@@ -178,11 +178,11 @@ module MiqProvisionVmware::Customization
 
     if requested_network_adapter_count < nic_count
       # Remove nicSettings to match network adapter count
-      nic_count.downto(requested_network_adapter_count+1) {spec.nicSettingMap.pop}
+      nic_count.downto(requested_network_adapter_count + 1) {spec.nicSettingMap.pop}
     elsif requested_network_adapter_count > nic_count
       # Add DHCP nicSettings to match network adapter count
       spec.nicSettingMap ||= VimArray.new("ArrayOfCustomizationAdapterMapping")
-      nic_count.upto(requested_network_adapter_count-1) do
+      nic_count.upto(requested_network_adapter_count - 1) do
         adapter_map = VimHash.new("CustomizationAdapterMapping")
         adapter = find_build_spec_path(adapter_map, 'CustomizationIPSettings', 'adapter')
         adapter.ip = VimHash.new("CustomizationDhcpIpGenerator")

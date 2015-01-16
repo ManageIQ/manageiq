@@ -72,7 +72,7 @@ class RecreateRelationships < ActiveRecord::Migration
   private
 
   def self.collect_relationships
-    relats = RelationshipsOrig.all(:include => [:parent, :child])
+    relats = RelationshipsOrig.includes(:parent, :child).all
     tree = Hash.new { |h,k| h[k] = Hash.new }
     roots = Hash.new { |h,k| h[k] = Array.new }
 

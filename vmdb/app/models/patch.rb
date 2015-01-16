@@ -25,7 +25,7 @@ class Patch < ActiveRecord::Base
 
   def self.highest_patch_level(target)
     ret_val = 0
-    target.patches.find(:all, :select=>"id, name").collect do |rec|
+    target.patches.find(:all, :select => "id, name").collect do |rec|
       level  = rec[:name].split("-")[-1].to_i
       ret_val = level if level > ret_val
     end

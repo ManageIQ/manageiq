@@ -9,7 +9,7 @@ class RemoveCustomFieldsFromVmsHosts < ActiveRecord::Migration
     # Add source column and mark all existing rows as VC data
     add_column :custom_attributes, :source, :string
     say_with_time("Update CustomAttribute source to VC") do
-      CustomAttribute.find(:all, :select=>'id, source').each {|ca| ca.update_attribute('source', 'VC')}
+      CustomAttribute.select('id, source').each {|ca| ca.update_attribute('source', 'VC')}
     end
 
     custom_names = (1..9).collect {|i| "custom_#{i}"}
@@ -24,7 +24,7 @@ class RemoveCustomFieldsFromVmsHosts < ActiveRecord::Migration
     [:vms, :hosts].each {|klass| custom_names.each {|cn| add_column klass, cn.to_sym, :string}}
 
     say_with_time("Migrate CustomAttribute to resource custom columns") do
-      ca = CustomAttribute.find(:all, :conditions=>"source = 'EVM' AND name like 'custom_%'", :include => :resource)
+      ca = CustomAttribute.where("source = 'EVM' AND name like 'custom_%'").includes(:resource)
       ca.each {|c| c.resource.update_attribute(c.name, c.value) if c.name =~ /^custom_[1-9]$/}
     end
 
@@ -38,7 +38,7 @@ class RemoveCustomFieldsFromVmsHosts < ActiveRecord::Migration
   def self.move_custom_vars(klass, custom_names)
     say_with_time("Migrate #{klass.name} custom columns to CustomAttribute") do
       condition = (custom_names).join(' is not NULL OR ') +  ' is not NULL'
-      items = klass.find(:all, :select=>'id,' + custom_names.join(','), :conditions => condition)
+      items = klass.select(custom_names + ['id']).where(condition)
 
       custom_attrs = []
       res_type = klass.name

@@ -52,7 +52,7 @@ module Metric::Purging
     else             [MetricRollup, {:capture_interval_name => interval}]
     end
 
-    oldest = klass.first(:select => :timestamp, :conditions => conditions, :order => :timestamp)
+    oldest = klass.select(:timestamp).where(conditions).order(:timestamp).first
     oldest = oldest.nil? ? older_than : oldest.timestamp
 
     klass.count(:conditions => conditions.merge(:timestamp => oldest..older_than))
@@ -74,13 +74,13 @@ module Metric::Purging
 
       oldest = nil
       Benchmark.realtime_block(:query_oldest) do
-        oldest = klass.first(:select => :timestamp, :conditions => conditions, :order => :timestamp)
+        oldest = klass.select(:timestamp).where(conditions).order(:timestamp).first
         oldest = oldest.nil? ? older_than : oldest.timestamp
       end
 
       loop do
         batch, _ = Benchmark.realtime_block(:query_batch) do
-          klass.all(:select => :id, :conditions => conditions.merge(:timestamp => oldest..older_than), :limit => window)
+          klass.select(:id).where(conditions.merge(:timestamp => (oldest..older_than))).limit(window)
         end
         break if batch.empty?
 

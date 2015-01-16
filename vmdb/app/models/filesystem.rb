@@ -66,7 +66,7 @@ class Filesystem < ActiveRecord::Base
           ch = file_contents.attributes.to_h
           nh[:contents] = file_contents.text
           if ch[:encoded] == 'true'
-            compressed = ch[:compressed]=='true'
+            compressed = ch[:compressed] == 'true'
             nh[:contents] = MIQEncode.decode(nh[:contents], compressed)
           end
         end

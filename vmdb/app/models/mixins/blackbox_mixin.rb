@@ -36,7 +36,7 @@ module BlackboxMixin
 
     host = hosts.first # use first host on list since we don't have a dispatcher for this.
     begin
-      host.call_ws(OpenStruct.new("args"=>[self.path, YAML.dump(eventData)], "useHostQueue"=>true, "method_name"=>"RecordBlackBoxEvent"))
+      host.call_ws(OpenStruct.new("args" => [self.path, YAML.dump(eventData)], "useHostQueue" => true, "method_name" => "RecordBlackBoxEvent"))
     rescue => err
       $log.log_backtrace(err)
     end
@@ -68,7 +68,7 @@ module BlackboxMixin
         :target_class => self.class.base_class.name,
         :name => "#{mode.capitalize} Blackbox for Vm #{self.name}",
         :userid => userid,
-        :mode=>mode
+        :mode => mode
       }
       options = {:agent_id => myhost.id, :agent_class => myhost.class.to_s}.merge!(options) unless myhost.nil?
 
@@ -82,8 +82,8 @@ module BlackboxMixin
     # Skip local configuration if we are running against a VMFS datastore
     # We need to call a WS once the blackbox disk file is in place.
     config_locally = self.storage.store_type != "VMFS"
-    eventData = {:config => {:vmId=>self.guid, :svrId=>MiqServer.my_guid, :path=>self.path},
-      :options => {:config_locally=>config_locally, :jobid=>options["taskid"]}}
+    eventData = {:config => {:vmId => self.guid, :svrId => MiqServer.my_guid, :path => self.path},
+      :options => {:config_locally => config_locally, :jobid => options["taskid"]}}
 
     run_miq_cmd(options[:ws_method], options, [YAML.dump(eventData)])
   end
@@ -141,7 +141,7 @@ module BlackboxMixin
         bbDiskName = File.join(File.dirname(self.path), File.basename(dataHash[:results][:bbName]))
 
         # Call addDisk and pass the existing blackbox filename and a size of -1 to indicate it already exists.
-        self.ext_management_system.removeDiskByFile(self, {:diskName=>bbDiskName})
+        self.ext_management_system.removeDiskByFile(self, {:diskName => bbDiskName})
         self.blackbox_exists = false
         self.save
       end
@@ -158,7 +158,7 @@ module BlackboxMixin
         bbDiskName = File.join(File.dirname(self.path), File.basename(dataHash[:results][:bbName]))
 
         # Call addDisk and pass the existing blackbox filename and a size of -1 to indicate it already exists.
-        self.ext_management_system.addDisk(self, {:diskName=>bbDiskName, :diskSize=>-1})
+        self.ext_management_system.addDisk(self, {:diskName => bbDiskName, :diskSize => -1})
         self.blackbox_exists = true
         self.save
       end

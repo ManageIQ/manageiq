@@ -283,7 +283,7 @@ class CimComputerSystem < MiqCimInstance
       next if ap.property("CreationClassName") != "ONTAP_RemoteServiceAccessPoint"
       ai = ap.property("AccessInfo")
       next unless (/http:\/\/([^\/]*)\/na_admin/ =~ ai)
-      sma = NetappRemoteService.find(:all, :conditions => ["ipaddress = ? or hostname = ?", $1, $1])
+      sma = NetappRemoteService.where("ipaddress = ? or hostname = ?", $1, $1)
       storageManagers.concat(sma) unless sma.length == 0
     end
     return storageManagers

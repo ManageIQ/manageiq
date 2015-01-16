@@ -48,7 +48,7 @@ module ServiceMixin
   end
 
   def remove_resource(rsc)
-    sr = self.service_resources.find(:first, :conditions => {:resource_type => rsc.class.base_class.name, :resource_id => rsc.id})
+    sr = self.service_resources.where(:resource_type => rsc.class.base_class.name, :resource_id => rsc.id).first
     sr.try(:destroy)
   end
 
@@ -95,7 +95,7 @@ module ServiceMixin
     last_idx = self.last_group_index
     method, target = direction > 0 ? [:upto, last_idx] : [:downto, 0]
 
-    (current_idx+direction).send(method, target) do |i|
+    (current_idx + direction).send(method, target) do |i|
       next if i == current_idx
       return(i) if self.group_has_resources?(i)
     end

@@ -414,11 +414,11 @@ module VimPerformanceAnalysis
       #   :errors    => Array of user friendly error messages if any errors are encountered
 
       # Return mocked up result for now
-      hash = {:datastore => Storage.find(:first), :vm_count => 42}
+      hash = {:datastore => Storage.first, :vm_count => 42}
       if options[:target_tags][:type] == :cluster
-        hash[:cluster] = EmsCluster.find(:first)
+        hash[:cluster] = EmsCluster.first
       else
-        hash[:host] = Host.find(:first)
+        hash[:host] = Host.first
       end
       return {:recomendations => [hash], :errors => nil}
     end
@@ -470,7 +470,7 @@ module VimPerformanceAnalysis
       VimPerformanceDaily.all(:conditions => cond, :order => "timestamp", :ext_options => options[:ext_options], :select => options[:select])
     else
       klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
-      klass.all(:conditions => cond, :order => "timestamp", :select => options[:select])
+      klass.where(cond).order("timestamp").select(options[:select]).to_a
     end
   end
 
@@ -514,7 +514,7 @@ module VimPerformanceAnalysis
     if interval_name == "daily"
       VimPerformanceDaily.all(:conditions => cond, :ext_options => options[:ext_options], :select => options[:select])
     else
-      klass.all(:conditions => cond, :select => options[:select])
+      klass.where(cond).select(options[:select]).to_a
     end
   end
 

@@ -60,8 +60,8 @@ describe Vm do
       end
 
       it "should destroy all relationships" do
-        Relationship.count(:conditions => {:resource_type => "Vm", :resource_id => @vm.id}).should == 0
-        Relationship.count(:conditions => {:resource_type => "Vm", :resource_id => @child_vm.id}).should == 0
+        Relationship.where(:resource_type => "Vm", :resource_id => @vm.id).count.should == 0
+        Relationship.where(:resource_type => "Vm", :resource_id => @child_vm.id).count.should == 0
 
         @parent_vm.children.should == []
         @child_vm.parents.should == []

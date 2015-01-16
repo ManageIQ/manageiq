@@ -68,35 +68,35 @@ module MiqReport::Generator::Html
           style_class = !style.nil? ? " class='#{style}'" : nil
           if c == "resource_type"                     # Lookup models in resource_type col
             output << "<td#{style_class}>"
-            output << ui_lookup(:model=>d.data[c])
+            output << ui_lookup(:model => d.data[c])
             output << "</td>"
           elsif self.db == "VimUsage"                 # Format usage columns
             case c
             when "cpu_usagemhz_rate_average"
               output << "<td#{style_class} " + 'style="text-align:right">'
-              output << CGI.escapeHTML(self.format(c, d.data[c].to_f, :format=>:general_number_precision_1))
+              output << CGI.escapeHTML(self.format(c, d.data[c].to_f, :format => :general_number_precision_1))
               tot_cpu += d.data[c].to_f
             when "derived_memory_used"
               output << "<td#{style_class} " + 'style="text-align:right">'
-              output << CGI.escapeHTML(self.format(c, d.data[c].to_f, :format=>:megabytes_human))
+              output << CGI.escapeHTML(self.format(c, d.data[c].to_f, :format => :megabytes_human))
               tot_ram += d.data[c].to_f
             when "derived_vm_used_disk_storage"
               output << "<td#{style_class} " + 'style="text-align:right">'
-              output << CGI.escapeHTML(self.format(c, d.data[c], :format=>:bytes_human))
+              output << CGI.escapeHTML(self.format(c, d.data[c], :format => :bytes_human))
               tot_space += d.data[c].to_f
             when "derived_storage_used_managed"
               output << "<td#{style_class} " + 'style="text-align:right">'
-              output << CGI.escapeHTML(self.format(c, d.data[c], :format=>:bytes_human))
+              output << CGI.escapeHTML(self.format(c, d.data[c], :format => :bytes_human))
               tot_space += d.data[c].to_f
             when "disk_usage_rate_average"
               output << "<td#{style_class} " + 'style="text-align:right">'
-              output << CGI.escapeHTML(self.format(c, d.data[c].to_f, :format=>:general_number_precision_1)) <<
-                        " (#{CGI.escapeHTML(self.format(c, d.data[c].to_f*1.kilobyte*self.extras[:interval], :format=>:bytes_human))})"
+              output << CGI.escapeHTML(self.format(c, d.data[c].to_f, :format => :general_number_precision_1)) <<
+                        " (#{CGI.escapeHTML(self.format(c, d.data[c].to_f * 1.kilobyte * self.extras[:interval], :format => :bytes_human))})"
               tot_disk += d.data[c].to_f
             when "net_usage_rate_average"
               output << "<td#{style_class} " + 'style="text-align:right">'
-              output << CGI.escapeHTML(self.format(c, d.data[c].to_f, :format=>:general_number_precision_1)) <<
-                        " (#{CGI.escapeHTML(self.format(c, d.data[c].to_f*1.kilobyte*self.extras[:interval], :format=>:bytes_human))})"
+              output << CGI.escapeHTML(self.format(c, d.data[c].to_f, :format => :general_number_precision_1)) <<
+                        " (#{CGI.escapeHTML(self.format(c, d.data[c].to_f * 1.kilobyte * self.extras[:interval], :format => :bytes_human))})"
               tot_net += d.data[c].to_f
             else
               output << "<td#{style_class}>"
@@ -117,8 +117,8 @@ module MiqReport::Generator::Html
             end
             output << CGI.escapeHTML(self.format(c.split("__").first,
                                                 d.data[c],
-                                                :format=>self.col_formats[c_idx] ? self.col_formats[c_idx] : :_default_,
-                                                :tz=>tz))
+                                                :format => self.col_formats[c_idx] ? self.col_formats[c_idx] : :_default_,
+                                                :tz => tz))
             output << "</td>"
           end
         end
@@ -142,26 +142,26 @@ module MiqReport::Generator::Html
           case c
           when "cpu_usagemhz_rate_average"
             output << '<td style="text-align:right"><strong>' <<
-                      CGI.escapeHTML(self.format(c, tot_cpu, :format=>:general_number_precision_1)) <<
+                      CGI.escapeHTML(self.format(c, tot_cpu, :format => :general_number_precision_1)) <<
                       "</strong></td>"
           when "derived_memory_used"
             output << '<td style="text-align:right"><strong>' <<
-                      CGI.escapeHTML(self.format(c, tot_ram, :format=>:megabytes_human)) <<
+                      CGI.escapeHTML(self.format(c, tot_ram, :format => :megabytes_human)) <<
                       "</strong></td>"
           when "derived_storage_used_managed"
             output << '<td style="text-align:right"><strong>' <<
-                      CGI.escapeHTML(self.format(c, tot_space, :format=>:bytes_human)) <<
+                      CGI.escapeHTML(self.format(c, tot_space, :format => :bytes_human)) <<
                       "</strong></td>"
           when "derived_vm_used_disk_storage"
             output << '<td style="text-align:right"><strong>' <<
-                      CGI.escapeHTML(self.format(c, tot_space, :format=>:bytes_human)) <<
+                      CGI.escapeHTML(self.format(c, tot_space, :format => :bytes_human)) <<
                       "</strong></td>"
           when "disk_usage_rate_average"
-            output << '<td style="text-align:right"><strong>' << CGI.escapeHTML(self.format(c, tot_disk, :format=>:general_number_precision_1)) <<
-                                " (#{CGI.escapeHTML(self.format(c, tot_disk*1.kilobyte*self.extras[:interval], :format=>:bytes_human))})" << "</strong></td>"
+            output << '<td style="text-align:right"><strong>' << CGI.escapeHTML(self.format(c, tot_disk, :format => :general_number_precision_1)) <<
+                                " (#{CGI.escapeHTML(self.format(c, tot_disk * 1.kilobyte * self.extras[:interval], :format => :bytes_human))})" << "</strong></td>"
           when "net_usage_rate_average"
-            output << '<td style="text-align:right"><strong>' << CGI.escapeHTML(self.format(c, tot_net, :format=>:general_number_precision_1)) <<
-                                " (#{CGI.escapeHTML(self.format(c, tot_net*1.kilobyte*self.extras[:interval], :format=>:bytes_human))})" << "</strong></td>"
+            output << '<td style="text-align:right"><strong>' << CGI.escapeHTML(self.format(c, tot_net, :format => :general_number_precision_1)) <<
+                                " (#{CGI.escapeHTML(self.format(c, tot_net * 1.kilobyte * self.extras[:interval], :format => :bytes_human))})" << "</strong></td>"
           end
         end
         output << "</tr>"
@@ -188,8 +188,8 @@ module MiqReport::Generator::Html
       controller = self.db == "ExtManagementSystem" ? "management_system" : self.db.underscore
       donav = "DoNav('/#{controller}/show/#{data_row['id']}');"
       title = data_row['name'] ?
-        "View #{ui_lookup(:model=>self.db)} \"#{data_row['name']}\"" :
-        "View this #{ui_lookup(:model=>self.db)}"
+        "View #{ui_lookup(:model => self.db)} \"#{data_row['name']}\"" :
+        "View this #{ui_lookup(:model => self.db)}"
       onclick = "onclick=\"#{donav}\" style='cursor:hand' title='#{title}'"
     end
 
@@ -197,7 +197,7 @@ module MiqReport::Generator::Html
     if self.db.ends_with?("Performance")
       if data_row['resource_id'] && data_row['resource_type'] # Base click thru on the related resource
         donav = "DoNav('/#{data_row['resource_type'].underscore}/show/#{data_row['resource_id']}');"
-        onclick = "onclick=\"#{donav}\" style='cursor:hand' title='View #{ui_lookup(:model=>data_row['resource_type'])} \"#{data_row['resource_name']}\"'"
+        onclick = "onclick=\"#{donav}\" style='cursor:hand' title='View #{ui_lookup(:model => data_row['resource_type'])} \"#{data_row['resource_name']}\"'"
       end
     end
 
@@ -235,7 +235,7 @@ module MiqReport::Generator::Html
             grp_output << CGI.escapeHTML(
               self.format(
                 c.split("__").first, self.extras[:grouping][group][calc.first][c],
-                  :format=>self.col_formats[c_idx] ? self.col_formats[c_idx] : :_default_
+                  :format => self.col_formats[c_idx] ? self.col_formats[c_idx] : :_default_
               )
             ) if self.extras[:grouping][group].has_key?(calc.first)
             grp_output << "</td>"

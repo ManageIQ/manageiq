@@ -34,7 +34,7 @@ module MiqRequestTask::Dumping
     end
 
     def dumpArray(ad, prefix, prnt_obj, prnt_meth, options)
-      ad.inject(0) {|i, d| self.dumpObj(d, "#{prefix}[#{i}]", prnt_obj, prnt_meth, options);  i+=1}
+      ad.inject(0) {|i, d| self.dumpObj(d, "#{prefix}[#{i}]", prnt_obj, prnt_meth, options);  i += 1}
     end
 
     def dumpVimArray(ad, prefix, prnt_obj, prnt_meth, options)

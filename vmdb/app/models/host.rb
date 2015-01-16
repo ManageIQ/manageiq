@@ -347,7 +347,7 @@ class Host < ActiveRecord::Base
 
   def validate_esx_host_connected_to_vc
     # Check the basic require to interact with a VM.
-    return {:available => false, :message => "The Host is not connected to an active #{ui_lookup(:table=>"ext_management_systems")}"} unless self.has_active_ems?
+    return {:available => false, :message => "The Host is not connected to an active #{ui_lookup(:table => "ext_management_systems")}"} unless self.has_active_ems?
     return {:available => false, :message => "The Host is not VMware ESX"} unless self.is_vmware_esx?
     return nil
   end
@@ -551,7 +551,7 @@ class Host < ActiveRecord::Base
           next if found.ems_id
 
           # Handle an existing VM that is now reported on a different host
-          if config[:repository_vm]==false && found.host_id != self.id
+          if config[:repository_vm] == false && found.host_id != self.id
             found.host_id = self.id
             found.save!
             found.registerVm
@@ -649,7 +649,7 @@ class Host < ActiveRecord::Base
   def get_config_data(doc=nil)
     # if we were not passed the Host config xml, go get it
     unless doc
-      ost = OpenStruct.new("method_name"=>"GetHostConfig")
+      ost = OpenStruct.new("method_name" => "GetHostConfig")
       ret = call_ws(ost)
       return
     end
@@ -683,7 +683,7 @@ class Host < ActiveRecord::Base
 
     $log.info "MIQ(host-tag_elements): Tagging: #{self.name}..."
     tags = Xml2tags.walk(xmlNode.root)
-    self.tag_add(tags, :ns=>"/system")
+    self.tag_add(tags, :ns => "/system")
     $log.info "MIQ(host-tag_elements): Tagging: #{self.name} complete, #{tags.size} tags were applied"
   end
 
@@ -722,7 +722,7 @@ class Host < ActiveRecord::Base
   def available_builds
     data = self.platform_arch
     return [] if data.blank?
-    ProductUpdate.all(:conditions => {:component => 'smartproxy', :platform => data[0], :arch => data[1]})
+    ProductUpdate.where(:component => "smartproxy", :platform => data[0], :arch => data[1]).to_a
   end
 
   def arch
@@ -761,7 +761,7 @@ class Host < ActiveRecord::Base
   end
 
   def miq_proxies
-    MiqProxy.find(:all).collect {|p| p if p.hosts.include?(self)}.compact
+    MiqProxy.all.select { |p| p.hosts.include?(self) }
   end
 
   def acts_as_ems?
@@ -772,11 +772,11 @@ class Host < ActiveRecord::Base
 
   def refreshable_status
     if self.ext_management_system
-      return {:show=>true, :enabled=>true, :message=> ""}
+      return {:show => true, :enabled => true, :message => ""}
     end
 
     if self.platform == "windows"
-      s =  {:show=>true, :enabled=>true, :message=> ""}
+      s =  {:show => true, :enabled => true, :message => ""}
       unless self.is_proxy_active?
         s[:enabled] = false
         s[:message] = "Proxy not active"
@@ -784,7 +784,7 @@ class Host < ActiveRecord::Base
       return s
     end
 
-    return {:show=>false, :enabled=>false, :message=> "Host not configured for refresh"}
+    return {:show => false, :enabled => false, :message => "Host not configured for refresh"}
   end
 
   def scannable_status
@@ -792,11 +792,11 @@ class Host < ActiveRecord::Base
     if s[:show] == false && s[:enabled] == false
       if self.authentication_valid?(:ipmi) || !self.ipmi_address.blank?
         if self.authentication_invalid?(:ipmi)
-          s.merge!({:show=>true, :enabled=>false, :message=> "Provide credentials for IPMI"})
+          s.merge!(:show => true, :enabled => false, :message => "Provide credentials for IPMI")
         elsif self.ipmi_address.blank?
-          s.merge!({:show=>true, :enabled=>false, :message=> "Provide an IPMI Address"})
+          s.merge!(:show => true, :enabled => false, :message => "Provide an IPMI Address")
         else
-          s.merge!({:show=>true, :enabled=>true, :message=> ""})
+          s.merge!(:show => true, :enabled => true, :message => "")
         end
       end
     end
@@ -822,7 +822,7 @@ class Host < ActiveRecord::Base
   end
 
   def refresh_ems
-    raise "No #{ui_lookup(:table=>"ext_management_systems")} or credentials defined" unless self.ext_management_system && self.ext_management_system.authentication_valid?
+    raise "No #{ui_lookup(:table => "ext_management_systems")} or credentials defined" unless self.ext_management_system && self.ext_management_system.authentication_valid?
     EmsRefresh.queue_refresh(self)
   end
 
@@ -872,7 +872,7 @@ class Host < ActiveRecord::Base
     newHost = nil
     version = "0.0.0.NA"
     $log.debug "MIQ(host-self_register): [#{xmlDoc}]"
-    host_config = {:vmm_vendor=>"unknown", :hostname=>nil, :ipaddress=>nil, :name=>nil}
+    host_config = {:vmm_vendor => "unknown", :hostname => nil, :ipaddress => nil, :name => nil}
     xmlDoc.find_match("//host").each { |n| version = n.attributes["version"] }
 
     # Find the computer name from Linux and map the hostname/ip to it
@@ -918,7 +918,7 @@ class Host < ActiveRecord::Base
     proxy.version = version
     proxy.save
 
-    return {:hostId=>newHost.guid, :settings=>newHost.miq_proxy.settings}
+    return {:hostId => newHost.guid, :settings => newHost.miq_proxy.settings}
   end
 
   def self.lookUpHost(hostname, ipaddr)
@@ -1173,7 +1173,7 @@ class Host < ActiveRecord::Base
     self.miq_proxy ? self.miq_proxy.myport : nil
   end
 
-  def self.discoverByIpRange(starting, ending, options={:ping=>true})
+  def self.discoverByIpRange(starting, ending, options={:ping => true})
     options[:timeout] ||= 10
     pattern = %r{^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$}
     raise "Starting address is malformed" if (starting =~ pattern).nil?
@@ -1370,7 +1370,7 @@ class Host < ActiveRecord::Base
               ipmi = MiqIPMI.new(host.ipmi_address, cred[:userid], cred[:password])
               if ipmi.connected?
                 $log.warn "#{log_header}: IPMI connected to Host:<#{host.ipmi_address}> with User:<#{cred[:userid]}>"
-                host.update_authentication(:ipmi=>cred)
+                host.update_authentication(:ipmi => cred)
                 host.scan
               else
                 $log.warn "#{log_header}: IPMI did not connect to Host:<#{host.ipmi_address}> with User:<#{cred[:userid]}>"
@@ -1379,7 +1379,7 @@ class Host < ActiveRecord::Base
           end
 
           $log.info "#{log_header}: #{host.name} created"
-          AuditEvent.success(:event => "host_created", :target_id=>host.id, :target_class => "Host", :message => "#{host.name} created")
+          AuditEvent.success(:event => "host_created", :target_id => host.id, :target_class => "Host", :message => "#{host.name} created")
         end
       else
         $log.info "#{log_header}: NOT Discovered: #{self.ost_inspect(ost)}"
@@ -1444,8 +1444,8 @@ class Host < ActiveRecord::Base
         # Find the lines we should skip
         begin
           next if data[1,2].nil?
-          dhash = {:name=>data[0], :vendor=>"VMware", :installed_on=>Time.parse(data[1,2].join(" ")).utc}
-          next if dhash[:installed_on]-t >= 0
+          dhash = {:name => data[0], :vendor => "VMware", :installed_on => Time.parse(data[1,2].join(" ")).utc}
+          next if dhash[:installed_on] - t >= 0
           dhash[:description] = data[3..-1].join(" ") unless data[3..-1].nil?
           patches << dhash
         rescue ArgumentError
@@ -1484,7 +1484,7 @@ class Host < ActiveRecord::Base
       rpm_list = ssu.shell_exec("rpm -qa --queryformat '%{NAME}|%{VERSION}|%{ARCH}|%{GROUP}|%{RELEASE}|%{SUMMARY}\n'")
       rpm_list.each_line do |line|
         l = line.split('|')
-        pkg_xml.add_element(:application, {'name'=>l[0], 'version'=>l[1], 'arch'=>l[2], 'typename'=>l[3], 'release'=>l[4], 'description'=>l[5]})
+        pkg_xml.add_element(:application, {'name' => l[0], 'version' => l[1], 'arch' => l[2], 'typename' => l[3], 'release' => l[4], 'description' => l[5]})
       end
       GuestApplication.add_elements(self, pkg_xml.root)
     rescue => err
@@ -1979,9 +1979,9 @@ class Host < ActiveRecord::Base
     if args.length == 0
       services = self.host_services
     elsif args.length == 1
-      services = self.host_services.find(:all, :conditions => ["enable_run_levels LIKE ?", "%#{args.first}%"])
+      services = self.host_services.where("enable_run_levels LIKE ?", "%#{args.first}%")
     end
-    services.collect {|s| s.name}.uniq.sort
+    services.order(:name).uniq.pluck(:name)
   end
 
   def control_supported?

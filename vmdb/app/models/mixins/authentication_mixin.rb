@@ -66,9 +66,9 @@ module AuthenticationMixin
 
     data.each_pair do |type, value|
       cred = self.authentication_type(type)
-      current = {:new=>nil, :old => nil}
-      current[:new] = {:user=>value[:userid], :password=>value[:password]} unless value[:userid].blank?
-      current[:old] = {:user=>cred.userid, :password=>cred.password} if cred
+      current = {:new => nil, :old => nil}
+      current[:new] = {:user => value[:userid], :password => value[:password]} unless value[:userid].blank?
+      current[:old] = {:user => cred.userid, :password => cred.password} if cred
 
       # Raise an error if required fields are blank
       Array(options[:required]).each { |field| raise(ArgumentError, "#{field} is required") if value[field].blank? }

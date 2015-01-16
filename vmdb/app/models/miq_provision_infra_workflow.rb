@@ -33,7 +33,7 @@ class MiqProvisionInfraWorkflow < MiqProvisionWorkflow
   end
 
   def get_source_and_targets(refresh=false)
-    return @target_resource if @target_resource && refresh==false
+    return @target_resource if @target_resource && refresh == false
     result = super
     return result if result.blank?
 
@@ -51,7 +51,7 @@ class MiqProvisionInfraWorkflow < MiqProvisionWorkflow
     end
 
     rails_logger('get_source_and_targets', 1)
-    return @target_resource=result
+    return @target_resource = result
   end
 
   def dialog_name_from_automate(message, extra_attrs)

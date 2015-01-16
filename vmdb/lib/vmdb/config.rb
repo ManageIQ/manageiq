@@ -110,7 +110,7 @@ module VMDB
         if configuration_source == :database
           server = MiqServer.my_server
           raise "MiqServer.my_server cannot be nil" if server.nil?
-          @db_record = server.configurations.find_by_typ(@name)
+          @db_record = server.configurations.where(:typ => @name).first
 
           conf = current
 
@@ -164,7 +164,7 @@ module VMDB
       server = MiqServer.my_server(true)
       return if server.nil?
 
-      conf = server.configurations.find_by_typ(@name, :select => "updated_on")
+      conf = server.configurations.select("updated_on").where(:typ => @name).first
       return if conf.nil?
 
       mtime = conf.updated_on

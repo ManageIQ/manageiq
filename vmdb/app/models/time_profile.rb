@@ -101,7 +101,7 @@ class TimeProfile < ActiveRecord::Base
   end
 
   def rebuild_daily_metrics
-    oldest_hourly = MetricRollup.first(:select => :timestamp, :conditions => {:capture_interval_name => 'hourly'}, :order => :timestamp)
+    oldest_hourly = MetricRollup.select(:timestamp).where(:capture_interval_name => "hourly").order(:timestamp).first
     self.destroy_metric_rollups
     return if oldest_hourly.nil?
 

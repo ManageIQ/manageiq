@@ -87,7 +87,7 @@ class EmsVmware < EmsInfra
       raise $!.message
     rescue Exception
       $log.warn("MIQ(#{self.class.name}#verify_credentials): #{$!.inspect}")
-      raise "Unexpected response returned from #{ui_lookup(:table=>"ext_management_systems")}, see log for details"
+      raise "Unexpected response returned from #{ui_lookup(:table => "ext_management_systems")}, see log for details"
     end
 
     return true
@@ -329,7 +329,7 @@ class EmsVmware < EmsInfra
     config = VMDB::Config.new('vmdb').config
     defaults = {
       :subTree => "false",
-      :refresh=>false,
+      :refresh => false,
       :wait    => true,
       :free_space_percent => config.fetch_path(:snapshots, :remove_free_percent) || 100
     }

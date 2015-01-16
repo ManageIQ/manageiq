@@ -16,7 +16,7 @@ module PerEmsWorkerMixin
     end
 
     def all_ems_in_zone
-      self.ems_class.all(:conditions => {:zone_id => MiqServer.my_server.zone.id})
+      self.ems_class.where(:zone_id => MiqServer.my_server.zone.id).to_a
     end
 
     def all_valid_ems_in_zone

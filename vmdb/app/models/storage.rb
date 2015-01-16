@@ -67,7 +67,7 @@ class Storage < ActiveRecord::Base
   SUPPORTED_STORAGE_TYPES = ["VMFS", "NFS"]
 
   def miq_proxies
-    MiqProxy.find(:all).select { |p| p.storages.include?(self) }
+    MiqProxy.all.select { |p| p.storages.include?(self) }
   end
 
   def to_s
@@ -360,24 +360,24 @@ class Storage < ActiveRecord::Base
 
   def scan(userid = "system", role = "ems_operations")
     log_header = "MIQ(Storage.scan)"
-    raise(MiqException::MiqUnsupportedStorage, "Action not supported for #{ui_lookup(:table=>"storages")} type [#{self.store_type}], [#{self.name}] with id: [#{self.id}]") unless SUPPORTED_STORAGE_TYPES.include?(self.store_type)
+    raise(MiqException::MiqUnsupportedStorage, "Action not supported for #{ui_lookup(:table => "storages")} type [#{self.store_type}], [#{self.name}] with id: [#{self.id}]") unless SUPPORTED_STORAGE_TYPES.include?(self.store_type)
 
     hosts = self.active_hosts_with_credentials
-    raise(MiqException::MiqStorageError,       "Check that a Host is running and has valid credentials for #{ui_lookup(:table=>"storages")} [#{self.name}] with id: [#{self.id}]") if hosts.empty?
+    raise(MiqException::MiqStorageError,       "Check that a Host is running and has valid credentials for #{ui_lookup(:table => "storages")} [#{self.name}] with id: [#{self.id}]") if hosts.empty?
 
     task_name = "SmartState Analysis for [#{self.name}]"
     self.class.create_scan_task(task_name, userid, [self])
   end
 
   def self.unregistered_vm_config_files
-    Storage.find(:all).inject([]) {|list, s| list + s.unregistered_vm_config_files}
+    Storage.all.inject([]) { |list, s| list + s.unregistered_vm_config_files }
   end
 
   def unmanaged_vm_config_files
     files = if association_cache.include?(:storage_files)
       self.storage_files.select { |f| f.ext_name == "vmx" && f.vm_or_template_id.nil? }
     else
-      self.storage_files.all(:conditions => {:ext_name => "vmx", :vm_or_template_id => nil})
+      self.storage_files.where(:ext_name => "vmx", :vm_or_template_id => nil)
     end
     return files.collect {|f| f.name}
   end
@@ -581,7 +581,7 @@ class Storage < ActiveRecord::Base
   def vm_ids_by_path
     host_ids = self.hosts.collect { |h| h.id }
     return nil if host_ids.empty?
-    Vm.find(:all, :conditions => ["host_id IN (?)", host_ids], :include => :storage).inject({}) { |h, v| h[File.dirname(v.path)] = v.id; h }
+    Vm.where("host_id IN (?)", host_ids).includes(:storage).inject({}) { |h, v| h[File.dirname(v.path)] = v.id; h }
   end
 
   # TODO: Is this still needed?
@@ -592,8 +592,8 @@ class Storage < ActiveRecord::Base
 
     objs = storages.collect do |s|
       # Get the first VM or Host that's available since we can't refresh a storage directly
-      obj = s.vms.find(:first, :order => :id)
-      obj = s.hosts.find(:first, :order => :id) if obj.nil?
+      obj = s.vms.order(:id).first
+      obj = s.hosts.order(:id).first if obj.nil?
       obj
     end
     return objs.compact.uniq

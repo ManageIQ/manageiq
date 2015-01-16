@@ -534,7 +534,7 @@ module EmsRefresh::Parsers::Rhevm
 
     parent_id = nil
     inv.each_with_index do |snapshot, idx|
-      result << self.snapshot_inv_to_snapshot_hashes(snapshot, idx == inv.length-1, parent_id)
+      result << self.snapshot_inv_to_snapshot_hashes(snapshot, idx == inv.length - 1, parent_id)
       parent_id = snapshot[:id]
     end
     return result

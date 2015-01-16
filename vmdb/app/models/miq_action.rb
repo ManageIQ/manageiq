@@ -187,7 +187,7 @@ class MiqAction < ActiveRecord::Base
     else
       phrase = "for failed policy"
     end
-    MiqPolicy.logger.info("MIQ(action-invoke) Invoking action [#{self.description}] #{phrase} [#{inputs[:policy].description}], event: [#{inputs[:event].description}], entity name: [#{rec.name}], entity type: [#{Dictionary.gettext(rec.class.to_s, :type=>:model)}], sequence: [#{inputs[:sequence]}], synchronous? [#{inputs[:synchronous]}]")
+    MiqPolicy.logger.info("MIQ(action-invoke) Invoking action [#{self.description}] #{phrase} [#{inputs[:policy].description}], event: [#{inputs[:event].description}], entity name: [#{rec.name}], entity type: [#{Dictionary.gettext(rec.class.to_s, :type => :model)}], sequence: [#{inputs[:sequence]}], synchronous? [#{inputs[:synchronous]}]")
     self.send(method.to_sym, self, rec, inputs)
   end
 
@@ -200,7 +200,7 @@ class MiqAction < ActiveRecord::Base
       return
     end
 
-    MiqPolicy.logger.info("MIQ(action-invoke) Invoking action [#{self.description}] for built-in policy [#{inputs[:built_in_policy]}], event: [#{inputs[:event]}], entity name: [#{rec.name}], entity type: [#{Dictionary.gettext(rec.class.to_s, :type=>:model)}]")
+    MiqPolicy.logger.info("MIQ(action-invoke) Invoking action [#{self.description}] for built-in policy [#{inputs[:built_in_policy]}], event: [#{inputs[:event]}], entity name: [#{rec.name}], entity type: [#{Dictionary.gettext(rec.class.to_s, :type => :model)}]")
     self.send(method.to_sym, self, rec, inputs)
   end
 
@@ -211,9 +211,9 @@ class MiqAction < ActiveRecord::Base
 
   def action_log(action, rec, inputs)
     if inputs[:result]
-      MiqPolicy.logger.info("MIQ(action-log): Policy success: policy: [#{inputs[:policy].description}], event: [#{inputs[:event].description}], entity name: [#{rec.name}], entity type: [#{Dictionary.gettext(rec.class.to_s, :type=>:model)}]")
+      MiqPolicy.logger.info("MIQ(action-log): Policy success: policy: [#{inputs[:policy].description}], event: [#{inputs[:event].description}], entity name: [#{rec.name}], entity type: [#{Dictionary.gettext(rec.class.to_s, :type => :model)}]")
     else
-      MiqPolicy.logger.warn("MIQ(action-log): Policy failure: policy: [#{inputs[:policy].description}], event: [#{inputs[:event].description}], entity name: [#{rec.name}], entity type: [#{Dictionary.gettext(rec.class.to_s, :type=>:model)}]")
+      MiqPolicy.logger.warn("MIQ(action-log): Policy failure: policy: [#{inputs[:policy].description}], event: [#{inputs[:event].description}], entity name: [#{rec.name}], entity type: [#{Dictionary.gettext(rec.class.to_s, :type => :model)}]")
     end
   end
 
@@ -311,7 +311,7 @@ class MiqAction < ActiveRecord::Base
       email_options[:subject] = "Policy #{presult}: #{inputs[:policy].description}, for (#{rec.class.to_s.upcase}) #{rec.name}"
       email_options[:miq_action_hash] = {
         :header => inputs[:result] ? "Policy Succeeded" : "Policy Failed",
-        :policy_detail =>"Policy '#{inputs[:policy].description}', #{presult}",
+        :policy_detail => "Policy '#{inputs[:policy].description}', #{presult}",
         :event_description => inputs[:event].description,
         :entity_type => rec.class.to_s,
         :entity_name => rec.name
@@ -412,7 +412,7 @@ class MiqAction < ActiveRecord::Base
   def action_tag_inherit(action, rec, inputs)
     get_policies_from = inputs[:get_policies_from]
     MiqPolicy.logger.info("MIQ(action_tag_inherit): Applying tags from [(#{get_policies_from.class}) #{get_policies_from.name}] to [(#{rec.class}) #{rec.name}]")
-    tags = get_policies_from.tag_list(:ns=>"/managed").split
+    tags = get_policies_from.tag_list(:ns => "/managed").split
     tags.delete_if {|t| t =~ /^power_state/} # omit power state since this is assigned by the system
 
     tags.each {|t| Classification.classify_by_tag(rec, File.join("/managed", t))}
@@ -431,7 +431,7 @@ class MiqAction < ActiveRecord::Base
 
     options[:cats].each do |cat|
       MiqPolicy.logger.info("MIQ(action_inherit_parent_tags): Removing tags from category [(#{cat}) from [(#{rec.class}) #{rec.name}]")
-      rec.tag_with("", :ns=>"/managed/#{cat}")
+      rec.tag_with("", :ns => "/managed/#{cat}")
     end
     rec.reload
 
@@ -815,7 +815,7 @@ class MiqAction < ActiveRecord::Base
 
   def action_ems_refresh(action, rec, inputs)
     unless rec.respond_to?(:ext_management_system) && !rec.ext_management_system.nil?
-      MiqPolicy.logger.error("MIQ(action_ems_refresh): Unable to perform action [#{action.description}], object [#{rec.inspect}] does not have a #{ui_lookup(:table=>"ext_management_systems")}")
+      MiqPolicy.logger.error("MIQ(action_ems_refresh): Unable to perform action [#{action.description}], object [#{rec.inspect}] does not have a #{ui_lookup(:table => "ext_management_systems")}")
       return
     end
 
@@ -859,7 +859,7 @@ class MiqAction < ActiveRecord::Base
 
   def action_cancel_task(action, rec, inputs)
     unless rec.respond_to?(:ext_management_system) && !rec.ext_management_system.nil?
-      MiqPolicy.logger.error("MIQ(action_cancel_task): Unable to perform action [#{action.description}], object [#{rec.inspect}] does not have a #{ui_lookup(:table=>"ext_management_systems")}")
+      MiqPolicy.logger.error("MIQ(action_cancel_task): Unable to perform action [#{action.description}], object [#{rec.inspect}] does not have a #{ui_lookup(:table => "ext_management_systems")}")
       return
     end
 

@@ -220,10 +220,10 @@ module MiqReport::Formatting
     seconds = (val % 60)
 
     arr = [days, hours, minutes, seconds]
-    return if arr.all? {|a| a==0}
+    return if arr.all? {|a| a == 0}
 
     sidx = arr.index {|a| a > 0}
-    values = arr[sidx..(sidx+1)]
+    values = arr[sidx..(sidx + 1)]
     result = ''
     sep    = ''
     values.each_index do |i|

@@ -165,15 +165,15 @@ class EmsRedhat < EmsInfra
     storages.each do |s|
       uri = s.location.gsub('//', ':/').strip
       s_mnt_path = File.join(mnt_path, uri.gsub('/', '_'))
-      result[:mount_points] << mount_parms = {:uri=>"nfs://#{uri}", :mount_point=>s_mnt_path}
+      result[:mount_points] << mount_parms = {:uri => "nfs://#{uri}", :mount_point => s_mnt_path}
 
       storage_guid = s.ems_ref.split('/').last
       link_name = File.join(link_path, storage_guid)
       link_mnt_path = File.join(mount_parms[:mount_point], storage_guid)
 
       # Determine what symlinks we need to make
-      result[:symlinks] << {:source=>link_mnt_path, :target=>link_name}
-      result[:symlinks] << {:source=>link_mnt_path, :target=>File.join(link_path, 'mastersd')} if s.master?
+      result[:symlinks] << {:source => link_mnt_path, :target => link_name}
+      result[:symlinks] << {:source => link_mnt_path, :target => File.join(link_path, 'mastersd')} if s.master?
     end
 
     return result

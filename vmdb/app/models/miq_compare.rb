@@ -285,7 +285,7 @@ class MiqCompare
       # Get the tag entry name and description from the source
       new_columns = case @mode
       when :compare
-        Classification.find_by_name(tag_name).entries.collect { |e| [e.name, e.description] if rec.is_tagged_with?(e.tag.name, :ns=>"*") }
+        Classification.find_by_name(tag_name).entries.collect { |e| [e.name, e.description] if rec.is_tagged_with?(e.tag.name, :ns => "*") }
       when :drift
         rec.tags.to_miq_a.collect { |tag| [tag.entry_name, tag.entry_description] if tag.category_name == tag_name }
       end

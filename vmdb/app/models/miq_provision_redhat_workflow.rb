@@ -42,7 +42,7 @@ class MiqProvisionRedhatWorkflow < MiqProvisionInfraWorkflow
   end
 
   def update_field_visibility()
-    super(:force_platform=>'linux')
+    super(:force_platform => 'linux')
   end
 
   def update_field_visibility_linked_clone(options={}, f)

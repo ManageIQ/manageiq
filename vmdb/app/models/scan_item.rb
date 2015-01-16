@@ -70,7 +70,7 @@ class ScanItem < ActiveRecord::Base
     load_host_default = host_default.new_record?
     host_default.update_attributes(DEFAULT_HOST_PROFILE)
 
-    self.find(:all, :conditions=>{:prod_default=>'Default'}).each do |s|
+    self.find(:all, :conditions => {:prod_default => 'Default'}).each do |s|
       case s.mode
       when "Host"
         host_profile.add_member(s) unless host_profile.members.include?(s)
@@ -90,7 +90,7 @@ class ScanItem < ActiveRecord::Base
     si = ScanItemSet.find_by_name(set_name)
     if si
       y = si.attributes
-      y["definition"]=[]
+      y["definition"] = []
       si.members.each do |m|
         y["definition"] << m.attributes
       end

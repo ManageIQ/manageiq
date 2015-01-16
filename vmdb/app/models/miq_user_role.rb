@@ -157,7 +157,7 @@ class MiqUserRole < ActiveRecord::Base
     array.each do |hash|
       feature_ids = hash.delete(:miq_product_feature_identifiers)
 
-      hash[:miq_product_features] = MiqProductFeature.find_all_by_identifier(feature_ids)
+      hash[:miq_product_features] = MiqProductFeature.where(:identifier => feature_ids).to_a
       role = self.find_by_name(hash[:name]) || self.new(hash)
       new_role = role.new_record?
       unless role.settings.nil? # Makse sure existing settings are merged in with the new ones.

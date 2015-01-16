@@ -611,7 +611,7 @@ class MiqWidget < ActiveRecord::Base
     transaction do
       ws = Array.new  # Create an array of widget shortcuts
       shortcuts.each_with_index do |s, s_idx|
-        ws.push(MiqWidgetShortcut.new(:sequence=>s_idx, :description=>s.last, :miq_shortcut_id=>s.first))
+        ws.push(MiqWidgetShortcut.new(:sequence => s_idx, :description => s.last, :miq_shortcut_id => s.first))
       end
       self.miq_widget_shortcuts = ws
       self.save       # .save! raises exception if validate_uniqueness fails

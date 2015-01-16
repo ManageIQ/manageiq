@@ -30,7 +30,8 @@ class VimPerformanceTrend < ActsAsArModel
       "VmOrTemplate",
       "%" + [options[:group_by_category], options[:group_by_tag]].join("/") + "%"
     ]
-    return self.build(model.all(:conditions => cond), options[:interval_name]), interval
+    rows = model.where(cond).to_a
+    return self.build(rows, options[:interval_name]), interval
   end
 
   def self.build(perfs, options)

@@ -81,7 +81,7 @@ class VmScan < Job
             self.options[:snapshot] = :created
             self.options[:use_existing_snapshot] = true
           else
-            signal(:abort, "No #{ui_lookup(:table=>"ext_management_systems")} available to create snapshot, skipping", "error")
+            signal(:abort, "No #{ui_lookup(:table => "ext_management_systems")} available to create snapshot, skipping", "error")
             return
           end
         end
@@ -107,7 +107,7 @@ class VmScan < Job
     $log.info "action-wait_for_vim_broker: Enter"
     i = 0
     loop do
-      set_status("Waiting for VimBroker to become available (#{i+=1})")
+      set_status("Waiting for VimBroker to become available (#{i += 1})")
       sleep(60)
       $log.info "Checking VimBroker connection status.  Count=[#{i}]"
       break if MiqVimBrokerWorker.available?
@@ -213,8 +213,8 @@ class VmScan < Job
           set_status("Snapshot deleted: reference: [#{mor}]")
         end
       else
-        $log.error("MIQ(scan-action-call_snapshot_delete) Deleting snapshot: reference: [#{mor}], No #{ui_lookup(:table=>"ext_management_systems")} available to delete snapshot")
-        set_status("No #{ui_lookup(:table=>"ext_management_systems")} available to delete snapshot, skipping", "error", 1)
+        $log.error("MIQ(scan-action-call_snapshot_delete) Deleting snapshot: reference: [#{mor}], No #{ui_lookup(:table => "ext_management_systems")} available to delete snapshot")
+        set_status("No #{ui_lookup(:table => "ext_management_systems")} available to delete snapshot, skipping", "error", 1)
       end
     else
       set_status("Snapshot was not taken, delete not required") if self.options[:snapshot] == :skipped
@@ -346,7 +346,7 @@ class VmScan < Job
             vm.ext_management_system.vm_remove_snapshot(vm, :snMor => mor, :user_event => user_event)
           end
         else
-          raise "No #{ui_lookup(:table=>"ext_management_systems")} available to delete snapshot"
+          raise "No #{ui_lookup(:table => "ext_management_systems")} available to delete snapshot"
         end
       rescue => err
         $log.error("scan-delete_snapshot: #{err.message}")

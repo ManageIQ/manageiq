@@ -271,12 +271,12 @@ class EmsCluster < ActiveRecord::Base
   def ems_events
     ewc = self.event_where_clause
     return [] if ewc.blank?
-    EmsEvent.find(:all, :conditions => ewc, :order => "timestamp")
+    EmsEvent.where(ewc).order("timestamp").to_a
   end
 
   def scan
     zone = self.ext_management_system ? self.ext_management_system.my_zone : nil
-    MiqQueue.put(:class_name=>self.class.to_s, :method_name=>"save_drift_state", :instance_id=>self.id, :zone => zone, :role => "smartstate")
+    MiqQueue.put(:class_name => self.class.to_s, :method_name => "save_drift_state", :instance_id => self.id, :zone => zone, :role => "smartstate")
   end
 
   def get_reserve(field)

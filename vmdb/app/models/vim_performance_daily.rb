@@ -59,8 +59,24 @@ class VimPerformanceDaily < MetricRollup
     #
 
     klass = ext_options[:class] || MetricRollup
-    options[:conditions] = klass.merge_conditions(options[:conditions], {:time_profile_id => tp_ids, :capture_interval_name => 'daily'})
-    klass.find(cnt, options)
+    wheres = klass.merge_conditions(options[:conditions], {:time_profile_id => tp_ids, :capture_interval_name => 'daily'})
+
+    # FIXME we should push these up to the callers
+    options.delete :conditions
+    select = options.delete :select
+    order = options.delete :order
+    raise "Unsupported options #{options.keys}" unless options.empty?
+
+    case cnt
+    when :all
+      scope = klass
+      scope = scope.select(select) if select
+      scope = scope.order(order) if order
+      scope = scope.where(wheres) if wheres
+      scope.to_a
+    else
+      raise "Unsupported finder value #{cnt}"
+    end
   end
 
   def self.find_adhoc(*args)
@@ -73,8 +89,8 @@ class VimPerformanceDaily < MetricRollup
 
     klass = ext_options[:class] || MetricRollup
 
-    start_time =   klass.hourly.first(options.merge(:order => "timestamp ASC"))
-    end_time   =   klass.hourly.first(options.merge(:order => "timestamp DESC"))
+    start_time =   klass.hourly.where(options).order("timestamp ASC").first
+    end_time   =   klass.hourly.where(options).order("timestamp DESC").first
     return cnt == :first ? nil : [] if start_time.nil? || end_time.nil?
 
     tz = Metric::Helper.get_time_zone(ext_options)

@@ -29,7 +29,7 @@ class Condition < ActiveRecord::Base
   end
 
   def self.conditions
-    find(:all).collect {|c| c.expression}
+    pluck(:expression)
   end
 
   def self.evaluate(cond, rec, inputs={}, attr=:expression)
@@ -209,7 +209,7 @@ class Condition < ActiveRecord::Base
       opts, ref, object = self.options2hash(raw_opts, obj)
       value = MiqExpression.quote(obj.send(checkattr), opts[:type])
       value = value.gsub(/\\/, '\&\&') if value.kind_of?(String)
-      e =check.gsub(/<value[^>]*>.+<\/value>/im, value.to_s)
+      e = check.gsub(/<value[^>]*>.+<\/value>/im, value.to_s)
       MiqPolicy.logger.debug("MIQ(condition-_subst_find): Check Expression after substitution: [#{e}]")
 
       result = self.do_eval(e)
@@ -247,9 +247,7 @@ class Condition < ActiveRecord::Base
     # <registry>HKLM\Software\Microsoft\Windows\CurrentVersion\explorer\Shell Folders : Common AppData</registry> == 'C:\Documents and Settings\All Users\Application Data'
     return nil unless ref.respond_to?("registry_items")
     if ohash[:key_exists]
-      clause = ActiveRecord::Base.connection.adapter_name == "PostgreSQL" ? "name LIKE ? ESCAPE ''" : "name LIKE ?"
-      rec = ref.registry_items.find(:first, :conditions => [clause, name + "%"])
-      return rec ? true : false
+      return ref.registry_items.where("name LIKE ? ESCAPE ''", name + "%").exists?
     elsif ohash[:value_exists]
       rec = ref.registry_items.find_by_name(name)
       return rec ? true : false

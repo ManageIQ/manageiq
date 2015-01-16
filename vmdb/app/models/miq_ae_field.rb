@@ -46,7 +46,7 @@ class MiqAeField < ActiveRecord::Base
   end
 
   def self.find_by_name(name)
-    self.find(:first, :conditions => ["lower(name) = ?", name.downcase])
+    self.where("lower(name) = ?", name.downcase).first
   end
 
   def default_value=(value)

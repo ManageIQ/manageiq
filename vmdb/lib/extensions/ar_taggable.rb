@@ -106,7 +106,7 @@ module ActsAsTaggable
 
       # Apply new tags
       Tag.parse(list).each do |name|
-        tag = Tag.find_or_create_by_name(File.join(ns, name))
+        tag = Tag.where(:name => File.join(ns, name)).first_or_create
         tag.taggings.create(:taggable => self)
       end
     end
@@ -120,7 +120,7 @@ module ActsAsTaggable
       Tag.parse(list).each do |name|
         next if self.is_tagged_with?(name, options)
         name = File.join(ns, name)
-        tag = Tag.find_or_create_by_name(name)
+        tag = Tag.where(:name => name).first_or_create
         tag.taggings.create(:taggable => self)
       end
     end

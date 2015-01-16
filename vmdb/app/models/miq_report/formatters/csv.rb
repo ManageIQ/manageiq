@@ -4,7 +4,7 @@ module MiqReport::Formatters::Csv
     csv_table = @sub_table ? @sub_table.dup : @table.dup  # Duplicate table/sub_table since we will be deleting the ID column
     csv_table.column_names.delete("id")
     rpt_options ||= Hash.new
-    csv_table = csv_table.sub_table(0..rpt_options[:row_limit]-1) unless rpt_options[:row_limit].blank? # Get only row_limit rows
+    csv_table = csv_table.sub_table(0..rpt_options[:row_limit] - 1) unless rpt_options[:row_limit].blank? # Get only row_limit rows
     csv_table.data.each do |key|
       key.data.each do |k|
         if k[0] == "v_date"

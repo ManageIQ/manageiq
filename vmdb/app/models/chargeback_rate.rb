@@ -26,7 +26,7 @@ class ChargebackRate < ActiveRecord::Base
     #Returns[{:cb_rate=>obj, :tag=>[Classification.entry_object, klass]} || :object=>object},...]
     self.validate_rate_type(type)
     result = []
-    ChargebackRate.find(:all, :conditions=>{:rate_type => type.to_s.capitalize}).each do |rate|
+    ChargebackRate.find(:all, :conditions => {:rate_type => type.to_s.capitalize}).each do |rate|
       assigned_tos = rate.get_assigned_tos
       assigned_tos[:tags].each    {|tag|    result << {:cb_rate => rate, :tag => tag}}
       assigned_tos[:objects].each {|object| result << {:cb_rate => rate, :object => object}}
@@ -38,7 +38,7 @@ class ChargebackRate < ActiveRecord::Base
     #cb_rates = [{:cb_rate=>obj, :tag=>[Classification.entry_object, klass]} || :object=>object},...]
     #cb_rates.each {|rate| rate[:cb_rate].remove_all_assigned_tos}
     self.validate_rate_type(type)
-    ChargebackRate.find(:all, :conditions=>{:rate_type => type.to_s.capitalize}).each do |rate|
+    ChargebackRate.find(:all, :conditions => {:rate_type => type.to_s.capitalize}).each do |rate|
       rate.remove_all_assigned_tos
     end
 

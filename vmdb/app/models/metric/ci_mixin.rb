@@ -187,7 +187,7 @@ module Metric::CiMixin
     cap_int = (interval_name == "realtime" ? (60 / Metric::Capture::Vim::REALTIME_METRICS_PER_MINUTE) : 3600) unless cap_int.kind_of?(Integer)
 
     # If not using a percent recs_in_window will equal recs_to_match. Otherwise recs_to_match is the percentage of recs_in_window
-    recs_in_window = duration/cap_int
+    recs_in_window = duration / cap_int
     recs_to_match  = percentage.nil? ? recs_in_window : (recs_in_window * (percentage / 100.0)).to_i
 
     $log.info("#{log_header} Need at least #{recs_to_match} matches out of #{recs_in_window} consecutive records for the duration #{duration}")
@@ -195,16 +195,16 @@ module Metric::CiMixin
     matches_in_window = 0
     total_records.each_with_index do |rec, i|
       # Slide the window and subtract the oldest match_history value from the matches_in_window once we have looked at recs_in_window records.
-      matches_in_window = matches_in_window - match_history[i-recs_in_window] if i > (recs_in_window - 1) && match_history[i-recs_in_window]
+      matches_in_window = matches_in_window - match_history[i - recs_in_window] if i > (recs_in_window - 1) && match_history[i - recs_in_window]
       colvalue = rec.send(column)
       res = colvalue.nil? ? nil : colvalue.send(operator, value)
       match_history[i] = res ? 1 : 0
       if res
         matches_in_window += match_history[i]
-        $log.info("#{log_header} Matched?: true,  Index: #{i}, Window start index: #{i-recs_in_window}, matches_in_window: #{matches_in_window}, ts: #{rec.timestamp}, #{column}: #{rec.send(column)}") if debug_trace
+        $log.info("#{log_header} Matched?: true,  Index: #{i}, Window start index: #{i - recs_in_window}, matches_in_window: #{matches_in_window}, ts: #{rec.timestamp}, #{column}: #{rec.send(column)}") if debug_trace
         return true if matches_in_window >= recs_to_match
       else
-        $log.info("#{log_header} Matched?: false, Index: #{i}, Window start index: #{i-recs_in_window}, matches_in_window: #{matches_in_window}, ts: #{rec.timestamp}, #{column}: #{rec.send(column)}") if debug_trace
+        $log.info("#{log_header} Matched?: false, Index: #{i}, Window start index: #{i - recs_in_window}, matches_in_window: #{matches_in_window}, ts: #{rec.timestamp}, #{column}: #{rec.send(column)}") if debug_trace
       end
     end
     false

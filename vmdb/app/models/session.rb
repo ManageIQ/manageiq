@@ -12,7 +12,7 @@ class Session < ActiveRecord::Base
   end
 
   def self.purge(ttl)
-    ses = self.find(:all, :conditions => ["updated_at <= ?", ttl.seconds.ago.utc])
+    ses = self.where("updated_at <= ?", ttl.seconds.ago.utc)
     ses.each{|s|
       begin
         userid = Marshal.load(Base64.decode64(s.data.split("\n").join))[:userid]

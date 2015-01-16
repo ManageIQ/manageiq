@@ -73,8 +73,8 @@ module EmsRefresh::SaveInventoryInfra
     locs, names = hashes.partition { |h| h[:location] }
     locs.collect!  { |h| h[:location] }
     names.collect! { |h| h[:name] }
-    locs  = Storage.all(:conditions => ["location IN (?)", locs]) unless locs.empty?
-    names = Storage.all(:conditions => ["location IS NULL AND name IN (?)", names]) unless names.empty?
+    locs  = Storage.where("location IN (?)", locs) unless locs.empty?
+    names = Storage.where("location IS NULL AND name IN (?)", names) unless names.empty?
 
     hashes.each do |h|
       found = if h[:location]
@@ -173,7 +173,7 @@ module EmsRefresh::SaveInventoryInfra
           found.save!
         rescue ActiveRecord::RecordInvalid
           raise if found.errors[:name].blank?
-          old_name = Host.first(:conditions => ["name LIKE ?", "#{found.name.sub(/ - \d+$/, "")}%"], :order => "name DESC").name
+          old_name = Host.where("name LIKE ?", "#{found.name.sub(/ - \d+$/, "")}%").order("name DESC").first.name
           found.name = old_name =~ / - \d+$/ ? old_name.succ : "#{old_name} - 2"
           retry
         end

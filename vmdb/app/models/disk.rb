@@ -18,15 +18,15 @@ class Disk < ActiveRecord::Base
   virtual_has_many  :storage_systems,      :class_name => "CimComputerSystem"
 
   def self.find_hard_disks
-    self.find(:all, :conditions => "device_type != 'floppy' AND device_type NOT LIKE '%cdrom%'")
+    where("device_type != 'floppy' AND device_type NOT LIKE '%cdrom%'").to_a
   end
 
   def self.find_floppies
-    self.find(:all, :conditions => "device_type = 'floppy'")
+    where("device_type = 'floppy'").to_a
   end
 
   def self.find_cdroms
-    self.find(:all, :conditions => "device_type LIKE '%cdrom%'")
+    where("device_type LIKE '%cdrom%'").to_a
   end
 
   def allocated_space

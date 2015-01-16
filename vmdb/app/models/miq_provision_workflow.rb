@@ -172,7 +172,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
       update_field_visibility()
 
       @last_vm_id = get_value(@values[:src_vm_id])
-      $log.info "#{log_header} provision refresh completed in [#{Time.now-st}] seconds"
+      $log.info "#{log_header} provision refresh completed in [#{Time.now - st}] seconds"
     rescue => err
       $log.error "#{log_header} [#{err}]"
       $log.error err.backtrace.join("\n")
@@ -203,7 +203,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
       vlan = nil
       show_dialog(:customize, :show, "disabled")
     else
-      raise "Source VM [#{vm.name}] does not belong to a #{ui_lookup(:table=>"ext_management_systems")}" if vm.ext_management_system.nil?
+      raise "Source VM [#{vm.name}] does not belong to a #{ui_lookup(:table => "ext_management_systems")}" if vm.ext_management_system.nil?
       set_or_default_hardware_field_values(vm)
 
       # Record the nic/lan setting on the template for validation checks at provision time.
@@ -567,7 +567,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
         return switches
       ensure
         vim.disconnect if vim rescue nil
-        $log.info "MIQ(#{self.class.name}.allowed_dvs) Network DVS collection completed in [#{Time.now-st}] seconds"
+        $log.info "MIQ(#{self.class.name}.allowed_dvs) Network DVS collection completed in [#{Time.now - st}] seconds"
       end
     end
 
@@ -594,7 +594,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
       raise "Unable to find Host with Id: [#{src[:host_id]}]" if src[:host].nil?
       hosts = [load_ar_obj(src[:host])]
     else
-      raise "Source VM [#{src[:vm].name}] does not belong to a #{ui_lookup(:table=>"ext_management_systems")}" if src[:ems].nil?
+      raise "Source VM [#{src[:vm].name}] does not belong to a #{ui_lookup(:table => "ext_management_systems")}" if src[:ems].nil?
       hosts = load_ar_obj(src[:ems]).hosts
     end
 
@@ -697,7 +697,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
 
       unless tag_conditions.blank?
         $log.info "#{log_header} Filtering VM templates with the following tag_filters: <#{tag_conditions.inspect}>"
-        vms = MiqTemplate.find_tags_by_grouping(tag_conditions, :ns =>"/managed", :conditions => condition)
+        vms = MiqTemplate.find_tags_by_grouping(tag_conditions, :ns => "/managed", :conditions => condition)
         if vms.blank?
           $log.warn "#{log_header} tag_filters returned an empty VM template list.  Tag Filters used: <#{tag_conditions.inspect}>"
           run_search = false
@@ -775,9 +775,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
   end
 
   def allowed_datastore_storage_controller(options={})
-    result = {}
-    NetAppFiler.find(:all).each {|f| result[f.name] = f.name}
-    return result
+    NetAppFiler.pluck(:name).index_by { |n| n }
   end
 
   def allowed_datastore_aggregate(options={})
@@ -795,7 +793,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
   end
 
   def get_source_and_targets(refresh=false)
-    return @target_resource if @target_resource && refresh==false
+    return @target_resource if @target_resource && refresh == false
 
     vm_id = get_value(@values[:src_vm_id])
     if vm_id.to_i.zero?
@@ -809,7 +807,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
       raise MiqException::MiqVmError, "VM/Template <#{svm.name}> with Id: <#{vm_id}> is archived and cannot be used with provisioning." if svm.archived?
       raise MiqException::MiqVmError, "VM/Template <#{svm.name}> with Id: <#{vm_id}> is orphaned and cannot be used with provisioning." if svm.orphaned?
     end
-    return @target_resource={} if svm.nil?
+    return @target_resource = {} if svm.nil?
 
     @vm_snapshot_count = svm.v_total_snapshots
     result = {}
@@ -886,12 +884,12 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
   end
 
   def allowed_number_of_vms(options={})
-    options = {:min=>1, :max=>50}.merge(options)
+    options = {:min => 1, :max => 50}.merge(options)
     min, max = options[:min].to_i, options[:max].to_i
     min = 1 if min < 1
     max = min if max < 1
     h = {}
-    min.upto(max) {|i| h[i]=i.to_s; h}
+    min.upto(max) {|i| h[i] = i.to_s; h}
     h
   end
 
@@ -899,7 +897,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
     return @ldap_ous unless @ldap_ous.nil?
     ous = YAML.load_file("ous.yaml")
     @ldap_ous = {}
-    ous.each {|ou| @ldap_ous[ou[0].dup]= ou[1].dup}
+    ous.each {|ou| @ldap_ous[ou[0].dup] = ou[1].dup}
     return @ldap_ous
   end
 
@@ -936,7 +934,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
         ous = l.get_organizationalunits
         $log.info("#{log_header} LDAP OUs returned: #{ous.inspect}")
         if ous.kind_of?(Array)
-          ous.each {|ou| @ldap_ous[ou[0].dup]= ou[1].dup}
+          ous.each {|ou| @ldap_ous[ou[0].dup] = ou[1].dup}
           #@ldap_ous.each {|ou| build_ou_path_name(ou)}
         end
       else
@@ -1260,7 +1258,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
     unless placement_cluster_name.blank?
       data[:placement_cluster_name] = placement_cluster_name.to_s.downcase
       $log.info "#{log_header} placement_cluster_name:<#{data[:placement_cluster_name].inspect}>"
-      data[:data_centers] = EmsCluster.find(:all, :conditions => ["lower(name) = ?", data[:placement_cluster_name]]).collect {|c| c.v_parent_datacenter}
+      data[:data_centers] = EmsCluster.where("lower(name) = ?", data[:placement_cluster_name]).collect { |c| c.v_parent_datacenter }
     end
     $log.info "#{log_header} data:<#{data.inspect}>"
 
@@ -1305,7 +1303,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
     end
 
     conditions = [conditions.join(" AND "), *args]
-    vms = VmOrTemplate.find(:all, :conditions => conditions)
+    vms = VmOrTemplate.where(conditions)
     vms = source_vm_rbac_filter(vms) unless vms.blank?
     return vms.first
   end

@@ -75,12 +75,15 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
   end
 
   def allowed_ws_hosts(options={})
-    Host.find(:all, :conditions=>["mac_address is not NULL"]).find_all {|h| h.ipmi_enabled}
+    Host.where("mac_address is not NULL").select { |h| h.ipmi_enabled }
   end
 
   def allowed_ems(options={})
     result = {}
-    ExtManagementSystem.find(:all).each { |e| result[e.id] = e.name if e.kind_of?(EmsVmware) }
+
+    EmsVmware.select("id, name").each do |e|
+      result[e.id] = e.name
+    end
     return result
   end
 
@@ -105,7 +108,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
 
   # This is for summary screen display purposes only
   def update_selected_storage_names(values)
-    values[:attached_ds_names] = Storage.find_all_by_id(values[:attached_ds], :select=>"name").collect {|h| h.name}
+    values[:attached_ds_names] = Storage.find_all_by_id(values[:attached_ds], :select => "name").collect {|h| h.name}
   end
 
   def ws_template_fields(values, fields)

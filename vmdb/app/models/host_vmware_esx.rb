@@ -84,7 +84,7 @@ class HostVmwareEsx < HostVmware
   end
 
   def vim_firewall_rules
-    data = {'config'=> {}}
+    data = {'config' => {}}
     with_provider_object do |vim_host|
       fws = vim_host.firewallSystem
       return [] if fws.nil?
@@ -95,7 +95,7 @@ class HostVmwareEsx < HostVmware
   end
 
   def vim_advanced_settings
-    data = {'config'=> {}}
+    data = {'config' => {}}
     with_provider_object do |vim_host|
       aom = vim_host.advancedOptionManager
       return nil if aom.nil?

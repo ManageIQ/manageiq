@@ -62,7 +62,7 @@ module MiqFilter
       mfilters ||= []
       bfilters ||= []
       result = unfiltered.collect do |r|
-        next unless r.is_tagged_with_grouping?(mfilters, :ns=>"*")
+        next unless r.is_tagged_with_grouping?(mfilters, :ns => "*")
         next unless self.apply_belongsto_filters([r], bfilters) == [r]
         r
       end.compact
@@ -83,7 +83,7 @@ module MiqFilter
     # Need to honor limit and offset
     if options[:limit]
       options[:offset] ||= 0
-      result = result[options[:offset]..options[:offset]+options[:limit]-1]
+      result = result[options[:offset]..options[:offset] + options[:limit] - 1]
     end
 
     return result, total_count
@@ -147,7 +147,7 @@ module MiqFilter
 
   def self.object2belongsto(obj)
     #/belongsto/ExtManagementSystem|<name>/EmsCluster|<name>/EmsFolder|<name>
-    raise "Folder Root is not a #{ui_lookup(:table=>"ext_management_systems")}" unless obj.root_id[0] == "ExtManagementSystem"
+    raise "Folder Root is not a #{ui_lookup(:table => "ext_management_systems")}" unless obj.root_id[0] == "ExtManagementSystem"
 
     tag = obj.ancestry(
       :field_delimiter  => '|',

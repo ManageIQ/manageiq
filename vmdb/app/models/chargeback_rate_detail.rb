@@ -28,7 +28,7 @@ class ChargebackRateDetail < ActiveRecord::Base
 
   def rate_adjustment(hr)
     case self.per_unit
-    when "gigabytes" then hr/1.gigabyte   # adjust to bytes / per hour
+    when "gigabytes" then hr / 1.gigabyte   # adjust to bytes / per hour
     else hr
     end
   end

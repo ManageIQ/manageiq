@@ -71,7 +71,7 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_email(email)
-    self.in_region.find(:first, :conditions => {:email  => email})
+    self.in_region.where(:email => email).first
   end
 
   virtual_column :ldap_group, :type => :string, :uses => :current_group
@@ -338,7 +338,7 @@ class User < ActiveRecord::Base
       auth = VMDB::Config.new("vmdb").config[:authentication]
       # Amazon IAM will be used for authentication and role assignment
       $log.info("#{log_prefix} AWS key: [#{auth[:amazon_key]}]")
-      amazon_auth = AmazonAuth.new(:auth=>auth)
+      amazon_auth = AmazonAuth.new(:auth => auth)
       $log.info("#{log_prefix}  User: [#{username}]")
       amazon_user = amazon_auth.iam_user(username)
       $log.debug("#{log_prefix} User obj from Amazon: #{amazon_user.inspect}")
@@ -358,7 +358,7 @@ class User < ActiveRecord::Base
     rescue Exception => err
       $log.log_backtrace(err)
       task.error(err.message)
-      AuditEvent.failure(audit.merge(:message=> err.message))
+      AuditEvent.failure(audit.merge(:message => err.message))
       task.state_finished
       raise
     end
@@ -467,7 +467,7 @@ class User < ActiveRecord::Base
     rescue Exception => err
       $log.log_backtrace(err)
       task.error(err.message)
-      AuditEvent.failure(audit.merge(:message=> err.message))
+      AuditEvent.failure(audit.merge(:message => err.message))
       task.state_finished
       raise
     end
@@ -860,7 +860,7 @@ class User < ActiveRecord::Base
 
     miq_groups  = MiqServer.my_server.miq_groups
     miq_groups  = MiqServer.my_server.zone.miq_groups if miq_groups.empty?
-    miq_groups  = MiqGroup.find(:all, :conditions => {:resource_id => nil, :resource_type => nil}) if miq_groups.empty?
+    miq_groups  = MiqGroup.where(:resource_id => nil, :resource_type => nil) if miq_groups.empty?
     miq_groups.sort!  { |a, b| a.sequence <=> b.sequence }
     groups.each       { |g| $log.debug("#{log_prefix} External Group: #{g}") }
     miq_groups.each   { |g| $log.debug("#{log_prefix} Internal Group: #{g.description.downcase}") }

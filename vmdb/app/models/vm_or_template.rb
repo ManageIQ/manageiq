@@ -286,7 +286,7 @@ class VmOrTemplate < ActiveRecord::Base
     begin
       # Notify the host to do initialize the VM
       if myhost
-        ost = OpenStruct.new("vmId"=>self.guid, "args"=>[self.path], "method_name"=>"RegisterId", "params"=>{"registeredOnHost"=>!self.host.nil?})     #, "makeSmart"=>myhost.policy_settings[:autosmart]})
+        ost = OpenStruct.new("vmId" => self.guid, "args" => [self.path], "method_name" => "RegisterId", "params" => {"registeredOnHost" => !self.host.nil?})     #, "makeSmart"=>myhost.policy_settings[:autosmart]})
         myhost.call_ws(ost)
       end
     rescue Exception => err
@@ -344,7 +344,7 @@ class VmOrTemplate < ActiveRecord::Base
       host ||= myhost
       # If the options hash has an "args" element, remove it and add it to the "args" element with self.path
       miqhost_args = Array(options.delete("args"))
-      options = {"args"=>[self.path] + miqhost_args, "method_name"=>verb, "vm_guid"=>self.guid}.merge(options)
+      options = {"args" => [self.path] + miqhost_args, "method_name" => verb, "vm_guid" => self.guid}.merge(options)
       ost = OpenStruct.new(options)
       ret = host.call_ws(ost) if host
     end
@@ -375,8 +375,8 @@ class VmOrTemplate < ActiveRecord::Base
     raise "No ids given to process_tasks" if options[:ids].blank?
     if options[:task] == "refresh_ems"
       self.refresh_ems(options[:ids])
-      AuditEvent.success(:event=>options[:task], :target_class=>self.base_class.name, :userid => options[:userid],
-        :message=>"'#{options[:task]}' successfully initiated for #{ApplicationController.new.pluralize(options[:ids].length,"VM")}")
+      AuditEvent.success(:event => options[:task], :target_class => self.base_class.name, :userid => options[:userid],
+        :message => "'#{options[:task]}' successfully initiated for #{ApplicationController.new.pluralize(options[:ids].length,"VM")}")
     else
       raise "Unknown task, #{options[:task]}" unless self.instance_methods.collect { |m| m.to_s }.include?(options[:task])
       options[:userid] ||= "system"
@@ -425,13 +425,13 @@ class VmOrTemplate < ActiveRecord::Base
 
     vms, tasks = self.validate_tasks(options)
 
-    audit = {:event=>options[:task], :target_class=>self.base_class.name, :userid => options[:userid]}
+    audit = {:event => options[:task], :target_class => self.base_class.name, :userid => options[:userid]}
 
     vms.each_with_index do |vm, idx|
       task = MiqTask.find_by_id(tasks[idx])
 
       if task && task.status == "Error"
-        AuditEvent.failure(audit.merge(:target_id=>vm.id, :message=> task.message))
+        AuditEvent.failure(audit.merge(:target_id => vm.id, :message => task.message))
         task.state_finished
         next
       end
@@ -458,7 +458,7 @@ class VmOrTemplate < ActiveRecord::Base
         :role         => role,
         :expires_on   => POWER_OPS.include?(options[:task]) ? powerops_expiration : nil
       )
-      AuditEvent.success(audit.merge(:target_id=>vm.id, :message=>"#{vm.name}: '#{options[:task]}' successfully initiated"))
+      AuditEvent.success(audit.merge(:target_id => vm.id, :message => "#{vm.name}: '#{options[:task]}' successfully initiated"))
       task.update_status("Queued", "Ok", "Task has been queued") if task
     end
   end
@@ -508,7 +508,7 @@ class VmOrTemplate < ActiveRecord::Base
   def self.validate_tasks(options)
     tasks = []
 
-    vms = self.base_class.find_all_by_id(options[:ids], :order => "lower(name)")
+    vms = base_class.where(:id => options[:ids]).order("lower(name)").to_a
     return vms, tasks unless options[:invoke_by] == :task # jobs will be used instead of tasks for feedback
 
     vms.each do |vm|
@@ -527,7 +527,7 @@ class VmOrTemplate < ActiveRecord::Base
 
       # VM has no host or storage affiliation
       if vm.storage.nil?
-        task.error("#{vm.name}: There is no owning Host or #{ui_lookup(:table=>"storages")} for this VM, '" + options[:task] + "' is not allowed")
+        task.error("#{vm.name}: There is no owning Host or #{ui_lookup(:table => "storages")} for this VM, '" + options[:task] + "' is not allowed")
         next
       end
 
@@ -777,7 +777,7 @@ class VmOrTemplate < ActiveRecord::Base
 
   def connect_storage(s)
     unless self.storage == s
-      $log.debug "MIQ(Vm-connect_storage) Connecting Vm [#{self.name}] id [#{self.id}] to #{ui_lookup(:table=>"storages")} [#{s.name}] id [#{s.id}]"
+      $log.debug "MIQ(Vm-connect_storage) Connecting Vm [#{self.name}] id [#{self.id}] to #{ui_lookup(:table => "storages")} [#{s.name}] id [#{s.id}]"
       self.storage = s
       self.save
     end
@@ -786,7 +786,7 @@ class VmOrTemplate < ActiveRecord::Base
   def disconnect_storage(s=nil)
     if s.nil? || self.storage == s || self.storages.include?(s)
       stores = s.nil? ? ([self.storage] + self.storages).compact.uniq : [s]
-      log_text = stores.collect {|x| "#{ui_lookup(:table=>"storages")} [#{x.name}] id [#{x.id}]"}.join(", ")
+      log_text = stores.collect {|x| "#{ui_lookup(:table => "storages")} [#{x.name}] id [#{x.id}]"}.join(", ")
       $log.info "MIQ(Vm-disconnect_storage) Disconnecting Vm [#{self.name}] id [#{self.id}] from #{log_text}"
 
       if s.nil?
@@ -885,7 +885,7 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def reconnect_events
-    events = EmsEvent.find(:all, :conditions => ["(vm_location = ? AND vm_or_template_id IS NULL) OR (dest_vm_location = ? AND dest_vm_or_template_id IS NULL)", self.path, self.path])
+    events = EmsEvent.where("(vm_location = ? AND vm_or_template_id IS NULL) OR (dest_vm_location = ? AND dest_vm_or_template_id IS NULL)", self.path, self.path)
     events.each do |e|
       do_save = false
 
@@ -1010,7 +1010,7 @@ class VmOrTemplate < ActiveRecord::Base
 
     self.log_proxies(proxies, all_proxy_list, msg, job) if proxies.empty? && job
 
-    return {:proxies=>proxies.flatten, :message=>msg}
+    return {:proxies => proxies.flatten, :message => msg}
   end
 
   def log_proxies(proxy_list=[], all_proxy_list = nil, message=nil, job=nil)
@@ -1028,7 +1028,7 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def log_proxies_vm_config
-    "[#{log_proxies_format_instance(self)}] on host [#{log_proxies_format_instance(self.host)}] #{ui_lookup(:table=>"storages").downcase} [#{self.storage.name}-#{self.storage.store_type}]"
+    "[#{log_proxies_format_instance(self)}] on host [#{log_proxies_format_instance(self.host)}] #{ui_lookup(:table => "storages").downcase} [#{self.storage.name}-#{self.storage.store_type}]"
   end
 
   def log_proxies_format_instance(object)
@@ -1180,7 +1180,7 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def refresh_ems
-    raise "no #{ui_lookup(:table=>"ext_management_systems")} or credentials defined" unless self.ext_management_system && self.ext_management_system.authentication_valid?
+    raise "no #{ui_lookup(:table => "ext_management_systems")} or credentials defined" unless self.ext_management_system && self.ext_management_system.authentication_valid?
     EmsRefresh.queue_refresh(self)
   end
 
@@ -1191,12 +1191,12 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def refresh_ems_sync
-    raise "no #{ui_lookup(:table=>"ext_management_systems")} or credentials defined" unless self.ext_management_system && self.ext_management_system.authentication_valid?
+    raise "no #{ui_lookup(:table => "ext_management_systems")} or credentials defined" unless self.ext_management_system && self.ext_management_system.authentication_valid?
     EmsRefresh.refresh(self)
   end
 
   def refresh_on_reconfig
-    raise "no #{ui_lookup(:table=>"ext_management_systems")} or credentials defined" unless self.ext_management_system && self.ext_management_system.authentication_valid?
+    raise "no #{ui_lookup(:table => "ext_management_systems")} or credentials defined" unless self.ext_management_system && self.ext_management_system.authentication_valid?
     EmsRefresh.reconfig_refresh(self)
   end
 
@@ -1205,7 +1205,7 @@ class VmOrTemplate < ActiveRecord::Base
     ems = ExtManagementSystem.find(ems_id)
 
     # Collect the newly added VMs
-    added_vms = ems.vms_and_templates.all(:conditions=> ["created_on >= ?", update_start_time])
+    added_vms = ems.vms_and_templates.where("created_on >= ?", update_start_time)
 
     # Create queue items to do additional process like apply tags and link events
     unless added_vms.empty?
@@ -1266,7 +1266,7 @@ class VmOrTemplate < ActiveRecord::Base
     #TODO: Vmware specific
     return unless ems && ems.kind_of?(EmsVmware)
 
-    vms_list = vms_to_update.collect { |v| {:id=>v.id, :name=> v.name, :uid_ems=>v.uid_ems} }
+    vms_list = vms_to_update.collect { |v| {:id => v.id, :name => v.name, :uid_ems => v.uid_ems} }
     found = ems.find_vm_create_events(vms_list)
 
     # Loop through the found VM's and set their create times
@@ -1525,7 +1525,7 @@ class VmOrTemplate < ActiveRecord::Base
   def v_pct_used_disk_space
     percent_free = self.v_pct_free_disk_space
     return nil unless percent_free
-    return 100-percent_free
+    return 100 - percent_free
   end
 
   def v_datastore_path
@@ -1828,7 +1828,7 @@ class VmOrTemplate < ActiveRecord::Base
   # Called from integrate ws to kick off scan for vdi VMs
   def self.vms_by_ipaddress(ipaddress)
     ipaddresses = ipaddress.split(',')
-    Network.find(:all, :conditions => ["ipaddress in (?)", ipaddresses]).each do |network|
+    Network.where("ipaddress in (?)", ipaddresses).each do |network|
       begin
         vm = network.hardware.vm
         yield(vm)
@@ -1901,13 +1901,13 @@ class VmOrTemplate < ActiveRecord::Base
   # Return all archived VMs
   ARCHIVED_CONDITIONS = "ems_id IS NULL AND storage_id IS NULL"
   def self.all_archived
-    self.find(:all, :conditions=>ARCHIVED_CONDITIONS)
+    self.where(ARCHIVED_CONDITIONS).to_a
   end
 
   # Return all orphaned VMs
   ORPHANED_CONDITIONS = "ems_id IS NULL AND storage_id IS NOT NULL"
   def self.all_orphaned
-    self.find(:all, :conditions=>ORPHANED_CONDITIONS)
+    self.where(ORPHANED_CONDITIONS).to_a
   end
 
   # Stop certain charts from showing unless the subclass allows

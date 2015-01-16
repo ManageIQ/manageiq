@@ -58,7 +58,7 @@ class MiqRegion < ActiveRecord::Base
   end
 
   def self.my_region
-    self.find_by_region(self.my_region_number)
+    self.where(:region => self.my_region_number).first
   end
 
   def self.seed
@@ -122,7 +122,7 @@ class MiqRegion < ActiveRecord::Base
   end
 
   def remote_ui_miq_server
-    MiqServer.in_region(self.region).first(:conditions => {:has_active_userinterface => true})
+    MiqServer.in_region(self.region).where(:has_active_userinterface => true).first
   end
 
   def remote_ui_ipaddress
@@ -141,7 +141,7 @@ class MiqRegion < ActiveRecord::Base
   end
 
   def remote_ws_miq_server
-    MiqServer.in_region(self.region).first(:conditions => {:has_active_webservices => true})
+    MiqServer.in_region(self.region).where(:has_active_webservices => true).first
   end
 
   def remote_ws_address
@@ -194,7 +194,7 @@ class MiqRegion < ActiveRecord::Base
   end
 
   def self.log_not_under_management(prefix)
-    hosts_objs = Host.all(:conditions =>  {:ems_id => nil})
+    hosts_objs = Host.where(:ems_id => nil)
     hosts      = hosts_objs.count
     vms        = VmOrTemplate.count(:conditions =>  {:ems_id => nil})
     sockets    = self.my_region.aggregate_physical_cpus(hosts_objs)

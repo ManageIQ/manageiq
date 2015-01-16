@@ -23,7 +23,7 @@ module MiqReport::Search
     ids          = self.extras[:target_ids_for_paging]
     if limit.kind_of?(Numeric)
       offset ||= 0
-      ids      = ids[offset..offset+limit-1]
+      ids      = ids[offset..offset + limit - 1]
     end
     data         = self.db_class.find_all_by_id(ids, :include => includes)
     targets_hash = data.index_by { |obj| obj.id } if options[:targets_hash]

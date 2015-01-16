@@ -67,9 +67,8 @@ module MiqServer::RoleManagement
     roles = roles.first if roles.length == 1 && roles[0].kind_of?(Array)
     return if roles.empty?
 
-    roles = (roles.length == 1 && roles[0] == "*") ? self.server_roles : ServerRole.find_all_by_name(roles)
-    ids   = roles.collect { |r| r.id }
-    self.assigned_server_roles.find_all_by_server_role_id(ids).each do |a|
+    ids = roles == ["*"] ? self.server_roles.pluck(:id) : ServerRole.where(:name => roles).pluck(:id)
+    self.assigned_server_roles.where(:server_role_id => ids).each do |a|
       next if a.database_owner?
       next if a.active == active
       active ? a.activate : a.deactivate
@@ -78,7 +77,7 @@ module MiqServer::RoleManagement
 
   def set_database_owner_role(active)
     dbowner    = ServerRole.database_owner
-    assigned   = self.assigned_server_roles.find_by_server_role_id(dbowner.id)
+    assigned   = self.assigned_server_roles.where(:server_role_id => dbowner.id).first
     assigned ||= self.assigned_server_roles.create(:server_role => dbowner, :priority => AssignedServerRole::DEFAULT_PRIORITY, :active => active)
 
     active ? assigned.activate : assigned.deactivate
@@ -86,7 +85,7 @@ module MiqServer::RoleManagement
 
   def is_master_for_role?(server_role)
     server_role = ServerRole.to_role(server_role)
-    assigned    = self.assigned_server_roles.find_by_server_role_id(server_role.id)
+    assigned    = self.assigned_server_roles.where(:server_role_id => server_role.id).first
     returned false if assigned.nil?
     assigned.priority == 1
   end
@@ -95,7 +94,7 @@ module MiqServer::RoleManagement
     server_role = ServerRole.to_role(server_role)
     if server_role.master_supported?
       self.zone.miq_servers.delete_if { |s| s.id == self.id }.each do |server|
-        assigned = server.assigned_server_roles.find_by_server_role_id(server_role.id)
+        assigned = server.assigned_server_roles.where(:server_role_id =>  server_role.id).first
         next if assigned.nil?
         server.assign_role(server_role, 2)  if assigned.priority == 1
       end
@@ -127,7 +126,7 @@ module MiqServer::RoleManagement
     self.zone.lock do
       val = val.to_s.strip.downcase
       if val.blank?
-        self.server_roles.delete(ServerRole.find(:all))
+        self.server_roles.delete_all
       else
         desired = (val == "*" ? ServerRole.all_names : val.split(",").collect { |v| v.strip.downcase }.sort)
         current = self.server_role_names
@@ -137,10 +136,10 @@ module MiqServer::RoleManagement
         current -= ServerRole.database_scoped_role_names
 
         #TODO: Change this to use replace method under Rails 2.x
-        removes = ServerRole.find_all_by_name(current - desired)
+        removes = ServerRole.where(:name => (current - desired))
         self.server_roles.delete(removes) unless removes.empty?
 
-        adds    = ServerRole.find_all_by_name(desired - current)
+        adds    = ServerRole.where(:name => (desired - current))
         adds.each { |r|
           self.assign_role(r)
           self.deactivate_roles(r.name)

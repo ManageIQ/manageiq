@@ -25,7 +25,7 @@ class MiqWidget::ReportContent < MiqWidget::ContentGeneration
         report.build_html_rows.join
       else
         report.group = nil                      # Ignore groupings for widgets, unless hiding details
-        report.build_html_rows(true)[0..row_count-1].join # clickable_rows = true
+        report.build_html_rows(true)[0..row_count - 1].join # clickable_rows = true
       end
     end
 

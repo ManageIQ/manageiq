@@ -69,7 +69,7 @@ class Classification < ActiveRecord::Base
     cat = Classification.find_by_name(category_name, obj.region_id)
     unless cat.nil?
       ent = cat.find_entry_by_name(entry_name, obj.region_id)
-      ent.assign_entry_to(obj, is_request) unless ent.nil? || obj.is_tagged_with?(ent.to_tag, :ns=>"none")
+      ent.assign_entry_to(obj, is_request) unless ent.nil? || obj.is_tagged_with?(ent.to_tag, :ns => "none")
     end
   end
 
@@ -77,7 +77,7 @@ class Classification < ActiveRecord::Base
     cat = Classification.find_by_name(category_name, obj.region_id)
     unless cat.nil?
       ent = cat.find_entry_by_name(entry_name, obj.region_id)
-      ent.remove_entry_from(obj, is_request) unless ent.nil? || !obj.is_tagged_with?(ent.to_tag, :ns=>"none")
+      ent.remove_entry_from(obj, is_request) unless ent.nil? || !obj.is_tagged_with?(ent.to_tag, :ns => "none")
     end
   end
 
@@ -165,7 +165,7 @@ class Classification < ActiveRecord::Base
   end
 
   def self.get_tags_from_object(obj)
-    tags = obj.tag_list(:ns=>"/managed").split
+    tags = obj.tag_list(:ns => "/managed").split
     tags.delete_if {|t| t =~ /^\/folder_path_/}
   end
 
@@ -176,17 +176,20 @@ class Classification < ActiveRecord::Base
   def self.categories(region_id = self.my_region_number, ns = DEFAULT_NAMESPACE)
     result = []
     if region_id
-      cats = Classification.in_region(region_id).find(:all, :conditions => "classifications.parent_id = 0", :include => [:tag, :children])
+      cats = Classification.in_region(region_id).where("classifications.parent_id = 0").includes(:tag, :children)
     else
-      cats = Classification.find(:all, :conditions => "classifications.parent_id = 0", :include => [:tag, :children])
+      cats = Classification.where("classifications.parent_id = 0").includes(:tag, :children)
     end
     cats.each { |c| result.push(c) if c.tag2ns(c.tag.name) == ns }
     result
   end
 
   def self.category_names_for_perf_by_tag(region_id = self.my_region_number, ns = DEFAULT_NAMESPACE)
-    find_opts = {:conditions => {:parent_id => 0, :perf_by_tag => true}, :include => [:tag]}
-    self.in_region(region_id).all(find_opts).collect { |c| c.name if c.tag2ns(c.tag.name) == ns }.compact
+    self.in_region(region_id)
+      .where(:parent_id => 0, :perf_by_tag => true)
+      .includes(:tag)
+      .collect { |c| c.name if c.tag2ns(c.tag.name) == ns }
+      .compact
   end
 
   def self.find_assigned_entries(obj, ns=DEFAULT_NAMESPACE)
@@ -317,7 +320,7 @@ class Classification < ActiveRecord::Base
   def tag2ns(tag)
     unless tag.nil?
       ta = tag.split("/")
-      ta[0..(ta.length-2)].join("/")
+      ta[0..(ta.length - 2)].join("/")
 
       # tnew = []
       # tag.split("/").each {|level|

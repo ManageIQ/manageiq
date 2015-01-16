@@ -67,7 +67,7 @@ module OwnershipMixin
     end
 
     def user_or_group_owned(user=nil)
-      self.all(:conditions => self.conditions_for_owned_or_group_owned(user))
+      self.where(self.conditions_for_owned_or_group_owned(user)).to_a
     end
 
   end

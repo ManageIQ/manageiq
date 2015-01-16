@@ -46,7 +46,7 @@ class MiqPolicy < ActiveRecord::Base
       :event => "vm_retired",
       :applies_to? => true,
       :active => true,
-      :condition => {"and"=>[{"="=>{"field"=>"Vm-retired", "value"=>true}}, {"="=>{"field"=>"Vm-power_state", "value"=>"on"}}]},
+      :condition => {"and" => [{"=" => {"field" => "Vm-retired", "value" => true}}, {"=" => {"field" => "Vm-power_state", "value" => "on"}}]},
       :modifier => "deny",
       :mode => "control",
       :action => "vm_stop"},
@@ -56,7 +56,7 @@ class MiqPolicy < ActiveRecord::Base
       :event => "request_vm_start",
       :applies_to? => true,
       :active => true,
-      :condition => {"="=>{"field"=>"Vm-retired", "value"=>true}},
+      :condition => {"=" => {"field" => "Vm-retired", "value" => true}},
       :modifier => "deny",
       :mode => "control",
       :action => "prevent"},
@@ -66,7 +66,7 @@ class MiqPolicy < ActiveRecord::Base
       :event => "vm_start",
       :applies_to? => true,
       :active => true,
-      :condition => {"="=>{"field"=>"Vm-retired", "value"=>true}},
+      :condition => {"=" => {"field" => "Vm-retired", "value" => true}},
       :modifier => "deny",
       :mode => "control",
       :action => "vm_stop"},
@@ -272,7 +272,7 @@ class MiqPolicy < ActiveRecord::Base
 
   def self.resolve(rec, list=nil, event=nil)
     # list is expected to be a list of policies, not profiles.
-    policies = list.nil? ? self.find(:all) : self.find_all_by_name(list)
+    policies = list.nil? ? self.all : self.where(:name => list)
     result = []
     policies.each {|p|
       next if event && !p.events.include?(event)

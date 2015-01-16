@@ -35,7 +35,7 @@ module MiqProvision::OptionsHelper
     return nil if email.blank?
     requester = self.miq_request.requester
     return requester if requester.email.to_s.downcase == email.downcase
-    User.find(:first, :conditions => ["lower(email) = ?", email.downcase])
+    User.where("lower(email) = ?", email.downcase).first
   end
 
   def get_hostname(dest_vm_name)

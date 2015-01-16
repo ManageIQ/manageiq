@@ -149,7 +149,7 @@ module ArRegion
   end
 
   def miq_region
-    self.class.id_to_miq_region[region_number] || (self.class.id_to_miq_region[region_number] = MiqRegion.find_by_region(region_number))
+    self.class.id_to_miq_region[region_number] || (self.class.id_to_miq_region[region_number] = MiqRegion.where(:region => region_number).first)
   end
 
   def compressed_id

@@ -42,7 +42,7 @@ module MiqServer::WorkerManagement::Monitor::Validation
   end
 
   def validate_active_messages(processed_worker_ids = [])
-    actives = MiqQueue.find(:all, :conditions => {:state => 'dequeue'}, :include => :handler )
+    actives = MiqQueue.where(:state => 'dequeue').includes(:handler)
     actives.each do |msg|
       next if processed_worker_ids.include?(msg.handler_id)
 

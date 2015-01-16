@@ -74,7 +74,7 @@ class MiqProvisionCloudWorkflow < MiqProvisionWorkflow
 
   def update_field_visibility()
     show_dialog(:customize, :show, "disabled")
-    super(:force_platform=>'linux')
+    super(:force_platform => 'linux')
   end
 
   def show_customize_fields(fields, platform)
@@ -95,7 +95,7 @@ class MiqProvisionCloudWorkflow < MiqProvisionWorkflow
   end
 
   def get_source_and_targets(refresh=false)
-    return @target_resource if @target_resource && refresh==false
+    return @target_resource if @target_resource && refresh == false
     result = super
     return result if result.blank?
 
@@ -105,7 +105,7 @@ class MiqProvisionCloudWorkflow < MiqProvisionWorkflow
     add_target(:cloud_tenant,                :cloud_tenant,      CloudTenant,      result)
 
     rails_logger('get_source_and_targets', 1)
-    return @target_resource=result
+    return @target_resource = result
   end
 
   def dialog_name_from_automate(message, extra_attrs)

@@ -40,8 +40,8 @@ class MiqRequestTask < ActiveRecord::Base
   end
 
   def update_request_status
-    states = Hash.new {|h,k| h[k]=0}
-    status = Hash.new {|h,k| h[k]=0}
+    states = Hash.new {|h,k| h[k] = 0}
+    status = Hash.new {|h,k| h[k] = 0}
 
     child_requests = self.miq_request_tasks
     task_count = child_requests.size

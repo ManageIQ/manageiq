@@ -101,7 +101,7 @@ describe "MiqWorker Monitor" do
 
         it "on worker destroy, will destroy its processed messages" do
           @worker.destroy
-          @worker.messages.all(:conditions => ["state != ?", "ready"]).size.should == 0
+          @worker.messages.where("state != ?", "ready").count.should == 0
           @worker.active_messages.size.should   == 0
         end
 
@@ -147,14 +147,14 @@ describe "MiqWorker Monitor" do
         end
 
         it "should timeout the right active messages" do
-          actives = MiqQueue.find(:all, :conditions => {:state => 'dequeue'})
+          actives = MiqQueue.where(:state => 'dequeue')
           actives.length.should == @actives.length
 
           Timecop.travel 5.minutes do
             @miq_server.validate_active_messages
           end
 
-          actives = MiqQueue.find(:all, :conditions => {:state => 'dequeue'})
+          actives = MiqQueue.where(:state => 'dequeue')
           actives.length.should == @actives.length - 1
         end
       end
@@ -172,14 +172,14 @@ describe "MiqWorker Monitor" do
           @actives << FactoryGirl.create(:miq_queue, :state => 'dequeue', :msg_timeout => 4.minutes, :handler => @worker1)
           @actives << FactoryGirl.create(:miq_queue, :state => 'dequeue', :msg_timeout => 4.minutes, :handler => @worker2)
 
-          actives = MiqQueue.find(:all, :conditions => {:state => 'dequeue'})
+          actives = MiqQueue.where(:state => 'dequeue')
           actives.length.should == @actives.length
 
           Timecop.travel 5.minutes do
             @miq_server.validate_active_messages
           end
 
-          actives = MiqQueue.find(:all, :conditions => {:state => 'dequeue'})
+          actives = MiqQueue.where(:state => 'dequeue')
           actives.length.should == @actives.length - 1
           actives.first.handler.should == @worker2
 
@@ -189,7 +189,7 @@ describe "MiqWorker Monitor" do
             @miq_server.validate_active_messages
           end
 
-          actives = MiqQueue.find(:all, :conditions => {:state => 'dequeue'})
+          actives = MiqQueue.where(:state => 'dequeue')
           actives.length.should == 0
         end
       end

@@ -94,7 +94,7 @@ class MiqQueue < ActiveRecord::Base
     data_size = data ? data.length : 0
 
     if (args_size + data_size) > 512
-      log_prefix=LOG_PREFIX[:put]
+      log_prefix = LOG_PREFIX[:put]
       culprit = caller.detect {|r| ! (r =~ /miq_queue.rb/) } || ""
       $log.warn("#{log_prefix} #{culprit.split(":in ").first} called with large payload (args: #{args_size} bytes, data: #{data_size} bytes) #{MiqQueue.format_full_log_msg(self)}")
     end
@@ -158,14 +158,14 @@ class MiqQueue < ActiveRecord::Base
     ]
 
     prefetch_max_per_worker = self.vmdb_config.config[:server][:prefetch_max_per_worker] || 10
-    msgs = MiqQueue.find(:all, :conditions => cond, :order => "priority, id", :limit => prefetch_max_per_worker)
+    msgs = MiqQueue.where(cond).order("priority, id").limit(prefetch_max_per_worker)
     return nil if msgs.empty? # Nothing available in the queue
 
     result = nil
     msgs.each do |msg|
       begin
         $log.info("#{log_prefix} #{MiqQueue.format_short_log_msg(msg)} previously timed out, retrying...") if msg.state == STATE_TIMEOUT
-        w = MiqWorker.server_scope.find_by_pid(Process.pid)
+        w = MiqWorker.server_scope.where(:pid => Process.pid).first
         if w.nil?
           msg.update_attributes!(:state => STATE_DEQUEUE, :handler => MiqServer.my_server)
         else
@@ -220,10 +220,9 @@ class MiqQueue < ActiveRecord::Base
       conditions[:priority] || MIN_PRIORITY,
     ]
 
-    args = { :conditions => cond, :order => "priority, id" }
-    args[:select] = select unless select.nil?
-    args[:limit]  = limit || 1
-    MiqQueue.all(args)
+    result = MiqQueue.where(cond).order(:priority, :id).limit(limit || 1)
+    result = result.select(select) unless select.nil?
+    result.to_a
   end
 
   # Find the MiqQueue item with the specified find options, and yields that
@@ -510,10 +509,10 @@ class MiqQueue < ActiveRecord::Base
     dates = where(:state => STATE_READY)
            .select("created_on, role")
            .order("priority, id").to_a
-           .each.with_object({}) { |c, h| (h[c.role] ||=[]) << c.created_on }
+           .each.with_object({}) { |c, h| (h[c.role] ||= []) << c.created_on }
 
     dates.each.with_object({}) { |(role, created_ons), h|
-      h[role]= { :next => (now - created_ons.last), :last => (now - created_ons.first) }
+      h[role] = { :next => (now - created_ons.last), :last => (now - created_ons.first) }
     }
   end
 
@@ -522,7 +521,7 @@ class MiqQueue < ActiveRecord::Base
   end
 
   def self.get_worker(task_id)
-    msg = self.find_by_task_id(task_id)
+    msg = self.where(:task_id => task_id).first
     return nil if msg.nil?
     msg.get_worker
   end

@@ -26,7 +26,7 @@ module Metric::CiMixin::StateFinders
   end
 
   def preload_vim_performance_state_for_ts(conditions = {})
-    @states_by_ts = self.vim_performance_states.all(:conditions => conditions).index_by(&:timestamp)
+    @states_by_ts = self.vim_performance_states.where(conditions).index_by(&:timestamp)
   end
 
   def hosts_from_vim_performance_state_for_ts(ts)

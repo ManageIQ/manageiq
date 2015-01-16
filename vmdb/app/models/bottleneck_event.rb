@@ -6,7 +6,7 @@ class BottleneckEvent < ActiveRecord::Base
   serialize :context_data
 
   def self.last_created_on(obj)
-    event = self.find(:first, :conditions => ["resource_type = ? AND resource_id = ?", obj.class.name, obj.id], :order => "created_on DESC")
+    event = self.where("resource_type = ? AND resource_id = ?", obj.class.name, obj.id).order("created_on DESC").first
     return event ? event.created_on : nil
   end
 
@@ -46,7 +46,7 @@ class BottleneckEvent < ActiveRecord::Base
 
   def self.event_definitions(event_type)
     @event_definitions             ||= {}
-    @event_definitions[event_type] ||= MiqEvent.find_all_by_event_type(event_type)
+    @event_definitions[event_type] ||= MiqEvent.where(:event_type => event_type).to_a
   end
 
   def self.future_event_definitions_for_obj(obj)
@@ -62,7 +62,7 @@ class BottleneckEvent < ActiveRecord::Base
   end
 
   def dictionary(col)
-    Dictionary.gettext(col.to_s, :type=>"column")
+    Dictionary.gettext(col.to_s, :type => "column")
   end
 
   def format(value, method, options={})

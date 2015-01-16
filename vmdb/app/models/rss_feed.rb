@@ -72,18 +72,7 @@ class RssFeed < ActiveRecord::Base
   end
 
   def self.roles
-    roles = []
-    # RssFeed.find(:all).each {|feed|
-    #   next if feed.options[:roles].nil?
-    #   feed.options[:roles].split.each {|role|
-    #     roles.push(role.downcase) unless roles.include?(role.downcase)
-    #   }
-    # }
-    # Tag.tags(:ns=>"managed", :cat=>"roles").each {|t|
-    #   roles.push(t.name.split("/").last)
-    # }
-    Tag.find(:all, :conditions=>"name like '/managed/roles/%'").each {|t| roles.push(t.name.split("/").last)}
-    roles
+    Tag.where("name like '/managed/roles/%'").pluck(:name).collect { |n| n.split("/").last }
   end
 
   private
@@ -145,7 +134,7 @@ class RssFeed < ActiveRecord::Base
       rec = self.create!(rss)
     end
 
-    rec.tag_add(yml[:roles], {:ns=>"/managed", :cat=>"roles"}) unless yml[:roles].nil?
+    rec.tag_add(yml[:roles], {:ns => "/managed", :cat => "roles"}) unless yml[:roles].nil?
   end
 
   def self.yml_file_name(name)

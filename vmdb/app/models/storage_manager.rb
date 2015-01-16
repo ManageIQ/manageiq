@@ -42,7 +42,7 @@ class StorageManager < ActiveRecord::Base
   end
 
   def self.add(ipaddress, username, password, agent_type, zone_id=nil, hostname=nil, name=nil)
-    agent = self.first(:conditions => { :ipaddress => ipaddress, :agent_type => agent_type })
+    agent = self.where(:ipaddress => ipaddress, :agent_type => agent_type).first
     unless (agent)
       agent = self.new
       agent.ipaddress   = ipaddress || hostname
@@ -113,7 +113,7 @@ class StorageManager < ActiveRecord::Base
 
   def self.refresh_vmdb_cim
     zoneId = MiqServer.my_server.zone.id
-    agent = CimVmdbAgent.find(:first, :conditions => {:agent_type => 'VMDB', :zone_id => zoneId})
+    agent = CimVmdbAgent.where(:agent_type => "VMDB", :zone_id => zoneId).first
     agent = CimVmdbAgent.add(nil, nil, nil, 'VMDB', zoneId, "VMDB-#{zoneId}") unless agent
     $log.info "#{self.name}.refresh_vmdb_cim: zone = #{zoneId} - STORAGE_UPDATE_IN_PROGRESS"
     agent.update_attribute(:last_update_status, STORAGE_UPDATE_IN_PROGRESS)
@@ -152,7 +152,7 @@ class StorageManager < ActiveRecord::Base
 
   def self.bridge_associations
     zoneId = MiqServer.my_server.zone.id
-    agent = CimVmdbAgent.find(:all, :conditions => {:agent_type => 'VMDB', :zone_id => zoneId}).first
+    agent = CimVmdbAgent.where(:agent_type => "VMDB", :zone_id => zoneId).first
     agent = CimVmdbAgent.add(nil, nil, nil, 'VMDB', zoneId, "VMDB-#{zoneId}") unless agent
     $log.info "#{self.name}.bridge_associations: zone = #{zoneId} - STORAGE_UPDATE_BRIDGE_ASSOCIATIONS"
     agent.update_attribute(:last_update_status, STORAGE_UPDATE_BRIDGE_ASSOCIATIONS)
@@ -188,7 +188,7 @@ class StorageManager < ActiveRecord::Base
 
   def self.update_association_shortcuts
     zoneId = MiqServer.my_server.zone.id
-    agent = CimVmdbAgent.find(:all, :conditions => {:agent_type => 'VMDB', :zone_id => zoneId}).first
+    agent = CimVmdbAgent.where(:agent_type => "VMDB", :zone_id => zoneId).first
     agent = CimVmdbAgent.add(nil, nil, nil, 'VMDB', zoneId, "VMDB-#{zoneId}") unless agent
     $log.info "#{self.name}.update_association_shortcuts: zone = #{zoneId} - STORAGE_UPDATE_ASSOCIATION_SHORTCUTS"
     agent.update_attribute(:last_update_status, STORAGE_UPDATE_ASSOCIATION_SHORTCUTS)
@@ -233,7 +233,7 @@ class StorageManager < ActiveRecord::Base
 
   def self.association_cleanup_by_zone
     zoneId = MiqServer.my_server.zone.id
-    agent = CimVmdbAgent.find(:all, :conditions => {:agent_type => 'VMDB', :zone_id => zoneId}).first
+    agent = CimVmdbAgent.where(:agent_type => "VMDB", :zone_id => zoneId).first
     agent = CimVmdbAgent.add(nil, nil, nil, 'VMDB', zoneId, "VMDB-#{zoneId}") unless agent
     $log.info "#{self.name}.association_cleanup_by_zone: zone = #{zoneId} - STORAGE_UPDATE_ASSOCIATION_CLEANUP"
     agent.update_attribute(:last_update_status, STORAGE_UPDATE_ASSOCIATION_CLEANUP)

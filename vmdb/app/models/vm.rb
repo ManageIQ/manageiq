@@ -48,7 +48,7 @@ class Vm < VmOrTemplate
     end
     conds[0] = "(#{conds[0].join(" AND ")})"
 
-    Hardware.all(:include => include.uniq, :conditions => conds).collect { |h| h.vm_or_template.kind_of?(Vm) ? h.vm_or_template : nil }.compact
+    Hardware.includes(include.uniq).where(conds).collect { |h|  h.vm_or_template.kind_of?(Vm) ? h.vm_or_template : nil}.compact
   end
 
   def running_processes

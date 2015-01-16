@@ -176,7 +176,7 @@ module EmsRefresh::SaveInventory
       end
     end
 
-    deletes = hardware.guest_devices.find(:all, :conditions => {:device_type => ['ethernet', 'storage']}).dup
+    deletes = hardware.guest_devices.where(:device_type => ["ethernet", "storage"]).to_a.dup
     self.save_inventory_multi(:guest_devices, GuestDevice, hardware, hashes, deletes, [:device_type, :uid_ems], [:network, :miq_scsi_targets], [:switch, :lan])
     self.store_ids_for_new_records(hardware.guest_devices, hashes, [:device_type, :uid_ems])
   end

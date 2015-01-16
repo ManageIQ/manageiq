@@ -64,7 +64,7 @@ module MiqProvisionMixin
   def get_owner
     @owner ||= begin
       email = get_option(:owner_email)
-      User.find(:first, :conditions => ["lower(email) = ?", email.downcase]) unless email.blank?
+      User.where("lower(email) = ?", email.downcase).first unless email.blank?
     end
   end
 
@@ -132,7 +132,7 @@ module MiqProvisionMixin
 
     result = nil
     begin
-      if folder.kind_of?(Array) && folder.length==2 && folder.first.kind_of?(Integer)
+      if folder.kind_of?(Array) && folder.length == 2 && folder.first.kind_of?(Integer)
         result = EmsFolder.find_by_id(folder.first)
         result = [result.id, result.name] unless result.nil?
       else

@@ -65,11 +65,11 @@ class MiqCimInstance < ActiveRecord::Base
   ]
 
   def self.topManagedElements
-    self.find(:all, :conditions => { :is_top_managed_element => true })
+    self.where(:is_top_managed_element => true).to_a
   end
 
   def self.find_kinda(cimClass, zoneId)
-    self.find(:all, :conditions => ["class_hier LIKE ? AND zone_id = ?", "%/#{cimClass}/%", zoneId])
+    self.where("class_hier LIKE ? AND zone_id = ?", "%/#{cimClass}/%", zoneId).to_a
   end
 
   def evm_display_name
@@ -342,9 +342,9 @@ class MiqCimInstance < ActiveRecord::Base
         node.getAssociators(a).each do |an|
           children = true
           if p[:flags][:recurse]
-            getLeafNodes(p, an, retHash, level+1, visited)
+            getLeafNodes(p, an, retHash, level + 1, visited)
           end
-          getLeafNodes(p[:next], an, retHash, level+1, visited)
+          getLeafNodes(p[:next], an, retHash, level + 1, visited)
         end
       end
     end

@@ -44,7 +44,7 @@ class Snapshot < ActiveRecord::Base
   def self.find_all_evm_snapshots(zone = nil)
     zone ||= MiqServer.my_server.zone
     require 'MiqVimVm'
-    Snapshot.all(:conditions => {:vm_or_template_id => zone.vm_or_template_ids, :name => MiqVimVm::EVM_SNAPSHOT_NAME}, :include => :vm_or_template)
+    Snapshot.where(:vm_or_template_id => zone.vm_or_template_ids, :name => MiqVimVm::EVM_SNAPSHOT_NAME).includes(:vm_or_template).to_a
   end
 
   def is_a_type?(stype)
@@ -161,7 +161,7 @@ class Snapshot < ActiveRecord::Base
 
   def self.add_snapshot_size_for_ems(parentObj, hashes)
     ss_props = {}
-    hashes.each {|h| ss_props[normalize_ss_uid(h[:uid])]={:total_size=>h[:total_size]}}
+    hashes.each {|h| ss_props[normalize_ss_uid(h[:uid])] = {:total_size => h[:total_size]}}
     parentObj.snapshots.each {|s| s.update_attributes(ss_props[normalize_ss_uid(s[:uid])]) unless ss_props[normalize_ss_uid(s[:uid])].nil?}
   end
 

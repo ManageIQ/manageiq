@@ -27,7 +27,7 @@ module FilterableMixin
 
       if options[:limit]
         options[:offset] ||= 0
-        result = result[options[:offset]..options[:offset]+options[:limit]-1]
+        result = result[options[:offset]..options[:offset] + options[:limit] - 1]
       end
 
       return result, total_count
@@ -55,7 +55,7 @@ module FilterableMixin
     result   = true
 
     if db.respond_to?(:find_filtered) && !mfilters.empty?
-      recs = db.find_tags_by_grouping(mfilters, :conditions => ["#{db.table_name}.id = ?", id], :ns=>"*").first
+      recs = db.find_tags_by_grouping(mfilters, :conditions => ["#{db.table_name}.id = ?", id], :ns => "*").first
       # result = false if recs.nil?
       return false if recs.nil?
     end

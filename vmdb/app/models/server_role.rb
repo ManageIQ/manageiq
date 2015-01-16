@@ -24,7 +24,7 @@ class ServerRole < ActiveRecord::Base
         action = {}
         cols.each_index {|i| action[cols[i].to_sym] = arr[i]}
 
-        rec = self.find_by_name(action[:name])
+        rec = self.where(:name => action[:name]).first
         if rec.nil?
           $log.info("MIQ(ServerRole.seed) Creating Server Role [#{action[:name]}]")
           rec = self.create(action)
@@ -44,7 +44,7 @@ class ServerRole < ActiveRecord::Base
     # server_role can either be a Role Name (string or symbol) or an instance of a ServerRole
     unless server_role.kind_of?(ServerRole)
       role_name   = server_role.to_s.strip.downcase
-      server_role = ServerRole.find_by_name(role_name)
+      server_role = ServerRole.where(:name => role_name).first
       raise "Role <#{role_name}> not defined in server_roles table" if server_role.nil?
     end
 
@@ -52,23 +52,23 @@ class ServerRole < ActiveRecord::Base
   end
 
   def self.all_names
-    self.find(:all, :order => :name, :select => "id, name").collect { |r| r.name }
+    self.order(:name).pluck(:name)
   end
 
   def self.database_scoped_role_names
-    self.find_all_by_role_scope('database', :select => "id, name", :order => :name).collect { |r| r.name }
+    self.where(:role_scope => 'database').order(:name).pluck(:name)
   end
 
   def self.database_scoped_roles
-    @database_scoped_roles ||= self.find_all_by_role_scope('database').sort { |a,b| a.name <=> b.name }
+    @database_scoped_roles ||= self.where(:role_scope => 'database').order(:name).to_a
   end
 
   def self.region_scoped_roles
-    @region_scoped_roles ||= self.where(:role_scope => 'region').sort { |a,b| a.name <=> b.name }
+    @region_scoped_roles ||= self.where(:role_scope => 'region').order(:name).to_a
   end
 
   def self.zone_scoped_roles
-    @zone_scoped_roles ||= self.find_all_by_role_scope('zone').sort { |a,b| a.name <=> b.name }
+    @zone_scoped_roles ||= self.where(:role_scope => 'zone').order(:name).to_a
   end
 
   def self.database_role?(role)
@@ -108,7 +108,7 @@ class ServerRole < ActiveRecord::Base
   end
 
   def self.database_owner
-    @database_owner ||= self.find_by_name('database_owner')
+    @database_owner ||= self.where(:name => 'database_owner').first
   end
 
 end
