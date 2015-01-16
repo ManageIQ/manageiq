@@ -2,7 +2,9 @@
   %ul.tab
     %li
       %a{:href => "#tree"}=_('Tree View')
+    %li
       %a{:href => "#xml"}=_('XML View')
+    %li
       %a{:href => "#object"}=_('Object')
   #tree{:name => "tree", :width => "80px;"}
     = render :partial => "results_tree"
