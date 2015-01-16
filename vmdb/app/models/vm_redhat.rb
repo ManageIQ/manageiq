@@ -1,6 +1,10 @@
 class VmRedhat < VmInfra
   include_concern 'Operations'
 
+  def console_supported?(type)
+    type == 'VNC'
+  end
+
   def provider_object(connection = nil)
     connection ||= self.ext_management_system.connect
     connection.get_resource_by_ems_ref(self.ems_ref)

@@ -803,16 +803,14 @@ module ApplicationHelper
     when "miq_task_canceljob"
       return true if !["all_tasks", "all_ui_tasks"].include?(@layout)
     when "vm_console"
-      return true if !@record.console_supported? ||
-          (get_vmdb_config[:server][:remote_console_type] && get_vmdb_config[:server][:remote_console_type] != "MKS")
+      type = get_vmdb_config[:server][:remote_console_type]
+      return type != 'MKS' || !@record.console_supported?(type)
     when "vm_vnc_console"
-      return true if !@record.console_supported? ||
-          !get_vmdb_config[:server][:remote_console_type] ||
-          (get_vmdb_config[:server][:remote_console_type] && get_vmdb_config[:server][:remote_console_type] != "VNC")
+      type = get_vmdb_config[:server][:remote_console_type]
+      return type != 'VNC' || !@record.console_supported?(type)
     when "vm_vmrc_console"
-      return true if !@record.console_supported? ||
-          !get_vmdb_config[:server][:remote_console_type] ||
-          (get_vmdb_config[:server][:remote_console_type] && get_vmdb_config[:server][:remote_console_type] != "VMRC")
+      type = get_vmdb_config[:server][:remote_console_type]
+      return type != 'VMRC' || !@record.console_supported?(type)
     # Check buttons behind SMIS setting
     when "ontap_storage_system_statistics", "ontap_logical_disk_statistics", "ontap_storage_volume_statistics",
         "ontap_file_share_statistics"

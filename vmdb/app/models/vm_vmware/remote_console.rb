@@ -1,7 +1,7 @@
 module VmVmware::RemoteConsole
   autoload :SecureRandom, 'securerandom'
 
-  def console_supported?
+  def console_supported?(_type)
     true
   end
 
