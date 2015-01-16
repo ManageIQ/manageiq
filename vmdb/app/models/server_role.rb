@@ -24,7 +24,7 @@ class ServerRole < ActiveRecord::Base
         action = {}
         cols.each_index {|i| action[cols[i].to_sym] = arr[i]}
 
-        rec = self.where(:name => (action[:name])).first
+        rec = self.where(:name => action[:name]).first
         if rec.nil?
           $log.info("MIQ(ServerRole.seed) Creating Server Role [#{action[:name]}]")
           rec = self.create(action)

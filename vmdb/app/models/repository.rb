@@ -59,7 +59,7 @@ class Repository < ActiveRecord::Base
 
   def vms
     if relative_path != "/"
-      Vm.where("storage_id=? and location like ?", storage_id, (relative_path + "%")).to_a
+      Vm.where("storage_id=? and location like ?", storage_id, relative_path + "%").to_a
     else
       Vm.where("storage_id=?", storage_id).to_a
     end
@@ -67,7 +67,7 @@ class Repository < ActiveRecord::Base
 
   def miq_templates
     if relative_path != "/"
-      MiqTemplate.where("storage_id=? and location like ?", storage_id, (relative_path + "%")).to_a
+      MiqTemplate.where("storage_id=? and location like ?", storage_id, relative_path + "%").to_a
     else
       MiqTemplate.where("storage_id=?", storage_id).to_a
     end
