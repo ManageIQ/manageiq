@@ -557,7 +557,6 @@
     :klass: Vm
     :subcollections:
     - :tags
-    - :policies
     - :accounts
     - :software
     :collection_actions:
