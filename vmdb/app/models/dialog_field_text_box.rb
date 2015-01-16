@@ -19,11 +19,11 @@ class DialogFieldTextBox < DialogField
   end
 
   def protected=(passed_in_value)
-    self.options[:protected] = passed_in_value
+    options[:protected] = passed_in_value
   end
 
   def protected?
-    self.options[:protected] == true
+    options[:protected] == true
   end
 
   def value_from_dialog_fields(dialog_values)

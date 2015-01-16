@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe DialogFieldTextBox do
   context "dialog field text box without options hash" do
-    before(:each) do
+    before do
       @df = FactoryGirl.build(:dialog_field_text_box, :label => 'test field', :name => 'test field')
     end
 
@@ -26,8 +26,13 @@ describe DialogFieldTextBox do
   end
 
   context "dialog field text box without protected field" do
-    before(:each) do
-      @df = FactoryGirl.build(:dialog_field_text_box, :label => 'test field', :name => 'test field', :options => {:protected => false} )
+    before do
+      @df = FactoryGirl.build(
+        :dialog_field_text_box,
+        :label   => 'test field',
+        :name    => 'test field',
+        :options => {:protected => false}
+      )
     end
 
     it "#protected?" do
@@ -40,8 +45,13 @@ describe DialogFieldTextBox do
   end
 
   context "dialog field text box with protected field" do
-    before(:each) do
-      @df = FactoryGirl.build(:dialog_field_text_box, :label => 'test field', :name => 'test field', :options => {:protected => true} )
+    before do
+      @df = FactoryGirl.build(
+        :dialog_field_text_box,
+        :label   => 'test field',
+        :name    => 'test field',
+        :options => {:protected => true}
+      )
     end
 
     it "#protected?" do
@@ -75,7 +85,7 @@ describe DialogFieldTextBox do
       let(:dt) { active_record_instance_double('DialogTab', :label => 'tab') }
       let(:dg) { active_record_instance_double('DialogGroup', :label => 'group') }
 
-      before(:each) do
+      before do
         df.validator_type = 'regex'
         df.validator_rule = '[aA]bc'
         df.required = true
