@@ -72,15 +72,6 @@ class RssFeed < ActiveRecord::Base
   end
 
   def self.roles
-    # RssFeed.find(:all).each {|feed|
-    #   next if feed.options[:roles].nil?
-    #   feed.options[:roles].split.each {|role|
-    #     roles.push(role.downcase) unless roles.include?(role.downcase)
-    #   }
-    # }
-    # Tag.tags(:ns=>"managed", :cat=>"roles").each {|t|
-    #   roles.push(t.name.split("/").last)
-    # }
     Tag.where("name like '/managed/roles/%'").pluck(:name).collect { |n| n.split("/").last }
   end
 
