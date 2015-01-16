@@ -348,7 +348,7 @@ module VmOrTemplate::Scanning
       xml_summary = ost.xml_class.createDoc("<summary/>")
       $log.debug "#{log_pref}: xml_summary1 = #{xml_summary.class.name}"
       xmlNode = xml_summary.root.add_element("syncmetadata")
-      xml_summary.root.add_attributes({"scan_time" => ost.scanTime, "taskid" => ost.taskid})
+      xml_summary.root.add_attributes("scan_time" => ost.scanTime, "taskid" => ost.taskid)
       ost.skipConfig = true
       data_dir = File.join(File.expand_path(Rails.root), "data/metadata")
       ost.config = OpenStruct.new(

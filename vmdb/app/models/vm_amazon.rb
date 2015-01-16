@@ -58,7 +58,7 @@ class VmAmazon < VmCloud
 
     xml_summary = MiqXml.createDoc("<summary/>")
     xmlNode = xml_summary.root.add_element("syncmetadata")
-    xml_summary.root.add_attributes({"scan_time" => Time.now.to_s, "taskid" => ost.taskid})
+    xml_summary.root.add_attributes("scan_time" => Time.now.to_s, "taskid" => ost.taskid)
 
     results.each do |r|
       c = categories.shift

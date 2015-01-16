@@ -792,11 +792,11 @@ class Host < ActiveRecord::Base
     if s[:show] == false && s[:enabled] == false
       if self.authentication_valid?(:ipmi) || !self.ipmi_address.blank?
         if self.authentication_invalid?(:ipmi)
-          s.merge!({:show => true, :enabled => false, :message => "Provide credentials for IPMI"})
+          s.merge!(:show => true, :enabled => false, :message => "Provide credentials for IPMI")
         elsif self.ipmi_address.blank?
-          s.merge!({:show => true, :enabled => false, :message => "Provide an IPMI Address"})
+          s.merge!(:show => true, :enabled => false, :message => "Provide an IPMI Address")
         else
-          s.merge!({:show => true, :enabled => true, :message => ""})
+          s.merge!(:show => true, :enabled => true, :message => "")
         end
       end
     end

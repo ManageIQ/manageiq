@@ -267,7 +267,7 @@ class MiqServer < ActiveRecord::Base
 
     svr.ntp_reload(svr.server_ntp_settings)
     # Update the config settings in the db table for MiqServer
-    svr.config_updated(OpenStruct.new({:name => cfg.get(:server, :name)}))
+    svr.config_updated(OpenStruct.new(:name => cfg.get(:server, :name)))
 
     EvmDatabase.seed_last
 

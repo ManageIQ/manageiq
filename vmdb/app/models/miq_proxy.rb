@@ -332,7 +332,7 @@ class MiqProxy < ActiveRecord::Base
   end
 
   def clear_queue_items(options={})
-    options.reverse_merge!({:task_id => nil, :queue_name => nil})
+    options.reverse_merge!(:task_id => nil, :queue_name => nil)
     call_ws(OpenStruct.new("method_name" => "ClearQueueItems", "options" => YAML.dump(options)))
   end
 
@@ -341,7 +341,7 @@ class MiqProxy < ActiveRecord::Base
   end
 
   def shutdown(restart=false)
-    call_ws(OpenStruct.new("method_name" => "Shutdown", "options" => YAML.dump({:restart => restart})))
+    call_ws(OpenStruct.new("method_name" => "Shutdown", "options" => YAML.dump(:restart => restart)))
   end
 
   def change_agent_config(opts=nil)
@@ -471,7 +471,7 @@ class MiqProxy < ActiveRecord::Base
         $log.debug "MIQ(proxy-miqcmd_formatter): #{cmd_hash.inspect}"
         # Remove items before queuing task
         cmd_hash.delete(:host);cmd_hash.delete(:port)
-        x = self.proxy_tasks.create({:command => cmd_hash, :state => "pending"})
+        x = self.proxy_tasks.create(:command => cmd_hash, :state => "pending")
         x.save!
       end
     rescue => err
@@ -1053,7 +1053,7 @@ class MiqProxy < ActiveRecord::Base
   def powershell_command_async(ps_script, return_type='object', ps_options = {}, queue_parms = {})
     cmd_options = {:ps_options => ps_options, :queue_parms => queue_parms}
     options = YAML.dump(cmd_options).miqEncode
-    self.call_ws(OpenStruct.new({"args" => [ps_script, return_type, options], 'method_name' => 'powershell_command_async'}))
+    self.call_ws(OpenStruct.new("args" => [ps_script, return_type, options], 'method_name' => 'powershell_command_async'))
   end
 
   def self.process_powershell_object(result)
