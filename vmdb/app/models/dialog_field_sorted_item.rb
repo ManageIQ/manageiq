@@ -48,8 +48,8 @@ class DialogFieldSortedItem < DialogField
     [[nil, "<Script error>"]]
   end
 
-  def normalize_automate_values(passed_in_values)
-    result = passed_in_values.to_a
+  def normalize_automate_values(automate_hash)
+    result = automate_hash["values"].to_a
     result.blank? ? initial_values : result
   end
 end

@@ -21,6 +21,6 @@ class DynamicDialogFieldValueProcessor
       dialog_field.send("#{key}=", workspace_attributes[key]) if workspace_attributes.key?(key)
     end
 
-    dialog_field.normalize_automate_values(workspace_attributes["values"])
+    dialog_field.normalize_automate_values(workspace_attributes)
   end
 end

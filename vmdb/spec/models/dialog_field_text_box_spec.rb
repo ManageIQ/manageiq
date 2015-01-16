@@ -111,11 +111,6 @@ describe DialogFieldTextBox do
         dialog_field.default_value = "some value"
       end
 
-      it "resets default value to nil" do
-        dialog_field.refresh_button_pressed
-        expect(dialog_field.default_value).to be_nil
-      end
-
       it "returns the values from the value processor" do
         expect(dialog_field.refresh_button_pressed).to eq("processor")
       end
@@ -126,26 +121,16 @@ describe DialogFieldTextBox do
 
       before do
         dialog_field.default_value = "some value"
-        dialog_field.update_values("test")
-      end
-
-      it "resets default value to nil" do
-        dialog_field.refresh_button_pressed
-        expect(dialog_field.default_value).to be_nil
       end
 
       it "returns the current values" do
-        expect(dialog_field.refresh_button_pressed).to eq("test")
+        expect(dialog_field.refresh_button_pressed).to eq("some value")
       end
     end
   end
 
-  describe "#values" do
-    let(:dialog_field) { described_class.new(:dynamic => dynamic) }
-
-    before do
-      dialog_field.update_values("test")
-    end
+  describe "#default_value" do
+    let(:dialog_field) { described_class.new(:dynamic => dynamic, :default_value => "test") }
 
     context "when the dialog field is dynamic" do
       let(:dynamic) { true }
@@ -155,7 +140,7 @@ describe DialogFieldTextBox do
       end
 
       it "returns the values from the value processor" do
-        expect(dialog_field.values).to eq("processor")
+        expect(dialog_field.default_value).to eq("processor")
       end
     end
 
@@ -163,7 +148,7 @@ describe DialogFieldTextBox do
       let(:dynamic) { false }
 
       it "returns the current value" do
-        expect(dialog_field.values).to eq("test")
+        expect(dialog_field.default_value).to eq("test")
       end
     end
   end
@@ -173,6 +158,27 @@ describe DialogFieldTextBox do
 
     it "returns the script error values" do
       expect(dialog_field.script_error_values).to eq("<Script error>")
+    end
+  end
+
+  describe "#normalize_automate_values" do
+    let(:dialog_field) { described_class.new }
+    let(:automate_hash) { {"default_value" => default_value} }
+
+    context "when the automate hash does not have a default value" do
+      let(:default_value) { nil }
+
+      it "returns the initial values" do
+        expect(dialog_field.normalize_automate_values(automate_hash)).to eq("<None>")
+      end
+    end
+
+    context "when the automate hash has a default value" do
+      let(:default_value) { 123 }
+
+      it "returns the default value in string format" do
+        expect(dialog_field.normalize_automate_values(automate_hash)).to eq("123")
+      end
     end
   end
 end

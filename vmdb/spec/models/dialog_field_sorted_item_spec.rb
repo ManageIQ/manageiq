@@ -23,20 +23,21 @@ describe DialogFieldSortedItem do
 
   describe "#normalize_automate_values" do
     let(:dialog_field) { DialogFieldRadioButton.new }
+    let(:automate_hash) { {"values" => values} }
 
-    context "when the values passed in are blank" do
-      let(:passed_in_values) { nil }
+    context "when the automate hash values passed in are blank" do
+      let(:values) { nil }
 
       it "returns the initial values of the dialog field" do
-        expect(dialog_field.normalize_automate_values(passed_in_values)).to eq([["", "<None>"]])
+        expect(dialog_field.normalize_automate_values(automate_hash)).to eq([["", "<None>"]])
       end
     end
 
-    context "when the values passed in are not blank" do
-      let(:passed_in_values) { {"lol" => "123"} }
+    context "when the automate hash values passed in are not blank" do
+      let(:values) { {"lol" => "123"} }
 
       it "normalizes the values to an array" do
-        expect(dialog_field.normalize_automate_values(passed_in_values)).to eq([%w(lol 123)])
+        expect(dialog_field.normalize_automate_values(automate_hash)).to eq([%w(lol 123)])
       end
     end
   end

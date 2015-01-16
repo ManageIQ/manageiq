@@ -12,12 +12,12 @@
       - when 'DialogFieldTextBox'
         - if edit
           - if field.protected?
-            = password_field_tag(field.name + "__protected", field.values,
+            = password_field_tag(field.name + "__protected", field.default_value,
                                  :maxlength         => 50,
                                  :class             => "dynamic-text-box-#{field.id}",
                                  "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
           - else
-            = text_field_tag(field.name, field.values,
+            = text_field_tag(field.name, field.default_value,
                              :maxlength         => 50,
                              :class             => "dynamic-text-box-#{field.id}",
                              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
@@ -42,7 +42,7 @@
           - if field.protected?
             ********
           - else
-            = h(field.values)
+            = h(field.default_value)
 
       - when 'DialogFieldTextAreaBox'
         - if edit

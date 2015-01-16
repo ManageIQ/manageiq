@@ -1,20 +1,17 @@
 class DialogFieldTextBox < DialogField
+  attr_writer :default_value
+
   has_one :resource_action, :as => :resource, :dependent => :destroy
 
   after_initialize :default_resource_action
 
   def refresh_button_pressed
-    self.default_value = nil
-    values
+    default_value
   end
 
-  def update_values(passed_in_values)
-    @values = passed_in_values
-  end
-
-  def values
-    @values = values_from_automate if dynamic
-    @values
+  def default_value
+    @default_value = values_from_automate if dynamic
+    @default_value
   end
 
   def initial_values
@@ -56,9 +53,9 @@ class DialogFieldTextBox < DialogField
     "<Script error>"
   end
 
-  def normalize_automate_values(passed_in_values)
-    return initial_values if passed_in_values.blank?
-    passed_in_values.to_s
+  def normalize_automate_values(automate_hash)
+    return initial_values if automate_hash["default_value"].blank?
+    automate_hash["default_value"].to_s
   end
 
   private

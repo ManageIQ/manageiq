@@ -52,7 +52,7 @@ describe DynamicDialogFieldValueProcessor do
         dialog_field.stub(:data_type=)
         dialog_field.stub(:default_value=)
         dialog_field.stub(:required=)
-        dialog_field.stub(:normalize_automate_values).with("workspace values").and_return("normalized values")
+        dialog_field.stub(:normalize_automate_values).with(workspace_attributes.attributes).and_return("normalized values")
       end
 
       it "sets the sort_by" do
