@@ -99,10 +99,9 @@ describe DashboardController do
     main_tabs.each do |tab, feature|
       it "for tab ':#{tab}'" do
         seed_specific_product_features(feature)
-        session[:tab_url] = Hash.new
+        session[:tab_url] = {}
         post :maintab, :tab => tab
-        tab_features = MAIN_TAB_FEATURES.collect{|f| f.last if f.first == MAIN_TABS[tab]}.compact.first
-        url_controller = tab_features.find{|f|f.ends_with?("_accords")}
+        url_controller = Menu::Manager.tab_features_by_id(tab).find { |f| f.ends_with?("_accords") }
         response.body.should include("#{DashboardController::EXPLORER_FEATURE_LINKS[url_controller]}/explorer")
       end
     end

@@ -701,27 +701,29 @@ module OpsController::OpsRbac
 
   def rbac_build_features_tree
     @role = @sb[:typ] == "copy" ? @record.dup : @record if @role.nil?     #if on edit screen use @record
-    root_node = Hash.new
     root_feature = MiqProductFeature.feature_root
     root = MiqProductFeature.feature_details(root_feature)
-    root_node[:key] = "#{@role.id ? to_cid(@role.id) : "new"}__#{root_feature}"
-    root_node[:icon] = "feature_node.png"
-    root_node[:title] = root[:name]
-    root_node[:tooltip] = root[:description] || root[:name]
-    root_node[:addClass] = "cfme-cursor-default"
-    root_node[:expand] = true
-    root_node[:select] = @role_features.include?(root_feature)
+    root_node = {
+      :key      => "#{@role.id ? to_cid(@role.id) : "new"}__#{root_feature}",
+      :icon     => "feature_node.png",
+      :title    => root[:name],
+      :tooltip  => root[:description] || root[:name],
+      :addClass => "cfme-cursor-default",
+      :expand   => true,
+      :select   => @role_features.include?(root_feature)
+    }
 
-    top_nodes = Array.new
-    MAIN_TAB_FEATURES.each do |mt|
-      t_node = Hash.new
-      t_kids = Array.new
-      t_node[:key] = "#{@role.id ? to_cid(@role.id) : "new"}___tab_#{mt.first}"
-      t_node[:icon] = "feature_node.png"
-      t_node[:title] = mt.first
-      t_node[:tooltip] = mt.first + " Main Tab"
+    top_nodes = []
+    Menu::Manager.each_feature_title_with_subitems do |feature_title, subitems|
+      t_kids = []
+      t_node = {
+        :key     => "#{@role.id ? to_cid(@role.id) : "new"}___tab_#{feature_title}",
+        :icon    => "feature_node.png",
+        :title   => feature_title,
+        :tooltip => feature_title + " Main Tab"
+      }
 
-      mt.last.each do |f| # Go thru the features of this tab
+      subitems.each do |f| # Go thru the features of this tab
         f_tab = f.ends_with?("_accords") ? f.split("_accords").first : f  # Remove _accords suffix if present, to get tab feature name
         next unless MiqProductFeature.feature_exists?(f_tab)
         feature = rbac_features_tree_add_node(f_tab, t_node[:key], root_node[:select])
@@ -742,7 +744,7 @@ module OpsController::OpsRbac
 
       t_node[:children] = t_kids unless t_kids.empty?
       #only show storage node if product setting is set to show the nodes
-      case mt[0].downcase
+      case feature_title.downcase
         when "storage"; top_nodes.push(t_node) if get_vmdb_config[:product][:storage]
         else            top_nodes.push(t_node)
       end
@@ -1047,7 +1049,7 @@ module OpsController::OpsRbac
       node = params[:id].split("__").last # Get the feature of the checked node
       if params[:check] == "0"  # Unchecked
         if node.starts_with?("_tab_") # Remove all features under this tab
-          tab_features = MAIN_TAB_FEATURES.collect{|f| f.last if f.first == node.split("_tab_").last}.compact.first
+          tab_features = Menu::Manager.tab_features_by_name(node.split("_tab_").last)
           tab_features.each do |f|
             @edit[:new][:features] -= ([f] + MiqProductFeature.feature_all_children(f)) # Remove the feature + children
             rbac_role_remove_parent(f)  # Remove all parents above the unchecked tab feature
@@ -1057,8 +1059,8 @@ module OpsController::OpsRbac
           rbac_role_remove_parent(node) # Remove all parents above the unchecked node
         end
       else                      # Checked
-        if node.starts_with?("_tab_") # Add all features undter this tab
-          tab_features = MAIN_TAB_FEATURES.collect{|f| f.last if f.first == node.split("_tab_").last}.compact.first
+        if node.starts_with?("_tab_") # Add all features under this tab
+          tab_features = Menu::Manager.tab_features_by_name(node.split("_tab_").last)
           tab_features.each do |f|
             @edit[:new][:features] += ([f] + MiqProductFeature.feature_all_children(f))
             rbac_role_add_parent(f) # Add any parents above the checked tab feature that have all children checked

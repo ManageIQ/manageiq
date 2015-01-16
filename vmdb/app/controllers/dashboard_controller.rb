@@ -59,7 +59,7 @@ class DashboardController < ApplicationController
         return
       end
 
-      tab_features = MAIN_TAB_FEATURES.collect { |f| f.last if f.first == MAIN_TABS[tab] }.compact.first
+      tab_features = Menu::Manager.tab_features_by_id(tab)
       case tab
       when :vi
         tab_features.detect do |f|
@@ -124,7 +124,7 @@ class DashboardController < ApplicationController
         end
       end
     else
-      tab_features = MAIN_TAB_FEATURES.collect { |f| f.last if f.first == MAIN_TABS[tab] }.compact.first
+      tab_features = Menu::Manager.tab_features_by_id(tab)
       if Array(session[:tab_bc][tab]).empty? # no saved breadcrumbs for this tab
         case tab
         when :vs
