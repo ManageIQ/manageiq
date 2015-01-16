@@ -81,8 +81,8 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
   def allowed_ems(options={})
     result = {}
 
-    ExtManagementSystem.select("id, name").each do |e|
-      result[e.id] = e.name if e.kind_of?(EmsVmware)
+    EmsVmware.select("id, name").each do |e|
+      result[e.id] = e.name
     end
     return result
   end

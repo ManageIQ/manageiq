@@ -35,7 +35,7 @@ module EventMixin
     end
     return nil if klass.blank?
 
-    event = klass.where(ewc).order(order).first
+    klass.where(ewc).order(order).first
   end
 
 end

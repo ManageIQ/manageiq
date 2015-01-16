@@ -38,7 +38,7 @@ class RemoveCustomFieldsFromVmsHosts < ActiveRecord::Migration
   def self.move_custom_vars(klass, custom_names)
     say_with_time("Migrate #{klass.name} custom columns to CustomAttribute") do
       condition = (custom_names).join(' is not NULL OR ') +  ' is not NULL'
-      items = klass.select('id,' + custom_names.join(',')).where(condition)
+      items = klass.select(custom_names + ['id']).where(condition)
 
       custom_attrs = []
       res_type = klass.name

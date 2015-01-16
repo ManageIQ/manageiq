@@ -127,7 +127,7 @@ module MiqServer::RoleManagement
     self.zone.lock do
       val = val.to_s.strip.downcase
       if val.blank?
-        self.server_roles.delete(ServerRole.all)
+        self.server_roles.delete_all
       else
         desired = (val == "*" ? ServerRole.all_names : val.split(",").collect { |v| v.strip.downcase }.sort)
         current = self.server_role_names

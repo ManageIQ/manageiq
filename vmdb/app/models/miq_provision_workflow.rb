@@ -775,9 +775,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
   end
 
   def allowed_datastore_storage_controller(options={})
-    result = {}
-    NetAppFiler.select(:name).each { |f| result[f.name] = f.name }
-    return result
+    NetAppFiler.pluck(:name).index_by { |n| n }
   end
 
   def allowed_datastore_aggregate(options={})

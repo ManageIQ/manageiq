@@ -73,7 +73,7 @@ class VimPerformanceDaily < MetricRollup
       scope = scope.select(select) if select
       scope = scope.order(order) if order
       scope = scope.where(wheres) if wheres
-      scope.all
+      scope.to_a
     else
       raise "Unsupported finder value #{cnt}"
     end
