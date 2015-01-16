@@ -14,7 +14,7 @@ class RegistryItem < ActiveRecord::Base
     return if hashes.nil?
 
     new_reg = []
-    deletes = vm.registry_items.pluck(:id, :name)
+    deletes = vm.registry_items.select("id, name").collect { |i| [i.id, i.name] }
 
     hashes.each do |nh|
       found = vm.registry_items.find_by_name(nh[:name])
