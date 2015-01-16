@@ -516,6 +516,7 @@ class CatalogController < ApplicationController
   def ae_tree_select_discard
     ae_tree_key = get_ae_tree_edit_key(params[:typ])
     @edit = session[:edit]
+    @edit[:new][params[:typ]] = nil
     @edit[:new][ae_tree_key] = ''
     #build_ae_tree(:automate, :automate_tree) # Build Catalog Items tree unless @edit[:ae_tree_select]
     render :update do |page|
