@@ -101,7 +101,7 @@ describe "MiqWorker Monitor" do
 
         it "on worker destroy, will destroy its processed messages" do
           @worker.destroy
-          @worker.messages.where(["state != ?", "ready"]).count.should == 0
+          @worker.messages.where("state != ?", "ready").count.should == 0
           @worker.active_messages.size.should   == 0
         end
 

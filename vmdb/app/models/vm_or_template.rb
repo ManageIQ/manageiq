@@ -1828,7 +1828,7 @@ class VmOrTemplate < ActiveRecord::Base
   # Called from integrate ws to kick off scan for vdi VMs
   def self.vms_by_ipaddress(ipaddress)
     ipaddresses = ipaddress.split(',')
-    Network.where(["ipaddress in (?)", ipaddresses]).each do |network|
+    Network.where("ipaddress in (?)", ipaddresses).each do |network|
       begin
         vm = network.hardware.vm
         yield(vm)
