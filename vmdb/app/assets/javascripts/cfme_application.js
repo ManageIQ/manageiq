@@ -830,19 +830,22 @@ function miqBuildCalendar(){
 
     // Create an observer for the date field if the html5 attr is specified
     if (this.getAttribute('data-miq_observe_date')) {
-      cal.attachEvent("onClick", function(){
-        var parms = $j.parseJSON(el.attr('data-miq_observe_date'));
-        var url = parms.url;
-        var urlstring = url + '?' + el.prop('id') + '=' + el.val(); //  tack on the id and value to the URL
-        if (el.attr('data-miq_sparkle_on')) {
-          miqJqueryRequest(urlstring, {beforeSend: true});
-        } else {
-          miqJqueryRequest(urlstring);
-        }
-      });
+      el.change(function() { miqSendDateRequest(el); })
+      cal.attachEvent("onClick", function(){ miqSendDateRequest(el); });
     }
 
   });
+}
+
+function miqSendDateRequest(el){
+  var parms = $j.parseJSON(el.attr('data-miq_observe_date'));
+  var url = parms.url;
+  var urlstring = url + '?' + el.prop('id') + '=' + el.val(); //  tack on the id and value to the URL
+  if (el.attr('data-miq_sparkle_on')) {
+    miqJqueryRequest(urlstring, {beforeSend: true});
+  } else {
+    miqJqueryRequest(urlstring);
+  }
 }
 
 // Build an explorer view using a YUI layout and a jQuery accordion
