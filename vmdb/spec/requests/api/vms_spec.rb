@@ -22,8 +22,8 @@ describe ApiController do
     Vmdb::Application
   end
 
-  def start_request(*hrefs)
-    request = {"action" => "start"}
+  def gen_request(action, *hrefs)
+    request = {"action" => action.to_s}
     request["resources"] = hrefs.collect { |href| {"href" => href} } if hrefs.present?
     request
   end
@@ -193,7 +193,7 @@ describe ApiController do
       update_user_role(@role, action_identifier(:vms, :start))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post("#{@cfme[:vms_url]}/999999", start_request)
+      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:start))
 
       expect(@success).to be_false
       expect(@code).to eq(404)
@@ -202,7 +202,7 @@ describe ApiController do
     it "starts an invalid vm without appropriate role" do
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post("#{@cfme[:vms_url]}/999999", start_request)
+      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:start))
 
       expect(@success).to be_false
       expect(@code).to eq(403)
@@ -215,7 +215,7 @@ describe ApiController do
       vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "on")
       vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
 
-      @success = run_post(vm_url, start_request)
+      @success = run_post(vm_url, gen_request(:start))
 
       expect(@result).to have_key("success")
       expect(@result["success"]).to be_false
@@ -232,7 +232,7 @@ describe ApiController do
       vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "off")
       vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
 
-      @success = run_post(vm_url, start_request)
+      @success = run_post(vm_url, gen_request(:start))
 
       expect(@result).to have_key("success")
       expect(@result["success"]).to be_true
@@ -254,7 +254,86 @@ describe ApiController do
       vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
       vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
 
-      @success = run_post(@cfme[:vms_url], start_request(vm1_url, vm2_url))
+      @success = run_post(@cfme[:vms_url], gen_request(:start, vm1_url, vm2_url))
+
+      expect(@result).to have_key("results")
+      results = @result["results"]
+      expect(results.size).to eq(2)
+      expect(resources_include_suffix?(results, "href", "#{vm1_url}")).to be_true
+      expect(resources_include_suffix?(results, "href", "#{vm2_url}")).to be_true
+      expect(results.all? { |r| r["success"] }).to be_true
+      expect(results.all? { |r| r.key?("task_id") }).to be_true
+      expect(results.all? { |r| r.key?("task_href") }).to be_true
+    end
+  end
+
+  context "Vm stop action" do
+    it "stops an invalid vm" do
+      update_user_role(@role, action_identifier(:vms, :stop))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:stop))
+
+      expect(@success).to be_false
+      expect(@code).to eq(404)
+    end
+
+    it "stops an invalid vm without appropriate role" do
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:stop))
+
+      expect(@success).to be_false
+      expect(@code).to eq(403)
+    end
+
+    it "stops a powered off vm" do
+      update_user_role(@role, action_identifier(:vms, :stop))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "off")
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+
+      @success = run_post(vm_url, gen_request(:stop))
+
+      expect(@result).to have_key("success")
+      expect(@result["success"]).to be_false
+      expect(@result).to have_key("message")
+      expect(@result["message"]).to match("is not powered on")
+      expect(@result).to have_key("href")
+      expect(@result["href"]).to match(vm_url)
+    end
+
+    it "stops a vm" do
+      update_user_role(@role, action_identifier(:vms, :stop))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "on")
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+
+      @success = run_post(vm_url, gen_request(:stop))
+
+      expect(@result).to have_key("success")
+      expect(@result["success"]).to be_true
+      expect(@result).to have_key("message")
+      expect(@result["message"]).to match("stopping")
+      expect(@result).to have_key("href")
+      expect(@result["href"]).to match(vm_url)
+      expect(@result).to have_key("task_id")
+      expect(@result).to have_key("task_href")
+    end
+
+    it "stops multiple vms" do
+      update_user_role(@role, action_identifier(:vms, :stop))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm1 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "on")
+      vm2 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "on")
+
+      vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
+      vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
+
+      @success = run_post(@cfme[:vms_url], gen_request(:stop, vm1_url, vm2_url))
 
       expect(@result).to have_key("results")
       results = @result["results"]

@@ -579,9 +579,8 @@
         :disabled: true
       - :name: start
         :identifier: vm_start
-      - :name: poweroff
+      - :name: stop
         :identifier: vm_stop
-        :disabled: true
       - :name: suspend
         :identifier: vm_suspend
         :disabled: true
@@ -610,9 +609,8 @@
         :disabled: true
       - :name: start
         :identifier: vm_start
-      - :name: poweroff
+      - :name: stop
         :identifier: vm_stop
-        :disabled: true
       - :name: suspend
         :identifier: vm_suspend
         :disabled: true

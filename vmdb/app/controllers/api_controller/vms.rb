@@ -13,6 +13,19 @@ class ApiController
       end
     end
 
+    def stop_resource_vms(type, id = nil, _data = nil)
+      raise BadRequestError, "Must specify an id for stopping a #{type} resource" unless id
+
+      api_action(type, id) do |klass|
+        vm = resource_search(id, type, klass)
+        api_log_info("Stopping #{vm_ident(vm)}")
+
+        result = validate_vm_for_action(vm, "stop")
+        result = stop_vm(vm, klass) if result[:success]
+        result
+      end
+    end
+
     private
 
     def vm_ident(vm)
@@ -30,6 +43,18 @@ class ApiController
                                     desc,
                                     :class_name  => klass.name,
                                     :method_name => "start",
+                                    :role        => "ems_operations")
+      action_result(true, desc, :task_id => task_id)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
+    def stop_vm(vm, klass)
+      desc = "#{vm_ident(vm)} stopping"
+      task_id = queue_object_action(vm,
+                                    desc,
+                                    :class_name  => klass.name,
+                                    :method_name => "stop",
                                     :role        => "ems_operations")
       action_result(true, desc, :task_id => task_id)
     rescue => err
