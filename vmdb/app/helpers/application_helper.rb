@@ -2280,13 +2280,10 @@ module ApplicationHelper
   def display_back_button?
     # don't need to back button if @record is not there or @record doesnt have name or
     # evm_display_name column, i.e MiqProvisionRequest
-    if (%w(advanced_settings drift_history event_logs guest_applications groups
-           host_services kernel_drivers filesystem_drivers filesystems linux_initprocesses
-           patches processes registry_items scan_histories scan_history vmtree
-           rsop users win32_services).include?(@lastaction) ||
-        (@lastaction == "show" && @display != "main")) && @record &&
-        ((@layout == "cim_base_storage_extent" && !@record.evm_display_name.nil?) ||
-            (@layout != "cim_base_storage_extent" && @record.respond_to?('name') && !@record.name.nil?))
+    if (@lastaction != "show" || (@lastaction == "show" && @display != "main")) &&
+       @record &&
+       ((@layout == "cim_base_storage_extent" && !@record.evm_display_name.nil?) ||
+         (@layout != "cim_base_storage_extent" && @record.respond_to?('name') && !@record.name.nil?))
       return true
     else
       return false
