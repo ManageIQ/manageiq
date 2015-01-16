@@ -1005,31 +1005,6 @@ function miqClickAndPop(el) {
   return false;
 }
 
-// Set up checkbox observers
-function miqObserveCheckboxes() {
-  $j('[data-miq_observe_checkbox]').each(function(index) {
-    var parms = $j.parseJSON(this.getAttribute('data-miq_observe_checkbox'));
-    var url = parms.url;
-    var el = $j(this);
-    el.unbind('change')
-    el.change(function() {
-      if (el.attr('data-miq_sparkle_on')){
-        miqJqueryRequest(url, {
-          beforeSend: true,
-          complete: true,
-          data: el.attr('id') + '=' + encodeURIComponent(el.prop('checked') ? 1 : null),
-          no_encoding: true
-        });
-      } else {
-        miqJqueryRequest(url, {
-          data: el.attr('id') + '=' + encodeURIComponent(el.prop('checked') ? 1 : null),
-          no_encoding: true
-        });
-      }
-    })
-  })
-}
-
 //method takes 4 parameters tabs div id, active tab label, url to go to when tab is changed, and whether to check for abandon changes or not
 function miq_jquery_tabs_init(options){
 

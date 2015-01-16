@@ -39,6 +39,3 @@
     <%= render :partial => "db_widgets" %>
   <% if read_only %> * Dashboard name cannot be changed<% end %>
 </div>
-<%# Need this to bind checkbox observers when under DHTMLX tabs %>
-<%# TODO: Remove when DHTMLX tabs are converted to jQuery tabs  %>
-<script>miqObserveCheckboxes();</script>

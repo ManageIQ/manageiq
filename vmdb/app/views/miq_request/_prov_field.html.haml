@@ -482,7 +482,3 @@
             = form_tag({:controller => path[:controller], :action => "explorer"}, :multipart => true) do
               = file_field("upload", "file")
               = submit_tag("Upload", :class => "upload")
-  - # Need this to bind checkbox observers when under DHTMLX tabs
-  - # TODO: Remove when DHTMLX tabs are converted to jQuery tabs
-  :javascript
-    miqObserveCheckboxes();
