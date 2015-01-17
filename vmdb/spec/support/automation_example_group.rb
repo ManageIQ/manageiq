@@ -1,18 +1,16 @@
-module RSpec::Rails
-  module AutomationExampleGroup
-    extend ActiveSupport::Concern
+module AutomationExampleGroup
+  extend ActiveSupport::Concern
 
-    included do
-      metadata[:type] = :automation
+  included do
+    metadata[:type] = :automation
 
-      before(:all) do
-        MiqAeDatastore.reset
-        MiqAeDatastore.reset_manageiq_domain
-      end
+    before(:all) do
+      MiqAeDatastore.reset
+      MiqAeDatastore.reset_manageiq_domain
+    end
 
-      after(:all) do
-        MiqAeDatastore.reset
-      end
+    after(:all) do
+      MiqAeDatastore.reset
     end
   end
 end
