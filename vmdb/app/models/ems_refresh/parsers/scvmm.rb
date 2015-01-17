@@ -114,7 +114,7 @@ module EmsRefresh::Parsers
         :uid_ems          => uid,
         :ems_ref          => uid,
         :hostname         => host_name,
-        :ipaddress        => identify_primary_ip(host[:NetworkAdapters]),
+        :ipaddress        => identify_primary_ip(host[:NetworkAdapters], host_name),
         :vmm_vendor       => 'microsoft',
         :vmm_version      => p[:HyperVVersion],
         :vmm_product      => p[:VirtualizationPlatform][:ToString],
@@ -488,10 +488,15 @@ module EmsRefresh::Parsers
       end
     end
 
-    def identify_primary_ip(nics)
-      nics.each do |nic|
-        next if nic[:Props][:UsedForManagement] == false
-        return nic[:Props][:IPAddresses][0][:MS][:IPAddressToString]
+    def identify_primary_ip(nics, host)
+      prefix = "MIQ(#{self.class.name})##{__method__})"
+
+      primary_ip = nics.select { |nic| nic[:Props][:UsedForManagement] == true }
+      if primary_ip.empty?
+        $scvmm_log.warn("#{prefix} Found no management IP for #{host}. Setting IP to nil")
+        nil
+      else
+        primary_ip.fetch_path(0, :Props, :IPAddresses, 0, :ToString)
       end
     end
 
