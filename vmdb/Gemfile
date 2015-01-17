@@ -70,20 +70,6 @@ gem "savon",                          "~>2.2.0",      :require => false  # Autom
 gem "snmp",                           "~>1.1.0",      :require => false
 gem "uglifier",                       "~>2.4.0",      :require => false
 
-#
-# Platform or Group dependent gems
-#
-
-if RUBY_PLATFORM =~ /mingw/
-  gem "win32-process",                :require => false
-
-  # win32-api (1.4.6 x86-mingw32)
-  # win32-open3 (0.3.2 x86-mingw32)
-  # win32-service (0.7.1 x86-mswin32-60)
-  # windows-api (0.4.0)
-  # windows-pr (1.0.9)
-end
-
 ### Start of gems excluded from the appliances.
 # The gems listed below do not need to be packaged until we find it necessary or useful.
 # Only add gems here that we do not need on an appliance.
@@ -91,7 +77,6 @@ end
 unless ENV['APPLIANCE']
   group :development do
     gem "ruby-prof",                    :require => false
-    gem "win32console",                 :require => false if RUBY_PLATFORM =~ /mingw/
 
     gem "ruby-graphviz",                :require => false  # Used by state_machine:draw Rake Task
     # used for finding translations
@@ -143,9 +128,6 @@ end
 #
 # Custom Gemfile modifications
 #
-
-# Load platform specific Gemfile
-MiqBundler.include_gemfile("Gemfile.mingw.rb", binding) if RUBY_PLATFORM =~ /mingw/
 
 # Load developer specific Gemfile
 #   Developers can create a file called Gemfile.dev.rb containing any gems for

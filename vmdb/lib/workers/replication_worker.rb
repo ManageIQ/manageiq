@@ -57,12 +57,7 @@ class ReplicationWorker < WorkerBase
   #
 
   def mode
-    @mode ||=
-      if Platform::OS == :win32
-        :thread
-      else
-        self.worker_settings[:mode] || :process
-      end
+    @mode ||= self.worker_settings[:mode] || :process
   end
 
   def start_replicate
