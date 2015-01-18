@@ -58,7 +58,8 @@ class Chargeback < ActsAsArModel
     $log.info("#{log_prefix} Calculating chargeback costs...")
 
     tz = Metric::Helper.get_time_zone(options[:ext_options])
-    tp = options[:ext_options][:time_profile] #TODO: Support time profiles
+    # TODO: Support time profiles via options[:ext_options][:time_profile]
+
     interval = options[:interval] || "daily"
     cb = self.new
 
@@ -122,7 +123,6 @@ class Chargeback < ActsAsArModel
       $log.info("#{log_prefix} Found #{recs.length} records for time range #{[query_start_time, query_end_time].inspect}")
 
       unless recs.empty?
-        ts     = recs.first.timestamp.in_time_zone(tz).midnight
         ts_key = self.get_group_key_ts(recs.first, interval, tz)
 
         recs.each do |perf|

@@ -11,7 +11,7 @@ class JobProxyDispatcher
   end
 
   def dispatch
-    dummy, t = Benchmark.realtime_block(:total_time) do
+    _dummy, t = Benchmark.realtime_block(:total_time) do
       jobs_to_dispatch, = Benchmark.realtime_block(:pending_jobs) { self.pending_jobs }
       Benchmark.current_realtime[:jobs_to_dispatch_count] = jobs_to_dispatch.length
 

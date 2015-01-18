@@ -7,7 +7,7 @@ class DialogTab < ActiveRecord::Base
   alias_attribute :order, :position
 
   def to_h
-    result = [self.name.to_sym, self.values_to_h]
+    [self.name.to_sym, self.values_to_h]
   end
 
   def values_to_h

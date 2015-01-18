@@ -352,7 +352,7 @@ class Classification < ActiveRecord::Base
   end
 
   def self.export_to_array
-    result = self.categories.inject([]) do |a,c|
+    self.categories.inject([]) do |a,c|
       a.concat c.export_to_array
     end
   end
@@ -397,7 +397,7 @@ class Classification < ActiveRecord::Base
       cat = self.create(classification)
       stats["categories"] += 1
       entries.each do |e|
-        stat, e = self.import_from_hash(e, cat)
+        stat, _e = self.import_from_hash(e, cat)
         stats.each_key { |k| stats[k] += stat[k] }
       end
 
@@ -422,7 +422,7 @@ class Classification < ActiveRecord::Base
 
     input = YAML.load(fd)
     input.each do |c|
-      stat, c = import_from_hash(c)
+      stat, _c = import_from_hash(c)
       stats.each_key { |k| stats[k] += stat[k] }
     end
 
@@ -470,11 +470,11 @@ class Classification < ActiveRecord::Base
 
   def self.name2tag(name, parent_id = 0, ns = DEFAULT_NAMESPACE)
     if parent_id == 0
-      tag_name = File.join(ns, name)
+      File.join(ns, name)
     else
       c = Classification.find(parent_id)
       return nil if c.nil?
-      tag_name = File.join(ns, c.name, name)
+      File.join(ns, c.name, name)
     end
   end
 

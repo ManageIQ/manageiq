@@ -531,7 +531,7 @@ class Host < ActiveRecord::Base
 
   # Scan for new vms and get OS/hardware details if we do not already have them.
   def add_vms(ret)
-    current_vm_list, disconnect_vm_list = [], []
+    disconnect_vm_list = []
 
     begin
       vm_list = eval(ret) rescue nil
@@ -650,7 +650,7 @@ class Host < ActiveRecord::Base
     # if we were not passed the Host config xml, go get it
     unless doc
       ost = OpenStruct.new("method_name" => "GetHostConfig")
-      ret = call_ws(ost)
+      call_ws(ost)
       return
     end
     begin
@@ -869,7 +869,6 @@ class Host < ActiveRecord::Base
   end
 
   def self.self_register(xmlDoc)
-    newHost = nil
     version = "0.0.0.NA"
     $log.debug "MIQ(host-self_register): [#{xmlDoc}]"
     host_config = {:vmm_vendor => "unknown", :hostname => nil, :ipaddress => nil, :name => nil}
@@ -1347,8 +1346,8 @@ class Host < ActiveRecord::Base
           :hostname  => Socket.getaddrinfo(ost.ipaddr, nil)[0][2]
         )
 
-        find_method       = host.detect_discovered_hypervisor(ost, ost.ipaddr)
-        os_name, ost_type = host.detect_discovered_os(ost)
+        find_method        = host.detect_discovered_hypervisor(ost, ost.ipaddr)
+        os_name, _ost_type = host.detect_discovered_os(ost)
 
         if Host.send(find_method, ost.ipaddr).nil?
           # It may have been added by someone else while we were discovering
@@ -1473,8 +1472,7 @@ class Host < ActiveRecord::Base
         service[:disable_run_level].each { |l| s.add_element(:disable_run_level, 'value' => l) } unless service[:disable_run_level].nil?
       end
       SystemService.add_elements(self, xml.root)
-    rescue => err
-      #$log.log_backtrace($!)
+    rescue
     end
   end
 
@@ -1487,8 +1485,7 @@ class Host < ActiveRecord::Base
         pkg_xml.add_element(:application, {'name' => l[0], 'version' => l[1], 'arch' => l[2], 'typename' => l[3], 'release' => l[4], 'description' => l[5]})
       end
       GuestApplication.add_elements(self, pkg_xml.root)
-    rescue => err
-      #$log.log_backtrace($!)
+    rescue
     end
   end
 
@@ -1760,7 +1757,7 @@ class Host < ActiveRecord::Base
 
     task.update_status("Active", "Ok", "Scanning") if task
 
-    dummy, t = Benchmark.realtime_block(:total_time) do
+    _dummy, t = Benchmark.realtime_block(:total_time) do
 
       # Firewall Rules and Advanced Settings go through EMS so we don't need Host credentials
       $log.info("#{log_header} Refreshing Firewall Rules for #{log_target}")

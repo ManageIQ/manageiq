@@ -46,7 +46,7 @@ class MiqSearch < ActiveRecord::Base
         rec = self.find_by_name_and_db(name, db)
         if rec.nil?
           $log.info("MIQ(MiqSearch.seed) Creating [#{name}]")
-          rec = self.create(attrs)
+          self.create(attrs)
         else
           # Avoid undoing user changes made to enable/disable default searches which is held in the search_key column
           attrs.delete('search_key')

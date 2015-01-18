@@ -117,7 +117,7 @@ class EmsVmware < EmsInfra
   def get_alarms
     with_provider_connection do |vim|
       miqAm = vim.getVimAlarmManager
-      alarms = miqAm.getAlarm
+      miqAm.getAlarm
     end
   end
 

@@ -157,7 +157,7 @@ class MiqAction < ActiveRecord::Base
 
       deferred.each {|arr|
         a, apply_policies_to, inputs = arr
-        result = a.invoke(apply_policies_to, inputs)
+        a.invoke(apply_policies_to, inputs)
       }
     rescue MiqException::StopAction => err
       MiqPolicy.logger.error("MIQ(action-invoke) Stopping action invocation [#{err.message}]")
@@ -404,7 +404,6 @@ class MiqAction < ActiveRecord::Base
   end
 
   def action_tag(action, rec, inputs)
-    get_policies_from = inputs[:get_policies_from]
     MiqPolicy.logger.info("MIQ(action_tag): Applying tags [#{action.options[:tags].inspect}] to [(#{rec.class}) #{rec.name}]")
     action.options[:tags].each {|t| Classification.classify_by_tag(rec, t)}
   end
@@ -436,7 +435,7 @@ class MiqAction < ActiveRecord::Base
     rec.reload
 
     Classification.get_tags_from_object(parent).each do |t|
-      cat, ent = t.split("/")
+      cat, _ent = t.split("/")
       next unless options[:cats].include?(cat)
 
       MiqPolicy.logger.info("MIQ(action_inherit_parent_tags): Applying tag [#{t}] from [(#{parent.class}) #{parent.name}] to [(#{rec.class}) #{rec.name}]")
@@ -449,7 +448,7 @@ class MiqAction < ActiveRecord::Base
     #   :cats        => [array of categories]
     # }
     Classification.get_tags_from_object(rec).each do |t|
-      cat, ent = t.split("/")
+      cat, _ent = t.split("/")
       next unless options[:cats].include?(cat)
 
       MiqPolicy.logger.info("MIQ(action_remove_tags): Removing tag [#{t}] from [(#{rec.class}) #{rec.name}]")

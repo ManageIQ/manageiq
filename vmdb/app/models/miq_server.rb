@@ -400,7 +400,7 @@ class MiqServer < ActiveRecord::Base
     log_prefix = "MIQ(MiqServer.monitor_loop)"
 
     loop do
-      dummy, timings = Benchmark.realtime_block(:total_time) { self.monitor }
+      _dummy, timings = Benchmark.realtime_block(:total_time) { self.monitor }
       $log.info "#{log_prefix} Server Monitoring Complete - Timings: #{timings.inspect}" unless timings[:total_time] < server_log_timings_threshold
       sleep monitor_poll
     end
@@ -513,7 +513,6 @@ class MiqServer < ActiveRecord::Base
     restart_script = File.join(Rails.root, "vmdb_restart")
     File.chmod(0755, restart_script)
 
-    cmd = "#{restart_script} 2>&1 >> #{logfile}"
     pid = spawn("nohup", restart_script, [:out, :err] => [logfile, "a"])
     Process.detach(pid)
   end

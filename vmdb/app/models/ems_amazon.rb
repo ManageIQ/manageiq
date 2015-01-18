@@ -49,9 +49,9 @@ class EmsAmazon < EmsCloud
     begin
       # EC2 does Lazy Connections, so call a cheap function
       with_provider_connection(options.merge(:auth_type => auth_type)) { |ec2| ec2.regions.map(&:name) }
-    rescue AWS::EC2::Errors::SignatureDoesNotMatch => err
+    rescue AWS::EC2::Errors::SignatureDoesNotMatch
       raise MiqException::MiqHostError, "SignatureMismatch - check your AWS Secret Access Key and signing method"
-    rescue AWS::EC2::Errors::AuthFailure => err
+    rescue AWS::EC2::Errors::AuthFailure
       raise MiqException::MiqHostError, "Login failed due to a bad username or password."
     rescue Exception => err
       $log.error("MIQ(#{self.class.name}.verify_credentials) Error Class=#{err.class.name}, Message=#{err.message}")
