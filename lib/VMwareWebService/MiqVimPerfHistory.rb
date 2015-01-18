@@ -159,8 +159,7 @@ class MiqVimPerfHistory
         return(nil) if !pema
         
         pema = [ pema ] if !pema.kind_of? Array
-        pema.each { |pem| perfEntityMetricFixup(pem) }
-        return(pema)
+        return pema
     end
     
     def queryPerfComposite(entnty, ah)
@@ -171,9 +170,7 @@ class MiqVimPerfHistory
         umPem = @invObj.queryPerfComposite(@perfManager, pqs)
 		$vim_log.info "MiqVimPerfHistory(#{@invObj.server}, #{@invObj.username}).queryPerfComposite: returned from queryPerfComposite" if $vim_log
         
-        perfEntityMetricFixup(umPem['entity'])
         umPem['childEntity'] = [ umPem['childEntity'] ] if umPem['childEntity'].kind_of? Hash
-        umPem['childEntity'].each { |ce| perfEntityMetricFixup(ce) } if umPem['childEntity']
         
         return(umPem)
     end
