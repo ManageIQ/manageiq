@@ -25,7 +25,7 @@ $stderr.sync = true
 $stdout.sync = true
 
 # $DEBUG = true
-# VimClientBase.wiredump_file = "clone.txt"
+# MiqVimClientBase.wiredump_file = "clone.txt"
 
 SRC_VM      = "rpo-test2"
 

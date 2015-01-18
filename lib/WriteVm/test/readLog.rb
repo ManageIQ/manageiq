@@ -4,7 +4,7 @@ $:.push("#{File.dirname(__FILE__)}/..")
 
 require 'rubygems'
 require 'log4r'
-require 'VimClientBase'
+require 'MiqVimClientBase'
 require 'MiqVim'
 require 'MiqVimBroker'
 require 'MiqDisk'

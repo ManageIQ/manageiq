@@ -18,7 +18,7 @@ $vim_log = Log4r::Logger.new 'toplog'
 Log4r::StderrOutputter.new('err_console', :level=>Log4r::DEBUG, :formatter=>ConsoleFormatter)
 $vim_log.add 'err_console'
 
-# VimClientBase.wiredump_file = "perf.txt"
+# MiqVimClientBase.wiredump_file = "perf.txt"
 
 begin
     vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
