@@ -258,7 +258,7 @@ end
 
 def add_and_save_service(p,c)
   p.add_resource(c)
-  p.service_resources.each {|sr| sr.save}
+  p.service_resources.each(&:save)
 end
 
 def print_svc(svc, indent="")

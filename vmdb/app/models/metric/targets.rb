@@ -18,7 +18,7 @@ module Metric::Targets
     targets = zone.ems_clusters + zone.non_clustered_hosts
     targets += zone.storages.select { |s| Storage::SUPPORTED_STORAGE_TYPES.include?(s.store_type) } unless options[:exclude_storages]
 
-    targets = targets.select { |t| t.perf_capture_enabled? }
+    targets = targets.select(&:perf_capture_enabled?)
     targets = targets.collect { |t| t.kind_of?(EmsCluster) ? t.hosts : t }.flatten
 
     targets += capture_vm_targets(targets, Host, options)

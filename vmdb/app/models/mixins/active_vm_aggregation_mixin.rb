@@ -10,7 +10,7 @@ module ActiveVmAggregationMixin
   end
 
   def active_vms
-    self.vms.select { |vm| vm.active? }
+    self.vms.select(&:active?)
   end
 
   def active_vm_aggregation(field_name)

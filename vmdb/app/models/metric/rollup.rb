@@ -308,8 +308,8 @@ module Metric::Rollup
     metrics = Metric.in_my_region.select("DISTINCT resource_type, resource_id")
     metric_rollups = MetricRollup.in_my_region.select("DISTINCT resource_type, resource_id")
 
-    recs = (metrics + metric_rollups).group_by { |m| m.resource_type }
-    recs.keys.each { |k| recs[k] = recs[k].collect { |r| r.resource_id }.uniq }
+    recs = (metrics + metric_rollups).group_by(&:resource_type)
+    recs.keys.each { |k| recs[k] = recs[k].collect(&:resource_id).uniq }
 
     recs.each_with_object([]) do |(klass, ids), ret|
       ret.concat(klass.constantize.where(:id => ids))

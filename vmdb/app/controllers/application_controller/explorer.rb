@@ -668,7 +668,7 @@ module ApplicationController::Explorer
     if [:bottlenecks_tree, :utilization_tree].include?(x_active_tree)
       objects = Array.new
     else
-      objects = rbac_filtered_objects(object.resource_pools).sort_by { |a| a.name.downcase }.delete_if{|o| o.is_default}
+      objects = rbac_filtered_objects(object.resource_pools).sort_by { |a| a.name.downcase }.delete_if(&:is_default)
       if object.default_resource_pool           # Go thru default RP VMs
         objects += rbac_filtered_objects(object.default_resource_pool.vms).sort_by { |a| a.name.downcase }
       end
@@ -782,7 +782,7 @@ module ApplicationController::Explorer
         CustomButton.buttons_for(object.name.split('|').last.split('-').last).each do |uri|
           objects.push(uri) if uri.parent.nil?
         end
-        return objects.sort_by { |a| a.name }
+        return objects.sort_by(&:name)
       else
         #need to show button nodes in button order that they were saved in
         button_order = object[:set_data] && object[:set_data][:button_order] ? object[:set_data][:button_order] : nil
@@ -863,7 +863,7 @@ module ApplicationController::Explorer
     if options[:count_only]
       return options[:type] == :dialogs ? 0 : object.dialog_resources.count
     else
-      return options[:type] == :dialogs ? [] : object.ordered_dialog_resources.collect {|a| a.resource}.compact
+      return options[:type] == :dialogs ? [] : object.ordered_dialog_resources.collect(&:resource).compact
     end
   end
 
@@ -871,7 +871,7 @@ module ApplicationController::Explorer
     if options[:count_only]
       return object.dialog_resources.count
     else
-      return object.ordered_dialog_resources.collect {|a| a.resource}.compact
+      return object.ordered_dialog_resources.collect(&:resource).compact
     end
   end
 
@@ -879,7 +879,7 @@ module ApplicationController::Explorer
     if options[:count_only]
       return object.dialog_resources.count
     else
-      return object.ordered_dialog_resources.collect {|a| a.resource}.compact
+      return object.ordered_dialog_resources.collect(&:resource).compact
     end
   end
 
@@ -949,7 +949,7 @@ module ApplicationController::Explorer
     when :db
       if object[:id].split('-').first == "g"
         objects = MiqGroup.all
-        return options[:count_only] ? objects.count : objects.sort_by { |a| a.name }
+        return options[:count_only] ? objects.count : objects.sort_by(&:name)
       else
         options[:count_only] ? 0 : []
       end
@@ -1029,7 +1029,7 @@ module ApplicationController::Explorer
       view.table.data.each do |s|
         objects.push(MiqReportResult.find_by_id(s["id"]))
       end
-      return options[:count_only] ? objects.count : objects.sort_by { |a| a.name }
+      return options[:count_only] ? objects.count : objects.sort_by(&:name)
     when :vandt # VMs & Templates tree has orphaned and archived nodes
       case object[:id]
       when "orph" # Orphaned
@@ -1091,7 +1091,7 @@ module ApplicationController::Explorer
       end
     when :widgets
       objects = MiqWidget.find_all_by_content_type(WIDGET_CONTENT_TYPE[object[:id].split('-').last])
-      return options[:count_only] ? objects.count : objects.sort_by { |a| a.title }
+      return options[:count_only] ? objects.count : objects.sort_by(&:title)
     else
       return options[:count_only] ? 0 : []
     end

@@ -188,7 +188,7 @@ module MiqProvisionQuotaMixin
                                 *scheduled_range])
     # Make sure we skip the current MiqProvisionRequest in the calculation.
     skip_id = self.class.name == "MiqProvisionRequest" ? self.id : self.miq_provision_request.id
-    load_ids = queued_requests.collect {|q| q.instance_id}
+    load_ids = queued_requests.collect(&:instance_id)
     load_ids.delete(skip_id)
     provisions = MiqProvisionRequest.find_all_by_id(load_ids)
 

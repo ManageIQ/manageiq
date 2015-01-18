@@ -60,14 +60,14 @@ class VimPerformanceTagValue < ActiveRecord::Base
       conditions = [
         "resource_type = ? AND resource_id IN (?) AND (timestamp >= ? AND timestamp < ?) AND tag_names LIKE ? AND capture_interval_name = 'hourly'",
         children.first.class.base_class.name,
-        children.collect {|c| c.id},
+        children.collect(&:id),
         ts, ts + 1.day, "%#{options[:category]}/%"
       ]
     else
       klass, meth = Metric::Helper.class_and_association_for_interval_name(parent_perf.capture_interval_name)
       conditions = {
         :resource_type         => children.first.class.base_class.name,
-        :resource_id           => children.collect {|c| c.id},
+        :resource_id           => children.collect(&:id),
         :timestamp             => parent_perf.timestamp,
         :capture_interval_name => parent_perf.capture_interval_name
       }

@@ -60,7 +60,7 @@ describe MiqAlert do
       end
 
       it "should queue up the correct alert for each event" do
-        guids = @events_to_alerts.collect {|e| e.last}.uniq
+        guids = @events_to_alerts.collect(&:last).uniq
         messages =  MiqQueue.all(:order => "id")
         messages.length.should == @events_to_alerts.length
 
@@ -177,9 +177,7 @@ describe MiqAlert do
         MiqAlert.all.each {|a| a.update_attribute(:enabled, true) } # enable out of the box alerts
         @original_assigned     = MiqAlert.assigned_to_target(@vm, "vm_perf_complete") # force cache load
         @original_assigned_all = MiqAlert.assigned_to_target(@vm)                     # force cache load
-        MiqAlertSet.all.each do |a|
-          a.remove_all_assigned_tos
-        end
+        MiqAlertSet.all.each(&:remove_all_assigned_tos)
 
         @assigned_now     = MiqAlert.assigned_to_target(@vm, "vm_perf_complete")
         @assigned_all_now = MiqAlert.assigned_to_target(@vm)

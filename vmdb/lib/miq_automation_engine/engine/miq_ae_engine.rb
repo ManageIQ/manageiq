@@ -160,7 +160,7 @@ module MiqAeEngine
 
   def self.format_benchmark_counts(bm)
     formatted = ''
-    bm.keys.select { |k| k.to_s.downcase =~ /_count$/ }.sort_by { |k| k.to_s }.each do |k|
+    bm.keys.select { |k| k.to_s.downcase =~ /_count$/ }.sort_by(&:to_s).each do |k|
       formatted << ', ' unless formatted.blank?
       formatted << "#{k}=>#{bm[k]}"
     end
@@ -174,7 +174,7 @@ module MiqAeEngine
     total_time = bm[:total_time]
     threshold  = 0                                                                               # show everything
     threshold  = (total_time * BENCHMARK_TIME_THRESHOLD_PERCENT) if total_time.kind_of?(Numeric) # only show times > threshold of the total
-    bm.keys.select { |k| k.to_s.downcase =~ /_time$/ }.sort_by { |k| k.to_s }.each do |k|
+    bm.keys.select { |k| k.to_s.downcase =~ /_time$/ }.sort_by(&:to_s).each do |k|
       next unless bm[k] >= threshold
       formatted << ', ' unless formatted.blank?
       formatted << "#{k}=>#{bm[k]}"

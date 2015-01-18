@@ -68,7 +68,7 @@ class Service < ActiveRecord::Base
   end
 
   def indirect_vms
-    self.all_service_children.collect { |s| s.direct_vms }.flatten.compact
+    self.all_service_children.collect(&:direct_vms).flatten.compact
   end
 
   def direct_vms
@@ -83,7 +83,7 @@ class Service < ActiveRecord::Base
   # Processes tasks received from the UI and queues them
   def self.process_tasks(options)
     raise "No ids given to process_tasks" if options[:ids].blank?
-    raise "Unknown task, #{options[:task]}" unless self.instance_methods.collect { |m| m.to_s }.include?(options[:task])
+    raise "Unknown task, #{options[:task]}" unless self.instance_methods.collect(&:to_s).include?(options[:task])
     options[:userid] ||= "system"
     self.invoke_tasks_queue(options)
   end

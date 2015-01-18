@@ -31,7 +31,7 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
       target.hosts.each do |h|
         vr[:ems_to_hosts] << h.id
 
-        ids = h.storages.collect { |s| s.id }
+        ids = h.storages.collect(&:id)
         vr[:hosts_to_storages][h.id] = ids unless ids.empty?
       end
 
@@ -44,23 +44,23 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
       target.ems_folders.each do |f|
         vr[:ems_to_folders] << f.id
 
-        ids = f.folders.collect { |f2| f2.id }
+        ids = f.folders.collect(&:id)
         vr[:folders_to_folders][f.id] = ids unless ids.empty?
 
-        ids = f.clusters.collect { |c| c.id }
+        ids = f.clusters.collect(&:id)
         vr[:folders_to_clusters][f.id] = ids unless ids.empty?
 
-        ids = f.hosts.collect { |h| h.id }
+        ids = f.hosts.collect(&:id)
         vr[:folders_to_hosts][f.id] = ids unless ids.empty?
 
-        ids = f.vms.collect { |v| v.id }
+        ids = f.vms.collect(&:id)
         vr[:folders_to_vms][f.id] = ids unless ids.empty?
       end
 
       target.ems_clusters.each do |c|
         vr[:ems_to_clusters] << c.id
 
-        ids = c.hosts.collect { |h| h.id }
+        ids = c.hosts.collect(&:id)
         vr[:clusters_to_hosts][c.id] = ids unless ids.empty?
       end
 
@@ -71,17 +71,17 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
           vr[relat_type][r.parent.id] << r.id
         end
 
-        ids = r.resource_pools.collect { |r2| r2.id }
+        ids = r.resource_pools.collect(&:id)
         vr[:rps_to_rps][r.id] = ids unless ids.empty?
 
-        ids = r.vms.collect { |v| v.id }
+        ids = r.vms.collect(&:id)
         vr[:rps_to_vms][r.id] = ids unless ids.empty?
       end
 
     when Host
       vr[:ems_to_hosts] << target.id
 
-      ids = target.storages.collect { |s| s.id }
+      ids = target.storages.collect(&:id)
       vr[:hosts_to_storages][target.id] = ids unless ids.empty?
 
       target.vms.each do |v|

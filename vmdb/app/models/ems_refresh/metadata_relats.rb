@@ -42,7 +42,7 @@ module EmsRefresh::MetadataRelats
               c_meth = ([:hosts, :clusters].include?(p_type) && c_type == :resource_pools) ? :resource_pools_with_default : c_type
               next unless x.respond_to?(c_meth)
 
-              ids = x.send(c_meth).collect {|x2| x2.id}.uniq
+              ids = x.send(c_meth).collect(&:id).uniq
               relats["#{p_type}_to_#{c_type}".to_sym][x.id] |= ids unless ids.empty?
             end
           end

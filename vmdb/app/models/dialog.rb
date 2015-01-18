@@ -32,7 +32,7 @@ class Dialog < ActiveRecord::Base
   end
 
   def dialog_fields
-    self.dialog_tabs.collect {|dt| dt.dialog_fields}.flatten!
+    self.dialog_tabs.collect(&:dialog_fields).flatten!
   end
 
   def field_name_exist?(name)

@@ -67,7 +67,7 @@ class EmsFolder < ActiveRecord::Base
   end
 
   def datacenters_only
-    self.folders.select { |f| f.is_datacenter }
+    self.folders.select(&:is_datacenter)
   end
 
   # Cluster relationship methods
@@ -170,7 +170,7 @@ class EmsFolder < ActiveRecord::Base
   end
 
   def folder_path(*args)
-    self.folder_path_objs(*args).collect { |f| f.name }.join('/')
+    self.folder_path_objs(*args).collect(&:name).join('/')
   end
 
   def child_folder_paths(*args)

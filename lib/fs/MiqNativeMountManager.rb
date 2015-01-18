@@ -106,8 +106,6 @@ if __FILE__ == $0
 	# puts "*** Copied files:"
 	# rootTree.findEach(tdn) { |f| puts "\t#{f}" }
 	
-	rootTrees.each do |r|
-		r.umount
-	end
+	rootTrees.each(&:umount)
 end
 

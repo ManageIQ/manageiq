@@ -213,7 +213,7 @@ class MiqRequest < ActiveRecord::Base
   end
 
   def v_approved_by
-    self.miq_approvals.collect {|a| a.stamper_name}.compact.join(", ")
+    self.miq_approvals.collect(&:stamper_name).compact.join(", ")
   end
 
   def v_approved_by_email

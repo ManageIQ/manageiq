@@ -182,7 +182,7 @@ class MiqVm
     
     def unmount
 		$log.info "MiqVm.unmount called."
-        @wholeDisks.each { |d| d.close }
+        @wholeDisks.each(&:close)
         @wholeDisks.clear
         if @volumeManager
             @volumeManager.close

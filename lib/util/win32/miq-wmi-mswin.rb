@@ -49,7 +49,7 @@ module WmiMswin
   def raise_win32ole_error(err)
       err = err.to_s.split("\n")
       err.delete_at(-1)
-      err.each {|e| e.strip!}
+      err.each(&:strip!)
       raise(WIN32OLERuntimeError, err.join(" - "))
   end
 

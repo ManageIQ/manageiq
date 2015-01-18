@@ -251,7 +251,7 @@ class MiqTask < ActiveRecord::Base
     cond[1] << ts.utc
 
     $log.info("#{log_prefix} cond.flatten: #{cond.flatten.inspect}")
-    ids = where(cond.flatten).select("id").collect {|j| j.id}
+    ids = where(cond.flatten).select("id").collect(&:id)
 
     self.delete_by_id(ids)
   end

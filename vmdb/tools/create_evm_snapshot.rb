@@ -15,7 +15,7 @@ ids  = $2.split(',').collect { |id| id.strip!; id.blank? ? nil : id.to_i }.compa
 case type
 when 'vm'
   vms = Vm.find_all_by_id(ids)
-  puts "Warning: Unable to find Vms for the following ids: #{ids - vms.collect { |vm| vm.id }}" if ids.length != vms.length
+  puts "Warning: Unable to find Vms for the following ids: #{ids - vms.collect(&:id)}" if ids.length != vms.length
   return if vms.empty?
 
   descs = []
@@ -24,7 +24,7 @@ when 'vm'
   end
 when 'job'
   jobs = Job.find_all_by_id(ids)
-  puts "Warning: Unable to find Jobs for the following ids: #{ids - jobs.collect { |job| job.id }}" if ids.length != jobs.length
+  puts "Warning: Unable to find Jobs for the following ids: #{ids - jobs.collect(&:id)}" if ids.length != jobs.length
   return if jobs.empty?
 
   vms   = []

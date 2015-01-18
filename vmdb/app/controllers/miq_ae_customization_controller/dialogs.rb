@@ -514,7 +514,7 @@ module MiqAeCustomizationController::Dialogs
       # replace select tag of default values
       url = url_for(:action=>'dialog_form_field_changed', :id=>"#{@record.id || "new"}")
       none =  [['<None>', nil]]
-      values = key[:values].empty? ? none : none + key[:values].collect {|val| val.reverse}
+      values = key[:values].empty? ? none : none + key[:values].collect(&:reverse)
       selected = @edit[:field_default_value]
       page.replace("field_default_value",
                    :text=> "#{select_tag('field_default_value', options_for_select(values, selected), 'data-miq_observe'=>{:interval=>'.5', :url=>url}.to_json)}")
@@ -551,7 +551,7 @@ module MiqAeCustomizationController::Dialogs
       # replace select tag of default values
       url = url_for(:action=>'dialog_form_field_changed', :id=>"#{@record.id || "new"}")
       none =  [['<None>', nil]]
-      values = key[:values].empty? ? none : none + key[:values].collect {|val| val.reverse}
+      values = key[:values].empty? ? none : none + key[:values].collect(&:reverse)
       selected = @edit[:field_default_value]
       page.replace("field_default_value",
                    :text => select_tag('field_default_value',

@@ -758,7 +758,7 @@ class VmConfig
     sn_list.each do |(id, snapshot)|
       delete_items = []
       snapshot.each {|d| delete_items << d if d.name == 'disk'}
-      delete_items.each {|d| d.remove!}
+      delete_items.each(&:remove!)
     end
   end
 

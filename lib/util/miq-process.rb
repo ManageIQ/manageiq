@@ -20,7 +20,7 @@ class MiqProcess
     when :mswin, :mingw
       WMIHelper.connectServer().run_query("select Handle,Name from Win32_Process where Name = '#{process_name}.exe'") {|p| pids << p.Handle.to_i}
     when :linux, :macosx
-      pids = %x(ps -e | grep #{process_name} | grep -v grep ).split("\n").collect { |r| r.to_i}
+      pids = %x(ps -e | grep #{process_name} | grep -v grep ).split("\n").collect(&:to_i)
     else
       raise "Method MiqProcess.get_active_process_by_name not implemented on this platform [#{Platform::IMPL}]"
     end

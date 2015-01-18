@@ -41,7 +41,7 @@ class MiqUserScope
 
   def merge_managed(*args)
     grouped = args.flatten.compact.group_by {|v| v.split("/")[0..2]}
-    grouped.values.collect {|inner| inner.uniq}
+    grouped.values.collect(&:uniq)
   end
 
   def merge_belongsto(*args)

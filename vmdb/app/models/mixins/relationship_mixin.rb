@@ -101,7 +101,7 @@ module RelationshipMixin
   end
 
   def relationship_ids
-    self.relationships.collect { |r| r.id }
+    self.relationships.collect(&:id)
   end
 
   #
@@ -111,7 +111,7 @@ module RelationshipMixin
   # Returns all of the relationships of the parents of the record, [] for a root node
   def parent_rels(*args)
     options = args.extract_options!
-    rels = self.relationships.collect { |r| r.parent }.compact
+    rels = self.relationships.collect(&:parent).compact
     return Relationship.filter_by_resource_type(rels, options)
   end
 
@@ -241,7 +241,7 @@ module RelationshipMixin
   # Returns a list of child relationships
   def child_rels(*args)
     options = args.extract_options!
-    rels = self.relationships.flat_map { |r| r.children }.uniq
+    rels = self.relationships.flat_map(&:children).uniq
     return Relationship.filter_by_resource_type(rels, options)
   end
 
@@ -263,18 +263,18 @@ module RelationshipMixin
 
   # Returns true if the record has any children, false otherwise
   def has_children?(*args)
-    self.relationships.any? { |r| r.has_children? }
+    self.relationships.any?(&:has_children?)
   end
 
   # Returns true if the record has no children, false otherwise
   def is_childless?(*args)
-    self.relationships.all? { |r| r.is_childless? }
+    self.relationships.all?(&:is_childless?)
   end
 
   # Returns a list of sibling relationships
   def sibling_rels(*args)
     options = args.extract_options!
-    rels = self.relationships.flat_map { |r| r.siblings }.uniq
+    rels = self.relationships.flat_map(&:siblings).uniq
     return Relationship.filter_by_resource_type(rels, options)
   end
 
@@ -295,18 +295,18 @@ module RelationshipMixin
 
   # Returns true if the record's parent has more than one child
   def has_siblings?(*args)
-    self.relationships.any? { |r| r.has_siblings? }
+    self.relationships.any?(&:has_siblings?)
   end
 
   # Returns true if the record is the only child of its parent
   def is_only_child?(*args)
-    self.relationships.all? { |r| r.is_only_child? }
+    self.relationships.all?(&:is_only_child?)
   end
 
   # Returns a list of descendant relationships
   def descendant_rels(*args)
     options = args.extract_options!
-    rels = self.relationships.flat_map { |r| r.descendants }.uniq
+    rels = self.relationships.flat_map(&:descendants).uniq
     return Relationship.filter_by_resource_type(rels, options)
   end
 
@@ -347,7 +347,7 @@ module RelationshipMixin
   # Returns a list of all relationships in the record's subtree
   def subtree_rels(*args)
     options = args.extract_options!
-    rels = self.relationships.flat_map { |r| r.subtree }.uniq
+    rels = self.relationships.flat_map(&:subtree).uniq
     return Relationship.filter_by_resource_type(rels, options)
   end
 
@@ -535,7 +535,7 @@ module RelationshipMixin
       end
     end
 
-    child_objs.each { |c| c.clear_relationships_cache }
+    child_objs.each(&:clear_relationships_cache)
     self.clear_relationships_cache
 
     return child_objs
@@ -569,7 +569,7 @@ module RelationshipMixin
     # Determine which child relationships should be destroyed, already exist, or should be added
     child_rels = self.child_rels
 
-    child_rel_ids = child_rels.collect { |r| r.resource_pair }
+    child_rel_ids = child_rels.collect(&:resource_pair)
     child_obj_ids = child_objs.collect { |c| [c.class.base_class.name, c.id] }
 
     to_del = child_rel_ids - child_obj_ids
@@ -579,7 +579,7 @@ module RelationshipMixin
     to_add, to_keep = child_objs.partition { |c| to_add.include?([c.class.base_class.name, c.id]) }
 
     Relationship.transaction do
-      to_keep.each { |c| c.clear_relationships_cache }
+      to_keep.each(&:clear_relationships_cache)
       self.remove_all_relationships(to_del)
       self.add_children(to_add, :skip_check => true)
     end
@@ -599,7 +599,7 @@ module RelationshipMixin
     child_obj_ids = child_objs.collect { |c| [c.class.base_class.name, c.id] }
     to_del, to_keep = child_rels.partition { |r| child_obj_ids.include?(r.resource_pair) }
 
-    child_objs.each { |c| c.clear_relationships_cache }
+    child_objs.each(&:clear_relationships_cache)
     if to_keep.empty?
       self.remove_all_children
     else
@@ -634,7 +634,7 @@ module RelationshipMixin
 
     unless rels.empty?
       Relationship.transaction do
-        rels.each { |r| r.destroy }
+        rels.each(&:destroy)
       end
       self.clear_relationships_cache
     end

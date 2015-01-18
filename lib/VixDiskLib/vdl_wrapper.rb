@@ -172,7 +172,7 @@ class VdlConnection
     if !@vdl_connection
       vim_log.warn "VDLConnection.disconnect: server: #{@serverName} not connected" if $vim_log
     else
-      @disks.each { |d| d.close }
+      @disks.each(&:close)
     end
   end
   private :__close_disks__

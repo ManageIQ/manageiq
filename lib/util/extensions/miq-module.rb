@@ -53,7 +53,7 @@ class Module
 
   def self.clear_all_cache_with_timeout
     $miq_cache_with_timeout_lock.synchronize(:EX) do
-      $miq_cache_with_timeout.each_value { |v| v.clear }
+      $miq_cache_with_timeout.each_value(&:clear)
     end
   end
 end

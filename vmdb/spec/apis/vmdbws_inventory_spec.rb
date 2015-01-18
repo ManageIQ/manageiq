@@ -267,7 +267,7 @@ describe VmdbwsController, :apis => true do
 
     it 'should return Cluster information for FindClusterById' do
       new_cluster =  FactoryGirl.create(:ems_cluster,   :name => "cluster 2")
-      all_cluster_ids = EmsCluster.find(:all).collect {|c| c.id}
+      all_cluster_ids = EmsCluster.find(:all).collect(&:id)
       all_clusters = invoke(:FindClustersById,all_cluster_ids)
       all_clusters.should have(EmsCluster.count).things
       db_cluster = EmsCluster.first
@@ -342,7 +342,7 @@ describe VmdbwsController, :apis => true do
     end
 
     it 'should return Resource Pool information for FindResourcePoolById' do
-      all_resource_pool_ids = ResourcePool.find(:all).collect {|r| r.id}
+      all_resource_pool_ids = ResourcePool.find(:all).collect(&:id)
       all_resource_pools = invoke(:FindResourcePoolsById,all_resource_pool_ids)
       all_resource_pools.should have(ResourcePool.count).things
       db_resource_pool = ResourcePool.first
@@ -437,7 +437,7 @@ describe VmdbwsController, :apis => true do
     end
 
     it 'should return Datastore information for FindDatastoreById' do
-      all_storage_ids = Storage.find(:all).collect {|s| s.id}
+      all_storage_ids = Storage.find(:all).collect(&:id)
       all_datastores = invoke(:FindDatastoresById,all_storage_ids)
       all_datastores.should have(Storage.count).things
       db_storage = Storage.first

@@ -32,7 +32,7 @@ class MiqCompare
       raise "Must pass an id to MiqCompare" if options[:id].nil?
 
       @model_record_id = options[:id]
-      @ids_orig = options[:timestamps].collect { |ts| ts.utc }
+      @ids_orig = options[:timestamps].collect(&:utc)
       @ids = Array.new(@ids_orig)
     else
       raise "Unknown compare type [#{@mode}]"

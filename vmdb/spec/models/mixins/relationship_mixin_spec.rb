@@ -313,7 +313,7 @@ describe RelationshipMixin do
       rels[child].parent = rels[parent]
       rels[child].save!
     end
-    objs.each { |o| o.unmemoize_all }
+    objs.each(&:unmemoize_all)
   end
 
   def recurse_relationship_tree(tree, &block)

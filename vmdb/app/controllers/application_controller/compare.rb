@@ -12,7 +12,7 @@ module ApplicationController::Compare
 
     rpt = get_compare_report(@sb[:compare_db])
     session[:miq_sections] = MiqCompare.sections(rpt)
-    ids = session[:miq_selected].collect {|id| id.to_i}
+    ids = session[:miq_selected].collect(&:to_i)
     @compare = MiqCompare.new( {:ids=>ids,
                                 :include=>session[:miq_sections]},
                             rpt

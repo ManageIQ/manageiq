@@ -41,7 +41,7 @@ module EmsRefresh::SaveInventory
     # Query for all of the Vms once across all EMSes, to handle any moving VMs
     vms_uids = hashes.collect { |h| h[:uid_ems] }.compact
     vms = VmOrTemplate.find_all_by_uid_ems(vms_uids)
-    dup_vms_uids = (vms_uids.duplicates + vms.collect { |v| v.uid_ems }.duplicates).uniq.sort
+    dup_vms_uids = (vms_uids.duplicates + vms.collect(&:uid_ems).duplicates).uniq.sort
     $log.info "#{log_header} Duplicate unique values found: #{dup_vms_uids.inspect}" unless dup_vms_uids.empty?
 
     invalids_found = false
@@ -139,7 +139,7 @@ module EmsRefresh::SaveInventory
         $log.warn("#{log_header} Since failures occurred, not disconnecting for Vms #{self.log_format_deletes(disconnects)}")
       else
         $log.info("#{log_header} Disconnecting Vms #{self.log_format_deletes(disconnects)}")
-        disconnects.each { |v| v.disconnect_inv }
+        disconnects.each(&:disconnect_inv)
       end
     end
   end

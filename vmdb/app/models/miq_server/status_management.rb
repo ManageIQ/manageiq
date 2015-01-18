@@ -28,7 +28,7 @@ module MiqServer::StatusManagement
       status = MiqSystem.memory
       unless status.empty?
         $log.info("#{log_prefix} [#{svr_name}] System Status:")
-        status.keys.sort_by { |k| k.to_s }.each { |k| $log.info("#{log_prefix} [#{svr_name}]     #{k}: #{status[k]}") }
+        status.keys.sort_by(&:to_s).each { |k| $log.info("#{log_prefix} [#{svr_name}]     #{k}: #{status[k]}") }
       end
 
       disks = MiqSystem.disk_usage
@@ -72,11 +72,11 @@ module MiqServer::StatusManagement
       end
 
       queue_count = MiqQueue.nested_count_by(%w(state zone role))
-      states = queue_count.keys.sort_by { |k| k.to_s }
+      states = queue_count.keys.sort_by(&:to_s)
       states.each { |state| $log.info("#{log_prefix} [#{svr_name}] MiqQueue count for state=[#{state.inspect}] by zone and role: #{queue_count[state].inspect}") }
 
       job_count = Job.nested_count_by(%w(state zone type))
-      states = job_count.keys.sort_by { |k| k.to_s }
+      states = job_count.keys.sort_by(&:to_s)
       states.each { |state| $log.info("#{log_prefix} [#{svr_name}] Job count for state=[#{state.inspect}] by zone and process_type: #{job_count[state].inspect}") }
     end
   end

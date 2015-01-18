@@ -110,7 +110,7 @@ class MiqRegion < ActiveRecord::Base
   end
 
   def assigned_roles
-    self.miq_servers.collect { |s| s.assigned_roles }.flatten.uniq.compact
+    self.miq_servers.collect(&:assigned_roles).flatten.uniq.compact
   end
 
   def role_active?(role_name)

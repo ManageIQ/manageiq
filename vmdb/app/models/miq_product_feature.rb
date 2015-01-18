@@ -53,7 +53,7 @@ class MiqProductFeature < ActiveRecord::Base
   def self.features
     @feature_cache ||= begin
       self.all(:include => [:parent, :children]).inject({}) do |h,f|
-        child_idents = f.children.collect { |c| c.identifier }
+        child_idents = f.children.collect(&:identifier)
         parent_ident = f.parent.identifier if f.parent
         details      = DETAIL_ATTRS.inject({}) {|dh,a| dh[a] = f.send(a); dh}
         h[f.identifier] = {:parent => parent_ident, :children => child_idents, :details => details}
@@ -66,7 +66,7 @@ class MiqProductFeature < ActiveRecord::Base
     # Build an array of arrays as [[feature_type, name, identifier], ...]
     c_array = children.collect { |c| [self.feature_details(c)[:feature_type], self.feature_details(c)[:name], c] }
     # Sort by feature_type and name forcing the ordering of feature_type to match FEATURE_TYPE_ORDER
-    c_array.sort_by { |ftype, name, ident| [FEATURE_TYPE_ORDER.index(ftype), name] }.collect {|c| c.last}
+    c_array.sort_by { |ftype, name, ident| [FEATURE_TYPE_ORDER.index(ftype), name] }.collect(&:last)
   end
 
   def self.seed

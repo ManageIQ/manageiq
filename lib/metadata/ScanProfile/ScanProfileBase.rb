@@ -39,7 +39,7 @@ class ScanProfileBase
     return {
       :guid => @params["guid"],
       :name => @params["name"],
-      :scan_items => self.collect { |si| si.to_hash }
+      :scan_items => self.collect(&:to_hash)
     }
   end
   

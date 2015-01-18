@@ -161,7 +161,7 @@ class ResourcePool < ActiveRecord::Base
   end
 
   def all_host_ids
-    self.all_hosts.collect {|h| h.id}
+    self.all_hosts.collect(&:id)
   end
 
   # Virtual cols for parents
@@ -206,6 +206,6 @@ class ResourcePool < ActiveRecord::Base
   end
 
   def absolute_path(*args)
-    absolute_path_objs(*args).collect { |o| o.name }.join("/")
+    absolute_path_objs(*args).collect(&:name).join("/")
   end
 end

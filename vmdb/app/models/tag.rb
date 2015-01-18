@@ -66,10 +66,10 @@ class Tag < ActiveRecord::Base
       tag_names.concat list.split(/\s/)
 
       # strip whitespace from the names
-      tag_names = tag_names.map { |t| t.strip }
+      tag_names = tag_names.map(&:strip)
 
       # delete any blank tag names
-      tag_names = tag_names.delete_if { |t| t.empty? }
+      tag_names = tag_names.delete_if(&:empty?)
 
       return tag_names.uniq
     else

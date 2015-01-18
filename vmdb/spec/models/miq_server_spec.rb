@@ -327,7 +327,7 @@ describe MiqServer do
           ['ems_operations',         0]
         ].each { |r, max| @server_roles << FactoryGirl.create(:server_role, :name => r, :max_concurrent => max) }
 
-        @miq_server.role    = @server_roles.collect { |r| r.name }.join(',')
+        @miq_server.role    = @server_roles.collect(&:name).join(',')
 
       end
 

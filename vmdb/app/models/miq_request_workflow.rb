@@ -450,7 +450,7 @@ class MiqRequestWorkflow
 
   def validate_tags(field, values, dlg, fld, value)
     selected_tags_categories = values[field].to_miq_a.collect {|tag_id| Classification.find_by_id(tag_id).parent.name.to_sym}
-    required_tags = fld[:required_tags].to_miq_a.collect {|t| t.to_sym}
+    required_tags = fld[:required_tags].to_miq_a.collect(&:to_sym)
     missing_tags = required_tags - selected_tags_categories
     missing_categories_names = missing_tags.collect {|category| Classification.find_by_name(category.to_s).description rescue nil}.compact
     return nil if missing_categories_names.blank?
@@ -571,11 +571,11 @@ class MiqRequestWorkflow
     st = Time.now
     @tags = {}
     class_tags = Classification.where(:show => true).includes(:tag)
-    class_tags.reject! {|t| t.read_only?} # Can't do in query because column is a string.
+    class_tags.reject!(&:read_only?) # Can't do in query because column is a string.
 
-    exclude_list  = options[:exclude].blank?       ? [] : options[:exclude].collect{|t| t.to_s}
-    include_list  = options[:include].blank?       ? [] : options[:include].collect{|t| t.to_s}
-    single_select = options[:single_select].blank? ? [] : options[:single_select].collect{|t| t.to_s}
+    exclude_list  = options[:exclude].blank?       ? [] : options[:exclude].collect(&:to_s)
+    include_list  = options[:include].blank?       ? [] : options[:include].collect(&:to_s)
+    single_select = options[:single_select].blank? ? [] : options[:single_select].collect(&:to_s)
 
     cats, ents = class_tags.partition {|t| t.parent_id == 0}
     cats.each do |t|
@@ -599,7 +599,7 @@ class MiqRequestWorkflow
     # Now sort the tags based on the order passed options.  All remaining tags not defined in the order
     # will be sorted by description and appended to the other sorted tags
     tag_results, tags_to_sort = [], []
-    sort_order = options[:order].blank? ? [] : options[:order].collect{|t| t.to_s}
+    sort_order = options[:order].blank? ? [] : options[:order].collect(&:to_s)
     @tags.each do |k,v|
       (idx = sort_order.index(v[:name])).nil? ? tags_to_sort << v : tag_results[idx] = v
     end
@@ -1059,11 +1059,11 @@ class MiqRequestWorkflow
 
     rails_logger('allowed_hosts_obj', 0)
     st = Time.now
-    hosts_ids = find_all_ems_of_type(Host).collect {|h| h.id}
-    hosts_ids &= load_ar_obj(src[:storage]).hosts.collect {|h| h.id} unless src[:storage].nil?
+    hosts_ids = find_all_ems_of_type(Host).collect(&:id)
+    hosts_ids &= load_ar_obj(src[:storage]).hosts.collect(&:id) unless src[:storage].nil?
     unless src[:datacenter].nil?
       dc_node = load_ems_node(src[:datacenter], log_header)
-      hosts_ids &= find_hosts_under_ci(dc_node.attributes[:object]).collect {|h| h.id}
+      hosts_ids &= find_hosts_under_ci(dc_node.attributes[:object]).collect(&:id)
     end
     return [] if hosts_ids.blank?
 

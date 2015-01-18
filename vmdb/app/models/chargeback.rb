@@ -168,7 +168,7 @@ class Chargeback < ActsAsArModel
   end
 
   def self.column_names
-    @column_names ||= self.columns.collect { |c| c.name }.sort
+    @column_names ||= self.columns.collect(&:name).sort
   end
 
   def self.calculate_costs(perf, h, rates)

@@ -51,7 +51,7 @@ class ScanProfilesBase
   end
 
   def to_hash
-    return {:scan_profiles => self.collect { |p| p.to_hash } }
+    return {:scan_profiles => self.collect(&:to_hash) }
   end
 
   def to_yaml

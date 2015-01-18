@@ -570,7 +570,7 @@ module OpsController::Settings::Common
       if checked
         all_children.each { |k, v| server[k] = Set.new(v) }
       else
-        server.each_value { |v| v.clear }
+        server.each_value(&:clear)
       end
     end
   end
@@ -1272,7 +1272,7 @@ module OpsController::Settings::Common
   end
 
   def build_smartproxy_affinity_tree(zone)
-    zone.miq_servers.select { |s| s.is_a_proxy? }.sort_by { |s| [s.name, s.id] }.collect do |s|
+    zone.miq_servers.select(&:is_a_proxy?).sort_by { |s| [s.name, s.id] }.collect do |s|
       title = "#{Dictionary.gettext('MiqServer', :type => :model, :notfound => :titleize)}: #{s.name} [#{s.id}]"
       title = "<b class='cfme-bold-node'>#{title} (current)</title>".html_safe if @sb[:my_server_id] == s.id
       {

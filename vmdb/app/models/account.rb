@@ -43,7 +43,7 @@ class Account < ActiveRecord::Base
     # Only need to check one direction, as both directions are implied in the xml
     user_map.each do |name, curr_groups|
       acct = parent.accounts.find_by_name_and_accttype(name, 'user')
-      prev_groups = acct.groups.collect { |group| group.name }
+      prev_groups = acct.groups.collect(&:name)
 
       # Remove the common elements from both groups to determine the add/deletes
       common = prev_groups & curr_groups

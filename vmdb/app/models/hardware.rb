@@ -29,15 +29,15 @@ class Hardware < ActiveRecord::Base
   include ReportableMixin
 
   def ipaddresses
-    @ipaddresses ||= self.networks.collect { |n| n.ipaddress }.compact.uniq
+    @ipaddresses ||= self.networks.collect(&:ipaddress).compact.uniq
   end
 
   def hostnames
-    @hostnames ||= self.networks.collect { |n| n.hostname }.compact.uniq
+    @hostnames ||= self.networks.collect(&:hostname).compact.uniq
   end
 
   def mac_addresses
-    @mac_addresses ||= self.nics.collect { |n| n.address }.compact.uniq
+    @mac_addresses ||= self.nics.collect(&:address).compact.uniq
   end
 
   @@dh = {"type" => "device_name", "devicetype" => "device_type", "id" => "location", "present" => "present",

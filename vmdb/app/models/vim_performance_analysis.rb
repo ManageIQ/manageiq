@@ -90,7 +90,7 @@ module VimPerformanceAnalysis
       return target.storages if target.kind_of?(Host)
 
       if target.kind_of?(EmsCluster)
-        return target.hosts.collect {|h| h.storages}.flatten.compact
+        return target.hosts.collect(&:storages).flatten.compact
       else
         raise "unable to get storages for #{target.class}"
       end

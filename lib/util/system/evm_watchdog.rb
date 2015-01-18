@@ -51,7 +51,7 @@ module EvmWatchdog
 
   def self.get_ps_pids(process_name)
     pids = self.ps_for_process(process_name)
-    pids.chomp.split.map {|p| p.to_i}
+    pids.chomp.split.map(&:to_i)
   end
 
   def self.ps_for_process(process_name)

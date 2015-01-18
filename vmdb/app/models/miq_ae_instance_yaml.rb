@@ -7,7 +7,7 @@ class MiqAeInstanceYaml
 
   def field_names
     raise "ae instance object has not been initialize" unless @ae_instance_obj
-    @ae_instance_obj['object']['fields'].collect { |item| item.keys }.flatten
+    @ae_instance_obj['object']['fields'].collect(&:keys).flatten
   end
 
   def field_value_hash(name)

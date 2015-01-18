@@ -30,7 +30,7 @@ begin
     total = 0
     log "-- Purging table: #{tn}..."
     sc.select(:id).find_in_batches(:batch_size => 500) do |ma|
-      ids = ma.collect { |m| m.id }
+      ids = ma.collect(&:id)
       total += sc.delete_all(:id => ids)
     end
     gtotal += total

@@ -14,7 +14,7 @@ module MiqBulkImport
     end
     header = reader.shift
 
-    tags = (header - keys).collect{|t| t.dup} if tags.nil?
+    tags = (header - keys).collect(&:dup) if tags.nil?
 
     verified_tags = tags.collect {|t| t if header.include?(t)}.compact
     unless verified_tags.empty?

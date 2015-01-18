@@ -77,7 +77,7 @@ class MiqMountManager < MiqFS
     #
 
 	def umount
-		@allFileSystems.each { |fs| fs.umount }
+		@allFileSystems.each(&:umount)
 	end
     
   	# Return free space in file system.

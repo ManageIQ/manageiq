@@ -21,7 +21,7 @@ class TreeBuilderChargebackAssignments  < TreeBuilder
     case options[:type]
     when :cb_assignments, :cb_rates
       rates = ChargebackRate.all
-      rate_types = rates.collect {|s| s.rate_type}.uniq.sort
+      rate_types = rates.collect(&:rate_type).uniq.sort
 
       if count_only
         rate_types.length

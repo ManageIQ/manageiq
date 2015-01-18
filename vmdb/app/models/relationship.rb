@@ -33,7 +33,7 @@ class Relationship < ActiveRecord::Base
 
   def self.resources(relationships)
     MiqPreloader.preload(relationships, :resource)
-    relationships.collect { |r| r.resource }
+    relationships.collect(&:resource)
   end
 
   def self.resource_pair(relationship)
@@ -41,15 +41,15 @@ class Relationship < ActiveRecord::Base
   end
 
   def self.resource_pairs(relationships)
-    relationships.collect { |r| r.resource_pair }
+    relationships.collect(&:resource_pair)
   end
 
   def self.resource_ids(relationships)
-    relationships.collect { |r| r.resource_id }
+    relationships.collect(&:resource_id)
   end
 
   def self.resource_types(relationships)
-    relationships.collect { |r| r.resource_type }.uniq
+    relationships.collect(&:resource_type).uniq
   end
 
   def self.resource_pairs_to_ids(resource_pairs)

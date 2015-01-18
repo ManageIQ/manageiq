@@ -96,7 +96,7 @@ module EmsRefresh
       recs = c.find(:all, opts)
 
       if recs.length != ids.length
-        missing = ids - recs.collect {|r| r.id}
+        missing = ids - recs.collect(&:id)
         $log.warn "MIQ(#{self.name}.get_ar_objects) Unable to find a record for [#{c}] ids: #{missing.inspect}."
       end
 

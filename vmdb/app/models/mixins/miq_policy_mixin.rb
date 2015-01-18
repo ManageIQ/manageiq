@@ -49,7 +49,7 @@ module MiqPolicyMixin
       prof = MiqPolicySet.find(pid)
       next unless prof
 
-      plist = prof.members.collect {|p| p.name}
+      plist = prof.members.collect(&:name)
       presults = resolve_policies(plist, event)
 
       next if presults.empty? # skip profiles that had no policies due to the event not matching or no policies in scope
@@ -108,7 +108,7 @@ module MiqPolicyMixin
           next unless t.respond_to?(assoc)
           t.send(assoc).get_policies unless t.send(assoc).nil?
         }).compact.flatten.uniq
-        presults = t.resolve_profiles(profiles.collect{|p| p.id}, eventobj)
+        presults = t.resolve_profiles(profiles.collect(&:id), eventobj)
         target_result = presults.inject("allow") { |s,r| break "deny" if r["result"] == "deny"; s }
 
         result_list = presults.collect {|r| r["result"]}.uniq
@@ -122,7 +122,7 @@ module MiqPolicyMixin
       eventobj = event.kind_of?(String) ? MiqEvent.find_by_name(event) : MiqEvent.extract_objects(event)
       raise "No event found for [#{event}]" if eventobj.nil?
 
-      targets =  targets.first.kind_of?(self) ? targets.collect {|t| t.id} : targets
+      targets =  targets.first.kind_of?(self) ? targets.collect(&:id) : targets
 
       opts = {
         :action       => "#{self.name} - Resultant Set of Policy, Event: [#{eventobj.description}]",

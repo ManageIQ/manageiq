@@ -155,7 +155,7 @@ class MiqWidget < ActiveRecord::Base
       :class_name  => self.class.name,
       :instance_id => self.id ).all
 
-    unless messages.any? { |m| m.unfinished? }
+    unless messages.any?(&:unfinished?)
       unless task.state == MiqTask::STATE_FINISHED
         task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_TIMEOUT, "Timed out stalled task.")
       end
@@ -456,7 +456,7 @@ class MiqWidget < ActiveRecord::Base
   end
 
   def timezones_for_users(users)
-    users.to_miq_a.collect { |u| u.get_timezone }.uniq.sort
+    users.to_miq_a.collect(&:get_timezone).uniq.sort
   end
 
   def available_for_group?(group)

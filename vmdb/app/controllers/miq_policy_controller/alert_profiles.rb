@@ -286,7 +286,7 @@ module MiqPolicyController::AlertProfiles
         @assign[:new][:assign_to] = "enterprise"
       else                                                    # Assigned to CIs
         @assign[:new][:assign_to] = aa[:objects].first.class.base_class.to_s.underscore
-        @assign[:new][:objects] = aa[:objects].collect{|o| o.id}.sort!
+        @assign[:new][:objects] = aa[:objects].collect(&:id).sort!
       end
     elsif !aa[:tags].empty?                                   # Tags are assigned
       @assign[:new][:assign_to] = aa[:tags].first.last + "-tags"

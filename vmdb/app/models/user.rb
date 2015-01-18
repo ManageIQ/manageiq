@@ -856,7 +856,7 @@ class User < ActiveRecord::Base
     log_prefix  = "MIQ(User#match_groups)"
 
     return [] if groups.empty?
-    groups = groups.collect { |g| g.downcase }
+    groups = groups.collect(&:downcase)
 
     miq_groups  = MiqServer.my_server.miq_groups
     miq_groups  = MiqServer.my_server.zone.miq_groups if miq_groups.empty?

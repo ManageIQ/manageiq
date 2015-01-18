@@ -70,7 +70,7 @@ module MiqServer::WorkerManagement::Monitor
       w.destroy
     end
     self.miq_workers.delete(*processed_workers) unless processed_workers.empty?
-    processed_workers.collect {|w| w.id}
+    processed_workers.collect(&:id)
   end
 
   def check_pending_stop(class_name = nil)
@@ -96,7 +96,7 @@ module MiqServer::WorkerManagement::Monitor
       worker_delete(w.pid)
     end
     self.miq_workers.delete(*processed_workers) unless processed_workers.empty?
-    processed_workers.collect {|w| w.id}
+    processed_workers.collect(&:id)
   end
 
   def do_system_limit_exceeded

@@ -9,7 +9,7 @@ module MiqAeMethodService
     expose :host,             :association => true
 
     def mac_addresses
-      object_send(:nics).collect { |n| n.address }
+      object_send(:nics).collect(&:address)
     end
   end
 end

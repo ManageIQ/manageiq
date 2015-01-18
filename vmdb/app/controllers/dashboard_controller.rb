@@ -743,7 +743,7 @@ class DashboardController < ApplicationController
     # Copy ALL display settings into the :css hash so we can easily add new settings
     @settings[:css] ||= Hash.new
     @settings[:css].merge!(@settings[:display])
-    @settings[:display][:theme] = THEMES.first.last unless THEMES.collect{|t| t.last}.include?(@settings[:display][:theme])
+    @settings[:display][:theme] = THEMES.first.last unless THEMES.collect(&:last).include?(@settings[:display][:theme])
     @settings[:css].merge!(THEME_CSS_SETTINGS[@settings[:display][:theme]])
 
     @css ||= Hash.new

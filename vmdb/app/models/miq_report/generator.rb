@@ -410,9 +410,9 @@ module MiqReport::Generator
     raise "Report table is nil" if rpt.table.nil?
 
     rpt_data = if self.db_options[:row_col] && self.db_options[:row_val]
-      rpt.table.find_all {|d| d.data.has_key?(self.db_options[:row_col]) && (d.data[self.db_options[:row_col]] == self.db_options[:row_val])}.collect {|d| d.data}
+      rpt.table.find_all {|d| d.data.has_key?(self.db_options[:row_col]) && (d.data[self.db_options[:row_col]] == self.db_options[:row_val])}.collect(&:data)
     else
-      rpt.table.collect {|d| d.data}
+      rpt.table.collect(&:data)
     end
   end
 
@@ -556,9 +556,9 @@ module MiqReport::Generator
     return data if data.blank?
 
     # Build a tempory table so that ruport sorting can be used to sort data before summarizing pivot data
-    column_names = (data.first.keys.collect {|k| k.to_s} + self.col_order).uniq
+    column_names = (data.first.keys.collect(&:to_s) + self.col_order).uniq
     data = Ruport::Data::Table.new(:data => data, :column_names => column_names)
-    data = self.sort_table(data, self.rpt_options[:pivot][:group_cols].collect {|c| c.to_s}, :order => :ascending)
+    data = self.sort_table(data, self.rpt_options[:pivot][:group_cols].collect(&:to_s), :order => :ascending)
 
     # build grouping options for subtotal
     options = self.col_order.inject({}) do |h,col|

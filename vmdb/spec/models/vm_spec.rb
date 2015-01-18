@@ -51,7 +51,7 @@ describe Vm do
       @parent_vm.with_relationship_type("genealogy") { @parent_vm.add_child(@vm) }
       @vm.with_relationship_type("genealogy")        { @vm.add_child(@child_vm) }
 
-      [@rp, @parent_vm, @vm, @child_vm].each { |o| o.clear_relationships_cache }
+      [@rp, @parent_vm, @vm, @child_vm].each(&:clear_relationships_cache)
     end
 
     context "#destroy" do

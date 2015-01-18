@@ -107,5 +107,5 @@ diskFiles.each do |df|
     puts
 end
 
-disks.each { |disk| disk.close }
+disks.each(&:close)
 connection.disconnect

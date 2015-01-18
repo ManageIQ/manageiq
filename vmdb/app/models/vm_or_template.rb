@@ -378,7 +378,7 @@ class VmOrTemplate < ActiveRecord::Base
       AuditEvent.success(:event => options[:task], :target_class => self.base_class.name, :userid => options[:userid],
         :message => "'#{options[:task]}' successfully initiated for #{ApplicationController.new.pluralize(options[:ids].length,"VM")}")
     else
-      raise "Unknown task, #{options[:task]}" unless self.instance_methods.collect { |m| m.to_s }.include?(options[:task])
+      raise "Unknown task, #{options[:task]}" unless self.instance_methods.collect(&:to_s).include?(options[:task])
       options[:userid] ||= "system"
       self.invoke_tasks_queue(options)
     end
@@ -862,7 +862,7 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def lans
-    !self.hardware.nil? ? self.hardware.nics.collect {|n| n.lan}.compact : []
+    !self.hardware.nil? ? self.hardware.nics.collect(&:lan).compact : []
   end
 
   # Create a hash of this Vm's EMS and Host and their credentials
@@ -1074,7 +1074,7 @@ class VmOrTemplate < ActiveRecord::Base
 
   def storage2active_proxies(all_proxy_list = nil)
     all_proxy_list ||= self.storage2proxies
-    proxies = all_proxy_list.select { |h| h.is_proxy_active? }
+    proxies = all_proxy_list.select(&:is_proxy_active?)
 
     # MiqServer coresident proxy needs to contact the host and provide credentials.
     # Remove any MiqServer instances if we do not have credentials
@@ -1093,7 +1093,7 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def miq_proxies
-    miqproxies = self.storage2proxies.collect {|h| h.miq_proxy}.compact
+    miqproxies = self.storage2proxies.collect(&:miq_proxy).compact
 
     # The UI does not handle getting back non-MiqProxy objects back from this call.
     # Remove MiqServer elements until we can support different class types.
@@ -1117,7 +1117,7 @@ class VmOrTemplate < ActiveRecord::Base
     end
 
     host_server_ids = host ? host.vm_scan_affinity.collect(&:id) : []
-    storage_server_ids = storages.collect { |s| s.vm_scan_affinity.collect(&:id) }.reject { |i| i.blank? }
+    storage_server_ids = storages.collect { |s| s.vm_scan_affinity.collect(&:id) }.reject(&:blank?)
     all_storage_server_ids = storage_server_ids.inject(:&) || []
     miq_servers = self.class.miq_servers_for_scan.select do |svr|
       (svr.vm_scan_host_affinity? ? host_server_ids.detect { |id| id == svr.id } : host_server_ids.empty?) &&
@@ -1232,8 +1232,8 @@ class VmOrTemplate < ActiveRecord::Base
         end
     end
     unless updated_folders.empty?
-      updated_vms = updated_folders.collect { |f| f.all_vms_and_templates }.flatten.uniq - added_vms
-      updated_vms.each { |v| v.classify_with_parent_folder_path_queue }
+      updated_vms = updated_folders.collect(&:all_vms_and_templates).flatten.uniq - added_vms
+      updated_vms.each(&:classify_with_parent_folder_path_queue)
     end
   end
 
@@ -1674,12 +1674,12 @@ class VmOrTemplate < ActiveRecord::Base
   def has_rdm_disk
     return false if self.hardware.nil?
 
-    !self.hardware.disks.detect {|d| d.rdm_disk?}.nil?
+    !self.hardware.disks.detect(&:rdm_disk?).nil?
   end
 
   def disks_aligned
     dlist = self.hardware ? self.hardware.hard_disks : []
-    dlist = dlist.reject {|d| d.rdm_disk?} # Skip RDM disks
+    dlist = dlist.reject(&:rdm_disk?) # Skip RDM disks
     return "Unknown" if dlist.empty?
     return "True"    if dlist.all? {|d| d.partitions_aligned == "True"}
     return "False"   if dlist.any? {|d| d.partitions_aligned == "False"}

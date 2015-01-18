@@ -115,7 +115,7 @@ class MiqVolumeManager
     # manager is instantiated through fromNativePvs().
     #
     def closePvols
-    	@allPhysicalVolumes.each { |pv| pv.close }
+    	@allPhysicalVolumes.each(&:close)
     	@allPhysicalVolumes.clear
     end
 

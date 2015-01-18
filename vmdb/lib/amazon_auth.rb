@@ -56,6 +56,6 @@ class AmazonAuth
   end
 
   def get_memberships(user)
-    user.groups.collect {|x| x.name}
+    user.groups.collect(&:name)
   end
 end

@@ -14,7 +14,7 @@ class AddTypeToAuthentications < ActiveRecord::Migration
 
   def down
     say_with_time("Deleting non 'AuthUseridPassword' type authenications") do
-      Authentication.where("type != 'AuthUseridPassword'").each { |a| a.destroy }
+      Authentication.where("type != 'AuthUseridPassword'").each(&:destroy)
     end
 
     remove_column :authentications, :type

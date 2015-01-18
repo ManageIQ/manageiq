@@ -199,7 +199,7 @@ class MiqStorageMetric < ActiveRecord::Base
       query = query.where(:rollup_type => rollup_type) unless rollup_type.nil?
       total = 0
       query.find_in_batches(:batch_size => window) do |ma|
-        ids = ma.collect { |m| m.id }
+        ids = ma.collect(&:id)
         total += mc.delete_all(:id => ids)
       end
       gtotal += total
@@ -214,7 +214,7 @@ class MiqStorageMetric < ActiveRecord::Base
   # Called directly from MiqStorageMetric.
   #
   def self.sub_class_names
-    self.select('DISTINCT type').collect { |c| c.type }
+    self.select('DISTINCT type').collect(&:type)
   end
 
   #

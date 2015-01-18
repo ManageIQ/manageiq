@@ -5,7 +5,7 @@ module MiqReport::Generator::Async
       options[:userid] ||= "system"
       sync = VMDB::Config.new("vmdb").config[:product][:report_sync]
 
-      task = MiqTask.create(:name => "Generate Reports: #{options[:reports].collect {|r| r.name}.inspect}")
+      task = MiqTask.create(:name => "Generate Reports: #{options[:reports].collect(&:name).inspect}")
       MiqQueue.put(
         :queue_name  => "generic",
         :role        => "reporting",

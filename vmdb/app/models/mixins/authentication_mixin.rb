@@ -10,7 +10,7 @@ module AuthenticationMixin
       zone = MiqServer.my_server.zone
       assoc = self.name.tableize
       assocs = zone.respond_to?(assoc) ? zone.send(assoc) : []
-      assocs.each { |ci| ci.authentication_check_types_queue }
+      assocs.each(&:authentication_check_types_queue)
     end
   end
 

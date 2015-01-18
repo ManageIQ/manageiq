@@ -11,8 +11,8 @@ describe ConvertOldStatesToNewFormat do
 
         disable_paralleism { migrate }
 
-        actual   = state_stub.order(:id).all.collect { |s| s.data }
-        expected = load_data_file("#{filename}_expected").collect { |e| e.to_yaml }
+        actual   = state_stub.order(:id).all.collect(&:data)
+        expected = load_data_file("#{filename}_expected").collect(&:to_yaml)
 
         actual.zip(expected).each_with_index do |(a, e), i|
           a.should eq(e), "on index #{i}"

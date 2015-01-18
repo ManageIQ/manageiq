@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe EmsInfra do
   it ".types" do
-    expected_types = [EmsVmware, EmsRedhat, EmsMicrosoft, EmsKvm, EmsOpenstackInfra].collect { |e| e.ems_type }
+    expected_types = [EmsVmware, EmsRedhat, EmsMicrosoft, EmsKvm, EmsOpenstackInfra].collect(&:ems_type)
     described_class.types.should match_array(expected_types)
   end
 
@@ -12,7 +12,7 @@ describe EmsInfra do
   end
 
   it ".supported_types" do
-    expected_types = [EmsVmware, EmsMicrosoft, EmsRedhat, EmsOpenstackInfra].collect { |e| e.ems_type }
+    expected_types = [EmsVmware, EmsMicrosoft, EmsRedhat, EmsOpenstackInfra].collect(&:ems_type)
     described_class.supported_types.should match_array(expected_types)
   end
 

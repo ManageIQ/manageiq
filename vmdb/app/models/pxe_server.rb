@@ -41,7 +41,7 @@ class PxeServer < ActiveRecord::Base
   end
 
   def synchronize_advertised_images
-    self.pxe_menus.each { |m| m.synchronize }
+    self.pxe_menus.each(&:synchronize)
     sync_windows_images
     clear_association_cache
     self.update_attribute(:last_refresh_on, Time.now.utc)

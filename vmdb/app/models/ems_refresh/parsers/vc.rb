@@ -925,7 +925,7 @@ module EmsRefresh::Parsers::Vc
     return result if hostname.nil? && guest_ip.nil?
 
     inv_net.to_miq_a.each do |data|
-      ipv4, ipv6 = data['ipAddress'].to_miq_a.compact.collect { |ip| ip.to_s }.sort.partition { |ip| ip =~ /([0-9]{1,3}\.){3}[0-9]{1,3}/ }
+      ipv4, ipv6 = data['ipAddress'].to_miq_a.compact.collect(&:to_s).sort.partition { |ip| ip =~ /([0-9]{1,3}\.){3}[0-9]{1,3}/ }
       ipv4 << nil if ipv4.empty?
       ipaddresses = ipv4.zip_stretched(ipv6)
 

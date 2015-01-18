@@ -32,7 +32,7 @@ module VmdbDatabase::MetricCapture
   end
 
   def capture_table_metrics(timestamp = Time.now)
-    vmdb_tables.each { |table| table.capture_metrics }
+    vmdb_tables.each(&:capture_metrics)
   end
 
   def rollup_metrics(timestamp = Time.now)

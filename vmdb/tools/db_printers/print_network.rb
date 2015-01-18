@@ -26,7 +26,7 @@ Host.find(:all).each do |host|
     end
 
     pnics_grouped.each do |pa|
-      puts "  pNIC: #{pa.collect { |pnic| pnic.device_name }.join(", ")}"
+      puts "  pNIC: #{pa.collect(&:device_name).join(", ")}"
       pnic = pa[0]
       unless pnic.switch.nil?
         print_switch("    ", pnic.switch)

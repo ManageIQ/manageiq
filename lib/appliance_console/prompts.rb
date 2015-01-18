@@ -89,7 +89,7 @@ module ApplianceConsole
       collective ||= "#{prompt}s"
       validate = ->(p) { (p.length < max_length) && (p.split(/[\s,;]+/).length <= max_count) }
       error_message = "up to #{max_count} #{prompt}s separated by a space and up to #{max_length} characters"
-      just_ask(collective, default, validate, error_message).split(/[\s,;]+/).collect { |p| p.strip }
+      just_ask(collective, default, validate, error_message).split(/[\s,;]+/).collect(&:strip)
     end
 
     def ask_for_password(prompt, default = nil)

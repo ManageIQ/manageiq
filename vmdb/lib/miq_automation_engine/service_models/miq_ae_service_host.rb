@@ -42,7 +42,7 @@ module MiqAeMethodService
 
     def ems_custom_keys
       ar_method do
-        @object.ems_custom_attributes.collect { |c| c.name }
+        @object.ems_custom_attributes.collect(&:name)
       end
     end
 

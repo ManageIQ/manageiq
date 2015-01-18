@@ -75,7 +75,7 @@ class Storage < ActiveRecord::Base
   end
 
   def ext_management_systems
-    @ext_management_systems ||= Host.includes(:storages).select { |h| h.storages.include?(self) }.collect { |h| h.ext_management_system }.compact.uniq
+    @ext_management_systems ||= Host.includes(:storages).select { |h| h.storages.include?(self) }.collect(&:ext_management_system).compact.uniq
   end
 
   def ext_management_systems_in_zone(zone_name)
@@ -87,7 +87,7 @@ class Storage < ActiveRecord::Base
   end
 
   def active_hosts_with_credentials
-    self.active_hosts.select { |h| h.authentication_valid? }
+    self.active_hosts.select(&:authentication_valid?)
   end
 
   def active_hosts_in_zone(zone_name)
@@ -319,13 +319,13 @@ class Storage < ActiveRecord::Base
       storages << storage
     end
 
-    $log.info "#{log_header} Computing#{zone_caption} Complete -- Storage IDs: #{storages.collect { |s| s.id }.sort.inspect}"
+    $log.info "#{log_header} Computing#{zone_caption} Complete -- Storage IDs: #{storages.collect(&:id).sort.inspect}"
     storages
   end
 
   def self.create_scan_task(task_name, userid, storages)
     log_header = "MIQ(Storage.create_scan_task)"
-    context_data = { :targets  => storages.collect { |s| s.id }.sort, :complete => [], :pending  => {} }
+    context_data = { :targets  => storages.collect(&:id).sort, :complete => [], :pending  => {} }
     miq_task     = MiqTask.create(
                       :name         => task_name,
                       :state        => MiqTask::STATE_QUEUED,
@@ -379,7 +379,7 @@ class Storage < ActiveRecord::Base
     else
       self.storage_files.where(:ext_name => "vmx", :vm_or_template_id => nil)
     end
-    return files.collect {|f| f.name}
+    return files.collect(&:name)
   end
 
   # Cache storage file counts for the entire list of storages so that looping over
@@ -413,7 +413,7 @@ class Storage < ActiveRecord::Base
   end
 
   def registered_vms
-    self.vms.select { |v| v.registered? }
+    self.vms.select(&:registered?)
   end
 
   def unregistered_vms
@@ -579,7 +579,7 @@ class Storage < ActiveRecord::Base
   end
 
   def vm_ids_by_path
-    host_ids = self.hosts.collect { |h| h.id }
+    host_ids = self.hosts.collect(&:id)
     return nil if host_ids.empty?
     Vm.where("host_id IN (?)", host_ids).includes(:storage).inject({}) { |h, v| h[File.dirname(v.path)] = v.id; h }
   end

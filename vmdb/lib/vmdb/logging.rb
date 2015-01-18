@@ -125,7 +125,7 @@ module Vmdb
         config[key] = config[key].upcase unless config[key].nil?
 
         level = config[key]
-        if level && !VMDBLogger::Severity.constants.collect { |c| c.to_s }.include?(level)
+        if level && !VMDBLogger::Severity.constants.collect(&:to_s).include?(level)
           valid = false
           errors << [key, "#{key}, \"#{level}\", is invalid. Should be one of: #{VMDBLogger::Severity.constants.join(", ")}"]
         end

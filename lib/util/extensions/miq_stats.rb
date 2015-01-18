@@ -93,6 +93,6 @@ if __FILE__ == $0
   fields.each_index do |i|
     next unless fields[i].size > 0
     puts [ i,  fields[i].mean, fields[i].deviation ] \
-    .collect{|x|x.to_s}.join("\t")
+    .collect(&:to_s).join("\t")
   end
 end
