@@ -109,7 +109,6 @@ module MiqPolicyController::Conditions
     add_flash(_("Condition \"%{cond_name}\" has been removed from Policy \"%{pol_name}\"") % {:cond_name=>cdesc, :pol_name=>policy.description})
     policy_get_info(policy)
     @nodetype = "p"
-    node_ids = @sb[:node_ids][x_active_tree]  # Get the selected node ids
     nodes = x_node.split("_")
     nodes.pop
     @new_policy_node = self.x_node = nodes.join("_")
