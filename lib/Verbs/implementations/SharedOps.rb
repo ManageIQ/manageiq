@@ -404,29 +404,6 @@ module SharedOps
     @vmdbDriver ||= MiqservicesClient.get_driver(ost.config)
 	end
 		
-	def renameDisks (diskFile, diskFileSave, bbFileSave)
-		
-		return	#NOP
-		
-		attempt = 0
-		begin
-			#
-			# Now that the VM has started, let's reset...
-			# 
-			# Save the VM's disk file.
-			# 
-			File.rename(diskFile, diskFileSave) if File.exist?(diskFile)
-			#
-			# Restore the black box.
-			# 
-			File.rename(bbFileSave, diskFile) if File.exist?(bbFileSave)
-		rescue => err #Errno::EACCES
-			sleep(0.1)
-			attempt+=1
-			retry unless attempt > 20
-		end
-	end
-	
 	def isSmart?(vmName)
 		# Set Internal blackbox smart flag to true, if not already
 		bb = Manageiq::BlackBox.new(vmName)
