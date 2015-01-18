@@ -212,24 +212,4 @@ class MiqVimPerfHistory
         return(pqSpec)
     end
     
-    def perfEntityMetricFixup(pemHash)
-        return
-        pemHash["sampleInfo"] = [ pemHash["sampleInfo"] ] if pemHash["sampleInfo"].kind_of? Hash
-        
-        pemHash["sampleInfo"].each do |si|
-            si["interval"] = si["interval"].to_i if si["interval"]
-            si['timestamp'] = DateTime.parse(si['timestamp'])
-        end if pemHash["sampleInfo"]
-        
-        pemHash["value"] = [ pemHash["value"] ] if pemHash["value"].kind_of? Hash
-        
-        pemHash["value"].each do |pms|
-            pms["value"] = [ pms["value"] ] if !pms["value"].kind_of? Array
-            
-            pms["value"].each_index do |i|
-                pms["value"][i] = pms["value"][i].to_i
-            end
-        end if pemHash["value"]
-    end
-    
 end # class MiqVimPerfHistory
