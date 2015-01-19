@@ -90,7 +90,7 @@ module ToModelHash
           recs = self.tags.collect { |t| Classification.tag_to_model_hash(t) }
         else
           recs = self.send(k)
-          single_rec = !recs.kind_of?(Array)
+          single_rec = !iterable?(self.class, k)
           recs = recs.to_miq_a.collect { |c| c.to_model_hash_recursive(v) }
           recs = recs.first if single_rec
         end
@@ -99,6 +99,12 @@ module ToModelHash
     end
 
     return result
+  end
+
+  def iterable?(klass, association)
+    reflection = klass.virtual_reflection(association) ||
+      klass.reflect_on_association(association)
+    reflection && reflection.collection?
   end
 
   def to_model_hash_build_preload(options)
