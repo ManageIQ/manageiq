@@ -49,8 +49,7 @@ module MiqReport::Generator
     end
 
     def default_queue_timeout
-      value = VMDB::Config.new("vmdb").config.fetch_path(:reporting, :queue_timeout) || 3600
-      return value.to_i_with_method
+      VMDB::Config.new("vmdb").config.fetch_path(:reporting, :queue_timeout) || 3600.seconds
     end
   end
 
@@ -786,7 +785,7 @@ module MiqReport::Generator
   end
 
   def queue_timeout
-    ((self.rpt_options || {})[:queue_timeout] || self.class.default_queue_timeout).to_i_with_method
+    (self.rpt_options || {})[:queue_timeout] || self.class.default_queue_timeout
   end
 
   def queue_timeout=(value)

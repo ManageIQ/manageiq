@@ -202,7 +202,6 @@ class ScheduleWorker < WorkerBase
 
     # Schedule - Periodic refresh for all EMS's
     eri = VMDB::Config.new("vmdb").config.fetch_path(:ems_refresh, :refresh_interval)
-    eri = eri.respond_to?(:to_i_with_method) ? eri.to_i_with_method : eri.to_i
     unless eri == 0
       @schedules[:scheduler] << self.system_schedule_every(eri, :first_in => eri) do |rufus_job|
         @queue.enq :ems_refresh_all_ems_timer
@@ -210,7 +209,6 @@ class ScheduleWorker < WorkerBase
     end
 
     eri = VMDB::Config.new("vmdb").config.fetch_path(:ems_refresh, :scvmm, :refresh_interval)
-    eri = eri.respond_to?(:to_i_with_method) ? eri.to_i_with_method : eri.to_i
     unless eri == 0
       @schedules[:scheduler] << self.system_schedule_every(eri, :first_in => eri) do |rufus_job|
         @queue.enq :ems_refresh_all_scvmm_timer

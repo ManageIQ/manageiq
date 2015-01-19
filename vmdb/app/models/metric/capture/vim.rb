@@ -9,7 +9,7 @@ module Metric::Capture::Vim
   #
 
   cache_with_timeout(:perf_history_results,
-    lambda { (VMDB::Config.new("vmdb").config.fetch_path(:performance, :vim_cache_ttl) || 1.hour).to_i_with_method }
+    lambda { (VMDB::Config.new("vmdb").config.fetch_path(:performance, :vim_cache_ttl) || 1.hour) }
   ) { Hash.new }
 
   def self.intervals(ems, vim_hist)

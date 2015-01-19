@@ -79,8 +79,8 @@ class ApiController
         token_cui   = api_config[:token_cleanup_interval]
 
         options                          = {}
-        options[:token_ttl]              = token_ttl.to_i_with_method if token_ttl
-        options[:token_cleanup_interval] = token_cui.to_i_with_method if token_cui
+        options[:token_ttl]              = token_ttl if token_ttl
+        options[:token_cleanup_interval] = token_cui if token_cui
 
         $api_log.info("")
         $api_log.info("Creating new Token Manager for the #{name}")

@@ -32,6 +32,20 @@ class Numeric
   end
 end
 
+module ActiveSupport
+  class Duration < BasicObject
+    def to_i_with_method
+      warn "#{__method__} on a duration is deprecated, remove this call at (#{caller.first})"
+      self
+    end
+
+    def to_f_with_method
+      warn "#{__method__} on a duration is deprecated, remove this call at (#{caller.first})"
+      self
+    end
+  end
+end
+
 class NilClass
   alias to_i_with_method to_i
   alias to_f_with_method to_f

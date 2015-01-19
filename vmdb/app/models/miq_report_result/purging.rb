@@ -4,9 +4,12 @@ module MiqReportResult::Purging
   module ClassMethods
     def purge_mode_and_value
       value = VMDB::Config.new("vmdb").config.fetch_path(:reporting, :history, :keep_reports)
-      mode  = (value.nil? || value.number_with_method?) ? :date : :remaining
-      value = (value || 6.months).to_i_with_method.ago.utc if mode == :date
-      return mode, value
+      value ||= 6.months
+      if ActiveSupport::Duration === value
+        [:date, value.ago]
+      else
+        [:remaining, value]
+      end
     end
 
     def purge_window_size

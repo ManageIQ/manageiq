@@ -20,6 +20,7 @@ gem 'less-rails'
 gem "rails",                          "=3.2.17",                         :git => "git://github.com/ManageIQ/rails.git", :tag => "vendored-3.2.17-13"
 gem "ruport",                         "=1.7.0",                          :git => "git://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-2"
 
+gem 'psych', '~> 2.0.7'
 # Vendored but not required
 gem "actionwebservice",               "=3.1.0",       :require => false, :git => "git://github.com/ManageIQ/actionwebservice.git", :tag => "v3.1.0-1"
 gem "net-ldap",                       "~>0.7.0",      :require => false
