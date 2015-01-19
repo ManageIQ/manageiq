@@ -1,4 +1,3 @@
-$:.push("#{File.dirname(__FILE__)}/../../blackbox")
 $:.push("#{File.dirname(__FILE__)}/../../metadata/VmConfig")
 $:.push("#{File.dirname(__FILE__)}/../../metadata/MIQExtract")
 $:.push("#{File.dirname(__FILE__)}/../../util")
@@ -7,7 +6,6 @@ require 'runcmd'
 require 'MIQExtract'
 require 'VmConfig'
 require 'VmwareWinCom'
-require 'VmBlackBox'
 
 module VMWareOpsWin
 	def initializeCOM
@@ -50,9 +48,6 @@ module VMWareOpsWin
 
 				eventStatus = "ok"
 			end
-		ensure
-			#record the event to the black box
-			Manageiq::BlackBox.recordEvent(vmName, {:event=>"StartVM", :status=>eventStatus} )
 		end
 	end
 
@@ -71,9 +66,6 @@ module VMWareOpsWin
 
 				eventStatus = "ok"
 			end
-		ensure
-			#record the event to the black box
-			Manageiq::BlackBox.recordEvent(vmName, {:event=>"StopVM", :status=>eventStatus} )
 		end
 	end
 
@@ -124,9 +116,6 @@ module VMWareOpsWin
 				ost.value = "reset() = 1"		 
 				eventStatus = "ok"
 			end
-		ensure 
-			#record the event to the black box
-			Manageiq::BlackBox.recordEvent(vmName, {:event=>"ResetVM", :status=>eventStatus} )
     end
 	end
 
@@ -143,9 +132,6 @@ module VMWareOpsWin
 				
 				eventStatus = "ok"
 			end
-		ensure
-			#record the event to the black box
-			Manageiq::BlackBox.recordEvent(vmName, {:event=>"SuspendVM", :status=>eventStatus} )
 		end
 	end
 

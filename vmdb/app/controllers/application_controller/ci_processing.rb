@@ -1320,67 +1320,6 @@ module ApplicationController::CiProcessing
   alias instance_guest_restart guestreboot
   alias vm_guest_restart guestreboot
 
-#  # Make all selected or single displayed vm(s) smart
-#  def smartvms
-#    vm_button_operation('makesmart', 'making smart')
-#    if @flash_array.nil?
-#      shb = MiqProxyBuild
-#      audit = {:event=>"miqproxybuild_record_activated", :message=>"[#{shb.name}] Record activated", :target_id=>shb.id, :target_class=>"MiqProxyBuild", :userid => session[:userid]}
-#      AuditEvent.success(audit)
-#    end
-#  end
-
-  # Create blackboxes on all selected or single displayed vm(s)
-  def createbbvms
-    assert_privileges(params[:pressed])
-    vm_button_operation('create_blackbox', 'create Virtual BlackBoxes on')
-  end
-
-    # Delete blackboxes on all selected or single displayed vm(s)
-  def deletebbvms
-    assert_privileges(params[:pressed])
-    vms = Array.new
-    if @lastaction == "show_list" || @layout != "vm" # showing a list
-      vms = find_checked_items
-      if vms.empty?
-        add_flash(_("No virtual machines were selected to delete Virtual BlackBoxes on"), :error)
-      end
-      i = 0
-      vms_new = Array.new
-      while i < vms.length
-        @vm = find_by_id_filtered(Vm, vms[i])
-        if @vm.has_blackbox?
-          if ["off","unknown"].include?(@vm.current_state)
-            vms_new.push(vms[i])
-          else
-            add_flash(_("\"%s\": VM needs to be in a Powered Off state to delete the BlackBox.") % @vm.name, :error)
-          end
-        else
-          add_flash(_("\"%s\": VM does not have BlackBox.") %  @vm.name, :error)
-        end
-        i += 1
-      end
-      process_vms(vms_new, "delete_blackbox") if ! vms_new.empty?
-#     add_flash("Virtual BlackBox deletion has been started on selected virtual machines", :info, true) unless flash_errors?
-      if @layout == "vm" # In vm controller, refresh show_list, else let the other controller handle it
-        show_list
-        @refresh_partial = "layouts/gtl"
-      end
-    else # showing 1 vm
-      if params[:id] == nil || Vm.find_by_id(params[:id]).nil?
-        add_flash(_("%s no longer exists") % ui_lookup(:table=>"vm"), :error)
-        if @layout == "vm" # In vm controller, refresh show_list, else let the other controller handle it
-          show_list
-          @refresh_partial = "layouts/gtl"
-        end
-      else
-        vms.push(params[:id])
-        process_vms(vms, "delete_blackbox") if ! vms.empty?
-#       add_flash("Virtual BlackBox deletion has been started on this virtual machine", :info, true) unless flash_errors?
-      end
-    end
-  end
-
   # Delete all snapshots for vm(s)
   def deleteallsnapsvms
     assert_privileges(params[:pressed])

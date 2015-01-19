@@ -1,14 +1,12 @@
 $:.push("#{File.dirname(__FILE__)}/../../metadata/VmConfig")
 $:.push("#{File.dirname(__FILE__)}/../../metadata/MIQExtract")
 $:.push("#{File.dirname(__FILE__)}/../../util")
-$:.push("#{File.dirname(__FILE__)}/../../blackbox")
 $:.push("#{File.dirname(__FILE__)}/../../VMwareWebService")
 
 require 'runcmd'
 require 'MIQExtract'
 require 'VmConfig'
 require 'platform'
-require 'VmBlackBox'
 require 'SharedOps'
 require 'MiqVimInventory'
 require 'miq-password'

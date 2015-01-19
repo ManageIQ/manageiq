@@ -1,6 +1,5 @@
 $:.push("#{File.dirname(__FILE__)}/../disk")
 $:.push("#{File.dirname(__FILE__)}/../util")
-$:.push("#{File.dirname(__FILE__)}/../blackbox")
 
 require 'ostruct'
 require 'platform'
@@ -9,7 +8,6 @@ require 'MiqLvm'
 require 'MiqLdm'
 require 'VolMgrPlatformSupport'
 require 'modules/RawDisk'
-require 'VmBlackBox'
 
 class MiqVolumeManager
     

@@ -1,13 +1,11 @@
 $:.push("#{File.dirname(__FILE__)}/../../metadata/VmConfig")
 $:.push("#{File.dirname(__FILE__)}/../../metadata/MIQExtract")
 $:.push("#{File.dirname(__FILE__)}/../../util")
-$:.push("#{File.dirname(__FILE__)}/../../blackbox")
 
 require 'runcmd'
 require 'MIQExtract'
 require 'VmConfig'
 require 'platform'
-require 'VmBlackBox'
 require 'SharedOps'
 
 class MicrosoftOps

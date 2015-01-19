@@ -124,14 +124,6 @@ class MiqVm
                     # I am not sure if getting a nil handle back should throw an error or not.
                     # For now I am just skipping to the next disk.  (GMM)
                     next if d.nil?
-                    
-                    #
-                    # If this is the BlackBox disk, skip it.
-                    #
-                    if Manageiq::BlackBox.isBlackBox?(d)
-                        d.close
-                        next
-                    end
                 end
             rescue => err
                 $log.error "Couldn't open disk file: #{df}"

@@ -286,7 +286,7 @@ class VmOrTemplate < ActiveRecord::Base
     begin
       # Notify the host to do initialize the VM
       if myhost
-        ost = OpenStruct.new("vmId" => self.guid, "args" => [self.path], "method_name" => "RegisterId", "params" => {"registeredOnHost" => !self.host.nil?})     #, "makeSmart"=>myhost.policy_settings[:autosmart]})
+        ost = OpenStruct.new("vmId" => self.guid, "args" => [self.path], "method_name" => "RegisterId", "params" => {"registeredOnHost" => !self.host.nil?})
         myhost.call_ws(ost)
       end
     rescue Exception => err
@@ -409,7 +409,7 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def self.invoke_tasks_local(options)
-    if ["scan","sync","create_blackbox","delete_blackbox"].include?(options[:task])
+    if ["scan","sync"].include?(options[:task])
       options[:invoke_by] = :job
       args = [options[:userid]]
     elsif ["remove_snapshot", "revert_to_snapshot"].include?(options[:task])
@@ -533,7 +533,7 @@ class VmOrTemplate < ActiveRecord::Base
 
       # VM belongs to a storage/repository location
       # TODO: The following never gets run since the invoke tasks invokes it as a job, and only tasks get to this point ?
-      unless ["scan", "sync", "create_blackbox", "delete_blackbox"].include?(options[:task])
+      unless ["scan", "sync"].include?(options[:task])
         task.error("#{vm.name}: There is no owning Host for this VM, '#{options[:task]}' is not allowed")
         next
       end
@@ -857,10 +857,6 @@ class VmOrTemplate < ActiveRecord::Base
   end
   alias owning_datacenter parent_datacenter
 
-  def has_blackbox?
-    self.blackbox_exists # Cannot use alias here as blackbox_exists is an attribute (method defined later)
-  end
-
   def lans
     !self.hardware.nil? ? self.hardware.nics.collect(&:lan).compact : []
   end
@@ -903,10 +899,7 @@ class VmOrTemplate < ActiveRecord::Base
         do_save = true
       end
 
-      if do_save
-        e.save
-        #e.record_blackbox_event(saveSrc, saveDest) if e.event_type == EmsEvent::CLONE_TASK_COMPLETE
-      end
+      e.save if do_save
 
       # Hook up genealogy after a Clone Task
       src_vm.add_genealogy_child(dest_vm) if src_vm && dest_vm && e.event_type == EmsEvent::CLONE_TASK_COMPLETE
