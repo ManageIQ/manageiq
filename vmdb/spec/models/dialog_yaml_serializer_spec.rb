@@ -23,13 +23,13 @@ describe DialogYamlSerializer do
 
     let(:dialogs) { [dialog] }
 
-    let(:expected_yaml) do
+    let(:expected_data) do
       [{
         "description" => description,
         "buttons"     => buttons,
         "label"       => label,
         "dialog_tabs" => ["serialized_dialog1", "serialized_dialog2"]
-      }].to_yaml
+      }]
     end
 
     before do
@@ -38,7 +38,7 @@ describe DialogYamlSerializer do
     end
 
     it "serializes the dialog" do
-      dialog_yaml_serializer.serialize(dialogs).should == expected_yaml
+      YAML.load(dialog_yaml_serializer.serialize(dialogs)).should == expected_data
     end
   end
 end
