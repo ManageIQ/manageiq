@@ -99,4 +99,28 @@ module EmsRefresh::SaveInventoryHelper
       h[:id] = r.id
     end
   end
+
+  # most of the refresh_multi calls follow the same pattern
+  # this pulls it out
+  def save_inventory_assoc(type, parent, hashes, target, find_key, child_keys = [], extra_keys = [])
+    reflection = parent.reflections[type]
+    klass = reflection.class_name.constantize
+    deletes = relation_values(parent, reflection, target)
+
+    save_inventory_multi(type, klass, parent, hashes, deletes, find_key, child_keys, extra_keys)
+    store_ids_for_new_records(parent.send(type), hashes, find_key)
+  end
+
+  # We need to determine our intent:
+  # - make a complete refresh. Delete missing values.
+  # - make a partial refresh. Don't delete missing keys
+  # This generates the "deletes" values based upon this intent
+  def relation_values(parent, reflection, target)
+    # always want to refresh this association
+    reflection = parent.reflections[reflection] if reflection.kind_of?(Symbol)
+    values = parent.send(reflection.name, true)
+    top_level = reflection.options[:dependent] == :destroy
+
+    top_level && (target == true || target.nil? || parent == target) ? values.dup : []
+  end
 end

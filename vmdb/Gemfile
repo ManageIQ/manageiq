@@ -15,6 +15,7 @@ gem "sprockets-less",  "~>0.6.1"
 gem 'therubyracer'
 gem 'less-rails'
 
+gem "manageiq_foreman", :git => "git://github.com/kbrock/manageiq-foreman.git"
 # Vendored and required
 # TODO: Fix AWS tests now that our api specs and the soap4r 1.6.0 specs pass on 1.8.7/1.9.3
 gem "rails",                          "=3.2.17",                         :git => "git://github.com/ManageIQ/rails.git", :tag => "vendored-3.2.17-13"

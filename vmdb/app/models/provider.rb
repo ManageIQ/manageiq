@@ -1,5 +1,6 @@
 class Provider < ActiveRecord::Base
   include AuthenticationMixin
+  include EmsRefresh::Manager
 
   belongs_to :zone
 

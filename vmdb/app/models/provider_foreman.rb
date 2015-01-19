@@ -19,6 +19,10 @@ class ProviderForeman < Provider
     }
   end
 
+  def self.ems_type
+    @ems_type ||= "foreman".freeze
+  end
+
   private
 
   def build_managers
