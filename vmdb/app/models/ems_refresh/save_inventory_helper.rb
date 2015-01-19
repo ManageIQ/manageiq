@@ -1,11 +1,11 @@
 module EmsRefresh::SaveInventoryHelper
-  def save_inventory_multi(type, klass, parent, hashes, deletes, find_key, child_keys = [], extra_keys = [])
+  def save_inventory_multi(type, parent, hashes, deletes, find_key, child_keys = [], extra_keys = [])
     find_key, child_keys, extra_keys, remove_keys = self.save_inventory_prep(find_key, child_keys, extra_keys)
     record_index, record_index_columns = self.save_inventory_prep_record_index(parent.send(type), find_key)
 
     new_records = []
     hashes.each do |h|
-      self.save_inventory(type, klass, parent, h, deletes, new_records, record_index, record_index_columns, find_key, child_keys, remove_keys)
+      save_inventory(type, parent, h, deletes, new_records, record_index, record_index_columns, find_key, child_keys, remove_keys)
     end
 
     # Delete the items no longer found
@@ -18,9 +18,9 @@ module EmsRefresh::SaveInventoryHelper
     parent.send(type).push(new_records)
   end
 
-  def save_inventory_single(type, klass, parent, hash, child_keys = [], extra_keys = [])
+  def save_inventory_single(type, parent, hash, child_keys = [], extra_keys = [])
     find_key, child_keys, extra_keys, remove_keys = self.save_inventory_prep(nil, child_keys, extra_keys)
-    self.save_inventory(type, klass, parent, hash, nil, nil, nil, nil, nil, child_keys, remove_keys)
+    save_inventory(type, parent, hash, nil, nil, nil, nil, nil, child_keys, remove_keys)
   end
 
   def save_inventory_prep(find_key, child_keys, extra_keys)
@@ -32,14 +32,14 @@ module EmsRefresh::SaveInventoryHelper
     return find_key, child_keys, extra_keys, remove_keys
   end
 
-  def save_inventory(type, klass, parent, hash, deletes, new_records, record_index, record_index_columns, find_key, child_keys, remove_keys)
+  def save_inventory(type, parent, hash, deletes, new_records, record_index, record_index_columns, find_key, child_keys, remove_keys)
     # Backup keys that cannot be written directly to the database
     key_backup = backup_keys(hash, remove_keys)
 
     # Find the record, and update if found, else create it
     found = find_key.blank? ? parent.send(type) : self.save_inventory_record_index_fetch(record_index, record_index_columns, hash, find_key)
     if found.nil?
-      found = klass.new(hash)
+      found = find_key ? parent.send(type).build(hash) : parent.send("build_#{type}", hash)
       new_records.nil? ? parent.send("#{type}=", found) : new_records << found
     else
       key_backup.merge!(backup_keys(hash, [:type]))
@@ -103,11 +103,9 @@ module EmsRefresh::SaveInventoryHelper
   # most of the refresh_inventory_multi calls follow the same pattern
   # this pulls it out
   def save_inventory_assoc(type, parent, hashes, target, find_key, child_keys = [], extra_keys = [])
-    reflection = parent.class.reflect_on_association(type)
-    klass = reflection.class_name.constantize
     deletes = relation_values(parent, type, target)
 
-    save_inventory_multi(type, klass, parent, hashes, deletes, find_key, child_keys, extra_keys)
+    save_inventory_multi(type, parent, hashes, deletes, find_key, child_keys, extra_keys)
     store_ids_for_new_records(parent.send(type), hashes, find_key)
   end
 
