@@ -229,7 +229,7 @@ module ApplicationController::Performance
     # Swap in 'Instances' for 'VMs' in AZ breadcrumbs (poor man's cloud/infra split hack)
     bc_model = request.parameters['controller'] == 'availability_zone' && model == 'VMs' ? 'Instances' : model
 
-    report = @sb[:chart_reports].is_a?(Array) ? report = @sb[:chart_reports][chart_idx] : @sb[:chart_reports]
+    report = @sb[:chart_reports].kind_of?(Array) ? @sb[:chart_reports][chart_idx] : @sb[:chart_reports]
     data_row = report.table.data[data_idx]
 
     # Use timestamp or statistic_time (metrics vs ontap)
@@ -358,11 +358,12 @@ module ApplicationController::Performance
               page.redirect_to(:controller=>data_row["resource_type"].underscore.downcase.singularize,
                                :action=>"explorer")
             else
-              page.redirect_to( :controller=>data_row["resource_type"].underscore.downcase.singularize,
-                                :action=>"show_timeline",
-                                :id=>data_row["resource_id"],
-                                :refresh=>"n",
-                                :escape => false)
+              page.redirect_to(:controller => data_row["resource_type"].underscore.downcase.singularize,
+                               :action     => "show",
+                               :display    => "timeline",
+                               :id         => data_row["resource_id"],
+                               :refresh    => "n",
+                               :escape     => false)
             end
           end
         end
