@@ -311,10 +311,6 @@ module XFS
       @modification_time ||= Time.at(@in['mtime_secs'])
     end
 
-    def d_time
-      @d_time ||= Time.at(@in['dtime'])
-    end
-
     def permissions
       @permissions ||= @in['file_mode'] & (MSK_PERM_OWNER | MSK_PERM_GROUP | MSK_PERM_USER)
     end
@@ -355,7 +351,6 @@ module XFS
       out += "ATime Secs/NSecs: #{@in['atime_secs']}/#{@in['atime_nsecs']}\n"
       out += "CTime Secs/NSecs: #{@in['ctime_secs']}/#{@in['ctime_nsecs']}\n"
       out += "MTime Secs/NSecs: #{@in['mtime_secs']}/#{@in['mtime_nsecs']}\n"
-      out += "DTime        : #{@in['dTime']}\n"
       out += "GID          : #{@in['gid']}\n"
       out += "Link count   : #{@in['num_links']}\n"
       out += "Old Link cnt : #{@in['old_num_links']}\n"
