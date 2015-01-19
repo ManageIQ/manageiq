@@ -300,15 +300,15 @@ module XFS
     end
 
     def access_time
-      @access_time ||= Time.at(@in['atime'])
+      @access_time ||= Time.at(@in['atime_secs'])
     end
 
     def create_time
-      @create_time ||= Time.at(@in['ctime'])
+      @create_time ||= Time.at(@in['ctime_secs'])
     end
 
     def modification_time
-      @modification_time ||= Time.at(@in['mtime'])
+      @modification_time ||= Time.at(@in['mtime_secs'])
     end
 
     def d_time

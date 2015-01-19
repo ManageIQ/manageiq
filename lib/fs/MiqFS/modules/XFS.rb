@@ -156,17 +156,17 @@ module XFS
 
   # Returns a Ruby Time object.
   def fs_fileAtime_obj(fobj)
-    fobj.inode.aTime
+    fobj.inode.access_time
   end
 
   # Returns a Ruby Time object.
   def fs_fileCtime_obj(fobj)
-    fobj.inode.cTime
+    fobj.inode.create_time
   end
 
   # Returns a Ruby Time obect.
   def fs_fileMtime_obj(fobj)
-    fobj.inode.mTime
+    fobj.inode.modification_time
   end
 
   # New FileObject instance.
