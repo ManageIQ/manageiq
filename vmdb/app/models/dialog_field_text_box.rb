@@ -52,6 +52,10 @@ class DialogFieldTextBox < DialogField
   end
 
   def normalize_automate_values(automate_hash)
+    %w(data_type default_value protected required validator_type validator_rule).each do |key|
+      send("#{key}=", automate_hash[key]) if automate_hash.key?(key)
+    end
+
     return initial_values if automate_hash["default_value"].blank?
     automate_hash["default_value"].to_s
   end
