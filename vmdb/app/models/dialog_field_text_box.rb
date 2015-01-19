@@ -1,6 +1,4 @@
 class DialogFieldTextBox < DialogField
-  attr_writer :default_value
-
   has_one :resource_action, :as => :resource, :dependent => :destroy
 
   after_initialize :default_resource_action
@@ -10,8 +8,8 @@ class DialogFieldTextBox < DialogField
   end
 
   def default_value
-    @default_value = values_from_automate if dynamic
-    @default_value
+    write_attribute(:default_value, values_from_automate) if dynamic
+    read_attribute(:default_value)
   end
 
   def initial_values
