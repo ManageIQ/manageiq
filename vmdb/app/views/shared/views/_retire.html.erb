@@ -18,7 +18,7 @@
 					<%= hidden_span_if(session[:retire_date] == nil, :id=>"remove_button") %>
 						<%= link_to_function(image_tag('/images/icons/16/clear.png',
 																				:border=>"0", :alt=>"Set to blank"),
-																"$('miq_date_1').value=''")
+																"$j('#miq_date_1').val('').change();")
 						%>
 					</span>
 				</td>
