@@ -23,6 +23,8 @@ class Classification < ActiveRecord::Base
     :in => %w{ string integer boolean },
     :message => "should be one of 'string', 'integer' or 'boolean'"
 
+  virtual_column :name, :type => :string
+
   DEFAULT_NAMESPACE = "/managed"
 
   default_value_for :read_only,    false

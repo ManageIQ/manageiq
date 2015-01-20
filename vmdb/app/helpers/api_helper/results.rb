@@ -14,9 +14,21 @@ module ApiHelper
       hash
     end
 
+    def add_parent_href_to_result(hash)
+      hash[:href] = "#{@req[:base]}#{@req[:prefix]}/#{@req[:collection]}/#{@req[:c_id]}"
+      hash
+    end
+
     def add_task_to_result(hash, task_id)
       hash[:task_id]   = task_id
       hash[:task_href] = "#{@req[:base]}#{@req[:prefix]}/tasks/#{task_id}"
+      hash
+    end
+
+    def add_tag_to_result(hash, tag_spec)
+      hash[:tag_category] = tag_spec[:category] if tag_spec[:category].present?
+      hash[:tag_name]     = tag_spec[:name] if tag_spec[:name].present?
+      hash[:tag_href]     = "#{@req[:base]}#{@req[:prefix]}/tags/#{tag_spec[:id]}" if tag_spec[:id].present?
       hash
     end
 

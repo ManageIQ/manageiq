@@ -521,6 +521,7 @@
   :tags:
     :description: Tags
     :options:
+    - :collection
     - :subcollection
     :methods: *70174834085620
     :klass: Tag
