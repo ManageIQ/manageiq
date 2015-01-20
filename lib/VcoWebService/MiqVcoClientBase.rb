@@ -128,4 +128,4 @@ class MiqVcoClientBase < VcoService
         is_ok
     end
 	
-end # class MiqVimClientBase
+end # class MiqVcoClientBase
