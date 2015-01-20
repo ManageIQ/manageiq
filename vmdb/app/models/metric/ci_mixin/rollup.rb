@@ -75,7 +75,7 @@ module Metric::CiMixin::Rollup
       new_perf = {
         :timestamp => time,
         :capture_interval_name => (interval_name == 'historical' ? 'hourly' : interval_name)
-      }
+      }.with_indifferent_access
       new_perf[:time_profile_id] = time_profile_id unless time_profile_id.nil?
 
       perf = nil
