@@ -1,6 +1,7 @@
 #ops_tabs{:style => "display:none;"}
+  -# Settings
   - if x_active_tree == :settings_tree
-    - if x_node.split("-")[0] == "z"
+    - if selected?(x_node,"z")
       %ul.tab
         %li
           %a{:href => "#settings_evm_servers"} Zone
@@ -10,7 +11,7 @@
         = render :partial => "settings_evm_servers_tab"
       #settings_smartproxy_affinity{:name => "settings_smartproxy_affinity", :width => "80px"}
         = render :partial => "settings_smartproxy_affinity_tab"
-    - elsif x_node.split("-")[0] == "svr"
+    - elsif selected?(x_node, "svr")
       - cur_svr_id = from_cid(x_node.split("-").last).to_i
       %ul.tab
         %li
@@ -58,27 +59,18 @@
           - if @sb[:active_tab] == "settings_advanced"
             = render :partial => "settings_advanced_tab"
     - else
-      - tree_node = x_node
-      - if tree_node == "xx-l" ||
-        tree_node  == "xx-msc" ||
-        tree_node  == "xx-sis" ||
-        tree_node == "xx-z" ||
-        tree_node.split("-").first == "msc" ||
-        tree_node.split("-").first == "sis" ||
-        tree_node.split("-").first == "l" ||
-        tree_node.split("-").first == "ld" ||
-        tree_node.split("-").first == "lr"
-        - if tree_node == "xx-msc"
+      - if selected_settings_tree?(x_node)
+        - if x_node == "xx-msc"
           - label = "Schedules"
-        - elsif tree_node == "xx-l"
+        - elsif x_node == "xx-l"
           - label = "LDAP Regions"
-        - elsif tree_node == "xx-z"
+        - elsif x_node == "xx-z"
           - label = ui_lookup(:models=>'Zone')
-        - elsif tree_node.split("-").first == "sis"
+        - elsif x_node.split("-").first == "sis"
           - label = escape_javascript(@selected_scan.name)
-        - elsif tree_node.split("-").first == "msc"
+        - elsif x_node.split("-").first == "msc"
           - label = escape_javascript(@selected_schedule.name)
-        - elsif tree_node.split("-").first == "lr" || tree_node.split("-").first == "ld"
+        - elsif x_node.split("-").first == "lr" || x_node.split("-").first == "ld"
           - label = escape_javascript(@selected_lr ? @selected_lr.name : @selected_ld.name)
         - else
           - label = "Analysis Profiles"
@@ -126,6 +118,7 @@
         #settings_rhn{:name => "settings_rhn", :width => "80px"}
           - if @sb[:active_tab] == "settings_rhn"
             = render :partial => "settings_rhn_tab"
+    -# Diagnostics
   - elsif x_active_tree == :diagnostics_tree
     - if x_node.split("__").last.split("-")[0] == "z"
       %ul.tab
