@@ -52,40 +52,75 @@ describe VirtualReflection do
     @mock_ar = OpenStruct.new(:pluralize_table_names => false)
   end
 
-  context ".new" do
-    it("with invalid parameters") do
-      lambda { VirtualReflection.new :has_one }.should raise_error(ArgumentError)
-      lambda { VirtualReflection.new :vref1 }.should   raise_error(ArgumentError)
-      lambda { VirtualReflection.new :has_one, :vref1, {}, nil }.should raise_error(NoMethodError) # AR object must respond_to? :pluralize_table_names
+  def model_with_virtual_fields(&block)
+    Class.new(ActiveRecord::Base) do
+      extend VirtualFields
+      class_eval(&block)
     end
-    it("with symbol name") { VirtualReflection.new(:has_one, :vref1, {}, @mock_ar).name.should  == :vref1 }
-    it("with string name") { VirtualReflection.new(:has_one, "vref1", {}, @mock_ar).name.should == "vref1" }
+  end
+
+  context ".new" do
+    it("with symbol name") do
+      klass = model_with_virtual_fields { virtual_has_one :vref1 }
+      reflection = klass.virtual_field(:vref1)
+      reflection.name.should == :vref1
+    end
   end
 
   context ".class_name" do
-    it("without class_name on .new") { VirtualReflection.new(:has_one, :vref1, {}, @mock_ar).class_name.should == "Vref1" }
-    it("with class_name on .new")    { VirtualReflection.new(:has_one, :vref1, {:class_name => "TestClass"}, @mock_ar).class_name.should == "TestClass" }
+    it("without class_name on .new") do
+      klass = model_with_virtual_fields { virtual_has_one :vref1 }
+      reflection = klass.virtual_field(:vref1)
+      reflection.class_name.should == "Vref1"
+    end
+    it("with class_name on .new") do
+      klass = model_with_virtual_fields do
+        virtual_has_one :vref1, :class_name => "TestClass"
+      end
+      reflection = klass.virtual_field(:vref1)
+      reflection.class_name.should == "TestClass"
+    end
   end
 
   context ".uses" do
-    it("without uses on .new") { VirtualReflection.new(:has_one, :vref1, {}, @mock_ar).uses.should be_nil }
-    it("with uses on .new")    { VirtualReflection.new(:has_one, :vref1, {:uses => :ref1}, @mock_ar).uses.should == :ref1 }
+    it("without uses on .new") do
+      klass = model_with_virtual_fields { virtual_has_one :vref1 }
+      reflection = klass.virtual_field(:vref1)
+      reflection.uses.should be_nil
+    end
+    it("with uses on .new") do
+      klass = model_with_virtual_fields do
+        virtual_has_one :vref1, :uses => :ref1
+      end
+      reflection = klass.virtual_field(:vref1)
+      reflection.uses.should == :ref1
+    end
   end
 
   context ".options[:uses]" do
-    it("without uses on .new") { VirtualReflection.new(:has_one, :vref1, {}, @mock_ar).options[:uses].should be_nil }
-    it("with uses on .new")    { VirtualReflection.new(:has_one, :vref1, {:uses => :ref1}, @mock_ar).options[:uses].should == :ref1 }
+    it("without uses on .new") do
+      klass = model_with_virtual_fields { virtual_has_one :vref1 }
+      reflection = klass.virtual_field(:vref1)
+      reflection.options[:uses].should be_nil
+    end
+    it("with uses on .new") do
+      klass = model_with_virtual_fields do
+        virtual_has_one :vref1, :uses => :ref1
+      end
+      reflection = klass.virtual_field(:vref1)
+      reflection.options[:uses].should == :ref1
+    end
   end
 
   it ".uses=" do
-    c = VirtualReflection.new(:has_one, :vref1, {}, @mock_ar)
+    c = model_with_virtual_fields { virtual_has_one :vref1 }.virtual_field(:vref1)
     c.uses = :ref1
     c.uses.should           == :ref1
     c.options[:uses].should == :ref1
   end
 
   it ".options[:uses]=" do
-    c = VirtualReflection.new(:has_one, :vref1, {}, @mock_ar)
+    c = model_with_virtual_fields { virtual_has_one :vref1 }.virtual_field(:vref1)
     c.options[:uses] = :ref1
     c.uses.should           == :ref1
     c.options[:uses].should == :ref1
