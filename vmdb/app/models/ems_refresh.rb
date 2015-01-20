@@ -25,7 +25,7 @@ module EmsRefresh
 
     # Group the target refs by zone and role
     targets_by_ems = targets.each_with_object(Hash.new {|h, k| h[k] = Array.new}) do |t, h|
-      e = if t.kind_of?(ExtManagementSystem)
+      e = if t.kind_of?(EmsRefresh::Manager)
         t
       elsif t.kind_of?(Storage)
         t.ext_management_systems.first
