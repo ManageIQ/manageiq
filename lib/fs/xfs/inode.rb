@@ -300,19 +300,15 @@ module XFS
     end
 
     def access_time
-      @access_time ||= Time.at(@in['atime'])
+      @access_time ||= Time.at(@in['atime_secs'])
     end
 
     def create_time
-      @create_time ||= Time.at(@in['ctime'])
+      @create_time ||= Time.at(@in['ctime_secs'])
     end
 
     def modification_time
-      @modification_time ||= Time.at(@in['mtime'])
-    end
-
-    def d_time
-      @d_time ||= Time.at(@in['dtime'])
+      @modification_time ||= Time.at(@in['mtime_secs'])
     end
 
     def permissions
@@ -355,7 +351,6 @@ module XFS
       out += "ATime Secs/NSecs: #{@in['atime_secs']}/#{@in['atime_nsecs']}\n"
       out += "CTime Secs/NSecs: #{@in['ctime_secs']}/#{@in['ctime_nsecs']}\n"
       out += "MTime Secs/NSecs: #{@in['mtime_secs']}/#{@in['mtime_nsecs']}\n"
-      out += "DTime        : #{@in['dTime']}\n"
       out += "GID          : #{@in['gid']}\n"
       out += "Link count   : #{@in['num_links']}\n"
       out += "Old Link cnt : #{@in['old_num_links']}\n"
