@@ -161,6 +161,10 @@ module VirtualFields
     reflections.merge(virtual_reflections)
   end
 
+  def reflection_with_virtual(association)
+    virtual_reflection(association) || reflect_on_association(association)
+  end
+
 
   #
   # Common methods for Virtual Fields

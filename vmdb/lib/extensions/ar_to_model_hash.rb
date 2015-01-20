@@ -102,8 +102,7 @@ module ToModelHash
   end
 
   def iterable?(klass, association)
-    reflection = klass.virtual_reflection(association) ||
-      klass.reflect_on_association(association)
+    reflection = klass.reflection_with_virtual(association)
     reflection && reflection.collection?
   end
 
