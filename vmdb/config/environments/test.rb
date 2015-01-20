@@ -42,8 +42,11 @@ Vmdb::Application.configure do
 
   # Do not include all helpers for all views
   config.action_controller.include_all_helpers = false
+  config.secret_key_base = SecureRandom.random_bytes(32)
+  config.secret_token = SecureRandom.random_bytes(32)
 end
 
+require "minitest"
 require "shoulda-matchers"
 require "factory_girl"
 require "timecop"
