@@ -27,7 +27,7 @@ class VMwareEsxVcProbe
 		# First check if we can access the VMware webservice before even trying the port scans.
 		$log.debug "VMwareEsxVcProbe: probing ip = #{ost.ipaddr}" if $log
 		begin
-      vcb = MiqVimClientBase.new(ost.ipaddr, "test", "test")
+      MiqVimClientBase.new(ost.ipaddr, "test", "test")
 		rescue => err
 			$log.debug "VMwareEsxVcProbe: Failed to connect to VMware webservice: #{err}. ip = #{ost.ipaddr}" if $log
 			return
