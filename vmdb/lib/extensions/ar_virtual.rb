@@ -80,16 +80,13 @@ class VirtualColumn < ActiveRecord::ConnectionAdapters::Column
   end
 end
 
-class VirtualReflection < ActiveRecord::Reflection::AssociationReflection
-  def uses
-    options[:uses]
-  end
+class VirtualReflection < SimpleDelegator
+  attr_accessor :uses
 
-  def uses=(val)
-    options[:uses] = val
+  def initialize(reflection, uses)
+    super(reflection)
+    @uses = uses
   end
-
-  alias to_s inspect # Changes to_s to include all of the instance variables
 end
 
 module VirtualFields
@@ -118,15 +115,21 @@ module VirtualFields
   #
 
   def virtual_has_one(name, options = {})
-    add_virtual_reflection(:has_one, name, options)
+    uses = options.delete :uses
+    reflection = ActiveRecord::Associations::Builder::HasOne.build(self, name, nil, options)
+    add_virtual_reflection(reflection, name, uses, options)
   end
 
   def virtual_has_many(name, options = {})
-    add_virtual_reflection(:has_many, name, options)
+    uses = options.delete :uses
+    reflection = ActiveRecord::Associations::Builder::HasMany.build(self, name, nil, options)
+    add_virtual_reflection(reflection, name, uses, options)
   end
 
   def virtual_belongs_to(name, options = {})
-    add_virtual_reflection(:belongs_to, name, options)
+    uses = options.delete :uses
+    reflection = ActiveRecord::Associations::Builder::BelongsTo.build(self, name, nil, options)
+    add_virtual_reflection(reflection, name, uses, options)
   end
 
   def virtual_reflection?(name)
@@ -198,10 +201,10 @@ module VirtualFields
     @virtual_columns = @virtual_column_names = @virtual_column_names_symbols = nil
   end
 
-  def add_virtual_reflection(macro, name, options)
-    raise ArgumentError, "macro must be specified" if macro.nil?
+  def add_virtual_reflection(reflection, name, uses, options)
+    raise ArgumentError, "macro must be specified" unless reflection
     reset_virtual_reflection_information
-    _virtual_reflections[name.to_sym] = VirtualReflection.new(macro.to_sym, name.to_sym, options, self)
+    _virtual_reflections[name.to_sym] = VirtualReflection.new(reflection, uses)
   end
 
   def reset_virtual_reflection_information
@@ -265,8 +268,9 @@ module ActiveRecord
 
   module Associations
     class Preloader
-      def preload_with_virtual(association)
+      def preloaders_on_with_virtual(association, records, preload_scope = nil)
         records_model = records.first.class
+        return preloaders_on_without_virtual(association, records, preload_scope) if records.empty?
 
         case association
         when Hash
@@ -278,7 +282,7 @@ module ActiveRecord
 
           virtual_association.each do |parent, child|
             field = records_model.virtual_field(parent)
-            Array.wrap(field.uses).each { |f| preload(f) }
+            Array.wrap(field.uses).each { |f| preload(records, f) }
 
             raise "child must be blank if parent is a virtual column" if field.kind_of?(VirtualColumn) && !child.blank?
             next unless field.kind_of?(VirtualReflection)
@@ -288,12 +292,12 @@ module ActiveRecord
           end
         when String, Symbol
           field = records_model.virtual_field(association)
-          return Array.wrap(field.uses).each { |f| preload(f) } if field
+          return Array.wrap(field.uses).each { |f| preload(records, f) } if field
         end
 
-        preload_without_virtual(association)
+        preloaders_on_without_virtual(association, records, preload_scope)
       end
-      alias_method_chain :preload, :virtual
+      alias_method_chain :preloaders_on, :virtual
     end
   end
 
