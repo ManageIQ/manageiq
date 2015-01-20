@@ -20,7 +20,7 @@ FactoryGirl.define do
   end
 
   factory :classification_department, :parent => :classification do
-    name        "deparment"
+    name        "department"
     description "Department"
   end
 
