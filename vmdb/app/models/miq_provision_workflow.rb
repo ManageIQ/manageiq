@@ -775,7 +775,8 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
   end
 
   def allowed_datastore_storage_controller(options={})
-    NetAppFiler.pluck(:name).index_by { |n| n }
+    # TODO: NetAppFiler is an ActAsArModel and doesn't support arel syntax yet
+    NetAppFiler.all.collect(&:name).index_by { |n| n }
   end
 
   def allowed_datastore_aggregate(options={})
