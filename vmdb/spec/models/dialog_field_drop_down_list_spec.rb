@@ -63,7 +63,7 @@ describe DialogFieldDropDownList do
 
     context "#initialize_with_values" do
       before(:each) do
-        @df.values = [[3, "X"], [2, "Y"], [1, "Z"]]
+        @df.values = [["3", "X"], ["2", "Y"], ["1", "Z"]]
       end
 
       it "no default value" do
@@ -73,13 +73,13 @@ describe DialogFieldDropDownList do
       end
 
       it "with default value" do
-        @df.default_value = 1
+        @df.default_value = "1"
         @df.initialize_with_values({})
-        @df.value.should == 1
+        @df.value.should == "1"
       end
 
       it "with non-matching default value" do
-        @df.default_value = 4
+        @df.default_value = "4"
         @df.initialize_with_values({})
         @df.value.should == nil
       end

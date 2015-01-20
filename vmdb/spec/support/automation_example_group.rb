@@ -1,18 +1,27 @@
-module RSpec::Rails
-  module AutomationExampleGroup
-    extend ActiveSupport::Concern
+module AutomationExampleGroup
+  extend ActiveSupport::Concern
 
-    included do
-      metadata[:type] = :automation
+  class << self
+    attr_accessor :fixtures_loaded
+  end
 
-      before(:all) do
-        MiqAeDatastore.reset
-        MiqAeDatastore.reset_manageiq_domain
+  included do
+    metadata[:type] = :automation
+
+    unless AutomationExampleGroup.fixtures_loaded
+      RSpec.configure do |config|
+        config.before(:suite) do
+          puts "** Resetting ManageIQ domain"
+          MiqAeDatastore.reset
+          MiqAeDatastore.reset_manageiq_domain
+        end
+
+        config.after(:suite) do
+          MiqAeDatastore.reset
+        end
       end
 
-      after(:all) do
-        MiqAeDatastore.reset
-      end
+      AutomationExampleGroup.fixtures_loaded = true
     end
   end
 end

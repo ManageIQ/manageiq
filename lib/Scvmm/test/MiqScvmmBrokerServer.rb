@@ -3,7 +3,6 @@ $:.push("#{File.dirname(__FILE__)}/..")
 
 require 'rubygems'
 require 'log4r'
-#require 'VimClientBase'
 require 'MiqScvmmBroker'
 
 #
@@ -29,7 +28,6 @@ trap(:INT) do
 	exit 0
 end
 
-# VimClientBase.wiredump_file = "wire_dump.out"
 #$miq_wiredump = false
 
 MiqScvmmBroker.preLoad        = true

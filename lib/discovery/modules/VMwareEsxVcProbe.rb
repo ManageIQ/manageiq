@@ -2,13 +2,7 @@ $:.push("#{File.dirname(__FILE__)}/..")
 $:.push("#{File.dirname(__FILE__)}/../../VMwareWebService")
 
 require 'PortScan'
-begin
-  $miq_vim_soap_lib = "soap4r"
-  require 'VimClientBase'
-rescue LoadError
-  $miq_vim_soap_lib = "handsoap"
-  require 'MiqVimClientBase'
-end
+require 'MiqVimClientBase'
 
 class VMwareEsxVcProbe
     
@@ -33,11 +27,7 @@ class VMwareEsxVcProbe
 		# First check if we can access the VMware webservice before even trying the port scans.
 		$log.debug "VMwareEsxVcProbe: probing ip = #{ost.ipaddr}" if $log
 		begin
-      if $miq_vim_soap_lib == "handsoap"
-			  vcb = MiqVimClientBase.new(ost.ipaddr, "test", "test")
-		  else
-			  vcb =    VimClientBase.new(ost.ipaddr, "test", "test")
-	    end
+      MiqVimClientBase.new(ost.ipaddr, "test", "test")
 		rescue => err
 			$log.debug "VMwareEsxVcProbe: Failed to connect to VMware webservice: #{err}. ip = #{ost.ipaddr}" if $log
 			return

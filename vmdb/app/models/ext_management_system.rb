@@ -1,4 +1,6 @@
 class ExtManagementSystem < ActiveRecord::Base
+  include EmsRefresh::Manager
+
   def self.types
     [EmsInfra, EmsCloud].collect(&:types).flatten
   end
@@ -19,14 +21,6 @@ class ExtManagementSystem < ActiveRecord::Base
     supported_subclasses.each_with_object({}) do |klass, hash|
       hash[klass.ems_type] = klass.description
     end
-  end
-
-  def self.ems_type
-    nil
-  end
-
-  def emstype
-    self.class.ems_type
   end
 
   has_many :hosts,  :foreign_key => "ems_id", :dependent => :nullify

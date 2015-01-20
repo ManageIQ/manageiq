@@ -25,7 +25,7 @@ module EmsRefresh
 
     # Group the target refs by zone and role
     targets_by_ems = targets.each_with_object(Hash.new {|h, k| h[k] = Array.new}) do |t, h|
-      e = if t.kind_of?(ExtManagementSystem)
+      e = if t.kind_of?(EmsRefresh::Manager)
         t
       elsif t.kind_of?(Storage)
         t.ext_management_systems.first
@@ -55,16 +55,13 @@ module EmsRefresh
 
     # Split the targets into refresher groups
     groups = targets.group_by do |t|
-      # Determine the group
       ems = t.respond_to?(:ext_management_system) ? t.ext_management_system : t
-      if t.respond_to?(:emstype)
-        ems.kind_of?(EmsVmware) ? :vc : ems.emstype.to_sym
-      end
+      ems.kind_of?(EmsVmware) ? "vc" : ems.emstype.to_s
     end
 
     # Do the refreshes
-    [:vc, :ec2, :rhevm, :scvmm, :kvm, :openstack, :openstack_infra].each do |g|
-      self::Refreshers.const_get("#{g.to_s.camelize}Refresher").refresh(groups[g]) if groups.has_key?(g)
+    groups.each do |g, group_targets|
+      self::Refreshers.const_get("#{g.to_s.camelize}Refresher").refresh(group_targets)
     end
   end
 
