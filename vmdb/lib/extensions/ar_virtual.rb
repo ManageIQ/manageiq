@@ -231,7 +231,9 @@ module VirtualFields
 
   def add_virtual_column(name, options)
     reset_virtual_column_information
-    options[:type] = VirtualColumn::TYPE_MAP.fetch(options[:type])
+    options[:type] = VirtualColumn::TYPE_MAP.fetch(options[:type]) {
+      raise ArgumentError, "unknown type #{options[:type]}"
+    }
     _virtual_columns_hash[name.to_s] = VirtualColumn.new(name, options)
   end
 
