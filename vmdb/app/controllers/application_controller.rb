@@ -141,9 +141,13 @@ class ApplicationController < ActionController::Base
     @keep_compare = true
     panel = params[:panel]
     render :update do |page|
-      @panels[panel] = !@panels[panel]
-      direction = @panels[panel] ? 'down' : 'up'
-      page << "$('#{j_str(panel)}').visualEffect('slide_#{direction}', {duration: 0.3});"
+      if @panels[panel] == 'down'
+        @panels[panel] = 'up'
+        page << "$j('##{j_str(panel)}').slideUp('medium');"
+      else
+        @panels[panel] = 'down'
+        page << "$j('##{j_str(panel)}').slideDown('medium');"
+      end
     end
     # FIXME: the @panels end up in the session eventually
     #        so there's a issue with the possibility of inserting arbitrary
@@ -253,7 +257,7 @@ class ApplicationController < ActionController::Base
     if miq_task.task_results.blank? || miq_task.status != "Ok"  # Check to see if any results came back or status not Ok
       add_flash(_("Report generation returned: Status [%{status}] Message [%{message}]") % {:status  => miq_task.status, :message => miq_task.message}, :error)
       render :update do |page|
-        page << "if ($('flash_msg_div_report_list')){"
+        page << "if (miqDomElementExists('flash_msg_div_report_list')){"
         page.replace("flash_msg_div_report_list", :partial => "layouts/flash_msg",
                                                   :locals  => {:div_num => "_report_list"})
         page << "} else {"
@@ -2124,7 +2128,7 @@ class ApplicationController < ActionController::Base
         page.replace("pc_div_2", :partial=>'/layouts/pagingcontrols', :locals=>{:pages=>@pages, :action_url=>action_url})
       else                                          # No grid, replace the gtl div
         page.replace_html("main_div", :partial=>"layouts/gtl")                                                  # Replace the main div area contents
-        page << "$('adv_div').visualEffect('slide_up', {duration:0.3});" if params[:entry]
+        page << "$j('#adv_div').slideUp(0.3);" if params[:entry]
       end
     end
   end
@@ -2715,7 +2719,7 @@ class ApplicationController < ActionController::Base
 
   def render_flash_not_applicable_to_model(type)
     add_flash(_("%{task} does not apply to selected %{model}") % {:model => ui_lookup(:table => "miq_template"), :task  => type.capitalize}, :error)
-    render_flash { |page| page << '$(\'main_div\').scrollTop = 0;' }
+    render_flash { |page| page << '$j(\'#main_div\').scrollTop();' }
   end
 
   def set_gettext_locale

@@ -429,7 +429,7 @@ class ServiceController < ApplicationController
         page << "dhxLayoutB.cells('c').expand();"
       end
 
-      page << "$('main_div').scrollTop = 0;"  # Scroll to top of main div
+      page << "$j('#main_div').scrollTop();"  # Scroll to top of main div
 
       # Clear the JS gtl_list_grid var if changing to a type other than list
       if @gtl_type && @gtl_type != "list"

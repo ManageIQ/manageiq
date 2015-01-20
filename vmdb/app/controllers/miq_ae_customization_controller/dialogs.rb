@@ -427,7 +427,7 @@ module MiqAeCustomizationController::Dialogs
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("field_values_div", :partial=>"field_values", :locals=>{:entry=>"new", :edit=>true})
         page << javascript_focus('entry_name')
-        page << "$('entry_name').select();"
+        page << "$j('#entry_name').select();"
       end
       session[:entry] = "new"
     else
@@ -441,7 +441,7 @@ module MiqAeCustomizationController::Dialogs
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("field_values_div", :partial=>"field_values", :locals=>{:entry=>entry, :edit=>true})
         page << javascript_focus("entry_#{j_str(params[:field])}")
-        page << "$('entry_#{j_str(params[:field])}').select();"
+        page << "$j('#entry_#{j_str(params[:field])}').select();"
 
      end
       session[:entry] = entry

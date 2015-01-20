@@ -19,7 +19,7 @@ module AutomateTreeHelper
         page << set_element_visible("#{edit_key}_div", true)
         @edit[:new][edit_key] = @edit[:automate_tree_selected_path]
         if @edit[:new][edit_key]
-          page << "$('#{edit_key}').value = '#{@edit[:new][edit_key]}';"
+          page << "$j('##{edit_key}').val('#{@edit[:new][edit_key]}');"
           page << "$j('##{edit_key}').prop('title', '#{@edit[:new][edit_key]}');"
         end
         page.replace("form_div", :partial => "copy_objects_form") if params[:controller] == "miq_ae_class"

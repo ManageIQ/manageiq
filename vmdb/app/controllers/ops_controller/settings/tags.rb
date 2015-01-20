@@ -157,7 +157,7 @@ module OpsController::Settings::Tags
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("classification_entries_div", :partial=>"classification_entries", :locals=>{:entry=>"new", :edit=>true})
         page << javascript_focus('entry_name')
-        page << "$('entry_name').select();"
+        page << "$j('#entry_name').select();"
       end
       session[:entry] = "new"
     else
@@ -166,7 +166,7 @@ module OpsController::Settings::Tags
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("classification_entries_div", :partial=>"classification_entries", :locals=>{:entry=>entry, :edit=>true})
         page << javascript_focus("entry_#{j_str(params[:field])}")
-        page << "$('entry_#{j_str(params[:field])}').select();"
+        page << "$j('#entry_#{j_str(params[:field])}').select();"
       end
       session[:entry] = entry
     end
@@ -204,7 +204,9 @@ module OpsController::Settings::Tags
     ce_build_screen # Build the Classification Edit screen
     render :update do |page|
       page.replace(:tab_div, :partial => "settings_co_tags_tab")
-      page << "$('#{entry.id}_tr').visualEffect('pulsate');" unless no_changes
+      unless no_changes
+        page << jquery_pulsate_element("#{entry.id}_tr")
+      end
     end
   end
 

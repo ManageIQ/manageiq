@@ -217,13 +217,13 @@ module EmsCommon
         page.replace_html("form_div", :partial => "shared/views/ems_common/form")
         unless @ems.kind_of?(EmsCloud)
           # Hide/show C&U credentials tab
-          page << "$('metrics_li').#{params[:server_emstype] == "rhevm" ? "show" : "hide"}();"
+          page << "$j('#metrics_li').#{params[:server_emstype] == "rhevm" ? "show" : "hide"}();"
         end
         if ["openstack", "openstack_infra"].include?(params[:server_emstype])
-          page << "$('port').value = #{j_str(@edit[:new][:port].to_s)};"
+          page << "$j('#port').val(#{j_str(@edit[:new][:port].to_s)});"
         end
         # Hide/show port field
-        page << "$('port_tr').#{["openstack", "openstack_infra", "rhevm"].include?(params[:server_emstype]) ? "show" : "hide"}();"
+        page << "$j('#port_tr').#{%w(openstack openstack_infra rhevm).include?(params[:server_emstype]) ? "show" : "hide"}();"
       end
       if changed != session[:changed]
         session[:changed] = changed

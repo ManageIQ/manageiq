@@ -62,9 +62,11 @@ module OpsController::Settings::Common
           page << javascript_show("email_verify_button_off")
         end
 
-        verb = @smtp_auth_none ? 'disable' : 'enable'
-        page << "$('smtp_user_name').#{verb}();"
-        page << "$('smtp_password').#{verb}();"
+        if @smtp_auth_none
+          page << javascript_disable_field('smtp_user_name')
+        else
+          page << javascript_enable_field('smtp_user_name')
+        end
 
         if @changed || @login_text_changed
           page << javascript_hide_if_exists("server_options_on")
@@ -118,7 +120,7 @@ module OpsController::Settings::Common
           page << set_element_visible("ldap_default_group_div", !@edit[:new][:authentication][:ldap_role])
         end
         if @authldapport_reset
-          page << "$('authentication_ldapport').value = '#{@edit[:new][:authentication][:ldapport]}'"
+          page << "$j('#authentication_ldapport').val('#{@edit[:new][:authentication][:ldapport]}');"
         end
         if @reset_verify_button
           if !@edit[:new][:authentication][:ldaphost].empty? && @edit[:new][:authentication][:ldapport] != nil
