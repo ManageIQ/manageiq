@@ -10,10 +10,10 @@ gem "rake",    "~>10.1"
 #       this file, the directories resolve correctly.
 
 # Locally modified and required
-gem "activesupport", "=3.2.17", :git => "git://github.com/ManageIQ/rails.git", :tag => "vendored-3.2.17-13"
+gem "activesupport", :git => "git://github.com/rails/rails.git", :branch => "4-2-stable"
 
 # ActiveRecord is used by appliance_console
-gem "activerecord",  "=3.2.17", :git => "git://github.com/ManageIQ/rails.git", :tag => "vendored-3.2.17-13"
+gem "activerecord",  :git => "git://github.com/rails/rails.git", :branch => "4-2-stable"
 
 # Not locally modified and not required
 gem "awesome_spawn",        "~> 1.2",        :require => false
@@ -30,7 +30,7 @@ gem "linux_admin",          ">=0.9.4", "<1", :require => false
 gem "log4r",                "=1.1.8",        :require => false
 gem "memoist",              "~>0.11.0",      :require => false
 gem "more_core_extensions", "~>1.2.0",       :require => false
-gem "nokogiri",             "~>1.5.0",       :require => false
+gem "nokogiri",             "~>1.6.0",       :require => false
 gem "ovirt",                "~>0.2.2",       :require => false
 gem "parallel",             "~>0.5.21",      :require => false
 gem "Platform",             "=0.4.0",        :require => false
@@ -56,13 +56,13 @@ end
 
 group :appliance do
   gem "highline", "~> 1.6.21", :require => false  # Needed for the appliance_console
-  gem "minitest", "<  5",      :require => false  # HACK to run test suite on SCL ruby
+  #gem "minitest", "<  5",      :require => false  # HACK to run test suite on SCL ruby
   gem "rdoc",                  :require => false  # HACK to run test suite on SCL ruby
 end
 
 # Locally modified but not required
 gem "handsoap",    "~>0.2.5",   :require => false, :git => "git://github.com/ManageIQ/handsoap.git", :tag => "v0.2.5-2"
-gem "rubywbem",    "=0.1.0",    :require => false, :git => "git://github.com/ManageIQ/rubywbem.git", :tag => "v0.1.0-2"
+gem "rubywbem",    :require => false, :git => "git://github.com/ManageIQ/rubywbem.git", :branch => "rubywbem_0_1_0"
 
 ### Start of gems excluded from the appliances.
 # The gems listed below do not need to be packaged until we find it necessary or useful.
