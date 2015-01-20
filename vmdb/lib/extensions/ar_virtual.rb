@@ -6,6 +6,14 @@ class VirtualColumn < ActiveRecord::ConnectionAdapters::Column
     class Symbol < ActiveRecord::Type::String
       def type; :symbol; end
     end
+
+    class StringSet < ActiveRecord::Type::Value
+      def type; :string_set; end
+    end
+
+    class NumericSet < ActiveRecord::Type::Value
+      def type; :numeric_set; end
+    end
   end
 
   TYPE_MAP = {
@@ -13,9 +21,9 @@ class VirtualColumn < ActiveRecord::ConnectionAdapters::Column
     :datetime    => ActiveRecord::Type::Time.new,
     :float       => ActiveRecord::Type::Float.new,
     :integer     => ActiveRecord::Type::Integer.new, # TODO: does a virtual_column :integer care if it's a Integer or BigInteger
-    :numeric_set => ActiveRecord::Type::Value.new,   # TODO: is this correct?
+    :numeric_set => Type::NumericSet.new,
     :string      => ActiveRecord::Type::String.new,
-    :string_set  => ActiveRecord::Type::Value.new,   # TODO: is this correct?
+    :string_set  => Type::StringSet.new,
     :symbol      => Type::Symbol.new,                # TODO: is this correct?
     :time        => ActiveRecord::Type::Time.new,
   }
