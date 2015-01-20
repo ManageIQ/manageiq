@@ -388,12 +388,6 @@ describe VirtualFields do
         c.name.should == :vref1
       end
 
-      it "with string name" do
-        c = TestClass.virtual_has_one "vref1"
-        c.should be_kind_of(VirtualReflection)
-        c.name.should == :vref1
-      end
-
       it("with has_one macro")    { TestClass.virtual_has_one(:vref1).macro.should    == :has_one }
       it("with has_many macro")   { TestClass.virtual_has_many(:vref1).macro.should   == :has_many }
       it("with belongs_to macro") { TestClass.virtual_belongs_to(:vref1).macro.should == :belongs_to }
@@ -421,12 +415,6 @@ describe VirtualFields do
           c.name.should == :vref1
         end
 
-        it "with string name" do
-          c = TestClass.send(virtual_method, "vref1")
-          c.should be_kind_of(VirtualReflection)
-          c.name.should == :vref1
-        end
-
         it "without uses" do
           c = TestClass.send(virtual_method, :vref1)
           c.uses.should           be_nil
@@ -445,7 +433,7 @@ describe VirtualFields do
       it "" do
         {
           :vref1  => {:macro => :has_one},
-          "vref2" => {:macro => :has_many},
+          :vref2  => {:macro => :has_many},
         }.each do |name, options|
           TestClass.send "virtual_#{options[:macro]}", name
         end
@@ -460,7 +448,7 @@ describe VirtualFields do
 
         {
           :vref1  => {:macro => :has_one},
-          "vref2" => {:macro => :has_many},
+          :vref2  => {:macro => :has_many},
         }.each do |name, options|
           TestClass.send "virtual_#{options[:macro]}", name
         end
