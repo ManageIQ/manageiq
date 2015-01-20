@@ -1,6 +1,13 @@
 class VirtualColumn < ActiveRecord::ConnectionAdapters::Column
   attr_reader :options
 
+  module Type
+    # TODO: do we actually need symbol types?
+    class Symbol < ActiveRecord::Type::String
+      def type; :symbol; end
+    end
+  end
+
   TYPE_MAP = {
     :boolean     => ActiveRecord::Type::Boolean.new,
     :datetime    => ActiveRecord::Type::Time.new,
@@ -9,7 +16,7 @@ class VirtualColumn < ActiveRecord::ConnectionAdapters::Column
     :numeric_set => ActiveRecord::Type::Value.new,   # TODO: is this correct?
     :string      => ActiveRecord::Type::String.new,
     :string_set  => ActiveRecord::Type::Value.new,   # TODO: is this correct?
-    :symbol      => ActiveRecord::Type::String.new,  # TODO: is this correct?
+    :symbol      => Type::Symbol.new,                # TODO: is this correct?
     :time        => ActiveRecord::Type::Time.new,
   }
 
