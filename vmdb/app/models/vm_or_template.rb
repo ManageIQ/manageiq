@@ -26,7 +26,7 @@ class VmOrTemplate < ActiveRecord::Base
 
   include EventMixin
 
-  has_many :ems_custom_attributes, :as => :resource, :dependent => :destroy, :class_name => "CustomAttribute", :conditions => "source = 'VC'"
+  has_many :ems_custom_attributes, -> { where "source = 'VC'" }, :as => :resource, :dependent => :destroy, :class_name => "CustomAttribute"
 
   VENDOR_TYPES = {
     # DB            Displayed
@@ -57,7 +57,7 @@ class VmOrTemplate < ActiveRecord::Base
 
   belongs_to                :storage
   has_many                  :repositories, :through => :storage
-  has_and_belongs_to_many   :storages
+  has_and_belongs_to_many   :storages, :join_table => 'storages_vms_and_templates'
 
   belongs_to                :ext_management_system, :foreign_key => "ems_id"
 
@@ -71,19 +71,19 @@ class VmOrTemplate < ActiveRecord::Base
 
   # Accounts - Users and Groups
   has_many                  :accounts, :dependent => :destroy
-  has_many                  :users,  :class_name => "Account", :conditions => {:accttype => 'user'}
-  has_many                  :groups, :class_name => "Account", :conditions => {:accttype => 'group'}
+  has_many                  :users, -> { where(:accttype => 'user') }, :class_name => "Account"
+  has_many                  :groups, -> { where(:accttype => 'group') }, :class_name => "Account"
 
   # System Services - Win32_Services, Kernel drivers, Filesystem drivers
   has_many                  :system_services, :dependent => :destroy
-  has_many                  :win32_services,      :class_name => "SystemService", :conditions => "typename = 'win32_service'"
-  has_many                  :kernel_drivers,      :class_name => "SystemService", :conditions => "typename = 'kernel' OR typename = 'misc'"
-  has_many                  :filesystem_drivers,  :class_name => "SystemService", :conditions => "typename = 'filesystem'"
-  has_many                  :linux_initprocesses, :class_name => "SystemService", :conditions => "typename = 'linux_initprocess'"
+  has_many                  :win32_services, -> { where "typename = 'win32_service'" }, :class_name => "SystemService"
+  has_many                  :kernel_drivers, -> { where "typename = 'kernel' OR typename = 'misc'" }, :class_name => "SystemService"
+  has_many                  :filesystem_drivers, -> { where "typename = 'filesystem'" },  :class_name => "SystemService"
+  has_many                  :linux_initprocesses, -> { where "typename = 'linux_initprocess'" }, :class_name => "SystemService"
 
   has_many                  :filesystems, :as => :resource, :dependent => :destroy
-  has_many                  :directories, :as => :resource, :class_name => "Filesystem", :conditions => "rsc_type = 'dir'"
-  has_many                  :files,       :as => :resource, :class_name => "Filesystem", :conditions => "rsc_type = 'file'"
+  has_many                  :directories, -> { where "rsc_type = 'dir'" }, :as => :resource, :class_name => "Filesystem"
+  has_many                  :files, -> { where "rsc_type = 'file'" },       :as => :resource, :class_name => "Filesystem"
 
   has_many                  :scan_histories,    :dependent => :destroy
   has_many                  :lifecycle_events,  :class_name => "LifecycleEvent"
@@ -97,18 +97,14 @@ class VmOrTemplate < ActiveRecord::Base
   has_many                  :vim_performance_states, :as => :resource  # Destroy will be handled by purger
 
   has_many                  :storage_files, :dependent => :destroy
-  has_many                  :storage_files_files, :class_name => "StorageFile", :conditions => "rsc_type = 'file'"
+  has_many                  :storage_files_files, -> { where "rsc_type = 'file'" }, :class_name => "StorageFile"
 
   # EMS Events
-  has_many                  :ems_events, :class_name => "EmsEvent",
-    :finder_sql  => lambda { |_| EmsEvent.where("vm_or_template_id = ? OR dest_vm_or_template_id = ?", id, id).order(:timestamp).to_sql },
-    :counter_sql => lambda { |_| EmsEvent.where("vm_or_template_id = ? OR dest_vm_or_template_id = ?", id, id).select("COUNT(*)").to_sql }
+  has_many                  :ems_events, -> { where(["vm_or_template_id = ? OR dest_vm_or_template_id = ?", id, id]).order(:timestamp) }, :class_name => "EmsEvent"
   has_many                  :ems_events_src,  :class_name => "EmsEvent"
   has_many                  :ems_events_dest, :class_name => "EmsEvent", :foreign_key => :dest_vm_or_template_id
 
-  has_many                  :policy_events, :class_name => "PolicyEvent",
-    :finder_sql  => lambda { |_| PolicyEvent.where("target_id = ? OR target_class = 'VmOrTemplate'", id).order(:timestamp).to_sql },
-    :counter_sql => lambda { |_| PolicyEvent.where("target_id = ? OR target_class = 'VmOrTemplate'", id).select("COUNT(*)").to_sql }
+  has_many                  :policy_events, -> { where(["target_id = ? OR target_class = 'VmOrTemplate'", id]).order(:timestamp) }, :class_name => "PolicyEvent"
 
   has_many                  :miq_alert_statuses, :dependent => :destroy, :as => :resource
 

@@ -69,23 +69,21 @@ class Host < ActiveRecord::Base
   has_many                  :metric_rollups, :as => :resource  # Destroy will be handled by purger
   has_many                  :vim_performance_states, :as => :resource  # Destroy will be handled by purger
 
-  has_many                  :ems_events, :class_name => "EmsEvent",
-    :finder_sql  => lambda { |_| EmsEvent.where("host_id = ? OR dest_host_id = ?", id, id).order(:timestamp).to_sql },
-    :counter_sql => lambda { |_| EmsEvent.where("host_id = ? OR dest_host_id = ?", id, id).select("COUNT(*)").to_sql }
+  has_many                  :ems_events, -> { where("host_id = ? OR dest_host_id = ?", id, id).order(:timestamp) }, :class_name => "EmsEvent"
   has_many                  :ems_events_src, :class_name => "EmsEvent"
   has_many                  :ems_events_dest, :class_name => "EmsEvent", :foreign_key => :dest_host_id
 
-  has_many                  :policy_events, :order => "timestamp"
+  has_many                  :policy_events, -> { order("timestamp") }
   has_many                  :guest_applications, :dependent => :destroy
 
   has_many                  :filesystems, :as => :resource, :dependent => :destroy
-  has_many                  :directories, :as => :resource, :class_name => "Filesystem", :conditions => "rsc_type = 'dir'"
-  has_many                  :files,       :as => :resource, :class_name => "Filesystem", :conditions => "rsc_type = 'file'"
+  has_many                  :directories, -> { where("rsc_type = 'dir'") }, :as => :resource, :class_name => "Filesystem"
+  has_many                  :files,       -> { where("rsc_type = 'file'") }, :as => :resource, :class_name => "Filesystem"
 
   # Accounts - Users and Groups
   has_many                  :accounts, :dependent => :destroy
-  has_many                  :users, :class_name => "Account", :foreign_key => "host_id", :conditions => "accttype = 'user'"
-  has_many                  :groups, :class_name => "Account", :foreign_key => "host_id", :conditions => "accttype = 'group'"
+  has_many                  :users, -> { where("accttype = 'user'") }, :class_name => "Account", :foreign_key => "host_id"
+  has_many                  :groups, -> { where("accttype = 'group'") }, :class_name => "Account", :foreign_key => "host_id"
 
   has_many                  :advanced_settings, :as => :resource, :dependent => :destroy
 
@@ -106,7 +104,7 @@ class Host < ActiveRecord::Base
   include EventMixin
 
   include CustomAttributeMixin
-  has_many :ems_custom_attributes, :as => :resource, :dependent => :destroy, :class_name => "CustomAttribute", :conditions => "source = 'VC'"
+  has_many :ems_custom_attributes, -> { where("source = 'VC'") }, :as => :resource, :dependent => :destroy, :class_name => "CustomAttribute"
 
   acts_as_miq_taggable
   include ReportableMixin

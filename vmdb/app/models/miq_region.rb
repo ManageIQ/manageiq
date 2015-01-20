@@ -1,20 +1,21 @@
 class MiqRegion < ActiveRecord::Base
-  has_many :zones,                  :finder_sql => lambda { |_| Zone.in_region(region_number).to_sql }
-  has_many :ext_management_systems, :finder_sql => lambda { |_| ExtManagementSystem.in_region(region_number).to_sql }
-  has_many :vms_and_templates,      :finder_sql => lambda { |_| VmOrTemplate.in_region(region_number).to_sql }
-  has_many :vms,                    :finder_sql => lambda { |_| Vm.in_region(region_number).to_sql }
-  has_many :miq_templates,          :finder_sql => lambda { |_| MiqTemplate.in_region(region_number).to_sql }
-  has_many :hosts,                  :finder_sql => lambda { |_| Host.in_region(region_number).to_sql }
-  has_many :storages,               :finder_sql => lambda { |_| Storage.in_region(region_number).to_sql }
-  has_many :policy_events,          :finder_sql => lambda { |_| PolicyEvent.in_region(region_number).to_sql }
-  has_many :miq_servers,            :finder_sql => lambda { |_| MiqServer.in_region(region_number).to_sql }
-  has_many :active_miq_servers,     :finder_sql => lambda { |_| MiqServer.in_region(region_number).where(:status => ['started', 'starting']).to_sql }, :class_name => "MiqServer"
-
-  has_many :database_backups, :finder_sql => lambda { |_| DatabaseBackup.in_region(region_number).to_sql }
-
   has_many :metrics,        :as => :resource # Destroy will be handled by purger
   has_many :metric_rollups, :as => :resource # Destroy will be handled by purger
   has_many :vim_performance_states, :as => :resource # Destroy will be handled by purger
+
+  virtual_has_many :database_backups,       :class_name => "DatabaseBackup"
+  virtual_has_many :ext_management_systems, :class_name => "ExtManagementSystem"
+  virtual_has_many :hosts,                  :class_name => "Host"
+  virtual_has_many :storages,               :class_name => "Storage"
+  virtual_has_many :policy_events,          :class_name => "PolicyEvent"
+  virtual_has_many :zones,                  :class_name => "Zone"
+
+  virtual_has_many :miq_servers,            :class_name => "MiqServer"
+  virtual_has_many :active_miq_servers,     :class_name => "MiqServer"
+
+  virtual_has_many :vms_and_templates,      :uses => :all_relationships
+  virtual_has_many :miq_templates,          :uses => :all_relationships
+  virtual_has_many :vms,                    :uses => :all_relationships
 
   acts_as_miq_taggable
   include ReportableMixin
@@ -40,6 +41,50 @@ class MiqRegion < ActiveRecord::Base
   alias all_storages           storages
 
   PERF_ROLLUP_CHILDREN = [:ext_management_systems, :storages]
+
+  def database_backups
+    DatabaseBackup.in_region(region)
+  end
+
+  def ext_management_systems
+    ExtManagementSystem.in_region(region)
+  end
+
+  def hosts
+    Host.in_region(region)
+  end
+
+  def storages
+    Storage.in_region(region)
+  end
+
+  def policy_events
+    PolicyEvent.in_region(region)
+  end
+
+  def zones
+    Zone.in_region(region)
+  end
+
+  def miq_servers
+    MiqServer.in_region(region)
+  end
+
+  def active_miq_servers
+    MiqServer.in_region(region).active_miq_servers
+  end
+
+  def vms_and_templates
+    VmOrTemplate.in_region(region)
+  end
+
+  def miq_templates
+    MiqTemplate.in_region(region)
+  end
+
+  def vms
+    Vm.in_region(region)
+  end
 
   def perf_rollup_parent(interval_name=nil)
     MiqEnterprise.my_enterprise unless interval_name == 'realtime'

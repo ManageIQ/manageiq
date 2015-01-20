@@ -4,8 +4,8 @@ module MiqServer::RoleManagement
   included do
     has_many :assigned_server_roles, :dependent => :destroy
     has_many :server_roles,   :through => :assigned_server_roles
-    has_many :active_roles,   :through => :assigned_server_roles, :source => :server_role, :conditions => ['assigned_server_roles.active = ?', true]
-    has_many :inactive_roles, :through => :assigned_server_roles, :source => :server_role, :conditions => ['assigned_server_roles.active = ?', false]
+    has_many :active_roles,   -> { where('assigned_server_roles.active' => true) }, :through => :assigned_server_roles, :source => :server_role
+    has_many :inactive_roles, -> { where('assigned_server_roles.active' => false) }, :through => :assigned_server_roles, :source => :server_role
 
     alias assigned_roles server_roles
 
@@ -258,9 +258,9 @@ module MiqServer::RoleManagement
   def monitor_server_roles
     MiqRegion.my_region.lock do |region|
       region.zones.each do |zone|
-        synchronize_active_roles(zone.active_miq_servers(:include => [:active_roles, :inactive_roles]), ServerRole.zone_scoped_roles)
+        synchronize_active_roles(zone.active_miq_servers.includes([:active_roles, :inactive_roles]), ServerRole.zone_scoped_roles)
       end
-      synchronize_active_roles(region.active_miq_servers(:include => [:active_roles, :inactive_roles]), ServerRole.region_scoped_roles)
+      synchronize_active_roles(region.active_miq_servers.includes([:active_roles, :inactive_roles]), ServerRole.region_scoped_roles)
     end
   end
 

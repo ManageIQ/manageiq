@@ -47,6 +47,10 @@ class MiqServer < ActiveRecord::Base
   STATUSES_ACTIVE  = [STATUS_STARTING, STATUS_STARTED]
   STATUSES_ALIVE   = STATUSES_ACTIVE + [STATUS_RESTARTING, STATUS_QUIESCE]
 
+  def self.active_miq_servers
+    where(:status => STATUSES_ACTIVE)
+  end
+
   def self.atStartup
     log_prefix = "MIQ(MiqServer.atStartup)"
 
@@ -680,19 +684,19 @@ class MiqServer < ActiveRecord::Base
   end
 
   def find_other_started_servers_in_region
-    MiqRegion.my_region.active_miq_servers.delete_if { |s| s.id == self.id }
+    MiqRegion.my_region.active_miq_servers.to_a.delete_if { |s| s.id == self.id }
   end
 
   def find_other_servers_in_region
-    MiqRegion.my_region.miq_servers.delete_if { |s| s.id == self.id }
+    MiqRegion.my_region.miq_servers.to_a.delete_if { |s| s.id == self.id }
   end
 
   def find_other_started_servers_in_zone
-    self.zone.active_miq_servers.delete_if { |s| s.id == self.id }
+    self.zone.active_miq_servers.to_a.delete_if { |s| s.id == self.id }
   end
 
   def find_other_servers_in_zone
-    self.zone.miq_servers.delete_if { |s| s.id == self.id }
+    self.zone.miq_servers.to_a.delete_if { |s| s.id == self.id }
   end
 
   # Determines the average time to the database in milliseconds

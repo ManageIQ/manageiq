@@ -4,7 +4,7 @@ class Dialog < ActiveRecord::Base
   # The following gets around a glob symbolic link issue
   ALL_YAML_FILES = DIALOG_DIR.join("{,*/**/}*.{yaml,yml}")
 
-  has_many :dialog_tabs, :dependent => :destroy, :order => :position
+  has_many :dialog_tabs, -> { order :position }, :dependent => :destroy
 
   include DialogMixin
   include ReportableMixin

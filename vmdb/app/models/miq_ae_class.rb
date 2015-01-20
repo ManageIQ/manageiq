@@ -3,10 +3,10 @@ class MiqAeClass < ActiveRecord::Base
   include MiqAeYamlImportExportMixin
 
   belongs_to :ae_namespace, :class_name => "MiqAeNamespace", :foreign_key => :namespace_id
-  has_many   :ae_fields,    :class_name => "MiqAeField",     :foreign_key => :class_id,
-                            :dependent => :destroy, :order => :priority, :autosave => true
-  has_many   :ae_instances, :class_name => "MiqAeInstance",  :foreign_key => :class_id,
-                            :dependent => :destroy, :include => :ae_values
+  has_many   :ae_fields,    -> { order(:priority) }, :class_name => "MiqAeField",     :foreign_key => :class_id,
+                            :dependent => :destroy, :autosave => true
+  has_many   :ae_instances, -> { includes(:ae_values) }, :class_name => "MiqAeInstance",  :foreign_key => :class_id,
+                            :dependent => :destroy
   has_many   :ae_methods,   :class_name => "MiqAeMethod",    :foreign_key => :class_id,
                             :dependent => :destroy
 

@@ -1,12 +1,12 @@
 class MiqEnterprise < ActiveRecord::Base
-  has_many :miq_regions,            :finder_sql => lambda { |_| MiqRegion.scoped.to_sql }
-  has_many :ext_management_systems, :finder_sql => lambda { |_| ExtManagementSystem.scoped.to_sql }
-  has_many :vms_and_templates,      :finder_sql => lambda { |_| VmOrTemplate.where("ems_id IS NOT NULL").to_sql }
-  has_many :vms,                    :finder_sql => lambda { |_| Vm.where("ems_id IS NOT NULL").to_sql }
-  has_many :miq_templates,          :finder_sql => lambda { |_| MiqTemplate.where("ems_id IS NOT NULL").to_sql }
-  has_many :hosts,                  :finder_sql => lambda { |_| Host.where("ems_id IS NOT NULL").to_sql }
-  has_many :storages,               :finder_sql => lambda { |_| Storage.scoped.to_sql }
-  has_many :policy_events,          :finder_sql => lambda { |_| PolicyEvent.scoped.to_sql }
+  has_many :miq_regions,            lambda { |_| MiqRegion.scoped }
+  has_many :ext_management_systems, lambda { |_| ExtManagementSystem.scoped }
+  has_many :vms_and_templates,      lambda { |_| VmOrTemplate.where("ems_id IS NOT NULL") }
+  has_many :vms,                    lambda { |_| Vm.where("ems_id IS NOT NULL") }
+  has_many :miq_templates,          lambda { |_| MiqTemplate.where("ems_id IS NOT NULL") }
+  has_many :hosts,                  lambda { |_| Host.where("ems_id IS NOT NULL") }
+  has_many :storages,               lambda { |_| Storage.scoped }
+  has_many :policy_events,          lambda { |_| PolicyEvent.scoped }
 
   has_many :metrics,        :as => :resource  # Destroy will be handled by purger
   has_many :metric_rollups, :as => :resource  # Destroy will be handled by purger

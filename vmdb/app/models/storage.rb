@@ -4,9 +4,9 @@ class Storage < ActiveRecord::Base
   has_many :miq_templates,     :foreign_key => :storage_id
   has_many :vms,               :foreign_key => :storage_id
   has_and_belongs_to_many :hosts
-  has_and_belongs_to_many :all_vms_and_templates, :class_name => "VmOrTemplate"
-  has_and_belongs_to_many :all_miq_templates, :class_name => "MiqTemplate",  :join_table => :storages_vms_and_templates, :association_foreign_key => :vm_or_template_id
-  has_and_belongs_to_many :all_vms, :class_name => "Vm", :join_table => :storages_vms_and_templates, :association_foreign_key => :vm_or_template_id
+  has_and_belongs_to_many :all_vms_and_templates, :class_name => "VmOrTemplate", :join_table => :storages_vms_and_templates, :association_foreign_key => :vm_or_template_id
+  has_and_belongs_to_many :all_miq_templates,     :class_name => "MiqTemplate",  :join_table => :storages_vms_and_templates, :association_foreign_key => :vm_or_template_id
+  has_and_belongs_to_many :all_vms,               :class_name => "Vm",           :join_table => :storages_vms_and_templates, :association_foreign_key => :vm_or_template_id
   has_many :disks
 
   has_many :metrics,        :as => :resource  # Destroy will be handled by purger
@@ -14,8 +14,8 @@ class Storage < ActiveRecord::Base
   has_many :vim_performance_states, :as => :resource  # Destroy will be handled by purger
 
   has_many :storage_files,       :dependent => :destroy
-  has_many :storage_files_files, :class_name => "StorageFile", :foreign_key => "storage_id", :conditions => "rsc_type = 'file'"
-  has_many :files,               :class_name => "StorageFile", :foreign_key => "storage_id", :conditions => "rsc_type = 'file'"
+  has_many :storage_files_files, -> { where "rsc_type = 'file'" }, :class_name => "StorageFile", :foreign_key => "storage_id"
+  has_many :files,               -> { where "rsc_type = 'file'" }, :class_name => "StorageFile", :foreign_key => "storage_id"
   has_many :hosts_storages
 
   has_one  :miq_cim_instance, :as => :vmdb_obj, :dependent => :destroy

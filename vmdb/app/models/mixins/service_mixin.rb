@@ -3,7 +3,7 @@ module ServiceMixin
 
   included do
     # These relationships are used for resources that are processed as part of the service
-    has_many   :service_resources, :order => "group_idx ASC", :dependent => :destroy
+    has_many   :service_resources, -> { order "group_idx ASC" }, :dependent => :destroy
     has_many   :resource_actions, :as => :resource, :dependent => :destroy
 
     serialize  :options, Hash

@@ -10,7 +10,6 @@ class Zone < ActiveRecord::Base
   alias_attribute :log_depot, :log_file_depot
 
   has_many :miq_servers
-  has_many :active_miq_servers, :class_name => "MiqServer", :conditions => {:status => MiqServer::STATUSES_ACTIVE}
   has_many :ext_management_systems
   has_many :file_depots, :dependent => :destroy, :as => :resource
   has_many :miq_groups, :as => :resource
@@ -18,8 +17,9 @@ class Zone < ActiveRecord::Base
   has_many :storage_managers
   has_many :ldap_regions
 
-  virtual_has_many :hosts,             :uses => {:ext_management_systems => :hosts}
-  virtual_has_many :vms_and_templates, :uses => {:ext_management_systems => :vms_and_templates}
+  virtual_has_many :hosts,              :uses => {:ext_management_systems => :hosts}
+  virtual_has_many :active_miq_servers, :class_name => "MiqServer"
+  virtual_has_many :vms_and_templates,  :uses => {:ext_management_systems => :vms_and_templates}
 
   include ReportableMixin
 
@@ -34,6 +34,10 @@ class Zone < ActiveRecord::Base
   # we must also override the :uses portion of the virtual columns.
   override_aggregation_mixin_virtual_columns_uses(:all_hosts, :hosts)
   override_aggregation_mixin_virtual_columns_uses(:all_vms_and_templates, :vms_and_templates)
+
+  def active_miq_servers
+    MiqServer.active_miq_servers.where(:zone_id => self.id)
+  end
 
   def find_master_server
     active_miq_servers.detect(&:is_master?)

@@ -2,6 +2,7 @@ class AddSettingsToMiqGroup < ActiveRecord::Migration
   class MiqGroup < ActiveRecord::Base
     self.inheritance_column = :_type_disabled # disable STI
     belongs_to :miq_user_role, :class_name => "AddSettingsToMiqGroup::MiqUserRole"
+    serialize :settings
   end
 
   class MiqUserRole < ActiveRecord::Base

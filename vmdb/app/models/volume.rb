@@ -1,13 +1,12 @@
 class Volume < ActiveRecord::Base
   belongs_to :hardware
-  has_many :partitions, :foreign_key => :volume_group,
-    :finder_sql => lambda { |_|
+  has_many :partitions, lambda { |_|
       p = Partition.quoted_table_name
       v = Volume.quoted_table_name
       Partition.select("DISTINCT #{p}.*").
         joins("JOIN #{v} ON #{v}.hardware_id = #{p}.hardware_id AND #{v}.volume_group = #{p}.volume_group").
         where("#{v}.id" => id).to_sql
-    }
+    }, :foreign_key => :volume_group
 
   include ReportableMixin
 

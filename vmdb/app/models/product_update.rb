@@ -4,8 +4,8 @@ require 'tempfile'
 require 'fileutils'
 
 class ProductUpdate < ActiveRecord::Base
-  has_one :binary_blob, :as => :resource, :dependent => :destroy, :conditions => {:name => "product_update"}
-  has_one :release_notes, :as => :resource, :dependent => :destroy, :class_name => "BinaryBlob", :conditions => {:name => "release_notes"}
+  has_one :binary_blob, -> { where(:name => "product_update") }, :as => :resource, :dependent => :destroy
+  has_one :release_notes, -> { where(:name => "release_notes") }, :as => :resource, :dependent => :destroy, :class_name => "BinaryBlob"
   has_and_belongs_to_many :miq_servers
   has_and_belongs_to_many :miq_proxies
 

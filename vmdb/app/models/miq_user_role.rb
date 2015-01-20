@@ -1,5 +1,5 @@
 class MiqUserRole < ActiveRecord::Base
-  has_many                :miq_groups, :dependent => :restrict
+  has_many                :miq_groups, :dependent => :restrict_with_exception
   has_and_belongs_to_many :miq_product_features, :join_table => :miq_roles_features
 
   virtual_column :group_count,                      :type => :integer

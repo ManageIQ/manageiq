@@ -10,9 +10,9 @@ class MiqWorker < ActiveRecord::Base
 
   belongs_to :miq_server
   has_many   :messages,           :as => :handler, :class_name => 'MiqQueue'
-  has_many   :active_messages,    :as => :handler, :class_name => 'MiqQueue', :conditions => [ "state = ?", "dequeue"]
-  has_many   :ready_messages,     :as => :handler, :class_name => 'MiqQueue', :conditions => [ "state = ?", "ready"]
-  has_many   :processed_messages, :as => :handler, :class_name => 'MiqQueue', :conditions => [ "state != ?", "ready"], :dependent => :destroy
+  has_many   :active_messages,    -> { where [ "state = ?", "dequeue"] }, :as => :handler, :class_name => 'MiqQueue'
+  has_many   :ready_messages,     -> { where [ "state = ?", "ready"] }, :as => :handler, :class_name => 'MiqQueue'
+  has_many   :processed_messages, -> { where [ "state != ?", "ready"] }, :as => :handler, :class_name => 'MiqQueue', :dependent => :destroy
 
   virtual_column :friendly_name, :type => :string
   virtual_column :uri_or_queue_name, :type => :string
