@@ -5,7 +5,7 @@ module DriftState::Purging
     def purge_mode_and_value
       value = VMDB::Config.new("vmdb").config.fetch_path(:drift_states, :history, :keep_drift_states)
       mode  = (value.nil? || value.number_with_method?) ? :date : :remaining
-      value = (value || 6.months).to_i_with_method.ago.utc if mode == :date
+      value = (value || 6.months).to_i_with_method.seconds.ago.utc if mode == :date
       return mode, value
     end
 
