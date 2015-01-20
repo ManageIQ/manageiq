@@ -9,7 +9,9 @@ class ConvertOldStatesToNewFormat < ActiveRecord::Migration
 
   disable_ddl_transaction!
 
-  class State < ActiveRecord::Base; end
+  class State < ActiveRecord::Base
+    serialize :data
+  end
 
   require 'miq-xml'
   require 'parallel'
@@ -128,10 +130,12 @@ class ConvertOldStatesToNewFormat < ActiveRecord::Migration
       v = attrs[k_str]
       next if v.nil?
 
-      col = klass.columns_hash_with_virtual[k_str]
+      col = klass.virtual_columns_hash.fetch(k_str) {
+        klass.columns_hash[k_str]
+      }
       next unless col
 
-      h[k] = col.type_cast(v)
+      h[k] = col.type_cast_from_database(v)
     end
   end
 
@@ -191,12 +195,12 @@ class ConvertOldStatesToNewFormat < ActiveRecord::Migration
   end
 
   def cast_to_integer(value)
-    @integer_caster ||= VirtualColumn.new("dummy", :type => :integer)
-    @integer_caster.type_cast(value)
+    @integer_caster ||= ActiveRecord::Type::Integer.new(:limit => 8)
+    @integer_caster.type_cast_from_user(value)
   end
 
   def cast_to_boolean(value)
-    @boolean_caster ||= VirtualColumn.new("dummy", :type => :boolean)
-    @boolean_caster.type_cast(value)
+    @boolean_caster ||= ActiveRecord::Type::Boolean.new
+    @boolean_caster.type_cast_from_user(value)
   end
 end

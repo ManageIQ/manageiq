@@ -4,7 +4,9 @@ class RenameStatesToDriftStates < ActiveRecord::Migration
   include MigrationHelper::SharedStubs
 
   def up
+    remove_index :states, :name => 'index_states_on_resource_id_and_resource_type_and_timestamp'
     rename_table :states, :drift_states
+    add_index :drift_states, [:resource_id, :resource_type, :timestamp], :name => 'index_states_on_resource_id_and_resource_type_and_timestamp'
 
     if RrPendingChange.table_exists?
       say_with_time("Renaming state to drift_state in '#{RrPendingChange.table_name}'") do
@@ -18,7 +20,9 @@ class RenameStatesToDriftStates < ActiveRecord::Migration
   end
 
   def down
+    remove_index :drift_states, :name => 'index_states_on_resource_id_and_resource_type_and_timestamp'
     rename_table :drift_states, :states
+    add_index :states, [:resource_id, :resource_type, :timestamp], :name => 'index_states_on_resource_id_and_resource_type_and_timestamp'
 
     if RrPendingChange.table_exists?
       say_with_time("Renaming drift_state to state in '#{RrPendingChange.table_name}'") do

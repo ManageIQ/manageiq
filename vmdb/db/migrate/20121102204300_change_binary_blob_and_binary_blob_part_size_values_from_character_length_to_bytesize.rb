@@ -1,6 +1,6 @@
 class ChangeBinaryBlobAndBinaryBlobPartSizeValuesFromCharacterLengthToBytesize < ActiveRecord::Migration
   class BinaryBlob < ActiveRecord::Base
-    has_many :binary_blob_parts, :dependent => :delete_all, :order => :id, :class_name => "ChangeBinaryBlobAndBinaryBlobPartSizeValuesFromCharacterLengthToBytesize::BinaryBlobPart"
+    has_many :binary_blob_parts, -> { order(:id) }, :dependent => :delete_all, :class_name => "ChangeBinaryBlobAndBinaryBlobPartSizeValuesFromCharacterLengthToBytesize::BinaryBlobPart"
   end
 
   class BinaryBlobPart < ActiveRecord::Base

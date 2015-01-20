@@ -30,7 +30,11 @@ class RemoveVdiModels < ActiveRecord::Migration
     drop_table   "vdi_desktop_pools_vdi_users"
 
     remove_index "vdi_desktops", "vdi_desktop_pool_id"
-    remove_index "vdi_desktops", :name => "index_vdi_desktops_on_vm_id"
+    if index_exists?('vdi_desktops', :name => 'index_vdi_desktops_on_vm_id')
+      remove_index "vdi_desktops", :name => "index_vdi_desktops_on_vm_id"
+    else
+      remove_index "vdi_desktops", :name => "index_vdi_desktops_on_vm_or_template_id"
+    end
     drop_table   "vdi_desktops"
 
     drop_table "vdi_desktops_vdi_users"
