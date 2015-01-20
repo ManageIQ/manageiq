@@ -133,6 +133,10 @@ module VirtualFields
     virtual_reflections.has_key?(name.to_sym)
   end
 
+  def virtual_reflection(name)
+    virtual_reflections[name.to_sym]
+  end
+
   #
   # Accessors for fields, with inheritance
   #
@@ -155,6 +159,10 @@ module VirtualFields
 
   def reflections_with_virtual
     reflections.merge(virtual_reflections)
+  end
+
+  def reflection_with_virtual(association)
+    virtual_reflection(association) || reflect_on_association(association)
   end
 
 
