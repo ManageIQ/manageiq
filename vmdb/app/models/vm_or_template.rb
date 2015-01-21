@@ -1932,10 +1932,6 @@ class VmOrTemplate < ActiveRecord::Base
 
   private
 
-  def power_state=(new_power_state)
-    super
-  end
-
   def calculate_power_state
     self.class.calculate_power_state(raw_power_state)
   end
