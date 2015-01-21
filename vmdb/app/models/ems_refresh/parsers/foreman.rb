@@ -8,8 +8,8 @@ module EmsRefresh
         new.provisioning_inv_to_hashes(inv)
       end
 
-      def self.configuration_inv_to_hashes(inv, provisioning_manager)
-        new.configuration_inv_to_hashes(inv, provisioning_manager)
+      def self.configuration_inv_to_hashes(inv)
+        new.configuration_inv_to_hashes(inv)
       end
 
       def provisioning_inv_to_hashes(inv)
@@ -21,12 +21,14 @@ module EmsRefresh
         result
       end
 
-      def configuration_inv_to_hashes(inv, provisioning_manager)
+      def configuration_inv_to_hashes(inv)
         result = {}
-        ids = fetch_provisioning_manager_ids(provisioning_manager)
-        result[:configuration_profiles] = configuration_profile_inv_to_hashes(inv[:hostgroups], ids)
+        ids = {}
+        result[:configuration_profiles] = configuration_profile_inv_to_hashes(inv[:hostgroups],
+                                                                              inv[:operating_system_flavors],
+                                                                              inv[:customization_scripts])
         add_ids(ids, result[:configuration_profiles])
-        result[:configured_systems] = configured_system_inv_to_hashes(inv[:hosts], ids)
+        result[:configured_systems] = configured_system_inv_to_hashes(inv[:hosts], ids, inv[:operating_system_flavors])
         result[:missing_key] = true if missing_key
         result
       end
@@ -66,38 +68,31 @@ module EmsRefresh
         end
       end
 
-      def configuration_profile_inv_to_hashes(recs, ids)
+      def configuration_profile_inv_to_hashes(recs, osfs, scripts)
         recs.collect do |profile|
           {
             "manager_ref"                    => "hostgroup:#{profile["id"]}",
             "name"                           => profile["name"],
             "description"                    => profile["title"],
-            "operating_system_flavor_id"     => id_lookup(ids, profile, "operating_system", "operatingsystem_id"),
-            "customization_script_ptable_id" => id_lookup(ids, profile, "ptable"),
-            "customization_script_medium_id" => id_lookup(ids, profile, "medium"),
+            "operating_system_flavor_id"     => id_lookup(osfs, profile, "operating_system", "operatingsystem_id"),
+            "customization_script_ptable_id" => id_lookup(scripts, profile, "ptable"),
+            "customization_script_medium_id" => id_lookup(scripts, profile, "medium"),
           }
         end
       end
 
-      def configured_system_inv_to_hashes(recs, ids)
+      def configured_system_inv_to_hashes(recs, profiles, operatingsystems)
         recs.collect do |cs|
           {
             "manager_ref"                => "host:#{cs["id"]}",
             "hostname"                   => cs["name"],
-            "configuration_profile"      => id_lookup(ids, cs, "hostgroup"),
-            "operating_system_flavor_id" => id_lookup(ids, cs, "operating_system", "operatingsystem_id"),
+            "configuration_profile"      => id_lookup(profiles, cs, "hostgroup"),
+            "operating_system_flavor_id" => id_lookup(operatingsystems, cs, "operating_system", "operatingsystem_id"),
           }
         end
       end
 
       private
-
-      def fetch_provisioning_manager_ids(manager)
-        ids = {}
-        manager.customization_scripts.each { |cs| ids[cs.manager_ref] = cs.id }
-        manager.operating_system_flavors.each { |cs| ids[cs.manager_ref] = cs.id }
-        ids
-      end
 
       def add_ids(target, recs, key = "manager_ref")
         recs.each { |r| target[r[key]] = r }
