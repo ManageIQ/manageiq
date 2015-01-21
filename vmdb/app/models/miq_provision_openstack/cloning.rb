@@ -1,7 +1,7 @@
 module MiqProvisionOpenstack::Cloning
   def do_clone_task_check(clone_task_ref)
     self.source.with_provider_connection do |openstack|
-      instance = openstack.servers.detect { |s| s.id == clone_task_ref}
+      instance = openstack.servers_for_accessible_tenants.detect { |s| s.id == clone_task_ref }
       status   = instance.state.downcase.to_sym
 
       return true if status == :active
