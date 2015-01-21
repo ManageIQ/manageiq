@@ -296,7 +296,7 @@
     :description: Resource Pools
     :options:
     - :collection
-    :methods: *70174834086080
+    :methods: *70174834085860
     :klass: ResourcePool
     :subcollections:
     - :tags
@@ -305,6 +305,7 @@
       :post:
       - :name: delete
         :identifier: resource_pool_delete
+        :disabled: true
     :resource_actions:
       :delete:
       - :name: delete
