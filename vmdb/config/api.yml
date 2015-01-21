@@ -60,7 +60,7 @@
     :description: Clusters
     :options:
     - :collection
-    :methods: *70174834086080
+    :methods: *70174834085860
     :klass: EmsCluster
     :subcollections:
     - :tags
@@ -69,6 +69,7 @@
       :post:
       - :name: delete
         :identifier: ems_cluster_delete
+        :disabled: true
     :resource_actions:
       :delete:
       - :name: delete
