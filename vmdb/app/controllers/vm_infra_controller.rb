@@ -9,6 +9,8 @@ class VmInfraController < ApplicationController
   after_filter :cleanup_action
   after_filter :set_session_data
 
+  skip_before_filter :set_csp_header, :only => :launch_novnc_console
+
   private
 
   def build_trees_and_accordions
