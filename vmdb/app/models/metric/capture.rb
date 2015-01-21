@@ -25,8 +25,11 @@ module Metric::Capture
     key, default = MiqAlert.target_needs_realtime_capture?(target) ? [:capture_threshold_with_alerts, 1] : [:capture_threshold, 10]
 
     value = VMDB::Config.new("vmdb").config.fetch_path(:performance, key, target.class.base_model.to_s.underscore.to_sym) || default
-    value = value.to_i.send(:minutes) if value.kind_of?(Fixnum) # Default unit is minutes
-    value = value.to_i_with_method.ago.utc unless value.nil?
+    value = if value.kind_of?(Fixnum) # Default unit is minutes
+              value.minutes.ago.utc
+            else
+              value.to_i_with_method.ago.utc unless value.nil?
+            end
     return value
   end
 
