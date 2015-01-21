@@ -83,7 +83,7 @@
     :description: Datastores
     :options:
     - :collection
-    :methods: *70174834086080
+    :methods: *70174834085860
     :klass: Storage
     :subcollections:
     - :tags
@@ -91,6 +91,7 @@
       :post:
       - :name: delete
         :identifier: storage_delete
+        :disabled: true
     :resource_actions:
       :delete:
       - :name: delete
