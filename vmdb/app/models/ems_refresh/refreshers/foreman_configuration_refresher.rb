@@ -14,6 +14,7 @@ module EmsRefresh
 
       def save_inventory(manager, targets, hashes)
         EmsRefresh.save_configuration_manager_inventory(manager, hashes, targets[0])
+        EmsRefresh.refresh(manager.provider.provisioning_manager) if hashes[:missing_key]
       end
     end
   end

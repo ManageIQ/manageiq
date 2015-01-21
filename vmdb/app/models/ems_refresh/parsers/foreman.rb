@@ -1,6 +1,9 @@
 module EmsRefresh
   module Parsers
     class Foreman
+      # we referenced a record that does not exist in the database
+      attr_accessor :missing_key
+
       def self.provisioning_inv_to_hashes(inv)
         new.provisioning_inv_to_hashes(inv)
       end
@@ -24,6 +27,7 @@ module EmsRefresh
         result[:configuration_profiles] = configuration_profile_inv_to_hashes(inv[:hostgroups], ids)
         add_ids(ids, result[:configuration_profiles])
         result[:configured_systems] = configured_system_inv_to_hashes(inv[:hosts], ids)
+        result[:missing_key] = true if missing_key
         result
       end
 
@@ -100,8 +104,11 @@ module EmsRefresh
       end
 
       def id_lookup(ids, record, prefix, id_key = "#{prefix}_id")
-        key = record[id_key]
-        ids["#{prefix}:#{key}"] if key
+        if key = record[id_key]
+          ids["#{prefix}:#{key}"].tap do |v|
+            @missing_key = true unless v
+          end
+        end
       end
 
       def ids_lookup(ids, records, prefix, id_key = "id")

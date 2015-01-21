@@ -14,6 +14,7 @@ module EmsRefresh
 
       def save_inventory(manager, targets, hashes)
         EmsRefresh.save_provisioning_manager_inventory(manager, hashes, targets[0])
+        EmsRefresh.refresh(manager.provider.configuration_manager)
       end
     end
   end
