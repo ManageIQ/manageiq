@@ -1149,11 +1149,12 @@ function miqLaunchMiqVncConsole(pwd, hostAddress, hostPort, proxyAddress, proxyP
 
 // Toggle the user options div in the page header
 function miqToggleUserOptions(e, id){
-  if (id == 'user_options_div')
-    $('#user_options_div').toggle();
+  $j('#' + id).toggle();
+  miqStopBubble(e);
+}
 
-  if ( e.stopPropagation )  // Don't propagate the mouse click to the dom event catcher
-    e.stopPropagation();
+function miqStopBubble(e) {
+  if (e.stopPropagation) e.stopPropagation();
   e.cancelBubble = true;
   return false;
 }

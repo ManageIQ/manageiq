@@ -1,31 +1,38 @@
-%li.dropdown{:onclick=>"miqToggleUserOptions(event, 'user_options_div')", :style=>"cursor: pointer;"}
+%li.dropdown{:onclick => "miqToggleUserOptions(event, 'user_options_div')", :style => "cursor: pointer;"}
   %span.pficon.pficon-user
   = "#{session[:username]} | #{session[:vmdb_name]}"
   %b.caret
-  %ul.dropdown-menu#user_options_div{:style=>"display:none;"}
-    %li 
+  %ul.dropdown-menu.topright_menu#user_options_div{:style => "display:none;"}
+    %li
       Server: #{session[:vmdb_name]}
-    %li 
+    %li
       Group:
       - if session[:eligible_groups].length > 1
         = select_tag("to_group",
                      options_for_select(session[:eligible_groups], session[:group]),
-                     {:multiple=>false,
-                      :title=>"Select to change to another Group",
-                      :onclick => "miqToggleUserOptions(event, 'to_group');",
-                      "data-miq_sparkle_on"=>true,
-                      "data-miq_observe"=>{:url=>"/dashboard/change_group"}.to_json}) 
+                     {:multiple => false,
+                      :title    => "Select to change to another Group",
+                      :onclick  => "miqStopBubble(event);",
+                      "data-miq_sparkle_on" => true,
+                      "data-miq_observe"    => {:url => "/dashboard/change_group"}.to_json})
       - else
-        = session[:group_description] 
+        = session[:group_description]
     %li.divider
-    %a{:href=>"/dashboard/logout", :onclick=>'return miqCheckForChanges()', :title=>"Click to Logout"}
+    %a{:href => "/dashboard/logout", :onclick => 'return miqCheckForChanges()', :title => "Click to Logout"}
       %li.active
         Logout
 
-  %script{:type=>"text/javascript"}
-    $("body").click(function(e){
-    if (! $(e.target).is('#to_group') && ! $(e.target).is('#user_options_div'))
-    -# If not clicking on group selector or user_options_div itself
-    if ($('#user_options_div').is(':visible'))
-    $('#user_options_div').hide();
+-Menu::Manager.menu(:top_right) do |menu_section|
+  %li.dropdown{:onclick => "miqToggleUserOptions(event, 'custom_menu_div')", :style => "cursor: pointer;"}
+    = menu_section.name
+    %b.caret
+    %ul.dropdown-menu.topright_menu#custom_menu_div{:style => "display:none;"}
+      - menu_section.items.each do |menu_item|
+        %li
+          = menu_item.name
+
+  :javascript
+    $j("body").click(function(e) {
+      if (!$j(e.target).is('#to_group') && !$j(e.target).is('.topright_menu'))
+        $j('.topright_menu:visible').hide();
     });
