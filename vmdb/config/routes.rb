@@ -1508,6 +1508,7 @@ Vmdb::Application.routes.draw do
         drift_to_txt
         explorer
         launch_vmware_console
+        launch_novnc_console
         perf_chart_chooser
         policies
         protect
@@ -1567,6 +1568,8 @@ Vmdb::Application.routes.draw do
         users
         vmrc_console
         vm_pre_prov
+        vm_vdi
+        vnc_console
         wait_for_task
         win32_services
       ) +

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>noVNC</title>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+  <%= stylesheet_link_tag('noVNC/base') %>
+  <%= javascript_include_tag 'jquery/jquery-1.8.3.min','jquery/jquery-ui-1.9.2.custom.min' %>
+  <%= javascript_include_tag('noVNC/util', 'noVNC/webutil', 'noVNC/base64', 'noVNC/websock',
+                             'noVNC/des', 'noVNC/input', 'noVNC/display', 'noVNC/rfb',
+                             'noVNC/jsunzip', 'noVNC') %>
+</head>
+
+<body style='margin: 0;'>
+<%= link_to('Ctrl-Alt-Del', '#', :id => 'sendCtrlAltDelButton', :class => 'btn btn-default') %>
+<div id='vnc' 
+  data-host='<%= proxy_host %>' 
+  data-port='<%= proxy_port %>' 
+  data-password='<%= password %>' 
+  data-encrypt='<%= encrypt %>'>
+  <div id='noVNC_status_bar' class='console-status'>
+    <div id='noVNC_status' class='col-md-7 label'>Loading ...</div>
+  </div>
+
+  <canvas id='noVNC_canvas' class='console-screen'>
+    Canvas not supported.
+  </canvas>
+</div>
+
+</body>
+</html>

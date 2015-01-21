@@ -30,6 +30,12 @@ describe 'routes for VmInfra' do
     end
   end
 
+  describe '#launch_novnc_console' do
+    it 'routes with GET' do
+      expect(get("/#{controller_name}/launch_novnc_console")).to route_to("#{controller_name}#launch_novnc_console")
+    end
+  end
+
   describe '#launch_vmware_console' do
     it 'routes with GET' do
       expect(get("/#{controller_name}/launch_vmware_console")).to route_to("#{controller_name}#launch_vmware_console")
@@ -143,6 +149,12 @@ describe 'routes for VmInfra' do
   describe '#vmrc_console' do
     it 'routes with POST' do
       expect(post("/#{controller_name}/vmrc_console")).to route_to("#{controller_name}#vmrc_console")
+    end
+  end
+
+  describe '#vnc_console' do
+    it 'routes with POST' do
+      expect(post("/#{controller_name}/vnc_console")).to route_to("#{controller_name}#vnc_console")
     end
   end
 end

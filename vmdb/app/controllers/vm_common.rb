@@ -114,6 +114,18 @@ module VmCommon
     render :action=>"console"
   end
 
+  def launch_novnc_console
+    @vnc = {}
+    @vnc[:password], @vnc[:host], @vnc[:host_port] = @sb[:vnc]
+    @vnc[:encrypt] = get_vmdb_config.fetch_path(:server, :websocket_encrypt)
+    WsProxy.start(
+      :host        => @vnc[:host],
+      :host_port   => @vnc[:host_port],
+      :password    => @vnc[:password]
+    ).merge(:type  => 'vnc')
+    render :action => 'console'
+  end
+
   # VM clicked on in the explorer right cell
   def x_show
     @explorer = true
@@ -1402,32 +1414,16 @@ module VmCommon
       add_flash(_("Console access failed: %s") %  miq_task.message, :error)
     else
       @vm = @record = identify_record(params[:id], VmOrTemplate)
-      case console_type
-      when "mks"
-        @sb[:mks] = miq_task.task_results
-      when "vmrc"
-        @sb[:vmrc_ticket] = miq_task.task_results
-      end
+      @sb[console_type.to_sym] = miq_task.task_results # VNC, MKS or VMRC
     end
     render :update do |page|
       if @flash_array
         page.replace(:flash_msg_div, :partial=>"layouts/flash_msg")
         page << "miqSparkle(false);"
-
-      elsif console_type == "vnc" # VNC - send down the miqvncplugin and launch it
-        page << "if (typeof miqvncplugin == 'undefined')"
-        page.insert_html(:after, "page_footer_div", :partial=>"layouts/miq_vnc_plugin")
-        pwd, host, port, proxy, proxy_port = miq_task.task_results  # Split array into parms
-        if proxy.blank? || proxy_port.blank?
-          page << "miqLaunchMiqVncConsole('#{pwd}', '#{host}', #{port});"
-        else
-          page << "miqLaunchMiqVncConsole('#{pwd}', '#{host}', #{port}, '#{proxy}', #{proxy_port});"
-        end
+      else # open a window to show a VNC or VMWare console
+        console_action = console_type == 'vnc' ? 'launch_novnc_console' : 'launch_vmware_console'
         page << "miqSparkle(false);"
-
-      else                        # MKS or VMRC - open a new web page
-        page << "miqSparkle(false);"
-        page << "window.open('#{url_for :controller => controller_name, :action => 'launch_vmware_console', :id => @record.id}');"
+        page << "window.open('#{url_for :controller => controller_name, :action => console_action, :id => @record.id}');"
       end
     end
   end

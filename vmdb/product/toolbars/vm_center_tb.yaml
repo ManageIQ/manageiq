@@ -189,8 +189,8 @@
   - :button: vm_vnc_console
     :image: console
     :url: 'vnc_console'
-    :title: "Open a VNC console for this VM"
-    :confirm: "Opening a VM VNC console requires that the MIQ VNC plugin is pre-configured to work in your browser.  Are you sure?"
+    :title: "Open a web-based VNC console for this VM"
+    :confirm: "Opening a web-based VM VNC console requires that the Provider is pre-configured to allow VNC connections.  Are you sure?"
   - :button: vm_vmrc_console
     :image: console
     :url: '/vmrc_console'
@@ -236,4 +236,4 @@
     :url_parms: 'main_div'
     :enabled: 'false'
     :onwhen: '2+'
-  
+
