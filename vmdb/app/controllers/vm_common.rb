@@ -99,31 +99,46 @@ module VmCommon
   def launch_vmware_console
     console_type = get_vmdb_config.fetch_path(:server, :remote_console_type).downcase
     @vm = @record = identify_record(params[:id], VmOrTemplate)
+    proxy_options = { :console_type => console_type.to_sym }
     case console_type
     when "mks"
-      @mks_version = get_vmdb_config[:server][:mks_version]
-      @mks = @sb[:mks]
+      options = @sb[:mks]
+      options['version'] = get_vmdb_config[:server][:mks_version]
     when "vmrc"
-      @vmrc = Hash.new
-      @vmrc[:host]        = @record.ext_management_system.ipaddress || @record.ext_management_system.hostname
-      @vmrc[:vmid]        = @record.ems_ref
-      @vmrc[:ticket]      = @sb[:vmrc_ticket]
-      @vmrc[:api_version] = @record.ext_management_system.api_version.to_s
-      @vmrc[:os]          = browser_info(:os).downcase
+      options = {
+        :host        => @record.ext_management_system.ipaddress || @record.ext_management_system.hostname,
+        :vmid        => @record.ems_ref,
+        :ticket      => @sb[:vmrc_ticket],
+        :api_version => @record.ext_management_system.api_version.to_s,
+        :os          => browser_info(:os).downcase,
+        :name        => @record.name
+      }
     end
-    render :action=>"console"
+    render :template => "vm_common/console_#{proxy_options[:console_type]}",
+           :layout   => false,
+           :locals   => options
   end
 
   def launch_novnc_console
-    @vnc = {}
-    @vnc[:password], @vnc[:host], @vnc[:host_port] = @sb[:vnc]
-    @vnc[:encrypt] = get_vmdb_config.fetch_path(:server, :websocket_encrypt)
-    WsProxy.start(
-      :host        => @vnc[:host],
-      :host_port   => @vnc[:host_port],
-      :password    => @vnc[:password]
-    ).merge(:type  => 'vnc')
-    render :action => 'console'
+    password, host, host_port = @sb[:vnc]
+    proxy_options = WsProxy.start(
+      :host         => host,
+      :host_port    => host_port,
+      :password     => password,
+      :encrypt      => false # get_vmdb_config.fetch_path(:server, :websocket_encrypt)
+    ).merge(
+      :console_type => 'vnc',
+      :encrypt      => false # get_vmdb_config.fetch_path(:server, :websocket_encrypt)
+    )
+
+    proxy_options[:proxy_host] = 'localhost' # FIXME: appliance IP
+    @sb[:vnc] = proxy_options[:proxy_port]
+
+    Rails.logger.error("PROXY options: #{proxy_options}")
+
+    render :template => "vm_common/console_#{proxy_options[:console_type]}",
+           :layout   => false,
+           :locals   => proxy_options
   end
 
   # VM clicked on in the explorer right cell
@@ -1392,18 +1407,17 @@ module VmCommon
   def console_before_task(console_type)
     @vm = @record = identify_record(params[:id], VmOrTemplate)
     api_version = @record.ext_management_system.api_version.to_s
-    if !api_version.starts_with?("5")
-      add_flash(_("Console access failed: %s") %  "Unsupported Provider API version #{api_version}", :error)
-    else
+    # FIXME use validate_remote_console_vmrc_support and such
+    if api_version.starts_with?("5") # FIXME this test only for vmware?
       task_id = @record.remote_console_acquire_ticket_queue(console_type.to_sym, session[:userid], MiqServer.my_server.id)
-      unless task_id.is_a?(Fixnum)
-        add_flash(_("Console access failed: %s") %  "Task start failed: ID [#{task_id.inspect}]", :error)
-      end
+      add_flash(_("Console access failed: %s") % "Task start failed: ID [#{task_id.inspect}]", :error) unless task_id.is_a?(Fixnum)
+    else
+      add_flash(_("Console access failed: %s") % "Unsupported Provider API version #{api_version}", :error)
     end
     if @flash_array
       render :partial => "shared/ajax/flash_msg_replace"
     else
-      initiate_wait_for_task(:task_id => task_id) # Spin the Q until the task is done
+      initiate_wait_for_task(:task_id => task_id)
     end
   end
 
@@ -1411,14 +1425,14 @@ module VmCommon
   def console_after_task(console_type)
     miq_task = MiqTask.find(params[:task_id])
     if miq_task.status == "Error" || miq_task.task_results.blank?
-      add_flash(_("Console access failed: %s") %  miq_task.message, :error)
+      add_flash(_("Console access failed: %s") % miq_task.message, :error)
     else
       @vm = @record = identify_record(params[:id], VmOrTemplate)
       @sb[console_type.to_sym] = miq_task.task_results # VNC, MKS or VMRC
     end
     render :update do |page|
       if @flash_array
-        page.replace(:flash_msg_div, :partial=>"layouts/flash_msg")
+        page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
         page << "miqSparkle(false);"
       else # open a window to show a VNC or VMWare console
         console_action = console_type == 'vnc' ? 'launch_novnc_console' : 'launch_vmware_console'

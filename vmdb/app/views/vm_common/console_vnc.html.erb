@@ -13,10 +13,10 @@
 
 <body style='margin: 0;'>
 <%= link_to('Ctrl-Alt-Del', '#', :id => 'sendCtrlAltDelButton', :class => 'btn btn-default') %>
-<div id='vnc' 
-  data-host='<%= proxy_host %>' 
-  data-port='<%= proxy_port %>' 
-  data-password='<%= password %>' 
+<div id='vnc'
+  data-host='<%= proxy_host %>'
+  data-port='<%= proxy_port %>'
+  data-password='<%= password %>'
   data-encrypt='<%= encrypt %>'>
   <div id='noVNC_status_bar' class='console-status'>
     <div id='noVNC_status' class='col-md-7 label'>Loading ...</div>
