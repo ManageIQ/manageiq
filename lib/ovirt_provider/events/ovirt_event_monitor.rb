@@ -20,8 +20,11 @@ class OvirtEventMonitor
 
   def each_batch
     while @monitor_events do
-      events = inventory.events(@since).sort_by { |e| e[:id].to_i }
+      # grab only the most recent event if this is the first time through
+      query_options = @since ? {:since => @since} : {:max => 1}
+      events = inventory.events(query_options).sort_by { |e| e[:id].to_i }
       @since = events.last[:id].to_i unless events.empty?
+
       yield events
     end
   end
