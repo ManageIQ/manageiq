@@ -4,6 +4,7 @@ class OvirtEventMonitor
   end
 
   def inventory
+    require 'ovirt'
     @inventory ||= Ovirt::Inventory.new(@options)
   end
 
