@@ -409,7 +409,7 @@ module MiqAeMethodService
     end
 
     def class_name
-      @object.klass
+      @object.class.name
     end
 
     def instance_name
