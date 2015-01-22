@@ -362,7 +362,7 @@ module Rbac
     # Example with args:    :named_scope => [in_region, 1]
     scope             = options.delete(:named_scope) || NO_SCOPE
 
-    class_or_name     = options.delete(:class)
+    class_or_name     = options.delete(:class) { Object }
     conditions        = options.delete(:conditions)
     where_clause      = options.delete(:where_clause)
     sub_filter        = options.delete(:sub_filter)
