@@ -17,7 +17,7 @@ module EmsRefresh::SaveInventory
     log_header = "MIQ(#{self.name}.save_vms_inventory) EMS: [#{ems.name}], id: [#{ems.id}]"
 
     disconnects = if target.kind_of?(ExtManagementSystem) || target.kind_of?(Host)
-      target.vms_and_templates(true).dup
+      target.vms_and_templates(true).to_a.dup
     elsif target.kind_of?(Vm)
       [target.ruby_clone]
     else
