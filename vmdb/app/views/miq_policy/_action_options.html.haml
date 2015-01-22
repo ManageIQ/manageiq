@@ -268,4 +268,4 @@
                   - checked = !@edit[:new][:options][:cats].nil? && @edit[:new][:options][:cats].include?(cat.first)
                   %td{:align => "left", :valign => "top", :nowrap => 1}
                     = check_box_tag("cat_#{cat.first}", "1", checked, "data-miq_observe_checkbox" => observe)
-                  = h(cat.last)
+                    = h(cat.last)
