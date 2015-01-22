@@ -13,7 +13,7 @@ module JobProxyDispatcherEmbeddedScanSpec
     NUM_STORAGES = 3
 
     def assert_at_most_x_scan_jobs_per_y_resource(x_scans, y_resource)
-      vms_in_embedded_scanning = Job.find(:all, :conditions => ["dispatch_status = ? AND state != ? AND agent_class = ? AND target_class = ?", "active", "finished", "MiqServer", "VmOrTemplate"], :select => "target_id").collect(&:target_id).compact.uniq
+      vms_in_embedded_scanning = Job.where(["dispatch_status = ? AND state != ? AND agent_class = ? AND target_class = ?", "active", "finished", "MiqServer", "VmOrTemplate"]).select("target_id").collect(&:target_id).compact.uniq
       vms_in_embedded_scanning.length.should > 0
 
       method = case y_resource
