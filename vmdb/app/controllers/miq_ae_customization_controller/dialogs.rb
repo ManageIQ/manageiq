@@ -684,7 +684,7 @@ module MiqAeCustomizationController::Dialogs
         add_flash(_("%s is required") % "Element Label", :error)
         res = false
       end
-      if @edit[:field_typ].to_s == 'DialogFieldDynamicList' && @edit[:field_entry_point].blank?
+      if needs_entry_point?
         add_flash(_("Entry Point must be given for field \"%s\".") %  @edit[:field_name], :error)
         res = false
       end
@@ -1371,5 +1371,9 @@ module MiqAeCustomizationController::Dialogs
 
   def dynamic_field?(field)
     field[:typ] == 'DialogFieldDynamicList' || field[:dynamic]
+  end
+
+  def needs_entry_point?
+    (@edit[:field_typ].to_s == 'DialogFieldDynamicList' || @edit[:field_dynamic]) && @edit[:field_entry_point].blank?
   end
 end
