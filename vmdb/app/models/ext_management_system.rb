@@ -186,7 +186,11 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def last_refresh_status
-    last_refresh_error ? "error" : "success"
+    if last_refresh_date
+      last_refresh_error ? "error" : "success"
+    else
+      "never"
+    end
   end
 
   def refresh_ems
