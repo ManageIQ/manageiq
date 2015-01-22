@@ -212,7 +212,7 @@ describe ApiController do
       update_user_role(@role, action_identifier(:vms, :start))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "on")
+      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
       vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
 
       @success = run_post(vm_url, gen_request(:start))
@@ -229,7 +229,7 @@ describe ApiController do
       update_user_role(@role, action_identifier(:vms, :start))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "off")
+      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOff")
       vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
 
       @success = run_post(vm_url, gen_request(:start))
@@ -248,8 +248,8 @@ describe ApiController do
       update_user_role(@role, action_identifier(:vms, :start))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      vm1 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "off")
-      vm2 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "off")
+      vm1 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOff")
+      vm2 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOff")
 
       vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
       vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
@@ -291,7 +291,7 @@ describe ApiController do
       update_user_role(@role, action_identifier(:vms, :stop))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "off")
+      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOff")
       vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
 
       @success = run_post(vm_url, gen_request(:stop))
@@ -308,7 +308,7 @@ describe ApiController do
       update_user_role(@role, action_identifier(:vms, :stop))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "on")
+      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
       vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
 
       @success = run_post(vm_url, gen_request(:stop))
@@ -327,8 +327,8 @@ describe ApiController do
       update_user_role(@role, action_identifier(:vms, :stop))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      vm1 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "on")
-      vm2 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "on")
+      vm1 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
+      vm2 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
 
       vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
       vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
@@ -370,7 +370,7 @@ describe ApiController do
       update_user_role(@role, action_identifier(:vms, :suspend))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "off")
+      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOff")
       vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
 
       @success = run_post(vm_url, gen_request(:suspend))
@@ -387,7 +387,7 @@ describe ApiController do
       update_user_role(@role, action_identifier(:vms, :suspend))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "suspended")
+      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "suspended")
       vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
 
       @success = run_post(vm_url, gen_request(:suspend))
@@ -404,7 +404,7 @@ describe ApiController do
       update_user_role(@role, action_identifier(:vms, :suspend))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "on")
+      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
       vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
 
       @success = run_post(vm_url, gen_request(:suspend))
@@ -423,8 +423,8 @@ describe ApiController do
       update_user_role(@role, action_identifier(:vms, :suspend))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      vm1 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "on")
-      vm2 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "on")
+      vm1 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
+      vm2 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
 
       vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
       vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"

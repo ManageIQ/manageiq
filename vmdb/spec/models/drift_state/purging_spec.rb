@@ -16,16 +16,16 @@ describe DriftState do
       VMDB::Config.any_instance.stub(:config).and_return(@vmdb_config)
 
       @rr1 = [
-        FactoryGirl.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => 1, :timestamp => (6.months + 1.days).to_i.ago.utc),
-        FactoryGirl.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => 1, :timestamp => (6.months - 1.days).to_i.ago.utc)
+        FactoryGirl.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => 1, :timestamp => (6.months + 1.days).to_i.seconds.ago.utc),
+        FactoryGirl.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => 1, :timestamp => (6.months - 1.days).to_i.seconds.ago.utc)
       ]
       @rr2 = [
-        FactoryGirl.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => 2, :timestamp => (6.months + 2.days).to_i.ago.utc),
-        FactoryGirl.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => 2, :timestamp => (6.months + 1.days).to_i.ago.utc),
-        FactoryGirl.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => 2, :timestamp => (6.months - 1.days).to_i.ago.utc)
+        FactoryGirl.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => 2, :timestamp => (6.months + 2.days).to_i.seconds.ago.utc),
+        FactoryGirl.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => 2, :timestamp => (6.months + 1.days).to_i.seconds.ago.utc),
+        FactoryGirl.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => 2, :timestamp => (6.months - 1.days).to_i.seconds.ago.utc)
       ]
       @rr_orphaned = [
-        FactoryGirl.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => nil, :timestamp => (6.months - 1.days).to_i.ago.utc)
+        FactoryGirl.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => nil, :timestamp => (6.months - 1.days).to_i.seconds.ago.utc)
       ]
     end
 
@@ -42,7 +42,7 @@ describe DriftState do
           :method_name => "purge"
         )
         q.first.args[0].should == :date
-        q.first.args[1].should be_same_time_as 6.months.to_i.ago.utc
+        q.first.args[1].should be_same_time_as 6.months.to_i.seconds.ago.utc
       end
     end
 
@@ -89,7 +89,7 @@ describe DriftState do
       end
 
       it "by date" do
-        described_class.purge_count(:date, 6.months.to_i.ago.utc).should == 3
+        described_class.purge_count(:date, 6.months.to_i.seconds.ago.utc).should == 3
       end
     end
 
@@ -102,7 +102,7 @@ describe DriftState do
       end
 
       it "by date" do
-        described_class.purge(:date, 6.months.to_i.ago.utc)
+        described_class.purge(:date, 6.months.to_i.seconds.ago.utc)
         described_class.where(:resource_id => 1).all.should   == [@rr1.last]
         described_class.where(:resource_id => 2).all.should   == [@rr2.last]
         described_class.where(:resource_id => nil).all.should == @rr_orphaned
