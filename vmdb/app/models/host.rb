@@ -96,7 +96,7 @@ class Host < ActiveRecord::Base
   serialize                 :settings
 
   def settings
-    super || (settings = VMDB::Config.new("hostdefaults").get(:host))
+    super || self.settings = VMDB::Config.new("hostdefaults").get(:host)
   end
 
   include SerializedEmsRefObjMixin
