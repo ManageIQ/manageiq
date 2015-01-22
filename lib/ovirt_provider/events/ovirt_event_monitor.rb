@@ -1,5 +1,5 @@
 class OvirtEventMonitor
-  def initialize(options={})
+  def initialize(options = {})
     @options = options
   end
 
@@ -20,7 +20,7 @@ class OvirtEventMonitor
   end
 
   def each_batch
-    while @monitor_events do
+    while @monitor_events
       # grab only the most recent event if this is the first time through
       query_options = @since ? {:since => @since} : {:max => 1}
       events = inventory.events(query_options).sort_by { |e| e[:id].to_i }
