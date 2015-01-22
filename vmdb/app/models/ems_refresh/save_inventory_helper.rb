@@ -117,10 +117,9 @@ module EmsRefresh::SaveInventoryHelper
   # This generates the "deletes" values based upon this intent
   def relation_values(parent, reflection, target)
     # always want to refresh this association
-    reflection = parent.reflections[reflection] if reflection.kind_of?(Symbol)
-    values = parent.send(reflection.name, true)
+    reflection = parent.reflect_on_association(reflection) if reflection.kind_of?(Symbol)
     top_level = reflection.options[:dependent] == :destroy
 
-    top_level && (target == true || target.nil? || parent == target) ? values.dup : []
+    top_level && (target == true || target.nil? || parent == target) ? parent.send(reflection.name).dup : []
   end
 end

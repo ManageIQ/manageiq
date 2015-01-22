@@ -4,7 +4,6 @@ module EmsRefresh
   module Refreshers
     class ForemanProvisioningRefresher < BaseRefresher
       include EmsRefresherMixin
-      include RefresherRelatsMixin
 
       def parse_inventory(manager, targets)
         foreman = ManageiqForeman::Inventory.from_attributes(manager.connection_attrs)

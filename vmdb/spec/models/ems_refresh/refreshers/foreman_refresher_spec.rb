@@ -1,6 +1,8 @@
 require "spec_helper"
 
 describe EmsRefresh::Refreshers::ForemanRefresher do
+  # where clause to use spec related entries
+  let(:spec_related) { "name like 'ProviderRefreshSpec%'" }
   let(:provider) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     FactoryGirl.create(:provider_foreman,
@@ -22,12 +24,12 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
 
   def assert_table_counts
     expect(Provider.count).to                   eq(1)
-    expect(CustomizationScript.count).to        eq(17)
-    expect(CustomizationScriptPtable.count).to  eq(10)
-    expect(CustomizationScriptMedium.count).to  eq(7)
-    expect(OperatingSystemFlavor.count).to      eq(3)
-    expect(ConfigurationProfile.count).to       eq(11)
-    expect(ConfiguredSystem.count).to           eq(36)
+    expect(CustomizationScript.count).to        eq(19)
+    expect(CustomizationScriptPtable.count).to  eq(11)
+    expect(CustomizationScriptMedium.count).to  eq(8)
+    expect(OperatingSystemFlavor.count).to      eq(5)
+    expect(ConfigurationProfile.count).to       eq(14)
+    expect(ConfiguredSystem.count).to           eq(39)
   end
 
   def assert_provisioning_manager
@@ -35,62 +37,77 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
     expect(manager).not_to be_nil
 
     css = manager.customization_scripts
-    expect(css.count).to eq(17)
-    expect(css.select { |cs| cs.class == CustomizationScriptPtable }.size).to  eq(10)
-    expect(css.select { |cs| cs.class == CustomizationScriptMedium }.size).to  eq(7)
-    expect(manager.operating_system_flavors.count).to     eq(3)
+    expect(css.count).to                              eq(19)
+    expect(css.ptables.count).to                      eq(11)
+    expect(css.media.count).to                        eq(8)
+    expect(manager.operating_system_flavors.count).to eq(5)
+
+    medium = css.media.where(spec_related).first
+    ptable = css.ptables.where(spec_related).first
+    osf = manager.operating_system_flavors.where(spec_related).first
+
+    expect(medium.attributes).to include(
+      "name"        => "ProviderRefreshSpec-Media",
+      "type"        => "CustomizationScriptMedium",
+      "manager_ref" => "medium:8"
+    )
+    expect(ptable.attributes).to include(
+      "name"        => "ProviderRefreshSpec-PartitionTable",
+      "type"        => "CustomizationScriptPtable",
+      "manager_ref" => "ptable:12"
+    )
+
+    expect(osf.attributes).to include(
+      "name"        => "ProviderRefreshSpec-OperatingSystem 1.2",
+      "description" => "OS 1.2",
+      "manager_ref" => "operating_system:4"
+    )
+    expect(osf.customization_scripts).to include(ptable)
+    expect(osf.customization_scripts).to include(medium)
   end
+
+  # these values are from the
+  let(:provisioning_manager) { Provider.first.provisioning_manager }
+  let(:osf) { provisioning_manager.operating_system_flavors.where(spec_related).first }
+  let(:medium) { provisioning_manager.customization_scripts.media.where(spec_related).first }
+  let(:ptable) { provisioning_manager.customization_scripts.ptables.where(spec_related).first }
 
   def assert_configuration_manager
     manager = Provider.first.configuration_manager
     expect(manager).not_to be_nil
-    expect(manager.configured_systems.count).to  eq(36)
-    expect(manager.configuration_profiles.count).to eq(11)
+    expect(manager.configured_systems.count).to  eq(39)
+    expect(manager.configuration_profiles.count).to eq(14)
 
-    # configured_system -> configuration_profile
-    # configured_system -> operating_system_flavor
-    # configured_system -> 2 customization_Scripts (1 medium, 1 ptable)
-    # configured_system -> operating_system_flavor
+    child  = manager.configuration_profiles.where(:name => 'ProviderRefreshSpec-ChildHostGroup').first
+    parent = manager.configuration_profiles.where(:name => 'ProviderRefreshSpec-HostGroup').first
+    system = manager.configured_systems.where("hostname like 'providerrefreshspec%'").first
 
-    # configuration_profile -> operating_system_flavor
-    # configuration_profile -> 2 customization_Scripts (1 medium, 1 ptable)
-    # configuration_profile -> operating_system_flavor
-  end
+    expect(child.attributes).to include(
+      "type"        => "ConfigurationProfileForeman",
+      "name"        => "ProviderRefreshSpec-ChildHostGroup",
+      "description" => "ProviderRefreshSpec-HostGroup/ProviderRefreshSpec-ChildHostGroup",
+      "manager_ref" => "hostgroup:14",
+    )
+    expect(child.operating_system_flavor).to eq(osf)        # inherited from parent
+    expect(child.customization_script_medium).to eq(medium) # inherit
+    expect(child.customization_script_ptable).to eq(ptable) # declared
 
-  def assert_specific_cluster
-    # @cluster = EmsCluster.find_by_name("iSCSI")
-    # @cluster.should have_attributes(
-    #   :ems_ref                 => "/api/clusters/99408929-82cf-4dc7-a532-9d998063fa95",
-    #   :ems_ref_obj             => "/api/clusters/99408929-82cf-4dc7-a532-9d998063fa95",
-    #   :uid_ems                 => "99408929-82cf-4dc7-a532-9d998063fa95",
-    #   :name                    => "iSCSI",
-    #   :ha_enabled              => nil, # TODO: Should be true
-    #   :ha_admit_control        => nil,
-    #   :ha_max_failures         => nil,
-    #   :drs_enabled             => nil, # TODO: Should be true
-    #   :drs_automation_level    => nil,
-    #   :drs_migration_threshold => nil
-    # )
+    expect(parent.attributes).to include(
+      "type"        => "ConfigurationProfileForeman",
+      "name"        => "ProviderRefreshSpec-HostGroup",
+      "description" => "ProviderRefreshSpec-HostGroup",
+      "manager_ref" => "hostgroup:13",
+    )
+    expect(parent.operating_system_flavor).to eq(osf)        # declared
+    expect(parent.customization_script_medium).to eq(medium) # declared
+    expect(parent.customization_script_ptable).to be_nil     # blank
 
-    # @cluster.all_resource_pools_with_default.size.should == 1
-    # @default_rp = @cluster.default_resource_pool
-    # @default_rp.should have_attributes(
-    #   :ems_ref               => nil,
-    #   :ems_ref_obj           => nil,
-    #   :uid_ems               => "99408929-82cf-4dc7-a532-9d998063fa95_respool",
-    #   :name                  => "Default for Cluster iSCSI",
-    #   :memory_reserve        => nil,
-    #   :memory_reserve_expand => nil,
-    #   :memory_limit          => nil,
-    #   :memory_shares         => nil,
-    #   :memory_shares_level   => nil,
-    #   :cpu_reserve           => nil,
-    #   :cpu_reserve_expand    => nil,
-    #   :cpu_limit             => nil,
-    #   :cpu_shares            => nil,
-    #   :cpu_shares_level      => nil,
-
-    #   :is_default            => true
-    # )
+    expect(system.attributes).to include(
+      "type"        => "ConfiguredSystemForeman",
+      "hostname"    => "providerrefreshspec-hostbaremetal.cloudforms.lab.eng.rdu2.redhat.com",
+      "manager_ref" => "host:38",
+    )
+    expect(system.operating_system_flavor).to eq(osf)
+    expect(system.configuration_profile).to eq(child)
   end
 end

@@ -71,6 +71,7 @@ module EmsRefresh
       def configuration_profile_inv_to_hashes(recs, osfs, scripts)
         recs.collect do |profile|
           {
+            "type"                           => "ConfigurationProfileForeman",
             "manager_ref"                    => "hostgroup:#{profile["id"]}",
             "name"                           => profile["name"],
             "description"                    => profile["title"],
@@ -84,6 +85,7 @@ module EmsRefresh
       def configured_system_inv_to_hashes(recs, profiles, operatingsystems)
         recs.collect do |cs|
           {
+            "type"                       => "ConfiguredSystemForeman",
             "manager_ref"                => "host:#{cs["id"]}",
             "hostname"                   => cs["name"],
             "configuration_profile"      => id_lookup(profiles, cs, "hostgroup"),
@@ -99,7 +101,7 @@ module EmsRefresh
       end
 
       def id_lookup(ids, record, prefix, id_key = "#{prefix}_id")
-        if key = record[id_key]
+        if (key = record[id_key])
           ids["#{prefix}:#{key}"].tap do |v|
             @missing_key = true unless v
           end
