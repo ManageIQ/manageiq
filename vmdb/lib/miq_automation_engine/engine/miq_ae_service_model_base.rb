@@ -88,9 +88,15 @@ module MiqAeMethodService
         next if method_name.to_sym == :id
         self.association = method_name if options[:association]
         define_method(method_name) do |*params|
-          ret = object_send(options[:method] || method_name, *params)
+          method = options[:method] || method_name
+          ret = object_send(method, *params)
           return options[:override_return] if options.has_key?(:override_return)
-          return wrap_results(ret)
+          reflection = @object.class.reflection_with_virtual(method)
+          if reflection && reflection.collection?
+            wrap_results(ret.to_a)
+          else
+            wrap_results(ret)
+          end
         end
       end
     end
