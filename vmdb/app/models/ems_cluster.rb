@@ -316,11 +316,7 @@ class EmsCluster < ActiveRecord::Base
       h
     end
 
-    hids = cl_hash.collect do |a|
-      k, v = a
-      v[:ho_ids]
-    end.flatten.compact.uniq
-
+    hids = cl_hash.values.flat_map { |v| v[:ho_ids] }.compact.uniq
     hosts_by_id = Host.find_all_by_id(hids, :include => [:tags, :taggings], :select => "name, id").inject({}) { |h,host| h[host.id] = host; h }
 
     cl_hash.each do |k,v|
