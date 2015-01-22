@@ -267,7 +267,6 @@ module MiqProvisionVmware::Customization
       value = get_option(nil, override_value)
     else
       value = override_value.nil? ? get_option(key) : override_value
-      value = get_option(key)
     end
     values = value.to_s.split(",")
     unless values.blank?
