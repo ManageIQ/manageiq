@@ -83,54 +83,54 @@ function miqGetMouseXY(e){
 
 // Prefill text entry field when blank
 function miqLoginPrefill() {
-  if (miqDomElementExists('user_name')) miqPrefill($j('#user_name'));
-  if (miqDomElementExists('user_password')) miqPrefill($j('#user_password'));
-  if (miqDomElementExists('user_new_password')) miqPrefill($j('#user_new_password'));
-  if (miqDomElementExists('user_verify_password')) miqPrefill($j('#user_verify_password'));
+  if (miqDomElementExists('user_name')) miqPrefill($j('#user_name')[0]);
+  if (miqDomElementExists('user_password')) miqPrefill($j('#user_password')[0]);
+  if (miqDomElementExists('user_new_password')) miqPrefill($j('#user_new_password')[0]);
+  if (miqDomElementExists('user_verify_password')) miqPrefill($j('#user_verify_password')[0]);
   if (miqDomElementExists('user_name')) self.setTimeout('miqLoginPrefill()',200); // Retry in .2 seconds, if user name field is present
 }
 
 // Prefill expression value text entry fields when blank
 function miqExpressionPrefill(count) {
-  if (miqDomElementExists('chosen_value') && $j('#chosen_value').type.startsWith('text')) {
-    miqPrefill($j('#chosen_value'), '/images/layout/expression/' + miq_val1_type + '.png');
+  if (miqDomElementExists('chosen_value') && $j('#chosen_value')[0].type.startsWith('text')) {
+    miqPrefill($j('#chosen_value')[0], '/images/layout/expression/' + miq_val1_type + '.png');
     $j('#chosen_value').prop('title', miq_val1_title);
     $j('#chosen_value').prop('alt', miq_val1_title);
   }
-  if (miqDomElementExists('chosen_cvalue') && $j('#chosen_cvalue').type.startsWith('text')) {
-    miqPrefill($j('#chosen_cvalue'), '/images/layout/expression/' + miq_val2_type + '.png');
+  if (miqDomElementExists('chosen_cvalue') && $j('#chosen_cvalue')[0].type.startsWith('text')) {
+    miqPrefill($j('#chosen_cvalue')[0], '/images/layout/expression/' + miq_val2_type + '.png');
     $j('#chosen_cvalue').prop('title', miq_val2_title);
     $j('#chosen_cvalue').prop('alt', miq_val2_title);
   }
-  if (miqDomElementExists('chosen_regkey') && $j('#chosen_regkey').type.startsWith('text')) {
-    miqPrefill($j('#chosen_regkey'), '/images/layout/expression/string.png');
+  if (miqDomElementExists('chosen_regkey') && $j('#chosen_regkey')[0].type.startsWith('text')) {
+    miqPrefill($j('#chosen_regkey')[0], '/images/layout/expression/string.png');
     var title = "Registry Key";
     $j('#chosen_regkey').prop('title', title);
     $j('#chosen_regkey').prop('alt', title);
   }
-  if (miqDomElementExists('chosen_regval') && $j('#chosen_regval').type.startsWith('text')) {
-    miqPrefill($j('#chosen_regval'), '/images/layout/expression/string.png');
+  if (miqDomElementExists('chosen_regval') && $j('#chosen_regval')[0].type.startsWith('text')) {
+    miqPrefill($j('#chosen_regval')[0], '/images/layout/expression/string.png');
     var title = "Registry Key Value";
     $j('#chosen_regval').prop('title', title);
     $j('#chosen_regval').prop('alt', title);
   }
-  if (miqDomElementExists('miq_date_1_0') && $j('#miq_date_1_0').type.startsWith('text')) {
-    miqPrefill($j('#miq_date_1_0'), '/images/layout/expression/' + miq_val1_type + '.png');
+  if (miqDomElementExists('miq_date_1_0') && $j('#miq_date_1_0')[0].type.startsWith('text')) {
+    miqPrefill($j('#miq_date_1_0')[0], '/images/layout/expression/' + miq_val1_type + '.png');
     $j('#miq_date_1_0').prop('title', miq_val1_title);
     $j('#miq_date_1_0').prop('alt', miq_val1_title);
   }
-  if (miqDomElementExists('miq_date_1_1') && $j('#miq_date_1_1').type.startsWith('text')) {
-    miqPrefill($j('#miq_date_1_1'), '/images/layout/expression/' + miq_val1_type + '.png');
+  if (miqDomElementExists('miq_date_1_1') && $j('#miq_date_1_1')[0].type.startsWith('text')) {
+    miqPrefill($j('#miq_date_1_1')[0], '/images/layout/expression/' + miq_val1_type + '.png');
     $j('#miq_date_1_1').prop('title', miq_val1_title);
     $j('#miq_date_1_1').prop('alt', miq_val1_title);
   }
-  if (miqDomElementExists('miq_date_2_0') && $j('#miq_date_2_0').type.startsWith('text')) {
-    miqPrefill($j('#miq_date_2_0'), '/images/layout/expression/' + miq_val2_type + '.png');
+  if (miqDomElementExists('miq_date_2_0') && $j('#miq_date_2_0')[0].type.startsWith('text')) {
+    miqPrefill($j('#miq_date_2_0')[0], '/images/layout/expression/' + miq_val2_type + '.png');
     $j('#miq_date_2_0').prop('title', miq_val2_title);
     $j('#miq_date_2_0').prop('alt', miq_val2_title);
   }
-  if (miqDomElementExists('miq_date_2_1') && $j('#miq_date_2_1').type.startsWith('text')) {
-    miqPrefill($j('#miq_date_2_1'), '/images/layout/expression/' + miq_val2_type + '.png');
+  if (miqDomElementExists('miq_date_2_1') && $j('#miq_date_2_1')[0].type.startsWith('text')) {
+    miqPrefill($j('#miq_date_2_1')[0], '/images/layout/expression/' + miq_val2_type + '.png');
     $j('#miq_date_2_1').prop('title', miq_val2_title);
     $j('#miq_date_2_1').prop('alt', miq_val2_title);
   }
@@ -150,8 +150,8 @@ function miqExpressionPrefill(count) {
 function miqValueStylePrefill(count) {
   var found = false;
   for (field in miq_value_styles) {
-    if ($(field) != null) {
-      miqPrefill($(field), '/images/layout/expression/' + miq_value_styles[field] + '.png');
+    if (miqDomElementExists(field)) {
+      miqPrefill($j('#' + field)[0], '/images/layout/expression/' + miq_value_styles[field] + '.png');
       found = true;
     }
   }
@@ -710,8 +710,8 @@ function miqCheckMaxLength(obj){
   var counter=obj.getAttribute ? obj.getAttribute("counter") : "";
   if (obj.getAttribute && obj.value.length>ml) obj.value=obj.value.substring(0,ml);
   if (counter != "")
-    if (miq_browser != 'Explorer') $(counter).textContent = obj.value.length;
-    else $(counter).innerText = obj.value.length;
+    if (miq_browser != 'Explorer') $j('#' + counter)[0].textContent = obj.value.length;
+    else $j('#' + counter).innerText = obj.value.length;
 }
 
 function miqSetInputClass(fld,cname,typ){

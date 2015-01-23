@@ -224,7 +224,7 @@ function miqOnClick_snapshot_tree(id) {
 function miqOnMouseIn_HostNet(id) {
   nid = hover_node_id(id);
   if (nid)  {                                         // and div id exists
-    var node = $(id);                                  // Get html node
+    var node = $j('#' + id);                                  // Get html node
     var top = getAbsoluteTop(node);
     $j("#" + nid).css({top: (top-220) + "px"});       // Set quad top location
     $j("#" + nid).show();                                    // Show the quad div
@@ -245,7 +245,7 @@ function hover_node_id(id){
   var nid = ids[ids.length - 1];                      // Get the last part of the node id
   return ((nid.split('-')[0] == 'v' ||                // Check for VM node
     nid.split('-')[0] == 'h')                         // or Host node
-    && $(nid)) ? nid : false
+    && miqDomElementExists(nid)) ? nid : false
 }
 
 // OnClick handler for Host Network Tree

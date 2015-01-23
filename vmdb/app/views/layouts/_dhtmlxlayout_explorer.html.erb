@@ -69,7 +69,7 @@
       <% end %>
     <% end %>
 
-		if ($('custom_left_cell_div'))
+		if (miqDomElementExists('custom_left_cell_div'))
       <%= accord_name %> = <%= layout_name %>.cells("a").view("custom").attachObject('custom_left_cell_div');
 
     <% if @explorer %>  <%# For new explorers, create the right cell layout with header, center, and footer %>

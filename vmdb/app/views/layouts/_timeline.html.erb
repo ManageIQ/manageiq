@@ -102,7 +102,7 @@
 					tl.getBand(i).closeBubble();
 				}
 			}
-			tl = Timeline.create($('miq_timeline'), bandInfos, Timeline.HORIZONTAL);
+			tl = Timeline.create($j('#miq_timeline')[0], bandInfos, Timeline.HORIZONTAL);
 			<% if bands[0][:center_position]		%><%# to align daily/hourly timeline in center %>
 				tl.getBand(0).setCenterVisibleDate(Timeline.DateTime.parseGregorianDateTime("<%= bands[0][:center_position] %>"));
 			<% else %>

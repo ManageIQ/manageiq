@@ -15,7 +15,7 @@
             :with=>"miq_date_1",
             :url => { :action => 'retire_date_changed' })
           = hidden_span_if(session[:retire_date] == nil, :id=>"remove_button")
-          = link_to_function(image_tag('/images/icons/16/clear.png', :border=>"0", :alt=>"Set to blank"), "$('miq_date_1').value=''")
+          = link_to_function(image_tag('/images/icons/16/clear.png', :border=>"0", :alt=>"Set to blank"), "$j('#miq_date_1').val('')")
 
       %tr
         - disabled = session[:retire_date] == nil
