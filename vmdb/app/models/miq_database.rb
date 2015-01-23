@@ -12,6 +12,7 @@ class MiqDatabase < ActiveRecord::Base
   encrypt_column  :csrf_secret_token
   encrypt_column  :session_secret_token
 
+  validate :registration_server_url_is_valid
   validates_presence_of :session_secret_token, :csrf_secret_token, :update_repo_name
 
   default_values REGISTRATION_DEFAULT_VALUES
@@ -99,5 +100,12 @@ class MiqDatabase < ActiveRecord::Base
     return true if auth_type == :registration_http_proxy
 
     MiqTask.wait_for_taskid(RegistrationSystem.verify_credentials_queue).task_results if auth_type == :registration
+  end
+
+  private
+
+  def registration_server_url_is_valid
+    return if registration_type != "rhn_satellite"  # Only validating Satellite 5 URL
+    errors.add(:registration_server, "expected https://server.example.com/XMLRPC") unless registration_server =~ %r{\Ahttps?://.+/XMLRPC\z}i
   end
 end

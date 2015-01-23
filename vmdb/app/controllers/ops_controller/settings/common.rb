@@ -277,12 +277,6 @@ module OpsController::Settings::Common
     when 'settings_rhn_edit'
       if rhn_allow_save?
         rhn_save_subscription
-        add_flash(_("Customer Information successfully saved"))
-        @changed = false
-        @edit    = nil
-        @sb[:active_tab] = 'settings_rhn'
-        settings_get_info('root')
-        replace_right_cell('root')
       else
         render_flash
       end
