@@ -47,37 +47,9 @@ describe DynamicDialogFieldValueProcessor do
           "target_resource"
         ).and_return(workspace)
         workspace.stub(:root).and_return(workspace_attributes)
-        dialog_field.stub(:sort_by=)
-        dialog_field.stub(:sort_order=)
-        dialog_field.stub(:data_type=)
-        dialog_field.stub(:default_value=)
-        dialog_field.stub(:required=)
-        dialog_field.stub(:normalize_automate_values).with("workspace values").and_return("normalized values")
-      end
-
-      it "sets the sort_by" do
-        dialog_field.should_receive(:sort_by=).with("none")
-        dynamic_dialog_field_value_processor.values_from_automate(dialog_field)
-      end
-
-      it "sets the sort_order" do
-        dialog_field.should_receive(:sort_order=).with("descending")
-        dynamic_dialog_field_value_processor.values_from_automate(dialog_field)
-      end
-
-      it "sets the data_type" do
-        dialog_field.should_receive(:data_type=).with("datatype")
-        dynamic_dialog_field_value_processor.values_from_automate(dialog_field)
-      end
-
-      it "sets the default_value" do
-        dialog_field.should_receive(:default_value=).with("default")
-        dynamic_dialog_field_value_processor.values_from_automate(dialog_field)
-      end
-
-      it "sets the required" do
-        dialog_field.should_receive(:required=).with(true)
-        dynamic_dialog_field_value_processor.values_from_automate(dialog_field)
+        dialog_field.stub(:normalize_automate_values).with(workspace_attributes.attributes).and_return(
+          "normalized values"
+        )
       end
 
       it "returns the normalized values" do

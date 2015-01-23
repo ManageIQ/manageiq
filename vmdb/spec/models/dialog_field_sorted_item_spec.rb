@@ -23,20 +23,60 @@ describe DialogFieldSortedItem do
 
   describe "#normalize_automate_values" do
     let(:dialog_field) { DialogFieldRadioButton.new }
+    let(:automate_hash) do
+      {
+        "sort_by"       => "none",
+        "sort_order"    => "descending",
+        "data_type"     => "datatype",
+        "default_value" => "default",
+        "required"      => true,
+        "values"        => values
+      }
+    end
 
-    context "when the values passed in are blank" do
-      let(:passed_in_values) { nil }
+    shared_examples_for "DialogFieldSortedItem#normalize_automate_values" do
+      before do
+        dialog_field.normalize_automate_values(automate_hash)
+      end
 
-      it "returns the initial values of the dialog field" do
-        expect(dialog_field.normalize_automate_values(passed_in_values)).to eq([["", "<None>"]])
+      it "sets the sort_by" do
+        expect(dialog_field.sort_by).to eq(:none)
+      end
+
+      it "sets the sort_order" do
+        expect(dialog_field.sort_order).to eq(:descending)
+      end
+
+      it "sets the data_type" do
+        expect(dialog_field.data_type).to eq("datatype")
+      end
+
+      it "sets the default_value" do
+        expect(dialog_field.default_value).to eq("default")
+      end
+
+      it "sets the required" do
+        expect(dialog_field.required).to eq(true)
       end
     end
 
-    context "when the values passed in are not blank" do
-      let(:passed_in_values) { {"lol" => "123"} }
+    context "when the automate hash values passed in are blank" do
+      let(:values) { nil }
+
+      it_behaves_like "DialogFieldSortedItem#normalize_automate_values"
+
+      it "returns the initial values of the dialog field" do
+        expect(dialog_field.normalize_automate_values(automate_hash)).to eq([["", "<None>"]])
+      end
+    end
+
+    context "when the automate hash values passed in are not blank" do
+      let(:values) { {"lol" => "123"} }
+
+      it_behaves_like "DialogFieldSortedItem#normalize_automate_values"
 
       it "normalizes the values to an array" do
-        expect(dialog_field.normalize_automate_values(passed_in_values)).to eq([%w(lol 123)])
+        expect(dialog_field.normalize_automate_values(automate_hash)).to eq([%w(lol 123)])
       end
     end
   end

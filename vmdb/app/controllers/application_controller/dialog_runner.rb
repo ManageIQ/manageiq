@@ -186,6 +186,19 @@ module ApplicationController::DialogRunner
     end
   end
 
+  def dynamic_text_box_refresh
+    @edit = session[:edit]
+
+    dialog = @edit[:wf].dialog
+
+    field = dialog.field(params[:name])
+    values = field.refresh_button_pressed
+
+    respond_to do |format|
+      format.json { render :json => {:field_name => field.name, :values => values}, :status => 200 }
+    end
+  end
+
   private     #######################
 
   def dialog_reset_form

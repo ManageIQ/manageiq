@@ -684,7 +684,7 @@ module MiqAeCustomizationController::Dialogs
         add_flash(_("%s is required") % "Element Label", :error)
         res = false
       end
-      if @edit[:field_typ].to_s == 'DialogFieldDynamicList' && @edit[:field_entry_point].blank?
+      if needs_entry_point?
         add_flash(_("Entry Point must be given for field \"%s\".") %  @edit[:field_name], :error)
         res = false
       end
@@ -869,9 +869,7 @@ module MiqAeCustomizationController::Dialogs
       @edit[:field_default_value] = key[:default_value] = nil
     end
 
-    if @edit[:field_typ] == "DialogFieldRadioButton" && params[:field_dynamic] != true
-      @edit[:field_values] ||= key[:values] = []
-    end
+    @edit[:field_values] ||= key[:values] = []
 
     copy_field_param.call(:entry_point)
     copy_checkbox_field_param.call(:load_on_init)
@@ -1373,5 +1371,9 @@ module MiqAeCustomizationController::Dialogs
 
   def dynamic_field?(field)
     field[:typ] == 'DialogFieldDynamicList' || field[:dynamic]
+  end
+
+  def needs_entry_point?
+    (@edit[:field_typ].to_s == 'DialogFieldDynamicList' || @edit[:field_dynamic]) && @edit[:field_entry_point].blank?
   end
 end

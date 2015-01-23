@@ -4,6 +4,7 @@ require 'routing/shared_examples'
 describe 'routes for MiqRequestController' do
   let(:controller_name) { 'miq_request' }
 
+  it_behaves_like "A controller that has dialog runner routes"
   it_behaves_like 'A controller that has show list routes'
   it_behaves_like 'A controller that has column width routes'
 
