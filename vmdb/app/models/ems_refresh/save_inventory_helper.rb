@@ -100,24 +100,32 @@ module EmsRefresh::SaveInventoryHelper
     end
   end
 
-  # most of the refresh_multi calls follow the same pattern
+  # most of the refresh_inventory_multi calls follow the same pattern
   # this pulls it out
   def save_inventory_assoc(type, parent, hashes, target, find_key, child_keys = [], extra_keys = [])
     reflection = parent.class.reflect_on_association(type)
     klass = reflection.class_name.constantize
-    deletes = relation_values(parent, reflection, target)
+    deletes = relation_values(parent, type, target)
 
     save_inventory_multi(type, klass, parent, hashes, deletes, find_key, child_keys, extra_keys)
     store_ids_for_new_records(parent.send(type), hashes, find_key)
   end
 
   # We need to determine our intent:
-  # - make a complete refresh. Delete missing values.
-  # - make a partial refresh. Don't delete missing keys
+  # - make a complete refresh. Delete missing records.
+  # - make a partial refresh. Don't delete missing records.
   # This generates the "deletes" values based upon this intent
-  def relation_values(parent, reflection, target)
+  # It will delete missing records if both of the following is true:
+  # - The association is declared as a top_level association
+  #   In Active Record, :dependent => :destory says the parent controls the lifespan of the children
+  # - We are targeting this association
+  #   If we are targeting something else, chances are it is a partial refresh. Don't delete.
+  #   If we are targeting this node, or targeting anything (nil), then refresh.
+  #   Some places don't have the target==parent concept. So they can pass in true instead.
+  def relation_values(parent, type, target)
     # always want to refresh this association
-    reflection = parent.class.reflect_on_association(reflection) if reflection.kind_of?(Symbol)
+    reflection = parent.class.reflect_on_association(type)
+    # if this association isn't the definitive source
     top_level = reflection.options[:dependent] == :destroy
 
     top_level && (target == true || target.nil? || parent == target) ? parent.send(reflection.name).dup : []
