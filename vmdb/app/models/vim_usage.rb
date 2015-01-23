@@ -75,7 +75,7 @@ class VimUsage < ActsAsArModel
       .where(:capture_interval_name => interval_name, :resource_type => "VmOrTemplate")
       .select("MIN(timestamp) AS first_ts, MAX(timestamp) AS last_ts")
       .group(:resource_type)
-      .first
+      .limit(1).to_a.first
     perf.nil? ? [] : [
       perf.first_ts.kind_of?(String) ? Time.zone.parse(perf.first_ts) : perf.first_ts,
       perf.last_ts.kind_of?(String)  ? Time.zone.parse(perf.last_ts)  : perf.last_ts

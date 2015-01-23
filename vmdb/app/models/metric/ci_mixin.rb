@@ -46,6 +46,7 @@ module Metric::CiMixin
     perf = associated_metrics(interval_name)
       .select("MIN(timestamp) AS first_ts, MAX(timestamp) AS last_ts")
       .group(:resource_id)
+      .limit(1).to_a
       .first
     perf.nil? ? [] : [
       perf.first_ts.kind_of?(String) ? Time.parse("#{perf.first_ts} UTC") : perf.first_ts,
