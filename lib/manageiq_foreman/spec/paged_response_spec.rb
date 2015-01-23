@@ -9,7 +9,7 @@ describe ManageiqForeman::PagedResponse do
     end
 
     context "with show hash" do
-      subject(:paged_response) do
+      let(:paged_response) do
         described_class.new("id" => "the id")
       end
 
@@ -21,7 +21,7 @@ describe ManageiqForeman::PagedResponse do
   end
 
   describe "#map!" do
-    subject(:paged_response) do
+    let(:paged_response) do
       described_class.new([{"id" => "1"}, {"id" => "2"}, {"id" => "3"}])
     end
     let(:mapped_response) do

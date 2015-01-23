@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe ManageiqForeman::Connection do
-  subject(:connection) { described_class.new(FOREMAN) }
+  let(:connection) { described_class.new(FOREMAN) }
 
   describe "#host" do
     context "with 2 hosts" do

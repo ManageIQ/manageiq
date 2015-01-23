@@ -15,14 +15,20 @@ module EmsRefresh
 
       def save_inventory(manager, targets, hashes)
         EmsRefresh.save_configuration_manager_inventory(manager, hashes, targets[0])
-        EmsRefresh.refresh(manager.provider.provisioning_manager, targets[0]) if hashes[:missing_key]
+        EmsRefresh.refresh(manager.provider.provisioning_manager) if hashes[:missing_key]
       end
 
       private
 
       def fetch_provisioning_manager_data(hash, manager)
-        hash[:customization_scripts] = Hash[manager.customization_scripts.map { |r| [r.manager_ref, r.id] }]
-        hash[:operating_system_flavors] = Hash[manager.operating_system_flavors.map { |r| [r.manager_ref, r.id] }]
+        scripts = manager.customization_scripts.to_a.group_by(&:type)
+        hash[:ptables] = manager_ref_hash(scripts["CustomizationScriptPtable"]||[])
+        hash[:media] = manager_ref_hash(scripts["CustomizationScriptMedium"]||[])
+        hash[:operating_system_flavors] = manager_ref_hash(manager.operating_system_flavors)
+      end
+
+      def manager_ref_hash(records)
+        Hash[records.collect { |r| [r.manager_ref, r.id] }]
       end
     end
   end

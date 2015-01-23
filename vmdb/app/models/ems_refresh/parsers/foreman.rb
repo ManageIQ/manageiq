@@ -14,10 +14,15 @@ module EmsRefresh
 
       def provisioning_inv_to_hashes(inv)
         result = {}
-        ids = {}
-        result[:customization_scripts] = customization_scripts_inv_to_hash(inv[:media], inv[:ptables])
-        add_ids(ids, result[:customization_scripts])
-        result[:operating_system_flavors] = operating_system_flavors_inv_to_hashes(inv[:operating_systems], ids)
+        media = media_inv_to_hashes(inv[:media])
+        ptables = ptables_inv_to_hashes(inv[:ptables])
+        medium_ids = add_ids({}, media)
+        ptable_ids = add_ids({}, ptables)
+
+        result[:customization_scripts] = media + ptables
+        result[:operating_system_flavors] = operating_system_flavors_inv_to_hashes(inv[:operating_systems],
+                                                                                   medium_ids,
+                                                                                   ptable_ids)
         result
       end
 
@@ -26,7 +31,8 @@ module EmsRefresh
         ids = {}
         result[:configuration_profiles] = configuration_profile_inv_to_hashes(inv[:hostgroups],
                                                                               inv[:operating_system_flavors],
-                                                                              inv[:customization_scripts])
+                                                                              inv[:media],
+                                                                              inv[:ptables])
         add_ids(ids, result[:configuration_profiles])
         result[:configured_systems] = configured_system_inv_to_hashes(inv[:hosts], ids, inv[:operating_system_flavors])
         result[:missing_key] = true if missing_key
@@ -36,7 +42,7 @@ module EmsRefresh
       def media_inv_to_hashes(media)
         media.collect do |m|
           {
-            "manager_ref" => "medium:#{m["id"]}",
+            "manager_ref" => m["id"].to_s,
             "type"        => "CustomizationScriptMedium",
             "name"        => m["name"]
           }
@@ -46,38 +52,34 @@ module EmsRefresh
       def ptables_inv_to_hashes(ptables)
         ptables.collect do |m|
           {
-            "manager_ref" => "ptable:#{m["id"]}",
+            "manager_ref" => m["id"].to_s,
             "type"        => "CustomizationScriptPtable",
             "name"        => m["name"]
           }
         end
       end
 
-      def customization_scripts_inv_to_hash(media, ptables)
-        media_inv_to_hashes(media) + ptables_inv_to_hashes(ptables)
-      end
-
-      def operating_system_flavors_inv_to_hashes(flavors_inv, ids)
+      def operating_system_flavors_inv_to_hashes(flavors_inv, medium_ids, ptable_ids)
         flavors_inv.collect do |os|
           {
-            "manager_ref"           => "operating_system:#{os["id"]}",
+            "manager_ref"           => os["id"].to_s,
             "name"                  => os["fullname"],
             "description"           => os["description"],
-            "customization_scripts" => ids_lookup(ids, os["media"], "medium") + ids_lookup(ids, os["ptables"], "ptable")
+            "customization_scripts" => ids_lookup(medium_ids, os["media"]) + ids_lookup(ptable_ids, os["ptables"])
           }
         end
       end
 
-      def configuration_profile_inv_to_hashes(recs, osfs, scripts)
+      def configuration_profile_inv_to_hashes(recs, osfs, media, ptables)
         recs.collect do |profile|
           {
             "type"                           => "ConfigurationProfileForeman",
-            "manager_ref"                    => "hostgroup:#{profile["id"]}",
+            "manager_ref"                    => profile["id"].to_s,
             "name"                           => profile["name"],
             "description"                    => profile["title"],
-            "operating_system_flavor_id"     => id_lookup(osfs, profile, "operating_system", "operatingsystem_id"),
-            "customization_script_ptable_id" => id_lookup(scripts, profile, "ptable"),
-            "customization_script_medium_id" => id_lookup(scripts, profile, "medium"),
+            "operating_system_flavor_id"     => id_lookup(osfs, profile, "operatingsystem_id"),
+            "customization_script_medium_id" => id_lookup(media, profile, "medium_id"),
+            "customization_script_ptable_id" => id_lookup(ptables, profile, "ptable_id"),
           }
         end
       end
@@ -86,10 +88,10 @@ module EmsRefresh
         recs.collect do |cs|
           {
             "type"                       => "ConfiguredSystemForeman",
-            "manager_ref"                => "host:#{cs["id"]}",
+            "manager_ref"                => cs["id"].to_s,
             "hostname"                   => cs["name"],
-            "configuration_profile"      => id_lookup(profiles, cs, "hostgroup"),
-            "operating_system_flavor_id" => id_lookup(operatingsystems, cs, "operating_system", "operatingsystem_id"),
+            "configuration_profile"      => id_lookup(profiles, cs, "hostgroup_id"),
+            "operating_system_flavor_id" => id_lookup(operatingsystems, cs, "operatingsystem_id"),
           }
         end
       end
@@ -98,18 +100,19 @@ module EmsRefresh
 
       def add_ids(target, recs, key = "manager_ref")
         recs.each { |r| target[r[key]] = r }
+        target
       end
 
-      def id_lookup(ids, record, prefix, id_key = "#{prefix}_id")
+      def id_lookup(ids, record, id_key)
         key = record[id_key]
         return unless key
-        ids["#{prefix}:#{key}"].tap do |v|
+        ids[key.to_s].tap do |v|
           @missing_key = true unless v
         end
       end
 
-      def ids_lookup(ids, records, prefix, id_key = "id")
-        records.collect { |record| id_lookup(ids, record, prefix, id_key) }
+      def ids_lookup(ids, records, id_key = "id")
+        records.collect { |record| id_lookup(ids, record, id_key) }
       end
     end
   end

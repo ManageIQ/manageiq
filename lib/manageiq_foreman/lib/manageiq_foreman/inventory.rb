@@ -13,15 +13,6 @@ module ManageiqForeman
       # NOP
     end
 
-    def refresh(target = nil)
-      refresh_all(target)
-    end
-
-    # generate inventory for the foreman provider
-    def refresh_all(target = nil)
-      refresh_configuration(target).merge(refresh_provisioning)
-    end
-
     def refresh_configuration(_target = nil)
       {
         :hosts      => connection.all(:hosts),

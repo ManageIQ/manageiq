@@ -12,6 +12,13 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
                       )
   end
 
+  # these values are from the
+  let(:provisioning_manager) { Provider.first.provisioning_manager }
+  let(:osfs) { provisioning_manager.operating_system_flavors }
+  let(:customization_scripts) { provisioning_manager.customization_scripts }
+  let(:media) { customization_scripts.where(:type => "CustomizationScriptMedium") }
+  let(:ptables) { customization_scripts.where(:type => "CustomizationScriptPtable") }
+
   it "will perform a full refresh on api v2" do
     VCR.use_cassette("#{described_class.name.underscore}_api_v2") do
       EmsRefresh.refresh(provider)
@@ -33,44 +40,35 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
   end
 
   def assert_provisioning_manager
-    manager = Provider.first.provisioning_manager
-    expect(manager).not_to be_nil
+    expect(provisioning_manager).not_to    be_nil
+    expect(customization_scripts.count).to eq(19)
+    expect(ptables.count).to               eq(11)
+    expect(media.count).to                 eq(8)
+    expect(osfs.count).to                  eq(5)
 
-    css = manager.customization_scripts
-    expect(css.count).to                              eq(19)
-    expect(css.ptables.count).to                      eq(11)
-    expect(css.media.count).to                        eq(8)
-    expect(manager.operating_system_flavors.count).to eq(5)
-
-    medium = css.media.where(spec_related).first
-    ptable = css.ptables.where(spec_related).first
-    osf = manager.operating_system_flavors.where(spec_related).first
+    medium = mine(media)
+    ptable = mine(ptables)
+    osf = mine(osfs)
 
     expect(medium.attributes).to include(
       "name"        => "ProviderRefreshSpec-Media",
       "type"        => "CustomizationScriptMedium",
-      "manager_ref" => "medium:8"
+      "manager_ref" => "8"
     )
     expect(ptable.attributes).to include(
       "name"        => "ProviderRefreshSpec-PartitionTable",
       "type"        => "CustomizationScriptPtable",
-      "manager_ref" => "ptable:12"
+      "manager_ref" => "12"
     )
 
     expect(osf.attributes).to include(
       "name"        => "ProviderRefreshSpec-OperatingSystem 1.2",
       "description" => "OS 1.2",
-      "manager_ref" => "operating_system:4"
+      "manager_ref" => "4"
     )
     expect(osf.customization_scripts).to include(ptable)
     expect(osf.customization_scripts).to include(medium)
   end
-
-  # these values are from the
-  let(:provisioning_manager) { Provider.first.provisioning_manager }
-  let(:osf) { provisioning_manager.operating_system_flavors.where(spec_related).first }
-  let(:medium) { provisioning_manager.customization_scripts.media.where(spec_related).first }
-  let(:ptable) { provisioning_manager.customization_scripts.ptables.where(spec_related).first }
 
   def assert_configuration_manager
     manager = Provider.first.configuration_manager
@@ -82,32 +80,44 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
     parent = manager.configuration_profiles.where(:name => 'ProviderRefreshSpec-HostGroup').first
     system = manager.configured_systems.where("hostname like 'providerrefreshspec%'").first
 
+    medium = mine(media)
+    ptable = mine(ptables)
+    osf = mine(osfs)
+
+
+
     expect(child.attributes).to include(
       "type"        => "ConfigurationProfileForeman",
       "name"        => "ProviderRefreshSpec-ChildHostGroup",
       "description" => "ProviderRefreshSpec-HostGroup/ProviderRefreshSpec-ChildHostGroup",
-      "manager_ref" => "hostgroup:14",
+      "manager_ref" => "14",
     )
-    expect(child.operating_system_flavor).to eq(osf)        # inherited from parent
-    expect(child.customization_script_medium).to eq(medium) # inherit
+    expect(child.operating_system_flavor).to     eq(osf)    # inherited from parent
+    expect(child.customization_script_medium).to eq(medium)   # inherit
     expect(child.customization_script_ptable).to eq(ptable) # declared
 
     expect(parent.attributes).to include(
       "type"        => "ConfigurationProfileForeman",
       "name"        => "ProviderRefreshSpec-HostGroup",
       "description" => "ProviderRefreshSpec-HostGroup",
-      "manager_ref" => "hostgroup:13",
+      "manager_ref" => "13",
     )
-    expect(parent.operating_system_flavor).to eq(osf)        # declared
+    expect(parent.operating_system_flavor).to     eq(osf)  # declared
     expect(parent.customization_script_medium).to eq(medium) # declared
-    expect(parent.customization_script_ptable).to be_nil     # blank
+    expect(parent.customization_script_ptable).to be_nil          # blank
 
     expect(system.attributes).to include(
       "type"        => "ConfiguredSystemForeman",
       "hostname"    => "providerrefreshspec-hostbaremetal.cloudforms.lab.eng.rdu2.redhat.com",
-      "manager_ref" => "host:38",
+      "manager_ref" => "38",
     )
     expect(system.operating_system_flavor).to eq(osf)
-    expect(system.configuration_profile).to eq(child)
+    expect(system.configuration_profile).to   eq(child)
+  end
+
+  private
+
+  def mine(collection)
+    collection.where(spec_related).first
   end
 end

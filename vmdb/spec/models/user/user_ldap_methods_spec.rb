@@ -14,7 +14,7 @@ describe User do
   end
 
   context ".find_or_create_by_ldap_attr" do
-    subject(:current_user) { described_class.find_or_create_by_ldap_attr(@user_type, @username) }
+    let(:current_user) { described_class.find_or_create_by_ldap_attr(@user_type, @username) }
 
     it "with invalid attribute" do
       @user_type = "invalid"

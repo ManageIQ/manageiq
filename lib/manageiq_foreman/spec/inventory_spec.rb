@@ -9,7 +9,7 @@ describe ManageiqForeman::Inventory do
   end
 
   describe "#refresh" do
-    subject(:inventory) { described_class.new(FOREMAN) }
+    let(:inventory) { described_class.new(FOREMAN) }
   end
 
   # describe "#ems_inv_to_hashes" do

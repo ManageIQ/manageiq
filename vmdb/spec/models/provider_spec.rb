@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Provider do
-  subject(:provider) { described_class.new }
+  let(:provider) { described_class.new }
 
   describe "#verify_ssl" do
     context "when non set" do

@@ -18,16 +18,16 @@ module EmsRefresh
     end
 
     def save_configuration_profiles_inventory(manager, hashes, target)
-      hash_contains_all_values = target.nil? || manager == target
-      save_inventory_assoc(:configuration_profiles, manager, hashes, hash_contains_all_values, "manager_ref")
+      delete_missing_records = target.nil? || manager == target
+      save_inventory_assoc(:configuration_profiles, manager, hashes, delete_missing_records, "manager_ref")
     end
 
     def save_configured_systems_inventory(manager, hashes, target)
-      hash_contains_all_values = target.nil? || manager == target
+      delete_missing_records = target.nil? || manager == target
       hashes.each do |hash|
         hash[:configuration_profile_id] = hash.fetch_path("configuration_profile", :id)
       end
-      save_inventory_assoc(:configured_systems, manager, hashes, hash_contains_all_values, "manager_ref", nil,
+      save_inventory_assoc(:configured_systems, manager, hashes, delete_missing_records, "manager_ref", nil,
                            %w(configuration_profile))
     end
   end
