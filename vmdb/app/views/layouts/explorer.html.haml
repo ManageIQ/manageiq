@@ -1,0 +1,29 @@
+= render :partial => "layouts/global_header"
+= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"layout"}
+= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"accordion"}
+= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"grid"}
+= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"combo"}
+= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"calendar"}
+= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"menu"}
+= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"toolbar"}
+
+= render :partial => "layouts/page_header"
+= render :partial => "layouts/page_center"
+= render :partial => "layouts/page_footer"
+
+#context_div
+#layout_div
+  = yield :trees
+  #center_cell_div{:style => "display:none;"}
+    #taskbar_div
+      = render :partial => "layouts/x_taskbar"
+    = yield
+    #paging_div
+      - if saved_report_paging?
+        = render(:partial => 'layouts/saved_report_paging_bar', :locals=>{:pages=>@sb[:pages]})
+      - else
+        = render(:partial => '/layouts/x_pagingcontrols')
+= yield :accords
+
+= render :partial => "layouts/page_footer"
+= render :partial => "layouts/global_footer"

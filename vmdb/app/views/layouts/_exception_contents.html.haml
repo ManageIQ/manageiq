@@ -1,0 +1,42 @@
+%div
+  %table#content{:width => "100%", :border => "0", :cellpadding => "0", :cellspacing => "0"}
+    %tr
+      %td{:valign => "top", :id => "maincol"}
+        %div{:style => "height: 10px;"}
+        %div{:style => "padding-left: 20px; padding-top: 20px; width: 700px"}
+          %h1{:style => "color: red"}
+            = _("Unexpected error encountered")
+          %br
+          %br
+          %h2
+            = _("Errors in Management Engine can be caused by:")
+          %br
+          %h3
+            %fieldset
+              %font{:style => "font-size: 116%;color: black"}&#x2460;
+              = _("Accessing Management Engine from multiple tabs or windows of the same browser on a single machine.")
+              %br
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              = _("Close any duplicate browser sessions, then select a menu option above.")
+
+            %fieldset
+              %font{:style => "font-size: 116%;color: black"}&#x2461;
+              = _("Pressing the back button during a session.")
+              %br
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              = _("Close any duplicate browser sessions, then select a menu option above.")
+
+            %fieldset
+              %font{:style => "font-size: 116%;color: black"}&#x2461;
+              %font{:style => "font-size: 116%;color: black"}&#x2462;
+              = _("An internal system error.")
+              %br
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              = _("Please contact your administrator for assistance.")
+          %br
+          %br
+          %h2
+            = _("Error text:")
+          %br
+          %h3 
+            = message + " [#{params[:controller]}/#{params[:action]}]"
