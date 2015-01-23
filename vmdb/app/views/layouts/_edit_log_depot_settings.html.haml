@@ -1,0 +1,52 @@
+- action  ||= "log_depot_field_changed"
+- div_num ||= ""
+- record    = @schedule || @record
+- url       = url_for(:action => action, :id => (record.try(:id) || "new"))
+
+#form_filter_div
+  = render :partial => "layouts/flash_msg", :locals=> {:div_num => div_num}
+  %fieldset
+    %p.legend
+      - if (@sb[:active_tree] == :diagnostics_tree && @sb[:active_tab] == "diagnostics_database") || (@sb[:active_tree] == :settings_tree)
+        = _("Database Backup Settings")
+      - else
+      = _("Editing Log Depot Settings for %{class}: %{display}") % {:class   => Dictionary::gettext(record.class.name, :type => :model, :notfound => :titleize)
+                                                                    :display => @record.display_name}
+    %table.style1
+      %tr
+        %td.key
+          = _("Type")
+        %td.wide
+          = select_tag("log_protocol",
+                       options_for_select([[_("<No Depot>"), nil]] + @edit[:protocols_arr].sort,
+                                          @edit[:protocol]),
+                       "data-miq_observe" => {:url => url}.to_json)
+      - if @edit[:protocol]
+        %tr
+          %td.key _("Depot Name")
+          %td.wide
+            = text_field_tag("depot_name",
+                             @edit[:new][:depot_name],
+                             :maxlength         => 50,
+                             "data-miq_observe" => {
+                               :interval => '.5',
+                               :url      => url
+                             }.to_json)
+        %tr
+          %td.key
+            = _("URI")
+          %td.wide #{@edit[:new][:uri_prefix]}://
+            = text_field_tag("uri", @edit[:new][:uri],
+                             :maxlength         => 100,
+                             "data-miq_observe" => {
+                               :interval => '.5',
+                               :url      => url
+                             }.to_json)
+          = javascript_tag(javascript_focus('uri'))
+        - if @edit[:new][:requires_credentials]
+          = render(:partial => "/layouts/auth_credentials",
+                   :locals  => {
+                     :pfx          => "log",
+                     :change_url   => action,
+                     :validate_url => "log_depot_edit",
+                     :record       => record})

@@ -1,0 +1,8 @@
+%script{:type => "text/javascript"}
+  var miq_browser = "#{browser_info("name")}";
+  var miq_browser_version = "#{browser_info("version")}";
+  var miq_controller = "#{request.parameters[:controller]}";
+
+- if is_browser_ie?
+  %script{:defer => "defer", :type => "text/javascript"}
+    miqOnLoad();
