@@ -133,10 +133,10 @@ module OpsController::Settings::RHN
     begin
       db.save!
     rescue StandardError => bang
-      add_flash(_(bang.message),:error)
+      add_flash(_(bang.message), :error)
       @in_a_form = true
       render :update do |page|
-        page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     else
       add_flash(_("Customer Information successfully saved"))
