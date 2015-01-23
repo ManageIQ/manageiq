@@ -31,12 +31,6 @@ module VMWareOpsLinux
 		# Start the VM.
 		# 
 		ost.value = MiqUtil.runcmd("vmware-cmd \"#{vmName}\" start", ost.test)
-
-        # Don't worry if the disk rename fails during start
-#		begin
-#            renameDisks(*diskNames(vmName))    
-#        rescue => e
-#        end
 	end
 
 	def StopVM(ost)
@@ -45,8 +39,6 @@ module VMWareOpsLinux
 
         diskFile, diskFileSave, bbFileSave = diskNames(vmName)
 		ost.value = MiqUtil.runcmd("vmware-cmd \"#{vmName}\" stop", ost.test)
-#        sleep(0.5)
-#        renameDisks(*diskNames(vmName))
 	end
 
 	def GetHeartbeat(ost)
@@ -97,7 +89,6 @@ module VMWareOpsLinux
 		vmName = getVmFile(ost)
 
 		ost.value = MiqUtil.runcmd("vmware-cmd \"#{vmName}\" suspend", ost.test)
-#        renameDisks(*diskNames(vmName))
 	end
 	
 end
