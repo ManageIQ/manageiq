@@ -101,10 +101,10 @@ module EmsRefresh
       end
 
       def id_lookup(ids, record, prefix, id_key = "#{prefix}_id")
-        if (key = record[id_key])
-          ids["#{prefix}:#{key}"].tap do |v|
-            @missing_key = true unless v
-          end
+        key = record[id_key]
+        return unless key
+        ids["#{prefix}:#{key}"].tap do |v|
+          @missing_key = true unless v
         end
       end
 

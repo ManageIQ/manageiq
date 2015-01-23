@@ -103,7 +103,7 @@ module EmsRefresh::SaveInventoryHelper
   # most of the refresh_multi calls follow the same pattern
   # this pulls it out
   def save_inventory_assoc(type, parent, hashes, target, find_key, child_keys = [], extra_keys = [])
-    reflection = parent.reflections[type]
+    reflection = parent.class.reflect_on_association(type)
     klass = reflection.class_name.constantize
     deletes = relation_values(parent, reflection, target)
 
@@ -117,7 +117,7 @@ module EmsRefresh::SaveInventoryHelper
   # This generates the "deletes" values based upon this intent
   def relation_values(parent, reflection, target)
     # always want to refresh this association
-    reflection = parent.reflect_on_association(reflection) if reflection.kind_of?(Symbol)
+    reflection = parent.class.reflect_on_association(reflection) if reflection.kind_of?(Symbol)
     top_level = reflection.options[:dependent] == :destroy
 
     top_level && (target == true || target.nil? || parent == target) ? parent.send(reflection.name).dup : []
