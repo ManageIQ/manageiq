@@ -128,9 +128,24 @@ module OpsController::Settings::RHN
     auth    = {:registration =>  {:userid => credentials[:userid], :password => credentials[:password]}}
     options = {:required => [:userid, :password]}
     db.update_authentication(auth, options)
-
     db.registration_organization = @edit[:new][:customer_org]
-    db.save
+
+    begin
+      db.save!
+    rescue StandardError => bang
+      add_flash(_(bang.message),:error)
+      @in_a_form = true
+      render :update do |page|
+        page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+      end
+    else
+      add_flash(_("Customer Information successfully saved"))
+      @changed = false
+      @edit    = nil
+      @sb[:active_tab] = 'settings_rhn'
+      settings_get_info('root')
+      replace_right_cell('root')
+    end
   end
 
   # prepare credentials from @edit into a hash for async call
