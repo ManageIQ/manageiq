@@ -106,6 +106,6 @@ class MiqDatabase < ActiveRecord::Base
 
   def registration_server_url_is_valid
     return if registration_type != "rhn_satellite"  # Only validating Satellite 5 URL
-    errors.add(:registration_server, "expected http://server.example.com/XMLRPC") unless registration_server =~ %r{\Ahttps?://.+/XMLRPC\z}i
+    errors.add(:registration_server, "expected https://server.example.com/XMLRPC") unless registration_server =~ %r{\Ahttps?://.+/XMLRPC\z}i
   end
 end
