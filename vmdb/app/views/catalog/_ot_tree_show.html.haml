@@ -1,0 +1,30 @@
+.maincontent{:xmlns => "http://www.w3.org/1999/html"}
+  = render :partial => "layouts/flash_msg"
+  %table
+    %td{:valign => "top"}
+      %table.style1
+        %tr
+          %td.key=_('Name')
+          %td.notwide= @record.name
+        %tr
+          %td.key=_('Description')
+          %td.notwide= @record.description
+        %tr
+          %td.key=_('Created On')
+          %td.notwide= @record.created_at
+        %tr
+          %td.key=_('Updated On')
+          %td.notwide= @record.updated_at
+
+  %hr
+  - if @record.content
+    = text_area_tag("template_content", @record.content, :style => "display:none;")
+    - if params[:action] != "explorer"
+      = render :partial => "/layouts/my_code_mirror",
+        :locals       => {:text_area_id => "template_content",
+        :mode         => "yaml",
+        :line_numbers => false,
+        :read_only    => true}
+
+:javascript
+  miqEditor.refresh();
