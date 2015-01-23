@@ -117,7 +117,7 @@ module ReportFormatter
           else
             series.push(:value => val)
           end
-          allnil = false if val.nil? || nils2zero
+          allnil = false if !val.nil? || nils2zero
         end
         series[-1] = 0 if allnil                    # XML/SWF Charts can't handle all nils, set the last value to 0
         add_axis_category_text(categories)
