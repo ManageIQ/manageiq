@@ -1,4 +1,6 @@
 class DialogFieldTextBox < DialogField
+  AUTOMATE_VALUE_FIELDS = %w(data_type default_value protected required validator_rule validator_type)
+
   has_one :resource_action, :as => :resource, :dependent => :destroy
 
   after_initialize :default_resource_action
@@ -52,7 +54,7 @@ class DialogFieldTextBox < DialogField
   end
 
   def normalize_automate_values(automate_hash)
-    %w(data_type default_value protected required validator_type validator_rule).each do |key|
+    self.class::AUTOMATE_VALUE_FIELDS.each do |key|
       send("#{key}=", automate_hash[key]) if automate_hash.key?(key)
     end
 
