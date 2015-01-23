@@ -139,11 +139,11 @@ describe EmsRefreshCoreWorker do
         end
 
         def should_not_have_network_changes
-          @hw.nics(true).sort_by!(&:address).collect { |n| [n.network.try(:ipaddress), n.network.try(:ipv6address)] }.should == @expected_addresses
+          @hw.nics(true).sort_by(&:address).collect { |n| [n.network.try(:ipaddress), n.network.try(:ipv6address)] }.should == @expected_addresses
         end
 
         def should_have_network_changes(expected)
-          @hw.nics(true).sort_by!(&:address).collect { |n| [n.network.try(:ipaddress), n.network.try(:ipv6address)] }.should == expected
+          @hw.nics(true).sort_by(&:address).collect { |n| [n.network.try(:ipaddress), n.network.try(:ipv6address)] }.should == expected
         end
       end
     end
