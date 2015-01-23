@@ -66,8 +66,8 @@ module OpsController::Settings::CapAndU
     # need to create an array of items, if their or their children's capture has been changed then make the changed one blue.
     render :update do |page|                    # Use JS to update the display
       page.replace_html(@refresh_div, :partial=>@refresh_partial) if @refresh_div
-      page << "$('clusters_div').#{params[:all_clusters] == "1" ? "hide" : "show"}()" if params[:all_clusters]
-      page << "$('storages_div').#{params[:all_storages] == "1" ? "hide" : "show"}()" if params[:all_storages]
+      page << "$j('#clusters_div').#{params[:all_clusters] == "1" ? "hide" : "show"}()" if params[:all_clusters]
+      page << "$j('#storages_div').#{params[:all_storages] == "1" ? "hide" : "show"}()" if params[:all_storages]
       if params[:id] || params[:check_all] #|| (params[:tree_name] == "cu_datastore_tree" && params[:check_all])
         if (params[:id] && params[:id].split('_')[0] == "Datastore") || (params[:tree_name] == "cu_datastore_tree" && params[:check_all])
           # change nodes to blue if they were changed during current edit session

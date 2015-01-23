@@ -84,4 +84,8 @@ module JsHelper
   def javascript_hide_if_exists(element)
     "if ($j('##{j_str(element)}').length) #{javascript_hide(element)}".html_safe
   end
+
+  def jquery_pulsate_element(element)
+    "$j('##{element}').fadeIn().fadeOut().fadeIn().fadeOut().fadeIn().fadeOut().fadeIn().fadeOut().fadeIn().fadeOut().fadeIn();".html_safe
+  end
 end

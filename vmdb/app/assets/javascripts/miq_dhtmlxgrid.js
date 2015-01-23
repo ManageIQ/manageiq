@@ -47,9 +47,9 @@ function miqRequestRowSelected(row_id) {
 // Handle checkbox
 function miqGridOnCheck(row_id, cell_idx, state) {
   crows = gtl_list_grid.getCheckedRows(0);
-  $('miq_grid_checks').value = crows
+  $j('#miq_grid_checks').val(crows);
   count = crows == "" ? 0:crows.split(",").length;
-  if ($('center_tb')) miqSetButtons(count, "center_tb");
+  if (miqDomElementExists('center_tb')) miqSetButtons(count, "center_tb");
   else miqSetButtons(count, "center_buttons_div");
 }
 
@@ -58,24 +58,24 @@ function miqCheck_AE_All(button_div,gridname) {
   var state = true;
   var crows = "";
   if (typeof ns_list_grid != "undefined" && gridname == "ns_list_grid") {
-    state = $('Toggle1').checked;
+    state = $j('#Toggle1').prop('checked');
     ns_list_grid.checkAll(state ? true : false)
     crows = ns_list_grid.getCheckedRows(0);
   } else if (typeof ns_grid != "undefined" && gridname == "ns_grid") {
-    state = $('Toggle2').checked;
+    state = $j('#Toggle2').prop('checked');
     ns_grid.checkAll(state ? true:false)
     crows = ns_grid.getCheckedRows(0);
   } else if (typeof instance_grid != "undefined" && gridname == "instance_grid") {
-    state = $('Toggle3').checked;
+    state = $j('#Toggle3').prop('checked');
     instance_grid.checkAll(state ? true:false)
     crows = instance_grid.getCheckedRows(0);
   } else if (typeof class_methods_grid != "undefined" && gridname == "class_methods_grid") {
-    state = $('Toggle4').checked;
+    state = $j('#Toggle4').prop('checked');
     class_methods_grid.checkAll(state ? true:false)
     crows = class_methods_grid.getCheckedRows(0);
   }
-  if ($('miq_grid_checks')) $('miq_grid_checks').value = crows
-  if ($('miq_grid_checks2')) $('miq_grid_checks2').value = crows
+  if (miqDomElementExists('miq_grid_checks')) $j('#miq_grid_checks').val(crows)
+  if (miqDomElementExists('miq_grid_checks2')) $j('#miq_grid_checks2').val(crows)
   count = crows == "" ? 0:crows.split(",").length;
   miqSetButtons(count, button_div);
   miqSparkle(false);
@@ -197,7 +197,7 @@ function miqOnAECheck(row_id, cell_idx, state) {
   count = crows == "" ? 0:crows.split(",").length;  
   //if ($('policy_bar'))  miqSetButtons(count, "policy_bar");
   //if ($('policy_bar2')) miqSetButtons(count, "policy_bar2");
-  if ($('center_tb')) miqSetButtons(count, "center_tb");
+  if (miqDomElementExists('center_tb')) miqSetButtons(count, "center_tb");
   else miqSetButtons(count, "center_buttons_div");
 }
 

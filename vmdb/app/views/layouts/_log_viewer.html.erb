@@ -8,4 +8,4 @@
 
 	<%= text_area("logview","data", :value=>@log, :readonly=>true, :style=>"height:#{h}px;", :wrap=>"off") %>
 
-<%= javascript_tag "$('logview_data').scrollTop = $('logview_data').scrollHeight - $('logview_data').clientHeight;" %>
+<%= javascript_tag "$j('#logview_data').scrollTop($j('#logview_data').prop('scrollHeight') - $j('#logview_data').prop('clientHeight'));" %>

@@ -1091,7 +1091,7 @@ class MiqAeClassController < ApplicationController
       end
     end
     render :update do |page|
-      page << "if ($('cls_method_data')){"
+      page << "if (miqDomElementExists('cls_method_data')){"
         page.replace("flash_msg_div_class_methods", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"_class_methods"})
         page << "var ta = document.getElementById('cls_method_data');"
       page << "} else {"
@@ -1102,11 +1102,11 @@ class MiqAeClassController < ApplicationController
       page << "ta.scrollTop = (#{line.to_i}-1) * lineHeight;"
       if line > 0
         if @sb[:row_selected]
-          page << "$('cls_method_data_lines').scrollTop = ta.scrollTop;"
-          page << "$('cls_method_data').scrollTop = ta.scrollTop;"
+          page << "$j('#cls_method_data_lines').scrollTop(ta.scrollTop);"
+          page << "$j('#cls_method_data').scrollTop(ta.scrollTop);"
         else
-          page << "$('method_data_lines').scrollTop = ta.scrollTop;"
-          page << "$('method_data').scrollTop = ta.scrollTop;"
+          page << "$j('#method_data_lines').scrollTop(ta.scrollTop);"
+          page << "$j('#method_data').scrollTop(ta.scrollTop);"
         end
       end
     end
@@ -1135,11 +1135,11 @@ class MiqAeClassController < ApplicationController
           if session[:field_data][:datatype] == "password"
             page << javascript_hide("field_default_value")
             page << javascript_show("field_password_value")
-            page << "$('field_password_value').value = '';"
+            page << "$j('#field_password_value').val('');"
           else
             page << javascript_hide("field_password_value")
             page << javascript_show("field_default_value")
-            page << "$('field_default_value').value = '';"
+            page << "$j('#field_default_value').val('');"
           end
         end
         params.keys.each do |field|
@@ -1150,12 +1150,12 @@ class MiqAeClassController < ApplicationController
             if @edit[:new][:fields][f[1].to_i]['datatype'] == "password"
               page << javascript_hide(def_field)
               page << javascript_show(pwd_field)
-              page << "$('#{pwd_field}').value='';"
+              page << "$j('##{pwd_field}').val('');"
               @edit[:new][:fields][f[1].to_i]['default_value'] = nil
             else
               page << javascript_hide(pwd_field)
               page << javascript_show(def_field)
-              page << "$('#{def_field}').value='';"
+              page << "$j('##{def_field}').val('');"
               @edit[:new][:fields][f[1].to_i]['default_value'] = nil
             end
           end
@@ -1203,22 +1203,22 @@ class MiqAeClassController < ApplicationController
           if session[:field_data][:datatype] == "password"
             page << javascript_hide("cls_field_default_value")
             page << javascript_show("cls_field_password_value")
-            page << "$('cls_field_password_value').value = '';"
+            page << "$j('#cls_field_password_value').val('');"
           else
             page << javascript_hide("cls_field_password_value")
             page << javascript_show("cls_field_default_value")
-            page << "$('cls_field_default_value').value = '';"
+            page << "$j('#cls_field_default_value').val('');"
           end
         end
         if params[:method_field_datatype]
           if session[:field_data][:datatype] == "password"
             page << javascript_hide("method_field_default_value")
             page << javascript_show("method_field_password_value")
-            page << "$('method_field_password_value').value = '';"
+            page << "$j('#method_field_password_value').val('');"
           else
             page << javascript_hide("method_field_password_value")
             page << javascript_show("method_field_default_value")
-            page << "$('method_field_default_value').value = '';"
+            page << "$j('#method_field_default_value').val('');"
           end
         end
 
@@ -1237,12 +1237,12 @@ class MiqAeClassController < ApplicationController
             if @edit[:new][:fields][f[1].to_i]['datatype'] == "password"
               page << javascript_hide(def_field)
               page << javascript_show(pwd_field)
-              page << "$('#{pwd_field}').value='';"
+              page << "$j('##{pwd_field}').val('');"
               @edit[:new][:fields][f[1].to_i]['default_value'] = nil
             else
               page << javascript_hide(pwd_field)
               page << javascript_show(def_field)
-              page << "$('#{def_field}').value='';"
+              page << "$j('##{def_field}').val('');"
               @edit[:new][:fields][f[1].to_i]['default_value'] = nil
             end
           end

@@ -174,8 +174,8 @@ function miqToolbarOnClick(id){
 	var params;
 	if (typeof button.url_parms != "undefined") {
 		if (button.url_parms.endsWith("_div")) {
-			if ($('miq_grid_checks'))
-				params = "miq_grid_checks=" + $('miq_grid_checks').value;
+			if (miqDomElementExists('miq_grid_checks'))
+				params = "miq_grid_checks=" + $j('#miq_grid_checks').val();
 			else
 				params = Form.serialize(button.url_parms);
 		} else {

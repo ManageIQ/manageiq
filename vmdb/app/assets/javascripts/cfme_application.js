@@ -4,15 +4,15 @@
 function miqOnLoad() {
 
   miq_widget_dd_url = "dashboard/widget_dd_done";     // controller to be used in url in miqDropComplete method
-  if ($('col1')) miqInitDashboardCols();  // Initialize the dashboard column sortables
-  if ($('widget_select_div')) miqInitWidgetPulldown();  // Initialize the dashboard widget pulldown
+  if (miqDomElementExists('col1')) miqInitDashboardCols();  // Initialize the dashboard column sortables
+  if (miqDomElementExists('widget_select_div')) miqInitWidgetPulldown();  // Initialize the dashboard widget pulldown
 
   if (typeof init_dhtmlx_layout != "undefined") {
     miqInitDhtmlxLayout();  // Need this since IE will not run JS correctly until after page is loaded
   }
 
   Event.observe(document, 'mousemove', miqGetMouseXY);
-  if ($('compare_grid')) {  // Need to do this here for IE, rather then right after the grid is initialized
+  if (miqDomElementExists('compare_grid')) {  // Need to do this here for IE, rather then right after the grid is initialized
     compare_grid.enableAutoHeight(true);
     compare_grid.enableAutoWidth(true);
   }
@@ -33,7 +33,7 @@ function miqOnLoad() {
 
   if (typeof miq_tree_focus == "string") eval(miq_tree_focus);      // Focus on certain tree node, if set
 
-  if ($('clear_search') != "undefined")                             // Position clear search link in right cell header
+  if (miqDomElementExists('clear_search'))                             // Position clear search link in right cell header
     $j('.dhtmlxInfoBarLabel:visible').append($j('#clear_search')[0])  // Find the right cell header div
 
   if (typeof miq_after_onload == "string") eval(miq_after_onload);  // Run MIQ after onload code if present
@@ -83,54 +83,54 @@ function miqGetMouseXY(e){
 
 // Prefill text entry field when blank
 function miqLoginPrefill() {
-  if ($('user_name')) miqPrefill($('user_name'));
-  if ($('user_password')) miqPrefill($('user_password'));
-  if ($('user_new_password')) miqPrefill($('user_new_password'));
-  if ($('user_verify_password')) miqPrefill($('user_verify_password'));
-  if ($('user_name')) self.setTimeout('miqLoginPrefill()',200); // Retry in .2 seconds, if user name field is present
+  if (miqDomElementExists('user_name')) miqPrefill($j('#user_name'));
+  if (miqDomElementExists('user_password')) miqPrefill($j('#user_password'));
+  if (miqDomElementExists('user_new_password')) miqPrefill($j('#user_new_password'));
+  if (miqDomElementExists('user_verify_password')) miqPrefill($j('#user_verify_password'));
+  if (miqDomElementExists('user_name')) self.setTimeout('miqLoginPrefill()',200); // Retry in .2 seconds, if user name field is present
 }
 
 // Prefill expression value text entry fields when blank
 function miqExpressionPrefill(count) {
-  if ($('chosen_value') && $('chosen_value').type.startsWith('text')) {
-    miqPrefill($('chosen_value'), '/images/layout/expression/' + miq_val1_type + '.png');
+  if (miqDomElementExists('chosen_value') && $j('#chosen_value').type.startsWith('text')) {
+    miqPrefill($j('#chosen_value'), '/images/layout/expression/' + miq_val1_type + '.png');
     $j('#chosen_value').prop('title', miq_val1_title);
     $j('#chosen_value').prop('alt', miq_val1_title);
   }
-  if ($('chosen_cvalue') && $('chosen_cvalue').type.startsWith('text')) {
-    miqPrefill($('chosen_cvalue'), '/images/layout/expression/' + miq_val2_type + '.png');
+  if (miqDomElementExists('chosen_cvalue') && $j('#chosen_cvalue').type.startsWith('text')) {
+    miqPrefill($j('#chosen_cvalue'), '/images/layout/expression/' + miq_val2_type + '.png');
     $j('#chosen_cvalue').prop('title', miq_val2_title);
     $j('#chosen_cvalue').prop('alt', miq_val2_title);
   }
-  if ($('chosen_regkey') && $('chosen_regkey').type.startsWith('text')) {
-    miqPrefill($('chosen_regkey'), '/images/layout/expression/string.png');
+  if (miqDomElementExists('chosen_regkey') && $j('#chosen_regkey').type.startsWith('text')) {
+    miqPrefill($j('#chosen_regkey'), '/images/layout/expression/string.png');
     var title = "Registry Key";
     $j('#chosen_regkey').prop('title', title);
     $j('#chosen_regkey').prop('alt', title);
   }
-  if ($('chosen_regval') && $('chosen_regval').type.startsWith('text')) {
-    miqPrefill($('chosen_regval'), '/images/layout/expression/string.png');
+  if (miqDomElementExists('chosen_regval') && $j('#chosen_regval').type.startsWith('text')) {
+    miqPrefill($j('#chosen_regval'), '/images/layout/expression/string.png');
     var title = "Registry Key Value";
     $j('#chosen_regval').prop('title', title);
     $j('#chosen_regval').prop('alt', title);
   }
-  if ($('miq_date_1_0') && $('miq_date_1_0').type.startsWith('text')) {
-    miqPrefill($('miq_date_1_0'), '/images/layout/expression/' + miq_val1_type + '.png');
+  if (miqDomElementExists('miq_date_1_0') && $j('#miq_date_1_0').type.startsWith('text')) {
+    miqPrefill($j('#miq_date_1_0'), '/images/layout/expression/' + miq_val1_type + '.png');
     $j('#miq_date_1_0').prop('title', miq_val1_title);
     $j('#miq_date_1_0').prop('alt', miq_val1_title);
   }
-  if ($('miq_date_1_1') && $('miq_date_1_1').type.startsWith('text')) {
-    miqPrefill($('miq_date_1_1'), '/images/layout/expression/' + miq_val1_type + '.png');
+  if (miqDomElementExists('miq_date_1_1') && $j('#miq_date_1_1').type.startsWith('text')) {
+    miqPrefill($j('#miq_date_1_1'), '/images/layout/expression/' + miq_val1_type + '.png');
     $j('#miq_date_1_1').prop('title', miq_val1_title);
     $j('#miq_date_1_1').prop('alt', miq_val1_title);
   }
-  if ($('miq_date_2_0') && $('miq_date_2_0').type.startsWith('text')) {
-    miqPrefill($('miq_date_2_0'), '/images/layout/expression/' + miq_val2_type + '.png');
+  if (miqDomElementExists('miq_date_2_0') && $j('#miq_date_2_0').type.startsWith('text')) {
+    miqPrefill($j('#miq_date_2_0'), '/images/layout/expression/' + miq_val2_type + '.png');
     $j('#miq_date_2_0').prop('title', miq_val2_title);
     $j('#miq_date_2_0').prop('alt', miq_val2_title);
   }
-  if ($('miq_date_2_1') && $('miq_date_2_1').type.startsWith('text')) {
-    miqPrefill($('miq_date_2_1'), '/images/layout/expression/' + miq_val2_type + '.png');
+  if (miqDomElementExists('miq_date_2_1') && $j('#miq_date_2_1').type.startsWith('text')) {
+    miqPrefill($j('#miq_date_2_1'), '/images/layout/expression/' + miq_val2_type + '.png');
     $j('#miq_date_2_1').prop('title', miq_val2_title);
     $j('#miq_date_2_1').prop('alt', miq_val2_title);
   }
@@ -183,16 +183,16 @@ function miqPrefill(element, image, blank_image) {
 function miqGetTZO() {
   var uDate = new Date();
   if(uDate)
-    if ($('user_TZO')) $('user_TZO').value=uDate.getTimezoneOffset()/60;
+    if (miqDomElementExists('user_TZO')) $j('#user_TZO').val(uDate.getTimezoneOffset()/60);
 }
 
 // Get user's browswer info
 function miqGetBrowserInfo() {
   var bd;
   bd = miqBrowserDetect();
-  if ($('browser_name')) $('browser_name').value=bd.browser;
-  if ($('browser_version')) $('browser_version').value=bd.version;
-  if ($('browser_os')) $('browser_os').value=bd.OS;
+  if (miqDomElementExists('browser_name')) $j('#browser_name').val(bd.browser);
+  if (miqDomElementExists('browser_version')) $j('#browser_version').val(bd.version);
+  if (miqDomElementExists('browser_os')) $j('#browser_os').val(bd.OS);
 }
 
 // Turn highlight on or off
@@ -243,8 +243,9 @@ function miqCheckForChanges() {
     if (cfmeAngularApplication.$scope.form.$dirty)
       return confirm("Abandon changes?");
     } else {
-        if ((($('buttons_on') && $('buttons_on').visible()) || typeof miq_changes != "undefined") &&
-          $j('#ignore_form_changes').length == 0)
+        if (((miqDomElementExists('buttons_on') && $j('#buttons_on').is(":visible")) ||
+          typeof miq_changes != "undefined") &&
+          !miqDomElementExists('ignore_form_changes'))
             return confirm("Abandon changes?");
     }
   return true;
@@ -264,7 +265,7 @@ function miqNewTagPrompt() {
   text = prompt('Enter new tags, separated by blanks','');
     if (text == null) return false;
   else {
-    $('new_tag').value = text;
+    $j('#new_tag').val(text);
     return true;
 } }
 
@@ -319,7 +320,7 @@ function toggleConvertButtonToLink(button, url, toggle) {
 // parms: button_div=<id of div with buttons to update>, override=<forced state>
 function miqUpdateAllCheckboxes(button_div,override) {
   miqSparkle(true);
-  if ($j('#masterToggle').length > 0) {
+  if (miqDomElementExists('masterToggle')) {
     var state = $j('#masterToggle').prop('checked');
     if ( override != null ) state = override;
     if (typeof gtl_list_grid == "undefined" && ($$('input[id=listcheckbox]').length>0)) {             // No dhtmlx grid on the screen
@@ -340,7 +341,7 @@ function miqUpdateAllCheckboxes(button_div,override) {
         gtl_list_grid.cells(id, 0).setValue(state ? 1:0);
       })
       crows = gtl_list_grid.getCheckedRows(0);
-      $('miq_grid_checks').value = crows
+      $j('#miq_grid_checks').val(crows);
       count = crows == "" ? 0:crows.split(",").length;
       miqSetButtons(count, button_div);
     }
@@ -739,18 +740,18 @@ function miqAjaxAuth(button){
     miqEnableLoginFields(false);
     miqJqueryRequest('/dashboard/authenticate', {beforeSend: true, data: Form.serialize('login_div')});
   } else if (button == 'more' || button == 'back') {
-    miqJqueryRequest('/dashboard/authenticate?' + Form.serialize($('login_div')) + '&button=' + button);
+    miqJqueryRequest('/dashboard/authenticate?' + Form.serialize($j('#login_div')) + '&button=' + button);
   } else {
     miqEnableLoginFields(false);
-    miqAsyncAjax('/dashboard/authenticate?' + Form.serialize($('login_div')) + '&button=' + button);
+    miqAsyncAjax('/dashboard/authenticate?' + Form.serialize($j('#login_div')) + '&button=' + button);
   }
 }
 
 function miqEnableLoginFields(enabled){
-  $('user_name').readOnly = !enabled;
-  $('user_password').readOnly = !enabled;
-  if ($('user_new_password')) $('user_new_password').readOnly = !enabled;
-  if ($('user_verify_password')) $('user_verify_password').readOnly = !enabled;
+  $j('#user_name').prop('readonly', !enabled);
+  $j('#user_password').prop('readonly', !enabled);
+  if (miqDomElementExists('user_new_password')) $j('#user_new_password').prop('readonly', !enabled);
+  if (miqDomElementExists('user_verify_password')) $j('#user_verify_password').prop('readonly', !enabled);
 }
 
 // Attach text area with id = id + "_lines" to work with the text area id passed in
@@ -810,7 +811,7 @@ function miqBuildCalendar(){
     var el = $j(this);
     var cal = new dhtmlxCalendarObject(el.attr('id'));
     cal.setDateFormat("%m/%d/%Y");
-    if (this.value == "" && typeof miq_cal_dateTo != "undefined"){
+    if (el.val() == "" && typeof miq_cal_dateTo != "undefined"){
       cal.setDate(miq_cal_dateTo);
     } else {
       cal.setDate(this.value);
@@ -897,7 +898,7 @@ function miqBuildExplorerView(options){
       ]
     });
     expLayout.on('render',function() {
-      if ($('main_div')) {
+      if (miqDomElementExists('main_div')) {
         miqBuildMainLayout(this, settings.header);
       }
     });
@@ -934,7 +935,7 @@ function miqBuildExplorerView(options){
 function miqBuildMainLayout(parentLayout, header){
   var el = parentLayout.getUnitByPosition('center').get('wrap');
 //  parentLayout.getUnitByPosition('center').set('header', "Test");
-  if ($('paging_div')) var paging_height = 35; else var paging_height = 0;
+  if (miqDomElementExists('paging_div')) var paging_height = 35; else var paging_height = 0;
   var mainLayout = new YAHOO.widget.Layout(el, {
 //  var mainLayout = new YAHOO.widget.Layout('center_div', {
     parent: parentLayout,
@@ -1192,9 +1193,9 @@ function miqSpinner(status){
         top: 'auto', // Top position relative to parent in px
         left: 'auto' // Left position relative to parent in px
       };
-      spinner = new Spinner(opts).spin($('spinner_div'));
+      spinner = new Spinner(opts).spin($j('#spinner_div'));
     } else {
-      spinner.spin($('spinner_div'));
+      spinner.spin($j('#spinner_div'));
     }
   } else {
     if (typeof spinner != "undefined") spinner.stop();
@@ -1237,3 +1238,8 @@ function miqJqueryRequest(url, options) {
 
   new $j.ajax(options['no_encoding'] ? url : encodeURI(url), ajax_options);
 }
+
+function miqDomElementExists(element){
+  return $j('#' + element).length
+}
+

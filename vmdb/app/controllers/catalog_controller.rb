@@ -525,7 +525,7 @@ class CatalogController < ApplicationController
       page << javascript_hide("ae_tree_select_div")
       page << javascript_hide("blocker_div")
       page << javascript_hide("#{ae_tree_key}_div")
-      page << "$('#{ae_tree_key}').value = '#{@edit[:new][ae_tree_key]}';"
+      page << "$j('##{ae_tree_key}').val('#{@edit[:new][ae_tree_key]}');"
       page << "$j('##{ae_tree_key}').prop('title', '#{@edit[:new][ae_tree_key]}');"
       @edit[:ae_tree_select] = false
       page << javascript_for_miq_button_visibility(@changed)

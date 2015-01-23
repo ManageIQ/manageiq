@@ -47,7 +47,7 @@ module ApplicationController::Tags
       page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
       page.replace("tab_div", :partial=>"layouts/mytags")
       newtags.split.each do |tag|
-        page << "$('mytag_#{j_str(tag.downcase)}').visualEffect('pulsate');"
+        page << jquery_pulsate_element("mytag_#{j_str(tag.downcase)}")
       end
     end
   end
@@ -138,7 +138,9 @@ module ApplicationController::Tags
       end
       page.replace("cat_tags_div", :partial=>"layouts/tag_edit_cat_tags")
       page.replace("assignments_div", :partial=>"layouts/tag_edit_assignments") unless params[:tag_cat]
-      page << "$('#{j_str(params[:tag_add])}_tr').visualEffect('pulsate');" if params[:tag_add]
+      if params[:tag_add]
+        page << jquery_pulsate_element("#{j_str(params[:tag_add])}_tr")
+      end
     end
   end
 
@@ -152,7 +154,7 @@ module ApplicationController::Tags
     render :update do |page|
       page.replace("value_div", :partial=>"layouts/classify_value")
       page.replace("table_div", :partial=>"layouts/classify_table")
-      page << "$('#{entry.id}_tr').visualEffect('pulsate');"
+      page << jquery_pulsate_element("#{entry.id}_tr")
     end
   end
 
