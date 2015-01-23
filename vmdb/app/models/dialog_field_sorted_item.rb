@@ -43,4 +43,13 @@ class DialogFieldSortedItem < DialogField
       default_value
     end
   end
+
+  def script_error_values
+    [[nil, "<Script error>"]]
+  end
+
+  def normalize_automate_values(passed_in_values)
+    result = passed_in_values.to_a
+    result.blank? ? initial_values : result
+  end
 end
