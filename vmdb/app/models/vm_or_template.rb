@@ -1042,7 +1042,7 @@ class VmOrTemplate < ActiveRecord::Base
         hosts = [self.myhost]
       else
         store = self.storage
-        hosts = store.hosts if hosts.empty? && store
+        hosts = store.hosts.to_a if hosts.empty? && store
         hosts = [self.myhost] if hosts.empty?
 
         # VMware needs a VMware host to resolve datastore names
