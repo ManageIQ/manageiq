@@ -363,27 +363,18 @@ module MigrationHelper
 
     file = bulk_copy_filename(table, options)
 
-    case Platform::OS
-    when :win32
-      pre     = "set PGPASSWORD=#{options[:password]}&&" if options[:password]
-      copy    = "\\COPY"
-      to_from = "'#{file}'"
-      post    = "&& set PGPASSWORD="
-    else
-      case direction
-      when :export
-        pre     = "PGPASSWORD=#{options[:password]}" if options[:password]
-        to_from = "STDOUT"
-        post    = "| gzip -c - > #{file}"
-      when :import
-        pre     = "gunzip -c #{file} |"
-        pre    += " PGPASSWORD=#{options[:password]}" if options[:password]
-        to_from = "STDIN"
-        post    = ""
-      end
-
-      copy = "\\\\COPY"
+    case direction
+    when :export
+      pre     = "PGPASSWORD=#{options[:password]}" if options[:password]
+      to_from = "STDOUT"
+      post    = "| gzip -c - > #{file}"
+    when :import
+      pre     = "gunzip -c #{file} |"
+      pre    += " PGPASSWORD=#{options[:password]}" if options[:password]
+      to_from = "STDIN"
+      post    = ""
     end
+    copy = "\\\\COPY"
 
     conditions =
       if direction == :export && options[:conditions]
@@ -408,18 +399,9 @@ module MigrationHelper
   def bulk_copy_transfer_postgresql(from_table, to_table, options = {})
     options = options.reverse_merge(Rails.configuration.database_configuration[Rails.env].symbolize_keys)
 
-    case Platform::OS
-    when :win32
-      pre  = "set PGPASSWORD=#{options[:password]}&&" if options[:password]
-      pre2  = ""
-      copy = "\\COPY"
-      post = "&& set PGPASSWORD="
-    else
-      pre  = "PGPASSWORD=#{options[:password]}" if options[:password]
-      pre2  = "PGPASSWORD=#{options[:password]}" if options[:password]
-      copy = "\\\\COPY"
-      post = ""
-    end
+    pre  = "PGPASSWORD=#{options[:password]}" if options[:password]
+    copy = "\\\\COPY"
+    post = ""
 
     from_conditions =
       if options[:conditions]
@@ -436,7 +418,7 @@ module MigrationHelper
 
     psql_export = "psql #{psql_host} -U #{options[:username]} -w -d #{options[:database]} -c \"#{psql_export_cmd}\""
     psql_import = "psql #{psql_host} -U #{options[:username]} -w -d #{options[:database]} -c \"#{psql_import_cmd}\""
-    cmd = "#{pre} #{psql_export} | #{pre2} #{psql_import} #{post}"
+    cmd = "#{pre} #{psql_export} | #{pre} #{psql_import} #{post}"
 
     `#{cmd}`
     status = $?.to_i

@@ -72,12 +72,6 @@ module MiqAeEngine
     private
 
     def self.invoke_external(cmd, workspace, serialize_workspace = false)
-      #TODO: Handle spawning on Windows.  Currently just return as if successful.
-      if Platform::OS == :win32
-        $miq_ae_logger.info("Method skipped.")
-        return 0
-      end
-
       ws = nil
 
       if serialize_workspace
@@ -265,11 +259,6 @@ RUBY
       return false if aem.data.blank?
 
       raise MiqAeException::Error, "Unable to launch Automate Method because currently in SQL transaction" if ActiveRecord::Base.connection.open_transactions > self.open_transactions_threshold
-
-      if Platform::OS == :win32
-        $miq_ae_logger.info("Method skipped.")
-        return false
-      end
 
       return true
     end
