@@ -861,7 +861,7 @@ class User < ActiveRecord::Base
     miq_groups  = MiqServer.my_server.miq_groups
     miq_groups  = MiqServer.my_server.zone.miq_groups if miq_groups.empty?
     miq_groups  = MiqGroup.where(:resource_id => nil, :resource_type => nil) if miq_groups.empty?
-    miq_groups.sort!  { |a, b| a.sequence <=> b.sequence }
+    miq_groups  = miq_groups.order(:sequence).to_a
     groups.each       { |g| $log.debug("#{log_prefix} External Group: #{g}") }
     miq_groups.each   { |g| $log.debug("#{log_prefix} Internal Group: #{g.description.downcase}") }
     miq_groups.select { |g| groups.include?(g.description.downcase) }
