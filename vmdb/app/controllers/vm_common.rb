@@ -490,11 +490,6 @@ module VmCommon
 
     # Sort disks by disk_name within device_type
     view.hardware.disks.sort{|x,y| cmp = x.device_type.to_s.downcase <=> y.device_type.to_s.downcase; cmp == 0 ? calculate_disk_name(x).downcase <=> calculate_disk_name(y).downcase : cmp }.each_with_index do |disk,idx|
-      allocated_space_percent = disk.allocated_space_percent
-      allocated_space_percent = (allocated_space_percent*10).round/10.0 if !allocated_space_percent.nil?
-      unallocated_space_percent = disk.unallocated_space_percent
-      unallocated_space_percent = (unallocated_space_percent*10).round/10.0 if !unallocated_space_percent.nil?
-
       srow = root.add_element("row", {"id" => "Disk_#{idx}"})
       srow.add_element("cell", {"image" => "blank.gif", "title" => "Disk #{idx}"}).text = calculate_disk_name(disk)
       srow.add_element("cell", {"image" => "blank.gif", "title" => "#{disk.disk_type}"}).text = disk.disk_type

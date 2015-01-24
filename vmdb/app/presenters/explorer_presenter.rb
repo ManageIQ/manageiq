@@ -140,7 +140,7 @@ class ExplorerPresenter
     @out << "miq_widget_dd_url = '#{@options[:miq_widget_dd_url]}';" if @options[:miq_widget_dd_url]
 
     # Always set 'def' view in left cell as active in case it was changed to show compare/drift sections
-    @out << "if ($('custom_left_cell_div')) dhxLayout.cells('a').view('def').setActive();"
+    @out << "if ($j('#custom_left_cell_div')) dhxLayout.cells('a').view('def').setActive();"
 
     # Update elements in the DOM with rendered partials
     @options[:update_partials].each { |element, content| @out << update_partial(element, content) }
@@ -170,7 +170,7 @@ class ExplorerPresenter
     end
 
     # Scroll to top of main div
-    @out << "$('main_div').scrollTop = 0;"
+    @out << "$j('#main_div').scrollTop(0);"
 
     @out << "dhxLayoutB.cells('b').setText('#{escape_javascript(ERB::Util::h(@options[:right_cell_text]))}');" if @options[:right_cell_text]
 

@@ -601,7 +601,7 @@ module OpsController::OpsRbac
                        :locals  => {:type => "classifications", :action_url => 'rbac_group_field_changed'}) if @refresh_div
 
           # Only update description field value if ldap group user field was selected
-          page << "$('description').value = '#{j_str(@edit[:new][:description])}'" if params[:ldap_groups_user]
+          page << "$j('#description').val('#{j_str(@edit[:new][:description])}');" if params[:ldap_groups_user]
           page << javascript_for_tree_checkbox_clicked(tree_name) if params[:check] && tree_name
 
           # don't do anythingto lookup box when checkboxes on the right side are checked

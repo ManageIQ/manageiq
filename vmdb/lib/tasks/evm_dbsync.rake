@@ -212,16 +212,9 @@ namespace :evm do
       when :import then "FROM"
       end
 
-      case Platform::OS
-      when :win32
-        cmd = "\\COPY"
-        password = "set PGPASSWORD=#{password}&&" if password
-        password_cleanup = "&& set PGPASSWORD="
-      else
-        cmd = "\\\\COPY"
-        password = "PGPASSWORD=#{password}" if password
-        password_cleanup = ""
-      end
+      cmd = "\\\\COPY"
+      password = "PGPASSWORD=#{password}" if password
+      password_cleanup = ""
 
       tables.sort.each do |table|
         file = File.expand_path(File.join(dir, "#{table}.sql"))

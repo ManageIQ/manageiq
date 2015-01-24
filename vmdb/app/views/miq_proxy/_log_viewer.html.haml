@@ -23,4 +23,5 @@
 
   = text_area_tag("logview", @proxy_log, :readonly => "readonly")
 
-= javascript_tag("$('logview').scrollTop = $('logview').scrollHeight - $('logview').clientHeight;")
+= javascript_tag "$j('#logview').scrollTop($j('#logview').prop('scrollHeight') - $j('#logview').prop('clientHeight'));"
+

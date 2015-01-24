@@ -285,7 +285,7 @@ module OpsController::Settings::Ldap
     return unless load_edit("ldap_domain_edit__#{params[:id]}","replace_cell__explorer")
     ldap_domain_get_form_vars
     render :update do |page|                    # Use JS to update the display
-      page << "$('entry_port').value = '#{params[:entry_mode] == "ldaps" ? '636' : '389' }'"
+      page << "$j('#entry_port').val('#{params[:entry_mode] == "ldaps" ? '636' : '389' }');"
       page << "miqSparkle(false);"
     end
   end
@@ -317,7 +317,7 @@ module OpsController::Settings::Ldap
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("ldap_server_entries_div", :partial=>"ldap_server_entries", :locals=>{:entry=>"new", :edit=>true,:domain_id=>params[:domain_id]})
         page << javascript_focus('entry_name')
-        page << "$('entry_name').select();"
+        page << "$j('#entry_name').select();"
       end
       session[:entry] = "new"
     else
@@ -326,7 +326,7 @@ module OpsController::Settings::Ldap
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("ldap_server_entries_div", :partial=>"ldap_server_entries", :locals=>{:entry=>entry, :edit=>true,:domain_id=>params[:domain_id]})
         page << javascript_focus("entry_#{j_str(params[:field])}")
-        page << "$('entry_#{j_str(params[:field])}').select();"
+        page << "$j('#entry_#{j_str(params[:field])}').select();"
       end
       session[:entry] = entry
     end

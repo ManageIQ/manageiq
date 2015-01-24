@@ -768,7 +768,7 @@ class OpsController < ApplicationController
       page << "cfmeDynatree_activateNodeSilently('#{x_active_tree}', '#{x_node}');"
       page << "miqSparkle(false);"
       page << javascript_focus_if_exists('server_company')
-      page << "if ($('flash_msg_div')) {"
+      page << "if (miqDomElementExists('flash_msg_div')) {"
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << "}"
       if @ajax_action

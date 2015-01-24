@@ -39,13 +39,6 @@ module VMWareOpsWin
 		begin
 			if @vmwareCom.start(vmName)
 				ost.value = "start() = 1" 
-
-				# Don't worry if the disk rename fails during start
-				#		begin
-				#			renameDisks(*diskNames(vmName))
-				#		rescue => e
-				#		end
-
 				eventStatus = "ok"
 			end
 		end
@@ -61,9 +54,6 @@ module VMWareOpsWin
 		begin
 			if @vmwareCom.stop(vmName)
 				ost.value = "stop() = 1" 
-
-				#		renameDisks(*diskNames(vmName)) if isSmart?(vmName)
-
 				eventStatus = "ok"
 			end
 		end
@@ -127,9 +117,6 @@ module VMWareOpsWin
 		begin
 			if @vmwareCom.suspend(vmName)
 				ost.value = "suspend() = 1" 
-				
-				#		renameDisks(*diskNames(vmName)) if isSmart?(vmName)
-				
 				eventStatus = "ok"
 			end
 		end

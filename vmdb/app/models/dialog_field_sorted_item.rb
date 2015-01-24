@@ -43,4 +43,17 @@ class DialogFieldSortedItem < DialogField
       default_value
     end
   end
+
+  def script_error_values
+    [[nil, "<Script error>"]]
+  end
+
+  def normalize_automate_values(automate_hash)
+    %w(sort_by sort_order data_type default_value required).each do |key|
+      send("#{key}=", automate_hash[key]) if automate_hash.key?(key)
+    end
+
+    result = automate_hash["values"].to_a
+    result.blank? ? initial_values : result
+  end
 end

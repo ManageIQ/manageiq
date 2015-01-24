@@ -29,9 +29,13 @@
                         - case field.type
                         - when "DialogFieldTextBox"
                           - if field.protected?
-                            = password_field_tag('field.id', field.default_value, :maxlength => 20, :disabled => true)
+                            = password_field_tag('field.id', '********', :maxlength => 20, :disabled => true)
                           - else
-                            = text_field_tag('field.id', field.default_value, :maxlength => 20, :disabled => true)
+                            - if field.dynamic
+                              = text_field_tag('field.id', 'Sample Text', :maxlength => 20, :disabled => true)
+                            - else
+                              = text_field_tag('field.id', field.default_value, :maxlength => 20, :disabled => true)
+
                         - when "DialogFieldTextAreaBox"
                           = text_area_tag(field.id, field.default_value, :size => "50x6", :disabled => true)
                         - when "DialogFieldCheckBox"

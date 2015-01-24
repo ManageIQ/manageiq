@@ -36,12 +36,6 @@ module MicrosoftOpsWin
 		# Start the VM.
 		# 
 		ost.value = "start() = 1" if @msCom.start(vmName)
-		
-		# Don't worry if the disk rename fails during start
-		#		begin
-		#			renameDisks(*diskNames(vmName))
-		#		rescue => e
-		#		end
 	end
 	
 	def StopVM(ost)
@@ -50,8 +44,6 @@ module MicrosoftOpsWin
 		
 		diskFile, diskFileSave, bbFileSave = diskNames(vmName)
 		ost.value = "stop() = 1" if @msCom.stop(vmName)
-		
-		#		renameDisks(*diskNames(vmName)) if isSmart?(vmName)
 	end
 	
 	def GetHeartbeat(ost)
@@ -102,7 +94,6 @@ module MicrosoftOpsWin
 		vmName = getVmFile(ost)
 		
 		ost.value = "suspend() = 1" if @msCom.suspend(vmName)
-		#		renameDisks(*diskNames(vmName)) if isSmart?(vmName)
 	end
 
 	def PauseVM(ost)
@@ -110,7 +101,6 @@ module MicrosoftOpsWin
 		vmName = getVmFile(ost)
 
 		ost.value = "pause() = 1" if @msCom.pause(vmName)
-		#		renameDisks(*diskNames(vmName)) if isSmart?(vmName)
 	end
 
 	def ShutdownGuest(ost)

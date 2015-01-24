@@ -62,9 +62,11 @@ module OpsController::Settings::Common
           page << javascript_show("email_verify_button_off")
         end
 
-        verb = @smtp_auth_none ? 'disable' : 'enable'
-        page << "$('smtp_user_name').#{verb}();"
-        page << "$('smtp_password').#{verb}();"
+        if @smtp_auth_none
+          page << javascript_disable_field('smtp_user_name')
+        else
+          page << javascript_enable_field('smtp_user_name')
+        end
 
         if @changed || @login_text_changed
           page << javascript_hide_if_exists("server_options_on")
@@ -118,7 +120,7 @@ module OpsController::Settings::Common
           page << set_element_visible("ldap_default_group_div", !@edit[:new][:authentication][:ldap_role])
         end
         if @authldapport_reset
-          page << "$('authentication_ldapport').value = '#{@edit[:new][:authentication][:ldapport]}'"
+          page << "$j('#authentication_ldapport').val('#{@edit[:new][:authentication][:ldapport]}');"
         end
         if @reset_verify_button
           if !@edit[:new][:authentication][:ldaphost].empty? && @edit[:new][:authentication][:ldapport] != nil
@@ -275,12 +277,6 @@ module OpsController::Settings::Common
     when 'settings_rhn_edit'
       if rhn_allow_save?
         rhn_save_subscription
-        add_flash(_("Customer Information successfully saved"))
-        @changed = false
-        @edit    = nil
-        @sb[:active_tab] = 'settings_rhn'
-        settings_get_info('root')
-        replace_right_cell('root')
       else
         render_flash
       end

@@ -71,9 +71,9 @@ class ConfigurationController < ApplicationController
         page.replace_html("main_div", :partial => "ui_4") # Replace the main div area contents
         if c_buttons && c_xml
           page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
-          page << "$('center_buttons_div').show();"
+          page << "$j('#center_buttons_div').show();"
         else
-          page << "$('center_buttons_div').hide();"
+          page << "$j('#center_buttons_div').hide();"
         end
       end
     end
@@ -217,7 +217,7 @@ class ConfigurationController < ApplicationController
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page.replace("tab_div", :partial => "configuration/ui_5")
         newtags.each do |tag|
-          page << "$('mytag_#{tag}').visualEffect('pulsate');"
+          page << jquery_pulsate_element("mytag#{tag}")
         end
       end
     end

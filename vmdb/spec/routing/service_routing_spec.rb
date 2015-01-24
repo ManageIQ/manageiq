@@ -4,6 +4,7 @@ require 'routing/shared_examples'
 describe 'routes for ServiceController' do
   let(:controller_name) { 'service' }
 
+  it_behaves_like "A controller that has dialog runner routes"
   it_behaves_like 'A controller that has column width routes'
   it_behaves_like 'A controller that has download_data routes'
 
@@ -24,19 +25,6 @@ describe 'routes for ServiceController' do
     it "routes with POST" do
       expect(post("/service/dialog_form_button_pressed"))
       .to route_to("service#dialog_form_button_pressed")
-    end
-  end
-
-  describe '#dynamic_list_refresh' do
-    it 'routes with POST' do
-      expect(post("/service/dynamic_list_refresh"))
-      .to route_to("service#dynamic_list_refresh")
-    end
-  end
-
-  describe "#dynamic_radio_button_refresh" do
-    it "routes with POST" do
-      expect(post("/service/dynamic_radio_button_refresh")).to route_to("service#dynamic_radio_button_refresh")
     end
   end
 

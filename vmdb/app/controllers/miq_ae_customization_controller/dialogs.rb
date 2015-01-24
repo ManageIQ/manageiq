@@ -427,7 +427,7 @@ module MiqAeCustomizationController::Dialogs
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("field_values_div", :partial=>"field_values", :locals=>{:entry=>"new", :edit=>true})
         page << javascript_focus('entry_name')
-        page << "$('entry_name').select();"
+        page << "$j('#entry_name').select();"
       end
       session[:entry] = "new"
     else
@@ -441,7 +441,7 @@ module MiqAeCustomizationController::Dialogs
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("field_values_div", :partial=>"field_values", :locals=>{:entry=>entry, :edit=>true})
         page << javascript_focus("entry_#{j_str(params[:field])}")
-        page << "$('entry_#{j_str(params[:field])}').select();"
+        page << "$j('#entry_#{j_str(params[:field])}').select();"
 
      end
       session[:entry] = entry
@@ -684,7 +684,7 @@ module MiqAeCustomizationController::Dialogs
         add_flash(_("%s is required") % "Element Label", :error)
         res = false
       end
-      if @edit[:field_typ].to_s == 'DialogFieldDynamicList' && @edit[:field_entry_point].blank?
+      if needs_entry_point?
         add_flash(_("Entry Point must be given for field \"%s\".") %  @edit[:field_name], :error)
         res = false
       end
@@ -869,9 +869,7 @@ module MiqAeCustomizationController::Dialogs
       @edit[:field_default_value] = key[:default_value] = nil
     end
 
-    if @edit[:field_typ] == "DialogFieldRadioButton" && params[:field_dynamic] != true
-      @edit[:field_values] ||= key[:values] = []
-    end
+    @edit[:field_values] ||= key[:values] = []
 
     copy_field_param.call(:entry_point)
     copy_checkbox_field_param.call(:load_on_init)
@@ -1373,5 +1371,9 @@ module MiqAeCustomizationController::Dialogs
 
   def dynamic_field?(field)
     field[:typ] == 'DialogFieldDynamicList' || field[:dynamic]
+  end
+
+  def needs_entry_point?
+    (@edit[:field_typ].to_s == 'DialogFieldDynamicList' || @edit[:field_dynamic]) && @edit[:field_entry_point].blank?
   end
 end

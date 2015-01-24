@@ -8,7 +8,7 @@ class ApiController
         api_log_info("Starting #{vm_ident(vm)}")
 
         result = validate_vm_for_action(vm, "start")
-        result = start_vm(vm, klass) if result[:success]
+        result = start_vm(vm) if result[:success]
         result
       end
     end
@@ -21,7 +21,7 @@ class ApiController
         api_log_info("Stopping #{vm_ident(vm)}")
 
         result = validate_vm_for_action(vm, "stop")
-        result = stop_vm(vm, klass) if result[:success]
+        result = stop_vm(vm) if result[:success]
         result
       end
     end
@@ -34,7 +34,7 @@ class ApiController
         api_log_info("Suspending #{vm_ident(vm)}")
 
         result = validate_vm_for_action(vm, "suspend")
-        result = suspend_vm(vm, klass) if result[:success]
+        result = suspend_vm(vm) if result[:success]
         result
       end
     end
@@ -50,37 +50,25 @@ class ApiController
       action_result(validation[:available], validation[:message].to_s)
     end
 
-    def start_vm(vm, klass)
+    def start_vm(vm)
       desc = "#{vm_ident(vm)} starting"
-      task_id = queue_object_action(vm,
-                                    desc,
-                                    :class_name  => klass.name,
-                                    :method_name => "start",
-                                    :role        => "ems_operations")
+      task_id = queue_object_action(vm, desc, :method_name => "start", :role => "ems_operations")
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
     end
 
-    def stop_vm(vm, klass)
+    def stop_vm(vm)
       desc = "#{vm_ident(vm)} stopping"
-      task_id = queue_object_action(vm,
-                                    desc,
-                                    :class_name  => klass.name,
-                                    :method_name => "stop",
-                                    :role        => "ems_operations")
+      task_id = queue_object_action(vm, desc, :method_name => "stop", :role => "ems_operations")
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
     end
 
-    def suspend_vm(vm, klass)
+    def suspend_vm(vm)
       desc = "#{vm_ident(vm)} suspending"
-      task_id = queue_object_action(vm,
-                                    desc,
-                                    :class_name  => klass.name,
-                                    :method_name => "suspend",
-                                    :role        => "ems_operations")
+      task_id = queue_object_action(vm, desc, :method_name => "suspend", :role => "ems_operations")
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)

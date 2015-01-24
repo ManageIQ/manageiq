@@ -8,6 +8,7 @@ describe EmsCloudController do
   it_behaves_like "A controller that has column width routes"
   it_behaves_like "A controller that has compare routes"
   it_behaves_like "A controller that has CRUD routes"
+  it_behaves_like "A controller that has dialog runner routes"
   it_behaves_like "A controller that has discovery routes"
   it_behaves_like "A controller that has download_data routes"
   it_behaves_like "A controller that has policy protect routes"
@@ -31,8 +32,6 @@ describe EmsCloudController do
   %w(
     button
     create
-    dynamic_list_refresh
-    dynamic_radio_button_refresh
     form_field_changed
     listnav_search_selected
     save_default_search

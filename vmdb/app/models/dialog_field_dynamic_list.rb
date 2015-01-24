@@ -1,29 +1,10 @@
 class DialogFieldDynamicList < DialogFieldDropDownList
-
   has_one       :resource_action, :as => :resource, :dependent => :destroy
 
   after_initialize :default_resource_action
 
   def values_from_automate
-    dialog_values = {:dialog => @dialog.try(:automate_values_hash)}
-    ws = self.resource_action.deliver_to_automate_from_dialog_field(dialog_values, @dialog.try(:target_resource))
-    process_automate_values(ws.root.attributes)
-  rescue => err
-    [[nil, "<Script error>"]]
-  end
-
-  def process_automate_values(ws_attrs)
-    %w{sort_by sort_order data_type default_value}.each do |key|
-      self.send("#{key}=", ws_attrs[key]) if ws_attrs.has_key?(key)
-    end
-
-    self.required = (ws_attrs["required"].to_s.downcase == "true") if ws_attrs.has_key?("required")
-    normalize_automate_values(ws_attrs["values"])
-  end
-
-  def normalize_automate_values(ae_values)
-    result = ae_values.to_a
-    result.blank? ? initial_values : result
+    DynamicDialogFieldValueProcessor.values_from_automate(self)
   end
 
   def initial_values
@@ -36,7 +17,7 @@ class DialogFieldDynamicList < DialogFieldDropDownList
   end
 
   def refresh_button_pressed
-    @raw_values = default_value = nil
+    @raw_values = @default_value = nil
     values
   end
 

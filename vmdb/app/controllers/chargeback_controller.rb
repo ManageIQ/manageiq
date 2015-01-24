@@ -443,7 +443,6 @@ class ChargebackController < ApplicationController
       end
     elsif x_active_tree == :cb_reports_tree
       @nodetype = node.split("-")[0]
-      nodeid = node.split("_")
       nodes = x_node.split('_')
       nodes_len = nodes.length
 
@@ -461,7 +460,6 @@ class ChargebackController < ApplicationController
           @right_cell_text = _("%{model} \"%{name}\"") % {:model=>"Saved Chargeback Report", :name=>format_timezone(s.last_run_on,Time.zone,"gtl")}
         else
           add_flash(_("Selected %s Report no longer exists") % "Saved Chargeback", :warning)
-          nodes_len = 2  # Force to show the parent node
           self.x_node = nodes[0..1].join("_")
           cb_rpts_build_tree # Rebuild tree
         end
@@ -477,7 +475,6 @@ class ChargebackController < ApplicationController
           @sb[:parent_reports] = nil  if !@sb[:saved_reports].blank?    # setting it to nil so saved reports can be displayed, unless all saved reports were deleted
         else
           add_flash(_("Selected %s Report no longer exists") % "Chargeback", :warning)
-          nodes_len = 1  # Force to show the parent node
           self.x_node = nodes[0]
           @temp[:saved_reports] = nil
           cb_rpts_build_tree # Rebuild tree

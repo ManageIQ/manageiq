@@ -327,7 +327,7 @@ function cfmeGetChecked(node, treename) {
     }
   }
   count = selectedKeys.length
-  if ($('center_tb'))
+  if (miqDomElementExists('center_tb'))
     miqSetButtons(count, "center_tb");
   else
     miqSetButtons(count, "center_buttons_div");
@@ -348,9 +348,9 @@ function cfmeCheckAll(cb, treename) {
   });
 
   var count = selectedKeys.length
-  if ($('center_tb'))
+  if (miqDomElementExists('center_tb'))
     miqSetButtons(count, "center_tb");
-  else if ($('center_buttons_div'))
+  else if (miqDomElementExists('center_buttons_div'))
     miqSetButtons(count, "center_buttons_div");
 
   if (count > 0) {
