@@ -140,7 +140,7 @@ class ExplorerPresenter
     @out << "miq_widget_dd_url = '#{@options[:miq_widget_dd_url]}';" if @options[:miq_widget_dd_url]
 
     # Always set 'def' view in left cell as active in case it was changed to show compare/drift sections
-    @out << "if ($j('#custom_left_cell_div')) dhxLayout.cells('a').view('def').setActive();"
+    @out << "if (miqDomElementExists('custom_left_cell_div')) dhxLayout.cells('a').view('def').setActive();"
 
     # Update elements in the DOM with rendered partials
     @options[:update_partials].each { |element, content| @out << update_partial(element, content) }
@@ -285,15 +285,11 @@ class ExplorerPresenter
   #     :locals   --- FIXME
   #     :partial  --- FIXME
   def replace_partial(element, content)
-    replace_or_update_partial('replace', element, content)
+    "$j('##{element}').replaceWith('#{escape_javascript(content)}');"
   end
 
   def update_partial(element, content)
-    replace_or_update_partial('update', element, content)
-  end
-
-  def replace_or_update_partial(method, element, content)
-    "Element.#{method}('#{element}','#{escape_javascript(content)}');"
+    "$j('##{element}').html('#{escape_javascript(content)}');"
   end
 
   private

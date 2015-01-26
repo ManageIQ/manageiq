@@ -33,7 +33,6 @@ $j(document).ready(function(){
 		var url = parms.url;
 		var submit = parms.submit;
 		if (typeof interval == "undefined") {	// No interval passed, use event observer
-      this.stopObserving(); // Use prototype to stop observing this element, prevents multi ajax transactions
       var el = $j(this);
       el.unbind('change')
       el.change(function() {
@@ -49,7 +48,7 @@ $j(document).ready(function(){
       el.observe_field(interval, function(){
 				var oneTrans = this.getAttribute('data-miq_send_one_trans');	// Grab one trans URL, if present
 				if (typeof submit != "undefined"){										// If submit element passed in
-          miqJqueryRequest(url, {data: Form.serialize(submit)});
+          miqJqueryRequest(url, {data: miqSerializeForm(submit)});
 				} else if (oneTrans) {
 					miqSendOneTrans(url);
 				} else {

@@ -11,7 +11,9 @@ function miqOnLoad() {
     miqInitDhtmlxLayout();  // Need this since IE will not run JS correctly until after page is loaded
   }
 
-  Event.observe(document, 'mousemove', miqGetMouseXY);
+  $j(document).mousemove(function(e){
+    miqGetMouseXY(e.pageX, e.pageY)
+  });
   if (miqDomElementExists('compare_grid')) {  // Need to do this here for IE, rather then right after the grid is initialized
     compare_grid.enableAutoHeight(true);
     compare_grid.enableAutoWidth(true);
@@ -76,9 +78,9 @@ function miqCalendarDateConversion(server_offset){
 
 // Track the mouse coordinates for popup menus
 var miqMouseX, miqMouseY;
-function miqGetMouseXY(e){
-  miqMouseX = Event.pointerX(e),
-  miqMouseY = Event.pointerY(e);
+function miqGetMouseXY(positionX, positionY){
+  miqMouseX = positionX,
+  miqMouseY = positionY;
 }
 
 // Prefill text entry field when blank
@@ -323,16 +325,14 @@ function miqUpdateAllCheckboxes(button_div,override) {
   if (miqDomElementExists('masterToggle')) {
     var state = $j('#masterToggle').prop('checked');
     if ( override != null ) state = override;
-    if (typeof gtl_list_grid == "undefined" && ($$('input[id=listcheckbox]').length>0)) {             // No dhtmlx grid on the screen
-      cbs = $$('input[id=listcheckbox]');
-      cbs.each(function(cb) {
-        cb.checked=state;
+    if (typeof gtl_list_grid == "undefined" && ($j("input[id^='listcheckbox']").length > 0)) {             // No dhtmlx grid on the screen
+      $j("input[id^='listcheckbox']").each(function() {
+        this.checked=state;
       })
-      miqUpdateButtons(cbs.first(),button_div);
-    } else if (typeof gtl_list_grid == "undefined" && $$('input[id=storage_cb]')) {         // to handle check/uncheck all for C&U collection
-        cbs = $$('input[id=storage_cb]');
-        cbs.each(function(cb) {
-          cb.checked=state;
+      miqUpdateButtons(this.first(), button_div);
+    } else if (typeof gtl_list_grid == "undefined" && $j("input[id^='storage_cb']").length > 0) {         // to handle check/uncheck all for C&U collection
+      $j("input[id^='storage_cb']").each(function() {
+          this.checked=state;
         })
       miqJqueryRequest("/configuration/form_field_changed?storage_cb_all=" + state);
     return true;
@@ -354,9 +354,9 @@ function miqUpdateAllCheckboxes(button_div,override) {
 function miqUpdateButtons(obj, button_div) {
   var count = 0;
   if (typeof obj.id != "undefined" ) {
-    $$('input[id=' + obj.id + ']').each(function(cb) {
-      if (cb.checked && ! cb.disabled) count++;
-        if (count > 1) throw $break;
+    $j("input[id^='" + obj.id + "']").each(function() {
+      if (this.checked && ! this.disabled) count++;
+        if (count > 1) return false;
     })
   } else if (typeof obj == 'number') {      // Check for number object, as passed from snapshot tree
     count = 1;
@@ -369,25 +369,25 @@ function miqSetButtons(count, button_div) {
   var tb;
   var buttons;
   if (button_div.endsWith("_tb")) {
-    if (typeof miq_toolbars.get(button_div) != "undefined"){
-      tb = miq_toolbars.get(button_div).get("obj");
-      buttons = miq_toolbars.get(button_div).get("buttons");
+    if (typeof miq_toolbars[button_div] != "undefined"){
+      tb = miq_toolbars[button_div]["obj"];
+      buttons = miq_toolbars[button_div]["buttons"];
       for (button in buttons) {
         onwhen = eval("buttons." + button + ".onwhen");
         if (typeof onwhen != "undefined") {
           if (count == 0) {
-            if (button.include("__")) tb.disableListOption(button.split("__")[0], button);  else tb.disableItem(button);
+            if (button.indexOf("__") >= 0) tb.disableListOption(button.split("__")[0], button);  else tb.disableItem(button);
           } else if (count == 1) {
             if (onwhen == "1" || onwhen == "1+") {
-              if (button.include("__")) tb.enableListOption(button.split("__")[0], button); else tb.enableItem(button);
+              if (button.indexOf("__") >= 0) tb.enableListOption(button.split("__")[0], button); else tb.enableItem(button);
             } else if (onwhen == "2+") {
-              if (button.include("__")) tb.disableListOption(button.split("__")[0], button);  else tb.disableItem(button);
+              if (button.indexOf("__") >= 0) tb.disableListOption(button.split("__")[0], button);  else tb.disableItem(button);
             }
           } else {
             if (onwhen == "1+" || onwhen == "2+") {
-              if (button.include("__")) tb.enableListOption(button.split("__")[0], button); else tb.enableItem(button);
+              if (button.indexOf("__") >= 0) tb.enableListOption(button.split("__")[0], button); else tb.enableItem(button);
             } else if (onwhen = "1") {
-              if (button.include("__")) tb.disableListOption(button.split("__")[0], button);  else tb.disableItem(button);
+              if (button.indexOf("__") >= 0) tb.disableListOption(button.split("__")[0], button);  else tb.disableItem(button);
             }
           }
         }
@@ -395,34 +395,34 @@ function miqSetButtons(count, button_div) {
     }
   } else if (button_div.endsWith("_buttons")) { // Handle newer divs with button elements
     if (count == 0) {
-      $$('#' + button_div + ' button[id$=on_1]').each(function(b) {b.disabled = true});
+      $j("#" + button_div + " button[id$=on_1]").each(function() {this.disabled = true});
     } else if (count == 1) {
-      $$('#' + button_div + ' button[id$=on_1]').each(function(b) {b.disabled = false});
+      $j("#" + button_div + " button[id$=on_1]").each(function() {this.disabled = false});
     } else {
-      $$('#' + button_div + ' button[id$=on_1]').each(function(b) {b.disabled = false});
+      $j("#" + button_div + " button[id$=on_1]").each(function() {this.disabled = false});
     }
   } else {  // Handle older li based buttons
     if (count == 0) {
-      $j('#' + button_div + ' li[id~=on_1]').each(function(b) {$j(this).hide()})
-      $j('#' + button_div + ' li[id~=on_2]').each(function(b) {$j(this).hide()})
-      $j('#' + button_div + ' li[id~=on_only_1]').each(function(b) {$j(this).hide()})
-      $j('#' + button_div + ' li[id~=off_0]').each(function(b) {$j(this).show()})
-      $j('#' + button_div + ' li[id~=off_1]').each(function(b) {$j(this).show()})
-      $j('#' + button_div + ' li[id~=off_not_1]').each(function(b) {$j(this).show()})
+      $j('#' + button_div + ' li[id~=on_1]').each(function() {$j(this).hide()})
+      $j('#' + button_div + ' li[id~=on_2]').each(function() {$j(this).hide()})
+      $j('#' + button_div + ' li[id~=on_only_1]').each(function() {$j(this).hide()})
+      $j('#' + button_div + ' li[id~=off_0]').each(function() {$j(this).show()})
+      $j('#' + button_div + ' li[id~=off_1]').each(function() {$j(this).show()})
+      $j('#' + button_div + ' li[id~=off_not_1]').each(function() {$j(this).show()})
     } else if (count == 1) {
-      $j('#' + button_div + ' li[id~=off_0]').each(function(b) {$j(this).hide()})
-      $j('#' + button_div + ' li[id~=on_2]').each(function(b) {$j(this).hide()})
-      $j('#' + button_div + ' li[id~=off_not_1]').each(function(b) {$j(this).hide()})
-      $j('#' + button_div + ' li[id~=off_1]').each(function(b) {$j(this).show()})
-      $j('#' + button_div + ' li[id~=on_1]').each(function(b) {$j(this).show()})
-      $j('#' + button_div + ' li[id~=on_only_1]').each(function(b) {$j(this).show()})
+      $j('#' + button_div + ' li[id~=off_0]').each(function() {$j(this).hide()})
+      $j('#' + button_div + ' li[id~=on_2]').each(function() {$j(this).hide()})
+      $j('#' + button_div + ' li[id~=off_not_1]').each(function() {$j(this).hide()})
+      $j('#' + button_div + ' li[id~=off_1]').each(function() {$j(this).show()})
+      $j('#' + button_div + ' li[id~=on_1]').each(function() {$j(this).show()})
+      $j('#' + button_div + ' li[id~=on_only_1]').each(function() {$j(this).show()})
     } else {
-      $j('#' + button_div + ' li[id~=off_0]').each(function(b) {$j(this).hide()})
-      $j('#' + button_div + ' li[id~=off_1]').each(function(b) {$j(this).hide()})
-      $j('#' + button_div + ' li[id~=on_only_1]').each(function(b) {$j(this).hide()})
-      $j('#' + button_div + ' li[id~=on_1]').each(function(b) {$j(this).show()})
-      $j('#' + button_div + ' li[id~=on_2]').each(function(b) {$j(this).show()})
-      $j('#' + button_div + ' li[id~=off_not_1]').each(function(b) {$j(this).show()})
+      $j('#' + button_div + ' li[id~=off_0]').each(function() {$j(this).hide()})
+      $j('#' + button_div + ' li[id~=off_1]').each(function() {$j(this).hide()})
+      $j('#' + button_div + ' li[id~=on_only_1]').each(function() {$j(this).hide()})
+      $j('#' + button_div + ' li[id~=on_1]').each(function() {$j(this).show()})
+      $j('#' + button_div + ' li[id~=on_2]').each(function() {$j(this).show()})
+      $j('#' + button_div + ' li[id~=off_not_1]').each(function() {$j(this).show()})
 }}}
 
 // ChangeColor and DoNav are for making a full table row clickable and
@@ -654,7 +654,7 @@ function miqAjaxButtonSend(url, serialize_fields){
 // Function to generate an Ajax request
 function miqAjax(url, serialize_fields) {
   if (serialize_fields) {
-    miqJqueryRequest(url, {beforeSend: true, complete: true, data:Form.serialize('form_div')});
+    miqJqueryRequest(url, {beforeSend: true, complete: true, data: miqSerializeForm('form_div')});
   } else {
     miqJqueryRequest(url, {beforeSend: true, complete: true});
   }
@@ -738,12 +738,12 @@ return (keycode == 13);
 function miqAjaxAuth(button){
   if (button == null) {
     miqEnableLoginFields(false);
-    miqJqueryRequest('/dashboard/authenticate', {beforeSend: true, data: Form.serialize('login_div')});
+    miqJqueryRequest('/dashboard/authenticate', {beforeSend: true, data: miqSerializeForm('login_div')});
   } else if (button == 'more' || button == 'back') {
-    miqJqueryRequest('/dashboard/authenticate?' + Form.serialize($j('#login_div')) + '&button=' + button);
+    miqJqueryRequest('/dashboard/authenticate?' + miqSerializeForm('login_div') + '&button=' + button);
   } else {
     miqEnableLoginFields(false);
-    miqAsyncAjax('/dashboard/authenticate?' + Form.serialize($j('#login_div')) + '&button=' + button);
+    miqAsyncAjax('/dashboard/authenticate?' + miqSerializeForm('login_div') + '&button=' + button);
   }
 }
 
@@ -1055,7 +1055,7 @@ function miq_jquery_tabs_init(options){
 
   // Hide the first tab, if only one
   if ($j("#" + options['tabs_div'] + " ul:first li").length == 1) {
-    $j("#" + options['tabs_div'] + " ul:first li")[0].hide();
+    $j("#" + options['tabs_div'] + " ul:first li").hide();
   }
 
   $j("#" + options['tabs_div']).show();
@@ -1110,13 +1110,13 @@ function miq_jquery_disable_all_tabs(tabs_div){
 // Send explorer search by name via ajax
 function miqSearchByName(button){
   if (button == null)
-    miqJqueryRequest('x_search_by_name', {beforeSend: true, data: Form.serialize('searchbox')});
+    miqJqueryRequest('x_search_by_name', {beforeSend: true, data: miqSerializeForm('input')});
 }
 
 // Send search by filter via ajax
 function miqSearchByFilter(button){
   if (button == null)
-    miqJqueryRequest('list_view_filter', {beforeSend: true, data:Form.serialize('filterbox')});
+    miqJqueryRequest('list_view_filter', {beforeSend: true, data: miqSerializeForm('input')});
 }
 
 // Send transaction to server so automate tree selection box can be made active and rest of the screen can be blocked
@@ -1208,19 +1208,12 @@ function miqSpinner(status){
  * work with rails applications which have fixed
  * CVE-2011-0447
  */
-Ajax.Responders.register({
-  onCreate: function(request) {
-    var csrf_meta_tag = $$('meta[name=csrf-token]')[0];
+$j( document ).ajaxSend(function( event, request, settings ) {
+  var csrf_meta_tag = $j('#meta[name=csrf-token]')[0];
 
-    if (csrf_meta_tag) {
-      var header = 'X-CSRF-Token',
-        token = csrf_meta_tag.readAttribute('content');
-
-      if (!request.options.requestHeaders) {
-        request.options.requestHeaders = {};
-      }
-      request.options.requestHeaders[header] = token;
-    }
+  if (csrf_meta_tag) {
+    var header = 'X-CSRF-Token',
+      token = csrf_meta_tag.readAttribute('content');
   }
 });
 
@@ -1242,4 +1235,9 @@ function miqJqueryRequest(url, options) {
 function miqDomElementExists(element){
   return $j('#' + element).length
 }
+
+function miqSerializeForm(element){
+  return $j('#' + element).find('input,select,textarea').serialize();
+}
+
 

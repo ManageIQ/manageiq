@@ -3,17 +3,17 @@
 // This function is called in miqOnLoad
 function miqInitToolbars() {
 	if (typeof miq_toolbars == "undefined") return;
-	miq_toolbars.each(function(pair) {
-		miqInitToolbar(pair.value);
+  $j.each(miq_toolbars, function( key ) {
+		miqInitToolbar(miq_toolbars[key]);
 	});
   miqResizeTaskbarCell();
 }
 
 // Initialize a single toolbar
 function miqInitToolbar(tb_hash){
-	tb = tb_hash.get('obj');
+	tb = tb_hash['obj'];
 	tb.setIconsPath("/images/toolbars/");
-	tb.loadXMLString(tb_hash.get('xml'));
+	tb.loadXMLString(tb_hash['xml']);
 	tb.attachEvent("onClick", miqToolbarOnClick);
 //	tb.attachEvent("onStateChange", miqToolbarOnStateChange);
 	tb.attachEvent("onStateChange", miqToolbarOnClick);
@@ -35,19 +35,19 @@ function miqSetToolbarButtonIds(tb) {
 
 // Hide buttons in the toolbars
 function miqHideToolbarButtons(){
-	if (typeof miq_toolbars.get('view_tb') != "undefined") {
-		for (var x in miq_toolbars.get('view_tb').get('buttons')) {
+	if (typeof miq_toolbars['view_tb'] != "undefined") {
+		for (var x in miq_toolbars['view_tb']['buttons']) {
 			if (view_tb.getType(x) == "button"){
-				if (view_tb.getPosition(x)> 0 && miq_toolbars.get('view_tb').get('buttons')[x].hidden) {
+				if (view_tb.getPosition(x)> 0 && miq_toolbars['view_tb']['buttons'][x].hidden) {
 					view_tb.hideItem(x);
 					view_tb.hideItem('sep_1');
 				}
 			}
 		}
 	}
-	if (typeof miq_toolbars.get('center_tb') != "undefined") {
-		var tb = miq_toolbars.get('center_tb').get('obj');
-		var buttons = miq_toolbars.get('center_tb').get('buttons')
+	if (typeof miq_toolbars['center_tb'] != "undefined") {
+		var tb = miq_toolbars['center_tb']['obj'];
+		var buttons = miq_toolbars['center_tb']['buttons']
 		for (var x in buttons) {
 			var count = 0
 			if (tb.getType(x) == "button"){
@@ -72,9 +72,9 @@ function miqHideToolbarButtons(){
 			}
 		}
 	}
-  if (typeof miq_toolbars.get('custom_tb') != "undefined") {
-    var tb = miq_toolbars.get('custom_tb').get('obj');
-    var buttons = miq_toolbars.get('custom_tb').get('buttons')
+  if (typeof miq_toolbars['custom_tb'] != "undefined") {
+    var tb = miq_toolbars['custom_tb']['obj'];
+    var buttons = miq_toolbars['custom_tb']['buttons']
     for (var x in buttons) {
       var count = 0
       if (tb.getType(x) == "buttonSelect"){
@@ -91,14 +91,14 @@ function miqHideToolbarButtons(){
 
 // Re-Initialize a single toolbar
 function miqReinitToolbar(tb_name){
-	var tb = miq_toolbars.get(tb_name).get('obj');
+	var tb = miq_toolbars[tb_name]['obj'];
 //	tb.clearAll();
 // Workaround to replace clearAll method call, it's is not available in 2.0 version of dhtmlx
 	tb.forEachItem(function(id) {
 		tb.removeItem(id);
 	});
-	var tb_hash = miq_toolbars.get(tb_name);
-	tb.loadXMLString(tb_hash.get('xml'));
+	var tb_hash = miq_toolbars[tb_name];
+	tb.loadXMLString(tb_hash['xml']);
 	miqHideToolbarButtons();
 }
 
@@ -113,9 +113,9 @@ function miqToolbarOnClick(id){
 	var tb_hash;
 	var button;
 //	tb_hash = miq_toolbars.get(this.base.id);	// Use this line for toolbar v2.1
-		tb_hash = miq_toolbars.get(this.base.parentNode.id);	// Use this line for toolbar v3.0
+		tb_hash = miq_toolbars[this.base.parentNode.id];	// Use this line for toolbar v3.0
 
-	eval("button = tb_hash.get('buttons')." + id);
+	eval("button = tb_hash['buttons']." + id);
 	if (typeof button != "undefined") {
 		if (typeof button.confirm != "undefined" && typeof button.popup == "undefined") {
 			if (!confirm(button.confirm)) return;
@@ -174,10 +174,11 @@ function miqToolbarOnClick(id){
 	var params;
 	if (typeof button.url_parms != "undefined") {
 		if (button.url_parms.endsWith("_div")) {
-			if (miqDomElementExists('miq_grid_checks'))
-				params = "miq_grid_checks=" + $j('#miq_grid_checks').val();
-			else
-				params = Form.serialize(button.url_parms);
+      if (miqDomElementExists('miq_grid_checks')) {
+      params = "miq_grid_checks=" + $j('#miq_grid_checks').val();
+      } else {
+        params = miqSerializeForm(button.url_parms);
+      }
 		} else {
 			params = button.url_parms.split("?")[1];
 	}	}

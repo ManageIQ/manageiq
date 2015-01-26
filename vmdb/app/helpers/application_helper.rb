@@ -1687,8 +1687,8 @@ module ApplicationHelper
     js << "#{tb}.unload();"
     js << "#{tb} = null;"
     js << "#{tb} = new dhtmlXToolbarObject('#{tb}', 'miq_blue');"
-    js << "miq_toolbars.set('#{tb}', $H({obj:#{tb}, buttons:#{buttons}, xml:\"#{xml}\"}));" # Store hash of object, buttons, and xml
-    js << "miqInitToolbar(miq_toolbars.get('#{tb}'));"
+    js << "miq_toolbars['#{tb}'] = {obj:#{tb}, buttons:#{buttons}, xml:\"#{xml}\"};" # Store hash of object, buttons, and xml
+    js << "miqInitToolbar(miq_toolbars['#{tb}']);"
     return js
   end
 

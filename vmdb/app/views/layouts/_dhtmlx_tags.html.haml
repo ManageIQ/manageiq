@@ -2,7 +2,7 @@
 -# control  Name of the control (i.e. tree, grid, layout)
 
 -# Create miq_grids object to hold grid hash
-%script if (typeof miq_grids == "undefined") var miq_grids = $H();
+%script if (typeof miq_grids == "undefined") var miq_grids = {};
 
 -# Include the common JS once
 - unless @dhtmlx_common

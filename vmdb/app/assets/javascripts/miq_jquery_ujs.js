@@ -134,8 +134,7 @@
 					// MIQ added code follows
 					submit = element.attr('data-submit');
 					if (submit !== undefined)
-//						data = $j("#" + submit).serialize();
-						data = Form.serialize(submit);	// Use prototype serialize as it also works on non-forms
+						data = miqSerializeForm(submit);
 					else
 					// end of MIQ added code
 

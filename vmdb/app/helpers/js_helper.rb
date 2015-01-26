@@ -24,9 +24,10 @@ module JsHelper
   #     :title  ---
   def update_element(element, options)
     if options[:legend]
-      "Element.update('#{element}', '#{escape_javascript(options[:legend])}');"
+      "$j('##{element}').html('#{escape_javascript(options[:legend]).html_safe}');"
     elsif options[:title]
-      "Element.update('#{element}').title = '#{options[:title]}';"
+      "$j('##{element}').html('#{escape_javascript(options[:title]).html_safe}');"
+     # "Element.update('#{element}').title = '#{options[:title]}';"
     else
        ''
     end
@@ -78,14 +79,22 @@ module JsHelper
   end
 
   def javascript_show_if_exists(element)
-    "if ($j('##{j_str(element)}').length) #{javascript_show(element)}".html_safe
+    "if (miqDomElementExists('#{j_str(element)}')) #{javascript_show(element)}".html_safe
   end
 
   def javascript_hide_if_exists(element)
-    "if ($j('##{j_str(element)}').length) #{javascript_hide(element)}".html_safe
+    "if (miqDomElementExists('#{j_str(element)}')) #{javascript_hide(element)}".html_safe
   end
 
   def jquery_pulsate_element(element)
     "$j('##{element}').fadeIn().fadeOut().fadeIn().fadeOut().fadeIn().fadeOut().fadeIn().fadeOut().fadeIn().fadeOut().fadeIn();".html_safe
+  end
+
+  def js_for_page_replace_html(div, partial_name, locals = {})
+    "$j('##{div}').html('#{escape_javascript(render :partial => partial_name, :locals => locals).html_safe}');"
+  end
+
+  def js_for_page_replace(div, partial_name, locals = {})
+    "$j('##{div}').replaceWith('#{escape_javascript(render :partial => partial_name, :locals => locals).html_safe}');"
   end
 end

@@ -84,21 +84,21 @@ function miqCheck_AE_All(button_div,gridname) {
 // This function is called in miqOnLoad to init any grids on the screen
 function miqInitGrids() {
   if (typeof miq_grids != "undefined") {
-    miq_grids.each(function(pair) {
-      miqInitGrid(pair.key); // pass they key (grid name), called function will get the grid hash
+    $j.each(miq_grids, function( key ) {
+      miqInitGrid(key); // pass they key (grid name), called function will get the grid hash
     });
   }
 }
 
 // Initialize a single grid (is called directly after an AJAX trans)
 function miqInitGrid(grid_name){
-  var grid_hash = miq_grids.get(grid_name)  // Get the hash for the passed in grid
+  var grid_hash = miq_grids[grid_name]  // Get the hash for the passed in grid
   var miq_grid_checks = "";                   //<%# Keep track of the grid checkboxes %>
     
   // Build the grid object, then point a local var at it
-  eval(grid_name + " = new dhtmlXGridObject('" + grid_hash.get('g_id') + "')");
+  eval(grid_name + " = new dhtmlXGridObject('" + grid_hash['g_id'] + "')");
   var grid = eval(grid_name);
-  var options = grid_hash.get('opts')
+  var options = grid_hash['opts']
   // Start with a clear grid
   grid.clearAll(true)
 
@@ -127,8 +127,8 @@ if (options['alt_row']) {
   } 
 
   // Load the grid with XML data, if present
-  if (grid_hash.get('xml') != "") {
-    grid.parse(grid_hash.get('xml'));
+  if (grid_hash['xml'] != "") {
+    grid.parse(grid_hash['xml']);
   }
   
   if (options['autosize']) {
@@ -187,11 +187,11 @@ if (options['alt_row']) {
 // Handle checkbox
 function miqOnAECheck(row_id, cell_idx, state) {
   crows = this.getCheckedRows(0);
-  $$('#miq_grid_checks').each(function(a) {   
-    a.value = crows
+  $j("#miq_grid_checks").each(function() {
+    this.value = crows
   })
-  $$('#miq_grid_checks2').each(function(a) {
-    a.value = crows
+  $j("#miq_grid_checks2").each(function() {
+    this.value = crows
   })
   
   count = crows == "" ? 0:crows.split(",").length;  
