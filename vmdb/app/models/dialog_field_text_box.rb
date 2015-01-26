@@ -1,5 +1,5 @@
 class DialogFieldTextBox < DialogField
-  AUTOMATE_VALUE_FIELDS = %w(data_type default_value protected required validator_rule validator_type)
+  AUTOMATE_VALUE_FIELDS = %w(default_value protected required validator_rule validator_type)
 
   has_one :resource_action, :as => :resource, :dependent => :destroy
 

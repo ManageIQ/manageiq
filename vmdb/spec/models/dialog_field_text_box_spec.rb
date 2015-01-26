@@ -189,10 +189,6 @@ describe DialogFieldTextBox do
         dialog_field.normalize_automate_values(automate_hash)
       end
 
-      it "sets the data_type" do
-        expect(dialog_field.data_type).to eq("datatype")
-      end
-
       it "sets the protected" do
         expect(dialog_field.protected?).to be_true
       end

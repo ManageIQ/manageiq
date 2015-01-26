@@ -32,10 +32,6 @@ describe DialogFieldTextAreaBox do
         expect(dialog_field.validator_rule).to be_nil
       end
 
-      it "sets the data_type" do
-        expect(dialog_field.data_type).to eq("datatype")
-      end
-
       it "sets the required" do
         expect(dialog_field.required).to eq(true)
       end
