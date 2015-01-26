@@ -65,6 +65,8 @@ class VimPerformanceDaily < MetricRollup
     options.delete :conditions
     select = options.delete :select
     order = options.delete :order
+    includes = options.delete :include
+    limit = options.delete :limit
     raise "Unsupported options #{options.keys}" unless options.empty?
 
     case cnt
@@ -72,6 +74,8 @@ class VimPerformanceDaily < MetricRollup
       scope = klass
       scope = scope.select(select) if select
       scope = scope.order(order) if order
+      scope = scope.includes(includes) if includes
+      scope = scope.limit(limit) if limit
       scope = scope.where(wheres) if wheres
       scope.to_a
     else
