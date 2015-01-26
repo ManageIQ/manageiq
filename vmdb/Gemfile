@@ -7,7 +7,7 @@ MiqBundler.include_gemfile("../lib/Gemfile", binding)
 # VMDB specific gems
 #
 
-gem "prototype-rails", "~>3.2.1"
+gem "jquery-rjs", "=0.1.1", :git => 'https://github.com/amatsuda/jquery-rjs.git'
 # gem 'jquery-rails'
 
 gem "sprockets-sass",  "~>1.2.0"
