@@ -1193,9 +1193,9 @@ function miqSpinner(status){
         top: 'auto', // Top position relative to parent in px
         left: 'auto' // Left position relative to parent in px
       };
-      spinner = new Spinner(opts).spin($j('#spinner_div'));
+      spinner = new Spinner(opts).spin($j('#spinner_div')[0]);
     } else {
-      spinner.spin($j('#spinner_div'));
+      spinner.spin($j('#spinner_div')[0]);
     }
   } else {
     if (typeof spinner != "undefined") spinner.stop();
