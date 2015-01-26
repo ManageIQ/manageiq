@@ -144,7 +144,7 @@ module ApiHelper
     # Render nothing for normal resource deletes.
     #
     def render_normal_destroy
-      render :nothing => true, :status => 204
+      render :nothing => true, :status => Rack::Utils.status_code(:no_content)
     end
 
     #

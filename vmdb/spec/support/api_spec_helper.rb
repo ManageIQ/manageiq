@@ -19,9 +19,9 @@ module ApiSpecHelper
 
   def parse_response
     @code    = last_response.status
-    @result  = JSON.parse(last_response.body)
+    @result  = (@code != Rack::Utils.status_code(:no_content)) ? JSON.parse(last_response.body) : {}
     @success = @code < 400
-    @status  = API_STATUS[@code] || (@success ? 200 : 400)
+    @status  = API_STATUS[@code] || (@success ? Rack::Utils.status_code(:ok) : Rack::Utils.status_code(:bad_request))
     @message = @result.fetch_path("error", "message").to_s
     @success
   end
@@ -43,6 +43,11 @@ module ApiSpecHelper
 
   def run_post(url, body = {}, headers = {})
     post url, {}, update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
+    parse_response
+  end
+
+  def run_delete(url, headers = {})
+    delete url, {}, update_headers(headers)
     parse_response
   end
 

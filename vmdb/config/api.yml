@@ -553,7 +553,7 @@
     :description: Virtual Machines
     :options:
     - :collection
-    :methods: *70174834085860
+    :methods: *70174834085620
     :klass: Vm
     :subcollections:
     - :tags
@@ -591,7 +591,6 @@
         :disabled: true
       - :name: delete
         :identifier: vm_delete
-        :disabled: true
     :resource_actions:
       :post:
       - :name: edit
@@ -618,6 +617,8 @@
       - :name: retire
         :identifier: vm_retire
         :disabled: true
+      - :name: delete
+        :identifier: vm_delete
       :delete:
       - :name: delete
         :identifier: vm_delete
