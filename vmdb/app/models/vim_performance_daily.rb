@@ -63,20 +63,20 @@ class VimPerformanceDaily < MetricRollup
 
     # FIXME we should push these up to the callers
     options.delete :conditions
-    select = options.delete :select
-    order = options.delete :order
+    select   = options.delete :select
+    order    = options.delete :order
     includes = options.delete :include
-    limit = options.delete :limit
+    limit    = options.delete :limit
     raise "Unsupported options #{options.keys}" unless options.empty?
 
     case cnt
     when :all
       scope = klass
-      scope = scope.select(select) if select
-      scope = scope.order(order) if order
+      scope = scope.select(select)     if select
+      scope = scope.order(order)       if order
       scope = scope.includes(includes) if includes
-      scope = scope.limit(limit) if limit
-      scope = scope.where(wheres) if wheres
+      scope = scope.limit(limit)       if limit
+      scope = scope.where(wheres)      if wheres
       scope.to_a
     else
       raise "Unsupported finder value #{cnt}"
