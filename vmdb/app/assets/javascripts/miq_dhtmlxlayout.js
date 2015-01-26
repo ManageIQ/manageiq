@@ -10,10 +10,10 @@ function miqOnPanelResize(){
 // When right explorer cell is resized, make dhxLayoutB cell "a" taller or shorter if divs have moved up/down
 function miqResizeTaskbarCell(){
   if (typeof miq_toolbars == "undefined" || // Make sure everything's here that we need
-      $j('#taskbar_buttons_div') == "undefined" ||
+      $('#taskbar_buttons_div') == "undefined" ||
       typeof dhxLayoutB == "undefined")
     return;
-  $j('#taskbar_buttons_div').children('div').each(function(){
+  $('#taskbar_buttons_div').children('div').each(function(){
     if (this.offsetTop > 0) {
       dhxLayoutB.cells("a").setHeight(64);
       return false;

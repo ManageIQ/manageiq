@@ -71,9 +71,9 @@ class ConfigurationController < ApplicationController
         page.replace_html("main_div", :partial => "ui_4") # Replace the main div area contents
         if c_buttons && c_xml
           page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
-          page << "$j('#center_buttons_div').show();"
+          page << "$('#center_buttons_div').show();"
         else
-          page << "$j('#center_buttons_div').hide();"
+          page << "$('#center_buttons_div').hide();"
         end
       end
     end

@@ -4,7 +4,7 @@ function _jqplot_eval_option(data, option) {
   var keys  = option.split('.');
   var datum = data;
   try {
-    $j.each(keys, function (index, key) {
+    $.each(keys, function (index, key) {
       if (index < keys.length-1)
         datum = datum[key];
       else
@@ -14,7 +14,7 @@ function _jqplot_eval_option(data, option) {
 }
 
 function jqplot_process_options(data) {
-  $j.each(['seriesDefaults.renderer',
+  $.each(['seriesDefaults.renderer',
            'axes.xaxis.renderer',
            'legend.renderer',
            'highlighter.tooltipContentEditor'], function (index, key) {
@@ -36,10 +36,10 @@ function load_jqplot_chart(chart_set, index) {
   var data  = miq_chart_data[chart_set][index].xml;
   var data2 = miq_chart_data[chart_set][index].xml2;
 
-  if ($j('#'+chart_id).is(":visible")) {
-    $j.jqplot(chart_id, data.data, jqplot_process_options(data.options)).replot();
+  if ($('#'+chart_id).is(":visible")) {
+    $.jqplot(chart_id, data.data, jqplot_process_options(data.options)).replot();
     if (typeof(data2) !== "undefined")
-      $j.jqplot(chart2_id, data2.data, jqplot_process_options(data2.options)).replot();
+      $.jqplot(chart2_id, data2.data, jqplot_process_options(data2.options)).replot();
   }
 }
 

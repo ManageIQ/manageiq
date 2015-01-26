@@ -157,7 +157,7 @@ module OpsController::Settings::Tags
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("classification_entries_div", :partial=>"classification_entries", :locals=>{:entry=>"new", :edit=>true})
         page << javascript_focus('entry_name')
-        page << "$j('#entry_name').select();"
+        page << "$('#entry_name').select();"
       end
       session[:entry] = "new"
     else
@@ -166,7 +166,7 @@ module OpsController::Settings::Tags
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("classification_entries_div", :partial=>"classification_entries", :locals=>{:entry=>entry, :edit=>true})
         page << javascript_focus("entry_#{j_str(params[:field])}")
-        page << "$j('#entry_#{j_str(params[:field])}').select();"
+        page << "$('#entry_#{j_str(params[:field])}').select();"
       end
       session[:entry] = entry
     end

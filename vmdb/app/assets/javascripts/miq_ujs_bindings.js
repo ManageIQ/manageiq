@@ -1,39 +1,39 @@
 // MIQ unobtrusive javascript bindings run when document is fully loaded
 
-$j(document).ready(function(){
+$(document).ready(function(){
 
 	// Bind call to prompt if leaving an active edit
-	$j('a[data-miq_check_for_changes]').live('ajax:beforeSend', function() {
+	$('a[data-miq_check_for_changes]').live('ajax:beforeSend', function() {
 			return miqCheckForChanges();
 	})
 
 	// Bind call to check/display text area max length on keyup
-	$j('textarea[data-miq_check_max_length]').live('keyup', function() {
+	$('textarea[data-miq_check_max_length]').live('keyup', function() {
 			miqCheckMaxLength(this);
 	})
 
 	// Bind the MIQ spinning Q to configured links
-	$j('a[data-miq_sparkle_on]').live('ajax:beforeSend', function() {
+	$('a[data-miq_sparkle_on]').live('ajax:beforeSend', function() {
 			miqSparkleOn();	// Call to miqSparkleOn since miqSparkle(true) checks XHR count, which is 0 before send
 	})
-	$j('a[data-miq_login_error]').live('ajax:error', function(xhr, status, error) {
+	$('a[data-miq_login_error]').live('ajax:error', function(xhr, status, error) {
 	  js_mimetypes = ["text/javascript", "application/javascript"]
 	  if(status.status == 401 && js_mimetypes.indexOf(status.getResponseHeader("Content-Type")) > -1 && status.responseText.length > 0) {
-	    $j.globalEval(status.responseText)
+	    $.globalEval(status.responseText)
 	  }
 	})
-	$j('a[data-miq_sparkle_off]').live('ajax:complete', function() {
+	$('a[data-miq_sparkle_off]').live('ajax:complete', function() {
 			miqSparkle(false);
 	})
 
 	// Bind in the observe support. If interval is configured, use the observe_field function
-	$j('[data-miq_observe]').live('focus', function() {
-		var parms = $j.parseJSON(this.getAttribute('data-miq_observe'));
+	$('[data-miq_observe]').live('focus', function() {
+		var parms = $.parseJSON(this.getAttribute('data-miq_observe'));
 		var interval = parms.interval;
 		var url = parms.url;
 		var submit = parms.submit;
 		if (typeof interval == "undefined") {	// No interval passed, use event observer
-      var el = $j(this);
+      var el = $(this);
       el.unbind('change')
       el.change(function() {
         miqJqueryRequest(url, {beforeSend: true,
@@ -43,8 +43,8 @@ $j(document).ready(function(){
         });
 			})
 		} else {
-      $j(this).off(); // Use jQuery to turn off observe_field, prevents multi ajax transactions
-      var el = $j(this);
+      $(this).off(); // Use jQuery to turn off observe_field, prevents multi ajax transactions
+      var el = $(this);
       el.observe_field(interval, function(){
 				var oneTrans = this.getAttribute('data-miq_send_one_trans');	// Grab one trans URL, if present
 				if (typeof submit != "undefined"){										// If submit element passed in
@@ -59,9 +59,9 @@ $j(document).ready(function(){
 		}
 	});
 
-  $j('[data-miq_observe_checkbox]').live('click', function() {
-    var el = $j(this);
-    var parms = $j.parseJSON(el.attr('data-miq_observe_checkbox'));
+  $('[data-miq_observe_checkbox]').live('click', function() {
+    var el = $(this);
+    var parms = $.parseJSON(el.attr('data-miq_observe_checkbox'));
     var url = parms.url;
     var options = {
       data: el.attr('id') + '=' + encodeURIComponent(el.prop('checked') ? el.val() : 'null'),
@@ -127,7 +127,7 @@ $j(document).ready(function(){
 //    });
 
 	// Run this last to be sure all other UJS bindings have been run in case the focus field is observed
-	$j('[data-miq_focus]').each(function(index) {
+	$('[data-miq_focus]').each(function(index) {
 		this.focus();
 	})
 

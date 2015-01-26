@@ -26,14 +26,14 @@
             = button_tag('Refresh', :id => "refresh-dynamic-text-field-#{field.id}", :class => "btn btn-default")
 
             :javascript
-              $j('#refresh-dynamic-text-field-#{field.id}').click(function() {
+              $('#refresh-dynamic-text-field-#{field.id}').click(function() {
                 miqSparkleOn();
 
                 var fieldId = "#{field.id}";
                 var fieldName = "#{field.name}";
 
-                $j.post('dynamic_text_box_refresh', {name: fieldName}, function(data) {
-                  $j('.dynamic-text-box-' + fieldId).val(data.values);
+                $.post('dynamic_text_box_refresh', {name: fieldName}, function(data) {
+                  $('.dynamic-text-box-' + fieldId).val(data.values);
                   miqSparkleOff();
                 });
               });
@@ -59,14 +59,14 @@
           = button_tag('Refresh', :id => "refresh-dynamic-text-field-#{field.id}", :class => "btn btn-default")
 
           :javascript
-            $j('#refresh-dynamic-text-field-#{field.id}').click(function() {
+            $('#refresh-dynamic-text-field-#{field.id}').click(function() {
               miqSparkleOn();
 
               var fieldId = "#{field.id}";
               var fieldName = "#{field.name}";
 
-              $j.post('dynamic_text_box_refresh', {name: fieldName}, function(data) {
-                $j('.dynamic-text-area-' + fieldId).val(data.values);
+              $.post('dynamic_text_box_refresh', {name: fieldName}, function(data) {
+                $('.dynamic-text-area-' + fieldId).val(data.values);
                 miqSparkleOff();
               });
             });
@@ -160,17 +160,17 @@
           = button_tag('Refresh', :id => "refresh-dynamic-field-#{field.id}", :class => "btn btn-default")
 
           :javascript
-            $j('#refresh-dynamic-field-#{field.id}').click(function() {
+            $('#refresh-dynamic-field-#{field.id}').click(function() {
               miqSparkleOn();
 
               var fieldId = "#{field.id}";
               var fieldName = "#{field.name}";
-              var checkedValue = $j('input:radio[name="#{field.name}"]:checked').val();
+              var checkedValue = $('input:radio[name="#{field.name}"]:checked').val();
 
-              $j.post('dynamic_radio_button_refresh', {name: fieldName, checked_value: checkedValue}, function(data) {
+              $.post('dynamic_radio_button_refresh', {name: fieldName, checked_value: checkedValue}, function(data) {
                 var radioButtons = [];
 
-                $j.each(data.values, function(index, value) {
+                $.each(data.values, function(index, value) {
                   var radio = '<input type="radio" ';
                   radio += 'id="' + fieldId + '" ';
                   radio += 'value="' + value[0] + '" ';
@@ -185,12 +185,12 @@
                     :complete => 'miqSparkle(false);'
                   )}" + '"';
                   radio += '/> ';
-                  radio += $j('<label></label>').addClass('dynamic-radio-label').text(value[1]).prop('outerHTML');
+                  radio += $('<label></label>').addClass('dynamic-radio-label').text(value[1]).prop('outerHTML');
                   radio += ' ';
                   radioButtons.push(radio);
                 });
 
-                $j('.dynamic-radio-' + fieldId).html(radioButtons);
+                $('.dynamic-radio-' + fieldId).html(radioButtons);
 
                 miqSparkleOff();
               });

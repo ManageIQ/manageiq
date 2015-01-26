@@ -120,7 +120,7 @@ module OpsController::Settings::Common
           page << set_element_visible("ldap_default_group_div", !@edit[:new][:authentication][:ldap_role])
         end
         if @authldapport_reset
-          page << "$j('#authentication_ldapport').val('#{@edit[:new][:authentication][:ldapport]}');"
+          page << "$('#authentication_ldapport').val('#{@edit[:new][:authentication][:ldapport]}');"
         end
         if @reset_verify_button
           if !@edit[:new][:authentication][:ldaphost].empty? && @edit[:new][:authentication][:ldapport] != nil

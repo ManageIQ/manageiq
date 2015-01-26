@@ -1,4 +1,4 @@
 <%# Replaces a div using opts hash :partial and :locals values %>
 
-$j("<%= div.to_s %>").replaceWith("<%= escape_javascript(render(:partial => opts[:partial], :locals  => opts[:locals])) %>")
+$("<%= div.to_s %>").replaceWith("<%= escape_javascript(render(:partial => opts[:partial], :locals  => opts[:locals])) %>")
 

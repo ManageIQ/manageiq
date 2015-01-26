@@ -42,8 +42,8 @@
             = button_tag(_('Cancel'), :alt => "Cancel Changes", :class => "btn btn-default")
 
 :javascript
-  $j(function() {
-    $j('#upload_service_dialog_import').click(function() {
+  $(function() {
+    $('#upload_service_dialog_import').click(function() {
       miqSparkleOn();
     });
 

@@ -40,7 +40,7 @@
                                     "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
 							<%# unless resolve[:new][:instance_name].blank? %>
 								<% if !is_browser_ie? %>
-									<%= javascript_tag("if (!$j('#description').length) #{javascript_focus('object_message')}") %>
+									<%= javascript_tag("if (!$('#description').length) #{javascript_focus('object_message')}") %>
 								<% end %>
 							<%# end %>
 						</td>

@@ -62,7 +62,7 @@ module OpsController::Settings::AnalysisProfiles
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace_html("ap_form_div", :partial=>"ap_form", :locals=>{:entry=>session[:edit_filename], :edit=>true})
         page << javascript_focus("entry_#{j_str(params[:field])}")
-        page << "$j('#entry_#{j_str(params[:field])}').select();"
+        page << "$('#entry_#{j_str(params[:field])}').select();"
       end
     elsif params[:edit_entry] == "edit_registry"
       session[:reg_data] = Hash.new
@@ -72,7 +72,7 @@ module OpsController::Settings::AnalysisProfiles
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("ap_form_div", :partial=>"ap_form", :locals=>{:entry=>session[:reg_data], :edit=>true})
         page << javascript_focus("entry_#{j_str(params[:field])}")
-        page << "$j('#entry_#{j_str(params[:field])}').select();"
+        page << "$('#entry_#{j_str(params[:field])}').select();"
       end
     elsif params[:edit_entry] == "edit_nteventlog"
       session[:nteventlog_data] = Hash.new
@@ -92,7 +92,7 @@ module OpsController::Settings::AnalysisProfiles
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("ap_form_div", :partial=>"ap_form", :locals=>{:entry=>session[:nteventlog_data], :edit=>true})
         page << javascript_focus("entry_#{j_str(params[:field])}")
-        page << "$j('#entry_#{j_str(params[:field])}').select();"
+        page << "$('#entry_#{j_str(params[:field])}').select();"
       end
     else
       session[:edit_filename] = ""
@@ -102,7 +102,7 @@ module OpsController::Settings::AnalysisProfiles
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("ap_form_div", :partial=>"ap_form", :locals=>{:entry=>"new", :edit=>true})
         page << javascript_focus('entry_name')
-        page << "$j('#entry_name').select();"
+        page << "$('#entry_name').select();"
       end
     end
   end

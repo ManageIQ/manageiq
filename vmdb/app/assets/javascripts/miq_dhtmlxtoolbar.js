@@ -3,7 +3,7 @@
 // This function is called in miqOnLoad
 function miqInitToolbars() {
 	if (typeof miq_toolbars == "undefined") return;
-  $j.each(miq_toolbars, function( key ) {
+  $.each(miq_toolbars, function( key ) {
 		miqInitToolbar(miq_toolbars[key]);
 	});
   miqResizeTaskbarCell();
@@ -175,7 +175,7 @@ function miqToolbarOnClick(id){
 	if (typeof button.url_parms != "undefined") {
 		if (button.url_parms.endsWith("_div")) {
       if (miqDomElementExists('miq_grid_checks')) {
-      params = "miq_grid_checks=" + $j('#miq_grid_checks').val();
+      params = "miq_grid_checks=" + $('#miq_grid_checks').val();
       } else {
         params = miqSerializeForm(button.url_parms);
       }

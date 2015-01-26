@@ -130,7 +130,7 @@ class ExplorerPresenter
       # using dynatree if dhtmlxtree object is undefined
       @out << "
       if (typeof #{@options[:active_tree]} == 'undefined') {
-        var del_node = $j('##{@options[:active_tree]}box').dynatree('getTree').getNodeByKey('#{@options[:delete_node]}');
+        var del_node = $('##{@options[:active_tree]}box').dynatree('getTree').getNodeByKey('#{@options[:delete_node]}');
         del_node.remove();
       } else {
         #{@options[:active_tree]}.deleteItem('#{@options[:delete_node]}');
@@ -170,7 +170,7 @@ class ExplorerPresenter
     end
 
     # Scroll to top of main div
-    @out << "$j('#main_div').scrollTop(0);"
+    @out << "$('#main_div').scrollTop(0);"
 
     @out << "dhxLayoutB.cells('b').setText('#{escape_javascript(ERB::Util::h(@options[:right_cell_text]))}');" if @options[:right_cell_text]
 
@@ -209,8 +209,8 @@ class ExplorerPresenter
 
     # Position and show or hide the clear_search link
     @out << "
-    $j('.dhtmlxInfoBarLabel:visible').append($j('#clear_search')[0]);
-    $j('#clear_search').#{clear_search_show_or_hide}();
+    $('.dhtmlxInfoBarLabel:visible').append($('#clear_search')[0]);
+    $('#clear_search').#{clear_search_show_or_hide}();
     miqResizeTaskbarCell();"
 
     @out << set_spinner_off
@@ -285,11 +285,11 @@ class ExplorerPresenter
   #     :locals   --- FIXME
   #     :partial  --- FIXME
   def replace_partial(element, content)
-    "$j('##{element}').replaceWith('#{escape_javascript(content)}');"
+    "$('##{element}').replaceWith('#{escape_javascript(content)}');"
   end
 
   def update_partial(element, content)
-    "$j('##{element}').html('#{escape_javascript(content)}');"
+    "$('##{element}').html('#{escape_javascript(content)}');"
   end
 
   private

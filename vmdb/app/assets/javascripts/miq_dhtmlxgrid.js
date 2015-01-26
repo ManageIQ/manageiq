@@ -32,7 +32,7 @@ function miqAeRowSelected(row_id,cell_idx) {
 
 // Method to hide flash_msg when folde ris being edited in menu editor
 function miqMenuRowSelected(row_id,cell_idx) {
-  $j('#flash_msg_div_menu_list').hide();
+  $('#flash_msg_div_menu_list').hide();
   folder_list_grid.editCell();
 }
 
@@ -47,7 +47,7 @@ function miqRequestRowSelected(row_id) {
 // Handle checkbox
 function miqGridOnCheck(row_id, cell_idx, state) {
   crows = gtl_list_grid.getCheckedRows(0);
-  $j('#miq_grid_checks').val(crows);
+  $('#miq_grid_checks').val(crows);
   count = crows == "" ? 0:crows.split(",").length;
   if (miqDomElementExists('center_tb')) miqSetButtons(count, "center_tb");
   else miqSetButtons(count, "center_buttons_div");
@@ -58,24 +58,24 @@ function miqCheck_AE_All(button_div,gridname) {
   var state = true;
   var crows = "";
   if (typeof ns_list_grid != "undefined" && gridname == "ns_list_grid") {
-    state = $j('#Toggle1').prop('checked');
+    state = $('#Toggle1').prop('checked');
     ns_list_grid.checkAll(state ? true : false)
     crows = ns_list_grid.getCheckedRows(0);
   } else if (typeof ns_grid != "undefined" && gridname == "ns_grid") {
-    state = $j('#Toggle2').prop('checked');
+    state = $('#Toggle2').prop('checked');
     ns_grid.checkAll(state ? true:false)
     crows = ns_grid.getCheckedRows(0);
   } else if (typeof instance_grid != "undefined" && gridname == "instance_grid") {
-    state = $j('#Toggle3').prop('checked');
+    state = $('#Toggle3').prop('checked');
     instance_grid.checkAll(state ? true:false)
     crows = instance_grid.getCheckedRows(0);
   } else if (typeof class_methods_grid != "undefined" && gridname == "class_methods_grid") {
-    state = $j('#Toggle4').prop('checked');
+    state = $('#Toggle4').prop('checked');
     class_methods_grid.checkAll(state ? true:false)
     crows = class_methods_grid.getCheckedRows(0);
   }
-  if (miqDomElementExists('miq_grid_checks')) $j('#miq_grid_checks').val(crows)
-  if (miqDomElementExists('miq_grid_checks2')) $j('#miq_grid_checks2').val(crows)
+  if (miqDomElementExists('miq_grid_checks')) $('#miq_grid_checks').val(crows)
+  if (miqDomElementExists('miq_grid_checks2')) $('#miq_grid_checks2').val(crows)
   count = crows == "" ? 0:crows.split(",").length;
   miqSetButtons(count, button_div);
   miqSparkle(false);
@@ -84,7 +84,7 @@ function miqCheck_AE_All(button_div,gridname) {
 // This function is called in miqOnLoad to init any grids on the screen
 function miqInitGrids() {
   if (typeof miq_grids != "undefined") {
-    $j.each(miq_grids, function( key ) {
+    $.each(miq_grids, function( key ) {
       miqInitGrid(key); // pass they key (grid name), called function will get the grid hash
     });
   }
@@ -187,10 +187,10 @@ if (options['alt_row']) {
 // Handle checkbox
 function miqOnAECheck(row_id, cell_idx, state) {
   crows = this.getCheckedRows(0);
-  $j("#miq_grid_checks").each(function() {
+  $("#miq_grid_checks").each(function() {
     this.value = crows
   })
-  $j("#miq_grid_checks2").each(function() {
+  $("#miq_grid_checks2").each(function() {
     this.value = crows
   })
   
