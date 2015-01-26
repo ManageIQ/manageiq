@@ -47,12 +47,29 @@
       - when 'DialogFieldTextAreaBox'
         - if edit
           = text_area_tag(field.name,
-                          wf.value(field.name),
+                          field.default_value,
+                          :class             => "dynamic-text-area-#{field.id}",
                           :maxlength         => 8192,
                           :size              => "50x6",
                           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
         - else
-          = h(wf.value(field.name))
+          = h(field.default_value)
+
+        - if field.dynamic && field.show_refresh_button?
+          = button_tag('Refresh', :id => "refresh-dynamic-text-field-#{field.id}", :class => "btn btn-default")
+
+          :javascript
+            $j('#refresh-dynamic-text-field-#{field.id}').click(function() {
+              miqSparkleOn();
+
+              var fieldId = "#{field.id}";
+              var fieldName = "#{field.name}";
+
+              $j.post('dynamic_text_box_refresh', {name: fieldName}, function(data) {
+                $j('.dynamic-text-area-' + fieldId).val(data.values);
+                miqSparkleOff();
+              });
+            });
 
       - when 'DialogFieldCheckBox'
         - checked = ['1', 't'].include?(wf.value(field.name))
