@@ -53,6 +53,10 @@ class DialogFieldTextBox < DialogField
     "<Script error>"
   end
 
+  def sample_text
+    dynamic ? "Sample Text" : default_value
+  end
+
   def normalize_automate_values(automate_hash)
     self.class::AUTOMATE_VALUE_FIELDS.each do |key|
       send("#{key}=", automate_hash[key]) if automate_hash.key?(key)

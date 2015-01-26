@@ -240,4 +240,24 @@ describe DialogFieldTextBox do
       end
     end
   end
+
+  describe "#sample_text" do
+    let(:dialog_field) { described_class.new(:dynamic => dynamic, :default_value => "defaultvalue") }
+
+    context "when the dialog is dynamic" do
+      let(:dynamic) { true }
+
+      it "returns 'Sample Text'" do
+        expect(dialog_field.sample_text).to eq("Sample Text")
+      end
+    end
+
+    context "when the dialog is not dynamic" do
+      let(:dynamic) { false }
+
+      it "returns the default value" do
+        expect(dialog_field.sample_text).to eq("defaultvalue")
+      end
+    end
+  end
 end
