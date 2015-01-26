@@ -1,7 +1,9 @@
-require 'spec_helper'
+require_relative 'spec_helper'
 
 describe ManageiqForeman::Connection do
-  let(:connection) { described_class.new(FOREMAN) }
+  let(:connection) do
+    described_class.new(:base_url => "example.com", :username => "admin", :password => "smartvm", :verify_ssl => nil)
+  end
 
   describe "#host" do
     context "with 2 hosts" do

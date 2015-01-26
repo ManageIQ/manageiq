@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://admin:smartvm@10.8.96.102/api/hosts?page=1&per_page=50
+    uri: http://admin:smartvm@example.com/api/hosts?page=1&per_page=50
     body:
       encoding: US-ASCII
       string: ''
