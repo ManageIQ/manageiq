@@ -27,7 +27,6 @@ module JsHelper
       "$('##{element}').html('#{escape_javascript(options[:legend]).html_safe}');"
     elsif options[:title]
       "$('##{element}').html('#{escape_javascript(options[:title]).html_safe}');"
-     # "Element.update('#{element}').title = '#{options[:title]}';"
     else
        ''
     end

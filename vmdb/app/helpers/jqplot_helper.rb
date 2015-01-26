@@ -7,6 +7,7 @@ jQuery(document).ready(function($) {
       url:      "#{url}",
       type:     "get",
       dataType: "json",
+      complete: function(request) { miqSparkle(false); },
       success:  function(chart) {
         $.jqplot('#{chart_id}', chart.data, jqplot_process_options(chart.options));
       }

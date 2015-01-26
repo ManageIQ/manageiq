@@ -34,7 +34,3 @@
             - widget = MiqWidget.find_by_id(w)
             - if widget && widget.enabled
               = render :partial => 'db_widget', :locals => {:widget => widget}
-  - # Set the JS miq_chart_data var to hold any chart XML that was saved
-  - if @chart_data
-    :javascript
-      miq_chart_data = #{{"widgetchart" => WidgetPresenter.chart_data}.to_json};

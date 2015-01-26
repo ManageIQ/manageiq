@@ -207,11 +207,10 @@ class ExplorerPresenter
 
     @out << @options[:extra_js].join("\n")
 
-    # Position and show or hide the clear_search link
+    # Position the clear_search link
     @out << "
-    $('.dhtmlxInfoBarLabel:visible').append($('#clear_search')[0]);
-    $('#clear_search').#{clear_search_show_or_hide}();
-    miqResizeTaskbarCell();"
+      $('.dhtmlxInfoBarLabel').filter(':visible').append($('#clear_search')[0]);
+      miqResizeTaskbarCell();"
 
     @out << set_spinner_off
   end

@@ -50,7 +50,7 @@ function miqOnLoad() {
 }
 
 function miqPrepRightCellForm(tree) {
-  if ($('#adv_searchbox_div')) $('#adv_searchbox_div').hide();
+  if (miqDomElementExists('adv_searchbox_div')) $('#adv_searchbox_div').hide();
   dhxLayoutB.cells("a").collapse();
   $('#' + tree).dynatree('disable');
   miqDimDiv(tree + '_div', true);
@@ -287,15 +287,15 @@ function miqButtons(h_or_s, prefix) {
 // Hide/show form buttons
 function miqValidateButtons(h_or_s, prefix) {
   var prefix = (prefix == null) ? "" : prefix;
-  on_id = "#" + prefix + 'validate_buttons_on';
-  off_id = "#" + prefix + 'validate_buttons_off';
-  if ($('flash_msg_div')) $('flash_msg_div').hide();
+  on_id = prefix + 'validate_buttons_on';
+  off_id = prefix + 'validate_buttons_off';
+  if (miqDomElementExists('flash_msg_div')) $('flash_msg_div').hide();
     if (h_or_s == "show") {
-      if($(on_id)) $(on_id).show();
-      if($(off_id)) $(off_id).hide();
+      if(miqDomElementExists(on_id)) $("#" + on_id).show();
+      if(miqDomElementExists(off_id)) $("#" + off_id).hide();
     } else {
-      if($(off_id)) $(off_id).show();
-      if($(on_id)) $(on_id).hide();
+      if(miqDomElementExists(off_id)) $("#" + off_id).show();
+      if(miqDomElementExists(on_id)) $("#" + on_id).hide();
 }   }
 
 // Convert Button image to hyperlink
@@ -781,15 +781,15 @@ function miqAttachTextAreaWithLines(id){
 
 // Initialize dashboard column jQuery sortables
 function miqInitDashboardCols() {
-  if ($('#col1')) {
+  if (miqDomElementExists('col1')) {
     $('#col1').sortable({connectWith:'#col2, #col3', handle:"h2"});
     $('#col1').bind('sortupdate', miqDropComplete);
   }
-  if ($('#col2')) {
+  if (miqDomElementExists('col2')) {
     $('#col2').sortable({connectWith:'#col1, #col3', handle:"h2"});
     $('#col2').bind('sortupdate', miqDropComplete);
   }
-  if ($('#col3')) {
+  if (miqDomElementExists('col3')) {
     $('#col3').sortable({connectWith:'#col1, #col2', handle:"h2"});
     $('#col3').bind('sortupdate', miqDropComplete);
   }
@@ -1110,13 +1110,13 @@ function miq_jquery_disable_all_tabs(tabs_div){
 // Send explorer search by name via ajax
 function miqSearchByName(button){
   if (button == null)
-    miqJqueryRequest('x_search_by_name', {beforeSend: true, data: miqSerializeForm('input')});
+    miqJqueryRequest('x_search_by_name', {beforeSend: true, data: miqSerializeForm('searchbox')});
 }
 
 // Send search by filter via ajax
 function miqSearchByFilter(button){
   if (button == null)
-    miqJqueryRequest('list_view_filter', {beforeSend: true, data: miqSerializeForm('input')});
+    miqJqueryRequest('list_view_filter', {beforeSend: true, data: miqSerializeForm('filterbox')});
 }
 
 // Send transaction to server so automate tree selection box can be made active and rest of the screen can be blocked
