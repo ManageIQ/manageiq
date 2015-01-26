@@ -7,6 +7,14 @@ class EmsRedhat < EmsInfra
     @description ||= "Red Hat Enterprise Virtualization Manager".freeze
   end
 
+  def supports_port?
+    true
+  end
+
+  def supports_authentication?(authtype)
+    %w(default metrics).include?(authtype.to_s)
+  end
+
   def self.raw_connect(server, port, username, password, service = "Service")
     require 'ovirt'
     params = {
