@@ -113,6 +113,15 @@ module EmsCommon
           @view.extras[:total_count] > @view.extras[:auth_count]
         @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other Cluster") + " on this " + ui_lookup(:tables=>@table_name)
       end
+    elsif @display == "orchestration_stacks" || session[:display] == "orchestration_stacks" && params[:display].nil?
+      title = "Stacks"
+      drop_breadcrumb( {:name => @ems.name+" (All #{title})", :url => "/#{@table_name}/show/#{@ems.id}?display=#{@display}"} )
+      @view, @pages = get_view(OrchestrationStack, :parent => @ems)  # Get the records (into a view) and the paginator
+      @showtype = @display
+      if @view.extras[:total_count] && @view.extras[:auth_count] &&
+        @view.extras[:total_count] > @view.extras[:auth_count]
+        @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") + " on this " + ui_lookup(:tables => @table_name)
+      end
     else  # Must be Hosts # FIXME !!!
       drop_breadcrumb( {:name=>@ems.name+" (All Managed Hosts)", :url=>"/#{@table_name}/show/#{@ems.id}?display=hosts"} )
       @view, @pages = get_view(Host, :parent=>@ems) # Get the records (into a view) and the paginator

@@ -2316,7 +2316,7 @@ class ApplicationController < ActionController::Base
         session[:tab_url][:opt] = inbound_url if ["utilization","planning","bottlenecks","waste"].include?(action_name)
       when "catalog", "vm", "vm_or_template", "miq_template", "service"
         session[:tab_url][:svc] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
-      when "availability_zone","ems_cloud","flavor","security_group","vm_cloud"
+      when "availability_zone", "ems_cloud", "flavor", "security_group", "vm_cloud", "orchestration_stack"
         session[:tab_url][:clo] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
       when "ems_cluster", "ems_infra", "host", "pxe", "repository", "resource_pool", "storage", "vm_infra"
         session[:tab_url][:inf] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
