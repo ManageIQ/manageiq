@@ -305,7 +305,6 @@ class Condition < ActiveRecord::Base
       $log.debug("#{log_prefix} Script:\n#{script}")
       begin
         t = Thread.new do
-          script = "$SAFE = 3\n#{script}"
           Thread.current["result"] = _eval(context, script)
         end
         to = 20 # allow 20 seconds for script to complete
