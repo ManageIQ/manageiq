@@ -2724,21 +2724,24 @@ class ApplicationController < ActionController::Base
 
   def set_gettext_locale
     user_settings =  User.find_by_userid(session[:userid]).try(:settings)
-    locale = user_settings[:display][:locale] if user_settings &&
+    user_locale = user_settings[:display][:locale] if user_settings &&
                                                  user_settings.key?(:display) &&
                                                  user_settings[:display].key?(:locale)
-    if locale.nil? || locale == 'default'
+    if user_locale == 'default' || user_locale.nil?
       unless MiqServer.my_server.nil?
-        locale = MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :locale)
+        server_locale = MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :locale)
       end
-      if locale.nil? || locale == 'default'
-        locale = request.env['HTTP_ACCEPT_LANGUAGE'].to_s.split(',')
-          .collect { |l| l.sub(/;.*/, '') }
-          .detect  { |l| FastGettext.available_locales.include?(l) }
-      end
+      # user settings && server settings == 'default'
+      # OR not defined
+      # use HTTP_ACCEPT_LANGUAGE
+      locale = if server_locale == "default" || server_locale.nil?
+                 env['HTTP_ACCEPT_LANGUAGE']
+               else
+                 server_locale
+               end
+    else
+      locale = user_locale
     end
-
-    session[:locale] = I18n.locale = FastGettext.set_locale(locale)
-    super
+    FastGettext.set_locale(locale)
   end
 end
