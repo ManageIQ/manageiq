@@ -14,7 +14,7 @@
         %tbody
           - @conditions.each do |c|
             %tr{:class => cycle('row0', 'row1'), :onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Condition"),
-              :onclick => "cfmeDynatree_activateNode('condition_tree', 'xx-<%=c.towhat.downcase%>_co-#{to_cid(c.id)}');"}
+              :onclick => "cfmeDynatree_activateNode('condition_tree', 'xx-#{c.towhat.downcase}_co-#{to_cid(c.id)}');"}
               %td.icon
                 %img{:src => "/images/icons/new/miq_condition.png", :valign => "middle", :border => "0"}
               %td
