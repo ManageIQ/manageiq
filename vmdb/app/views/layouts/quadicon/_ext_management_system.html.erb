@@ -7,7 +7,7 @@
   <% if item.is_a?(EmsCloud) %>
     <div class="flobj b<%= size %>"><p><%= item.total_miq_templates %></p></div>
   <% end %>
-	<div class="flobj c<%= size %>"><img src="/images/icons/new/vendor-<%= h(item.emstype.downcase) %>.png"/></div>
+	<div class="flobj c<%= size %>"><img src="/images/icons/new/vendor-<%= h(item.image_name) %>.png"/></div>
 	<div class="flobj d<%= size %>">
 		<%
 			case item.authentication_status
@@ -28,7 +28,7 @@
 	<% end %>
 <% else %>
 	<div class="flobj" ><img src="/images/icons/<%= size %>/base-single.png"></div>
-	<div class="flobj e<%= size %>"><img src="/images/icons/new/vendor-<%= h(item.emstype.downcase) %>.png" width="<%= width * 1.8 %>" height="<%= height * 1.8 %>"></div>
+	<div class="flobj e<%= size %>"><img src="/images/icons/new/vendor-<%= h(item.image_name) %>.png" width="<%= width * 1.8 %>" height="<%= height * 1.8 %>"></div>
 
 <% end %>
 <% if typ == :listnav %><%# Listnav, no href needed %>

@@ -142,6 +142,11 @@ class ExtManagementSystem < ActiveRecord::Base
     model_name_from_emstype(emstype).constantize
   end
 
+  # UI method for determining which icon to show for a particular EMS
+  def image_name
+    emstype.downcase
+  end
+
   def authentication_check_role
     'ems_operations'
   end

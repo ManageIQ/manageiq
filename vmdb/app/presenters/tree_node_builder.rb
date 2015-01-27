@@ -48,7 +48,7 @@ class TreeNodeBuilder
   def build
     case object
     when AvailabilityZone     then generic_node(object.name, "availability_zone.png", "Availability Zone: #{object.name}")
-    when ExtManagementSystem  then generic_node(object.name, "vendor-#{object.emstype.downcase}.png",
+    when ExtManagementSystem  then generic_node(object.name, "vendor-#{object.image_name}.png",
       "#{ui_lookup(:table=>object.kind_of?(EmsInfra) ? "ems_infra" : "ems_cloud")}: #{object.name}")
     when ChargebackRate       then generic_node(object.description, "chargeback_rates.png")
     when Condition            then generic_node(object.description, "miq_condition.png")
