@@ -1,25 +1,35 @@
 require "spec_helper"
 
-describe OrchestrationTemplate do
-  let(:sample) do
-    'spec/fixtures/orchestration_templates/cfn_parameters.json'
+describe OrchestrationTemplateCfn do
+  describe ".eligible_manager_types" do
+    it "lists the classes of eligible managers" do
+      OrchestrationTemplateCfn.eligible_manager_types.each do |klass|
+        (klass <= EmsAmazon || klass <= EmsOpenstack).should be_true
+      end
+    end
   end
 
-  it "parses parameters from a template" do
-    template = OrchestrationTemplateCfn.new(:content => IO.read(sample))
+  context "when a raw template in JSON format is given" do
+    let(:sample) do
+      'spec/fixtures/orchestration_templates/cfn_parameters.json'
+    end
 
-    groups = template.parameter_groups
-    groups.size.should == 1
-    groups[0].label.should == "Parameters"
+    it "parses parameters from a template" do
+      template = OrchestrationTemplateCfn.new(:content => IO.read(sample))
 
-    param_hash = groups[0].parameters.index_by(&:name)
-    param_hash.size.should == 6
-    assert_aws_type(param_hash["KeyName"])
-    assert_list_aws_type(param_hash["Subnets"])
-    assert_list_string_type(param_hash["AZs"])
-    assert_allowed_values(param_hash["WebServerInstanceType"])
-    assert_min_max_value(param_hash["SecondaryIPAddressCount"])
-    assert_hidden_length_pattern(param_hash["MasterUserPassword"])
+      groups = template.parameter_groups
+      groups.size.should == 1
+      groups[0].label.should == "Parameters"
+
+      param_hash = groups[0].parameters.index_by(&:name)
+      param_hash.size.should == 6
+      assert_aws_type(param_hash["KeyName"])
+      assert_list_aws_type(param_hash["Subnets"])
+      assert_list_string_type(param_hash["AZs"])
+      assert_allowed_values(param_hash["WebServerInstanceType"])
+      assert_min_max_value(param_hash["SecondaryIPAddressCount"])
+      assert_hidden_length_pattern(param_hash["MasterUserPassword"])
+    end
   end
 
   def assert_aws_type(parameter)

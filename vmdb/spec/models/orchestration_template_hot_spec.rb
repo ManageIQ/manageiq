@@ -1,18 +1,28 @@
 require "spec_helper"
 
-describe OrchestrationTemplate do
-  let(:sample) do
-    'spec/fixtures/orchestration_templates/hot_parameters.yml'
+describe OrchestrationTemplateHot do
+  describe ".eligible_manager_types" do
+    it "lists the classes of eligible managers" do
+      OrchestrationTemplateHot.eligible_manager_types.each do |klass|
+        (klass <= EmsOpenstack).should be_true
+      end
+    end
   end
 
-  it "parses parameters from a template" do
-    template = OrchestrationTemplateHot.new(:content => IO.read(sample))
+  context "when a raw template in YAML format is given" do
+    let(:sample) do
+      'spec/fixtures/orchestration_templates/hot_parameters.yml'
+    end
 
-    groups = template.parameter_groups
-    groups.size.should == 2
+    it "parses parameters from a template" do
+      template = OrchestrationTemplateHot.new(:content => IO.read(sample))
 
-    assert_general_group(groups[0])
-    assert_db_group(groups[1])
+      groups = template.parameter_groups
+      groups.size.should == 2
+
+      assert_general_group(groups[0])
+      assert_db_group(groups[1])
+    end
   end
 
   def assert_general_group(group)
