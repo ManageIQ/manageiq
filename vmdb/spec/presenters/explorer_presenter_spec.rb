@@ -12,26 +12,14 @@ describe ExplorerPresenter do
     context "#replace_partial" do
       it 'returns proper JS' do
         js_str = @presenter.replace_partial(@el, @content)
-        js_str.should == "Element.replace('#{@el}','#{escape_javascript(@content)}');"
+        js_str.should == "$('##{@el}').replaceWith('#{escape_javascript(@content)}');"
       end
     end
 
     context "#update_partial" do
       it 'returns proper JS' do
         js_str = @presenter.update_partial(@el, @content)
-        js_str.should == "Element.update('#{@el}','#{escape_javascript(@content)}');"
-      end
-    end
-
-    context "#replace_or_update_partial" do
-      it 'replace returns proper JS' do
-        js_str = @presenter.replace_or_update_partial('replace', @el, @content)
-        js_str.should == "Element.replace('#{@el}','#{escape_javascript(@content)}');"
-      end
-
-      it 'update returns proper JS' do
-        js_str = @presenter.replace_or_update_partial('update', @el, @content)
-        js_str.should == "Element.update('#{@el}','#{escape_javascript(@content)}');"
+        js_str.should == "$('##{@el}').html('#{escape_javascript(@content)}');"
       end
     end
 

@@ -16,31 +16,31 @@ describe('import.js', function() {
     });
 
     it('removes alert classes', function() {
-      expect($j('.import-flash-message')).not.toHaveClass('alert-success');
-      expect($j('.import-flash-message')).not.toHaveClass('alert-danger');
-      expect($j('.import-flash-message')).not.toHaveClass('alert-warning');
+      expect($('.import-flash-message')).not.toHaveClass('alert-success');
+      expect($('.import-flash-message')).not.toHaveClass('alert-danger');
+      expect($('.import-flash-message')).not.toHaveClass('alert-warning');
     });
 
     it('removes pficon classes', function() {
-      expect($j('.icon-placeholder')).not.toHaveClass('pficon');
-      expect($j('.icon-placeholder')).not.toHaveClass('pficon-ok');
-      expect($j('.icon-placeholder')).not.toHaveClass('pficon-layered');
+      expect($('.icon-placeholder')).not.toHaveClass('pficon');
+      expect($('.icon-placeholder')).not.toHaveClass('pficon-ok');
+      expect($('.icon-placeholder')).not.toHaveClass('pficon-layered');
     });
 
     it('removes pficon-error-octagon class', function() {
-      expect($j('#error-octagon')).not.toHaveClass('pficon-error-octagon');
+      expect($('#error-octagon')).not.toHaveClass('pficon-error-octagon');
     });
 
     it('removes pficon-error-exclamation class', function() {
-      expect($j('#error-exclamation')).not.toHaveClass('pficon-error-exclamation');
+      expect($('#error-exclamation')).not.toHaveClass('pficon-error-exclamation');
     });
 
     it('removes pficon-warning-triangle class', function() {
-      expect($j('#warning-triangle')).not.toHaveClass('pficon-warning-triangle');
+      expect($('#warning-triangle')).not.toHaveClass('pficon-warning-triangle');
     });
 
     it('removes pficon-warning-exclamation class', function() {
-      expect($j('#warning-exclamation')).not.toHaveClass('pficon-warning-exclamation');
+      expect($('#warning-exclamation')).not.toHaveClass('pficon-warning-exclamation');
     });
   });
 });
