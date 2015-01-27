@@ -1,13 +1,13 @@
-- box_title ||= "E-mail"
+- box_title  ||= _("E-mail")
 - action_url ||= "form_field_changed"
 - if @edit
   - url = url_for(:action => action_url, :id => "#{record.id || "new"}")
 #edit_email_div
   %p{:class => "legend"}
     = box_title
-    %table{:class => "style1"}
+    %table.style1
       %tr
-        %td{:class => "key"}
+        %td.key
           = _("Send an E-mail")
         = check_box_tag("send_email_cb",
                         "1",
@@ -15,7 +15,7 @@
                         "data-miq_observe_checkbox" => {:url => url}.to_json)
       - if @edit[:new][:send_email]
         %tr
-          %td{:class => "key"}
+          %td.key
             = _("From")
             %br
             = _("(leave blank for default)")

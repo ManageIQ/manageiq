@@ -9,7 +9,7 @@
     %meta{"http-equiv" => "cache-control", :content => "no-cache, no-store"}
     = tag :link, :rel => "shortcut icon", :href => image_path("favicon.ico")
     = stylesheet_link_tag 'application'
-    = render :partial=>"stylesheets/template50"
+    = render :partial => "stylesheets/template50"
 
     -# HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries
     /[if lt IE 9]
@@ -17,7 +17,8 @@
       = javascript_include_tag 'respond.min'
     -# IE8 requires jQuery and Bootstrap JS to load in head to prevent rendering bugs
     -# IE8 requires jQuery v1.x
-    = javascript_include_tag 'jquery/jquery-1.8.3.min','jquery/jquery-ui-1.9.2.custom.min'
+    = javascript_include_tag 'jquery/jquery-1.8.3.min',
+                             'jquery/jquery-ui-1.9.2.custom.min'
     = javascript_include_tag 'bootstrap.min'
     = javascript_include_tag 'bootstrap-hover-dropdown/bootstrap-hover-dropdown.min'
     = javascript_include_tag 'patternfly.min'
@@ -25,7 +26,8 @@
     /[if IE 8]
       <html class="ie8">
     -# jQuery includes
-    = javascript_include_tag 'jquery/jquery-1.8.3.min','jquery/jquery-ui-1.9.2.custom.min'
+    = javascript_include_tag 'jquery/jquery-1.8.3.min',
+                             'jquery/jquery-ui-1.9.2.custom.min'
     -# jQuery UI CSS
     = javascript_include_tag 'jquery.observe_field' # Observe field plugin
     = stylesheet_link_tag "jquery/miq/jquery-ui-1.9.2.custom"
@@ -34,14 +36,20 @@
     = javascript_include_tag 'miq_ujs_bindings' # MIQ UJS event bindings
     = javascript_include_tag 'jquery.form' # Form plugin (for file uploads
     = javascript_include_tag 'jquery.cookie' # Cookie plugin (dynatree)
-    = csrf_meta_tag %>
+    = csrf_meta_tag
     = javascript_include_tag 'application'
-    = javascript_include_tag 'dhtmlx_gpl_36/dhtmlxcommon.js', 'dhtmlx_gpl_36/dhtmlxcontainer.js'
-    = javascript_include_tag 'dynatree_1.2.4/jquery.dynatree', 'cfme_dynatree'
-    = javascript_include_tag 'SlickGrid-2.1/jquery.event.drag-2.2', 'SlickGrid-2.1/slick.core',
-      'SlickGrid-2.1/slick.grid', 'SlickGrid-2.1/slick.dataview',
-      'SlickGrid-2.1/plugins/slick.autotooltips', 'cfme_slickgrid'
-    = javascript_include_tag 'codemirror-4.2/lib/codemirror.js', 'codemirror-4.2/mode/yaml/yaml.js'
+    = javascript_include_tag 'dhtmlx_gpl_36/dhtmlxcommon.js',
+                             'dhtmlx_gpl_36/dhtmlxcontainer.js'
+    = javascript_include_tag 'dynatree_1.2.4/jquery.dynatree',
+                             'cfme_dynatree'
+    = javascript_include_tag 'SlickGrid-2.1/jquery.event.drag-2.2',
+                             'SlickGrid-2.1/slick.core',
+                             'SlickGrid-2.1/slick.grid',
+                             'SlickGrid-2.1/slick.dataview',
+                             'SlickGrid-2.1/plugins/slick.autotooltips',
+                             'cfme_slickgrid'
+    = javascript_include_tag 'codemirror-4.2/lib/codemirror.js',
+                             'codemirror-4.2/mode/yaml/yaml.js'
     - if @timeline
       = javascript_include_tag '/javascripts/timeline/api/timeline-api.js'
       - if @timeline_filter
@@ -52,13 +60,8 @@
 
     %style html, body{width:100%; height:100%; margin:0px; padding:0px; overflow:hidden;}
 
-  - if %w(configuration policy).include?(@layout)
-    - if is_browser_ie?
-      %body{:id => @config_tab, :onresize => "miqOnResize();"}
-    - else
-      %body{:onload => "miqOnLoad();", :id => @config_tab, :onresize => "miqOnResize();"}
+  - id = %w(configuration policy).include?(@layout) ? @config_tab : @layout
+  - if is_browser_ie?
+    %body{:id => id, :onresize => "miqOnResize();"}
   - else
-    - if is_browser_ie?
-      %body{:id => @layout, :onresize => "miqOnResize();"}
-    - else
-      %body{:onload => "miqOnLoad();", :id => @layout, :onresize => "miqOnResize();"}
+    %body{:onload => "miqOnLoad();", :id => id, :onresize => "miqOnResize();"}
