@@ -15,7 +15,7 @@ namespace :test do
   end
 
   desc "Run all lib specs and tests except MiqDisk tests"
-  task :lib => [:spec, :test, :foreman_spec]
+  task :lib => [:spec, :test, "spec:foreman"]
 end
 
 task :default => 'test:lib'

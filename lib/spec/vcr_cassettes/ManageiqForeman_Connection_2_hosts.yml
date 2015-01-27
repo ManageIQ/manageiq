@@ -1,0 +1,74 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://admin:smartvm@example.com/api/hosts?per_page=2
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json;version=2
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 27 Jan 2015 15:35:26 GMT
+      Server:
+      - Apache/2.2.15 (Red Hat)
+      Foreman-Version:
+      - 1.5.3
+      Foreman-Api-Version:
+      - '2'
+      Apipie-Checksum:
+      - f0c66204518b52fe5a1aa2c2163e7166
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Etag:
+      - '"65cf62b7cc52dcd7d044d1f4a5b35a9b"'
+      Cache-Control:
+      - must-revalidate, private, max-age=0
+      X-Request-Id:
+      - ece7256f57c8dcc261b6a68192d175ab
+      X-Runtime:
+      - '0.089247'
+      X-Rack-Cache:
+      - miss
+      X-Powered-By:
+      - Phusion Passenger 4.0.18
+      Set-Cookie:
+      - _session_id=ed453867984c57de53640de219eff6db; path=/; HttpOnly
+      Status:
+      - 200 OK
+      Connection:
+      - close
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "total": 39,
+          "subtotal": 39,
+          "page": 1,
+          "per_page": 2,
+          "search": null,
+          "sort": {
+            "by": null,
+            "order": null
+          },
+          "results": [{"name":"abc.example.com","id":29,"ip":"10.17.70.199","environment_id":1,"environment_name":"production","last_report":null,"mac":"78:2b:cb:00:f6:6c","realm_id":null,"realm_name":null,"sp_mac":"78:2b:cb:00:f6:6e","sp_ip":"10.17.70.210","sp_name":"","domain_id":1,"domain_name":"example.com","architecture_id":1,"architecture_name":"x86_64","operatingsystem_id":3,"operatingsystem_name":"RHEL Server 6.6","subnet_id":2,"subnet_name":"Mahwah","sp_subnet_id":null,"ptable_id":7,"ptable_name":"Kickstart default","medium_id":7,"medium_name":"RHEL Server mirror","build":true,"comment":"","disk":"","installed_at":null,"model_id":null,"model_name":null,"hostgroup_id":2,"hostgroup_name":"Raleigh/Metal","owner_id":1,"owner_type":"User","enabled":true,"puppet_ca_proxy_id":1,"managed":true,"use_image":null,"image_file":"","uuid":null,"compute_resource_id":null,"compute_resource_name":null,"compute_profile_id":null,"compute_profile_name":null,"capabilities":["build"],"provision_method":"build","puppet_proxy_id":1,"certname":"abc.example.com","image_id":null,"image_name":null,"created_at":"2014-11-13T20:40:16Z","updated_at":"2014-11-13T22:04:50Z","last_compile":null,"last_freshcheck":null,"serial":null,"source_file_id":null,"puppet_status":0},{"name":"bdbaremetal.example.com","id":25,"ip":null,"environment_id":1,"environment_name":"production","last_report":null,"mac":"c8:1f:66:c6:84:fc","realm_id":null,"realm_name":null,"sp_mac":null,"sp_ip":null,"sp_name":null,"domain_id":1,"domain_name":"example.com","architecture_id":1,"architecture_name":"x86_64","operatingsystem_id":3,"operatingsystem_name":"RHEL Server 6.6","subnet_id":null,"subnet_name":null,"sp_subnet_id":null,"ptable_id":7,"ptable_name":"Kickstart default","medium_id":7,"medium_name":"RHEL Server mirror","build":true,"comment":"","disk":"","installed_at":null,"model_id":2,"model_name":"PowerEdge R420","hostgroup_id":5,"hostgroup_name":"Raleigh/Virt/Productivity/Cruisers","owner_id":1,"owner_type":"User","enabled":true,"puppet_ca_proxy_id":1,"managed":true,"use_image":null,"image_file":"","uuid":null,"compute_resource_id":null,"compute_resource_name":null,"compute_profile_id":null,"compute_profile_name":null,"capabilities":["build"],"provision_method":"build","puppet_proxy_id":1,"certname":"bdbaremetal.example.com","image_id":null,"image_name":null,"created_at":"2014-11-07T20:41:21Z","updated_at":"2014-11-12T15:46:07Z","last_compile":null,"last_freshcheck":null,"serial":null,"source_file_id":null,"puppet_status":0}]
+        }
+    http_version:
+  recorded_at: Tue, 27 Jan 2015 15:35:26 GMT
+recorded_with: VCR 2.9.3

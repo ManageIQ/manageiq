@@ -15,7 +15,7 @@ module ManageiqForeman
         @size    = @results.size
         @page    = json["page"]
       else
-        @results = json.is_a?(Array) ? json : Array[json]
+        @results = json.kind_of?(Array) ? json : Array[json]
         @total = @size = json.size
         @page  = 1
       end

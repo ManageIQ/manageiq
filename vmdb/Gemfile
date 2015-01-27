@@ -88,8 +88,6 @@ unless ENV['APPLIANCE']
   group :test do
     gem "brakeman",         "~>2.0",    :require => false
 
-    gem "vcr",              "~>2.6",    :require => false
-    gem "webmock",                      :require => false
     gem "shoulda-matchers", "~>1.0.0",  :require => false
     gem "factory_girl",     "~>4.1.0",  :require => false
 

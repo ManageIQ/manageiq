@@ -2,7 +2,7 @@ module EmsRefresh
   module Parsers
     class Foreman
       # we referenced a record that does not exist in the database
-      attr_accessor :missing_key
+      attr_accessor :needs_provisioning_refresh
 
       def self.provisioning_inv_to_hashes(inv)
         new.provisioning_inv_to_hashes(inv)
@@ -35,7 +35,7 @@ module EmsRefresh
                                                                               inv[:ptables])
         add_ids(ids, result[:configuration_profiles])
         result[:configured_systems] = configured_system_inv_to_hashes(inv[:hosts], ids, inv[:operating_system_flavors])
-        result[:missing_key] = true if missing_key
+        result[:needs_provisioning_refresh] = true if needs_provisioning_refresh
         result
       end
 
@@ -107,7 +107,7 @@ module EmsRefresh
         key = record[id_key]
         return unless key
         ids[key.to_s].tap do |v|
-          @missing_key = true unless v
+          @needs_provisioning_refresh = true unless v
         end
       end
 

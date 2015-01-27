@@ -81,5 +81,3 @@ unless ENV['APPLIANCE']
     gem "webmock",                :require => false  # Used by vcr / manageiq-foreman
   end
 end
-
-gem 'pry'

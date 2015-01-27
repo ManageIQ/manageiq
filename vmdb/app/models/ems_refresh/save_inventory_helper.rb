@@ -115,12 +115,12 @@ module EmsRefresh::SaveInventoryHelper
   # - make a complete refresh. Delete missing records.
   # - make a partial refresh. Don't delete missing records.
   # This generates the "deletes" values based upon this intent
-  # It will delete missing records if both of the following is true:
+  # It will delete missing records if both of the following are true:
   # - The association is declared as a top_level association
-  #   In Active Record, :dependent => :destory says the parent controls the lifespan of the children
+  #   In Active Record, :dependent => :destroy says the parent controls the lifespan of the children
   # - We are targeting this association
   #   If we are targeting something else, chances are it is a partial refresh. Don't delete.
-  #   If we are targeting this node, or targeting anything (nil), then refresh.
+  #   If we are targeting this node, or targeting anything (nil), then delete.
   #   Some places don't have the target==parent concept. So they can pass in true instead.
   def relation_values(parent, type, target)
     # always want to refresh this association

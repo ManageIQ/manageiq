@@ -7,7 +7,7 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     FactoryGirl.create(:provider_foreman,
                        :zone       => zone,
-                       :url        => "10.8.96.102",
+                       :url        => "example.com",
                        :verify_ssl => false,
                       )
   end
@@ -116,7 +116,7 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
 
     expect(system.attributes).to include(
       "type"        => "ConfiguredSystemForeman",
-      "hostname"    => "providerrefreshspec-hostbaremetal.cloudforms.lab.eng.rdu2.redhat.com",
+      "hostname"    => "providerrefreshspec-hostbaremetal.example.com",
       "manager_ref" => "38",
     )
     expect(system.operating_system_flavor).to eq(mine(osfs))
