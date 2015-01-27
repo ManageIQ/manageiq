@@ -1,17 +1,16 @@
 module OrchestrationStackHelper::TextualSummary
-
   #
   # Groups
   #
 
   def textual_group_relationships
-    items = %w{ems_cloud orchestration_template instances security_groups cloud_networks parameters outputs resources}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items = %w(ems_cloud orchestration_template instances security_groups cloud_networks parameters outputs resources)
+    items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
   def textual_group_tags
-    items = %w{tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items = %w(tags)
+    items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
   #
@@ -38,7 +37,7 @@ module OrchestrationStackHelper::TextualSummary
   end
 
   def textual_instances
-    label = ui_lookup(:tables=>"vm_cloud")
+    label = ui_lookup(:tables => "vm_cloud")
     num   = @record.number_of(:vms)
     h     = {:label => label, :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "vm_show_list")
@@ -49,7 +48,7 @@ module OrchestrationStackHelper::TextualSummary
   end
 
   def textual_security_groups
-    label = ui_lookup(:tables=>"security_group")
+    label = ui_lookup(:tables => "security_group")
     num   = @record.number_of(:security_groups)
     h     = {:label => label, :image => "security_group", :value => num}
     if num > 0 && role_allows(:feature => "security_group_show_list")
@@ -60,7 +59,7 @@ module OrchestrationStackHelper::TextualSummary
   end
 
   def textual_cloud_networks
-    label = ui_lookup(:tables=>"cloud_network")
+    label = ui_lookup(:tables => "cloud_network")
     num   = @record.number_of(:cloud_networks)
     h     = {:label => label, :image => "cloud_network", :value => num}
     if num > 0
@@ -71,33 +70,33 @@ module OrchestrationStackHelper::TextualSummary
   end
 
   def textual_parameters
-    label = ui_lookup(:tables=>"parameter")
+    label = ui_lookup(:tables => "parameter")
     num   = @record.number_of(:parameters)
     h     = {:label => label, :image => "parameter", :value => num}
     if num > 0
-      #h[:link]  = url_for(:controller => controller.controller_name, :action => 'parameters', :id => @record)
+      # h[:link]  = url_for(:controller => controller.controller_name, :action => 'parameters', :id => @record)
       h[:title] = "Show all #{label}"
     end
     h
   end
 
   def textual_outputs
-    label = ui_lookup(:tables=>"output")
+    label = ui_lookup(:tables => "output")
     num   = @record.number_of(:outputs)
     h     = {:label => label, :image => "output", :value => num}
     if num > 0 && role_allows(:feature => "outputs_show_list")
-      #h[:link]  = url_for(:controller => controller.controller_name, :action => 'outputs', :id => @record)
+      # h[:link]  = url_for(:controller => controller.controller_name, :action => 'outputs', :id => @record)
       h[:title] = "Show all #{label}"
     end
     h
   end
 
   def textual_resources
-    label = ui_lookup(:tables=>"resource")
+    label = ui_lookup(:tables => "resource")
     num   = @record.number_of(:resources)
     h     = {:label => label, :image => "resource", :value => num}
     if num > 0
-      #h[:link]  = url_for(:controller => controller.controller_name, :action => 'resources', :id => @record)
+      # h[:link]  = url_for(:controller => controller.controller_name, :action => 'resources', :id => @record)
       h[:title] = "Show all #{label}"
     end
     h
@@ -111,11 +110,8 @@ module OrchestrationStackHelper::TextualSummary
       h[:image] = "smarttag"
       h[:value] = "No #{label} have been assigned"
     else
-      h[:value] = tags.sort_by { |category, assigned| category.downcase }.collect { |category, assigned| {:image => "smarttag", :label => category, :value => assigned } }
+      h[:value] = tags.sort_by { |category, _| category.downcase }.collect { |category, assigned| {:image => "smarttag", :label => category, :value => assigned} }
     end
     h
   end
-
-
-
 end

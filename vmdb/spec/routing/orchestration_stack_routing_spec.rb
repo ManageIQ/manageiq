@@ -1,7 +1,7 @@
 require "spec_helper"
 require "routing/shared_examples"
 
-describe EmsInfraController do
+describe OrchestrationStackController do
   let(:controller_name) { "orchestration_stack" }
 
   it_behaves_like "A controller that has advanced search routes"

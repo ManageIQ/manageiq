@@ -1522,17 +1522,20 @@ module ApplicationController::CiProcessing
     end
   end
 
-
   # Common Stacks button handler routines
-  def process_orchestration_stacks(stacks, task, display_name = nil)
-    stacks, stacks_out_region = filter_ids_in_region(stacks, "OrchestrationStack")
+  def process_orchestration_stacks(stacks, task, _)
+    stacks, _ = filter_ids_in_region(stacks, "OrchestrationStack")
     return if stacks.empty?
 
     if task == "destroy"
       OrchestrationStack.find_all_by_id(stacks, :order => "lower(name)").each do |stack|
         id = stack.id
         stack_name = stack.name
-        audit = {:event=>"stack_record_delete_initiated", :message=>"[#{stack_name}] Record delete initiated", :target_id=>id, :target_class=>"OrchestrationStack", :userid => session[:userid]}
+        audit = {:event        => "stack_record_delete_initiated",
+                 :message      => "[#{stack_name}] Record delete initiated",
+                 :target_id    => id,
+                 :target_class => "OrchestrationStack",
+                 :userid       => session[:userid]}
         AuditEvent.success(audit)
       end
       OrchestrationStack.destroy_queue(stacks)
