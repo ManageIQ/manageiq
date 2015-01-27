@@ -99,7 +99,7 @@ class WidgetPresenter
   end
 
   def self.chart_data
-    @@chart_data
+    @@chart_data ||= []
   end
 
 end
