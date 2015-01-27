@@ -1,0 +1,56 @@
+- if @settings[:quadicons][:host]
+  .flobj
+    %img{:src => "/images/icons/#{size}/base.png", :width => size, :height => size}
+  - # Get the VM count %>
+  - vcount = item.vms.size
+  .flobj{:class => "a#{size}"}
+    %p
+      = vcount
+
+  - unless item.state.blank?
+    .flobj{:class => "b#{size}"}
+      %img{:src => "/images/icons/72/currentstate-#{h(item.state.downcase)}.png"}
+
+  .flobj{:class => "c#{size}"}
+    %img{:src => "/images/icons/new/vendor-#{h(item.vmm_vendor.downcase)}.png"}
+  .flobj{:class => "d#{size}"}
+    - case item.authentication_status
+    - when "Invalid"
+      - auth_status = "x"
+    - when "Valid"
+      - auth_status = "checkmark"
+    - when "None"
+      - auth_status = "unknown"
+    - else
+      - auth_status = "exclamationpoint"
+    %img{:src => "/images/icons/new/#{h(auth_status)}.png"}
+
+  - if item.get_policies.length > 0
+    .flobj{:class => "g#{size}"}
+      %img{:src => "/images/icons/new/shield.png"}
+
+- else
+  .flobj
+    %img{:src => "/images/icons/#{size}/base-single.png"}
+  .flobj{:class => "e#{size}"}
+    %img{:src => "/images/icons/new/vendor-#{h(item.vmm_vendor.downcase)}.png", :width => width * 1.8, :height => width * 1.8}
+
+- if typ == :listnav
+  - # Listnav, no href needed
+  .flobj
+    %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
+- else
+  - if !@embedded || @showlinks
+    - if @edit && @edit[:hostitems]
+      .flobj
+        %a{:href => "/host/edit/?selected_host=#{item.id}", :title => _("Name: %s | Host Name: %s") % [h(item.name), h(item.hostname)]}
+          %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
+    - else
+      .flobj
+        %a{:href => url_for_record(item), :title => _("Name: %s | Host Name: %s") % [h(item.name), h(item.hostname)]}
+          %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
+  - else
+    .flobj
+      %a{:title => _("Name: %s | Host Name: %s") % [h(item.name), h(item.hostname)]}
+        %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
+

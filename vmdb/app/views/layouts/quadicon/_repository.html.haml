@@ -1,0 +1,20 @@
+.flobj
+  %img{:src => "/images/icons/#{size}/base-single.png", :border => 0, :width => size, :height => size}
+
+.flobj{:class => "e#{size}"}
+  %img{:src => "/images/icons/new/repository.png", :width => width * 1.8, :height => width * 1.8}
+- if item.get_policies.length > 0
+  .flobj{:class => "g#{size}"}
+    %img{:src => "/images/icons/new/shield.png"}
+
+.flobj
+  %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
+- unless typ == :listnav
+  - # Listnav, no clear image needed
+  .flobj
+    - if ! @embedded || @showlinks
+      %a{:href => url_for_record(item), :title => _("Name: %s | Path: %s") % [h(item.name), h(item.path)]}
+        %img{:src => "/images/clearpix.gif", :width => size, :height => size}
+    - else
+      %a{:title => _("Name: %s | Path: %s") % [h(item.name), h(item.path)]}
+        %img{:src => "/images/clearpix.gif", :width => size, :height => size}
