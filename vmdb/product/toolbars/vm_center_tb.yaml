@@ -180,17 +180,11 @@
     :popup: true
     :title: "Open a web-based console for this VM"
     :confirm: "Opening a VM web-based console can take a while and requires that the VMware MKS plugin version configured for Management Engine already be installed and working.  Are you sure?"
-#  - :button: vm_vnc_console
-#    :image: console
-#    :url: 'vnc_console'
-#    :popup: true
-#    :title: "Open a web-based VNC console for this VM"
-#    :confirm: "Opening a VM web-based VNC console requires that VNC is pre-configured to work in your browser.  Are you sure?"
   - :button: vm_vnc_console
     :image: console
-    :url: 'vnc_console'
-    :title: "Open a web-based VNC console for this VM"
-    :confirm: "Opening a web-based VM VNC console requires that the Provider is pre-configured to allow VNC connections.  Are you sure?"
+    :url: 'html5_console'
+    :title: "Open a web-based VNC or SPICE console for this VM"
+    :confirm: "Opening a web-based VM VNC or SPICE console requires that the Provider is pre-configured to allow VNC connections.  Are you sure?"
   - :button: vm_vmrc_console
     :image: console
     :url: '/vmrc_console'

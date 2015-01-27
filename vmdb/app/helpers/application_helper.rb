@@ -683,6 +683,8 @@ module ApplicationHelper
 
   # Determine if a button should be hidden
   def build_toolbar_hide_button(id)
+    binding.pry if id == 'vm_spice_console'
+
     return true if id == "blank_button" # Always hide the blank button placeholder
 
     # hide timelines button for Amazon provider and instances
@@ -803,13 +805,19 @@ module ApplicationHelper
     when "miq_task_canceljob"
       return true if !["all_tasks", "all_ui_tasks"].include?(@layout)
     when "vm_console"
-      type = get_vmdb_config[:server][:remote_console_type]
+      type = get_vmdb_config.fetch_path(:server, :remote_console_type)
       return type != 'MKS' || !@record.console_supported?(type)
     when "vm_vnc_console"
-      type = get_vmdb_config[:server][:remote_console_type]
+      #binding.pry
+      type = get_vmdb_config.fetch_path(:server, :remote_console_type)
       return type != 'VNC' || !@record.console_supported?(type)
+#    when "vm_spice_console"
+#      binding.pry
+#      type = get_vmdb_config.fetch_path(:server, :remote_console_type)
+#      #return type != 'SPICE' || !@record.console_supported?(type)
+#      return !@record.console_supported?(type)
     when "vm_vmrc_console"
-      type = get_vmdb_config[:server][:remote_console_type]
+      type = get_vmdb_config.fetch_path(:server, :remote_console_type)
       return type != 'VMRC' || !@record.console_supported?(type)
     # Check buttons behind SMIS setting
     when "ontap_storage_system_statistics", "ontap_logical_disk_statistics", "ontap_storage_volume_statistics",
@@ -1323,7 +1331,7 @@ module ApplicationHelper
         end
 
         return "The web-based console is not available because the VM is not powered on" if @record.current_state != "on"
-      when "vm_vnc_console"
+      when "vm_vnc_console", "vm_spice_console"
         return "The web-based VNC console is not available because the VM is not powered on" if @record.current_state != "on"
       when "vm_guest_startup", "vm_start"
         return @record.is_available_now_error_message(:start) if @record.is_available_now_error_message(:start)

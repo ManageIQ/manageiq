@@ -86,11 +86,15 @@ module VmCommon
 
   # Launch a VM console
   def console
+    binding.pry
     console_type = get_vmdb_config.fetch_path(:server, :remote_console_type).downcase
     params[:task_id] ? console_after_task(console_type) : console_before_task(console_type)
   end
   alias vmrc_console console  # VMRC needs its own URL for RBAC checking
-  alias vnc_console console   # VNC needs its own URL for RBAC checking
+
+  def html5_console
+    params[:task_id] ? console_after_task('html5') : console_before_task('html5')
+  end
 
   def launch_vmware_console
     console_type = get_vmdb_config.fetch_path(:server, :remote_console_type).downcase
@@ -116,22 +120,33 @@ module VmCommon
            :locals   => options
   end
 
-  def launch_novnc_console
-    password, host, host_port = @sb[:vnc]
+  def launch_html5_console
+    password, host_address, host_port, proxy_address, proxy_port, protocol = @sb[:html5]
     encrypt = false # get_vmdb_config.fetch_path(:server, :websocket_encrypt)
+
+    Rails.logger.error("@sb[:vnc]: #{@sb[:vnc]}")
+
+    binding.pry
     proxy_options = WsProxy.start(
-      :host      => host,
+      :host      => host_address,
       :host_port => host_port,
       :password  => password,
       :encrypt   => encrypt
     )
 
-    proxy_options[:proxy_host] = 'localhost' # FIXME: appliance IP
-    @sb[:vnc] = proxy_options[:proxy_port]
+    case protocol
+    when 'spice'
+      view = "vm_common/console_spice"
+    when nil, 'vnc' # FIXME nil - from vmware
+      view = "vm_common/console_vnc"
+      proxy_options[:proxy_host] = 'localhost' # FIXME: appliance IP
+      #@sb[:vnc] = proxy_options[:proxy_port]
+    end
+    binding.pry
 
     Rails.logger.error("PROXY options: #{proxy_options}")
 
-    render :template => "vm_common/console_vnc",
+    render :template => view,
            :layout   => false,
            :locals   => proxy_options
   end
@@ -1396,19 +1411,28 @@ module VmCommon
     replace_right_cell
   end
 
-  private ############################
+  private
 
   # First time thru, kick off the acquire ticket task
   def console_before_task(console_type)
-    @vm = @record = identify_record(params[:id], VmOrTemplate)
-    api_version = @record.ext_management_system.api_version.to_s
-    # FIXME use validate_remote_console_vmrc_support and such
-    if api_version.starts_with?("5") # FIXME this test only for vmware?
-      task_id = @record.remote_console_acquire_ticket_queue(console_type.to_sym, session[:userid], MiqServer.my_server.id)
-      add_flash(_("Console access failed: %s") % "Task start failed: ID [#{task_id.inspect}]", :error) unless task_id.is_a?(Fixnum)
-    else
-      add_flash(_("Console access failed: %s") % "Unsupported Provider API version #{api_version}", :error)
+    ticket_type = console_type.to_sym
+
+    record = identify_record(params[:id], VmOrTemplate)
+    ems = record.ext_management_system
+    if ems.class.ems_type == 'vmwarews'
+      ticket_type = :vnc if console_type == 'html5'
+      begin
+        ems.validate_remote_console_vmrc_support
+      rescue MiqException::RemoteConsoleNotSupportedError => e
+        add_flash(_("Console access failed: %s") % e.msg, :error)
+        render :partial => "shared/ajax/flash_msg_replace"
+        return
+      end
     end
+
+    task_id = record.remote_console_acquire_ticket_queue(ticket_type, session[:userid], MiqServer.my_server.id)
+    add_flash(_("Console access failed: %s") % "Task start failed: ID [#{task_id.inspect}]", :error) unless task_id.is_a?(Fixnum)
+
     if @flash_array
       render :partial => "shared/ajax/flash_msg_replace"
     else
@@ -1423,14 +1447,14 @@ module VmCommon
       add_flash(_("Console access failed: %s") % miq_task.message, :error)
     else
       @vm = @record = identify_record(params[:id], VmOrTemplate)
-      @sb[console_type.to_sym] = miq_task.task_results # VNC, MKS or VMRC
+      @sb[console_type.to_sym] = miq_task.task_results # html5, VNC?, MKS or VMRC
     end
     render :update do |page|
       if @flash_array
         page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
         page << "miqSparkle(false);"
       else # open a window to show a VNC or VMWare console
-        console_action = console_type == 'vnc' ? 'launch_novnc_console' : 'launch_vmware_console'
+        console_action = console_type == 'html5' ? 'launch_html5_console' : 'launch_vmware_console'
         page << "miqSparkle(false);"
         page << "window.open('#{url_for :controller => controller_name, :action => console_action, :id => @record.id}');"
       end

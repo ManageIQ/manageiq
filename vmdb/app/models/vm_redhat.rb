@@ -1,9 +1,6 @@
 class VmRedhat < VmInfra
   include_concern 'Operations'
-
-  def console_supported?(type)
-    type == 'VNC'
-  end
+  include_concern 'RemoteConsole'
 
   def provider_object(connection = nil)
     connection ||= self.ext_management_system.connect

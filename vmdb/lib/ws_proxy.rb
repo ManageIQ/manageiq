@@ -24,7 +24,7 @@ class WsProxy
       if result.failure?
         next if result.exit_status == 1 && result.error =~ /socket.error: \[Errno 98\] Address already in use/
 
-        Rails.logger.error("error running websocket proxy: '#{result.commandline}' " \
+        Rails.logger.error("error running websocket proxy: '#{result.command_line}' " \
                            "returned #{result.exit_status}, stderr: #{result.error}, stdout: #{result.output}")
         return nil
       end

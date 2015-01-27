@@ -9,7 +9,7 @@ class VmInfraController < ApplicationController
   after_filter :cleanup_action
   after_filter :set_session_data
 
-  skip_before_filter :set_csp_header, :only => :launch_novnc_console
+  skip_before_filter :set_csp_header, :only => :launch_html5_console
 
   private
 
