@@ -1,36 +1,36 @@
-- if @edit && @edit.fetch_path(@expkey,:val1,:type)
-  = javascript_tag("miq_val1_type = '#{@edit[@expkey][:val1][:type].to_s}';")
+- if @edit && @edit.fetch_path(@expkey, :val1, :type)
+  = javascript_tag("miq_val1_type = '#{@edit[@expkey][:val1][:type]}';")
   = javascript_tag("miq_val1_title = '#{@edit[@expkey][:val1][:title]}';")
-- if @edit && @edit.fetch_path(@expkey,:val2,:type)
-  = javascript_tag("miq_val2_type = '#{@edit[@expkey][:val2][:type].to_s}';")
+- if @edit && @edit.fetch_path(@expkey, :val2, :type)
+  = javascript_tag("miq_val2_type = '#{@edit[@expkey][:val2][:type]}';")
   = javascript_tag("miq_val2_title = '#{@edit[@expkey][:val2][:title]}';")
 
 #exp_editor_div
   %fieldset{:style => "width:auto; height; padding-left: 6px; padding-top: 6px"}
-    %ul{:id="searchtoolbar"}
-      - if @edit[@expkey][:exp_idx] > 0 %>
+    %ul#searchtoolbar
+      - if @edit[@expkey][:exp_idx] > 0
         %li
           = link_to(image_tag('/images/toolbars/undo.png',
                               :alt => 'Undo the previous change'),
                     {:action  => 'exp_button',
-                     :pressed =>'undo'},
+                     :pressed => 'undo'},
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
                     :remote                => true,
-                    :title                 => 'Undo the previous change')
+                    :title                 => _('Undo the previous change'))
       - else
         %li.dimmed
           = image_tag("/images/toolbars/undo.png")
       - if @edit[@expkey][:exp_idx] < @edit[@expkey][:exp_array].length - 1
-      %li
-        = link_to(image_tag('/images/toolbars/redo.png',
-                            :alt => 'Redo the next change'),
-                  {:action  => 'exp_button',
-                   :pressed => 'redo'},
-                  "data-miq_sparkle_on"  => true,
-                  "data-miq_sparkle_off" => true,
-                  :remote                => true,
-                  :title                 => 'Redo the next change')
+        %li
+          = link_to(image_tag('/images/toolbars/redo.png',
+                              :alt => 'Redo the next change'),
+                    {:action  => 'exp_button',
+                     :pressed => 'redo'},
+                    "data-miq_sparkle_on"  => true,
+                    "data-miq_sparkle_off" => true,
+                    :remote                => true,
+                    :title                 => _('Redo the next change'))
       - else
         %li.dimmed
           = image_tag("/images/toolbars/redo.png")
@@ -39,18 +39,18 @@
         - %w(and or not discard).each do |image|
           %li.dimmed
             = image_tag("/images/toolbars/#{image}.png")
-      %span#exp_buttons_not{:style =>"display:none"}
+      %span#exp_buttons_not{:style => "display:none"}
         - [[_("AND with a new expression element"), 'and',     'and'],
            [_("OR with a new expression element"),  'or',      'or'],
            ["",                                     'not',     ''],
-           [_("Remove this expression element"),    'discard', 'remove']].each do |title image pressed|
+           [_("Remove this expression element"),    'discard', 'remove']].each do |title, image, pressed|
           %li
             - if title.empty?
-              = link_to(image_tag("/images/toolbars/#{image}.png")
+              = link_to(image_tag("/images/toolbars/#{image}.png"))
             - else
-              = link_to(image_tag("/images/toolbars/#{image}.png"
-                                  :alt                   => title,
-                                  {:action  => 'exp_button',
+              = link_to(image_tag("/images/toolbars/#{image}.png",
+                                  :alt                   => title),
+                                  {:action  => "exp_button",
                                    :pressed => pressed},
                                   "data-miq_sparkle_on"  => true,
                                   "data-miq_sparkle_off" => true,
@@ -60,7 +60,7 @@
         - [[_("AND with a new expression element"),       'and',     'and'],
            [_("OR with a new expression element"),        'or',      'or'],
            [_("Wrap this expression element with a NOT"), 'not',     'not'],
-           [_("Remove this expression element"),          'discard', 'remove']].each do |title image pressed|
+           [_("Remove this expression element"),          'discard', 'remove']].each do |title, image, pressed|
           %li
             = link_to(image_tag("/images/toolbars/#{image}.png",
                                 :alt => title),
@@ -71,12 +71,12 @@
                       :remote                => true,
                       :title                 => title)
     %div{:style => "padding:10px"}
-      - @edit[@expkey][:exp_table].each do |token| %>
-        - if ! ["AND", "OR", "(", ")", "???"].include?([token].flatten.first)
+      - @edit[@expkey][:exp_table].each do |token|
+        - if ! %w(AND OR ( ) ???).include?(token.flatten.first)
           = link_to(token.first,
                     {:action => 'exp_token_pressed',
                      :token  => token.last},
-                    :style                 =>"color: black",
+                    :style                 => "color: black",
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
                     :remote                => true,

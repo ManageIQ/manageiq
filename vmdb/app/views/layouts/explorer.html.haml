@@ -1,11 +1,11 @@
 = render :partial => "layouts/global_header"
-= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"layout"}
-= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"accordion"}
-= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"grid"}
-= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"combo"}
-= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"calendar"}
-= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"menu"}
-= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"toolbar"}
+= render :partial => "layouts/dhtmlx_tags", :locals => {:control => "layout"}
+= render :partial => "layouts/dhtmlx_tags", :locals => {:control => "accordion"}
+= render :partial => "layouts/dhtmlx_tags", :locals => {:control => "grid"}
+= render :partial => "layouts/dhtmlx_tags", :locals => {:control => "combo"}
+= render :partial => "layouts/dhtmlx_tags", :locals => {:control => "calendar"}
+= render :partial => "layouts/dhtmlx_tags", :locals => {:control => "menu"}
+= render :partial => "layouts/dhtmlx_tags", :locals => {:control => "toolbar"}
 
 = render :partial => "layouts/page_header"
 = render :partial => "layouts/page_center"
@@ -20,7 +20,7 @@
     = yield
     #paging_div
       - if saved_report_paging?
-        = render(:partial => 'layouts/saved_report_paging_bar', :locals=>{:pages=>@sb[:pages]})
+        = render(:partial => 'layouts/saved_report_paging_bar', :locals => {:pages => @sb[:pages]})
       - else
         = render(:partial => '/layouts/x_pagingcontrols')
 = yield :accords
