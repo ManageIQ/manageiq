@@ -194,7 +194,7 @@
               <td class="wide">
                 <%= text_field_tag("smtp_host",
                   @edit[:new][:smtp][:host],
-                  :maxlength=>30,
+                  :maxlength=>255,
                   "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json) %>
               </td>
             </tr>
