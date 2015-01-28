@@ -21,6 +21,24 @@ module ApiHelper
       end
     end
 
+    def normalize_virtual(vtype, name, obj, options = {})
+      return normalize_virtual_array(vtype, name, obj, options) if obj.kind_of?(Array)
+      return normalize_virtual_hash(vtype, obj, options) if obj.respond_to?(:attributes) || obj.respond_to?(:keys)
+      normalize_attr_byname(vtype, name, obj)
+    end
+
+    def normalize_virtual_array(vtype, name, obj, options)
+      obj.collect { |item| normalize_virtual(vtype, name, item, options) }
+    end
+
+    def normalize_virtual_hash(vtype, obj, options)
+      attrs = (obj.respond_to?(:attributes) ? obj.attributes.keys : obj.keys)
+      attrs.each_with_object({}) do |k, res|
+        value = normalize_virtual(vtype, k, obj[k], options)
+        res[k] = value unless options[:ignore_nil] && value.nil?
+      end
+    end
+
     #
     # Attribute Normalizer
     #
@@ -72,7 +90,7 @@ module ApiHelper
     # Normalize Id's, <type>/<id>
     #
     def normalize_id(type, value)
-      normalize_url(type, "#{type}/#{value}")
+      type.nil? ? value : normalize_url(type, "#{type}/#{value}")
     end
   end
 end
