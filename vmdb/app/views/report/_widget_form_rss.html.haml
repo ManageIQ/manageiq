@@ -1,0 +1,51 @@
+- url = url_for(:action => 'widget_form_field_changed', :id => "#{@widget.id || "new"}")
+%fieldset
+  %p.legend
+    = _('RSS Feed Options')
+  %table.style1
+    %tr
+      %td.key
+        - if @edit[:read_only]
+          *
+        = _('Type')
+      %td.wide
+        = select_tag("feed_type",
+          options_for_select([["#{_('Internal')}", "internal"], ["#{_('External')}", "external"]], @edit[:new][:feed_type]),
+          :disabled          => @edit[:read_only],
+          "data-miq_observe" => {:url => url}.to_json)
+    - if @edit[:new][:feed_type] == "internal"
+      %tr
+        %td.key
+          - if @edit[:read_only]
+            *
+          = _('Internal RSS Feed')
+        %td.wide
+          = select_tag("rss_feed",
+            options_for_select(@edit[:rss_feeds].sort, @edit[:new][:rss_feed_id]),
+            :disabled          => @edit[:read_only],
+            "data-miq_observe" => {:url => url}.to_json)
+    - else
+      %tr
+        %td.key
+          - if @edit[:read_only]
+            *
+          = _('External RSS Feed/URL')
+        %td.wide
+          = select_tag("rss_url",
+            options_for_select([["<#{_('Enter URL Manually')}>", nil]] + RSS_FEEDS.sort, @edit[:new][:url]),
+            :disabled          => @edit[:read_only],
+            "data-miq_observe" => {:url => url}.to_json)
+          = hidden_span_if(!@edit[:new][:url].blank?, :id => "url_span")
+          = text_field_tag("txt_url",
+            @edit[:new][:txt_url],
+            :maxlength         => MAX_NAME_LEN,
+            :disabled          => @edit[:read_only],
+            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+          </span>
+    %tr
+      %td.key
+        = _('Row Count')
+      %td
+        = select_tag("row_count",
+          options_for_select((5..20).to_a, @edit[:new][:row_count]),
+          "data-miq_observe" => {:url => url}.to_json)

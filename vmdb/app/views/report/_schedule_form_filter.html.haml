@@ -1,0 +1,64 @@
+- url = url_for(:action => 'schedule_form_field_changed',  :id => "#{@schedule.id || 'new'}")
+#form_filter_div
+  %p.legend
+    = _('Report Selection')
+  %table.style1
+    - if @sb[:tree_typ] == "reports"
+      %tr
+        %td.key{:rowspan => "3"}
+          = _('Filter')
+        %td
+          = select_tag('filter_typ',
+            options_for_select(["<#{_('Choose')}>"] + @folders, @edit[:new][:filter]),
+            :multiple => false,
+            :class    => "widthed",
+            :disabled => true)
+      - if @sub_folders && !@sub_folders.empty?
+        %tr
+          %td
+            = select_tag('subfilter_typ',
+              options_for_select(["<#{_('Choose')}>"] + @sub_folders, @edit[:new][:subfilter]),
+              :multiple => false,
+              :class    => "widthed",
+              :disabled => true)
+      - if @reps && !@reps.empty?
+        %tr
+          %td
+            = select_tag('repfilter_typ',
+              options_for_select(["<#{_('Choose')}>"] + @reps, @edit[:new][:repfilter]),
+              :multiple => false,
+              :class    => "widthed",
+              :disabled => true)
+    - else
+      %tr
+        %td.key{:rowspan => "3"}
+          = _('Filter')
+        %td
+          = select_tag("filter_typ",
+            options_for_select(["<#{_('Choose')}>"] + @folders, @edit[:new][:filter]),
+            :multiple              => false,
+            :class                 => "widthed",
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe"     => {:url => url}.to_json)
+      - if @sub_folders && !@sub_folders.empty?
+        %tr
+          %td
+            = select_tag("subfilter_typ",
+              options_for_select(["<#{_('Choose')}>"] + @sub_folders, @edit[:new][:subfilter]),
+              :multiple              => false,
+              :class                 => "widthed",
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              "data-miq_observe"     => {:url => url}.to_json)
+      - if @reps && !@reps.empty?
+        %tr
+          %td
+            = select_tag("repfilter_typ",
+              options_for_select(["<#{_('Choose')}>"] + @reps, @edit[:new][:repfilter]),
+              :multiple              => false,
+              :class                 => "widthed",
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              "data-miq_observe"     => {:url => url}.to_json)
+  %hr

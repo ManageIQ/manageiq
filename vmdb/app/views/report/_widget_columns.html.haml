@@ -1,0 +1,53 @@
+- url = url_for(:action => 'widget_form_field_changed', :id => "#{@widget.id || "new"}")
+#consolidate_div
+  %tr
+    %td.key
+      - if @edit[:read_only]
+        *
+      = _('Column 1')
+    %td
+      = select_tag("chosen_pivot1", options_for_select([NOTHING_STRING] + @pivots1, @pivotby1),
+        :multiple             => false,
+        :class                => "widthed",
+        :disabled             => @edit[:read_only],
+        "data-miq_sparkle_on" => true,
+        "data-miq_observe"    => {:url => url}.to_json)
+  - if @pivotby1 != NOTHING_STRING && @pivots2.length >= 1
+    %tr
+      %td.key
+        - if @edit[:read_only]
+          *
+        = _('Column 2')
+      %td
+        = select_tag("chosen_pivot2", options_for_select([NOTHING_STRING] + @pivots2, @pivotby2),
+          :multiple             => false,
+          :class                => "widthed",
+          :disabled             => @edit[:read_only],
+          "data-miq_sparkle_on" => true,
+          "data-miq_observe"    => {:url => url}.to_json)
+    - if @pivotby2 != NOTHING_STRING && @pivots3.length >= 1
+      %tr
+        %td.key
+          - if @edit[:read_only]
+            *
+          = _('Column 3')
+        %td
+          = select_tag("chosen_pivot3", options_for_select([NOTHING_STRING] + @pivots3, @pivotby3),
+            :multiple             => false,
+            :class                => "widthed",
+            :disabled             => @edit[:read_only],
+            "data-miq_sparkle_on" => true,
+            "data-miq_observe"    => {:url => url}.to_json)
+    - if @pivotby3 != NOTHING_STRING && @pivots4.length >= 1
+      %tr
+        %td.key
+          - if @edit[:read_only]
+            *
+          = _('Column 4')
+        %td
+          = select_tag("chosen_pivot4", options_for_select([NOTHING_STRING] + @pivots4, @pivotby4),
+            :multiple             => false,
+            :class                => "widthed",
+            :disabled             => @edit[:read_only],
+            "data-miq_sparkle_on" => true,
+            "data-miq_observe"    => {:url => url}.to_json)

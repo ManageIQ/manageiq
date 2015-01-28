@@ -1,0 +1,52 @@
+- url = url_for(:action => 'widget_form_field_changed', :id => "#{@widget.id || "new"}")
+%fieldset
+  %p.legend
+    = _('Menu Shortcuts')
+  %table.admintable
+    %tbody
+      %tr
+        %td.wider
+          - # combo_url  = "/report/widget_form_field_changed/#{@widget.id || 'new'}"
+          / #widget_div{:style => "width: 500px;"}
+          - # = render(:partial => 'layouts/dhtmlxcombo',
+          - #   :locals         => {:combo_id => "widget_div",
+          - #     :combo_name                 => "widget",
+          - #     :xml_combo                  => @widgets_menu_xml,
+          - #     :combo_url                  => combo_url,
+          - #     :combo_width                => 250,
+          - #     :combo_onchange             => true})
+          = select_tag("add_shortcut",
+            options_for_select([["Add a Shortcut", nil]] + @edit[:avail_shortcuts], nil),
+            :disabled          => @edit[:read_only],
+            "data-miq_observe" => {:url => url}.to_json)
+  #modules
+    .yui-b
+      .yui-gb
+        #col1.yui-u.first{:style => "position: relative; min-height: 50px;"}
+          - @edit[:new][:shortcuts].each do |s_id, s_desc|
+            - # :shortcuts is a hash of s.id => s.miq_widget_shortcut.description
+            %div{:id => "s_#{s_id}", :title => _("Drag this Shortcut to a new location")}
+              #test.modbox
+                %h2.modtitle{:style => @edit ? "cursor: move;" : ""}
+                  %a{:class => "#{@widget.content_type}box"}
+                  = link_to("",
+                    {:controller => "report", :action => "widget_shortcut_remove", :id => @widget.id || "new", :shortcut => s_id},
+                    "data-miq_sparkle_on" => true,
+                    :remote               => true,
+                    :id                   => "s_#{s_id}_close",
+                    :title                => _("Remove this Shortcut"),
+                    :class                => "delbox")
+                  = link_to("",
+                    {:controller => "report", :action => "widget_shortcut_reset", :id => @widget.id || "new", :shortcut => s_id},
+                    "data-miq_sparkle_on" => true,
+                    :remote               => true,
+                    :id                   => "s_#{s_id}_reset",
+                    :title                => _("Reset this Shortcut's text"),
+                    :class                => "resetbox")
+                  #div
+                    %span.modtitle_text
+                      = text_field_tag("shortcut_desc_#{s_id}", s_desc,
+                        :disabled          => @edit[:read_only],
+                        :maxlength         => 50,
+                        :style             => "width: 250px;",
+                        "data-miq_observe" => {:interval => '.5', :url => url}.to_json)

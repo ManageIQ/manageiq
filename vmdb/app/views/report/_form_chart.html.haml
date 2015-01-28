@@ -1,0 +1,39 @@
+- url = url_for(:action => 'form_field_changed', :id => "#{@edit[:rpt_id] || 'new'}")
+#chart_div
+  %p.legend
+    = _('Chart Settings')
+  %table.style1
+    %tr
+      %td.key
+        = _('Choose a chart type')
+      %td
+        = select_tag('chosen_graph',
+          options_for_select(["<No chart>"] + Charting.chart_names_for_select, @edit[:new][:graph_type]),
+          :multiple              => false,
+          :class                 => "widthed",
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe"     => {:url => url}.to_json)
+    - unless @edit[:new][:graph_type].blank?
+      %tr
+        %td.key
+          = _('Top values to show')
+        %td
+          = select_tag('chosen_count',
+            options_for_select(3..GRAPH_MAX_COUNT, @edit[:new][:graph_count].to_i),
+            :multiple              => false,
+            :class                 => "widthed",
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe"     => {:url => url}.to_json)
+      %tr
+        %td.key
+          = _("Sum 'Other' values")
+        %td
+          = check_box_tag("chosen_other", "1", @edit[:new][:graph_other],
+          "data-miq_sparkle_on"       => true,
+          "data-miq_sparkle_off"      => true,
+          "data-miq_observe_checkbox" => {:url => url}.to_json)
+  - unless @edit[:new][:graph_type].blank?
+    = _('* Some charts my not produce desired results with a single sort field')
+  %hr

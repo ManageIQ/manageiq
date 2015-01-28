@@ -1,0 +1,61 @@
+- url = url_for(:action => 'form_field_changed', :id => "#{@edit[:rpt_id] || 'new'}")
+%tr
+  %td.key
+    = _('Trending for')
+  %td
+    - opts = ["<#{_('Choose')}>"] + MiqExpression.reporting_available_fields(@edit[:new][:model], @edit[:new][:perf_interval]).sort
+    = select_tag('chosen_trend_col',
+      options_for_select(opts, @edit[:new][:perf_trend_db] ? @edit[:new][:perf_trend_db] + "-" + @edit[:new][:perf_trend_col] : ""),
+      :multiple              => false,
+      :class                 => "widthed",
+      "data-miq_sparkle_on"  => true,
+      "data-miq_sparkle_off" => true,
+      "data-miq_observe"     => {:url => url}.to_json)
+- if @edit[:new][:perf_trend_col]
+  %tr
+    %td.key
+      = _('Trend Target Limit')
+    %td
+      - unless @edit[:limit_cols].empty?
+        = _('Column:')
+        = select_tag('chosen_limit_col',
+          options_for_select(["<#{_('None')}>"] + @edit[:limit_cols].sort,  @edit[:new][:perf_limit_col]),
+          :multiple              => false,
+          :class                 => "widthed",
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe"     => {:url => url}.to_json)
+      - unless @edit[:new][:perf_limit_col]
+        = _('Value:')
+        - if @edit[:percent_col]
+          = "#{h(@edit[:new][:perf_limit_val])}%"
+        - else
+          = text_field_tag("chosen_limit_val", @edit[:new][:perf_limit_val],
+            :maxlength         => 20,
+            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+- if @edit[:new][:perf_trend_col]
+  %tr
+    %td.key
+      = _('Trend Target Percents')
+    %td
+      = select_tag('percent1',
+        options_for_select((0..100).step(5).to_a, @edit[:new][:perf_target_pct1]),
+        :multiple              => false,
+        :class                 => "widthed",
+        "data-miq_sparkle_on"  => true,
+        "data-miq_sparkle_off" => true,
+        "data-miq_observe"     => {:url => url}.to_json)
+      = select_tag('percent2',
+        options_for_select(["<#{_('None')}>"] + (0..100).step(5).to_a, edit[:new][:perf_target_pct2]),
+        :multiple              => false,
+        :class                 => "widthed",
+        "data-miq_sparkle_on"  => true,
+        "data-miq_sparkle_off" => true,
+        "data-miq_observe"     => {:url => url}.to_json)
+      = select_tag('percent3',
+        options_for_select(["<#{_('None')}>"] + (0..100).step(5).to_a, edit[:new][:perf_target_pct3]),
+        :multiple              => false,
+        :class                 => "widthed",
+        "data-miq_sparkle_on"  => true,
+        "data-miq_sparkle_off" => true,
+        "data-miq_observe"     => {:url => url}.to_json)

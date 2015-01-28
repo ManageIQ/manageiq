@@ -1,0 +1,42 @@
+- url = url_for(:action => 'widget_form_field_changed', :id => "#{@widget.id || "new"}")
+#form_div
+  = render :partial => "layouts/flash_msg"
+  %p.legend
+    = _('Basic Information')
+  %table.style1
+    %tr
+      %td.key
+        - if @edit[:read_only]
+          *
+        = _('Title')
+      %td.wider
+        = text_field_tag("title", @edit[:new][:title],
+          :disabled          => @edit[:read_only],
+          :maxlength         => 40,
+          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+        - unless @edit[:read_only]
+          = javascript_tag(javascript_focus('title'))
+    %tr
+      %td.key
+        - if @edit[:read_only]
+          *
+        = _('Description')
+      %td.wider
+        = text_field_tag("description", @edit[:new][:description],
+          :disabled          => @edit[:read_only],
+          :maxlength         => MAX_DESC_LEN,
+          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+    %tr
+      %td.key
+        = _('Active')
+      %td
+        = check_box_tag("enabled", "1", @edit[:new][:enabled],
+          "data-miq_observe_checkbox" => {:url => url}.to_json)
+  %hr
+  = render :partial => "widget_form_filter", :locals => {:read_only => @edit[:read_only]}
+  - unless @sb[:wtype] == "m"
+    = render :partial => "schedule_form_timer", :locals => {:action_url => "widget_form_field_changed", :record => @widget}
+  = render :partial => "layouts/role_visibility", :locals => {:rec_id => "#{@widget.id || "new"}", :action => "widget_form_field_changed"}
+
+  - if @edit[:read_only]
+    = _('* Fields are read only for default Widgets')
