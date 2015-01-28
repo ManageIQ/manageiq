@@ -6,4 +6,6 @@ class ProvisioningManager < ActiveRecord::Base
   has_many :customization_scripts,    :dependent => :destroy
 
   delegate :zone, :my_zone, :zone_name, :to => :provider
+
+  virtual_column :name,                :type => :string,      :uses => :provider
 end

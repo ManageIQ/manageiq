@@ -10,6 +10,8 @@ class MiqExpression
     CloudResourceQuota
     CloudTenant
     Compliance
+    ConfiguredSystemForeman
+    ConfigurationManager
     EmsCloud
     EmsCluster
     EmsClusterPerformance
@@ -61,6 +63,12 @@ class MiqExpression
     cloud_tenants
     compliances
     compliance_details
+    configuration_profiles
+    configuration_managers
+    configured_systems
+    customization_scripts
+    customization_script_media
+    customization_script_ptables
     disks
     ems_events
     ems_clusters
@@ -102,6 +110,7 @@ class MiqExpression
     orchestration_stack_parameters
     orchestration_stack_resources
     orchestration_templates
+    operating_system_flavors
     partitions
     ports
     processes
