@@ -56,10 +56,6 @@ class ReplicationWorker < WorkerBase
   # Rubyrep interaction methods
   #
 
-  def mode
-    @mode ||= self.worker_settings[:mode] || :process
-  end
-
   def start_replicate
     unless self.valid_destination_settings?
       $log.error("#{self.log_prefix} Replication configuration is invalid.")
@@ -70,41 +66,6 @@ class ReplicationWorker < WorkerBase
   end
 
   def check_replicate
-    self.send("check_replicate_#{mode}")
-  end
-
-  def start_uninstall
-    start_rubyrep(:uninstall)
-  end
-
-  def start_rubyrep(verb)
-    raise "Cannot call start_rubyrep if a #{mode} already exists" if rubyrep_alive?
-    $log.info("#{self.log_prefix} Starting #{verb.to_s.humanize} #{mode.to_s.humanize}")
-    self.send("start_rubyrep_#{mode}", verb)
-    $log.info("#{self.log_prefix} Started  #{verb.to_s.humanize} #{mode.to_s.humanize}")
-  end
-
-  def stop_rubyrep
-    self.send("stop_rubyrep_#{mode}")
-  end
-
-  def wait_on_rubyrep
-    self.send("wait_on_rubyrep_#{mode}")
-  end
-
-  def rubyrep_alive?
-    self.send("rubyrep_#{mode}_alive?")
-  end
-
-  def rubyrep_run(verb)
-    self.send("rubyrep_run_in_#{mode}", verb)
-  end
-
-  #
-  # Rubyrep process interaction methods
-  #
-
-  def check_replicate_process
     if rubyrep_alive?
       @stdout.readpartial(1.megabyte).split("\n").each { |msg| $log.info  "rubyrep: #{msg.rstrip}" } if @stdout && @stdout.ready?
       @stderr.readpartial(1.megabyte).split("\n").each { |msg| $log.error "rubyrep: #{msg.rstrip}" } if @stderr && @stderr.ready?
@@ -112,6 +73,17 @@ class ReplicationWorker < WorkerBase
       $log.info("#{self.log_prefix} Replicate Process gone. Restarting...")
       start_replicate
     end
+  end
+
+  def start_uninstall
+    start_rubyrep(:uninstall)
+  end
+
+  def start_rubyrep(verb)
+    raise "Cannot call start_rubyrep if a process already exists" if rubyrep_alive?
+    $log.info("#{self.log_prefix} Starting #{verb.to_s.humanize} Process")
+    start_rubyrep_process(verb)
+    $log.info("#{self.log_prefix} Started  #{verb.to_s.humanize} Process")
   end
 
   def start_rubyrep_process(verb)
@@ -123,7 +95,7 @@ class ReplicationWorker < WorkerBase
     end
   end
 
-  def stop_rubyrep_process
+  def stop_rubyrep
     if rubyrep_alive?
       $log.info("#{self.log_prefix} Shutting down replication process...pid=#{@pid}")
       Process.kill("INT", @pid)
@@ -132,7 +104,7 @@ class ReplicationWorker < WorkerBase
     end
   end
 
-  def wait_on_rubyrep_process
+  def wait_on_rubyrep
     # TODO: Use Process.waitpid or one of its async variants
     begin
       Timeout.timeout(5.minutes.to_i) do
@@ -168,7 +140,7 @@ class ReplicationWorker < WorkerBase
     end
   end
 
-  def rubyrep_process_alive?
+  def rubyrep_alive?
     begin
       pid_state = MiqProcess.state(@pid) unless @pid.nil?
     rescue SystemCallError
@@ -185,7 +157,7 @@ class ReplicationWorker < WorkerBase
     return false
   end
 
-  def rubyrep_run_in_process(verb)
+  def rubyrep_run(verb)
     verb = :local_uninstall if verb == :uninstall
 
     require 'io/wait'
@@ -226,51 +198,5 @@ class ReplicationWorker < WorkerBase
 
     $log.info("#{self.log_prefix} rubyrep process for verb=#{verb} started - pid=#{pid}")
     return pid, stdout, stderr
-  end
-
-  #
-  # Rubyrep thread interaction methods
-  #
-
-  def check_replicate_thread
-    if !rubyrep_alive?
-      $log.info("#{self.log_prefix} Replicate Thread gone. Restarting...")
-      start_replicate
-    end
-  end
-
-  def start_rubyrep_thread(verb)
-    @tid = Thread.new do
-      begin
-        rubyrep_run(verb)
-      rescue => err
-        $log.error("#{self.log_prefix} #{verb.to_s.humanize} Thread aborted because [#{err.message}]")
-        $log.log_backtrace(err)
-      end
-    end
-  end
-
-  def stop_rubyrep_thread
-    if @tid
-      $log.info("#{self.log_prefix} Shutting down replication thread gracefully...")
-      $rubyrep_shutdown = true
-      wait_on_rubyrep
-      $log.info("#{self.log_prefix} Shutting down replication thread gracefully...Complete")
-    end
-  end
-
-  def wait_on_rubyrep_thread
-    @tid.join if @tid
-    @tid = nil
-  end
-
-  def rubyrep_thread_alive?
-    @tid && @tid.alive?
-  end
-
-  def rubyrep_run_in_thread(verb)
-    Thread.current[:running_in_child_thread] = true
-    require 'rubyrep'
-    RR::CommandRunner.run(["--verbose", verb.to_s, "-c", File.join(Rails.root, "config", "replication.conf")])
   end
 end
