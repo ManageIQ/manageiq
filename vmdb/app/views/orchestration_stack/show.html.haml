@@ -1,0 +1,11 @@
+#main_div
+  - case @showtype
+    - when "details"
+      = render(:partial => "layouts/gtl", :locals => {:action_url => @lastaction})
+    - when "item"
+      = render(:partial => "layouts/#{@showtype}")
+    - else
+      - if ["instances", "security_groups"].include?(@display)
+        = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@orchestration_stack.id}"}
+      - else
+        = render :partial => @showtype

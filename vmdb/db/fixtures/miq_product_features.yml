@@ -3424,4 +3424,46 @@
     :hidden: true
     :identifier: perf_reload
 
+# OrchestrationStack
+- :name: Orchestration Stacks
+  :description: Everything under Orchestration Stacks
+  :feature_type: node
+  :identifier: orchestration_stack
+  :children:
+  - :name: View
+    :description: View Orchestration Stacks
+    :feature_type: view
+    :identifier: orchestration_stack_view
+    :children:
+    - :name: List
+      :description: Display Lists of Orchestration Stacks
+      :feature_type: view
+      :identifier: orchestration_stack_show_list
+    - :name: Show
+      :description: Display Individual Orchestration Stacks
+      :feature_type: view
+      :identifier: orchestration_stack_show
+  - :name: Modify
+    :description: Modify Orchestration Stacks
+    :feature_type: admin
+    :identifier: orchestration_stack_admin
+    :children:
+    - :name: Remove
+      :description: Remove Orchestration Stacks from the VMDB
+      :feature_type: admin
+      :identifier: orchestration_stack_delete
+    - :name: Edit
+      :description: Edit Orchestration Stack
+      :feature_type: admin
+      :identifier: orchestration_stack_edit
+  - :name: Operate
+    :description: Perform Operations on Orchestration Stacks
+    :feature_type: control
+    :identifier: orchestration_stack_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Orchestration Stack
+      :feature_type: control
+      :identifier: orchestration_stack_tag
+
 

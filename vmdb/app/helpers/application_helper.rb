@@ -123,6 +123,7 @@ module ApplicationHelper
     # Handle other sub-items of a VM or Host
     case view.db
     when "AdvancedSetting"  then association = "advanced_settings"
+    when "CloudNetwork"     then association = "cloud_networks"
     when "Filesystem"       then association = "filesystems"
     when "FirewallRule"     then association = "firewall_rules"
     when "GuestApplication" then association = "guest_applications"
@@ -2247,10 +2248,10 @@ module ApplicationHelper
     else
       #show_list and show screens
       if !@in_a_form
-        if ["availability_zone","flavor","ems_cloud","ems_cluster","host","ems_infra","miq_proxy",
-            "ontap_file_share","ontap_logical_disk","ontap_storage_system","repository",
-            "resource_pool","storage","storage_manager","timeline","usage",
-            "security_group"].include?(@layout)
+        if %w(availability_zone ems_cloud ems_cluster ems_infra flavor host miq_proxy
+              ontap_file_share ontap_logical_disk ontap_storage_system orchestration_stack
+              repository resource_pool storage storage_manager timeline usage
+              security_group).include?(@layout)
           if ["show_list"].include?(@lastaction)
             return "#{@layout.pluralize}_center_tb"
           else
@@ -2288,6 +2289,15 @@ module ApplicationHelper
     else
       return false
     end
+  end
+
+  def display_adv_search?
+    %w(availability_zone vm miq_template offline retired templates
+       host service repository storage ems_cloud ems_cluster flavor
+       resource_pool ems_infra ontap_storage_system ontap_storage_volume
+       ontap_file_share snia_local_file_system ontap_logical_disk
+       orchestration_stack cim_base_storage_extent storage_manager
+       security_group).include?(@layout)
   end
 
   # Do we show or hide the clear_search link in the list view title
@@ -2543,9 +2553,9 @@ module ApplicationHelper
 
   GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_tenant condition ems_cloud
                         ems_cluster ems_infra event flavor host miq_proxy miq_schedule miq_template offline
-                        ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume policy
-                        policy_group policy_profile repository resource_pool retired scan_profile service
-                        snia_local_file_system storage storage_manager templates)
+                        ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume
+                        orchestration_stack policy policy_group policy_profile repository resource_pool
+                        retired scan_profile service snia_local_file_system storage storage_manager templates)
 
   def render_gtl_view_tb?
     GTL_VIEW_LAYOUTS.include?(@layout) && @gtl_type && !@tagitems &&

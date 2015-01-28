@@ -988,6 +988,7 @@ en:
       ontap_storage_volume:        LUNs
       ontap_storage_volumes:       Storage - LUNs
       ontap_volume_metrics_rollup: Storage Performance - Volumes
+      orchestration_stack:         Stack
       operating_system:            OS
       registry_items:              Registry
       resource_pools:              Resource Pools

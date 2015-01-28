@@ -1,6 +1,10 @@
 require 'ancestry'
 class OrchestrationStack < ActiveRecord::Base
   include NewWithTypeStiMixin
+  include ReportableMixin
+  include AsyncDeleteMixin
+
+  acts_as_miq_taggable
 
   has_ancestry
 
