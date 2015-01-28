@@ -44,6 +44,9 @@ describe ApplianceConsole::Principal do
   end
 
   def response(ret_code = 0)
-    double("CommandResult", :success? => ret_code == 0, :failure => ret_code != 0, :exit_status => ret_code)
+    double("CommandResult", :success?    => ret_code == 0,
+                            :failure     => ret_code != 0,
+                            :failure?    => ret_code != 0,
+                            :exit_status => ret_code)
   end
 end
