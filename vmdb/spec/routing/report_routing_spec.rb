@@ -323,6 +323,13 @@ describe "routes for ReportController" do
     end
   end
 
+  describe "#widget_shortcut_dd_done" do
+    it "routes with POST" do
+      expect(post("/report/widget_shortcut_dd_done"))
+      .to route_to("report#widget_shortcut_dd_done")
+    end
+  end
+
   describe "#widget_shortcut_remove" do
     it "routes with POST" do
       expect(post("/report/widget_shortcut_remove"))

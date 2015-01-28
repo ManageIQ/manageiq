@@ -1185,6 +1185,7 @@ Vmdb::Application.routes.draw do
         wait_for_task
         widget_edit
         widget_form_field_changed
+        widget_shortcut_dd_done
         widget_shortcut_remove
         widget_shortcut_reset
         x_button
