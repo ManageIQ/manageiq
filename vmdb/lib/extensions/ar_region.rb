@@ -65,7 +65,7 @@ module ArRegion
     end
 
     def with_region(region_number)
-      self.with_scope(:find => where(:id => self.region_to_range(region_number))) { yield }
+      where(:id => self.region_to_range(region_number)).scoping { yield }
     end
 
     def without_scope(&blk)
