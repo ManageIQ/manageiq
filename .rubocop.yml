@@ -47,6 +47,8 @@ Documentation:
   Enabled: false
 Encoding:
   Enabled: false
+GuardClause:
+  Enabled: false
 SingleLineBlockParams:
   Enabled: false
 SingleSpaceBeforeFirstArg:
