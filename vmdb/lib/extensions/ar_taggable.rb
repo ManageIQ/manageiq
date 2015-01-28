@@ -139,7 +139,7 @@ module ActsAsTaggable
 
   def tagged_with(options = {})
     tagging = Tagging.arel_table
-    query = Tag.includes(:taggings)
+    query = Tag.includes(:taggings).joins(:taggings)
     query = query.where(tagging[:taggable_type].eq self.class.base_class.name)
     query = query.where(tagging[:taggable_id].eq self.id)
     ns    = Tag.get_namespace(options)
