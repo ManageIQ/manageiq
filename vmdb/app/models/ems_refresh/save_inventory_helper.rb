@@ -1,7 +1,19 @@
 module EmsRefresh::SaveInventoryHelper
   def save_inventory_multi(type, klass, parent, hashes, deletes, find_key, child_keys = [], extra_keys = [])
+    return if hashes.nil?
+    # refresh association if developer is using new syntax (alt: dev passes in nil, [], or actual association values)
+    parent.send(type, true) if deletes == true || deletes == false
     find_key, child_keys, extra_keys, remove_keys = self.save_inventory_prep(find_key, child_keys, extra_keys)
     record_index, record_index_columns = self.save_inventory_prep_record_index(parent.send(type), find_key)
+
+    deletes = case deletes
+              when true
+                parent.send(type).dup
+              when false
+                []
+              else
+                deletes
+              end
 
     new_records = []
     hashes.each do |h|
