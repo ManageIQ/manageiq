@@ -241,7 +241,7 @@ module MiqAeEngine
 
   def self.create_automation_attribute(key, value)
     case value
-    when Array
+    when Array, ActiveRecord::Relation
       [self.create_automation_attribute_array_key(key), self.create_automation_attribute_array_value(value)]
     when ActiveRecord::Base
       [self.create_automation_attribute_key(value, key), self.create_automation_attribute_value(value)]
