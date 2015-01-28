@@ -2,6 +2,7 @@ class ServiceTemplate < ActiveRecord::Base
   DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS = 120
   include ServiceMixin
   include OwnershipMixin
+  include NewWithTypeStiMixin
 
   # # These relationships are used to specify children spawned from a parent service
   # has_many   :child_services, :class_name => "ServiceTemplate", :foreign_key => :service_template_id
@@ -115,45 +116,51 @@ class ServiceTemplate < ActiveRecord::Base
   end
 
   def create_tasks_for_service(service_task, parent_svc)
-    tasks = []
     svc = create_service(service_task, parent_svc)
 
     user = User.find_by_userid(service_task.userid)
-    self.set_ownership(svc, user) unless user.nil?
+    set_ownership(svc, user) unless user.nil?
 
     service_task.destination = svc
-    self.service_resources.each do |child_svc_rsc|
+
+    create_subtasks(service_task, svc)
+  end
+
+  # default implementation to create subtasks from service resources
+  def create_subtasks(parent_service_task, parent_service)
+    tasks = []
+    service_resources.each do |child_svc_rsc|
       scaling_min = child_svc_rsc.scaling_min
       1.upto(scaling_min).each do |scaling_idx|
-        nh = service_task.attributes.dup
+        nh = parent_service_task.attributes.dup
         %w{created_on updated_on type state status message}.each {|key| nh.delete(key)}
-        nh['options'] = service_task.options.dup
+        nh['options'] = parent_service_task.options.dup
         nh['options'].delete(:child_tasks)
         # Initial Options[:dialog] to an empty hash so we do not pass down dialog values to child services tasks
         nh['options'][:dialog] = {}
-        new_task = service_task.class.new(nh)
-        new_task.options.merge!({
-          :src_id               => child_svc_rsc.resource.id,
-          :scaling_idx          => scaling_idx,
-          :scaling_min          => scaling_min,
-          :service_resource_id  => child_svc_rsc.id,
-          :parent_service_id    => svc.id,
-          :parent_task_id       => service_task.id,
-          })
+        new_task = parent_service_task.class.new(nh)
+        new_task.options.merge!(
+          :src_id              => child_svc_rsc.resource.id,
+          :scaling_idx         => scaling_idx,
+          :scaling_min         => scaling_min,
+          :service_resource_id => child_svc_rsc.id,
+          :parent_service_id   => parent_service.id,
+          :parent_task_id      => parent_service_task.id,
+        )
         new_task.state  = 'pending'
         new_task.status = 'Ok'
         new_task.source = child_svc_rsc.resource
         new_task.save!
         new_task.after_request_task_create
-        service_task.miq_request.miq_request_tasks << new_task
+        parent_service_task.miq_request.miq_request_tasks << new_task
 
         tasks << new_task
       end
     end
-    return tasks
+    tasks
   end
 
-   def set_ownership(service, user)
+  def set_ownership(service, user)
     return if user.nil?
     service.evm_owner = user
     if user.current_group
