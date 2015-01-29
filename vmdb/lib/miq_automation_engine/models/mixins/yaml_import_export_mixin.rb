@@ -4,13 +4,13 @@ module YAMLImportExportMixin
   module ClassMethods
     def export_to_array(list, klass)
       begin
-        klass = klass.is_a?(Class) ? klass : Object.const_get(klass)
+        klass = klass.kind_of?(Class) ? klass : Object.const_get(klass)
       rescue => err
         $log.error("MIQ(export_to_array) List: [#{list}], Class: [#{klass}] - #{err.message}")
         return []
       end
 
-      list = klass.where(:id => list) unless list.first.is_a?(klass)
+      list = klass.where(:id => list) unless list.first.kind_of?(klass)
       list.collect { |obj| obj.export_to_array if obj }.compact.flatten
     end
 
@@ -24,12 +24,12 @@ module YAMLImportExportMixin
     # @param options [Hash] The properties to change.
     # @option options [Boolean] :save Save into DB the objects to be imported.
     # @option options [Boolean] :overwrite Overwrite the exsiting object.
-    # @option options [String] :userid The current user's id, used to check the 
+    # @option options [String] :userid The current user's id, used to check the
     #     user's accessibility to the objects to be imported.
-    # @return [Array<Hash>, Array<String>] The array of objects to be imported, 
+    # @return [Array<Hash>, Array<String>] The array of objects to be imported,
     #   and the array of importing status.
     def import(fd, options = {})
-      log_prefix = "MIQ(#{self.name}).#{__method__}"
+      log_prefix = "MIQ(#{name}).#{__method__}"
 
       fd.rewind   # ensure to be at the beginning as the file is read multiple times
       begin
@@ -48,13 +48,13 @@ module YAMLImportExportMixin
     # @param options [Hash] The properties to change.
     # @option (see #import)
     # @return [Array<String>] The array of importing status.
-    def import_from_array(input, options ={})
+    def import_from_array(input, options = {})
       input.collect do |i|
         begin
           klass = Object.const_get(i.keys.first)
           report = i[klass.to_s]
-        rescue 
-          # for the legacy MiqReport 
+        rescue
+          # for the legacy MiqReport
           klass = MiqReport
           report = i
         end

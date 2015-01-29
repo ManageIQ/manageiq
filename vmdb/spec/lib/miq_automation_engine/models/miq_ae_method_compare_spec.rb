@@ -10,8 +10,12 @@ describe MiqAeMethodCompare do
     @yaml_file   = File.join(File.dirname(__FILE__), 'miq_ae_copy_data', 'miq_ae_method_copy.yaml')
     MiqAeDatastore.reset
     EvmSpecHelper.import_yaml_model_from_file(@yaml_file, @domain)
-    @export_dir = File.join(Dir.tmpdir, 'rspec_copy_tests')
+    @export_dir = Dir.mktmpdir
     @yaml_model = YAML.load_file(@yaml_file)
+  end
+
+  after(:each) do
+    FileUtils.remove_entry_secure(@export_dir) if Dir.exist?(@export_dir)
   end
 
   context 'same methods' do

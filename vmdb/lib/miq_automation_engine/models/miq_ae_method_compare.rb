@@ -37,8 +37,8 @@ class MiqAeMethodCompare
 
   def congruent?
     @adds.empty? && @incompatibilities.empty? &&
-    @compatibilities.empty? && @fields_in_use.empty? &&
-    @deletes.empty?
+      @compatibilities.empty? && @fields_in_use.empty? &&
+      @deletes.empty?
   end
 
   def compatible?

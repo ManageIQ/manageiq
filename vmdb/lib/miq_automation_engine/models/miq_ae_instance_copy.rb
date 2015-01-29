@@ -40,7 +40,7 @@ class MiqAeInstanceCopy
     MiqAeInstance.transaction do
       ids.each do |id|
         instance_obj = MiqAeInstance.find(id)
-        new_instance = new(instance_obj.fqname, validate_flag).to_domain(domain, ns, overwrite)
+        new_instance = new(instance_obj.fqname_from_objects, validate_flag).to_domain(domain, ns, overwrite)
         nids << new_instance.id if new_instance
         validate_flag = false
       end
@@ -103,8 +103,8 @@ class MiqAeInstanceCopy
   end
 
   def check_duplicity(domain, ns, instance_name)
-    if domain.downcase == @src_domain.downcase  && instance_name.downcase == @instance_name.downcase
-      raise "Cannot copy instance onto itself" if ns.nil? || ns.downcase == @partial_ns.downcase
-    end
+    return if domain.downcase != @src_domain.downcase
+    return if instance_name.downcase != @instance_name.downcase
+    raise "Cannot copy instance onto itself" if ns.nil? || ns.downcase == @partial_ns.downcase
   end
 end

@@ -1,22 +1,22 @@
-class MiqAeInstanceCompareValues
+class MiqAeClassCompareFields
   attr_reader :compatibilities
   attr_reader :incompatibilities
   attr_reader :fields_in_use
   attr_reader :adds
   IGNORE_PROPERTY_NAMES  = %w(name owner created_on updated_on updated_by
-                              updated_by_user_id id class_id instance_id field_id)
+                              updated_by_user_id id class_id)
   WARNING_PROPERTY_NAMES = %w(priority message display_name default_value substitute
                               visibility collect scope description condition on_entry
                               on_exit on_error max_retries max_time)
   ERROR_PROPERTY_NAMES   = %w(aetype datatype)
 
-  CONGRUENT_INSTANCE = 1
-  COMPATIBLE_INSTANCE = 2
-  INCOMPATIBLE_INSTANCE = 4
+  CONGRUENT_SCHEMA = 1
+  COMPATIBLE_SCHEMA = 2
+  INCOMPATIBLE_SCHEMA = 4
 
-  def initialize(new_instance, old_instance)
-    @new_instance = new_instance
-    @old_instance = old_instance
+  def initialize(new_class, old_class)
+    @new_class = new_class
+    @old_class = old_class
   end
 
   def compare
@@ -28,15 +28,15 @@ class MiqAeInstanceCompareValues
   end
 
   def status
-    return CONGRUENT_INSTANCE if congruent?
-    return COMPATIBLE_INSTANCE if compatible?
-    INCOMPATIBLE_INSTANCE
+    return CONGRUENT_SCHEMA if congruent?
+    return COMPATIBLE_SCHEMA if compatible?
+    INCOMPATIBLE_SCHEMA
   end
 
   def congruent?
     @adds.empty? && @incompatibilities.empty? &&
-    @compatibilities.empty? && @fields_in_use.empty? &&
-    @deletes.empty?
+      @compatibilities.empty? && @fields_in_use.empty? &&
+      @deletes.empty?
   end
 
   def compatible?
@@ -54,8 +54,8 @@ class MiqAeInstanceCompareValues
   end
 
   def load_field_names
-    @old_names = @old_instance.field_names
-    @new_names = @new_instance.field_names
+    @old_names = @old_class.field_names
+    @new_names = @new_class.field_names
   end
 
   def venn_list
@@ -66,19 +66,19 @@ class MiqAeInstanceCompareValues
 
   def validate_similar
     @similar.each do |name|
-      old_value = @old_instance.field_value_hash(name)
-      new_value = @new_instance.field_value_hash(name)
-      compare_value_properties(name, old_value, new_value)
+      old_field = @old_class.field_hash(name)
+      new_field = @new_class.field_hash(name)
+      compare_field_properties(name, old_field, new_field)
     end
   end
 
-  def compare_value_properties(field_name, old_value, new_value)
-    old_value.each do |property, data|
+  def compare_field_properties(field_name, old_field, new_field)
+    old_field.each do |property, value|
       next if IGNORE_PROPERTY_NAMES.include?(property)
-      next if data == new_value[property]
+      next if value == new_field[property]
       hash = {'property'   => property,
-              'old_data'   => data,
-              'new_data'   => new_value[property],
+              'old_value'  => value,
+              'new_value'  => new_field[property],
               'field_name' => field_name}
       @compatibilities   << hash if WARNING_PROPERTY_NAMES.include?(property)
       @incompatibilities << hash if ERROR_PROPERTY_NAMES.include?(property)
