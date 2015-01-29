@@ -1,0 +1,5 @@
+- # view to hold form_buttons_div
+#form_buttons_div{:style => "padding-right: 10px"}
+  %div{:style => "float: right;"}
+    - if @temp[:x_edit_buttons_locals]
+      = render :partial => '/layouts/x_edit_buttons', :locals => @temp[:x_edit_buttons_locals]
