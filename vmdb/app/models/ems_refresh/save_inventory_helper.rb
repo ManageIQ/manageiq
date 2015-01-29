@@ -1,11 +1,55 @@
 module EmsRefresh::SaveInventoryHelper
+  class MultiSaver
+    def initialize(type, klass, record_index, record_index_columns, find_key)
+      @type                 = type
+      @klass                = klass
+      @record_index         = record_index
+      @record_index_columns = record_index_columns
+      @find_key             = find_key
+    end
+
+    def find_records(hash)
+      save_inventory_record_index_fetch(@record_index, @record_index_columns, hash, @find_key)
+    end
+
+    def build(hash)
+      @klass.new(hash)
+    end
+
+    private
+    def save_inventory_record_index_fetch(record_index, record_index_columns, hash, find_key)
+      return nil if record_index.blank?
+
+      hash_values = find_key.collect { |k| hash[k] }
+
+      # Coerce each hash value into the db column type for valid lookup during fetch_path
+      coerced_hash_values = hash_values.zip(record_index_columns).collect do |value, column|
+        new_value = column.type_cast(value)
+        new_value = new_value.to_s if column.text? && !new_value.nil? # type_cast doesn't actually convert string or text
+        new_value
+      end
+
+      record_index.fetch_path(coerced_hash_values)
+    end
+  end
+
   def save_inventory_multi(type, klass, parent, hashes, deletes, find_key, child_keys = [], extra_keys = [])
     find_key, child_keys, extra_keys, remove_keys = self.save_inventory_prep(find_key, child_keys, extra_keys)
     record_index, record_index_columns = self.save_inventory_prep_record_index(parent.send(type), find_key)
 
+    strategy = MultiSaver.new(type, klass, record_index, record_index_columns, find_key)
     new_records = []
-    hashes.each do |h|
-      _save_inventory(type, klass, parent, h, deletes, new_records, record_index, record_index_columns, find_key, child_keys, remove_keys)
+    actions = hashes.map do |h|
+      _save_inventory(type, klass, parent, h, child_keys, remove_keys, strategy)
+    end
+
+    actions.each do |action, found|
+      case action
+      when :add
+        new_records << found
+      when :delete
+        deletes.delete found
+      end
     end
 
     # Delete the items no longer found
@@ -32,23 +76,25 @@ module EmsRefresh::SaveInventoryHelper
     return find_key, child_keys, extra_keys, remove_keys
   end
 
-  def _save_inventory(type, klass, parent, hash, deletes, new_records, record_index, record_index_columns, find_key, child_keys, remove_keys)
+  def _save_inventory(type, klass, parent, hash, child_keys, remove_keys, s)
     # Backup keys that cannot be written directly to the database
     key_backup = backup_keys(hash, remove_keys)
 
     # Find the record, and update if found, else create it
-    found = self.save_inventory_record_index_fetch(record_index, record_index_columns, hash, find_key)
+    found = s.find_records(hash)
+    action = nil
     if found.nil?
-      found = klass.new(hash)
-      new_records << found
+      found = s.build(hash)
+      action = :add
     else
       key_backup.merge!(backup_keys(hash, [:type]))
       found.update_attributes!(hash)
-      deletes.delete(found) unless deletes.blank?
+      action = :delete
     end
 
     save_child_inventory(found, key_backup, child_keys)
     restore_keys(hash, remove_keys, key_backup)
+    [action, found]
   end
   private :_save_inventory
 
@@ -82,21 +128,6 @@ module EmsRefresh::SaveInventoryHelper
     end
 
     return record_index, record_index_columns
-  end
-
-  def save_inventory_record_index_fetch(record_index, record_index_columns, hash, find_key)
-    return nil if record_index.blank?
-
-    hash_values = find_key.collect { |k| hash[k] }
-
-    # Coerce each hash value into the db column type for valid lookup during fetch_path
-    coerced_hash_values = hash_values.zip(record_index_columns).collect do |value, column|
-      new_value = column.type_cast(value)
-      new_value = new_value.to_s if column.text? && !new_value.nil? # type_cast doesn't actually convert string or text
-      new_value
-    end
-
-    record_index.fetch_path(coerced_hash_values)
   end
 
   def backup_keys(hash, keys)
