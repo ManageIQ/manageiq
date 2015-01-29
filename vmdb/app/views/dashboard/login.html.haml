@@ -88,7 +88,7 @@
 - if auth_mode == "httpd" && sso_enabled
   - if auto_login != false
     :javascript
-      var miq_after_onload = "$j('#sso_login').click()";
+      var miq_after_onload = "$('#sso_login').click()";
 - elsif @user_name  # If user name is pre-populated by the server, press the Login button automatically
   :javascript
-    var miq_after_onload = "$j('#login').click()";
+    var miq_after_onload = "$('#login').click()";

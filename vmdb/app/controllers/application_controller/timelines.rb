@@ -113,13 +113,13 @@ module ApplicationController::Timelines
       page << "miq_cal_dateTo = new Date(#{@tl_options[:edate]});" unless @tl_options[:edate].nil?
       page << 'miqBuildCalendar();'
       if @tl_options[:tl_show] == "timeline"
-        page << "$j('#filter1').val('#{@tl_options[:fltr1]}');"
-        page << "$j('#filter2').val('#{@tl_options[:fltr2]}');"
-        page << "$j('#filter3').val('#{@tl_options[:fltr3]}');"
+        page << "$('#filter1').val('#{@tl_options[:fltr1]}');"
+        page << "$('#filter2').val('#{@tl_options[:fltr2]}');"
+        page << "$('#filter3').val('#{@tl_options[:fltr3]}');"
       else
         @tl_options[:events].sort.each_with_index do |e,i|
           fltr = "pol_fltr#{i+1}".to_sym
-          page << "$j('#filter#{i + 1}').val('#{@tl_options[fltr]}');"
+          page << "$('#filter#{i + 1}').val('#{@tl_options[fltr]}');"
         end
       end
       page << "miqSparkle(false);"

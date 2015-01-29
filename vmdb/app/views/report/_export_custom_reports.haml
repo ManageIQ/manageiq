@@ -33,6 +33,6 @@
           :size              => 15,
           :style             => "width: 400px",
           :multiple          => true,
-          :onchange          => "toggleConvertButtonToLink($j('#export_button'),
-                                  'download_report', $j('#choices_chosen').val() != null);",
+          :onchange          => "toggleConvertButtonToLink($('#export_button'),
+                                  'download_report', $('#choices_chosen').val() != null);",
           "data-miq_observe" => {:url => url}.to_json)

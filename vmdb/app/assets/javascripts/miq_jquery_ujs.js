@@ -1,8 +1,8 @@
 // MIQ - changes made to jquery-rails gem source JS file:
-//  Replaced all "$" changed to "$j"
+//  Replaced all "$" changed to "$"
 //  Code added to handle data-submit serialization of element whose ID is specified
 
-(function($j, undefined) {
+(function($, undefined) {
 
 /**
  * Unobtrusive scripting adapter for jQuery
@@ -52,7 +52,7 @@
   // Shorthand to make it a little easier to call public rails functions from within rails.js
   var rails;
 
-  $j.rails = rails = {
+  $.rails = rails = {
     // Link elements bound by jquery-ujs
     linkClickSelector: 'a[data-confirm], a[data-method], a[data-remote], a[data-disable-with]',
 
@@ -82,13 +82,13 @@
 
     // Make sure that every Ajax request sends the CSRF token
     CSRFProtection: function(xhr) {
-      var token = $j('meta[name="csrf-token"]').attr('content');
+      var token = $('meta[name="csrf-token"]').attr('content');
       if (token) xhr.setRequestHeader('X-CSRF-Token', token);
     },
 
     // Triggers an event on an element and returns false if the event result is false
     fire: function(obj, name, data) {
-      var event = $j.Event(name);
+      var event = $.Event(name);
       obj.trigger(event, data);
       return event.result !== false;
     },
@@ -100,14 +100,14 @@
 
     // Default ajax function, may be overridden with custom function in $.rails.ajax
     ajax: function(options) {
-      return $j.ajax(options);
+      return $.ajax(options);
     },
 
     // Submits "remote" forms and links with ajax
     handleRemote: function(element) {
       var method, url, data,
         crossDomain = element.data('cross-domain') || null,
-        dataType = element.data('type') || ($j.ajaxSettings && $j.ajaxSettings.dataType),
+        dataType = element.data('type') || ($.ajaxSettings && $.ajaxSettings.dataType),
         options;
 
       if (rails.fire(element, 'ajax:before')) {
@@ -134,8 +134,7 @@
 					// MIQ added code follows
 					submit = element.attr('data-submit');
 					if (submit !== undefined)
-//						data = $j("#" + submit).serialize();
-						data = Form.serialize(submit);	// Use prototype serialize as it also works on non-forms
+						data = miqSerializeForm(submit);
 					else
 					// end of MIQ added code
 
@@ -179,9 +178,9 @@
       var href = link.attr('href'),
         method = link.data('method'),
         target = link.attr('target'),
-        csrf_token = $j('meta[name=csrf-token]').attr('content'),
-        csrf_param = $j('meta[name=csrf-param]').attr('content'),
-        form = $j('<form method="post" action="' + href + '"></form>'),
+        csrf_token = $('meta[name=csrf-token]').attr('content'),
+        csrf_param = $('meta[name=csrf-param]').attr('content'),
+        form = $('<form method="post" action="' + href + '"></form>'),
         metadata_input = '<input name="_method" value="' + method + '" type="hidden" />';
 
       if (csrf_param !== undefined && csrf_token !== undefined) {
@@ -201,7 +200,7 @@
     */
     disableFormElements: function(form) {
       form.find(rails.disableSelector).each(function() {
-        var element = $j(this), method = element.is('button') ? 'html' : 'val';
+        var element = $(this), method = element.is('button') ? 'html' : 'val';
         element.data('ujs:enable-with', element[method]());
         element[method](element.data('disable-with'));
         element.prop('disabled', true);
@@ -214,7 +213,7 @@
     */
     enableFormElements: function(form) {
       form.find(rails.enableSelector).each(function() {
-        var element = $j(this), method = element.is('button') ? 'html' : 'val';
+        var element = $(this), method = element.is('button') ? 'html' : 'val';
         if (element.data('ujs:enable-with')) element[method](element.data('ujs:enable-with'));
         element.prop('disabled', false);
       });
@@ -244,10 +243,10 @@
 
     // Helper function which checks for blank inputs in a form that match the specified CSS selector
     blankInputs: function(form, specifiedSelector, nonBlank) {
-      var inputs = $j(), input,
+      var inputs = $(), input,
         selector = specifiedSelector || 'input,textarea';
       form.find(selector).each(function() {
-        input = $j(this);
+        input = $(this);
         // Collect non-blank inputs if nonBlank option is true, otherwise, collect blank inputs
         if (nonBlank ? input.val() : !input.val()) {
           inputs = inputs.add(input);
@@ -263,7 +262,7 @@
 
     // Helper function, needed to provide consistent behavior in IE
     stopEverything: function(e) {
-      $j(e.target).trigger('ujs:everythingStopped');
+      $(e.target).trigger('ujs:everythingStopped');
       e.stopImmediatePropagation();
       return false;
     },
@@ -273,7 +272,7 @@
     callFormSubmitBindings: function(form) {
       var events = form.data('events'), continuePropagation = true;
       if (events !== undefined && events['submit'] !== undefined) {
-        $j.each(events['submit'], function(i, obj){
+        $.each(events['submit'], function(i, obj){
           if (typeof obj.handler === 'function') return continuePropagation = obj.handler(obj.data);
         });
       }
@@ -303,14 +302,14 @@
 
   };
 
-  $j.ajaxPrefilter(function(options, originalOptions, xhr){ if ( !options.crossDomain ) { rails.CSRFProtection(xhr); }});
+  $.ajaxPrefilter(function(options, originalOptions, xhr){ if ( !options.crossDomain ) { rails.CSRFProtection(xhr); }});
 
-  $j(rails.linkDisableSelector).live('ajax:complete', function() {
-      rails.enableElement($j(this));
+  $(rails.linkDisableSelector).live('ajax:complete', function() {
+      rails.enableElement($(this));
   });
 
-  $j(rails.linkClickSelector).live('click.rails', function(e) {
-    var link = $j(this), method = link.data('method'), data = link.data('params');
+  $(rails.linkClickSelector).live('click.rails', function(e) {
+    var link = $(this), method = link.data('method'), data = link.data('params');
     if (!rails.allowAction(link)) return rails.stopEverything(e);
 
     if (link.is(rails.linkDisableSelector)) rails.disableElement(link);
@@ -325,16 +324,16 @@
     }
   });
 
-	$j(rails.inputChangeSelector).live('change.rails', function(e) {
-    var link = $j(this);
+	$(rails.inputChangeSelector).live('change.rails', function(e) {
+    var link = $(this);
     if (!rails.allowAction(link)) return rails.stopEverything(e);
 
     rails.handleRemote(link);
     return false;
   });
 
-  $j(rails.formSubmitSelector).live('submit.rails', function(e) {
-    var form = $j(this),
+  $(rails.formSubmitSelector).live('submit.rails', function(e) {
+    var form = $(this),
       remote = form.data('remote') !== undefined,
       blankRequiredInputs = rails.blankInputs(form, rails.requiredInputSelector),
       nonBlankFileInputs = rails.nonBlankInputs(form, rails.fileInputSelector);
@@ -353,7 +352,7 @@
 
       // If browser does not support submit bubbling, then this live-binding will be called before direct
       // bindings. Therefore, we should directly call any direct bindings before remotely submitting form.
-      if (!$j.support.submitBubbles && rails.callFormSubmitBindings(form) === false) return rails.stopEverything(e);
+      if (!$.support.submitBubbles && rails.callFormSubmitBindings(form) === false) return rails.stopEverything(e);
 
       rails.handleRemote(form);
       return false;
@@ -363,8 +362,8 @@
     }
   });
 
-  $j(rails.formInputClickSelector).live('click.rails', function(event) {
-    var button = $j(this);
+  $(rails.formInputClickSelector).live('click.rails', function(event) {
+    var button = $(this);
 
     if (!rails.allowAction(button)) return rails.stopEverything(event);
 
@@ -375,12 +374,12 @@
     button.closest('form').data('ujs:submit-button', data);
   });
 
-  $j(rails.formSubmitSelector).live('ajax:beforeSend.rails', function(event) {
-    if (this == event.target) rails.disableFormElements($j(this));
+  $(rails.formSubmitSelector).live('ajax:beforeSend.rails', function(event) {
+    if (this == event.target) rails.disableFormElements($(this));
   });
 
-  $j(rails.formSubmitSelector).live('ajax:complete.rails', function(event) {
-    if (this == event.target) rails.enableFormElements($j(this));
+  $(rails.formSubmitSelector).live('ajax:complete.rails', function(event) {
+    if (this == event.target) rails.enableFormElements($(this));
   });
 
 })( jQuery );

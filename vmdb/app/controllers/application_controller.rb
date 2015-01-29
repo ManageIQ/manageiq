@@ -143,10 +143,10 @@ class ApplicationController < ActionController::Base
     render :update do |page|
       if @panels[panel] == 'down'
         @panels[panel] = 'up'
-        page << "$j('##{j_str(panel)}').slideUp('medium');"
+        page << "$('##{j_str(panel)}').slideUp('medium');"
       else
         @panels[panel] = 'down'
-        page << "$j('##{j_str(panel)}').slideDown('medium');"
+        page << "$('##{j_str(panel)}').slideDown('medium');"
       end
     end
     # FIXME: the @panels end up in the session eventually
@@ -2128,7 +2128,7 @@ class ApplicationController < ActionController::Base
         page.replace("pc_div_2", :partial=>'/layouts/pagingcontrols', :locals=>{:pages=>@pages, :action_url=>action_url})
       else                                          # No grid, replace the gtl div
         page.replace_html("main_div", :partial=>"layouts/gtl")                                                  # Replace the main div area contents
-        page << "$j('#adv_div').slideUp(0.3);" if params[:entry]
+        page << "$('#adv_div').slideUp(0.3);" if params[:entry]
       end
     end
   end
@@ -2719,7 +2719,7 @@ class ApplicationController < ActionController::Base
 
   def render_flash_not_applicable_to_model(type)
     add_flash(_("%{task} does not apply to selected %{model}") % {:model => ui_lookup(:table => "miq_template"), :task  => type.capitalize}, :error)
-    render_flash { |page| page << '$j(\'#main_div\').scrollTop();' }
+    render_flash { |page| page << '$(\'#main_div\').scrollTop();' }
   end
 
   def set_gettext_locale

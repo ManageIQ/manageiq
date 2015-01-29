@@ -57,7 +57,7 @@
     <% session[:group_changed] = false %>
   <% end %>
   <%# Create the Dynatree object from the passed in options %>
-  $j("#<%= tree_id %>").dynatree({
+  $("#<%= tree_id %>").dynatree({
     title: "<%= tree_name %>",
     imagePath: "/images/icons/new/",
     generateIds: true,
@@ -101,7 +101,7 @@
     <% if onselect %>
       onSelect: function(flag, node) {
         var selectedNodes = node.tree.getSelectedNodes();
-        var selectedKeys = $j.map(selectedNodes, function(node){
+        var selectedKeys = $.map(selectedNodes, function(node){
           return node.data.key;
         });
         <%= onselect %>('<%= tree_name %>', node.data.key, flag, selectedKeys);

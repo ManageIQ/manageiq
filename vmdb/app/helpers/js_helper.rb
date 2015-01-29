@@ -14,7 +14,7 @@ module JsHelper
     bool_str = (!!lock).to_s
     element = "#{tree_var}_div"
     "
-      $j('##{j_str(tree_var)}box').dynatree('#{lock ? 'disable' : 'enable'}');
+      $('##{j_str(tree_var)}box').dynatree('#{lock ? 'disable' : 'enable'}');
       #{javascript_dim(element, bool_str)}
     ".html_safe
   end
@@ -24,9 +24,9 @@ module JsHelper
   #     :title  ---
   def update_element(element, options)
     if options[:legend]
-      "Element.update('#{element}', '#{escape_javascript(options[:legend])}');"
+      "$('##{element}').html('#{escape_javascript(options[:legend]).html_safe}');"
     elsif options[:title]
-      "Element.update('#{element}').title = '#{options[:title]}';"
+      "$('##{element}').html('#{escape_javascript(options[:title]).html_safe}');"
     else
        ''
     end
@@ -38,11 +38,11 @@ module JsHelper
   end
 
   def javascript_focus(element)
-    "$j('##{j_str(element)}').focus();".html_safe
+    "$('##{j_str(element)}').focus();".html_safe
   end
 
   def javascript_focus_if_exists(element)
-    "if ($j('##{j_str(element)}').length) #{javascript_focus(element)}".html_safe
+    "if ($('##{j_str(element)}').length) #{javascript_focus(element)}".html_safe
   end
 
   def javascript_highlight(element, status)
@@ -54,38 +54,46 @@ module JsHelper
   end
 
   def javascript_add_class(element, cls)
-    "$j('##{j_str(element)}').addClass('#{j_str(cls)}');".html_safe
+    "$('##{j_str(element)}').addClass('#{j_str(cls)}');".html_safe
   end
 
   def javascript_del_class(element, cls)
-    "$j('##{j_str(element)}').removeClass('#{j_str(cls)}');".html_safe
+    "$('##{j_str(element)}').removeClass('#{j_str(cls)}');".html_safe
   end
 
   def javascript_disable_field(element)
-    "$j('##{j_str(element)}').prop('disabled', true);".html_safe
+    "$('##{j_str(element)}').prop('disabled', true);".html_safe
   end
 
   def javascript_enable_field(element)
-    "$j('##{j_str(element)}').prop('disabled', false);".html_safe
+    "$('##{j_str(element)}').prop('disabled', false);".html_safe
   end
 
   def javascript_show(element)
-    "$j('##{j_str(element)}').show();".html_safe
+    "$('##{j_str(element)}').show();".html_safe
   end
 
   def javascript_hide(element)
-    "$j('##{j_str(element)}').hide();".html_safe
+    "$('##{j_str(element)}').hide();".html_safe
   end
 
   def javascript_show_if_exists(element)
-    "if ($j('##{j_str(element)}').length) #{javascript_show(element)}".html_safe
+    "if (miqDomElementExists('#{j_str(element)}')) #{javascript_show(element)}".html_safe
   end
 
   def javascript_hide_if_exists(element)
-    "if ($j('##{j_str(element)}').length) #{javascript_hide(element)}".html_safe
+    "if (miqDomElementExists('#{j_str(element)}')) #{javascript_hide(element)}".html_safe
   end
 
   def jquery_pulsate_element(element)
-    "$j('##{element}').fadeIn().fadeOut().fadeIn().fadeOut().fadeIn().fadeOut().fadeIn().fadeOut().fadeIn().fadeOut().fadeIn();".html_safe
+    "$('##{element}').fadeIn().fadeOut().fadeIn().fadeOut().fadeIn().fadeOut().fadeIn().fadeOut().fadeIn().fadeOut().fadeIn();".html_safe
+  end
+
+  def js_for_page_replace_html(div, partial_name, locals = {})
+    "$('##{div}').html('#{escape_javascript(render :partial => partial_name, :locals => locals).html_safe}');"
+  end
+
+  def js_for_page_replace(div, partial_name, locals = {})
+    "$('##{div}').replaceWith('#{escape_javascript(render :partial => partial_name, :locals => locals).html_safe}');"
   end
 end

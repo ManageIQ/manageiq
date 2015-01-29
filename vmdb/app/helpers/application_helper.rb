@@ -1673,10 +1673,10 @@ module ApplicationHelper
       future  = @edit[:new    ][key][params[:id].split('___').last]
       current = @edit[:current][key][params[:id].split('___').last]
       css_class = future == current ? 'dynatree-title' : 'cfme-blue-bold-node'
-      js_array << "$j('##{tree_name_escaped}box').dynatree('getTree').getNodeByKey('#{params[:id].split('___').last}').data.addClass = '#{css_class}';"
+      js_array << "$('##{tree_name_escaped}box').dynatree('getTree').getNodeByKey('#{params[:id].split('___').last}').data.addClass = '#{css_class}';"
     end
     # need to redraw the tree to change node colors
-    js_array << "tree = $j('##{tree_name_escaped}box').dynatree('getTree');"
+    js_array << "tree = $('##{tree_name_escaped}box').dynatree('getTree');"
     js_array << "tree.redraw();"
     js_array.join("\n")
   end
@@ -1687,8 +1687,8 @@ module ApplicationHelper
     js << "#{tb}.unload();"
     js << "#{tb} = null;"
     js << "#{tb} = new dhtmlXToolbarObject('#{tb}', 'miq_blue');"
-    js << "miq_toolbars.set('#{tb}', $H({obj:#{tb}, buttons:#{buttons}, xml:\"#{xml}\"}));" # Store hash of object, buttons, and xml
-    js << "miqInitToolbar(miq_toolbars.get('#{tb}'));"
+    js << "miq_toolbars['#{tb}'] = {obj:#{tb}, buttons:#{buttons}, xml:\"#{xml}\"};"
+    js << "miqInitToolbar(miq_toolbars['#{tb}']);"
     return js
   end
 
@@ -1706,7 +1706,7 @@ module ApplicationHelper
   end
 
   def javascript_set_value(element_id, value)
-    "$j('##{element_id}').val('#{value}');"
+    "$('##{element_id}').val('#{value}');"
   end
   ############# End of methods that generate JS lines for render page blocks
 

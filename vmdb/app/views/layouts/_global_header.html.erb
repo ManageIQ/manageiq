@@ -26,9 +26,6 @@
     <html class="ie8"><![endif]-->
     <%# jQuery includes %>
     <%= javascript_include_tag 'jquery/jquery-1.8.3.min','jquery/jquery-ui-1.9.2.custom.min' %>
-    <script type="text/javascript">
-      $j = jQuery;	<%# Override jQuery $ to $j %>
-    </script>
 
     <%# jQuery UI CSS %>
     <%= stylesheet_link_tag "jquery/miq/jquery-ui-1.9.2.custom" %>
@@ -41,7 +38,7 @@
 
     <%= csrf_meta_tag %>
 
-    <%= javascript_include_tag 'prototype_min', 'effects_min', 'application', 'dragdrop_min', 'controls_min' %>
+    <%= javascript_include_tag 'application' %>
 
     <%= javascript_include_tag 'dhtmlx_gpl_36/dhtmlxcommon.js', 'dhtmlx_gpl_36/dhtmlxcontainer.js' %>
 

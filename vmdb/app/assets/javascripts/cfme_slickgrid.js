@@ -23,7 +23,7 @@ function cfmeInitSlickGrid(grid_name, dataJson, columnsJson, options) {
   grid.registerPlugin(plugin);
 
   grid.onClick.subscribe(function (e, args) {
-  if ($j(e.target).hasClass("toggle")) {
+  if ($(e.target).hasClass("toggle")) {
     var state = 0;
     var item = dataView.getItem(args.row);
 
@@ -112,10 +112,10 @@ function applyCSS(cellNode, row, dataContext, colDef) {
     }
   }
   if (dataContext.section && colDef.field == 'col0')
-    $j(cellNode).addClass('cell-bkg-plain');
+    $(cellNode).addClass('cell-bkg-plain');
 
   if(value.search('cell-stripe') > -1)
-    $j(cellNode).addClass('cell-bkg');
+    $(cellNode).addClass('cell-bkg');
   else if(value.search('cell-plain') > -1)
-    $j(cellNode).addClass('cell-bkg-plain');
+    $(cellNode).addClass('cell-bkg-plain');
 }

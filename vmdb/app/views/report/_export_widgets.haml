@@ -62,8 +62,8 @@
         = button_tag(_('Cancel'), :alt => _("Cancel Changes"), :class => "btn btn-default")
 
 :javascript
-  $j(function() {
-    $j('#upload_widget_import').click(function() {
+  $(function() {
+    $('#upload_widget_import').click(function() {
       miqSparkleOn();
     });
 
@@ -74,8 +74,8 @@
     setTimeout(function() {
       if (typeof(dhxLayoutB) !== 'undefined') {
         dhxLayoutB.cells('c').collapse();
-        $j(dhxLayoutB.cells('c')).height(1);
-        $j('.widget-export-buttons').show();
+        $(dhxLayoutB.cells('c')).height(1);
+        $('.widget-export-buttons').show();
       }
     }, 100);
   });
