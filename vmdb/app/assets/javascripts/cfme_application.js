@@ -368,7 +368,7 @@ function miqUpdateButtons(obj, button_div) {
 function miqSetButtons(count, button_div) {
   var tb;
   var buttons;
-  if (button_div.endsWith("_tb")) {
+  if (button_div.match("_tb$")) {
     if (typeof miq_toolbars[button_div] != "undefined"){
       tb = miq_toolbars[button_div]["obj"];
       buttons = miq_toolbars[button_div]["buttons"];
@@ -393,7 +393,7 @@ function miqSetButtons(count, button_div) {
         }
       }
     }
-  } else if (button_div.endsWith("_buttons")) { // Handle newer divs with button elements
+  } else if (button_div.match("_buttons$")) { // Handle newer divs with button elements
     if (count == 0) {
       $("#" + button_div + " button[id$=on_1]").each(function() {this.disabled = true});
     } else if (count == 1) {

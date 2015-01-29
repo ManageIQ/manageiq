@@ -173,7 +173,7 @@ function miqToolbarOnClick(id){
 	// put url_parms into params var, if defined
 	var params;
 	if (typeof button.url_parms != "undefined") {
-		if (button.url_parms.endsWith("_div")) {
+		if (button.url_parms.match("_div$")) {
       if (miqDomElementExists('miq_grid_checks')) {
       params = "miq_grid_checks=" + $('#miq_grid_checks').val();
       } else {
@@ -188,7 +188,7 @@ function miqToolbarOnClick(id){
 	// Need to design this feature into the toolbar button support at a later time.
   if ((button.name == "perf_reload") ||
 		  (button.name == "vm_perf_reload") ||
-      (button.name.endsWith("_console"))) {
+      (button.name.match("_console$"))) {
 		if (typeof params == "undefined") {
       miqJqueryRequest(tb_url, {beforeSend: true,});
 		} else {
