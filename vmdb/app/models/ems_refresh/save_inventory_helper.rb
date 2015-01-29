@@ -1,4 +1,24 @@
 module EmsRefresh::SaveInventoryHelper
+  class SingleSaver
+    def initialize(type, klass, parent)
+      @type  = type
+      @klass = klass
+      @parent = parent
+    end
+
+    def find_records(hash)
+      @parent.send(@type)
+    end
+
+    def set(record)
+      @parent.send("#{@type}=", record)
+    end
+
+    def build(hash)
+      @klass.new(hash)
+    end
+  end
+
   class MultiSaver
     def initialize(type, klass, record_index, record_index_columns, find_key)
       @type                 = type
@@ -10,6 +30,9 @@ module EmsRefresh::SaveInventoryHelper
 
     def find_records(hash)
       save_inventory_record_index_fetch(@record_index, @record_index_columns, hash, @find_key)
+    end
+
+    def set(record)
     end
 
     def build(hash)
@@ -64,7 +87,8 @@ module EmsRefresh::SaveInventoryHelper
 
   def save_inventory_single(type, klass, parent, hash, child_keys = [], extra_keys = [])
     find_key, child_keys, extra_keys, remove_keys = self.save_inventory_prep(nil, child_keys, extra_keys)
-    self.save_inventory(type, klass, parent, hash, child_keys, remove_keys)
+    strategy = SingleSaver.new(type, klass, parent)
+    self.save_inventory(type, klass, parent, hash, child_keys, remove_keys, strategy)
   end
 
   def save_inventory_prep(find_key, child_keys, extra_keys)
@@ -85,6 +109,7 @@ module EmsRefresh::SaveInventoryHelper
     action = nil
     if found.nil?
       found = s.build(hash)
+      s.set(found)
       action = :add
     else
       key_backup.merge!(backup_keys(hash, [:type]))
@@ -98,22 +123,26 @@ module EmsRefresh::SaveInventoryHelper
   end
   private :_save_inventory
 
-  def save_inventory(type, klass, parent, hash, child_keys, remove_keys)
+  def save_inventory(type, klass, parent, hash, child_keys, remove_keys, s)
     # Backup keys that cannot be written directly to the database
     key_backup = backup_keys(hash, remove_keys)
 
     # Find the record, and update if found, else create it
-    found = parent.send(type)
+    found = s.find_records(hash)
+    action = nil
     if found.nil?
-      found = klass.new(hash)
-      parent.send("#{type}=", found)
+      found = s.build(hash)
+      s.set(found)
+      action = :add
     else
       key_backup.merge!(backup_keys(hash, [:type]))
       found.update_attributes!(hash)
+      action = :delete
     end
 
     save_child_inventory(found, key_backup, child_keys)
     restore_keys(hash, remove_keys, key_backup)
+    [action, found]
   end
 
   def save_inventory_prep_record_index(records, find_key)
