@@ -47,8 +47,12 @@ RSpec.configure do |config|
 
   # Preconfigure and auto-tag specs in the automation subdirectory a la rspec-rails
   config.include AutomationExampleGroup, :type => :automation, :example_group => {
-    :file_path => config.escaped_path(%w[spec automation])
+    :file_path => config.escaped_path(%w(spec automation))
   }
+  config.include AutomationEngineExampleGroup, :type => :automation_engine, :example_group => {
+    :file_path => config.escaped_path(%w(spec lib miq_automation_engine))
+  }
+
   config.include RSpec::Fire
 
   config.extend  MigrationSpecHelper::DSL
