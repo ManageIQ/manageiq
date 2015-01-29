@@ -159,8 +159,7 @@ class MiqVimPerfHistory
         return(nil) if !pema
         
         pema = [ pema ] if !pema.kind_of? Array
-        pema.each { |pem| perfEntityMetricFixup(pem) }
-        return(pema)
+        return pema
     end
     
     def queryPerfComposite(entnty, ah)
@@ -171,9 +170,7 @@ class MiqVimPerfHistory
         umPem = @invObj.queryPerfComposite(@perfManager, pqs)
 		$vim_log.info "MiqVimPerfHistory(#{@invObj.server}, #{@invObj.username}).queryPerfComposite: returned from queryPerfComposite" if $vim_log
         
-        perfEntityMetricFixup(umPem['entity'])
         umPem['childEntity'] = [ umPem['childEntity'] ] if umPem['childEntity'].kind_of? Hash
-        umPem['childEntity'].each { |ce| perfEntityMetricFixup(ce) } if umPem['childEntity']
         
         return(umPem)
     end
@@ -213,26 +210,6 @@ class MiqVimPerfHistory
 		end
 
         return(pqSpec)
-    end
-    
-    def perfEntityMetricFixup(pemHash)
-        return
-        pemHash["sampleInfo"] = [ pemHash["sampleInfo"] ] if pemHash["sampleInfo"].kind_of? Hash
-        
-        pemHash["sampleInfo"].each do |si|
-            si["interval"] = si["interval"].to_i if si["interval"]
-            si['timestamp'] = DateTime.parse(si['timestamp'])
-        end if pemHash["sampleInfo"]
-        
-        pemHash["value"] = [ pemHash["value"] ] if pemHash["value"].kind_of? Hash
-        
-        pemHash["value"].each do |pms|
-            pms["value"] = [ pms["value"] ] if !pms["value"].kind_of? Array
-            
-            pms["value"].each_index do |i|
-                pms["value"][i] = pms["value"][i].to_i
-            end
-        end if pemHash["value"]
     end
     
 end # class MiqVimPerfHistory
