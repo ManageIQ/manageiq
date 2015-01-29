@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe "ops/_settings_cu_collection_tab.html.erb" do
+describe "ops/_settings_cu_collection_tab.html.haml" do
   before do
     assign(:sb, {:active_tab => "settings_cu_collection"})
   end
