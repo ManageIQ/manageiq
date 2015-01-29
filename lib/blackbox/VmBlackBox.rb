@@ -2,7 +2,6 @@ $:.push("#{File.dirname(__FILE__)}")
 $:.push("#{File.dirname(__FILE__)}/../util")
 $:.push("#{File.dirname(__FILE__)}/../metadata/VmConfig")
 
-require 'extensions/miq-dir'
 require 'ostruct'
 require 'yaml'
 require 'miq-xml'
