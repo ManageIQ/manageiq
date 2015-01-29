@@ -67,7 +67,7 @@ class MiqAeYamlExport
     $log.info("#{self.class} Exporting domain:    <#{@domain}> ns: <#{namespace}> class: <#{class_name}>")
     write_domain_file(@domain_object)
     write_namespace_file(ns_obj)
-    write_class_components(ns_obj.fqname, class_obj)
+    write_class_components(ns_obj.fqname_from_objects, class_obj)
   end
 
   def setup_envelope(obj, obj_type)
@@ -91,9 +91,9 @@ class MiqAeYamlExport
   end
 
   def write_namespace_file(ns_obj)
-    $log.info("#{self.class} Exporting namespace: <#{ns_obj.fqname}>")
+    $log.info("#{self.class} Exporting namespace: <#{ns_obj.fqname_from_objects}>")
     envelope_hash = setup_envelope(ns_obj, NAMESPACE_OBJ_TYPE).to_yaml
-    write_export_file('fqname'          => swap_domain_path(ns_obj.fqname),
+    write_export_file('fqname'          => swap_domain_path(ns_obj.fqname_from_objects),
                       'output_filename' => NAMESPACE_YAML_FILENAME,
                       'export_data'     => envelope_hash,
                       'created_on'      => ns_obj.created_on,
@@ -118,7 +118,7 @@ class MiqAeYamlExport
 
   def write_all_classes(ns_obj)
     ns_obj.ae_classes.sort_by(&:name).each do |cls|
-      write_class_components(ns_obj.fqname, cls)
+      write_class_components(ns_obj.fqname_from_objects, cls)
     end
   end
 
@@ -144,7 +144,7 @@ class MiqAeYamlExport
   def write_all_instances(ns_fqname, class_obj)
     export_file_hash = {'fqname'     => swap_domain_path(ns_fqname),
                         'class_name' => "#{class_obj.name}#{CLASS_DIR_SUFFIX}"}
-    class_obj.ae_instances.sort_by(&:fqname).each do |inst|
+    class_obj.ae_instances.sort_by(&:fqname_from_objects).each do |inst|
       file_name = inst.name.gsub('.', '_')
       envelope_hash = setup_envelope(inst, INSTANCE_OBJ_TYPE)
       envelope_hash['object']['fields'] = inst.export_ae_fields
@@ -160,7 +160,7 @@ class MiqAeYamlExport
   def write_all_methods(ns_fqname, class_obj)
     export_file_hash = {'fqname' => swap_domain_path(ns_fqname)}
     export_file_hash['class_name'] = "#{class_obj.name}#{CLASS_DIR_SUFFIX}/#{METHOD_FOLDER_NAME}"
-    class_obj.ae_methods.sort_by(&:fqname).each do |meth_obj|
+    class_obj.ae_methods.sort_by(&:fqname_from_objects).each do |meth_obj|
       export_file_hash['created_on'] = meth_obj.created_on
       export_file_hash['updated_on'] = meth_obj.updated_on
       write_method_file(meth_obj, export_file_hash) unless meth_obj.location == 'builtin'

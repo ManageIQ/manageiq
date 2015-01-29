@@ -31,7 +31,7 @@ class MiqAeClassCopy
     MiqAeClass.transaction do
       ids.each do |id|
         class_obj = MiqAeClass.find(id)
-        new_class = new(class_obj.fqname).to_domain(domain, ns, overwrite)
+        new_class = new(class_obj.fqname_from_objects).to_domain(domain, ns, overwrite)
         new_ids << new_class.id if new_class
       end
     end
@@ -78,15 +78,14 @@ class MiqAeClassCopy
 
   def validate
     dest_class = MiqAeClass.find_by_fqname("#{@target_ns_fqname}/#{@target_name}")
-    if dest_class
-      dest_class.destroy if @overwrite
-      raise "Destination Class already exists #{dest_class.fqname}" unless @overwrite
-    end
+    return unless dest_class
+    dest_class.destroy if @overwrite
+    raise "Destination Class already exists #{dest_class.fqname}" unless @overwrite
   end
 
   def check_duplicity(domain, ns, classname)
-    if domain.downcase == @src_domain.downcase && classname.downcase == @ae_class.downcase
-      raise "Cannot copy class onto itself" if ns.nil? || ns.downcase == @partial_ns.downcase
-    end
+    return if domain.downcase    != @src_domain.downcase
+    return if classname.downcase != @ae_class.downcase
+    raise "Cannot copy class onto itself" if ns.nil? || ns.downcase == @partial_ns.downcase
   end
 end

@@ -105,7 +105,7 @@ describe MiqAeInstanceCopy do
       ins = mock_model(MiqAeInstance)
       ins_copy.should_receive(:to_domain).with(domain, nil, false).exactly(ids.length).times { ins }
       new_ids = [ins.id] * ids.length
-      ins.should_receive(:fqname).with(no_args).exactly(ids.length).times { fqname }
+      ins.should_receive(:fqname_from_objects).with(no_args).exactly(ids.length).times { fqname }
       MiqAeInstance.should_receive(:find).with(an_instance_of(Fixnum)).exactly(ids.length).times { ins }
       MiqAeInstanceCopy.should_receive(:new).with(fqname, true).exactly(1).times { ins_copy }
       MiqAeInstanceCopy.should_receive(:new).with(fqname, false).exactly(ids.length - 1).times { ins_copy }

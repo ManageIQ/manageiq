@@ -1,13 +1,16 @@
 require "spec_helper"
 include MiqAeYamlImportExportMixin
 describe MiqAeClassCompareFields do
-
   before do
     @domain = 'SPEC_DOMAIN'
     @namespace   = 'NS1'
     @yaml_folder = File.join(File.dirname(__FILE__), 'miq_ae_copy_data')
     MiqAeDatastore.reset
-    @export_dir = File.join(Dir.tmpdir, 'rspec_copy_tests')
+    @export_dir = Dir.mktmpdir
+  end
+
+  after(:each) do
+    FileUtils.remove_entry_secure(@export_dir) if Dir.exist?(@export_dir)
   end
 
   context "same fields" do
@@ -28,7 +31,6 @@ describe MiqAeClassCompareFields do
       class2 = MiqAeClassYaml.new(@class1_file)
       class_check_status(class1, class2, MiqAeClassCompareFields::CONGRUENT_SCHEMA)
     end
-
   end
 
   context "same fields mixed case" do

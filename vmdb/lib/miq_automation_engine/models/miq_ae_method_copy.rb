@@ -36,7 +36,7 @@ class MiqAeMethodCopy
     MiqAeMethod.transaction do
       ids.each do |id|
         method_obj = MiqAeMethod.find(id)
-        new_method = new(method_obj.fqname).to_domain(domain, ns, overwrite)
+        new_method = new(method_obj.fqname_from_objects).to_domain(domain, ns, overwrite)
         nids << new_method.id if new_method
       end
     end
@@ -87,8 +87,8 @@ class MiqAeMethodCopy
   end
 
   def check_duplicity(domain, ns, method_name)
-    if domain.downcase == @src_domain.downcase && method_name.downcase == @method_name.downcase
-      raise "Cannot copy method onto itself" if ns.nil? || ns.downcase == @partial_ns.downcase
-    end
+    return if domain.downcase != @src_domain.downcase
+    return if method_name.downcase != @method_name.downcase
+    raise "Cannot copy method onto itself" if ns.nil? || ns.downcase == @partial_ns.downcase
   end
 end
