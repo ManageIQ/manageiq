@@ -14,6 +14,14 @@ class MiqAeClassController < ApplicationController
     redirect_to :action => 'explorer'
   end
 
+  def to_cid(id)
+    id
+  end
+
+  def from_cid(id)
+    id
+  end
+
   def change_tab
     #resetting flash array so messages don't get displayed when tab is changed
     @flash_array = Array.new
@@ -115,17 +123,17 @@ class MiqAeClassController < ApplicationController
       @sb[:namespace_path] = rec.fqname
     when "aei"
       txt = ui_lookup(:model=>"MiqAeInstance")
-      updated_by = rec.updated_by ? " by #{rec.updated_by}" : ""
+      updated_by = rec.updated_by_ui ? " by #{rec.updated_by_ui}" : ""
       @sb[:namespace_path] = rec.fqname
       @right_cell_text = txt +
-          " [" + get_rec_name(rec) + " - Updated " + format_timezone(rec.created_on, Time.zone, "gtl") +
+          " [" + get_rec_name(rec) + " - Updated " + format_timezone(rec.updated_on_ui, Time.zone, "gtl") +
           updated_by + "]"
     when "aem"
       txt = ui_lookup(:model=>"MiqAeMethod")
-      updated_by = rec.updated_by ? " by #{rec.updated_by}" : ""
+      updated_by = rec.updated_by_ui ? " by #{rec.updated_by_ui}" : ""
       @sb[:namespace_path] = rec.fqname
       @right_cell_text = txt + " [" + get_rec_name(rec) +
-          " - Updated " + format_timezone(rec.created_on, Time.zone, "gtl") +
+          " - Updated " + format_timezone(rec.updated_on_ui, Time.zone, "gtl") +
           updated_by + "]"
     when "aen"
       txt = ui_lookup(:model => rec.domain? ? "MiqAeDomain" : "MiqAeNamespace")
@@ -906,6 +914,7 @@ class MiqAeClassController < ApplicationController
         session[:edit] = nil  # clean out the saved info
         @in_a_form = false
         add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"MiqAeInstance"), :name=>@ae_inst.name})
+        self.x_node = "aei-#{to_cid(@ae_inst.id)}"
         replace_right_cell([:ae])
         return
       end
@@ -982,7 +991,7 @@ class MiqAeClassController < ApplicationController
     @edit[:new][:description] = @ae_class.description
     @edit[:new][:namespace] = @ae_class.namespace
     @edit[:new][:inherits] = @ae_class.inherits
-    @edit[:inherits_from] = MiqAeClass.all.collect {|c| [ c.fqname, c.fqname ] }
+    # @edit[:inherits_from] = MiqAeClass.all.collect {|c| [ c.fqname, c.fqname ] }
     @edit[:current] = @edit[:new].dup
     @right_cell_text = @edit[:rec_id].nil? ?
         _("Adding a new %s") % ui_lookup(:model=>"Class") :
@@ -1282,7 +1291,7 @@ class MiqAeClassController < ApplicationController
       @in_a_form = false
       replace_right_cell
     when "save"
-      ae_class = find_by_id_filtered(MiqAeClass, params[:id])
+      ae_class = find_by_id_filtered_ae(MiqAeClass, params[:id])
       set_record_vars(ae_class)                     # Set the record variables, but don't save
       begin
         MiqAeClass.transaction do
@@ -1300,6 +1309,7 @@ class MiqAeClassController < ApplicationController
         AuditEvent.success(build_saved_audit(ae_class, @edit))
         session[:edit] = nil  # clean out the saved info
         @in_a_form = false
+        self.x_node = "aec-#{to_cid(ae_class.id)}"
         replace_right_cell([:ae])
         return
       end
@@ -1326,7 +1336,7 @@ class MiqAeClassController < ApplicationController
       @in_a_form = false
       replace_right_cell
     when "save"
-      ae_class = find_by_id_filtered(MiqAeClass, params[:id])
+      ae_class = find_by_id_filtered_ae(MiqAeClass, params[:id])
       set_field_vars(ae_class)
       begin
         MiqAeClass.transaction do
@@ -1376,7 +1386,7 @@ class MiqAeClassController < ApplicationController
       @in_a_form = false
       replace_right_cell
     when "save"
-      ae_ns = find_by_id_filtered(@edit[:typ].constantize, params[:id])
+      ae_ns = find_by_id_filtered_ae(@edit[:typ].constantize, params[:id])
       ns_set_record_vars(ae_ns)                     # Set the record variables, but don't save
       begin
         ae_ns.save!
@@ -1394,6 +1404,7 @@ class MiqAeClassController < ApplicationController
         AuditEvent.success(build_saved_audit(ae_ns, @edit))
         session[:edit] = nil  # clean out the saved info
         @in_a_form = false
+        self.x_node = "aen-#{to_cid(ae_ns.id)}"
         replace_right_cell([:ae])
       end
     when "reset"
@@ -1421,7 +1432,7 @@ class MiqAeClassController < ApplicationController
       @in_a_form = false
       replace_right_cell
     when "save"
-      ae_method = find_by_id_filtered(MiqAeMethod, params[:id])
+      ae_method = find_by_id_filtered_ae(MiqAeMethod, params[:id])
       set_method_record_vars(ae_method)                     # Set the record variables, but don't save
       set_input_vars(ae_method)
       begin
@@ -1448,6 +1459,7 @@ class MiqAeClassController < ApplicationController
         session[:edit] = nil  # clean out the saved info
         @sb[:form_vars_set] = false
         @in_a_form = false
+        self.x_node = "aem-#{to_cid(ae_method.id)}"
         replace_right_cell([:ae])
         return
       end
@@ -2036,7 +2048,7 @@ private
       :domain_name    => @record.domain.name,
       :domain_id      => @record.domain.id,
       :old_name       => @record.name,
-      :fqname         => @record.fqname,
+      :fqname         => @record.fqname_from_objects,
       :rec_id         => from_cid(@record.id),
       :key            => "copy_objects__#{from_cid(@record.id)}",
       :domains        => domains,
@@ -2561,8 +2573,8 @@ private
   def set_instances_value_vars(vals, ae_instance = nil)
     original_values = ae_instance ? ae_instance.ae_values : []
 
-    vals.each_with_index do |v,i|
-      original = original_values.detect { |ov| ov.id == v.id } unless original_values.empty?
+    vals.each_with_index do |v, i|
+      original = original_values.detect { |ov| v.id? && ov.id == v.id } unless original_values.empty?
       if original
         v = original
       else

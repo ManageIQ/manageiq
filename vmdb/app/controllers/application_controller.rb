@@ -2606,6 +2606,30 @@ class ApplicationController < ActionController::Base
     result
   end
 
+  def find_by_id_filtered_ae(db, id)
+    raise "Invalid input" if id.blank?
+
+    userid = session[:userid]
+    result = db.find(id)
+
+    if result.nil?
+      msg = I18n.t("flash.record.selected_item_no_longer_exists", :model => ui_lookup(:model => db.to_s))
+      raise msg
+    end
+
+    return result
+    ##  TODO
+    ## Need to investigate how this will work with file system
+    #
+    msg = "User '#{userid}' is not authorized to access '#{ui_lookup(:model => db.to_s)}' record id '#{id}'"
+    conditions = ["#{db.table_name}.id = ?", id]
+    result = Rbac.search(:class => db, :conditions => conditions, :userid => userid,
+                         :results_format => :objects).first.first
+    raise msg if result.nil?
+
+    result
+  end
+
   def find_filtered(db, count, options={})
     user     = User.find_by_userid(session[:userid])
     mfilters = user ? user.get_managed_filters   : []

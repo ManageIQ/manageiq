@@ -144,8 +144,9 @@ module EvmSpecHelper
   end
 
   def self.import_yaml_model(dirname, domain, attrs = {})
-    options = {'import_dir' => dirname, 'preview' => false, 'domain' => domain}
-    yaml_import(domain, options, attrs)
+    initialize_ae_git_repo(dirname, domain, ENV['AUTOMATE_DB_DIRECTORY'])
+    dom = MiqAeNamespace.find_by_fqname(domain)
+    dom.update_attributes(attrs.reverse_merge(:enabled => true)) if dom
   end
 
   def self.import_yaml_model_from_file(yaml_file, domain, attrs = {})
@@ -157,5 +158,39 @@ module EvmSpecHelper
     MiqAeImport.new(domain, options).import
     dom = MiqAeNamespace.find_by_fqname(domain)
     dom.update_attributes!(attrs.reverse_merge(:enabled => true)) if dom
+  end
+
+  def self.initialize_ae_git_repo(src_dir, domain, target_dir)
+    require 'rugged'
+    repo = Rugged::Repository.init_at(File.join(target_dir, domain), :bare)
+    author = {:email => 'miq_tester@manageiq.org', :name => 'miq_tester'}
+    repo.config['user.name'] = author[:name]
+    repo.config['user.email'] = author[:email]
+    pwd = Dir.pwd
+    Dir.chdir(File.join(src_dir, domain))
+    tree = load_all_files_into_tree(repo)
+    Rugged::Commit.create(repo, :author => author, :commiter => author,
+                                :message => "Test Repo", :parents => [],
+                                :tree    => tree, :update_ref => 'HEAD')
+    repo.close
+    Dir.chdir(pwd)
+  end
+
+  def self.load_all_files_into_tree(repo)
+    current_index = Rugged::Index.new
+    Dir.glob('**/*').each do |f|
+      next if File.directory?(f)
+      entry = {}
+      entry[:oid]  = repo.write(IO.read(f), :blob)
+      entry[:mode] = 0100644
+      entry[:path] = fix_missing_instance(f).downcase
+      current_index.add(entry)
+    end
+    current_index.write_tree(repo)
+  end
+
+  def self.fix_missing_instance(f)
+    return f unless File.basename(f) == "_missing.yaml"
+    f.gsub('_missing.yaml', '.missing.yaml')
   end
 end

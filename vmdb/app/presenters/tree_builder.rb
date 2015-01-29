@@ -1,6 +1,8 @@
 class TreeBuilder
   include Sandbox
   include CompressedIds
+  include MiqAeClassHelper
+
   attr_reader :locals_for_render, :name, :type
 
   #need to move this to a subclass
@@ -63,7 +65,7 @@ class TreeBuilder
 
   # return this nodes model and record id
   def extract_method_and_node_id(id)
-    id.split("_").last.split('-')
+    automate_node?(id) ? [id[0..2], id[4..-1]] : id.split("_").last.split('-')
   end
 
   # Get the children of a dynatree node that is being expanded (autoloaded)
@@ -75,6 +77,8 @@ class TreeBuilder
     elsif model.nil? && [:sandt_tree, :svccat_tree, :stcat_tree].include?(x_active_tree)
       # Creating empty record to show items under unassigned catalog node
       object = ServiceTemplateCatalog.new # Get the object from the DB
+    elsif AE_CLASSES_LIST.include?(model)
+      object = model.constantize.find(rec_id)   # Get the Automate object from the DB
     else
       object = model.constantize.find(from_cid(rec_id))   # Get the object from the DB
     end
