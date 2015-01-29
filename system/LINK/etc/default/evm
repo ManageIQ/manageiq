@@ -25,3 +25,4 @@ export QPID_SSL_CERT_DB=/etc/qpid/certs
 [[ -s /etc/default/evm_bundler ]] && source /etc/default/evm_bundler
 [[ -s /opt/rh/postgresql92/enable ]] && source /opt/rh/postgresql92/enable
 [[ -s /opt/rh/nodejs010/enable ]] && source /opt/rh/nodejs010/enable
+[[ -s /etc/default/evm_productization ]] && source /etc/default/evm_productization
