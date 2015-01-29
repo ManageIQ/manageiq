@@ -1,0 +1,41 @@
+= render :partial => "layouts/flash_msg"
+#column_lists
+  %table.style1
+    %tr
+      %td
+        %table{:width => "50%"}
+          %tr
+            %td.widhted{:align => "left"}
+              = _('Button Group Order:')
+            %td
+          %tr
+            %td{:align => "left", :valign => "top"}
+              = select_tag('selected_fields[]',
+                options_for_select(@edit[:new][:fields], @selected),
+                :multiple => true,
+                :style    => "width: 450px",
+                :size     => 20,
+                :id       => "selected_fields")
+            %td{:width => "30", :align => "left", :valign => "middle"}
+              - if @edit[:new][:fields].length < 2
+                = image_tag("/images/toolbars/up.png", :class => "dimmed small")
+              - else
+                -t = _("Move selected fields up")
+                = link_to(image_tag("/images/toolbars/up.png", :class => "rollover small", :alt => t),
+                  {:action => 'group_reorder_field_changed', :button => 'up', :id => "seq"},
+                  "data-submit" => "column_lists",
+                  :remote       => true,
+                  :title        => t)
+
+              - if @edit[:new][:fields].length < 2
+                = image_tag("/images/toolbars/down.png", :class => "dimmed small")
+              - else
+                -t = _("Move selected fields down")
+                = link_to(image_tag("/images/toolbars/down.png", :class => "rollover small", :alt => t),
+                  {:action => 'group_reorder_field_changed', :button => 'down', :id => "seq"},
+                  "data-submit" => "column_lists",
+                  :remote       => true,
+                  :title        => t)
+          .note
+            = _('* Select one or more consecutive groups to move up or down.')
+  - #= render(:partial=>'/layouts/edit_form_buttons', :locals=>{:action_url=>'ab_group_reorder',:ajax_buttons=>true, :force_cancel_button=>true})

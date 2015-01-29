@@ -1,0 +1,84 @@
+#column_lists
+  %table#formtest.form{:width => "100%"}
+    %tr
+      - if x_active_tree == :ab_tree
+        %td.widthed{:align => "left"}
+          = _('Unassigned:')
+        %td
+      %td{:align => "left"}
+        = _('Selected:')
+    %tr
+      - if x_active_tree == :ab_tree
+        %td{:align => "right", :valign => "top"}
+          = select_tag('available_fields[]',
+            options_for_select(@edit[:new][:available_fields]),
+            :multiple => true,
+            :style    => "width: 450px",
+            :size     => 8,
+            :id       => "available_fields")
+        %td{:width => "30", :valign => "middle"}
+          - if @edit[:new][:available_fields].length == 0
+            = image_tag("/images/toolbars/right.png", :class => "dimmed rollover small")
+          - else
+            - t = _("Move selected fields right")
+            = link_to(image_tag("/images/toolbars/right.png", :class => "rollover small", :alt => t),
+              {:action => 'group_form_field_changed', :button => 'right', :id => "#{@custom_button_set.id || 'new'}"},
+              "data-submit" => 'column_lists',
+              :remote       => true,
+              :title        => t)
+
+          - if @edit[:new][:fields].length == 0
+            = image_tag("/images/toolbars/left.png", :class => "dimmed rollover small")
+          - else
+            - t = _("Move selected fields left")
+            = link_to(image_tag("/images/toolbars/left.png", :class => "rollover small", :alt => t),
+              {:action => 'group_form_field_changed', :button => 'left', :id => "#{@custom_button_set.id || 'new'}"},
+              "data-submit" => 'column_lists',
+              :remote       => true,
+              :title        => t)
+      %td{:align => "left", :valign => "top"}
+        = select_tag('selected_fields[]',
+          options_for_select(@edit[:new][:fields], @selected),
+          :multiple => true,
+          :style    => "width: 450px",
+          :size     => 8,
+          :id       => "selected_fields")
+      %td{:width => "30", :valign => "middle"}
+        - if @edit[:new][:fields].length < 2
+          = image_tag("/images/toolbars/top.png", :class => "dimmed rollover small")
+        - else
+          - t = _("Move selected fields to top")
+          = link_to(image_tag("/images/toolbars/top.png", :class => "rollover small", :alt => t),
+            {:action  => 'group_form_field_changed', :button  => 'top', :id => "#{@custom_button_set.id || "new"}"},
+            "data-submit" => 'column_lists',
+            :remote       => true,
+            :title        => t)
+
+        - if @edit[:new][:fields].length < 2
+          = image_tag("/images/toolbars/up.png", :class => "dimmed rollover small")
+        - else
+          -t = _("Move selected fields up")
+          = link_to(image_tag("/images/toolbars/up.png", :class => "rollover small", :alt => t),
+          {:action => 'group_form_field_changed', :button => 'up', :id => "#{@custom_button_set.id || "new"}"},
+          "data-submit" => 'column_lists',
+          :remote       => true,
+          :title        => t)
+        - if @edit[:new][:fields].length < 2
+          = image_tag("/images/toolbars/down.png", :class => "dimmed rollover small")
+        - else
+          - t = _("Move selected fields down")
+          = link_to(image_tag("/images/toolbars/down.png", :class => "rollover small", :alt => t),
+            {:action => 'group_form_field_changed', :button => 'down', :id => "#{@custom_button_set.id || 'new'}"},
+            "data-submit" => 'column_lists',
+            :remote       => true,
+            :title        => t)
+
+        - if @edit[:new][:fields].length < 2
+          = image_tag("/images/toolbars/bottom.png", :class => "dimmed rollover small")
+        - else
+          - t = _("Move selected fields to bottom")
+          = link_to(image_tag("/images/toolbars/bottom.png", :class => "rollover small", :alt => t),
+            {:action => 'group_form_field_changed', :button => 'bottom', :id => "#{@custom_button_set.id || 'new'}"},
+            "data-submit" => 'column_lists',
+            :remote       => true,
+            :title        => t)

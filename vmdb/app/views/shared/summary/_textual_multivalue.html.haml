@@ -1,0 +1,7 @@
+%table{:cellpadding => "0", :cellspacing => "0"}
+  - items.each do |item|
+    %tr{:class => item[:title] ? 'no-hover' : '', :title => item[:title] ? item[:title] && item[:link] : "", :onclick => item[:link] ? "DoNav('#{item[:link]}');" : ""}
+      %td{:style => "border: 0px; margin: 0px; padding: 2px 0px 2px 0px;"}
+        - if item[:image]
+          %img{:src => "/images/icons/new/<%= item[:image] %>.png"}
+        = item[:value]

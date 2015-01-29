@@ -56,8 +56,7 @@ module VmCommon
           render :partial => "shared/ajax/flash_msg_replace"
         else
           options
-          render :partial => "shared/ajax/partial_replace",
-                 :locals => {:div => @refresh_div, opts => {partial => "vm_common/#{@refresh_partial}"}}
+          partial_replace(@refresh_div, "vm_common/#{@refresh_partial}")
         end
       end
     end

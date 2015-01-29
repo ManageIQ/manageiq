@@ -116,7 +116,7 @@
                        'data-miq_sparkle_off' => true,
                        'data-miq_observe'     => { :url => url }.to_json)
           - if field.show_refresh_button?
-            = button_tag('Refresh',
+            = button_tag(_('Refresh'),
                          :onclick  => remote_function(:url      => { :action => 'dynamic_list_refresh',
                                                                      :id     => field.name },
                                                       :loading  => "miqSparkle(true);",
@@ -136,7 +136,7 @@
             - else
               %span(class="dynamic-radio-#{field.id}")
                 - values = field.values
-                - values = [['', '<None>']] + values if !field.required && !field.dynamic
+                - values = [['', "<#{_('None')}>"]] + values if !field.required && !field.dynamic
                 - values.each_with_index do |rb, i|
                   %input{:type     => 'radio',
                          :id       => field.id,
@@ -157,7 +157,7 @@
           = h(field.values.detect { |k, _v| k == wf.value(field.name) }.try(:last) || wf.value(field.name))
 
         - if field.dynamic && field.show_refresh_button?
-          = button_tag('Refresh', :id => "refresh-dynamic-field-#{field.id}", :class => "btn btn-default")
+          = button_tag(_('Refresh'), :id => "refresh-dynamic-field-#{field.id}", :class => "btn btn-default")
 
           :javascript
             $('#refresh-dynamic-field-#{field.id}').click(function() {
@@ -197,7 +197,7 @@
             });
 
       - when 'DialogFieldButton'
-        = button_tag("Save",
+        = button_tag(_("Save"),
                     :class => edit ? 'btn btn-primary' : 'btn btn-primary btn-disabled')
 
       - when 'DialogFieldTagControl'

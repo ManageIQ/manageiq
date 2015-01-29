@@ -1,0 +1,18 @@
+- if items
+  %table.style3
+    %thead
+      %tr
+        %th{:colspan => "2"}
+          = title
+    - items.each do |item|
+      %tr.no-hover{:class => cycle('row0', 'row1')}
+        %td.label
+          = item[:label]
+        %td
+          %table{:style => "line-height: 5px; white-space: nowrap;"}
+            - item[:value].each do |subitem|
+              %tr
+                %td
+                  = subitem[:label]
+                %td
+                  = subitem[:value]
