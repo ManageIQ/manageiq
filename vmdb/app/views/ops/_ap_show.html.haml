@@ -1,0 +1,52 @@
+#main_div
+  = render(:partial=>"layouts/flash_msg")
+  %p.legend Info
+  %table.style1
+    %tr
+      %td.key Name
+      %td= h(@selected_scan.name)
+    %tr
+      %td.key Description
+      %td= h(@selected_scan.description)
+    %tr
+      %td.key Type
+      %td.wide= h(@selected_scan.mode)
+  %hr/
+  - unless @selected_scan.mode == "Host"
+    - if @category
+      %p.legend Categories
+      %table.style1
+        - @category.sort.each do |c|
+          %tr
+            %td= h(c)
+      %hr/
+  - if @file
+    %p.legend File Items
+    %table.style3
+      %thead
+        %tr
+          %th{:width => "200"} Name
+          %th Collect Contents?
+      %tbody
+        - @file.sort.each do |f|
+          %tr
+            %td{:width => "200"}= h(f)
+            %td= h(@file_stats["#{f}"])
+    %hr/
+  - unless @selected_scan.mode == "Host"
+    - if @registry
+      %p.legend Registry Items
+      %table.style1
+        - @registry.sort_by { |r| r["key"] }.each do |k|
+          %tr
+            %td
+              = h(k["hive"]) + "\\" + h(k["key"]) + " : " + h(k["value"])
+          %tr
+      %hr/
+  - if @nteventlog
+    %p.legend Event Log Items
+    %table.style1
+      - @nteventlog.sort_by{|l| l[:name]}.each do |k|
+        %tr
+          %td= h(k[:name])
+        %tr
