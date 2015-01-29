@@ -63,7 +63,7 @@ module EmsRefresh::SaveInventoryHelper
     strategy = MultiSaver.new(type, klass, record_index, record_index_columns, find_key)
     new_records = []
     actions = hashes.map do |h|
-      _save_inventory(type, klass, parent, h, child_keys, remove_keys, strategy)
+      save_inventory(strategy, h, child_keys, remove_keys)
     end
 
     actions.each do |action, found|
@@ -88,7 +88,7 @@ module EmsRefresh::SaveInventoryHelper
   def save_inventory_single(type, klass, parent, hash, child_keys = [], extra_keys = [])
     find_key, child_keys, extra_keys, remove_keys = self.save_inventory_prep(nil, child_keys, extra_keys)
     strategy = SingleSaver.new(type, klass, parent)
-    self.save_inventory(type, klass, parent, hash, child_keys, remove_keys, strategy)
+    save_inventory(strategy, hash, child_keys, remove_keys)
   end
 
   def save_inventory_prep(find_key, child_keys, extra_keys)
@@ -100,45 +100,21 @@ module EmsRefresh::SaveInventoryHelper
     return find_key, child_keys, extra_keys, remove_keys
   end
 
-  def _save_inventory(type, klass, parent, hash, child_keys, remove_keys, s)
+  def save_inventory(strategy, hash, child_keys, remove_keys)
     # Backup keys that cannot be written directly to the database
     key_backup = backup_keys(hash, remove_keys)
 
     # Find the record, and update if found, else create it
-    found = s.find_records(hash)
-    action = nil
-    if found.nil?
-      found = s.build(hash)
-      s.set(found)
-      action = :add
-    else
-      key_backup.merge!(backup_keys(hash, [:type]))
-      found.update_attributes!(hash)
-      action = :delete
-    end
-
-    save_child_inventory(found, key_backup, child_keys)
-    restore_keys(hash, remove_keys, key_backup)
-    [action, found]
-  end
-  private :_save_inventory
-
-  def save_inventory(type, klass, parent, hash, child_keys, remove_keys, s)
-    # Backup keys that cannot be written directly to the database
-    key_backup = backup_keys(hash, remove_keys)
-
-    # Find the record, and update if found, else create it
-    found = s.find_records(hash)
-    action = nil
-    if found.nil?
-      found = s.build(hash)
-      s.set(found)
-      action = :add
-    else
-      key_backup.merge!(backup_keys(hash, [:type]))
-      found.update_attributes!(hash)
-      action = :delete
-    end
+    found = strategy.find_records(hash)
+    action = if found.nil?
+               found = strategy.build(hash)
+               strategy.set(found)
+               :add
+             else
+               key_backup.merge!(backup_keys(hash, [:type]))
+               found.update_attributes!(hash)
+               :delete
+             end
 
     save_child_inventory(found, key_backup, child_keys)
     restore_keys(hash, remove_keys, key_backup)
