@@ -4,10 +4,10 @@
 %dl.col2
   %dd
     %fieldset
-      %p.legend Zone Information
+      %p.legend=_("Zone Information")
       %table.style1
         %tr
-          %td.key Name
+          %td.key=_("Name")
           %td
             = text_field_tag("name",
               @edit[:new][:name],
@@ -17,7 +17,7 @@
             - if !@zone.id
               = javascript_tag(javascript_focus('name'))
         %tr
-          %td.key Description
+          %td.key=_("Description")
           %td
             = text_field_tag("description",
               @edit[:new][:description],
@@ -26,7 +26,7 @@
             - if @zone.id && @zone.name.downcase != "default"
               = javascript_tag(javascript_focus('description'))
         %tr
-          %td.key SmartProxy Server IP
+          %td.key=_("SmartProxy Server IP")
           %td
             = text_field_tag("proxy_server_ip",
               @edit[:new][:proxy_server_ip],
@@ -35,10 +35,10 @@
             - if @zone.id && @zone.name.downcase == "default"
               = javascript_tag(javascript_focus('proxy_server_ip'))
     %fieldset
-      %p.legend NTP Servers
+      %p.legend=_("NTP Servers")
       %table.style1
         %tr
-          %td.key Servers
+          %td.key=_("Servers")
           %td.wide
             = text_field_tag("ntp_server_1",
               @edit[:new][:ntp][:server][0],
@@ -54,39 +54,39 @@
               @edit[:new][:ntp][:server][2],
               :maxlength=>MAX_NAME_LEN,
               "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
-      * Specified NTP settings apply to this zone only and are not global.
+      =_("* Specified NTP settings apply to this zone only and are not global.")
   %dd
     %fieldset
-      %p.legend Credentials - Windows Domain
+      %p.legend=_("Credentials - Windows Domain")
       %table.style1
         %tr
-          %td.key User ID
+          %td.key=_("User ID")
           %td.wide
             = text_field_tag("userid",
               @edit[:new][:userid],
               :maxlength=>50,
               "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
         %tr
-          %td.key Password
+          %td.key=_("Password")
           %td.wide
             = password_field_tag("password",
               @edit[:new][:password],
               :maxlength=>50,
               "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
         %tr
-          %td.key Verify Password
+          %td.key=_("Verify Password")
           %td.wide
             = password_field_tag("verify",
               @edit[:new][:verify],
               :maxlength=>50,
               "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
     %fieldset
-      %p.legend Settings
+      %p.legend=_("Settings")
       %table.style1
         %tr
-          %td.key Max Active VM Scans
+          %td.key=_("Max Active VM Scans")
           %td
             = select_tag('max_scans',
-              options_for_select([["Unlimited",0]] + [1,2,3,4] + Array.new(10) {|i| (i+1)*5},
+              options_for_select([[_("Unlimited"),0]] + [1,2,3,4] + Array.new(10) {|i| (i+1)*5},
                 @edit[:new][:concurrent_vm_scans]),
               "data-miq_observe"=>{:url=>url}.to_json)
