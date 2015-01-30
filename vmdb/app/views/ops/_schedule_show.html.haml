@@ -1,27 +1,27 @@
 #main_div
   = render(:partial=>"layouts/flash_msg")
-  %p.legend Schedule Info
+  %p.legend=_("Schedule Info")
   %table.style1
     %tr
-      %td.key Description
+      %td.key=_("Description")
       %td= h(@selected_schedule.description)
     %tr
-      %td.key Active
+      %td.key=_("Active")
       %td= h(@selected_schedule.enabled)
     %tr
-      %td.key Action
+      %td.key=_("Action")
       %td
         - if @selected_schedule.sched_action[:method] && @selected_schedule.sched_action[:method] == "check_compliance"
           = h(ui_lookup(:model=>@selected_schedule.towhat))
-          Compliance Check
+          =_("Compliance Check")
         - elsif @selected_schedule.sched_action[:method] && @selected_schedule.sched_action[:method] == "db_backup"
-          Database Backup
+          =_("Database Backup")
         - else
           = h(ui_lookup(:model=>@selected_schedule.towhat))
-          Analysis
+          =_("Analysis")
     - if @selected_schedule.sched_action[:method] != "db_backup"
       %tr
-        %td.key Filter
+        %td.key=_("Filter")
         - unless @selected_schedule.miq_search
           - if @selected_schedule.filter.is_a?(MiqExpression)
             %td
@@ -37,19 +37,19 @@
           %td
             = "#{@selected_schedule.miq_search.search_type == "user" ? "My" : "Global"} Filter: #{@selected_schedule.miq_search.description}"
     %tr
-      %td.key Run At
+      %td.key=_("Run At")
       %td= h(@selected_schedule.run_at_to_human(@timezone).to_s)
     %tr
-      %td.key Last Run Time
+      %td.key=_("Last Run Time")
       %td
         - if !@selected_schedule.last_run_on.blank?
           = h(format_timezone(@selected_schedule.last_run_on, @timezone,"view"))
     %tr
-      %td.key Next Run Time
+      %td.key=_("Next Run Time")
       %td
         - if !@selected_schedule.next_run_on.blank?
           = h(format_timezone(@selected_schedule.next_run_on, @timezone, "view"))
     %tr
-      %td.key Zone
+      %td.key=_("Zone")
       %td
         = h(@selected_schedule.v_zone_name)
