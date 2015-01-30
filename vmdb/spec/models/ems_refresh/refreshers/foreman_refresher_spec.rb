@@ -1,6 +1,14 @@
 require "spec_helper"
 
 describe EmsRefresh::Refreshers::ForemanRefresher do
+  before do
+    unless provider.api_cached?
+      VCR.use_cassette("ems_refresh/refreshers/foreman_refresher_api_doc") do
+        provider.ensure_api_cached
+      end
+    end
+  end
+
   let(:spec_related) { "name like 'ProviderRefreshSpec%'" }
   let(:provider) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone

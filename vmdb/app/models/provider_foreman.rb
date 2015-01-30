@@ -10,6 +10,8 @@ class ProviderForeman < Provider
           :dependent   => :destroy,
           :autosave    => true
 
+  delegate :api_cached?, :ensure_api_cached, :to => :connect
+
   before_validation :ensure_managers
 
   validates :name, :presence => true, :uniqueness => true
