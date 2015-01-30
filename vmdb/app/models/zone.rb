@@ -202,7 +202,7 @@ class Zone < ActiveRecord::Base
 
   def miq_proxies
     ems_ids = self.ext_management_systems.collect(&:id)
-    MiqProxy.includes(:host).where("hosts.ems_id in (?)", ems_ids).to_a
+    MiqProxy.includes(:host).references(:host).where("hosts.ems_id in (?)", ems_ids).to_a
   end
 
   # Used by AggregationMixin
