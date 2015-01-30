@@ -1,5 +1,4 @@
 $:.push("#{File.dirname(__FILE__)}/../../../lib/metadata/linux")
-require 'miq-xml'
 
 class AgentController < ApplicationController
   def get

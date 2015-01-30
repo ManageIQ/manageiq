@@ -1,5 +1,3 @@
-require 'miq-xml'
-
 class MiqEvent < ActiveRecord::Base
   default_scope { where self.conditions_for_my_region_default_scope }
 
