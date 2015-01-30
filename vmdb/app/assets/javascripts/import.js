@@ -1,12 +1,13 @@
 //= require_directory ./SlickGrid-2.1/
+//= require dynatree_replacement
 
-var setUpImportClickHandlers = function(url) {
+var setUpImportClickHandlers = function(url, importCallback) {
   $('.import-commit').click(function() {
     miqSparkleOn();
     clearMessages();
 
     $.post(url, $('#import-form').serialize(), function(data) {
-      var flashMessage = JSON.parse(data).first();
+      var flashMessage = data[0];
       if (flashMessage.level == 'error') {
         showErrorMessage(flashMessage.message);
       } else {
@@ -15,8 +16,13 @@ var setUpImportClickHandlers = function(url) {
 
       $('.import-or-export').show();
       $('.import-data').hide();
+
+      if (importCallback !== undefined) {
+        importCallback();
+      }
+
       miqSparkleOff();
-    });
+    }, 'json');
   });
 
   $('.import-cancel').click(function() {
@@ -24,13 +30,13 @@ var setUpImportClickHandlers = function(url) {
     clearMessages();
 
     $.post('cancel_import', $('#import-form').serialize(), function(data) {
-      var flashMessage = JSON.parse(data).first();
+      var flashMessage = data[0];
       showSuccessMessage(flashMessage.message);
 
       $('.import-or-export').show();
       $('.import-data').hide();
       miqSparkleOff();
-    });
+    }, 'json');
   });
 
   $('#toggle-all').click(function() {

@@ -601,6 +601,7 @@ Vmdb::Application.routes.draw do
     },
     :miq_ae_customization => {
       :get => %w(
+        dialog_accordion_json
         explorer
         export_service_dialogs
         review_import

@@ -50,5 +50,12 @@
     });
 
     listenForDialogPostMessages();
-    setUpImportClickHandlers('import_service_dialogs');
+
+    var importCallback = function() {
+      $.get('dialog_accordion_json', function(data) {
+        dynatreeReplacement.replace(data.locals_for_render);
+      });
+    };
+
+    setUpImportClickHandlers('import_service_dialogs', importCallback);
   });
