@@ -1,21 +1,26 @@
 module ApplicationController::DialogRunner
   extend ActiveSupport::Concern
 
+  def dialog_cancel_form(flash = nil)
+    @sb[:action] = @edit = nil
+    @in_a_form = false
+    if session[:edit][:explorer]
+      add_flash(flash)
+      replace_right_cell
+    else
+      render :update do |page|
+        page.redirect_to :action    => 'show',
+                         :id        => session[:edit][:target_id],
+                         :flash_msg => flash  # redirect to miq_request show_list screen
+      end
+    end
+  end
+
   def dialog_form_button_pressed
     case params[:button]
       when "cancel"
         flash = _("%s was cancelled by the user") % "#{ui_lookup(:model=>'Service')} Order"
-        @sb[:action] = @edit = nil
-        @in_a_form = false
-        if session[:edit][:explorer]
-          add_flash(flash)
-          replace_right_cell
-        else
-          render :update do |page|
-            page.redirect_to :action => 'show', :id => session[:edit][:target_id],
-                             :flash_msg => flash  # redirect to miq_request show_list screen
-          end
-        end
+        dialog_cancel_form(flash)
       when "submit"
         return unless load_edit("dialog_edit__#{params[:id]}","replace_cell__explorer")
         begin
@@ -36,23 +41,30 @@ module ApplicationController::DialogRunner
             end
           else
             flash = _("%s Request was Submitted") % "Order"
-            @sb[:action] = @edit = nil
-            @in_a_form = false
-            if session[:edit][:explorer]
-              add_flash(flash)
-              if request.parameters[:controller] == "catalog"
-                #only do this Service PRovision requests
-                render :update do |page|
-                  page.redirect_to :controller=>'miq_request', :action => 'show_list', :flash_msg=>flash  # redirect to miq_request show_list screen
+            if role_allows(:feature => "miq_request_show_list", :any => true)
+              @sb[:action] = @edit = nil
+              @in_a_form = false
+              if session[:edit][:explorer]
+                add_flash(flash)
+                if request.parameters[:controller] == "catalog"
+                  #only do this Service PRovision requests
+                  render :update do |page|
+                    page.redirect_to :controller => 'miq_request',
+                                     :action     => 'show_list',
+                                     :flash_msg  => flash  # redirect to miq_request show_list screen
+                  end
+                else
+                  replace_right_cell
                 end
               else
-                replace_right_cell
+                render :update do |page|
+                  page.redirect_to :action    => 'show',
+                                    :id       => session[:edit][:target_id],
+                                   :flash_msg => flash  # redirect to miq_request show_list screen
+                end
               end
             else
-              render :update do |page|
-                page.redirect_to :action => 'show', :id => session[:edit][:target_id],
-                                 :flash_msg => flash  # redirect to miq_request show_list screen
-              end
+              dialog_cancel_form(flash)
             end
           end
         end
