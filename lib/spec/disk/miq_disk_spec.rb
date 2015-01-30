@@ -9,10 +9,6 @@ require 'modules/RawDiskProbe'
 require 'modules/QcowDiskProbe'
 
 describe MiqDisk do
-  before(:all) do
-    init_logger
-  end
-
   describe "#getDisk" do
 
     it "returns new matching disk instance" do

@@ -7,10 +7,6 @@ require 'MiqDisk'
 require 'modules/RawDisk'
 
 describe RawDisk do
-  before(:all) do
-    init_logger
-  end
-
   describe "#read" do
     around do |example|
       Camcorder.use_recording('rawdisk_read') do
