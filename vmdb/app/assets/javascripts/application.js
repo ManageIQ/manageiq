@@ -6,6 +6,7 @@
 //= require directives/repository/valid_unc_path
 //= require controllers/repository/repository_form_controller
 //= require cfme_application
+//= require miq_dynatree_replacement
 //= require dialog_import_export
 //= require widget_import_export
 //= require automate_import_export

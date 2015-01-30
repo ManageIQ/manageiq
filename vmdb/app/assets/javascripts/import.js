@@ -1,5 +1,4 @@
 //= require_directory ./SlickGrid-2.1/
-//= require dynatree_replacement
 
 var setUpImportClickHandlers = function(url, importCallback) {
   $('.import-commit').click(function() {

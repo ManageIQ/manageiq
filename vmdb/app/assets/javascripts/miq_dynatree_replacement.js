@@ -1,4 +1,4 @@
-var dynatreeReplacement = {
+var miqDynatreeReplacement = {
   replace: function(options) {
     var onDblClickFunction;
     var onClickFunction;
