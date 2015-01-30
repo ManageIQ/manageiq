@@ -17,6 +17,7 @@ class Zone < ActiveRecord::Base
   has_many :miq_schedules, :dependent => :destroy
   has_many :storage_managers
   has_many :ldap_regions
+  has_many :providers
 
   virtual_has_many :hosts,             :uses => {:ext_management_systems => :hosts}
   virtual_has_many :vms_and_templates, :uses => {:ext_management_systems => :vms_and_templates}

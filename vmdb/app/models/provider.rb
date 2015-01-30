@@ -16,4 +16,9 @@ class Provider < ActiveRecord::Base
   def verify_ssl?
     verify_ssl != OpenSSL::SSL::VERIFY_NONE
   end
+
+  def my_zone
+    zone.try(:name).presence || MiqServer.my_zone
+  end
+  alias_method :zone_name, :my_zone
 end
