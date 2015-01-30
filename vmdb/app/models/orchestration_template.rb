@@ -1,6 +1,9 @@
 require 'digest/md5'
 class OrchestrationTemplate < ActiveRecord::Base
   include NewWithTypeStiMixin
+  include ReportableMixin
+
+  acts_as_miq_taggable
 
   has_many :stacks, :class_name => "OrchestrationStack"
 

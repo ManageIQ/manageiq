@@ -18,6 +18,10 @@ class OrchestrationStack < ActiveRecord::Base
   has_many   :outputs,    :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackOutput"
   has_many   :resources,  :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackResource"
 
+  alias orchestration_stack_parameters parameters
+  alias orchestration_stack_outputs    outputs
+  alias orchestration_stack_resources  resources
+
   # @param options [Hash] what to update for the stack. Option keys and values are:
   #   :template (String, URI, S3::S3Object, Object) - A new stack template.
   #     This may be provided in a number of formats including:
