@@ -1,10 +1,8 @@
 require 'spec_helper'
 
-$LOAD_PATH << lib_disk_dir
-
 require 'ostruct'
-require 'MiqDisk'
-require 'modules/RawDisk'
+require 'disk/MiqDisk'
+require 'disk/modules/RawDisk'
 
 describe RawDisk do
   describe "#read" do
@@ -13,7 +11,7 @@ describe RawDisk do
         Camcorder.intercept MiqLargeFile::MiqLargeFileOther, :seek, :read
         Camcorder.intercept MiqLargeFile::MiqLargeFileStat,  :blockdev?
 
-        disk_info = OpenStruct.new(:fileName => image_for('basic.img'))
+        disk_info = OpenStruct.new(:fileName => image_path('basic.img'))
         @disk     = MiqDisk.getDisk(disk_info, "RawDiskProbe")
 
         example.run
@@ -32,7 +30,7 @@ describe RawDisk do
         Camcorder.intercept MiqLargeFile::MiqLargeFileOther, :seek, :write
         Camcorder.intercept MiqLargeFile::MiqLargeFileStat,  :blockdev?
 
-        disk_info = OpenStruct.new(:fileName  => image_for('basic.img'),
+        disk_info = OpenStruct.new(:fileName  => image_path('basic.img'),
                                    :mountMode => 'rw')
         @disk     = MiqDisk.getDisk(disk_info, "RawDiskProbe")
 

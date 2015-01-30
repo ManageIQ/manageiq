@@ -1,3 +1,4 @@
+$:.push(__dir__) unless $:.include?(__dir__)
 $:.push("#{File.dirname(__FILE__)}/modules")
 $:.push("#{File.dirname(__FILE__)}/../util")
 
