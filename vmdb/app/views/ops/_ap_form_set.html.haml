@@ -1,7 +1,7 @@
 - url = url_for(:action=>'ap_form_field_changed',:item_type=>"category", :id=>"#{@scan.id || "new"}")
 #form_div
   %fieldset
-    %p.legend Category Selection
+    %p.legend=_("Category Selection")
     %table.style1
       %tr
         %td

@@ -2,7 +2,8 @@
   - if @zones
     = render(:partial=>"layouts/flash_msg")
     - if @zones.empty?
-      = render :partial => 'layouts/info_msg', :locals => {:message => "No Zones found."}
+      = render :partial => 'layouts/info_msg',
+               :locals  => {:message => _("No Zones found.")}
     - else
       %table.style3
         %thead
@@ -13,14 +14,14 @@
             %tr{:class => cycle('row0', 'row1'),
               :onclick => "cfmeDynatree_activateNode('settings_tree', 'z-#{to_cid(z.id)}');",
               :onmouseover => "this.style.cursor='pointer'",
-              :title => "View this Zone's settings"}
+              :title => _("View this Zone's settings")}
               %td{:nowrap => ""}
                 %img{:border => "0", :height => "20", :src => "/images/icons/new/zone.png", :valign => "middle", :width => "20"}/
               %td
                 - if @sb[:my_zone] == z.name
                   %b
                     = h(ui_lookup(:model=>z.class.to_s)) + ":"
-                    = h(z.description) + " (current)"
+                    = h(z.description) + _(" (current)")
                 - else
                   = h(ui_lookup(:model=>z.class.to_s))
                   \: #{h(z.description)}

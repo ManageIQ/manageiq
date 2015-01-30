@@ -1,14 +1,14 @@
 %fieldset
-  %p.legend File Entry
+  %p.legend=_("File Entry")
   %table.style3
     %thead
       %tr
         %th.icon
-        %th Name
-        %th Collect Contents?
+        %th=_("Name")
+        %th=_("Collect Contents?")
     %tbody
       - if !params[:add] && params[:add] != "new"
-        %tr#new_tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url=>{:action=>'ap_ce_select', :add=>'new', :item=>"file", :id=>"#{@scan.id || "new"}"}), :title => "Click to add a new entry"}
+        %tr#new_tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url=>{:action=>'ap_ce_select', :add=>'new', :item=>"file", :id=>"#{@scan.id || "new"}"}), :title => _("Click to add a new entry")}
           %td
             .rollover
               = image_tag("/images/toolbars/new.png", :class=>"rollover small")
@@ -19,9 +19,12 @@
           %td
             .rollover
               = image_submit_tag("/images/toolbars/import.png",
-                :class=>"rollover small", :name=>"accept",
-                :alt=>"Add this entry", :title=>"Add this entry", :item_type=>"file",
-                :id=>"#{@scan.id || "new"}")
+                :class     => "rollover small",
+                :name      => "accept",
+                :alt       => _("Add this entry"),
+                :title     => _("Add this entry"),
+                :item_type => "file",
+                :id        => "#{@scan.id || "new"}")
           %td.all
             = text_field("entry", "fname", :maxlength=>MAX_NAME_LEN)
             = hidden_field("item", "type1", :value=>"file")
@@ -31,19 +34,23 @@
         - session[:file_names].sort_by { |r| r["target"] }.each do |entry|
           - if session[:edit_filename] != entry["target"]
             %tr{:class => cycle('row0', 'row1'), :id => "#{entry["target"]}_tr"}
-              %td{:onclick => remote_function(:url=>{:action=>'ap_ce_delete', :file_name=>entry["target"], :id=>"#{@scan.id || "new"}"}), :title => "Click to delete this entry"}
+              %td{:onclick => remote_function(:url=>{:action=>'ap_ce_delete', :file_name=>entry["target"], :id=>"#{@scan.id || "new"}"}), :title => _("Click to delete this entry")}
                 = image_tag("/images/toolbars/delete.png", :class=>"rollover small")
-              %td{:onclick => remote_function(:url=>{:action=>'ap_ce_select', :file_name=>entry["target"], :edit_entry=>'edit_file', :field=>"fname", :id=>"#{@scan.id || "new"}"}), :title => "Click to update this entry"}
+              %td{:onclick => remote_function(:url=>{:action=>'ap_ce_select', :file_name=>entry["target"], :edit_entry=>'edit_file', :field=>"fname", :id=>"#{@scan.id || "new"}"}), :title => _("Click to update this entry")}
                 = h(entry["target"])
-              %td{:onclick => remote_function(:url=>{:action=>'ap_ce_select', :file_name=>entry["target"], :edit_entry=>'edit_file', :field=>"fname", :id=>"#{@scan.id || "new"}"}), :title => "Click to update this entry"}
+              %td{:onclick => remote_function(:url=>{:action=>'ap_ce_select', :file_name=>entry["target"], :edit_entry=>'edit_file', :field=>"fname", :id=>"#{@scan.id || "new"}"}), :title => _("Click to update this entry")}
                 = h(entry["content"] ? entry["content"] : false)
           - else
             - if params[:add] != "new"
               %tr{:class => cycle('row0', 'row1'), :id => "edit_tr"}
                 %td
                   = image_submit_tag("/images/toolbars/import.png",
-                    :class=>"rollover small",
-                    :id=>"accept", :name=>"accept", :alt=>"Update this entry", :title=>"Update this entry", :id=>"#{@scan.id || "new"}")
+                    :class => "rollover small",
+                    :id    => "accept",
+                    :name  => "accept",
+                    :alt   => _("Update this entry"),
+                    :title => _("Update this entry",
+                    :id    => "#{@scan.id || "new"}")
                 %td.all
                   = text_field("entry", "fname", :maxlength=>MAX_NAME_LEN, "value"=>session[:edit_filename])
                   = hidden_field("item", "type1", :value=>"file")
