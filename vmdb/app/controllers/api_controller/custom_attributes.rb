@@ -4,7 +4,7 @@ class ApiController
     # Custom Attributes Supporting Methods
     #
     def custom_attributes_query_resource(object)
-      object.send("custom_attributes")
+      object.custom_attributes
     end
 
     def custom_attributes_add_resource(object, _type, _id, data = nil)
@@ -44,7 +44,7 @@ class ApiController
 
     def delete_custom_attribute(object, ca)
       return if ca.blank?
-      object.set_custom_field(ca.name, '') if ca.source == "VC"
+      object.set_custom_field(ca.name, '') if ca.stored_on_provider?
       ca.delete
       ca
     end
@@ -54,7 +54,7 @@ class ApiController
     end
 
     def update_custom_field(object, ca)
-      object.set_custom_field(ca.name.to_s, ca.value.to_s) if ca.source == "VC"
+      object.set_custom_field(ca.name.to_s, ca.value.to_s) if ca.stored_on_provider?
     end
 
     def find_custom_attribute(object, id, data)
