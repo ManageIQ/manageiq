@@ -8,5 +8,6 @@ module MiqAeMethodService
     expose :key_pairs,             :association => true
     expose :security_groups,       :association => true
     expose :cloud_resource_quotas, :association => true
+    expose :orchestration_stacks,  :association => true
   end
 end
