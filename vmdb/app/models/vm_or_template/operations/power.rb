@@ -24,7 +24,7 @@ module VmOrTemplate::Operations::Power
     raw_suspend unless policy_prevented?(:request_vm_suspend)
   end
 
-  # Pause keeps the VM in memory but does not give it CPU cycles.  (HyperV, KVM)
+  # Pause keeps the VM in memory but does not give it CPU cycles.
   # Not supported in VMware, so it is the same as suspend
   def raw_pause
     run_command_via_parent(:vm_pause)

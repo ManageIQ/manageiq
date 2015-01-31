@@ -324,8 +324,6 @@ workers:
           :restart_interval: 2.hours
         :ems_refresh_worker_amazon:
           :poll_method: :normal
-        :ems_refresh_worker_kvm:
-          :poll_method: :normal
         :ems_refresh_worker_microsoft:
           :poll_method: :normal
         :ems_refresh_worker_redhat:

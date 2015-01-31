@@ -2867,7 +2867,7 @@ describe ApplicationHelper do
     end
 
     context "when record is valid" do
-      [HostRedhat, EmsKvm].each do |c|
+      [HostRedhat].each do |c|
         it "and with #{c}" do
           record = c.new
           get_record_cls(record).should eql(record.class.base_class.to_s)
