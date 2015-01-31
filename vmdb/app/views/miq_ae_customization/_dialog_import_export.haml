@@ -28,7 +28,7 @@
   %form#import-form
     %p.legend=_('Import Service Dialogs')
 
-    %label(for='toggle-all')_=('All')
+    %label(for='toggle-all')= _('All')
     %input#toggle-all(type='checkbox')
 
     #import-grid
@@ -38,8 +38,10 @@
         %td(align="right")
           #buttons
             = hidden_field_tag(:import_file_upload_id, '', :class => "hidden-import-file-upload-id")
-            = button_tag(_('Commit'), :alt => "Commit Changes", :class => "btn btn-primary")
-            = button_tag(_('Cancel'), :alt => "Cancel Changes", :class => "btn btn-default")
+            = button_tag(:type => "button", :alt => "Commit Changes", :class => "btn btn-primary import-commit") do
+              = _('Commit')
+            = button_tag(:type => "button", :alt => "Cancel Changes", :class => "btn btn-default import-cancel") do
+              = _('Cancel')
 
 :javascript
   $(function() {
@@ -48,5 +50,12 @@
     });
 
     listenForDialogPostMessages();
-    setUpImportClickHandlers('import_service_dialogs');
+
+    var importCallback = function() {
+      $.get('dialog_accordion_json', function(data) {
+        miqDynatreeReplacement.replace(data.locals_for_render);
+      });
+    };
+
+    setUpImportClickHandlers('import_service_dialogs', importCallback);
   });
