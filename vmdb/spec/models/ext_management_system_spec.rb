@@ -13,7 +13,6 @@ describe ExtManagementSystem do
       "vmwarews",
       "ec2",
       "scvmm",
-      "kvm",
       "rhevm",
       "openstack",
       "openstack_infra"

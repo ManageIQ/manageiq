@@ -1,6 +1,5 @@
 class EmsInfra < ExtManagementSystem
   SUBCLASSES = %w{
-    EmsKvm
     EmsMicrosoft
     EmsOpenstackInfra
     EmsRedhat
@@ -12,7 +11,7 @@ class EmsInfra < ExtManagementSystem
   end
 
   def self.supported_subclasses
-    subclasses - [EmsKvm]
+    subclasses
   end
 
   def self.supported_types

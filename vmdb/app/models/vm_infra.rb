@@ -1,6 +1,5 @@
 class VmInfra < Vm
   SUBCLASSES = %w{
-    VmKvm
     VmMicrosoft
     VmRedhat
     VmVmware
