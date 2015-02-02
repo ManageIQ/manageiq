@@ -9,8 +9,6 @@ class TreeBuilderButtons  < TreeBuilderAeCustomization
   def x_get_tree_roots(options)
     resolve = Hash.new
     CustomButton.button_classes.each{|db| resolve[db] = ui_lookup(:model=>db)}
-    #deleting ServiceTemplate, don't need to show those in automate buttons tree
-    resolve.delete_if {|key, value| key == "ServiceTemplate" }
     @sb[:target_classes] = resolve.invert
     resolve = Array(resolve.invert).sort
     resolve.collect { |typ| {:id => "ab_#{typ[1]}", :text => typ[0], :image => buttons_node_image(typ[1]), :tip => typ[0]} }
