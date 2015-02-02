@@ -2710,7 +2710,8 @@ private
   def ns_right_cell_text
     model = ui_lookup(:model => @edit[:typ])
     name_for_msg = @edit[:rec_id].nil? ? _("Adding a new %s") : _("Editing %{model} \"%{name}\"")
-    options = @edit[:rec_id].nil? ? {:model => model} : {:model => model, :name => @ae_ns.name}
+    options = @edit[:rec_id].nil? ? ui_lookup(:model => model) : {:model => ui_lookup(:model => model),
+                                                                  :name  => @ae_ns.name}
     name_for_msg % options
   end
 
