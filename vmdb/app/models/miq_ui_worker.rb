@@ -12,8 +12,8 @@ class MiqUiWorker < MiqWorker
     end
   end
 
-  BALANCE_MEMBER_CONFIG_FILE = '/etc/httpd/conf.d/cfme-balancer-ui.conf'
-  REDIRECTS_CONFIG_FILE      = '/etc/httpd/conf.d/cfme-redirects-ui'
+  BALANCE_MEMBER_CONFIG_FILE = Pathname.new(ENV['MIQ_APACHE_ROOT_DIR']).join('etc/httpd/conf.d/cfme-balancer-ui.conf').to_s
+  REDIRECTS_CONFIG_FILE      = Pathname.new(ENV['MIQ_APACHE_ROOT_DIR']).join('etc/httpd/conf.d/cfme-redirects-ui').to_s
   STARTING_PORT              = 3000
   LB_METHOD                  = :busy
   REDIRECTS                  = '/'

@@ -18,8 +18,9 @@ EOS
       HTTP_KEYTAB         = "/etc/http.keytab"
 
       EXTERNAL_AUTH_FILE  = "conf.d/cfme-external-auth"
-      HTTPD_EXTERNAL_AUTH = "/etc/httpd/#{EXTERNAL_AUTH_FILE}"
-      HTTPD_CONFIG        = "/etc/httpd/conf.d/cfme-https-application.conf"
+
+      HTTPD_EXTERNAL_AUTH = Pathname.new(ENV['MIQ_APACHE_ROOT_DIR']).join("etc/httpd/#{EXTERNAL_AUTH_FILE}").to_s
+      HTTPD_CONFIG        = Pathname.new(ENV['MIQ_APACHE_ROOT_DIR']).join("etc/httpd/conf.d/cfme-https-application.conf").to_s
 
       GETSEBOOL_COMMAND   = "/usr/sbin/getsebool"
       SETSEBOOL_COMMAND   = "/usr/sbin/setsebool"
@@ -70,7 +71,7 @@ EOS
         config_file_write(config, HTTPD_CONFIG, timestamp)
 
         say("Restarting httpd ...")
-        LinuxAdmin::Service.new("httpd").restart
+        LinuxAdmin::Service.new(ENV['MIQ_APACHE_SERVICE_NAME']).restart
       end
 
       #
