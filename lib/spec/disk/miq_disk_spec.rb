@@ -23,7 +23,7 @@ describe MiqDisk do
   end
 
   describe "#discoverPartitions" do
-    it "returns all dos partitions" do
+    it "with dos partitions" do
       Camcorder.use_recording('dos_partitions') do
         Camcorder.intercept MiqLargeFile::MiqLargeFileOther, :seek, :read
         Camcorder.intercept MiqLargeFile::MiqLargeFileStat,  :blockdev?
@@ -34,16 +34,14 @@ describe MiqDisk do
       end
     end
 
-    context "no dos partitions" do
-      it "returns an empty array" do
-        Camcorder.use_recording('no_partitions') do
-          Camcorder.intercept MiqLargeFile::MiqLargeFileOther, :seek, :read
-          Camcorder.intercept MiqLargeFile::MiqLargeFileStat,  :blockdev?
+    it "without dos partitions" do
+      Camcorder.use_recording('no_partitions') do
+        Camcorder.intercept MiqLargeFile::MiqLargeFileOther, :seek, :read
+        Camcorder.intercept MiqLargeFile::MiqLargeFileStat,  :blockdev?
 
-          disk_info = OpenStruct.new(:fileName => image_path('basic.img'))
-          disk      = MiqDisk.getDisk(disk_info, "RawDiskProbe")
-          disk.getPartitions.should be_empty
-        end
+        disk_info = OpenStruct.new(:fileName => image_path('basic.img'))
+        disk      = MiqDisk.getDisk(disk_info, "RawDiskProbe")
+        disk.getPartitions.should be_empty
       end
     end
   end
