@@ -1,4 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/../../../lib/util/xml")
+$:.push(Rails.root.join("../lib/util/xml"))
 
 require 'miq-xml'
 require 'xml_utils'
