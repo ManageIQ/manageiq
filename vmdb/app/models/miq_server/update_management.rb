@@ -129,7 +129,6 @@ module MiqServer::UpdateManagement
       begin
         LinuxAdmin::RegistrationSystem.enable_repo(repo, assemble_registration_options)
       rescue AwesomeSpawn::CommandResultError
-        $log.error("MIQ(#{self.class.name}##{__method__}) Failed to enable repo: #{repo}")
         update_attributes(:upgrade_message => "failed to enable repo #{repo}")
       end
     end

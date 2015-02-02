@@ -95,7 +95,15 @@ module Vmdb
       $api_log       = MirroredLogger.new(File.join(path_dir, "api.log"),        "<API> ")
       $miq_ae_logger = MirroredLogger.new(File.join(path_dir, "automation.log"), "<AutomationEngine> ")
       $miq_ae_logger.mirror_level = VMDBLogger::INFO
+
+      configure_external_loggers
     end
+
+    def self.configure_external_loggers
+      require 'awesome_spawn'
+      AwesomeSpawn.logger = $log
+    end
+    private_class_method :configure_external_loggers
 
     def self.apply_config_value(config, logger, key, mirror_key = nil)
       apply_config_value_logged(config, logger, :level, key)
