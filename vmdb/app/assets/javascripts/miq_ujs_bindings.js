@@ -36,11 +36,13 @@ $(document).ready(function(){
       var el = $(this);
       el.unbind('change')
       el.change(function() {
-        miqJqueryRequest(url, {beforeSend: true,
-          complete: true,
+        var options = {
+          no_encoding: true,
           data: el.attr('id') + '=' + encodeURIComponent(el.prop('value')),
-          no_encoding: true
-        });
+        };
+        if (el.attr('data-miq_sparkle_on')) options['beforeSend'] = true
+        if (el.attr('data-miq_sparkle_off')) options['complete'] = true
+        miqJqueryRequest(url, options);
 			})
 		} else {
       $(this).off(); // Use jQuery to turn off observe_field, prevents multi ajax transactions
@@ -67,7 +69,7 @@ $(document).ready(function(){
       data: el.attr('id') + '=' + encodeURIComponent(el.prop('checked') ? el.val() : 'null'),
     };
     if (el.attr('data-miq_sparkle_on')) options['beforeSend'] = true
-    if (el.attr('data-miq_sparkle_on')) options['complete'] = true
+    if (el.attr('data-miq_sparkle_off')) options['complete'] = true
     miqJqueryRequest(url, options);
   });
 
