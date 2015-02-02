@@ -1818,7 +1818,7 @@ module ApplicationHelper
     return false if @layout == "exception"
     return true if params[:action] == "timeline"
     if ["show", "show_list", "show_timeline", "new", "edit",
-        "protect", "tagging_edit", "discover", "compare_miq", "drift_history", "drift",
+        "protect", "discover", "compare_miq", "drift_history", "drift",
         "users", "groups", "patches","firewall_rules", "usage",
         "host_services", "advanced_settings", "guest_applications", "filesystems",
         "assign","user_import","perf_top_chart"
