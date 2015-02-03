@@ -107,16 +107,18 @@ class FileDepotFtp < FileDepot
   end
 
   def destination_file
-    File.join(destination_path, file.destination_file_name)
+    destination_path.join(file.destination_file_name).to_s
   end
 
   def destination_path
-    File.join(base_path, file.destination_directory)
+    base_path.join(file.destination_directory)
   end
 
   def base_path
-    # URI.split(URI.encode("ftp://ftp.example.com/incoming"))[5]  => "/incoming"
-    URI.split(URI.encode(uri))[5]
+    # uri: "ftp://ftp.example.com/incoming" => #<Pathname:incoming>
+    path = URI.split(URI.encode(uri))[5]
+    path = Pathname.new(path)
+    path.relative_path_from(Pathname.new("/"))
   end
 
   def login_credentials
