@@ -1,6 +1,8 @@
 require 'net/ftp'
 
 class FileDepotFtp < FileDepot
+  attr_reader :ftp
+
   def self.uri_prefix
     "ftp"
   end
@@ -57,9 +59,11 @@ class FileDepotFtp < FileDepot
     $log.info("MIQ(#{self.class.name}##{__method__}) Connecting through #{self.class.name}: [#{name}]")
     begin
       connection = connect(cred_hash)
+      @ftp = connection
       yield connection
     ensure
       connection.try(:close)
+      @ftp = nil
     end
   end
 
@@ -67,12 +71,12 @@ class FileDepotFtp < FileDepot
     host       = URI.split(URI.encode(uri))[2]
 
     begin
-      ftp         = Net::FTP.new(host)
-      ftp.passive = true  # Use passive mode to avoid firewall issues see http://slacksite.com/other/ftp.html#passive
-      # ftp.debug_mode = true if settings[:debug]  # TODO: add debug option
       $log.info("#{log_header(__method__)} Connecting to #{self.class.name}: #{name} host: #{host}...")
+      @ftp         = Net::FTP.new(host)
+      @ftp.passive = true  # Use passive mode to avoid firewall issues see http://slacksite.com/other/ftp.html#passive
+      # @ftp.debug_mode = true if settings[:debug]  # TODO: add debug option
       creds = cred_hash ? [cred_hash[:username], cred_hash[:password]] : login_credentials
-      ftp.login(*creds)
+      @ftp.login(*creds)
       $log.info("#{log_header(__method__)} Connected to #{self.class.name}: #{name} host: #{host}")
     rescue SocketError => err
       $log.error("#{log_header(__method__)} Failed to connect.  #{err.message}")
@@ -81,7 +85,7 @@ class FileDepotFtp < FileDepot
       $log.error("#{log_header(__method__)} Failed to login.  #{err.message}")
       raise
     else
-      ftp
+      @ftp
     end
   end
 
