@@ -1282,7 +1282,7 @@ class CatalogController < ApplicationController
     end
     record_showing = (type && ["MiqTemplate", "Service", "ServiceTemplate", "ServiceTemplateCatalog"].include?(X_TREE_NODE_PREFIXES[type]) && !@view) || params[:action] == "x_show"
     # Clicked on right cell record, open the tree enough to show the node, if not already showing
-    if params[:action] == "x_show" && x_active_tree != :stcat_tree
+    if params[:action] == "x_show" && x_active_tree != :stcat_tree &&
         @record &&                                # Showing a record
         !@in_a_form                               # Not in a form
       add_nodes = open_parent_nodes(@record)      # Open the parent nodes of selected record, if not open
