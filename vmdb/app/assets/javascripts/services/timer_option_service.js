@@ -26,7 +26,10 @@ cfmeAngularApplication.service('timerOptionService', function() {
     timeObject("Hours", 6),
     timeObject("Hours", 8),
     timeObject("Hours", 12)
-  ].flatten();
+  ];
+  hourlyTimeOptions = $.map(hourlyTimeOptions, function(n){
+    return n;
+  });
 
   this.timerOptions = {
     "Once": [],
