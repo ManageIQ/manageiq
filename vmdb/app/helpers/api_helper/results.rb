@@ -32,6 +32,13 @@ module ApiHelper
       hash
     end
 
+    def add_policy_to_result(hash, ctype, policy)
+      return hash if policy.blank?
+      hash["#{ctype.to_s.singularize}_id".to_sym]   = policy.id
+      hash["#{ctype.to_s.singularize}_href".to_sym] = "#{@req[:base]}#{@req[:prefix]}/#{ctype}/#{policy.id}"
+      hash
+    end
+
     def log_result(hash)
       hash.each { |k, v| api_log_info("Result: #{k}=#{v}") }
     end
