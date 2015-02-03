@@ -1,6 +1,7 @@
 cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 'storageTable', 'scheduleFormId', 'oneMonthAgo', 'miqService', 'timerOptionService', function($http, $scope, storageTable, scheduleFormId, oneMonthAgo, miqService, timerOptionService) {
   var init = function() {
     $scope.finishedLoading = false;
+    cfmeAngularApplication.$scope = $scope;
 
     if (scheduleFormId == 'new') {
       $scope.newSchedule         = true;
@@ -10,7 +11,7 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
       $scope.filterValuesEmpty   = true;
       var today                  = new Date();
       var tomorrowsDate          = parseInt(today.getDate()) + 1;
-      $scope.scheduleDate        = today.getMonth() + 1 + "/" + tomorrowsDate + "/" + today.getFullYear();
+      $scope.miq_angular_date_1  = today.getMonth() + 1 + "/" + tomorrowsDate + "/" + today.getFullYear();
       $scope.scheduleTimerType   = 'Once';
       $scope.scheduleTimeZone    = 'UTC';
       $scope.scheduleStartHour   = '0';
@@ -34,7 +35,7 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
         $scope.scheduleName        = data.schedule_name;
         $scope.scheduleTimerType   = data.schedule_timer_type;
         $scope.scheduleTimerValue  = data.schedule_timer_value;
-        $scope.scheduleDate        = data.schedule_start_date;
+        $scope.miq_angular_date_1  = data.schedule_start_date;
         $scope.scheduleStartHour   = data.schedule_start_hour;
         $scope.scheduleStartMinute = data.schedule_start_min;
         $scope.scheduleTimeZone    = data.schedule_time_zone;
@@ -213,6 +214,13 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
 
   $scope.addClicked = function() {
     scheduleEditButtonClicked('add', true);
+  };
+
+  $scope.triggerCheckChange = function(date) {
+    $scope.miq_angular_date_1 = date;
+    $scope.$apply(function() {
+      $scope.scheduleForm.miq_angular_date_1.$setViewValue($scope.miq_angular_date_1);
+    });
   };
 
   init();
