@@ -1,23 +1,31 @@
-#login-screen{:class =>"#{get_vmdb_config[:server][:custom_login_logo] ? 'whitelabel' : ''}"}
-  %img#logo{:src => "#{session[:custom_logo] ? '/upload/custom_logo.png' : image_path("layout/login-screen-logo.png")}"}
-  .form
-    = render(:partial => "layouts/spinner", :locals => {:login => true})
-    #flash_div{:style =>"#{flash[:notice] ? "" : "display:none"}"}
-      #{flash[:notice]}
-    %fieldset
-      %legend
-        %img{:src => image_path("layout/product-name.png")}
-      #login_div
-        %p
-          %label=_('Username')
-          = text_field_tag('user_name', @user_name,:onkeypress => "if(miqEnterPressed(event)) miqAjaxAuth();")
-          = javascript_tag(javascript_focus('user_name'))
-        %p
-          %label=_('Password')
-          = password_field_tag('user_password',
-            @user_password,
-            :onkeypress => "if(miqEnterPressed(event)) miqAjaxAuth();",
-            :autocomplete => "off")
+%span#badge
+  %img{:src => "#{session[:custom_logo] ? '/upload/custom_logo.png' : image_path("layout/login-screen-logo.png")}"}
+.container
+  .row
+    .col-sm-12
+      #brand
+        %img{:src => image_path("layout/brand.svg"), :alt => "ManageIQ"}
+    .col-sm-7.col-md-6.col-lg-5.login
+      .form-horizontal#login_div
+        = render(:partial => "layouts/spinner", 
+                 :locals  => {:login => true})
+        #flash_div{:style =>"#{flash[:notice] ? "" : "display:none"}"}
+        #{flash[:notice]}
+        .form-group
+          %label.col-sm-3.col-md-3.control-label=_('Username')
+          .col-sm-9.col-md-9
+            = text_field_tag('user_name', @user_name, 
+                             :class      => "form-control",
+                             :onkeypress => "if(miqEnterPressed(event)) miqAjaxAuth();")
+            = javascript_tag(javascript_focus('user_name'))
+        .form-group
+          %label.col-sm-3.col-md-3.control-label=_('Password')
+          .col-sm-9.col-md-9
+            = password_field_tag('user_password',
+              @user_password,
+              :onkeypress   => "if(miqEnterPressed(event)) miqAjaxAuth();",
+              :autocomplete => "off",
+              :class        => "form-control")
 
         - if User.mode == 'database'
           = render :partial => 'login_more'
@@ -28,36 +36,51 @@
         %input{:type => "hidden", :id => "browser_os", :name => "browser_os"}
         %input{:type => "hidden", :id => "user_TZO", :name => "user_TZO"}
 
-      %ul.login_buttons
-        %li
-          = link_to({:action => "authenticate", :button => "login", :method => :post},
-            "data-miq_sparkle_on" => true,
-            "data-submit" => 'login_div',
-            :remote => true,
-            :id => "login",
-            :class => "button",
-            :title => _("Login")) { _("Log In") }
-          = link_to({:action => "kerberos_authenticate", :button => "sso_login", :method => :post},
-            "data-miq_sparkle_on" => true,
-            "data-miq_login_error" => true,
-            "data-submit" => 'login_div',
-            :remote => true,
-            :id => "sso_login",
-            :class => "button",
-            :hidden => true,
-            :title => _("SSO Login")) { _("SSO Log In") }
+        .form-group
+          .col-xs-8.col-sm-offset-2.col-sm-6.col-md-offset-3.col-md-6
+            - if User.mode == "database"
+              #back_button{:style => "display:none"}
+                = link_to({:action => "authenticate", 
+                           :button => "back", 
+                           :method => :post},
+                          :remote => true,
+                          :title => _("Back")) { _("Back")}
+              #more_button
+                = link_to({:action => "authenticate", 
+                           :button => "more", 
+                           :method => :post},
+                :remote => true,
+                :title => _("Update Password")) { _("Update password") }
 
-        - if User.mode == "database"
-          %li#back_button{:style => "display:none"}
-            = link_to({:action => "authenticate", :button => "back", :method => :post},
-              :remote => true,
-              :title => _("Back")) { _("Back") }
-          %li#more_button
-            = link_to({:action => "authenticate", :button => "more", :method => :post},
-            :remote => true,
-            :title => _("Update Password")) { _("Update password") }
-    - if get_vmdb_config[:session][:show_login_info]
-      %aside
+          .col-xs-4.col-sm-4.col-md-3.submit
+            = link_to(button_tag("Login",
+                                  :class => "btn btn-primary",
+                                  :alt   => "Login"),
+                                {:action               => "authenticate",
+                                 :button               => "login",
+                                 :id                   => "login",
+                                 :title                => _("Login") { _("Log In")},
+                                 :method               => :post,
+                                 :remote               => true,
+                                 "data-miq_sparkle_on" => true,
+                                 "data-submit"         => 'login_div'})
+
+            = link_to(button_tag("SSO Login",
+                                 :class => "btn btn-primary",
+                                 :alt   => "SSO Login"),
+                                 {:action => "kerberos_authenticate",
+                                  :button => "sso_login",
+                                  :title  => _("SSO Login") { _("SSO Log In")},
+                                  :method => :post,
+                                  :remote => true},
+                                 :id                    => "sso_login",
+                                 :hidden                => true,
+                                 "data-miq_sparkle_on"  => true,
+                                 "data-miq_login_error" => true,
+                                 "data-submit"          => 'login_div')
+
+    .col-sm-5.col-md-6.col-lg-7.details
+      - if get_vmdb_config[:session][:show_login_info]
         %p
           =_('Region:')
           %span

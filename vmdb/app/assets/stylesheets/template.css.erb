@@ -1,10 +1,10 @@
-* { margin:0; padding:0; }
-html { padding: 0 0 25px 0;  /* create area for notification */}
-body { font: 13px/1.231 OpenSansRegular,Arial,Helvetica,sans-serif;}
-ul { list-style-type: none;}
+* { margin:0; /*padding:0;*/ }
+html { padding: 0 0 /*25*/px 0;  /* create area for notification */}
+/*body { font: 13px/1.231 OpenSansRegular,Arial,Helvetica,sans-serif;}*/
+/*ul { list-style-type: none;}*/
 ul.normal{list-style-type: disc; margin-left: 15px}  /*use for standard bulleted lists*/
 ul.normal li{float: none; line-height: 1.5em}   /*use for standard bulleted lists*/
-li { float:left;}
+/*li { float:left;}*/
 legend { display: none;}
 a { text-decoration: none;}
 h2 { margin:0; padding:0;line-height: 1.4em;font-family: OpenSansSemibold,Arial,Helvetica,sans-serif; font-weight:normal}
@@ -19,77 +19,6 @@ textarea { width: 98.5%; border: 1px solid #d1d1d1; padding: 7px; line-height: 1
 strong {font-family: OpenSansSemibold,Arial,Helvetica,sans-serif;font-weight:normal} /*using OpenSansSemibold for all bolded text*/
 
 /* begin modified Patternfly code */
-
-.btn {
-    display: inline-block;
-    margin-bottom: 0px;
-    font-weight: 600;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-    background-image: none;
-    border: 1px solid;
-    white-space: nowrap;
-    padding: 2px 6px;
-    font-size: 12px;
-    line-height: 1.66667;
-    border-radius: 1px;
-    -moz-user-select: none;
-    box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.1);
-}
-
-.btn-xs {
-    padding: 1px 5px;
-    font-size: 11px;
-    font-weight: 400;
-    line-height: 1.5;
-    border-radius: 1px;
-}
-
-.btn-danger {
-    background-color: #AB070F;
-    background-image: linear-gradient(to bottom, #D60915 0px, #AC0710 100%);
-    background-repeat: repeat-x;
-    border-color: #781919;
-    color: #FFF;
-}
-
-.btn-default {
-    background-color: #EEE;
-    background-image: linear-gradient(to bottom, #FAFAFA 0px, #EDEDED 100%);
-    background-repeat: repeat-x;
-    border-color: #B7B7B7;
-    color: #4D5258;
-}
-
-.btn-primary {
-    background-color: #189AD1;
-    background-image: linear-gradient(to bottom, #1CACE8 0px, #1998CC 100%);
-    background-repeat: repeat-x;
-    border-color: #267DA1;
-    color: #FFF;
-}
-
-.btn-danger:hover, .btn-danger:focus, .btn-danger:active, .btn-danger.active, .open .dropdown-toggle.btn-danger {
-    background-color: #AB070F;
-    background-image: none;
-    border-color: #781919;
-    color: #FFF;
-}
-
-.btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open .dropdown-toggle.btn-default {
-    background-color: #EEE;
-    background-image: none;
-    border-color: #B7B7B7;
-    color: #4D5258;
-}
-
-.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open .dropdown-toggle.btn-primary {
-    background-color: #189AD1;
-    background-image: none;
-    border-color: #267DA1;
-    color: #FFF;
-}
 
 .btn-disabled {
   opacity:0.4; 
@@ -128,74 +57,6 @@ dl.dl-horizontal dt {
     font-family:'OpenSansSemibold';
     line-height: 2.2;
 }
-
-.breadcrumb {
-  list-style: none outside none;
-  margin: 0 0 25px 0;
-  padding: 8px 0;
-  border-radius: 1px
-  background-color: transparent;
-  font-size: 11px;}
-.breadcrumb > li + li:before {
-  padding: 0px 9px 0px 7px;
-  color: #999;
-  content: "";
-  font-family: FontAwesome;
-  font-size: 11px;}
-.breadcrumb > li > a {
-    color: #0099D3;}
-.breadcrumb > li > a:hover,.breadcrumb > li > a:focus {
-    color: #00618A;
-    text-decoration: underline;}
-
-hr{
-  margin-top: 35px;
-  margin-bottom: 19px;
-  border-right: 0px none;
-  border-width: 1px 0px 0px;
-  border-style: solid none none;
-  border-color: #cecdcd;}
-  
-@font-face{
-  font-weight:normal;
-  font-style:normal;font-family:'OpenSansRegular';
-  src:url('<%= asset_path("OpenSans-Regular-webfont.eot") %>');
-  src:url('<%= asset_path("OpenSans-Regular-webfont.eot?#iefix") %>') 
-    format('embedded-opentype'),url('<%= asset_path("OpenSans-Regular-webfont.woff") %>')
-    format('woff'),url('<%= asset_path("OpenSans-Regular-webfont.ttf") %>')
-    format('truetype'),url('<%= asset_path("OpenSans-Regular-webfont.svg#OpenSansRegular") %>')
-    format('svg');}
-
-@font-face{
-  font-weight:normal;
-  font-style:normal;
-  font-family:'OpenSansSemibold';
-  src:url('<%= asset_path("OpenSans-Semibold-webfont.eot") %>');
-  src:url('<%= asset_path("OpenSans-Semibold-webfont.eot?#iefix") %>')
-    format('embedded-opentype'),url('<%= asset_path("OpenSans-Semibold-webfont.woff") %>') 
-    format('woff'),url('<%= asset_path("OpenSans-Semibold-webfont.ttf") %>') 
-    format('truetype'),url('<%= asset_path("OpenSans-Semibold-webfont.svg#OpenSansSemibold") %>') 
-    format('svg');}
-
-@font-face{
-  font-weight:normal;
-  font-style:normal;
-  font-family:'OpenSansLight';
-  src:url('<%= asset_path("OpenSans-Light-webfont.eot") %>');
-  src:url('<%= asset_path("OpenSans-Light-webfont.eot?#iefix") %>')
-    format('embedded-opentype'),url('<%= asset_path("OpenSans-Light-webfont.woff") %>') 
-    format('woff'),url('<%= asset_path("OpenSans-Light-webfont.ttf") %>') 
-    format('truetype'),url('<%= asset_path("OpenSans-Light-webfont.svg#OpenSansLight") %>') 
-    format('svg');}
-
-/* flash messages */
-
-.alert {position: relative;padding:7px; margin: 0 0 19px 0; border:1px solid transparent;border-radius:1px;}
-.alert-success {background-color:#fff;border-color:#5cb75c;color:#333;}
-.alert-warning {background-color:#fff;border-color:#eb7720;color:#333}
-.alert-danger {background-color:#fff;border-color:#c90813;color:#333}
-.alert-info {background-color:#fff;border-color:#ccc;color:#333}
-.alert strong{position: absolute; padding: 3px 0 0 5px; font-size: 12px}
 
 /* end modified Patternfly code */
 
@@ -255,11 +116,16 @@ nobr { white-space: nowrap;}
 
 /********************** Task Bar **********************/
 
-#teaser { z-index: 99;width: auto; height: 33px; background: url(/images/layout/teaserbarlg3.png) left bottom repeat-x;}
-#taskbar_div  { z-index: 99;width: auto; height: 64px; background: url(/images/layout/teaserbarlg3.png) left top repeat-x;}
-#dashboard_dropdown { position: relative;top: -34px;left: 6px;z-index: 2;padding: 0 8px 0 0; width: 115px;height: 37px;}
-#searchbox { position: absolute; right: 17px; z-index: 20; width: 285px; height: 24px; border: 1px solid #7e7e7e; border-top: 0px; background: url(/images/layout/teaserbarlg3.png);}
-#search_text { z-index: 21; margin: 1px 0 0 12px; width: 220px; height: 16px;}
+#taskbar_div  { 
+  z-index: 99;
+  width: auto;   
+  height: 32px;
+/*  background-image: linear-gradient(to bottom, #FAFAFA 0%, #EDEDED 100%);
+  border-bottom: 1px solid #c7c7c7;*/
+}
+#dashboard_dropdown { position: absolute;right: 0;z-index: 2;padding: 0 8px 0 0; width: 115px; top: 0px;}
+#searchbox { position: absolute; right: 20px; z-index: 20; width: 285px; height: 26px; border: 1px solid #bebebe; background: #f5f5f5;}
+#search_text { z-index: 21; margin: 4px 0 0 12px; width: 220px; height: 16px;}
     #search_text.nameonly { width: 257px;}  /* Wider if no adv search */
   #searchicon { position: absolute; top: 3px; right: 55px; z-index: 22; width: 16px; height: 16px;}
     #searchicon.nameonly { right: 18px;}    /* Move right if no adv search */
@@ -275,7 +141,7 @@ nobr { white-space: nowrap;}
  #control_searchicon { position: absolute; top: 4px; right: 16px; z-index: 51; width: 16px; height: 16px;}
 
 /********************** Listnav **************************/
-#accordion { overflow: hidden;width:215px;background: #ededed;}
+#accordion {}
 #accordion .topbar, #accordion .topbarDHTMLX  { z-index: 5;}
 #accordion .topbar a, #accordion .topbarDHTMLX a { 
             display:block;width: 215px;height:30px;background: #f8f8f8 url(/images/layout/teaserbarlg3.png) left bottom repeat-x;color:#454545;vertical-align: top;text-indent: 8px;  text-shadow: #ebebeb 0 1px 0;font: normal 93% OpenSansSemibold,Arial,Helvetica,sans-serif;line-height: 30px;}
@@ -308,29 +174,20 @@ td#leftcol { overflow: hidden; min-width:224px; width:224px;}
 /************ Tabs ************/
 
 ul#searchtoolbar  { margin: 0;padding: 2px 0 0 5px; width:100%;height: 30px; background: url(/images/layout/teaserbarlg3.png) left bottom repeat-x;}
-#searchtoolbar li { margin-right: 7px;padding: 0 4px 1px 4px; height:22px; border: 1px solid #7e7e7e; background: url(/images/layout/buttonbackground.png) top center repeat-x;}
+#searchtoolbar li { margin-right: 7px;padding: 0 4px 1px 4px; height:22px; width: 30px;float: left;display: inline;border: 1px solid #7e7e7e; background: url(/images/layout/buttonbackground.png) top center repeat-x;}
 #searchtoolbar li:hover { background: #aeaeae;}
 #searchtoolbar li:hover.dimmed {background: url(/images/layout/buttonbackground.png) top center repeat-x;}
 #searchtoolbar li img.dimmed { background: none;}
 
-/* Non-jquery tabs  */
-.tab2 {display:block; float:left; width: 100%; height: 27px; margin-bottom: 15px; border-bottom: 1px solid #cecdcd}      
-.tab2 li {padding: 3px 40px 0 0;}
-.tab2 li.active a {border-bottom: 2px #2289ba solid;  color: #2289ba !important;}     
-.tab2 li a {padding-bottom: 6px; color: #4d5258; font-size: 12px;}
-.tab2 li a:hover {border-bottom: 2px #2289ba solid ; color: #000; text-decoration: none;}
-
-/* Non-jquery tabs for Dashboard */
-.tab3   {float:left; position: relative; top: 4px; left: -100px; padding-left: 10px; margin: 0; border: 0}
-.tab3 li { margin-right: 0; border: 1px solid #7e7e7e; border-left: 0; background: url(/images/layout/buttonbackground.png) bottom center repeat-x; }
-.tab3 li:first-child { border-left: 1px solid #7e7e7e; }
-.tab3 li.active { background: #aeaeae; }
-.tab3 li a { display: block;margin: 2px 2px 0 0; padding: 1px 10px 1px 10px; height: 20px; background: none; vertical-align: middle; font: normal 12px OpenSansSemibold,Arial,Helvetica,sans-serif; }
-
 /* Automate Specific */
 .checkall { padding: 0 0 7px 7px;} /*styling for automate (Check All) */
+<<<<<<< Updated upstream
 #automate_tree_div { position: absolute; z-index: 49; left:100px; padding: 10px; overflow-y: none; background: #fff;}
 #automate_treebox { width: 550px; height:300px; top: 43px; padding: 15px 5px 5px 0;color:#000;overflow-Y:scroll}
+=======
+#automate_tree_div { position: absolute; z-index: 49; left:100px}
+#automate_tree_box { width: 550px; height:300px; top: 43px; padding: 15px 5px 5px 0;color:#000;overflow-Y:scroll}
+>>>>>>> Stashed changes
 /* End Automate Specific */
 
 /* Chargeback Specific */
@@ -395,12 +252,6 @@ img.tiny { margin: 0; padding: 0;width:20px;height:20px; border: 0; vertical-ali
 #policy_bar li{ display: inline;margin: 0 -6px 0 0;line-height: 0;}
 
 /*************************** Class for html buttons in explorer views *********************************/
-ul#set_default{ position: absolute; top:5px;  left: 105px; z-index:100;}
-#set_default li{ display: inline;margin: 0 -6px 0 0;line-height: 0;}
-#set_default img { width: 100px;height:20px;}
-#set_default  img:hover { background: url(/images/layout/set-default-hover.png);}
-#set_default .active img { background:  #4b4b4b;}
-
 /************ Quad Icons ************/
 
 #quadicon { position:relative;float:left;padding: 0 1px 1px 0;width: 72px; height: 80px;color: #e3e4e4;text-transform: none;}
@@ -474,13 +325,6 @@ img.timeline-event-bubble-image { width: 64px; height: 64px;}
   background:#f0f0f0;
 }
 
-#footer { 
-  bottom: 0;
-  padding: 3px 3px 3pc 120px;
-  background: #333;
-  color: #fff;
-  text-align: center;
-}
 
 #time { 
   float: right;
@@ -519,11 +363,9 @@ div.role_list { margin: 0 0 0 44px;width:400px; height:400px;}
   background: #fff;
 }
 
-div.gridbox_light table.hdr td,#tab a,#tab a.active, .title, .key, legend, a,
+div.gridbox_light table.hdr td,#tab a,#tab a.active, .title, .key, legend, /*a*/,
 .ui-tabs .ui-tabs-nav li.ui-tabs-selected a, .ui-tabs .ui-tabs-nav li.ui-state-disabled a, .ui-tabs .ui-tabs-nav li.ui-state-processing a
 { color: #4b4b4b;}
-
-#view_buttons_div { padding-right: 18px;}
 
 DIV#candu_charts_div fieldset p{ padding-top: 0;padding-bottom: 0;}
 
@@ -549,13 +391,13 @@ table.style3 thead tr th, .modtitle{
 } 
 table.style3 thead tr th.special{height: 30px; border-bottom:0px; text-align: left;} /*special header formatting for dropdowns, etc  within table above table data*/
 table.style3 thead tr th.special div {display:inline-block}
-table.style3 thead tr th.checkbox,
-table.style3 thead tr th.icon {width:24px; padding-left:6px}
+table.style3 thead tr th.checkbox {height: 26px;}
+table.style3 thead tr th.icon {width:24px; padding-left:6px;}
 table.style3 thead .sorting_asc, table.style3 thead .sorting_desc {
   display: block;
   position: relative;
   padding-top:6px;
-  padding-bottom:3px;
+  padding-bottom:20px !important;
   color: #2289ba;
 }
 table.style3 thead .sorting_asc a, table.style3 thead .sorting_desc a {
@@ -594,10 +436,10 @@ table.style3 tbody tr.no-hover:hover td {background: none !important; cursor:def
 table.style3 tbody tr.seperator td {margin:0; padding:0;height:5px;border: 0;background: #ccc;font-size: 2%;}
 table.style3 tbody tr td {border: 1px solid transparent;border-right: 1px solid #d1d1d1;border-bottom-color: #e7e7e7;padding: 2px 2px 2px 10px;margin: 0;vertical-align: top;cursor: default;}
 table.style3 tbody tr td img {width: 20px;height: 20px; float:left; padding-right: 5px}
-table.style3 tbody tr td.checkbox {width: 20px;}
+table.style3 tbody tr td.checkbox {width: 20px; height: 32px;padding-left: 24px;}
 table.style3 tbody tr td.group_spacer {font: normal 12px OpenSansSemibold,Arial,Helvetica,sans-serif;} /*used in miq_report*/
 table.style3 tbody tr td.icon {min-width:24px; padding-left:6px; text-align: center} 
-table.style3 tbody tr td.label {width: 33%;font: normal 12px OpenSansSemibold,Arial,Helvetica,sans-serif;cursor: default;}
+table.style3 tbody tr td.label {display: table-cell;width: 20% !important; min-width: 200px; font: normal 12px OpenSansSemibold,Arial,Helvetica,sans-serif;cursor: default;color: #333; text-align: left;}
 table.style3 tbody tr td.select {text-align:center;}
 table.style3 tfoot {display: none}
 
@@ -663,7 +505,7 @@ table.style3 tbody tr td.miq_rpt_green_bg, .miq_rpt_green_bg {
 .dhtmlxInfoBarLabel-2 a.active {text-decoration: underline}
 
 ul#toolbars { line-height: 0;}
-  #toolbars li { border: 1px solid #7e7e7e;}
+  #toolbars li { float: left; display: inline; border: 1px solid #7e7e7e;}
   #toolbars img { width:24px; height: 24px;}
   #toolbars  img:hover, #toolbars  img:hover, #toolbars .active img, #toolbars.active img { background: #e4e4e4;}
 

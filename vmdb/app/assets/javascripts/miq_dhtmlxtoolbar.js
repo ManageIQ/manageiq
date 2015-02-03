@@ -6,7 +6,7 @@ function miqInitToolbars() {
   $.each(miq_toolbars, function( key ) {
 		miqInitToolbar(miq_toolbars[key]);
 	});
-  miqResizeTaskbarCell();
+//  miqResizeTaskbarCell(); TODO: Commented out when removing outer DHTMLX layout, need to revisit
 }
 
 // Initialize a single toolbar

@@ -1,0 +1,60 @@
+//
+// Bootstrap-select
+// --------------------------------------------------
+
+.bootstrap-select.btn-group {
+  .btn {
+    .caret {
+      margin-top: -4px;
+    }
+  }
+  .dropdown-menu { // Also see navbar.less
+    > .active > a {
+      &, &:active {
+        background-color: @dropdown-link-hover-bg !important;
+        border-color: @dropdown-link-hover-border-color !important;
+        color: @gray-dark !important;
+        small {
+          color: @gray-light !important;
+        }
+      }
+    }
+    > .disabled > a {
+      color: @gray-light !important;
+    }
+    > .selected > a {
+      background-color: @dropdown-link-active-bg !important;
+      border-color: @dropdown-link-active-border-color !important;
+      color: #fff !important;
+      small {
+        color: #70c8e7 !important;
+        color:rgba(225, 255, 255, 0.5) !important;
+      }
+    }
+    .divider {
+      background: @dropdown-divider-bg !important;
+      margin: @dropdown-divider-margin !important;
+    }
+    dt {
+      color: #969696;
+      font-weight:normal;
+      padding: 1px 10px;
+    }
+    li {
+      & > a.opt {
+        padding: 1px 10px;
+      }
+      & a {
+        &:active small {
+          color: #70c8e7 !important;
+          color:rgba(225, 255, 255, 0.5) !important;
+        }
+        &:hover, &:focus {
+          small {
+            color: @gray-light;
+          }
+        }
+      }
+    }
+  }
+}

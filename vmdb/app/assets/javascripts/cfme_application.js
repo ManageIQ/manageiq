@@ -433,7 +433,7 @@ function miqSetButtons(count, button_div) {
 
 // Change table cell colors as mouse moves
 function ChangeColor(tablecell, highLight) {
-  if (highLight) tablecell.style.backgroundColor = '#f1f1f1';
+  if (highLight) tablecell.style.backgroundColor = '#fff';
   else tablecell.style.backgroundColor = '';
 }
 

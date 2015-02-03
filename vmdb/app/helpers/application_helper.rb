@@ -1818,7 +1818,7 @@ module ApplicationHelper
     return false if @layout == "exception"
     return true if params[:action] == "timeline"
     if ["show", "show_list", "show_timeline", "new", "edit",
-        "protect", "tagging_edit", "discover", "compare_miq", "drift_history", "drift",
+        "protect", "discover", "compare_miq", "drift_history", "drift",
         "users", "groups", "patches","firewall_rules", "usage",
         "host_services", "advanced_settings", "guest_applications", "filesystems",
         "assign","user_import","perf_top_chart"
@@ -2458,11 +2458,12 @@ module ApplicationHelper
       tag_attrs = { :title => title }
       check_changes = args[:check_changes] || args[:check_changes].nil?
       tag_attrs[:onclick] = 'return miqCheckForChanges()' if check_changes
-
-      link_to_with_icon(link_text, link_params, tag_attrs, args[:image_path])
+      link_to_with_icon(link_text, link_params, tag_attrs)
     else
-      content_tag(:p) do
-        image_tag('/images/icons/16/link_none.gif') + "#{args.key?(:link_text) ? args[:link_text] : entity_name} #{none}"
+      content_tag(:li, class: "disabled") do
+        content_tag(:a, href: "#") do
+          "#{args.key?(:link_text) ? args[:link_text] : entity_name} #{none}"
+        end
       end
     end
   end
@@ -2489,10 +2490,8 @@ module ApplicationHelper
 
   def link_to_with_icon(link_text, link_params, tag_args, image_path=nil)
     tag_args ||= {}
-    image_path ||= '/images/icons/16/link_internal.gif'
     default_tag_args = { :onclick => "return miqCheckForChanges()" }
     tag_args = default_tag_args.merge(tag_args)
-    link_to(image_tag(image_path), link_params, tag_args) +
       link_to(link_text, link_params, tag_args)
   end
 
@@ -2507,14 +2506,22 @@ module ApplicationHelper
     # FIXME: exception behavior to remove
     test_layout = 'my_tasks' if %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout)
 
-    Menu::Manager.item_in_section?(test_layout, nav_id) ? "active" : "inactive"
+    Menu::Manager.item_in_section?(test_layout, nav_id) ? "active" : "dropdown"
+  end
+
+  def primary_nav_class2(nav_id)
+    test_layout = @layout
+    # FIXME: exception behavior to remove
+    test_layout = 'my_tasks' if %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout)
+
+    Menu::Manager.item_in_section?(test_layout, nav_id) ? "nav navbar-nav navbar-persistent" : "dropdown-menu"
   end
 
   def secondary_nav_class(nav_layout)
     if nav_layout == 'my_tasks' # FIXME: exceptional behavior to remove
       nav_layout = %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout) ? @layout : "my_tasks"
     end
-    nav_layout == @layout ? "active" : "inactive"
+    nav_layout == @layout ? "active" : ""
   end
 
   def render_flash_msg?

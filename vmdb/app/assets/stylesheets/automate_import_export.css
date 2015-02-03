@@ -1,0 +1,11 @@
+.import-label {
+  margin: 20px 0 0 0;
+}
+
+#form_buttons {
+  margin: 20px 0 0 0;
+}
+
+#form_buttons  li {
+    margin-right: 10px;
+  }
