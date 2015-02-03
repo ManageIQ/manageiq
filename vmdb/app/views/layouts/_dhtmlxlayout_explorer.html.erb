@@ -27,7 +27,16 @@
 	// Following function will be called by miqOnLoad if init_dhtmlx_layout is true
 	init_dhtmlx_layout = true;
 	function miqInitDhtmlxLayout() {
+<<<<<<< HEAD
     <%= layout_name %> = new dhtmlXLayoutObject(miqLayout.cells("a"), "<%= layout_pattern %>");
+=======
+    <%= layout_name %> = new dhtmlXLayoutObject("center_div", "<%= layout_pattern %>");
+
+    <%# Resize the layout whenever the browser window resizes %>
+    $j(window).resize(function() {
+      <%= layout_name %>.setSizes();
+    });
+>>>>>>> Remove miqLayout, fix exceptions
 
     <% if width_factor %>
       width = <%= layout_name %>.cells("a").getWidth() * <%= width_factor.split("/").first %> / <%= width_factor.split("/").last %>
