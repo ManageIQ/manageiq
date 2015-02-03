@@ -1,13 +1,68 @@
-%table#content{:width=>"100%", :border=>"0", :cellpadding=>"0", :cellspacing=>"0"}
-  %tr
-    - if layout_uses_listnav?
-      %td#leftcol{:valign=>"top"}
-        = render :partial => "layouts/listnav"
-    %td#maincol{:valign=>"top"}
+-if inner_layout_present?
+  .container-fluid{:style => "overflow: hidden; height: 100%; background: #fff;"}
+    .row{:style => "height: 100%"}
+      .col-md-12#center_div{:style => "height: 100%"}
+-else
+  .container-fluid{:style => "overflow: hidden; height: 100%; background: #fff;"}
+    .row.scrollable-sm#center_div{:style => "height: 100%"}
+      - if layout_uses_listnav?
+        .col-sm-9.col-md-10.col-sm-push-3.col-md-push-2.max-height
+          - if taskbar_in_header?
+            .row#main_taskbar
+              .col-md-12
+                = render :partial => "layouts/taskbar"
+          / .row#main_search
+          /   .col-md-12
+          /     = render :partial => '/layouts/searchbarNEW'
+          .row
+            .col-md-12
+              = render :partial => "layouts/breadcrumbs"
+              - if layout_uses_tabs?
+                = render :partial => '/layouts/tabs'
+          .row#main_content
+            .col-md-12
+              = yield
+        .col-sm-3.col-md-2.col-sm-pull-9.col-md-pull-10.sidebar-pf.sidebar-pf-left.scrollable-lg
+          = render :partial => "layouts/listnav"
 
-      - if layout_uses_breadcrumbs?
-        = render :partial => "layouts/breadcrumbs"
+      - elsif  @layout == "dashboard" && (controller.action_name == "show" || controller.action_name == "change_tab")
+        .col-sm-12.col-md-12
+          .cpage-header.page-header-bleed-right
+            %div{:style => "margin-top: 27px"}
+            = render :partial => '/layouts/tabs'
+          = yield
 
-      - if layout_uses_tabs?
-        = render :partial => '/layouts/tabs'
-      = yield
+          /  .col-sm-4.col-md-3.sidebar-pf.sidebar-pf-right
+          /  .sidebar-header.sidebar-header-bleed-left.sidebar-header-bleed-right
+
+      - else
+        .col-sm-12.col-md-12
+          - if taskbar_in_header?
+            .row#main_taskbar
+              .col-md-12
+                = render :partial => "layouts/taskbar"
+          / .row#main_search
+          /   .col-md-12
+          /     = render :partial => '/layouts/searchbarNEW'
+          .row{:style => "margin-top: 27px"}
+            .col-md-12
+              = render :partial => "layouts/breadcrumbs"
+              - if layout_uses_tabs?
+                = render :partial => '/layouts/tabs'
+          .row#main_content
+            .col-md-12
+              = yield
+
+
+      / #side-nav.col-md-2
+      /   .sidebar-header.sidebar-header-bleed-left.sidebar-header-bleed-right
+      /     %ul.nav.nav-list.affix
+      /       %li
+      /         %a{:href => "#one"}
+      /           One
+      /       %li
+      /         %a{:href => "#two"}
+      /           Two
+      /       %li
+      /         %a{:href => "#three"}
+      /           Three

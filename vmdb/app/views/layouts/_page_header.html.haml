@@ -1,39 +1,76 @@
-%div{:id=>"page_header_div", :class=>"#{taskbar_in_header? ? "taskbar" : "notaskbar"} #{session[:custom_logo] ? "whitelabeled" : ""}"}
-  %div{:class=>"header #{session[:custom_logo] ? "whitelabeled" : ""}"}
-    .brand
-      %img{:src=>image_path("layout/brand.svg"), :alt=>"Red Hat&reg; CloudForms Management Engine"}
-    %ul.pull-right
-      - if session[:userid] 
-        = render :partial => "layouts/user_options" 
-      - else
-        Logging into
-        = "#{session[:vmdb_name]}"
-      - if ["login", "authenticate"].include?(controller.action_name) 
-        = javascript_tag( "$$('#navcontainer a').each(function(a){a.href='#'})" )
-        -# <li class="dropdown">Red Hat Access<b class="caret"></b></li> for later Sprint 
-      %div{:class=>"brand-white-label #{session[:custom_logo] ? "whitelabeled" : ""}"}
+%body
+  %nav{:class => "navbar navbar-default navbar-fixed-top navbar-pf #{session[:custom_logo] ? "whitelabeled" : ""}", :role => "navigation"}
+    %div{:class=>"navbar-header"}
+      %button{:type => "button", :class => "navbar-toggle", "data-target" => ".navbar-collapse-1", "data-toggle" => "collapse"}
+        %span.sr-only
+          Toggle navigation
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      %a.navbar-brand{:href => "/"}
+        %img{:src=>image_path("layout/brand.svg"), :alt=>"ManageIQ"}
+    %div{:class => "collapse navbar-collapse navbar-collapse-1"}
+      %ul{:class => "nav navbar-nav navbar-utility"}
+        %li{:class => "brand-white-label #{session[:custom_logo] ? "whitelabeled" : ""}"}
+        %li
+          %a
+            Status
+        - if session[:userid] 
+          %li.dropdown
+            %a{:href => "#", :class => "dropdown-toggle", "data-toggle" => "dropdown"}
+              %span.pficon.pficon-user
+              = "#{session[:username]} | #{session[:vmdb_name]}"
+              %b.caret
+            %ul.dropdown-menu
+              %li 
+                %a{:href => "#"}
+                  Server: #{session[:vmdb_name]}
+              %li 
+                %a{:href => "#"}
+                  Group:
+                  - if session[:eligible_groups].length > 1
+                    = select_tag("to_group",
+                                 options_for_select(session[:eligible_groups], session[:group]),
+                                 {:multiple=>false,
+                                  :title=>"Select to change to another Group",
+                                  :onclick => "miqToggleUserOptions(event, 'to_group');",
+                                  "data-miq_sparkle_on"=>true,
+                                  "data-miq_observe"=>{:url=>"/dashboard/change_group"}.to_json}) 
+                  - else
+                    = session[:group_description] 
+              %li.divider
+              %li
+                %a{:href=>"/dashboard/logout", :onclick=>'return miqCheckForChanges()', :title=>"Click to Logout"}
+                  Logout
 
-  = render :partial => "layouts/page_header_navbar"
-  = render :partial => "layouts/spinner"
+            %script{:type=>"text/javascript"}
+              $j("body").click(function(e){
+              if (! $j(e.target).is('#to_group') && ! $j(e.target).is('#user_options_div')) 
+              -# If not clicking on group selector or user_options_div itself
+              if ($j('#user_options_div').is(':visible'))
+              $j('#user_options_div').hide();
+              });
 
-  - display = @edit == nil || (@edit && @edit[:adv_search_open]) != true ? "none" : ""
-  #blocker_div{:style=>"display: #{display}"}
+        - else
+          Logging into
+          = "#{session[:vmdb_name]}"
+        - if ["login", "authenticate"].include?(controller.action_name) 
+          = javascript_tag( "$$('#navcontainer a').each(function(a){a.href='#'})" )
+          -# <li class="dropdown">Red Hat Access<b class="caret"></b></li> for later Sprint 
 
-  -# Exception div to be replaced and attached to miqLayout when exceptions are hit 
-  #exception_div{:style=>"display:none"}
+      = render :partial => "layouts/page_header_navbar"
 
-  = render :partial => "layouts/lightbox_panel"
+    = render :partial => "layouts/spinner"
 
-  - if taskbar_in_header?
-    = render :partial => "layouts/taskbar"
-  - else
-    %li.navbar-divider
+    / - display = @edit == nil || (@edit && @edit[:adv_search_open]) != true ? "none" : ""
+    / #blocker_div{:style=>"display: #{display}"}
 
-  - if  @layout == "dashboard" && (controller.action_name == "show" || controller.action_name == "change_tab") 
-    - if @widgets_menu_xml
-      = render :partial => "dashboard/dropdownbar" 
+    -# Exception div to be replaced and attached to miqLayout when exceptions are hit 
+    #exception_div{:style=>"display:none"}
 
-  %script{:type => "text/javascript"}
-    - if @miq_after_onload 
-      -# if set by controller, set up to run as JS after onload is done 
-      "var miq_after_onload = '#{@miq_after_onload.html_safe}'"
+    -# = render :partial => "layouts/lightbox_panel"
+
+    %script{:type => "text/javascript"}
+      - if @miq_after_onload 
+        -# if set by controller, set up to run as JS after onload is done 
+        "var miq_after_onload = '#{@miq_after_onload.html_safe}'"
