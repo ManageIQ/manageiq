@@ -212,7 +212,8 @@ class ExplorerPresenter
       $('.dhtmlxInfoBarLabel').filter(':visible').append($('#clear_search')[0]);
       miqResizeTaskbarCell();"
 
-    @out << set_spinner_off
+    # Don't turn off spinner for charts/timelines
+    @out << set_spinner_off unless @options[:ajax_action]
   end
 
   def build_calendar
