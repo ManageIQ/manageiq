@@ -15,6 +15,10 @@
       - wf.dialog.dialog_tabs.each do |tab|
         = render :partial => "shared/dialogs/dialog_tab", 
                  :locals => {:wf => wf, :tab => tab}
+  - unless @edit[:explorer]
+    = render :partial => "layouts/x_dialog_buttons",
+             :locals  => {:action_url => 'dialog_form_button_pressed',
+                          :record_id  => @edit[:rec_id]}
 -# Initialize jQuery UI tabs based on tabs ul
 :javascript
   //method takes hash that can have 4 keys: tabs div id, active tab label,
