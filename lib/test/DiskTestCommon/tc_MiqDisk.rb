@@ -31,13 +31,6 @@ module DiskTestCommon
     RANDOM_OFFSET = 0xABCC
 
     def setup
-#      unless $log
-#      $:.push("#{File.dirname(__FILE__)}/../../util")
-#      require 'miq-logger'
-#
-#      # Setup console logging
-#      $log = MIQLogger.get_log(nil, nil)
-#      end
     end
 
     def teardown
@@ -215,7 +208,6 @@ module DiskTestCommon
             if x < (128 - ofst)
               assert_equal(2*i, tmp)
             else
-              #puts "#{tmp}"
               assert_equal(2*(i+1), tmp)
             end
           }
@@ -260,57 +252,6 @@ module DiskTestCommon
     #
     def test_partition_256mb_seek_and_read
       filename = FILE_PRTN1_256MB
-      # Disk format: each block has its corresponding number repeated over it
- #     diskInfo = OpenStruct.new
- #     diskInfo.fileName = FILE_PRTN_256MB
- #     d = MiqDisk.getDisk(diskInfo)
- #     partitions = d.getPartitions
- #     d1 = partitions[0]
- #     d2 = partitions[1]
- #     d3 = partitions[2]
- #     d4 = partitions[3]
-
-
- #     params = [d1,   63472*1024,
-#		d2,   32768*1024,
-#                d3,   32768*1024,
-#                d4,   125936*1024
-#		]
-
-#      params.each_slice(2) do |disk, filesize|
-#	disk.seek(0, IO::SEEK_END)
-#	assert_equal(filesize, disk.seekPos)
-#      end
-
-#      d1.seek(0)
-#      buf = d1.read(63472*1024)
-#      16248832.times { |x|
-#        tmp = buf[4*x, 4].unpack('L')[0]
-#        assert_equal(1, tmp)
-#      }
-
-#      d2.seek(0)
-#      buf = d2.read(8388608*4)
-#      8388608.times { |x|
-#        tmp = buf[4*x, 4].unpack('L')[0]
-#        assert_equal(2, tmp)
-#      }
-
-#      d3.seek(0)
-#      buf = d3.read(8388608*4)
-#      8388608.times { |x|
-#        tmp = buf[4*x, 4].unpack('L')[0]
-#        assert_equal(3, tmp)
-#      }
-
-#     d4.seek(0)
-#     buf = d4.read(125936*1024)
-#     32239616.times { |x|
-#       tmp = buf[4*x, 4].unpack('L')[0]
-#       assert_equal(4, tmp)
-#     }
-
-#     d.close
       return unless File.exist?(filename)
 
       diskInfo = OpenStruct.new
