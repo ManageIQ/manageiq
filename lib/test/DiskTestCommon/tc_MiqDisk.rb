@@ -6,22 +6,19 @@ require 'test/unit'
 
 module DiskTestCommon
   class TestMiqDisk < Test::Unit::TestCase
-    FILE_PATH = case Platform::OS
-    when :win32 then '//miq-websvr1'
-    when :unix  then (Platform::IMPL == :macosx) ? '/Volumes' : '/mnt'
-    end + "/Scratch/TestData/miq/lib/test/DiskTestCommon/"
+    FILE_PATH = (Platform::IMPL == :macosx ? "/Volumes" : "/mnt") + "/manageiq/fleecing_test/images/"
 
-    FILE_DESC_4GB   = FILE_PATH + "DiskTestCommon_MiqDisk_Flat4GB.vmdk"
-    FILE_FLAT_4GB   = FILE_PATH + "DiskTestCommon_MiqDisk_Flat4GB-flat.vmdk"    
-    FILE_SPRS_5GB   = FILE_PATH + "DiskTestCommon_MiqDisk_Sparse5GBFull.vmdk" 
-    FILE_SPRS_8GB   = FILE_PATH + "DiskTestCommon_MiqDisk_Sparse8GB.vmdk"
-    FILE_COWD_256MB = FILE_PATH + "COWD/debian40server_4-000001-delta.vmdk"
-    FILE_MLTD_8GB   = FILE_PATH + "MULTIDISK/8GB/debian40server-3.vmdk"
-    FILE_PCHL_256MB = FILE_PATH + "PARENTCHILD/debian40server-9-000001.vmdk"
-    FILE_OFST_1GB   = FILE_PATH + "OFFSETINBLOCK/debian40server-12.vmdk"
-    FILE_PRTN_256MB = FILE_PATH + "PARTITION/debian40server-18.vmdk"
-    FILE_PRTN1_256MB = FILE_PATH + "PARTITION/debian40server-21.vmdk" 
-    
+    FILE_DESC_4GB   = FILE_PATH + "disks/DiskTestCommon_MiqDisk_Flat4GB.vmdk"
+    FILE_FLAT_4GB   = FILE_PATH + "disks/DiskTestCommon_MiqDisk_Flat4GB-flat.vmdk"
+    FILE_SPRS_5GB   = FILE_PATH + "disks/DiskTestCommon_MiqDisk_Sparse5GBFull.vmdk"
+    FILE_SPRS_8GB   = FILE_PATH + "disks/DiskTestCommon_MiqDisk_Sparse8GB.vmdk"
+    FILE_MLTD_8GB   = FILE_PATH + "disks/debian40server-3.vmdk"
+    FILE_PCHL_256MB = FILE_PATH + "disks/debian40server-9-000001.vmdk"
+    FILE_OFST_1GB   = FILE_PATH + "disks/debian40server-12.vmdk"
+    FILE_PRTN_256MB = FILE_PATH + "disks/debian40server-18.vmdk"
+    FILE_PRTN1_256MB = FILE_PATH + "disks/debian40server-21.vmdk"
+    FILE_COWD_256MB  = FILE_PATH + "containers/cowd/debian40server_4-000001-delta.vmdk"
+
     SIZE_32MB  = 0x0000000002000000
     SIZE_64MB  = 0x0000000004000000
     SIZE_128MB = 0x0000000008000000
