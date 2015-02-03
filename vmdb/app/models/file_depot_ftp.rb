@@ -18,12 +18,11 @@ class FileDepotFtp < FileDepot
 
   def upload_file(file)
     super
-    with_connection do |ftp|
+    with_connection do
       begin
-        return if destination_file_exists?(ftp, destination_file)
+        return if file_exists?(destination_file)
 
-        create_directory_structure(ftp)
-        ftp.putbinaryfile(file.local_file, destination_file)
+        upload(file.local_file, destination_file)
       rescue => err
         msg = "Error '#{err.message.chomp}', writing to FTP: [#{uri}], Username: [#{authentication_userid}]"
         $log.error("#{log_header(__method__)} #{msg}")
@@ -33,7 +32,6 @@ class FileDepotFtp < FileDepot
           :state   => "available",
           :log_uri => destination_file
         )
-        $log.info("#{log_header(__method__)} Uploading file: #{destination_file}... Complete")
         file.post_upload_tasks
       end
     end
@@ -43,7 +41,7 @@ class FileDepotFtp < FileDepot
     @file = file
     $log.info("#{log_header(__method__)} Removing log file [#{destination_file}]...")
     with_connection do |ftp|
-      ftp.delete(destination_file)
+      ftp.delete(destination_file.to_s)
     end
     $log.info("#{log_header(__method__)} Removing log file [#{destination_file}]...complete")
   end
@@ -91,19 +89,26 @@ class FileDepotFtp < FileDepot
 
   private
 
-  def create_directory_structure(ftp)
-    $log.info("MIQ(#{self.class.name}##{__method__}) Creating directory structure on server...")
-    ftp.mkdir(destination_path)
-  rescue Net::FTPPermError => err
-    return if err.message.to_s.strip.start_with?("521")  # path already exists.
-    raise
+  def create_directory_structure(directory_path)
+    Pathname.new(directory_path).descend do |path|
+      next if file_exists?(path)
+
+      $log.info("#{log_header(__method__)} creating #{path}")
+      ftp.mkdir(path.to_s)
+    end
   end
 
-  def destination_file_exists?(ftp, file)
-    $log.info("MIQ(#{self.class.name}##{__method__}) Checking for log file #{file} on server...")
-    result = ftp.ls(file).present?
-    $log.info("MIQ(#{self.class.name}##{__method__}) Found file: #{file} on server... skipping") if result
-    result
+  def file_exists?(file_or_directory)
+    !!ftp.nlst(file_or_directory.to_s)
+  rescue Net::FTPPermError
+    false
+  end
+
+  def upload(source, destination)
+    create_directory_structure(destination_path)
+    $log.info("#{log_header(__method__)} Uploading file: #{destination} to File Depot: #{name}...")
+    ftp.putbinaryfile(source, destination.to_s)
+    $log.info("#{log_header(__method__)} Uploading file: #{destination_file}... Complete")
   end
 
   def destination_file
@@ -116,9 +121,8 @@ class FileDepotFtp < FileDepot
 
   def base_path
     # uri: "ftp://ftp.example.com/incoming" => #<Pathname:incoming>
-    path = URI.split(URI.encode(uri))[5]
-    path = Pathname.new(path)
-    path.relative_path_from(Pathname.new("/"))
+    path = URI(URI.encode(uri)).path
+    Pathname.new(path)
   end
 
   def login_credentials
