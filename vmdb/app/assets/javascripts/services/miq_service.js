@@ -9,7 +9,7 @@ cfmeAngularApplication.service('miqService', function() {
 
   this.buildCalendar = function(year, month, date) {
     miq_cal_dateFrom = new Date(year, month, date);
-    miqBuildCalendar();
+    miqBuildCalendar(true);
   };
 
   this.miqAjaxButton = function(url, serializeFields) {

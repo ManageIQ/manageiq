@@ -577,7 +577,7 @@ module OpsController::Settings::Schedules
     end
 
     schedule.run_at ||= Hash.new
-    run_at = create_time_in_utc("#{params[:miq_date_1]} #{params[:start_hour]}:#{params[:start_min]}:00", params[:time_zone])
+    run_at = create_time_in_utc("#{params[:miq_angular_date_1]} #{params[:start_hour]}:#{params[:start_min]}:00", params[:time_zone])
     schedule.run_at[:start_time] = "#{run_at} Z"
     schedule.run_at[:tz] = params[:time_zone]
     schedule.run_at[:interval] ||= {}
