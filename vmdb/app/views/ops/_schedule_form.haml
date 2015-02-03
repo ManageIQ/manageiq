@@ -51,8 +51,8 @@
     = button_tag("Cancel", :class => "btn btn-default", "ng-click" => "cancelClicked()")
 
 :javascript
-  $j('#name').focus();
-  $j('#form_buttons_div').hide();
+  $('#name').focus();
+  $('#form_buttons_div').hide();
 
   cfmeAngularApplication.value('storageTable', '#{ui_lookup(:table => "storages")}');
   cfmeAngularApplication.value('scheduleFormId', '#{@schedule.id || "new"}');

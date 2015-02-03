@@ -47,7 +47,7 @@
           {{uriPrefix}}://
           %input.uri-input(type="text" ng-required="dbBackup()" name="uri" ng-model="uri" maxlength=100)
           %input(type="hidden" name="uri_prefix" ng-value="uriPrefix")
-        = javascript_tag("$j('.uri-input').focus()")
+        = javascript_tag("$('.uri-input').focus()")
 
       %tr(ng-show="sambaBackup()")
         %td.key
