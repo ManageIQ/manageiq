@@ -15,7 +15,7 @@ describe "layouts/listnav/_ems_cluster.html.haml" do
     assign(:record, record)
     record.stub(:has_events?).and_return(true)
     render
-    response.should have_selector("a[title='Show Timelines'][href*='display=timeline']", :count => 2)
+    response.should have_selector("a[title='Show Timelines'][href*='display=timeline']", :count => 1)
   end
 
   it "both template links pass display=miq_templates" do
@@ -23,6 +23,6 @@ describe "layouts/listnav/_ems_cluster.html.haml" do
     assign(:record, record)
     record.stub(:total_miq_templates).and_return(5)
     render
-    response.should have_selector("a[title^='Show all Templates'][href*='display=miq_templates']", :count => 2)
+    response.should have_selector("a[title^='Show all Templates'][href*='display=miq_templates']", :count => 1)
   end
 end
