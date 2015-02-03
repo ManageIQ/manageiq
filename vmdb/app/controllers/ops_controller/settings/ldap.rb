@@ -419,6 +419,7 @@ module OpsController::Settings::Ldap
     @edit[:new][:name] = @ldap_domain.name
     @edit[:new][:user_type] = @ldap_domain.user_type ? @ldap_domain.user_type : "userprincipalname"
     @edit[:new][:user_suffix] = @ldap_domain.user_suffix
+    @edit[:new][:domain_prefix] = @ldap_domain.domain_prefix
     @edit[:new][:get_user_groups] = @ldap_domain.get_user_groups ? @ldap_domain.get_user_groups : false
     @edit[:new][:get_direct_groups] = @ldap_domain.get_direct_groups
     @edit[:new][:follow_referrals] = @ldap_domain.follow_referrals ? @ldap_domain.follow_referrals : false
@@ -449,6 +450,7 @@ module OpsController::Settings::Ldap
       @authusertype_changed = true
     end
     @edit[:new][:user_suffix] = params[:user_suffix] if params[:user_suffix]
+    @edit[:new][:domain_prefix] = params[:domain_prefix] if params[:domain_prefix]
     if @sb[:get_user_groups] != @edit[:new][:get_user_groups]
       @edit[:new][:get_user_groups] = @sb[:get_user_groups]
       @authldaprole_changed = true
@@ -467,6 +469,7 @@ module OpsController::Settings::Ldap
     ldap_domain.name = @edit[:new][:name]
     ldap_domain.user_type = @edit[:new][:user_type]
     ldap_domain.user_suffix = @edit[:new][:user_suffix]
+    ldap_domain.domain_prefix = @edit[:new][:domain_prefix]
     ldap_domain.get_user_groups = @edit[:new][:get_user_groups]
     ldap_domain.get_direct_groups = @edit[:new][:get_direct_groups]
     ldap_domain.follow_referrals = @edit[:new][:follow_referrals]
