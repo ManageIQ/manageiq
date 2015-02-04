@@ -12,15 +12,14 @@
        :value => ''}
 
 - if options[:div_in_js]
-  %div{:id    => options[:grid_id], 
+  %div{:id    => options[:grid_id],
        :style => "width:#{options[:div_width]}; height:#{options[:div_height]}; cursor:#{options[:div_cursor]}; overflow:#{options[:div_overflow]}"}
 
 %script{:type => "text/javascript"}
   - unless @parent.nil?
     var miq_parent_id = "#{@parent.id}";
     var miq_parent_class = "#{@parent.class.base_class.to_s.underscore}";
-    - if (miq_parent_class == "policy_set")
-      - miq_parent_class = "policy";
+    if (miq_parent_class == "policy_set") miq_parent_class = "policy";
   - if options[:action_url]
     miq_action_url = "#{options[:action_url].html_safe}";
   miq_grids['#{options[:grid_name].html_safe}'] = {g_id:'#{options[:grid_id].html_safe}', opts:#{options.to_json.html_safe}, xml:"#{escape_javascript(options[:grid_xml]).html_safe}"};
