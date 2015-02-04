@@ -53,23 +53,19 @@ module OpsController::Settings::Schedules
       # when we have a version of Rails that supports detecting changes on serialized
       # fields
       old_schedule_attributes = schedule.attributes.clone
-      humanized_old = old_schedule_attributes.merge(
-        "depot_hash" => {
-          :uri      => schedule.depot_hash[:uri],
-          :username => schedule.depot_hash[:username],
-          :password => schedule.depot_hash[:password],
-          :name     => schedule.depot_hash[:name]
-        },
-        "filter"     => old_schedule_attributes["filter"].try(:to_human),
-        "run_at"     => {
-          :start_time => schedule.run_at[:start_time],
-          :tz         => schedule.run_at[:tz],
-          :interval   => {
-            :unit  => schedule.run_at[:interval][:unit],
-            :value => schedule.run_at[:interval][:value]
-          }
-        }
-      )
+      old_schedule_attributes.merge("depot_hash" => {:uri      => schedule.depot_hash[:uri],
+                                                     :username => schedule.depot_hash[:username],
+                                                     :password => schedule.depot_hash[:password],
+                                                     :name     => schedule.depot_hash[:name]
+                                                    }) if schedule.depot_hash
+      old_schedule_attributes.merge("filter" => old_schedule_attributes["filter"].try(:to_human))
+      old_schedule_attributes.merge("run_at" => {:start_time => schedule.run_at[:start_time],
+                                                 :tz         => schedule.run_at[:tz],
+                                                 :interval   => {:unit  => schedule.run_at[:interval][:unit],
+                                                                 :value => schedule.run_at[:interval][:value]
+                                                                }
+                                                }) if schedule.run_at
+      humanized_old = old_schedule_attributes
 
       schedule_set_record_vars(schedule)
       schedule_validate?(schedule)
