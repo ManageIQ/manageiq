@@ -136,7 +136,7 @@ function miqToolbarOnClick(id){
 			return;
 	}	}
 	if (typeof button != "undefined" && typeof button.url != "undefined") {		// See if a url is defined
-		if (button.url.startsWith("/")) {																				// If url starts with / it is non-ajax
+		if (button.url.indexOf("/") == 0) {			   															// If url starts with / it is non-ajax
 			tb_url = "/" + miq_controller + button.url;
 			if (typeof miq_record_id != "undefined" && miq_record_id != null) tb_url += "/" + miq_record_id;
 			if (typeof button.url_parms != "undefined") tb_url += button.url_parms;
@@ -144,7 +144,7 @@ function miqToolbarOnClick(id){
 			return;
 		} else {																																// An ajax url was defined
 			tb_url = "/" + miq_controller + "/" + button.url;
-			if (!button.url.startsWith("x_history"))	// If not an explorer history button
+			if (button.url.indexOf("x_history") != 0)	// If not an explorer history button
 				if (typeof miq_record_id != "undefined" && miq_record_id != null) tb_url += "/" + miq_record_id;
 		}
 	}	else {																																	// No url specified, run standard button ajax transaction

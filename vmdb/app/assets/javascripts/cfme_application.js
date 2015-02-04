@@ -94,44 +94,44 @@ function miqLoginPrefill() {
 
 // Prefill expression value text entry fields when blank
 function miqExpressionPrefill(count) {
-  if (miqDomElementExists('chosen_value') && $('#chosen_value')[0].type.startsWith('text')) {
+  if (miqDomElementExists('chosen_value') && $('#chosen_value')[0].type.indexOf('text') == 0) {
     miqPrefill($('#chosen_value')[0], '/images/layout/expression/' + miq_val1_type + '.png');
     $('#chosen_value').prop('title', miq_val1_title);
     $('#chosen_value').prop('alt', miq_val1_title);
   }
-  if (miqDomElementExists('chosen_cvalue') && $('#chosen_cvalue')[0].type.startsWith('text')) {
+  if (miqDomElementExists('chosen_cvalue') && $('#chosen_cvalue')[0].type.indexOf('text') == 0) {
     miqPrefill($('#chosen_cvalue')[0], '/images/layout/expression/' + miq_val2_type + '.png');
     $('#chosen_cvalue').prop('title', miq_val2_title);
     $('#chosen_cvalue').prop('alt', miq_val2_title);
   }
-  if (miqDomElementExists('chosen_regkey') && $('#chosen_regkey')[0].type.startsWith('text')) {
+  if (miqDomElementExists('chosen_regkey') && $('#chosen_regkey')[0].type.indexOf('text') == 0) {
     miqPrefill($('#chosen_regkey')[0], '/images/layout/expression/string.png');
     var title = "Registry Key";
     $('#chosen_regkey').prop('title', title);
     $('#chosen_regkey').prop('alt', title);
   }
-  if (miqDomElementExists('chosen_regval') && $('#chosen_regval')[0].type.startsWith('text')) {
+  if (miqDomElementExists('chosen_regval') && $('#chosen_regval')[0].type.indexOf('text') == 0) {
     miqPrefill($('#chosen_regval')[0], '/images/layout/expression/string.png');
     var title = "Registry Key Value";
     $('#chosen_regval').prop('title', title);
     $('#chosen_regval').prop('alt', title);
   }
-  if (miqDomElementExists('miq_date_1_0') && $('#miq_date_1_0')[0].type.startsWith('text')) {
+  if (miqDomElementExists('miq_date_1_0') && $('#miq_date_1_0')[0].type.indexOf('text') == 0) {
     miqPrefill($('#miq_date_1_0')[0], '/images/layout/expression/' + miq_val1_type + '.png');
     $('#miq_date_1_0').prop('title', miq_val1_title);
     $('#miq_date_1_0').prop('alt', miq_val1_title);
   }
-  if (miqDomElementExists('miq_date_1_1') && $('#miq_date_1_1')[0].type.startsWith('text')) {
+  if (miqDomElementExists('miq_date_1_1') && $('#miq_date_1_1')[0].type.indexOf('text') == 0) {
     miqPrefill($('#miq_date_1_1')[0], '/images/layout/expression/' + miq_val1_type + '.png');
     $('#miq_date_1_1').prop('title', miq_val1_title);
     $('#miq_date_1_1').prop('alt', miq_val1_title);
   }
-  if (miqDomElementExists('miq_date_2_0') && $('#miq_date_2_0')[0].type.startsWith('text')) {
+  if (miqDomElementExists('miq_date_2_0') && $('#miq_date_2_0')[0].type.indexOf('text') == 0) {
     miqPrefill($('#miq_date_2_0')[0], '/images/layout/expression/' + miq_val2_type + '.png');
     $('#miq_date_2_0').prop('title', miq_val2_title);
     $('#miq_date_2_0').prop('alt', miq_val2_title);
   }
-  if (miqDomElementExists('miq_date_2_1') && $('#miq_date_2_1')[0].type.startsWith('text')) {
+  if (miqDomElementExists('miq_date_2_1') && $('#miq_date_2_1')[0].type.indexOf('text') == 0) {
     miqPrefill($('#miq_date_2_1')[0], '/images/layout/expression/' + miq_val2_type + '.png');
     $('#miq_date_2_1').prop('title', miq_val2_title);
     $('#miq_date_2_1').prop('alt', miq_val2_title);
@@ -592,7 +592,7 @@ function miqLoadChart(chart_id) {
 function miqChartLinkData(col, row, value, category, series, id, message) {
 // Create the context menu
   if (typeof miqMenu != "undefined") miqMenu.hideContextMenu();
-  if (category.startsWith("<Other(")) return; // No menus for <Other> category
+  if (category.indexOf("<Other(") == 0) return; // No menus for <Other> category
   //Added delay before showing menus to get it work in version 3.5
   self.setTimeout("miqBuildChartMenu('" + col + "', '" + row + "', '" + value + "', '" + category + "', '" + series + "', '" + id + "', '" + message + "')",250);
 }
