@@ -1,0 +1,90 @@
+- if @record && !@record.name.nil?
+  #accordion
+    .panel
+      .topbar
+        = link_to(h(@record.name.length < trunc_at ? @record.name : "#{@record.name[0...trunc_to]}..."),
+          {:action => 'panel_control', :panel => 'icon'},
+          :remote => true,
+          :title  => h(@record.name))
+      = hidden_div_if(@panels["icon"].nil? || @panels["icon"] == false, :id => "icon") do
+        .panecontent
+          = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
+      .topbar
+        = link_to(_("Properties"),
+          {:action => 'panel_control', :panel => 'miqproxy_prop'},
+          :remote => true)
+
+      = hidden_div_if(@panels["miqproxy_prop"].nil? || @panels["miqproxy_prop"] == false, :id => "miqproxy_prop") do
+        .panecontent
+          = link_to_with_icon(_('Summary'),
+            {:action => 'show', :id => @record, :display => 'main'},
+            :title => _("Show Summary"))
+          = link_to_with_icon(_('Log Viewer'),
+            {:action => 'log_viewer', :id => @record},
+            :title => _("View the SmartProxy log"))
+
+    .topbar
+      = link_to(_("Relationships"),
+        {:action => 'panel_control', :panel => 'miqproxy_rel'},
+        :remote => true)
+
+    = hidden_div_if(@panels["miqproxy_rel"].nil? || @panels["miqproxy_rel"] == false, :id => "miqproxy_rel") do
+      .panecontent
+        - if role_allows(:feature => "host_show")
+          - if @record.host.nil?
+            %img{:src => "/images/icons/16/link_none.gif"}
+            = _("Installed on Host: None")
+            %br
+          - else
+            = link_to_with_icon(_("Installed on Host: %s") % @record.host.name,
+              {:controller => "host", :action => 'show', :id => @record.host.id.to_s},
+              {:title => _("Show the Host this SmartProxy is installed on")},
+              '/images/icons/16/link_external.gif')
+
+        - if role_allows(:feature => "ems_infra_show")
+          - unless @record.ext_management_system.nil?
+            = link_to_with_icon("#{ui_lookup(:table => "ems_infra")}: #{@record.ext_management_system.name}",
+              {:controller => "ems_infra", :action => 'show', :id => @record.ext_management_system.id.to_s},
+              {:title => _("Show this SmartProxy's %s") % ui_lookup(:table => "ems_infra")},
+              '/images/icons/16/link_external.gif')
+
+        - if false
+          - # Removed this link for case 6026, version 2.2
+          - if role_allows(:feature => "host_show_list")
+            - if @record.hosts.length == 0
+              %img{:src => "/images/icons/16/link_none.gif"}
+              = _("Managed Hosts (%s)") % @record.hosts.length
+              %br
+            - else
+              = link_to_with_icon(_("Managed Hosts (%s)" % @record.hosts.length),
+                {:action => 'show', :id => @record, :display => 'hosts'},
+                :title => _("Show all managed Hosts"))
+        - if role_allows(:feature => "storage_show_list")
+          = link_if_nonzero(:count => @record.storages.length,
+            :record_id             => @record.id,
+            :tables                => 'storages',
+            :display               => 'storages',
+            :action                => 'show')
+          %p
+
+        - if role_allows(:feature => "vm_show_list")
+          - if @record.vms.length == 0
+            %img{:src => "/images/icons/16/link_none.gif"}
+            = _("Managed VMs (%s)") % @record.vms.length
+            %br
+          - else
+            = link_to_with_icon(_("Managed VMs (%s)" % @record.vms.length),
+              {:action => 'show', :id => @record, :display => 'vms'},
+              :title => _("Show all managed VMs"))
+          %p
+
+        - if role_allows(:feature => "miq_template_show_list")
+          - if @record.miq_templates.length == 0
+            %img{:src => "/images/icons/16/link_none.gif"}
+            = _("Templates (%s)") % @record.miq_templates.length
+            %br
+          - else
+            = link_to_with_icon(_("Templates (%s)") % @record.miq_templates.length,
+              {:action => 'show', :id => @record, :display => 'miq_templates'},
+              :title => _("Show all Templates"))
+          %p

@@ -1,0 +1,313 @@
+- if @record
+  #accordion
+    .panel
+      .topbar
+        = link_to(h(@record.name.length < trunc_at ? @record.name : "#{@record.name[0...trunc_to]}..."),
+          {:action => 'panel_control', :panel  => 'icon'},
+          :remote => true,
+          :title  => h(@record.name))
+      = hidden_div_if(@panels["icon"].nil? || @panels["icon"] == false, :id => "icon") do
+        .panecontent
+          - # Calculate the quadicon div height based on # of lines of text
+          - if @record.product_name != "" && @record.service_pack != ""
+            - height = 100
+          - elsif @record.product_name != "" || @record.service_pack != ""
+            - height = 90
+          - else
+            - height = 78
+          = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav, :height => height}
+
+          %div{:style => "margin-top: -23px; line-height: 13px;"}
+            %center{:style => "color: #000;"}
+              = h(@record.product_name)
+              %br
+              = h(@record.service_pack)
+
+      .topbar
+        = link_to(_("Properties"),
+          {:action => 'panel_control', :panel  => 'host_prop'},
+          :remote => true)
+      = hidden_div_if(@panels["host_prop"].nil? || @panels["host_prop"] == false, :id => "host_prop") do
+        .panecontent
+          = link_to_with_icon(_('Summary'),
+            {:action => 'show', :id => @record, :display => 'main'},
+            :title => _("Show Summary"))
+          - if @devices.nil? || @devices.empty?
+            %img{:src => "/images/icons/16/link_none.gif"}
+            = _("Devices")
+            %br
+          - else
+            = link_to_with_icon(_('Devices'),
+              {:action  => 'show', :id => @record, :display => 'devices'},
+              :title => _("Show Host devices"))
+
+          - if @record.number_of(:switches) == 0
+            %img{:src => "/images/icons/16/link_none.gif"}
+            = _("Network")
+            %br
+          - else
+            = link_to_with_icon(_('Network'),
+              {:action  => 'show', :id => @record, :display => 'network'},
+              :title => _("Show Host network"))
+
+          - if @record.hardware.blank? || @record.hardware.number_of(:storage_adapters) == 0
+            %img{:src => "/images/icons/16/link_none.gif"}
+            = _("Storage Adapters")
+            %br
+          - else
+            = link_to_with_icon(_('Storage Adapters'),
+              {:action  => 'show', :id => @record, :display => 'storage_adapters'},
+              :title => _("Show Host storage adapters"))
+
+          - if @osinfo.nil? || @osinfo.empty?
+            %img{:src => "/images/icons/16/link_none.gif"}
+            = _("OS Information")
+            %br
+          - else
+            = link_to_with_icon(_('OS Information'),
+              {:action  => 'show', :id => @record, :display => 'os_info'},
+              :title => _("Show Host OS information"))
+
+          - if @vmminfo.nil? || @vmminfo.empty?
+            %img{:src => "/images/icons/16/link_none.gif"}
+            = _('VMM Information')
+            %br
+          - else
+            = link_to_with_icon(_('VMM Information'),
+              {:action => 'show', :id => @record, :display => 'hv_info'},
+              :title => _("Show VMM information"))
+
+          - if @record.has_perf_data?
+            = link_to_with_icon(_('Capacity & Utilization'),
+              {:action => 'show', :id => @record, :display => 'performance'},
+              :title => _("Show Capacity & Utilization"))
+          - else
+            %img{:src => "/images/icons/16/link_none.gif", :title => _("Capacity & Utilization Data Not Available")}
+            = _('Capacity & Utilization')
+            %br
+
+          - if @record.has_events? || @record.has_events?(:policy_events)
+            - if @record.has_events?
+              = link_to_with_icon('Timelines',
+                {:action => 'show', :id => @record, :display => 'timeline'},
+                :title => _("Show Timelines"))
+            - elsif @record.has_events?(:policy_events)
+              - # wrapping around control if
+              = link_to_with_icon('Timelines',
+                {:action => 'show', :display => 'timeline', :id => @record},
+                :title => _("Show Timelines"))
+          - else
+            %img{:src => "/images/icons/16/link_none.gif", :title => _("Timelines Not Available")}
+            = _('Timelines')
+            %br
+
+          - if get_vmdb_config[:product][:proto]
+            - if @record.event_logs.count == 0
+              %img{:src => "/images/icons/16/link_none.gif"}
+              = _('ESX Logs')
+              %br
+            - else
+              = link_to_with_icon(_("ESX Logs"),
+                {:action => 'event_logs', :id => @record},
+                :title => _("Show esx logs on this VM"))
+    .topbar
+      = link_to(_("Relationships"),
+        {:action => 'panel_control', :panel => 'host_rel'},
+        :remote => true)
+
+    = hidden_div_if(@panels["host_rel"].nil? || @panels["host_rel"] == false, :id => "host_rel") do
+      .panecontent
+        - if role_allows(:feature => "ems_infra_show")
+          - unless @record.ext_management_system.nil?
+            = link_to_with_icon("#{ui_lookup(:table => "ext_management_systems")}: #{@record.ext_management_system.name}",
+              {:controller => "ems_infra", :action => 'show', :id => @record.ext_management_system.id.to_s},
+              {:title => _("Show this Host's parent %s") % ui_lookup(:table => "ems_infra")},
+              '/images/icons/16/link_external.gif')
+
+        - if role_allows(:feature => "ems_cluster_show")
+          - unless @record.ems_cluster.nil?
+            = link_to_with_icon("Cluster: #{@record.ems_cluster.name}",
+              {:controller => "ems_cluster", :action => 'show', :id => @record.ems_cluster.id.to_s},
+              {:title => _("Show this Host's parent Cluster")},
+              '/images/icons/16/link_external.gif')
+
+        - if role_allows(:feature => "storage_show_list")
+          = link_if_nonzero(:count => @record.number_of(:storages),
+            :record_id             => @record.id,
+            :tables                => 'storages',
+            :display               => 'storages',
+            :action                => 'show')
+          %p
+
+        - if role_allows(:feature => "resource_pool_show_list")
+          - rps_size = @record.number_of(:resource_pools)
+          - if rps_size == 0
+            %img{:src => "/images/icons/16/link_none.gif"}
+            = _('Resource Pools (0)')
+            %br
+          - else
+            = link_to_with_icon(_("Resource Pools (%s)") % rps_size,
+              {:action  => 'show', :id => @record, :display => 'resource_pools'},
+              :title => _("Show Resource Pools"))
+          %p
+
+        - if role_allows(:feature => "vm_show_list")
+          - vms_size = @record.number_of(:vms)
+          - if vms_size == 0
+            %img{:src => "/images/icons/16/link_none.gif"}
+            = _("VMs (0)")
+          - else
+            = link_to_with_icon(_("VMs (%s)") % vms_size,
+              {:action  => 'show', :id => @record, :display => 'vms'},
+              :title => _("Show all VMs"))
+          %br
+
+        - if role_allows(:feature => "miq_template_show_list")
+          - templates_size = @record.number_of(:miq_templates)
+          - if vms_size == 0
+            %img{:src => "/images/icons/16/link_none.gif"}
+            = _('Templates (0)')
+          - else
+            = link_to_with_icon(_("Templates (%s)" % templates_size),
+              {:action  => 'show', :id => @record, :display => 'miq_templates'},
+              :title    => _("Show all Templates"))
+          %br
+
+        - if role_allows(:feature => "host_drift")
+          - states_size = @record.number_of(:drift_states)
+          - if states_size == 0
+            %img{:src => "/images/icons/16/link_none.gif"}
+            = _("Drift History (0)")
+          - else
+            = link_to_with_icon("Drift History (%s)" % states_size,
+              {:action => 'drift_history', :id => @record},
+              :title => _("Show host drift history"))
+          %br
+
+    - if get_vmdb_config[:product][:storage]
+      .topbar
+        = link_to(_("Storage Relationships"),
+          {:action => 'panel_control', :panel => 'host_inf_rel'},
+          :remote => true)
+      = hidden_div_if(@panels["host_inf_rel"].nil? || @panels["host_inf_rel"] == false, :id => "host_inf_rel") do
+        .panecontent
+          - if role_allows(:feature => "ontap_storage_system_show_list")
+            = link_if_nonzero(:count => @record.storage_systems_size,
+              :record_id             => @record.id,
+              :tables                => 'ontap_storage_system',
+              :display               => 'ontap_storage_systems',
+              :action                => 'show')
+
+          - if role_allows(:feature => "ontap_storage_volume_show_list")
+            = link_if_nonzero(:count => @record.storage_volumes_size,
+              :record_id             => @record.id,
+              :tables                => 'ontap_storage_volume',
+              :display               => 'ontap_storage_volumes')
+
+          - if role_allows(:feature => "ontap_logical_disk_show_list")
+            = link_if_nonzero(:count => @record.logical_disks.count,
+              :record_id             => @record.id,
+              :tables                => 'ontap_logical_disk',
+              :display               => 'ontap_logical_disks')
+
+          - if role_allows(:feature => "ontap_file_share_show_list")
+            = link_if_nonzero(:count => @record.file_shares_size,
+              :record_id             => @record.id,
+              :tables                => 'ontap_file_share',
+              :display               => 'ontap_file_shares')
+
+    .topbar
+      = link_to(_("Security"),
+        {:action => 'panel_control', :panel => 'host_sec'},
+        :remote => true)
+
+    = hidden_div_if(@panels["host_sec"].nil? || @panels["host_sec"] == false, :id => "host_sec") do
+      .panecontent
+        - users_size = @record.number_of(:users)
+        - if users_size == 0
+          %img{:src => "/images/icons/16/link_none.gif"}
+          = _("Users (0)")
+          %br
+        - else
+          = link_to_with_icon(_("Users (%s)") % users_size,
+            {:action => 'users', :id => @record, :db => "host"},
+            :title => _("Show the users defined on this Host"))
+        %p
+        - groups_size = @record.number_of(:groups)
+        - if groups_size == 0
+          %img{:src => "/images/icons/16/link_none.gif"}
+          = _("Groups (0)")
+          %br
+        - else
+          = link_to_with_icon(_("Groups (%s)") % groups_size,
+            {:action => 'groups', :id => @record, :db => "host"},
+            :title => _("Show the groups defined on this Host"))
+        %p
+        - patches_size = @record.number_of(:patches)
+        - if patches_size == 0
+          %img{:src => "/images/icons/16/link_none.gif"}
+          = _("Patches (0)")
+          %br
+        - else
+          = link_to_with_icon(_("Patches (%s)") % patches_size,
+            {:action => 'patches', :id => @record, :db => "host"},
+            :title => _("Show the patches installed on this Host"))
+        %p
+        - fws_size = @record.number_of(:firewall_rules)
+        - if fws_size == 0
+          %img{:src => "/images/icons/16/link_none.gif"}
+          = _("Firewall Rules (0)")
+          %br
+        - else
+          = link_to_with_icon("Firewall Rules (%s)" % fws_size,
+            {:action => 'firewall_rules', :id => @record},
+            :title => _("Show the firewall rules on this Host"))
+        %p
+
+    .topbar
+      = link_to(_("Configuration"),
+        {:action => 'panel_control', :panel => 'host_config'},
+        :remote => true)
+
+    = hidden_div_if(@panels["host_config"].nil? || @panels["host_config"] == false, :id => "host_config") do
+      .panecontent
+        - gas_size = @record.number_of(:guest_applications)
+        - if gas_size == 0
+          %img{:src => "/images/icons/16/link_none.gif"}
+          = _("Packages (0)")
+          %br
+        - else
+          = link_to_with_icon(_("Packages (%s)") % gas_size,
+            {:action => 'guest_applications', :id => @record},
+            :title => _("Show the packages installed on this Host"))
+        %p
+        - hs_size = @record.number_of(:host_services)
+        - if hs_size == 0
+          %img{:src => "/images/icons/16/link_none.gif"}
+          = _("Services (0)")
+          %br
+        - else
+          = link_to_with_icon(_("Services (%s)") % hs_size,
+            {:action => 'host_services', :id => @record},
+            :title => _("Show the services installed on this Host"))
+        %p
+        - fs_size = @record.number_of(:filesystems)
+        - if fs_size == 0
+          %img{:src => "/images/icons/16/link_none.gif"}
+          = _("Files (0)")
+          %br
+        - else
+          = link_to_with_icon(_("Files (%s)") % fs_size,
+            {:action => 'filesystems', :id => @record},
+            :title => _("Show the files on this Host"))
+        %p
+        - as_size = @record.number_of(:advanced_settings)
+        - if as_size == 0
+          %img{:src => "/images/icons/16/link_none.gif"}
+          = _("Advanced Settings (0)")
+          %br
+        - else
+          = link_to_with_icon(("Advanced Settings (%s)") % as_size,
+            {:action => 'advanced_settings', :id => @record},
+            :title => _("Show the advanced settings on this Host"))
+        %p

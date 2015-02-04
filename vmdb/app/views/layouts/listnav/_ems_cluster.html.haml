@@ -1,0 +1,160 @@
+- if @record.try(:name)
+  #accordion
+    .panel
+      .topbar
+        = link_to(h(@record.name.length < trunc_at ? @record.name : "#{@record.name[0...trunc_to]}..."),
+          {:action => 'panel_control', :panel => 'icon'},
+          :remote => true,
+          :title  => h(@record.name))
+      = hidden_div_if(@panels["icon"].nil? || @panels["icon"] == false, :id => "icon") do
+        .panecontent
+          = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
+      .topbar
+        = link_to(_("Properties"),
+          {:action => 'panel_control', :panel => 'ems_cluster_prop'},
+          :remote => true)
+      = hidden_div_if(@panels["ems_cluster_prop"].nil? || @panels["ems_cluster_prop"] == false, :id => "ems_cluster_prop") do
+        .panecontent
+          = link_to_with_icon(_('Summary'),
+            {:action => 'show', :id => @record, :display => 'main'},
+            :title => _("Show Summary"))
+          - if @cluster_config.nil? || @cluster_config.empty?
+            %img{:src => "/images/icons/16/link_none.gif", :title => _("No Configuration Available")}
+            = _('Configuration')
+            %br
+          - else
+            = link_to_with_icon(_('Configuration'),
+              {:action => 'show', :id => @record, :display => 'config_info'},
+              :title   => _("Show configuration"),
+              :onclick => "return miqCheckForChanges()")
+          - if @record.has_perf_data?
+            = link_to_with_icon(_('Capacity & Utilization'),
+              {:action => 'show', :id => @record, :display => 'performance'},
+              :title => _("Show Capacity & Utilization"))
+          - else
+            %img{:src => "/images/icons/16/link_none.gif", :title => _("Capacity & Utilization Data Not Available")}
+            = _('Capacity & Utilization')
+            %br
+          - if @record.has_events? || @record.has_events?(:policy_events)
+            - if @record.has_events?
+              = link_to_with_icon(_('Timelines'),
+                {:action => 'show', :id => @record, :display => 'timeline'},
+                :title => _("Show Timelines"))
+            - elsif @record.has_events?(:policy_events)
+              - # wrapping around control if
+              = link_to_with_icon(_('Timelines'),
+                {:action => 'show', :id => @record, :display => 'timeline'},
+                :title => _("Show Timelines"))
+          - else
+            %img{:src => "/images/icons/16/link_none.gif", :title => _("Timelines Not Available")}
+            = _('Timelines')
+            %br
+
+      .topbar
+        = link_to(_("Relationships"),
+          {:action => 'panel_control', :panel => 'ems_cluster_rel'},
+          :remote => true)
+
+      = hidden_div_if(@panels["ems_cluster_rel"].nil? || @panels["svc_rel"] == false, :id => "ems_cluster_rel") do
+        .panecontent
+          - if role_allows(:feature => "host_show_list")
+            - if @record.total_hosts == 0
+              %img{:src => "/images/icons/16/link_none.gif"}
+              = _('Hosts (%s)') % @record.total_hosts
+              %br
+            - else
+              = link_to_with_icon(_("Hosts (%s)") % @record.total_hosts,
+                {:action => 'show', :id => @record, :display => 'hosts'},
+                :title => _("Show Hosts"))
+
+          - if role_allows(:feature => "vm_show_list")
+            - if @record.total_direct_vms == 0
+              %img{:src => "/images/icons/16/link_none.gif"}
+              = _('Direct VMs: 0')
+              %br
+            - else
+              = link_to_with_icon(_("Direct VMs: %s") % @record.total_direct_vms,
+                {:action => 'show', :display => "vms", :id => @record.id.to_s},
+                :title => _("Show VMs in this Cluster, but not in Resource Pools below"))
+          - if role_allows(:feature => "vm_show_list")
+            - if @record.total_vms == 0
+              %img{:src => "/images/icons/16/link_none.gif"}
+              = _('All VMs: 0')
+              %br
+            - else
+              = link_to_with_icon(_("All VMs: %s") % @record.total_vms,
+                {:action => 'show', :display => "all_vms", :id => @record.id.to_s},
+                :title => _("Show all VMs in this Cluster"))
+          - if role_allows(:feature => "miq_template_show_list")
+            - if @record.total_miq_templates == 0
+              %img{:src => "/images/icons/16/link_none.gif"}
+              = _('All Templates: 0')
+              %br
+            - else
+              = link_to_with_icon(_("All Templates: %s") % @record.total_miq_templates,
+                {:action => 'show', :display => "miq_templates", :id => @record.id.to_s},
+                :title => _("Show all Templates in this Cluster"))
+          - if role_allows(:feature => "vm_show_list")
+            - if @record.total_vms == 0
+              %img{:src => "/images/icons/16/link_none.gif"}
+              = _('All VMs (Tree View): 0')
+              %br
+            - else
+              = link_to_with_icon(_("All VMs (Tree View): %s") % @record.total_vms,
+                {:action => 'show', :display => "descendant_vms", :id => @record.id.to_s},
+                :title => _("Show tree of all VMs by Resource Pool in this Cluster"))
+          - if role_allows(:feature => "resource_pool_show_list")
+            - if @record.number_of(:resource_pools) == 0
+              %img{:src => "/images/icons/16/link_none.gif"}
+              = _("Resource Pools (%s)") % @record.number_of(:resource_pools)
+              %br
+            - else
+              = link_to_with_icon(_("Resource Pools (%s)") % @record.number_of(:resource_pools),
+                {:action => 'show', :id => @record, :display => 'resource_pools'},
+                :title => _("Show Resource Pools"))
+          - if role_allows(:feature => "ems_cluster_drift")
+            - if @record.number_of(:drift_states) == 0
+              %img{:src => "/images/icons/16/link_none.gif"}
+              = _('Drift History (%s)') % @record.number_of(:drift_states)
+              %br
+            - else
+              = link_to_with_icon(_("Drift History (%s)") % @record.number_of(:drift_states),
+                {:action => 'drift_history', :id => @record},
+                :title => _("Show cluster drift history"))
+
+      - if get_vmdb_config[:product][:storage]
+        .topbar
+          = link_to(_("Storage Relationships"),
+            {:action => 'panel_control', :panel => 'host_inf_rel'},
+            :remote => true)
+
+        = hidden_div_if(@panels["host_inf_rel"].nil? || @panels["host_inf_rel"] == false, :id => "host_inf_rel") do
+          .panecontent
+            - if role_allows(:feature => "ontap_storage_system_show_list")
+              = link_if_nonzero(:count => @record.storage_systems.count,
+                :record_id             => @record.id,
+                :tables                => 'ontap_storage_system',
+                :display               => 'storage_systems',
+                :action                => 'show',
+                :title                 => _("Show all %s") % ui_lookup(:tables => "ontap_storage_system"))
+            - if role_allows(:feature => "ontap_storage_volume_show_list")
+              = link_if_nonzero(:count => @record.storage_volumes.count,
+                :record_id             => @record.id,
+                :tables                => 'ontap_storage_volume',
+                :display               => 'ontap_storage_volumes',
+                :action                => 'show',
+                :title                 => ui_lookup(:tables => "ontap_storage_volume"))
+            - if role_allows(:feature => "ontap_file_share_show_list")
+              = link_if_nonzero(:count => @record.file_shares.count,
+                :record_id             => @record.id,
+                :tables                => 'ontap_file_share',
+                :display               => 'ontap_file_shares',
+                :action                => 'show',
+                :title                 => _("Show all %s") % ui_lookup(:tables => "ontap_file_share"))
+            - if role_allows(:feature => "cim_base_storage_extent_show_list")
+              = link_if_nonzero(:count => @record.base_storage_extents.count,
+                :record_id             => @record.id,
+                :tables                => 'cim_base_storage_extent',
+                :display               => 'storage_extents',
+                :action                => 'show',
+                :title                 => _("Show all %s") % ui_lookup(:tables => "cim_base_storage_extent"))

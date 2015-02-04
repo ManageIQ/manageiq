@@ -1,0 +1,15 @@
+- if @record && @record.name.nil?
+  #accordion
+    .panel
+      .topbar
+        = link_to(h(@record.name.length < trunc_at ? @record.name : "#{@record.name[0...trunc_to]}..."),
+          {:action => 'panel_control', :panel => 'icon'},
+          :remote => true,
+          :title  => h(@record.name))
+      = hidden_div_if(@panels["icon"].nil? || @panels["icon"] == false, :id => "icon") do
+        .panecontent
+          = render(:partial => "layouts/quadicon",
+            :locals         => {:mode => :icon,
+              :item                   => @record,
+              :size                   => 72,
+              :typ                    => :listnav})
