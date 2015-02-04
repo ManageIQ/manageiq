@@ -2,19 +2,19 @@
   #tab_div
     - url = url_for(:action =>'ce_new_cat')
     = form_tag(url_for(:action => 'ce_accept', :id => "config_form"), :remote=>true) do
-      %p.legend Choose a Category
+      %p.legend=_("Choose a Category")
       %table.style1
         %tr
-          %td.key Category
+          %td.key=_("Category")
           %td.wide
             = select_tag('classification_name',
               options_for_select(@cats.sort, @cat.name),
               "data-miq_observe"=>{:url=>url}.to_json)
         %tr
-          %td.key Description
+          %td.key=_("Description")
           %td= h(@cat.example_text)
         %tr
-          %td.key Show in Console
+          %td.key=_("Show in Console")
           %td= h(@cat.show)
       %hr/
       = render :partial => 'classification_entries', :locals=>{:entry=>nil}

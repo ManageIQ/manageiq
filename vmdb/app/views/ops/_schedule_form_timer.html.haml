@@ -1,9 +1,9 @@
 - url = url_for(:action =>'schedule_form_field_changed', :id=>"#{@schedule.id || "new"}")
 #form_timer_div
-  %p.legend Timer
+  %p.legend=_("Timer")
   %table.style1
     %tr
-      %td.key Run
+      %td.key=_("Run")
       %td
         = select_tag('timer_typ',
           options_for_select(["Once","Hourly","Daily","Weekly","Monthly"],
@@ -11,35 +11,36 @@
           "data-miq_sparkle_on"=>true,
           "data-miq_observe"=>{:url=>url}.to_json)
         = hidden_span_if(@edit[:new][:timer_typ].downcase != "daily", :id=>"daily_span" )
-        every
+        =_("every")
         = select_tag('timer_days', options_for_select(TIMER_DAYS,
           @edit[:new][:timer_days]),
           "data-miq_observe"=>{:url=>url}.to_json)
         = hidden_span_if(@edit[:new][:timer_typ].downcase != "hourly", :id=>"hourly_span" )
-        every
+        =_("every")
         = select_tag('timer_hours', options_for_select(TIMER_HOURS,
           @edit[:new][:timer_hours]),
           "data-miq_observe"=>{:url=>url}.to_json)
         = hidden_span_if(@edit[:new][:timer_typ].downcase != "weekly", :id=>"weekly_span" )
-        every
+        =_("every")
         = select_tag('timer_weeks', options_for_select(TIMER_WEEKS,
           @edit[:new][:timer_weeks]),
           "data-miq_observe"=>{:url=>url}.to_json)
         = hidden_span_if(@edit[:new][:timer_typ].downcase != "monthly", :id=>"monthly_span" )
-        every
+        =_("every")
         = select_tag('timer_months', options_for_select(TIMER_MONTHS,
           @edit[:new][:timer_months]),
           "data-miq_observe"=>{:url=>url}.to_json)
     %tr
-      %td.key Time Zone
+      %td.key=_("Time Zone")
       %td
         = select_tag('time_zone',
           options_for_select(ALL_TIMEZONES,
           @edit[:tz]),
           "data-miq_observe"=>{:url=>url}.to_json)
-        \&nbsp;&nbsp;* Changing the Time Zone will reset the Starting Date and Time fields below
+        \&nbsp;&nbsp;
+        =_("* Changing the Time Zone will reset the Starting Date and Time fields below")
     %tr
-      %td.key Starting Date
+      %td.key=_("Starting Date")
       %td#start_date
         = text_field_tag("miq_date_1",
           (@edit[:new][:start_date]),
@@ -48,7 +49,8 @@
           "data-miq_observe_date"=>{:url=>url}.to_json)
     %tr
       %td.key
-        Starting Time (
+        =_("Starting Time")
+        (
         %span#tz_span= @timezone_abbr
         )
       %td

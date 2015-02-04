@@ -5,8 +5,8 @@
     %thead
       %tr
         %th.icon
-        %th Name
-        %th Display Name
+        %th=_("Name")
+        %th=_("Display Name")
     %tbody
       - if entry != nil && entry == "new"
         = render :partial => "classification_entry", :locals=>{:entry=>"new", :edit=>true}

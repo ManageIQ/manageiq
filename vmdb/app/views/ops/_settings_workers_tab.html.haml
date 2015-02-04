@@ -4,63 +4,63 @@
   %dl.col2
     %dd
       %fieldset
-        %p.legend Generic Workers
+        %p.legend=_("Generic Workers")
         %table.style1
           %tr
-            %td.key Count
+            %td.key=_("Count")
             %td.wide
               = select_tag('generic_worker_count',
                 options_for_select(Array.new(10) {|i| i}, @edit[:new].config[:workers][:worker_base][:queue_worker_base][:generic_worker][:count].to_i),
                 "data-miq_observe"=>{:url=>url}.to_json)
           %tr
-            %td.key Memory threshold
+            %td.key=_("Memory threshold")
             %td.wide
               = select_tag('generic_worker_threshold',
                 options_for_select(@sb[:generic_threshold],
                 @edit[:new].config[:workers][:worker_base][:queue_worker_base][:generic_worker][:memory_threshold]),
                 "data-miq_observe"=>{:url=>url}.to_json)
       %fieldset
-        %p.legend C &amp; U Data Collectors
+        %p.legend=_("C &amp; U Data Collectors")
         %table.style1
           %tr
-            %td.key Count
+            %td.key=_("Count")
             %td.wide
               = select_tag('ems_metrics_collector_worker_count',
                 options_for_select(Array.new(10) {|i| i},
                 @edit[:new].config[:workers][:worker_base][:queue_worker_base][:ems_metrics_collector_worker][:defaults][:count].to_i),
                 "data-miq_observe"=>{:url=>url}.to_json)
           %tr
-            %td.key Memory threshold
+            %td.key=_("Memory threshold")
             %td.wide
               = select_tag('ems_metrics_collector_worker_threshold',
                 options_for_select(@sb[:ems_metrics_collector_threshold],
                 @edit[:new].config[:workers][:worker_base][:queue_worker_base][:ems_metrics_collector_worker][:defaults][:memory_threshold]),
                 "data-miq_observe"=>{:url=>url}.to_json)
       %fieldset
-        %p.legend Event Monitor
+        %p.legend=_("Event Monitor")
         %table.style1
           %tr
-            %td.key Memory threshold
+            %td.key=_("Memory threshold")
             %td.wide
               = select_tag('event_catcher_threshold',
                 options_for_select(@sb[:event_catcher_threshold],
                 @edit[:new].config[:workers][:worker_base][:event_catcher][:memory_threshold]),
                 "data-miq_observe"=>{:url=>url}.to_json)
       %fieldset
-        %p.legend Connection Broker
+        %p.legend=_("Connection Broker")
         %table.style1
           %tr
-            %td.key Memory threshold
+            %td.key=_("Memory threshold")
             %td.wide
               = select_tag('vim_broker_worker_threshold',
                 options_for_select(@sb[:vim_broker_threshold],
                 @edit[:new].config[:workers][:worker_base][:vim_broker_worker][:memory_threshold]),
                 "data-miq_observe"=>{:url=>url}.to_json)
       %fieldset
-        %p.legend UI Worker
+        %p.legend=_("UI Worker")
         %table.style1
           %tr
-            %td.key Count
+            %td.key=_("Count")
             %td.wide
               - uiworker_count_disbaled = Vmdb::Application.config.session_store == :memory_store
               - if uiworker_count_disbaled
@@ -70,36 +70,36 @@
                   options_for_select(Array.new(10) {|i| i}, @edit[:new].config[:workers][:worker_base][:ui_worker][:count].to_i),
                   "data-miq_observe"=>{:url=>url}.to_json)
         - if uiworker_count_disbaled
-          .note * Multiple UI workers can not be configured with session store as memory
+          .note= _(" * Multiple UI workers can not be configured with session store as memory")
       %fieldset
-        %p.legend Reporting Workers
+        %p.legend=_("Reporting Workers")
         %table.style1
           %tr
-            %td.key Count
+            %td.key=_("Count")
             %td.wide
               = select_tag('reporting_worker_count',
                 options_for_select(Array.new(10) {|i| i},
                 @edit[:new].config[:workers][:worker_base][:queue_worker_base][:reporting_worker][:count].to_i),
                 "data-miq_observe"=>{:url=>url}.to_json)
           %tr
-            %td.key Memory threshold
+            %td.key=_("Memory threshold")
             %td.wide
               = select_tag('reporting_worker_threshold',
                 options_for_select(@sb[:reporting_threshold],
                 @edit[:new].config[:workers][:worker_base][:queue_worker_base][:reporting_worker][:memory_threshold]),
                 "data-miq_observe"=>{:url=>url}.to_json)
       %fieldset
-        %p.legend Web Service Workers
+        %p.legend=_("Web Service Workers")
         %table.style1
           %tr
-            %td.key Count
+            %td.key=_("Count")
             %td.wide
               = select_tag('web_service_worker_count',
                 options_for_select(Array.new(10) {|i| i},
                 @edit[:new].config[:workers][:worker_base][:web_service_worker][:count].to_i),
                 "data-miq_observe"=>{:url=>url}.to_json)
           %tr
-            %td.key Memory threshold
+            %td.key=_("Memory threshold")
             %td.wide
               = select_tag('web_service_worker_threshold',
                 options_for_select(@sb[:web_service_threshold],
@@ -107,106 +107,106 @@
                 "data-miq_observe"=>{:url=>url}.to_json)
     %dd
       %fieldset
-        %p.legend Priority Workers
+        %p.legend=_("Priority Workers")
         %table.style1
           %tr
-            %td.key Count
+            %td.key=_("Count")
             %td.wide
               = select_tag('priority_worker_count',
                 options_for_select(Array.new(5) {|i| i},
                 @edit[:new].config[:workers][:worker_base][:queue_worker_base][:priority_worker][:count].to_i),
                 "data-miq_observe"=>{:url=>url}.to_json)
           %tr
-            %td.key Memory threshold
+            %td.key=_("Memory threshold")
             %td.wide
               = select_tag('priority_worker_threshold',
                 options_for_select(@sb[:priority_threshold],
                 @edit[:new].config[:workers][:worker_base][:queue_worker_base][:priority_worker][:memory_threshold]),
                 "data-miq_observe"=>{:url=>url}.to_json)
       %fieldset
-        %p.legend C &amp; U Data Processors
+        %p.legend=_("C &amp; U Data Processors")
         %table.style1
           %tr
-            %td.key Count
+            %td.key=_("Count")
             %td.wide
               = select_tag('ems_metrics_processor_worker_count',
                 options_for_select(Array.new(5) {|i| i},
                 @edit[:new].config[:workers][:worker_base][:queue_worker_base][:ems_metrics_processor_worker][:count].to_i),
                 "data-miq_observe"=>{:url=>url}.to_json)
           %tr
-            %td.key Memory threshold
+            %td.key=_("Memory threshold")
             %td.wide
               = select_tag('ems_metrics_processor_worker_threshold',
                 options_for_select(@sb[:ems_metrics_processor_threshold],
                 @edit[:new].config[:workers][:worker_base][:queue_worker_base][:ems_metrics_processor_worker][:memory_threshold]),
                 "data-miq_observe"=>{:url=>url}.to_json)
       %fieldset
-        %p.legend Refresh
+        %p.legend=_("Refresh")
         %table.style1
           %tr
-            %td.key Memory threshold
+            %td.key=_("Memory threshold")
             %td.wide
               = select_tag('ems_refresh_worker_threshold',
                 options_for_select(@sb[:ems_refresh_threshold],
                 @edit[:new].get_raw_worker_setting(:MiqEmsRefreshWorker, :memory_threshold)),
                 "data-miq_observe"=>{:url=>url}.to_json)
       %fieldset
-        %p.legend VM Analysis Collectors
+        %p.legend=_("VM Analysis Collectors")
         %table.style1
           %tr
-            %td.key Count
+            %td.key=_("Count")
             %td.wide
               = select_tag('proxy_worker_count',
                 options_for_select(Array.new(6) {|i| i},
                 @edit[:new].config[:workers][:worker_base][:queue_worker_base][:smart_proxy_worker][:count].to_i),
                 "data-miq_observe"=>{:url=>url}.to_json)
           %tr
-            %td.key Memory threshold
+            %td.key=_("Memory threshold")
             %td.wide
               = select_tag('proxy_worker_threshold',
                 options_for_select(@sb[:smart_proxy_threshold],
                 @edit[:new].config[:workers][:worker_base][:queue_worker_base][:smart_proxy_worker][:memory_threshold]),
                 "data-miq_observe"=>{:url=>url}.to_json)
       %fieldset
-        %p.legend Replication Worker
+        %p.legend=_("Replication Worker")
         %table.style1
           %tr
-            %td.key Database
+            %td.key=_("Database")
             %td.wide
               = text_field_tag("replication_worker_dbname",
                 @edit[:new].config[:workers][:worker_base][:replication_worker][:replication][:destination][:database],
                 :maxlength=>20,
                 "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
           %tr
-            %td.key Port
+            %td.key=_("Port")
             %td.wide
               = text_field_tag("replication_worker_port",
                 @edit[:new].config[:workers][:worker_base][:replication_worker][:replication][:destination][:port],
                 :maxlength=>20,
                 "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
           %tr
-            %td.key Username
+            %td.key=_("Username")
             %td.wide
               = text_field_tag("replication_worker_username",
                 @edit[:new].config[:workers][:worker_base][:replication_worker][:replication][:destination][:username],
                 :maxlength=>20,
                 "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
           %tr
-            %td.key Password
+            %td.key=_("Password")
             %td.wide
               = password_field_tag("replication_worker_password",
                 @edit[:new].config[:workers][:worker_base][:replication_worker][:replication][:destination][:password],
                 :maxlength=>20,
                 "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
           %tr
-            %td.key Verify Password
+            %td.key=_("Verify Password")
             %td.wide
               = password_field_tag("replication_worker_verify",
                 @edit[:new].config[:workers][:worker_base][:replication_worker][:replication][:destination][:verify],
                 :maxlength=>20,
                 "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
           %tr
-            %td.key Host
+            %td.key=_("Host")
             %td.wide
               = text_field_tag("replication_worker_host",
                 @edit[:new].config[:workers][:worker_base][:replication_worker][:replication][:destination][:host],

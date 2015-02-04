@@ -4,12 +4,12 @@
     %thead
       %tr
         %th.icon &nbsp;
-        %th Name
-        %th Display Name
-        %th Show in Console
-        %th Single Value
-        %th Capture C&amp;U Data
-        %th Default
+        %th=_("Name")
+        %th=_("Display Name")
+        %th=_("Show in Console")
+        %th=_("Single Value")
+        %th=_("Capture C & U Data")
+        %th=_("Default")
     %tbody
       %tr#new_tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url=>{:action=>'category_edit',:id=>nil}), :title => "Click to add a new category"}
         %td.icon
@@ -17,7 +17,7 @@
             %li
               %span.glyphicon.glyphicon-plus
         %td
-          = h("<Click on this row to create a new category>")
+          =_("<Click on this row to create a new category>")
         %td
         %td
         %td
@@ -26,15 +26,15 @@
       - @categories.each do | cat |
         %tr{:class => cycle('row0', 'row1')}
           - if cat[:default] == "t" || cat[:default].to_s == "1"
-            %td.icon{:title => "Category '#{cat[:name]}' cannot be deleted"}
+            %td.icon{:title => _("Category '%s' cannot be deleted") % cat[:name]}
               %ul.icons
                 %li
                   %span.pficon.pficon-delete
           - else
             %td.icon{:onclick => remote_function(:url=>{:action=>'category_delete',
-              :id=>cat[:id]},
-              :confirm=>"Are you sure you want to delete category '#{cat[:name]}'?"),
-              :title => "Click to delete this category"}
+              :id      => cat[:id]},
+              :confirm =>_("Are you sure you want to delete category '%s'?") % cat[:name]),
+              :title   => _("Click to delete this category")}
               %ul.icons
                 %li
                   %span.pficon.pficon-delete

@@ -3,30 +3,30 @@
   = form_tag( {:action => 'category_update'}, {:id => "category_form"}) do
     = render :partial => "layouts/flash_msg"
     %fieldset
-      %p.legend Category Information
+      %p.legend=_("Category Information")
       %table.style1
         - if @category && @category.default == "t"
           %tr
-            %td.key Name
+            %td.key=_("Name")
             %td
               = @edit[:new][:name]
           %tr
-            %td.key Display Name
+            %td.key=_("Display Name")
             %td
               = @edit[:new][:description]
           %tr
-            %td.key Description
+            %td.key=_("Description")
             %td
               = @edit[:new][:example_text]
           %tr
-            %td.key Show in Console
+            %td.key=_("Show in Console")
             %td
               - checked = @edit[:new][:show] ? true : false
               = check_box_tag("show", value="1",
                 checked=checked,
                 "data-miq_observe_checkbox"=>{:url=>url}.to_json)
           %tr
-            %td.key Single Value
+            %td.key=_("Single Value")
             %td
               - checked = @edit[:new][:single_value] ? true : false
               - disabled = true
@@ -35,7 +35,7 @@
                 :disabled=>disabled,
                 "data-miq_observe_checkbox"=>{:url=>url}.to_json)
           %tr
-            %td.key Capture C&amp;U Data by Tag
+            %td.key=_("Capture C & U Data by Tag")
             %td
               - checked = @edit[:new][:perf_by_tag] ? true : false
               = check_box_tag("perf_by_tag", value="1",
@@ -44,7 +44,7 @@
         - else
           - disabled = @category.nil? ? false : true
           %tr
-            %td.key Name
+            %td.key=_("Name")
             %td
               = text_field_tag("name",
                 @edit[:new][:name],
@@ -52,7 +52,7 @@
                 :disabled =>disabled,
                 "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
           %tr
-            %td.key Display Name
+            %td.key=_("Display Name")
             %td
               = text_field_tag("description",
                 @edit[:new][:description],
@@ -63,21 +63,21 @@
           - else
             = javascript_tag(javascript_focus('description'))
           %tr
-            %td.key Description
+            %td.key=_("Description")
             %td
               = text_field_tag("example_text",
                 @edit[:new][:example_text],
                 :maxlength=>255,
                 "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
           %tr
-            %td.key Show in Console
+            %td.key=_("Show in Console")
             %td
               - checked = @edit[:new][:show] ? true : false
               = check_box_tag("show", value="1",
                 checked=checked,
                 "data-miq_observe_checkbox"=>{:url=>url}.to_json)
           %tr
-            %td.key Single Value
+            %td.key=_("Single Value")
             %td
               - checked = @edit[:new][:single_value] ? true : false
               = check_box_tag("single_value", value="1",
@@ -85,10 +85,10 @@
                 :disabled=>disabled,
                 "data-miq_observe_checkbox"=>{:url=>url}.to_json)
           %tr
-            %td.key Capture C&amp;U Data by Tag
+            %td.key=_("Capture C & U Data by Tag")
             %td
               - checked = @edit[:new][:perf_by_tag] ? true : false
               = check_box_tag("perf_by_tag", value="1",
                 checked=checked,
                 "data-miq_observe_checkbox"=>{:url=>url}.to_json)
-      * 'Name' and 'Single Value' fields cannot be edited after adding a category.
+      =_("* 'Name' and 'Single Value' fields cannot be edited after adding a category.")

@@ -1,33 +1,31 @@
 %fieldset
   %p{:class => 'legend'}
-    Appliance Updates
-
+    =_("Appliance Updates")
     #rhn_buttons
       %table
         %tr
           %td{:colspan => 2}
-            Available Product version:
+            =_("Available Product version:")
             = @customer.version_available
         %tr
           %td{:colspan => 2} &nbsp;
-
         %tr
           %td
-            =button_tag('Refresh List',
+            =button_tag(_("Refresh List"),
                       :id      => 'rhn_refresh_button',
                       :class   => 'btn btn-default',
-                      :onclick => "miqAjaxButton('#{url_for( :action => 'rhn_buttons',
-                                                             :button => 'refresh')}');")
+                      :onclick => "miqAjaxButton('#{url_for(:action => 'rhn_buttons',
+                                                            :button => 'refresh')}');")
           %td
-            =button_tag('Check for Updates',
+            =button_tag(_("Check for Updates"),
                       :id       => 'rhn_check_updates_button_on_1',
                       :class    => 'btn btn-default',
                       :disabled => !@buttons_on,
-                      :onclick  => "miqAjaxButton('#{url_for( :action => 'rhn_buttons',
-                                                              :button => 'check')}',
+                      :onclick  => "miqAjaxButton('#{url_for(:action => 'rhn_buttons',
+                                                             :button => 'check')}',
                                                   true);")
           %td
-            =button_tag('Register',
+            =button_tag(_("Register"),
                       :id       => 'rhn_register_button_on_1',
                       :class    => 'btn btn-default',
                       :disabled => !@buttons_on,
@@ -35,7 +33,7 @@
                                                               :button => 'register')}',
                                                   true);")
           %td
-            =button_tag('Apply CFME Update',
+            =button_tag(_("Apply CFME Update"),
                       :id       => 'rhn_update_button_on_1',
                       :class    => 'btn btn-default',
                       :disabled => !@buttons_on,
@@ -49,13 +47,13 @@
           %th.checkbox
             = check_box_tag('masterToggle', 1, @check_all,
                             :onclick => "miqUpdateAllCheckboxes('rhn_buttons', null);")
-          %th Appliance
-          %th Zone
-          %th Update Status
-          %th Last Checked for updates
-          %th CFME Version
-          %th Platform Updates Available
-          %th Last Message
+          %th=_("Appliance")
+          %th=_("Zone")
+          %th=_("Update Status")
+          %th=_("Last Checked for updates")
+          %th=_("CFME Version")
+          %th=_("Platform Updates Available")
+          %th=_("Last Message")
         %tbody
           -Array(@updates).each do |update|
             %tr{:class => cycle('row0', 'row1')}
