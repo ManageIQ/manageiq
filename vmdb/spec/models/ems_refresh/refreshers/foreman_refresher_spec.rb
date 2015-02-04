@@ -16,8 +16,8 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
   let(:provisioning_manager) { Provider.first.provisioning_manager }
   let(:osfs) { provisioning_manager.operating_system_flavors }
   let(:customization_scripts) { provisioning_manager.customization_scripts }
-  let(:media) { customization_scripts.where(:type => "CustomizationScriptMedium") }
-  let(:ptables) { customization_scripts.where(:type => "CustomizationScriptPtable") }
+  let(:media) { provisioning_manager.customization_script_media }
+  let(:ptables) { provisioning_manager.customization_script_ptables }
   let(:configuration_manager) { Provider.first.configuration_manager }
 
   it "will perform a full refresh on api v2" do
@@ -77,6 +77,9 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
       "manager_ref" => "4"
     )
     expect(osf.customization_scripts).to include(mine(ptables), mine(media))
+    expect(osf.customization_script_ptables).to include(mine(ptables))
+    expect(osf.customization_script_ptables).not_to include(mine(media))
+    expect(osf.customization_script_media).to include(mine(media))
   end
 
   def assert_configuration_table_counts
