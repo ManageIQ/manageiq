@@ -1,10 +1,10 @@
 require "spec_helper"
 
-describe EmsRefresh::Refreshers::OpenstackRefresher do
+describe EmsRefresh::Refreshers::VcRefresher do
   before(:each) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(
-      :ems_openstack,
+      :ems_vmware,
       :zone      => zone,
       :hostname  => "1.2.3.4",
       :ipaddress => "1.2.3.4",
@@ -12,8 +12,8 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
     @ems.update_authentication(:default => {:userid => "admin", :password => "password"})
   end
 
-  it "will record an error when trying to perform a full refresh against RHOS Havana" do
-    error = "Bad Request"
+  it "will record an error when trying to perform a full refresh against Vmware" do
+    error = "Error getting VC data"
     refresh_ems(@ems, error)
     assert_failed_refresh(error)
   end
@@ -24,7 +24,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
   end
 
   def refresh_ems(ems, error)
-    EmsRefresh::Parsers::Openstack.stub(:ems_inv_to_hashes).and_raise(Excon::Errors::BadRequest.new(error))
+    EmsRefresh::Refreshers::VcRefresher.any_instance.stub(:refresh_targets_for_ems).and_raise(StandardError.new(error))
     EmsRefresh.refresh(ems)
   end
 end
