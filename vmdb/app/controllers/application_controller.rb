@@ -1200,33 +1200,30 @@ class ApplicationController < ActionController::Base
     p  = "/images/icons/"
     pn = "#{p}new/"
 
-    case item.class.base_class.to_s
-    when "ExtManagementSystem"   then "#{pn}/vendor-#{item.image_name}.png"
-    when "Filesystem"            then "#{p}ico/win/#{item.image_name.downcase}.ico"
-    when "Host"                  then "#{pn}vendor-#{item.vmm_vendor.downcase}.png"
-    when "MiqEvent"              then "#{pn}event-#{item.name.downcase}.png"
-    when "MiqRequest"
-      pn + case item.request_status.to_s.downcase
-           when "ok"    then "checkmark.png"
-           when "error" then "x.png"
-           else              "#{@listicon.downcase}.png"
-           end
-    when "RegistryItem"          then "#{pn}#{item.image_name.downcase}.png"
-    when "ResourcePool"          then "#{pn}#{item.vapp ? "vapp" : "resource_pool"}.png"
-    when "Vm", "VmOrTemplate"    then "#{pn}vendor-#{item.vendor.downcase}.png"
-    when "ServiceResource"       then "#{pn}#{item.resource_type.to_s == "VmOrTemplate" ? "vm" : "service_template"}.png"
-    when "Storage"               then "#{pn}piecharts/datastore/#{calculate_pct_img(item.v_free_space_percent_of_total)}.png"
-    when "OsProcess", "EventLog" then "#{pn}#{@listicon.downcase}.png"
-    when "Service", "ServiceTemplate"
-      if item.try(:picture)
-        add_pictures_to_sync(item.picture.id)
-        "../../../pictures/#{item.picture.basename}"
-      else
-        # FIXME: what here?
-      end
-    else
-      "#{pn}#{(@listicon || view.db).underscore}.png"
-    end
+    image = case item.class.base_class.to_s
+            when "ExtManagementSystem"   then "#{pn}/vendor-#{item.image_name}.png"
+            when "Filesystem"            then "#{p}ico/win/#{item.image_name.downcase}.ico"
+            when "Host"                  then "#{pn}vendor-#{item.vmm_vendor.downcase}.png"
+            when "MiqEvent"              then "#{pn}event-#{item.name.downcase}.png"
+            when "MiqRequest"
+              pn + case item.request_status.to_s.downcase
+                   when "ok"    then "checkmark.png"
+                   when "error" then "x.png"
+                   else              "#{@listicon.downcase}.png"
+                   end
+            when "RegistryItem"          then "#{pn}#{item.image_name.downcase}.png"
+            when "ResourcePool"          then "#{pn}#{item.vapp ? "vapp" : "resource_pool"}.png"
+            when "Vm", "VmOrTemplate"    then "#{pn}vendor-#{item.vendor.downcase}.png"
+            when "ServiceResource"       then "#{pn}#{item.resource_type.to_s == "VmOrTemplate" ? "vm" : "service_template"}.png"
+            when "Storage"               then "#{pn}piecharts/datastore/#{calculate_pct_img(item.v_free_space_percent_of_total)}.png"
+            when "OsProcess", "EventLog" then "#{pn}#{@listicon.downcase}.png"
+            when "Service", "ServiceTemplate"
+              if item.try(:picture)
+                add_pictures_to_sync(item.picture.id)
+                "../../../pictures/#{item.picture.basename}"
+              end
+            end
+    image ? image : "#{pn}#{(@listicon || view.db).underscore}.png"
   end
 
   def get_host_for_vm(vm)
