@@ -7,8 +7,8 @@
 = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "grid"}
 
 %input{:type  => 'hidden',
-       :name  => 'miq_grid_checks#{options[:grid_num]}',
-       :id    => 'miq_grid_checks#{options[:grid_num]}',
+       :name  => "miq_grid_checks#{options[:grid_num]}",
+       :id    => "miq_grid_checks#{options[:grid_num]}",
        :value => ''}
 
 - if options[:div_in_js]
