@@ -12,6 +12,14 @@ module Metric::Capture::Openstack
     meters.all? {|m| DIFF_METERS.include? m}
   end
 
+  def self.counter_sum_per_second_calculation(stats, intervals)
+    total = 0.0
+    stats.keys.each do |c|
+      total += (intervals[c] > 0) ? stats[c] / intervals[c].to_f : 0
+    end
+    total / 1024.0
+  end
+
   COUNTER_INFO   = [
     {
       :openstack_counters    => CPU_METERS,
@@ -21,17 +29,16 @@ module Metric::Capture::Openstack
 
     {
       :openstack_counters    => DISK_METERS,
-      :calculation           => lambda { |*stats, interval| stats.compact.sum / 1024.0 / interval },
+      :calculation           => Metric::Capture::Openstack.method(:counter_sum_per_second_calculation).to_proc,
       :vim_style_counter_key => "disk_usage_rate_average"
     },
 
     {
       :openstack_counters    => NETWORK_METERS,
-      :calculation           => lambda { |*stats, interval| stats.compact.sum / 1024.0 / interval },
+      :calculation           => Metric::Capture::Openstack.method(:counter_sum_per_second_calculation).to_proc,
       :vim_style_counter_key => "net_usage_rate_average"
     },
   ]
-
 
   COUNTER_NAMES = COUNTER_INFO.collect { |i| i[:openstack_counters] }.flatten.uniq
 
