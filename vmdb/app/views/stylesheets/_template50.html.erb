@@ -13,10 +13,4 @@
 #advsearchbox { top: <%= session[:custom_logo] ? "148" : "60" %>px;}
 #adv_search_img { top: <%= session[:custom_logo] ? "40" : "63" %>px;}
 
-<% if show_page_content_background && @compare && !@explorer %> /*prevents scrolling of entire main area*/
-  div#page_content_div { position: absolute; background: url(/images/layout/modulefade1.png) no-repeat left top;}
-<% elsif show_page_content_background %>
-  div#page_content_div { background: url(/images/layout/modulefade1.png) no-repeat left top;}
-<% end %>
-
  </style>

@@ -1813,23 +1813,6 @@ module ApplicationHelper
     end
   end
 
-  # Only show the background image with listnav splitter for some classic screens
-  def show_page_content_background
-    return false if @layout == "exception"
-    return true if params[:action] == "timeline"
-    if ["show", "show_list", "show_timeline", "new", "edit",
-        "protect", "discover", "compare_miq", "drift_history", "drift",
-        "users", "groups", "patches","firewall_rules", "usage",
-        "host_services", "advanced_settings", "guest_applications", "filesystems",
-        "assign","user_import","perf_top_chart"
-       ].include?(params[:action])
-      unless ["miq_request", "dashboard", "alert"].include?(params[:controller])
-        return true
-      end
-    end
-    return false
-  end
-
   # Truncate text to fit below a quad icon
   TRUNC_AT = 13
   TRUNC_TO = 10
