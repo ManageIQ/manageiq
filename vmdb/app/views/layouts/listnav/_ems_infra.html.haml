@@ -1,0 +1,108 @@
+- if @record && !@record.name.nil?
+  #accordion
+    .panel
+      .topbar
+        = link_to(h(@record.name.length < trunc_at ? @record.name : "#{@record.name[0...trunc_to]}..."),
+          {:action => 'panel_control', :panel => 'icon'},
+          :remote => true,
+          :title  => h(@record.name))
+      = hidden_div_if(@panels["icon"].nil? || @panels["icon"] == false, :id => "icon") do
+        .panecontent
+          = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
+
+    .topbar
+      = link_to(_("Properties"),
+        {:action => 'panel_control', :panel => 'ems_prop'},
+        :remote => true)
+    = hidden_div_if(@panels["ems_prop"].nil? || @panels["ems_prop"] == false, :id => "ems_prop") do
+      .panecontent
+        = link_to_with_icon(_('Summary'),
+          {:action => 'show', :id => @record, :display => 'main'},
+          :title => _("Show Summary"))
+        - if @record.has_events? || @record.has_events?(:policy_events)
+          - if @record.has_events?
+            = link_to_with_icon(_('Timelines'),
+              {:action => 'show', :id => @record, :display => 'timeline'},
+              :title => _("Show Timelines"))
+          - elsif @record.has_events?(:policy_events)
+            - # wrapping around control if
+            = link_to_with_icon(_('Timelines'),
+              {:action => 'show', :id => @record, :display => 'timeline'},
+              :title => _("Show Timelines"))
+        - else
+          %img{:src => "/images/icons/16/link_none.gif", :title => _("Timelines Not Available")}
+          = _('Timelines')
+          %br
+
+    .topbar
+      = link_to(_("Relationships"),
+        {:action => 'panel_control', :panel => 'ems_rel'},
+        :remote => true)
+    = hidden_div_if(@panels["ems_rel"].nil? || @panels["ems_rel"] == false, :id => "ems_rel") do
+      .panecontent
+        - if @record.number_of(:ems_folders) == 0 || @record.ems_folder_root.nil?
+          %img{:src => "/images/icons/16/link_none.gif"}
+          = _('Hosts & Clusters')
+          %br
+        - else
+          = link_to_with_icon(_('Hosts & Clusters'),
+            {:action => 'show', :id => @record, :display => 'ems_folders'},
+            :title => _("Show Hosts & Clusters"))
+
+        - if @record.number_of(:ems_folders) == 0 || @record.ems_folder_root.nil?
+          %img{:src => "/images/icons/16/link_none.gif"}
+          = _('VMs & Templates')
+          %br
+        - else
+          = link_to_with_icon(_('VMs & Templates'),
+            {:action => 'show', :id => @record, :display => 'ems_folders', :vat => true},
+            :title => _("Show VMs & Templates"))
+
+        - if role_allows(:feature => "ems_cluster_show_list")
+          - if @record.number_of(:ems_clusters) == 0
+            %img{:src => "/images/icons/16/link_none.gif"}
+              = _("Clusters (%s)") % @record.number_of(:ems_clusters)
+            %br
+          - else
+            = link_to_with_icon(_("Clusters (%s)") % @record.number_of(:ems_clusters),
+              {:action => 'show', :id => @record, :display => 'ems_clusters'},
+              :title => _("Show all managed Clusters"))
+
+        - if role_allows(:feature => "host_show_list")
+          - if @record.number_of(:hosts) == 0
+            %img{:src => "/images/icons/16/link_none.gif"}
+            = _("Hosts (%s)") % @record.number_of(:hosts)
+            %br
+          - else
+            = link_to_with_icon(_("Hosts (%s)") % @record.number_of(:hosts),
+              {:action => 'show', :id => @record, :display => 'hosts'},
+              :title => _("Show all managed Hosts"))
+
+        - if role_allows(:feature => "storage_show_list")
+          = link_if_nonzero(:count => @record.number_of(:storages),
+            :record_id             => @record.id,
+            :tables                => 'storages',
+            :display               => 'storages',
+            :action                => 'show',
+            :title                 => _("Show all managed %s") % ui_lookup(:tables => "storages"))
+
+        - if role_allows(:feature => "vm_show_list")
+          - if @record.number_of(:vms) == 0
+            %img{:src => "/images/icons/16/link_none.gif"}
+            = _("VMs (%s)") % @record.number_of(:vms)
+            %br
+          - else
+            = link_to_with_icon(_("VMs (%s)") % @record.number_of(:vms),
+              {:action => 'show', :id => @record, :display => 'vms'},
+              :title => _("Show all VMs"))
+
+        - if role_allows(:feature => "miq_template_show_list")
+          - if @record.number_of(:miq_templates) == 0
+            %img{:src => "/images/icons/16/link_none.gif"}
+            = _("Templates (%s)") % @record.number_of(:miq_templates)
+            %br
+          - else
+            = link_to_with_icon("Templates (#{@record.number_of(:miq_templates)})",
+              {:action => 'show', :id => @record, :display => 'miq_templates'},
+              :title => _("Show all Templates"))
+
