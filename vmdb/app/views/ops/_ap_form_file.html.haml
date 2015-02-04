@@ -49,8 +49,8 @@
                     :id    => "accept",
                     :name  => "accept",
                     :alt   => _("Update this entry"),
-                    :title => _("Update this entry",
-                    :id    => "#{@scan.id || "new"}")
+                    :title => _("Update this entry"),
+                    :id    => "#{@scan.id || 'new'}")
                 %td.all
                   = text_field("entry", "fname", :maxlength=>MAX_NAME_LEN, "value"=>session[:edit_filename])
                   = hidden_field("item", "type1", :value=>"file")
