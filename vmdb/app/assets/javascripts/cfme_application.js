@@ -1152,8 +1152,8 @@ function miqToggleUserOptions(e, id){
   $('#' + id).toggle();
   miqStopBubble(e);
 }
-  if ( e.stopPropagation )  // Don't propagate the mouse click to the dom event catcher
-    e.stopPropagation();
+function miqStopBubble(e) {
+  if (e.stopPropagation) e.stopPropagation();
   e.cancelBubble = true;
   return false;
 }
