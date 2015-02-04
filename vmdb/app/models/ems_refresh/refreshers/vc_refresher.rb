@@ -52,8 +52,8 @@ module EmsRefresh::Refreshers
           dummy, timings = Benchmark.realtime_block(:total_time) { refresh_targets_for_ems(targets) }
 
           $log.info "#{log_header} Refreshing targets for EMS...Complete - Timings: #{timings.inspect}"
-        rescue => err
-          $log.log_backtrace(err)
+        rescue => e
+          $log.log_backtrace(e)
           $log.error("#{log_header} Unable to perform refresh for the following targets:" )
           targets.each { |t| $log.error "#{log_header}   #{t.class}: [#{t.name}], id: [#{t.id}]" }
           @ems.update_attributes(:last_refresh_error => e.to_s, :last_refresh_date => Time.now.utc)
