@@ -313,7 +313,7 @@
               - else
                 - if %w(Account SystemService Patch GuestApplication).include?(view.db)
                   = h(row[col].to_s.length < 18 ? row[col] : row[col].to_s[0..13] + "...")
-                - elsif view.db = "RegistryItems" && col == "data"
+                - elsif view.db == "RegistryItems" && col == "data"
                   = h(row[col].to_s.length < 50 ? row[col] : row[col].to_s[0..50] + "...")
                 - elsif view.db == "Filesystem" && col == "name"
                   = h(row[col].to_s.length < 50 ? row[col] : row[col].to_s[0..50] + "...")
