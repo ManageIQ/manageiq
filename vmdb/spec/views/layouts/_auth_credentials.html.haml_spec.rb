@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe "layouts/_auth_credentials.html.erb" do
+describe "layouts/_auth_credentials.html.haml" do
   it "check if correct labels are being displayed for credentials fields" do
     set_controller_for_view("host")
     assign(:edit, {:new => {}})

@@ -1,0 +1,45 @@
+- entry_point ||= "Instance"
+#automate_tree_div
+  = hidden_field_tag(:ignore_form_changes)
+  %p.legend= _("Select Entry Point %s") % entry_point
+  #automate_treebox
+  = render(:partial => "layouts/dynatree",
+           :locals => {:tree_id             => "automate_treebox",
+                       :tree_name           => "automate_tree",
+                       :json_tree           => @temp[:automate_tree],
+                       :onclick             => "cfmeOnClick_SelectAETreeNode",
+                       :tree_root           => "#{x_node(:automate_tree)}",
+                       :base_id             => "root",
+                       :no_base_exp         => true,
+                       :exp_tree            => false,
+                       :highlighting        => true,
+                       :autoload            => true,
+                       :cfme_changes_check  => true })
+  #buttons
+    %table{:width => "100%"}
+      %tr
+        %td{:align => "right"}
+          #automate_buttons_on{:style => "display:#{@changed ? "display" : "none"};"}
+            = link_to(button_tag(t = _("Apply"),
+                                 :class => "btn btn-primary",
+                                 :alt   => t),
+                      {:action => "ae_tree_select_toggle",
+                       :button => "submit"},
+                      :remote => true,
+                      :title  => t)
+            = link_to(button_tag(t = _("Cancel"),
+                                 :class => "btn btn-default",
+                                 :alt   => t),
+                      {:action => "ae_tree_select_toggle",
+                       :button => "cancel"},
+                      :remote => true,
+                      :title  => t)
+          #automate_buttons_off{:style => "display:#{@changed ? "none" : "display"};"}
+            = button_tag(_("Apply"), :class => "btn btn-primary btn-disabled")
+            = link_to(button_tag(t = _("Cancel"),
+                                 :class => "btn btn-default",
+                                 :alt   => t),
+                      {:action => "ae_tree_select_toggle",
+                       :button => "cancel"},
+                      :remote => true,
+                      :title  => t)

@@ -1,0 +1,8 @@
+- if @breadcrumbs && @breadcrumbs.length > 1
+  %ol.breadcrumb
+    - @breadcrumbs.each do |breadcrumbs|
+      %li
+        %a{:href => breadcrumbs[:url], :onclick => "return miqCheckForChanges()"}
+          = h(breadcrumbs[:name])
+    %li.active
+      = @title
