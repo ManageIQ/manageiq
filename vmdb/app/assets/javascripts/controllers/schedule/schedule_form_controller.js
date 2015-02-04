@@ -1,48 +1,77 @@
 cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 'storageTable', 'scheduleFormId', 'oneMonthAgo', 'miqService', 'timerOptionService', function($http, $scope, storageTable, scheduleFormId, oneMonthAgo, miqService, timerOptionService) {
   var init = function() {
     $scope.finishedLoading = false;
+
+    $scope.scheduleModel = {
+      action_typ: '',
+      depot_name: '',
+      filter_typ: '',
+      log_userid: '',
+      log_password: '',
+      log_verify: '',
+      log_protocol: '',
+      description: '',
+      enabled: '',
+      name: '',
+      timer_typ: '',
+      timer_value: '',
+      miq_angular_date_1: '',
+      start_hour: '',
+      start_min: '',
+      time_zone: '',
+      uri: '',
+      uri_prefix: '',
+      timer_items: '',
+      filter_value: ''
+    };
+    $scope.formId = scheduleFormId;
+    $scope.afterGet = false;
+    $scope.modelCopy = angular.copy( $scope.scheduleModel );
+
     cfmeAngularApplication.$scope = $scope;
 
     if (scheduleFormId == 'new') {
-      $scope.newSchedule         = true;
-      $scope.actionType          = 'vm';
-      $scope.filterType          = 'all';
-      $scope.scheduleEnabled     = '1';
-      $scope.filterValuesEmpty   = true;
-      var today                  = new Date();
-      var tomorrowsDate          = parseInt(today.getDate()) + 1;
-      $scope.miq_angular_date_1  = today.getMonth() + 1 + "/" + tomorrowsDate + "/" + today.getFullYear();
-      $scope.scheduleTimerType   = 'Once';
-      $scope.scheduleTimeZone    = 'UTC';
-      $scope.scheduleStartHour   = '0';
-      $scope.scheduleStartMinute = '0';
-      $scope.finishedLoading     = true;
+      $scope.newSchedule                        = true;
+      $scope.scheduleModel.action_typ          = 'vm';
+      $scope.scheduleModel.filter_typ          = 'all';
+      $scope.scheduleModel.enabled             = '1';
+      $scope.filterValuesEmpty                  = true;
+      var today                                 = new Date();
+      var tomorrowsDate                         = parseInt(today.getDate()) + 1;
+      $scope.scheduleModel.miq_angular_date_1  = today.getMonth() + 1 + "/" + tomorrowsDate + "/" + today.getFullYear();
+      $scope.scheduleModel.timer_typ           = 'Once';
+      $scope.scheduleModel.time_zone           = 'UTC';
+      $scope.scheduleModel.start_hour          = '0';
+      $scope.scheduleModel.start_min           = '0';
+      $scope.finishedLoading                    = true;
+      $scope.afterGet                           = true;
+      $scope.modelCopy                          = angular.copy( $scope.scheduleModel );
     } else {
       $scope.newSchedule = false;
 
       miqService.sparkleOn();
 
       $http.get('/ops/schedule_form_fields/' + scheduleFormId).success(function(data) {
-        $scope.actionType          = data.action_type;
-        $scope.depotName           = data.depot_name;
-        $scope.filterType          = data.filter_type;
-        $scope.logUserid           = data.log_userid;
-        $scope.logPassword         = data.log_password;
-        $scope.logVerify           = data.log_verify;
-        $scope.logProtocol         = data.protocol;
-        $scope.scheduleDescription = data.schedule_description;
-        $scope.scheduleEnabled     = data.schedule_enabled;
-        $scope.scheduleName        = data.schedule_name;
-        $scope.scheduleTimerType   = data.schedule_timer_type;
-        $scope.scheduleTimerValue  = data.schedule_timer_value;
-        $scope.miq_angular_date_1  = data.schedule_start_date;
-        $scope.scheduleStartHour   = data.schedule_start_hour;
-        $scope.scheduleStartMinute = data.schedule_start_min;
-        $scope.scheduleTimeZone    = data.schedule_time_zone;
-        $scope.uri                 = data.uri;
-        $scope.uriPrefix           = data.uri_prefix;
+        $scope.scheduleModel.action_typ         = data.action_type;
+        $scope.scheduleModel.depot_name         = data.depot_name;
+        $scope.scheduleModel.filter_typ         = data.filter_type;
+        $scope.scheduleModel.log_userid         = data.log_userid;
+        $scope.scheduleModel.log_password       = data.log_password;
+        $scope.scheduleModel.log_verify         = data.log_verify;
+        $scope.scheduleModel.log_protocol       = data.protocol;
+        $scope.scheduleModel.description        = data.schedule_description;
+        $scope.scheduleModel.enabled            = data.schedule_enabled;
+        $scope.scheduleModel.name               = data.schedule_name;
+        $scope.scheduleModel.timer_typ          = data.schedule_timer_type;
+        $scope.scheduleModel.timer_value        = data.schedule_timer_value;
+        $scope.scheduleModel.miq_angular_date_1 = data.schedule_start_date;
+        $scope.scheduleModel.start_hour         = data.schedule_start_hour;
+        $scope.scheduleModel.start_min          = data.schedule_start_min;
+        $scope.scheduleModel.time_zone          = data.schedule_time_zone;
+        $scope.scheduleModel.uri                = data.uri;
+        $scope.scheduleModel.uri_prefix         = data.uri_prefix;
 
-        $scope.timerItems          = timerOptionService.getOptions($scope.scheduleTimerType);
+        $scope.scheduleModel.timer_items        = timerOptionService.getOptions($scope.scheduleModel.timer_typ);
 
         if (data.filter_type === 'all' || (data.protocol !== undefined && data.protocol !== null)) {
           $scope.filterValuesEmpty = true;
@@ -50,16 +79,23 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
           buildFilterList(data);
 
           $scope.filterValuesEmpty = false;
-          $scope.filterValue = data.filter_value;
+          $scope.scheduleModel.filter_value     = data.filter_value;
         }
 
         $scope.finishedLoading = true;
+        $scope.afterGet = true;
+        $scope.modelCopy = angular.copy( $scope.scheduleModel );
 
         miqService.sparkleOff();
       });
     }
 
     miqService.buildCalendar(oneMonthAgo.year, parseInt(oneMonthAgo.month) + 1, oneMonthAgo.date);
+
+    $scope.$watch("scheduleModel.name", function() {
+      $scope.form = $scope.scheduleForm;
+      $scope.miqService = miqService;
+    });
   };
 
   var buildFilterList = function(data) {
@@ -80,7 +116,7 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
   };
 
   var testType = function(type) {
-    return type.test($scope.actionType);
+    return type.test($scope.scheduleModel.action_typ);
   };
 
   var isVmType = function() {
@@ -108,13 +144,13 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
       type = 'VM';
     } else if (isHostType()) {
       type = 'Host';
-    } else if ($scope.actionType === 'miq_template') {
+    } else if ($scope.scheduleModel.action_typ === 'miq_template') {
       type = 'Template';
-    } else if ($scope.actionType === 'emscluster') {
+    } else if ($scope.scheduleModel.action_typ === 'emscluster') {
       type = 'Cluster';
-    } else if ($scope.actionType === 'storage') {
+    } else if ($scope.scheduleModel.action_typ === 'storage') {
       type = storageTable;
-    } else if ($scope.actionType === 'db_backup') {
+    } else if ($scope.scheduleModel.action_typ === 'db_backup') {
       type = 'Database Backup';
     }
 
@@ -127,32 +163,32 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
     } else if (isHostType()) {
       return 'host';
     } else {
-      return $scope.actionType;
+      return $scope.scheduleModel.action_typ;
     }
   };
 
   $scope.dbBackup = function() {
-    return $scope.actionType === 'db_backup';
+    return $scope.scheduleModel.action_typ === 'db_backup';
   };
 
   $scope.sambaBackup = function() {
-    return $scope.dbBackup() && $scope.logProtocol === 'Samba';
+    return $scope.dbBackup() && $scope.scheduleModel.log_protocol === 'Samba';
   };
 
   $scope.actionTypeChanged = function() {
     if ($scope.dbBackup()) {
-      $scope.logProtocol = 'Network File System';
+      $scope.scheduleModel.log_protocol = 'Network File System';
     } else {
-      $scope.filterType = 'all';
+      $scope.scheduleModel.filter_typ = 'all';
     }
 
     $scope.filterValuesEmpty = true;
   };
 
   $scope.filterTypeChanged = function() {
-    if ($scope.filterType != 'all') {
+    if ($scope.scheduleModel.filter_typ != 'all') {
       miqService.sparkleOn();
-      $http.post('/ops/schedule_form_filter_type_field_changed/' + scheduleFormId, {filter_type: $scope.filterType}).success(function(data) {
+      $http.post('/ops/schedule_form_filter_type_field_changed/' + scheduleFormId, {filter_type: $scope.scheduleModel.filter_typ}).success(function(data) {
         buildFilterList(data);
         $scope.filterValuesEmpty = false;
         miqService.sparkleOff();
@@ -161,39 +197,35 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
       $scope.filterValuesEmpty = true;
     }
 
-    $scope.filterValue = null;
+    $scope.scheduleModel.filter_value = '';
+    $scope.scheduleForm.filter_value.$setViewValue('');
   };
 
   $scope.logProtocolChanged = function() {
-    if ($scope.logProtocol === "Samba") {
-      $scope.uriPrefix = "smb";
+    if ($scope.scheduleModel.log_protocol === "Samba") {
+      $scope.scheduleModel.uri_prefix = "smb";
     }
 
-    if ($scope.logProtocol === "Network File System") {
-      $scope.uriPrefix = "nfs";
+    if ($scope.scheduleModel.log_protocol === "Network File System") {
+      $scope.scheduleModel.uri_prefix = "nfs";
     }
   };
 
   $scope.filterValueChanged = function() {
-    if ($scope.formAltered) {
-      miqService.showButtons();
-    } else {
-      miqService.hideButtons();
-    }
   };
 
   $scope.scheduleTimerTypeChanged = function() {
-    $scope.timerItems = timerOptionService.getOptions($scope.scheduleTimerType);
+    $scope.scheduleModel.timer_items = timerOptionService.getOptions($scope.scheduleModel.timer_typ);
 
     if ($scope.timerNotOnce()) {
-      $scope.scheduleTimerValue = 1;
+      $scope.scheduleModel.timer_value = 1;
     } else {
-      $scope.scheduleTimerValue = null;
+      $scope.scheduleModel.timer_value = null;
     }
   };
 
   $scope.timerNotOnce = function() {
-    return $scope.scheduleTimerType !== 'Once';
+    return $scope.scheduleModel.timer_typ !== 'Once';
   };
 
   $scope.saveable = function(scheduleForm) {
@@ -205,7 +237,13 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
   };
 
   $scope.resetClicked = function() {
-    scheduleEditButtonClicked('reset');
+    $scope.scheduleModel = angular.copy( $scope.modelCopy );
+    if($scope.form.action_typ.$dirty || ($scope.form.filter_typ != undefined && $scope.form.filter_typ.$dirty)) {
+      $scope.filterTypeChanged();
+    }
+    $scope.scheduleModel.filter_value = $scope.modelCopy.filter_value;
+    $scope.scheduleForm.$setPristine(true);
+    miqService.miqFlash("warn", "All changes have been reset");
   };
 
   $scope.saveClicked = function() {

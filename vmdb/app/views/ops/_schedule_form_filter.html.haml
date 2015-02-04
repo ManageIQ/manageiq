@@ -8,64 +8,64 @@
         %td
           = select_tag('filter_typ', options_for_select(@vm_options_for_select),
             "ng-switch-when" => "vm",
-            "ng-model"       => "$parent.filterType",
+            "ng-model"       => "$parent.scheduleModel.filter_typ",
             "ng-change"      => "filterTypeChanged()")
           = select_tag('filter_typ', options_for_select(@template_options_for_select),
             "ng-switch-when" => "miq_template",
-            "ng-model"       => "$parent.filterType",
+            "ng-model"       => "$parent.scheduleModel.filter_typ",
             "ng-change"      => "filterTypeChanged()")
           = select_tag('filter_typ', options_for_select(@host_options_for_select),
             "ng-switch-when" => "host",
-            "ng-model"       => "$parent.filterType",
+            "ng-model"       => "$parent.scheduleModel.filter_typ",
             "ng-change"      => "filterTypeChanged()")
           = select_tag('filter_typ', options_for_select(@cluster_options_for_select),
             "ng-switch-when" => "emscluster",
-            "ng-model"       => "$parent.filterType",
+            "ng-model"       => "$parent.scheduleModel.filter_typ",
             "ng-change"      => "filterTypeChanged()")
           = select_tag('filter_typ', options_for_select(@storage_options_for_select),
             "ng-switch-when" => "storage",
-            "ng-model"       => "$parent.filterType",
+            "ng-model"       => "$parent.scheduleModel.filter_typ",
             "ng-change"      => "filterTypeChanged()")
           = select_tag('log_protocol', options_for_select(@database_backup_options_for_select),
             "ng-switch-when" => "db_backup",
-            "ng-model"       => "$parent.logProtocol",
+            "ng-model"       => "$parent.scheduleModel.log_protocol",
             "ng-change"      => "logProtocolChanged()")
 
-          %select#filter_value(ng-change="filterValueChanged()" ng-model="filterValue" ng-options="filteredItem.value as filteredItem.text for filteredItem in filterList" ng-hide="filterValuesEmpty" ng-required="!filterValuesEmpty")
+          %select#filter_value(name="filter_value" ng-change="filterValueChanged()" ng-model="scheduleModel.filter_value" ng-options="filteredItem.value as filteredItem.text for filteredItem in filterList" ng-hide="filterValuesEmpty" ng-required="!filterValuesEmpty")
             %option(value="") &lt;Choose&gt;
-          %input(type="hidden" name="filter_value" value="{{filterValue}}")
+          %input(type="hidden" name="filter_value" value="{{scheduleModel.filter_value}}")
 
       %tr(ng-show="dbBackup()")
         %td.key
           Depot Name
         %td.wide
-          %input(type="text" ng-required="dbBackup()" name="depot_name" ng-model="depotName")
+          %input(type="text" ng-required="dbBackup()" name="depot_name" ng-model="scheduleModel.depot_name")
 
       %tr(ng-show="dbBackup()")
         %td.key URI
         %td.wide
-          {{uriPrefix}}://
-          %input.uri-input(type="text" ng-required="dbBackup()" name="uri" ng-model="uri" maxlength=100)
-          %input(type="hidden" name="uri_prefix" ng-value="uriPrefix")
+          {{scheduleModel.uri_prefix}}://
+          %input.uri-input(type="text" ng-required="dbBackup()" name="uri" ng-model="scheduleModel.uri" maxlength=100)
+          %input(type="hidden" name="uri_prefix" ng-value="scheduleModel.uri_prefix")
         = javascript_tag("$('.uri-input').focus()")
 
       %tr(ng-show="sambaBackup()")
         %td.key
           User ID
         %td
-          %input(type="text" ng-required="sambaBackup()" name="log_userid" ng-model="logUserid" maxlength=50)
+          %input(type="text" ng-required="sambaBackup()" name="log_userid" ng-model="scheduleModel.log_userid" maxlength=50)
 
       %tr(ng-show="sambaBackup()")
         %td.key
           Password
         %td
-          %input(type="password" ng-required="sambaBackup()" name="log_password" ng-model="logPassword" maxlength=50)
+          %input(type="password" ng-required="sambaBackup()" name="log_password" ng-model="scheduleModel.log_password" maxlength=50)
 
       %tr(ng-show="sambaBackup()")
         %td.key
           Verify Password
         %td
-          %input(type="password" ng-required="sambaBackup()" name="log_verify" ng-model="logVerify" maxlength=50)
+          %input(type="password" ng-required="sambaBackup()" name="log_verify" ng-model="scheduleModel.log_verify" maxlength=50)
 
       %tr(ng-show="sambaBackup()")
         %td
