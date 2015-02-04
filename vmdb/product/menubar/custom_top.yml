@@ -1,0 +1,8 @@
+type: item
+name: Custom top item
+id: custom2
+feature: about
+rbac:
+  feature: dashboard_view
+parent: custom_top
+url: /dashboard/timeline
