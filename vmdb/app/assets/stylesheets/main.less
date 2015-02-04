@@ -1,0 +1,25 @@
+@import "patternfly/patternfly";
+@import "font_paths";           // corrects broken font paths (should be fixed)
+@import "patternfly_overrides"; // style overrides not accessible through variables
+
+// Product overrides of Boostrap & Patternfly variables
+
+@screen-sm:                                 992px;    // sets the breakpoint between mobile and desktop modes
+@navbar-pf-navbar-navbar-brand-min-width:   270px;
+@navbar-pf-navbar-navbar-brand-padding:     8px 0 2px;
+@dropdown-link-hover-bg:                    #d4edfa;  // sets dropdown link hover
+@link-color:                                #0099d3;  // sets link (and accordion hover ) color globally
+@navbar-pf-border-color:                    #063451;  // sets 3px border color at top of screen
+@navbar-pf-bg-color:                        #063451;  // sets backgound color of navigation bar
+@img-path:                                  "../img";
+
+
+// Product overrides of Patternfly Login variables
+
+@img-bg-login:                              "bg-login.jpg";
+@img-bg-login-whitelabel:                   "custom_login_logo.png"; // added new variable to login.less
+@login-bg-color:                            #083c5a;
+@login-pf-brand-img-height:                 40px;                    // added new variable to login.less
+@login-container-bg-color:                  #000000;
+@login-container-bg-color-rgba:             rgba(0, 0, 0, 0.2);
+@login-container-details-border-color-rgba: rgba(0, 0, 0, 0.5);      // added new variable to login.less

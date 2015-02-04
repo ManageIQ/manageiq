@@ -40,7 +40,7 @@ describe "dashboard/login.html.haml" do
         :session => {:show_login_info => true}, :authentication => {})
       render
       @labels.each do |label|
-        response.should have_selector('aside p', text: label)
+        response.should have_selector('p', :text => label)
       end
     end
 
@@ -49,7 +49,7 @@ describe "dashboard/login.html.haml" do
         :session => {:show_login_info => false}, :authentication => {})
       render
       @labels.each do |label|
-        response.should_not have_selector('aside p', text: label)
+        response.should_not have_selector('p', :text => label)
       end
     end
   end

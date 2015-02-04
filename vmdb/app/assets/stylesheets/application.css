@@ -3,11 +3,20 @@
  * and any sub-directories. You're free to add application-wide styles to this file and they'll appear at
  * the top of the compiled file, but it's generally better to create a new file per style scope.
  *
+ *= require main
  *= require slick.grid
  *= require jquery.jqplot
  *= require automate_import_export
+ *= require dialog_import_export
+ *= require dialog_fields
  *= require widget_import_export
  *= require angular
  *= require miq_timeline
  *= require ../javascripts/dynatree_1.2.4/skin-cfme/ui.dynatree
+ *= require jquery/miq/jquery-ui-1.9.2.custom
+ *= require codemirror-4.2/lib/codemirror.css
+ *= require jqplot
+ *= require product_slickgrid
+ *= require template
+ *= require glyphicons
 */

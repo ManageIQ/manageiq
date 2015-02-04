@@ -1,0 +1,125 @@
+//
+// Login
+// --------------------------------------------------
+
+.login-pf {
+  height: 100%;
+  #brand {
+    position: relative;
+    top: -70px;
+    img {
+      display: block;
+      height: @login-pf-brand-img-height;
+      margin: 0 auto;
+      max-width: 100%;
+      @media (min-width: @screen-sm-min) {
+        margin: 0;
+        text-align: left;
+      }
+    }
+  }
+  #badge {
+    display: block;
+    margin: 20px auto 70px;
+    position: relative;
+    text-align: center;
+    @media (min-width: @screen-sm-min) { 
+      float: right;
+      margin-right: 64px;
+      margin-top: 50px;
+    }
+  }
+  body {
+    background: @login-bg-color url("@{img-path}/@{img-bg-login}") repeat-x 50% 0;
+    background-size: auto;
+    color: #fff;
+    @media (min-width: @screen-sm-min) {
+      background-size: 100% auto;
+    }
+  }
+  body.whitelabel {
+  background: @login-bg-color url("/upload/@{img-bg-login-whitelabel}") repeat-x 50% 0;
+  background-size: auto;
+  color: #fff;
+  @media (min-width: @screen-sm-min) {
+    background-size: 100% auto;
+  }
+}
+  .container {
+    background-color: @login-container-bg-color;
+    background-color: @login-container-bg-color-rgba;
+    clear: right;
+    padding-bottom: 40px;
+    padding-top: 20px;
+    width: auto;
+    @media (min-width: @screen-sm-min) { 
+      bottom: 13%;
+      padding-left: 80px;
+      position: absolute;
+      width: 100%;
+    }
+    .details {
+      p:first-child {
+        border-top: 1px solid @login-container-details-border-color-rgba;
+        padding-top: 25px;
+        margin-top: 25px;
+      }
+      @media (min-width: @screen-sm-min) {
+        p:first-child {
+          border-top: 0;
+          padding-top: 0;
+          margin-top: 0;
+        }
+        border-left: 1px solid @login-container-details-border-color-rgba;
+        padding-left: 40px;
+      }
+      p {
+        margin-bottom: 2px;
+      }
+    }
+    .form-horizontal {
+      .control-label {
+        font-size: @font-size-base + 1;
+        font-weight: 400;
+        text-align: left;
+      }
+      .form-group:last-child {
+        &, .help-block:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+    .help-block {
+      color: #fff;
+    }
+    .login {
+      @media (min-width: @screen-sm-min) {
+        padding-right: 40px;
+      }
+    }
+    .submit {
+      text-align: right;
+    }
+  }
+}
+
+.ie8.login-pf {
+  #badge {
+    background: url('@{img-path}/@{img-badge-ie8}') no-repeat;
+    height: @img-badge-ie8-height;
+    width: @img-badge-ie8-width;
+    img {
+      width: 0;
+    }
+  }
+  #brand {
+    background: url('@{img-path-alt}/@{img-brand-lg-ie8}') no-repeat center;
+    background-size: cover auto;
+    @media (min-width: @screen-sm-min) {
+      background-position: 0 0;
+    }
+    img {
+      width: 0;
+    }
+  }
+}

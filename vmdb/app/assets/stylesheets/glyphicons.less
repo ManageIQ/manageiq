@@ -1,0 +1,76 @@
+.icons {
+  float: left;
+  list-style: none outside none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+.icons .fa, .icons .glyphicon, .icons .pficon, .icons .product, .alert .pficon{
+  font-size: 20px;
+}
+/*begin icon class customizations*/
+.fa-bar-chart-o:before, .fa-chart:before {
+  content: "\f080";
+}
+.fa-file-text-o:before, .fa-report:before {
+  content: "\f0f6";
+}
+.fa-warning:before,
+.fa-exclamation-triangle:before{
+  color: #c90813;
+}
+.fa-play:before {
+  content: "\f04b";
+  color: #57a81c;
+}
+.fa-pause:before {
+  content: "\f04c";
+  color: #eb7720;
+}
+.pficon-ok:before, .pficon-complete:before {
+  color: #57a81c;
+  content: "\e602";
+} 
+.pficon-folder-close-blue:before {
+  content: "\e607";
+  color: #3188c5;
+}
+/*end icon class customizations*/
+
+
+/* custom font for this product */
+
+[class^="product-"], [class*=" product-"] {
+  font-family: "product";
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.product-arrow-right:before {
+  content: "\e605";
+}
+.product-report:before {
+  content: "\e603";
+}
+.product-role:before {
+  content: "\e600";
+}
+.product-product:before {
+  content: "\e601";
+}
+.product-group:before {
+  content: "\e602";
+}
+.product-chart:before {
+  content: "\e604";
+}
+/*end icon customizations*/
+

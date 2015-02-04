@@ -8,8 +8,14 @@
 <%= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"menu"} %>
 <%= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"toolbar"} %>
 
+<%= render :partial => "layouts/page_header" %>
+
+<%= render :partial => "layouts/page_center" %>
+
+<%= render :partial => "layouts/page_footer" %>
+
 <div id="context_div"></div>	<%# Div to refer context menu to %>
-<div id="layout_div" style="position:relative; width:auto; height:<%= center_div_height(true,550) %>px;">
+<div id="layout_div">
   <%= yield :trees %>
   <div id="center_cell_div" style="display:none;">
 
@@ -31,18 +37,5 @@
 </div>
 
 <%= yield :accords %>
-
-<%= render :partial => "layouts/page_header" %>
-
-<%= render :partial => "layouts/page_footer" %>
-
-<script>
-  var miqLayout = new dhtmlXLayoutObject(document.body,"1C");
-  miqLayout.cont.obj._offsetLeft = miqLayout.cont.obj._offsetTop = miqLayout.cont.obj._offsetWidth = miqLayout.cont.obj._offsetHeight = 0;
-  miqLayout.setSizes();
-  miqLayout.cells("a").hideHeader();
-  miqLayout.attachHeader("page_header_div");
-  miqLayout.attachFooter("page_footer_div");
-</script>
 
 <%= render :partial => "layouts/global_footer" %>

@@ -94,8 +94,7 @@ class ApplicationController < ActionController::Base
     respond_to do |format|
       format.js do
         render :update do |page|    # AJAX, replace the main area with error
-          page.replace_html("exception_div", :partial => "layouts/exception_contents", :locals => { :message => msg })
-          page << "miqLayout.cells('a').attachObject('exception_div');"
+          page.replace_html("center_div", :partial => "layouts/exception_contents", :locals => {:message => msg})
           page << "miqSparkle(false);"
           page << javascript_hide_if_exists("adv_searchbox_div")
         end

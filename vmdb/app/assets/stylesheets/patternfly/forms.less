@@ -1,0 +1,22 @@
+//
+// Forms
+// --------------------------------------------------
+
+.form-control {
+  &[disabled], &[readonly], fieldset[disabled] & {
+    border-color: @input-border-disabled !important;
+    .box-shadow(none);
+    color: #969696;
+  }
+  &:hover {
+    border-color: #7BB2DD;
+  }
+}
+
+.input-group .input-group-btn .btn {
+  .box-shadow(none);
+}
+
+label {
+  font-weight: 600;
+}
