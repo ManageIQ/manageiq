@@ -1,4 +1,6 @@
-%form#form_div(name="scheduleForm" ng-controller="scheduleFormController" ng-show="finishedLoading")
+- @angularForm = true
+
+%form#form_div(name="angularForm" ng-controller="scheduleFormController" ng-show="finishedLoading")
   = render :partial => "layouts/flash_msg"
   %fieldset
     %p.legend
@@ -29,34 +31,10 @@
 
   = render :partial => "schedule_form_filter"
   = render :partial => "schedule_form_timer"
-
-  .button-group
-    = button_tag("Add",
-      :class        => "btn btn-primary",
-      "ng-class"    => "{'btn-disabled': !saveable(scheduleForm)}",
-      "ng-click"    => "saveClicked()",
-      "ng-disabled" => "!saveable(scheduleForm)",
-      "ng-show"     => "newSchedule")
-
-    = button_tag("Save",
-      :class        => "btn btn-primary",
-      "ng-class"    => "{'btn-disabled': !saveable(scheduleForm)}",
-      "ng-click"    => "saveClicked()",
-      "ng-disabled" => "!saveable(scheduleForm)",
-      "ng-hide"     => "newSchedule")
-
-    = button_tag("Reset",
-      :class        => "btn btn-default",
-      "ng-class"    => "{'btn-disabled': !scheduleForm.$dirty}",
-      "ng-click"    => "resetClicked()",
-      "ng-disabled" => "!scheduleForm.$dirty",
-      "ng-hide"     => "newSchedule")
-
-    = button_tag("Cancel", :class => "btn btn-default", "ng-click" => "cancelClicked()")
+  = render :partial => "layouts/angular/x_edit_buttons_angular"
 
 :javascript
   $('#name').focus();
-  $('#form_buttons_div').hide();
 
   cfmeAngularApplication.value('storageTable', '#{ui_lookup(:table => "storages")}');
   cfmeAngularApplication.value('scheduleFormId', '#{@schedule.id || "new"}');
