@@ -2444,7 +2444,7 @@ module ApplicationHelper
       link_to_with_icon(link_text, link_params, tag_attrs)
     else
       content_tag(:li, :class => "disabled") do
-        content(:a, :href => "#") do
+        content_tag(:a, :href => "#") do
           "#{args.key?(:link_text) ? args[:link_text] : entity_name} #{none}"
         end
       end
