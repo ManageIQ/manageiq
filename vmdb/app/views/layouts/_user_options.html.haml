@@ -1,31 +1,57 @@
-%li.dropdown{:onclick=>"miqToggleUserOptions(event, 'user_options_div')", :style=>"cursor: pointer;"}
-  %span.pficon.pficon-user
-  = "#{session[:username]} | #{session[:vmdb_name]}"
-  %b.caret
-  %ul.dropdown-menu#user_options_div{:style=>"display:none;"}
-    %li 
-      Server: #{session[:vmdb_name]}
-    %li 
-      Group:
-      - if session[:eligible_groups].length > 1
-        = select_tag("to_group",
-                     options_for_select(session[:eligible_groups], session[:group]),
-                     {:multiple=>false,
-                      :title=>"Select to change to another Group",
-                      :onclick => "miqToggleUserOptions(event, 'to_group');",
-                      "data-miq_sparkle_on"=>true,
-                      "data-miq_observe"=>{:url=>"/dashboard/change_group"}.to_json}) 
-      - else
-        = session[:group_description] 
-    %li.divider
-    %a{:href=>"/dashboard/logout", :onclick=>'return miqCheckForChanges()', :title=>"Click to Logout"}
-      %li.active
-        Logout
+-Menu::Manager.menu(:top_right) do |menu_section|
+  %li.dropdown{:onclick => "miqToggleUserOptions(event, 'custom_menu_div')"}
+    %a{:href => "#", :class => "dropdown-toggle", "data-toggle" => "dropdown"}
+      = menu_section.name
+      %b.caret
+    %ul.dropdown-menu#custom_menu_div
+      - menu_section.items.each do |menu_item|
+        %li
+          %a{:href => "#"}
+            = menu_item.name
 
-  %script{:type=>"text/javascript"}
-    $("body").click(function(e){
-    if (! $(e.target).is('#to_group') && ! $(e.target).is('#user_options_div'))
-    -# If not clicking on group selector or user_options_div itself
-    if ($('#user_options_div').is(':visible'))
-    $('#user_options_div').hide();
-    });
+  :javascript
+    $j("body").click(function(e) {
+      if (!$j(e.target).is('#to_group') && !$j(e.target).is('.topright_menu'))
+        $j('.topright_menu:visible').hide();
+
+- if session[:userid] 
+  %li.dropdown
+    %a{:href => "#", :class => "dropdown-toggle", "data-toggle" => "dropdown"}
+      %span.pficon.pficon-user
+      = "#{session[:username]} | #{session[:vmdb_name]}"
+      %b.caret
+    %ul.dropdown-menu
+      %li 
+        %a{:href => "#"}
+          Server: #{session[:vmdb_name]}
+      %li 
+        %a{:href => "#"}
+          Group:
+          - if session[:eligible_groups].length > 1
+            = select_tag("to_group",
+                         options_for_select(session[:eligible_groups], session[:group]),
+                         {:multiple=>false,
+                          :title=>"Select to change to another Group",
+                          :onclick => "miqToggleUserOptions(event, 'to_group');",
+                          "data-miq_sparkle_on"=>true,
+                          "data-miq_observe"=>{:url=>"/dashboard/change_group"}.to_json}) 
+          - else
+            = session[:group_description] 
+      %li.divider
+      %li
+        %a{:href=>"/dashboard/logout", :onclick=>'return miqCheckForChanges()', :title=>"Click to Logout"}
+          Logout
+
+    %script{:type=>"text/javascript"}
+      $j("body").click(function(e){
+      if (! $j(e.target).is('#to_group') && ! $j(e.target).is('#user_options_div')) 
+      -# If not clicking on group selector or user_options_div itself
+      if ($j('#user_options_div').is(':visible'))
+      $j('#user_options_div').hide();
+      });
+
+- else
+  Logging into
+  = "#{session[:vmdb_name]}"
+- if ["login", "authenticate"].include?(controller.action_name) 
+  = javascript_tag( "$$('#navcontainer a').each(function(a){a.href='#'})") 
