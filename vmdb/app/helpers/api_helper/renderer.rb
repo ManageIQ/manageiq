@@ -182,8 +182,8 @@ module ApiHelper
         else
           klass.scoped
         end
-      res = res.where(sqlfilter_param)            if sqlfilter_param
-      res = res.reorder(sort_params)              if sort_params
+      res = res.where(sqlfilter_param)            if sqlfilter_param && res.respond_to?(:where)
+      res = res.reorder(sort_params)              if sort_params && res.respond_to?(:reorder)
 
       options = {
         :targets        => res,
