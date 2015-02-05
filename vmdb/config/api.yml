@@ -80,6 +80,13 @@
         :identifier: ems_cluster_tag
       - :name: unassign
         :identifier: ems_cluster_tag
+  :conditions:
+    :description: Conditions
+    :options:
+    - :collection
+    - :subcollection
+    :methods: *70174834086080
+    :klass: Condition
   :data_stores:
     :description: Datastores
     :options:
@@ -214,6 +221,8 @@
     - :collection
     :methods: *70174834086080
     :klass: MiqPolicy
+    :subcollections:
+    - :conditions
     :collection_actions:
       :post:
       - :name: add

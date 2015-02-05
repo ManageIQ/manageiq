@@ -88,10 +88,13 @@ module ApiSpecHelper
       :group_name => "API User Group",
       :role_name  => "API User Role",
       :auth_token => "",
-      :entrypoint => "/api",
-      :auth_url   => "/api/auth",
-      :vms_url    => "/api/vms"
+      :entrypoint => "/api"
     }
+
+    collections  = %w(auth vms tags providers hosts data_stores resource_pools clusters)
+    collections += %w(policies policy_profiles templates conditions)
+
+    collections.each { |collection| @cfme["#{collection}_url".to_sym] = "#{@cfme[:entrypoint]}/#{collection}" }
 
     define_user
   end
@@ -116,9 +119,39 @@ module ApiSpecHelper
     api_config[:collections]
   end
 
-  def action_identifier(type, action)
-    collection_config.fetch_path(type, :resource_actions, :post)
+  def action_identifier(type, action, selection = :resource_actions)
+    collection_config.fetch_path(type, selection, :post)
       .select { |spec| spec[:name] == action.to_s }
       .first[:identifier]
+  end
+
+  def collection_action_identifier(type, action)
+    action_identifier(type, action, :collection_actions)
+  end
+
+  def subcollection_action_identifier(type, subtype, action)
+    action_identifier(type, action, "#{subtype}_subcollection_actions".to_sym)
+  end
+
+  def gen_request(action, *hrefs)
+    request = {"action" => action.to_s}
+    request["resources"] = hrefs.collect { |href| {"href" => href} } if hrefs.present?
+    request
+  end
+
+  def gen_requests(action, data)
+    request = {"action" => action.to_s}
+    request["resources"] = data
+    request
+  end
+
+  def gen_request_data(action, data, *hrefs)
+    request = {"action" => action.to_s}
+    if hrefs.present?
+      request["resources"] = hrefs.collect { |href| data.dup.merge("href" => href) }
+    else
+      request["resource"] = data
+    end
+    request
   end
 end
