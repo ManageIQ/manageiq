@@ -1,6 +1,17 @@
 require "spec_helper"
 
 describe MiqAeClassController do
+  ENV['AUTOMATE_DB_DIRECTORY'] = Dir.mktmpdir
+  before(:each) do
+    stub_const("MiqAeDatastore::DATASTORE_DIRECTORY", ENV['AUTOMATE_DB_DIRECTORY'])
+    FileUtils.remove_entry_secure(ENV['AUTOMATE_DB_DIRECTORY']) if Dir.exist?(ENV['AUTOMATE_DB_DIRECTORY'])
+    FileUtils.mkdir(ENV['AUTOMATE_DB_DIRECTORY'])
+  end
+
+  after(:each) do
+    FileUtils.remove_entry_secure(ENV['AUTOMATE_DB_DIRECTORY']) if Dir.exist?(ENV['AUTOMATE_DB_DIRECTORY'])
+  end
+
   context "#set_record_vars" do
     it "Namespace remains unchanged when a class is edited" do
       ns = FactoryGirl.create(:miq_ae_namespace)
@@ -280,6 +291,8 @@ describe MiqAeClassController do
           MiqAeInstance.stub(:find_by_id).with(123).and_return(miq_ae_instance)
           miq_ae_instance.stub(:ae_class).and_return(miq_ae_class)
           MiqAeInstance.stub(:get_homonymic_across_domains).with("fqname").and_return([override, override2])
+          miq_ae_instance.stub(:updated_by_ui).with(no_args).and_return("fred")
+          miq_ae_instance.stub(:updated_on_ui).with(no_args).and_return(Time.now)
         end
 
         it "return instance record and check count of override instances being returned" do
@@ -347,6 +360,8 @@ describe MiqAeClassController do
           MiqAeMethod.stub(:find_by_id).with(123).and_return(miq_ae_method)
           miq_ae_method.stub(:ae_class).and_return(miq_ae_class)
           MiqAeMethod.stub(:get_homonymic_across_domains).with("fqname").and_return([override, override2])
+          miq_ae_method.stub(:updated_by_ui).with(no_args).and_return("fred")
+          miq_ae_method.stub(:updated_on_ui).with(no_args).and_return(Time.now)
         end
 
         it "returns method record and check count of override methods being returned" do
@@ -367,9 +382,9 @@ describe MiqAeClassController do
   context "#delete_domain" do
     it "Should only delete editable domains" do
       set_user_privileges
-      domain1 = FactoryGirl.create(:miq_ae_domain_enabled, :system => true)
+      domain1 = FactoryGirl.create(:miq_ae_domain_enabled, :system => true, :priority => 1)
 
-      domain2 = FactoryGirl.create(:miq_ae_domain_enabled, :system => false)
+      domain2 = FactoryGirl.create(:miq_ae_domain_enabled, :system => false, :priority => 2)
       controller.instance_variable_set(:@_params,
                                        :miq_grid_checks => "aen-#{domain1.id}, aen-#{domain2.id}, aen-someid"
       )

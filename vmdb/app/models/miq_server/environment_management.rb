@@ -1,3 +1,4 @@
+require 'miq_apache'
 module MiqServer::EnvironmentManagement
   extend ActiveSupport::Concern
 

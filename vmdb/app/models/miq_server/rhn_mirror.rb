@@ -1,4 +1,5 @@
 require 'linux_admin'
+require 'miq_apache'
 
 module MiqServer::RhnMirror
   extend ActiveSupport::Concern

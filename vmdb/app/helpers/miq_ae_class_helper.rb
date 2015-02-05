@@ -1,4 +1,5 @@
 module MiqAeClassHelper
+  AE_CLASSES_LIST = %w(MiqAeDomain MiqAeNamespace MiqAeClass MiqAeInstance MiqAeMethod MiqAeField MiqAeValue)
   def add_read_only_suffix(node_string)
     "#{node_string} (Locked)"
   end
@@ -14,5 +15,9 @@ module MiqAeClassHelper
     else
       return domain_name, record.id
     end
+  end
+
+  def automate_node?(treenodeid)
+    (treenodeid =~ /^ae[ncim]-/) == 0
   end
 end

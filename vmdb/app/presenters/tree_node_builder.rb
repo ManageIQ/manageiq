@@ -281,7 +281,7 @@ class TreeNodeBuilder
       base_class = object.class.base_model.name           # i.e. Vm or MiqTemplate
       base_class = "Datacenter" if base_class == "EmsFolder" && object.is_datacenter
       prefix = X_TREE_NODE_PREFIXES_INVERTED[base_class]
-      cid = ActiveRecord::Base.compress_id(object.id)
+      cid = AE_CLASSES_LIST.include?(base_class) ? object.id : ActiveRecord::Base.compress_id(object.id)
       "#{format_parent_id}#{prefix}-#{cid}"
     end
   end

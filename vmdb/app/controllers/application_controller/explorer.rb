@@ -1,6 +1,7 @@
 # Explorer generic methods included in application.rb
 module ApplicationController::Explorer
   extend ActiveSupport::Concern
+  include MiqAeClassHelper
 
   # Historical tree item selected
   def x_history
@@ -1102,6 +1103,7 @@ module ApplicationController::Explorer
   end
 
   def valid_active_node(treenodeid)
+    return treenodeid if automate_node?(treenodeid)
     nodetype, id = treenodeid.split("_").last.split("-")
     return treenodeid if ["root",""].include?(nodetype) #incase node is root or doesn't have a prefix
     kls = model_from_nodetype(nodetype)
