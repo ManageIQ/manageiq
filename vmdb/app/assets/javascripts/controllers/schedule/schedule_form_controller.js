@@ -31,7 +31,7 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
     cfmeAngularApplication.$scope = $scope;
 
     if (scheduleFormId == 'new') {
-      $scope.newSchedule                        = true;
+      $scope.newRecord                         = true;
       $scope.scheduleModel.action_typ          = 'vm';
       $scope.scheduleModel.filter_typ          = 'all';
       $scope.scheduleModel.enabled             = '1';
@@ -47,7 +47,7 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
       $scope.afterGet                           = true;
       $scope.modelCopy                          = angular.copy( $scope.scheduleModel );
     } else {
-      $scope.newSchedule = false;
+      $scope.newRecord = false;
 
       miqService.sparkleOn();
 
@@ -93,7 +93,7 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
     miqService.buildCalendar(oneMonthAgo.year, parseInt(oneMonthAgo.month) + 1, oneMonthAgo.date);
 
     $scope.$watch("scheduleModel.name", function() {
-      $scope.form = $scope.scheduleForm;
+      $scope.form = $scope.angularForm;
       $scope.miqService = miqService;
     });
   };
@@ -199,7 +199,7 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
     }
 
     $scope.scheduleModel.filter_value = '';
-    $scope.scheduleForm.filter_value.$setViewValue('');
+    $scope.angularForm.filter_value.$setViewValue('');
   };
 
   $scope.logProtocolChanged = function() {
@@ -223,15 +223,15 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
     } else {
       $scope.scheduleModel.timer_value = null;
     }
-    $scope.scheduleForm.timer_value.$setViewValue($scope.scheduleModel.timer_value);
+    $scope.angularForm.timer_value.$setViewValue($scope.scheduleModel.timer_value);
   };
 
   $scope.timerNotOnce = function() {
     return $scope.scheduleModel.timer_typ !== 'Once';
   };
 
-  $scope.saveable = function(scheduleForm) {
-    return scheduleForm.$valid && scheduleForm.$dirty;
+  $scope.saveable = function(angularForm) {
+    return angularForm.$valid && angularForm.$dirty;
   };
 
   $scope.cancelClicked = function() {
@@ -244,7 +244,7 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
       $scope.filterTypeChanged();
     }
     $scope.scheduleModel.filter_value = $scope.modelCopy.filter_value;
-    $scope.scheduleForm.$setPristine(true);
+    $scope.angularForm.$setPristine(true);
     miqService.miqFlash("warn", "All changes have been reset");
   };
 
@@ -253,13 +253,13 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
   };
 
   $scope.addClicked = function() {
-    scheduleEditButtonClicked('add', true);
+    $scope.saveClicked();
   };
 
   $scope.triggerCheckChange = function(date) {
     $scope.miq_angular_date_1 = date;
     $scope.$apply(function() {
-      $scope.scheduleForm.miq_angular_date_1.$setViewValue($scope.miq_angular_date_1);
+      $scope.angularForm.miq_angular_date_1.$setViewValue($scope.miq_angular_date_1);
     });
   };
 
