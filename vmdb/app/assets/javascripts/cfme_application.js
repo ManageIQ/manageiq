@@ -59,6 +59,7 @@ function miqPrepRightCellForm(tree) {
 // Things to be done on page resize
 function miqOnResize() {
 //  if ($('miq_timeline')) miqResizeTL();
+  if (typeof dhxLayout != "undefined") dhxLayout.setSizes();
   miqGetBrowserSize();
 }
 

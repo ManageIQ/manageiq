@@ -41,11 +41,11 @@
                   Logout
 
             %script{:type=>"text/javascript"}
-              $j("body").click(function(e){
-              if (! $j(e.target).is('#to_group') && ! $j(e.target).is('#user_options_div')) 
+              $("body").click(function(e){
+              if (! $(e.target).is('#to_group') && ! $(e.target).is('#user_options_div'))
               -# If not clicking on group selector or user_options_div itself
-              if ($j('#user_options_div').is(':visible'))
-              $j('#user_options_div').hide();
+              if ($('#user_options_div').is(':visible'))
+              $('#user_options_div').hide();
               });
 
         - else
