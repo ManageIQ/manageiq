@@ -1,6 +1,6 @@
 - # New code to use DHTMLXGRID below
 - if @grid_xml
-  - url = @showlinks ? view_to_url(view, @parent) : nil
+  - url = @showlinks == false ? nil : view_to_url(view, @parent)
   - if @explorer
     #list_grid{:style => "cursor: hand;"}
     - ajax_url = !(%w(OntapStorageSystem OntapLogicalDisk OntapStorageVolume OntapFileShare SecurityGroup).include?(view.db) || (request.parameters[:controller] == "service" && view.db == "Vm"))
