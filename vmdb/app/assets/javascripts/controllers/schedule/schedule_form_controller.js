@@ -35,7 +35,7 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
       $scope.scheduleModel.action_typ          = 'vm';
       $scope.scheduleModel.filter_typ          = 'all';
       $scope.scheduleModel.enabled             = '1';
-      $scope.filterValuesEmpty                  = true;
+      $scope.scheduleModel.filterValuesEmpty   = true;
       var today                                 = new Date();
       var tomorrowsDate                         = parseInt(today.getDate()) + 1;
       $scope.scheduleModel.miq_angular_date_1  = today.getMonth() + 1 + "/" + tomorrowsDate + "/" + today.getFullYear();
@@ -74,11 +74,11 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
         $scope.scheduleModel.timer_items        = timerOptionService.getOptions($scope.scheduleModel.timer_typ);
 
         if (data.filter_type === 'all' || (data.protocol !== undefined && data.protocol !== null)) {
-          $scope.filterValuesEmpty = true;
+          $scope.scheduleModel.filterValuesEmpty = true;
         } else {
           buildFilterList(data);
 
-          $scope.filterValuesEmpty = false;
+          $scope.scheduleModel.filterValuesEmpty = false;
           $scope.scheduleModel.filter_value     = data.filter_value;
         }
 
@@ -178,11 +178,12 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
   $scope.actionTypeChanged = function() {
     if ($scope.dbBackup()) {
       $scope.scheduleModel.log_protocol = 'Network File System';
+      $scope.scheduleModel.uri_prefix = 'nfs';
     } else {
       $scope.scheduleModel.filter_typ = 'all';
     }
 
-    $scope.filterValuesEmpty = true;
+    $scope.scheduleModel.filterValuesEmpty = true;
   };
 
   $scope.filterTypeChanged = function() {
@@ -190,11 +191,11 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
       miqService.sparkleOn();
       $http.post('/ops/schedule_form_filter_type_field_changed/' + scheduleFormId, {filter_type: $scope.scheduleModel.filter_typ}).success(function(data) {
         buildFilterList(data);
-        $scope.filterValuesEmpty = false;
+        $scope.scheduleModel.filterValuesEmpty = false;
         miqService.sparkleOff();
       });
     } else {
-      $scope.filterValuesEmpty = true;
+      $scope.scheduleModel.filterValuesEmpty = true;
     }
 
     $scope.scheduleModel.filter_value = '';
@@ -222,6 +223,7 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
     } else {
       $scope.scheduleModel.timer_value = null;
     }
+    $scope.scheduleForm.timer_value.$setViewValue($scope.scheduleModel.timer_value);
   };
 
   $scope.timerNotOnce = function() {
@@ -259,6 +261,25 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
     $scope.$apply(function() {
       $scope.scheduleForm.miq_angular_date_1.$setViewValue($scope.miq_angular_date_1);
     });
+  };
+
+  $scope.filterValueRequired = function(value) {
+    return !$scope.scheduleModel.filterValuesEmpty &&
+      ($scope.isModelValueNil(value));
+  };
+
+  $scope.dbRequired = function(value) {
+    return $scope.dbBackup() &&
+      ($scope.isModelValueNil(value));
+  };
+
+  $scope.sambaRequired = function(value) {
+    return $scope.sambaBackup() &&
+      ($scope.isModelValueNil(value));
+  };
+
+  $scope.isModelValueNil = function(value) {
+    return value == null || value == '';
   };
 
   init();

@@ -5,23 +5,30 @@
       %tr
         %td.key=_("Run")
         %td
-          = select_tag("timer_typ", options_for_select(%w(Once Hourly Daily Weekly Monthly)), "ng-model" => "scheduleModel.timer_typ", "ng-change" => "scheduleTimerTypeChanged()")
+          = select_tag("timer_typ",
+                       options_for_select(%w(Once Hourly Daily Weekly Monthly)),
+                       "ng-model"    => "scheduleModel.timer_typ",
+                       "ng-change"   => "scheduleTimerTypeChanged()",
+                       "checkchange" => "timer_value")
 
           %span(ng-show="timerNotOnce()")=_("every")
-          %select#timer_value(ng-model="scheduleModel.timer_value" ng-options="timerItem.value as timerItem.text for timerItem in scheduleModel.timer_items" ng-show="timerNotOnce()")
+          %select#timer_value(ng-model="scheduleModel.timer_value" name="timer_value" ng-options="timerItem.value as timerItem.text for timerItem in scheduleModel.timer_items" ng-show="timerNotOnce()" checkchange)
           %input(type="hidden" ng-value="scheduleModel.timer_value" name="timer_value")
 
       %tr
         %td.key=_("Time Zone")
         %td
-          = select_tag("time_zone", options_for_select(ALL_TIMEZONES), "ng-model" => "scheduleModel.time_zone")
+          = select_tag("time_zone",
+                       options_for_select(ALL_TIMEZONES),
+                       "ng-model"    => "scheduleModel.time_zone",
+                       "checkchange" => "")
           \&nbsp;&nbsp;
           =_("* Changing the Time Zone will reset the Starting Date and Time fields below")
 
       %tr
         %td.key=_("Starting Date")
         %td#start_date
-          %input#miq_angular_date_1.css1(readonly="true" ng-model="scheduleModel.miq_angular_date_1" name="miq_angular_date_1" data-miq_observe_date="execAngular")
+          %input#miq_angular_date_1.css1(readonly="true" ng-model="scheduleModel.miq_angular_date_1" name="miq_angular_date_1" data-miq_observe_date="execAngular" checkchange)
 
       %tr
         %td.key
@@ -30,7 +37,15 @@
           %span#tz_span {{scheduleModel.time_zone}}
           )
         %td
-          = select_tag("start_hour", options_for_select(Array.new(24) {|i| i}), :class => "threedigit", "ng-model" => "scheduleModel.start_hour")
+          = select_tag("start_hour",
+                       options_for_select(Array.new(24) {|i| i}),
+                       :class        => "threedigit",
+                       "ng-model"    => "scheduleModel.start_hour",
+                       "checkchange" => "")
           %span h
-          = select_tag("start_min", options_for_select(Array.new(12) {|i| i*5}), :class => "threedigit", "ng-model" => "scheduleModel.start_min")
+          = select_tag("start_min",
+                       options_for_select(Array.new(12) {|i| i*5}),
+                       :class        => "threedigit",
+                       "ng-model"    => "scheduleModel.start_min",
+                       "checkchange" => "")
           %span m

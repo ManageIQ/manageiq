@@ -7,21 +7,25 @@
         %tr
           %td.key Name
           %td
-            %input(type="text" name="name" required ng-model="scheduleModel.name" maxlength="#{MAX_NAME_LEN}")
+            %input(type="text" name="name" ng-model="scheduleModel.name" maxlength="#{MAX_NAME_LEN}" miqrequired checkchange)
         %tr
           %td.key Description
           %td
-            %input(type="text" name="description" required ng-model="scheduleModel.description" maxlength="#{MAX_DESC_LEN}")
+            %input(type="text" name="description" ng-model="scheduleModel.description" maxlength="#{MAX_DESC_LEN}" miqrequired checkchange)
 
         %tr
           %td.key Active
           %td
-            %input(type="checkbox" name="enabled" ng-model="scheduleModel.enabled" ng-true-value="1" ng-false-value="0")
+            %input(type="checkbox" name="enabled" ng-model="scheduleModel.enabled" ng-true-value="1" ng-false-value="0" checkchange)
 
         %tr
           %td.key Action
           %td
-            = select_tag('action_typ', options_for_select(@action_type_options_for_select), "ng-model" => "scheduleModel.action_typ", "ng-change" => "actionTypeChanged()")
+            = select_tag('action_typ',
+                         options_for_select(@action_type_options_for_select),
+                         "ng-model"    => "scheduleModel.action_typ",
+                         "ng-change"   => "actionTypeChanged()",
+                         "checkchange" => @schedule.id ? "" : "filter_typ,filter_value")
 
   = render :partial => "schedule_form_filter"
   = render :partial => "schedule_form_timer"
