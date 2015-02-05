@@ -282,5 +282,17 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
     return value == null || value == '';
   };
 
+  $scope.validateFieldsValid = function() {
+    if($scope.angularForm != undefined &&
+       $scope.angularForm.depot_name.$valid &&
+       $scope.angularForm.uri.$valid &&
+       $scope.angularForm.log_userid.$valid &&
+       $scope.angularForm.log_password.$valid &&
+       $scope.angularForm.log_verify.$valid) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   init();
 }]);
