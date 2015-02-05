@@ -1,4 +1,5 @@
 require "spec_helper"
+require 'util/miq_apache'
 
 describe MiqApache::Conf do
   it "should raise ConfFileNotSpecified for a missing conf file" do

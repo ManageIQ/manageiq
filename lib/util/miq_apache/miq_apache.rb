@@ -1,4 +1,8 @@
 require 'fileutils'
+require 'logger'
+require 'active_support/core_ext/class/attribute_accessors'
+require 'util/runcmd'
+require 'util/extensions/miq-array'
 
 module MiqApache
   # Abstract Apache Error Class
