@@ -37,44 +37,25 @@
             "ng-change"      => "logProtocolChanged()",
             "checkchange"    => "")
 
-          %select#filter_value(name="filter_value" ng-change="filterValueChanged()" ng-model="scheduleModel.filter_value" ng-options="filteredItem.value as filteredItem.text for filteredItem in filterList" ng-hide="scheduleModel.filterValuesEmpty" ng-required="filterValueRequired(scheduleModel.filter_value)" checkchange)
+          %select#filter_value(name="filter_value" ng-change="filterValueChanged()" ng-model="scheduleModel.filter_value" ng-options="filteredItem.value as filteredItem.text for filteredItem in filterList" ng-hide="scheduleModel.filterValuesEmpty || dbBackup()" ng-required="filterValueRequired(scheduleModel.filter_value)" checkchange)
             %option(value="") &lt;Choose&gt;
           %input(type="hidden" name="filter_value" value="{{scheduleModel.filter_value}}")
 
-      %tr(ng-show="dbBackup()")
-        %td.key
-          Depot Name
-        %td.wide
-          %input(type="text" ng-required="dbRequired(scheduleModel.depot_name)" name="depot_name" ng-model="scheduleModel.depot_name" checkchange)
+      = render :partial => "layouts/angular/edit_log_depot_settings_angular",
+               :locals  => {:ng_show             => "dbBackup()",
+                            :ng_reqd_depot_name  => "dbRequired(scheduleModel.depot_name)",
+                            :ng_model_depot_name => "scheduleModel.depot_name",
+                            :ng_reqd_uri         => "dbRequired(scheduleModel.uri)",
+                            :ng_model_uri        => "scheduleModel.uri",
+                            :ng_model_uri_prefix => "scheduleModel.uri_prefix",
+                            :uri_prefix_display  =>  "{{scheduleModel.uri_prefix}}://"}
 
-      %tr(ng-show="dbBackup()")
-        %td.key URI
-        %td.wide
-          {{scheduleModel.uri_prefix}}://
-          %input.uri-input(type="text" ng-required="dbRequired(scheduleModel.uri)" name="uri" ng-model="scheduleModel.uri" maxlength=100 checkchange)
-          %input(type="hidden" name="uri_prefix" ng-value="scheduleModel.uri_prefix")
-        = javascript_tag("$('.uri-input').focus()")
-
-      %tr(ng-show="sambaBackup()")
-        %td.key
-          User ID
-        %td
-          %input(type="text" ng-required="sambaRequired(scheduleModel.log_userid)" name="log_userid" ng-model="scheduleModel.log_userid" maxlength=50 checkchange)
-
-      %tr(ng-show="sambaBackup()")
-        %td.key
-          Password
-        %td
-          %input(type="password" ng-required="sambaRequired(scheduleModel.log_password)" name="log_password" ng-model="scheduleModel.log_password" maxlength=50 checkchange)
-
-      %tr(ng-show="sambaBackup()")
-        %td.key
-          Verify Password
-        %td
-          %input(type="password" ng-required="sambaRequired(scheduleModel.log_verify)" name="log_verify" ng-model="scheduleModel.log_verify" maxlength=50 checkchange)
-
-      %tr(ng-show="sambaBackup()")
-        %td
-        %td(align="right")
-          - validate_url ||= ["new", "create"].include?(controller.action_name) ? "create" : "update"
-          = render(:partial => "/layouts/form_buttons_verify", :locals => {:validate_url => validate_url, :valtype => "log"})
+      = render :partial => "layouts/angular/auth_credentials_angular",
+               :locals  => {:ng_show           => "sambaBackup()",
+                            :ng_model          => "scheduleModel",
+                            :ng_reqd_userid    => "sambaRequired(scheduleModel.log_userid)",
+                            :ng_reqd_password  => "sambaRequired(scheduleModel.log_password)",
+                            :ng_reqd_verify    => "sambaRequired(scheduleModel.log_verify)",
+                            :validate_url      => "log_depot_edit",
+                            :id                => @schedule.id || "new",
+                            :valtype           => "log"}

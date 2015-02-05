@@ -1,0 +1,13 @@
+%tr(ng-show="#{ng_show}")
+  %td.key
+    Depot Name
+    %td.wide
+      %input(type="text" ng-required="#{ng_reqd_depot_name}" name="depot_name" ng-model="#{ng_model_depot_name}" checkchange)
+%tr(ng-show="#{ng_show}")
+  %td.key
+    URI
+    %td.wide
+      = uri_prefix_display
+      %input.uri-input(type="text" ng-required="#{ng_reqd_uri}" name="uri" ng-model="#{ng_model_uri}" maxlength=100 checkchange)
+      %input(type="hidden" name="uri_prefix" ng-value="#{ng_model_uri_prefix}")
+      = javascript_tag("$('.uri-input').focus()")
