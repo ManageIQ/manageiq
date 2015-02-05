@@ -1149,7 +1149,7 @@ function miqLaunchMiqVncConsole(pwd, hostAddress, hostPort, proxyAddress, proxyP
 
 // Toggle the user options div in the page header
 function miqToggleUserOptions(e, id){
-  $j('#' + id).toggle();
+  $('#' + id).toggle();
   miqStopBubble(e);
 }
 
