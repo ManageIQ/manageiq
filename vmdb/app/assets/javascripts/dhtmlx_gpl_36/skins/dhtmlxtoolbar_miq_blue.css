@@ -119,7 +119,7 @@ div.dhx_toolbar_poly_18_miq_blue {
   background-image: linear-gradient(to bottom, #FAFAFA 0px, #EDEDED 100%);
 	border: 1px solid #999;
     position: absolute;
-    margin-top: 12px;
+    margin-top: 0;
     padding-top: 1px;
     padding-bottom: 1px;
     overflow: hidden;
