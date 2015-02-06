@@ -48,7 +48,6 @@ class LdapUser < ActiveRecord::Base
     ldap_server.ldap_users.select([:id, :dn]).find_each {|u| db_users[u[:dn]] = u[:id]}
     $log.info "#{log_header} Initial DB User count: #{db_users.length}"
 
-    sync_start_time = Time.now.utc
     user_count = creates = updates = 0
 
     # LDAP filters to return on record DB for people

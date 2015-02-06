@@ -451,7 +451,7 @@ class MiqAlert < ActiveRecord::Base
       msg = "Request to retrieve alarms timed out after #{to} seconds"
       $log.warn(msg)
       raise msg
-    rescue MiqException::MiqVimBrokerUnavailable => err
+    rescue MiqException::MiqVimBrokerUnavailable
       msg = "Unable to retrieve alarms, Management System Connection Broker is currently unavailable"
       $log.warn(msg)
       raise msg
@@ -785,7 +785,7 @@ class MiqAlert < ActiveRecord::Base
 
     input = YAML.load(fd)
     input.each { |e|
-      a, stat = import_from_hash(e[self.name])
+      _a, stat = import_from_hash(e[self.name])
       stats.push(stat)
     }
 

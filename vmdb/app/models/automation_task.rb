@@ -22,7 +22,7 @@ class AutomationTask < MiqRequestTask
     args[:user_id]          = self.options[:user_id]
     args[:automate_message] = self.options[:message]
 
-    ws = MiqAeEngine.deliver(args)
+    MiqAeEngine.deliver(args)
   end
 
   def after_ae_delivery(ae_result)

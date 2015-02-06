@@ -85,7 +85,7 @@ class MiqAlertSet < ActiveRecord::Base
     input = YAML.load(fd)
 
     input.each { |e|
-      a, stat = import_from_hash(e["MiqAlertSet"])
+      _a, stat = import_from_hash(e["MiqAlertSet"])
       stats.push(stat)
     }
 
