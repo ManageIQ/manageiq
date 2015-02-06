@@ -72,12 +72,28 @@
             });
 
       - when 'DialogFieldCheckBox'
-        - checked = ['1', 't'].include?(wf.value(field.name))
-        = check_box_tag(field.name, "1", checked,
+        = check_box_tag(field.name, "1", field.checked?,
                         :disabled                   => !edit,
+                        :class                      => "dynamic-checkbox-#{field.id}",
                         "data-miq_sparkle_on"       => true,
                         "data-miq_sparkle_off"      => true,
                         "data-miq_observe_checkbox" => {:url => url}.to_json)
+
+        - if field.dynamic && field.show_refresh_button?
+          = button_tag('Refresh', :id => "refresh-dynamic-checkbox-#{field.id}", :class => "btn btn-default")
+
+          :javascript
+            $('#refresh-dynamic-checkbox-#{field.id}').click(function() {
+              miqSparkleOn();
+
+              var fieldId = "#{field.id}";
+              var fieldName = "#{field.name}";
+
+              $.post('dynamic_checkbox_refresh', {name: fieldName}, function(data) {
+                $('.dynamic-checkbox-' + fieldId).prop('checked', data.checked);
+                miqSparkleOff();
+              });
+            });
 
       - when 'DialogFieldDateControl', 'DialogFieldDateTimeControl'
         - t = Time.now.in_time_zone(session[:user_tz]) + 1.day

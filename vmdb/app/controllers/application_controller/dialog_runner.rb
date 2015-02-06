@@ -211,6 +211,18 @@ module ApplicationController::DialogRunner
     end
   end
 
+  def dynamic_checkbox_refresh
+    @edit = session[:edit]
+
+    dialog = @edit[:wf].dialog
+
+    field = dialog.field(params[:name])
+
+    respond_to do |format|
+      format.json { render :json => {:field_name => field.name, :checked => field.checked?}, :status => 200 }
+    end
+  end
+
   private     #######################
 
   def dialog_reset_form
