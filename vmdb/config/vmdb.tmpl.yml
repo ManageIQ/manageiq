@@ -310,6 +310,8 @@ workers:
           :poll_method: :escalate
         :ems_metrics_collector_worker_openstack:
           :poll_method: :escalate
+        :ems_metrics_collector_worker_openstack_infra:
+          :poll_method: :escalate
       :ems_metrics_processor_worker:
         :count: 2
         :memory_threshold: 400.megabytes
