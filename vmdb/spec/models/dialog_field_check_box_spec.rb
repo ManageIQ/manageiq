@@ -73,8 +73,8 @@ describe DialogFieldCheckBox do
     let(:dialog_field) { described_class.new }
     let(:automate_hash) do
       {
-        "default_value"  => default_value,
-        "required"       => true
+        "default_value" => default_value,
+        "required"      => true
       }
     end
 

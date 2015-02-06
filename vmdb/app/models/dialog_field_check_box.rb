@@ -6,7 +6,7 @@ class DialogFieldCheckBox < DialogField
   after_initialize :default_resource_action
 
   def checked?
-    ['1', 't'].include?(default_value)
+    %w(1 t).include?(default_value)
   end
 
   def default_value
