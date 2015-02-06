@@ -75,10 +75,6 @@ module MiqAeEngine
       return workspace
     end
 
-    def add_root(obj)
-      @graph.vertex(obj)
-    end
-
     DATASTORE_CACHE = true
     def datastore(klass, key)
       if DATASTORE_CACHE
