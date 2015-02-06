@@ -6,10 +6,6 @@ class MiqDatabase < ActiveRecord::Base
 
   include AuthenticationMixin
   include PasswordMixin
-  include ReservedMixin
-
-  attr_via_reserved :registration_organization_display_name
-  virtual_column    :registration_organization_display_name, :type => :string, :uses => :reserved_rec
 
   virtual_has_many  :vmdb_tables
 
