@@ -12,8 +12,10 @@ describe FileDepotFtp do
   context "#upload_file" do
     it "does not already exist" do
       file_depot_ftp.should_receive(:connect).and_return(connection)
-      file_depot_ftp.should_receive(:destination_file_exists?).and_return(false)
-      connection.should_receive(:mkdir).with("/uploads/#{@zone.name}_#{@zone.id}/#{@miq_server.name}_#{@miq_server.id}")
+      file_depot_ftp.should_receive(:file_exists?).exactly(4).times.and_return(false)
+      connection.should_receive(:mkdir).with("uploads")
+      connection.should_receive(:mkdir).with("uploads/#{@zone.name}_#{@zone.id}")
+      connection.should_receive(:mkdir).with("uploads/#{@zone.name}_#{@zone.id}/#{@miq_server.name}_#{@miq_server.id}")
       connection.should_receive(:putbinaryfile)
       log_file.should_receive(:post_upload_tasks)
       connection.should_receive(:close)
@@ -23,7 +25,7 @@ describe FileDepotFtp do
 
     it "already exists" do
       file_depot_ftp.should_receive(:connect).and_return(connection)
-      file_depot_ftp.should_receive(:destination_file_exists?).and_return(true)
+      file_depot_ftp.should_receive(:file_exists?).and_return(true)
       connection.should_not_receive(:mkdir)
       connection.should_not_receive(:putbinaryfile)
       log_file.should_not_receive(:post_upload_tasks)
