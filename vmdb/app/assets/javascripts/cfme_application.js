@@ -243,8 +243,12 @@ function miqDimDiv(divname, status) {
 // Check for changes and prompt
 function miqCheckForChanges() {
   if(cfmeAngularApplication.$scope) {
-    if (cfmeAngularApplication.$scope.form.$dirty)
-      return confirm("Abandon changes?");
+    if (cfmeAngularApplication.$scope.form.$dirty) {
+      answer = confirm("Abandon changes?");
+      if(answer == true)
+        cfmeAngularApplication.$scope.form.$setPristine(true);
+      return answer;
+    }
     } else {
         if (((miqDomElementExists('buttons_on') && $('#buttons_on').is(":visible")) ||
           typeof miq_changes != "undefined") &&
