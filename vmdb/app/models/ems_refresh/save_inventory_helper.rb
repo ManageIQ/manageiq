@@ -18,10 +18,9 @@ module EmsRefresh::SaveInventoryHelper
     end
   end
 
-  class MultiSaver
+  class MultiSaver < SingleSaver
     def initialize(type, parent, record_index, record_index_columns, find_key)
-      @type                 = type
-      @parent               = parent
+      super(type, parent)
       @record_index         = record_index
       @record_index_columns = record_index_columns
       @find_key             = find_key
