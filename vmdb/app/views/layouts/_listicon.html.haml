@@ -1,0 +1,158 @@
+- icon_image ||= nil
+- img_path = "/images/icons/"
+- img_attr_20 = {:valign => "middle", :width => "20", :height => "20", :alt => nil, :border => "0"}
+- img_attr_16 = {:valign => "middle", :width => "16", :height => "16", :alt => nil}
+- if (@scan_history) || (@vm && @listicon.present?) || (@host && @listicon.present?)
+  = image_tag("#{img_path}new/#{h(@listicon.downcase)}.png", img_attr_20)
+- elsif @vm && @listicon == "registry_items"
+  - ri = @targets_hash[@id] if @targets_hash
+  = image_tag("#{img_path}new/#{h(ri.image_name.downcase)}.png", img_attr_20)
+- elsif @vm && @listicon == "filesystems"
+  - fs = @targets_hash[@id] if @targets_hash
+  = image_tag("#{img_path}ico/win/#{h(fs.image_name.downcase)}.ico", img_attr_20)
+- elsif %w(Job MiqTask).include?(db)
+  - if row["state"] && row["state"].downcase == "finished"
+    - row_status = _("Status = %s") % row["status"].capitalize
+    - strsearch = row["message"].gsub!("cancel", "cancel")
+    - if row["status"] && row["status"].downcase == "ok" && strsearch.nil?
+      = image_tag("#{img_path}new/checkmark.png", {:title => row_status}, img_attr_16)
+    - elsif row["status"] && row["status"].downcase == "error" || !strsearch.nil?
+      = image_tag("#{img_path}new/x.png", {:title => row_status}, img_attr_16)
+    - elsif row["status"] && row["status"].downcase == "warn" || !strsearch.nil?
+      = image_tag("#{img_path}16/warning.png", {:title => row_status}, img_attr_16)
+  - elsif row["state"] && (row["state"].downcase == "waiting_to_start" || row["state"].downcase == "queued")
+    = image_tag("#{img_path}16/job-queued.png", {:title => _("Status = Queued")}, img_attr_16)
+  - elsif row["state"] && row["state"].downcase != "finished" && row["state"].downcase != "waiting_to_start" && row["state"].downcase != "queued"
+    = image_tag("#{img_path}16/job-running.png", {:title => _("Status = Running")}, img_attr_16)
+- elsif db == "ScanHistory"
+  = image_tag("#{img_path}new/vendor-#{h(db..downcase)}.png", img_attr_20)
+- elsif %(Vm VmOrTemplate).include?(db)
+  - vm = @targets_hash[from_cid(@id)] if @targets_hash
+  - vendor = vm ? vm.vendor.downcase : "unknown"
+  = image_tag("#{img_path}new/vendor-#{h(vendor)}.png", img_attr_20)
+- elsif db == "Host"
+  - host = @targets_hash[@id] if @targets_hash
+  - vendor = host ? host.vmm_vendor.downcase : "unknown"
+  = image_tag("#{img_path}new/vendor-#{h(vendor)}.png", img_attr_20)
+- elsif db == "Service"
+  = image_tag("#{img_path}new/service.png", img_attr_20)
+- elsif db == "MiqProxy"
+  = image_tag("#{img_path}new/miqproxy.png", img_attr_20)
+- elsif db == "Storage"
+  = image_tag("#{img_path}new/storage.png", img_attr_20)
+- elsif db == "MiqEvent"
+  = image_tag("#{img_path}new/event-#{h(row['name'].downcase)}.png", img_attr_20)
+- elsif db == "Condition"
+  = image_tag("#{img_path}new/miq_condition.png", img_attr_20)
+- elsif db == "MiqPolicySet"
+  = image_tag("#{img_path}new/policy_profile.png", img_attr_20)
+- elsif db == "MiqPolicy"
+  = image_tag("#{img_path}new/miq_policy_#{h(@sb[:nodeid].downcase + (row.active ? "" : "_inactive"))}.png", img_attr_20)
+- elsif db == "MiqServer"
+  = image_tag("#{img_path}new/miq_server.png", img_attr_20)
+- elsif db == "MiqAction"
+  - action = @targets_hash[@id.to_i] if @targets_hash
+  - icon_image = action && action.action_type != "default" ? "miq_action_#{action.action_type}" : "miq_action"
+  = image_tag("#{img_path}new/#{icon_image}.png", img_attr_20)
+- elsif db == "MiqAlert"
+  = image_tag("#{img_path}new/#{icon_image.nil? ? 'miq_alert' : icon_image}.png", img_attr_20)
+- elsif db == "ExtManagementSystem"
+  - ems = @targets_hash[from_cid(@id)] if @targets_hash
+  = image_tag("#{img_path}new/vendor-#{h(ems.image_name)}.png", img_attr_20)
+- elsif db == "LdapServer"
+  = image_tag("#{img_path}new/ldap_server.png", img_attr_20)
+- elsif db == "MiqSchedule"
+  %ul.icons
+    %li
+      %span.fa.fa-clock-o
+- elsif db == "MiqGroup"
+  = image_tag("#{img_path}new/miq_group.png", img_attr_20)
+- elsif db == "MiqReportResult"
+  - case row['status'].downcase
+  - when "error"
+    - glyph = "fa fa-warning"
+  - when "finished"
+    - glyph = "pficon pficon-ok"
+  - when "running"
+    - glyph = "fa fa-play"
+  - when "queued"
+    - glyph = "fa fa-pause"
+  - else
+    - glyph = "product product-arrow-right"
+  %ul.icons
+    %li
+      %span{:class => glyph}
+- elsif db == "MiqUserRole"
+  %ul.icons
+    %li
+      %span{:class => "product product-role"}
+- elsif db == "MiqWidget"
+  - case row['content_type'].downcase
+  - when "chart"
+    - glyph = "product product-chart"
+  - when "menu"
+    - glyph = "fa fa-share-square-o"
+  - when "report"
+    - glyph = "product product-report"
+  - when "rss"
+    - glyph = "fa fa-rss"
+  %ul.icons
+    %li
+      %span{:class => glyph}
+      - status = row.status
+      - case status.downcase
+      - when "complete"
+        - glyph = "pficon pficon-ok"
+      - when "queued"
+        - glyph = "fa fa-pause"
+      - when "running"
+        - glyph = "fa fa-play"
+      - when "error"
+        - glyph = "fa fa-warning"
+      - if status.downcase != "none"
+        %span{:class => glyph}
+- elsif db == "MiqWorker"
+  - worker = @targets_hash[from_cid(@id)] if @targets_hash
+  = image_tag("#{img_path}new/processmanager-#{worker.normalized_type}.png", img_attr_20)
+- elsif db == "ScanItemSet"
+  = image_tag("#{img_path}new/scan_item_set.png", img_attr_20)
+- elsif db == "ChargebackRate"
+  = image_tag("#{img_path}new/chargeback_rates.png", img_attr_20)
+- elsif db == "MiqProxyBuild"
+  = link_to(image_tag("/images/toolbars/download.png",
+                      :class => "rollover small",
+                      :type  => "application/txt",
+                      :alt   => "Download SmartProxy Build"),
+            {:action => 'fetch_build', :id => @id},
+            :title => _("Download SmartProxy Build"))
+  = link_to(image_tag("/images/toolbars/delete.png",
+                      :class => "rollover small",
+                      :alt   => _("Click to delete this build")),
+            {:action => "delete_build", :id => @id},
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            :confirm               => _("Are you sure you want to delete build %{row_build} for %{row_platform}?") % {:row_build    => row.build,
+                                                                                                                      :row_platform => row.platform.capitalize},
+            :remote                => true,
+            :title                 => _("Click to delete this build"))
+- elsif db == "ServerBuild"
+  = link_to(image_tag("/images/toolbars/delete.png",
+                      :class => "rollover small",
+                      :alt   => _("Click to delete this build")),
+            {:action => "delete_build", :id => @id},
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            :confirm               => _("Are you sure you want to delete build %s?") % row.build,
+            :remote                => true,
+            :title                 => _("Click to delete this build"))
+- elsif db == "MiqProvision"
+  = image_tag("#{img_path}new/miq_request.png", img_attr_20)
+- elsif %w(CimBaseStorageExtent LdapRegion OntapStorageSystem OntapLogicalDisk OntapStorageVolume OntapFileShare SniaLocalFileSystem).include?(db)
+  = image_tag("#{img_path}new/#{h(db.underscore)}.png", img_attr_20)
+- elsif db == "ServiceTemplate"
+  - st = @targets_hash[from_cid(@id)] if @targets_hash
+  - img = st.respond_to?(:picture) && st.picture ? "../../../pictures/#{st.picture.basename}" : "/images/icons/new/service_template.png"
+  = image_tag(img, img_attr_20)
+- else
+  = image_tag("#{img_path}new/#{h(db.downcase)}.png", img_attr_20)
+

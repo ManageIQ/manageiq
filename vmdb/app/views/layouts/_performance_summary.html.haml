@@ -1,0 +1,14 @@
+= render :partial => "layouts/dhtmlx_tags", :locals => {:control => "calendar"}
+= render :partial => "layouts/dhtmlx_tags", :locals => {:control => "menu"}
+
+#context_div
+
+%script{:type => "text/javascript"}
+  var miq_cal_dateFrom = new Date(#{@perf_options[:sdate]});
+  var miq_cal_dateTo = new Date(#{@perf_options[:edate]});
+  - if WidgetPresenter.chart_data.present?
+    miq_chart_data = #{WidgetPresenter.chart_data.to_json};
+
+= render :partial => "layouts/flash_msg"
+= render :partial => "layouts/perf_options"
+= render :partial => "layouts/perf_charts"

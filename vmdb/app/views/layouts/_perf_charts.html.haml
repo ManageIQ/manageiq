@@ -1,0 +1,109 @@
+%div{:id => "#{chart_set}_charts_div", :onmousedown => "if (typeof miqMenu != 'undefined') miqMenu.hideContextMenu();"}
+  - if @temp[:charts] || @perf_options[:chart_type] != :performance
+    - perf_options ||= @perf_options
+    - width, height = perf_options[:index] ? [1000, 700] : [350, 250]
+    - charts ||= @temp[:charts]
+    - if chart_data
+      - if !perf_parent? && !perf_compare_vm?
+        - if charts && chart_data.length > 0
+          - (0..chart_data.length - 1).each do |c|
+            - unless charts[c][:type] == "None" || chart_data[c].nil?
+              = render(:partial    => '/layouts/perf_chart',
+                       :locals     => {:charts      => charts,
+                                       :chart_data  => chart_data,
+                                       :chart_set   => chart_set,
+                                       :chart_index => c,
+                                       :width       => width,
+                                       :height      => height})
+        - else
+          = render :partial => 'layouts/info_msg', :locals => {:message => _("No Capacity & Utilization data available.")}
+        - if @html
+          %br{:clear => "all"}
+          %hr
+          = @html.html_safe
+      - elsif perf_parent?
+        - pcharts = @temp[:parent_charts]
+        - pchart_data = @temp[:parent_chart_data]
+        %table
+          - if charts && chart_data.length > 0
+            - (0..chart_data.length - 1).each do |c|
+              - unless charts[c][:type] == "None" || chart_data[c].nil?
+                %tr
+                  %td{:align => "center", :style => "padding-top: 20px;"}
+                    %h3= _("VM \"#{@perf_record.name}\"")
+                    %div{:style => "width: #{width + 15}px; height: #{height + 15}px; float:left; padding: 0px 5px 20px 0px;"}
+                      = render(:partial => '/layouts/perf_chart',
+                               :locals  => {:charts      => charts,
+                                            :chart_data  => chart_data,
+                                            :chart_set   => chart_set,
+                                            :chart_index => c,
+                                            :width       => width,
+                                            :height      => height})
+                  %td{:align => "center", :style => "padding-top: 20px;"}
+                    %h3= "#{ui_lookup(:model => @perf_options[:parent])} #{@perf_record.send(@perf_options[:parent].underscore).name}"
+                    %div{:style => "width: #{width + 15}px; height: #{height + 15}px; float:left; padding: 0px 5px 20px 0px;"}
+                      = render(:partial => '/layouts/perf_chart',
+                               :locals  => {:charts      => pcharts,
+                                            :chart_data  => pchart_data,
+                                            :chart_set   => "parent",
+                                            :chart_index => c,
+                                            :width       => width,
+                                            :height      => height})
+            - if @html
+              %tr
+                %td{:align => "center", :style => "padding-top: 20px;padding-left: 10px;padding-right: 10px;"}
+                  %h3= _("VM \"#{@perf_record.name}\"")
+                  = @html.html_safe
+                - if @p_html
+                  %td{:align => "center", :style => "padding-top: 20px;padding-left: 10px;padding-right: 10px;"}
+                    %h3= "#{ui_lookup(:model => @perf_options[:parent])} #{@perf_record.send(@perf_options[:parent].underscore).name}"
+                    = @p_html.html_safe
+          - else
+            = render :partial => 'layouts/info_msg', :locals => {:message => _("No Capacity & Utilization data available.")}
+      - elsif perf_compare_vm?
+        %table
+          %tr
+            %td
+              %h3
+                %br
+                = "#{ui_lookup(:model => @perf_record.class.to_s)} #{@perf_record.evm_display_name}"
+              - if charts && chart_data.length > 0
+                - (0..chart_data.length - 1).each do |c|
+                  - unless charts[c][:type] == "None" || chart_data[c].nil?
+                    = render(:partial => '/layouts/perf_chart',
+                             :locals  => {:charts      => charts,
+                                          :chart_data  => chart_data,
+                                          :chart_set   => chart_set,
+                                          :chart_index => c,
+                                          :width       => width,
+                                          :height      => height})
+              - else
+                = render :partial => 'layouts/info_msg', :locals => {:message => _("No Capacity & Utilization data available.")}
+              - if @html
+                %br{:clear => "all"}
+                %hr
+                = @html.html_safe
+          %tr
+            %td
+              %h3
+                %br
+                = "#{ui_lookup(:model=>@compare_vm.class.base_model.to_s)} #{@compare_vm.name}"
+            - ccharts = @temp[:compare_vm_charts]
+            - cchart_data = @temp[:compare_vm_chart_data]
+            - if ccharts && cchart_data.length > 0
+              - (0..cchart_data.length - 1).each do |c|
+                - unless ccharts[c][:type] == "None" || cchart_data[c].nil?
+                  = render(:partial => '/layouts/perf_chart',
+                           :locals  => {:charts      => ccharts,
+                                        :chart_data  => cchart_data,
+                                        :chart_set   => "comparevm",
+                                        :chart_index => c,
+                                        :width       => width,
+                                        :height      => height})
+            - else
+              = render :partial => 'layouts/info_msg', :locals => {:message => _("No Capacity & Utilization data available.")}
+
+            - if @c_html
+              %br{:clear => "all"}
+              %hr
+              = @c_html.html_safe

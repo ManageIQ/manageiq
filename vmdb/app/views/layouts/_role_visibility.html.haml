@@ -1,0 +1,44 @@
+- url = url_for(:action => action, :id => rec_id)
+#form_role_visibility
+  %p.legend= _("Visibility")
+  %table.style1
+    %tr
+      %td.key= _("Show")
+      %td
+        = select_tag("visibility_typ",
+                     options_for_select(@edit[:visibility_types], @edit[:new][:visibility_typ]),
+                     "data-miq_observe" => {:url => url}.to_json)
+    - if @edit[:new][:visibility_typ] == "role"
+      %tr
+        %td.key= _("User Roles")
+        %td
+          %table
+            - @edit[:sorted_user_roles].each_with_index do |sorted_user_roles, index|
+              - content_for :table_sorted_roles do
+                - sorted_user_roles[index].each do |role|
+                  - checked = (!@edit[:new][:roles].nil? && @edit[:new][:roles].include?(role[1].to_s))
+                  %td{:align => "left", :valign => "top", :nowrap => true}
+                    = check_box_tag("roles_#{role[1]}", "1", checked, "data-miq_observe_checkbox" => {:url => url}.to_json)
+                    = h(role[0])
+              - if (index % 3) == 0
+                %tr
+                  = yield :table_sorted_roles
+              - else
+                = yield :table_sorted_roles
+    - elsif @edit[:new][:visibility_typ] == "group"
+      %tr
+        %td.key= _("Groups")
+        %td
+          %table
+            - @edit[:sorted_groups].each_with_index do |sorted_groups, index|
+              - content_for :table_sorted_groups do
+                - sorted_groups[index].each do |group|
+                  - checked = (!@edit[:new][:groups].nil? && @edit[:new][:groups].include?(group[1]))
+                  %td{:align => "left", :valign => "top", :nowrap => true}
+                    = check_box_tag("groups_#{group[1]}", "1", checked, "data-miq_observe_checkbox" => {:url => url}.to_json)
+                    = h(group[0])
+              - if (index % 3) == 0
+                %tr
+                  = yield :table_sorted_groups
+              - else
+                = yield :table_sorted_groups
