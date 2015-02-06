@@ -37,8 +37,7 @@
                           = text_area_tag(field.id, field.sample_text, :size => "50x6", :disabled => true)
 
                         - when "DialogFieldCheckBox"
-                          - checked = field.default_value != "f"
-                          = check_box_tag("field.id", value = "1", checked = checked, :disabled => true)
+                          = check_box_tag("field.id", value = "1", false, :disabled => true)
                         - when "DialogFieldDateControl", "DialogFieldDateTimeControl"
                           - if field.show_past_dates
                             :javascript
