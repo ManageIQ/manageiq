@@ -9,16 +9,16 @@ class FileDepotFtpAnonymous < FileDepotFtp
 
   private
 
-  def create_directory_structure(_ftp)
+  def create_directory_structure(_path)
     nil
   end
 
-  def destination_file_exists?(_ftp, _file)
+  def file_exists?(_file)
     false
   end
 
   def destination_path
-    "/incoming"
+    Pathname.new("incoming")
   end
 
   def login_credentials
