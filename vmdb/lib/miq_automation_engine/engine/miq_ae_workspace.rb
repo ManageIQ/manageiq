@@ -276,10 +276,6 @@ module MiqAeEngine
       current(:method)
     end
 
-    def nobjs
-      @graph.size
-    end
-
     def root(attrib = nil)
       return nil if @graph.roots.nil? || @graph.roots.empty?
       return @graph.roots.first if attrib.nil?
