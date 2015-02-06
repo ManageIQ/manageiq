@@ -34,7 +34,7 @@ describe "RegistrationSystem" do
   context ".available_organizations" do
     it "with valid credentials" do
       LinuxAdmin::SubscriptionManager.any_instance.should_receive(:organizations).once.with({:username=>"SomeUser", :password=>"SomePass"}).and_return({"SomeOrg"=>{:name=>"SomeOrg", :key=>"1234567"}, "SomeOrg2"=>{:name=>"SomeOrg2", :key=>"12345672"}})
-      expect(RegistrationSystem.available_organizations(@creds)).to eq(["SomeOrg", "SomeOrg2"])
+      expect(RegistrationSystem.available_organizations(@creds)).to eq("SomeOrg" => "1234567", "SomeOrg2" => "12345672")
     end
 
     it "with invalid credentials" do
@@ -51,7 +51,7 @@ describe "RegistrationSystem" do
         :registration_http_proxy_server => "1.1.1.1"
       )
       LinuxAdmin::SubscriptionManager.any_instance.should_receive(:organizations).once.with({:username=>"SomeUser", :password=>"SomePass", :server_url=>"http://abc.net", :registration_type=>"sm_hosted", :proxy_address=>"1.1.1.1", :proxy_username=>"bob", :proxy_password=>"pass"}).and_return({"SomeOrg"=>{:name=>"SomeOrg", :key=>"1234567"}, "SomeOrg2"=>{:name=>"SomeOrg2", :key=>"12345672"}})
-      expect(RegistrationSystem.available_organizations).to eq(["SomeOrg", "SomeOrg2"])
+      expect(RegistrationSystem.available_organizations).to eq("SomeOrg" => "1234567", "SomeOrg2" => "12345672")
     end
   end
 
