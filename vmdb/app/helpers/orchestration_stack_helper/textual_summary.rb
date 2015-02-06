@@ -3,6 +3,11 @@ module OrchestrationStackHelper::TextualSummary
   # Groups
   #
 
+  def textual_group_properties
+    items = %w{name description type status}
+    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+  end
+
   def textual_group_relationships
     items = %w(ems_cloud orchestration_template instances security_groups cloud_networks parameters outputs resources)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
@@ -16,6 +21,22 @@ module OrchestrationStackHelper::TextualSummary
   #
   # Items
   #
+
+  def textual_name
+    {:label => "Name", :value => @record.name}
+  end
+
+  def textual_description
+    {:label => "Description", :value => @record.description}
+  end
+
+  def textual_type
+    {:label => "Type", :value => @record.type}
+  end
+
+  def textual_status
+    {:label => "Status", :value => @record.status}
+  end
 
   def textual_ems_cloud
     ems = @record.ext_management_system
@@ -74,7 +95,7 @@ module OrchestrationStackHelper::TextualSummary
     num   = @record.number_of(:parameters)
     h     = {:label => label, :image => "parameter", :value => num}
     if num > 0
-      # h[:link]  = url_for(:controller => controller.controller_name, :action => 'parameters', :id => @record)
+      h[:link]  = url_for(:controller => controller.controller_name, :action => 'parameters', :id => @record)
       h[:title] = "Show all #{label}"
     end
     h
@@ -84,8 +105,8 @@ module OrchestrationStackHelper::TextualSummary
     label = ui_lookup(:tables => "output")
     num   = @record.number_of(:outputs)
     h     = {:label => label, :image => "output", :value => num}
-    if num > 0 && role_allows(:feature => "outputs_show_list")
-      # h[:link]  = url_for(:controller => controller.controller_name, :action => 'outputs', :id => @record)
+    if num > 0
+      h[:link]  = url_for(:controller => controller.controller_name, :action => 'outputs', :id => @record)
       h[:title] = "Show all #{label}"
     end
     h
@@ -96,7 +117,7 @@ module OrchestrationStackHelper::TextualSummary
     num   = @record.number_of(:resources)
     h     = {:label => label, :image => "resource", :value => num}
     if num > 0
-      # h[:link]  = url_for(:controller => controller.controller_name, :action => 'resources', :id => @record)
+      h[:link]  = url_for(:controller => controller.controller_name, :action => 'resources', :id => @record)
       h[:title] = "Show all #{label}"
     end
     h

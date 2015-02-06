@@ -209,6 +209,7 @@ module UiConstants
       :ontaplogicaldisk   =>  "list",
       :ontapstoragesystem =>  "list",
       :ontapstoragevolume =>  "list",
+      :orchestrationstack =>  "list",
       :service            =>  "list",
       :servicetemplate    =>  "list",
       :storagemanager   =>  "list",

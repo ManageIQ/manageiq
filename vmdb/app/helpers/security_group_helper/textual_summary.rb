@@ -10,7 +10,7 @@ module SecurityGroupHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w{ems_cloud instances}
+    items = %w{ems_cloud instances orchestration_stack}
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
@@ -64,6 +64,18 @@ module SecurityGroupHelper::TextualSummary
     if num > 0 && role_allows(:feature => "vm_show_list")
       h[:link]  = url_for(:action => 'show', :id => @security_group, :display => 'instances')
       h[:title] = "Show all #{label}"
+    end
+    h
+  end
+
+  def textual_orchestration_stack
+    stack = @record.orchestration_stack
+    return nil if stack.nil?
+    label = ui_lookup(:table => "orchestration_stack")
+    h = {:label => label, :image => "orchestration_stack", :value => stack.name}
+    if role_allows(:feature => "orchestration_stack_show")
+      h[:title] = "Show this Security Group's #{label} '#{stack.name}'"
+      h[:link]  = url_for(:controller => 'orchestration_stack', :action => 'show', :id => stack)
     end
     h
   end

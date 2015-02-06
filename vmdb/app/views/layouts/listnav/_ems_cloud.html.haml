@@ -75,3 +75,9 @@
               :record_id             => @record.id,
               :display               => 'images',
               :tables                => 'images')
+          - if role_allows(:feature => "orchestration_stack_show_list")
+            = link_if_nonzero(:count     => @record.number_of(:orchestration_stacks),
+              :record_id                 => @record.id,
+              :display                   => 'orchestration_stacks',
+              :tables                    => 'orchestration_stack',
+              :controller                => 'orchestration_stack')

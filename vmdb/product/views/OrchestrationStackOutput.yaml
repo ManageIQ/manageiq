@@ -19,18 +19,24 @@ db: OrchestrationStackOutput
 
 # Columns to fetch from the main table
 cols:
-- name
+- key
+- value
+- description
 
 # Included tables (joined, has_one, has_many) and columns
 include:
 
 # Order of columns (from all tables)
 col_order: 
-- name
+- key
+- value
+- description
 
 # Column titles, in order
 headers:
-- Name
+- Key
+- Value
+- Description
 
 # Condition(s) string for the SQL query
 conditions: 
