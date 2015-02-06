@@ -1,6 +1,6 @@
 %body
   %nav{:class => "navbar navbar-default navbar-fixed-top navbar-pf #{session[:custom_logo] ? "whitelabeled" : ""}", :role => "navigation"}
-    %div{:class=>"navbar-header"}
+    %div{:class => "navbar-header"}
       %button{:type => "button", :class => "navbar-toggle", "data-target" => ".navbar-collapse-1", "data-toggle" => "collapse"}
         %span.sr-only
           Toggle navigation
@@ -8,21 +8,26 @@
         %span.icon-bar
         %span.icon-bar
       %a.navbar-brand{:href => "/"}
-        %img{:src=>image_path("layout/brand.svg"), :alt=>"ManageIQ"}
+        %img{:src => image_path("layout/brand.svg"), :alt => "ManageIQ"}
     %div{:class => "collapse navbar-collapse navbar-collapse-1"}
       %ul{:class => "nav navbar-nav navbar-utility"}
         %li{:class => "brand-white-label #{session[:custom_logo] ? "whitelabeled" : ""}"}
+        -Menu::Manager.menu(:top_right) do |menu_section|
+          %li.dropdown
+            %a{:href => "#", :class => "dropdown-toggle", "data-toggle" => "dropdown"}
+              = menu_section.name
+              %b.caret
+            %ul.dropdown-menu#custom_menu_div
+              - menu_section.items.each do |menu_item|
+                %li
+                  %a{:href    => menu_item.href,
+                     :onclick => 'return miqCheckForChanges()'}= menu_item.name
+
         = render :partial => "layouts/user_options"
       = render :partial => "layouts/page_header_navbar"
-
     = render :partial => "layouts/spinner"
 
-    / - display = @edit == nil || (@edit && @edit[:adv_search_open]) != true ? "none" : ""
-    / #blocker_div{:style=>"display: #{display}"}
-
-    -# = render :partial => "layouts/lightbox_panel"
-
+  -# if set by controller, set up to run as JS after onload is done
+  - if @miq_after_onload
     %script{:type => "text/javascript"}
-      - if @miq_after_onload
-        -# if set by controller, set up to run as JS after onload is done
-        "var miq_after_onload = '#{@miq_after_onload.html_safe}'"
+      "var miq_after_onload = '#{@miq_after_onload.html_safe}'"
