@@ -1,6 +1,5 @@
-cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 'storageTable', 'scheduleFormId', 'oneMonthAgo', 'miqService', 'timerOptionService', function($http, $scope, storageTable, scheduleFormId, oneMonthAgo, miqService, timerOptionService) {
+cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 'scheduleFormId', 'oneMonthAgo', 'miqService', 'timerOptionService', function($http, $scope, scheduleFormId, oneMonthAgo, miqService, timerOptionService) {
   var init = function() {
-    $scope.finishedLoading = false;
 
     $scope.scheduleModel = {
       action_typ: '',
@@ -43,7 +42,6 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
       $scope.scheduleModel.time_zone           = 'UTC';
       $scope.scheduleModel.start_hour          = '0';
       $scope.scheduleModel.start_min           = '0';
-      $scope.finishedLoading                    = true;
       $scope.afterGet                           = true;
       $scope.modelCopy                          = angular.copy( $scope.scheduleModel );
     } else {
@@ -82,7 +80,10 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
           $scope.scheduleModel.filter_value     = data.filter_value;
         }
 
-        $scope.finishedLoading = true;
+        if(data.filter_type == null &&
+          (data.protocol !== undefined && data.protocol !== null && data.protocol != 'Samba'))
+          $scope.scheduleModel.filter_typ = 'all';
+
         $scope.afterGet = true;
         $scope.modelCopy = angular.copy( $scope.scheduleModel );
 
@@ -149,7 +150,7 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
     } else if ($scope.scheduleModel.action_typ === 'emscluster') {
       type = 'Cluster';
     } else if ($scope.scheduleModel.action_typ === 'storage') {
-      type = storageTable;
+      type = 'Datastore';
     } else if ($scope.scheduleModel.action_typ === 'db_backup') {
       type = 'Database Backup';
     }
@@ -232,6 +233,7 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
 
   $scope.cancelClicked = function() {
     scheduleEditButtonClicked('cancel');
+    $scope.angularForm.$setPristine(true);
   };
 
   $scope.resetClicked = function() {
@@ -246,6 +248,7 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
 
   $scope.saveClicked = function() {
     scheduleEditButtonClicked('save', true);
+    $scope.angularForm.$setPristine(true);
   };
 
   $scope.addClicked = function() {
