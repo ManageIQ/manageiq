@@ -1,0 +1,93 @@
+- url = url_for(:action => 'quick_search')
+#quicksearchbox{:style => "display:none;"}
+  - if @edit
+    %p 
+      %strong
+        &nbsp;&nbsp;&nbsp;
+        = @edit.fetch_path(@expkey, :selected, :description)
+    %table{:width => "100%"}
+      %tr
+        %td
+          %fieldset
+            - if @qs_exp_table
+              - @qs_exp_table.each do |part|
+                - if !%w(AND OR NOT ( )).include?([part].flatten.first)
+                  - if part.kind_of?(Array) && part.first == :user_input
+                    - token = part.last
+                    - if @edit[:qs_tokens][token].key?(:field)
+                      - if @edit[:qs_tokens][token][:value_type] == :boolean
+                        - values = [["<Choose>", ""], %w(true true), %w(false false)]
+                        = select_tag("value_#{token}",
+                                     options_for_select(values, nil),
+                                     :multiple              => false,
+                                     :class                 => "widthed",
+                                     "data-miq_sparkle_on"  => true,
+                                     "data-miq_sparkle_off" => true,
+                                     "data-miq_observe"     => {:url => url}.to_json)
+                      - else
+                        = text_field_tag("value_#{token}", nil,
+                                         :maxlength         => 500,
+                                         :onkeyup           => "miqQsEnterEscape(event);",
+                                         "data-miq_observe" => {:interval => '.5',
+                                                                :url      => url}.to_json)
+                        - if @edit[:qs_tokens][token][:value_type] == :percent
+                          = "%"
+                        - elsif @edit[:qs_tokens][token][:value_type] == :megabytes
+                          = "MB"
+                        - elsif FORMAT_SUB_TYPES[@edit[:qs_tokens][token][:value_type]][:units]
+                          = select_tag("suffix_#{token}",
+                                       options_for_select(FORMAT_SUB_TYPES[@edit[:qs_tokens][token][:value_type]][:units],
+                                                          nil),
+                                       :multiple              => false,
+                                       :class                 => "widthed",
+                                       "data-miq_sparkle_on"  => true,
+                                       "data-miq_sparkle_off" => true,
+                                       "data-miq_observe"     => {:url => url}.to_json)
+
+                    - elsif @edit[:qs_tokens][token].key?(:tag)
+                      = select_tag("value_#{token}",
+                                   options_for_select(["<Choose>"] + MiqExpression.get_entry_details(@edit[:qs_tokens][token][:tag]).sort { |a, b| a.first.downcase <=> b.first.downcase },
+                                                       nil),
+                                   :multiple              => false,
+                                   :class                 => "widthed",
+                                   "data-miq_sparkle_on"  => true,
+                                   "data-miq_sparkle_off" => true,
+                                   "data-miq_observe"     => {:url => url}.to_json)
+                    - elsif @edit[:qs_tokens][token].key?(:count)
+                      = text_field_tag("value_#{token}", nil,
+                                       :maxlength         => 500,
+                                       :onkeyup           => "miqQsEnterEscape(event);",
+                                       "data-miq_observe" => {:interval => '.5',
+                                                              :url      => url}.to_json)
+                  - else
+                    = h([part].flatten.first)
+                - else
+                  %font{:color => "red"}
+                    %b= h([part].flatten.first)
+      %tr
+        %td{:align => "right"}
+          %div#buttons
+            %span#quick_search_buttons_off
+              = button_tag(t = _("Apply"), :class => "btn btn-primary btn-disabled")
+            %span#quick_search_buttons_on{:style => "display:none;"}
+              = link_to(button_tag(t,
+                                   :class => "btn btn-primary",
+                                   :alt   => t = _("Apply the current filter (Enter)")),
+                        {:action => "quick_search",
+                         :button => "apply"},
+                        "data-miq_sparkle_on"  => true,
+                        "data-miq_sparkle_off" => true,
+                        :remote                => true,
+                        :method                => :post,
+                        :id                    => "apply_button",
+                        :title                 => t)
+            = link_to(button_tag(_('Cancel'),
+                                :class => "btn btn-default",
+                                :alt   => t = _('Cancel (Esc)')),
+                      {:action => "quick_search",
+                       :button => "cancel"},
+                      :remote => true,
+                      :method => :post,
+                      :id     => "cancel_button",
+                      :title  => t)
+    = javascript_tag(javascript_focus_if_exists('value_1'))
