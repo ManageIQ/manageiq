@@ -1,0 +1,49 @@
+- url = url_for(:action => 'retire_date_changed')
+= render :partial => "layouts/dhtmlx_tags", :locals => {:control => "calendar"}
+= render :partial => "layouts/flash_msg"
+
+%fieldset
+  %p.legend
+    = _('Set/Remove Retirement Date')
+  %table.style1
+    %tr
+      %td.key
+        = _('Retirement Date')
+      %td#retirement_date
+        = text_field_tag("miq_date_1", session[:retire_date],
+          :class                  => "css1",
+          :readonly               => "true",
+          "data-miq_sparkle_on"   => true,
+          "data-miq_sparkle_off"  => true,
+          "data-miq_observe_date" => {:url => url}.to_json)
+        = hidden_span_if(session[:retire_date].nil?, :id => "remove_button")
+        = link_to_function(image_tag('/images/icons/16/clear.png', :border => "0", :alt => _("Set to blank")), "$('#miq_date_1').val('').change();")
+        </span>
+    %tr
+      - disabled = session[:retire_date].nil?
+      %td.key
+        = _('Retirement Warning')
+      %td.wide
+        = select_tag("retirement_warn",
+          options_for_select([["#{_('None')}", ""], [_("1 Week before retirement"), 7], [_("2 Weeks before retirement"), 14], [_("30 Days before retirement"), 30]], session[:retire_warn]),
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          :disabled              => disabled,
+          "data-miq_observe"     => {:url => url}.to_json)
+  = _('* Saving a blank date will remove all retirement dates')
+- unless @explorer
+  = render :partial => '/layouts/edit_form_buttons', :locals => {:noreset => true, :action_url => "retire"}
+
+%fieldset
+  %p.legend
+    - if request.parameters[:controller] == "service"
+      = n_("New setting will affect Service", "New setting will affect Services", @retireitems.length)
+    - else
+      = n_("New setting will affect VM", "New setting will affect VMs", @retireitems.length)
+  %table.admintable{:height => "75"}
+    %tbody
+      %tr
+        %td
+          - if @retireitems
+            - @embedded = true
+            = render :partial => "layouts/gtl"

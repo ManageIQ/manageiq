@@ -9,11 +9,11 @@ describe JsHelper do
 
   context '#set_element_visible' do
     it 'returns js to hide element' do
-      set_element_visible('foo', false).should eq("if ($j('\#foo').length) $j('\#foo').hide();")
+      set_element_visible('foo', false).should eq("if (miqDomElementExists('foo')) $('\#foo').hide();")
     end
 
     it 'returns js to show element' do
-      set_element_visible('foo', true).should eq("if ($j('\#foo').length) $j('\#foo').show();")
+      set_element_visible('foo', true).should eq("if (miqDomElementExists('foo')) $('\#foo').show();")
     end
   end
 
@@ -21,7 +21,7 @@ describe JsHelper do
     it 'returns js to lock tree' do
       tree_lock('bar',true).should eq(
     "
-      $j('#barbox').dynatree('disable');
+      $('#barbox').dynatree('disable');
       miqDimDiv('\#bar_div', true);
     ")
     end
@@ -29,7 +29,7 @@ describe JsHelper do
     it 'returns js to unlock tree' do
       tree_lock('bar',false).should eq(
     "
-      $j('#barbox').dynatree('enable');
+      $('#barbox').dynatree('enable');
       miqDimDiv('\#bar_div', false);
     ")
     end
@@ -40,13 +40,13 @@ describe JsHelper do
 
   context '#javascript_focus' do
     it 'returns js to focus on an element' do
-      javascript_focus('foo').should eq("$j('#foo').focus();")
+      javascript_focus('foo').should eq("$('#foo').focus();")
     end
   end
 
   context '#javascript_focus_if_exists' do
     it 'returns js to check for the existence of an element and focus on the element if it exists' do
-      javascript_focus_if_exists('foo').should eq("if ($j('#foo').length) $j('#foo').focus();")
+      javascript_focus_if_exists('foo').should eq("if ($('#foo').length) $('#foo').focus();")
     end
   end
 
@@ -66,49 +66,49 @@ describe JsHelper do
 
   context '#javascript_add_class' do
     it 'returns js to add a class on the element' do
-      javascript_add_class('foo', 'bar').should eq("$j('\#foo').addClass('bar');")
+      javascript_add_class('foo', 'bar').should eq("$('\#foo').addClass('bar');")
     end
   end
 
   context '#javascript_del_class' do
     it 'returns js to remove a class on the element' do
-      javascript_del_class('foo', 'bar').should eq("$j('\#foo').removeClass('bar');")
+      javascript_del_class('foo', 'bar').should eq("$('\#foo').removeClass('bar');")
     end
   end
 
   context '#javascript_disable_field' do
     it 'returns js to disable the provided element' do
-      javascript_disable_field('foo').should eq("$j('#foo').prop('disabled', true);")
+      javascript_disable_field('foo').should eq("$('#foo').prop('disabled', true);")
     end
   end
 
   context '#javascript_enable_field' do
     it 'returns js to enable the provided element' do
-      javascript_enable_field('foo').should eq("$j('#foo').prop('disabled', false);")
+      javascript_enable_field('foo').should eq("$('#foo').prop('disabled', false);")
     end
   end
 
   context '#javascript_show' do
     it 'returns js to show an element' do
-      javascript_show('foo').should eq("$j('#foo').show();")
+      javascript_show('foo').should eq("$('#foo').show();")
     end
   end
 
   context '#javascript_hide' do
     it 'returns js to hide an element' do
-      javascript_hide('foo').should eq("$j('#foo').hide();")
+      javascript_hide('foo').should eq("$('#foo').hide();")
     end
   end
 
   context '#javascript_show_if_exists' do
     it 'returns js to check for the existence of an element and show the element if it exists' do
-      javascript_show_if_exists('foo').should eq("if ($j('#foo').length) $j('#foo').show();")
+      javascript_show_if_exists('foo').should eq("if (miqDomElementExists('foo')) $('#foo').show();")
     end
   end
 
   context '#javascript_hide_if_exists' do
     it 'returns js to check for the existence of an element and hide the element if it exists' do
-      javascript_hide_if_exists('foo').should eq("if ($j('#foo').length) $j('#foo').hide();")
+      javascript_hide_if_exists('foo').should eq("if (miqDomElementExists('foo')) $('#foo').hide();")
     end
   end
 end

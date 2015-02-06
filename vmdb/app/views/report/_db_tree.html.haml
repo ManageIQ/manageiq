@@ -1,0 +1,17 @@
+- # Div to hold the actual tree
+#db_tree_div{:style => "width: 100%; height: 100%;"}
+  #db_treebox{:style => "width: 100%; height: 100%; color: #000; overflow: hidden;"}
+  = render(:partial => 'layouts/dynatree',
+    :locals         => {:tree_id => 'db_treebox',
+      :tree_name                 => 'db_tree',
+      :id_prefix                 => 'db_',
+      :json_tree                 => @temp[:db_tree],
+      :onclick                   => 'cfmeOnClick_SelectTreeNode',
+      :select_node               => "#{x_node}",
+      :exp_tree                  => false,
+      :base_id                   => 'root',
+      :no_base_exp               => true,
+      :highlighting              => true,
+      :tree_state                => true,
+      :autoload                  => true,
+      :multi_lines               => true})

@@ -13,7 +13,7 @@ class CustomButton < ActiveRecord::Base
   include UuidMixin
   acts_as_miq_set_member
 
-  BUTTON_CLASSES = %w{ Vm Host ExtManagementSystem Storage EmsCluster MiqTemplate Service ServiceTemplate}
+  BUTTON_CLASSES = %w(Vm Host ExtManagementSystem Storage EmsCluster MiqTemplate Service)
 
   def self.buttons_for(other, applies_to_id=nil)
     if other.kind_of?(Class)

@@ -10,7 +10,7 @@ module ApplicationHelper::PageLayouts
           "my_tasks","my_ui_tasks","all_tasks","all_ui_tasks","miq_ae_tools","miq_policy",
           "miq_ae_export","miq_ae_automate_button","miq_ae_logs","miq_policy_logs",
           "miq_policy_export","ops","pxe"].include?(@layout)) &&
-       @showtype != "dialog_provision"
+       @showtype != "dialog_provision" && !controller.action_name.end_with?("tagging_edit")
       return true
     else
       return false

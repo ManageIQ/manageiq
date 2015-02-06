@@ -22,9 +22,9 @@ var listenForWidgetPostMessages = function() {
 };
 
 var getAndRenderWidgetJson = function(importFileUploadId, message) {
-  $j('.hidden-import-file-upload-id').val(importFileUploadId);
+  $('.hidden-import-file-upload-id').val(importFileUploadId);
 
-  $j.getJSON("widget_json?import_file_upload_id=" + importFileUploadId, function(rows_json) {
+  $.getJSON("widget_json?import_file_upload_id=" + importFileUploadId, function(rows_json) {
     var statusFormatter = function(row, cell, value, columnDef, dataContext) {
       var status_img = "<img src=/images/icons/16/" + dataContext.status_icon + ".png >";
 
@@ -68,42 +68,42 @@ var getAndRenderWidgetJson = function(importFileUploadId, message) {
 
     var grid = new Slick.Grid("#import-grid", dataview, columns, {enableColumnReorder: false});
 
-    $j('#import_file_upload_id').val(importFileUploadId);
-    $j('.import-data').show();
-    $j('.widget-import-buttons').show();
-    $j('.import-or-export').hide();
-    $j('.widget-export-buttons').hide();
+    $('#import_file_upload_id').val(importFileUploadId);
+    $('.import-data').show();
+    $('.widget-import-buttons').show();
+    $('.import-or-export').hide();
+    $('.widget-export-buttons').hide();
   });
 
   showSuccessMessage(JSON.parse(message).message);
 };
 
 var setUpExportWidgetClickHandlers = function() {
-  $j('.widget-export').change(function() {
-    if ($j('.widget-export').val() !== null) {
-      if ($j('#export-widgets').hasClass('btn-disabled')) {
-        $j('#export-widgets').removeClass('btn-disabled');
+  $('.widget-export').change(function() {
+    if ($('.widget-export').val() !== null) {
+      if ($('#export-widgets').hasClass('btn-disabled')) {
+        $('#export-widgets').removeClass('btn-disabled');
       }
     } else {
-      if (!$j('#export-widgets').hasClass('btn-disabled')) {
-        $j('#export-widgets').addClass('btn-disabled');
+      if (!$('#export-widgets').hasClass('btn-disabled')) {
+        $('#export-widgets').addClass('btn-disabled');
       }
     }
   });
 
-  $j('#export-widgets').click(function() {
-    if ($j('.widget-export').val() !== null) {
-      $j('#export-widgets-form').submit();
+  $('#export-widgets').click(function() {
+    if ($('.widget-export').val() !== null) {
+      $('#export-widgets-form').submit();
     }
   });
 };
 
 var setUpImportWidgetClickHandlers = function() {
-  $j('.import-commit').click(function() {
+  $('.import-commit').click(function() {
     miqSparkleOn();
     clearMessages();
 
-    $j.post('import_widgets', $j('#import-form').serialize(), function(data) {
+    $.post('import_widgets', $('#import-form').serialize(), function(data) {
       var flashMessage = JSON.parse(data).first();
       if (flashMessage.level == 'error') {
         showErrorMessage(flashMessage.message);
@@ -115,26 +115,26 @@ var setUpImportWidgetClickHandlers = function() {
     });
   });
 
-  $j('.import-cancel').click(function() {
+  $('.import-cancel').click(function() {
     miqSparkleOn();
     clearMessages();
 
-    $j.post('cancel_import', $j('#import-form').serialize(), function(data) {
+    $.post('cancel_import', $('#import-form').serialize(), function(data) {
       var flashMessage = JSON.parse(data).first();
       showSuccessMessage(flashMessage.message);
       showMainWidgetImportExport();
     });
   });
 
-  $j('#toggle-all').click(function() {
-    $j('.import-checkbox').prop('checked', this.checked);
+  $('#toggle-all').click(function() {
+    $('.import-checkbox').prop('checked', this.checked);
   });
 };
 
 var showMainWidgetImportExport = function() {
-  $j('.import-or-export').show();
-  $j('.widget-export-buttons').show();
-  $j('.import-data').hide();
-  $j('.widget-import-buttons').hide();
+  $('.import-or-export').show();
+  $('.widget-export-buttons').show();
+  $('.import-data').hide();
+  $('.widget-import-buttons').hide();
   miqSparkleOff();
 };

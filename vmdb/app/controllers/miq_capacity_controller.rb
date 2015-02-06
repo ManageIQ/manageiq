@@ -500,7 +500,7 @@ class MiqCapacityController < ApplicationController
     }
 
     # FIXME: where is curTab declared?
-    presenter[:extra_js] << "curTab = $j('#utilization_tabs.ui-tabs-panel:not(.ui-tabs-hide)');"
+    presenter[:extra_js] << "curTab = $('#utilization_tabs.ui-tabs-panel:not(.ui-tabs-hide)');"
     presenter[:extra_js] << "tab = curTab.prop('id');"
     # FIXME: handle or verify the IE/non-IE branch for the flash charts
     presenter[:extra_js] << Charting.js_load_statement(true)
@@ -613,7 +613,7 @@ class MiqCapacityController < ApplicationController
     presenter[:update_partials][:main_div] = r[:partial => 'planning_tabs']
     presenter[:replace_cell_text] = _("Best Fit %s") % @sb[:planning][:options][:target_typ] == 'Host' ? 'Hosts' : 'Clusters'
 
-    presenter[:extra_js] << "curTab = $j('#planning_tabs.ui-tabs-panel:not(.ui-tabs-hide)');"
+    presenter[:extra_js] << "curTab = $('#planning_tabs.ui-tabs-panel:not(.ui-tabs-hide)');"
     presenter[:extra_js] << "tab = curTab.prop('id');"
     presenter[:extra_js] << Charting.js_load_statement(true)
 
@@ -631,7 +631,7 @@ class MiqCapacityController < ApplicationController
     presenter[:save_open_states_trees] << :bottlenecks_tree
     presenter[:right_cell_text] = @right_cell_text
 
-    presenter[:extra_js] << "curTab = $j('#bottlenecks_tabs.ui-tabs-panel:not(.ui-tabs-hide)');"
+    presenter[:extra_js] << "curTab = $('#bottlenecks_tabs.ui-tabs-panel:not(.ui-tabs-hide)');"
     presenter[:extra_js] << "tab = curTab.prop('id');"
 
     render :js => presenter.to_html

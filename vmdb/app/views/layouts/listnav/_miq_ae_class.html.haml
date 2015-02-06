@@ -1,0 +1,22 @@
+- if @record && !@record.name.nil?
+  #accordion
+    .panel
+      .topbar
+        %strong
+          = h(@record.name.length < trunc_at ? @record.name : "#{@record.name[0...trunc_to]}...")
+      = hidden_div_if(@panels["icon"].nil? || @panels["icon"] == false, :id => "icon")
+    .topbar
+      = link_to("Properties",
+        {:action => 'panel_control', :panel => 'miqaeclass_prop'},
+        :remote => true)
+
+    = hidden_div_if(@panels["miqaeclass_prop"].nil? || @panels["miqaeclass_prop"] == false, :id => "miqaeclass_prop") do
+      .panecontent
+        = link_to_with_icon(_('Summary'),
+          {:action => 'show', :id => @record, :display => 'main'},
+          :title => _("Show Summary"))
+        = link_to_with_icon(_("Instances (%s)") % record.instances.count,
+          {:action => 'show_instances', :id => @record.id},
+          :title  => _("View Instances"),
+          :align  => 'left',
+          :border => '0')

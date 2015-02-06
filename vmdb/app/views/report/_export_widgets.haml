@@ -8,20 +8,23 @@
     %strong.message
 
 .import-or-export
-  %h2 Widgets
+  %h2
+    = _('Widgets')
 
-  %p.legend Import
+  %p.legend
+    = _('Import')
   = form_tag({:action => "upload_widget_import_file"}, :target => "upload_target", :multipart => true) do
     = file_field("upload", "file")
-    = submit_tag("Upload", :id => "upload_widget_import", :class => "upload")
+    = submit_tag(_("Upload"), :id => "upload_widget_import", :class => "upload")
 
   %hr
 
-  %p.legend Export
+  %p.legend
+    = _('Export')
   %table.style1
     %tr
       %td.key
-        Available Widgets:
+        = _('Available Widgets:')
       %td
         .export-choices
           = form_tag({:action => "export_widgets"}, :id => "export-widgets-form", :method => :get) do
@@ -31,7 +34,7 @@
               :size     => 15,
               :style    => "min-width: 375px",
               :multiple => true)
-              
+
 %table{:width => "100%"}
   %tr
     %td{:align => "right"}
@@ -40,9 +43,11 @@
 
 .import-data
   %form#import-form
-    %p.legend Import Widgets
+    %p.legend
+      = _('Import Widgets')
 
-    %label(for='toggle-all') All
+    %label(for='toggle-all')
+      = _('All')
     %input#toggle-all(type='checkbox')
 
     #import-grid
@@ -53,12 +58,12 @@
   %tr
     %td{:align => "right"}
       .widget-import-buttons
-        = button_tag('Commit', :alt => "Commit Changes", :class => "btn btn-primary")
-        = button_tag('Cancel', :alt => "Cancel Changes", :class => "btn btn-default")
+        = button_tag(_('Commit'), :alt => _("Commit Changes"), :class => "btn btn-primary")
+        = button_tag(_('Cancel'), :alt => _("Cancel Changes"), :class => "btn btn-default")
 
 :javascript
-  $j(function() {
-    $j('#upload_widget_import').click(function() {
+  $(function() {
+    $('#upload_widget_import').click(function() {
       miqSparkleOn();
     });
 
@@ -69,8 +74,8 @@
     setTimeout(function() {
       if (typeof(dhxLayoutB) !== 'undefined') {
         dhxLayoutB.cells('c').collapse();
-        $j(dhxLayoutB.cells('c')).height(1);
-        $j('.widget-export-buttons').show();
+        $(dhxLayoutB.cells('c')).height(1);
+        $('.widget-export-buttons').show();
       }
     }, 100);
   });

@@ -1,0 +1,22 @@
+#main_div
+  - if @report.nil?
+    = render :partial => 'layouts/info_msg', :locals => {:message => _("Choose a Report to edit from the menus on the left.")}
+    %fieldset
+      %p.legend
+        = @report.name
+      %table.style1
+        %tr
+          %td.key
+            = _('Title:')
+          %td.notwide
+            = @report.title
+        %tr
+          %td.key
+            = _('Based On:')
+          %td.notwide
+            = Dictionary::gettext(@report.db, :type => :model, :notfound => :titleize)
+        %tr
+          %td.key
+            = _('Updated On:')
+          %td.notwide
+            = @report.updated_on

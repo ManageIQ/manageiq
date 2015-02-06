@@ -43,6 +43,7 @@
   - miq_report
   - miq_request
   - miq_template
+  - orchestration_stack
   - planning
   - policy_import_export
   - pxe

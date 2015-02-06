@@ -1,0 +1,38 @@
+- url = url_for(:action => 'db_form_field_changed', :id => "#{@db.id || 'new'}")
+#form_div
+  = render :partial => "layouts/flash_msg"
+  - read_only = @edit && @edit[:db_id] && @edit[:db_id] ? true : false
+  %p.legend
+    = _('Basic Information')
+  %table.style1
+    %tr
+      %td.key
+        - if read_only
+          *
+        = _('Name')
+      %td.wider
+        = text_field_tag("name",
+          @edit[:new][:name],
+          :maxlength         => 50,
+          :disabled          => read_only,
+          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+        - unless read_only
+          = javascript_tag(javascript_focus('name'))
+    %tr
+      %td.key
+        = _('Tab Title')
+      %td.wider
+        = text_field_tag("description",
+          @edit[:new][:description],
+          :maxlength         => 20,
+          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+    %tr
+      %td.key
+        = _('Locked')
+      %td
+        = check_box_tag("locked", "1", @edit[:new][:locked],
+          "data-miq_observe_checkbox" => {:url => url}.to_json)
+  %hr
+  = render :partial => "db_widgets"
+  - if read_only
+    = _('* Dashboard name cannot be changed')

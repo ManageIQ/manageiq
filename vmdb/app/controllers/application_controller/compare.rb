@@ -91,7 +91,7 @@ module ApplicationController::Compare
       img_src = "squashed-all-true"
     end
     render :update do |page|                    # Use RJS to update the display
-      page << "$j('#expand_collapse').prop('src', '/images/toolbars/#{img_src}.png');"
+      page << "$('#expand_collapse').prop('src', '/images/toolbars/#{img_src}.png');"
     end
   end
 

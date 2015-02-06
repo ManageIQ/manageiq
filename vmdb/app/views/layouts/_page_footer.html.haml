@@ -1,5 +1,4 @@
-#page_footer_div{:style=>"height:20px;"}
-  #footer
-    #time
-      %script{:type => "text/javascript"}
-        ="dT('#{Time.zone.now.utc_offset}','#{Time.zone.now.strftime("%Z")}');"
+%nav.navbar.navbar-default.navbar-fixed-bottom
+  .container-fluid
+    %script{:type => "text/javascript"}
+      ="dT('#{Time.zone.now.utc_offset}','#{Time.zone.now.strftime("%Z")}');"

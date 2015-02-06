@@ -2,6 +2,10 @@ require "spec_helper"
 require Rails.root.join("db/migrate/20100413003434_remove_miq_alert_contents.rb")
 
 describe RemoveMiqAlertContents do
+  before do
+    pending("spec can only run on region 0")  unless ActiveRecord::Base.my_region_number == 0
+  end
+
   migration_context :up do
     let(:alert_stub)         { migration_stub(:MiqAlert) }
     let(:action_stub)        { migration_stub(:MiqAction) }

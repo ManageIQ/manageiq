@@ -1,23 +1,9 @@
-= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"layout"}
-
 - if inner_layout_present?
   -# Explorer type layouts will attach directly to outer layout
   = yield
 - else                     
   -# Classic HTML type layouts will live inside this div
-  #page_content_div{:style=>"display:none; height:100%; overflow-y:scroll;"}
-    = render :partial => "layouts/page_center"
 
-= render :partial => "layouts/page_header" 
-= render :partial => "layouts/page_footer"
-
-%script
-  var miqLayout = new dhtmlXLayoutObject(document.body,"1C");
-  miqLayout.cont.obj._offsetLeft = miqLayout.cont.obj._offsetTop = miqLayout.cont.obj._offsetWidth = miqLayout.cont.obj._offsetHeight = 0;
-  miqLayout.setSizes();
-  miqLayout.cells("a").hideHeader();
-  - unless inner_layout_present?
-    -# Attach content div wrapped non-explorer pages to the miqLayout
-    miqLayout.cells("a").attachObject('page_content_div');
-  miqLayout.attachHeader("page_header_div");
-  miqLayout.attachFooter("page_footer_div");
+  = render :partial => "layouts/page_header" 
+  = render :partial => "layouts/page_center"
+  = render :partial => "layouts/page_footer"

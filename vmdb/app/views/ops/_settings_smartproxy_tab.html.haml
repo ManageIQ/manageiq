@@ -1,0 +1,63 @@
+- url = url_for(:action=>'settings_form_field_changed', :id=>"#{@sb[:active_tab].split('_').last}")
+- if @sb[:active_tab] == "settings_smartproxy"
+  = render :partial => "layouts/flash_msg"
+  %p.legend=_("Host Based SmartProxy Settings")
+  %table.style1
+    %tr
+      %td.key=_("Heartbeat Frequency")
+      %td{:width => "70"}
+        = select_tag('agent_heartbeat_frequency_mins',
+          options_for_select(Array.new(61) {|i| i},
+            @edit[:new][:agent][:heartbeat_frequency]/60),
+          "data-miq_focus"=>true,
+          "data-miq_observe"=>{:url=>url}.to_json)
+        m
+      %td
+        = select_tag('agent_heartbeat_frequency_secs',
+          options_for_select(Array.new(12) {|i| i*5},
+            @edit[:new][:agent][:heartbeat_frequency]%60),
+          "data-miq_observe"=>{:url=>url}.to_json)
+        s
+    %tr
+      %td.key=_("Read Only Mode")
+      - checked = @edit[:new][:agent][:readonly].to_s == "1"
+      %td{:colspan => "2"}
+        = check_box_tag("agent_readonly", value="1",
+          checked=checked,
+          "data-miq_observe_checkbox"=>{:url=>url}.to_json)
+    %tr
+      %td.key=_("Web Services Listen Port")
+      %td.wide{:colspan => "2"}
+        = text_field_tag("agent_wsListenPort",
+          @edit[:new][:agent][:wsListenPort],
+          :maxlength=>6,
+          "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+    %tr
+      %td.key=_("Log Level")
+      %td.wide{:colspan => "2"}
+        = select_tag('agent_log_level',
+          options_for_select(["fatal","error","warn","info","debug"],
+            @edit[:new][:agent][:log][:level]),
+          "data-miq_observe"=>{:url=>url}.to_json)
+    %tr
+      %td.key=_("Log Wrap Size")
+      %td.wide{:colspan => "2"}
+        = text_field_tag("agent_log_wrapsize",
+          @edit[:new][:agent][:log][:wrap_size],
+          :maxlength=>3,
+          "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+        =_("(1-999 MB)")
+    %tr
+      %td.key=_("Log Wrap Time")
+      %td{:width => "70"}
+        = select_tag('agent_log_wraptime_days',
+          options_for_select(Array.new(31) {|i| i},
+            @edit[:new][:agent][:log][:wrap_time]/24/3600),
+          "data-miq_observe"=>{:url=>url}.to_json)
+        d
+      %td
+        = select_tag('agent_log_wraptime_hours',
+          options_for_select(Array.new(24) {|i| i},
+            @edit[:new][:agent][:log][:wrap_time]%(24*3600)/3600),
+          "data-miq_observe"=>{:url=>url}.to_json)
+        h

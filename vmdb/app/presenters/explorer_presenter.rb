@@ -130,7 +130,7 @@ class ExplorerPresenter
       # using dynatree if dhtmlxtree object is undefined
       @out << "
       if (typeof #{@options[:active_tree]} == 'undefined') {
-        var del_node = $j('##{@options[:active_tree]}box').dynatree('getTree').getNodeByKey('#{@options[:delete_node]}');
+        var del_node = $('##{@options[:active_tree]}box').dynatree('getTree').getNodeByKey('#{@options[:delete_node]}');
         del_node.remove();
       } else {
         #{@options[:active_tree]}.deleteItem('#{@options[:delete_node]}');
@@ -140,7 +140,7 @@ class ExplorerPresenter
     @out << "miq_widget_dd_url = '#{@options[:miq_widget_dd_url]}';" if @options[:miq_widget_dd_url]
 
     # Always set 'def' view in left cell as active in case it was changed to show compare/drift sections
-    @out << "if ($j('#custom_left_cell_div')) dhxLayout.cells('a').view('def').setActive();"
+    @out << "if (miqDomElementExists('custom_left_cell_div')) dhxLayout.cells('a').view('def').setActive();"
 
     # Update elements in the DOM with rendered partials
     @options[:update_partials].each { |element, content| @out << update_partial(element, content) }
@@ -170,7 +170,7 @@ class ExplorerPresenter
     end
 
     # Scroll to top of main div
-    @out << "$j('#main_div').scrollTop(0);"
+    @out << "$('#main_div').scrollTop(0);"
 
     @out << "dhxLayoutB.cells('b').setText('#{escape_javascript(ERB::Util::h(@options[:right_cell_text]))}');" if @options[:right_cell_text]
 
@@ -207,13 +207,13 @@ class ExplorerPresenter
 
     @out << @options[:extra_js].join("\n")
 
-    # Position and show or hide the clear_search link
+    # Position the clear_search link
     @out << "
-    $j('.dhtmlxInfoBarLabel:visible').append($j('#clear_search')[0]);
-    $j('#clear_search').#{clear_search_show_or_hide}();
-    miqResizeTaskbarCell();"
+      $('.dhtmlxInfoBarLabel').filter(':visible').append($('#clear_search')[0]);
+      miqResizeTaskbarCell();"
 
-    @out << set_spinner_off
+    # Don't turn off spinner for charts/timelines
+    @out << set_spinner_off unless @options[:ajax_action]
   end
 
   def build_calendar
@@ -285,15 +285,11 @@ class ExplorerPresenter
   #     :locals   --- FIXME
   #     :partial  --- FIXME
   def replace_partial(element, content)
-    replace_or_update_partial('replace', element, content)
+    "$('##{element}').replaceWith('#{escape_javascript(content)}');"
   end
 
   def update_partial(element, content)
-    replace_or_update_partial('update', element, content)
-  end
-
-  def replace_or_update_partial(method, element, content)
-    "Element.#{method}('#{element}','#{escape_javascript(content)}');"
+    "$('##{element}').html('#{escape_javascript(content)}');"
   end
 
   private

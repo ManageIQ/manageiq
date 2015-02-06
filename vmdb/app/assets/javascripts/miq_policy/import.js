@@ -1,7 +1,7 @@
 //= require_directory ../SlickGrid-2.1/
 var rows;
 
-$j.getJSON("get_json?import_file_upload_id=" + import_file_upload_id, function(rows_json){
+$.getJSON("get_json?import_file_upload_id=" + import_file_upload_id, function(rows_json){
 
   rows = rows_json;
   function myFilter(item) {
@@ -58,7 +58,7 @@ $j.getJSON("get_json?import_file_upload_id=" + import_file_upload_id, function(r
   grid = new Slick.Grid("#import_grid", dataview, columns, options);
 
   grid.onClick.subscribe(function (e, args) {
-    if ($j(e.target).hasClass("toggle")) {
+    if ($(e.target).hasClass("toggle")) {
       var item = dataview.getItem(args.row);
       if (item) {
         if (!item._collapsed) {

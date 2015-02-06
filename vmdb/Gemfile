@@ -7,7 +7,7 @@ MiqBundler.include_gemfile("../lib/Gemfile", binding)
 # VMDB specific gems
 #
 
-gem "prototype-rails", "~>3.2.1"
+gem "jquery-rjs", "=0.1.1", :git => 'https://github.com/amatsuda/jquery-rjs.git'
 # gem 'jquery-rails'
 
 gem "sprockets-sass",  "~>1.2.0"
@@ -88,8 +88,6 @@ unless ENV['APPLIANCE']
   group :test do
     gem "brakeman",         "~>2.0",    :require => false
 
-    gem "vcr",              "~>2.6",    :require => false
-    gem "webmock",                      :require => false
     gem "shoulda-matchers", "~>1.0.0",  :require => false
     gem "factory_girl",     "~>4.1.0",  :require => false
 

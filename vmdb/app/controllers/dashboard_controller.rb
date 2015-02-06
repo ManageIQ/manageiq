@@ -303,13 +303,13 @@ class DashboardController < ApplicationController
         page << javascript_add_class("w_#{w}_minmax", "minbox")
         page << javascript_del_class("w_#{w}_minmax", "maxbox")
         page << javascript_show("dd_w#{w}_box")
-        page << "$j('#w_#{w}_minmax').prop('title', 'Minimize');"
+        page << "$('#w_#{w}_minmax').prop('title', 'Minimize');"
         @sb[:dashboards][@sb[:active_db]][:minimized].delete(w)
       else
         page << javascript_add_class("w_#{w}_minmax", "maxbox")
         page << javascript_del_class("w_#{w}_minmax", "minbox")
         page << javascript_hide("dd_w#{w}_box")
-        page << "$j('#w_#{w}_minmax').prop('title', 'Restore');"
+        page << "$('#w_#{w}_minmax').prop('title', 'Restore');"
         @sb[:dashboards][@sb[:active_db]][:minimized].push(w)
       end
     end
@@ -329,7 +329,7 @@ class DashboardController < ApplicationController
 
     render :update do |page|
       page.replace_html("lightbox_div", :partial => "zoomed_chart", :locals => {:widget => widget})
-      page << "$j('#lightbox-panel').fadeIn(300);"
+      page << "$('#lightbox-panel').fadeIn(300);"
       page << "miqLoadCharts();"
     end
   end

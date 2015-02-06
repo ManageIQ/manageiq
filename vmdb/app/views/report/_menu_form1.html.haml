@@ -1,0 +1,81 @@
+- unless @temp[:grid_xml].blank?
+  :javascript
+    grid_xml = "#{@temp[:grid_xml]}"
+#menu_div1
+  = form_tag(:action => 'menu_update', :id => "report_menu_form1") do
+    %fieldset{:style => "width: 320px; height: 450px;"}
+      %p.legend
+        %span#menu1_legend
+          = _('Manage Accordions')
+      #folder_lists
+        - #= render :partial => "layouts/flash_msg"
+        %table{:class => "form", :cellspacing => "3"}
+          %tr
+            %td{:valign => "top"}
+              - @temp[:grid_xml] = params[:grid] if params[:grid]
+              = render(:partial => 'layouts/dhtmlxgrid',
+                :locals         => {:options => {:grid_id => "folder_grid",
+                  :grid_name                              => "folder_list_grid",
+                  :menu_grid_edit                         => true,
+                  :row_edit                               => true,
+                  :autosize                               => true,
+                  :grid_xml                               => @temp[:grid_xml],
+                  :no_resize                              => true,
+                  :skin                                   => "menueditor",
+                  :div_in_js                              => true}})
+            %td{:width => "20", :valign => "middle"}
+              - t = _("Move selected folder top")
+              = image_tag('/images/toolbars/top.png', :border => "0", :class => "rollover small", :alt => t, :title => t,
+                :onclick => "return miqMenuChangeRow('folder_list_grid', 'top')", :id => 'folder_top')
+              - t = _("Move selected folder up")
+              = image_tag('/images/toolbars/up.png', :border => "0", :class => "rollover small", :alt => t, :title => t,
+                :onclick => "return miqMenuChangeRow('folder_list_grid', 'up')", :id => 'folder_up')
+              - t = _("Move selected folder down")
+              = image_tag('/images/toolbars/down.png', :border => "0", :class => "rollover small", :alt => t, :title => t,
+                :onclick => "return miqMenuChangeRow('folder_list_grid', 'down')", :id => 'folder_down')
+              - t = _("Move selected folder to bottom")
+              = image_tag('/images/toolbars/bottom.png', :border => "0", :class => "rollover small", :alt => t, :title => t,
+                :onclick => "return miqMenuChangeRow('folder_list_grid', 'bottom')", :id => 'folder_bottom')
+              - t = _("Delete selected folder and its contents")
+              = image_tag('/images/toolbars/delete.png', :border => "0", :class => "rollover small", :alt => t, :title => t,
+                :onclick => "return miqMenuChangeRow('folder_list_grid', 'delete')", :id => 'folder_delete')
+              - t = _("Add subfolder to selected folder")
+              = image_tag('/images/toolbars/new.png', :border => "0", :class => "rollover small", :alt => t, :title => t,
+                :onclick => "return miqMenuChangeRow('folder_list_grid', 'add')", :id => 'folder_add')
+          %tr
+            %td{:colspan => "2", :style => "float: right;"}
+              - t = _('Commit expression element changes')
+              - # = link_to(image_tag('/images/toolbars/commit.png', :class => "rollover small", :alt => t),
+              - #   "data-miq_sparkle_on"  => true,
+              - #   "data-miq_sparkle_off" => true,
+              - #   :remote                => true,
+              - #   :title                 => t,
+              - #   :id                    => "folder_commit",
+              - #   :onclick               => "return miqMenuChangeRow('folder_list_grid', 'serialize', '/report/menu_field_changed/')")
+              = image_tag('/images/toolbars/commit.png',
+                :border                => "0",
+                :class                 => "rollover small",
+                :alt                   => t,
+                :title                 => t,
+                :id                    => "folder_commit",
+                "data-miq_sparkle_on"  => true,
+                "data-miq_sparkle_off" => true,
+                :onclick               => "return miqMenuChangeRow('folder_list_grid', 'serialize', '/report/menu_field_changed/')")
+              - t = _('Discard expression element changes')
+              = link_to(image_tag('/images/toolbars/discard.png', :id => "folder_discard", :class => "rollover small", :alt => t),
+                {:action => 'discard_changes', :pressed => 'discard_folders', :title => t},
+                "data-miq_sparkle_on"  => true,
+                "data-miq_sparkle_off" => true,
+                :remote                => true)
+            %td
+
+#menu_div3{:style => "display: none;"}
+  %fieldset{:style => "width: 300px; height: 450px;"}
+    %p.legend
+      = _('Manage Accordions & Folders')
+    - #= render :partial => "layouts/flash_msg"
+    %table{:cellspacing => "1"}
+      %tr
+        %td{:align => "left"}
+          %span{:style => "color: #4b4b4b; font-size: 14px; font-weight: bold; line-height: 22px;"}
+            = _("Please select a node at left to edit.")

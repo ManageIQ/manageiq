@@ -1,0 +1,35 @@
+- # Create from/to date JS vars to limit calendar starting from
+:javascript
+  var miq_cal_dateFrom = miqCalendarDateConversion("#{@timezone_offset}");
+
+#layout_div{:style => "position:relative; width:auto; height: #{center_div_height(true, 550)}px;"}
+  - content_for :trees do
+    - @trees.each do |tree|
+      %div{:style => "display:none"}
+        = render :partial => tree, :locals => {:name => tree}
+  #main_div.main_div
+    - @lists.each do |list|
+      = render :partial => list
+      - # Include the center cell divs
+
+- content_for :accords do
+  - # Create the explorer dhtmlx layout/accordion JS objects
+  = render(:partial => "layouts/dhtmlxlayout_explorer",
+    :locals         => {:accords => @accords,
+      :active_accord             => @sb[:active_accord],
+      :accord_select_function    => "miqAccordReportSelect",
+      :cell_b_text               => @right_cell_text,
+      :cell_b_object             => "#{@right_cell_div}_div"})
+
+%script{:type => "text/javascript"}
+  function miqReportAfterOnload() {
+  - if @right_cell_div == "role_list"
+    - if role_allows(:feature => "miq_report_menu_editor")
+      cfmeDynatree_activateNode('roles_tree','#{x_node}');
+      - if x_node.split('-').length > 1
+        = javascript_hide("menu_div1")
+        = javascript_show("menu_div3")
+  - else
+    cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}')
+  };
+  var miq_after_onload = "miqReportAfterOnload();"

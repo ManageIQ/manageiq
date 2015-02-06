@@ -1,0 +1,35 @@
+#
+# Toolbar config file
+#
+---
+:model: OrchestrationStack
+:button_groups:
+- :name: orchestration_stack_vmdb
+  :items:
+  - :buttonSelect: orchestration_stack_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+#    - :button: orchestration_stack_edit
+#      :image: edit
+#      :text: 'Edit this #{ui_lookup(:table=>"orchestration_stack")}'
+#      :title: 'Edit this #{ui_lookup(:table=>"orchestration_stack")}'
+#      :url: '/edit'
+    - :button: orchestration_stack_delete
+      :image: delete
+      :text: 'Remove this #{ui_lookup(:table=>"orchestration_stack")} from the VMDB'
+      :title: 'Remove this #{ui_lookup(:table=>"orchestration_stack")} from the VMDB'
+      :url_parms: '&refresh=y'
+      :confirm: 'Warning: This #{ui_lookup(:table=>"orchestration_stack")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this #{ui_lookup(:table=>"orchestration_stack")}?'
+- :name: orchestration_stack_policy
+  :items:
+  - :buttonSelect: orchestration_stack_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: orchestration_stack_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: 'Edit Tags for this #{ui_lookup(:tables=>"orchestration_stack")}'

@@ -429,7 +429,7 @@ class ServiceController < ApplicationController
         page << "dhxLayoutB.cells('c').expand();"
       end
 
-      page << "$j('#main_div').scrollTop();"  # Scroll to top of main div
+      page << "$('#main_div').scrollTop();"  # Scroll to top of main div
 
       # Clear the JS gtl_list_grid var if changing to a type other than list
       if @gtl_type && @gtl_type != "list"
@@ -479,7 +479,7 @@ class ServiceController < ApplicationController
       end
 
       page << "cfmeDynatree_activateNodeSilently('#{x_active_tree}','#{x_node}');" if params[:id]
-      page << "$j('##{x_active_tree}box').dynatree('#{@in_a_form && @edit ? 'disable' : 'enable'}');"
+      page << "$('##{x_active_tree}box').dynatree('#{@in_a_form && @edit ? 'disable' : 'enable'}');"
       dim_div = @in_a_form && @edit && @edit[:current] ? true : false
       page << javascript_dim("#{x_active_tree}_div", dim_div)
       page << "miqSparkle(false);"

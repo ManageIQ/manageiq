@@ -1,0 +1,24 @@
+- if items
+  #table_div
+    %table.style3
+      %thead
+        %tr
+          %th{:colspan => "2", :align => "left"}
+            = title
+      - items.each do |item|
+        %tr.no-hover
+          %td.label
+            = item[:label]
+          - if item[:value].kind_of?(Array)
+            %td{:valign => "top", :style => "padding: 0;"}
+              %table.style3{:style => "padding: 0; margin: 0; border: 0; width: 100%;"}
+                - item[:value].each do |subitem|
+                  %tr.no-hover{:class => cycle('row0', 'row1')}
+                    %td
+                      %img{:src => "/images/icons/new/#{subitem[:image]}.png"}
+                        = "#{subitem[:label]}: #{subitem[:value].collect { |t| h(t) }.join("&nbsp;<b>|</b>&nbsp;").html_safe}"
+          - else
+            %td
+              - if item[:image]
+                %img{:src => "/images/icons/new/#{item[:image]}.png"}
+                = item[:value]

@@ -94,8 +94,7 @@ class ApplicationController < ActionController::Base
     respond_to do |format|
       format.js do
         render :update do |page|    # AJAX, replace the main area with error
-          page.replace_html("exception_div", :partial => "layouts/exception_contents", :locals => { :message => msg })
-          page << "miqLayout.cells('a').attachObject('exception_div');"
+          page.replace_html("center_div", :partial => "layouts/exception_contents", :locals => {:message => msg})
           page << "miqSparkle(false);"
           page << javascript_hide_if_exists("adv_searchbox_div")
         end
@@ -143,10 +142,10 @@ class ApplicationController < ActionController::Base
     render :update do |page|
       if @panels[panel] == 'down'
         @panels[panel] = 'up'
-        page << "$j('##{j_str(panel)}').slideUp('medium');"
+        page << "$('##{j_str(panel)}').slideUp('medium');"
       else
         @panels[panel] = 'down'
-        page << "$j('##{j_str(panel)}').slideDown('medium');"
+        page << "$('##{j_str(panel)}').slideDown('medium');"
       end
     end
     # FIXME: the @panels end up in the session eventually
@@ -1201,33 +1200,30 @@ class ApplicationController < ActionController::Base
     p  = "/images/icons/"
     pn = "#{p}new/"
 
-    case item.class.base_class.to_s
-    when "ExtManagementSystem"   then "#{pn}/vendor-#{item.image_name}.png"
-    when "Filesystem"            then "#{p}ico/win/#{item.image_name.downcase}.ico"
-    when "Host"                  then "#{pn}vendor-#{item.vmm_vendor.downcase}.png"
-    when "MiqEvent"              then "#{pn}event-#{item.name.downcase}.png"
-    when "MiqRequest"
-      pn + case item.request_status.to_s.downcase
-           when "ok"    then "checkmark.png"
-           when "error" then "x.png"
-           else              "#{@listicon.downcase}.png"
-           end
-    when "RegistryItem"          then "#{pn}#{item.image_name.downcase}.png"
-    when "ResourcePool"          then "#{pn}#{item.vapp ? "vapp" : "resource_pool"}.png"
-    when "Vm", "VmOrTemplate"    then "#{pn}vendor-#{item.vendor.downcase}.png"
-    when "ServiceResource"       then "#{pn}#{item.resource_type.to_s == "VmOrTemplate" ? "vm" : "service_template"}.png"
-    when "Storage"               then "#{pn}piecharts/datastore/#{calculate_pct_img(item.v_free_space_percent_of_total)}.png"
-    when "OsProcess", "EventLog" then "#{pn}#{@listicon.downcase}.png"
-    when "Service", "ServiceTemplate"
-      if item.try(:picture)
-        add_pictures_to_sync(item.picture.id)
-        "../../../pictures/#{item.picture.basename}"
-      else
-        # FIXME: what here?
-      end
-    else
-      "#{pn}#{(@listicon || view.db).underscore}.png"
-    end
+    image = case item.class.base_class.to_s
+            when "ExtManagementSystem"   then "#{pn}/vendor-#{item.image_name}.png"
+            when "Filesystem"            then "#{p}ico/win/#{item.image_name.downcase}.ico"
+            when "Host"                  then "#{pn}vendor-#{item.vmm_vendor.downcase}.png"
+            when "MiqEvent"              then "#{pn}event-#{item.name.downcase}.png"
+            when "MiqRequest"
+              pn + case item.request_status.to_s.downcase
+                   when "ok"    then "checkmark.png"
+                   when "error" then "x.png"
+                   else              "#{@listicon.downcase}.png"
+                   end
+            when "RegistryItem"          then "#{pn}#{item.image_name.downcase}.png"
+            when "ResourcePool"          then "#{pn}#{item.vapp ? "vapp" : "resource_pool"}.png"
+            when "Vm", "VmOrTemplate"    then "#{pn}vendor-#{item.vendor.downcase}.png"
+            when "ServiceResource"       then "#{pn}#{item.resource_type.to_s == "VmOrTemplate" ? "vm" : "service_template"}.png"
+            when "Storage"               then "#{pn}piecharts/datastore/#{calculate_pct_img(item.v_free_space_percent_of_total)}.png"
+            when "OsProcess", "EventLog" then "#{pn}#{@listicon.downcase}.png"
+            when "Service", "ServiceTemplate"
+              if item.try(:picture)
+                add_pictures_to_sync(item.picture.id)
+                "../../../pictures/#{item.picture.basename}"
+              end
+            end
+    image ? image : "#{pn}#{(@listicon || view.db).underscore}.png"
   end
 
   def get_host_for_vm(vm)
@@ -2128,7 +2124,7 @@ class ApplicationController < ActionController::Base
         page.replace("pc_div_2", :partial=>'/layouts/pagingcontrols', :locals=>{:pages=>@pages, :action_url=>action_url})
       else                                          # No grid, replace the gtl div
         page.replace_html("main_div", :partial=>"layouts/gtl")                                                  # Replace the main div area contents
-        page << "$j('#adv_div').slideUp(0.3);" if params[:entry]
+        page << "$('#adv_div').slideUp(0.3);" if params[:entry]
       end
     end
   end
@@ -2316,7 +2312,7 @@ class ApplicationController < ActionController::Base
         session[:tab_url][:opt] = inbound_url if ["utilization","planning","bottlenecks","waste"].include?(action_name)
       when "catalog", "vm", "vm_or_template", "miq_template", "service"
         session[:tab_url][:svc] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
-      when "availability_zone","ems_cloud","flavor","security_group","vm_cloud"
+      when "availability_zone", "ems_cloud", "flavor", "security_group", "vm_cloud", "orchestration_stack"
         session[:tab_url][:clo] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
       when "ems_cluster", "ems_infra", "host", "pxe", "repository", "resource_pool", "storage", "vm_infra"
         session[:tab_url][:inf] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
@@ -2719,7 +2715,7 @@ class ApplicationController < ActionController::Base
 
   def render_flash_not_applicable_to_model(type)
     add_flash(_("%{task} does not apply to selected %{model}") % {:model => ui_lookup(:table => "miq_template"), :task  => type.capitalize}, :error)
-    render_flash { |page| page << '$j(\'#main_div\').scrollTop();' }
+    render_flash { |page| page << '$(\'#main_div\').scrollTop();' }
   end
 
   def set_gettext_locale

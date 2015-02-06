@@ -14,12 +14,12 @@ cfmeAngularApplication.directive('checkpath', function (){
       validPath = function(scope, path, bClearMsg) {
         modified_path = path.replace(/\\/g, "/");
         if(new RegExp("^//[^/].*/.+$").test(modified_path)) {
-          if(bClearMsg) $j('#flash_msg_div').text("");
+          if(bClearMsg) $('#flash_msg_div').text("");
           scope.path_type = "NAS";
           return true;
         }
         else if(/^\[[^\]].+\].*$/.test(modified_path)) {
-          if(bClearMsg) $j('#flash_msg_div').text("");
+          if(bClearMsg) $('#flash_msg_div').text("");
           scope.path_type = "VMFS";
           return true;
         }

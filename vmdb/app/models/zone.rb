@@ -17,6 +17,7 @@ class Zone < ActiveRecord::Base
   has_many :miq_schedules, :dependent => :destroy
   has_many :storage_managers
   has_many :ldap_regions
+  has_many :providers
 
   virtual_has_many :hosts,             :uses => {:ext_management_systems => :hosts}
   virtual_has_many :vms_and_templates, :uses => {:ext_management_systems => :vms_and_templates}
@@ -202,7 +203,7 @@ class Zone < ActiveRecord::Base
 
   def miq_proxies
     ems_ids = self.ext_management_systems.collect(&:id)
-    MiqProxy.includes(:host).where("hosts.ems_id in (?)", ems_ids).to_a
+    MiqProxy.includes(:host).references(:host).where("hosts.ems_id in (?)", ems_ids).to_a
   end
 
   # Used by AggregationMixin

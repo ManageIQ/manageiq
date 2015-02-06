@@ -83,6 +83,14 @@ class MiqAeCustomizationController < ApplicationController
     end
   end
 
+  def dialog_accordion_json
+    accordion_json = {:locals_for_render => dialog_build_tree.locals_for_render}.to_json
+
+    respond_to do |format|
+      format.json { render :json => accordion_json, :status => 200 }
+    end
+  end
+
   def review_import
     @import_file_upload_id = params[:import_file_upload_id]
     @message = params[:message]

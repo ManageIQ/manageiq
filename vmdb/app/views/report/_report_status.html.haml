@@ -1,0 +1,46 @@
+#report_status_div
+  %fieldset
+    %p.legend
+      = @temp[:report_result].name
+    %table.style1
+      %tr{:class => cycle('row0', 'row1')}
+        %td.key
+          = _("Queued At")
+        %td
+          = h(format_timezone(@temp[:report_result].created_on, Time.zone, "view"))
+      %tr{:class => cycle('row0', 'row1')}
+        %td.key
+          = _("Run At")
+        - run_on = @temp[:report_result].last_run_on
+        %td
+          = h(run_on ? format_timezone(run_on, Time.zone, "view") : "")
+      %tr{:class => cycle('row0', 'row1')}
+        %td.key
+          = _('Name')
+        %td
+          = h(@temp[:report_result].name)
+      %tr{:class => cycle('row0', 'row1')}
+        %td.key
+          = _('Source')
+        %td
+          = h(@temp[:report_result].report_source)
+      %tr{:class => cycle('row0', 'row1')}
+        %td.key
+          = _("User ID")
+        %td
+          = h(@temp[:report_result].userid)
+      %tr{:class => cycle('row0', 'row1')}
+        %td.key
+          = _('Group')
+        %td
+          = h(@temp[:report_result].miq_group_description)
+      %tr{:class => cycle('row0', 'row1')}
+        %td.key
+          = _("Status")
+        %td
+          = h(@temp[:report_result].status)
+      %tr{:class => cycle('row0', 'row1')}
+        %td.key
+          = _("Message")
+        %td
+          = h(@temp[:report_result].status_message)

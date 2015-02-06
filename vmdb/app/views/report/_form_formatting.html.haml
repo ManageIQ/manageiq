@@ -1,0 +1,46 @@
+- url = url_for(:action => 'form_field_changed', :id => "#{@edit[:rpt_id] || 'new'}")
+#formatting_div
+  %p.legend
+    = _('PDF Output')
+  %table.style1
+    %tr
+      %td.key
+        = _('Page Size')
+      %td
+        = select_tag('pdf_page_size',
+          options_for_select(PDF_PAGE_SIZES.invert.sort, @edit[:new][:pdf_page_size]),
+          :multiple             => false,
+          :class                => "widthed",
+          "data-miq_sparkle_on" => true,
+          "data-miq_observe"    => {:url => url}.to_json)
+  %hr
+  %p.legend
+    = _('Specify Column Headers and Formats')
+  %table.style3
+    %thead
+      %tr
+        %th
+          = _('Column Name')
+        %th
+          = _('Header')
+        %th
+          = _('Format')
+    %tbody
+      - @edit[:new][:field_order].each do |f|
+        %tr
+          %td.key
+            = h(f.first)
+          %td.wide
+            %div{:id => "hdr_#{f.last}_div"}
+              = text_field_tag("hdr_#{f.last}", @edit[:new][:headers][f.last],
+                :maxlength         => 40,
+                "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+          %td
+            - ci = MiqReport.get_col_info(f.last.split("__").first)
+            - unless ci[:available_formats].blank?
+              - # need to gsub the period out of the field name for pull down or observe doesn't work, replacing with "__"
+              - opts = [["<#{_('None')}>", "_none_"], ["<#{_('Reset to Default')}>", nil]] + Array(ci[:available_formats].invert).sort_by(&:first)
+              = select_tag("fmt_#{f.last.gsub(".", "___")}",
+                options_for_select(opts, @edit[:new][:col_formats][f.last] || ci[:default_format]),
+                "data-miq_sparkle_on" => true,
+                "data-miq_observe"    => {:url => url}.to_json)

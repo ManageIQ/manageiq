@@ -1,0 +1,98 @@
+- if @record && @record.evm_display_name.nil?
+  #accordion
+    .panel
+      .topbar
+        = link_to(h(@record.evm_display_name.length < trunc_at ? @record.evm_display_name : @record.evm_display_name[0...trunc_to] + "..."),
+          {:action => 'panel_control', :panel => 'icon'},
+          :remote => true,
+          :title  => h(@record.evm_display_name))
+      = hidden_div_if(@panels["icon"].nil? || @panels["icon"] == false, :id => "icon") do
+        .panecontent
+          = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
+
+      .topbar
+        = link_to(_("Properties"),
+          {:action => 'panel_control', :panel => 'cim_se_prop'},
+          :remote => true)
+      = hidden_div_if(@panels["cim_se_prop"].nil? || @panels["cim_se_prop"] == false, :id => "cim_se_prop") do
+        .panecontent
+          = link_to_with_icon(_('Summary'),
+            {:action => 'show', :id => @record, :display => 'main'},
+            :title => _("Show Summary"))
+
+    .topbar
+      = link_to(_("Relationships"),
+        {:action => 'panel_control', :panel => 'cim_se_rel'},
+        :remote => true)
+    = hidden_div_if(@panels["cim_se_rel"].nil? || @panels["cim_se_rel"] == false, :id => "cim_se_rel") do
+      .panecontent
+        - if role_allows(:feature => "ontap_storage_system_show")
+          = link_if_condition(:cond => !@record.storage_system.nil?,
+            :record_id              => @record.storage_system.id,
+            :table                  => 'ontap_storage_system',
+            :controller             => 'ontap_storage_system',
+            :action                 => 'show',
+            :image_path             => '/images/icons/16/link_external.gif',
+            :link_text              => "#{ui_lookup(:table => "ontap_storage_system")}: #{@record.storage_system.evm_display_name}")
+
+        - if role_allows(:feature => "ontap_storage_volumes_show_list")
+          = link_if_nonzero(:count => @record.storage_volumes.count,
+            :record_id             => @record.id,
+            :tables                => 'ontap_storage_volume',
+            :display               => 'ontap_storage_volumes',
+            :action                => 'show',
+            :title                 => _("Show all %s") % ui_lookup(:tables => "ontap_storage_volume"))
+
+        - if role_allows(:feature => "ontap_file_share_show_list")
+          = link_if_nonzero(:count => @record.file_shares.count,
+            :record_id             => @record.id,
+            :tables                => 'ontap_file_share',
+            :display               => 'ontap_file_shares',
+            :action                => 'show',
+            :title                 => _("Show all %s") % ui_lookup(:tables => "ontap_file_share"))
+
+        - if role_allows(:feature => "snia_local_file_system_show_list")
+          = link_if_nonzero(:count => @record.file_systems.count,
+            :record_id             => @record.id,
+            :tables                => 'snia_local_file_system',
+            :display               => 'snia_local_file_systems',
+            :action                => 'show',
+            :title                 => _("Show all %s") % ui_lookup(:tables => "snia_local_file_system"))
+
+        - if role_allows(:feature => "ontap_logical_disk_show_list")
+          = link_if_nonzero(:count => @record.logical_disks.count,
+            :record_id             => @record.id,
+            :tables                => 'ontap_logical_disk',
+            :display               => 'ontap_logical_disks',
+            :action                => 'show',
+            :title                 => _("Show all %s") % ui_lookup(:tables => "ontap_logical_disk"))
+
+    .topbar
+      = link_to(_("Infrastructure Relationships"),
+        {:action => 'panel_control', :panel => 'cim_se_inf_rel'},
+        :remote => true)
+    = hidden_div_if(@panels["cim_se_inf_rel"].nil? || @panels["cim_se_inf_rel"] == false, :id => "cim_se_inf_rel") do
+      .panecontent
+        - if role_allows(:feature => "vm_show_list")
+          = link_if_nonzero(:count => @record.vms.count,
+            :record_id             => @record.id,
+            :tables                => 'vm',
+            :display               => 'vms',
+            :action                => 'show',
+            :title                 => _("Show all %s") % ui_lookup(:tables => "vm"))
+
+        - if role_allows(:feature => "host_show_list")
+          = link_if_nonzero(:count => @record.hosts.count,
+            :record_id             => @record.id,
+            :tables                => 'host',
+            :display               => 'hosts',
+            :action                => 'show',
+            :title                 => _("Show all %s") % ui_lookup(:tables => "host"))
+
+        - if role_allows(:feature => "storage_show_list")
+          = link_if_nonzero(:count => @record.storages.count,
+            :record_id             => @record.id,
+            :tables                => 'storage',
+            :display               => 'storages',
+            :action                => 'show',
+            :title                 => _("Show all %s") % ui_lookup(:tables => "storage"))

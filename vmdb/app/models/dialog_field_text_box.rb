@@ -42,6 +42,8 @@ class DialogFieldTextBox < DialogField
   end
 
   def validate(dialog_tab, dialog_group)
+    return if !required? && value.blank?
+
     case validator_type
     when 'regex'
       return "#{dialog_tab.label}/#{dialog_group.label}/#{label} is invalid" unless value.match(/#{validator_rule}/)

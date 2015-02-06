@@ -1,0 +1,23 @@
+- url = url_for(:action=>'ap_form_field_changed',:item_type=>"category", :id=>"#{@scan.id || "new"}")
+#form_div
+  %fieldset
+    %p.legend=_("Category Selection")
+    %table.style1
+      %tr
+        %td
+          %table#formtest.form{:width => "100%"}
+            - if @edit[:new].has_key?("category")
+              - @selected = Array.new
+              - @edit[:new]["category"][:definition]["content"].each do |a|
+                - @selected.push(a["target"])
+            - CATEGORY_CHOICES.each_slice(3) do |keyvalue|
+              %tr
+                - keyvalue.each do |k,v|
+                  - checked = @selected.include? k if @selected
+                  %td{:align => "left", :nowrap => "", :valign => "top"}
+                    = hidden_field("item", "type", :value=>"category")
+                    = check_box_tag("check_#{k}", value=v,
+                      checked=checked,
+                      "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                      "data-miq_observe_checkbox"=>{:url=>url}.to_json)
+                    = v

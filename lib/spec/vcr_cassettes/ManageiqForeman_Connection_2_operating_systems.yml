@@ -1,0 +1,200 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://admin:smartvm@example.com/api/operatingsystems?per_page=2
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json;version=2
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 27 Jan 2015 16:24:59 GMT
+      Server:
+      - Apache/2.2.15 (Red Hat)
+      Foreman-Version:
+      - 1.5.3
+      Foreman-Api-Version:
+      - '2'
+      Apipie-Checksum:
+      - f0c66204518b52fe5a1aa2c2163e7166
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Etag:
+      - '"420802ea864fdbedb6d931033e2ca688"'
+      Cache-Control:
+      - must-revalidate, private, max-age=0
+      X-Request-Id:
+      - f8574b84a66708700f5391a425a8c576
+      X-Runtime:
+      - '0.081479'
+      X-Rack-Cache:
+      - miss
+      X-Powered-By:
+      - Phusion Passenger 4.0.18
+      Set-Cookie:
+      - _session_id=f2c9ee64274ab2328838e4dcd0a302a9; path=/; HttpOnly
+      Status:
+      - 200 OK
+      Connection:
+      - close
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "total": 5,
+          "subtotal": 5,
+          "page": 1,
+          "per_page": 2,
+          "search": null,
+          "sort": {
+            "by": null,
+            "order": null
+          },
+          "results": [{"id":4,"name":"ProviderRefreshSpec-OperatingSystem","fullname":"ProviderRefreshSpec-OperatingSystem 1.2","description":"OS 1.2","major":"1","minor":"2","family":null,"release_name":"","created_at":"2015-01-15T19:44:25Z","updated_at":"2015-01-15T19:44:25Z"},{"id":3,"name":"RHELServer","fullname":"RHELServer 6.6","description":"RHEL Server 6.6","major":"6","minor":"6","family":"Redhat","release_name":"","created_at":"2014-11-07T19:21:30Z","updated_at":"2014-12-11T16:42:01Z"}]
+        }
+    http_version:
+  recorded_at: Tue, 27 Jan 2015 16:24:59 GMT
+- request:
+    method: get
+    uri: http://admin:smartvm@example.com/api/operatingsystems/4
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json;version=2
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 27 Jan 2015 16:24:59 GMT
+      Server:
+      - Apache/2.2.15 (Red Hat)
+      Foreman-Version:
+      - 1.5.3
+      Foreman-Api-Version:
+      - '2'
+      Apipie-Checksum:
+      - f0c66204518b52fe5a1aa2c2163e7166
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Etag:
+      - '"9460e7b6d460f8854fc8ad67a5bd1300"'
+      Cache-Control:
+      - must-revalidate, private, max-age=0
+      X-Request-Id:
+      - 3b32bf63f991a3819b8f055a2ed0b151
+      X-Runtime:
+      - '0.097847'
+      X-Rack-Cache:
+      - miss
+      X-Powered-By:
+      - Phusion Passenger 4.0.18
+      Set-Cookie:
+      - _session_id=49714aac9184d6eb6e6b1d2d4be92798; path=/; HttpOnly
+      Status:
+      - 200 OK
+      Connection:
+      - close
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: '{"id":4,"name":"ProviderRefreshSpec-OperatingSystem","fullname":"ProviderRefreshSpec-OperatingSystem
+        1.2","description":"OS 1.2","major":"1","minor":"2","family":null,"release_name":"","created_at":"2015-01-15T19:44:25Z","updated_at":"2015-01-15T19:44:25Z","parameters":[],"media":[{"id":8,"name":"ProviderRefreshSpec-Media"}],"architectures":[{"name":"x86_64","id":1}],"ptables":[{"name":"ProviderRefreshSpec-PartitionTable","id":12}],"config_templates":[],"os_default_templates":[],"images":[]}'
+    http_version:
+  recorded_at: Tue, 27 Jan 2015 16:24:59 GMT
+- request:
+    method: get
+    uri: http://admin:smartvm@example.com/api/operatingsystems/3
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json;version=2
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 27 Jan 2015 16:25:00 GMT
+      Server:
+      - Apache/2.2.15 (Red Hat)
+      Foreman-Version:
+      - 1.5.3
+      Foreman-Api-Version:
+      - '2'
+      Apipie-Checksum:
+      - f0c66204518b52fe5a1aa2c2163e7166
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Etag:
+      - '"57f139fcc29511541dee04a4cca24ccc"'
+      Cache-Control:
+      - must-revalidate, private, max-age=0
+      X-Request-Id:
+      - ff19e34889323b669260b771eda0ad20
+      X-Runtime:
+      - '0.118239'
+      X-Rack-Cache:
+      - miss
+      X-Powered-By:
+      - Phusion Passenger 4.0.18
+      Set-Cookie:
+      - _session_id=0be640ed22565c431b1b8024324a7c4b; path=/; HttpOnly
+      Status:
+      - 200 OK
+      Connection:
+      - close
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: '{"id":3,"name":"RHELServer","fullname":"RHELServer 6.6","description":"RHEL
+        Server 6.6","major":"6","minor":"6","family":"Redhat","release_name":"","created_at":"2014-11-07T19:21:30Z","updated_at":"2014-12-11T16:42:01Z","parameters":[],"media":[{"id":7,"name":"RHEL
+        Server mirror"}],"architectures":[{"name":"x86_64","id":1}],"ptables":[{"name":"Kickstart
+        default","id":7}],"config_templates":[{"id":38,"name":"Kickstart RHEL cfme","template_kind_id":4,"template_kind_name":"provision"},{"id":15,"name":"Kickstart
+        RHEL default","template_kind_id":4,"template_kind_name":"provision"},{"id":18,"name":"Kickstart
+        default iPXE","template_kind_id":3,"template_kind_name":"iPXE"}],"os_default_templates":[{"id":1,"config_template_id":38,"config_template_name":"Kickstart
+        RHEL cfme","template_kind_id":4,"template_kind_name":"provision"},{"id":5,"config_template_id":18,"config_template_name":"Kickstart
+        default iPXE","template_kind_id":3,"template_kind_name":"iPXE"}],"images":[]}'
+    http_version:
+  recorded_at: Tue, 27 Jan 2015 16:25:00 GMT
+recorded_with: VCR 2.9.3

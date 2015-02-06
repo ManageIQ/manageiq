@@ -1,0 +1,168 @@
+- url = url_for(:action => 'form_field_changed', :id => "#{@edit[:rpt_id] || 'new'}")
+#sort_div
+  %p.legend
+    = _('Sort Criteria')
+  %table.style1
+    %tr
+      %td.key
+        = _('Sort the Report By')
+      %td
+        - if @sortby1.include?("__") && MiqReport.is_break_suffix?(@sortby1.split("__")[1])
+          - sortby1 = @sortby1.split("__").first
+        - else
+          - sortby1 = @sortby1
+        = select_tag('chosen_sort1',
+          options_for_select([NOTHING_STRING] + @sort1, sortby1),
+          :multiple              => false,
+          :class                 => "widthed",
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe"     => {:url => url}.to_json)
+        - unless MiqReport.get_col_break_suffixes(@sortby1.split("__").first).empty?
+          - opts = [["<#{_('Original Value')}>", nil]] + MiqReport.get_col_break_suffixes(@sortby1.split("__").first)
+          = select_tag('sort1_suffix',
+            options_for_select(opts, @sortby1.split("__")[1]),
+            :multiple              => false,
+            :class                 => "widthed",
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe"     => {:url => url}.to_json)
+    - if @sortby1 != NOTHING_STRING
+      %tr
+        %td.key
+          = _('Sort Order')
+        %td
+          - opts = [[_("Ascending"), "Ascending"], [_("Descending"), "Descending"]]
+          = select_tag('sort_order',
+            options_for_select(opts, @edit[:new][:order]),
+            :multiple              => false,
+            :class                 => "widthed",
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe"     => {:url => url}.to_json)
+      %tr
+        %td.key
+          = _('Show Sort Breaks')
+        %td
+          - opts = [[_("No"), "No"], [_("Yes"), "Yes"], [_("Counts"), "Counts"]]
+          = select_tag('sort_group',
+            options_for_select(opts, @edit[:new][:group]),
+            :multiple              => false,
+            :class                 => "widthed",
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe"     => {:url => url}.to_json)
+      - unless @edit[:new][:group] == "No"
+        %tr
+          %td{:class => "key"}
+            = _('Hide Detail Rows')
+          %td
+            = check_box_tag("hide_details", "1", @edit[:new][:hide_details],
+              "data-miq_sparkle_on"       => true,
+              "data-miq_sparkle_off"      => true,
+              "data-miq_observe_checkbox" => {:url => url}.to_json)
+        - ci = MiqReport.get_col_info(@sortby1)
+        - unless ci[:available_formats].empty?
+          %tr
+            %td.key
+              = _('Format on Summary Row')
+            %td
+              - opts = [["<#{_('None')}>", "_none_"], ["<#{_('Reset to Default')}>", nil]] + Array(ci[:available_formats].invert).sort_by(&:first)
+              = select_tag('break_format',
+                options_for_select(opts, @edit[:new].fetch_path(:col_options, @sortby1.split("-").last, :break_format) || ci[:default_format]),
+                  :multiple              => false,
+                  :class                 => "widthed",
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  "data-miq_observe"     => {:url => url}.to_json)
+          - if false
+            - # TODO: Commented out as this observe causes double transactions until we can undo the form observe
+            %tr
+              %td.key
+                = _('Label on Summary Row')
+              %td.wide
+                #break_label_div
+                  = text_field_tag("break_label",
+                    @edit[:new].fetch_path(:col_options, @sortby1.split("-").last, :break_label).to_s,
+                    :maxlength         => 100,
+                    "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+  - if @sortby1 != NOTHING_STRING
+    %br
+    %table.style1
+      %tr
+        %td.key
+          = _('Within Above Field, Sort By')
+        %td
+          - if @sortby2.include?("__") && MiqReport.is_break_suffix?(@sortby2.split("__")[1])
+            - sortby2 = @sortby2.split("__").first
+          - else
+            - sortby2 = @sortby2
+          = select_tag('chosen_sort2',
+            options_for_select([NOTHING_STRING] + @sort2, sortby2),
+            :multiple              => false,
+            :class                 => "widthed",
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe"     => {:url => url}.to_json)
+          - unless MiqReport.get_col_break_suffixes(@sortby2.split("__").first).empty?
+            - opts = [["<#{_('Original Value')}>", nil]] + MiqReport.get_col_break_suffixes(@sortby2.split("__").first)
+            = select_tag('sort2_suffix',
+              options_for_select(opts, @sortby2.split("__")[1]),
+              :multiple              => false,
+              :class                 => "widthed",
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              "data-miq_observe"     => {:url => url}.to_json)
+      %tr
+        %td.key
+          = _('Number of Rows to Show')
+        %td
+          - if @edit[:new][:group] == "No"
+            - opts = [[_("All"), ""]] + [5, 10, 20, 50, 100].map! { |x| [_("First %s") % x, x] }
+            = select_tag('row_limit',
+              options_for_select(opts, @edit[:new][:row_limit]),
+              :multiple              => false,
+              :class                 => "widthed",
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              "data-miq_observe"     => {:url => url}.to_json)
+          - else
+            = _('All')
+  - unless @sortby1 == NOTHING_STRING || @edit[:new][:group] == "No"
+    %fieldset
+      %p.legend
+        = _("Specify Calculations for Summary Rows")
+      %table.style3
+        %thead
+          %tr
+            %th
+              = _('Column Name')
+            %th
+              = _('Header')
+            %th
+              = _('Calculations')
+            %th
+              = _('Selected')
+        %tbody
+          - @edit[:new][:field_order].each_with_index do |f, f_idx|
+            %tr
+              %td.key
+                = h(f.first)
+              %td.wide
+                = h(@edit[:new][:headers][f.last])
+              - combo_id = "calc_id_#{f_idx}"
+              - combo_name = "calc_#{f_idx}"
+              %td{:id => combo_id}
+              - ci = MiqReport.get_col_info(f.last.split("__").first)
+              %td{:id => "calc_#{f_idx}_div"}
+                - if ci[:numeric]
+                  = render(:partial => 'layouts/dhtmlxcombo',
+                    :locals         => {:combo_id => combo_id,
+                      :combo_name                 => combo_name,
+                      :combo_url                  => "/report/form_field_changed/#{@edit[:rpt_id] || 'new'}",
+                      :combo_onchange             => "miqChangeIgnore",
+                      :combo_type                 => "checkbox",
+                      :xml_combo                  => @edit[:calc_xml][f_idx]})
+                  - col = field_to_col(f.last)
+                  - if @edit[:new][:col_options][col] && @edit[:new][:col_options][col][:grouping]
+                    = @edit[:new][:col_options][col][:grouping].collect { |c| c.to_s.titleize }.join(", ")

@@ -2867,7 +2867,7 @@ describe ApplicationHelper do
     end
 
     context "when record is valid" do
-      [HostRedhat, EmsKvm].each do |c|
+      [HostRedhat].each do |c|
         it "and with #{c}" do
           record = c.new
           get_record_cls(record).should eql(record.class.base_class.to_s)
@@ -3264,42 +3264,42 @@ describe ApplicationHelper do
 
     context "when timer_type == 'Monthly'" do
       let(:timer_type) { 'Monthly' }
-      it { should include("$j('\#weekly_span').hide();") }
-      it { should include("$j('\#daily_span').hide();") }
-      it { should include("$j('\#hourly_span').hide();") }
-      it { should include("$j('\#monthly_span').show();") }
+      it { should include("$('\#weekly_span').hide();") }
+      it { should include("$('\#daily_span').hide();") }
+      it { should include("$('\#hourly_span').hide();") }
+      it { should include("$('\#monthly_span').show();") }
     end
 
     context "when timer_type == 'Weekly'" do
       let(:timer_type) { 'Weekly' }
-      it { should include("$j('\#daily_span').hide();") }
-      it { should include("$j('\#hourly_span').hide();") }
-      it { should include("$j('\#monthly_span').hide();") }
-      it { should include("$j('\#weekly_span').show();") }
+      it { should include("$('\#daily_span').hide();") }
+      it { should include("$('\#hourly_span').hide();") }
+      it { should include("$('\#monthly_span').hide();") }
+      it { should include("$('\#weekly_span').show();") }
     end
 
     context "when timer_type == 'Daily'" do
       let(:timer_type) { 'Daily' }
-      it { should include("$j('\#hourly_span').hide();") }
-      it { should include("$j('\#monthly_span').hide();") }
-      it { should include("$j('\#weekly_span').hide();") }
-      it { should include("$j('\#daily_span').show();") }
+      it { should include("$('\#hourly_span').hide();") }
+      it { should include("$('\#monthly_span').hide();") }
+      it { should include("$('\#weekly_span').hide();") }
+      it { should include("$('\#daily_span').show();") }
     end
 
     context "when timer_type == 'Hourly'" do
       let(:timer_type) { 'Hourly' }
-      it { should include("$j('\#daily_span').hide();") }
-      it { should include("$j('\#monthly_span').hide();") }
-      it { should include("$j('\#weekly_span').hide();") }
-      it { should include("$j('\#hourly_span').show();") }
+      it { should include("$('\#daily_span').hide();") }
+      it { should include("$('\#monthly_span').hide();") }
+      it { should include("$('\#weekly_span').hide();") }
+      it { should include("$('\#hourly_span').show();") }
     end
 
     context "when timer_type == 'something_else'" do
       let(:timer_type) { 'something_else' }
-      it { should include("$j('\#daily_span').hide();") }
-      it { should include("$j('\#hourly_span').hide();") }
-      it { should include("$j('\#monthly_span').hide();") }
-      it { should include("$j('\#weekly_span').hide();") }
+      it { should include("$('\#daily_span').hide();") }
+      it { should include("$('\#hourly_span').hide();") }
+      it { should include("$('\#monthly_span').hide();") }
+      it { should include("$('\#weekly_span').hide();") }
     end
   end
 
@@ -3325,8 +3325,8 @@ describe ApplicationHelper do
     it { should include("#{test_tab}.unload();") }
     it { should include("#{test_tab} = null;")}
     it { should include("#{test_tab} = new dhtmlXToolbarObject('#{test_tab}', 'miq_blue');")}
-    it { should include("miq_toolbars.set('#{test_tab}', $H({obj:#{test_tab}, buttons:#{test_buttons}, xml:\"#{test_xml}\"}));")}
-    it { should include("miqInitToolbar(miq_toolbars.get('#{test_tab}'));")}
+    it { should include("miq_toolbars['some_center_tb'] = {obj:#{test_tab}, buttons:#{test_buttons}, xml:\"#{test_xml}\"};")}
+    it { should include("miqInitToolbar(miq_toolbars['some_center_tb']);")}
     it { should_not include("anything else")}
   end
 
@@ -3335,7 +3335,7 @@ describe ApplicationHelper do
     let(:element_value) {"something"}
     subject { javascript_set_value(element_id, element_value)}
 
-    it { should eq("$j('#text_field').val('something');") }
+    it { should eq("$('#text_field').val('something');") }
   end
 
   context "#set_edit_timer_from_schedule" do

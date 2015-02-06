@@ -4,7 +4,11 @@ module Psych
   module Visitors
     class ToRuby # ruby-1.9.3-p125/lib/ruby/1.9.1/psych/visitors/to_ruby.rb
       def resolve_class_with_constantize(klass_name)
-        klass_name.constantize
+        if klass_name
+          klass_name.constantize
+        else
+          resolve_class_without_constantize(klass_name)
+        end
       rescue
         resolve_class_without_constantize(klass_name)
       end

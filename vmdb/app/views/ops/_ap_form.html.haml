@@ -1,0 +1,59 @@
+- if x_active_tree == :settings_tree
+  - url = url_for(:action=>'ap_form_field_changed', :id=>"#{@scan.id || "new"}")
+  #ap_form_div
+    = form_tag(url_for(:action => 'ap_edit', :id=>"#{@scan.id || "new"}"), :remote=>true) do
+      = render :partial => "layouts/flash_msg"
+      %fieldset
+        %p.legend=_("Basic Information")
+        %table.style1
+          %tr
+            %td.key=_("Name")
+            %td.wide
+              = text_field_tag("name",
+                @edit[:new][:name].to_s,
+                :maxlength=>MAX_NAME_LEN,
+                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+          - if !params[:add] && params[:add] != "new"
+            = javascript_tag(javascript_focus('name'))
+          %tr
+            %td.key=_("Description")
+            %td.wide
+              = text_field_tag("description",
+                @edit[:new][:description],
+                :maxlength=>MAX_DESC_LEN,
+                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+          %tr
+            %td.key=_("Type")
+            %td.wide= h(@edit[:new][:scan_mode])
+      - edit ||= false
+      - entry = (@sb[:miq_tab].split("_")[0] == "edit" || session[:set_copy] == "copy") ? "edit" : "new"
+      #ap_tabs{"data-miq_url" => "/ops/ap_set_active_tab/", :style => "display:none;"}
+        %ul.tab
+          - if @edit[:new][:scan_mode] == "Host"
+            %li
+              %a{:href => "#file"}=_("File")
+            %li
+              %a{:href => "#event_log"}=_("Event Log")
+          - else
+            %li
+              %a{:href => "#category"}=_("Category")
+            %li
+              %a{:href => "#file"}=_("File")
+            %li
+              %a{:href => "#registry"}=_("Registry")
+            %li
+              %a{:href => "#event_log"}=_("Event Log")
+        - if @edit[:new][:scan_mode] != "Host"
+          #category{:name => "category", :width => "80px"}
+            = render :partial => "ap_form_set"
+        #file{:name => "file", :width => "80px"}
+          = render :partial => "ap_form_file", :locals=>{:entry=>entry, :edit=>edit}
+        - if @edit[:new][:scan_mode] != "Host"
+          #registry{:name => "registry", :width => "80px"}
+            = render :partial => "ap_form_registry", :locals=>{:entry=>entry, :edit=>edit}
+        #event_log{:name => "event_log", :width => "80px"}
+          = render :partial => "ap_form_nteventlog", :locals=>{:entry=>entry, :edit=>edit}
+:javascript
+  //method takes hash that can have 4 keys: tabs div id, active_tab label,
+  //url to go to when tab is changed, and whether to check for abandon changes or not
+  miq_jquery_tabs_init({tabs_div: "ap_tabs", url: "/ops/ap_set_active_tab/", active_tab: "#{@sb[:ap_active_tab]}"})

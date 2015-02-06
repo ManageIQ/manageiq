@@ -60,7 +60,7 @@
     :description: Clusters
     :options:
     - :collection
-    :methods: *70174834086080
+    :methods: *70174834085860
     :klass: EmsCluster
     :subcollections:
     - :tags
@@ -69,6 +69,7 @@
       :post:
       - :name: delete
         :identifier: ems_cluster_delete
+        :disabled: true
     :resource_actions:
       :delete:
       - :name: delete
@@ -83,7 +84,7 @@
     :description: Datastores
     :options:
     - :collection
-    :methods: *70174834086080
+    :methods: *70174834085860
     :klass: Storage
     :subcollections:
     - :tags
@@ -91,6 +92,7 @@
       :post:
       - :name: delete
         :identifier: storage_delete
+        :disabled: true
     :resource_actions:
       :delete:
       - :name: delete
@@ -134,7 +136,7 @@
     :description: Hosts
     :options:
     - :collection
-    :methods: *70174834086080
+    :methods: *70174834085860
     :klass: Host
     :subcollections:
     - :tags
@@ -143,42 +145,60 @@
       :post:
       - :name: add
         :identifier: host_new
+        :disabled: true
       - :name: edit
         :identifier: host_edit
+        :disabled: true
       - :name: refresh
         :identifier: host_refresh
+        :disabled: true
       - :name: standby
         :identifier: host_standby
+        :disabled: true
       - :name: shutdown
         :identifier: host_shutdown
+        :disabled: true
       - :name: restart
         :identifier: host_reboot
+        :disabled: true
       - :name: poweron
         :identifier: host_start
+        :disabled: true
       - :name: poweroff
         :identifier: host_stop
+        :disabled: true
       - :name: reset
         :identifier: host_reset
+        :disabled: true
       - :name: delete
         :identifier: host_delete
+        :disabled: true
     :resource_actions:
       :post:
       - :name: edit
         :identifier: host_edit
+        :disabled: true
       - :name: refresh
         :identifier: host_refresh
+        :disabled: true
       - :name: standby
         :identifier: host_standby
+        :disabled: true
       - :name: shutdown
         :identifier: host_shutdown
+        :disabled: true
       - :name: restart
         :identifier: host_reboot
+        :disabled: true
       - :name: poweron
         :identifier: host_start
+        :disabled: true
       - :name: poweroff
         :identifier: host_stop
+        :disabled: true
       - :name: reset
         :identifier: host_reset
+        :disabled: true
       :delete:
       - :name: delete
         :identifier: host_delete
@@ -236,7 +256,7 @@
     :description: Providers
     :options:
     - :collection
-    :methods: *70174834086080
+    :methods: *70174834085860
     :klass: ExtManagementSystem
     :subcollections:
     - :tags
@@ -245,18 +265,24 @@
       :post:
       - :name: add
         :identifier: ems_infra_new
+        :disabled: true
       - :name: edit
         :identifier: ems_infra_edit
+        :disabled: true
       - :name: refresh
         :identifier: ems_infra_refresh
+        :disabled: true
       - :name: delete
         :identifier: ems_infra_delete
+        :disabled: true
     :resource_actions:
       :post:
       - :name: edit
         :identifier: ems_infra_edit
+        :disabled: true
       - :name: refresh
         :identifier: ems_infra_delete
+        :disabled: true
       :delete:
       - :name: delete
         :identifier: ems_infra_delete
@@ -296,7 +322,7 @@
     :description: Resource Pools
     :options:
     - :collection
-    :methods: *70174834086080
+    :methods: *70174834085860
     :klass: ResourcePool
     :subcollections:
     - :tags
@@ -305,6 +331,7 @@
       :post:
       - :name: delete
         :identifier: resource_pool_delete
+        :disabled: true
     :resource_actions:
       :delete:
       - :name: delete
@@ -589,6 +616,8 @@
       - :name: retire
         :identifier: vm_retire
         :disabled: true
+      - :name: set_owner
+        :identifier: vm_edit
       - :name: delete
         :identifier: vm_delete
     :resource_actions:
@@ -619,6 +648,8 @@
         :disabled: true
       - :name: delete
         :identifier: vm_delete
+      - :name: set_owner
+        :identifier: vm_edit
       :delete:
       - :name: delete
         :identifier: vm_delete

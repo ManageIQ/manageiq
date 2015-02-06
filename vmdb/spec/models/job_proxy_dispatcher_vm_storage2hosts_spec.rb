@@ -49,18 +49,6 @@ describe "JobProxyDispatcherVmStorage2Hosts" do
           end
         end
 
-        context "with a vm tied to a host and it's vendor is KVM, " do
-          before(:each) do
-            @vm.host = @hosts.first
-            @vm.vendor = "KVM"
-            @vm.save
-          end
-
-          it "should return repo host" do
-            @vm.storage2hosts.should == [@repo_host]
-          end
-        end
-
         context "with a non KVM vm tied to a host and it's storage having hosts, " do
           before(:each) do
             @vm.host = @hosts.first

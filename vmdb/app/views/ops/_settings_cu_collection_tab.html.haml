@@ -1,0 +1,70 @@
+- url = url_for(:action=>'cu_collection_field_changed')
+- if @sb[:active_tab] == "settings_cu_collection"
+  = form_tag( {:action => 'cu_collection_update'}, {:id => "config_form"}) do
+    = render :partial => "layouts/flash_msg"
+    %dl.col2
+      %dd
+        %fieldset
+          %p.legend=_("Clusters")
+          %table.style1
+            %tr
+              %td.key=_("Collect for All Clusters")
+              %td
+                = check_box_tag("all_clusters", value="1",
+                  checked=@edit[:new][:all_clusters],
+                  "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                  "data-miq_observe_checkbox"=>{:url=>url}.to_json)
+          .note
+            Note:
+            %b=_("Collect for All Clusters must be checked to be able to collect C & U data from Cloud Providers such as Red Hat OpenStack or Amazon EC2")
+          #clusters_div{:style => "display:#{@edit[:new][:all_clusters] ? "none" : ""}"}
+            - if @edit[:new][:clusters].blank? && @edit[:new][:non_cl_hosts].blank?
+              =_("No Clusters found in the current region.")
+            - else
+              %br/
+              %b=_("Enable Collection by Cluster")
+              %br/
+              %input#cl_toggle{:name => "cl_toggle", :onclick => "miqCheck_CU_All(this,'#{session[:tree_name]}');", :type => "checkbox"}/
+              =(_("Check All"))
+              #clhosts_treebox{:style => "color:#000"}
+              = render(:partial => "layouts/dynatree",
+                  :locals => {:tree_id => "clhosts_treebox",
+                  :tree_name => "clhosts_tree",
+                  :json_tree => @temp[:clhosts_tree],
+                  :onselect => "miqOnCheck_CU_Filters",
+                  :check_url => "/ops/cu_collection_field_changed/",
+                  :three_checks => true,
+                  :exp_tree => true,
+                  :checkboxes => true})
+              %br/
+              .note=_("VM data will be collected for VMs under selected Hosts only. Data is collected for a Cluster and all of its Hosts when at least one Host is selected.")
+      %dd
+        %fieldset
+          %p.legend= ui_lookup(:tables=>"storages")
+          %table.style1
+            %tr
+              %td.key=_("Collect for All Datastores")
+              %td
+                = check_box_tag("all_storages", value="1",
+                  checked=@edit[:new][:all_storages],
+                  "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
+                  "data-miq_observe_checkbox"=>{:url=>url}.to_json)
+          #storages_div{:style => "display:#{@edit[:new][:all_storages] ? "none" : ""}"}
+            - if @edit[:new][:storages].blank?
+              =_("No Datastores found in the current region.")
+            - else
+              %br/
+              %b=_("Enable Collection by Datastore")
+              %br/
+              %input#ds_toggle{:name => "ds_toggle", :onclick => "miqCheck_CU_All(this,'#{session[:ds_tree_name]}');", :type => "checkbox"}/
+              =(_("Check All"))
+              #cu_datastore_treebox{:style => "color:#000"}
+              = render(:partial => "layouts/dynatree",
+                  :locals => {:tree_id => "cu_datastore_treebox",
+                  :tree_name => "cu_datastore_tree",
+                  :json_tree => @temp[:cu_datastore_tree],
+                  :onselect => "miqOnCheck_CU_Filters",
+                  :check_url => "/ops/cu_collection_field_changed/",
+                  :exp_tree => false,
+                  :checkboxes => true})
+  %div{:style => "padding-bottom:20px;"}

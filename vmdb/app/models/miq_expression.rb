@@ -30,6 +30,8 @@ class MiqExpression
     OntapStorageSystem
     OntapStorageVolume
     OntapVolumeMetricsRollup
+    OrchestrationStack
+    OrchestrationTemplate
     PolicyEvent
     Repository
     ResourcePool
@@ -54,6 +56,7 @@ class MiqExpression
     advanced_settings
     audit_events
     availability_zones
+    cloud_networks
     cloud_resource_quotas
     cloud_tenants
     compliances
@@ -95,6 +98,10 @@ class MiqExpression
     ontap_raid_group_extents
     ontap_storage_systems
     ontap_storage_volumes
+    orchestration_stack_outputs
+    orchestration_stack_parameters
+    orchestration_stack_resources
+    orchestration_templates
     partitions
     ports
     processes
@@ -112,6 +119,7 @@ class MiqExpression
     service_templates
     services
     snapshots
+    stacks
     storages
     storage_adapters
     storage_files

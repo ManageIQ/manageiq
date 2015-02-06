@@ -1,8 +1,7 @@
 module EmsRefresh::SaveInventoryHelper
   class SingleSaver
-    def initialize(type, klass, parent)
+    def initialize(type, parent)
       @type  = type
-      @klass = klass
       @parent = parent
     end
 
@@ -15,14 +14,14 @@ module EmsRefresh::SaveInventoryHelper
     end
 
     def build(hash)
-      @klass.new(hash)
+      @parent.send("build_#{type}", hash)
     end
   end
 
   class MultiSaver
-    def initialize(type, klass, record_index, record_index_columns, find_key)
+    def initialize(type, parent, record_index, record_index_columns, find_key)
       @type                 = type
-      @klass                = klass
+      @parent               = parent
       @record_index         = record_index
       @record_index_columns = record_index_columns
       @find_key             = find_key
@@ -36,7 +35,7 @@ module EmsRefresh::SaveInventoryHelper
     end
 
     def build(hash)
-      @klass.new(hash)
+      @parent.send(@type).build(hash)
     end
 
     private
@@ -56,11 +55,11 @@ module EmsRefresh::SaveInventoryHelper
     end
   end
 
-  def save_inventory_multi(type, klass, parent, hashes, deletes, find_key, child_keys = [], extra_keys = [])
+  def save_inventory_multi(type, parent, hashes, deletes, find_key, child_keys = [], extra_keys = [])
     find_key, child_keys, extra_keys, remove_keys = self.save_inventory_prep(find_key, child_keys, extra_keys)
     record_index, record_index_columns = self.save_inventory_prep_record_index(parent.send(type), find_key)
 
-    strategy = MultiSaver.new(type, klass, record_index, record_index_columns, find_key)
+    strategy = MultiSaver.new(type, record_index, record_index_columns, find_key)
     new_records = []
     actions = hashes.map do |h|
       save_inventory(strategy, h, child_keys, remove_keys)
@@ -85,9 +84,9 @@ module EmsRefresh::SaveInventoryHelper
     parent.send(type).push(new_records)
   end
 
-  def save_inventory_single(type, klass, parent, hash, child_keys = [], extra_keys = [])
+  def save_inventory_single(type, parent, hash, child_keys = [], extra_keys = [])
     find_key, child_keys, extra_keys, remove_keys = self.save_inventory_prep(nil, child_keys, extra_keys)
-    strategy = SingleSaver.new(type, klass, parent)
+    strategy = SingleSaver.new(type, parent)
     save_inventory(strategy, hash, child_keys, remove_keys)
   end
 
@@ -153,5 +152,34 @@ module EmsRefresh::SaveInventoryHelper
       r = records.detect { |r| keys.all? { |k| r.send(k) == h[k] } }
       h[:id] = r.id
     end
+  end
+
+  # most of the refresh_inventory_multi calls follow the same pattern
+  # this pulls it out
+  def save_inventory_assoc(type, parent, hashes, target, find_key, child_keys = [], extra_keys = [])
+    deletes = relation_values(parent, type, target)
+
+    save_inventory_multi(type, parent, hashes, deletes, find_key, child_keys, extra_keys)
+    store_ids_for_new_records(parent.send(type), hashes, find_key)
+  end
+
+  # We need to determine our intent:
+  # - make a complete refresh. Delete missing records.
+  # - make a partial refresh. Don't delete missing records.
+  # This generates the "deletes" values based upon this intent
+  # It will delete missing records if both of the following are true:
+  # - The association is declared as a top_level association
+  #   In Active Record, :dependent => :destroy says the parent controls the lifespan of the children
+  # - We are targeting this association
+  #   If we are targeting something else, chances are it is a partial refresh. Don't delete.
+  #   If we are targeting this node, or targeting anything (nil), then delete.
+  #   Some places don't have the target==parent concept. So they can pass in true instead.
+  def relation_values(parent, type, target)
+    # always want to refresh this association
+    reflection = parent.class.reflect_on_association(type)
+    # if this association isn't the definitive source
+    top_level = reflection.options[:dependent] == :destroy
+
+    top_level && (target == true || target.nil? || parent == target) ? parent.send(reflection.name).dup : []
   end
 end

@@ -1,5 +1,8 @@
 module MiqAeMethodService
   class MiqAeServiceVmOrTemplate < MiqAeServiceModelBase
+    require_relative "mixins/miq_ae_service_ems_operations_mixin"
+    include MiqAeServiceEmsOperationsMixin
+
     expose :ext_management_system, :association => true
     expose :storage,               :association => true
     expose :host,                  :association => true
@@ -15,7 +18,6 @@ module MiqAeMethodService
     expose :ems_blue_folder,       :association => true, :method => :parent_blue_folder
     expose :resource_pool,         :association => true, :method => :parent_resource_pool
     expose :datacenter,            :association => true, :method => :parent_datacenter
-    expose :remove_from_disk,                            :method => :vm_destroy, :override_return => true
     expose :registered?
     expose :to_s
     expose :event_threshold?
@@ -193,6 +195,10 @@ module MiqAeMethodService
     def snapshot_operation(task, options = {})
       options.merge!(:ids=>[self.id], :task=>task.to_s)
       Vm.process_tasks(options)
+    end
+
+    def remove_from_disk(sync = true)
+      sync_or_async_ems_operation(sync, "vm_destroy", [])
     end
   end
 end

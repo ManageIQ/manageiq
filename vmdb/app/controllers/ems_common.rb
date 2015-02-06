@@ -113,6 +113,18 @@ module EmsCommon
           @view.extras[:total_count] > @view.extras[:auth_count]
         @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other Cluster") + " on this " + ui_lookup(:tables=>@table_name)
       end
+    elsif @display == "orchestration_stacks" || session[:display] == "orchestration_stacks" && params[:display].nil?
+      title = "Stacks"
+      drop_breadcrumb(:name => "#{@ems.name} (All #{title})",
+                      :url  => "/#{@table_name}/show/#{@ems.id}?display=#{@display}")
+      @view, @pages = get_view(OrchestrationStack, :parent => @ems)  # Get the records (into a view) and the paginator
+      @showtype = @display
+      if @view.extras[:total_count] &&
+         @view.extras[:auth_count] &&
+         @view.extras[:total_count] > @view.extras[:auth_count]
+        count_text = pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}")
+        @bottom_msg = "* You are not authorized to view #{count_text} on this #{ui_lookup(:tables => @table_name)}"
+      end
     else  # Must be Hosts # FIXME !!!
       drop_breadcrumb( {:name=>@ems.name+" (All Managed Hosts)", :url=>"/#{@table_name}/show/#{@ems.id}?display=hosts"} )
       @view, @pages = get_view(Host, :parent=>@ems) # Get the records (into a view) and the paginator
@@ -217,13 +229,13 @@ module EmsCommon
         page.replace_html("form_div", :partial => "shared/views/ems_common/form")
         unless @ems.kind_of?(EmsCloud)
           # Hide/show C&U credentials tab
-          page << "$j('#metrics_li').#{params[:server_emstype] == "rhevm" ? "show" : "hide"}();"
+          page << "$('#metrics_li').#{params[:server_emstype] == "rhevm" ? "show" : "hide"}();"
         end
         if ["openstack", "openstack_infra"].include?(params[:server_emstype])
-          page << "$j('#port').val(#{j_str(@edit[:new][:port].to_s)});"
+          page << "$('#port').val(#{j_str(@edit[:new][:port].to_s)});"
         end
         # Hide/show port field
-        page << "$j('#port_tr').#{%w(openstack openstack_infra rhevm).include?(params[:server_emstype]) ? "show" : "hide"}();"
+        page << "$('#port_tr').#{%w(openstack openstack_infra rhevm).include?(params[:server_emstype]) ? "show" : "hide"}();"
       end
       if changed != session[:changed]
         session[:changed] = changed

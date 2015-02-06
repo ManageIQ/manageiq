@@ -1,0 +1,26 @@
+- combo_id         ||= "combo_div"
+- combo_name       ||= "combo"
+- combo_width      ||= 120
+- combo_max_height ||= 200
+- combo_url        ||= false
+- combo_type       ||= "image"
+- combo_onselect   ||= false
+
+%script{:type => "text/javascript"}
+  #{combo_name}=new dhtmlXCombo("#{combo_id}","#{combo_name}",#{combo_width}, "#{combo_type}");
+  #{combo_name}.setDefaultImage("/images/icons/new/blank.gif");
+  #{combo_name}.readonly(1);
+  #{combo_name}.loadXMLString("#{xml_combo.html_safe}");
+  #{combo_name}.enableOptionAutoHeight(1, #{combo_max_height});  // enables auto height of combo options
+  #{combo_name}.enableOptionAutoPositioning(1);
+  - if combo_url  
+    combo_url = "#{combo_url}"
+  - if combo_type == "checkbox"
+    #{combo_name}.attachEvent("onSelectionChange", miqSelectionIgnore);
+    #{combo_name}.attachEvent("onCheck", miqComboOnCheck);
+    #{combo_name}.setComboText("Check Options");
+    #{combo_name}.DOMelem_checkbox.style.display='none';
+  - elsif combo_url
+    #{combo_name}.attachEvent("onSelectionChange", miqComboChanged);
+  - if combo_onselect
+    #{combo_name}.attachEvent("onChange", function() { miqSparkle(true); } );

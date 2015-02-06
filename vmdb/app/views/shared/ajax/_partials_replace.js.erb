@@ -1,6 +1,0 @@
-<%# Replace multiple elements in the DOM %>
-<%# partials is a hash with keys that are the divs and values that are hashes with :partial and :locals keys %>
-
-<% partials.each do |div, opts| %>
-  <%= render :partial => "shared/ajax/partial_replace", :locals => {:div => div, :opts => opts} %>
-<% end %>

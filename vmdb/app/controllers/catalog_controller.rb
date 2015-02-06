@@ -525,8 +525,8 @@ class CatalogController < ApplicationController
       page << javascript_hide("ae_tree_select_div")
       page << javascript_hide("blocker_div")
       page << javascript_hide("#{ae_tree_key}_div")
-      page << "$j('##{ae_tree_key}').val('#{@edit[:new][ae_tree_key]}');"
-      page << "$j('##{ae_tree_key}').prop('title', '#{@edit[:new][ae_tree_key]}');"
+      page << "$('##{ae_tree_key}').val('#{@edit[:new][ae_tree_key]}');"
+      page << "$('##{ae_tree_key}').prop('title', '#{@edit[:new][ae_tree_key]}');"
       @edit[:ae_tree_select] = false
       page << javascript_for_miq_button_visibility(@changed)
       page << "automate_tree.selectItem('root');"
@@ -1282,7 +1282,7 @@ class CatalogController < ApplicationController
     end
     record_showing = (type && ["MiqTemplate", "Service", "ServiceTemplate", "ServiceTemplateCatalog"].include?(X_TREE_NODE_PREFIXES[type]) && !@view) || params[:action] == "x_show"
     # Clicked on right cell record, open the tree enough to show the node, if not already showing
-    if params[:action] == "x_show" && x_active_tree != :stcat_tree
+    if params[:action] == "x_show" && x_active_tree != :stcat_tree &&
         @record &&                                # Showing a record
         !@in_a_form                               # Not in a form
       add_nodes = open_parent_nodes(@record)      # Open the parent nodes of selected record, if not open
