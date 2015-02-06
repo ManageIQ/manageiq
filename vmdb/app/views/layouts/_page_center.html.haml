@@ -28,23 +28,19 @@
       - elsif  @layout == "dashboard" && (controller.action_name == "show" || controller.action_name == "change_tab")
         .col-sm-12.col-md-12
           .cpage-header.page-header-bleed-right
-            %div{:style => "margin-top: 27px"}
+            %br
             = render :partial => '/layouts/tabs'
           = yield
-
           /  .col-sm-4.col-md-3.sidebar-pf.sidebar-pf-right
           /  .sidebar-header.sidebar-header-bleed-left.sidebar-header-bleed-right
 
       - else
-        .col-sm-12.col-md-12
+        .col-sm-12.col-md-12.max-height
           - if taskbar_in_header?
             .row#main_taskbar
               .col-md-12
                 = render :partial => "layouts/taskbar"
-          / .row#main_search
-          /   .col-md-12
-          /     = render :partial => '/layouts/searchbarNEW'
-          .row{:style => "margin-top: 27px"}
+          .row
             .col-md-12
               = render :partial => "layouts/breadcrumbs"
               - if layout_uses_tabs?
@@ -52,17 +48,3 @@
           .row#main_content
             .col-md-12
               = yield
-
-
-      / #side-nav.col-md-2
-      /   .sidebar-header.sidebar-header-bleed-left.sidebar-header-bleed-right
-      /     %ul.nav.nav-list.affix
-      /       %li
-      /         %a{:href => "#one"}
-      /           One
-      /       %li
-      /         %a{:href => "#two"}
-      /           Two
-      /       %li
-      /         %a{:href => "#three"}
-      /           Three
