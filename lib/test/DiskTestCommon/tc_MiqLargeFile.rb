@@ -4,6 +4,7 @@ require 'MiqLargeFile'
 require 'md5deep'
 require 'enumerator'
 require 'test/unit'
+require 'tmpdir'
 
 module DiskTestCommon
   class TestMiqLargeFile < Test::Unit::TestCase
@@ -13,9 +14,6 @@ module DiskTestCommon
     FILE_1GB = FILE_PATH + "containers/raw/DiskTestCommon_MiqLargeFile_1GB"
     FILE_4GB = FILE_PATH + "containers/raw/DiskTestCommon_MiqLargeFile_4GB"
     FILE_5GB = FILE_PATH + "containers/raw/DiskTestCommon_MiqLargeFile_5GB"
-
-    FILE_WRITE_PATH = "/temp/"
-    FILE_WRITE = FILE_WRITE_PATH + "DiskTestCommon_WriteTest"
 
     SIZE_1MB = 0x00100000
     SIZE_1GB = 0x40000000
@@ -100,37 +98,36 @@ module DiskTestCommon
         #FILE_5GB, SIZE_5GB, '5c5bcb1e258ffdf69faadc5ae4c09ac4',
       ]
 
-      Dir.mkdir(FILE_WRITE_PATH) unless File.exist?(FILE_WRITE_PATH)
+      Dir.mktmpdir do |file_write_path|
+        params.each_slice(3) do |filename, filesize, md5|
+          next unless File.exist?(filename)
 
-      params.each_slice(3) do |filename, filesize, md5|
-        next unless File.exist?(filename)
+          # Temporarily create the file, as MiqLargeFile only opens existing files
+          file_write = File.join(file_write_path, "DiskTestCommon_WriteTest")
+          File.new(file_write, "w").close
 
-        # Temporarily create the file, as MiqLargeFile only opens existing files
-        File.new(FILE_WRITE, "w").close
+          # Copy the file 100+ MB at a time
+          #   (using an "off" amount to validate that partial reads return properly)
+          f = MiqLargeFile.open(filename, "r")
+          f2 = MiqLargeFile.open(file_write, "+")
+          while (f.getFilePos < filesize)
+            buf = f.read(0x06400123)
+            f2.write(buf, buf.length)
+            buf = nil
+          end
+          f.close
+          f2.close
 
-        # Copy the file 100+ MB at a time
-        #   (using an "off" amount to validate that partial reads return properly)
-        f = MiqLargeFile.open(filename, "r")
-        f2 = MiqLargeFile.open(FILE_WRITE, "+")
-        while (f.getFilePos < filesize)
-          buf = f.read(0x06400123)
-          f2.write(buf, buf.length)
-          buf = nil
+          # Get the new file's size
+          assert_equal(filesize, MiqLargeFile.size(file_write))
+
+          # Get the md5 hash of the new file
+          xml = MD5deep.new.scan(file_write_path)
+          assert_equal(md5, xml.root.elements[1].children[0].attributes["md5"])
+
+          File.delete(file_write)
         end
-        f.close
-        f2.close
-
-        # Get the new file's size
-        assert_equal(filesize, MiqLargeFile.size(FILE_WRITE))
-
-        # Get the md5 hash of the new file
-        xml = MD5deep.new.scan(FILE_WRITE_PATH)
-        assert_equal(md5, xml.root.elements[1].children[0].attributes["md5"])
-
-        File.delete(FILE_WRITE)
       end
-
-      Dir.delete(FILE_WRITE_PATH) if Dir.entries(FILE_WRITE_PATH).length == 2
     end
   end
 end
