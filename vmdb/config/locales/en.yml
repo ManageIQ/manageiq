@@ -1005,6 +1005,7 @@ en:
       template_infra:              Template
       vm:                          VM and Instance
       vm_cloud:                    Instance
+      vm_clouds:                   Instances
       vm_infra:                    Virtual Machine
       vm_or_template:              Virtual Machine
       vms:                         VMs
