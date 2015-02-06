@@ -48,9 +48,7 @@ class MiqScvmmInventory
     EOL
 
     script = self.ps_cache_server_command() + ps_script.chomp!
-    data_hash = @psd.run_script(script, :object)
-    return nil if data_hash.nil?
-    return data_hash
+    @psd.run_script(script, :object)
   end
 
   def collect_ems_host()
@@ -74,9 +72,7 @@ class MiqScvmmInventory
   end
 
   def collect_hash_data(type)
-    data_hash = @psd.run_script(self.send("load_#{type}_command".to_sym), :object)
-    return nil if data_hash.nil?
-    return data_hash
+    @psd.run_script(send("load_#{type}_command".to_sym), :object)
   end
 
   def ps_cache_server_command
