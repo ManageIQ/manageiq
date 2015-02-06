@@ -10,7 +10,7 @@ module SecurityGroupHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w{ems_cloud instances orchestration_stack}
+    items = %w(ems_cloud instances orchestration_stack)
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 

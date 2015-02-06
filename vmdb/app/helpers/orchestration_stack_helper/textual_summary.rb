@@ -4,8 +4,8 @@ module OrchestrationStackHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w{name description type status}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items = %w(name description type status)
+    items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
   def textual_group_relationships

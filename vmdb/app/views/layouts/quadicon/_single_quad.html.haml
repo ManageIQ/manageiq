@@ -43,7 +43,13 @@
     - # Listnav, no clear image needed
     .flobj
       - if !@embedded || @showlinks
-        - name = @listicon == "scan_history" ? item.started_on : item.name
+        - name = case @listicon
+          - when "scan_history"
+            - item.started_on
+          - when "orchestration_stack_output", "output"
+            - item.key
+          - else
+            - item.name
         - l = url_for(:controller => @parent.class.base_class.to_s.underscore, :action => @lastaction, :id => @parent.id, :show => item.id)
         %a{:href => l, :title => h(name)}
           %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}

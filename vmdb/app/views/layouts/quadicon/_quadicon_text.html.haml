@@ -54,6 +54,9 @@
       - if row['evm_display_name']
         %a{:href => url_for_db(db, "show"), :title => h(row['evm_display_name'])}
           = truncate_for_quad(row['evm_display_name'])
+      - elsif row['key']
+        %a{:href => url_for_db(db), :title => h(row['key'])}
+          = truncate_for_quad(row['key'])
       - else
         %a{:href => url_for_db(db), :title => h(row['name'])}
           = truncate_for_quad(row['name'])
