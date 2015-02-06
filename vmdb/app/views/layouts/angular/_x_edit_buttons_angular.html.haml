@@ -5,7 +5,7 @@
                :title        => "Add",
                "ng-class"    => "{'btn-disabled': !angularForm.$valid}",
                "ng-click"    => "addClicked()",
-               "ng-disabled" => "!angularForm.$valid",
+               "ng-disabled" => "!miqService.saveable(angularForm)",
                "ng-show"     => "newRecord")
 
   = button_tag("Save",
@@ -14,7 +14,7 @@
                :title        => "Save changes",
                "ng-class"    => "{'btn-disabled': angularForm.$pristine || angularForm.$invalid}",
                "ng-click"    => "saveClicked()",
-               "ng-disabled" => "angularForm.$pristine || angularForm.$invalid",
+               "ng-disabled" => "!miqService.saveable(angularForm)",
                "ng-hide"     => "newRecord")
 
   = button_tag("Reset",
