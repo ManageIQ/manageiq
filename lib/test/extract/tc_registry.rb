@@ -13,8 +13,8 @@ $qaShare = File.join((Platform::IMPL == :macosx ? "/Volumes" : "/mnt"), "managei
 module Extract
   class TestRegistry < Test::Unit::TestCase
     @@vmList = [
-      {:vmName=>File.join($qaShare, "vmware", "Windows Server 2003 Enterprise Edition/Windows Server 2003 Enterprise Edition.vmx"), :guestOS=>"Windows"},
-      {:vmName=>File.join($qaShare, "vmware", "Debian 40 Server/debian40server.vmx"), :guestOS=>"Linux"},
+      {:vmName => File.join($qaShare, "vmware", "Windows Server 2003 Enterprise Edition/Windows Server 2003 Enterprise Edition.vmx"), :guestOS => "Windows"},
+      {:vmName => File.join($qaShare, "vmware", "Debian 40 Server/debian40server.vmx"), :guestOS => "Linux"},
     ]
 
     def setup
@@ -38,7 +38,7 @@ module Extract
     end
 
     def test_scan_vm_metadata
-      @@vmList.each {|f| scan_vm_metadata(f) }
+      @@vmList.each { |f| scan_vm_metadata(f) }
     end
 
     def scan_vm_metadata(vmParms)
@@ -70,7 +70,6 @@ module Extract
 
       # Get handle to the Extract object
       vm = MIQExtract.new(@vm)
-
 
       # Call extract on each category
       # "ntevents"
@@ -113,8 +112,8 @@ module Extract
       #       actually contain the exact same data.
       unless oldMD5 == newMD5
         stats = {}
-				xml.extendXmlDiff
-				delta = xml.xmlDiff(refXml, stats)
+        xml.extendXmlDiff
+        delta = xml.xmlDiff(refXml, stats)
 
         # If we find any changes write the diff xml out so it can be evaluated.
         xmlDiffPath = File.join(File.dirname(@vm.vmConfigFile), "test_data", category + "_diff.xml")
