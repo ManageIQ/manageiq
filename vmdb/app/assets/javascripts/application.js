@@ -3,6 +3,7 @@
 //= require services/miq_service
 //= require directives/miqrequired
 //= require directives/checkchange
+//= require directives/verifypasswd
 //= require directives/repository/valid_unc_path
 //= require services/miq_service
 //= require services/timer_option_service
