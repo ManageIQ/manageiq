@@ -13,15 +13,7 @@ module MiqAeEngine
     end
 
     def roots
-      indices.collect { |id| @v[id] if parents(id).blank? }.compact
-    end
-
-    def indices
-      @v.keys
-    end
-
-    def size
-      @v.length
+      @v.keys.collect { |id| @v[id] if parents(id).blank? }.compact
     end
 
     def vertex(data)
@@ -51,10 +43,6 @@ module MiqAeEngine
       @v[id]
     end
 
-    def []=(id, data)
-      @v[id] = data
-    end
-
     def parents(id)
       find_by_edge(id, "parent")
     end
@@ -73,23 +61,12 @@ module MiqAeEngine
       link(child, "parent", parent)
     end
 
-    def unlink_parent_child(parent, child)
-      unlink(child, "parent", parent)
-      unlink(parent, "child", child)
-    end
+    private
 
     def link(from, typ, to)
       key = [from, typ].join(SEP)
       @from[key] ||= []
       @from[key].push(to)
-    end
-
-    def unlink(from, typ, to)
-      key = [from, typ].join(SEP)
-      if @from[key]
-        @from[key].delete(to)
-        @from.delete(key) if @from[key].blank?
-      end
     end
 
     def new_id
