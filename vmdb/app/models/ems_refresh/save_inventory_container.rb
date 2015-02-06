@@ -51,7 +51,7 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(:container_groups, ems, hashes, deletes, :ems_ref, [:container_definitions, :containers])
+    save_inventory_multi(:container_groups, ems, hashes, deletes, :ems_ref, [:container_definitions, :containers, :labels])
     store_ids_for_new_records(ems.container_groups, hashes, :ems_ref)
   end
 
@@ -95,5 +95,19 @@ module EmsRefresh::SaveInventoryContainer
 
     save_inventory_multi(:containers, container_group, hashes, deletes, :ems_ref)
     store_ids_for_new_records(container_group.containers, hashes, :ems_ref)
+  end
+
+  def save_labels_inventory(container_group, hashes, target = nil)
+    return if hashes.nil?
+
+    container_group.labels(true)
+    deletes = if target.kind_of?(ExtManagementSystem)
+                container_group.labels.dup
+              else
+                []
+              end
+
+    save_inventory_multi(:labels, container_group, hashes, deletes, [:section, :name])
+    store_ids_for_new_records(container_group.labels, hashes, [:section, :name])
   end
 end

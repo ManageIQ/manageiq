@@ -85,7 +85,25 @@ module EmsRefresh::Parsers
           parse_container(container, container_name, pod.metadata.uid)
         end
       end
+
+      new_result[:labels] = parse_labels(pod)
       new_result
+    end
+
+    def parse_labels(entity)
+      result = []
+      labels = entity.metadata.labels
+      return result if labels.nil?
+      labels.to_h.each do |key, value|
+        custom_attr = {
+          :section => 'labels',
+          :name    => key,
+          :value   => value,
+          :source  => "kubernetes"
+        }
+        result << custom_attr
+      end
+      result
     end
 
     def parse_container_definition(container_def, pod_id)
