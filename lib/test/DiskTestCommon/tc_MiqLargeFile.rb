@@ -8,15 +8,12 @@ require 'test/unit'
 module DiskTestCommon
 	
 	class TestMiqLargeFile < Test::Unit::TestCase
-    FILE_PATH = case Platform::OS
-    when :win32 then '//miq-websvr1'
-    when :unix  then (Platform::IMPL == :macosx) ? '/Volumes' : '/mnt'
-    end + "/Scratch/TestData/miq/lib/test/DiskTestCommon/"
+    FILE_PATH = (Platform::IMPL == :macosx ? "/Volumes" : "/mnt") + "/manageiq/fleecing_test/images/"
 
-		FILE_1MB = FILE_PATH + "DiskTestCommon_MiqLargeFile_1MB"
-		FILE_1GB = FILE_PATH + "DiskTestCommon_MiqLargeFile_1GB"
-		FILE_4GB = FILE_PATH + "DiskTestCommon_MiqLargeFile_4GB"
-		FILE_5GB = FILE_PATH + "DiskTestCommon_MiqLargeFile_5GB"
+		FILE_1MB = FILE_PATH + "containers/raw/DiskTestCommon_MiqLargeFile_1MB"
+		FILE_1GB = FILE_PATH + "containers/raw/DiskTestCommon_MiqLargeFile_1GB"
+		FILE_4GB = FILE_PATH + "containers/raw/DiskTestCommon_MiqLargeFile_4GB"
+		FILE_5GB = FILE_PATH + "containers/raw/DiskTestCommon_MiqLargeFile_5GB"
 
 		FILE_WRITE_PATH = "/temp/"
 		FILE_WRITE = FILE_WRITE_PATH + "DiskTestCommon_WriteTest"
