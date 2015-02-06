@@ -1768,7 +1768,7 @@ module ApplicationHelper
           ["about","rss","server_build","product_update","miq_policy","miq_ae_class",
            "miq_capacity_utilization","miq_capacity_planning","miq_capacity_bottlenecks","miq_capacity_waste","chargeback",
            "miq_ae_export","miq_ae_automate_button","miq_ae_tools","miq_policy_export","miq_policy_rsop","report",
-           "ops", "pxe", "exception"].include?(@layout) || 
+           "ops", "pxe", "exception"].include?(@layout) ||
           (@layout == "configuration" && @tabform != "ui_4")) && !controller.action_name.end_with?("tagging_edit")
         unless @explorer
           @show_taskbar = true
