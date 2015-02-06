@@ -1,6 +1,9 @@
 require 'digest/md5'
 class OrchestrationTemplate < ActiveRecord::Base
   include NewWithTypeStiMixin
+  include ReportableMixin
+
+  acts_as_miq_taggable
 
   has_many :stacks, :class_name => "OrchestrationStack"
 
@@ -46,6 +49,15 @@ class OrchestrationTemplate < ActiveRecord::Base
 
   def parameter_groups
     raise NotImplementedError, "parameter_groups must be implemented in subclass"
+  end
+
+  # List managers that may be able to deploy this template
+  def self.eligible_managers
+    ExtManagementSystem.where(:type => eligible_manager_types.collect(&:name))
+  end
+
+  def eligible_managers
+    self.class.eligible_managers
   end
 
   private

@@ -10,33 +10,37 @@
       = _("Filter")
     %td
       = select_tag("filter_typ",
-                  options_for_select(["<Choose>"] + @folders, @edit[:new][:filter]),
-                  :multiple=>false, :class=>"widthed",
-                  :disabled=>@edit[:read_only],
-                  "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                  "data-miq_observe"=>{:url=>url}.to_json)
+        options_for_select(["<#{_('Choose')}>"] + @folders, @edit[:new][:filter]),
+        :multiple              => false,
+        :class                 => "widthed",
+        :disabled              => @edit[:read_only],
+        "data-miq_sparkle_on"  => true,
+        "data-miq_sparkle_off" => true,
+        "data-miq_observe"     => url_json)
       - if @sub_folders && !@sub_folders.empty?
         = select_tag("subfilter_typ",
-                    options_for_select(["<Choose>"] + @sub_folders, @edit[:new][:subfilter]),
-                    :multiple=>false, :class=>"widthed",
-                    :disabled=>@edit[:read_only],
-                    "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                    "data-miq_observe"=>{:url=>url}.to_json)
+          options_for_select(["<#{_('Choose')}>"] + @sub_folders, @edit[:new][:subfilter]),
+          :multiple              => false,
+          :class                 => "widthed",
+          :disabled              => @edit[:read_only],
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe"     => url_json)
       - if @reps && !@reps.empty?
         = select_tag("repfilter_typ",
-                    options_for_select(["<Choose>"] + @reps, @edit[:new][:repfilter]),
-                    :multiple=>false, :class=>"widthed",
-                    :disabled=>@edit[:read_only],
-                    "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                    "data-miq_observe"=>{:url=>url}.to_json)
+          options_for_select(["<#{_('Choose')}>"] + @reps, @edit[:new][:repfilter]),
+          :multiple              => false,
+          :class                 => "widthed",
+          :disabled              => @edit[:read_only],
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe"     => url_json)
       - elsif @edit[:new][:subfilter].present?
         = _("No Widget compatible Reports found")
-      = render :partial => "widget_columns", :locals=>{:read_only=>@edit[:read_only]}
+      = render :partial => "widget_columns", :locals => {:read_only => @edit[:read_only]}
     %tr
       %td.key
         = _("Row Count")
       %td
-        = select_tag("row_count",
-                      options_for_select(Array.new(16) {|i| i+5}, @edit[:new][:row_count]),
-                      "data-miq_observe"=>{:url=>url}.to_json)
+        = select_tag("row_count", options_for_select((5..20).to_a, @edit[:new][:row_count]), "data-miq_observe" => url_json)
 %hr

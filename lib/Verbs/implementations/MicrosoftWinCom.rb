@@ -1,8 +1,5 @@
-$:.push("#{File.dirname(__FILE__)}/../../HyperV")
-
 require 'rubygems'
 require "win32/service"
-require 'MiqHyperv'
 
 class MSVirtualServerCom
 	VBSCRIPT_EXE = "cscript"
@@ -26,15 +23,9 @@ class MSVirtualServerCom
 	VMVMSTATE_DELETEMACHINE = 10
 
 	def initialize(ost=nil)
-    begin
-      extend MSHyperV_Server
-      self.init_hv()
-      raise "Hyper-V not found" if hypervisorVersion().nil?
-    rescue => err
-      extend MSVirtualServer_Server
-      self.init_hv()
-      @server = MSVirtualServer_Server.new()
-    end
+    extend MSVirtualServer_Server
+    self.init_hv()
+    @server = MSVirtualServer_Server.new()
 	end
 end # end MSVirtualServerCom
 
@@ -126,117 +117,4 @@ module MSVirtualServer_Server
 			return "unknown"
 		end
 	end
-end
-
-module MSHyperV_Server
-  def init_hv()
-    @hyperv = MiqHyperV.new()
-    @hyperv.connect
-  end
-
-  def hypervisorVersion()
-    @hyperv.hypervisorVersion()
-  end
-
-  def registeredVms()
-    @hyperv.registeredVms()
-  end
-
-  def state(vmName)
-    @hyperv.getVm(vmName).powerState
-  end
-
-	def start(vmName, mode=nil)
-    @hyperv.getVm(vmName).start
-	end
-
-	def stop(vmName, mode=nil)
-    @hyperv.getVm(vmName).stop
-	end
-
-	def suspend(vmName, mode=nil)
-    @hyperv.getVm(vmName).suspend
-	end
-
-	def pause(vmName, mode=nil)
-    @hyperv.getVm(vmName).pause
-	end
-
-	def reset(vmName, mode=nil)
-    @hyperv.getVm(vmName).reset
-	end
-
-	def shutdownGuest(vmName, mode=nil)
-    @hyperv.getVm(vmName).shutdownGuest
-	end
-
-	def standbyGuest(vmName, mode=nil)
-    @hyperv.getVm(vmName).standbyGuest
-	end
-
-	def rebootGuest(vmName, mode=nil)
-    @hyperv.getVm(vmName).rebootGuest
-	end
-
-  def create_snapshot(vmName, name, description)
-    @hyperv.getVm(vmName).createSnapshot(name, description)
-  end
-
-  def remove_snapshot(vmName, sn_uid)
-    @hyperv.getVm(vmName).removeSnapshot(sn_uid)
-  end
-
-  def remove_all_snapshots(vmName)
-    @hyperv.getVm(vmName).removeAllSnapshots()
-  end
-
-  def revert_to_snapshot(vmName, sn_uid)
-    @hyperv.getVm(vmName).revertToSnapshot(sn_uid)
-  end
-
-  def remove_snapshot_by_description(vmName, description)
-    @hyperv.getVm(vmName).removeSnapshotByDescription(description)
-  end
-
-  def to_inv_h
-    invh = {:vms=>[]}
-    vms = self.registeredVms
-    vms.each do |v|
-        invh[:vms] << {:location => v, :power_state => self.state(v), :name => File.basename(v, '.xml')}
-    end
-    return invh
-  end
-
-  def MonitorEmsEvents(ost)
-    require 'EventingOps'
-    EmsEventMonitorOps.doEvents(ost, self.class)
-    # Does not return
-  end
-
-  def GetEmsInventory(ost)
-    ems_hash = MiqHypervInventoryParser.ems_inv_to_hashes(@hyperv.ems_refresh())
-    ems_hash[:type] = :ems_refresh
-    ost.yaml = true
-    ost.encode = true
-    ost.value = YAML.dump(ems_hash)
-  end
-end
-
-if __FILE__ == $0 then
-  begin    
-    hyperv = MSVirtualServerCom.new rescue nil
-    if hyperv
-      p hyperv.hypervisorVersion
-      vms = hyperv.registeredVms
-      p vms
-
-      vms.each {|v| puts "State:[#{hyperv.state(v)}]  VM:[#{v}]"}
-#      p vms.start(vmName)
-#      puts vms.state(vmName)
-#      p vms.stop(vmName)
-    end
-  rescue Exception
-    puts $!
-  end
-	p "done"
 end

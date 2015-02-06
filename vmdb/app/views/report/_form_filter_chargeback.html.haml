@@ -1,0 +1,133 @@
+- url = url_for(:action => 'form_field_changed', :id => "#{@edit[:rpt_id] || 'new'}")
+%fieldset
+  %p.legend
+    = _('Chargeback Filters')
+  %table.style1
+    - if @edit[:cb_users]
+      %tr
+        %td.key
+          = _('Show Costs by')
+        %td
+          - opts = [["<{_('Choose')}>", nil], ["#{_('Owner')}", "owner"], ["%s Tag" % session[:customer_name], "tag"]]
+          = select_tag("cb_show_typ",
+            options_for_select(opts, @edit[:new][:cb_show_typ]),
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe"     => {:url => url}.to_json)
+      - if @edit[:new][:cb_show_typ] == "owner"
+        %tr
+          %td.key{:style => "width:120px;"}
+            = _('Owner')
+          %td
+            - opts = [["<#{_('Choose an Owner')}>", nil]] + Array(@edit[:cb_users].invert).sort { |a| a.first.downcase }
+            = select_tag("cb_owner_id",
+              options_for_select(opts, @edit[:new][:cb_owner_id]),
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              "data-miq_observe"     => {:url => url}.to_json)
+      - elsif @edit[:new][:cb_show_typ] == "tag"
+        %tr
+          %td.key{:style => "width:120px;"}
+            = _('Tag Category')
+          %td
+            - opts = [["<#{_('Choose a Category')}>", nil]] + Array(@edit[:cb_cats].invert).sort { |a| a.first.downcase }
+            = select_tag("cb_tag_cat",
+              options_for_select(opts, @edit[:new][:cb_tag_cat]),
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              "data-miq_observe"     => {:url => url}.to_json)
+        - if @edit[:new][:cb_tag_cat]
+          %tr
+            %td.key{:style => "width: 120px;"}
+              = _('Tag')
+            %td
+              - opts = [["<#{_('Choose a Value')}>", nil]] + Array(@edit[:cb_tags].invert).sort_by { |a| a.first.downcase }
+              = select_tag("cb_tag_value",
+                options_for_select(opts, @edit[:new][:cb_tag_value]),
+                "data-miq_sparkle_on"  => true,
+                "data-miq_sparkle_off" => true,
+                "data-miq_observe"     => {:url => url}.to_json)
+    - else
+      %tr
+        %td.key{:style => "width: 120px;"}
+          = _('Owner')
+        %td
+          = h(@edit[:cb_owner_name])
+    %tr
+      %td.key{:style => "width: 120px;"}
+        = _('Group by')
+      %td
+        = select_tag("cb_groupby",
+          options_for_select([["#{_('Date')}", "date"], ["#{_('VM/Instance')}", "vm"]], @edit[:new][:cb_groupby]),
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe"     => {:url => url}.to_json)
+
+%fieldset
+  %p.legend
+    = _('Chargeback Interval')
+  %table.style1
+    %tr
+      %td.key
+        = _('Show Costs by')
+      %td
+        = select_tag("cb_interval",
+          options_for_select([[_("Day"), "daily"], [_("Week"), "weekly"], [_("Month"), "monthly"]], @edit[:new][:cb_interval]),
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe"     => {:url => url}.to_json)
+    %tr
+      %td.key{:style => "width: 120px;"}
+        = _("%s  Ending with") % @edit[:new][:cb_interval].capitalize
+      %td
+        - case @edit[:new][:cb_interval]
+        - when "daily"
+          - opts = [[_("Today (partial)"), 0], [_("Yesterday"), 1]] + (2..6).map { |i| [_("%s Days Ago") % i, i] } + [[_("1 Week Ago"), 7]]
+          = select_tag("cb_end_interval_offset",
+            options_for_select(opts, @edit[:new][:cb_end_interval_offset]),
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe"     => {:url => url}.to_json)
+        - when "weekly"
+          - opts = [[_("This Week (partial)"), 0], [_("Last Week"), 1]] + (2..4).map { |i| [_("%d Weeks Ago") % i, i] }
+          = select_tag("cb_end_interval_offset",
+            options_for_select(opts, @edit[:new][:cb_end_interval_offset]),
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe"     => {:url => url}.to_json)
+        - when "monthly"
+          - opts = [[_("This Month (partial)"), 0], ["Last Month", 1]] + (2..3).map { |i| [_("%d Months Ago") % i, i] }
+          = select_tag("cb_end_interval_offset",
+            options_for_select(opts, @edit[:new][:cb_end_interval_offset]),
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe"     => {:url => url}.to_json)
+          = _("going back")
+        - when "daily"
+          - opts = (1..6).map { |i| [n_('%s Day', '%s Days', i) % i, i] } + (1..4).map { |i| [n_('%s Week', '%s Weeks', i) % i, i] }
+          = select_tag("cb_interval_size",
+            options_for_select(opts, @edit[:new][:cb_interval_size]),
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe"     => {:url => url}.to_json)
+        - when "weekly"
+          - opts = [1, 2, 3, 4, 8, 12].map! { |i| [n_('%s Week', '%s Weeks', i) % i, i] }
+          = select_tag("cb_interval_size",
+            options_for_select(opts, @edit[:new][:cb_interval_size]),
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe"     => {:url => url}.to_json)
+        - when "monthly"
+          - opts = [1, 2, 3, 6, 9, 12].map! { |i| [n_('%s Month', '%s Months', i) % i, i] }
+          = select_tag("cb_interval_size",
+            options_for_select(opts, @edit[:new][:cb_interval_size]),
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe"     => {:url => url}.to_json)
+    %tr
+      %td.key{:style => "width: 90px;"}
+        = _('Time Zone')
+      %td
+        = select_tag('chosen_tz',
+          options_for_select(ALL_TIMEZONES, @edit[:new][:tz]),
+          "data-miq_observe" => {:url => url}.to_json)

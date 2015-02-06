@@ -1,9 +1,5 @@
 - if @tabs
-  - if ["dashboard"].include?(@layout)
-    - tab_id = 3
-  - else
-    - tab_id = 2
-  %ul{:class => "tab#{tab_id}"}
+  %ul{:class => "nav nav-tabs"}
     - @tabs[1..-1].each do |tab|
       - if tab[0] == @tabs[0][0]
         %li.active
@@ -39,11 +35,10 @@
                     :remote=>true)
   %br{:clear => "all"}/
 - if !@tabs && (@lastaction == "show_list" || !@edit && !session[:menu_click])
-  .dhtmlxInfoBarLabel-2
+  %h1
     - if @edit && @edit[:adv_search_applied] != nil && !session[:menu_click]
       = h(@title + @edit[:adv_search_applied][:text] + " ")
       - if (@default_search && @default_search.name != @edit[:adv_search_applied][:name]) || !@default_search
         (#{link_to("default", {:action => 'adv_search_clear'}, :method => :post, :class => 'active')})
     - else
       = @title
-  %br{:clear => "all"}/

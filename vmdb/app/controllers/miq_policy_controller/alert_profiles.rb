@@ -205,7 +205,7 @@ module MiqPolicyController::AlertProfiles
             icon = "tag.png"
           else
             if @assign[:new][:assign_to] == "ext_management_system"
-              icon = "vendor-#{o.emstype.downcase}.png"
+              icon = "vendor-#{o.image_name}.png"
             elsif @assign[:new][:assign_to] == "resource_pool"
               icon = o.vapp ? "vapp.png" : "resource_pool.png"
             else

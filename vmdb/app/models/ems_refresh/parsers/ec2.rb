@@ -465,6 +465,9 @@ module EmsRefresh::Parsers
       # convert the AWS Resource Summary collection to an array to avoid the same API getting called twice
       raw_resources = stack.resource_summaries.to_a
 
+      # physical_resource_id can be empty if the resource was not successfully created; ignore such
+      raw_resources.reject! { |r| r[:physical_resource_id].nil? }
+
       get_stack_resources(raw_resources)
 
       child_stacks = []

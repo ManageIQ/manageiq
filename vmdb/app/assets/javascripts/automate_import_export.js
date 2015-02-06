@@ -23,20 +23,20 @@ var Automate = {
   },
 
   getAndRenderAutomateJson: function(importFileUploadId, message) {
-    $j('.hidden-import-file-upload-id').val(importFileUploadId);
+    $('.hidden-import-file-upload-id').val(importFileUploadId);
 
-    $j.getJSON("automate_json?import_file_upload_id=" + importFileUploadId)
+    $.getJSON("automate_json?import_file_upload_id=" + importFileUploadId)
       .done(function(rows_json) {
       Automate.addDomainOptions(rows_json.children);
       Automate.setupInitialDynatree(rows_json.children);
 
-      $j('.importing-domains').change(function() {
+      $('.importing-domains').change(function() {
         Automate.importingDomainsChangeHandler(rows_json.children);
       });
 
-      $j('#import_file_upload_id').val(importFileUploadId);
-      $j('.import-data').show();
-      $j('.import-or-export').hide();
+      $('#import_file_upload_id').val(importFileUploadId);
+      $('.import-data').show();
+      $('.import-or-export').hide();
       showSuccessMessage(JSON.parse(message).message);
     })
     .fail(function(failedMessage) {
@@ -52,11 +52,11 @@ var Automate = {
   },
 
   addDomainOptions: function(domains) {
-    $j('.importing-domains').empty();
+    $('.importing-domains').empty();
 
-    $j.each(domains, function(index, child) {
-      $j('.importing-domains').append(
-        $j('<option>', {
+    $.each(domains, function(index, child) {
+      $('.importing-domains').append(
+        $('<option>', {
         value: child.title,
         text: child.title
       })
@@ -65,7 +65,7 @@ var Automate = {
   },
 
   setupInitialDynatree: function(domains) {
-    $j('.domain-tree').dynatree({
+    $('.domain-tree').dynatree({
       checkbox: true,
       children: domains[0].children,
       selectMode: 3
@@ -73,30 +73,30 @@ var Automate = {
   },
 
   importingDomainsChangeHandler: function(domains) {
-    $j.each(domains, function(index, child) {
-      if ($j('.importing-domains').val() === child.title) {
-        $j('.domain-tree').dynatree({
+    $.each(domains, function(index, child) {
+      if ($('.importing-domains').val() === child.title) {
+        $('.domain-tree').dynatree({
           checkbox: true,
           children: child.children,
           selectMode: 3
         });
-        $j('.domain-tree').dynatree('getTree').reload();
+        $('.domain-tree').dynatree('getTree').reload();
       }
     });
 
-    $j('#toggle-all').prop('checked', false);
+    $('#toggle-all').prop('checked', false);
   },
 
   setUpAutomateImportClickHandlers: function() {
-    $j('.import-commit').click(function() {
+    $('.import-commit').click(function() {
       miqSparkleOn();
       clearMessages();
 
-      var postData = $j('#import-form').serialize();
+      var postData = $('#import-form').serialize();
       postData += '&';
-      postData = postData.concat($j.param($j('.domain-tree').dynatree('getTree').serializeArray()));
+      postData = postData.concat($.param($('.domain-tree').dynatree('getTree').serializeArray()));
 
-      $j.post('import_automate_datastore', postData, function(data) {
+      $.post('import_automate_datastore', postData, function(data) {
         var flashMessage = JSON.parse(data).first();
         if (flashMessage.level == 'error') {
           showErrorMessage(flashMessage.message);
@@ -108,25 +108,25 @@ var Automate = {
       });
     });
 
-    $j('.import-back').click(function() {
+    $('.import-back').click(function() {
       miqSparkleOn();
       clearMessages();
 
-      $j('.domain-tree').dynatree('destroy');
+      $('.domain-tree').dynatree('destroy');
 
-      $j.post('cancel_import', $j('#import-form').serialize(), function(data) {
+      $.post('cancel_import', $('#import-form').serialize(), function(data) {
         var flashMessage = JSON.parse(data).first();
         showSuccessMessage(flashMessage.message);
 
-        $j('.import-or-export').show();
-        $j('.import-data').hide();
+        $('.import-or-export').show();
+        $('.import-data').hide();
         miqSparkleOff();
       });
     });
 
-    $j('#toggle-all').click(function() {
-      $j('.domain-tree').dynatree('getRoot').visit(function(node) {
-        node.select($j('#toggle-all').prop('checked'));
+    $('#toggle-all').click(function() {
+      $('.domain-tree').dynatree('getRoot').visit(function(node) {
+        node.select($('#toggle-all').prop('checked'));
       });
     });
   }

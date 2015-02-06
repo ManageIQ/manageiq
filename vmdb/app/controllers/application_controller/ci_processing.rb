@@ -190,7 +190,7 @@ module ApplicationController::CiProcessing
     vms = find_checked_items
     if VmOrTemplate.includes_template?(vms.map(&:to_i).uniq)
       add_flash(_("%{task} does not apply to selected %{model}") % {:model=>ui_lookup(:table => "miq_template"), :task=>"Set Retirement Dates"}, :error)
-      render_flash { |page| page << '$j(\'#main_div\').scrollTop();' }
+      render_flash { |page| page << '$(\'#main_div\').scrollTop();' }
       return
     end
     # check to see if coming from show_list or drilled into vms from another CI
@@ -291,7 +291,7 @@ module ApplicationController::CiProcessing
         session[:retire_warn] = ""
         page << javascript_hide("remove_button")
         page << javascript_disable_field('retirement_warn')
-        page << "$j('#retirement_warn').val('');"
+        page << "$('#retirement_warn').val('');"
       else
         page << javascript_show("remove_button")
         page << javascript_enable_field('retirement_warn')
@@ -313,7 +313,7 @@ module ApplicationController::CiProcessing
     else
       if VmOrTemplate.includes_template?(recs)
         add_flash(_("%{task} does not apply to selected %{model}") % {:model=>ui_lookup(:table => "miq_template"), :task=>"Right-Size Recommendations"}, :error)
-        render_flash { |page| page << '$j(\'#main_div\').scrollTop();' }
+        render_flash { |page| page << '$(\'#main_div\').scrollTop();' }
         return
       end
     end
@@ -843,36 +843,36 @@ module ApplicationController::CiProcessing
         if params[:from_first] =~ /[\D]/
           temp = params[:from_first].gsub(/[\.]/,"")
           field_shift = true if params[:from_first] =~ /[\.]/ && params[:from_first].gsub(/[\.]/,"") =~ /[0-9]/ && temp.gsub!(/[\D]/,"").nil?
-          page << "$j('#from_first').val('#{j_str(params[:from_first]).gsub(/[\D]/, "")}');"
+          page << "$('#from_first').val('#{j_str(params[:from_first]).gsub(/[\D]/, "")}');"
           page << javascript_focus('from_second') if field_shift
         else
-          page << "$j('#to_first').val('#{j_str(params[:from_first])}');"
+          page << "$('#to_first').val('#{j_str(params[:from_first])}');"
           page << javascript_focus('from_second') if params[:from_first].length == 3
         end
       elsif params[:from_second]
         if params[:from_second] =~ /[\D]/
           temp = params[:from_second].gsub(/[\.]/,"")
           field_shift = true if params[:from_second] =~ /[\.]/ && params[:from_second].gsub(/[\.]/,"") =~ /[0-9]/ && temp.gsub!(/[\D]/,"").nil?
-          page << "$j('#from_second').val('#{j_str(params[:from_second].gsub(/[\D]/, ""))}');"
+          page << "$('#from_second').val('#{j_str(params[:from_second].gsub(/[\D]/, ""))}');"
           page << javascript_focus('from_third') if field_shift
         else
-          page << "$j('#to_second').val('#{j_str(params[:from_second])}');"
+          page << "$('#to_second').val('#{j_str(params[:from_second])}');"
           page << javascript_focus('from_third') if params[:from_second].length == 3
         end
       elsif params[:from_third]
         if params[:from_third] =~ /[\D]/
           temp = params[:from_third].gsub(/[\.]/,"")
           field_shift = true if params[:from_third] =~ /[\.]/ && params[:from_third].gsub(/[\.]/,"") =~ /[0-9]/ && temp.gsub!(/[\D]/,"").nil?
-          page << "$j('#from_third').val('#{j_str(params[:from_third].gsub(/[\D]/, ""))}');"
+          page << "$('#from_third').val('#{j_str(params[:from_third].gsub(/[\D]/, ""))}');"
           page << javascript_focus('from_fourth') if field_shift
         else
-          page << "$j('#to_third').val('#{j_str(params[:from_third])}');"
+          page << "$('#to_third').val('#{j_str(params[:from_third])}');"
           page << javascript_focus('from_fourth') if params[:from_third].length == 3
         end
       elsif params[:from_fourth] && params[:from_fourth] =~ /[\D]/
-        page << "$j('#from_fourth').val('#{j_str(params[:from_fourth].gsub(/[\D]/, ""))}');"
+        page << "$('#from_fourth').val('#{j_str(params[:from_fourth].gsub(/[\D]/, ""))}');"
       elsif params[:to_fourth] && params[:to_fourth] =~ /[\D]/
-        page << "$j('#to_fourth').val('#{j_str(params[:to_fourth].gsub(/[\D]/, ""))}');"
+        page << "$('#to_fourth').val('#{j_str(params[:to_fourth].gsub(/[\D]/, ""))}');"
       end
       if request.parameters[:controller] == "ems_cloud" || (params[:discover_type_ipmi] && params[:discover_type_ipmi].to_s == "1")
         @ipmi = true
@@ -993,12 +993,12 @@ module ApplicationController::CiProcessing
     end
     if recs.length < 1
       add_flash(_("One or more %{model} must be selected to %{task}") % {:model=>Dictionary::gettext(db.to_s, :type=>:model, :notfound=>:titleize).pluralize, :task=>"Reconfigure"}, :error)
-      render_flash { |page| page << '$j(\'#main_div\').scrollTop();' }
+      render_flash { |page| page << '$(\'#main_div\').scrollTop();' }
       return
     else
       if VmOrTemplate.includes_template?(recs)
         add_flash(_("%{task} does not apply because you selected at least one %{model}") % {:model=>ui_lookup(:table => "miq_template"), :task=>"Reconfigure"}, :error)
-        render_flash { |page| page << '$j(\'#main_div\').scrollTop();' }
+        render_flash { |page| page << '$(\'#main_div\').scrollTop();' }
         return
       end
       @edit[:reconfigure_items] = Array.new # Set the array of set ownership items
@@ -1096,7 +1096,7 @@ module ApplicationController::CiProcessing
       vms = find_checked_items
       if method == 'retire_now' && VmOrTemplate.includes_template?(vms)
         add_flash(_("%{task} does not apply to selected %{model}") % {:model=>ui_lookup(:table => "miq_template"), :task=>"Retire"}, :error)
-        render_flash { |page| page << '$j(\'#main_div\').scrollTop();' }
+        render_flash { |page| page << '$(\'#main_div\').scrollTop();' }
         return
       end
 
@@ -1522,6 +1522,26 @@ module ApplicationController::CiProcessing
     end
   end
 
+  # Common Stacks button handler routines
+  def process_orchestration_stacks(stacks, task, _)
+    stacks, _ = filter_ids_in_region(stacks, "OrchestrationStack")
+    return if stacks.empty?
+
+    if task == "destroy"
+      OrchestrationStack.find_all_by_id(stacks, :order => "lower(name)").each do |stack|
+        id = stack.id
+        stack_name = stack.name
+        audit = {:event        => "stack_record_delete_initiated",
+                 :message      => "[#{stack_name}] Record delete initiated",
+                 :target_id    => id,
+                 :target_class => "OrchestrationStack",
+                 :userid       => session[:userid]}
+        AuditEvent.success(audit)
+      end
+      OrchestrationStack.destroy_queue(stacks)
+    end
+  end
+
   # Refresh all selected or single displayed host(s)
   def refreshhosts
     assert_privileges("host_refresh")
@@ -1690,6 +1710,12 @@ module ApplicationController::CiProcessing
   def deletehosts
     assert_privileges("host_delete")
     delete_elements(Host, :process_hosts)
+  end
+
+  # Delete all selected or single displayed stack(s)
+  def orchestration_stack_delete
+    assert_privileges("orchestration_stack_delete")
+    delete_elements(OrchestrationStack, :process_orchestration_stacks)
   end
 
   # Delete all selected or single displayed datastore(s)

@@ -9,12 +9,12 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w{availability_zones cloud_tenants flavors security_groups instances images}
+    items = %w(availability_zones cloud_tenants flavors security_groups instances images orchestration_stacks)
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
-  def textual_group_authentications
-    items = %w{authentications}
+  def textual_group_status
+    items = %w(authentications refresh_status)
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
@@ -97,6 +97,17 @@ module EmsCloudHelper::TextualSummary
     h
   end
 
+  def textual_orchestration_stacks
+    label = ui_lookup(:tables => "orchestration_stack")
+    num   = @ems.number_of(:orchestration_stacks)
+    h     = {:label => label, :image => "orchestration_stack", :value => num}
+    if num > 0 && role_allows(:feature => "orchestration_stack_show_list")
+      h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'orchestration_stacks')
+      h[:title] = "Show all #{label}"
+    end
+    h
+  end
+
   def textual_flavors
     label = ui_lookup(:tables=>"flavors")
     num   = @record.number_of(:flavors)
@@ -133,6 +144,20 @@ module EmsCloudHelper::TextualSummary
 
       {:label => "#{label} Credentials", :value => auth.status || "None", :title => auth.status_details}
     end
+  end
+
+  def textual_refresh_status
+    last_refresh_status = @ems.last_refresh_status.titleize
+    if @ems.last_refresh_date
+      last_refresh_date = time_ago_in_words(@ems.last_refresh_date.in_time_zone(Time.zone)).titleize
+      last_refresh_status << " - #{last_refresh_date} Ago"
+    end
+    {
+      :label => "Last Refresh",
+      :value => [{:value => last_refresh_status},
+                 {:value => @ems.last_refresh_error.try(:truncate, 120)}],
+      :title => @ems.last_refresh_error
+    }
   end
 
   def textual_zone

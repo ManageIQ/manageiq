@@ -30,6 +30,10 @@ class OrchestrationTemplateCfn < OrchestrationTemplate
     end
   end
 
+  def self.eligible_manager_types
+    [EmsAmazon, EmsOpenstack]
+  end
+
   private
 
   def add_allowed_values(parameter, val)

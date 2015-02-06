@@ -1,0 +1,19 @@
+%p.legend
+  Assign Hosts and Datastores to Embedded SmartProxies in Zone '#{ui_lookup(:model=>"Zone")}: #{@selected_zone.description}'
+- if @temp[:smartproxy_affinity_tree].blank?
+  .alert.alert-info
+    %span.pficon.pficon-info
+    %strong
+      No Servers with the SmartProxy role are in Zone '#{ui_lookup(:model=>"Zone")}: #{@selected_zone.description}'
+- else
+  - tree_id = "smartproxy_affinity_treebox"
+  %div{:id => tree_id}
+  = render(:partial => "layouts/dynatree",
+    :locals => {:tree_id         => tree_id,
+    :tree_name                   => session[:tree_name],
+    :json_tree                   => @temp[:smartproxy_affinity_tree].to_json,
+    :checkboxes                  => true,
+    :three_checks                => true,
+    :open_close_all_on_dbl_click => true,
+    :check_url                   => '/ops/smartproxy_affinity_field_changed/',
+    :oncheck                     => 'cfmeOnClick_SmartProxyAffinityCheck'})

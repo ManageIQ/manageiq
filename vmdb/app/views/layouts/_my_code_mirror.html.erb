@@ -28,8 +28,8 @@
 <% end %>
 
 <script type="text/javascript">
-	if ($('<%= text_area_id %>')) {
-		miqEditor = CodeMirror.fromTextArea($('<%= text_area_id %>'),
+	if (miqDomElementExists('<%= text_area_id %>')) {
+		miqEditor = CodeMirror.fromTextArea($('#<%= text_area_id %>')[0],
 			{	mode: '<%= mode %>',
 				lineNumbers: <%= line_numbers %>,
 				matchBrackets: true,
@@ -39,8 +39,8 @@
 		);
     miqEditor.on("change", function(cm, change) {miqSendOneTrans('<%= url %>')}),
     miqEditor.on("blur", function(cm) {miqEditor.save()}),
-		$j('.CodeMirror-scroll')[0].style.height = '<%= height %>px';
-		$j('.CodeMirror-scroll')[0].style.width = '<%= width %>px';
+		$('.CodeMirror-scroll')[0].style.height = '<%= height %>px';
+		$('.CodeMirror-scroll')[0].style.width = '<%= width %>px';
     <% unless no_focus %>
       miqEditor.focus();
     <% end %>

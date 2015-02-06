@@ -123,6 +123,7 @@ module ApplicationHelper
     # Handle other sub-items of a VM or Host
     case view.db
     when "AdvancedSetting"  then association = "advanced_settings"
+    when "CloudNetwork"     then association = "cloud_networks"
     when "Filesystem"       then association = "filesystems"
     when "FirewallRule"     then association = "firewall_rules"
     when "GuestApplication" then association = "guest_applications"
@@ -1672,10 +1673,10 @@ module ApplicationHelper
       future  = @edit[:new    ][key][params[:id].split('___').last]
       current = @edit[:current][key][params[:id].split('___').last]
       css_class = future == current ? 'dynatree-title' : 'cfme-blue-bold-node'
-      js_array << "$j('##{tree_name_escaped}box').dynatree('getTree').getNodeByKey('#{params[:id].split('___').last}').data.addClass = '#{css_class}';"
+      js_array << "$('##{tree_name_escaped}box').dynatree('getTree').getNodeByKey('#{params[:id].split('___').last}').data.addClass = '#{css_class}';"
     end
     # need to redraw the tree to change node colors
-    js_array << "tree = $j('##{tree_name_escaped}box').dynatree('getTree');"
+    js_array << "tree = $('##{tree_name_escaped}box').dynatree('getTree');"
     js_array << "tree.redraw();"
     js_array.join("\n")
   end
@@ -1686,8 +1687,8 @@ module ApplicationHelper
     js << "#{tb}.unload();"
     js << "#{tb} = null;"
     js << "#{tb} = new dhtmlXToolbarObject('#{tb}', 'miq_blue');"
-    js << "miq_toolbars.set('#{tb}', $H({obj:#{tb}, buttons:#{buttons}, xml:\"#{xml}\"}));" # Store hash of object, buttons, and xml
-    js << "miqInitToolbar(miq_toolbars.get('#{tb}'));"
+    js << "miq_toolbars['#{tb}'] = {obj:#{tb}, buttons:#{buttons}, xml:\"#{xml}\"};"
+    js << "miqInitToolbar(miq_toolbars['#{tb}']);"
     return js
   end
 
@@ -1705,7 +1706,7 @@ module ApplicationHelper
   end
 
   def javascript_set_value(element_id, value)
-    "$j('##{element_id}').val('#{value}');"
+    "$('##{element_id}').val('#{value}');"
   end
   ############# End of methods that generate JS lines for render page blocks
 
@@ -1810,23 +1811,6 @@ module ApplicationHelper
       @refresh_partial = "layouts/flash_msg"
       @refresh_div = "flash_msg_div"
     end
-  end
-
-  # Only show the background image with listnav splitter for some classic screens
-  def show_page_content_background
-    return false if @layout == "exception"
-    return true if params[:action] == "timeline"
-    if ["show", "show_list", "show_timeline", "new", "edit",
-        "protect", "tagging_edit", "discover", "compare_miq", "drift_history", "drift",
-        "users", "groups", "patches","firewall_rules", "usage",
-        "host_services", "advanced_settings", "guest_applications", "filesystems",
-        "assign","user_import","perf_top_chart"
-       ].include?(params[:action])
-      unless ["miq_request", "dashboard", "alert"].include?(params[:controller])
-        return true
-      end
-    end
-    return false
   end
 
   # Truncate text to fit below a quad icon
@@ -2247,10 +2231,10 @@ module ApplicationHelper
     else
       #show_list and show screens
       if !@in_a_form
-        if ["availability_zone","flavor","ems_cloud","ems_cluster","host","ems_infra","miq_proxy",
-            "ontap_file_share","ontap_logical_disk","ontap_storage_system","repository",
-            "resource_pool","storage","storage_manager","timeline","usage",
-            "security_group"].include?(@layout)
+        if %w(availability_zone ems_cloud ems_cluster ems_infra flavor host miq_proxy
+              ontap_file_share ontap_logical_disk ontap_storage_system orchestration_stack
+              repository resource_pool storage storage_manager timeline usage
+              security_group).include?(@layout)
           if ["show_list"].include?(@lastaction)
             return "#{@layout.pluralize}_center_tb"
           else
@@ -2288,6 +2272,15 @@ module ApplicationHelper
     else
       return false
     end
+  end
+
+  def display_adv_search?
+    %w(availability_zone vm miq_template offline retired templates
+       host service repository storage ems_cloud ems_cluster flavor
+       resource_pool ems_infra ontap_storage_system ontap_storage_volume
+       ontap_file_share snia_local_file_system ontap_logical_disk
+       orchestration_stack cim_base_storage_extent storage_manager
+       security_group).include?(@layout)
   end
 
   # Do we show or hide the clear_search link in the list view title
@@ -2448,11 +2441,12 @@ module ApplicationHelper
       tag_attrs = { :title => title }
       check_changes = args[:check_changes] || args[:check_changes].nil?
       tag_attrs[:onclick] = 'return miqCheckForChanges()' if check_changes
-
-      link_to_with_icon(link_text, link_params, tag_attrs, args[:image_path])
+      link_to_with_icon(link_text, link_params, tag_attrs)
     else
-      content_tag(:p) do
-        image_tag('/images/icons/16/link_none.gif') + "#{args.key?(:link_text) ? args[:link_text] : entity_name} #{none}"
+      content_tag(:li, :class => "disabled") do
+        content_tag(:a, :href => "#") do
+          "#{args.key?(:link_text) ? args[:link_text] : entity_name} #{none}"
+        end
       end
     end
   end
@@ -2479,10 +2473,8 @@ module ApplicationHelper
 
   def link_to_with_icon(link_text, link_params, tag_args, image_path=nil)
     tag_args ||= {}
-    image_path ||= '/images/icons/16/link_internal.gif'
     default_tag_args = { :onclick => "return miqCheckForChanges()" }
     tag_args = default_tag_args.merge(tag_args)
-    link_to(image_tag(image_path), link_params, tag_args) +
       link_to(link_text, link_params, tag_args)
   end
 
@@ -2497,14 +2489,22 @@ module ApplicationHelper
     # FIXME: exception behavior to remove
     test_layout = 'my_tasks' if %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout)
 
-    Menu::Manager.item_in_section?(test_layout, nav_id) ? "active" : "inactive"
+    Menu::Manager.item_in_section?(test_layout, nav_id) ? "active" : "dropdown"
+  end
+
+  def primary_nav_class2(nav_id)
+    test_layout = @layout
+    # FIXME: exception behavior to remove
+    test_layout = 'my_tasks' if %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout)
+
+    Menu::Manager.item_in_section?(test_layout, nav_id) ? "nav navbar-nav navbar-persistent" : "dropdown-menu"
   end
 
   def secondary_nav_class(nav_layout)
     if nav_layout == 'my_tasks' # FIXME: exceptional behavior to remove
       nav_layout = %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout) ? @layout : "my_tasks"
     end
-    nav_layout == @layout ? "active" : "inactive"
+    nav_layout == @layout ? "active" : ""
   end
 
   def render_flash_msg?
@@ -2543,9 +2543,9 @@ module ApplicationHelper
 
   GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_tenant condition ems_cloud
                         ems_cluster ems_infra event flavor host miq_proxy miq_schedule miq_template offline
-                        ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume policy
-                        policy_group policy_profile repository resource_pool retired scan_profile service
-                        snia_local_file_system storage storage_manager templates)
+                        ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume
+                        orchestration_stack policy policy_group policy_profile repository resource_pool
+                        retired scan_profile service snia_local_file_system storage storage_manager templates)
 
   def render_gtl_view_tb?
     GTL_VIEW_LAYOUTS.include?(@layout) && @gtl_type && !@tagitems &&

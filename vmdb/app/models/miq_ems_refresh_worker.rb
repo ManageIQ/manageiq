@@ -22,7 +22,7 @@ class MiqEmsRefreshWorker < MiqQueueWorkerBase
 
     refresh_worker_settings = configuration.config.fetch_path(*path)
     unless refresh_worker_settings.has_key?(:defaults)
-      subclasses = %w{amazon kvm microsoft redhat vmware}.collect { |k| "ems_refresh_worker_#{k}".to_sym }
+      subclasses = %w{amazon microsoft redhat vmware}.collect { |k| "ems_refresh_worker_#{k}".to_sym }
       $log.info("MIQ(#{self.name}) Migrating Settings")
       defaults = refresh_worker_settings
       subclasses.each { |subclass_key| defaults.delete(subclass_key)}

@@ -54,7 +54,7 @@ module MiqProxyHelper::TextualSummary
     ems = @record.ext_management_system
     return nil if ems.nil?
     label = ui_lookup(:table => "ems_infra")
-    h = {:label => label, :image => "vendor-#{ems.emstype.downcase}", :value => ems.name}
+    h = {:label => label, :image => "vendor-#{ems.image_name}", :value => ems.name}
     if role_allows(:feature => "ems_infra_show")
       h[:title] = "Show parent #{label} '#{ems.name}'"
       h[:link]  = url_for(:controller => 'ems_infra', :action => 'show', :id => ems)

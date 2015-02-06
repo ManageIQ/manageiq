@@ -1,0 +1,22 @@
+- url = url_for(:action =>'upload_form_field_changed', :id=>@sb[:active_tab].split('_').last)
+- if @sb[:active_tab] == "settings_import"
+  %p.legend=_("Messages")
+  = render(:partial=>"layouts/flash_msg", :locals=>{:click_remove=>false})
+  %hr/
+  %p.legend=_("Upload Custom Variable Values")
+  = form_tag({:action=>"upload_csv", :typ=>"asset_tag"}, :multipart => true) do
+    %table.style1
+      %tr
+        %td.key=_("Type")
+        %td
+          = select_tag('upload_type',
+            options_for_select([["<Choose>",nil],["Host","host"],["Vm","vm"]],
+            @edit[:new][:upload_type]),
+            "data-miq_observe"=>{:url=>url}.to_json)
+      - if @edit[:new][:upload_type]
+        %tr
+          %td.key=_("File")
+          %td
+            = file_field("upload", "file")
+            = submit_tag("Upload", :id=>"upload_atags")
+            =_("* Requirements: CSV formatted file.")

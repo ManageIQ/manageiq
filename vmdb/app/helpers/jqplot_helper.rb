@@ -3,12 +3,13 @@ module JqplotHelper
     chart_id   = opts[:id] || rand(10**8)
     javascript = <<-EOJ
 jQuery(document).ready(function($) {
-    $j.ajax({
+    $.ajax({
       url:      "#{url}",
       type:     "get",
       dataType: "json",
+      complete: function(request) { miqSparkle(false); },
       success:  function(chart) {
-        $j.jqplot('#{chart_id}', chart.data, jqplot_process_options(chart.options));
+        $.jqplot('#{chart_id}', chart.data, jqplot_process_options(chart.options));
       }
     });
 });
@@ -30,7 +31,7 @@ jQuery(document).ready(function($) {
   var data    = #{data};
   var options = #{options};
 
-  $j.jqplot('#{chart_id}', data, jqplot_process_options(options));
+  $.jqplot('#{chart_id}', data, jqplot_process_options(options));
 });
 EOJ
     content_tag_for_jqplot(chart_id, opts[:width], opts[:height], javascript)

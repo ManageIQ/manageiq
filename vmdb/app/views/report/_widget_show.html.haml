@@ -1,0 +1,218 @@
+#form_div
+  - s = @widget.miq_schedule
+  - tz = @timezone = s && s.run_at && s.run_at[:tz] ? s.run_at[:tz] : session[:user_tz]
+  %p.legend
+    = _('Basic Information')
+  %table.style1
+    %tr
+      %td.key
+        - if @widget.read_only
+          *
+        = _('Title')
+      %td
+        = h(@widget.title)
+    %tr
+      %td.key
+        - if @widget.read_only
+          *
+        = _('Description')
+      %td
+        = h(@widget.description)
+    %tr
+      %td.key
+        = _('Active')
+      %td
+        = h(@widget.enabled)
+    %tr
+      %td.key
+        = _('Default')
+      %td
+        = h(@widget.read_only)
+  %hr
+  - unless @sb[:wtype] == "m"
+    %p.legend
+      = _('Status')
+    %table.style1
+      %tr
+        %td.key
+          = _('Current Status')
+        %td
+          - case @widget.status.downcase
+          - when "complete"
+            - img = "complete"
+          - when "queued"
+            - img = "queued"
+          - when "running"
+            - img = "running"
+          - when "error"
+            - img = "error"
+          - if @widget.status.downcase != "none"
+            %img{:src => "/images/icons/new/status_#{img}.png", :width => "16", :height => "16"}
+          = h(@widget.status)
+      %tr
+        %td.key
+          = _('Last Run Time')
+        %td
+          = h(@widget.last_run_on ? format_timezone(@widget.last_run_on, tz, "view") : "")
+      %tr
+        %td.key
+          = _('Message')
+        %td
+          = h(@widget.status_message)
+    %hr
+  - case @sb[:wtype]
+  - when "r"
+    - title = "Report Options"
+  - when "c"
+    - title = "Chart Report"
+  - when "rf"
+    - title = "RSS Feed Options"
+  - when "m"
+    - title = "Menu Shortcuts"
+  %p.legend
+    = title
+  %table.style1
+    - if @sb[:wtype] == "r"
+      %tr
+        %td.key
+          - if @widget.read_only
+            *
+          = _('Report Filter')
+        %td
+          - if @widget.resource
+            = h(@widget.resource.name)
+          - else
+            %span{:style => "color: red;"}
+              = "*** %s ***" % _('Report no longer exists')
+    - elsif @sb[:wtype] == "c"
+      %tr
+        %td.key
+          - if @widget.read_only
+            *
+          = _('Filter')
+        %td
+          - if @widget.resource
+            = h(@widget.resource.title)
+          - else
+            %span{:style => "color: red;"}
+              = "*** %s ***" % _("Chart no longer exists")
+    - elsif @sb[:wtype] == "rf"
+      - typ = @widget.resource ? _("Internal") : _("External")
+      %tr
+        %td.key
+          - if @widget.read_only
+            *
+          = _('Type')
+        %td.wide
+          = h(typ)
+      - if typ == "Internal"
+        %tr
+          %td.key
+            - if @widget.read_only
+              *
+            = _('Internal RSS Feed')
+          %td.wide
+            - if @widget.resource
+              = h(@widget.resource.name)
+            - else
+              %span{:style => "color: red;"}
+                = "*** %s ***" % _("RSS Feed no longer exists")
+      - else
+        %tr
+          %td.key
+            - if @widget.read_only
+              *
+            = _('External RSS Feed/URL')
+          %td.wide
+            = h(@widget.options[:url])
+    - elsif @sb[:wtype] == "m"
+      %tr
+        %td.key
+          - if @widget.read_only
+            *
+          = _('Shortcuts')
+        %td.wide
+          - if true
+            - # TODO: fix formatting to look like widget menu shortcuts (first attempt in ELSE)
+            - @widget.miq_widget_shortcuts.order("sequence").each_with_index do |ws, wsi|
+              - unless wsi == 0
+                %br
+              = ws.description
+          - else
+            #modules
+              .yui-b
+                .yui-gb
+                  #col1.yui-u.first{:style => "position: relative; min-height: 50px;"}
+                    - @widget.miq_widget_shortcuts.each do |ws|
+                      %div
+                        .modbox
+                          %h2.modtitle
+                            %a{:class => "#{@widget.content_type}box"}
+                            %div
+                              %span.modtitle_text
+                                = ws.description
+    - if @sb[:wtype] == "r"
+      - @sb[:col_order].each_with_index do |col, idx|
+        %tr
+          %td.key
+            = _("Column %s") % (idx + 1)
+          %td
+            = h(col)
+    - if %w(r rf).include?(@sb[:wtype])
+      %tr
+        %td.key
+          = _('Row Count')
+        %td
+          = h(@widget.options[:row_count].to_s)
+  %hr
+  - unless @sb[:wtype] == "m"
+    %p.legend
+      = _('Timer')
+    %table.style1
+      - if s.kind_of?(MiqSchedule)
+        %tr
+          %td.key
+            = _('Run At')
+          %td
+            = h(s.run_at_to_human(@timezone).to_s)
+        %tr
+          %td.key
+            = _('Next Run Time')
+          %td
+            - unless s.next_run_on.blank?
+              = h(format_timezone(s.next_run_on, tz, "view"))
+      - else
+        %tr
+          %td.error
+            %b
+              = _('No timer is attached to this Widget, its contents will not be updated.')
+            %br
+            = _('Edit this Widget to configure a timer.')
+    %hr
+  %p.legend
+    = _('Visibility')
+  - if @widget.visibility && @widget.visibility[:groups]
+    - show_to = @widget.visibility
+  - elsif @widget.visibility && @widget.visibility[:roles] && @widget.visibility[:roles][0] == "_ALL_"
+    - show_to = _("To All Users")
+  - else
+    - show_to = _("By Role")
+  %table.style1
+    %td.key
+      = _('Show')
+    %td
+      = h(show_to)
+  - if show_to == _("By Role") && !@sb[:user_roles].blank?
+    %tr
+      %td.key
+        = _('User Roles')
+      %td
+        = h(@sb[:user_roles].join(", "))
+  - elsif show_to == _("By Group") && !@sb[:groups].blank?
+    %tr
+      %td.key
+        = _('Groups')
+      %td
+        = h(@sb[:groups].join(", "))
+  - if @widget.read_only
+    = _('* Fields are read only for default Widgets')

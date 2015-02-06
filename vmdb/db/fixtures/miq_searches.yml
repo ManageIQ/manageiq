@@ -306,17 +306,6 @@
     search_type: default
     db: Host
 - attributes:
-    name: default_Platform / KVM
-    description: Platform / KVM
-    filter: !ruby/object:MiqExpression
-      exp:
-        "=":
-          field: Host-vmm_vendor
-          value: KVM
-    search_type: default
-    search_key: _hidden_
-    db: Host
-- attributes:
     name: default_Status / Running
     description: Status / Running
     filter: !ruby/object:MiqExpression

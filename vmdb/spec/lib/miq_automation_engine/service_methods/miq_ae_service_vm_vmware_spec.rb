@@ -51,5 +51,15 @@ module MiqAeServiceVmVmwareSpec
           :args        => ['disk_1', 100])
       )
     end
+
+    it "#remove_from_disk async"do
+      service_vm.remove_from_disk(false)
+
+      MiqQueue.first.should have_attributes(
+        @base_queue_options.merge(
+          :method_name => 'vm_destroy',
+          :args        => [])
+      )
+    end
   end
 end

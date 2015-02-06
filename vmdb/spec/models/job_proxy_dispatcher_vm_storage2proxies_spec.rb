@@ -36,7 +36,7 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
             @repo_host.save
 
             @vm.host = @host
-            @vm.vendor = "KVM"
+            @vm.vendor = "RedHat"
             @vm.save
             @vm.stub(:miq_server_proxies => [])
           end

@@ -570,7 +570,7 @@ class MiqRequestWorkflow
     rails_logger('allowed_tags', 0)
     st = Time.now
     @tags = {}
-    class_tags = Classification.where(:show => true).includes(:tag)
+    class_tags = Classification.where(:show => true).includes(:tag).to_a
     class_tags.reject!(&:read_only?) # Can't do in query because column is a string.
 
     exclude_list  = options[:exclude].blank?       ? [] : options[:exclude].collect(&:to_s)

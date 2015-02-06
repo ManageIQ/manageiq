@@ -1,0 +1,35 @@
+- url = url_for(:action => 'schedule_form_field_changed', :id => "#{@schedule.id || 'new'}")
+#form_div
+  = render :partial => "layouts/flash_msg"
+  %p.legend
+    = _('Basic Information')
+  %table.style1
+    %tr
+      %td.key
+        = _("Name")
+      %td.wider
+        = text_field_tag("name", @edit[:new][:name],
+          :maxlength         => MAX_NAME_LEN,
+          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+        = javascript_tag(javascript_focus('name'))
+    %tr
+      %td.key
+        = _('Description')
+      %td.wider
+        = text_field_tag("description", @edit[:new][:description],
+          :maxlength         => MAX_DESC_LEN,
+          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+    %tr
+      %td.key
+        = _('Active')
+      %td>
+        = check_box_tag("enabled", "1", @edit[:new][:enabled],
+        "data-miq_observe_checkbox" => {:url => url}.to_json)
+  %hr
+  = render :partial => "schedule_form_filter"
+  = render :partial => "schedule_form_timer", :locals => {:action_url => "schedule_form_field_changed", :record => @schedule}
+  = render(:partial => "layouts/edit_email",
+    :locals         => {:box_title => _("E-mail after Running"),
+      :action_url                  => "schedule_form_field_changed",
+      :record                      => @schedule})
+  = render :partial => "schedule_email_options"

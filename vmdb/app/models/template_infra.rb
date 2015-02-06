@@ -1,6 +1,5 @@
 class TemplateInfra < MiqTemplate
   SUBCLASSES = %w{
-    TemplateKvm
     TemplateMicrosoft
     TemplateRedhat
     TemplateVmware

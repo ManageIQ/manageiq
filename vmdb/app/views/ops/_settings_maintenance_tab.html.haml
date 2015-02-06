@@ -1,0 +1,28 @@
+- if @sb[:active_tab] == "settings_maintenance"
+  = render :partial => "layouts/flash_msg"
+  - if @sb[:activating] && @build
+    = hidden_field_tag(:ignore_form_changes)
+    %p.legend=_("Product Update Info")
+    %table.style1
+      - @sb[:buildinfo].each do |item|
+        %tr
+          %td.key= h(item.first)
+          %td.wide= h(item.last)
+    %hr/
+    - if @build.component.downcase != "smartproxy"
+      .alert.alert-warning
+        %span.pficon-layered
+          %span.pficon.pficon-warning-triangle
+          %span.pficon.pficon-warning-exclamation
+        %strong
+          =_("Pressing the Activate button")
+          %b=_(" will shut down ")
+          =_("and restart the Server!")
+  - else
+    %p.legend
+      =_("Available Product Updates")
+      =_("[Server '%{server_name}' is currently running Version %{server_version}]") % {:server_name => @temp[:selected_server].name, :server_version => @temp[:selected_server].version}
+    =_("Select a product update to view activation options")
+    #main_div
+      = render :partial => 'layouts/x_gtl',
+        :locals  => {:action_url => "product_updates_list"}

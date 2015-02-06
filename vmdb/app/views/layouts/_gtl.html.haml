@@ -30,7 +30,7 @@
              :locals => {:message => _("No Records Found.")})
   - if @bottom_msg
     = h(@bottom_msg)
-  #record_div{:style => rec_display}
+  #records_div{:style => rec_display}
     - unless @embedded
       - if render_flash_msg? && table.data.length > 0
         = render(:partial => "layouts/flash_msg")
@@ -47,7 +47,7 @@
                              :button_div => button_div,
                              :view       => view,
                              :action_url => action_url })
-    - elsif @gtl_type == "title"
+    - elsif @gtl_type == "tile"
       = render(:partial => "layouts/gtl/tile",
                :locals  => { :table      => table,
                              :button_div => button_div,

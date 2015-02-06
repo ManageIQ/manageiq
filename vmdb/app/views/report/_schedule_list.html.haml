@@ -1,0 +1,12 @@
+- if @sb[:active_accord] == :schedules || params[:pressed] == "miq_report_schedule_add"
+  - if @in_a_form
+    = render :partial => 'schedule_form'
+  - elsif @schedule && !@in_a_form
+    = render :partial => "show_schedule"
+  - elsif @temp[:schedules] && @view
+    - if @view.table.data.empty?
+      = render :partial => 'layouts/info_msg', :locals => {:message => _("No Schedules available.")}
+    - else
+      = render :partial => 'layouts/x_gtl'
+  - else
+    = render :partial => 'layouts/info_msg', :locals => {:message => _("Choose a Schedule to view from the menus on the left.")}

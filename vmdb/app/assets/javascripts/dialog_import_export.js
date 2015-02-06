@@ -22,9 +22,9 @@ var listenForDialogPostMessages = function() {
 };
 
 var getAndRenderServiceDialogJson = function(importFileUploadId, message) {
-  $j('.hidden-import-file-upload-id').val(importFileUploadId);
+  $('.hidden-import-file-upload-id').val(importFileUploadId);
 
-  $j.getJSON("service_dialog_json?import_file_upload_id=" + importFileUploadId, function(rows_json) {
+  $.getJSON("service_dialog_json?import_file_upload_id=" + importFileUploadId, function(rows_json) {
     var statusFormatter = function(row, cell, value, columnDef, dataContext) {
       var status_img = "<img src=/images/icons/16/" + dataContext.status_icon + ".png >";
 
@@ -70,9 +70,9 @@ var getAndRenderServiceDialogJson = function(importFileUploadId, message) {
 
     var grid = new Slick.Grid("#import-grid", dataview, columns, {enableColumnReorder: false});
 
-    $j('#import_file_upload_id').val(importFileUploadId);
-    $j('.import-data').show();
-    $j('.import-or-export').hide();
+    $('#import_file_upload_id').val(importFileUploadId);
+    $('.import-data').show();
+    $('.import-or-export').hide();
   });
 
   showSuccessMessage(JSON.parse(message).message);

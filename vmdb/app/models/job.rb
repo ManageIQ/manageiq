@@ -185,7 +185,7 @@ class Job < ActiveRecord::Base
     Snapshot.remove_unused_evm_snapshots(job_not_found_delay)
   end
 
-  def self.guid_active?(job_guid, timestamp = nil, job_not_found_delay = 1.hour)
+  def self.guid_active?(job_guid, timestamp, job_not_found_delay)
     job = Job.find_by_guid(job_guid)
 
     # If job was found, return whether it is active
@@ -194,7 +194,7 @@ class Job < ActiveRecord::Base
     # If Job is NOT found, consider active if timestamp is newer than (now - delay)
     timestamp = timestamp.to_time rescue nil
     return false if timestamp.nil?
-    return (timestamp >= job_not_found_delay.ago)
+    return (timestamp >= job_not_found_delay.seconds.ago)
   end
 
   def self.extend_timeout(host_id, jobs)

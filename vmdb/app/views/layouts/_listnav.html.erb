@@ -55,7 +55,8 @@
     <%= render :partial=>"layouts/listnav/timeline", :locals=>{:trunc_at=>trunc_at, :trunc_to=>trunc_to} %>
   <% elsif ["vm","vm_cloud","offline","retired","templates","vm_or_template"].include?(@layout) %>
     <%= render :partial=>"layouts/listnav/vm", :locals=>{:trunc_at=>trunc_at, :trunc_to=>trunc_to} %>
-  <% elsif ["availability_zone","cloud_tenant","ems_cloud","ems_infra","flavor","security_group","miq_template"].include?(@layout) %>
+  <% elsif %w(availability_zone cloud_tenant ems_cloud ems_infra flavor miq_template
+              orchestration_stack security_group).include?(@layout) %>
     <%= render :partial=>"layouts/listnav/#{@layout}", :locals=>{:trunc_at=>trunc_at, :trunc_to=>trunc_to} %>
   <% else %>
       <!-- hack for IE7 and FF2 -->

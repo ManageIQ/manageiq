@@ -37,6 +37,10 @@ class OrchestrationTemplateHot < OrchestrationTemplate
     end
   end
 
+  def self.eligible_manager_types
+    [EmsOpenstack]
+  end
+
   private
 
   def parse_constraints(raw_constraints)

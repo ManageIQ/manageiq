@@ -33,8 +33,6 @@ class VmOrTemplate < ActiveRecord::Base
     "vmware"    => "VMware",
     "microsoft" => "Microsoft",
     "xen"       => "XenSource",
-    "kvm"       => "KVM",
-    "qemu"      => "KVM",
     "parallels" => "Parallels",
     "amazon"    => "Amazon",
     "redhat"    => "RedHat",
@@ -1032,19 +1030,13 @@ class VmOrTemplate < ActiveRecord::Base
       hosts = store.hosts if hosts.empty? && store
       hosts = [self.myhost] if hosts.empty?
     else
-      if self.vendor == 'KVM'
-        # For KVM the config file is stored on locally and not on the datastore
-        # so the only host that can read the config file and disk is the VM's host.
-        hosts = [self.myhost]
-      else
-        store = self.storage
-        hosts = store.hosts.to_a if hosts.empty? && store
-        hosts = [self.myhost] if hosts.empty?
+      store = self.storage
+      hosts = store.hosts.to_a if hosts.empty? && store
+      hosts = [self.myhost] if hosts.empty?
 
-        # VMware needs a VMware host to resolve datastore names
-        if self.vendor == 'VMware'
-          hosts.delete_if {|h| h.vmm_vendor != 'VMware'}
-        end
+      # VMware needs a VMware host to resolve datastore names
+      if self.vendor == 'VMware'
+        hosts.delete_if {|h| h.vmm_vendor != 'VMware'}
       end
     end
 

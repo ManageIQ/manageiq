@@ -27,7 +27,6 @@ class Host < ActiveRecord::Base
 
   VENDOR_TYPES = {
     # DB            Displayed
-    "kvm"             => "KVM",
     "microsoft"       => "Microsoft",
     "redhat"          => "RedHat",
     "vmware"          => "VMware",

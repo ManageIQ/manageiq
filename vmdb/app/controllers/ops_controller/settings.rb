@@ -133,7 +133,7 @@ module OpsController::Settings
     @edit = session[:edit]  # Need to reload @edit so it stays in the session
     port = params[:user_proxies_mode] == "ldap" ? "389" : "636"
     render :update do |page|
-      page << "$j('#user_proxies_ldapport').val('#{port}');"
+      page << "$('#user_proxies_ldapport').val('#{port}');"
     end
   end
 

@@ -1,4 +1,6 @@
 class DialogFieldTextBox < DialogField
+  AUTOMATE_VALUE_FIELDS = %w(default_value protected required validator_rule validator_type)
+
   has_one :resource_action, :as => :resource, :dependent => :destroy
 
   after_initialize :default_resource_action
@@ -40,6 +42,8 @@ class DialogFieldTextBox < DialogField
   end
 
   def validate(dialog_tab, dialog_group)
+    return if !required? && value.blank?
+
     case validator_type
     when 'regex'
       return "#{dialog_tab.label}/#{dialog_group.label}/#{label} is invalid" unless value.match(/#{validator_rule}/)
@@ -51,8 +55,12 @@ class DialogFieldTextBox < DialogField
     "<Script error>"
   end
 
+  def sample_text
+    dynamic ? "Sample Text" : default_value
+  end
+
   def normalize_automate_values(automate_hash)
-    %w(data_type default_value protected required validator_type validator_rule).each do |key|
+    self.class::AUTOMATE_VALUE_FIELDS.each do |key|
       send("#{key}=", automate_hash[key]) if automate_hash.key?(key)
     end
 

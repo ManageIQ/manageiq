@@ -7,37 +7,48 @@
   <% if item.is_a?(EmsCloud) %>
     <div class="flobj b<%= size %>"><p><%= item.total_miq_templates %></p></div>
   <% end %>
-	<div class="flobj c<%= size %>"><img src="/images/icons/new/vendor-<%= h(item.emstype.downcase) %>.png"/></div>
+	<div class="flobj c<%= size %>"><img src="/images/icons/new/vendor-<%= h(item.image_name) %>.png"/></div>
 	<div class="flobj d<%= size %>">
 		<%
+			# Move to a view helper for ext_management_system quad icon
 			case item.authentication_status
 			when "Invalid"
-				auth_status = "x"
+				status_icon = "x"
 			when "Valid"
-				auth_status = "checkmark"
+				status_icon =
+					case item.last_refresh_status
+					when "error"
+						"x"
+					when "success"
+						"checkmark"
+					when "never"
+						"unknown"
+					end
 			when "None"
-				auth_status = "unknown"
+				status_icon = "unknown"
 			else
-				auth_status = "exclamationpoint"
+				status_icon = "exclamationpoint"
 			end
 		%>
-		<img src="/images/icons/new/<%= h(auth_status) %>.png"/>
+		<img src="/images/icons/new/<%= h(status_icon) %>.png"/>
 	</div>
 	<% if item.get_policies.length > 0 %>
 		<div class="flobj g<%= size %>" ><img src="/images/icons/new/shield.png"></div>
 	<% end %>
 <% else %>
 	<div class="flobj" ><img src="/images/icons/<%= size %>/base-single.png"></div>
-	<div class="flobj e<%= size %>"><img src="/images/icons/new/vendor-<%= h(item.emstype.downcase) %>.png" width="<%= width * 1.8 %>" height="<%= height * 1.8 %>"></div>
+	<div class="flobj e<%= size %>"><img src="/images/icons/new/vendor-<%= h(item.image_name) %>.png" width="<%= width * 1.8 %>" height="<%= height * 1.8 %>"></div>
 
 <% end %>
 <% if typ == :listnav %><%# Listnav, no href needed %>
 		<div class="flobj"><img src="/images/icons/<%= size %>/reflection.png" width="<%= size %>" height="<%= size %>"/></div>
 <% else %>
 	<div class="flobj">
-		<a href="<%= url_for_record(item) %>" title="<%= "Name: "+h(item.name)+" | Host Name: "+h(item.hostname)+" | IP Address: "+h(item.ipaddress) %>">
+		<%
+			item_hover_info = "Name: #{h(item.name)} | Host Name: #{h(item.hostname)} | IP Address: #{h(item.ipaddress)} | Refresh Status: #{h(item.last_refresh_status.titleize)}"
+		%>
+		<a href="<%= url_for_record(item) %>" title="<%= item_hover_info %>">
 		<img src="/images/icons/<%= size %>/reflection.png" width="<%= size %>" height="<%= size %>"/>
 		</a>
 	</div>
 <% end %>
-

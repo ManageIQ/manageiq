@@ -32,7 +32,7 @@ function miqAeRowSelected(row_id,cell_idx) {
 
 // Method to hide flash_msg when folde ris being edited in menu editor
 function miqMenuRowSelected(row_id,cell_idx) {
-  $j('#flash_msg_div_menu_list').hide();
+  $('#flash_msg_div_menu_list').hide();
   folder_list_grid.editCell();
 }
 
@@ -47,7 +47,7 @@ function miqRequestRowSelected(row_id) {
 // Handle checkbox
 function miqGridOnCheck(row_id, cell_idx, state) {
   crows = gtl_list_grid.getCheckedRows(0);
-  $j('#miq_grid_checks').val(crows);
+  $('#miq_grid_checks').val(crows);
   count = crows == "" ? 0:crows.split(",").length;
   if (miqDomElementExists('center_tb')) miqSetButtons(count, "center_tb");
   else miqSetButtons(count, "center_buttons_div");
@@ -58,24 +58,24 @@ function miqCheck_AE_All(button_div,gridname) {
   var state = true;
   var crows = "";
   if (typeof ns_list_grid != "undefined" && gridname == "ns_list_grid") {
-    state = $j('#Toggle1').prop('checked');
+    state = $('#Toggle1').prop('checked');
     ns_list_grid.checkAll(state ? true : false)
     crows = ns_list_grid.getCheckedRows(0);
   } else if (typeof ns_grid != "undefined" && gridname == "ns_grid") {
-    state = $j('#Toggle2').prop('checked');
+    state = $('#Toggle2').prop('checked');
     ns_grid.checkAll(state ? true:false)
     crows = ns_grid.getCheckedRows(0);
   } else if (typeof instance_grid != "undefined" && gridname == "instance_grid") {
-    state = $j('#Toggle3').prop('checked');
+    state = $('#Toggle3').prop('checked');
     instance_grid.checkAll(state ? true:false)
     crows = instance_grid.getCheckedRows(0);
   } else if (typeof class_methods_grid != "undefined" && gridname == "class_methods_grid") {
-    state = $j('#Toggle4').prop('checked');
+    state = $('#Toggle4').prop('checked');
     class_methods_grid.checkAll(state ? true:false)
     crows = class_methods_grid.getCheckedRows(0);
   }
-  if (miqDomElementExists('miq_grid_checks')) $j('#miq_grid_checks').val(crows)
-  if (miqDomElementExists('miq_grid_checks2')) $j('#miq_grid_checks2').val(crows)
+  if (miqDomElementExists('miq_grid_checks')) $('#miq_grid_checks').val(crows)
+  if (miqDomElementExists('miq_grid_checks2')) $('#miq_grid_checks2').val(crows)
   count = crows == "" ? 0:crows.split(",").length;
   miqSetButtons(count, button_div);
   miqSparkle(false);
@@ -84,21 +84,21 @@ function miqCheck_AE_All(button_div,gridname) {
 // This function is called in miqOnLoad to init any grids on the screen
 function miqInitGrids() {
   if (typeof miq_grids != "undefined") {
-    miq_grids.each(function(pair) {
-      miqInitGrid(pair.key); // pass they key (grid name), called function will get the grid hash
+    $.each(miq_grids, function( key ) {
+      miqInitGrid(key); // pass they key (grid name), called function will get the grid hash
     });
   }
 }
 
 // Initialize a single grid (is called directly after an AJAX trans)
 function miqInitGrid(grid_name){
-  var grid_hash = miq_grids.get(grid_name)  // Get the hash for the passed in grid
+  var grid_hash = miq_grids[grid_name]  // Get the hash for the passed in grid
   var miq_grid_checks = "";                   //<%# Keep track of the grid checkboxes %>
     
   // Build the grid object, then point a local var at it
-  eval(grid_name + " = new dhtmlXGridObject('" + grid_hash.get('g_id') + "')");
+  eval(grid_name + " = new dhtmlXGridObject('" + grid_hash['g_id'] + "')");
   var grid = eval(grid_name);
-  var options = grid_hash.get('opts')
+  var options = grid_hash['opts']
   // Start with a clear grid
   grid.clearAll(true)
 
@@ -127,8 +127,8 @@ if (options['alt_row']) {
   } 
 
   // Load the grid with XML data, if present
-  if (grid_hash.get('xml') != "") {
-    grid.parse(grid_hash.get('xml'));
+  if (grid_hash['xml'] != "") {
+    grid.parse(grid_hash['xml']);
   }
   
   if (options['autosize']) {
@@ -187,11 +187,11 @@ if (options['alt_row']) {
 // Handle checkbox
 function miqOnAECheck(row_id, cell_idx, state) {
   crows = this.getCheckedRows(0);
-  $$('#miq_grid_checks').each(function(a) {   
-    a.value = crows
+  $("#miq_grid_checks").each(function() {
+    this.value = crows
   })
-  $$('#miq_grid_checks2').each(function(a) {
-    a.value = crows
+  $("#miq_grid_checks2").each(function() {
+    this.value = crows
   })
   
   count = crows == "" ? 0:crows.split(",").length;  

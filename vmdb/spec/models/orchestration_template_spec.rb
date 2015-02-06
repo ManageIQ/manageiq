@@ -65,4 +65,17 @@ describe OrchestrationTemplate do
       end
     end
   end
+
+  describe "#eligible_managers" do
+    before do
+      OrchestrationTemplate.stub(:eligible_manager_types => [EmsAmazon, EmsOpenstack])
+      @template = FactoryGirl.create(:orchestration_template)
+      @aws = FactoryGirl.create(:ems_amazon)
+      @openstack = FactoryGirl.create(:ems_openstack)
+    end
+
+    it "lists all eligible managers for a template" do
+      @template.eligible_managers.should =~ [@aws, @openstack]
+    end
+  end
 end

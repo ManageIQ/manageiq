@@ -440,6 +440,7 @@ class MiqQueue < ActiveRecord::Base
 
   def requeue(options = {})
     options.reverse_merge!(self.attributes.symbolize_keys)
+    options.delete(:id)
     MiqQueue.put(options)
   end
 

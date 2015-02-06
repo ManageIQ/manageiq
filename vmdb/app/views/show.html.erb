@@ -1,9 +1,0 @@
-<div id='main_div'>
-	<% if @lastaction == "resolve" %>
-		<%= render :partial => "resolve" %>
-	<% elsif @lastaction == "log" %>
-		<%= render :partial => "layouts/log_viewer", :locals=>{:legend_text=>"Last 1000 lines from the Automation log"} %>
-	<% elsif @lastaction == "import_export" %>
-		<%= render :partial => "import_export" %>
-	<% end %>
-</div>

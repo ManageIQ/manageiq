@@ -1,0 +1,500 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://admin:smartvm@example.com/api/hosts?per_page=2
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json;version=2
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 27 Jan 2015 16:21:08 GMT
+      Server:
+      - Apache/2.2.15 (Red Hat)
+      Foreman-Version:
+      - 1.5.3
+      Foreman-Api-Version:
+      - '2'
+      Apipie-Checksum:
+      - f0c66204518b52fe5a1aa2c2163e7166
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Etag:
+      - '"ac83f14161c508925b8c585fc822729b"'
+      Cache-Control:
+      - must-revalidate, private, max-age=0
+      X-Request-Id:
+      - 6faf6ee32eca98a6deb45069f2b40e72
+      X-Runtime:
+      - '0.126928'
+      X-Rack-Cache:
+      - miss
+      X-Powered-By:
+      - Phusion Passenger 4.0.18
+      Set-Cookie:
+      - _session_id=8921462e6ec700273bba433811825d63; path=/; HttpOnly
+      Status:
+      - 200 OK
+      Connection:
+      - close
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "total": 44,
+          "subtotal": 44,
+          "page": 1,
+          "per_page": 2,
+          "search": null,
+          "sort": {
+            "by": null,
+            "order": null
+          },
+          "results": [{"name":"abc.example.com","id":29,"ip":"10.17.70.199","environment_id":1,"environment_name":"production","last_report":null,"mac":"78:2b:cb:00:f6:6c","realm_id":null,"realm_name":null,"sp_mac":"78:2b:cb:00:f6:6e","sp_ip":"10.17.70.210","sp_name":"","domain_id":1,"domain_name":"example.com","architecture_id":1,"architecture_name":"x86_64","operatingsystem_id":3,"operatingsystem_name":"RHEL Server 6.6","subnet_id":2,"subnet_name":"Mahwah","sp_subnet_id":null,"ptable_id":7,"ptable_name":"Kickstart default","medium_id":7,"medium_name":"RHEL Server mirror","build":true,"comment":"","disk":"","installed_at":null,"model_id":null,"model_name":null,"hostgroup_id":2,"hostgroup_name":"Raleigh/Metal","owner_id":1,"owner_type":"User","enabled":true,"puppet_ca_proxy_id":1,"managed":true,"use_image":null,"image_file":"","uuid":null,"compute_resource_id":null,"compute_resource_name":null,"compute_profile_id":null,"compute_profile_name":null,"capabilities":["build"],"provision_method":"build","puppet_proxy_id":1,"certname":"abc.example.com","image_id":null,"image_name":null,"created_at":"2014-11-13T20:40:16Z","updated_at":"2014-11-13T22:04:50Z","last_compile":null,"last_freshcheck":null,"serial":null,"source_file_id":null,"puppet_status":0},{"name":"bdbaremetal.example.com","id":25,"ip":null,"environment_id":1,"environment_name":"production","last_report":null,"mac":"c8:1f:66:c6:84:fc","realm_id":null,"realm_name":null,"sp_mac":null,"sp_ip":null,"sp_name":null,"domain_id":1,"domain_name":"example.com","architecture_id":1,"architecture_name":"x86_64","operatingsystem_id":3,"operatingsystem_name":"RHEL Server 6.6","subnet_id":null,"subnet_name":null,"sp_subnet_id":null,"ptable_id":7,"ptable_name":"Kickstart default","medium_id":7,"medium_name":"RHEL Server mirror","build":true,"comment":"","disk":"","installed_at":null,"model_id":2,"model_name":"PowerEdge R420","hostgroup_id":5,"hostgroup_name":"Raleigh/Virt/Productivity/Cruisers","owner_id":1,"owner_type":"User","enabled":true,"puppet_ca_proxy_id":1,"managed":true,"use_image":null,"image_file":"","uuid":null,"compute_resource_id":null,"compute_resource_name":null,"compute_profile_id":null,"compute_profile_name":null,"capabilities":["build"],"provision_method":"build","puppet_proxy_id":1,"certname":"bdbaremetal.example.com","image_id":null,"image_name":null,"created_at":"2014-11-07T20:41:21Z","updated_at":"2014-11-12T15:46:07Z","last_compile":null,"last_freshcheck":null,"serial":null,"source_file_id":null,"puppet_status":0}]
+        }
+    http_version:
+  recorded_at: Tue, 27 Jan 2015 16:21:08 GMT
+- request:
+    method: get
+    uri: http://admin:smartvm@example.com/api/hostgroups?per_page=2
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json;version=2
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 27 Jan 2015 16:21:09 GMT
+      Server:
+      - Apache/2.2.15 (Red Hat)
+      Foreman-Version:
+      - 1.5.3
+      Foreman-Api-Version:
+      - '2'
+      Apipie-Checksum:
+      - f0c66204518b52fe5a1aa2c2163e7166
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Etag:
+      - '"91b4285e64ea92872e084f9051d80cc8"'
+      Cache-Control:
+      - must-revalidate, private, max-age=0
+      X-Request-Id:
+      - ef6796d190534744ebd112083ed341e9
+      X-Runtime:
+      - '0.083118'
+      X-Rack-Cache:
+      - miss
+      X-Powered-By:
+      - Phusion Passenger 4.0.18
+      Set-Cookie:
+      - _session_id=092a12b917d1b013aa99a35885a38234; path=/; HttpOnly
+      Status:
+      - 200 OK
+      Connection:
+      - close
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "total": 14,
+          "subtotal": 14,
+          "page": 1,
+          "per_page": 2,
+          "search": null,
+          "sort": {
+            "by": null,
+            "order": null
+          },
+          "results": [{"id":13,"name":"ProviderRefreshSpec-HostGroup","title":"ProviderRefreshSpec-HostGroup","subnet_id":null,"subnet_name":null,"operatingsystem_id":4,"operatingsystem_name":"OS 1.2","domain_id":null,"domain_name":null,"environment_id":1,"environment_name":"production","compute_profile_id":null,"compute_profile_name":null,"ancestry":null,"puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":8,"medium_name":"ProviderRefreshSpec-Media","architecture_id":1,"architecture_name":"x86_64","realm_id":null,"realm_name":null,"created_at":"2015-01-15T19:42:50Z","updated_at":"2015-01-22T16:34:33Z"},{"id":14,"name":"ProviderRefreshSpec-ChildHostGroup","title":"ProviderRefreshSpec-HostGroup/ProviderRefreshSpec-ChildHostGroup","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"13","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":12,"ptable_name":"ProviderRefreshSpec-PartitionTable","medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2015-01-15T19:43:14Z","updated_at":"2015-01-22T16:35:24Z"}]
+        }
+    http_version:
+  recorded_at: Tue, 27 Jan 2015 16:21:09 GMT
+- request:
+    method: get
+    uri: http://admin:smartvm@example.com/api/operatingsystems?per_page=2
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json;version=2
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 27 Jan 2015 16:21:09 GMT
+      Server:
+      - Apache/2.2.15 (Red Hat)
+      Foreman-Version:
+      - 1.5.3
+      Foreman-Api-Version:
+      - '2'
+      Apipie-Checksum:
+      - f0c66204518b52fe5a1aa2c2163e7166
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Etag:
+      - '"420802ea864fdbedb6d931033e2ca688"'
+      Cache-Control:
+      - must-revalidate, private, max-age=0
+      X-Request-Id:
+      - 5fb7bbf69922a69a4f45ecf12f333ed7
+      X-Runtime:
+      - '0.054633'
+      X-Rack-Cache:
+      - miss
+      X-Powered-By:
+      - Phusion Passenger 4.0.18
+      Set-Cookie:
+      - _session_id=aea1e94b916e2672e01841cbb5a0a0fc; path=/; HttpOnly
+      Status:
+      - 200 OK
+      Connection:
+      - close
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "total": 5,
+          "subtotal": 5,
+          "page": 1,
+          "per_page": 2,
+          "search": null,
+          "sort": {
+            "by": null,
+            "order": null
+          },
+          "results": [{"id":4,"name":"ProviderRefreshSpec-OperatingSystem","fullname":"ProviderRefreshSpec-OperatingSystem 1.2","description":"OS 1.2","major":"1","minor":"2","family":null,"release_name":"","created_at":"2015-01-15T19:44:25Z","updated_at":"2015-01-15T19:44:25Z"},{"id":3,"name":"RHELServer","fullname":"RHELServer 6.6","description":"RHEL Server 6.6","major":"6","minor":"6","family":"Redhat","release_name":"","created_at":"2014-11-07T19:21:30Z","updated_at":"2014-12-11T16:42:01Z"}]
+        }
+    http_version:
+  recorded_at: Tue, 27 Jan 2015 16:21:09 GMT
+- request:
+    method: get
+    uri: http://admin:smartvm@example.com/api/media?per_page=2
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json;version=2
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 27 Jan 2015 16:21:09 GMT
+      Server:
+      - Apache/2.2.15 (Red Hat)
+      Foreman-Version:
+      - 1.5.3
+      Foreman-Api-Version:
+      - '2'
+      Apipie-Checksum:
+      - f0c66204518b52fe5a1aa2c2163e7166
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Etag:
+      - '"906d1de27c76b52cb1dda5ccb33b390f"'
+      Cache-Control:
+      - must-revalidate, private, max-age=0
+      X-Request-Id:
+      - 7d58ef78e5ef328df059d55401052c5a
+      X-Runtime:
+      - '0.064467'
+      X-Rack-Cache:
+      - miss
+      X-Powered-By:
+      - Phusion Passenger 4.0.18
+      Set-Cookie:
+      - _session_id=41439ff7f24e4078bfb8d9153b131628; path=/; HttpOnly
+      Status:
+      - 200 OK
+      Connection:
+      - close
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "total": 8,
+          "subtotal": 8,
+          "page": 1,
+          "per_page": 2,
+          "search": null,
+          "sort": {
+            "by": null,
+            "order": null
+          },
+          "results": [{"id":1,"name":"CentOS mirror","path":"http://mirror.centos.org/centos/$major.$minor/os/$arch","os_family":"Redhat","created_at":"2014-07-24T22:22:05Z","updated_at":"2014-07-24T22:22:05Z"},{"id":2,"name":"Debian mirror","path":"http://ftp.debian.org/debian/","os_family":"Debian","created_at":"2014-07-24T22:22:05Z","updated_at":"2014-07-24T22:22:05Z"}]
+        }
+    http_version:
+  recorded_at: Tue, 27 Jan 2015 16:21:09 GMT
+- request:
+    method: get
+    uri: http://admin:smartvm@example.com/api/ptables?per_page=2
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json;version=2
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 27 Jan 2015 16:21:09 GMT
+      Server:
+      - Apache/2.2.15 (Red Hat)
+      Foreman-Version:
+      - 1.5.3
+      Foreman-Api-Version:
+      - '2'
+      Apipie-Checksum:
+      - f0c66204518b52fe5a1aa2c2163e7166
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Etag:
+      - '"640991fbabe7061f4b1609000bbd52bf"'
+      Cache-Control:
+      - must-revalidate, private, max-age=0
+      X-Request-Id:
+      - 16664cefc6db28d3c253590783049e76
+      X-Runtime:
+      - '0.229339'
+      X-Rack-Cache:
+      - miss
+      X-Powered-By:
+      - Phusion Passenger 4.0.18
+      Set-Cookie:
+      - _session_id=d2c94872f53ac503e96d931c209992b6; path=/; HttpOnly
+      Status:
+      - 200 OK
+      Connection:
+      - close
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "total": 11,
+          "subtotal": 11,
+          "page": 1,
+          "per_page": 2,
+          "search": null,
+          "sort": {
+            "by": null,
+            "order": null
+          },
+          "results": [{"name":"AutoYaST LVM","id":3,"os_family":"Suse","created_at":"2014-07-24T22:22:04Z","updated_at":"2014-07-24T22:22:04Z"},{"name":"AutoYaST entire SCSI disk","id":1,"os_family":"Suse","created_at":"2014-07-24T22:22:04Z","updated_at":"2014-07-24T22:22:04Z"}]
+        }
+    http_version:
+  recorded_at: Tue, 27 Jan 2015 16:21:09 GMT
+- request:
+    method: get
+    uri: http://admin:smartvm@example.com/api/config_templates?per_page=2
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json;version=2
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 27 Jan 2015 16:21:09 GMT
+      Server:
+      - Apache/2.2.15 (Red Hat)
+      Foreman-Version:
+      - 1.5.3
+      Foreman-Api-Version:
+      - '2'
+      Apipie-Checksum:
+      - f0c66204518b52fe5a1aa2c2163e7166
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Etag:
+      - '"8db1acba93cb62cbfb9a3beb913353f9"'
+      Cache-Control:
+      - must-revalidate, private, max-age=0
+      X-Request-Id:
+      - cd19054c33efb4c3146403a252b46976
+      X-Runtime:
+      - '0.062598'
+      X-Rack-Cache:
+      - miss
+      X-Powered-By:
+      - Phusion Passenger 4.0.18
+      Set-Cookie:
+      - _session_id=ac4f1c1cbcb84438029cf1bc20c28dba; path=/; HttpOnly
+      Status:
+      - 200 OK
+      Connection:
+      - close
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "total": 39,
+          "subtotal": 39,
+          "page": 1,
+          "per_page": 2,
+          "search": null,
+          "sort": {
+            "by": null,
+            "order": null
+          },
+          "results": [{"id":5,"name":"AutoYaST SLES default","template_kind_id":4,"template_kind_name":"provision","snippet":false,"audit_comment":null,"created_at":"2014-07-24T22:22:03Z","updated_at":"2014-07-24T22:22:03Z"},{"id":4,"name":"AutoYaST default","template_kind_id":4,"template_kind_name":"provision","snippet":false,"audit_comment":null,"created_at":"2014-07-24T22:22:03Z","updated_at":"2014-07-24T22:22:03Z"}]
+        }
+    http_version:
+  recorded_at: Tue, 27 Jan 2015 16:21:09 GMT
+- request:
+    method: get
+    uri: http://admin:smartvm@example.com/api/subnets?per_page=2
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json;version=2
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 27 Jan 2015 16:21:10 GMT
+      Server:
+      - Apache/2.2.15 (Red Hat)
+      Foreman-Version:
+      - 1.5.3
+      Foreman-Api-Version:
+      - '2'
+      Apipie-Checksum:
+      - f0c66204518b52fe5a1aa2c2163e7166
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Etag:
+      - '"7efaee36ff5960e13437f7b2658c973a"'
+      Cache-Control:
+      - must-revalidate, private, max-age=0
+      X-Request-Id:
+      - cdbab26eb3bc566a65305af69d0bbdf1
+      X-Runtime:
+      - '0.104555'
+      X-Rack-Cache:
+      - miss
+      X-Powered-By:
+      - Phusion Passenger 4.0.18
+      Set-Cookie:
+      - _session_id=f31274b42ea508f881924a6de35aaf0d; path=/; HttpOnly
+      Status:
+      - 200 OK
+      Connection:
+      - close
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "total": 2,
+          "subtotal": 2,
+          "page": 1,
+          "per_page": 2,
+          "search": null,
+          "sort": {
+            "by": null,
+            "order": null
+          },
+          "results": [{"id":1,"name":"example.com","network_address":"10.8.96.0/22","network":"10.8.96.0","cidr":22,"mask":"255.255.252.0","priority":null,"vlanid":"","gateway":"10.8.99.254","dns_primary":"example.com","dns_secondary":"","from":"","to":"","created_at":"2014-11-10T21:34:05Z","updated_at":"2014-11-10T21:38:21Z","dhcp":null,"tftp":{"name":"foreman1.example.com","id":1,"url":"https://foreman1.example.com:8443"},"dns":null},{"id":2,"name":"Mahwah","network_address":"192.168.252.0/23","network":"192.168.252.0","cidr":23,"mask":"255.255.254.0","priority":null,"vlanid":"","gateway":"192.168.252.1","dns_primary":"192.168.252.3","dns_secondary":"","from":"","to":"","created_at":"2014-11-11T22:06:10Z","updated_at":"2014-11-11T22:06:10Z","dhcp":null,"tftp":null,"dns":null}]
+        }
+    http_version:
+  recorded_at: Tue, 27 Jan 2015 16:21:10 GMT
+recorded_with: VCR 2.9.3

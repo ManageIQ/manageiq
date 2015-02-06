@@ -1,0 +1,160 @@
+/* needed for scrollable rows */
+body, html {
+  height: 100%;
+  overflow: hidden;
+}
+#main_taskbar {
+  height: 34px;
+  background-image: linear-gradient(to bottom, #FAFAFA 0%, #EDEDED 100%);
+  border-bottom: 1px solid #c7c7c7;
+}
+
+#main_search {
+  padding-top: 10px;
+}
+
+
+/* This media query makes the entire main row scrollable once the columns have collapsed */
+
+@media (max-width: 992px) {
+  body {     
+    padding-top: 45px; //Body 'padding-top' is added because navbar-fixed-top class is applied
+    padding-bottom: 30px !important;
+  }
+  .scrollable-sm {
+    height: 100%;
+    overflow: auto;
+  }
+
+  #main_content {
+    overflow: auto;
+    height: 100%;
+  }
+  #main_footer {
+    background: #f9f9f9;
+    height: 50px;
+  }
+}
+
+/* This media query makes the left column and the main area independently scrollable and sets the footer at the bottom of the column */
+
+@media (min-width: 993px) {
+  body {
+    padding-top: 110px !important; //Body 'padding-top' is added because navbar-fixed-top class is applied
+    padding-bottom: 30px !important;
+  }
+
+  .login-pf body {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+  }
+  .scrollable {
+    height: 100%;
+    overflow: auto;
+  }
+  #main_content {
+    overflow: auto;
+    height: 100%;
+    padding-bottom: 200px;
+  }
+  #main_footer {
+    position: absolute;
+    bottom: 0;
+    height: 50px;
+    width: 100%;
+    margin-bottom: 10px;
+    border-top: 1px solid #c7c7c7;
+    background: #f9f9f9;
+  }
+  .max-height {
+    height: 100%;
+  }
+}
+
+.navbar.navbar-default.navbar-fixed-bottom {
+  min-height: 30px;
+  background: #333;
+  color: #FFF;
+  text-align: center;
+}
+
+
+/* Overrides patternfly style for disabled accordion items */
+
+.nav-stacked > li.disabled > a {
+  color: #ccc;
+}
+
+.nav-stacked > li.disabled:hover > a {
+  background: transparent;
+  border: transparent;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  color: #ccc;
+}
+
+/* Style changes applied when customer logo is active */
+
+nav.whitelabeled .navbar-header {
+  height: 39px !important;
+}
+
+nav.whitelabeled .navbar-utility > li > a {
+  padding: 14px 10px;
+}
+
+nav.whitelabeled .navbar-utility span.pficon-user {
+  padding-top: 5px;
+}
+
+li.brand-white-label.whitelabeled {
+  width: 350px;
+  height: 38px;
+  background: url(/upload/custom_logo.png) right top no-repeat;
+  background-size: auto 38px;
+}
+
+/* Navigation overrides */
+
+.persistent-secondary .dropdown-menu {
+  top: auto;
+  left: auto;
+}
+
+.navbar-pf .navbar-primary.persistent-secondary > li > .navbar-persistent > li {
+  font-size: 12px;
+  padding-bottom: 1px;
+}
+
+/* Login overrides */
+
+.login-pf body {
+  padding-top: 0 !imporant;
+  padding-bottom: 0 !imporant;
+}
+
+#notification { 
+  position:absolute;
+  left:0;
+  bottom:0;
+  z-index:1000;
+  display: block;
+  margin:0;
+  padding:0;
+  width: 100%; 
+  height:100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.ie8 #notification {
+  background-image: url(/images/layout/overlay_dark.png);
+}
+
+#spinner_div {
+  position: absolute;
+  top: 20px;
+  left:0;
+  width:100%;
+  height: 180px;
+  z-index:1;
+  }

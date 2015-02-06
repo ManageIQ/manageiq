@@ -670,13 +670,13 @@ describe VirtualFields do
     end
 
     it "virtual fields as Hash when :conditions are also present" do
-      lambda { Vm.all(:include => [:platform, :host], :conditions => "hosts.name = 'test'") }.should_not raise_error
-      lambda { Vm.all(:include => [:platform, :host], :conditions => "hosts.id IS NOT NULL") }.should_not raise_error
+      lambda { Vm.includes([:platform, :host]).where("hosts.name = 'test'") }.should_not raise_error
+      lambda { Vm.includes([:platform, :host]).where("hosts.id IS NOT NULL") }.should_not raise_error
     end
 
     it "should handle virtual fields in :include when :conditions are also present in calculations" do
-      lambda { Vm.count(:include => [:platform, :host], :conditions => "hosts.name = 'test'") }.should_not raise_error
-      lambda { Vm.count(:include => [:platform, :host], :conditions => "hosts.id IS NOT NULL") }.should_not raise_error
+      lambda { Vm.includes([:platform, :host]).references(:host).where("hosts.name = 'test'").count }.should_not raise_error
+      lambda { Vm.includes([:platform, :host]).references(:host).where("hosts.id IS NOT NULL").count }.should_not raise_error
     end
   end
 end

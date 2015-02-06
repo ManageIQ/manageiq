@@ -156,9 +156,9 @@ module OpsController::Settings::Schedules
       if params[:time_zone]
         page << "miq_cal_dateFrom = new Date(#{(Time.now - 1.month).in_time_zone(@edit[:tz]).strftime("%Y,%m,%d")});"
         page << "miqBuildCalendar();"
-        page << "$j('#miq_date_1').val('#{@edit[:new][:start_date]}');"
-        page << "$j('#start_hour').val('#{@edit[:new][:start_hour].to_i}');"
-        page << "$j('#start_min').val('#{@edit[:new][:start_min].to_i}');"
+        page << "$('#miq_date_1').val('#{@edit[:new][:start_date]}');"
+        page << "$('#start_hour').val('#{@edit[:new][:start_hour].to_i}');"
+        page << "$('#start_min').val('#{@edit[:new][:start_min].to_i}');"
         page.replace_html("tz_span", @timezone_abbr)
       end
       changed = (@edit[:new] != @edit[:current])

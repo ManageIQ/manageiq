@@ -24,7 +24,7 @@ module EmsRefresh
 
             if hashes.blank?
               # TODO: determine if this is "success" or "failed"
-              $log.warn "#{log_header} No inventory data returned for EMS: [#{@ems.name}], id: [#{@ems.id}]..."
+              $log.warn "#{log_header} No inventory data returned for EMS: [#{ems.name}], id: [#{ems.id}]..."
               next
             end
             save_inventory(ems, targets, hashes)
@@ -36,12 +36,15 @@ module EmsRefresh
               target = target.first if target.is_a?(Array)
               $log.error(" --- #{target.class} [#{target.name}] id [#{target.id}]")
             end
-            # skip post processing below
+
+            # record the failed status and skip post-processing
+            ems.update_attributes(:last_refresh_error => e.to_s, :last_refresh_date => Time.now.utc)
             next
           ensure
             post_refresh_ems_cleanup(ems, targets)
           end
 
+          ems.update_attributes(:last_refresh_error => nil, :last_refresh_date => Time.now.utc)
           post_refresh(ems, ems_refresh_start_time)
         end
 

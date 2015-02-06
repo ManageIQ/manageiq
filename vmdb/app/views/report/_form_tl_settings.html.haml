@@ -1,0 +1,91 @@
+- url = url_for(:action => 'form_field_changed', :id => "#{@edit[:rpt_id] || 'new'}")
+#tl_settings_div
+  %fieldset
+    %p.legend
+      = _('Timeline Settings')
+    %dl.col2
+      %dd
+        %fieldset
+          %table.style1
+            %tr
+              %td.key{:nowrap => 1}
+                = _('Base Timeline on')
+              %td
+                = select_tag('chosen_tl',
+                  options_for_select([NOTHING_STRING] + @tl_fields, @tl_field),
+                  :multiple              => false,
+                  :class                 => "widthed",
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  "data-miq_observe"     => {:url => url}.to_json)
+            - if @tl_field != NOTHING_STRING
+              %tr
+                %td.key
+                  = _('First band unit:')
+                %td
+                  = select_tag('chosen_unit1',
+                    options_for_select(@units1, @edit[:unit1]),
+                    :multiple              => false,
+                    :class                 => "widthed",
+                    "data-miq_sparkle_on"  => true,
+                    "data-miq_sparkle_off" => true,
+                    "data-miq_observe"     => {:url => url}.to_json)
+              - if @edit[:unit1] != BAND_UNITS.last
+                %tr
+                  %td.key
+                    = _('Second band unit:')
+                  %td
+                    = select_tag('chosen_unit2',
+                      options_for_select([NOTHING_STRING] + @units2, @edit[:unit2]),
+                      :multiple              => false,
+                      :class                 => "widthed",
+                      "data-miq_sparkle_on"  => true,
+                      "data-miq_sparkle_off" => true,
+                      "data-miq_observe"     => {:url => url}.to_json)
+                - if @edit[:new][:tl_bands].length > 1 && @edit[:unit2] != BAND_UNITS.last
+                  %tr
+                    %td.key
+                      = _('Third band unit:')
+                    %td
+                      = select_tag('chosen_unit3',
+                        options_for_select([NOTHING_STRING] + @units3, @edit[:unit3]),
+                        :multiple              => false,
+                        :class                 => "widthed",
+                        "data-miq_sparkle_on"  => true,
+                        "data-miq_sparkle_off" => true,
+                        "data-miq_observe"     => {:url => url}.to_json)
+      %dd>
+        - if @tl_field != NOTHING_STRING
+          %fieldset
+            %table.style1
+              %tr
+                %td.key
+                  = _('Event to position at:')
+                %td
+                  = select_tag('chosen_position',
+                    options_for_select([_("First"), _("Last")], @edit[:new][:tl_position]),
+                    :multiple              => false,
+                    :class                 => "widthed",
+                    "data-miq_sparkle_on"  => true,
+                    "data-miq_sparkle_off" => true,
+                    "data-miq_observe"     => {:url => url}.to_json)
+              %tr
+                %td.key
+                  = _('Show events from last:')
+                - if @edit[:new][:tl_last_unit] != SHOWALL_STRING
+                  %td
+                    = select_tag('chosen_last_time',
+                      options_for_select(@tl_last_time_choices, @edit[:new][:tl_last_time]),
+                      :multiple              => false,
+                      :class                 => "widthed",
+                      "data-miq_sparkle_on"  => true,
+                      "data-miq_sparkle_off" => true,
+                      "data-miq_observe"     => {:url => url}.to_json)
+                %td
+                  = select_tag('chosen_last_unit',
+                    options_for_select([SHOWALL_STRING] + @edit[:tl_last_units], @edit[:new][:tl_last_unit]),
+                    :multiple              => false,
+                    :class                 => "widthed",
+                    "data-miq_sparkle_on"  => true,
+                    "data-miq_sparkle_off" => true,
+                    "data-miq_observe"     => {:url => url}.to_json)

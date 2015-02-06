@@ -432,7 +432,7 @@ Date and Time Configuration
           clear_screen
           say("#{selection}\n\n")
           say("Note: Each database region number must be unique.\n\n")
-          region_number = ask_for_integer("Enter a database region number: ")
+          region_number = ask_for_integer("database region number")
           clear_screen
           say "It is recommended to use a new database or backup the existing database first.\n"
           say "Warning: SETTING A DATABASE REGION WILL DESTROY ANY EXISTING DATA AND CANNOT BE UNDONE.\n\n"

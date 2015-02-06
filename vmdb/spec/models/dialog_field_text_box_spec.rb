@@ -189,10 +189,6 @@ describe DialogFieldTextBox do
         dialog_field.normalize_automate_values(automate_hash)
       end
 
-      it "sets the data_type" do
-        expect(dialog_field.data_type).to eq("datatype")
-      end
-
       it "sets the protected" do
         expect(dialog_field.protected?).to be_true
       end
@@ -237,6 +233,26 @@ describe DialogFieldTextBox do
 
       it "returns the default value in string format" do
         expect(dialog_field.normalize_automate_values(automate_hash)).to eq("123")
+      end
+    end
+  end
+
+  describe "#sample_text" do
+    let(:dialog_field) { described_class.new(:dynamic => dynamic, :default_value => "defaultvalue") }
+
+    context "when the dialog is dynamic" do
+      let(:dynamic) { true }
+
+      it "returns 'Sample Text'" do
+        expect(dialog_field.sample_text).to eq("Sample Text")
+      end
+    end
+
+    context "when the dialog is not dynamic" do
+      let(:dynamic) { false }
+
+      it "returns the default value" do
+        expect(dialog_field.sample_text).to eq("defaultvalue")
       end
     end
   end

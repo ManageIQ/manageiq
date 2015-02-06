@@ -1,10 +1,9 @@
-<div id="teaser">
   <% if display_back_button? %>  <%# Only create this div if we get back a file name %>
     <div style="float:left;">
       <%= render :partial => "layouts/dhtmlxtoolbar", :locals=>{:tb=>"summary_center_tb", :tb_yaml=>"summary_center_tb"} %>
     </div>
   <% end %>
-  <% padding = @layout == "configuration" && @tabform == "ui_4" ? 0 : 224 %>
+  <% padding = @layout == "configuration" && @tabform == "ui_4" ? 0 : 0 %>
   <div style="float:left;padding-left: <%=padding%>px">
     <%= render(:partial=>"layouts/center_buttons") %>
   </div>
@@ -13,17 +12,8 @@
   </div>
   <div style="float:right">
   <%= render(:partial=>"layouts/view_buttons") %>
-</div>
-
   <% if @lastaction=="show_list" && !session[:menu_click] &&
-          ["availability_zone","vm", "miq_template","offline", "retired", "templates",
-           "flavor","host", "service", "repository", "storage","ems_cloud","ems_cluster",
-           "resource_pool","ems_infra","vd_controller",
-           "ontap_storage_system",
-           "ontap_storage_volume","ontap_file_share","snia_local_file_system",
-           "ontap_logical_disk","cim_base_storage_extent","storage_manager", "security_group"].include?(@layout) &&
-           !@in_a_form %>
-
+        display_adv_search? && !@in_a_form %>
     <%= render :partial => "layouts/dhtmlx_tags", :locals=>{:control=>"calendar"} %>
     <%= hidden_div_if(@edit && @edit[:adv_search_open] != true, :id=>"adv_search_div" ) %>
       <% if @edit && @edit[:adv_search_open] %>
@@ -32,7 +22,7 @@
     </div>
     <%= render(:partial=>'layouts/quick_search') %>
 
-  <div id="searchbox" class="<% if session[:custom_logo] %>whitelabeled<% end %>"><%# Name based search box %>
+   <div id="searchbox" class="<% if session[:custom_logo] %>whitelabeled<% end %>"><%# Name based search box %>
     <%= form_tag( {:action=>'show_list'}) do %>
       <%= text_field("search", "text", :id=>"search_text", :value=>@search_text,:alt=>"Search by Name within results", :title=>"Search by Name within results", "data-miq_focus"=>true) %>
       <%= image_submit_tag("/images/layout/search.gif", :id=>"searchicon", :name=>"search", :alt=>"Search by Name within results", :title=>"Search by Name within results")%>
@@ -45,13 +35,7 @@
 </div>
 
 <% if @lastaction=="show_list" && !session[:menu_click] &&
-      ["availability_zone","vm","miq_template" ,"offline", "retired", "templates",
-       "host", "service", "repository", "storage","ems_cloud","ems_cluster","flavor",
-       "resource_pool","ems_infra","ontap_storage_system","ontap_storage_volume",
-       "ontap_file_share","snia_local_file_system","ontap_logical_disk",
-       "cim_base_storage_extent","storage_manager","vd_controller",
-       "security_group"].include?(@layout) &&
-       !@in_a_form %>
+    display_adv_search? && !@in_a_form %>
   <% squash_state = @edit && @edit[:adv_search_open] && @edit[:adv_search_open] == true ? "false" : "true" %>
   <%= link_to(image_tag("/images/toolbars/squashed-#{squash_state}.png", :class=>"rollover small", :id=>"adv_search_img", :style=>"z-index:50", :alt=>"Advanced Search", :title=>"Advanced Search"),
                       {:action=>'adv_search_toggle'},

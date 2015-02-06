@@ -1,0 +1,45 @@
+- url = url_for(:action => 'group_form_field_changed', :id => "#{@custom_button_set.id || 'new'}")
+#group_form_div{:style => "width: 100%; height: 100%; overflow: auto;"}
+  = render :partial => "layouts/flash_msg"
+  %p.legend
+    = _('Basic Info')
+  %table.style1
+    %tr
+      %td.key
+        = _('Button Group Text')
+      %td
+        = text_field_tag("name", @edit[:new][:name],
+          :maxlength         => 15,
+          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+        &nbsp;
+        = check_box_tag("display", "1", @edit[:new][:display],
+          "data-miq_observe_checkbox" => {:url => url}.to_json)
+        &nbsp;
+        = _('Display on Button')
+      - unless is_browser_ie?
+        = javascript_tag(javascript_focus('name'))
+    %tr
+      %td.key
+        = _('Button Group Hover Text')
+      %td.wide
+        = text_field_tag("description", @edit[:new][:description],
+          :maxlength         => 30,
+          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+    %tr
+      %td.key
+        = _('Button Group Image')
+      %td
+        - #= select("button","id", Array.new(5) {|i| i+1}, {:selected=>@edit[:new][:button_id].to_i}, {:class=>"threedigit"})
+        #button_div
+        = render(:partial => 'layouts/dhtmlxcombo',
+          :locals         => {:combo_id => "button_div",
+            :combo_name                 => "button_image",
+            :combo_width                => 50,
+            :combo_url                  => "/miq_ae_customization/group_form_field_changed/#{@custom_button_set.id || 'new'}",
+            :xml_combo                  => @edit[:new][:button_images]})
+
+  - if x_active_tree == :ab_tree || (x_active_tree == :sandt_tree && @edit[:rec_id])
+    %hr
+    %p.legend
+      = _('Assign Buttons')
+    = render :partial => "shared/buttons/column_lists"

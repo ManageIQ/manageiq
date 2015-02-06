@@ -1,0 +1,119 @@
+.cell-title {
+    font-weight: bold;
+}
+
+.cell-bkg {
+    border-left: 1px #999 solid;
+    border-right: 1px #999 solid;
+    background-image: url(/images/layout/stripe_bg2.png);
+    color:#403990;
+    font-weight: bold;
+}
+
+.cell-bkg-plain {
+    background-image: -webkit-linear-gradient(top, #fafafa, #ededed); /* For Chrome and Safari */
+    background-image: -moz-linear-gradient(top, #fafafa, #ededed); /* For old Fx (3.6 to 15) */
+    background-image: -ms-linear-gradient(top, #fafafa, #ededed); /* For pre-releases of IE 10*/
+    background-image: -o-linear-gradient(top, #fafafa, #ededed); /* For old Opera (11.1 to 12.0) */
+    background-image: linear-gradient(top, #fafafa, #ededed); /* Standard syntax; must be last */
+
+}
+
+.cell-bkg-plain-no-shade {
+    color:#403990;
+    font-weight: bold;
+}
+
+.cell-bkg-plain-mark-txt-no-shade {
+    color:#21a0ec;
+    font-weight: bold;
+}
+
+.cell-bkg-plain-mark-txt-no-shade-no-bold {
+    color:#21a0ec;
+}
+
+.cell-bkg-plain-mark-txt-black {
+    color:#000;
+}
+
+.slick-header-column {
+    text-align: center;
+    /*white-space:normal;*/
+
+}
+
+.slick-column-name {
+    /*position: absolute; bottom: 0; left: 0;*/
+    width: 100%;
+    /*text-align: center;*/
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.cell-text-wrap {
+    white-space:normal;
+}
+
+.cell-effort-driven {
+    text-align: center;
+}
+
+/*.slick-cell {*/
+    /*overflow: visible;*/
+    /*white-space: pre-wrap;*/
+/*}*/
+
+.slick-header-column.ui-state-default {
+    height: 160px;
+    background-image: -webkit-linear-gradient(top, #fafafa, #ffffff); /* For Chrome and Safari */
+    background-image: -moz-linear-gradient(top, #fafafa, #ffffff); /* For old Fx (3.6 to 15) */
+    background-image: -ms-linear-gradient(top, #fafafa, #ffffff); /* For pre-releases of IE 10*/
+    background-image: -o-linear-gradient(top, #fafafa, #ffffff); /* For old Opera (11.1 to 12.0) */
+    background-image: linear-gradient(top, #fafafa, #ffffff); /* Standard syntax; must be last */
+}
+
+.rotated-text {
+    /*position: absolute; bottom: 0; left: 0;*/
+    /*display: inline-block;*/
+    /*margin-bottom: 10px;*/
+    /*white-space: nowrap;*/
+    /*text-align: left;*/
+    width: 100%;
+    display: inline-block;
+    /*text-align: center;*/
+    /*position: absolute;*/
+    bottom: 0;
+    left: 0;
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    padding-bottom: 30px;
+    padding-left: 20px;
+}
+
+.toggle {
+    height: 9px;
+    width: 9px;
+    display: inline-block;
+}
+
+.toggle.expand {
+    background: url(/images/layout/plus.gif) no-repeat center center;
+}
+
+.toggle.collapse {
+    background: url(/images/layout/minus.gif) no-repeat center center;
+}
+
+.quadicon_grid { position:relative;float:left;padding: 0 1px 1px 0;width: 72px; height: 80px;color: #e3e4e4;text-transform: none;
+    padding-left: 33%
+}
+.quadicon_grid:hover{
+    padding: 1px 0 0 34%;
+}
+
+abbr[title] {
+    border-bottom-width: 0;
+}

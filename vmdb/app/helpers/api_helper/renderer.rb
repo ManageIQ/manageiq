@@ -70,23 +70,13 @@ module ApiHelper
       reftype = get_reftype(type, reftype, resource, opts)
       json    = Jbuilder.new
       json.ignore_nil!
-      add_hash json, normalize_hash(reftype, resource), :render_attr
-      #
-      # Let's expand subcollections for objects if asked for
-      #
-      scs = collection_config[type.to_sym]
-      if resource.respond_to?(:attributes) && scs[:subcollections]
-        scs[:subcollections].each do |sc|
-          target = "#{sc}_query_resource"
-          next unless respond_to?(target)
-          next unless expand?(sc) || collection_config[sc.to_sym][:options].include?(:show)
+      add_hash json, normalize_hash(reftype, resource), :render_resource_attr, resource
 
-          sctype = "#{type}/#{resource.id}/#{sc}"
-          subresources = send(target, resource)
-
-          expand_subcollection(json, sc, sctype, subresources)
-        end
+      if resource.respond_to?(:attributes)
+        expand_virtual_attributes(json, type, resource)
+        expand_subcollections(json, type, resource)
       end
+
       expand_actions(json, type, opts)
       json
     end
@@ -133,10 +123,10 @@ module ApiHelper
     #
     # Common proc for adding a hash directly to the Jbuilder
     #
-    def add_hash(json, hash, attr_rendered = nil)
+    def add_hash(json, hash, render_attr_proc = nil, resource = nil)
       return if hash.blank?
       hash.each do |attr, value|
-        json.set! attr, value if attr_rendered.nil? || send(attr_rendered, attr)
+        json.set! attr, value if render_attr_proc.nil? || send(render_attr_proc, resource, attr)
       end
     end
 
@@ -144,7 +134,7 @@ module ApiHelper
     # Render nothing for normal resource deletes.
     #
     def render_normal_destroy
-      render :nothing => true, :status => 204
+      render :nothing => true, :status => Rack::Utils.status_code(:no_content)
     end
 
     #
@@ -199,6 +189,111 @@ module ApiHelper
     end
 
     #
+    # Let's expand subcollections for objects if asked for
+    #
+    def expand_subcollections(json, type, resource)
+      scs = collection_config[type.to_sym][:subcollections]
+      return unless scs
+      scs.each do |sc|
+        target = "#{sc}_query_resource"
+        next unless expand_subcollection?(sc, target)
+        expand_subcollection(json, sc, "#{type}/#{resource.id}/#{sc}", send(target, resource))
+      end
+    end
+
+    def expand_subcollection?(sc, target)
+      respond_to?(target) && (expand?(sc) || collection_config[sc.to_sym][:options].include?(:show))
+    end
+
+    #
+    # Let's expand virtual attributes and related objects if asked for
+    # Supporting [<related_object>]*.<virtual_attribute>
+    #
+    def expand_virtual_attributes(json, type, resource)
+      result = {}
+      object_hash = {}
+      virtual_attributes_list(resource).each do |vattr|
+        attr_name, attr_base = split_virtual_attribute(vattr)
+        value, value_result = if attr_base.blank?
+                                fetch_direct_virtual_attribute(type, resource, attr_name)
+                              else
+                                fetch_indirect_virtual_attribute(type, resource, attr_base, attr_name, object_hash)
+                              end
+        result = result.deep_merge(value_result) unless value.nil?
+      end
+      add_hash json, result
+    end
+
+    def fetch_direct_virtual_attribute(_type, resource, attr)
+      return unless attr_accessible?(resource, attr)
+      value = resource.public_send(attr)
+      result = {attr => normalize_virtual(nil, attr, value, :ignore_nil => true)}
+      # set nil vtype above to "#{type}/#{resource.id}/#{attr}" to support id normalization
+      [value, result]
+    end
+
+    def fetch_indirect_virtual_attribute(_type, resource, base, attr, object_hash)
+      query_related_objects(base, resource, object_hash)
+      return unless attr_accessible?(object_hash[base], attr)
+      value = object_hash[base].public_send(attr)
+      result = {attr => normalize_virtual(nil, attr, value, :ignore_nil => true)}
+      # set nil vtype above to "#{type}/#{resource.id}/#{base.tr('.', '/')}/#{attr}" to support id normalization
+      base.split(".").reverse.each { |level| result = {level => result} }
+      [value, result]
+    end
+
+    #
+    # Accesing and hashing <resource>[.<related_object>]+ in object_hash
+    #
+    def query_related_objects(object_path, resource, object_hash)
+      return if object_hash[object_path].present?
+      related_resource = resource
+      related_objects  = []
+      object_path.split(".").each do |related_object|
+        related_objects << related_object
+        if attr_accessible?(related_resource, related_object)
+          related_resource = related_resource.public_send(related_object)
+          object_hash[related_objects.join(".")] = related_resource if related_resource
+        end
+      end
+    end
+
+    #
+    # Let's get a list of virtual attributes applicable to the resource.
+    #
+    def virtual_attributes_list(resource)
+      return [] if attribute_selection == "all"
+      attribute_selection.collect do |requested_attr|
+        requested_attr if attr_virtual?(resource, requested_attr)
+      end.compact
+    end
+
+    def split_virtual_attribute(attr)
+      attr_parts = attr_split(attr)
+      return [attr_parts.first, ""] if attr_parts.length == 1
+      [attr_parts.last, attr_parts[0..-2].join(".")]
+    end
+
+    def attr_accessible?(object, attr)
+      return false unless object && object.respond_to?(attr)
+      is_reflection = object.class.reflections_with_virtual.keys.collect(&:to_s).include?(attr)
+      is_column = object.class.columns_hash_with_virtual.keys.include?(attr) unless is_reflection
+      is_reflection || is_column
+    end
+
+    def attr_virtual?(object, attr)
+      primary = attr_split(attr).first
+      return false unless object && object.respond_to?(:attributes) && object.respond_to?(primary)
+      is_reflection = object.class.reflections_with_virtual.keys.collect(&:to_s).include?(primary)
+      is_virtual_column = object.class.virtual_columns_hash.keys.include?(primary) unless is_reflection
+      is_reflection || is_virtual_column
+    end
+
+    def attr_split(attr)
+      attr.tr("/", ".").split(".")
+    end
+
+    #
     # Let's expand actions
     #
     def expand_actions(json, type, opts)
@@ -215,6 +310,19 @@ module ApiHelper
           aspecs.each { |action_spec| add_child js, normalize_hash(type, action_spec) }
         end
       end
+    end
+
+    def render_resource_attr(resource, attr)
+      pas = physical_attribute_selection(resource)
+      pas.blank? || pas.include?(attr)
+    end
+
+    def physical_attribute_selection(resource)
+      return [] unless params['attributes']
+      physical_attributes = params['attributes'].split(",").collect do |attr|
+        attr unless attr_virtual?(resource, attr)
+      end.compact
+      physical_attributes.present? ? physical_attributes | ["id"] : []
     end
 
     #

@@ -601,6 +601,7 @@ Vmdb::Application.routes.draw do
     },
     :miq_ae_customization => {
       :get => %w(
+        dialog_accordion_json
         explorer
         export_service_dialogs
         review_import
@@ -1064,6 +1065,38 @@ Vmdb::Application.routes.draw do
         zone_field_changed
       )
     },
+
+    :orchestration_stack => {
+      :get  => %w(
+        cloud_networks
+        download_data
+        index
+        outputs
+        parameters
+        resources
+        show
+        show_list
+        tagging_edit
+      ),
+      :post => %w(
+        button
+        cloud_networks
+        outputs
+        panel_control
+        parameters
+        quick_search
+        resources
+        save_col_widths
+        sections_field_changed
+        show
+        show_list
+        tagging_edit
+        tag_edit_form_field_changed
+      ) +
+        adv_search_post+
+        exp_post
+    },
+
     :pxe => {
       :get => %w(
         explorer
@@ -1153,6 +1186,7 @@ Vmdb::Application.routes.draw do
         wait_for_task
         widget_edit
         widget_form_field_changed
+        widget_shortcut_dd_done
         widget_shortcut_remove
         widget_shortcut_reset
         x_button

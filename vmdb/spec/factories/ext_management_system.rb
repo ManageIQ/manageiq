@@ -33,9 +33,6 @@ FactoryGirl.define do
     end
   end
 
-  factory :ems_kvm, :class => "EmsKvm", :parent => :ext_management_system do
-  end
-
   factory :ems_amazon, :class => "EmsAmazon", :parent => :ext_management_system do
     provider_region "us-east-1"
   end

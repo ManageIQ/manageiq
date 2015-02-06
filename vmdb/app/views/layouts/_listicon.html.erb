@@ -60,7 +60,7 @@
     <img src="/images/icons/new/<%= icon_image == nil ? 'miq_alert' : icon_image %>.png" valign="middle" border="0" height="20" width="20" />
   <% elsif db == "ExtManagementSystem" %>
       <% ems = @targets_hash[from_cid(@id)] if @targets_hash %>
-        <img src="/images/icons/new/vendor-<%=h(ems.emstype.downcase) %>.png" valign="middle" border="0" height="20" width="20"  />
+        <img src="/images/icons/new/vendor-<%=h(ems.image_name) %>.png" valign="middle" border="0" height="20" width="20"  />
   <% elsif db == "LdapServer" %>
     <img src="/images/icons/new/ldap_server.png" valign="middle" border="0" height="20" width="20"  />
   <% elsif db == "MiqSchedule" %>

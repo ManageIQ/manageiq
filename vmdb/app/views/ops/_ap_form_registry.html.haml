@@ -1,0 +1,56 @@
+%fieldset
+  %p.legend=_("Registry Entry")
+  %table.style3
+    %thead
+      %tr
+        %th.icon
+        %th=_("Registry Hive")
+        %th=_("Registry Key")
+        %th=_("Registry Value")
+    %tbody
+      - if (!params[:add] && session[:reg_data].empty?) || params[:edit_entry]
+        %tr#new_tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url=>{:action=>'ap_ce_select', :add=>'new', :item1=>"registry", :id=>"#{@scan.id || "new"}"}), :title => _("Click to add a new entry")}
+          %td
+            = image_tag("/images/toolbars/new.png",:class=>"rollover small")
+          %td=_("<New Entry>")
+          %td=_("<Click on this row to create a new entry>")
+          %td=_("<Click on this row to create a new entry>")
+      - else
+        %tr#new_tr{:class => cycle('row0', 'row1')}
+          %td
+            = image_submit_tag("/images/toolbars/import.png",
+              :class=>"rollover small",
+              :id=>"accept", :name=>"accept", :alt=>_("Add this entry"), :title=>_("Add this entry"), :item_type=>"registry", :id=>"#{@scan.id || "new"}")
+          %td.all
+            =_("HKLM")
+          %td.all
+            = text_field("entry", "kname", :maxlength=>MAX_NAME_LEN, "value"=>session[:reg_data][:key])
+          %td.all
+            = text_field("entry", "value", :maxlength=>MAX_NAME_LEN, "value"=>session[:reg_data][:value])
+          = hidden_field("item", "type2", :value=>"registry")
+      - if !session[:reg_entries].nil? && !session[:reg_entries].empty?
+        - session[:reg_entries].sort_by { |r| r["key"] }.each_with_index do |reg,i|
+          - if session[:reg_data][:key] == reg["key"] && session[:reg_data][:value] == reg["value"]
+            %tr{:class => cycle('row0', 'row1'), :id => "edit_tr"}
+              %td
+                = image_submit_tag("/images/toolbars/import.png",
+                  :class=>"rollover small",
+                  :id=>"accept", :name=>"accept", :entry_id=>i, :edit_entry=>'edit_registry', :alt=>_("Update this entry"), :title=>_("Update this entry"), :id=>"#{@scan.id || "new"}")
+              %td.all
+                =_("HKLM")
+              %td.all
+                = text_field("entry", "kname", :maxlength=>MAX_NAME_LEN, "value"=>session[:reg_data][:key])
+              %td.all
+                = text_field("entry", "value", :maxlength=>MAX_NAME_LEN, "value"=>session[:reg_data][:value])
+              = hidden_field("item", "type2", :value=>"registry")
+              = hidden_field("entry", "id", :value=>i)
+          - else
+            %tr{:class => cycle('row0', 'row1'), :id => "#{i}_tr"}
+              %td{:onclick => remote_function(:url=>{:action=>'ap_ce_delete', :entry_id=>i,:item1=>"registry", :reg_key=>reg["key"], :reg_value=>reg["value"], :id=>"#{@scan.id || "new"}"}), :title => _("Click to delete this entry")}
+                = image_tag("/images/toolbars/delete.png", :class=>"rollover small")
+              %td{:onclick => remote_function(:url=>{:action=>'ap_ce_select', :entry_id=>i,:item2=>"registry", :reg_key=>reg["key"], :reg_value=>reg["value"], :edit_entry=>'edit_registry', :field=>"kname", :id=>"#{@scan.id || "new"}"}), :title => _("Click to update this entry")}
+                =_("HKLM")
+              %td{:onclick => remote_function(:url=>{:action=>'ap_ce_select', :entry_id=>i,:item2=>"registry", :reg_key=>reg["key"], :reg_value=>reg["value"], :edit_entry=>'edit_registry', :field=>"kname", :id=>"#{@scan.id || "new"}"}), :title => _("Click to update this entry")}
+                = h(reg["key"])
+              %td{:onclick => remote_function(:url=>{:action=>'ap_ce_select', :entry_id=>i,:item2=>"registry", :reg_key=>reg["key"], :reg_value=>reg["value"], :edit_entry=>'edit_registry', :field=>"value", :id=>"#{@scan.id || "new"}"}), :title => _("Click to update this entry")}
+                = h(reg["value"])

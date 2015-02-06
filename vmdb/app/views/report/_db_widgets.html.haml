@@ -1,0 +1,36 @@
+#form_widgets_div
+  - edit = @in_a_form ? @edit : @sb
+  %p.legend
+    = _('Sample Dashboard')
+  - if @in_a_form
+    %table.admintable
+      %tbody
+        %tr
+          %td.wider
+            - combo_url = "/report/db_form_field_changed/#{@db.id || 'new'}"
+            #widget_div{:style => "width: 500px;"}
+            = render(:partial => 'layouts/dhtmlxcombo',
+              :locals         => {:combo_id => "widget_div",
+                :combo_name                 => "widget",
+                :xml_combo                  => @widgets_menu_xml,
+                :combo_url                  => combo_url,
+                :combo_width                => 250,
+                :combo_onchange             => true})
+  #modules
+    .yui-b
+      .yui-gb
+        #col1.yui-u.first{:style => "position: relative; min-height: 50px;"}
+          - edit[:new][:col1].each do |w|
+            - widget = MiqWidget.find_by_id(w)
+            - if widget && widget.enabled
+              = render :partial => 'db_widget', :locals => {:widget => widget}
+        #col2.yui-u{:style => "position: relative; min-height: 50px;"}
+          - edit[:new][:col2].each do |w|
+            - widget = MiqWidget.find_by_id(w)
+            - if widget && widget.enabled
+              = render :partial => 'db_widget', :locals => {:widget => widget}
+        #col3.yui-u{:style => "position: relative; min-height: 50px;"}
+          - edit[:new][:col3].each do |w|
+            - widget = MiqWidget.find_by_id(w)
+            - if widget && widget.enabled
+              = render :partial => 'db_widget', :locals => {:widget => widget}

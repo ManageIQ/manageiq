@@ -1,0 +1,6 @@
+- # Replace the flash message
+- opts ||= {}
+- div_num = opts[:div_num]
+
+= partial_replace("flash_msg_div", "layouts/flash_msg", :div_num => div_num ? div_num : "")
+= set_spinner_off

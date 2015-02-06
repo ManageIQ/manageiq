@@ -62,27 +62,7 @@
                                "data-miq_observe" => url_json)
         %fieldset
           %p.legend=_('Display Settings')
-          %table.style1
-            %tr
-              %td.key=_('Header Accent Color')
-              %td.wide
-                - THEMES.each do |t|
-                  - if t.last == @edit[:new][:display][:theme]
-                    %div{:title => _("The %s theme is currently selected") % t.first,
-                         :style => "background-color: #{THEME_CSS_SETTINGS[t.last][:background_color]};" |
-                                   "border: 3px solid #000;" +                                           |
-                                   "width: 32px;" +                                                      |
-                                   "height: 32px;" +                                                     |
-                                   "float: left;"}                                                       |
-                  - else
-                    %div{:onclick => "#{remote_function(:url => {:action => 'theme_changed',
-                                                                 :theme  => t.last})}",
-                         :title   => _("Click to select the %s theme") % t.first,
-                         :style   => "background-color: #{THEME_CSS_SETTINGS[t.last][:background_color]};" |
-                                     "border: 3px solid #fff;" +                                           |
-                                     "width: 32px;" +                                                      |
-                                     "height: 32px;" +                                                     |
-                                     "float: left;"}                                                       |
+          %table.style1                                                     |
             - [[_("Chart Theme"), "display_reporttheme", Charting.chart_themes_for_select, :reporttheme],
                [_("Time Zone"),   "display_timezone",    ALL_TIMEZONES,                    :timezone],
                [_("Locale"), "display_locale",      [[_("Global Default"), "default"]] + FastGettext.human_available_locales,

@@ -439,7 +439,7 @@
             - # need to specify Checked/Disabled to check or disable a checkbox, so need separate lines for each depending upon radio button state
             - field_hash[:values].each do |f|
               - checked = options[field] && options[field][0] ==  f[0]
-              - onclick = remote_function(:with => 'Form.Element.serialize(this)', :url => url, :loading => "miqSparkle(true);", :complete => "miqSparkle(false);")
+              - onclick = remote_function(:with => 'miqSerializeForm(this)', :url => url, :loading => "miqSparkle(true);", :complete => "miqSparkle(false);")
               %input{:type => "radio", :id => field_id, :value => f[0], :name => field_id, :checked => checked, :onclick => disabled ? "" : onclick}
               = f[1]
           - else

@@ -1,0 +1,102 @@
+= render :partial => "layouts/flash_msg"
+
+%p.legend
+  = _('Basic Information')
+%table.style1
+  %tbody
+    %tr
+      %td.key
+        = _('Button Text')
+      %td
+        = @temp[:custom_button].name
+        - display = @temp[:custom_button].options.key?(:display) ? @temp[:custom_button].options[:display] : true
+        = check_box_tag(display, true, display, :disabled => true)
+        &nbsp;
+        = _('Display on Button')
+    %tr
+      %td.key
+        = _('Button Hover Text')
+      %td.notwide
+        = @temp[:custom_button].description
+    %tr
+      %td.key
+        = _('Image')
+      %td.notwide
+        %img{:src => "/images/icons/new/custom-#{@temp[:custom_button].options[:button_image]}.png", :align => "left", :width => "20", :height => "20"}
+    %tr
+      %td.key
+        = _('Dialog')
+      %td
+        = h(@sb[:dialog_label])
+%hr
+
+%p.legend
+  = _('Object Details')
+%table.style1
+  %tbody
+    %tr
+      %td.key
+        = _('System/Process/')
+      %td
+        = h(@resolve[:new][:instance_name])
+    %tr
+      %td.key
+        = _('Message')
+      %td
+        = h(@resolve[:new][:object_message])
+    %tr
+      %td.key
+        = _('Request')
+      %td
+        = h(@resolve[:new][:object_request])
+%hr
+
+%p.legend
+  = _('Object Attribute')
+%table.style1
+  %tbody
+    %tr
+      %td.key
+        = _('Type')
+      %td.notwide
+        = @resolve[:new][:target_class]
+    - if @resolve[:new][:target_class] && !@resolve[:new][:target_class].blank?
+      %tr
+        %td.key
+          = _('Selection')
+        %td
+          = h(@resolve[:new][:target_id])
+%hr
+
+%p.legend
+  = _('Attribute/Value Pairs')
+- if @resolve[:new][:attrs].empty?
+  = render :partial => 'layouts/info_msg', :locals => {:message => _("No Attribute/Value Pairs found.")}
+- else
+  %table.style1
+    - @resolve[:new][:attrs].each_with_index do |attr, i|
+      %tr
+        %td.key
+          = (i + 1).to_s
+        %td.wide
+          = h(attr[0])
+        %td.wide
+          = h(attr[1])
+%hr
+
+%p.legend
+  = _('Visibility')
+%table.style1
+  - show_to = @temp[:custom_button].visibility.nil? || (@temp[:custom_button].visibility && @temp[:custom_button].visibility[:roles] && @temp[:custom_button].visibility[:roles][0] == "_ALL_") ? _("To All") : _("By Role")
+  %tbody
+    %tr
+      %td.key
+        = _('Show')
+      %td
+        = h(show_to)
+    - if show_to == "By Role" && !@sb[:user_roles].blank?
+      %tr
+        %td.key
+          = _('User Roles')
+        %td
+          = h(@sb[:user_roles].join(", "))

@@ -1,6 +1,10 @@
 require 'ancestry'
 class OrchestrationStack < ActiveRecord::Base
   include NewWithTypeStiMixin
+  include ReportableMixin
+  include AsyncDeleteMixin
+
+  acts_as_miq_taggable
 
   has_ancestry
 
@@ -13,6 +17,26 @@ class OrchestrationStack < ActiveRecord::Base
   has_many   :parameters, :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackParameter"
   has_many   :outputs,    :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackOutput"
   has_many   :resources,  :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackResource"
+
+  alias orchestration_stack_parameters parameters
+  alias orchestration_stack_outputs    outputs
+  alias orchestration_stack_resources  resources
+
+  virtual_column :total_vms,             :type => :integer
+  virtual_column :total_security_groups, :type => :integer
+  virtual_column :total_cloud_networks,  :type => :integer
+
+  def total_vms
+    vms.size
+  end
+
+  def total_security_groups
+    security_groups.size
+  end
+
+  def total_cloud_networks
+    cloud_networks.size
+  end
 
   # @param options [Hash] what to update for the stack. Option keys and values are:
   #   :template (String, URI, S3::S3Object, Object) - A new stack template.

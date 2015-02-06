@@ -1,0 +1,21 @@
+#main_div
+  %p.legend
+    = _('Basic Information')
+  %table.style1
+    %tr
+      %td.key
+        = _('Name')
+      %td.wider
+        = h(widget.name)
+    %tr
+      %td.key
+        = _('Tab Title')
+      %td.wider
+        = h(widget.description)
+    %tr
+      %td.key
+        = _('Locked')
+      %td
+        = h(widget.set_data[:locked])
+  %hr
+  = render :partial => 'db_widgets', :locals => {:widget => widget}

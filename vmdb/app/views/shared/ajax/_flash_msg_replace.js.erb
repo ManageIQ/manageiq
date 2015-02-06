@@ -1,8 +1,0 @@
-<%# Replace the flash message %>
-<% opts ||= {} %>
-<% div_num = opts[:div_num] %>
-
-<%= render :partial => "shared/ajax/partial_replace",
-           :locals => {:div => "flash_msg_div", :opts => {:partial => "layouts/flash_msg", :div_num => div_num ? div_num : ""}} %>
-
-<%= set_spinner_off %>

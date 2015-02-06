@@ -39,6 +39,31 @@ class ApiController
       end
     end
 
+    def delete_resource_vms(type, id = nil, _data = nil)
+      raise BadRequestError, "Must specify an id for deleting a #{type} resource" unless id
+
+      api_action(type, id) do |klass|
+        vm = resource_search(id, type, klass)
+        api_log_info("Deleting #{vm_ident(vm)}")
+
+        destroy_vm(vm)
+      end
+    end
+
+    def set_owner_resource_vms(type, id = nil, data = nil)
+      raise BadRequestError, "Must specify an id for setting the owner of a #{type} resource" unless id
+
+      owner = data.blank? ? "" : data["owner"].strip
+      raise BadRequestError, "Must specify an owner" if owner.blank?
+
+      api_action(type, id) do |klass|
+        vm = resource_search(id, type, klass)
+        api_log_info("Setting owner of #{vm_ident(vm)}")
+
+        set_owner_vm(vm, owner)
+      end
+    end
+
     private
 
     def vm_ident(vm)
@@ -70,6 +95,25 @@ class ApiController
       desc = "#{vm_ident(vm)} suspending"
       task_id = queue_object_action(vm, desc, :method_name => "suspend", :role => "ems_operations")
       action_result(true, desc, :task_id => task_id)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
+    def destroy_vm(vm)
+      desc = "#{vm_ident(vm)} deleting"
+      task_id = queue_object_action(vm, desc, :method_name => "destroy")
+      action_result(true, desc, :task_id => task_id)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
+    def set_owner_vm(vm, owner)
+      desc = "#{vm_ident(vm)} setting owner to '#{owner}'"
+      user = User.find_or_create_by_ldap_upn(owner)
+      vm.evm_owner = user
+      vm.miq_group = user.current_group unless user.nil?
+      vm.save!
+      action_result(true, desc)
     rescue => err
       action_result(false, err.to_s)
     end

@@ -3,26 +3,31 @@
 %div#schedule_email_options_div
   - if @edit[:new][:send_email]
     %fieldset
-      %p.legend E-mail Options
+      %p.legend
+        = _("E-mail Options")
       %table.style1
         %tr
-          %td.key Send if Report is Empty
+          %td.key
+            = _("Send if Report is Empty")
           %td
             = check_box_tag("send_if_empty", "1", @edit[:new][:email][:send_if_empty],
                             "data-miq_observe_checkbox" => url_json)
         %tr
-          %td.key Attachments
+          %td.key
+            = _("Attachments")
           %td
             = check_box_tag("send_txt", 1,
                             Array(@edit[:new][:email][:attach]).include?(:txt),
                             "data-miq_observe_checkbox" => url_json)
-            Text &nbsp;&nbsp;
+            = _("Text")
+            &nbsp;&nbsp;
             = check_box_tag("send_csv", 1,
                             Array(@edit[:new][:email][:attach]).include?(:csv),
                             "data-miq_observe_checkbox" => url_json)
-            CSV&nbsp;&nbsp;
+            = _("CSV")
+            &nbsp;&nbsp;
             - if PdfGenerator.available?
               = check_box_tag("send_pdf", 1,
                               Array(@edit[:new][:email][:attach]).include?(:pdf),
                               "data-miq_observe_checkbox" => url_json)
-              PDF
+              = _("PDF")

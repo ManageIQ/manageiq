@@ -1,0 +1,94 @@
+- if @record && !@record.name.nil?
+  #accordion
+    .panel
+      .topbar
+        = link_to(h(@record.name.length < trunc_at ? @record.name : "#{@record.name[0...trunc_to]}..."),
+          {:action => 'panel_control', :panel => 'icon'},
+          :remote => true,
+          :title  => h(@record.name))
+      = hidden_div_if(@panels["icon"].nil? || @panels["icon"] == false, :id => "icon") do
+        .panecontent
+          = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
+
+      .topbar
+        = link_to(_("Properties"),
+          {:action => 'panel_control', :panel => 'resource_pool_prop'},
+          :remote => true)
+
+      = hidden_div_if(@panels["resource_pool_prop"].nil? || @panels["resource_pool_prop"] == false, :id => "resource_pool_prop") do
+        .panecontent
+          = link_to_with_icon(_('Summary'),
+            {:action => 'show', :id => @record, :display => 'main'},
+            :title => _('Show Summary'))
+          - # - unless @rp_config.nil? || @rp_config.empty?
+          - #   = link_to(image_tag("/images/icons/16/link_internal.gif", :align => 'left', :border => '0'),
+          - #     {:action => 'show', :id => @record, :display => 'config_info'},
+          - #     :title   => _("Show configuration"),
+          - #     :onclick => "return miqCheckForChanges()")
+          - #   = link_to(_('Configuration'),
+          - #     {:action => 'show', :id => @record, :display => 'config_info'},
+          - #     :title => _("Show configuration"), :onclick => "return miqCheckForChanges()")
+          - # - else
+          - #   *
+          - #   %img{:src => "/images/icons/16/link_none.gif", :align => "left", :title => _("No Configuration Available")}
+          - #   *
+          - #   = _("Configuration")
+
+      .topbar
+        = link_to(_("Relationships"),
+          {:action => 'panel_control', :panel => 'resource_pool_rel'},
+          :remote => true)
+      = hidden_div_if(@panels["resource_pool_rel"].nil? || @panels["resource_pool_rel"] == false, :id => "resource_pool_rel") do
+        .panecontent
+          - if role_allows(:feature => "ems_cluster_show")
+            - if @record.parent_cluster.nil?
+              %img{:src => "/images/icons/16/link_none.gif"}
+              = _("Parent Cluster: None")
+              %br
+            - else
+              = link_to_with_icon("Parent Cluster: %s" % @record.parent_cluster.name,
+                {:controller => 'ems_cluster', :action => 'show', :id => @record.parent_cluster.id.to_s},
+                :title => _('Show VMs'))
+
+          - if role_allows(:feature => "host_show")
+            - if @record.parent_host.nil?
+              %img{:src => "/images/icons/16/link_none.gif"}
+              = _("Parent Host: None")
+              %br
+            - else
+              = link_to_with_icon("Parent Host: %s" % @record.parent_host.name,
+                {:controller => 'host', :action => 'show', :id => @record.parent_host.id.to_s},
+                :title => _('Show Parent Host'))
+
+          - if role_allows(:feature => "vm_show_list")
+            - if @record.v_direct_vms == 0
+              %img{:src => "/images/icons/16/link_none.gif"}
+              = _("Direct VMs: 0")
+              %br
+            - else
+              = link_to_with_icon("Direct VMs: %s" % @record.v_direct_vms,
+                {:action => 'show', :display => "vms", :id => @record.id.to_s},
+                :title => _('Show VMs in this Resource Pool, but not in Resource Pools below'))
+            %p
+
+          - if role_allows(:feature => "vm_show_list")
+            - if @record.total_vms == 0
+              %img{:src => "/images/icons/16/link_none.gif"}
+              = _("All VMs: 0")
+              %br
+            - else
+              = link_to_with_icon("All VMs: %s" % @record.total_vms,
+                {:action => 'show', :display => "all_vms", :id => @record.id.to_s},
+                :title => _('Show all VMs in this Resource Pool'))
+            %p
+
+          - if role_allows(:feature => "_show_list")
+            - if @record.v_total_vms == 0
+              %img{:src => "/images/icons/16/link_none.gif"}
+              = _("Total VMs: 0")
+              %br
+            - else
+              = link_to_with_icon(_("All VMs (Tree View): %s") % @record.v_total_vms,
+                {:action => 'show', :display => "descendant_vms", :id => @record.id.to_s},
+                :title => _('Show tree of all VMs in this Resource Pool'))
+            %p

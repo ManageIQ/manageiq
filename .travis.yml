@@ -24,6 +24,7 @@ addons:
   postgresql: '9.3'
 before_install:
 - "echo 'gem: --no-ri --no-rdoc --no-document' > ~/.gemrc"
+- echo "1" > vmdb/REGION
 - psql -c "CREATE USER root SUPERUSER PASSWORD 'smartvm';" -U postgres
 - rake build:shared_objects
 - cd $TEST_ROOT

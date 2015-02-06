@@ -141,15 +141,15 @@ class MiqAeClassController < ApplicationController
       if @sb[:squash_state]
         @sb[:squash_state] = false
         page << javascript_show("inputs_div")
-        page << "$j('#exp_collapse_img').prop('src' ,'/images/toolbars/squashed-false.png');"
-        page << "$j('#exp_collapse_img').prop('title', 'Hide Input Parameters');"
-        page << "$j('#exp_collapse_img').prop('alt', 'Hide Input Parameters');"
+        page << "$('#exp_collapse_img').prop('src' ,'/images/toolbars/squashed-false.png');"
+        page << "$('#exp_collapse_img').prop('title', 'Hide Input Parameters');"
+        page << "$('#exp_collapse_img').prop('alt', 'Hide Input Parameters');"
       else
         @sb[:squash_state] = true
         page << javascript_hide("inputs_div")
-        page << "$j('#exp_collapse_img').prop('src', '/images/toolbars/squashed-true.png');"
-        page << "$j('#exp_collapse_img').prop('title', 'Show Input Parameters');"
-        page << "$j('#exp_collapse_img').prop('alt', 'Show Input Parameters');"
+        page << "$('#exp_collapse_img').prop('src', '/images/toolbars/squashed-true.png');"
+        page << "$('#exp_collapse_img').prop('title', 'Show Input Parameters');"
+        page << "$('#exp_collapse_img').prop('alt', 'Show Input Parameters');"
       end
     end
   end
@@ -1102,11 +1102,11 @@ class MiqAeClassController < ApplicationController
       page << "ta.scrollTop = (#{line.to_i}-1) * lineHeight;"
       if line > 0
         if @sb[:row_selected]
-          page << "$j('#cls_method_data_lines').scrollTop(ta.scrollTop);"
-          page << "$j('#cls_method_data').scrollTop(ta.scrollTop);"
+          page << "$('#cls_method_data_lines').scrollTop(ta.scrollTop);"
+          page << "$('#cls_method_data').scrollTop(ta.scrollTop);"
         else
-          page << "$j('#method_data_lines').scrollTop(ta.scrollTop);"
-          page << "$j('#method_data').scrollTop(ta.scrollTop);"
+          page << "$('#method_data_lines').scrollTop(ta.scrollTop);"
+          page << "$('#method_data').scrollTop(ta.scrollTop);"
         end
       end
     end
@@ -1135,11 +1135,11 @@ class MiqAeClassController < ApplicationController
           if session[:field_data][:datatype] == "password"
             page << javascript_hide("field_default_value")
             page << javascript_show("field_password_value")
-            page << "$j('#field_password_value').val('');"
+            page << "$('#field_password_value').val('');"
           else
             page << javascript_hide("field_password_value")
             page << javascript_show("field_default_value")
-            page << "$j('#field_default_value').val('');"
+            page << "$('#field_default_value').val('');"
           end
         end
         params.keys.each do |field|
@@ -1150,12 +1150,12 @@ class MiqAeClassController < ApplicationController
             if @edit[:new][:fields][f[1].to_i]['datatype'] == "password"
               page << javascript_hide(def_field)
               page << javascript_show(pwd_field)
-              page << "$j('##{pwd_field}').val('');"
+              page << "$('##{pwd_field}').val('');"
               @edit[:new][:fields][f[1].to_i]['default_value'] = nil
             else
               page << javascript_hide(pwd_field)
               page << javascript_show(def_field)
-              page << "$j('##{def_field}').val('');"
+              page << "$('##{def_field}').val('');"
               @edit[:new][:fields][f[1].to_i]['default_value'] = nil
             end
           end
@@ -1203,22 +1203,22 @@ class MiqAeClassController < ApplicationController
           if session[:field_data][:datatype] == "password"
             page << javascript_hide("cls_field_default_value")
             page << javascript_show("cls_field_password_value")
-            page << "$j('#cls_field_password_value').val('');"
+            page << "$('#cls_field_password_value').val('');"
           else
             page << javascript_hide("cls_field_password_value")
             page << javascript_show("cls_field_default_value")
-            page << "$j('#cls_field_default_value').val('');"
+            page << "$('#cls_field_default_value').val('');"
           end
         end
         if params[:method_field_datatype]
           if session[:field_data][:datatype] == "password"
             page << javascript_hide("method_field_default_value")
             page << javascript_show("method_field_password_value")
-            page << "$j('#method_field_password_value').val('');"
+            page << "$('#method_field_password_value').val('');"
           else
             page << javascript_hide("method_field_password_value")
             page << javascript_show("method_field_default_value")
-            page << "$j('#method_field_default_value').val('');"
+            page << "$('#method_field_default_value').val('');"
           end
         end
 
@@ -1237,12 +1237,12 @@ class MiqAeClassController < ApplicationController
             if @edit[:new][:fields][f[1].to_i]['datatype'] == "password"
               page << javascript_hide(def_field)
               page << javascript_show(pwd_field)
-              page << "$j('##{pwd_field}').val('');"
+              page << "$('##{pwd_field}').val('');"
               @edit[:new][:fields][f[1].to_i]['default_value'] = nil
             else
               page << javascript_hide(pwd_field)
               page << javascript_show(def_field)
-              page << "$j('##{def_field}').val('');"
+              page << "$('##{def_field}').val('');"
               @edit[:new][:fields][f[1].to_i]['default_value'] = nil
             end
           end
@@ -2710,7 +2710,8 @@ private
   def ns_right_cell_text
     model = ui_lookup(:model => @edit[:typ])
     name_for_msg = @edit[:rec_id].nil? ? _("Adding a new %s") : _("Editing %{model} \"%{name}\"")
-    options = @edit[:rec_id].nil? ? {:model => model} : {:model => model, :name => @ae_ns.name}
+    options = @edit[:rec_id].nil? ? ui_lookup(:model => model) : {:model => ui_lookup(:model => model),
+                                                                  :name  => @ae_ns.name}
     name_for_msg % options
   end
 
