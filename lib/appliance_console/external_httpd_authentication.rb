@@ -81,7 +81,7 @@ module ApplianceConsole
 
     def post_activation
       say("\nRestarting sssd and httpd ...")
-      %w(sssd httpd).each { |service| LinuxAdmin::Service.new(service).restart }
+      ['sssd', ENV['MIQ_APACHE_SERVICE_NAME']].each { |service| LinuxAdmin::Service.new(service).restart }
 
       say("Configuring sssd to start upon reboots ...")
       LinuxAdmin::Service.new("sssd").enable

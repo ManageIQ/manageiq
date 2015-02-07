@@ -2,7 +2,7 @@ require 'linux_admin'
 
 module MiqServer::RhnMirror
   extend ActiveSupport::Concern
-  APACHE_MIRROR_CONF_FILE = "/etc/httpd/conf.d/cfme-https-mirror.conf"
+  APACHE_MIRROR_CONF_FILE = Pathname.new(ENV['MIQ_APACHE_ROOT_DIR']).join("etc/httpd/conf.d/cfme-https-mirror.conf").to_s
   YUM_MIRROR_CONF_FILE    = "/etc/yum.repos.d/cfme-mirror.repo"
 
   def configure_rhn_mirror_client

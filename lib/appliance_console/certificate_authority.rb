@@ -108,8 +108,9 @@ module ApplianceConsole
       ).request
       if cert.complete?
         say "configuring apache to use certs"
-        FileUtils.cp("#{TEMPLATES}/etc/httpd/conf.d/cfme-https-cert.conf", "/etc/httpd/conf.d/cfme-https-cert.conf")
-        LinuxAdmin::Service.new("httpd").restart
+        FileUtils.cp("#{TEMPLATES}/etc/httpd/conf.d/cfme-https-cert.conf",
+                     Pathname.new(ENV['MIQ_APACHE_ROOT_DIR']).join("etc/httpd/conf.d/cfme-https-cert.conf").to_s)
+        LinuxAdmin::Service.new(ENV['MIQ_APACHE_SERVICE_NAME']).restart
       end
       self.api = cert.status
     end

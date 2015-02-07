@@ -5,9 +5,15 @@
 export RAILS_ENV=production
 export APPLIANCE=true
 export HOME=${HOME:-/root}
+
 # workaround for virtual memory spike observed with RHEL6
 export MALLOC_ARENA_MAX=1
 export MALLOC_MMAP_THRESHOLD=131072
+
+# Apache environment variables that MIQ scripts use
+export MIQ_APACHE_ROOT_DIR=/opt/rh/httpd24/root/
+export MIQ_APACHE_SERVICE_NAME=httpd24-httpd
+export MIQ_APACHE_PACKAGE_NAME=httpd24-httpd
 
 # Environment variables required to enable SSL for the Qpid C++ client.  This
 # allows CFME to collect OpenStack events from Qpid over SSL.
@@ -22,7 +28,17 @@ export QPID_LOAD_MODULE=/usr/lib64/qpid/client/sslconnector.so
 # - CFME does not currently support client ssl certificate for authentication
 export QPID_SSL_CERT_DB=/etc/qpid/certs
 
+# This is needed only if we are using Apache from SCL which is installed into
+# a different directory
+scl_apache=1
+if [ -n "$scl_apache" ] && [ ! -h /opt/rh/httpd24/root/var/www/html ]
+then
+  mv /opt/rh/httpd24/root/var/www/html /opt/rh/httpd24/root/var/www/html_24
+  ln -s /var/www/html /opt/rh/httpd24/root/var/www/html
+fi
+
 [[ -s /etc/default/evm_bundler ]] && source /etc/default/evm_bundler
 [[ -s /opt/rh/postgresql92/enable ]] && source /opt/rh/postgresql92/enable
 [[ -s /opt/rh/nodejs010/enable ]] && source /opt/rh/nodejs010/enable
-[[ -s /etc/default/evm_productization ]] && source /etc/default/evm_productization
+[[ -s /opt/rh/httpd24/enable ]] && source /opt/rh/httpd24/enable
+export PATH=$PATH:/opt/rubies/ruby-2.0.0-p598/bin

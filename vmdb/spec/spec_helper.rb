@@ -1,5 +1,9 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
+ENV['MIQ_APACHE_ROOT_DIR'] ||= '/'
+ENV['MIQ_APACHE_SERVICE_NAME'] ||= 'httpd'
+ENV['MIQ_APACHE_PACKAGE_NAME'] ||= 'httpd'
+
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/autorun'
 require 'rspec/rails'

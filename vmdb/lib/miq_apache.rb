@@ -79,7 +79,7 @@ module MiqApache
 
     def self.httpd_status
       begin
-        res = MiqUtil.runcmd('/etc/init.d/httpd status')
+        res = MiqUtil.runcmd("/etc/init.d/#{ENV['MIQ_APACHE_PACKAGE_NAME']} status")
       rescue RuntimeError => err
         res = err.to_s
         return false, res if res =~ /^httpd (is stopped|dead but pid file exists)$/
@@ -121,7 +121,7 @@ module MiqApache
     end
 
     def self.version
-       MiqUtil.runcmd("rpm -qa --queryformat '%{VERSION}' httpd")
+      MiqUtil.runcmd("rpm -qa --queryformat '%{VERSION}' #{ENV['MIQ_APACHE_PACKAGE_NAME']}")
     end
 
     def self.config_ok?
