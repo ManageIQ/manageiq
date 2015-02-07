@@ -36,6 +36,7 @@ class TreeBuilder
     when :images_filter_tree            then ["All Images",                   "All of the Images that I can see"]
     when :iso_datastores_tree           then ["All ISO Datastores",           "All ISO Datastores"]
     when :old_dialogs_tree              then ["All Dialogs",                  "All Dialogs"]
+    when :ot_tree                       then ["All Orchestration Templates",  "All Orchestration Templates"]
     when :pxe_image_types_tree          then ["All System Image Types",       "All System Image Types"]
     when :pxe_servers_tree              then ["All PXE Servers",              "All PXE Servers"]
     when :sandt_tree                    then ["All Catalog Items",            "All Catalog Items"]

@@ -54,6 +54,7 @@ module Sandbox
     instances_tree
     iso_datastores_tree
     old_dialogs_tree
+    ot_tree
     policy_profile_tree
     policy_tree
     pxe_image_types_tree
@@ -100,6 +101,7 @@ module Sandbox
     instances_filter
     iso_datastores
     old_dialogs
+    ot
     policy
     policy_profile
     pxe_image_types
