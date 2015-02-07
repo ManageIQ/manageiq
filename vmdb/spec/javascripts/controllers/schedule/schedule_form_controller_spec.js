@@ -28,7 +28,6 @@ describe('scheduleFormController', function() {
     $httpBackend.whenGET('/ops/schedule_form_fields/new').respond();
     $controller = _$controller_('scheduleFormController', {
       $scope: $scope,
-      storageTable: 'Potatostore',
       scheduleFormId: 'new',
       oneMonthAgo: oneMonthAgo,
       miqService: miqService,
@@ -42,80 +41,80 @@ describe('scheduleFormController', function() {
   });
 
   var sharedBehaviorForInitialization = function() {
-    it('sets newSchedule to false', function() {
-      expect($scope.newSchedule).toBe(false);
+    it('sets newRecord to false', function() {
+      expect($scope.newRecord).toBe(false);
     });
 
     it('sets the action type to the type returned from the http request', function() {
-      expect($scope.actionType).toEqual('actionType');
+      expect($scope.scheduleModel.action_typ).toEqual('actionType');
     });
 
     it('sets the depot name', function() {
-      expect($scope.depotName).toEqual('depotName');
+      expect($scope.scheduleModel.depot_name).toEqual('depotName');
     });
 
     it('sets the logUserid to the log_userid returned from the http request', function() {
-      expect($scope.logUserid).toEqual('logUserId');
+      expect($scope.scheduleModel.log_userid).toEqual('logUserId');
     });
 
     it('sets the logPassword to the log_password returned from the http request', function() {
-      expect($scope.logPassword).toEqual('logPassword');
+      expect($scope.scheduleModel.log_password).toEqual('logPassword');
     });
 
     it('sets the logVerify to the log_verify returned from the http request', function() {
-      expect($scope.logVerify).toEqual('logVerify');
+      expect($scope.scheduleModel.log_verify).toEqual('logVerify');
     });
 
     it('sets the scheduleName to the name returned from the http request', function() {
-      expect($scope.scheduleName).toEqual('scheduleName');
+      expect($scope.scheduleModel.name).toEqual('scheduleName');
     });
 
     it('sets the scheduleDescription to the description returned from the http request', function() {
-      expect($scope.scheduleDescription).toEqual('scheduleDescription');
+      expect($scope.scheduleModel.description).toEqual('scheduleDescription');
     });
 
     it('sets the scheduleEnabled to the enabled attribute returned from the http request', function() {
-      expect($scope.scheduleEnabled).toEqual('1');
+      expect($scope.scheduleModel.enabled).toEqual('1');
     });
 
     it('sets the scheduleTimerType', function() {
-      expect($scope.scheduleTimerType).toEqual('Hourly');
+      expect($scope.scheduleModel.timer_typ).toEqual('Hourly');
     });
 
     it('sets the scheduleTimerValue', function() {
-      expect($scope.scheduleTimerValue).toEqual('8');
+      expect($scope.scheduleModel.timer_value).toEqual('8');
     });
 
     it('sets the scheduleDate', function() {
-      expect($scope.scheduleDate).toEqual('now');
+      expect($scope.scheduleModel.miq_angular_date_1).toEqual('now');
     });
 
     it('sets the scheduleStartHour', function() {
-      expect($scope.scheduleStartHour).toEqual('12');
+      expect($scope.scheduleModel.start_hour).toEqual('12');
     });
 
     it('sets the scheduleStartMinute', function() {
-      expect($scope.scheduleStartMinute).toEqual('25');
+      expect($scope.scheduleModel.start_min).toEqual('25');
     });
 
     it('sets the scheduleTimeZone', function() {
-      expect($scope.scheduleTimeZone).toEqual('UTC');
+      expect($scope.scheduleModel.time_zone).toEqual('UTC');
     });
 
     it('sets the uri', function() {
-      expect($scope.uri).toEqual('uri');
+      expect($scope.scheduleModel.uri).toEqual('uri');
     });
 
     it('sets the uriPrefix', function() {
-      expect($scope.uriPrefix).toEqual('uriPrefix');
+      expect($scope.scheduleModel.uri_prefix).toEqual('uriPrefix');
     });
 
     it('sets the timer items', function() {
-      expect($scope.timerItems).toEqual(["some", "options"]);
+      expect($scope.scheduleModel.timer_items).toEqual(["some", "options"]);
     });
 
-    it('sets finishedLoading', function() {
-      expect($scope.finishedLoading).toBe(true);
+    it('sets afterGet', function() {
+      expect($scope.afterGet).toBe(true);
     });
 
     it('turns sparkle on', function() {
@@ -129,48 +128,48 @@ describe('scheduleFormController', function() {
 
   describe('initialization', function() {
     describe('when the scheduleFormId is new', function() {
-      it('sets newSchedule to true', function() {
-        expect($scope.newSchedule).toBe(true);
+      it('sets newRecord to true', function() {
+        expect($scope.newRecord).toBe(true);
       });
 
       it('sets the action type to vm', function() {
-        expect($scope.actionType).toEqual('vm');
+        expect($scope.scheduleModel.action_typ).toEqual('vm');
       });
 
       it('sets the filter type to all', function() {
-        expect($scope.filterType).toEqual('all');
+        expect($scope.scheduleModel.filter_typ).toEqual('all');
       });
 
       it('sets the filterValuesEmpty to true', function() {
-        expect($scope.filterValuesEmpty).toBe(true);
+        expect($scope.scheduleModel.filterValuesEmpty).toBe(true);
       });
 
       it('sets the scheduleDate to today', function() {
-        expect($scope.scheduleDate).toEqual("1/3/2014");
+        expect($scope.scheduleModel.miq_angular_date_1).toEqual("1/3/2014");
       });
 
       it('sets the scheduleTimerType to once', function() {
-        expect($scope.scheduleTimerType).toEqual('Once');
+        expect($scope.scheduleModel.timer_typ).toEqual('Once');
       });
 
       it('sets the scheduleEnabled to the truthy value', function() {
-        expect($scope.scheduleEnabled).toEqual('1');
+        expect($scope.scheduleModel.enabled).toEqual('1');
       });
 
       it('sets the scheduleTimeZone to UTC', function() {
-        expect($scope.scheduleTimeZone).toEqual('UTC');
+        expect($scope.scheduleModel.time_zone).toEqual('UTC');
       });
 
       it('sets the scheduleStartHour to 0', function() {
-        expect($scope.scheduleStartHour).toEqual('0');
+        expect($scope.scheduleModel.start_hour).toEqual('0');
       });
 
       it('sets the scheduleStartMinute to 0', function() {
-        expect($scope.scheduleStartMinute).toEqual('0');
+        expect($scope.scheduleModel.start_min).toEqual('0');
       });
 
-      it('sets finishedLoading', function() {
-        expect($scope.finishedLoading).toBe(true);
+      it('sets afterGet', function() {
+        expect($scope.afterGet).toBe(true);
       });
     });
 
@@ -199,6 +198,7 @@ describe('scheduleFormController', function() {
 
       describe('when the filter type is all', function() {
         beforeEach(inject(function(_$controller_) {
+
           scheduleFormResponse.filter_type = 'all';
 
           $httpBackend.whenGET('/ops/schedule_form_fields/12345').respond(scheduleFormResponse);
@@ -212,11 +212,11 @@ describe('scheduleFormController', function() {
         sharedBehaviorForInitialization();
 
         it('sets the filter type to the type returned from the http request', function() {
-          expect($scope.filterType).toEqual('all');
+          expect($scope.scheduleModel.filter_typ).toEqual('all');
         });
 
         it('sets the filterValuesEmpty to true', function() {
-          expect($scope.filterValuesEmpty).toBe(true);
+          expect($scope.scheduleModel.filterValuesEmpty).toBe(true);
         });
       });
 
@@ -233,11 +233,11 @@ describe('scheduleFormController', function() {
         sharedBehaviorForInitialization();
 
         it('sets the filterValuesEmpty to true', function() {
-          expect($scope.filterValuesEmpty).toBe(true);
+          expect($scope.scheduleModel.filterValuesEmpty).toBe(true);
         });
 
         it('sets the log protocol', function() {
-          $scope.logProtocol = 'protocol';
+          $scope.scheduleModel.log_protocol = 'protocol';
         });
       });
 
@@ -247,14 +247,14 @@ describe('scheduleFormController', function() {
 
           $httpBackend.whenGET('/ops/schedule_form_fields/12345').respond(scheduleFormResponse);
 
-          $controller = _$controller_('scheduleFormController', {$scope: $scope, storageTable: 'Potatostore', scheduleFormId: '12345', oneMonthAgo: oneMonthAgo});
+          $controller = _$controller_('scheduleFormController', {$scope: $scope, scheduleFormId: '12345', oneMonthAgo: oneMonthAgo});
           $httpBackend.flush();
         }));
 
         sharedBehaviorForInitialization();
 
         it('sets the filter type to the type returned from the http request', function() {
-          expect($scope.filterType).toEqual('filterType');
+          expect($scope.scheduleModel.filter_typ).toEqual('filterType');
         });
 
         it('sets the filter list', function() {
@@ -262,11 +262,11 @@ describe('scheduleFormController', function() {
         });
 
         it('sets the filter value to the value returned from the http request', function() {
-          expect($scope.filterValue).toEqual('filterValue');
+          expect($scope.scheduleModel.filter_value).toEqual('filterValue');
         });
 
         it('sets the filterValuesEmpty to false', function() {
-          expect($scope.filterValuesEmpty).toBe(false);
+          expect($scope.scheduleModel.filterValuesEmpty).toBe(false);
         });
       });
     });
@@ -278,11 +278,18 @@ describe('scheduleFormController', function() {
 
   describe('#cancelClicked', function() {
     beforeEach(function() {
+      $scope.angularForm = {
+        $setPristine: function (value){}
+      };
       $scope.cancelClicked();
     });
 
     it('turns the spinner on via the miqService', function() {
       expect(miqService.sparkleOn).toHaveBeenCalled();
+    });
+
+    it('turns the spinner on once', function() {
+      expect(miqService.sparkleOn.calls.count()).toBe(1);
     });
 
     it('delegates to miqService.miqAjaxButton', function() {
@@ -292,25 +299,41 @@ describe('scheduleFormController', function() {
 
   describe('#resetClicked', function() {
     beforeEach(function() {
+      $scope.form = {
+        action_typ: {
+          $name:  'action_typ',
+          $dirty: true
+        }
+      };
+      $scope.angularForm = {
+        $setPristine: function (value){},
+        filter_value: {
+          $name:       'filter_value',
+          $setViewValue: function (value){}
+        }
+      };
       $scope.resetClicked();
     });
 
-    it('turns the spinner on via the miqService', function() {
-      expect(miqService.sparkleOn).toHaveBeenCalled();
-    });
-
-    it('delegates to miqService.miqAjaxButton', function() {
-      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/schedule_edit/new?button=reset');
+    it('does not turn the spinner on', function() {
+      expect(miqService.sparkleOn.calls.count()).toBe(0);
     });
   });
 
   describe('#saveClicked', function() {
     beforeEach(function() {
+      $scope.angularForm = {
+        $setPristine: function (value){}
+      };
       $scope.saveClicked();
     });
 
     it('turns the spinner on via the miqService', function() {
       expect(miqService.sparkleOn).toHaveBeenCalled();
+    });
+
+    it('turns the spinner on once', function() {
+      expect(miqService.sparkleOn.calls.count()).toBe(1);
     });
 
     it('delegates to miqService.miqAjaxButton', function() {
@@ -320,6 +343,9 @@ describe('scheduleFormController', function() {
 
   describe('#addClicked', function() {
     beforeEach(function() {
+      $scope.angularForm = {
+        $setPristine: function (value){}
+      };
       $scope.addClicked();
     });
 
@@ -328,7 +354,7 @@ describe('scheduleFormController', function() {
     });
 
     it('delegates to miqService.miqAjaxButton', function() {
-      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/schedule_edit/new?button=add', true);
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/schedule_edit/new?button=save', true);
     });
   });
 
@@ -345,7 +371,7 @@ describe('scheduleFormController', function() {
 
     describe('when the action type is a host type', function() {
       beforeEach(function() {
-        $scope.actionType = 'host_potato';
+        $scope.scheduleModel.action_typ = 'host_potato';
       });
 
       it('returns Host Selection', function() {
@@ -355,7 +381,7 @@ describe('scheduleFormController', function() {
 
     describe('when the action type is an miq_template type', function() {
       beforeEach(function() {
-        $scope.actionType = 'miq_template';
+        $scope.scheduleModel.action_typ = 'miq_template';
       });
 
       it('returns Template Selection', function() {
@@ -365,7 +391,7 @@ describe('scheduleFormController', function() {
 
     describe('when the action type is an emscluster type', function() {
       beforeEach(function() {
-        $scope.actionType = 'emscluster';
+        $scope.scheduleModel.action_typ = 'emscluster';
       });
 
       it('returns Cluster Selection', function() {
@@ -375,17 +401,17 @@ describe('scheduleFormController', function() {
 
     describe('when the action type is a storage type', function() {
       beforeEach(function() {
-        $scope.actionType = 'storage';
+        $scope.scheduleModel.action_typ = 'storage';
       });
 
       it('returns storageTable + Selection', function() {
-        expect($scope.buildLegend()).toEqual('Potatostore Selection');
+        expect($scope.buildLegend()).toEqual('Datastore Selection');
       });
     });
 
     describe('when the action type is a db_backup type', function() {
       beforeEach(function() {
-        $scope.actionType = 'db_backup';
+        $scope.scheduleModel.action_typ = 'db_backup';
       });
 
       it('returns Database Backup Selection', function() {
@@ -397,7 +423,7 @@ describe('scheduleFormController', function() {
   describe('#determineActionType', function() {
     describe('when the action type is a vm type', function() {
       beforeEach(function() {
-        $scope.actionType = 'vm_potato';
+        $scope.scheduleModel.action_typ = 'vm_potato';
       });
 
       it('returns vm', function() {
@@ -407,7 +433,7 @@ describe('scheduleFormController', function() {
 
     describe('when the action type is a host type', function() {
       beforeEach(function() {
-        $scope.actionType = 'host_potato';
+        $scope.scheduleModel.action_typ = 'host_potato';
       });
 
       it('returns host', function() {
@@ -417,7 +443,7 @@ describe('scheduleFormController', function() {
 
     describe('when the action type is any other type', function() {
       beforeEach(function() {
-        $scope.actionType = 'potato';
+        $scope.scheduleModel.action_typ = 'potato';
       });
 
       it('returns that type', function() {
@@ -429,23 +455,35 @@ describe('scheduleFormController', function() {
   describe('#filterTypeChanged', function() {
     describe('when the filter type is all', function() {
       beforeEach(function() {
-        $scope.filterType = 'all';
-        $scope.filterValuesEmpty = false;
+        $scope.scheduleModel.filter_typ = 'all';
+        $scope.scheduleModel.filterValuesEmpty = false;
+        $scope.angularForm = {
+          filter_value: {
+            $name:       'filter_value',
+            $setViewValue: function (value){}
+          }
+        };
         $scope.filterTypeChanged();
       });
 
       it('sets filter values empty to true', function() {
-        expect($scope.filterValuesEmpty).toBe(true);
+        expect($scope.scheduleModel.filterValuesEmpty).toBe(true);
       });
 
-      it('sets the filterValue to null', function() {
-        expect($scope.filterValue).toEqual(null);
+      it('sets the filterValue to ""', function() {
+        expect($scope.scheduleModel.filter_value).toEqual("");
       });
     });
 
     describe('when the filter type is not all', function() {
       beforeEach(function() {
-        $scope.filterType = 'not_all';
+        $scope.scheduleModel.filter_typ = 'not_all';
+        $scope.angularForm = {
+          filter_value: {
+            $name:       'filter_value',
+            $setViewValue: function (value){}
+          }
+        };
       });
 
       describe('when the ajax request returns with success', function() {
@@ -461,7 +499,7 @@ describe('scheduleFormController', function() {
           });
 
           it('sets the filterValuesEmpty to false', function() {
-            expect($scope.filterValuesEmpty).toBe(false);
+            expect($scope.scheduleModel.filterValuesEmpty).toBe(false);
           });
 
           it('turns the sparkle on', function() {
@@ -472,8 +510,8 @@ describe('scheduleFormController', function() {
             expect(miqService.sparkleOff).toHaveBeenCalled();
           });
 
-          it('sets the filterValue to null', function() {
-            expect($scope.filterValue).toEqual(null);
+          it('sets the filterValue to ""', function() {
+            expect($scope.scheduleModel.filter_value).toEqual("");
           });
         });
 
@@ -489,7 +527,7 @@ describe('scheduleFormController', function() {
           });
 
           it('sets the filterValuesEmpty to false', function() {
-            expect($scope.filterValuesEmpty).toBe(false);
+            expect($scope.scheduleModel.filterValuesEmpty).toBe(false);
           });
 
           it('turns the sparkle on', function() {
@@ -500,8 +538,8 @@ describe('scheduleFormController', function() {
             expect(miqService.sparkleOff).toHaveBeenCalled();
           });
 
-          it('sets the filterValue to null', function() {
-            expect($scope.filterValue).toEqual(null);
+          it('sets the filterValue to ""', function() {
+            expect($scope.scheduleModel.filter_value).toEqual("");
           });
         });
       });
@@ -511,47 +549,23 @@ describe('scheduleFormController', function() {
   describe('#logProtocolChanged', function() {
     describe('when the log protocol is samba', function() {
       beforeEach(function() {
-        $scope.logProtocol = 'Samba';
+        $scope.scheduleModel.log_protocol = 'Samba';
       });
 
       it('sets the uriPrefix to smb', function() {
         $scope.logProtocolChanged();
-        expect($scope.uriPrefix).toEqual('smb');
+        expect($scope.scheduleModel.uri_prefix).toEqual('smb');
       });
     });
 
     describe('when the log protocol is network file system', function() {
       beforeEach(function() {
-        $scope.logProtocol = 'Network File System';
+        $scope.scheduleModel.log_protocol = 'Network File System';
       });
 
       it('sets the uriPrefix to nfs', function() {
         $scope.logProtocolChanged();
-        expect($scope.uriPrefix).toEqual('nfs');
-      });
-    });
-  });
-
-  describe('#filterValueChanged', function() {
-    describe('when the form has been altered', function() {
-      beforeEach(function() {
-        $scope.formAltered = true;
-      });
-
-      it('shows the buttons', function() {
-        $scope.filterValueChanged();
-        expect(miqService.showButtons).toHaveBeenCalled();
-      });
-    });
-
-    describe('when the form has not been altered', function() {
-      beforeEach(function() {
-        $scope.formAltered = false;
-      });
-
-      it('hides the buttons', function() {
-        $scope.filterValueChanged();
-        expect(miqService.hideButtons).toHaveBeenCalled();
+        expect($scope.scheduleModel.uri_prefix).toEqual('nfs');
       });
     });
   });
@@ -559,33 +573,33 @@ describe('scheduleFormController', function() {
   describe('#actionTypeChanged', function() {
     describe('when the action type is db_backup', function() {
       beforeEach(function() {
-        $scope.actionType = 'db_backup';
+        $scope.scheduleModel.action_typ = 'db_backup';
         $scope.actionTypeChanged();
       });
 
       it('sets the log protocol to network file system', function() {
-        expect($scope.logProtocol).toEqual('Network File System');
+        expect($scope.scheduleModel.log_protocol).toEqual('Network File System');
       });
 
       it('sets filter values empty to true', function() {
-        expect($scope.filterValuesEmpty).toBe(true);
+        expect($scope.scheduleModel.filterValuesEmpty).toBe(true);
       });
     });
 
     describe('when the action type is not db_backup', function() {
       beforeEach(function() {
-        $scope.actionType = 'not_db_backup';
-        $scope.filterType = 'not_all';
-        $scope.filterValuesEmpty = false;
+        $scope.scheduleModel.action_typ = 'not_db_backup';
+        $scope.scheduleModel.filter_typ = 'not_all';
+        $scope.scheduleModel.filterValuesEmpty = false;
         $scope.actionTypeChanged();
       });
 
       it('resets the filter type to all', function() {
-        expect($scope.filterType).toEqual('all');
+        expect($scope.scheduleModel.filter_typ).toEqual('all');
       });
 
       it('sets filter values empty to true', function() {
-        expect($scope.filterValuesEmpty).toBe(true);
+        expect($scope.scheduleModel.filterValuesEmpty).toBe(true);
       });
     });
   });
@@ -593,12 +607,12 @@ describe('scheduleFormController', function() {
   describe('#sambaBackup', function() {
     describe('when the action type is db_backup', function() {
       beforeEach(function() {
-        $scope.actionType = 'db_backup';
+        $scope.scheduleModel.action_typ = 'db_backup';
       });
 
       describe('when the log protocol is Samba', function() {
         beforeEach(function() {
-          $scope.logProtocol = 'Samba';
+          $scope.scheduleModel.log_protocol = 'Samba';
         });
 
         it('returns true', function() {
@@ -623,33 +637,45 @@ describe('scheduleFormController', function() {
   describe('#scheduleTimerTypeChanged', function() {
     describe('when the timer type is changed to once', function() {
       beforeEach(function() {
-        $scope.scheduleTimerType = 'Once';
-        $scope.scheduleTimerValue = 'not null';
+        $scope.scheduleModel.timer_typ = 'Once';
+        $scope.scheduleModel.timer_value = 'not null';
+        $scope.angularForm = {
+          timer_value: {
+            $name:       'timer_value',
+            $setViewValue: function (value){}
+          }
+        };
         $scope.scheduleTimerTypeChanged();
       });
 
       it('sets the scheduleTimerValue to null', function() {
-        expect($scope.scheduleTimerValue).toBeNull();
+        expect($scope.scheduleModel.timer_value).toBeNull();
       });
 
       it('sets timerItems to the return value of the timerOptionService', function() {
-        expect($scope.timerItems).toEqual(['some', 'options']);
+        expect($scope.scheduleModel.timer_items).toEqual(['some', 'options']);
       });
     });
 
     describe('when the timer type is changed to anything else', function() {
       beforeEach(function() {
-        $scope.scheduleTimerType = 'Hourly';
-        $scope.scheduleTimerValue = null;
+        $scope.scheduleModel.timer_typ = 'Hourly';
+        $scope.scheduleModel.timer_value = null;
+        $scope.angularForm = {
+          timer_value: {
+            $name:       'timer_value',
+            $setViewValue: function (value){}
+          }
+        };
         $scope.scheduleTimerTypeChanged();
       });
 
       it('sets the scheduleTimerValue to 1', function() {
-        expect($scope.scheduleTimerValue).toEqual(1);
+        expect($scope.scheduleModel.timer_value).toEqual(1);
       });
 
       it('sets timerItems to the return value of the timerOptionService', function() {
-        expect($scope.timerItems).toEqual(['some', 'options']);
+        expect($scope.scheduleModel.timer_items).toEqual(['some', 'options']);
       });
     });
   });
@@ -657,7 +683,7 @@ describe('scheduleFormController', function() {
   describe('#timerNotOnce', function() {
     describe('when the timer type is once', function() {
       beforeEach(function() {
-        $scope.scheduleTimerType = 'Once';
+        $scope.scheduleModel.timer_typ = 'Once';
       });
 
       it('returns false', function() {
@@ -667,67 +693,11 @@ describe('scheduleFormController', function() {
 
     describe('when the timer type is not once', function() {
       beforeEach(function() {
-        $scope.scheduleTimerType = 'Hourly';
+        $scope.scheduleModel.timer_typ = 'Hourly';
       });
 
       it('returns true', function() {
         expect($scope.timerNotOnce()).toBe(true);
-      });
-    });
-  });
-
-  describe('#saveable', function() {
-    var scheduleForm = {};
-
-    describe('when the schedule form is valid', function() {
-      beforeEach(function() {
-        scheduleForm.$valid = true;
-      });
-
-      describe('when the schedule form is dirty', function() {
-        beforeEach(function() {
-          scheduleForm.$dirty = true;
-        });
-
-        it('returns true', function() {
-          expect($scope.saveable(scheduleForm)).toBe(true);
-        });
-      });
-
-      describe('when the schedule form is not dirty', function() {
-        beforeEach(function() {
-          scheduleForm.$dirty = false;
-        });
-
-        it('returns false', function() {
-          expect($scope.saveable(scheduleForm)).toBe(false);
-        });
-      });
-    });
-
-    describe('when the schedule form is not valid', function() {
-      beforeEach(function() {
-        scheduleForm.$valid = false;
-      });
-
-      describe('when the schedule form is dirty', function() {
-        beforeEach(function() {
-          scheduleForm.$dirty = true;
-        });
-
-        it('returns false', function() {
-          expect($scope.saveable(scheduleForm)).toBe(false);
-        });
-      });
-
-      describe('when the schedule form is not dirty', function() {
-        beforeEach(function() {
-          scheduleForm.$dirty = false;
-        });
-
-        it('returns false', function() {
-          expect($scope.saveable(scheduleForm)).toBe(false);
-        });
       });
     });
   });
