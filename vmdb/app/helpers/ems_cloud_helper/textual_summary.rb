@@ -46,7 +46,7 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_port
-    ["openstack", "openstack_infra", "rhevm"].include?(@ems.emstype) ? {:label => "API Port", :value => @ems.port} : nil
+    @ems.supports_port? ? {:label => "API Port", :value => @ems.port} : nil
   end
 
   def textual_guid

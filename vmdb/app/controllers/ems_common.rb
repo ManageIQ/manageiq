@@ -555,7 +555,7 @@ module EmsCommon
     if @edit[:new][:password] != @edit[:new][:verify]
       @edit[:errors].push(_("Password/Verify Password do not match"))
     end
-    if ems.emstype == "rhevm" && @edit[:new][:metrics_password] != @edit[:new][:metrics_verify]
+    if ems.supports_authentication?(:metrics) && @edit[:new][:metrics_password] != @edit[:new][:metrics_verify]
       @edit[:errors].push("C & U Database Login Password and Verify Password fields do not match")
     end
     if ems.is_a?(EmsVmware)
@@ -595,7 +595,7 @@ module EmsCommon
     @edit[:new][:hostname] = @ems.hostname
     @edit[:new][:ipaddress] = @ems.ipaddress
     @edit[:new][:emstype] = @ems.emstype
-    @edit[:amazon_regions] = get_amazon_regions if @ems.emstype == "ec2"
+    @edit[:amazon_regions] = get_amazon_regions if @ems.kind_of?(EmsAmazon)
     @edit[:new][:port] = @ems.port
     if @ems.zone.nil? || @ems.my_zone == ""
       @edit[:new][:zone] = "default"
@@ -686,7 +686,7 @@ module EmsCommon
     ems.provider_region = @edit[:new][:provider_region]
     ems.hostname = @edit[:new][:hostname]
     ems.ipaddress = @edit[:new][:ipaddress]
-    ems.port = @edit[:new][:port] if ["openstack", "openstack_infra", "rhevm"].include?(ems.emstype)
+    ems.port = @edit[:new][:port] if ems.supports_port?
     ems.zone = Zone.find_by_name(@edit[:new][:zone])
 
     if ems.is_a?(EmsVmware)
@@ -696,10 +696,10 @@ module EmsCommon
 
     creds = Hash.new
     creds[:default] = {:userid=>@edit[:new][:default_userid], :password=>@edit[:new][:default_password]} unless @edit[:new][:default_userid].blank?
-    if ems.emstype == "rhevm" && !@edit[:new][:metrics_userid].blank?
+    if ems.supports_authentication?(:metrics) && !@edit[:new][:metrics_userid].blank?
       creds[:metrics] = {:userid=>@edit[:new][:metrics_userid], :password=>@edit[:new][:metrics_password]}
     end
-    if ["openstack", "openstack_infra"].include?(ems.emstype) && !@edit[:new][:amqp_userid].blank?
+    if ems.supports_authentication?(:amqp) && !@edit[:new][:amqp_userid].blank?
       creds[:amqp] = {:userid => @edit[:new][:amqp_userid], :password => @edit[:new][:amqp_password]}
     end
     ems.update_authentication(creds, {:save=>(mode != :validate)})
