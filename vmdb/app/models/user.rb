@@ -782,6 +782,16 @@ class User < ActiveRecord::Base
     !!miq_user_role
   end
 
+  def accessible_vms
+    if limited_self_service_user?
+      vms
+    elsif self_service_user?
+      (vms + miq_groups.includes(:vms).collect(&:vms).flatten).uniq
+    else
+      Vm.all
+    end
+  end
+
   protected
 
   def on_changed_admin_password

@@ -509,4 +509,49 @@ describe User do
       expect(admin.current_group.miq_user_role_name).to eq "EvmRole-super_administrator"
     end
   end
+
+  context "#accessible_vms" do
+    before do
+      @user = FactoryGirl.create(:user_admin)
+
+      @self_service_role = FactoryGirl.create(
+        :miq_user_role,
+        :name     => "ss_role",
+        :settings => {:restrictions => {:vms => :user_or_group}}
+      )
+      @self_service_group = FactoryGirl.create(:miq_group, :miq_user_role => @self_service_role)
+
+      @limited_self_service_role = FactoryGirl.create(
+        :miq_user_role,
+        :name     => "lss_role",
+        :settings => {:restrictions => {:vms => :user}}
+      )
+      @limited_self_service_group = FactoryGirl.create(:miq_group, :miq_user_role => @limited_self_service_role)
+
+      @vm = []
+      (1..5).each { |i| @vm[i] = FactoryGirl.create(:vm_redhat, :name => "vm_#{i}") }
+    end
+    subject(:accessible_vms) { @user.accessible_vms }
+
+    it "non self service user" do
+      expect(accessible_vms.size).to eq(5)
+    end
+
+    it "self service user" do
+      @user.update_attributes(:miq_groups => [@self_service_group])
+      @vm[1].update_attributes(:evm_owner => @user)
+      @vm[2].update_attributes(:miq_group => @self_service_group)
+
+      expect(accessible_vms.size).to eq(2)
+    end
+
+    it "limited self service user" do
+      @user.update_attributes(:miq_groups => [@limited_self_service_group])
+      @vm[1].update_attributes(:evm_owner => @user)
+      @vm[2].update_attributes(:miq_group => @self_service_group)
+      @vm[3].update_attributes(:miq_group => @limited_self_service_group)
+
+      expect(accessible_vms.size).to eq(1)
+    end
+  end
 end

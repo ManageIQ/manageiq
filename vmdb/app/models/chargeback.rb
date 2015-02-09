@@ -62,6 +62,7 @@ class Chargeback < ActsAsArModel
 
     interval = options[:interval] || "daily"
     cb = self.new
+    report_user = User.where(:userid => options[:userid]).first
 
     # Find Vms by user or by tag
     if options[:owner]
@@ -73,6 +74,7 @@ class Chargeback < ActsAsArModel
       vms = user.vms
     elsif options[:tag]
       vms = Vm.find_tagged_with(:all => options[:tag], :ns => "*")
+      vms = vms & report_user.accessible_vms if report_user.self_service_user?
     else
       raise "must provide options :owner or :tag"
     end
@@ -94,7 +96,7 @@ class Chargeback < ActsAsArModel
     data = {}
 
     (start_time..end_time).step_value(1.day).each_cons(2) do |query_start_time, query_end_time|
-      if options[:tag]
+      if options[:tag] && !report_user.self_service_user?
         cond = ["resource_type = ? and resource_id IS NOT NULL and timestamp >= ? and timestamp < ? and capture_interval_name = ? and tag_names like ? ",
                 "VmOrTemplate",
                 query_start_time,
