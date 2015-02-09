@@ -67,7 +67,8 @@ div.gridbox_style3 table.obj td {
   border: 1px solid transparent;
   border-right: 1px solid #d1d1d1;
   border-bottom-color: #e7e7e7;
-  padding: 2px 2px 2px 5px;
+  padding-right: 2px;
+  padding-left: 2px;
   margin: 0;
   vertical-align: middle;
   cursor: pointer;
