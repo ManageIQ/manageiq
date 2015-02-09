@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased - as of Sprint 18 end 2015-01-26
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+18+Ending+Jan+26%2C+2015%22+label%3Aenhancement)
+
+- Providers
+  - Added refresh status and errors, viewable on Provider Summary Page.
+  - Amazon EC2: Added C4 instance types.
+- Rest API: VM start, stop, suspend, delete actions added.
+- UI
+ - Multi-character set language support
+ - Cloud Stacks summary and list views
+- Service Dialogs: Dynamic field support for text boxes and text area boxes
+- IPv6: Ensure an IPv6 literal address, such as "[::1]", passed to the Excon gem removes the square brackets [], when establishing a Socket connection to the address, "::1".
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+18+Ending+Jan+26%2C+2015%22+label%3Aenhancement)
+
+- Rails Updates
+  - Moved to Rails 4 finders.
+  - Removed patches against the logger classes.
+  - Removed assumptions that associations are eagerly loaded.
+- Fog gem updates for OpenStack
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+18+Ending+Jan+26%2C+2015%22+label%3Abug)
+
+- 48 issues fixed. 
+- Notable fixes include:
+  - A new version of the Rake gem broke the nightly CentOS community builds requiring users to run `rake db:migrate`
+  - OpenStack provisioning fix for non-admin tenants.
+
 ## Unreleased - as of Sprint 17 end 2015-01-05
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+17+Ending+Jan+5%2C+2015%22+label%3Aenhancement)
@@ -14,8 +43,8 @@ All notable changes to this project will be documented in this file.
 - SCVMM: Virtual DVD drives for templates
 - Amazon
   - AWS Region EU Frankfurt
-  - Inventory collection for AWS CloudFormatio.
-  - Parsing of parameters from orchestration templates.
+  - Inventory collection for AWS CloudFormation
+  - Parsing of parameters from orchestration templates
 - Provisioning: 
   - Allow removing keys from :clone_options by setting value to nil
   - Dynamic radio button support in dialogs
@@ -27,7 +56,7 @@ All notable changes to this project will be documented in this file.
   - Updated virtual column / reflection code to integrate with Rails
   - Started moving ActiveRecord 2.3 hash based finders to Relation based finders
   - Backports and refactorings on master for Rails 4 support
-- Changed classification seeding to only add classification if missing.
+- Changed classification seeding to only add classification if missing
 
 
 ### [Removed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+17+Ending+Jan+5%2C+2015%22+label%3A%22technical+debt%22)
