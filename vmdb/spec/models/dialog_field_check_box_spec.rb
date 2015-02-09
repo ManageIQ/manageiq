@@ -36,16 +36,8 @@ describe DialogFieldCheckBox do
       end
     end
 
-    context "when the default value is '1'" do
-      let(:default_value) { "1" }
-
-      it "returns true" do
-        expect(dialog_field.checked?).to be_true
-      end
-    end
-
     context "when the default value is anything else" do
-      let(:default_value) { "potato" }
+      let(:default_value) { "1" }
 
       it "returns false" do
         expect(dialog_field.checked?).to be_false
