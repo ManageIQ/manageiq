@@ -683,8 +683,6 @@ module ApplicationHelper
 
   # Determine if a button should be hidden
   def build_toolbar_hide_button(id)
-    binding.pry if id == 'vm_spice_console'
-
     return true if id == "blank_button" # Always hide the blank button placeholder
 
     # hide timelines button for Amazon provider and instances
@@ -808,14 +806,8 @@ module ApplicationHelper
       type = get_vmdb_config.fetch_path(:server, :remote_console_type)
       return type != 'MKS' || !@record.console_supported?(type)
     when "vm_vnc_console"
-      #binding.pry
       type = get_vmdb_config.fetch_path(:server, :remote_console_type)
       return type != 'VNC' || !@record.console_supported?(type)
-#    when "vm_spice_console"
-#      binding.pry
-#      type = get_vmdb_config.fetch_path(:server, :remote_console_type)
-#      #return type != 'SPICE' || !@record.console_supported?(type)
-#      return !@record.console_supported?(type)
     when "vm_vmrc_console"
       type = get_vmdb_config.fetch_path(:server, :remote_console_type)
       return type != 'VMRC' || !@record.console_supported?(type)

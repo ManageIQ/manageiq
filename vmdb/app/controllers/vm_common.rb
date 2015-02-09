@@ -86,7 +86,6 @@ module VmCommon
 
   # Launch a VM console
   def console
-    binding.pry
     console_type = get_vmdb_config.fetch_path(:server, :remote_console_type).downcase
     params[:task_id] ? console_after_task(console_type) : console_before_task(console_type)
   end
@@ -121,28 +120,30 @@ module VmCommon
   end
 
   def launch_html5_console
-    password, host_address, host_port, proxy_address, proxy_port, protocol = @sb[:html5]
+    password, host_address, host_port, proxy_address, proxy_port, protocol, ssl = @sb[:html5]
     encrypt = false # get_vmdb_config.fetch_path(:server, :websocket_encrypt)
 
-    Rails.logger.error("@sb[:vnc]: #{@sb[:vnc]}")
-
-    binding.pry
     proxy_options = WsProxy.start(
-      :host      => host_address,
-      :host_port => host_port,
-      :password  => password,
-      :encrypt   => encrypt
+      :host       => host_address,
+      :host_port  => host_port,
+      :password   => password,
+      :ssl_target => ssl,
+      :encrypt    => encrypt
     )
+
+    if proxy_options.nil?
+      # failed to launch
+    end
 
     case protocol
     when 'spice'
       view = "vm_common/console_spice"
+      proxy_options[:proxy_host] = 'localhost' # FIXME: appliance IP
     when nil, 'vnc' # FIXME nil - from vmware
       view = "vm_common/console_vnc"
       proxy_options[:proxy_host] = 'localhost' # FIXME: appliance IP
       #@sb[:vnc] = proxy_options[:proxy_port]
     end
-    binding.pry
 
     Rails.logger.error("PROXY options: #{proxy_options}")
 

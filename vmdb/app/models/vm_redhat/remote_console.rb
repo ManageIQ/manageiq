@@ -1,12 +1,10 @@
 module VmRedhat::RemoteConsole
 
   def console_supported?(type)
-    #type.upcase == remote_display.fetch_path(:type).upcase
     %w(SPICE VNC).include?(type.upcase)
   end
 
   def remote_display
-    # :display=>{:type=>"spice", :address=>"10.16.4.96", :monitors=>1},
     provider_object.attributes[:display]
   end
 
@@ -24,19 +22,19 @@ module VmRedhat::RemoteConsole
     validate_remote_console_acquire_ticket(console_type)
 
     display = provider_object.attributes[:display]
-    binding.pry
-    Rails.logger.debug(display)
-
-    host_address = display[:address]
-    host_port    = display[:port]
-    protocol     = display[:type]
-    #binding.pry
 
     parsed_ticket = Nokogiri::XML(provider_object.ticket)
 
+    display = provider_object.attributes[:display]
+
+    host_address = display[:address]
+    host_port    = display[:secure_port] || display[:port]
+    ssl          = display[:secure_port].present?
+    protocol     = display[:type]
+
     proxy_address = proxy_port = nil
     password = parsed_ticket.xpath('action/ticket/value')[0].text
-    return password, host_address, host_port, proxy_address, proxy_port, protocol
+    return password, host_address, host_port, proxy_address, proxy_port, protocol, ssl
   end
 
   def remote_console_acquire_ticket_queue(protocol, userid, proxy_miq_server = nil)
