@@ -1,4 +1,4 @@
-- url = url_for(:action =>'settings_form_field_changed', :id=>"#{@sb[:active_tab].split('_').last}")
+- url = url_for(:action => 'settings_form_field_changed', :id => "#{@sb[:active_tab].split('_').last}")
 - if @sb[:active_tab] == "settings_authentication"
   = render :partial => "layouts/flash_msg"
   %p.legend=_("Authentication")
@@ -7,10 +7,10 @@
       %td.key=_("Session Timeout")
       %td
         = select_tag('session_timeout_hours',
-          options_for_select(Array.new(25) {|i| i}, @edit[:new][:session][:timeout]/3600),
-          "data-miq_observe"=>{:url=>url}.to_json)
+          options_for_select(Array.new(25) { |i| i }, @edit[:new][:session][:timeout] / 3600),
+          "data-miq_observe" => {:url => url}.to_json)
         h
-        = select_tag('session_timeout_mins', options_for_select(Array.new(12) {|i| i*5}, @edit[:new][:session][:timeout]%3600/60),
+        = select_tag('session_timeout_mins', options_for_select(Array.new(12) { |i| i * 5 }, @edit[:new][:session][:timeout] % 3600 / 60),
           "data-miq_observe" => {:url => url}.to_json)
         m
     %tr
@@ -22,166 +22,158 @@
           @edit[:new][:authentication][:mode]),
           "data-miq_observe" => {:url => url}.to_json)
   %hr/
-  = hidden_div_if(!["ldap","ldaps"].include?(@edit[:new][:authentication][:mode]), :id=>"ldap_div" )
-  %p.legend=_("LDAP Settings")
-  %table.style1
-    %tr
-      %td.key=_("LDAP Host Names")
-      %td.wide
-        = text_field_tag("authentication_ldaphost_1",
-          @edit[:new][:authentication][:ldaphost][0],
-          :maxlength=>50,
-          "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
-        %br/
-        = text_field_tag("authentication_ldaphost_2",
-          @edit[:new][:authentication][:ldaphost][1],
-          :maxlength=>50,
-          "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
-        %br/
-        = text_field_tag("authentication_ldaphost_3",
-          @edit[:new][:authentication][:ldaphost][2],
-          :maxlength=>50,
-          "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
-    %tr
-      %td.key=_("LDAP Port")
-      %td.wide
-        = text_field_tag("authentication_ldapport",
-          @edit[:new][:authentication][:ldapport],
-          :maxlength=>6,
-          "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
-    %tr
-      %td.key=_("User Type")
-      %td.wide
-        = select_tag('authentication_user_type',
-          options_for_select([["User Principal Name", "userprincipalname"],
-          ["E-mail Address", "mail"],
-          ["Distinguished Name (CN=<user>)", "dn-cn"],
-          ["Distinguished Name (UID=<user>)", "dn-uid"]],
-          @edit[:new][:authentication][:user_type]),
-          "data-miq_observe"=>{:url=>url}.to_json)
-    %tr
-      %td.key
-        =_("User Suffix:")
-        - if @edit[:new][:authentication][:user_type] == "dn-cn"
-          %span#upn-mail_prefix{:style => "display:none"}= h("<user>@")
-          %span#dn-cn_prefix= h("CN=<user>,")
-          %span#dn-uid_prefix{:style => "display:none"}= h("UID=<user>,")
-        - elsif @edit[:new][:authentication][:user_type] == "dn-uid"
-          %span#upn-mail_prefix{:style => "display:none"}= h("<user>@")
-          %span#dn-cn_prefix{:style => "display:none"}= h("CN=<user>,")
-          %span#dn-uid_prefix= h("UID=<user>,")
-        - else
-          %span#upn-mail_prefix= h("<user>@")
-          %span#dn-cn_prefix{:style => "display:none"}= h("CN=<user>,")
-          %span#dn-uid_prefix{:style => "display:none"}= h("UID=<user>,")
-      %td.wide
-        = text_field_tag("authentication_user_suffix",
-          @edit[:new][:authentication][:user_suffix],
-          :maxlength=>255,
-          "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
-  %hr/
-  = hidden_div_if(@edit[:new][:authentication][:mode] != "amazon", :id=>"amazon_div" )
-  %p.legend=_("Amazon Primary AWS Account Settings for IAM")
-  %table.style1
-    %tr
-      %td.key=_("Access Key")
-      %td.wide
-        = text_field_tag("authentication_amazon_key",
-          @edit[:new][:authentication][:amazon_key],
-          :maxlength=>50,
-          "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
-    %tr
-      %td.key=_("Secret Key")
-      %td.wide
-        = password_field_tag("authentication_amazon_secret", '',
-          :maxlength         => 50,
-          :placeholder       => placeholder_if_present(@edit[:new][:authentication][:amazon_secret]),
-          "data-miq_observe" => {:interval=>'.5', :url=>url}.to_json)
-  %hr/
-  - if ["ldap","ldaps"].include?(@edit[:new][:authentication][:mode])
-    #ldap_role_div
-  - else
-    #ldap_role_div{:style => "display:none"}
-  %p.legend=_("Role Settings")
-  %table.style1
-    %tr
-      %td.key=_("Get User Groups from LDAP")
-      %td
-        = check_box_tag("ldap_role", value="1",
-          checked=@edit[:new][:authentication][:ldap_role],
-          "data-miq_observe_checkbox"=>{:url=>url}.to_json)
-  #ldap_default_group_div{:style => @edit[:new][:authentication][:ldap_role] ? 'display:none' : ''}
+  = hidden_div_if(!["ldap", "ldaps"].include?(@edit[:new][:authentication][:mode]), :id => "ldap_div") do
+    %p.legend=_("LDAP Settings")
     %table.style1
       %tr
-        %td.key=_("Default Group for Users")
+        %td.key=_("LDAP Host Names")
         %td.wide
-          = select_tag('authentication_default_group_for_users',
-            options_for_select([["<No Default Group>", nil]] + MiqGroup.pluck(:description).sort,
-            @edit[:new][:authentication][:default_group_for_users]),
+          = text_field_tag("authentication_ldaphost_1",
+            @edit[:new][:authentication][:ldaphost][0],
+            :maxlength => 50,
+            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+          %br/
+          = text_field_tag("authentication_ldaphost_2",
+            @edit[:new][:authentication][:ldaphost][1],
+            :maxlength => 50,
+            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+          %br/
+          = text_field_tag("authentication_ldaphost_3",
+            @edit[:new][:authentication][:ldaphost][2],
+            :maxlength => 50,
+            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+      %tr
+        %td.key=_("LDAP Port")
+        %td.wide
+          = text_field_tag("authentication_ldapport",
+            @edit[:new][:authentication][:ldapport],
+            :maxlength => 6,
+            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+      %tr
+        %td.key=_("User Type")
+        %td.wide
+          = select_tag('authentication_user_type',
+            options_for_select([["User Principal Name", "userprincipalname"],
+            ["E-mail Address", "mail"],
+            ["Distinguished Name (CN=<user>)", "dn-cn"],
+            ["Distinguished Name (UID=<user>)", "dn-uid"]],
+            @edit[:new][:authentication][:user_type]),
             "data-miq_observe" => {:url => url}.to_json)
-  - if @edit[:new][:authentication][:ldap_role]
-    #ldap_role_details_div
-  - else
-    #ldap_role_details_div{:style => "display:none"}
-  %table.style1
-    - if !@edit[:new][:authentication][:user_proxies].blank?
-      %tr#get_roles_row
-    - else
-      %tr#get_roles_row{:style => "display:none"}
-  %td.key=_("Get Roles from Home Forest")
-  %td
-    = check_box_tag("get_direct_groups", value="1",
-      checked=@edit[:new][:authentication][:get_direct_groups],
-      "data-miq_observe_checkbox"=>{:url=>url}.to_json)
-  %tr
-    %td.key=_("Follow Referrals")
-    %td
-      = check_box_tag("follow_referrals", value="1",
-        checked=@edit[:new][:authentication][:follow_referrals],
-        "data-miq_observe_checkbox"=>{:url=>url}.to_json)
-  %tr
-    %td.key=_("Base DN")
-    %td.wide
-      = text_field_tag("authentication_basedn",
-        @edit[:new][:authentication][:basedn],
-        :maxlength=>255,
-        "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
-  %tr
-    %td.key=_("Bind DN")
-    %td.wide
-      = text_field_tag("authentication_bind_dn",
-        @edit[:new][:authentication][:bind_dn],
-        :maxlength=>255,
-        "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
-  %tr
-    %td.key=_("Bind Password")
-    %td.wide
-      = password_field_tag("authentication_bind_pwd", '',
-        :maxlength         => 128,
-        :placeholder       => placeholder_if_present(@edit[:new][:authentication][:bind_pwd]),
-        "data-miq_observe" => {:interval=>'.5', :url=>url}.to_json)
-  %tr
-    %td
-    %td{:align => "right"}
-      = render :partial => 'ldap_verify_button', :locals=>{:id=>"#{@sb[:active_tab].split('_').last}"}
-  = hidden_div_if(!@edit[:new][:authentication][:ldap_role], :id=>"user_proxies_div")
-  = render :partial => 'ldap_forest_entries', :locals=>{:entry=>nil,:edit=>false}
-  - if @edit[:new][:authentication][:mode] == "amazon"
-    #amazon_role_div
-  - else
-    #amazon_role_div{:style => "display:none"}
-  %p.legend=_("Role Settings")
-  %table.style1
-    %tr
-      %td.key=_("Get User Groups from Amazon")
-      %td
-        = check_box_tag("amazon_role", value="1",
-          checked=@edit[:new][:authentication][:amazon_role],
-          "data-miq_observe_checkbox"=>{:url=>url}.to_json)
-    %tr
-      %td
-      %td{:align => "right"}
-        = render :partial => 'amazon_verify_button', :locals=>{:id=>"#{@sb[:active_tab].split('_').last}"}
+      %tr
+        %td.key
+          =_("User Suffix:")
+          - if @edit[:new][:authentication][:user_type] == "dn-cn"
+            %span#upn-mail_prefix{:style => "display:none"}= h("<user>@")
+            %span#dn-cn_prefix= h("CN=<user>,")
+            %span#dn-uid_prefix{:style => "display:none"}= h("UID=<user>,")
+          - elsif @edit[:new][:authentication][:user_type] == "dn-uid"
+            %span#upn-mail_prefix{:style => "display:none"}= h("<user>@")
+            %span#dn-cn_prefix{:style => "display:none"}= h("CN=<user>,")
+            %span#dn-uid_prefix= h("UID=<user>,")
+          - else
+            %span#upn-mail_prefix= h("<user>@")
+            %span#dn-cn_prefix{:style => "display:none"}= h("CN=<user>,")
+            %span#dn-uid_prefix{:style => "display:none"}= h("UID=<user>,")
+        %td.wide
+          = text_field_tag("authentication_user_suffix",
+            @edit[:new][:authentication][:user_suffix],
+            :maxlength => 255,
+            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+    %hr/
+  = hidden_div_if(@edit[:new][:authentication][:mode] != "amazon", :id => "amazon_div") do
+    %p.legend=_("Amazon Primary AWS Account Settings for IAM")
+    %table.style1
+      %tr
+        %td.key=_("Access Key")
+        %td.wide
+          = text_field_tag("authentication_amazon_key",
+            @edit[:new][:authentication][:amazon_key],
+            :maxlength => 50,
+            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+      %tr
+        %td.key=_("Secret Key")
+        %td.wide
+          = password_field_tag("authentication_amazon_secret", '',
+            :maxlength         => 50,
+            :placeholder       => placeholder_if_present(@edit[:new][:authentication][:amazon_secret]),
+            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+    %hr/
+  = hidden_div_if(!["ldap", "ldaps"].include?(@edit[:new][:authentication][:mode]), :id => "ldap_role_div") do
+    %p.legend=_("Role Settings")
+    %table.style1
+      %tr
+        %td.key=_("Get User Groups from LDAP")
+        %td
+          = check_box_tag("ldap_role", "1",
+            @edit[:new][:authentication][:ldap_role],
+            "data-miq_observe_checkbox" => {:url => url}.to_json)
+    = hidden_div_if(@edit[:new][:authentication][:ldap_role], :id => "ldap_default_group_div") do
+      %table.style1
+        %tr
+          %td.key=_("Default Group for Users")
+          %td.wide
+            = select_tag('authentication_default_group_for_users',
+              options_for_select([["<No Default Group>", nil]] + MiqGroup.pluck(:description).sort,
+              @edit[:new][:authentication][:default_group_for_users]),
+              "data-miq_observe" => {:url => url}.to_json)
+    = hidden_div_if(!@edit[:new][:authentication][:ldap_role], :id => "ldap_role_details_div") do
+      %table.style1
+        %tr#get_roles_now{:style => @edit[:new][:authentication][:user_proxies].blank? ? "display: none" : ""}
+          %td.key=_("Get Roles from Home Forest")
+          %td
+            = check_box_tag("get_direct_groups", "1",
+              @edit[:new][:authentication][:get_direct_groups],
+              "data-miq_observe_checkbox" => {:url => url}.to_json)
+        %tr
+          %td.key=_("Follow Referrals")
+          %td
+            = check_box_tag("follow_referrals", "1",
+              @edit[:new][:authentication][:follow_referrals],
+              "data-miq_observe_checkbox" => {:url => url}.to_json)
+        %tr
+          %td.key=_("Base DN")
+          %td.wide
+            = text_field_tag("authentication_basedn",
+              @edit[:new][:authentication][:basedn],
+              :maxlength => 255,
+              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+        %tr
+          %td.key=_("Bind DN")
+          %td.wide
+            = text_field_tag("authentication_bind_dn",
+              @edit[:new][:authentication][:bind_dn],
+              :maxlength => 255,
+              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+        %tr
+          %td.key=_("Bind Password")
+          %td.wide
+            = password_field_tag("authentication_bind_pwd", '',
+              :maxlength         => 128,
+              :placeholder       => placeholder_if_present(@edit[:new][:authentication][:bind_pwd]),
+              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+        %tr
+          %td
+          %td{:align => "right"}
+            = render :partial => 'ldap_verify_button', :locals => {:id => "#{@sb[:active_tab].split('_').last}"}
+
+  = hidden_div_if(!@edit[:new][:authentication][:ldap_role], :id => "user_proxies_div") do
+    = render :partial => 'ldap_forest_entries', :locals => {:entry => nil, :edit => false}
+
+  = hidden_div_if(@edit[:new][:authentication][:mode] != "amazon", :id => "amazon_role_div") do
+    %p.legend=_("Role Settings")
+    %table.style1
+      %tr
+        %td.key=_("Get User Groups from Amazon")
+        %td
+          = check_box_tag("amazon_role", "1",
+            @edit[:new][:authentication][:amazon_role],
+            "data-miq_observe_checkbox" => {:url => url}.to_json)
+      %tr
+        %td
+        %td{:align => "right"}
+          = render :partial => 'amazon_verify_button', :locals => {:id => @sb[:active_tab].split('_').last}
+    %hr/
+
   = hidden_div_if(@edit[:new][:authentication][:mode] != "httpd", :id => "httpd_div") do
     %p.legend=_("External Authentication (httpd) Settings")
     %table.style1
@@ -190,8 +182,9 @@
         %td
           = check_box_tag("sso_enabled", "1",
             @edit[:new][:authentication][:sso_enabled],
-            "data-miq_observe_checkbox"=>{:url=>url}.to_json)
+            "data-miq_observe_checkbox" => {:url => url}.to_json)
     %hr/
+
   = hidden_div_if(@edit[:new][:authentication][:mode] != "httpd", :id => "httpd_role_div") do
     %p.legend=_("Role Settings")
     %table.style1
@@ -200,5 +193,5 @@
         %td
           = check_box_tag("httpd_role", "1",
             @edit[:new][:authentication][:httpd_role],
-            "data-miq_observe_checkbox"=>{:url=>url}.to_json)
-  %hr/
+            "data-miq_observe_checkbox" => {:url => url}.to_json)
+    %hr/
