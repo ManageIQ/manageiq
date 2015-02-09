@@ -724,11 +724,7 @@ module OpsController::Settings::Common
       auth[:ldaphost][1] = params[:authentication_ldaphost_2] if params[:authentication_ldaphost_2]
       auth[:ldaphost][2] = params[:authentication_ldaphost_3] if params[:authentication_ldaphost_3]
 
-      auth[:ldaphost].each_with_index do |ntp,i|
-        if auth[:ldaphost][i].nil? || auth[:ldaphost][i] == ""
-          auth[:ldaphost].delete_at(i)
-        end
-      end
+      auth[:ldaphost].reject!(&:blank?)
 
       auth[:follow_referrals] = (params[:follow_referrals].to_s == "1") if params[:follow_referrals]
       auth[:get_direct_groups] = (params[:get_direct_groups].to_s == "1") if params[:get_direct_groups]
