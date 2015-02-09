@@ -5,7 +5,6 @@ describe 'routes for CatalogController' do
   let(:controller_name) { 'catalog' }
 
   it_behaves_like 'A controller that has column width routes'
-  it_behaves_like 'A controller that has dialog runner routes'
   it_behaves_like 'A controller that has download_data routes'
   it_behaves_like 'A controller that has explorer routes'
 
@@ -31,8 +30,6 @@ describe 'routes for CatalogController' do
     automate_button_field_changed
     button_create
     button_update
-    dialog_field_changed
-    dialog_form_button_pressed
     explorer
     get_ae_tree_edit_key
     group_create

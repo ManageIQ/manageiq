@@ -33,6 +33,14 @@ Vmdb::Application.routes.draw do
     compare_set_state
   )
 
+  dialog_runner_post = %w(
+    dialog_field_changed
+    dialog_form_button_pressed
+    dynamic_list_refresh
+    dynamic_radio_button_refresh
+    dynamic_text_box_refresh
+  )
+
   discover_get_post = %w(
     discover
     discover_field_changed
@@ -174,11 +182,6 @@ Vmdb::Application.routes.draw do
         atomic_form_field_changed
         atomic_st_edit
         automate_button_field_changed
-        dialog_field_changed
-        dialog_form_button_pressed
-        dynamic_list_refresh
-        dynamic_radio_button_refresh
-        dynamic_text_box_refresh
         explorer
         get_ae_tree_edit_key
         group_create
@@ -214,7 +217,8 @@ Vmdb::Application.routes.draw do
         x_settings_changed
         x_show
       ) +
-        button_post
+        button_post +
+        dialog_runner_post
     },
 
     :chargeback              => {
@@ -332,6 +336,7 @@ Vmdb::Application.routes.draw do
 
     :ems_cloud => {
       :get => %w(
+        dialog_load
         discover
         download_data
         edit
@@ -366,6 +371,7 @@ Vmdb::Application.routes.draw do
       ) +
         adv_search_post +
         compare_post +
+        dialog_runner_post +
         discover_get_post +
         exp_post +
         save_post
@@ -374,6 +380,7 @@ Vmdb::Application.routes.draw do
     :ems_cluster => {
       :get => %w(
         columns_json
+        dialog_load
         download_data
         index
         perf_top_chart
@@ -387,9 +394,6 @@ Vmdb::Application.routes.draw do
         drift_get,
       :post => %w(
         button
-        dynamic_list_refresh
-        dynamic_radio_button_refresh
-        dynamic_text_box_refresh
         listnav_search_selected
         panel_control
         protect
@@ -404,6 +408,7 @@ Vmdb::Application.routes.draw do
       ) +
         adv_search_post +
         compare_post +
+        dialog_runner_post +
         drift_post +
         exp_post +
         perf_post +
@@ -412,6 +417,7 @@ Vmdb::Application.routes.draw do
 
     :ems_infra => {
       :get => %w(
+        dialog_load
         discover
         download_data
         edit
@@ -445,6 +451,7 @@ Vmdb::Application.routes.draw do
       ) +
         adv_search_post +
         compare_post +
+        dialog_runner_post +
         discover_get_post +
         exp_post +
         save_post
@@ -511,16 +518,11 @@ Vmdb::Application.routes.draw do
         advanced_settings
         button
         create
-        dialog_field_changed
-        dialog_form_button_pressed
         drift_all
         drift_compress
         drift_differences
         drift_mode
         drift_same
-        dynamic_list_refresh
-        dynamic_radio_button_refresh
-        dynamic_text_box_refresh
         filesystems
         firewall_rules
         firewallrules
@@ -547,6 +549,7 @@ Vmdb::Application.routes.draw do
       ) +
         adv_search_post +
         compare_post +
+        dialog_runner_post +
         discover_get_post +
         exp_post +
         perf_post +
@@ -799,10 +802,6 @@ Vmdb::Application.routes.draw do
       ),
       :post => %w(
         button
-        dialog_field_changed
-        dynamic_list_refresh
-        dynamic_radio_button_refresh
-        dynamic_text_box_refresh
         post_install_callback
         pre_prov
         prov_button
@@ -829,7 +828,8 @@ Vmdb::Application.routes.draw do
         stamp_field_changed
         vm_pre_prov
         upload
-      )
+      ) +
+        dialog_runner_post
     },
 
     :miq_template           => {
@@ -1290,11 +1290,6 @@ Vmdb::Application.routes.draw do
       ),
       :post => %w(
         button
-        dialog_field_changed
-        dialog_form_button_pressed
-        dynamic_list_refresh
-        dynamic_radio_button_refresh
-        dynamic_text_box_refresh
         explorer
         ownership_field_changed
         ownership_update
@@ -1311,6 +1306,7 @@ Vmdb::Application.routes.draw do
         x_settings_changed
         x_show
       ) +
+        dialog_runner_post +
         retire_post
     },
 
@@ -1323,6 +1319,7 @@ Vmdb::Application.routes.draw do
       :get  => %w(
         button
         debris_files
+        dialog_load
         disk_files
         download_data
         files
@@ -1339,9 +1336,6 @@ Vmdb::Application.routes.draw do
         compare_get,
       :post => %w(
         button
-        dynamic_list_refresh
-        dynamic_radio_button_refresh
-        dynamic_text_box_refresh
         files
         listnav_search_selected
         panel_control
@@ -1359,6 +1353,7 @@ Vmdb::Application.routes.draw do
       ) +
         adv_search_post +
         compare_post +
+        dialog_runner_post +
         exp_post +
         save_post
     },
@@ -1440,11 +1435,6 @@ Vmdb::Application.routes.draw do
         advanced_settings
         accordion_select
         button
-        dialog_form_button_pressed
-        dialog_field_changed
-        dynamic_list_refresh
-        dynamic_radio_button_refresh
-        dynamic_text_box_refresh
         edit_vm
         event_logs
         explorer
@@ -1486,6 +1476,7 @@ Vmdb::Application.routes.draw do
       ) +
         adv_search_post +
         compare_post +
+        dialog_runner_post +
         drift_post +
         evm_relationship_post +
         exp_post +
@@ -1514,11 +1505,6 @@ Vmdb::Application.routes.draw do
         accordion_select
         advanced_settings
         button
-        dialog_field_changed
-        dialog_form_button_pressed
-        dynamic_list_refresh
-        dynamic_radio_button_refresh
-        dynamic_text_box_refresh
         edit_vm
         event_logs
         explorer
@@ -1572,6 +1558,7 @@ Vmdb::Application.routes.draw do
       ) +
         adv_search_post +
         compare_post +
+        dialog_runner_post +
         drift_post +
         evm_relationship_post +
         exp_post +
@@ -1603,16 +1590,11 @@ Vmdb::Application.routes.draw do
         advanced_settings
         button
         console
-        dialog_field_changed
-        dialog_form_button_pressed
         drift_all
         drift_differences
         drift_history
         drift_mode
         drift_same
-        dynamic_list_refresh
-        dynamic_radio_button_refresh
-        dynamic_text_box_refresh
         edit_vm
         event_logs
         explorer
@@ -1667,6 +1649,7 @@ Vmdb::Application.routes.draw do
       ) +
         adv_search_post +
         compare_post +
+        dialog_runner_post +
         evm_relationship_post +
         exp_post +
         policy_post +
