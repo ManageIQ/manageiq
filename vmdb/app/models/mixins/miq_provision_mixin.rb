@@ -63,8 +63,10 @@ module MiqProvisionMixin
 
   def get_owner
     @owner ||= begin
-      email = get_option(:owner_email)
-      User.where("lower(email) = ?", email.downcase).first unless email.blank?
+      email = get_option(:owner_email).try(:downcase)
+      return if email.blank?
+      requester = miq_request.requester
+      requester.email.to_s.downcase == email ? requester : User.where("lower(email) = ?", email).first
     end
   end
 
