@@ -76,6 +76,24 @@ describe MiqProvision do
           @vm_prov.get_option(:vm_target_hostname).should == name_002.gsub(/ +|_+/, "-")
         end
 
+        context "when auto naming sequence exceeds the range" do
+          before do
+            region = MiqRegion.my_region
+            region.naming_sequences.create(:name => "#{@target_vm_name}$n{3}", :source => "provisioning", :value => 998)
+            region.naming_sequences.create(:name => "#{@target_vm_name}$n{4}", :source => "provisioning", :value => 10)
+          end
+
+          it "should advance to next range but based on the existing sequence number for the new range" do
+            @vm_prov.options[:number_of_vms] = 2
+            @vm_prov.after_request_task_create
+            @vm_prov.get_option(:vm_target_name).should == "#{@target_vm_name}999"  # 3 digits
+
+            @vm_prov.options[:pass] = 2
+            @vm_prov.after_request_task_create
+            @vm_prov.get_option(:vm_target_name).should == "#{@target_vm_name}0011" # 4 digits
+          end
+        end
+
         it "should create a hostname with a valid length based on the OS" do
           # Hostname lengths by platform:
           #   Linux   : 63

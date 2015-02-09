@@ -27,6 +27,13 @@ describe MiqRegion do
       MiqRegion.count.should == 1
     end
 
+    it "should increment naming sequence number after each call" do
+      MiqRegion.my_region.next_naming_sequence("namingtest$n{3}", "naming").should == 1
+      MiqRegion.my_region.next_naming_sequence("namingtest$n{3}", "naming").should == 2
+      MiqRegion.my_region.next_naming_sequence("anothertest$n{3}", "naming").should == 1
+      MiqRegion.my_region.next_naming_sequence("anothertest$n{3}", "naming").should == 2
+    end
+
     context "with cloud and infra EMSes" do
 
       before :each do
