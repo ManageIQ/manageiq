@@ -253,23 +253,30 @@ class ApplicationController < ActionController::Base
     end
 
     miq_task = MiqTask.find(params[:task_id])
-    if miq_task.task_results.blank? || miq_task.status != "Ok"  # Check to see if any results came back or status not Ok
-      add_flash(_("Report generation returned: Status [%{status}] Message [%{message}]") % {:status  => miq_task.status, :message => miq_task.message}, :error)
-      render :update do |page|
-        page << "if (miqDomElementExists('flash_msg_div_report_list')){"
-        page.replace("flash_msg_div_report_list", :partial => "layouts/flash_msg",
-                                                  :locals  => {:div_num => "_report_list"})
-        page << "} else {"
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        page << "}"
-        page << "miqSparkle(false);"
-      end
+    if miq_task.status != "Ok"  # Check to see if any results came back or status not Ok
+      add_flash(_("Report generation returned: Status [%{status}] Message [%{message}]") %
+        {:status  => miq_task.status,
+         :message => miq_task.message}, :error)
+    elsif miq_task.task_results.blank?
+      add_flash(_("Report results are not available at this time: Message [%{message}]") %
+        {:message => miq_task.message}, :error)
     else
+      report_gen_success = true
       @sb[:render_rr_id] = miq_task.miq_report_result.id
-      render :update do |page|
-        page << "miqSparkle(false);"
-        page << "DoNav('#{url_for(:action => "send_report_data")}');"
-      end
+      add_flash(_("Report generation successful: Status [%{status}] Message [%{message}]") %
+        {:status  => miq_task.status,
+         :message => miq_task.message})
+    end
+
+    render :update do |page|
+      page << "if (miqDomElementExists('flash_msg_div_report_list')){"
+      page.replace("flash_msg_div_report_list", :partial => "layouts/flash_msg",
+                                                :locals  => {:div_num => "_report_list"})
+      page << "} else {"
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+      page << "}"
+      page << "miqSparkle(false);"
+      page << "DoNav('#{url_for(:action => 'send_report_data')}');" if report_gen_success
     end
   end
   alias render_report_txt render_report_data
