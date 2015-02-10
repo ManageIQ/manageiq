@@ -41,12 +41,13 @@
                   %td
                     %ul#toolbars= render_view_buttons(resource, @edit[:new][:views][resource])
       %dd
-        - if role_allows(:feature => "ems_cloud_show_list")         |
-          || role_allows(:feature => "availability_zone_show_list") |
-          || role_allows(:feature => "flavor_show_list")            |
-          || role_allows(:feature => "instances_accord")            |
-          || role_allows(:feature => "instances_filter_accord")     |
-          || role_allows(:feature => "images_filter_accord")        |
+        - if role_allows(:feature => "ems_cloud_show_list")           |
+          || role_allows(:feature => "availability_zone_show_list")   |
+          || role_allows(:feature => "flavor_show_list")              |
+          || role_allows(:feature => "instances_accord")              |
+          || role_allows(:feature => "instances_filter_accord")       |
+          || role_allows(:feature => "images_filter_accord")          |
+          || role_allows(:feature => "orchestration_stack_show_list") |
           %fieldset
             %p.legend= _('Clouds')
             %table.style1
@@ -77,6 +78,11 @@
                   %td.key= _('Images')
                   %td
                     %ul#toolbars= render_view_buttons(:templatecloud, @edit[:new][:views][:templatecloud])
+              - if role_allows(:feature => "orchestration_stack_show_list")
+                %tr
+                  %td.key= _('Stacks')
+                  %td
+                    %ul#toolbars= render_view_buttons(:orchestrationstack, @edit[:new][:views][:orchestrationstack])
         - if role_allows(:feature => "ems_cloud_show_list")     |
           || role_allows(:feature => "ems_cluster_show_list")   |
           || role_allows(:feature => "host_show_list")          |

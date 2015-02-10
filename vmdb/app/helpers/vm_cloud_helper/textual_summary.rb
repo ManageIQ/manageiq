@@ -16,7 +16,8 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_group_vm_cloud_relationships
-    items = %w(ems availability_zone cloud_tenant flavor drift scan_history security_groups cloud_network cloud_subnet)
+    items = %w(ems availability_zone cloud_tenant flavor drift scan_history security_groups
+               cloud_network cloud_subnet orchestration_stack)
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
@@ -232,6 +233,17 @@ module VmCloudHelper::TextualSummary
     if flavor && role_allows(:feature => "flavor_show")
       h[:title] = "Show this VM's #{label}"
       h[:link]  = url_for(:controller => 'flavor', :action => 'show', :id => flavor)
+    end
+    h
+  end
+
+  def textual_orchestration_stack
+    stack = @record.orchestration_stack
+    label = ui_lookup(:table => "orchestration_stack")
+    h = {:label => label, :image => "orchestration_stack", :value => (stack.nil? ? "None" : stack.name)}
+    if stack && role_allows(:feature => "orchestration_stack_show")
+      h[:title] = "Show this VM's #{label} '#{stack.name}'"
+      h[:link]  = url_for(:controller => 'orchestration_stack', :action => 'show', :id => stack)
     end
     h
   end

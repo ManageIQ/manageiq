@@ -20,6 +20,7 @@ db: OrchestrationStackParameter
 # Columns to fetch from the main table
 cols:
 - name
+- value
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -27,10 +28,12 @@ include:
 # Order of columns (from all tables)
 col_order: 
 - name
+- value
 
 # Column titles, in order
 headers:
 - Name
+- Value
 
 # Condition(s) string for the SQL query
 conditions: 

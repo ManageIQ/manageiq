@@ -38,3 +38,10 @@
               = link_to_with_icon("Instances (%s)" % @record.number_of(:vms),
                 {:action => 'show', :id => @record, :display => 'instances'},
                 :title => _("Show all Instances"))
+          - if role_allows(:feature => "orchestration_stack_show")
+            - if @record.orchestration_stack
+              = link_to_with_icon("#{ui_lookup(:table=>"orchestration_stack")}: #{@record.orchestration_stack.name}",
+                                    {:controller=>"orchestration_stack", :action=>'show',
+                                     :id=>@record.orchestration_stack.id.to_s},
+                                    {:title=>"Show parent #{ui_lookup(:table=>"orchestration_stack")} for this #{ui_lookup(:table=>"security_group")}"},
+                                    '/images/icons/16/link_external.gif')

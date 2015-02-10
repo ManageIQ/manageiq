@@ -20,9 +20,11 @@ db: OrchestrationStack
 # Columns to fetch from the main table
 cols:
 - name
-- description
 - type
 - status
+- total_vms
+- total_security_groups
+- total_cloud_networks
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -38,17 +40,21 @@ include_for_find:
 col_order:
 - name
 - ext_management_system.name
-- description
 - type
 - status
+- total_vms
+- total_security_groups
+- total_cloud_networks
 
 # Column titles, in order
 headers:
 - Name
 - Provider
-- Description
 - Type
 - Status
+- Instances
+- Security Groups
+- Cloud Networks
 
 # Condition(s) string for the SQL query
 conditions: 
