@@ -288,6 +288,8 @@ class ReportController < ApplicationController
         redirect_options[:import_file_upload_id] = import_file_upload_id
       rescue WidgetImportValidator::NonYamlError
         add_flash(_("Error: the file uploaded is not of the supported format"), :error)
+      rescue WidgetImportValidator::InvalidWidgetYamlError
+        add_flash(_("Error: the file uploaded contains no widgets"), :error)
       end
     end
 
