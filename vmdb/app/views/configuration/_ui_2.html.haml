@@ -7,12 +7,12 @@
         %fieldset
           %p.legend= _('General')
           %table.style1
-            - keys = { :tagging      => _('Tagging'),
-                       :compare      => _('Compare'),
-                       :compare_mode => _('Compare Mode'),
-                       :drift        => _('Drift'),
-                       :drift_mode   => _('Drift Mode'),
-                       :vmitem       => _('VM and Instance Items') }
+            - keys = {:tagging      => _('Tagging'),
+                      :compare      => _('Compare'),
+                      :compare_mode => _('Compare Mode'),
+                      :drift        => _('Drift'),
+                      :drift_mode   => _('Drift Mode'),
+                      :vmitem       => _('VM and Instance Items')}
             - keys.each do |resource, view_name|
               %tr
                 %td.key #{view_name}
@@ -26,6 +26,7 @@
                 %td.key= _('SmartProxies')
                 %td
                   %ul#toolbars= render_view_buttons(:miqproxy, @edit[:new][:views][:miqproxy])
+
         - if role_allows(:feature => "service")                        |
           || role_allows(:feature => "catalog_items_accord")           |
           || role_allows(:feature => "catalog_items_view")             |
@@ -35,12 +36,12 @@
           %fieldset
             %p.legend= _('Services')
             %table.style1
-              - keys = { :service               => ["service",                        _('My Services')],
+              - keys = {:service               => ["service",                        _('My Services')],
                         :catalog               => ["catalog_items_accord",           _('Service Catalogs')],
                         :servicetemplate       => ["catalog_items_view",             _('Catalog Items')],
                         :orchestrationtemplate => ["orchestration_templates_accord", _('Orchestration Templates')],
                         :vm                    => ["vms_instances_filter_accord",    _('VMs & Instances')],
-                        :miqtemplate           => ["templates_images_filter_accord", _('Templates & Images')] }
+                        :miqtemplate           => ["templates_images_filter_accord", _('Templates & Images')]}
               - keys.each do |resource, (feature, view_name)|
                 - if role_allows(:feature => feature)
                   %tr
@@ -152,12 +153,12 @@
           %fieldset
             %p.legend= _('Storage')
             %table.style1
-              - keys = { :ontapstoragesystem   => "ontap_storage_system",
-                         :ontapstoragevolume   => "ontap_storage_volume",
-                         :ontaplogicaldisk     => "ontap_logical_disk",
-                         :ontapfileshare       => "ontap_file_share",
-                         :cimbasestorageextent => "cim_base_storage_extent",
-                         :snialocalfilesystem  => "snia_local_file_system" }
+              - keys = {:ontapstoragesystem   => "ontap_storage_system",
+                        :ontapstoragevolume   => "ontap_storage_volume",
+                        :ontaplogicaldisk     => "ontap_logical_disk",
+                        :ontapfileshare       => "ontap_file_share",
+                        :cimbasestorageextent => "cim_base_storage_extent",
+                        :snialocalfilesystem  => "snia_local_file_system"}
               - keys.each do |resource, table_view_name|
                 %tr
                   %td.key= ui_lookup(:tables => table_view_name)
