@@ -1,0 +1,5 @@
+= render :partial => "layouts/pdf_styles"
+- controller = %w(miq_template vm_infra vm_or_template vm).include?(params[:controller]) ? "vm_common" : params[:controller]
+#xyz_main
+  = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72}
+= render :partial => "#{controller}/main"

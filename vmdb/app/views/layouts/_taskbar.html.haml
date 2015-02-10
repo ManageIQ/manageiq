@@ -1,0 +1,45 @@
+- if display_back_button?
+  - # Only create this div if we get back a file name
+  %div{:style => "float: left;"}
+    = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "summary_center_tb", :tb_yaml => "summary_center_tb"}
+
+%div{:style => "float: left; padding-left: 0px;"}
+  = render :partial => "layouts/center_buttons"
+%div{:style => "float: left;"}
+  = render :partial => "layouts/x_custom_buttons"
+%div{:style => "float: right;"}
+  = render :partial => "layouts/view_buttons"
+
+  - if @lastaction == "show_list" && !session[:menu_click] && display_adv_search? && !@in_a_form
+    = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "calendar"}
+    = hidden_div_if(@edit && @edit[:adv_search_open] != true, :id => "adv_search_div") do
+      - if @edit && @edit[:adv_search_open]
+        = render :partial => 'layouts/adv_search'
+    = render :partial => 'layouts/quick_search'
+
+    - # Name based search box
+    #searchbox{:class => session[:custom_logo] ? "whitelabeled" : ""}
+      = form_tag(:action => 'show_list') do
+        = text_field("search", "text",
+          :id              => "search_text",
+          :value           => @search_text,
+          :alt             => t = _("Search by Name within results"),
+          :title           => t,
+          "data-miq_focus" => true)
+        = image_submit_tag("/images/layout/search.gif",
+          :id    => "searchicon",
+          :name  => "search",
+          :alt   => t,
+          :title => t)
+
+  - elsif @layout == "dashboard"
+    = render :partial => '/layouts/tabs'
+
+- if @lastaction == "show_list" && !session[:menu_click] && display_adv_search? && !@in_a_form
+  - squash_state = @edit && @edit[:adv_search_open] && @edit[:adv_search_open] == true ? "false" : "true"
+  - t = _("Advanced Search")
+  - i = "/images/toolbars/squashed-#{squash_state}.png"
+  = link_to(image_tag(i, :class => "rollover small", :id => "adv_search_img", :style => "z-index:50", :alt => t, :title => t),
+    {:action => 'adv_search_toggle'},
+    :remote  => true,
+    :id      => "adv_search")

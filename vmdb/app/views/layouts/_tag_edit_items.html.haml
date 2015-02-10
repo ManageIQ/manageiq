@@ -1,0 +1,12 @@
+%hr
+%div
+  %p.legend
+    = "%s Being Tagged" % pluralize(@tagitems.length, ui_lookup(:model => @edit[:tagging]))
+  %table.admintable{:height => "75"}
+    %tbody
+      %tr
+        %td
+          - if @tagitems
+            - @embedded = true
+            - @gtl_type ||= @settings[:views][:tagging]
+            = render :partial => "layouts/gtl"
