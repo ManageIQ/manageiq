@@ -64,10 +64,6 @@ module Metric::CiMixin::Capture::OpenstackBase
     # TODO(lsmola) check that first statistic is already saved in the database. If not log.warn that there is hole
     # in the data due to missing data in Ceilometer. Only if this is not the first metrics collection,
 
-    # TODO(lsmola) since it actually saves all counters at once, and we don't know if samples of all those counters
-    # will be aligned. We need to obtain the overlapping period of start and merge those samples together, so they
-    # are not rewritten by nil values of another collection period. This should probably go to saving algorithm
-
     counter_values_by_ts = process_statistics(metric_capture_module, metrics_by_counter_name, data_collecting_period,
                                               log_header)
     counters_by_id              = {ems_ref => metric_capture_module::VIM_STYLE_COUNTERS}
@@ -94,7 +90,8 @@ module Metric::CiMixin::Capture::OpenstackBase
 
   def find_meter_counters(metric_capture_module, resource_filter, metadata_filter, log_header)
     counters = list_resource_meters(resource_filter, log_header) + list_metadata_meters(metadata_filter, log_header)
-    counters.select { |c| meter_names(metric_capture_module).include?(c["name"]) }
+    # Select only allowed counters, with unique names
+    counters.select { |c| meter_names(metric_capture_module).include?(c["name"]) }.uniq { |x| x['name'] }
   end
 
   def list_resource_meters(resource_filter, log_header)
