@@ -987,6 +987,30 @@ module MiqEc2InstanceTypes
 
   # Types that are no longer advertised
   DISCONTINUED_TYPES = {
+    "unknown" => {
+      :disabled                => true,
+      :name                    => "unknown",
+      :family                  => "unknown",
+      :description             => "unknown",
+      :memory                  => 0.megabytes,
+      :vcpu                    => 1,
+      :ebs_only                => true,
+      :instance_store_size     => 0,
+      :instance_store_volumes  => 0,
+      :architecture            => [],
+      :virtualization_type     => [],
+      :network_performance     => :low_to_moderate,
+      :physical_processor      => nil,
+      :processor_clock_speed   => nil,
+      :intel_aes_ni            => nil,
+      :intel_avx               => nil,
+      :intel_avx2              => nil,
+      :intel_turbo             => nil,
+      :ebs_optimized_available => nil,
+      :enhanced_networking     => nil,
+      :cluster_networking      => nil,
+    },
+
     # cc1.4xlarge is not available in any of the documentation, but if you
     #   launch a new instance, it's still available to choose.
     "cc1.4xlarge" => {
