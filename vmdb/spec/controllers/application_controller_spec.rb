@@ -33,8 +33,8 @@ describe ApplicationController do
 
   context "#assert_privileges" do
     before do
-      EvmSpecHelper.seed_specific_product_features("host_new", "host_edit")
-      feature = MiqProductFeature.find_all_by_identifier("host_new")
+      EvmSpecHelper.seed_specific_product_features("host_new", "host_edit", "perf_reload")
+      feature = MiqProductFeature.find_all_by_identifier(["host_new"])
       test_user_role  = FactoryGirl.create(:miq_user_role,
                                            :name                 => "test_user_role",
                                            :miq_product_features => feature)
@@ -55,6 +55,12 @@ describe ApplicationController do
       lambda do
         controller.send(:assert_privileges, "host_edit")
       end.should raise_error(MiqException::RbacPrivilegeException, msg)
+    end
+
+    it "should not raise an error for common hidden feature under a hidden parent" do
+      lambda do
+        controller.send(:assert_privileges, "perf_reload")
+      end.should_not raise_error
     end
   end
 
