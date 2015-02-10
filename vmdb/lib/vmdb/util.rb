@@ -14,7 +14,9 @@ module VMDB
       proxy = proxy.dup
 
       user     = proxy.delete(:user)
+      user     &&= CGI.escape(user)
       password = proxy.delete(:password)
+      password &&= CGI.escape(password)
       userinfo = "#{user}:#{password}".chomp(":") unless user.blank?
 
       proxy[:userinfo]   = userinfo
