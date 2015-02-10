@@ -1,0 +1,37 @@
+- if @settings[:quadicons][:storage]
+  .flobj
+    %img{:src => "/images/icons/#{size}/base.png", :width => size, :height => size}
+  .flobj{:class => "a#{size}"}
+    %img{:src => "/images/icons/new/storagetype-#{item.store_type.nil? ? "unknown" : h(item.store_type.to_s.downcase)}.png"}
+  - # Get the Host count
+  - hcount = item.v_total_hosts
+  - # Get the VM count
+  - vcount = item.v_total_vms
+  .flobj{:class => "b#{size}"}
+    %p
+      = vcount
+  .flobj{:class => "c#{size}"}
+    %p
+      = hcount
+  - space_percent = item.free_space_percent_of_total == 100 ? 20 : ((item.free_space_percent_of_total.to_i + 2) / 5.25).round
+  .flobj{:class => "d#{size}"}
+    %img{:src => "/images/icons/new/piecharts/datastore/#{h(space_percent)}.png"}
+- else
+  - space_percent = (item.used_space_percent_of_total.to_i + 9) / 10
+  .flobj
+    %img{:src => "/images/icons/#{size}/base-single.png", :width => size, :height => size}
+  .flobj{:class => "e#{size}"}
+    %img{:src => "/images/icons/new/datastore-#{h(space_percent)}.png"}
+
+- if typ == :listnav
+  - # Listnav, no clear image needed
+  .flobj
+    %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
+- else
+  .flobj
+    - if !@embedded || @showlinks
+      %a{:href => url_for_record(item), :title => _("Name: %s | %s Type: %s") % [h(item.name), ui_lookup(:table => "storages"), h(item.store_type)]}
+        %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
+    - else
+      %a{:title => _("Name: %s | %s Type: %s") % [h(item.name), ui_lookup(:table => "storages"), h(item.store_type)]}
+        %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}

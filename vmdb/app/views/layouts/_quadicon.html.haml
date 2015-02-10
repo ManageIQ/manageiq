@@ -1,0 +1,45 @@
+- # Default to 100 pixel size
+- size ||= 72
+- # item is the record to be used to build the quadicon
+- item ||= nil
+- # Qualifier (ie :listnav)
+- typ ||= nil
+- db ||= nil
+
+- if !db && item
+  - db = item.kind_of?(ExtManagementSystem) ? model_for_ems(item).name : item.class.base_model.name
+- if mode == :text
+  - # Rendering the text link, not the quadicon
+  - trunc_at = 13
+  - trunc_to = 10
+  = render :partial => "layouts/quadicon/quadicon_text", :locals => {:db => db, :trunc_at => trunc_at, :trunc_to => trunc_to, :row => row}
+- else
+  - # Render the quad icon
+  - if typ == :listnav
+    - id = ""
+    - height ||= 80
+    - style = "margin-left: auto; margin-right: auto; width: 75px; height: #{height}px; z-index: 0;"
+  - else
+    - style = ""
+    - id = "quadicon"
+  %div{:style => style, :id => id}
+    - if %w(EmsCluster ResourcePool Repository Service ServiceTemplate Storage).include?(item.class.name)
+      - partial_name = item.class.name.underscore
+    - elsif item.kind_of?(VmOrTemplate)
+      - partial_name = item.class.base_model.to_s.underscore
+    - elsif %w(ExtManagementSystem Host).include?(item.class.base_class.name)
+      - partial_name = item.class.base_class.name.underscore
+    - else
+      - # All other models that only need single large icon and use name for hover text
+      - partial_name = "single_quad"
+
+    - # List of removed partials with two lines
+    - norender = %w(cim_base_storage_extent cim_storage_extent ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume snia_local_file_system)
+    - if norender.include?(partial_name)
+      .flobj
+        %img{:src => "/images/icons/#{size}/#{partial_name}.png", :border => 0}
+    - else
+      - # VMs and miq_templates use the same partial
+      - partial_name = %w(miq_template vm).include?(partial_name) ? "vm_or_template" : partial_name
+      - width = size == 150 ? 54 : 35
+      = render :partial => "layouts/quadicon/#{partial_name}", :locals => {:size => size, :width => width, :item => item, :typ => typ, :db => db}

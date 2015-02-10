@@ -1,0 +1,86 @@
+- if @settings[:quadicons][item.class.base_model.name.underscore.to_sym]
+  .flobj
+    %img{:src => "/images/icons/#{size}/base.png", :width => size, :height => size}
+  .flobj{:class => "a#{size}"}
+    %img{:src => "/images/icons/new/os-#{h(item.os_image_name.downcase)}.png"}
+  .flobj{:class => "b#{size}"}
+    %img{:src => "/images/icons/72/currentstate-#{h(item.normalized_state.downcase)}.png"}
+  .flobj{:class => "c#{size}"}
+    %img{:src => "/images/icons/new/vendor-#{h(item.vendor.downcase)}.png"}
+
+  - if item.get_policies.length > 0
+    .flobj{:class => "g#{size}"}
+      %img{:src => "/images/icons/new/shield.png"}
+
+  - if @lastaction == "policy_sim"
+    - if @policy_sim && session[:policies].length > 0
+      - result = item.passes_profiles?(session[:policies].keys)
+      - if result == true
+        .flobj{:class => "d#{size}"}
+          %img{:src => "/images/icons/new/check.png"}
+      - elsif result == "N/A"
+        .flobj{:class => "d#{size}"}
+          %img{:src => "/images/icons/new/na.png"}
+      - else
+        .flobj{:class => "d#{size}"}
+          %img{:src => "/images/icons/new/x.png"}
+  - else
+    .flobj{:class => "d#{size}"}
+      %p
+        = h(item.v_total_snapshots)
+- else
+  .flobj
+    %img{:src => "/images/icons/#{size}/base-single.png"}
+  - if @policy_sim == true
+    - if @policy_sim && session[:policies].length > 0
+      - result = item.passes_profiles?(session[:policies].keys)
+      - if result == true
+        .flobj{:class => "e#{size}"}
+          %img{:src => "/images/icons/new/check.png", :width => width * 1.8, :height => width * 1.8}
+      - elsif result == "N/A"
+        .flobj{:class => "e#{size}"}
+          %img{:src => "/images/icons/new/na.png", :width => width * 1.8, :height => width * 1.8}
+      - else
+        .flobj{:class => "e#{size}"}
+          %img{:src => "/images/icons/new/x.png", :width => width * 1.8, :height => width * 1.8}
+    - else
+      .flobj{:class => "e#{size}"}
+        %img{:src => "/images/icons/new/vendor-#{h(item.vendor.downcase)}.png", :width => width * 1.8, :height => width * 1.8}
+  - else
+    .flobj
+      %img{:src => "/images/icons/#{size}/base-single.png"}
+    .flobj{:class => "e#{size}"}
+      %img{:src => "/images/icons/new/vendor-#{h(item.vendor.downcase)}.png", :width => width * 1.8, :height => width * 1.8}
+
+- unless typ == :listnav
+  .flobj
+    - if !@embedded || @showlinks
+      - if @explorer
+        - if request.parameters[:controller] == "service" && @view.db == "Vm"
+          = link_to(image_tag("/images/icons/#{size}/reflection.png", :width => size, :height => size, :title => h(item.name)),
+            {:controller => "vm_infra", :action => 'show', :id => to_cid(item.id)},
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true)
+        - else
+          = link_to(image_tag("/images/icons/#{size}/reflection.png", :width => size, :height => size, :title => h(item.name)),
+            {:action => 'x_show', :id => to_cid(item.id)},
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            :remote                => true)
+      - else
+        %a{:href => url_for_record(item), :title => h(item.name)}
+          %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
+    - else
+      - if @policy_sim && session[:policies].length > 0
+        - if @edit && @edit[:explorer]
+          = link_to(image_tag("/images/icons/#{size}/reflection.png", :width => size, :height => size, :title => h(item.name)),
+            {:action => 'policies', :id => to_cid(item.id)},
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            :remote                => true)
+        - else
+          %a{:href => url_for_record(item, "policies"), :title => _("Show policy details for %s") % h(item.name)}
+            %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
+      - else
+        %a{:title => h(item.name)}
+          %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
