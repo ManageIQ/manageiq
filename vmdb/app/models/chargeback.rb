@@ -151,7 +151,7 @@ class Chargeback < ActsAsArModel
     end
     $log.info("#{log_prefix} Calculating chargeback costs...Complete")
 
-    return [data.inject([]) {|a,r| a << self.new(r.last)}]
+    return [data.map {|r| new(r.last)}]
   end
 
   def get_rates(perf)
