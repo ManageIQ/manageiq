@@ -26,21 +26,27 @@
                 %td.key= _('SmartProxies')
                 %td
                   %ul#toolbars= render_view_buttons(:miqproxy, @edit[:new][:views][:miqproxy])
-        %fieldset
-          %p.legend= _('Services')
-          %table.style1
-            - keys = { :service               => ["service",                        _('My Services')],
-                       :catalog               => ["catalog_items_accord",           _('Service Catalogs')],
-                       :servicetemplate       => ["catalog_items_view",             _('Catalog Items')],
-                       :orchestrationtemplate => ["orchestration_templates_accord", _('Orchestration Templates')],
-                       :vm                    => ["vms_instances_filter_accord",    _('VMs & Instances')],
-                       :miqtemplate           => ["templates_images_filter_accord", _('Templates & Images')] }
-            - keys.each do |resource, (feature, view_name)|
-              - if role_allows(:feature => feature)
-                %tr
-                  %td.key #{view_name}
-                  %td
-                    %ul#toolbars= render_view_buttons(resource, @edit[:new][:views][resource])
+        - if role_allows(:feature => "service")                        |
+          || role_allows(:feature => "catalog_items_accord")           |
+          || role_allows(:feature => "catalog_items_view")             |
+          || role_allows(:feature => "orchestration_templates_accord") |
+          || role_allows(:feature => "vms_instances_filter_accord")    |
+          || role_allows(:feature => "templates_images_filter_accord") |
+          %fieldset
+            %p.legend= _('Services')
+            %table.style1
+              - keys = { :service               => ["service",                        _('My Services')],
+                        :catalog               => ["catalog_items_accord",           _('Service Catalogs')],
+                        :servicetemplate       => ["catalog_items_view",             _('Catalog Items')],
+                        :orchestrationtemplate => ["orchestration_templates_accord", _('Orchestration Templates')],
+                        :vm                    => ["vms_instances_filter_accord",    _('VMs & Instances')],
+                        :miqtemplate           => ["templates_images_filter_accord", _('Templates & Images')] }
+              - keys.each do |resource, (feature, view_name)|
+                - if role_allows(:feature => feature)
+                  %tr
+                    %td.key #{view_name}
+                    %td
+                      %ul#toolbars= render_view_buttons(resource, @edit[:new][:views][resource])
       %dd
         - if role_allows(:feature => "ems_cloud_show_list")           |
           || role_allows(:feature => "availability_zone_show_list")   |
