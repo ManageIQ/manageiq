@@ -38,7 +38,7 @@ describe "MiqServer" do
 
       FileUtils.should_receive(:mkdir_p).with("/repo/mirror")
       MiqApache::Conf.should_receive(:create_conf_file).once.and_return(true)
-      FileUtils.should_receive(:rm).with("/etc/httpd/conf.d/cfme-https-mirror.conf", {:force=>true})
+      FileUtils.should_receive(:rm).with(MiqServer::RhnMirror::APACHE_MIRROR_CONF_FILE, :force => true)
       MiqApache::Control.should_receive(:restart).once
       LinuxAdmin::Yum.should_receive(:download_packages).once.with("/repo/mirror", "cfme-appliance")
       Dir.should_receive(:glob).with("/repo/mirror/**/*.rpm").and_return(rpm_file_list)

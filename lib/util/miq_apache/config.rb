@@ -4,7 +4,7 @@ module MiqApache
   DEFAULT_PACKAGE_NAME = 'httpd'
 
   def self.root_dir
-    ENV.fetch('MIQ_APACHE_ROOT_DIR', DEFAULT_ROOT_DIR)
+    Pathname.new(ENV.fetch('MIQ_APACHE_ROOT_DIR', DEFAULT_ROOT_DIR))
   end
 
   def self.service_name
