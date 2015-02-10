@@ -333,7 +333,8 @@ module EmsRefresh::Parsers
 
       flavor_uid = instance.instance_type
       @known_flavors << flavor_uid
-      flavor = @data_index.fetch_path(:flavors, flavor_uid)
+      flavor = @data_index.fetch_path(:flavors, flavor_uid) ||
+        @data_index.fetch_path(:flavors, "unknown")
 
       private_network = {
         :ipaddress => instance.private_ip_address,
