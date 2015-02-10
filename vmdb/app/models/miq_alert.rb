@@ -596,11 +596,25 @@ class MiqAlert < ActiveRecord::Base
     eval_options = {
       :interval_name => "realtime",
       :duration      => options[:rt_time_threshold],
-      :column        => options[:perf_column],
       :debug_trace   => options[:debug_trace]
     }
 
-    eval_options[:operator] = case options[:operator].downcase
+    # options[:perf_column] points to one of keys in vim_performance_operating_ranges's values column
+    # which stores the long term average data
+    # eval_options[:column] points to the column in metrics, where data are collected and to be compared
+    # with the average.
+    # A column name conversion is needed as follows
+    eval_options[:column] =
+      case options[:perf_column]
+      when "max_cpu_usage_rate_average"
+        "cpu_usage_rate_average"
+      when "max_mem_usage_absolute_average"
+        "mem_usage_absolute_average"
+      else
+        options[:perf_column]
+      end
+
+    case options[:operator].downcase
     when "exceeded"
       eval_options[:operator] = ">"
       typ = "high"
@@ -611,7 +625,7 @@ class MiqAlert < ActiveRecord::Base
       raise "operator '#{eval_options[:operator]}' is not valid"
     end
 
-    val_col_name = "#{eval_options[:column]}_#{typ}_over_time_period"
+    val_col_name = "#{options[:perf_column]}_#{typ}_over_time_period"
     unless target.respond_to?(val_col_name)
       $log.warn("MIQ(alert-evaluate_method_operating_range_exceptions) Target class [#{target.class.name}] does not support operating range, skipping")
       return false
