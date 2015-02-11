@@ -6,8 +6,8 @@
 /data/
 /productization
 BUILD
-Gemfile.lock
 Gemfile.dev.rb
+Gemfile.lock*
 GUID
 REGION
 SyntaxCheck
