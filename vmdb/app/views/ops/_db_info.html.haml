@@ -1,7 +1,7 @@
 = render :partial => "layouts/flash_msg"
 - if @temp[:vmdb_index]
   %p.legend
-    #{_("Index")}: #{h(@temp[:vmdb_index].name)}
+    = "#{_("Index")}: #{h(@temp[:vmdb_index].name)}"
   %table.style1
     %tr
       %td.key= _("Name")
@@ -26,12 +26,12 @@
     %hr/
 - elsif @temp[:table]
   %p.legend
-    #{_("Table")}: #{h(@temp[:table].name)}
-  - metrics = @temp[:table].latest_hourly_metric
+    = "#{_("Table")}: #{h(@temp[:table].name)}"
   %table.style1
     %tr
       %td.key= _("Name")
       %td= h(@temp[:table].name)
+    - metrics = @temp[:table].latest_hourly_metric
     - if metrics
       %tr
         %td.key= _("Rows")
