@@ -56,7 +56,9 @@ module EmsRefresh::Parsers
         :portal_ip        => service.spec.portalIP,
         :container_port   => service.spec.containerPort,
         :namespace        => service.metadata.instance_values["table"][:namespace],
-        :session_affinity => service.spec.sessionAffinity
+        :session_affinity => service.spec.sessionAffinity,
+
+        :labels           => parse_labels(service)
       )
       new_result
     end
