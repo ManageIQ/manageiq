@@ -26,4 +26,9 @@ end
 
 # Update Status for on_error
 if $evm.root['ae_result'] == 'error'
+  if step.downcase == 'startretirement'
+    $evm.log("info", "Cannot continue because VM is already retired or is being retired.")
+  else
+    vm.retirement_state = 'error'
+  end
 end

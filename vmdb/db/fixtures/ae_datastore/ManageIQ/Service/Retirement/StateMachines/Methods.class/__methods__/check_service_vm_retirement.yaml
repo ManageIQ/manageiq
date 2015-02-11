@@ -3,7 +3,7 @@ object_type: method
 version: 1.0
 object:
   attributes:
-    name: PreDeleteFromProvider
+    name: check_service_vm_retirement
     display_name: 
     description: 
     scope: instance
