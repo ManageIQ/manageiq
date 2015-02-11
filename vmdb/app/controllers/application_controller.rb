@@ -2311,6 +2311,8 @@ class ApplicationController < ActionController::Base
       when "miq_request"
         session[:tab_url][:svc] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "vm"
         session[:tab_url][:inf] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "host"
+      when "provider_foreman"
+        session[:tab_url][:inf] = inbound_url if ["show", "explorer"].include?(action_name)
       end
     end
 

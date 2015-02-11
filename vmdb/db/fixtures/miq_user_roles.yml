@@ -292,6 +292,11 @@
   - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
+  - provider_foreman_authentication_validate
+  - provider_foreman_edit
+  - provider_foreman_delete
+  - provider_foreman_new
+  - provider_foreman_refresh
   - vm_clone
   - vm_compare
   - vm_console
@@ -370,6 +375,11 @@
   - host_tag
   - host_timeline
   - job_my_smartproxy
+  - provider_foreman_authentication_validate
+  - provider_foreman_edit
+  - provider_foreman_delete
+  - provider_foreman_new
+  - provider_foreman_refresh
   - storage_manager_new
   - storage_manager_edit
   - storage_manager_refresh_inventory
@@ -776,6 +786,11 @@
   - my_settings_visuals
   - miq_request_admin
   - miq_request_view
+  - provider_foreman_authentication_validate
+  - provider_foreman_edit
+  - provider_foreman_delete
+  - provider_foreman_new
+  - provider_foreman_refresh
   - vm_console
   - vm_clone
   - vm_filter_accord
@@ -834,6 +849,11 @@
   - miq_template_tag
   - miq_template_timeline
   - miq_template_snapshot
+  - provider_foreman_authentication_validate
+  - provider_foreman_edit
+  - provider_foreman_delete
+  - provider_foreman_new
+  - provider_foreman_refresh
   - vm_analyze
   - vm_check_compliance
   - vm_clone

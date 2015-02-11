@@ -24,6 +24,7 @@ class TreeBuilder
     when :cb_reports_tree               then ["Saved Chargeback Reports",     "Saved Chargeback Reports"]
     when :containers_tree               then ["All Containers",               "All Containers"]
     when :containers_filter_tree               then ["All Containers",        "All Containers"]
+    when :cs_filter_tree                then ["All Foreman Configured Systems",       "All Foreman Configured Systems"]
     when :customization_templates_tree  then
       title = "All #{ui_lookup(:models => "CustomizationTemplate")} - #{ui_lookup(:models => "PxeImageType")}"
       [title, title]
@@ -39,6 +40,7 @@ class TreeBuilder
     when :iso_datastores_tree           then ["All ISO Datastores",           "All ISO Datastores"]
     when :old_dialogs_tree              then ["All Dialogs",                  "All Dialogs"]
     when :ot_tree                       then ["All Orchestration Templates",  "All Orchestration Templates"]
+    when :foreman_providers_tree        then ["All Foreman Providers",        "All Foreman Providers"]
     when :pxe_image_types_tree          then ["All System Image Types",       "All System Image Types"]
     when :pxe_servers_tree              then ["All PXE Servers",              "All PXE Servers"]
     when :sandt_tree                    then ["All Catalog Items",            "All Catalog Items"]
@@ -195,6 +197,8 @@ class TreeBuilder
     object = options[:parent]
     children_or_count = case object
                         when nil                 then x_get_tree_roots(options)
+                        when ConfigurationManagerForeman then x_get_tree_cmf_kids(object, options)
+                        when ConfigurationProfile then x_get_tree_cpf_kids(object, options)
                         when CustomButtonSet     then x_get_tree_aset_kids(object, options)
                         when Dialog              then x_get_tree_dialog_kids(object, options)
                         when DialogGroup         then x_get_tree_dialog_group_kids(object, options)
@@ -345,7 +349,9 @@ class TreeBuilder
     "cbg" => "CustomButtonSet",
     "cb"  => "CustomButton",
     "cfn" => "OrchestrationTemplateCfn",
+    "cp"  => "ConfigurationProfile",
     "cr"  => "ChargebackRate",
+    "cs"  => "ConfiguredSystem",
     "ct"  => "CustomizationTemplate",
     "d"   => "Datacenter",
     "dg"  => "Dialog",

@@ -1,6 +1,8 @@
 class Provider < ActiveRecord::Base
   include NewWithTypeStiMixin
   include AuthenticationMixin
+  include ReportableMixin
+  include AsyncDeleteMixin
   include EmsRefresh::Manager
 
   belongs_to :zone

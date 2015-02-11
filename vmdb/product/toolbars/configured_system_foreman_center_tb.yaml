@@ -1,0 +1,23 @@
+#
+# Toolbar config file
+#
+---
+:model: ConfiguredSystem
+:button_groups:
+- :name: provider_vmdb
+  :items:
+  - :buttonSelect: provider_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :enabled: 'false'
+    :items:
+    - :button: tbd
+      :image: tbd
+      :text: tbd
+      :title: tbd
+      :url_parms: tbd
+      :confirm: tbd
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :separator:

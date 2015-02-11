@@ -1261,6 +1261,41 @@ Vmdb::Application.routes.draw do
         save_post
     },
 
+    :provider_foreman => {
+      :get  => %w(
+        download_data
+        explorer
+        provider_foreman_form_fields
+        show
+      ),
+      :post => %w(
+        accordion_select
+        button
+        explorer
+        exp_button
+        exp_changed
+        exp_token_pressed
+        form_field_changed
+        panel_control
+        authentication_validate
+        edit
+        quick_search
+        reload
+        save_col_widths
+        show
+        show_list
+        tree_autoload_dynatree
+        tree_select
+        users
+        wait_for_task
+        x_button
+        x_history
+        x_search_by_name
+        x_show
+      ) +
+        adv_search_post
+    },
+
     :pxe => {
       :get => %w(
         explorer

@@ -73,6 +73,13 @@ miqAngularApplication.service('miqService', function() {
       return false;
   }
 
+  this.canValidateBasicInfo = function () {
+    if (miqAngularApplication.$scope.isBasicInfoValid())
+      return true;
+    else
+      return false;
+  }
+
   this.validateFieldsValid = function (form) {
     if (form != undefined &&
       form.depot_name.$valid &&
@@ -96,4 +103,9 @@ miqAngularApplication.service('miqService', function() {
     else
       return false;
   }
+
+   this.validateClicked = function (url) {
+     this.sparkleOn();
+     this.miqAjaxButton(url, true);
+  };
 });

@@ -128,6 +128,8 @@ module ApplicationHelper
       return url_for(:controller=>@record.class.to_s.underscore, :action=>"snia_local_file_systems", :id=>@record, :show=>@id)
     elsif db == "MiqCimInstance" && @db && @db == "cim_base_storage_extent"
       return url_for(:controller=>@record.class.to_s.underscore, :action=>"cim_base_storage_extents", :id=>@record, :show=>@id)
+    elsif db == "ConfiguredSystem"
+      return url_for(:controller => "provider_foreman", :action => @lastaction, :id => @record, :show => @id)
     else
       controller, action = db_to_controller(db, action)
       return url_for(:controller=>controller, :action=>action, :id=>@id)
@@ -172,6 +174,11 @@ module ApplicationHelper
           elsif ["Vm"].include?(view.db) && parent && request.parameters[:controller] != "vm"
             # this is to handle link to a vm in vm explorer from service explorer
             return url_for(:controller=>"vm_or_template", :action=>"show") + "/"
+          elsif %w(ConfigurationProfile).include?(view.db) &&
+                request.parameters[:controller] == "provider_foreman"
+            return url_for(:action => action, :id => nil) + "/"
+          elsif %w(ConfiguredSystem).include?(view.db) && request.parameters[:controller] == "provider_foreman"
+            return url_for(:action => action, :id => nil) + "/"
           else
             return url_for(:action=>action) + "/" # In explorer, don't jump to other controllers
           end
@@ -1929,6 +1936,10 @@ module ApplicationHelper
         end
       elsif @layout == "miq_policy_rsop"
         return session[:rsop_tree] ? "miq_policy_rsop_center_tb" : "blank_view_tb"
+      elsif @layout == "provider_foreman"
+        if x_active_tree == :foreman_providers_tree || :cs_filter_tree
+          return center_toolbar_filename_foreman_providers
+        end
       else
         if x_active_tree == :ae_tree
           return center_toolbar_filename_automate
@@ -2293,6 +2304,29 @@ module ApplicationHelper
       end
     end
     return "blank_view_tb"
+  end
+
+  def center_toolbar_filename_foreman_providers
+    nodes = x_node.split('-')
+    if x_active_tree == :foreman_providers_tree
+      foreman_providers_tree_center_tb(nodes)
+    elsif x_active_tree == :cs_filter_tree
+      cs_filter_tree_center_tb(nodes)
+    end
+  end
+
+  def foreman_providers_tree_center_tb(nodes)
+    case nodes.first
+    when "root" then  "provider_foreman_center_tb"
+    when "e"  then  "configuration_profile_foreman_center_tb"
+    when "cp"   then  "configured_system_foreman_center_tb"
+    end
+  end
+
+  def cs_filter_tree_center_tb(nodes)
+    case nodes.first
+    when "root", "ms" then  "configured_system_foreman_center_tb"
+    end
   end
 
   # check if back to summary button needs to be show
@@ -2669,7 +2703,10 @@ module ApplicationHelper
                      orchestration_stack repository resource_pool retired security_group service
                      snia_local_file_system storage storage_manager templates vm)
     (@lastaction == "show_list" && !session[:menu_click] && show_search.include?(@layout) && !@in_a_form) ||
-      (@explorer && x_tree && [:containers, :filter, :images, :instances, :vandt].include?(x_tree[:type]) && !@record)
+      (@explorer &&
+       x_tree &&
+       [:containers, :filter, :images, :instances, :providers, :vandt].include?(x_tree[:type]) &&
+       !@record)
   end
 
   def need_prov_dialogs?(type)

@@ -1,0 +1,187 @@
+#
+# Toolbar config file
+#
+---
+:model: ProviderForeman
+:button_groups:
+- :name: provider_vmdb
+  :items:
+  - :buttonSelect: provider_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :enabled: 'true'
+    :items:
+    - :button: provider_foreman_refresh
+      :image: refresh
+      :text: "Refresh Relationships and Power states"
+      :title: "Refresh relationships for all items related to the selected items"
+      :url_parms: 'main_div'
+      :confirm: "Refresh relationships for all items related to the selected items?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :separator:
+    - :button: provider_foreman_new
+      :image: new
+      :text: "Add a new Foreman Provider"
+      :title: "Add a new Foreman Provider"
+      :enabled: 'true'
+    - :button: provider_foreman_edit
+      :image: edit
+      :text: Edit Selected item
+      :title: Select a single item to edit
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: provider_foreman_delete
+      :image: remove
+      :text: Remove selected items from the VMDB
+      :title: Remove selected items from the VMDB
+      :url_parms: 'main_div'
+      :confirm: "Warning: The selected items and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected items?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :separator:
+- :name: provider_foreman_policy
+  :items:
+  - :buttonSelect: provider_foreman_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :enabled: 'false'
+    :onwhen: '1+'
+    :items:
+    - :button: provider_foreman_protect
+      :image: protect
+      :text: "Manage Policies"
+      :title: "Manage Policies for the selected items"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: provider_foreman_policy_sim
+      :text: "Policy Simulation"
+      :title: "View Policy Simulation for the selected items"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: provider_foreman_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: "Edit tags for the selected items"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: provider_foreman_check_compliance
+      :image: compliance
+      :text: "Check Compliance of Last Known Configuration"
+      :title: "Check Compliance of the last known configuration for the selected items"
+      :url_parms: 'main_div'
+      :confirm: "Initiate Check Compliance of the last known configuration for the selected items?"
+      :enabled: 'false'
+      :onwhen: '1+'
+- :name: provider_foreman_lifecycle
+  :items:
+  - :buttonSelect: provider_foreman_lifecycle_choice
+    :image: lifecycle
+    :title: Lifecycle
+    :text: Lifecycle
+    :items:
+    - :button: provider_foreman_miq_request_new
+      :image: new
+      :url_parms: 'main_div'
+      :text: "Provision VMs"
+      :title: "Request to Provision VMs"
+    - :button: provider_foreman_clone
+      :image: clone
+      :text: "Clone selected item"
+      :title: "Clone this item"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: provider_foreman_publish
+      :image: publish
+      :text: "Publish selected VM to a Template"
+      :title: "Publish selected VM to a Template"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: provider_foreman_migrate
+      :image: migrate
+      :text: "Migrate selected items"
+      :title: "Migrate selected items to another Host/Datastore"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: provider_foreman_retire
+      :image: retire
+      :text: "Set Retirement Dates"
+      :title: "Set Retirement Dates for the selected items"
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: provider_foreman_retire_now
+      :image: retire_now
+      :text: "Retire selected items"
+      :title: "Retire the selected items"
+      :url_parms: 'main_div'
+      :confirm: "Retire the selected items?"
+      :enabled: 'false'
+      :onwhen: '1+'
+- :name: provider_foreman_operations
+  :items:
+  - :buttonSelect: provider_foreman_power_choice
+    :image: power_choice
+    :title: Power Operations
+    :text: Power
+    :enabled: 'false'
+    :onwhen: '1+'
+    :items:
+    - :button: provider_foreman_guest_shutdown
+      :image: guest_shutdown
+      :text: "Shutdown Guest"
+      :title: "Shutdown the Guest OS on the selected items"
+      :url_parms: 'main_div'
+      :confirm: "Shutdown the Guest OS on the selected items?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: provider_foreman_guest_restart
+      :image: guest_restart
+      :text: "Restart Guest"
+      :title: "Restart the Guest OS on the selected items"
+      :url_parms: 'main_div'
+      :confirm: "Restart the Guest OS on the selected items?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :separator:
+    - :button: provider_foreman_start
+      :image: power_on
+      :text: "Power On"
+      :title: "Power On the selected items"
+      :url_parms: 'main_div'
+      :confirm: "Power On the selected items?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: provider_foreman_stop
+      :image: power_off
+      :text: "Power Off"
+      :title: "Power Off the selected items"
+      :url_parms: 'main_div'
+      :confirm: "Power Off the selected items?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: provider_foreman_suspend
+      :image: power_suspend
+      :text: "Suspend"
+      :title: "Suspend the selected items"
+      :url_parms: 'main_div'
+      :confirm: "Suspend the selected items?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :button: provider_foreman_reset
+      :image: power_reset
+      :text: "Reset"
+      :title: "Reset the selected items"
+      :url_parms: 'main_div'
+      :confirm: "Reset the selected items?"
+      :enabled: 'false'
+      :onwhen: '1+'

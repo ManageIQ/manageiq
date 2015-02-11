@@ -52,6 +52,8 @@ class TreeNodeBuilder
       "#{ui_lookup(:table=>object.kind_of?(EmsInfra) ? "ems_infra" : "ems_cloud")}: #{object.name}")
     when ChargebackRate       then generic_node(object.description, "chargeback_rates.png")
     when Condition            then generic_node(object.description, "miq_condition.png")
+    when ConfigurationProfile then generic_node(object.name, "configuration_profile.png", "Configuration Profile: #{object.name}")
+    when ConfiguredSystem     then generic_node(object.hostname, "configured_system.png", "Configured System: #{object.hostname}")
     when Container            then generic_node(object.name, "container.png")
     when CustomButton         then generic_node(object.name, object.options && object.options[:button_image] ? "custom-#{object.options[:button_image]}.png" : "leaf.gif",
       "Button: #{object.description}")
@@ -91,6 +93,7 @@ class TreeNodeBuilder
     when MiqUserRole          then generic_node(object.name, "miq_user_role.png")
     when OrchestrationTemplateCfn then generic_node(object.name, "orchestration_template_cfn.png")
     when OrchestrationTemplateHot then generic_node(object.name, "orchestration_template_hot.png")
+    when ConfigurationManagerForeman             then generic_node(object.name, "vendor-foreman.png", "Provider: #{object.name}")
     when PxeImage             then generic_node(object.name, object.default_for_windows ? "win32service.png" : "pxeimage.png")
     when WindowsImage         then generic_node(object.name, "os-windows_generic.png")
     when PxeImageType         then generic_node(object.name, "pxeimagetype.png")
@@ -102,7 +105,7 @@ class TreeNodeBuilder
     when ServiceTemplateCatalog then generic_node(object.name, "service_template_catalog.png")
     when Storage              then generic_node(object.name, "storage.png")
     when User                 then generic_node(object.name, "user.png")
-    when MiqSearch            then generic_node(object.description, "filter.png")
+    when MiqSearch            then generic_node(object.description, "filter.png", "Filter: #{object.description}")
     when MiqDialog            then generic_node(object.description, "miqdialog.png", object[0])
     when MiqRegion            then miq_region_node
     when MiqWidget            then generic_node(object.title, "#{object.content_type}_widget.png", object.title)

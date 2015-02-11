@@ -944,7 +944,7 @@ module ApplicationController::CiProcessing
     @lastaction  = "show_list"
     @gtl_url = "/#{self.class.table_name}/show_list/?"
 
-    model = options.delete(:model)  # Get passed in model override
+    model = options.delete(:model) # Get passed in model override
     @view, @pages = get_view(model || self.class.model, options)  # Get the records (into a view) and the paginator
     if session[:bc] && session[:menu_click]               # See if we came from a perf chart menu click
       drop_breadcrumb( {:name => session[:bc],
@@ -1108,6 +1108,8 @@ module ApplicationController::CiProcessing
       else
         if request.parameters["controller"] == "service"
           self.send("process_services", vms, method)
+        elsif request.parameters["controller"] == "provider_foreman"
+          process_foreman(vms, method) unless vms.empty?
         else
           self.send("process_vms", vms, method, display_name)
         end
@@ -1128,6 +1130,8 @@ module ApplicationController::CiProcessing
         vms.push(params[:id])
         if request.parameters["controller"] == "service"
           self.send("process_services", vms, method) unless vms.empty?
+        elsif request.parameters["controller"] == "provider_foreman"
+          process_foreman(vms, method) unless vms.empty?
         else
           self.send("process_vms", vms, method, display_name) unless vms.empty?
         end
@@ -1193,6 +1197,21 @@ module ApplicationController::CiProcessing
     end
   end
 
+  def process_foreman(providers, task)
+    providers, _services_out_region = filter_ids_in_region(providers, "ConfigurationManagerForeman")
+    return if providers.empty?
+
+    options = {:ids => providers, :task => task, :userid => session[:userid]}
+    kls = ConfigurationManagerForeman.find_by_id(providers.first).class.base_model
+    ConfigurationManagerForeman.process_tasks(options)
+    rescue StandardError => bang                            # Catch any errors
+      add_flash(_("Error during '%s': ") % task << bang.message, :error)
+  else
+    add_flash(_("%{task} initiated for %{count_model} (Foreman) from the CFME Database") %
+      {:task        => Dictionary.gettext(task, :type => :task).titleize,
+       :count_model => pluralize(providers.length, ui_lookup(:model => kls.to_s))})
+  end
+
   # Delete all selected or single displayed VM(s)
   def deletevms
     assert_privileges(params[:pressed])
@@ -1218,6 +1237,7 @@ module ApplicationController::CiProcessing
   alias instance_refresh refreshvms
   alias vm_refresh refreshvms
   alias miq_template_refresh refreshvms
+  alias foreman_refresh refreshvms
 
   # Import info for all selected or single displayed vm(s)
   def scanvms
