@@ -114,8 +114,13 @@ describe Metric::CiMixin::Capture do
   end
 
   context "2 collection periods total, there is data hole between periods" do
-    it "verifies that hole in the data is logged" do
+    it "verifies that hole in the data is logged, corrupted data is logged and no other warnings are logged" do
+      # Hole in the data is logged
       $log.should_receive(:warn).with(/expected to get data as of/).exactly(:once)
+      # Corrupted data is logged
+      $log.should_receive(:warn).with(/Distance of the multiple streams of data is invalid/).exactly(:once)
+      # No to other warnings should be logged
+      $log.should_not_receive(:warn)
 
       # sending no collection period overlap will cause hole in the data
       capture_data('2013-08-28T11:56:00Z', nil)
