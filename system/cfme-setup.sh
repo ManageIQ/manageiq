@@ -47,8 +47,3 @@ EOF
 # will remove this once app is no longer running as root
 /usr/sbin/semanage fcontext -a -t user_home_dir_t "/root(/)?"
 /sbin/restorecon /root
-
-# Copy the postgres template yml to database.yml if it doesn't exist
-db_yml="/var/www/miq/vmdb/config/database.yml"
-db_template="/var/www/miq/vmdb/config/database.pg.yml"
-[ ! -f $db_yml ] && [ -f $db_template ] && cp $db_template $db_yml
