@@ -1,0 +1,82 @@
+- if @sb[:active_tab] == "diagnostics_database"
+  -# created div with different name so database validation flash message can be shown in it's own box
+  = render :partial => "layouts/flash_msg", :locals => {:div_num => "database"}
+
+  %p.legend= _("Basic Info")
+  %table.style1
+    %tr
+      %td.key= _("Type")
+      %td.wide= h(@database[:display_name])
+    %tr
+      %td.key= _("Hostname")
+      %td.wide= h(@database[:host])
+    %tr
+      %td.key= _("Database Name")
+      %td.wide= h(@database[:database])
+    %tr
+      %td.key= _("Username")
+      %td.wide= h(@database[:username])
+
+  - if DatabaseBackup.backup_supported?
+    - url = url_for(:action => 'db_backup_form_field_changed')
+    %hr/
+    %p.legend= _("Run a Database Backup Now")
+    %fieldset
+      %p.legend= _("Backup Schedules")
+      %table.style1
+        %tr
+          %td.key= _("Fetch settings from a schedule")
+          %td.wide
+            - if @edit[:backup_schedules].length < 1
+              = _("No Backup Schedules are defined")
+            - else
+              - default_option = [_("<Choose>"), nil]
+              - schedules_ary = Array(@edit[:backup_schedules].invert)
+              - schedules_ary.sort! { |a, b| a.first <=> b.first }
+              - options = options_for_select([default_option] + schedules_ary, @edit[:selected_backup_schedule])
+
+              = select_tag('backup_schedule', options, "data-miq_observe" => {:url => url}.to_json)
+
+    = render :partial => "layouts/edit_log_depot_settings",        |
+      :locals       => {:action => "db_backup_form_field_changed", |
+      :validate_url => "log_depot_validate",                       |
+      :div_num      => "validate"}                                 |
+
+    %table{:width => "100%"}
+      %tr
+        %td{:align => "right"}
+          #submit_on{:style => "display: none"}
+            - caption = _("Run a Database Backup Now")
+            - submit = button_tag(_("Submit"), :class => "btn btn-primary", :alt => caption)
+
+            = link_to(submit, {:action => 'db_backup'},                                          |
+              "data-miq_sparkle_on" => true,                                                     |
+              :confirm              => _("Are you sure you want to Run a Database Backup Now?"), |
+              :remote               => true,                                                     |
+              :title                => caption)                                                  |
+
+          #submit_off
+            - caption = _("No Backup Schedules are defined")
+            = button_tag(_("Submit"),                   |
+              :class => "btn btn-primary btn-disabled", |
+              :alt   => caption,                        |
+              :title => caption)                        |
+
+  - if DatabaseBackup.gc_supported?
+    %hr/
+    %p.legend= _("Run Database Garbage Collection Now")
+    %table.style1
+      %tr
+        %td= _("Press submit to start the Database Vacuum process")
+    %table{:width => "100%"}
+      %tr
+        %td{:align => "right"}
+          #gc_submit_on
+            - caption = _("Run Database Garbage Collection Now")
+            - submit = button_tag(_("Submit"), :class => "btn btn-primary", :alt => caption)
+
+            = link_to(submit, {:action => 'db_gc_collection'},                                             |
+              "data-miq_sparkle_on" => true,                                                               |
+              :confirm              => _("Are you sure you want to Run Database Garbage Collection Now?"), |
+              :remote               => true,                                                               |
+              :title                => caption)                                                            |

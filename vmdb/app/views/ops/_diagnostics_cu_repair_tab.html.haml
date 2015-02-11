@@ -1,0 +1,35 @@
+- url = url_for(:action => 'cu_repair_field_changed')
+- url_json = {:url => url}.to_json
+
+- if @sb[:active_tab] == "diagnostics_cu_repair"
+  = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "calendar"}
+  -# Create from/to date JS vars to limit calendar starting from
+  :javascript
+    var miq_cal_dateFrom = null;
+    var miq_cal_dateTo = new Date();
+  = render :partial => "layouts/flash_msg", :locals => {:div_num => "cu_repair"}
+
+  %p.legend= _("Collection Options")
+  %table.style1
+    %tr
+      %td.key= _("Timezone")
+      %td
+        = select_tag('cu_repair_tz',                                  |
+          options_for_select(ALL_TIMEZONES, @edit[:new][:timezone]),  |
+          "data-miq_observe" => url_json)                             |
+    %tr
+      %td.key= _("Start Date")
+      %td.wide{:style => "padding-right: 5px"}
+        = text_field_tag("miq_date_1",         |
+          @edit[:new][:start_date],            |
+          :readonly               => true,     |
+          "data-miq_observe_date" => url_json) |
+    %tr
+      %td.key= _("End Date")
+      %td.wide{:style => "padding-right: 5px"}
+        = text_field_tag("miq_date_2",         |
+          @edit[:new][:end_date],              |
+          :readonly               => true,     |
+          "data-miq_observe_date" => url_json) |
+
+  .note= _("Note: Gap Collection is only available for VMware vSphere Infrastructures")
