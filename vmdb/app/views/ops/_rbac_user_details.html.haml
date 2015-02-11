@@ -1,0 +1,103 @@
+- if @edit
+  - url = url_for(:action => 'rbac_user_field_changed',
+                  :id     => "#{@edit[:user_id] || "new"}")
+- observe_url_json = {:interval => '.5', :url => url}.to_json
+= render :partial => "layouts/flash_msg"
+- disabled = @edit && @edit[:new][:userid] == "admin"
+#main_div
+  %p.legend=_("User Information")
+  %table.style1
+    %tr
+      %td.key=_("Name")
+      %td
+        - if !@edit
+          = h(@user.name)
+        - else
+          = text_field_tag("name",
+                           @edit[:new][:name],
+                           :autocomplete => 'off',
+                           :maxlength    => 50,
+                           :disabled     => disabled,
+                           "data-miq_observe" => observe_url_json)
+          - unless @edit[:new][:userid] == "admin"
+            = javascript_tag(javascript_focus('name'))
+    %tr
+      %td.key=_("User ID")
+      %td
+        - if !@edit
+          = h(@user.userid)
+        - else
+          = text_field_tag("userid",
+                           @edit[:new][:userid],
+                           :autocomplete => 'off',
+                           :maxlength    => 50,
+                           :disabled     => disabled,
+                           "data-miq_observe" => observe_url_json)
+    - if @edit
+      - db_mode = get_vmdb_config[:authentication][:mode]
+      - if db_mode == "database" || (db_mode != "database" && disabled)
+        %tr
+          %td.key=_("Change Password / Confirm Password")
+          %td
+            = password_field_tag("password", '',
+                                 :maxlength         => 50,
+                                 :placeholder       => placeholder_if_present(@edit[:new][:password]),
+                                 "data-miq_observe" => observe_url_json)
+            - if @edit[:new][:userid] == "admin"
+              = javascript_tag(javascript_focus('password'))
+            = password_field_tag("password2", '',
+                                 :maxlength         => 50,
+                                 :placeholder       => placeholder_if_present(@edit[:new][:password2]),
+                                 "data-miq_observe" => observe_url_json)
+    %tr
+      %td.key=_("E-mail Address")
+      %td
+        - if !@edit
+          = h(@user.email)
+        - else
+          = text_field_tag("email",
+                           @edit[:new][:email],
+                           :autocomplete      => 'off',
+                           :maxlength         => 50,
+                           "data-miq_observe" => observe_url_json)
+    %tr
+      %td.key=_("Group")
+      %td{:style => "padding: 0px"}
+        - if !@edit
+          - if @user.current_group
+            %table{:cellpadding => "0", :cellspacing => "0"}
+              %tr{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'g-#{to_cid(@user.current_group.id)}');", :onmouseover => "this.style.cursor='pointer'", :title => _("View this Group")}
+                %td.image
+                  %ul.icons
+                    %li
+                      %span.product.product-group
+                %td
+                  = h(@user.miq_group_description)
+          - else
+            = h(@user.miq_group_description)
+        - else
+          - if disabled
+            = h(@user.miq_group_description)
+          - else
+            - options = (@edit[:new][:group] ? [] : [[_("<Choose a Group>"), nil]]) + @edit[:groups]
+            = select_tag('chosen_group',
+                         options_for_select(options, @edit[:new][:group]),
+                         "data-miq_observe" => {:url => url}.to_json)
+    - unless @edit
+      %tr
+        %td.key=_("Role")
+        %td{:style => "padding: 0px"}
+          - if @user.current_group && @user.current_group.miq_user_role
+            %table{:cellpadding => "0", :cellspacing => "0"}
+              %tr{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'ur-#{to_cid(@user.current_group.miq_user_role.id)}');", :onmouseover => "this.style.cursor='pointer'", :title => _("View this Role")}
+                %td.image
+                  %ul.icons
+                    %li
+                      %span.product.product-role
+                %td
+                  = h(@user.miq_user_role_name)
+          - else
+            = h(@user.miq_user_role_name)
+  %hr/
+  - unless @edit
+    = render :partial => "rbac_tag_box"

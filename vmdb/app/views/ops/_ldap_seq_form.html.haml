@@ -1,0 +1,49 @@
+= render :partial => "layouts/flash_msg"
+#column_lists
+  %table.style1
+    %tr
+      %td
+        %table.form#formtest{:width => "50%"}
+          %tr
+            %td.widthed{:align => "left"}
+              = _("User Group Sequencing for LDAP Look Up:")
+            %td
+          %tr
+            %td{:align => "left", :valign => "top"}
+              = select_tag('seq_fields[]',
+                           options_for_select(@edit[:new][:ldap_groups_list],
+                                              @selected),
+                           :multiple => true,
+                           :style    => "width: 450px",
+                           :size     => 20,
+                           :id       => "seq_fields")
+            %td{:align => "left", :valign => "middle", :width => "30"}
+              - if @edit[:new][:ldap_groups].length < 2
+                = image_tag("/images/toolbars/up.png",
+                            :class => "dimmed small")
+              - else
+                = link_to(image_tag("/images/toolbars/up.png",
+                                    :class => "rollover small",
+                                    :alt   => _("Move selected fields up")),
+                          {:action      => 'rbac_group_field_changed',
+                           :button      => 'up',
+                           :id          => "seq"},
+                          "data-submit" => "column_lists",
+                          :remote       => true,
+                          :title        => _("Move selected fields up"))
+              - if @edit[:new][:ldap_groups].length < 2
+                = image_tag("/images/toolbars/down.png",
+                            :class => "dimmed small")
+              - else
+                = link_to(image_tag("/images/toolbars/down.png",
+                                    :class => "rollover small",
+                                    :alt   => _("Move selected fields down")),
+                          {:action => 'rbac_group_field_changed',
+                           :button => 'down',
+                           :id     => "seq"},
+                           "data-submit" => "column_lists",
+                           :remote       => true,
+                           :title        => _("Move selected fields down"))
+        .note
+          *
+          = _("Select one or more consecutive groups to move up or down.")
