@@ -2598,4 +2598,23 @@ module ApplicationHelper
   def placeholder_if_present(password)
     password.present? ? "\u25cf" * 8 : ''
   end
+
+  def render_listnav_filename
+    if @lastaction == "show_list" && !session[:menu_click] &&
+       %w(ems_cloud ems_cluster ems_infra host miq_template offline orchestration_stack repository
+          resource_pool retired service storage templates vm).include?(@layout) && !@in_a_form
+      "show_list"
+    elsif @compare
+      "compare_sections"
+    elsif %w(offline retired templates vm vm_cloud vm_or_template).include?(@layout)
+      "vm"
+    elsif %w(action availability_zone cim_base_storage_extent cloud_tenant condition ems_cloud ems_cluster
+             ems_infra flavor host miq_proxy miq_schedule miq_template policy ontap_file_share ontap_logical_disk
+             ontap_storage_system ontap_storage_volume orchestration_stack repository resource_pool scan_profile
+             security_group service snia_local_file_system storage storage_manager timeline).include?(@layout)
+      @layout
+    else
+      nil
+    end
+  end
 end

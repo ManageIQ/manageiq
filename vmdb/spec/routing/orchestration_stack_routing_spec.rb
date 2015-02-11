@@ -31,11 +31,13 @@ describe OrchestrationStackController do
     button
     cloud_networks
     outputs
+    listnav_search_selected
     panel_control
     parameters
     quick_search
     resources
     save_col_widths
+    save_default_search
     sections_field_changed
     show
     show_list
