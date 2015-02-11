@@ -17,7 +17,7 @@
     period_end: "2013-08-28T11:01:20"
     duration: 0.0
     period_start: "2013-08-28T11:01:00"
-    avg: 134681418.0
+    avg: 90
     sum: 134681418.0
   -
     count: 1
@@ -29,7 +29,7 @@
     period_end: "2013-08-28T11:11:20"
     duration: 0.0
     period_start: "2013-08-28T11:11:00"
-    avg: 134682753.0
+    avg: 90
     sum: 134682753.0
   -
     count: 1
@@ -41,7 +41,7 @@
     period_end: "2013-08-28T11:21:20"
     duration: 0.0
     period_start: "2013-08-28T11:21:00"
-    avg: 134732080.0
+    avg: 90
     sum: 134732080.0
   -
     count: 1
@@ -53,7 +53,7 @@
     period_end: "2013-08-28T11:31:20"
     duration: 0.0
     period_start: "2013-08-28T11:31:00"
-    avg: 134733457.0
+    avg: 90
     sum: 134733457.0
   -
     count: 1
@@ -65,7 +65,7 @@
     period_end: "2013-08-28T11:44:40"
     duration: 0.0
     period_start: "2013-08-28T11:44:20"
-    avg: 134734792.0
+    avg: 90
     sum: 134734792.0
   -
     count: 1
@@ -77,7 +77,7 @@
     period_end: "2013-08-28T11:51:40"
     duration: 0.0
     period_start: "2013-08-28T11:51:20"
-    avg: 134736127.0
+    avg: 90
     sum: 134736127.0
   -
     count: 1
@@ -89,7 +89,7 @@
     period_end: "2013-08-28T12:01:40"
     duration: 0.0
     period_start: "2013-08-28T12:01:20"
-    avg: 134739000.0
+    avg: 90
     sum: 134739000.0
   -
     count: 1
@@ -101,7 +101,7 @@
     period_end: "2013-08-28T12:11:40"
     duration: 0.0
     period_start: "2013-08-28T12:11:20"
-    avg: 134740467.0
+    avg: 90
     sum: 134740467.0
   -
     count: 1
@@ -113,7 +113,7 @@
     period_end: "2013-08-28T12:21:40"
     duration: 0.0
     period_start: "2013-08-28T12:21:20"
-    avg: 134741802.0
+    avg: 90
     sum: 134741802.0
   -
     count: 1
@@ -125,7 +125,7 @@
     period_end: "2013-08-28T12:31:40"
     duration: 0.0
     period_start: "2013-08-28T12:31:20"
-    avg: 134743538.0
+    avg: 90
     sum: 134743538.0
   -
     count: 1
@@ -137,7 +137,7 @@
     period_end: "2013-08-28T12:41:40"
     duration: 0.0
     period_start: "2013-08-28T12:41:20"
-    avg: 134843538.0
+    avg: 90
     sum: 89.74293759622134
   disk.read.bytes:
   -

@@ -20,6 +20,15 @@ describe Metric::CiMixin::Capture do
     @vm.stub(:perf_init_openstack).and_return(@ems_openstack)
   end
 
+  before do
+    @orig_log = $log
+    $log = double.as_null_object
+  end
+
+  after do
+    $log = @orig_log
+  end
+
   def expected_stats_period_start
     parse_datetime('2013-08-28T11:01:20Z')
   end
@@ -104,6 +113,15 @@ describe Metric::CiMixin::Capture do
     end
   end
 
+  context "2 collection periods total, there is data hole between periods" do
+    it "verifies that hole in the data is logged" do
+      $log.should_receive(:warn).with(/expected to get data as of/).exactly(:once)
+
+      # sending no collection period overlap will cause hole in the data
+      capture_data('2013-08-28T11:56:00Z', nil)
+    end
+  end
+
   def capture_data(second_collection_period_start, collection_overlap_period)
     # 1.collection period, save all metrics
     @ems_openstack.stub(:get_statistics) do |name, _options|
@@ -114,7 +132,9 @@ describe Metric::CiMixin::Capture do
 
       OpenstackApiResult.new(first_collection_period)
     end
-    @vm.perf_capture('realtime', Time.parse('2013-08-28T10:02:00Z'), Time.parse(second_collection_period_start))
+
+    @vm.stub(:state_changed_on).and_return(second_collection_period_start)
+    @vm.perf_capture('realtime', Time.parse('2013-08-28T11:01:40Z'), Time.parse(second_collection_period_start))
 
     # 2.collection period, save all metrics
     @ems_openstack.stub(:get_statistics) do |name, _options|
@@ -127,6 +147,7 @@ describe Metric::CiMixin::Capture do
       OpenstackApiResult.new(second_collection_period)
     end
 
+    @vm.stub(:state_changed_on).and_return(second_collection_period_start)
     @vm.perf_capture('realtime', Time.parse(second_collection_period_start), Time.parse('2013-08-28T14:02:00Z'))
 
     @metrics_by_ts = {}

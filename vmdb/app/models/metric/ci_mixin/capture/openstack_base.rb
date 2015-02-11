@@ -61,9 +61,6 @@ module Metric::CiMixin::Capture::OpenstackBase
       metrics_by_counter_name[c["name"]] = collect_metrics_by_counter(c, start_time, end_time)
     end
 
-    # TODO(lsmola) check that first statistic is already saved in the database. If not log.warn that there is hole
-    # in the data due to missing data in Ceilometer. Only if this is not the first metrics collection,
-
     counter_values_by_ts = process_statistics(metric_capture_module, metrics_by_counter_name, data_collecting_period,
                                               log_header)
     counters_by_id              = {ems_ref => metric_capture_module::VIM_STYLE_COUNTERS}
