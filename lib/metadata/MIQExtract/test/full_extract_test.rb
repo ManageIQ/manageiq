@@ -1,5 +1,6 @@
 $:.push("#{File.dirname(__FILE__)}/../../../util")
 require 'miq-logger'
+require 'tempfile'
 include Log4r
 
 $log = MIQLogger.get_log(nil, __FILE__)
@@ -9,7 +10,7 @@ $:.push("#{File.dirname(__FILE__)}/..")
 require 'MIQExtract'
 require 'miq-process'
 
-$:.push("#{File.dirname(__FILE__)}/../../../../tools/ruby-prof")
+$:.push("#{File.dirname(__FILE__)}/../../../../../cfme_tools/ruby-prof")
 require 'miq-ruby-prof'
 PROFILE_INIT = false
 PROFILE_EXTRACT = false
@@ -18,7 +19,8 @@ begin
   vmCfgFile = nil
 
   startTime = Time.now
-  vmCfgFile = "//miq-websvr1/VM/scratch3/VM_DEPOT/VMs/VMWare/JanusVM/JanusVM-17-sep-2007/JanusVM/JanusVM.vmx"
+  vms_path  = File.join((Platform::IMPL == :macosx ? "/Volumes" : "/mnt"), "manageiq", "fleecing_test", "images", "virtual_machines")
+  vmCfgFile = File.join(vms_path, "vmware", "JanusVM", "JanusVM-17-sep-2007", "JanusVM", "JanusVM.vmx")
 
   # Load VM config file
   ost = OpenStruct.new
@@ -42,7 +44,7 @@ begin
     $log.warn "Fleece for [#{c}] completed [#{Time.now-stf}]"
 
     $log.summary "[#{c}] extract return xml of type [#{xml.class}]" if xml
-    File.open("d:/temp/xml/extract_#{c}.xml","w"){|f| xml.write(f,2)} if xml
+    File.open(Tempfile.new("extract_#{c}.xml"), "w") { |f| xml.write(f, 2) } if xml
   end
   $log.info "******************** Memory    : [#{MiqProcess.processInfo().inspect}] ********************"
 
