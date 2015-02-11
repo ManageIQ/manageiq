@@ -327,10 +327,11 @@ function miqUpdateAllCheckboxes(button_div,override) {
     var state = $('#masterToggle').prop('checked');
     if ( override != null ) state = override;
     if (typeof gtl_list_grid == "undefined" && ($("input[id^='listcheckbox']").length > 0)) {             // No dhtmlx grid on the screen
-      $("input[id^='listcheckbox']").each(function() {
+      cbs = $("input[id^='listcheckbox']")
+      cbs.each(function() {
         this.checked=state;
       })
-      miqUpdateButtons(this.first(), button_div);
+      miqUpdateButtons(cbs[0], button_div);
     } else if (typeof gtl_list_grid == "undefined" && $("input[id^='storage_cb']").length > 0) {         // to handle check/uncheck all for C&U collection
       $("input[id^='storage_cb']").each(function() {
           this.checked=state;
