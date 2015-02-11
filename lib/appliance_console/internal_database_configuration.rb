@@ -77,7 +77,7 @@ module ApplianceConsole
 
       copy_template "postgresql.conf.erb", POSTGRESQL_TEMPLATE
       copy_template "pg_hba.conf.erb",     POSTGRESQL_TEMPLATE
-      copy_template "pg_ident.conf"
+      copy_template "pg_ident.conf",       POSTGRESQL_TEMPLATE
     end
 
     def post_activation

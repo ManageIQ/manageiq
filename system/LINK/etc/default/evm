@@ -8,6 +8,10 @@ export HOME=${HOME:-/root}
 # workaround for virtual memory spike observed with RHEL6
 export MALLOC_ARENA_MAX=1
 export MALLOC_MMAP_THRESHOLD=131072
+# To enable SCL Version of Apache 2.4 only for RHEL6
+export MIQ_APACHE_ROOT_DIR=/opt/rh/httpd24/root/
+export MIQ_APACHE_SERVICE_NAME=httpd24-httpd
+export MIQ_APACHE_PACKAGE_NAME=httpd24-httpd
 
 # Environment variables required to enable SSL for the Qpid C++ client.  This
 # allows CFME to collect OpenStack events from Qpid over SSL.
@@ -28,3 +32,4 @@ export KEY_ROOT=/var/www/miq/vmdb/certs
 [[ -s /opt/rh/postgresql92/enable ]] && source /opt/rh/postgresql92/enable
 [[ -s /opt/rh/nodejs010/enable ]] && source /opt/rh/nodejs010/enable
 [[ -s /etc/default/evm_productization ]] && source /etc/default/evm_productization
+[[ -s /opt/rh/httpd24/enable ]] && source /opt/rh/httpd24/enable
