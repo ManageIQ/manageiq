@@ -29,12 +29,12 @@ begin
   else
     MIQExtract.new(vmCfgFile, ost)
   end
-  
+
   $log.info "******************** Memory    : [#{MiqProcess.processInfo().inspect}] ********************"
   %w{vmconfig vmevents accounts software services system}.each do |c|
     $log.warn "Start fleece for [#{c}]"
     stf = Time.now
-    
+
     xml = if PROFILE_EXTRACT
       profile_block(:file_prefix => "#{c}_") { vmCfg.extract([c]) }
     else
@@ -54,7 +54,7 @@ begin
   $log.info "START TIME: [#{startTime}]"
   $log.info "STOP TIME : [#{Time.now}]"
   $log.info "Run  time : [#{(Time.now-startTime)}] seconds"
- 
+
   # Use this time to check for memory usage through OS utilities
 #  $log.info "Sleeping for 5 seconds"
 #  sleep(5)
@@ -66,7 +66,7 @@ rescue NameError=> err
   end
 rescue => err
   $log.fatal err.to_s
-  err.backtrace.each {|e| $log.fatal e}
+  err.backtrace.each { |e| $log.fatal e }
 end
 
 $log.info "MIQExtract ending."
