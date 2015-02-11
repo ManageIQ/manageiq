@@ -1,0 +1,82 @@
+-# tree type is roles by server
+- if rec.class == MiqServer
+  %table.style1
+    %tr
+      %td.keyimage{:rowspan => 13}
+        %img{:src => "/images/icons/new/evmserver.png"}/
+      %td.key= Dictionary.gettext('MiqServer', :type => :model, :notfound => :titleize)
+      %td.wide
+        = h("#{rec.name}(#{rec.id})")
+        = "PID=#{h(rec[:pid])}"
+    %tr
+      %td.key= _("Hostname")
+      %td.wide= h(rec[:hostname])
+    %tr
+      %td.key= _("IP Address")
+      %td.wide= h(rec[:ipaddress])
+    %tr
+      %td.key= _("Status")
+      %td.wide= h(rec[:status])
+    %tr
+      %td.key= _("Started On")
+      %td.wide
+        - t = rec.started_on
+        = h(t.blank? ? "" : format_timezone(t))
+    %tr
+      %td.key= _("Stopped On")
+      %td.wide
+        - t = rec.stopped_on
+        = h(t.blank? ? "" : format_timezone(t))
+    %tr
+      %td.key= _("Memory Usage")
+      %td.wide
+        = h(rec["memory_usage"])
+    %tr
+      %td.key= _("Memory Size")
+      %td.wide
+        = h(rec["memory_size"])
+    %tr
+      %td.key= _("CPU Time")
+      %td.wide
+        = h(rec["cpu_time"])
+    %tr
+      %td.key= _("CPU Percent")
+      %td.wide
+        = h(rec["percent_cpu"])
+    %tr
+      %td.key= _("Version / Build")
+      %td.wide
+        = h(rec["version"])
+- else
+  -# record class is AssignedServerRole
+  %table.style1
+    %tr
+      %td.keyimage{:rowspan => 9}
+        %img{:src => "/images/icons/new/role-#{rec.server_role.name}.png"}/
+      %td.key= _("Role")
+      %td.wide
+        = _("%{role} on %{model}: %{name} [%{id}]") % {:role => rec.server_role.description,   |
+          :model => Dictionary.gettext('MiqServer', :type => :model, :notfound => :titleize),  |
+          :name => rec.miq_server.name,                                                        |
+          :id => rec.miq_server.id}                                                            |
+    %tr
+      %td.key= _("Status")
+      %td.wide
+        - if rec.miq_server.started?
+          = rec.active ? _("active") : _("available")
+        - else
+          = _("unavailable")
+    - if rec.master_supported?
+      %tr
+        %td.key= _("Priority")
+        %td.wide
+          - if rec.priority == 1
+            = _("primary")
+          - elsif rec.priority == 2
+            = _("secondary")
+          - else
+            = _("normal")
+    %tr
+      - max = rec.server_role.max_concurrent
+      %td.key= _("Max Concurrent")
+      %td.wide= h(max == 0 ? _("unlimited") : max)

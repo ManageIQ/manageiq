@@ -1,0 +1,14 @@
+- if @sb[:active_tab] == "diagnostics_replication"
+  = render :partial => "layouts/flash_msg"
+
+  %p.legend= _("Replication Process")
+  %table.style1
+    %tr
+      %td.key= _("Replicate to Host")
+      %td.wide= h(MiqReplicationWorker.destination_host.to_s)
+    %tr
+      %td.key= _("Status")
+      %td.wide= h(MiqReplicationWorker.replication_active? ? _("Active") : _("Inactive"))
+    %tr
+      %td.key= _("Current Backlog")
+      %td.wide= h(MiqReplicationWorker.current_backlog.to_i)
