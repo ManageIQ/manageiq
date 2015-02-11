@@ -29,11 +29,12 @@
         %fieldset
           %p.legend= _('Services')
           %table.style1
-            - keys = { :service         => ["service",                        _('My Services')],
-                       :catalog         => ["catalog_items_accord",           _('Service Catalogs')],
-                       :servicetemplate => ["catalog_items_view",             _('Catalog Items')],
-                       :vm              => ["vms_instances_filter_accord",    _('VMs & Instances')],
-                       :miqtemplate     => ["templates_images_filter_accord", _('Templates & Images')] }
+            - keys = { :service               => ["service",                        _('My Services')],
+                       :catalog               => ["catalog_items_accord",           _('Service Catalogs')],
+                       :servicetemplate       => ["catalog_items_view",             _('Catalog Items')],
+                       :orchestrationtemplate => ["orchestration_templates_accord", _('Orchestration Templates')],
+                       :vm                    => ["vms_instances_filter_accord",    _('VMs & Instances')],
+                       :miqtemplate           => ["templates_images_filter_accord", _('Templates & Images')] }
             - keys.each do |resource, (feature, view_name)|
               - if role_allows(:feature => feature)
                 %tr
