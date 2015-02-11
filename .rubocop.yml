@@ -59,6 +59,8 @@ SpaceInsideHashLiteralBraces:
 #
 # Enabled/Disabled
 #
+AllCops:
+  RunRailsCops: true
 Documentation:
   Enabled: false
 Encoding:
