@@ -17,13 +17,11 @@ describe "VM Retirement Management" do
     @vm.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
     expect(@vm.retirement_last_warn).to be_nil
     @vm.class.any_instance.should_receive(:retire_now).once
-    #expect(@vm.class.any_instance).to receive(:retire_now).twice
     @vm.retirement_check
     @vm.reload
     expect(@vm.retirement_last_warn).not_to be_nil
     expect(Time.now.utc - @vm.retirement_last_warn).to be < 30
   end
-
 
   it "#start_retirement" do
     expect(@vm.retirement_state).to be_nil
@@ -100,7 +98,7 @@ describe "VM Retirement Management" do
 
   it "#raise_retirement_event" do
     event_name = 'foo'
-    event_hash = { :vm => @vm, :host => @vm.host, :type => "VmVmware" }
+    event_hash = {:vm => @vm, :host => @vm.host, :type => "VmVmware"}
 
     expect(MiqAeEvent).to receive(:raise_evm_event).with(event_name, @vm, event_hash).once
 

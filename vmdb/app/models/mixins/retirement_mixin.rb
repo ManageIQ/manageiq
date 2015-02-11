@@ -110,21 +110,19 @@ module RetirementMixin
   end
 
   def finish_retirement
-    if !self.retired?
-      $log.info("Finishing Retirement for [#{name}]")
-      update_attributes(:retires_on => Date.today, :retired => true, :retirement_state => "retired")
-      message = "#{self.class.base_model.name}: [#{self.name}], Retires On Date: [#{self.retires_on}], has been retired"
-      $log.info("Calling audit event for: #{message} ")
-      raise_audit_event(retired_event_name, message)
-      $log.info("Called audit event for: #{message} ")
-    end
+    return if self.retired?
+    $log.info("Finishing Retirement for [#{name}]")
+    update_attributes(:retires_on => Date.today, :retired => true, :retirement_state => "retired")
+    message = "#{self.class.base_model.name}: [#{name}], Retires On Date: [#{retires_on}], has been retired"
+    $log.info("Calling audit event for: #{message} ")
+    raise_audit_event(retired_event_name, message)
+    $log.info("Called audit event for: #{message} ")
   end
 
   def start_retirement
-    if  !self.retired?
-      $log.info("Starting Retirement for [#{name}]")
-      update_attributes(:retirement_state => "retiring")
-    end
+    return if self.retired?
+    $log.info("Starting Retirement for [#{name}]")
+    update_attributes(:retirement_state => "retiring")
   end
 
   def retired_validated?

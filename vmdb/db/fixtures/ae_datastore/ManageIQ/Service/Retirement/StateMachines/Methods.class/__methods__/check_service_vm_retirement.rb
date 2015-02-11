@@ -23,14 +23,11 @@ end
 result = 'ok'
 vm_name = nil
 
-service.vms.each do |v|
-  $evm.log('info', "checking if vm: #{v.name} is retired.")
-  unless v.retired
-    result = 'retry'
-    vm_name = v.name
-    $evm.log('info', "vm: #{v.name} is not retired, setting retry.")
-    break
-  end
+unretired_obj = service.vms.detect { |v| !v.retired }
+if unretired_obj
+  result = 'retry'
+  vm_name = v.name
+  $evm.log('info', "vm: #{v.name} is not retired, setting retry.")
 end
 
 $evm.log('info', "Service: #{service.name} VM retirement check returned <#{result}>")
