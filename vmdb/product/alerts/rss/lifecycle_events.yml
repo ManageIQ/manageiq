@@ -8,7 +8,7 @@ feed_link: "/alert/rss?feed=lifecycle_events"
 item_title: |-
     <script>
         if rec.vm_or_template_id != nil
-          "#{rec.event}, VM: #{rec.vm.name}, created by #{rec.created_by}"
+          "#{rec.event}, VM: #{rec.vm_or_template.name}, created by #{rec.created_by}"
         else
           "#{rec.event}, VM Location: #{rec.location}, created by #{rec.created_by}"
         end
@@ -29,7 +29,7 @@ orderby: "created_on DESC"
 
 # Included tables and columns for query performance
 include:
-  :vm: {}
+  :vm_or_template: {}
 
 # tags_include: any or all
 tag_ns: "/managed/lifecycles"
