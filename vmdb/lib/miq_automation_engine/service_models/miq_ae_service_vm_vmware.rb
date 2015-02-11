@@ -1,7 +1,5 @@
 module MiqAeMethodService
   class MiqAeServiceVmVmware < MiqAeServiceVmInfra
-    require_relative "mixins/miq_ae_service_ems_operations_mixin"
-    include MiqAeServiceEmsOperationsMixin
 
     def set_number_of_cpus(count, options = {})
       sync_or_async_ems_operation(options[:sync], "set_number_of_cpus", [count])
