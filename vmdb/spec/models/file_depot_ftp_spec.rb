@@ -9,6 +9,27 @@ describe FileDepotFtp do
   let(:file_depot_ftp) { FileDepotFtp.new(:uri => "ftp://server.example.com/uploads") }
   let(:log_file)       { LogFile.new(:resource => @miq_server, :local_file => "/tmp/file.txt") }
 
+  context "#file_exists?" do
+    it "true if file exists" do
+      file_depot_ftp.ftp = double(:nlst => ["somefile"])
+
+      expect(file_depot_ftp.file_exists?("somefile")).to be_true
+    end
+
+    it "false if ftp raises on missing file" do
+      file_depot_ftp.ftp = double
+      file_depot_ftp.ftp.should_receive(:nlst).and_raise(Net::FTPPermError)
+
+      expect(file_depot_ftp.file_exists?("somefile")).to be_false
+    end
+
+    it "false if file missing" do
+      file_depot_ftp.ftp = double(:nlst => [])
+
+      expect(file_depot_ftp.file_exists?("somefile")).to be_false
+    end
+  end
+
   context "#upload_file" do
     it "does not already exist" do
       file_depot_ftp.should_receive(:connect).and_return(connection)
