@@ -1,0 +1,141 @@
+- button_div ||= "center_tb"
+- db         ||= nil
+- action_id    = action_url.split("/").last if action_url.include?("/")
+
+- @pc_occ ||= 0
+- @pc_occ += 1
+
+%div{:id => "pc_div_#{@pc_occ}"}
+  %table{:border => "0", :cellpadding => "0", :cellspacing => "0", :width => "100%",
+         :style => "height: 30px;" +                                                        |
+                   "border: 1px solid #BAB9BA;" +                                           |
+                   "border-width: 0px 1px 0px 1px;" +                                       |
+                   "background: url(/images/layout/teaserbarlg.png) repeat-x left bottom;"} |
+    %tr
+      - if @pc_occ == 1
+        - if !@no_checkall && !@no_checkboxes
+          %td{:width => "4%", :nowrap => true, :style => "padding: 4px 2px 4px 2px;"}
+            %input{:id => 'masterToggle', :type => 'checkbox', :name => 'masterToggle', :onclick => "miqUpdateAllCheckboxes('#{button_div}', null);"}
+              = _("(Check All)")
+      - if @gtl_type != "list" && @view
+        %td{:width => "4%", :nowrap => true, :style => "padding: 4px 2px 4px 2px;"}
+          = select_tag("sort_choice",
+                       options_for_select(["Sort by:"] + @view.headers),
+                       "data-miq_sparkle_on"  => true,
+                       "data-miq_sparkle_off" => true,
+                       "data-miq_observe"     => {:url => update_paging_url_parms(action_url)}.to_json)
+      - else
+        - if @bottom_msg
+          = h(@bottom_msg)
+      - unless db.blank?
+        - db = case db
+        - when "EmsInfra" 
+          - "ems_infra"
+        - when "EmsCloud"
+          - "ems_cloud"
+        - when "EmsCluster"
+          - "ems_cluster"
+        - when "ResourcePool"
+          - "resource_pool"
+        - when "OntapStorageSystem"
+          - "ontap_storage_system"
+        - when "OntapLogicalDisk"
+          - "ontap_logical_disk"
+        - when "CimBaseStorageExtent"
+          - "cim_base_storage_extent"
+        - when "OntapStorageVolume"
+          - "ontap_storage_volume"
+        - when "StorageManager"
+          - "storage_manager"
+        - when "OntapFileShare"
+          - "ontap_file_share"
+        - when "SniaLocalFileSystem"
+          - "snia_local_file_system"
+        - @db = db
+      - if @pc_occ == 1
+        %td{:nowrap => true, :style => "padding: 4px 2px 4px 2px;"}
+          - unless @embedded
+            - if @sortdir == "ASC"
+              = _("Asc. by:")
+            - else
+              = _("Desc. by:")
+          = @view.headers[@sortcol]
+      %td{:align => "right", :valign => "middle"}
+        %table{:border => "0", :cellpadding => "0", :cellspacing => "0", :align => "right"}
+          %tr
+            %td{:style => "padding: 4px 2px 4px 2px;", :nowrap => true}= _("Per page:")
+            %td{:style => "padding: 4px 2px 4px 2px;"}
+              = select_tag("perpage_setting#{@pc_occ}",
+                           options_for_select(@pp_choices, pages[:perpage]),
+                           "data-miq_sparkle_on"  => true,
+                           "data-miq_sparkle_off" => true,
+                           "data-miq_observe"     => {:url => update_paging_url_parms(action_url)}.to_json)
+            %td{:nowrap => true}
+              - if pages[:current] > 1
+                - if @ajax_paging_buttons
+                  = link_to(image_tag('/images/toolbars/first.png',
+                                      :border => "0",
+                                      :class  => "rollover small"),
+                            update_paging_url_parms(action_url, :page => 1),
+                            "data-miq_sparkle_on"  => true,
+                            "data-miq_sparkle_off" => true,
+                            :remote                => true,
+                            :title                 => "")
+                  = link_to(image_tag('/images/toolbars/previous.png', :border => "0", :class => "rollover small"),
+                            update_paging_url_parms(action_url, :page => pages[:current] - 1),
+                            "data-miq_sparkle_on"  => true,
+                            "data-miq_sparkle_off" => true,
+                            :remote                => true,
+                            :title                 => "")
+                - elsif action_id
+                  = link_to(image_tag('/images/toolbars/first.png', :border => "0", :class => "rollover small"),
+                            update_paging_url_parms(action_url, :page => 1))
+                  = link_to(image_tag('/images/toolbars/previous.png', :border => "0", :class => "rollover small"),
+                            update_paging_url_parms(action_url, :page => pages[:current] - 1))
+                - else
+                  = link_to(image_tag('/images/toolbars/first.png', :border => "0", :class => "rollover small"),
+                            update_paging_url_parms(action_url, :page => 1))
+                  = link_to(image_tag('/images/toolbars/previous.png', :border => "0", :class => "rollover small"),
+                            update_paging_url_parms(action_url, :page => pages[:current] - 1))
+              - else
+                = image_tag('/images/toolbars/first.png', :class => "dimmed small")
+                = image_tag('/images/toolbars/previous.png', :class => "dimmed small")
+
+              - if pages[:current] < pages[:total]
+                - if @ajax_paging_buttons
+                  = link_to(image_tag('/images/toolbars/next.png', :class => "rollover small"),
+                            update_paging_url_parms(action_url, :page => pages[:current] - 1),
+                            "data-miq_sparkle_on"  => true,
+                            "data-miq_sparkle_off" => true,
+                            :remote                => true,
+                            :title                 => "")
+                  = link_to(image_tag('/images/toolbars/last.png', :class => "rollover small"),
+                            update_paging_url_parms(action_url, :page => pages[:total]),
+                            "data-miq_sparkle_on"  => true,
+                            "data-miq_sparkle_off" => true,
+                            :remote                => true,
+                            :title                 => "")
+                - elsif action_id
+                  = link_to(image_tag('/images/toolbars/next.png', :class => "rollover small"),
+                            update_paging_url_parms(action_url, :page => pages[:current] + 1))
+                  = link_to(image_tag('/images/toolbars/last.png', :class => "rollover small"),
+                            update_paging_url_parms(action_url, :page => pages[:total]))
+                - else
+                  = link_to(image_tag('/images/toolbars/next.png', :class => "rollover small"),
+                            update_paging_url_parms(action_url, :page => pages[:current] + 1))
+                  = link_to(image_tag('/images/toolbars/last.png', :class => "rollover small"),
+                            update_paging_url_parms(action_url, :page => pages[:total]))
+              - else
+                = image_tag('/images/toolbars/next.png', :class => "dimmed small")
+                = image_tag('/images/toolbars/last.png', :class => "dimmed small")
+            %td{:valign => "middle", :style => "padding: 4px"}
+              - start_number = (pages[:perpage] * pages[:current]) - pages[:perpage] + 1
+              - end_number = pages[:perpage] * pages[:current]
+              - if start_number == pages[:items]
+                = "(Item #{start_number} of #{pages[:items]})"
+              - else
+                - if end_number > pages[:items]
+                  = "(Items #{start_number}-#{pages[:items]} of #{pages[:items]})"
+                - else
+                  = "(Items #{start_number}-#{end_number} of #{pages[:items]})"
+              %input{:type => 'hidden', :name => 'limitstart', :value => '0'}

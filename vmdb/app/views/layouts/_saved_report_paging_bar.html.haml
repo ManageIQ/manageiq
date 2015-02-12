@@ -1,0 +1,77 @@
+- action = "saved_report_paging"
+- url = url_for(:action => action)
+- @pb_occ ||= 0
+- @pb_occ += 1
+- pages ||= {:perpage => @settings[:perpage][:reports],
+             :current => 1,
+             :total   => 5,
+             :items   => @sb[:pages][:items]}
+
+%div{:id => "rpb_div_#{@pb_occ}"}
+  %table{:border => "0", :cellpadding => "0", :cellspacing => "0", :width => "100%",
+         :style => "height: 30px; border: 1px solid #BAB9BA; border-width: 1px 1px 0px 1px; background: url(/images/layout/teaserbarlg.png) repeat-x left bottom;"}
+    %tr
+      %td{:valign => "middle"}
+      %td{:valign => "middle", :align => "right"}
+        %table{:border => "0", :cellpadding => "0", :cellspacing => "0", :align => "right"}
+          %tr
+            %td{:style => "padding: 4px 2px 4px 2px;", :nowrap => true}= _("Per page:")
+            %td{:style => "padding: 4px 2px 4px 2px;"}
+              = select_tag("perpage_setting#{@pb_occ}",
+                           options_for_select(@pp_choices, pages[:perpage]),
+                           "data-miq_sparkle_on"  => true,
+                           "data-miq_sparkle_off" => true,
+                           "data-miq_observe"     => {:url => url}.to_json)
+            %td{:nowrap => true}
+              - if pages[:current] > 1
+                = link_to(image_tag('/images/toolbars/first.png', :border => "0", :class => "rollover small"),
+                          {:action => action,
+                           :page   => 1},
+                          "data-miq_sparkle_on"  => true,
+                          "data-miq_sparkle_off" => true,
+                          :remote                => true,
+                          :title                 => "")
+                = link_to(image_tag('/images/toolbars/previous.png', :border => "0", :class => "rollover small"),
+                          {:action => action,
+                           :page   => pages[:current] - 1},
+                          "data-miq_sparkle_on"  => true,
+                          "data-miq_sparkle_off" => true,
+                          :remote                => true,
+                          :title                 => "")
+              - else
+                = image_tag('/images/toolbars/first.png', :class => "dimmed small")
+                = image_tag('/images/toolbars/previous.png', :class => "dimmed small")
+              - if pages[:current] < pages[:total]
+                = link_to(image_tag('/images/toolbars/next.png', :class => "rollover small"),
+                          {:action => action,
+                           :page   => pages[:current] + 1},
+                          "data-miq_sparkle_on"  => true,
+                          "data-miq_sparkle_off" => true,
+                          :remote                => true,
+                          :title                 => "")
+                = link_to(image_tag('/images/toolbars/last.png', :class => "rollover small"),
+                          {:action  => action,
+                           :page    => pages[:total]},
+                          "data-miq_sparkle_on"  => true,
+                          "data-miq_sparkle_off" => true,
+                          :remote                => true,
+                          :title                 => "")
+              - else
+                = image_tag('/images/toolbars/next.png', :class => "dimmed small")
+                = image_tag('/images/toolbars/last.png', :class => "dimmed small")
+            %td{:valign => "middle", :style => "padding: 4px"}
+              - start_number = (pages[:perpage] * pages[:current]) - pages[:perpage] + 1
+              - end_number = pages[:perpage] * pages[:current]
+              - if start_number == pages[:items]
+                = _("(Row %{start_number} of %{pages})") % {:start_number => start_number,
+                                                            :pages        => pages[:items]}
+              - else
+                - if end_number > pages[:items]
+                  = _("(Rows %{start_number}-%{pages_items} of %{pages_items})") % {:start_number => start_number,
+                                                                                    :pages_items  => pages[:items]}
+                - else
+                  = _("(Rows %{start_number}-%{end_number} of %{pages_items})") % {:start_number => start_number,
+                                                                                   :end_number   => end_numer,
+                                                                                   :pages_items  => pages[:items]}
+              %input{:type => "hidden", :name => 'limitstart', :value => '0'}
+= render(:partial => '/layouts/x_form_buttons')

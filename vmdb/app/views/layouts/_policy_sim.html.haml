@@ -1,0 +1,47 @@
+- url = url_for(:action => 'policy_sim_add')
+#main_div
+  = render :partial => "layouts/flash_msg"
+  %p.legend= _("Choose Policies")
+  #tab_div
+    %table.style3
+      %thead
+        %tr
+          %th.special{:colspan => "2"}
+            %strong= _("Select a Policy Profile to add:")
+            = select_tag("profile_id",
+                         options_for_select(@temp[:all_profs].invert.sort { |a, b| a.first.downcase <=> b.first.downcase }, "select"),
+                         "data-miq_sparkle_on"  => true, 
+                         "data-miq_sparkle_off" => true,
+                         "data-miq_observe"     => {:url => url}.to_json)
+        %tr
+          %th.icon
+          %th= _("Policy Profiles in Effect")
+      %tbody
+        - if session[:policies].length == 0
+          %tr{:class => "#{cycle('row0', 'row1')}"}
+            %td
+            %td
+              = _("No policies have been chosen yet")
+        - else
+          - session[:policies].invert.sort.each do |desc, id|
+            %tr{:id => "#{desc}_tr", :class => "#{cycle('row0', 'row1')}"}
+              %td{:onclick => "#{remote_function(:loading  => "miqSparkle(true);",
+                                                 :complete => "miqSparkle(false);",
+                                                 :url      => {:action  => 'policy_sim_remove', :del_pol => id})}",
+                  :title => t = _("Click to remove this policy")}
+                = image_tag("/images/toolbars/delete.png", 
+                            :class => "rollover small", 
+                            :alt   => t) 
+              %td
+                = h(desc)
+  %hr
+  %p.legend= _("Policy Simulation for %s") % pluralize(@tagitems.length, 'Item')
+  %table.admintable{:height => "75"}
+    %tbody
+      %tr
+        %td
+          - if @tagitems
+            - @embedded = true
+            - @policy_sim = true
+            = render :partial => "layouts/gtl", 
+                     :locals  => {:view => @pol_view} 
