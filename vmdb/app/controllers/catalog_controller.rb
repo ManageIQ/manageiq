@@ -205,7 +205,7 @@ class CatalogController < ApplicationController
       @built_trees << build_st_tree
       @accords.push(:name => "sandt", :title => "Catalog Items", :container => "sandt_tree_div")
     end
-    if role_allows(:feature => "orchestration_templates_accord")
+    if role_allows(:feature => "orchestration_templates_accord", :any => true)
       self.x_active_tree   = 'ot_tree'
       self.x_active_accord = 'ot'
       default_active_tree ||= x_active_tree
@@ -821,7 +821,8 @@ class CatalogController < ApplicationController
     trees_to_replace.push(:stcat) if trees.include?(:stcat) && role_allows(:feature => "st_catalog_accord")
     trees_to_replace.push(:sandt) if trees.include?(:sandt) && role_allows(:feature => "catalog_items_view")
     trees_to_replace.push(:svccat) if trees.include?(:svccat) && role_allows(:feature => "svc_catalog_accord")
-    trees_to_replace.push(:ot) if trees.include?(:ot) && role_allows(:feature => "orchestration_templates_accord")
+    trees_to_replace.push(:ot) if trees.include?(:ot) &&
+                                  role_allows(:feature => "orchestration_templates_accord", :any => true)
     trees_to_replace
   end
 
