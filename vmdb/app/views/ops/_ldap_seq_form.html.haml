@@ -21,6 +21,8 @@
               - if @edit[:new][:ldap_groups].length < 2
                 = image_tag("/images/toolbars/up.png",
                             :class => "dimmed small")
+                = image_tag("/images/toolbars/down.png",
+                            :class => "dimmed small")
               - else
                 = link_to(image_tag("/images/toolbars/up.png",
                                     :class => "rollover small",
@@ -31,10 +33,6 @@
                           "data-submit" => "column_lists",
                           :remote       => true,
                           :title        => _("Move selected fields up"))
-              - if @edit[:new][:ldap_groups].length < 2
-                = image_tag("/images/toolbars/down.png",
-                            :class => "dimmed small")
-              - else
                 = link_to(image_tag("/images/toolbars/down.png",
                                     :class => "rollover small",
                                     :alt   => _("Move selected fields down")),
