@@ -58,6 +58,10 @@ cfmeAngularApplication.service('miqService', function() {
       $(outerMost).appendTo($("#flash_msg_div"));
   }
 
+  this.miqFlashClear = function() {
+    $('#flash_msg_div').text("");
+  }
+
   this.saveable = function(form) {
     return form.$valid && form.$dirty;
   };

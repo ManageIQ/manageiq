@@ -8,6 +8,8 @@ cfmeAngularApplication.directive('checkchange', function() {
           scope.skipCheck[ctrl.$name] = attr.checkchange.split(',');
 
         ctrl.$parsers.unshift(function() {
+          scope.miqService.miqFlashClear();
+
           scope.ctrl = ctrl;
 
           for (var name in scope.modelCopy) {
