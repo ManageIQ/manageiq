@@ -10,8 +10,6 @@ $:.push("#{File.dirname(__FILE__)}/..")
 require 'MIQExtract'
 require 'miq-process'
 
-$:.push("#{File.dirname(__FILE__)}/../../../../../cfme_tools/ruby-prof")
-require 'miq-ruby-prof'
 PROFILE_INIT = false
 PROFILE_EXTRACT = false
 
