@@ -50,7 +50,7 @@
               %td.key=_("Users in this Group")
               %td{:style => "padding: 0px"}
                 %table{:cellpadding => "0", :cellspacing => "0"}
-                  - @group.users.collect { |g| g }.sort { |a, b| a.name.downcase <=> b.name.downcase }.each do |u|
+                  - @group.users.sort_by { |a| a.name.downcase }.each do |u|
                     %tr{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'u-#{to_cid(u.id)}');", :onmouseover => "this.style.cursor='pointer'", :title => _("View this User")}
                       %td.image
                         %ul.icons
