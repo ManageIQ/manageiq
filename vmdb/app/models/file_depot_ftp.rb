@@ -88,7 +88,7 @@ class FileDepotFtp < FileDepot
   end
 
   def file_exists?(file_or_directory)
-    !!ftp.nlst(file_or_directory.to_s)
+    !ftp.nlst(file_or_directory.to_s).empty?
   rescue Net::FTPPermError
     false
   end
