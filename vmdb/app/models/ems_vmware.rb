@@ -221,7 +221,7 @@ class EmsVmware < EmsInfra
       :disk           => nil
     }
     options = defaults.merge(options)
-    invoke_vim_ws(:cloneVM, vm, options[:name], options[:folder], options[:pool], options[:host], options[:datastore], options[:powerOn], options[:template], options[:transform], options[:config], options[:customization], options[:disk])
+    invoke_vim_ws(:cloneVM, vm, options[:user_event], options[:name], options[:folder], options[:pool], options[:host], options[:datastore], options[:powerOn], options[:template], options[:transform], options[:config], options[:customization], options[:disk])
   end
 
   def vm_connect_all(vm, options={})
