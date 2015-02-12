@@ -71,7 +71,7 @@
                                                                                     :pages_items  => pages[:items]}
                 - else
                   = _("(Rows %{start_number}-%{end_number} of %{pages_items})") % {:start_number => start_number,
-                                                                                   :end_number   => end_numer,
+                                                                                   :end_number   => end_number,
                                                                                    :pages_items  => pages[:items]}
               %input{:type => "hidden", :name => 'limitstart', :value => '0'}
 = render(:partial => '/layouts/x_form_buttons')
