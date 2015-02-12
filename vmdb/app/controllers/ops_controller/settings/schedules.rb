@@ -297,7 +297,7 @@ module OpsController::Settings::Schedules
     when "cluster"
       filtered_item_list = find_filtered(EmsCluster, :all).collect { |cluster|
         [cluster.name + "__" + cluster.v_parent_datacenter, cluster.v_qualified_desc]
-      }.sort_by { |cluster| cluster.first.downcase }
+      }.sort_by { |cluster| cluster.first.downcase }.uniq
     when "global"
       build_listnav_search_list("Vm")
       filtered_item_list = @def_searches.delete_if { |search| search.id == 0 }.collect { |search| [search.id, search.description] }
@@ -493,7 +493,7 @@ module OpsController::Settings::Schedules
                   {"=" => {"field" => "EmsCluster-name", "value" => params[:filter_value].split("__").first}},
                   {"=" => {
                     "field" => "EmsCluster-v_parent_datacenter",
-                    "value" => params[:filter_value].split("__").last
+                    "value" => params[:filter_value].split("__").size == 1 ? "" : params[:filter_value].split("__").last
                   }}
                 ]
               end
