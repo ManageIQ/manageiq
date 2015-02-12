@@ -159,7 +159,7 @@
               - when "ChargebackRate"
                 - click = "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_cr-#{to_cid(row['id'])}');"
               - when "MiqDialog"
-                - click = "cfmeDynatree_activateNode('old_dialogs_tree', '#{X_TREE_NODE_PREFIXES.invert["MiqDialog"]}-#{to_cid(row['id'])}');"
+                - click = "cfmeDynatree_activateNode('old_dialogs_tree', '#{TreeBuilder.get_prefix_for_model("MiqDialog")}-#{to_cid(row['id'])}');"
               - when "MiqWorker"
                 - click = remote_function(:url => {:action => 'diagnostics_worker_selected', :id => "#{row['id']}"})
               - else
@@ -264,7 +264,7 @@
                   - when "ChargebackRate"
                     - click = "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_cr-#{to_cid(row['id'])}');"
                   - when "MiqDialog"
-                    - click = "cfmeDynatree_activateNode('old_dialogs_tree', '#{X_TREE_NODE_PREFIXES.invert["MiqDialog"]}-#{to_cid(row['id'])}');"
+                    - click = "cfmeDynatree_activateNode('old_dialogs_tree', '#{TreeBuilder.get_prefix_for_model("MiqDialog")}-#{to_cid(row['id'])}');"
                   - when "MiqWorker"
                     - click = remote_function(:url => {:action => 'diagnostics_worker_selected', :id => "#{row['id']}"})
                   - else

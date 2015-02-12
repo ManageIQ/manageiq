@@ -57,11 +57,10 @@ class ServiceController < ApplicationController
   def show
     record = Service.find_by_id(from_cid(params[:id]))
     if !@explorer
-      prefix = X_TREE_NODE_PREFIXES.invert[record.class.base_model.to_s]
-      tree_node_id = "#{prefix}-#{record.id}" # Build the tree node id
-      redirect_to :controller=>"service",
-                  :action=>"explorer",
-                  :id=>tree_node_id
+      TreeBuilder.build_node_id(record)
+      redirect_to :controller => "service",
+                  :action     => "explorer",
+                  :id         => tree_node_id
       return
     end
     redirect_to :action => 'show', :controller=>record.class.base_model.to_s.underscore, :id=>record.id
@@ -117,12 +116,11 @@ class ServiceController < ApplicationController
         tree_select
       end
       format.html do                # HTML, redirect to explorer
-        prefix = X_TREE_NODE_PREFIXES.invert[@record.class.base_model.to_s]
-        tree_node_id = "#{prefix}-#{@record.id}"  # Build the tree node id
-        session[:exp_parms] = {:id=>tree_node_id}
-        redirect_to :action=>"explorer"
+        tree_node_id = TreeBuilder.build_node_id(@record)
+        session[:exp_parms] = {:id => tree_node_id}
+        redirect_to :action => "explorer"
       end
-      format.any {render :nothing=>true, :status=>404}  # Anything else, just send 404
+      format.any {render :nothing => true, :status => 404}
     end
   end
 
@@ -277,10 +275,10 @@ class ServiceController < ApplicationController
     @nodetype, id = valid_active_node(treenodeid).split("_").last.split("-")
     #resetting action that was stored during edit to determine what is being edited
     @sb[:action] = nil
-    case X_TREE_NODE_PREFIXES[@nodetype]
+    case TreeBuilder.get_model_for_prefix(@nodetype)
     when "Service"  # VM or Template record, show the record
       show_record(from_cid(id))
-      @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@record.name, :model=>ui_lookup(:model=>X_TREE_NODE_PREFIXES[@nodetype])}
+      @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@record.name, :model=>ui_lookup(:model=>TreeBuilder.get_model_for_prefix(@nodetype))}
       @no_checkboxes = true
       @gtl_type = "grid"
       @items_per_page = ONE_MILLION
@@ -294,7 +292,7 @@ class ServiceController < ApplicationController
       else
         show_record(from_cid(id))
         add_pictures_to_sync(@record.picture.id) if @record.picture
-        typ = x_active_tree == :svcs_tree ? "Service" : X_TREE_NODE_PREFIXES[@nodetype]
+        typ = x_active_tree == :svcs_tree ? "Service" : TreeBuilder.get_model_for_prefix(@nodetype)
         @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@record.name, :model=>ui_lookup(:model=>typ)}
       end
     end
@@ -342,7 +340,7 @@ class ServiceController < ApplicationController
     if replace_trees
       trees[:svcs] = build_svcs_tree if replace_trees.include?(:svcs)
     end
-    record_showing = type && ["Service"].include?(X_TREE_NODE_PREFIXES[type])
+    record_showing = type && ["Service"].include?(TreeBuilder.get_model_for_prefix(type))
     if x_active_tree == :svcs_tree && !@in_a_form && !@sb[:action]
       if record_showing && @sb[:action].nil?
         cb_buttons, cb_xml = build_toolbar_buttons_and_xml("custom_buttons_tb")

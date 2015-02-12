@@ -1988,7 +1988,7 @@ module ApplicationHelper
 
   def center_toolbar_filename_services
     if x_active_tree == :sandt_tree
-      if X_TREE_NODE_PREFIXES[@nodetype] == "ServiceTemplate"
+      if TreeBuilder.get_model_for_prefix(@nodetype) == "ServiceTemplate"
         return "servicetemplate_center_tb"
       elsif @sb[:buttons_node]
         nodes = x_node.split('_')
@@ -2003,19 +2003,19 @@ module ApplicationHelper
         return "servicetemplates_center_tb"
       end
     elsif x_active_tree == :svccat_tree
-      if X_TREE_NODE_PREFIXES[@nodetype] == "ServiceTemplate"
+      if TreeBuilder.get_model_for_prefix(@nodetype) == "ServiceTemplate"
         return "servicetemplate-catalog_center_tb"
       else
         return "servicetemplates-catalogs_center_tb"
       end
     elsif x_active_tree == :stcat_tree
-      if X_TREE_NODE_PREFIXES[@nodetype] == "ServiceTemplateCatalog"
+      if TreeBuilder.get_model_for_prefix(@nodetype) == "ServiceTemplateCatalog"
         return "servicetemplatecatalog_center_tb"
       else
         return "servicetemplatecatalogs_center_tb"
       end
     elsif x_active_tree == :svcs_tree
-      if X_TREE_NODE_PREFIXES[@nodetype] == "Service"
+      if TreeBuilder.get_model_for_prefix(@nodetype) == "Service"
         return "service_center_tb"
       else
         return "services_center_tb"
