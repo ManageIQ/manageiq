@@ -9,6 +9,8 @@ describe('checkchange initialization', function() {
       '</form>'
     );
     $scope.modelCopy = {repo_path : "//a/a2"};
+    $scope.miqService = { miqFlashClear: function (){}};
+    spyOn($scope.miqService, 'miqFlashClear');
     $compile(element)($scope);
     $scope.$digest();
     form = $scope.form;
