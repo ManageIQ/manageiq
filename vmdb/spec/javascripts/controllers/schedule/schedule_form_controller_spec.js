@@ -180,6 +180,7 @@ describe('scheduleFormController', function() {
         filter_type: 'all',
         filtered_item_list: ['lol', 'lol2'],
         filter_value: 'filterValue',
+        protocol: 'protocol',
         log_userid: 'logUserId',
         log_password: 'logPassword',
         log_verify: 'logVerify',
@@ -237,13 +238,14 @@ describe('scheduleFormController', function() {
         });
 
         it('sets the log protocol', function() {
-          $scope.scheduleModel.log_protocol = 'protocol';
+          expect($scope.scheduleModel.log_protocol).toBe('protocol')
         });
       });
 
       describe('when the filter type is not all', function() {
         beforeEach(inject(function(_$controller_) {
           scheduleFormResponse.filter_type = 'filterType';
+          scheduleFormResponse.protocol = undefined;
 
           $httpBackend.whenGET('/ops/schedule_form_fields/12345').respond(scheduleFormResponse);
 
