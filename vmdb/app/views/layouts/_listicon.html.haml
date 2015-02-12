@@ -15,15 +15,15 @@
     - row_status = _("Status = %s") % row["status"].capitalize
     - strsearch = row["message"].gsub!("cancel", "cancel")
     - if row["status"] && row["status"].downcase == "ok" && strsearch.nil?
-      = image_tag("#{img_path}new/checkmark.png", {:title => row_status}, img_attr_16)
+      = image_tag("#{img_path}new/checkmark.png", img_attr_16.merge!(:title => row_status))
     - elsif row["status"] && row["status"].downcase == "error" || !strsearch.nil?
-      = image_tag("#{img_path}new/x.png", {:title => row_status}, img_attr_16)
+      = image_tag("#{img_path}new/x.png", img_attr_16.merge!(:title => row_status))
     - elsif row["status"] && row["status"].downcase == "warn" || !strsearch.nil?
-      = image_tag("#{img_path}16/warning.png", {:title => row_status}, img_attr_16)
+      = image_tag("#{img_path}16/warning.png", img_attr_16.merge!(:title => row_status))
   - elsif row["state"] && (row["state"].downcase == "waiting_to_start" || row["state"].downcase == "queued")
-    = image_tag("#{img_path}16/job-queued.png", {:title => _("Status = Queued")}, img_attr_16)
+    = image_tag("#{img_path}16/job-queued.png", img_attr_16.merge!(:title => "Status = Queued"))
   - elsif row["state"] && row["state"].downcase != "finished" && row["state"].downcase != "waiting_to_start" && row["state"].downcase != "queued"
-    = image_tag("#{img_path}16/job-running.png", {:title => _("Status = Running")}, img_attr_16)
+    = image_tag("#{img_path}16/job-running.png", img_attr_16.merge!(:title => "Status = Running"))
 - elsif db == "ScanHistory"
   = image_tag("#{img_path}new/vendor-#{h(db..downcase)}.png", img_attr_20)
 - elsif %(Vm VmOrTemplate).include?(db)
