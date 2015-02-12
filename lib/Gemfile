@@ -76,7 +76,6 @@ unless ENV['APPLIANCE']
     gem "jasmine",    "~>2.0",    :require => false
     gem "rspec",      "~>2.14.0", :require => false
     gem "rspec-fire", "~>1.3.0",  :require => false
-    gem "ruby-prof"
     gem "timecop",    "~>0.5.3",  :require => false
     gem "xml-simple", "=1.0.12",  :require => false  # Used by test/xml/tc_xmlhash_methods.rb
     gem "vcr",        "~>2.6",    :require => false  # Used by manageiq-foreman
