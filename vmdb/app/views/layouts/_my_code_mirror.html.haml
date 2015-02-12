@@ -23,7 +23,7 @@
   = stylesheet_link_tag "codemirror-4.2/theme/#{theme}.css"
 %script{:type => "text/javascript"}
   if (miqDomElementExists('#{text_area_id}')) {
-  miqEditor = CodeMirror.fromTextArea($('#{text_area_id}')[0],
+  miqEditor = CodeMirror.fromTextArea($('##{text_area_id}')[0],
   {mode: '#{mode}',
   lineNumbers: #{line_numbers},
   matchBrackets: true,
