@@ -554,69 +554,6 @@ module UiConstants
     "4 Years Ago"
   ]
 
-  # Tree node prefixes for generic explorers
-  X_TREE_NODE_PREFIXES = {
-    "a"   => "MiqAction",
-    "aec" => "MiqAeClass",
-    "aei" => "MiqAeInstance",
-    "aem" => "MiqAeMethod",
-    "aen" => "MiqAeNamespace",
-    "al"  => "MiqAlert",
-    "ap"  => "MiqAlertSet",
-    "az"  => "AvailabilityZone",
-    "co"  => "Condition",
-    "cbg" => "CustomButtonSet",
-    "cb"  => "CustomButton",
-    "cfn" => "OrchestrationTemplateCfn",
-    "cr"  => "ChargebackRate",
-    "ct"  => "CustomizationTemplate",
-    "d"   => "Datacenter",
-    "dg"  => "Dialog",
-    "ds"  => "Storage",
-    "e"   => "ExtManagementSystem",
-    "ev"  => "MiqEvent",
-    "c"   => "EmsCluster",
-    "f"   => "EmsFolder",
-    "g"   => "MiqGroup",
-    "h"   => "Host",
-    "hot" => "OrchestrationTemplateHot",
-    "isd" => "IsoDatastore",
-    "isi" => "IsoImage",
-    "ld"  => "LdapDomain",
-    "lr"  => "LdapRegion",
-    "me"  => "MiqEnterprise",
-    "mr"  => "MiqRegion",
-    "msc" => "MiqSchedule",
-    "ms"  => "MiqSearch",
-    "odg" => "MiqDialog",
-    "ot"  => "OrchestrationTemplate",
-    "pi"  => "PxeImage",
-    "pit" => "PxeImageType",
-    "ps"  => "PxeServer",
-    "pp"  => "MiqPolicySet",
-    "p"   => "MiqPolicy",
-    "rep" => "MiqReport",
-    "rr"  => "MiqReportResult",
-    "svr" => "MiqServer",
-    "ur"  => "MiqUserRole",
-    "r"   => "ResourcePool",
-    "s"   => "Service",
-    "sis" => "ScanItemSet",
-    "st"  => "ServiceTemplate",
-    "stc" => "ServiceTemplateCatalog",
-    "sr"  => "ServiceResource",
-    "t"   => "MiqTemplate",
-    "tb"  => "VmdbTable",
-    "ti"  => "VmdbIndex",
-    "u"   => "User",
-    "v"   => "Vm",
-    "wi"  => "WindowsImage",
-    "xx"  => "Hash",  # For custom (non-CI) nodes, specific to each tree
-    "z"   => "Zone"
-  }
-
-  X_TREE_NODE_PREFIXES_INVERTED = X_TREE_NODE_PREFIXES.invert
-
   # Need this for display purpose to map with id
   WIDGET_TYPES = {
       "r" => "Reports",

@@ -37,7 +37,7 @@ class VmOrTemplateController < ApplicationController
   end
 
   def prefix_by_nodetype(nodetype)
-    case X_TREE_NODE_PREFIXES[nodetype].underscore
+    case TreeBuilder.get_model_for_prefix(nodetype).underscore
     when "miq_template" then "templates_images"
     when "vm"           then "vms_instances"
     end

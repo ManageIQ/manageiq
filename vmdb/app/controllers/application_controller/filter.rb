@@ -839,7 +839,7 @@ module ApplicationController::Filter
       format.js do
         @explorer = true
         if x_tree[:type] == :filter &&
-            !["Vm", "MiqTemplate"].include?(X_TREE_NODE_PREFIXES[@nodetype])
+            !["Vm", "MiqTemplate"].include?(TreeBuilder.get_model_for_prefix(@nodetype))
           search_id = 0
           adv_search_build(vm_model_from_active_tree(x_active_tree))
           session[:edit] = @edit              # Set because next method will restore @edit from session

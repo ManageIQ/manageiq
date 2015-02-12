@@ -128,10 +128,9 @@ module VmCommon
         tree_select
       end
       format.html do                # HTML, redirect to explorer
-        prefix = X_TREE_NODE_PREFIXES_INVERTED[@record.class.base_model.to_s]
-        tree_node_id = "#{prefix}-#{@record.id}"  # Build the tree node id
-        session[:exp_parms] = {:id=>tree_node_id}
-        redirect_to :action=>"explorer"
+        tree_node_id = TreeBuilder.build_node_id(@record)
+        session[:exp_parms] = {:id => tree_node_id}
+        redirect_to :action => "explorer"
       end
       format.any {render :nothing=>true, :status=>404}  # Anything else, just send 404
     end
@@ -153,11 +152,10 @@ module VmCommon
     @explorer = true if request.xml_http_request? # Ajax request means in explorer
 
     if !@explorer && @display != "download_pdf"
-      prefix = X_TREE_NODE_PREFIXES_INVERTED[@record.class.base_model.to_s]
-      tree_node_id = "#{prefix}-#{@record.id}"  # Build the tree node id
-      session[:exp_parms] = {:display=>@display, :refresh=>params[:refresh], :id=>tree_node_id}
-      redirect_to :controller=>controller_for_vm(model_for_vm(@record)),
-                  :action=>"explorer"
+      tree_node_id = TreeBuilder.build_node_id(@record)
+      session[:exp_parms] = {:display => @display, :refresh => params[:refresh], :id => tree_node_id}
+      redirect_to :controller => controller_for_vm(model_for_vm(@record)),
+                  :action     => "explorer"
       return
     end
 
@@ -1340,11 +1338,11 @@ module VmCommon
 
     # Need to see if record is unauthorized if it's a VM node
     @nodetype, id = params[:id].split("_").last.split("-")
-    @vm = @record = identify_record(id, VmOrTemplate) if ["Vm", "MiqTemplate"].include?(X_TREE_NODE_PREFIXES[@nodetype]) && !@record
+    @vm = @record = identify_record(id, VmOrTemplate) if ["Vm", "MiqTemplate"].include?(TreeBuilder.get_model_for_prefix(@nodetype)) && !@record
 
     # Handle filtered tree nodes
     if x_tree[:type] == :filter &&
-        !["Vm", "MiqTemplate"].include?(X_TREE_NODE_PREFIXES[@nodetype])
+        !["Vm", "MiqTemplate"].include?(TreeBuilder.get_model_for_prefix(@nodetype))
       search_id = @nodetype == "root" ? 0 : from_cid(id)
       adv_search_build(vm_model_from_active_tree(x_active_tree))
       session[:edit] = @edit              # Set because next method will restore @edit from session
@@ -1501,7 +1499,7 @@ module VmCommon
                       else
                         [nil, nil]
                     end
-    case X_TREE_NODE_PREFIXES[@nodetype]
+    case TreeBuilder.get_model_for_prefix(@nodetype)
     when "Vm", "MiqTemplate"  # VM or Template record, show the record
       show_record(from_cid(id))
       if @record.nil?
@@ -1509,7 +1507,7 @@ module VmCommon
         get_node_info("root")
         return
       else
-        @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@record.name, :model=>"#{ui_lookup(:model => model && model != "VmOrTemplate" ? model : X_TREE_NODE_PREFIXES[@nodetype])}"}
+        @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@record.name, :model=>"#{ui_lookup(:model => model && model != "VmOrTemplate" ? model : TreeBuilder.get_model_for_prefix(@nodetype))}"}
       end
     else      # Get list of child VMs of this node
       options = {:model=>model}
@@ -1522,7 +1520,7 @@ module VmCommon
         # TODO: Change ui_lookup/dictionary to handle VmOrTemplate, returning VMs And Templates
         @right_cell_text = _("All %s") % title ? "#{title}" : "VMs & Templates"
       else
-        if X_TREE_NODE_PREFIXES[@nodetype] == "Hash"
+        if TreeBuilder.get_model_for_prefix(@nodetype) == "Hash"
           options[:where_clause] =
             ["vms.type IN (?)", VmInfra::SUBCLASSES + TemplateInfra::SUBCLASSES] if x_active_tree == :vandt_tree
           if id == "orph"
@@ -1534,11 +1532,11 @@ module VmCommon
             process_show_list(options)
             @right_cell_text = "Archived #{model ? ui_lookup(:models => model) : "VMs & Templates"}"
           end
-        elsif X_TREE_NODE_PREFIXES[@nodetype] == "MiqSearch"
+        elsif TreeBuilder.get_model_for_prefix(@nodetype) == "MiqSearch"
           process_show_list(options)  # Get all VMs & Templates
           @right_cell_text = _("All %s") % model ? "#{ui_lookup(:models=>model)}" : "VMs & Templates"
         else
-          rec = X_TREE_NODE_PREFIXES[@nodetype].constantize.find(from_cid(id))
+          rec = TreeBuilder.get_model_for_prefix(@nodetype).constantize.find(from_cid(id))
           options.merge!({:association=>"#{@nodetype == "az" ? "vms" : "all_vms_and_templates"}", :parent=>rec})
           process_show_list(options)
           model_name = @nodetype == "d" ? "Datacenter" : ui_lookup(:model=>rec.class.base_class.to_s)
@@ -1565,7 +1563,7 @@ module VmCommon
     end
 
     # After adding to history, add name filter suffix if showing a list
-    unless ["Vm", "MiqTemplate"].include?(X_TREE_NODE_PREFIXES[@nodetype])
+    unless ["Vm", "MiqTemplate"].include?(TreeBuilder.get_model_for_prefix(@nodetype))
       unless @search_text.blank?
         @right_cell_text += _(" (Names with \"%s\")") % @search_text
       end
@@ -1587,7 +1585,7 @@ module VmCommon
       @delete_node = params[:id] if @replace_trees  #get_node_info might set this
       type, id = x_node.split("_").last.split("-")
 
-      record_showing = type && ["Vm", "MiqTemplate"].include?(X_TREE_NODE_PREFIXES[type])
+      record_showing = type && ["Vm", "MiqTemplate"].include?(TreeBuilder.get_model_for_prefix(type))
       c_buttons,  c_xml  = build_toolbar_buttons_and_xml(center_toolbar_filename) # Use vm or template tb
       if record_showing
         cb_buttons, cb_xml = build_toolbar_buttons_and_xml("custom_buttons_tb")
