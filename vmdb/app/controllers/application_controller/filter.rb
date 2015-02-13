@@ -65,7 +65,8 @@ module ApplicationController::Filter
         page.replace("flash_msg_div#{div_num}", :partial=>"layouts/flash_msg", :locals=>{:div_num=>div_num})
 #       page.replace("form_expression_div", :partial=>"form_expression")
         if @edit[:adv_search_open] != nil
-          page.replace_html("adv_search_div", :partial=>"layouts/adv_search")
+          page.replace("adv_search_body", :partial => "layouts/adv_search_body")
+          page.replace("adv_search_footer", :partial => "layouts/adv_search_footer")
         else
           page.replace("exp_editor_div", :partial=>"layouts/exp_editor")
         end
@@ -449,17 +450,14 @@ module ApplicationController::Filter
       if @edit[:adv_search_open] == true
         @edit[:adv_search_open] = false
         page << "$('#adv_search_img').prop('src', '/images/toolbars/squashed-true.png')"
-        page << javascript_hide("adv_search_div")
+        page << javascript_hide("advsearchModal")
         page << javascript_hide("blocker_div")
-#       page << "$('adv_search_div').visualEffect('blind_up', {duration:1.5});"
       else
         @edit[:adv_search_open] = true
-        page.replace_html("adv_search_div", :partial=>"layouts/adv_search")
+        page << "$('#clear_search').#{clear_search_show_or_hide}();"
+        page.replace("adv_search_body", :partial => "layouts/adv_search_body")
+        page.replace("adv_search_footer", :partial => "layouts/adv_search_footer")
         page << "$('#adv_search_img').prop('src', '/images/toolbars/squashed-false.png')"
-        page << javascript_show("adv_search_div")
-        page << javascript_show("blocker_div")
-#       page << "$('adv_search_div').visualEffect('blind_down', {duration:1.5});"
-
         if [:date, :datetime].include?(@edit.fetch_path(@expkey, :val1, :type)) ||
             [:date, :datetime].include?(@edit.fetch_path(@expkey, :val2, :type))
           page << "miqBuildCalendar();"
@@ -470,6 +468,7 @@ module ApplicationController::Filter
         page << "miq_val2_type = '#{@edit[@expkey][:val2][:type]}';" if @edit.fetch_path(@expkey,:val2,:type)
         page << "miq_val2_title = '#{@edit[@expkey][:val2][:title]}';" if @edit.fetch_path(@expkey,:val2,:type)
       end
+      page << set_spinner_off
       # Rememeber this settting in the model settings
       if session.fetch_path(:adv_search, @edit[@expkey][:exp_model])
         session[:adv_search][@edit[@expkey][:exp_model]][:adv_search_open] = @edit[:adv_search_open]
@@ -734,7 +733,7 @@ module ApplicationController::Filter
       @edit[:selected] = true
       @edit[:adv_search_applied][:exp] = @edit[:new][@expkey]   # Save the expression to be applied
       @edit[@expkey].delete(:exp_token)                         # Remove any existing atom being edited
-#     @edit[:adv_search_open] = false                           # Close the adv search box
+      @edit[:adv_search_open] = false                           # Close the adv search box
       if MiqExpression.quick_search?(@edit[:adv_search_applied][:exp])
         quick_search_show
         return
@@ -781,11 +780,14 @@ module ApplicationController::Filter
 
     render :update do |page|
       if ["load","save"].include?(params[:button])
-        page.replace_html("adv_search_div", :partial=>"layouts/adv_search", :locals=>{:mode=>params[:button]})
+        page.replace("adv_search_body", :partial => "layouts/adv_search_body", :locals => {:mode => params[:button]})
+        page.replace("adv_search_footer", :partial => "layouts/adv_search_footer",
+                                          :locals  => {:mode => params[:button]})
       else
         @edit[@expkey][:exp_chosen_report] = nil
         @edit[@expkey][:exp_chosen_search] = nil
-        page.replace_html("adv_search_div", :partial=>"layouts/adv_search")
+        page.replace("adv_search_body", :partial => "layouts/adv_search_body")
+        page.replace("adv_search_footer", :partial => "layouts/adv_search_footer")
       end
 
       if ["delete","saveit"].include?(params[:button])
@@ -820,7 +822,8 @@ module ApplicationController::Filter
       end
     end
     render :update do |page|
-      page.replace_html("adv_search_div", :partial=>"layouts/adv_search", :locals=>{:mode=>'load'})
+      page.replace("adv_search_body", :partial => "layouts/adv_search_body", :locals => {:mode => 'load'})
+      page.replace("adv_search_footer", :partial => "layouts/adv_search_footer", :locals => {:mode => 'load'})
     end
   end
 

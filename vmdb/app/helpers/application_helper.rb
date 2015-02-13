@@ -2617,4 +2617,10 @@ module ApplicationHelper
       nil
     end
   end
+
+  def show_adv_search?
+    (!@explorer && @edit && @edit[@expkey]) ||
+      (@explorer && (([:filter, :images, :instances, :vandt].include?(x_tree[:type]) && !@record) ||
+        @show_adv_search))
+  end
 end

@@ -11,14 +11,14 @@
             .row#main_taskbar
               .col-md-12
                 = render :partial => "layouts/taskbar"
-          / .row#main_search
-          /   .col-md-12
-          /     = render :partial => '/layouts/searchbarNEW'
           .row
-            .col-md-12
+            .col-sm-5.col-md-5.pull-right
+              %br
+              = render :partial => 'layouts/searchbar'
+            .col-sm-7.col-md-7
               = render :partial => "layouts/breadcrumbs"
               - if layout_uses_tabs?
-                = render :partial => '/layouts/tabs'
+                = render :partial => 'layouts/tabs'
           .row#main_content
             .col-md-12
               = yield
@@ -44,7 +44,8 @@
             .col-md-12
               = render :partial => "layouts/breadcrumbs"
               - if layout_uses_tabs?
-                = render :partial => '/layouts/tabs'
-          .row#main_content
-            .col-md-12
+
+                = render :partial => 'layouts/tabs'
+          .row.max-height
+            .col-sm-12.col-md-12.scrollable{:style => "padding-bottom: 120px !important"}
               = yield
