@@ -51,7 +51,7 @@ module ApiHelper
   end
 
   def attribute_selection
-    params['attributes'] ? params['attributes'].split(",") | ["id"] : "all"
+    params['attributes'] ? params['attributes'].split(",") | ApiController::ID_ATTRS : "all"
   end
 
   def render_attr(attr)

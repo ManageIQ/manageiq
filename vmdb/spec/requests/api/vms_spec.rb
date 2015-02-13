@@ -113,8 +113,8 @@ describe ApiController do
       expect(@code).to eq(200)
       expect(@result).to have_key("accounts")
       expect(@result["accounts"].size).to eq(2)
-      expect(resources_include_suffix?(@result["accounts"], "id", "#{vm_accounts_url}/#{acct1.id}")).to be_true
-      expect(resources_include_suffix?(@result["accounts"], "id", "#{vm_accounts_url}/#{acct2.id}")).to be_true
+      expect(resources_include_suffix?(@result["accounts"], "href", "#{vm_accounts_url}/#{acct1.id}")).to be_true
+      expect(resources_include_suffix?(@result["accounts"], "href", "#{vm_accounts_url}/#{acct2.id}")).to be_true
     end
   end
 
@@ -193,8 +193,8 @@ describe ApiController do
       expect(@code).to eq(200)
       expect(@result).to have_key("software")
       expect(@result["software"].size).to eq(2)
-      expect(resources_include_suffix?(@result["software"], "id", "#{vm_software_url}/#{sw1.id}")).to be_true
-      expect(resources_include_suffix?(@result["software"], "id", "#{vm_software_url}/#{sw2.id}")).to be_true
+      expect(resources_include_suffix?(@result["software"], "href", "#{vm_software_url}/#{sw1.id}")).to be_true
+      expect(resources_include_suffix?(@result["software"], "href", "#{vm_software_url}/#{sw2.id}")).to be_true
     end
   end
 
