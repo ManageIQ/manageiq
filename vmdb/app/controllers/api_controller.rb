@@ -63,9 +63,13 @@ class ApiController < ApplicationController
   #
   ATTR_TYPES = {
     :time => %w(expires_on),
-    :url  => %w(href),
-    :id   => %w(id)
+    :url  => %w(href)
   }
+
+  #
+  # Attributes used for identification
+  #
+  ID_ATTRS = %w(id href)
 
   #
   # To skip CSRF token verification as API clients would
