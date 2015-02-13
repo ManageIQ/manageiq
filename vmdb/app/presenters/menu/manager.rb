@@ -6,7 +6,7 @@ module Menu
       extend Forwardable
 
       delegate [:menu, :tab_features_by_id, :tab_features_by_name, :tab_name,
-                :each_feature_title_with_subitems, :item_in_section?] => :instance
+                :each_feature_title_with_subitems, :item_in_section?, :item, :section] => :instance
     end
 
     private
@@ -14,10 +14,24 @@ module Menu
     class InvalidMenuDefinition < Exception
     end
 
-    def menu(type = :default)
+    def menu(placement = :default)
       @menu.each do |menu_section|
-        yield menu_section if menu_section.type == type
+        yield menu_section if menu_section.placement == placement
       end
+    end
+
+    def item(item_id)
+      @menu.each do |menu_section|
+        the_item = menu_section.items.detect { |item| item.id == item_id }
+        return the_item if the_item.present?
+      end
+    end
+
+    def section(section_id)
+      if section_id.kind_of?(String) # prevent .to_sym call on section_id
+        section_id = @id_to_section.keys.detect{ |k| k.to_s == section_id }
+      end
+      @id_to_section[section_id]
     end
 
     def item_in_section?(item_id, section_id)
@@ -49,7 +63,7 @@ module Menu
       sections.each do |section|
         if section.after
           position = @menu.index { |existing_section| existing_section.id == section.after }
-          @menu.insert(position+1, section)
+          @menu.insert(position + 1, section)
         else
           @menu << section
         end

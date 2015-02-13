@@ -11,6 +11,20 @@ class DashboardController < ApplicationController
     redirect_to :action => 'show'
   end
 
+  skip_before_filter :set_csp_header, :only => :iframe # FIXME only frame-src
+  skip_before_filter :set_x_frame_options_header, :only => :iframe
+
+  def iframe
+    item = if params[:id].present?
+             Menu::Manager.item(params[:id])
+           elsif params[:sid].present?
+             Menu::Manager.section(params[:sid])
+           end
+    @big_iframe = true
+    @layout     = nil
+    render :locals => {:iframe_src => item.href}
+  end
+
   def csp_report
     report = ActiveSupport::JSON.decode(request.body.read)
     $log.warn("security warning, CSP violation report follows: #{report.inspect}")

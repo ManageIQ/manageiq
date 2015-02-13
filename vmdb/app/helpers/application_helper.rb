@@ -2526,6 +2526,8 @@ module ApplicationHelper
     # FIXME: exception behavior to remove
     test_layout = 'my_tasks' if %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout)
 
+    return "dropdown-menu" if big_iframe
+
     Menu::Manager.item_in_section?(test_layout, nav_id) ? "nav navbar-nav navbar-persistent" : "dropdown-menu"
   end
 
@@ -2654,5 +2656,9 @@ module ApplicationHelper
 
   def need_prov_dialogs?(type)
     !type.starts_with?("generic")
+  end
+
+  def big_iframe
+    @big_iframe
   end
 end
