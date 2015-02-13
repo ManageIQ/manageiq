@@ -58,7 +58,7 @@ describe ApiController do
       expect(@result["name"]).to eq("policy_actions")
       expect(@result["resources"].size).to eq(10)
       hrefs_ids = @result["resources"].collect { |r| r["href"].sub(/^.*#{@cfme[:policy_actions_url]}\//, '') }
-      expect(hrefs_ids.sort).to eq(MiqAction.all.collect(&:id).collect(&:to_s).sort)
+      expect(hrefs_ids).to match_array(MiqAction.pluck(:id).collect(&:to_s))
     end
 
     it "query policy actions in expanded form" do
@@ -72,7 +72,7 @@ describe ApiController do
       expect(@result["name"]).to eq("policy_actions")
       expect(@result["resources"].size).to eq(10)
       guids = @result["resources"].collect { |r| r["guid"] }
-      expect(guids.sort).to eq(MiqAction.all.collect(&:guid).sort)
+      expect(guids).to match_array(MiqAction.pluck(:guid))
     end
   end
 
@@ -109,7 +109,7 @@ describe ApiController do
       expect(@result["name"]).to eq("policy_actions")
       expect(@result["resources"].size).to eq(4)
       guids = @result["resources"].collect { |r| r["guid"] }
-      expect(guids.sort).to eq(MiqAction.all.collect(&:guid).sort)
+      expect(guids).to match_array(MiqAction.pluck(:guid))
     end
 
     it "query policy with expanded policy actions" do
@@ -130,7 +130,7 @@ describe ApiController do
       policy_actions = @result["policy_actions"]
       expect(policy_actions.size).to eq(4)
       guids = policy_actions.collect { |r| r["guid"] }
-      expect(guids.sort).to eq(MiqAction.all.collect(&:guid).sort)
+      expect(guids).to match_array(MiqAction.pluck(:guid))
     end
   end
 end
