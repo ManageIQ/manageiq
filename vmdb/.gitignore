@@ -36,6 +36,7 @@ config/miq_pass
 # db/
 db/*.sqlite3
 db/schema.rb
+db/fixtures/ae_datastore/ManageIQ/.manifest.yaml
 
 # log/
 log/*.gz
