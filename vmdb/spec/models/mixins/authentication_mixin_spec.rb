@@ -160,6 +160,35 @@ describe AuthenticationMixin do
         @orig_ems_user, @orig_ems_pwd = @ems.auth_user_pwd(:default)
       end
 
+      it "#authentication_status_ok? true if no type, default is Valid" do
+        @auth.update_attribute(:status, "Valid")
+        @ems.authentication_status_ok?.should be_true
+      end
+
+      it "#authentication_status_ok? true if no type, default is Valid and second one is Invalid" do
+        @auth.update_attribute(:status, "Valid")
+        @ems.authentications << FactoryGirl.build(:authentication, :authtype => :some_type, :status => "Invalid")
+        @ems.authentication_status_ok?.should be_true
+      end
+
+      it "#authentication_status_ok? false if no type, default is Invalid and second one is Valid" do
+        @auth.update_attribute(:status, "Invalid")
+        @ems.authentications << FactoryGirl.build(:authentication, :authtype => :some_type, :status => "Valid")
+        @ems.authentication_status_ok?.should be_false
+      end
+
+      it "#authentication_status_ok? true if type is Valid" do
+        @auth.update_attribute(:status, "Invalid")
+        @ems.authentications << FactoryGirl.build(:authentication, :authtype => :some_type, :status => "Valid")
+        @ems.authentication_status_ok?(:some_type).should be_true
+      end
+
+      it "#authentication_status_ok? false if type is Invalid" do
+        @auth.update_attribute(:status, "Valid")
+        @ems.authentications << FactoryGirl.build(:authentication, :authtype => :some_type, :status => "Invalid")
+        @ems.authentication_status_ok?(:some_type).should be_false
+      end
+
       it "should return 'Invalid' authentication_status with one valid, one invalid" do
         highest = "Invalid"
         @auth.update_attribute(:status, "Valid")
