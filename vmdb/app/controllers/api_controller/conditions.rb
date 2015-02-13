@@ -5,7 +5,7 @@ class ApiController
     #
 
     def conditions_query_resource(object)
-      return {} unless object && object.respond_to?(:conditions)
+      return {} unless object.respond_to?(:conditions)
       object.conditions
     end
   end

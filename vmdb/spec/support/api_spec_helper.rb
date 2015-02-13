@@ -91,8 +91,8 @@ module ApiSpecHelper
       :entrypoint => "/api"
     }
 
-    collections  = %w(auth vms tags providers hosts data_stores resource_pools clusters)
-    collections += %w(policies policy_profiles templates conditions)
+    collections  = %w(auth vms tags providers hosts data_stores resource_pools clusters
+                      policies policy_profiles templates conditions)
 
     collections.each { |collection| @cfme["#{collection}_url".to_sym] = "#{@cfme[:entrypoint]}/#{collection}" }
 
@@ -121,8 +121,7 @@ module ApiSpecHelper
 
   def action_identifier(type, action, selection = :resource_actions)
     collection_config.fetch_path(type, selection, :post)
-      .select { |spec| spec[:name] == action.to_s }
-      .first[:identifier]
+      .detect { |spec| spec[:name] == action.to_s }[:identifier]
   end
 
   def collection_action_identifier(type, action)
