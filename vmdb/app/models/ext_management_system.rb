@@ -1,20 +1,26 @@
 class ExtManagementSystem < ActiveRecord::Base
+  SUBCLASSES = %w(
+    EmsInfra
+    EmsCloud
+    EmsContainer
+  )
+
   include EmsRefresh::Manager
 
   def self.types
-    [EmsInfra, EmsCloud].collect(&:types).flatten
+    leaf_subclasses.collect(&:ems_type)
   end
 
   def self.supported_types
-    [EmsInfra, EmsCloud].collect(&:supported_types).flatten
+    supported_subclasses.collect(&:ems_type)
   end
 
   def self.leaf_subclasses
-    [EmsInfra, EmsCloud].collect(&:subclasses).flatten
+    descendants.select { |d| d.subclasses.empty? }
   end
 
   def self.supported_subclasses
-    [EmsInfra, EmsCloud].collect(&:supported_subclasses).flatten
+    subclasses.flat_map(&:supported_subclasses)
   end
 
   def self.supported_types_and_descriptions_hash
@@ -131,14 +137,12 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def self.model_name_from_emstype(emstype)
-    leaf_subclasses.each do |k|
-      return k.name if k.ems_type == emstype.downcase
-    end
-    return nil
+    model_from_emstype(emstype).try(:name)
   end
 
   def self.model_from_emstype(emstype)
-    model_name_from_emstype(emstype).constantize
+    emstype = emstype.downcase
+    ExtManagementSystem.leaf_subclasses.detect { |k| k.ems_type == emstype }
   end
 
   # UI methods for determining availability of fields
@@ -429,3 +433,7 @@ class ExtManagementSystem < ActiveRecord::Base
     end
   end
 end
+
+# Preload any subclasses of this class, so that they will be part of the
+#   conditions that are generated on queries against this class.
+ExtManagementSystem::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}.rb").to_s }
