@@ -1,0 +1,14 @@
+= render :partial => "layouts/flash_msg"
+
+- legend_text ||= _("Last 1000 lines from server %{name} [%{id}] in zone %{zone}") % |
+  {:name => @temp[:selected_server].name,                                            |
+  :id    => @temp[:selected_server].id,                                              |
+  :zone  => @temp[:selected_server].my_zone}                                         |
+%p.legend= legend_text
+
+= text_area("logview", "data",                                |
+  :value    => @log,                                          |
+  :readonly => true,                                          |
+  :style    => "height: #{center_div_height}px; width: 100%") |
+
+= javascript_tag "$('#logview_data').scrollTop($('#logview_data').prop('scrollHeight') - $('#logview_data').prop('clientHeight'));"

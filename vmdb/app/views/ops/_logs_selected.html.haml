@@ -1,0 +1,28 @@
+- record               = @temp[:selected_server]
+- icon                 = record.class == MiqServer ? "evmserver" : "zone"
+- icon_string          = "/images/icons/new/#{icon}.png"
+- log_depot_settings   = record.get_log_depot_settings
+- log_depot_uri        = log_depot_settings.try(:fetch_path, :uri) || "N/A"
+- log_depot_uri       << " (from Zone)" if log_depot_settings.try(:fetch_path, :from_zone)
+- last_time            = record.last_log_sync_on
+- last_collection_time = last_time.blank? ? "Never" : format_timezone(last_time.to_time, Time.zone, "gtl")
+
+#selected_div
+  %fieldset
+    %p.legend= _("Basic Info")
+    %table.style1
+      %tr
+        %td.keyimage{:rowspan => 9}
+          %img{:src => icon_string}/
+        %td.key= Dictionary.gettext(record.class.name, :type => :model, :notfound => :titleize)
+        %td.wide= h(record.display_name)
+      %tr
+        %td.key= _("Log Depot URI")
+        %td.wide= h(log_depot_uri)
+      %tr
+        %td.key= _("Last Log Collection")
+        %td.wide= h(last_collection_time)
+      - if record.respond_to?(:last_log_sync_message)
+        %tr
+          %td.key= _("Last Message")
+          %td.wide= h(record.last_log_sync_message)

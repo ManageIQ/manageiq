@@ -1,0 +1,73 @@
+= render :partial => "layouts/flash_msg"
+- if @temp[:vmdb_index]
+  %p.legend
+    = "#{_("Index")}: #{h(@temp[:vmdb_index].name)}"
+  %table.style1
+    %tr
+      %td.key= _("Name")
+      %td= h(@temp[:vmdb_index].name)
+  %hr/
+  - metrics = @temp[:vmdb_index].latest_hourly_metric
+  - if metrics
+    %p.legend= _("Metrics")
+    %table.style1
+      %tr
+        %td.key= _("Rows")
+        %td= h(metrics.rows)
+      %tr
+        %td.key= _("Size")
+        %td= number_to_human_size(metrics.size)
+      %tr
+        %td.key= _("Wasted")
+        %td= number_to_human_size(metrics.wasted_bytes)
+      %tr
+        %td.key= _("Percent Bloat")
+        %td= h(metrics.percent_bloat)
+    %hr/
+- elsif @temp[:table]
+  %p.legend
+    = "#{_("Table")}: #{h(@temp[:table].name)}"
+  %table.style1
+    %tr
+      %td.key= _("Name")
+      %td= h(@temp[:table].name)
+    - metrics = @temp[:table].latest_hourly_metric
+    - if metrics
+      %tr
+        %td.key= _("Rows")
+        %td= h(metrics.rows)
+      %tr
+        %td.key= _("Size")
+        %td= number_to_human_size(metrics.size)
+      %tr
+        %td.key= _("Wasted")
+        %td= number_to_human_size(metrics.wasted_bytes)
+      %tr
+        %td.key= _("Percent Bloat")
+        %td= h(metrics.percent_bloat)
+  %hr/
+- if @temp[:indexes]
+  %p.legend= _("Indexes")
+  - if @temp[:indexes].blank?
+    = _("No Indexes found for this table.")
+  - else
+    %table.style3
+      %thead
+        %th.icon
+        %th= _("Name")
+        %th= _("Rows")
+        %th= _("Size")
+        %th= _("Wasted")
+        %th= _("Percent Bloat")
+      %tbody
+        - @temp[:indexes].each_with_index do |ind, _|
+          %tr{:class => "#{cycle('row0', 'row1')}", :onclick => "#{remote_function(:url => "/ops/x_show/#{ind.id}")}", :onmouseover => "this.style.cursor = 'pointer'", :title => _("Click to view index")}
+            %td.icon{:nowrap => "nowrap"}
+              %img{:border => 0, :height => 20, :src => "/images/icons/new/vmdbindex.png", :valign => "middle", :width => 20}/
+            %td= ind.name
+            - metrics = ind.latest_hourly_metric
+            - if metrics
+              %td{:align => "right"}= h(metrics.rows)
+              %td{:align => "right"}= number_to_human_size(metrics.size)
+              %td{:align => "right"}= number_to_human_size(metrics.wasted_bytes)
+              %td{:align => "right"}= h(metrics.percent_bloat)
