@@ -1,0 +1,28 @@
+%fieldset
+  %p.legend=_("Smart Management")
+  #table_div
+    %table.style1
+      %tr
+        %td.key
+          = session[:customer_name]
+          =_("Tags")
+        %td{:align => "left", :style => "padding: 0px;", :valign => "top"}
+          %table{:style => "padding: 0px; margin: 0px; border: 0px; width: 100%"}
+            - if session[:assigned_filters].empty?
+              %tr
+                %td{:style => "padding: 0px; margin: 0px; border: 0px"}
+                  %img{:align => "left", :height => "20", :src => "/images/icons/new/smarttag.png", :width => "20"}/
+                  %div{:style => "padding-left: 2em;"}
+                    =_("No %s Tags have been assigned") % session[:customer_name]
+            - else
+              - session[:assigned_filters].keys.sort.each do |k|
+                - v = session[:assigned_filters][k]
+                %tr{:class => cycle('row0','row1', :name => 'props')}
+                  %td{:style => "padding: 0px; margin: 0px; border: 0px"}
+                    %img{:align => "left", :height => "20", :src => "/images/icons/new/smarttag.png", :width => "20"}/
+                    %div{:style => "padding-left: 2em;"}
+                      %b
+                        = h(k) + ':'
+                      - v.sort.each_with_index do |t, idx|
+                        = idx > 0 ? "<b>|</b>".html_safe : ""
+                        = h(t)

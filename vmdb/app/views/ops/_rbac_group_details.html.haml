@@ -1,0 +1,171 @@
+- if @edit
+  - url = url_for(:action => 'rbac_group_field_changed',
+                  :id     => "#{@edit[:group_id] || "new"}")
+= render :partial => "layouts/flash_msg"
+#main_div
+  %dl.col2
+    %dd
+      %fieldset
+        %p.legend=_("Group Information")
+        - if @edit
+          = render :partial => "ldap_auth_users"
+        %table.style1
+          %tr
+            %td.key=_("Description")
+            %td{:nowrap => ""}
+              - if !@edit
+                = h(@group.description)
+              - else
+                = text_field_tag("description",
+                                 @edit[:new][:description],
+                                 :maxlength         => 50,
+                                 "data-miq_observe" => {:interval => '.5',
+                                                        :url      => url}.to_json)
+                &nbsp;
+                = check_box_tag("lookup",
+                                "1",
+                                false,
+                                "data-miq_observe_checkbox" => {:url => url}.to_json)
+                =_("(Look Up LDAP Groups)")
+                = javascript_tag(javascript_focus('description'))
+          %tr
+            %td.key=_("Role")
+            %td{:style => @edit ? 'padding: 0px' : ''}
+              - if !@edit
+                - if @group.miq_user_role
+                  %table{:cellpadding => "0", :cellspacing => "0"}
+                    %tr{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'ur-#{to_cid(@group.miq_user_role.id)}');", :onmouseover => "this.style.cursor='pointer'", :title => _("View this Role")}
+                      %td.image
+                        %ul.icons
+                          %li
+                            %span.product.product-role
+                      %td
+                        = h(@group.miq_user_role.name)
+              - else
+                = select_tag('group_role',
+                             options_for_select(@edit[:roles].sort, @edit[:new][:role]),
+                             "data-miq_observe" => {:url => url}.to_json)
+          - unless @edit
+            %tr
+              %td.key=_("Users in this Group")
+              %td{:style => "padding: 0px"}
+                %table{:cellpadding => "0", :cellspacing => "0"}
+                  - @group.users.sort_by { |a| a.name.downcase }.each do |u|
+                    %tr{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'u-#{to_cid(u.id)}');", :onmouseover => "this.style.cursor='pointer'", :title => _("View this User")}
+                      %td.image
+                        %ul.icons
+                          %li
+                            %span.pficon.pficon-user
+                      %td
+                        = h(u.name)
+      - unless @edit
+        = render :partial => "rbac_tag_box"
+      - if @edit
+        #group_lookup{:style => "display:none"}
+          %fieldset
+            %p.legend=_("LDAP Group Look Up")
+            %table.style1
+              %tr
+                %td.key=_("User to Look Up")
+                %td
+                  = text_field_tag("user",
+                                   @edit[:new][:user],
+                                   :maxlength         => 255,
+                                   "data-miq_observe" => {:interval => '.5',
+                                                          :url      => url}.to_json)
+                %td
+              %tr
+                %td.key=_("User Id")
+                %td
+                  = text_field_tag("user_id",
+                                   @edit[:new][:user_id],
+                                   :maxlength         => 255,
+                                   "data-miq_observe" => {:interval => '.5',
+                                                          :url      => url}.to_json)
+                %td
+              %tr
+                %td.key=_("Password")
+                %td
+                  = password_field_tag("password",
+                                       @edit[:new][:password],
+                                       :maxlength         => 50,
+                                       "data-miq_observe" => {:interval => '.5',
+                                                              :url      => url}.to_json)
+                %td{:align => "right", :valign => "bottom"}
+                  = link_to(button_tag("Retrieve",
+                                       :class => "btn btn-primary",
+                                       :alt   => _("LDAP Group Lookup")),
+                            {:action => "rbac_group_user_lookup",
+                             :button => "submit",
+                             :id     => "#{@edit[:group_id] || "new"}"},
+                             "data-miq_sparkle_on"  => true,
+                             "data-miq_sparkle_off" => true,
+                             :remote                => true,
+                             :title                 => _("LDAP Group Lookup"))
+    %dd
+      %fieldset
+        %p.legend= @edit ? _("Assign Filters") : _("Assigned Filters (read only)")
+        #rbac_group_tabs{"data-miq_url" => "_none_", :style => "display:none;"}
+          %ul.tab
+            %li
+              %a{:href => "#customer_tags"}
+                = escape_javascript(session[:customer_name])
+                =_("Tags")
+            %li
+              %a{:href => "#hosts_clusters"}
+                =_("Hosts & Clusters")
+            %li
+              %a{:href => "#vms_templates"}
+                =_("VMs & Templates")
+          #customer_tags{:name => "customer_tags", :width => "80px"}
+            %br/
+            =_("This user is limited to items with the selected tags.")
+            %br/
+            %br/
+            #myco_treebox{:style => "color:#000"}
+            = render(:partial => "layouts/dynatree",
+                     :locals  => {:tree_id        => "myco_treebox",
+                                  :tree_name      => "myco_tree",
+                                  :json_tree      => session[:myco_tree],
+                                  :onmousein      => "miqOnMouseIn_HostNet",
+                                  :onmouseout     => "miqOnMouseOut_HostNet",
+                                  :oncheck        => @edit.nil? ? nil : "miqOnCheck_UserFilters",
+                                  :disable_checks => @edit.nil?,
+                                  :check_url      => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
+                                  :checkboxes     => true})
+          #hosts_clusters{:name => "hosts_clusters", :width => "80px"}
+            %br/
+            =_("This user is limited to the selected items and their children.")
+            %br/
+            %br/
+            #hac_treebox{:style => "color:#000"}
+            = render(:partial => "layouts/dynatree",
+                     :locals  => {:tree_id        => "hac_treebox",
+                                  :tree_name      => "hac_tree",
+                                  :json_tree      => session[:hac_tree],
+                                  :onmousein      => "miqOnMouseIn_HostNet",
+                                  :onmouseout     => "miqOnMouseOut_HostNet",
+                                  :oncheck        => @edit.nil? ? nil : "miqOnCheck_UserFilters",
+                                  :disable_checks => @edit.nil?,
+                                  :check_url      => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
+                                  :checkboxes     => true})
+          #vms_templates{:name => "vms_templates", :width => "80px"}
+            %br/
+            =_("This user is limited to the selected folders and their children.")
+            %br/
+            %br/
+            #vat_treebox{:style => "color:#000"}
+            = render(:partial => "layouts/dynatree",
+                     :locals  => {:tree_id        => "vat_treebox",
+                                  :tree_name      => "vat_tree",
+                                  :json_tree      => session[:vat_tree],
+                                  :onmousein      => "miqOnMouseIn_HostNet",
+                                  :onmouseout     => "miqOnMouseOut_HostNet",
+                                  :oncheck        => @edit.nil? ? nil : "miqOnCheck_UserFilters",
+                                  :disable_checks => @edit.nil?,
+                                  :check_url      => "/ops/rbac_group_field_changed/#{@group.id || "new"}___",
+                                  :checkboxes     => true})
+:javascript
+  //method takes hash that can have 4 keys: tabs div id, active tab label,
+  //url to go to when tab is changed, and whether to check for abandon changes or not
+  miq_jquery_tabs_init({tabs_div: "rbac_group_tabs"})
