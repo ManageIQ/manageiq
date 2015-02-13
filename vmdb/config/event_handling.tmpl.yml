@@ -1345,6 +1345,7 @@ filtered_events:
   AlarmSnmpFailedEvent:
   AlarmStatusChangedEvent:
   AlreadyAuthenticatedSessionEvent:
+  EventEx:
   UNASSIGNED:                               # RHEV filtered events
   USER_REMOVE_VG:
   USER_REMOVE_VG_FAILED:
