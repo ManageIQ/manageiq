@@ -161,11 +161,10 @@ class CatalogController < ApplicationController
     @explorer = true if request.xml_http_request? # Ajax request means in explorer
     record = ServiceTemplate.find_by_id(from_cid(params[:id]))
     if !@explorer
-      prefix = X_TREE_NODE_PREFIXES.invert[record.class.base_model.to_s]
-      tree_node_id = "#{prefix}-#{record.id}"  # Build the tree node id
-      redirect_to :controller=>"catalog",
-                  :action=>"explorer",
-                  :id=>tree_node_id
+      tree_node_id = TreeBuilder.build_node_id(record)
+      redirect_to :controller => "catalog",
+                  :action     => "explorer",
+                  :id         => tree_node_id
       return
     else
       redirect_to :action => 'show', :controller=>record.class.base_model.to_s.underscore, :id=>record.id
@@ -261,7 +260,7 @@ class CatalogController < ApplicationController
   end
 
   def identify_catalog(id = nil)
-    kls = X_TREE_NODE_PREFIXES[@nodetype] == "MiqTemplate" ? VmOrTemplate : ServiceTemplate
+    kls = TreeBuilder.get_model_for_prefix(@nodetype) == "MiqTemplate" ? VmOrTemplate : ServiceTemplate
     @record = identify_record(id || params[:id], kls)
   end
 
@@ -1157,10 +1156,10 @@ class CatalogController < ApplicationController
       buttons_get_node_info(treenodeid)
     else
       @sb[:buttons_node] = false
-      case X_TREE_NODE_PREFIXES[@nodetype]
+      case TreeBuilder.get_model_for_prefix(@nodetype)
       when "Vm", "MiqTemplate", "ServiceResource"  # VM or Template record, show the record
         show_record(from_cid(id))
-        @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@record.name, :model=>ui_lookup(:model=>X_TREE_NODE_PREFIXES[@nodetype])}
+        @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@record.name, :model=>ui_lookup(:model=>TreeBuilder.get_model_for_prefix(@nodetype))}
       else      # Get list of child Catalog Items/Services of this node
         if x_node == "root"
           types = {
@@ -1189,7 +1188,7 @@ class CatalogController < ApplicationController
           if x_active_tree == :stcat_tree
             @record = ServiceTemplateCatalog.find_by_id(from_cid(id))
             @record_service_templates = rbac_filtered_objects(@record.service_templates)
-            typ = x_active_tree == :svccat_tree ? "Service" : X_TREE_NODE_PREFIXES[@nodetype]
+            typ = x_active_tree == :svccat_tree ? "Service" : TreeBuilder.get_model_for_prefix(@nodetype)
             @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@record.name, :model=>ui_lookup(:model=>typ)}
           elsif x_active_tree == :ot_tree
             @record = OrchestrationTemplate.find_by_id(from_cid(id))
@@ -1238,7 +1237,7 @@ class CatalogController < ApplicationController
                 prefix = @record.service_template_catalog_id ? "stc-#{to_cid(@record.service_template_catalog_id)}" : "-Unassigned"
                 self.x_node = "#{prefix}_#{params[:id]}"
               end
-              typ = x_active_tree == :svccat_tree ? "Service" : X_TREE_NODE_PREFIXES[@nodetype]
+              typ = x_active_tree == :svccat_tree ? "Service" : TreeBuilder.get_model_for_prefix(@nodetype)
               @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@record.name, :model=>ui_lookup(:model=>typ)}
             end
           end
@@ -1303,7 +1302,7 @@ class CatalogController < ApplicationController
       trees[:ot]  = build_orch_tmpl_tree if replace_trees.include?(:ot)
     end
     allowed_records = %w(MiqTemplate OrchestrationTemplate Service ServiceTemplate ServiceTemplateCatalog)
-    record_showing = (type && allowed_records.include?(X_TREE_NODE_PREFIXES[type]) && !@view) ||
+    record_showing = (type && allowed_records.include?(TreeBuilder.get_model_for_prefix(type)) && !@view) ||
                      params[:action] == "x_show"
     # Clicked on right cell record, open the tree enough to show the node, if not already showing
     if params[:action] == "x_show" && ! [:stcat_tree, :ot_tree].include?(x_active_tree) &&
@@ -1316,7 +1315,7 @@ class CatalogController < ApplicationController
       case x_active_tree
       when :sandt_tree
         if record_showing && !@in_a_form
-          if X_TREE_NODE_PREFIXES[@nodetype] == "MiqTemplate"
+          if TreeBuilder.get_model_for_prefix(@nodetype) == "MiqTemplate"
             build_toolbar_buttons_and_xml("summary_view_tb")
           end
         else
@@ -1374,7 +1373,7 @@ class CatalogController < ApplicationController
       elsif action == "dialog_provision"
         r[:partial=>"shared/dialogs/dialog_provision"]
       elsif record_showing
-        if X_TREE_NODE_PREFIXES[@nodetype] == "MiqTemplate"
+        if TreeBuilder.get_model_for_prefix(@nodetype) == "MiqTemplate"
           r[:partial=>"vm_common/main", :locals=>{:controller=>"vm"}]
         elsif @sb[:buttons_node]
           r[:partial=>"shared/buttons/ab_list"]

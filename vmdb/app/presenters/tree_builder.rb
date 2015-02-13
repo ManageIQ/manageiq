@@ -3,7 +3,7 @@ class TreeBuilder
   include CompressedIds
   attr_reader :locals_for_render, :name, :type
 
-  #need to move this to a subclass
+  # FIXME: need to move this to a subclass
   def self.root_options(tree_name)
     #returns title, tooltip, root icon
     case tree_name
@@ -68,29 +68,38 @@ class TreeBuilder
   end
 
   # Get the children of a dynatree node that is being expanded (autoloaded)
-  def x_get_child_nodes_dynatree(id)
+  def x_get_child_nodes(id)
     prefix, rec_id = extract_method_and_node_id(id)
-    model = X_TREE_NODE_PREFIXES[prefix]                # Get this nodes model (folder, Vm, Cluster, etc)
-    if model == "Hash"
-      object = {:type => prefix, :id => rec_id, :full_id => id}
-    elsif model.nil? && [:sandt_tree, :svccat_tree, :stcat_tree].include?(x_active_tree)
-      # Creating empty record to show items under unassigned catalog node
-      object = ServiceTemplateCatalog.new # Get the object from the DB
-    else
-      object = model.constantize.find(from_cid(rec_id))   # Get the object from the DB
-    end
+    model = self.class.get_model_for_prefix(prefix)
+    object = if model == "Hash"
+               {:type => prefix, :id => rec_id, :full_id => id}
+             elsif model.nil? && [:sandt_tree, :svccat_tree, :stcat_tree].include?(x_active_tree)
+               # Creating empty record to show items under unassigned catalog node
+               ServiceTemplateCatalog.new
+             else
+               model.constantize.find(from_cid(rec_id))
+             end
 
-    kids = Array.new
     x_tree[:open_nodes].push(id) unless x_tree[:open_nodes].include?(id) # Save node as open
 
-    options = x_tree         # Get options from sandbox
-
-    # Process the node's children
-    x_get_tree_objects(options.merge(:parent => object)).each do |o|
-      kids += x_build_node_dynatree(o, id, options)
+    x_get_tree_objects(x_tree.merge(:parent => object)).each_with_object([]) do |o, acc|
+      acc.concat(x_build_node_dynatree(o, id, x_tree))
     end
+  end
 
-    return kids                                         # Return the node's children
+  # Get nodes model (folder, Vm, Cluster, etc)
+  def self.get_model_for_prefix(node_prefix)
+    X_TREE_NODE_PREFIXES[node_prefix]
+  end
+
+  def self.get_prefix_for_model(model)
+    model = model.to_s unless model.is_a?(String)
+    X_TREE_NODE_PREFIXES_INVERTED[model]
+  end
+
+  def self.build_node_id(record)
+    prefix = get_prefix_for_model(record.class.base_model)
+    "#{prefix}-#{record.id}"
   end
 
   private
@@ -251,7 +260,8 @@ class TreeBuilder
     TreeNodeBuilder.build(object, pid, options)
   end
 
-  def x_build_node_dynatree(object, pid, options)   # Called with object, tree node parent id, tree options
+  # Called with object, tree node parent id, tree options
+  def x_build_node_dynatree(object, pid, options)
     x_build_node(object, pid, options)
   end
 
@@ -260,10 +270,10 @@ class TreeBuilder
     options[:count_only] ? 0 : []
   end
 
-  #add child nodes to the active tree below node 'id'
+  # Add child nodes to the active tree below node 'id'
   def self.tree_add_child_nodes(sandbox, klass_name, id)
     tree = klass_name.constantize.new("temp_tree", "temp", sandbox)
-    tree.x_get_child_nodes_dynatree(id)
+    tree.x_get_child_nodes(id)
   end
 
   def count_only_or_objects(count_only, objects, sort_by)
@@ -276,7 +286,7 @@ class TreeBuilder
     end
   end
 
-  #Replacing calls to VMDB::Config.new in the views/controllers
+  # Replacing calls to VMDB::Config.new in the views/controllers
   def get_vmdb_config
     @vmdb_config ||= VMDB::Config.new("vmdb").config
   end
@@ -317,4 +327,67 @@ class TreeBuilder
     results.length > 0
   end
   private_class_method :rbac_has_visible_vm_descendants?
+
+  # Tree node prefixes for generic explorers
+  X_TREE_NODE_PREFIXES = {
+    "a"   => "MiqAction",
+    "aec" => "MiqAeClass",
+    "aei" => "MiqAeInstance",
+    "aem" => "MiqAeMethod",
+    "aen" => "MiqAeNamespace",
+    "al"  => "MiqAlert",
+    "ap"  => "MiqAlertSet",
+    "az"  => "AvailabilityZone",
+    "co"  => "Condition",
+    "cbg" => "CustomButtonSet",
+    "cb"  => "CustomButton",
+    "cfn" => "OrchestrationTemplateCfn",
+    "cr"  => "ChargebackRate",
+    "ct"  => "CustomizationTemplate",
+    "d"   => "Datacenter",
+    "dg"  => "Dialog",
+    "ds"  => "Storage",
+    "e"   => "ExtManagementSystem",
+    "ev"  => "MiqEvent",
+    "c"   => "EmsCluster",
+    "f"   => "EmsFolder",
+    "g"   => "MiqGroup",
+    "h"   => "Host",
+    "hot" => "OrchestrationTemplateHot",
+    "isd" => "IsoDatastore",
+    "isi" => "IsoImage",
+    "ld"  => "LdapDomain",
+    "lr"  => "LdapRegion",
+    "me"  => "MiqEnterprise",
+    "mr"  => "MiqRegion",
+    "msc" => "MiqSchedule",
+    "ms"  => "MiqSearch",
+    "odg" => "MiqDialog",
+    "ot"  => "OrchestrationTemplate",
+    "pi"  => "PxeImage",
+    "pit" => "PxeImageType",
+    "ps"  => "PxeServer",
+    "pp"  => "MiqPolicySet",
+    "p"   => "MiqPolicy",
+    "rep" => "MiqReport",
+    "rr"  => "MiqReportResult",
+    "svr" => "MiqServer",
+    "ur"  => "MiqUserRole",
+    "r"   => "ResourcePool",
+    "s"   => "Service",
+    "sis" => "ScanItemSet",
+    "st"  => "ServiceTemplate",
+    "stc" => "ServiceTemplateCatalog",
+    "sr"  => "ServiceResource",
+    "t"   => "MiqTemplate",
+    "tb"  => "VmdbTable",
+    "ti"  => "VmdbIndex",
+    "u"   => "User",
+    "v"   => "Vm",
+    "wi"  => "WindowsImage",
+    "xx"  => "Hash",  # For custom (non-CI) nodes, specific to each tree
+    "z"   => "Zone"
+  }
+
+  X_TREE_NODE_PREFIXES_INVERTED = X_TREE_NODE_PREFIXES.invert
 end

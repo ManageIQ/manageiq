@@ -1904,7 +1904,7 @@ class MiqAeClassController < ApplicationController
 
   def x_show
     typ, id = params[:id].split("-")
-    @record = X_TREE_NODE_PREFIXES[typ].constantize.find_by_id(from_cid(id))
+    @record = TreeBuilder.get_model_for_prefix(typ).constantize.find_by_id(from_cid(id))
     tree_select
   end
 
@@ -1982,7 +1982,7 @@ private
       model = @edit[:selected_items].count > 1 ? :models : :model
       add_flash(_("Copy selected %s was saved") %  ui_lookup(model => "#{@edit[:typ]}"))
       @record = res.kind_of?(Array) ? @edit[:typ].find_by_id(res.first) : res
-      self.x_node = "#{X_TREE_NODE_PREFIXES_INVERTED[@edit[:typ].to_s]}-#{to_cid(@record.id)}"
+      self.x_node = "#{TreeBuilder.get_prefix_for_model(@edit[:typ])}-#{to_cid(@record.id)}"
       @in_a_form = @changed = session[:changed] = false
       @sb[:action] = @edit = session[:edit] = nil
       replace_right_cell
@@ -2820,7 +2820,7 @@ private
   def domain_overrides
     @domain_overrides = {}
     typ, _ = x_node.split('-')
-    overrides = X_TREE_NODE_PREFIXES[typ].constantize.get_homonymic_across_domains(@record.fqname)
+    overrides = TreeBuilder.get_model_for_prefix(typ).constantize.get_homonymic_across_domains(@record.fqname)
     overrides.each do |obj|
       display_name, id = domain_display_name_using_name(obj, @record.domain.name)
       @domain_overrides[display_name] = id

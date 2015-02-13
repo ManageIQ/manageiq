@@ -348,7 +348,7 @@ module ApplicationController::Explorer
   # Get the children of a dynatree node that is being expanded (autoloaded)
   def x_get_child_nodes_dynatree(tree, id)
     prefix, rec_id = id.split("_").last.split('-')      # Get this nodes model and id
-    model = X_TREE_NODE_PREFIXES[prefix]                # Get this nodes model (folder, Vm, Cluster, etc)
+    model = TreeBuilder.get_model_for_prefix(prefix)                # Get this nodes model (folder, Vm, Cluster, etc)
     if model == "Hash"
       object = {:type=>prefix, :id=>rec_id, :full_id=>id}
     elsif model.nil? && [:sandt_tree, :svccat_tree, :stcat_tree].include?(x_active_tree)   #creating empty record to show items under unassigned catalog node
@@ -1116,13 +1116,13 @@ module ApplicationController::Explorer
   end
 
   def model_from_nodetype(nodetype)
-    model_name = X_TREE_NODE_PREFIXES[nodetype]
+    model_name = TreeBuilder.get_model_for_prefix(nodetype)
     raise _("No Class found for explorer tree node type '%s'") %  nodetype if model_name.nil?
     return model_name.constantize
   end
 
   def nodetype_from_model(model)
-    nodetype = X_TREE_NODE_PREFIXES_INVERTED[model.to_s]
+    nodetype = TreeBuilder.get_prefix_for_model(model)
     raise _("No explorer tree node type found for '%s'") %  model.to_s if nodetype.nil?
     return nodetype
   end
