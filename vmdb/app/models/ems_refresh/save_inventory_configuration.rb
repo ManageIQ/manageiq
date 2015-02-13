@@ -25,10 +25,20 @@ module EmsRefresh
     def save_configured_systems_inventory(manager, hashes, target)
       delete_missing_records = target.nil? || manager == target
       hashes.each do |hash|
-        hash[:configuration_profile_id] = hash.fetch_path(:configuration_profile, :id)
+        if hash.key?(:configuration_profile)
+          hash[:configuration_profile_id] = hash.fetch_path(:configuration_profile, :id)
+        else # single refresh
+          configuration_profile = manager.configuration_profiles.find_by_manager_ref(hash[:configuration_profile_ref])
+          if configuration_profile
+            hash[:configuration_profile_id] = configuration_profile.id
+          else
+            # do not have configuration_profile, need to do a complete configuration refresh
+            hashes[:needs_configuration_refresh] = true
+          end
+        end
       end
       save_inventory_assoc(:configured_systems, manager, hashes, delete_missing_records, :manager_ref, nil,
-                           [:configuration_profile])
+                           [:configuration_profile, :configuration_profile_ref])
     end
   end
 end

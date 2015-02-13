@@ -13,11 +13,17 @@ module ManageiqForeman
       # NOP
     end
 
-    def refresh_configuration(_target = nil)
-      {
-        :hosts      => connection.all(:hosts),
-        :hostgroups => connection.denormalized_hostgroups,
-      }
+    def refresh_configuration(target = nil)
+      if target
+        {
+          :hosts => [connection.host(target.manager_ref)]
+        }
+      else
+        {
+          :hosts      => connection.all(:hosts),
+          :hostgroups => connection.denormalized_hostgroups,
+        }
+      end
     end
 
     def refresh_provisioning(_target = nil)
