@@ -1,7 +1,7 @@
 require 'net/ftp'
 
 class FileDepotFtp < FileDepot
-  attr_reader :ftp
+  attr_accessor :ftp
 
   def self.uri_prefix
     "ftp"
@@ -87,6 +87,12 @@ class FileDepotFtp < FileDepot
     end
   end
 
+  def file_exists?(file_or_directory)
+    !ftp.nlst(file_or_directory.to_s).empty?
+  rescue Net::FTPPermError
+    false
+  end
+
   private
 
   def create_directory_structure(directory_path)
@@ -96,12 +102,6 @@ class FileDepotFtp < FileDepot
       $log.info("#{log_header(__method__)} creating #{path}")
       ftp.mkdir(path.to_s)
     end
-  end
-
-  def file_exists?(file_or_directory)
-    !!ftp.nlst(file_or_directory.to_s)
-  rescue Net::FTPPermError
-    false
   end
 
   def upload(source, destination)
