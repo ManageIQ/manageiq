@@ -9,4 +9,4 @@ object:
     description: 
   fields:
   - relationship4:
-      value: /Service/Retirement/StateMachines/ServiceRetirement/Default
+      value: "/Service/Retirement/StateMachines/ServiceRetirement/Default"

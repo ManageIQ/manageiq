@@ -9,6 +9,6 @@ object:
     description: 
   fields:
   - PreProvision:
-      value: /Infrastructure/VM/Provisioning/StateMachines/Methods/PreProvision_Clone_to_VM#${/#miq_provision.source.vendor}
+      value: "/Infrastructure/VM/Provisioning/StateMachines/Methods/PreProvision_Clone_to_VM#${/#miq_provision.source.vendor}"
   - EmailOwner:
-      value: /Infrastructure/VM/Provisioning/Email/MiqProvision_Complete?event=vm_cloned
+      value: "/Infrastructure/VM/Provisioning/Email/MiqProvision_Complete?event=vm_cloned"

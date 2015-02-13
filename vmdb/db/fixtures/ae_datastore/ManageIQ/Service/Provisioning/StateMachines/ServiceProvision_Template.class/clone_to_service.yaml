@@ -9,4 +9,4 @@ object:
     description: clone_to_service
   fields:
   - pre1:
-      value: /Service/Provisioning/StateMachines/Methods/GroupSequenceCheck
+      value: "/Service/Provisioning/StateMachines/Methods/GroupSequenceCheck"

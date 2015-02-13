@@ -9,4 +9,4 @@ object:
     description: 
   fields:
   - rel5:
-      value: /System/Event/Alert_Host_Evacuation
+      value: "/System/Event/Alert_Host_Evacuation"

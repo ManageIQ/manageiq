@@ -118,7 +118,7 @@ object:
       datatype: string
       priority: 6
       owner: 
-      default_value: ! '#/Service/Provisioning/StateMachines/Methods/ConfigureChildDialog'
+      default_value: "#/Service/Provisioning/StateMachines/Methods/ConfigureChildDialog"
       substitute: true
       message: create
       visibility: 
@@ -138,7 +138,7 @@ object:
       datatype: string
       priority: 7
       owner: 
-      default_value: /Service/Provisioning/StateMachines/Methods/Provision
+      default_value: "/Service/Provisioning/StateMachines/Methods/Provision"
       substitute: true
       message: create
       visibility: 
@@ -158,7 +158,7 @@ object:
       datatype: string
       priority: 8
       owner: 
-      default_value: /Service/Provisioning/StateMachines/Methods/CheckProvisioned
+      default_value: "/Service/Provisioning/StateMachines/Methods/CheckProvisioned"
       substitute: true
       message: create
       visibility: 
@@ -278,7 +278,7 @@ object:
       datatype: string
       priority: 14
       owner: 
-      default_value: /Service/Provisioning/Email/ServiceProvision_complete?event=service_provisioned
+      default_value: "/Service/Provisioning/Email/ServiceProvision_complete?event=service_provisioned"
       substitute: true
       message: create
       visibility: 
@@ -298,7 +298,7 @@ object:
       datatype: string
       priority: 15
       owner: 
-      default_value: /System/CommonMethods/StateMachineMethods/service_provision_finished
+      default_value: "/System/CommonMethods/StateMachineMethods/service_provision_finished"
       substitute: true
       message: create
       visibility: 

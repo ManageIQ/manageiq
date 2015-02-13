@@ -18,11 +18,11 @@ object:
       datatype: string
       priority: 1
       owner: 
-      default_value: /Cloud/VM/Provisioning/Naming/Default#create
+      default_value: "/Cloud/VM/Provisioning/Naming/Default#create"
       substitute: true
       message: get_vmname
       visibility: 
-      collect: /vmname = vmname
+      collect: "/vmname = vmname"
       scope: 
       description: 
       condition: 
@@ -42,7 +42,7 @@ object:
       substitute: true
       message: get_pre_dialog_name
       visibility: 
-      collect: /dialog_name = pre_dialog_name
+      collect: "/dialog_name = pre_dialog_name"
       scope: 
       description: 
       condition: 
@@ -98,11 +98,11 @@ object:
       datatype: string
       priority: 5
       owner: 
-      default_value: ${#dialog_name_prefix}_${/#dialog_input_request_type}
+      default_value: "${#dialog_name_prefix}_${/#dialog_input_request_type}"
       substitute: true
       message: get_dialog_name
       visibility: 
-      collect: /dialog_name = dialog_name
+      collect: "/dialog_name = dialog_name"
       scope: 
       description: 
       condition: 
@@ -122,7 +122,7 @@ object:
       substitute: true
       message: get_auto_approval_state_machine
       visibility: 
-      collect: /state_machine = auto_approval_state_machine
+      collect: "/state_machine = auto_approval_state_machine"
       scope: 
       description: 
       condition: 
@@ -142,7 +142,7 @@ object:
       substitute: true
       message: get_quota_state_machine
       visibility: 
-      collect: /state_machine = quota_state_machine
+      collect: "/state_machine = quota_state_machine"
       scope: 
       description: 
       condition: 
@@ -162,7 +162,7 @@ object:
       substitute: true
       message: get_state_machine
       visibility: 
-      collect: /state_machine = state_machine
+      collect: "/state_machine = state_machine"
       scope: 
       description: 
       condition: 

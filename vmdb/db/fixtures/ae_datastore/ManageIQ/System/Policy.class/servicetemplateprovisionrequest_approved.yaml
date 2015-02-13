@@ -9,4 +9,4 @@ object:
     description: 
   fields:
   - rel5:
-      value: /Service/Provisioning/Email/ServiceTemplateProvisionRequest_Approved
+      value: "/Service/Provisioning/Email/ServiceTemplateProvisionRequest_Approved"
