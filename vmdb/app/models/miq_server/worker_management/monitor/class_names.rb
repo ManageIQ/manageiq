@@ -16,6 +16,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqEmsRefreshWorkerOpenstackInfra
     MiqEmsRefreshWorkerVmware
     MiqEventCatcherAmazon
+    MiqEventCatcherKubernetes
     MiqEventCatcherRedhat
     MiqEventCatcherOpenstack
     MiqEventCatcherOpenstackInfra
@@ -68,6 +69,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqEventCatcherOpenstack
     MiqEventCatcherOpenstackInfra
     MiqEventCatcherAmazon
+    MiqEventCatcherKubernetes
     MiqUiWorker
   }.freeze
 

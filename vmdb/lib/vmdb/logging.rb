@@ -26,6 +26,8 @@ module Vmdb
       :level_rhevm_in_evm,
       :level_aws,
       :level_aws_in_evm,
+      :level_kube,
+      :level_kube_in_evm,
       :level_scvmm,
       :level_scvmm_in_evm,
       :level_api,
@@ -51,6 +53,7 @@ module Vmdb
       apply_config_value(config, $vim_log,   :level_vim,   :level_vim_in_evm)
       apply_config_value(config, $rhevm_log, :level_rhevm, :level_rhevm_in_evm)
       apply_config_value(config, $aws_log,   :level_aws,   :level_aws_in_evm)
+      apply_config_value(config, $kube_log,  :level_kube,  :level_kube_in_evm)
       apply_config_value(config, $scvmm_log, :level_scvmm, :level_scvmm_in_evm)
       apply_config_value(config, $api_log,   :level_api,   :level_api_in_evm)
       apply_config_value(config, $fog_log,   :level_fog,   :level_fog_in_evm)
@@ -91,6 +94,7 @@ module Vmdb
       $vim_log       = MirroredLogger.new(File.join(path_dir, "vim.log"),        "<VIM> ")
       $rhevm_log     = MirroredLogger.new(File.join(path_dir, "rhevm.log"),      "<RHEVM> ")
       $aws_log       = MirroredLogger.new(File.join(path_dir, "aws.log"),        "<AWS> ")
+      $kube_log      = MirroredLogger.new(File.join(path_dir, "kubernetes.log"), "<KUBERNETES> ")
       $scvmm_log     = MirroredLogger.new(File.join(path_dir, "scvmm.log"),      "<SCVMM> ")
       $api_log       = MirroredLogger.new(File.join(path_dir, "api.log"),        "<API> ")
       $miq_ae_logger = MirroredLogger.new(File.join(path_dir, "automation.log"), "<AutomationEngine> ")

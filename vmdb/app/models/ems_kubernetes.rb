@@ -36,6 +36,10 @@ class EmsKubernetes < EmsContainer
     self.class.raw_connect(hostname, port, api_version)
   end
 
+  def self.event_monitor_class
+    MiqEventCatcherKubernetes
+  end
+
   def authentication_check
     # TODO: support real authentication using certificates
     true

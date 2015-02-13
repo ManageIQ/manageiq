@@ -32,6 +32,7 @@ GlobalVars:
   - $miq_ae_logger
   - $rails_log
   - $rhevm_log
+  - $kube_log
   - $scvmm_log
   - $vim_log
   # In Automate methods
