@@ -1084,6 +1084,7 @@ Vmdb::Application.routes.draw do
         button
         cloud_networks
         outputs
+        listnav_search_selected
         panel_control
         parameters
         quick_search
@@ -1095,8 +1096,9 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
       ) +
-        adv_search_post+
-        exp_post
+        adv_search_post +
+        exp_post +
+        save_post
     },
 
     :pxe => {
