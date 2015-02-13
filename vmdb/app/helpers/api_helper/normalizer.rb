@@ -7,16 +7,6 @@ module ApiHelper
     # Note: revisit merging direct and virtual normalize hash methods here once support for
     # virtual subcollections is added.
 
-    def normalize_direct(type, name, obj)
-      return normalize_direct_array(type, name, obj) if obj.kind_of?(Array)
-      return normalize_hash(type, obj) if obj.respond_to?(:attributes) || obj.respond_to?(:keys)
-      normalize_attr_byname(type, name, obj)
-    end
-
-    def normalize_direct_array(type, name, obj)
-      obj.collect { |item| normalize_direct(type, name, item) }
-    end
-
     def normalize_hash(type, obj, opts = {})
       attrs = (obj.respond_to?(:attributes) ? obj.attributes.keys : obj.keys)
       result = {}
@@ -26,10 +16,6 @@ module ApiHelper
 
       attrs.each { |k| result[k] = normalize_direct(type, k, obj[k]) }
       result
-    end
-
-    def new_href(type, current_id, current_href, opts)
-      normalize_href(type, current_id) if opts[:add_href] && current_id.present? && current_href.blank?
     end
 
     def normalize_virtual(vtype, name, obj, options = {})
@@ -100,6 +86,22 @@ module ApiHelper
     #
     def normalize_href(type, value)
       normalize_url(type, "#{type}/#{value}")
+    end
+
+    private
+
+    def normalize_direct(type, name, obj)
+      return normalize_direct_array(type, name, obj) if obj.kind_of?(Array)
+      return normalize_hash(type, obj) if obj.respond_to?(:attributes) || obj.respond_to?(:keys)
+      normalize_attr_byname(type, name, obj)
+    end
+
+    def normalize_direct_array(type, name, obj)
+      obj.collect { |item| normalize_direct(type, name, item) }
+    end
+
+    def new_href(type, current_id, current_href, opts)
+      normalize_href(type, current_id) if opts[:add_href] && current_id.present? && current_href.blank?
     end
   end
 end
