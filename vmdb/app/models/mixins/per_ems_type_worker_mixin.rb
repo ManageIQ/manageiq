@@ -21,7 +21,7 @@ module PerEmsTypeWorkerMixin
     end
 
     def any_valid_ems_in_zone?
-      self.emses_in_zone.any?(&:authentication_valid?)
+      self.emses_in_zone.any?(&:authentication_status_ok?)
     end
   end
 end
