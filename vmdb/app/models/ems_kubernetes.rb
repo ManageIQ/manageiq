@@ -26,4 +26,19 @@ class EmsKubernetes < EmsContainer
   def connect(_options = {})
     self.class.raw_connect(hostname, port, api_version)
   end
+
+  def authentication_check
+    # TODO: support real authentication using certificates
+    true
+  end
+
+  def verify_credentials(_auth_type = nil, _options = {})
+    # TODO: support real authentication using certificates
+    true
+  end
+
+  def authentication_status_ok?(_type = nil)
+    # TODO: support real authentication using certificates
+    true
+  end
 end
