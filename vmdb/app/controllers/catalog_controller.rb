@@ -1321,7 +1321,7 @@ class CatalogController < ApplicationController
         else
           build_toolbar_buttons_and_xml("x_gtl_view_tb")
         end
-      when :svccat_tree, :stcat_tree
+      when :svccat_tree, :stcat_tree, :ot_tree
         build_toolbar_buttons_and_xml("x_gtl_view_tb") unless record_showing
       end
 
