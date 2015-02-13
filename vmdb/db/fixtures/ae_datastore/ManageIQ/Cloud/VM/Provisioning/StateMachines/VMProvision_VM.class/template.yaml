@@ -9,6 +9,6 @@ object:
     description: 
   fields:
   - Provision:
-      value: /Cloud/VM/Provisioning/StateMachines/Methods/Provision
+      value: "/Cloud/VM/Provisioning/StateMachines/Methods/Provision"
   - CheckProvisioned:
-      value: /Cloud/VM/Provisioning/StateMachines/Methods/CheckProvisioned
+      value: "/Cloud/VM/Provisioning/StateMachines/Methods/CheckProvisioned"

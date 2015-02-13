@@ -18,7 +18,7 @@ object:
       datatype: string
       priority: 1
       owner: 
-      default_value: /Infrastructure/VM/Retirement/StateMachines/Methods/CheckPoweredOff
+      default_value: "/Infrastructure/VM/Retirement/StateMachines/Methods/CheckPoweredOff"
       substitute: true
       message: create
       visibility: 
@@ -158,7 +158,7 @@ object:
       datatype: string
       priority: 8
       owner: 
-      default_value: ! '#/Infrastructure/VM/Retirement/Email/vm_retirement_emails?event=vm_entered_retirement'
+      default_value: "#/Infrastructure/VM/Retirement/Email/vm_retirement_emails?event=vm_entered_retirement"
       substitute: true
       message: create
       visibility: 
@@ -178,7 +178,7 @@ object:
       datatype: string
       priority: 9
       owner: 
-      default_value: /Infrastructure/VM/Retirement/StateMachines/Methods/UnregisterFromProvider
+      default_value: "/Infrastructure/VM/Retirement/StateMachines/Methods/UnregisterFromProvider"
       substitute: true
       message: create
       visibility: 
@@ -198,7 +198,7 @@ object:
       datatype: string
       priority: 10
       owner: 
-      default_value: ! '#/Infrastructure/VM/Retirement/StateMachines/Methods/PreDeleteFromProvider'
+      default_value: "#/Infrastructure/VM/Retirement/StateMachines/Methods/PreDeleteFromProvider"
       substitute: true
       message: create
       visibility: 
@@ -219,7 +219,7 @@ object:
       datatype: string
       priority: 11
       owner: 
-      default_value: /Infrastructure/VM/Retirement/StateMachines/Methods/DeleteFromProvider
+      default_value: "/Infrastructure/VM/Retirement/StateMachines/Methods/DeleteFromProvider"
       substitute: true
       message: create
       visibility: 
@@ -239,7 +239,7 @@ object:
       datatype: string
       priority: 12
       owner: 
-      default_value: /Infrastructure/VM/Retirement/Email/vm_retirement_emails?event=vm_retired
+      default_value: "/Infrastructure/VM/Retirement/Email/vm_retirement_emails?event=vm_retired"
       substitute: true
       message: create
       visibility: 
@@ -259,7 +259,7 @@ object:
       datatype: string
       priority: 13
       owner: 
-      default_value: /Infrastructure/VM/Retirement/StateMachines/Methods/CheckUnregisteredFromProvider
+      default_value: "/Infrastructure/VM/Retirement/StateMachines/Methods/CheckUnregisteredFromProvider"
       substitute: true
       message: create
       visibility: 
@@ -280,7 +280,7 @@ object:
       datatype: string
       priority: 14
       owner: 
-      default_value: /Infrastructure/VM/Retirement/StateMachines/Methods/DeleteFromVMDB
+      default_value: "/Infrastructure/VM/Retirement/StateMachines/Methods/DeleteFromVMDB"
       substitute: true
       message: create
       visibility: 

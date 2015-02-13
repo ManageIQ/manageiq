@@ -9,6 +9,6 @@ object:
     description: 
   fields:
   - Relationship5:
-      value: /Infrastructure/VM/Migrate/Profile/${/#user.normalized_ldap_group}#get_state_machine
+      value: "/Infrastructure/VM/Migrate/Profile/${/#user.normalized_ldap_group}#get_state_machine"
   - Relationship6:
-      value: /Infrastructure/VM/Migrate/StateMachines/${/#state_machine}/default
+      value: "/Infrastructure/VM/Migrate/StateMachines/${/#state_machine}/default"

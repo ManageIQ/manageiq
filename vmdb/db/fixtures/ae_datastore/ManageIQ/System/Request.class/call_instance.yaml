@@ -9,4 +9,4 @@ object:
     description: 
   fields:
   - rel2:
-      value: /${/#namespace}/${/#class}/${/#instance}
+      value: "/${/#namespace}/${/#class}/${/#instance}"

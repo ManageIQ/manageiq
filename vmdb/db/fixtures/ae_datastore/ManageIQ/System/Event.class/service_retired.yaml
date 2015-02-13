@@ -11,4 +11,4 @@ object:
   - logical_event:
       value: service_retired
   - rel4:
-      value: /Service/Lifecycle/Retirement?service_id=${process#service_id}
+      value: "/Service/Lifecycle/Retirement?service_id=${process#service_id}"

@@ -9,4 +9,4 @@ object:
     description: 
   fields:
   - Relationship4:
-      value: /Cloud/VM/Retirement/StateMachines/VMRetirement/Default
+      value: "/Cloud/VM/Retirement/StateMachines/VMRetirement/Default"

@@ -22,7 +22,7 @@ object:
       substitute: true
       message: get_auto_approval_state_machine
       visibility: 
-      collect: /state_machine = auto_approval_state_machine
+      collect: "/state_machine = auto_approval_state_machine"
       scope: 
       description: 
       condition: 

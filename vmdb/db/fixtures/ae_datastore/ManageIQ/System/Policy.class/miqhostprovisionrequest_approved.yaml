@@ -9,4 +9,4 @@ object:
     description: 
   fields:
   - rel5:
-      value: /Infrastructure/Host/Provisioning/Email/MiqHostProvisionRequest_Approved
+      value: "/Infrastructure/Host/Provisioning/Email/MiqHostProvisionRequest_Approved"
