@@ -3,7 +3,7 @@ require "spec_helper"
 describe MiqEventCatcherOpenstack do
   before do
     @ems = FactoryGirl.create(:ems_openstack)
-    @ems.stub(:authentication_valid?).and_return(true)
+    @ems.stub(:authentication_status_ok?).and_return(true)
     MiqEventCatcherOpenstack.stub(:all_ems_in_zone).and_return([@ems])
   end
 

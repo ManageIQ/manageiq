@@ -21,7 +21,7 @@ module PerStorageManagerTypeWorkerMixin
     end
 
     def any_valid_storage_manager_in_zone?
-      self.storage_managers_in_zone.any?(&:authentication_valid?)
+      self.storage_managers_in_zone.any?(&:authentication_status_ok?)
     end
   end
 end
