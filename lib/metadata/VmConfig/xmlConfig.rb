@@ -43,11 +43,7 @@ module XmlConfig
 
     raise "Specified XML file [#{filename}] is not a valid VM configuration file." if xml_type.nil?
 
-    case xml_type
-    when :kvm
-      require "kvmConfig"
-      extend  KvmConfig
-    when :ms_hyperv
+    if xml_type == :ms_hyperv
       require "xmlMsHyperVConfig"
       extend  XmlMsHyperVConfig
     end
