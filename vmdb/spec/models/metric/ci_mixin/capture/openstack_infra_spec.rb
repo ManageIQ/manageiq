@@ -646,8 +646,9 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
 
   #####################################################################################################################
   # These constants are used in both 1. collection period and 2.collection period. These constants should make sure of
-  # correct connection of these two periods of mem_usage_absolute_average
+  # correct connection of these two periods of mem_usage_absolute_average and mem_swapped_absolute_average
   MEM_LAST_VALUE_OF_FIRST_COLLECTING_PERIOD = 19.53125
+  MEM_SWAPPED_LAST_VALUE_OF_FIRST_COLLECTING_PERIOD = 19.53125
 
   context "1. collection period from 2 collection periods total of the mem_usage_absolute_average, end of this "\
           "period has incomplete stat" do
@@ -668,6 +669,9 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
       @counter_info = Metric::Capture::OpenstackInfra::COUNTER_INFO.find do |c|
         c[:vim_style_counter_key] == "mem_usage_absolute_average"
       end
+      @counter_info_swap = Metric::Capture::OpenstackInfra::COUNTER_INFO.find do |c|
+        c[:vim_style_counter_key] == "mem_swapped_absolute_average"
+      end
 
       # grab read bytes and write bytes data, these values are pulled directly from
       # spec/tools/openstack_data/openstack_perf_data/multiple_collection_periods.yml
@@ -680,6 +684,16 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
                                                                         "multiple_collection_periods"),
                                         '<=',
                                         NET_SECOND_COLLECTION_PERIOD_START)
+
+      @swap_avail = filter_statistics(@mock_stats_data.get_statistics("hardware.memory.swap.avail",
+                                                                      "multiple_collection_periods"),
+                                      '<=',
+                                      NET_SECOND_COLLECTION_PERIOD_START)
+
+      @swap_total = filter_statistics(@mock_stats_data.get_statistics("hardware.memory.swap.total",
+                                                                      "multiple_collection_periods"),
+                                      '<=',
+                                      NET_SECOND_COLLECTION_PERIOD_START)
 
       _, values_by_id_and_ts = @host.perf_collect_metrics_openstack("perf_capture_data_openstack_infra", "realtime")
       @values_by_ts = values_by_id_and_ts[@host.ems_ref]
@@ -705,6 +719,29 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
       avg_stat3 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, 3)
       avg_stat4_computed_elsewhere = 31.73828125
       avg_stat4 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, 4)
+
+      # ensure computations are equal
+      avg_stat1_manual.should eq avg_stat1_computed_elsewhere
+      avg_stat4_manual.should eq avg_stat4_computed_elsewhere
+      avg_stat1.should eq avg_stat1_computed_elsewhere
+      avg_stat2.should eq avg_stat2_computed_elsewhere
+      avg_stat3.should eq avg_stat3_computed_elsewhere
+      avg_stat4.should eq avg_stat4_computed_elsewhere
+    end
+
+    it "computes first 4 values of mem_swapped_absolute_average values correctly" do
+      # Make the computations of the stats
+      avg_stat1_manual = (4096.0 - 3000.0) / (1024.0 * 1024.0)
+      avg_stat4_manual = (4096.0 - 1300.0) / (1024.0 * 1024.0)
+
+      avg_stat1_computed_elsewhere = 0.00104522705078125
+      avg_stat1 = make_memory_swapped_calculation(@counter_info_swap, @swap_avail, @swap_total, 1)
+      avg_stat2_computed_elsewhere = 0.0019989013671875
+      avg_stat2 = make_memory_swapped_calculation(@counter_info_swap, @swap_avail, @swap_total, 2)
+      avg_stat3_computed_elsewhere = 0.001712799072265625
+      avg_stat3 = make_memory_swapped_calculation(@counter_info_swap, @swap_avail, @swap_total, 3)
+      avg_stat4_computed_elsewhere = 0.002666473388671875
+      avg_stat4 = make_memory_swapped_calculation(@counter_info_swap, @swap_avail, @swap_total, 4)
 
       # ensure computations are equal
       avg_stat1_manual.should eq avg_stat1_computed_elsewhere
@@ -915,6 +952,14 @@ describe Metric::CiMixin::Capture::OpenstackInfra do
     filter_date  = parse_datetime(date)
     filter_date -= subtract_by if subtract_by
     stats.select { |x| x['period_end'].send(op, filter_date) }
+  end
+
+  def make_memory_swapped_calculation(counter_info, swap_used, swap_total, index)
+    counter_info[:calculation].call(
+      {
+        "hardware.memory.swap.avail" => swap_used[index]['avg'],
+        "hardware.memory.swap.total" => swap_total[index]['avg'],
+      }, nil)
   end
 
   def make_memory_util_calculation(counter_info, memory_used, memory_total, index)

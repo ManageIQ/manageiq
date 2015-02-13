@@ -1451,3 +1451,245 @@
     period_start: "2013-08-28T11:10:00"
     avg: 4096.0
     sum: 196711321.0
+  hardware.memory.swap.avail:
+  -
+    count: 1
+    duration_start: "2013-08-28T11:01:09"
+    min: 134681418.0
+    max: 134681418.0
+    duration_end: "2013-08-28T11:01:09"
+    period: 20
+    period_end: "2013-08-28T11:01:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:01:00"
+    avg: 4096.0
+    sum: 134681418.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:02:09"
+    min: 134682753.0
+    max: 134682753.0
+    duration_end: "2013-08-28T11:02:09"
+    period: 20
+    period_end: "2013-08-28T11:02:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:02:00"
+    avg: 4096.0
+    sum: 134682753.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:03:09"
+    min: 134732080.0
+    max: 134732080.0
+    duration_end: "2013-08-28T11:03:09"
+    period: 20
+    period_end: "2013-08-28T11:03:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:03:00"
+    avg: 4096.0
+    sum: 134732080.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:04:09"
+    min: 134733457.0
+    max: 134733457.0
+    duration_end: "2013-08-28T11:04:09"
+    period: 20
+    period_end: "2013-08-28T11:04:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:04:00"
+    avg: 4096.0
+    sum: 134733457.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:05:09"
+    min: 134734792.0
+    max: 134734792.0
+    duration_end: "2013-08-28T11:05:09"
+    period: 20
+    period_end: "2013-08-28T11:05:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:05:00"
+    avg: 4096.0
+    sum: 134734792.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:06:09"
+    min: 134736127.0
+    max: 134736127.0
+    duration_end: "2013-08-28T11:06:09"
+    period: 20
+    period_end: "2013-08-28T11:06:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:06:00"
+    avg: 4096.0
+    sum: 134736127.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:07:09"
+    min: 134739000.0
+    max: 134739000.0
+    duration_end: "2013-08-28T11:07:09"
+    period: 20
+    period_end: "2013-08-28T11:07:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:07:00"
+    avg: 4096.0
+    sum: 134739000.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:08:09"
+    min: 134740467.0
+    max: 134740467.0
+    duration_end: "2013-08-28T11:08:09"
+    period: 20
+    period_end: "2013-08-28T11:08:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:08:00"
+    avg: 4096.0
+    sum: 134740467.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:09:09"
+    min: 134741802.0
+    max: 134741802.0
+    duration_end: "2013-08-28T11:09:09"
+    period: 20
+    period_end: "2013-08-28T11:09:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:09:00"
+    avg: 4096.0
+    sum: 134741802.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:10:09"
+    min: 134743538.0
+    max: 134743538.0
+    duration_end: "2013-08-28T11:10:09"
+    period: 20
+    period_end: "2013-08-28T11:10:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:10:00"
+    avg: 4096.0
+    sum: 134743538.0
+  hardware.memory.swap.total:
+  -
+    count: 1
+    duration_start: "2013-08-28T11:01:09"
+    min: 196678550.0
+    max: 196678550.0
+    duration_end: "2013-08-28T11:01:09"
+    period: 20
+    period_end: "2013-08-28T11:01:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:01:00"
+    avg: 4096.0
+    sum: 196678550.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:02:09"
+    min: 196679966.0
+    max: 196679966.0
+    duration_end: "2013-08-28T11:02:09"
+    period: 20
+    period_end: "2013-08-28T11:02:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:02:00"
+    avg: 4096.0
+    sum: 196679966.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:03:09"
+    min: 196691325.0
+    max: 196691325.0
+    duration_end: "2013-08-28T11:03:09"
+    period: 20
+    period_end: "2013-08-28T11:03:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:03:00"
+    avg: 4096.0
+    sum: 196691325.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:04:09"
+    min: 196692783.0
+    max: 196692783.0
+    duration_end: "2013-08-28T11:04:09"
+    period: 20
+    period_end: "2013-08-28T11:04:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:04:00"
+    avg: 4096.0
+    sum: 196692783.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:05:09"
+    min: 196694199.0
+    max: 196694199.0
+    duration_end: "2013-08-28T11:05:09"
+    period: 20
+    period_end: "2013-08-28T11:05:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:05:00"
+    avg: 4096.0
+    sum: 196694199.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:06:09"
+    min: 196695615.0
+    max: 196695615.0
+    duration_end: "2013-08-28T11:06:09"
+    period: 20
+    period_end: "2013-08-28T11:06:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:06:00"
+    avg: 4096.0
+    sum: 196695615.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:07:09"
+    min: 196706601.0
+    max: 196706601.0
+    duration_end: "2013-08-28T11:07:09"
+    period: 20
+    period_end: "2013-08-28T11:07:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:07:00"
+    avg: 4096.0
+    sum: 196706601.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:08:09"
+    min: 196708017.0
+    max: 196708017.0
+    duration_end: "2013-08-28T11:08:09"
+    period: 20
+    period_end: "2013-08-28T11:08:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:08:00"
+    avg: 4096.0
+    sum: 196708017.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:09:09"
+    min: 196709433.0
+    max: 196709433.0
+    duration_end: "2013-08-28T11:09:09"
+    period: 20
+    period_end: "2013-08-28T11:09:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:09:00"
+    avg: 4096.0
+    sum: 196709433.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:10:09"
+    min: 196711321.0
+    max: 196711321.0
+    duration_end: "2013-08-28T11:10:09"
+    period: 20
+    period_end: "2013-08-28T11:10:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:10:00"
+    avg: 4096.0
+    sum: 196711321.0
