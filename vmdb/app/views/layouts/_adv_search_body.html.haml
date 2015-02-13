@@ -1,0 +1,79 @@
+- url = url_for(:action =>'adv_search_load_choice')
+- url2 = url_for(:action =>'adv_search_name_typed')
+- report_expressions = MiqReport.get_expressions_by_model(@edit[@expkey][:exp_model])
+- mode ||= "search"
+#adv_search_body
+  - if mode == "search"
+    - if @edit && @edit[@expkey] && @edit[@expkey][:selected]
+      = " (#{h(@edit[@expkey][:selected][:description])})"
+    - elsif @edit && @edit[:adv_search_report]
+      = " (from report #{h(@edit[:adv_search_report])})"
+    = render(:partial => 'layouts/flash_msg',
+             :locals  => {:div_num => "2"})
+    %br
+    - if @edit && @edit[@expkey][:expression]
+      = render(:partial => 'layouts/exp_editor')
+  - elsif mode == "load"
+    - if @exp_to_load
+      %fieldset
+        %p.legend
+          = _("Search Expression Preview")
+        - @exp_to_load.each do |token|
+          - if ! ["AND", "OR", "(", ")"].include?([token].flatten.first)
+            = h([token].flatten.first)
+          - else
+            %font{:color => "black"}
+              %b= h([token].flatten.first)
+    %fieldset
+      %table.style1
+        %tbody
+          - unless @edit[@expkey][:exp_search_expressions].blank?
+            %tr
+              %td.key
+                %font{:color => "black"}
+                  = _("Choose a saved %s filter:") % ui_lookup(:model => @edit[@expkey][:exp_model])
+              %td= select_tag("chosen_search",
+                              options_for_select([[_("<Choose>"), "0"]] + @edit[@expkey][:exp_search_expressions],
+                                                     @edit[@expkey][:exp_chosen_search]),
+                              :multiple          => false,
+                              :class             => "widthed",
+                              "data-miq_observe" => {:url => url}.to_json)
+          - unless @edit[@expkey][:exp_search_expressions].blank? || report_expressions.blank?
+            %tr
+              %td.key -- OR --
+          - unless report_expressions.blank?
+            %tr
+              %td.key
+                %font{:color => "black"}
+                  = _("Choose a %s report filter") % ui_lookup(:model => @edit[@expkey][:exp_model])
+  - elsif mode == "save"
+    .modal-body
+      = render(:partial => "layouts/flash_msg",
+               :locals  => { :div_num => "2"})
+      %fieldset
+        %p.legend
+          = _("Search Expression")
+        - @edit[@expkey][:exp_table].each do |token|
+          - if ! ["AND", "OR", "(", ")"].include?([token].flatten.first)
+            = h([token].flatten.first)
+          - else
+            %font{:color => "black"}
+              %b= h([token].flatten.first)
+      %fieldset
+        %table.style1
+          %tbody
+            %tr
+              %td.key
+                = _("Save this %s search as:") % @edit[@expkey][:exp_model]
+              %td.notwide
+                %span#search_name_span
+                  = text_field_tag("search_name",
+                                   h(@edit[:adv_search_name]),
+                                   :maxlength         => 30,
+                                   :style             => "width: 250px",
+                                   "data-miq_focus"   => true,
+                                   "data-miq_observe" => { :interval => ".5",
+                                                           :url      => url2}.to_json)
+            - checked = (session[:userrole] == "super_administrator" || session[:userrole] == "administrator")
+            = check_box_tag("search_type", "1", checked, :style                      => "width: 20px",
+                                                         "data-miq_observe_checkbox" => {:url => url2}.to_json)
