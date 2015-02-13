@@ -13,6 +13,11 @@ class EmsKubernetes < EmsContainer
 
   def self.raw_connect(hostname, port, api_version)
     require 'kubeclient'
+    api_endpoint = raw_api_endpoint(hostname, port)
+    Kubeclient::Client.new(api_endpoint, api_version)
+  end
+
+  def self.raw_api_endpoint(hostname, port)
     require 'uri'
 
     uri = URI::HTTP.build(:path => "/api", :port => port.to_i)
@@ -20,7 +25,11 @@ class EmsKubernetes < EmsContainer
     # URI::Generic#hostname= was added in ruby 1.9.3 and will automatically
     # wrap an ipv6 address in []
     uri.hostname = hostname
-    Kubeclient::Client.new uri.to_s, api_version
+    uri
+  end
+
+  def api_endpoint
+    self.class.raw_api_endpoint(hostname, port)
   end
 
   def connect(_options = {})
