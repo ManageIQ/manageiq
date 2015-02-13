@@ -332,7 +332,7 @@ module OpsController::Settings::Schedules
           case schedule.filter.exp[key]["field"]
           when "Vm.ext_management_system-name",
                "MiqTemplate.ext_management_system-name",
-               "Storage.ext_management_system-name",
+               "Storage.ext_management_systems-name",
                "Host.ext_management_system-name",
                "EmsCluster.ext_management_system-name"
             filter_type = "ems"
@@ -474,8 +474,13 @@ module OpsController::Settings::Schedules
             when "cluster"
               unless params[:filter_value].blank?
                 exp["AND"] = [
-                  {"=" => {"field" => "Host-v_owning_cluster", "value" => params[:filter_value].split("__").first}},
-                  {"=" => {"field" => "Host-v_owning_datacenter", "value" => params[:filter_value].split("__").last}}
+                  {"=" => {"field" => "Host-v_owning_cluster",
+                           "value" => params[:filter_value].split("__").first}
+                  },
+                  {"=" => {"field" => "Host-v_owning_datacenter",
+                           "value" =>
+                             params[:filter_value].split("__").size == 1 ? "" : params[:filter_value].split("__").last}
+                  }
                 ]
               end
             when "host"
@@ -516,7 +521,7 @@ module OpsController::Settings::Schedules
                 }},
                 {"=" => {
                   "field" => "#{params[:action_typ].split("_").first.capitalize}-v_owning_datacenter",
-                  "value" => params[:filter_value].split("__").last
+                  "value" => params[:filter_value].split("__").size == 1 ? "" : params[:filter_value].split("__").last
                 }}
               ]
             end
@@ -541,7 +546,7 @@ module OpsController::Settings::Schedules
                   }},
                   {"=" => {
                     "field" => "#{model}-v_owning_datacenter",
-                    "value" => params[:filter_value].split("__").last
+                    "value" => params[:filter_value].split("__").size == 1 ? "" : params[:filter_value].split("__").last
                   }}
                 ]
               end
