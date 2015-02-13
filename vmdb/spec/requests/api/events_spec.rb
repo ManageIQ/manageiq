@@ -22,9 +22,7 @@ describe ApiController do
   end
 
   def create_events(count)
-    1.upto(count) do |i|
-      FactoryGirl.create(:miq_event, :name => "custom_event_#{i}", :description => "Custom Event #{i}")
-    end
+    count.times { FactoryGirl.create(:miq_event) }
   end
 
   context "Event collection" do
@@ -50,29 +48,29 @@ describe ApiController do
     it "query events" do
       basic_authorize @cfme[:user], @cfme[:password]
 
-      create_events(10)
+      create_events(3)
       @success = run_get @cfme[:events_url]
 
       expect(@code).to eq(200)
       expect(@result).to have_key("name")
       expect(@result["name"]).to eq("events")
-      expect(@result["resources"].size).to eq(10)
+      expect(@result["resources"].size).to eq(3)
       hrefs_ids = @result["resources"].collect { |r| r["href"].sub(/^.*#{@cfme[:events_url]}\//, '') }
-      expect(hrefs_ids.sort).to eq(MiqEvent.all.collect(&:id).collect(&:to_s).sort)
+      expect(hrefs_ids).to match_array(MiqEvent.pluck(:id).collect(&:to_s))
     end
 
     it "query events in expanded form" do
       basic_authorize @cfme[:user], @cfme[:password]
 
-      create_events(10)
+      create_events(3)
       @success = run_get "#{@cfme[:events_url]}?expand=resources"
 
       expect(@code).to eq(200)
       expect(@result).to have_key("name")
       expect(@result["name"]).to eq("events")
-      expect(@result["resources"].size).to eq(10)
+      expect(@result["resources"].size).to eq(3)
       guids = @result["resources"].collect { |r| r["guid"] }
-      expect(guids.sort).to eq(MiqEvent.all.collect(&:guid).sort)
+      expect(guids).to match_array(MiqEvent.pluck(:guid))
     end
   end
 
@@ -97,7 +95,7 @@ describe ApiController do
     it "query events" do
       basic_authorize @cfme[:user], @cfme[:password]
 
-      create_events(4)
+      create_events(3)
       MiqEvent.all.collect(&:id).each do |event_id|
         MiqPolicyContent.create(:miq_policy_id => @policy.id, :miq_event_id => event_id)
       end
@@ -107,15 +105,15 @@ describe ApiController do
       expect(@code).to eq(200)
       expect(@result).to have_key("name")
       expect(@result["name"]).to eq("events")
-      expect(@result["resources"].size).to eq(4)
+      expect(@result["resources"].size).to eq(3)
       guids = @result["resources"].collect { |r| r["guid"] }
-      expect(guids.sort).to eq(MiqEvent.all.collect(&:guid).sort)
+      expect(guids).to match_array(MiqEvent.pluck(:guid))
     end
 
     it "query policy with expanded events" do
       basic_authorize @cfme[:user], @cfme[:password]
 
-      create_events(4)
+      create_events(3)
       MiqEvent.all.collect(&:id).each do |event_id|
         MiqPolicyContent.create(:miq_policy_id => @policy.id, :miq_event_id => event_id)
       end
@@ -128,9 +126,9 @@ describe ApiController do
       expect(@result["guid"]).to eq(@policy.guid)
       expect(@result).to have_key("events")
       events = @result["events"]
-      expect(events.size).to eq(4)
+      expect(events.size).to eq(3)
       guids = events.collect { |r| r["guid"] }
-      expect(guids.sort).to eq(MiqEvent.all.collect(&:guid).sort)
+      expect(guids).to match_array(MiqEvent.pluck(:guid))
     end
   end
 end
