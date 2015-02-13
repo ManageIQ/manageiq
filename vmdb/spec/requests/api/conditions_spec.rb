@@ -22,9 +22,7 @@ describe ApiController do
   end
 
   def create_conditions(count)
-    1.upto(count) do |i|
-      FactoryGirl.create(:condition, :name => "condition_#{i}", :description => "Condition #{i}")
-    end
+    count.times { FactoryGirl.create(:condition) }
   end
 
   context "Condition collection" do
@@ -50,29 +48,29 @@ describe ApiController do
     it "query conditions" do
       basic_authorize @cfme[:user], @cfme[:password]
 
-      create_conditions(10)
+      create_conditions(3)
       @success = run_get @cfme[:conditions_url]
 
       expect(@code).to eq(200)
       expect(@result).to have_key("name")
       expect(@result["name"]).to eq("conditions")
-      expect(@result["resources"].size).to eq(10)
+      expect(@result["resources"].size).to eq(3)
       hrefs_ids = @result["resources"].collect { |r| r["href"].sub(/^.*#{@cfme[:conditions_url]}\//, '') }
-      expect(hrefs_ids.sort).to eq(Condition.all.collect(&:id).collect(&:to_s).sort)
+      expect(hrefs_ids).to match_array(Condition.pluck(:id).collect(&:to_s))
     end
 
     it "query conditions in expanded form" do
       basic_authorize @cfme[:user], @cfme[:password]
 
-      create_conditions(10)
+      create_conditions(3)
       @success = run_get "#{@cfme[:conditions_url]}?expand=resources"
 
       expect(@code).to eq(200)
       expect(@result).to have_key("name")
       expect(@result["name"]).to eq("conditions")
-      expect(@result["resources"].size).to eq(10)
+      expect(@result["resources"].size).to eq(3)
       guids = @result["resources"].collect { |r| r["guid"] }
-      expect(guids.sort).to eq(Condition.all.collect(&:guid).sort)
+      expect(guids).to match_array(Condition.pluck(:guid))
     end
   end
 
@@ -97,7 +95,7 @@ describe ApiController do
     it "query conditions" do
       basic_authorize @cfme[:user], @cfme[:password]
 
-      create_conditions(4)
+      create_conditions(3)
       @policy.conditions = Condition.all
 
       @success = run_get "#{@policy_conditions_url}?expand=resources"
@@ -105,15 +103,15 @@ describe ApiController do
       expect(@code).to eq(200)
       expect(@result).to have_key("name")
       expect(@result["name"]).to eq("conditions")
-      expect(@result["resources"].size).to eq(4)
+      expect(@result["resources"].size).to eq(3)
       guids = @result["resources"].collect { |r| r["guid"] }
-      expect(guids.sort).to eq(Condition.all.collect(&:guid).sort)
+      expect(guids).to match_array(Condition.pluck(:guid))
     end
 
     it "query policy with expanded conditions" do
       basic_authorize @cfme[:user], @cfme[:password]
 
-      create_conditions(4)
+      create_conditions(3)
       @policy.conditions = Condition.all
 
       @success = run_get "#{@policy_url}?expand=conditions"
@@ -124,9 +122,9 @@ describe ApiController do
       expect(@result["guid"]).to eq(@policy.guid)
       expect(@result).to have_key("conditions")
       conditions = @result["conditions"]
-      expect(conditions.size).to eq(4)
+      expect(conditions.size).to eq(3)
       guids = conditions.collect { |r| r["guid"] }
-      expect(guids.sort).to eq(Condition.all.collect(&:guid).sort)
+      expect(guids).to eq(Condition.pluck(:guid))
     end
   end
 end
