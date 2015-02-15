@@ -259,7 +259,7 @@
           = _("Firewall Rules (0)")
           %br
         - else
-          = link_to_with_icon("Firewall Rules (%s)" % fws_size,
+          = link_to_with_icon(_("Firewall Rules (%s)") % fws_size,
             {:action => 'firewall_rules', :id => @record},
             :title => _("Show the firewall rules on this Host"))
         %p

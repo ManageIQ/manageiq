@@ -35,7 +35,7 @@
               = _("Instances (%s)") % @record.number_of(:vms)
               %br
             - else
-              = link_to_with_icon("Instances (%s)" % @record.number_of(:vms),
+              = link_to_with_icon(_("Instances (%s)") % @record.number_of(:vms),
                 {:action => 'show', :id => @record, :display => 'instances'},
                 :title => _("Show all Instances"))
           - if role_allows(:feature => "orchestration_stack_show")
