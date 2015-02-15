@@ -1,4 +1,4 @@
-- if @record && @record.name.nil? && !%w(new copy create).include?(request.parameters["action"])
+- if @record.try(:name) && !%w(new copy create).include?(request.parameters["action"])
   #accordion
     .panel
       .topbar
