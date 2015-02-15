@@ -10,9 +10,7 @@
   - db = item.kind_of?(ExtManagementSystem) ? model_for_ems(item).name : item.class.base_model.name
 - if mode == :text
   - # Rendering the text link, not the quadicon
-  - trunc_at = 13
-  - trunc_to = 10
-  = render :partial => "layouts/quadicon/quadicon_text", :locals => {:db => db, :trunc_at => trunc_at, :trunc_to => trunc_to, :row => row}
+  = render :partial => "layouts/quadicon/quadicon_text", :locals => {:db => db, :truncate_length => 13, :row => row}
 - else
   - # Render the quad icon
   - if typ == :listnav

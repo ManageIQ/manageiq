@@ -3,7 +3,7 @@
     .panel
       .topbar
         %strong
-          = h(@record.name.length < trunc_at ? @record.name : "#{@record.name[0...trunc_to]}...")
+          = truncate(@record.name, :length => truncate_length)
       = hidden_div_if(@panels["icon"].nil? || @panels["icon"] == false, :id => "icon")
     .topbar
       = link_to("Properties",

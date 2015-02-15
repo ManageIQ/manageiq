@@ -1663,7 +1663,7 @@ module VmCommon
 
       if ['compare', 'drift'].include?(@sb[:action])
         presenter[:update_partials][:custom_left_cell_div] = r[
-            :partial=>'layouts/listnav/x_compare_sections', :locals=>{:trunc_at=>23, :trunc_to=>20}]
+          :partial => 'layouts/listnav/x_compare_sections', :locals => {:truncate_length => 23}]
         presenter[:cell_a_view] = 'custom'
       end
     elsif @sb[:action] || params[:display]
