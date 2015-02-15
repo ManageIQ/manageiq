@@ -1,4 +1,4 @@
-<% if @record && @record.name != nil%>
+<% if @record.try(:name) %>
   <div id="accordion">
     <div class="panel">
       <div class="topbar">

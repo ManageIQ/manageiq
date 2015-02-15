@@ -1,4 +1,4 @@
-- if @record && !@record.evm_display_name.nil?
+- if @record.try(:evm_display_name)
   #accordion
     .panel
       .topbar

@@ -1,4 +1,4 @@
-- if @record && !@record.name.nil? && @lastaction == "show"
+- if @record.try(:name) && @lastaction == "show"
   #accordion
     .panel
       .topbar
