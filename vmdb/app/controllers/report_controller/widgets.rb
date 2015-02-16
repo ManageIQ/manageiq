@@ -341,11 +341,8 @@ module ReportController::Widgets
       @edit[:new][:roles].sort! unless @edit[:new][:roles].blank?
     elsif @widget.visibility && @widget.visibility[:groups]
       @edit[:new][:visibility_typ] = "group"
-      @edit[:new][:groups] ||= Array.new
-      @widget.visibility[:groups].each do |g|
-        group = MiqGroup.find_by_description(g)
-        @edit[:new][:groups].push(to_cid(group.id)) if group
-      end
+      groups = MiqGroup.find_by_description(@widget.visibility[:groups])
+      @edit[:new][:groups] = groups.collect { |group| to_cid(group.id) }
       @edit[:new][:groups].sort! unless @edit[:new][:groups].blank?
     end
     @edit[:new][:roles] ||= Array.new   # initializing incase of new widget since visibility is not set yet.
