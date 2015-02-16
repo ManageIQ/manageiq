@@ -38,8 +38,33 @@ class EventCatcherKubernetes < EventCatcher
   end
 
   def process_event(event)
-    # TODO: some sane event filtering
-    $log.info "#{log_prefix} Caught event [#{event}]"
-    # TODO: add_queue kubernetes event
+    event_data = {
+      :timestamp => event.object.lastTimestamp,
+      :kind      => event.object.involvedObject.kind,
+      :name      => event.object.involvedObject.name,
+      :namespace => event.object.involvedObject['table'][:namespace],
+      :reason    => event.object.reason,
+      :message   => event.object.message
+    }
+
+    @enabled_events ||= worker_settings[:enabled_events]
+    supported_reasons = @enabled_events[event_data[:kind]] || []
+
+    unless supported_reasons.include?(event_data[:reason])
+      $log.debug "#{log_prefix} Discarding event [#{event_data}]"
+      return
+    end
+
+    # Handle event data for specific entities
+    case event_data[:kind]
+    when 'Node'
+      event_data[:container_node_name] = event_data[:name]
+    when 'Pod'
+      event_data[:container_namespace] = event_data[:namespace]
+      event_data[:container_group_name] = event_data[:name]
+    end
+
+    $log.info "#{log_prefix} Queuing event [#{event_data}]"
+    EmsEvent.add_queue('add_kubernetes', @cfg[:ems_id], event_data)
   end
 end
