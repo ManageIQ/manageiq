@@ -13,6 +13,7 @@ $:.push("#{File.dirname(__FILE__)}/workers")
 
 require 'miq-exception'
 require 'miq-system'
+require 'miq-xml'
 
 $:.push(File.expand_path(File.join(Rails.root, %w{.. lib VMwareWebService})))
 require 'vmdb_extensions'
