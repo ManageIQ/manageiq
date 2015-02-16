@@ -12,21 +12,24 @@ class VmInfraController < ApplicationController
   private
 
   def build_trees_and_accordions
-    @trees   = []
+    @trees   = {}
     @accords = []
     if role_allows(:feature => "vandt_accord")
-      build_vm_tree(:vandt, :vandt_tree)  # Build V&T tree
-      @trees.push("vandt_tree")
+      #build_vm_tree(:vandt, :vandt_tree)  # Build V&T tree
+      #@trees.push("vandt_tree")
+      @trees[:vandt] = TreeBuilderVandt.new('vandt_tree', 'vandt', @sb)
       @accords.push(:name => "vandt", :title => "VMs & Templates", :container => "vandt_tree_div")
     end
     if role_allows(:feature => "vms_filter_accord")
-      build_vm_tree(:filter, :vms_filter_tree) # Build VM filter tree
-      @trees.push("vms_filter_tree")
+      #build_vm_tree(:filter, :vms_filter_tree) # Build VM filter tree
+      #@trees.push("vms_filter_tree")
+      @trees[:vms_filter] = TreeBuilderVmsFilter.new('vms_filter_tree', 'vms_filter', @sb)
       @accords.push(:name => "vms_filter", :title => "VMs", :container => "vms_filter_tree_div")
     end
     if role_allows(:feature => "templates_filter_accord")
-      build_vm_tree(:filter, :templates_filter_tree) # Build Template filter tree
-      @trees.push("templates_filter_tree")
+      #build_vm_tree(:filter, :templates_filter_tree) # Build Template filter tree
+      #@trees.push("templates_filter_tree")
+      @trees[:template_filter] = TreeBuilderTemplateFilter.new('template_filter_tree', 'template_filter', @sb)
       @accords.push(:name => "templates_filter", :title => "Templates", :container => "templates_filter_tree_div")
     end
   end

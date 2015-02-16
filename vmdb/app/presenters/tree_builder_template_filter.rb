@@ -1,0 +1,2 @@
+class TreeBuilderTemplateFilter < TreeBuilder
+end
