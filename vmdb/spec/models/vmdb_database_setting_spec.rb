@@ -19,7 +19,35 @@ describe VmdbDatabaseSetting do
 
   it 'sets a default database' do
     setting = VmdbDatabaseSetting.new
-    expect(setting.vmdb_database).to eql(@db)
+    expect(setting.vmdb_database).to eq(@db)
+  end
+
+  it 'aliases min_val to minimum_value' do
+    setting = VmdbDatabaseSetting.where('min_val is not null').first
+    expect(setting.min_val).to eq(setting.minimum_value)
+  end
+
+  it 'aliases max_val to maximum_value' do
+    setting = VmdbDatabaseSetting.where('max_val is not null').first
+    expect(setting.max_val).to eq(setting.maximum_value)
+  end
+
+  it 'aliases setting to value' do
+    setting = VmdbDatabaseSetting.where('setting is not null').first
+    expect(setting.value).to eq(setting.setting)
+  end
+
+  it 'combines short_desc and extra_desc for description' do
+    setting = VmdbDatabaseSetting.where(:extra_desc => nil).first
+    expect(setting.description).to eq(setting.short_desc)
+
+    setting = VmdbDatabaseSetting.where('extra_desc is not null').first
+    expect(setting.description).to eq("#{setting.short_desc}  #{setting.extra_desc}")
+  end
+
+  it 'defaults unit to a blank string' do
+    setting = VmdbDatabaseSetting.where(:unit => nil).first
+    expect(setting.unit).to eq("")
   end
 
   [
