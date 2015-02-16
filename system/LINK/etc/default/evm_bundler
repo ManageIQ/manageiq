@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export BUNDLE_WITHOUT=test:metric_fu:development
-export BUNDLE_JOBS=4
+export BUNDLE_JOBS=1
 
 # This is an environment variable we set in one place in the event
 # we want to use --local, --deployment, etc.
