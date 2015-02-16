@@ -867,7 +867,6 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
     begin
       text = io_handle.read
       if text.include?("<?xml")
-        require 'miq-xml'
         xml = MiqXml.load(text)
         raise "Invalid file contents detected" if xml.root.name != "unattend"
       else
