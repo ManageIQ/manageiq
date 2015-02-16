@@ -335,11 +335,8 @@ module ReportController::Widgets
       if @widget.visibility[:roles][0] == "_ALL_"
         @edit[:new][:roles] = ["_ALL_"]
       else
-        @edit[:new][:roles] ||= Array.new
-        @widget.visibility[:roles].each do |r|
-          role = MiqUserRole.find_by_name(r)
-          @edit[:new][:roles].push(to_cid(role.id)) if role
-        end
+        roles = MiqUserRole.find_by_name(@widget.visibility[:roles])
+        @edit[:new][:roles] = roles.collect { |role| to_cid(role.id) }
       end
       @edit[:new][:roles].sort! unless @edit[:new][:roles].blank?
     elsif @widget.visibility && @widget.visibility[:groups]
