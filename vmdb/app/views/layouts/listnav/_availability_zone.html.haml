@@ -1,4 +1,4 @@
-- if @record && @record.name.nil?
+- if @record.try(:name)
   #accordion
     .panel
       .topbar
@@ -15,13 +15,13 @@
               :typ                    => :listnav})
 
       .topbar
-        = link_to("Properties", {:action => 'panel_control', :panel => 'ems_prop'}, :remote => true)
+        = link_to(_("Properties"), {:action => 'panel_control', :panel => 'ems_prop'}, :remote => true)
       #ems_prop{:style => @panels["ems_prop"] ? '' : 'display: none;'}
         .panecontent
-          = link_to_with_icon('Summary', {:action => 'show', :id => @record, :display => 'main'}, :title => _("Show Summary"))
+          = link_to_with_icon(_('Summary'), {:action => 'show', :id => @record, :display => 'main'}, :title => _("Show Summary"))
 
       .topbar
-        = link_to("Relationships", {:action => 'panel_control', :panel => 'ems_rel'}, :remote => true)
+        = link_to(_("Relationships"), {:action => 'panel_control', :panel => 'ems_rel'}, :remote => true)
       #ems_rel{:style => @panels["ems_rel"] ? '' : 'display: none;'}
         .panecontent
           - if role_allows(:feature => "ems_cloud_show")
@@ -36,6 +36,6 @@
               = _("Instances (%s)") % @record.number_of(:vms)
               %br
             - else
-              = link_to_with_icon("Instances (%s)" % @record.number_of(:vms),
+              = link_to_with_icon(_("Instances (%s)") % @record.number_of(:vms),
                 {:action => 'show', :id => @record, :display => 'instances'},
                 :title => _("Show all Instances"))
