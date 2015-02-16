@@ -987,12 +987,7 @@ class ApplicationController < ActionController::Base
       @data.each do |r|
         next if r.template_type != "report" && ! r.template_type.blank?
         r_group = r.rpt_group == "Custom" ? "#{@sb[:grp_title]} - Custom" : r.rpt_group # Get the report group
-        title = r_group.split('-')
-        i = 0
-        while i < title.length
-          title[i] = title[i].strip
-          i += 1
-        end
+        title = r_group.split('-').collect(&:strip)
         if @temp_title != title[0]
           @temp_title = title[0]
           reports = Array.new
