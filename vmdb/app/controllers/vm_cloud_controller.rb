@@ -10,26 +10,30 @@ class VmCloudController < ApplicationController
   private
 
   def build_trees_and_accordions
-    @trees   = []
+    @trees   = {}
     @accords = []
     if role_allows(:feature=>"instances_accord")
-      build_vm_tree(:instances, :instances_tree)  # Build V&T tree
-      @trees.push("instances_tree")
+      # build_vm_tree(:instances, :instances_tree)  # Build V&T tree
+      # @trees.push("instances_tree")
+      @trees[:instances] = TreeBuilderInstances.new('instances_tree', 'instances', @sb)
       @accords.push({:name=>"instances", :title=>"Instances by Provider", :container=>"instances_tree_div"})
     end
     if role_allows(:feature=>"images_accord")
-      build_vm_tree(:images, :images_tree)  # Build V&T tree
-      @trees.push("images_tree")
+      #build_vm_tree(:images, :images_tree)  # Build V&T tree
+      #@trees.push("images_tree")
+      @trees[:images] = TreeBuilderImages.new('images_tree', 'images', @sb)
       @accords.push({:name=>"images", :title=>"Images by Provider", :container=>"images_tree_div"})
     end
     if role_allows(:feature=>"instances_filter_accord")
-      build_vm_tree(:filter, :instances_filter_tree) # Build VM filter tree
-      @trees.push("instances_filter_tree")
+      #build_vm_tree(:filter, :instances_filter_tree) # Build VM filter tree
+      #@trees.push("instances_filter_tree")
+      @trees[:instances_filter] = TreeBuilderInstancesFilter.new('instances_filter_tree', 'instances_filter')
       @accords.push({:name=>"instances_filter", :title=>"Instances", :container=>"instances_filter_tree_div"})
     end
     if role_allows(:feature=>"images_filter_accord")
-      build_vm_tree(:filter, :images_filter_tree) # Build Template filter tree
-      @trees.push("images_filter_tree")
+      #build_vm_tree(:filter, :images_filter_tree) # Build Template filter tree
+      #@trees.push("images_filter_tree")
+      @trees[:instances_filter] = TreeBuilderImagesFilter.new('images_filter_tree', 'images_filter')
       @accords.push({:name=>"images_filter", :title=>"Images", :container=>"images_filter_tree_div"})
     end
   end

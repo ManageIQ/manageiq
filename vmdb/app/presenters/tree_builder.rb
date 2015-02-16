@@ -86,6 +86,11 @@ class TreeBuilder
       acc.concat(x_build_node_dynatree(o, id, x_tree))
     end
   end
+  
+  # FIXME: remove
+  def tree_init_options(tree_name)
+    {}
+  end
 
   # Get nodes model (folder, Vm, Cluster, etc)
   def self.get_model_for_prefix(node_prefix)

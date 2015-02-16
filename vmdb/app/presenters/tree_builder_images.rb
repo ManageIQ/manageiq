@@ -1,0 +1,2 @@
+class TreeBuilderImages < TreeBuilder
+end
