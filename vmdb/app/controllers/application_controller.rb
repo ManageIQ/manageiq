@@ -972,16 +972,10 @@ class ApplicationController < ActionController::Base
       #array of all reports if menu not configured
       @rep = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
       if tree_type == "timeline"
-        @rep.each do |r|
-          if r.timeline != nil
-            @data.push(r)
-          end
-        end
+        @data = @rep.reject { |r| r.timeline == nil }
       else
-        @rep.each do |r|
-          if r.template_type == "report" && !r.template_type.blank?
-            @data.push(r)
-          end
+        @data = @rep.select do |r|
+          r.template_type == "report" && !r.template_type.blank?
         end
       end
       @data.each do |r|
