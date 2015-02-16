@@ -3,8 +3,12 @@
 //= require services/miq_service
 //= require directives/miqrequired
 //= require directives/checkchange
+//= require directives/verifypasswd
 //= require directives/repository/valid_unc_path
+//= require services/miq_service
+//= require services/timer_option_service
 //= require controllers/repository/repository_form_controller
+//= require controllers/schedule/schedule_form_controller
 //= require cfme_application
 //= require miq_dynatree_replacement
 //= require dialog_import_export

@@ -373,6 +373,7 @@ class OpsController < ApplicationController
           action_url = "schedule_edit"
           record_id = @edit[:sched_id] ? @edit[:sched_id] : nil
         elsif %w(zone_edit zone_new).include?(@sb[:action])
+          locals[:serialize] = true
           action_url = "zone_edit"
           record_id = @edit[:zone_id] ? @edit[:zone_id] : nil
         end

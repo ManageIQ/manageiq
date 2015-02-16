@@ -14,12 +14,13 @@ src_files:
   - javascripts/vendor/angular.js
   - javascripts/vendor/angular-mocks.js
   - javascripts/jquery.js
-  - javascripts/dollar_j.js
   - javascripts/prototype.js
+  - javascripts/dollar_j.js
   - javascripts/cfme_application.js
   - javascripts/cfme_angular_application.js
   - javascripts/services/miq_service.js
-  - javascripts/controllers/schedule_form_controller.js
+  - javascripts/services/timer_option_service.js
+  - javascripts/controllers/schedule/schedule_form_controller.js
   - javascripts/controllers/repository/repository_form_controller.js
   - javascripts/directives/repository/valid_unc_path.js
   - javascripts/directives/checkchange.js

@@ -9,7 +9,7 @@ cfmeAngularApplication.service('miqService', function() {
 
   this.buildCalendar = function(year, month, date) {
     miq_cal_dateFrom = new Date(year, month, date);
-    miqBuildCalendar();
+    miqBuildCalendar(true);
   };
 
   this.miqAjaxButton = function(url, serializeFields) {
@@ -56,5 +56,44 @@ cfmeAngularApplication.service('miqService', function() {
       $(outerBox).append(txt);
       $(outerMost).append(outerBox);
       $(outerMost).appendTo($("#flash_msg_div"));
+  }
+
+  this.miqFlashClear = function() {
+    $('#flash_msg_div').text("");
+  }
+
+  this.saveable = function(form) {
+    return form.$valid && form.$dirty;
+  };
+
+  this.canValidate = function (form) {
+    if (this.validateFieldsValid(form) && this.validateFieldsDirty(form))
+      return true;
+    else
+      return false;
+  }
+
+  this.validateFieldsValid = function (form) {
+    if (form != undefined &&
+      form.depot_name.$valid &&
+      form.uri.$valid &&
+      form.log_userid.$valid &&
+      form.log_password.$valid &&
+      form.log_verify.$valid)
+      return true;
+    else
+      return false;
+  }
+
+  this.validateFieldsDirty = function (form) {
+    if (form != undefined &&
+      form.depot_name.$dirty ||
+      form.uri.$dirty ||
+      form.log_userid.$dirty ||
+      form.log_password.$dirty ||
+      form.log_verify.$dirty)
+      return true;
+    else
+      return false;
   }
 });

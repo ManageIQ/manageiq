@@ -1,0 +1,61 @@
+#form_filter_div
+  %fieldset
+    %p.legend {{buildLegend()}}
+    %table.style1
+      %tr(ng-switch on="determineActionType()")
+        %td.key(ng-hide="dbBackup()") Filter
+        %td.key(ng-show="dbBackup()") Type
+        %td
+          = select_tag('filter_typ', options_for_select(@vm_options_for_select),
+            "ng-switch-when" => "vm",
+            "ng-model"       => "$parent.scheduleModel.filter_typ",
+            "ng-change"      => "filterTypeChanged()",
+            "checkchange"    => @schedule.id ? "" : "filter_value")
+          = select_tag('filter_typ', options_for_select(@template_options_for_select),
+            "ng-switch-when" => "miq_template",
+            "ng-model"       => "$parent.scheduleModel.filter_typ",
+            "ng-change"      => "filterTypeChanged()",
+            "checkchange"    => @schedule.id ? "" : "filter_value")
+          = select_tag('filter_typ', options_for_select(@host_options_for_select),
+            "ng-switch-when" => "host",
+            "ng-model"       => "$parent.scheduleModel.filter_typ",
+            "ng-change"      => "filterTypeChanged()",
+            "checkchange"    => @schedule.id ? "" : "filter_value")
+          = select_tag('filter_typ', options_for_select(@cluster_options_for_select),
+            "ng-switch-when" => "emscluster",
+            "ng-model"       => "$parent.scheduleModel.filter_typ",
+            "ng-change"      => "filterTypeChanged()",
+            "checkchange"    => @schedule.id ? "" : "filter_value")
+          = select_tag('filter_typ', options_for_select(@storage_options_for_select),
+            "ng-switch-when" => "storage",
+            "ng-model"       => "$parent.scheduleModel.filter_typ",
+            "ng-change"      => "filterTypeChanged()",
+            "checkchange"    => @schedule.id ? "" : "filter_value")
+          = select_tag('log_protocol', options_for_select(@database_backup_options_for_select),
+            "ng-switch-when" => "db_backup",
+            "ng-model"       => "$parent.scheduleModel.log_protocol",
+            "ng-change"      => "logProtocolChanged()",
+            "checkchange"    => "")
+
+          %select#filter_value(name="filter_value" ng-change="filterValueChanged()" ng-model="scheduleModel.filter_value" ng-options="filteredItem.value as filteredItem.text for filteredItem in filterList" ng-hide="scheduleModel.filterValuesEmpty || dbBackup()" ng-required="filterValueRequired(scheduleModel.filter_value)" checkchange)
+            %option(value="") &lt;Choose&gt;
+          %input(type="hidden" name="filter_value" value="{{scheduleModel.filter_value}}")
+
+      = render :partial => "layouts/angular/edit_log_depot_settings_angular",
+               :locals  => {:ng_show             => "dbBackup()",
+                            :ng_reqd_depot_name  => "dbRequired(scheduleModel.depot_name)",
+                            :ng_model_depot_name => "scheduleModel.depot_name",
+                            :ng_reqd_uri         => "dbRequired(scheduleModel.uri)",
+                            :ng_model_uri        => "scheduleModel.uri",
+                            :ng_model_uri_prefix => "scheduleModel.uri_prefix",
+                            :uri_prefix_display  =>  "{{scheduleModel.uri_prefix}}://"}
+
+      = render :partial => "layouts/angular/auth_credentials_angular",
+               :locals  => {:ng_show           => "sambaBackup()",
+                            :ng_model          => "scheduleModel",
+                            :ng_reqd_userid    => "sambaRequired(scheduleModel.log_userid)",
+                            :ng_reqd_password  => "sambaRequired(scheduleModel.log_password)",
+                            :ng_reqd_verify    => "sambaRequired(scheduleModel.log_verify)",
+                            :validate_url      => "log_depot_edit",
+                            :id                => @schedule.id || "new",
+                            :valtype           => "log"}

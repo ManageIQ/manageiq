@@ -852,6 +852,7 @@ Vmdb::Application.routes.draw do
     :miqservices            => {
       :post => %w(api)
     },
+
     :ontap_file_share       => {
       :get => %w(
         cim_base_storage_extents
@@ -883,6 +884,7 @@ Vmdb::Application.routes.draw do
         compare_post +
         exp_post
     },
+
     :ontap_logical_disk     => {
       :get  => %w(
         cim_base_storage_extents
@@ -913,6 +915,7 @@ Vmdb::Application.routes.draw do
         compare_post +
         exp_post
     },
+
     :ontap_storage_system   => {
       :get  => %w(
         cim_base_storage_extents
@@ -944,6 +947,7 @@ Vmdb::Application.routes.draw do
         compare_post +
         exp_post
     },
+
     :ontap_storage_volume   => {
       :get => %w(
         cim_base_storage_extents
@@ -971,6 +975,7 @@ Vmdb::Application.routes.draw do
         compare_post +
         exp_post
     },
+
     :ops => {
       :get => %w(
         explorer
@@ -978,6 +983,7 @@ Vmdb::Application.routes.draw do
         fetch_build
         fetch_log
         fetch_production_log
+        schedule_form_fields
         show_product_update
       ),
       :post => %w(
@@ -1044,6 +1050,7 @@ Vmdb::Application.routes.draw do
         rhn_validate
         schedule_edit
         schedule_form_field_changed
+        schedule_form_filter_type_field_changed
         schedules_list
         schedule_update
         settings_form_field_changed
@@ -1055,6 +1062,7 @@ Vmdb::Application.routes.draw do
         tl_chooser
         tree_autoload_dynatree
         tree_select
+        update
         upload_csv
         upload_form_field_changed
         upload_login_logo

@@ -47,80 +47,80 @@ module OpsController::Settings::Schedules
       @edit = session[:edit] = nil  # clean out the saved info
       replace_right_cell(@nodetype)
     when "save", "add"
-      id = params[:id] ? params[:id] : "new"
-      return unless load_edit("schedule_edit__#{id}","replace_cell__explorer")
-      @schedule = @edit && @edit[:sched_id] ? MiqSchedule.find_by_id(@edit[:sched_id]) : MiqSchedule.new(:userid=>session[:userid])
-      if @edit[:new][:action] == "db_backup"
-        @schedule.sched_action = {:method=>"db_backup"}
-        if @edit[:new][:uri_prefix].blank?
-          add_flash(_("%s is required") % "Type", :error)
-        elsif @edit[:new][:uri_prefix] == "nfs" && @edit[:new][:uri].blank?
-          add_flash(_("%s is required") % "URI", :error)
-        elsif @edit[:new][:uri_prefix] == "smb" || @edit[:new][:uri_prefix] == "ftp"
-          if @edit[:new][:uri].blank?
-            add_flash(_("%s is required") % "URI", :error)
-          elsif @edit[:new][:log_userid].blank?
-            add_flash(_("%s is required") % "Username", :error)
-          elsif @edit[:new][:log_password].blank?
-            add_flash(_("%s is required") % "Password", :error)
-          end
-        end
-        if @flash_array
-          render :update do |page|
-            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-          end
-          return
-        end
-        uri = @edit[:new][:uri_prefix] + "://" + @edit[:new][:uri]
-        settings_new = {:uri      => uri,
-                        :username => @edit[:new][:log_userid],
-                        :password => @edit[:new][:log_password],
-                        :name     => @edit[:new][:depot_name]}
-        settings_current = {:uri      => @edit[:current][:uri],
-                            :username => @edit[:current][:log_userid],
-                            :password => @edit[:current][:log_password],
-                            :name     => @edit[:current][:depot_name]}
+      schedule = params[:id] != "new" ? MiqSchedule.find_by_id(params[:id]) : MiqSchedule.new(:userid => session[:userid])
 
-        # only verify_depot_hash if anything has changed in depot settings
-        if settings_new != settings_current
-          if MiqSchedule.verify_depot_hash(settings_new)
-            @schedule.depot_hash = settings_new
-          else
-            add_flash(_("Failed to add depot. See logs for detail."), :error)
-          end
-        end
-      end
-      schedule_set_record_vars(@schedule)
-      schedule_validate?(@schedule)
-      if @schedule.valid? && !flash_errors? && @schedule.save
-        AuditEvent.success(build_saved_audit(@schedule, params[:button] == "add"))
-        add_flash(_("%{model} \"%{name}\" was saved") % {:model=>ui_lookup(:model=>"MiqSchedule"), :name=>@schedule.name})
-        @edit = session[:edit] = nil  # clean out the saved info
-        if params[:button] == "add"
-          self.x_node  = "xx-msc"  # reset node to show list
-          schedules_list
-          settings_get_info("st")
-        else          #set selected schedule
-          @selected_schedule = MiqSchedule.find(@schedule.id)
-          get_node_info(x_node)
-        end
-        replace_right_cell("root",[:settings])
+      # This should be changed to something like schedule.changed? and schedule.changes
+      # when we have a version of Rails that supports detecting changes on serialized
+      # fields
+      old_schedule_attributes = schedule.attributes.clone
+      old_schedule_attributes.merge("depot_hash" => {:uri      => schedule.depot_hash[:uri],
+                                                     :username => schedule.depot_hash[:username],
+                                                     :password => schedule.depot_hash[:password],
+                                                     :name     => schedule.depot_hash[:name]
+                                                    }) if schedule.depot_hash
+      old_schedule_attributes.merge("filter" => old_schedule_attributes["filter"].try(:to_human))
+      old_schedule_attributes.merge("run_at" => {:start_time => schedule.run_at[:start_time],
+                                                 :tz         => schedule.run_at[:tz],
+                                                 :interval   => {:unit  => schedule.run_at[:interval][:unit],
+                                                                 :value => schedule.run_at[:interval][:value]
+                                                                }
+                                                }) if schedule.run_at
+      humanized_old = old_schedule_attributes
+
+      schedule_set_record_vars(schedule)
+      schedule_validate?(schedule)
+
+      humanized_new = schedule.attributes.merge(
+        "depot_hash" => schedule.depot_hash,
+        "filter"     => schedule.filter.try(:to_human),
+        "run_at"     => schedule.run_at
+      )
+
+      attribute_difference = humanized_old.diff(humanized_new)
+
+      if attribute_difference.blank?
+        add_flash(I18n.t("flash.edit.nothing_changed", :name => schedule.name))
       else
-        @schedule.errors.each do |field,msg|
-          add_flash("#{field.to_s.capitalize} #{msg}", :error)
-        end
-        @changed = session[:changed] = (@edit[:new] != @edit[:current])
-        render :update do |page|
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        schedule.save
+
+        AuditEvent.success(build_saved_audit_hash(old_schedule_attributes, schedule, params[:button] == "add"))
+
+        add_flash(I18n.t("flash.edit.saved", :model => ui_lookup(:model => "MiqSchedule"), :name => schedule.name))
       end
+
+      if params[:button] == "add"
+        self.x_node  = "xx-msc"
+        schedules_list
+        settings_get_info("st")
+      else
+        @selected_schedule = schedule
+        get_node_info(x_node)
+      end
+
+      replace_right_cell("root", [:settings])
+
     when "reset", nil # Reset or first time in
       obj = find_checked_items
       obj[0] = params[:id] if obj.blank? && params[:id]
       @schedule = params[:typ] == "new" ? MiqSchedule.new(:userid=>session[:userid])  : MiqSchedule.find(obj[0])          # Get existing or new record
-      schedule_set_form_vars
+
+      # This is only because ops_controller tries to set form locals, otherwise we should not use the @edit variable
+      @edit = {:sched_id => @schedule.id}
+
+      settings = @schedule.depot_hash
+      unless settings[:uri].nil?
+        @protocol = DatabaseBackup.supported_depots[settings[:uri].split('://')[0]]
+        @uri_prefix = settings[:uri].split('://')[0]
+        @uri = settings[:uri].split('://')[1]
+      end
+      @log_userid = settings[:username]
+      @log_password = settings[:password]
+      @log_verify = settings[:password]
+
+      # This is a hack to trick the controller into thinking we loaded an edit variable
+      session[:edit] = {:key => "schedule_edit__#{@schedule.id || 'new'}"}
+
       schedule_build_edit_screen
-      @in_a_form = true
       session[:changed] = false
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
@@ -129,45 +129,67 @@ module OpsController::Settings::Schedules
     end
   end
 
-  # AJAX driven routine to check for changes in ANY field on the form
-  def schedule_form_field_changed
-    return unless load_edit("schedule_edit__#{params[:id]}","replace_cell__explorer")
-    schedule_get_form_vars
-    render :update do |page|                    # Use JS to update the display
-      if params[:action_typ]
-        @edit[:new][:action] = params[:action_typ]
-        if params[:action_typ] == "db_backup"
-          page.replace("form_filter_div",
-                       :partial => "layouts/edit_log_depot_settings",
-                       :locals  => {:action       => "log_depot_field_changed",
-                                    :validate_url => "log_depot_validate"})
-        else
-          @edit[:new][:filter] = "all"
-          page.replace("form_filter_div", :partial=>"schedule_form_filter")
-        end
-      end
-      if params[:filter_typ]
-        @edit[:new][:filter_value] = nil        # Clear filter value if filter type changed
-        page.replace("form_filter_div", :partial=>"schedule_form_filter")
+  def schedule_form_fields
+    schedule = MiqSchedule.find_by_id(params[:id])
+
+    if schedule_check_compliance?(schedule)
+      action_type = schedule.towhat.downcase + "_" + schedule.sched_action[:method]
+    elsif schedule_db_backup?(schedule)
+      action_type = schedule.sched_action[:method]
+
+      settings = schedule.depot_hash
+
+      unless settings[:uri].nil?
+        uri_prefix = settings[:uri].split('://')[0]
+        uri = settings[:uri].split('://')[1]
+        protocol = DatabaseBackup.supported_depots[uri_prefix]
       end
 
-      javascript_for_timer_type(params[:timer_typ]).each { |js| page << js }
-
-      if params[:time_zone]
-        page << "miq_cal_dateFrom = new Date(#{(Time.now - 1.month).in_time_zone(@edit[:tz]).strftime("%Y,%m,%d")});"
-        page << "miqBuildCalendar();"
-        page << "$('#miq_date_1').val('#{@edit[:new][:start_date]}');"
-        page << "$('#start_hour').val('#{@edit[:new][:start_hour].to_i}');"
-        page << "$('#start_min').val('#{@edit[:new][:start_min].to_i}');"
-        page.replace_html("tz_span", @timezone_abbr)
+      depot_name = settings[:name]
+      log_userid = settings[:username]
+      log_password = settings[:password]
+      log_verify = settings[:password]
+    else
+      if schedule.towhat.nil?
+        action_type = "vm"
+      else
+        action_type ||= schedule.towhat == "EmsCluster" ? "emscluster" : schedule.towhat.underscore
       end
-      changed = (@edit[:new] != @edit[:current])
-      page << javascript_for_miq_button_visibility(changed)
-      page << "miqSparkle(false);"
     end
+
+    filter_type, filter_value = determine_filter_type_and_value(schedule)
+    filtered_item_list = build_filtered_item_list(filter_type)
+
+    render :json => {
+      :action_type          => action_type,
+      :depot_name           => depot_name,
+      :filter_type          => filter_type,
+      :filter_value         => filter_value,
+      :filtered_item_list   => filtered_item_list,
+      :log_password         => log_password,
+      :log_userid           => log_userid,
+      :log_verify           => log_verify,
+      :protocol             => protocol,
+      :schedule_description => schedule.description,
+      :schedule_enabled     => schedule.enabled ? "1" : "0",
+      :schedule_name        => schedule.name,
+      :schedule_start_date  => schedule.run_at[:start_time].strftime("%m/%d/%Y"),
+      :schedule_start_hour  => schedule.run_at[:start_time].strftime("%H").to_i,
+      :schedule_start_min   => schedule.run_at[:start_time].strftime("%M").to_i,
+      :schedule_time_zone   => schedule.run_at[:tz],
+      :schedule_timer_type  => schedule.run_at[:interval][:unit].capitalize,
+      :schedule_timer_value => schedule.run_at[:interval][:value].to_i,
+      :uri                  => uri,
+      :uri_prefix           => uri_prefix
+    }
   end
 
-    # Delete all selected or single displayed action(s)
+  def schedule_form_filter_type_field_changed
+    filtered_item_list = build_filtered_item_list(params[:filter_type])
+
+    render :json => {:filtered_item_list => filtered_item_list}
+  end
+
   def schedule_delete
     assert_privileges("schedule_delete")
     schedules = Array.new
@@ -232,6 +254,106 @@ module OpsController::Settings::Schedules
 
   private
 
+  def build_saved_audit_hash(old_schedule_attributes, new_schedule, add)
+    name  = new_schedule.respond_to?(:name) ? new_schedule.name : new_schedule.description
+    msg   = "[#{name}] Record #{add ? "added" : "updated"} ("
+    event = "#{new_schedule.class.to_s.downcase}_record_#{add ? "add" : "update"}"
+
+    attribute_difference = old_schedule_attributes.diff(new_schedule.attributes)
+
+    difference_messages = []
+
+    attribute_difference.each do |key, value|
+      difference_messages << "#{key} changed to #{value}"
+    end
+
+    msg = msg + difference_messages.join(", ") + ")"
+
+    {
+      :event        => event,
+      :target_id    => new_schedule.id,
+      :target_class => new_schedule.class.base_class.name,
+      :userid       => session[:userid],
+      :message      => msg
+    }
+  end
+
+  def schedule_check_compliance?(schedule)
+    schedule.sched_action && schedule.sched_action[:method] && schedule.sched_action[:method] == "check_compliance"
+  end
+
+  def schedule_db_backup?(schedule)
+    schedule.sched_action && schedule.sched_action[:method] && schedule.sched_action[:method] == "db_backup"
+  end
+
+  def build_filtered_item_list(filter_type)
+    case filter_type
+    when "vm"
+      filtered_item_list = find_filtered(Vm, :all).sort_by { |vm| vm.name.downcase }.collect { |vm| vm.name }.uniq
+    when "host"
+      filtered_item_list = find_filtered(Host, :all).sort_by { |vm| vm.name.downcase }.collect { |vm| vm.name }.uniq
+    when "ems"
+      filtered_item_list = find_filtered(ExtManagementSystem, :all).sort_by { |vm| vm.name.downcase }.collect { |vm| vm.name }.uniq
+    when "cluster"
+      filtered_item_list = find_filtered(EmsCluster, :all).collect { |cluster|
+        [cluster.name + "__" + cluster.v_parent_datacenter, cluster.v_qualified_desc]
+      }.sort_by { |cluster| cluster.first.downcase }.uniq
+    when "global"
+      build_listnav_search_list("Vm")
+      filtered_item_list = @def_searches.delete_if { |search| search.id == 0 }.collect { |search| [search.id, search.description] }
+    when "my"
+      build_listnav_search_list("Vm")
+      filtered_item_list = @my_searches.collect { |search| [search.id, search.description] }
+    else
+      filtered_item_list = []
+      DatabaseBackup.supported_depots.each { |depot| filtered_item_list.push(depot[1]) }
+    end
+
+    filtered_item_list
+  end
+
+  def determine_filter_type_and_value(schedule)
+    if schedule.sched_action && schedule.sched_action[:method] && schedule.sched_action[:method] != "db_backup"
+      if schedule.miq_search                         # See if a search filter is attached
+        filter_type = schedule.miq_search.search_type == "user" ? "my" : "global"
+        filter_value = schedule.miq_search.id
+      elsif schedule.filter.nil?                   # Set to All if not set
+        filter_type = "all"
+        filter_value = nil
+      else
+        key = schedule.filter.exp.keys.first
+        if key == "IS NOT NULL"                       # All
+          filter_type = "all"
+          filter_value = nil
+        elsif key == "AND"                            # Cluster name and datacenter
+          filter_type = "cluster"
+          filter_value = schedule.filter.exp[key][0]["="]["value"] + "__" + schedule.filter.exp[key][1]["="]["value"]
+        else
+          case schedule.filter.exp[key]["field"]
+          when "Vm.ext_management_system-name",
+               "MiqTemplate.ext_management_system-name",
+               "Storage.ext_management_systems-name",
+               "Host.ext_management_system-name",
+               "EmsCluster.ext_management_system-name"
+            filter_type = "ems"
+          when "Vm.host-name", "MiqTemplate.host-name", "Storage.hosts-name", "Host-name"
+            filter_type = "host"
+          when "Vm-name"
+            filter_type = "vm"
+          when "MiqTemplate-name"
+            filter_type = "miq_template"
+          when "Storage-name"
+            filter_type = "storage"
+          end
+
+          filter_value = schedule.filter.exp[key]["value"]
+        end
+      end
+    end
+
+    return filter_type, filter_value
+  end
+
   # Create the view and associated vars for the schedules list
   def schedule_build_list
     @lastaction = "schedules_list"
@@ -257,16 +379,15 @@ module OpsController::Settings::Schedules
     session[:schedule_sortdir] = @sortdir
   end
 
-  # Validate some of the schedule fields
   def schedule_validate?(sched)
     valid = true
-    if @edit[:new][:action] != "db_backup"
-      if ["global","my"].include?(@edit[:new][:filter])
-        if @edit[:new][:filter_value].blank?  # Check for search filter chosen
+    if params[:action_typ] != "db_backup"
+      if %w(global my).include?(params[:filter_typ])
+        if params[:filter_value].blank?  # Check for search filter chosen
           add_flash(_("%s must be selected") % "filter", :error)
           valid = false
         end
-      elsif sched.filter.exp.keys.first != "IS NOT NULL" && @edit[:new][:filter_value].blank? # Check for empty filter value
+      elsif sched.filter.exp.keys.first != "IS NOT NULL" && params[:filter_value].blank? # Check for empty filter value
         add_flash(_("%s must be selected") % "filter value", :error)
         valid = false
       end
@@ -281,329 +402,188 @@ module OpsController::Settings::Schedules
     return valid
   end
 
-  # Set form variables for edit
-  def schedule_set_form_vars
-    @timezone_abbr = get_timezone_abbr("server")
-    @edit = Hash.new
-
-    # Remember how this edit started
-    @edit[:type] = ["copy", "new"].include?(params[:action]) ? "new" : "edit"
-
-    # Get configured tz, default to user's tz
-    @edit[:tz] = @schedule.run_at && @schedule.run_at[:tz] ? @schedule.run_at[:tz] : session[:user_tz]
-
-    @edit[:sched_id] = @schedule.id
-    @edit[:new] = Hash.new
-    @edit[:current] = Hash.new
-    @edit[:key] = "schedule_edit__#{@schedule.id || "new"}"
-
-    @edit[:new][:name] = @schedule.name
-    @edit[:new][:description] = @schedule.description
-    @edit[:action_types] = [
-                             ["VM Analysis","vm"],
-                             ["Template Analysis","miq_template"],
-                             ["Host Analysis","host"],
-                             ["#{ui_lookup(:model=>'EmsCluster')} Analysis","emscluster"],
-                             ["#{ui_lookup(:model=>'Storage')} Analysis","storage"]
-                           ]
-    @edit[:action_types].push(["VM Compliance Check","vm_check_compliance"]) if role_allows(:feature=>"vm_check_compliance")
-    @edit[:action_types].push(["Host Compliance Check","host_check_compliance"]) if role_allows(:feature=>"host_check_compliance")
-    @edit[:action_types].push(["Database Backup","db_backup"]) if DatabaseBackup.backup_supported?
-
-    @edit[:new][:enabled] = @schedule.enabled == nil ? false : @schedule.enabled
-    if @schedule.sched_action && @schedule.sched_action[:method] && @schedule.sched_action[:method] == "check_compliance"
-      @edit[:new][:action] = @schedule.towhat.downcase + "_" + @schedule.sched_action[:method]
-    elsif @schedule.sched_action && @schedule.sched_action[:method] && @schedule.sched_action[:method] == "db_backup"
-      @edit[:new][:action] = @schedule.sched_action[:method]
-      @edit[:protocols_hash] = DatabaseBackup.supported_depots
-      #have to create array to add <choose> on the top in the form
-      @edit[:protocols_arr] = Array.new
-      @edit[:protocols_hash].each do |p|
-        @edit[:protocols_arr].push(p[1])
-      end
-      set_log_depot_vars
-    else
-      if @schedule.towhat == nil
-        @edit[:new][:action] = "vm"
-      else
-        @edit[:new][:action] ||= @schedule.towhat == "EmsCluster" ? "emscluster" : @schedule.towhat.underscore
-      end
-    end
-    if @schedule.sched_action && @schedule.sched_action[:method] && @schedule.sched_action[:method] != "db_backup"
-      if @schedule.miq_search                         # See if a search filter is attached
-        @edit[:new][:filter] = @schedule.miq_search.search_type == "user" ? "my" : "global"
-        @edit[:new][:filter_value] = @schedule.miq_search.id
-      elsif @schedule.filter == nil                   # Set to All if not set
-        @edit[:new][:filter] = "all"
-        @edit[:new][:filter_value] = nil
-      else
-        key = @schedule.filter.exp.keys.first
-        if key == "IS NOT NULL"                       # All
-          @edit[:new][:filter] = "all"
-          @edit[:new][:filter_value] = nil
-        elsif key == "AND"                            # Cluster name and datacenter
-          @edit[:new][:filter] = "cluster"
-          @edit[:new][:filter_value] = @schedule.filter.exp[key][0]["="]["value"] + "__" + @schedule.filter.exp[key][1]["="]["value"]
-        else
-          case @schedule.filter.exp[key]["field"]
-          when "Vm.ext_management_system-name", "MiqTemplate.ext_management_system-name"
-            @edit[:new][:filter] = "ems"
-          when "Vm.host-name", "MiqTemplate.host-name"
-            @edit[:new][:filter] = "host"
-          when "Vm-name"
-            @edit[:new][:filter] = "vm"
-          when "MiqTemplate-name"
-            @edit[:new][:filter] = "miq_template"
-          when "Storage.ext_management_system-name"
-            @edit[:new][:filter] = "ems"
-          when "Storage.host-name"
-            @edit[:new][:filter] = "host"
-          when "Storage-name"
-            @edit[:new][:filter] = "storage"
-          when "Host.ext_management_system-name"
-            @edit[:new][:filter] = "ems"
-          when "Host-name"
-            @edit[:new][:filter] = "host"
-          when "EmsCluster.ext_management_system-name"
-            @edit[:new][:filter] = "ems"
-          end
-          @edit[:new][:filter_value] = @schedule.filter.exp[key]["value"]
-        end
-      end
-    end
-    set_edit_timer_from_schedule(@schedule)
-
-    @edit[:current] = copy_hash(@edit[:new])
-
-    session[:edit] = @edit
-  end
-
-  # Get variables from edit form
-  def schedule_get_form_vars
-    @schedule = @edit && @edit[:sched_id] ? MiqSchedule.find_by_id(@edit[:sched_id]) : MiqSchedule.new(:userid=>session[:userid])
-
-    @edit[:new][:name] = params[:name] if params[:name]
-    @edit[:new][:description] = params[:description] if params[:description]
-    @edit[:new][:enabled] = (params[:enabled] == "1") if params[:enabled]
-    @edit[:new][:action] = params[:action_typ] if params[:action_typ]
-    if params[:action_typ] == "db_backup"
-      @edit[:protocols_hash] = DatabaseBackup.supported_depots
-      #have to create array to add <choose> on the top in the form
-      @edit[:protocols_arr] = Array.new
-      @edit[:protocols_hash].each do |p|
-        @edit[:protocols_arr].push(p[1])
-      end
-      if params[:action_typ] == @edit[:current][:action]
-        #need to delete these if action was changed and reset data
-        @edit[:new].delete(:filter) if @edit[:new].has_key?(:filter)
-        @edit[:new].delete(:filter_value) if @edit[:new].has_key?(:filter_value)
-        set_log_depot_vars
-      end
-    else
-      if params[:action_typ] == @edit[:current][:action]
-        #need to delete these if action was changed and reset data
-        @edit[:new].delete(:uri_prefix) if @edit[:new].has_key?(:uri_prefix)
-        @edit[:new].delete(:uri) if @edit[:new].has_key?(:uri)
-        @edit[:new].delete(:log_userid) if @edit[:new].has_key?(:log_userid)
-        @edit[:new].delete(:log_password) if @edit[:new].has_key?(:log_password)
-        @edit[:new].delete(:log_verify) if @edit[:new].has_key?(:log_verify)
-      end
-    end
-    @edit[:new][:filter] = params[:filter_typ] if params[:filter_typ]
-    if params[:filter_value]
-      @edit[:new][:filter_value] = params[:filter_value] == "<Choose>" ? nil : params[:filter_value]
-    end
-    @edit[:new][:timer_typ] = params[:timer_typ] if params[:timer_typ]
-    @edit[:new][:timer_months] = params[:timer_months] if params[:timer_months]
-    @edit[:new][:timer_weeks] = params[:timer_weeks] if params[:timer_weeks]
-    @edit[:new][:timer_days] = params[:timer_days] if params[:timer_days]
-    @edit[:new][:timer_hours] = params[:timer_hours] if params[:timer_hours]
-    @edit[:new][:start_date] = params[:miq_date_1] if params[:miq_date_1]
-    @edit[:new][:start_hour] = params[:start_hour] if params[:start_hour]
-    @edit[:new][:start_min] = params[:start_min] if params[:start_min]
-
-    if params[:time_zone]
-      @edit[:tz] = params[:time_zone]
-      @timezone_abbr = Time.now.in_time_zone(@edit[:tz]).strftime("%Z")
-      t = Time.now.in_time_zone(@edit[:tz]) + 1.day # Default date/time to tomorrow in selected time zone
-      @edit[:new][:start_date] = "#{t.month}/#{t.day}/#{t.year}"  # Reset the start date
-      @edit[:new][:start_hour] = "00" # Reset time to midnight
-      @edit[:new][:start_min] = "00"
-    end
-  end
-
   def schedule_build_edit_screen
-    @schedule = @edit && @edit[:sched_id] ? MiqSchedule.find_by_id(@edit[:sched_id]) : MiqSchedule.new(:userid=>session[:userid])
     @in_a_form = true
 
-    # Build pulldown arrays
-    @edit[:emss] = Array.new
-    find_filtered(ExtManagementSystem, :all).sort{|a,b| a.name.downcase<=>b.name.downcase}.each{|e|@edit[:emss].push(e.name)}
-    @edit[:clusters] = Hash.new
-    find_filtered(EmsCluster, :all).sort{|a,b| a.name.downcase<=>b.name.downcase}.each{|c|
-      @edit[:clusters][c.name + "__" + c.v_parent_datacenter] = c.v_qualified_desc
-    }
-    @edit[:hosts] = Array.new
-    find_filtered(Host, :all).sort{|a,b| a.name.downcase<=>b.name.downcase}.each{|h|@edit[:hosts].push(h.name)}
-    @edit[:vms] = Array.new
-    find_filtered(Vm, :all).sort{|a,b| a.name.downcase<=>b.name.downcase}.each{|v|@edit[:vms].push(v.name)}
-    @edit[:miq_templates] = Array.new
-    find_filtered(MiqTemplate, :all).sort{|a,b| a.name.downcase<=>b.name.downcase}.each{|t|@edit[:miq_templates].push(t.name)}
-    @edit[:datastores] = Array.new
-    find_filtered(Storage, :all).sort{|a,b| a.name.downcase<=>b.name.downcase}.each{|h|@edit[:datastores].push(h.name)}
+    @vm_global_filters, @vm_my_filters                     = build_global_and_my_filters("Vm")
+    @miq_template_global_filters, @miq_template_my_filters = build_global_and_my_filters("MiqTemplate")
+    @host_global_filters, @host_my_filters                 = build_global_and_my_filters("Host")
+    @cluster_global_filters, @cluster_my_filters           = build_global_and_my_filters("EmsCluster")
+    @storage_global_filters, @storage_my_filters           = build_global_and_my_filters("Storage")
 
-    # Build search filter pulldowns
-    @edit[:filters] = Hash.new
-    build_listnav_search_list("Vm")
-    @edit[:filters][:vm_global] = @def_searches.delete_if{|s| s.id == 0}.collect{|s| [s.description, s.id]}
-    @edit[:filters][:vm_my] = @my_searches.collect{|s| [s.description, s.id]}
-    build_listnav_search_list("MiqTemplate")
-    @edit[:filters][:miq_template_global] = @def_searches.delete_if{|s| s.id == 0}.collect{|s| [s.description, s.id]}
-    @edit[:filters][:miq_template_my] = @my_searches.collect{|s| [s.description, s.id]}
-    build_listnav_search_list("Host")
-    @edit[:filters][:host_global] = @def_searches.delete_if{|s| s.id == 0}.collect{|s| [s.description, s.id]}
-    @edit[:filters][:host_my] = @my_searches.collect{|s| [s.description, s.id]}
-    build_listnav_search_list("EmsCluster")
-    @edit[:filters][:cluster_global] = @def_searches.delete_if{|s| s.id == 0}.collect{|s| [s.description, s.id]}
-    @edit[:filters][:cluster_my] = @my_searches.collect{|s| [s.description, s.id]}
-    build_listnav_search_list("Storage")
-    @edit[:filters][:storage_global] = @def_searches.delete_if{|s| s.id == 0}.collect{|s| [s.description, s.id]}
-    @edit[:filters][:storage_my] = @my_searches.collect{|s| [s.description, s.id]}
+    build_schedule_options_for_select
+
+    one_month_ago = (Time.now - 1.month).in_time_zone(session[:user_tz])
+    @one_month_ago = {
+      :year  => one_month_ago.year,
+      :month => one_month_ago.month - 1, # Javascript counts months 0-11
+      :date  => one_month_ago.day
+    }
   end
 
-  # Set record variables to new values
+  def build_global_and_my_filters(type)
+    build_listnav_search_list(type)
+    global_filters = @def_searches.reject { |s| s.id == 0 }.collect { |s| [s.description, s.id] }
+    my_filters = @my_searches.collect { |s| [s.description, s.id] }
+
+    return global_filters, my_filters
+  end
+
   def schedule_set_record_vars(schedule)
-    schedule.name = @edit[:new][:name]
-    schedule.description = @edit[:new][:description]
-    schedule.enabled = @edit[:new][:enabled]
-    if @edit[:new][:action] == "db_backup"
+    schedule.name = params[:name]
+    schedule.description = params[:description]
+    schedule.enabled = params[:enabled]
+
+    if params[:action_typ] == "db_backup"
       schedule.towhat = "DatabaseBackup"
-    elsif @edit[:new][:action].ends_with?("check_compliance")
-      schedule.towhat = @edit[:new][:action].split("_").first.capitalize
+    elsif params[:action_typ].ends_with?("check_compliance")
+      schedule.towhat = params[:action_typ].split("_").first.capitalize
     else
-      schedule.towhat = @edit[:new][:action] == "emscluster" ? "EmsCluster" : @edit[:new][:action].camelcase
+      schedule.towhat = params[:action_typ] == "emscluster" ? "EmsCluster" : params[:action_typ].camelcase
     end
-    if ["vm", "miq_template"].include?(@edit[:new][:action])
+
+    if %w(vm miq_template).include?(params[:action_typ])
       schedule.sched_action = {:method=>"vm_scan"}      # Default to vm_scan method for now
-    elsif @edit[:new][:action].ends_with?("check_compliance")
+    elsif params[:action_typ].ends_with?("check_compliance")
       schedule.sched_action = {:method=>"check_compliance"}
-    elsif @edit[:new][:action] == "db_backup"
+    elsif params[:action_typ] == "db_backup"
       schedule.sched_action = {:method=>"db_backup"}
     else
       schedule.sched_action = {:method=>"scan"}
     end
 
-    if @edit[:new][:action] != "db_backup"
-      unless ["global","my"].include?@edit[:new][:filter] # Unless a search filter is chosen
+    if params[:action_typ] != "db_backup"
+      unless %w(global my).include?(params[:filter_typ]) # Unless a search filter is chosen
         # Build the filter expression
         exp = Hash.new
-        if @edit[:new][:action] == "storage"
-          case @edit[:new][:filter]
+        if params[:action_typ] == "storage"
+          case params[:filter_typ]
             when "ems"
-              exp["CONTAINS"] = {"field"=>"Storage.ext_management_systems-name", "value"=>@edit[:new][:filter_value]}
+              exp["CONTAINS"] = {"field" => "Storage.ext_management_systems-name", "value" => params[:filter_value]}
             when "host"
-              exp["CONTAINS"] = {"field"=>"Storage.hosts-name", "value"=>@edit[:new][:filter_value]}
+              exp["CONTAINS"] = {"field" => "Storage.hosts-name", "value" => params[:filter_value]}
             when "storage"
-              exp["="] = {"field"=>"Storage-name", "value"=>@edit[:new][:filter_value]}
+              exp["="] = {"field" => "Storage-name", "value" => params[:filter_value]}
             else
-              exp["IS NOT NULL"] = {"field"=>"Storage-name"}
+              exp["IS NOT NULL"] = {"field" => "Storage-name"}
           end
-        elsif @edit[:new][:action] == "host"
-          case @edit[:new][:filter]
+        elsif params[:action_typ] == "host"
+          case params[:filter_typ]
             when "ems"
-              exp["="] = {"field"=>"Host.ext_management_system-name", "value"=>@edit[:new][:filter_value]}
+              exp["="] = {"field" => "Host.ext_management_system-name", "value" => params[:filter_value]}
             when "cluster"
-              unless @edit[:new][:filter_value].blank?
+              unless params[:filter_value].blank?
                 exp["AND"] = [
-                  {"="=>{"field"=>"Host-v_owning_cluster", "value"=>@edit[:new][:filter_value].split("__").first}},
-                  {"="=>{"field"=>"Host-v_owning_datacenter", "value"=>@edit[:new][:filter_value].split("__").last}}
+                  {"=" => {"field" => "Host-v_owning_cluster",
+                           "value" => params[:filter_value].split("__").first}
+                  },
+                  {"=" => {"field" => "Host-v_owning_datacenter",
+                           "value" =>
+                             params[:filter_value].split("__").size == 1 ? "" : params[:filter_value].split("__").last}
+                  }
                 ]
               end
             when "host"
-              exp["="] = {"field"=>"Host-name", "value"=>@edit[:new][:filter_value]}
+              exp["="] = {"field" => "Host-name", "value" => params[:filter_value]}
             else
-              exp["IS NOT NULL"] = {"field"=>"Host-name"}
+              exp["IS NOT NULL"] = {"field" => "Host-name"}
           end
-        elsif @edit[:new][:action] == "emscluster"
-          case @edit[:new][:filter]
+        elsif params[:action_typ] == "emscluster"
+          case params[:filter_typ]
             when "ems"
-              exp["="] = {"field"=>"EmsCluster.ext_management_system-name", "value"=>@edit[:new][:filter_value]}
+              exp["="] = {"field" => "EmsCluster.ext_management_system-name", "value" => params[:filter_value]}
             when "cluster"
-              unless @edit[:new][:filter_value].blank?
+              unless params[:filter_value].blank?
                 exp["AND"] = [
-                  {"="=>{"field"=>"EmsCluster-name", "value"=>@edit[:new][:filter_value].split("__").first}},
-                  {"="=>{"field"=>"EmsCluster-v_parent_datacenter", "value"=>@edit[:new][:filter_value].split("__").last}}
+                  {"=" => {"field" => "EmsCluster-name", "value" => params[:filter_value].split("__").first}},
+                  {"=" => {
+                    "field" => "EmsCluster-v_parent_datacenter",
+                    "value" => params[:filter_value].split("__").size == 1 ? "" : params[:filter_value].split("__").last
+                  }}
                 ]
               end
             else
-              exp["IS NOT NULL"] = {"field"=>"EmsCluster-name"}
+              exp["IS NOT NULL"] = {"field" => "EmsCluster-name"}
           end
-        elsif @edit[:new][:action].ends_with?("check_compliance")
-          case @edit[:new][:filter]
+        elsif params[:action_typ].ends_with?("check_compliance")
+          case params[:filter_typ]
           when "ems"
-            exp["="] = {"field"=>"#{@edit[:new][:action].split("_").first.capitalize}.ext_management_system-name", "value"=>@edit[:new][:filter_value]}
+            exp["="] = {
+              "field" => "#{params[:action_typ].split("_").first.capitalize}.ext_management_system-name",
+              "value" => params[:filter_value]
+            }
           when "cluster"
-            unless @edit[:new][:filter_value].blank?
+            unless params[:filter_value].blank?
               exp["AND"] = [
-                {"="=>{"field"=>"#{@edit[:new][:action].split("_").first.capitalize}-v_owning_cluster", "value"=>@edit[:new][:filter_value].split("__").first}},
-                {"="=>{"field"=>"#{@edit[:new][:action].split("_").first.capitalize}-v_owning_datacenter", "value"=>@edit[:new][:filter_value].split("__").last}}
+                {"=" => {
+                  "field" => "#{params[:action_typ].split("_").first.capitalize}-v_owning_cluster",
+                  "value" => params[:filter_value].split("__").first
+                }},
+                {"=" => {
+                  "field" => "#{params[:action_typ].split("_").first.capitalize}-v_owning_datacenter",
+                  "value" => params[:filter_value].split("__").size == 1 ? "" : params[:filter_value].split("__").last
+                }}
               ]
             end
           when "host"
-            exp["="] = {"field"=>"Host-name", "value"=>@edit[:new][:filter_value]}
+            exp["="] = {"field" => "Host-name", "value" => params[:filter_value]}
           when "vm"
-              exp["="] = {"field"=>"Vm-name", "value"=>@edit[:new][:filter_value]}
+            exp["="] = {"field" => "Vm-name", "value" => params[:filter_value]}
           else
-            exp["IS NOT NULL"] = {"field"=>"#{@edit[:new][:action].split("_").first.capitalize}-name"}
+            exp["IS NOT NULL"] = {"field" => "#{params[:action_typ].split("_").first.capitalize}-name"}
           end
         else
-          model = @edit[:new][:action].starts_with?("vm") ? "Vm" : "MiqTemplate"
-          case @edit[:new][:filter]
+          model = params[:action_typ].starts_with?("vm") ? "Vm" : "MiqTemplate"
+          case params[:filter_typ]
             when "ems"
-              exp["="] = {"field"=>"#{model}.ext_management_system-name", "value"=>@edit[:new][:filter_value]}
+              exp["="] = {"field" => "#{model}.ext_management_system-name", "value" => params[:filter_value]}
             when "cluster"
-              unless @edit[:new][:filter_value].blank?
+              unless params[:filter_value].blank?
                 exp["AND"] = [
-                  {"="=>{"field"=>"#{model}-v_owning_cluster", "value"=>@edit[:new][:filter_value].split("__").first}},
-                  {"="=>{"field"=>"#{model}-v_owning_datacenter", "value"=>@edit[:new][:filter_value].split("__").last}}
+                  {"=" => {
+                    "field" => "#{model}-v_owning_cluster",
+                    "value" => params[:filter_value].split("__").first
+                  }},
+                  {"=" => {
+                    "field" => "#{model}-v_owning_datacenter",
+                    "value" => params[:filter_value].split("__").size == 1 ? "" : params[:filter_value].split("__").last
+                  }}
                 ]
               end
             when "host"
-              exp["="] = {"field"=>"#{model}.host-name", "value"=>@edit[:new][:filter_value]}
+              exp["="] = {"field" => "#{model}.host-name", "value" => params[:filter_value]}
             when "vm"
-              exp["="] = {"field"=>"#{model}-name", "value"=>@edit[:new][:filter_value]}
+              exp["="] = {"field" => "#{model}-name", "value" => params[:filter_value]}
             when "miq_template"
-              exp["="] = {"field"=>"#{model}-name", "value"=>@edit[:new][:filter_value]}
+              exp["="] = {"field" => "#{model}-name", "value" => params[:filter_value]}
             else
-              exp["IS NOT NULL"] = {"field"=>"#{model}-name"}
+              exp["IS NOT NULL"] = {"field" => "#{model}-name"}
           end
         end
+
         schedule.filter = MiqExpression.new(exp)
         schedule.miq_search = nil if schedule.miq_search  # Clear out any search relationship
       else  # Search filter chosen, set up relationship
         schedule.filter = nil                             # Clear out existing filter expression
-        schedule.miq_search = @edit[:new][:filter_value] ? MiqSearch.find(@edit[:new][:filter_value]) : nil # Set up the search relationship
+        schedule.miq_search = params[:filter_value] ? MiqSearch.find(params[:filter_value]) : nil # Set up the search relationship
       end
-    end
-    schedule.run_at ||= Hash.new
-    run_at = create_time_in_utc("#{@edit[:new][:start_date]} #{@edit[:new][:start_hour]}:#{@edit[:new][:start_min]}:00",
-                                @edit[:tz])
-    schedule.run_at[:start_time] = "#{run_at} Z"
-    schedule.run_at[:tz] = @edit[:tz]
-    schedule.run_at[:interval] ||= Hash.new
-    schedule.run_at[:interval][:unit] = @edit[:new][:timer_typ].downcase
-    case @edit[:new][:timer_typ].downcase
-    when "monthly"
-      schedule.run_at[:interval][:value] = @edit[:new][:timer_months]
-    when "weekly"
-      schedule.run_at[:interval][:value] = @edit[:new][:timer_weeks]
-    when "daily"
-      schedule.run_at[:interval][:value] = @edit[:new][:timer_days]
-    when "hourly"
-      schedule.run_at[:interval][:value] = @edit[:new][:timer_hours]
     else
-      schedule.run_at[:interval].delete(:value)
+      schedule.filter = nil
+      schedule.depot_hash = {
+        :uri      => "#{params[:uri_prefix]}://#{params[:uri]}",
+        :username => params[:log_userid],
+        :password => params[:log_password],
+        :name     => params[:depot_name]
+      }
     end
+
+    schedule.run_at ||= Hash.new
+    run_at = create_time_in_utc("#{params[:miq_angular_date_1]} #{params[:start_hour]}:#{params[:start_min]}:00", params[:time_zone])
+    schedule.run_at[:start_time] = "#{run_at} Z"
+    schedule.run_at[:tz] = params[:time_zone]
+    schedule.run_at[:interval] ||= {}
+    schedule.run_at[:interval][:unit] = params[:timer_typ].downcase
+    schedule.run_at[:interval][:value] = params[:timer_value]
   end
 
   # Common Schedule button handler routines follow
@@ -611,4 +591,66 @@ module OpsController::Settings::Schedules
     process_elements(schedules, MiqSchedule, task)
   end
 
+  def build_schedule_options_for_select
+    @action_type_options_for_select = [
+      ["VM Analysis", "vm"],
+      ["Template Analysis", "miq_template"],
+      ["Host Analysis", "host"],
+      ["#{ui_lookup(:model => 'EmsCluster')} Analysis", "emscluster"],
+      ["#{ui_lookup(:model => 'Storage')} Analysis", "storage"]
+    ]
+    @action_type_options_for_select.push(["VM Compliance Check", "vm_check_compliance"]) if role_allows(:feature => "vm_check_compliance")
+    @action_type_options_for_select.push(["Host Compliance Check", "host_check_compliance"]) if role_allows(:feature => "host_check_compliance")
+    @action_type_options_for_select.push(["Database Backup", "db_backup"]) if DatabaseBackup.backup_supported?
+
+    @vm_options_for_select = [
+      ["All VMs", "all"],
+      ["All VMs for #{ui_lookup(:table => "ext_management_systems")}", "ems"],
+      ["All VMs for #{ui_lookup(:table => "ems_clusters")}", "cluster"],
+      ["All VMs for Host", "host"],
+      ["A single VM", "vm"]
+    ] +
+      (@vm_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
+      (@vm_my_filters.empty? ? [] : [["My Filters", "my"]])
+
+    @template_options_for_select = [
+      ["All Templates", "all"],
+      ["All Templates for #{ui_lookup(:table => "ext_management_systems")}", "ems"],
+      ["All Templates for #{ui_lookup(:table => "ems_clusters")}", "cluster"],
+      ["All Templates for Host", "host"],
+      ["A single Template", "miq_template"]
+    ] +
+      (@miq_template_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
+      (@miq_template_my_filters.empty? ? [] : [["My Filters", "my"]])
+
+    @host_options_for_select = [
+      ["All Hosts", "all"],
+      ["All Hosts for #{ui_lookup(:table => "ext_management_systems")}", "ems"],
+      ["All Hosts for #{ui_lookup(:table => "ems_clusters")}", "cluster"],
+      ["A single Host", "host"]
+    ] +
+      (@host_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
+      (@host_my_filters.empty? ? [] : [["My Filters", "my"]])
+
+    @cluster_options_for_select = [
+      ["All Clusters", "all"],
+      ["All Clusters for #{ui_lookup(:table => "ext_management_systems")}", "ems"],
+      ["A single Cluster", "cluster"]
+    ] +
+      (@cluster_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
+      (@cluster_my_filters.empty? ? [] : [["My Filters", "my"]])
+
+    @storage_options_for_select = [
+      ["All Datastores", "all"],
+      ["All Datastores for Host", "host"],
+      ["All Datastores for #{ui_lookup(:table => "ext_management_systems")}", "ems"],
+      ["A single Datastore", "storage"]
+    ] +
+      (@storage_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
+      (@storage_my_filters.empty? ? [] : [["My Filters", "my"]])
+
+    @protocols_arr = []
+    DatabaseBackup.supported_depots.each { |depot| @protocols_arr.push(depot[1]) }
+    @database_backup_options_for_select = @protocols_arr.sort
+  end
 end
