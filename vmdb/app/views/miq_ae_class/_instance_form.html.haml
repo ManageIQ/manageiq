@@ -60,7 +60,6 @@
           (#{h(@edit[:new][:ae_fields][i]["name"])})
         %td
           - default_value = @edit[:new][:ae_fields][i]["default_value"]
-          - cls = flds["value"].blank? && !default_value.blank? ? "input_def_val" : ""
           - if @edit[:new][:ae_fields][i]["datatype"] == "password"
             = password_field_tag("#{prefix}inst_password_value_#{i}",
               flds["value"].blank? ? '' : flds["value"],
