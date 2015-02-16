@@ -86,7 +86,8 @@ describe ApiController do
 
       expect(@success).to be_true
       expect(@code).to eq(200)
-      expect(@result["id"]).to match(tag_url)
+      expect(@result["href"]).to match(tag_url)
+      expect(@result["id"]).to eq(tag.id)
       expect(@result["name"]).to eq(tag.name)
       expect(@result).to have_key("category")
       expect(@result["category"]["name"]).to eq(tag.category.name)
@@ -106,7 +107,8 @@ describe ApiController do
 
       expect(@success).to be_true
       expect(@code).to eq(200)
-      expect(@result["id"]).to match(tag_url)
+      expect(@result["href"]).to match(tag_url)
+      expect(@result["id"]).to eq(tag.id)
       expect(@result["name"]).to eq(tag.name)
       expect(@result).to have_key("categorization")
       cat = @result["categorization"]

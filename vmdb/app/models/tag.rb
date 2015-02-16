@@ -1,8 +1,8 @@
 class Tag < ActiveRecord::Base
   has_many :taggings, :dependent => :destroy
   has_one :classification
-  virtual_has_one :category
-  virtual_has_one :categorization
+  virtual_has_one :category,       :class_name => "Classification"
+  virtual_has_one :categorization, :class_name => "Hash"
 
   def self.to_tag(name, options = {})
     File.join(Tag.get_namespace(options), name)
@@ -113,23 +113,25 @@ class Tag < ActiveRecord::Base
   end
 
   def show
-    category && category.show
+    category.try(:show)
   end
 
   def categorization
-    @categorization ||= begin
-      !show ? {} : {
-        "name"         => classification.name,
-        "description"  => classification.description,
-        "category"     => {"name" => category.name, "description" => category.description},
-        "display_name" => "#{category.description}: #{classification.description}"
-      }
-    end
+    @categorization ||= if !show
+                          {}
+                        else
+                          {
+                            "name"         => classification.name,
+                            "description"  => classification.description,
+                            "category"     => {"name" => category.name, "description" => category.description},
+                            "display_name" => "#{category.description}: #{classification.description}"
+                          }
+                        end
   end
 
   private
 
   def name_path
-    @name_path ||= name.dup.sub!(%r{/[^/]*/}, "")
+    @name_path ||= name.sub(%r{^/[^/]*/}, "")
   end
 end
