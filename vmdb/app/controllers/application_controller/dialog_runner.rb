@@ -148,12 +148,10 @@ module ApplicationController::DialogRunner
     # this problem applies not only to the action here, but also to all of the
     # app/views/shared/dialogs/_dialog_field.html.erb and more...
 
-    @edit = session[:edit]
+    field = load_dialog_field
+
     dialog_id = @edit[:rec_id]
     url = url_for(:action => 'dialog_field_changed', :id => dialog_id)
-
-    dialog = @edit[:wf].dialog
-    field  = dialog.field(params[:id])
 
     field.refresh_button_pressed
 
@@ -175,11 +173,7 @@ module ApplicationController::DialogRunner
   end
 
   def dynamic_radio_button_refresh
-    @edit = session[:edit]
-
-    dialog = @edit[:wf].dialog
-
-    field = dialog.field(params[:name])
+    field = load_dialog_field
     values = field.refresh_button_pressed
 
     checked_value = values.collect { |value_pair| value_pair[0].to_s }.include?(params[:checked_value]) ?
@@ -187,34 +181,24 @@ module ApplicationController::DialogRunner
 
     field.value = checked_value
 
-    json = {
-      :checked_value => checked_value,
-      :field_name    => field.name,
-      :values        => values
-    }
-
-    respond_to do |format|
-      format.json { render :json => json, :status => 200 }
-    end
+    response_json = {:checked_value => checked_value, :field_name => field.name, :values => values}
+    dynamic_refresh_response(response_json)
   end
 
   def dynamic_text_box_refresh
-    @edit = session[:edit]
-
-    dialog = @edit[:wf].dialog
-
-    field = dialog.field(params[:name])
+    field = load_dialog_field
     values = field.refresh_button_pressed
 
-    respond_to do |format|
-      format.json { render :json => {:field_name => field.name, :values => values}, :status => 200 }
-    end
+    response_json = {:field_name => field.name, :values => values}
+    dynamic_refresh_response(response_json)
   end
 
   def dynamic_checkbox_refresh
-    @edit = session[:edit]
+    field = load_dialog_field
 
-    dialog = @edit[:wf].dialog
+    response_json = {:field_name => field.name, :checked => field.checked?}
+    dynamic_refresh_response(response_json)
+  end
 
   def dynamic_date_refresh
     field = load_dialog_field
@@ -270,7 +254,6 @@ module ApplicationController::DialogRunner
     @record = Dialog.find_by_id(@edit[:rec_id])
 
     params.each do |p|
-
       #if p[0] contains name w/ __protected(password field), so remove it
       p[0] = p[0].split("__protected").first if p[0].ends_with?("__protected")
 
