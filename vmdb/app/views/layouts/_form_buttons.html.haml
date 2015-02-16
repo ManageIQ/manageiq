@@ -1,0 +1,95 @@
+- save_text            ||= _("Save Changes")
+- save_confirm_text    ||= nil
+- show_validate_button ||= nil
+- ajax_buttons         ||= false
+- serialize            ||= false
+- action_url           ||= "update"
+%table{:width => "100%"}
+  %tr
+    %td{:align => "right "}
+      #buttons_on{:style => "display:#{@changed ? 'block' : 'none'}"}
+        -if ajax_buttons
+          - if serialize
+            = button_tag(_('Save'),
+              :class   => 'btn btn-primary',
+              :alt     => save_text,
+              :title   => save_text,
+              :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => 'save')}', true);")
+          - else
+            - if show_validate_button
+              = button_tag(t = _('Validate'),
+                :class   => 'btn btn-primary',
+                :alt     => t,
+                :title   => t,
+                :onclick => "miqAjaxButton('#{url_for(:action => action_url, :button => 'db_verify')}');")
+            = button_tag(_('Save'),
+              :class   => 'btn btn-primary',
+              :alt     => save_text,
+              :title   => save_text,
+              :onclick => "miqAjaxButton('#{url_for(:action => action_url, :button => 'save')}');")
+        - else
+          - if show_validate_button
+            = button_tag(_("Verify"),
+              :id      => "db_verify",
+              :class   => "btn btn-primary",
+              :name    => "save",
+              :alt     => _("Validate"),
+              :title   => _("Validate Database Settings for the Server"),
+              :type    => "submit")
+          - if save_confirm_text
+            = button_tag(_("Save"),
+              :id      => "save",
+              :class   => "btn btn-primary",
+              :name    => "save",
+              :alt     => save_text,
+              :title   => save_text,
+              :type    => "submit",
+              :confirm => save_confirm_text)
+          - else
+            = button_tag(_("Save"),
+              :id      => "save",
+              :class   => "btn btn-primary",
+              :name    => "save",
+              :alt     => save_text,
+              :title   => save_text,
+              :type    => "submit")
+
+        - if ajax_buttons
+          = button_tag(_('Reset'),
+            :class   => 'btn btn-default',
+            :alt     => t = _("Reset Changes"),
+            :title   => t,
+            :onclick => "miqAjaxButton('#{url_for(:action => action_url, :button => 'reset')}');")
+        - else
+          = button_tag(_('Reset'),
+            :id      => "reset",
+            :class   => "btn btn-default",
+            :name    => "reset",
+            :alt     => t = _("Reset Changes"),
+            :title   => t,
+            :type    => "submit")
+          - unless @layout == "configuration" || @layout == "ops" || @layout == "chargeback" || @layout == "miq_ae_class"
+            = button_tag(t = _("Cancel"),
+              :id      => "cancel",
+              :class   => "btn btn-default",
+              :name    => "cancel",
+              :alt     => t,
+              :title   => t,
+              :type    => "submit")
+
+      #buttons_off{:style => "display: #{@changed ? 'none' : 'block'}"}
+        - if show_validate_button
+          = button_tag(_("Verify"),
+            :class => "btn btn-primary btn-disabled",
+            :title => _("All fields are needed to perform verification of Database Settings"))
+        = button_tag(_("Save"),  :class => "btn btn-primary btn-disabled")
+        = button_tag(_("Reset"), :class => "btn btn-default btn-disabled")
+
+        - unless  @layout == "configuration" || @layout == "ops" || @layout == "chargeback" || @layout == "miq_ae_class"
+          = button_tag(t = _("Cancel"),
+            :id      => "cancel",
+            :class   => "btn btn-default",
+            :name    => "cancel",
+            :alt     => t,
+            :title   => t,
+            :type    => "submit")
