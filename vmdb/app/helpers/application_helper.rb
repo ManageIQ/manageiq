@@ -495,7 +495,7 @@ module ApplicationHelper
 
   def get_custom_buttons(record)
     cbses = CustomButtonSet.find_all_by_class_name(button_class_name(record), service_template_id(record))
-    cbses.sort { |a,b| a.name <=> b.name }.collect do |cbs|
+    cbses.sort_by { |cbs| cbs[:set_data][:group_index] }.collect do |cbs|
       group = Hash.new
       group[:id]           = cbs.id
       group[:text]         = cbs.name.split("|").first
