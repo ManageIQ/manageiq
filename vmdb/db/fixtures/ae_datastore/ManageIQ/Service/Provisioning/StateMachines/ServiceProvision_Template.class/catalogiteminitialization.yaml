@@ -9,4 +9,4 @@ object:
     description: 
   fields:
   - pre2:
-      value: /Service/Provisioning/StateMachines/Methods/CatalogItemInitialization
+      value: "/Service/Provisioning/StateMachines/Methods/CatalogItemInitialization"

@@ -9,4 +9,4 @@ object:
     description: 
   fields:
   - dialog_name:
-      value: ${#dialog_name_prefix}-user
+      value: "${#dialog_name_prefix}-user"

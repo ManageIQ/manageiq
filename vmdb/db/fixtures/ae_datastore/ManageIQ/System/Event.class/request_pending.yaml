@@ -9,4 +9,4 @@ object:
     description: 
   fields:
   - rel5:
-      value: /System/Policy/request_pending
+      value: "/System/Policy/request_pending"

@@ -13,4 +13,4 @@ object:
   - meth1:
       value: parse_automation_request
   - rel2:
-      value: /${/#ae_provider_category}/${#target_component}/${#target_class}/${#target_instance}
+      value: "/${/#ae_provider_category}/${#target_component}/${#target_class}/${#target_instance}"

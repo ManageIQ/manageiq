@@ -3,7 +3,7 @@ object_type: class
 version: 1.0
 object:
   attributes:
-    description: ! 'Event '
+    description: 'Event '
     display_name: 
     name: Event
     type: 

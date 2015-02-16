@@ -18,9 +18,9 @@ object:
       datatype: string
       priority: 1
       owner: 
-      default_value: ${/#miq_provision.placement_auto}
+      default_value: "${/#miq_provision.placement_auto}"
       substitute: true
-      message: ! '*'
+      message: "*"
       visibility: 
       collect: 
       scope: 

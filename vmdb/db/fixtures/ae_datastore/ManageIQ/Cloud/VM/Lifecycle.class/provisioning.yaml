@@ -9,6 +9,6 @@ object:
     description: 
   fields:
   - Relationship5:
-      value: /Cloud/VM/Provisioning/Profile/${/#user.normalized_ldap_group}#get_state_machine
+      value: "/Cloud/VM/Provisioning/Profile/${/#user.normalized_ldap_group}#get_state_machine"
   - Relationship6:
-      value: /Cloud/VM/Provisioning/StateMachines/${/#state_machine}/${/#miq_provision.provision_type}
+      value: "/Cloud/VM/Provisioning/StateMachines/${/#state_machine}/${/#miq_provision.provision_type}"
