@@ -2,7 +2,7 @@
   #accordion
     .panel
       .topbar
-        = link_to(h(@record.evm_display_name.length < trunc_at ? @record.evm_display_name : @record.evm_display_name[0...trunc_to] + "..."),
+        = link_to(truncate(@record.evm_display_name, :length => truncate_length),
           {:action => 'panel_control', :panel => 'icon'},
           :remote => true,
           :title  => h(@record.evm_display_name))

@@ -1,9 +1,7 @@
-- trunc_at = 23
-- trunc_to = 20
 #listnav_div
   - filename = render_listnav_filename
   - if filename
-    - locals = {:trunc_at => trunc_at, :trunc_to => trunc_to}
+    - locals = {:truncate_length => 23}
     - locals.merge(:size => 72) if @compare
     = render :partial => "layouts/listnav/#{filename}", :locals => locals
   - else
