@@ -119,7 +119,16 @@ class VirtualReflection < SimpleDelegator
 end
 
 module VirtualFields
+  module NonARModels
+    def dangerous_attribute_method?(_); false; end
+    def generated_association_methods; self; end
+    def add_autosave_association_callbacks(*args); self; end
+  end
+
   def self.extended(other)
+    unless other.respond_to?(:dangerous_attribute_method?)
+      other.extend NonARModels
+    end
     other.class_eval { @virtual_fields_base = true }
   end
 
