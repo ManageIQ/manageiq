@@ -290,6 +290,7 @@ module OpsController::Settings::Common
         render_flash
         return
       end
+      @edit[:new][:authentication][:ldaphost].reject!(&:blank?) if @edit[:new][:authentication][:ldaphost]
       @changed = (@edit[:new] != @edit[:current].config)
       @update = MiqServer.find(@sb[:selected_server_id]).get_config("vmdb")
     when "settings_workers"                                   # Workers Settings
@@ -723,8 +724,6 @@ module OpsController::Settings::Common
       auth[:ldaphost][0] = params[:authentication_ldaphost_1] if params[:authentication_ldaphost_1]
       auth[:ldaphost][1] = params[:authentication_ldaphost_2] if params[:authentication_ldaphost_2]
       auth[:ldaphost][2] = params[:authentication_ldaphost_3] if params[:authentication_ldaphost_3]
-
-      auth[:ldaphost].reject!(&:blank?)
 
       auth[:follow_referrals] = (params[:follow_referrals].to_s == "1") if params[:follow_referrals]
       auth[:get_direct_groups] = (params[:get_direct_groups].to_s == "1") if params[:get_direct_groups]
