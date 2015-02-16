@@ -74,7 +74,9 @@ class ScheduleWorker < WorkerBase
     end
 
     def ems_refresh_all_scvmm_timer
-      queue_work_on_each_zone(:class_name  => "EmsMicrosoft", :method_name => "refresh_all_ems_timer")
+      if EmsMicrosoft.any?
+        queue_work_on_each_zone(:class_name  => "EmsMicrosoft", :method_name => "refresh_all_ems_timer")
+      end
     end
 
     def miq_alert_evaluate_hourly_timer
