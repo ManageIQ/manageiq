@@ -1,83 +1,67 @@
 - if @record.try(:evm_display_name)
-  #accordion
-    .panel
-      .topbar
-        = link_to(truncate(@record.evm_display_name, :length => truncate_length),
-          {:action => 'panel_control', :panel => 'icon'},
-          :remote => true,
-          :title  => h(@record.evm_display_name))
-      = hidden_div_if(@panels["icon"].nil? || @panels["icon"] == false, :id => "icon") do
-        .panecontent
-          = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
+  #accordion.panel-group
+    = patternfly_accordion_panel(truncate(@record.evm_display_name, :length => truncate_length),
+      @panels["icon"].nil? || @panels["icon"] == false, "icon") do
+      = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
 
-    .topbar
-      = link_to(_("Properties"),
-        {:action => 'panel_control', :panel => 'snia_fs_prop'},
-        :remote => true)
-    = hidden_div_if(@panels["snia_fs_prop"].nil? || @panels["snia_fs_prop"] == false, :id => "snia_fs_prop") do
-      .panecontent
-        = link_to_with_icon(_('Summary'),
-          {:action => 'show', :id => @record, :display => 'main'},
-          :title => _("Show Summary"))
+    = patternfly_accordion_panel(_("Properties"),
+      @panels["snia_fs_prop"].nil? || @panels["snia_fs_prop"] == false, "snia_fs_prop") do
+      %ul.nav.nav-pills.nav-stacked
+        %li
+          = link_to(_('Summary'),
+            {:action => 'show', :id => @record, :display => 'main'},
+            :title => _("Show Summary"))
 
-    .topbar
-      = link_to(_("Relationships"),
-        {:action => 'panel_control', :panel => 'snia_fs_rel'},
-        :remote => true)
-    = hidden_div_if(@panels["snia_fs_rel"].nil? || @panels["snia_fs_rel"] == false, :id => "snia_fs_rel") do
-      .panecontent
+    = patternfly_accordion_panel(_("Relationships"),
+      @panels["snia_fs_rel"].nil? || @panels["snia_fs_rel"] == false, "snia_fs_rel") do
+      %ul.nav.nav-pills.nav-stacked
         - if role_allows(:feature => "ontap_storage_system_show")
-          = link_if_condition(:cond => !@record.storage_system.nil?,
-            :record_id              => @record.storage_system.id,
-            :table                  => 'ontap_storage_system',
-            :controller             => 'ontap_storage_system',
-            :action                 => 'show',
-            :image_path             => '/images/icons/16/link_external.gif',
-            :link_text              => "#{ui_lookup(:table => "ontap_storage_system")}: #{@record.storage_system.evm_display_name}")
+          = li_link_if_condition(:cond => !@record.storage_system.nil?,
+            :record_id                 => @record.storage_system.id,
+            :table                     => 'ontap_storage_system',
+            :controller                => 'ontap_storage_system',
+            :action                    => 'show',
+            :link_text                 => "#{ui_lookup(:table => "ontap_storage_system")}: #{@record.storage_system.evm_display_name}")
 
         - if role_allows(:feature => "snia_local_file_system_show")
-          = link_if_condition(:cond => !@record.file_system.nil?,
-            :record_id              => @record.file_system.id,
-            :table                  => 'snia_local_file_system',
-            :controller             => 'snia_local_file_system',
-            :action                 => 'show',
-            :image_path             => '/images/icons/16/link_external.gif',
-            :link_text              => "#{ui_lookup(:table => "snia_local_file_system")}: #{@record.file_system.evm_display_name}")
+          = li_link_if_condition(:cond => !@record.file_system.nil?,
+            :record_id                 => @record.file_system.id,
+            :table                     => 'snia_local_file_system',
+            :controller                => 'snia_local_file_system',
+            :action                    => 'show',
+            :image_path                => '/images/icons/16/link_external.gif',
+            :link_text                 => "#{ui_lookup(:table => "snia_local_file_system")}: #{@record.file_system.evm_display_name}")
 
         - if role_allows(:feature => "ontap_logical_disk_show")
-          = link_if_condition(:cond => !@record.logical_disk.nil?,
-            :record_id              => @record.logical_disk.id,
-            :table                  => 'ontap_logical_disk',
-            :display                => 'storage_systems',
-            :controller             => 'ontap_logical_disk')
+          = li_link_if_condition(:cond => !@record.logical_disk.nil?,
+            :record_id                 => @record.logical_disk.id,
+            :table                     => 'ontap_logical_disk',
+            :display                   => 'storage_systems',
+            :controller                => 'ontap_logical_disk')
 
         - if role_allows(:feature => "cim_base_storage_extent_show_list")
-          = link_if_nonzero(:count => @record.base_storage_extents_size,
-            :record_id             => @record.id,
-            :tables                => 'cim_base_storage_extent',
-            :display               => 'cim_base_storage_extents')
-    .topbar
-      = link_to(_("Infrastructure Relationships"),
-        {:action => 'panel_control', :panel => 'snia_fs_inf_rel'},
-        :remote => true)
-    = hidden_div_if(@panels["snia_fs_inf_rel"].nil? || @panels["snia_fs_inf_rel"] == false, :id => "snia_fs_inf_rel") do
-      .panecontent
+          = li_link_if_nonzero(:count => @record.base_storage_extents_size,
+            :record_id                => @record.id,
+            :tables                   => 'cim_base_storage_extent',
+            :display                  => 'cim_base_storage_extents')
+
+    = patternfly_accordion_panel(_("Infrastructure Relationships"),
+      @panels["snia_fs_inf_rel"].nil? || @panels["snia_fs_inf_rel"] == false, "snia_fs_inf_rel") do
+      %ul.nav.nav-pills.nav-stacked
         - if role_allows(:feature => "vm_show_list")
-          = link_if_nonzero(:count => @record.vms_size,
-            :record_id             => @record.id,
-            :tables                => 'vm',
-            :display               => 'vms')
-          %p
+          = li_link_if_nonzero(:count => @record.vms_size,
+            :record_id                => @record.id,
+            :tables                   => 'vm',
+            :display                  => 'vms')
 
         - if role_allows(:feature => "host_show_list")
-          = link_if_nonzero(:count => @record.hosts_size,
-            :record_id             => @record.id,
-            :tables                => 'host',
-            :display               => 'hosts')
-          %p
+          = li_link_if_nonzero(:count => @record.hosts_size,
+            :record_id                => @record.id,
+            :tables                   => 'host',
+            :display                  => 'hosts')
 
         - if role_allows(:feature => "storage_show_list")
-          = link_if_nonzero(:count => @record.storages_size,
-            :record_id             => @record.id,
-            :tables                => 'storage',
-            :display               => 'storages')
+          = li_link_if_nonzero(:count => @record.storages_size,
+            :record_id                => @record.id,
+            :tables                   => 'storage',
+            :display                  => 'storages')

@@ -1,47 +1,35 @@
 - if @record.try(:name) && @lastaction == "show"
-  #accordion
-    .panel
-      .topbar
-        = link_to(truncate(@record.name, :length => truncate_length),
-          {:action => 'panel_control', :panel => 'icon'},
-          :remote => true,
-          :title  => h(@record.name))
-      = hidden_div_if(@panels["icon"].nil? || @panels["icon"] == false, :id => "icon") do
-        .panecontent
-          = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
+  #accordion.panel-group
+    = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length),
+      @panels["icon"].nil? || @panels["icon"] == false, "icon") do
+      = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
 
-    .topbar
-      = link_to(_("Properties"),
-        {:action => 'panel_control', :panel => 'repo_prop'},
-        :remote => true)
-    = hidden_div_if(@panels["repo_prop"].nil? || @panels["repo_prop"] == false, :id => "repo_prop") do
-      .panecontent
-        = link_to_with_icon(_('Summary'),
+    = patternfly_accordion_panel(_("Properties"),
+      @panels["repo_prop"].nil? || @panels["repo_prop"] == false, "repo_prop") do
+      %ul.nav.nav-pills.nav-stacked
+        %li
+        = link_to(_('Summary'),
           {:action => 'show', :id => @record, :display => 'main'},
           :title => _("Show Summary"))
 
-    .topbar
-      = link_to(_("Relationships"),
-        {:action => 'panel_control', :panel => 'repo_rel'},
-        :remote => true)
-    = hidden_div_if(@panels["repo_rel"].nil? || @panels["repo_rel"] == false, :id => "repo_rel") do
-      .panecontent
+    = patternfly_accordion_panel(_("Properties"),
+      @panels["repo_rel"].nil? || @panels["repo_rel"] == false, "repo_rel") do
+      %ul.nav.nav-pills.nav-stacked
         - if role_allows(:feature => "vm_show_list")
           - if @record.number_of(:vms) == 0
-            %img{:src => "/images/icons/16/link_none.gif"}
-            = _("Discovered VMs (%s)") % @record.number_of(:vms)
-            %br
+            %li.disabled
+              = link_to(_("Discovered VMs (%s)") % @record.number_of(:vms), "#")
           - else
-            = link_to_with_icon(_("Discovered VMs (%s)") % @record.number_of(:vms),
-              {:action => 'show', :id => @record, :display => 'vms'},
-              :title => _("Show all discovered VMs"))
+            %li
+              = link_to(_("Discovered VMs (%s)") % @record.number_of(:vms),
+                {:action => 'show', :id => @record, :display => 'vms'},
+                :title => _("Show all discovered VMs"))
         - if role_allows(:feature => "miq_template_show_list")
           - if @record.number_of(:miq_templates) == 0
-            %img{:src => "/images/icons/16/link_none.gif"}
-            = _("Templates (%s)") % @record.number_of(:miq_templates)
-            %br
+            %li.disabled
+              = link_to(_("Templates (%s)") % @record.number_of(:miq_templates), "#")
           - else
-            = link_to_with_icon(_("Templates (%s)") % @record.number_of(:miq_templates),
-              {:action => 'show', :id => @record, :display => 'miq_templates'},
-              :title => _("Show all discovered Templates"))
-        %p
+            %li
+              = link_to_with_icon(_("Templates (%s)") % @record.number_of(:miq_templates),
+                {:action => 'show', :id => @record, :display => 'miq_templates'},
+                :title => _("Show all discovered Templates"))
