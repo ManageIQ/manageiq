@@ -52,8 +52,8 @@ describe ApiController do
 
     @ps2.add_member(@p3)
 
-    @p_guids     = [@p1.guid, @p2.guid].sort
-    @p_all_guids = [@p1.guid, @p2.guid, @p3.guid].sort
+    @p_guids     = [@p1.guid, @p2.guid]
+    @p_all_guids = [@p1.guid, @p2.guid, @p3.guid]
   end
 
   def app
@@ -115,8 +115,7 @@ describe ApiController do
     expect(@result["name"]).to eq("policies")
     expect(@result["resources"].size).to eq(2)
     results = @result["resources"]
-    guids = [results.first["guid"], results.last["guid"]].sort
-    expect(guids).to eq(@p_guids)
+    expect([results.first["guid"], results.last["guid"]]).to match_array(@p_guids)
   end
 
   def test_policy_profile_query(object, object_policy_profiles_url)
@@ -170,7 +169,7 @@ describe ApiController do
       expect(@result["name"]).to eq("policies")
       expect(@result["resources"].size).to eq(3)
       guids = @result["resources"].collect { |r| r["guid"] }
-      expect(guids.sort).to eq(@p_all_guids)
+      expect(guids).to match_array(@p_all_guids)
     end
   end
 
@@ -224,8 +223,7 @@ describe ApiController do
       expect(@result["name"]).to eq("policies")
       expect(@result["resources"].size).to eq(2)
       results = @result["resources"]
-      guids = [results.first["guid"], results.last["guid"]].sort
-      expect(guids).to eq(@p_guids)
+      expect([results.first["guid"], results.last["guid"]]).to match_array(@p_guids)
     end
 
     it "query Policy Profile with expanded policies subcollection" do
@@ -241,8 +239,7 @@ describe ApiController do
       expect(@result).to have_key("policies")
       policies = @result["policies"]
       expect(policies.size).to eq(2)
-      guids = [policies.first["guid"], policies.last["guid"]].sort
-      expect(guids).to eq(@p_guids)
+      expect([policies.first["guid"], policies.last["guid"]]).to match_array(@p_guids)
     end
   end
 
