@@ -372,7 +372,6 @@ module ReportController::Widgets
       @edit[:rpt] = MiqReport.find_by_id(@widget.resource_id)
       @menu = get_reports_menu
       if @sb[:wtype] == "r"
-        @menu = get_reports_menu
         @menu.each do |m|
           m[1].each do |f|
               f.each do |r|
