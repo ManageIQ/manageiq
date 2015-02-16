@@ -336,14 +336,12 @@ module ReportController::Widgets
         @edit[:new][:roles] = ["_ALL_"]
       else
         roles = MiqUserRole.find_by_name(@widget.visibility[:roles])
-        @edit[:new][:roles] = roles.collect { |role| to_cid(role.id) }
+        @edit[:new][:roles] = roles.collect { |role| to_cid(role.id) }.sort
       end
-      @edit[:new][:roles].sort! unless @edit[:new][:roles].blank?
     elsif @widget.visibility && @widget.visibility[:groups]
       @edit[:new][:visibility_typ] = "group"
       groups = MiqGroup.find_by_description(@widget.visibility[:groups])
-      @edit[:new][:groups] = groups.collect { |group| to_cid(group.id) }
-      @edit[:new][:groups].sort! unless @edit[:new][:groups].blank?
+      @edit[:new][:groups] = groups.collect { |group| to_cid(group.id) }.sort
     end
     @edit[:new][:roles] ||= Array.new   # initializing incase of new widget since visibility is not set yet.
     @edit[:sorted_user_roles] =
