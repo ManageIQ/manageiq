@@ -1016,10 +1016,8 @@ class ApplicationController < ActionController::Base
     else
       # Building custom reports array for super_admin/admin roles, it doesnt show up on menu if their menu was set which didnt contain custom folder in it
       temp = Array.new
-      subfolder = Array.new
-      @custom_folder = Array.new
-      @custom_folder.push(@sb[:grp_title])
-      subfolder.push("Custom")
+      subfolder = %w{ Custom }
+      @custom_folder = [ @sb[:grp_title] ]
       @custom_folder.push([subfolder]) unless @custom_folder.include?([subfolder])
 
       custom = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
