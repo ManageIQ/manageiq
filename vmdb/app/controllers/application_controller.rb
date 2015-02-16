@@ -1018,6 +1018,7 @@ class ApplicationController < ActionController::Base
       temp = Array.new
       subfolder = %w{ Custom }
       @custom_folder = [ @sb[:grp_title] ]
+      @custom_folder.push(@sb[:grp_title])
       @custom_folder.push([subfolder]) unless @custom_folder.include?([subfolder])
 
       custom = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
