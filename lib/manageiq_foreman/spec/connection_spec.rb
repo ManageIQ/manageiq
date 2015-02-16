@@ -39,7 +39,7 @@ describe ManageiqForeman::Connection do
 
   describe "#denormalized_hostgroups" do
     # can't denormalize hostgroups with partial lists
-    context "with all hostgroups" do
+    context "with parent children" do
       let(:orig)         { connection.hostgroups }
       let(:orig_child)   { orig.detect { |r| r["name"] == 'ProviderRefreshSpec-ChildHostGroup' } }
       let(:parent)       { results.detect { |r| r["name"] == 'ProviderRefreshSpec-HostGroup' } }
@@ -73,6 +73,47 @@ describe ManageiqForeman::Connection do
         expect(merge_child["ptable_id"]).to eq(12)
       end
     end
+
+    context "with multi levels" do
+      it "inherits value" do
+        expect(connection).to receive(:all).with(:hostgroups, {}).and_return(rs([
+          {"id" => 1, "operatingsystem_id" => 4},
+          {"id" => 2, "operatingsystem_id" => nil, "ancestry" => "1"},
+          {"id" => 3, "operatingsystem_id" => nil, "ancestry" => "1/2"},
+        ]))
+        expect(connection.denormalized_hostgroups).to eq(rs([
+          {"id" => 1, "operatingsystem_id" => 4},
+          {"id" => 2, "operatingsystem_id" => 4, "ancestry" => "1"},
+          {"id" => 3, "operatingsystem_id" => 4, "ancestry" => "1/2"},
+        ]))
+      end
+
+      it "overrides value" do
+        expect(connection).to receive(:all).with(:hostgroups, {}).and_return(rs([
+          {"id" => 1, "operatingsystem_id" => 4},
+          {"id" => 2, "operatingsystem_id" => nil, "ancestry" => "1"},
+          {"id" => 3, "operatingsystem_id" => 6, "ancestry" => "1/2"},
+        ]))
+        expect(connection.denormalized_hostgroups).to eq(rs([
+          {"id" => 1, "operatingsystem_id" => 4},
+          {"id" => 2, "operatingsystem_id" => 4, "ancestry" => "1"},
+          {"id" => 3, "operatingsystem_id" => 6, "ancestry" => "1/2"},
+        ]))
+      end
+
+      it "overrides parent values" do
+        expect(connection).to receive(:all).with(:hostgroups, {}).and_return(rs([
+          {"id" => 1, "operatingsystem_id" => 4},
+          {"id" => 2, "operatingsystem_id" => 5, "ancestry" => "1"},
+          {"id" => 3, "operatingsystem_id" => nil, "ancestry" => "1/2"},
+        ]))
+        expect(connection.denormalized_hostgroups).to eq(rs([
+          {"id" => 1, "operatingsystem_id" => 4},
+          {"id" => 2, "operatingsystem_id" => 5, "ancestry" => "1"},
+          {"id" => 3, "operatingsystem_id" => 5, "ancestry" => "1/2"},
+        ]))
+      end
+    end
   end
 
   describe "simple accessor methods" do
@@ -99,5 +140,20 @@ describe ManageiqForeman::Connection do
         end
       end
     end
+  end
+
+  def rs(arr)
+    ManageiqForeman::PagedResponse.new(
+      "total"    => arr.count,
+      "subtotal" => arr.count,
+      "page"     => 1,
+      "per_page" => [arr.count, 20].max,
+      "search"   => nil,
+      "sort"     => {
+        "by"    => nil,
+        "order" => nil,
+      },
+      "results"  => arr,
+    )
   end
 end

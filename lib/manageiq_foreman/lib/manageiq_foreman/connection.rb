@@ -26,7 +26,7 @@ module ManageiqForeman
         all += small.to_a
         break if small.empty? || all.size >= small.total
       end
-      paged_response(all)
+      PagedResponse.new(all)
     end
 
     # filter:
@@ -75,24 +75,21 @@ module ManageiqForeman
     private
 
     def fetch(resource, action = :index, filter = {})
-      paged_response(raw(resource).send(action, filter).first)
+      PagedResponse.new(raw(resource).send(action, filter).first)
     end
 
     def denormalize_ancestors!(records)
       records.each do |record|
-        ancestor_ids(record["ancestry"]).each do |ancestor_id|
+        ancestor_ids(record["ancestry"]).reverse.each do |ancestor_id|
           ancestor = records.detect { |r| r["id"] == ancestor_id }
           ancestor.each_pair { |n, v| record[n] ||= v unless v.nil? } if ancestor
         end
       end
+      records
     end
 
     def ancestor_ids(str)
       (str || "").split("/").collect(&:to_i)
-    end
-
-    def paged_response(resource)
-      PagedResponse.new(resource)
     end
 
     def raw(resource)
