@@ -30,7 +30,7 @@
         .panecontent
           - if role_allows(:feature => "ems_cloud_show")
             - if @record.ext_management_system
-              l = [ui_lookup(:table => "ems_cloud"), ui_lookup(:table=>"orchestration_stack")]
+              - l = [ui_lookup(:table => "ems_cloud"), ui_lookup(:table=>"orchestration_stack")]
               = link_to_with_icon("#{ui_lookup(:table => "ext_management_system")}: #{@record.ext_management_system.name}",
                 {:controller => "ems_cloud", :action => 'show', :id => @record.ext_management_system.id.to_s},
                 {:title => _("Show parent %s for this %s") % l},
