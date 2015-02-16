@@ -1410,7 +1410,7 @@ module VmCommon
 
     if record.orphaned? || record.archived?
       parents = [{:type=>"x", :id=>"#{record.orphaned ? "orph" : "arch"}"}]
-    else
+    else # FIXME !!!
       if x_active_tree == :instances_tree
         parents = record.kind_of?(VmCloud) && record.availability_zone ? [record.availability_zone] : [record.ext_management_system]
       else

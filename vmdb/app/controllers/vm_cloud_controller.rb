@@ -29,7 +29,7 @@ class VmCloudController < ApplicationController
 
       ApplicationController::Feature.new_with_hash(
         :role        => "instances_filter_accord",
-        :name        => :filter,
+        :name        => :instances_filter,
         :accord_name => "instances_filter",
         :tree_name   => :instances_filter_tree,
         :title       => "Instances",
@@ -37,7 +37,7 @@ class VmCloudController < ApplicationController
 
       ApplicationController::Feature.new_with_hash(
         :role        => "images_filter_accord",
-        :name        => :filter,
+        :name        => :images_filter,
         :accord_name => "images_filter",
         :tree_name   => :images_filter_tree,
         :title       => "Images",

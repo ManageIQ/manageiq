@@ -4,7 +4,10 @@
 
   - @trees.each do |tree|
     %div{:style => "display:none;"}
-      = render(:partial => "vm_common/#{tree}")
+      - # = render(:partial => "vm_common/#{tree}")
+      = render(:partial => "shared/tree",
+               :locals  => {:tree => tree,
+                            :name => tree.name.to_s})
 
   - # Custom left cell div for compare options to use
   = render :partial => "layouts/custom_left_cell"

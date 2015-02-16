@@ -345,30 +345,30 @@ module ApplicationController::Explorer
     TreeNodeBuilder.build_id(object, pid, options)
   end
 
-  # Get the children of a dynatree node that is being expanded (autoloaded)
-  def x_get_child_nodes_dynatree(tree, id)
-    prefix, rec_id = id.split("_").last.split('-')      # Get this nodes model and id
-    model = TreeBuilder.get_model_for_prefix(prefix)                # Get this nodes model (folder, Vm, Cluster, etc)
-    if model == "Hash"
-      object = {:type=>prefix, :id=>rec_id, :full_id=>id}
-    elsif model.nil? && [:sandt_tree, :svccat_tree, :stcat_tree].include?(x_active_tree)   #creating empty record to show items under unassigned catalog node
-      object = ServiceTemplateCatalog.new()   # Get the object from the DB
-    else
-      object = model.constantize.find(from_cid(rec_id))   # Get the object from the DB
-    end
+  ## Get the children of a dynatree node that is being expanded (autoloaded)
+  #def x_get_child_nodes_dynatree(tree, id)
+  #  prefix, rec_id = id.split("_").last.split('-')      # Get this nodes model and id
+  #  model = TreeBuilder.get_model_for_prefix(prefix)                # Get this nodes model (folder, Vm, Cluster, etc)
+  #  if model == "Hash"
+  #    object = {:type=>prefix, :id=>rec_id, :full_id=>id}
+  #  elsif model.nil? && [:sandt_tree, :svccat_tree, :stcat_tree].include?(x_active_tree)   #creating empty record to show items under unassigned catalog node
+  #    object = ServiceTemplateCatalog.new()   # Get the object from the DB
+  #  else
+  #    object = model.constantize.find(from_cid(rec_id))   # Get the object from the DB
+  #  end
 
-    kids = Array.new
-    x_tree(tree)[:open_nodes].push(id) unless x_tree(tree)[:open_nodes].include?(id) # Save node as open
+  #  kids = Array.new
+  #  x_tree(tree)[:open_nodes].push(id) unless x_tree(tree)[:open_nodes].include?(id) # Save node as open
 
-    options = x_tree(tree)         # Get options from sandbox
+  #  options = x_tree(tree)         # Get options from sandbox
 
-    # Process the node's children
-    x_get_tree_objects(options.merge({:parent=>object})).each do |o|
-      kids += x_build_node_dynatree(o, id, options)
-    end
+  #  # Process the node's children
+  #  x_get_tree_objects(options.merge({:parent=>object})).each do |o|
+  #    kids += x_build_node_dynatree(o, id, options)
+  #  end
 
-    return kids                                         # Return the node's children
-  end
+  #  return kids                                         # Return the node's children
+  #end
 
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(options)
@@ -464,18 +464,18 @@ module ApplicationController::Explorer
       end
       return options[:count_only] ? objects.count : objects.sort_by { |a| a.name.downcase }
     when :vandt # :vandt is partially built in a "new" full tree way
-      objects = rbac_filtered_objects(EmsInfra.order("lower(name)"), :match_via_descendants => "VmOrTemplate")
+      #objects = rbac_filtered_objects(EmsInfra.order("lower(name)"), :match_via_descendants => "VmOrTemplate")
 
-      if count_only
-        return objects.length + 2
-      else
-        objects.collect! { |o| TreeBuilderVmsAndTemplates.new(o, options).tree }
-        return objects +
-          [
-            {:id=>"arch", :text=>"<Archived>", :image=>"currentstate-archived", :tip=>"Archived VMs and Templates"},
-            {:id=>"orph", :text=>"<Orphaned>", :image=>"currentstate-orphaned", :tip=>"Orphaned VMs and Templates"}
-          ]
-      end
+      #if count_only
+      #  return objects.length + 2
+      #else
+      #  objects.collect! { |o| TreeBuilderVmsAndTemplates.new(o, options).tree }
+      #  return objects +
+      #    [
+      #      {:id=>"arch", :text=>"<Archived>", :image=>"currentstate-archived", :tip=>"Archived VMs and Templates"},
+      #      {:id=>"orph", :text=>"<Orphaned>", :image=>"currentstate-orphaned", :tip=>"Orphaned VMs and Templates"}
+      #    ]
+      #end
     when :handc
       objects = rbac_filtered_objects(EmsInfra.order("lower(name)"), :match_via_descendants => "VmOrTemplate")
       if count_only
@@ -534,12 +534,12 @@ module ApplicationController::Explorer
       end
       return count_only ? filtered_objects.length : filtered_objects
     when :filter
-      objects =
-        [
-          {:id=>"global", :text=>"Global Filters", :image=>"folder", :tip=>"Global Shared Filters", :cfmeNoClick=>true},
-          {:id=>"my", :text=>"My Filters", :image=>"folder", :tip=>"My Personal Filters", :cfmeNoClick=>true}
-        ]
-      return objects
+      #objects =
+      #  [
+      #    {:id=>"global", :text=>"Global Filters", :image=>"folder", :tip=>"Global Shared Filters", :cfmeNoClick=>true},
+      #    {:id=>"my", :text=>"My Filters", :image=>"folder", :tip=>"My Personal Filters", :cfmeNoClick=>true}
+      #  ]
+      #return objects
     when :bottlenecks, :utilization
       ent = MiqEnterprise.my_enterprise
       objects = ent.miq_regions.sort_by { |a| a.description.to_s.downcase }
@@ -1030,6 +1030,7 @@ module ApplicationController::Explorer
       end
       options[:count_only] ? objects.length : objects.sort_by { |a| a.name.downcase }
     when :images # Images by Provider tree has orphaned and archived nodes
+      # FIXME: orphaned, archived
       case object[:id]
         when "orph" # Orphaned
           objects = rbac_filtered_objects(TemplateCloud.all_orphaned).sort_by { |a| a.name.downcase }
@@ -1038,6 +1039,7 @@ module ApplicationController::Explorer
       end
       return options[:count_only] ? objects.length : objects
     when :instances # Instances by Provider tree has orphaned and archived nodes
+      # FIXME: orphaned, archived
       case object[:id]
         when "orph" # Orphaned
           objects = rbac_filtered_objects(VmCloud.all_orphaned).sort_by { |a| a.name.downcase }
@@ -1046,6 +1048,7 @@ module ApplicationController::Explorer
       end
       return options[:count_only] ? objects.length : objects
     when :filter  # Filter trees have global and my filter nodes
+      # FIXME: filter vms_filter templater_filter
       objects = MiqSearch.where(:db => options[:leaf])
       case object[:id]
       when "global" # Global filters

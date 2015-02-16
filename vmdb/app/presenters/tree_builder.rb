@@ -3,6 +3,20 @@ class TreeBuilder
   include CompressedIds
   attr_reader :locals_for_render, :name, :type
 
+  def self.class_for_type(type)
+    case type
+    when :vandt           then TreeBuilderVandt
+    when :filter      then FOOBAR #TreeBuilderVmsFilter  # FIXME
+    when :vms_filter       then TreeBuilderVmsFilter
+    when :templates_filter then TreeBuilderTemplateFilter
+
+    when :instances        then TreeBuilderInstances
+    when :images           then TreeBuilderImages
+    when :instances_filter then TreeBuilderInstancesFilter
+    when :images_filter    then TreeBuilderImagesFilter
+    end
+  end
+
   # FIXME: need to move this to a subclass
   def self.root_options(tree_name)
     #returns title, tooltip, root icon
@@ -14,7 +28,7 @@ class TreeBuilder
       if MiqEnterprise.my_enterprise.is_enterprise?
         title = "Enterprise"
         icon = "enterprise"
-      else
+      else # FIXME: string CFME below
         title = "CFME Region: #{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]"
         icon = "miq_region"
       end
@@ -70,11 +84,6 @@ class TreeBuilder
     build_tree
   end
 
-  # return this nodes model and record id
-  def extract_method_and_node_id(id)
-    id.split("_").last.split('-')
-  end
-
   # Get the children of a dynatree node that is being expanded (autoloaded)
   def x_get_child_nodes(id)
     prefix, rec_id = extract_method_and_node_id(id)
@@ -91,11 +100,17 @@ class TreeBuilder
                model.constantize.find(from_cid(rec_id))
              end
 
-    x_tree[:open_nodes].push(id) unless x_tree[:open_nodes].include?(id) # Save node as open
+    # Save node as open
+    x_tree[:open_nodes].push(id) unless x_tree[:open_nodes].include?(id)
 
     x_get_tree_objects(x_tree.merge(:parent => object)).each_with_object([]) do |o, acc|
       acc.concat(x_build_node_dynatree(o, id, x_tree))
     end
+  end
+
+  def tree_init_options(tree_name)
+    $log.warn "MIQ(#{self.class.name}) - TreeBuilder descendants should have their own tree_init_options"
+    {}
   end
 
   # Get nodes model (folder, Vm, Cluster, etc)
@@ -184,7 +199,14 @@ class TreeBuilder
       :parent => nil                # Asking for roots, no parent
     ))
 
-    root_nodes = roots.each_with_object([]) { |root, acc| acc.concat(x_build_node_dynatree(root, nil, options)) }
+    root_nodes = roots.each_with_object([]) do |root, acc|
+      # FIXME: already o node?
+      if root.kind_of?(Hash) && root.key?(:title) && root.key?(:key) && root.key?(:icon)
+        acc << root
+      else
+        acc.concat(x_build_node_dynatree(root, nil, options))
+      end
+    end
 
     return root_nodes unless options[:add_root]
     [{:key => 'root', :children => root_nodes, :expand => true}]
@@ -256,7 +278,10 @@ class TreeBuilder
     end
 
     # Process the node's children
-    if x_tree[:open_nodes].include?(node[:key]) || options[:open_all] || object[:load_children] || node[:expand]
+    if x_tree(@name)[:open_nodes].include?(node[:key]) ||
+      options[:open_all] ||
+      object[:load_children] ||
+      node[:expand]
       kids = x_get_tree_objects(options.merge(:parent => object)).each_with_object([]) do |o, acc|
         acc.concat(x_build_node(o, node[:key], options))
       end
@@ -283,12 +308,6 @@ class TreeBuilder
     options[:count_only] ? 0 : []
   end
 
-  # Add child nodes to the active tree below node 'id'
-  def self.tree_add_child_nodes(sandbox, klass_name, id)
-    tree = klass_name.constantize.new("temp_tree", "temp", sandbox)
-    tree.x_get_child_nodes(id)
-  end
-
   def count_only_or_objects(count_only, objects, sort_by)
     if count_only
       objects.count
@@ -299,13 +318,18 @@ class TreeBuilder
     end
   end
 
-  # Replacing calls to VMDB::Config.new in the views/controllers
   def get_vmdb_config
     @vmdb_config ||= VMDB::Config.new("vmdb").config
   end
 
   def rbac_filtered_objects(objects, options = {})
     self.class.rbac_filtered_objects(objects, options)
+  end
+
+  # Add child nodes to the active tree below node 'id'
+  def self.tree_add_child_nodes(sandbox, klass_name, id)
+    tree = klass_name.constantize.new("temp_tree", "temp", sandbox)
+    tree.x_get_child_nodes(id)
   end
 
   def self.rbac_filtered_objects(objects, options = {})
@@ -405,4 +429,12 @@ class TreeBuilder
   }
 
   X_TREE_NODE_PREFIXES_INVERTED = X_TREE_NODE_PREFIXES.invert
+
+  private
+
+  # return this nodes model and record id
+  def extract_method_and_node_id(id)
+    id.split("_").last.split('-')
+  end
+
 end
