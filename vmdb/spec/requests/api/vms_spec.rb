@@ -28,6 +28,12 @@ describe ApiController do
     request
   end
 
+  def gen_requests(action, data)
+    request = {"action" => action.to_s}
+    request["resources"] = data
+    request
+  end
+
   def gen_request_data(action, data, *hrefs)
     request = {"action" => action.to_s}
     if hrefs.present?
@@ -635,6 +641,216 @@ describe ApiController do
       expect(resources_include_suffix?(results, "href", "#{vm2_url}")).to be_true
       expect(vm1.reload.evm_owner).to eq(@user)
       expect(vm2.reload.evm_owner).to eq(@user)
+    end
+  end
+
+  context "Vm custom_attributes" do
+    it "getting custom_attributes from a vm with no custom_attributes" do
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm = FactoryGirl.create(:vm_vmware)
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+
+      @success = run_get("#{vm_url}/custom_attributes")
+
+      expect(@success).to be_true
+      expect(@code).to eq(200)
+      expect(@result).to have_key("name")
+      expect(@result["name"]).to eq("custom_attributes")
+      expect(@result).to have_key("resources")
+      expect(@result["resources"].size).to eq(0)
+    end
+
+    it "getting custom_attributes from a vm" do
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      ca1 = FactoryGirl.create(:custom_attribute, :name => "name1", :value => "value1")
+      ca2 = FactoryGirl.create(:custom_attribute, :name => "name2", :value => "value2")
+
+      vm = FactoryGirl.create(:vm_vmware)
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+      vm_ca_url = "#{vm_url}/custom_attributes"
+      vm.custom_attributes = [ca1, ca2]
+
+      @success = run_get "#{vm_url}/custom_attributes"
+
+      expect(@success).to be_true
+      expect(@code).to eq(200)
+      expect(@result).to have_key("name")
+      expect(@result["name"]).to eq("custom_attributes")
+      expect(@result).to have_key("resources")
+      expect(@result["resources"].size).to eq(2)
+      expect(resources_include_suffix?(@result["resources"], "href", "#{vm_ca_url}/#{ca1.id}")).to be_true
+      expect(resources_include_suffix?(@result["resources"], "href", "#{vm_ca_url}/#{ca2.id}")).to be_true
+    end
+
+    it "getting custom_attributes from a vm in expanded form" do
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      ca1 = FactoryGirl.create(:custom_attribute, :name => "name1", :value => "value1")
+      ca2 = FactoryGirl.create(:custom_attribute, :name => "name2", :value => "value2")
+
+      vm = FactoryGirl.create(:vm_vmware)
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+      vm.custom_attributes = [ca1, ca2]
+
+      @success = run_get "#{vm_url}/custom_attributes?expand=resources"
+
+      expect(@success).to be_true
+      expect(@code).to eq(200)
+      expect(@result).to have_key("name")
+      expect(@result["name"]).to eq("custom_attributes")
+      expect(@result).to have_key("resources")
+      expect(@result["resources"].size).to eq(2)
+      expect(@result["resources"].collect { |r| r["name"] }.sort).to eq(%w(name1 name2))
+    end
+
+    it "getting custom_attributes from a vm using expand" do
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      ca1 = FactoryGirl.create(:custom_attribute, :name => "name1", :value => "value1")
+      ca2 = FactoryGirl.create(:custom_attribute, :name => "name2", :value => "value2")
+
+      vm = FactoryGirl.create(:vm_vmware)
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+      vm.custom_attributes = [ca1, ca2]
+
+      @success = run_get "#{vm_url}?expand=custom_attributes"
+
+      expect(@success).to be_true
+      expect(@code).to eq(200)
+      expect(@result).to have_key("custom_attributes")
+      expect(@result["custom_attributes"].size).to eq(2)
+      expect(@result["custom_attributes"].collect { |r| r["name"] }.sort).to eq(%w(name1 name2))
+    end
+
+    it "delete a custom_attribute without appropriate role" do
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      ca1 = FactoryGirl.create(:custom_attribute, :name => "name1", :value => "value1")
+
+      vm = FactoryGirl.create(:vm_vmware)
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+      vm.custom_attributes = [ca1]
+
+      @success = run_post("#{vm_url}/custom_attributes", gen_request(:delete, vm_url))
+
+      expect(@success).to be_false
+      expect(@code).to eq(403)
+    end
+
+    it "delete a custom_attribute from a vm via the delete action" do
+      update_user_role(@role, action_identifier(:vms, :edit))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      ca1 = FactoryGirl.create(:custom_attribute, :name => "name1", :value => "value1")
+
+      vm = FactoryGirl.create(:vm_vmware)
+      vm_ca_url = "#{@cfme[:vms_url]}/#{vm.id}/custom_attributes"
+      vm.custom_attributes = [ca1]
+
+      @success = run_post(vm_ca_url, gen_request(:delete, "#{vm_ca_url}/#{ca1.id}"))
+
+      expect(@success).to be_true
+      expect(@code).to eq(200)
+      expect(vm.reload.custom_attributes).to be_empty
+    end
+
+    it "add custom attribute to a vm without a name" do
+      update_user_role(@role, action_identifier(:vms, :edit))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm = FactoryGirl.create(:vm_vmware)
+      vm_ca_url = "#{@cfme[:vms_url]}/#{vm.id}/custom_attributes"
+
+      @success = run_post(vm_ca_url, gen_request_data(:add, "value" => "value1"))
+
+      expect(@success).to be_false
+      expect(@code).to eq(400)
+      expect(@result).to have_key("error")
+      expect(@result["error"]["message"]).to match("Must specify a name")
+    end
+
+    it "add custom attributes to a vm" do
+      update_user_role(@role, action_identifier(:vms, :edit))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      vm = FactoryGirl.create(:vm_vmware)
+      vm_ca_url = "#{@cfme[:vms_url]}/#{vm.id}/custom_attributes"
+
+      @success = run_post(vm_ca_url, gen_requests(:add, [{"name" => "name1", "value" => "value1"},
+                                                         {"name" => "name2", "value" => "value2"}]))
+
+      expect(@success).to be_true
+      expect(@code).to eq(200)
+      expect(@result).to have_key("results")
+      expect(@result["results"].collect { |r| r["name"] }.sort).to eq(%w(name1 name2))
+      expect(vm.custom_attributes.size).to eq(2)
+      expect(vm.custom_attributes.pluck(:value).sort).to eq(%w(value1 value2))
+    end
+
+    it "edit a custom attribute by name" do
+      update_user_role(@role, action_identifier(:vms, :edit))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      ca1 = FactoryGirl.create(:custom_attribute, :name => "name1", :value => "value1")
+
+      vm = FactoryGirl.create(:vm_vmware)
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+      vm_ca_url = "#{vm_url}/custom_attributes"
+      vm.custom_attributes = [ca1]
+
+      @success = run_post(vm_ca_url, gen_request_data(:edit, "name" => "name1", "value" => "value one"))
+
+      expect(@success).to be_true
+      expect(@code).to eq(200)
+      expect(@result).to have_key("results")
+      expect(@result["results"].first["value"]).to eq("value one")
+      expect(vm.reload.custom_attributes.first.value).to eq("value one")
+    end
+
+    it "edit a custom attribute by href" do
+      update_user_role(@role, action_identifier(:vms, :edit))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      ca1 = FactoryGirl.create(:custom_attribute, :name => "name1", :value => "value1")
+
+      vm = FactoryGirl.create(:vm_vmware)
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+      vm_ca_url = "#{vm_url}/custom_attributes"
+      vm_ca1_url = "#{vm_ca_url}/#{ca1.id}"
+      vm.custom_attributes = [ca1]
+
+      @success = run_post(vm_ca_url, gen_request_data(:edit, "href" => vm_ca1_url, "value" => "new value1"))
+
+      expect(@success).to be_true
+      expect(@code).to eq(200)
+      expect(@result).to have_key("results")
+      expect(@result["results"].first["value"]).to eq("new value1")
+      expect(vm.reload.custom_attributes.first.value).to eq("new value1")
+    end
+
+    it "edit multiple custom attributes" do
+      update_user_role(@role, action_identifier(:vms, :edit))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      ca1 = FactoryGirl.create(:custom_attribute, :name => "name1", :value => "value1")
+      ca2 = FactoryGirl.create(:custom_attribute, :name => "name2", :value => "value2")
+
+      vm = FactoryGirl.create(:vm_vmware)
+      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+      vm_ca_url = "#{vm_url}/custom_attributes"
+      vm.custom_attributes = [ca1, ca2]
+
+      @success = run_post(vm_ca_url, gen_requests(:edit, [{"name" => "name1", "value" => "new value1"},
+                                                          {"name" => "name2", "value" => "new value2"}]))
+
+      expect(@success).to be_true
+      expect(@code).to eq(200)
+      expect(@result).to have_key("results")
+      expect(@result["results"].first["value"]).to eq("new value1")
+      expect(@result["results"].second["value"]).to eq("new value2")
+      expect(vm.reload.custom_attributes.pluck(:value).sort).to eq(["new value1", "new value2"])
     end
   end
 end

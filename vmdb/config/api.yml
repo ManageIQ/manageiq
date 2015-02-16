@@ -494,6 +494,21 @@
     - :subcollection
     :methods: *70174834086080
     :klass: GuestApplication
+  :custom_attributes:
+    :description: Custom Attributes
+    :options:
+    - :subcollection
+    :methods: *70174834085620
+    :klass: CustomAttribute
+    :subcollection_actions:
+      :post:
+      - :name: add
+      - :name: edit
+      - :name: delete
+    :subresource_actions:
+      :post:
+      - :name: edit
+      - :name: delete
   :tags:
     :description: Tags
     :options:
@@ -586,6 +601,7 @@
     - :tags
     - :policies
     - :accounts
+    - :custom_attributes
     - :software
     :collection_actions:
       :post:
@@ -659,6 +675,14 @@
         :identifier: vm_tag
       - :name: unassign
         :identifier: vm_tag
+    :custom_attributes_subcollection_actions:
+      :post:
+      - :name: add
+        :identifier: vm_edit
+      - :name: edit
+        :identifier: vm_edit
+      - :name: delete
+        :identifier: vm_edit
   :zones:
     :description: Zones
     :options:

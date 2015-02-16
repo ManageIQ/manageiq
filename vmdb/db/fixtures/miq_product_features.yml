@@ -786,14 +786,14 @@
     :feature_type: node
     :identifier: orchestration_templates_accord
     :children:
-    - :name: Cloudformations Templates
-      :description: View Cloudformations Templates
+    - :name: View Orchestration Templates
+      :description: View Orchestration Templates
       :feature_type: view
-      :identifier: cf_orch_templates_view
-    - :name: Heat Templates
-      :description: Heat Templates
-      :feature_type: view
-      :identifier: hot_orch_templates_view
+      :identifier: orchestration_templates_view
+    - :name: Modify Orchestration Templates
+      :description: Modify Orchestration Templates
+      :feature_type: admin
+      :identifier: orchestration_templates_admin
       
 # My Services
 - :name: My Services

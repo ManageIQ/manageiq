@@ -129,7 +129,7 @@ module OpsController::Settings::RHN
     options = {:required => [:userid, :password]}
     db.update_authentication(auth, options)
     db.registration_organization = @edit[:new][:customer_org]
-    db.registration_organization_display_name = @edit[:organizations].key(@edit[:new][:customer_org])
+    db.registration_organization_display_name = @edit[:organizations].try(:key, @edit[:new][:customer_org])
 
     begin
       db.save!

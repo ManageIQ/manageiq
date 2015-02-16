@@ -243,8 +243,12 @@ function miqDimDiv(divname, status) {
 // Check for changes and prompt
 function miqCheckForChanges() {
   if(cfmeAngularApplication.$scope) {
-    if (cfmeAngularApplication.$scope.form.$dirty)
-      return confirm("Abandon changes?");
+    if (cfmeAngularApplication.$scope.form.$dirty) {
+      answer = confirm("Abandon changes?");
+      if(answer == true)
+        cfmeAngularApplication.$scope.form.$setPristine(true);
+      return answer;
+    }
     } else {
         if (((miqDomElementExists('buttons_on') && $('#buttons_on').is(":visible")) ||
           typeof miq_changes != "undefined") &&
@@ -807,8 +811,12 @@ function miqDropComplete(event, ui) {
 }
 
 // Attach a calendar control to all text boxes that start with miq_date_
-function miqBuildCalendar(){
-  var all = $('input[id^=miq_date_]');   // Get all of the input boxes with ids starting with "miq_date_"
+function miqBuildCalendar(bAngular) {
+  if(bAngular == undefined) {
+    var all = $('input[id^=miq_date_]');   // Get all of the input boxes with ids starting with "miq_date_"
+  } else {
+    var all = $('input[id^=miq_angular_date_]');
+  }
   all.each(function() {                   // Attach dhtmlxcalendars to each one
     var el = $(this);
     var cal = new dhtmlxCalendarObject(el.attr('id'));
@@ -832,11 +840,23 @@ function miqBuildCalendar(){
       cal.setInsensitiveRange(miq_cal_skipDays);
 
     // Create an observer for the date field if the html5 attr is specified
-    if (this.getAttribute('data-miq_observe_date')) {
-      el.change(function() { miqSendDateRequest(el); })
-      cal.attachEvent("onClick", function(){ miqSendDateRequest(el); });
-    }
-
+    if(el.attr('data-miq_observe_date') == "execAngular") {
+      el.change(function () {
+        miqSetAngularDate(el);
+      })
+      cal.attachEvent("onClick", function () {
+        miqSetAngularDate(el);
+      });
+    } else {
+        if (this.getAttribute('data-miq_observe_date')) {
+          el.change(function () {
+            miqSendDateRequest(el);
+          })
+          cal.attachEvent("onClick", function () {
+            miqSendDateRequest(el);
+          });
+        }
+      }
   });
 }
 
@@ -849,6 +869,10 @@ function miqSendDateRequest(el){
   } else {
     miqJqueryRequest(urlstring);
   }
+}
+
+function miqSetAngularDate(el){
+  cfmeAngularApplication.$scope.triggerCheckChange($('#' + el.attr('id')).val());
 }
 
 // Build an explorer view using a YUI layout and a jQuery accordion

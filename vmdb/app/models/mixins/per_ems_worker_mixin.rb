@@ -20,7 +20,7 @@ module PerEmsWorkerMixin
     end
 
     def all_valid_ems_in_zone
-      self.all_ems_in_zone.select(&:authentication_valid?)
+      self.all_ems_in_zone.select(&:authentication_status_ok?)
     end
 
     def desired_queue_names

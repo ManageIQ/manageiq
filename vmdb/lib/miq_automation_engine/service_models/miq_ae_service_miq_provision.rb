@@ -47,7 +47,11 @@ module MiqAeMethodService
     def status
       ar_method do
         if ['finished', 'provisioned'].include?(@object.state)
-          @object.vm.nil? ? 'error' : 'ok'
+          if @object.status.to_s.downcase == 'error' || @object.vm.nil?
+            'error'
+          else
+            'ok'
+          end
         else
           'retry'
         end

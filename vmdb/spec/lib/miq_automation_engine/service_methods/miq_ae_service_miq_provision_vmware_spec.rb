@@ -21,6 +21,8 @@ module MiqAeServiceMiqProvisionVmwareSpec
                                           :userid => @user.userid)
     end
 
+    let(:ae_svc_prov) { MiqAeMethodService::MiqAeServiceMiqProvision.find(@miq_provision.id) }
+
     def invoke_ae
       target_key   = MiqAeEngine.create_automation_attribute_key(@miq_provision)
       target_value = MiqAeEngine.create_automation_attribute_value(@miq_provision)
@@ -213,6 +215,31 @@ module MiqAeServiceMiqProvisionVmwareSpec
       it "#associations" do
         result = invoke_ae.root(@ae_result_key)
         result.associations.should_not be_empty
+      end
+
+      it "#statemachine_task_status state not finished, status of error returns a retry" do
+        @miq_provision.update_attributes(:status => "Error")
+        ae_svc_prov.status.should eq('retry')
+      end
+
+      it "#statemachine_task_status state not finished, status of ok returns a retry" do
+        @miq_provision.update_attributes(:status => "ok")
+        ae_svc_prov.status.should eq('retry')
+      end
+
+      it "#statemachine_task_status finished state, status of error returns error " do
+        @miq_provision.update_attributes(:status => "Error", :state => "finished", :vm => FactoryGirl.create(:vm_vmware))
+        ae_svc_prov.status.should eq('error')
+      end
+
+      it "#statemachine_task_status finished state, status of ok returns error " do
+        @miq_provision.update_attributes(:status => "Ok", :state => "finished")
+        ae_svc_prov.status.should eq('error')
+      end
+
+      it "#statemachine_task_status finished state, status of ok returns ok " do
+        @miq_provision.update_attributes(:status => "Ok", :state => "finished", :vm => FactoryGirl.create(:vm_vmware))
+        ae_svc_prov.status.should eq('ok')
       end
     end
 

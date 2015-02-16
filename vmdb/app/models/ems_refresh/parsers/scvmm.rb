@@ -481,11 +481,15 @@ module EmsRefresh::Parsers
     end
 
     def set_host_folder_children
-      if @data[:clusters].empty?
-        {:hosts => @data[:hosts]}
-      else
-        {:clusters => @data[:clusters]}
-      end
+      results = {}
+      results[:clusters] = @data[:clusters] unless @data[:clusters].empty?
+      results[:hosts]    = unclustered_hosts
+
+      results
+    end
+
+    def unclustered_hosts
+      @data[:hosts].select { |h| h[:ems_cluster].nil? }
     end
 
     def identify_primary_ip(nics, host)

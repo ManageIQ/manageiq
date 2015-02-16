@@ -168,7 +168,6 @@ module ApplicationHelper
     else
       #need to add a check for @explorer while setting controller incase building a link for details screen to show items
       #i.e users list view screen inside explorer needs to point to vm_or_template controller
-      puts "XXXXXXXXXX association present: #{association}"
       return url_for(:controller=>parent.class.base_class.to_s == "VmOrTemplate" && !@explorer ? parent.class.base_model.to_s.underscore : request.parameters["controller"],
                     :action=>association,
                     :id=>parent.id) + "?#{@explorer ? "x_show" : "show"}="
@@ -496,7 +495,7 @@ module ApplicationHelper
 
   def get_custom_buttons(record)
     cbses = CustomButtonSet.find_all_by_class_name(button_class_name(record), service_template_id(record))
-    cbses.sort { |a,b| a.name <=> b.name }.collect do |cbs|
+    cbses.sort_by { |cbs| cbs[:set_data][:group_index] }.collect do |cbs|
       group = Hash.new
       group[:id]           = cbs.id
       group[:text]         = cbs.name.split("|").first
@@ -2616,5 +2615,11 @@ module ApplicationHelper
     else
       nil
     end
+  end
+
+  def show_adv_search?
+    (!@explorer && @edit && @edit[@expkey]) ||
+      (@explorer && (([:filter, :images, :instances, :vandt].include?(x_tree[:type]) && !@record) ||
+        @show_adv_search))
   end
 end
