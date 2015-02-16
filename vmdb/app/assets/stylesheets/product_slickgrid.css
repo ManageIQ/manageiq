@@ -3,9 +3,7 @@
 }
 
 .cell-bkg {
-    border-left: 1px #999 solid;
-    border-right: 1px #999 solid;
-    background-image: url(/images/layout/stripe_bg2.png);
+    background-color: #f2f2f2;
     color:#403990;
     font-weight: bold;
 }
@@ -90,7 +88,7 @@
     -moz-transform: rotate(-90deg);
     -ms-transform: rotate(-90deg);
     padding-bottom: 30px;
-    padding-left: 20px;
+    margin-left: 17px !important;
 }
 
 .toggle {
