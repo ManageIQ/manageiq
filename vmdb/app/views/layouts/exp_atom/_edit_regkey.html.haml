@@ -1,0 +1,34 @@
+- url = url_for(:action => 'exp_changed')
+- input_attrs = {:maxlength => 500, "data-miq_observe" => {:interval => '.5', :url => url}.to_json}
+
+%span#chosen_regkey_span
+  = _("Key:")
+  = text_field_tag("chosen_regkey", @edit[@expkey][:exp_regkey], input_attrs)
+- unless @edit[@expkey][:exp_key] == "KEY EXISTS"
+  %span#chosen_regval_span
+    = _("Value:")
+    = text_field_tag("chosen_regval", @edit[@expkey][:exp_regval], input_attrs)
+
+- options = options_for_select(MiqExpression.get_col_operators(:regkey), @edit[@expkey][:exp_key])
+- select_attrs = {:multiple => false, :class => "widthed", "data-miq_sparkle_on" => true,
+  "data-miq_sparkle_off" => true, "data-miq_observe" => {:url => url}.to_json}
+= select_tag('chosen_key', options, select_attrs)
+
+-# IS NULL, IS NOT NULL, IS EMPTY, IS NOT EMPTY, KEY EXISTS, VALUE EXISTS
+- unless @edit[@expkey][:exp_key].include?("NULL") || @edit[@expkey][:exp_key].include?("EMPTY") || @edit[@expkey][:exp_key].include?("EXISTS")
+  %span#chosen_value_span
+    - if @edit[@expkey][:exp_key] == "RUBY"
+      %br/
+      %fieldset
+        %p.legend
+          Ruby Script (
+          %span#ruby_count
+            = @edit[@expkey][:exp_value] ? @edit[@expkey][:exp_value].length : 0
+          \/ 1000)
+        %div{:style => "margin: 5px 10px 10px 10px"}
+          - textarea_attrs = {:rows => 10, :style => "width: 100%", :maxlength => "1000", :counter => "ruby_count",
+            "data-miq_check_max_length" => true, "data-miq_observe" => {:interval => '.5', :url => url}.to_json}
+          = text_area_tag("chosen_value", @edit[@expkey][:exp_value], textarea_attrs)
+    - else
+      = _("Data:")
+      = text_field_tag("chosen_value", @edit[@expkey][:exp_value], input_attrs)
