@@ -81,13 +81,13 @@ describe DialogFieldCheckBox do
     end
 
     context "when the automate hash has a default value" do
-      let(:default_value) { 1 }
+      let(:default_value) { '1' }
 
       it_behaves_like "DialogFieldCheckbox#normalize_automate_values"
 
       it "sets the default value" do
         dialog_field.normalize_automate_values(automate_hash)
-        expect(dialog_field.default_value).to eq(1)
+        expect(dialog_field.default_value).to eq('1')
       end
 
       it "returns the default value in a string format" do
