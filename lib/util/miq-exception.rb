@@ -102,4 +102,7 @@ module MiqException
   class MiqGitRepositoryMissing < Error; end
 
   class MiqParsingError < Error; end
+
+  class MiqOrchestrationProvisionError < Error; end
+  class MiqOrchestrationStatusError < Error; end
 end
