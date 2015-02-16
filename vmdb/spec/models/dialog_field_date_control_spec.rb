@@ -95,20 +95,34 @@ describe DialogFieldDateControl do
     end
   end
 
-  it "#automate_output_value" do
-    subject.value = "08/07/2013"
-    subject.automate_output_value.should == "2013-08-07"
-  end
+  describe "#automate_output_value" do
+    let(:dialog_field) { described_class.new(:value => value) }
 
-  it "#automate_output_value with ISO value" do
-    subject.value = "2013-08-07"
-    subject.automate_output_value.should == "2013-08-07"
-  end
+    context "when the dialog_field does not have a value" do
+      let(:value) { nil }
 
-  it "#default_value" do
-    subject.class.stub(:server_timezone).and_return("EST")
-    Time.stub(:now).and_return(Time.parse("2013-08-08T18:01:32Z"))
-    subject.default_value.should == "08/09/2013"
+      it "returns nil" do
+        expect(dialog_field.automate_output_value).to be_nil
+      end
+    end
+
+    context "when the dialog_field has a value" do
+      context "when the value is a date formatted in ISO" do
+        let(:value) { "2013-08-07" }
+
+        it "returns the date in ISO format" do
+          expect(dialog_field.automate_output_value).to eq("2013-08-07")
+        end
+      end
+
+      context "when the value is a date formatted in %m/%d/%Y" do
+        let(:value) { "08/07/2013" }
+
+        it "returns the date in ISO format" do
+          expect(dialog_field.automate_output_value).to eq("2013-08-07")
+        end
+      end
+    end
   end
 
   context "#show_past_dates" do
@@ -128,5 +142,4 @@ describe DialogFieldDateControl do
       subject.show_past_dates.should be_false
     end
   end
-
 end
