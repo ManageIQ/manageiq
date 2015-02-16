@@ -9,16 +9,11 @@ body, html {
   border-bottom: 1px solid #c7c7c7;
 }
 
-#main_search {
-  padding-top: 10px;
-}
-
-
 /* This media query makes the entire main row scrollable once the columns have collapsed */
 
 @media (max-width: 992px) {
   body {     
-    padding-top: 45px; //Body 'padding-top' is added because navbar-fixed-top class is applied
+    padding-top: 45px !important; //Body 'padding-top' is added because navbar-fixed-top class is applied
     padding-bottom: 30px !important;
   }
   .scrollable-sm {
@@ -157,4 +152,10 @@ li.brand-white-label.whitelabeled {
   width:100%;
   height: 180px;
   z-index:1;
-  }
+}
+
+/* Adjust search styling for 2nd button (adv search)  */
+
+.search-pf.has-button .form-group {
+  width: auto;
+}

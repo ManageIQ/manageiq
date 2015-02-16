@@ -1,0 +1,104 @@
+- url = url_for(:action =>'adv_search_load_choice')
+- url2 = url_for(:action =>'adv_search_name_typed')
+- report_expressions = MiqReport.get_expressions_by_model(@edit[@expkey][:exp_model])
+- mode ||= "search"
+
+#adv_search_footer
+  - if mode == "search"
+    - if @edit[@expkey][:exp_search_expressions].blank? && report_expressions.blank?
+      = button_tag(_("Load..."),
+                   :class => "btn btn-primary btn-disabled pull-left",
+                   :alt   => t = _("No saved filters or report filters are available to load"),
+                   :title => t)
+
+    - else
+      = link_to(button_tag(_("Load..."),
+                           :class   => "btn btn-primary pull-left",
+                           :alt     => t = _("Load a filter")),
+                {:action => "adv_search_button",
+                 :button => 'load'},
+                 :remote => true,
+                 :title  => t)
+
+    - if @edit[@expkey][:exp_table].flatten.first == "???"
+      = button_tag(_("Apply"), :class => "btn btn-primary btn-disabled")
+    - else
+      = link_to(button_tag(_("Apply"),
+                           :class => "btn btn-primary",
+                           :alt   => t = _("Apply the current filter")),
+                {:action => "adv_search_button",
+                 :button => "apply"},
+                "data-miq_sparkle_on"  => true,
+                "data-miq_sparkle_off" => true,
+                :remote                => true,
+                :title                 => t)
+    - if @edit[@expkey][:selected] && @edit[@expkey][:selected][:typ] != "default" &&
+    -    @edit[@expkey][:selected][:id] != 0
+      - if (session[:userrole] == "super_administrator" || session[:userrole] == "administrator") ||
+      -    (session[:userrole] != "super_administrator" && session[:userrole] != "administrator" &&
+      -    @edit[@expkey][:selected][:typ] == "user")
+        = link_to(button_tag(_("Delete"),
+                             :class => "btn btn-danger",
+                             :alt   => _("Delete the filter named %s") % @edit[@expkey][:selected][:description]),
+                  {:action => "adv_search_button",
+                   :button => "delete" },
+                  :confirm => _("Delete the %{model} filter named %{filter}?") % {:model  => ui_lookup(:model => @edit[@expkey][:exp_mode]),
+                                                                                  :filter => @edit[:adv_search_name]},
+                  :remote  => true,
+                  :title   => _("Delete the filter named %s" % @edit[@expkey][:selected][:description]))
+    - if @edit[@expkey][:exp_table].flatten.first == "???"
+      = button_tag(_("Save..."), :class => "btn btn-primary btn-disabled")
+    - else
+      = link_to(button_tag(_("Save..."),
+                           :class => "btn btn-primary",
+                           :alt   => t = _("Save the current filter")),
+                {:action => "adv_search_button",
+                 :button => "save"},
+                :remote => true,
+                :title  => t)
+    - if @edit[@expkey][:exp_table].flatten.first == "???"
+      = button_tag("Reset", :class => "btn btn-default btn-disabled")
+    - else
+      = link_to(button_tag(_("Reset"),
+                           :class => "btn btn-default",
+                           :alt   => t = _("Reset the filter")),
+                {:action => "adv_search_button",
+                 :button => "reset"},
+                :remote => true,
+                :title  => t)
+  - elsif mode == "load"
+    - if @edit[@expkey][:exp_chosen_report].nil? && @edit[@expkey][:exp_chosen_search].nil?
+      = button_tag(_("Load"),
+                   :class => "btn btn-primary btn-disabled pull-left",
+                   :alt   => t = _("Choose a saved filter or report filter to load"),
+                   :title => t)
+    - else
+      = link_to(button_tag(_("Load"),
+                           :class => "btn btn-primary pull-left",
+                           :alt   => t = _("Load the filter shown above")),
+                { :action => "adv_search_button",
+                  :button => "loadit" },
+                :remote => true,
+                :title  => t)
+    = link_to(button_tag(_("Cancel"),
+                         :class => "btn btn-primary",
+                         :alt   => t = _("Cancel the load")),
+              { :action => "adv_search_button",
+                :button => "cancel" },
+              :remote => true,
+              :title  => t)
+  - elsif mode == "save"
+    = link_to(button_tag(_("Save"),
+                           :class => "btn btn-primary",
+                           :alt   => t = _("Save the current search")),
+                {:action => "adv_search_button",
+                 :button => "saveit"},
+                :remote => true,
+                :title  => t)
+    = link_to(button_tag(_("Cancel"),
+                         :class => "btn btn-default",
+                         :alt   => t = _("Cancel the save")),
+              {:action => "adv_search_button",
+               :button => "cancel"},
+              :remote => true,
+              :title  => t)
