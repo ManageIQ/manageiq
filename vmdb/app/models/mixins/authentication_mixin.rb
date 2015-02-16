@@ -48,6 +48,10 @@ module AuthenticationMixin
     ordered_auths.last.try(:status) || "None"
   end
 
+  def authentication_status_ok?(type = nil)
+    authentication_best_fit(type).try(:status) == "Valid"
+  end
+
   def auth_user_pwd(type = nil)
     cred = authentication_best_fit(type)
     return nil if cred.nil? || cred.userid.blank?
