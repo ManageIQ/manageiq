@@ -1,21 +1,13 @@
 - if @record.try(:name)
-  #accordion
-    .panel
-      .topbar
-        = link_to(truncate(@record.name, :length => truncate_length),
-          {:action => 'panel_control', :panel => 'icon'},
-          :remote => true,
-          :title  => h(@record.name))
-      = hidden_div_if(@panels["icon"].nil? || @panels["icon"] == false, :id => "icon") do
-        .panecontent
-          = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
+  #accordion.panel-group
+    = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length),
+      @panels["icon"].nil? || @panels["icon"] == false, "icon") do
+      = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
 
-      .topbar
-        = link_to(_("Properties"),
-          {:action => 'panel_control', :panel => 'storage_manager_prop'},
-          :remote => true)
-      = hidden_div_if(@panels["storage_manager_prop"].nil? || @panels["storage_manager_prop"] == false, :id => "storage_manager_prop") do
-        .panecontent
-          = link_to_with_icon(_("Summary"),
+    = patternfly_accordion_panel(_("Properties"),
+      @panels["storage_manager_prop"].nil? || @panels["storage_manager_prop"] == false, "storage_manager_prop") do
+      %ul.nav.nav-pills.nav-stacked
+        %li
+          = link_to(_("Summary"),
             {:action => 'show', :id => @record, :display => 'main'},
             :title => _("Show Summary"))

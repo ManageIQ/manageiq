@@ -1,47 +1,34 @@
 - if @record.try(:name)
-  #accordion
-    .panel
-      .topbar
-        = link_to(truncate(@record.name, :length => truncate_length),
-          {:action => 'panel_control', :panel => 'icon'},
-          :remote => true,
-          :title  => h(@record.name))
-      #icon{:style => "display:#{@panels["icon"] ? '' : 'none'}"}
-        .panecontent
-          = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
-      .topbar
-        = link_to(_("Properties"),
-          {:action => 'panel_control', :panel => 'ems_prop'},
-          :remote => true)
-      #ems_prop{:style => @panels["ems_prop"] ? '' : 'display: none;'}
-        .panecontent
-          = link_to_with_icon('Summary', {:action => 'show', :id => @record, :display => 'main'},
+  #accordion.panel-group
+    = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length), !@panels["icon"], "icon") do
+      = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
+
+    = patternfly_accordion_panel(_("Properties"), !@panels["ems_prop"], "ems_prop") do
+      %ul.nav.nav-pills.nav-stacked
+        %li
+          = link_to_with_icon(_('Summary'),
+            {:action => 'show', :id => @record, :display => 'main'},
             :title => "Show Summary")
-      .topbar
-        = link_to(_("Relationships"),
-          {:action => 'panel_control', :panel => 'ems_rel'},
-          :remote => true)
-      #ems_rel{:style => @panels["ems_rel"] ? '' : 'display: none;'}
-        .panecontent
-          - if role_allows(:feature => "ems_cloud_show")
-            - if @record.ext_management_system
-              = link_to_with_icon("#{ui_lookup(:table => "ext_management_systems")}: #{@record.ext_management_system.name}",
-                {:controller => "ems_cloud", :action => 'show', :id => @record.ext_management_system.id.to_s},
-                {:title => _("Show this Security Group's parent %s") % ui_lookup(:table => "ems_cloud")},
-                '/images/icons/16/link_external.gif')
-          - if role_allows(:feature => "vm_show_list")
-            - if @record.number_of(:vms) == 0
-              %img{:src => "/images/icons/16/link_none.gif"}/
-              = _("Instances (%s)") % @record.number_of(:vms)
-              %br
-            - else
-              = link_to_with_icon(_("Instances (%s)") % @record.number_of(:vms),
+
+    = patternfly_accordion_panel(_("Relationships"), !@panels["ems_rel"], "ems_rel") do
+      %ul.nav.nav-pills.nav-stacked
+        - if role_allows(:feature => "ems_cloud_show") && @record.ext_management_system
+          %li
+            = link_to("#{ui_lookup(:table => "ext_management_systems")}: #{@record.ext_management_system.name}",
+              {:controller => "ems_cloud", :action => 'show', :id => @record.ext_management_system.id.to_s},
+              :title => _("Show this Security Group's parent %s") % ui_lookup(:table => "ems_cloud"))
+        - if role_allows(:feature => "vm_show_list")
+          - if @record.number_of(:vms) == 0
+            %li.disabled
+              = link_to(_("Instances (%s)") % @record.number_of(:vms), "#")
+          - else
+            %li
+              = link_to(_("Instances (%s)") % @record.number_of(:vms),
                 {:action => 'show', :id => @record, :display => 'instances'},
                 :title => _("Show all Instances"))
-          - if role_allows(:feature => "orchestration_stack_show")
-            - if @record.orchestration_stack
-              = link_to_with_icon("#{ui_lookup(:table=>"orchestration_stack")}: #{@record.orchestration_stack.name}",
-                                    {:controller=>"orchestration_stack", :action=>'show',
-                                     :id=>@record.orchestration_stack.id.to_s},
-                                    {:title=>"Show parent #{ui_lookup(:table=>"orchestration_stack")} for this #{ui_lookup(:table=>"security_group")}"},
-                                    '/images/icons/16/link_external.gif')
+        - if role_allows(:feature => "orchestration_stack_show") && @record.orchestration_stack
+          %li
+            - t = [ui_lookup(:table => "orchestration_stack"), ui_lookup(:table => "security_group")]
+            = link_to("#{ui_lookup(:table => "orchestration_stack")}: #{@record.orchestration_stack.name}",
+              {:controller => "orchestration_stack", :action => 'show', :id => @record.orchestration_stack.id.to_s},
+              :title => _("Show parent %s for this %s") % t)
