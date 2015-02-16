@@ -1,0 +1,8 @@
+- if @sb[:active_tab] == "analytics_details"
+  - if @sb[:analytics_rpt]
+    %fieldset
+      %p.legend= @sb[:analytics_rpt].title
+      - if !@sb[:analytics_rpt].table.nil? || @sb[:analytics_rpt].table.data.empty?
+        = @sb[:analytics_rpt].to_html.html_safe
+      - else
+        = _("No records found.")

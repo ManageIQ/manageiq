@@ -1,0 +1,27 @@
+- url = url_for(:action => 'ldap_region_form_field_changed', :id => @edit[:ldap_region_id] || "new")
+#form_div
+  = render :partial => "layouts/flash_msg"
+  %fieldset
+    %p.legend= _("Basic Information")
+    %table.style1
+      %tr
+        %td.key= _("Name")
+        %td
+          = text_field_tag("name",
+                           @edit[:new][:name],
+                           :maxlength         => MAX_NAME_LEN,
+                           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+          = javascript_tag(javascript_focus('name'))
+      %tr
+        %td.key= _("Description")
+        %td.wide
+          = text_field_tag("description",
+                           @edit[:new][:description],
+                           :maxlength         => MAX_DESC_LEN,
+                           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+      %tr
+        %td.key= _("Zone")
+        %td.wide
+          = select_tag('zone_id',
+                       options_for_select([[_("<Choose>"), nil]] + @edit[:zones], @edit[:new][:zone_id]),
+                       "data-miq_observe" => {:url => url}.to_json)

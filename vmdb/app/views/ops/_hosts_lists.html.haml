@@ -1,0 +1,30 @@
+#hosts_lists
+  %table.style1
+    %tr
+      %td.widthed{:align => "left"}
+        = _("Available Hosts:")
+      %td
+      %td{:align => "left"}
+        = _("Selected Hosts:")
+    %tr
+      %td{:align => "right", :valign => "top"}
+        = select_tag('available_fields[]', options_for_select(@edit[:new][@edit[:new][:selected_server][0]][:available_hosts].sort), :multiple => true, :style => "width: 450px", :size => 8, :id => "available_fields")
+      %td{:width => "30", :valign => "middle"}
+        - if @edit[:current][:all_servers].length == 0
+          = image_tag("/images/toolbars/right.png", :class => "dimmed small")
+        - else
+          = link_to(image_tag("/images/toolbars/right.png", :class => "rollover small", :alt => _("Move selected fields right")),
+                    {:action => 'settings_form_field_changed', :button => 'right'},
+                    "data-submit" => "hosts_lists",
+                    :remote       => true,
+                    :title        => _("Move selected fields right"))
+        - if @edit[:current][:all_servers].length == 0
+          = image_tag("/images/toolbars/left.png", :class => "dimmed small")
+        - else
+          = link_to(image_tag("/images/toolbars/left.png", :class => "rollover small", :alt => _("Move selected fields left")),
+                    {:action => 'settings_form_field_changed', :button => 'left'},
+                    "data-submit" => "hosts_lists",
+                    :remote       => true,
+                    :title        => _("Move selected fields left"))
+      %td{:align => "left", :valign => "top"}
+        = select_tag('selected_fields[]', options_for_select(@edit[:new][@edit[:new][:selected_server][0]][:selected_hosts], @selected), :multiple => true, :style => "width: 450px", :size => 8, :id => "selected_fields")
