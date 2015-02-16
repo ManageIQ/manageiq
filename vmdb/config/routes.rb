@@ -37,6 +37,7 @@ Vmdb::Application.routes.draw do
     dialog_field_changed
     dialog_form_button_pressed
     dynamic_checkbox_refresh
+    dynamic_date_refresh
     dynamic_list_refresh
     dynamic_radio_button_refresh
     dynamic_text_box_refresh

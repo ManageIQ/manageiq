@@ -216,14 +216,20 @@ module ApplicationController::DialogRunner
 
     dialog = @edit[:wf].dialog
 
-    field = dialog.field(params[:name])
+  def dynamic_date_refresh
+    field = load_dialog_field
 
-    respond_to do |format|
-      format.json { render :json => {:field_name => field.name, :checked => field.checked?}, :status => 200 }
-    end
+    response_json = {:field_name => field.name, :date_value => field.default_value}
+    dynamic_refresh_response(response_json)
   end
 
   private     #######################
+
+  def dynamic_refresh_response(response_json)
+    respond_to do |format|
+      format.json { render :json => response_json, :status => 200 }
+    end
+  end
 
   def dialog_reset_form
     return unless load_edit("dialog_edit__#{params[:id]}","replace_cell__explorer")
@@ -311,6 +317,11 @@ module ApplicationController::DialogRunner
         @edit[:wf].set_value(p[0],p[1]) if @record.field_name_exist?(p[0])
       end
     end
+  end
 
+  def load_dialog_field
+    @edit = session[:edit]
+    dialog = @edit[:wf].dialog
+    dialog.field(params[:name])
   end
 end
