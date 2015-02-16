@@ -103,14 +103,14 @@
         }
       }
 
-      - if disable_checks || oncheck
-        if (event_type == 'checkbox') {
-        - if disable_checks
-          return false;
-        - elsif oncheck
-          #{oncheck}(node, "#{tree_name}");
-          return;
-        }
+    - if disable_checks || oncheck
+      if (event_type == 'checkbox') {
+      - if disable_checks
+        return false;
+      - elsif oncheck
+        #{oncheck}(node, "#{tree_name}");
+        return;
+      }
 
       if (event_type != 'expander') return false;
     },
