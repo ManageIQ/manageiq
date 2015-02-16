@@ -1017,17 +1017,16 @@ class ApplicationController < ActionController::Base
       # Building custom reports array for super_admin/admin roles, it doesnt show up on menu if their menu was set which didnt contain custom folder in it
       temp = Array.new
       subfolder = Array.new
-      rep = Array.new
       @custom_folder = Array.new
       @custom_folder.push(@sb[:grp_title])
       subfolder.push("Custom")
       @custom_folder.push([subfolder]) unless @custom_folder.include?([subfolder])
+
       custom = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
-      custom.each do |r|
-        if r.rpt_type == "Custom" && (user.admin_user? || r.miq_group_id.to_i == session[:group].to_i)
-          rep.push(r.name) unless rep.include?(r.name)
-        end
-      end
+      rep = custom.select do |r|
+        r.rpt_type == "Custom" && (user.admin_user? || r.miq_group_id.to_i == session[:group].to_i)
+      end.map(&:name).uniq
+
       subfolder.push(rep) unless subfolder.include?(rep)
       temp.push(@custom_folder) unless temp.include?(@custom_folder)
       if tree_type == "timeline"
