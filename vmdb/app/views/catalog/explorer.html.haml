@@ -14,9 +14,9 @@
 
 -# Include the center cell divs
 - nodetypes = %w(MiqTemplate ServiceResource ServiceTemplate ServiceTemplateCatalog)
-- if nodetypes.include?(X_TREE_NODE_PREFIXES[@nodetype]) && !@view
+- if nodetypes.include?(TreeBuilder.get_model_for_prefix(@nodetype)) && !@view
   #main_div.main_div
-    - if X_TREE_NODE_PREFIXES[@nodetype] == "MiqTemplate"
+    - if TreeBuilder.get_model_for_prefix(@nodetype) == "MiqTemplate"
       = render(:partial => "vm_common/main",
                :locals  => {:controller => "vm"})
     - else

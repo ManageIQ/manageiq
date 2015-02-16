@@ -1,4 +1,8 @@
-- if !@def_searches.blank? || !@my_searches.blank?
+- if @def_searches.blank? && @my_searches.blank?
+  %ul#set_default
+    %li
+      = _("No filters defined")
+- else
   %ul#set_default
     %li
     - if @edit && @edit[:expression] && @edit[:expression][:selected] && (!@settings[:default_search] || (@settings[:default_search] && @edit[:expression][:selected][:id].to_i != @settings[:default_search][@edit[@expkey][:exp_model].to_s.to_sym].to_i) || (!@settings[:default_search][@edit[@expkey][:exp_model].to_s.to_sym]))

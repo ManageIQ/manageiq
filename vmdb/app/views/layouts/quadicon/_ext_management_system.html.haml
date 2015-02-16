@@ -1,0 +1,49 @@
+- if @settings[:quadicons][@layout == 'ems_infra' ? :ems : :ems_cloud]
+  .flobj
+    %img{:src => "/images/icons/#{size}/base.png", :width => size, :height => size}
+
+  - # Get the VM or Host count
+  - a_count = item.kind_of?(EmsCloud) ? item.total_vms : item.hosts.size
+  .flobj{:class => "a#{size}"}
+    %p
+      = a_count
+  - if item.kind_of?(EmsCloud)
+    .flobj{:class => "b#{size}"}
+      %p
+        = item.total_miq_templates
+
+  .flobj{:class => "c#{size}"}
+    %img{:src => "/images/icons/new/vendor-#{h(item.image_name)}.png"}
+
+  .flobj{:class => "d#{size}"}
+    - case item.authentication_status
+    - when "Invalid"
+      - status_icon = "x"
+    - when "Valid"
+      - status_icon = "checkmark"
+    - when "None"
+      - status_icon = "unknown"
+    - else
+      - status_icon = "exclamationpoint"
+    %img{:src => "/images/icons/new/#{h(status_icon)}.png"}
+
+  - if item.get_policies.length > 0
+    .flobj{:class => "g#{size}"}
+      %img{:src => "/images/icons/new/shield.png"}
+
+- else
+  .flobj
+    %img{:src => "/images/icons/#{size}/base-single.png"}
+  .flobj{:class => "e#{size}"}
+    %img{:src => "/images/icons/new/vendor-#{h(item.image_name)}.png", :width => width * 1.8, :height => width * 1.8}
+
+- if typ == :listnav
+  - # Listnav, no href needed
+  .flobj
+    %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
+- else
+  .flobj
+    - t = [h(item.name), h(item.hostname), h(item.ipaddress), h(item.last_refresh_status.titleize)]
+    %a{:href => url_for_record(item), :title => _("Name: %s | Host Name: %s | IP Address: %s | Refresh Status: %s") % t}
+      %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
+

@@ -1,3 +1,4 @@
+require 'miq_apache'
 module WebServerWorkerMixin
   extend ActiveSupport::Concern
 

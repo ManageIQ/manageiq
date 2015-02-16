@@ -109,7 +109,7 @@ class LogFile < ActiveRecord::Base
       # Queue the async fetch of the logs from the server - specifying a timeout, the zone to process this request, and a callback
       options = options.merge({:taskid => task.id, :klass => server.class.name, :id => server.id})
 
-      queue_message = MiqQueue.put(
+      MiqQueue.put(
         :class_name   => self.name,
         :method_name  => "_request_logs",
         :args         => [options],

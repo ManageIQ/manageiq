@@ -9,4 +9,4 @@ object:
     description: 
   fields:
   - rel5:
-      value: /Infrastructure/Host/Provisioning/Profile/${/#user.normalized_ldap_group}#${process#message}
+      value: "/Infrastructure/Host/Provisioning/Profile/${/#user.normalized_ldap_group}#${process#message}"

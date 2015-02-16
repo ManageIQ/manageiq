@@ -30,6 +30,12 @@ describe "routes for StorageController" do
     end
   end
 
+  describe "#dialog_load" do
+    it "routes with GET" do
+      expect(get("/#{controller_name}/dialog_load")).to route_to("#{controller_name}#dialog_load")
+    end
+  end
+
   describe "#disk_files" do
     it "routes with GET" do
       expect(get("/#{controller_name}/disk_files")).to route_to("#{controller_name}#disk_files")

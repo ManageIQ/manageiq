@@ -55,6 +55,12 @@ FactoryGirl.define do
     vmm_vendor "redhat"
   end
 
+  factory :host_openstack_infra, :parent => :host, :class => "HostOpenstackInfra" do
+    vmm_vendor  ""
+    ems_ref     "openstack-perf-host"
+    ems_ref_obj "openstack-perf-host-nova-instance"
+  end
+
   factory :host_microsoft, :parent => :host, :class => "HostMicrosoft" do
     vmm_vendor  "microsoft"
     vmm_product "Hyper-V"

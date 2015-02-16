@@ -117,7 +117,7 @@ class EmsVmware < EmsInfra
   def get_alarms
     with_provider_connection do |vim|
       miqAm = vim.getVimAlarmManager
-      alarms = miqAm.getAlarm
+      miqAm.getAlarm
     end
   end
 
@@ -221,7 +221,7 @@ class EmsVmware < EmsInfra
       :disk           => nil
     }
     options = defaults.merge(options)
-    invoke_vim_ws(:cloneVM, vm, options[:name], options[:folder], options[:pool], options[:host], options[:datastore], options[:powerOn], options[:template], options[:transform], options[:config], options[:customization], options[:disk])
+    invoke_vim_ws(:cloneVM, vm, options[:user_event], options[:name], options[:folder], options[:pool], options[:host], options[:datastore], options[:powerOn], options[:template], options[:transform], options[:config], options[:customization], options[:disk])
   end
 
   def vm_connect_all(vm, options={})
@@ -401,7 +401,7 @@ class EmsVmware < EmsInfra
     log_header = "MIQ(#{self.class.name}.invoke_vim_ws) EMS: [#{self.name}] #{obj.class.name}: id [#{obj.id}], name [#{obj.name}], ems_ref [#{obj.ems_ref}]"
     result = nil
 
-    if obj.kind_of?(VmVmware) || obj.kind_of?(HostVmware) || obj.kind_of?(EmsCluster) || obj.kind_of?(EmsFolder)
+    if obj.kind_of?(VmVmware) || obj.kind_of?(TemplateVmware) || obj.kind_of?(HostVmware) || obj.kind_of?(EmsCluster) || obj.kind_of?(EmsFolder)
       obj.with_provider_object do |vim_obj|
         vim_obj.logUserEvent(user_event) if user_event && obj.kind_of?(Vm)
 

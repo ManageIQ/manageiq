@@ -1,0 +1,124 @@
+- url = url_for(:action => 'tl_chooser', :id => @record.id)
+#tl_options_div
+  - if @temp[:timeline]
+    %fieldset
+      %p.legend
+        - if @record != @tl_record
+          = _("Options %s: %s") % [ui_lookup(:model => @tl_record.class), @tl_record.name]
+        - else
+          = _("Options")
+      %table.style1
+        %tr
+          %td.key{:style => "width: 90px;"}
+            = _("Show")
+          %td{:style => "padding-right: 5px;"}
+            - # only show pulldown if Policy Events are allowed
+            - if @tl_options[:tl_show_options].length > 1
+              = select_tag("tl_show",
+                options_for_select(@tl_options[:tl_show_options], @tl_options[:tl_show]),
+                "data-miq_sparkle_on" => true,
+                "data-miq_observe"    => {:url => url}.to_json)
+            - else
+              = h(@tl_options[:tl_show_options].last[0])
+        %tr
+          %td.key{:style => "width: 90px;"}
+            = _("Interval")
+          %td.notwide{:style => "padding-right: 5px;"}
+            = select_tag("tl_typ",
+              options_for_select([[_("Hourly"), "Hourly"], [_("Daily"), "Daily"]], @tl_options[:typ]),
+              "data-miq_sparkle_on" => true,
+              "data-miq_observe"    => {:url => url}.to_json)
+          %td.key{:style => "width: 90px;"}
+            = _("Date")
+          %td.notwide{:style => "padding-right: 5px;"}
+            - v = h(@tl_options[:typ] == "Hourly" ? @tl_options[:hourly_date] : @tl_options[:daily_date])
+            = text_field_tag("miq_date_1", v,
+              :readonly               => "true",
+              "data-miq_sparkle_on"   => true,
+              "data-miq_observe_date" => {:url => url}.to_json)
+          - if @tl_options[:typ] == "Hourly"
+            %span#day_span{:style => "display: none;"}
+          - else
+            %span#day_span
+              %td.key{:style => "width: 100px;"}
+                = _("Show")
+              %td.notwide{:style => "padding-right: 5px;"}
+                = select_tag("tl_days",
+                  options_for_select((2..31).to_a, @tl_options[:days].to_i),
+                  "data-miq_sparkle_on" => true,
+                  "data-miq_observe"    => {:url => url}.to_json)
+                = _("days back")
+
+      - if @tl_options[:tl_show] == "policy_timeline"
+        %table.style1
+          %tr
+            %td.key{:style => "width:90px; height:15px", :nowrap => true}
+              = _("Result")
+            %td.notwide{:style => "padding-right: 5px;"}
+              = select_tag("tl_result",
+                options_for_select(@tl_options[:all_results], @tl_options[:tl_result]),
+                "data-miq_sparkle_on" => true,
+                "data-miq_observe"    => {:url => url}.to_json)
+            %td.key{:style => "width: 90px;", :nowrap => true}
+              = _("Event Type")
+              - #= select("tl","fl_grp1", [["<NONE> ", ""]] + @tl_options[:etypes].sort, :selected=>@tl_options[:filter1])
+            %td{:nowrap => true}
+              = check_box_tag("tl_fl_grp_all", "1", @tl_options[:tl_filter_all],
+                "data-miq_sparkle_on"       => true,
+                "data-miq_observe_checkbox" => {:url => url}.to_json)
+              = _("(Check All)")
+            %td{:rowspan => "2"}
+              - @tl_options[:etypes].sort.each_with_index do |e, i|
+                %div{:style => "padding: 0px 5px 0px 0px; float: left; color: #{@tl_options[:tl_colors][i]}"}
+                  = check_box_tag("tl_fl_grp#{i + 1}__#{e}", "1", @tl_options[:applied_filters].include?(e),
+                    "data-miq_sparkle_on"       => true,
+                    "data-miq_observe_checkbox" => {:url => url}.to_json)
+                  = h(e)
+          %tr
+            %td
+            %td
+            %td
+            %td
+            %td
+        %form#hiddenForm
+          - @tl_options[:etypes].length.times do |i|
+            %input{:type => "hidden", :name => "filter#{i + 1}", :id => "filter#{i + 1}", :value => @tl_options["pol_fltr#{i + 1}".to_sym]}
+
+      - else
+        %table.style1
+          %tr
+            %td.nowrap{:nowrap => true, :style => "width:90px"}
+              = _("Level")
+            %td.notwide{:style => "padding-right: 5px;"}
+              = select_tag("tl_fl_typ",
+                options_for_select([[_("Summary"), "Critical"], [_("Detail"), "Detail"]], @tl_options[:fl_typ]),
+                "data-miq_sparkle_on" => true,
+                "data-miq_observe"    => {:url => url}.to_json)
+            %td.key{:style => "width: 90px;"}
+              = _("Event Groups")
+            %td
+              %div{:style => "border-bottom: 6px solid #CD051C;"}
+                = select_tag("tl_fl_grp1",
+                  options_for_select([["<#{_('NONE')}> ", ""]] + @tl_options[:groups].sort, @tl_options[:filter1]),
+                  :style                => "",
+                  "data-miq_sparkle_on" => true,
+                  "data-miq_observe"    => {:url => url}.to_json)
+            %td
+              %div{:style => "border-bottom: 6px solid #005C25;"}
+                = select_tag("tl_fl_grp2",
+                  options_for_select([["<#{_('NONE')}> ", ""]] + @tl_options[:groups].sort, @tl_options[:filter2]),
+                  :style                => "",
+                  "data-miq_sparkle_on" => true,
+                  "data-miq_observe"    => {:url => url}.to_json)
+            %td
+              %div{:style => "border-bottom: 6px solid #035CB1;"}
+                = select_tag("tl_fl_grp3",
+                  options_for_select([["<#{_('NONE')}> ", ""]] + @tl_options[:groups].sort, @tl_options[:filter3]),
+                  :style                => "",
+                  "data-miq_sparkle_on" => true,
+                  "data-miq_observe"    => {:url => url}.to_json)
+        %form#hiddenForm
+          %input#filter1{:type => "hidden", :name => "filter1", :value => @tl_options[:fltr1]}
+          %input#filter2{:type => "hidden", :name => "filter2", :value => @tl_options[:fltr2]}
+          %input#filter3{:type => "hidden", :name => "filter3", :value => @tl_options[:fltr3]}
+      = _("* Dates/Times on this page are based on time zone: %s.") % session[:user_tz]

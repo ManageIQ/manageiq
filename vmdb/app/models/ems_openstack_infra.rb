@@ -8,4 +8,16 @@ class EmsOpenstackInfra < EmsInfra
   def self.description
     @description ||= "OpenStack Infrastructure".freeze
   end
+
+  def supports_port?
+    true
+  end
+
+  def supports_authentication?(authtype)
+    %w(default amqp).include?(authtype.to_s)
+  end
+
+  def self.event_monitor_class
+    MiqEventCatcherOpenstackInfra
+  end
 end

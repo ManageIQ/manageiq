@@ -6,15 +6,10 @@ require 'ostruct'
 require 'miq-xml'
 require 'runcmd'
 require 'miq-password'
-require 'MiqKvmHost'
 
 module MiqLinux
     
     class HostLinuxOps
-        def initialize(ost)
-          @hyperVisors = [MiqKvmHost].inject([]) {|h, klass| h << klass.new if klass.new.is_available? rescue nil; h}
-        end
-        
         def GetHostConfig(ost)
             xml = MiqXml.createDoc("<host_configuration><OperatingSystem/></host_configuration>")
             
@@ -104,8 +99,7 @@ module MiqLinux
   	    end # def GetVMs
 
         def ems
-          return nil if @hyperVisors.empty?
-          return @hyperVisors.first.class
+          return nil
         end
   	  
     end # class HostLinuxOps

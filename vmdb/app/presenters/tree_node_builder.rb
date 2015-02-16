@@ -88,6 +88,8 @@ class TreeNodeBuilder
     when MiqPolicy            then miq_policy_node
     when MiqPolicySet         then generic_node(object.description, "policy_profile#{object.active? ? "" : "_inactive"}.png")
     when MiqUserRole          then generic_node(object.name, "miq_user_role.png")
+    when OrchestrationTemplateCfn then generic_node(object.name, "orchestration_template_cfn.png")
+    when OrchestrationTemplateHot then generic_node(object.name, "orchestration_template_hot.png")
     when PxeImage             then generic_node(object.name, object.default_for_windows ? "win32service.png" : "pxeimage.png")
     when WindowsImage         then generic_node(object.name, "os-windows_generic.png")
     when PxeImageType         then generic_node(object.name, "pxeimagetype.png")
@@ -268,7 +270,7 @@ class TreeNodeBuilder
     if object[:id] == "-Unassigned"
       "-Unassigned"
     else
-      prefix = X_TREE_NODE_PREFIXES_INVERTED["Hash"]
+      prefix = TreeBuilder.get_prefix_for_model("Hash")
       "#{format_parent_id}#{prefix}-#{object[:id]}"
     end
   end
@@ -280,7 +282,7 @@ class TreeNodeBuilder
     else
       base_class = object.class.base_model.name           # i.e. Vm or MiqTemplate
       base_class = "Datacenter" if base_class == "EmsFolder" && object.is_datacenter
-      prefix = X_TREE_NODE_PREFIXES_INVERTED[base_class]
+      prefix = TreeBuilder.get_prefix_for_model(base_class)
       cid = ActiveRecord::Base.compress_id(object.id)
       "#{format_parent_id}#{prefix}-#{cid}"
     end

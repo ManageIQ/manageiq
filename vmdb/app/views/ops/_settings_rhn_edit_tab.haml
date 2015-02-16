@@ -87,7 +87,7 @@
               = @edit[:new][:customer_org]
             -else
               = select_tag('customer_org',
-                options_for_select((@edit[:new][:customer_org] ? [] : [["<Choose>", nil]]) + @edit[:organizations],
+                options_for_select((@edit[:new][:customer_org] ? [] : [["<Choose>", nil]]) + Array(@edit[:organizations].sort_by { |k, _v| k.downcase }),
                                    @edit[:new][:customer_org]),
                 'data-miq_sparkle_on'  => true,
                 'data-miq_sparkle_off' => true,

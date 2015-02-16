@@ -1,9 +1,15 @@
 #
 # Overrides
 #
+AbcSize:
+  Severity: refactor
 AlignHash:
   EnforcedHashRocketStyle: table
   EnforcedColonStyle: table
+BlockNesting:
+  Severity: refactor
+ClassLength:
+  Severity: refactor
 ClassCheck:
   EnforcedStyle: kind_of?
 CollectionMethods:
@@ -12,6 +18,10 @@ CollectionMethods:
     find_all: select
     map: collect
     reduce: inject
+CyclomaticComplexity:
+  Severity: refactor
+DoubleNegation:
+  Severity: refactor
 GlobalVars:
   AllowedVariables:
   # Loggers
@@ -30,8 +40,14 @@ HashSyntax:
   EnforcedStyle: hash_rockets
 LineLength:
   Max: 120
+  Severity: refactor
 MethodLength:
   Max: 25
+  Severity: refactor
+ParameterLists:
+  Severity: refactor
+PerceivedComplexity:
+  Severity: refactor
 RedundantReturn:
   AllowMultipleReturnValues: true
 SignalException:
@@ -43,6 +59,8 @@ SpaceInsideHashLiteralBraces:
 #
 # Enabled/Disabled
 #
+AllCops:
+  RunRailsCops: true
 Documentation:
   Enabled: false
 Encoding:

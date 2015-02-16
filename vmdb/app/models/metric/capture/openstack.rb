@@ -7,7 +7,7 @@ module Metric::Capture::Openstack
   # meters from openstack.  The values from these meters will have to be
   # diffed against the previous value in order to grab a discrete value.
   DIFF_METERS    = DISK_METERS + NETWORK_METERS
-  def self.is_diff_meter?(meters)
+  def self.diff_meter?(meters)
     meters = [meters] unless meters.is_a? Array
     meters.all? {|m| DIFF_METERS.include? m}
   end

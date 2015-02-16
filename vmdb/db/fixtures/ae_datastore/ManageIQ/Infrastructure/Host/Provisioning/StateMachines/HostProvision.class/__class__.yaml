@@ -18,7 +18,7 @@ object:
       datatype: string
       priority: 1
       owner: 
-      default_value: /Infrastructure/Host/Provisioning/StateMachines/Methods/CustomizeRequest
+      default_value: "/Infrastructure/Host/Provisioning/StateMachines/Methods/CustomizeRequest"
       substitute: true
       message: create
       visibility: 
@@ -138,7 +138,7 @@ object:
       datatype: string
       priority: 7
       owner: 
-      default_value: /Infrastructure/Host/Provisioning/StateMachines/Methods/PreProvision_Host
+      default_value: "/Infrastructure/Host/Provisioning/StateMachines/Methods/PreProvision_Host"
       substitute: true
       message: create
       visibility: 
@@ -158,7 +158,7 @@ object:
       datatype: string
       priority: 8
       owner: 
-      default_value: /Infrastructure/Host/Provisioning/StateMachines/Methods/Provision
+      default_value: "/Infrastructure/Host/Provisioning/StateMachines/Methods/Provision"
       substitute: true
       message: create
       visibility: 
@@ -178,7 +178,7 @@ object:
       datatype: string
       priority: 9
       owner: 
-      default_value: /Infrastructure/Host/Provisioning/StateMachines/Methods/CheckProvisioned
+      default_value: "/Infrastructure/Host/Provisioning/StateMachines/Methods/CheckProvisioned"
       substitute: true
       message: create
       visibility: 
@@ -198,7 +198,7 @@ object:
       datatype: string
       priority: 10
       owner: 
-      default_value: /Infrastructure/Host/Provisioning/StateMachines/Methods/PostProvision_Host
+      default_value: "/Infrastructure/Host/Provisioning/StateMachines/Methods/PostProvision_Host"
       substitute: true
       message: create
       visibility: 
@@ -258,7 +258,7 @@ object:
       datatype: string
       priority: 13
       owner: 
-      default_value: /Infrastructure/Host/Provisioning/Email/MiqHostProvision_complete?event=host_provisioned
+      default_value: "/Infrastructure/Host/Provisioning/Email/MiqHostProvision_complete?event=host_provisioned"
       substitute: true
       message: create
       visibility: 
@@ -278,7 +278,7 @@ object:
       datatype: string
       priority: 14
       owner: 
-      default_value: /System/CommonMethods/StateMachineMethods/host_provision_finished
+      default_value: "/System/CommonMethods/StateMachineMethods/host_provision_finished"
       substitute: true
       message: create
       visibility: 

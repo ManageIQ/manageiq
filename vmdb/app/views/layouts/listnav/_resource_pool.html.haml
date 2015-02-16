@@ -1,8 +1,8 @@
-- if @record && !@record.name.nil?
+- if @record.try(:name)
   #accordion
     .panel
       .topbar
-        = link_to(h(@record.name.length < trunc_at ? @record.name : "#{@record.name[0...trunc_to]}..."),
+        = link_to(truncate(@record.name, :length => truncate_length),
           {:action => 'panel_control', :panel => 'icon'},
           :remote => true,
           :title  => h(@record.name))
@@ -46,7 +46,7 @@
               = _("Parent Cluster: None")
               %br
             - else
-              = link_to_with_icon("Parent Cluster: %s" % @record.parent_cluster.name,
+              = link_to_with_icon(_("Parent Cluster: %s") % @record.parent_cluster.name,
                 {:controller => 'ems_cluster', :action => 'show', :id => @record.parent_cluster.id.to_s},
                 :title => _('Show VMs'))
 
@@ -56,7 +56,7 @@
               = _("Parent Host: None")
               %br
             - else
-              = link_to_with_icon("Parent Host: %s" % @record.parent_host.name,
+              = link_to_with_icon(_("Parent Host: %s") % @record.parent_host.name,
                 {:controller => 'host', :action => 'show', :id => @record.parent_host.id.to_s},
                 :title => _('Show Parent Host'))
 
@@ -66,7 +66,7 @@
               = _("Direct VMs: 0")
               %br
             - else
-              = link_to_with_icon("Direct VMs: %s" % @record.v_direct_vms,
+              = link_to_with_icon(_("Direct VMs: %s") % @record.v_direct_vms,
                 {:action => 'show', :display => "vms", :id => @record.id.to_s},
                 :title => _('Show VMs in this Resource Pool, but not in Resource Pools below'))
             %p
@@ -77,7 +77,7 @@
               = _("All VMs: 0")
               %br
             - else
-              = link_to_with_icon("All VMs: %s" % @record.total_vms,
+              = link_to_with_icon(_("All VMs: %s") % @record.total_vms,
                 {:action => 'show', :display => "all_vms", :id => @record.id.to_s},
                 :title => _('Show all VMs in this Resource Pool'))
             %p

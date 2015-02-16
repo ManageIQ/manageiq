@@ -1,0 +1,53 @@
+#desc_content.desc_content
+  %fieldset
+    %p.legend
+      = h(@temp[:selected_server]["name"])
+    %dl.col2
+      %dd
+        %table.style1
+          %tr
+            %td.keyimage{:rowspan => 6}
+              %img{:src => "/images/icons/new/processmanager-evmserver.png"}
+            %td.key= _("Hostname")
+            %td.wide
+              = h(@temp[:selected_server][:hostname])
+          %tr
+            %td.key= _("IP Address")
+            %td.wide
+              = h(@temp[:selected_server][:ipaddress])
+          %tr
+            %td.key= _("Status")
+            %td.wide
+              = h(@temp[:selected_server][:status])
+          %tr
+            %td.key= _("Started On")
+            %td.wide
+              - t = @temp[:selected_server].started_on
+              = h(t.blank? ? "" : format_timezone(t))
+          %tr
+            %td.key= _("Stopped On")
+            %td.wide
+              - t = @temp[:selected_server].stopped_on
+              = h(t.blank? ? "" : format_timezone(t))
+      %dd
+        %table.style1
+          %tr
+            %td.key= _("Memory Usage")
+            %td
+              = h(@temp[:selected_server]["memory_usage"])
+          %tr
+            %td.key= _("Memory Size")
+            %td
+              = h(@temp[:selected_server]["memory_size"])
+          %tr
+            %td.key= _("CPU Time")
+            %td
+              = h(@temp[:selected_server]["cpu_time"])
+          %tr
+            %td.key= _("CPU Percent")
+            %td
+              = h(@temp[:selected_server]["percent_cpu"])
+          %tr
+            %td.key= _("Version / Build")
+            %td
+              = h(@temp[:selected_server]["version"])

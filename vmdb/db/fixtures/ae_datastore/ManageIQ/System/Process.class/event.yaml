@@ -9,4 +9,4 @@ object:
     description: 
   fields:
   - rel5:
-      value: /System/Event/${#event_type}
+      value: "/System/Event/${#event_type}"

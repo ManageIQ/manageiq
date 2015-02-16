@@ -201,7 +201,6 @@ class MiqDbConfig
   end
 
   def verify_config(from_save = nil)
-    output = nil
     curr = self.class.current
     $log.info("MIQ(DbConfig-verify_config) Backing up current settings: #{curr.options.merge(@@pwd_mask).inspect}")
     same = self.options == curr.options

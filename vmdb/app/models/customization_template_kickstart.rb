@@ -12,7 +12,7 @@ class CustomizationTemplateKickstart < CustomizationTemplate
   def self.ks_settings_for_pxe_image(pxe_server, pxe_image, mac_address)
     ks_access_path =
       if pxe_server.access_url.nil?
-        ks_access_path = nil
+        nil
       else
         File.join(pxe_server.access_url, pxe_server_filepath(pxe_server, pxe_image, mac_address))
       end

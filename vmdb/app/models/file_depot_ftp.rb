@@ -1,8 +1,14 @@
 require 'net/ftp'
 
 class FileDepotFtp < FileDepot
+  attr_accessor :ftp
+
   def self.uri_prefix
     "ftp"
+  end
+
+  def log_header(method = nil)
+    "MIQ(#{self.class.name}##{method})"
   end
 
   def self.validate_settings(settings)
@@ -11,38 +17,33 @@ class FileDepotFtp < FileDepot
   end
 
   def upload_file(file)
-    log_header = "MIQ(#{self.class.name}##{__method__})"
     super
-    with_connection do |ftp|
+    with_connection do
       begin
-        return if destination_file_exists?(ftp, destination_file)
+        return if file_exists?(destination_file)
 
-        create_directory_structure(ftp)
-        $log.info("#{log_header} Uploading file: #{destination_file} to File Depot: #{name}...")
-        ftp.putbinaryfile(file.local_file, destination_file)
+        upload(file.local_file, destination_file)
       rescue => err
         msg = "Error '#{err.message.chomp}', writing to FTP: [#{uri}], Username: [#{authentication_userid}]"
-        $log.error("#{log_header} #{msg}")
+        $log.error("#{log_header(__method__)} #{msg}")
         raise msg
       else
         file.update_attributes(
           :state   => "available",
           :log_uri => destination_file
         )
-        $log.info("#{log_header} Uploading file: #{destination_file}... Complete")
         file.post_upload_tasks
       end
     end
   end
 
   def remove_file(file)
-    log_header = "MIQ(#{self.class.name}##{__method__})"
     @file = file
-    $log.info("#{log_header} Removing log file [#{destination_file}]...")
+    $log.info("#{log_header(__method__)} Removing log file [#{destination_file}]...")
     with_connection do |ftp|
-      ftp.delete(destination_file)
+      ftp.delete(destination_file.to_s)
     end
-    $log.info("#{log_header} Removing log file [#{destination_file}]...complete")
+    $log.info("#{log_header(__method__)} Removing log file [#{destination_file}]...complete")
   end
 
   def verify_credentials(_auth_type = nil)
@@ -56,63 +57,72 @@ class FileDepotFtp < FileDepot
     $log.info("MIQ(#{self.class.name}##{__method__}) Connecting through #{self.class.name}: [#{name}]")
     begin
       connection = connect(cred_hash)
+      @ftp = connection
       yield connection
     ensure
       connection.try(:close)
+      @ftp = nil
     end
   end
 
   def connect(cred_hash = nil)
-    log_header = "MIQ(#{self.class.name}##{__method__})"
     host       = URI.split(URI.encode(uri))[2]
 
     begin
-      $log.info("#{log_header} Connecting to #{self.class.name}: #{name} host: #{host}...")
-      ftp         = Net::FTP.new(host)
-      ftp.passive = true  # Use passive mode to avoid firewall issues see http://slacksite.com/other/ftp.html#passive
-      # ftp.debug_mode = true if settings[:debug]  # TODO: add debug option
+      $log.info("#{log_header(__method__)} Connecting to #{self.class.name}: #{name} host: #{host}...")
+      @ftp         = Net::FTP.new(host)
+      @ftp.passive = true  # Use passive mode to avoid firewall issues see http://slacksite.com/other/ftp.html#passive
+      # @ftp.debug_mode = true if settings[:debug]  # TODO: add debug option
       creds = cred_hash ? [cred_hash[:username], cred_hash[:password]] : login_credentials
-      ftp.login(*creds)
-      $log.info("#{log_header} Connected to #{self.class.name}: #{name} host: #{host}")
+      @ftp.login(*creds)
+      $log.info("#{log_header(__method__)} Connected to #{self.class.name}: #{name} host: #{host}")
     rescue SocketError => err
-      $log.error("#{log_header} Failed to connect.  #{err.message}")
+      $log.error("#{log_header(__method__)} Failed to connect.  #{err.message}")
       raise
     rescue Net::FTPPermError => err
-      $log.error("#{log_header} Failed to login.  #{err.message}")
+      $log.error("#{log_header(__method__)} Failed to login.  #{err.message}")
       raise
     else
-      ftp
+      @ftp
     end
+  end
+
+  def file_exists?(file_or_directory)
+    !ftp.nlst(file_or_directory.to_s).empty?
+  rescue Net::FTPPermError
+    false
   end
 
   private
 
-  def create_directory_structure(ftp)
-    $log.info("MIQ(#{self.class.name}##{__method__}) Creating directory structure on server...")
-    ftp.mkdir(destination_path)
-  rescue Net::FTPPermError => err
-    return if err.message.to_s.strip.start_with?("521")  # path already exists.
-    raise
+  def create_directory_structure(directory_path)
+    Pathname.new(directory_path).descend do |path|
+      next if file_exists?(path)
+
+      $log.info("#{log_header(__method__)} creating #{path}")
+      ftp.mkdir(path.to_s)
+    end
   end
 
-  def destination_file_exists?(ftp, file)
-    $log.info("MIQ(#{self.class.name}##{__method__}) Checking for log file #{file} on server...")
-    result = ftp.ls(file).present?
-    $log.info("MIQ(#{self.class.name}##{__method__}) Found file: #{file} on server... skipping") if result
-    result
+  def upload(source, destination)
+    create_directory_structure(destination_path)
+    $log.info("#{log_header(__method__)} Uploading file: #{destination} to File Depot: #{name}...")
+    ftp.putbinaryfile(source, destination.to_s)
+    $log.info("#{log_header(__method__)} Uploading file: #{destination_file}... Complete")
   end
 
   def destination_file
-    File.join(destination_path, file.destination_file_name)
+    destination_path.join(file.destination_file_name).to_s
   end
 
   def destination_path
-    File.join(base_path, file.destination_directory)
+    base_path.join(file.destination_directory)
   end
 
   def base_path
-    # URI.split(URI.encode("ftp://ftp.example.com/incoming"))[5]  => "/incoming"
-    URI.split(URI.encode(uri))[5]
+    # uri: "ftp://ftp.example.com/incoming" => #<Pathname:incoming>
+    path = URI(URI.encode(uri)).path
+    Pathname.new(path)
   end
 
   def login_credentials

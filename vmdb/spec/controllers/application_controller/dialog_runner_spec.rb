@@ -40,4 +40,24 @@ describe CatalogController do
       end
     end
   end
+
+  describe "#dynamic_checkbox_refresh" do
+    include_context "valid session"
+
+    let(:dialog) { active_record_instance_double("Dialog") }
+    let(:wf) { double(:dialog => dialog) }
+    let(:dialog_field) { active_record_instance_double("DialogFieldCheckBox", :checked? => true, :name => "potato") }
+
+    let(:params)  { {:name => "name"} }
+    let(:session) { {:edit => {:wf => wf}} }
+
+    before do
+      dialog.stub(:field).with("name").and_return(dialog_field)
+    end
+
+    it "returns the correct json response" do
+      xhr :post, :dynamic_checkbox_refresh, params, session
+      expect(response.body).to eq({:field_name => "potato", :checked => true}.to_json)
+    end
+  end
 end

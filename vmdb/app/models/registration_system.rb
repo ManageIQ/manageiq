@@ -42,7 +42,8 @@ module RegistrationSystem
   end
 
   def self.available_organizations(options = {})
-    LinuxAdmin::SubscriptionManager.new.organizations(assemble_options(options)).keys
+    raw_values = LinuxAdmin::SubscriptionManager.new.organizations(assemble_options(options)).values
+    raw_values.each_with_object({}) { |v, h| h[v[:name]] = v[:key] }
   end
 
   def self.verify_credentials(options = {})

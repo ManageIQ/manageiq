@@ -117,7 +117,7 @@ class Condition < ActiveRecord::Base
   end
 
   def self._subst(rec, inputs, opts, tag, mode)
-    ohash, ref, object = self.options2hash(opts, rec)
+    ohash, ref, _object = self.options2hash(opts, rec)
 
     case mode.downcase
     when "exist"

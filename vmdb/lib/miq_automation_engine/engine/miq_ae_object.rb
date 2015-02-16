@@ -434,6 +434,7 @@ module MiqAeEngine
         $miq_ae_logger.info "Processing State=[#{f['name']}]"
         enforce_state_maxima(f)
         process_relationship_raw(relationship, message, args, f['name'], f['collect'])
+        raise MiqAeException::MiqAeDatastoreError, "empty relationship" unless @rels[f['name']]
         $miq_ae_logger.info "Processed  State=[#{f['name']}] with Result=[#{@workspace.root['ae_result']}]"
       end
     end

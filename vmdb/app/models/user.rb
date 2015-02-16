@@ -176,7 +176,13 @@ class User < ActiveRecord::Base
     return false if self.miq_user_role.nil?
     feature = MiqProductFeature.find_by_identifier(options[:identifier])
     identifiers = {:identifiers => [options[:identifier]]}
-    feature.try(:hidden) ? miq_user_role.allows_any?(identifiers) : miq_user_role.allows?(options)
+    if feature.try(:hidden)
+      parent_feature = MiqProductFeature.parent_for_feature(options[:identifier])
+      # always return true for common features that are hidden and are under hidden parent
+      parent_feature.try(:hidden) ? true : miq_user_role.allows_any?(identifiers)
+    else
+      miq_user_role.allows?(options)
+    end
   end
 
   def role_allows_any?(options={})
@@ -780,6 +786,16 @@ class User < ActiveRecord::Base
 
   def valid_for_login?
     !!miq_user_role
+  end
+
+  def accessible_vms
+    if limited_self_service_user?
+      vms
+    elsif self_service_user?
+      (vms + miq_groups.includes(:vms).collect(&:vms).flatten).uniq
+    else
+      Vm.all
+    end
   end
 
   protected

@@ -14,20 +14,6 @@ describe 'routes for ServiceController' do
     end
   end
 
-  describe "#dialog_field_changed" do
-    it "routes with POST" do
-      expect(post("/service/dialog_field_changed"))
-      .to route_to("service#dialog_field_changed")
-    end
-  end
-
-  describe "#dialog_form_button_pressed" do
-    it "routes with POST" do
-      expect(post("/service/dialog_form_button_pressed"))
-      .to route_to("service#dialog_form_button_pressed")
-    end
-  end
-
   describe '#explorer' do
     it 'routes with GET' do
       expect(get("/service/explorer")).to route_to("service#explorer")

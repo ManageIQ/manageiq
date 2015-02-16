@@ -261,7 +261,7 @@
         %li
           %a{:href => "#db_connections"}=_("Client Connections")
       - if tree_node == "root" ||
-      - tree_node.split("-").first == X_TREE_NODE_PREFIXES.invert["VmdbTable"]
+      - tree_node.split("-").first == TreeBuilder.get_prefix_for_model("VmdbTable")
         %li
           %a{:href => "#db_utilization"}=_("Utilization")
     - if tree_node == "root"
@@ -282,7 +282,7 @@
         - if @sb[:active_tab] == "db_connections"
           = render :partial => "db_details_tab"
     - if tree_node == "root" ||
-    - tree_node.split("-").first == X_TREE_NODE_PREFIXES.invert["VmdbTable"]
+    - tree_node.split("-").first == TreeBuilder.get_prefix_for_model("VmdbTable")
       #db_utilization{:name => "db_utilization", :width => "80px"}
         - if @sb[:active_tab] == "db_utilization"
           = render(:partial => "layouts/performance")

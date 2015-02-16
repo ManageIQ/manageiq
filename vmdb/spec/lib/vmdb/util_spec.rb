@@ -37,6 +37,15 @@ describe VMDB::Util do
       described_class.http_proxy_uri.should == URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321)
     end
 
+    it "with unescaped user value" do
+      password = "secret#"
+      config = {:http_proxy => {:host => "1.2.3.4", :port => 4321, :user => "testuser", :password => password}}
+      VMDB::Config.any_instance.stub(:config => config)
+      userinfo = "testuser:secret%23"
+      uri_parts = {:scheme => "http", :host => "1.2.3.4", :port => 4321, :userinfo => userinfo}
+      described_class.http_proxy_uri.should == URI::Generic.build(uri_parts)
+    end
+
     it "with scheme overridden" do
       VMDB::Config.any_instance.stub(:config => {:http_proxy => {:scheme => "https", :host => "1.2.3.4", :port => 4321, :user => "testuser", :password => "secret"}})
       described_class.http_proxy_uri.should == URI::Generic.build(:scheme => "https", :host => "1.2.3.4", :port => 4321, :userinfo => "testuser:secret")

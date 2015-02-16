@@ -9,4 +9,4 @@ object:
     description: 
   fields:
   - rel5:
-      value: /System/Event/Alert_Cluster_Workload_Management
+      value: "/System/Event/Alert_Cluster_Workload_Management"

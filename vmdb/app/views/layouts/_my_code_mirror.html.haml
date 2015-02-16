@@ -1,0 +1,40 @@
+- text_area_id ||= "miqNone"
+- url          ||= "form_field_changed"
+- mode         ||= "yaml"
+- theme        ||= "eclipse"
+- line_numbers ||= false
+- height       ||= "auto"
+- width        ||= "auto"
+- read_only    ||= false
+- multi_mode   ||= false
+- no_focus     ||= false
+
+- if multi_mode
+  - modes.each do |mode|
+    = javascript_include_tag "codemirror-4.2/mode/#{mode}/#{mode}.js"
+- elsif mode == "htmlmixed"
+  = javascript_include_tag "codemirror-4.2/mode/javascript/javascript.js"
+  = javascript_include_tag "codemirror-4.2/mode/css/css.js"
+  = javascript_include_tag "codemirror-4.2/mode/#{mode}/#{mode}.js"
+  = javascript_include_tag "codemirror-4.2/mode/xml/xml.js"
+- else
+  = javascript_include_tag "codemirror-4.2/mode/#{mode}/#{mode}.js"
+- unless theme == "default"
+  = stylesheet_link_tag "codemirror-4.2/theme/#{theme}.css"
+%script{:type => "text/javascript"}
+  if (miqDomElementExists('#{text_area_id}')) {
+  miqEditor = CodeMirror.fromTextArea($('##{text_area_id}')[0],
+  {mode: '#{mode}',
+  lineNumbers: #{line_numbers},
+  matchBrackets: true,
+  theme: '#{theme}',
+  readOnly: #{read_only ? "'nocursor'".html_safe : false}
+  }
+  );
+  miqEditor.on("change", function(cm, change) {miqSendOneTrans('#{url}')}),
+  miqEditor.on("blur", function(cm) {miqEditor.save()}),
+  $('.CodeMirror-scroll')[0].style.height = '#{height}px';
+  $('.CodeMirror-scroll')[0].style.width = '#{width}px';
+  - unless no_focus
+    miqEditor.focus();
+  }

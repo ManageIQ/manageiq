@@ -98,7 +98,7 @@ module OpsController::Settings::RHN
       :registered        => !username.blank?,
       :user_name         => username,
       :server            => db.registration_server,
-      :company_name      => db.registration_organization,
+      :company_name      => db.registration_organization_display_name,
       :subscription      => rhn_subscription_map[db.registration_type] || 'None',
       :update_repo_name  => db.update_repo_name,
       :version_available => db.cfme_version_available
@@ -129,6 +129,7 @@ module OpsController::Settings::RHN
     options = {:required => [:userid, :password]}
     db.update_authentication(auth, options)
     db.registration_organization = @edit[:new][:customer_org]
+    db.registration_organization_display_name = @edit[:organizations].key(@edit[:new][:customer_org])
 
     begin
       db.save!

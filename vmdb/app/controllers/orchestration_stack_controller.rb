@@ -107,8 +107,10 @@ class OrchestrationStackController < ApplicationController
       params[:page] = @current_page if @current_page.nil?                     # Save current page for list refresh
       @refresh_div = "main_div" # Default div for button.rjs to refresh
       orchestration_stack_delete if params[:pressed] == "orchestration_stack_delete"
-      tag(OrchestrationStack) if params[:pressed] == "orchestration_stack_tag"
-      return if ["orchestration_stack_tag"].include?(params[:pressed]) &&
+      retirevms              if params[:pressed] == "orchestration_stack_retire"
+      retirevms_now          if params[:pressed] == "orchestration_stack_retire_now"
+      tag(OrchestrationStack)    if params[:pressed] == "orchestration_stack_tag"
+      return if %w(orchestration_stack_retire orchestration_stack_tag).include?(params[:pressed]) &&
                 @flash_array.nil? # Tag screen showing, so return
     end
 
@@ -193,7 +195,7 @@ class OrchestrationStackController < ApplicationController
 
       drop_breadcrumb(:name => "#{@orchestration_stack.name} (#{display_name})",
                       :url  => "/orchestration_stack/#{action}/#{@orchestration_stack.id}?page=#{@current_page}")
-      drop_breadcrumb(:name => @item.name,
+      drop_breadcrumb(:name => @item.respond_to?("name") ? @item.name : @item.key,
                       :url  => "/orchestration_stack/#{action}/#{@orchestration_stack.id}?show=#{@item.id}")
       show_item
     else

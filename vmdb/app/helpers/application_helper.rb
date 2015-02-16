@@ -124,6 +124,9 @@ module ApplicationHelper
     case view.db
     when "AdvancedSetting"  then association = "advanced_settings"
     when "CloudNetwork"     then association = "cloud_networks"
+    when "OrchestrationStackOutput" then association = "outputs"
+    when "OrchestrationStackParameter" then association = "parameters"
+    when "OrchestrationStackResource"  then association = "resources"
     when "Filesystem"       then association = "filesystems"
     when "FirewallRule"     then association = "firewall_rules"
     when "GuestApplication" then association = "guest_applications"
@@ -165,6 +168,7 @@ module ApplicationHelper
     else
       #need to add a check for @explorer while setting controller incase building a link for details screen to show items
       #i.e users list view screen inside explorer needs to point to vm_or_template controller
+      puts "XXXXXXXXXX association present: #{association}"
       return url_for(:controller=>parent.class.base_class.to_s == "VmOrTemplate" && !@explorer ? parent.class.base_model.to_s.underscore : request.parameters["controller"],
                     :action=>association,
                     :id=>parent.id) + "?#{@explorer ? "x_show" : "show"}="
@@ -1768,7 +1772,8 @@ module ApplicationHelper
           ["about","rss","server_build","product_update","miq_policy","miq_ae_class",
            "miq_capacity_utilization","miq_capacity_planning","miq_capacity_bottlenecks","miq_capacity_waste","chargeback",
            "miq_ae_export","miq_ae_automate_button","miq_ae_tools","miq_policy_export","miq_policy_rsop","report",
-           "ops","pxe","exception"].include?(@layout) || (@layout == "configuration" && @tabform != "ui_4"))
+           "ops", "pxe", "exception"].include?(@layout) ||
+          (@layout == "configuration" && @tabform != "ui_4")) && !controller.action_name.end_with?("tagging_edit")
         unless @explorer
           @show_taskbar = true
         end
@@ -1983,7 +1988,7 @@ module ApplicationHelper
 
   def center_toolbar_filename_services
     if x_active_tree == :sandt_tree
-      if X_TREE_NODE_PREFIXES[@nodetype] == "ServiceTemplate"
+      if TreeBuilder.get_model_for_prefix(@nodetype) == "ServiceTemplate"
         return "servicetemplate_center_tb"
       elsif @sb[:buttons_node]
         nodes = x_node.split('_')
@@ -1998,19 +2003,19 @@ module ApplicationHelper
         return "servicetemplates_center_tb"
       end
     elsif x_active_tree == :svccat_tree
-      if X_TREE_NODE_PREFIXES[@nodetype] == "ServiceTemplate"
+      if TreeBuilder.get_model_for_prefix(@nodetype) == "ServiceTemplate"
         return "servicetemplate-catalog_center_tb"
       else
         return "servicetemplates-catalogs_center_tb"
       end
     elsif x_active_tree == :stcat_tree
-      if X_TREE_NODE_PREFIXES[@nodetype] == "ServiceTemplateCatalog"
+      if TreeBuilder.get_model_for_prefix(@nodetype) == "ServiceTemplateCatalog"
         return "servicetemplatecatalog_center_tb"
       else
         return "servicetemplatecatalogs_center_tb"
       end
     elsif x_active_tree == :svcs_tree
-      if X_TREE_NODE_PREFIXES[@nodetype] == "Service"
+      if TreeBuilder.get_model_for_prefix(@nodetype) == "Service"
         return "service_center_tb"
       else
         return "services_center_tb"
@@ -2592,5 +2597,24 @@ module ApplicationHelper
 
   def placeholder_if_present(password)
     password.present? ? "\u25cf" * 8 : ''
+  end
+
+  def render_listnav_filename
+    if @lastaction == "show_list" && !session[:menu_click] &&
+       %w(ems_cloud ems_cluster ems_infra host miq_template offline orchestration_stack repository
+          resource_pool retired service storage templates vm).include?(@layout) && !@in_a_form
+      "show_list"
+    elsif @compare
+      "compare_sections"
+    elsif %w(offline retired templates vm vm_cloud vm_or_template).include?(@layout)
+      "vm"
+    elsif %w(action availability_zone cim_base_storage_extent cloud_tenant condition ems_cloud ems_cluster
+             ems_infra flavor host miq_proxy miq_schedule miq_template policy ontap_file_share ontap_logical_disk
+             ontap_storage_system ontap_storage_volume orchestration_stack repository resource_pool scan_profile
+             security_group service snia_local_file_system storage storage_manager timeline).include?(@layout)
+      @layout
+    else
+      nil
+    end
   end
 end

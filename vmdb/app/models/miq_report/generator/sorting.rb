@@ -49,7 +49,6 @@ module MiqReport::Generator::Sorting
     rpt_sortby = self.sortby.to_miq_a
     rpt_sortby.each do |sb|
       col, sfx = sb.split("__")
-      dt = self.class.get_col_type(self.col_to_expression_col(sb))
       if sfx && self.class.is_break_suffix?(sfx)
         sort_col = "#{sb}#{SORT_COL_SUFFIX}"
 

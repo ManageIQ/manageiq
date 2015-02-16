@@ -9,6 +9,6 @@ object:
     description: 
   fields:
   - rel5:
-      value: /${/#miq_request.resource.ci_type}/Provisioning/Profile/${/#user.normalized_ldap_group}#get_auto_approval_state_machine
+      value: "/${/#miq_request.resource.ci_type}/Provisioning/Profile/${/#user.normalized_ldap_group}#get_auto_approval_state_machine"
   - rel6:
-      value: /${/#miq_request.resource.ci_type}/Provisioning/StateMachines/${/#state_machine}/Default
+      value: "/${/#miq_request.resource.ci_type}/Provisioning/StateMachines/${/#state_machine}/Default"

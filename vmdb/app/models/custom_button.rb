@@ -93,7 +93,7 @@ class CustomButton < ActiveRecord::Base
 
   def uri_path=(value)
     ra = self.get_resource_action
-    ra.ae_namespace, ra.ae_class, ra.ae_instance, attr_name = MiqAeEngine::MiqAePath.split(value)
+    ra.ae_namespace, ra.ae_class, ra.ae_instance, _attr_name = MiqAeEngine::MiqAePath.split(value)
   end
 
   def uri_path

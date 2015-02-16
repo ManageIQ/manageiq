@@ -114,7 +114,7 @@ class MiqSmisAgent < StorageManager
     raise "no credentials defined" if self.authentication_invalid?(auth_type)
 
     begin
-      con = self.connect
+      self.connect
       self.disconnect
     rescue NameError, Errno::ETIMEDOUT, Errno::ENETUNREACH, WBEM::CIMError
       #

@@ -1,0 +1,62 @@
+- if @embedded && !@showlinks
+  - if db == "MiqCimInstance"
+    %span{:title => row['evm_display_name']}
+      = truncate_for_quad(row['evm_display_name'])
+  - else
+    %span{:title => row['name']}
+      = truncate_for_quad(row['name'])
+- else
+  - if !@listicon.nil? && (@vm || @host || @storage)
+    - # if sub-item is being shown
+    - if @listicon == "scan_history"
+      - href_link = url_for_item_quad_text(@vm, @id, @listicon.pluralize)
+      %a{:href => href_link, :title => h(row['started_on'])}
+        = truncate_for_quad(row['started_on'].to_s)
+    - else
+      - if @vm
+        - href_link = url_for_item_quad_text(@vm, @id, @listicon.pluralize)
+      - elsif @host
+        - href_link = url_for_item_quad_text(@host, @id, @listicon.pluralize)
+      - elsif @storage
+        - href_link = url_for_item_quad_text(@storage, @id, params[:action])
+      %a{:href => href_link, :title => h(row['name'])}
+        = truncate_for_quad(row['name'] ? row['name'] : row['display_name'])
+  - elsif @policy_sim && session[:policies].length > 0
+    - #  Policy sim (VMs only, for now)
+    %a{:href => url_for_db(db), :title => _("Show policy details for %s") % row['name']}
+      = truncate_for_quad(row['name'])
+  - elsif db == "EmsCluster"
+    %a{:href => url_for_db("ems_cluster", "show"), :title => h(row['v_qualified_desc'])}
+      = truncate_for_quad(row['v_qualified_desc'])
+  - elsif db == "StorageManager"
+    %a{:href => url_for_db("storage_manager", "show"), :title => h(row['name'])}
+      = truncate_for_quad(row['name'])
+  - else
+    - if @explorer
+      - if db == "ServiceResource"
+        - name = row['resource_name']
+      - else
+        - name = row['name']
+      - if request.parameters[:controller] == "service" && @view.db == "Vm"
+        = link_to(truncate_for_quad(name),
+          {:controller => "vm_or_template", :action => 'show', :id => to_cid(row['id'])},
+          :title                 => name,
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true)
+      - else
+        = link_to(truncate_for_quad(name),
+          {:action => 'x_show', :id => to_cid(row['id'])},
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          :title                 => name,
+          :remote                => true)
+    - else
+      - if row['evm_display_name']
+        %a{:href => url_for_db(db, "show"), :title => h(row['evm_display_name'])}
+          = truncate_for_quad(row['evm_display_name'])
+      - elsif row['key']
+        %a{:href => url_for_db(db), :title => h(row['key'])}
+          = truncate_for_quad(row['key'])
+      - else
+        %a{:href => url_for_db(db), :title => h(row['name'])}
+          = truncate_for_quad(row['name'])

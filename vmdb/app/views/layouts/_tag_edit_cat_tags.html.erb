@@ -1,7 +1,0 @@
-<% url = url_for(:action=>'tag_edit_form_field_changed', :id=>@sb[:rec_id] || @edit[:object_ids][0]) %>
-<div id="cat_tags_div">
-  <%= select_tag("tag_add",
-                    options_for_select(@entries.sort, "select"),
-                    "data-miq_sparkle_on"=>true, "data-miq_sparkle_off"=>true,
-                    "data-miq_observe"=>{:url=>url}.to_json) %>
-</div

@@ -135,7 +135,7 @@ class MiqUserRole < ActiveRecord::Base
     return role if role.kind_of?(self) || role.nil?
 
     find_method = role.kind_of?(Integer) ? :find_by_id : :find_by_name
-    role = self.send(find_method, role, :include => :miq_product_features)
+    self.send(find_method, role, :include => :miq_product_features)
   end
 
   def self_service_role?

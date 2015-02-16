@@ -781,6 +781,19 @@
         :description: Add a Composite Catalog
         :feature_type: admin
         :identifier: st_catalog_new
+  - :name: Orchestration Templates
+    :description: Everything under Orchestration Templates Accordion
+    :feature_type: node
+    :identifier: orchestration_templates_accord
+    :children:
+    - :name: Cloudformations Templates
+      :description: View Cloudformations Templates
+      :feature_type: view
+      :identifier: cf_orch_templates_view
+    - :name: Heat Templates
+      :description: Heat Templates
+      :feature_type: view
+      :identifier: hot_orch_templates_view
       
 # My Services
 - :name: My Services

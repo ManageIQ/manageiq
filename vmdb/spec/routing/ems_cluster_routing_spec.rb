@@ -25,6 +25,12 @@ describe EmsClusterController do
     end
   end
 
+  describe "#dialog_load" do
+    it "routes with GET" do
+      expect(get("/ems_cluster/dialog_load")).to route_to("ems_cluster#dialog_load")
+    end
+  end
+
   describe "#drift" do
     it "routes with GET" do
       expect(get("/ems_cluster/drift")).to route_to("ems_cluster#drift")

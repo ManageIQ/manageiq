@@ -866,6 +866,9 @@ en:
       OntapStorageSystem:       Storage - Filer
       OntapStorageVolume:       Storage - LUN
       OntapVolumeMetricsRollup: Storage Performance - Volumes
+      OrchestrationTemplate:    Orchestration Template
+      OrchestrationTemplateCfn: Orchestration Template - CloudFormation
+      OrchestrationTemplateHot: Orchestration Template - Heat
       ProductUpdate:            Product Update
       PxeCustomizationTemplate: Customization Template
       PxeImage:                 PXE Image
@@ -989,6 +992,7 @@ en:
       ontap_storage_volumes:       Storage - LUNs
       ontap_volume_metrics_rollup: Storage Performance - Volumes
       orchestration_stack:         Stack
+      orchestration_template:      Orchestration Template
       operating_system:            OS
       registry_items:              Registry
       resource_pools:              Resource Pools

@@ -58,9 +58,11 @@ class Chargeback < ActsAsArModel
     $log.info("#{log_prefix} Calculating chargeback costs...")
 
     tz = Metric::Helper.get_time_zone(options[:ext_options])
-    tp = options[:ext_options][:time_profile] #TODO: Support time profiles
+    # TODO: Support time profiles via options[:ext_options][:time_profile]
+
     interval = options[:interval] || "daily"
     cb = self.new
+    report_user = User.where(:userid => options[:userid]).first
 
     # Find Vms by user or by tag
     if options[:owner]
@@ -72,6 +74,7 @@ class Chargeback < ActsAsArModel
       vms = user.vms
     elsif options[:tag]
       vms = Vm.find_tagged_with(:all => options[:tag], :ns => "*")
+      vms = vms & report_user.accessible_vms if report_user.self_service_user?
     else
       raise "must provide options :owner or :tag"
     end
@@ -93,7 +96,7 @@ class Chargeback < ActsAsArModel
     data = {}
 
     (start_time..end_time).step_value(1.day).each_cons(2) do |query_start_time, query_end_time|
-      if options[:tag]
+      if options[:tag] && !report_user.self_service_user?
         cond = ["resource_type = ? and resource_id IS NOT NULL and timestamp >= ? and timestamp < ? and capture_interval_name = ? and tag_names like ? ",
                 "VmOrTemplate",
                 query_start_time,
@@ -122,7 +125,6 @@ class Chargeback < ActsAsArModel
       $log.info("#{log_prefix} Found #{recs.length} records for time range #{[query_start_time, query_end_time].inspect}")
 
       unless recs.empty?
-        ts     = recs.first.timestamp.in_time_zone(tz).midnight
         ts_key = self.get_group_key_ts(recs.first, interval, tz)
 
         recs.each do |perf|
@@ -149,7 +151,7 @@ class Chargeback < ActsAsArModel
     end
     $log.info("#{log_prefix} Calculating chargeback costs...Complete")
 
-    return [data.inject([]) {|a,r| a << self.new(r.last)}]
+    return [data.map {|r| new(r.last)}]
   end
 
   def get_rates(perf)

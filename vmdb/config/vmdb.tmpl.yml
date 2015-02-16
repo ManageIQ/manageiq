@@ -288,6 +288,7 @@ workers:
         :duration: 10.seconds
         :capacity: 50
         :amqp_port: 5672
+        :event_catcher_openstack_infra: {}
       :event_catcher_amazon:
         :poll: 15.seconds
     :queue_worker_base:
@@ -309,6 +310,8 @@ workers:
         :ems_metrics_collector_worker_vmware:
           :poll_method: :escalate
         :ems_metrics_collector_worker_openstack:
+          :poll_method: :escalate
+        :ems_metrics_collector_worker_openstack_infra:
           :poll_method: :escalate
       :ems_metrics_processor_worker:
         :count: 2

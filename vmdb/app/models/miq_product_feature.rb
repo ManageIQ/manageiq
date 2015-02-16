@@ -28,6 +28,10 @@ class MiqProductFeature < ActiveRecord::Base
     feat[:parent] if feat
   end
 
+  def self.parent_for_feature(identifier)
+    find_by_identifier(feature_parent(identifier))
+  end
+
   def self.feature_children(identifier)
     feat = self.features[identifier.to_s]
     children = (feat && !feat[:hidden] ? feat[:children] : [])

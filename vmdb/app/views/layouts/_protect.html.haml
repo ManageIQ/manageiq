@@ -1,0 +1,25 @@
+#main_div
+  = render :partial => "layouts/flash_msg"
+  %p.legend= _("Select Policy Profiles")
+  - if @sb[:no_policy_profiles]
+    = render :partial => 'layouts/info_msg', :locals => {:message => _("No Policy Profiles available.")}
+  - else
+    = render :partial => '/layouts/protect_tree'
+  %br
+  - if @politems.length > 1
+    = render :partial => 'layouts/info_msg', :locals => {:message => _("Policy Profile is only applied to some of the items below.")}
+  - unless @edit[:explorer]
+    = render :partial => '/layouts/edit_form_buttons',
+             :locals  => {:action_url => "protect"}
+  %p.legend
+    = _("Policy changes will affect %s") % pluralize(@politems.length,
+                                                     Dictionary.gettext(session[:pol_db].to_s,
+                                                                         :type     => :model,
+                                                                         :notfound => :titleize))
+  %table.admintable{:height => "75"}
+    %tbody
+      %tr
+        %td
+          - if @politems
+            - @embedded = true
+            = render :partial => "layouts/gtl"

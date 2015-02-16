@@ -54,7 +54,7 @@ var clearMessages = function() {
 
 var flashMessageClickHandler = function() {
   clearMessages();
-  this.hide();
+  $(this).hide();
 };
 
 var showSuccessMessage = function(message) {

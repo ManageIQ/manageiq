@@ -20,6 +20,7 @@ describe Chargeback do
 
     @ems_cluster = FactoryGirl.create(:ems_cluster, :ext_management_system => @ems)
     @ems_cluster.hosts << @host1
+    @admin = FactoryGirl.create(:user_admin)
 
     @cbr = FactoryGirl.create(:chargeback_rate, :rate_type => "compute")
     temp = { :cb_rate => @cbr, :tag => [c, "vm"] }
@@ -39,7 +40,8 @@ describe Chargeback do
     @options = {:interval_size       => 1,
                 :end_interval_offset => 0,
                 :tag                 => "/managed/environment/prod",
-                :ext_options         => { :tz => "Pacific Time (US & Canada)" }
+                :ext_options         => {:tz => "Pacific Time (US & Canada)"},
+                :userid              => @admin.userid
                 }
 
     Timecop.travel(Time.parse("2012-09-01 00:00:00 UTC"))

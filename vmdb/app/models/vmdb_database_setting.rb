@@ -11,9 +11,15 @@ class VmdbDatabaseSetting < ActsAsArModel
 
   virtual_belongs_to :vmdb_database
 
+  attr_accessor :vmdb_database
+
   def initialize(values = {})
-    values[:vmdb_database] ||= self.class.vmdb_database
+    @vmdb_database = VmdbDatabase.my_database
     super(values)
+  end
+
+  def vmdb_database_id
+    vmdb_database.id
   end
 
   #
@@ -33,14 +39,6 @@ class VmdbDatabaseSetting < ActsAsArModel
     Arel::Table.new(self.name)
   end
 
-  def vmdb_database
-    VmdbDatabase.find_by_id(self.vmdb_database_id)
-  end
-
-  def vmdb_database=(db)
-    self.vmdb_database_id = db.id
-  end
-
   #
   # Finders
   #
@@ -58,10 +56,6 @@ class VmdbDatabaseSetting < ActsAsArModel
   end
 
   protected
-
-  def self.vmdb_database
-    @vmdb_database ||= VmdbDatabase.my_database
-  end
 
   def self.vmdb_database_settings
     settings = ActiveRecord::Base.connection.configuration_settings

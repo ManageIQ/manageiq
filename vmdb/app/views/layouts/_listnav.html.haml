@@ -1,0 +1,9 @@
+#listnav_div
+  - filename = render_listnav_filename
+  - if filename
+    - locals = {:truncate_length => 23}
+    - locals.merge(:size => 72) if @compare
+    = render :partial => "layouts/listnav/#{filename}", :locals => locals
+  - else
+    -# hack for IE7 and FF2
+    %img{:src => "/images/clearpix.gif", :width => "219"}

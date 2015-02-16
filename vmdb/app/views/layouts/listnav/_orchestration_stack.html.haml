@@ -1,0 +1,98 @@
+- if @record.try(:name)
+  #accordion
+    .panel
+      .topbar
+        = link_to(truncate(@record.name, :length => truncate_length),
+          {:action => 'panel_control', :panel => 'icon'},
+          :remote => true,
+          :title  => h(@record.name))
+      #icon{:style => @panels["icon"] ? "" : "display: none;"}
+        .panecontent
+          = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
+
+      .topbar
+        = link_to(_("Properties"),
+          {:action => 'panel_control', :panel => 'stack_prop'},
+          :remote => true)
+
+      #stack_prop{:style => @panels["ems_prop"] ? "" : "display: none;"}
+        .panecontent
+          = link_to_with_icon(_('Summary'),
+            {:action => 'show', :id => @record, :display => 'main'},
+            :title => _("Show Summary"))
+
+      .topbar
+        = link_to(_("Relationships"),
+          {:action => 'panel_control', :panel => 'stack_rel'},
+          :remote => true)
+
+      #stack_rel{:style => @panels["ems_rel"] ? '' : 'display: none;'}
+        .panecontent
+          - if role_allows(:feature => "ems_cloud_show")
+            - if @record.ext_management_system
+              l = [ui_lookup(:table => "ems_cloud"), ui_lookup(:table=>"orchestration_stack")]
+              = link_to_with_icon("#{ui_lookup(:table => "ext_management_system")}: #{@record.ext_management_system.name}",
+                {:controller => "ems_cloud", :action => 'show', :id => @record.ext_management_system.id.to_s},
+                {:title => _("Show parent %s for this %s") % l},
+                '/images/icons/16/link_external.gif')
+
+          - if @record.orchestration_template
+            %img{:src => "/images/icons/16/link_none.gif"}
+            = "#{ui_lookup(:table => 'orchestration_template')}: #{@record.orchestration_template.name}"
+            %br
+
+          - if role_allows(:feature => "vm_show_list")
+            - if @record.number_of(:vms) == 0
+              %img{:src => "/images/icons/16/link_none.gif"}
+              = _("Instances (%s)") % @record.number_of(:vms)
+              %br
+            - else
+              = link_to_with_icon(_("Instances (%s)") % @record.number_of(:vms),
+                {:action => 'show', :id => @record, :display => 'instances'},
+                :title => _("Show all Instances"))
+
+          - if role_allows(:feature => "security_group_show_list")
+            - if @record.number_of(:security_groups) == 0
+              %img{:src => "/images/icons/16/link_none.gif"}
+              = _("Security Groups (%s)") % @record.number_of(:security_groups)
+              %br
+            - else
+              = link_to_with_icon(_("Security Groups (%s)") % @record.number_of(:security_groups),
+                {:action => 'show', :id => @record, :display => 'security_groups'},
+                :title => _("Show all Security Groups"))
+
+          - if @record.number_of(:cloud_networks) == 0
+            %img{:src => "/images/icons/16/link_none.gif"}
+            = _("Cloud Networks (%s)") % @record.number_of(:cloud_networks)
+            %br
+          - else
+            = link_to_with_icon(_("Cloud Networks (%s)") % @record.number_of(:cloud_networks),
+              {:action => 'cloud_networks', :id => @record},
+              :title => _("Show all Cloud Networks"))
+
+          - if @record.number_of(:parameters) == 0
+            %img{:src => "/images/icons/16/link_none.gif"}
+            = _("Parameters (%s)") % @record.number_of(:parameters)
+            %br
+          - else
+            = link_to_with_icon(_("Parameters (%s)") % @record.number_of(:parameters),
+              {:action => 'parameters', :id => @record},
+              :title => _("Show all Parameters"))
+
+          - if @record.number_of(:outputs) == 0
+            %img{:src => "/images/icons/16/link_none.gif"}
+            = _("Outputs (%s)") % @record.number_of(:outputs)
+            %br
+          - else
+            = link_to_with_icon(_("Outputs (%s)") % @record.number_of(:outputs),
+              {:action => 'outputs', :id => @record},
+              :title => _("Show all Outputs"))
+
+          - if @record.number_of(:resources) == 0
+            %img{:src => "/images/icons/16/link_none.gif"}
+            = _("Resources (%s)") % @record.number_of(:resources)
+            %br
+          - else
+            = link_to_with_icon(_("Resources (%s)") % @record.number_of(:resources),
+              {:action => 'resources', :id => @record},
+              :title => _("Show all Resources"))

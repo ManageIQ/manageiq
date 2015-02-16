@@ -6,6 +6,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqEmsMetricsCollectorWorkerRedhat
     MiqEmsMetricsCollectorWorkerVmware
     MiqEmsMetricsCollectorWorkerOpenstack
+    MiqEmsMetricsCollectorWorkerOpenstackInfra
     MiqEmsMetricsProcessorWorker
     MiqEmsRefreshCoreWorker
     MiqEmsRefreshWorkerAmazon
@@ -16,6 +17,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqEventCatcherAmazon
     MiqEventCatcherRedhat
     MiqEventCatcherOpenstack
+    MiqEventCatcherOpenstackInfra
     MiqEventCatcherVmware
     MiqEventHandler
     MiqGenericWorker
@@ -39,6 +41,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqEmsMetricsCollectorWorkerRedhat
     MiqEmsMetricsCollectorWorkerVmware
     MiqEmsMetricsCollectorWorkerOpenstack
+    MiqEmsMetricsCollectorWorkerOpenstackInfra
     MiqReportingWorker
     MiqSmartProxyWorker
     MiqReplicationWorker
@@ -61,6 +64,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqEventCatcherVmware
     MiqEventCatcherRedhat
     MiqEventCatcherOpenstack
+    MiqEventCatcherOpenstackInfra
     MiqEventCatcherAmazon
     MiqUiWorker
   }.freeze

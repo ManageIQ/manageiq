@@ -9,6 +9,6 @@ object:
     description: 
   fields:
   - rel4:
-      value: /System/Process/parse_provider_category
+      value: "/System/Process/parse_provider_category"
   - rel5:
-      value: /System/Policy/${/#miq_request.type}_Approved
+      value: "/System/Policy/${/#miq_request.type}_Approved"

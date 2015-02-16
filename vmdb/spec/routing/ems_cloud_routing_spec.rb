@@ -16,6 +16,7 @@ describe EmsCloudController do
   it_behaves_like "A controller that has timeline routes"
 
   %w(
+    dialog_load
     edit
     index
     new

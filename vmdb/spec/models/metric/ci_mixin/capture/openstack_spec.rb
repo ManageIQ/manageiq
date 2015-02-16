@@ -26,7 +26,7 @@ describe Metric::CiMixin::Capture::Openstack do
 
     it "treats openstack timestamp as UTC" do
       ts_as_utc = api_time_as_utc(@mock_stats_data.get_statistics("cpu_util").last)
-      counters, values_by_id_and_ts = @vm.perf_collect_metrics_openstack("realtime")
+      _counters, values_by_id_and_ts = @vm.perf_collect_metrics_openstack("perf_capture_data_openstack", "realtime")
       ts = Time.parse(values_by_id_and_ts[@vm.ems_ref].keys.sort.last)
 
       ts_as_utc.should eq ts
@@ -64,7 +64,7 @@ describe Metric::CiMixin::Capture::Openstack do
       disk_val = disk_val2 - disk_val1
 
       # get the actual values from the method
-      _, values_by_id_and_ts = @vm.perf_collect_metrics_openstack("realtime")
+      _, values_by_id_and_ts = @vm.perf_collect_metrics_openstack("perf_capture_data_openstack", "realtime")
       values_by_ts = values_by_id_and_ts[@vm.ems_ref]
 
       # make sure that the last calculated value is the same as the discrete value

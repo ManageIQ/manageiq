@@ -38,7 +38,7 @@ object:
       datatype: string
       priority: 2
       owner: 
-      default_value: /Infrastructure/VM/Migrate/StateMachines/Methods/BestHost
+      default_value: "/Infrastructure/VM/Migrate/StateMachines/Methods/BestHost"
       substitute: true
       message: create
       visibility: 
@@ -58,7 +58,7 @@ object:
       datatype: string
       priority: 3
       owner: 
-      default_value: /Infrastructure/VM/Migrate/StateMachines/Methods/BestStorage
+      default_value: "/Infrastructure/VM/Migrate/StateMachines/Methods/BestStorage"
       substitute: true
       message: create
       visibility: 
@@ -78,7 +78,7 @@ object:
       datatype: string
       priority: 4
       owner: 
-      default_value: /Infrastructure/VM/Migrate/StateMachines/Methods/PreMigration
+      default_value: "/Infrastructure/VM/Migrate/StateMachines/Methods/PreMigration"
       substitute: true
       message: create
       visibility: 
@@ -98,7 +98,7 @@ object:
       datatype: string
       priority: 5
       owner: 
-      default_value: /Infrastructure/VM/Migrate/StateMachines/Methods/Migrate
+      default_value: "/Infrastructure/VM/Migrate/StateMachines/Methods/Migrate"
       substitute: true
       message: create
       visibility: 
@@ -118,7 +118,7 @@ object:
       datatype: string
       priority: 6
       owner: 
-      default_value: /Infrastructure/VM/Migrate/StateMachines/Methods/CheckMigration
+      default_value: "/Infrastructure/VM/Migrate/StateMachines/Methods/CheckMigration"
       substitute: true
       message: create
       visibility: 
@@ -138,7 +138,7 @@ object:
       datatype: string
       priority: 7
       owner: 
-      default_value: /Infrastructure/VM/Migrate/StateMachines/Methods/PostMigration
+      default_value: "/Infrastructure/VM/Migrate/StateMachines/Methods/PostMigration"
       substitute: true
       message: create
       visibility: 
@@ -178,7 +178,7 @@ object:
       datatype: string
       priority: 9
       owner: 
-      default_value: /Infrastructure/VM/Migrate/Email/VmMigrateTask_Complete?event=vm_migrated
+      default_value: "/Infrastructure/VM/Migrate/Email/VmMigrateTask_Complete?event=vm_migrated"
       substitute: true
       message: create
       visibility: 
@@ -198,7 +198,7 @@ object:
       datatype: string
       priority: 10
       owner: 
-      default_value: /System/CommonMethods/StateMachineMethods/vm_migrate_finished
+      default_value: "/System/CommonMethods/StateMachineMethods/vm_migrate_finished"
       substitute: true
       message: create
       visibility: 

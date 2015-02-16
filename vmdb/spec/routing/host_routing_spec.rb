@@ -32,18 +32,6 @@ describe "routes for HostController" do
     end
   end
 
-  describe "#dialog_field_changed" do
-    it "routes with POST" do
-      expect(post("/host/dialog_field_changed")).to route_to("host#dialog_field_changed")
-    end
-  end
-
-  describe "#dialog_form_button_pressed" do
-    it "routes with POST" do
-      expect(post("/host/dialog_form_button_pressed")).to route_to("host#dialog_form_button_pressed")
-    end
-  end
-
   describe "#dialog_load" do
     it "routes with GET" do
       expect(get("/host/dialog_load")).to route_to("host#dialog_load")

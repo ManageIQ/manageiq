@@ -9,4 +9,4 @@ object:
     description: 
   fields:
   - rel5:
-      value: /System/Event/VM_Alert_CPU_Ready
+      value: "/System/Event/VM_Alert_CPU_Ready"

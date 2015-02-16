@@ -22,7 +22,7 @@ object:
       substitute: true
       message: get_pre_dialog_name
       visibility: 
-      collect: /dialog_name = pre_dialog_name
+      collect: "/dialog_name = pre_dialog_name"
       scope: 
       description: 
       condition: 
@@ -62,7 +62,7 @@ object:
       substitute: true
       message: get_dialog_name
       visibility: 
-      collect: /dialog_name = dialog_name
+      collect: "/dialog_name = dialog_name"
       scope: 
       description: 
       condition: 
@@ -82,7 +82,7 @@ object:
       substitute: true
       message: get_state_machine
       visibility: 
-      collect: /state_machine = state_machine
+      collect: "/state_machine = state_machine"
       scope: 
       description: 
       condition: 

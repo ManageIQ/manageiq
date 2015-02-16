@@ -352,9 +352,8 @@ module ApplicationController::Performance
         else
           render :update do |page|
             if data_row["resource_type"] == "VmOrTemplate"
-              prefix = X_TREE_NODE_PREFIXES.invert[@record.class.base_model.to_s]
-              tree_node_id = "#{prefix}-#{@record.id}"  # Build the tree node id
-              session[:exp_parms] = {:display=>"timeline", :refresh=>"n", :id=>tree_node_id}
+              tree_node_id = TreeBuilder.build_node_id(@record.class.base_model, @record.id)
+              session[:exp_parms] = {:display => "timeline", :refresh => "n", :id => tree_node_id}
               page.redirect_to(:controller=>data_row["resource_type"].underscore.downcase.singularize,
                                :action=>"explorer")
             else
@@ -459,7 +458,7 @@ module ApplicationController::Performance
 
       render :update do |page|
         if data_row["resource_type"] == "VmOrTemplate"
-          prefix = X_TREE_NODE_PREFIXES.invert[@record.class.base_model.to_s]
+          prefix = TreeBuilder.get_prefix_for_model(@record.class.base_model)
           tree_node_id = "#{prefix}-#{@record.id}"  # Build the tree node id
           session[:exp_parms] = {:display=>"performance", :refresh=>"n", :id=>tree_node_id}
           page.redirect_to(:controller=>data_row["resource_type"].underscore.downcase.singularize,
