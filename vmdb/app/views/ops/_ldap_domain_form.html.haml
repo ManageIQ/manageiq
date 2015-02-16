@@ -1,0 +1,91 @@
+- url = url_for(:action => 'ldap_domain_form_field_changed', :id => @edit[:ldap_domain_id] || "new")
+#form_div
+  = form_tag(url_for(:action => 'ldap_domain_edit', :id => "#{@edit[:ldap_domain_id] || "new"}"), :remote => true) do
+    = render :partial => "layouts/flash_msg"
+    %fieldset
+      %p.legend= _("Basic Information")
+      %table{:class => "style1"}
+        %tr
+          %td.key= _("Name")
+          %td
+            = text_field_tag("name",
+                             @edit[:new][:name],
+                             :maxlength         => MAX_NAME_LEN,
+                             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+            = javascript_tag(javascript_focus('name'))
+    %fieldset
+      %p.legend= _("LDAP Settings")
+      %table.style1
+        %tr
+          %td.key= _("User Type")
+          %td.wide
+            = select_tag('user_type',
+                          options_for_select([[_("User Principal Name"),             "userprincipalname"],
+                                              [_("E-mail Address"),                  "mail"],
+                                              [_("Distinguished Name (CN=<user>)"),  "dn-cn"],
+                                              [_("Distinguished Name (UID=<user>)"), "dn-uid"]],
+                          @edit[:new][:user_type]),
+                          "data-miq_observe" => {:url => url}.to_json)
+        %tr
+          %td.key
+            = _("User Suffix:")
+            - if @edit[:new][:user_type] == "dn-cn"
+              %span#upn-mail_prefix{:style => "display:none"}= h("<user>@")
+              %span#dn-cn_prefix= h("CN=<user>,")
+              %span#dn-uid_prefix{:style => "display:none"}= h("UID=<user>,")
+            - elsif @edit[:new][:user_type] == "dn-uid"
+              %span#upn-mail_prefix{:style => "display:none"}= h("<user>@")
+              %span#dn-cn_prefix{:style => "display:none"}= h("CN=<user>,")
+              %span#dn-uid_prefix= h("UID=<user>,")
+            - else
+              %span#upn-mail_prefix= h("<user>@")
+              %span#dn-cn_prefix{:style => "display:none"}= h("CN=<user>,")
+              %span#dn-uid_prefix{:style => "display:none"}= h("UID=<user>,")
+          %td.wide
+            = text_field_tag("user_suffix",
+                             @edit[:new][:user_suffix],
+                             :maxlength         => 50,
+                             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+    %fieldset
+      %p.legend= _("Role Settings")
+      %table.style1
+        %tr
+          %td.key= _("Get User Groups from LDAP")
+          %td
+            = check_box_tag("get_user_groups", "1",
+                            @edit[:new][:get_user_groups],
+                            "data-miq_observe_checkbox" => {:url => url}.to_json)
+        %tr
+          %td.key= _("Get Roles from Home Forest")
+          %td
+            = check_box_tag("get_direct_groups", "1",
+                            @edit[:new][:get_direct_groups],
+                            "data-miq_observe_checkbox" => {:url => url}.to_json)
+        %tr
+          %td.key= _("Follow Referrals")
+          %td
+            = check_box_tag("follow_referrals", "1",
+                            @edit[:new][:follow_referrals],
+                            "data-miq_observe_checkbox" => {:url => url}.to_json)
+        %tr
+          %td.key= _("Base DN")
+          %td.wide
+            = text_field_tag("base_dn",
+                             @edit[:new][:base_dn],
+                             :maxlength => 255,
+                             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+        %tr
+          %td.key= _("Bind DN")
+          %td.wide
+            = text_field_tag("bind_dn",
+                             @edit[:new][:bind_dn],
+                             :maxlength => 255,
+                             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+        %tr
+          %td.key= _("Bind Password")
+          %td.wide
+            = password_field_tag("bind_pwd",
+                                 @edit[:new][:bind_pwd],
+                                 :maxlength => 128,
+                                 "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+    = render :partial => 'ldap_server_entries', :locals => {:entry => nil, :domain_id => "#{@edit[:ldap_domain_id] || "new"}"}
