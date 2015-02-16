@@ -181,6 +181,7 @@ module OpsController::Settings
     no_changes = true
     if @temp[:ldaphost] == ""
       add_flash(_("%s is required") % "LDAP Host", :error)
+      no_changes = false
     elsif @edit[:new][:authentication][:user_proxies].blank? || @edit[:new][:authentication][:user_proxies][0].blank?   # if adding forest first time, delete a blank record
       @edit[:new][:authentication][:user_proxies].delete_at(0)
     else
@@ -203,8 +204,8 @@ module OpsController::Settings
     end
     @changed = (@edit[:new] != @edit[:current].config)
     render :update do |page|                        # Use JS to update the display
-      page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
       page << javascript_for_miq_button_visibility(@changed)
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page.replace("forest_entries_div", :partial=>"ldap_forest_entries", :locals=>{:entry=>nil, :edit=>false})  if no_changes
     end
   end
