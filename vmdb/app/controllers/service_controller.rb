@@ -281,6 +281,7 @@ class ServiceController < ApplicationController
       @right_cell_text = _("%{model} \"%{name}\"") % {:name=>@record.name, :model=>ui_lookup(:model=>TreeBuilder.get_model_for_prefix(@nodetype))}
       @no_checkboxes = true
       @gtl_type = "grid"
+      @embedded = !role_allows(:feature => "vm_show")
       @items_per_page = ONE_MILLION
       @view, @pages = get_view(Vm, :parent=>@record, :parent_method => :all_vms, :all_pages=>true)  # Get the records (into a view) and the paginator
     else      # Get list of child Catalog Items/Services of this node
