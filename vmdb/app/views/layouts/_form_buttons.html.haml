@@ -7,7 +7,7 @@
 %table{:width => "100%"}
   %tr
     %td{:align => "right "}
-      #buttons_on{:style => "display:#{@changed ? 'display' : 'none'}"}
+      #buttons_on{:style => "display:#{@changed ? 'block' : 'none'}"}
         -if ajax_buttons
           - if serialize
             = button_tag(_('Save'),
@@ -77,7 +77,7 @@
               :title   => t,
               :type    => "submit")
 
-      #buttons_off{:style => "display: #{@changed ? 'none' : 'display'}"}
+      #buttons_off{:style => "display: #{@changed ? 'none' : 'block'}"}
         - if show_validate_button
           = button_tag(_("Verify"),
             :class => "btn btn-primary btn-disabled",
