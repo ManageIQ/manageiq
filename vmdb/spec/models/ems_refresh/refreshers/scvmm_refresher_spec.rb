@@ -55,7 +55,7 @@ describe EmsRefresh::Refreshers::ScvmmRefresher do
     Snapshot.count.should            == 9
     Switch.count.should              == 0
     SystemService.count.should       == 0
-    Relationship.count.should        == 34
+    Relationship.count.should        == 35
 
     MiqQueue.count.should            == 28
     Storage.count.should             == 6
@@ -245,7 +245,8 @@ describe EmsRefresh::Refreshers::ScvmmRefresher do
       [EmsFolder, "Datacenters", {:is_datacenter => false}] => {
         [EmsFolder, "SCVMM", {:is_datacenter => true}] => {
           [EmsFolder, "host", {:is_datacenter => false}] => {
-            [EmsCluster, "US_East"] => {}
+            [EmsCluster, "US_East"]                    => {},
+            [HostMicrosoft, "hyperv-h01.manageiq.com"] => {},
           },
           [EmsFolder, "vm", {:is_datacenter => false}]   => {
             [TemplateMicrosoft, "testvm1"]                                                            => {},
