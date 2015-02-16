@@ -148,7 +148,7 @@ module ApplicationController::DialogRunner
     # this problem applies not only to the action here, but also to all of the
     # app/views/shared/dialogs/_dialog_field.html.erb and more...
 
-    field = load_dialog_field
+    field = load_dialog_field(params[:id])
 
     dialog_id = @edit[:rec_id]
     url = url_for(:action => 'dialog_field_changed', :id => dialog_id)
@@ -173,7 +173,7 @@ module ApplicationController::DialogRunner
   end
 
   def dynamic_radio_button_refresh
-    field = load_dialog_field
+    field = load_dialog_field(params[:name])
     values = field.refresh_button_pressed
 
     checked_value = values.collect { |value_pair| value_pair[0].to_s }.include?(params[:checked_value]) ?
@@ -186,7 +186,7 @@ module ApplicationController::DialogRunner
   end
 
   def dynamic_text_box_refresh
-    field = load_dialog_field
+    field = load_dialog_field(params[:name])
     values = field.refresh_button_pressed
 
     response_json = {:field_name => field.name, :values => values}
@@ -194,14 +194,14 @@ module ApplicationController::DialogRunner
   end
 
   def dynamic_checkbox_refresh
-    field = load_dialog_field
+    field = load_dialog_field(params[:name])
 
     response_json = {:field_name => field.name, :checked => field.checked?}
     dynamic_refresh_response(response_json)
   end
 
   def dynamic_date_refresh
-    field = load_dialog_field
+    field = load_dialog_field(params[:name])
 
     response_json = {:field_name => field.name, :date_value => field.default_value}
     dynamic_refresh_response(response_json)
@@ -302,9 +302,9 @@ module ApplicationController::DialogRunner
     end
   end
 
-  def load_dialog_field
+  def load_dialog_field(field_name)
     @edit = session[:edit]
     dialog = @edit[:wf].dialog
-    dialog.field(params[:name])
+    dialog.field(field_name)
   end
 end
