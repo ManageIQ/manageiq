@@ -1,6 +1,5 @@
 require 'open-uri'
 require 'simple-rss'
-require 'miq-xml'
 
 # Need to make sure models are autoloaded
 MiqCompare
@@ -1085,7 +1084,6 @@ class ApplicationController < ActionController::Base
       tz = Time.zone
     end
 
-    require 'miq-xml'
     xml = MiqXml.createDoc(nil, nil, 1.0, :nokogiri)
 
     root = xml.add_element('rows')

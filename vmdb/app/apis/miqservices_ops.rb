@@ -1,4 +1,3 @@
-require 'miq-xml'
 require 'xmldata_helper'
 require 'yaml'
 
