@@ -1793,14 +1793,16 @@ class ApplicationController < ActionController::Base
     { :class => object.class.name, :id => object.id }
   end
 
-  def get_view_calculate_gtl_type(db_sym)
-    gtl_type = nil
-    gtl_type = @settings[:views][db_sym] unless ['scanitemset', 'miqschedule', 'pxeserver', 'customizationtemplate'].include?(db_sym.to_s)
-    # Force list view for certain types and areas
-    gtl_type = 'list' if ['filesystems', 'registry_items', 'chargeback_rates', 'miq_request'].include?(@listicon)
-    gtl_type = 'list' if gtl_type.nil?
-    gtl_type = 'grid' if 'vm' == db_sym.to_s && request.parameters[:controller] == 'service'
-    gtl_type
+  def get_view_calculate_gtl_type(db, listicon, gtl_type)
+    if 'vm' == db && request.parameters[:controller] == 'service'
+      'grid'
+    elsif ['filesystems', 'registry_items', 'chargeback_rates', 'miq_request'].include?(listicon)
+      'list'
+    elsif ['scanitemset', 'miqschedule', 'pxeserver', 'customizationtemplate'].include?(db)
+      'list'
+    else
+      gtl_type || 'list'
+    end
   end
   private :get_view_calculate_gtl_type
 
@@ -1889,10 +1891,14 @@ class ApplicationController < ActionController::Base
     sortcol_sym = "#{sort_prefix}_sortcol".to_sym
     sortdir_sym = "#{sort_prefix}_sortdir".to_sym
 
+    view_type = nil
     # Set up the list view type (grid/tile/list)
-    @settings[:views][db_sym] = params[:type] if params[:type]  # Change the list view type, if it's sent in
+    if params[:type]  # Change the list view type, if it's sent in
+      @settings[:views][db_sym] = params[:type]
+      view_type = params[:type]
+    end
 
-    @gtl_type = get_view_calculate_gtl_type(db_sym)
+    @gtl_type = get_view_calculate_gtl_type(db_sym.to_s, @listicon, view_type)
 
     # Get the view for this db or use the existing one in the session
     view = @refresh_view ? get_db_view(db.split("::").last, :association => association, :view_suffix => view_suffix) : session[:view]
