@@ -853,4 +853,66 @@ describe ApiController do
       expect(vm.reload.custom_attributes.pluck(:value).sort).to eq(["new value1", "new value2"])
     end
   end
+
+  context "Vm add_lifecycle_event action" do
+    before(:each) do
+      @vm = FactoryGirl.create(:vm_vmware)
+      @vm_url = "#{@cfme[:vms_url]}/#{@vm.id}"
+
+      @events = 1.upto(3).collect do |n|
+        {:event => "event#{n}", :status => "status#{n}", :message => "message#{n}", :created_by => "system"}
+      end
+    end
+
+    it "add_lifecycle_event to an invalid vm" do
+      update_user_role(@role, action_identifier(:vms, :add_lifecycle_event))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request_data(:add_lifecycle_event, :event => "event 1"))
+
+      expect(@success).to be_false
+      expect(@code).to eq(404)
+    end
+
+    it "add_lifecycle_event without appropriate action role" do
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      @success = run_post(@vm_url, gen_request_data(:add_lifecycle_event, :event => "event 1"))
+
+      expect(@success).to be_false
+      expect(@code).to eq(403)
+    end
+
+    it "add_lifecycle_event to a vm" do
+      update_user_role(@role, action_identifier(:vms, :add_lifecycle_event))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      @success = run_post(@vm_url, gen_request_data(:add_lifecycle_event, @events[0]))
+
+      expect(@success).to be_true
+      expect(@code).to eq(200)
+      expect(@result["success"]).to be_true
+      expect(@result["message"]).to match(/adding lifecycle event/i)
+      expect(@result["href"]).to match(@vm_url)
+      expect(@vm.lifecycle_events.size).to eq(1)
+      expect(@vm.lifecycle_events.first.event).to eq(@events[0][:event])
+    end
+
+    it "add_lifecycle_event to multiple vms" do
+      update_user_role(@role, action_identifier(:vms, :add_lifecycle_event))
+      basic_authorize @cfme[:user], @cfme[:password]
+
+      @success = run_post(@cfme[:vms_url], gen_requests(:add_lifecycle_event,
+                                                        @events.collect { |e| {:href => @vm_url}.merge(e) }))
+
+      expect(@success).to be_true
+      expect(@code).to eq(200)
+      expect(@result).to have_key("results")
+      results = @result["results"]
+      expect(results.size).to eq(@events.size)
+      expect(results.all? { |r| r["success"] }).to be_true
+      expect(@vm.lifecycle_events.size).to eq(@events.size)
+      expect(@vm.lifecycle_events.collect(&:event)).to match_array(@events.collect { |e| e[:event] })
+    end
+  end
 end
