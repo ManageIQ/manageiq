@@ -43,3 +43,6 @@ class FileDepot < ActiveRecord::Base
     @file = file
   end
 end
+
+# load all plugins
+Dir.glob(File.join(File.dirname(__FILE__), "file_depot_*.rb")).sort.each { |f| require_dependency f rescue true }
