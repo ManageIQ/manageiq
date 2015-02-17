@@ -23,6 +23,13 @@
           :opts_false         => {:class  => "rollover small-nofloat", :style => "width: 28px; height: 28px", :alt => t},
           :link               => {:action => 'form_field_changed', :button => 'right', :id => "#{@edit[:rpt_id] || "new"}"},
           :opts_link          => {:remote => true, "data-submit" => 'column_lists', :title => t})
+        - t = _("Move selected fields up")
+        = link_image_if(:cond => @edit[:new][:fields].length == 0,
+          :image              => "/images/toolbars/up.png",
+          :opts_true          => {:class  => "dimmed rollover small-nofloat"},
+          :opts_false         => {:class  => "rollover small-nofloat", :style => "width: 28px; height: 28px", :alt => t},
+          :link               => {:action => 'form_field_changed', :button => 'left', :id => "#{@edit[:rpt_id] || "new"}"},
+          :opts_link          => {:remote => true, "data-submit" => 'column_lists', :title => t})
       %td
     %tr
       %td{:align => "left"}
