@@ -12,7 +12,7 @@
             {:action => 'show', :id => @record, :display => 'main'},
             :title => _('Show Summary'))
 
-    = patternfly_accordion_panel(_("Properties"),
+    = patternfly_accordion_panel(_("Relationships"),
       @panels["resource_pool_rel"].nil? || @panels["resource_pool_rel"] == false, "resource_pool_rel") do
       %ul.nav.nav-pills.nav-stacked
         - if role_allows(:feature => "ems_cluster_show")
