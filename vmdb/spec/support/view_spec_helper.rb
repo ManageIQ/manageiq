@@ -19,6 +19,6 @@ module ViewSpecHelper
   end
 
   def set_controller_for_view(controller_name)
-    controller.request.path_parameters["controller"] = controller_name
+    controller.request.path_parameters[:controller] = controller_name
   end
 end
