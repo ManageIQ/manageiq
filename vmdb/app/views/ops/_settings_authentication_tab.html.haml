@@ -17,8 +17,8 @@
       %td.key=_("Mode")
       %td.wide
         = select_tag('authentication_mode',
-          options_for_select([["Database", "database"], ["LDAP", "ldap"], ["LDAPS", "ldaps"],
-          ["Amazon", "amazon"], ["External (httpd)", "httpd"]],
+          options_for_select([[_("Database"), "database"], [_("LDAP"), "ldap"], [_("LDAPS"), "ldaps"],
+          [_("Amazon"), "amazon"], [_("External (httpd)"), "httpd"]],
           @edit[:new][:authentication][:mode]),
           "data-miq_observe" => {:url => url}.to_json)
   %hr/
