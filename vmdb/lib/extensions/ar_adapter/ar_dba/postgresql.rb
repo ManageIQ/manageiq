@@ -180,24 +180,6 @@ module ActiveRecord
         return nil
       end
 
-      def configuration_settings
-        data = select(<<-SQL, "Configuration Settings")
-                          SELECT *
-                            FROM pg_settings
-                            ORDER BY name
-                         SQL
-
-        data.each do |datum|
-          # Synthesize short_desc and extra_desc into a new field called description
-          datum['description']  = datum['short_desc']
-          datum['description'] += "  #{datum['extra_desc']}" unless datum['extra_desc'].nil?
-
-          datum.keys.each { |key| datum[key] ||= "" }
-        end
-
-        data.to_a
-      end
-
       # Taken from: https://github.com/bucardo/check_postgres/blob/2.19.0/check_postgres.pl#L3492
       # and referenced here: http://wiki.postgresql.org/wiki/Show_database_bloat
       # check_postgres is Copyright (C) 2007-2012, Greg Sabino Mullane

@@ -64,6 +64,17 @@ class ApiController
       end
     end
 
+    def add_lifecycle_event_resource_vms(type, id = nil, data = nil)
+      raise BadRequestError, "Must specify an id for adding a Lifecycle Event to a #{type} resource" unless id
+
+      api_action(type, id) do |klass|
+        vm = resource_search(id, type, klass)
+        api_log_info("Adding Lifecycle Event to #{vm_ident(vm)}")
+
+        add_lifecycle_event_vm(vm, lifecycle_event_from_data(data))
+      end
+    end
+
     private
 
     def vm_ident(vm)
@@ -116,6 +127,21 @@ class ApiController
       action_result(true, desc)
     rescue => err
       action_result(false, err.to_s)
+    end
+
+    def add_lifecycle_event_vm(vm, lifecycle_event)
+      desc = "#{vm_ident(vm)} adding lifecycle event=#{lifecycle_event[:event]} message=#{lifecycle_event[:message]}"
+      event = LifecycleEvent.create_event(vm, lifecycle_event)
+      action_result(event.present?, desc)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
+    def lifecycle_event_from_data(data)
+      data ||= {}
+      data = data.slice("event", "status", "message", "created_by")
+      data.keys.each { |k| data[k] = data[k].to_s }
+      data
     end
   end
 end

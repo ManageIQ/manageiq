@@ -1,90 +1,41 @@
-class VmdbDatabaseSetting < ActsAsArModel
-  set_columns_hash(
-    :name              => :string,
-    :description       => :string,
-    :value             => :string,
-    :minimum_value     => :integer,
-    :maximum_value     => :integer,
-    :unit              => :string,
-    :vmdb_database_id  => :integer
-  )
+class VmdbDatabaseSetting < ActiveRecord::Base
+  self.table_name = 'pg_settings'
 
   virtual_belongs_to :vmdb_database
+  virtual_column :description,      :type => :string
+  virtual_column :minimum_value,    :type => :integer
+  virtual_column :maximum_value,    :type => :integer
+  virtual_column :vmdb_database_id, :type => :integer
 
-  attr_accessor :vmdb_database
+  attr_writer :vmdb_database
 
-  def initialize(values = {})
-    @vmdb_database = VmdbDatabase.my_database
-    super(values)
+  def vmdb_database
+    @vmdb_database ||= VmdbDatabase.my_database
   end
 
   def vmdb_database_id
     vmdb_database.id
   end
 
-  #
-  # Attributes and Reflections
-  #
-
-  def model_name
-    self.name.singularize.camelize
+  def minimum_value
+    min_val || ''
   end
 
-  def model
-    return @model if instance_variable_defined?(:@model)
-    @model = self.model_name.constantize rescue nil
+  def maximum_value
+    max_val || ''
   end
 
-  def arel_table
-    Arel::Table.new(self.name)
+  def value
+    setting || ''
   end
 
-  #
-  # Finders
-  #
-
-  def self.find(*args)
-    settings = self.vmdb_database_settings
-
-    options = args.extract_options!
-
-    case args.first
-    when :first then settings.empty? ? nil : self.new(settings.first)
-    when :last  then settings.empty? ? nil : self.new(settings.last)
-    when :all   then settings.collect { |hash| self.new(hash) }
-    end
+  def description
+    desc = short_desc
+    desc += "  #{extra_desc}" unless extra_desc.nil?
+    desc
   end
 
-  protected
-
-  def self.vmdb_database_settings
-    settings = ActiveRecord::Base.connection.configuration_settings
-    settings.collect { |hash| filtered_hash(hash) }
+  def unit
+    super || ''
   end
-
-  def self.dictionary_postgresql
-    @dictionary_postgresql ||= {
-      :name          => 'name',
-      :description   => 'description',
-      :value         => 'setting',
-      :minimum_value => 'min_val',
-      :maximum_value => 'max_val',
-      :unit          => 'unit'
-    }
-  end
-
-  def self.dictionary
-    case ActiveRecord::Base.connection.adapter_name
-    when 'PostgreSQL'; dictionary_postgresql
-    else
-      {}
-    end
-  end
-
-  def self.filtered_hash(hash)
-    filtered_hash = {}
-    dictionary.each { |key, pg_key| filtered_hash[key] = hash[pg_key] }
-    filtered_hash
-  end
-
 end

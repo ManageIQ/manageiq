@@ -521,6 +521,7 @@
   :tags:
     :description: Tags
     :options:
+    - :collection
     - :subcollection
     :methods: *70174834085620
     :klass: Tag
@@ -620,6 +621,8 @@
       - :name: edit
         :identifier: vm_edit
         :disabled: true
+      - :name: add_lifecycle_event
+        :identifier: vm_edit
       - :name: refresh
         :identifier: vm_refresh
         :disabled: true
@@ -650,6 +653,8 @@
       - :name: edit
         :identifier: vm_edit
         :disabled: true
+      - :name: add_lifecycle_event
+        :identifier: vm_edit
       - :name: refresh
         :identifier: vm_refresh
         :disabled: true
