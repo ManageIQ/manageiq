@@ -91,6 +91,8 @@ module EmsRefresh
           :uid_ems          => uid,
           :ems_ref          => uid,
           :ems_ref_obj      => host.instance_uuid,
+          :vmm_vendor       => 'RedHat',
+          :vmm_product      => identify_product(indexed_resources, host.instance_uuid),
           :ipaddress        => identify_primary_ip_address(host, indexed_servers),
           :mac_address      => identify_primary_mac_address(host, indexed_servers),
           :ipmi_address     => identify_ipmi_address(host),
@@ -118,6 +120,17 @@ module EmsRefresh
 
       def get_purpose(indexed_resources, instance_uuid)
         indexed_resources.fetch_path(instance_uuid, 'resource_name')
+      end
+
+      def identify_product(indexed_resources, instance_uuid)
+        purpose = get_purpose(indexed_resources, instance_uuid)
+        return nil unless purpose
+
+        if purpose == 'NovaCompute'
+          'rhel (Nova Compute hypervisor)'
+        else
+          "rhel (No hypervisor, Host Type is #{purpose})"
+        end
       end
 
       def identify_host_name(indexed_resources, instance_uuid, uid)
