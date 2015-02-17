@@ -1,398 +1,364 @@
 - if @record && !@in_a_form
   -  regexosname = Regexp.new(/linux/)
   - linuxos = regexosname.match(@record.os_image_name.downcase)
-  #accordion
-    .panel
-      .topbar
-        = link_to(truncate(@record.name, :length => truncate_length),
-        {:action => 'panel_control', :panel => 'icon'},
-        :remote => true,
-        :title  => h(@record.name))
-      = hidden_div_if(@panels["icon"].nil? || @panels["icon"] == false, :id => "icon") do
-        .panecontent
-          - # Calculate the quadicon div height based on # of lines of text
-          - if @record.product_name != "" && @record.service_pack != ""
-            - height = 120
-          - elsif @record.product_name != "" || @record.service_pack != ""
-            - height = 110
-          - else
-            - height = 98
-          = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav, :height => height}
-          %div{:style => "margin-top: -23px; line-height: 13px; width: 210px; float:left;"}
-            %center{:style => "color:#000;"}
-              = h(@record.product_name)
-              %br
-              = h(@record.service_pack)
+  #accordion.panel-group
+    = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length),
+      @panels["icon"].nil? || @panels["icon"] == false, "icon") do
+      - # Calculate the quadicon div height based on # of lines of text
+      - if @record.product_name != "" && @record.service_pack != ""
+        - height = 120
+      - elsif @record.product_name != "" || @record.service_pack != ""
+        - height = 110
+      - else
+        - height = 98
+      = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav, :height => height}
+      %div{:style => "margin-top: -23px; line-height: 13px; width: 210px; float:left;"}
+        %center{:style => "color:#000;"}
+          = h(@record.product_name)
+          %br
+          = h(@record.service_pack)
 
-    .panel
-      .topbar
-        = link_to(_("Properties"),
-          {:action => 'panel_control', :panel => 'vm_prop'},
-          :remote => true)
+    = patternfly_accordion_panel(_("Properties"),
+      @panels["vm_prop"].nil? || @panels["vm_prop"] == false, "vm_prop") do
+      %ul.nav.nav-pills.nav-stacked
+        %li
+          = link_to(_('Summary'),
+            {:action => 'show', :id => @record, :display => 'main'},
+            :title => "Show Summary")
 
-        = hidden_div_if(@panels["vm_prop"].nil? || @panels["vm_prop"] == false, :id => "vm_prop") do
-          .panecontent
-            = link_to_with_icon(_('Summary'),
-              {:action => 'show', :id => @record, :display => 'main'},
-              :title => "Show Summary")
+        - if @vmminfo.nil? || @vmminfo.empty?
+          %li.disabled
+            = link_to(_('Container'), "#")
+        - else
+          %li
+            = link_to(_('Container'),
+              {:action => 'show', :id => @record, :display => 'hv_info'},
+              :title => _("Show virtual machine container information"))
 
-            - if @vmminfo.nil? || @vmminfo.empty?
-              %img{:src => "/images/icons/16/link_none.gif"}
-              = _('Container')
-            - else
-              = link_to_with_icon(_('Container'),
-                {:action => 'show', :id => @record, :display => 'hv_info'},
-                :title => _("Show virtual machine container information"))
+        - if @osinfo.nil? || @osinfo.empty?
+          %li.disabled
+            = link_to(_('Operating System'), "#")
+        - else
+          %li
+            = link_to('Operating System',
+              {:action => 'show', :id => @record, :display => 'os_info'},
+              :title => _("Show virtual machine OS information"))
 
-            - if @osinfo.nil? || @osinfo.empty?
-              %img{:src => "/images/icons/16/link_none.gif"}
-              = _('Operating System')
-            - else
-              = link_to_with_icon('Operating System',
-                {:action => 'show', :id => @record, :display => 'os_info'},
-                :title => _("Show virtual machine OS information"))
+        %li
+          = link_to(_('Networks'),
+            {:action => 'show', :id => @record, :display => 'networks'},
+            :title => _("Show virtual machine networks"))
 
-            = link_to_with_icon(_('Networks'),
-              {:action => 'show', :id => @record, :display => 'networks'},
-              :title => _("Show virtual machine networks"))
+        - if @record.operating_system.nil? || @record.operating_system.number_of(:processes) == 0
+          %li.disabled
+            = link_to(_("Running Processes (0)"), "#")
+        - else
+          %li
+            = link_to(_("Running Processes (%s)") % @record.number_of(:processes),
+              {:action => 'processes', :id => @record},
+              :title => _("Show running process on this VM"))
 
-            - if @record.operating_system.nil? || @record.operating_system.number_of(:processes) == 0
-              %img{:src => "/images/icons/16/link_none.gif"}
-              = _("Running Processes (0)")
-              %br
-            - else
-              = link_to_with_icon(_("Running Processes (%s)") % @record.number_of(:processes),
-                {:action => 'processes', :id => @record},
-                :title => _("Show running process on this VM"))
+        - if role_allows(:feature => "vm_snapshot_show_list")
+          %li
+            = link_to(_('Snapshots'),
+              {:action => 'show', :id => @record, :display => 'snapshot info'},
+              :title => _("Show snapshot info"))
 
-            - if role_allows(:feature => "vm_snapshot_show_list")
-              = link_to_with_icon(_('Snapshots'),
-                {:action => 'show', :id => @record, :display => 'snapshot info'},
-                :title => _("Show snapshot info"))
+        - if @record.has_perf_data?
+          %li
+            = link_to(_('Capacity & Utilization'),
+              {:action => 'show', :id => @record, :display => 'performance'},
+              :title => _("Show Capacity & Utilization"))
+        - else
+          %li.disabled
+            = link_to(_('Capacity & Utilization'), "#")
 
-            - if @record.has_perf_data?
-              = link_to_with_icon(_('Capacity & Utilization'),
-                {:action => 'show', :id => @record, :display => 'performance'},
-                :title => _("Show Capacity & Utilization"))
-            - else
-              %img{:src => "/images/icons/16/link_none.gif", :title => _("Capacity & Utilization Data Not Available")}
-              = _('Capacity & Utilization')
-              %br
+        - if @record.has_events? || @record.has_events?(:policy_events)
+          %li
+            = link_to(_('Timelines'),
+              {:action => 'show', :id => @record, :display => 'timeline'},
+              :title => _("Show Timelines"))
+        - else
+          %li.disabled
+            = link_to(_('Timelines'), "#")
 
-            - if @record.has_events? || @record.has_events?(:policy_events)
-              - if @record.has_events?
-                = link_to_with_icon(_('Timelines'),
-                  {:action => 'show', :id => @record, :display => 'timeline'},
-                  :title => _("Show Timelines"))
-              - elsif @record.has_events?(:policy_events)
-                - # wrapping around control if
-                = link_to_with_icon(_('Timelines'),
-                  {:action => 'show', :id => @record, :display => 'timeline'},
-                  :title => _("Show Timelines"))
-            - else
-              %img{:src => "/images/icons/16/link_none.gif", :title => _("Timelines Not Available")}
-              = _('Timelines')
-              %br
+        - if @record.operating_system.nil? || @record.operating_system.number_of(:event_logs) == 0
+          %li.disabled
+            = link_to(_('Event Logs'), "#")
+        - else
+          %li
+            = link_to(_('Event Logs'),
+              {:action => 'event_logs', :id => @record},
+              :title => _("Show event logs on this VM"))
 
-            - if @record.operating_system.nil? || @record.operating_system.number_of(:event_logs) == 0
-              %img{:src => "/images/icons/16/link_none.gif"}
-              = _('Event Logs')
-              %br
-            - else
-              = link_to_with_icon(_('Event Logs'),
-                {:action => 'event_logs', :id => @record},
-                :title => _("Show event logs on this VM"))
+    = patternfly_accordion_panel(_("Relationships"),
+      @panels["vm_rel"].nil? || @panels["vm_rel"] == false, "vm_rel") do
+      %ul.nav.nav-pills.nav-stacked
+        - if role_allows(:feature => "ems_infra_show") && !@record.ext_management_system.nil?
+          %li
+            = link_to("#{ui_lookup(:table => "ems_infra")}: #{@record.ext_management_system.name}",
+              {:controller => "ems_infra", :action => 'show', :id => @record.ext_management_system.id.to_s},
+              :title => _("Show this Vm's parent %s") % ui_lookup(:table => "ems_infra"))
 
-
-      .topbar
-        = link_to(_("Relationships"),
-          {:action => 'panel_control', :panel => 'vm_rel'},
-          :remote => true)
-
-      = hidden_div_if(@panels["vm_rel"].nil? || @panels["vm_rel"] == false, :id => "vm_rel") do
-        .panecontent
-          - if role_allows(:feature => "ems_infra_show")
-            - unless @record.ext_management_system.nil?
-              = link_to_with_icon("#{ui_lookup(:table => "ems_infra")}: #{@record.ext_management_system.name}",
-                {:controller => "ems_infra", :action => 'show', :id => @record.ext_management_system.id.to_s},
-                {:title => _("Show this Vm's parent %s") % ui_lookup(:table => "ems_infra")},
-                '/images/icons/16/link_external.gif')
-
-          - if role_allows(:feature => "host_show")
-            - if @record.host.nil?
+        - if role_allows(:feature => "host_show")
+          - if @record.host.nil?
+            %li
               = link_to_with_icon("Host: #{@record.host.name}",
                 {:controller => "host", :action => 'show', :id => @record.host.id.to_s},
-                {:title => _("Show this VM's parent Host")},
-                '/images/icons/16/link_external.gif')
-            - else
-              %img{:src > "/images/icons/16/link_none.gif"}
-              = _('Parent Host: None')
-              %br
+                :title => _("Show this VM's parent Host"))
+          - else
+            %li.disabled
+              = link_to(_('Parent Host: None'), "#")
 
-          - if @record.kind_of?(VmInfra) && role_allows(:feature => "storage_show")
-            = link_if_condition(:cond => !@record.storage.nil?,
-              :record_id              => @record.storage.id,
-              :table                  => 'storages',
-              :action                 => 'show',
-              :image_path             => '/images/icons/16/link_external.gif',
-              :controller             => 'storage',
-              :title                  => _("Show this Vm's parent %s") % ui_lookup(:table => 'storages'),
-              :link_text              => "#{ui_lookup(:table => 'storages')}: #{@record.storage.name}")
+        - if @record.kind_of?(VmInfra) && role_allows(:feature => "storage_show")
+          = li_link_if_condition(:cond => !@record.storage.nil?,
+            :record_id                 => @record.storage.id,
+            :table                     => 'storages',
+            :action                    => 'show',
+            :image_path                => '/images/icons/16/link_external.gif',
+            :controller                => 'storage',
+            :title                     => _("Show this Vm's parent %s") % ui_lookup(:table => 'storages'),
+            :link_text                 => "#{ui_lookup(:table => 'storages')}: #{@record.storage.name}")
 
-          - if get_vmdb_config[:product][:proto]
-            - # Hiding behind proto - Sprint 34
-            - if @record.service
+        - if get_vmdb_config[:product][:proto]
+          - # Hiding behind proto - Sprint 34
+          - if @record.service
+            %li
               = link_to_with_icon(_("Service: %s") % @record.service.name,
                 {:controller => "service", :action => 'show', :id => @record.service},
-                {:title => _("Show this VM's parent Service")},
-                '/images/icons/16/link_external.gif')
-            - else
-              %img{:src => "/images/icons/16/link_none.gif"}
-              = _('Service: None')
-              %br
-
-          - if @record.parents.length > 0
-            = link_to_with_icon("Parent VM: %s" % @record.parents.first.name,
-              {:controller => "vm", :action => 'guest_application', :id => @record.parents.first},
-              {:title => _("Show this VM's parent")},
-              '/images/icons/16/link_external.gif')
+                :title => _("Show this VM's parent Service"))
           - else
-            %img{:src => "/images/icons/16/link_none.gif"}
-            = _('Parent VM: None')
-            %br
+            %li
+              = link_to(_('Service: None'), "#")
 
-          = link_to_with_icon(_('Genealogy'),
+        - if @record.parents.length > 0
+          %li
+            = link_to(_("Parent VM: %s") % @record.parents.first.name,
+              {:controller => "vm", :action => 'guest_application', :id => @record.parents.first},
+              :title => _("Show this VM's parent"))
+        - else
+          %li.disabled
+            = link_to(_('Parent VM: None'), "#")
+
+        %li
+          = link_to(_('Genealogy'),
             {:action => 'show', :id => @record, :display => 'vmtree_info'},
             :title => _("Show virtual machine genealogy"))
 
-          - if role_allows(:feature => "vm_drift")
-            - if @record.number_of(:drift_states) == 0
-              %img{:src => "/images/icons/16/link_none.gif"}
-              = _('Drift History (%s)') % @record.number_of(:drift_states)
-              %br
-            - else
-              = link_to_with_icon(_("Drift History (%s)") % @record.number_of(:drift_states),
+        - if role_allows(:feature => "vm_drift")
+          - if @record.number_of(:drift_states) == 0
+            %li
+              = link_to(_('Drift History (%s)') % @record.number_of(:drift_states), "#")
+          - else
+            %li
+              = link_to(_("Drift History (%s)") % @record.number_of(:drift_states),
                 {:action => 'drift_history', :id => @record},
                 :title => _("Show virtual machine drift history"))
 
-          - if @record.number_of(:scan_histories) == 0
-            %img{:src => "/images/icons/16/link_none.gif"}
-            = _('Analysis History (%s)') % @record.number_of(:scan_histories)
-            %br
-          - else
-            = link_to_with_icon(_("Analysis History (%s)") % @record.number_of(:scan_histories),
+        - if @record.number_of(:scan_histories) == 0
+          %li.disabled
+            = link_to(_('Analysis History (%s)') % @record.number_of(:scan_histories), "#")
+        - else
+          %li
+            = link_to(_("Analysis History (%s)") % @record.number_of(:scan_histories),
               {:action => 'scan_history', :id => @record},
               :title => _("Show virtual machine Analysis History"))
 
 
-      .topbar
-        = link_to(_("Storage Relationships"),
-          {:action => 'panel_control', :panel => 'vm_inf_rel'},
-          :remote => true)
+    = patternfly_accordion_panel(_("Storage Relationships"),
+      @panels["vm_inf_rel"].nil? || @panels["vm_inf_rel"] == false, "vm_inf_rel") do
+      %ul.nav.nav-pills.nav-stacked
+        - if role_allows(:feature => "ontap_storage_system_show_list")
+          = li_link_if_nonzero(:count => @record.storage_systems_size,
+            :record_id                => @record.id,
+            :display                  => 'storage_systems',
+            :tables                   => 'ontap_storage_system')
 
-      = hidden_div_if(@panels["vm_inf_rel"].nil? || @panels["vm_inf_rel"] == false, :id => "vm_inf_rel") do
-        .panecontent
-          - if role_allows(:feature => "ontap_storage_system_show_list")
-            = link_if_nonzero(:count => @record.storage_systems_size,
-              :record_id             => @record.id,
-              :display               => 'storage_systems',
-              :tables                => 'ontap_storage_system')
+        - if role_allows(:feature => "ontap_storage_volume_show_list")
+          = li_link_if_nonzero(:count => @record.storage_volumes_size,
+            :record_id                => @record.id,
+            :display                  => 'ontap_storage_volumes',
+            :tables                   => 'ontap_storage_volume')
 
-          - if role_allows(:feature => "ontap_storage_volume_show_list")
-            = link_if_nonzero(:count => @record.storage_volumes_size,
-              :record_id             => @record.id,
-              :display               => 'ontap_storage_volumes',
-              :tables                => 'ontap_storage_volume')
+        - if role_allows(:feature => "ontap_file_share_show_list")
+          = li_link_if_nonzero(:count => @record.file_shares_size,
+            :record_id                => @record.id,
+            :display                  => 'ontap_file_shares',
+            :tables                   => 'ontap_file_share')
 
-          - if role_allows(:feature => "ontap_file_share_show_list")
-            = link_if_nonzero(:count => @record.file_shares_size,
-              :record_id             => @record.id,
-              :display               => 'ontap_file_shares',
-              :tables                => 'ontap_file_share')
+        - if role_allows(:feature => "cim_base_storage_extent_show_list")
+          = li_link_if_nonzero(:count => @record.base_storage_extents_size,
+            :record_id                => @record.id,
+            :display                  => 'storage_extents',
+            :tables                   => 'cim_base_storage_extent')
 
-          - if role_allows(:feature => "cim_base_storage_extent_show_list")
-            = link_if_nonzero(:count => @record.base_storage_extents_size,
-              :record_id             => @record.id,
-              :display               => 'storage_extents',
-              :tables                => 'cim_base_storage_extent')
+    = patternfly_accordion_panel(_("Security"),
+      @panels["vm_sec"].nil? || @panels["vm_sec"] == false, "vm_sec") do
+      - if @record.number_of(:users) == 0
+        %li.disabled
+          = link_to(_('Users (%s)') % @record.number_of(:users), "#")
+      - else
+        %li
+          = link_to(_("Users (%s)") % @record.number_of(:users),
+            {:action => 'users', :id => @record},
+            :title => _("Show the users defined on this VM"))
 
-      .topbar
-        = link_to(_("Security"),
-          {:action => 'panel_control', :panel => 'vm_sec'},
-          :remote => true)
+      - if @record.number_of(:groups) == 0
+        %li.disabled
+          = link_to(_('Groups (%s)') % @record.number_of(:groups), "#")
+      - else
+        %li
+          = link_to(_("Groups (%s)") % @record.number_of(:groups),
+            {:action => 'groups', :id => @record},
+            :title => _("Show the groups defined on this VM"))
 
-      = hidden_div_if(@panels["vm_sec"].nil? || @panels["vm_sec"] == false, :id => "vm_sec") do
-        .panecontent
-          - if @record.number_of(:users) == 0
-            %img{:src => "/images/icons/16/link_none.gif"}
-            = _('Users (%s)') % @record.number_of(:users)
-            %br
+      - unless linuxos || @record.os_image_name.downcase == "unknown"
+        - if @record.number_of(:patches) == 0
+          %li.disabled
+            = link_to(_('Patches (%s)') % @record.number_of(:patches), "#")
+        - else
+          %li
+            = link_to(_("Patches (%s)") % @record.number_of(:patches),
+              {:action => 'patches', :id => @record, :db => "vm"},
+              :title => _("Show the patches installed on this VM"))
+
+    = patternfly_accordion_panel(_("Security"),
+      @panels["vm_config"].nil? || @panels["vm_config"] == false, "vm_config") do
+      %ul.nav.nav-pills.nav-stacked
+        - if linuxos
+          - if @record.number_of(:guest_applications) == 0
+            %li.disabled
+            = link_to(_('Packages (%s)') % @record.number_of(:guest_applications), "#")
           - else
-            = link_to_with_icon(_("Users (%s)") % @record.number_of(:users),
-              {:action => 'users', :id => @record},
-              :title => _("Show the users defined on this VM"))
-          %p
-          - if @record.number_of(:groups) == 0
-            %img{:src => "/images/icons/16/link_none.gif"}
-            = _('Groups (%s)') % @record.number_of(:groups)
-            %br
-          - else
-            = link_to_with_icon(_("Groups (%s)") % @record.number_of(:groups),
-              {:action => 'groups', :id => @record},
-              :title => _("Show the groups defined on this VM"))
-          %p
-
-          - unless linuxos || @record.os_image_name.downcase == "unknown"
-            - if @record.number_of(:patches) == 0
-              %img{:src => "/images/icons/16/link_none.gif"}
-              = _('Patches (%s)') % @record.number_of(:patches)
-              %br
-            - else
-              = link_to_with_icon(_("Patches (%s)") % @record.number_of(:patches),
-                {:action => 'patches', :id => @record, :db => "vm"},
-                :title => _("Show the patches installed on this VM"))
-            %p
-
-      .topbar
-        = link_to("Configuration", {:action => 'panel_control', :panel => 'vm_config'}, :remote => true)
-
-      = hidden_div_if(@panels["vm_config"].nil? || @panels["vm_config"] == false, :id => "vm_config") do
-        .panecontent
-          - if linuxos
-            - if @record.number_of(:guest_applications) == 0
-              %img{:src => "/images/icons/16/link_none.gif"}
-              = _('Packages (%s)') % @record.number_of(:guest_applications)
-              %br
-            - else
-              = link_to_with_icon(_("Packages (%s)") % @record.number_of(:guest_applications),
+            %li
+              = link_to(_("Packages (%s)") % @record.number_of(:guest_applications),
                 {:action => 'guest_applications', :id => @record},
                 :title => ("Show the packages installed on this VM"))
-            %p
-            - if @record.number_of(:linux_initprocesses) == 0
-              %img{:src => "/images/icons/16/link_none.gif"}
-              = _('Init Processes (%s)') % @record.number_of(:linux_initprocesses)
-              %br
-            - else
-              = link_to_with_icon(_("Init Processes (%s)") % @record.number_of(:linux_initprocesses),
+
+          - if @record.number_of(:linux_initprocesses) == 0
+            %li.disabled
+              = link_to(_('Init Processes (%s)') % @record.number_of(:linux_initprocesses), "#")
+          - else
+            %li
+              = link_to(_("Init Processes (%s)") % @record.number_of(:linux_initprocesses),
                 {:action => 'linux_initprocesses', :id => @record},
                 :title => ("Show the Linux processes installed on this VM"))
-            %p
-            - if @record.number_of(:filesystems) == 0
-              %img{:src => "/images/icons/16/link_none.gif"}
-              = _('Files (%s)') % @record.number_of(:filesystems)
-              %br
-            - else
-              = link_to_with_icon(_("Files (%s)") % @record.number_of(:filesystems),
+
+          - if @record.number_of(:filesystems) == 0
+            %li.disabled
+              = link_to(_('Files (%s)') % @record.number_of(:filesystems), "#")
+          - else
+            %li
+              = link_to(_("Files (%s)") % @record.number_of(:filesystems),
                 {:action => 'filesystems', :id => @record},
                 :title => ("Show the files on this VM"))
-            %p
-          - else
-            - if @record.os_image_name.downcase == "unknown"
-              - if @record.number_of(:filesystems) == 0
-                %img{:src => "/images/icons/16/link_none.gif"}
-                = _('Files (%s)') % @record.number_of(:filesystems)
-                %br
-              - else
-                = link_to_with_icon(_("Files (%s)") % @record.number_of(:filesystems),
+
+        - else
+          - if @record.os_image_name.downcase == "unknown"
+            - if @record.number_of(:filesystems) == 0
+              %li.disabled
+                = link_to(_('Files (%s)') % @record.number_of(:filesystems), "#")
+            - else
+              %li
+                = link_to(_("Files (%s)") % @record.number_of(:filesystems),
                   {:action => 'filesystems', :id => @record},
                   :title => _("Show the files on this VM"))
+          - else
+            - if @record.number_of(:guest_applications) == 0
+              %li.disabled
+                = link_to(_('Applications (%s)') % @record.number_of(:guest_applications), "#")
             - else
-              - if @record.number_of(:guest_applications) == 0
-                %img{:src => "/images/icons/16/link_none.gif"}
-                = _('Applications (%s)') % @record.number_of(:guest_applications)
-                %br
-              - else
-                = link_to_with_icon(_("Applications (%s)") % @record.number_of(:guest_applications),
+              %li
+                = link_to(_("Applications (%s)") % @record.number_of(:guest_applications),
                   {:action => 'guest_application', :id => @record},
                   :title => _("Show the applications installed on this VM"))
-              %p
-              - if @record.number_of(:win32_services) == 0
-                %img{:src => "/images/icons/16/link_none.gif"}
-                = _('Win32 Services (%s)') % @record.number_of(:win32_services)
-                %br
-              - else
-                = link_to_with_icon(_("Win32 Services (%s)") % @record.number_of(:win32_services),
+
+            - if @record.number_of(:win32_services) == 0
+              %li.disabled
+                = link_to(_('Win32 Services (%s)') % @record.number_of(:win32_services), "#")
+            - else
+              %li
+                = link_to(_("Win32 Services (%s)") % @record.number_of(:win32_services),
                   {:action => 'win32_services', :id => @record},
                   :title => _("Show the Win32 services installed on this VM"))
-              %p
-              - if @record.number_of(:kernel_drivers) == 0
-                %img{:src => "/images/icons/16/link_none.gif"}
-                = _('Kernel Drivers (%s)') % @record.number_of(:kernel_drivers)
-                %br
-              - else
-                = link_to_with_icon(_("Kernel Drivers (%s)") % @record.number_of(:kernel_drivers),
+
+            - if @record.number_of(:kernel_drivers) == 0
+              %li.disabled
+                = link_to(_('Kernel Drivers (%s)') % @record.number_of(:kernel_drivers), "#")
+            - else
+              %li
+                = link_to(_("Kernel Drivers (%s)") % @record.number_of(:kernel_drivers),
                   {:action => 'kernel_drivers', :id => @record},
                   :title => _("Show the kernel drivers installed on this VM"))
-              %p
-              - if @record.number_of(:filesystem_drivers) == 0
-                %img{:src => "/images/icons/16/link_none.gif"}
-                = _('File System Drivers (%s)') % @record.number_of(:filesystem_drivers)
-                %br
-              - else
-                = link_to_with_icon(_("File System Drivers (%s)") % @record.number_of(:filesystem_drivers),
+
+            - if @record.number_of(:filesystem_drivers) == 0
+              %li.disabled
+                = link_to(_('File System Drivers (%s)') % @record.number_of(:filesystem_drivers), "#")
+            - else
+              %li
+                = link_to(_("File System Drivers (%s)") % @record.number_of(:filesystem_drivers),
                   {:action => 'filesystem_drivers', :id => @record},
                   :title => _("Show the file system drivers installed on this VM"))
-              - if @record.number_of(:filesystems) == 0
-                %img{:src => "/images/icons/16/link_none.gif"}
-                = _('Files (%s)') % @record.number_of(:filesystems)
-                %br
-              - else
-                = link_to_with_icon(_("Files (%s)") % @record.number_of(:filesystems),
+
+            - if @record.number_of(:filesystems) == 0
+              %li.disabled
+                = link_to(_('Files (%s)') % @record.number_of(:filesystems), "#")
+            - else
+              %li
+                = link_to(_("Files (%s)") % @record.number_of(:filesystems),
                   {:action => 'filesystems', :id => @record},
                   :title => _("Show the files on this VM"))
-              - if @record.number_of(:registry_items) == 0
-                %img{:src => "/images/icons/16/link_none.gif"}
-                = _('Registry Entries (%s)') % @record.number_of(:registry_items)
-                %br
-              - else
-                = link_to_with_icon(_("Registry Entries (%s)") % @record.number_of(:registry_items),
+
+            - if @record.number_of(:registry_items) == 0
+              %li.disabled
+                = link_to(_('Registry Entries (%s)') % @record.number_of(:registry_items), "#")
+            - else
+              %li
+                = link_to(_("Registry Entries (%s)") % @record.number_of(:registry_items),
                   {:action => 'registry_items', :id => @record},
                   :title => _("Show the registry items on this VM"))
-              %p
 
-            - if @record.hardware.blank? || @record.hardware.number_of(:disks) == 0
-              %img{:src => "/images/icons/16/link_none.gif"}
-              = _('Disks (0)')
-            - else
-              = link_to_with_icon(_("Disks (%s)") % @record.hardware.number_of(:disks),
+
+          - if @record.hardware.blank? || @record.hardware.number_of(:disks) == 0
+            %li.disabled
+              = link_to(_('Disks (0)'), "#")
+          - else
+            %li
+              = link_to(_("Disks (%s)") % @record.hardware.number_of(:disks),
                 {:action => 'show', :id => @record, :display => 'disks'},
                 :title => _("Show disks"))
-            %p
-            - if @record.number_of(:advanced_settings) == 0
-              %img{:src => "/images/icons/16/link_none.gif"}
-              = _('Advanced Settings (%s)') % @record.number_of(:advanced_settings)
-              %br
-            - else
+
+          - if @record.number_of(:advanced_settings) == 0
+            %li.disabled
+              = link_to(_('Advanced Settings (%s)') % @record.number_of(:advanced_settings), "#")
+          - else
+            %li
               = link_to_with_icon(("Advanced Settings (%s)") % @record.number_of(:advanced_settings),
                 {:action => 'advanced_settings', :id => @record},
                 :title => _("Show the advanced settings on this VM"))
-            %p
-            = link_to_with_icon(_('Resources'),
+          %li
+            = link_to(_('Resources'),
               {:action => 'show', :id => @record, :display => 'resources_info'},
               :title => _("Show Resources of this VM"))
-            %p
-        </div>
 
-    .topbar
-      = link_to(_("Diagnostics"),
-        {:action => 'panel_control', :panel => 'vm_diag'},
-        :remote => true)
-
-    = hidden_div_if(@panels["vm_diag"].nil? || @panels["vm_diag"] == false, :id => "vm_diag") do
-      .panecontent
+    = patternfly_accordion_panel(_("Diagnostics"),
+      @panels["vm_diag"].nil? || @panels["vm_diag"] == false, "vm_diag") do
+      %ul.nav.nav-pills.nav-stacked
         - ldate = last_date(:processes)
         - if ldate
-          = link_to_with_icon(_("Running Processes (%s Ago)") % h(time_ago_in_words(ldate.in_time_zone(Time.zone)).titleize),
-            {:action => 'processes', :id => @record},
-            :title => _("Show Running Processes on this VM"))
+          %li
+            = link_to(_("Running Processes (%s Ago)") % h(time_ago_in_words(ldate.in_time_zone(Time.zone)).titleize),
+              {:action => 'processes', :id => @record},
+              :title => _("Show Running Processes on this VM"))
         - else
-          %img{:src => "/images/icons/16/link_none.gif"}
-          = _('Running Processes (Not Available)')
-        %p
+          %li.disabled
+            = link_to(_('Running Processes (Not Available)'), "#")
+
         - if @record.operating_system.nil? || @record.operating_system.number_of(:event_logs) == 0
-          %img{:src => "/images/icons/16/link_none.gif"}
-          = _('Event Logs (Not Available)')
+          %li.disabled
+            = link_to(_('Event Logs (Not Available)'), "#")
         - else
-          = link_to_with_icon(_("Event Logs (Available)"),
-            {:action => 'event_logs', :id => @record},
-            :title => _("Show Event Logs on this VM"))
+          %li
+            = link_to(_("Event Logs (Available)"),
+              {:action => 'event_logs', :id => @record},
+              :title => _("Show Event Logs on this VM"))
