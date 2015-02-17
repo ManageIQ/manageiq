@@ -4,21 +4,18 @@ module ApiHelper
     # Object or Hash Normalizer
     #
 
-    def normalize_hash(type, obj)
+    # Note: revisit merging direct and virtual normalize hash methods here once support for
+    # virtual subcollections is added.
+
+    def normalize_hash(type, obj, opts = {})
       attrs = (obj.respond_to?(:attributes) ? obj.attributes.keys : obj.keys)
-      attrs.each_with_object({}) do |k, res|
-        res[k] =
-          case obj[k]
-          when Hash
-            normalize_hash(type, obj[k])
-          when Array
-            obj[k].collect do |item|
-              item.kind_of?(Hash) ? normalize_hash(type, item) : item
-            end
-          else
-            normalize_attr_byname(type, k, obj[k])
-          end
-      end
+      result = {}
+
+      href = new_href(type, obj["id"], obj["href"], opts)
+      result["href"] = href if href.present?
+
+      attrs.each { |k| result[k] = normalize_direct(type, k, obj[k]) }
+      result
     end
 
     def normalize_virtual(vtype, name, obj, options = {})
@@ -56,8 +53,6 @@ module ApiHelper
         normalize_attr(type, :time, value)
       elsif self.class.attr_type_hash(:url).key?(attr.to_s)
         normalize_attr(type, :url,  value)
-      elsif self.class.attr_type_hash(:id).key?(attr.to_s)
-        normalize_attr(type, :id,   value)
       else
         value
       end
@@ -87,10 +82,26 @@ module ApiHelper
     end
 
     #
-    # Normalize Id's, <type>/<id>
+    # Let's normalize an href based on type and id value
     #
-    def normalize_id(type, value)
-      type.nil? ? value : normalize_url(type, "#{type}/#{value}")
+    def normalize_href(type, value)
+      normalize_url(type, "#{type}/#{value}")
+    end
+
+    private
+
+    def normalize_direct(type, name, obj)
+      return normalize_direct_array(type, name, obj) if obj.kind_of?(Array)
+      return normalize_hash(type, obj) if obj.respond_to?(:attributes) || obj.respond_to?(:keys)
+      normalize_attr_byname(type, name, obj)
+    end
+
+    def normalize_direct_array(type, name, obj)
+      obj.collect { |item| normalize_direct(type, name, item) }
+    end
+
+    def new_href(type, current_id, current_href, opts)
+      normalize_href(type, current_id) if opts[:add_href] && current_id.present? && current_href.blank?
     end
   end
 end

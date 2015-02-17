@@ -65,7 +65,7 @@ class ApiController
       cspec = collection_config[type]
       klass = cspec[:klass].constantize
       resource = resource_search(id, type, klass)
-      resource.update_attributes(data.except("id", "href"))
+      resource.update_attributes(data.except(*ID_ATTRS))
       resource
     end
 
