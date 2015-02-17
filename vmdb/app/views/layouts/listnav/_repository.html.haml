@@ -12,7 +12,7 @@
           {:action => 'show', :id => @record, :display => 'main'},
           :title => _("Show Summary"))
 
-    = patternfly_accordion_panel(_("Properties"),
+    = patternfly_accordion_panel(_("Relationships"),
       @panels["repo_rel"].nil? || @panels["repo_rel"] == false, "repo_rel") do
       %ul.nav.nav-pills.nav-stacked
         - if role_allows(:feature => "vm_show_list")
