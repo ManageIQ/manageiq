@@ -1,5 +1,6 @@
 class MiqProvisionWorkflow < MiqRequestWorkflow
   SUBCLASSES = %w{
+    MiqProvisionConfiguredSystemWorkflow
     MiqProvisionVirtWorkflow
   }
 
