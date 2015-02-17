@@ -1,4 +1,4 @@
-class MiqProvisionCloudWorkflow < MiqProvisionWorkflow
+class MiqProvisionCloudWorkflow < MiqProvisionVirtWorkflow
   include CloudInitTemplateMixin
 
   SUBCLASSES = %w{
