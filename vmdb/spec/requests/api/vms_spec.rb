@@ -859,7 +859,7 @@ describe ApiController do
       @vm = FactoryGirl.create(:vm_vmware)
       @vm_url = "#{@cfme[:vms_url]}/#{@vm.id}"
 
-      @events = 1.upto(10).collect do |n|
+      @events = 1.upto(3).collect do |n|
         {:event => "event#{n}", :status => "status#{n}", :message => "message#{n}", :created_by => "system"}
       end
     end
@@ -912,7 +912,7 @@ describe ApiController do
       expect(results.size).to eq(@events.size)
       expect(results.all? { |r| r["success"] }).to be_true
       expect(@vm.lifecycle_events.size).to eq(@events.size)
-      expect(@vm.lifecycle_events.collect(&:event).sort).to eq(@events.collect { |e| e[:event] }.sort)
+      expect(@vm.lifecycle_events.collect(&:event)).to match_array(@events.collect { |e| e[:event] })
     end
   end
 end
