@@ -58,7 +58,8 @@ module EmsRefresh::Parsers
         :namespace        => service.metadata.instance_values["table"][:namespace],
         :session_affinity => service.spec.sessionAffinity,
 
-        :labels           => parse_labels(service)
+        :labels           => parse_labels(service),
+        :selector_parts   => parse_selector_parts(service)
       )
       new_result
     end
@@ -99,6 +100,22 @@ module EmsRefresh::Parsers
       labels.to_h.each do |key, value|
         custom_attr = {
           :section => 'labels',
+          :name    => key,
+          :value   => value,
+          :source  => "kubernetes"
+        }
+        result << custom_attr
+      end
+      result
+    end
+
+    def parse_selector_parts(entity)
+      result = []
+      selector_parts = entity.spec.selector
+      return result if selector_parts.nil?
+      selector_parts.to_h.each do |key, value|
+        custom_attr = {
+          :section => 'selectors',
           :name    => key,
           :value   => value,
           :source  => "kubernetes"
