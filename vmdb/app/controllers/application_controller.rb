@@ -23,6 +23,8 @@ class ApplicationController < ActionController::Base
   include JsHelper
   helper JsHelper
 
+  helper CloudResourceQuotaHelper
+
   include_concern 'Automate'
   include_concern 'CiProcessing'
   include_concern 'Compare'
