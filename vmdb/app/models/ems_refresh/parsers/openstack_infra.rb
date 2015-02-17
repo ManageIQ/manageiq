@@ -91,6 +91,7 @@ module EmsRefresh
           :uid_ems          => uid,
           :ems_ref          => uid,
           :ems_ref_obj      => host.instance_uuid,
+          :operating_system => {:product_name => 'linux'},
           :vmm_vendor       => 'RedHat',
           :vmm_product      => identify_product(indexed_resources, host.instance_uuid),
           :ipaddress        => identify_primary_ip_address(host, indexed_servers),
