@@ -38,6 +38,7 @@ class ApiController < ApplicationController
   include_concern 'Authentication'
   include_concern 'AutomationRequests'
   include_concern 'CustomAttributes'
+  include_concern 'Conditions'
   include_concern 'ProvisionRequests'
   include_concern 'RequestTasks'
   include_concern 'ServiceRequests'
@@ -63,9 +64,13 @@ class ApiController < ApplicationController
   #
   ATTR_TYPES = {
     :time => %w(expires_on),
-    :url  => %w(href),
-    :id   => %w(id)
+    :url  => %w(href)
   }
+
+  #
+  # Attributes used for identification
+  #
+  ID_ATTRS = %w(id href)
 
   #
   # To skip CSRF token verification as API clients would

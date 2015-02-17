@@ -1,38 +1,25 @@
 - if @record.try(:name)
-  #accordion
-    .panel
-      .topbar
-        = link_to(truncate(@record.name, :length => truncate_length),
-          {:action => 'panel_control', :panel => 'icon'},
-          :remote => true,
-          :title  => h(@record.name))
-      = hidden_div_if(@panels["icon"].nil? || @panels["icon"] == false, :id => "icon") do
-        .panecontent
-          = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
+  #accordion.panel-group
+    = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length),
+      @panels["icon"].nil? || @panels["icon"] == false, "icon") do
+      = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
 
-      .topbar
-        = link_to(_("Properties"),
-          {:action => 'panel_control', :panel => 'service_prop'},
-          :remote => true)
-      = hidden_div_if(@panels["service_prop"].nil? || @panels["service_prop"] == false, :id => "service_prop") do
-        .panecontent
-          = link_to_with_icon(_('Summary'),
+    = patternfly_accordion_panel(_("Properties"),
+      @panels["service_prop"].nil? || @panels["service_prop"] == false, "service_prop") do
+      %ul.nav.nav-pills.nav-stacked
+        %li
+          = link_to(_('Summary'),
             {:action => 'show', :id => @record, :display => 'main'},
             :title => _("Show Summary"))
 
-      .topbar
-        = link_to(_("Relationships"),
-          {:action => 'panel_control', :panel => 'svc_rel'},
-          :remote => true)
-      = hidden_div_if(@panels["svc_rel"].nil? || @panels["svc_rel"] == false, :id => "svc_rel") do
-        .panecontent
-          - if @record.number_of(:get_vms) == 0
-            %img{:src => "/images/icons/16/link_none.gif"}
-            = _("Member VMs (%s)") % @record.number_of(:get_vms)
-            %br
-          - else
-            = link_to_with_icon(_("Member VMs (%s)") % @record.number_of(:get_vms),
+    = patternfly_accordion_panel(_("Relationships"),
+      @panels["svc_rel"].nil? || @panels["svc_rel"] == false, "svc_rel") do
+      %ul.nav.nav-pills.nav-stacked
+        - if @record.number_of(:get_vms) == 0
+          %li.disabled
+            = link_to(_("Member VMs (%s)") % @record.number_of(:get_vms), "#")
+        - else
+          %li
+            = link_to(_("Member VMs (%s)") % @record.number_of(:get_vms),
               {:action => 'show', :id => @record, :display => 'vms'},
               :title => _("Show member VMs"))
-          %p
-

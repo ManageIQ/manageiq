@@ -31,8 +31,7 @@ module ApiHelper
     #
     def render_collection(type, resources, opts = {})
       validate_response_format
-      reftype = opts[:is_subcollection] ? "#{@req[:collection]}/#{@req[:c_id]}/#{type}" : type
-      render :json => collection_to_jbuilder(type, reftype, resources, opts).target!
+      render :json => collection_to_jbuilder(type, gen_reftype(type, opts), resources, opts).target!
     end
 
     #
@@ -40,7 +39,14 @@ module ApiHelper
     #
     def render_resource(type, resource, opts = {})
       validate_response_format
-      render :json => resource_to_jbuilder(type, type, resource, opts).target!
+      render :json => resource_to_jbuilder(type, gen_reftype(type, opts), resource, opts).target!
+    end
+
+    #
+    # We want reftype to reflect subcollection if targeting as such.
+    #
+    def gen_reftype(type, opts)
+      opts[:is_subcollection] ? "#{@req[:collection]}/#{@req[:c_id]}/#{type}" : type
     end
 
     # Methods for Serialization as Jbuilder Objects.
@@ -58,7 +64,7 @@ module ApiHelper
           if opts[:expand_resources]
             add_hash json, resource_to_jbuilder(type, reftype, resource, opts).attributes!
           else
-            json.href normalize_id(reftype, resource["id"])
+            json.href normalize_href(reftype, resource["id"])
           end
         end
         aspecs = get_aspecs(type, opts[:collection_actions], :collection, opts[:is_subcollection], reftype)
@@ -70,7 +76,8 @@ module ApiHelper
       reftype = get_reftype(type, reftype, resource, opts)
       json    = Jbuilder.new
       json.ignore_nil!
-      add_hash json, normalize_hash(reftype, resource), :render_resource_attr, resource
+
+      add_hash json, normalize_hash(reftype, resource, :add_href => true), :render_resource_attr, resource
 
       if resource.respond_to?(:attributes)
         expand_virtual_attributes(json, type, resource)
@@ -175,8 +182,8 @@ module ApiHelper
         else
           klass.scoped
         end
-      res = res.where(sqlfilter_param)            if sqlfilter_param
-      res = res.reorder(sort_params)              if sort_params
+      res = res.where(sqlfilter_param)            if sqlfilter_param && res.respond_to?(:where)
+      res = res.reorder(sort_params)              if sort_params && res.respond_to?(:reorder)
 
       options = {
         :targets        => res,
@@ -297,11 +304,11 @@ module ApiHelper
     # Let's expand actions
     #
     def expand_actions(json, type, opts)
-      if render_attr("actions")
-        href   = json.attributes!["id"]
-        aspecs = get_aspecs(type, opts[:resource_actions], :resource, opts[:is_subcollection], href)
-        add_actions(json, aspecs, type)
-      end
+      return unless render_attr("actions")
+
+      href   = json.attributes!["href"]
+      aspecs = get_aspecs(type, opts[:resource_actions], :resource, opts[:is_subcollection], href)
+      add_actions(json, aspecs, type)
     end
 
     def add_actions(json, aspecs, type)
@@ -322,7 +329,7 @@ module ApiHelper
       physical_attributes = params['attributes'].split(",").collect do |attr|
         attr unless attr_virtual?(resource, attr)
       end.compact
-      physical_attributes.present? ? physical_attributes | ["id"] : []
+      physical_attributes.present? ? physical_attributes | ApiController::ID_ATTRS : []
     end
 
     #
@@ -340,9 +347,9 @@ module ApiHelper
         json.set! sc.to_s do |js|
           subresources.each do |scr|
             if expand?(sc) || scr["id"].nil?
-              add_child js, normalize_hash(sctype, scr)
+              add_child js, normalize_hash(sctype, scr, :add_href => true)
             else
-              js.child! { |jsc| jsc.href normalize_id(sctype, scr["id"]) }
+              js.child! { |jsc| jsc.href normalize_href(sctype, scr["id"]) }
             end
           end
         end

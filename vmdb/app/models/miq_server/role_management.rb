@@ -93,7 +93,7 @@ module MiqServer::RoleManagement
   def set_master_for_role(server_role)
     server_role = ServerRole.to_role(server_role)
     if server_role.master_supported?
-      self.zone.miq_servers.delete_if { |s| s.id == self.id }.each do |server|
+      self.zone.miq_servers.reject { |s| s.id == self.id }.each do |server|
         assigned = server.assigned_server_roles.where(:server_role_id =>  server_role.id).first
         next if assigned.nil?
         server.assign_role(server_role, 2)  if assigned.priority == 1

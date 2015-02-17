@@ -29,4 +29,13 @@ describe ManageiqForeman::PagedResponse do
     end
     it { expect(mapped_response.results).to eq([{"id" => "a"}, {"id" => "aa"}, {"id" => "aaa"}]) }
   end
+
+  describe "comparison" do
+    let(:a) { described_class.new([{"id" => "a"}, {"id" => "b"}]) }
+    let(:b) { described_class.new([{"id" => "a"}, {"id" => "b"}]) }
+    let(:x) { described_class.new([{"id" => "b"}, {"id" => "b"}]) }
+    it { expect(a).to eq(a) }
+    it { expect(a).to eq(b) }
+    it { expect(a).not_to eq(x) }
+  end
 end

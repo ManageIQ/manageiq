@@ -1,14 +1,14 @@
 ---
 :base:
   :module: api
-  :name: CFME API
-  :description: CloudForms Management Engine REST API
-  :version: '1.1.0-pre'
+  :name: ManageIQ API
+  :description: ManageIQ REST API
+  :version: '2.0.0-pre'
 :version:
   :regex: !ruby/regexp /^v[0-9]+(?>\\.[0-9a-zA-Z]+)*(-[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?/
   :definitions:
-  - :name: '1.1.0-pre'
-    :ident: 'v1.1.0-pre'
+  - :name: '2.0.0-pre'
+    :ident: 'v2.0.0-pre'
 :method:
   :names:
   - :get
@@ -80,6 +80,13 @@
         :identifier: ems_cluster_tag
       - :name: unassign
         :identifier: ems_cluster_tag
+  :conditions:
+    :description: Conditions
+    :options:
+    - :collection
+    - :subcollection
+    :methods: *70174834086080
+    :klass: Condition
   :data_stores:
     :description: Datastores
     :options:
@@ -214,6 +221,8 @@
     - :collection
     :methods: *70174834086080
     :klass: MiqPolicy
+    :subcollections:
+    - :conditions
     :collection_actions:
       :post:
       - :name: add

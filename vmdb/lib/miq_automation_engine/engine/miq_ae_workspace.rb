@@ -273,7 +273,7 @@ module MiqAeEngine
     end
 
     def root(attrib = nil)
-      return nil if @graph.roots.nil? || @graph.roots.empty?
+      return nil if @graph.roots.empty?
       return @graph.roots.first if attrib.nil?
       return @graph.roots.first.attributes[attrib.downcase]
     end
@@ -335,7 +335,7 @@ module MiqAeEngine
       id = @graph.find_by_data(obj)
       return [] if id.nil?
       kids = @graph.children(id)
-      return [] if kids.nil?
+      return [] if kids.empty?
       return kids.collect { |vid| @graph[vid] }
     end
 

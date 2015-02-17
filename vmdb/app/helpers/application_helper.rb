@@ -24,6 +24,22 @@ module ApplicationHelper
     }
   end
 
+  # Create a collapsed panel based on a condition
+  def patternfly_accordion_panel(title, condition, id, &block)
+    content_tag(:div, :class => "panel panel-default") do
+      out  = content_tag(:div, :class => "panel-heading") do
+        content_tag(:h4, :class => "panel-title") do
+          # To allow to expand more panels at once, swap the comments below
+          link_to(title, "##{id}", 'data-parent' => '#accordion', 'data-toggle' => 'collapse')
+          # link_to(title, "##{id}", 'data-toggle' => 'collapse')
+        end
+      end
+      out << content_tag(:div, :id => id, :class => "panel-collapse collapse #{condition ? 'out' : 'in'}") do
+        content_tag(:div, :class => "panel-body", &block)
+      end
+    end
+  end
+
   # Create a hidden div area based on a condition (using for hiding nav panes)
   def hidden_div_if(condition, options = {}, &block)
     hidden_tag_if(:div, condition, options, &block)
@@ -2392,14 +2408,14 @@ module ApplicationHelper
     end
   end
 
-  # Same as link_if_condition for cases where the condition is a zero equality
+  # Same as li_link_if_condition for cases where the condition is a zero equality
   # test.
   #
   # args (same as link_if_condition) plus:
   #   :count    --- fixnum  - the number to test and present
   #
-  def link_if_nonzero(args)
-    link_if_condition(args.update(:condition => args[:count] != 0))
+  def li_link_if_nonzero(args)
+    li_link_if_condition(args.update(:condition => args[:count] != 0))
   end
 
   # Function returns a HTML fragment that represents a link to related entity
@@ -2420,7 +2436,7 @@ module ApplicationHelper
   #     :[action]     --- controller action
   #     :record_id    --- id of record
   #
-  def link_if_condition(args)
+  def li_link_if_condition(args)
     if args.key?(:tables) # plural case
       entity_name = ui_lookup(:tables => args[:tables])
       link_text   = args.key?(:link_text) ? "#{args[:link_text]} (#{args[:count]})" : "#{entity_name} (#{args[:count]})"
@@ -2442,10 +2458,12 @@ module ApplicationHelper
       }
       link_params[:controller] = args[:controller] if args.key?(:controller)
 
-      tag_attrs = { :title => title }
+      tag_attrs = {:title => title}
       check_changes = args[:check_changes] || args[:check_changes].nil?
       tag_attrs[:onclick] = 'return miqCheckForChanges()' if check_changes
-      link_to_with_icon(link_text, link_params, tag_attrs)
+      content_tag(:li) do
+        link_to(link_text, link_params, tag_attrs)
+      end
     else
       content_tag(:li, :class => "disabled") do
         content_tag(:a, :href => "#") do
@@ -2618,8 +2636,11 @@ module ApplicationHelper
   end
 
   def show_adv_search?
-    (!@explorer && @edit && @edit[@expkey]) ||
-      (@explorer && (([:filter, :images, :instances, :vandt].include?(x_tree[:type]) && !@record) ||
-        @show_adv_search))
+    show_search = %w(availability_zone cim_base_storage_extent ems_cloud ems_cluster ems_infra flavor host
+                     miq_template offline ontap_file_share ontap_logical_disk ontap_storage_system
+                     ontap_storage_volume repository resource_pool retired security_group service
+                     snia_local_file_system storage storage_manager templates vm)
+    (@lastaction == "show_list" && !session[:menu_click] && show_search.include?(@layout) && !@in_a_form) ||
+      (@explorer && [:filter, :images, :instances, :vandt].include?(x_tree[:type]) && !@record)
   end
 end

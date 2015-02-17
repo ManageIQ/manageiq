@@ -1156,7 +1156,7 @@ class VmOrTemplate < ActiveRecord::Base
 
   def self.refresh_ems(vm_ids)
     vm_ids = [vm_ids] unless vm_ids.kind_of?(Array)
-    vm_ids = vm_ids.collect { |id| [Vm, id] }
+    vm_ids = vm_ids.collect { |id| [base_class, id] }
     EmsRefresh.queue_refresh(vm_ids)
   end
 

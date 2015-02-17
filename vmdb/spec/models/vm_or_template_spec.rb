@@ -413,4 +413,16 @@ describe VmOrTemplate do
       end
     end
   end
+
+  context ".refresh_ems queues refresh for proper class" do
+    [:template_vmware, :vm_vmware].each do |vm_or_template|
+      let(:instance) {FactoryGirl.create(vm_or_template)}
+
+      it "#{vm_or_template.to_s.classify}" do
+        EmsRefresh.should_receive(:queue_refresh).with([[VmOrTemplate, instance.id]])
+
+        instance.class.refresh_ems(instance.id)
+      end
+    end
+  end
 end

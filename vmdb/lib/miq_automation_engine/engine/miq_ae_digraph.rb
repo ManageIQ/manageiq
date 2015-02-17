@@ -1,76 +1,64 @@
 module MiqAeEngine
   class MiqAeDigraph
-    SEP = "-"
+    class Node < Struct.new(:data, :parents, :children)
+      def initialize(data)
+        super(data, [], [])
+      end
+    end
 
     def initialize
-      @v    = Hash.new
-      @from = Hash.new
-      @lastid = -1
+      @nodes        = []
+      @data_to_node = {}
     end
 
     def nodes
-      @v.values
+      @nodes.map(&:data)
     end
 
     def roots
-      @v.keys.collect { |id| @v[id] if parents(id).blank? }.compact
+      @nodes.select { |n| n.parents.empty? }.collect(&:data)
     end
 
     def vertex(data)
-      id = new_id
-      @v[id] = data
-      return id
+      node = Node.new(data)
+      @nodes << node
+      @data_to_node[data] = node
+      node
     end
 
     def find_by_data(data)
-      @v.key(data)
+      @data_to_node[data]
     end
 
     def dump
       puts "Vertex:"
-      @v.each {|k, v| puts "\tkey=#{k}, value=#{v.inspect}"}
+      @nodes.each { |node| puts "\tkey=#{node.object_id}, value=#{node.data.inspect}" }
     end
 
     def delete(id)
-      @v.delete(id)
-      @from.each_key { |key|
-        from, typ = key.split(SEP)
-        from == id ? @from.delete(key) : @from[key].delete(id)
-      }
+      @data_to_node.delete(id.data)
+      @nodes.delete(id)
+      @nodes.each do |node|
+        node.parents.delete id
+        node.children.delete id
+      end
     end
 
     def [](id)
-      @v[id]
+      id.data
     end
 
     def parents(id)
-      find_by_edge(id, "parent")
+      id.parents
     end
 
     def children(id)
-      find_by_edge(id, "child")
-    end
-
-    def find_by_edge(id, name)
-      idx = [id, name].join(SEP)
-      @from[idx]
+      id.children
     end
 
     def link_parent_child(parent, child)
-      link(parent, "child", child)
-      link(child, "parent", parent)
-    end
-
-    private
-
-    def link(from, typ, to)
-      key = [from, typ].join(SEP)
-      @from[key] ||= []
-      @from[key].push(to)
-    end
-
-    def new_id
-      @lastid += 1
+      parent.children << child
+      child.parents << parent
     end
   end
 

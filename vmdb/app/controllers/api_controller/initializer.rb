@@ -99,11 +99,9 @@ class ApiController
       def gen_attr_type_hash
         @attr_time = {}
         @attr_url  = {}
-        @attr_id   = {}
 
         ATTR_TYPES[:time].each { |attr| @attr_time[attr] = true }
         ATTR_TYPES[:url].each  { |attr| @attr_url[attr]  = true }
-        ATTR_TYPES[:id].each   { |attr| @attr_id[attr]   = true }
         #
         # Let's dynamically get the :date and :datetime attributes from the Classes we care about.
         #
