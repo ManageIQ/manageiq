@@ -147,7 +147,7 @@
             :title                 => _("Click to delete this build"))
 - elsif db == "MiqProvision"
   = image_tag("#{img_path}new/miq_request.png", img_attr_20)
-- elsif %w(CimBaseStorageExtent LdapRegion OntapStorageSystem OntapLogicalDisk OntapStorageVolume OntapFileShare SniaLocalFileSystem).include?(db)
+- elsif %w(CimBaseStorageExtent LdapRegion OntapStorageSystem OntapLogicalDisk OntapStorageVolume OntapFileShare OrchestrationStack SniaLocalFileSystem).include?(db)
   = image_tag("#{img_path}new/#{h(db.underscore)}.png", img_attr_20)
 - elsif db == "ServiceTemplate"
   - st = @targets_hash[from_cid(@id)] if @targets_hash
