@@ -468,6 +468,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
       :ems_ref_obj           => nil,
       :vendor                => "OpenStack",
       :power_state           => "off",
+      :raw_power_state       => "SHUTDOWN", # openstack bug?  suspended libvirt instances show up as "shutdown"
       :location              => "unknown",
       :tools_status          => nil,
       :boot_time             => nil,

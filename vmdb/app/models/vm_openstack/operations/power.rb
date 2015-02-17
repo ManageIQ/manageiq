@@ -8,6 +8,7 @@ module VmOpenstack::Operations::Power
       case raw_power_state
       when "PAUSED"    then connection.unpause_server(ems_ref)
       when "SUSPENDED" then connection.resume_server(ems_ref)
+      when "SHUTDOWN"  then connection.resume_server(ems_ref)
       when "STOPPED"   then connection.start_server(ems_ref)
       end
     end
