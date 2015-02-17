@@ -519,7 +519,7 @@ module EmsCommon
     ems_node = TreeNodeBuilder.generic_tree_node(
       "ems-#{to_cid(@ems.id)}",
       @ems.name,
-      "ems.png",
+      "vendor-#{@ems.image_name}.png",
       "#{ui_lookup(:table => @table_name)}: #{@ems.name}",
       :cfme_no_click => true,
       :expand        => true,
