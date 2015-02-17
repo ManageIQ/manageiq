@@ -1,8 +1,8 @@
 module MiqAeEngine
   class MiqAeDigraph
-    class Node < Struct.new(:data, :parents, :children)
+    class Node < Struct.new(:data, :parent, :children)
       def initialize(data)
-        super(data, [], [])
+        super(data, nil, [])
       end
     end
 
@@ -16,7 +16,7 @@ module MiqAeEngine
     end
 
     def roots
-      @nodes.select { |n| n.parents.empty? }.collect(&:data)
+      @nodes.reject(&:parent).collect(&:data)
     end
 
     def vertex(data)
@@ -39,7 +39,7 @@ module MiqAeEngine
       @data_to_node.delete(id.data)
       @nodes.delete(id)
       @nodes.each do |node|
-        node.parents.delete id
+        node.parent = nil if node.parent == id
         node.children.delete id
       end
     end
@@ -48,8 +48,8 @@ module MiqAeEngine
       id.data
     end
 
-    def parents(id)
-      id.parents
+    def parent(id)
+      id.parent
     end
 
     def children(id)
@@ -58,7 +58,7 @@ module MiqAeEngine
 
     def link_parent_child(parent, child)
       parent.children << child
-      child.parents << parent
+      child.parent = parent
     end
   end
 
