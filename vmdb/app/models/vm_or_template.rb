@@ -328,7 +328,7 @@ class VmOrTemplate < ActiveRecord::Base
 
   def run_command_via_parent(verb, options = {})
     # TODO: Need to break this logic out into a method that can look at the verb and the vm and decide the best way to invoke it - Virtual Center WS, ESX WS, Storage Proxy.
-    if self.ext_management_system && self.ext_management_system.authentication_valid? && self.ext_management_system.respond_to?(verb)
+    if self.ext_management_system && self.ext_management_system.has_credentials? && self.ext_management_system.respond_to?(verb)
       $log.info("MIQ(#{self.class.name}#run_command_via_parent) Invoking [#{verb}] through EMS: [#{self.ext_management_system.name}]")
       options = {:user_event => "EVM Console Request Action [#{verb}], VM [#{self.name}]"}.merge(options)
       self.ext_management_system.send(verb, self, options)
@@ -1064,7 +1064,7 @@ class VmOrTemplate < ActiveRecord::Base
     # MiqServer coresident proxy needs to contact the host and provide credentials.
     # Remove any MiqServer instances if we do not have credentials
     rsc = self.scan_via_ems? ? self.ext_management_system : self.host
-    proxies.delete_if {|p| MiqServer === p} if rsc && rsc.authentication_invalid?
+    proxies.delete_if {|p| MiqServer === p} if rsc && rsc.missing_credentials?
 
     return proxies
   end
@@ -1165,7 +1165,7 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def refresh_ems
-    raise "no #{ui_lookup(:table => "ext_management_systems")} or credentials defined" unless self.ext_management_system && self.ext_management_system.authentication_valid?
+    raise "no #{ui_lookup(:table => "ext_management_systems")} or credentials defined" unless self.ext_management_system && self.ext_management_system.has_credentials?
     EmsRefresh.queue_refresh(self)
   end
 
@@ -1176,12 +1176,12 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def refresh_ems_sync
-    raise "no #{ui_lookup(:table => "ext_management_systems")} or credentials defined" unless self.ext_management_system && self.ext_management_system.authentication_valid?
+    raise "no #{ui_lookup(:table => "ext_management_systems")} or credentials defined" unless self.ext_management_system && self.ext_management_system.has_credentials?
     EmsRefresh.refresh(self)
   end
 
   def refresh_on_reconfig
-    raise "no #{ui_lookup(:table => "ext_management_systems")} or credentials defined" unless self.ext_management_system && self.ext_management_system.authentication_valid?
+    raise "no #{ui_lookup(:table => "ext_management_systems")} or credentials defined" unless self.ext_management_system && self.ext_management_system.has_credentials?
     EmsRefresh.reconfig_refresh(self)
   end
 

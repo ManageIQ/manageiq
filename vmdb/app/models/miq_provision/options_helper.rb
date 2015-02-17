@@ -26,7 +26,7 @@ module MiqProvision::OptionsHelper
     ems = source.ext_management_system
     raise MiqException::MiqProvisionError, "#{source.class.name} [#{source.name}] is not attached to a Management System" if ems.nil?
     raise MiqException::MiqProvisionError, "#{source.class.name} [#{source.name}] is attached to <#{ems.class.name}: #{ems.name}> that does not support Provisioning" unless MiqProvision::SUPPORTED_EMS_CLASSES.include?(ems.class.name)
-    raise MiqException::MiqProvisionError, "#{source.class.name} [#{source.name}] is attached to <#{ems.class.name}: #{ems.name}> with invalid credentials" if ems.authentication_invalid?
+    raise MiqException::MiqProvisionError, "#{source.class.name} [#{source.name}] is attached to <#{ems.class.name}: #{ems.name}> with invalid credentials" if ems.missing_credentials?
     source
   end
 

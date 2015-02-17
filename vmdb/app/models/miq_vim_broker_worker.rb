@@ -20,7 +20,7 @@ class MiqVimBrokerWorker < MiqWorker
   end
 
   def self.emses_to_monitor
-    EmsVmware.where(:zone_id => MiqServer.my_server.zone_id).includes(:authentications).select(&:authentication_valid?)
+    EmsVmware.where(:zone_id => MiqServer.my_server.zone_id).includes(:authentications).select(&:has_credentials?)
   end
 
   def self.available?

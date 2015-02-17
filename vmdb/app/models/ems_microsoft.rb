@@ -31,7 +31,7 @@ class EmsMicrosoft < EmsInfra
   end
 
   def connect(options = {})
-    raise "no credentials defined" if self.authentication_invalid?(options[:auth_type])
+    raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
 
     username = options[:user] || authentication_userid(options[:auth_type])
     password = options[:pass] || authentication_password(options[:auth_type])
@@ -41,7 +41,7 @@ class EmsMicrosoft < EmsInfra
   end
 
   def verify_credentials(_auth_type = nil, options = {})
-    raise MiqException::MiqHostError, "No credentials defined" if self.authentication_invalid?(options[:auth_type])
+    raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(options[:auth_type])
 
     begin
       run_dos_command("hostname")

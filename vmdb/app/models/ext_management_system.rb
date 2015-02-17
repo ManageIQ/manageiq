@@ -208,8 +208,7 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def refresh_ems
-    raise "no #{ui_lookup(:table => "ext_management_systems")} credentials defined" if self.authentication_invalid?
-    raise "refresh requires a valid user id and password" if self.authentication_invalid?
+    raise "no #{ui_lookup(:table => "ext_management_systems")} credentials defined" if self.missing_credentials?
     EmsRefresh.queue_refresh(self)
   end
 

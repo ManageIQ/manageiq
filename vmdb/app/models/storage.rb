@@ -87,7 +87,7 @@ class Storage < ActiveRecord::Base
   end
 
   def active_hosts_with_credentials
-    self.active_hosts.select(&:authentication_valid?)
+    self.active_hosts.select(&:has_credentials?)
   end
 
   def active_hosts_in_zone(zone_name)

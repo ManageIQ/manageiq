@@ -523,7 +523,7 @@ class NetappRemoteService < StorageManager
   end
 
   def verify_credentials(auth_type=nil)
-    raise "no credentials defined" if self.authentication_invalid?(auth_type)
+    raise "no credentials defined" if self.missing_credentials?(auth_type)
 
     begin
       self.volume_list_info

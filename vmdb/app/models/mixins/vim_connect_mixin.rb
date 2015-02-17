@@ -3,7 +3,7 @@ module VimConnectMixin
     log_header = "MIQ(#{self.class.name}.connect)"
 
     options[:auth_type] ||= :ws
-    raise "no credentials defined" if self.authentication_invalid?(options[:auth_type])
+    raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
 
     options[:fault_tolerant] = true unless options.has_key?(:fault_tolerant)
 

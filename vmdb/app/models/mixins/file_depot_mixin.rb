@@ -53,7 +53,7 @@ module FileDepotMixin
 
   def validate_depot_credentials
     # This only checks that credentials are present
-    errors.add(:file_depot, "is missing credentials") if self.requires_credentials? && self.authentication_invalid?
+    errors.add(:file_depot, "is missing credentials") if self.requires_credentials? && self.missing_credentials?
   end
 
   def verify_depot_credentials(auth_type=nil)
@@ -71,7 +71,7 @@ module FileDepotMixin
   end
 
   def mnt
-    raise "No credentials defined" if self.requires_credentials? && self.authentication_invalid?
+    raise "No credentials defined" if self.requires_credentials? && self.missing_credentials?
 
     return @mnt if @mnt
     @mnt = self.class.mnt_instance(self.depot_settings)

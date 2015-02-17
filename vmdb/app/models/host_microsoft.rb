@@ -4,7 +4,7 @@ require 'MiqScvmm'
 
 class HostMicrosoft < Host
   def verify_credentials(auth_type=nil, options={})
-    raise "no credentials defined" if self.authentication_invalid?(auth_type)
+    raise "no credentials defined" if self.missing_credentials?(auth_type)
 
     return verify_credentials_windows(self.ipaddress, *self.auth_user_pwd(auth_type)) if MiqServer.my_server(true).has_role?(authentication_check_role)
 
