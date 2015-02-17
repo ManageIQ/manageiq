@@ -12,17 +12,16 @@
       %tr
         %td.key= _("User Type")
         %td.wide
-          - case @selected_ld.user_type
+          = case @selected_ld.user_type
           - when "mail"
-            - user_type = _("E-mail Address")
+            - _("E-mail Address")
           - when "dn-cn"
-            - user_type = _("Distinguished Name (CN=<user>)")
+            - _("Distinguished Name (CN=<user>)")
           - when "dn-uid"
-            - user_type = _("Distinguished Name (UID=<user>)")
+            - _("Distinguished Name (UID=<user>)")
           - else
             -# when "userprincipalname"
-            - user_type = _("User Principal Name")
-          = user_type
+            - _("User Principal Name")
       %tr
         %td.key
           = _("User Suffix:")
