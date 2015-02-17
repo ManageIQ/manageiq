@@ -5,15 +5,16 @@ body, html {
 }
 #main_taskbar {
   height: 34px;
-  background-image: linear-gradient(to bottom, #FAFAFA 0%, #EDEDED 100%);
+  padding-top: 2px;
   border-bottom: 1px solid #c7c7c7;
+  background-image: linear-gradient(to bottom, #FAFAFA 0%, #EDEDED 100%);
 }
 
 /* This media query makes the entire main row scrollable once the columns have collapsed */
 
-@media (max-width: 992px) {
+@media (max-width: @screen-sm) {
   body {     
-    padding-top: 45px !important; //Body 'padding-top' is added because navbar-fixed-top class is applied
+    padding-top: 40px !important; //Body 'padding-top' is added because navbar-fixed-top class is applied
     padding-bottom: 30px !important;
   }
   .scrollable-sm {
@@ -33,9 +34,9 @@ body, html {
 
 /* This media query makes the left column and the main area independently scrollable and sets the footer at the bottom of the column */
 
-@media (min-width: 993px) {
+@media (min-width: @screen-sm) {
   body {
-    padding-top: 110px !important; //Body 'padding-top' is added because navbar-fixed-top class is applied
+    padding-top: 100px !important; //Body 'padding-top' is added because navbar-fixed-top class is applied
     padding-bottom: 30px !important;
   }
 
