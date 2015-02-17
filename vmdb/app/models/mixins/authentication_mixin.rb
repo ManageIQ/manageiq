@@ -34,13 +34,12 @@ module AuthenticationMixin
     authentication_component(type, :password_encrypted)
   end
 
-  def authentication_valid?(type = nil)
+  def has_credentials?(type = nil)
     !!authentication_component(type, :userid)
   end
-  alias :has_credentials? :authentication_valid?
 
-  def authentication_invalid?(type = nil)
-    !authentication_valid?(type)
+  def missing_credentials?(type = nil)
+    !has_credentials?(type)
   end
 
   def authentication_status
@@ -158,7 +157,7 @@ module AuthenticationMixin
     header = "MIQ(#{self.class.name}.authentication_check) type: [#{types.inspect}] for [#{self.id}] [#{self.name}]"
     auth = authentication_best_fit(types)
 
-    unless self.authentication_valid?(types)
+    unless self.has_credentials?(types)
       $log.warn("#{header} Validation failed due to error: [#{Authentication::ERRORS[:incomplete]}]")
       auth.validation_failed(:incomplete) if auth
       return false
