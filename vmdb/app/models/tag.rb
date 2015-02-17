@@ -1,5 +1,8 @@
 class Tag < ActiveRecord::Base
   has_many :taggings, :dependent => :destroy
+  has_one :classification
+  virtual_has_one :category,       :class_name => "Classification"
+  virtual_has_one :categorization, :class_name => "Hash"
 
   def self.to_tag(name, options = {})
     File.join(Tag.get_namespace(options), name)
@@ -103,5 +106,32 @@ class Tag < ActiveRecord::Base
 
   def ==(comparison_object)
     super || name.downcase == comparison_object.to_s.downcase
+  end
+
+  def category
+    @category ||= Classification.find_by_name(name_path.split('/').first, nil)
+  end
+
+  def show
+    category.try(:show)
+  end
+
+  def categorization
+    @categorization ||= if !show
+                          {}
+                        else
+                          {
+                            "name"         => classification.name,
+                            "description"  => classification.description,
+                            "category"     => {"name" => category.name, "description" => category.description},
+                            "display_name" => "#{category.description}: #{classification.description}"
+                          }
+                        end
+  end
+
+  private
+
+  def name_path
+    @name_path ||= name.sub(%r{^/[^/]*/}, "")
   end
 end
