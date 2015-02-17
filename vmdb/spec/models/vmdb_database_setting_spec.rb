@@ -45,6 +45,15 @@ describe VmdbDatabaseSetting do
     expect(setting.description).to eq("#{setting.short_desc}  #{setting.extra_desc}")
   end
 
+  it 'does not mutate short_desc' do
+    setting = VmdbDatabaseSetting.where('extra_desc is not null').first
+    short_desc = setting.short_desc.dup
+    desc = setting.description.dup
+
+    expect(setting.description).to eq(desc)
+    expect(setting.short_desc).to eq(short_desc)
+  end
+
   it 'defaults unit to a blank string' do
     setting = VmdbDatabaseSetting.where(:unit => nil).first
     expect(setting.unit).to eq("")
