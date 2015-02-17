@@ -38,10 +38,7 @@ module MiqAeEngine
     def delete(id)
       @data_to_node.delete(id.data)
       @nodes.delete(id)
-      @nodes.each do |node|
-        node.parent = nil if node.parent == id
-        node.children.delete id
-      end
+      id.children.each { |node| node.parent = nil }
     end
 
     def [](id)
