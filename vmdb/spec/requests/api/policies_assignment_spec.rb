@@ -28,7 +28,7 @@ describe ApiController do
     @miq_server = FactoryGirl.create(:miq_server, :guid => miq_server_guid, :zone => @zone)
     @provider   = FactoryGirl.create(:ems_vmware, :zone => @zone)
     @host       = FactoryGirl.create(:host)
-    @cluster    = FactoryGirl.create(:ems_cluster, :ext_management_system => @ems, :hosts => [@host], :vms => [])
+    @cluster    = FactoryGirl.create(:ems_cluster, :ext_management_system => @provider, :hosts => [@host], :vms => [])
     @rp         = FactoryGirl.create(:resource_pool, :name => "Resource Pool 1")
     @vm         = FactoryGirl.create(:vm)
     @template   = FactoryGirl.create(:miq_template, :name => "Tmpl 1", :vendor => "vmware", :location => "tmpl_1.vmtx")
@@ -48,9 +48,6 @@ describe ApiController do
     @ps1.add_member(@p2)
 
     @ps2.add_member(@p3)
-
-    @ps1_p_guids = [@p1.guid, @p2.guid].sort
-    @p_all_guids = [@p1.guid, @p2.guid, @p3.guid].sort
   end
 
   def app
@@ -112,7 +109,7 @@ describe ApiController do
       expect(result["#{sc_prefix}_href"]).to match("/api/#{subcollection}/#{policy.id}")
     end
     expect(object.get_policies.size).to eq(policies.size)
-    expect(object.get_policies.collect(&:guid).sort).to eq(policies.collect(&:guid).sort)
+    expect(object.get_policies.collect(&:guid)).to match_array(policies.collect(&:guid))
   end
 
   def test_policy_unassign_no_role(object_policies_url)

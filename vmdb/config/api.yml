@@ -81,13 +81,6 @@
         :identifier: ems_cluster_tag
       - :name: unassign
         :identifier: ems_cluster_tag
-  :conditions:
-    :description: Conditions
-    :options:
-    - :collection
-    - :subcollection
-    :methods: *70174834086080
-    :klass: Condition
     :policies_subcollection_actions:
       :post:
       - :name: assign
@@ -100,6 +93,13 @@
         :identifier: ems_cluster_protect
       - :name: unassign
         :identifier: ems_cluster_protect
+  :conditions:
+    :description: Conditions
+    :options:
+    - :collection
+    - :subcollection
+    :methods: *70174834086080
+    :klass: Condition
   :data_stores:
     :description: Datastores
     :options:
