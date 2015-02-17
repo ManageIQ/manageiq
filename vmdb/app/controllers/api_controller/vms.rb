@@ -138,13 +138,10 @@ class ApiController
     end
 
     def lifecycle_event_from_data(data)
-      data = {} if data.nil?
-      {
-        :event      => data["event"].to_s,
-        :status     => data["status"].to_s,
-        :message    => data["message"].to_s,
-        :created_by => data["created_by"].to_s
-      }
+      data ||= {}
+      data = data.slice("event", "status", "message", "created_by")
+      data.keys.each { |k| data[k] = data[k].to_s }
+      data
     end
   end
 end
