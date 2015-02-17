@@ -222,13 +222,13 @@ describe DialogFieldTextBox do
     end
 
     context "when the automate hash has a default value" do
-      let(:default_value) { 123 }
+      let(:default_value) { '123' }
 
       it_behaves_like "DialogFieldTextBox#normalize_automate_values"
 
       it "sets the default_value" do
         dialog_field.normalize_automate_values(automate_hash)
-        expect(dialog_field.default_value).to eq(123)
+        expect(dialog_field.default_value).to eq('123')
       end
 
       it "returns the default value in string format" do
