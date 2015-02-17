@@ -60,20 +60,6 @@
             = render :partial => "settings_advanced_tab"
     - else
       - if selected_settings_tree?(x_node)
-        - if x_node == "xx-msc"
-          - label = "Schedules"
-        - elsif x_node == "xx-l"
-          - label = "LDAP Regions"
-        - elsif x_node == "xx-z"
-          - label = ui_lookup(:models=>'Zone')
-        - elsif x_node.split("-").first == "sis"
-          - label = escape_javascript(@selected_scan.name)
-        - elsif x_node.split("-").first == "msc"
-          - label = escape_javascript(@selected_schedule.name)
-        - elsif x_node.split("-").first == "lr" || x_node.split("-").first == "ld"
-          - label = escape_javascript(@selected_lr ? @selected_lr.name : @selected_ld.name)
-        - else
-          - label = "Analysis Profiles"
         #settings_list{:name => "settings_list", :width => "80px"}
           - if @sb[:active_tab] == "settings_list"
             = render :partial => "settings_list_tab"
@@ -260,8 +246,7 @@
           %a{:href => "#db_settings"}=_("Settings")
         %li
           %a{:href => "#db_connections"}=_("Client Connections")
-      - if tree_node == "root" ||
-      - tree_node.split("-").first == TreeBuilder.get_prefix_for_model("VmdbTable")
+      - if tree_node == "root" || tree_node.split("-").first == TreeBuilder.get_prefix_for_model("VmdbTable")
         %li
           %a{:href => "#db_utilization"}=_("Utilization")
     - if tree_node == "root"
@@ -281,8 +266,7 @@
       #db_connections{:name => "db_connections", :width => "80px"}
         - if @sb[:active_tab] == "db_connections"
           = render :partial => "db_details_tab"
-    - if tree_node == "root" ||
-    - tree_node.split("-").first == TreeBuilder.get_prefix_for_model("VmdbTable")
+    - if tree_node == "root" || tree_node.split("-").first == TreeBuilder.get_prefix_for_model("VmdbTable")
       #db_utilization{:name => "db_utilization", :width => "80px"}
         - if @sb[:active_tab] == "db_utilization"
           = render(:partial => "layouts/performance")
