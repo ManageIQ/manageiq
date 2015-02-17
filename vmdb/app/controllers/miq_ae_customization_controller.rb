@@ -1,4 +1,3 @@
-require 'miq-xml'
 class MiqAeCustomizationController < ApplicationController
   include_concern 'CustomButtons'
   include_concern 'OldDialogs'

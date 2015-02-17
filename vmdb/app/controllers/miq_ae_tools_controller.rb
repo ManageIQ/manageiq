@@ -1,4 +1,3 @@
-require 'miq-xml'
 class MiqAeToolsController < ApplicationController
 
   before_filter :check_privileges
