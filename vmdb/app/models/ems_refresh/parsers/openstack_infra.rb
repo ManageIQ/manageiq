@@ -98,6 +98,7 @@ module EmsRefresh
           :mac_address      => identify_primary_mac_address(host, indexed_servers),
           :ipmi_address     => identify_ipmi_address(host),
           :power_state      => lookup_power_state(host.power_state),
+          :connection_state => lookup_connection_state(host.power_state),
           :hardware         => process_host_hardware(host)
         }
 
@@ -158,6 +159,14 @@ module EmsRefresh
         when "power on"               then "on"
         when "power off", "rebooting" then "off"
         else                               "unknown"
+        end
+      end
+
+      def lookup_connection_state(power_state_input)
+        case power_state_input
+        when "power on"               then "connected"
+        when "power off", "rebooting" then "disconnected"
+        else                               "disconnected"
         end
       end
 
