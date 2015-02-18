@@ -34,8 +34,10 @@ class MiqPolicy < ActiveRecord::Base
 
   attr_accessor :reserved
 
+  DESCRIPTION_LIMIT = 255
+
   def description=(value)
-    super(value ? value.truncate(MiqPolicy.columns_hash['description'].limit) : value)
+    super(value ? value.truncate(DESCRIPTION_LIMIT) : value)
   end
 
   # Note: Built-in policies only support one event and one action.
