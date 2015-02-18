@@ -41,7 +41,7 @@ describe ExtManagementSystem do
       "virtualcenter"
     ]
 
-    expect(ExtManagementSystem.ems_discovery_types).to eq(expected_types)
+    expect(ExtManagementSystem.ems_discovery_types).to match_array(expected_types)
   end
 
   context "with two small envs" do
