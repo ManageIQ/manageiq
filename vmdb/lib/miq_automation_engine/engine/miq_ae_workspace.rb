@@ -296,7 +296,7 @@ module MiqAeEngine
       if path == "/"
         return roots[0] if obj.nil?
         while true
-          parent = parents(obj).first
+          parent = parent(obj)
           return obj if parent.nil?
           obj = parent
         end
@@ -306,7 +306,7 @@ module MiqAeEngine
           part = plist.shift
           next if part.blank? || part == "."
           raise MiqAeException::InvalidPathFormat, "bad part [#{part}] in path [#{path}]" if (part != "..")
-          obj = parents(obj).first
+          obj = parent(obj)
         end
       else
         obj = find_named_ancestor(path)
@@ -321,7 +321,7 @@ module MiqAeEngine
       ns    = (plist.length == 0) ? "*" : plist.join('/')
 
       obj = current_object
-      while obj = parents(obj).first
+      while obj = parent(obj)
         next unless klass.casecmp(obj.klass).zero?
         break if ns == "*"
         ns_split = obj.namespace.split('/')
@@ -339,12 +339,12 @@ module MiqAeEngine
       return kids.collect { |vid| @graph[vid] }
     end
 
-    def parents(obj)
+    def parent(obj)
       id = @graph.find_by_data(obj)
-      return [] if id.nil?
-      parents = @graph.parents(id)
-      return [] if parents.nil?
-      parents.collect { |vid| @graph[vid] }
+      return nil if id.nil?
+      parent = @graph.parent(id)
+      return nil if parent.nil?
+      @graph[parent]
     end
 
     def overlay_namespace(scheme, uri, ns, klass, instance)
