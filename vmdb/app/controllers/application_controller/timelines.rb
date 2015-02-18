@@ -134,7 +134,6 @@ module ApplicationController::Timelines
       blob.destroy
       session[:tl_xml_blob_id] = session[:tl_position] = nil #if params[:controller] != "miq_capacity"
     else
-      require 'miq-xml'
       tl_xml = MiqXml.load("<data/>")
       #   tl_event = tl_xml.root.add_element("event", {
       #                                                   "start"=>"May 16 2007 08:17:23 GMT",

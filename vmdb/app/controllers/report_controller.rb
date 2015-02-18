@@ -1,5 +1,4 @@
 require 'yaml'
-require 'miq-xml'
 
 class ReportController < ApplicationController
   include_concern 'Dashboards'
