@@ -569,9 +569,8 @@ class MiqRequestController < ApplicationController
     conditions = ["created_on>=? AND created_on<=? AND type IN (?)", time_period.days.ago.utc, Time.now.utc, request_types.keys]
     opts[:users] = MiqRequest.all_requesters(conditions)
     unless is_approver
-      if opts[:users].has_value?(session[:username])
-        opts[:users] = {opts[:users].key(session[:username]) => session[:username]}
-      end
+      username = session[:username]
+      opts[:users] = opts[:users].has_value?(username) ? {opts[:users].key(username) => username} : {}
     end
     opts[:applied_states] = opts[:states].collect { |s| s[0] }
     opts[:type_choice] = "all"
