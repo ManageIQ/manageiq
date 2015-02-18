@@ -2,6 +2,65 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased - as of Sprint 19 end 2015-02-16
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+19+Ending+Feb+16%2C+2015%22+label%3Aenhancement)
+
+- Providers
+  - OpenStack Infrastructure Host Events
+  - Kubernetes Inventory Collection
+  - Foreman
+     - Provider refresh (inventory)
+     - Enabled Reporting / Tagging
+     - Automate service models
+     - Zone enablement
+- Rest APIs
+  - Tag Collection /api/tags 
+  - Tag Management (assign and unassign to/from resources)
+  - Foundational
+     - Virtual attribute support  
+     - Id/Href separation
+  - Policy Management
+     - Query policy and policy profiles conditions
+ - VM Management
+     - Custom Attributes
+     - Add LifeCycle Events
+- I18n Status
+  - All strings in the views have been converted to use gettext (I18n) calls
+  - Can add/update I18n files with translations
+- Service Dialogs: Added Dynamic checkbox
+- Orchestration
+  - Provisioning dialog generator
+  - Enabled Reporting / Tagging
+  - Automate service models
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+19+Ending+Feb+16%2C+2015%22+label%3Aenhancement)
+
+- UI
+  - Login screen converted to Bootstrap / Patternfly
+  - Header, navigation, and outer layouts converted to Bootstrap / Patternfly
+  - Advanced search converted to Bootstrap / Patternfly
+  - Stacks screens have icons now
+  - Orchestration Insight
+  - Schedule editor converted to AngularJS
+  - UI Customizations with Less
+  - Dashboard tabs updated
+
+### [Removed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+19+Ending+Feb+16%2C+2015%22+label%3A%22technical+debt%22)
+
+- I18N: All views converted to HAML
+- Removed Prototype
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+19+Ending+Feb+16%2C+2015%22+label%3Abug)
+
+- Notable fixes include:
+ - EventEx is now disabled by default to help prevent event storms
+ - Fixed ftp log collection regression
+ - Fixed “High CPU usage” due to continually restarting workers, when a provider is unreachable or password is invalid
+ - Fixed bug causing fleecing timeout
+ - Fixed timeout issue with remove_from_disk method on a VM in Automate
+ - Fixed duplicate VM name generation issue during provisioning
+
 ## Unreleased - as of Sprint 18 end 2015-01-26
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+18+Ending+Jan+26%2C+2015%22+label%3Aenhancement)
