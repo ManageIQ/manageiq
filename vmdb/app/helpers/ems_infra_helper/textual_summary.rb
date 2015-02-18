@@ -9,12 +9,12 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w{infrastructure_folders folders clusters hosts datastores vms templates}
+    items = %w(infrastructure_folders folders clusters hosts datastores vms templates orchestration_stacks)
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
   def textual_group_status
-    items = %w(authentications refresh_status)
+    items = %w(authentications refresh_status orchestration_stacks_status)
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
@@ -154,6 +154,28 @@ module EmsInfraHelper::TextualSummary
 
       {:label => "#{label} Credentials", :value => auth.status || "None", :title => auth.status_details}
     end
+  end
+
+  def textual_orchestration_stacks_status
+    return nil unless @ems.orchestration_stacks
+
+    label         = "States of Orchestration Stacks"
+    stacks_states = @ems.orchestration_stacks.collect { |x| "#{x.name} status: #{x.status}" }.join(", ")
+
+    {:label => label, :value => stacks_states}
+  end
+
+  def textual_orchestration_stacks
+    return nil unless @ems.orchestration_stacks
+
+    label = ui_lookup(:tables => "orchestration_stack")
+    num   = @ems.number_of(:orchestration_stacks)
+    h     = {:label => label, :image => "orchestration_stack", :value => num}
+    if num > 0 && role_allows(:feature => "orchestration_stack_show_list")
+      h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'orchestration_stacks')
+      h[:title] = "Show all #{label}"
+    end
+    h
   end
 
   def textual_refresh_status
