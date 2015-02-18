@@ -1,5 +1,5 @@
-var cfmeAngularApplication = angular.module('cfmeAngularApplication', []);
+var miqAngularApplication = angular.module('miqAngularApplication', []);
 
-cfmeAngularApplication.config(['$httpProvider', function($httpProvider) {
+miqAngularApplication.config(['$httpProvider', function($httpProvider) {
   $httpProvider.defaults.headers.common['X-CSRF-Token'] = jQuery('meta[name=csrf-token]').attr('content');
 }]);

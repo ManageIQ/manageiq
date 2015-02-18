@@ -1,4 +1,4 @@
-cfmeAngularApplication.directive('verifypasswd', function() {
+miqAngularApplication.directive('verifypasswd', function() {
   return {
     require: 'ngModel',
     link: function (scope, elem, attr, ctrl) {

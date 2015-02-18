@@ -1,4 +1,4 @@
-cfmeAngularApplication.directive('miqrequired', function() {
+miqAngularApplication.directive('miqrequired', function() {
   return {
     require: 'ngModel',
       link: function (scope, elem, attrs, ctrl) {

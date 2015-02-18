@@ -1,11 +1,11 @@
-cfmeAngularApplication.controller('repositoryFormController', ['$http', '$scope', 'repositoryFormId', 'miqService', function($http, $scope, repositoryFormId, miqService) {
+miqAngularApplication.controller('repositoryFormController', ['$http', '$scope', 'repositoryFormId', 'miqService', function($http, $scope, repositoryFormId, miqService) {
   $scope.repoModel = { repo_name: '', repo_path: '' };
   $scope.path_type = '';
   $scope.formId = repositoryFormId;
   $scope.afterGet = false;
   $scope.modelCopy = angular.copy( $scope.repoModel );
 
-  cfmeAngularApplication.$scope = $scope;
+  miqAngularApplication.$scope = $scope;
 
   if (repositoryFormId == 'new') {
     $scope.repoModel.repo_name = "";
