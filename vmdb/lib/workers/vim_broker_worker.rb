@@ -25,7 +25,7 @@ class VimBrokerWorker < WorkerBase
   def self.emses_and_hosts_to_monitor
     emses = MiqVimBrokerWorker.emses_to_monitor
     MiqPreloader.preload(emses, :hosts => :authentications)
-    hosts = emses.collect(&:hosts).flatten.uniq.select(&:has_credentials?)
+    hosts = emses.collect(&:hosts).flatten.uniq.select(&:authentication_status_ok?)
     return emses + hosts
   end
 

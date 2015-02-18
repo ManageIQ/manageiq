@@ -57,8 +57,8 @@ module JobProxyDispatcherEmbeddedScanSpec
         MiqServer.any_instance.stub(:is_vix_disk? => true)
         MiqServer.any_instance.stub(:is_a_proxy? => true)
         MiqServer.any_instance.stub(:has_active_role? => true)
-        EmsVmware.any_instance.stub(:missing_credentials? => false)
-        Host.any_instance.stub(:missing_credentials? => false)
+        EmsVmware.any_instance.stub(:authentication_status_ok? => true)
+        Host.any_instance.stub(:authentication_status_ok? => true)
         MiqProxy.any_instance.stub(:state).and_return("on")
 
         @hosts, @proxies, @storages, @vms, @repo_vms = self.build_hosts_proxies_storages_vms(:hosts => NUM_HOSTS, :proxies => NUM_COS_PROXIES, :storages => NUM_STORAGES, :vms => NUM_VMS, :repo_vms => NUM_REPO_VMS)
