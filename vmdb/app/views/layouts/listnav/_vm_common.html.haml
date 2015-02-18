@@ -2,8 +2,7 @@
   -  regexosname = Regexp.new(/linux/)
   - linuxos = regexosname.match(@record.os_image_name.downcase)
   #accordion.panel-group
-    = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length),
-      @panels["icon"].nil? || @panels["icon"] == false, "icon") do
+    = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
       - # Calculate the quadicon div height based on # of lines of text
       - if @record.product_name != "" && @record.service_pack != ""
         - height = 120
@@ -18,8 +17,7 @@
           %br
           = h(@record.service_pack)
 
-    = patternfly_accordion_panel(_("Properties"),
-      @panels["vm_prop"].nil? || @panels["vm_prop"] == false, "vm_prop") do
+    = patternfly_accordion_panel(_("Properties"), false, "vm_prop") do
       %ul.nav.nav-pills.nav-stacked
         %li
           = link_to(_('Summary'),
@@ -91,8 +89,7 @@
               {:action => 'event_logs', :id => @record},
               :title => _("Show event logs on this VM"))
 
-    = patternfly_accordion_panel(_("Relationships"),
-      @panels["vm_rel"].nil? || @panels["vm_rel"] == false, "vm_rel") do
+    = patternfly_accordion_panel(_("Relationships"), false, "vm_rel") do
       %ul.nav.nav-pills.nav-stacked
         - if role_allows(:feature => "ems_infra_show") && !@record.ext_management_system.nil?
           %li
@@ -165,8 +162,7 @@
               :title => _("Show virtual machine Analysis History"))
 
 
-    = patternfly_accordion_panel(_("Storage Relationships"),
-      @panels["vm_inf_rel"].nil? || @panels["vm_inf_rel"] == false, "vm_inf_rel") do
+    = patternfly_accordion_panel(_("Storage Relationships"), false, "vm_inf_rel") do
       %ul.nav.nav-pills.nav-stacked
         - if role_allows(:feature => "ontap_storage_system_show_list")
           = li_link_if_nonzero(:count => @record.storage_systems_size,
@@ -192,8 +188,7 @@
             :display                  => 'storage_extents',
             :tables                   => 'cim_base_storage_extent')
 
-    = patternfly_accordion_panel(_("Security"),
-      @panels["vm_sec"].nil? || @panels["vm_sec"] == false, "vm_sec") do
+    = patternfly_accordion_panel(_("Security"), false, "vm_sec") do
       - if @record.number_of(:users) == 0
         %li.disabled
           = link_to(_('Users (%s)') % @record.number_of(:users), "#")
@@ -222,8 +217,7 @@
               {:action => 'patches', :id => @record, :db => "vm"},
               :title => _("Show the patches installed on this VM"))
 
-    = patternfly_accordion_panel(_("Security"),
-      @panels["vm_config"].nil? || @panels["vm_config"] == false, "vm_config") do
+    = patternfly_accordion_panel(_("Security"), false, "vm_config") do
       %ul.nav.nav-pills.nav-stacked
         - if linuxos
           - if @record.number_of(:guest_applications) == 0
@@ -341,8 +335,7 @@
               {:action => 'show', :id => @record, :display => 'resources_info'},
               :title => _("Show Resources of this VM"))
 
-    = patternfly_accordion_panel(_("Diagnostics"),
-      @panels["vm_diag"].nil? || @panels["vm_diag"] == false, "vm_diag") do
+    = patternfly_accordion_panel(_("Diagnostics"), false, "vm_diag") do
       %ul.nav.nav-pills.nav-stacked
         - ldate = last_date(:processes)
         - if ldate

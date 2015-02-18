@@ -1,19 +1,16 @@
 - if @record.try(:evm_display_name)
   #accordion.panel-group
-    = patternfly_accordion_panel(truncate(@record.evm_display_name, :length => truncate_length),
-      @panels["icon"].nil? || @panels["icon"] == false, "icon") do
+    = patternfly_accordion_panel(truncate(@record.evm_display_name, :length => truncate_length), true, "icon") do
       = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
 
-    = patternfly_accordion_panel(_("Properties"),
-      @panels["cim_sv_prop"].nil? || @panels["cim_sv_prop"] == false, "cim_sv_prop") do
+    = patternfly_accordion_panel(_("Properties"), false, "cim_sv_prop") do
       %ul.nav.nav-pills.nav-stacked
         %li
           = link_to_with_icon(_('Summary'),
             {:action => 'show', :id => @record, :display => 'main'},
             :title => _("Show Summary"))
 
-    = patternfly_accordion_panel(_("Relationships"),
-      @panels["cim_sv_rel"].nil? || @panels["cim_sv_rel"] == false, "cim_sv_rel") do
+    = patternfly_accordion_panel(_("Relationships"), false, "cim_sv_rel") do
       %ul.nav.nav-pills.nav-stacked
         - if role_allows(:feature => "ontap_storage_system_show")
           - if @record.storage_system.nil?
@@ -33,8 +30,7 @@
             :action                   => 'show',
             :title                    => _("Show all %s") % ui_lookup(:tables => "cim_base_storage_extent"))
 
-    = patternfly_accordion_panel(_("Infrastructure Relationships"),
-      @panels["cim_sv_inf_rel"].nil? || @panels["cim_sv_inf_rel"] == false, "cim_sv_inf_rel") do
+    = patternfly_accordion_panel(_("Infrastructure Relationships"), false, "cim_sv_inf_rel") do
       %ul.nav.nav-pills.nav-stacked
         - if role_allows(:feature => "vm_show_list")
           = li_link_if_nonzero(:count => @record.vms_size,

@@ -1,5 +1,4 @@
 - if @record.try(:name) && !%w(new copy create).include?(request.parameters["action"])
   #accordion.panel-group
-  = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length),
-    @panels["icon"].nil? || @panels["icon"] == false, "icon") do
+  = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
     = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}

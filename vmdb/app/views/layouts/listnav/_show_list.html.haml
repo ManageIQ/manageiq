@@ -3,8 +3,7 @@
     - unless @def_searches.blank?
       - if @panels["#{@view.db}_def_searches"].nil?
         - @panels["#{@view.db}_def_searches"] = true
-      = patternfly_accordion_panel(_("Filters"),
-        @panels["#{@view.db}_def_searches"].nil? || @panels["#{@view.db}_def_searches"] == false, "#{@view.db}_def_searches") do
+      = patternfly_accordion_panel(_("Filters"), true, "#{@view.db}_def_searches") do
         %ul.nav.nav-pills.nav-stacked
           - @def_searches.each do |search|
             - li_class = ""
@@ -27,8 +26,7 @@
     - unless @my_searches.blank?
       - if @panels["#{@view.db}_my_searches"].nil?
         - @panels["#{@view.db}_my_searches"] = true
-      = patternfly_accordion_panel(_("My Filters"),
-        @panels["#{@view.db}_my_searches"].nil? || @panels["#{@view.db}_my_searches"] == false, "#{@view.db}_my_searches") do
+      = patternfly_accordion_panel(_("My Filters"), false, "#{@view.db}_my_searches") do
         %ul.nav.nav-pills.nav-stacked
           - @my_searches.each do |search|
             - li_class = ""

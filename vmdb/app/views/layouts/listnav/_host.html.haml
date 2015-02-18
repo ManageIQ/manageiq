@@ -1,7 +1,6 @@
 - if @record
   #accordion.panel-group
-    = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length),
-      @panels["icon"].nil? || @panels["icon"] == false, "icon") do
+    = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
       - # Calculate the quadicon div height based on # of lines of text
       - if @record.product_name != "" && @record.service_pack != ""
         - height = 100
@@ -17,8 +16,7 @@
           %br
           = h(@record.service_pack)
 
-    = patternfly_accordion_panel(_("Properties"),
-      @panels["host_prop"].nil? || @panels["host_prop"] == false, "host_prop") do
+    = patternfly_accordion_panel(_("Properties"), false, "host_prop") do
       %ul.nav.nav-pills.nav-stacked
         %li
           = link_to(_('Summary'),
@@ -94,8 +92,7 @@
                 {:action => 'event_logs', :id => @record},
                 :title => _("Show esx logs on this VM"))
 
-    = patternfly_accordion_panel(_("Relationships"),
-      @panels["host_rel"].nil? || @panels["host_rel"] == false, "host_rel") do
+    = patternfly_accordion_panel(_("Relationships"), false, "host_rel") do
       %ul.nav.nav-pills.nav-stacked
         - if role_allows(:feature => "ems_infra_show") && !@record.ext_management_system.nil?
           %li
@@ -163,8 +160,7 @@
                 :title => _("Show host drift history"))
 
     - if get_vmdb_config[:product][:storage]
-      = patternfly_accordion_panel(_("Storage Relationships"),
-        @panels["host_inf_rel"].nil? || @panels["host_inf_rel"] == false, "host_inf_rel") do
+      = patternfly_accordion_panel(_("Storage Relationships"), false, "host_inf_rel") do
         %ul.nav.nav-pills.nav-stacked
           - if role_allows(:feature => "ontap_storage_system_show_list")
             = li_link_if_nonzero(:count => @record.storage_systems_size,
@@ -191,8 +187,7 @@
               :tables                   => 'ontap_file_share',
               :display                  => 'ontap_file_shares')
 
-    = patternfly_accordion_panel(_("Security"),
-      @panels["host_sec"].nil? || @panels["host_sec"] == false, "host_sec") do
+    = patternfly_accordion_panel(_("Security"), false, "host_sec") do
       %ul.nav.nav-pills.nav-stacked
         - users_size = @record.number_of(:users)
         - if users_size == 0
@@ -233,8 +228,7 @@
               {:action => 'firewall_rules', :id => @record},
               :title => _("Show the firewall rules on this Host"))
 
-    = patternfly_accordion_panel(_("Configuration"),
-      @panels["host_config"].nil? || @panels["host_config"] == false, "host_config") do
+    = patternfly_accordion_panel(_("Configuration"), false, "host_config") do
       %ul.nav.nav-pills.nav-stacked
         - gas_size = @record.number_of(:guest_applications)
         - if gas_size == 0

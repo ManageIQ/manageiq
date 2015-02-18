@@ -1,11 +1,9 @@
 - if @record.try(:name)
   #accordion.panel-group
-    = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length),
-      @panels["icon"].nil? || @panels["icon"] == false, "icon") do
+    = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
       = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
 
-    = patternfly_accordion_panel(_("Properties"),
-      @panels["storage_prop"].nil? || @panels["storage_prop"] == false, "storage_prop") do
+    = patternfly_accordion_panel(_("Properties"), false, "storage_prop") do
       %ul.nav.nav-pills.nav-stacked
         %li
           = link_to(_('Summary'),
@@ -20,8 +18,7 @@
           %li.disabled
             = link_to(_('Capacity & Utilization'), "#")
 
-    = patternfly_accordion_panel(_("Relationships"),
-      @panels["storage_rel"].nil? || @panels["storage_rel"] == false, "storage_rel") do
+    = patternfly_accordion_panel(_("Relationships"), false, "storage_rel") do
       %ul.nav.nav-pills.nav-stacked
         - if role_allows(:feature => "host_show_list")
           - if @record.number_of(:hosts) == 0
@@ -44,8 +41,7 @@
                 :title => _("Show registered VMs"))
 
     - if get_vmdb_config[:product][:storage]
-      = patternfly_accordion_panel(_("Relationships"),
-        @panels["storage_inf_rel"].nil? || @panels["storage_inf_rel"] == false, "storage_inf_rel") do
+      = patternfly_accordion_panel(_("Relationships"), false, "storage_inf_rel") do
         %ul.nav.nav-pills.nav-stacked
           - if role_allows(:feature => "ontap_storage_system_show_list")
             = li_link_if_nonzero(:count => @record.storage_systems_size,
@@ -79,8 +75,7 @@
               :action                   => 'show',
               :title                    => _("Show all %s") % ui_lookup(:tables => "cim_base_storage_extent"))
 
-      = patternfly_accordion_panel(_("Content"),
-        @panels["storage_content"].nil? || @panels["storage_content"] == false, "storage_content") do
+      = patternfly_accordion_panel(_("Content"), false, "storage_content") do
         %ul.nav.nav-pills.nav-stacked
           = li_link_if_nonzero(:count => @storage.number_of(:files),
             :record_id                => @storage.id,
