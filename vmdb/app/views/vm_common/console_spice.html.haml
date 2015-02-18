@@ -1,58 +1,59 @@
+- record_name = (@record.name rescue '')
 !!! XML
 %html
   %head
-    %title SPICE Console
-    = javascript_include_tag 'jquery/jquery-1.8.3.min','jquery/jquery-ui-1.9.2.custom.min'
+    %title
+      = _('SPICE Console')
+    = stylesheet_link_tag 'application'
+    = javascript_include_tag 'jquery/jquery-1.8.3.min', 'jquery/jquery-ui-1.9.2.custom.min'
     = javascript_include_tag 'application'
 
-%body{:style => 'margin: 0'}
-  = link_to('Ctrl-Alt-Del', '#', :id => 'sendCtrlAltDelButton', :class => 'btn btn-default', :onclick => 'sendCtrlAltDel()')
+  %body{:style => 'margin: 0px; padding-top: 0px !important;'}
+    = link_to('Ctrl-Alt-Del', '#', :id => 'sendCtrlAltDelButton', :class => 'btn btn-default', :onclick => 'sendCtrlAltDel()')
+    #spice-area{'data-port' => proxy_port, 'data-password' => password}
+      .console-status
+        #spice-status.col-md-7.label{'data-host' => record_name}
+          = _("Connecting (unencrypted) to: %s") % record_name
 
-  = content_tag(:div, :id => 'spice-area', :data => spice_data_attributes(local_assigns)) do
-  #spice-area{'data-port' => proxy_port, 'data-password' => password} do
-    .console-status
-      #spice-status.col-md-7.label{'data-host' => (@record.name rescue '') }
-        = _("Connecting (unencrypted) to: %s") % (@record.name rescue '')
+      #spice-screen.console-screen
 
-    #spice-screen.console-screen
+      :javascript
+        var sc = null;
+        $(function () {
+          var scheme   = "ws://", uri; // FIXME: ssl
 
-    :javascript
-      var sc = null;
-      $(function () {
-        var scheme   = "ws://", uri; // FIXME: ssl
+          var host     = window.location.hostname;
+          var port     = $('#spice-area').data('port');
+          var password = $('#spice-area').data('password');
 
-        var host     = window.location.hostname;
-        var port     = $('#spice-area').data('port');
-        var password = $('#spice-area').data('password');
+          if (!host || !port) {
+            console.log(__("must set host and port"));
+            return;
+          }
 
-        if (!host || !port) {
-          console.log(__("must set host and port"));
-          return;
+          uri = scheme + host + ":" + port;
+
+          sc = new SpiceMainConn({
+            uri:       uri,
+            screen_id: "spice-screen",
+            password:  password,
+            onerror:   spice_error,
+            onsuccess: spice_success
+          });
+        });
+
+        function disconnect() {
+          if (sc) { sc.stop(); }
         }
 
-        uri = scheme + host + ":" + port;
+        function spice_error(e) {
+          $('#spice-status').text(e);
+          $('#spice-status').removeClass('label-success').addClass('label-danger');
+          disconnect();
+        }
 
-        sc = new SpiceMainConn({
-          uri:       uri,
-          screen_id: "spice-screen",
-          password:  password,
-          onerror:   spice_error,
-          onsuccess: spice_success
-        });
-      });
-
-      function disconnect() {
-        if (sc) { sc.stop(); }
-      }
-
-      function spice_error(e) {
-        $('#spice-status').text(e);
-        $('#spice-status').removeClass('label-success').addClass('label-danger');
-        disconnect();
-      }
-
-      function spice_success(m) {
-        $('#spice-status').text('Connected (unencrypted) to: ' +
-          $('#spice-status').attr('data-host'));
-        $('#spice-status').addClass('label-success');
-      }
+        function spice_success(m) {
+          $('#spice-status').text('Connected (unencrypted) to: ' +
+            $('#spice-status').attr('data-host'));
+          $('#spice-status').addClass('label-success');
+        }
