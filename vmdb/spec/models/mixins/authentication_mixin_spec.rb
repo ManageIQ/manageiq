@@ -257,16 +257,16 @@ describe AuthenticationMixin do
         @ems.authentication_status.should == 'None'
       end
 
-      it "should have valid_authentication" do
+      it "should have credentials" do
         @ems.has_credentials?.should be_true
       end
 
-      it "should have invalid authentication if userid nil" do
+      it "should have missing credentials if userid nil" do
         @auth.update_attribute(:userid, nil)
         @ems.missing_credentials?.should be_true
       end
 
-      it "should have invalid authentication ems's authentication is nil" do
+      it "should have missing credentials if ems's authentication is nil" do
         @ems.authentications = []
         @ems.missing_credentials?.should be_true
       end
@@ -328,7 +328,7 @@ describe AuthenticationMixin do
         queued_auth_checks.first.deliver
       end
 
-      context "with host invalid authentication due to no authentication row or incomplete userid" do
+      context "with host missing credentials due to no authentication row or incomplete userid" do
         before(:each) do
           @host.stub(:has_credentials?).and_return(false)
         end
@@ -350,7 +350,7 @@ describe AuthenticationMixin do
         end
       end
 
-      context "with ems invalid authentication due to no authentication row or incomplete userid" do
+      context "with ems missing credentials due to no authentication row or incomplete userid" do
         before(:each) do
           @ems.stub(:has_credentials?).and_return(false)
         end
