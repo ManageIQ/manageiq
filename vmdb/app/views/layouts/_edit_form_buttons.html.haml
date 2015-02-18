@@ -130,10 +130,10 @@
       #buttons_off{:style => "display:#{@changed ? "none" : "display"};"}
         - if show_validate_button
           = button_tag(_("Validate"), :class => "btn btn-primary btn-disabled")
-          - if continue_button
-            = button_tag(_("Continue"), :class => "btn btn-primary btn-disabled")
-          - else
-            = button_tag(_("Save"), :class => "btn btn-primary btn-disabled")
+        - if continue_button
+          = button_tag(_("Continue"), :class => "btn btn-primary btn-disabled")
+        - else
+          = button_tag(_("Save"), :class => "btn btn-primary btn-disabled")
         - unless noreset
           = button_tag(_("Reset"), :class => "btn btn-default btn-disabled")
           - if @layout == "report" && @sb[:menu_buttons]
