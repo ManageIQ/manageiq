@@ -351,7 +351,7 @@ class EmsVmware < EmsInfra
   end
 
   def vm_add_disk(vm, options={})
-    invoke_vim_ws(:addDisk, vm, options[:user_event], options[:diskName], options[:diskSize])
+    invoke_vim_ws(:addDisk, vm, options[:user_event], options[:diskName], options[:diskSize], nil, nil, options[:thinProvisioned])
   end
 
   def vm_remove_disk_by_file(vm, options={})
