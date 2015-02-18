@@ -16,8 +16,9 @@ class MiqSchedule < ActiveRecord::Base
   belongs_to  :miq_search
 
   scope :in_zone, lambda { |zone_name|
-    { :include => :zone, :conditions => ["zones.name = ?", zone_name] }
+    includes(:zone).where("zones.name" => zone_name)
   }
+
   scope :updated_since, lambda { |time|
     { :conditions => ["updated_at > ?", time] }
   }
