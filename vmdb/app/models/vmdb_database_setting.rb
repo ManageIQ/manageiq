@@ -1,5 +1,6 @@
 class VmdbDatabaseSetting < ActiveRecord::Base
   self.table_name = 'pg_settings'
+  self.primary_key = nil
 
   virtual_belongs_to :vmdb_database
   virtual_column :description,      :type => :string
