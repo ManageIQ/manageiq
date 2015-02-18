@@ -788,19 +788,18 @@ class Host < ActiveRecord::Base
 
   def scannable_status
     s = self.refreshable_status
-    if s[:show] == false && s[:enabled] == false
-      # TODO: Simplify these conditions
-      if self.has_credentials?(:ipmi) || !self.ipmi_address.blank?
-        if self.missing_credentials?(:ipmi)
-          s.merge!(:show => true, :enabled => false, :message => "Provide credentials for IPMI")
-        elsif self.ipmi_address.blank?
-          s.merge!(:show => true, :enabled => false, :message => "Provide an IPMI Address")
-        else
-          s.merge!(:show => true, :enabled => true, :message => "")
-        end
-      end
+    return s if s[:show] || s[:enabled]
+
+    s[:show] = true
+    if self.has_credentials?(:ipmi) && self.ipmi_address.present?
+      s.merge!(:enabled => true, :message => "")
+    elsif self.ipmi_address.blank?
+      s.merge!(:enabled => false, :message => "Provide an IPMI Address")
+    elsif self.missing_credentials?(:ipmi)
+      s.merge!(:enabled => false, :message => "Provide credentials for IPMI")
     end
-    return s
+
+    s
   end
 
   def is_refreshable?

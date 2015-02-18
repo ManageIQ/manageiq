@@ -50,6 +50,40 @@ describe Host do
     host.save
   end
 
+  context "#scannable_status" do
+    before do
+      Authentication.any_instance.stub(:after_authentication_changed)
+      @host = FactoryGirl.create(:host_vmware)
+      @host.stub(:refreshable_status => {:show => false, :enabled => false})
+    end
+
+    it "refreshable_status already reporting error" do
+      reportable_status = {:show => true, :enabled => false, :message => "Proxy not active"}
+      @host.stub(:refreshable_status => reportable_status)
+      @host.scannable_status.should == reportable_status
+    end
+
+    it "ipmi address and creds" do
+      @host.update_attribute(:ipmi_address, "127.0.0.1")
+      @host.update_authentication({:ipmi => {:userid => "a", :password => "a"}})
+      @host.scannable_status.should == {:show => true, :enabled => true, :message => ""}
+    end
+
+    it "ipmi address but no creds" do
+      @host.update_attribute(:ipmi_address, "127.0.0.1")
+      @host.scannable_status.should == {:show => true, :enabled => false, :message => "Provide credentials for IPMI"}
+    end
+
+    it "creds but no ipmi address" do
+      @host.update_authentication({:ipmi => {:userid => "a", :password => "a"}})
+      @host.scannable_status.should == {:show => true, :enabled => false, :message => "Provide an IPMI Address"}
+    end
+
+    it "no creds or ipmi address" do
+      @host.scannable_status.should == {:show => true, :enabled => false, :message => "Provide an IPMI Address"}
+    end
+  end
+
   context ".check_for_vms_to_scan" do
     before(:each) do
       @zone1 = FactoryGirl.create(:small_environment)
