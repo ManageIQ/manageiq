@@ -42,7 +42,7 @@
         - if role_allows(:feature => "ems_cluster_show_list")
           - if @record.number_of(:ems_clusters) == 0
             %li.disabled
-            = link_to(_("Clusters (%s)") % @record.number_of(:ems_clusters), "#")
+              = link_to(_("Clusters (%s)") % @record.number_of(:ems_clusters), "#")
           - else
             %li
               = link_to_with_icon(_("Clusters (%s)") % @record.number_of(:ems_clusters),
