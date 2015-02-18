@@ -570,7 +570,7 @@ class MiqRequestController < ApplicationController
     opts[:users] = MiqRequest.all_requesters(conditions)
     unless is_approver
       username = session[:username]
-      opts[:users] = opts[:users].has_value?(username) ? {opts[:users].key(username) => username} : {}
+      opts[:users] = opts[:users].value?(username) ? {opts[:users].key(username) => username} : {}
     end
     opts[:applied_states] = opts[:states].collect { |s| s[0] }
     opts[:type_choice] = "all"
