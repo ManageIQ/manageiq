@@ -69,15 +69,15 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     password_helper(@values, false) # Decrypt passwords in the hash for the UI
     @last_vm_id = get_value(@values[:src_vm_id]) unless initial_pass == true
 
-    unless options[:skip_dialog_load] == true
-      set_default_values
-      update_field_visibility
+    return if options[:skip_dialog_load] == true
 
-      service_template_req = get_value(values[:service_template_request])
-      if service_template_req == true
-        show_dialog(:requester, :hide, "disabled")
-        show_dialog(:purpose,   :hide, "disabled")
-      end
+    set_default_values
+    update_field_visibility
+
+    service_template_req = get_value(values[:service_template_request])
+    if service_template_req == true
+      show_dialog(:requester, :hide, "disabled")
+      show_dialog(:purpose,   :hide, "disabled")
     end
   end
 
@@ -448,14 +448,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     linux_fields = [:linux_domain_name]
     show_options = [:edit, :hide]
     show_options.reverse! if platform == 'linux'
-    self.fields(:customize) do |fn,_f,_dn,_d|
-      unless exclude_list.include?(fn)
-        if linux_fields.include?(fn)
-          fields[show_options[1]] += [fn]
-        else
-          fields[show_options[0]] += [fn]
-        end
-      end
+    self.fields(:customize) do |fn, _f, _dn, _d|
+      next if exclude_list.include?(fn)
+      linux_fields.include?(fn) ? fields[show_options[1]] += [fn] : fields[show_options[0]] += [fn]
     end
   end
 
@@ -513,7 +508,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
         hosts.each { |h| h.lans.each { |l| vlans[l.name] = l.name } }
 
         # Remove certain networks
-        vlans.delete_if {|_k,v| v.include?('Service Console') || v.include?('VMkernel')}
+        vlans.delete_if { |_k, v| v.in?('Service Console', 'VMkernel') }
         rails_logger('allowed_vlans', 1)
       end
 
@@ -610,12 +605,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     filters.each do |f|
       result.delete_if do |key, name|
         test_str = f[:key] == :key ? key : name
-        unless f[:modifier] == "!"
-          regex_result = test_str !~ f[:filter]
-        else
-          regex_result = test_str =~ f[:filter]
-        end
-        regex_result
+        f[:modifier] == "!" ? test_str =~ f[:filter] : test_str !~ f[:filter]
       end
     end
 
@@ -624,16 +614,14 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def selected_tags_by_cat_and_name
     tag_ids = (@values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags].to_miq_a).uniq
-    result = {}
+    return {} if tag_ids.blank?
 
     # Collect the filter tags by category
-    self.allowed_tags_and_pre_tags.each do |cat|
-      children = cat[:children].reduce({}) {|result, value| result[value.first] = value.last; result}
+    allowed_tags_and_pre_tags.each_with_object({}) do |cat, hsh|
+      children = cat[:children].each_with_object({}) { |value, result| result[value.first] = value.last }
       selected_ids = (children.keys & tag_ids)
-      result[cat[:name]] = selected_ids.collect {|t_id| children[t_id][:name]} unless selected_ids.blank?
-    end unless tag_ids.blank?
-
-    return result
+      hsh[cat[:name]] = selected_ids.collect { |t_id| children[t_id][:name] } unless selected_ids.blank?
+    end
   end
 
   def self.allowed_templates_vendor
@@ -736,12 +724,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     template_msg += "  VM Filter: <#{@values[:vm_filter].inspect}>"
     template_msg += "  Passing inital template IDs: <#{vms.collect(&:id).inspect}>" unless vms.blank?
     $log.info "#{log_header} Checking for allowed templates for #{template_msg}"
-    unless filter_id.zero?
-      result = MiqSearch.find(filter_id).search(vms, search_options).first
+    if filter_id.zero?
+      Rbac.search(search_options.merge(:targets => vms, :class => VmOrTemplate)).first
     else
-      result = Rbac.search(search_options.merge(:targets => vms, :class => VmOrTemplate)).first
+      MiqSearch.find(filter_id).search(vms, search_options).first
     end
-    return result
   end
 
   def allowed_provision_types(_options = {})
@@ -891,10 +878,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       if ldap_bind == true
         ous = l.get_organizationalunits
         $log.info("#{log_header} LDAP OUs returned: #{ous.inspect}")
-        if ous.kind_of?(Array)
-          ous.each {|ou| @ldap_ous[ou[0].dup] = ou[1].dup}
-          #@ldap_ous.each {|ou| build_ou_path_name(ou)}
-        end
+        ous.each { |ou| @ldap_ous[ou[0].dup] = ou[1].dup } if ous.kind_of?(Array)
       else
         $log.warn("#{log_header} LDAP Bind failed")
       end
@@ -909,11 +893,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     ous = allowed_organizational_units
     return ous if ous.blank?
 
-    dc_path = ous.keys.first.split(',').inject([]) do |a, p|
-      type, pathname = p.split('=')
-      a << pathname if type == "DC"
-      a
-    end.join('.')
+    dc_path = ous.keys.first.split(',').collect { |i| i.split("DC=")[1] }.compact.join(".")
     ous.each { |ou| create_ou_tree(ou, hous[dc_path] ||= {}, ou[0].split(',')) }
 
     # Re-adjust path for remove levels without OUs.
@@ -929,7 +909,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def find_first_ou(hous, path = nil)
-    unless hous.has_key?(:ou)
+    if hous.key?(:ou)
+      find_first_ou(hous[key], path)
+    else
       key = hous.keys.first
       if hous[key].key?(:ou)
         return hous, path
@@ -937,8 +919,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
         path = path.nil? ? key : "#{path} / #{key}"
         find_first_ou(hous[key], path)
       end
-    else
-      find_first_ou(hous[key], path)
     end
   end
 
@@ -1018,7 +998,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     $log.info "#{log_header} Custom spec changed from [#{@current_spec}] to [#{selected_spec}].  Customize option:[#{@customize_option}]"
 
-    unless selected_spec.nil?
+    if selected_spec.nil?
       src = get_source_and_targets
       ems_id = src[:ems].id
 
@@ -1026,8 +1006,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       if cs_data.nil?
         selected_spec_int = selected_spec.to_i
         cs_data = @customization_specs[ems_id].detect { |s| s.id == selected_spec_int }
-      end
-      unless cs_data.nil?
+      else
         cs_data = load_ar_obj(cs_data)
 
         if @customize_option == 'file'
@@ -1041,9 +1020,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
         update_fields_from_spec_networking(cs_data)
       end
     else
-      if @customize_option == 'file'
-        @values[:sysprep_upload_text] = nil
-      end
+      @values[:sysprep_upload_text] = nil if @customize_option == 'file'
     end
 
     @current_spec = selected_spec
@@ -1114,9 +1091,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
 
   def collect_customization_spec_settings(spec, spec_hash, spec_path, fields)
-    unless (section = spec.fetch_path(spec_path)).nil?
-      fields.each_slice(2) {|dlg_field, prop| spec_hash[dlg_field] = section[prop]}
-    end
+    return unless (section = spec.fetch_path(spec_path)).nil?
+    fields.each_slice(2) { |dlg_field, prop| spec_hash[dlg_field] = section[prop] }
   end
 
   def set_customization_field_from_spec(data_value, dlg_field, dialog)
@@ -1143,21 +1119,16 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def target_type
-    return 'template' if self.request_type == :clone_to_template
-    return 'vm'
+    request_type == :clone_to_template ? 'template' : 'vm'
   end
 
   def source_type
     svm = get_source_vm
     if svm.nil?
-      result = case self.request_type
-               when :template then 'template'
-               else 'unknown'
-               end
+      request_type == :template ? 'template' : 'unknown'
     else
-      result = svm.template? ? 'template' : 'vm'
+      svm.template? ? 'template' : 'vm'
     end
-    return result
   end
 
   def self.from_ws(*args)
@@ -1222,7 +1193,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     src_name =     data[:name].blank?     ? nil : data[:name].downcase
     src_guid =     data[:guid].blank?     ? nil : data[:guid].downcase
     ems_guid =     data[:ems_guid].blank? ? nil : data[:ems_guid].downcase
-    data_centers = data[:data_centers].nil? ? nil : data[:data_centers]
+    data_centers = data[:data_centers]
 
     $log.info "#{log_header} VM Passed: <#{src_name}> <#{src_guid}> <#{ems_guid}> Datacenters:<#{data_centers.inspect}>"
     if [:clone_to_vm, :clone_to_template].include?(self.request_type)
