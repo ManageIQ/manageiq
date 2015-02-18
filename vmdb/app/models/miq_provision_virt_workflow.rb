@@ -487,7 +487,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     rails_logger('allowed_cat_entries', 0)
     @values["#{options[:prov_field_name]}_category".to_sym] = options[:category]
     cat = Classification.find_by_name(options[:category].to_s)
-    result = cat ? cat.entries.inject({}) {|h,e| h[e.name] = e.description; h} : {}
+    result = cat ? cat.entries.each_with_object({}) { |e, h| h[e.name] = e.description} : {}
     rails_logger('allowed_cat_entries', 1)
     result
   end
