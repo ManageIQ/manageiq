@@ -2638,9 +2638,9 @@ module ApplicationHelper
   def show_adv_search?
     show_search = %w(availability_zone cim_base_storage_extent ems_cloud ems_cluster ems_infra flavor host
                      miq_template offline ontap_file_share ontap_logical_disk ontap_storage_system
-                     ontap_storage_volume repository resource_pool retired security_group service
+                     ontap_storage_volume orchestration_stack repository resource_pool retired security_group service
                      snia_local_file_system storage storage_manager templates vm)
     (@lastaction == "show_list" && !session[:menu_click] && show_search.include?(@layout) && !@in_a_form) ||
-      (@explorer && [:filter, :images, :instances, :vandt].include?(x_tree[:type]) && !@record)
+      (@explorer && x_tree && [:filter, :images, :instances, :vandt].include?(x_tree[:type]) && !@record)
   end
 end
