@@ -1,4 +1,4 @@
-cfmeAngularApplication.service('miqService', function() {
+miqAngularApplication.service('miqService', function() {
   this.showButtons = function() {
     miqButtons('show');
   };

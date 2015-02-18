@@ -1,7 +1,7 @@
 describe('timerOptionService', function() {
   var testService;
 
-  beforeEach(module('cfmeAngularApplication'));
+  beforeEach(module('miqAngularApplication'));
 
   beforeEach(inject(function(timerOptionService) {
     testService = timerOptionService;

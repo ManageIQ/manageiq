@@ -34,6 +34,6 @@
   = render :partial => "layouts/angular/x_edit_buttons_angular"
 
 :javascript
-  cfmeAngularApplication.value('scheduleFormId', '#{@schedule.id || "new"}');
-  cfmeAngularApplication.value('oneMonthAgo', {year: '#{@one_month_ago[:year]}', month: '#{@one_month_ago[:month]}', date: '#{@one_month_ago[:date]}'});
-  angular.bootstrap(jQuery('#form_div'), ['cfmeAngularApplication']);
+  miqAngularApplication.value('scheduleFormId', '#{@schedule.id || "new"}');
+  miqAngularApplication.value('oneMonthAgo', {year: '#{@one_month_ago[:year]}', month: '#{@one_month_ago[:month]}', date: '#{@one_month_ago[:date]}'});
+  angular.bootstrap(jQuery('#form_div'), ['miqAngularApplication']);

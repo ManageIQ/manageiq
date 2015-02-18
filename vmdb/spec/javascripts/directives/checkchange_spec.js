@@ -1,6 +1,6 @@
 describe('checkchange initialization', function() {
   var $scope, form;
-  beforeEach(module('cfmeAngularApplication'));
+  beforeEach(module('miqAngularApplication'));
   beforeEach(inject(function($compile, $rootScope) {
     $scope = $rootScope;
     var element = angular.element(

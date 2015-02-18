@@ -1,4 +1,4 @@
-cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 'scheduleFormId', 'oneMonthAgo', 'miqService', 'timerOptionService', function($http, $scope, scheduleFormId, oneMonthAgo, miqService, timerOptionService) {
+miqAngularApplication.controller('scheduleFormController', ['$http', '$scope', 'scheduleFormId', 'oneMonthAgo', 'miqService', 'timerOptionService', function($http, $scope, scheduleFormId, oneMonthAgo, miqService, timerOptionService) {
   var init = function() {
 
     $scope.scheduleModel = {
@@ -27,7 +27,7 @@ cfmeAngularApplication.controller('scheduleFormController', ['$http', '$scope', 
     $scope.afterGet = false;
     $scope.modelCopy = angular.copy( $scope.scheduleModel );
 
-    cfmeAngularApplication.$scope = $scope;
+    miqAngularApplication.$scope = $scope;
 
     if (scheduleFormId == 'new') {
       $scope.newRecord                         = true;
