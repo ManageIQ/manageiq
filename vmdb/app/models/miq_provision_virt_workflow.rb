@@ -950,22 +950,22 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def allowed_domains(options = {})
-    return @domains unless @domains.nil?
-
-    @domains = {}
-    if @values[:forced_sysprep_domain_name].blank?
-      Host.find(:all).each do |host|
-        domain = host.domain.to_s.downcase
-        next if domain.blank? || @domains.has_key?(domain)
-        # Filter by host platform or is proxy is active
-        next unless options[:platform].nil? || options[:platform].include?(host.platform)
-        next unless options[:active_proxy].nil? || host.is_proxy_active? == options[:active_proxy]
-        @domains[domain] = domain
+    @domains ||= begin
+      domains = {}
+      if @values[:forced_sysprep_domain_name].blank?
+        Host.all.each do |host|
+          domain = host.domain.to_s.downcase
+          next if domain.blank? || domains.key?(domain)
+          # Filter by host platform or is proxy is active
+          next unless options[:platform].nil? || options[:platform].include?(host.platform)
+          next unless options[:active_proxy].nil? || host.is_proxy_active? == options[:active_proxy]
+          domains[domain] = domain
+        end
+      else
+        @values[:forced_sysprep_domain_name].to_miq_a.each { |d| domains[d] = d }
       end
-    else
-      @values[:forced_sysprep_domain_name].to_miq_a.each {|d| @domains[d] = d}
+      domains
     end
-    @domains
   end
 
   def update_custom_spec
