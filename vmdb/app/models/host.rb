@@ -822,7 +822,9 @@ class Host < ActiveRecord::Base
   end
 
   def refresh_ems
-    raise "No #{ui_lookup(:table => "ext_management_systems")} or credentials defined" unless self.ext_management_system && self.ext_management_system.has_credentials?
+    raise "No #{ui_lookup(:table => "ext_management_systems")} defined" unless self.ext_management_system
+    raise "No #{ui_lookup(:table => "ext_management_systems")} credentials defined" unless self.ext_management_system.has_credentials?
+    raise "#{ui_lookup(:table => "ext_management_systems")} failed last authentication check" unless self.ext_management_system.authentication_status_ok?
     EmsRefresh.queue_refresh(self)
   end
 

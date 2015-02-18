@@ -209,6 +209,7 @@ class ExtManagementSystem < ActiveRecord::Base
 
   def refresh_ems
     raise "no #{ui_lookup(:table => "ext_management_systems")} credentials defined" if self.missing_credentials?
+    raise "#{ui_lookup(:table => "ext_management_systems")} failed last authentication check" unless self.authentication_status_ok?
     EmsRefresh.queue_refresh(self)
   end
 
