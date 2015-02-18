@@ -27,12 +27,12 @@
                 %td
                   %ul#toolbars= render_view_buttons(:miqproxy, @edit[:new][:views][:miqproxy])
 
-        - if role_allows(:feature => "service")                        |
-          || role_allows(:feature => "catalog_items_accord")           |
-          || role_allows(:feature => "catalog_items_view")             |
-          || role_allows(:feature => "orchestration_templates_accord") |
-          || role_allows(:feature => "vms_instances_filter_accord")    |
-          || role_allows(:feature => "templates_images_filter_accord") |
+        - if role_allows(:feature => "service")                        ||
+        -    role_allows(:feature => "catalog_items_accord")           ||
+        -    role_allows(:feature => "catalog_items_view")             ||
+        -    role_allows(:feature => "orchestration_templates_accord") ||
+        -    role_allows(:feature => "vms_instances_filter_accord")    ||
+        -    role_allows(:feature => "templates_images_filter_accord")
           %fieldset
             %p.legend= _('Services')
             %table.style1
@@ -49,13 +49,13 @@
                     %td
                       %ul#toolbars= render_view_buttons(resource, @edit[:new][:views][resource])
       %dd
-        - if role_allows(:feature => "ems_cloud_show_list")           |
-          || role_allows(:feature => "availability_zone_show_list")   |
-          || role_allows(:feature => "flavor_show_list")              |
-          || role_allows(:feature => "instances_accord")              |
-          || role_allows(:feature => "instances_filter_accord")       |
-          || role_allows(:feature => "images_filter_accord")          |
-          || role_allows(:feature => "orchestration_stack_show_list") |
+        - if role_allows(:feature => "ems_cloud_show_list")           ||
+        -    role_allows(:feature => "availability_zone_show_list")   ||
+        -    role_allows(:feature => "flavor_show_list")              ||
+        -    role_allows(:feature => "instances_accord")              ||
+        -    role_allows(:feature => "instances_filter_accord")       ||
+        -    role_allows(:feature => "images_filter_accord")          ||
+        -    role_allows(:feature => "orchestration_stack_show_list")
           %fieldset
             %p.legend= _('Clouds')
             %table.style1
@@ -91,15 +91,15 @@
                   %td.key= _('Stacks')
                   %td
                     %ul#toolbars= render_view_buttons(:orchestrationstack, @edit[:new][:views][:orchestrationstack])
-        - if role_allows(:feature => "ems_cloud_show_list")     |
-          || role_allows(:feature => "ems_cluster_show_list")   |
-          || role_allows(:feature => "host_show_list")          |
-          || role_allows(:feature => "resource_pool_show_list") |
-          || role_allows(:feature => "storage_show_list")       |
-          || role_allows(:feature => "repository_show_list")    |
-          || role_allows(:feature => "vandt_accord")            |
-          || role_allows(:feature => "vms_filter_accord")       |
-          || role_allows(:feature => "templates_filter_accord") |
+        - if role_allows(:feature => "ems_cloud_show_list")     ||
+        -    role_allows(:feature => "ems_cluster_show_list")   ||
+        -    role_allows(:feature => "host_show_list")          ||
+        -    role_allows(:feature => "resource_pool_show_list") ||
+        -    role_allows(:feature => "storage_show_list")       ||
+        -    role_allows(:feature => "repository_show_list")    ||
+        -    role_allows(:feature => "vandt_accord")            ||
+        -    role_allows(:feature => "vms_filter_accord")       ||
+        -    role_allows(:feature => "templates_filter_accord")
           %fieldset
             %p.legend= _('Infrastructure')
             %table.style1
