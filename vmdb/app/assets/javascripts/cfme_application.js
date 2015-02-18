@@ -242,11 +242,11 @@ function miqDimDiv(divname, status) {
 
 // Check for changes and prompt
 function miqCheckForChanges() {
-  if(cfmeAngularApplication.$scope) {
-    if (cfmeAngularApplication.$scope.form.$dirty) {
+  if(miqAngularApplication.$scope) {
+    if (miqAngularApplication.$scope.form.$dirty) {
       answer = confirm("Abandon changes?");
       if(answer == true)
-        cfmeAngularApplication.$scope.form.$setPristine(true);
+        miqAngularApplication.$scope.form.$setPristine(true);
       return answer;
     }
     } else {
@@ -872,7 +872,7 @@ function miqSendDateRequest(el){
 }
 
 function miqSetAngularDate(el){
-  cfmeAngularApplication.$scope.triggerCheckChange($('#' + el.attr('id')).val());
+  miqAngularApplication.$scope.triggerCheckChange($('#' + el.attr('id')).val());
 }
 
 // Build an explorer view using a YUI layout and a jQuery accordion

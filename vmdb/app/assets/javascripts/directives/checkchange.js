@@ -1,4 +1,4 @@
-cfmeAngularApplication.directive('checkchange', function() {
+miqAngularApplication.directive('checkchange', function() {
   return {
     require: 'ngModel',
       link: function (scope, elem, attr, ctrl) {

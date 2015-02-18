@@ -1,7 +1,7 @@
 describe('repositoryFormController', function() {
   var $scope, $controller, $httpBackend, miqService;
 
-  beforeEach(module('cfmeAngularApplication'));
+  beforeEach(module('miqAngularApplication'));
 
   beforeEach(inject(function($rootScope, _$controller_, _$httpBackend_, _miqService_) {
     miqService = _miqService_;

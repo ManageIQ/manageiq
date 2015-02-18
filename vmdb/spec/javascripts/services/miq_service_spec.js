@@ -1,7 +1,7 @@
 describe('miqService', function() {
   var testService;
 
-  beforeEach(module('cfmeAngularApplication'));
+  beforeEach(module('miqAngularApplication'));
 
   beforeEach(inject(function(miqService) {
     testService = miqService;

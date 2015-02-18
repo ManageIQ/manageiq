@@ -1,4 +1,4 @@
-cfmeAngularApplication.service('timerOptionService', function() {
+miqAngularApplication.service('timerOptionService', function() {
   var singularize = function(timeType) {
     return timeType.substring(0, timeType.length - 1);
   };
