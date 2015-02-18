@@ -114,6 +114,14 @@ class ActsAsArModel
     true
   end
 
+  def self.reflect_on_association(name)
+    virtual_reflection(name)
+  end
+
+  def self.compute_type(name)
+    ActiveRecord::Base.send :compute_type, name
+  end
+
   def initialize(values = {})
     self.attributes = {}
     values.each do |attr, value|
