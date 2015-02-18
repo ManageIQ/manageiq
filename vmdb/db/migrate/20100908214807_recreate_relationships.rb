@@ -19,7 +19,8 @@ class RecreateRelationships < ActiveRecord::Migration
     remove_index :relationships, :relationship
     remove_index :relationships, [:parent_type, :parent_id]
     remove_index :relationships, [:child_type, :child_id]
-    drop_table :relationships, :relationships_orig
+    drop_table :relationships
+    drop_table :relationships_orig if table_exists?(:relationships_orig)
 
     create_table :relationships do |t|
       t.string  :resource_type
