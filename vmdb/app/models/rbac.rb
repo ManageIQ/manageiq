@@ -455,7 +455,11 @@ module Rbac
   end
 
   def self.method_with_scope(ar_scope, options)
-    apply_options(ar_scope, options).all
+    if ar_scope < ActsAsArModel
+      ar_scope.find(:all, options)
+    else
+      apply_options(ar_scope, options).all
+    end
   end
 
   def self.apply_scope(klass, scope)
