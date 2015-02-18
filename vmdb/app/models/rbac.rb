@@ -446,6 +446,7 @@ module Rbac
     [
       [:conditions, :where],
       [:include, :includes],
+      [:include, :references],
       [:limit, :limit],
       [:order, :order],
       [:offset, :offset],
