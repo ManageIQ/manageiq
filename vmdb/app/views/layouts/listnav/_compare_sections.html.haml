@@ -59,9 +59,9 @@
               - height = width
               - if @settings[:quadicons][:host]
                 .flobj
-                  %img{src => "/images/icons/#{size}/base.png"}
+                  %img{:src => "/images/icons/#{size}/base.png"}
                 %div{:class => "flobj c#{size}"}
-                  %img{src => "/images/icons/new/vendor-#{h(@drift_obj.vmm_vendor.downcase)}.png"}
+                  %img{:src => "/images/icons/new/vendor-#{h(@drift_obj.vmm_vendor.downcase)}.png"}
                 - unless @drift_obj.power_state.blank?
                   %div{:class => "flobj b#{size}"}
                     %img{:src => "/images/icons/#{size}/currentstate-#{h(@drift_obj.power_state.downcase)}.png"}
