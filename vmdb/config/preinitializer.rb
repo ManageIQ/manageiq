@@ -19,11 +19,3 @@ if $print_gc_on_signal
   require 'miq_ree_gc'
   MiqReeGc.print_gc_info_on_signal($print_extra_gc_stats, :SIGALRM)
 end
-
-# Copy the postgres template yml to database.yml if it doesn't exist
-db_yml = File.join(File.dirname(__FILE__), 'database.yml')
-unless File.exist?(db_yml)
-  db_template = File.join(File.dirname(__FILE__), 'database.pg.yml')
-  require 'fileutils'
-  FileUtils.cp(db_template, db_yml) if File.exist?(db_template)
-end
