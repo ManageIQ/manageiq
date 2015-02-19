@@ -16,7 +16,7 @@
   - verify_title_off ||= _("Server information, User ID and matching password fields are needed to perform verification of credentials")
   - verify_title_on  ||= _("Validate the credentials by logging into the Server")
 
-%div{:id => "#{valtype}_validate_buttons_on", :style => ("display:none" if @edit[statuskey])}
+%div{:id => "#{valtype}_validate_buttons_on", :style => ("display:none" if !@edit[statuskey])}
   - if serialize
     = button_tag(_("Validate"),
                  :class   => "btn btn-primary btn-xs",
