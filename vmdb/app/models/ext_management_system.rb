@@ -48,6 +48,9 @@ class ExtManagementSystem < ActiveRecord::Base
   validates :name,                 :presence => true, :uniqueness => true
   validates :hostname, :ipaddress, :presence => true, :uniqueness => {:case_sensitive => false}, :if => :hostname_ipaddress_required?
 
+  # TODO: Remove all callers of address
+  alias_attribute :address, :hostname
+
   include NewWithTypeStiMixin
   include UuidMixin
   include WebServiceAttributeMixin
@@ -78,7 +81,6 @@ class ExtManagementSystem < ActiveRecord::Base
 
   include AuthenticationMixin
   include Metric::CiMixin
-  include AddressMixin
   include AsyncDeleteMixin
 
   virtual_column :emstype,                 :type => :string

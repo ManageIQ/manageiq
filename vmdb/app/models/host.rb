@@ -85,6 +85,9 @@ class Host < ActiveRecord::Base
 
   serialize                 :settings
 
+  # TODO: Remove all callers of address
+  alias_attribute :address, :hostname
+
   def settings
     super || self.settings = VMDB::Config.new("hostdefaults").get(:host)
   end
@@ -161,7 +164,6 @@ class Host < ActiveRecord::Base
   include Metric::CiMixin
   include FilterableMixin
   include AuthenticationMixin
-  include AddressMixin
   include AsyncDeleteMixin
   include ComplianceMixin
   include VimConnectMixin
