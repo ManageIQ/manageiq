@@ -10,40 +10,38 @@ describe MiqProvisionRequest do
   end
 
   context "A new provision request," do
-    before(:each) do
-      @vm_template = FactoryGirl.create(:template_vmware, :name => "template1")
-      @vm          = FactoryGirl.create(:vm_vmware, :name => "vm1",       :location => "abc/def.vmx")
-      User.any_instance.stub(:role).and_return("admin")
-      @user        = FactoryGirl.create(:user)
-      @approver    = FactoryGirl.create(:user_miq_request_approver)
-    end
+    before            { User.any_instance.stub(:role).and_return("admin") }
+    let(:approver)    { FactoryGirl.create(:user_miq_request_approver) }
+    let(:user)        { FactoryGirl.create(:user) }
+    let(:vm)          { FactoryGirl.create(:vm_vmware, :name => "vm1", :location => "abc/def.vmx") }
+    let(:vm_template) { FactoryGirl.create(:template_vmware, :name => "template1") }
 
     it "should not be created without userid being specified" do
       lambda { FactoryGirl.create(:miq_provision_request) }.should raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "should not be created with an invalid userid being specified" do
-      lambda { FactoryGirl.create(:miq_provision_request, :userid => 'barney', :src_vm_id => @vm_template.id ) }.should raise_error(ActiveRecord::RecordInvalid)
+      lambda { FactoryGirl.create(:miq_provision_request, :userid => 'barney', :src_vm_id => vm_template.id ) }.should raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "should not be created with a valid userid but no vm being specified" do
-      lambda { FactoryGirl.create(:miq_provision_request, :userid => @user.userid) }.should raise_error(ActiveRecord::RecordInvalid)
+      lambda { FactoryGirl.create(:miq_provision_request, :userid => user.userid) }.should raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "should be created from either a VM or Template" do
-      lambda { FactoryGirl.create(:miq_provision_request, :userid => @user.userid, :src_vm_id => @vm_template.id) }.should_not raise_error
-      lambda { FactoryGirl.create(:miq_provision_request, :userid => @user.userid, :src_vm_id => @vm.id) }.should_not raise_error
+      lambda { FactoryGirl.create(:miq_provision_request, :userid => user.userid, :src_vm_id => vm_template.id) }.should_not raise_error
+      lambda { FactoryGirl.create(:miq_provision_request, :userid => user.userid, :src_vm_id => vm.id) }.should_not raise_error
     end
 
     it "should not be created with a valid userid but invalid vm being specified" do
-      lambda { FactoryGirl.create(:miq_provision_request, :userid => @user.userid, :src_vm_id => 42    ) }.should raise_error(ActiveRecord::RecordInvalid)
+      lambda { FactoryGirl.create(:miq_provision_request, :userid => user.userid, :src_vm_id => 42) }.should raise_error(ActiveRecord::RecordInvalid)
     end
 
     context "with a valid userid and source vm," do
-      before(:each) do
-        @pr        = FactoryGirl.create(:miq_provision_request, :userid => @user.userid, :src_vm_id => @vm_template.id )
+      before do
+        @pr = FactoryGirl.create(:miq_provision_request, :userid => user.userid, :src_vm_id => vm_template.id, :options => {:owner_email => 'tester@miq.com'})
         @pr.create_request
-        @request   = @pr.miq_request
+        @request = @pr.miq_request
       end
 
       it "should create an MiqProvisionRequest" do
@@ -58,7 +56,7 @@ describe MiqProvisionRequest do
         @pr.miq_request.valid?.should be_true
         @pr.miq_request.approval_state.should == "pending_approval"
         @pr.miq_request.resource.should == @pr
-        @pr.miq_request.requester_userid.should == @user.userid
+        @pr.miq_request.requester_userid.should == user.userid
         @pr.miq_request.stamped_on.should be_nil
 
         @pr.miq_request.approved?.should be_false
@@ -67,11 +65,11 @@ describe MiqProvisionRequest do
       end
 
       it "should return a workflow class" do
-          @pr.workflow_class.should == MiqProvisionVmwareWorkflow
+        @pr.workflow_class.should == MiqProvisionVmwareWorkflow
       end
 
       context "when calling call_automate_event_queue" do
-        before(:each) do
+        before do
           MiqServer.stub(:my_zone).and_return("default")
           @event_name = "request_created"
           @pr.miq_request.call_automate_event_queue(@event_name)
@@ -89,9 +87,7 @@ describe MiqProvisionRequest do
       end
 
       context "after MiqRequest is deleted," do
-        before(:each) do
-          @request.destroy
-        end
+        before { @request.destroy }
 
         it "should delete MiqProvisionRequest" do
           MiqProvisionRequest.count.should == 0
@@ -102,18 +98,12 @@ describe MiqProvisionRequest do
         end
 
         it "should not delete Approver" do
-          lambda { @approver.reload }.should_not raise_error
+          lambda { approver.reload }.should_not raise_error
         end
       end
 
       context "when calling quota methods" do
-        before(:each) do
-          @guid = MiqUUID.new_guid
-          MiqServer.stub(:my_guid).and_return(@guid)
-          @zone       = FactoryGirl.create(:zone)
-          @miq_server = FactoryGirl.create(:miq_server_not_master, :guid => @guid, :zone => @zone)
-          MiqServer.my_server(true)
-        end
+        before { EvmSpecHelper.create_guid_miq_server_zone }
 
         it "should return a hash for quota methods" do
           [:vms_by_group, :vms_by_owner, :retired_vms_by_group, :retired_vms_by_owner, :provisions_by_group, :provisions_by_owner,
@@ -124,8 +114,7 @@ describe MiqProvisionRequest do
 
         it "should return stats from quota methods" do
           prov_options = {:number_of_vms => [2, '2'], :owner_email => 'tester@miq.com', :vm_memory => ['1024','1024'], :number_of_cpus => [2, '2']}
-          @pr.options[:owner_email] = 'tester@miq.com'
-          @pr2        = FactoryGirl.create(:miq_provision_request, :userid => @user.userid, :src_vm_id => @vm_template.id, :options => prov_options)
+          @pr2 = FactoryGirl.create(:miq_provision_request, :userid => user.userid, :src_vm_id => vm_template.id, :options => prov_options)
           @pr2.create_request
 
           #:requests_by_group
@@ -141,9 +130,7 @@ describe MiqProvisionRequest do
       end
 
       context "when processing tags" do
-        before do
-          FactoryGirl.create(:classification_department_with_tags)
-        end
+        before { FactoryGirl.create(:classification_department_with_tags) }
 
         it "should add and delete tags from a request" do
           @pr.get_tags.length.should == 0
