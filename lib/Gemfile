@@ -32,7 +32,7 @@ gem "memoist",              "~>0.11.0",      :require => false
 gem "more_core_extensions", "~>1.2.0",       :require => false
 gem "nokogiri",             "~>1.5.0",       :require => false
 gem "ovirt",                "~>0.3.0",       :require => false
-gem "kubeclient",           ">=0.1.1",       :require => false
+gem "kubeclient",           ">=0.1.3",       :require => false
 gem "parallel",             "~>0.5.21",      :require => false
 gem "Platform",             "=0.4.0",        :require => false
 gem "rubyzip",              "=0.9.5",        :require => false  # TODO: Review 0.9.7 breaking log collection in FB14646
