@@ -9,4 +9,4 @@ object:
     description: 
   fields:
   - execute:
-      value: check_unregistered_from_provider
+      value: check_removed_from_provider

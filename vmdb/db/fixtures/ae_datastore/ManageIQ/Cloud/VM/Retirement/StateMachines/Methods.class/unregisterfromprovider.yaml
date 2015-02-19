@@ -9,4 +9,4 @@ object:
     description: 
   fields:
   - execute:
-      value: unregister_from_provider
+      value: remove_from_provider(removal_type => 'unregister')

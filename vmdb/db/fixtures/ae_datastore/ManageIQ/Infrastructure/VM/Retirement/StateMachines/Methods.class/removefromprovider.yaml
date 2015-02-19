@@ -4,9 +4,9 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: PreDeleteFromProvider
+    name: RemoveFromProvider
     inherits: 
     description: 
   fields:
   - execute:
-      value: pre_delete_from_provider
+      value: remove_from_provider(removal_type => 'remove_from_disk')

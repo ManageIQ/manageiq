@@ -9,4 +9,4 @@ object:
     description: 
   fields:
   - execute:
-      value: PreDeleteFromProvider
+      value: pre_delete_from_provider
