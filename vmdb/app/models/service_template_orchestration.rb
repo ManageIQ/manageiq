@@ -4,7 +4,7 @@ class ServiceTemplateOrchestration < ServiceTemplate
   end
 
   def orchestration_template=(template)
-    orchestration_templates.clear << template
+    orchestration_templates.replace([template].compact)
   end
 
   def orchestration_manager
@@ -12,7 +12,7 @@ class ServiceTemplateOrchestration < ServiceTemplate
   end
 
   def orchestration_manager=(manager)
-    orchestration_managers.clear << manager
+    orchestration_managers.replace([manager].compact)
   end
 
   def create_subtasks(_parent_service_task, _parent_service)
