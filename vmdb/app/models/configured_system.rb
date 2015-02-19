@@ -8,4 +8,10 @@ class ConfiguredSystem < ActiveRecord::Base
   belongs_to :operating_system_flavor
 
   has_one    :computer_system, :dependent => :destroy
+
+  alias_method :manager, :configuration_manager
+
+  def name
+    hostname
+  end
 end

@@ -2,13 +2,13 @@ module EmsRefresh
   module Manager
     extend ActiveSupport::Concern
     module ClassMethods
-      unless defined?(ems_type)
+      unless respond_to?(:ems_type)
         def ems_type
         end
       end
     end
 
-    unless defined?(emstype)
+    unless respond_to?(:emstype)
       def emstype
         self.class.ems_type
       end
