@@ -99,8 +99,6 @@ class ExtManagementSystem < ActiveRecord::Base
 
   alias clusters ems_clusters # Used by web-services to return clusters as the property name
 
-  DEFAULT_PLATFORMS   = %w(microsoft redhat vmware amazon openstack)
-
   EMS_DISCOVERY_TYPES = {
     'vmware'    => 'virtualcenter',
     'microsoft' => 'scvmm',
@@ -214,7 +212,7 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def self.ems_discovery_types
-    EMS_DISCOVERY_TYPES.values_at(*DEFAULT_PLATFORMS).compact
+    EMS_DISCOVERY_TYPES.values
   end
 
   def disconnect_inv

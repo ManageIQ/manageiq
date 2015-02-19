@@ -39,7 +39,7 @@
           %td.key=_('Host platform')
           %td.wide
             = select_tag("user_assigned_os",
-              options_for_select([["<#{_('not specified')}>", nil]] + Host.host_platforms.to_a,
+              options_for_select([["<#{_('not specified')}>", nil]] + Host.host_create_os_types.to_a,
               @edit[:new][:user_assigned_os]),
               "data-miq_observe" => { :url => url }.to_json)
       %tr
