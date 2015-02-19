@@ -833,9 +833,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     min, max = options[:min].to_i, options[:max].to_i
     min = 1 if min < 1
     max = min if max < 1
-    h = {}
-    min.upto(max) { |i| h[i] = i.to_s; h }
-    h
+    (min..max).each_with_object({}) { |i, h| h[i] = i.to_s }
   end
 
   def load_test_ous_data
