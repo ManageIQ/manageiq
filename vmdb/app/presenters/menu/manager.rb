@@ -45,24 +45,39 @@ module Menu
       load_custom_items
     end
 
-    def load_custom_items
-      sections, items = Menu::CustomLoader.load
-      sections.each { |section| @menu << section }
-      preprocess_items
+    def merge_sections(sections)
+      sections.each do |section|
+        if section.after
+          position = @menu.index { |existing_section| existing_section.id == section.after }
+          @menu.insert(position+1, section)
+        else
+          @menu << section
+        end
+      end
+    end
+
+    def merge_items(items)
       items.each do |item|
         raise InvalidMenuDefinition, 'Invalid parent' unless @id_to_section.key?(item.parent)
         @id_to_section[item.parent].items << item
       end
     end
 
-    def preprocess_items
-      @id_to_section   = @menu.index_by(&:id)
-      @name_to_section = @menu.index_by(&:name)
+    def load_custom_items
+      sections, items = Menu::CustomLoader.load
+      merge_sections(sections)
+      preprocess_sections
+      merge_items(items)
     end
 
     def load_default_items
       @menu = Menu::DefaultMenu.default_menu
-      preprocess_items
+      preprocess_sections
+    end
+
+    def preprocess_sections
+      @id_to_section   = @menu.index_by(&:id)
+      @name_to_section = @menu.index_by(&:name)
     end
   end
 end

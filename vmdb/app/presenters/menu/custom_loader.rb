@@ -19,7 +19,6 @@ module Menu
 
     def load_custom_item(file_name)
       properties = YAML.load(File.open(file_name))
-
       if properties['type'] == 'section'
         @sections << create_custom_menu_section(properties)
       else
@@ -29,7 +28,6 @@ module Menu
 
     class CustomItem < Item
       attr_accessor :parent
-      # FIXME: :order?
     end
 
     def create_custom_menu_item(properties)
@@ -40,11 +38,9 @@ module Menu
     end
 
     def create_custom_menu_section(properties)
-      if properties.key?('section_type')
-        Section.new(properties['id'].to_sym, properties['name'], [], properties['section_type'].to_sym)
-      else
-        Section.new(properties['id'].to_sym, properties['name'])
-      end
+      section_type = properties.key?('section_type') ? properties['section_type'].to_sym : :default
+      after = properties.key?('after') ? properties['after'].to_sym : nil
+      Section.new(properties['id'].to_sym, properties['name'], [], section_type, after)
     end
   end
 end
