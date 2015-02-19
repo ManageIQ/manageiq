@@ -28,22 +28,5 @@ module AddressMixin
       value ||= default_value
       return value
     end
-
-    def column_for_find_by_address(type=:ems)
-      case self.address_configuration(type, :contactwith, :ipaddress).to_sym
-      when :hostname           then :hostname
-      when :resolved_ipaddress then :ipaddress # TODO: Support actual reverse lookup
-      else                          :ipaddress
-      end
-    end
-
-    def find_first_by_address(addr, type=:ems)
-      self.where(self.column_for_find_by_address(type) => addr).first
-    end
-    alias find_by_address find_first_by_address
-
-    def find_all_by_address(addr, type=:ems)
-      self.where(self.column_for_find_by_address(type) => addr).to_a
-    end
   end
 end
