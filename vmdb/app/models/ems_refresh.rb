@@ -34,6 +34,8 @@ module EmsRefresh
         t.ext_management_systems.first
       elsif t.respond_to?(:ext_management_system) && t.ext_management_system
         t.ext_management_system
+      elsif t.respond_to?(:manager) && t.manager
+        t.manager
       elsif t.kind_of?(Host) && t.acts_as_ems?
         t
       else
@@ -58,7 +60,11 @@ module EmsRefresh
 
     # Split the targets into refresher groups
     groups = targets.group_by do |t|
-      ems = t.respond_to?(:ext_management_system) ? t.ext_management_system : t
+      ems = case
+            when t.respond_to?(:ext_management_system) then t.ext_management_system
+            when t.respond_to?(:manager)               then t.manager
+            else                                            t
+            end
       ems.kind_of?(EmsVmware) ? "vc" : ems.emstype.to_s
     end
 
