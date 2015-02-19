@@ -652,6 +652,8 @@
         :disabled: true
       - :name: set_owner
         :identifier: vm_edit
+      - :name: scan
+        :identifier: vm_scan
       - :name: delete
         :identifier: vm_delete
     :resource_actions:
@@ -686,6 +688,8 @@
         :identifier: vm_delete
       - :name: set_owner
         :identifier: vm_edit
+      - :name: scan
+        :identifier: vm_scan
       :delete:
       - :name: delete
         :identifier: vm_delete
