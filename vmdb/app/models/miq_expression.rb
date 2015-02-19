@@ -1392,7 +1392,7 @@ class MiqExpression
 
     result = []
     unless opts[:typ] == "count" || opts[:typ] == "find"
-      result = self.get_column_details(relats[:columns], model, opts).sort!{|a,b|a.to_s <=> b.to_s}
+      result = self.get_column_details(relats[:columns], model, model, opts).sort!{|a,b|a.to_s <=> b.to_s}
       result.concat(self.tag_details(model, model, opts)) if opts[:include_tags] == true
     end
     result.concat(self._model_details(relats, opts).sort!{|a,b|a.to_s <=> b.to_s})
@@ -1403,14 +1403,15 @@ class MiqExpression
   def self._model_details(relats, opts)
     result = []
     relats[:reflections].each {|assoc, ref|
+      parent = ref[:parent]
       case opts[:typ]
       when "count"
-        result.push(self.get_table_details(ref[:parent][:path])) if ref[:parent][:multivalue]
+        result.push(self.get_table_details(parent[:class_path], parent[:assoc_path])) if parent[:multivalue]
       when "find"
-        result.concat(self.get_column_details(ref[:columns], ref[:parent][:path], opts)) if ref[:parent][:multivalue]
+        result.concat(self.get_column_details(ref[:columns], parent[:class_path], parent[:assoc_path], opts)) if parent[:multivalue]
       else
-        result.concat(self.get_column_details(ref[:columns], ref[:parent][:path], opts))
-        result.concat(self.tag_details(ref[:parent][:assoc_class], ref[:parent][:path], opts)) if opts[:include_tags] == true
+        result.concat(self.get_column_details(ref[:columns], parent[:class_path], parent[:assoc_path], opts))
+        result.concat(self.tag_details(parent[:assoc_class], parent[:class_path], opts)) if opts[:include_tags] == true
       end
 
       result.concat(self._model_details(ref, opts))
@@ -1424,12 +1425,12 @@ class MiqExpression
     @classifications ||= self.get_categories
     @classifications.each {|name,cat|
       prefix = path.nil? ? "managed" : [path, "managed"].join(".")
-      field = prefix + "-" + name
+      field = [prefix, name].join("-")
       result.push([self.value2human(field, opts.merge(:classification => cat)), field])
     }
     if opts[:include_my_tags] && opts[:userid] && Tag.exists?(["name like ?", "/user/#{opts[:userid]}/%"])
       prefix = path.nil? ? "user_tag" : [path, "user_tag"].join(".")
-      field = prefix + "-" + opts[:userid]
+      field = [prefix, opts[:userid]].join("_")
       result.push([self.value2human(field, opts), field])
     end
     result.sort!{|a,b|a.to_s <=> b.to_s}
@@ -1481,7 +1482,8 @@ class MiqExpression
 
     model = model_class(model)
 
-    parent[:path] ||= model.name
+    parent[:class_path] ||= model.name
+    parent[:assoc_path] ||= model.name
     parent[:root] ||= model.name
     result = {:columns => model.column_names_with_virtual, :parent => parent}
     result[:reflections] = {}
@@ -1501,7 +1503,8 @@ class MiqExpression
 
       new_parent = {
         :macro       => ref.macro,
-        :path        => [parent[:path], determine_relat_path(ref)].join("."),
+        :class_path  => [parent[:class_path], determine_relat_path(ref)].join("."),
+        :assoc_path  => [parent[:assoc_path], assoc.to_s].join("."),
         :assoc       => assoc,
         :assoc_class => assoc_class,
         :root        => parent[:root]
@@ -1512,8 +1515,8 @@ class MiqExpression
       seen_key = [model.name, assoc].join("_")
       unless seen.include?(seen_key) ||
              assoc_class == parent[:root] ||
-             parent[:path].include?(assoc.to_s) ||
-             parent[:path].include?(assoc.to_s.singularize) ||
+             parent[:assoc_path].include?(assoc.to_s) ||
+             parent[:assoc_path].include?(assoc.to_s.singularize) ||
              parent[:direction] == :up ||
              parent[:multivalue]
         seen.push(seen_key)
@@ -1523,24 +1526,23 @@ class MiqExpression
     result
   end
 
-  def self.get_table_details(table)
-# puts "Enter: get_table_details: model: #{model}, parent: #{parent.inspect}"
-    [self.value2human(table), table]
+  def self.get_table_details(class_path, assoc_path)
+    [value2human(class_path), assoc_path]
   end
 
-  def self.get_column_details(column_names, parent, opts)
+  def self.get_column_details(column_names, class_path, assoc_path, opts)
     include_model = opts[:include_model]
-    base_model = parent.split(".").first
+    base_model = class_path.split(".").first
 
     excludes =  EXCLUDE_COLUMNS
     # special case for C&U ad-hoc reporting
-    if opts[:interval] && opts[:interval] != "daily" && base_model.ends_with?("Performance") && !parent.include?(".")
+    if opts[:interval] && opts[:interval] != "daily" && base_model.ends_with?("Performance") && !class_path.include?(".")
       excludes += ["^min_.*$", "^max_.*$", "^.*derived_storage_.*$", "created_on"]
-    elsif opts[:interval] && base_model.ends_with?("Performance") && !parent.include?(".")
+    elsif opts[:interval] && base_model.ends_with?("Performance") && !class_path.include?(".")
       excludes += ["created_on"]
     end
 
-    excludes += ["logical_cpus"] if parent == "Vm.hardware"
+    excludes += ["logical_cpus"] if class_path == "Vm.hardware"
 
     case base_model
     when "VmPerformance"
@@ -1570,8 +1572,9 @@ class MiqExpression
         end
       } unless EXCLUDE_EXCEPTIONS.include?(c)
       if col
-        field = parent + "-" + col
-        [self.value2human(field, :include_model => include_model), field]
+        field_class_path = "#{class_path}-#{col}"
+        field_assoc_path = "#{assoc_path}-#{col}"
+        [self.value2human(field_class_path, :include_model => include_model), field_assoc_path]
       end
     }.compact
   end
@@ -1851,7 +1854,9 @@ class MiqExpression
     return last_path unless class_from_association_name
 
     association_class = ref.klass
-    last_path = association_class.to_s.underscore if association_class < class_from_association_name
+    if association_class < class_from_association_name
+      last_path = ref.collection? ? association_class.model_name.plural : association_class.model_name.singular
+    end
     last_path
   end
 end #class MiqExpression

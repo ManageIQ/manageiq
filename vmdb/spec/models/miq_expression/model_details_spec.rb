@@ -87,18 +87,28 @@ describe MiqExpression do
   context ".build_relats" do
     it "AvailabilityZone" do
       result = described_class.build_relats("AvailabilityZone")
-      expect(result.fetch_path(:reflections, :ext_management_system, :parent, :path).split(".").last).to eq("ems_cloud")
+      expect(result.fetch_path(:reflections, :ext_management_system, :parent, :class_path).split(".").last).to eq("ems_cloud")
+      expect(result.fetch_path(:reflections, :ext_management_system, :parent, :assoc_path).split(".").last).to eq("ext_management_system")
     end
 
     it "VmInfra" do
       result = described_class.build_relats("VmInfra")
-      expect(result.fetch_path(:reflections, :evm_owner, :parent, :path).split(".").last).to eq("evm_owner")
-      expect(result.fetch_path(:reflections, :linux_initprocesses, :parent, :path).split(".").last).to eq("linux_initprocesses")
+      expect(result.fetch_path(:reflections, :evm_owner, :parent, :class_path).split(".").last).to eq("evm_owner")
+      expect(result.fetch_path(:reflections, :evm_owner, :parent, :assoc_path).split(".").last).to eq("evm_owner")
+      expect(result.fetch_path(:reflections, :linux_initprocesses, :parent, :class_path).split(".").last).to eq("linux_initprocesses")
+      expect(result.fetch_path(:reflections, :linux_initprocesses, :parent, :assoc_path).split(".").last).to eq("linux_initprocesses")
     end
 
     it "Vm" do
       result = described_class.build_relats("Vm")
-      expect(result.fetch_path(:reflections, :users, :parent, :path).split(".").last).to eq("users")
+      expect(result.fetch_path(:reflections, :users, :parent, :class_path).split(".").last).to eq("users")
+      expect(result.fetch_path(:reflections, :users, :parent, :assoc_path).split(".").last).to eq("users")
+    end
+
+    it "OrchestrationStack" do
+      result = described_class.build_relats("OrchestrationStack")
+      expect(result.fetch_path(:reflections, :vms, :parent, :class_path).split(".").last).to eq("vm_clouds")
+      expect(result.fetch_path(:reflections, :vms, :parent, :assoc_path).split(".").last).to eq("vms")
     end
   end
 
@@ -115,9 +125,16 @@ describe MiqExpression do
       expect(subject).to eq(@ref.name.to_s)
     end
 
-    it "when class name is a subclass of association name" do
-      @ref = AvailabilityZone.reflect_on_association(:ext_management_system)
-      expect(subject).to eq(@ref.klass.to_s.underscore)
+    context "when class name is a subclass of association name" do
+      it "one_to_one relation" do
+        @ref = AvailabilityZone.reflect_on_association(:ext_management_system)
+        expect(subject).to eq(@ref.klass.model_name.singular)
+      end
+
+      it "one_to_many relation" do
+        @ref = OrchestrationStack.reflect_on_association(:vms)
+        expect(subject).to eq(@ref.klass.model_name.plural)
+      end
     end
   end
 end
