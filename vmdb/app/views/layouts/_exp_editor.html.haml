@@ -72,7 +72,7 @@
                       :title                 => title)
     %div{:style => "padding:10px"}
       - @edit[@expkey][:exp_table].each do |token|
-        - if ! %w(AND OR ( ) ???).include?(token.flatten.first)
+        - if ! %w(AND OR ( ) ???).include?([token].flatten.first)
           = link_to(token.first,
                     {:action => 'exp_token_pressed',
                      :token  => token.last},
