@@ -36,7 +36,11 @@ module EmsRefresh::Refreshers
       self.targets_by_ems_id = Hash.new { |h, k| h[k] = Array.new }
 
       targets.each do |t|
-        ems = t.respond_to?(:ext_management_system) ? t.ext_management_system : t
+        ems = case
+              when t.respond_to?(:ext_management_system) then t.ext_management_system
+              when t.respond_to?(:manager)               then t.manager
+              else                                            t
+              end
         if ems.nil?
           $log.warn "MIQ(#{self.class.name}.group_targets_by_ems) Unable to perform refresh for #{t.class} [#{t.name}] id [#{t.id}], since it is not on an EMS."
           next
