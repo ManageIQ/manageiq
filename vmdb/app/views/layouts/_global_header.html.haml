@@ -1,5 +1,7 @@
 !!! XML
 !!! Strict
+<!--[if IE 8]><html class="ie8"><![endif]-->
+<!--[if IE 9]><html class="ie9"><![endif]-->
 %html
   %head
     %title= h(title_from_layout(@layout))
@@ -23,8 +25,6 @@
     = javascript_include_tag 'bootstrap-hover-dropdown/bootstrap-hover-dropdown.min'
     = javascript_include_tag 'patternfly.min'
     = javascript_include_tag 'less.min'
-    /[if IE 8]
-      <html class="ie8">
     -# jQuery UI CSS
     = javascript_include_tag 'jquery.observe_field' # Observe field plugin
     = stylesheet_link_tag "jquery/miq/jquery-ui-1.9.2.custom"

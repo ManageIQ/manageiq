@@ -30,7 +30,7 @@
     }
   }
   body {
-    background: @login-bg-color url("@{img-path}/@{img-bg-login}") repeat-x 50% 0;
+    background: @login-bg-color image-url('@{img-bg-login}') repeat-x 50% 0;
     background-size: auto;
     color: #fff;
     @media (min-width: @screen-sm-min) {
@@ -104,16 +104,16 @@
 }
 
 .ie8.login-pf {
-  #badge {
-    background: url('@{img-path}/@{img-badge-ie8}') no-repeat;
-    height: @img-badge-ie8-height;
-    width: @img-badge-ie8-width;
-    img {
-      width: 0;
-    }
-  }
+// #badge {
+//   background: url('@{img-path}/@{img-badge-ie8}') no-repeat;
+//   height: @img-badge-ie8-height;
+//   width: @img-badge-ie8-width;
+//   img {
+//     width: 0;
+//   }
+// }
   #brand {
-    background: url('@{img-path-alt}/@{img-brand-lg-ie8}') no-repeat center;
+    background: image-url('@{img-brand-lg-ie8}') no-repeat center;
     background-size: cover auto;
     @media (min-width: @screen-sm-min) {
       background-position: 0 0;
