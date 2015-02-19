@@ -300,6 +300,7 @@ Vmdb::Application.routes.draw do
 
     :dashboard => {
       :get => %w(
+        auth_error
         change_tab
         index
         login
