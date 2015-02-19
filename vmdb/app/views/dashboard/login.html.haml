@@ -1,10 +1,10 @@
 %span#badge
-  %img{:src => "#{session[:custom_logo] ? '/upload/custom_logo.png' : image_path("layout/login-screen-logo.png")}"}
+  %img{:src => "#{session[:custom_logo] ? '/upload/custom_logo.png' : image_path("login-screen-logo.png")}"}
 .container
   .row
     .col-sm-12
       #brand
-        %img{:src => image_path("layout/brand.svg"), :alt => "ManageIQ"}
+        %img{:src => image_path("brand.svg"), :alt => "ManageIQ"}
     .col-sm-7.col-md-6.col-lg-5.login
       .form-horizontal#login_div
         = render(:partial => "layouts/spinner", 
