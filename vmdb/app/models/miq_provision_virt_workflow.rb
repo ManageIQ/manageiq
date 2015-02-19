@@ -1190,11 +1190,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     log_header = "#{self.name}.from_ws_ver_1_x"
     $log.info "#{log_header} Web-service provisioning starting with interface version <#{version}> for user <#{userid}>"
     values = {}
-    p = MiqProvisionWorkflow.new(values, userid, {:use_pre_dialog => false})
+    p = new(values, userid, {:use_pre_dialog => false, :options => {:skip_dialog_load => true}})
     src_name_down = src_name.downcase
     src = p.send(:allowed_templates).detect {|v| v.name.downcase == src_name_down}
     raise "Source template [#{src_name}] was not found" if src.nil?
-    p = MiqProvisionWorkflow.class_for_source(src.id).new(values, userid, {:use_pre_dialog => false})
+    p = class_for_source(src.id).new(values, userid, {:use_pre_dialog => false, :options => {:skip_dialog_load => true}})
 
     # Populate required fields
     p.init_from_dialog(values, userid)
@@ -1413,13 +1413,13 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
         $log.warn "#{log_header} Web-service requester changed to <#{userid}>"
       end
 
-      p = MiqProvisionWorkflow.new(values = {}, userid, init_options)
+      p = new(values = {}, userid, init_options)
       userid = p.requester.userid
       src = p.ws_template_fields(values, template_fields, options.values)
       raise "Source template [#{src_name}] was not found" if src.nil?
       # Allow new workflow class to determine dialog name instead of using the stored value from the first call.
       values.delete(:miq_request_dialog_name)
-      p = MiqProvisionWorkflow.class_for_source(src.id).new(values, userid, init_options)
+      p = class_for_source(src.id).new(values, userid, init_options)
 
       # Populate required fields
       p.init_from_dialog(values, userid)

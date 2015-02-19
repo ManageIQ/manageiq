@@ -431,14 +431,14 @@ module VmdbwsOps
   end
 
   def EVM_provision_request(src_name, target_name, auto_approve, tags, additional_values)
-    # MiqProvisionWorkflow.from_ws will raise an error, otherwise it is successful
-    MiqProvisionWorkflow.from_ws("1.0", @username, src_name, target_name, auto_approve, tags, additional_values)
+    # MiqProvisionVirtWorkflow.from_ws will raise an error, otherwise it is successful
+    MiqProvisionVirtWorkflow.from_ws("1.0", @username, src_name, target_name, auto_approve, tags, additional_values)
     true
   end
 
   def EVM_provision_request_ex(version_str, template_fields, vm_fields, requester, tags, additional_values, ems_custom_attrs, miq_custom_attrs)
-    # MiqProvisionWorkflow.from_ws will raise an error, otherwise it is successful
-    MiqProvisionWorkflow.from_ws(version_str, @username, template_fields, vm_fields, requester, tags,
+    # MiqProvisionVirtWorkflow.from_ws will raise an error, otherwise it is successful
+    MiqProvisionVirtWorkflow.from_ws(version_str, @username, template_fields, vm_fields, requester, tags,
                                  additional_values, ems_custom_attrs, miq_custom_attrs)
     true
   end
@@ -469,8 +469,8 @@ module VmdbwsOps
   end
 
   def VmProvisionRequest(version_str, template_fields, vm_fields, requester, tags, options)
-    # MiqProvisionWorkflow.from_ws_2 will raise an error, otherwise it returns a MiqRequest instance
-    MiqProvisionWorkflow.from_ws_2(version_str, @username, template_fields, vm_fields, requester, tags, options)
+    # MiqProvisionVirtWorkflow.from_ws_2 will raise an error, otherwise it returns a MiqRequest instance
+    MiqProvisionVirtWorkflow.from_ws_2(version_str, @username, template_fields, vm_fields, requester, tags, options)
   end
 
   def GetVmProvisionRequest(req_id)
