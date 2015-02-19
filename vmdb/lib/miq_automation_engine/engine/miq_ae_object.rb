@@ -425,7 +425,7 @@ module MiqAeEngine
     end
 
     def process_state_relationship(f, message, args)
-    relationship = get_value(f, :aetype_relationship)
+      relationship = get_value(f, :aetype_relationship)
       unless relationship.blank? || relationship.lstrip[0,1] == '#'
         $miq_ae_logger.info "Processing State=[#{f['name']}]"
         enforce_state_maxima(f)
@@ -621,7 +621,7 @@ module MiqAeEngine
           # We are properly encoding when we send URL requests to external systems
           # or building an automate request
           # subst &&= URI.escape(subst, RE_URI_ESCAPE)  if type == :aetype_relationship
-          #subst &&= URI.escape(subst, RE_URI_ESCAPE)  if type == :aetype_relationship
+          # subst &&= URI.escape(subst, RE_URI_ESCAPE)  if type == :aetype_relationship
           subst
         } unless value.nil?
         return value

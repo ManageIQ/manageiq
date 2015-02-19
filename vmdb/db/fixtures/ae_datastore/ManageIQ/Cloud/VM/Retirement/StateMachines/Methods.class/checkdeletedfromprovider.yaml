@@ -8,5 +8,5 @@ object:
     inherits: 
     description: 
   fields:
-  - execute:
+  - common_meth1:
       value: check_deleted_from_provider

@@ -5,7 +5,8 @@ module MiqAeMethodService
     expose :automate_retirement_entrypoint
     expose :start_retirement
     expose :finish_retirement
-    expose :is_or_being_retired?
+    expose :retiring?
+    expose :error_retiring?
     expose :retired?
     expose :start
     expose :stop

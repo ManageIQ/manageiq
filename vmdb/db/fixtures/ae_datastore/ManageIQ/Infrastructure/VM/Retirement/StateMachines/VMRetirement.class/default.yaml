@@ -9,8 +9,8 @@ object:
     description: 
   fields:
   - RemoveFromProvider:
-      value: /Infrastructure/VM/Retirement/StateMachines/Methods/RemoveFromProvider
+      value: "/Infrastructure/VM/Retirement/StateMachines/Methods/RemoveFromProvider"
   - CheckRemovedFromProvider:
-      value: /Infrastructure/VM/Retirement/StateMachines/Methods/CheckRemovedFromProvider
+      value: "/Infrastructure/VM/Retirement/StateMachines/Methods/CheckRemovedFromProvider"
   - DeleteFromVMDB:
       value: "/Infrastructure/VM/Retirement/StateMachines/Methods/DeleteFromVMDB"

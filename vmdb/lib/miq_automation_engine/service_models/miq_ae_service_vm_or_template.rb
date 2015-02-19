@@ -30,7 +30,8 @@ module MiqAeMethodService
     expose :directories,           :association => true
     expose :start_retirement
     expose :finish_retirement
-    expose :is_or_being_retired?
+    expose :retiring?
+    expose :error_retiring?
     expose :retired?
     expose :files
     expose :directories

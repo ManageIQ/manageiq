@@ -3,7 +3,7 @@ object_type: method
 version: 1.0
 object:
   attributes:
-    name: update_retirement_status
+    name: update_service_retirement_status
     display_name: 
     description: 
     scope: instance

@@ -4,9 +4,11 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: CheckPoweredOff
+    name: PreRetirement
     inherits: 
     description: 
   fields:
-  - execute:
-      value: check_powered_off
+  - redhat_meth1:
+      value: pre_retirement
+  - vmware_meth1:
+      value: pre_retirement

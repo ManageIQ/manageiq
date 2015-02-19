@@ -130,14 +130,24 @@ module MiqAeServiceVmSpec
       expect(service_vm.retirement_state).to eq("retired")
     end
 
-    it "#is_or_being_retired - false" do
-      expect(service_vm.is_or_being_retired?).to be_false
+    it "#retiring? - false" do
+      expect(service_vm.retiring?).to be_false
     end
 
-    it "#is_or_being_retired - true" do
+    it "#retiring - true" do
       service_vm.retirement_state = 'retiring'
 
-      expect(service_vm.is_or_being_retired?).to be_true
+      expect(service_vm.retiring?).to be_true
+    end
+
+    it "#error_retiring? - false" do
+      expect(service_vm.error_retiring?).to be_false
+    end
+
+    it "#error_retiring - true" do
+      service_vm.retirement_state = 'error'
+
+      expect(service_vm.error_retiring?).to be_true
     end
 
     it "#retires_on - today" do
@@ -164,7 +174,6 @@ module MiqAeServiceVmSpec
       expect(service_vm.retirement_warn).to eq(60)
       expect(vm.retirement_last_warn).to be_nil
     end
-
 
     pending "Not yet implemented: 41 specs" do
       it "#ext_management_system"

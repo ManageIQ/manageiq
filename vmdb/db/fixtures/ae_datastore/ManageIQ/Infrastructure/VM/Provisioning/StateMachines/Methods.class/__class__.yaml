@@ -14,8 +14,8 @@ object:
   - field:
       aetype: relationship
       name: common_rel1
-      display_name: 
-      datatype: 
+      display_name: ''
+      datatype: string
       priority: 1
       owner: 
       default_value: 
@@ -34,7 +34,7 @@ object:
   - field:
       aetype: method
       name: common_meth1
-      display_name: 
+      display_name: ''
       datatype: string
       priority: 2
       owner: 
@@ -54,8 +54,8 @@ object:
   - field:
       aetype: relationship
       name: rel1
-      display_name: 
-      datatype: 
+      display_name: ''
+      datatype: string
       priority: 3
       owner: 
       default_value: 
@@ -74,7 +74,7 @@ object:
   - field:
       aetype: method
       name: execute
-      display_name: 
+      display_name: ''
       datatype: string
       priority: 4
       owner: 
@@ -94,8 +94,8 @@ object:
   - field:
       aetype: relationship
       name: vmware_rel1
-      display_name: 
-      datatype: 
+      display_name: ''
+      datatype: string
       priority: 5
       owner: 
       default_value: 
@@ -114,7 +114,7 @@ object:
   - field:
       aetype: method
       name: vmware_meth1
-      display_name: 
+      display_name: ''
       datatype: string
       priority: 6
       owner: 
@@ -134,8 +134,8 @@ object:
   - field:
       aetype: relationship
       name: redhat_rel1
-      display_name: 
-      datatype: 
+      display_name: ''
+      datatype: string
       priority: 7
       owner: 
       default_value: 
@@ -154,7 +154,7 @@ object:
   - field:
       aetype: method
       name: redhat_meth1
-      display_name: 
+      display_name: ''
       datatype: string
       priority: 8
       owner: 

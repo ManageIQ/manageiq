@@ -13,7 +13,7 @@ module RetirementMixin
 
   def retirement_warn=(seconds)
     if self.retirement_warn != seconds
-      self.retirement_last_warn = nil # Reset so that a new warning can be sent out when the time is right
+      retirement_last_warn = nil # Reset so that a new warning can be sent out when the time is right
       write_attribute(:retirement_warn, seconds)
     end
   end
@@ -23,11 +23,11 @@ module RetirementMixin
   end
 
   def retirement_warning_due?
-    self.retirement_warn && self.retires_on && self.retirement_warn.days.from_now.to_date >= self.retires_on.to_date
+    retirement_warn && retires_on && retirement_warn.days.from_now.to_date >= retires_on.to_date
   end
 
   def retirement_due?
-    self.retires_on && (Date.today >= self.retires_on_date)
+    retires_on && (Date.today >= retires_on_date)
   end
 
   def retires_on=(timestamp)
@@ -42,35 +42,35 @@ module RetirementMixin
     self.retires_on.nil? ? nil : self.retires_on.to_date
   end
 
-  def retire(options={})
+  def retire(options = {})
     return unless options.keys.any? { |key| [:date, :warn].include?(key) }
 
-    message = "#{retirement_object_title}: [#{self.name}]"
+    message = "#{retirement_object_title}: [#{name}]"
 
-    if options.has_key?(:date)
+    if options.key?(:date)
       date = nil
       date = options[:date].to_date unless options[:date].nil?
-      self.retires_on = date
+      retires_on = date
 
       if date
-        message += " is scheduled to retire on date: [#{self.retires_on_date}]"
+        message += " is scheduled to retire on date: [#{retires_on}]"
       else
         message += " is no longer scheduled to retire"
       end
     end
 
-    if options.has_key?(:warn)
-      message += " and" if options.has_key?(:date)
+    if options.key?(:warn)
+      message += " and" if options.key?(:date)
       warn = options[:warn]
-      self.retirement_warn = warn
+      retirement_warn = warn
       if warn
-        message += " has a value for retirement warning days of: [#{self.retirement_warn}]"
+        message += " has a value for retirement warning days of: [#{retirement_warn}]"
       else
         message += " has no value for retirement warning days"
       end
     end
 
-    self.save
+    save
 
     event_name = "#{retirement_event_prefix}_scheduled_to_retire"
     $log.info("MIQ(#{retirement_object_title}#retire) #{message}")
@@ -80,22 +80,26 @@ module RetirementMixin
   def retirement_check
     return if self.retired?
 
-    if !self.retirement_warned? && self.retirement_warning_due?
+    if !retirement_warned? && retirement_warning_due?
       begin
-        self.retirement_last_warn = Time.now.utc
-        self.save
+        retirement_last_warn = Time.now.utc
+        save
         raise_retirement_event(retire_warn_event_name)
       rescue => err
         $log.log_backtrace(err)
       end
     end
 
-    self.retire_now if self.retirement_due?
+    retire_now if retirement_due?
   end
 
   def retire_now
     log_prefix = "MIQ(#{retirement_object_title}#retire_now)"
-    unless self.retired
+
+    if retired
+      return if retired_validated?
+      $log.info("#{log_prefix} #{retirement_object_title}: [#{self.name}], Retires On Date: [#{self.retires_on_date}], was previously retired, but currently #{retired_invalid_reason}")
+    else
       event_name = "request_#{retirement_event_prefix}_retire"
       $log.info("#{log_prefix} calling #{event_name}")
       begin
@@ -103,30 +107,25 @@ module RetirementMixin
       rescue => err
         $log.log_backtrace(err)
       end
-    else
-      return if retired_validated?
-      $log.info("#{log_prefix} #{retirement_object_title}: [#{self.name}], Retires On Date: [#{self.retires_on_date}], was previously retired, but currently #{retired_invalid_reason}")
     end
   end
 
   def finish_retirement
-    unless self.retired?
-      $log.info("Finishing Retirement for [#{self.name}]")
-      self.update_attributes(:retires_on => Date.today, :retired => true, :retirement_state => "retired")
-      message = "#{self.class.base_model.name}: [#{self.name}], Retires On Date: [#{self.retires_on}], has been retired"
-      $log.info("Calling audit event for: #{message} ")
-      raise_audit_event(retired_event_name, message)
-      $log.info("Called audit event for: #{message} ")
-    end
+    return if self.retired?
+
+    $log.info("Finishing Retirement for [#{name}]")
+    update_attributes(:retires_on => Date.today, :retired => true, :retirement_state => "retired")
+    message = "#{self.class.base_model.name}: [#{name}], Retires On Date: [#{retires_on}], has been retired"
+    $log.info("Calling audit event for: #{message} ")
+    raise_audit_event(retired_event_name, message)
+    $log.info("Called audit event for: #{message} ")
   end
 
   def start_retirement
-    unless self.retired?
-      $log.info("Starting Retirement for [#{self.name}]")
-      self.update_attributes(:retirement_state => "retiring")
-    end
+    return if self.retired?
+    $log.info("Starting Retirement for [#{name}]")
+    update_attributes(:retirement_state => "retiring")
   end
-
 
   def retired_validated?
     true
@@ -160,7 +159,7 @@ module RetirementMixin
     event_hash = {}
     event_hash[retirement_base_model_name.underscore.to_sym] = self
     event_hash[:host] = self.host if self.respond_to?(:host)
-    $log.info("Raising EVM Retirement Event (not checking policy) for [#{self.name}]")
+    $log.info("Raising EVM Retirement Event (not checking policy) for [#{name}]")
     event_hash[:type] ||= self.class.name
     MiqAeEvent.raise_evm_event(event_name, self, event_hash)
   end
@@ -168,15 +167,18 @@ module RetirementMixin
   def raise_audit_event(event_name, message)
     event_hash = {
       :target_class => retirement_base_model_name,
-      :target_id    => self.id.to_s,
+      :target_id    => id.to_s,
       :event        => event_name,
       :message      => message
     }
     AuditEvent.success(event_hash)
   end
 
-  def is_or_being_retired?
-    self.retired || !self.retirement_state.blank?
+  def retiring?
+    !retirement_state.blank? && !retirement_state != 'error'
   end
 
+  def error_retiring?
+    !retirement_state.blank? && retirement_state == 'error'
+  end
 end

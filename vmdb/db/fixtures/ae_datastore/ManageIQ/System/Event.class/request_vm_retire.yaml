@@ -11,6 +11,6 @@ object:
   - logical_event:
       value: request_vm_retire
   - rel4:
-      value: /System/Process/parse_provider_category
+      value: "/System/Process/parse_provider_category"
   - rel5:
-      value: /${/#ae_provider_category}/VM/Lifecycle/Retirement?vm_id=${process#vm_id}
+      value: "/${/#ae_provider_category}/VM/Lifecycle/Retirement?vm_id=${process#vm_id}"

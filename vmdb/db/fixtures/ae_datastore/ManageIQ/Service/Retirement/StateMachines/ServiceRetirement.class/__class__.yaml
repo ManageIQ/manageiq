@@ -13,32 +13,12 @@ object:
   schema:
   - field:
       aetype: state
-      name: pre1
+      name: StartRetirement
       display_name: 
       datatype: string
       priority: 1
       owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: update_service_retirement_status(status => 'Processing Pre1')
-      on_exit: update_service_retirement_status(status => 'Processed Pre1')
-      on_error: update_service_retirement_status(status => 'Error Processing Pre1')
-      max_retries: '100'
-      max_time: 
-  - field:
-      aetype: state
-      name: StartRetirement
-      display_name: 
-      datatype: string
-      priority: 2
-      owner: 
-      default_value: /Service/Retirement/StateMachines/Methods/StartRetirement
+      default_value: "/Service/Retirement/StateMachines/Methods/StartRetirement"
       substitute: true
       message: create
       visibility: 
@@ -52,6 +32,26 @@ object:
         => 'on_exit')
       on_error: update_service_retirement_status(status => 'Error Starting Retirement',status_state
         => 'on_error')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: pre1
+      display_name: 
+      datatype: string
+      priority: 2
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_service_retirement_status(status => 'Processing Pre1')
+      on_exit: update_service_retirement_status(status => 'Processed Pre1')
+      on_error: update_service_retirement_status(status => 'Error Processing Pre1')
       max_retries: '100'
       max_time: 
   - field:
@@ -81,7 +81,7 @@ object:
       datatype: string
       priority: 4
       owner: 
-      default_value: /Service/Retirement/StateMachines/Methods/RetireService
+      default_value: "/Service/Retirement/StateMachines/Methods/RetireService"
       substitute: true
       message: create
       visibility: 
@@ -97,32 +97,12 @@ object:
       max_time: 
   - field:
       aetype: state
-      name: FinishRetirement
+      name: CheckServiceRetired
       display_name: 
       datatype: string
       priority: 5
       owner: 
-      default_value: /Service/Retirement/StateMachines/Methods/FinishRetirement
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: update_service_retirement_status(status => 'Finishing Retirement')
-      on_exit: update_service_retirement_status(status => 'Finished Retirement')
-      on_error: update_service_retirement_status(status => 'Error Finishing Retirement')
-      max_retries: '100'
-      max_time: 
-  - field:
-      aetype: state
-      name: CheckServiceRetired
-      display_name: 
-      datatype: string
-      priority: 6
-      owner: 
-      default_value: /Service/Retirement/StateMachines/Methods/CheckServiceRetired
+      default_value: "/Service/Retirement/StateMachines/Methods/CheckServiceRetired"
       substitute: true
       message: create
       visibility: 
@@ -138,12 +118,52 @@ object:
       max_time: 
   - field:
       aetype: state
-      name: DeleteServiceFromVMDB
+      name: post1
+      display_name: 
+      datatype: string
+      priority: 6
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_service_retirement_status(status => 'Processing Post1')
+      on_exit: update_service_retirement_status(status => 'Processed Post1')
+      on_error: update_service_retirement_status(status => 'Error Processing Post1')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: post2
       display_name: 
       datatype: string
       priority: 7
       owner: 
-      default_value: /Service/Retirement/StateMachines/Methods/DeleteFromVMDB
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_service_retirement_status(status => 'Processing Post2')
+      on_exit: update_service_retirement_status(status => 'Processed Post2')
+      on_error: update_service_retirement_status(status => 'Error Processing Post2')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: DeleteServiceFromVMDB
+      display_name: 
+      datatype: string
+      priority: 8
+      owner: 
+      default_value: "/Service/Retirement/StateMachines/Methods/DeleteServiceFromVMDB"
       substitute: true
       message: create
       visibility: 
@@ -161,12 +181,12 @@ object:
       max_time: 
   - field:
       aetype: state
-      name: Finished
+      name: FinishRetirement
       display_name: 
       datatype: string
-      priority: 8
+      priority: 9
       owner: 
-      default_value: 
+      default_value: "/Service/Retirement/StateMachines/Methods/FinishRetirement"
       substitute: true
       message: create
       visibility: 
@@ -174,8 +194,8 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
+      on_entry: update_service_retirement_status(status => 'Finishing Retirement')
+      on_exit: update_service_retirement_status(status => 'Finished Retirement')
+      on_error: update_service_retirement_status(status => 'Error Finishing Retirement')
       max_retries: '100'
       max_time: 

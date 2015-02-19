@@ -4,9 +4,9 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: CheckPoweredOff
+    name: CheckServiceRetired
     inherits: 
     description: 
   fields:
   - execute:
-      value: check_powered_off
+      value: check_service_retired

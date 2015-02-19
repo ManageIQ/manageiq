@@ -147,14 +147,13 @@ EOF
       ems = FactoryGirl.create(:ems_vmware, :zone => @zone)
       vm  = FactoryGirl.create(:vm_vmware, :ems_id => ems.id)
       service << vm
-      #method = "$evm.root['#{@ae_result_key}'] = $evm.root['service'].retire_service_resources"
+      # method = "$evm.root['#{@ae_result_key}'] = $evm.root['service'].retire_service_resources"
 
-
-      #@ae_method.update_attributes(:data => method)
+      # @ae_method.update_attributes(:data => method)
       expect(service.service_resources).to have(1).thing
       expect(service.service_resources.first.resource.respond_to?(:retire_now)).to be_true
       service_service.retire_service_resources
-      #ae_object = invoke_ae.root(@ae_result_key)
+      # ae_object = invoke_ae.root(@ae_result_key)
     end
 
     it "#finish_retirement" do
@@ -169,14 +168,24 @@ EOF
       expect(service_service.retirement_state).to eq("retired")
     end
 
-    it "#is_or_being_retired - false" do
-      expect(service_service.is_or_being_retired?).to be_false
+    it "#retiring - false" do
+      expect(service_service.retiring?).to be_false
     end
 
-    it "#is_or_being_retired - true" do
+    it "#retiring? - true" do
       service_service.retirement_state = 'retiring'
 
-      expect(service_service.is_or_being_retired?).to be_true
+      expect(service_service.retiring?).to be_true
+    end
+
+    it "#error_retiring? - false" do
+      expect(service_service.error_retiring?).to be_false
+    end
+
+    it "#error_retiring? - true" do
+      service_service.retirement_state = 'error'
+
+      expect(service_service.error_retiring?).to be_true
     end
 
     it "#retires_on - today" do

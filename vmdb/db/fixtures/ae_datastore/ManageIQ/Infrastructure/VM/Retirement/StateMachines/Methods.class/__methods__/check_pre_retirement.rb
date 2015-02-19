@@ -19,7 +19,7 @@ if vm
     # If never then this VM is a template so exit the retirement state machine
     $evm.root['ae_result'] = 'error'
   else
-    $evm.root['ae_result']     = 'retry'
+    $evm.root['ae_result']	   = 'retry'
     $evm.root['ae_retry_interval'] = '60.seconds'
   end
 end

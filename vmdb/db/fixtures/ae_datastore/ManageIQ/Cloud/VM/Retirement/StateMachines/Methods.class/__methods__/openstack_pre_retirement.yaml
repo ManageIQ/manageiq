@@ -3,7 +3,7 @@ object_type: method
 version: 1.0
 object:
   attributes:
-    name: delete_from_vmdb
+    name: openstack_pre_retirement
     display_name: 
     description: 
     scope: instance
