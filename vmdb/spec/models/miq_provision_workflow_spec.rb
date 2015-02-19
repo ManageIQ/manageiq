@@ -56,11 +56,11 @@ describe MiqProvisionWorkflow do
           MiqPassword.decrypt(request.options[:root_password]).should    == password_input
         end
       end
-  
+
       context "#show_customize_fields" do
         it "should show PXE fields when customization supported" do
           fields = {'key' => 'value'}
-          wf = MiqProvisionWorkflow.new({}, @admin.userid)
+          wf = MiqProvisionVirtWorkflow.new({}, @admin.userid)
           wf.should_receive(:supports_customization_template?).and_return(true)
           wf.should_receive(:show_customize_fields_pxe).with(fields)
           wf.show_customize_fields(fields, 'linux')
@@ -108,12 +108,8 @@ describe MiqProvisionWorkflow do
   end
 
   context ".encrypted_options_fields" do
-    MiqProvisionWorkflow::SUBCLASSES.each do |parent_klass|
-      parent_klass.constantize::SUBCLASSES.each do |sub_klass|
-        it "with class #{sub_klass}" do
-          "#{sub_klass}Workflow".constantize.encrypted_options_fields.should include(:root_password)
-        end
-      end
+    MiqProvisionWorkflow.descendants.each do |sub_klass|
+      it("with class #{sub_klass}") { sub_klass.encrypted_options_fields.should include(:root_password) }
     end
   end
 end
