@@ -1,4 +1,4 @@
-class MiqProvisionInfraWorkflow < MiqProvisionWorkflow
+class MiqProvisionInfraWorkflow < MiqProvisionVirtWorkflow
   SUBCLASSES = %w{
     MiqProvisionRedhat
     MiqProvisionVmware

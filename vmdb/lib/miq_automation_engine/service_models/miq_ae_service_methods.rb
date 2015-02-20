@@ -255,7 +255,7 @@ module MiqAeMethodService
       #TODO: This code should pass a real username, similar to how the web-service
       #      passes the name of the user that logged into the web-service.
       args.insert(1, "admin") if args.kind_of?(Array)
-      MiqAeServiceModelBase.wrap_results(MiqProvisionWorkflow.from_ws(*args))
+      MiqAeServiceModelBase.wrap_results(MiqProvisionVirtWorkflow.from_ws(*args))
     end
 
     private
