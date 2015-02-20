@@ -74,14 +74,14 @@
                   %td.key= _('Flavors')
                   %td
                     %ul#toolbars= render_view_buttons(:flavor, @edit[:new][:views][:flavor])
-              - if role_allows(:feature => "instances_accord")        |
-                || role_allows(:feature => "instances_filter_accord") |
+              - if role_allows(:feature => "instances_accord")        ||
+              -    role_allows(:feature => "instances_filter_accord")
                 %tr
                   %td.key= _('Instances')
                   %td
                     %ul#toolbars= render_view_buttons(:vmcloud, @edit[:new][:views][:vmcloud])
-              - if role_allows(:feature => "images_accord")        |
-                || role_allows(:feature => "images_filter_accord") |
+              - if role_allows(:feature => "images_accord")        ||
+              -    role_allows(:feature => "images_filter_accord")
                 %tr
                   %td.key= _('Images')
                   %td
@@ -122,14 +122,14 @@
                   %td.key= _('Host Items')
                   %td
                     %ul#toolbars= render_view_buttons(:hostitem, @edit[:new][:views][:hostitem])
-              - if role_allows(:feature => "vandt_accord")      |
-                || role_allows(:feature => "vms_filter_accord") |
+              - if role_allows(:feature => "vandt_accord")      ||
+              -    role_allows(:feature => "vms_filter_accord")
                 %tr
                   %td.key= _('VMs')
                   %td
                     %ul#toolbars= render_view_buttons(:vminfra, @edit[:new][:views][:vminfra])
-              - if role_allows(:feature => "vandt_accord")            |
-                || role_allows(:feature => "templates_filter_accord") |
+              - if role_allows(:feature => "vandt_accord")            ||
+              -    role_allows(:feature => "templates_filter_accord")
                 %tr
                   %td.key= _('Templates')
                   %td
