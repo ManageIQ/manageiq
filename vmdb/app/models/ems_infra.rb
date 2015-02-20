@@ -6,16 +6,8 @@ class EmsInfra < ExtManagementSystem
     EmsVmware
   }
 
-  def self.types
-    self.subclasses.collect(&:ems_type)
-  end
-
   def self.supported_subclasses
     subclasses
-  end
-
-  def self.supported_types
-    self.supported_subclasses.collect(&:ems_type)
   end
 
   #

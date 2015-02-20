@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe ExtManagementSystem do
   it ".model_name_from_emstype" do
-    ExtManagementSystem.leaf_subclasses.each do |klass|
+    described_class.leaf_subclasses.each do |klass|
       described_class.model_name_from_emstype(klass.ems_type).should == klass.name
     end
     described_class.model_name_from_emstype('foo').should be_nil
@@ -15,7 +15,8 @@ describe ExtManagementSystem do
       "scvmm",
       "rhevm",
       "openstack",
-      "openstack_infra"
+      "openstack_infra",
+      "kubernetes"
     ]
 
     described_class.types.should match_array(expected_types)
@@ -28,7 +29,8 @@ describe ExtManagementSystem do
       "rhevm",
       "scvmm",
       "openstack",
-      "openstack_infra"
+      "openstack_infra",
+      "kubernetes"
     ]
 
     described_class.supported_types.should match_array(expected_types)
@@ -41,7 +43,7 @@ describe ExtManagementSystem do
       "virtualcenter"
     ]
 
-    expect(ExtManagementSystem.ems_discovery_types).to match_array(expected_types)
+    expect(described_class.ems_discovery_types).to match_array(expected_types)
   end
 
   context "with two small envs" do
@@ -53,15 +55,15 @@ describe ExtManagementSystem do
     it "refresh_all_ems_timer will refresh for all emses in zone1" do
       @ems1 = @zone1.ext_management_systems.first
       MiqServer.stub(:my_server).and_return(@zone1.miq_servers.first)
-      ExtManagementSystem.should_receive(:refresh_ems).with([@ems1.id], true)
-      ExtManagementSystem.refresh_all_ems_timer
+      described_class.should_receive(:refresh_ems).with([@ems1.id], true)
+      described_class.refresh_all_ems_timer
     end
 
     it "refresh_all_ems_timer will refresh for all emses in zone2" do
       @ems2 = @zone2.ext_management_systems.first
       MiqServer.stub(:my_server).and_return(@zone2.miq_servers.first)
-      ExtManagementSystem.should_receive(:refresh_ems).with([@ems2.id], true)
-      ExtManagementSystem.refresh_all_ems_timer
+      described_class.should_receive(:refresh_ems).with([@ems2.id], true)
+      described_class.refresh_all_ems_timer
     end
   end
 
@@ -111,7 +113,7 @@ describe ExtManagementSystem do
   end
 
   context "validates" do
-    ExtManagementSystem.leaf_subclasses.collect{|ems| ems.name.underscore.to_sym}.each do |t|
+    described_class.leaf_subclasses.collect{|ems| ems.name.underscore.to_sym}.each do |t|
       next if t == :ems_amazon # Amazon is tested in ems_amazon_spec.rb
 
       context "for #{t}" do
@@ -163,13 +165,13 @@ describe ExtManagementSystem do
       end
 
       it "duplicate name" do
-        ExtManagementSystem.leaf_subclasses.collect{|ems| ems.name.underscore.to_sym}.each do |t|
+        described_class.leaf_subclasses.collect{|ems| ems.name.underscore.to_sym}.each do |t|
           expect { FactoryGirl.create(t, :name => @ems.name, :hostname => @different_host_name) }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Name has already been taken")
         end
       end
 
       it "duplicate ipaddress" do
-        ExtManagementSystem.leaf_subclasses.collect{|ems| ems.name.underscore.to_sym}.each do |t|
+        described_class.leaf_subclasses.collect{|ems| ems.name.underscore.to_sym}.each do |t|
           provider = FactoryGirl.build(t, :ipaddress => @ems.ipaddress, :hostname => @different_host_name)
 
           if provider.hostname_ipaddress_required?
@@ -182,7 +184,7 @@ describe ExtManagementSystem do
       end
 
       it "duplicate hostname" do
-        ExtManagementSystem.leaf_subclasses.collect{|ems| ems.name.underscore.to_sym}.each do |t|
+        described_class.leaf_subclasses.collect{|ems| ems.name.underscore.to_sym}.each do |t|
           provider = FactoryGirl.build(t, :hostname => @same_host_name)
 
           if provider.hostname_ipaddress_required?

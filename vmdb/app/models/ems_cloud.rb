@@ -4,16 +4,8 @@ class EmsCloud < ExtManagementSystem
     EmsOpenstack
   }
 
-  def self.types
-    self.subclasses.collect(&:ems_type)
-  end
-
   def self.supported_subclasses
-    self.subclasses
-  end
-
-  def self.supported_types
-    types
+    subclasses
   end
 
   has_many :availability_zones,            :foreign_key => :ems_id, :dependent => :destroy
