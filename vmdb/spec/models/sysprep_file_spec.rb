@@ -17,7 +17,7 @@ describe SysprepFile do
   end
 
   context "invalid inputs raise errors" do
-    it("INI") { expect { described_class.new(bad_ini) }.to raise_error(RuntimeError, "Invalid file contents detected") }
-    it("XML") { expect { described_class.new(bad_xml) }.to raise_error(RuntimeError, "Invalid file contents detected") }
+    it("INI") { expect { described_class.new(bad_ini) }.to raise_error(StandardError, "Invalid INI file contents detected. Could not parse line: \"var1_foo\"") }
+    it("XML") { expect { described_class.new(bad_xml) }.to raise_error(RuntimeError, "Invalid XML file contents detected.") }
   end
 end
