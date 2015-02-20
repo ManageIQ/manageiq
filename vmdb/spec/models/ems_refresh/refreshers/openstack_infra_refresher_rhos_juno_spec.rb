@@ -34,31 +34,31 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
   end
 
   def assert_table_counts
-    ExtManagementSystem.count.should == 1
-    EmsFolder.count.should           == 0 # HACK: Folder structure for UI a la VMware
-    EmsCluster.count.should          == 0
-    Host.count.should                == 6
-    OrchestrationStack.count.should  == 0
-    ResourcePool.count.should        == 0
-    Vm.count.should                  == 0
-    VmOrTemplate.count.should        == 16
-    CustomAttribute.count.should     == 0
-    CustomizationSpec.count.should   == 0
-    Disk.count.should                == 0
-    GuestDevice.count.should         == 0
-    Hardware.count.should            == 6
-    Lan.count.should                 == 0
-    MiqScsiLun.count.should          == 0
-    MiqScsiTarget.count.should       == 0
-    Network.count.should             == 0
-    OperatingSystem.count.should     == 6
-    Snapshot.count.should            == 0
-    Switch.count.should              == 0
-    SystemService.count.should       == 0
-    Relationship.count.should        == 0
-
-    MiqQueue.count.should            == 19
-    Storage.count.should             == 0
+    ExtManagementSystem.count.should         == 1
+    EmsFolder.count.should                   == 0 # HACK: Folder structure for UI a la VMware
+    EmsCluster.count.should                  == 0
+    Host.count.should                        == 6
+    OrchestrationStack.count.should          == 1
+    OrchestrationStackParameter.count.should == 132
+    ResourcePool.count.should                == 0
+    Vm.count.should                          == 0
+    VmOrTemplate.count.should                == 16
+    CustomAttribute.count.should             == 0
+    CustomizationSpec.count.should           == 0
+    Disk.count.should                        == 0
+    GuestDevice.count.should                 == 0
+    Hardware.count.should                    == 6
+    Lan.count.should                         == 0
+    MiqScsiLun.count.should                  == 0
+    MiqScsiTarget.count.should               == 0
+    Network.count.should                     == 0
+    OperatingSystem.count.should             == 6
+    Snapshot.count.should                    == 0
+    Switch.count.should                      == 0
+    SystemService.count.should               == 0
+    Relationship.count.should                == 0
+    MiqQueue.count.should                    == 19
+    Storage.count.should                     == 0
   end
 
   def assert_ems
@@ -66,16 +66,17 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
       :api_version => nil,
       :uid_ems     => nil
     )
-    @ems.ems_folders.size.should         == 0 # HACK: Folder structure for UI a la VMware
-    @ems.ems_clusters.size.should        == 0
-    @ems.resource_pools.size.should      == 0
 
-    @ems.storages.size.should            == 0
-    @ems.hosts.size.should               == 6
-    @ems.vms_and_templates.size.should   == 16
-    @ems.vms.size.should                 == 0
-    @ems.miq_templates.size.should       == 16
-    @ems.customization_specs.size.should == 0
+    @ems.ems_folders.size.should          == 0 # HACK: Folder structure for UI a la VMware
+    @ems.ems_clusters.size.should         == 0
+    @ems.resource_pools.size.should       == 0
+    @ems.storages.size.should             == 0
+    @ems.hosts.size.should                == 6
+    @ems.orchestration_stacks.size.should == 1
+    @ems.vms_and_templates.size.should    == 16
+    @ems.vms.size.should                  == 0
+    @ems.miq_templates.size.should        == 16
+    @ems.customization_specs.size.should  == 0
   end
 
   def assert_specific_host

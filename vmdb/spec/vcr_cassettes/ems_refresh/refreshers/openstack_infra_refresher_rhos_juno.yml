@@ -23,13 +23,13 @@ http_interactions:
       Content-Length:
       - '3484'
       Date:
-      - Fri, 20 Feb 2015 11:16:47 GMT
+      - Fri, 20 Feb 2015 12:11:22 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-02-20T11:16:47.588703", "expires":
-        "2015-02-20T15:16:47Z", "id": "fd8d39f8600a4fc5828170bfe91ab238", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-02-20T12:11:22.695346", "expires":
+        "2015-02-20T16:11:22Z", "id": "4b85fee2ead9495da171fc320a00d10d", "tenant":
         {"description": null, "enabled": true, "id": "50f2f94aef674a9c931ecb287c493909",
-        "name": "admin"}, "audit_ids": ["ZcumlKtvS4SC0FNOPGS18g"]}, "serviceCatalog":
+        "name": "admin"}, "audit_ids": ["Wh4RIQbATUqqODzJH17j2g"]}, "serviceCatalog":
         [{"endpoints": [{"adminURL": "http://192.0.2.1:8585/", "region": "regionOne",
         "internalURL": "http://192.0.2.1:8585/", "id": "27b82f74c9e94d0597a3f5f233a6ffcf",
         "publicURL": "http://192.0.2.1:8585/"}], "endpoints_links": [], "type": "management",
@@ -68,7 +68,7 @@ http_interactions:
         "_member_"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles": ["6e523abb6b754c2eb118187a91e8dffe",
         "9fe2ff9ee4384b1894a90878d3e92bab"]}}}'
     http_version: 
-  recorded_at: Fri, 20 Feb 2015 11:16:48 GMT
+  recorded_at: Fri, 20 Feb 2015 12:11:23 GMT
 - request:
     method: get
     uri: http://192.0.2.1:5000/v2.0/tenants
@@ -83,7 +83,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - fd8d39f8600a4fc5828170bfe91ab238
+      - 4b85fee2ead9495da171fc320a00d10d
   response:
     status:
       code: 200
@@ -96,13 +96,13 @@ http_interactions:
       Content-Length:
       - '133'
       Date:
-      - Fri, 20 Feb 2015 11:16:47 GMT
+      - Fri, 20 Feb 2015 12:11:22 GMT
     body:
       encoding: UTF-8
       string: '{"tenants_links": [], "tenants": [{"description": null, "enabled":
         true, "id": "50f2f94aef674a9c931ecb287c493909", "name": "admin"}]}'
     http_version: 
-  recorded_at: Fri, 20 Feb 2015 11:16:48 GMT
+  recorded_at: Fri, 20 Feb 2015 12:11:23 GMT
 - request:
     method: post
     uri: http://192.0.2.1:5000/v2.0/tokens
@@ -126,13 +126,13 @@ http_interactions:
       Content-Length:
       - '3484'
       Date:
-      - Fri, 20 Feb 2015 11:16:48 GMT
+      - Fri, 20 Feb 2015 12:11:23 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-02-20T11:16:48.190357", "expires":
-        "2015-02-20T15:16:48Z", "id": "b380c7376243456bbe4c9c4daf6ce3b9", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-02-20T12:11:23.287505", "expires":
+        "2015-02-20T16:11:23Z", "id": "072c83a014364850bd3e721ca19e010f", "tenant":
         {"description": null, "enabled": true, "id": "50f2f94aef674a9c931ecb287c493909",
-        "name": "admin"}, "audit_ids": ["aBGXjZURSMirX5JgeNW5EA"]}, "serviceCatalog":
+        "name": "admin"}, "audit_ids": ["BmNAi05tQSSV0aFzKMLPLg"]}, "serviceCatalog":
         [{"endpoints": [{"adminURL": "http://192.0.2.1:8585/", "region": "regionOne",
         "internalURL": "http://192.0.2.1:8585/", "id": "27b82f74c9e94d0597a3f5f233a6ffcf",
         "publicURL": "http://192.0.2.1:8585/"}], "endpoints_links": [], "type": "management",
@@ -171,7 +171,7 @@ http_interactions:
         "_member_"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles": ["6e523abb6b754c2eb118187a91e8dffe",
         "9fe2ff9ee4384b1894a90878d3e92bab"]}}}'
     http_version: 
-  recorded_at: Fri, 20 Feb 2015 11:16:48 GMT
+  recorded_at: Fri, 20 Feb 2015 12:11:24 GMT
 - request:
     method: post
     uri: http://192.0.2.1:5000/v2.0/tokens
@@ -195,13 +195,13 @@ http_interactions:
       Content-Length:
       - '3484'
       Date:
-      - Fri, 20 Feb 2015 11:16:48 GMT
+      - Fri, 20 Feb 2015 12:11:23 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-02-20T11:16:48.432439", "expires":
-        "2015-02-20T15:16:48Z", "id": "31f8a0ef0e454494b5738ecd759cbbc7", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-02-20T12:11:23.567956", "expires":
+        "2015-02-20T16:11:23Z", "id": "21563aadfd964aa09bbbee0272870b99", "tenant":
         {"description": null, "enabled": true, "id": "50f2f94aef674a9c931ecb287c493909",
-        "name": "admin"}, "audit_ids": ["StTYhM1QQe2hvkXtrUTK6g"]}, "serviceCatalog":
+        "name": "admin"}, "audit_ids": ["bLuJoHRAQX6Dk1BNOp24Yg"]}, "serviceCatalog":
         [{"endpoints": [{"adminURL": "http://192.0.2.1:8585/", "region": "regionOne",
         "internalURL": "http://192.0.2.1:8585/", "id": "27b82f74c9e94d0597a3f5f233a6ffcf",
         "publicURL": "http://192.0.2.1:8585/"}], "endpoints_links": [], "type": "management",
@@ -240,7 +240,7 @@ http_interactions:
         "_member_"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles": ["6e523abb6b754c2eb118187a91e8dffe",
         "9fe2ff9ee4384b1894a90878d3e92bab"]}}}'
     http_version: 
-  recorded_at: Fri, 20 Feb 2015 11:16:49 GMT
+  recorded_at: Fri, 20 Feb 2015 12:11:24 GMT
 - request:
     method: post
     uri: http://192.0.2.1:5000/v2.0/tokens
@@ -264,13 +264,13 @@ http_interactions:
       Content-Length:
       - '3484'
       Date:
-      - Fri, 20 Feb 2015 11:16:48 GMT
+      - Fri, 20 Feb 2015 12:11:23 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-02-20T11:16:48.854093", "expires":
-        "2015-02-20T15:16:48Z", "id": "4442d4834e8b4f39a5377675da8da616", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-02-20T12:11:23.788825", "expires":
+        "2015-02-20T16:11:23Z", "id": "db0d045dde2048e2921385167a2bd443", "tenant":
         {"description": null, "enabled": true, "id": "50f2f94aef674a9c931ecb287c493909",
-        "name": "admin"}, "audit_ids": ["9dvgUq3QRqqiW6E-JdijEQ"]}, "serviceCatalog":
+        "name": "admin"}, "audit_ids": ["3oT9Sn26SLOHLTCYxVDZ2g"]}, "serviceCatalog":
         [{"endpoints": [{"adminURL": "http://192.0.2.1:8585/", "region": "regionOne",
         "internalURL": "http://192.0.2.1:8585/", "id": "27b82f74c9e94d0597a3f5f233a6ffcf",
         "publicURL": "http://192.0.2.1:8585/"}], "endpoints_links": [], "type": "management",
@@ -309,7 +309,7 @@ http_interactions:
         "_member_"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles": ["6e523abb6b754c2eb118187a91e8dffe",
         "9fe2ff9ee4384b1894a90878d3e92bab"]}}}'
     http_version: 
-  recorded_at: Fri, 20 Feb 2015 11:16:49 GMT
+  recorded_at: Fri, 20 Feb 2015 12:11:24 GMT
 - request:
     method: post
     uri: http://192.0.2.1:5000/v2.0/tokens
@@ -430,7 +430,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - b380c7376243456bbe4c9c4daf6ce3b9
+      - 072c83a014364850bd3e721ca19e010f
   response:
     status:
       code: 200
@@ -441,9 +441,9 @@ http_interactions:
       Content-Length:
       - '3623'
       X-Compute-Request-Id:
-      - req-e8f7e47b-fdbc-47d8-9393-a409fa46760a
+      - req-015820cf-0bf5-405e-b189-c163052440af
       Date:
-      - Fri, 20 Feb 2015 11:16:49 GMT
+      - Fri, 20 Feb 2015 12:11:24 GMT
     body:
       encoding: UTF-8
       string: '{"servers": [{"status": "ACTIVE", "updated": "2015-01-22T10:33:34Z",
@@ -486,7 +486,7 @@ http_interactions:
         "accessIPv4": "", "accessIPv6": "", "progress": 0, "OS-EXT-STS:power_state":
         1, "config_drive": "", "metadata": {}}]}'
     http_version: 
-  recorded_at: Fri, 20 Feb 2015 11:16:50 GMT
+  recorded_at: Fri, 20 Feb 2015 12:11:24 GMT
 - request:
     method: get
     uri: http://192.0.2.1:6385/ports/detail
@@ -499,14 +499,14 @@ http_interactions:
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 31f8a0ef0e454494b5738ecd759cbbc7
+      - 21563aadfd964aa09bbbee0272870b99
   response:
     status:
       code: 200
       message: ''
     headers:
       Date:
-      - Fri, 20 Feb 2015 11:16:49 GMT
+      - Fri, 20 Feb 2015 12:11:24 GMT
       Server:
       - WSGIServer/0.1 Python/2.7.5
       Content-Length:
@@ -543,7 +543,7 @@ http_interactions:
         "created_at": "2015-01-22T10:27:32+00:00", "updated_at": "2015-01-22T10:29:25+00:00",
         "address": "00:6b:a4:4c:df:f3"}]}'
     http_version: 
-  recorded_at: Fri, 20 Feb 2015 11:16:50 GMT
+  recorded_at: Fri, 20 Feb 2015 12:11:24 GMT
 - request:
     method: get
     uri: http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks
@@ -558,7 +558,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 4442d4834e8b4f39a5377675da8da616
+      - db0d045dde2048e2921385167a2bd443
       X-Auth-User:
       - admin
       X-Auth-Key:
@@ -573,9 +573,9 @@ http_interactions:
       Content-Length:
       - '471'
       X-Openstack-Request-Id:
-      - req-7a409655-4bf9-47e8-bf82-8e829824d7bb
+      - req-3c069f04-59f7-443d-919c-160283b3e939
       Date:
-      - Fri, 20 Feb 2015 11:16:49 GMT
+      - Fri, 20 Feb 2015 12:11:24 GMT
     body:
       encoding: UTF-8
       string: '{"stacks": [{"parent": null, "description": "No description", "links":
@@ -584,7 +584,119 @@ http_interactions:
         "stack_name": "overcloud", "creation_time": "2015-01-22T10:29:05Z", "updated_time":
         null, "stack_owner": "admin", "stack_status": "CREATE_COMPLETE", "id": "415396e3-baa4-46b5-85ab-643fa79f8848"}]}'
     http_version: 
-  recorded_at: Fri, 20 Feb 2015 11:16:50 GMT
+  recorded_at: Fri, 20 Feb 2015 12:11:24 GMT
+- request:
+    method: get
+    uri: http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.28.0 fog-core/1.29.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - db0d045dde2048e2921385167a2bd443
+      X-Auth-User:
+      - admin
+      X-Auth-Key:
+      - 3ddb6de300630a431ffae7f01104c9988ec4c89d
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Content-Length:
+      - '8896'
+      X-Openstack-Request-Id:
+      - req-9a1065a4-26e6-4192-aa03-bb276cbd53da
+      Date:
+      - Fri, 20 Feb 2015 12:11:24 GMT
+    body:
+      encoding: UTF-8
+      string: '{"stack": {"parent": null, "disable_rollback": true, "description":
+        "No description", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
+        "rel": "self"}], "stack_status_reason": "Stack CREATE completed successfully",
+        "stack_name": "overcloud", "outputs": [{"output_value": "http://192.0.2.5:5000/v2.0/",
+        "description": "URL for the Overcloud Keystone service", "output_key": "KeystoneURL"}],
+        "stack_owner": "admin", "creation_time": "2015-01-22T10:29:05Z", "capabilities":
+        [], "notification_topics": [], "updated_time": null, "timeout_mins": null,
+        "stack_status": "CREATE_COMPLETE", "parameters": {"compute-1::NeutronBridgeMappings":
+        "", "cinder-storage-1::CinderPassword": "******", "controller-1::RabbitPassword":
+        "******", "controller-1::KeystoneSigningCertificate": "-----BEGIN CERTIFICATE-----\nMIIDJDCCAgygAwIBAgIBAjANBgkqhkiG9w0BAQUFADBTMQswCQYDVQQGEwJYWDEO\nMAwGA1UECBMFVW5zZXQxDjAMBgNVBAcTBVVuc2V0MQ4wDAYDVQQKEwVVbnNldDEU\nMBIGA1UEAxMLS2V5c3RvbmUgQ0EwHhcNMTUwMTIyMTAyODU2WhcNMjUwMTE5MTAy\nODU2WjBYMQswCQYDVQQGEwJYWDEOMAwGA1UECBMFVW5zZXQxDjAMBgNVBAcTBVVu\nc2V0MQ4wDAYDVQQKEwVVbnNldDEZMBcGA1UEAxMQS2V5c3RvbmUgU2lnbmluZzCC\nASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAPM9jKjXT6N+2uTA48R3hrg3\nxS4hgi9NzcZ37ljQPgL6t1LlHRPVO3JuzuSs0Oier07JdRjZoPfMMOXP2zz7Op21\n8wwuUeH3Mc3P08iUibjY5NENsz/2iDpv4DtL/kTCOTepRhSxyTk6UEWkGUwz5Htk\nuV5Df8xEWpCoKVFNUGdtGLP5g7BJyrweGXZlYF9nsFGnrvu+tjC7GMnnFZBqiAwZ\naj8H0hVBzAoxXcNzucxXaCn/pxyFIgZwattIDCysbcpfJC22s+Jn5rGH1NSuZIDi\n0ASj1u4I8puCssum3hTvXTeAOrC02S9YR+umZZ9DA0WoJWi0J1t45Bl6mQXDhfsC\nAwEAATANBgkqhkiG9w0BAQUFAAOCAQEAlYMWx88ohT47O+fk5Mv/CRzt0ILzJT0o\nrC2Q63hpbc0et953xJHBtWjb3P/7Uxf3tOvDKYAFf/W/1s7xXquPhZWwk0eq0FsD\ny0bkTN6JtAahdJ8g9Q0ApXX0NqK/yR53a42uYOfHTjszoRRaagA8eRVDqOa8IiOA\n4TSkDJKYbJ8e5QxRrI4edr2P+gNH15yJnuQX1ulJ+j/+NZZ8rCxRYQBKy64z/t20\nmrvKoegnaLL2qlnPO+a7MHGDTZdqEatpsinktowmot/iJf84wQofYDcLiVHdAgWr\n8ky38wbGGvj9wv8edYGhreQMEfg/xUj41kn/U3aHiG5QjtFH3+U0tw==\n-----END
+        CERTIFICATE-----", "controller-1::ExtraConfig": "{}", "compute-1::Flavor":
+        "baremetal", "cinder-storage-1::SnmpdReadonlyUserName": "ro_snmp_user", "controller-1::GlanceProtocol":
+        "http", "NeutronPublicInterfaceTag": "", "controller-1::HeatPassword": "******",
+        "compute-1::SnmpdReadonlyUserName": "ro_snmp_user", "compute-1::NeutronTunnelTypes":
+        "gre", "ControlFixedIPs": "[]", "controller-1::NeutronPassword": "******",
+        "controller-1::SwiftPartPower": "10", "controller-1::SwiftHashSuffix": "******",
+        "swift-storage-1::Password": "******", "controller-1::NtpServer": "", "compute-1::NovaPassword":
+        "******", "PublicVirtualFixedIPs": "[]", "Debug": "", "controller-1::SwiftReplicas":
+        "1", "cinder-storage-1::AdminPassword": "a228cb72191205b8ab13df362c8ca6c13a6f06b2",
+        "DefaultSignalTransport": "CFN_SIGNAL", "controller-1::GlanceNotifierStrategy":
+        "noop", "controller-1::CinderPassword": "******", "controller-1::CinderISCSIHelper":
+        "lioadm", "controller-1::NeutronFlatNetworks": "", "compute-1::Image": "fc1b086f-f35e-4d3b-b80b-17f46a5653d9",
+        "cinder-storage-1::ExtraConfig": "{}", "swift-storage-1::ExtraConfig": "{}",
+        "compute-1::CeilometerComputeAgent": "", "controller-1::SnmpdReadonlyUserName":
+        "ro_snmp_user", "cinder-storage-1::NeutronNetworkType": "gre", "swift-storage-1::PartPower":
+        "10", "controller-1::CeilometerPassword": "******", "compute-1::NeutronNetworkVLANRanges":
+        "datacentre", "controller-1::SSLKey": "******", "controller-1::NeutronPublicInterfaceTag":
+        "", "controller-1::CloudName": "overcloud", "cinder-storage-1::RabbitUserName":
+        "", "controller-1::MysqlInnodbBufferPoolSize": "0", "cinder-storage-1::CinderLVMLoopDeviceSize":
+        "5000", "controller-1::NeutronEnableTunnelling": "True", "controller-1::ControlVirtualInterface":
+        "br-ex", "compute-1::LiveUpdateComputeImage": "", "swift-storage-1::count":
+        "0", "swift-storage-1::Replicas": "1", "compute-1::NovaComputeDriver": "libvirt.LibvirtDriver",
+        "swift-storage-1::Image": "2a29083e-fc92-4c5f-bc78-a697b03691b5", "cinder-storage-1::CinderISCSIHelper":
+        "lioadm", "controller-1::AdminPassword": "******", "controller-1::CeilometerMeteringSecret":
+        "******", "compute-1::GlanceProtocol": "http", "RabbitCookieSalt": "unset",
+        "compute-1::RabbitPassword": "******", "compute-1::SnmpdReadonlyUserPassword":
+        "******", "compute-1::CeilometerMeteringSecret": "******", "cinder-storage-1::GlancePort":
+        "9292", "cinder-storage-1::RabbitPassword": "", "controller-1::NeutronPublicInterfaceIP":
+        "", "swift-storage-1::SnmpdReadonlyUserName": "ro_snmp_user", "controller-1::KeyName":
+        "default", "compute-1::LiveUpdateUserName": "", "controller-1::NeutronPublicInterfaceDefaultRoute":
+        "", "compute-1::KeyName": "default", "controller-1::RabbitUserName": "guest",
+        "controller-1::Debug": "", "controller-1::SSLCertificate": "******", "compute-1::LiveUpdatePassword":
+        "******", "controller-1::ImageUpdatePolicy": "REBUILD_PRESERVE_EPHEMERAL",
+        "compute-1::NeutronPhysicalBridge": "", "PublicVirtualNetwork": "ctlplane",
+        "swift-storage-1::Flavor": "baremetal", "controller-1::CinderLVMLoopDeviceSize":
+        "5000", "controller-1::NeutronBridgeMappings": "", "controller-1::SwiftPassword":
+        "******", "controller-1::count": "1", "compute-1::GlancePort": "9292", "compute-1::ExtraConfig":
+        "{}", "compute-1::RabbitUserName": "guest", "swift-storage-1::NeutronNetworkType":
+        "gre", "swift-storage-1::HashSuffix": "******", "compute-1::NeutronFlatNetworks":
+        "", "compute-1::ImageUpdatePolicy": "REBUILD_PRESERVE_EPHEMERAL", "compute-1::LiveUpdateTenantName":
+        "", "OS::stack_id": "415396e3-baa4-46b5-85ab-643fa79f8848", "controller-1::HeatStackDomainAdminPassword":
+        "******", "compute-1::NeutronPublicInterface": "eth0", "cinder-storage-1::KeyName":
+        "default", "controller-1::ControllerExtraConfig": "{}", "cinder-storage-1::NeutronPassword":
+        "04305272083c300f7010e9acd9bb8de3b15436a1", "controller-1::Image": "d31a60ba-71a3-4c6f-912f-eceaa22d41dc",
+        "controller-1::AdminToken": "******", "compute-1::NeutronEnableTunnelling":
+        "True", "controller-1::KeystoneSigningKey": "******", "controller-1::NeutronNetworkVLANRanges":
+        "datacentre", "controller-1::NeutronPublicInterface": "eth0", "compute-1::CeilometerPassword":
+        "******", "controller-1::NeutronNetworkType": "gre", "compute-1::count": "1",
+        "controller-1::SSLCACertificate": "", "swift-storage-1::KeyName": "default",
+        "compute-1::NtpServer": "", "cinder-storage-1::NeutronEnableTunnelling": "True",
+        "compute-1::NovaComputeLibvirtType": "qemu", "controller-1::SnmpdReadonlyUserPassword":
+        "******", "cinder-storage-1::NeutronPublicInterface": "eth0", "compute-1::AdminPassword":
+        "******", "compute-1::Debug": "", "NeutronControlPlaneID": "212bb828-4851-453d-a99e-897c4e61fb3f",
+        "controller-1::NovaPassword": "******", "controller-1::GlancePort": "9292",
+        "swift-storage-1::SnmpdReadonlyUserPassword": "******", "OS::stack_name":
+        "overcloud", "controller-1::NeutronPublicInterfaceRawDevice": "", "compute-1::NeutronPassword":
+        "******", "cinder-storage-1::SnmpdReadonlyUserPassword": "******", "controller-1::PublicVirtualInterface":
+        "br-ex", "controller-1::KeystoneCACertificate": "-----BEGIN CERTIFICATE-----\nMIIDNzCCAh+gAwIBAgIBATANBgkqhkiG9w0BAQUFADBTMQswCQYDVQQGEwJYWDEO\nMAwGA1UECBMFVW5zZXQxDjAMBgNVBAcTBVVuc2V0MQ4wDAYDVQQKEwVVbnNldDEU\nMBIGA1UEAxMLS2V5c3RvbmUgQ0EwHhcNMTUwMTIyMTAyODU2WhcNMjUwMTE5MTAy\nODU2WjBTMQswCQYDVQQGEwJYWDEOMAwGA1UECBMFVW5zZXQxDjAMBgNVBAcTBVVu\nc2V0MQ4wDAYDVQQKEwVVbnNldDEUMBIGA1UEAxMLS2V5c3RvbmUgQ0EwggEiMA0G\nCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCfMtozcKFemIme23+V+og/2oMbSwbm\nVmX+SZWnWsGljPPeAlBtrJt2ZtjXdklIDFghrtxmCNWarRNk2Ivn4bN7l1ZX1sKE\nMAPgkFL9yUh1h2dlN429I3oXRJs2lSSs5TfgfNXxqyMX7kIeUeFGJrY3jkkHeIoj\n5vmjwTDxf6ZLO4iX+4K/u1EvRy8R3dsAgQg3beUhIN8eYop2KJS00BasCo6cJeH2\n5qEJ+K98zB16TRIQbI92DPA9rSSttEgPM+dCSbOgqPCFJsIxjEjphZ1e2AH6r1LG\ndxfdWHyTYT1k8gJnyy8p7ruJH0SNcxY1PHnaofoa2PUs3Vc1obSIjzpJAgMBAAGj\nFjAUMBIGA1UdEwEB/wQIMAYBAf8CAQAwDQYJKoZIhvcNAQEFBQADggEBACTv2I/S\nomkEra8Wx6W6fOeIrB/JtfbWj9gMCleHMqigpxOLvB+rb7miz3gMOfZsyci61lXs\nToM6oCuKiOSlEV04o8wFHG+Hw8Stqi9zUU6/V94hBiE5Q0KZxI+ClHShtt1L8sdY\nXUfK6ECtlfjUVddkjT2hlpiS5qHQArPNYkygYxbDI6iDaYpgpVRzS9K3sMioHqSc\nMaXcvocCVy+KGuLiN8DnchmJDnrVhcdqruF+6K40u9undGm/xa+B+uzGv81ZGh4h\nMhw8S+PKQ1xYq8wtq+PZE3ICrEaq1G8u0WsmQM+BAJVATNHTH+RPzvzbpG0THXFN\ns/wMJQxWMhmFjZI=\n-----END
+        CERTIFICATE-----", "compute-1::NovaComputeExtraConfig": "{}", "cinder-storage-1::Flavor":
+        "baremetal", "controller-1::Flavor": "baremetal", "compute-1::LiveUpdateHost":
+        "", "controller-1::NeutronTunnelTypes": "gre", "compute-1::NeutronNetworkType":
+        "gre", "cinder-storage-1::Image": "2d3ab9a2-dbff-4123-8cf9-0513f8211981",
+        "controller-1::GlancePassword": "******", "swift-storage-1::NeutronEnableTunnelling":
+        "True", "cinder-storage-1::count": "0", "controller-1::NeutronDnsmasqOptions":
+        "dhcp-option-force=26,1400", "controller-1::GlanceLogFile": ""}, "id": "415396e3-baa4-46b5-85ab-643fa79f8848",
+        "template_description": "No description"}}'
+    http_version: 
+  recorded_at: Fri, 20 Feb 2015 12:11:25 GMT
 - request:
     method: get
     uri: http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources?nested_depth=50
@@ -599,7 +711,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 4442d4834e8b4f39a5377675da8da616
+      - db0d045dde2048e2921385167a2bd443
       X-Auth-User:
       - admin
       X-Auth-Key:
@@ -614,9 +726,9 @@ http_interactions:
       Content-Length:
       - '35111'
       X-Openstack-Request-Id:
-      - req-6739222e-4ac3-461e-bdaf-00dd19dae01e
+      - req-b2d6fd19-8931-4ebc-8309-b7ef8d86197d
       Date:
-      - Fri, 20 Feb 2015 11:16:50 GMT
+      - Fri, 20 Feb 2015 12:11:25 GMT
     body:
       encoding: UTF-8
       string: '{"resources": [{"resource_name": "SwiftDevicesAndProxyConfig", "links":
@@ -624,7 +736,7 @@ http_interactions:
         "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
         "rel": "stack"}], "logical_resource_id": "SwiftDevicesAndProxyConfig", "resource_status":
         "CREATE_COMPLETE", "updated_time": "2015-01-22T10:32:20Z", "required_by":
-        ["ControllerSwiftDeployment", "ObjectStorageSwiftDeployment"], "resource_status_reason":
+        ["ObjectStorageSwiftDeployment", "ControllerSwiftDeployment"], "resource_status_reason":
         "state changed", "physical_resource_id": "4f04b5a1-c812-47a2-a8a3-c91790839d8b",
         "resource_type": "OS::Heat::StructuredConfig"}, {"resource_name": "controller-1-servers",
         "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources/controller-1-servers",
@@ -632,9 +744,9 @@ http_interactions:
         "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy/239db625-dfbe-4514-8b05-312e724922ff",
         "rel": "nested"}], "logical_resource_id": "controller-1-servers", "resource_status":
         "CREATE_COMPLETE", "updated_time": "2015-01-22T10:29:09Z", "required_by":
-        ["ControllerBootstrapNodeDeployment", "ControllerSwiftDeployment", "allNodesConfig",
-        "ControllerClusterDeployment", "ControllerBootstrapNodeConfig", "SwiftDevicesAndProxyConfig",
-        "ControllerClusterConfig", "ControllerAllNodesDeployment"], "resource_status_reason":
+        ["ControllerBootstrapNodeDeployment", "allNodesConfig", "ControllerAllNodesDeployment",
+        "ControllerClusterDeployment", "ControllerClusterConfig", "ControllerSwiftDeployment",
+        "SwiftDevicesAndProxyConfig", "ControllerBootstrapNodeConfig"], "resource_status_reason":
         "state changed", "physical_resource_id": "239db625-dfbe-4514-8b05-312e724922ff",
         "resource_type": "OS::Heat::ResourceGroup"}, {"parent_resource": "controller-1-servers",
         "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy/239db625-dfbe-4514-8b05-312e724922ff/resources/0",
@@ -669,9 +781,9 @@ http_interactions:
         "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3",
         "rel": "stack"}], "logical_resource_id": "Controller", "resource_status":
         "CREATE_COMPLETE", "updated_time": "2015-01-22T10:29:11Z", "required_by":
-        ["ControllerSSLDeployment", "SwiftStorageDeploy", "ControllerDeployment",
-        "ControllerPassthroughDeployment", "ControllerPassthroughSpecificDeployment"],
-        "resource_status_reason": "state changed", "physical_resource_id": "5de454a1-7f3c-418e-815d-0350aef47934",
+        ["ControllerPassthroughSpecificDeployment", "ControllerSSLDeployment", "SwiftStorageDeploy",
+        "ControllerDeployment", "ControllerPassthroughDeployment"], "resource_status_reason":
+        "state changed", "physical_resource_id": "5de454a1-7f3c-418e-815d-0350aef47934",
         "resource_type": "OS::Nova::Server"}, {"parent_resource": "0", "resource_name":
         "ControllerPassthroughSpecificDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3/resources/ControllerPassthroughSpecificDeployment",
         "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3",
@@ -762,7 +874,7 @@ http_interactions:
         "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
         "rel": "stack"}], "logical_resource_id": "ControlVirtualIP", "resource_status":
         "CREATE_COMPLETE", "updated_time": "2015-01-22T10:29:06Z", "required_by":
-        ["cinder-storage-1-servers", "compute-1-servers", "controller-1-servers",
+        ["compute-1-servers", "cinder-storage-1-servers", "controller-1-servers",
         "swift-storage-1-servers"], "resource_status_reason": "state changed", "physical_resource_id":
         "637211e5-235b-4571-a8b6-aa2401b4542b", "resource_type": "OS::Neutron::Port"},
         {"resource_name": "ControllerClusterDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources/ControllerClusterDeployment",
@@ -829,7 +941,7 @@ http_interactions:
         "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
         "rel": "stack"}], "logical_resource_id": "swift-storage-1-servers", "resource_status":
         "CREATE_COMPLETE", "updated_time": "2015-01-22T10:29:09Z", "required_by":
-        ["allNodesConfig", "SwiftDevicesAndProxyConfig", "ObjectStorageSwiftDeployment"],
+        ["SwiftDevicesAndProxyConfig", "allNodesConfig", "ObjectStorageSwiftDeployment"],
         "resource_status_reason": "state changed", "physical_resource_id": "3a6da422-d929-416d-b55e-bb7566591b57",
         "resource_type": "OS::Heat::ResourceGroup"}, {"resource_name": "ControllerClusterConfig",
         "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources/ControllerClusterConfig",
@@ -891,11 +1003,10 @@ http_interactions:
         "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-compute-1-servers-25ftwygzyut5-0-ybdywaguhfsi/2f7a3cce-b440-40f2-a6f5-57b63dc885d7",
         "rel": "stack"}], "logical_resource_id": "NovaCompute", "resource_status":
         "CREATE_COMPLETE", "updated_time": "2015-01-22T10:29:14Z", "required_by":
-        ["NovaComputePassthroughDeployment", "NovaComputePassthroughDeploymentSpecific",
-        "NovaComputeDeployment"], "resource_status_reason": "state changed", "physical_resource_id":
-        "b4b40028-2a74-4b83-a232-d1741b0071ae", "resource_type": "OS::Nova::Server"},
-        {"parent_resource": "0", "resource_name": "NovaComputePassthroughDeploymentSpecific",
-        "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-compute-1-servers-25ftwygzyut5-0-ybdywaguhfsi/2f7a3cce-b440-40f2-a6f5-57b63dc885d7/resources/NovaComputePassthroughDeploymentSpecific",
+        ["NovaComputePassthroughDeployment", "NovaComputeDeployment", "NovaComputePassthroughDeploymentSpecific"],
+        "resource_status_reason": "state changed", "physical_resource_id": "b4b40028-2a74-4b83-a232-d1741b0071ae",
+        "resource_type": "OS::Nova::Server"}, {"parent_resource": "0", "resource_name":
+        "NovaComputePassthroughDeploymentSpecific", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-compute-1-servers-25ftwygzyut5-0-ybdywaguhfsi/2f7a3cce-b440-40f2-a6f5-57b63dc885d7/resources/NovaComputePassthroughDeploymentSpecific",
         "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-compute-1-servers-25ftwygzyut5-0-ybdywaguhfsi/2f7a3cce-b440-40f2-a6f5-57b63dc885d7",
         "rel": "stack"}], "logical_resource_id": "NovaComputePassthroughDeploymentSpecific",
         "resource_status": "CREATE_COMPLETE", "updated_time": "2015-01-22T10:33:38Z",
@@ -924,7 +1035,7 @@ http_interactions:
         "physical_resource_id": "13434824-834d-4354-8b71-c6f2c4b0853f", "resource_type":
         "OS::Heat::StructuredConfig"}]}'
     http_version: 
-  recorded_at: Fri, 20 Feb 2015 11:16:50 GMT
+  recorded_at: Fri, 20 Feb 2015 12:11:25 GMT
 - request:
     method: get
     uri: http://192.0.2.1:6385/nodes/detail
@@ -937,14 +1048,14 @@ http_interactions:
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 31f8a0ef0e454494b5738ecd759cbbc7
+      - 21563aadfd964aa09bbbee0272870b99
   response:
     status:
       code: 200
       message: ''
     headers:
       Date:
-      - Fri, 20 Feb 2015 11:16:50 GMT
+      - Fri, 20 Feb 2015 12:11:25 GMT
       Server:
       - WSGIServer/0.1 Python/2.7.5
       Content-Length:
@@ -957,7 +1068,7 @@ http_interactions:
         false, "uuid": "d2194f0a-54c2-4d3c-a393-b060507891cd", "driver_info": {"ssh_username":
         "stack", "ssh_virt_type": "virsh", "ssh_address": "192.168.122.1", "ssh_key_contents":
         "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAr8iyVYymC7bzjLutZ9dYmxGjKkx4vSh1CTMo6xRnFGgvN9Vn\nQ/Bcax53ugf+86xQ3xeKnzVtQgg/38/EomuoBXGSr7oH3sUALX1KNQxIwZCN6Cma\nncvfCIjIUh0fZ+5ET+D5Yw4h3ADsePh2FxAfkg5UnEllKQyhSQV3rIzLI/D7IJez\npmDUH0o8viTNqw8jkV3wHPfSi5/cIgMfPtk2H4o5B6VSyflQ66gyTp8GJAAM0mAy\nXuDDLBJX5QyH+7OhCM/LFhcVPFmEzl/WD+KM+uSt9+js7fqyL7koh4pgzW8ty7KS\nmejkGFKN5OL+L0YHP3XgsqoGkiyBZXGI887ePwIDAQABAoIBAEBjnZ9ko7YKz++v\nF3fAE/7JWSE3Xcq8NRKnoMdrc86v0wv6qZbjRpceU/Da2PLdHcp6Txa+dUUIzIzp\nCDgOgz9rOLYRyKw7MTN4f2QrGcN9dd2iz7YZZZs0r1wUutpRFsjDudYk6RYzaGtv\nZ6JPD6FqimetItcEf1fGHu4frJF/KgwWn9cv0OE4j36V7OIskFauYT2ODQ9HRFfX\nfL7AID4R6WIwS2u5hsFNaNlFv02HKsTYOvFBz/FpHeWxOPbqOzCB5bEk3zvtclSS\ntzcAUBnRY1YZAon+Ej4gPhC9JbZWGnE8rN2ytqZx+24n4/b9HmalUIEAZG3S97tc\noD2bUoECgYEA6JioR2vkV4aBTaE1ChKDhEBf/PqYJ3lLI7LJ2flrmWeEF9vvDVqG\nHpj7qEM7TC/HfkvZ+xeE/MffIbXkIMYDn8ETMdbV2Bcv5kmd8sDVhxys0s4r9d6o\nqrin+wKbCNvlGvNIPQkNJnkc6lNXZG1YyIrcq2TlxcDFvYa1KP5KSyECgYEAwXii\nysGU3Siw3lDP/bE6UIR4WhtHbt6ryQ745XwPrE652FsbMxJdTxXoo9KhH6HeVgx/\nAmQJX0HqJjjkjUHlTXS6KkQyaW9Vh+OtWfAq6bwprpfO6p1sIdMMsmdRmMlAsm2z\nD8bSm83/FU8uCIwP3eZx7l0MmpXRQrREmdyyXV8CgYByvtTNnzlfwHhLnsq2tFlz\nRfrUp5+mYZ0i+FHCGdzuKfYtew+ci9r8f0YvRTOcqzmEYdEgoQK3XbcDP2NSk703\n850PikemuhGkTw7/sgflBs1vlcx0GCsnRb+BAlEPdsO4nuo1SiDVqQwNwZ2sapFR\nJcglObps62Ph0vHOTlzCYQKBgQC2W0q16biyrEPpiCpDaOUaN4JpDAVMjz1ECYS4\naTMsqhepwlXk0Y55mKDqqQGNmzjByo18Z2YeDzbwR/fE3TOQylEevaD2mCX6K7Od\nbi5EmUKAej5iDXd6ej8heRkD9c2xYIzCdhjVGlkwcK1nCP17nlYM4k+a9VOEl/2B\nOPA16QKBgQCjqK63ySRBZagnWlWwjp9BRBy0OfOxXimtVRsxWKVsBrz3sGG7TOCs\nACQjoeZXrLPajjRmzPYnQCvAraA1hrfybV/cxA4WDMPRywk12WaWTFAXYdh5F8ej\n17RSzIQMXRJxsMJs8o6WXJSpC1ZJaFxa+X5EGYELw3V+M1NDVKI5EA==\n-----END
-        RSA PRIVATE KEY-----"}, "target_provision_state": null, "updated_at": "2015-02-20T11:15:59+00:00",
+        RSA PRIVATE KEY-----"}, "target_provision_state": null, "updated_at": "2015-02-20T12:10:53+00:00",
         "last_error": null, "console_enabled": false, "extra": {}, "driver": "pxe_ssh",
         "links": [{"href": "http://192.0.2.1:6385/v1/nodes/d2194f0a-54c2-4d3c-a393-b060507891cd",
         "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/d2194f0a-54c2-4d3c-a393-b060507891cd",
@@ -971,7 +1082,7 @@ http_interactions:
         "maintenance": false, "uuid": "21231c17-ad9a-48b9-848e-c8cc2d950407", "driver_info":
         {"ssh_username": "stack", "ssh_virt_type": "virsh", "ssh_address": "192.168.122.1",
         "ssh_key_contents": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAr8iyVYymC7bzjLutZ9dYmxGjKkx4vSh1CTMo6xRnFGgvN9Vn\nQ/Bcax53ugf+86xQ3xeKnzVtQgg/38/EomuoBXGSr7oH3sUALX1KNQxIwZCN6Cma\nncvfCIjIUh0fZ+5ET+D5Yw4h3ADsePh2FxAfkg5UnEllKQyhSQV3rIzLI/D7IJez\npmDUH0o8viTNqw8jkV3wHPfSi5/cIgMfPtk2H4o5B6VSyflQ66gyTp8GJAAM0mAy\nXuDDLBJX5QyH+7OhCM/LFhcVPFmEzl/WD+KM+uSt9+js7fqyL7koh4pgzW8ty7KS\nmejkGFKN5OL+L0YHP3XgsqoGkiyBZXGI887ePwIDAQABAoIBAEBjnZ9ko7YKz++v\nF3fAE/7JWSE3Xcq8NRKnoMdrc86v0wv6qZbjRpceU/Da2PLdHcp6Txa+dUUIzIzp\nCDgOgz9rOLYRyKw7MTN4f2QrGcN9dd2iz7YZZZs0r1wUutpRFsjDudYk6RYzaGtv\nZ6JPD6FqimetItcEf1fGHu4frJF/KgwWn9cv0OE4j36V7OIskFauYT2ODQ9HRFfX\nfL7AID4R6WIwS2u5hsFNaNlFv02HKsTYOvFBz/FpHeWxOPbqOzCB5bEk3zvtclSS\ntzcAUBnRY1YZAon+Ej4gPhC9JbZWGnE8rN2ytqZx+24n4/b9HmalUIEAZG3S97tc\noD2bUoECgYEA6JioR2vkV4aBTaE1ChKDhEBf/PqYJ3lLI7LJ2flrmWeEF9vvDVqG\nHpj7qEM7TC/HfkvZ+xeE/MffIbXkIMYDn8ETMdbV2Bcv5kmd8sDVhxys0s4r9d6o\nqrin+wKbCNvlGvNIPQkNJnkc6lNXZG1YyIrcq2TlxcDFvYa1KP5KSyECgYEAwXii\nysGU3Siw3lDP/bE6UIR4WhtHbt6ryQ745XwPrE652FsbMxJdTxXoo9KhH6HeVgx/\nAmQJX0HqJjjkjUHlTXS6KkQyaW9Vh+OtWfAq6bwprpfO6p1sIdMMsmdRmMlAsm2z\nD8bSm83/FU8uCIwP3eZx7l0MmpXRQrREmdyyXV8CgYByvtTNnzlfwHhLnsq2tFlz\nRfrUp5+mYZ0i+FHCGdzuKfYtew+ci9r8f0YvRTOcqzmEYdEgoQK3XbcDP2NSk703\n850PikemuhGkTw7/sgflBs1vlcx0GCsnRb+BAlEPdsO4nuo1SiDVqQwNwZ2sapFR\nJcglObps62Ph0vHOTlzCYQKBgQC2W0q16biyrEPpiCpDaOUaN4JpDAVMjz1ECYS4\naTMsqhepwlXk0Y55mKDqqQGNmzjByo18Z2YeDzbwR/fE3TOQylEevaD2mCX6K7Od\nbi5EmUKAej5iDXd6ej8heRkD9c2xYIzCdhjVGlkwcK1nCP17nlYM4k+a9VOEl/2B\nOPA16QKBgQCjqK63ySRBZagnWlWwjp9BRBy0OfOxXimtVRsxWKVsBrz3sGG7TOCs\nACQjoeZXrLPajjRmzPYnQCvAraA1hrfybV/cxA4WDMPRywk12WaWTFAXYdh5F8ej\n17RSzIQMXRJxsMJs8o6WXJSpC1ZJaFxa+X5EGYELw3V+M1NDVKI5EA==\n-----END
-        RSA PRIVATE KEY-----"}, "target_provision_state": null, "updated_at": "2015-02-20T11:16:00+00:00",
+        RSA PRIVATE KEY-----"}, "target_provision_state": null, "updated_at": "2015-02-20T12:10:54+00:00",
         "last_error": null, "console_enabled": false, "extra": {}, "driver": "pxe_ssh",
         "links": [{"href": "http://192.0.2.1:6385/v1/nodes/21231c17-ad9a-48b9-848e-c8cc2d950407",
         "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/21231c17-ad9a-48b9-848e-c8cc2d950407",
@@ -985,7 +1096,7 @@ http_interactions:
         "maintenance": false, "uuid": "0896f621-fb83-4ca0-9745-2213eeb2eb11", "driver_info":
         {"ssh_username": "stack", "ssh_virt_type": "virsh", "ssh_address": "192.168.122.1",
         "ssh_key_contents": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAr8iyVYymC7bzjLutZ9dYmxGjKkx4vSh1CTMo6xRnFGgvN9Vn\nQ/Bcax53ugf+86xQ3xeKnzVtQgg/38/EomuoBXGSr7oH3sUALX1KNQxIwZCN6Cma\nncvfCIjIUh0fZ+5ET+D5Yw4h3ADsePh2FxAfkg5UnEllKQyhSQV3rIzLI/D7IJez\npmDUH0o8viTNqw8jkV3wHPfSi5/cIgMfPtk2H4o5B6VSyflQ66gyTp8GJAAM0mAy\nXuDDLBJX5QyH+7OhCM/LFhcVPFmEzl/WD+KM+uSt9+js7fqyL7koh4pgzW8ty7KS\nmejkGFKN5OL+L0YHP3XgsqoGkiyBZXGI887ePwIDAQABAoIBAEBjnZ9ko7YKz++v\nF3fAE/7JWSE3Xcq8NRKnoMdrc86v0wv6qZbjRpceU/Da2PLdHcp6Txa+dUUIzIzp\nCDgOgz9rOLYRyKw7MTN4f2QrGcN9dd2iz7YZZZs0r1wUutpRFsjDudYk6RYzaGtv\nZ6JPD6FqimetItcEf1fGHu4frJF/KgwWn9cv0OE4j36V7OIskFauYT2ODQ9HRFfX\nfL7AID4R6WIwS2u5hsFNaNlFv02HKsTYOvFBz/FpHeWxOPbqOzCB5bEk3zvtclSS\ntzcAUBnRY1YZAon+Ej4gPhC9JbZWGnE8rN2ytqZx+24n4/b9HmalUIEAZG3S97tc\noD2bUoECgYEA6JioR2vkV4aBTaE1ChKDhEBf/PqYJ3lLI7LJ2flrmWeEF9vvDVqG\nHpj7qEM7TC/HfkvZ+xeE/MffIbXkIMYDn8ETMdbV2Bcv5kmd8sDVhxys0s4r9d6o\nqrin+wKbCNvlGvNIPQkNJnkc6lNXZG1YyIrcq2TlxcDFvYa1KP5KSyECgYEAwXii\nysGU3Siw3lDP/bE6UIR4WhtHbt6ryQ745XwPrE652FsbMxJdTxXoo9KhH6HeVgx/\nAmQJX0HqJjjkjUHlTXS6KkQyaW9Vh+OtWfAq6bwprpfO6p1sIdMMsmdRmMlAsm2z\nD8bSm83/FU8uCIwP3eZx7l0MmpXRQrREmdyyXV8CgYByvtTNnzlfwHhLnsq2tFlz\nRfrUp5+mYZ0i+FHCGdzuKfYtew+ci9r8f0YvRTOcqzmEYdEgoQK3XbcDP2NSk703\n850PikemuhGkTw7/sgflBs1vlcx0GCsnRb+BAlEPdsO4nuo1SiDVqQwNwZ2sapFR\nJcglObps62Ph0vHOTlzCYQKBgQC2W0q16biyrEPpiCpDaOUaN4JpDAVMjz1ECYS4\naTMsqhepwlXk0Y55mKDqqQGNmzjByo18Z2YeDzbwR/fE3TOQylEevaD2mCX6K7Od\nbi5EmUKAej5iDXd6ej8heRkD9c2xYIzCdhjVGlkwcK1nCP17nlYM4k+a9VOEl/2B\nOPA16QKBgQCjqK63ySRBZagnWlWwjp9BRBy0OfOxXimtVRsxWKVsBrz3sGG7TOCs\nACQjoeZXrLPajjRmzPYnQCvAraA1hrfybV/cxA4WDMPRywk12WaWTFAXYdh5F8ej\n17RSzIQMXRJxsMJs8o6WXJSpC1ZJaFxa+X5EGYELw3V+M1NDVKI5EA==\n-----END
-        RSA PRIVATE KEY-----"}, "target_provision_state": null, "updated_at": "2015-02-20T11:16:01+00:00",
+        RSA PRIVATE KEY-----"}, "target_provision_state": null, "updated_at": "2015-02-20T12:10:55+00:00",
         "last_error": null, "console_enabled": false, "extra": {}, "driver": "pxe_ssh",
         "links": [{"href": "http://192.0.2.1:6385/v1/nodes/0896f621-fb83-4ca0-9745-2213eeb2eb11",
         "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/0896f621-fb83-4ca0-9745-2213eeb2eb11",
@@ -1001,7 +1112,7 @@ http_interactions:
         "ssh_username": "stack", "ssh_key_contents": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAr8iyVYymC7bzjLutZ9dYmxGjKkx4vSh1CTMo6xRnFGgvN9Vn\nQ/Bcax53ugf+86xQ3xeKnzVtQgg/38/EomuoBXGSr7oH3sUALX1KNQxIwZCN6Cma\nncvfCIjIUh0fZ+5ET+D5Yw4h3ADsePh2FxAfkg5UnEllKQyhSQV3rIzLI/D7IJez\npmDUH0o8viTNqw8jkV3wHPfSi5/cIgMfPtk2H4o5B6VSyflQ66gyTp8GJAAM0mAy\nXuDDLBJX5QyH+7OhCM/LFhcVPFmEzl/WD+KM+uSt9+js7fqyL7koh4pgzW8ty7KS\nmejkGFKN5OL+L0YHP3XgsqoGkiyBZXGI887ePwIDAQABAoIBAEBjnZ9ko7YKz++v\nF3fAE/7JWSE3Xcq8NRKnoMdrc86v0wv6qZbjRpceU/Da2PLdHcp6Txa+dUUIzIzp\nCDgOgz9rOLYRyKw7MTN4f2QrGcN9dd2iz7YZZZs0r1wUutpRFsjDudYk6RYzaGtv\nZ6JPD6FqimetItcEf1fGHu4frJF/KgwWn9cv0OE4j36V7OIskFauYT2ODQ9HRFfX\nfL7AID4R6WIwS2u5hsFNaNlFv02HKsTYOvFBz/FpHeWxOPbqOzCB5bEk3zvtclSS\ntzcAUBnRY1YZAon+Ej4gPhC9JbZWGnE8rN2ytqZx+24n4/b9HmalUIEAZG3S97tc\noD2bUoECgYEA6JioR2vkV4aBTaE1ChKDhEBf/PqYJ3lLI7LJ2flrmWeEF9vvDVqG\nHpj7qEM7TC/HfkvZ+xeE/MffIbXkIMYDn8ETMdbV2Bcv5kmd8sDVhxys0s4r9d6o\nqrin+wKbCNvlGvNIPQkNJnkc6lNXZG1YyIrcq2TlxcDFvYa1KP5KSyECgYEAwXii\nysGU3Siw3lDP/bE6UIR4WhtHbt6ryQ745XwPrE652FsbMxJdTxXoo9KhH6HeVgx/\nAmQJX0HqJjjkjUHlTXS6KkQyaW9Vh+OtWfAq6bwprpfO6p1sIdMMsmdRmMlAsm2z\nD8bSm83/FU8uCIwP3eZx7l0MmpXRQrREmdyyXV8CgYByvtTNnzlfwHhLnsq2tFlz\nRfrUp5+mYZ0i+FHCGdzuKfYtew+ci9r8f0YvRTOcqzmEYdEgoQK3XbcDP2NSk703\n850PikemuhGkTw7/sgflBs1vlcx0GCsnRb+BAlEPdsO4nuo1SiDVqQwNwZ2sapFR\nJcglObps62Ph0vHOTlzCYQKBgQC2W0q16biyrEPpiCpDaOUaN4JpDAVMjz1ECYS4\naTMsqhepwlXk0Y55mKDqqQGNmzjByo18Z2YeDzbwR/fE3TOQylEevaD2mCX6K7Od\nbi5EmUKAej5iDXd6ej8heRkD9c2xYIzCdhjVGlkwcK1nCP17nlYM4k+a9VOEl/2B\nOPA16QKBgQCjqK63ySRBZagnWlWwjp9BRBy0OfOxXimtVRsxWKVsBrz3sGG7TOCs\nACQjoeZXrLPajjRmzPYnQCvAraA1hrfybV/cxA4WDMPRywk12WaWTFAXYdh5F8ej\n17RSzIQMXRJxsMJs8o6WXJSpC1ZJaFxa+X5EGYELw3V+M1NDVKI5EA==\n-----END
         RSA PRIVATE KEY-----", "pxe_deploy_kernel": "84917c45-2fd8-4044-97d6-cb89adde1f0b",
         "ssh_address": "192.168.122.1", "ssh_virt_type": "virsh"}, "target_provision_state":
-        null, "updated_at": "2015-02-20T11:16:02+00:00", "last_error": null, "console_enabled":
+        null, "updated_at": "2015-02-20T12:10:56+00:00", "last_error": null, "console_enabled":
         false, "extra": {}, "driver": "pxe_ssh", "links": [{"href": "http://192.0.2.1:6385/v1/nodes/fa492556-0232-4a20-ba58-f64276b97716",
         "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/fa492556-0232-4a20-ba58-f64276b97716",
         "rel": "bookmark"}], "properties": {"memory_mb": "4096", "cpu_arch": "x86_64",
@@ -1016,7 +1127,7 @@ http_interactions:
         "maintenance": false, "uuid": "3326440a-b655-4a96-b31c-3623ca18e2a8", "driver_info":
         {"ssh_username": "stack", "ssh_virt_type": "virsh", "ssh_address": "192.168.122.1",
         "ssh_key_contents": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAr8iyVYymC7bzjLutZ9dYmxGjKkx4vSh1CTMo6xRnFGgvN9Vn\nQ/Bcax53ugf+86xQ3xeKnzVtQgg/38/EomuoBXGSr7oH3sUALX1KNQxIwZCN6Cma\nncvfCIjIUh0fZ+5ET+D5Yw4h3ADsePh2FxAfkg5UnEllKQyhSQV3rIzLI/D7IJez\npmDUH0o8viTNqw8jkV3wHPfSi5/cIgMfPtk2H4o5B6VSyflQ66gyTp8GJAAM0mAy\nXuDDLBJX5QyH+7OhCM/LFhcVPFmEzl/WD+KM+uSt9+js7fqyL7koh4pgzW8ty7KS\nmejkGFKN5OL+L0YHP3XgsqoGkiyBZXGI887ePwIDAQABAoIBAEBjnZ9ko7YKz++v\nF3fAE/7JWSE3Xcq8NRKnoMdrc86v0wv6qZbjRpceU/Da2PLdHcp6Txa+dUUIzIzp\nCDgOgz9rOLYRyKw7MTN4f2QrGcN9dd2iz7YZZZs0r1wUutpRFsjDudYk6RYzaGtv\nZ6JPD6FqimetItcEf1fGHu4frJF/KgwWn9cv0OE4j36V7OIskFauYT2ODQ9HRFfX\nfL7AID4R6WIwS2u5hsFNaNlFv02HKsTYOvFBz/FpHeWxOPbqOzCB5bEk3zvtclSS\ntzcAUBnRY1YZAon+Ej4gPhC9JbZWGnE8rN2ytqZx+24n4/b9HmalUIEAZG3S97tc\noD2bUoECgYEA6JioR2vkV4aBTaE1ChKDhEBf/PqYJ3lLI7LJ2flrmWeEF9vvDVqG\nHpj7qEM7TC/HfkvZ+xeE/MffIbXkIMYDn8ETMdbV2Bcv5kmd8sDVhxys0s4r9d6o\nqrin+wKbCNvlGvNIPQkNJnkc6lNXZG1YyIrcq2TlxcDFvYa1KP5KSyECgYEAwXii\nysGU3Siw3lDP/bE6UIR4WhtHbt6ryQ745XwPrE652FsbMxJdTxXoo9KhH6HeVgx/\nAmQJX0HqJjjkjUHlTXS6KkQyaW9Vh+OtWfAq6bwprpfO6p1sIdMMsmdRmMlAsm2z\nD8bSm83/FU8uCIwP3eZx7l0MmpXRQrREmdyyXV8CgYByvtTNnzlfwHhLnsq2tFlz\nRfrUp5+mYZ0i+FHCGdzuKfYtew+ci9r8f0YvRTOcqzmEYdEgoQK3XbcDP2NSk703\n850PikemuhGkTw7/sgflBs1vlcx0GCsnRb+BAlEPdsO4nuo1SiDVqQwNwZ2sapFR\nJcglObps62Ph0vHOTlzCYQKBgQC2W0q16biyrEPpiCpDaOUaN4JpDAVMjz1ECYS4\naTMsqhepwlXk0Y55mKDqqQGNmzjByo18Z2YeDzbwR/fE3TOQylEevaD2mCX6K7Od\nbi5EmUKAej5iDXd6ej8heRkD9c2xYIzCdhjVGlkwcK1nCP17nlYM4k+a9VOEl/2B\nOPA16QKBgQCjqK63ySRBZagnWlWwjp9BRBy0OfOxXimtVRsxWKVsBrz3sGG7TOCs\nACQjoeZXrLPajjRmzPYnQCvAraA1hrfybV/cxA4WDMPRywk12WaWTFAXYdh5F8ej\n17RSzIQMXRJxsMJs8o6WXJSpC1ZJaFxa+X5EGYELw3V+M1NDVKI5EA==\n-----END
-        RSA PRIVATE KEY-----"}, "target_provision_state": null, "updated_at": "2015-02-20T11:16:03+00:00",
+        RSA PRIVATE KEY-----"}, "target_provision_state": null, "updated_at": "2015-02-20T12:10:57+00:00",
         "last_error": null, "console_enabled": false, "extra": {}, "driver": "pxe_ssh",
         "links": [{"href": "http://192.0.2.1:6385/v1/nodes/3326440a-b655-4a96-b31c-3623ca18e2a8",
         "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/3326440a-b655-4a96-b31c-3623ca18e2a8",
@@ -1032,7 +1143,7 @@ http_interactions:
         "ssh_username": "stack", "ssh_key_contents": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAr8iyVYymC7bzjLutZ9dYmxGjKkx4vSh1CTMo6xRnFGgvN9Vn\nQ/Bcax53ugf+86xQ3xeKnzVtQgg/38/EomuoBXGSr7oH3sUALX1KNQxIwZCN6Cma\nncvfCIjIUh0fZ+5ET+D5Yw4h3ADsePh2FxAfkg5UnEllKQyhSQV3rIzLI/D7IJez\npmDUH0o8viTNqw8jkV3wHPfSi5/cIgMfPtk2H4o5B6VSyflQ66gyTp8GJAAM0mAy\nXuDDLBJX5QyH+7OhCM/LFhcVPFmEzl/WD+KM+uSt9+js7fqyL7koh4pgzW8ty7KS\nmejkGFKN5OL+L0YHP3XgsqoGkiyBZXGI887ePwIDAQABAoIBAEBjnZ9ko7YKz++v\nF3fAE/7JWSE3Xcq8NRKnoMdrc86v0wv6qZbjRpceU/Da2PLdHcp6Txa+dUUIzIzp\nCDgOgz9rOLYRyKw7MTN4f2QrGcN9dd2iz7YZZZs0r1wUutpRFsjDudYk6RYzaGtv\nZ6JPD6FqimetItcEf1fGHu4frJF/KgwWn9cv0OE4j36V7OIskFauYT2ODQ9HRFfX\nfL7AID4R6WIwS2u5hsFNaNlFv02HKsTYOvFBz/FpHeWxOPbqOzCB5bEk3zvtclSS\ntzcAUBnRY1YZAon+Ej4gPhC9JbZWGnE8rN2ytqZx+24n4/b9HmalUIEAZG3S97tc\noD2bUoECgYEA6JioR2vkV4aBTaE1ChKDhEBf/PqYJ3lLI7LJ2flrmWeEF9vvDVqG\nHpj7qEM7TC/HfkvZ+xeE/MffIbXkIMYDn8ETMdbV2Bcv5kmd8sDVhxys0s4r9d6o\nqrin+wKbCNvlGvNIPQkNJnkc6lNXZG1YyIrcq2TlxcDFvYa1KP5KSyECgYEAwXii\nysGU3Siw3lDP/bE6UIR4WhtHbt6ryQ745XwPrE652FsbMxJdTxXoo9KhH6HeVgx/\nAmQJX0HqJjjkjUHlTXS6KkQyaW9Vh+OtWfAq6bwprpfO6p1sIdMMsmdRmMlAsm2z\nD8bSm83/FU8uCIwP3eZx7l0MmpXRQrREmdyyXV8CgYByvtTNnzlfwHhLnsq2tFlz\nRfrUp5+mYZ0i+FHCGdzuKfYtew+ci9r8f0YvRTOcqzmEYdEgoQK3XbcDP2NSk703\n850PikemuhGkTw7/sgflBs1vlcx0GCsnRb+BAlEPdsO4nuo1SiDVqQwNwZ2sapFR\nJcglObps62Ph0vHOTlzCYQKBgQC2W0q16biyrEPpiCpDaOUaN4JpDAVMjz1ECYS4\naTMsqhepwlXk0Y55mKDqqQGNmzjByo18Z2YeDzbwR/fE3TOQylEevaD2mCX6K7Od\nbi5EmUKAej5iDXd6ej8heRkD9c2xYIzCdhjVGlkwcK1nCP17nlYM4k+a9VOEl/2B\nOPA16QKBgQCjqK63ySRBZagnWlWwjp9BRBy0OfOxXimtVRsxWKVsBrz3sGG7TOCs\nACQjoeZXrLPajjRmzPYnQCvAraA1hrfybV/cxA4WDMPRywk12WaWTFAXYdh5F8ej\n17RSzIQMXRJxsMJs8o6WXJSpC1ZJaFxa+X5EGYELw3V+M1NDVKI5EA==\n-----END
         RSA PRIVATE KEY-----", "pxe_deploy_kernel": "84917c45-2fd8-4044-97d6-cb89adde1f0b",
         "ssh_address": "192.168.122.1", "ssh_virt_type": "virsh"}, "target_provision_state":
-        null, "updated_at": "2015-02-20T11:16:04+00:00", "last_error": null, "console_enabled":
+        null, "updated_at": "2015-02-20T12:10:57+00:00", "last_error": null, "console_enabled":
         false, "extra": {}, "driver": "pxe_ssh", "links": [{"href": "http://192.0.2.1:6385/v1/nodes/06c2fb5a-22ab-450f-bd83-9342f7b823e6",
         "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/06c2fb5a-22ab-450f-bd83-9342f7b823e6",
         "rel": "bookmark"}], "properties": {"memory_mb": "4096", "cpu_arch": "x86_64",
@@ -1045,6 +1156,7 @@ http_interactions:
         "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/06c2fb5a-22ab-450f-bd83-9342f7b823e6/ports",
         "rel": "bookmark"}]}]}'
     http_version: 
+
   recorded_at: Mon, 19 Jan 2015 12:16:23 GMT
 - request:
     method: get
@@ -1206,5 +1318,6 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"images": []}'
-    http_version: 
-  recorded_at: Tue, 03 Feb 2015 23:11:05 GMT
+    http_version:
+  recorded_at: Fri, 20 Feb 2015 12:11:26 GMT
+recorded_with: VCR 2.9.3
