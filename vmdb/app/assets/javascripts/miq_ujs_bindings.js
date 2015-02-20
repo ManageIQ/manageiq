@@ -36,10 +36,16 @@ $(document).ready(function(){
       var el = $(this);
       el.unbind('change')
       el.change(function() {
+        var data = el.attr('id') + '=';
+        if (el.prop('multiple')) {
+            data += el.val();
+        } else {
+            data += encodeURIComponent(el.prop('value'));
+        }
+
         var options = {
           no_encoding: true,
-          data: el.attr('id') + '=' + encodeURIComponent(el.prop('value')),
-        };
+          data:  data, };
         if (el.attr('data-miq_sparkle_on')) options['beforeSend'] = true
         if (el.attr('data-miq_sparkle_off')) options['complete'] = true
         miqJqueryRequest(url, options);
