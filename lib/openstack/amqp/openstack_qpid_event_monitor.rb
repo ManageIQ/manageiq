@@ -24,9 +24,9 @@ class OpenstackQpidEventMonitor < OpenstackEventMonitor
       connection.open
       connection.open?
     rescue => e
-      log_prefix = "MIQ(#{self.name}.#{__method__}) Failed testing qpid amqp connection for #{options[:hostname]}. "
-      $log.info("#{log_prefix} The Openstack AMQP service may be using a different provider.  Enable debug logging to see connection exception.") if $log
-      $log.debug("#{log_prefix} Exception: #{e}") if $log
+      log_prefix = "MIQ(#{self.name}.#{__method__}) Failed testing QPid AMQP connection for #{options[:hostname]}. "
+      $log.info("#{log_prefix} The Openstack AMQP service may be using a different provider.") if $log
+      $log.info("#{log_prefix} Exception: #{e}") if $log
       return false
     ensure
       connection.close if connection.respond_to? :close

@@ -82,14 +82,19 @@ class OpenstackEventMonitor
 
   def self.select_event_monitor_class(options)
     cache_result(:plugin_classes, event_monitor_key(options)) do
-      self.subclasses.detect do |event_monitor|
+      event_monitor_class = self.subclasses.detect do |event_monitor|
         begin
           event_monitor.available?(options)
         rescue => e
           $log.error("MIQ(#{self}.#{__method__}) Error occured testing #{event_monitor} for #{options[:hostname]}. Trying other AMQP clients.  #{e.message}")
           false
         end
-      end || OpenstackNullEventMonitor
+      end
+      unless event_monitor_class
+        $log.warn("MIQ(#{self}.#{__method__}) Unable to connect to the AMQP service on #{options[:hostname]}.  Events will be unavailable.")
+        event_monitor_class = OpenstackNullEventMonitor
+      end
+      event_monitor_class
     end
   end
   private_class_method :select_event_monitor_class
