@@ -4,8 +4,8 @@
   %fieldset
     %h3
       =_("Request Details")
-    %dl.col3
-      %dd
+    .row
+      .col-sm-12.col-md-12.col-lg-6
         %table.style1
           %tr
             %td.key
@@ -33,7 +33,7 @@
               = _("Request Type")
             %td.wide:nowrap
               = h(@miq_request.request_type_display)
-      %dd
+      .col-sm-12.col-md-12.col-lg-6
         %table.style1
           %tr
             %td.key
@@ -61,7 +61,8 @@
             %td.wide:nowrap
               - if @miq_request.fulfilled_on
                 = h(format_timezone(@miq_request.fulfilled_on))
-      %dd
+    .row
+      .col-sm-12.col-md-12.col-lg-6
         %table.style1
           %tr
             %td.key

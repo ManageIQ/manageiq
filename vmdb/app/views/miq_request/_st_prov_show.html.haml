@@ -7,7 +7,7 @@
     %fieldset
       %h3
         = _("Dialog Options")
-      %dl.col1
-        %dd
+      .row
+        .col-sm-12.col-md-12.col-lg-12
           = render :partial => "shared/dialogs/dialog_provision",
                    :locals  => {:wf => ResourceActionWorkflow.new(values, session[:userid], ra, opts)}

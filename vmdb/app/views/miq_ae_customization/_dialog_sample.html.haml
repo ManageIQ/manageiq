@@ -1,7 +1,7 @@
 - # if dialogs is selected
 = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "calendar"}
-%dl.col1
-  %dd
+.row
+  .col-sm-12.col-md-12.col-lg-12
     #dialog_tabs{:style => "display: none; width: 100%; height: 100%; overflow: auto;", "data-miq_url" => "_none_"}
       %ul.tab
         - @record.ordered_dialog_resources.each do |dt|

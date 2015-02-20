@@ -3,8 +3,8 @@
                   :id     => "#{@edit[:group_id] || "new"}")
 = render :partial => "layouts/flash_msg"
 #main_div
-  %dl.col2
-    %dd
+  .row
+    .col-sm-12.col-md-12.col-lg-6
       %fieldset
         %h3=_("Group Information")
         - if @edit
@@ -102,7 +102,7 @@
                              "data-miq_sparkle_off" => true,
                              :remote                => true,
                              :title                 => _("LDAP Group Lookup"))
-    %dd
+    .col-sm-12.col-md-12.col-lg-6
       %fieldset
         %h3= @edit ? _("Assign Filters") : _("Assigned Filters (read only)")
         #rbac_group_tabs{"data-miq_url" => "_none_", :style => "display:none;"}
