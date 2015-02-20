@@ -20,6 +20,8 @@ module MiqAeServiceServiceReconfigureTaskSpec
       </MiqAeDatastore>
       XML
 
+      # hide deprecation warning
+      expect(MiqAeDatastore).to receive(:xml_deprecated_warning)
       MiqAeDatastore::Import.load_xml(xml)
       FactoryGirl.create(:ui_task_set_approver)
     end
