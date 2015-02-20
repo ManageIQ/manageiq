@@ -13,6 +13,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqEmsRefreshWorkerMicrosoft
     MiqEmsRefreshWorkerRedhat
     MiqEmsRefreshWorkerOpenstack
+    MiqEmsRefreshWorkerOpenstackInfra
     MiqEmsRefreshWorkerVmware
     MiqEventCatcherAmazon
     MiqEventCatcherRedhat
@@ -55,6 +56,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqEmsRefreshWorkerMicrosoft
     MiqEmsRefreshWorkerRedhat
     MiqEmsRefreshWorkerOpenstack
+    MiqEmsRefreshWorkerOpenstackInfra
     MiqEmsRefreshWorkerVmware
     MiqScheduleWorker
     MiqPriorityWorker

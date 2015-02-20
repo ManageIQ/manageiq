@@ -15,12 +15,13 @@ module OpenstackHandle
     }
 
     SERVICE_NAME_MAP = {
-      "Compute"  => :nova,
-      "Network"  => :neutron,
-      "Image"    => :glance,
-      "Volume"   => :cinder,
-      "Storage"  => :swift,
-      "Metering" => :ceilometer
+      "Compute"   => :nova,
+      "Network"   => :neutron,
+      "Image"     => :glance,
+      "Volume"    => :cinder,
+      "Storage"   => :swift,
+      "Metering"  => :ceilometer,
+      "Baremetal" => :baremetal
     }
 
     def self.raw_connect_try_ssl(username, password, address, port, service = "Compute", opts = nil)
@@ -110,6 +111,18 @@ module OpenstackHandle
           raw_service
         end
       end
+    end
+
+    def baremetal_service(tenant_name = nil)
+      connect(:service => "Baremetal", :tenant_name => tenant_name)
+    end
+
+    def detect_baremetal_service(tenant_name = nil)
+      detect_service("Baremetal", tenant_name)
+    end
+
+    def baremetal_service_name
+      service_name("Baremetal")
     end
 
     def compute_service(tenant_name = nil)
