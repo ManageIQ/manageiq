@@ -111,6 +111,13 @@
         :identifier: storage_tag
       - :name: unassign
         :identifier: storage_tag
+  :events:
+    :description: Events
+    :options:
+    - :collection
+    - :subcollection
+    :methods: *70174834086080
+    :klass: MiqEvent
   :groups:
     :description: Groups
     :options:
@@ -226,6 +233,7 @@
     :subcollections:
     - :conditions
     - :policy_actions
+    - :events
     :collection_actions:
       :post:
       - :name: add
