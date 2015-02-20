@@ -340,9 +340,10 @@ class HostController < ApplicationController
 
     render :update do |page|                    # Use JS to update the display
       if changed != session[:changed]
-        page.replace_html("form_div", :partial => "host/form")
         session[:changed] = changed
-        page << javascript_for_miq_button_visibility(changed)
+        unless params[:id] == "new"
+          page << javascript_for_miq_button_visibility(changed)
+        end
       end
       unless session[:host_items].nil?
         page << "miqButtons('show');"
