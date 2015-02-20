@@ -47,7 +47,7 @@ class RssFeed < ActiveRecord::Base
     items = options[:limit_to_count] ? feed.items[0..options[:limit_to_count] - 1] : feed.items
     items.each_with_index do |i,idx|
       row_class = idx % 2 == 0 ? 'row0' : 'row1'
-      output << "<tr class=\"#{row_class}\" onclick='window.location=\"#{i.link}\";''>"
+      output << "<tr class=\"#{row_class}\" onclick='window.location=\"#{i.link}\";'>"
       output << '<td>'
       output << i.title
       output << '<br/>'
