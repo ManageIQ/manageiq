@@ -16,7 +16,7 @@ module ManageiqForeman
     def refresh_configuration(_target = nil)
       {
         :hosts      => connection.all(:hosts),
-        :hostgroups => connection.denormalized_hostgroups,
+        :hostgroups => connection.all(:hostgroups).denormalize,
       }
     end
 

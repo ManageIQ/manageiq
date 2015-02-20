@@ -35,10 +35,6 @@ module ManageiqForeman
       fetch(:hosts, :index, filter)
     end
 
-    def denormalized_hostgroups(filter = {})
-      denormalize_ancestors!(all(:hostgroups, filter))
-    end
-
     def hostgroups(filter = {})
       fetch(:hostgroups, :index, filter)
     end
@@ -76,20 +72,6 @@ module ManageiqForeman
 
     def fetch(resource, action = :index, filter = {})
       PagedResponse.new(raw(resource).send(action, filter).first)
-    end
-
-    def denormalize_ancestors!(records)
-      records.each do |record|
-        ancestor_ids(record["ancestry"]).reverse.each do |ancestor_id|
-          ancestor = records.detect { |r| r["id"] == ancestor_id }
-          ancestor.each_pair { |n, v| record[n] ||= v unless v.nil? } if ancestor
-        end
-      end
-      records
-    end
-
-    def ancestor_ids(str)
-      (str || "").split("/").collect(&:to_i)
     end
 
     def raw(resource)
