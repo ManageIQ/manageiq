@@ -1,0 +1,3 @@
+rubies="/opt/rubies/ruby-2.0.0*/bin"
+# add latest (alphabetically) ruby version
+export PATH=$PATH:${rubies[${#rubies[@]} - 1]}

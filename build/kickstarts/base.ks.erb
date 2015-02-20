@@ -223,10 +223,6 @@ make install
 # See: https://github.com/postmodern/ruby-install/issues/175
 /usr/local/bin/ruby-install ruby 2.0.0-p598 -- --disable-install-doc --enable-shared
 
-# Add the ruby binaries path to the PATH so we can find bundle and friends:
-ruby_bin_path=(/opt/rubies/ruby-2.0.0*/bin)
-echo "export PATH=\$PATH:$ruby_bin_path" >> /etc/default/evm
-
 cat /etc/default/evm
 
 echo "gem: --no-ri --no-rdoc --no-document" > /root/.gemrc
