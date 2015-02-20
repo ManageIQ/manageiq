@@ -432,8 +432,15 @@ module ApplicationController::CiProcessing
 
       if @edit[:req_id] ? VmReconfigureRequest.update_request(@edit[:req_id],options, session[:userid]) : VmReconfigureRequest.create_request(options, session[:userid])
         flash = _("VM Reconfigure Request was saved")
-        render :update do |page|
-          page.redirect_to :controller => 'miq_request', :action => 'show_list', :flash_msg => flash
+        if role_allows(:feature => "miq_request_show_list", :any => true)
+          render :update do |page|
+            page.redirect_to :controller => 'miq_request', :action => 'show_list', :flash_msg => flash
+          end
+        else
+          url = previous_breadcrumb_url.split('/')
+          render :update do |page|
+            page.redirect_to :controller => url[1], :action => url[2], :flash_msg => flash
+          end
         end
       else
         @edit[:errors].each { |msg| add_flash(msg, :error) }
