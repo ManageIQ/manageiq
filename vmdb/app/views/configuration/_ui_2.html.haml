@@ -91,7 +91,7 @@
                   %td.key= _('Stacks')
                   %td
                     %ul#toolbars= render_view_buttons(:orchestrationstack, @edit[:new][:views][:orchestrationstack])
-        - if role_allows(:feature => "ems_cloud_show_list")     ||
+        - if role_allows(:feature => "ems_infra_show_list")     ||
         -    role_allows(:feature => "ems_cluster_show_list")   ||
         -    role_allows(:feature => "host_show_list")          ||
         -    role_allows(:feature => "resource_pool_show_list") ||
