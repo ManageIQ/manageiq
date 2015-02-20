@@ -23,7 +23,7 @@ class DialogFieldDateControl < DialogField
   def default_value
     if dynamic
       write_attribute(:default_value, values_from_automate)
-      read_attribute(:default_value)
+      self[:default_value]
     else
       default_time
     end
@@ -35,7 +35,14 @@ class DialogFieldDateControl < DialogField
     end
 
     return default_time if automate_hash["default_value"].blank?
-    automate_hash["default_value"].to_s
+    begin
+      self.default_value = Date.parse(automate_hash["default_value"]).iso8601
+    rescue
+      self.default_value = nil
+      return default_time
+    end
+
+    self[:default_value]
   end
 
   def script_error_values

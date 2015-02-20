@@ -40,6 +40,10 @@ describe DialogFieldDateControl do
       }
     end
 
+    before do
+      described_class.stub(:server_timezone).and_return("UTC")
+    end
+
     shared_examples_for "DialogFieldDateControl#normalize_automate_values" do
       before do
         dialog_field.normalize_automate_values(automate_hash)
@@ -51,26 +55,41 @@ describe DialogFieldDateControl do
     end
 
     context "when the automate hash has a default value" do
-      let(:default_value) { "01/02/2015" }
+      context "when the default value is a date format" do
+        let(:default_value) { "01/02/2015" }
 
-      it_behaves_like "DialogFieldDateControl#normalize_automate_values"
+        it_behaves_like "DialogFieldDateControl#normalize_automate_values"
 
-      it "sets the default value" do
-        dialog_field.normalize_automate_values(automate_hash)
-        expect(dialog_field.read_attribute(:default_value)).to eq("01/02/2015")
+        it "sets the default value as an iso format" do
+          dialog_field.normalize_automate_values(automate_hash)
+          expect(dialog_field.read_attribute(:default_value)).to eq("2015-01-02")
+        end
+
+        it "returns the default value" do
+          expect(dialog_field.normalize_automate_values(automate_hash)).to eq("2015-01-02")
+        end
       end
 
-      it "returns the default value" do
-        expect(dialog_field.normalize_automate_values(automate_hash)).to eq("01/02/2015")
+      context "when the default value is not a proper date format" do
+        let(:default_value) { "not a date" }
+
+        it_behaves_like "DialogFieldDateControl#normalize_automate_values"
+
+        it "sets the default value to nil" do
+          dialog_field.normalize_automate_values(automate_hash)
+          expect(dialog_field.read_attribute(:default_value)).to eq(nil)
+        end
+
+        it "returns the initial values" do
+          Timecop.freeze(2015, 1, 2) do
+            expect(dialog_field.normalize_automate_values(automate_hash)).to eq("01/03/2015")
+          end
+        end
       end
     end
 
     context "when the automate hash does not have a default value" do
       let(:default_value) { nil }
-
-      before do
-        described_class.stub(:server_timezone).and_return("UTC")
-      end
 
       it_behaves_like "DialogFieldDateControl#normalize_automate_values"
 
