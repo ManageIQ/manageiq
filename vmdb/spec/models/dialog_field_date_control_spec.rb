@@ -9,6 +9,12 @@ describe DialogFieldDateControl do
 
       before do
         DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("processor")
+        dialog_field.value = nil
+      end
+
+      it "stores the new value in the value attribute" do
+        dialog_field.default_value
+        expect(dialog_field.value).to eq("processor")
       end
 
       it "returns the values from the value processor" do

@@ -22,7 +22,9 @@ class DialogFieldDateControl < DialogField
 
   def default_value
     if dynamic
-      write_attribute(:default_value, values_from_automate)
+      new_value = values_from_automate
+      write_attribute(:default_value, new_value)
+      @value = new_value
       self[:default_value]
     else
       default_time
