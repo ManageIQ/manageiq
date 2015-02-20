@@ -22,7 +22,7 @@ module ManageiqForeman
 
     def refresh_provisioning(_target = nil)
       {
-        :operating_systems => connection.all(:operating_system_details),
+        :operating_systems => connection.all_with_details(:operating_systems),
         :media             => connection.all(:media),
         :ptables           => connection.all(:ptables),
       }

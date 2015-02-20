@@ -5,9 +5,9 @@ describe ManageiqForeman::Connection do
     described_class.new(:base_url => "example.com", :username => "admin", :password => "smartvm", :verify_ssl => nil)
   end
 
-  describe "#host" do
+  describe "#fetch" do
     context "with 2 hosts" do
-      let(:results) { connection.hosts("per_page" => 2) }
+      let(:results) { connection.fetch(:hosts, "per_page" => 2) }
 
       it "fetches 2 hosts" do
         with_vcr("_2_hosts") do
@@ -26,10 +26,10 @@ describe ManageiqForeman::Connection do
   end
 
   describe "#operating_system_detail" do
-    context "with 2 operating_system_details" do
-      let(:results) { connection.operating_system_details("per_page" => 2) }
+    context "with 2 operating_system details" do
+      let(:results) { connection.all_with_details(:operating_systems, "per_page" => 2) }
 
-      it "fetches 2 operating_system_details" do
+      it "fetches 2 operating_system details" do
         with_vcr("_2_operating_systems") do
           expect(results.size).to eq(2)
         end
@@ -40,13 +40,13 @@ describe ManageiqForeman::Connection do
   describe "simple accessor methods" do
     it "works" do
       with_vcr("_all_methods") do
-        expect(connection.hosts(:per_page => 2).size).to eq(2)
-        expect(connection.hostgroups(:per_page => 2).size).to eq(2)
-        expect(connection.operating_systems(:per_page => 2).size).to eq(2)
-        expect(connection.media(:per_page => 2).size).to eq(2)
-        expect(connection.ptables(:per_page => 2).size).to eq(2)
-        expect(connection.config_templates(:per_page => 2).size).to eq(2)
-        expect(connection.subnets(:per_page => 2).size).to eq(2)
+        expect(connection.fetch(:hosts, :per_page => 2).size).to eq(2)
+        expect(connection.fetch(:hostgroups, :per_page => 2).size).to eq(2)
+        expect(connection.fetch(:operating_systems, :per_page => 2).size).to eq(2)
+        expect(connection.fetch(:media, :per_page => 2).size).to eq(2)
+        expect(connection.fetch(:ptables, :per_page => 2).size).to eq(2)
+        expect(connection.fetch(:config_templates, :per_page => 2).size).to eq(2)
+        expect(connection.fetch(:subnets, :per_page => 2).size).to eq(2)
       end
     end
   end
