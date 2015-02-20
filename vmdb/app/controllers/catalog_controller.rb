@@ -92,7 +92,7 @@ class CatalogController < ApplicationController
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
-      if !@record.id.nil? && @record.prov_type != "generic"
+      if !@record.id.nil? && need_prov_dialogs?(@record.prov_type)
         prov_set_form_vars(MiqRequest.find(@record.service_resources[0].resource_id))      # Set vars from existing request
         @edit[:new][:st_prov_type] = @record.prov_type
       else
@@ -101,20 +101,21 @@ class CatalogController < ApplicationController
         @edit[:new] ||= Hash.new
         @edit[:current] ||= Hash.new
         @edit[:key] = "prov_edit__new"
-        @edit[:new][:st_prov_type] = @record.prov_type if !@record.id.nil?
+        @edit[:new][:st_prov_type] = @record.prov_type if @record.try(:id)
         @edit[:st_prov_types] = {
-            "amazon"    => "Amazon",
-            "openstack" => "OpenStack",
-            "redhat"    => "RHEV",
-            "generic"   => "Generic",
-            "vmware"    => "VMware"
+          "amazon"                => "Amazon",
+          "openstack"             => "OpenStack",
+          "generic_orchestration" => "Orchestration",
+          "redhat"                => "RHEV",
+          "generic"               => "Generic",
+          "vmware"                => "VMware"
         }
       end
 
       #set name and description for ServiceTemplate record
       set_form_vars
       @edit[:new][:service_type] = "atomic"
-      @edit[:rec_id] = @record ? @record.id : nil
+      @edit[:rec_id] = @record.try(:id)
       @edit[:current] = copy_hash(@edit[:new])
 
       @tabactive = "#{@edit[:new][:current_tab_key]}_div"
@@ -130,11 +131,12 @@ class CatalogController < ApplicationController
     return unless load_edit("prov_edit__#{id}","replace_cell__explorer")
     get_form_vars
     changed = (@edit[:new] != @edit[:current])
-    build_ae_tree(:automate, :automate_tree) if params[:display] # Build Catalog Items tree unless @edit[:ae_tree_select]
+    # Build Catalog Items tree unless @edit[:ae_tree_select]
+    build_ae_tree(:automate, :automate_tree) if params[:display] || params[:template_id]
     if params[:st_prov_type] #build request screen for selected item type
       @_params[:org_controller] = "service_template"
-      prov_set_form_vars if params[:st_prov_type] != "generic"
-      @record = ServiceTemplate.new                                                             #set name and description for ServiceTemplate record
+      prov_set_form_vars if need_prov_dialogs?(params[:st_prov_type])
+      @record = class_service_template(params[:st_prov_type]).new
       set_form_vars
       @edit[:new][:st_prov_type] = params[:st_prov_type] if params[:st_prov_type]
       @edit[:new][:service_type] = "atomic"
@@ -143,7 +145,7 @@ class CatalogController < ApplicationController
     end
     render :update do |page|                    # Use JS to update the display
       page.replace_html("form_div", :partial=>"st_form") if params[:st_prov_type]
-      page.replace_html("basic_info_div", :partial=>"form_basic_info") if params[:display]
+      page.replace_html("basic_info_div", :partial => "form_basic_info") if params[:display] || params[:template_id]
       if params[:display]
         show_or_hide = (params[:display] == "1") ? "show" : "hide"
         page << "miq_jquery_show_hide_tab('li_details','#{show_or_hide}')"
@@ -152,7 +154,7 @@ class CatalogController < ApplicationController
         page << javascript_for_miq_button_visibility(changed)
         session[:changed] = changed
       end
-      page << "miqSparkle(false);"
+      page << set_spinner_off
     end
   end
 
@@ -357,7 +359,9 @@ class CatalogController < ApplicationController
         end
         return
       end
-      @st = @edit[:rec_id] ? ServiceTemplate.find_by_id(@edit[:rec_id]) : ServiceTemplate.new
+      @st = @edit[:rec_id] ?
+        ServiceTemplate.find_by_id(@edit[:rec_id]) :
+        class_service_template(@edit[:new][:st_prov_type]).new
       st_set_record_vars(@st)
       if @add_rsc
         if @st.save
@@ -665,6 +669,12 @@ class CatalogController < ApplicationController
 
   private      #######################
 
+  def class_service_template(prov_type)
+    prov_type.starts_with?('generic') ?
+      prov_type.gsub(/(generic)(_.*)?/, 'service_template\2').classify.constantize :
+      ServiceTemplate
+  end
+
   def atomic_req_submit
     id = session[:edit][:req_id] || "new"
     return unless load_edit("prov_edit__#{id}","show_list")
@@ -674,7 +684,7 @@ class CatalogController < ApplicationController
     end
 
     #set request for non generic ST
-    if @edit[:wf] && @edit[:new][:st_prov_type] != "generic"
+    if @edit[:wf] && need_prov_dialogs?(@edit[:new][:st_prov_type])
       request = @edit[:req_id] ? @edit[:wf].update_request(@edit[:req_id], @edit[:new], session[:userid]) :
                                   @edit[:wf].create_request(@edit[:new], session[:userid])
       if request && request.errors.present?
@@ -693,7 +703,9 @@ class CatalogController < ApplicationController
       return
     end
     get_form_vars   #need to get long_description
-    st = @edit[:rec_id] ? ServiceTemplate.find_by_id(@edit[:rec_id]) : ServiceTemplate.new
+    st = @edit[:rec_id] ?
+      ServiceTemplate.find_by_id(@edit[:rec_id]) :
+      class_service_template(@edit[:new][:st_prov_type]).new
     st.name = @edit[:new][:name]
     st.description = @edit[:new][:description]
     st.long_description = @edit[:new][:display] ? @edit[:new][:long_description] : nil
@@ -705,14 +717,17 @@ class CatalogController < ApplicationController
     else
       st.service_template_catalog = nil
     end
+    add_orchestration_template_vars(st) if st.kind_of?(ServiceTemplateOrchestration)
     st.service_type = "atomic"
     st.prov_type = @edit[:new][:st_prov_type]
-    set_resource_action(st)
+    set_resource_action(st) if params[:button] == "save"
     if request
       st.remove_all_resources
-      st.add_resource(request) if @edit[:new][:st_prov_type] != "generic"
+      st.add_resource(request) if need_prov_dialogs?(@edit[:new][:st_prov_type])
     end
+
     if st.save
+      set_resource_action(st) if params[:button] == "add"
       flash_key = params[:button] == "save" ? _("%{model} \"%{name}\" was saved") : _("%{model} \"%{name}\" was added")
       add_flash(flash_key % {:model => ui_lookup(:model => "ServiceTemplate"), :name => @edit[:new][:name]})
       @changed = session[:changed] = false
@@ -903,7 +918,9 @@ class CatalogController < ApplicationController
     available_catalogs.each do |stc|
       @edit[:new][:available_catalogs].push([stc.name,stc.id])
     end
-    @edit[:new][:available_catalogs].sort!                  # Sort the available fields array
+    @edit[:new][:available_catalogs].sort!
+    available_templates if @record.kind_of?(ServiceTemplateOrchestration)
+
     # initialize fqnames
     @edit[:new][:fqname] = @edit[:new][:reconfigure_fqname] = @edit[:new][:retire_fqname] = ""
     @record.resource_actions.each do |ra|
@@ -1030,6 +1047,47 @@ class CatalogController < ApplicationController
     @edit[:st_prov_type] = @edit[:new][:st_prov_type] = params[:st_prov_type] if params[:st_prov_type]
     @edit[:new][:long_description] = params[:long_description] if params[:long_description]
     @edit[:new][:long_description] = @edit[:new][:long_description].to_s + "..." if params[:transOne]
+
+    if params[:template_id]
+      if params[:template_id] == ""
+        @edit[:new][:available_managers] = []
+        @edit[:new][:template_id]        = nil
+        @edit[:new][:manager_id]         = nil
+      else
+        @edit[:new][:template_id] = params[:template_id]
+        available_managers(params[:template_id])
+      end
+    end
+    @edit[:new][:manager_id] = params[:manager_id] if params[:manager_id]
+  end
+
+  def available_managers(template_id)
+    available_managers = OrchestrationTemplate.find_by_id(template_id).eligible_managers
+    @edit[:new][:available_managers] = []
+    available_managers.each do |manager|
+      @edit[:new][:available_managers].push([manager.name, manager.id])
+    end
+    @edit[:new][:available_managers].sort!
+  end
+
+  def available_templates
+    available_templates = OrchestrationTemplate.find(:all)
+    @edit[:new][:available_templates] = []
+    available_templates.each do |template|
+      @edit[:new][:available_templates].push([template.name, template.id])
+    end
+    @edit[:new][:available_templates].sort!
+
+    @edit[:new][:template_id] = @record.orchestration_template.try(:id)
+    @edit[:new][:manager_id] = @record.orchestration_manager.try(:id)
+    available_managers(@record.orchestration_template.id) if @record.orchestration_template
+  end
+
+  def add_orchestration_template_vars(st)
+    st.orchestration_template = @edit[:new][:template_id].nil? ?
+      nil : OrchestrationTemplate.find_by_id(@edit[:new][:template_id])
+    st.orchestration_manager  = @edit[:new][:manager_id].nil? ?
+      nil : ExtManagementSystem.find_by_id(@edit[:new][:manager_id])
   end
 
   def st_get_form_vars
@@ -1211,7 +1269,7 @@ class CatalogController < ApplicationController
             else
               show_record(from_cid(id))
               add_pictures_to_sync(@record.picture.id) if @record.picture
-              if @record.atomic? && @record.prov_type != "generic"
+              if @record.atomic? && need_prov_dialogs?(@record.prov_type)
                 @miq_request = MiqRequest.find_by_id(@record.service_resources[0].resource_id)
                 prov_set_show_vars
               end

@@ -3,14 +3,14 @@
   %ul.tab
     %li#li_basic
       %a{:href => "#basic"}=_('Basic Info')
-    - if @record.display
+    - if @record.display && @record.prov_type != "generic_orchestration"
       %li#li_details
         %a{:href => "#details"}=_('Details')
     - if @record.composite?
       %li#li_resources
         %a{:href => "#resources"}=_('Selected Resources')
     - else
-      - unless @record.prov_type.eql?("generic")
+      - if need_prov_dialogs?(@record.prov_type)
         %li#li_request
           %a{:href => "#request"}=_('Request Info')
   #basic{:name => "basic", :width => "80px"}
@@ -30,9 +30,20 @@
       %tr
         %td.key=_('Dialog')
         %td= h(@sb[:dialog_label])
-      - [[_("Provisioning"), :fqname],
-         [_("Reconfigure"),  :reconfigure_fqname],
-         [_("Retirement"),   :retire_fqname]].each do |entry_points_op|
+      - if @record.prov_type == "generic_orchestration"
+        %tr
+          %td.key=_('Orchestration Template')
+          %td= h(@record.try(:orchestration_template).try(:name))
+        - if @record.orchestration_manager
+          %tr
+            %td.key=_('Provider')
+            %td= h(@record.orchestration_manager.name)
+      - entry_points = [[_("Provisioning"), :fqname]]
+      - unless @record.prov_type == "generic_orchestration"
+        - entry_points.push([_("Provisioning"), :fqname],
+           [_("Reconfigure"),  :reconfigure_fqname],
+           [_("Retirement"),   :retire_fqname])
+      - entry_points.each do |entry_points_op|
         %tr
           %td.key{:title => _("%s Entry Point (NameSpace/Class/Instance)") % entry_points_op[0]}
             ="#{entry_points_op[0]} #{_('Entry Point')}"
@@ -79,7 +90,7 @@
         =_('* Requirements - Type: jpg/png  Size: 100x100')
       %script{:type => "text/javascript"} miqInitJqueryForm();
 
-  - if @record.display
+  - if @record.display && @record.prov_type != "generic_orchestration"
     #details{:name => "details", :width => "80px"}
       %p.legend=_('Basic Information')
       %table.style1
@@ -136,7 +147,7 @@
       - else
         =_('No Resources found.')
   - else
-    - if !@record.prov_type || (@record.prov_type && @record.prov_type != "generic")
+    - if !@record.prov_type || (@record.prov_type && need_prov_dialogs?(@record.prov_type))
       #request{:name => "request", :width => "80px"}
         - if @options[:wf]
           %p.legend
