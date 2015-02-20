@@ -1,10 +1,9 @@
 - if @record.try(:name)
   #accordion.panel-group
-    = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length),
-      @panels["icon"].nil? || @panels["icon"] == false, "icon") do
+    = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
       = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
 
-    = patternfly_accordion_panel(_("Properties"), @panels["ems_prop"].nil? || @panels["ems_prop"] == false, "ems_prop") do
+    = patternfly_accordion_panel(_("Properties"), false, "ems_prop") do
       %ul.nav.nav-pills.nav-stacked
         %li
           = link_to(_('Summary'),
@@ -19,7 +18,7 @@
           %li.disabled
             = link_to(_('Timelines'), "#")
 
-    = patternfly_accordion_panel(_("Relationships"), @panels["ems_rel"].nil? || @panels["ems_rel"] == false, "ems_rel") do
+    = patternfly_accordion_panel(_("Relationships"), false, "ems_rel") do
       %ul.nav.nav-pills.nav-stacked
         - if @record.number_of(:ems_folders) == 0 || @record.ems_folder_root.nil?
           %li.disabled
@@ -42,7 +41,7 @@
         - if role_allows(:feature => "ems_cluster_show_list")
           - if @record.number_of(:ems_clusters) == 0
             %li.disabled
-            = link_to(_("Clusters (%s)") % @record.number_of(:ems_clusters), "#")
+              = link_to(_("Clusters (%s)") % @record.number_of(:ems_clusters), "#")
           - else
             %li
               = link_to_with_icon(_("Clusters (%s)") % @record.number_of(:ems_clusters),

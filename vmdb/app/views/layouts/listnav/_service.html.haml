@@ -1,19 +1,16 @@
 - if @record.try(:name)
   #accordion.panel-group
-    = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length),
-      @panels["icon"].nil? || @panels["icon"] == false, "icon") do
+    = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
       = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
 
-    = patternfly_accordion_panel(_("Properties"),
-      @panels["service_prop"].nil? || @panels["service_prop"] == false, "service_prop") do
+    = patternfly_accordion_panel(_("Properties"), false, "service_prop") do
       %ul.nav.nav-pills.nav-stacked
         %li
           = link_to(_('Summary'),
             {:action => 'show', :id => @record, :display => 'main'},
             :title => _("Show Summary"))
 
-    = patternfly_accordion_panel(_("Relationships"),
-      @panels["svc_rel"].nil? || @panels["svc_rel"] == false, "svc_rel") do
+    = patternfly_accordion_panel(_("Relationships"), false, "svc_rel") do
       %ul.nav.nav-pills.nav-stacked
         - if @record.number_of(:get_vms) == 0
           %li.disabled
