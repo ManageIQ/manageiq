@@ -225,6 +225,7 @@
     :klass: MiqPolicy
     :subcollections:
     - :conditions
+    - :policy_actions
     :collection_actions:
       :post:
       - :name: add
@@ -240,6 +241,13 @@
       :delete:
       - :name: delete
         :identifier: policy_delete
+  :policy_actions:
+    :description: Actions
+    :options:
+    - :collection
+    - :subcollection
+    :methods: *70174834086080
+    :klass: MiqAction
   :policy_profiles:
     :description: Policy Profiles
     :options:
