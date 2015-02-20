@@ -90,8 +90,8 @@ class VixDiskLib
   #
   def self.setup_env
     vars_to_clear = %w(BUNDLE_BIN BUNDLE_BIN_PATH BUNDLE_GEMFILE
-                       BUNDLE_ORIG_MANPATH EVMSERVER GEM_HOME
-                       GEM_PATH MIQ_GUID RAILS_ENV RUBYOPT ORIGINAL_GEM_PATH)
+                       BUNDLE_ORIG_MANPATH EVMSERVER MIQ_GUID
+                       RAILS_ENV RUBYOPT ORIGINAL_GEM_PATH)
     my_env = ENV.to_hash
     vars_to_clear.each do |key|
       my_env.delete(key)
