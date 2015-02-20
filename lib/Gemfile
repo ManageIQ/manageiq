@@ -26,7 +26,7 @@ gem "ffi-vix_disk_lib",     "~>1.0.1",       :require => false  # used by lib/Vi
 gem "fog",                  "~>1.28.0",      :require => false
 gem "httpclient",           "~>2.5.3",       :require => false
 gem "io-extra",             "=1.2.6",        :require => false
-gem "linux_admin",          ">=0.9.4", "<1", :require => false
+gem "linux_admin",          ">=0.10", "<1",  :require => false
 gem "log4r",                "=1.1.8",        :require => false
 gem "memoist",              "~>0.11.0",      :require => false
 gem "more_core_extensions", "~>1.2.0",       :require => false

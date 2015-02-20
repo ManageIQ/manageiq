@@ -14,11 +14,7 @@ class SysprepFile
 
   def validate_sysprep_ini
     require 'inifile'
-    Tempfile.open('miqini') do |tf|
-      tf.write(content)
-      tf.close
-      IniFile.load(tf.path)
-    end
+    IniFile.new(:content => content)
   rescue IniFile::Error
     raise "Invalid file contents detected"
   end
