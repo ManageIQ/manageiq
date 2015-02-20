@@ -41,6 +41,10 @@ module ManageiqForeman
       PagedResponse.new(raw(resource).send(action, filter).first)
     end
 
+    def host(manager_ref)
+      ::ManageiqForeman::Host.new(self, manager_ref)
+    end
+
     private
 
     def raw(resource)
