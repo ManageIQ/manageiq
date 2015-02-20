@@ -1,5 +1,4 @@
-#maincontent
-  = render :partial => "layouts/flash_msg"
-  %dl.col2
-    %dd
-      = render :partial => "shared/summary/textual", :locals => {:title => _("Properties"), :items => textual_group_properties}
+= render :partial => "layouts/flash_msg"
+.row
+  .col-sm-12.col-md-12.col-lg-6
+    = render :partial => "shared/summary/textual", :locals => {:title => _("Properties"), :items => textual_group_properties}
