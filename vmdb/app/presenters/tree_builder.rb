@@ -86,9 +86,9 @@ class TreeBuilder
       acc.concat(x_build_node_dynatree(o, id, x_tree))
     end
   end
-  
-  # FIXME: remove
+
   def tree_init_options(tree_name)
+    $log.warn "MIQ(#{self.class.name}) - TreeBuilder descendants should have their own tree_init_options"
     {}
   end
 
