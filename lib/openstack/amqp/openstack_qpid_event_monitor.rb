@@ -13,6 +13,10 @@ class OpenstackQpidEventMonitor < OpenstackEventMonitor
     OpenstackQpidConnection.available? && test_connection(options)
   end
 
+  def self.plugin_priority
+    PLUGIN_PRIORITY_MED
+  end
+
   def self.test_connection(options = {})
     connection = nil
     begin

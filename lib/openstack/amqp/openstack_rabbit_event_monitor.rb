@@ -12,7 +12,7 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
   end
 
   def self.plugin_priority
-    1
+    PLUGIN_PRIORITY_HIGH
   end
 
   # Why not inline this?

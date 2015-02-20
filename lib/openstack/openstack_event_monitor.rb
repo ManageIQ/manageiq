@@ -15,7 +15,10 @@ class OpenstackEventMonitor
     !select_event_monitor_class(options).kind_of? OpenstackNullEventMonitor
   end
 
-  DEFAULT_PLUGIN_PRIORITY = 0
+  PLUGIN_PRIORITY_HIGH    = 0
+  PLUGIN_PRIORITY_MED     = 50
+  PLUGIN_PRIORITY_LOW     = 100
+  DEFAULT_PLUGIN_PRIORITY = PLUGIN_PRIORITY_LOW
   # Subclasses can override plugin priority to receive preferential treatment.
   # The higher the plugin_priority, the ealier the plugin will be tested for
   # availability.
