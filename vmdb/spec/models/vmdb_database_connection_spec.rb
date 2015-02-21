@@ -72,6 +72,11 @@ describe VmdbDatabaseConnection do
     expect(header).to eq(CSV_HEADER)
   end
 
+  it 'computes wait_time' do
+    setting = VmdbDatabaseConnection.all.first
+    expect(setting.wait_time).to be_kind_of(Fixnum)
+  end
+
   [
     :address,
     :application,
