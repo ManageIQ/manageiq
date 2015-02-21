@@ -117,16 +117,17 @@ class Tag < ActiveRecord::Base
   end
 
   def categorization
-    @categorization ||= if !show
-                          {}
-                        else
-                          {
-                            "name"         => classification.name,
-                            "description"  => classification.description,
-                            "category"     => {"name" => category.name, "description" => category.description},
-                            "display_name" => "#{category.description}: #{classification.description}"
-                          }
-                        end
+    @categorization ||=
+      if !show
+        {}
+      else
+        {
+          "name"         => classification.name,
+          "description"  => classification.description,
+          "category"     => {"name" => category.name, "description" => category.description},
+          "display_name" => "#{category.description}: #{classification.description}"
+        }
+      end
   end
 
   private

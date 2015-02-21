@@ -1,7 +1,7 @@
 #class_props_div{:style => "width:100%;height:100%;"}
   - if x_node.split('-')[0] == "aec" || params[:pressed] ||
-    ["field_select","field_accept","field_delete"].include?(params[:action]) ||
-    (x_node.split('-')[0] == "aen" && params[:button] == "reset")
+  -    ["field_select","field_accept","field_delete"].include?(params[:action]) ||
+  -    (x_node.split('-')[0] == "aen" && params[:button] == "reset")
     - if !@in_a_form_props
       = render :partial => "layouts/flash_msg", :locals  => {:div_num => "_class_props"}
       %p.legend=_('Properties')

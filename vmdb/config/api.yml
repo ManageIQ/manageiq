@@ -65,6 +65,7 @@
     :subcollections:
     - :tags
     - :policies
+    - :policy_profiles
     :collection_actions:
       :post:
       - :name: delete
@@ -110,6 +111,13 @@
         :identifier: storage_tag
       - :name: unassign
         :identifier: storage_tag
+  :events:
+    :description: Events
+    :options:
+    - :collection
+    - :subcollection
+    :methods: *70174834086080
+    :klass: MiqEvent
   :groups:
     :description: Groups
     :options:
@@ -148,6 +156,7 @@
     :subcollections:
     - :tags
     - :policies
+    - :policy_profiles
     :collection_actions:
       :post:
       - :name: add
@@ -223,6 +232,8 @@
     :klass: MiqPolicy
     :subcollections:
     - :conditions
+    - :policy_actions
+    - :events
     :collection_actions:
       :post:
       - :name: add
@@ -238,6 +249,13 @@
       :delete:
       - :name: delete
         :identifier: policy_delete
+  :policy_actions:
+    :description: Actions
+    :options:
+    - :collection
+    - :subcollection
+    :methods: *70174834086080
+    :klass: MiqAction
   :policy_profiles:
     :description: Policy Profiles
     :options:
@@ -270,6 +288,7 @@
     :subcollections:
     - :tags
     - :policies
+    - :policy_profiles
     :collection_actions:
       :post:
       - :name: add
@@ -336,6 +355,7 @@
     :subcollections:
     - :tags
     - :policies
+    - :policy_profiles
     :collection_actions:
       :post:
       - :name: delete
@@ -549,6 +569,7 @@
     :subcollections:
     - :tags
     - :policies
+    - :policy_profiles
     :collection_actions:
       :post:
       - :name: refresh
@@ -610,6 +631,7 @@
     :subcollections:
     - :tags
     - :policies
+    - :policy_profiles
     - :accounts
     - :custom_attributes
     - :software
@@ -646,6 +668,8 @@
         :disabled: true
       - :name: set_owner
         :identifier: vm_edit
+      - :name: scan
+        :identifier: vm_scan
       - :name: delete
         :identifier: vm_delete
     :resource_actions:
@@ -680,6 +704,8 @@
         :identifier: vm_delete
       - :name: set_owner
         :identifier: vm_edit
+      - :name: scan
+        :identifier: vm_scan
       :delete:
       - :name: delete
         :identifier: vm_delete

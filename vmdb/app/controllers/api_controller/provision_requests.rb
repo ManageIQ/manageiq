@@ -17,7 +17,7 @@ class ApiController
 
       user_name = requester["user_name"] || @auth_user
 
-      MiqProvisionWorkflow.from_ws(version_str, user_name, template_fields, vm_fields, requester, tags,
+      MiqProvisionVirtWorkflow.from_ws(version_str, user_name, template_fields, vm_fields, requester, tags,
                                    additional_values, ems_custom_attrs, miq_custom_attrs)
     end
   end

@@ -8,11 +8,9 @@ object:
     inherits: 
     description: 
   fields:
-  - UnregisterFromProvider:
-      value: "#/Infrastructure/VM/Retirement/StateMachines/Methods/UnregisterFromProvider"
-  - DeleteFromProvider:
-      value: "/Infrastructure/VM/Retirement/StateMachines/Methods/DeleteFromProvider"
-  - CheckUnregisteredFromProvider:
-      value: "/Infrastructure/VM/Retirement/StateMachines/Methods/CheckUnregisteredFromProvider"
+  - RemoveFromProvider:
+      value: /Infrastructure/VM/Retirement/StateMachines/Methods/RemoveFromProvider
+  - CheckRemovedFromProvider:
+      value: /Infrastructure/VM/Retirement/StateMachines/Methods/CheckRemovedFromProvider
   - DeleteFromVMDB:
       value: "/Infrastructure/VM/Retirement/StateMachines/Methods/DeleteFromVMDB"

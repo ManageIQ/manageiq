@@ -273,6 +273,28 @@ class VimService < Handsoap::Service
 		return(parse_response(response, 'CreateSnapshot_TaskResponse')['returnval'])
 	end
 	
+	def createVM_Task(fMor, vmcs, pool, hMor)
+		response = invoke("n1:CreateVM_Task") do |message|
+			message.add "n1:_this", fMor do |i|
+				i.set_attr "type", fMor.vimType
+			end
+			message.add "n1:config" do |i|
+				i.set_attr "xsi:type", vmcs.xsiType
+				marshalObj(i, vmcs)
+			end
+			message.add "n1:pool", pool do |i|
+				i.set_attr "type", "ResourcePool"
+			end
+			# hMor is not mandatory since it's ok to miss it for DRS clusters or single host clusters
+			if hMor != nil then
+				message.add "n1:host", hMor do |i|
+					i.set_attr "type", hMor.vimType
+				end
+			end
+		end
+		return parse_response(response, 'CreateVM_TaskResponse')['returnval']
+	end
+	
 	def currentTime
 		response = invoke("n1:CurrentTime") do |message|
 			message.add "n1:_this", "ServiceInstance" do |i|
@@ -490,6 +512,18 @@ class VimService < Handsoap::Service
 		return(parse_response(response, 'MigrateVM_TaskResponse')['returnval'])
 	end
 
+	def moveIntoFolder_Task(fMor, oMor)
+		response = invoke("n1:MoveIntoFolder_Task") do |message|
+			message.add "n1:_this", fMor do |i|
+				i.set_attr "type", fMor.vimType
+			end
+			message.add "n1:list", oMor do |i|
+				i.set_attr "type", oMor.vimType
+			end
+		end
+		return parse_response(response, 'MoveIntoFolder_TaskResponse')['returnval']
+	end
+	
 	def relocateVM_Task(vmMor, cspec, priority="defaultPriority")
 		response = invoke("n1:RelocateVM_Task") do |message|
 			message.add "n1:_this", vmMor do |i|

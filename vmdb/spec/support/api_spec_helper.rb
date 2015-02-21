@@ -92,7 +92,7 @@ module ApiSpecHelper
     }
 
     collections  = %w(auth vms tags providers hosts data_stores resource_pools clusters
-                      policies policy_profiles templates conditions)
+                      policies policy_profiles templates policy_actions events conditions)
 
     collections.each { |collection| @cfme["#{collection}_url".to_sym] = "#{@cfme[:entrypoint]}/#{collection}" }
 

@@ -21,6 +21,26 @@ describe OpsController do
     end
   end
 
+  it 'can view the db_settings tab' do
+    EvmSpecHelper.create_guid_miq_server_zone
+    session[:sandboxes] = {"ops" => {:active_tree => :vmdb_tree,
+                                     :active_tab  => 'db_settings',
+                                     :trees       => {:vmdb_tree => {:active_node => 'root'}}}}
+    session[:settings] = {:views => {}, :perpage => {:list => 10}}
+    post :change_tab, :tab_id => 'db_settings', :format => :json
+  end
+
+  it 'can view the db_connections tab' do
+    FactoryGirl.create(:vmdb_database)
+    EvmSpecHelper.create_guid_miq_server_zone
+    session[:sandboxes] = {"ops" => {:active_tree => :vmdb_tree,
+                                     :active_tab  => 'db_connections',
+                                     :trees       => {:vmdb_tree => {:active_node => 'root'}}}}
+    session[:settings] = {:views => {}, :perpage => {:list => 10}}
+    post :change_tab, :tab_id => 'db_connections', :format => :json
+    expect(response.status).to eq(200)
+  end
+
   #  def rbac_user_edit
   #
   # def rbac_user_set_record_vars(user)

@@ -75,6 +75,19 @@ class ApiController
       end
     end
 
+    def scan_resource_vms(type, id = nil, _data = nil)
+      raise BadRequestError, "Must specify an id for scanning a #{type} resource" unless id
+
+      api_action(type, id) do |klass|
+        vm = resource_search(id, type, klass)
+        api_log_info("Scanning #{vm_ident(vm)}")
+
+        result = validate_vm_for_action(vm, "scan")
+        result = scan_vm(vm) if result[:success]
+        result
+      end
+    end
+
     private
 
     def vm_ident(vm)
@@ -142,6 +155,14 @@ class ApiController
       data = data.slice("event", "status", "message", "created_by")
       data.keys.each { |k| data[k] = data[k].to_s }
       data
+    end
+
+    def scan_vm(vm)
+      desc = "#{vm_ident(vm)} scanning"
+      task_id = queue_object_action(vm, desc, :method_name => "scan", :role => "smartstate")
+      action_result(true, desc, :task_id => task_id)
+    rescue => err
+      action_result(false, err.to_s)
     end
   end
 end

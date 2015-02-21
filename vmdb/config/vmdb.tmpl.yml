@@ -333,6 +333,8 @@ workers:
           :poll_method: :normal
         :ems_refresh_worker_openstack:
           :poll_method: :normal
+        :ems_refresh_worker_openstack_infra:
+          :poll_method: :normal
         :ems_refresh_worker_vmware:
           :poll_method: :normal
       :event_handler:

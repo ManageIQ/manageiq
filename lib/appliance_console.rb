@@ -428,6 +428,11 @@ Date and Time Configuration
 
         when I18n.t("advanced_settings.dbregion_setup")
           say("#{selection}\n\n")
+          unless DatabaseConfiguration.configured?
+            say("There is no database configured yet, please choose #{I18n.t("advanced_settings.db_config")} instead.")
+            press_any_key
+            raise MiqSignalError
+          end
           ApplianceConsole::Utilities.bail_if_db_connections("preventing the setup of a database region")
           clear_screen
           say("#{selection}\n\n")

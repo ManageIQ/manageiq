@@ -1,5 +1,5 @@
 #
-# Description: This method powers-off the VM on the Provider
+# Description: This method powers-off the VM on the provider
 #
 
 vm = $evm.root['vm']

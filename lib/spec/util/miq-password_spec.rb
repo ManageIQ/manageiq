@@ -219,6 +219,20 @@ describe MiqPassword do
     expect(x).to eq("some :password: ******** and another :password: ********")
   end
 
+  context ".key_root" do
+    it "defaults key_root" do
+      expect(ENV).to receive(:[]).with("KEY_ROOT").and_return("/certs")
+      MiqPassword.key_root = nil
+      expect(MiqPassword.key_root).to eq("/certs")
+    end
+
+    it "overrides key_root" do
+      expect(ENV).not_to receive(:[])
+      MiqPassword.key_root = "/abc"
+      expect(MiqPassword.key_root).to eq("/abc")
+    end
+  end
+
   def erberize(password, passmethod = "MiqPassword")
     "<%= #{passmethod}.decrypt(\"#{password}\") %>"
   end

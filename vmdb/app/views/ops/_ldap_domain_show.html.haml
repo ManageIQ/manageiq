@@ -1,0 +1,100 @@
+#main_div
+  = render(:partial => "layouts/flash_msg")
+  %fieldset
+    %p.legend= _("Basic Information")
+    %table.style1
+      %tr
+        %td.key= _("Name")
+        %td= @selected_ld.name
+  %fieldset
+    %p.legend= _("LDAP Settings")
+    %table.style1
+      %tr
+        %td.key= _("User Type")
+        %td.wide
+          = case @selected_ld.user_type
+          - when "mail"
+            - _("E-mail Address")
+          - when "dn-cn"
+            - _("Distinguished Name (CN=<user>)")
+          - when "dn-uid"
+            - _("Distinguished Name (UID=<user>)")
+          - else
+            -# when "userprincipalname"
+            - _("User Principal Name")
+      %tr
+        %td.key
+          = _("User Suffix:")
+          - if @selected_ld.user_type == "dn-cn"
+            %span#upn-mail_prefix{:style => "display: none"}
+              = h("<user>@")
+            %span#dn-cn_prefix
+              = h("CN=<user>,")
+            %span#dn-uid_prefix{:style => "display: none"}
+              = h("UID=<user>,")
+          - elsif @selected_ld.user_type == "dn-uid"
+            %span#upn-mail_prefix{:style => "display: none"}
+              = h("<user>@")
+            %span#dn-cn_prefix{:style => "display: none"}
+              = h("CN=<user>,")
+            %span#dn-uid_prefix
+              = h("UID=<user>,")
+          - else
+            -# mail or userprincipalname
+            %span#upn-mail_prefix
+              = h("<user>@")
+            %span#dn-cn_prefix{:style => "display: none"}
+              = h("CN=<user>,")
+            %span#dn-uid_prefix{:style => "display: none"}
+              = h("UID=<user>,")
+        %td.wide
+          = @selected_ld.user_suffix
+  %fieldset
+    %p.legend= _("Role Settings")
+    %table.style1
+      %tr
+        %td.key= _("Get User Groups from LDAP")
+        %td
+          = check_box_tag("get_user_groups", "1", @selected_ld.get_user_groups, :disabled => true)
+      %tr
+        %td.key= _("Get Roles from Home Forest")
+        %td
+          = check_box_tag("get_direct_groups", "1", @selected_ld.get_direct_groups, :disabled => true)
+      %tr
+        %td.key= _("Follow Referrals")
+        %td
+          = check_box_tag("follow_referrals", "1", @selected_ld.follow_referrals, :disabled => true)
+      %tr
+        %td.key= _("Base DN")
+        %td.wide
+          = @selected_ld.base_dn
+      %tr
+        %td.key= _("Bind DN")
+        %td.wide
+          = @selected_ld.authentication_userid
+      %tr
+        %td.key= _("Bind Password")
+        %td.wide
+          = @selected_ld.authentication_password ? "*******" : ""
+  %fieldset
+    %p.legend= _("LDAP Servers")
+    - if @selected_ld.ldap_servers.count <= 0
+      = ("No Records found.")
+    - else
+      %table.style3
+        %thead
+          %th.icon
+          %th= _("Host Name")
+          %th= _("Mode")
+          %th= _("Port")
+        %tbody
+          - @selected_ld.ldap_servers.sort { |a, b| a.hostname.to_s <=> b.hostname.to_s }.each do |svr|
+            %tr{:class => "no-hover #{cycle('row0', 'row1')}"}
+              %td.icon{:nowrap => true}
+                %img{:border => 0, :width => 20, :height => 20, :src => "/images/icons/new/ldap_server.png", :valign => "middle"}/
+              %td
+                = svr.hostname
+              %td
+                = svr.mode == "ldaps" ? _("LDAPS") : _("LDAP")
+              %td
+                = svr.port

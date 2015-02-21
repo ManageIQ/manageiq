@@ -179,7 +179,10 @@ class MiqPassword
   end
 
   class << self
-    attr_accessor :key_root
+    attr_writer :key_root
+    def key_root
+      @key_root ||= ENV["KEY_ROOT"]
+    end
   end
 
   def self.extract_erb_encrypted_value(value)

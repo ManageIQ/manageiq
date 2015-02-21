@@ -5,10 +5,10 @@
 # Get vm from root object
 vm = $evm.root['vm']
 
-unless vm.nil?
+if vm
   power_state = vm.attributes['power_state']
   ems = vm.ext_management_system
-  $evm.log('info', "VM:<#{vm.name}> on EMS:<#{ems ? ems.name : nil} has Power State:<#{power_state}>")
+  $evm.log('info', "VM:<#{vm.name}> on provider:<#{ems.try(:name)} has Power State:<#{power_state}>")
 
   # If VM is powered off or suspended exit
   if power_state == "off" || power_state == "suspended"

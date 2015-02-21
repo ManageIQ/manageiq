@@ -9,26 +9,26 @@
                          "miq_policy",   "miq_policy_rsop",       "report",
                          "ops",          "pxe"]
 #view_buttons_div
-- if @record.nil? && @explorer && !no_gtl_view_buttons.include?(@layout)
-  = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "x_gtl_view_tb"}
-- elsif %w(miq_capacity_planning miq_capacity_utilization).include?(@layout)
-  = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "miq_capacity_view_tb"}
-- elsif @record && @explorer && (%w(services catalogs).include?(@layout) || %w(performance timeline).include?(@display))
-  = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "blank_view_tb"}
-- elsif %w(report).include?(@layout)
-  = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => @report ? "report_view_tb" : "blank_view_tb"}
-- else
-  - if ["ems_cloud",    "ems_infra",    "resource_pool",   "policy_profile",
-        "offline",      "retired",      "templates",       "ontap_file_share",
-        "repository",   "policy_group", "event",           "snia_local_file_system",
-        "storage",      "service",      "miq_proxy",       "ontap_logical_disk",
-        "action",       "scan_profile", "ems_cluster",     "ontap_storage_volume",
-        "miq_schedule", "vm",           "storage_manager", "ontap_storage_system",
-        "host",         "condition",    "policy",          "cim_base_storage_extent"].include?(@layout) && @gtl_type && !@tagitems && !@ownershipitems && !@retireitems && !@politems && !@new_policy && !@in_a_form
-    = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "gtl_view_tb"}
-  - elsif %w(vm host ems_cluster).include?(@layout) && %(compare_miq compare_compress).include?(@lastaction)
-    = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "compare_view_tb"}
-  - elsif @lastaction == "drift"
-    = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "drift_view_tb"}
-  - elsif !["all_tasks","all_ui_tasks","timeline","diagnostics","my_tasks","my_ui_tasks","miq_server","services","usage"].include?(@layout) && !@layout.starts_with?("miq_request") && !@treesize_buttons && @display == "main" && @showtype == "main" && !@in_a_for
-    = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "x_summary_view_tb"}
+  - if @record.nil? && @explorer && !no_gtl_view_buttons.include?(@layout)
+    = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "x_gtl_view_tb"}
+  - elsif %w(miq_capacity_planning miq_capacity_utilization).include?(@layout)
+    = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "miq_capacity_view_tb"}
+  - elsif @record && @explorer && (%w(services catalogs).include?(@layout) || %w(performance timeline).include?(@display))
+    = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "blank_view_tb"}
+  - elsif %w(report).include?(@layout)
+    = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => @report ? "report_view_tb" : "blank_view_tb"}
+  - else
+    - if ["ems_cloud",    "ems_infra",    "resource_pool",   "policy_profile",
+          "offline",      "retired",      "templates",       "ontap_file_share",
+          "repository",   "policy_group", "event",           "snia_local_file_system",
+          "storage",      "service",      "miq_proxy",       "ontap_logical_disk",
+          "action",       "scan_profile", "ems_cluster",     "ontap_storage_volume",
+          "miq_schedule", "vm",           "storage_manager", "ontap_storage_system",
+          "host",         "condition",    "policy",          "cim_base_storage_extent"].include?(@layout) && @gtl_type && !@tagitems && !@ownershipitems && !@retireitems && !@politems && !@new_policy && !@in_a_form
+      = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "gtl_view_tb"}
+    - elsif %w(vm host ems_cluster).include?(@layout) && %(compare_miq compare_compress).include?(@lastaction)
+      = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "compare_view_tb"}
+    - elsif @lastaction == "drift"
+      = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "drift_view_tb"}
+    - elsif !["all_tasks","all_ui_tasks","timeline","diagnostics","my_tasks","my_ui_tasks","miq_server","services","usage"].include?(@layout) && !@layout.starts_with?("miq_request") && !@treesize_buttons && @display == "main" && @showtype == "main" && !@in_a_for
+      = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "x_summary_view_tb"}

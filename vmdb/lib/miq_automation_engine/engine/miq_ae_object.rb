@@ -38,6 +38,8 @@ module MiqAeEngine
       'server'                 => 'MiqServer'
     )
     attr_accessor :attributes, :namespace, :klass, :instance, :object_name, :instance_methods, :workspace, :current_field, :current_message
+    attr_accessor :node_parent
+    attr_reader :node_children
 
     def initialize(workspace, ns, klass, instance, object_name=nil)
       Benchmark.current_realtime[:object_count] += 1
@@ -56,6 +58,8 @@ module MiqAeEngine
       @aec              = fetch_class
       @current_field    = nil
       @current_message  = nil
+      @node_parent      = nil
+      @node_children    = []
 
       # Collect Class and Instance Methods into Hashes
       unless @aec.nil?
@@ -326,12 +330,8 @@ module MiqAeEngine
       message.split(MESSAGE_SEPARATOR).collect {|m| m.strip.downcase}
     end
 
-    def parents
-      @workspace.parents(self)
-    end
-
     def children(name=nil)
-      return @workspace.children(self) if name.nil?
+      return node_children if name.nil?
       return @rels[name]
     end
 

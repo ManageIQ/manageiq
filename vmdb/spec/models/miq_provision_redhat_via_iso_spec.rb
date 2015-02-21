@@ -60,21 +60,21 @@ describe MiqProvisionRedhatViaIso do
         end
 
         it "when phase is poll_destination_powered_off_in_vmdb" do
-          @vm_prov.phase = :poll_destination_powered_off_in_vmdb
+          @vm_prov.phase = "poll_destination_powered_off_in_vmdb"
 
           @vm.should_receive(:stop)
           @vm_prov.provision_completed
 
-          @vm_prov.phase.should == :poll_destination_powered_off_in_vmdb
+          @vm_prov.phase.should == "poll_destination_powered_off_in_vmdb"
         end
 
         it "when phase is not poll_destination_powered_off_in_vmdb" do
-          @vm_prov.phase = :post_provision
+          @vm_prov.phase = "post_provision"
 
           @vm.should_not_receive(:stop)
           @vm_prov.provision_completed
 
-          @vm_prov.phase.should == :post_provision
+          @vm_prov.phase.should == "post_provision"
         end
       end
     end

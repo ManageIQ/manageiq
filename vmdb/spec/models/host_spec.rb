@@ -314,22 +314,14 @@ describe Host do
         Host.lookUpHost(@bad_partial_hostname_multi, nil).should be_nil
       end
     end
+  end
 
-    context "discovery types and platforms" do
-      before do
-        @host = FactoryGirl.create(:host_vmware)
-      end
+  it ".host_discovery_types" do
+    expect(Host.host_discovery_types).to match_array ["esx", "ipmi"]
+  end
 
-      it ".host_discovery_types returns an Array" do
-        expected_array = [ "esx", "ipmi" ]
-        expect(Host.host_discovery_types).to eq(expected_array)
-      end
-
-      it ".host_platforms returns a Hash" do
-        expected_hash = { "VMware ESX" => "linux_generic" }
-        expect(Host.host_platforms).to eq(expected_hash)
-      end
-    end
+  it ".host_create_os_types" do
+    expect(Host.host_create_os_types).to eq("VMware ESX" => "linux_generic")
   end
 
   context "host validation" do

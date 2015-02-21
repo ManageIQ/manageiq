@@ -15,16 +15,6 @@ require 'HostScanProfiles'
 class Host < ActiveRecord::Base
   include NewWithTypeStiMixin
 
-  UNMANAGED_PLATFORMS = {
-    'vmware'    => "VMware ESX",
-    "microsoft" => "Microsoft Hyper-V"
-  }
-
-  PLATFORM_TO_USER_OS = {
-    'vmware'    => "linux_generic",
-    'microsoft' => "windows_generic"
-  }
-
   VENDOR_TYPES = {
     # DB            Displayed
     "microsoft"       => "Microsoft",
@@ -35,13 +25,14 @@ class Host < ActiveRecord::Base
     nil               => "Unknown",
   }
 
-  DEFAULT_PLATFORMS    = %w(redhat vmware amazon openstack_infra ipmi)
-
   HOST_DISCOVERY_TYPES = {
-    'vmware'    => 'esx',
-    'microsoft' => 'hyperv',
-    'kvm'       => 'kvm',
-    'ipmi'      => 'ipmi'
+    'vmware' => 'esx',
+    'ipmi'   => 'ipmi'
+  }
+
+  HOST_CREATE_OS_TYPES = {
+    'VMware ESX' => 'linux_generic',
+    # 'Microsoft Hyper-V' => 'windows_generic'
   }
 
   validates_presence_of     :name
@@ -2219,14 +2210,11 @@ class Host < ActiveRecord::Base
   # Host Discovery Types and Platforms
 
   def self.host_discovery_types
-    HOST_DISCOVERY_TYPES.values_at(*DEFAULT_PLATFORMS).compact
+    HOST_DISCOVERY_TYPES.values
   end
 
-  def self.host_platforms
-    DEFAULT_PLATFORMS.each_with_object({}) do |key, hash|
-      next unless UNMANAGED_PLATFORMS.has_key?(key)
-      hash[UNMANAGED_PLATFORMS[key]] = PLATFORM_TO_USER_OS[key]
-    end
+  def self.host_create_os_types
+    HOST_CREATE_OS_TYPES
   end
 
   def has_compliance_policies?

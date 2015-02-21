@@ -18,7 +18,8 @@ module ApplianceConsole
     class ModelWithNoBackingTable < ActiveRecord::Base
     end
 
-    REGION_FILE = File.join(RAILS_ROOT, "REGION")
+    DB_YML      = RAILS_ROOT.join("config/database.yml")
+    DB_YML_TMPL = RAILS_ROOT.join("config/database.pg.yml")
 
     CREATE_REGION_AGREE = "WARNING: Creating a database region will destroy any existing data and cannot be undone.\n\nAre you sure you want to continue? (Y/N):".freeze
     FAILED_WITH_ERROR_HYPHEN = "failed with error -".freeze
@@ -173,6 +174,10 @@ FRIENDLY
       decrypt_password(load_current)
     end
 
+    def self.configured?
+      File.exist?(DB_YML)
+    end
+
     def validated
       begin
         !!validate!
@@ -206,18 +211,16 @@ FRIENDLY
 
     def self.load_current
       require 'yaml'
-      db_yml = RAILS_ROOT.join("config/database.yml")
-      unless File.exist?(db_yml)
-        db_template = RAILS_ROOT.join("config/database.pg.yml")
+      unless File.exist?(DB_YML)
         require 'fileutils'
-        FileUtils.cp(db_template, db_yml) if File.exist?(db_template)
+        FileUtils.cp(DB_YML_TMPL, DB_YML) if File.exist?(DB_YML_TMPL)
       end
-      YAML.load_file(db_yml)
+      YAML.load_file(DB_YML)
     end
 
     def do_save(settings)
       require 'yaml'
-      File.write(RAILS_ROOT.join("config/database.yml"), YAML.dump(settings))
+      File.write(DB_YML, YAML.dump(settings))
     end
 
     def initialize_from_hash(hash)

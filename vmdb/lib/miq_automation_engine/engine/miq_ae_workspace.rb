@@ -36,6 +36,7 @@ module MiqAeEngine
 
   class MiqAeWorkspaceRuntime
     attr_accessor :graph, :num_drb_methods, :class_methods, :datastore_cache, :persist_state_hash
+    attr_reader :nodes
     DEFAULTS = {
       :readonly => false
     }
@@ -43,7 +44,7 @@ module MiqAeEngine
     def initialize(options = {})
       options            = DEFAULTS.merge(options)
       @readonly          = options[:readonly]
-      @graph             = MiqAeDigraph.new
+      @nodes             = []
       @current           = Array.new
       @num_drb_methods   = 0
       @datastore_cache   = Hash.new
@@ -131,11 +132,8 @@ module MiqAeEngine
 
           @current.push( {:ns => ns, :klass => klass, :instance => instance, :object => obj, :message => message} )
           pushed = true
-          v = @graph.vertex(obj)
-          if root
-            parent = @graph.find_by_data(root)
-            @graph.link_parent_child(parent, v) if parent
-          end
+          @nodes << obj
+          link_parent_child(root, obj) if root
 
           obj.process_assertions(message)
           obj.process_args_as_attributes(args)
@@ -151,10 +149,10 @@ module MiqAeEngine
         $miq_ae_logger.error(err.message)
       rescue MiqAeException::AssertionFailure => err
         $miq_ae_logger.info(err.message)
-        @graph.delete(v)
+        delete(obj)
       rescue MiqAeException::StopInstantiation => err
         $miq_ae_logger.info("Stopping instantiation because [#{err.message}]")
-        @graph.delete(v)
+        delete(obj)
       rescue MiqAeException::AbortInstantiation => err
         $miq_ae_logger.info("Aborting instantiation because [#{err.message}]")
         raise
@@ -273,17 +271,13 @@ module MiqAeEngine
     end
 
     def root(attrib = nil)
-      return nil if @graph.roots.empty?
-      return @graph.roots.first if attrib.nil?
-      return @graph.roots.first.attributes[attrib.downcase]
+      return nil if roots.empty?
+      return roots.first if attrib.nil?
+      roots.first.attributes[attrib.downcase]
     end
 
     def roots
-      @graph.roots
-    end
-
-    def nodes
-      @graph.nodes
+      @nodes.reject(&:node_parent)
     end
 
     def get_obj_from_path(path)
@@ -296,7 +290,7 @@ module MiqAeEngine
       if path == "/"
         return roots[0] if obj.nil?
         while true
-          parent = parents(obj).first
+          parent = obj.node_parent
           return obj if parent.nil?
           obj = parent
         end
@@ -306,7 +300,7 @@ module MiqAeEngine
           part = plist.shift
           next if part.blank? || part == "."
           raise MiqAeException::InvalidPathFormat, "bad part [#{part}] in path [#{path}]" if (part != "..")
-          obj = parents(obj).first
+          obj = obj.node_parent
         end
       else
         obj = find_named_ancestor(path)
@@ -321,7 +315,7 @@ module MiqAeEngine
       ns    = (plist.length == 0) ? "*" : plist.join('/')
 
       obj = current_object
-      while obj = parents(obj).first
+      while(obj = obj.node_parent)
         next unless klass.casecmp(obj.klass).zero?
         break if ns == "*"
         ns_split = obj.namespace.split('/')
@@ -331,28 +325,24 @@ module MiqAeEngine
       return obj
     end
 
-    def children(obj)
-      id = @graph.find_by_data(obj)
-      return [] if id.nil?
-      kids = @graph.children(id)
-      return [] if kids.empty?
-      return kids.collect { |vid| @graph[vid] }
-    end
-
-    def parents(obj)
-      id = @graph.find_by_data(obj)
-      return [] if id.nil?
-      parents = @graph.parents(id)
-      return [] if parents.nil?
-      parents.collect { |vid| @graph[vid] }
-    end
-
     def overlay_namespace(scheme, uri, ns, klass, instance)
       @dom_search.get_alternate_domain(scheme, uri, ns, klass, instance)
     end
 
     def overlay_method(ns, klass, method)
       @dom_search.get_alternate_domain_method('miqaedb', "#{ns}/#{klass}/#{method}", ns, klass, method)
+    end
+
+    private
+
+    def delete(id)
+      @nodes.delete(id)
+      id.children.each { |node| node.node_parent = nil }
+    end
+
+    def link_parent_child(parent, child)
+      parent.node_children << child
+      child.node_parent = parent
     end
   end
 end

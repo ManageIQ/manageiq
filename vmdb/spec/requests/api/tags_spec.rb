@@ -17,11 +17,11 @@ describe ApiController do
 
     Host.any_instance.stub(:miq_proxy).and_return(@miq_server)
 
-    @vm1           = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "on")
+    @vm1           = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
     @vm1_url       = "#{@cfme[:vms_url]}/#{@vm1.id}"
     @vm1_tags_url  = "#{@vm1_url}/tags"
 
-    @vm2           = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :power_state => "on")
+    @vm2           = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
     @vm2_url       = "#{@cfme[:vms_url]}/#{@vm2.id}"
     @vm2_tags_url  = "#{@vm2_url}/tags"
 

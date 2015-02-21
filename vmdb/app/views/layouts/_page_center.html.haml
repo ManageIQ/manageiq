@@ -22,15 +22,27 @@
           .row#main_content
             .col-md-12
               = yield
+              // the added space on the lines below are a fix for FF 
+              // which doesn't honor padding-bottom on a div that is preceded by overflow: auto
+              %h1 
+                &nbsp;
+              %h1
+                &nbsp;
+              %h1
+                &nbsp;
         .col-sm-3.col-md-2.col-sm-pull-9.col-md-pull-10.sidebar-pf.sidebar-pf-left.scrollable-lg
           = render :partial => "layouts/listnav"
 
       - elsif  @layout == "dashboard" && (controller.action_name == "show" || controller.action_name == "change_tab")
-        .col-sm-12.col-md-12
+        .col-sm-12.col-md-12.max-height.scrollable
           .cpage-header.page-header-bleed-right
             %br
             = render :partial => '/layouts/tabs'
           = yield
+          // the added space on the lines below are a fix for FF 
+          // which doesn't honor padding-bottom on a div that is preceded by overflow: auto
+          %h1
+            &nbsp;      
           /  .col-sm-4.col-md-3.sidebar-pf.sidebar-pf-right
           /  .sidebar-header.sidebar-header-bleed-left.sidebar-header-bleed-right
 
@@ -47,5 +59,11 @@
 
                 = render :partial => 'layouts/tabs'
           .row.max-height
-            .col-sm-12.col-md-12.scrollable{:style => "padding-bottom: 120px !important"}
+            .col-sm-12.col-md-12.scrollable
               = yield
+              // the added space on the lines below are a fix for FF 
+              // which does'nt honor padding-bottom on a div that is preceded by overflow: auto
+              %h1 
+                &nbsp;
+              %h1
+                &nbsp;

@@ -173,30 +173,10 @@ object:
       max_time: 
   - field:
       aetype: state
-      name: UnregisterFromProvider
-      display_name: 
-      datatype: string
-      priority: 9
-      owner: 
-      default_value: "/Infrastructure/VM/Retirement/StateMachines/Methods/UnregisterFromProvider"
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: update_retirement_status(status => 'Unregistering from Provider')
-      on_exit: update_retirement_status(status => 'Unregistered from Provider')
-      on_error: update_retirement_status(status => 'Error Unregistering from Provider')
-      max_retries: '100'
-      max_time: 
-  - field:
-      aetype: state
       name: PreDeleteFromProvider
       display_name: 
       datatype: string
-      priority: 10
+      priority: 9
       owner: 
       default_value: "#/Infrastructure/VM/Retirement/StateMachines/Methods/PreDeleteFromProvider"
       substitute: true
@@ -214,12 +194,12 @@ object:
       max_time: 
   - field:
       aetype: state
-      name: DeleteFromProvider
+      name: RemoveFromProvider
       display_name: 
       datatype: string
-      priority: 11
+      priority: 10
       owner: 
-      default_value: "/Infrastructure/VM/Retirement/StateMachines/Methods/DeleteFromProvider"
+      default_value: /Infrastructure/VM/Retirement/StateMachines/Methods/RemoveFromProvider
       substitute: true
       message: create
       visibility: 
@@ -227,9 +207,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_retirement_status(status => 'Deleting from Provider')
-      on_exit: update_retirement_status(status => 'Deleted from Provider')
-      on_error: update_retirement_status(status => 'Error Deleting from Provider')
+      on_entry: update_retirement_status(status => 'Removing from Provider')
+      on_exit: update_retirement_status(status => 'Removed from Provider')
+      on_error: update_retirement_status(status => 'Error Removing from Provider')
       max_retries: '100'
       max_time: 
   - field:
@@ -237,7 +217,7 @@ object:
       name: EmailOwner
       display_name: 
       datatype: string
-      priority: 12
+      priority: 11
       owner: 
       default_value: "/Infrastructure/VM/Retirement/Email/vm_retirement_emails?event=vm_retired"
       substitute: true
@@ -254,12 +234,12 @@ object:
       max_time: 
   - field:
       aetype: state
-      name: CheckUnregisteredFromProvider
+      name: CheckRemovedFromProvider
       display_name: 
       datatype: string
-      priority: 13
+      priority: 12
       owner: 
-      default_value: "/Infrastructure/VM/Retirement/StateMachines/Methods/CheckUnregisteredFromProvider"
+      default_value: /Infrastructure/VM/Retirement/StateMachines/Methods/CheckDeletedFromProvider
       substitute: true
       message: create
       visibility: 
@@ -267,10 +247,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_retirement_status(status => 'Checking Unregistration from Provider')
-      on_exit: update_retirement_status(status => 'Checked Unregistration from Provider')
-      on_error: update_retirement_status(status => 'Error Checking Unregistration
-        from Provider')
+      on_entry: update_retirement_status(status => 'Checking Removal from Provider')
+      on_exit: update_retirement_status(status => 'Checked Removal from Provider')
+      on_error: update_retirement_status(status => 'Error Checking Removal from Provider')
       max_retries: '100'
       max_time: 
   - field:
@@ -278,7 +257,7 @@ object:
       name: DeleteFromVMDB
       display_name: 
       datatype: string
-      priority: 14
+      priority: 13
       owner: 
       default_value: "/Infrastructure/VM/Retirement/StateMachines/Methods/DeleteFromVMDB"
       substitute: true
@@ -298,7 +277,7 @@ object:
       name: Finished
       display_name: 
       datatype: string
-      priority: 15
+      priority: 14
       owner: 
       default_value: 
       substitute: true
