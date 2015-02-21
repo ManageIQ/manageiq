@@ -61,29 +61,7 @@ module ActiveRecord
 
       def activity_stats_blocking_pid(locks, record)
         lock_info = record.pg_locks.detect { |lock| lock.granted == false }
-        return unless lock_info
-
-        blocking_lock = locks.find do |lock|
-          next if lock.pid == record.pid
-          next unless lock.granted
-
-          case lock.locktype
-          when "relation"
-            lock_info.blocking_lock
-          when "advisory"
-            ['classid', 'objid', 'objsubid'].all? {|key| lock_info.send(key) == lock.send(key)}
-          when "virtualxid"
-            lock_info.virtualxid == lock.virtualxid
-          when "transactionid"
-            lock_info.transactionid == lock.transactionid
-          when "tuple"
-            ['database', 'relation', 'page', 'tuple'].all? {|key| lock_info.send(key) == lock.send(key)}
-          else
-            false
-          end
-        end
-
-        blocking_lock && blocking_lock.pid
+        lock_info && lock_info.blocking_lock.pid
       end
 
       # Taken from: https://github.com/bucardo/check_postgres/blob/2.19.0/check_postgres.pl#L3492
