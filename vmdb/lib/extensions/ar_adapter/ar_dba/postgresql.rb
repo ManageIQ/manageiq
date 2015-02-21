@@ -34,6 +34,7 @@ module ActiveRecord
 
       def activity_stats
         data = raw_activity_stats
+        locks = PgLock.all
         data.collect do |record|
           conn = {'session_id' => record.pid}
           conn['xact_start']              = record.xact_start
@@ -51,35 +52,32 @@ module ActiveRecord
           if record.pg_locks.empty?
             conn['blocked_by'] = nil
           else
-            conn['blocked_by'] = activity_stats_blocking_pid(data, record)
+            conn['blocked_by'] = activity_stats_blocking_pid(locks, record)
           end
 
           conn
         end
       end
 
-      def activity_stats_blocking_pid(data, record)
+      def activity_stats_blocking_pid(locks, record)
         lock_info = record.pg_locks.detect { |lock| lock.granted == false }
 
         unless lock_info.nil?
-          data.each do |data_record|
-            next if data_record == record  || data_record.pg_locks.empty?
+          locks.each do |lock|
+            next if lock.pid == record.pid
+            next unless lock.granted
 
-            data_record.pg_locks.each do |current_lock|
-              next unless current_lock.granted
-
-              case current_lock.locktype
-              when "relation"
-                return current_lock.pid if ['database', 'relation'].all? {|key| lock_info.send(key) == lock_info.send(key)}
-              when "advisory"
-                return current_lock.pid if ['classid', 'objid', 'objsubid'].all? {|key| lock_info.send(key) == current_lock.send(key)}
-              when "virtualxid"
-                return current_lock.pid if lock_info.virtualxid == current_lock.virtualxid
-              when "transactionid"
-                return current_lock.pid if lock_info.transactionid == current_lock.transactionid
-              when "tuple"
-                return current_lock.pid if ['database', 'relation', 'page', 'tuple'].all? {|key| lock_info.send(key) == current_lock.send(key)}
-              end
+            case lock.locktype
+            when "relation"
+              return lock.pid if ['database', 'relation'].all? {|key| lock_info.send(key) == lock.send(key)}
+            when "advisory"
+              return lock.pid if ['classid', 'objid', 'objsubid'].all? {|key| lock_info.send(key) == lock.send(key)}
+            when "virtualxid"
+              return lock.pid if lock_info.virtualxid == lock.virtualxid
+            when "transactionid"
+              return lock.pid if lock_info.transactionid == lock.transactionid
+            when "tuple"
+              return lock.pid if ['database', 'relation', 'page', 'tuple'].all? {|key| lock_info.send(key) == lock.send(key)}
             end
           end
         end
