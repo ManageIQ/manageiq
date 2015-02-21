@@ -243,7 +243,7 @@ class MiqDbConfig
     self.log_activity_statistics
   end
 
-  def self.log_activity_statistics
+  def self.log_activity_statistics(output = $log)
     require 'csv'
 
     con = ActiveRecord::Base.connection
@@ -262,9 +262,9 @@ class MiqDbConfig
         end
       end
 
-      $log.info("MIQ(DbConfig.log_activity_statistics) <<-ACTIVITY_STATS_CSV\n#{csv}ACTIVITY_STATS_CSV")
+      output.info("MIQ(DbConfig.log_activity_statistics) <<-ACTIVITY_STATS_CSV\n#{csv}ACTIVITY_STATS_CSV")
     rescue => err
-      $log.warn("MIQ(DbConfig.log_activity_statistics) Unable to log stats, '#{err.message}'")
+      output.warn("MIQ(DbConfig.log_activity_statistics) Unable to log stats, '#{err.message}'")
     end
   end
 end
