@@ -69,7 +69,7 @@ module ActiveRecord
 
           case lock.locktype
           when "relation"
-            ['database', 'relation'].all? {|key| lock_info.send(key) == lock.send(key)}
+            lock_info.blocking_lock
           when "advisory"
             ['classid', 'objid', 'objsubid'].all? {|key| lock_info.send(key) == lock.send(key)}
           when "virtualxid"
