@@ -9,7 +9,7 @@ class PgStatActivity < ActiveRecord::Base
   end
 
   def blocked_by
-    lock_info = pg_locks.detect { |lock| lock.granted == false }
+    lock_info = pg_locks.where(:granted => false).first
     lock_info && lock_info.blocking_lock.pid
   end
 end
