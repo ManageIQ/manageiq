@@ -34,10 +34,6 @@ class MiqPolicy < ActiveRecord::Base
 
   attr_accessor :reserved
 
-  def description=(value)
-    super(value ? value.truncate(MiqPolicy.columns_hash['description'].limit) : value)
-  end
-
   # Note: Built-in policies only support one event and one action.
   @@built_in_policies = [
     {:name => "Stop Newly Retired Running VM",
