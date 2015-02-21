@@ -29,145 +29,58 @@ module ActiveRecord
       end
 
       def raw_activity_stats
-        data = select(<<-SQL, "Activity Statistics")
-                  SELECT stat.pid                       AS session_id
-                       , locks.locktype                 AS wait_type
-                       , locks.database
-                       , locks.relation                 AS wait_resource
-                       , locks.page
-                       , locks.tuple
-                       , locks.virtualxid
-                       , locks.transactionid
-                       , locks.virtualtransaction
-                       , locks.mode
-                       , locks.granted
-                       , locks.classid
-                       , locks.objid
-                       , locks.objsubid
-                       , stat.usesysid                  AS request_id
-                       , stat.usename                   AS login
-                       , stat.application_name          AS application
-                       , stat.client_addr               AS net_address
-                       , stat.client_hostname           AS host_name
-                       , stat.client_port
-                       , stat.xact_start
-                       , stat.query_start               AS last_request_start_time
-                       , stat.waiting                   AS task_state
-                       , EXTRACT(epoch FROM NOW() - stat.query_start)::int8     AS wait_time_ms
-                       , stat.query                     AS command
-
-                    FROM pg_stat_activity               AS stat
-                         LEFT JOIN pg_locks             AS locks
-                           ON ( stat.pid                 = locks.pid )
-
-                   WHERE stat.datname = '#{current_database}'
-                   ORDER BY stat.pid
-                          , locks.granted
-                SQL
-
-        integer_columns = %w{
-          session_id
-          database
-          wait_resource
-          page
-          tuple
-          transactionid
-          classid
-          objid
-          objsubid
-          request_id
-          client_port
-          wait_time_ms
-        }
-
-        timestamp_columns = %w{
-          xact_start
-          last_request_start_time
-        }
-
-        boolean_columns = %w{
-          granted
-        }
-
-        data.each do |datum|
-          integer_columns.each   { |c| datum[c] = datum[c].to_i }
-          timestamp_columns.each { |c| datum[c] = ActiveRecord::ConnectionAdapters::PostgreSQLColumn.string_to_time(datum[c]) }
-          boolean_columns.each   { |c| datum[c] = datum[c] == "t" }
-
-        end
-
-        data
-      end
-
-      def cooked_activity_stats
-        data = raw_activity_stats
-
-        sandbox = Hash.new
-
-        data.each do |stat_hash|
-          session_id = stat_hash['session_id']
-
-          unless sandbox.has_key?(session_id)
-            sandbox[session_id] = {'lock_info' => []}
-            %w{xact_start last_request_start_time command task_state login application request_id net_address host_name client_port wait_time_ms}.each do |key|
-              sandbox[session_id][key] = stat_hash[key]
-            end
-          end
-
-          wait_type = stat_hash['wait_type']
-
-          unless wait_type.nil?
-            lock = Hash.new
-            %w{wait_type database wait_resource granted transactionid virtualtransaction virtualxid mode page tuple wait_time_ms}.each do |key|
-              lock[key] = stat_hash[key]
-            end
-            sandbox[session_id]['lock_info'] << lock
-          end
-
-        end
-
-        sandbox
+        PgStatActivity.where(:datname => current_database).includes(:pg_locks)
       end
 
       def activity_stats
-        data = cooked_activity_stats
-        data.collect do | session_id, stat_hash |
-          conn = {'session_id' => session_id}
-          %w{xact_start last_request_start_time command task_state login application request_id net_address host_name client_port wait_time_ms}.each do |key|
-            conn[key] = stat_hash[key]
-          end
+        data = raw_activity_stats
+        data.collect do |record|
+          conn = {'session_id' => record.pid}
+          conn['xact_start']              = record.xact_start
+          conn['last_request_start_time'] = record.query_start
+          conn['command']                 = record.query
+          conn['task_state']              = record.waiting
+          conn['login']                   = record.usename
+          conn['application']             = record.application_name
+          conn['request_id']              = record.usesysid
+          conn['net_address']             = record.client_addr
+          conn['host_name']               = record.client_hostname
+          conn['client_port']             = record.client_port
+          conn['wait_time_ms']            = record.wait_time_ms
 
-          if stat_hash['lock_info'].empty?
+          if record.pg_locks.empty?
             conn['blocked_by'] = nil
           else
-            conn['blocked_by'] = activity_stats_blocking_pid(data, session_id)
+            conn['blocked_by'] = activity_stats_blocking_pid(data, record)
           end
 
           conn
         end
       end
 
-      def activity_stats_blocking_pid(data, session_id)
-        lock_info = data[session_id]['lock_info'].detect { |lock| lock['granted'] == false }
+      def activity_stats_blocking_pid(data, record)
+        lock_info = record.pg_locks.detect { |lock| lock.granted == false }
 
         unless lock_info.nil?
-          data.each do | stat_session_id, stat_hash|
-            next if stat_session_id == session_id  || stat_hash['lock_info'].empty?
+          data.each do |data_record|
+            next if data_record == record  || data_record.pg_locks.empty?
 
-            stat_hash['lock_info'].each do |current_lock|
-              next unless current_lock['granted']
+            stat_session_id = data_record.pid
 
-              case lock_info['wait_type']
-                when "relation"
-                  return stat_session_id if ['database', 'wait_resource'].all? {|key| lock_info[key] == current_lock[key]}
-                when "advisory"
-                  return stat_session_id if ['classid', 'objid', 'objsubid'].all? {|key| lock_info[key] == current_lock[key]}
-                when "virtualxid"
-                  return stat_session_id if lock_info['virtualxid'] == current_lock['virtualxid']
-                when "transactionid"
-                  return stat_session_id if lock_info['transactionid'] == current_lock['transactionid']
-                when "tuple"
-                  return stat_session_id if ['database', 'wait_resource', 'page', 'tuple'].all? {|key| lock_info[key] == current_lock[key]}
+            data_record.pg_locks.each do |current_lock|
+              next unless current_lock.granted
+
+              case current_lock.locktype
+              when "relation"
+                return stat_session_id if ['database', 'relation'].all? {|key| lock_info.send(key) == lock_info.send(key)}
+              when "advisory"
+                return stat_session_id if ['classid', 'objid', 'objsubid'].all? {|key| lock_info.send(key) == current_lock.send(key)}
+              when "virtualxid"
+                return stat_session_id if lock_info.virtualxid == current_lock.virtualxid
+              when "transactionid"
+                return stat_session_id if lock_info.transactionid == current_lock.transactionid
+              when "tuple"
+                return stat_session_id if ['database', 'relation', 'page', 'tuple'].all? {|key| lock_info.send(key) == current_lock.send(key)}
               end
             end
           end
