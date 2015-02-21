@@ -65,22 +65,20 @@ module ActiveRecord
           data.each do |data_record|
             next if data_record == record  || data_record.pg_locks.empty?
 
-            stat_session_id = data_record.pid
-
             data_record.pg_locks.each do |current_lock|
               next unless current_lock.granted
 
               case current_lock.locktype
               when "relation"
-                return stat_session_id if ['database', 'relation'].all? {|key| lock_info.send(key) == lock_info.send(key)}
+                return current_lock.pid if ['database', 'relation'].all? {|key| lock_info.send(key) == lock_info.send(key)}
               when "advisory"
-                return stat_session_id if ['classid', 'objid', 'objsubid'].all? {|key| lock_info.send(key) == current_lock.send(key)}
+                return current_lock.pid if ['classid', 'objid', 'objsubid'].all? {|key| lock_info.send(key) == current_lock.send(key)}
               when "virtualxid"
-                return stat_session_id if lock_info.virtualxid == current_lock.virtualxid
+                return current_lock.pid if lock_info.virtualxid == current_lock.virtualxid
               when "transactionid"
-                return stat_session_id if lock_info.transactionid == current_lock.transactionid
+                return current_lock.pid if lock_info.transactionid == current_lock.transactionid
               when "tuple"
-                return stat_session_id if ['database', 'relation', 'page', 'tuple'].all? {|key| lock_info.send(key) == current_lock.send(key)}
+                return current_lock.pid if ['database', 'relation', 'page', 'tuple'].all? {|key| lock_info.send(key) == current_lock.send(key)}
               end
             end
           end
