@@ -7,4 +7,9 @@ class PgStatActivity < ActiveRecord::Base
   def wait_time_ms
     (Time.now - query_start).to_i
   end
+
+  def blocked_by
+    lock_info = pg_locks.detect { |lock| lock.granted == false }
+    lock_info && lock_info.blocking_lock.pid
+  end
 end

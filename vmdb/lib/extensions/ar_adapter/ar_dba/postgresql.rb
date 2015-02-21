@@ -34,7 +34,6 @@ module ActiveRecord
 
       def activity_stats
         data = raw_activity_stats
-        locks = PgLock.all
         data.collect do |record|
           conn = {'session_id' => record.pid}
           conn['xact_start']              = record.xact_start
@@ -48,20 +47,10 @@ module ActiveRecord
           conn['host_name']               = record.client_hostname
           conn['client_port']             = record.client_port
           conn['wait_time_ms']            = record.wait_time_ms
-
-          if record.pg_locks.empty?
-            conn['blocked_by'] = nil
-          else
-            conn['blocked_by'] = activity_stats_blocking_pid(locks, record)
-          end
+          conn['blocked_by']              = record.blocked_by
 
           conn
         end
-      end
-
-      def activity_stats_blocking_pid(locks, record)
-        lock_info = record.pg_locks.detect { |lock| lock.granted == false }
-        lock_info && lock_info.blocking_lock.pid
       end
 
       # Taken from: https://github.com/bucardo/check_postgres/blob/2.19.0/check_postgres.pl#L3492
