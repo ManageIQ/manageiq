@@ -921,7 +921,7 @@ module ApplicationController::Buttons
     end
 
     @edit[:sorted_user_roles] = Array.new
-    MiqUserRole.all.sort{|a,b| a.name.downcase <=> b.name.downcase}.each do |r|
+    MiqUserRole.all.sort_by { |ur| ur.name.downcase }.each do |r|
       @edit[:sorted_user_roles].push(r.name=>to_cid(r.id))
     end
     @edit[:new][:dialog_id] = @custom_button.resource_action.dialog_id.to_i

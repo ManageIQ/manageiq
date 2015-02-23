@@ -159,7 +159,7 @@ module OpsController::Settings::CapAndU
       c = cl_hash[:cl_rec]
       enabled = cl_hash[:ho_enabled]
       enabled_host_ids = enabled.collect(&:id)
-      hosts = (cl_hash[:ho_enabled] + cl_hash[:ho_disabled]).sort {|a,b| a.name.downcase <=> b.name.downcase}
+      hosts = (cl_hash[:ho_enabled] + cl_hash[:ho_disabled]).sort_by { |ho| ho.name.downcase }
       cl_enabled = enabled_host_ids.length == hosts.length
       if cl_enabled && !enabled.empty?
         en_flg = true
@@ -190,12 +190,12 @@ module OpsController::Settings::CapAndU
         @edit[:current][:clusters][j][:capture] = flg
       end
     end
-    @edit[:current][:clusters].sort!{|a,b| a[:name]<=>b[:name]}
+    @edit[:current][:clusters].sort_by! { |c| c[:name] }
     build_cl_hosts_tree(@edit[:current][:clusters])
 
     @edit[:current][:storages] = Array.new
     @temp[:st_recs] = Hash.new
-    Storage.in_my_region.all(:include => [:taggings, :tags, :hosts], :select => "id, name, store_type, location").sort{|a,b| a.name.downcase <=> b.name.downcase}.each do |s|
+    Storage.in_my_region.all(:include => [:taggings, :tags, :hosts], :select => "id, name, store_type, location").sort_by { |s| s.name.downcase }.each do |s|
       @temp[:st_recs][s.id] = s
       @edit[:current][:storages].push({:name=>s.name,
                                 :id=>s.id,
@@ -410,7 +410,7 @@ module OpsController::Settings::CapAndU
         st_hosts.push({:name=>cname})
       end
 
-      st_hosts.sort{|a,b| a[:name].downcase<=>b[:name].downcase}.each do |h|
+      st_hosts.sort_by { |h| h[:name].downcase }.each do |h|
         temp = Hash.new
         temp[:key] = h[:name]
         temp[:title] = h[:name]

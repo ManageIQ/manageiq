@@ -1722,9 +1722,9 @@ module ApplicationController::Filter
     temp = MiqSearch.new
     temp.description = "ALL"
     temp.id = 0
-    @def_searches = MiqSearch.all(:conditions=>["(search_type=? or (search_type=? and (search_key is null or search_key<>?))) and db=?", "global","default","_hidden_",db]).sort{|a,b| a.description.downcase<=>b.description.downcase}
+    @def_searches = MiqSearch.all(:conditions=>["(search_type=? or (search_type=? and (search_key is null or search_key<>?))) and db=?", "global","default","_hidden_",db]).sort_by { |s| s.description.downcase }
     @def_searches = @def_searches.unshift(temp) if !@def_searches.blank?
-    @my_searches = MiqSearch.all(:conditions=>["search_type=? and search_key=? and db=?", "user",session[:userid],db]).sort{|a,b| a.description.downcase<=>b.description.downcase}
+    @my_searches = MiqSearch.all(:conditions=>["search_type=? and search_key=? and db=?", "user",session[:userid],db]).sort_by { |s| s.description.downcase }
   end
 
   def process_changed_expression(params, chosen_key, exp_key, exp_value, exp_valx)

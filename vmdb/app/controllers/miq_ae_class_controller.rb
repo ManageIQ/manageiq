@@ -836,14 +836,14 @@ class MiqAeClassController < ApplicationController
             var.starts_with?("cls_inst_collect") || var.starts_with?("cls_inst_on_entry") ||
             var.starts_with?("cls_inst_on_exit") || var.starts_with?("cls_inst_on_error") ||
             var.starts_with?("cls_inst_max_retries") || var.starts_with?("cls_inst_max_time")
-          @ae_class.ae_fields.sort! { |a,b| a.priority.to_i <=> b.priority.to_i } if @ae_class
+          @ae_class.ae_fields.sort_by! { |f| f.priority.to_i } if @ae_class
         end
         # for instance node selected in the left tree
         if var.starts_with?("inst_value") || var.starts_with?("inst_password_value") ||
             var.starts_with?("inst_collect") || var.starts_with?("inst_on_entry") ||
             var.starts_with?("inst_on_exit") || var.starts_with?("inst_on_error") ||
             var.starts_with?("inst_max_retries") || var.starts_with?("inst_max_time")
-          @ae_class.ae_fields.sort! { |a,b| a.priority.to_i <=> b.priority.to_i } if @ae_class
+          @ae_class.ae_fields.sort_by! { |f| f.priority.to_i } if @ae_class
         end
       end
 

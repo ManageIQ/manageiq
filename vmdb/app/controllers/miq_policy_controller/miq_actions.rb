@@ -277,8 +277,8 @@ module MiqPolicyController::MiqActions
                                   ["Host","host"],
                                   [ui_lookup(:table=>"storage"),"storage"],
                                   ["Resource Pool","parent_resource_pool"]
-                                ].sort{|a,b| a.first.downcase<=>b.first.downcase}
-    @edit[:cats] = MiqAction.inheritable_cats.sort{|a,b| a.description.downcase <=> b.description.downcase}.collect{|c| [c.name, c.description]}
+                                ].sort_by { |x| x.first.downcase }
+    @edit[:cats] = MiqAction.inheritable_cats.sort_by { |c| c.description.downcase }.collect { |c| [c.name, c.description] }
 
     @edit[:current] = copy_hash(@edit[:new])
     get_tags_tree
@@ -309,7 +309,7 @@ module MiqPolicyController::MiqActions
     )
     if cats.length > 0
       r_kids = Array.new
-      cats.sort{|a,b| a.description.downcase <=> b.description.downcase}.each do |c|
+      cats.sort_by { |c| c.description.downcase }.each do |c|
       if !c.read_only
         c_node = Hash.new                       # Build the category nodes
         c_node = TreeNodeBuilder.generic_tree_node(
@@ -321,7 +321,7 @@ module MiqPolicyController::MiqActions
         )
         if c.entries.length > 0
           c_kids ||= Array.new
-          c.entries.sort{|a,b| a.description.downcase <=> b.description.downcase}.each do | t |
+          c.entries.sort_by { |t| t.description.downcase }.each do |t|
             t_node = Hash.new                   # Build the tag nodes
             t_node = TreeNodeBuilder.generic_tree_node(
                        "t__#{t.tag.name}",
@@ -437,7 +437,7 @@ module MiqPolicyController::MiqActions
     end
 
     if x_active_tree == :action_tree
-      @action_policies = @action.miq_policies.sort{|a,b|a.description.downcase<=>b.description.downcase}
+      @action_policies = @action.miq_policies.sort_by { |p| p.description.downcase }
     end
 
     if ["inherit_parent_tags","remove_tags"].include?(@action.action_type)

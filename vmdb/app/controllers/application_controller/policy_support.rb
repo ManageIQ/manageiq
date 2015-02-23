@@ -125,7 +125,7 @@ module ApplicationController::PolicySupport
 
   def profile_build
     session[:assignments] = session[:protect_item].get_policies
-    session[:assignments].sort{|a,b| a["description"] <=> b["description"]}.each do | policy |
+    session[:assignments].sort_by { |a| a["description"] }.each do |policy|
       @catinfo ||= Hash.new                               # Hash to hold category squashed states
       cat = policy["description"]
       if @catinfo[cat] ==  nil

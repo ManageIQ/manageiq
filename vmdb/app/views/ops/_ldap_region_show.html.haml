@@ -28,7 +28,7 @@
           %th= _("User Type")
           %th= _("User Suffix")
         %tbody
-          - @selected_lr.ldap_domains.sort { |a, b| a.name.to_s <=> b.name.to_s }.each do |domain|
+          - @selected_lr.ldap_domains.sort_by { |d| d.name.to_s }.each do |domain|
             %tr{:onclick     => "cfmeDynatree_activateNode('settings_tree', 'ld-#{to_cid(domain.id)}');",
                 :onmouseover => "this.style.cursor='pointer'",
                 :title       => _("Click to view details")}

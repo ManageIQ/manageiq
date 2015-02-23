@@ -961,7 +961,7 @@ module OpsController::Diagnostics
         @database = MiqDbConfig.current.options
         db_types = MiqDbConfig.get_db_types
         @database[:display_name] = db_types[@database[:name]]
-        MiqSchedule.all(:conditions=>"towhat = 'DatabaseBackup' And adhoc is NULL").sort{|a,b| a.name.downcase <=> b.name.downcase}.each do |s|
+        MiqSchedule.all(:conditions=>"towhat = 'DatabaseBackup' And adhoc is NULL").sort_by { |s| s.name.downcase }.each do |s|
           if s.towhat == "DatabaseBackup"
             @edit[:backup_schedules][s.id] = s.name
           end
@@ -1071,7 +1071,7 @@ module OpsController::Diagnostics
     case @sb[:diag_tree_type]
     when "roles"
       session[:tree_name] = "#{parent.class.to_s.downcase}_roles_tree"
-      parent.miq_servers.sort{|a,b| a.name.to_s <=> b.name.to_s}.each do |s|
+      parent.miq_servers.sort_by { |s| s.name.to_s }.each do |s|
         unless @sb[:diag_selected_id] # Set default selected record vars
           @sb[:diag_selected_model] = s.class.to_s
           @sb[:diag_selected_id] = s.id
@@ -1095,7 +1095,7 @@ module OpsController::Diagnostics
 
         server_kids = Array.new
         active_role_names = s.active_role_names
-        s.assigned_server_roles.sort{|a,b| a.server_role.description <=> b.server_role.description}.each do |asr|
+        s.assigned_server_roles.sort_by { |asr| asr.server_role.description }.each do |asr|
           next if parent.is_a?(MiqRegion) && !asr.server_role.regional_role?  # Only regional roles under Region
           if asr.server_role.name != "database_owner"
             role_node = Hash.new
@@ -1138,7 +1138,7 @@ module OpsController::Diagnostics
           tree_kids.push(role_node)
 
           role_kids = Array.new
-          r.assigned_server_roles.sort{|a,b| a.miq_server.name <=> b.miq_server.name}.each do |asr|
+          r.assigned_server_roles.sort_by { |asr| asr.miq_server.name }.each do |asr|
             next if parent.is_a?(Zone) && asr.miq_server.my_zone != parent.name
             server_node = Hash.new
             server_node[:key] = "asr_#{asr.id}"
