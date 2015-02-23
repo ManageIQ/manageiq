@@ -46,33 +46,6 @@ describe VmdbDatabaseConnection do
     wait_for_lock.join
   end
 
-  CSV_HEADER = %w{ session_id
-                   xact_start
-                   last_request_start_time
-                   command
-                   task_state
-                   login
-                   application
-                   request_id
-                   net_address
-                   host_name
-                   client_port
-                   wait_time_ms
-                   blocked_by }
-
-  it 'logs stats' do
-    buffer = StringIO.new
-    class << buffer
-      alias :info :write
-    end
-
-    MiqDbConfig.log_activity_statistics(buffer)
-    lines = buffer.string.lines.drop(1)
-    lines.pop
-    header, *rows = CSV.parse lines.join
-    expect(header).to eq(CSV_HEADER)
-  end
-
   it 'computes wait_time' do
     setting = VmdbDatabaseConnection.all.first
     expect(setting.wait_time).to be_kind_of(Fixnum)

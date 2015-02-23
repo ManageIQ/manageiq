@@ -1,15 +1,40 @@
 require "spec_helper"
 
 describe MiqDbConfig do
+  CSV_HEADER = %w{ session_id
+                   xact_start
+                   last_request_start_time
+                   command
+                   task_state
+                   login
+                   application
+                   request_id
+                   net_address
+                   host_name
+                   client_port
+                   wait_time_ms
+                   blocked_by }
+
 
   it ".log_activity_statistics" do
-    activity_stats  = [{"session_id" => 79687, "blocked_by" => nil, "wait_time_ms" => 0}]
-    expected_output = "MIQ(DbConfig.log_activity_statistics) <<-ACTIVITY_STATS_CSV\nsession_id,blocked_by,wait_time_ms\n79687,,0\nACTIVITY_STATS_CSV"
-    ActiveRecord::Base.stub_chain(:connection, :activity_stats).and_return(activity_stats)
-    $log ||= double
-    $log.should_receive(:info).with(expected_output)
+    db = FactoryGirl.create(:vmdb_database)
+    buffer = StringIO.new
+    class << buffer
+      alias :info :write
+    end
 
-    MiqDbConfig.log_activity_statistics
+    MiqDbConfig.log_activity_statistics(buffer)
+    lines = buffer.string.lines
+    expect(lines.shift).to eq "MIQ(DbConfig.log_activity_statistics) <<-ACTIVITY_STATS_CSV\n"
+    expect(lines.pop).to eq "ACTIVITY_STATS_CSV"
+
+    header, *rows = CSV.parse lines.join
+    expect(header).to eq(CSV_HEADER)
+
+    expect(rows.length).to be > 0
+    rows.each do |row|
+      expect(row.first).to be
+    end
   end
 
   it ".get_db_types" do
