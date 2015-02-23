@@ -1,0 +1,2 @@
+class TreeBuilderInstancesFilter < TreeBuilder
+end

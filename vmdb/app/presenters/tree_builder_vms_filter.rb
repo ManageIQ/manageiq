@@ -1,0 +1,2 @@
+class TreeBuilderVmsFilter < TreeBuilder
+end

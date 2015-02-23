@@ -1,0 +1,2 @@
+class TreeBuilderImagesFilter < TreeBuilder
+end
