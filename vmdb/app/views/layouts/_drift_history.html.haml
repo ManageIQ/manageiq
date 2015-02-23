@@ -15,7 +15,7 @@
           = _("Timestamp")
     %tbody
       - @timestamps.reverse.each_with_index do |ts, idx|
-        %tr{:class => cycle('row0', 'row1')}
+        %tr{:class => cycle('row0 no-hover', 'row1 no-hover')}
           %td{:onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);", :nowrap => true}
             = check_box_tag("check_#{(@timestamps.length - 1 - idx)}", 1, false, :id => "listcheckbox", :onclick => "miqUpdateButtons(this,'center_tb');")
           %td{:onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);", :nowrap => true}
