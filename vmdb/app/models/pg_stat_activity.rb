@@ -7,23 +7,25 @@ class PgStatActivity < ActiveRecord::Base
   def self.activity_stats
     current_database = connection.current_database
     data = where(:datname => current_database).includes(:pg_locks)
-    data.collect do |record|
-      conn = {'session_id' => record.pid}
-      conn['xact_start']              = record.xact_start
-      conn['last_request_start_time'] = record.query_start
-      conn['command']                 = record.query
-      conn['task_state']              = record.waiting
-      conn['login']                   = record.usename
-      conn['application']             = record.application_name
-      conn['request_id']              = record.usesysid
-      conn['net_address']             = record.client_addr
-      conn['host_name']               = record.client_hostname
-      conn['client_port']             = record.client_port
-      conn['wait_time_ms']            = record.wait_time_ms
-      conn['blocked_by']              = record.blocked_by
+    data.collect(&:to_csv_hash)
+  end
 
-      conn
-    end
+  def to_csv_hash
+    {
+      'session_id'              => pid,
+      'xact_start'              => xact_start,
+      'last_request_start_time' => query_start,
+      'command'                 => query,
+      'task_state'              => waiting,
+      'login'                   => usename,
+      'application'             => application_name,
+      'request_id'              => usesysid,
+      'net_address'             => client_addr,
+      'host_name'               => client_hostname,
+      'client_port'             => client_port,
+      'wait_time_ms'            => wait_time_ms,
+      'blocked_by'              => blocked_by,
+    }
   end
 
   def wait_time_ms
