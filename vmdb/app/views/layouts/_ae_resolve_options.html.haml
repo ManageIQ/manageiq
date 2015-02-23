@@ -11,7 +11,7 @@
       %td.key= _("System/Process/")
       %td
         = select_tag('instance_name',
-                     options_for_select(resolve[:instance_names].sort{|a, b| a.downcase <=> b.downcase},
+                     options_for_select(resolve[:instance_names].sort_by(&:downcase),
                      resolve[:new][:instance_name]),
                      "data-miq_sparkle_on"  => true,
                      "data-miq_sparkle_off" => true,

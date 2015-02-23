@@ -298,7 +298,7 @@ module OpsController::Settings::Tags
   end
 
   def category_get_all
-    cats = Classification.categories.sort{|a,b| a.name <=> b.name}  # Get the categories, sort by name
+    cats = Classification.categories.sort_by(&:name)  # Get the categories, sort by name
     @categories = Array.new                                       # Classifications array for first chooser
     cats.each do |c|
       if !c.read_only?    # Show the non-read_only categories

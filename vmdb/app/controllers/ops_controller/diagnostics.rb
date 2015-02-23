@@ -1108,7 +1108,7 @@ module OpsController::Diagnostics
       end
     when "servers"
       session[:tree_name] = "#{parent.class.to_s.downcase}_servers_tree"
-      ServerRole.all.sort{|a,b| a.description <=> b.description}.each do |r|
+      ServerRole.all.sort_by(&:description).each do |r|
         next if parent.is_a?(MiqRegion) && !r.regional_role?  # Only regional roles under Region
         next unless (parent.is_a?(Zone) && r.miq_servers.any?{ |s| s.my_zone == parent.name }) ||
                     (parent.is_a?(MiqRegion) && !r.miq_servers.empty?) # Skip if no assigned servers in this zone

@@ -290,13 +290,13 @@ module ReportController::Widgets
       if @widget.visibility && @widget.visibility[:roles]
         @sb[:user_roles] = Array.new
         if @widget.visibility[:roles][0] != "_ALL_"
-          MiqUserRole.all.sort{|a,b| a.name <=> b.name}.each do |r|
+          MiqUserRole.all.sort_by(&:name).each do |r|
             @sb[:user_roles].push(r.name) if @widget.visibility[:roles].include?(r.name)
           end
         end
       elsif @widget.visibility && @widget.visibility[:groups]
         @sb[:groups] = Array.new
-        MiqGroup.all.sort{|a,b| a.description <=> b.description}.each do |r|
+        MiqGroup.all.sort_by(&:description).each do |r|
           @sb[:groups].push(r.description) if @widget.visibility[:groups].include?(r.description)
         end
       end
@@ -401,7 +401,9 @@ module ReportController::Widgets
       end
     elsif ["m"].include?(@sb[:wtype])
       @edit[:new][:shortcuts] = Hash.new
-      @widget.miq_widget_shortcuts.sort{|a,b| a.sequence <=> b.sequence}.each{|ws| @edit[:new][:shortcuts][ws.miq_shortcut.id] = ws.description}
+      @widget.miq_widget_shortcuts.sort_by(&:sequence).each do |ws|
+        @edit[:new][:shortcuts][ws.miq_shortcut.id] = ws.description
+      end
       @edit[:new][:shortcut_keys] = @edit[:new][:shortcuts].keys  # Save the keys array so we can compare the hash order
       @edit[:avail_shortcuts] = widget_build_avail_shortcuts
     end

@@ -320,7 +320,7 @@ class HostController < ApplicationController
       @showlinks = true
       @in_a_form = true
       @edit[:hostitems] = Array.new
-      hostitems = Host.find(session[:host_items]).sort{|a,b| a.name <=> b.name} # Get the db records that are being tagged
+      hostitems = Host.find(session[:host_items]).sort_by(&:name) # Get the db records that are being tagged
       @edit[:selected_hosts] = { nil => "<Choose>" }
       hostitems.each do |h|
         @edit[:selected_hosts][h.id] = h.name

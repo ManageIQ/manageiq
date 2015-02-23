@@ -6,7 +6,7 @@
     - else
       %table.table.table-striped.table-bordered.table-hover
         %tbody
-          - @zones.sort { |a, b| a.name <=> b.name }.each do |z|
+          - @zones.sort_by(&:name).each do |z|
             %tr{:onclick => "cfmeDynatree_activateNode('diagnostics_tree', 'z-#{to_cid(z.id)}')",  |
               :onmouseover => "this.style.cursor = 'pointer'",                                     |
               :title => _("View this Zone")}                                                       |

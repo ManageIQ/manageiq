@@ -304,7 +304,7 @@ module ApplicationController::Tags
 
   # Build the tagging assignment screen
   def tagging_build_screen
-    @tagitems = session[:tag_db].find(session[:tag_items]).sort{|a,b| a.name <=> b.name}  # Get the db records that are being tagged
+    @tagitems = session[:tag_db].find(session[:tag_items]).sort_by(&:name)  # Get the db records that are being tagged
     @view = get_db_view(session[:tag_db])       # Instantiate the MIQ Report view object
     @view.table = MiqFilter.records2table(@tagitems, :only=>@view.cols + ['id'])
 
@@ -347,7 +347,7 @@ module ApplicationController::Tags
     end
     session[:cat] ||= cats.first                                    # Set to first category, if not already set
 
-    @tagitems = session[:tag_db].find(session[:tag_items]).sort{|a,b| a.name <=> b.name}  # Get the db records that are being tagged
+    @tagitems = session[:tag_db].find(session[:tag_items]).sort_by(&:name)  # Get the db records that are being tagged
 
     @view = get_db_view(session[:tag_db])       # Instantiate the MIQ Report view object
     @view.table = MiqFilter.records2table(@tagitems, :only=>@view.cols + ['id'])

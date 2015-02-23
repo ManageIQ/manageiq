@@ -32,9 +32,9 @@ module OpsController::Db
       end
       exp =  MiqExpression.new(condition)
     elsif model == VmdbDatabaseConnection
-      @zones = Zone.find(:all).sort{|a,b| a.name <=> b.name}.collect{|z| [z.name, z.name]}
+      @zones = Zone.find(:all).sort_by(&:name).collect { |z| [z.name, z.name] }
       # for now we dont need this pulldown, need ot get a method that could give us a list of workers for filter pulldown
-      #@workers = MiqWorker.all(:order=>"type ASC").uniq.sort{|a,b| a.type <=> b.type}.collect{|w| [w.friendly_name, w.id]}
+      #@workers = MiqWorker.all(:order=>"type ASC").uniq.sort_by(&:type).collect { |w| [w.friendly_name, w.id] }
     end
 
     @view, @pages = get_view(model, :filter=>exp ? exp : nil) # Get the records (into a view) and the paginator

@@ -93,11 +93,11 @@ module ApplicationController::Buttons
 #     @resolve[:saved_buttons] = Array.new
 #     aset = CustomButtonSet.find_by_name("#{@resolve[:target_class].to_s.downcase}_custom")
 #     if aset
-#       aset.members.sort{|a,b| a.button_id <=> b.button_id }.each do |as|
+#       aset.members.sort_by(&:button_id).each do |as|
 #         @resolve[:saved_buttons].push(as)
 #       end
 #     end
-#     uri = CustomButton.all(:conditions => {:applies_to_class=>@resolve[:target_class].to_s, :button_id=>0}).sort{|a,b| a.description <=> b.description }
+#     uri = CustomButton.all(:conditions => {:applies_to_class=>@resolve[:target_class].to_s, :button_id=>0}).sort_by(&:description)
 #     if uri    # add uri records that dont have button number assigned to them
 #       uri.each do |u|
 #         @resolve[:saved_buttons].push(u)
@@ -677,7 +677,7 @@ module ApplicationController::Buttons
         @edit[:new][:fields].push([mem.name,mem.id])
       end
     end
-    uri = CustomButton.buttons_for(@sb[:applies_to_class]).sort{|a,b| a.name <=> b.name }
+    uri = CustomButton.buttons_for(@sb[:applies_to_class]).sort_by(&:name)
     uri.each do |u|
       @edit[:new][:available_fields].push([u.name,u.id]) if u.parent.nil?
     end
@@ -1025,9 +1025,9 @@ module ApplicationController::Buttons
       end
       @sb[:user_roles] = Array.new
       if @temp[:custom_button].visibility && @temp[:custom_button].visibility[:roles] && @temp[:custom_button].visibility[:roles][0] != "_ALL_"
-#         User.roles.sort{|a,b| a.name <=> b.name}.each do |r|
+#         User.roles.sort_by(&:name).each do |r|
 #           @sb[:user_roles].push(r.description) if @temp[:custom_button].visibility[:roles].include?(r.name) && !@sb[:user_roles].include?(r.description)
-        MiqUserRole.all.sort{|a,b| a.name <=> b.name}.each do |r|
+        MiqUserRole.all.sort_by(&:name).each do |r|
           @sb[:user_roles].push(r.name) if @temp[:custom_button].visibility[:roles].include?(r.name)
         end
       end
