@@ -75,12 +75,18 @@
                 %thead
                   - #  had to move <th> inside loop to show following columns only when report node is selected in tree
                   %th.icon
-                  = _('Name')
-                  = _('Primary (Record) Filter')
-                  = _('Secondary (Display) Filter')
-                  = _('Sort By')
-                  = _('Chart')
-                  = _('User')
+                  %th
+                    = _('Name')
+                  %th
+                    = _('Primary (Record) Filter')
+                  %th
+                    = _('Secondary (Display) Filter')
+                  %th
+                    = _('Sort By')
+                  %th
+                    = _('Chart')
+                  %th
+                    = _('User')
                   %th
                     = Dictionary::gettext("MiqGroup", :type => :model, :notfound => :titleize)
               - if @sb[:rep_details][rep]
