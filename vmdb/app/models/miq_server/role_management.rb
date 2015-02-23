@@ -1,6 +1,8 @@
 module MiqServer::RoleManagement
   extend ActiveSupport::Concern
 
+  ROLES_NEEDING_APACHE = %w(user_interface web_services).freeze
+
   included do
     has_many :assigned_server_roles, :dependent => :destroy
     has_many :server_roles,   :through => :assigned_server_roles
@@ -34,6 +36,10 @@ module MiqServer::RoleManagement
 
   def sync_active_roles
     @active_role_names = self.active_role_names
+  end
+
+  def apache_needed?
+    !(active_role_names & ROLES_NEEDING_APACHE).empty?
   end
 
   def set_active_role_flags
