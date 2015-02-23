@@ -82,7 +82,7 @@
               = render(:partial => "layouts/quadicon",
                 :locals         => {:mode => :icon,
                   :item                   => @drift_obj,
-                  :size                   => 150,
+                  :size                   => size,
                   :typ                    => :listnav})
           - if @sb[:compare_db] != "EmsCluster"
             %div{:style => "margin-top: -25px;"}
