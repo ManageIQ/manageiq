@@ -87,10 +87,6 @@ class VmdbDatabaseConnection < ActiveRecord::Base
     }
   end
 
-  #
-  # Attributes and Reflections
-  #
-
   def vmdb_database
     VmdbDatabase.find_by_id(self.vmdb_database_id)
   end
@@ -119,9 +115,5 @@ class VmdbDatabaseConnection < ActiveRecord::Base
     return @pid if defined?(@pid)
     parent = miq_worker || miq_server
     @pid = parent && parent.pid
-  end
-
-  def self.find_activity
-    all
   end
 end
