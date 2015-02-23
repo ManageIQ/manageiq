@@ -93,25 +93,20 @@ class VmdbDatabaseConnection < ActsAsArModel
   end
 
   def self.vmdb_database_connections
-    connections = PgStatActivity.activity_stats
-    return [] if connections.nil?
-    connections.collect { |hash| filtered_hash(hash) }
+    connections = PgStatActivity.find_activity
+    connections.collect { |record| filtered_hash(record) }
   end
 
-  def self.filtered_hash(hash)
-    dictionary = {
-      :address       => 'net_address',
-      :application   => 'application',
-      :blocked_by    => 'blocked_by',
-      :command       => 'command',
-      :spid          => 'session_id',
-      :task_state    => 'task_state',
-      :wait_resource => 'wait_resource',
-      :wait_time     => 'wait_time_ms',
+  def self.filtered_hash(record)
+    {
+      :address       => record.client_addr,
+      :application   => record.application_name,
+      :blocked_by    => record.blocked_by,
+      :command       => record.query,
+      :spid          => record.pid,
+      :task_state    => record.waiting,
+      :wait_time     => record.wait_time_ms,
     }
-    filtered_hash = {}
-    dictionary.each { |key, pg_key| filtered_hash[key] = hash[pg_key] }
-    filtered_hash
   end
 
 end

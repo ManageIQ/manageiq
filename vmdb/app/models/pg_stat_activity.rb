@@ -4,10 +4,9 @@ class PgStatActivity < ActiveRecord::Base
 
   has_many :pg_locks, :primary_key => 'pid', :foreign_key => 'pid'
 
-  def self.activity_stats
+  def self.find_activity
     current_database = connection.current_database
-    data = where(:datname => current_database).includes(:pg_locks)
-    data.collect(&:to_csv_hash)
+    where(:datname => current_database).includes(:pg_locks)
   end
 
   def to_csv_hash

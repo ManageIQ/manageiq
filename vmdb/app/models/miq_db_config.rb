@@ -247,7 +247,7 @@ class MiqDbConfig
     require 'csv'
 
     begin
-      stats = PgStatActivity.activity_stats
+      stats = PgStatActivity.find_activity.map(&:to_csv_hash)
 
       keys = stats.first.keys
 
