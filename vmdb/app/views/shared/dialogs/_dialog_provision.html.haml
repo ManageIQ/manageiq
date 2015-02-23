@@ -15,7 +15,7 @@
       - wf.dialog.dialog_tabs.each do |tab|
         = render :partial => "shared/dialogs/dialog_tab", 
                  :locals => {:wf => wf, :tab => tab}
-  - unless @edit[:explorer]
+  - if @edit && !@edit[:explorer]
     = render :partial => "layouts/x_dialog_buttons",
              :locals  => {:action_url => 'dialog_form_button_pressed',
                           :record_id  => @edit[:rec_id]}
