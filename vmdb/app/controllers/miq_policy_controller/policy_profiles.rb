@@ -147,9 +147,7 @@ module MiqPolicyController::PolicyProfiles
   # Get information for a profile
   def profile_get_info(profile)
     @record = @profile = profile
-    @profile_policies = @profile.miq_policies.sort do |a,b|
-      a.towhat + a.mode + a.description.downcase<=>b.towhat + b.mode + b.description.downcase
-    end
+    @profile_policies = @profile.miq_policies.sort_by { |p| [p.towhat, p.mode, p.description.downcase] }
     @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqPolicySet"), :name=>@profile.description}
     @right_cell_div = "profile_details"
   end

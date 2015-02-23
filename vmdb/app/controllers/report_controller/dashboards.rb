@@ -404,11 +404,13 @@ module ReportController::Dashboards
                   @edit[:new][:col3]
     if @sb[:nodes].length == 2 && @sb[:nodes][1] != "g"
       #default dashboard selected
-      @available_widgets = MiqWidget.available_for_all_roles.collect.sort{|a,b| a.content_type + a.title.downcase <=> b.content_type + b.title.downcase}
+      @available_widgets = MiqWidget.available_for_all_roles
     else
       g = MiqGroup.find(from_cid(@sb[:nodes][2].split('_').first))
-      @available_widgets = MiqWidget.available_for_group(g).collect.sort{|a,b| a.content_type + a.title.downcase <=> b.content_type + b.title.downcase}
+      @available_widgets = MiqWidget.available_for_group(g)
     end
+    @available_widgets.sort_by! { |w| [w.content_type, w.title.downcase] }
+
     xml = REXML::Document.load("")
     xml << REXML::XMLDecl.new(1.0, "UTF-8")
     # Create root element

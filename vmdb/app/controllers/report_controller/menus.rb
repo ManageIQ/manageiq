@@ -263,7 +263,7 @@ module ReportController::Menus
     user = User.find_by_userid(session[:userid])
     id = session[:node_selected].split('__')
     @selected = id[1].split(':')
-    all = MiqReport.all.sort{|a,b| a.rpt_type + a.filename.to_s + a.name <=> b.rpt_type  + b.filename.to_s + b.name}
+    all = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
     @all_reports = Array.new
     all.each do |r|
       next if r.template_type != "report" && ! r.template_type.blank?

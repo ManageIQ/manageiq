@@ -252,7 +252,7 @@ class ChargebackController < ApplicationController
           end
         end
       end
-      @sb[:rate_details].sort!{|a,b| [a[:group].downcase,a[:description].downcase]<=>[b[:group].downcase,b[:description].downcase]}
+      @sb[:rate_details].sort_by! { |rd| [rd[:group].downcase, rd[:description].downcase] }
       cb_rate_set_form_vars
       @in_a_form = true
       if params[:button] == "reset"
@@ -275,7 +275,7 @@ class ChargebackController < ApplicationController
   def cb_rate_show
     @display = "main"
     @sb[:selected_rate_details] = @record.chargeback_rate_details
-    @sb[:selected_rate_details].sort!{|a,b| [a[:group].downcase,a[:description].downcase]<=>[b[:group].downcase,b[:description].downcase]}
+    @sb[:selected_rate_details].sort_by! { |rd| [rd[:group].downcase, rd[:description].downcase] }
     if @record == nil
       redirect_to :action=>"cb_rates_list", :flash_msg=>_("Error: Record no longer exists in the database"), :flash_error=>true
       return

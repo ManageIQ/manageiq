@@ -389,7 +389,7 @@ module ApplicationController::Explorer
       @resolve[:target_classes] = Array(@resolve[:target_classes].invert).sort
       @resolve[:target_classes].collect{|typ| {:id=>"ab_#{typ[1]}", :text=>typ[0], :image=>buttons_node_image(typ[1]), :tip=>typ[0]}}
     when :ae,:automate
-      objects = MiqAeNamespace.all(:conditions => ["parent_id is null AND name<>?" ,"$"]).sort{|a,b| a.display_name.to_s + a.name.to_s <=> b.display_name.to_s + b.name.to_s}
+      objects = MiqAeNamespace.all(:conditions => ["parent_id is null AND name<>?" ,"$"]).sort_by { |ns| [ns.display_name.to_s, ns.name.to_s] }
       return count_only ? objects.length : objects
     when :action
       objects = MiqAction.all.sort_by { |a| a.description.downcase }
