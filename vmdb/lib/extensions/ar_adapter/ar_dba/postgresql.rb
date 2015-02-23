@@ -28,12 +28,8 @@ module ActiveRecord
         data
       end
 
-      def raw_activity_stats
-        PgStatActivity.where(:datname => current_database).includes(:pg_locks)
-      end
-
       def activity_stats
-        data = raw_activity_stats
+        data = PgStatActivity.where(:datname => current_database).includes(:pg_locks)
         data.collect do |record|
           conn = {'session_id' => record.pid}
           conn['xact_start']              = record.xact_start
