@@ -50,6 +50,7 @@ class MiqVimInventory < MiqVimClientBase
 
 			deleteProperty(:Datastore, "summary.uncommitted")
 
+			deleteProperty(:VirtualMachine, "config.hardware.numCoresPerSocket")
 			deleteProperty(:VirtualMachine, "summary.config.ftInfo.instanceUuids")
 			deleteProperty(:VirtualMachine, "summary.storage.unshared")
 			deleteProperty(:VirtualMachine, "summary.storage.committed")
@@ -63,6 +64,7 @@ class MiqVimInventory < MiqVimClientBase
 			if @v4 && cacheScope != :cache_scope_event_monitor
 				@propMap = dupProps(@propMap)
 				addProperty(:VirtualMachine, "runtime.memoryOverhead")
+				deleteProperty(:VirtualMachine, "config.hardware.numCoresPerSocket")
 			end
 			@propMap = @propMap.merge(PropMap4)
 		end
