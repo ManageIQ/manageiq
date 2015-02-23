@@ -74,7 +74,7 @@ describe VmdbDatabaseConnection do
   end
 
   it 'computes wait_time' do
-    setting = VmdbDatabaseConnection.all.first
+    setting = VmdbDatabaseConnection.find_activity.first
     expect(setting.wait_time).to be_kind_of(Fixnum)
   end
 

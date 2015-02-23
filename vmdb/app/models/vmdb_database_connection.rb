@@ -1,4 +1,14 @@
-class VmdbDatabaseConnection < ActsAsArModel
+class VmdbDatabaseConnection < ActiveRecord::Base
+  self.table_name = 'pg_stat_activity'
+  self.primary_key = nil
+
+  has_many :pg_locks, :primary_key => 'pid', :foreign_key => 'pid'
+
+  default_scope do
+    current_database = VmdbDatabaseConnection.connection.current_database
+    where(:datname => current_database).includes(:pg_locks)
+  end
+
   virtual_column :address,           :type => :string
   virtual_column :application,       :type => :string
   virtual_column :command,           :type => :string
@@ -16,57 +26,70 @@ class VmdbDatabaseConnection < ActsAsArModel
   virtual_column :pid, :type => :integer
   virtual_column :blocked_by, :type => :integer
 
-  attr_accessor :vmdb_database_id
+  attr_reader :vmdb_database_id
 
-  def initialize(record)
-    self.vmdb_database = self.class.vmdb_database
-    @record = record
+  def vmdb_database_id
+    @vmdb_database_id ||= self.class.vmdb_database.id
   end
 
   def address
-    @record.client_addr
+    client_addr
   end
 
   def application
-    @record.application_name
+    application_name
   end
 
   def command
-    @record.query
+    query
   end
 
   def spid
-    @record.pid
+    read_attribute 'pid'
   end
 
   def task_state
-    @record.waiting
+    waiting
   end
 
   def wait_time
-    @record.wait_time_ms
+    wait_time_ms
   end
 
   def wait_resource
-    @record.pg_locks.first.relation
+    pg_locks.first.relation
+  end
+
+  def wait_time_ms
+    (Time.now - query_start).to_i
+  end
+
+  def blocked_by
+    lock_info = pg_locks.where(:granted => false).first
+    lock_info && lock_info.blocking_lock.pid
+  end
+
+  def to_csv_hash
+    {
+      'session_id'              => spid,
+      'xact_start'              => xact_start,
+      'last_request_start_time' => query_start,
+      'command'                 => query,
+      'task_state'              => waiting,
+      'login'                   => usename,
+      'application'             => application_name,
+      'request_id'              => usesysid,
+      'net_address'             => client_addr,
+      'host_name'               => client_hostname,
+      'client_port'             => client_port,
+      'wait_time_ms'            => wait_time_ms,
+      'blocked_by'              => blocked_by,
+    }
   end
 
   #
   # Attributes and Reflections
   #
-
-  def model_name
-    self.name.singularize.camelize
-  end
-
-  def model
-    return @model if instance_variable_defined?(:@model)
-    @model = self.model_name.constantize rescue nil
-  end
-
-  def arel_table
-    Arel::Table.new(self.name)
-  end
 
   def vmdb_database
     VmdbDatabase.find_by_id(self.vmdb_database_id)
@@ -98,34 +121,7 @@ class VmdbDatabaseConnection < ActsAsArModel
     @pid = parent && parent.pid
   end
 
-  def blocked_by
-    @record.blocked_by
-  end
-
-  #
-  # Finders
-  #
-
-  def self.find(*args)
-    connections = self.find_activity
-
-    options = args.extract_options!
-
-    case args.first
-    when :first then connections.empty? ? nil : self.new(connections.first)
-    when :last  then connections.empty? ? nil : self.new(connections.last)
-    when :all   then connections.collect { |hash| self.new(hash) }
-    end
-  end
-
   def self.find_activity
-    current_database = PgStatActivity.connection.current_database
-    PgStatActivity.where(:datname => current_database).includes(:pg_locks)
-  end
-
-  protected
-
-  def self.vmdb_database
-    @vmdb_database ||= VmdbDatabase.my_database
+    all
   end
 end
