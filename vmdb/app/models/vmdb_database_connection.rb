@@ -1,4 +1,9 @@
 class VmdbDatabaseConnection < ActiveRecord::Base
+  class << self
+    attr_accessor :aar_columns
+  end
+  self.aar_columns = []
+
   self.table_name = 'pg_stat_activity'
   self.primary_key = nil
 
