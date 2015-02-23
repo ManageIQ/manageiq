@@ -28,27 +28,6 @@ module ActiveRecord
         data
       end
 
-      def activity_stats
-        data = PgStatActivity.where(:datname => current_database).includes(:pg_locks)
-        data.collect do |record|
-          conn = {'session_id' => record.pid}
-          conn['xact_start']              = record.xact_start
-          conn['last_request_start_time'] = record.query_start
-          conn['command']                 = record.query
-          conn['task_state']              = record.waiting
-          conn['login']                   = record.usename
-          conn['application']             = record.application_name
-          conn['request_id']              = record.usesysid
-          conn['net_address']             = record.client_addr
-          conn['host_name']               = record.client_hostname
-          conn['client_port']             = record.client_port
-          conn['wait_time_ms']            = record.wait_time_ms
-          conn['blocked_by']              = record.blocked_by
-
-          conn
-        end
-      end
-
       # Taken from: https://github.com/bucardo/check_postgres/blob/2.19.0/check_postgres.pl#L3492
       # and referenced here: http://wiki.postgresql.org/wiki/Show_database_bloat
       # check_postgres is Copyright (C) 2007-2012, Greg Sabino Mullane

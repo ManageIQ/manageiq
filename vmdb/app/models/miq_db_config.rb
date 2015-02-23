@@ -246,11 +246,8 @@ class MiqDbConfig
   def self.log_activity_statistics(output = $log)
     require 'csv'
 
-    con = ActiveRecord::Base.connection
-    return unless con.respond_to?(:activity_stats)
-
     begin
-      stats = con.activity_stats
+      stats = PgStatActivity.activity_stats
 
       keys = stats.first.keys
 

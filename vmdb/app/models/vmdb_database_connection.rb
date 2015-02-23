@@ -93,7 +93,7 @@ class VmdbDatabaseConnection < ActsAsArModel
   end
 
   def self.vmdb_database_connections
-    connections = ActiveRecord::Base.connection.activity_stats if ActiveRecord::Base.connection.respond_to?(:activity_stats)
+    connections = PgStatActivity.activity_stats
     return [] if connections.nil?
     connections.collect { |hash| filtered_hash(hash) }
   end
