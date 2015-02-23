@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe MiqDbConfig do
-  CSV_HEADER = %w{ session_id
+  CSV_HEADER = %w( session_id
                    xact_start
                    last_request_start_time
                    command
@@ -13,14 +13,14 @@ describe MiqDbConfig do
                    host_name
                    client_port
                    wait_time_ms
-                   blocked_by }
+                   blocked_by )
 
 
   it ".log_activity_statistics" do
-    db = FactoryGirl.create(:vmdb_database)
+    FactoryGirl.create(:vmdb_database)
     buffer = StringIO.new
     class << buffer
-      alias :info :write
+      alias_method :info, :write
     end
 
     MiqDbConfig.log_activity_statistics(buffer)

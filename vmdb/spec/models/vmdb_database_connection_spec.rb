@@ -35,7 +35,7 @@ describe VmdbDatabaseConnection do
 
     connections = VmdbDatabaseConnection.all
 
-    blocked_conn = connections.find { |conn| conn.blocked_by }
+    blocked_conn = connections.find(&:blocked_by)
     expect(blocked_conn).to be
     blocked_by = connections.find { |conn| conn.spid == blocked_conn.blocked_by }
     expect(blocked_by).to be

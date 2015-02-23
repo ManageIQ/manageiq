@@ -456,9 +456,8 @@ module Rbac
 
   def self.method_with_scope(ar_scope, options)
     if ar_scope == VmdbDatabaseConnection
-      return ar_scope.all
-    end
-    if ar_scope < ActsAsArModel
+      ar_scope.all
+    elsif ar_scope < ActsAsArModel
       ar_scope.find(:all, options)
     else
       apply_options(ar_scope, options).all

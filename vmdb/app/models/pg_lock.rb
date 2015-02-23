@@ -4,7 +4,7 @@ class PgLock < ActiveRecord::Base
   def blocking_lock
     return unless granted == false
     blocking_lock_relation.where(:granted => true)
-    .where(['pid != ?', pid]).limit(1).first
+      .where(['pid != ?', pid]).limit(1).first
   end
 
   private
