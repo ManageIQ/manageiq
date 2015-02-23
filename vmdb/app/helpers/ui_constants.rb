@@ -179,6 +179,7 @@ module UiConstants
       :storageitem    =>  true
     },
     :views => { # List view setting, by resource type
+      :availabilityzone      => "list",
       :catalog               => "list",
       :compare               => "expanded",
       :compare_mode          => "details",
@@ -191,6 +192,7 @@ module UiConstants
       :emscluster            => "grid",
       :emsinfra              => "grid",
       :filesystem            => "list",
+      :flavor                => "list",
       :host                  => "grid",
       :hostitem              => "list",
       :job                   => "list",
