@@ -63,7 +63,7 @@
                 %td.icon{:nowrap => 1}
                   %ul.icons
                     %li
-                      %span.pficon{:class => "pficon-folder-close-#{@sb[:rpt_menu][nodes[1].to_i][0] == @sb[:grp_title] ? 'blue' : ''}"}
+                      %span.pficon{:class => "pficon-folder-close#{@sb[:rpt_menu][nodes[1].to_i][0] == @sb[:grp_title] ? '-blue' : ''}"}
                 %td
                   - # removing :::#{@sb[:count]} that was added at the end of report name to make id's unique in the dhtmlxtree
                   - # custom reports will be shown in assigned folders and custom folder both
