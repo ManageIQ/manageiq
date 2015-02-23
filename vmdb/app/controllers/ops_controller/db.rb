@@ -230,11 +230,8 @@ module OpsController::Db
   end
 
   def get_indexes(tb)
-    indexes = Array.new
-    tb.vmdb_indexes.sort{|a,b| a.name <=> b.name}.each do |idx|
-      indexes.push(idx) if idx.vmdb_table.type == "VmdbTableEvm"
-    end
-    return indexes
+    return [] unless tb.kind_of?(VmdbTableEvm)
+    tb.vmdb_indexes.sort_by(&:name)
   end
 
   def db_refresh

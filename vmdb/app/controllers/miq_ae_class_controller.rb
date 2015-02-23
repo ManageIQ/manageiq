@@ -475,15 +475,13 @@ class MiqAeClassController < ApplicationController
     new_column.add_attribute("type", 'ro')
     new_column.text = header
 
-    records = Array.new
     # passing in mode, don't need to sort records for namaspace node, it will be passed in sorted order, need to show Namesaces first and then Classes
-    if mode
-      view.flatten.sort{|a,b| a.display_name.to_s + a.name.to_s <=> b.display_name.to_s + b.name.to_s}.each do |r|
-        records.push(r)
+    records =
+      if mode
+        view.flatten.sort_by { |v| [v.display_name.to_s, v.name.to_s] }
+      else
+        view
       end
-    else
-        records = view
-    end
     records.each do |kids|
       cls,img_name = set_cls(kids.class)
       rec_name = get_rec_name(kids)

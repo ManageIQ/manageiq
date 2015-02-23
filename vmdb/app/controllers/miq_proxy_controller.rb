@@ -1053,7 +1053,8 @@ class MiqProxyController < ApplicationController
     # Get the hosts that have no miq_proxy yet for the Host pulldown list
     if ["new","create"].include?(request.parameters[:action])
       @edit[:avail_hosts] = Hash.new
-      Host.all.delete_if{|h| !h.miq_proxy.blank? || !h.supports_miqproxy?}.sort{|a,b| a.name.downcase<=>b.name.downcase}.each do |host|
+      avail_hosts = Host.all.reject { |h| h.miq_proxy.present? || !h.supports_miqproxy? }
+      avail_hosts.sort_by { |h| h.name.downcase }.each do |host|
         @edit[:avail_hosts][host.id.to_s] = host.name
       end
     end

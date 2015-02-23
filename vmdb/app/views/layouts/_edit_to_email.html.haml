@@ -12,9 +12,11 @@
             = _("None")
           - else
             - if @temp[:email_to].present?
-              - emails = @temp[:email_to].sort { |a, b| a[1] <=> b[1] }.collect { |e| e[0] }
+              - emails = @temp[:email_to]
+                  .sort_by { |_email, display_email| display_name }
+                  .collect { |email, _display_email| email }
             - elsif !@edit[:new][:email][:to].present?
-              - emails = @edit[:new][:email][:to].sort { |a, b| a[1] <=> b[1] }
+              - emails = @edit[:new][:email][:to].sort
             - else
               - emails = []
             - emails.each_with_index do |e, e_idx|

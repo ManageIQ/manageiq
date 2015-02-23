@@ -330,7 +330,7 @@ module ApplicationController::Tags
 
   # Build the classification assignment screen
   def classify_build_screen
-    cats = Classification.categories.collect {|c| c unless !c.show}.compact.sort{|a,b| a.name <=> b.name} # Get the categories, sort by name
+    cats = Classification.categories.select(&:show).sort_by(&:name) # Get the categories, sort by name
     @categories = Hash.new    # Classifications array for first chooser
     cats.delete_if{ |c| c.read_only? || c.entries.length == 0}  # Remove categories that are read only or have no entries
     cats.each do |c|
@@ -387,7 +387,7 @@ module ApplicationController::Tags
 
   # Build the @edit elements for the tag edit screen
   def tag_edit_build_screen
-    cats = Classification.categories.collect {|c| c unless !c.show}.compact.sort{|a,b| a.name <=> b.name} # Get the categories, sort by name
+    cats = Classification.categories.select(&:show).sort_by(&:name) # Get the categories, sort by name
     @categories = Hash.new    # Classifications array for first chooser
     cats.delete_if{ |c| c.read_only? || c.entries.length == 0}  # Remove categories that are read only or have no entries
     cats.each do |c|

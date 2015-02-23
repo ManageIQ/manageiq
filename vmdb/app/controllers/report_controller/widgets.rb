@@ -352,16 +352,14 @@ module ReportController::Widgets
       @edit[:new][:groups].sort! unless @edit[:new][:groups].blank?
     end
     @edit[:new][:roles] ||= Array.new   # initializing incase of new widget since visibility is not set yet.
-    @edit[:sorted_user_roles] = Array.new
-    MiqUserRole.all.sort{|a,b| a.name.downcase <=> b.name.downcase}.each do |r|
-      @edit[:sorted_user_roles].push(r.name=>to_cid(r.id))
-    end
+    @edit[:sorted_user_roles] =
+      MiqUserRole.all.sort_by { |r| r.name.downcase }
+        .collect { |r| {r.name => to_cid(r.id)} }
 
     @edit[:new][:groups] ||= Array.new    # initializing incase of new widget since visibility is not set yet.
-    @edit[:sorted_groups] = Array.new
-    MiqGroup.all.sort{|a,b| a.description.downcase <=> b.description.downcase}.each do |g|
-      @edit[:sorted_groups].push(g.description=>to_cid(g.id))
-    end
+    @edit[:sorted_groups] =
+      MiqGroup.all.sort_by { |g| g.description.downcase }
+        .collect { |g| {g.description => to_cid(g.id)} }
 
     # Schedule Box - create new sched for copy/new, use existing for edit
     @edit[:schedule] = @widget.id && !@widget.miq_schedule.nil? ?

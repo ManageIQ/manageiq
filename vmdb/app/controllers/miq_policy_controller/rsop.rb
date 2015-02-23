@@ -57,16 +57,11 @@ module MiqPolicyController::Rsop
       @breadcrumbs = Array.new
       @accords = [{:name=>"rsop", :title=>"Options", :container=>"rsop_options_div"}]
       @sb[:rsop] ||= Hash.new   # Leave exising values
-      @sb[:rsop][:emss] = Hash.new
-      find_filtered(ExtManagementSystem, :all).sort{|a,b| a.name.downcase<=>b.name.downcase}.each{|e|@sb[:rsop][:emss][e.id.to_s] = e.name}
-      @sb[:rsop][:clusters] = Hash.new
-      find_filtered(EmsCluster, :all).sort{|a,b| a.name.downcase<=>b.name.downcase}.each{|e|@sb[:rsop][:clusters][e.id.to_s] = e.name}
-      @sb[:rsop][:hosts] = Hash.new
-      find_filtered(Host, :all).sort{|a,b| a.name.downcase<=>b.name.downcase}.each{|e|@sb[:rsop][:hosts][e.id.to_s] = e.name}
-      @sb[:rsop][:vms] = Hash.new
-      find_filtered(Vm, :all).sort{|a,b| a.name.downcase<=>b.name.downcase}.each{|e|@sb[:rsop][:vms][e.id.to_s] = e.name}
-      @sb[:rsop][:datastores] = Hash.new
-      find_filtered(Storage, :all).sort{|a,b| a.name.downcase<=>b.name.downcase}.each{|e|@sb[:rsop][:datastores][e.id.to_s] = e.name}
+      rsop_put_objects_in_sb(find_filtered(ExtManagementSystem, :all), :emss)
+      rsop_put_objects_in_sb(find_filtered(EmsCluster, :all), :clusters)
+      rsop_put_objects_in_sb(find_filtered(Host, :all), :hosts)
+      rsop_put_objects_in_sb(find_filtered(Vm, :all), :vms)
+      rsop_put_objects_in_sb(find_filtered(Storage, :all), :datastores)
       @temp[:rsop_events] = MiqEventSet.all.collect{|e|[e.description, e.id.to_s]}.sort
       @temp[:rsop_event_sets] = MiqEventSet.find(@sb[:rsop][:event]).miq_events.collect{|e|[e.description, e.id.to_s]}.sort if @sb[:rsop][:event] != nil
       render :layout => "explorer"
@@ -136,6 +131,13 @@ module MiqPolicyController::Rsop
   end
 
   private
+
+  def rsop_put_objects_in_sb(objects, key)
+    @sb[:rsop][key] = {}
+    objects
+      .sort_by { |o| o.name.downcase }
+      .each { |o| @sb[:rsop][key][o.id.to_s] = o.name }
+  end
 
   def rsop_button_pressed
     c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
