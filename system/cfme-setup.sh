@@ -10,7 +10,8 @@ pushd /var/www/miq/vmdb
   popd
 
   # rails compile tasks loads environment which needs above shared objects
-  RAILS_ENV=production rake evm:compile_assets
+  # There is no database.yml. Bogus database parameters appeases rails.
+  RAILS_ENV=production DATABASE_URL=postgresql://user:pass@127.0.0.1/dbname rake evm:compile_assets
 popd
 
 #this is for the black console
