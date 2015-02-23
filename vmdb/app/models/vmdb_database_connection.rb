@@ -2,7 +2,6 @@ class VmdbDatabaseConnection < ActsAsArModel
   set_columns_hash(
     :address           => :string,
     :application       => :string,
-    :blocked_by        => :integer,
     :command           => :string,
     :spid              => :integer,
     :task_state        => :string,
@@ -17,6 +16,7 @@ class VmdbDatabaseConnection < ActsAsArModel
   virtual_belongs_to :miq_worker
 
   virtual_column :pid, :type => :integer
+  virtual_column :blocked_by, :type => :integer
 
   def initialize(values = {})
     values[:vmdb_database] ||= self.class.vmdb_database
@@ -70,6 +70,11 @@ class VmdbDatabaseConnection < ActsAsArModel
     @pid = parent && parent.pid
   end
 
+  def blocked_by
+    lock_info = PgLock.where(:pid => spid, :granted => false).first
+    lock_info && lock_info.blocking_lock.pid
+  end
+
   #
   # Finders
   #
@@ -106,7 +111,6 @@ class VmdbDatabaseConnection < ActsAsArModel
     {
       :address       => record.client_addr,
       :application   => record.application_name,
-      :blocked_by    => record.blocked_by,
       :command       => record.query,
       :spid          => record.pid,
       :task_state    => record.waiting,
