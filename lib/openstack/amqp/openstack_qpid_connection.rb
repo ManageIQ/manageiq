@@ -71,9 +71,47 @@ class OpenstackQpidConnection
   end
 
   def create_connection
-    url = "#{@options[:hostname]}:#{@options[:port]}"
-    opts = @options.select { |k, v| [:username, :password].include? k }
-    opts[:transport] = "ssl" if @options[:port] == 5671
-    Qpid::Messaging::Connection.new(:url => url, :options => opts)
+    Qpid::Messaging::Connection.new(:url => connection_url, :options => connection_options)
+  end
+
+  def connection_options
+    connection_opts = {}
+    if @options[:port] == 5671
+      connection_opts[:transport]     = "ssl"
+      connection_opts[:ssl_cert_name] = @options[:hostname]
+    end
+    if @options.key?(:username)
+      connection_opts[:sasl_mechanism] = "PLAIN"
+      connection_opts[:username]       = @options[:username]
+      connection_opts[:password]       = @options[:password]
+    end
+    connection_opts
+  end
+
+  def connection_url
+    # The qpid "url" is not a URL at all!  It's something that's *called* a URL
+    # but doesn't follow the same format as a standard URL ... it looks like:
+    #
+    #   hostname:port
+    #
+    # In full, the URL could look like:
+    #
+    #   scheme:protocol:user/pass@host:port:queue_name
+    #
+    #   or,
+    #
+    #   amqp:tcp:username/password@host:port:queue
+    #
+    # But, the rest of the arguments are passed as "options" to the connection
+    # constructor.  This method will only format the host and port portion of
+    # the "url".
+    #
+    # Also, this is going to use the ruby URI module in order to confidently
+    # handle ipv6 ip addresses that might find their way here.
+    uri = URI::Generic.build(:host => @options[:hostname], :port => @options[:port])
+
+    # uri.to_s will result in //hostname:port when no scheme is set
+    # strip off the leading "//" and return what's left
+    uri.to_s.sub(%r{^//}, '')
   end
 end

@@ -60,6 +60,12 @@ class OpenstackEventMonitor
     raise NotImplementedError, "must be implemented in subclass"
   end
 
+  def parse_options(options = {})
+    @options = options
+    @options[:port] = options[:port].presence.try(:to_i) || DEFAULT_AMQP_PORT
+    @options
+  end
+
   def each
     each_batch do |events|
       events.each {|e| yield e}

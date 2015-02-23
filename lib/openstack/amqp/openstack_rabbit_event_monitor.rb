@@ -44,8 +44,7 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
   end
 
   def initialize(options = {})
-    @options = options
-    @options[:port] ||= DEFAULT_AMQP_PORT
+    parse_options(options)
     @collecting_events = false
     @events = []
     #protect threaded access to the events array
