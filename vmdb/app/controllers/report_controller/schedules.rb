@@ -101,7 +101,7 @@ module ReportController::Schedules
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
       end
-    else
+    elsif params[:id]
       if MiqSchedule.exists?(from_cid(params[:id]))
         scheds.push(from_cid(params[:id]))
       else
