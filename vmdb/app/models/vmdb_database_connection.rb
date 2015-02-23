@@ -1,14 +1,12 @@
 class VmdbDatabaseConnection < ActsAsArModel
-  set_columns_hash(
-    :address           => :string,
-    :application       => :string,
-    :command           => :string,
-    :spid              => :integer,
-    :task_state        => :string,
-    :wait_resource     => :string,
-    :wait_time         => :integer,
-    :vmdb_database_id  => :integer
-  )
+  virtual_column :address,           :type => :string
+  virtual_column :application,       :type => :string
+  virtual_column :command,           :type => :string
+  virtual_column :spid,              :type => :integer
+  virtual_column :task_state,        :type => :string
+  virtual_column :wait_resource,     :type => :string
+  virtual_column :wait_time,         :type => :integer
+  virtual_column :vmdb_database_id,  :type => :integer
 
   virtual_belongs_to :vmdb_database
   virtual_belongs_to :zone
@@ -18,9 +16,39 @@ class VmdbDatabaseConnection < ActsAsArModel
   virtual_column :pid, :type => :integer
   virtual_column :blocked_by, :type => :integer
 
-  def initialize(values = {})
-    values[:vmdb_database] ||= self.class.vmdb_database
-    super(values)
+  attr_accessor :vmdb_database_id
+
+  def initialize(record)
+    self.vmdb_database = self.class.vmdb_database
+    @record = record
+  end
+
+  def address
+    @record.client_addr
+  end
+
+  def application
+    @record.application_name
+  end
+
+  def command
+    @record.query
+  end
+
+  def spid
+    @record.pid
+  end
+
+  def task_state
+    @record.waiting
+  end
+
+  def wait_time
+    @record.wait_time_ms
+  end
+
+  def wait_resource
+    @record.pg_locks.first.relation
   end
 
   #
@@ -71,8 +99,7 @@ class VmdbDatabaseConnection < ActsAsArModel
   end
 
   def blocked_by
-    lock_info = PgLock.where(:pid => spid, :granted => false).first
-    lock_info && lock_info.blocking_lock.pid
+    @record.blocked_by
   end
 
   #
@@ -80,7 +107,7 @@ class VmdbDatabaseConnection < ActsAsArModel
   #
 
   def self.find(*args)
-    connections = self.vmdb_database_connections
+    connections = self.find_activity
 
     options = args.extract_options!
 
@@ -101,21 +128,4 @@ class VmdbDatabaseConnection < ActsAsArModel
   def self.vmdb_database
     @vmdb_database ||= VmdbDatabase.my_database
   end
-
-  def self.vmdb_database_connections
-    connections = find_activity
-    connections.collect { |record| filtered_hash(record) }
-  end
-
-  def self.filtered_hash(record)
-    {
-      :address       => record.client_addr,
-      :application   => record.application_name,
-      :command       => record.query,
-      :spid          => record.pid,
-      :task_state    => record.waiting,
-      :wait_time     => record.wait_time_ms,
-    }
-  end
-
 end
