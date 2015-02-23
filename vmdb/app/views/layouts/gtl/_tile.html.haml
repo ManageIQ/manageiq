@@ -31,7 +31,7 @@
                 - reset_cycle
                 - (1..4).each do |i|
                   - if view.headers.length > i
-                    %tr{:class => cycle('row0', 'row1')}
+                    %tr{:class => cycle('row0 no-hover', 'row1 no-hover')}
                       %td{:width => "800", :style => "padding: 2px;"}
                         %strong
                           = "#{h(view.headers[i])}: "
