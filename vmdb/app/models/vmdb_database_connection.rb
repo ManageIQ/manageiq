@@ -86,6 +86,11 @@ class VmdbDatabaseConnection < ActsAsArModel
     end
   end
 
+  def self.find_activity
+    current_database = PgStatActivity.connection.current_database
+    PgStatActivity.where(:datname => current_database).includes(:pg_locks)
+  end
+
   protected
 
   def self.vmdb_database
@@ -93,7 +98,7 @@ class VmdbDatabaseConnection < ActsAsArModel
   end
 
   def self.vmdb_database_connections
-    connections = PgStatActivity.find_activity
+    connections = find_activity
     connections.collect { |record| filtered_hash(record) }
   end
 
