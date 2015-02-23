@@ -45,5 +45,4 @@ class FileDepot < ActiveRecord::Base
 end
 
 # load all plugins
-#VMDB::Util.eager_load_subclasses("FileDepot")
-Dir.glob(File.join(File.dirname(__FILE__), "file_depot_*.rb")).sort.each { |f| require_dependency f rescue true }
+VMDB::Util.eager_load_subclasses('FileDepot')
