@@ -3,6 +3,7 @@ $:.push(File.expand_path(File.join(Rails.root, %w{.. lib Scvmm})))
 
 class EmsMicrosoft < EmsInfra
   include_concern "Powershell"
+  include ScvmmErrorHandling
 
   def self.ems_type
     @ems_type ||= "scvmm".freeze
@@ -44,10 +45,16 @@ class EmsMicrosoft < EmsInfra
     raise MiqException::MiqHostError, "No credentials defined" if self.authentication_invalid?(options[:auth_type])
 
     begin
-      run_dos_command("hostname")
+      run_dos_command("powershell import-module virtualmachinemanager; \
+        Get-SCVMMServer -ComputerName localhost")
+
+    rescue ScvmmNotInstalled => e
+      raise MiqException::MiqHostError, "#{e.message}"
+
     rescue WinRM::WinRMHTTPTransportError => e # Error 401
-      raise MiqException::MiqHostError, "Check credentials and WinRM configuration settings. " \
-      "Remote error message: #{e.message}"
+      raise MiqException::MiqHostError, "Check credentials and WinRM configuration
+        settings. Remote error message: #{e.message}"
+
     end
 
     true

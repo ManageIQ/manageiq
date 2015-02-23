@@ -34,10 +34,13 @@ class EmsMicrosoft
         MiqPowerShell::Convert.new(xml).to_h
       end
 
-      def log_dos_error_results(results)
+      def log_dos_error_results(error)
         log_header = "MIQ(#{self.class.name}##{__method__})"
-        error = results[:data].collect { |d| d[:stderr] }.join
         $scvmm_log.error("#{log_header} #{error}") unless error.blank?
+      end
+
+      def extract_errors_from_results(results)
+        results[:data].collect { |d| d[:stderr] }.join
       end
     end
 
@@ -48,7 +51,9 @@ class EmsMicrosoft
       _result, timings = Benchmark.realtime_block(:execution) do
         with_provider_connection do |connection|
           results = connection.run_cmd(command)
-          self.class.log_dos_error_results(results)
+          errors  = self.class.extract_errors_from_results(results)
+          self.class.log_dos_error_results(errors)
+          ScvmmErrorHandling.raise_error_condition(errors)
         end
       end
 
