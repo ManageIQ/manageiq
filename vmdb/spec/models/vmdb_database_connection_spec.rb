@@ -34,15 +34,16 @@ describe VmdbDatabaseConnection do
     loop { break if wait_for_lock.status == "sleep" }
 
     connections = VmdbDatabaseConnection.all
-    continue_latch.release
-    get_lock.join
-    wait_for_lock.join
 
     blocked_conn = connections.find { |conn| conn.blocked_by }
     expect(blocked_conn).to be
     blocked_by = connections.find { |conn| conn.spid == blocked_conn.blocked_by }
     expect(blocked_by).to be
     expect(blocked_conn.spid).not_to eq(blocked_by.spid)
+
+    continue_latch.release
+    get_lock.join
+    wait_for_lock.join
   end
 
   CSV_HEADER = %w{ session_id
