@@ -9,10 +9,11 @@
       %tr
         %td.key
           = _("Send an E-mail")
-        = check_box_tag("send_email_cb",
-                        "1",
-                        @edit[:new][:send_email],
-                        "data-miq_observe_checkbox" => {:url => url}.to_json)
+        %td
+          = check_box_tag("send_email_cb",
+                          "1",
+                          @edit[:new][:send_email],
+                          "data-miq_observe_checkbox" => {:url => url}.to_json)
       - if @edit[:new][:send_email]
         %tr
           %td.key
