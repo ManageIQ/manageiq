@@ -56,7 +56,6 @@ class ApiController < ApplicationController
   extend ApiHelper::ErrorHandler::ClassMethods
   respond_to :json
   rescue_from_api_errors
-  before_filter :auth_token_cleanup
   before_filter :require_api_user_or_token
 
   TAG_NAMESPACE = "/managed"
