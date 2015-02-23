@@ -1,9 +1,13 @@
 module VMDB
   module Util
+    # load all direct subclasses
     def self.eager_load_subclasses(klass)
       ActiveSupport::Dependencies.autoload_paths.each do |root|
-        Dir.glob(File.join(root, "#{klass.underscore}_*.rb")).each do |file|
-          File.basename(file, '.*').camelize.constantize
+        Dir.glob(File.join(root, "#{klass.underscore}_*.rb")).sort.each do |file|
+          name = File.basename(file, '.*')
+          if name =~ /^#{klass.underscore}_[^_]*$/  # filter out sub-subclasses
+            require_dependency file
+          end
         end
       end
     end
