@@ -29,12 +29,13 @@ module ApplicationHelper
     content_tag(:div, :class => "panel panel-default") do
       out  = content_tag(:div, :class => "panel-heading") do
         content_tag(:h4, :class => "panel-title") do
-          # To allow to expand more panels at once, swap the comments below
-          link_to(title, "##{id}", 'data-parent' => '#accordion', 'data-toggle' => 'collapse')
-          # link_to(title, "##{id}", 'data-toggle' => 'collapse')
+          link_to(title, "##{id}",
+            'data-parent' => '#accordion',
+            'data-toggle' => 'collapse',
+            :class        => condition ? '' : 'collapsed')
         end
       end
-      out << content_tag(:div, :id => id, :class => "panel-collapse collapse #{condition ? 'out' : 'in'}") do
+      out << content_tag(:div, :id => id, :class => "panel-collapse collapse #{condition ? 'in' : ''}") do
         content_tag(:div, :class => "panel-body", &block)
       end
     end

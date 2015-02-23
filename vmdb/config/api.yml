@@ -81,6 +81,18 @@
         :identifier: ems_cluster_tag
       - :name: unassign
         :identifier: ems_cluster_tag
+    :policies_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: ems_cluster_protect
+      - :name: unassign
+        :identifier: ems_cluster_protect
+    :policy_profiles_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: ems_cluster_protect
+      - :name: unassign
+        :identifier: ems_cluster_protect
   :conditions:
     :description: Conditions
     :options:
@@ -224,11 +236,24 @@
         :identifier: host_tag
       - :name: unassign
         :identifier: host_tag
+    :policies_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: host_protect
+      - :name: unassign
+        :identifier: host_protect
+    :policy_profiles_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: host_protect
+      - :name: unassign
+        :identifier: host_protect
   :policies:
     :description: Policies
     :options:
     - :collection
-    :methods: *70174834086080
+    - :subcollection
+    :methods: *70174834085860
     :klass: MiqPolicy
     :subcollections:
     - :conditions
@@ -238,17 +263,30 @@
       :post:
       - :name: add
         :identifier: policy_new
+        :disabled: true
       - :name: edit
         :identifier: policy_edit
+        :disabled: true
       - :name: delete
         :identifier: policy_delete
+        :disabled: true
     :resource_actions:
       :post:
       - :name: edit
         :identifier: policy_edit
+        :disabled: true
       :delete:
       - :name: delete
         :identifier: policy_delete
+        :disabled: true
+    :subcollection_actions:
+      :post:
+      - :name: assign
+      - :name: unassign
+    :subresource_actions:
+      :post:
+      - :name: assign
+      - :name: unassign
   :policy_actions:
     :description: Actions
     :options:
@@ -260,7 +298,8 @@
     :description: Policy Profiles
     :options:
     - :collection
-    :methods: *70174834086080
+    - :subcollection
+    :methods: *70174834085860
     :klass: MiqPolicySet
     :subcollections:
     - :policies
@@ -268,17 +307,30 @@
       :post:
       - :name: add
         :identifier: profile_new
+        :disabled: true
       - :name: edit
         :identifier: profile_edit
+        :disabled: true
       - :name: delete
         :identifier: profile_delete
+        :disabled: true
     :resource_actions:
       :post:
       - :name: edit
         :identifier: profile_edit
+        :disabled: true
       :delete:
       - :name: delete
         :identifier: profile_delete
+        :disabled: true
+    :subcollection_actions:
+      :post:
+      - :name: assign
+      - :name: unassign
+    :subresource_actions:
+      :post:
+      - :name: assign
+      - :name: unassign
   :providers:
     :description: Providers
     :options:
@@ -320,6 +372,18 @@
         :identifier: ems_infra_tag
       - :name: unassign
         :identifier: ems_infra_tag
+    :policies_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: ems_infra_protect
+      - :name: unassign
+        :identifier: ems_infra_protect
+    :policy_profiles_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: ems_infra_protect
+      - :name: unassign
+        :identifier: ems_infra_protect
   :provision_requests:
     :description: Provision Requests
     :options:
@@ -371,6 +435,18 @@
         :identifier: resource_pool_tag
       - :name: unassign
         :identifier: resource_pool_tag
+    :policies_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: resource_pool_protect
+      - :name: unassign
+        :identifier: resource_pool_protect
+    :policy_profiles_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: resource_pool_protect
+      - :name: unassign
+        :identifier: resource_pool_protect
   :roles:
     :description: Roles
     :options:
@@ -593,6 +669,18 @@
         :identifier: miq_template_tag
       - :name: unassign
         :identifier: miq_template_tag
+    :policies_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: miq_template_protect
+      - :name: unassign
+        :identifier: miq_template_protect
+    :policy_profiles_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: miq_template_protect
+      - :name: unassign
+        :identifier: miq_template_protect
   :users:
     :description: Users
     :options:
@@ -723,6 +811,18 @@
         :identifier: vm_edit
       - :name: delete
         :identifier: vm_edit
+    :policies_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: vm_protect
+      - :name: unassign
+        :identifier: vm_protect
+    :policy_profiles_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: vm_protect
+      - :name: unassign
+        :identifier: vm_protect
   :zones:
     :description: Zones
     :options:

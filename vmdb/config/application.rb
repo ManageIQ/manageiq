@@ -6,10 +6,6 @@ if defined?(Bundler)
   Bundler.require *Rails.groups(:assets => %w(development test))
 end
 
-# Rails3 TODO: is this still required?
-require 'yaml'
-$ADAPTER = YAML::load_file(File.join(File.dirname(__FILE__), "database.yml"))[Rails.env]["adapter"].downcase
-
 module Vmdb
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.

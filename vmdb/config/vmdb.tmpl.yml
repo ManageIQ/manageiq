@@ -21,7 +21,6 @@
 ---
 api:
   token_ttl: 10.minutes
-  token_cleanup_interval: 2.minutes
   authentication_timeout: 30.seconds
 authentication:
   basedn:

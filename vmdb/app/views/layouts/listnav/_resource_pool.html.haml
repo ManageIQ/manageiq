@@ -1,7 +1,6 @@
 - if @record.try(:name)
   #accordion.panel-group
-    = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length),
-      @panels["icon"].nil? || @panels["icon"] == false, "icon") do
+    = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
       = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
 
     = patternfly_accordion_panel(_("Properties"),
@@ -12,8 +11,7 @@
             {:action => 'show', :id => @record, :display => 'main'},
             :title => _('Show Summary'))
 
-    = patternfly_accordion_panel(_("Relationships"),
-      @panels["resource_pool_rel"].nil? || @panels["resource_pool_rel"] == false, "resource_pool_rel") do
+    = patternfly_accordion_panel(_("Relationships"), false, "resource_pool_rel") do
       %ul.nav.nav-pills.nav-stacked
         - if role_allows(:feature => "ems_cluster_show")
           - if @record.parent_cluster.nil?

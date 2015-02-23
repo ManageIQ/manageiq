@@ -14,14 +14,6 @@ class ApiController
     end
 
     #
-    # Supporting Methods
-    #
-
-    def auth_token_cleanup
-      @api_token_mgr.token_cleanup if defined?(@api_token_mgr)
-    end
-
-    #
     # REST APIs Authenticator and Redirector
     #
     def require_api_user_or_token
@@ -30,8 +22,6 @@ class ApiController
         @auth_token  = request.env['HTTP_X_AUTH_TOKEN']
         if !@api_token_mgr.token_valid?(@module, @auth_token)
           raise AuthenticationError, "Invalid Authentication Token #{@auth_token} specified"
-        elsif @api_token_mgr.token_expired?(@module, @auth_token)
-          raise AuthenticationError, "Authentication Token #{@auth_token} specified expired"
         else
           @auth_user     = @api_token_mgr.token_get_info(@module, @auth_token, :userid)
           @auth_user_obj = userid_to_userobj(@auth_user)

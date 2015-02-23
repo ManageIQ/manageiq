@@ -1,11 +1,9 @@
 - if @record.try(:name)
   #accordion.panel-group
-    = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length),
-      @panels["icon"].nil? || @panels["icon"] == false, "icon") do
+    = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
       = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
 
-    = patternfly_accordion_panel(_("Properties"),
-      @panels["miqproxy_prop"].nil? || @panels["miqproxy_prop"] == false, "miqproxy_prop") do
+    = patternfly_accordion_panel(_("Properties"), false, "miqproxy_prop") do
       %ul.nav.nav-pills.nav-stacked
         %li
           = link_to(_('Summary'),
@@ -16,8 +14,7 @@
             {:action => 'log_viewer', :id => @record},
             :title => _("View the SmartProxy log"))
 
-    = patternfly_accordion_panel(_("Relationships"),
-      @panels["miqproxy_rel"].nil? || @panels["miqproxy_rel"] == false, "miqproxy_rel") do
+    = patternfly_accordion_panel(_("Relationships"), false, "miqproxy_rel") do
       %ul.nav.nav-pills.nav-stacked
         - if role_allows(:feature => "host_show")
           - if @record.host.nil?
