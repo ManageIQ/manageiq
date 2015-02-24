@@ -44,14 +44,12 @@ class MiqRequestWorkflow
   def instance_var_init(values, requester, options)
     @values       = values
     @filters      = {}
-    @requester    = @owner    = MiqLdap.using_ldap? ? User.find_or_create_by_ldap_upn(requester) : User.find_by_userid(requester)
-    @requester_id = @owner_id = @requester.userid
+    @requester    = MiqLdap.using_ldap? ? User.find_or_create_by_ldap_upn(requester) : User.find_by_userid(requester)
     @values.merge!(options) unless options.blank?
   end
 
   def create_request(values, requester_id, target_class, event_name, event_message, auto_approve=false)
     log_header = "MIQ(#{self.class.name}#create_request)"
-    @requester_id = requester_id
     return false unless validate(values)
 
     # Ensure that tags selected in the pre-dialog get applied to the request
@@ -471,7 +469,7 @@ class MiqRequestWorkflow
     model_name = options[:category]
     return @filters[model_name] unless @filters[model_name].nil?
     rails_logger("allowed_filters - #{model_name}", 0)
-    @filters[model_name] = @owner.get_expressions(model_name).invert
+    @filters[model_name] = @requester.get_expressions(model_name).invert
     rails_logger("allowed_filters - #{model_name}", 1)
     @filters[model_name]
   end
@@ -498,8 +496,8 @@ class MiqRequestWorkflow
 
   def set_default_user_info
     if get_value(@values[:owner_email]).blank?
-      unless @owner.email.blank?
-        @values[:owner_email] = @owner.email
+      unless @requester.email.blank?
+        @values[:owner_email] = @requester.email
         retrieve_ldap() if MiqLdap.using_ldap?
       end
     end
@@ -651,7 +649,7 @@ class MiqRequestWorkflow
 
     @values[:miq_request_dialog_name] ||= @values[:provision_dialog_name] || dialog_name_from_automate || self.class.default_dialog_file
     dp = @values[:miq_request_dialog_name] = File.basename(@values[:miq_request_dialog_name], ".rb")
-    $log.info "#{log_header} Loading dialogs <#{dp}> for user <#{@owner_id}>"
+    $log.info "#{log_header} Loading dialogs <#{dp}> for user <#{@requester.userid}>"
     d = MiqDialog.where("lower(name) = ? and dialog_type = ?", dp.downcase, self.class.base_model.name).first
     raise MiqException::Error, "Dialog cannot be found.  Name:[#{@values[:miq_request_dialog_name]}]  Type:[#{self.class.base_model.name}]" if d.nil?
     prov_dialogs = d.content
@@ -667,7 +665,7 @@ class MiqRequestWorkflow
       pre_dialog_name = File.basename(pre_dialog_name, ".rb")
       d = MiqDialog.find_by_name_and_dialog_type(pre_dialog_name, self.class.base_model.name)
       unless d.nil?
-        $log.info "#{log_header} Loading pre-dialogs <#{pre_dialog_name}> for user <#{@owner_id}>"
+        $log.info "#{log_header} Loading pre-dialogs <#{pre_dialog_name}> for user <#{@requester.userid}>"
         pre_dialogs = d.content
       end
     end
@@ -697,7 +695,7 @@ class MiqRequestWorkflow
 
     input_fields.each {|k| attrs["dialog_input_#{k.to_s.downcase}"] = self.send(k).to_s}
 
-    uri  = MiqAeEngine.create_automation_object("REQUEST", attrs, :vmdb_object => @owner)
+    uri  = MiqAeEngine.create_automation_object("REQUEST", attrs, :vmdb_object => @requester)
     ws   = MiqAeEngine.resolve_automation_object(uri)
 
     if ws && ws.root
@@ -747,8 +745,8 @@ class MiqRequestWorkflow
     return if get_dialog(:requester).blank?
 
     if get_value(@values[:owner_email]).blank?
-      unless @owner.email.blank?
-        @values[:owner_email] = @owner.email
+      unless @requester.email.blank?
+        @values[:owner_email] = @requester.email
         retrieve_ldap() if MiqLdap.using_ldap?
       end
     end
@@ -785,9 +783,7 @@ class MiqRequestWorkflow
     begin
       st = Time.now
 
-      # Note: This makes a copy of the values hash so we have a copy of the object to modify
       @values = values
-      @requester_id = requester_id
 
       get_source_and_targets(true)
 
@@ -834,9 +830,9 @@ class MiqRequestWorkflow
     rails_logger("process_filter - [#{ci_klass}]", 0)
     filter_id = get_value(@values[filter_prop]).to_i
     result =  unless filter_id.zero?
-                MiqSearch.find(filter_id).search(targets, :results_format => :objects, :userid => @owner_id).first
+                MiqSearch.find(filter_id).search(targets, :results_format => :objects, :userid => @requester.userid).first
               else
-                Rbac.search(:targets => targets, :class => ci_klass, :results_format => :objects, :userid => @owner_id).first
+                Rbac.search(:targets => targets, :class => ci_klass, :results_format => :objects, :userid => @requester.userid).first
               end
     rails_logger("process_filter - [#{ci_klass}]", 1)
     result
