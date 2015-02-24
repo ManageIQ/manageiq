@@ -69,6 +69,13 @@ describe MiqRegion do
         MiqRegion.count.should == 1
         MiqRegion.first.region.should == @region_number
       end
+
+      it "replaces deleted current region" do
+        MiqRegion.where(:region => @region_number).destroy_all
+        MiqRegion.count.should == 0
+        MiqRegion.seed
+        MiqRegion.first.region.should == @region_number
+      end
     end
 
     context "existing region" do
