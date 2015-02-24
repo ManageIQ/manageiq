@@ -28,7 +28,7 @@ class LdapDomain < ActiveRecord::Base
       options[:basedn]         = self.base_dn
       options[:user_type]      = self.user_type
       options[:user_suffix]    = self.user_suffix
-      options[:domain_prefix]  = self.domain_prefix
+      options[:domain_prefix]  = domain_prefix
       options[:bind_timeout]   = self.bind_timeout
       options[:search_timeout] = self.search_timeout
       #options[:] = (self.follow_referrals)

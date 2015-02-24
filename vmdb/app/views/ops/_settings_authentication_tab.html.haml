@@ -204,16 +204,8 @@
             @edit[:new][:authentication][:httpd_role],
             "data-miq_observe_checkbox" => {:url => url}.to_json)
     %hr/
-  - if (@edit[:new] == @edit[:current].config)
-    - if (@edit[:current].config[:authentication][:user_type] == "samaccountname")
-      %script{:type => "text/javascript"}
-        :plain
-          $(function() {
-            document.getElementById('user_type_base').style.display = 'none';
-          });
+  %script{:type => "text/javascript"}
+    - if @edit[:new][:authentication][:user_type] == "samaccountname"
+      if (miqDomElementExists('user_type_base')) $('#user_type_base').hide();
     - else
-      %script{:type => "text/javascript"}
-        :plain
-          $(function() {
-            document.getElementById('user_type_samaccountname').style.display = 'none';
-          });
+      if (miqDomElementExists('user_type_samaccountname')) $('#user_type_samaccountname').hide();
