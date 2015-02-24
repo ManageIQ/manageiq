@@ -4,7 +4,7 @@ class PgLock < ActiveRecord::Base
   def blocking_lock
     return unless granted == false
     blocking_lock_relation.where(:granted => true)
-      .where(['pid != ?', pid]).limit(1).first
+      .where(['pid != ?', pid]).first
   end
 
   private
@@ -12,18 +12,18 @@ class PgLock < ActiveRecord::Base
   def blocking_lock_relation
     case locktype
     when "relation"
-      PgLock.where(:relation => relation, :database => database)
+      self.class.where(:relation => relation, :database => database)
     when "advisory"
-      PgLock.where(:classid => classid, :objid => objid, :objsubid => objsubid)
+      self.class.where(:classid => classid, :objid => objid, :objsubid => objsubid)
     when "virtualxid"
-      PgLock.where(:virtualxid => virtualxid)
+      self.class.where(:virtualxid => virtualxid)
     when "transactionid"
-      PgLock.where(:transactionid => transactionid)
+      self.class.where(:transactionid => transactionid)
     when "tuple"
-      PgLock.where(:database => database,
-                   :relation => relation,
-                   :page     => page,
-                   :tuple    => tuple)
+      self.class.where(:database => database,
+                       :relation => relation,
+                       :page     => page,
+                       :tuple    => tuple)
     end
   end
 end
