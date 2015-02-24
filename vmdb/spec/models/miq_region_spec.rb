@@ -10,14 +10,6 @@ describe MiqRegion do
     File.open(REGION_FILE, 'w') {|f| f.write(number) } if File.exist?(REGION_FILE)
   end
 
-  before(:each) do
-    MiqRegion.delete_all
-  end
-
-  it "should have 0 records in the miq_regions table" do
-    MiqRegion.count.should == 0
-  end
-
   context "after seeding" do
     before(:each) do
       MiqRegion.seed
