@@ -32,6 +32,14 @@
           = text_field_tag("port", @edit[:new][:port],
             :maxlength         => 15,
             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+      - if @edit[:new][:emstype] && @edit[:new][:emstype] == 'openstack' && @edit[:openstack_infra_providers].length > 1
+        %tr
+          %td.key
+            = _('Openstack Infra provider')
+          %td.wide
+            = select_tag("provider_id",
+              options_for_select(@edit[:openstack_infra_providers], @edit[:new][:provider_id]),
+              "data-miq_observe" => {:url => url}.to_json)
       %tr
         %td.key
           = _('Zone')
