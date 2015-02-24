@@ -70,9 +70,9 @@ class ApiController
     end
 
     def validate_api_parameters
-      if params['sqlfilter']
-        raise BadRequestError, "The sqlfilter parameter is no longer supported, please use the filter parameter instead"
-      end
+      return unless params['sqlfilter']
+
+      raise BadRequestError, "The sqlfilter parameter is no longer supported, please use the filter parameter instead"
     end
 
     #

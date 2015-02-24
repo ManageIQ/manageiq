@@ -50,7 +50,7 @@ module ApiHelper
                 }
 
     res_filter = nil
-    params['filter'].select { |f| f.present? }.each do |filter|
+    params['filter'].select(&:present?).each do |filter|
       parsed_filter = parse_filter(filter, operators)
 
       arel = klass.arel_table[parsed_filter[:attr]].send(parsed_filter[:method], parsed_filter[:value])
