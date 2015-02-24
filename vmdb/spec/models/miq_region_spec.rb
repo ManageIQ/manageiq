@@ -69,18 +69,6 @@ describe MiqRegion do
       @other_region = FactoryGirl.create(:miq_region)
     end
 
-    it "finds record with original region number" do
-      MiqRegion.exists?(:region => @orig_region).should be_true
-    end
-
-    it "should have different region values" do
-      @region.region.should_not == @other_region.region
-    end
-
-    it "should have 2 records in the miq_regions table" do
-      MiqRegion.count.should == 2
-    end
-
     context "after seeding" do
       before(:each) do
         MiqRegion.seed
