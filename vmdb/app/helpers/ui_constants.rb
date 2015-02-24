@@ -226,7 +226,6 @@ module UiConstants
       :scanhistory           => "list",
       :snialocalfilesystem   => "list",
       :storage_files         => "list",
-      :storageitem           => "list",
       :registryitems         => "list",
       :repo                  => "grid",
       :serverbuild           => "list",
@@ -240,7 +239,6 @@ module UiConstants
       :vminfra               => "grid",
       :vmortemplate          => "grid",
       :vmcompare             => "compressed",
-      :vmitem                => "list"
     },
     :perpage => { # Items per page, by view setting
       :grid => 20,
