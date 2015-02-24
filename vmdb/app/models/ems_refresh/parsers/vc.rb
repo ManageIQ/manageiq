@@ -813,7 +813,7 @@ module EmsRefresh::Parsers::Vc
     result[:bios] = bios unless bios.blank?
 
     if inv["numCpu"].present?
-      result[:numvcpus] = inv["numCpu"]
+      result[:numvcpus] = inv["numCpu"].to_i
       result[:cores_per_socket], result[:logical_cpus] = calculate_cores_and_sockets(inv["numCpu"], config.try(:fetch_path, "hardware", "numCoresPerSocket"))
     end
 
@@ -825,8 +825,8 @@ module EmsRefresh::Parsers::Vc
   end
 
   def self.calculate_cores_and_sockets(total, cores)
-    cores ||= 1
-    [cores.to_s, (total.to_i / cores.to_i).to_s]
+    cores = (cores || 1).to_i
+    [cores, (total.to_i / cores)]
   end
   private_class_method :calculate_cores_and_sockets
 
