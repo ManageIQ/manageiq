@@ -12,20 +12,7 @@ describe MiqRegion do
 
   context "after seeding" do
     before(:each) do
-      @region_number = 99
-      MiqRegion.stub(:my_region_number => @region_number)
       MiqRegion.seed
-    end
-
-    it "seeds 1 record in the miq_regions" do
-      MiqRegion.count.should == 1
-      MiqRegion.first.region.should == @region_number
-    end
-
-    it "skips seeding if one exists" do
-      MiqRegion.seed
-      MiqRegion.count.should == 1
-      MiqRegion.first.region.should == @region_number
     end
 
     it "should increment naming sequence number after each call" do
@@ -61,31 +48,32 @@ describe MiqRegion do
     end
   end
 
-  context "with two regions" do
-    before(:each) do
-      @orig_region = self.read_region if File.exist?(REGION_FILE)
-      @orig_region ||= 0
-      @region = FactoryGirl.create(:miq_region, :region => @orig_region)
-      @other_region = FactoryGirl.create(:miq_region)
-    end
-
-    context "after seeding" do
+  context ".seed" do
+    context "no regions" do
       before(:each) do
+        @region_number = 99
+        MiqRegion.stub(:my_region_number => @region_number)
         MiqRegion.seed
       end
 
-      it "should find region" do
-        MiqRegion.exists?(:region => @orig_region).should be_true
+      it "seeds 1 record in the miq_regions" do
+        MiqRegion.count.should == 1
+        MiqRegion.first.region.should == @region_number
+      end
+
+      it "skips seeding if one exists" do
+        MiqRegion.seed
+        MiqRegion.count.should == 1
+        MiqRegion.first.region.should == @region_number
       end
     end
 
-    context "then original destroyed" do
+    context "existing region" do
       before(:each) do
-        @region.destroy
-      end
-
-      it "should not find region" do
-        MiqRegion.exists?(:region => @orig_region).should_not be_true
+        @orig_region = self.read_region if File.exist?(REGION_FILE)
+        @orig_region ||= 0
+        @region = FactoryGirl.create(:miq_region, :region => @orig_region)
+        @other_region = FactoryGirl.create(:miq_region)
       end
 
       context "after seeding" do
@@ -97,17 +85,37 @@ describe MiqRegion do
           MiqRegion.exists?(:region => @orig_region).should be_true
         end
       end
-    end
 
-    context "with MiqDatabase" do
-      before(:each) do
-        @db = FactoryGirl.create(:miq_database)
+      context "then original destroyed" do
+        before(:each) do
+          @region.destroy
+        end
+
+        it "should not find region" do
+          MiqRegion.exists?(:region => @orig_region).should_not be_true
+        end
+
+        context "after seeding" do
+          before(:each) do
+            MiqRegion.seed
+          end
+
+          it "should find region" do
+            MiqRegion.exists?(:region => @orig_region).should be_true
+          end
+        end
       end
 
-      it "will raise Exception if my_region_number is not the db region" do
-        MiqRegion.stub(:my_region_number).and_return(@other_region.region)
-        MiqRegion.my_region_number.should_not == @db.region_id
-        lambda { MiqRegion.seed }.should raise_error(Exception)
+      context "with MiqDatabase" do
+        before(:each) do
+          @db = FactoryGirl.create(:miq_database)
+        end
+
+        it "will raise Exception if my_region_number is not the db region" do
+          MiqRegion.stub(:my_region_number).and_return(@other_region.region)
+          MiqRegion.my_region_number.should_not == @db.region_id
+          lambda { MiqRegion.seed }.should raise_error(Exception)
+        end
       end
     end
   end
