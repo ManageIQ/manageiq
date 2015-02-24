@@ -43,34 +43,28 @@ describe MiqRegion do
     before do
       @region_number = 99
       MiqRegion.stub(:my_region_number => @region_number)
+      MiqRegion.seed
     end
 
-    context "no regions" do
-      before(:each) do
-        MiqRegion.seed
-      end
+    it "seeds 1 record in the miq_regions" do
+      MiqRegion.count.should == 1
+      MiqRegion.first.region.should == @region_number
+    end
 
-      it "seeds 1 record in the miq_regions" do
-        MiqRegion.count.should == 1
-        MiqRegion.first.region.should == @region_number
-      end
+    it "skips seeding if one exists" do
+      MiqRegion.seed
+      MiqRegion.count.should == 1
+      MiqRegion.first.region.should == @region_number
+    end
 
-      it "skips seeding if one exists" do
-        MiqRegion.seed
-        MiqRegion.count.should == 1
-        MiqRegion.first.region.should == @region_number
-      end
-
-      it "replaces deleted current region" do
-        MiqRegion.where(:region => @region_number).destroy_all
-        MiqRegion.count.should == 0
-        MiqRegion.seed
-        MiqRegion.first.region.should == @region_number
-      end
+    it "replaces deleted current region" do
+      MiqRegion.where(:region => @region_number).destroy_all
+      MiqRegion.count.should == 0
+      MiqRegion.seed
+      MiqRegion.first.region.should == @region_number
     end
 
     it "raises Exception if db region_id doesn't match my_region_number" do
-      FactoryGirl.create(:miq_region, :region => @region_number)
       @db = FactoryGirl.create(:miq_database)
       MiqRegion.stub(:my_region_number => @region_number + 1)
       lambda { MiqRegion.seed }.should raise_error(Exception)
