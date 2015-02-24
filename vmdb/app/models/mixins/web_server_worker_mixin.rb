@@ -2,9 +2,15 @@ require 'miq_apache'
 module WebServerWorkerMixin
   extend ActiveSupport::Concern
 
+  BINDING_ADDRESS = "127.0.0.1"
+
   included do
     class << self
       attr_accessor :registered_ports
+    end
+
+    def self.binding_address
+      BINDING_ADDRESS
     end
 
     def self.rails_server_command_line
@@ -18,7 +24,7 @@ module WebServerWorkerMixin
 
       defaults = {
         :port         => 3000,
-        :binding      => "127.0.0.1",
+        :binding      => binding_address,
         :environment  => Rails.env.to_s,
         :config       => Rails.root.join("config.ru")
       }
