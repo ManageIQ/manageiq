@@ -15,11 +15,12 @@
               %img{:src => "/imgas/icons/16/sort_#{@edit[:vc_sortdir] == 'ASC' ? 'up' : 'down'}"}
     %tbody
       - cls = @edit[:new][:sysprep_custom_spec] && @edit[:new][:sysprep_custom_spec][0].nil? ? "row3" : cycle('row0', 'row1')
-      %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=__VC__NONE__&id=#{id}');", :nowrap => 1}
-        %td{:onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
-          = "<#{_('None')}>"
-        %td
-        %td>
+      - unless spec_required
+        %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=__VC__NONE__&id=#{id}');", :nowrap => 1}
+          %td{:onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+            = "<#{_('None')}>"
+          %td
+          %td>
       - @temp[:vcs].each do |row|
         - cls = @edit[:new][:sysprep_custom_spec] && @edit[:new][:sysprep_custom_spec][0] == row.id.to_s ? "row3" : cycle('row0', 'row1')
         %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=#{row.id}&id=#{id}');", :nowrap => 1}
