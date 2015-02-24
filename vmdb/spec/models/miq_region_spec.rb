@@ -78,23 +78,11 @@ describe MiqRegion do
       end
     end
 
-    context "existing region" do
-      before(:each) do
-        @region = FactoryGirl.create(:miq_region, :region => @region_number)
-        @other_region = FactoryGirl.create(:miq_region, :region => @region_number + 1)
-      end
-
-      context "with MiqDatabase" do
-        before(:each) do
-          @db = FactoryGirl.create(:miq_database)
-        end
-
-        it "will raise Exception if my_region_number is not the db region" do
-          MiqRegion.stub(:my_region_number).and_return(@other_region.region)
-          MiqRegion.my_region_number.should_not == @db.region_id
-          lambda { MiqRegion.seed }.should raise_error(Exception)
-        end
-      end
+    it "raises Exception if db region_id doesn't match my_region_number" do
+      FactoryGirl.create(:miq_region, :region => @region_number)
+      @db = FactoryGirl.create(:miq_database)
+      MiqRegion.stub(:my_region_number => @region_number + 1)
+      lambda { MiqRegion.seed }.should raise_error(Exception)
     end
   end
 end
