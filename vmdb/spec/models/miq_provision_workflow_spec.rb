@@ -69,44 +69,6 @@ describe MiqProvisionWorkflow do
     end
   end
 
-  context "validate_sysprep_file" do
-    require 'stringio'
-
-    context "Sysprep INI" do
-      it "validate_sysprep_file with valid data" do
-        ini_file = StringIO.new(<<-INI_DATA
-          [section1]
-          ; some comment on section1
-          var1 = foo
-          var2 = bar
-        INI_DATA
-        )
-        expect { MiqProvisionWorkflow.validate_sysprep_file(ini_file) }.to_not raise_error
-      end
-
-      it "validate_sysprep_file with invalid data" do
-        ini_file = StringIO.new(<<-INI_DATA
-          ; some comment on section1
-          var1_foo
-        INI_DATA
-        )
-        expect { MiqProvisionWorkflow.validate_sysprep_file(ini_file) }.to raise_error(RuntimeError, "Invalid file contents detected")
-      end
-    end
-
-    context "Sysprep XML" do
-      it "validate_sysprep_file with valid XML" do
-        xml_file = StringIO.new("<?xml version=\"1.0\"?><unattend/>")
-        expect { MiqProvisionWorkflow.validate_sysprep_file(xml_file) }.to_not raise_error
-      end
-
-      it "validate_sysprep_file with invalid XML" do
-        xml_file = StringIO.new("<?xml version=\"1.0\"?><bad_root_name/>")
-        expect { MiqProvisionWorkflow.validate_sysprep_file(xml_file) }.to raise_error(RuntimeError, "Invalid file contents detected")
-      end
-    end
-  end
-
   context ".encrypted_options_fields" do
     MiqProvisionWorkflow.descendants.each do |sub_klass|
       it("with class #{sub_klass}") { sub_klass.encrypted_options_fields.should include(:root_password) }
