@@ -51,7 +51,7 @@ module EmsRefresh::SaveInventory
       key_backup = backup_keys(h, remove_keys)
 
       h[:ems_id]                 = ems.id
-      h[:host_id]                = key_backup.fetch_path(:host, :id)
+      h[:host_id]                = key_backup.fetch_path(:host, :id) || key_backup.fetch_path(:host).try(:id)
       h[:ems_cluster_id]         = key_backup.fetch_path(:ems_cluster, :id)
       h[:storage_id]             = key_backup.fetch_path(:storage, :id)
       h[:flavor_id]              = key_backup.fetch_path(:flavor, :id)

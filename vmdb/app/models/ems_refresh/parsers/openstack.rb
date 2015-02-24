@@ -167,7 +167,8 @@ module EmsRefresh::Parsers
     end
 
     def get_servers
-      process_collection(servers, :vms) { |server| parse_server(server) }
+      openstack_infra_hosts = @ems.provider.try(:infra_ems).try(:hosts)
+      process_collection(servers, :vms) { |server| parse_server(server, openstack_infra_hosts) }
     end
 
     def process_collection(collection, key, &block)
@@ -467,7 +468,7 @@ module EmsRefresh::Parsers
       return uid, new_result
     end
 
-    def parse_server(server)
+    def parse_server(server, parent_hosts = nil)
       uid = server.id
 
       raw_power_state = RAW_POWER_STATES[server.os_ext_sts_power_state.to_i] || "UNKNOWN"
@@ -483,7 +484,18 @@ module EmsRefresh::Parsers
       private_network = {:ipaddress => server.private_ip_address}.delete_nils
       public_network  = {:ipaddress => server.public_ip_address}.delete_nils
 
-      # parent_host      = @data_index.fetch_path(:hosts, server.os_ext_srv_attr_host)
+      if parent_hosts
+        # Find associated host from OpenstackInfra
+        filtered_hosts = parent_hosts.select do |x|
+          x.hypervisor_hostname && server.os_ext_srv_attr_host && server.os_ext_srv_attr_host.include?(x.hypervisor_hostname.downcase)
+        end
+        parent_host = filtered_hosts.first
+        parent_cluster = parent_host.try(:ems_cluster)
+      else
+        parent_host = nil
+        parent_cluster = nil
+      end
+
       parent_image_uid = server.image["id"]
 
       new_result = {
@@ -505,7 +517,8 @@ module EmsRefresh::Parsers
           :networks         => [], # Filled in later conditionally on what's available
         },
 
-        # :host => parent_host,
+        :host              => parent_host,
+        :ems_cluster       => parent_cluster,
         :flavor            => flavor,
         :availability_zone => @data_index.fetch_path(:availability_zones, server.availability_zone || "null_az"),
         :key_pairs         => [@data_index.fetch_path(:key_pairs, server.key_name)].compact,
