@@ -54,7 +54,7 @@ describe MiqServer do
          :name     => "File Depot"}
       end
 
-      let(:depot)          { FactoryGirl.build(:file_depot, :uri => uri) { |d| d.save(:validate => false) } }
+      let(:depot)          { FactoryGirl.create(:file_depot, :uri => uri) }
       let(:new_depot_hash) { {:uri => "nfs://server.example.com", :username => "new_user", :password => "new_pass"} }
       let(:uri)            { "smb://server/share" }
 
