@@ -40,10 +40,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     supports_pxe? || supports_iso? || supports_cloud_init?
   end
 
-  def initialize(values, requester, options={})
+  def initialize(values, requester, options = {})
     initial_pass = values.blank?
     initial_pass = true if options[:initial_pass] == true
-    self.instance_var_init(values, requester, options)
+    instance_var_init(values, requester, options)
 
     # Check if the caller passed the source VM as part of the initial call
     if initial_pass == true
@@ -85,7 +85,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     super(message, [:request_type, :source_type, :target_type], extra_attrs)
   end
 
-  def create_request(values, requester_id, auto_approve=false)
+  def create_request(values, requester_id, auto_approve = false)
     if @running_pre_dialog == true
       continue_request(values, requester_id)
       password_helper(values, true)
@@ -101,8 +101,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     super(request, values, requester_id, 'Vm', 'vm_migrate_request_updated', event_message)
   end
 
-  def continue_request(values, requester_id)
-
+  def continue_request(values, _requester_id)
     return false unless validate(values)
 
     if @running_pre_dialog == true
@@ -148,17 +147,17 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
       # Update fields that should be updated when the Source VM changes
       if vm_changed
-        set_on_vm_id_changed()
+        set_on_vm_id_changed
         get_source_and_targets(true)
       end
 
       # @values gets modified during this call
-      self.get_all_dialogs
-      update_custom_spec()
+      get_all_dialogs
+      update_custom_spec
       values.merge!(@values)
 
       # Update the display flag for fields based on current settings
-      update_field_visibility()
+      update_field_visibility
 
       @last_vm_id = get_value(@values[:src_vm_id])
       $log.info "#{log_header} provision refresh completed in [#{Time.now - st}] seconds"
@@ -213,9 +212,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
 
     # Update VM description
-    self.fields do |fn,f,dn,d|
+    fields do |fn, f, _, _|
       case fn
-      when :src_vm_id then f[:notes] = vm_description
+      when :src_vm_id
+        f[:notes] = vm_description
       when :vlan
         get_field(:vlan)
         set_value_from_list(fn, f, vlan, allowed_vlans)
@@ -223,26 +223,23 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
   end
 
-  def vm_name_preview(options = {})
-    return nil
+  def vm_name_preview(_options = {})
   end
 
   def validate_vm_name(field, values, dlg, fld, value)
-    result = validate_length(field, values, dlg, fld, value)
-    return result unless result.nil?
-    return nil
+    validate_length(field, values, dlg, fld, value)
   end
 
-  def validate_pxe_image_id(field, values, dlg, fld, value)
+  def validate_pxe_image_id(_field, _values, dlg, fld, _value)
     return nil unless supports_pxe?
     return nil unless get_pxe_image.nil?
-    return "#{required_description(dlg, fld)} is required"
+    "#{required_description(dlg, fld)} is required"
   end
 
-  def validate_pxe_server_id(field, values, dlg, fld, value)
+  def validate_pxe_server_id(_field, _values, dlg, fld, _value)
     return nil unless supports_pxe?
     return nil unless get_pxe_server.nil?
-    return "#{required_description(dlg, fld)} is required"
+    "#{required_description(dlg, fld)} is required"
   end
 
   def validate_placement(field, values, dlg, fld, value)
@@ -251,32 +248,32 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     return nil if get_value(values[:placement_auto]) == true
     return nil unless get_value(values[field]).blank?
     return nil if get_value(@values[:new_datastore_create]) == true
-    return "#{required_description(dlg, fld)} is required"
+    "#{required_description(dlg, fld)} is required"
   end
 
   def validate_sysprep_upload(field, values, dlg, fld, value)
     return nil unless value.blank?
     return nil unless get_value(values[:sysprep_enabled]) == 'file'
     return nil unless get_value(values[field]).blank?
-    return "#{required_description(dlg, fld)} is required"
+    "#{required_description(dlg, fld)} is required"
   end
 
   def validate_sysprep_field(field, values, dlg, fld, value)
     return nil unless value.blank?
     return nil unless get_value(values[:sysprep_enabled]) == 'fields'
     return nil unless get_value(values[field]).blank?
-    return "#{required_description(dlg, fld)} is required"
+    "#{required_description(dlg, fld)} is required"
   end
 
-  def default_require_sysprep_enabled(field, values, dlg, fld, value)
-    return "#{required_description(dlg, fld)} is required" if value.blank? || value == "disabled"
+  def default_require_sysprep_enabled(_field, _values, dlg, fld, value)
+    "#{required_description(dlg, fld)} is required" if value.blank? || value == "disabled"
   end
 
-  def default_require_sysprep_custom_spec(field, values, dlg, fld, value)
-    return "#{required_description(dlg, fld)} is required" if value.blank? || value == "__VC__NONE__"
+  def default_require_sysprep_custom_spec(_field, _values, dlg, fld, value)
+    "#{required_description(dlg, fld)} is required" if value.blank? || value == "__VC__NONE__"
   end
 
-  def update_field_visibility(options={})
+  def update_field_visibility(options = {})
     # Determine the visibility of fields based on current values and collect the fields
     # together so we can update the dialog in one pass
 
@@ -338,9 +335,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     show_flag = get_value(@values[:sysprep_custom_spec]).blank? ? :hide : :edit
     f[show_flag] += [:sysprep_spec_override]
 
-
     new_ds_ctrls = [:new_datastore_storage_controller, :new_datastore_fs_type, :new_datastore_size, :new_datastore_name,
-                    :new_datastore_aggregate, :new_datastore_volume, :new_datastore_thin_provision , :new_datastore_autogrow]
+                    :new_datastore_aggregate, :new_datastore_volume, :new_datastore_thin_provision, :new_datastore_autogrow]
     new_ds_grow  = [:new_datastore_grow_increment, :new_datastore_max_size]
 
     if auto_placement == :hide
@@ -372,9 +368,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
 
     # Hide VM filter if we are using a pre-selected VM
-    if [:clone_to_vm, :clone_to_template].include?(self.request_type)
+    if [:clone_to_vm, :clone_to_template].include?(request_type)
       f[:hide] += [:vm_filter]
-      if self.request_type == :clone_to_template
+      if request_type == :clone_to_template
         show_dialog(:customize, :hide, "disabled")
         f[:hide] += [:vm_auto_start]
       end
@@ -383,8 +379,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     update_field_visibility_linked_clone(options, f)
 
     # Update field :display value
-    f.each {|k,v| show_fields(k, v)}
-
+    f.each { |k, v| show_fields(k, v) }
 
     # Show/Hide Notes
     f = Hash.new { |h, k| h[k] = Array.new }
@@ -396,7 +391,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     f[show_flag] += [:linked_clone]
 
     # Update field :notes_display value
-    f.each {|k,v| show_fields(k, v, :notes_display)}
+    f.each { |k, v| show_fields(k, v, :notes_display) }
 
     # need to set required to false for the fields that are not being shown on screen,
     # based upon ISO/PXE choices in provision tpe pulldown
@@ -405,7 +400,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     update_field_read_only(options)
   end
 
-  def update_field_visibility_linked_clone(options={}, f)
+  def update_field_visibility_linked_clone(_options = {}, f)
     if get_value(@values[:provision_type]).to_s == 'vmware'
       show_flag = @vm_snapshot_count.zero? ? :show : :edit
       f[show_flag] += [:linked_clone]
@@ -418,7 +413,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def update_field_required
-    self.fields(:service) {|fn,f,dn,d|
+    self.fields(:service) {|fn, f, _dn, _d|
       f[:required] =  supports_pxe? ? f[:required] : false if [:pxe_image_id,:pxe_server_id].include?(fn)
       f[:required] =  supports_iso? ? f[:required] : false if [:iso_image_id].include?(fn)
     }
@@ -442,11 +437,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       fields[:edit].push(f) unless fields[:edit].include?(f)
       fields[:hide].delete(f)
     end
-
   end
 
   def show_customize_fields(fields, platform)
-    #ISO and cloud-init prov. needs to show same fields on customize tab as Pxe prov.
+    # ISO and cloud-init prov. needs to show same fields on customize tab as Pxe prov.
     return show_customize_fields_pxe(fields) if self.supports_customization_template?
 
     exclude_list = [:sysprep_spec_override, :sysprep_custom_spec, :sysprep_enabled, :sysprep_upload_file, :sysprep_upload_text,
@@ -454,7 +448,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     linux_fields = [:linux_domain_name]
     show_options = [:edit, :hide]
     show_options.reverse! if platform == 'linux'
-    self.fields(:customize) do |fn,f,dn,d|
+    self.fields(:customize) do |fn,_f,_dn,_d|
       unless exclude_list.include?(fn)
         if linux_fields.include?(fn)
           fields[show_options[1]] += [fn]
@@ -465,13 +459,12 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
   end
 
-  def update_field_read_only(options={})
+  def update_field_read_only(options = {})
     read_only = get_value(@values[:sysprep_custom_spec]).blank? ? false : !(get_value(@values[:sysprep_spec_override]) == true)
     exclude_list = [:sysprep_spec_override, :sysprep_custom_spec, :sysprep_enabled, :sysprep_upload_file, :sysprep_upload_text]
-    self.fields(:customize) {|fn,f,dn,d| f[:read_only] = read_only unless exclude_list.include?(fn)}
-    if options[:read_only_fields]
-      self.fields(:hardware) {|fn,f,dn,d| f[:read_only] = true if options[:read_only_fields].include?(fn)}
-    end
+    self.fields(:customize) { |fn, f, _dn, _d| f[:read_only] = read_only unless exclude_list.include?(fn) }
+    return unless options[:read_only_fields]
+    self.fields(:hardware) { |fn, f, _dn, _d| f[:read_only] = true if options[:read_only_fields].include?(fn) }
   end
 
   def set_default_values
@@ -501,10 +494,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     cat = Classification.find_by_name(options[:category].to_s)
     result = cat ? cat.entries.inject({}) {|h,e| h[e.name] = e.description; h} : {}
     rails_logger('allowed_cat_entries', 1)
-    return result
+    result
   end
 
-  def allowed_vlans(options={})
+  def allowed_vlans(options = {})
     if @allowed_vlan_cache.nil?
       @vlan_options ||= options
       vlans = {}
@@ -515,11 +508,12 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       unless @vlan_options[:vlans] == false
         rails_logger('allowed_vlans', 0)
         hosts = get_selected_hosts(src)
+        # TODO: Use Active Record to preload this data?
         MiqPreloader.preload(hosts, :switches => :lans)
-        hosts.each {|h| h.lans.each {|l| vlans[l.name] = l.name}}
+        hosts.each { |h| h.lans.each { |l| vlans[l.name] = l.name } }
 
         # Remove certain networks
-        vlans.delete_if {|k,v| v.include?('Service Console') || v.include?('VMkernel')}
+        vlans.delete_if {|_k,v| v.include?('Service Console') || v.include?('VMkernel')}
         rails_logger('allowed_vlans', 1)
       end
 
@@ -531,10 +525,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       end
       @allowed_vlan_cache = vlans
     end
-    return filter_by_tags(@allowed_vlan_cache, options)
+    filter_by_tags(@allowed_vlan_cache, options)
   end
 
-  def allowed_dvs(options={}, hosts=nil)
+  def allowed_dvs(_options = {}, hosts = nil)
     @dvs_ems_connect_ok ||= {}
     @dvs_by_host ||= {}
     switches = {}
@@ -544,13 +538,13 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     hosts = get_selected_hosts(src) if hosts.nil?
 
     # Find if we need to connect to the EMS to collect a host's dvs
-    missing_hosts = hosts.reject {|h| @dvs_by_host.has_key?(h.id)}
+    missing_hosts = hosts.reject { |h| @dvs_by_host.has_key?(h.id) }
     unless missing_hosts.blank?
       begin
         st = Time.now
         return switches if @dvs_ems_connect_ok[src[:ems].id] == false
         vim = load_ar_obj(src[:ems]).connect
-        missing_hosts.each {|dest_host| @dvs_by_host[dest_host.id] = get_host_dvs(dest_host, vim)}
+        missing_hosts.each { |dest_host| @dvs_by_host[dest_host.id] = get_host_dvs(dest_host, vim) }
       rescue
         @dvs_ems_connect_ok[src[:ems].id] = false
         return switches
@@ -560,8 +554,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       end
     end
 
-    hosts.each {|h| switches.merge!(@dvs_by_host[h.id])}
-    return switches
+    hosts.each { |h| switches.merge!(@dvs_by_host[h.id]) }
+    switches
   end
 
   def get_host_dvs(dest_host, vim)
@@ -571,10 +565,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     # List the names of the non-uplink portgroups.
     unless dvs.nil? || dvs.distributedVirtualPortgroup.nil?
       nupga = vim.applyFilter(dvs.distributedVirtualPortgroup, 'uplinkPortgroup' => 'false')
-      nupga.each { |nupg| switches[URI.decode("dvs_#{nupg.portgroupName}")] = URI.decode("#{nupg.portgroupName} (#{nupg.switchName})")}
+      nupga.each { |nupg| switches[URI.decode("dvs_#{nupg.portgroupName}")] = URI.decode("#{nupg.portgroupName} (#{nupg.switchName})") }
     end
 
-    return switches
+    switches
   end
 
   def get_selected_hosts(src)
@@ -595,13 +589,13 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     return target if opt_filters.blank?
 
     filters = []
-    selected_cats = self.selected_tags_by_cat_and_name
+    selected_cats = selected_tags_by_cat_and_name
     if opt_filters.kind_of?(Hash)
       opt_filters.each do |cat, f|
         selected_tag = selected_cats[cat.to_s]
         if selected_tag.nil?
           # If no tags are selected check for a filter with a tag of nil to process
-          f.each {|fd| filters << fd if fd[:tag].nil?}
+          f.each { |fd| filters << fd if fd[:tag].nil? }
         else
           f.each do |fd|
             selected_tag.each do |st|
@@ -625,7 +619,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       end
     end
 
-    return result
+    result
   end
 
   def selected_tags_by_cat_and_name
@@ -646,11 +640,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     nil
   end
 
-  def allowed_templates(options={})
+  def allowed_templates(options = {})
     log_header = "MIQ(#{self.class.name}#allowed_templates)"
 
     # Return pre-selected VM if we are called for cloning
-    if [:clone_to_vm, :clone_to_template].include?(self.request_type)
+    if [:clone_to_vm, :clone_to_template].include?(request_type)
       return [VmOrTemplate.find_by_id(get_value(@values[:src_vm_id]))].compact
     end
 
@@ -675,10 +669,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
       # Collect the filter tags by category
       unless selected_tags.blank?
-        self.allowed_tags_and_pre_tags.each do |cat|
+        allowed_tags_and_pre_tags.each do |cat|
           if tag_filters.include?(cat[:name])
-            children_keys = cat[:children].each_with_object({}) {|t,h| h[t.first] = t.last}
-            conditions = (children_keys.keys & selected_tags).collect {|t_id| "#{cat[:name]}/#{children_keys[t_id][:name]}"}
+            children_keys = cat[:children].each_with_object({}) { |t, h| h[t.first] = t.last }
+            conditions = (children_keys.keys & selected_tags).collect { |t_id| "#{cat[:name]}/#{children_keys[t_id][:name]}" }
           end
           tag_conditions << conditions unless conditions.blank?
         end
@@ -691,7 +685,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
           $log.warn "#{log_header} tag_filters returned an empty VM template list.  Tag Filters used: <#{tag_conditions.inspect}>"
           run_search = false
         else
-          vms.each { |vm| $log.info "#{log_header} tag_filter template returned: <#{vm.id}:#{vm.name}>  GUID: <#{vm.guid}>  UID_EMS: <#{vm.uid_ems}>"}
+          vms.each { |vm| $log.info "#{log_header} tag_filter template returned: <#{vm.id}:#{vm.name}>  GUID: <#{vm.guid}>  UID_EMS: <#{vm.uid_ems}>" }
         end
       end
     end
@@ -704,22 +698,22 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       $log.warn "#{log_header} Allowed Templates is returning an empty list"
     else
       $log.warn "#{log_header} Allowed Templates is returning <#{allowed_templates_list.length}> template(s)"
-      allowed_templates_list.each { |vm| $log.info "#{log_header} Allowed Template <#{vm.id}:#{vm.name}>  GUID: <#{vm.guid}>  UID_EMS: <#{vm.uid_ems}>"}
+      allowed_templates_list.each { |vm| $log.info "#{log_header} Allowed Template <#{vm.id}:#{vm.name}>  GUID: <#{vm.guid}>  UID_EMS: <#{vm.uid_ems}>" }
     end
 
     MiqPreloader.preload(allowed_templates_list, [:operating_system, :ext_management_system, {:hardware => :disks}])
     @allowed_templates_cache = allowed_templates_list.collect do |v|
       nh = MiqHashStruct.new(
-        :id       => v.id,
-        :name     => v.name,
-        :guid     => v.guid,
-        :uid_ems  => v.uid_ems,
-        :platform => v.platform,
-        :num_cpu  => v.num_cpu,
-        :mem_cpu  => v.mem_cpu,
+        :id                     => v.id,
+        :name                   => v.name,
+        :guid                   => v.guid,
+        :uid_ems                => v.uid_ems,
+        :platform               => v.platform,
+        :num_cpu                => v.num_cpu,
+        :mem_cpu                => v.mem_cpu,
         :allocated_disk_storage => v.allocated_disk_storage,
-        :v_total_snapshots => v.v_total_snapshots,
-        :evm_object_class => :Vm
+        :v_total_snapshots      => v.v_total_snapshots,
+        :evm_object_class       => :Vm
         )
       nh.operating_system = MiqHashStruct.new(:product_name => v.operating_system.product_name) unless v.operating_system.nil?
       nh.ext_management_system = MiqHashStruct.new(:name => v.ext_management_system.name) unless v.ext_management_system.nil?
@@ -728,10 +722,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       end
       nh
     end
-    return @allowed_templates_cache
+    @allowed_templates_cache
   end
 
-  def source_vm_rbac_filter(vms, condition=nil)
+  def source_vm_rbac_filter(vms, condition = nil)
     log_header = "MIQ(#{self.class.name}#source_vm_rbac)"
 
     filter_id = get_value(@values[:vm_filter]).to_i
@@ -750,38 +744,38 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     return result
   end
 
-  def allowed_provision_types(options={})
+  def allowed_provision_types(_options = {})
     {}
   end
 
-  def allowed_snapshots(options={})
+  def allowed_snapshots(_options = {})
     result = {}
     return result if (vm = get_source_vm).blank?
-    vm.snapshots.each {|ss| result[ss.id.to_s] = ss.current? ? "#{ss.name} (Active)" : ss.name}
+    vm.snapshots.each { |ss| result[ss.id.to_s] = ss.current? ? "#{ss.name} (Active)" : ss.name }
     result["__CURRENT__"] = " Use the snapshot that is active at time of provisioning" unless result.blank?
     result
   end
 
-  def allowed_datastore_storage_controller(options={})
+  def allowed_datastore_storage_controller(_options = {})
     # TODO: NetAppFiler is an ActAsArModel and doesn't support arel syntax yet
     NetAppFiler.all.collect(&:name).index_by { |n| n }
   end
 
-  def allowed_datastore_aggregate(options={})
+  def allowed_datastore_aggregate(_options = {})
     result = {}
     controller = get_value(@values[:new_datastore_storage_controller])
     return result if controller.blank?
     naf = NetAppFiler.find_by_name(controller)
     naf_type = get_value(@values[:new_datastore_fs_type]) == "NFS" ? :aggregates : :volumes
-    naf.send(naf_type).each {|a| result[a] = a}
-    return result
+    naf.send(naf_type).each { |a| result[a] = a }
+    result
   end
 
   def get_source_vm
     get_source_and_targets[:vm]
   end
 
-  def get_source_and_targets(refresh=false)
+  def get_source_and_targets(refresh = false)
     return @target_resource if @target_resource && refresh == false
 
     vm_id = get_value(@values[:src_vm_id])
@@ -803,7 +797,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     result[:vm] = ci_to_hash_struct(svm)
     result[:ems] = ci_to_hash_struct(svm.ext_management_system)
 
-    return result
+    result
   end
 
   def resources_for_ui
@@ -811,15 +805,15 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     super
   end
 
-  def allowed_customization_specs(options={})
+  def allowed_customization_specs(_options = {})
     return [] if (src = get_source_and_targets).blank?
     return [] if src[:ems].nil?
     customization_type = get_value(@values[:sysprep_enabled])
     return [] if customization_type.blank? || customization_type == 'disabled'
 
-    @customization_specs ||= Hash.new
+    @customization_specs ||= {}
     ems_id = src[:ems].id
-    unless @customization_specs.has_key?(ems_id)
+    unless @customization_specs.key?(ems_id)
       rails_logger('allowed_customization_specs', 0)
       @customization_specs[ems_id] = ci_to_hash_struct(load_ar_obj(src[:ems]).customization_specs)
       rails_logger('allowed_customization_specs', 1)
@@ -827,35 +821,34 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     result = @customization_specs[ems_id].dup
     source_platform = src[:vm].platform.capitalize
-    result.delete_if {|cs| source_platform != cs.typ}
+    result.delete_if { |cs| source_platform != cs.typ }
     result.delete_if(&:is_sysprep_spec?)  if customization_type == 'file'
-    result.delete_if {|cs| !cs.is_sysprep_spec? } if customization_type == 'fields'
-    return result
+    result.delete_if { |cs| !cs.is_sysprep_spec? } if customization_type == 'fields'
+    result
   end
 
-  def allowed_customization(options={})
+  def allowed_customization(_options = {})
     src = get_source_and_targets
     return {} if src.blank?
-    return {"fields"  => "Specification"} if @values[:forced_sysprep_enabled] == 'fields'
+    return {"fields" => "Specification"} if @values[:forced_sysprep_enabled] == 'fields'
 
-    result = {"disabled"    => "<None>"}
-              #"customspec" => "Use existing Specification"}
+    result = {"disabled" => "<None>"}
 
     case src[:vm].platform
-    when 'windows' then result.merge!({"fields" => "Specification", "file"  => "Sysprep Answer File"})
-    when 'linux'   then result.merge!({"fields" => "Specification"})
+    when 'windows' then result.merge!("fields" => "Specification", "file"  => "Sysprep Answer File")
+    when 'linux'   then result.merge!("fields" => "Specification")
     end
 
-    return result
+    result
   end
 
-  def allowed_number_of_vms(options={})
+  def allowed_number_of_vms(options = {})
     options = {:min => 1, :max => 50}.merge(options)
     min, max = options[:min].to_i, options[:max].to_i
     min = 1 if min < 1
     max = min if max < 1
     h = {}
-    min.upto(max) {|i| h[i] = i.to_s; h}
+    min.upto(max) { |i| h[i] = i.to_s; h }
     h
   end
 
@@ -863,12 +856,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     return @ldap_ous unless @ldap_ous.nil?
     ous = YAML.load_file("ous.yaml")
     @ldap_ous = {}
-    ous.each {|ou| @ldap_ous[ou[0].dup] = ou[1].dup}
-    return @ldap_ous
+    ous.each { |ou| @ldap_ous[ou[0].dup] = ou[1].dup }
+    @ldap_ous
   end
 
-  def allowed_organizational_units(options={})
-    #return load_test_ous_data
+  def allowed_organizational_units(options = {})
     log_header = "MIQ(#{self.class.name}#allowed_organizational_units)"
     ou_domain = get_value(@values[:sysprep_domain_name])
     $log.info("#{log_header} sysprep_domain_name=<#{ou_domain}>")
@@ -881,10 +873,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       details   = MiqProvision.get_domain_details(ou_domain, true, @requester)
       return @ldap_ous if details.nil?
 
-      options[:host]      = details[:ldap_host]  if details.has_key?(:ldap_host)
-      options[:port]      = details[:ldap_port]  if details.has_key?(:ldap_port)
-      options[:basedn]    = details[:base_dn]    if details.has_key?(:base_dn)
-      options[:user_type] = details[:user_type]  if details.has_key?(:user_type)
+      options[:host]      = details[:ldap_host]  if details.key?(:ldap_host)
+      options[:port]      = details[:ldap_port]  if details.key?(:ldap_port)
+      options[:basedn]    = details[:base_dn]    if details.key?(:base_dn)
+      options[:user_type] = details[:user_type]  if details.key?(:user_type)
       l = MiqLdap.new(options)
       userid   = details[:bind_dn]
       password = details[:bind_password]
@@ -912,17 +904,17 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     @ldap_ous
   end
 
-  def allowed_ous_tree(options={})
+  def allowed_ous_tree(_options = {})
     hous = {}
     ous = allowed_organizational_units
     return ous if ous.blank?
 
     dc_path = ous.keys.first.split(',').inject([]) do |a, p|
-                type, pathname = p.split('=')
-                a << pathname if type == "DC"
-                a
-              end.join('.')
-    ous.each {|ou| create_ou_tree(ou, hous[dc_path] ||= {}, ou[0].split(','))}
+      type, pathname = p.split('=')
+      a << pathname if type == "DC"
+      a
+    end.join('.')
+    ous.each { |ou| create_ou_tree(ou, hous[dc_path] ||= {}, ou[0].split(',')) }
 
     # Re-adjust path for remove levels without OUs.
     root, path = find_first_ou(hous[dc_path])
@@ -933,13 +925,13 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       hous.delete(root_name)
     end
 
-    return hous
+    hous
   end
 
-  def find_first_ou(hous, path=nil)
+  def find_first_ou(hous, path = nil)
     unless hous.has_key?(:ou)
       key = hous.keys.first
-      if hous[key].has_key?(:ou)
+      if hous[key].key?(:ou)
         return hous, path
       else
         path = path.nil? ? key : "#{path} / #{key}"
@@ -949,7 +941,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       find_first_ou(hous[key], path)
     end
   end
-
 
   def build_ou_path_name(ou)
     path_name = ''
@@ -978,7 +969,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
   end
 
-  def allowed_domains(options={})
+  def allowed_domains(options = {})
     return @domains unless @domains.nil?
 
     @domains = {}
@@ -1031,10 +1022,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       src = get_source_and_targets
       ems_id = src[:ems].id
 
-      cs_data = @customization_specs[ems_id].detect {|s| s.name == selected_spec}
+      cs_data = @customization_specs[ems_id].detect { |s| s.name == selected_spec }
       if cs_data.nil?
         selected_spec_int = selected_spec.to_i
-        cs_data = @customization_specs[ems_id].detect {|s| s.id == selected_spec_int}
+        cs_data = @customization_specs[ems_id].detect { |s| s.id == selected_spec_int }
       end
       unless cs_data.nil?
         cs_data = load_ar_obj(cs_data)
@@ -1044,7 +1035,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
         end
 
         # Call platform specific method
-        self.send("update_fields_from_spec_#{cs_data[:typ].downcase}", cs_data)
+        send("update_fields_from_spec_#{cs_data[:typ].downcase}", cs_data)
 
         # Call generic networking method
         update_fields_from_spec_networking(cs_data)
@@ -1065,24 +1056,24 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     dialog = @dialogs.fetch_path(:dialogs, :customize)
 
     collect_customization_spec_settings(spec, spec_hash, ['identity', 'guiUnattended'],
-        [:sysprep_timezone, 'timeZone', :sysprep_auto_logon, 'autoLogon', :sysprep_auto_logon_count, 'autoLogonCount'])
+      [:sysprep_timezone, 'timeZone', :sysprep_auto_logon, 'autoLogon', :sysprep_auto_logon_count, 'autoLogonCount'])
 
     collect_customization_spec_settings(spec, spec_hash, ['identity', 'identification'],
-        [:sysprep_domain_name, 'joinDomain', :sysprep_domain_admin, 'domainAdmin' , :sysprep_workgroup_name, 'joinWorkgroup'])
+      [:sysprep_domain_name, 'joinDomain', :sysprep_domain_admin, 'domainAdmin', :sysprep_workgroup_name, 'joinWorkgroup'])
 
-    #PATH:[identity][userData][computerName][name] (VimString) = "VI25Test"
+    # PATH:[identity][userData][computerName][name] (VimString) = "VI25Test"
     collect_customization_spec_settings(spec, spec_hash, ['identity', 'userData'],
-        [:sysprep_organization, 'orgName', :sysprep_full_name, 'fullName', :sysprep_product_id, 'productId'])
+      [:sysprep_organization, 'orgName', :sysprep_full_name, 'fullName', :sysprep_product_id, 'productId'])
 
     collect_customization_spec_settings(spec, spec_hash, ['identity', 'licenseFilePrintData'],
-        [:sysprep_server_license_mode, 'autoMode', :sysprep_per_server_max_connections, 'autoUsers'])
+      [:sysprep_server_license_mode, 'autoMode', :sysprep_per_server_max_connections, 'autoUsers'])
 
     collect_customization_spec_settings(spec, spec_hash, ['options'],
-        [:sysprep_change_sid, 'changeSID', :sysprep_delete_accounts, 'deleteAccounts'])
+      [:sysprep_change_sid, 'changeSID', :sysprep_delete_accounts, 'deleteAccounts'])
 
     spec_hash[:sysprep_identification] = spec_hash[:sysprep_domain_name].blank? ? 'workgroup' : 'domain'
 
-    spec_hash.each {|k,v| set_customization_field_from_spec(v, k, dialog) }
+    spec_hash.each { |k, v| set_customization_field_from_spec(v, k, dialog) }
   end
 
   def update_fields_from_spec_linux(cs_data)
@@ -1091,9 +1082,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     dialog = @dialogs.fetch_path(:dialogs, :customize)
 
     collect_customization_spec_settings(spec, spec_hash, ['identity'],
-        [:linux_domain_name, 'domain', :linux_host_name, 'hostName'])
+      [:linux_domain_name, 'domain', :linux_host_name, 'hostName'])
 
-    spec_hash.each {|k,v| set_customization_field_from_spec(v, k, dialog) }
+    spec_hash.each { |k, v| set_customization_field_from_spec(v, k, dialog) }
   end
 
   def update_fields_from_spec_networking(cs_data)
@@ -1109,7 +1100,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       spec_hash[:subnet_mask]  = adapter['subnetMask'].to_s
       spec_hash[:ip_addr]      = adapter.fetch_path('ip', 'ipAddress').to_s
       # Combine the WINS server fields into 1 comma separated field list
-      spec_hash[:wins_servers] = [adapter['primaryWINS'], adapter['secondaryWINS']].collect{|s| s unless s.blank?}.compact.join(', ')
+      spec_hash[:wins_servers] = [adapter['primaryWINS'], adapter['secondaryWINS']].collect{ |s| s unless s.blank? }.compact.join(', ')
     end
 
     # In Linux, DNS server settings are global, not per adapter
@@ -1118,7 +1109,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     spec_hash[:addr_mode] = spec_hash[:ip_addr].blank? ? 'dhcp' : 'static'
 
-    spec_hash.each {|k,v| set_customization_field_from_spec(v, k, dialog) }
+    spec_hash.each { |k, v| set_customization_field_from_spec(v, k, dialog) }
   end
 
 
@@ -1129,21 +1120,21 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def set_customization_field_from_spec(data_value, dlg_field, dialog)
-    field_hash = dialog[:fields][dlg_field]
-    data_type = field_hash[:data_type]
+    field_hash  = dialog[:fields][dlg_field]
+    data_type   = field_hash[:data_type]
     cust_method = "custom_#{dlg_field}"
 
     if self.respond_to?(cust_method)
-      self.send(cust_method, field_hash, data_value)
+      send(cust_method, field_hash, data_value)
     else
       value = case data_type
               when :boolean then data_value == "true"
               when :integer then data_value.to_i_with_method
               when :string  then data_value.to_s
-              else data_value
+              else               data_value
               end
 
-      if field_hash.has_key?(:values)
+      if field_hash.key?(:values)
         set_value_from_list(dlg_field, field_hash, value)
       else
         @values[dlg_field] = value
@@ -1188,28 +1179,28 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     log_header = "#{self.name}.from_ws_ver_1_x"
     $log.info "#{log_header} Web-service provisioning starting with interface version <#{version}> for user <#{userid}>"
     values = {}
-    p = new(values, userid, {:use_pre_dialog => false, :options => {:skip_dialog_load => true}})
+    p = new(values, userid, :use_pre_dialog => false)
     src_name_down = src_name.downcase
-    src = p.send(:allowed_templates).detect {|v| v.name.downcase == src_name_down}
+    src = p.send(:allowed_templates).detect { |v| v.name.downcase == src_name_down }
     raise "Source template [#{src_name}] was not found" if src.nil?
-    p = class_for_source(src.id).new(values, userid, {:use_pre_dialog => false, :options => {:skip_dialog_load => true}})
+    p = class_for_source(src.id).new(values, userid, :use_pre_dialog => false)
 
     # Populate required fields
     p.init_from_dialog(values, userid)
     values[:src_vm_id] = [src.id, src.name]
     p.refresh_field_values(values, userid)
-    values[:vm_name] = target_name
-    values[:placement_auto] = [true, 1]
+    values[:vm_name]          = target_name
+    values[:placement_auto]   = [true, 1]
     values[:owner_first_name] = userid
-    values[:owner_email] = userid
-    values[:owner_last_name] = userid
+    values[:owner_email]      = userid
+    values[:owner_last_name]  = userid
 
     p.set_ws_tags(values, tags, :parse_ws_string_v1)    # Tags are passed as category|value|cat2|...  Example: cc|001|environment|test
     p.set_ws_values(values, :ws_values, additional_values, :parse_ws_string_v1)
 
     if p.validate(values) == false
       errors = []
-      p.fields {|fn,f,dn,d| errors << f[:error] unless f[:error].nil?}
+      p.fields { |_fn, f, _dn, _d| errors << f[:error] unless f[:error].nil? }
       raise "Provision failed for the following reasons:\n#{errors.join("\n")}"
     end
 
@@ -1228,16 +1219,16 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
     $log.info "#{log_header} data:<#{data.inspect}>"
 
-    src_name =     data[:name].blank?       ? nil : data[:name].downcase
-    src_guid =     data[:guid].blank?       ? nil : data[:guid].downcase
-    ems_guid =     data[:ems_guid].blank?   ? nil : data[:ems_guid].downcase
+    src_name =     data[:name].blank?     ? nil : data[:name].downcase
+    src_guid =     data[:guid].blank?     ? nil : data[:guid].downcase
+    ems_guid =     data[:ems_guid].blank? ? nil : data[:ems_guid].downcase
     data_centers = data[:data_centers].nil? ? nil : data[:data_centers]
 
     $log.info "#{log_header} VM Passed: <#{src_name}> <#{src_guid}> <#{ems_guid}> Datacenters:<#{data_centers.inspect}>"
     if [:clone_to_vm, :clone_to_template].include?(self.request_type)
       src = ws_find_template_or_vm(values, src_name, src_guid, ems_guid)
     else
-      srcs = self.send(:allowed_templates, {:include_datacenter => true}).find_all do |v|
+      srcs = send(:allowed_templates, :include_datacenter => true).find_all do |v|
         $log.info "#{log_header} VM Detected: <#{v.name.downcase}> <#{v.guid}> <#{v.uid_ems}> Datacenter:<#{v.datacenter_name}>"
         (src_name.nil? || src_name == v.name.downcase) && (src_guid.nil? || src_guid == v.guid) && (ems_guid.nil? || ems_guid == v.uid_ems) && (data_centers.nil? || data_centers.include?(v.datacenter_name))
       end
@@ -1246,10 +1237,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
     raise "No source template was found from input data:<#{data.inspect}>" if src.nil?
     $log.info "#{log_header} VM Found: <#{src.name}> <#{src.guid}> <#{src.uid_ems}>  Datacenter:<#{src.datacenter_name}>"
-    return src
+    src
   end
 
-  def ws_find_template_or_vm(values, src_name, src_guid, ems_guid)
+  def ws_find_template_or_vm(_values, src_name, src_guid, ems_guid)
     conditions = []
     args       = []
 
@@ -1287,17 +1278,17 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     data.each {|k, v| $log.warn "#{log_header} Unprocessed key <#{k}> with value <#{v.inspect}>"}
   end
 
-  def ws_service_fields(values, fields, data)
+  def ws_service_fields(values, _fields, data)
     return if (dlg_fields = get_ws_dialog_fields(dialog_name = :service)).nil?
     dlg_keys = dlg_fields.keys
 
     # Process PXE settings by setting the server first then image, windows image and custom template
     dlg_field = :pxe_server_id
-    if dlg_keys.include?(dlg_field) && (data.has_key?(dlg_field) || data.has_key?(:pxe_server))
+    if dlg_keys.include?(dlg_field) && (data.key?(dlg_field) || data.key?(:pxe_server))
       set_ws_field_value_by_id_or_name(values, dlg_field, data, dialog_name, dlg_fields)
 
       dlg_field = :pxe_image_id
-      self.get_field(dlg_field, dialog_name)
+      get_field(dlg_field, dialog_name)
       set_ws_field_value_by_id_or_name(values, dlg_field, data, dialog_name, dlg_fields, nil, "PxeImage")
 
       # Windows images are also stored with the pxe_image values
@@ -1305,22 +1296,22 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
 
     dlg_keys = dlg_fields.keys
-    data.keys.each {|key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_keys.include?(key)}
+    data.keys.each { |key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_keys.include?(key) }
   end
 
-  def ws_hardware_fields(values, fields, data)
+  def ws_hardware_fields(values, _fields, data)
     ws_hardware_scsi_controller_fields(values, data)
     ws_hardware_disk_fields(values, data)
     ws_hardware_network_fields(values, data)
     return if (dlg_fields = get_ws_dialog_fields(dialog_name = :hardware)).nil?
     dlg_keys = dlg_fields.keys
-    data.keys.each {|key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_keys.include?(key)}
+    data.keys.each { |key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_keys.include?(key) }
   end
 
 
   def ws_hardware_network_fields(values, data)
     log_header = "MIQ(#{self.class.name}#ws_hardware_network_fields)"
-    parse_ws_hardware_fields(:networks, /^network(\d{1,2})$/, values, data) {|n, v, i| n[:network] = v}
+    parse_ws_hardware_fields(:networks, /^network(\d{1,2})$/, values, data) { |n, v, _i| n[:network] = v }
 
     # Check and remove invalid networks specifications
     values[:networks].delete_if do |d|
@@ -1338,7 +1329,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def ws_hardware_disk_fields(values, data)
     log_header = "MIQ(#{self.class.name}#ws_hardware_network_fields)"
-    parse_ws_hardware_fields(:disk_scsi, /^diskscsi(\d{1,2})$/, values, data) do |disk, value, idx|
+    parse_ws_hardware_fields(:disk_scsi, /^diskscsi(\d{1,2})$/, values, data) do |disk, value, _idx|
       d_parms = value.split(':')
       disk[:bus]      = d_parms[0] || '*'
       disk[:pos]      = d_parms[1] || '*'
@@ -1379,23 +1370,23 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     values[hw_key].compact! unless values[hw_key].nil?
   end
 
-  def ws_network_fields(values, fields, data)
+  def ws_network_fields(values, _fields, data)
     return if (dlg_fields = get_ws_dialog_fields(dialog_name = :network)).nil?
     dlg_keys = dlg_fields.keys
-    data.keys.each {|key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_keys.include?(key)}
+    data.keys.each {|key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_keys.include?(key)}  # TODO: dlg_fileds.key?(key)
   end
 
-  def ws_customize_fields(values, fields, data)
+  def ws_customize_fields(values, _fields, data)
     return if (dlg_fields = get_ws_dialog_fields(dialog_name = :customize)).nil?
     dlg_keys = dlg_fields.keys
 
     key = :customization_template_id
-    if dlg_keys.include?(key) && (data.has_key?(key) || data.has_key?(:customization_template))
+    if dlg_keys.include?(key) && (data.key?(key) || data.key?(:customization_template))
       self.get_field(key, dialog_name)
       set_ws_field_value_by_id_or_name(values, key, data, dialog_name, dlg_fields)
     end
 
-    data.keys.each {|key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_keys.include?(key)}
+    data.keys.each { |k| set_ws_field_value(values, k, data, dialog_name, dlg_fields) if dlg_keys.include?(k) }
   end
 
   def self.from_ws_ver_1_x(version, userid, template_fields, vm_fields, requester, tags, options)
