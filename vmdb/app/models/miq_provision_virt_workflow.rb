@@ -1250,11 +1250,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def ws_service_fields(values, _fields, data)
     return if (dlg_fields = get_ws_dialog_fields(dialog_name = :service)).nil?
-    dlg_keys = dlg_fields.keys
 
     # Process PXE settings by setting the server first then image, windows image and custom template
     dlg_field = :pxe_server_id
-    if dlg_keys.include?(dlg_field) && (data.key?(dlg_field) || data.key?(:pxe_server))
+    if dlg_fields.key?(dlg_field) && (data.key?(dlg_field) || data.key?(:pxe_server))
       set_ws_field_value_by_id_or_name(values, dlg_field, data, dialog_name, dlg_fields)
 
       dlg_field = :pxe_image_id
@@ -1265,8 +1264,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       set_ws_field_value_by_id_or_name(values, dlg_field, data, dialog_name, dlg_fields, :windows_image_id, "WindowsImage")
     end
 
-    dlg_keys = dlg_fields.keys
-    data.keys.each { |key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_keys.include?(key) }
+    data.keys.each { |key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_fields.key?(key) }
   end
 
   def ws_hardware_fields(values, _fields, data)
@@ -1274,8 +1272,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     ws_hardware_disk_fields(values, data)
     ws_hardware_network_fields(values, data)
     return if (dlg_fields = get_ws_dialog_fields(dialog_name = :hardware)).nil?
-    dlg_keys = dlg_fields.keys
-    data.keys.each { |key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_keys.include?(key) }
+    data.keys.each { |key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_fields.key?(key) }
   end
 
   def ws_hardware_network_fields(values, data)
@@ -1340,21 +1337,19 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def ws_network_fields(values, _fields, data)
     return if (dlg_fields = get_ws_dialog_fields(dialog_name = :network)).nil?
-    dlg_keys = dlg_fields.keys
-    data.keys.each { |key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_keys.include?(key) }  # TODO: dlg_fileds.key?(key)
+    data.keys.each { |key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_fields.key?(key) }
   end
 
   def ws_customize_fields(values, _fields, data)
     return if (dlg_fields = get_ws_dialog_fields(dialog_name = :customize)).nil?
-    dlg_keys = dlg_fields.keys
 
     key = :customization_template_id
-    if dlg_keys.include?(key) && (data.key?(key) || data.key?(:customization_template))
+    if dlg_fields.key?(key) && (data.key?(key) || data.key?(:customization_template))
       get_field(key, dialog_name)
       set_ws_field_value_by_id_or_name(values, key, data, dialog_name, dlg_fields)
     end
 
-    data.keys.each { |k| set_ws_field_value(values, k, data, dialog_name, dlg_fields) if dlg_keys.include?(k) }
+    data.keys.each { |k| set_ws_field_value(values, k, data, dialog_name, dlg_fields) if dlg_fields.key?(k) }
   end
 
   def self.from_ws_ver_1_x(version, userid, template_fields, vm_fields, requester, tags, options)
