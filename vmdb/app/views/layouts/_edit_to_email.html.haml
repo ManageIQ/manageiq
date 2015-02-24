@@ -15,7 +15,7 @@
               - emails = @temp[:email_to]
                   .sort_by { |_email, display_email| display_name }
                   .collect { |email, _display_email| email }
-            - elsif !@edit[:new][:email][:to].present?
+            - elsif @edit[:new][:email][:to].present?
               - emails = @edit[:new][:email][:to].sort
             - else
               - emails = []
