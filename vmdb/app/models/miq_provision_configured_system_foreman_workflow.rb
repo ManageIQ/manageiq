@@ -3,14 +3,6 @@ class MiqProvisionConfiguredSystemForemanWorkflow < MiqProvisionConfiguredSystem
     'miq_provision_configured_system_foreman_dialogs'
   end
 
-  def self.encrypted_options_fields
-    [:root_password]
-  end
-
-  def supports_iso?
-    false
-  end
-
   def create_request(values, requester_id, auto_approve = false)
     event_message = "Provision requested by [#{requester_id}] for Configured Systems:#{values[:src_configured_system_ids].inspect}"
     super(values, requester_id, 'ConfiguredSystem', 'configured_system_provision_request_created', event_message, auto_approve)
