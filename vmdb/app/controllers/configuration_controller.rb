@@ -818,8 +818,6 @@ class ConfigurationController < ApplicationController
       if get_vmdb_config[:product][:proto] # Hide behind proto setting - Sprint 34
         @edit[:new][:quadicons][:service] = params[:quadicons_service] == "1" if params[:quadicons_service]
       end
-      @edit[:new][:quadicons][:vmitem] = params[:quadicons_vmitem] == "1" if params[:quadicons_vmitem]
-      @edit[:new][:quadicons][:storageitem] = params[:quadicons_storageitem] == "1" if params[:quadicons_storageitem]
       @edit[:new][:quadicons][:storage] = params[:quadicons_storage] == "1" if params[:quadicons_storage]
       @edit[:new][:perpage][:grid] = params[:perpage_grid].to_i if params[:perpage_grid]
       @edit[:new][:perpage][:tile] = params[:perpage_tile].to_i if params[:perpage_tile]
