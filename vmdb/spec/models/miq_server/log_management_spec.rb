@@ -47,6 +47,7 @@ describe MiqServer do
     end
 
     context "#get_log_depot_settings" do
+      let(:uri)            { "smb://server/share" }
       let(:depot_hash) do
         {:uri      => uri,
          :username => "user",
@@ -56,7 +57,6 @@ describe MiqServer do
 
       let(:depot)          { FactoryGirl.create(:file_depot, :uri => uri) }
       let(:new_depot_hash) { {:uri => "nfs://server.example.com", :username => "new_user", :password => "new_pass"} }
-      let(:uri)            { "smb://server/share" }
 
       before do
         depot.update_authentication(:default => {:userid => "user", :password => "pass"})
