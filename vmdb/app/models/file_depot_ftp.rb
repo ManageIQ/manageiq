@@ -129,5 +129,3 @@ class FileDepotFtp < FileDepot
     [authentication_userid, authentication_password]
   end
 end
-
-VMDB::Util.eager_load_subclasses('FileDepotFtp')
