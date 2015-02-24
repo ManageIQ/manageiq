@@ -12,11 +12,20 @@ describe MiqRegion do
 
   context "after seeding" do
     before(:each) do
+      @region_number = 99
+      MiqRegion.stub(:my_region_number => @region_number)
       MiqRegion.seed
     end
 
-    it "should have 1 record in the miq_regions table" do
+    it "seeds 1 record in the miq_regions" do
       MiqRegion.count.should == 1
+      MiqRegion.first.region.should == @region_number
+    end
+
+    it "skips seeding if one exists" do
+      MiqRegion.seed
+      MiqRegion.count.should == 1
+      MiqRegion.first.region.should == @region_number
     end
 
     it "should increment naming sequence number after each call" do
