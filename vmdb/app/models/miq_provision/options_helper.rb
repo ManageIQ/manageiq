@@ -30,14 +30,6 @@ module MiqProvision::OptionsHelper
     source
   end
 
-  def get_user_by_email
-    email = get_option(:owner_email).to_s
-    return nil if email.blank?
-    requester = self.miq_request.requester
-    return requester if requester.email.to_s.downcase == email.downcase
-    User.where("lower(email) = ?", email.downcase).first
-  end
-
   def get_hostname(dest_vm_name)
     name_key = (self.source.platform == 'windows') ? :sysprep_computer_name : :linux_host_name
     computer_name = (get_option(:number_of_vms) > 1) ? nil : get_option(name_key).to_s.strip

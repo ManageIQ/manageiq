@@ -63,7 +63,7 @@ module MiqProvision::StateMachine
     $log.info "#{log_header} Destination #{self.destination.class.base_model.name} ID=#{self.destination.id}, Name=#{self.destination.name}"
 
     set_description(self.destination, get_option(:vm_description))
-    set_ownership(self.destination, get_user_by_email)
+    set_ownership(destination, get_owner)
     set_retirement(self.destination)
     set_genealogy(self.destination, self.source)
     set_miq_custom_attributes(self.destination, get_option(:ws_miq_custom_attributes))
