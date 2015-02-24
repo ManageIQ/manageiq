@@ -21,6 +21,31 @@ describe MiqServer do
       end
     end
 
+    context "#log_depot" do
+      it "server log_file_depot configured" do
+        server_depot = FactoryGirl.create(:file_depot)
+        @miq_server.log_file_depot = server_depot
+
+        @miq_server.log_depot.should == server_depot
+      end
+
+      it "zone log_file_depot configured" do
+        zone_depot = FactoryGirl.create(:file_depot)
+        @zone.log_file_depot = zone_depot
+
+        @miq_server.log_depot.should == zone_depot
+      end
+
+      it "server and zone log_file_depot configured" do
+        server_depot = FactoryGirl.create(:file_depot)
+        zone_depot   = FactoryGirl.create(:file_depot)
+        @miq_server.log_file_depot = server_depot
+        @zone.log_file_depot = zone_depot
+
+        @miq_server.log_depot.should == server_depot
+      end
+    end
+
     context "#get_log_depot_settings" do
       let(:depot_hash) do
         {:uri      => uri,
