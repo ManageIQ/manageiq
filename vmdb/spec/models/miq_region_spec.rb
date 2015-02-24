@@ -46,7 +46,7 @@ describe MiqRegion do
       MiqRegion.seed
     end
 
-    it "seeds 1 record in the miq_regions" do
+    it "seeds 1 row in miq_regions" do
       MiqRegion.count.should == 1
       MiqRegion.first.region.should == @region_number
     end
