@@ -62,7 +62,8 @@ class VmdbDatabaseConnection < ActiveRecord::Base
   end
 
   def wait_resource
-    pg_locks.first.relation
+    lock = pg_locks.first
+    lock && lock.relation
   end
 
   def wait_time_ms

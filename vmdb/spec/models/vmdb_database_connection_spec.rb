@@ -10,6 +10,28 @@ describe VmdbDatabaseConnection do
     expect(connections.length).to be > 0
   end
 
+  it 'returns nil for wait_resource where there are no locks' do
+    continue = ActiveSupport::Concurrency::Latch.new
+    made_connection = ActiveSupport::Concurrency::Latch.new
+
+    get_connection = Thread.new do
+      VmdbDatabaseConnection.connection.transaction do
+        made_connection.release
+        continue.release
+      end
+    end
+
+    made_connection.await # wait until the thread has made a db connection
+
+    connections = VmdbDatabaseConnection.all
+    no_locks = connections.detect { |conn| conn.pg_locks.empty? }
+    expect(no_locks).to be
+    expect(no_locks.wait_resource).to be_nil
+
+    continue.release
+    get_connection.join
+  end
+
   it 'is blocked' do
     locked_latch = ActiveSupport::Concurrency::Latch.new
     continue_latch = ActiveSupport::Concurrency::Latch.new
