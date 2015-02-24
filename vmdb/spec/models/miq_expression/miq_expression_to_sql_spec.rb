@@ -157,7 +157,9 @@ module MiqExpressionToSqlSpec
 
       sql, incl, attrs = exp.to_sql
       sql.should == "((vms.name IS NOT NULL) AND (vms.description IS NOT NULL) AND ((hosts.name IS NOT NULL)))"
-      lambda { Vm.count(:conditions=>sql, :include=>incl) }.should_not raise_error
+      lambda {
+        Vm.where(sql).includes(incl).references(:hosts).count
+      }.should_not raise_error
       attrs[:supported_by_sql].should_not be_true
     end
 
@@ -180,7 +182,9 @@ module MiqExpressionToSqlSpec
 
       sql, incl, attrs = exp.to_sql
       sql.should == "((vms.name IS NOT NULL) AND (vms.description IS NOT NULL) AND ((hosts.name IS NOT NULL)))"
-      lambda { Vm.count(:conditions=>sql, :include=>incl) }.should_not raise_error
+      lambda {
+        Vm.where(sql).includes(incl).references(:hosts).count
+      }.should_not raise_error
       attrs[:supported_by_sql].should be_true
     end
 
