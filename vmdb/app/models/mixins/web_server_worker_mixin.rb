@@ -18,7 +18,7 @@ module WebServerWorkerMixin
 
       defaults = {
         :port         => 3000,
-        :binding      => Rails.env.production? ? "127.0.0.1" : "0.0.0.0",
+        :binding      => "127.0.0.1",
         :environment  => Rails.env.to_s,
         :config       => Rails.root.join("config.ru")
       }
