@@ -49,10 +49,13 @@ describe MiqRegion do
   end
 
   context ".seed" do
+    before do
+      @region_number = 99
+      MiqRegion.stub(:my_region_number => @region_number)
+    end
+
     context "no regions" do
       before(:each) do
-        @region_number = 99
-        MiqRegion.stub(:my_region_number => @region_number)
         MiqRegion.seed
       end
 
@@ -70,10 +73,8 @@ describe MiqRegion do
 
     context "existing region" do
       before(:each) do
-        @orig_region = self.read_region if File.exist?(REGION_FILE)
-        @orig_region ||= 0
-        @region = FactoryGirl.create(:miq_region, :region => @orig_region)
-        @other_region = FactoryGirl.create(:miq_region)
+        @region = FactoryGirl.create(:miq_region, :region => @region_number)
+        @other_region = FactoryGirl.create(:miq_region, :region => @region_number + 1)
       end
 
       context "after seeding" do
@@ -82,7 +83,7 @@ describe MiqRegion do
         end
 
         it "should find region" do
-          MiqRegion.exists?(:region => @orig_region).should be_true
+          MiqRegion.exists?(:region => @region_number).should be_true
         end
       end
 
@@ -92,7 +93,7 @@ describe MiqRegion do
         end
 
         it "should not find region" do
-          MiqRegion.exists?(:region => @orig_region).should_not be_true
+          MiqRegion.exists?(:region => @region_number).should_not be_true
         end
 
         context "after seeding" do
@@ -101,7 +102,7 @@ describe MiqRegion do
           end
 
           it "should find region" do
-            MiqRegion.exists?(:region => @orig_region).should be_true
+            MiqRegion.exists?(:region => @region_number).should be_true
           end
         end
       end
