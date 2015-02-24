@@ -84,36 +84,6 @@ describe MiqRegion do
         @other_region = FactoryGirl.create(:miq_region, :region => @region_number + 1)
       end
 
-      context "after seeding" do
-        before(:each) do
-          MiqRegion.seed
-        end
-
-        it "should find region" do
-          MiqRegion.exists?(:region => @region_number).should be_true
-        end
-      end
-
-      context "then original destroyed" do
-        before(:each) do
-          @region.destroy
-        end
-
-        it "should not find region" do
-          MiqRegion.exists?(:region => @region_number).should_not be_true
-        end
-
-        context "after seeding" do
-          before(:each) do
-            MiqRegion.seed
-          end
-
-          it "should find region" do
-            MiqRegion.exists?(:region => @region_number).should be_true
-          end
-        end
-      end
-
       context "with MiqDatabase" do
         before(:each) do
           @db = FactoryGirl.create(:miq_database)
