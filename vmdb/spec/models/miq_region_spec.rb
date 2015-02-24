@@ -1,15 +1,6 @@
 require "spec_helper"
 
 describe MiqRegion do
-  REGION_FILE = File.join(Rails.root, "REGION")
-  def read_region
-    (File.open(REGION_FILE, 'r') {|f| f.read }).chomp if File.exist?(REGION_FILE)
-  end
-
-  def write_region(number)
-    File.open(REGION_FILE, 'w') {|f| f.write(number) } if File.exist?(REGION_FILE)
-  end
-
   context "after seeding" do
     before(:each) do
       MiqRegion.seed
