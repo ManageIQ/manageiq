@@ -91,6 +91,7 @@ module EmsRefresh
             :manager_ref                => cs["id"].to_s,
             :hostname                   => cs["name"],
             :configuration_profile      => id_lookup(profiles, cs, "hostgroup_id"),
+            :configuration_profile_ref  => cs["hostgroup_id"],
             :operating_system_flavor_id => id_lookup(operatingsystems, cs, "operatingsystem_id"),
             :last_checkin               => cs["last_compile"],
             :build_state                => cs["build"] == "true" ? "pending" : nil,
