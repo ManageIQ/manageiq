@@ -24,7 +24,7 @@ describe VmdbDatabaseConnection do
     made_connection.await # wait until the thread has made a db connection
 
     connections = VmdbDatabaseConnection.all
-    no_locks = connections.detect { |conn| conn.pg_locks.empty? }
+    no_locks = connections.detect { |conn| conn.vmdb_database_locks.empty? }
     expect(no_locks).to be
     expect(no_locks.wait_resource).to be_nil
 

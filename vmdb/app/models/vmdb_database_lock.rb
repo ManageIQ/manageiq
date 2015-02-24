@@ -1,4 +1,5 @@
-class PgLock < ActiveRecord::Base
+class VmdbDatabaseLock < ActiveRecord::Base
+  self.table_name = 'pg_locks'
   self.primary_key = nil
 
   def blocking_lock
