@@ -684,9 +684,12 @@ class MiqExpression
         model = db.constantize
         assoc, field = field.split("-")
         ref = model.reflect_on_association(assoc.to_sym)
+
         inner_where = "#{field} = '#{exp[operator]["value"]}'"
-        if cond = ref.options.fetch(:conditions, nil)          # Include ref.options[:conditions] in inner select if exists
-          cond = ref.options[:class_name].constantize.send(:sanitize_sql_for_assignment, cond)
+        if cond = ref.scope          # Include ref.options[:conditions] in inner select if exists
+          cond = extract_where_values(model, cond).map { |value|
+            model.send(:sanitize_sql_for_assignment, value)
+          }.join ' AND '
           inner_where = "(#{inner_where}) AND (#{cond})"
         end
         clause = "#{model.table_name}.id IN (SELECT DISTINCT #{ref.foreign_key} FROM #{ref.table_name} WHERE #{inner_where})"
@@ -1834,6 +1837,26 @@ class MiqExpression
   end
 
   private
+
+  require 'delegate'
+  class WhereCollector < SimpleDelegator
+    attr_reader :wheres
+
+    def initialize(delegate)
+      super
+      @wheres = []
+    end
+
+    def where(*values)
+      @wheres << values
+      self
+    end
+  end
+
+  def extract_where_values(klass, scope)
+    relation = ActiveRecord::Relation.new klass, klass.table_name
+    WhereCollector.new(relation).instance_eval(&scope).wheres.flatten
+  end
 
   def self.determine_model(model, parts)
     model = model_class(model)
