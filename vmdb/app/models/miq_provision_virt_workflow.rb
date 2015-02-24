@@ -202,7 +202,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       vlan = @values[:src_vm_lans].first
       vm_description = vm.description
       case vm.platform
-      when 'linux', 'windows' then show_dialog(:customize, :show, "disabled")
+      when 'linux', 'windows' then show_dialog(:customize, :show, "enabled")
       else                         show_dialog(:customize, :hide, "disabled")
       end
 
