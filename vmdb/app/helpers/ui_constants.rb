@@ -174,9 +174,7 @@ module UiConstants
       :miq_template   =>  true,
       :storage        =>  true,
       :vm             =>  true,
-      :vmitem         =>  true,
       :hostitem       =>  true,
-      :storageitem    =>  true
     },
     :views => { # List view setting, by resource type
       :availabilityzone      => "list",
