@@ -1,5 +1,5 @@
 #alert_evm_event_div
-  %p.legend=_('Timeline Event')
+  %h3=_('Timeline Event')
   %table.style1
     - if @edit
       - url = url_for(:action => 'alert_field_changed',  :id => "#{@alert.id || 'new'}")

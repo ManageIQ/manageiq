@@ -3,7 +3,7 @@
 #planning_options_div{:style => "width: 100%; height: 100%; overflow: auto;"}
   = render :partial => "layouts/flash_msg", :locals => {:div_num => "0"}
   %fieldset{:style => "background-color: #f0f0f0; padding: 10px;"}
-    %p.legend=_('Reference VM Selection')
+    %h3=_('Reference VM Selection')
     - options = [["<#{_('Choose')}>"],
       [_("By %s") % ui_lookup(:table => "ems_infras"), "ems"],
       [_("By %s") % ui_lookup(:table => "ems_clusters"), "cluster"],
@@ -67,7 +67,7 @@
           "data-miq_observe"     => {:url => url}.to_json)
 
   %fieldset{:style => "background-color: #f0f0f0; padding: 10px"}
-    %p.legend=_('VM Options')
+    %h3=_('VM Options')
     %table.style1
       %tr
         %td.key{:style => "width: 120px;"}=_('Source')
@@ -147,7 +147,7 @@
             =_('GB')
 
   %fieldset{:style => "background-color: #f0f0f0; padding: 10px;"}
-    %p.legend=_('Target Options / Limits')
+    %h3=_('Target Options / Limits')
     %table.style1
       %tr
         %td.key{:style => "width: 120px;"}=_('Show')
@@ -209,7 +209,7 @@
               "data-miq_observe"     => {:url => url}.to_json)
 
   %fieldset{:style => "background-color: #f0f0f0; padding: 10px"}
-    %p.legend=_('Trend Options')
+    %h3=_('Trend Options')
     %table.style1
       %tr
         %td.key{:style => "width: 120px;"}=_('Trends for past')

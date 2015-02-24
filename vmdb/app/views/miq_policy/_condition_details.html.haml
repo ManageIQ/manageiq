@@ -7,7 +7,7 @@
       = render :partial => "layouts/flash_msg"
       - if @edit
         - # Don't show basic info box with description only unless in edit mode
-        %p.legend=_("Basic Information")
+        %h3=_("Basic Information")
         %table.style1
           %tr
             %td.key=_("Description")
@@ -25,7 +25,7 @@
       - if @edit
         = render :partial => "form_scope"
       - else
-        %p.legend=_("Scope")
+        %h3=_("Scope")
         - if !@applies_to_exp_table.nil?
           - @applies_to_exp_table.each do |token|
             - if ! ["AND", "OR", "(", ")"].include?([token].flatten.first)
@@ -41,7 +41,7 @@
       - if @edit
         = render :partial => "form_expression"
       - else
-        %p.legend=_("Expression")
+        %h3=_("Expression")
         - if !@expression_table.nil?
           - @expression_table.each do |token|
             - if ! ["AND", "OR", "(", ")"].include?([token].flatten.first)
@@ -56,7 +56,7 @@
 
       - # Notes field
       - if @edit
-        %p.legend
+        %h3
           =_("Notes")
           (
           %span#notes_count=@edit[:new][:notes] ? @edit[:new][:notes].length : 0
@@ -68,7 +68,7 @@
             "data-miq_check_max_length" => true,
             "data-miq_observe"          => observe_with_interval)
       - else
-        %p.legend=_("Notes")
+        %h3=_("Notes")
         - if @condition.notes.blank?
           = render :partial => 'layouts/info_msg', :locals => {:message => _("No notes have been entered.")}
         - else
@@ -76,7 +76,7 @@
         %hr
 
       - if x_active_tree == :condition_tree && !@edit
-        %p.legend=_("Assigned to Policies")
+        %h3=_("Assigned to Policies")
         - if @condition_policies.empty?
           = render :partial => 'layouts/info_msg', :locals => {:message => _("This Condition is not assigned to any Policies.")}
         - else

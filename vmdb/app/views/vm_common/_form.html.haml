@@ -3,7 +3,7 @@
 
   = render :partial => "layouts/flash_msg"
 
-  %p.legend=_('Basic Information')
+  %h3=_('Basic Information')
   %table.style1
     %tr
       %td.key=_('Custom Identifier')
@@ -29,7 +29,7 @@
             "data-miq_check_max_length" => true,
             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
   %hr
-  %p.legend=_('Parent VM Selection')
+  %h3=_('Parent VM Selection')
   %table.style1
     %tr
       %td.key=_('Parent VM')
@@ -43,7 +43,7 @@
           "data-miq_observe" => {:url => url}.to_json)
 
   %hr
-  %p.legend=_('Child VM Selection')
+  %h3=_('Child VM Selection')
   %table
     %tr
       %td.widthed{:align => "left"}=_('Child VMs:')

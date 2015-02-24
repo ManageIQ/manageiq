@@ -3,7 +3,7 @@
   - observe_with_interval = {:interval => '.5', :url => url}.to_json
   - observe = {:url => url}.to_json
 #alert_snmp_div
-  %p.legend=_('SNMP Trap')
+  %h3=_('SNMP Trap')
   %table.style1
     - if @edit
       %tr

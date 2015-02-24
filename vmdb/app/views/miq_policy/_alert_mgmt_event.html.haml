@@ -1,5 +1,5 @@
 #alert_mgmt_event_div
-  %p.legend=_('Management Event')
+  %h3=_('Management Event')
   %table.style1
     - if @edit
       - url = url_for(:action => 'alert_field_changed', :id => "#{@alert.id || 'new'}")

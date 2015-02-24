@@ -2,7 +2,7 @@
   - if @html
     - unless @edit[:tl_xml].nil?
       %fieldset
-        %p.legend
+        %h3
           = _('Timeline Preview (up to 50 rows)')
         #miq_timeline{:style => "height: 500px; border: 1px solid #aaa;"}
         = render(:partial => "layouts/timeline",
@@ -12,7 +12,7 @@
             :position_time           => @edit[:tl_position]})
     - unless @edit[:zgraph_xml].nil?
       %fieldset
-        %p.legend
+        %h3
           = _('Chart Preview (up to 50 rows)')
         - width, height = @html ? [350, 250] : [700, 500]
         = chart_remote('report',
@@ -23,12 +23,12 @@
           :id      => 'my_chart')
     - if @html
       %fieldset
-        %p.legend
+        %h3
           = _('Report Preview (up to 50 rows)')
         = @html.html_safe
   - else
     %fieldset
-      %p.legend
+      %h3
         = _('Generate Report Preview')
       %table{:width => "100%"}
         %tr

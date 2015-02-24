@@ -2,7 +2,7 @@
 = render :partial => "layouts/flash_msg", :locals => {:top_pad => 10}
 #form_div
   %fieldset
-    %p.legend=_('Basic Info')
+    %h3=_('Basic Info')
     %table.style1
       %tr
         %td.key=_('Description')
@@ -11,7 +11,7 @@
             :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
           = javascript_tag(javascript_focus('description'))
   %fieldset
-    %p.legend=_('Rate Details')
+    %h3=_('Rate Details')
     %table.style3
       %thead
         %tr

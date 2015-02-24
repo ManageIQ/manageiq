@@ -11,7 +11,7 @@
         = render(:partial => "shared/summary/textual",
           :locals  => {:title => binf, :items => textual_iso_datastore_basicinfo})
         - unless @isd.iso_images.empty?
-          %p.legend=_('ISO Images')
+          %h3=_('ISO Images')
           %table.style3
             %thead
               %tr

@@ -3,7 +3,7 @@
   = form_tag( {:action => 'category_update'}, {:id => "category_form"}) do
     = render :partial => "layouts/flash_msg"
     %fieldset
-      %p.legend=_("Category Information")
+      %h3=_("Category Information")
       %table.style1
         - if @category && @category.default == "t"
           %tr

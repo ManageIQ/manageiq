@@ -1,6 +1,6 @@
 = render :partial => "layouts/flash_msg"
 - if @temp[:vmdb_index]
-  %p.legend
+  %h3
     = "#{_("Index")}: #{h(@temp[:vmdb_index].name)}"
   %table.style1
     %tr
@@ -9,7 +9,7 @@
   %hr/
   - metrics = @temp[:vmdb_index].latest_hourly_metric
   - if metrics
-    %p.legend= _("Metrics")
+    %h3= _("Metrics")
     %table.style1
       %tr
         %td.key= _("Rows")
@@ -25,7 +25,7 @@
         %td= h(metrics.percent_bloat)
     %hr/
 - elsif @temp[:table]
-  %p.legend
+  %h3
     = "#{_("Table")}: #{h(@temp[:table].name)}"
   %table.style1
     %tr
@@ -47,7 +47,7 @@
         %td= h(metrics.percent_bloat)
   %hr/
 - if @temp[:indexes]
-  %p.legend= _("Indexes")
+  %h3= _("Indexes")
   - if @temp[:indexes].blank?
     = _("No Indexes found for this table.")
   - else

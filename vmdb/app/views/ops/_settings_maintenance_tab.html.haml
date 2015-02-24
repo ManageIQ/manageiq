@@ -2,7 +2,7 @@
   = render :partial => "layouts/flash_msg"
   - if @sb[:activating] && @build
     = hidden_field_tag(:ignore_form_changes)
-    %p.legend=_("Product Update Info")
+    %h3=_("Product Update Info")
     %table.style1
       - @sb[:buildinfo].each do |item|
         %tr
@@ -19,7 +19,7 @@
           %b=_(" will shut down ")
           =_("and restart the Server!")
   - else
-    %p.legend
+    %h3
       =_("Available Product Updates")
       =_("[Server '%{server_name}' is currently running Version %{server_version}]") % {:server_name => @temp[:selected_server].name, :server_version => @temp[:selected_server].version}
     =_("Select a product update to view activation options")

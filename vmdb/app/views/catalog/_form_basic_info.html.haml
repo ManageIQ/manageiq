@@ -5,7 +5,7 @@
   = hidden_div_if(@edit && @edit[:ae_tree_select] != true, :id => "ae_tree_select_div" ) do
     = render(:partial=>'layouts/ae_tree_select')
 
-  %p.legend=_('Basic Info')
+  %h3=_('Basic Info')
   %table.style1
     %tr
       %td.key=_('Name / Description')

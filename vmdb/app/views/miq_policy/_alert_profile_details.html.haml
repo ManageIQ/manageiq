@@ -9,7 +9,7 @@
       = render :partial => "layouts/flash_msg"
       - if @edit
         - # Show basic info box with description only in edit mode
-        %p.legend=_('Basic Information')
+        %h3=_('Basic Information')
         %table.style1
           %tr
             %td.key=_('Description')
@@ -25,7 +25,7 @@
         %hr
 
       - if !(@edit || @assign)
-        %p.legend=_('Alerts')
+        %h3=_('Alerts')
         - if @alert_profile_alerts.empty?
           = render :partial => 'layouts/info_msg', :locals => {:message => _("No Alerts are defined.")}
         - else
@@ -43,7 +43,7 @@
                     = h(a.description)
         %hr
       - elsif @edit
-        %p.legend=_('Alert Selection')
+        %h3=_('Alert Selection')
         %table#formtest.form
           %tr
             %td{:align => "left"}=_("Available %s Alerts:") % ui_lookup(:model => @edit[:new][:mode])
@@ -88,7 +88,7 @@
 
       - # Notes field
       - if @edit
-        %p.legend
+        %h3
           =_("Notes")
           (
           %span#notes_count
@@ -102,7 +102,7 @@
           "data-miq_observe"          => observe_with_interval)
         %hr
       - else
-        %p.legend
+        %h3
           = _('Notes')
         - if @alert_profile.notes.blank?
           = render :partial => 'layouts/info_msg', :locals => {:message => _(">No notes have been entered.")}
@@ -112,7 +112,7 @@
 
       - unless @edit
         - # Show assignments
-        %p.legend=_('Assigned To')
+        %h3=_('Assigned To')
         - aa = @alert_profile.get_assigned_tos
         - if !aa[:objects].empty?
           - # Objects are assigned

@@ -1,6 +1,6 @@
 #main_div
   = render(:partial=>"layouts/flash_msg")
-  %p.legend=_("Info")
+  %h3=_("Info")
   %table.style1
     %tr
       %td.key=_("Name")
@@ -14,14 +14,14 @@
   %hr/
   - unless @selected_scan.mode == "Host"
     - if @category
-      %p.legend=_("Categories")
+      %h3=_("Categories")
       %table.style1
         - @category.sort.each do |c|
           %tr
             %td= h(c)
       %hr/
   - if @file
-    %p.legend=_("File Items")
+    %h3=_("File Items")
     %table.style3
       %thead
         %tr
@@ -35,7 +35,7 @@
     %hr/
   - unless @selected_scan.mode == "Host"
     - if @registry
-      %p.legend=_("Registry Items")
+      %h3=_("Registry Items")
       %table.style1
         - @registry.sort_by { |r| r["key"] }.each do |k|
           %tr
@@ -44,7 +44,7 @@
           %tr
       %hr/
   - if @nteventlog
-    %p.legend=_("Event Log Items")
+    %h3=_("Event Log Items")
     %table.style1
       - @nteventlog.sort_by{|l| l[:name]}.each do |k|
         %tr

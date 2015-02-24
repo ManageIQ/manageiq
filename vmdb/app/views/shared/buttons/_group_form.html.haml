@@ -1,7 +1,7 @@
 - url = url_for(:action => 'group_form_field_changed', :id => "#{@custom_button_set.id || 'new'}")
 #group_form_div{:style => "width: 100%; height: 100%; overflow: auto;"}
   = render :partial => "layouts/flash_msg"
-  %p.legend
+  %h3
     = _('Basic Info')
   %table.style1
     %tr
@@ -40,6 +40,6 @@
 
   - if x_active_tree == :ab_tree || (x_active_tree == :sandt_tree && @edit[:rec_id])
     %hr
-    %p.legend
+    %h3
       = _('Assign Buttons')
     = render :partial => "shared/buttons/column_lists"

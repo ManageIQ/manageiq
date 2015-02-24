@@ -16,7 +16,7 @@
           - # this code can be uncommented when we have multiple pxe_menus
           - if !@ps.pxe_menus.empty?
             %hr
-            %p.legend=_('PXE Image Menus')
+            %h3=_('PXE Image Menus')
             %table.style3
               %thead
                 %tr
@@ -28,7 +28,7 @@
                       = h(menu.file_name)
         - unless @ps.pxe_images.empty?
           %hr
-          %p.legend=_('PXE Images')
+          %h3=_('PXE Images')
           %table.style3
             %thead
               %tr
@@ -51,7 +51,7 @@
                     = h(i.default_for_windows ? "Yes" : "")
         - unless @ps.windows_images.empty?
           %hr
-          %p.legend=_('Windows Images')
+          %h3=_('Windows Images')
           %table.style3
             %thead
             %tr

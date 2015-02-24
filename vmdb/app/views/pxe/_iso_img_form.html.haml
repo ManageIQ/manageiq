@@ -1,7 +1,7 @@
 - url = url_for(:action=>'iso_img_form_field_changed', :id=>"#{@img.id || "new"}")
 #form_div
   = render :partial => "layouts/flash_msg"
-  %p.legend=_('Basic Information')
+  %h3=_('Basic Information')
   %table.style1
     %tbody
       %tr

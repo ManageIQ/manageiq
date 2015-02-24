@@ -10,20 +10,20 @@
 
 .import-or-export
   %fieldset
-    %p.legend=_('Import Datastore classes (*.zip)')
+    %h3=_('Import Datastore classes (*.zip)')
     = form_tag({:action => "upload_import_file"}, :target => "upload_target", :multipart => true) do
       = file_field("upload", "file")
       = submit_tag(_("Upload"), :id => "upload-datastore-import", :class => "upload")
 
   %fieldset
-    %p.legend=_('Export')
+    %h3=_('Export')
     = form_tag({:action => "export_datastore"}, :method => :get) do
       = image_submit_tag("/images/toolbars/export.png",
                          :alt   => (t = _("Export all classes and instances")),
                          :title => t)
 
   %fieldset
-    %p.legend=(t = _('Reset all Datastore custom classes and instances to default'))
+    %h3=(t = _('Reset all Datastore custom classes and instances to default'))
     = link_to(image_tag("/images/toolbars/reset.png",
                         :alt => t),
                         {:action               => 'reset_datastore'},
@@ -34,7 +34,7 @@
 .import-data
   %form#import-form
     %fieldset
-      %p.legend=_('Import Datastore classes')
+      %h3=_('Import Datastore classes')
 
       %p.import-label=_('Select existing domain to import into:')
       %select.existing-domains(name="selected_domain_to_import_to")

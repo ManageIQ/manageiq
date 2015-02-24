@@ -4,7 +4,7 @@
 #menu_div1
   = form_tag(:action => 'menu_update', :id => "report_menu_form1") do
     %fieldset{:style => "width: 320px; height: 450px;"}
-      %p.legend
+      %h3
         %span#menu1_legend
           = _('Manage Accordions')
       #folder_lists
@@ -71,7 +71,7 @@
 
 #menu_div3{:style => "display: none;"}
   %fieldset{:style => "width: 300px; height: 450px;"}
-    %p.legend
+    %h3
       = _('Manage Accordions & Folders')
     - #= render :partial => "layouts/flash_msg"
     %table{:cellspacing => "1"}

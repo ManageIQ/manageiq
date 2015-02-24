@@ -11,7 +11,7 @@
   %h2
     = _('Widgets')
 
-  %p.legend
+  %h3
     = _('Import')
   = form_tag({:action => "upload_widget_import_file"}, :target => "upload_target", :multipart => true) do
     = file_field("upload", "file")
@@ -19,7 +19,7 @@
 
   %hr
 
-  %p.legend
+  %h3
     = _('Export')
   %table.style1
     %tr
@@ -43,7 +43,7 @@
 
 .import-data
   %form#import-form
-    %p.legend
+    %h3
       = _('Import Widgets')
 
     %label(for='toggle-all')

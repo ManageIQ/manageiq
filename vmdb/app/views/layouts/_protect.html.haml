@@ -1,6 +1,6 @@
 #main_div
   = render :partial => "layouts/flash_msg"
-  %p.legend= _("Select Policy Profiles")
+  %h3= _("Select Policy Profiles")
   - if @sb[:no_policy_profiles]
     = render :partial => 'layouts/info_msg', :locals => {:message => _("No Policy Profiles available.")}
   - else
@@ -11,7 +11,7 @@
   - unless @edit[:explorer]
     = render :partial => '/layouts/edit_form_buttons',
              :locals  => {:action_url => "protect"}
-  %p.legend
+  %h3
     = _("Policy changes will affect %s") % pluralize(@politems.length,
                                                      Dictionary.gettext(session[:pol_db].to_s,
                                                                          :type     => :model,

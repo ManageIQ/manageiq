@@ -1,7 +1,7 @@
 - url = url_for(:action=>'reconfigure_field_changed', :id=>"new")
 #form_div
   = render :partial => "layouts/flash_msg"
-  %p.legend=_('Options')
+  %h3=_('Options')
   %table.style1
     %tr
       %td.key=_('Memory')
@@ -78,7 +78,7 @@
                   :button => "cancel")}');")
 
   %hr
-  %p.legend=_('Affected VMs')
+  %h3=_('Affected VMs')
   %table.admintable{:height => "75"}
     %tbody
       %tr

@@ -1,6 +1,6 @@
 - legend_text ||= "Last 1000 lines from server #{@temp[:server].name} [#{@server_options[:server_id]}] in zone #{@temp[:server].my_zone}"
 = render :partial => "layouts/flash_msg"
-%p.legend= legend_text
+%h3= legend_text
 - h = @winH < 627 ? 200 : @winH - 427
 - w = @winW - 150
 = text_area("logview", "data", :value => @log, :readonly => true, :style => "height:#{h}px;", :wrap => "off")

@@ -1,7 +1,6 @@
 #tl_div
-  .dhtmlxInfoBarLabel-2
+  %h1
     = @title
-  %br
   = yield
   = render :partial => "layouts/flash_msg"
   - if @report && @report.table && @report.table.data.blank?

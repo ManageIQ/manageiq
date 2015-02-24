@@ -3,7 +3,7 @@
 #form_div
   = render :partial => "layouts/flash_msg"
   - if %w(new create).include?(controller.action_name)
-    %p.legend=_("Select SmartProxy Host")
+    %h3=_("Select SmartProxy Host")
     %table.style1
       %tr
         %td.key=_("Name (from chosen Host)")
@@ -12,7 +12,7 @@
             options_for_select([["<#{_('Choose')}>", "<Choose>"]] + Array(@edit[:avail_hosts].invert).sort_by{ |a,b| a[0].downcase <=> b[0].downcase }, @edit[:host]),
             "data-miq_observe" => {:url => url}.to_json)
   - else
-    %p.legend=_("Settings")
+    %h3=_("Settings")
     %table.style1
       %tr
         %td.key=_("Heartbeat Frequency")

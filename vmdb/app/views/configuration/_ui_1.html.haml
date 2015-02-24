@@ -7,7 +7,7 @@
     %dl.col2
       %dd
         %fieldset
-          %p.legend=_('Grid/Tile Icons')
+          %h3=_('Grid/Tile Icons')
           %table.style1
             -# render condition                                 title                                      check_box label & checked T/F
             -# Host Item is commented (condition set as false) until we have host item quads
@@ -38,7 +38,7 @@
                              @edit[:new][:display][:quad_truncate]),
                              "data-miq_observe" => url_json)
         %fieldset
-          %p.legend=_('Start Page')
+          %h3=_('Start Page')
           %table.style1
             %tr
               %td.key=_('Show at Login')
@@ -48,7 +48,7 @@
                              "data-miq_observe" => url_json)
       %dd
         %fieldset
-          %p.legend=_('Default Items Per Page')
+          %h3=_('Default Items Per Page')
           %table.style1
             - [[_("Grid View"), "perpage_grid",    :grid],
                [_("Tile View"), "perpage_tile",    :tile],
@@ -61,7 +61,7 @@
                                options_for_select(PPCHOICES, @edit[:new][:perpage][item_per_page[2]]),
                                "data-miq_observe" => url_json)
         %fieldset
-          %p.legend=_('Display Settings')
+          %h3=_('Display Settings')
           %table.style1                                                     |
             - [[_("Chart Theme"), "display_reporttheme", Charting.chart_themes_for_select, :reporttheme],
                [_("Time Zone"),   "display_timezone",    ALL_TIMEZONES,                    :timezone],

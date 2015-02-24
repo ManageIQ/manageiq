@@ -1,7 +1,7 @@
 = render :partial => "layouts/flash_msg", :locals => {:div_num => "_report_list"}
 - if @sb[:active_tab] == "report_info"
   - if @sb[:miq_report_id] && @miq_report
-    %p.legend
+    %h3
       = @miq_report.name
     %table.style1
       %tbody
@@ -58,7 +58,7 @@
           %td.notwide
             = format_timezone(@miq_report.updated_on, Time.zone, "gtl")
     %hr
-  %p.legend
+  %h3
     = _('Schedules')
   - if @temp[:schedules].blank?
     = render :partial => 'layouts/info_msg', :locals => {:message => _("Report is not Scheduled.")}
@@ -115,7 +115,7 @@
                 = s.userid
             %td
               = s.v_zone_name
-  %p.legend
+  %h3
     = _('Widgets')
   - if @temp[:widget_nodes].nil? || (@temp[:widget_nodes] && @temp[:widget_nodes].empty?)
     = render :partial => 'layouts/info_msg', :locals => {:message => _("Report doesn't belong to Widgets.")}

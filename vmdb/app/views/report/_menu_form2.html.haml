@@ -2,7 +2,7 @@
   - if @selected && @selected[1] && (!@edit[:selected_reports].blank? || !@edit[:available_reports].blank?)
     = form_tag(:action => 'menu_update', :id => "report_menu_form2") do
       %fieldset{:style => "height: 450px;"}
-        %p.legend
+        %h3
           = _('Manage Reports')
         #column_lists
           %table.admintable

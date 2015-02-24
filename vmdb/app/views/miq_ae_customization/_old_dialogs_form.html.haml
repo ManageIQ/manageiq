@@ -1,7 +1,7 @@
 - url = url_for(:action => 'old_dialogs_form_field_changed', :id => "#{@dialog.id || 'new'}")
 #form_div
   = render :partial => "layouts/flash_msg"
-  %p.legend=_('Basic Information')
+  %h3=_('Basic Information')
   %table.style1
     %tr
       %td.key=_('Name')
@@ -27,7 +27,7 @@
           @edit[:new][:dialog_type]),
           "data-miq_observe" => {:url => url}.to_json)
   %hr
-  %p.legend=_('Content')
+  %h3=_('Content')
   = text_area_tag("content_data",
     @edit[:new][:content],
     :style => "display:none;")

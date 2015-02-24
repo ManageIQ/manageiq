@@ -1,5 +1,5 @@
 = render :partial => "domain_overrides", :locals => {:node_prefix => "aei", :model => "Instance"}
-%p.legend=_('Fields')
+%h3=_('Fields')
 #instance_fields_div
   - if !@in_a_form
     = render :partial => "layouts/flash_msg", :locals => {:div_num => "_instance_fields"}

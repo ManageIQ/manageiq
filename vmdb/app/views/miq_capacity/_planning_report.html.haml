@@ -3,7 +3,7 @@
 
   - if @perf_record && @sb[:planning] && @sb[:planning][:rpt]
 
-    %p.legend=_("VM Counts per %s") % ui_lookup(:model => @sb[:planning][:options][:target_typ])
+    %h3=_("VM Counts per %s") % ui_lookup(:model => @sb[:planning][:options][:target_typ])
     = @sb[:planning][:rpt].to_html.html_safe
     - tvms = 0
     - @sb[:planning][:rpt].table.data.each { |r| tvms += r["total_vm_count"].to_i }

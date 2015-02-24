@@ -3,7 +3,7 @@
 = render :partial => "layouts/flash_msg"
 
 %fieldset
-  %p.legend
+  %h3
     = _('Set/Remove Retirement Date')
   %table.style1
     %tr
@@ -35,7 +35,7 @@
   = render :partial => '/layouts/edit_form_buttons', :locals => {:noreset => true, :action_url => "retire"}
 
 %fieldset
-  %p.legend
+  %h3
     - if request.parameters[:controller] == "service"
       = n_("New setting will affect Service", "New setting will affect Services", @retireitems.length)
     - else

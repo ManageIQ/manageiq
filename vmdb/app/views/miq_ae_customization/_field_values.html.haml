@@ -1,7 +1,7 @@
 #field_values_div
   = form_tag(url_for(:action => 'field_value_accept', :id => "#{@record.id || 'new'}"), :remote => true) do
     %fieldset
-      %p.legend=_('Entries')
+      %h3=_('Entries')
       = render :partial => "layouts/flash_msg"
       %table.style3
         %thead

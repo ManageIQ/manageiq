@@ -1,5 +1,5 @@
 %hr
-%p.legend=_('Reference VM Profile')
+%h3=_('Reference VM Profile')
 %dl.dl-horizontal
   %dt=_('Source')
   %dd
@@ -26,7 +26,7 @@
       = h(@sb[:planning][:rpt].extras[:vm_profile][:storage])
 
 %hr
-%p.legend=_('Target Options/Limits')
+%h3=_('Target Options/Limits')
 %dl.dl-horizontal
   %dt=_('Show')
   %dd
@@ -53,7 +53,7 @@
       = "#{h(@sb[:planning][:options][:limit_storage])}%"
 
 %hr
-%p.legend=_('Trend Options')
+%h3=_('Trend Options')
 %dl.dl-horizontal
   %dt=_('Trend for Past')
   %dd

@@ -2,7 +2,7 @@
 - observe = {:url => url}.to_json
 #profile_export_div
   = render :partial => "layouts/flash_msg"
-  %p.legend=_("Import")
+  %h3=_("Import")
   - if @sb[:hide]
     %table{:width => "100%"}
       %tr
@@ -34,7 +34,7 @@
 
   - if @sb[:hide] == false
     %hr
-    %p.legend=_("Export")
+    %h3=_("Export")
     - # title = @sb[:dbtype] == "pp" ? "Profiles" : "Policies"
     - case @sb[:dbtype]
     - when "pp"

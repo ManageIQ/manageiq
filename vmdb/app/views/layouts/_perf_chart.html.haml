@@ -2,7 +2,7 @@
 - height ||= @perf_options[:index] ? 700  : 250
 - if chart_data[chart_index][:xml2]
   %div{:style => "float:left; width: #{width + 10}px;"}
-    %p.legend= charts[chart_index][:title]
+    %h3= charts[chart_index][:title]
     = chart_no_url(:id      => "miq_#{chart_set}_#{chart_index}",
                    :bgcolor => "#f2f2f2",
                    :width   => width,
@@ -14,7 +14,7 @@
                      :height  => height * 30 / 100)
 - else
   %div{:style => "float:left; width: #{width + 10}px;"}
-    %p.legend= charts[chart_index][:title]
+    %h3= charts[chart_index][:title]
     = chart_no_url(:id      => "miq_#{chart_set}_#{chart_index}",
                    :bgcolor => "#f2f2f2",
                    :width   => width,
