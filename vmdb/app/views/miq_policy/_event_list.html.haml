@@ -5,15 +5,12 @@
       .note
         = _("* No Events are defined%s.") % @search_text.blank? ? "" : _(" that match the entered search string")
     - else
-      %table.style3
-        %thead
-          %th.icon
-          %th
+      %table.table.table-striped.table-bordered.table-hover
         %tbody
           - @events.each do |e|
-            %tr{:class => cycle('row0', 'row1'), :onmouseover => "this.style.cursor = 'pointer'", :title => ("View this Event"),
+            %tr{:onmouseover => "this.style.cursor = 'pointer'", :title => ("View this Event"),
               :onclick => "cfmeDynatree_activateNode('event_tree', 'ev-#{to_cid(e.id)}');"}
-              %td.icon
-                %img{:src => "/images/icons/new/event-#{e.name}.png", :valign => "middle", :border => "0"}
+              %td.narrow
+                %img{:src => "/images/icons/new/event-#{e.name}.png"}
               %td
                 = e.description

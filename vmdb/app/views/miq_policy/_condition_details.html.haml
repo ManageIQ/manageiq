@@ -80,17 +80,13 @@
         - if @condition_policies.empty?
           = render :partial => 'layouts/info_msg', :locals => {:message => _("This Condition is not assigned to any Policies.")}
         - else
-          %table.style3
-            %thead
-              %tr
-                %th.icon
-                %th
+          %table.table.table-striped.table-bordered.table-hover
             %tbody
               - @condition_policies.each do |p|
                 - id = "xx-#{p.mode.downcase}_xx-#{p.mode.downcase}-#{p.towhat.downcase}_p-#{to_cid(p.id)}"
-                %tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=policy"),
+                %tr{:onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=policy"),
                   :onmouseover => "this.style.cursor='pointer'", :title => _("Click to view Policy")}
-                  %td.icon
+                  %td.narrow
                     %img{:src => "/images/icons/new/miq_policy_#{p.towhat.downcase}#{p.active ? '' : '_inactive'}.png"}
                   %td
                     = p.description

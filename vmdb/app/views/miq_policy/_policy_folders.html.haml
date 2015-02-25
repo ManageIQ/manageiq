@@ -1,15 +1,12 @@
 - if @folders
   = render :partial => "layouts/flash_msg"
-  %table.style3
-    %thead
-      %th.icon
-      %th
+  %table.table.table-striped.table-bordered.table-hover
     %tbody
       - @folders.each do |f|
         - t = %w(Compliance Control).include?(f) ? "#{f.downcase}" : "#{f.split.last.downcase}_xx#{f.split[1].downcase}-#{f.split[0].downcase}"
-        %tr{:class => cycle('row0', 'row1'), :onclick => "cfmeDynatree_activateNode('policy_tree', 'xx-%s');" % t,
+        %tr{:onclick => "cfmeDynatree_activateNode('policy_tree', 'xx-%s');" % t,
           :onmouseover => "this.style.cursor =' pointer'", :title => _("Open Folder")}
-          %td{:nowrap => 1}
+          %td
             %img{:src => "/images/icons/new/#{f.split.first.downcase}.png", :valign => "middle", :border => "0"}
           %td
             = _("%s Policies") % h(f == "Vm" ? ui_lookup(:model => f) : f)

@@ -27,16 +27,13 @@
         - if @event_policies.empty?
           = render :partial => 'layouts/info_msg', :locals => {:message => _("This Event is not assigned to any Policies.")}
         - else
-          %table.style3
-            %thead
-              %th.icon
-              %th
+          %table.table.table-striped.table-bordered.table-hover
             %tbody
               - @event_policies.each do |p|
                 - id = "xx-#{p.mode.downcase}_xx-#{p.mode.downcase}-#{p.towhat.downcase}_p-#{to_cid(p.id)}"
-                %tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=policy"),
+                %tr{:onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=policy"),
                   :onmouseover => "this.style.cursor = 'pointer'", :title => _("Click to view Policy")}
-                  %td.icon
+                  %td.narrow
                     %img{:src => "/images/icons/new/miq_policy_#{p.towhat.downcase}#{p.active ? '' : '_inactive'}.png"}
                   %td
                     = p.description
@@ -133,27 +130,28 @@
           - if @event_true_actions.empty?
             = render :partial => 'layouts/info_msg', :locals => {:message => _("This Event has no true Actions.")}
           - else
-            %table.style3
+            %table.table.table-striped.table-bordered.table-hover
               %thead
                 %tr
-                  %th.icon &nbsp;
-                  %th{:nowrap => 1}=_("Description")
-                  %th{:nowrap => 1}=_("Synchronous")
-                  %th{:nowrap => 1}=_("Type")
-              - @event_true_actions.each do |a|
-                - id = "a-#{to_cid(a.id)}"
-                - t = remote_function(:url => "/miq_policy/x_show/#{id}?accord=action")
-                - f = "cfmeDynatree_activateNode(#{x_active_tree}', '#{x_node}_#{id}');"
-                %tr{:class => cycle('row0', 'row1'), :onclick => (x_active_tree == :action_tree) ? t : f,
-                  :onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Event Action")}
-                  %td.icon
-                    %img{:src => "/images/icons/new/check.png"}
-                  %td
-                    = a.description
-                  %td
-                    = a.v_synchronicity
-                  %td
-                    = a.action_type
+                  %th.narrow
+                  %th=_("Description")
+                  %th=_("Synchronous")
+                  %th=_("Type")
+              %tbody
+                - @event_true_actions.each do |a|
+                  - id = "a-#{to_cid(a.id)}"
+                  - t = remote_function(:url => "/miq_policy/x_show/#{id}?accord=action")
+                  - f = "cfmeDynatree_activateNode(#{x_active_tree}', '#{x_node}_#{id}');"
+                  %tr{:onclick => (x_active_tree == :action_tree) ? t : f,
+                    :onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Event Action")}
+                    %td.narrow
+                      %img{:src => "/images/icons/new/check.png"}
+                    %td
+                      = a.description
+                    %td
+                      = a.v_synchronicity
+                    %td
+                      = a.action_type
           %hr
 
         %h3=_("Order of Actions if ANY Conditions are False")
@@ -252,26 +250,25 @@
           - if @event_false_actions.empty?
             = render :partial => 'layouts/info_msg', :locals => {:message => _("This Event has no false Actions.")}
           - else
-            %table.style3
+            %table.table.table-striped.table-bordered.table-hover
               %thead
                 %tr
-                  %th.icon{:nowrap => 1} &nbsp;
-                  %th{:nowrap => 1}=_('Description')
-                  %th{:nowrap => 1}=_('Synchronous')
-                  %th{:nowrap => 1}=_('Type')
-              - @event_false_actions.each do |a|
-                - id = "a-#{to_cid(a.id)}"
-                - t = remote_function(:url => "/miq_policy/x_show/#{id}?accord=action")
-                - f = "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_#{id}');"
-                %tr{:class => cycle('row0', 'row1'), :onmouseover => "this.style.cursor = 'pointer'",
-                   :onclick => (x_active_tree == :action_tree) ? t : f, :title => _("View this Event Action")}
-                  %td
-                    %img{:src => "/images/icons/new/x.png"}
-                  %td
-                    = a.description
-                  %td
-                    = a.v_synchronicity
-                  %td
-                    = a.action_type
-          - # = render :partial => "layouts/gtl", :locals => {:view => @false_view, :listicon_image => "x"}
-        
+                  %th.narrow
+                  %th=_('Description')
+                  %th=_('Synchronous')
+                  %th=_('Type')
+              %tbody
+                - @event_false_actions.each do |a|
+                  - id = "a-#{to_cid(a.id)}"
+                  - t = remote_function(:url => "/miq_policy/x_show/#{id}?accord=action")
+                  - f = "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_#{id}');"
+                  %tr{:onmouseover => "this.style.cursor = 'pointer'",
+                     :onclick => (x_active_tree == :action_tree) ? t : f, :title => _("View this Event Action")}
+                    %td.narrow
+                      %img{:src => "/images/icons/new/x.png"}
+                    %td
+                      = a.description
+                    %td
+                      = a.v_synchronicity
+                    %td
+                      = a.action_type

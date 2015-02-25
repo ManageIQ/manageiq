@@ -44,32 +44,33 @@
               "data-miq_observe" => observe_with_interval)
   - if @edit[:new][:send_snmp]
     %br
-    %table.style3
+    %table.table.table-striped.table-bordered.table-hover
       %thead
         %tr
           %th=_('Variable Object ID')
           %th=_('Type')
           %th=_('Value')
-      - 10.times do |i|
-        %tr
-          %td.wide
-            = text_field_tag("oid__#{i + 1}", @edit[:new][:snmp][:variables][i][:oid],
-              :maxlength         => MAX_DESC_LEN,
-              "data-miq_observe" => observe_with_interval)
-          %td.wide
-            = select_tag("var_type__#{i + 1}",
-              options_for_select(["<#{_('None')}>"] + @edit[:snmp_var_types].sort, @edit[:new][:snmp][:variables][i][:var_type]),
-              :style                 => "width:100px",
-              "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true,
-              "data-miq_observe"     => observe)
-          - if @edit[:new][:snmp][:variables][i][:var_type] == "Null" || @edit[:new][:snmp][:variables][i][:var_type] == "<None>"
-            - val_disabled = true
-          - else
-            - val_disabled = false
-          %td.wider
-            = text_field_tag("value__#{i + 1}", @edit[:new][:snmp][:variables][i][:value],
-              :disabled  => val_disabled,
-              :maxlength => MAX_DESC_LEN,
-              "data-miq_observe" => observe_with_interval)
+      %tbody
+        - 10.times do |i|
+          %tr
+            %td
+              = text_field_tag("oid__#{i + 1}", @edit[:new][:snmp][:variables][i][:oid],
+                :maxlength         => MAX_DESC_LEN,
+                "data-miq_observe" => observe_with_interval)
+            %td
+              = select_tag("var_type__#{i + 1}",
+                options_for_select(["<#{_('None')}>"] + @edit[:snmp_var_types].sort, @edit[:new][:snmp][:variables][i][:var_type]),
+                :style                 => "width:100px",
+                "data-miq_sparkle_on"  => true,
+                "data-miq_sparkle_off" => true,
+                "data-miq_observe"     => observe)
+            - if @edit[:new][:snmp][:variables][i][:var_type] == "Null" || @edit[:new][:snmp][:variables][i][:var_type] == "<None>"
+              - val_disabled = true
+            - else
+              - val_disabled = false
+            %td
+              = text_field_tag("value__#{i + 1}", @edit[:new][:snmp][:variables][i][:value],
+                :disabled  => val_disabled,
+                :maxlength => MAX_DESC_LEN,
+                "data-miq_observe" => observe_with_interval)
   %hr

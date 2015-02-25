@@ -1,15 +1,12 @@
 #condition_folders_div{:style => "width: 100%; height: 100%; overflow: auto;"}
   - if @folders
     = render :partial => "layouts/flash_msg"
-    %table.style3
-      %thead
-        %th.icon
-        %th
+    %table.table.table-striped.table-bordered.table-hover
       %tbody
         - @folders.each do |f|
-          %tr{:class => cycle('row0', 'row1'), :onclick => "cfmeDynatree_activateNode('condition_tree', 'xx-#{f.downcase}');",
+          %tr{:onclick => "cfmeDynatree_activateNode('condition_tree', 'xx-#{f.downcase}');",
             :onmouseover => "this.style.cursor='pointer'", :title => _("View Condition")}
-            %td{:nowrap => 1}
-              %img{:src => "/images/icons/new/#{f.downcase}.png", :valign => "middle", :border => "0"}
+            %td.narrow
+              %img{:src => "/images/icons/new/#{f.downcase}.png"}
             %td
               = _("%s Conditions") % ui_lookup(:model => f)
