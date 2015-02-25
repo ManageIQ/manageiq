@@ -812,11 +812,10 @@ module EmsRefresh::Parsers::Vc
     bios = MiqUUID.clean_guid(inv["uuid"]) || inv["uuid"]
     result[:bios] = bios unless bios.blank?
 
-    # not sure what circumstances inv["numCpu"] would be blank, but using that
-    # as the basis for either setting, or not setting, :logical_cpus
-    result[:numvcpus] = inv["numCpu"] unless inv["numCpu"].blank?
-    result[:cores_per_socket] = 1 unless inv["numCpu"].blank?
-    result[:logical_cpus] = inv["numCpu"] unless inv["numCpu"].blank?
+    if inv["numCpu"].present?
+      result[:numvcpus] = inv["numCpu"].to_i
+      result[:cores_per_socket], result[:logical_cpus] = calculate_cores_and_sockets(inv["numCpu"], config.try(:fetch_path, "hardware", "numCoresPerSocket"))
+    end
 
     result[:annotation] = inv["annotation"] unless inv["annotation"].blank?
     result[:memory_cpu] = inv["memorySizeMB"] unless inv["memorySizeMB"].blank?
@@ -824,6 +823,12 @@ module EmsRefresh::Parsers::Vc
 
     return result
   end
+
+  def self.calculate_cores_and_sockets(total, cores)
+    cores = (cores || 1).to_i
+    [cores, (total.to_i / cores)]
+  end
+  private_class_method :calculate_cores_and_sockets
 
   def self.vm_inv_to_guest_device_hashes(inv, lan_uids)
     inv = inv.fetch_path('config', 'hardware', 'device')

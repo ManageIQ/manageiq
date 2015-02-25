@@ -153,6 +153,7 @@ module VimPropMaps
 					"config.cpuAffinity.affinitySet",
 					"config.defaultPowerOps.standbyAction",
 					"config.hardware.device",
+					"config.hardware.numCoresPerSocket",
 					"config.version",
 					"datastore",
 					"guest.net",
