@@ -1,9 +1,11 @@
 #email_verify_button_on{:style => "#{hide_button(@test_email_button, "on")}"}
-  = link_to(button_tag(_("Verify"), :class => "btn btn-primary btn-xs", :alt => _("Send test email")),
+  = link_to(_("Verify"),
     {:action => "settings_update",
     :button  => "email_verify",
     :id      => id},
-    "data-miq_sparkle_on" => true,
+    :class                 => "btn btn-primary btn-xs",
+    :alt                   => _("Send test email"),
+    "data-miq_sparkle_on"  => true,
     "data-miq_sparkle_off" => true,
     :remote                => true,
     :title                 => _("Send test email"))

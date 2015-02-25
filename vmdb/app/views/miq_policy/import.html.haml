@@ -20,23 +20,23 @@
                              :title => "Resolve conflicts to import the file",
                              :alt   => "Resolve conflicts to import the file")
               - else
-                = link_to(button_tag('Commit',
-                                     :class => "btn btn-primary",
-                                     :alt   => "Commit Import"),
+                = link_to('Commit',
                          {:action => "import",
                           :commit => "import",
                           :import_file_upload_id => @import_file_upload_id},
+                         :class                  => "btn btn-primary",
+                         :alt                    => "Commit Import",
                          "data-miq_sparkle_on"   => true,
                          "data-miq_sparkle_off"  => true,
                          :remote                 => true,
                          :title                  => "Commit Import")
 
-              = link_to(button_tag('Cancel',
-                                   :class => "btn btn-default",
-                                   :alt   => "Cancel Changes"),
+              = link_to('Cancel',
                         {:action                => "import",
                          :commit                => "cancel",
                          :import_file_upload_id => @import_file_upload_id},
+                        :class  => "btn btn-default",
+                        :alt    => "Cancel Changes",
                         :remote => true,
                         :title  => "Cancel Import")
 :javascript

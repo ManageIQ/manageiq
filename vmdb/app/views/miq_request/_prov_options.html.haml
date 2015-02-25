@@ -52,27 +52,36 @@
         #buttons_off
           = button_tag(_("Apply"), :id => "apply", :class => "btn btn-primary btn-disabled")
           = button_tag(_("Reset"), :class => "btn btn-default btn-disabled")
-          = link_to(button_tag(_("Default"), :class => "btn btn-default", :id => "apply", :alt => (t = _("Set filters to default"))),
+          = link_to(_("Default"),
             {:action => "prov_button", :button => "default"},
+            :class                 => "btn btn-default",
+            :id                    => "apply",
+            :alt                   => (t = _("Set filters to default")),
             "data-miq_sparkle_on"  => true,
             "data-miq_sparkle_off" => true,
             :remote                => true,
             :title                 => t)
         #buttons_on{:style => "display: none;"}
-          = link_to(button_tag(_("Apply"), :class => "btn btn-primary", :alt => (t = _("Apply the selected filters"))),
+          = link_to(_("Apply"),
             {:action => "prov_button", :button => "apply"},
+            :class                 => "btn btn-primary",
+            :alt                   => (t = _("Apply the selected filters")),
             "data-miq_sparkle_on"  => true,
             "data-miq_sparkle_off" => true,
             :remote                => true,
             :title                 => t)
-          = link_to(button_tag(_("Reset"), :class => "btn btn-default", :alt => (t = _("Reset filter changes"))),
+          = link_to(_("Reset"),
             {:action => "prov_button", :button => "reset"},
+            :class                 => "btn btn-default",
+            :alt                   => (t = _("Reset filter changes")),
             "data-miq_sparkle_on"  => true,
             "data-miq_sparkle_off" => true,
             :remote                => true,
             :title                 => t)
-          = link_to(button_tag(_("Default"), :class => "btn btn-default", :alt => (t = _("Set filters to default"))),
+          = link_to(_("Default"),
             {:action => "prov_button", :button => "default"},
+            :class                 => "btn btn-default",
+            :alt                   => (t = _("Set filters to default")),
             "data-miq_sparkle_on"  => true,
             "data-miq_sparkle_off" => true,
             :remote                => true,

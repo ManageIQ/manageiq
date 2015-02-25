@@ -103,7 +103,7 @@
             :checkboxes                  => true})
   .spacer
   = link_to(_('Apply'),
-    {:action => 'sections_field_changed', :check => "#{@lastaction}"},
+    {:action => 'sections_field_changed', :check => @lastaction},
     "data-miq_sparkle_on"  => true,
     "data-miq_sparkle_off" => true,
     :remote                => true,

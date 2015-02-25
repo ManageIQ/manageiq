@@ -1,10 +1,10 @@
 = hidden_div_if(@edit[:new][:authentication][:amazon_key].nil? || @edit[:new][:authentication][:amazon_secret].nil?, :id => "amazon_verify_button_on") do
-  = link_to(button_tag(_("Validate"),
-    :class => "btn btn-primary btn-xs",
-    :alt   => _("Validate the Amazon Settings")),
+  = link_to(_("Validate"),
     {:action => "settings_update",
      :button => "amazon_verify",
      :id     => id},
+    :class                 => "btn btn-primary btn-xs",
+    :alt                   => _("Validate the Amazon Settings"),
     "data-miq_sparkle_on"  => true,
     "data-miq_sparkle_off" => true,
     :remote                => true,

@@ -71,13 +71,13 @@
       %td{:onclick => remote_function(:url => {:action => 'ls_select', :id => entry_idx, :field => "port", :domain_id => domain_id}), :title => t}
         = entry[:port]
       %td{:title => t}
-        = link_to(button_tag(_('Validate'),
-                             :class => "btn btn-primary",
-                             :alt   => t = _("Validate the LDAP Settings by binding with the Host")),
+        = link_to(_('Validate'),
                   {:action    => "ldap_domain_edit",
                    :button    => "verify",
                    :id        => entry_idx,
                    :domain_id => domain_id},
+                  :class                 => "btn btn-primary",
+                  :alt                   => t = _("Validate the LDAP Settings by binding with the Host"),
                   "data-miq_sparkle_on"  => true,
                   "data-miq_sparkle_off" => true,
                   :remote                => true,
