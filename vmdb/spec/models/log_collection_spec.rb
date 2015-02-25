@@ -147,7 +147,7 @@ describe "LogCollection" do
 
   context "Log Collection #synchronize_logs" do
     before do
-      depot = FactoryGirl.create(:file_depot, :uri => "nfs://server/dir")
+      depot = FactoryGirl.create(:file_depot)
       @zone.update_attributes(:log_file_depot_id => depot.id)
     end
 
