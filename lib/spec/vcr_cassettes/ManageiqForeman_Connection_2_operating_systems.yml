@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/operatingsystems?per_page=2
+    uri: http://admin:smartvm@example.com/api/operatingsystems?page=1&per_page=2
     body:
       encoding: US-ASCII
       string: ''
@@ -58,7 +58,7 @@ http_interactions:
       encoding: UTF-8
       string: |
         {
-          "total": 5,
+          "total": 2,
           "subtotal": 5,
           "page": 1,
           "per_page": 2,

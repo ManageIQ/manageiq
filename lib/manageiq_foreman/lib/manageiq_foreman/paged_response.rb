@@ -32,5 +32,21 @@ module ManageiqForeman
     def ==(other)
       results == other.results
     end
+
+    def denormalize
+      self.class.new(
+        results.collect do |record|
+          ancestors(results, record["ancestry"]).each_with_object({}) do |ancestor, h|
+            h.merge!(ancestor.select { |_n, v| !v.nil? && v != "" })
+          end.merge!(record.select { |_n, v| !v.nil? && v != "" })
+        end
+      )
+    end
+
+    private
+
+    def ancestors(records, ancestry)
+      (ancestry || "").split("/").collect(&:to_i).collect { |id| records.detect { |r| r["id"] == id } }
+    end
   end
 end

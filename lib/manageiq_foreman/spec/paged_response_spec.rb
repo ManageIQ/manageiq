@@ -1,30 +1,30 @@
 require_relative 'spec_helper'
 
 describe ManageiqForeman::PagedResponse do
-  let(:first_page) do
-    described_class.new(
-      "total"    => 39,
-      "subtotal" => 39,
-      "page"     => 1,
-      "per_page" => 2,
-      "search"   => nil,
-      "sort"     => {
-        "by"    => nil,
-        "order" => nil
-      },
-      "results"  => [
-        {"name" => "first", "id" => 1},
-        {"name" => "second", "id" => 2}
-      ]
-    )
-  end
-
   describe "#initializer" do
     context "with index hash" do
+      let(:paged_response) do
+        described_class.new(
+          "total"    => 39,
+          "subtotal" => 39,
+          "page"     => 1,
+          "per_page" => 2,
+          "search"   => nil,
+          "sort"     => {
+            "by"    => nil,
+            "order" => nil
+          },
+          "results"  => [
+            {"name" => "first", "id" => 1},
+            {"name" => "second", "id" => 2}
+          ]
+        )
+      end
+
       it "creates the result set" do
-        expect(first_page.total).to eq(39)
-        expect(first_page.size).to eq(2)
-        expect(first_page.first).to eq("name" => "first", "id" => 1)
+        expect(paged_response.total).to eq(39)
+        expect(paged_response.size).to eq(2)
+        expect(paged_response.first).to eq("name" => "first", "id" => 1)
       end
     end
 
@@ -75,5 +75,43 @@ describe ManageiqForeman::PagedResponse do
     it { expect(a).to eq(a) }
     it { expect(a).to eq(b) }
     it { expect(a).not_to eq(x) }
+  end
+
+  describe "#denormalize" do
+    it "inherits value" do
+      expect(described_class.new([
+        {"id" => 1, "operatingsystem_id" => 4},
+        {"id" => 2, "operatingsystem_id" => nil, "ancestry" => "1"},
+        {"id" => 3, "operatingsystem_id" => "", "ancestry" => "1/2"},
+      ]).denormalize.results).to eq([
+        {"id" => 1, "operatingsystem_id" => 4},
+        {"id" => 2, "operatingsystem_id" => 4, "ancestry" => "1"},
+        {"id" => 3, "operatingsystem_id" => 4, "ancestry" => "1/2"},
+      ])
+    end
+
+    it "overrides value" do
+      expect(described_class.new([
+        {"id" => 1, "operatingsystem_id" => 4},
+        {"id" => 2, "operatingsystem_id" => nil, "ancestry" => "1"},
+        {"id" => 3, "operatingsystem_id" => 6, "ancestry" => "1/2"},
+      ]).denormalize.results).to eq([
+        {"id" => 1, "operatingsystem_id" => 4},
+        {"id" => 2, "operatingsystem_id" => 4, "ancestry" => "1"},
+        {"id" => 3, "operatingsystem_id" => 6, "ancestry" => "1/2"},
+      ])
+    end
+
+    it "overrides parent values" do
+      expect(described_class.new([
+        {"id" => 1, "operatingsystem_id" => 4},
+        {"id" => 2, "operatingsystem_id" => 5, "ancestry" => "1"},
+        {"id" => 3, "operatingsystem_id" => nil, "ancestry" => "1/2"},
+      ]).denormalize.results).to eq([
+        {"id" => 1, "operatingsystem_id" => 4},
+        {"id" => 2, "operatingsystem_id" => 5, "ancestry" => "1"},
+        {"id" => 3, "operatingsystem_id" => 5, "ancestry" => "1/2"},
+      ])
+    end
   end
 end
