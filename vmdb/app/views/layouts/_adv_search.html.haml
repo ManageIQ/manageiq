@@ -1,4 +1,4 @@
-- if show_adv_search?
+- if show_adv_search? && @edit[@expkey].present?
   - mode ||= "search"
   - report_expressions = MiqReport.get_expressions_by_model(@edit[@expkey][:exp_model])
 
