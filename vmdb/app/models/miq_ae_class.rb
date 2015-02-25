@@ -67,11 +67,11 @@ class MiqAeClass < ActiveRecord::Base
     }
 
     xml.MiqAeClass(xml_attrs) {
-      self.ae_methods.sort{|a,b| a.fqname <=> b.fqname}.each   { |m| m.to_export_xml(:builder => xml) }
+      ae_methods.sort_by(&:fqname).each { |m| m.to_export_xml(:builder => xml) }
       xml.MiqAeSchema {
-        self.ae_fields.sort{|a,b| a.priority <=> b.priority}.each  { |f| f.to_export_xml(:builder => xml) }
-      } unless self.ae_fields.length == 0
-      self.ae_instances.sort{|a,b| a.fqname <=> b.fqname}.each { |i| i.to_export_xml(:builder => xml) }
+        ae_fields.sort_by(&:priority).each { |f| f.to_export_xml(:builder => xml) }
+      } unless ae_fields.empty?
+      ae_instances.sort_by(&:fqname).each { |i| i.to_export_xml(:builder => xml) }
     }
   end
 

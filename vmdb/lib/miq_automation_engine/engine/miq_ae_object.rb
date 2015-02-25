@@ -318,11 +318,7 @@ module MiqAeEngine
     end
 
     def self.message_matches?(possible, message)
-      possible.each { |p|
-        return true if p == message
-        return true if p == '*'
-      }
-      return false
+      possible.any? { |p| p == message || p == '*' }
     end
 
     def message_parse(message)
