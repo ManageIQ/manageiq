@@ -52,6 +52,10 @@ class ServiceTemplate < ActiveRecord::Base
     "clone_to_service"
   end
 
+  def service_class_type
+    nil  # base class
+  end
+
   def create_service(service_task, parent_svc = nil)
     nh = self.attributes.dup
     nh['options'][:dialog] = service_task.options[:dialog]
@@ -59,6 +63,8 @@ class ServiceTemplate < ActiveRecord::Base
 
     # Hide child services by default
     nh[:display] = false if parent_svc
+
+    nh[:type] = service_class_type
 
     # Determine service name
     # target_name = self.get_option(:target_name)
