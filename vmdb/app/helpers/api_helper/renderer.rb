@@ -77,7 +77,12 @@ module ApiHelper
       json    = Jbuilder.new
       json.ignore_nil!
 
-      add_hash json, normalize_hash(reftype, resource, :add_href => true), :render_resource_attr, resource
+      normalize_options = {:add_href => true}
+
+      pas = physical_attribute_selection(resource)
+      normalize_options[:render_attributes] = pas if pas.present?
+
+      add_hash json, normalize_hash(reftype, resource, normalize_options), :render_resource_attr, resource
 
       if resource.respond_to?(:attributes)
         expand_virtual_attributes(json, type, resource)
@@ -283,17 +288,25 @@ module ApiHelper
 
     def attr_accessible?(object, attr)
       return false unless object && object.respond_to?(attr)
-      is_reflection = object.class.reflections_with_virtual.keys.collect(&:to_s).include?(attr)
-      is_column = object.class.columns_hash_with_virtual.keys.include?(attr) unless is_reflection
+      is_reflection = object.class.reflection_with_virtual(attr.to_sym)
+      is_column     = object.class.columns_hash_with_virtual.key?(attr) unless is_reflection
       is_reflection || is_column
     end
 
     def attr_virtual?(object, attr)
+      return false if ApiController::ID_ATTRS.include?(attr)
       primary = attr_split(attr).first
       return false unless object && object.respond_to?(:attributes) && object.respond_to?(primary)
-      is_reflection = object.class.reflections_with_virtual.keys.collect(&:to_s).include?(primary)
-      is_virtual_column = object.class.virtual_columns_hash.keys.include?(primary) unless is_reflection
+      is_reflection     = object.class.reflection_with_virtual(primary.to_sym)
+      is_virtual_column = object.class.virtual_columns_hash.key?(primary) unless is_reflection
       is_reflection || is_virtual_column
+    end
+
+    def attr_physical?(object, attr)
+      return true if ApiController::ID_ATTRS.include?(attr)
+      primary = attr_split(attr).first
+      return true unless object && object.respond_to?(:attributes) && object.respond_to?(primary)
+      object.class.columns_hash.key?(primary)
     end
 
     def attr_split(attr)
@@ -326,10 +339,9 @@ module ApiHelper
 
     def physical_attribute_selection(resource)
       return [] unless params['attributes']
-      physical_attributes = params['attributes'].split(",").collect do |attr|
-        attr unless attr_virtual?(resource, attr)
-      end.compact
-      physical_attributes.present? ? physical_attributes | ApiController::ID_ATTRS : []
+
+      physical_attributes = params['attributes'].split(",").select { |attr| attr_physical?(resource, attr) }
+      physical_attributes.present? ? ApiController::ID_ATTRS | physical_attributes : []
     end
 
     #

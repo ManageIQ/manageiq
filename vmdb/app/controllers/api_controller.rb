@@ -72,7 +72,7 @@ class ApiController < ApplicationController
   #
   # Attributes used for identification
   #
-  ID_ATTRS = %w(id href)
+  ID_ATTRS = %w(href id)
 
   #
   # To skip CSRF token verification as API clients would
