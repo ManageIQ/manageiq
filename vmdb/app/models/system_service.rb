@@ -4,6 +4,8 @@ class SystemService < ActiveRecord::Base
   belongs_to :miq_template, :foreign_key => :vm_or_template_id
   belongs_to :host
 
+  serialize :dependencies, Hash
+
   include ReportableMixin
 
   SVC_TYPES = {
@@ -89,5 +91,21 @@ class SystemService < ActiveRecord::Base
     #Handle friendly name conversion for dynamic find methods.
     data = super
     friendly(data)
+  end
+
+  def required_by
+    dependencies[:required_by]
+  end
+
+  def wanted_by
+    dependencies[:wanted_by]
+  end
+
+  def required_by=(val)
+    dependencies[:required_by] = val
+  end
+
+  def wanted_by=(val)
+    dependencies[:wanted_by] = val
   end
 end
