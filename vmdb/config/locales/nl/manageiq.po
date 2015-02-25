@@ -18,16 +18,16 @@ msgstr ""
 "\n"
 
 msgid " %s Assignments"
-msgstr ""
+msgstr "%s Opdrachten"
 
 msgid " (Names with \"%s\")"
-msgstr ""
+msgstr " (Namen met \"%s\")"
 
 msgid " Selected Actions:"
-msgstr ""
+msgstr  "Geselecteerde Acties:"
 
 msgid " Selected Alerts:"
-msgstr ""
+msgstr " Geselecteerde Meldingen:"
 
 msgid " that match the entered search string"
 msgstr ""
@@ -36,43 +36,43 @@ msgid "\"#{db}Performance.#{c}\""
 msgstr ""
 
 msgid "\"%s\" was executed"
-msgstr ""
+msgstr "\"%s\" is uitgevoerd"
 
 msgid "\"%s\": cannot be removed, has vms or hosts"
-msgstr ""
+msgstr "\"%s\": kan niet worden verwijderd, heeft vms of hosts"
 
 msgid "\"%{action}\" for %{model} \"%{name}\""
-msgstr ""
+msgstr "\"%{action}\" voor %{model} \"%{name}\""
 
 msgid "\"%{field}\" %{model} cannot be deleted"
-msgstr ""
+msgstr "\"%{field}\" %{model} kan niet worden verwijderd"
 
 msgid "\"%{name}\": Global %{model} cannot be deleted"
 msgstr ""
 
 msgid "\"%{name}\": In use by %{rep_count}, cannot be deleted"
-msgstr ""
+msgstr "\"%{name}\": In gebruik bij %{rep_count}, kan niet worden verwijderd"
 
 msgid "\"%{record}\": %{task} successfully initiated"
-msgstr ""
+msgstr "\"%{record}\": %{task} succesvol geïnitieerd"
 
 msgid "% Savings"
 msgstr ""
 
 msgid "%s"
-msgstr ""
+msgstr "%s"
 
 msgid "%s Button not yet implemented"
 msgstr ""
 
 msgid "%s Client Connections"
-msgstr ""
+msgstr "%s Client connecties"
 
 msgid "%s Conditions"
-msgstr ""
+msgstr "%s Condities"
 
 msgid "%s Credentials validated successfully"
-msgstr ""
+msgstr "%s Credentials succesvol gevallideerd"
 
 msgid "%s Discovery returned: "
 msgstr ""
@@ -81,7 +81,7 @@ msgid "%s Entry Point (NameSpace/Class/Instance)"
 msgstr ""
 
 msgid "%s Group Reorder"
-msgstr ""
+msgstr "%s Groep opnieuw sorteren"
 
 msgid "%s Group Reorder cancelled"
 msgstr ""
@@ -99,100 +99,100 @@ msgid "%s Policy Assignment"
 msgstr ""
 
 msgid "%s Policy Profiles"
-msgstr ""
+msgstr "%s Beleid Profielen"
 
 msgid "%s Policy Simulation"
-msgstr ""
+msgstr "%s Beleid Simulatie"
 
 msgid "%s Request was Submitted"
-msgstr ""
+msgstr "%s Verzoek verzonden"
 
 msgid "%s Settings"
-msgstr ""
+msgstr "%s Instellingen"
 
 msgid "%s Summary"
-msgstr ""
+msgstr "$s Samenvatting"
 
 msgid "%s Utilization"
 msgstr ""
 
 msgid "%s are not in the current region and will be skipped"
-msgstr ""
+msgstr "%s is niet in de huidige regio en wordt overgeslagen"
 
 msgid "%s cancelled by user"
-msgstr ""
+msgstr "%s geannuleerd bij gebruiker"
 
 msgid "%s file saved"
-msgstr ""
+msgstr "%s bestand opgeslagen"
 
 msgid "%s has been initiated for the selected Servers"
-msgstr ""
+msgstr "%s is geïnitieerd voor de geselecteerde Servers"
 
 msgid "%s has no network adapters"
-msgstr ""
+msgstr "%s heeft geen netwerk adapters"
 
 msgid "%s has no snapshots."
-msgstr ""
+msgstr "%s heeft geen snapshots"
 
 msgid "%s is currently being used in the Display Filter"
 msgstr ""
 
 msgid "%s is not allowed for the selected item"
-msgstr ""
+msgstr "%s is niet toegestaan voor de geselecteerde server"
 
 msgid "%s is not in the current region and will be skipped"
-msgstr ""
+msgstr "%s is niet in de huidige regio en wordt overgeslagen"
 
 msgid "%s is required"
-msgstr ""
+msgstr "%s is verplicht"
 
 msgid "%s must be alphanumeric characters and underscores without spaces"
 msgstr ""
 
 msgid "%s must be an integer"
-msgstr ""
+msgstr "%s moet een getal zijn"
 
 msgid "%s must be configured"
-msgstr ""
+msgstr "%s moet geconfigureerd zijn"
 
 msgid "%s must be entered to perform LDAP Group Look Up"
 msgstr ""
 
 msgid "%s must be numeric"
-msgstr ""
+msgstr "%s moet numeriek zijn"
 
 msgid "%s must be numeric and greater than zero"
-msgstr ""
+msgstr "%s moet numeriek en groter dan nul zijn"
 
 msgid "%s must be selected"
-msgstr ""
+msgstr "%s moet geselecteerd zijn"
 
 msgid "%s must be unique for this group"
-msgstr ""
+msgstr "%s moet uniek zijn voor deze groep"
 
 msgid "%s must not be 'action' or 'controller'"
 msgstr ""
 
 msgid "%s no longer exists"
-msgstr ""
+msgstr "%s bestaat niet meer"
 
 msgid "%s no longer exists in the database"
-msgstr ""
+msgstr "%s  bestaat niet meer in de database"
 
 msgid "%s no longer exists, this alert must be reconfigured"
-msgstr ""
+msgstr "%s bestaat niet langer, deze melding moet opnieuw worden geconfigureerd"
 
 msgid "%s saved"
-msgstr ""
+msgstr "%s opgeslagen"
 
 msgid "%s set to default"
-msgstr ""
+msgstr "%s aangepast naar standaard"
 
 msgid "%s should be unique"
-msgstr ""
+msgstr "%s moet uniek zijn"
 
 msgid "%s successfully initiated"
-msgstr ""
+msgstr "%s succesvol geïnniteerd"
 
 msgid "%s tab is not available unless a sort field has been selected"
 msgstr ""
@@ -204,10 +204,10 @@ msgid "%s tab is not available until at least 1 field has been selected"
 msgstr ""
 
 msgid "%s was cancelled by the user"
-msgstr ""
+msgstr "%s is geannulleerd door de gebruiker"
 
 msgid "%s with %s Tags"
-msgstr ""
+msgstr "%s met %s Tags"
 
 msgid "%{action} \"%{item_name}\" for %{model} \"%{name}\""
 msgstr ""
