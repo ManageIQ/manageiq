@@ -9,37 +9,34 @@ describe "routing for SecurityGroupController" do
   it_behaves_like "A controller that has compare routes"
   it_behaves_like "A controller that has tagging routes"
 
-  describe "no action" do
-    it "routes" do
-      expect(get("/security_group")).to route_to("security_group#index")
+  %w(
+    download_data
+    index
+    show
+    show_list
+    tagging_edit
+  ).each do |task|
+    describe "##{task}" do
+      it 'routes with GET' do
+        expect(get("/#{controller_name}/#{task}")).to route_to("#{controller_name}##{task}")
+      end
     end
   end
 
-  describe "#button" do
-    it "routes" do
-      expect(post("/security_group/button")).to route_to("security_group#button")
-    end
-  end
-
-  describe "#index" do
-    it "routes" do
-      expect(get("/security_group/index")).to route_to("security_group#index")
-    end
-  end
-
-  describe "#show" do
-    it "routes" do
-      expect(get("/security_group/show/123")).to route_to("security_group#show", :id => "123")
-    end
-  end
-
-  describe "#show_list" do
-    it "routes with get" do
-      expect(get("/security_group/show_list")).to route_to("security_group#show_list")
-    end
-
-    it "routes with post" do
-      expect(get("/security_group/show_list")).to route_to("security_group#show_list")
+  %w(
+    button
+    quick_search
+    panel_control
+    save_col_widths
+    show
+    show_list
+    tag_edit_form_field_changed
+    tagging_edit
+  ).each do |task|
+    describe "##{task}" do
+      it 'routes with POST' do
+        expect(post("/#{controller_name}/#{task}")).to route_to("#{controller_name}##{task}")
+      end
     end
   end
 end
