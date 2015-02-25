@@ -1,6 +1,6 @@
 - url = url_for(:action => 'tag_edit_form_field_changed', :id => @sb[:rec_id] || @edit[:object_ids][0])
 #tab_div
-  %p.legend
+  %h3
     = _("Tag Assignment%s") % (@tagitems.length > 1 ? " (#{_('Tags common to all selected items')})" : "")
   %table.style3{:style => "margin-bottom: 0;"}
     %thead

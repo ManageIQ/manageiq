@@ -7,7 +7,7 @@
   - elsif @alert
     #alert_info_div
       = render :partial => "layouts/flash_msg"
-      %p.legend=_('Info')
+      %h3=_('Info')
       %table.style1
         - # Description
         - if @edit
@@ -115,11 +115,11 @@
       - # Expression
       - if @edit
         - if !@edit[:new][:expression][:eval_method]
-          %p.legend=_('Expression (Choose an element of the expression to edit)')
+          %h3=_('Expression (Choose an element of the expression to edit)')
           = render(:partial => 'layouts/exp_editor')
         - else
           - if !@edit[:new][:expression][:eval_method] == "nothing"
-            %p.legend
+            %h3
               = h(MiqAlert.expression_types(@edit[:new][:db])[@edit[:new][:expression][:eval_method]])
               =_('Parameters')
             %table.style1
@@ -128,7 +128,7 @@
         %hr
       - else
         - if @alert.expression.is_a?(MiqExpression)
-          %p.legend=_('Expression')
+          %h3=_('Expression')
           - if !@expression_table.nil?
             - @expression_table.each do |token|
               - if ! ["AND", "OR", "(", ")"].include?([token].flatten.first)
@@ -142,7 +142,7 @@
           %hr
         - else
           - if @alert.expression[:eval_method] != "nothing"
-            %p.legend
+            %h3
               = h(MiqAlert.expression_types(@alert.db)[@alert.expression[:eval_method]])
               =_('Parameters')
             %table.style1
@@ -159,7 +159,7 @@
       - else
         - # E-mail, SNMP, Timeline Event, Mgmt Event show
         - if @alert.options && @alert.options[:notifications] && !@alert.options[:notifications][:email].blank?
-          %p.legend=_('Send E-mail')
+          %h3=_('Send E-mail')
           %table.style1
             %tr
               %td.key=_("From")
@@ -175,7 +175,7 @@
                   = h(@temp[:email_to].join(';'))
           %hr
         - if @alert.options && @alert.options[:notifications] && !@alert.options[:notifications][:snmp].blank?
-          %p.legend=_('Send SNMP Trap')
+          %h3=_('Send SNMP Trap')
           %table.style1
             %tr
               %td.key=_("Host")
@@ -214,14 +214,14 @@
                       = h(var[:value])
           %hr
         - if @alert.options && @alert.options[:notifications] && @alert.options[:notifications][:evm_event]
-          %p.legend=('Timeline Event')
+          %h3=('Timeline Event')
           %table.style1
             %tr
               %td.key=_("Show on Timeline")
               %td=_('True')
           %hr
         - if @alert.options && @alert.options[:notifications] && !@alert.options[:notifications][:automate].blank?
-          %p.legend=_('Send Management Event')
+          %h3=_('Send Management Event')
           %table.style1
             %tr
               %td.key=_("Event Name")
@@ -233,7 +233,7 @@
         - if x_active_tree == :alert_tree
           %tr
             %td
-              %p.legend=_('Belongs to Alert Profiles')
+              %h3=_('Belongs to Alert Profiles')
               - if @alert_profiles.empty?
                 = render :partial => 'layouts/info_msg', :locals => {:message => _("This Alert is not assigned to any Alert Profiles.")}
               - else
@@ -256,7 +256,7 @@
         - if x_active_tree == :alert_tree && !@alert.owning_miq_actions.empty?
           %tr
             %td
-              %p.legend=_('Referenced by Actions')
+              %h3=_('Referenced by Actions')
               - if @alert.owning_miq_actions.empty?
                 = render :partial => 'layouts/info_msg', :locals => {:message => _("This Alert is not referenced by any Actions.")}
               - else

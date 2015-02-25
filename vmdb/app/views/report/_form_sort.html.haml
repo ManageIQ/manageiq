@@ -1,6 +1,6 @@
 - url = url_for(:action => 'form_field_changed', :id => "#{@edit[:rpt_id] || 'new'}")
 #sort_div
-  %p.legend
+  %h3
     = _('Sort Criteria')
   %table.style1
     %tr
@@ -130,7 +130,7 @@
             = _('All')
   - unless @sortby1 == NOTHING_STRING || @edit[:new][:group] == "No"
     %fieldset
-      %p.legend
+      %h3
         = _("Specify Calculations for Summary Rows")
       %table.style3
         %thead

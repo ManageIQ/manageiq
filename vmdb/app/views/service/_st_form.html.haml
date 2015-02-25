@@ -42,7 +42,7 @@
     %dl.col1
       %dd
         %fieldset
-          %p.legend
+          %h3
             = _('Selected Resources')
           %table.style3
             %thead
@@ -85,7 +85,7 @@
     %dl.col1
       %dd
         %fieldset
-          %p.legend
+          %h3
             = _('Request Info')
           = render :partial => "miq_request/prov_wf", :locals => {:wf => @edit[:wf]}
     %br

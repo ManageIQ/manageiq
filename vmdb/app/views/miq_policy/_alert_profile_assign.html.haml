@@ -2,7 +2,7 @@
 - observe = {:url => url}.to_json
 #alert_profile_assign_div
   = render :partial => "layouts/flash_msg"
-  %p.legend=_('Assignments')
+  %h3=_('Assignments')
   %table.style1
     %tr
       %td.key=_('Based On')
@@ -27,7 +27,7 @@
             "data-miq_observe" => observe)
   - if @assign[:obj_tree]
     %hr
-    %p.legend=_('Selections')
+    %h3=_('Selections')
     - if @assign[:obj_tree]
       #obj_treebox{:style => "width: 100%; height: #{@winH - 500}px; color: #000; overflow: hidden;"}
       = render(:partial => "layouts/dynatree",

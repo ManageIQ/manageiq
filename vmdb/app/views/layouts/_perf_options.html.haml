@@ -2,7 +2,7 @@
                 :id     => @record.id)
 #perf_options_div{:onclick => "if (typeof miqMenu != 'undefined') miqMenu.hideContextMenu();"}
   - if @temp[:charts] || @perf_options[:chart_type] != :performance
-    %p.legend= _("Options %s") % (@record != @perf_record ? "(#{ui_lookup(:model => @perf_record.class.to_s)}: #{@perf_record.name})" : "")
+    %h3= _("Options %s") % (@record != @perf_record ? "(#{ui_lookup(:model => @perf_record.class.to_s)}: #{@perf_record.name})" : "")
     %dl.dl-horizontal
       %dt
         = _("Interval")

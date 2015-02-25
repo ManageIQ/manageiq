@@ -1,6 +1,6 @@
 - url = url_for(:action => 'form_field_changed', :id => "#{@edit[:rpt_id] || 'new'}")
 #formatting_div
-  %p.legend
+  %h3
     = _('PDF Output')
   %table.style1
     %tr
@@ -14,7 +14,7 @@
           "data-miq_sparkle_on" => true,
           "data-miq_observe"    => {:url => url}.to_json)
   %hr
-  %p.legend
+  %h3
     = _('Specify Column Headers and Formats')
   %table.style3
     %thead

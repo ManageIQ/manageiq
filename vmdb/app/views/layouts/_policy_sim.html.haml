@@ -1,7 +1,7 @@
 - url = url_for(:action => 'policy_sim_add')
 #main_div
   = render :partial => "layouts/flash_msg"
-  %p.legend= _("Choose Policies")
+  %h3= _("Choose Policies")
   #tab_div
     %table.style3
       %thead
@@ -35,7 +35,7 @@
               %td
                 = h(desc)
   %hr
-  %p.legend= _("Policy Simulation for %s") % pluralize(@tagitems.length, 'Item')
+  %h3= _("Policy Simulation for %s") % pluralize(@tagitems.length, 'Item')
   %table.admintable{:height => "75"}
     %tbody
       %tr

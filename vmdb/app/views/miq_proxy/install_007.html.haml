@@ -5,7 +5,7 @@
     %dl.col2
       %dd
         %fieldset
-          %p.legend=_("Version Info")
+          %h3=_("Version Info")
           %table.style1
             %tr
               %td.key=_("Current Version")
@@ -25,7 +25,7 @@
       %dd
         - if @miq_proxy.state == "on"
           %fieldset
-            %p.legend=_("Credentials")
+            %h3=_("Credentials")
             %span{:style => "color:black;"}
               = _("Credentials are not required because this SmartProxy is currently active.")
         - else

@@ -6,7 +6,7 @@
   %dl.col2
     %dd
       %fieldset
-        %p.legend=_("Role Information")
+        %h3=_("Role Information")
         %table.style1
           %tr
             %td.key=_("Name")
@@ -48,7 +48,7 @@
     %dd
       %fieldset
         - temp = @edit ? _("Editing") : _("Read Only")
-        %p.legend=_("Product Features (%s)") % temp
+        %h3=_("Product Features (%s)") % temp
         #features_treebox{:style => "width:100%;height:#{@winH - 435}px;color:#000"}
         = render(:partial => "layouts/dynatree",
                  :locals  => {:tree_id        => "features_treebox",

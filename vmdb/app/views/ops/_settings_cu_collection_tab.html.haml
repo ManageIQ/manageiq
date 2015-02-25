@@ -5,7 +5,7 @@
     %dl.col2
       %dd
         %fieldset
-          %p.legend=_("Clusters")
+          %h3=_("Clusters")
           %table.style1
             %tr
               %td.key=_("Collect for All Clusters")
@@ -40,7 +40,7 @@
               .note=_("VM data will be collected for VMs under selected Hosts only. Data is collected for a Cluster and all of its Hosts when at least one Host is selected.")
       %dd
         %fieldset
-          %p.legend= ui_lookup(:tables=>"storages")
+          %h3= ui_lookup(:tables=>"storages")
           %table.style1
             %tr
               %td.key=_("Collect for All Datastores")

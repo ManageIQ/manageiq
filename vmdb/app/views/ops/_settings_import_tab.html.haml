@@ -1,9 +1,9 @@
 - url = url_for(:action =>'upload_form_field_changed', :id=>@sb[:active_tab].split('_').last)
 - if @sb[:active_tab] == "settings_import"
-  %p.legend=_("Messages")
+  %h3=_("Messages")
   = render(:partial=>"layouts/flash_msg", :locals=>{:click_remove=>false})
   %hr/
-  %p.legend=_("Upload Custom Variable Values")
+  %h3=_("Upload Custom Variable Values")
   = form_tag({:action=>"upload_csv", :typ=>"asset_tag"}, :multipart => true) do
     %table.style1
       %tr

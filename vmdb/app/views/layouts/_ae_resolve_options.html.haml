@@ -4,7 +4,7 @@
 - rec_id = @edit && @edit[:action_id].present? ? @edit[:action_id] : "new"
 - url    = url_for(:action => field_changed_url, :id => rec_id)
 %fieldset
-  %p.legend= _("Object Details")
+  %h3= _("Object Details")
   %table.style1
     - if form_action == "ae_resolve"
       %tr
@@ -36,7 +36,7 @@
 - if form_action != "miq_action"
   - unless ae_custom_button
     %fieldset
-      %p.legend= _("Object Attribute")
+      %h3= _("Object Attribute")
       %table.style1
         %tr
           %td.key= _("Type")
@@ -59,7 +59,7 @@
                            "data-miq_observe"     => {:url => url}.to_json)
   - else
     %fieldset
-      %p.legend= _("Object Attribute")
+      %h3= _("Object Attribute")
       %table.style1
         %tr
           %td.key= _("Type")
@@ -67,7 +67,7 @@
             = ui_lookup(:model => @resolve[:target_class])
 - if ae_sim_form
   %fieldset
-    %p.legend= _("Simulation Parameters")
+    %h3= _("Simulation Parameters")
     %table.style1
       %tr
         %td.key= _("Execute Methods")
@@ -77,7 +77,7 @@
                           resolve[:new][:readonly] != true,
                           "data-miq_observe_checkbox" => {:url => url}.to_json)
   %fieldset
-    %p.legend= _("Attribute/Value Pairs")
+    %h3= _("Attribute/Value Pairs")
     %table.style1
       - AE_MAX_RESOLUTION_FIELDS.times do |i|
         - f = "attribute_" + (i+1).to_s

@@ -1,5 +1,5 @@
 = render :partial => "layouts/flash_msg"
-%p.legend= _("Report Results by User")
+%h3= _("Report Results by User")
 
 - if @sb[:orphaned_records].blank?
   = render :partial => 'layouts/info_msg', :locals => {:message => _("No Records Found.")}

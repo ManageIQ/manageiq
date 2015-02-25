@@ -1,7 +1,7 @@
 = form_tag({:action => 'snap_vm', :id => @record}, {:id => "vm_snap_form"}) do
   = render :partial => "layouts/flash_msg"
   #form_div
-    %p.legend=_('Snapshot Information')
+    %h3=_('Snapshot Information')
     %table.style1
       %tbody
         %tr

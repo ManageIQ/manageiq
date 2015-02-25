@@ -2,7 +2,7 @@
   #tab_div
     - url = url_for(:action =>'ce_new_cat')
     = form_tag(url_for(:action => 'ce_accept', :id => "config_form"), :remote=>true) do
-      %p.legend=_("Choose a Category")
+      %h3=_("Choose a Category")
       %table.style1
         %tr
           %td.key=_("Category")

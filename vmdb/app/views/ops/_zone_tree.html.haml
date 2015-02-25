@@ -1,6 +1,6 @@
 #zone_tree_div
   %fieldset
-    %p.legend
+    %h3
       - params = {:kind => ui_lookup(:model => @temp[:selected_server].class.to_s), :description => @temp[:selected_server].description}
       - if @temp[:selected_server].kind_of?(MiqRegion)
         = _("Status of Regional Roles for Servers in %{kind} %{description}") % params

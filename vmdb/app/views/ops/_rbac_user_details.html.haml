@@ -5,7 +5,7 @@
 = render :partial => "layouts/flash_msg"
 - disabled = @edit && @edit[:new][:userid] == "admin"
 #main_div
-  %p.legend=_("User Information")
+  %h3=_("User Information")
   %table.style1
     %tr
       %td.key=_("Name")

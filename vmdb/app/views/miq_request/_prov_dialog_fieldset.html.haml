@@ -1,6 +1,6 @@
 - if keys.any? { |key| workflow.get_field(key, dialog)[:display] && workflow.get_field(key, dialog)[:display].to_s != "hide" }
   %fieldset
-    %p.legend
+    %h3
       = label
     - table_class ||= "style1"
     %table{:class => "#{table_class} #{defined?(extra_table_attributes) ? extra_table_attributes : ''}"}

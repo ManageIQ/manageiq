@@ -8,13 +8,13 @@
     %strong.message
 
 .import-or-export
-  %p.legend=_('Import')
+  %h3=_('Import')
   = form_tag({:action => "upload_import_file"}, :target => "upload_target", :multipart => true) do
     = file_field("upload", "file")
     = button_tag(_("Upload"), :id => "upload_service_dialog_import", :class => "btn btn-default", :action => "submit")
 
   %hr
-  %p.legend=_('Export')
+  %h3=_('Export')
   = form_tag({:action => "export_service_dialogs"}, :method => :get) do
     = select_tag("service_dialogs[]",
       options_for_select(@dialog_exports),
@@ -26,7 +26,7 @@
 
 .import-data
   %form#import-form
-    %p.legend=_('Import Service Dialogs')
+    %h3=_('Import Service Dialogs')
 
     %label(for='toggle-all')= _('All')
     %input#toggle-all(type='checkbox')

@@ -3,7 +3,7 @@
 #form_div
   = render :partial => "layouts/flash_msg"
   - if session[:host_items].nil?
-    %p.legend=_('Basic Information')
+    %h3=_('Basic Information')
     %table.style1
       %tr
         %td.key=_('Name')
@@ -82,7 +82,7 @@
     = render(:partial => '/layouts/edit_form_buttons', :locals  => {:record_id => @host.id, :ajax_buttons => true})
 
   - unless session[:host_items].nil?
-    %p.legend
+    %h3
       = pluralize(session[:host_items].length,Dictionary::gettext(Host.to_s, :type => :model, :notfound => :titleize))
       |
       =_('Selected')

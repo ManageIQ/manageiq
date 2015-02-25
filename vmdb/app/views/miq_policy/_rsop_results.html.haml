@@ -4,7 +4,7 @@
   = render :partial => "layouts/flash_msg"
   - if session[:rsop_tree]
     %fieldset{:style => "margin: 8px;"}
-      %p.legend=_("Display Options")
+      %h3=_("Display Options")
       %table.style1
         %tr
           %td.key=_("Show out of scope items:")
@@ -30,7 +30,7 @@
             &nbsp;
             =_("Failed")
     %fieldset{:style => "margin: 8px;"}
-      %p.legend=_("Policy Simulation Results")
+      %h3=_("Policy Simulation Results")
       &nbsp;
       %strong
         =_("* Items in")

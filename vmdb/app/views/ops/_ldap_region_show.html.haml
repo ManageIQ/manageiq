@@ -1,7 +1,7 @@
 #main_div
   = render(:partial => "layouts/flash_msg")
   %fieldset
-    %p.legend= _("Basic Information")
+    %h3= _("Basic Information")
     %table.style1
       %tr
         %td.key= _("Name")
@@ -16,7 +16,7 @@
         %td.wide
           = @selected_lr.zone ? @selected_lr.zone.name : ""
   %fieldset
-    %p.legend= _("LDAP Domains")
+    %h3= _("LDAP Domains")
     - if @selected_lr.ldap_domains.count <= 0
       = _("No Records found.")
     - else

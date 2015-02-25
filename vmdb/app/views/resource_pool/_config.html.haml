@@ -3,7 +3,7 @@
 
   - if @display == "config_info"
     %fieldset
-      %p.legend=_('Info')
+      %h3=_('Info')
       %table.style3
         - if @rp_config.nil? || @rp_config.empty?
           %tr

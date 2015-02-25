@@ -1,7 +1,7 @@
 - url = url_for(:action => 'create_ld_field_changed', :id => @sb[:ccs_id])
 #form_div
   = render :partial => "layouts/flash_msg"
-  %p.legend=_('Options')
+  %h3=_('Options')
   %table.admintable
     %tr
       %td.key=_('Name')

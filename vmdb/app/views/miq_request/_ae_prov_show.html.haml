@@ -1,6 +1,6 @@
 #main_div
   %fieldset
-    %p.legend=_("Automations Tasks")
+    %h3=_("Automations Tasks")
     - at =  @miq_request.automation_tasks
     - if at.empty?
       =_("No Records found")

@@ -3,7 +3,7 @@
   - image_pfx = "/images/toolbars/"
   = render(:partial => 'vm_common/policy_options')
   %fieldset
-    %p.legend=_('Policy Simulation Details')
+    %h3=_('Policy Simulation Details')
     - squash_state = session[:squash_open] && session[:squash_open] == true ? "false" : "true"
     - squash_title = session[:squash_open] && session[:squash_open] == true ? _("Collapse All") : _("Expand All")
     = link_to(image_tag("/images/toolbars/squashed-all-#{squash_state}.png",

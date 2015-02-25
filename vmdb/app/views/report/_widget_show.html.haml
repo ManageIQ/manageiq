@@ -1,7 +1,7 @@
 #form_div
   - s = @widget.miq_schedule
   - tz = @timezone = s && s.run_at && s.run_at[:tz] ? s.run_at[:tz] : session[:user_tz]
-  %p.legend
+  %h3
     = _('Basic Information')
   %table.style1
     %tr
@@ -30,7 +30,7 @@
         = h(@widget.read_only)
   %hr
   - unless @sb[:wtype] == "m"
-    %p.legend
+    %h3
       = _('Status')
     %table.style1
       %tr
@@ -69,7 +69,7 @@
     - title = "RSS Feed Options"
   - when "m"
     - title = "Menu Shortcuts"
-  %p.legend
+  %h3
     = title
   %table.style1
     - if @sb[:wtype] == "r"
@@ -166,7 +166,7 @@
           = h(@widget.options[:row_count].to_s)
   %hr
   - unless @sb[:wtype] == "m"
-    %p.legend
+    %h3
       = _('Timer')
     %table.style1
       - if s.kind_of?(MiqSchedule)
@@ -189,7 +189,7 @@
             %br
             = _('Edit this Widget to configure a timer.')
     %hr
-  %p.legend
+  %h3
     = _('Visibility')
   - if @widget.visibility && @widget.visibility[:groups]
     - show_to = @widget.visibility

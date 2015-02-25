@@ -2,7 +2,7 @@
 #tab_div
   = render :partial => "layouts/flash_msg"
   %fieldset
-    %p.legend
+    %h3
       = _('Changes')
     %table.style1
       %tr
@@ -38,7 +38,7 @@
     = render :partial => '/layouts/edit_form_buttons', :locals => {:action_url => 'ownership_update', :ajax_buttons => true}
 
   %fieldset
-    %p.legend
+    %h3
       = _('Affected Items')
     %table.admintable{:height => "75"}
       %tbody

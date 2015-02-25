@@ -6,7 +6,7 @@
     = render :partial => "layouts/flash_msg"
     - if @edit
       - # Don't show basic info box with description only unless in edit mode
-      %p.legend=_("Basic Information")
+      %h3=_("Basic Information")
       %table.style1
         %tr
           %td.key=_("Description")
@@ -75,7 +75,7 @@
                       :id       => "members_chosen")
       %hr
     - else
-      %p.legend=_("Policies")
+      %h3=_("Policies")
       - if @profile_policies.empty?
         = render :partial => 'layouts/info_msg', :locals => {:message => _("No Policies are defined.")}
       - else
@@ -98,7 +98,7 @@
 
     - # Notes field
     - if @edit
-      %p.legend
+      %h3
         =_("Notes")
         (
         %span#notes_count=@edit[:new][:notes] ? @edit[:new][:notes].length : 0
@@ -111,7 +111,7 @@
         "data-miq_observe"          => observe_with_interval)
       %hr
     - else
-      %p.legend=_("Notes")
+      %h3=_("Notes")
       - if @profile.notes.blank?
         = render :partial => 'layouts/info_msg', :locals => {:message => _("No notes have been entered.")}
       - else

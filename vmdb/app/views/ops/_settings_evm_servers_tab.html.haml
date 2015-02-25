@@ -1,7 +1,7 @@
 - if @sb[:active_tab] == "settings_evm_servers"
   - if @servers
     = render(:partial=>"layouts/flash_msg")
-    %p.legend=_("Relationships")
+    %h3=_("Relationships")
     %table.style1
       %tr
         %td.key=_("Servers")
@@ -16,7 +16,7 @@
         %td.key=_("Schedules")
         %td.wide= @selected_zone.miq_schedules.count
     %hr/
-    %p.legend=_("Servers")
+    %h3=_("Servers")
     - if @servers.empty?
       = render :partial => 'layouts/info_msg', :locals => {:message => _("No Servers Found.")}
     - else

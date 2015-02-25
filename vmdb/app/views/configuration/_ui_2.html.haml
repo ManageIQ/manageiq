@@ -5,7 +5,7 @@
     %dl.col2
       %dd
         %fieldset
-          %p.legend= _('General')
+          %h3= _('General')
           %table.style1
             - keys = {:tagging      => _('Tagging'),
                       :compare      => _('Compare'),
@@ -19,7 +19,7 @@
                   %ul#toolbars= render_view_buttons(resource, @edit[:new][:views][resource])
         - if role_allows(:feature => "miq_proxy_show_list")
           %fieldset
-            %p.legend= _('Management Engine')
+            %h3= _('Management Engine')
             %table.style1
               %tr
                 %td.key= _('SmartProxies')
@@ -33,7 +33,7 @@
         -    role_allows(:feature => "vms_instances_filter_accord")    ||
         -    role_allows(:feature => "templates_images_filter_accord")
           %fieldset
-            %p.legend= _('Services')
+            %h3= _('Services')
             %table.style1
               - keys = {:service               => ["service",                        _('My Services')],
                         :catalog               => ["catalog_items_accord",           _('Service Catalogs')],
@@ -56,7 +56,7 @@
         -    role_allows(:feature => "images_filter_accord")          ||
         -    role_allows(:feature => "orchestration_stack_show_list")
           %fieldset
-            %p.legend= _('Clouds')
+            %h3= _('Clouds')
             %table.style1
               - if role_allows(:feature => "ems_cloud_show_list")
                 %tr
@@ -100,7 +100,7 @@
         -    role_allows(:feature => "vms_filter_accord")       ||
         -    role_allows(:feature => "templates_filter_accord")
           %fieldset
-            %p.legend= _('Infrastructure')
+            %h3= _('Infrastructure')
             %table.style1
               - if role_allows(:feature => "ems_infra_show_list")
                 %tr
@@ -150,7 +150,7 @@
                     %ul#toolbars= render_view_buttons(:repo, @edit[:new][:views][:repo])
         - if get_vmdb_config[:product][:storage]
           %fieldset
-            %p.legend= _('Storage')
+            %h3= _('Storage')
             %table.style1
               - keys = {:ontapstoragesystem   => "ontap_storage_system",
                         :ontapstoragevolume   => "ontap_storage_volume",

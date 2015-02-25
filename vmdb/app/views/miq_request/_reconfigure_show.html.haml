@@ -1,6 +1,6 @@
 #main_div
   %fieldset
-    %p.legend=_("Options")
+    %h3=_("Options")
     %table.style1
       - if @options[:vm_memory]
         %tr
@@ -18,7 +18,7 @@
             = h(@options[:number_of_cpus])
 
   %fieldset
-    %p.legend
+    %h3
       = _("Affected VMs")
     %table.style1{:height => "75"}
       %tr

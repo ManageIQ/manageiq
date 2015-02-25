@@ -16,7 +16,7 @@
   - elsif mode == "load"
     - if @exp_to_load
       %fieldset
-        %p.legend
+        %h3
           = _("Search Expression Preview")
         - @exp_to_load.each do |token|
           - if ! ["AND", "OR", "(", ")"].include?([token].flatten.first)
@@ -51,7 +51,7 @@
       = render(:partial => "layouts/flash_msg",
                :locals  => { :div_num => "2"})
       %fieldset
-        %p.legend
+        %h3
           = _("Search Expression")
         - @edit[@expkey][:exp_table].each do |token|
           - if ! ["AND", "OR", "(", ")"].include?([token].flatten.first)

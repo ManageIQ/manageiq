@@ -2,7 +2,7 @@
 #planning_summary_div
   = render :partial => "layouts/flash_msg", :locals => {:div_num => "1"}
   - if @perf_record
-    %p.legend=_('Display Options')
+    %h3=_('Display Options')
     %dl.dl-horizontal
       %dt=_('Limit Chart to')
       %dd
@@ -23,7 +23,7 @@
     %br{:clear => "all"}
     %hr
     - if @sb[:planning][:chart_data] && @sb[:planning][:chart_data]["planning"]
-      %p.legend=_("Eligible %s ") % ui_lookup(:models => @sb[:planning][:options][:target_typ])
+      %h3=_("Eligible %s ") % ui_lookup(:models => @sb[:planning][:options][:target_typ])
       %table.style3
         %thead
           %tr

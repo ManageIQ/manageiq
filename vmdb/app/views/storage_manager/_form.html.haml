@@ -3,7 +3,7 @@
 
 #form_div
   = render :partial => "layouts/flash_msg"
-  %p.legend=_('Basic Information')
+  %h3=_('Basic Information')
   %table.style1
     %tr
       %td.key=_('Name')
@@ -58,7 +58,7 @@
             "data-miq_observe" => {:url => url}.to_json)
 
   %hr
-  %p.legend=_('Credentials')
+  %h3=_('Credentials')
   %table.style1
     %tr
       %td.key=_('User ID')

@@ -1,6 +1,6 @@
 - url = url_for(:action => 'form_field_changed', :id => "#{@ae_class.id || 'new'}")
 - obs = {:interval => '.5', :url => url}.to_json
-%p.legend=_('Properties')
+%h3=_('Properties')
 %table.style1
   %tr
     %td.key

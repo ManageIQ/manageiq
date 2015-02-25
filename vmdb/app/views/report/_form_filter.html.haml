@@ -7,7 +7,7 @@
     = render :partial => "form_filter_chargeback"
   - else
     - # Show expression editors for all other reports
-    %p.legend
+    %h3
       = _("Primary (Record) Filter - Filters the %s table records") % @edit[:new][:model]
     - if @expkey == :record_filter
       = render :partial => 'layouts/exp_editor'
@@ -33,7 +33,7 @@
     - unless @edit[:display_filter][:exp_available_fields].empty? && @edit[:display_filter][:exp_available_tags].empty?
       - # Expression editor for the display filter
       %fieldset
-        %p.legend
+        %h3
           = _('Secondary (Display) Filter - Filters the rows based on child table fields')
         - if @expkey == :display_filter
           = render :partial => 'layouts/exp_editor'

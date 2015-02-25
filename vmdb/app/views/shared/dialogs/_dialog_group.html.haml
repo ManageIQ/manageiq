@@ -1,6 +1,6 @@
 %div{:id => "group_#{group.id}_div"}
   %fieldset
-    %p.legend{:title => "#{group.description}"}
+    %h3{:title => "#{group.description}"}
       = group.label
       - unless group.dialog_fields.empty?
         %table.style1

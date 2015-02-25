@@ -67,7 +67,7 @@
   = render :partial => "layouts/flash_msg"
   - if @record && @record.kind_of?(CustomButtonSet)
     - # don't need basic info box for Unassigned button group
-    %p.legend
+    %h3
       = _('Basic Information')
     %table.style1
       %tbody

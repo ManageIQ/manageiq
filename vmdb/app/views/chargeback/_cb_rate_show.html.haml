@@ -3,14 +3,14 @@
   = render :partial => "cb_rate_edit"
 - else
   %fieldset
-    %p.legend=_('Basic Info')
+    %h3=_('Basic Info')
     %table.style1
       %tr
         %td.key=_('Description')
         %td
           = h(@record.description)
   %fieldset
-    %p.legend=_('Rate Details')
+    %h3=_('Rate Details')
     %table.style3
       %thead
         %tr

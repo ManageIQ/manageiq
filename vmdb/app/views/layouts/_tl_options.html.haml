@@ -2,7 +2,7 @@
 #tl_options_div
   - if @temp[:timeline]
     %fieldset
-      %p.legend
+      %h3
         - if @record != @tl_record
           = _("Options %s: %s") % [ui_lookup(:model => @tl_record.class), @tl_record.name]
         - else

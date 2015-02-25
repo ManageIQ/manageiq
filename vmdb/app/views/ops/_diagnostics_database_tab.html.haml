@@ -2,7 +2,7 @@
   -# created div with different name so database validation flash message can be shown in it's own box
   = render :partial => "layouts/flash_msg", :locals => {:div_num => "database"}
 
-  %p.legend= _("Basic Info")
+  %h3= _("Basic Info")
   %table.style1
     %tr
       %td.key= _("Type")
@@ -20,9 +20,9 @@
   - if DatabaseBackup.backup_supported?
     - url = url_for(:action => 'db_backup_form_field_changed')
     %hr/
-    %p.legend= _("Run a Database Backup Now")
+    %h3= _("Run a Database Backup Now")
     %fieldset
-      %p.legend= _("Backup Schedules")
+      %h3= _("Backup Schedules")
       %table.style1
         %tr
           %td.key= _("Fetch settings from a schedule")
@@ -64,7 +64,7 @@
 
   - if DatabaseBackup.gc_supported?
     %hr/
-    %p.legend= _("Run Database Garbage Collection Now")
+    %h3= _("Run Database Garbage Collection Now")
     %table.style1
       %tr
         %td= _("Press submit to start the Database Vacuum process")

@@ -2,7 +2,7 @@
 #form_div
   = render :partial => "layouts/flash_msg"
   - read_only = @edit && @edit[:db_id] && @edit[:db_id] ? true : false
-  %p.legend
+  %h3
     = _('Basic Information')
   %table.style1
     %tr

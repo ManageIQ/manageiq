@@ -2,7 +2,7 @@
   - if @action
     #action_info_div
       = render :partial => "layouts/flash_msg"
-      %p.legend=_('Basic Information')
+      %h3=_('Basic Information')
       %table.style1
         - if @edit
           - # Don't show description unless in edit mode
@@ -35,7 +35,7 @@
       - else
         - case @action.action_type
         - when "create_snapshot"
-          %p.legend=_('Snapshot Settings')
+          %h3=_('Snapshot Settings')
           %table.style1
             %tr
               %td.key=_('Name')
@@ -43,7 +43,7 @@
                 = h(@action.options[:name])
           %hr
         - when "delete_snapshots_by_age"
-          %p.legend=_('Snapshot Age Settings')
+          %h3=_('Snapshot Age Settings')
           %table.style1
             %tr
               %td.key=_('Delete if older than')
@@ -51,12 +51,12 @@
                 = h(SNAPSHOT_AGES[@action.options[:age]])
           %hr
         - when "custom_automation"
-          %p.legend=_('Custom Automation')
+          %h3=_('Custom Automation')
           %table.style1
             %tr
               %td{:width => '50%'}
                 %fieldset
-                  %p.legend=_('Object Details')
+                  %h3=_('Object Details')
                   %table.style1
                     %tr
                       %td.key=_('Starting Message')
@@ -67,7 +67,7 @@
                       %td
                         = h(@action.options[:ae_request])
                 %fieldset
-                  %p.legend=_('Attribute/Value Pairs')
+                  %h3=_('Attribute/Value Pairs')
                   %table.style1
                     - if !@action.options[:ae_hash].blank?
                       - @action.options[:ae_hash].each do |k, v|
@@ -80,7 +80,7 @@
                       =_('No Attribute/Value Pairs found')
           %hr
         - when "email"
-          %p.legend=_('E-mail Settings')
+          %h3=_('E-mail Settings')
           %table.style1
             %tr
               %td.key=_('From E-mail Address')
@@ -92,7 +92,7 @@
                 = h(@action.options[:to])
           %hr
         - when "set_custom_attribute"
-          %p.legend=_('Set Custom Attribute Settings')
+          %h3=_('Set Custom Attribute Settings')
           %table.style1
             %tr
               %td.key=_('Attribute Name')
@@ -104,7 +104,7 @@
                 = h(@action.options[:value])
           %hr
         - when "reconfigure_cpus"
-          %p.legend=_("Reconfigure CPU")
+          %h3=_("Reconfigure CPU")
           %table.style1
             %tr
               %td.key=_("Number of CPU's")
@@ -112,7 +112,7 @@
                 = h(@action.options[:value])
           %hr
         - when "reconfigure_memory"
-          %p.legend=_("Reconfigure Memory")
+          %h3=_("Reconfigure Memory")
           %table.style1
             %tr
               %td.key=_("Memory Size")
@@ -120,7 +120,7 @@
                 = "#{h(@action.options[:value])} MB"
           %hr
         - when "tag"
-          %p.legend=_("Applied Tag")
+          %h3=_("Applied Tag")
           %table.style1
             %tr
               %td.key=_("Tag")
@@ -128,7 +128,7 @@
                 = h(Classification.tag2human(@action.options[:tags].first))
           %hr
         - when "snmp_trap"
-          %p.legend=_("SNMP Trap")
+          %h3=_("SNMP Trap")
           %table.style1
             %tr
               %td.key=_("Host")
@@ -145,7 +145,7 @@
               %td
                 = h(@action.options[:trap_id])
           %hr
-          %p.legend=_("Variables")
+          %h3=_("Variables")
           %table.style3
             %thead
               %tr
@@ -166,7 +166,7 @@
               =_('No variables configured.')
           %hr
         - when "assign_scan_profile"
-          %p.legend=_("Analysis Profile")
+          %h3=_("Analysis Profile")
           %table.style1
             %tr
               %td.key=_("Assigned Analysis Profile")
@@ -174,7 +174,7 @@
                 = h(@action.options[:scan_item_set_name])
           %hr
         - when "evaluate_alerts"
-          %p.legend=_("Alerts to Evaluate")
+          %h3=_("Alerts to Evaluate")
           - if @temp[:alert_guids].empty?
             = render :partial => 'layouts/info_msg', :locals => {:message => _("No Alerts have been selected.")}
           - else
@@ -193,7 +193,7 @@
                       = alert.description
           %hr
         - when "inherit_parent_tags"
-          %p.legend=_("Inherit Tags")
+          %h3=_("Inherit Tags")
           %table.style1
             %tr
               %td.key=_("Parent Type")
@@ -204,7 +204,7 @@
               %td= h(@temp[:cats])
           %hr
         - when "remove_tags"
-          %p.legend=_("Inherit Tags")
+          %h3=_("Inherit Tags")
           %table.style1
             %tr
               %td.key=_("Categories")
@@ -213,7 +213,7 @@
           %hr
 
         - if x_active_tree == :action_tree
-          %p.legend=_("Assigned to Policies")
+          %h3=_("Assigned to Policies")
           - if @action_policies.empty?
             = render :partial => 'layouts/info_msg', :locals => {:message => _("This Action is not assigned to any Policies.")}
           - else

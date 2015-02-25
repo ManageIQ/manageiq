@@ -1,6 +1,6 @@
 #form_filter_div
   %fieldset
-    %p.legend {{buildLegend()}}
+    %h3 {{buildLegend()}}
     %table.style1
       %tr(ng-switch on="determineActionType()")
         %td.key(ng-hide="dbBackup()") Filter

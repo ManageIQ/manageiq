@@ -1,7 +1,7 @@
 - url = url_for(:action => 'settings_form_field_changed', :id => "#{@sb[:active_tab].split('_').last}")
 - if @sb[:active_tab] == "settings_authentication"
   = render :partial => "layouts/flash_msg"
-  %p.legend=_("Authentication")
+  %h3=_("Authentication")
   %table.style1
     %tr
       %td.key=_("Session Timeout")
@@ -23,7 +23,7 @@
           "data-miq_observe" => {:url => url}.to_json)
   %hr/
   = hidden_div_if(!["ldap", "ldaps"].include?(@edit[:new][:authentication][:mode]), :id => "ldap_div") do
-    %p.legend=_("LDAP Settings")
+    %h3=_("LDAP Settings")
     %table.style1
       %tr
         %td.key=_("LDAP Host Names")
@@ -90,7 +90,7 @@
             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     %hr/
   = hidden_div_if(@edit[:new][:authentication][:mode] != "amazon", :id => "amazon_div") do
-    %p.legend=_("Amazon Primary AWS Account Settings for IAM")
+    %h3=_("Amazon Primary AWS Account Settings for IAM")
     %table.style1
       %tr
         %td.key=_("Access Key")
@@ -108,7 +108,7 @@
             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     %hr/
   = hidden_div_if(!["ldap", "ldaps"].include?(@edit[:new][:authentication][:mode]), :id => "ldap_role_div") do
-    %p.legend=_("Role Settings")
+    %h3=_("Role Settings")
     %table.style1
       %tr
         %td.key=_("Get User Groups from LDAP")
@@ -169,7 +169,7 @@
     = render :partial => 'ldap_forest_entries', :locals => {:entry => nil, :edit => false}
 
   = hidden_div_if(@edit[:new][:authentication][:mode] != "amazon", :id => "amazon_role_div") do
-    %p.legend=_("Role Settings")
+    %h3=_("Role Settings")
     %table.style1
       %tr
         %td.key=_("Get User Groups from Amazon")
@@ -184,7 +184,7 @@
     %hr/
 
   = hidden_div_if(@edit[:new][:authentication][:mode] != "httpd", :id => "httpd_div") do
-    %p.legend=_("External Authentication (httpd) Settings")
+    %h3=_("External Authentication (httpd) Settings")
     %table.style1
       %tr
         %td.key=_("Enable Single Sign-On")
@@ -195,7 +195,7 @@
     %hr/
 
   = hidden_div_if(@edit[:new][:authentication][:mode] != "httpd", :id => "httpd_role_div") do
-    %p.legend=_("Role Settings")
+    %h3=_("Role Settings")
     %table.style1
       %tr
         %td.key=_("Get User Groups from External Authentication (httpd)")

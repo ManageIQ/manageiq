@@ -1,13 +1,13 @@
 #main_div
   = render(:partial => "layouts/flash_msg")
   %fieldset
-    %p.legend= _("Basic Information")
+    %h3= _("Basic Information")
     %table.style1
       %tr
         %td.key= _("Name")
         %td= @selected_ld.name
   %fieldset
-    %p.legend= _("LDAP Settings")
+    %h3= _("LDAP Settings")
     %table.style1
       %tr
         %td.key= _("User Type")
@@ -50,7 +50,7 @@
         %td.wide
           = @selected_ld.user_suffix
   %fieldset
-    %p.legend= _("Role Settings")
+    %h3= _("Role Settings")
     %table.style1
       %tr
         %td.key= _("Get User Groups from LDAP")
@@ -77,7 +77,7 @@
         %td.wide
           = @selected_ld.authentication_password ? "*******" : ""
   %fieldset
-    %p.legend= _("LDAP Servers")
+    %h3= _("LDAP Servers")
     - if @selected_ld.ldap_servers.count <= 0
       = ("No Records found.")
     - else

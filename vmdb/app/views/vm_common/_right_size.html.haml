@@ -14,7 +14,7 @@
   %dl.col2
     %dd
       %fieldset
-        %p.legend=_("Normal Operating Ranges (up to 30 days' data)")
+        %h3=_("Normal Operating Ranges (up to 30 days' data)")
         %table.style3
           %thead
             %tr
@@ -120,7 +120,7 @@
                     - else
                       = notavail
       %fieldset
-        %p.legend=_('Right-Sizing (Conservative - derived from Absolute Maximum)')
+        %h3=_('Right-Sizing (Conservative - derived from Absolute Maximum)')
         %table.style3
           %thead
             %tr
@@ -154,7 +154,7 @@
                 = @record.conservative_mem_recommended_change ? "#{@record.conservative_mem_recommended_change} MB" : notavail
     %dd
       %fieldset
-        %p.legend=_('Right-Sizing (Moderate - derived from High NORM)')
+        %h3=_('Right-Sizing (Moderate - derived from High NORM)')
         %table.style3
           %thead
             %tr
@@ -187,7 +187,7 @@
               %td{:align => "right"}
                 = @record.moderate_mem_recommended_change ? "#{@record.moderate_mem_recommended_change} MB" : notavail
       %fieldset
-        %p.legend=_('Right-Sizing (Aggressive - derived from Average NORM)')
+        %h3=_('Right-Sizing (Aggressive - derived from Average NORM)')
         %table.style3
           %thead
             %tr

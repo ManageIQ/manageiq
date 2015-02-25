@@ -2,7 +2,7 @@
 #pre_prov_div
   %fieldset
     - typ = request.parameters[:controller] == "vm_cloud" ? ui_lookup(:table => "template_cloud") : ui_lookup(:table => "template_infra")
-    %p.legend
+    %h3
       =_("Provision %s based on the selected %s") % [ui_lookup(:tables => request.parameters[:controller]), typ]
     %table.style3
       %thead

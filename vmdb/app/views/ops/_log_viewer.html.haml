@@ -4,7 +4,7 @@
   {:name => @temp[:selected_server].name,                                            |
   :id    => @temp[:selected_server].id,                                              |
   :zone  => @temp[:selected_server].my_zone}                                         |
-%p.legend= legend_text
+%h3= legend_text
 
 = text_area("logview", "data",                                |
   :value    => @log,                                          |
