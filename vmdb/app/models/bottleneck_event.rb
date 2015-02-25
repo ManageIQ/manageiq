@@ -50,7 +50,8 @@ class BottleneckEvent < ActiveRecord::Base
   end
 
   def self.future_event_definitions_for_obj(obj)
-    self.event_definitions("projected").find_all {|e| e[:definition][:applies_to].include?(obj.class.name.to_sym)}
+    search_type = obj.class.base_class.name.to_sym
+    event_definitions("projected").find_all { |e| e[:definition][:applies_to].include?(search_type) }
   end
 
   def self.delete_future_events_for_obj(obj)
