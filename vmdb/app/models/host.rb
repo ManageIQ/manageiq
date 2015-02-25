@@ -85,6 +85,9 @@ class Host < ActiveRecord::Base
 
   serialize                 :settings
 
+  # TODO: Remove all callers of address
+  alias_attribute :address, :hostname
+
   def settings
     super || self.settings = VMDB::Config.new("hostdefaults").get(:host)
   end
@@ -161,7 +164,6 @@ class Host < ActiveRecord::Base
   include Metric::CiMixin
   include FilterableMixin
   include AuthenticationMixin
-  include AddressMixin
   include AsyncDeleteMixin
   include ComplianceMixin
   include VimConnectMixin
@@ -1402,20 +1404,19 @@ class Host < ActiveRecord::Base
       su_user, su_password = nil, nil
     end
 
-    prompt_delay = address_configuration(:ssh, :authentication_prompt_delay)
+    prompt_delay = VMDB::Config.new("vmdb").config.fetch_path(:ssh, :authentication_prompt_delay)
     options[:authentication_prompt_delay] = prompt_delay unless prompt_delay.nil?
 
-    address = self.address(:ssh)
     users = su_user.nil? ? rl_user : "#{rl_user}/#{su_user}"
-    $log.info "host.connect_ssh: Initiating SSH connection to Host:[#{self.name}] using [#{address}] for user:[#{users}].  Options:[#{options.inspect}]"
+    $log.info "host.connect_ssh: Initiating SSH connection to Host:[#{self.name}] using [#{hostname}] for user:[#{users}].  Options:[#{options.inspect}]"
     begin
-      MiqSshUtil.shell_with_su(address, rl_user, rl_password, su_user, su_password, options) do |ssu, shell|
-        $log.info "host.connect_ssh: SSH connection established to [#{address}]"
+      MiqSshUtil.shell_with_su(hostname, rl_user, rl_password, su_user, su_password, options) do |ssu, shell|
+        $log.info "host.connect_ssh: SSH connection established to [#{hostname}]"
         yield(ssu)
       end
-      $log.info "host.connect_ssh: SSH connection completed to [#{address}]"
+      $log.info "host.connect_ssh: SSH connection completed to [#{hostname}]"
     rescue Exception
-      $log.error "host.connect_ssh: SSH connection failed for [#{address}] with [#{$!.class}: #{$!}]"
+      $log.error "host.connect_ssh: SSH connection failed for [#{hostname}] with [#{$!.class}: #{$!}]"
       raise $!
     end
   end

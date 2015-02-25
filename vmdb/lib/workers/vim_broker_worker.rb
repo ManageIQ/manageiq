@@ -107,7 +107,7 @@ class VimBrokerWorker < WorkerBase
       ems = EmsVmware.
               includes(:authentications).
               where(:zone_id => zone_id).
-              find_all_by_address(address).
+              where(:hostname => address).
               detect { |e| e.authentication_userid == userid }
       ems_id = ems.nil? ? :ignore : ems.id
       $log.warn("#{self.log_prefix} Ignoring updates for unknown connection, address: [#{address}], userid: [#{userid}]") if ems_id == :ignore
@@ -189,7 +189,7 @@ class VimBrokerWorker < WorkerBase
 
     $log.info("#{self.log_prefix} Attempting to reconnect broker for EMS with address: [#{event[:server]}] due to error: #{event[:error]}")
 
-    ems = EmsVmware.find_by_address(event[:server])
+    ems = EmsVmware.where(:hostname => event[:server]).first
     if ems.nil?
       $log.error "#{self.log_prefix} Unable to find EMS with address: [#{event[:server]}]"
       return
