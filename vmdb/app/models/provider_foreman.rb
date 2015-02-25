@@ -23,6 +23,10 @@ class ProviderForeman < Provider
     @ems_type ||= "foreman".freeze
   end
 
+  def raw_connect(attrs = {})
+    ManageiqForeman::Connection.new(connection_attrs.merge(attrs))
+  end
+
   private
 
   def build_managers
