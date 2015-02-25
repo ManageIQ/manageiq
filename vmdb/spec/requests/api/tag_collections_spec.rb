@@ -56,9 +56,9 @@ describe ApiController do
     it "assigns a tag to a Provider without appropriate role" do
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@provider_tags_url, gen_request_data(:assign,
-                                                               :category => @tag1[:category],
-                                                               :name     => @tag1[:name]))
+      @success = run_post(@provider_tags_url, gen_request(:assign,
+                                                          :category => @tag1[:category],
+                                                          :name     => @tag1[:name]))
       expect(@success).to be_false
       expect(@code).to eq(403)
     end
@@ -67,9 +67,9 @@ describe ApiController do
       update_user_role(@role, subcollection_action_identifier(:providers, :tags, :assign))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@provider_tags_url, gen_request_data(:assign,
-                                                               :category => @tag1[:category],
-                                                               :name     => @tag1[:name]))
+      @success = run_post(@provider_tags_url, gen_request(:assign,
+                                                          :category => @tag1[:category],
+                                                          :name     => @tag1[:name]))
       expect(@success).to be_true
       expect(@code).to eq(200)
       expect(@result).to have_key("results")
@@ -85,9 +85,9 @@ describe ApiController do
     it "unassigns a tag from a Provider without appropriate role" do
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@provider_tags_url, gen_request_data(:unassign,
-                                                               :category => @tag1[:category],
-                                                               :name     => @tag1[:name]))
+      @success = run_post(@provider_tags_url, gen_request(:unassign,
+                                                          :category => @tag1[:category],
+                                                          :name     => @tag1[:name]))
       expect(@success).to be_false
       expect(@code).to eq(403)
     end
@@ -99,9 +99,9 @@ describe ApiController do
       Classification.classify(@provider, @tag1[:category], @tag1[:name])
       Classification.classify(@provider, @tag2[:category], @tag2[:name])
 
-      @success = run_post(@provider_tags_url, gen_request_data(:unassign,
-                                                               :category => @tag1[:category],
-                                                               :name     => @tag1[:name]))
+      @success = run_post(@provider_tags_url, gen_request(:unassign,
+                                                          :category => @tag1[:category],
+                                                          :name     => @tag1[:name]))
       expect(@success).to be_true
       expect(@code).to eq(200)
       expect(@result).to have_key("results")
@@ -144,9 +144,9 @@ describe ApiController do
     it "assigns a tag to a Host without appropriate role" do
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@host_tags_url, gen_request_data(:assign,
-                                                           :category => @tag1[:category],
-                                                           :name     => @tag1[:name]))
+      @success = run_post(@host_tags_url, gen_request(:assign,
+                                                      :category => @tag1[:category],
+                                                      :name     => @tag1[:name]))
       expect(@success).to be_false
       expect(@code).to eq(403)
     end
@@ -155,9 +155,9 @@ describe ApiController do
       update_user_role(@role, subcollection_action_identifier(:hosts, :tags, :assign))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@host_tags_url, gen_request_data(:assign,
-                                                           :category => @tag1[:category],
-                                                           :name     => @tag1[:name]))
+      @success = run_post(@host_tags_url, gen_request(:assign,
+                                                      :category => @tag1[:category],
+                                                      :name     => @tag1[:name]))
       expect(@success).to be_true
       expect(@code).to eq(200)
       expect(@result).to have_key("results")
@@ -173,9 +173,9 @@ describe ApiController do
     it "unassigns a tag from a Host without appropriate role" do
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@host_tags_url, gen_request_data(:unassign,
-                                                           :category => @tag1[:category],
-                                                           :name     => @tag1[:name]))
+      @success = run_post(@host_tags_url, gen_request(:unassign,
+                                                      :category => @tag1[:category],
+                                                      :name     => @tag1[:name]))
       expect(@success).to be_false
       expect(@code).to eq(403)
     end
@@ -187,9 +187,9 @@ describe ApiController do
       Classification.classify(@host, @tag1[:category], @tag1[:name])
       Classification.classify(@host, @tag2[:category], @tag2[:name])
 
-      @success = run_post(@host_tags_url, gen_request_data(:unassign,
-                                                           :category => @tag1[:category],
-                                                           :name     => @tag1[:name]))
+      @success = run_post(@host_tags_url, gen_request(:unassign,
+                                                      :category => @tag1[:category],
+                                                      :name     => @tag1[:name]))
       expect(@success).to be_true
       expect(@code).to eq(200)
       expect(@result).to have_key("results")
@@ -233,9 +233,8 @@ describe ApiController do
     it "assigns a tag to a Data Store without appropriate role" do
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@ds_tags_url, gen_request_data(:assign,
-                                                         :category => @tag1[:category],
-                                                         :name     => @tag1[:name]))
+      @success = run_post(@ds_tags_url, gen_request(:assign, :category => @tag1[:category], :name => @tag1[:name]))
+
       expect(@success).to be_false
       expect(@code).to eq(403)
     end
@@ -244,9 +243,8 @@ describe ApiController do
       update_user_role(@role, subcollection_action_identifier(:data_stores, :tags, :assign))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@ds_tags_url, gen_request_data(:assign,
-                                                         :category => @tag1[:category],
-                                                         :name     => @tag1[:name]))
+      @success = run_post(@ds_tags_url, gen_request(:assign, :category => @tag1[:category], :name => @tag1[:name]))
+
       expect(@success).to be_true
       expect(@code).to eq(200)
       expect(@result).to have_key("results")
@@ -262,9 +260,8 @@ describe ApiController do
     it "unassigns a tag from a Data Store without appropriate role" do
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@ds_tags_url, gen_request_data(:unassign,
-                                                         :category => @tag1[:category],
-                                                         :name     => @tag1[:name]))
+      @success = run_post(@ds_tags_url, gen_request(:unassign, :category => @tag1[:category], :name => @tag1[:name]))
+
       expect(@success).to be_false
       expect(@code).to eq(403)
     end
@@ -276,9 +273,8 @@ describe ApiController do
       Classification.classify(@ds, @tag1[:category], @tag1[:name])
       Classification.classify(@ds, @tag2[:category], @tag2[:name])
 
-      @success = run_post(@ds_tags_url, gen_request_data(:unassign,
-                                                         :category => @tag1[:category],
-                                                         :name     => @tag1[:name]))
+      @success = run_post(@ds_tags_url, gen_request(:unassign, :category => @tag1[:category], :name => @tag1[:name]))
+
       expect(@success).to be_true
       expect(@code).to eq(200)
       expect(@result).to have_key("results")
@@ -322,9 +318,8 @@ describe ApiController do
     it "assigns a tag to a Resource Pool without appropriate role" do
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@rp_tags_url, gen_request_data(:assign,
-                                                         :category => @tag1[:category],
-                                                         :name     => @tag1[:name]))
+      @success = run_post(@rp_tags_url, gen_request(:assign, :category => @tag1[:category], :name => @tag1[:name]))
+
       expect(@success).to be_false
       expect(@code).to eq(403)
     end
@@ -333,9 +328,8 @@ describe ApiController do
       update_user_role(@role, subcollection_action_identifier(:resource_pools, :tags, :assign))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@rp_tags_url, gen_request_data(:assign,
-                                                         :category => @tag1[:category],
-                                                         :name     => @tag1[:name]))
+      @success = run_post(@rp_tags_url, gen_request(:assign, :category => @tag1[:category], :name => @tag1[:name]))
+
       expect(@success).to be_true
       expect(@code).to eq(200)
       expect(@result).to have_key("results")
@@ -351,9 +345,8 @@ describe ApiController do
     it "unassigns a tag from a Resource Pool without appropriate role" do
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@rp_tags_url, gen_request_data(:unassign,
-                                                         :category => @tag1[:category],
-                                                         :name     => @tag1[:name]))
+      @success = run_post(@rp_tags_url, gen_request(:unassign, :category => @tag1[:category], :name => @tag1[:name]))
+
       expect(@success).to be_false
       expect(@code).to eq(403)
     end
@@ -365,9 +358,8 @@ describe ApiController do
       Classification.classify(@rp, @tag1[:category], @tag1[:name])
       Classification.classify(@rp, @tag2[:category], @tag2[:name])
 
-      @success = run_post(@rp_tags_url, gen_request_data(:unassign,
-                                                         :category => @tag1[:category],
-                                                         :name     => @tag1[:name]))
+      @success = run_post(@rp_tags_url, gen_request(:unassign, :category => @tag1[:category], :name => @tag1[:name]))
+
       expect(@success).to be_true
       expect(@code).to eq(200)
       expect(@result).to have_key("results")
@@ -416,9 +408,8 @@ describe ApiController do
     it "assigns a tag to a Cluster without appropriate role" do
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@cluster_tags_url, gen_request_data(:assign,
-                                                              :category => @tag1[:category],
-                                                              :name     => @tag1[:name]))
+      @success = run_post(@cluster_tags_url, gen_request(:assign, :category => @tag1[:category], :name => @tag1[:name]))
+
       expect(@success).to be_false
       expect(@code).to eq(403)
     end
@@ -427,9 +418,8 @@ describe ApiController do
       update_user_role(@role, subcollection_action_identifier(:clusters, :tags, :assign))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@cluster_tags_url, gen_request_data(:assign,
-                                                              :category => @tag1[:category],
-                                                              :name     => @tag1[:name]))
+      @success = run_post(@cluster_tags_url, gen_request(:assign, :category => @tag1[:category], :name => @tag1[:name]))
+
       expect(@success).to be_true
       expect(@code).to eq(200)
       expect(@result).to have_key("results")
@@ -445,9 +435,9 @@ describe ApiController do
     it "unassigns a tag from a Cluster without appropriate role" do
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@cluster_tags_url, gen_request_data(:unassign,
-                                                              :category => @tag1[:category],
-                                                              :name     => @tag1[:name]))
+      @success = run_post(@cluster_tags_url, gen_request(:unassign,
+                                                         :category => @tag1[:category],
+                                                         :name     => @tag1[:name]))
       expect(@success).to be_false
       expect(@code).to eq(403)
     end
@@ -459,9 +449,9 @@ describe ApiController do
       Classification.classify(@cluster, @tag1[:category], @tag1[:name])
       Classification.classify(@cluster, @tag2[:category], @tag2[:name])
 
-      @success = run_post(@cluster_tags_url, gen_request_data(:unassign,
-                                                              :category => @tag1[:category],
-                                                              :name     => @tag1[:name]))
+      @success = run_post(@cluster_tags_url, gen_request(:unassign,
+                                                         :category => @tag1[:category],
+                                                         :name     => @tag1[:name]))
       expect(@success).to be_true
       expect(@code).to eq(200)
       expect(@result).to have_key("results")
