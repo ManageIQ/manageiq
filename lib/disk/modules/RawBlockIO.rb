@@ -25,7 +25,7 @@ class RawBlockIO
     @seekPos        = 0
 
     # Enable directio (raw)
-    @rawDisk_file.directio = 1
+    @rawDisk_file.directio = IO::DIRECTIO_ON
 
     $log.debug "RawBlockIO: opened #{@filename}, size = #{@size} (#{@sizeInBlocks} blocks)"
   end
