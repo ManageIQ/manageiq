@@ -33,7 +33,7 @@ class EmsRedhat < EmsInfra
   end
 
   def connect(options = {})
-    raise "no credentials defined" if self.authentication_invalid?(options[:auth_type])
+    raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
 
     server   = options[:ip]      || self.address
     port     = options[:port]    || self.port

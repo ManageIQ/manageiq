@@ -35,7 +35,7 @@ class EmsAmazon < EmsCloud
   end
 
   def connect(options = {})
-    raise "no credentials defined" if self.authentication_invalid?(options[:auth_type])
+    raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
 
     username = options[:user] || self.authentication_userid(options[:auth_type])
     password = options[:pass] || self.authentication_password(options[:auth_type])
@@ -44,7 +44,7 @@ class EmsAmazon < EmsCloud
   end
 
   def verify_credentials(auth_type=nil, options={})
-    raise MiqException::MiqHostError, "No credentials defined" if self.authentication_invalid?(auth_type)
+    raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(auth_type)
 
     begin
       # EC2 does Lazy Connections, so call a cheap function

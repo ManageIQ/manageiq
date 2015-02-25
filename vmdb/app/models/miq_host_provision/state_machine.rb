@@ -10,7 +10,7 @@ module MiqHostProvision::StateMachine
     raise "Unable to find PXE server with id [#{get_option(:pxe_server_id)}]"                  if self.pxe_server.nil?
     raise "Unable to find PXE image with id [#{get_option(:pxe_image_id)}]"                    if self.pxe_image.nil?
     raise "Host [#{self.host_name}] does not have a valid Mac Address"                         if self.host.mac_address.blank?
-    raise "Host [#{self.host_name}] does not have valid IPMI credentials"                      if self.host.authentication_invalid?(:ipmi)
+    raise "Host [#{self.host_name}] does not have valid IPMI credentials"                      if self.host.missing_credentials?(:ipmi)
     raise "Host [#{self.host_name}] does not have an IP Address configured"                    if self.ip_address.blank?
     raise "Host [#{self.host_name}] has #{self.host.v_total_vms} VMs"                          if self.host.v_total_vms > 0
     raise "Host [#{self.host_name}] has #{self.host.v_total_miq_templates} Templates"          if self.host.v_total_miq_templates > 0

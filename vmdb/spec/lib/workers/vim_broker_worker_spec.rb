@@ -19,6 +19,7 @@ describe VimBrokerWorker do
     described_class.any_instance.stub(:sync_config)
     described_class.any_instance.stub(:set_connection_pool_size)
     EmsVmware.any_instance.stub(:authentication_check).and_return(true)
+    EmsVmware.any_instance.stub(:authentication_status_ok?).and_return(true)
   end
 
   it "#after_initialize" do

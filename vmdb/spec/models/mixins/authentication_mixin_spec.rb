@@ -16,9 +16,9 @@ describe AuthenticationMixin do
     context "##{method}" do
       let(:expected) do
         case method
-        when :authentication_valid?
+        when :has_credentials?
           false
-        when :authentication_invalid?
+        when :missing_credentials?
           true
         else
           nil
@@ -48,9 +48,9 @@ describe AuthenticationMixin do
         t.stub(:authentication_best_fit => double(required_field => "test"))
 
         expected = case method
-        when :authentication_valid?
+        when :has_credentials?
           true
-        when :authentication_invalid?
+        when :missing_credentials?
           false
         else
           "test"
@@ -64,8 +64,8 @@ describe AuthenticationMixin do
   include_examples "authentication_components", :authentication_password, :password
   include_examples "authentication_components", :authentication_userid, :userid
   include_examples "authentication_components", :authentication_password_encrypted, :password_encrypted
-  include_examples "authentication_components", :authentication_valid?, :userid
-  include_examples "authentication_components", :authentication_invalid?, :userid
+  include_examples "authentication_components", :has_credentials?, :userid
+  include_examples "authentication_components", :missing_credentials?, :userid
 
   context "required fields" do
     context "requires one field" do
@@ -257,18 +257,18 @@ describe AuthenticationMixin do
         @ems.authentication_status.should == 'None'
       end
 
-      it "should have valid_authentication" do
-        @ems.authentication_valid?.should be_true
+      it "should have credentials" do
+        @ems.has_credentials?.should be_true
       end
 
-      it "should have invalid authentication if userid nil" do
+      it "should have missing credentials if userid nil" do
         @auth.update_attribute(:userid, nil)
-        @ems.authentication_invalid?.should be_true
+        @ems.missing_credentials?.should be_true
       end
 
-      it "should have invalid authentication ems's authentication is nil" do
+      it "should have missing credentials if ems's authentication is nil" do
         @ems.authentications = []
-        @ems.authentication_invalid?.should be_true
+        @ems.missing_credentials?.should be_true
       end
 
       it "should have correct userid" do
@@ -328,9 +328,9 @@ describe AuthenticationMixin do
         queued_auth_checks.first.deliver
       end
 
-      context "with host invalid authentication due to no authentication row or incomplete userid" do
+      context "with host missing credentials due to no authentication row or incomplete userid" do
         before(:each) do
-          @host.stub(:authentication_valid?).and_return(false)
+          @host.stub(:has_credentials?).and_return(false)
         end
 
         it "should return false when calling authentication_check" do
@@ -350,9 +350,9 @@ describe AuthenticationMixin do
         end
       end
 
-      context "with ems invalid authentication due to no authentication row or incomplete userid" do
+      context "with ems missing credentials due to no authentication row or incomplete userid" do
         before(:each) do
-          @ems.stub(:authentication_valid?).and_return(false)
+          @ems.stub(:has_credentials?).and_return(false)
         end
 
         it "should return false when calling authentication_check" do

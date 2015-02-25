@@ -24,7 +24,7 @@ module EmsOpenstackMixin
   def openstack_handle(options = {})
     require 'openstack/openstack_handle'
     @openstack_handle ||= begin
-      raise "no credentials defined" if self.authentication_invalid?(options[:auth_type])
+      raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
 
       username = options[:user] || self.authentication_userid(options[:auth_type])
       password = options[:pass] || self.authentication_password(options[:auth_type])
@@ -98,7 +98,7 @@ module EmsOpenstackMixin
   def verify_credentials(auth_type=nil, options={})
     auth_type ||= 'default'
 
-    raise MiqException::MiqHostError, "No credentials defined" if self.authentication_invalid?(auth_type)
+    raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(auth_type)
 
     options.merge!(:auth_type => auth_type)
     case auth_type.to_s

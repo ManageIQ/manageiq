@@ -303,7 +303,7 @@ class MiqSchedule < ActiveRecord::Base
 
   def validate_file_depot
     if self.sched_action.kind_of?(Hash) && self.sched_action[:method] == "db_backup" && self.file_depot
-      errors.add(:file_depot, "is missing credentials") if !file_depot.uri.to_s.starts_with?("nfs") && file_depot.authentication_invalid?
+      errors.add(:file_depot, "is missing credentials") if !file_depot.uri.to_s.starts_with?("nfs") && file_depot.missing_credentials?
       errors.add(:file_depot, "is missing uri") if file_depot.uri.blank?
     end
   end

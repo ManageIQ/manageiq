@@ -77,7 +77,7 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
               MiqServer.my_server(true)
               @server1.deactivate_all_roles
               @server1.role    = 'smartproxy'
-              Host.any_instance.stub(:authentication_invalid? => false)
+              Host.any_instance.stub(:missing_credentials? => false)
             end
 
             it "will have no roles active" do
@@ -106,7 +106,7 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
 
             context "a vm template and invalid VC authentication" do
               before(:each) do
-                EmsVmware.any_instance.stub(:authentication_invalid? => true)
+                EmsVmware.any_instance.stub(:missing_credentials? => true)
                 @vm.stub(:template? => true)
                 @ems1 = FactoryGirl.create(:ems_vmware, :name => "Ems1")
                 @vm.ext_management_system = @ems1
@@ -119,7 +119,7 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
 
             context "a vm and invalid host authentication" do
               before(:each) do
-                Host.any_instance.stub(:authentication_invalid? => true)
+                Host.any_instance.stub(:missing_credentials? => true)
                 @vm.stub(:template? => false)
               end
               it "Vm#storage2active_proxies will return only repo host" do

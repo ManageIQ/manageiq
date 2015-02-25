@@ -8,7 +8,7 @@ describe EmsRefresh::Refreshers::VcRefresher do
 
     EmsVmware.any_instance.stub(:connect).and_return(FakeMiqVimHandle.new)
     EmsVmware.any_instance.stub(:disconnect).and_return(true)
-    EmsVmware.any_instance.stub(:authentication_valid?).and_return(true)
+    EmsVmware.any_instance.stub(:has_credentials?).and_return(true)
   end
 
   it "will perform a full refresh" do

@@ -781,18 +781,18 @@ class Host < ActiveRecord::Base
 
   def scannable_status
     s = self.refreshable_status
-    if s[:show] == false && s[:enabled] == false
-      if self.authentication_valid?(:ipmi) || !self.ipmi_address.blank?
-        if self.authentication_invalid?(:ipmi)
-          s.merge!(:show => true, :enabled => false, :message => "Provide credentials for IPMI")
-        elsif self.ipmi_address.blank?
-          s.merge!(:show => true, :enabled => false, :message => "Provide an IPMI Address")
-        else
-          s.merge!(:show => true, :enabled => true, :message => "")
-        end
-      end
+    return s if s[:show] || s[:enabled]
+
+    s[:show] = true
+    if self.has_credentials?(:ipmi) && self.ipmi_address.present?
+      s.merge!(:enabled => true, :message => "")
+    elsif self.ipmi_address.blank?
+      s.merge!(:enabled => false, :message => "Provide an IPMI Address")
+    elsif self.missing_credentials?(:ipmi)
+      s.merge!(:enabled => false, :message => "Provide credentials for IPMI")
     end
-    return s
+
+    s
   end
 
   def is_refreshable?
@@ -814,7 +814,9 @@ class Host < ActiveRecord::Base
   end
 
   def refresh_ems
-    raise "No #{ui_lookup(:table => "ext_management_systems")} or credentials defined" unless self.ext_management_system && self.ext_management_system.authentication_valid?
+    raise "No #{ui_lookup(:table => "ext_management_systems")} defined" unless self.ext_management_system
+    raise "No #{ui_lookup(:table => "ext_management_systems")} credentials defined" unless self.ext_management_system.has_credentials?
+    raise "#{ui_lookup(:table => "ext_management_systems")} failed last authentication check" unless self.ext_management_system.authentication_status_ok?
     EmsRefresh.queue_refresh(self)
   end
 
@@ -1102,7 +1104,7 @@ class Host < ActiveRecord::Base
   end
 
   def verify_credentials(auth_type=nil, options={})
-    raise MiqException::MiqHostError, "No credentials defined" if self.authentication_invalid?(auth_type)
+    raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(auth_type)
     raise MiqException::MiqHostError, "Logon to platform [#{self.os_image_name}] not supported" if auth_type.to_s != 'ipmi' && self.os_image_name !~ /linux_*/
 
     case auth_type.to_s
@@ -1126,7 +1128,7 @@ class Host < ActiveRecord::Base
   end
 
   def verify_credentials_with_ssh(auth_type=nil, options={})
-    raise MiqException::MiqHostError, "No credentials defined" if self.authentication_invalid?(auth_type)
+    raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(auth_type)
     raise MiqException::MiqHostError, "Logon to platform [#{self.os_image_name}] not supported" unless self.os_image_name =~ /linux_*/
 
     begin
@@ -1146,7 +1148,7 @@ class Host < ActiveRecord::Base
   end
 
   def verify_credentials_with_ipmi(auth_type=nil)
-    raise "No credentials defined for IPMI" if self.authentication_invalid?(auth_type)
+    raise "No credentials defined for IPMI" if self.missing_credentials?(auth_type)
 
     require 'miq-ipmi'
     address = self.ipmi_address
@@ -1258,7 +1260,7 @@ class Host < ActiveRecord::Base
       self.ipaddress   = ipaddr
       self.vmm_vendor  = "vmware"
       self.vmm_product = "Esx"
-      if self.authentication_valid?(:ws)
+      if self.has_credentials?(:ws)
         begin
           with_provider_connection(:ip => ipaddr) do |vim|
             $log.info "#{log_header} VIM Information for ESX Host with IP Address: [#{ipaddr}], Information: #{vim.about.inspect}"
@@ -1575,7 +1577,7 @@ class Host < ActiveRecord::Base
   end
 
   def ipmi_config_valid?(include_mac_addr=false)
-    if self.authentication_valid?(:ipmi) && !self.ipmi_address.blank?
+    if self.has_credentials?(:ipmi) && !self.ipmi_address.blank?
       if include_mac_addr == true
         if self.mac_address.blank?
           return false
@@ -1769,7 +1771,7 @@ class Host < ActiveRecord::Base
 
       # Skip SSH for ESXi hosts
       unless self.is_vmware_esxi?
-        if self.authentication_invalid?
+        if self.missing_credentials?
           $log.warn "#{log_header} No credentials defined for #{log_target}"
           task.update_status("Finished", "Warn", "Scanning incomplete due to Credential Issue")  if task
           return
