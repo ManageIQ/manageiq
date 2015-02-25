@@ -192,7 +192,7 @@ msgid "%s should be unique"
 msgstr "%s moet uniek zijn"
 
 msgid "%s successfully initiated"
-msgstr "%s succesvol geïnniteerd"
+msgstr "%s succesvol geïnitieerd"
 
 msgid "%s tab is not available unless a sort field has been selected"
 msgstr ""
@@ -237,43 +237,43 @@ msgid "%{model} \"%{name}\" successfully added to Service \"%{to_name}\""
 msgstr ""
 
 msgid "%{model} \"%{name}\" was added"
-msgstr ""
+msgstr "%{model} \"%{name}\" is toegevoegd"
 
 msgid "%{model} \"%{name}\" was saved"
-msgstr ""
+msgstr "%{model} \"%{name}\"  is opgeslagen"
 
 msgid "%{model} \"%{name}\" was successfully loaded"
-msgstr ""
+msgstr "%{model} \"%{name}\" is succesvol geladen"
 
 msgid "%{model} \"%{name}\": %{task} successfully initiated"
-msgstr ""
+msgstr "%{model} \"%{name}\": %{task} succesvol geïnitieerd"
 
 msgid "%{model} \"%{name}\": Delete successful"
-msgstr ""
+msgstr "%{model} \"%{name}\": Succesvol verwijderd"
 
 msgid "%{model} \"%{name}\": Error during '%{task}': "
-msgstr ""
+msgstr "%{model} \"%{name}\": Fout tijdens '%{task}': "
 
 msgid "%{model} for \"%{name}\""
-msgstr ""
+msgstr "%{model} voor \"%{name}\""
 
 msgid "%{model} for \"%{record}\""
-msgstr ""
+msgstr "%{model} voor \"%{record}\""
 
 msgid "%{model} for %{group} \"%{name}\""
-msgstr ""
+msgstr "%{model} voor %{group} \"%{name}\""
 
 msgid "%{model} for role \"%{role}\" was saved"
-msgstr ""
+msgstr "%{model} voor rol \"%{role}\" is opgeslagen"
 
 msgid "%{model} must contain at least one %{field}"
 msgstr ""
 
 msgid "%{model}: %{task} successfully initiated"
-msgstr ""
+msgstr "%{model}: %{task} succesvol geïnitieerd"
 
 msgid "%{record} - \"%{button_text}\""
-msgstr ""
+msgstr "%{record} - \"%{button_text}\""
 
 msgid "%{tab} tab is not available until %{field} field has been selected"
 msgstr ""
