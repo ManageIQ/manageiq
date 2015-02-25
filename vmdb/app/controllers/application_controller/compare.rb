@@ -795,7 +795,7 @@ module ApplicationController::Compare
     @timestamps = @drift_obj.drift_state_timestamps
     session[:timestamps] = @timestamps
     @showtype = "drift_history"
-    drop_breadcrumb( {:name=>"Drift History", :url=>"/#{@sb[:compare_db].downcase}/drift_history/#{@drift_obj.id}"} )
+    drop_breadcrumb({:name => "Drift History", :url => "/#{controller_name}/drift_history/#{@drift_obj.id}"})
     @lastaction = "drift_history"
     @display = "main"
     @button_group = "common_drift"
