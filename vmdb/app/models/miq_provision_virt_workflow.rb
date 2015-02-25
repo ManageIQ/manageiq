@@ -143,7 +143,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
       # Note: This makes a copy of the values hash so we have a copy of the object to modify
       @values = values
-      @requester_id = requester_id
 
       get_source_and_targets(true)
 
@@ -485,7 +484,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       filter = @dialogs.fetch_path(:dialogs, dialog, :fields, field)
       unless filter.nil?
         current_filter = get_value(@values[field])
-        filter[:default] = current_filter.nil? ? @owner.settings.fetch_path(:default_search, model) : current_filter
+        filter[:default] = current_filter.nil? ? @requester.settings.fetch_path(:default_search, model) : current_filter
       end
     end
   end
@@ -588,7 +587,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       hosts = load_ar_obj(src[:ems]).hosts
     end
 
-    Rbac.search(:targets => hosts, :class => Host, :results_format => :objects, :userid => @owner_id).first
+    Rbac.search(:targets => hosts, :class => Host, :results_format => :objects, :userid => @requester.userid).first
   end
 
   def filter_by_tags(target, options)
@@ -736,11 +735,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     log_header = "MIQ(#{self.class.name}#source_vm_rbac)"
 
     filter_id = get_value(@values[:vm_filter]).to_i
-    search_options = { :results_format => :objects, :userid => @owner_id }
+    search_options = {:results_format => :objects, :userid => @requester.userid}
     search_options[:conditions] = condition unless condition.blank?
-    user = User.find_by_userid(@owner_id)
-    template_msg =  "User: <#{@owner_id}>"
-    template_msg += " Role: <#{user.current_group.nil? ? "none" : user.current_group.miq_user_role.name}>  Group: <#{user.current_group.nil? ? "none" : user.current_group.description}>" unless user.blank?
+    template_msg =  "User: <#{@requester.userid}>"
+    template_msg += " Role: <#{@requester.current_group.nil? ? "none" : @requester.current_group.miq_user_role.name}>  Group: <#{@requester.current_group.nil? ? "none" : @requester.current_group.description}>"
     template_msg += "  VM Filter: <#{@values[:vm_filter].inspect}>"
     template_msg += "  Passing inital template IDs: <#{vms.collect(&:id).inspect}>" unless vms.blank?
     $log.info "#{log_header} Checking for allowed templates for #{template_msg}"
@@ -880,7 +878,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       $log.info("#{log_header} sysprep_domain_name=<#{ou_domain}> does not match previous=<#{@last_ou_domain}> - recomputing")
       @last_ou_domain = ou_domain
       @ldap_ous = {}
-      details   = MiqProvision.get_domain_details(ou_domain, true, @owner)
+      details   = MiqProvision.get_domain_details(ou_domain, true, @requester)
       return @ldap_ous if details.nil?
 
       options[:host]      = details[:ldap_host]  if details.has_key?(:ldap_host)
