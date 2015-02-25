@@ -40,6 +40,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     supports_pxe? || supports_iso? || supports_cloud_init?
   end
 
+  def auto_placement_enabled?
+    get_value(@values[:placement_auto])
+  end
+
   def initialize(values, requester, options = {})
     initial_pass = values.blank?
     initial_pass = true if options[:initial_pass] == true
@@ -74,8 +78,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     set_default_values
     update_field_visibility
 
-    service_template_req = get_value(values[:service_template_request])
-    if service_template_req == true
+    if get_value(values[:service_template_request])
       show_dialog(:requester, :hide, "disabled")
       show_dialog(:purpose,   :hide, "disabled")
     end
@@ -282,15 +285,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     # Show/Hide Fields
     f = Hash.new { |h, k| h[k] = Array.new }
 
-    service_template_req = get_value(@values[:service_template_request])
-    if service_template_req == true
-      f[:hide] += [:number_of_vms]
-      f[:hide] += [:vm_description]
-      f[:hide] += [:schedule_type]
-      f[:hide] += [:schedule_time]
+    if get_value(@values[:service_template_request])
+      f[:hide] = [:number_of_vms, :vm_description, :schedule_type, :schedule_time]
     end
 
-    auto_placement = show_flag = get_value(@values[:placement_auto]) == false ? :edit : :hide
+    auto_placement = show_flag = auto_placement_enabled? ? :hide : :edit
     f[show_flag] += [:placement_host_name, :placement_ds_name, :host_filter, :ds_filter, :cluster_filter, :placement_cluster_name, :rp_filter, :placement_rp_name]
 
     show_flag = get_value(@values[:sysprep_enabled]).in?('fields', 'file') || self.supports_pxe? || self.supports_iso? ? :edit : :hide
@@ -315,16 +314,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     show_flag = get_value(@values[:retirement]).to_i > 0 ? :edit : :hide
     f[show_flag] += [:retirement_warn]
     vm = get_source_vm
-    if options[:force_platform]
-      platform = options[:force_platform]
-    else
-      platform = vm.nil? ? nil : vm.platform
-    end
+    platform = options[:force_platform] || vm.try(:platform)
     show_customize_fields(f, platform)
 
     show_flag = number_of_vms > 1 ? :hide : :edit
-    case platform
-    when 'linux'
+    if platform == 'linux'
       f[show_flag] += [:linux_host_name]
       f[:hide] += [:sysprep_computer_name]
     else
@@ -784,8 +778,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def resources_for_ui
-    return {} if get_value(@values[:placement_auto]) == true
-    super
+    auto_placement_enabled? ? {} : super
   end
 
   def allowed_customization_specs(_options = {})
