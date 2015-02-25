@@ -2,20 +2,30 @@
 # REST API Request Tests - /api/vms
 #
 require 'spec_helper'
+require 'requests/shared_examples/api'
 
 describe ApiController do
 
   include Rack::Test::Methods
 
+  let(:zone)       { FactoryGirl.create(:zone, :name => "api_zone") }
+  let(:miq_server) { FactoryGirl.create(:miq_server, :guid => miq_server_guid, :zone => zone) }
+  let(:ems)        { FactoryGirl.create(:ems_vmware, :zone => zone) }
+  let(:host)       { FactoryGirl.create(:host) }
+
+  let(:vm)         { FactoryGirl.create(:vm_vmware, :host => host, :ems_id => ems.id, :raw_power_state => "poweredOn") }
+  let(:vm1)        { FactoryGirl.create(:vm_vmware, :host => host, :ems_id => ems.id, :raw_power_state => "poweredOn") }
+  let(:vm2)        { FactoryGirl.create(:vm_vmware, :host => host, :ems_id => ems.id, :raw_power_state => "poweredOn") }
+  let(:vm1_url)    { vm_url(vm1.id) }
+  let(:vm2_url)    { vm_url(vm2.id) }
+  let(:vms_list)   { [vm1_url, vm2_url] }
+  let(:vm_guid)    { vm.guid }
+  let(:vm_href)    { vm_url(vm.id) }
+
+  let(:invalid_vm_url) { vm_url(999_999) }
+
   before(:each) do
     init_api_spec_env
-
-    @zone       = FactoryGirl.create(:zone, :name => "api_zone")
-    @miq_server = FactoryGirl.create(:miq_server, :guid => miq_server_guid, :zone => @zone)
-    @ems        = FactoryGirl.create(:ems_vmware, :zone => @zone)
-    @host       = FactoryGirl.create(:host)
-
-    Host.any_instance.stub(:miq_proxy).and_return(@miq_server)
   end
 
   def app
@@ -23,1008 +33,764 @@ describe ApiController do
   end
 
   context "Vm accounts subcollection" do
-    it "query VM accounts subcollection with no related accounts" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    let(:acct1) { FactoryGirl.create(:account, :vm_or_template_id => vm.id, :name => "John") }
+    let(:acct2) { FactoryGirl.create(:account, :vm_or_template_id => vm.id, :name => "Jane") }
+    let(:vm_accounts_url)      { "#{vm_url(vm.id)}/accounts" }
+    let(:acct1_url)            { "#{vm_accounts_url}/#{acct1.id}" }
+    let(:acct2_url)            { "#{vm_accounts_url}/#{acct2.id}" }
+    let(:vm_accounts_url_list) { [acct1_url, acct2_url] }
 
-      vm = FactoryGirl.create(:vm_vmware)
+    context "query VM accounts subcollection with no related accounts" do
+      before do
+        api_basic_authorize
 
-      @success = run_get "#{@cfme[:vms_url]}/#{vm.id}/accounts"
+        run_get vm_accounts_url
+      end
 
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("accounts")
-      expect(@result["resources"]).to be_empty
+      include_examples "empty_query_result", :accounts
     end
 
-    it "query VM accounts subcollection with two related accounts" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "query VM accounts subcollection with two related accounts" do
+      before do
+        api_basic_authorize
+        acct1
+        acct2
 
-      vm = FactoryGirl.create(:vm_vmware)
-      acct1 = FactoryGirl.create(:account, :vm_or_template_id => vm.id, :name => "John")
-      acct2 = FactoryGirl.create(:account, :vm_or_template_id => vm.id, :name => "Jane")
+        run_get vm_accounts_url
+      end
 
-      vm_accounts_url = "#{@cfme[:vms_url]}/#{vm.id}/accounts"
-      @success = run_get vm_accounts_url
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("accounts")
-      expect(@result["subcount"]).to eq(2)
-      expect(@result["resources"].size).to eq(2)
-      expect(resources_include_suffix?(@result["resources"], "href", "#{vm_accounts_url}/#{acct1.id}")).to be_true
-      expect(resources_include_suffix?(@result["resources"], "href", "#{vm_accounts_url}/#{acct2.id}")).to be_true
+      include_examples "query_result", :accounts, 2, :includes_hrefs => ["resources", :vm_accounts_url_list]
     end
 
-    it "query VM accounts subcollection with a valid Account Id" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "query VM accounts subcollection with a valid Account Id" do
+      before do
+        api_basic_authorize
+        acct1
 
-      vm = FactoryGirl.create(:vm_vmware)
-      acct1 = FactoryGirl.create(:account, :vm_or_template_id => vm.id, :name => "John")
+        run_get acct1_url
+      end
 
-      @success = run_get "#{@cfme[:vms_url]}/#{vm.id}/accounts/#{acct1.id}"
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("John")
+      include_examples "single_resource_query", "name" => "John"
     end
 
-    it "query VM accounts subcollection with an invalid Account Id" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "query VM accounts subcollection with an invalid Account Id" do
+      before do
+        api_basic_authorize
+        acct1
 
-      vm = FactoryGirl.create(:vm_vmware)
-      FactoryGirl.create(:account, :vm_or_template_id => vm.id, :name => "John")
+        run_get "#{vm_accounts_url}/999999"
+      end
 
-      @success = run_get "#{@cfme[:vms_url]}/#{vm.id}/accounts/9999"
-
-      expect(@success).to be_false
-      expect(@code).to eq(404)
+      include_examples "resource_not_found"
     end
 
-    it "query VM accounts subcollection with two related accounts using expand directive" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "query VM accounts subcollection with two related accounts using expand directive" do
+      before do
+        api_basic_authorize
+        acct1
+        acct2
 
-      vm = FactoryGirl.create(:vm_vmware)
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
-      vm_accounts_url = "#{vm_url}/accounts"
-      acct1 = FactoryGirl.create(:account, :vm_or_template_id => vm.id, :name => "John")
-      acct2 = FactoryGirl.create(:account, :vm_or_template_id => vm.id, :name => "Jane")
+        run_get "#{vm_href}?expand=accounts"
+      end
 
-      @success = run_get "#{vm_url}?expand=accounts"
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("accounts")
-      expect(@result["accounts"].size).to eq(2)
-      expect(resources_include_suffix?(@result["accounts"], "href", "#{vm_accounts_url}/#{acct1.id}")).to be_true
-      expect(resources_include_suffix?(@result["accounts"], "href", "#{vm_accounts_url}/#{acct2.id}")).to be_true
+      include_examples "single_resource_query",
+                       "guid"          => :vm_guid,
+                       :includes_hrefs => ["accounts", :vm_accounts_url_list]
     end
   end
 
   context "Vm software subcollection" do
-    it "query VM software subcollection with no related software" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    let(:sw1) { FactoryGirl.create(:guest_application, :vm_or_template_id => vm.id, :name => "Word")  }
+    let(:sw2) { FactoryGirl.create(:guest_application, :vm_or_template_id => vm.id, :name => "Excel") }
+    let(:vm_software_url)      { "#{vm_url(vm.id)}/software"    }
+    let(:sw1_url)              { "#{vm_software_url}/#{sw1.id}" }
+    let(:sw2_url)              { "#{vm_software_url}/#{sw2.id}" }
+    let(:vm_software_url_list) { [sw1_url, sw2_url] }
 
-      vm = FactoryGirl.create(:vm_vmware)
+    context "query VM software subcollection with no related software" do
+      before do
+        api_basic_authorize
 
-      @success = run_get "#{@cfme[:vms_url]}/#{vm.id}/software"
+        run_get vm_software_url
+      end
 
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("software")
-      expect(@result["resources"]).to be_empty
+      include_examples "empty_query_result", :software
     end
 
-    it "query VM software subcollection with two related software" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "query VM software subcollection with two related software" do
+      before do
+        api_basic_authorize
+        sw1
+        sw2
 
-      vm = FactoryGirl.create(:vm_vmware)
-      sw1 = FactoryGirl.create(:guest_application, :vm_or_template_id => vm.id, :name => "Word")
-      sw2 = FactoryGirl.create(:guest_application, :vm_or_template_id => vm.id, :name => "Excel")
-      vm_software_url = "#{@cfme[:vms_url]}/#{vm.id}/software"
+        run_get vm_software_url
+      end
 
-      @success = run_get vm_software_url
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("software")
-      expect(@result["subcount"]).to eq(2)
-      expect(@result["resources"].size).to eq(2)
-      expect(resources_include_suffix?(@result["resources"], "href", "#{vm_software_url}/#{sw1.id}")).to be_true
-      expect(resources_include_suffix?(@result["resources"], "href", "#{vm_software_url}/#{sw2.id}")).to be_true
+      include_examples "query_result", :software, 2, :includes_hrefs => ["resources", :vm_software_url_list]
     end
 
-    it "query VM software subcollection with a valid Software Id" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "query VM software subcollection with a valid Software Id" do
+      before do
+        api_basic_authorize
 
-      vm = FactoryGirl.create(:vm_vmware)
-      sw1 = FactoryGirl.create(:guest_application, :vm_or_template_id => vm.id, :name => "Word")
+        run_get sw1_url
+      end
 
-      @success = run_get "#{@cfme[:vms_url]}/#{vm.id}/software/#{sw1.id}"
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("Word")
+      include_examples "single_resource_query", "name" => "Word"
     end
 
-    it "query VM software subcollection with an invalid Software Id" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "query VM software subcollection with an invalid Software Id" do
+      before do
+        api_basic_authorize
+        sw1
 
-      vm = FactoryGirl.create(:vm_vmware)
-      FactoryGirl.create(:guest_application, :vm_or_template_id => vm.id, :name => "Word")
+        run_get "#{vm_software_url}/999999"
+      end
 
-      @success = run_get "#{@cfme[:vms_url]}/#{vm.id}/software/9999"
-
-      expect(@success).to be_false
-      expect(@code).to eq(404)
+      include_examples "resource_not_found"
     end
 
-    it "query VM software subcollection with two related software using expand directive" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "query VM software subcollection with two related software using expand directive" do
+      before do
+        api_basic_authorize
+        sw1
+        sw2
 
-      vm = FactoryGirl.create(:vm_vmware)
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
-      vm_software_url = "#{vm_url}/software"
-      sw1 = FactoryGirl.create(:guest_application, :vm_or_template_id => vm.id, :name => "Word")
-      sw2 = FactoryGirl.create(:guest_application, :vm_or_template_id => vm.id, :name => "Excel")
+        run_get "#{vm_url(vm.id)}?expand=software"
+      end
 
-      @success = run_get "#{vm_url}?expand=software"
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("software")
-      expect(@result["software"].size).to eq(2)
-      expect(resources_include_suffix?(@result["software"], "href", "#{vm_software_url}/#{sw1.id}")).to be_true
-      expect(resources_include_suffix?(@result["software"], "href", "#{vm_software_url}/#{sw2.id}")).to be_true
+      include_examples "single_resource_query",
+                       "guid"          => :vm_guid,
+                       :includes_hrefs => ["software", :vm_software_url_list]
     end
   end
 
   context "Vm start action" do
-    it "starts an invalid vm" do
-      update_user_role(@role, action_identifier(:vms, :start))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "starts an invalid vm" do
+      before do
+        api_basic_authorize action_identifier(:vms, :start)
 
-      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:start))
+        run_post(invalid_vm_url, gen_request(:start))
+      end
 
-      expect(@success).to be_false
-      expect(@code).to eq(404)
+      include_examples "resource_not_found"
     end
 
-    it "starts an invalid vm without appropriate role" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "starts an invalid vm without appropriate role" do
+      before do
+        api_basic_authorize
 
-      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:start))
+        run_post(invalid_vm_url, gen_request(:start))
+      end
 
-      expect(@success).to be_false
-      expect(@code).to eq(403)
+      include_examples "request_forbidden"
     end
 
-    it "starts a powered on vm" do
-      update_user_role(@role, action_identifier(:vms, :start))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "starts a powered on vm" do
+      before do
+        api_basic_authorize action_identifier(:vms, :start)
 
-      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+        run_post(vm_href, gen_request(:start))
+      end
 
-      @success = run_post(vm_url, gen_request(:start))
-
-      expect(@result).to have_key("success")
-      expect(@result["success"]).to be_false
-      expect(@result).to have_key("message")
-      expect(@result["message"]).to match("is powered on")
-      expect(@result).to have_key("href")
-      expect(@result["href"]).to match(vm_url)
+      include_examples "single_action", :success => false, :message => "is powered on", :href => :vm_href
     end
 
-    it "starts a vm" do
-      update_user_role(@role, action_identifier(:vms, :start))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "starts a vm" do
+      let(:vm)  { FactoryGirl.create(:vm_vmware, :host => host, :ems_id => ems.id, :raw_power_state => "poweredOff") }
 
-      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOff")
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+      before do
+        api_basic_authorize action_identifier(:vms, :start)
 
-      @success = run_post(vm_url, gen_request(:start))
+        run_post(vm_href, gen_request(:start))
+      end
 
-      expect(@result).to have_key("success")
-      expect(@result["success"]).to be_true
-      expect(@result).to have_key("message")
-      expect(@result["message"]).to match("starting")
-      expect(@result).to have_key("href")
-      expect(@result["href"]).to match(vm_url)
-      expect(@result).to have_key("task_id")
-      expect(@result).to have_key("task_href")
+      include_examples "single_action", :success => true, :message => "starting", :href => :vm_href, :task => true
     end
 
-    it "starts multiple vms" do
-      update_user_role(@role, action_identifier(:vms, :start))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "starts multiple vms" do
+      let(:vm1) { FactoryGirl.create(:vm_vmware, :host => host, :ems_id => ems.id, :raw_power_state => "poweredOff") }
+      let(:vm2) { FactoryGirl.create(:vm_vmware, :host => host, :ems_id => ems.id, :raw_power_state => "poweredOff") }
 
-      vm1 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOff")
-      vm2 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOff")
+      before do
+        api_basic_authorize action_identifier(:vms, :start)
 
-      vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
-      vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
+        run_post(vms_url, gen_request(:start, nil, vm1_url, vm2_url))
+      end
 
-      @success = run_post(@cfme[:vms_url], gen_request(:start, nil, vm1_url, vm2_url))
-
-      expect(@result).to have_key("results")
-      results = @result["results"]
-      expect(results.size).to eq(2)
-      expect(resources_include_suffix?(results, "href", "#{vm1_url}")).to be_true
-      expect(resources_include_suffix?(results, "href", "#{vm2_url}")).to be_true
-      expect(results.all? { |r| r["success"] }).to be_true
-      expect(results.all? { |r| r.key?("task_id") }).to be_true
-      expect(results.all? { |r| r.key?("task_href") }).to be_true
+      include_examples "multiple_actions", 2, :href_list => :vms_list, :task => true
     end
   end
 
   context "Vm stop action" do
-    it "stops an invalid vm" do
-      update_user_role(@role, action_identifier(:vms, :stop))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "stops an invalid vm" do
+      before do
+        api_basic_authorize action_identifier(:vms, :stop)
 
-      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:stop))
+        run_post(invalid_vm_url, gen_request(:stop))
+      end
 
-      expect(@success).to be_false
-      expect(@code).to eq(404)
+      include_examples "resource_not_found"
     end
 
-    it "stops an invalid vm without appropriate role" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "stops an invalid vm without appropriate role" do
+      before do
+        api_basic_authorize
 
-      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:stop))
+        run_post(invalid_vm_url, gen_request(:stop))
+      end
 
-      expect(@success).to be_false
-      expect(@code).to eq(403)
+      include_examples "request_forbidden"
     end
 
-    it "stops a powered off vm" do
-      update_user_role(@role, action_identifier(:vms, :stop))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "stops a powered off vm" do
+      let(:vm)  { FactoryGirl.create(:vm_vmware, :host => host, :ems_id => ems.id, :raw_power_state => "poweredOff") }
 
-      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOff")
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+      before do
+        api_basic_authorize action_identifier(:vms, :stop)
 
-      @success = run_post(vm_url, gen_request(:stop))
+        run_post(vm_href, gen_request(:stop))
+      end
 
-      expect(@result).to have_key("success")
-      expect(@result["success"]).to be_false
-      expect(@result).to have_key("message")
-      expect(@result["message"]).to match("is not powered on")
-      expect(@result).to have_key("href")
-      expect(@result["href"]).to match(vm_url)
+      include_examples "single_action", :success => false, :message => "is not powered on", :href => :vm_href
     end
 
-    it "stops a vm" do
-      update_user_role(@role, action_identifier(:vms, :stop))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "stops a vm" do
+      before do
+        api_basic_authorize action_identifier(:vms, :stop)
 
-      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+        run_post(vm_href, gen_request(:stop))
+      end
 
-      @success = run_post(vm_url, gen_request(:stop))
-
-      expect(@result).to have_key("success")
-      expect(@result["success"]).to be_true
-      expect(@result).to have_key("message")
-      expect(@result["message"]).to match("stopping")
-      expect(@result).to have_key("href")
-      expect(@result["href"]).to match(vm_url)
-      expect(@result).to have_key("task_id")
-      expect(@result).to have_key("task_href")
+      include_examples "single_action", :success => true, :message => "stopping", :href => :vm_href, :task => true
     end
 
-    it "stops multiple vms" do
-      update_user_role(@role, action_identifier(:vms, :stop))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "stops multiple vms" do
+      before do
+        api_basic_authorize action_identifier(:vms, :stop)
 
-      vm1 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
-      vm2 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
+        run_post(vms_url, gen_request(:stop, nil, vm1_url, vm2_url))
+      end
 
-      vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
-      vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
-
-      @success = run_post(@cfme[:vms_url], gen_request(:stop, nil, vm1_url, vm2_url))
-
-      expect(@result).to have_key("results")
-      results = @result["results"]
-      expect(results.size).to eq(2)
-      expect(resources_include_suffix?(results, "href", "#{vm1_url}")).to be_true
-      expect(resources_include_suffix?(results, "href", "#{vm2_url}")).to be_true
-      expect(results.all? { |r| r["success"] }).to be_true
-      expect(results.all? { |r| r.key?("task_id") }).to be_true
-      expect(results.all? { |r| r.key?("task_href") }).to be_true
+      include_examples "multiple_actions", 2, :href_list => :vms_list, :task => true
     end
   end
 
   context "Vm suspend action" do
-    it "suspends an invalid vm" do
-      update_user_role(@role, action_identifier(:vms, :suspend))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "suspends an invalid vm" do
+      before do
+        api_basic_authorize action_identifier(:vms, :suspend)
 
-      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:suspend))
+        run_post(invalid_vm_url, gen_request(:suspend))
+      end
 
-      expect(@success).to be_false
-      expect(@code).to eq(404)
+      include_examples "resource_not_found"
     end
 
-    it "suspends an invalid vm without appropriate role" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "suspends an invalid vm without appropriate role" do
+      before do
+        api_basic_authorize
 
-      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:suspend))
+        run_post(invalid_vm_url, gen_request(:suspend))
+      end
 
-      expect(@success).to be_false
-      expect(@code).to eq(403)
+      include_examples "request_forbidden"
     end
 
-    it "suspends a powered off vm" do
-      update_user_role(@role, action_identifier(:vms, :suspend))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "suspends a powered off vm" do
+      let(:vm) { FactoryGirl.create(:vm_vmware, :host => host, :ems_id => ems.id, :raw_power_state => "poweredOff") }
 
-      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOff")
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+      before do
+        api_basic_authorize action_identifier(:vms, :suspend)
 
-      @success = run_post(vm_url, gen_request(:suspend))
+        run_post(vm_href, gen_request(:suspend))
+      end
 
-      expect(@result).to have_key("success")
-      expect(@result["success"]).to be_false
-      expect(@result).to have_key("message")
-      expect(@result["message"]).to match("is not powered on")
-      expect(@result).to have_key("href")
-      expect(@result["href"]).to match(vm_url)
+      include_examples "single_action", :success => false, :message => "is not powered on", :href => :vm_href
     end
 
-    it "suspends a suspended vm" do
-      update_user_role(@role, action_identifier(:vms, :suspend))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "suspends a suspended vm" do
+      let(:vm) { FactoryGirl.create(:vm_vmware, :host => host, :ems_id => ems.id, :raw_power_state => "suspended") }
 
-      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "suspended")
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+      before do
+        api_basic_authorize action_identifier(:vms, :suspend)
 
-      @success = run_post(vm_url, gen_request(:suspend))
+        run_post(vm_href, gen_request(:suspend))
+      end
 
-      expect(@result).to have_key("success")
-      expect(@result["success"]).to be_false
-      expect(@result).to have_key("message")
-      expect(@result["message"]).to match("is not powered on")
-      expect(@result).to have_key("href")
-      expect(@result["href"]).to match(vm_url)
+      include_examples "single_action", :success => false, :message => "is not powered on", :href => :vm_href
     end
 
-    it "suspends a vm" do
-      update_user_role(@role, action_identifier(:vms, :suspend))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "suspends a vm" do
+      before do
+        api_basic_authorize action_identifier(:vms, :suspend)
 
-      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+        run_post(vm_href, gen_request(:suspend))
+      end
 
-      @success = run_post(vm_url, gen_request(:suspend))
-
-      expect(@result).to have_key("success")
-      expect(@result["success"]).to be_true
-      expect(@result).to have_key("message")
-      expect(@result["message"]).to match("suspending")
-      expect(@result).to have_key("href")
-      expect(@result["href"]).to match(vm_url)
-      expect(@result).to have_key("task_id")
-      expect(@result).to have_key("task_href")
+      include_examples "single_action", :success => true, :message => "suspending", :href => :vm_href, :task => true
     end
 
-    it "suspends multiple vms" do
-      update_user_role(@role, action_identifier(:vms, :suspend))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "suspends multiple vms" do
+      before do
+        api_basic_authorize action_identifier(:vms, :suspend)
 
-      vm1 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
-      vm2 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
+        run_post(vms_url, gen_request(:suspend, nil, vm1_url, vm2_url))
+      end
 
-      vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
-      vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
-
-      @success = run_post(@cfme[:vms_url], gen_request(:suspend, nil, vm1_url, vm2_url))
-
-      expect(@result).to have_key("results")
-      results = @result["results"]
-      expect(results.size).to eq(2)
-      expect(resources_include_suffix?(results, "href", "#{vm1_url}")).to be_true
-      expect(resources_include_suffix?(results, "href", "#{vm2_url}")).to be_true
-      expect(results.all? { |r| r["success"] }).to be_true
-      expect(results.all? { |r| r.key?("task_id") }).to be_true
-      expect(results.all? { |r| r.key?("task_href") }).to be_true
+      include_examples "multiple_actions", 2, :href_list => :vms_list, :task => true
     end
   end
 
   context "Vm delete action" do
-    it "deletes an invalid vm" do
-      update_user_role(@role, action_identifier(:vms, :delete))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "deletes an invalid vm" do
+      before do
+        api_basic_authorize action_identifier(:vms, :delete)
 
-      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:delete))
+        run_post(invalid_vm_url, gen_request(:delete))
+      end
 
-      expect(@success).to be_false
-      expect(@code).to eq(404)
+      include_examples "resource_not_found"
     end
 
-    it "deletes a vm via a resource POST without appropriate role" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "deletes a vm via a resource POST without appropriate role" do
+      before do
+        api_basic_authorize
 
-      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:delete))
+        run_post(invalid_vm_url, gen_request(:delete))
+      end
 
-      expect(@success).to be_false
-      expect(@code).to eq(403)
+      include_examples "request_forbidden"
     end
 
-    it "deletes a vm via a resource DELETE without appropriate role" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "deletes a vm via a resource DELETE without appropriate role" do
+      before do
+        api_basic_authorize
 
-      @success = run_delete("#{@cfme[:vms_url]}/999999")
+        run_delete(invalid_vm_url)
+      end
 
-      expect(@success).to be_false
-      expect(@code).to eq(403)
+      include_examples "request_forbidden"
     end
 
-    it "deletes a vm via a resource POST" do
-      update_user_role(@role, action_identifier(:vms, :delete))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "deletes a vm via a resource POST" do
+      before do
+        api_basic_authorize action_identifier(:vms, :delete)
 
-      vm = FactoryGirl.create(:vm_vmware)
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+        run_post(vm_href, gen_request(:delete))
+      end
 
-      @success = run_post(vm_url, gen_request(:delete))
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("success")
-      expect(@result["success"]).to be_true
-      expect(@result).to have_key("message")
-      expect(@result["message"]).to match("deleting")
-      expect(@result).to have_key("href")
-      expect(@result["href"]).to match(vm_url)
-      expect(@result).to have_key("task_id")
-      expect(@result).to have_key("task_href")
+      include_examples "single_action", :success => true, :message => "deleting", :href => :vm_href, :task => true
     end
 
-    it "deletes a vm via a resource DELETE" do
-      update_user_role(@role, action_identifier(:vms, :delete))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "deletes a vm via a resource DELETE" do
+      before do
+        api_basic_authorize action_identifier(:vms, :delete)
 
-      vm = FactoryGirl.create(:vm_vmware)
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+        run_delete(vm_href)
+      end
 
-      @success = run_delete(vm_url)
-
-      expect(@success).to be_true
-      expect(@code).to eq(204)
+      include_examples "request_success_no_content"
     end
 
-    it "deletes multiple vms" do
-      update_user_role(@role, action_identifier(:vms, :delete))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "deletes multiple vms" do
+      before do
+        api_basic_authorize action_identifier(:vms, :delete)
 
-      vm1 = FactoryGirl.create(:vm_vmware)
-      vm2 = FactoryGirl.create(:vm_vmware)
+        run_post(vms_url, gen_request(:delete, nil, vm1_url, vm2_url))
+      end
 
-      vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
-      vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
-
-      @success = run_post(@cfme[:vms_url], gen_request(:delete, nil, vm1_url, vm2_url))
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("results")
-      results = @result["results"]
-      expect(results.size).to eq(2)
-      expect(results.all? { |r| r["success"] }).to be_true
-      expect(results.all? { |r| r.key?("task_id") }).to be_true
-      expect(results.all? { |r| r.key?("task_href") }).to be_true
+      include_examples "multiple_actions", 2, :task => true
     end
   end
 
   context "Vm set_owner action" do
-    it "set_owner to an invalid vm" do
-      update_user_role(@role, action_identifier(:vms, :set_owner))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "set_owner to an invalid vm" do
+      before do
+        api_basic_authorize action_identifier(:vms, :set_owner)
 
-      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:set_owner, "owner" => "admin"))
+        run_post(invalid_vm_url, gen_request(:set_owner, "owner" => "admin"))
+      end
 
-      expect(@success).to be_false
-      expect(@code).to eq(404)
+      include_examples "resource_not_found"
     end
 
-    it "set_owner without appropriate action role" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "set_owner without appropriate action role" do
+      before do
+        api_basic_authorize
 
-      vm = FactoryGirl.create(:vm_vmware)
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+        run_post(vm_href, gen_request(:set_owner, "owner" => "admin"))
+      end
 
-      @success = run_post(vm_url, gen_request(:set_owner, "owner" => "admin"))
-
-      expect(@success).to be_false
-      expect(@code).to eq(403)
+      include_examples "request_forbidden"
     end
 
-    it "set_owner with missing owner" do
-      update_user_role(@role, action_identifier(:vms, :set_owner))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "set_owner with missing owner" do
+      before do
+        api_basic_authorize action_identifier(:vms, :set_owner)
 
-      vm = FactoryGirl.create(:vm_vmware)
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+        run_post(vm_href, gen_request(:set_owner))
+      end
 
-      @success = run_post(vm_url, gen_request(:set_owner))
-
-      expect(@success).to be_false
-      expect(@code).to eq(400)
-      expect(@result).to have_key("error")
-      expect(@result["error"]["message"]).to match("Must specify an owner")
+      include_examples "bad_request", "Must specify an owner"
     end
 
-    it "set_owner with invalid owner" do
-      update_user_role(@role, action_identifier(:vms, :set_owner))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "set_owner with invalid owner" do
+      before do
+        api_basic_authorize action_identifier(:vms, :set_owner)
 
-      vm = FactoryGirl.create(:vm_vmware)
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+        run_post(vm_href, gen_request(:set_owner, "owner" => "bad_user"))
+      end
 
-      @success = run_post(vm_url, gen_request(:set_owner, "owner" => "bad_user"))
-
-      expect(@success).to be_true
-      expect(@result).to have_key("success")
-      expect(@result["success"]).to be_false
-      expect(@result).to have_key("message")
-      expect(@result).to have_key("href")
-      expect(@result["href"]).to match(vm_url)
+      include_examples "single_action", :success => false, :message => /.*/, :href => :vm_href
     end
 
-    it "set_owner to a vm" do
-      update_user_role(@role, action_identifier(:vms, :set_owner))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "set_owner to a vm" do
+      def verify_successfully_updated_vm_owner
+        expect(vm.reload.evm_owner).to eq(@user)
+      end
 
-      vm = FactoryGirl.create(:vm_vmware)
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+      before do
+        api_basic_authorize action_identifier(:vms, :set_owner)
 
-      @success = run_post(vm_url, gen_request(:set_owner, "owner" => @cfme[:user]))
+        run_post(vm_href, gen_request(:set_owner, "owner" => @cfme[:user]))
+      end
 
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("success")
-      expect(@result["success"]).to be_true
-      expect(@result).to have_key("message")
-      expect(@result["message"]).to match("setting owner")
-      expect(@result).to have_key("href")
-      expect(@result["href"]).to match(vm_url)
-      expect(vm.reload.evm_owner).to eq(@user)
+      include_examples "single_action",
+                       :success        => true,
+                       :message        => "setting owner",
+                       :href           => :vm_href,
+                       :custom_expects => :verify_successfully_updated_vm_owner
     end
 
-    it "set_owner to multiple vms" do
-      update_user_role(@role, action_identifier(:vms, :set_owner))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "set_owner to multiple vms" do
+      def verify_successfully_updated_owners_of_all_vms
+        expect(vm1.reload.evm_owner).to eq(@user)
+        expect(vm2.reload.evm_owner).to eq(@user)
+      end
 
-      vm1 = FactoryGirl.create(:vm_vmware)
-      vm2 = FactoryGirl.create(:vm_vmware)
+      before do
+        api_basic_authorize action_identifier(:vms, :set_owner)
 
-      vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
-      vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
+        run_post(vms_url, gen_request(:set_owner, {"owner" => @cfme[:user]}, vm1_url, vm2_url))
+      end
 
-      @success = run_post(@cfme[:vms_url], gen_request(:set_owner, {"owner" => @cfme[:user]}, vm1_url, vm2_url))
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("results")
-      results = @result["results"]
-      expect(results.size).to eq(2)
-      expect(results.all? { |r| r["success"] }).to be_true
-      expect(resources_include_suffix?(results, "href", "#{vm1_url}")).to be_true
-      expect(resources_include_suffix?(results, "href", "#{vm2_url}")).to be_true
-      expect(vm1.reload.evm_owner).to eq(@user)
-      expect(vm2.reload.evm_owner).to eq(@user)
+      include_examples "multiple_actions", 2,
+                       :href_list      => :vms_list,
+                       :custom_expects => :verify_successfully_updated_owners_of_all_vms
     end
   end
 
   context "Vm custom_attributes" do
-    it "getting custom_attributes from a vm with no custom_attributes" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    let(:ca1) { FactoryGirl.create(:custom_attribute, :name => "name1", :value => "value1") }
+    let(:ca2) { FactoryGirl.create(:custom_attribute, :name => "name2", :value => "value2") }
+    let(:vm_ca_url)      { "#{vm_href}/custom_attributes" }
+    let(:ca1_url)        { "#{vm_ca_url}/#{ca1.id}" }
+    let(:ca2_url)        { "#{vm_ca_url}/#{ca2.id}" }
+    let(:vm_ca_url_list) { [ca1_url, ca2_url] }
 
-      vm = FactoryGirl.create(:vm_vmware)
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+    context "getting custom_attributes from a vm with no custom_attributes" do
+      before do
+        api_basic_authorize
 
-      @success = run_get("#{vm_url}/custom_attributes")
+        run_get(vm_ca_url)
+      end
 
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("custom_attributes")
-      expect(@result).to have_key("resources")
-      expect(@result["resources"].size).to eq(0)
+      include_examples "empty_query_result", :custom_attributes
     end
 
-    it "getting custom_attributes from a vm" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "getting custom_attributes from a vm" do
+      before do
+        api_basic_authorize
+        vm.custom_attributes = [ca1, ca2]
 
-      ca1 = FactoryGirl.create(:custom_attribute, :name => "name1", :value => "value1")
-      ca2 = FactoryGirl.create(:custom_attribute, :name => "name2", :value => "value2")
+        run_get vm_ca_url
+      end
 
-      vm = FactoryGirl.create(:vm_vmware)
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
-      vm_ca_url = "#{vm_url}/custom_attributes"
-      vm.custom_attributes = [ca1, ca2]
-
-      @success = run_get "#{vm_url}/custom_attributes"
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("custom_attributes")
-      expect(@result).to have_key("resources")
-      expect(@result["resources"].size).to eq(2)
-      expect(resources_include_suffix?(@result["resources"], "href", "#{vm_ca_url}/#{ca1.id}")).to be_true
-      expect(resources_include_suffix?(@result["resources"], "href", "#{vm_ca_url}/#{ca2.id}")).to be_true
+      include_examples "query_result", :custom_attributes, 2, :includes_hrefs => ["resources", :vm_ca_url_list]
     end
 
-    it "getting custom_attributes from a vm in expanded form" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "getting custom_attributes from a vm in expanded form" do
+      before do
+        api_basic_authorize
+        vm.custom_attributes = [ca1, ca2]
 
-      ca1 = FactoryGirl.create(:custom_attribute, :name => "name1", :value => "value1")
-      ca2 = FactoryGirl.create(:custom_attribute, :name => "name2", :value => "value2")
+        run_get "#{vm_ca_url}?expand=resources"
+      end
 
-      vm = FactoryGirl.create(:vm_vmware)
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
-      vm.custom_attributes = [ca1, ca2]
-
-      @success = run_get "#{vm_url}/custom_attributes?expand=resources"
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("custom_attributes")
-      expect(@result).to have_key("resources")
-      expect(@result["resources"].size).to eq(2)
-      expect(@result["resources"].collect { |r| r["name"] }.sort).to eq(%w(name1 name2))
+      include_examples "query_result", :custom_attributes, 2, :includes_data => ["resources", "name" => %w(name1 name2)]
     end
 
-    it "getting custom_attributes from a vm using expand" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "getting custom_attributes from a vm using expand" do
+      before do
+        api_basic_authorize
+        vm.custom_attributes = [ca1, ca2]
 
-      ca1 = FactoryGirl.create(:custom_attribute, :name => "name1", :value => "value1")
-      ca2 = FactoryGirl.create(:custom_attribute, :name => "name2", :value => "value2")
+        run_get "#{vm_href}?expand=custom_attributes"
+      end
 
-      vm = FactoryGirl.create(:vm_vmware)
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
-      vm.custom_attributes = [ca1, ca2]
-
-      @success = run_get "#{vm_url}?expand=custom_attributes"
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("custom_attributes")
-      expect(@result["custom_attributes"].size).to eq(2)
-      expect(@result["custom_attributes"].collect { |r| r["name"] }.sort).to eq(%w(name1 name2))
+      include_examples "single_resource_query",
+                       "guid"         => :vm_guid,
+                       :includes_data => ["custom_attributes", "name" => %w(name1 name2)]
     end
 
-    it "delete a custom_attribute without appropriate role" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "delete a custom_attribute without appropriate role" do
+      before do
+        api_basic_authorize
+        vm.custom_attributes = [ca1]
 
-      ca1 = FactoryGirl.create(:custom_attribute, :name => "name1", :value => "value1")
+        run_post(vm_ca_url, gen_request(:delete, nil, vm_href))
+      end
 
-      vm = FactoryGirl.create(:vm_vmware)
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
-      vm.custom_attributes = [ca1]
-
-      @success = run_post("#{vm_url}/custom_attributes", gen_request(:delete, nil, vm_url))
-
-      expect(@success).to be_false
-      expect(@code).to eq(403)
+      include_examples "request_forbidden"
     end
 
-    it "delete a custom_attribute from a vm via the delete action" do
-      update_user_role(@role, action_identifier(:vms, :edit))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "delete a custom_attribute from a vm via the delete action" do
+      def verify_updated_vm_has_no_custom_attributes
+        expect(vm.reload.custom_attributes).to be_empty
+      end
 
-      ca1 = FactoryGirl.create(:custom_attribute, :name => "name1", :value => "value1")
+      before do
+        api_basic_authorize action_identifier(:vms, :edit)
+        vm.custom_attributes = [ca1]
 
-      vm = FactoryGirl.create(:vm_vmware)
-      vm_ca_url = "#{@cfme[:vms_url]}/#{vm.id}/custom_attributes"
-      vm.custom_attributes = [ca1]
+        run_post(vm_ca_url, gen_request(:delete, nil, ca1_url))
+      end
 
-      @success = run_post(vm_ca_url, gen_request(:delete, nil, "#{vm_ca_url}/#{ca1.id}"))
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(vm.reload.custom_attributes).to be_empty
+      include_examples "request_success", :custom_expects => :verify_updated_vm_has_no_custom_attributes
     end
 
-    it "add custom attribute to a vm without a name" do
-      update_user_role(@role, action_identifier(:vms, :edit))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "add custom attribute to a vm without a name" do
+      before do
+        api_basic_authorize action_identifier(:vms, :edit)
 
-      vm = FactoryGirl.create(:vm_vmware)
-      vm_ca_url = "#{@cfme[:vms_url]}/#{vm.id}/custom_attributes"
+        run_post(vm_ca_url, gen_request(:add, "value" => "value1"))
+      end
 
-      @success = run_post(vm_ca_url, gen_request(:add, "value" => "value1"))
-
-      expect(@success).to be_false
-      expect(@code).to eq(400)
-      expect(@result).to have_key("error")
-      expect(@result["error"]["message"]).to match("Must specify a name")
+      include_examples "bad_request", "Must specify a name"
     end
 
-    it "add custom attributes to a vm" do
-      update_user_role(@role, action_identifier(:vms, :edit))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "add custom attributes to a vm" do
+      def verify_updated_vm_custom_attributes_match_request
+        expect(vm.custom_attributes.size).to eq(2)
+        expect(vm.custom_attributes.pluck(:value).sort).to eq(%w(value1 value2))
+      end
 
-      vm = FactoryGirl.create(:vm_vmware)
-      vm_ca_url = "#{@cfme[:vms_url]}/#{vm.id}/custom_attributes"
+      before do
+        api_basic_authorize action_identifier(:vms, :edit)
 
-      @success = run_post(vm_ca_url, gen_request(:add, [{"name" => "name1", "value" => "value1"},
-                                                        {"name" => "name2", "value" => "value2"}]))
+        run_post(vm_ca_url, gen_request(:add, [{"name" => "name1", "value" => "value1"},
+                                               {"name" => "name2", "value" => "value2"}]))
+      end
 
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("results")
-      expect(@result["results"].collect { |r| r["name"] }.sort).to eq(%w(name1 name2))
-      expect(vm.custom_attributes.size).to eq(2)
-      expect(vm.custom_attributes.pluck(:value).sort).to eq(%w(value1 value2))
+      include_examples "request_success",
+                       :includes_data  => ["results", "name" => %w(name1 name2)],
+                       :custom_expects => :verify_updated_vm_custom_attributes_match_request
     end
 
-    it "edit a custom attribute by name" do
-      update_user_role(@role, action_identifier(:vms, :edit))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "edit a custom attribute by name" do
+      def verify_vm_custom_attribute_name_to_be_updated
+        expect(vm.reload.custom_attributes.first.value).to eq("value one")
+      end
 
-      ca1 = FactoryGirl.create(:custom_attribute, :name => "name1", :value => "value1")
+      before do
+        api_basic_authorize action_identifier(:vms, :edit)
+        vm.custom_attributes = [ca1]
 
-      vm = FactoryGirl.create(:vm_vmware)
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
-      vm_ca_url = "#{vm_url}/custom_attributes"
-      vm.custom_attributes = [ca1]
+        run_post(vm_ca_url, gen_request(:edit, "name" => "name1", "value" => "value one"))
+      end
 
-      @success = run_post(vm_ca_url, gen_request(:edit, "name" => "name1", "value" => "value one"))
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("results")
-      expect(@result["results"].first["value"]).to eq("value one")
-      expect(vm.reload.custom_attributes.first.value).to eq("value one")
+      include_examples "request_success",
+                       :includes_data  => ["results", "value" => ["value one"]],
+                       :custom_expects => :verify_vm_custom_attribute_name_to_be_updated
     end
 
-    it "edit a custom attribute by href" do
-      update_user_role(@role, action_identifier(:vms, :edit))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "edit a custom attribute by href" do
+      def verify_vm_custom_attribute_name_to_be_updated
+        expect(vm.reload.custom_attributes.first.value).to eq("new value1")
+      end
 
-      ca1 = FactoryGirl.create(:custom_attribute, :name => "name1", :value => "value1")
+      before do
+        api_basic_authorize action_identifier(:vms, :edit)
+        vm.custom_attributes = [ca1]
 
-      vm = FactoryGirl.create(:vm_vmware)
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
-      vm_ca_url = "#{vm_url}/custom_attributes"
-      vm_ca1_url = "#{vm_ca_url}/#{ca1.id}"
-      vm.custom_attributes = [ca1]
+        run_post(vm_ca_url, gen_request(:edit, "href" => ca1_url, "value" => "new value1"))
+      end
 
-      @success = run_post(vm_ca_url, gen_request(:edit, "href" => vm_ca1_url, "value" => "new value1"))
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("results")
-      expect(@result["results"].first["value"]).to eq("new value1")
-      expect(vm.reload.custom_attributes.first.value).to eq("new value1")
+      include_examples "request_success",
+                       :includes_data  => ["results", "value" => ["new value1"]],
+                       :custom_expects => :verify_vm_custom_attribute_name_to_be_updated
     end
 
-    it "edit multiple custom attributes" do
-      update_user_role(@role, action_identifier(:vms, :edit))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "edit multiple custom attributes" do
+      def verify_vm_custom_attribute_names_to_be_updated
+        expect(vm.reload.custom_attributes.pluck(:value).sort).to eq(["new value1", "new value2"])
+      end
 
-      ca1 = FactoryGirl.create(:custom_attribute, :name => "name1", :value => "value1")
-      ca2 = FactoryGirl.create(:custom_attribute, :name => "name2", :value => "value2")
+      before do
+        api_basic_authorize action_identifier(:vms, :edit)
+        vm.custom_attributes = [ca1, ca2]
 
-      vm = FactoryGirl.create(:vm_vmware)
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
-      vm_ca_url = "#{vm_url}/custom_attributes"
-      vm.custom_attributes = [ca1, ca2]
+        run_post(vm_ca_url, gen_request(:edit, [{"name" => "name1", "value" => "new value1"},
+                                                {"name" => "name2", "value" => "new value2"}]))
+      end
 
-      @success = run_post(vm_ca_url, gen_request(:edit, [{"name" => "name1", "value" => "new value1"},
-                                                         {"name" => "name2", "value" => "new value2"}]))
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("results")
-      expect(@result["results"].first["value"]).to eq("new value1")
-      expect(@result["results"].second["value"]).to eq("new value2")
-      expect(vm.reload.custom_attributes.pluck(:value).sort).to eq(["new value1", "new value2"])
+      include_examples "request_success",
+                       :includes_data  => ["results", "value" => ["new value1", "new value2"]],
+                       :custom_expects => :verify_vm_custom_attribute_names_to_be_updated
     end
   end
 
   context "Vm add_lifecycle_event action" do
-    before(:each) do
-      @vm = FactoryGirl.create(:vm_vmware)
-      @vm_url = "#{@cfme[:vms_url]}/#{@vm.id}"
-
-      @events = 1.upto(3).collect do |n|
+    let(:events) do
+      1.upto(3).collect do |n|
         {:event => "event#{n}", :status => "status#{n}", :message => "message#{n}", :created_by => "system"}
       end
     end
 
-    it "add_lifecycle_event to an invalid vm" do
-      update_user_role(@role, action_identifier(:vms, :add_lifecycle_event))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "add_lifecycle_event to an invalid vm" do
+      before do
+        api_basic_authorize action_identifier(:vms, :add_lifecycle_event)
 
-      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:add_lifecycle_event, :event => "event 1"))
+        run_post(invalid_vm_url, gen_request(:add_lifecycle_event, :event => "event 1"))
+      end
 
-      expect(@success).to be_false
-      expect(@code).to eq(404)
+      include_examples "resource_not_found"
     end
 
-    it "add_lifecycle_event without appropriate action role" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "add_lifecycle_event without appropriate action role" do
+      before do
+        api_basic_authorize
 
-      @success = run_post(@vm_url, gen_request(:add_lifecycle_event, :event => "event 1"))
+        run_post(vm_href, gen_request(:add_lifecycle_event, :event => "event 1"))
+      end
 
-      expect(@success).to be_false
-      expect(@code).to eq(403)
+      include_examples "request_forbidden"
     end
 
-    it "add_lifecycle_event to a vm" do
-      update_user_role(@role, action_identifier(:vms, :add_lifecycle_event))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "add_lifecycle_event to a vm" do
+      def verify_vm_lifecycle_events_created
+        expect(vm.lifecycle_events.size).to eq(1)
+        expect(vm.lifecycle_events.first.event).to eq(events[0][:event])
+      end
 
-      @success = run_post(@vm_url, gen_request(:add_lifecycle_event, @events[0]))
+      before do
+        api_basic_authorize action_identifier(:vms, :add_lifecycle_event)
 
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result["success"]).to be_true
-      expect(@result["message"]).to match(/adding lifecycle event/i)
-      expect(@result["href"]).to match(@vm_url)
-      expect(@vm.lifecycle_events.size).to eq(1)
-      expect(@vm.lifecycle_events.first.event).to eq(@events[0][:event])
+        run_post(vm_href, gen_request(:add_lifecycle_event, events[0]))
+      end
+
+      include_examples "single_action",
+                       :success        => true,
+                       :message        => /adding lifecycle event/i,
+                       :href           => :vm_href,
+                       :custom_expects => :verify_vm_lifecycle_events_created
     end
 
-    it "add_lifecycle_event to multiple vms" do
-      update_user_role(@role, action_identifier(:vms, :add_lifecycle_event))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "add_lifecycle_event to multiple vms" do
+      def verify_events_were_added_to_the_vms
+        expect(vm.lifecycle_events.size).to eq(events.size)
+        expect(vm.lifecycle_events.collect(&:event)).to match_array(events.collect { |e| e[:event] })
+      end
 
-      @success = run_post(@cfme[:vms_url], gen_request(:add_lifecycle_event,
-                                                       @events.collect { |e| {:href => @vm_url}.merge(e) }))
+      before do
+        api_basic_authorize action_identifier(:vms, :add_lifecycle_event)
 
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("results")
-      results = @result["results"]
-      expect(results.size).to eq(@events.size)
-      expect(results.all? { |r| r["success"] }).to be_true
-      expect(@vm.lifecycle_events.size).to eq(@events.size)
-      expect(@vm.lifecycle_events.collect(&:event)).to match_array(@events.collect { |e| e[:event] })
+        run_post(vms_url, gen_request(:add_lifecycle_event,
+                                      events.collect { |e| {:href => vm_href}.merge(e) }))
+      end
+
+      include_examples "multiple_actions", 3, :custom_expects => :verify_events_were_added_to_the_vms
     end
   end
 
   context "Vm scan action" do
-    it "scans an invalid vm" do
-      update_user_role(@role, action_identifier(:vms, :scan))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "scans an invalid vm" do
+      before do
+        api_basic_authorize action_identifier(:vms, :scan)
 
-      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:scan))
+        run_post(invalid_vm_url, gen_request(:scan))
+      end
 
-      expect(@success).to be_false
-      expect(@code).to eq(404)
+      include_examples "resource_not_found"
     end
 
-    it "scans an invalid Vm without appropriate role" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "scans an invalid Vm without appropriate role" do
+      before do
+        api_basic_authorize
 
-      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:scan))
+        run_post(invalid_vm_url, gen_request(:scan))
+      end
 
-      expect(@success).to be_false
-      expect(@code).to eq(403)
+      include_examples "request_forbidden"
     end
 
-    it "scan a Vm" do
-      update_user_role(@role, action_identifier(:vms, :scan))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "scan a Vm" do
+      before do
+        api_basic_authorize action_identifier(:vms, :scan)
 
-      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+        run_post(vm_href, gen_request(:scan))
+      end
 
-      @success = run_post(vm_url, gen_request(:scan))
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("success")
-      expect(@result["success"]).to be_true
-      expect(@result).to have_key("message")
-      expect(@result["message"]).to match("scanning")
-      expect(@result).to have_key("href")
-      expect(@result["href"]).to match(vm_url)
-      expect(@result).to have_key("task_id")
-      expect(@result).to have_key("task_href")
+      include_examples "single_action", :success => true, :message => "scanning", :href => :vm_href, :task => true
     end
 
-    it "scan multiple Vms" do
-      update_user_role(@role, action_identifier(:vms, :scan))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "scan multiple Vms" do
+      before do
+        api_basic_authorize action_identifier(:vms, :scan)
 
-      vm1 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
-      vm2 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
+        run_post(vms_url, gen_request(:scan, nil, vm1_url, vm2_url))
+      end
 
-      vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
-      vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
-
-      @success = run_post(@cfme[:vms_url], gen_request(:scan, nil, vm1_url, vm2_url))
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("results")
-      results = @result["results"]
-      expect(results.size).to eq(2)
-      expect(resources_include_suffix?(results, "href", "#{vm1_url}")).to be_true
-      expect(resources_include_suffix?(results, "href", "#{vm2_url}")).to be_true
-      expect(results.all? { |r| r["success"] }).to be_true
-      expect(results.all? { |r| r.key?("task_id") }).to be_true
-      expect(results.all? { |r| r.key?("task_href") }).to be_true
+      include_examples "multiple_actions", 2, :href_list => :vms_list, :task => true
     end
   end
 
   context "Vm add_event action" do
-    it "to an invalid vm" do
-      update_user_role(@role, action_identifier(:vms, :add_event))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "to an invalid vm" do
+      before do
+        api_basic_authorize action_identifier(:vms, :add_event)
 
-      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:add_event))
+        run_post(invalid_vm_url, gen_request(:add_event))
+      end
 
-      expect(@success).to be_false
-      expect(@code).to eq(404)
+      include_examples "resource_not_found"
     end
 
-    it "to an invalid vm without appropriate role" do
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "to an invalid vm without appropriate role" do
+      before do
+        api_basic_authorize
 
-      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:add_event))
+        run_post(invalid_vm_url, gen_request(:add_event))
+      end
 
-      expect(@success).to be_false
-      expect(@code).to eq(403)
+      include_examples "request_forbidden"
     end
 
-    it "to a single Vm" do
-      update_user_role(@role, collection_action_identifier(:vms, :add_event))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "to a single Vm" do
+      before do
+        api_basic_authorize collection_action_identifier(:vms, :add_event)
 
-      vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+        run_post(vm_href, gen_request(:add_event, :event_type => "special", :event_message => "message"))
+      end
 
-      @success = run_post(vm_url, gen_request(:add_event, :event_type => "special", :event_message => "message"))
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("success")
-      expect(@result["success"]).to be_true
-      expect(@result).to have_key("message")
-      expect(@result["message"]).to match(/adding event/i)
-      expect(@result).to have_key("href")
-      expect(@result["href"]).to match(vm_url)
+      include_examples "single_action", :success => true, :message => /adding event/i, :href => :vm_href
     end
 
-    it "to multiple Vms" do
-      update_user_role(@role, collection_action_identifier(:vms, :add_event))
-      basic_authorize @cfme[:user], @cfme[:password]
+    context "to multiple Vms" do
+      before do
+        api_basic_authorize collection_action_identifier(:vms, :add_event)
 
-      vm1 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
-      vm2 = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
+        run_post(vms_url,
+                 gen_request(:add_event,
+                             [{"href" => vm1_url, "event_type" => "etype1", "event_message" => "emsg1"},
+                              {"href" => vm2_url, "event_type" => "etype2", "event_message" => "emsg2"}]))
+      end
 
-      vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
-      vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
-
-      @success = run_post(@cfme[:vms_url],
-                          gen_request(:add_event,
-                                      [{"href" => vm1_url, "event_type" => "etype1", "event_message" => "emsg1"},
-                                       {"href" => vm2_url, "event_type" => "etype2", "event_message" => "emsg2"}]))
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("results")
-      results = @result["results"]
-      expect(results.size).to eq(2)
-      expect(results.first["success"]).to be_true
-      expect(results.first["message"]).to match(/adding event.*etype1/i)
-      expect(results.first["href"]).to match(vm1_url)
-      expect(results.second["success"]).to be_true
-      expect(results.second["message"]).to match(/adding event.*etype2/i)
-      expect(results.second["href"]).to match(vm2_url)
+      include_examples "multiple_actions",
+                       2,
+                       :href_list      => :vms_list,
+                       :match_key_data => ["results", "message", [/adding event .*etype1/i, /adding event .*etype2/i]]
     end
   end
 end

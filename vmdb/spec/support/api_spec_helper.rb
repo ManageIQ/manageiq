@@ -97,6 +97,28 @@ module ApiSpecHelper
     collections.each { |collection| @cfme["#{collection}_url".to_sym] = "#{@cfme[:entrypoint]}/#{collection}" }
 
     define_user
+    define_url_methods
+  end
+
+  def define_url_methods
+    collections  = %w(vms tags providers hosts data_stores resource_pools clusters
+                      policies policy_profiles templates policy_actions events conditions)
+
+    collections.each do |collection|
+      self.class.class_eval do
+        define_method("#{collection}_url".to_sym) do
+          @cfme["#{collection}_url".to_sym]
+        end
+        define_method("#{collection.singularize}_url".to_sym) do |id|
+          "#{@cfme["#{collection}_url".to_sym]}/#{id}"
+        end
+      end
+    end
+  end
+
+  def api_basic_authorize(identifier = nil)
+    update_user_role(@role, identifier) unless identifier.blank?
+    basic_authorize @cfme[:user], @cfme[:password]
   end
 
   def update_user_role(role, *identifiers)
@@ -141,5 +163,9 @@ module ApiSpecHelper
       request[data.kind_of?(Array) ? "resources" : "resource"] = data
     end
     request
+  end
+
+  def fetch_value(value)
+    value.kind_of?(Symbol) && respond_to?(value) ? public_send(value) : value
   end
 end
