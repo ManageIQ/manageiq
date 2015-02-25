@@ -1,18 +1,5 @@
 module VMDB
   module Util
-    # load all subclasses recursively
-    def self.eager_load_subclasses(klass)
-      ActiveSupport::Dependencies.autoload_paths.each do |root|
-        Dir.glob(File.join(root, "#{klass.underscore}_*.rb")).sort.each do |file|
-          name = File.basename(file, '.*')
-          if name =~ /^#{klass.underscore}_[^_]*$/  # filter out sub-subclasses
-            require_dependency file
-          end
-        end
-        const_get(klass).subclasses.each { |k| eager_load_subclasses(k.name) }
-      end
-    end
-
     def self.http_proxy_uri
       proxy = VMDB::Config.new("vmdb").config[:http_proxy] || {}
       return nil unless proxy[:host]
