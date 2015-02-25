@@ -307,7 +307,7 @@
               = render :partial => "#{pfx}prov_ds_grid", :locals => {:field_id => field_id}
             - elsif field == :sysprep_custom_spec
               - # grid for sysprep_custom_spec
-              = render :partial => "#{pfx}prov_vc_grid", :locals => {:field_id => field_id}
+              = render :partial => "#{pfx}prov_vc_grid", :locals => {:field_id => field_id, :spec_required => field_hash[:required]}
             - elsif field == :customization_template_id
               - # grid for customization script
               = render :partial => "#{pfx}prov_template_grid", :locals => {:field_id => field_id}
