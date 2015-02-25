@@ -39,6 +39,7 @@ class MiqLdap
     @basedn           = options.delete(:basedn)          || @auth[:basedn]
     @user_type        = options.delete(:user_type)       || @auth[:user_type]
     @user_suffix      = options.delete(:user_suffix)     || @auth[:user_suffix]
+    @domain_prefix    = options.delete(:domain_prefix)   || @auth[:domain_prefix]
     @bind_timeout     = options.delete(:bind_timeout)    || @auth[:bind_timeout]     || self.class.default_bind_timeout
     @search_timeout   = options.delete(:search_timeout)  || @auth[:search_timeout]   || self.class.default_search_timeout
     @follow_referrals = options.delete(:follow_referrals)|| @auth[:follow_referrals] || false
@@ -277,13 +278,19 @@ class MiqLdap
     str =~ /^([a-z|0-9|A-Z]+ *=[^,]+[,| ]*)+$/ ? true : false
   end
 
+  def domain_username?(str)
+    str =~ /^([a-zA-Z][a-zA-Z0-9.-]+)\\.+$/ ? true : false
+  end
+
   def fqusername(username)
-    return username if self.is_dn?(username)
+    return username if self.is_dn?(username) || self.domain_username?(username)
 
     user_type = @user_type.split("-").first
     user_prefix = @user_type.split("-").last
     user_prefix = "cn" if user_prefix == "dn"
     case user_type
+    when "samaccountname"
+      return "#{@domain_prefix}\\#{username}"
     when "upn", "userprincipalname"
       return username if @user_suffix.blank?
       return username if username =~ /^.+@.+$/ # already qualified with user@domain
@@ -310,6 +317,8 @@ class MiqLdap
       search_opts = {:base => @basedn, :scope => :sub, :attributes => ["*", "memberof"]}
 
       case user_type
+      when "samaccountname"
+        search_opts[:filter] = "(#{user_type}=#{username.split("\\").last})"
       when "upn", "userprincipalname", "mail"
         user_type = "userprincipalname" if user_type == "upn"
         search_opts[:filter] = "(#{user_type}=#{username})"

@@ -56,10 +56,19 @@
             options_for_select([["User Principal Name", "userprincipalname"],
             ["E-mail Address", "mail"],
             ["Distinguished Name (CN=<user>)", "dn-cn"],
-            ["Distinguished Name (UID=<user>)", "dn-uid"]],
+            ["Distinguished Name (UID=<user>)", "dn-uid"],
+            ["SAM Account Name", "samaccountname"]],
             @edit[:new][:authentication][:user_type]),
             "data-miq_observe" => {:url => url}.to_json)
-      %tr
+      %tr#user_type_samaccountname
+        %td.key
+          =_("Domain Prefix: <domain>\\<user>")
+        %td.wide
+          = text_field_tag("authentication_domain_prefix",
+            @edit[:new][:authentication][:domain_prefix],
+            :maxlength=>255,
+            "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+      %tr#user_type_base
         %td.key
           =_("User Suffix:")
           - if @edit[:new][:authentication][:user_type] == "dn-cn"
@@ -195,3 +204,8 @@
             @edit[:new][:authentication][:httpd_role],
             "data-miq_observe_checkbox" => {:url => url}.to_json)
     %hr/
+  %script{:type => "text/javascript"}
+    - if @edit[:new][:authentication][:user_type] == "samaccountname"
+      if (miqDomElementExists('user_type_base')) $('#user_type_base').hide();
+    - else
+      if (miqDomElementExists('user_type_samaccountname')) $('#user_type_samaccountname').hide();

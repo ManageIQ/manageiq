@@ -100,6 +100,9 @@ module OpsController::Settings::Common
           page << set_element_visible("httpd_role_div", verb)
         end
         if @authusertype_changed
+          verb = @edit[:new][:authentication][:user_type] == 'samaccountname'
+          page << set_element_visible("user_type_samaccountname", verb)
+          page << set_element_visible("user_type_base", !verb)
           if @edit[:new][:authentication][:user_type] == "dn-cn"
             page << javascript_hide("upn-mail_prefix")
             page << javascript_hide("dn-uid_prefix")
@@ -684,6 +687,7 @@ module OpsController::Settings::Common
         @authusertype_changed = true
       end
       auth[:user_suffix] = params[:authentication_user_suffix] if params[:authentication_user_suffix]
+      auth[:domain_prefix] = params[:authentication_domain_prefix] if params[:authentication_domain_prefix]
       if @sb[:newrole] != auth[:ldap_role]
         auth[:ldap_role] = @sb[:newrole]
         @authldaprole_changed = true
