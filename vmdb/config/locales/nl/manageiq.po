@@ -6120,7 +6120,7 @@ msgid "New Parameter"
 msgstr ""
 
 msgid "New Password"
-msgstr "Nieuw watchwoord"
+msgstr "Nieuw wachtwoord"
 
 msgid "New setting will affect %s"
 msgstr ""
@@ -8025,7 +8025,7 @@ msgid "Passed"
 msgstr ""
 
 msgid "Password"
-msgstr "Watchwoord"
+msgstr "Wachtwoord"
 
 msgid "Password/Verify Password do not match"
 msgstr ""
@@ -10148,45 +10148,45 @@ msgid "Unattended GUI"
 msgstr ""
 
 msgid "Unknown"
-msgstr ""
+msgstr "Onbekend"
 
 msgid "Unknown error has occurred"
-msgstr ""
+msgstr "Er is een onbekende fout opgetreden"
 
 msgid "Update"
 msgstr ""
 
 #, fuzzy
 msgid "Update Password"
-msgstr "Watchwoord verandern"
+msgstr "Wachtwoord veranderen"
 
 msgid "Update password"
-msgstr "Watchwoord verandern"
+msgstr "Wachtwoord veranderen"
 
 #, fuzzy
 msgid "Update this entry"
-msgstr "Watchwoord verandern"
+msgstr "Update dit object"
 
 msgid "Updated"
-msgstr ""
+msgstr "Aangepast"
 
 msgid "Updated On"
-msgstr ""
+msgstr "Aangepast op"
 
 msgid "Upload"
-msgstr ""
+msgstr "Upload"
 
 msgid "Upload File"
-msgstr ""
+msgstr "Upload bestand"
 
 msgid "Uploaded File '%s'"
-msgstr ""
+msgstr "Geupload bestand '%s'"
 
 msgid "Use CTRL-ALT-Enter to toggle full screen"
-msgstr ""
+msgstr "Gebruik CTRL-ALT-Enter voor volledig scherm"
 
 msgid "Use CTRL-ALT-INS for CTRL-ALT-DEL"
-msgstr ""
+msgstr "Gebruik CTRL-ALT-INS voor CTRL-ALT-DEL"
 
 msgid "Use the Browse button to locate %s file"
 msgstr ""
@@ -10354,7 +10354,7 @@ msgid "Variables"
 msgstr ""
 
 msgid "Verify Password"
-msgstr "Watchwoord bevestigen"
+msgstr "Wachtwoord bevestigen"
 
 msgid "Version"
 msgstr ""
