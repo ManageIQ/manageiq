@@ -16,6 +16,9 @@ env:
   - "TEST_SUITE=automation  TEST_ROOT=vmdb"
   - "TEST_SUITE=javascript  TEST_ROOT=vmdb"
 matrix:
+  exclude:
+  - rvm: "2.1"
+    env: "TRAVIS_PULL_REQUEST=false"
   allow_failures:
   - rvm: "2.1"
     env: "TEST_SUITE=vmdb        TEST_ROOT=vmdb"
