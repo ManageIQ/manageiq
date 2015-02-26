@@ -173,6 +173,7 @@ Vmdb::Application.routes.draw do
       :get  => %w(
         download_data
         explorer
+        ot_edit
         show
       ),
       :post => %w(
@@ -189,6 +190,10 @@ Vmdb::Application.routes.draw do
         group_form_field_changed
         group_update
         identify_catalog
+        ot_content_changed
+        ot_content_submit
+        ot_edit_submit
+        ot_form_field_changed
         process_sts
         prov_field_changed
         reload

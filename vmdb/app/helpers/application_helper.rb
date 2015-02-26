@@ -1015,6 +1015,11 @@ module ApplicationHelper
       when "miq_template_refresh", "miq_template_reload"
         return true unless @perf_options[:typ] == "realtime"
       end
+    when "OrchestrationTemplate", "OrchestrationTemplateCfn", "OrchestrationTemplateHot"
+      case id
+      when "orchestration_templates_admin"
+        return true unless role_allows(:feature => "orchestration_templates_admin")
+      end
     when "NilClass"
       case id
       when "action_new"
@@ -1033,6 +1038,8 @@ module ApplicationHelper
         return true if ["workers", "download_logs"].include?(@lastaction)
       when "logdepot_edit"
         return true if ["workers", "evm_logs", "audit_logs"].include?(@lastaction)
+      when "orchestration_templates_admin"
+        return true unless @report
       when "policy_new"
         return true unless role_allows(:feature => "policy_new")
       when "profile_new"
@@ -1926,7 +1933,7 @@ module ApplicationHelper
       else
         if x_active_tree == :ae_tree
           return center_toolbar_filename_automate
-        elsif [:sandt_tree, :svccat_tree, :stcat_tree, :svcs_tree].include?(x_active_tree)
+        elsif [:sandt_tree, :svccat_tree, :stcat_tree, :svcs_tree, :ot_tree].include?(x_active_tree)
           return center_toolbar_filename_services
         elsif @layout == "chargeback"
           return center_toolbar_filename_chargeback
@@ -2036,6 +2043,8 @@ module ApplicationHelper
       else
         return "services_center_tb"
       end
+    elsif x_active_tree == :ot_tree
+      return "ot_center_tb"
     end
   end
 
