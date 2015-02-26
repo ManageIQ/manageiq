@@ -22,32 +22,46 @@ ul.dynatree-container
 	overflow: hidden
 }
 
-/*formatting for old html accordions with fixed-width (ie, timeline) */
+/* overrides dynatree styling within patternfly accordion */
 
-.fixed_width ul.dynatree-container 
-{
-	width: 210px;
-	overflow-x: hidden
-}
-.fixed_width ul.dynatree-container ul a.dynatree-title
-{
-	white-space: normal; 
-	width: 150px;
-}
-.fixed_width ul.dynatree-container ul li:hover {
-	margin: -1px 0 -1px -200px;
-	padding-left: 200px;
-	padding-right: 500px;
-	border: 1px solid #5db9de;
-	border-left: 0px;
-	background-color: #d6ecf8;
-}
-.fixed_width ul.dynatree-container ul li span.dynatree-node:hover
-{
-	border: none
+#accordion .panel-body {
+  background-color: #f9f9f9 !important;
+  padding-left: 0 !important;  /*needed so that dynatree hover effect goes to edges*/
+  padding-right: 0 !important; /*needed so that dynatree hover effect goes to edges*/
 }
 
-/* end of formatting for old fixed-width accordions*/
+#accordion a.btn {
+  margin-right: 10px;
+}
+#accordion .panel-body ul.dynatree-container {
+  padding-left: 17px !important;
+  padding-right: 30px !important;
+}
+
+#accordion .panel-body .dynatree-title {
+  white-space: normal !important;
+}
+
+#accordion .panel-body ul li ul li:hover {
+  margin-left:-200px;
+  margin-right: -1000px;
+  margin-bottom: -1px;
+  padding: 2px 1000px 0 200px;
+  border: 1px solid #5db9de;
+  border-left: 0px;
+  background-color: #d6ecf8;
+}
+
+#accordion .panel-body ul li ul li.dynatree-lastsib:hover {
+  padding-bottom: 2px;
+}
+
+
+#accordion .panel-body ul li ul li span.dynatree-node:hover{
+  border: 0 !important;
+}
+
+/* end - overrides dynatree styling within patternfly accordion */
 
 .dhx_acc_base_dhx_blue ul.dynatree-container,   /*for accordion trees only*/
 .dhtmlx_no_accordion ul.dynatree-container

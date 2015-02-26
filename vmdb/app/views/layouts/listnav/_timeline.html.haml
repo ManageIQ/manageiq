@@ -1,19 +1,18 @@
 - if @tree_type == "timeline" && @rep_tree
-  #accordion.fixed_width.panel-group
+  #accordion.panel-group
     - @report_groups.each_with_index do |rg, rg_idx|
       = patternfly_accordion_panel(h(rg),
         @panels["timelines_#{rg_idx}"].nil? || @panels["timelines_#{rg_idx}"] == false, "timelines_#{rg_idx}") do
         - tree_id = "timeline_treebox#{rg_idx}"
-        %div{:style => "float: left; width: 216px;"}
-          %div{:id => tree_id, :style => "color: #000; overflow: hidden;"}
-          = render(:partial => "layouts/dynatree",
-            :locals         => {:tree_id   => tree_id,
-              :tree_name                   => "#{tree_id}_#{rg_idx}",
-              :json_tree                   => @rep_tree[@report_groups[rg_idx]],
-              :click_url                   => "/dashboard/show_timeline/",
-              :onclick                     => "cfmeOnClick_TimelineSelection",
-              :exp_tree                    => false,
-              :highlighting                => true,
-              :no_tree_lines               => true,
-              :multi_lines                 => true,
-              :open_close_all_on_dbl_click => true})
+        %div{:id => tree_id}
+        = render(:partial => "layouts/dynatree",
+          :locals         => {:tree_id   => tree_id,
+            :tree_name                   => "#{tree_id}_#{rg_idx}",
+            :json_tree                   => @rep_tree[@report_groups[rg_idx]],
+            :click_url                   => "/dashboard/show_timeline/",
+            :onclick                     => "cfmeOnClick_TimelineSelection",
+            :exp_tree                    => false,
+            :highlighting                => true,
+            :no_tree_lines               => true,
+            :multi_lines                 => true,
+            :open_close_all_on_dbl_click => true})

@@ -230,7 +230,7 @@ module ApplicationController::Timelines
           rpt.name,
           "link_internal.gif",
           "Report: #{rpt.name}",
-          :style_class => "cfme-no-cursor-node",
+          :style_class => "cfme-no-cursor-node ws-wrap",
           :style       => "background-color:#{node_color};padding-left: 0px;"     # No cursor pointer
       )
     end
