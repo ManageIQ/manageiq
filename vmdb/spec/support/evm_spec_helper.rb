@@ -24,6 +24,7 @@ module EvmSpecHelper
 
     clear_instance_variables(MiqEnvironment::Command)
     clear_instance_variable(MiqProductFeature, :@feature_cache)
+    clear_instance_variable(BottleneckEvent, :@event_definitions)
 
     # Clear the thread local variable to prevent test contamination
     User.current_userid = nil if defined?(User) && User.respond_to?(:current_userid=)
