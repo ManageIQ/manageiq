@@ -137,7 +137,7 @@ module EmsRefresh::Parsers
       }
       ports = container_def["ports"]
       new_result[:container_port_configs] = Array(ports).collect do |port_entry|
-          parse_container_port_config(port_entry, pod_id, container_def["name"])
+        parse_container_port_config(port_entry, pod_id, container_def["name"])
       end
       new_result
     end
