@@ -2,7 +2,7 @@ require 'miq_apache'
 module WebServerWorkerMixin
   extend ActiveSupport::Concern
 
-  BINDING_ADDRESS = "127.0.0.1"
+  BINDING_ADDRESS = Rails.env.production? ? "127.0.0.1" : "0.0.0.0"
 
   included do
     class << self
