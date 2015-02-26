@@ -2,7 +2,8 @@ module EmsRefresh
   module Parsers
     class OpenstackInfra < Infra
       include EmsRefresh::Parsers::OpenstackCommon::Images
-      
+      include EmsRefresh::Parsers::OpenstackCommon::OrchestrationStacks
+
       def self.ems_inv_to_hashes(ems, options = nil)
         new(ems, options).ems_inv_to_hashes
       end
@@ -41,6 +42,19 @@ module EmsRefresh
 
       private
 
+      def all_server_resources
+        return @all_server_resources if @all_server_resources
+
+        resources = []
+        stacks.each do |stack|
+          all_stack_resources = stack_resources(stack)
+          # Filtering just OS::Nova::Server, which is important to us for getting Purpose of the node
+          # (compute, controller, etc.).
+          resources += all_stack_resources.select { |x| x["resource_type"] == 'OS::Nova::Server' }
+        end
+        @all_server_resources = resources
+      end
+
       def servers
         @servers ||= @connection.servers_for_accessible_tenants
       end
@@ -51,28 +65,6 @@ module EmsRefresh
 
       def hosts_ports
         @hosts_ports ||= @baremetal_service.ports.details
-      end
-
-      def stacks
-        @stacks ||= detailed_stacks
-      end
-
-      def detailed_stacks
-        @orchestration_service.stacks.each_with_object([]) { |stack, detailed_stacks| detailed_stacks << stack.details }
-      end
-
-      def resources
-        return @resources if @resources
-
-        resources = []
-        stacks.each do |stack|
-          # Nested depth 50 just for sure, although nobody should nest templates that much
-          all_stack_resources = @orchestration_service.list_resources(stack, :nested_depth => 50)
-          # Filtering just OS::Nova::Server, which is important to us for getting Purpose of the node
-          # (compute, controller, etc.).
-          resources += all_stack_resources.body['resources'].select { |x| x["resource_type"] == 'OS::Nova::Server' }
-        end
-        @resources = resources
       end
 
       def load_hosts
@@ -88,52 +80,11 @@ module EmsRefresh
 
         # Indexed Heat resources, we are interested only in OS::Nova::Server
         indexed_resources = {}
-        resources.each { |p| indexed_resources[p['physical_resource_id']] = p }
+        all_server_resources.each { |p| indexed_resources[p['physical_resource_id']] = p }
 
         process_collection(hosts, :hosts) do  |host|
           parse_host(host, indexed_servers, indexed_hosts_ports, indexed_resources)
         end
-      end
-
-      def load_orchestration_stacks
-        process_collection(stacks, :orchestration_stacks) { |stack| parse_stack(stack) }
-      end
-
-      def parse_stack(stack)
-        uid = stack.id.to_s
-        new_result = {
-          :type        => "OrchestrationStackOpenstackInfra",
-          :ems_ref     => uid,
-          :name        => stack.stack_name,
-          :description => stack.description,
-          :status      => stack.stack_status,
-          :parameters  => find_stack_parameters(stack)
-        }
-        return uid, new_result
-      end
-
-      def find_stack_parameters(stack)
-        raw_parameters = stack.parameters
-        get_stack_parameters(stack.id, raw_parameters)
-        raw_parameters.collect do |parameter|
-          @data_index.fetch_path(:orchestration_stack_parameters, compose_ems_ref(stack.id, parameter[0]))
-        end
-      end
-
-      def get_stack_parameters(stack_id, parameters)
-        process_collection(parameters, :orchestration_stack_parameters) do |param_key, param_val|
-          parse_stack_parameter(param_key, param_val, stack_id)
-        end
-      end
-
-      def parse_stack_parameter(param_key, param_val, stack_id)
-        uid = compose_ems_ref(stack_id, param_key)
-        new_result = {
-          :ems_ref => uid,
-          :name    => param_key,
-          :value   => param_val
-        }
-        return uid, new_result
       end
 
       def parse_host(host, indexed_servers, _indexed_hosts_ports, indexed_resources)
