@@ -78,7 +78,7 @@ module MiqReport::Generator
       when :"<compare>"
         self.class.name
       else
-        ref = self.db_class.reflections_with_virtual[table.to_sym]
+        ref = db_class.reflection_with_virtual(table.to_sym)
         ref ? ref.class_name : table.singularize.camelize
       end
     end
