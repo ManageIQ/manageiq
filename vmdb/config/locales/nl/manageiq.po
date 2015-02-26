@@ -30,10 +30,10 @@ msgid " Selected Alerts:"
 msgstr " Geselecteerde Meldingen:"
 
 msgid " that match the entered search string"
-msgstr ""
+msgstr " dat komt overeen met de ingevoerde zoekterm"
 
 msgid "\"#{db}Performance.#{c}\""
-msgstr ""
+msgstr "\"#{db}Prestatie.#{c}\""
 
 msgid "\"%s\" was executed"
 msgstr "\"%s\" is uitgevoerd"
@@ -48,7 +48,7 @@ msgid "\"%{field}\" %{model} cannot be deleted"
 msgstr "\"%{field}\" %{model} kan niet worden verwijderd"
 
 msgid "\"%{name}\": Global %{model} cannot be deleted"
-msgstr ""
+msgstr "\"%{name}\": Globale %{model} kan niet worden verwijderd"
 
 msgid "\"%{name}\": In use by %{rep_count}, cannot be deleted"
 msgstr "\"%{name}\": In gebruik bij %{rep_count}, kan niet worden verwijderd"
@@ -63,7 +63,7 @@ msgid "%s"
 msgstr "%s"
 
 msgid "%s Button not yet implemented"
-msgstr ""
+msgstr "%s Knop nog niet geïmplementeerd"
 
 msgid "%s Client Connections"
 msgstr "%s Client connecties"
@@ -114,7 +114,7 @@ msgid "%s Summary"
 msgstr "$s Samenvatting"
 
 msgid "%s Utilization"
-msgstr ""
+msgstr "%s Benutting"
 
 msgid "%s are not in the current region and will be skipped"
 msgstr "%s is niet in de huidige regio en wordt overgeslagen"
@@ -156,7 +156,7 @@ msgid "%s must be configured"
 msgstr "%s moet geconfigureerd zijn"
 
 msgid "%s must be entered to perform LDAP Group Look Up"
-msgstr ""
+msgstr "%s moet ingevuld zijn voor het opzoeken van LDAP groepen"
 
 msgid "%s must be numeric"
 msgstr "%s moet numeriek zijn"
@@ -171,7 +171,7 @@ msgid "%s must be unique for this group"
 msgstr "%s moet uniek zijn voor deze groep"
 
 msgid "%s must not be 'action' or 'controller'"
-msgstr ""
+msgstr "%s mag geen 'action' of 'controller' zijn"
 
 msgid "%s no longer exists"
 msgstr "%s bestaat niet meer"
@@ -195,13 +195,13 @@ msgid "%s successfully initiated"
 msgstr "%s succesvol geïnitieerd"
 
 msgid "%s tab is not available unless a sort field has been selected"
-msgstr ""
+msgstr "%s tab is niet beschikbaar tot 1 sorteer veld is geselecteerd"
 
 msgid "%s tab is not available unless at least 1 time field has been selected"
-msgstr ""
+msgstr "%s tab is niet beschikbaar tot minstens 1 tijdsveld is geselecteerd"
 
 msgid "%s tab is not available until at least 1 field has been selected"
-msgstr ""
+msgstr "%s tab is niet beschikbaar tot minstens 1 veld is geselecteerd"
 
 msgid "%s was cancelled by the user"
 msgstr "%s is geannulleerd door de gebruiker"
@@ -210,19 +210,19 @@ msgid "%s with %s Tags"
 msgstr "%s met %s Tags"
 
 msgid "%{action} \"%{item_name}\" for %{model} \"%{name}\""
-msgstr ""
+msgstr "%{action} \"%{item_name}\" voor %{model} \"%{name}\""
 
 msgid "%{field1} and %{field2} fields can't be blank"
-msgstr ""
+msgstr "%{field1} en %{field2} velden kunnen niet leeg zijn"
 
 msgid "%{field} '%{value}' is already in use"
-msgstr ""
+msgstr "%{field} '%{value}' is reeds ingebruik"
 
 msgid "%{field} Value Error: %{msg}"
-msgstr ""
+msgstr "%{field} Waarde Fout: %{msg}"
 
 msgid "%{field} cannot contain \"%{character}\""
-msgstr ""
+msgstr "%{field} kan niet \"%{character}\" bevatten"
 
 msgid "%{model} \"%{name}\""
 msgstr ""
@@ -231,10 +231,10 @@ msgid "%{model} \"%{name}\" %{typ}"
 msgstr ""
 
 msgid "%{model} \"%{name}\" already exists"
-msgstr ""
+msgstr "%{model} \"%{name}\" bestaat al"
 
 msgid "%{model} \"%{name}\" successfully added to Service \"%{to_name}\""
-msgstr ""
+msgstr "%{model} \"%{name}\" succesvol toegevoegd aan Service \"%{to_name}\""
 
 msgid "%{model} \"%{name}\" was added"
 msgstr "%{model} \"%{name}\" is toegevoegd"
@@ -267,7 +267,7 @@ msgid "%{model} for role \"%{role}\" was saved"
 msgstr "%{model} voor rol \"%{role}\" is opgeslagen"
 
 msgid "%{model} must contain at least one %{field}"
-msgstr ""
+msgstr "%{model} moet minstens over één %{field} beschikken"
 
 msgid "%{model}: %{task} successfully initiated"
 msgstr "%{model}: %{task} succesvol geïnitieerd"
@@ -276,10 +276,10 @@ msgid "%{record} - \"%{button_text}\""
 msgstr "%{record} - \"%{button_text}\""
 
 msgid "%{tab} tab is not available until %{field} field has been selected"
-msgstr ""
+msgstr "%{tab} tab is niet beschikbaar tot %{field} veld is geselecteerd"
 
 msgid "%{tab} tab is not available until %{field} has been configured"
-msgstr ""
+msgstr "%{tab} tab is not beschikbaar tot %{field} is geconfigureerd"
 
 msgid "%{task} %{model}"
 msgstr ""
@@ -294,7 +294,7 @@ msgid "%{task} does not apply to selected %{model}"
 msgstr ""
 
 msgid "%{task} initiated for %{count_model} from the CFME Database"
-msgstr ""
+msgstr "%{task} Geïnitieerd voor %{count_model} van de CFME Database"
 
 msgid "%{typ} %{model}"
 msgstr ""
@@ -303,7 +303,7 @@ msgid "%{typ} %{model} \"%{name}\""
 msgstr ""
 
 msgid "%{typ} %{model} \"%{name}\" (current)"
-msgstr ""
+msgstr "%{typ} %{model} \"%{name}\" (huidige)"
 
 msgid ""
 "%{typ} Request was Submitted, you will be notified when your %{title} are read"
@@ -324,40 +324,40 @@ msgid ""
 msgstr ""
 
 msgid "%{val} missing for %{field}"
-msgstr ""
+msgstr "%{val} mist voor %{field}"
 
 msgid "'%s' Worker restart initiated successfully"
-msgstr ""
+msgstr "'%s' Worker herstart succesvol geïnitieerd"
 
 msgid "'%s' can not be deleted"
-msgstr ""
+msgstr "'%s' kan niet worden verwijderd"
 
 msgid "'%s' can not be edited"
-msgstr ""
+msgstr "'%s' kan niet worden aangepast"
 
 msgid "(%s bytes)"
 msgstr ""
 
 msgid "(All)"
-msgstr ""
+msgstr "(Alle)"
 
 msgid "(Check All)"
-msgstr ""
+msgstr "(Selecteer Alles)"
 
 msgid "(Default: %s)"
-msgstr ""
+msgstr "(Standaard: %s)"
 
 msgid "(Enter the value between 4 - 65636 MB)"
-msgstr ""
+msgstr "(Enter een waarde tussen 4 - 65636 MB)"
 
 msgid "(MB) memory"
-msgstr ""
+msgstr "(MB) geheugen"
 
 msgid "(NS/Cls/Inst)"
 msgstr ""
 
 msgid "(leave blank for default)"
-msgstr ""
+msgstr "(Laat leeg voor standaard)"
 
 msgid "(max 6 digits)"
 msgstr ""
@@ -377,10 +377,10 @@ msgid "* Enter Policy Simulation options on the left and press Submit"
 msgstr ""
 
 msgid "* Enter a reason for this approval and press Submit"
-msgstr ""
+msgstr "* Geef de reden voor dit akkoord en druk op Verzend"
 
 msgid "* Enter a reason for this denial and press Submit"
-msgstr ""
+msgstr "* Geef de reden voor deze afwijzing en druk op Verzend"
 
 msgid ""
 "* If all Conditions are removed from a Policy, it will be unconditional and al"
@@ -431,16 +431,16 @@ msgid "* Select one or more consecutive groups to move up or down."
 msgstr ""
 
 msgid "* Set in Time Profile"
-msgstr ""
+msgstr "* Zet in Tijd Profiel"
 
 msgid "1 - Select a Reference VM."
-msgstr ""
+msgstr "1 - Selecteer een referentie VM"
 
 msgid "1 Week before retirement"
-msgstr ""
+msgstr "1 Week voor vervallen"
 
 msgid "10 Minutes"
-msgstr ""
+msgstr "10 Minuten"
 
 msgid ""
 "2 - Specify the VM Options to define the source of the values used for the pla"
@@ -448,25 +448,25 @@ msgid ""
 msgstr ""
 
 msgid "2 Weeks before retirement"
-msgstr ""
+msgstr "2 Weken voor het vervallen"
 
 msgid "24 Hour Time Period:"
-msgstr ""
+msgstr "24 Uur Tijdsperiode:"
 
 msgid "3 - Specify Target Options to qualify target Clusters or Hosts."
 msgstr ""
 
 msgid "30 Days before retirement"
-msgstr ""
+msgstr "30 Dagen voor het vervallen"
 
 msgid "4 - Change the Trend Options used to calculate the daily trends, if desired."
 msgstr ""
 
 msgid "5 - Press the Submit button."
-msgstr ""
+msgstr "5 - Druk op de Verzend knop"
 
 msgid ">No notes have been entered."
-msgstr ""
+msgstr ">Er zijn geen notities toegevoegd"
 
 msgid "A %s must be chosen to commit this expression element"
 msgstr ""
@@ -475,10 +475,10 @@ msgid "A %s must be entered to commit this expression element"
 msgstr ""
 
 msgid "A User Group must be assigned a Role"
-msgstr ""
+msgstr "Een gebruiker moet zijn toegewezen aan een rol"
 
 msgid "A User must be assigned to a Group"
-msgstr ""
+msgstr "Een gebruiker moet zijn toegewezen aan een groep"
 
 msgid "A condition must contain a valid expression."
 msgstr ""
@@ -487,7 +487,7 @@ msgid "A valid expression must be present"
 msgstr ""
 
 msgid "ALL"
-msgstr ""
+msgstr "Alle"
 
 msgid "AM:"
 msgstr ""
@@ -535,7 +535,7 @@ msgid "Account|Name"
 msgstr ""
 
 msgid "Action"
-msgstr ""
+msgstr "Actie"
 
 msgid "Action Order"
 msgstr ""
@@ -544,22 +544,22 @@ msgid "Action Type"
 msgstr ""
 
 msgid "Actions"
-msgstr ""
+msgstr "Acties"
 
 msgid "Actions for Policy Event \"%s\" were saved"
 msgstr ""
 
 msgid "Active"
-msgstr ""
+msgstr "Actief"
 
 msgid "Add"
-msgstr ""
+msgstr "Toevoegen"
 
 msgid "Add VM \"%s\" to a Service was cancelled by the user"
 msgstr ""
 
 msgid "Add VM to the selected Service"
-msgstr ""
+msgstr "Voeg VM toe aan de geselecteerde Service"
 
 msgid "Add a Resource"
 msgstr ""
@@ -652,16 +652,16 @@ msgid "All"
 msgstr ""
 
 msgid "All %s"
-msgstr ""
+msgstr "Alle %s"
 
 msgid "All %s Indexes"
-msgstr ""
+msgstr "Alle %s Indexes"
 
 msgid "All %{model} - %{group}"
-msgstr ""
+msgstr "Alle %{model} - %{group}"
 
 msgid "All %{typ} %{model}"
-msgstr ""
+msgstr "Alle %{typ} %{model}"
 
 msgid ""
 "All Datastore customizations will be lost. Are you sure you want to reset all "
@@ -669,22 +669,22 @@ msgid ""
 msgstr ""
 
 msgid "All Users"
-msgstr ""
+msgstr "Alle Gebruikers"
 
 msgid "All VMs"
-msgstr ""
+msgstr "Alle VMs"
 
 msgid "All Zones"
-msgstr ""
+msgstr "Alle Zones"
 
 msgid "All changes have been reset"
-msgstr ""
+msgstr "Alle wijzigingen zijn teruggezet"
 
 msgid "All custom classes and instances have been reset to default"
 msgstr ""
 
 msgid "All selected %s are not in the current region"
-msgstr ""
+msgstr "Alle geselecteerde $s zijn niet in de huidige regio"
 
 msgid "Amazon Settings validation was successful"
 msgstr ""
@@ -717,16 +717,16 @@ msgid "Apply the selected filters"
 msgstr ""
 
 msgid "Approval State"
-msgstr ""
+msgstr "Goedkeurig Status"
 
 msgid "Approval State:"
-msgstr ""
+msgstr "Goedkeuring Status:"
 
 msgid "Approved/Denied by"
-msgstr ""
+msgstr "Goedgekeurd/Afgewezen door"
 
 msgid "Approved/Denied on"
-msgstr ""
+msgstr "Goedgekeurd/Afgewezen op"
 
 msgid "Are you sure you want to delete field from schema?"
 msgstr ""
@@ -750,22 +750,22 @@ msgid "Are you sure you want to remove this Retirement Entry Point?"
 msgstr ""
 
 msgid "Ascending"
-msgstr ""
+msgstr "Oplopen"
 
 msgid "Assign Catalog Items"
 msgstr ""
 
 msgid "Assign To"
-msgstr ""
+msgstr "Toewijzen Aan"
 
 msgid "Assigned Analysis Profile"
 msgstr ""
 
 msgid "Assigned To"
-msgstr ""
+msgstr "Toegewezen Aan"
 
 msgid "Assigned server role"
-msgstr ""
+msgstr "Toegewezen server rol"
 
 msgid "Assigned to Policies"
 msgstr ""
@@ -915,31 +915,31 @@ msgid "AvailabilityZone|Name"
 msgstr ""
 
 msgid "Available % Conditions:"
-msgstr ""
+msgstr "Beschikbare % Condities"
 
 msgid "Available %s Alerts:"
-msgstr ""
+msgstr "Beschikbare%s Alerts:"
 
 msgid "Available %s:"
-msgstr ""
+msgstr "Beschikbare %s"
 
 msgid "Available Actions:"
-msgstr ""
+msgstr "Beschikbare Acties:"
 
 msgid "Available Alerts:"
-msgstr ""
+msgstr "Beschikbare Alerts:"
 
 msgid "Available Policies:"
-msgstr ""
+msgstr "Beschikbare Policies"
 
 msgid "Available Snapshots"
-msgstr ""
+msgstr "Beschikbare Snapshots"
 
 msgid "Available VMs:"
-msgstr ""
+msgstr "Beschikbare VMs:"
 
 msgid "Average"
-msgstr ""
+msgstr "Gemiddelde"
 
 msgid "Back"
 msgstr "Terug"
@@ -948,16 +948,16 @@ msgid "Back (ABCD...)"
 msgstr ""
 
 msgid "Based On"
-msgstr ""
+msgstr "Gebaseerd Op"
 
 msgid "Basic Info"
-msgstr ""
+msgstr "Basis Info"
 
 msgid "Basic Information"
-msgstr ""
+msgstr "Basis Informatie"
 
 msgid "Basic Options"
-msgstr ""
+msgstr "Basis Opties"
 
 msgid "Belongs to Alert Profiles"
 msgstr ""
@@ -1035,7 +1035,7 @@ msgid "BottleneckEvent|Timestamp"
 msgstr ""
 
 msgid "Box Information"
-msgstr ""
+msgstr "Box Informatie"
 
 msgid "Browser"
 msgstr ""
@@ -1044,25 +1044,25 @@ msgid "Browser OS"
 msgstr ""
 
 msgid "Browser Version"
-msgstr ""
+msgstr "Browser Versie"
 
 msgid "Button not yet implemented"
-msgstr ""
+msgstr "Knop nog niet geïmplementeerd"
 
 msgid "Buttons"
-msgstr ""
+msgstr "Knoppen"
 
 msgid "By %s"
-msgstr ""
+msgstr "Bij %s"
 
 msgid "By Filter"
-msgstr ""
+msgstr "Bij Filter"
 
 msgid "By Host"
-msgstr ""
+msgstr "Bij Host"
 
 msgid "By User ID %s %s"
-msgstr ""
+msgstr "Bij Gebruikers ID %s %s"
 
 msgid "CFME Appliance restart initiated successfully"
 msgstr ""
@@ -1077,7 +1077,7 @@ msgid "CPU"
 msgstr ""
 
 msgid "CPU Limit"
-msgstr ""
+msgstr "CPU Limiet"
 
 msgid "CPU Reserve"
 msgstr ""
@@ -1092,10 +1092,10 @@ msgid "CPU Shares Level"
 msgstr ""
 
 msgid "CPU Speed"
-msgstr ""
+msgstr "CPU Snelheid"
 
 msgid "CPU Usage"
-msgstr ""
+msgstr "CPU Gebruiker"
 
 msgid ""
 "Can not delete folder, one or more reports in the selected folder are not owne"
@@ -1103,13 +1103,13 @@ msgid ""
 msgstr ""
 
 msgid "Cancel"
-msgstr ""
+msgstr "Annuleer"
 
 msgid "Cancel Changes"
-msgstr ""
+msgstr "Annuleer Wijzigingen"
 
 msgid "Cancel Import"
-msgstr ""
+msgstr "Annuleer Import"
 
 msgid "Cancel Simulation to go back to Button details"
 msgstr ""
@@ -1138,25 +1138,25 @@ msgid "Capacity and Utilization Collection settings saved"
 msgstr ""
 
 msgid "Catalog"
-msgstr ""
+msgstr "Catalogus"
 
 msgid "Catalog Item Type"
-msgstr ""
+msgstr "Catalogus Artikel Type"
 
 msgid "Catalog Items"
-msgstr ""
+msgstr "Custalogus Artikelen"
 
 msgid "Categories"
-msgstr ""
+msgstr "Categorieën"
 
 msgid "Category"
-msgstr ""
+msgstr "Categorie"
 
 msgid "Category Tag Entries"
 msgstr ""
 
 msgid "Caution:"
-msgstr ""
+msgstr "Voorzichtig:"
 
 msgid "Change %s value to submit reconfigure request"
 msgstr ""
@@ -1225,10 +1225,10 @@ msgid "Chart Theme"
 msgstr ""
 
 msgid "Check All"
-msgstr ""
+msgstr "Selecteer Alle"
 
 msgid "Check for updates"
-msgstr ""
+msgstr "Controlleer voor updates"
 
 msgid "Checked default filters will be visible."
 msgstr ""
@@ -1240,28 +1240,28 @@ msgid "Child VMs:"
 msgstr ""
 
 msgid "Choose"
-msgstr ""
+msgstr "Kies"
 
 msgid "Choose a %s"
-msgstr ""
+msgstr "Kies een %s"
 
 msgid "Choose a %s first"
-msgstr ""
+msgstr "Kies een %s eerst"
 
 msgid "Choose a Category"
-msgstr ""
+msgstr "Kies een Categorie"
 
 msgid "Choose a Filter"
-msgstr ""
+msgstr "Kies een Filter"
 
 msgid "Choose a Host"
-msgstr ""
+msgstr "Kies een Host"
 
 msgid "Choose a Timeline from the menus on the left."
-msgstr ""
+msgstr "Kies een Tijdlijn in het menu aan de linker kant."
 
 msgid "Choose a VM"
-msgstr ""
+msgstr "Kies een VM"
 
 msgid "Choose the type of custom variables to be imported"
 msgstr ""
