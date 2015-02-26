@@ -71,8 +71,8 @@ describe DialogFieldDateControl do
           expect(dialog_field.read_attribute(:default_value)).to eq("2015-01-02")
         end
 
-        it "returns the default value" do
-          expect(dialog_field.normalize_automate_values(automate_hash)).to eq("2015-01-02")
+        it "returns the default value in m/d/y format" do
+          expect(dialog_field.normalize_automate_values(automate_hash)).to eq("01/02/2015")
         end
       end
 

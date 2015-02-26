@@ -1,5 +1,5 @@
 class DialogFieldDateControl < DialogField
-  AUTOMATE_VALUE_FIELDS = %w(default_value show_past_dates)
+  AUTOMATE_VALUE_FIELDS = %w(show_past_dates)
 
   include TimezoneMixin
 
@@ -44,7 +44,7 @@ class DialogFieldDateControl < DialogField
       return default_time
     end
 
-    self[:default_value]
+    Date.parse(self[:default_value]).strftime("%m/%d/%Y")
   end
 
   def script_error_values
