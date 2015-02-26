@@ -1,44 +1,43 @@
-class Chargeback < ActsAsArModel
-  set_columns_hash(
-    :start_date               => :datetime,
-    :end_date                 => :datetime,
-    :interval_name            => :string,
-    :display_range            => :string,
-    :vm_name                  => :string,
-    :owner_name               => :string,
-    :cpu_allocated_metric     => :float,
-    :cpu_allocated_cost       => :float,
-    :cpu_used_cost            => :float,
-    :cpu_used_metric          => :float,
-    :cpu_cost                 => :float,
-    :cpu_metric               => :float,
-    :disk_io_used_cost        => :float,
-    :disk_io_used_metric      => :float,
-    :disk_io_cost             => :float,
-    :disk_io_metric           => :float,
-    :fixed_compute_1_cost     => :float,
-    :fixed_compute_2_cost     => :float,
-    :fixed_storage_1_cost     => :float,
-    :fixed_storage_2_cost     => :float,
-    :fixed_2_cost             => :float,
-    :fixed_cost               => :float,
-    :memory_allocated_cost    => :float,
-    :memory_allocated_metric  => :float,
-    :memory_used_cost         => :float,
-    :memory_used_metric       => :float,
-    :memory_cost              => :float,
-    :memory_metric            => :float,
-    :net_io_used_cost         => :float,
-    :net_io_used_metric       => :float,
-    :net_io_cost              => :float,
-    :net_io_metric            => :float,
-    :storage_allocated_cost   => :float,
-    :storage_allocated_metric => :float,
-    :storage_used_cost        => :float,
-    :storage_used_metric      => :float,
-    :storage_cost             => :float,
-    :storage_metric           => :float,
-    :total_cost               => :float
+class Chargeback < Struct.new(
+    :start_date,
+    :end_date,
+    :interval_name,
+    :display_range,
+    :vm_name,
+    :owner_name,
+    :cpu_allocated_metric,
+    :cpu_allocated_cost,
+    :cpu_used_cost,
+    :cpu_used_metric,
+    :cpu_cost,
+    :cpu_metric,
+    :disk_io_used_cost,
+    :disk_io_used_metric,
+    :disk_io_cost,
+    :disk_io_metric,
+    :fixed_compute_1_cost,
+    :fixed_compute_2_cost,
+    :fixed_storage_1_cost,
+    :fixed_storage_2_cost,
+    :fixed_2_cost,
+    :fixed_cost,
+    :memory_allocated_cost,
+    :memory_allocated_metric,
+    :memory_used_cost,
+    :memory_used_metric,
+    :memory_cost,
+    :memory_metric,
+    :net_io_used_cost,
+    :net_io_used_metric,
+    :net_io_cost,
+    :net_io_metric,
+    :storage_allocated_cost,
+    :storage_allocated_metric,
+    :storage_used_cost,
+    :storage_used_metric,
+    :storage_cost,
+    :storage_metric,
+    :total_cost
   )
 
   RATES = YAML.load_file(File.join(Rails.root, "db/fixtures/chargeback_rates.yml"))
@@ -151,7 +150,12 @@ class Chargeback < ActsAsArModel
     end
     $log.info("#{log_prefix} Calculating chargeback costs...Complete")
 
-    return [data.map {|r| new(r.last)}]
+    [data.map {|r| new_from_hash(r.last)}]
+  end
+
+  def self.new_from_hash(hash)
+    values = members.map { |n| hash[n.to_s] }
+    new(*values)
   end
 
   def get_rates(perf)
@@ -170,7 +174,7 @@ class Chargeback < ActsAsArModel
   end
 
   def self.column_names
-    @column_names ||= self.columns.collect(&:name).sort
+    @column_names ||= self.members.collect(&:to_s).sort
   end
 
   def self.calculate_costs(perf, h, rates)
