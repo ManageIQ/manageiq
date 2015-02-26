@@ -8,11 +8,14 @@ module ApiHelper
     # virtual subcollections is added.
 
     def normalize_hash(type, obj, opts = {})
-      attrs = (obj.respond_to?(:attributes) ? obj.attributes.keys : obj.keys)
+      attrs = normalize_select_attributes(obj, opts)
       result = {}
 
       href = new_href(type, obj["id"], obj["href"], opts)
-      result["href"] = href if href.present?
+      if href.present?
+        result["href"] = href
+        attrs -= ["href"]
+      end
 
       attrs.each { |k| result[k] = normalize_direct(type, k, obj[k]) }
       result
@@ -89,6 +92,14 @@ module ApiHelper
     end
 
     private
+
+    def normalize_select_attributes(obj, opts)
+      if opts[:render_attributes].present?
+        opts[:render_attributes]
+      else
+        obj.respond_to?(:attributes) ? obj.attributes.keys : obj.keys
+      end
+    end
 
     def normalize_direct(type, name, obj)
       return normalize_direct_array(type, name, obj) if obj.kind_of?(Array)
