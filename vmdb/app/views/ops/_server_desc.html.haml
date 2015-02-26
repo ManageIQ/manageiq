@@ -2,8 +2,8 @@
   %fieldset
     %h3
       = h(@temp[:selected_server]["name"])
-    %dl.col2
-      %dd
+    .row
+      .col-sm-12.col-md-12.col-lg-6
         %table.style1
           %tr
             %td.keyimage{:rowspan => 6}
@@ -29,7 +29,7 @@
             %td.wide
               - t = @temp[:selected_server].stopped_on
               = h(t.blank? ? "" : format_timezone(t))
-      %dd
+      .col-sm-12.col-md-12.col-lg-6
         %table.style1
           %tr
             %td.key= _("Memory Usage")

@@ -1,7 +1,7 @@
 .maincontent
   = render :partial => "layouts/flash_msg"
-  %dl.col1
-    %dd
+  .row
+    .col-sm-12.col-md-12.col-lg-12
       %fieldset
         %table.style1
           %tr
@@ -20,8 +20,8 @@
             %td.notwide
               = @record.display ? "True" : "False"
   - if @record.composite?
-    %dl.col1
-      %dd
+    .row
+      .col-sm-12.col-md-12.col-lg-12
         %fieldset
           %h3
             = _('Resources')
@@ -55,8 +55,8 @@
           - else
             = _('No Resources found.')
   - else
-    %dl.col1
-      %dd
+    .row
+      .col-sm-12.col-md-12.col-lg-12
         %fieldset
           %h3
             = _('Request Info')

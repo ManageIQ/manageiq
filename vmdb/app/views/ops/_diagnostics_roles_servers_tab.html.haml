@@ -1,10 +1,10 @@
 - if @sb[:active_tab] == "diagnostics_roles_servers"
   = render(:partial => "layouts/flash_msg")
   - if @temp[:server_tree]
-    %dl.col2
-      %dd
+    .row
+      .col-sm-12.col-md-12.col-lg-6
         = render :partial => "zone_tree"
-      %dd
+      .col-sm-12.col-md-12.col-lg-6
         = render :partial => "selected"
   - else
     = render :partial => 'layouts/info_msg', :locals => {:message => _("No Servers found.")}

@@ -11,8 +11,8 @@
 
 #tab_div
   = render :partial => "layouts/flash_msg"
-  %dl.col2
-    %dd
+  .row
+    .col-sm-12.col-md-12.col-lg-6
       %fieldset
         %h3=_("Normal Operating Ranges (up to 30 days' data)")
         %table.style3
@@ -152,7 +152,7 @@
                 = @record.conservative_mem_recommended_change_pct ? "#{@record.conservative_mem_recommended_change_pct}%" : notavail
               %td{:align => "right"}
                 = @record.conservative_mem_recommended_change ? "#{@record.conservative_mem_recommended_change} MB" : notavail
-    %dd
+    .col-sm-12.col-md-12.col-lg-6
       %fieldset
         %h3=_('Right-Sizing (Moderate - derived from High NORM)')
         %table.style3

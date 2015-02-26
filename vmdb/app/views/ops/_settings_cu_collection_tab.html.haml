@@ -2,8 +2,8 @@
 - if @sb[:active_tab] == "settings_cu_collection"
   = form_tag( {:action => 'cu_collection_update'}, {:id => "config_form"}) do
     = render :partial => "layouts/flash_msg"
-    %dl.col2
-      %dd
+    .row
+      .col-sm-12.col-md-12.col-lg-6
         %fieldset
           %h3=_("Clusters")
           %table.style1
@@ -38,7 +38,7 @@
                   :checkboxes => true})
               %br/
               .note=_("VM data will be collected for VMs under selected Hosts only. Data is collected for a Cluster and all of its Hosts when at least one Host is selected.")
-      %dd
+      .col-sm-12.col-md-12.col-lg-6
         %fieldset
           %h3= ui_lookup(:tables=>"storages")
           %table.style1

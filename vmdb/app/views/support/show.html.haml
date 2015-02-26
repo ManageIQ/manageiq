@@ -1,8 +1,8 @@
 #main_div
   #tab_div
     = render :partial => "layouts/flash_msg"
-    %dl.col2
-      %dd
+    .row
+      .col-sm-12.col-md-12.col-lg-6
         %fieldset
           %h3=_('Session Information')
           %table.style1
@@ -23,7 +23,7 @@
       - cond_url      = desc.present? && url.present?
       - cond_userrole = ["super_administrator", "administrator"].include?(session[:userrole])
       - if cond_userrole || cond_url
-        %dd
+        .col-sm-12.col-md-12.col-lg-6
           %fieldset
             %h3=_('Product Assistance')
             - if cond_userrole

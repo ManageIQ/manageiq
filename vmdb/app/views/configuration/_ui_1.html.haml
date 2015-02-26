@@ -4,8 +4,8 @@
 
 #tab_div
   = form_tag({:action => "update"}, {:id => "config_form"}) do
-    %dl.col2
-      %dd
+    .row
+      .col-sm-12.col-md-12.col-lg-6
         %fieldset
           %h3=_('Grid/Tile Icons')
           %table.style1
@@ -44,7 +44,7 @@
                 = select_tag("start_page",
                              options_for_select(session[:start_pages], @edit[:new][:display][:startpage]),
                              "data-miq_observe" => url_json)
-      %dd
+      .col-sm-12.col-md-12.col-lg-6
         %fieldset
           %h3=_('Default Items Per Page')
           %table.style1

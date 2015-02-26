@@ -2,8 +2,8 @@
 
 #tab_div
   = form_tag(:action => "update", :id => "config_form") do
-    %dl.col2
-      %dd
+    .row
+      .col-sm-12.col-md-12.col-lg-6
         %fieldset
           %h3= _('General')
           %table.style1
@@ -47,7 +47,7 @@
                     %td.key #{view_name}
                     %td
                       %ul#toolbars= render_view_buttons(resource, @edit[:new][:views][resource])
-      %dd
+      .col-sm-12.col-md-12.col-lg-6
         - if role_allows(:feature => "ems_cloud_show_list")           ||
         -    role_allows(:feature => "availability_zone_show_list")   ||
         -    role_allows(:feature => "flavor_show_list")              ||
