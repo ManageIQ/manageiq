@@ -1,8 +1,6 @@
 - if @explorer
   - style = "width:auto"
-- else
-  - klass = "fixed_width"
-#accordion.panel-group{:class => klass, :style => style}
+#accordion.panel-group{:style => style}
   - if @lastaction == "drift"
     = patternfly_accordion_panel(h(@drift_obj.name), true, "icon") do
       - if @sb[:compare_db] != "EmsCluster"
