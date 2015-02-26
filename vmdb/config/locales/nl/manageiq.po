@@ -1736,19 +1736,19 @@ msgid "Copy to same path"
 msgstr ""
 
 msgid "Create"
-msgstr ""
+msgstr "Maak"
 
 msgid "Create Snapshot for %{model} \"%{name}\" was started"
 msgstr ""
 
 msgid "Create snapshot"
-msgstr ""
+msgstr "Maak snapshot"
 
 msgid "Created"
-msgstr ""
+msgstr "Aangemaakt"
 
 msgid "Created On"
-msgstr ""
+msgstr "Aangemaakt Op"
 
 msgid "Credential validation returned: %s"
 msgstr ""
@@ -1772,19 +1772,19 @@ msgid "Credentials/Settings saved successfully"
 msgstr ""
 
 msgid "Current"
-msgstr ""
+msgstr "Huidige"
 
 msgid "Current %{model} \"%{name}\" cannot be deleted"
-msgstr ""
+msgstr "Huidige %{model} \"%{name}\" kan niet worden verwijderd"
 
 msgid "Current Rates"
 msgstr ""
 
 msgid "Current User"
-msgstr ""
+msgstr "Huidige gebruiker"
 
 msgid "Current Version"
-msgstr ""
+msgstr "Huidige Versie"
 
 msgid "Custom Attribute Settings"
 msgstr ""
