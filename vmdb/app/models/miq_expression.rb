@@ -954,7 +954,7 @@ class MiqExpression
 
     parts.each do |assoc|
       assoc = assoc.to_sym
-      ref = model.reflections_with_virtual[assoc]
+      ref = model.reflection_with_virtual(assoc)
       result[:virtual_reflection] = true if ref.kind_of?(VirtualReflection)
 
       unless result[:virtual_reflection]
@@ -1685,7 +1685,7 @@ class MiqExpression
     macro = nil
     model = model_class(parts.shift)
     parts.each do |assoc|
-      ref = model.reflections_with_virtual[assoc.to_sym]
+      ref = model.reflection_with_virtual(assoc.to_sym)
       return false if ref.nil?
 
       macro = ref.macro
@@ -1840,7 +1840,7 @@ class MiqExpression
     return nil if model.nil?
 
     parts.each do |assoc|
-      ref = model.reflections_with_virtual[assoc.to_sym]
+      ref = model.reflection_with_virtual(assoc.to_sym)
       return nil if ref.nil?
       model = ref.klass
     end
