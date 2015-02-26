@@ -18,7 +18,7 @@ module MiqAeEvent
     call_automate(event, aevent, 'Event')
   end
 
-  def self.raise_synthetic_event(target, event, inputs, message = nil)
+  def self.raise_synthetic_event(target, event, inputs, options = {})
     if event == 'vm_retired'
       instance    = 'Automation'
       aevent      = {'request' => event}
@@ -27,10 +27,10 @@ module MiqAeEvent
       aevent      = build_evm_event(event, inputs)
     end
 
-    call_automate(target, aevent, instance, message)
+    call_automate(target, aevent, instance, options)
   end
 
-  def self.raise_evm_event(event_name, target, inputs = {}, _message = nil)
+  def self.raise_evm_event(event_name, target, inputs = {}, options = {})
     if target.kind_of?(Array)
       klass, id = target
       klass = Object.const_get(klass)
@@ -38,14 +38,19 @@ module MiqAeEvent
       raise "Unable to find object with class: [#{klass}], Id: [#{id}]" if target.nil?
     end
 
-    call_automate(target, build_evm_event(event_name, inputs), 'Event')
+    sync = options.delete(:synchronous)
+    if sync
+      call_automate_sync(target.class.name, target.id, build_evm_event(event_name, inputs), 'Event')
+    else
+      call_automate(target, build_evm_event(event_name, inputs), 'Event', options)
+    end
   end
 
-  def self.eval_alert_expression(target, inputs, message = nil)
+  def self.eval_alert_expression(target, inputs, options = {})
     aevent = build_evm_event('alert', inputs)
     aevent[:request] = 'evaluate'
     aevent.merge!(inputs)
-    ws = call_automate(target, aevent, 'Alert', message)
+    ws = call_automate(target, aevent, 'Alert', options)
     return nil if ws.nil? || ws.root.nil?
     ws.root['ae_result']
   end
@@ -110,8 +115,15 @@ module MiqAeEvent
   rescue URI::InvalidURIError => err
   end
 
-  def self.call_automate(obj, attrs, instance_name, message = nil)
+  def self.call_automate(obj, attrs, instance_name, options = {})
     user_id, group_id, tenant_id = automate_user_ids(obj)
+
+    q_options = {
+      :miq_callback => options[:miq_callback],
+      :priority     => MiqQueue::HIGH_PRIORITY,
+      :task_id      => nil          # Clear task_id to allow running synchronously under current worker process
+    }
+
     args = {
       :object_type      => obj.class.name,
       :object_id        => obj.id,
@@ -120,9 +132,15 @@ module MiqAeEvent
       :user_id          => user_id,
       :miq_group_id     => group_id,
       :tenant_id        => tenant_id,
-      :automate_message => message
+      :automate_message => options[:message]
     }
-    MiqAeEngine.deliver_queue(args, {:priority => MiqQueue::HIGH_PRIORITY})
+
+    sync = options[:synchronous]
+    if sync
+      MiqAeEngine.deliver(args)
+    else
+      MiqAeEngine.deliver_queue(args, q_options)
+    end
   end
 
   def self.provider_event_target(event)
