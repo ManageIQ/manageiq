@@ -136,10 +136,8 @@ module EmsRefresh::Parsers
         :cpu_cores         => container_def["cpu"].to_f / 1000
       }
       ports = container_def["ports"]
-      unless ports.nil?
-        new_result[:container_port_configs] = ports.collect do |port_entry|
+      new_result[:container_port_configs] = Array(ports).collect do |port_entry|
           parse_container_port_config(port_entry, pod_id, container_def["name"])
-        end
       end
       new_result
     end
