@@ -20,26 +20,26 @@
       %tr
         %td{:align => "right"}
           #automate_buttons_on{:style => "display:#{@changed ? "display" : "none"};"}
-            = link_to(button_tag(t = _("Apply"),
-                                 :class => "btn btn-primary",
-                                 :alt   => t),
+            = link_to(t = _("Apply"),
                       {:action => "ae_tree_select_toggle",
                        :button => "submit"},
+                      :class  => "btn btn-primary",
+                      :alt    => t,
                       :remote => true,
                       :title  => t)
-            = link_to(button_tag(t = _("Cancel"),
-                                 :class => "btn btn-default",
-                                 :alt   => t),
+            = link_to(t = _("Cancel"),
                       {:action => "ae_tree_select_toggle",
                        :button => "cancel"},
+                      :class  => "btn btn-default",
+                      :alt    => t,
                       :remote => true,
                       :title  => t)
           #automate_buttons_off{:style => "display:#{@changed ? "none" : "display"};"}
             = button_tag(_("Apply"), :class => "btn btn-primary btn-disabled")
-            = link_to(button_tag(t = _("Cancel"),
-                                 :class => "btn btn-default",
-                                 :alt   => t),
+            = link_to(t = _("Cancel"),
                       {:action => "ae_tree_select_toggle",
                        :button => "cancel"},
+                      :class  => "btn btn-default",
+                      :alt    => t,
                       :remote => true,
                       :title  => t)

@@ -14,14 +14,18 @@
                 :title => (t = _("Resolve conflicts to import the file")),
                 :alt   => t)
             - else
-              = link_to(button_tag(_('Commit'), :class => "btn btn-primary", :alt => (t = _("Commit Import"))),
+              = link_to(_('Commit'),
                 {:action => "export", :button => "import", :commit => true},
+                :class                 => "btn btn-primary",
+                :alt                   => (t = _("Commit Import")),
                 "data-miq_sparkle_on"  => true,
                 "data-miq_sparkle_off" => true,
                 :remote                => true,
                 :title                 => t)
-            = link_to(button_tag(_('Cancel'), :class => "btn btn-default", :alt => _("Cancel Changes")),
+            = link_to(_('Cancel'),
               {:action => "export", :button => "cancel_import"},
+              :class                 => "btn btn-default",
+              :alt                   => _("Cancel Changes"),
               "data-miq_sparkle_on"  => true,
               "data-miq_sparkle_off" => true,
               :remote                => true,
@@ -67,8 +71,10 @@
         %td{:align => "right"}
           #buttons
             - t = _("Export Selected %s") % title
-            = link_to(button_tag(_('Export'), :class => "btn btn-primary", :alt => t),
+            = link_to(_('Export'),
               {:action => "export", :button => "export"},
+              :class                 => "btn btn-primary",
+              :alt                   => t,
               "data-miq_sparkle_on"  => true,
               "data-miq_sparkle_off" => true,
               "data-submit"          => "profile_export_div",

@@ -1,35 +1,45 @@
 #left_cell_bottom{:align => "right"}
   #throw_on{:style => @resolve[:throw_ready] ? "" : "display: none;"}
     - t = _("Submit Automation Simulation with the specified options")
-    = link_to(button_tag(_("Submit"), :class => "btn btn-primary", :alt => t),
+    = link_to(_("Submit"),
       {:action => "resolve", :button => "throw"},
+      :class                => "btn btn-primary",
+      :alt                  => t,
       "data-miq_sparkle_on" => true,
       :remote               => true,
       :title                => t)
-    = link_to(button_tag(_("Reset"), :class => "btn btn-default", :alt => (t = _("Reset all options"))),
+    = link_to(_("Reset"),
       {:action => "resolve", :button => "reset"},
+      :class                 => "btn btn-default",
+      :alt                   => (t = _("Reset all options")),
       "data-miq_sparkle_on"  => true,
       "data-miq_sparkle_off" => true,
       :remote                => true,
       :title                 => t)
     - if @resolve[:lastaction] == "simulate"
       - t = _("Cancel Simulation to go back to Button details")
-      = link_to(button_tag(_("Cancel"), :class => "btn btn-default", :alt => t),
+      = link_to(_("Cancel"),
         {:action => "explorer", :button => "cancel_simulation", :controller => "miq_ae_customization"},
+        :class => "btn btn-default",
+        :alt   => t,
         :title => t)
 
   #throw_off{:style => @resolve[:throw_ready] ? "display: none;" : ""}
     = button_tag(_("Submit"),
       :class => "btn btn-primary btn-disabled",
       :title => _("Starting process must be specified"))
-    = link_to(button_tag(_("Reset"), :class => "btn btn-default", :alt => (t = _("Reset all options"))),
+    = link_to(_("Reset"),
       {:action => "resolve", :button => "reset"},
+      :class                 => "btn btn-default",
+      :alt                   => (t = _("Reset all options")),
       "data-miq_sparkle_on"  => true,
       "data-miq_sparkle_off" => true,
       :remote                => true,
       :title                 => t)
     - if @resolve[:lastaction] == "simulate"
       - t = _("Cancel Simulation to go back to Button details")
-      = link_to(button_tag("Cancel", :class => "btn btn-default", :alt => t),
+      = link_to("Cancel",
         {:action => "explorer",  :button => "cancel_simulation", :controller => "miq_ae_customization"},
+        :class => "btn btn-default",
+        :alt   => t,
         :title => t)

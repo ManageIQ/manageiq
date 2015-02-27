@@ -70,22 +70,22 @@
             %span#quick_search_buttons_off
               = button_tag(t = _("Apply"), :class => "btn btn-primary btn-disabled")
             %span#quick_search_buttons_on{:style => "display:none;"}
-              = link_to(button_tag(t,
-                                   :class => "btn btn-primary",
-                                   :alt   => t = _("Apply the current filter (Enter)")),
+              = link_to(t,
                         {:action => "quick_search",
                          :button => "apply"},
+                        :class                 => "btn btn-primary",
+                        :alt                   => t = _("Apply the current filter (Enter)"),
                         "data-miq_sparkle_on"  => true,
                         "data-miq_sparkle_off" => true,
                         :remote                => true,
                         :method                => :post,
                         :id                    => "apply_button",
                         :title                 => t)
-            = link_to(button_tag(_('Cancel'),
-                                :class => "btn btn-default",
-                                :alt   => t = _('Cancel (Esc)')),
+            = link_to(_('Cancel'),
                       {:action => "quick_search",
                        :button => "cancel"},
+                      :class  => "btn btn-default",
+                      :alt    => t = _('Cancel (Esc)'),
                       :remote => true,
                       :method => :post,
                       :id     => "cancel_button",

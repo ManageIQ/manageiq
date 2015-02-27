@@ -53,26 +53,26 @@
                 :title => _("Update Password")) { _("Update password") }
 
           .col-xs-4.col-sm-4.col-md-3.submit
-            = link_to(button_tag("Login",
-                                 :class => "btn btn-primary",
-                                 :alt   => "Login"),
+            = link_to("Login",
                       {:action => "authenticate",
                        :button => "login",
                        :method => :post},
                       :id                   => "login",
+                      :class                => "btn btn-primary",
+                      :alt                  => "Login",
                       :title                => _("Login"),
                       :remote               => true,
                       "data-miq_sparkle_on" => true,
                       "data-submit"         => 'login_div')
 
-            = link_to(button_tag("SSO Login",
-                                 :class => "btn btn-primary",
-                                 :alt   => "SSO Login"),
+            = link_to("SSO Login",
                       {:action => "kerberos_authenticate",
                        :button => "sso_login",
                        :method => :post},
                       :id                    => "sso_login",
+                      :class                 => "btn btn-primary",
                       :hidden                => true,
+                      :alt                   => "SSO Login",
                       :title                 => _("SSO Login"),
                       :remote                => true,
                       "data-miq_sparkle_on"  => true,

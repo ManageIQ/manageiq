@@ -92,12 +92,12 @@
                                        "data-miq_observe" => {:interval => '.5',
                                                               :url      => url}.to_json)
                 %td{:align => "right", :valign => "bottom"}
-                  = link_to(button_tag("Retrieve",
-                                       :class => "btn btn-primary",
-                                       :alt   => _("LDAP Group Lookup")),
+                  = link_to("Retrieve",
                             {:action => "rbac_group_user_lookup",
                              :button => "submit",
                              :id     => "#{@edit[:group_id] || "new"}"},
+                             :class => "btn btn-primary",
+                             :alt   => _("LDAP Group Lookup"),
                              "data-miq_sparkle_on"  => true,
                              "data-miq_sparkle_off" => true,
                              :remote                => true,

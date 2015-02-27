@@ -122,8 +122,10 @@
               = _("* Enter a reason for this denial and press Submit")
         %td{:align => 'right'}
           %span#buttons_on{:style => 'display:none'}
-            = link_to(button_tag((t = _('Submit')), :class => "btn btn-primary", :alt => t),
+            = link_to(t = _('Submit'),
               {:action  => 'stamp', :button  => "submit", :disabled => true},
+              :class                 => "btn btn-primary",
+              :alt                   => t,
               "data-miq_sparkle_on"  => true,
               "data-miq_sparkle_off" => true,
               :remote                => true,

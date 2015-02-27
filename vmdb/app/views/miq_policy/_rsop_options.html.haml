@@ -3,14 +3,18 @@
 #left_cell_bottom{:align => "center"}
   #form_buttons_on{:style => session[:changed] ? "" : "display: none;"}
     - t = "Submit Policy Simulation for the selected VMs"
-    = link_to(button_tag("Submit", :class => "btn btn-primary", :alt => t),
+    = link_to("Submit",
       {:action => "rsop", :button => "submit"},
+      :class                => "btn btn-primary",
+      :alt                  => t,
       "data-miq_sparkle_on" => true,
       :remote               => true,
       :title                => t)
     - t = "Reset all Policy Simulation options"
-    = link_to(button_tag("Reset", :class => "btn btn-default", :alt => t),
+    = link_to("Reset",
       {:action => "rsop", :button => "reset"},
+      :class                 => "btn btn-default",
+      :alt                   => t,
       "data-miq_sparkle_on"  => true,
       "data-miq_sparkle_off" => true,
       :remote                => true,
@@ -20,8 +24,10 @@
       :class => "btn btn-primary btn-disabled",
       :title => _("Select a VM to Submit the Simulation Options"))
     - t = "Reset all Policy Simulation options"
-    = link_to(button_tag("Reset", :class => "btn btn-default", :alt => t),
+    = link_to("Reset",
       {:action => "rsop", :button => "reset"},
+      :class                 => "btn btn-default",
+      :alt                   => t,
       "data-miq_sparkle_on"  => true,
       "data-miq_sparkle_off" => true,
       :remote                => true,
