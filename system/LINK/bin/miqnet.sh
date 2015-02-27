@@ -98,7 +98,7 @@ get_info () {
         echo -e $USAGETEXT >&2
         exit 1
       fi
-      echo `get_hostname` `get_mac` `get_ip` `get_netmask` `get_gateway` `get_dns1` `get_dns2` `get_timeserver`
+      echo `get_hostname` `get_mac` `get_ip` `get_netmask` `get_gateway` `get_dns1` `get_dns2`
       ;;
   esac
 }
