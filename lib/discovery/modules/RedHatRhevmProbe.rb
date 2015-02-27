@@ -12,18 +12,9 @@ class RedHatRhevmProbe
     $log.debug "#{log_header}: probing ip = #{ost.ipaddr}" if $log
 
     require 'ovirt'
-
     if PortScanner.portOpen(ost, Ovirt::Service::DEFAULT_PORT)
-      begin
-        rhevm = Ovirt::Inventory.new(
-          :server     => ost.ipaddr,
-          :username   => 'test',
-          :password   => 'test',
-          :verify_ssl => false
-        )
-        rhevm.api
-      rescue => err
-        ost.hypervisor << :rhevm if err.to_s.include?('401 Unauthorized:')
+      if Ovirt::Service.ovirt?(:server => ost.ipaddr, :verify_ssl => false)
+        ost.hypervisor << :rhevm
       end
     end
     $log.debug "#{log_header}: probe of ip = #{ost.ipaddr} complete" if $log
