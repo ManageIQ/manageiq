@@ -10,12 +10,11 @@
     = render :partial => "shared/summary/textual_tags", :locals => {:title => _("Smart Management"), :items => textual_group_tags}
 .row
   .col-sm-12.col-md-12.col-lg-6
-    %fieldset
-      %h3
-        = _('VMs')
-      %table.admintable{:height => "75"}
-        %tbody
-          %tr
-            %td
-              - if @view
-                = render :partial => "layouts/gtl", :locals => {:view => @view}
+    %h3
+      = _('VMs')
+    %table.admintable{:height => "75"}
+      %tbody
+        %tr
+          %td
+            - if @view
+              = render :partial => "layouts/gtl", :locals => {:view => @view}

@@ -3,7 +3,7 @@
     %h3=_("Automations Tasks")
     - at =  @miq_request.automation_tasks
     - if at.empty?
-      =_("No Records found")
+      = render :partial => 'layouts/info_msg', :locals => {:message => _("No Records Found.")}
     - else
       %table.style3
         %tbody

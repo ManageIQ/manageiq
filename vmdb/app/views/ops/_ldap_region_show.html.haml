@@ -18,7 +18,7 @@
   %fieldset
     %h3= _("LDAP Domains")
     - if @selected_lr.ldap_domains.count <= 0
-      = _("No Records found.")
+      = render :partial => 'layouts/info_msg', :locals => {:message => _("No Records Found.")}
     - else
       %table.style3
         %thead

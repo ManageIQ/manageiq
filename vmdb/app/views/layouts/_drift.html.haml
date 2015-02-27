@@ -2,7 +2,7 @@
 
 = render :partial => "layouts/flash_msg"
 - if @compare.nil?
-  = _("No Records Found!")
+  = render :partial => 'layouts/info_msg', :locals => {:message => _("No Records Found.")}
 - else
   #drift_grid_div{:style => "width: #{w}px; height: auto; cursor:hand;"}
     = render :partial => 'layouts/slickgrid',

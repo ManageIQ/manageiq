@@ -1,11 +1,11 @@
 - if keys.any? { |key| workflow.get_field(key, dialog)[:display] && workflow.get_field(key, dialog)[:display].to_s != "hide" }
-  %fieldset
-    %h3
-      = label
-    - table_class ||= "style1"
-    %table{:class => "#{table_class} #{defined?(extra_table_attributes) ? extra_table_attributes : ''}"}
-      - prefix ||= "/miq_request/"
-      - keys.each do |key|
-        - locals = {:wf => workflow, :dialog => dialog, :field => key}
-        - locals[:disabled] = workflow.get_field(key, dialog)[:read_only] ? true : false
-        = render :partial => "#{prefix}prov_field", :locals => locals
+  %h3
+    = label
+  - table_class ||= "style1"
+  %table{:class => "#{table_class} #{defined?(extra_table_attributes) ? extra_table_attributes : ''}"}
+    - prefix ||= "/miq_request/"
+    - keys.each do |key|
+      - locals = {:wf => workflow, :dialog => dialog, :field => key}
+      - locals[:disabled] = workflow.get_field(key, dialog)[:read_only] ? true : false
+      = render :partial => "#{prefix}prov_field", :locals => locals
+  %hr
