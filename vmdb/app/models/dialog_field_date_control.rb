@@ -36,7 +36,7 @@ class DialogFieldDateControl < DialogField
 
     return default_time if automate_hash["value"].blank?
     begin
-      @value = Date.parse(automate_hash["value"]).iso8601
+      @value = DateTime.parse(automate_hash["value"]).iso8601
     rescue
       return default_time
     end

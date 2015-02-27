@@ -63,7 +63,7 @@ describe DialogFieldDateControl do
 
         it "sets the value as an iso format" do
           dialog_field.normalize_automate_values(automate_hash)
-          expect(dialog_field.instance_variable_get(:@value)).to eq("2015-01-02")
+          expect(dialog_field.instance_variable_get(:@value)).to eq("2015-01-02T00:00:00+00:00")
         end
 
         it "returns the value in m/d/y format" do
