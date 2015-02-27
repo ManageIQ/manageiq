@@ -147,9 +147,7 @@ module Vmdb
     def self.init_diagnostics
       log_dir = "/var/www/miq/vmdb/log"
       gem_log = File.join(log_dir, "gem_list.txt")
-      ven_gem_log = File.join(log_dir, "vendor_gems.txt")
       rpm_log = File.join(log_dir, "package_list_rpm.txt")
-      dpkg_log = File.join(log_dir, "package_list_dpkg.txt")
 
       @diags ||= [
         {:cmd => "top -b -n 1", :msg =>"Uptime, top processes, and memory usage"}, # batch mode - once
@@ -163,9 +161,7 @@ module Vmdb
         {:cmd => "File.open('/etc/hosts','r'){|f| f.read} if File.exist?('/etc/hosts')", :evaluate? => true, :msg => "Hosts file contents"},
         {:cmd => "File.open('/etc/fstab','r'){|f| f.read} if File.exist?('/etc/fstab')", :evaluate? => true, :msg => "Fstab file contents"},
         {:cmd => "echo start: date time is: #{Time.now.utc} >> #{gem_log}; gem list > #{gem_log}"},
-        {:cmd => "echo start: date time is: #{Time.now.utc} >> #{ven_gem_log}; ls -1 vendor/gems > #{ven_gem_log}"},
         {:cmd => "echo start: date time is: #{Time.now.utc} >> #{rpm_log}; rpm -qa --queryformat '%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n' |sort -k 1  > #{rpm_log} 2> /dev/null"},
-        {:cmd => "echo start: date time is: #{Time.now.utc} >> #{dpkg_log}; dpkg -l > #{dpkg_log} 2> /dev/null"}
       ]
     end
   end
