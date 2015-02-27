@@ -1,7 +1,7 @@
 - url = url_for(:action => 'form_field_changed', :id => "#{@edit[:rpt_id] || 'new'}")
 #columns_div
   = form_tag(:action => 'create', :id => "report_columns_form") do
-    %p.legend
+    %h3
       = _('Configure Report Columns')
     %table.style1
       %tr
@@ -24,7 +24,7 @@
     %strong
       = _('* Caution: Changing these fields will clear all selected values below them!')
     %hr
-      %p.legend
+      %h3
         = _('Report Creation Timeout')
       %table.style1
         %tr

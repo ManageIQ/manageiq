@@ -1,10 +1,10 @@
 - url = url_for(:action =>'zone_field_changed', :id=>"#{@zone.id || "new"}")
 = render :partial => "layouts/flash_msg"
 - disabled_name = !(@zone.name.nil? && @edit[:current][:name].nil?)
-%dl.col2
-  %dd
+.row
+  .col-sm-12.col-md-12.col-lg-6
     %fieldset
-      %p.legend=_("Zone Information")
+      %h3=_("Zone Information")
       %table.style1
         %tr
           %td.key=_("Name")
@@ -35,7 +35,7 @@
             - if @zone.id && @zone.name.downcase == "default"
               = javascript_tag(javascript_focus('proxy_server_ip'))
     %fieldset
-      %p.legend=_("NTP Servers")
+      %h3=_("NTP Servers")
       %table.style1
         %tr
           %td.key=_("Servers")
@@ -55,9 +55,9 @@
               :maxlength=>MAX_NAME_LEN,
               "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
       =_("* Specified NTP settings apply to this zone only and are not global.")
-  %dd
+  .col-sm-12.col-md-12.col-lg-6
     %fieldset
-      %p.legend=_("Credentials - Windows Domain")
+      %h3=_("Credentials - Windows Domain")
       %table.style1
         %tr
           %td.key=_("User ID")
@@ -81,7 +81,7 @@
               :maxlength=>50,
               "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
     %fieldset
-      %p.legend=_("Settings")
+      %h3=_("Settings")
       %table.style1
         %tr
           %td.key=_("Max Active VM Scans")

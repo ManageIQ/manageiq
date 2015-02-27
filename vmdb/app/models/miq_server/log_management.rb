@@ -62,7 +62,7 @@ module MiqServer::LogManagement
         local_file = VMDB::Util.zip_logs("evm_server_daily.zip", patterns, "admin")
 
         logfile.update_attributes(
-          :file_depot         => log_file_depot,
+          :file_depot         => log_depot,
           :local_file         => local_file,
           :logging_started_on => log_start,
           :logging_ended_on   => log_end,
@@ -169,7 +169,7 @@ module MiqServer::LogManagement
       desc = "Logs for Zone #{self.zone.name rescue nil} Server #{self.name} #{date_string}"
 
       logfile.update_attributes(
-        :file_depot         => log_file_depot,
+        :file_depot         => log_depot,
         :local_file         => local_file,
         :logging_started_on => log_start,
         :logging_ended_on   => log_end,

@@ -4,7 +4,7 @@
     = render :partial => "old_dialogs_form"
   - else
     = render :partial => "layouts/flash_msg"
-    %p.legend=_('Basic Information')
+    %h3=_('Basic Information')
     %table.style1
       %tbody
         %tr
@@ -16,7 +16,7 @@
           %td
             = h(@dialog.description)
     %hr
-      %p.legend=_('Content')
+      %h3=_('Content')
       = text_area("script", "data",
         :value    => h(@dialog.content.to_yaml),
         :readonly => "readonly",

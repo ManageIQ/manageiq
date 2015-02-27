@@ -2568,7 +2568,8 @@ module ApplicationHelper
                         ems_cluster ems_infra event flavor host miq_proxy miq_schedule miq_template offline
                         ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume
                         orchestration_stack policy policy_group policy_profile repository resource_pool
-                        retired scan_profile service snia_local_file_system storage storage_manager templates)
+                        retired scan_profile security_group service snia_local_file_system storage
+                        storage_manager templates)
 
   def render_gtl_view_tb?
     GTL_VIEW_LAYOUTS.include?(@layout) && @gtl_type && !@tagitems &&

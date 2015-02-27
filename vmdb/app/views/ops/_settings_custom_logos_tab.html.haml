@@ -2,7 +2,7 @@
   :id => "#{@sb[:active_tab].split('_')[1]}_#{@sb[:active_tab].split('_').last}")
 - if @sb[:active_tab] == "settings_custom_logos"
   = render :partial => "layouts/flash_msg"
-  %p.legend=_("Custom Logo Image (Shown on top right of all screens)")
+  %h3=_("Custom Logo Image (Shown on top right of all screens)")
   - if File.exist?(@logo_file)
     = image_tag("/upload/custom_logo.png?#{rand(99999999).to_s}")
   - else
@@ -23,7 +23,7 @@
             checked=@edit[:new][:server][:custom_logo],
             "data-miq_observe_checkbox" => {:url => url}.to_json)
   %hr/
-  %p.legend=_("Custom Login Background Image")
+  %h3=_("Custom Login Background Image")
   - if File.exist?(@login_logo_file)
     = image_tag("/upload/custom_login_logo.png?#{rand(99999999).to_s}",
       :height => 400,
@@ -54,7 +54,7 @@
             checked=@edit[:new][:server][:custom_login_logo],
             "data-miq_observe_checkbox" => {:url => url}.to_json)
   %hr/
-  %p.legend
+  %h3
     =_("Custom Login Panel Text (")
     %span#text_count= @edit[:new][:notes] ? @edit[:new][:notes].length : 0
     \/ 500)

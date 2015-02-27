@@ -1,9 +1,9 @@
 - if @sb[:active_tab] == "settings_import_tags"
   #tab_div
-    %p.legend Messages
+    %h3 Messages
     = render(:partial=>"layouts/flash_msg", :locals=>{:click_remove=>false})
     %hr/
-    %p.legend
+    %h3
       Upload #{h(session[:customer_name])} Tag Assignments for VMs
     %table.style1
       %tr

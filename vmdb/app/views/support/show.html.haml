@@ -1,10 +1,10 @@
 #main_div
   #tab_div
     = render :partial => "layouts/flash_msg"
-    %dl.col2
-      %dd
+    .row
+      .col-sm-12.col-md-12.col-lg-6
         %fieldset
-          %p.legend=_('Session Information')
+          %h3=_('Session Information')
           %table.style1
             - [[_("Server Name"),     h(session[:vmdb_name])],
                [_("Version"),         h(session[:vmdb][:version] + "." + session[:vmdb][:build])],
@@ -23,9 +23,9 @@
       - cond_url      = desc.present? && url.present?
       - cond_userrole = ["super_administrator", "administrator"].include?(session[:userrole])
       - if cond_userrole || cond_url
-        %dd
+        .col-sm-12.col-md-12.col-lg-6
           %fieldset
-            %p.legend=_('Product Assistance')
+            %h3=_('Product Assistance')
             - if cond_userrole
               - [[_("Quick Start"),              "cfme_quickstart.pdf"],
                  [_("Insight"),                  "cfme_insight.pdf"],

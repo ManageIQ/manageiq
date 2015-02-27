@@ -9,7 +9,7 @@ module MiqMemcached
     DEFAULT_USER = 'memcached'
     DEFAULT_MEMORY = 64
     DEFAULT_MAXCONN = 1024
-    DEFAULT_OPTIONS = ""
+    DEFAULT_OPTIONS = "-l 127.0.0.1"
 
     def initialize(opts = {})
       self.update(opts)

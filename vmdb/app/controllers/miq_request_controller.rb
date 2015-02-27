@@ -587,7 +587,7 @@ class MiqRequestController < ApplicationController
   end
 
   def is_approver
-    return %w{approver super_administrator administrator}.include?(session[:userrole])
+    User.current_user.role_allows?(:identifier => 'miq_request_approval')
   end
 
   # Delete all selected or single displayed action(s)

@@ -1,7 +1,7 @@
 .maincontent
   = render :partial => "layouts/flash_msg"
-  %dl.col1
-    %dd
+  .row
+    .col-sm-12.col-md-12.col-lg-12
       %fieldset
         %table.style1
           %tr
@@ -20,10 +20,10 @@
             %td.notwide
               = @record.display ? "True" : "False"
   - if @record.composite?
-    %dl.col1
-      %dd
+    .row
+      .col-sm-12.col-md-12.col-lg-12
         %fieldset
-          %p.legend
+          %h3
             = _('Resources')
           - resources = @record.service_resources
           - if !resources.empty?
@@ -55,10 +55,10 @@
           - else
             = _('No Resources found.')
   - else
-    %dl.col1
-      %dd
+    .row
+      .col-sm-12.col-md-12.col-lg-12
         %fieldset
-          %p.legend
+          %h3
             = _('Request Info')
           = render(:partial => "miq_request/prov_wf",
             :locals         => {:wf => @miq_request.workflow_class.new({:src_vm_id => @miq_request.source_id}, session[:userid]),

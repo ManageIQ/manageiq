@@ -1,7 +1,7 @@
 - cap_type ||= "details"
 - url = url_for(:action => 'util_chart_chooser', :id => @record.id)
 %div{:id => "capacity_#{cap_type}_options_div", :onclick => "if (typeof miqMenu != 'undefined') miqMenu.hideContextMenu();"}
-  %p.legend=_('Options')
+  %h3=_('Options')
   %table.style1
     %tr
       %td.key{:style => "width: 120px;"}=_('Trends for past')

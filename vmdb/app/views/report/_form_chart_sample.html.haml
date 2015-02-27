@@ -2,7 +2,7 @@
   - unless @edit[:new][:graph_type].blank?
     %fieldset
       - if Charting.backend == :ziya # FIXME: call some charting helper
-        %p.legend Sample Chart
+        %h3 Sample Chart
         %embed{:width => 400, :height => 250, :type => 'application/x-shockwave-flash',
                :src => '/charts/charts.swf?library_path=/charts/charts_library&xml_source=/report/sample_chart',
                :wmode => 'opaque', :swliveconnect => true,

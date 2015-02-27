@@ -92,6 +92,7 @@ module EmsRefresh::VcUpdates
       "config.hardware.device[*].key",
       "config.hardware.device[*].macAddress",
       "config.hardware.device[*].unitNumber",
+      "config.hardware.numCoresPerSocket",
       "config.version",
       "datastore",
       "datastore.ManagedObjectReference",

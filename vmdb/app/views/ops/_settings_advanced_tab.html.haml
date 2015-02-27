@@ -8,7 +8,7 @@
         %span.pficon.pficon-error-octagon
         %span.pficon.pficon-error-exclamation
       %strong=_("Caution: Manual changes to configuration files can disable the Server!")
-    %p.legend
+    %h3
       =_("Configuration File to Edit")
     %table.style1
       %tr
@@ -26,7 +26,7 @@
               "data-miq_sparkle_off" => true,
               "data-miq_observe"     => {:url => url}.to_json)
     %hr/
-    %p.legend
+    %h3
       =_("Editing %s File") % AVAILABLE_CONFIG_NAMES[session[:config_file_name]]
       %font{:color => "red"} *
     = text_area_tag("file_data",

@@ -88,6 +88,19 @@ class ApiController
       end
     end
 
+    def add_event_resource_vms(type, id = nil, data = nil)
+      raise BadRequestError, "Must specify an id for adding an event to a #{type} resource" unless id
+
+      data ||= {}
+
+      api_action(type, id) do |klass|
+        vm = resource_search(id, type, klass)
+        api_log_info("Adding Event to #{vm_ident(vm)}")
+
+        vm_event(vm, data["event_type"].to_s, data["event_message"].to_s, data["event_time"].to_s)
+      end
+    end
+
     private
 
     def vm_ident(vm)
@@ -161,6 +174,16 @@ class ApiController
       desc = "#{vm_ident(vm)} scanning"
       task_id = queue_object_action(vm, desc, :method_name => "scan", :role => "smartstate")
       action_result(true, desc, :task_id => task_id)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
+    def vm_event(vm, event_type, event_message, event_time)
+      desc = "Adding Event type=#{event_type} message=#{event_message}"
+      event_timestamp = event_time.blank? ? Time.now.utc.iso8601 : Time.parse(event_time).utc.iso8601
+
+      vm.add_ems_event(event_type, event_message, event_timestamp)
+      action_result(true, desc)
     rescue => err
       action_result(false, err.to_s)
     end

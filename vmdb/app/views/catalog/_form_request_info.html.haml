@@ -6,7 +6,7 @@
   - url = url_for(:id => "#{@edit[:rec_id] || "new"}",
     :action => @edit[:new][:service_type] == "composite" ? "st_form_field_changed" : "atomic_form_field_changed")
 
-  %p.legend=_('Request Info')
+  %h3=_('Request Info')
   = render :partial => "miq_request/prov_wf", :locals  => {:wf => @edit[:wf]}
   %br
   =_("Note: Fields marked with * are required.")

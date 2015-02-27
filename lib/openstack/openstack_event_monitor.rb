@@ -1,6 +1,8 @@
 # The OpentstackEventMonitor uses a plugin pattern to instantiate the correct
 # subclass as a plugin based on the #available? class method implemented in each
 # subclass
+require 'more_core_extensions/core_ext/hash'
+
 class OpenstackEventMonitor
   DEFAULT_AMQP_PORT = 5672
 

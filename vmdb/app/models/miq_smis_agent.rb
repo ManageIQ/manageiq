@@ -111,7 +111,7 @@ class MiqSmisAgent < StorageManager
   def verify_credentials(auth_type=nil)
     # Verification of creds for other SMA types is handled though mixinx.
     raise "Credential validation requires the SMIS Agent type be set." if self.agent_type.blank?
-    raise "no credentials defined" if self.authentication_invalid?(auth_type)
+    raise "no credentials defined" if self.missing_credentials?(auth_type)
 
     begin
       self.connect

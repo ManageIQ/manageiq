@@ -13,5 +13,5 @@
     :items:
     - :button: condition_new
       :image: new
-      :text: 'Add a New #{ui_lookup(:model=>@sb[:folder])} Condition'
-      :title: 'Add a New #{ui_lookup(:model=>@sb[:folder])} Condition'
+      :text: 'Add a New #{@sb[:folder].upcase == "VM" ? "VM" : ui_lookup(:model=>@sb[:folder])} Condition'
+      :title: 'Add a New #{@sb[:folder].upcase == "VM" ? "VM" : ui_lookup(:model=>@sb[:folder])} Condition'

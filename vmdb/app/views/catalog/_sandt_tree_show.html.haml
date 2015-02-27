@@ -14,7 +14,7 @@
         %li#li_request
           %a{:href => "#request"}=_('Request Info')
   #basic{:name => "basic", :width => "80px"}
-    %p.legend=_('Basic Information')
+    %h3=_('Basic Information')
     %table.style1
       %tr
         %td.key=_('Name / Description')
@@ -40,7 +40,7 @@
             =_('(NS/Cls/Inst)')
           %td= h(@sb[entry_points_op[1]])
     %hr
-    %p.legend=_('Custom Image')
+    %h3=_('Custom Image')
     - if @record.picture
       %table
         %tr
@@ -81,7 +81,7 @@
 
   - if @record.display
     #details{:name => "details", :width => "80px"}
-      %p.legend=_('Basic Information')
+      %h3=_('Basic Information')
       %table.style1
         %tr
           %td.key=_('Long Description')
@@ -89,7 +89,7 @@
 
   - if @record.composite?
     #resources{:name => "resources", :width => "80px"}
-      %p.legend=_('Resources')
+      %h3=_('Resources')
       - resources = @record.service_resources
       - unless resources.empty?
         %table.style3
@@ -139,7 +139,7 @@
     - if !@record.prov_type || (@record.prov_type && @record.prov_type != "generic")
       #request{:name => "request", :width => "80px"}
         - if @options[:wf]
-          %p.legend
+          %h3
             =_('Request Info')
             = render :partial => "miq_request/prov_wf",
                      :locals  => {:wf   => @options[:wf],

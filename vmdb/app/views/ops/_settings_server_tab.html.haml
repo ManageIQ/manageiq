@@ -1,10 +1,10 @@
 - url = url_for(:action=>'settings_form_field_changed', :id=>"#{@sb[:active_tab].split('_').last}")
 - if @sb[:active_tab] == "settings_server"
   = render :partial => "layouts/flash_msg"
-  %dl.col2
-    %dd
+  .row
+    .col-sm-12.col-md-12.col-lg-6
       %fieldset
-        %p.legend=_("Basic Information")
+        %h3=_("Basic Information")
         %table.style1
           %tr
             %td.key=_("Hostname")
@@ -67,7 +67,7 @@
                 "data-miq_observe" => {:url => url}.to_json)
         .note=_("* Changing the Zone will reset all of this Server's priorities to secondary.")
       %fieldset
-        %p.legend=_("Server Control")
+        %h3=_("Server Control")
         %table.style1
           %tr
             %td.key=_("Server Roles")
@@ -90,7 +90,7 @@
                   :include_blank=>true,
                   "data-miq_observe"=>{:url=>url}.to_json)
       %fieldset
-        %p.legend=_("VMware Console Support")
+        %h3=_("VMware Console Support")
         %table.style1
           %tr
             %td.key=_("Use")
@@ -122,9 +122,9 @@
                   @edit[:new][:server][:vnc_proxy_port],
                   :maxlength=>6, :size=>6,
                   "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
-    %dd
+    .col-sm-12.col-md-12.col-lg-6
       %fieldset
-        %p.legend=_("NTP Servers")
+        %h3=_("NTP Servers")
         %table.style1
           %tr
             %td.key=_("Servers")
@@ -145,7 +145,7 @@
                 "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
         .note=_("Specified NTP settings applied here will override Zone NTP settings.")
       %fieldset
-        %p.legend=_("Outgoing SMTP E-mail Server")
+        %h3=_("Outgoing SMTP E-mail Server")
         %table.style1
           %tr
             %td.key=_("Host")
@@ -221,7 +221,7 @@
             %td{:align => "right"}
               = render :partial => 'email_verify_button', :locals=>{:id=>"#{@sb[:active_tab].split('_').last}"}
       %fieldset
-        %p.legend=_("Web Services")
+        %h3=_("Web Services")
         %table.style1
           %tr
             %td.key=_("Mode")
@@ -236,7 +236,7 @@
                 options_for_select(["none","ws-security"], @edit[:new][:webservices][:security]),
                 "data-miq_observe"=>{:url=>url}.to_json)
       %fieldset
-        %p.legend=_("Logging")
+        %h3=_("Logging")
         %table.style1
           %tr
             %td.key=_("Log Level")
@@ -245,7 +245,7 @@
                 options_for_select(["fatal","error","warn","info","debug"], @edit[:new][:log][:level]),
                 "data-miq_observe"=>{:url=>url}.to_json)
       %fieldset
-        %p.legend=_("Custom Support URL")
+        %h3=_("Custom Support URL")
         %table.style1
           %tr
             %td.key=_("URL (i.e. www.mypage.com)")

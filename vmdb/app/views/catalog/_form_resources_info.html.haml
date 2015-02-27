@@ -3,7 +3,7 @@
 
 #resources_info_div
   - if @edit[:new][:service_type] == "composite"
-    %p.legend=_('Resources')
+    %h3=_('Resources')
     %table.style1
       %tr
         %td.key=_('Add a Resource')
@@ -13,7 +13,7 @@
             "data-miq_sparkle_on" => true,
             "data-miq_observe" => {:url => url}.to_json)
     - if !@edit[:new][:selected_resources].empty?
-      %p.legend=_('Selected Resources')
+      %h3=_('Selected Resources')
       %table.style3
         %thead
           %tr

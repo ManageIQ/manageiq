@@ -9,7 +9,7 @@
         = render(:partial => "shared/summary/textual",
           :locals  => {:title => _("Basic Information"), :items => textual_template_basicinfo})
         %hr
-        %p.legend=_('Script')
+        %h3=_('Script')
         = text_area("script1", "data",
           :value => @ct.script,
           :size => "90x20",

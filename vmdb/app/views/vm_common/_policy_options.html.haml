@@ -2,7 +2,7 @@
 - url2 = {:url => url_for(:action => 'policy_show_options', :id=>@record.id)}.to_json
 #policy_options_div
   %fieldset
-    %p.legend=_('Options')
+    %h3=_('Options')
     %table.style1
       %tr
         %td.key=_('Show out of scope items:')

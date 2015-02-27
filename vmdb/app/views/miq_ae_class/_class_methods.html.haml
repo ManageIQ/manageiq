@@ -1,7 +1,7 @@
 #class_methods_div
   - if !@in_a_form
     = render :partial => "layouts/flash_msg", :locals => {:div_num => "_class_methods"}
-    %p.legend=_('Methods')
+    %h3=_('Methods')
     .checkall
       %input{:id => "Toggle4", :type => "checkbox", :name => "Toggle4", :onclick => "miqCheck_AE_All('center_tb','class_methods_grid');"}
       (#{_('Check All')})

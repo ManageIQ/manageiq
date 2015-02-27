@@ -1,7 +1,7 @@
 - url = url_for(:action => 'pxe_server_form_field_changed', :id => "#{@ps.id || "new"}")
 #form_div
   = render :partial => "layouts/flash_msg"
-  %p.legend=_('Basic Information')
+  %h3=_('Basic Information')
   %table.style1
     %tbody
       %tr
@@ -50,7 +50,7 @@
             :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
 
   %hr
-  %p.legend=_('PXE Image Menus')
+  %h3=_('PXE Image Menus')
   %table.style1
     %tbody
       - @edit[:new][:pxe_menus].each_with_index do |menu,index|

@@ -7,7 +7,7 @@
         - if @edit
           - url = url_for(:action=>'region_form_field_changed', :id=>"#{region.id || "new"}")
           %fieldset
-            %p.legend=_("Region Information")
+            %h3=_("Region Information")
             %table.style1
               %tr
                 %td.key=_("Description")

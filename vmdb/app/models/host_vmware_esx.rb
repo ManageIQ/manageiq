@@ -107,7 +107,7 @@ class HostVmwareEsx < HostVmware
   end
 
   def verify_credentials_with_ws(auth_type=nil)
-    raise "No credentials defined" if self.authentication_invalid?(auth_type)
+    raise "No credentials defined" if self.missing_credentials?(auth_type)
 
     begin
       with_provider_connection(:use_broker => false, :auth_type => auth_type) {}
@@ -129,7 +129,7 @@ class HostVmwareEsx < HostVmware
   end
 
   def refresh_logs
-    if self.authentication_invalid?
+    if self.missing_credentials?
       $log.warn "MIQ(Host.refresh_logs) No credentials defined for Host [#{self.name}]"
       return
     end

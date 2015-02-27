@@ -82,12 +82,12 @@ class Storage < ActiveRecord::Base
     self.ext_management_systems.select { |ems| ems.my_zone == zone_name }
   end
 
-  def active_hosts_with_credentials_in_zone(zone_name)
-    self.active_hosts_with_credentials.select { |h| h.my_zone == zone_name }
+  def active_hosts_with_authentication_status_ok_in_zone(zone_name)
+    self.active_hosts_with_authentication_status_ok.select { |h| h.my_zone == zone_name }
   end
 
-  def active_hosts_with_credentials
-    self.active_hosts.select(&:authentication_valid?)
+  def active_hosts_with_authentication_status_ok
+    self.active_hosts.select(&:authentication_status_ok?)
   end
 
   def active_hosts_in_zone(zone_name)
@@ -362,7 +362,7 @@ class Storage < ActiveRecord::Base
     log_header = "MIQ(Storage.scan)"
     raise(MiqException::MiqUnsupportedStorage, "Action not supported for #{ui_lookup(:table => "storages")} type [#{self.store_type}], [#{self.name}] with id: [#{self.id}]") unless SUPPORTED_STORAGE_TYPES.include?(self.store_type)
 
-    hosts = self.active_hosts_with_credentials
+    hosts = self.active_hosts_with_authentication_status_ok
     raise(MiqException::MiqStorageError,       "Check that a Host is running and has valid credentials for #{ui_lookup(:table => "storages")} [#{self.name}] with id: [#{self.id}]") if hosts.empty?
 
     task_name = "SmartState Analysis for [#{self.name}]"
@@ -531,7 +531,7 @@ class Storage < ActiveRecord::Base
       miq_task.state_active unless miq_task.nil?
     end
 
-    hosts = active_hosts_with_credentials_in_zone(MiqServer.my_zone)
+    hosts = active_hosts_with_authentication_status_ok_in_zone(MiqServer.my_zone)
     if hosts.empty?
       message = "There are no active Hosts with valid credentials connected to Storage: [#{self.name}] in Zone: [#{MiqServer.my_zone}]."
       $log.warn "#{log_header} #{message}"

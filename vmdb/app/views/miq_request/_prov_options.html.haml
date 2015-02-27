@@ -1,7 +1,7 @@
 = render :partial => "layouts/flash_msg"
 - url = url_for(:action => 'prov_change_options')
 #prov_options_div
-  %p.legend=_("Filter By")
+  %h3=_("Filter By")
   %table.style1
     - res_type = @sb[:prov_options][@sb[:prov_options][:resource_type]]
     %tr

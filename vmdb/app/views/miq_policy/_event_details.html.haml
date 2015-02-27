@@ -2,7 +2,7 @@
   - if @event
     #event_info_div
       = render :partial => "layouts/flash_msg"
-      %p.legend=_("Basic Information")
+      %h3=_("Basic Information")
       %table.style1
         - if false
           - # Don't show description (event descriptions can not be edited)
@@ -23,7 +23,7 @@
       %hr
 
       - if x_active_tree == :event_tree
-        %p.legend=_("Assigned to Policies")
+        %h3=_("Assigned to Policies")
         - if @event_policies.empty?
           = render :partial => 'layouts/info_msg', :locals => {:message => _("This Event is not assigned to any Policies.")}
         - else
@@ -42,7 +42,7 @@
                     = p.description
           %hr
       - else
-        %p.legend=_("Order of Actions if ALL Conditions are True")
+        %h3=_("Order of Actions if ALL Conditions are True")
         - if @edit
           %table.admintable
             %tbody
@@ -156,7 +156,7 @@
                     = a.action_type
           %hr
 
-        %p.legend=_("Order of Actions if ANY Conditions are False")
+        %h3=_("Order of Actions if ANY Conditions are False")
         - if @edit
           %table.admintable
             %tbody

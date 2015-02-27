@@ -266,11 +266,9 @@ class StorageController < ApplicationController
     @showlinks = true
 
     @view, @pages = get_view(db,
-                            :parent=>@storage,
-                            :association=>association,
-                            :conditions=>condition,
-                            :dbname=>"storageitem") # Get the records into a view & paginator
-
+                            :parent => @storage,
+                            :association => association,
+                            :conditions => condition) # Get the records into a view & paginator
 
     # Came in from outside, use RJS to redraw gtl partial
     if params[:ppsetting]  || params[:searchtag] || params[:entry] || params[:sort_choice]

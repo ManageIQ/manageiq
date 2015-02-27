@@ -1,6 +1,6 @@
 module VMDB
   module Util
-    # load all direct subclasses
+    # load all subclasses recursively
     def self.eager_load_subclasses(klass)
       ActiveSupport::Dependencies.autoload_paths.each do |root|
         Dir.glob(File.join(root, "#{klass.underscore}_*.rb")).sort.each do |file|
@@ -9,6 +9,7 @@ module VMDB
             require_dependency file
           end
         end
+        const_get(klass).subclasses.each { |k| eager_load_subclasses(k.name) }
       end
     end
 

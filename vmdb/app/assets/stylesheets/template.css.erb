@@ -9,11 +9,6 @@ legend { display: none;}
 a { text-decoration: none;}
 h2 { margin:0; padding:0;line-height: 1.4em;font-family: OpenSansSemibold,Arial,Helvetica,sans-serif; font-weight:normal}
 img { border:0;}
-dl { float:left;width:100%;}
-dl.col1 dd{ float:left;margin:0;padding:0;width:100%;}
-dl.col2 dd{ float:left;margin:0;margin-right:15px;padding:0;width:48%;}
-dl.col3 dd{ float:left;margin:0;padding:0;width:33%;}
-dd.fixed {width:500px !important;} /* fixed width to prevent 3 tabs from wrapping*/
 textarea, input, select {font-family: OpenSansRegular,Arial,Helvetica,sans-serif;font-size: 12px}
 textarea { width: 98.5%; border: 1px solid #d1d1d1; padding: 7px; line-height: 1.5em}
 strong {font-family: OpenSansSemibold,Arial,Helvetica,sans-serif;font-weight:normal} /*using OpenSansSemibold for all bolded text*/
@@ -26,13 +21,6 @@ strong {font-family: OpenSansSemibold,Arial,Helvetica,sans-serif;font-weight:nor
   filter:alpha(opacity=40);
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);
   cursor: default;
-}
-
-p.legend {
-  margin-top: 9.5px;
-  margin-bottom: 12px;
-  font: 15px OpenSansRegular,Arial,Helvetica,sans-serif;
-  font-weight: 500;
 }
 
 dl.dl-horizontal {
@@ -124,37 +112,6 @@ nobr { white-space: nowrap;}
   border-bottom: 1px solid #c7c7c7;*/
 }
 #dashboard_dropdown { position: absolute;right: 0;z-index: 2;padding: 0 8px 0 0; width: 115px; top: 0px;}
-
-/********************** Listnav **************************/
-#accordion {}
-#accordion .topbar, #accordion .topbarDHTMLX  { z-index: 5;}
-#accordion .topbar a, #accordion .topbarDHTMLX a { 
-            display:block;width: 215px;height:30px;background: #f8f8f8 url(/images/layout/teaserbarlg3.png) left bottom repeat-x;color:#454545;vertical-align: top;text-indent: 8px;  text-shadow: #ebebeb 0 1px 0;font: normal 93% OpenSansSemibold,Arial,Helvetica,sans-serif;line-height: 30px;}
-#accordion .topbar a:hover,#accordion .topbarDHTMLX a:hover,
-#accordion .topbar a:active,#accordion .topbarDHTMLX a:active  { color:#000;}
-/*DHTMLX Compare*/
-#accordion .topbarDHTMLX a { width:100%;}
-/*DHTMLX Compare end*/
-
-#accordion .custom_topbar a { display: block;width: 215px;height:22px;
-      background:  #4b4b4b url(/images/layout/teaserbarlg3.png) left bottom; color:#f8f8f8;vertical-align: top;text-indent: 8px;text-shadow: 2px 2px 2px #555; font-weight:bold;
-      font-size: 93%;line-height: 22px; /*for custom reports*/}
-#accordion .panecontent { overflow: hidden;border-bottom: 1px solid #696969;color:#8c8c8c;font-size: 93%; line-height: 18px;} 
-
-/*styling for non-dynatree old accordion content*/
-#accordion .panecontent > a { display: block;color:#1c1c1c;}          
-#accordion .panecontent > a.active,
-#accordion .panecontent > a:hover{ 
-  margin: -1px 0 -1px 0;
-  border: 1px solid #5db9de;
-  border-left: 0px;
-  border-right: 0px;
-  background-color: #d6ecf8;}
-#accordion .panecontent > a > img { float: left;}
-
-/************* Main Area table ************/
-td#maincol { padding: 15px; height: 500px;}
-td#leftcol { overflow: hidden; min-width:224px; width:224px;}
 
 /************ Tabs ************/
 

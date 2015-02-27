@@ -1,7 +1,7 @@
 - url = url_for(:action => 'dialog_form_field_changed', :id => "#{@record.id || 'new'}")
 #dialog_field_div
   %fieldset
-    %p.legend=_('Element Information')
+    %h3=_('Element Information')
     %table.style1
       %tr
         %td.key=_('Label')
@@ -44,7 +44,7 @@
 
   - unless @edit[:field_typ].nil?
     %fieldset
-      %p.legend=_('Options')
+      %h3=_('Options')
       %table.style1
         - if 'DialogFieldDynamicList' == @edit[:field_typ] || @edit[:field_dynamic] == true
           %tr
@@ -238,7 +238,7 @@
 
   - unless @edit[:field_typ].nil?
     %fieldset
-      %p.legend=_('Advanced')
+      %h3=_('Advanced')
       %table.style1
         %tr
           %td.key=_('Reconfigurable')

@@ -172,10 +172,10 @@ describe Storage do
       end
     end
 
-    context "on a host with credentials" do
+    context "on a host authentication status ok" do
       before(:each) do
         Authentication.any_instance.stub(:after_authentication_changed)
-        FactoryGirl.create(:authentication, :resource => @host1)
+        FactoryGirl.create(:authentication, :resource => @host1, :status => "Valid")
       end
 
       it "#ext_management_systems" do
@@ -193,19 +193,19 @@ describe Storage do
         @storage3.ext_management_systems_in_zone(@zone2.name).should == [@ems2]
       end
 
-      it "#active_hosts_with_credentials" do
-        @storage1.active_hosts_with_credentials.should == [@host1]
-        @storage2.active_hosts_with_credentials.should == []
-        @storage3.active_hosts_with_credentials.should == [@host1]
+      it "#active_hosts_with_authentication_status_ok" do
+        @storage1.active_hosts_with_authentication_status_ok.should == [@host1]
+        @storage2.active_hosts_with_authentication_status_ok.should == []
+        @storage3.active_hosts_with_authentication_status_ok.should == [@host1]
       end
 
-      it "#active_hosts_with_credentials_in_zone" do
-        @storage1.active_hosts_with_credentials_in_zone(@zone.name).should  == [@host1]
-        @storage1.active_hosts_with_credentials_in_zone(@zone2.name).should == []
-        @storage2.active_hosts_with_credentials_in_zone(@zone.name).should  == []
-        @storage2.active_hosts_with_credentials_in_zone(@zone2.name).should == []
-        @storage3.active_hosts_with_credentials_in_zone(@zone.name).should  == [@host1]
-        @storage3.active_hosts_with_credentials_in_zone(@zone2.name).should == []
+      it "#active_hosts_with_authentication_status_ok_in_zone" do
+        @storage1.active_hosts_with_authentication_status_ok_in_zone(@zone.name).should  == [@host1]
+        @storage1.active_hosts_with_authentication_status_ok_in_zone(@zone2.name).should == []
+        @storage2.active_hosts_with_authentication_status_ok_in_zone(@zone.name).should  == []
+        @storage2.active_hosts_with_authentication_status_ok_in_zone(@zone2.name).should == []
+        @storage3.active_hosts_with_authentication_status_ok_in_zone(@zone.name).should  == [@host1]
+        @storage3.active_hosts_with_authentication_status_ok_in_zone(@zone2.name).should == []
       end
 
       it "#scan" do

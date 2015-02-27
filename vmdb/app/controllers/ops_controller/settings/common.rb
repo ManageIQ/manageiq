@@ -19,7 +19,7 @@ module OpsController::Settings::Common
     return unless @edit
     @assigned_filters = []
     case @sb[:active_tab] # Server, DB edit forms
-    when 'settings_server', 'settings_authentication', 'settings_host',
+    when 'settings_server', 'settings_authentication',
          'settings_custom_logos', 'settings_smartproxy'
       @changed = (@edit[:new] != @edit[:current].config)
       if params[:console_type]
@@ -100,6 +100,9 @@ module OpsController::Settings::Common
           page << set_element_visible("httpd_role_div", verb)
         end
         if @authusertype_changed
+          verb = @edit[:new][:authentication][:user_type] == 'samaccountname'
+          page << set_element_visible("user_type_samaccountname", verb)
+          page << set_element_visible("user_type_base", !verb)
           if @edit[:new][:authentication][:user_type] == "dn-cn"
             page << javascript_hide("upn-mail_prefix")
             page << javascript_hide("dn-uid_prefix")
@@ -360,9 +363,6 @@ module OpsController::Settings::Common
         end
         @changed = (@edit[:new] != @edit[:current])
       end
-    when "settings_host"                                      # Host Settings tab
-      @changed = (@edit[:new] != @edit[:current].config)
-      @update = VMDB::Config.new("hostdefaults")            # Get the settings object to update it
     when "settings_custom_logos"                                      # Custom Logo tab
       @changed = (@edit[:new] != @edit[:current].config)
       @update = VMDB::Config.new("vmdb")                    # Get the settings object to update it
@@ -687,6 +687,7 @@ module OpsController::Settings::Common
         @authusertype_changed = true
       end
       auth[:user_suffix] = params[:authentication_user_suffix] if params[:authentication_user_suffix]
+      auth[:domain_prefix] = params[:authentication_domain_prefix] if params[:authentication_domain_prefix]
       if @sb[:newrole] != auth[:ldap_role]
         auth[:ldap_role] = @sb[:newrole]
         @authldaprole_changed = true
@@ -799,14 +800,6 @@ module OpsController::Settings::Common
         new[option[:name]] = params["production_#{option[:name]}".to_sym]  if params["production_#{option[:name]}".to_sym]
       end
       new[:verify] = params[:production_verify]  if params[:production_verify]
-    when "settings_host"                                        # Smart Hosts tab
-      if params[:host_autoscan]
-        new[:host][:autoscan] = params[:host_autoscan] == "1" ? true : nil
-      end
-      if params[:host_inherit_mgt_tags]
-        new[:host][:inherit_mgt_tags] = params[:host_inherit_mgt_tags] == "1" ? true : nil
-      end
-      #new[:host][:scan_frequency] = params[:host_scan_frequency][:days] .to_i * 3600 * 24 if params[:host_scan_frequency]
     when "settings_custom_logos"                                            # Custom Logo tab
       new[:server][:custom_logo] = (params[:server_uselogo] == "1") if params[:server_uselogo]
       new[:server][:custom_login_logo] = (params[:server_useloginlogo] == "1") if params[:server_useloginlogo]
@@ -863,9 +856,9 @@ module OpsController::Settings::Common
     elsif @sb[:active_tab] == 'settings_rhn_edit'
       return unless load_edit("#{@sb[:active_tab]}__#{params[:id]}", "replace_cell__explorer")
     else
-      if ["settings_server","settings_authentication","settings_workers",
-              "settings_database","settings_host","settings_custom_logos",
-              "settings_smartproxy","settings_advanced"].include?(@sb[:active_tab])
+      if %w(settings_server settings_authentication settings_workers
+            settings_database settings_custom_logos settings_smartproxy
+            settings_advanced).include?(@sb[:active_tab])
         return unless load_edit("settings_#{params[:id]}_edit__#{@sb[:selected_server_id]}","replace_cell__explorer")
       end
     end
@@ -1038,13 +1031,6 @@ module OpsController::Settings::Common
       @edit[:key] = "#{@sb[:active_tab]}_edit__#{@sb[:selected_server_id]}"
       @options = MiqDbConfig.get_db_type_options(@edit[:new][:name])
       @in_a_form = true
-    when "settings_host"                                    # Host Settings tab
-      @edit = Hash.new
-      @edit[:new] = Hash.new
-      @edit[:current] = Hash.new
-      @edit[:key] = "#{@sb[:active_tab]}_edit__#{@sb[:selected_server_id]}"
-      @edit[:current] = VMDB::Config.new("hostdefaults")        # Get the host default settings
-      @in_a_form = true
     when "settings_custom_logos"                                  # Custom Logo tab
       @edit = Hash.new
       @edit[:new] = Hash.new
@@ -1089,8 +1075,9 @@ module OpsController::Settings::Common
       @edit[:key] = "#{@sb[:active_tab]}_edit__#{@sb[:selected_server_id]}"
       @in_a_form = true
     end
-    if ["settings_server","settings_authentication","settings_custom_logos","settings_smartproxy","settings_host"].include?(@sb[:active_tab]) &&
-        x_node.split("-").first != "z"
+    if %w(settings_server settings_authentication settings_custom_logos
+          settings_smartproxy).include?(@sb[:active_tab]) &&
+       x_node.split("-").first != "z"
       @edit[:current].config.each_key do |category|
         @edit[:new][category] = copy_hash(@edit[:current].config[category])
       end

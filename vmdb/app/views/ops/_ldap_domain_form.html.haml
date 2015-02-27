@@ -3,7 +3,7 @@
   = form_tag(url_for(:action => 'ldap_domain_edit', :id => "#{@edit[:ldap_domain_id] || "new"}"), :remote => true) do
     = render :partial => "layouts/flash_msg"
     %fieldset
-      %p.legend= _("Basic Information")
+      %h3= _("Basic Information")
       %table{:class => "style1"}
         %tr
           %td.key= _("Name")
@@ -14,7 +14,7 @@
                              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
             = javascript_tag(javascript_focus('name'))
     %fieldset
-      %p.legend= _("LDAP Settings")
+      %h3= _("LDAP Settings")
       %table.style1
         %tr
           %td.key= _("User Type")
@@ -47,7 +47,7 @@
                              :maxlength         => 50,
                              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     %fieldset
-      %p.legend= _("Role Settings")
+      %h3= _("Role Settings")
       %table.style1
         %tr
           %td.key= _("Get User Groups from LDAP")

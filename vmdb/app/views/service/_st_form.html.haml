@@ -2,8 +2,8 @@
 - url = url_for(:action => act, :id => "#{@edit[:rec_id] || 'new'}")
 #form_div
   = render :partial => "layouts/flash_msg"
-  %dl.col1
-    %dd
+  .row
+    .col-sm-12.col-md-12.col-lg-12
       %fieldset
         %table.style1
           %tr
@@ -39,10 +39,10 @@
                   "data-miq_sparkle_on" => true,
                   "data-miq_observe"    => {:url => url}.to_json)
   - if @edit[:new][:service_type] == "composite" && !@edit[:new][:selected_resources].empty?
-    %dl.col1
-      %dd
+    .row
+      .col-sm-12.col-md-12.col-lg-12
         %fieldset
-          %p.legend
+          %h3
             = _('Selected Resources')
           %table.style3
             %thead
@@ -82,10 +82,10 @@
                           "data-miq_sparkle_on" => true,
                           "data-miq_observe"    => {:url => url}.to_json)
   - elsif @edit[:new][:service_type] == "atomic"
-    %dl.col1
-      %dd
+    .row
+      .col-sm-12.col-md-12.col-lg-12
         %fieldset
-          %p.legend
+          %h3
             = _('Request Info')
           = render :partial => "miq_request/prov_wf", :locals => {:wf => @edit[:wf]}
     %br

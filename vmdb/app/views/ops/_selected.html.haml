@@ -1,7 +1,7 @@
 - rec = @record
 %div{:id => "selected_#{@sb[:active_tab].split('_').last}_div"}
   %fieldset
-    %p.legend= _("Selected Item")
+    %h3= _("Selected Item")
     - if @sb[:diag_tree_type] == "roles"
       -# roles by servers
       = render :partial => "ops/selected_by_servers", :locals => {:rec => rec}

@@ -1,10 +1,10 @@
 - url = url_for(:action => 'form_field_changed', :id => "#{@edit[:rpt_id] || 'new'}")
 #tl_settings_div
   %fieldset
-    %p.legend
+    %h3
       = _('Timeline Settings')
-    %dl.col2
-      %dd
+    .row
+      .col-sm-12.col-md-12.col-lg-6
         %fieldset
           %table.style1
             %tr
@@ -54,7 +54,7 @@
                         "data-miq_sparkle_on"  => true,
                         "data-miq_sparkle_off" => true,
                         "data-miq_observe"     => {:url => url}.to_json)
-      %dd>
+      .col-sm-12.col-md-12.col-lg-6
         - if @tl_field != NOTHING_STRING
           %fieldset
             %table.style1

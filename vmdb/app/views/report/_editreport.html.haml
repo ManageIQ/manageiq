@@ -2,7 +2,7 @@
   - if @report.nil?
     = render :partial => 'layouts/info_msg', :locals => {:message => _("Choose a Report to edit from the menus on the left.")}
     %fieldset
-      %p.legend
+      %h3
         = @report.name
       %table.style1
         %tr

@@ -60,11 +60,19 @@ class ApiController
           raise BadRequestError, "Unsupported HTTP Method #{mname} for the #{ctype} #{cname} specified"
         end
       end
+
+      validate_api_parameters
     end
 
     def validate_api_action
       return unless @req[:collection]
       send("validate_#{@req[:method]}_method")
+    end
+
+    def validate_api_parameters
+      return unless params['sqlfilter']
+
+      raise BadRequestError, "The sqlfilter parameter is no longer supported, please use the filter parameter instead"
     end
 
     #

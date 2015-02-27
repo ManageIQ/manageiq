@@ -6,7 +6,7 @@
       %tr
         %td
           %fieldset
-            %p.legend=_("Event Selection")
+            %h3=_("Event Selection")
             %strong{:style => "color: #4b4b4b"}=_("Type:")
             %br
             = select_tag('event_typ',
@@ -22,7 +22,7 @@
       %tr
         %td
           %fieldset
-            %p.legend=_("VM Selection")
+            %h3=_("VM Selection")
             = select_tag('filter_typ',
               options_for_select([["<#{_('Choose')}>"],
                 [_("By %s") % ui_lookup(:table => "ext_management_systems"), "ems"],

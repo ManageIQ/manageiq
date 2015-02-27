@@ -54,6 +54,9 @@ class ExtManagementSystem < ActiveRecord::Base
   validates :name,                 :presence => true, :uniqueness => true
   validates :hostname, :ipaddress, :presence => true, :uniqueness => {:case_sensitive => false}, :if => :hostname_ipaddress_required?
 
+  # TODO: Remove all callers of address
+  alias_attribute :address, :hostname
+
   include NewWithTypeStiMixin
   include UuidMixin
   include WebServiceAttributeMixin
@@ -84,7 +87,6 @@ class ExtManagementSystem < ActiveRecord::Base
 
   include AuthenticationMixin
   include Metric::CiMixin
-  include AddressMixin
   include AsyncDeleteMixin
 
   virtual_column :emstype,                 :type => :string
@@ -210,8 +212,8 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def refresh_ems
-    raise "no #{ui_lookup(:table => "ext_management_systems")} credentials defined" if self.authentication_invalid?
-    raise "refresh requires a valid user id and password" if self.authentication_invalid?
+    raise "no #{ui_lookup(:table => "ext_management_systems")} credentials defined" if self.missing_credentials?
+    raise "#{ui_lookup(:table => "ext_management_systems")} failed last authentication check" unless self.authentication_status_ok?
     EmsRefresh.queue_refresh(self)
   end
 

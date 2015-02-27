@@ -4,7 +4,7 @@
   -    (x_node.split('-')[0] == "aen" && params[:button] == "reset")
     - if !@in_a_form_props
       = render :partial => "layouts/flash_msg", :locals  => {:div_num => "_class_props"}
-      %p.legend=_('Properties')
+      %h3=_('Properties')
       %table.style3
         %thead
           %tr

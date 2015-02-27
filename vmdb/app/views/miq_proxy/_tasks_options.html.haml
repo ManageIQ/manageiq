@@ -1,6 +1,6 @@
 - url = url_for(:action => 'tasks_change_options')
 #tasks_options_div
-  %p.legend=_("Filter By")
+  %h3=_("Filter By")
   %table.style1
     %tbody
       - if %w(my_tasks all_tasks).include?(@layout)

@@ -71,7 +71,7 @@ class EmsVmware < EmsInfra
   end
 
   def verify_credentials(auth_type=nil, options={})
-    raise "no credentials defined" if self.authentication_invalid?(auth_type)
+    raise "no credentials defined" if self.missing_credentials?(auth_type)
 
     begin
       with_provider_connection(:use_broker => false, :auth_type => auth_type) {}

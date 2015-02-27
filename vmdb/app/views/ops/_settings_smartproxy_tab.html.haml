@@ -1,7 +1,7 @@
 - url = url_for(:action=>'settings_form_field_changed', :id=>"#{@sb[:active_tab].split('_').last}")
 - if @sb[:active_tab] == "settings_smartproxy"
   = render :partial => "layouts/flash_msg"
-  %p.legend=_("Host Based SmartProxy Settings")
+  %h3=_("Host Based SmartProxy Settings")
   %table.style1
     %tr
       %td.key=_("Heartbeat Frequency")

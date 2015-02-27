@@ -733,6 +733,8 @@
         :disabled: true
       - :name: add_lifecycle_event
         :identifier: vm_edit
+      - :name: add_event
+        :identifier: vm_edit
       - :name: refresh
         :identifier: vm_refresh
         :disabled: true
@@ -766,6 +768,8 @@
         :identifier: vm_edit
         :disabled: true
       - :name: add_lifecycle_event
+        :identifier: vm_edit
+      - :name: add_event
         :identifier: vm_edit
       - :name: refresh
         :identifier: vm_refresh

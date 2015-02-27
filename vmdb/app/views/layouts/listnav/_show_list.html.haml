@@ -1,4 +1,7 @@
-- if !@def_searches.blank? || !@my_searches.blank?
+- if @def_searches.blank? && @my_searches.blank?
+  %br
+  = render :partial => 'layouts/info_msg', :locals => {:message => _("No filters defined.")}
+- else
   #accordion.panel-group
     - unless @def_searches.blank?
       - if @panels["#{@view.db}_def_searches"].nil?

@@ -1,6 +1,6 @@
 = render :partial => "layouts/flash_msg"
 
-%p.legend
+%h3
   = _('Basic Information')
 %table.style1
   %tbody
@@ -30,7 +30,7 @@
         = h(@sb[:dialog_label])
 %hr
 
-%p.legend
+%h3
   = _('Object Details')
 %table.style1
   %tbody
@@ -51,7 +51,7 @@
         = h(@resolve[:new][:object_request])
 %hr
 
-%p.legend
+%h3
   = _('Object Attribute')
 %table.style1
   %tbody
@@ -68,7 +68,7 @@
           = h(@resolve[:new][:target_id])
 %hr
 
-%p.legend
+%h3
   = _('Attribute/Value Pairs')
 - if @resolve[:new][:attrs].empty?
   = render :partial => 'layouts/info_msg', :locals => {:message => _("No Attribute/Value Pairs found.")}
@@ -84,7 +84,7 @@
           = h(attr[1])
 %hr
 
-%p.legend
+%h3
   = _('Visibility')
 %table.style1
   - show_to = @temp[:custom_button].visibility.nil? || (@temp[:custom_button].visibility && @temp[:custom_button].visibility[:roles] && @temp[:custom_button].visibility[:roles][0] == "_ALL_") ? _("To All") : _("By Role")

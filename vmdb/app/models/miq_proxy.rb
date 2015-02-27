@@ -243,7 +243,7 @@ class MiqProxy < ActiveRecord::Base
 
     if self.host.vmm_product.to_s.downcase.include?("esx")
       # We need to have userid and password configured for the host for this to work.
-      if self.host.authentication_valid?(:ws)
+      if self.host.has_credentials?(:ws)
         if agentCfg[:emsLocal].blank?
           self.settings[:emsLocal] = default_key
           updated = true
@@ -997,7 +997,7 @@ class MiqProxy < ActiveRecord::Base
     host_plat = self.host.platform.to_s.downcase
 
     raise MiqException::MiqDeploymentError, "Deploy #{MIQHOST_PRODUCT_NAME} Cannot deploy update: [#{update.name if update.name}], id: [#{update.id}] which requires platform: [#{requ_plat}] to [#{host_plat}]" unless requ_plat == host_plat
-    raise MiqException::MiqDeploymentError, "#{MIQHOST_PRODUCT_NAME} deployment requires a valid user id and password" if self.host.authentication_invalid? && deploy_options[:userid].blank?
+    raise MiqException::MiqDeploymentError, "#{MIQHOST_PRODUCT_NAME} deployment requires a valid user id and password" if self.host.missing_credentials? && deploy_options[:userid].blank?
 
     options = {
       :target_id => self.host.id,

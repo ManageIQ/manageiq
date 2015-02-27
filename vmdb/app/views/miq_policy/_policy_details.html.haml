@@ -8,7 +8,7 @@
       - # Description and active fields
       - if @edit
         - if @edit && @edit[:typ] == "basic"
-          %p.legend=_("Basic Information")
+          %h3=_("Basic Information")
           %table.style1
             %tr
               %td.key=_("Description")
@@ -26,7 +26,7 @@
               %td
                 = check_box_tag("active", "1", @edit[:new][:active], "data-miq_observe_checkbox" => {:url => url}.to_json)
       - else
-        %p.legend=_('Basic Information')
+        %h3=_('Basic Information')
         %table.style1
           %tr
             %td.key=_('Active')
@@ -46,11 +46,11 @@
       - # Scope
       - if @edit
         - if @edit[:typ] == "basic"
-          %p.legend=_("Scope (Choose an element of the Policy scope to edit)")
+          %h3=_("Scope (Choose an element of the Policy scope to edit)")
           = render :partial => 'layouts/exp_editor'
         %hr
       - else
-        %p.legend=_("Scope")
+        %h3=_("Scope")
         - if !@expression_table.nil?
           - @expression_table.each do |token|
             - if ! ["AND", "OR", "(", ")"].include?([token].flatten.first)
@@ -67,13 +67,13 @@
       - if @edit
         - if @edit[:typ] == "conditions"
           %fieldset
-            %p.legend=_("Condition Selection")
+            %h3=_("Condition Selection")
             %table.admintable
               %tr
                 %td
                   %table#formtest.form{:width => "100%"}
                     %tr
-                      %td{:align => "left"}=_("Available % Conditions:") % ui_lookup(:model => @edit[:new][:towhat])
+                      %td{:align => "left"}=_("Available %s Conditions:") % ui_lookup(:model => @edit[:new][:towhat])
                       %td
                       %td.widthed{align => "left"}=_("Policy Conditions:")
                     %tr
@@ -121,7 +121,7 @@
                   %strong
                     =_("* If all Conditions are removed from a Policy, it will be unconditional and always evaluate to true.")
       - else
-        %p.legend=_("Conditions")
+        %h3=_("Conditions")
         - if @policy_conditions.empty?
           = render :partial => 'layouts/info_msg', :locals => {:message => _("No conditions defined. This policy is unconditional and will ALWAYS return true.")}
         - else
@@ -157,10 +157,10 @@
       - if @edit
         - if @edit[:typ] == "events"
           %fieldset
-            %p.legend=_("Event Selection")
+            %h3=_("Event Selection")
             - @edit[:allevents].keys.sort.each do |k|
               %fieldset
-                %p.legend
+                %h3
                   = h(k)
                 - @edit[:allevents][k].sort_by(&:first).each do |e|
                   %div{:style => "width: 300px; height: 18px; float:left; padding: 0px 5px 0px 0px;"}
@@ -168,7 +168,7 @@
                       "data-miq_observe_checkbox" => {:url => url}.to_json)
                     = h(e.first)
       - else
-        %p.legend=_("Events")
+        %h3=_("Events")
         - if @policy_events.empty?
           = render :partial => 'layouts/info_msg', :locals => {:message => _("This policy does not currently respond to any Events.")}
         - else
@@ -220,7 +220,7 @@
       - # Notes field
       - if @edit
         - if @edit[:typ] == "basic"
-          %p.legend
+          %h3
             =_("Notes")
             (
             %span#notes_count=@edit[:new][:notes] ? @edit[:new][:notes].length : 0
@@ -233,7 +233,7 @@
             "data-miq_observe"          => observe_with_interval)
           %hr
       - else
-        %p.legend=_("Notes")
+        %h3=_("Notes")
         - if @policy.notes.blank?
           = render :partial => 'layouts/info_msg', :locals => {:message => _("No notes have been entered.")}
         - else
@@ -242,7 +242,7 @@
       - # Profiles policy is assigned to
       - unless @edit
         - if x_active_tree == :policy_tree
-          %p.legend=_("Belongs to Profiles")
+          %h3=_("Belongs to Profiles")
           -if @policy_profiles.empty?
             = render :partial => 'layouts/info_msg', :locals => {:message => _("This Policy is not assigned to any Profiles.")}
           - else

@@ -2,10 +2,10 @@
 = form_tag({:action => 'install_007',  :id => @miq_proxy}, {:id => "007_form"}) do
   #form_div
     = render :partial => "layouts/flash_msg"
-    %dl.col2
-      %dd
+    .row
+      .col-sm-12.col-md-12.col-lg-6
         %fieldset
-          %p.legend=_("Version Info")
+          %h3=_("Version Info")
           %table.style1
             %tr
               %td.key=_("Current Version")
@@ -22,10 +22,10 @@
                   @edit[:install_build]),
                   "data-miq_focus"   => true,
                   "data-miq_observe" => {:url => url}.to_json)
-      %dd
+      .col-sm-12.col-md-12.col-lg-6
         - if @miq_proxy.state == "on"
           %fieldset
-            %p.legend=_("Credentials")
+            %h3=_("Credentials")
             %span{:style => "color:black;"}
               = _("Credentials are not required because this SmartProxy is currently active.")
         - else

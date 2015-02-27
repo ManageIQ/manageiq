@@ -1,7 +1,7 @@
 #snapshots_tree_div
   - if @record.snapshots.count > 0
     %fieldset
-      %p.legend=_('Available Snapshots')
+      %h3=_('Available Snapshots')
       #snapshots_treebox{:style => "width: 100%"}
       = render(:partial => "layouts/dynatree",
         :locals => {:tree_id => "snapshots_treebox",

@@ -1,7 +1,7 @@
 - url = url_for(:action => 'widget_form_field_changed', :id => "#{@widget.id || "new"}")
 #form_div
   = render :partial => "layouts/flash_msg"
-  %p.legend
+  %h3
     = _('Basic Information')
   %table.style1
     %tr

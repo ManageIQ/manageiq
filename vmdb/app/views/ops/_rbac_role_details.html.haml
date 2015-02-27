@@ -3,10 +3,10 @@
                   :id     => "#{@edit[:role_id] || "new"}")
 = render :partial => "layouts/flash_msg"
 #main_div
-  %dl.col2
-    %dd
+  .row
+    .col-sm-12.col-md-12.col-lg-6
       %fieldset
-        %p.legend=_("Role Information")
+        %h3=_("Role Information")
         %table.style1
           %tr
             %td.key=_("Name")
@@ -45,10 +45,10 @@
                         %img{:src => "/images/icons/new/miq_group.png"}/
                       %td
                         = h(g.description)
-    %dd
+    .col-sm-12.col-md-12.col-lg-6
       %fieldset
         - temp = @edit ? _("Editing") : _("Read Only")
-        %p.legend=_("Product Features (%s)") % temp
+        %h3=_("Product Features (%s)") % temp
         #features_treebox{:style => "width:100%;height:#{@winH - 435}px;color:#000"}
         = render(:partial => "layouts/dynatree",
                  :locals  => {:tree_id        => "features_treebox",

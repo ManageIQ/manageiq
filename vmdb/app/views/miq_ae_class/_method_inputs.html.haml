@@ -1,7 +1,7 @@
 #method_inputs_div
   - if !@in_a_form && @ae_method
     = render :partial => "layouts/flash_msg", :locals => {:div_num => "_method_inputs"}
-    %p.legend=_('Main Info')
+    %h3=_('Main Info')
     %table.style1
       %tr
         %td.key
@@ -28,7 +28,7 @@
         %td.wide
           = h(format_timezone(@ae_method.created_on, Time.zone, "gtl"))
     = render :partial => "domain_overrides", :locals => {:node_prefix => "aem", :model => "Method"}
-    %p.legend=_('Data')
+    %h3=_('Data')
     - if @ae_method.location == "inline"
       = text_area("method1",
         "data",
@@ -47,7 +47,7 @@
     - # show inputs parameters grid if there are any inputs
     #params_div{:style => @temp[:grid_methods_xml] ? "" : "display: none;"}
       %hr
-      %p.legend=_('Input Parameters')
+      %h3=_('Input Parameters')
       = render :partial => 'layouts/dhtmlxgrid',
         :locals  => {:options => {:grid_id => "method_inputs_grid_div",
         :grid_name                         => "method_inputs_grid",

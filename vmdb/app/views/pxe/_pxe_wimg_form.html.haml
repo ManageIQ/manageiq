@@ -1,7 +1,7 @@
 - url = url_for(:action => 'pxe_wimg_form_field_changed', :id => "#{@wimg.id || "new"}")
 #form_div
   = render :partial => "layouts/flash_msg"
-  %p.legend=_('Basic Information')
+  %h3=_('Basic Information')
   %table.style1
     %tbody
       %tr

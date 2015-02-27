@@ -2,7 +2,7 @@
 
 #form_div
   = render :partial => "layouts/flash_msg"
-  %p.legend=_('Basic Information')
+  %h3=_('Basic Information')
   %table.style1
     %tr
       %td.key=_('Name')
@@ -34,5 +34,5 @@
           options_for_select(types, @edit[:new][:typ]),
           "data-miq_observe" => {:url => url}.to_json)
   %hr
-  %p.legend=_('Script')
+  %h3=_('Script')
   = render :partial => "template_script_data"

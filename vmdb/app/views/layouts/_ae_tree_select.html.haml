@@ -1,7 +1,7 @@
 - entry_point ||= "Instance"
 #automate_tree_div
   = hidden_field_tag(:ignore_form_changes)
-  %p.legend= _("Select Entry Point %s") % entry_point
+  %h3= _("Select Entry Point %s") % entry_point
   #automate_treebox
   = render(:partial => "layouts/dynatree",
            :locals => {:tree_id             => "automate_treebox",

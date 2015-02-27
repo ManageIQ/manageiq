@@ -519,14 +519,16 @@ class MiqVimVm
 		raise MiqException::MiqVimError, "Failed to retrieve configuration information for VM" if cfgProps.nil?
 		cfgProps = cfgProps["config"]
 
-		cfgHash = Hash.new
-		cfgHash['displayname'] = cfgProps['name']
-		cfgHash['guestos'] = cfgProps['guestId'].downcase.chomp("guest")
-		cfgHash['uuid.bios'] = cfgProps['uuid']
-		cfgHash['uuid.location'] = cfgProps['locationId']
-		cfgHash['memsize'] = cfgProps['hardware']['memoryMB']
-		cfgHash['numvcpu'] = cfgProps['hardware']['numCPU']
-		cfgHash['config.version'] = cfgProps['version']
+    cfgHash = {
+      'displayname'      => cfgProps['name'],
+      'guestos'          => cfgProps['guestId'].downcase.chomp("guest"),
+      'uuid.bios'        => cfgProps['uuid'],
+      'uuid.location'    => cfgProps['locationId'],
+      'memsize'          => cfgProps['hardware']['memoryMB'],
+      'cores_per_socket' => cfgProps['hardware']['numCoresPerSocket'],
+      'numvcpu'          => cfgProps['hardware']['numCPU'],
+      'config.version'   => cfgProps['version'],
+    }
 
 		controllerKeyHash = Hash.new
 

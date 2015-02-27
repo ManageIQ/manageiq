@@ -10,7 +10,7 @@
 
 #desc_content.desc_content
   %fieldset
-    %p.legend
+    %h3
       = display_name
     %table.style1
       - if !session[:snap_selected].nil? || @record.snapshots.count > 0

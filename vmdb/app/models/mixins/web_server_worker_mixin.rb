@@ -2,9 +2,15 @@ require 'miq_apache'
 module WebServerWorkerMixin
   extend ActiveSupport::Concern
 
+  BINDING_ADDRESS = Rails.env.production? ? "127.0.0.1" : "0.0.0.0"
+
   included do
     class << self
       attr_accessor :registered_ports
+    end
+
+    def self.binding_address
+      BINDING_ADDRESS
     end
 
     def self.rails_server_command_line
@@ -18,7 +24,7 @@ module WebServerWorkerMixin
 
       defaults = {
         :port         => 3000,
-        :binding      => Rails.env.production? ? "127.0.0.1" : "0.0.0.0",
+        :binding      => binding_address,
         :environment  => Rails.env.to_s,
         :config       => Rails.root.join("config.ru")
       }
@@ -51,6 +57,14 @@ module WebServerWorkerMixin
       self.server_scope.all.collect { |w| w.port unless w.is_stopped? && !MiqProcess.is_worker?(w.pid)}.compact
     end
 
+    # Utilize URI::Generic#hostname to add support for IPv6 literals
+    # TODO: simplify this once https://github.com/ruby/ruby/pull/765 lands in our ruby
+    def self.build_uri(port)
+      uri = URI::HTTP.build(:port => port)
+      uri.hostname = binding_address
+      uri.to_s
+    end
+
     def self.sync_workers
       #TODO: add an at_exit to remove all registered ports and gracefully stop apache
       self.registered_ports ||= []
@@ -69,7 +83,7 @@ module WebServerWorkerMixin
             port = self.reserve_port(ports)
             $log.info("MIQ(#{self.name}.sync_workers) Reserved port=#{port}, Current ports in use: #{ports.inspect}")
             ports << port
-            w = self.start_worker(:uri => "http://0.0.0.0:#{port}")
+            w = self.start_worker(:uri => build_uri(port))
             result[:adds] << w.pid
           end
         elsif desired < current

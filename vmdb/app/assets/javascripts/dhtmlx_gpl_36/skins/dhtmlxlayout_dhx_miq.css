@@ -5,6 +5,7 @@
 table.dhtmlxLayoutPolyContainer_dhx_blue {
 	width: 100%;
 	height: 100%;
+	border-collapse: separate !important;
 }
 /* single polygon */
 table.dhtmlxLayoutPolyContainer_dhx_blue td.dhtmlxLayoutSinglePoly {
@@ -291,14 +292,14 @@ table.dhtmlxLayoutPolyContainer_dhx_blue td.dhtmlxLayoutPolySplitterVer {
 	width: 5px;
 	cursor: w-resize;
 	-moz-user-select: none;
-	background-color: #c4c4c4;
+	background-color: #f4f4f4;
 	background-image: url("../imgs/dhxlayout_dhx_miq/dhxlayout_drag_ver.gif") !important;
 	background-repeat: no-repeat !important;
 	background-position: 50% center !important;
-	border-right: #6b6b6b 1px solid;
-	border-left: #6b6b6b 1px solid;
-    padding-left: 3px;
-    padding-right: 3px;
+	border-right: #c3c2c2 1px solid;
+	border-left: #c3c2c2 1px solid;
+  padding-left: 3px;
+  padding-right: 3px;
 	vertical-align: top;
 }
 /* ver-based splitter inactive */
@@ -307,12 +308,12 @@ table.dhtmlxLayoutPolyContainer_dhx_blue td.dhtmlxLayoutPolySplitterVerInactive 
 	width: 5px;
 	cursor: default;
 	-moz-user-select: none;
-	background-color: #c4c4c4;
+	background-color: #f4f4f4;
 /*	background-image: url("../imgs/dhxlayout_dhx_miq/dhxlayout_drag_ver.gif") !important;*/
 	background-repeat: no-repeat !important;
 	background-position: 50% center !important;
-	border-right: #6b6b6b 1px solid;
-	border-left: #6b6b6b 1px solid;
+	border-right: #c3c2c2 1px solid;
+	border-left: #c3c2c2 1px solid;
     padding-left: 3px;
     padding-right: 3px;
 	vertical-align: top;

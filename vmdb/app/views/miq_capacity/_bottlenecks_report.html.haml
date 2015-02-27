@@ -6,5 +6,5 @@
     = render :partial => 'bottlenecks_options', :locals  => {:typ => "report"}
     - if @sb[:bottlenecks] && @sb[:bottlenecks][:report]
       %hr
-      %p.legend=_('Bottleneck Event Details')
+      %h3=_('Bottleneck Event Details')
       = @sb[:bottlenecks][:report].to_html.html_safe

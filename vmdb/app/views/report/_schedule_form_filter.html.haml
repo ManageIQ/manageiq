@@ -1,6 +1,6 @@
 - url = url_for(:action => 'schedule_form_field_changed',  :id => "#{@schedule.id || 'new'}")
 #form_filter_div
-  %p.legend
+  %h3
     = _('Report Selection')
   %table.style1
     - if @sb[:tree_typ] == "reports"

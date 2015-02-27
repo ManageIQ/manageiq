@@ -1,6 +1,6 @@
 require_relative "./evm_test_helper"
 
-if defined?(RSpec)
+if defined?(RSpec) && defined?(RSpec::Core::RakeTask)
 namespace :test do
   desc "Run all migration specs"
   task :migrations => %w(

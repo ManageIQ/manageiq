@@ -20,7 +20,7 @@
     - obs = {:interval => '.5', :url => url}.to_json
     = render :partial => "layouts/flash_msg", :locals => {:div_num => "_ns_list"}
     #form_ns_div
-      %p.legend=_('Info')
+      %h3=_('Info')
       %table.style1
         - unless @ae_ns.domain?
           %tr

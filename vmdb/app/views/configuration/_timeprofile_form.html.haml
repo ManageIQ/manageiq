@@ -3,7 +3,7 @@
   = render :partial => "layouts/flash_msg"
   - disabled = @tp_restricted
 
-  %p.legend=_('Time Profile Information')
+  %h3=_('Time Profile Information')
   %table.style1
     %tbody
       %tr
@@ -78,7 +78,7 @@
 
   - unless @timeprofile.miq_reports.empty?
     %fieldset
-      %p.legend=_('Reports Currently Using This Time Profile')
+      %h3=_('Reports Currently Using This Time Profile')
       %table.style3
         %tr
           %td{:width => "50%", :valign => "top"}
