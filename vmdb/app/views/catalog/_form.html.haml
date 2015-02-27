@@ -2,27 +2,29 @@
   %ul.tab
     %li#li_basic
       %a{:href => "#basic"}=_('Basic Info')
-    %li#li_details
-      %a{:href => "#details"}=_('Details')
-    - if @edit[:new][:service_type] == "composite"
-      %li#li_resources
-        %a{:href => "#resources"}=_('Resources')
-    - else
-      - if @edit[:new][:service_type] == "atomic" && @edit[:new][:st_prov_type] != "generic"
-        %li#li_request
-          %a{:href => "#request"}=_('Request Info')
+    - unless @edit[:new][:st_prov_type] == "generic_orchestration"
+      %li#li_details
+        %a{:href => "#details"}=_('Details')
+      - if @edit[:new][:service_type] == "composite"
+        %li#li_resources
+          %a{:href => "#resources"}=_('Resources')
+      - else
+        - if @edit[:new][:service_type] == "atomic" && need_prov_dialogs?(@edit[:new][:st_prov_type])
+          %li#li_request
+            %a{:href => "#request"}=_('Request Info')
 
   #basic{:name => "basic", :width => "80px;"}
     = render :partial => "form_basic_info"
-  #details{:name => "details", :width => "80px"}
-    = render :partial => "form_details_info"
-  - if @edit[:new][:service_type] == "composite"
-    #resources{:name => "resources", :width => "80px"}
-      = render :partial => "form_resources_info"
-  - else
-    - if @edit[:new][:service_type] == "atomic" && @edit[:new][:st_prov_type] != "generic"
-      #request{:name => "request", :width => "80px"}
-        = render :partial => "form_request_info"
+  - unless @edit[:new][:st_prov_type] == "generic_orchestration"
+    #details{:name => "details", :width => "80px"}
+      = render :partial => "form_details_info"
+    - if @edit[:new][:service_type] == "composite"
+      #resources{:name => "resources", :width => "80px"}
+        = render :partial => "form_resources_info"
+    - else
+      - if @edit[:new][:service_type] == "atomic" && need_prov_dialogs?(@edit[:new][:st_prov_type])
+        #request{:name => "request", :width => "80px"}
+          = render :partial => "form_request_info"
 
 :javascript
   //method takes hash that can have 4 keys: tabs div id, active_tab label,

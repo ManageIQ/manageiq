@@ -2645,4 +2645,8 @@ module ApplicationHelper
     (@lastaction == "show_list" && !session[:menu_click] && show_search.include?(@layout) && !@in_a_form) ||
       (@explorer && x_tree && [:filter, :images, :instances, :vandt].include?(x_tree[:type]) && !@record)
   end
+
+  def need_prov_dialogs?(type)
+    !type.starts_with?("generic")
+  end
 end
