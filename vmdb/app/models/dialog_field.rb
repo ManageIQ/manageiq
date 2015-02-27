@@ -57,6 +57,7 @@ class DialogField < ActiveRecord::Base
   DIALOG_FIELD_DYNAMIC_CLASSES = %w(
     DialogFieldCheckBox
     DialogFieldDateControl
+    DialogFieldDateTimeControl
     DialogFieldRadioButton
     DialogFieldTextAreaBox
     DialogFieldTextBox
