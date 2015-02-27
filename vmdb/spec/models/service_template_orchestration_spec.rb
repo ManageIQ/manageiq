@@ -3,6 +3,12 @@ require "spec_helper"
 describe ServiceTemplateOrchestration do
   let(:service_template) { FactoryGirl.create(:service_template_orchestration) }
 
+  context '#create_subtasks' do
+    it 'does not need subtasks' do
+      service_template.create_subtasks(nil, nil).size.should == 0
+    end
+  end
+
   context "#orchestration_template" do
     let(:first_orch_template) { FactoryGirl.create(:orchestration_template) }
     let(:second_orch_template) { FactoryGirl.create(:orchestration_template) }

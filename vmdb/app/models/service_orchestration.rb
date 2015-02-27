@@ -5,31 +5,35 @@ class ServiceOrchestration < Service
   attr_writer :stack_name
 
   def stack_options
-    @stack_options ||= build_stack_options
+    @stack_options ||= options[:create_options] || build_stack_options_from_dialog
   end
 
   def stack_name
-    @stack_name ||= OptionConverter.get_stack_name(options[:dialog] || {})
+    @stack_name ||= options[:stack_name] || OptionConverter.get_stack_name(options[:dialog] || {})
+  end
+
+  def stack_id
+    @stack_id ||= options[:stack_id]
   end
 
   def orchestration_stack_status
-    orchestration_manager.stack_status(stack_name)
+    return "check_status_failed", "stack has not been deployed" unless stack_id
+
+    orchestration_manager.stack_status(stack_name, stack_id)
   rescue MiqException::MiqOrchestrationStatusError => err
     # naming convention requires status to end with "failed"
     return "check_status_failed", err.message
   end
 
   def deploy_orchestration_stack
-    save_stack_options
-    orchestration_manager.stack_create(stack_name, orchestration_template, stack_options)
-    nil  # if no exception
-  rescue MiqException::MiqOrchestrationProvisionError => err
-    err.message
+    @stack_id = orchestration_manager.stack_create(stack_name, orchestration_template, stack_options)
+  ensure
+    save_options
   end
 
   private
 
-  def build_stack_options
+  def build_stack_options_from_dialog
     # manager from dialog_options overrides the one copied from service_template
     manager_from_dialog = OptionConverter.get_manager(options[:dialog] || {})
     self.orchestration_manager = manager_from_dialog if manager_from_dialog
@@ -43,13 +47,13 @@ class ServiceOrchestration < Service
     converter.stack_create_options
   end
 
-  def save_stack_options
-    options_dump = stack_options.dup
+  def save_options
+    options_dump = stack_options.deep_dup
     parameters = options_dump[:parameters] || {}
     parameters.each { |key, val| parameters[key] = MiqPassword.encrypt(val) if key.downcase =~ /password/ }
 
-    self.options = options.merge(:manager_id     => orchestration_manager.id,
-                                 :template_id    => orchestration_template.id,
+    self.options = options.merge(:stack_name     => stack_name,
+                                 :stack_id       => @stack_id,
                                  :create_options => options_dump)
     save!
   end
