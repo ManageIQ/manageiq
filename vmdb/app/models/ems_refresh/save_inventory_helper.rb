@@ -5,7 +5,8 @@ module EmsRefresh::SaveInventoryHelper
 
     new_records = []
     hashes.each do |h|
-      save_inventory(type, parent, h, deletes, new_records, record_index, record_index_columns, find_key, child_keys, remove_keys)
+      found = save_inventory(type, parent, h.except(*remove_keys), deletes, new_records, record_index, record_index_columns, find_key)
+      save_child_inventory(found, h, child_keys)
     end
 
     # Delete the items no longer found
@@ -20,7 +21,8 @@ module EmsRefresh::SaveInventoryHelper
 
   def save_inventory_single(type, parent, hash, child_keys = [], extra_keys = [])
     find_key, child_keys, extra_keys, remove_keys = self.save_inventory_prep(nil, child_keys, extra_keys)
-    save_inventory(type, parent, hash, nil, nil, nil, nil, nil, child_keys, remove_keys)
+    save_inventory(type, parent, hash.except(*remove_keys))
+    save_child_inventory(parent.send(type), hash, child_keys)
   end
 
   def save_inventory_prep(find_key, child_keys, extra_keys)
@@ -32,23 +34,17 @@ module EmsRefresh::SaveInventoryHelper
     return find_key, child_keys, extra_keys, remove_keys
   end
 
-  def save_inventory(type, parent, hash, deletes, new_records, record_index, record_index_columns, find_key, child_keys, remove_keys)
-    # Backup keys that cannot be written directly to the database
-    key_backup = backup_keys(hash, remove_keys)
-
+  def save_inventory(type, parent, hash, deletes = nil, new_records = nil, record_index = nil, record_index_columns = nil, find_key = nil)
     # Find the record, and update if found, else create it
     found = find_key.blank? ? parent.send(type) : self.save_inventory_record_index_fetch(record_index, record_index_columns, hash, find_key)
     if found.nil?
       found = find_key ? parent.send(type).build(hash) : parent.send("build_#{type}", hash)
       new_records.nil? ? parent.send("#{type}=", found) : new_records << found
     else
-      key_backup.merge!(backup_keys(hash, [:type]))
-      found.update_attributes!(hash)
+      found.update_attributes!(hash.except(:type))
       deletes.delete(found) unless deletes.blank?
     end
-
-    save_child_inventory(found, key_backup, child_keys)
-    restore_keys(hash, remove_keys, key_backup)
+    found
   end
 
   def save_inventory_prep_record_index(records, find_key)
