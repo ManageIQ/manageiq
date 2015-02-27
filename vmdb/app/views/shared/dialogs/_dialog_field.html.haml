@@ -144,7 +144,13 @@
               var fieldName = "#{field.name}";
 
               $.post('dynamic_date_refresh', {name: fieldName}, function(data) {
-                $('.dynamic-date-' + fieldId).val(data.date_value);
+                $('.dynamic-date-' + fieldId).val(data.values.date);
+
+                if (data.values.hour !== undefined && data.values.min !== undefined) {
+                  $('.dynamic-date-hour-' + fieldId).val(data.values.hour);
+                  $('.dynamic-date-min-' + fieldId).val(data.values.min);
+                }
+
                 miqSparkleOff();
               });
             });

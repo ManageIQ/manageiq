@@ -105,6 +105,22 @@ describe DialogFieldDateControl do
     end
   end
 
+  describe "#refresh_json_value" do
+    let(:dialog_field) { described_class.new }
+
+    before do
+      described_class.stub(:server_timezone).and_return("UTC")
+    end
+
+    it "returns tomorrow's date in a hash" do
+      Timecop.freeze(Time.utc(2015, 2, 3)) do
+        expect(dialog_field.refresh_json_value).to eq({
+          :date => "02/04/2015"
+        })
+      end
+    end
+  end
+
   describe "#automate_output_value" do
     let(:dialog_field) { described_class.new(:value => value) }
 

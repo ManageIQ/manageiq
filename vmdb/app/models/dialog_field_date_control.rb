@@ -48,6 +48,10 @@ class DialogFieldDateControl < DialogField
     "<Script error>"
   end
 
+  def refresh_json_value
+    {:date => Date.parse(default_value).strftime("%m/%d/%Y")}
+  end
+
   private
 
   def default_resource_action
