@@ -2108,10 +2108,10 @@ class ApplicationController < ActionController::Base
       page << "miqSetButtons(0,'center_tb');"                             # Reset the center toolbar
       page << "}";
       if ! (@layout == "dashboard" && ["show","change_tab","auth_error"].include?(@controller.action_name) ||
-                @layout == "report" ||
-                ["configuration","about","diagnostics","rss","server_build","product_update",
-                  "my_tasks","my_ui_tasks","all_tasks","all_ui_tasks","miq_ae_tools","miq_policy",
-                  "miq_ae_export","miq_ae_automate_button","miq_ae_customization","miq_ae_logs","miq_policy_logs","miq_policy_export","miq_request_vm","miq_request_host","miq_request_ae"].include?(@layout))
+        ["about", "all_tasks", "all_ui_tasks", "configuration", "diagnostics", "miq_ae_automate_button",
+          "miq_ae_customization", "miq_ae_export", "miq_ae_logs", "miq_ae_tools", "miq_policy", "miq_policy_export",
+          "miq_policy_logs", "miq_request_ae", "miq_request_configured_system", "miq_request_host", "miq_request_vm",
+          "my_tasks", "my_ui_tasks", "product_update", "report", "rss", "server_build"].include?(@layout))
         page.replace(:listnav_div, :partial=>"layouts/listnav")               # Replace accordion, if list_nav_div is there
       end
       if @grid_xml                                  # Replacing a grid

@@ -2279,7 +2279,7 @@ module ApplicationHelper
           return "diagnostics_center_tb"
         elsif @layout == "miq_policy_logs" || @layout == "miq_ae_logs"
           return "logs_center_tb"
-        elsif ["miq_request_host","miq_request_vm"].include?(@layout)
+        elsif ["miq_request_configured_system", "miq_request_host", "miq_request_vm"].include?(@layout)
           if ["show_list"].include?(@lastaction)
             return "miq_requests_center_tb"
           else
