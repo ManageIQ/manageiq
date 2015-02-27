@@ -348,7 +348,7 @@ module ApplicationController::MiqRequestMethods
   def build_grid
     if @edit[:wf].kind_of?(MiqProvisionWorkflow)
       if @edit[:new][:current_tab_key] == :service
-        if @edit[:wf].class.kind_of?(MiqProvisionWorkflow) || @edit[:new][:st_prov_type]
+        if @edit[:new][:st_prov_type]
           build_vm_grid(@edit[:wf].get_field(:src_vm_id,:service)[:values],@edit[:vm_sortdir],@edit[:vm_sortcol])
         else
           @temp[:vm] = VmOrTemplate.find_by_id(@edit[:new][:src_vm_id] && @edit[:new][:src_vm_id][0])
