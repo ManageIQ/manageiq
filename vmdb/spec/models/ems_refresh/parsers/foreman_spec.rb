@@ -35,7 +35,7 @@ describe EmsRefresh::Parsers::Foreman do
         "medium_id"          => 10,
         "ptable_id"          => 30,
         "last_compile"       => nil,
-        "build"              => ""
+        "build"              => false
       },
       {
         "id"                 => 2,
@@ -45,7 +45,7 @@ describe EmsRefresh::Parsers::Foreman do
         "medium_id"          => 20,
         "ptable_id"          => 10,
         "last_compile"       => date1,
-        "build"              => "true"
+        "build"              => true
       },
     ]
   end

@@ -1,3 +1,4 @@
+require 'manageiq_foreman'
 class ProviderForeman < Provider
   has_one :configuration_manager,
           :foreign_key => "provider_id",
