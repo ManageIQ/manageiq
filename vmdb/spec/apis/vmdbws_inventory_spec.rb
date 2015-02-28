@@ -118,12 +118,12 @@ describe VmdbwsController, :apis => true do
     host.hardware.memory_cpu.to_i.should == 1234
   end
 
-  # WAT?
   it 'should return Host information' do
-    FactoryGirl.create(:host_vmware)
+    host = FactoryGirl.create(:host_vmware)
     hosts = invoke(:GetHostList,'*')
-    host_info = invoke(:EVM_get_host, hosts.first.guid)
+    h = invoke(:EVM_get_host, hosts.first.guid)
     validate_ci_list(hosts, VmdbwsSupport::HostList)
+    h.guid.should == host.guid
   end
 
   it 'should return Host information for FindHostByGuid' do
