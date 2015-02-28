@@ -1,6 +1,8 @@
 module EmsRefresh
   module Parsers
     class OpenstackInfra < Infra
+      include EmsRefresh::Parsers::OpenstackCommon::Images
+      
       def self.ems_inv_to_hashes(ems, options = nil)
         new(ems, options).ems_inv_to_hashes
       end
@@ -14,12 +16,14 @@ module EmsRefresh
 
         @known_flavors = Set.new
 
-        @os_handle                  = ems.openstack_handle
-        @compute_service            = @connection # for consistency
-        @baremetal_service          = @os_handle.detect_baremetal_service
-        @baremetal_service_name     = @os_handle.baremetal_service_name
+        @os_handle              = ems.openstack_handle
+        @compute_service        = @connection # for consistency
+        @baremetal_service      = @os_handle.detect_baremetal_service
+        @baremetal_service_name = @os_handle.baremetal_service_name
         @orchestration_service      = @os_handle.detect_orchestration_service
         @orchestration_service_name = @os_handle.orchestration_service_name
+        @image_service        = @os_handle.detect_image_service
+        @image_service_name   = @os_handle.image_service_name
       end
 
       def ems_inv_to_hashes
@@ -28,6 +32,7 @@ module EmsRefresh
         $fog_log.info("#{log_header}...")
 
         load_hosts
+        get_images
 
         $fog_log.info("#{log_header}...Complete")
         @data

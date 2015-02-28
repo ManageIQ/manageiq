@@ -29,6 +29,7 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
       assert_table_counts
       assert_ems
       assert_specific_host
+      assert_specific_public_template
     end
   end
 
@@ -40,7 +41,7 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     OrchestrationStack.count.should  == 0
     ResourcePool.count.should        == 0
     Vm.count.should                  == 0
-    VmOrTemplate.count.should        == 0
+    VmOrTemplate.count.should        == 16
     CustomAttribute.count.should     == 0
     CustomizationSpec.count.should   == 0
     Disk.count.should                == 0
@@ -56,7 +57,7 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     SystemService.count.should       == 0
     Relationship.count.should        == 0
 
-    MiqQueue.count.should            == 3
+    MiqQueue.count.should            == 19
     Storage.count.should             == 0
   end
 
@@ -71,9 +72,9 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
 
     @ems.storages.size.should            == 0
     @ems.hosts.size.should               == 6
-    @ems.vms_and_templates.size.should   == 0
+    @ems.vms_and_templates.size.should   == 16
     @ems.vms.size.should                 == 0
-    @ems.miq_templates.size.should       == 0
+    @ems.miq_templates.size.should       == 16
     @ems.customization_specs.size.should == 0
   end
 
@@ -114,5 +115,47 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
       :cpu_usage          => nil,
       :memory_usage       => nil
     )
+  end
+
+  def assert_specific_public_template
+    assert_specific_template("overcloud-control", "1734551c-dff7-472c-9925-f713e7af5a52", true)
+  end
+
+  def assert_specific_template(name, uid, is_public = false)
+    template = TemplateOpenstack.where(:name => name).first
+    template.should have_attributes(
+      :template              => true,
+      :publicly_available    => is_public,
+      :ems_ref_obj           => nil,
+      :uid_ems               => uid,
+      :vendor                => "OpenStack",
+      :power_state           => "never",
+      :location              => "unknown",
+      :tools_status          => nil,
+      :boot_time             => nil,
+      :standby_action        => nil,
+      :connection_state      => nil,
+      :cpu_affinity          => nil,
+      :memory_reserve        => nil,
+      :memory_reserve_expand => nil,
+      :memory_limit          => nil,
+      :memory_shares         => nil,
+      :memory_shares_level   => nil,
+      :cpu_reserve           => nil,
+      :cpu_reserve_expand    => nil,
+      :cpu_limit             => nil,
+      :cpu_shares            => nil,
+      :cpu_shares_level      => nil
+    )
+    template.ems_ref.should be_guid
+
+    template.ext_management_system.should  == @ems
+    template.operating_system.should       be_nil # TODO: This should probably not be nil
+    template.custom_attributes.size.should == 0
+    template.snapshots.size.should         == 0
+    template.hardware.should               be_nil
+
+    template.parent.should                 be_nil
+    template
   end
 end
