@@ -48,16 +48,6 @@ describe VmdbwsController, :apis => true do
     validate_ci_list(result, VmdbwsSupport::EmsList)
     ems.should have(ExtManagementSystem.count).things
     result.should have(ExtManagementSystem.count).things
-  end
-
-  # Consolidate
-  it 'should return Management System ws attributes ' do
-    _guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
-    FactoryGirl.create(:ems_vmware)
-
-    result = invoke(:GetEmsList)
-    result.should have(ExtManagementSystem.count).things
-    ems = invoke(:GetEmsByList, result)
     ems.first.ws_attributes.count.should == get_ws_attribute_count(ExtManagementSystem)
   end
 
@@ -68,14 +58,6 @@ describe VmdbwsController, :apis => true do
     db_ems = ExtManagementSystem.first
     ems = invoke(:FindEmsByGuid,db_ems.guid)
     ems.guid.should == db_ems.guid
-  end
-
-  # DUPE
-  it 'should not raise error for valid ems guid for FindEmsByGuid' do
-    _guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
-    FactoryGirl.create(:ems_vmware)
-
-    lambda {invoke(:FindEmsByGuid,ExtManagementSystem.first.guid)}.should_not raise_error
   end
 
   it 'should raise an error for invalid ems guid for FindEmsByGuid' do
@@ -114,7 +96,6 @@ describe VmdbwsController, :apis => true do
     result.should have(Host.count).things
   end
 
-  #Consolidate
   it 'should return Host ws attributes' do
     ems = FactoryGirl.create(:ems_vmware)
     FactoryGirl.create(:host_vmware, :ext_management_system => ems)
@@ -122,17 +103,6 @@ describe VmdbwsController, :apis => true do
     result = invoke(:GetHostList, ems.guid)
     hosts = invoke(:GetHostsByList, result)
     hosts.first.ws_attributes.count.should == get_ws_attribute_count(Host)
-  end
-
-  #Useless?
-  it 'should not return hardware information for a host' do
-    ems = FactoryGirl.create(:ems_vmware)
-    FactoryGirl.create(:host_vmware, :ext_management_system => ems)
-    ems_list = invoke(:GetEmsList)
-    result = invoke(:GetHostList, ems.guid)
-    hosts = invoke(:GetHostsByList, result)
-    host = hosts.first
-    hosts.first.hardware.should be_nil
   end
 
   it 'should return hardware information for a host' do
@@ -163,12 +133,6 @@ describe VmdbwsController, :apis => true do
     host = invoke(:FindHostByGuid,host.guid)
     host.hardware.should be_kind_of(VmdbwsSupport::ProxyHardware)
     host.hardware.id.should == host.hardware.id.to_s
-  end
-
-  # dupe
-  it 'should not raise error for valid host guid for FindHostByGuid' do
-    host = FactoryGirl.create(:host_vmware)
-    lambda {invoke(:FindHostByGuid, host.guid)}.should_not raise_error
   end
 
   it 'should raise an error for invalid host guid for FindHostByGuid' do
@@ -227,12 +191,6 @@ describe VmdbwsController, :apis => true do
     all_clusters.should have(1).things
     cluster = invoke(:FindClusterById,new_cluster.id)
     cluster.ext_management_system.guid.should == ems.guid
-  end
-
-  #Dupe
-  it 'should not raise error for valid cluster id for FindClusterById' do
-    FactoryGirl.create(:ems_cluster)
-    lambda {invoke(:FindClustersById,EmsCluster.first.id)}.should_not raise_error
   end
 
   it 'should raise an error for invalid cluster id for FindClusterById' do
@@ -305,15 +263,6 @@ describe VmdbwsController, :apis => true do
     pools.should have(1).things
     resource_pool = invoke(:FindResourcePoolById, pool.id)
     resource_pool.id.to_i.should == pool.id
-  end
-
-  # DUPE
-  it 'should not raise error for valid resource pool id for FindResourcePoolById' do
-    cluster = FactoryGirl.create(:ems_cluster)
-    pool = FactoryGirl.create(:resource_pool)
-    pool.set_parent(cluster)
-
-    lambda {invoke(:FindResourcePoolsById, ResourcePool.first.id)}.should_not raise_error
   end
 
   it 'should raise an error for invalid resource pool id for FindResourcePoolById' do
@@ -402,12 +351,6 @@ describe VmdbwsController, :apis => true do
     lambda {invoke(:FindDatastoresById, ["1234"])}.should raise_error(RuntimeError)
   end
 
-  # DUPE
-  it 'should not raise error for valid datastore id for FindDatastoresById' do
-    FactoryGirl.create(:storage)
-    lambda {invoke(:FindDatastoresById,Storage.first.id)}.should_not raise_error
-  end
-
   it 'should raise an error for invalid datastore id for DatastoreGetTags' do
     lambda {invoke(:DatastoreGetTags,"1234")}.should raise_error(RuntimeError)
   end
@@ -458,15 +401,6 @@ describe VmdbwsController, :apis => true do
     result = invoke(:EVM_vm_list, db_host.guid)
     validate_ci_list(result, VmdbwsSupport::VmList)
     result.should have(1).things
-  end
-
-  # Useless?
-  it 'should not return hardware information for a VM' do
-    FactoryGirl.create(:vm_vmware)
-    result = invoke(:EVM_vm_list,"*")
-    vms = invoke(:GetVmsByList, result)
-    vm = vms.first
-    vm.hardware.should be_nil
   end
 
   it 'should return hardware information for a VM' do
