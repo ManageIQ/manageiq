@@ -111,9 +111,9 @@ module OpsController::Settings::AnalysisProfiles
   def ap_ce_delete
     return unless load_edit("ap_edit__#{params[:id]}","replace_cell__explorer")
     ap_get_form_vars
-    if params[:item1] == "registry"
+    if params[:item2] == "registry"
       session[:reg_entries].each do | reg |
-        if reg.has_value?(params[:reg_key]) && reg.has_value?(params[:reg_value])
+        if reg.value?(params[:reg_key]) && reg.value?(params[:reg_value])
           session[:reg_entries].delete(reg)
         end
       end
