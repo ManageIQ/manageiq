@@ -2,6 +2,7 @@ module MiqAeMethodService
   class MiqAeServiceService < MiqAeServiceModelBase
     expose :retire_now
     expose :retire_service_resources
+    expose :service_resources
     expose :automate_retirement_entrypoint
     expose :start_retirement
     expose :finish_retirement

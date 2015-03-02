@@ -13,7 +13,7 @@ module RetirementMixin
 
   def retirement_warn=(seconds)
     if self.retirement_warn != seconds
-      retirement_last_warn = nil # Reset so that a new warning can be sent out when the time is right
+      self.retirement_last_warn = nil # Reset so that a new warning can be sent out when the time is right
       write_attribute(:retirement_warn, seconds)
     end
   end
@@ -23,7 +23,7 @@ module RetirementMixin
   end
 
   def retirement_warning_due?
-    retirement_warn && retires_on && retirement_warn.days.from_now.to_date >= retires_on.to_date
+    self.retirement_warn && retires_on && self.retirement_warn.days.from_now.to_date >= retires_on.to_date
   end
 
   def retirement_due?
@@ -72,6 +72,10 @@ module RetirementMixin
 
     save
 
+    raise_retire_audit_event(message)
+  end
+
+  def raise_retire_audit_event(message)
     event_name = "#{retirement_event_prefix}_scheduled_to_retire"
     $log.info("MIQ(#{retirement_object_title}#retire) #{message}")
     raise_audit_event(event_name, message)
@@ -82,7 +86,7 @@ module RetirementMixin
 
     if !retirement_warned? && retirement_warning_due?
       begin
-        retirement_last_warn = Time.now.utc
+        self.retirement_last_warn = Time.now.utc
         save
         raise_retirement_event(retire_warn_event_name)
       rescue => err
@@ -175,10 +179,10 @@ module RetirementMixin
   end
 
   def retiring?
-    !retirement_state.blank? && !retirement_state != 'error'
+    retirement_state == 'retiring'
   end
 
   def error_retiring?
-    !retirement_state.blank? && retirement_state == 'error'
+    retirement_state == 'error'
   end
 end
