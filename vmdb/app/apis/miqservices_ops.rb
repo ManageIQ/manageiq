@@ -369,15 +369,6 @@ module MiqservicesOps
     true
   end
 
-  # def test_ws
-  #   $log.info "MIQ(vm_list): enter"
-  #   $log.info "MIQ(vm_list): type: #{type}"
-  #   t0 = Time.now
-  #   result = VmOrTemplate.find(:all).collect {|v| [v.guid, v.name]}
-  #   # result = VmOrTemplate.find(:all).collect {|v| {:id => v.guid, :name => v.name}}
-  #   result
-  # end
-
   def self.reconnect_to_db
     log_header = "MIQ(MiqservicesOps.reconnect_to_db)"
     begin

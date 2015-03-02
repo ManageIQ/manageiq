@@ -1759,12 +1759,6 @@ class VmOrTemplate < ActiveRecord::Base
     self.direct_service.try(:root_service)
   end
 
-  #Enable once we decide what it should return (seconds or some time format)
-  #def uptime
-  #  return nil if self.state != "on" || self.boot_time.nil?
-  #  return Time.now - self.boot_time
-  #end
-
   #
   # UI Button Validation Methods
   #

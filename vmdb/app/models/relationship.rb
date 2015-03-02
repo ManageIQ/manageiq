@@ -172,28 +172,6 @@ class Relationship < ActiveRecord::Base
     build_tree(root, descendants)
   end
 
-#  def self.get_rels_by_parent(relationship_type, options = {})
-#    excluded_types = options[:excluded_types].to_miq_a
-#    included_types = options[:included_types].to_miq_a
-#    options[:include] = :child unless options.has_key?(:include)
-#
-#    cond = ["relationship = ?", relationship_type]
-#    unless excluded_types.empty?
-#      cond[0] << " AND child_type NOT IN (?)"
-#      cond << excluded_types
-#    end
-#
-#    unless included_types.empty?
-#      cond[0] << " AND child_type IN (?)"
-#      cond << included_types
-#    end
-#
-#    cols = self.column_names - ["created_on", "updated_on", "reserved"]
-#    rels = Relationship.all(:conditions => cond, :include => options[:include], :select => cols.join(","))
-#
-#    rels.group_by { |r| [r.parent_type, r.parent_id] }
-#  end
-
   def self.tree_to_a(node, oftype)
     deprecate_method("tree_to_a", "subtree or descendants")
     node.subtree(:of_type => oftype)

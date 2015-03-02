@@ -626,13 +626,6 @@ class HostController < ApplicationController
 
   private ############################
 
-# def prov_redirect(typ=nil)
-#   @redirect_controller = "miq_request"
-#   @refresh_partial = "prov_edit"
-#   @org_controller = request.parameters[:controller]     #request originated from controller
-#   @prov_id = params[:id]
-# end
-
   # Build the tree object to display the host network info
   def build_network_tree
     @tree_vms = []                   # Capture all VM ids in the tree
