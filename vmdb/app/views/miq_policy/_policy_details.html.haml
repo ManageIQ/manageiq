@@ -125,32 +125,33 @@
         - if @policy_conditions.empty?
           = render :partial => 'layouts/info_msg', :locals => {:message => _("No conditions defined. This policy is unconditional and will ALWAYS return true.")}
         - else
-          %table.style3
+          %table.table.table-striped.table-bordered.table-hover
             %thead
               %tr
-                %th.icon &nbsp;
-                %th{:nowrap => 1}=_("Description")
-                %th{:nowrap => 1}=_("Scopes / Expressions")
-            - @policy_conditions.each do |c|
-              %tr{:class => cycle('row0', 'row1'), :onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Condition"),
-                :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_co-#{to_cid(c.id)}');"}
-                %td.icon
-                  %img{:src => "/images/icons/new/miq_condition.png"}
-                %td
-                  = c.description
-                %td
-                  %div
-                    %table
-                      - unless c.applies_to_exp.blank?
+                %th.narrow
+                %th=_("Description")
+                %th=_("Scopes / Expressions")
+            %tbody
+              - @policy_conditions.each do |c|
+                %tr{:onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Condition"),
+                  :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_co-#{to_cid(c.id)}');"}
+                  %td.narrow
+                    %img{:src => "/images/icons/new/miq_condition.png"}
+                  %td
+                    = c.description
+                  %td
+                    %div
+                      %table
+                        - unless c.applies_to_exp.blank?
+                          %tr
+                            %td=_("Scope")
+                            %td
+                              = h(MiqExpression.to_human(c.applies_to_exp))
                         %tr
-                          %td=_("Scope")
                           %td
-                            = h(MiqExpression.to_human(c.applies_to_exp))
-                      %tr
-                        %td
-                          =_("Expression")
-                        %td
-                          = h(MiqExpression.to_human(c.expression))
+                            =_("Expression")
+                          %td
+                            = h(MiqExpression.to_human(c.expression))
         %hr
 
       -# Events for this policy
@@ -172,22 +173,22 @@
         - if @policy_events.empty?
           = render :partial => 'layouts/info_msg', :locals => {:message => _("This policy does not currently respond to any Events.")}
         - else
-          %table.style3
+          %table.table.table-striped.table-bordered.table-hover
             %thead
               %tr
-                %th.icon &nbsp;
-                %th{:nowrap => 1}=_("Description")
-                %th{:nowrap => 1}=_("Actions")
-            - @policy_events.each do |e|
-              %tr
-                %td.icon{:onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}');",
-                  :onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Policy Event")}
-                  %img{:src => "/images/icons/new/event-#{e.name}.png"}
-                %td.icon{:onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}');",
-                  :onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Policy Event")}
-                  = h(e.description)
-                %td{:style => "padding: 0px;"}
-                  %div
+                %th.narrow
+                %th=_("Description")
+                %th=_("Actions")
+            %tbody
+              - @policy_events.each do |e|
+                %tr
+                  %td.narrow{:onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}');",
+                    :onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Policy Event")}
+                    %img{:src => "/images/icons/new/event-#{e.name}.png"}
+                  %td{:onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}');",
+                    :onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Policy Event")}
+                    = h(e.description)
+                  %td
                     - ta = @policy.actions_for_event(e, :success)
                     - fa = @policy.actions_for_event(e, :failure)
                     - if ta.empty? && fa.empty?
@@ -195,27 +196,26 @@
                         =_("* No Actions are configured for this Event.")
                     - else
                       - unless ta.empty?
-                        %table.style3
+                        %table
                           %tbody
                             - ta.each do |a|
-                              %tr{:class => cycle('row0', 'row1'), :onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Event Action"),
+                              %tr{:onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Event Action"),
                                 :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}_a-#{to_cid(a.id)}');"}
-                                %td{:width => "20"}
-                                  %img{:src => "/images/icons/new/check.png", :valign => "middle", :border => "0", :height => "20", :width => "20"}
+                                %td
+                                  %img{:src => "/images/icons/new/check.png"}
                                 %td
                                   = h(a.description)
                       - unless fa.empty?
-                        %table.style3
+                        %table
                           %tbody
                             - fa.each do |a|
-                              %tr{:class => cycle('row0', 'row1'), :onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Event Action"),
+                              %tr{:onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Event Action"),
                                   :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}_a-#{to_cid(a.id)}');"}
-                                %td{:width => "20"}
-                                  %img{:src => "/images/icons/new/x.png", :valign => "middle", :border => "0", :height => "20", :width => "20"}
+                                %td
+                                  %img{:src => "/images/icons/new/x.png"}
                                 %td
                                   = h(a.description)
           %hr
-      
 
       - # Notes field
       - if @edit
@@ -246,17 +246,13 @@
           -if @policy_profiles.empty?
             = render :partial => 'layouts/info_msg', :locals => {:message => _("This Policy is not assigned to any Profiles.")}
           - else
-            %table.style3
-              %thead
-                %tr
-                  %th.icon
-                  %th
+            %table.table.table-striped.table-bordered.table-hover
               %tbody
                 - @policy_profiles.each do |pp|
                   - id = "pp-#{to_cid(pp.id)}"
-                  %tr{:class => cycle('row0', 'row1'), :onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Profile"),
+                  %tr{:onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Profile"),
                     :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=policy_profile")}
-                    %td.icon
+                    %td.narrow
                       %img{:src => "/images/icons/new/policy_profile#{pp.active? ? '' : '_inactive'}.png"}
                     %td
                       = pp.description

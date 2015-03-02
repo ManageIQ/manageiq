@@ -197,21 +197,22 @@
                 = h(@alert.options[:notifications][:snmp][:trap_id])
           - if @alert.options[:notifications][:snmp].key?(:variables)
             %br
-            %table.style3
+            %table.table.table-striped.table-bordered.table-hover
               %thead
                 %tr
                   %th=_('Variable Object ID')
                   %th=_('Type')
                   %th=_('Value')
-              - @alert.options[:notifications][:snmp][:variables].each do |var|
-                - unless var[:oid].blank?
-                  %tr
-                    %td
-                      = h(var[:oid])
-                    %td
-                      = h(var[:var_type])
-                    %td
-                      = h(var[:value])
+              %tbody
+                - @alert.options[:notifications][:snmp][:variables].each do |var|
+                  - unless var[:oid].blank?
+                    %tr
+                      %td
+                        = h(var[:oid])
+                      %td
+                        = h(var[:var_type])
+                      %td
+                        = h(var[:value])
           %hr
         - if @alert.options && @alert.options[:notifications] && @alert.options[:notifications][:evm_event]
           %h3=('Timeline Event')
@@ -237,18 +238,14 @@
               - if @alert_profiles.empty?
                 = render :partial => 'layouts/info_msg', :locals => {:message => _("This Alert is not assigned to any Alert Profiles.")}
               - else
-                %table.style3
-                  %thead
-                    %tr
-                      %th.icon
-                      %th
+                %table
                   %tbody
                     - @alert_profiles.each do |ap|
                       - id = "xx-#{@alert.db}_ap-#{to_cid(ap.id)}"
-                      %tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=alert_profile",
+                      %tr{:onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=alert_profile",
                         :onmouseover => "this.style.cursor='pointer'", :title => _("View this Alert Profile"))}
                         %td
-                          %img{:src => "/images/icons/new/miq_alert_profile.png", :valign => "middle", :border => "0", :height => "20", :width => "20"}
+                          %img{:src => "/images/icons/new/miq_alert_profile.png"}
                         %td
                           = ap.description
       - # Show any owning actions
@@ -260,21 +257,17 @@
               - if @alert.owning_miq_actions.empty?
                 = render :partial => 'layouts/info_msg', :locals => {:message => _("This Alert is not referenced by any Actions.")}
               - else
-                %table.style3
-                  %thead
-                    %tr
-                      %th.icon
-                      %th
+                %table.table.table-striped.table-bordered.table-hover
                   %tbody
                     - @alert.owning_miq_actions.each do |oa|
                       - id = "a-#{to_cid(oa.id)}"
-                      %tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=action"),
+                      %tr{:onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=action"),
                         :onmouseover => "this.style.cursor='pointer'", :title => _("View this Action")}
-                        %td
+                        %td.narrow
                           - if oa.action_type == "default"
                             %img{:src => "/images/icons/new/miq_action.png"}
                           - else
                             %img{:src => "/images/icons/new/miq_action_#{oa.action_type}.png"}
-                        %td
+                        %td.narrow
                           = oa.description
               %hr

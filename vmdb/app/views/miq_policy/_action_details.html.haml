@@ -146,24 +146,25 @@
                 = h(@action.options[:trap_id])
           %hr
           %h3=_("Variables")
-          %table.style3
-            %thead
-              %tr
-                %th=_('Object ID')
-                %th=_('Type')
-                %th=_('Value')
-            - if @action.options.key?(:variables)
-              - @action.options[:variables].each do |var|
-                - unless var[:oid].blank?
-                  %tr
-                    %td
-                      = h(var[:oid])
-                    %td
-                      = h(var[:var_type])
-                    %td
-                      = h(var[:value])
-            - else
-              =_('No variables configured.')
+          - if @action.options.fetch(:variables, []).empty?
+            = render :partial => 'layouts/info_msg', :locals => {:message => _('No variables configured.')}
+          - else
+            %table.table.table-striped.table-bordered.table-hover
+              %thead
+                %tr
+                  %th=_('Object ID')
+                  %th=_('Type')
+                  %th=_('Value')
+              %tbody
+                - @action.options[:variables].each do |var|
+                  - unless var[:oid].blank?
+                    %tr
+                      %td
+                        = h(var[:oid])
+                      %td
+                        = h(var[:var_type])
+                      %td
+                        = h(var[:value])
           %hr
         - when "assign_scan_profile"
           %h3=_("Analysis Profile")
@@ -178,16 +179,13 @@
           - if @temp[:alert_guids].empty?
             = render :partial => 'layouts/info_msg', :locals => {:message => _("No Alerts have been selected.")}
           - else
-            %table.style3
-              %thead
-                %th.icon
-                %th
+            %table.table.table-striped.table-bordered.table-hover
               %tbody
                 - @temp[:alert_guids].sort_by(&:description).each do |alert|
                   - id = "al-#{to_cid(alert.id)}"
-                  %tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=alert"),
+                  %tr{:onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=alert"),
                     :onmouseover => "this.style.cursor='pointer'", :title => _('View This Alert')}
-                    %td.icon
+                    %td.narrow
                       %img{:src => "/images/icons/new/miq_alert.png"}
                     %td
                       = alert.description
@@ -217,16 +215,13 @@
           - if @action_policies.empty?
             = render :partial => 'layouts/info_msg', :locals => {:message => _("This Action is not assigned to any Policies.")}
           - else
-            %table.style3
-              %thead
-                %th.icon
-                %th
+            %table.table.table-striped.table-bordered.table-hover
               %tbody
                 - @action_policies.each do |p|
                   - id = "xx-#{p.mode.downcase}_xx-#{p.mode.downcase}-#{p.towhat.downcase}_p-#{to_cid(p.id)}"
-                  %tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=policy"),
+                  %tr{:onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=policy"),
                     :onmouseover => "this.style.cursor='pointer'", :title => _("Click to view Policy")}
-                    %td.icon
+                    %td.narrow
                       - src = "#{p.towhat.downcase}#{p.active ? '' : '_inactive'}"
                       %img{:src => "/images/icons/new/miq_policy_#{src}.png"}
                     %td

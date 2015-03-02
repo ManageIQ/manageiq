@@ -79,16 +79,13 @@
       - if @profile_policies.empty?
         = render :partial => 'layouts/info_msg', :locals => {:message => _("No Policies are defined.")}
       - else
-        %table.style3
-          %thead
-            %th.icon
-            %th
+        %table.table.table-striped.table-bordered.table-hover
           %tbody
             - @profile_policies.each do |p|
-              %tr{:class => cycle('row0', 'row1'), :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_p-#{to_cid(p.id)}');",
+              %tr{:onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_p-#{to_cid(p.id)}');",
                 :onmouseover => "this.style.cursor = 'pointer'", :title => _("View this %s Policy") % ui_lookup(:model => p.towhat)}
-                %td.icon
-                  %img{:src => "/images/icons/new/miq_policy_#{p.towhat.downcase + (p.active ? '' : '_inactive')}.png", :valign => "middle", :border => "0"}
+                %td.narrow
+                  %img{:src => "/images/icons/new/miq_policy_#{p.towhat.downcase + (p.active ? '' : '_inactive')}.png"}
                 %td
                   %b
                     #{ui_lookup(:model => p.towhat)} #{p.mode.capitalize}:
