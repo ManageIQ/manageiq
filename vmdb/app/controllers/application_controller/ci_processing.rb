@@ -369,21 +369,16 @@ module ApplicationController::CiProcessing
   def reconfigure_update
     return unless load_edit("reconfigure__new")
     reconfigure_get_form_vars
-    url = @breadcrumbs[1][:url].split('/')
     case params[:button]
     when "cancel"
-      flash = _("VM Reconfigure Request was cancelled by the user")
+      add_flash(_("VM Reconfigure Request was cancelled by the user"))
       if @edit[:explorer]
-        add_flash(flash)
         @sb[:action] = nil
         replace_right_cell
       else
+        session[:flash_msgs] = @flash_array
         render :update do |page|
-          if url[2] == "show"
-            page.redirect_to :controller=>url[1], :action =>url[2], :id=>url[3], :flash_msg=>flash
-          else
-            page.redirect_to :action=>@lastaction, :flash_msg=>flash
-          end
+          page.redirect_to(@breadcrumbs[-2][:url])
         end
       end
     when "submit"
@@ -962,7 +957,7 @@ module ApplicationController::CiProcessing
                         } )
     else
       @breadcrumbs = Array.new
-      bc_name = breadcrumb_name
+      bc_name = breadcrumb_name(model)
       bc_name += " - " + session["#{self.class.session_key_prefix}_type".to_sym].titleize if session["#{self.class.session_key_prefix}_type".to_sym]
       bc_name += " (filtered)" if @filters && (!@filters[:tags].blank? || !@filters[:cats].blank?)
       action = %w(container service vm_cloud vm_infra vm_or_template).include?(self.class.table_name) ? "explorer" : "show_list"
@@ -979,7 +974,7 @@ module ApplicationController::CiProcessing
     end
   end
 
-  def breadcrumb_name
+  def breadcrumb_name(_model)
     ui_lookup_for_model(self.class.model_name).pluralize
   end
 

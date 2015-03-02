@@ -51,4 +51,33 @@ describe VmCloudController do
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
   end
+
+  context "skip or drop breadcrumb" do
+    before do
+      session[:settings] = {:views => {}, :perpage => {:list => 10}}
+      session[:userid] = User.current_user.userid
+      session[:eligible_groups] = []
+      FactoryGirl.create(:vmdb_database)
+      EvmSpecHelper.create_guid_miq_server_zone
+      @vmcloud = VmCloud.create(:name     => "test_vmcloud",
+                                :location => "test_vmcloud_location",
+                                :vendor   => "openstack")
+      get :explorer
+      request.env['HTTP_REFERER'] = request.fullpath
+    end
+
+    it 'skips dropping a breadcrumb when a button action is executed' do
+      post :x_button, :id => @vmcloud.id, :pressed => 'instance_ownership'
+      breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
+      expect(breadcrumbs.size).to eq(1)
+      expect(breadcrumbs).to include(:name => "Instances", :url => "/vm_cloud/explorer")
+    end
+
+    it 'drops a breadcrumb when an action allowing breadcrumbs is executed' do
+      post :accordion_select, :id => "images_filter"
+      breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
+      expect(breadcrumbs.size).to eq(1)
+      expect(breadcrumbs).to include(:name => "Images", :url => "/vm_cloud/explorer")
+    end
+  end
 end
