@@ -39,7 +39,9 @@ module MiqServer::RoleManagement
   end
 
   def apache_needed?
-    !(active_role_names & ROLES_NEEDING_APACHE).empty?
+    # TODO: We need to splat the Array into multiple arguments for now
+    # https://github.com/ManageIQ/more_core_extensions/pull/18
+    active_role_names.include_any?(*ROLES_NEEDING_APACHE)
   end
 
   def set_active_role_flags
