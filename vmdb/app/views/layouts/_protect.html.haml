@@ -7,7 +7,7 @@
     = render :partial => '/layouts/protect_tree'
   %br
   - if @politems.length > 1
-    = render :partial => 'layouts/info_msg', :locals => {:message => _("Policy Profile is only applied to some of the items below.")}
+    = render :partial => 'layouts/info_msg', :locals => {:message => _("* Policy Profile is only applied to some of the items below.")}
   - unless @edit[:explorer]
     = render :partial => '/layouts/edit_form_buttons',
              :locals  => {:action_url => "protect"}

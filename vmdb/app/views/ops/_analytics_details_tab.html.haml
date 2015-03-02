@@ -5,4 +5,4 @@
       - if !@sb[:analytics_rpt].table.nil? || @sb[:analytics_rpt].table.data.empty?
         = @sb[:analytics_rpt].to_html.html_safe
       - else
-        = _("No records found.")
+        = render :partial => 'layouts/info_msg', :locals => {:message => _("No Records Found.")}

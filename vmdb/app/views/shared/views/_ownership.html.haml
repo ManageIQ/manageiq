@@ -1,50 +1,49 @@
 - url = url_for(:action => 'ownership_field_changed')
 #tab_div
   = render :partial => "layouts/flash_msg"
-  %fieldset
-    %h3
-      = _('Changes')
-    %table.style1
-      %tr
-        %td.key
-          = _('Select an Owner:')
-        %td.wide
-          - if @edit[:ownership_items].length > 1
-            - opts = [["<#{_("Don't change")}>", ApplicationController::CiProcessing::DONT_CHANGE_OWNER], ["<#{_('No Owner')}>", nil]]
-          - else
-            - opts =  [["<#{_('No Owner')}>", nil]]
-          - opts += @users.sort
-          = select_tag("user_name",
-            options_for_select(opts, @edit[:new][:user]),
-            "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true,
-            "data-miq_observe"     => {:url => url}.to_json)
-        %td{:width => "100"}
-      %tr
-        %td.key
-          = _('Select a Group:')
-        %td.wide
-          - if @edit[:ownership_items].length > 1
-            - opts = [["<#{_("Don't change")}>", ApplicationController::CiProcessing::DONT_CHANGE_OWNER], ["<#{_('No Group')}>", nil]]
-          - else
-            - opts = [["<#{_("No Group")}>", nil]]
-          - opts += @groups.sort
-          = select_tag("group_name",
-            options_for_select(opts, @edit[:new][:group]),
-            "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true,
-            "data-miq_observe"     => {:url => url}.to_json)
+  %h3
+    = _('Changes')
+  %table.style1
+    %tr
+      %td.key
+        = _('Select an Owner:')
+      %td.wide
+        - if @edit[:ownership_items].length > 1
+          - opts = [["<#{_("Don't change")}>", ApplicationController::CiProcessing::DONT_CHANGE_OWNER], ["<#{_('No Owner')}>", nil]]
+        - else
+          - opts =  [["<#{_('No Owner')}>", nil]]
+        - opts += @users.sort
+        = select_tag("user_name",
+          options_for_select(opts, @edit[:new][:user]),
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe"     => {:url => url}.to_json)
+      %td{:width => "100"}
+    %tr
+      %td.key
+        = _('Select a Group:')
+      %td.wide
+        - if @edit[:ownership_items].length > 1
+          - opts = [["<#{_("Don't change")}>", ApplicationController::CiProcessing::DONT_CHANGE_OWNER], ["<#{_('No Group')}>", nil]]
+        - else
+          - opts = [["<#{_("No Group")}>", nil]]
+        - opts += @groups.sort
+        = select_tag("group_name",
+          options_for_select(opts, @edit[:new][:group]),
+          "data-miq_sparkle_on"  => true,
+          "data-miq_sparkle_off" => true,
+          "data-miq_observe"     => {:url => url}.to_json)
   - unless @edit[:explorer]
     = render :partial => '/layouts/edit_form_buttons', :locals => {:action_url => 'ownership_update', :ajax_buttons => true}
 
-  %fieldset
-    %h3
-      = _('Affected Items')
-    %table.admintable{:height => "75"}
-      %tbody
-        %tr
-          %td
-            - if @ownershipitems
-              - @embedded = true
-              - @gtl_type = @settings[:views][:tagging]
-              = render :partial => "layouts/gtl"
+  %hr
+  %h3
+    = _('Affected Items')
+  %table.admintable{:height => "75"}
+    %tbody
+      %tr
+        %td
+          - if @ownershipitems
+            - @embedded = true
+            - @gtl_type = @settings[:views][:tagging]
+            = render :partial => "layouts/gtl"

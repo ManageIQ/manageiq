@@ -2,9 +2,7 @@
   = render :partial => "layouts/flash_msg"
   %div{:style => "padding-top:10px"}
     - if @temp[:timeprofiles].empty?
-      .alert.alert-info
-        %span.pficon.pficon
-        %strong=_('No Records Found')
+      = render :partial => 'layouts/info_msg', :locals => {:message => _("No Records Found.")}
     - else
       %table.style3
         %thead
