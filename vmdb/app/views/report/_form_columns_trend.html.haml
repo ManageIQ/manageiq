@@ -46,14 +46,14 @@
         "data-miq_sparkle_off" => true,
         "data-miq_observe"     => {:url => url}.to_json)
       = select_tag('percent2',
-        options_for_select(["<#{_('None')}>"] + (0..100).step(5).to_a, edit[:new][:perf_target_pct2]),
+        options_for_select(["<#{_('None')}>"] + (0..100).step(5).to_a, @edit[:new][:perf_target_pct2]),
         :multiple              => false,
         :class                 => "widthed",
         "data-miq_sparkle_on"  => true,
         "data-miq_sparkle_off" => true,
         "data-miq_observe"     => {:url => url}.to_json)
       = select_tag('percent3',
-        options_for_select(["<#{_('None')}>"] + (0..100).step(5).to_a, edit[:new][:perf_target_pct3]),
+        options_for_select(["<#{_('None')}>"] + (0..100).step(5).to_a, @edit[:new][:perf_target_pct3]),
         :multiple              => false,
         :class                 => "widthed",
         "data-miq_sparkle_on"  => true,
