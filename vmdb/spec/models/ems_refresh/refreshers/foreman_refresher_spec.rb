@@ -25,12 +25,8 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
 
     VCR.use_cassette("#{described_class.name.underscore}_api_v2") do
       EmsRefresh.refresh(provider)
-
-      configuration_manager.reload
-      expect(configuration_manager.last_refresh_error).to be_nil
-
-      provider.provisioning_manager.reload
-      expect(provisioning_manager.last_refresh_error).to be_nil
+      expect(configuration_manager.reload.last_refresh_error).to be_nil
+      expect(provisioning_manager.reload.last_refresh_error).to be_nil
     end
 
     assert_provider_counts

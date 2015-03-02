@@ -9,6 +9,8 @@ module ManageiqForeman
       :operating_systems => ForemanApi::Resources::OperatingSystem,
       :ptables           => ForemanApi::Resources::Ptable,
       :subnets           => ForemanApi::Resources::Subnet,
+      :locations         => ForemanApi::Resources::Location,
+      :organizations     => ForemanApi::Resources::Organization,
     }
 
     attr_accessor :connection_attrs
@@ -37,7 +39,11 @@ module ManageiqForeman
 
     # ala n+1
     def all_with_details(resource, filter = {})
-      all(resource, filter).map! { |os| fetch(resource, :show, "id" => os["id"]).first }
+      load_details(all(resource, filter), resource)
+    end
+
+    def load_details(resources, resource)
+      resources.map! { |os| fetch(resource, :show, "id" => os["id"]).first }
     end
 
     # filter: "page" => 2, "per_page" => 50, "search" => "field=value", "value"
