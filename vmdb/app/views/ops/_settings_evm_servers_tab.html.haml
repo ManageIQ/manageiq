@@ -23,8 +23,7 @@
       %table.table.table-striped.table-bordered.table-hover
         %tbody
           - @servers.sort_by(&:id).each do |s|
-            %tr{:onclick => "cfmeDynatree_activateNode('settings_tree', 'svr-#{to_cid(s.id)}');",
-            :onmouseover => "this.style.cursor='pointer'", :title => _("View this MiqServer")}
+            %tr{:onclick => "cfmeDynatree_activateNode('settings_tree', 'svr-#{to_cid(s.id)}');", :title => _("View this MiqServer")}
               %td.narrow
                 %img{:src => "/images/icons/new/miq_server.png"}/
               %td
