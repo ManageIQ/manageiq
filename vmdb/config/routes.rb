@@ -1274,6 +1274,7 @@ Vmdb::Application.routes.draw do
 
     :security_group => {
       :get => %w(
+        download_data
         index
         show
         show_list
