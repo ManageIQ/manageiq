@@ -595,8 +595,7 @@ module ApplicationController::MiqRequestMethods
       # for some reason if tree is not expanded clicking on radiobuttons this.getAllChecked() sends up extra blanks
       @edit.store_path(:new, tag_symbol_for_workflow, ids.select(&:present?).collect(&:to_i))
     end
-    id = params[:ou_id] if params[:ou_id]
-    id.gsub!(/_-_/,",") if id
+    id = params[:ou_id].gsub(/_-_/,",") if params[:ou_id]
     @edit[:new][:ldap_ous] = id.match(/(.*)\,(.*)/)[1..2] if id                       # ou selected in a tree
 
     @edit[:new][:start_date]    = params[:miq_date_1] if params[:miq_date_1]
@@ -649,7 +648,6 @@ module ApplicationController::MiqRequestMethods
                   else
                     @edit[:new][f.to_sym].push(val)                             # Save [value, description]
                   end
-
                 end
               end
             elsif v.class.name == "MiqHashStruct" && v.evm_object_class == :Host
@@ -763,7 +761,7 @@ module ApplicationController::MiqRequestMethods
     @edit[:key]               = "prov_edit__#{@edit[:req_id] || "new"}"
     options                   = req.try(:get_options) || {}  # Use existing request options, if passed in
     @edit[:new]               = options unless @workflow_exists
-    @edit[:org_controller]    = params[:org_controller]  if params[:org_controller]  # request originated from controller
+    @edit[:org_controller]    = params[:org_controller] if params[:org_controller]  # request originated from controller
     @edit[:prov_option_types] = MiqRequest::MODEL_REQUEST_TYPES[@layout == "miq_request_vm" ? :Vm : :Host]
     @edit[:wf]                = workflow_instance_from_vars(req)
 
@@ -775,10 +773,10 @@ module ApplicationController::MiqRequestMethods
         end
       end
       @edit[:buttons] = @edit[:wf].get_buttons
-      @edit[:wf].init_from_dialog(@edit[:new],session[:userid])                                 # Create a new provision workflow for this edit session
+      @edit[:wf].init_from_dialog(@edit[:new], session[:userid]) # Create a new provision workflow for this edit session
       @timezone_offset = get_timezone_offset
       if @edit[:new][:schedule_time]
-        @edit[:new][:schedule_time] = format_timezone(@edit[:new][:schedule_time],Time.zone,"raw")
+        @edit[:new][:schedule_time] = format_timezone(@edit[:new][:schedule_time], Time.zone, "raw")
         @edit[:new][:start_date] = "#{@edit[:new][:schedule_time].month}/#{@edit[:new][:schedule_time].day}/#{@edit[:new][:schedule_time].year}" # Set the start date
         if params[:id]
           @edit[:new][:start_hour] = "#{@edit[:new][:schedule_time].hour}"
@@ -789,11 +787,11 @@ module ApplicationController::MiqRequestMethods
         end
       end
       @edit[:new][tag_symbol_for_workflow] ||= []  # Initialize for new record
-      @edit[:current] ||= Hash.new
+      @edit[:current] ||= {}
       @edit[:current] = copy_hash(@edit[:new])
       # Give the model a change to modify the dialog based on the default settings
       #common grids
-      @edit[:wf].refresh_field_values(@edit[:new],session[:userid])
+      @edit[:wf].refresh_field_values(@edit[:new], session[:userid])
       if @pre_prov_values
         @edit[:new] = @edit[:new].reject { |_k, v| v.nil? }
         @edit[:new] = @edit[:new].merge @pre_prov_values.select { |k| !@edit[:new].keys.include?(k) }
@@ -802,8 +800,8 @@ module ApplicationController::MiqRequestMethods
       @edit[:ds_sortcol] ||= "free_space"
       @edit[:host_sortdir] ||= "ASC"
       @edit[:host_sortcol] ||= "name"
-      build_host_grid(@edit[:wf].send("allowed_hosts"),@edit[:host_sortdir],@edit[:host_sortcol])
-      build_ds_grid(@edit[:wf].send("allowed_storages"),@edit[:ds_sortdir],@edit[:ds_sortcol])
+      build_host_grid(@edit[:wf].send("allowed_hosts"), @edit[:host_sortdir], @edit[:host_sortcol])
+      build_ds_grid(@edit[:wf].send("allowed_storages"), @edit[:ds_sortdir], @edit[:ds_sortcol])
       if @edit[:wf].kind_of?(MiqProvisionWorkflow)
         @edit[:vm_sortdir] ||= "ASC"
         @edit[:vm_sortcol] ||= "name"
@@ -811,21 +809,21 @@ module ApplicationController::MiqRequestMethods
         @edit[:vc_sortcol] ||= "name"
         @edit[:template_sortdir] ||= "ASC"
         @edit[:template_sortcol] ||= "name"
-        build_vm_grid(@edit[:wf].send("allowed_templates"),@edit[:vm_sortdir],@edit[:vm_sortcol])
-        build_tags_tree(@edit[:wf],@edit[:new][:vm_tags],true)
-        build_ous_tree(@edit[:wf],@edit[:new][:ldap_ous])
+        build_vm_grid(@edit[:wf].send("allowed_templates"), @edit[:vm_sortdir], @edit[:vm_sortcol])
+        build_tags_tree(@edit[:wf], @edit[:new][:vm_tags], true)
+        build_ous_tree(@edit[:wf], @edit[:new][:ldap_ous])
         if @edit[:wf].supports_pxe?
           @edit[:windows_image_sortdir] ||= "ASC"
           @edit[:windows_image_sortcol] ||= "name"
-          build_pxe_img_grid(@edit[:wf].send("allowed_images"),@edit[:pxe_img_sortdir],@edit[:pxe_img_sortcol])
-          build_host_grid(@edit[:wf].send("allowed_hosts"),@edit[:host_sortdir],@edit[:host_sortcol])
-          build_template_grid(@edit[:wf].send("allowed_customization_templates"),@edit[:template_sortdir],@edit[:template_sortcol])
+          build_pxe_img_grid(@edit[:wf].send("allowed_images"), @edit[:pxe_img_sortdir], @edit[:pxe_img_sortcol])
+          build_host_grid(@edit[:wf].send("allowed_hosts"), @edit[:host_sortdir], @edit[:host_sortcol])
+          build_template_grid(@edit[:wf].send("allowed_customization_templates"), @edit[:template_sortdir], @edit[:template_sortcol])
         elsif @edit[:wf].supports_iso?
           @edit[:iso_img_sortdir] ||= "ASC"
           @edit[:iso_img_sortcol] ||= "name"
-          build_iso_img_grid(@edit[:wf].send("allowed_iso_images"),@edit[:iso_img_sortdir],@edit[:iso_img_sortcol])
+          build_iso_img_grid(@edit[:wf].send("allowed_iso_images"), @edit[:iso_img_sortdir], @edit[:iso_img_sortcol])
         else
-          build_vc_grid(@edit[:wf].send("allowed_customization_specs"),@edit[:vc_sortdir],@edit[:vc_sortcol])
+          build_vc_grid(@edit[:wf].send("allowed_customization_specs"), @edit[:vc_sortdir], @edit[:vc_sortcol])
         end
       elsif @edit[:wf].kind_of?(VmMigrateWorkflow)
       else
@@ -835,14 +833,14 @@ module ApplicationController::MiqRequestMethods
         @edit[:windows_image_sortcol] ||= "name"
         @edit[:template_sortdir] ||= "ASC"
         @edit[:template_sortcol] ||= "name"
-        build_tags_tree(@edit[:wf],@edit[:new][:tag_ids],true)
-        build_pxe_img_grid(@edit[:wf].send("allowed_images"),@edit[:pxe_img_sortdir],@edit[:pxe_img_sortcol])
-        build_iso_img_grid(@edit[:wf].send("allowed_iso_images"),@edit[:iso_img_sortdir],@edit[:iso_img_sortcol])
-        build_host_grid(@edit[:wf].send("allowed_hosts"),@edit[:host_sortdir],@edit[:host_sortcol])
-        build_template_grid(@edit[:wf].send("allowed_customization_templates"),@edit[:template_sortdir],@edit[:template_sortcol])
+        build_tags_tree(@edit[:wf], @edit[:new][:tag_ids], true)
+        build_pxe_img_grid(@edit[:wf].send("allowed_images"), @edit[:pxe_img_sortdir], @edit[:pxe_img_sortcol])
+        build_iso_img_grid(@edit[:wf].send("allowed_iso_images"), @edit[:iso_img_sortdir], @edit[:iso_img_sortcol])
+        build_host_grid(@edit[:wf].send("allowed_hosts"), @edit[:host_sortdir], @edit[:host_sortcol])
+        build_template_grid(@edit[:wf].send("allowed_customization_templates"), @edit[:template_sortdir], @edit[:template_sortcol])
       end
     else
-      @edit[:current] ||= Hash.new
+      @edit[:current] ||= {}
       @edit[:current] = copy_hash(@edit[:new])
     end
   end
@@ -1061,6 +1059,4 @@ module ApplicationController::MiqRequestMethods
     session[:tree] = "all_tags"
     session[:tree_name] = "all_tags_tree"
   end
-
-
 end

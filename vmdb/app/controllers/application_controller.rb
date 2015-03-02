@@ -1963,7 +1963,7 @@ class ApplicationController < ActionController::Base
     @targets_hash             = attrs[:targets_hash] if attrs[:targets_hash]
 
     # Set up the grid variables for list view, with exception models below
-    if !["MiqTask", "Job", "ProductUpdate", "MiqProvision", "MiqReportResult"].include?(view.db) && 
+    if !["MiqTask", "Job", "ProductUpdate", "MiqProvision", "MiqReportResult"].include?(view.db) &&
       !view.db.ends_with?("Build") && !@force_no_grid_xml && (@gtl_type == "list" || @force_grid_xml)
       @grid_xml = view_to_xml(view, 0, -1, :association => association)
     end
