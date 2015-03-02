@@ -183,8 +183,8 @@
               %tbody
                 - @temp[:alert_guids].sort_by(&:description).each do |alert|
                   - id = "al-#{to_cid(alert.id)}"
-                  %tr{:onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=alert"),
-                    :onmouseover => "this.style.cursor='pointer'", :title => _('View This Alert')}
+                  %tr{:title => _('View This Alert'),
+                    :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=alert")}
                     %td.narrow
                       %img{:src => "/images/icons/new/miq_alert.png"}
                     %td
@@ -219,8 +219,8 @@
               %tbody
                 - @action_policies.each do |p|
                   - id = "xx-#{p.mode.downcase}_xx-#{p.mode.downcase}-#{p.towhat.downcase}_p-#{to_cid(p.id)}"
-                  %tr{:onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=policy"),
-                    :onmouseover => "this.style.cursor='pointer'", :title => _("Click to view Policy")}
+                  %tr{:title => _("Click to view Policy"),
+                    :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=policy")}
                     %td.narrow
                       - src = "#{p.towhat.downcase}#{p.active ? '' : '_inactive'}"
                       %img{:src => "/images/icons/new/miq_policy_#{src}.png"}

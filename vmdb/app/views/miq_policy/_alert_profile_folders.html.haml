@@ -4,8 +4,8 @@
     %table.table.table-striped.table-bordered.table-hover
       %tbody
         - @ap_folders.each do |f|
-          %tr{:onclick => "cfmeDynatree_activateNode('alert_profile_tree', 'xx-#{f.last}');",
-            :onmouseover => "this.style.cursor = 'pointer'", :title => _("Open Folder")}
+          %tr{:title => _("Open Folder"),
+            :onclick => "cfmeDynatree_activateNode('alert_profile_tree', 'xx-#{f.last}');"}
             %td.narrow
               %img{:src => "/images/icons/new/#{f.last.underscore.downcase}.png"}
             %td

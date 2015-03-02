@@ -62,7 +62,7 @@
       %tbody
         - @temp[:indexes].each_with_index do |ind, _|
           %tr{:onclick => "#{remote_function(:url => "/ops/x_show/#{ind.id}")}",
-            :onmouseover => "this.style.cursor = 'pointer'", :title => _("Click to view index")}
+            :title => _("Click to view index")}
             %td.narrow
               %img{:src => "/images/icons/new/vmdbindex.png"}/
             %td= ind.name
