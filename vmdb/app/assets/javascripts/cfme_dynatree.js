@@ -47,6 +47,11 @@ function cfmeOnLazyRead_GetNodeChildren(node, tree, controller) {
         var url = '/' + controller + '/tree_autoload_quads?id=' + node.data.key
         miqJqueryRequest(url, {beforeSend: true});
       }
+    },
+    error: function(node, request) {
+      if (request.status == 401) {
+        window.location.href = "/?timeout=true";
+      }
     }
   });
 }

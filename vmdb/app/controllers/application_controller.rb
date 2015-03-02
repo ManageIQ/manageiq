@@ -1306,6 +1306,10 @@ class ApplicationController < ActionController::Base
         redirect_to :controller => 'dashboard', :action => 'login', :timeout => timed_out
       end
 
+      format.json do
+        render :nothing => true, :status => :unauthorized
+      end
+
       format.js do
         render :update do |page|
           page.redirect_to :controller => 'dashboard', :action => 'login', :timeout => timed_out
