@@ -9,8 +9,7 @@ module VmRedhat::RemoteConsole
   end
 
   def validate_remote_console_acquire_ticket(protocol, options = {})
-    #raise(MiqException::RemoteConsoleNotSupportedError, "#{protocol} protocol not enabled for this vm") unless console_supported?(protocol)
-    #raise(MiqException::RemoteConsoleNotSupportedError, "#{protocol} protocol not enabled for this vm") unless protocol == :html5
+    raise(MiqException::RemoteConsoleNotSupportedError, "#{protocol} protocol not enabled for this vm") unless protocol == :html5
 
     raise(MiqException::RemoteConsoleNotSupportedError, "#{protocol} remote console requires the vm to be registered with a management system.") if self.ext_management_system.nil?
 

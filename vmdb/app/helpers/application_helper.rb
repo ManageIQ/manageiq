@@ -806,8 +806,7 @@ module ApplicationHelper
       type = get_vmdb_config.fetch_path(:server, :remote_console_type)
       return type != 'MKS' || !@record.console_supported?(type)
     when "vm_vnc_console"
-      type = get_vmdb_config.fetch_path(:server, :remote_console_type)
-      return type != 'VNC' || !@record.console_supported?(type)
+      return !@record.console_supported?('vnc')
     when "vm_vmrc_console"
       type = get_vmdb_config.fetch_path(:server, :remote_console_type)
       return type != 'VMRC' || !@record.console_supported?(type)
@@ -1323,7 +1322,7 @@ module ApplicationHelper
         end
 
         return "The web-based console is not available because the VM is not powered on" if @record.current_state != "on"
-      when "vm_vnc_console", "vm_spice_console"
+      when "vm_vnc_console"
         return "The web-based VNC console is not available because the VM is not powered on" if @record.current_state != "on"
       when "vm_guest_startup", "vm_start"
         return @record.is_available_now_error_message(:start) if @record.is_available_now_error_message(:start)

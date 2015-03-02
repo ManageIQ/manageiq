@@ -1,8 +1,8 @@
 module VmVmware::RemoteConsole
   autoload :SecureRandom, 'securerandom'
 
-  def console_supported?(_type)
-    true
+  def console_supported?(type)
+    %w(VMRC VNC MKS).include?(type.upcase)
   end
 
   def validate_remote_console_acquire_ticket(protocol, options = {})
