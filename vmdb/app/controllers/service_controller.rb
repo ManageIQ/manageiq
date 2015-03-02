@@ -57,7 +57,7 @@ class ServiceController < ApplicationController
   def show
     record = Service.find_by_id(from_cid(params[:id]))
     if !@explorer
-      TreeBuilder.build_node_id(record)
+      tree_node_id = TreeBuilder.build_node_id(record)
       redirect_to :controller => "service",
                   :action     => "explorer",
                   :id         => tree_node_id
