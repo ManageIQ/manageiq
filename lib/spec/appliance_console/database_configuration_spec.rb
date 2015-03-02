@@ -134,12 +134,7 @@ describe ApplianceConsole::DatabaseConfiguration do
   context "#ask_for_database_credentials" do
     subject do
       # Note: this will move from External to DatabaseConfiguration
-      Class.new(ApplianceConsole::ExternalDatabaseConfiguration) do
-        include ApplianceConsole::Prompts
-        # global variable
-        def say(*args)
-        end
-      end.new
+      stubbed_say(ApplianceConsole::ExternalDatabaseConfiguration)
     end
 
     it "should default prompts based upon previous values (no password)" do
@@ -192,6 +187,7 @@ describe ApplianceConsole::DatabaseConfiguration do
         def say(*_args)
         end
       end.new
+      stubbed_say(ApplianceConsole::InternalDatabaseConfiguration)
     end
 
     it "should ask for password if local" do
@@ -362,5 +358,14 @@ describe ApplianceConsole::DatabaseConfiguration do
         end
       end
     end
+  end
+
+  def stubbed_say(clazz)
+    Class.new(clazz) do
+      include ApplianceConsole::Prompts
+      # global variable
+      def say(*args)
+      end
+    end.new
   end
 end
