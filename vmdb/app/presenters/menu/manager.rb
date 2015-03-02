@@ -29,7 +29,7 @@ module Menu
 
     def section(section_id)
       if section_id.kind_of?(String) # prevent .to_sym call on section_id
-        section_id = @id_to_section.keys.detect{ |k| k.to_s == section_id }
+        section_id = @id_to_section.keys.detect { |k| k.to_s == section_id }
       end
       @id_to_section[section_id]
     end

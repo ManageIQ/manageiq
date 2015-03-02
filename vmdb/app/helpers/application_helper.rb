@@ -2658,7 +2658,5 @@ module ApplicationHelper
     !type.starts_with?("generic")
   end
 
-  def big_iframe
-    @big_iframe
-  end
+  attr_reader :big_iframe
 end

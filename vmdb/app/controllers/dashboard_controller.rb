@@ -11,7 +11,7 @@ class DashboardController < ApplicationController
     redirect_to :action => 'show'
   end
 
-  skip_before_filter :set_csp_header, :only => :iframe # FIXME only frame-src
+  skip_before_filter :set_csp_header, :only => :iframe # FIXME: only frame-src
   skip_before_filter :set_x_frame_options_header, :only => :iframe
 
   def iframe
