@@ -1,0 +1,12 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: CheckDeletedFromProvider
+    inherits: 
+    description: 
+  fields:
+  - common_meth1:
+      value: check_deleted_from_provider
