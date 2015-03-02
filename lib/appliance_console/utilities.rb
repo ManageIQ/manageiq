@@ -21,7 +21,7 @@ module ApplianceConsole
       require 'open4'
       out = nil
       err = nil
-      Open4::popen4("cd #{RAILS_ROOT} && script/rails runner 'puts MiqDbConfig.current.options[:host]; puts MiqDbConfig.current.options[:name]; puts MiqDbConfig.current.options[:database]'") do |pid, stdin, stdout, stderr|
+      Open4::popen4("cd #{RAILS_ROOT} && script/rails runner 'puts MiqDbConfig.current.options[:host]|| \"localhost\"; puts MiqDbConfig.current.options[:name]; puts MiqDbConfig.current.options[:database]'") do |pid, stdin, stdout, stderr|
         out = stdout.read
         err = stderr.read
       end
