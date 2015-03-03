@@ -32,7 +32,8 @@
               :title => _("Show Host devices"))
 
         - if @record.number_of(:switches) == 0
-          = link_to(_("Network"), "#")
+          %li.disabled
+            = link_to(_("Network"), "#")
         - else
           %li
             = link_to(_('Network'),
@@ -40,7 +41,8 @@
               :title => _("Show Host network"))
 
         - if @record.hardware.blank? || @record.hardware.number_of(:storage_adapters) == 0
-          = link_to(_("Storage Adapters"), "#")
+          %li.disabled
+            = link_to(_("Storage Adapters"), "#")
         - else
           %li
             = link_to(_('Storage Adapters'),
@@ -48,7 +50,8 @@
               :title => _("Show Host storage adapters"))
 
         - if @osinfo.nil? || @osinfo.empty?
-          = link_to(_("OS Information"), "#")
+          %li.disabled
+            = link_to(_("OS Information"), "#")
         - else
           %li
             = link_to(_('OS Information'),
