@@ -272,18 +272,17 @@ module ApplicationController::MiqRequestMethods
 
   private ############################
 
-  def build_pxe_img_grid(pxe_imgs,sort_order="ASC",sort_by="name")
-    @edit[:pxe_img_sortdir] = sort_order
-    @edit[:pxe_img_headers] = {
-      "name"=>"Name",
-      "description"=>"Description"
-    }                                                         #Using it to get column display name on screen to show sort by
-    @edit[:pxe_img_columns] = ["name","description"] #Using it to get column names for sort
-    @edit[:pxe_img_sortcol] = sort_by                 # in case sort column is not set, set the defaults
+  def build_pxe_img_grid(pxe_imgs, sort_order = nil, sort_by = nil)
+    @edit[:pxe_img_headers] = {  # Using it to get column display name on screen to show sort by
+      "name"        => "Name",
+      "description" => "Description",
+    }
+    @edit[:pxe_img_columns] = @edit[:pxe_img_headers].keys  # Using it to get column names for sort
+    @edit[:pxe_img_sortcol] = sort_by    ||= "name"  # in case sort column is not set, set the defaults
+    @edit[:pxe_img_sortdir] = sort_order ||= "ASC"
 
-    sorted = pxe_imgs.sort_by { |pi| pi.deep_send(sort_by).to_s.downcase }
-    sorted = sorted.reverse unless sort_order == "ASC"
-    @temp[:pxe_imgs] = sorted.uniq
+    sorted = pxe_imgs.sort_by { |pi| pi.deep_send(sort_by).to_s.downcase }.uniq
+    @temp[:pxe_imgs] = (sort_order == "ASC") ? sorted : sorted.reverse
   end
 
   def build_iso_img_grid(iso_imgs,sort_order="ASC",sort_by="name")
@@ -354,8 +353,6 @@ module ApplicationController::MiqRequestMethods
           @temp[:vm] = VmOrTemplate.find_by_id(@edit[:new][:src_vm_id] && @edit[:new][:src_vm_id][0])
         end
         if @edit[:wf].supports_pxe?
-          @edit[:pxe_img_sortdir] ||= "ASC"
-          @edit[:pxe_img_sortcol] ||= "name"
           @edit[:windows_image_sortdir] ||= "ASC"
           @edit[:windows_image_sortcol] ||= "name"
           build_pxe_img_grid(@edit[:wf].send("allowed_images"),@edit[:pxe_img_sortdir],@edit[:pxe_img_sortcol])
@@ -872,8 +869,6 @@ module ApplicationController::MiqRequestMethods
         build_tags_tree(@edit[:wf],@edit[:new][:vm_tags],true)
         build_ous_tree(@edit[:wf],@edit[:new][:ldap_ous])
         if @edit[:wf].supports_pxe?
-          @edit[:pxe_img_sortdir] ||= "ASC"
-          @edit[:pxe_img_sortcol] ||= "name"
           @edit[:windows_image_sortdir] ||= "ASC"
           @edit[:windows_image_sortcol] ||= "name"
           build_pxe_img_grid(@edit[:wf].send("allowed_images"),@edit[:pxe_img_sortdir],@edit[:pxe_img_sortcol])
@@ -889,8 +884,6 @@ module ApplicationController::MiqRequestMethods
       elsif @edit[:wf].class.to_s == "VmMigrateWorkflow"
         #build_ds_grid(@edit[:wf].send("allowed_storages"),@edit[:ds_sortdir],@edit[:ds_sortcol])
       else
-        @edit[:pxe_img_sortdir] ||= "ASC"
-        @edit[:pxe_img_sortcol] ||= "name"
         @edit[:iso_img_sortdir] ||= "ASC"
         @edit[:iso_img_sortcol] ||= "name"
         @edit[:windows_image_sortdir] ||= "ASC"
