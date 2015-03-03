@@ -111,7 +111,7 @@ describe "Service Retirement Management" do
   #   @service.retirement_warn = 60
   #  expect(@service.retirement_warn).to eq(60)
   #  expect(@service.retirement_last_warn).to be_nil
-  #end
+  # end
 
   it "#retirement_due?" do
     expect(@service.retirement_due?).to be_false
