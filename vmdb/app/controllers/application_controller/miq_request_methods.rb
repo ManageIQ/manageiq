@@ -595,19 +595,26 @@ module ApplicationController::MiqRequestMethods
     id = params[:ou_id] if params[:ou_id]
     id.gsub!(/_-_/,",") if id
     @edit[:new][:ldap_ous] = id.match(/(.*)\,(.*)/)[1..2] if id                       # ou selected in a tree
+
+    @edit[:new][:start_date]    = params[:miq_date_1] if params[:miq_date_1]
+    @edit[:new][:start_hour]    = params[:start_hour] if params[:start_hour]
+    @edit[:new][:start_min]     = params[:start_min] if params[:start_min]
+    @edit[:new][:schedule_time] = Time.zone.parse("#{@edit[:new][:start_date]} #{@edit[:new][:start_hour]}:#{@edit[:new][:start_min]}")
+
     params.keys.each do |key|
-      @edit[:new][:start_date] = params[:miq_date_1] if params[:miq_date_1]
-      @edit[:new][:start_hour] = params[:start_hour] if params[:start_hour]
-      @edit[:new][:start_min] = params[:start_min] if params[:start_min]
-      #@edit[:new][:schedule_time] = format_timezone("#{@edit[:new][:start_date]} #{@edit[:new][:start_hour]}:#{@edit[:new][:start_min]}".to_time,Time.zone,"raw")
-      @edit[:new][:schedule_time] = Time.zone.parse("#{@edit[:new][:start_date]} #{@edit[:new][:start_hour]}:#{@edit[:new][:start_min]}")
       next unless key.include?("__")
-      d, f = key.split("__")                                                    # Parse dialog and field names from the parameter key
-      field = @edit[:wf].get_field(f.to_sym, d.to_sym)                          # Get the field hash
-      val = field[:data_type] == :integer ? params[key].to_i : params[key]      # Get the value, convert to integer if needed
-      if field[:data_type] == :boolean
-        val = (params[key].to_s == "true")
-      end
+      d, f  = key.split("__")  # Parse dialog and field names from the parameter key
+      field = @edit[:wf].get_field(f.to_sym, d.to_sym)  # Get the field hash
+      val   =
+        case field[:data_type]  # Get the value, convert to integer or boolean if needed
+        when :integer
+          params[key].to_i
+        when :boolean
+          params[key].to_s == "true"
+        else
+          params[key]
+        end
+
       if field[:values]                                                         # If a choice was made
         if field[:values].kind_of?(Hash)
           #set an array of selected ids for security groups field
