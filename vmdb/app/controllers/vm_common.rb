@@ -1648,6 +1648,16 @@ module VmCommon
         locals[:create_button] = true
       end
 
+      if @record.kind_of?(Dialog)
+        @record.dialog_fields.each do |field|
+          if %w(DialogFieldDateControl DialogFieldDateTimeControl).include?(field.type)
+            presenter[:build_calendar]  = {
+              :date_from => field.show_past_dates ? nil : Time.now.in_time_zone(session[:user_tz]).to_i * 1000
+            }
+          end
+        end
+      end
+
       if %w(ownership protect reconfigure retire tag).include?(@sb[:action])
         locals[:multi_record] = true    # need save/cancel buttons on edit screen even tho @record.id is not there
         locals[:record_id]    = @sb[:rec_id] || @edit[:object_ids][0] if @sb[:action] == "tag"

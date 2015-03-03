@@ -477,6 +477,17 @@ class ServiceController < ApplicationController
         page << "miq_record_id = undefined;"  # reset this, otherwise it remembers previously selected id and sends up from list view when add button is pressed
       end
 
+      if @record.kind_of?(Dialog)
+        @record.dialog_fields.each do |field|
+          if %w(DialogFieldDateControl DialogFieldDateTimeControl).include?(field.type)
+            date_from = field.show_past_dates ? nil : Time.now.in_time_zone(session[:user_tz]).to_i * 1000
+            page << "miq_cal_dateFrom = new Date(#{date_from});"
+
+            page << 'miqBuildCalendar();'
+          end
+        end
+      end
+
       page << "cfmeDynatree_activateNodeSilently('#{x_active_tree}','#{x_node}');" if params[:id]
       page << "$('##{x_active_tree}box').dynatree('#{@in_a_form && @edit ? 'disable' : 'enable'}');"
       dim_div = @in_a_form && @edit && @edit[:current] ? true : false
