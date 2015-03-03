@@ -390,8 +390,7 @@ module ApplicationController::MiqRequestMethods
         build_pxe_img_grid(@edit[:wf].get_field(:pxe_image_id,:service)[:values],@edit[:pxe_img_sortdir],@edit[:pxe_img_sortcol])
         build_iso_img_grid(@edit[:wf].get_field(:iso_image_id,:service)[:values],@edit[:iso_img_sortdir],@edit[:iso_img_sortcol]) if @edit[:wf].supports_iso?
       elsif @edit[:new][:current_tab_key] == :purpose
-        fld = @edit[:wf].kind_of?(MiqHostProvisionWorkflow) ? "tag_ids" : "vm_tags"
-        build_tags_tree(@edit[:wf],@edit[:new]["#{fld}".to_sym],true)
+        build_tags_tree(@edit[:wf], @edit.fetch_path(:new, tag_symbol_for_workflow), true)
       elsif @edit[:new][:current_tab_key] == :environment
         build_ds_grid(@edit[:wf].get_field(:attached_ds,:environment)[:values],@edit[:ds_sortdir],@edit[:ds_sortcol])
       elsif @edit[:new][:current_tab_key] == :customize
@@ -496,6 +495,10 @@ module ApplicationController::MiqRequestMethods
     end
   end
 
+  def tag_symbol_for_workflow
+    (@edit || @options)[:wf].kind_of?(MiqHostProvisionWorkflow) ? :tag_ids : :vm_tags
+  end
+
   def validate_fields
     # Update/create returned false, validation failed
     @edit[:wf].get_dialog_order.each do |d|                           # Go thru all dialogs, in order that they are displayed
@@ -586,10 +589,9 @@ module ApplicationController::MiqRequestMethods
   def prov_get_form_vars
     if params[:ids_checked]                         # User checked/unchecked a tree node
       ids = params[:ids_checked].split(",")
-      fld = @edit[:wf].kind_of?(MiqHostProvisionWorkflow) ? "tag_ids" : "vm_tags"
-      @edit[:new]["#{fld}".to_sym] = Array.new
+      @edit.store_path(:new, tag_symbol_for_workflow, [])
       ids.each do |id|
-        @edit[:new]["#{fld}".to_sym].push(id.to_i) if id != "" #for some reason if tree is not expanded clicking on radiobuttons this.getAllChecked() sends up extra blanks
+        @edit[:new][tag_symbol_for_workflow].push(id.to_i) if id != "" #for some reason if tree is not expanded clicking on radiobuttons this.getAllChecked() sends up extra blanks
       end
     end
     id = params[:ou_id] if params[:ou_id]
@@ -728,9 +730,8 @@ module ApplicationController::MiqRequestMethods
             break
           end
         end
-        fld = options[:wf].kind_of?(MiqHostProvisionWorkflow) ? "tag_ids" : "vm_tags"
-        @options["#{fld}".to_sym] = Array.new if @options["#{fld}".to_sym].nil?   #Initialize if came back nil from record
-        build_tags_tree(options[:wf],@options["#{fld}".to_sym],false) if @miq_request.resource_type != "VmMigrateRequest"
+        @options[tag_symbol_for_workflow] ||= []  # Initialize if came back nil from record
+        build_tags_tree(options[:wf], @options[tag_symbol_for_workflow], false) if @miq_request.resource_type != "VmMigrateRequest"
         if !["MiqHostProvisionRequest", "VmMigrateRequest"].include?(@miq_request.resource_type)
           build_ous_tree(options[:wf],@options[:ldap_ous])
           @sb[:vm_os] = VmOrTemplate.find_by_id(@options[:src_vm_id][0]).platform if @options[:src_vm_id] && @options[:src_vm_id][0]
@@ -844,8 +845,7 @@ module ApplicationController::MiqRequestMethods
           @edit[:new][:start_min] = "00"
         end
       end
-      fld = @edit[:wf].kind_of?(MiqHostProvisionWorkflow) ? "tag_ids" : "vm_tags"
-      @edit[:new]["#{fld}".to_sym] = Array.new if @edit[:new]["#{fld}".to_sym].nil?     #Initialize for new record
+      @edit[:new][tag_symbol_for_workflow] ||= []  # Initialize for new record
       @edit[:current] ||= Hash.new
       @edit[:current] = copy_hash(@edit[:new])
       # Give the model a change to modify the dialog based on the default settings
@@ -995,7 +995,6 @@ module ApplicationController::MiqRequestMethods
 
   def build_tags_tree(wf,vm_tags,edit_mode)
     tags = wf.send("allowed_tags")
-    fld = wf.kind_of?(MiqHostProvisionWorkflow) ? ":tag_ids" : "vm_tags"
     @curr_tag = nil
     # Build the default filters tree for the search views
     all_tags = []                          # Array to hold all CIs
@@ -1036,10 +1035,10 @@ module ApplicationController::MiqRequestMethods
             else
               temp[:select] = false
             end
-            if @edit && @edit[:current]["#{fld}".to_sym] != @edit[:new]["#{fld}".to_sym]
+            if @edit && @edit[:current][tag_symbol_for_workflow] != @edit[:new][tag_symbol_for_workflow]
               #checking to see if id is in current but not in new, change them to blue OR if id is in current but deleted from new
-              if (!@edit[:current]["#{fld}".to_sym].include?(c[0].to_i) && @edit[:new]["#{fld}".to_sym].include?(c[0].to_i)) ||
-                  (!@edit[:new]["#{fld}".to_sym].include?(c[0].to_i) && @edit[:current]["#{fld}".to_sym].include?(c[0].to_i))
+              if (!@edit[:current][tag_symbol_for_workflow].include?(c[0].to_i) && @edit[:new][tag_symbol_for_workflow].include?(c[0].to_i)) ||
+                  (!@edit[:new][tag_symbol_for_workflow].include?(c[0].to_i) && @edit[:current][tag_symbol_for_workflow].include?(c[0].to_i))
                 temp[:addClass] = "cfme-blue-bold-node"
               end
             end
