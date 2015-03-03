@@ -1425,7 +1425,7 @@ module VmCommon
       begin
         ems.validate_remote_console_vmrc_support
       rescue MiqException::RemoteConsoleNotSupportedError => e
-        add_flash(_("Console access failed: %s") % e.msg, :error)
+        add_flash(_("Console access failed: %s") % e.message, :error)
         render :partial => "shared/ajax/flash_msg_replace"
         return
       end
