@@ -16,6 +16,7 @@ class Authentication < ActiveRecord::Base
   before_save :set_credentials_changed_on
   after_save :after_authentication_changed
 
+  # TODO: DELETE ME!!!!
   ERRORS = {
     :incomplete => "Incomplete credentials",
     :invalid => "Invalid credentials",
