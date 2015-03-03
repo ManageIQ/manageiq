@@ -57,7 +57,7 @@ class MiqReportResult < ActiveRecord::Base
   end
 
   def miq_group_description
-    self.miq_group ? self.miq_group.description : nil
+    miq_group.try(:description)
   end
 
   def report_results

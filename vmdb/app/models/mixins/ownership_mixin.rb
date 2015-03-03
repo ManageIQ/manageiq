@@ -73,32 +73,27 @@ module OwnershipMixin
   end
 
   def evm_owner_email
-    self.evm_owner.nil? ? nil : self.evm_owner.email
+    evm_owner.try(:email)
   end
 
   def evm_owner_name
-    self.evm_owner.nil? ? nil : self.evm_owner.name
+    evm_owner.try(:name)
   end
 
   def evm_owner_userid
-    self.evm_owner.nil? ? nil : self.evm_owner.userid
+    evm_owner.try(:userid)
   end
 
   def owned_by_current_user
-    return false if User.current_userid.nil? || self.evm_owner_userid.nil?
-    User.current_userid.downcase == self.evm_owner_userid.downcase
+    User.current_userid && evm_owner_userid && User.current_userid.downcase == evm_owner_userid.downcase
   end
 
   def owning_ldap_group
-    self.miq_group ? self.miq_group.description : nil
+    miq_group.try(:description)
   end
 
   def owned_by_current_ldap_group
-    ldap_group = User.current_user_ldap_group
-    return false if ldap_group.nil? || self.owning_ldap_group.nil?
-
-    self.owning_ldap_group.downcase == User.current_user_ldap_group.downcase
+    ldap_group = User.current_user.try(:ldap_group)
+    ldap_group && owning_ldap_group && (owning_ldap_group.downcase == ldap_group.downcase)
   end
-
-
 end

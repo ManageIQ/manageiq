@@ -168,7 +168,7 @@ class User < ActiveRecord::Base
   end
 
   def ldap_group
-    self.current_group ? self.current_group.description : nil
+    current_group.try(:description)
   end
   alias miq_group_description ldap_group
 
@@ -921,10 +921,6 @@ class User < ActiveRecord::Base
 
   def self.current_user
     Thread.current[:user] ||= self.find_by_userid(self.current_userid)
-  end
-
-  def self.current_user_ldap_group
-    self.current_user ? self.current_user.ldap_group : nil
   end
 
   def self.current_user_has_filters?
