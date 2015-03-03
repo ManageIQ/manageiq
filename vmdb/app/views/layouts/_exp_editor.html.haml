@@ -1,3 +1,4 @@
+-# Set the JS type vars if a saved expression atom already exists when first showing the editor
 - if @edit && @edit.fetch_path(@expkey, :val1, :type)
   = javascript_tag("miq_val1_type = '#{@edit[@expkey][:val1][:type]}';")
   = javascript_tag("miq_val1_title = '#{@edit[@expkey][:val1][:title]}';")
@@ -6,7 +7,7 @@
   = javascript_tag("miq_val2_title = '#{@edit[@expkey][:val2][:title]}';")
 
 #exp_editor_div
-  %fieldset{:style => "width:auto; height; padding-left: 6px; padding-top: 6px"}
+  %fieldset{:style => "width: auto; padding-left: 6px; padding-top: 6px"}
     %ul#searchtoolbar
       - if @edit[@expkey][:exp_idx] > 0
         %li
@@ -21,6 +22,7 @@
       - else
         %li.dimmed
           = image_tag("/images/toolbars/undo.png")
+
       - if @edit[@expkey][:exp_idx] < @edit[@expkey][:exp_array].length - 1
         %li
           = link_to(image_tag('/images/toolbars/redo.png',
@@ -39,24 +41,27 @@
         - %w(and or not discard).each do |image|
           %li.dimmed
             = image_tag("/images/toolbars/#{image}.png")
-      %span#exp_buttons_not{:style => "display:none"}
+
+      %span#exp_buttons_not{:style => "display: none"}
         - [[_("AND with a new expression element"), 'and',     'and'],
            [_("OR with a new expression element"),  'or',      'or'],
            ["",                                     'not',     ''],
            [_("Remove this expression element"),    'discard', 'remove']].each do |title, image, pressed|
-          %li
-            - if title.empty?
+          - if title.empty?
+            %li.dimmed
               = link_to(image_tag("/images/toolbars/#{image}.png"))
-            - else
+          - else
+            %li
               = link_to(image_tag("/images/toolbars/#{image}.png",
-                                  :alt                   => title),
-                                  {:action  => "exp_button",
-                                   :pressed => pressed},
-                                  "data-miq_sparkle_on"  => true,
-                                  "data-miq_sparkle_off" => true,
-                                  :remote                => true,
-                                  :title                 => title)
-      %span#exp_buttons_on{:style => "display:none"}
+                                  :alt => title),
+                        {:action  => "exp_button",
+                         :pressed => pressed},
+                        "data-miq_sparkle_on"  => true,
+                        "data-miq_sparkle_off" => true,
+                        :remote                => true,
+                        :title                 => title)
+
+      %span#exp_buttons_on{:style => "display: none"}
         - [[_("AND with a new expression element"),       'and',     'and'],
            [_("OR with a new expression element"),        'or',      'or'],
            [_("Wrap this expression element with a NOT"), 'not',     'not'],
@@ -70,7 +75,8 @@
                       "data-miq_sparkle_off" => true,
                       :remote                => true,
                       :title                 => title)
-    %div{:style => "padding:10px"}
+
+    %div{:style => "padding: 10px"}
       - @edit[@expkey][:exp_table].each do |token|
         - if ! %w(AND OR ( ) ???).include?([token].flatten.first)
           = link_to(token.first,
@@ -85,7 +91,7 @@
           = link_to(token.first,
                     {:action => 'exp_token_pressed',
                      :token  => token.last},
-                    :style                 => "color: black; background-color: yellow !important",
+                    :style                 => "color: black; background-color: yellow",
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
                     :remote                => true,
@@ -94,5 +100,6 @@
           %font{:color => "red"}
             %b
               = token
-- if @edit[@expkey][:exp_token]
-  = render(:partial => 'layouts/exp_atom/editor')
+
+  - if @edit[@expkey][:exp_token]
+    = render(:partial => 'layouts/exp_atom/editor')
