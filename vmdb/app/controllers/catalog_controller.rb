@@ -359,9 +359,7 @@ class CatalogController < ApplicationController
         end
         return
       end
-      @st = @edit[:rec_id] ?
-        ServiceTemplate.find_by_id(@edit[:rec_id]) :
-        class_service_template(@edit[:new][:st_prov_type]).new
+      @st = @edit[:rec_id] ? ServiceTemplate.find_by_id(@edit[:rec_id]) : ServiceTemplate.new
       st_set_record_vars(@st)
       if @add_rsc
         if @st.save
