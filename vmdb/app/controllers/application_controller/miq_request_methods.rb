@@ -238,7 +238,7 @@ module ApplicationController::MiqRequestMethods
   # get the sort column that was clicked on, else use the current one
   def sort_host_grid
     return unless load_edit("prov_edit__#{params[:id]}","show_list")
-    @edit[:wf].class.to_s == "MiqHostProvisionWorkflow" ? sort_grid('host', @edit[:wf].get_field(:src_host_ids,:service)[:values]) : sort_grid('host', @edit[:wf].get_field(:placement_host_name,:environment)[:values])
+    @edit[:wf].kind_of?(MiqHostProvisionWorkflow) ? sort_grid('host', @edit[:wf].get_field(:src_host_ids, :service)[:values]) : sort_grid('host', @edit[:wf].get_field(:placement_host_name, :environment)[:values])
   end
 
   # get the sort column that was clicked on, else use the current one
@@ -318,7 +318,7 @@ module ApplicationController::MiqRequestMethods
     options = @edit || @options
     options[:host_sortdir] = sort_order
     #non-editable grid for host prov to display hosts being provisoned
-    if options[:wf].class.to_s == "MiqHostProvisionWorkflow"
+    if options[:wf].kind_of?(MiqHostProvisionWorkflow)
       options[:host_headers] = {
         "name"=>"Name",
         "mac_address"=>"MAC Address"
@@ -886,8 +886,7 @@ module ApplicationController::MiqRequestMethods
         else
           build_vc_grid(@edit[:wf].send("allowed_customization_specs"),@edit[:vc_sortdir],@edit[:vc_sortcol])
         end
-      elsif @edit[:wf].class.to_s == "VmMigrateWorkflow"
-        #build_ds_grid(@edit[:wf].send("allowed_storages"),@edit[:ds_sortdir],@edit[:ds_sortcol])
+      elsif @edit[:wf].kind_of?(VmMigrateWorkflow)
       else
         @edit[:pxe_img_sortdir] ||= "ASC"
         @edit[:pxe_img_sortcol] ||= "name"
