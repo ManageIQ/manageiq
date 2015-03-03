@@ -142,11 +142,6 @@ module EmsRefresh::Parsers
       end
     end
 
-    # def get_hosts
-    #   hosts = @connection.hosts.select { |h| h.service == "compute" }
-    #   process_collection(hosts, :hosts) { |host| parse_host(host) }
-    # end
-
     def get_volumes
       # TODO: support volumes through :nova as well?
       return unless @volume_service_name == :cinder
