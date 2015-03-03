@@ -17,7 +17,7 @@ module VmCloudHelper::TextualSummary
 
   def textual_group_vm_cloud_relationships
     items = %w(ems availability_zone cloud_tenant flavor drift scan_history security_groups
-               cloud_network cloud_subnet orchestration_stack)
+               service cloud_network cloud_subnet orchestration_stack)
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
@@ -244,6 +244,19 @@ module VmCloudHelper::TextualSummary
     if stack && role_allows(:feature => "orchestration_stack_show")
       h[:title] = "Show this VM's #{label} '#{stack.name}'"
       h[:link]  = url_for(:controller => 'orchestration_stack', :action => 'show', :id => stack)
+    end
+    h
+  end
+
+  def textual_service
+    h = {:label => "Service", :image => "service"}
+    service = @record.service
+    if service.nil?
+      h[:value] = "None"
+    else
+      h[:value] = service.name
+      h[:title] = "Show this Service"
+      h[:link]  = url_for(:controller => 'service', :action => 'show', :id => service)
     end
     h
   end
