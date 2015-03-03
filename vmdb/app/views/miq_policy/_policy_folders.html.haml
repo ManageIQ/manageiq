@@ -6,7 +6,7 @@
         - t = %w(Compliance Control).include?(f) ? "#{f.downcase}" : "#{f.split.last.downcase}_xx#{f.split[1].downcase}-#{f.split[0].downcase}"
         %tr{:onclick => "cfmeDynatree_activateNode('policy_tree', 'xx-%s');" % t,
           :onmouseover => "this.style.cursor =' pointer'", :title => _("Open Folder")}
-          %td
-            %img{:src => "/images/icons/new/#{f.split.first.downcase}.png", :valign => "middle", :border => "0"}
+          %td.narrow
+            %img{:src => "/images/icons/new/#{f.split.first.downcase}.png"}
           %td
             = _("%s Policies") % h(f == "Vm" ? ui_lookup(:model => f) : f)
