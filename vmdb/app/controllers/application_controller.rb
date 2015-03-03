@@ -2057,12 +2057,10 @@ class ApplicationController < ActionController::Base
   end
 
   def view_yaml_filename(db, options)
-    association = options[:association] || nil
-    view_suffix = options[:view_suffix] || nil
+    suffix = options[:association] || options[:view_suffix]
 
     # Build the view file name
-    if association || view_suffix
-      suffix = association ? association : view_suffix
+    if suffix
       viewfile = "#{VIEWS_FOLDER}/#{db}-#{suffix}.yaml"
       viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{suffix}-#{session[:userrole]}.yaml"
     else
