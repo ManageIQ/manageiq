@@ -23,6 +23,7 @@ require 'Win32EventLog'
 require 'LinuxUsers'
 require 'LinuxPackages'
 require 'LinuxInitProcs'
+require 'LinuxSystemd'
 require 'LinuxOSInfo'
 require 'VmScanProfiles'
 require 'MiqVim'
@@ -231,7 +232,8 @@ class MIQExtract
 		when "Windows"
 			MiqWin32::Services.new(c, @systemFs).to_xml(node)
 		when "Linux"
-			MiqLinux::InitProcs.new(@systemFs).toXml(node)
+      MiqLinux::Systemd.new(@systemFs).toXml(node) if MiqLinux::Systemd.detected?(@systemFs)
+      MiqLinux::InitProcs.new(@systemFs).toXml(node)
 		end
 
 		doc
