@@ -15,18 +15,20 @@
   - elsif node.first == "ur" || (node.last == "ur" && @edit)
     = render :partial => "rbac_role_details"
   - else
-    .ops_details
-      %fieldset
-        %div{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'xx-u');",
-          :onmouseover => "this.style.cursor='pointer'",
-          :title => _("View Users")}
-          = image_tag("/images/icons/new/user.png")
-          = _("Users (%s)") % @temp[:users_count].to_s
-      %fieldset
-        %div{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'xx-g');", :onmouseover => "this.style.cursor='pointer'", :title => _("View Groups")}
-          = image_tag("/images/icons/new/miq_group.png")
-          = _("Groups (%s)") % @temp[:groups_count].to_s
-      %fieldset
-        %div{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'xx-ur');", :onmouseover => "this.style.cursor='pointer'", :title => _("View Roles")}
-          = image_tag("/images/icons/new/miq_user_role.png")
-          = _("Roles (%s)") % @temp[:roles_count].to_s
+    %table.table.table-striped.table-bordered.table-hover
+      %tbody
+        %tr
+          %td.narrow{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'xx-u');", :title => _("View Users")}
+            = image_tag("/images/icons/new/user.png")
+          %td{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'xx-u');", :title => _("View Users")}
+            = _("Users (%s)") % @temp[:users_count].to_s
+        %tr
+          %td.narrow{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'xx-g');", :title => _("View Groups")}
+            = image_tag("/images/icons/new/miq_group.png")
+          %td{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'xx-g');", :title => _("View Groups")}
+            = _("Groups (%s)") % @temp[:groups_count].to_s
+        %tr
+          %td.narrow{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'xx-ur');", :title => _("View Roles")}
+            = image_tag("/images/icons/new/miq_user_role.png")
+          %td{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'xx-ur');", :title => _("View Roles")}
+            = _("Roles (%s)") % @temp[:roles_count].to_s

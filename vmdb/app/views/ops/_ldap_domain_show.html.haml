@@ -81,17 +81,17 @@
     - if @selected_ld.ldap_servers.count <= 0
       = render :partial => 'layouts/info_msg', :locals => {:message => _("No Records Found.")}
     - else
-      %table.style3
+      %table.table.table-striped.table-bordered.table-hover
         %thead
-          %th.icon
+          %th.narrow
           %th= _("Host Name")
           %th= _("Mode")
           %th= _("Port")
         %tbody
           - @selected_ld.ldap_servers.sort { |a, b| a.hostname.to_s <=> b.hostname.to_s }.each do |svr|
             %tr{:class => "no-hover #{cycle('row0', 'row1')}"}
-              %td.icon{:nowrap => true}
-                %img{:border => 0, :width => 20, :height => 20, :src => "/images/icons/new/ldap_server.png", :valign => "middle"}/
+              %td.narrow
+                %img{:src => "/images/icons/new/ldap_server.png"}/
               %td
                 = svr.hostname
               %td

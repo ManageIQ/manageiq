@@ -1,21 +1,22 @@
 %fieldset
   %h3=_("File Entry")
-  %table.style3
+  %table.table.table-striped.table-bordered.table-hover
     %thead
       %tr
-        %th.icon
+        %th.narrow
         %th=_("Name")
         %th=_("Collect Contents?")
     %tbody
       - if !params[:add] && params[:add] != "new"
-        %tr#new_tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url=>{:action=>'ap_ce_select', :add=>'new', :item=>"file", :id=>"#{@scan.id || "new"}"}), :title => _("Click to add a new entry")}
+        %tr#new_tr{:title => _("Click to add a new entry"),
+          :onclick => remote_function(:url=>{:action=>'ap_ce_select', :add=>'new', :item=>"file", :id=>"#{@scan.id || "new"}"})}
           %td
             .rollover
               = image_tag("/images/toolbars/new.png", :class=>"rollover small")
-          %td.all= h("<New Entry>")
-          %td.all= h("<New Entry>")
+          %td= h("<New Entry>")
+          %td= h("<New Entry>")
       - else
-        %tr#new_tr{:class => cycle('row0', 'row1')}
+        %tr#new_tr
           %td
             .rollover
               = image_submit_tag("/images/toolbars/import.png",
@@ -25,10 +26,10 @@
                 :title     => _("Add this entry"),
                 :item_type => "file",
                 :id        => "#{@scan.id || "new"}")
-          %td.all
+          %td
             = text_field("entry", "fname", :maxlength=>MAX_NAME_LEN)
             = hidden_field("item", "type1", :value=>"file")
-          %td.all
+          %td
             = check_box_tag("entry_content", value="1", checked=false, :id=>"entry_content")
       - if !session[:file_names].nil? && !session[:file_names].empty?
         - session[:file_names].sort_by { |r| r["target"] }.each do |entry|
@@ -51,10 +52,10 @@
                     :alt   => _("Update this entry"),
                     :title => _("Update this entry"),
                     :id    => "#{@scan.id || 'new'}")
-                %td.all
+                %td
                   = text_field("entry", "fname", :maxlength=>MAX_NAME_LEN, "value"=>session[:edit_filename])
                   = hidden_field("item", "type1", :value=>"file")
-                %td.all
+                %td
                   - checked = entry["content"] ? true : false
                   = check_box_tag("entry_content", value="1", checked=checked, :id=>"entry_content")
                   = hidden_field("item", "type1", :value=>"file")
