@@ -751,8 +751,7 @@ class MiqVimVm
 							# bck.diskMode = VirtualDiskMode::Independent_nonpersistent
 							bck.diskMode		= VirtualDiskMode::Independent_persistent
 						    bck.split			= "false"
-						    # Handle both cases - thinProvisioned passed as boolean and as string
-						    bck.thinProvisioned = (thinProvisioned.to_s.downcase == "true" ? "true" : "false")
+						    bck.thinProvisioned	= thinProvisioned.to_s
 						    bck.writeThrough	= "false"
 						    bck.fileName		= backingFile
 							begin
