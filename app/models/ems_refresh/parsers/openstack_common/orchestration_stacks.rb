@@ -5,9 +5,7 @@ module EmsRefresh
         def stack_resources(stack)
           return @resources[stack.id] if @resources && !@resources.fetch_path(stack.id).blank?
           @resources = {} unless @resources
-          # TODO(lsmola) catch exception when nested-depth is not supported, it's supported from Juno OpenStack
-          # TODO(lsmola) @resources[stack.id] = stack.resources(:nested_depth => 50)
-          @resources[stack.id] = @orchestration_service.list_resources(stack, :nested_depth => 50).body['resources']
+          @resources[stack.id] = stack.resources
         end
 
         def load_orchestration_stacks
@@ -26,7 +24,7 @@ module EmsRefresh
           # TODO(lsmola) We need a support of GET /{tenant_id}/stacks/detail in FOG, it was implemented here
           # https://review.openstack.org/#/c/35034/, but never documented in API reference, so right now we
           # can't get list of detailed stacks in one API call.
-          @orchestration_service.stacks.collect(&:details)
+          @orchestration_service.stacks.all(:show_nested => true).collect(&:details)
         rescue Excon::Errors::Forbidden
           # Orchestration service is detected but not open to the user
           $log.warn("Skip refreshing stacks because the user cannot access the orchestration service")
@@ -35,7 +33,7 @@ module EmsRefresh
 
         def parse_stack(stack)
           uid = stack.id.to_s
-          child_stacks, resources = find_stack_resources(stack)
+          resources = find_stack_resources(stack)
 
           orchestration_stack_type = case @ems
                                      when EmsOpenstack
@@ -53,7 +51,8 @@ module EmsRefresh
             :description            => stack.description,
             :status                 => stack.stack_status,
             :status_reason          => stack.stack_status_reason,
-            :children               => child_stacks,
+            # TODO(lsmola) expose attribute parent in Fog and change this to stack.attribute
+            :parent_stack_id        => stack.attributes['parent'],
             :resources              => resources,
             :outputs                => find_stack_outputs(stack),
             :parameters             => find_stack_parameters(stack),
@@ -99,16 +98,17 @@ module EmsRefresh
         end
 
         def parse_stack_resource(resource)
-          uid = resource['physical_resource_id']
+          # TODO(lsmola) expose physical_resource_id in Fog and replace all occurrences with
+          # resource.physical_resource_id
+          uid = resource.attributes['physical_resource_id']
           new_result = {
             :ems_ref                => uid,
-            :name                   => resource['resource_name'],
-            :logical_resource       => resource['logical_resource_id'],
+            :logical_resource       => resource.logical_resource_id,
             :physical_resource      => uid,
-            :resource_category      => resource['resource_type'],
-            :resource_status        => resource['resource_status'],
-            :resource_status_reason => resource['resource_status_reason'],
-            :last_updated           => resource['updated_time']
+            :resource_category      => resource.resource_type,
+            :resource_status        => resource.resource_status,
+            :resource_status_reason => resource.resource_status_reason,
+            :last_updated           => resource.updated_time
           }
           return uid, new_result
         end
@@ -159,22 +159,14 @@ module EmsRefresh
           raw_resources = stack_resources(stack)
 
           # physical_resource_id can be empty if the resource was not successfully created; ignore such
-          raw_resources.reject! { |r| r['physical_resource_id'].nil? }
+          raw_resources.reject! { |r| r.attributes['physical_resource_id'].nil? }
 
           get_stack_resources(raw_resources)
 
-          child_stacks = []
-          resources = raw_resources.collect do |resource|
-            physical_id = resource['physical_resource_id']
-            @resource_to_stack[physical_id] = stack.id
-            # TODO(lsmola) this condition doesn't apply for OpenStack, resource is nested stack when it has child
-            # resources nested resources will be solved in followup PR. There is 'rel' => 'nested' in links, when
-            # resource has children.
-            # child_stacks << physical_id if resource['resource_type'] == "AWS::CloudFormation::Stack"
+          raw_resources.collect do |resource|
+            physical_id = resource.attributes['physical_resource_id']
             @data_index.fetch_path(:orchestration_stack_resources, physical_id)
           end
-
-          return child_stacks, resources
         end
 
         #
@@ -184,11 +176,9 @@ module EmsRefresh
         # Remap from children to parent
         def update_nested_stack_relations
           @data[:orchestration_stacks].each do |stack|
-            stack[:children].each do |child_stack_id|
-              child_stack = @data_index.fetch_path(:orchestration_stacks, child_stack_id)
-              child_stack[:parent] = stack if child_stack
-            end
-            stack.delete(:children)
+            parent_stack = @data_index.fetch_path(:orchestration_stacks, stack[:parent_stack_id])
+            stack[:parent] = parent_stack if parent_stack
+            stack.delete(:parent_stack_id)
           end
         end
 

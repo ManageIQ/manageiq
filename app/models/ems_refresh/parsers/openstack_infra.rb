@@ -20,14 +20,14 @@ module EmsRefresh
 
         @known_flavors = Set.new
 
-        @os_handle              = ems.openstack_handle
-        @compute_service        = @connection # for consistency
-        @baremetal_service      = @os_handle.detect_baremetal_service
-        @baremetal_service_name = @os_handle.baremetal_service_name
+        @os_handle                  = ems.openstack_handle
+        @compute_service            = @connection # for consistency
+        @baremetal_service          = @os_handle.detect_baremetal_service
+        @baremetal_service_name     = @os_handle.baremetal_service_name
         @orchestration_service      = @os_handle.detect_orchestration_service
         @orchestration_service_name = @os_handle.orchestration_service_name
-        @image_service        = @os_handle.detect_image_service
-        @image_service_name   = @os_handle.image_service_name
+        @image_service              = @os_handle.detect_image_service
+        @image_service_name         = @os_handle.image_service_name
       end
 
       def ems_inv_to_hashes
@@ -49,15 +49,20 @@ module EmsRefresh
 
       def all_server_resources
         return @all_server_resources if @all_server_resources
-
         resources = []
         stacks.each do |stack|
-          all_stack_resources = stack_resources(stack)
           # Filtering just OS::Nova::Server, which is important to us for getting Purpose of the node
           # (compute, controller, etc.).
-          resources += all_stack_resources.select { |x| x["resource_type"] == 'OS::Nova::Server' }
+          resources += all_stack_server_resources(stack).select { |x| x["resource_type"] == 'OS::Nova::Server' }
         end
         @all_server_resources = resources
+      end
+
+      def all_stack_server_resources(stack)
+        # TODO(lsmola) loading this from already obtained nested stack hierarchy will be more effective. This is one
+        # extra API call. But we will need to change order of loading, so we have all resources first.
+        # Nested depth 50 just for sure, although nobody should nest templates that much
+        @orchestration_service.list_resources(stack, :nested_depth => 50).body['resources']
       end
 
       def servers
