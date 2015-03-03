@@ -1,7 +1,20 @@
 :css
-  @media (min-width: 992px) { 
-    body {padding-top: #{session[:custom_logo] ? 116 : 100}px !important} 
-  }
-
   #searchbox              {top: #{@explorer ? 138 : 63}px;}
   #searchbox.whitelabeled {top: 40px;}
+
+-if big_iframe
+  :css
+    @media (min-width: 992px) { 
+      .navbar-nav ul > li > ul {
+        display:none
+      }
+      body {
+        padding-top: #{session[:custom_logo] ? 83 : 70}px !important} 
+    }
+-else
+  :css
+    @media (min-width: 992px) { 
+      body {
+        padding-top: #{session[:custom_logo] ? 116 : 100}px !important
+      } 
+    }
