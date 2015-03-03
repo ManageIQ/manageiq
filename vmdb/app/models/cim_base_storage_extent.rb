@@ -29,5 +29,8 @@ class CimBaseStorageExtent < ActsAsArModel
     CimStorageExtent.table_name
   end
 
+  def self.sortable?
+    true
+  end
 
 end
