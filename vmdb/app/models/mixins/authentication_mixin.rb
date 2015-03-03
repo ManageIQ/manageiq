@@ -191,42 +191,45 @@ module AuthenticationMixin
     types.to_miq_a.each { |t| self.authentication_check(t, options)}
   end
 
+  # TODO: :valid, :incomplete, and friends shouldn't be littered in here and authentication
+  # Check callers of authentication_check
   def authentication_check(*args)
-    options = args.extract_options!
-    types = args.first
+    options         = args.last.kind_of?(Hash) ? args.last : {}
+    save            = options.fetch(:save, true)
+    type            = args.first
+    status, details = authentication_check_no_validation(type, options)
+    auth            = authentication_best_fit(type)
 
-    header = "MIQ(#{self.class.name}.authentication_check) type: [#{types.inspect}] for [#{self.id}] [#{self.name}]"
-    auth = authentication_best_fit(types)
-
-    unless self.has_credentials?(types)
-      $log.warn("#{header} Validation failed due to error: [#{Authentication::ERRORS[:incomplete]}]")
-      auth.validation_failed(:incomplete) if auth
-      return false
+    if save
+      status == :valid ? auth.validation_successful : auth.validation_failed(status, details)
     end
 
-    verify_args = self.is_a?(Host) ? [types, options] : types
+    return status, details
+  end
 
-    begin
-      result = self.verify_credentials(*verify_args)
-    rescue MiqException::MiqUnreachableError => err
-      auth.validation_failed(:unreachable, err.to_s[0..200])
-      $log.warn("#{header} Validation failed due to unreachable error: [#{err.to_s[0..500]}]")
-      return false
-    rescue MiqException::MiqInvalidCredentialsError => err
-      result = false
-    rescue => err
-      auth.validation_failed(:error, err.to_s[0..200])
-      $log.warn("#{header} Validation failed due to error: [#{err.to_s[0..500]}]")
-      return false
-    end
+  def authentication_check_no_validation(type, options)
+    header  = "MIQ(#{self.class.name}.#{__method__}) type: [#{type.inspect}] for [#{self.id}] [#{self.name}]"
+    verify_args = self.is_a?(Host) ? [type, options] : type
 
-    if result
-      auth.validation_successful
-    else
-      $log.warn("#{header} Validation failed due to error: [#{Authentication::ERRORS[:invalid]}]")
-      auth.validation_failed(:invalid)
-    end
-    return result
+    status, details =
+      if self.missing_credentials?(type)
+        [:incomplete, "Missing credentials"]
+      else
+        begin
+          verify_credentials(*verify_args) ? [:valid, ""] : [:invalid, "Unknown reason"]
+        rescue MiqException::MiqUnreachableError => err
+          [:unreachable, err]
+        rescue MiqException::MiqInvalidCredentialsError => err
+          [:invalid, err]
+        rescue => err
+          [:error, err]
+        end
+      end
+
+    details &&= details.to_s.truncate(200)
+
+    $log.warn("#{header} Validation failed: #{status}, #{details}") unless status == :valid
+    return status, details
   end
 
   private
