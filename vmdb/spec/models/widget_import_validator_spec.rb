@@ -18,12 +18,20 @@ describe WidgetImportValidator do
       end
 
       context "when the yaml contains stuff other than widgets" do
-        let(:uploaded_content) { [{"test" => "garbage"}, {"MiqWidget" => {}}].to_yaml }
+        let(:uploaded_content) { [{:test123 => 123}, {"MiqWidget" => {}}].to_yaml }
 
         it "raises a WidgetImportValidator::InvalidWidgetYamlError" do
           expect {
             widget_import_validator.determine_validity(import_file_upload)
           }.to raise_error(WidgetImportValidator::InvalidWidgetYamlError)
+        end
+      end
+
+      context "when the yaml contains a hash of widgets" do
+        let(:uploaded_content) { {"MiqWidget" => {}}.to_yaml }
+
+        it "does not raise any errors" do
+          expect { widget_import_validator.determine_validity(import_file_upload) }.to_not raise_error
         end
       end
 
