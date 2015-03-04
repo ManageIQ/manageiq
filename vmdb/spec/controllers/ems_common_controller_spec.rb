@@ -88,7 +88,7 @@ describe EmsCloudController do
         context "returns false" do
           it "renders unsuccessful flash message" do
             mocked_ems_cloud.should_receive(:verify_credentials).with("amqp").and_return(false)
-            controller.should_receive(:add_flash).with(_("Credential validation was not successful"))
+            controller.should_receive(:add_flash).with(_("Credential validation was not successful"), :error)
             controller.should_receive(:render_flash)
             controller.send(:update_button_validate)
           end
