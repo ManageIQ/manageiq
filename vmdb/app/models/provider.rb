@@ -1,4 +1,5 @@
 class Provider < ActiveRecord::Base
+  include NewWithTypeStiMixin
   include AuthenticationMixin
   include EmsRefresh::Manager
 

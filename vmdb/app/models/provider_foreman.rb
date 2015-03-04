@@ -1,15 +1,20 @@
 require 'manageiq_foreman'
+
 class ProviderForeman < Provider
   has_one :configuration_manager,
           :foreign_key => "provider_id",
           :class_name  => "ConfigurationManagerForeman",
-          :dependent   => :destroy
+          :dependent   => :destroy,
+          :autosave    => true
   has_one :provisioning_manager,
           :foreign_key => "provider_id",
           :class_name  => "ProvisioningManagerForeman",
-          :dependent   => :destroy
+          :dependent   => :destroy,
+          :autosave    => true
 
-  before_create :build_managers
+  before_validation :ensure_managers
+
+  validates :name, :presence => true, :uniqueness => true
 
   def connection_attrs(auth_type = nil)
     {
@@ -30,8 +35,13 @@ class ProviderForeman < Provider
 
   private
 
-  def build_managers
+  def ensure_managers
     build_provisioning_manager unless provisioning_manager
+    provisioning_manager.name    = "Configuration Manager for Foreman Provider '#{name}'"
+    provisioning_manager.zone_id = zone_id
+
     build_configuration_manager unless configuration_manager
+    configuration_manager.name    = "Provisioning Manager for Foreman Provider '#{name}'"
+    configuration_manager.zone_id = zone_id
   end
 end
