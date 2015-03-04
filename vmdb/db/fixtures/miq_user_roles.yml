@@ -876,6 +876,7 @@
   - vm_explorer
   - vm_guest_restart
   - vm_guest_shutdown
+  - vm_infra_explorer
   - vm_miq_request_new
   - vm_perf
   - vm_policy_sim
