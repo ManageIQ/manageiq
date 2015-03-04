@@ -15,7 +15,7 @@ object:
       name: status
       display_name: 
       datatype: 
-      priority: 2
+      priority: 1
       owner: 
       default_value: 
       substitute: true

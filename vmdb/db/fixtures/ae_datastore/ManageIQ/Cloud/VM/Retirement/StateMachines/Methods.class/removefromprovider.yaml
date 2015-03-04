@@ -8,5 +8,5 @@ object:
     inherits: 
     description: 
   fields:
-  - execute:
+  - common_meth1:
       value: remove_from_provider(removal_type => 'remove_from_disk')

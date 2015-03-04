@@ -8,5 +8,5 @@ object:
     inherits: 
     description: 
   fields:
-  - execute:
+  - meth1:
       value: check_removed_from_provider

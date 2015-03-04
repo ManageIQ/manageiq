@@ -621,6 +621,7 @@ module MiqAeEngine
           # We are properly encoding when we send URL requests to external systems
           # or building an automate request
           # subst &&= URI.escape(subst, RE_URI_ESCAPE)  if type == :aetype_relationship
+          # subst &&= URI.escape(subst, RE_URI_ESCAPE)  if type == :aetype_relationship
           subst
         } unless value.nil?
         return value

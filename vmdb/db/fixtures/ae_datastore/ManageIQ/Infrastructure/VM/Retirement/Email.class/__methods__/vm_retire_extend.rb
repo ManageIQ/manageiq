@@ -23,8 +23,7 @@ end
 
 # If VM is already retired to do not continue
 if vm.retired
-  $evm.log("info", "VM '#{vm_name}' is already marked as retired. vm.retires_on date value is  #{vm.retires_on}. No Action taken")
-  # exit MIQ_OK
+  $evm.log("info", "VM '#{vm_name}' is already retired. retires_on date: #{vm.retires_on}. No Action taken")
 end
 
 $evm.log("info", "VM: <#{vm_name}> current retirement date is #{vm.retires_on}")
@@ -55,7 +54,7 @@ unless vm.retires_on.nil?
   $evm.log("info", "Inspecting VM Owner: #{owner.inspect}")
 
   # to_email_address from owner.email then from model if nil
-  unless owner.nil?
+  if owner
     to = owner.email
   else
     to = $evm.object['to_email_address']
