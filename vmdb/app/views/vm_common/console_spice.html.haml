@@ -12,7 +12,7 @@
     = link_to('Ctrl-Alt-Del', '#', :id => 'sendCtrlAltDelButton', :class => 'btn btn-default', :onclick => 'sendCtrlAltDel()')
     #spice-area{'data-port' => proxy_port, 'data-password' => password}
       .console-status
-        #spice-status.col-md-7.label{'data-host' => record_name}
+        #spice-status.label{'data-host' => record_name}
           = _("Connecting (unencrypted) to: %s") % record_name
 
       #spice-screen.console-screen

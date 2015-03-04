@@ -12,7 +12,7 @@
     = link_to('Ctrl-Alt-Del', '#', :id => 'sendCtrlAltDelButton', :class => 'btn btn-default')
     #vnc{'data-host' => proxy_host, 'data-port' => proxy_port, 'data-password' => password, 'data-encrypt' => encrypt}
       #noVNC_status_bar.console-status
-        #noVNC_status.col-md-7.label
+        #noVNC_status.label
           = _('Loading ...')
 
     %canvas#noVNC_canvas.console-screen
