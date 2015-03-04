@@ -1888,7 +1888,7 @@ class ApplicationController < ActionController::Base
 
     # Build sorting keys - Use association name, if available, else dbname
     # need to add check for miqreportresult, need to use different sort in savedreports/report tree for saved reports list
-    sort_prefix = association ? association : (dbname == "miqreportresult" && x_active_tree ? x_active_tree.to_s : dbname)
+    sort_prefix = association || (dbname == "miqreportresult" && x_active_tree ? x_active_tree.to_s : dbname)
     sortcol_sym = "#{sort_prefix}_sortcol".to_sym
     sortdir_sym = "#{sort_prefix}_sortdir".to_sym
 
