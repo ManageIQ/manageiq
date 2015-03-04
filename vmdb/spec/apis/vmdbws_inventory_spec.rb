@@ -7,6 +7,7 @@ describe VmdbwsController, :apis => true do
 
     super_role   = FactoryGirl.create(:ui_task_set, :name => 'super_administrator2', :description => 'Super Administrator')
     @admin       = FactoryGirl.create(:user, :name => 'admin',            :userid => 'admin2',    :ui_task_set_id => super_role.id)
+    ApplicationController.any_instance.stub(:set_user_time_zone)
 
     ::UiConstants
     @controller = VmdbwsController.new
@@ -37,25 +38,460 @@ describe VmdbwsController, :apis => true do
     result.each {|ver| ver.should be_kind_of(String)}
   end
 
+  #ems
+  it 'should return a list of all Management Systems' do
+    _guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+    FactoryGirl.create(:ems_vmware)
+
+    result = invoke(:GetEmsList)
+    ems = invoke(:GetEmsByList, result)
+    validate_ci_list(result, VmdbwsSupport::EmsList)
+    ems.should have(ExtManagementSystem.count).things
+    result.should have(ExtManagementSystem.count).things
+    ems.first.ws_attributes.count.should == get_ws_attribute_count(ExtManagementSystem)
+  end
+
+  it 'should return Management information for FindEmsByGuid' do
+    _guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+    FactoryGirl.create(:ems_vmware)
+
+    db_ems = ExtManagementSystem.first
+    ems = invoke(:FindEmsByGuid,db_ems.guid)
+    ems.guid.should == db_ems.guid
+  end
+
+  it 'should raise an error for invalid ems guid for FindEmsByGuid' do
+    lambda {invoke(:FindEmsByGuid,"1234")}.should raise_error(RuntimeError)
+  end
+
+  it 'should raise an error for invalid ems guid for EmsGetTags' do
+    lambda {invoke(:EmsGetTags,"1234")}.should raise_error(RuntimeError)
+  end
+
+  it "should be able to get and set ems tags" do
+    _guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+    FactoryGirl.create(:ems_vmware)
+
+    FactoryGirl.create(:classification_cost_center_with_tags)
+    ems = ExtManagementSystem.first
+    invoke(:EmsGetTags, ems.guid).should == []
+    invoke(:EmsSetTag, ems.guid, "cc", "001" )
+    res = invoke(:EmsGetTags, ems.guid)
+    res.should have(1).thing
+    result = res.first
+    result.tag_name.should == "001"
+    result.display_name.should == "Cost Center: Cost Center 001"
+    result.tag_path.should == "/managed/cc/001"
+    result.category.should == "cc"
+    result.tag_display_name.should == "Cost Center 001"
+  end
+
+  #hosts
+  it 'should return a list of all Hosts' do
+    FactoryGirl.create(:host_vmware)
+    result = invoke(:GetHostList,'*')
+    hosts = invoke(:GetHostsByList, result)
+    validate_ci_list(result, VmdbwsSupport::HostList)
+    hosts.should have(Host.count).things
+    result.should have(Host.count).things
+  end
+
+  it 'should return Host ws attributes' do
+    ems = FactoryGirl.create(:ems_vmware)
+    FactoryGirl.create(:host_vmware, :ext_management_system => ems)
+    ems_list = invoke(:GetEmsList)
+    result = invoke(:GetHostList, ems.guid)
+    hosts = invoke(:GetHostsByList, result)
+    hosts.first.ws_attributes.count.should == get_ws_attribute_count(Host)
+  end
+
+  it 'should return hardware information for a host' do
+    ems  = FactoryGirl.create(:ems_vmware)
+    hardware = FactoryGirl.create(:hardware, :numvcpus => '2', :memory_cpu => '1234')
+    host = FactoryGirl.create(:host_vmware, :ext_management_system => ems, :hardware => hardware)
+    ems_list = invoke(:GetEmsList)
+    result = invoke(:GetHostList, ems.guid)
+    hosts = invoke(:GetHostsByList, result)
+    host = hosts.first
+    host.hardware.should_not be_nil
+    host.hardware.numvcpus.to_i.should == 2
+    host.hardware.memory_cpu.to_i.should == 1234
+  end
+
+  it 'should return Host information' do
+    host = FactoryGirl.create(:host_vmware)
+    hosts = invoke(:GetHostList,'*')
+    h = invoke(:EVM_get_host, hosts.first.guid)
+    validate_ci_list(hosts, VmdbwsSupport::HostList)
+    h.guid.should == host.guid
+  end
+
+  it 'should return Host information for FindHostByGuid' do
+    hardware = FactoryGirl.create(:hardware, :numvcpus => '2', :memory_cpu => '1234')
+    host = FactoryGirl.create(:host_vmware, :hardware => hardware)
+
+    host = invoke(:FindHostByGuid,host.guid)
+    host.hardware.should be_kind_of(VmdbwsSupport::ProxyHardware)
+    host.hardware.id.should == host.hardware.id.to_s
+  end
+
+  it 'should raise an error for invalid host guid for FindHostByGuid' do
+    lambda {invoke(:FindHostByGuid,"1234")}.should raise_error(RuntimeError)
+  end
+
+  it 'should raise an error for invalid host guid for HostGetTags' do
+    lambda {invoke(:HostGetTags,"1234")}.should raise_error(RuntimeError)
+  end
+
+  #clusters
+  it 'should return a list of all Clusters' do
+    FactoryGirl.create(:ems_cluster)
+    result = invoke(:GetClusterList, '*')
+    clusters = invoke(:GetClustersByList,result)
+    validate_ci_list(result, VmdbwsSupport::ClusterList, '@id')
+    result.should have(1).things
+    clusters.should have(1).things
+  end
+
+  it 'should return Cluster information using old style EVM methods' do
+    cluster = FactoryGirl.create(:ems_cluster)
+    result = invoke(:EVM_cluster_list, '*')
+    validate_ci_list(result, VmdbwsSupport::ClusterList, '@id')
+    result.should have(1).things
+    cluster = invoke(:EVM_get_cluster, cluster.id)
+    cluster.name.should == result.first.name
+  end
+
+  it 'should return Cluster ws attributes' do
+    FactoryGirl.create(:ems_cluster)
+    result = invoke(:GetClusterList, '*')
+    result.should have(1).things
+    clusters = invoke(:GetClustersByList,result)
+    clusters.first.ws_attributes.count.should == get_ws_attribute_count(EmsCluster)
+  end
+
+  it 'should return a list of Clusters for an EMS' do
+    ems  = FactoryGirl.create(:ems_vmware)
+    cluster = FactoryGirl.create(:ems_cluster, :ext_management_system => ems)
+    result = invoke(:GetClusterList, ems.guid)
+    result.should have(1).things
+  end
+
+  it 'should return tagged Clusters' do
+    cluster = FactoryGirl.create(:ems_cluster)
+    cluster.tag_with("/managed/cc/test", :ns=>"*")
+    EmsCluster.find_tagged_with(:all => 'cc/test', :ns => '/managed').all.should have(1).thing
+    invoke(:GetClustersByTag, "cc/test").should have(1).thing
+  end
+
+  it 'should return Cluster information for FindClusterById' do
+    ems  = FactoryGirl.create(:ems_vmware)
+    new_cluster = FactoryGirl.create(:ems_cluster, :ext_management_system => ems)
+    all_clusters = invoke(:FindClustersById,[new_cluster.id])
+    all_clusters.should have(1).things
+    cluster = invoke(:FindClusterById,new_cluster.id)
+    cluster.ext_management_system.guid.should == ems.guid
+  end
+
+  it 'should raise an error for invalid cluster id for FindClusterById' do
+    lambda {invoke(:FindClustersById, ["1234"])}.should raise_error(RuntimeError)
+  end
+
+  it 'should raise an error for invalid cluster id for ClusterGetTags' do
+    lambda {invoke(:ClusterGetTags,"1234")}.should raise_error(RuntimeError)
+  end
+
+  #resource_pools
+  it 'should return a list of all Resource Pools' do
+    cluster = FactoryGirl.create(:ems_cluster)
+    pool = FactoryGirl.create(:resource_pool)
+    pool.set_parent(cluster)
+    result = invoke(:GetResourcePoolList, '*')
+    resource_pools = invoke(:GetResourcePoolsByList,result)
+    validate_ci_list(result, VmdbwsSupport::ResourcePoolList,'@id')
+    result.should have(1).things
+    resource_pools.should have(1).things
+  end
+
+  it 'should return Resource Pool information using old style EVM methods' do
+    cluster = FactoryGirl.create(:ems_cluster)
+    pool = FactoryGirl.create(:resource_pool)
+    pool.set_parent(cluster)
+    result = invoke(:EVM_resource_pool_list, '*')
+    validate_ci_list(result, VmdbwsSupport::ResourcePoolList, '@id')
+    result.should have(1).things
+    resourcepool = invoke(:EVM_get_resource_pool, result.first.id)
+    resourcepool.name.should == result.first.name
+  end
+
+  it 'should return Resource Pool ws attributes' do
+    cluster = FactoryGirl.create(:ems_cluster)
+    pool = FactoryGirl.create(:resource_pool)
+    pool.set_parent(cluster)
+    result = invoke(:GetResourcePoolList, '*')
+    result.should have(1).things
+    resourcepools = invoke(:GetResourcePoolsByList,result)
+    resourcepools.first.ws_attributes.count.should == get_ws_attribute_count(ResourcePool)
+  end
+
+  it 'should return a list of all Resource Pools for a given ems' do
+    ems = FactoryGirl.create(:ems_vmware)
+    cluster = FactoryGirl.create(:ems_cluster)
+    pool = FactoryGirl.create(:resource_pool, :ext_management_system => ems)
+    pool.set_parent(cluster)
+    result = invoke(:GetResourcePoolList, ems.guid)
+    resource_pools = invoke(:GetResourcePoolsByList,result)
+    resource_pools.should have(1).things
+  end
+
+  it 'should return tagged Resource Pools' do
+    cluster = FactoryGirl.create(:ems_cluster)
+    pool = FactoryGirl.create(:resource_pool)
+    pool.set_parent(cluster)
+
+    pool.tag_with("/managed/cc/test", :ns=>"*")
+    ResourcePool.find_tagged_with(:all => 'cc/test', :ns => '/managed').all.should have(1).thing
+    invoke(:GetResourcePoolsByTag, "cc/test").should have(1).thing
+  end
+
+  it 'should return Resource Pool information for FindResourcePoolById' do
+    cluster = FactoryGirl.create(:ems_cluster)
+    pool = FactoryGirl.create(:resource_pool)
+    pool.set_parent(cluster)
+
+    pools = invoke(:FindResourcePoolsById,[pool.id])
+    pools.should have(1).things
+    resource_pool = invoke(:FindResourcePoolById, pool.id)
+    resource_pool.id.to_i.should == pool.id
+  end
+
+  it 'should raise an error for invalid resource pool id for FindResourcePoolById' do
+    lambda {invoke(:FindResourcePoolsById, ["1234"])}.should raise_error(RuntimeError)
+  end
+
+  it 'should raise an error for invalid resource pool id for ResourcePoolGetTags' do
+    lambda {invoke(:ResourcePoolGetTags, "1234")}.should raise_error(RuntimeError)
+  end
+
+  it "should be able to get and set resourcepool tags" do
+    cluster = FactoryGirl.create(:ems_cluster)
+    pool = FactoryGirl.create(:resource_pool)
+    pool.set_parent(cluster)
+
+    FactoryGirl.create(:classification_cost_center_with_tags)
+
+    invoke(:ResourcePoolGetTags, pool.id).should == []
+    invoke(:ResourcePoolSetTag, pool.id, "cc", "001" )
+    res = invoke(:ResourcePoolGetTags, pool.id)
+    res.should have(1).thing
+    result = res.first
+    result.tag_name.should == "001"
+    result.display_name.should == "Cost Center: Cost Center 001"
+    result.tag_path.should == "/managed/cc/001"
+    result.category.should == "cc"
+    result.tag_display_name.should == "Cost Center 001"
+  end
+
+  #datastores
+  it 'should return a list of all Datastores' do
+    FactoryGirl.create(:storage)
+    result = invoke(:GetDatastoreList, '*')
+    datastores = invoke(:GetDatastoresByList,result)
+    validate_ci_list(result, VmdbwsSupport::DatastoreList,'@id')
+    result.should have(1).things
+    datastores.should have(1).things
+  end
+
+  it 'should return a list of Datastores for an ems' do
+    ems = FactoryGirl.create(:ems_vmware)
+    host = FactoryGirl.create(:host_vmware, :ext_management_system => ems)
+    storage = FactoryGirl.create(:storage)
+    storage.hosts << host
+
+    result = invoke(:GetDatastoreList, ems.guid)
+    datastores = invoke(:GetDatastoresByList,result)
+    validate_ci_list(result, VmdbwsSupport::DatastoreList,'@id')
+    result.should have(1).things
+  end
+
+  it 'should return Datastore information using old style EVM methods' do
+    FactoryGirl.create(:storage)
+    result = invoke(:EVM_datastore_list, '*')
+    validate_ci_list(result, VmdbwsSupport::DatastoreList, '@id')
+    result.should have(1).things
+    datastore = invoke(:EVM_get_datastore, result.first.id)
+    datastore.name.should == result.first.name
+  end
+
+  it 'should return Datastore ws attributes' do
+    FactoryGirl.create(:storage)
+    result = invoke(:GetDatastoreList, '*')
+    result.should have(1).things
+    datastores = invoke(:GetDatastoresByList,result)
+    datastores.first.ws_attributes.count.should == get_ws_attribute_count(Storage)
+  end
+
+  it 'should return tagged Datastores' do
+    datastore = FactoryGirl.create(:storage)
+    datastore.tag_with("/managed/cc/test", :ns=>"*")
+    Storage.find_tagged_with(:all => 'cc/test', :ns => '/managed').all.should have(1).thing
+    invoke(:GetDatastoresByTag, "cc/test").should have(1).thing
+  end
+
+  it 'should return Datastore information for FindDatastoreById' do
+    db_datastore = FactoryGirl.create(:storage)
+    all_datastores = invoke(:FindDatastoresById, [db_datastore.id])
+    all_datastores.should have(1).things
+
+    datastore = invoke(:FindDatastoreById, db_datastore.id)
+    datastore.id.to_i.should == db_datastore.id
+  end
+
+  it 'should raise an error for invalid datastore id for FindDatastoresById' do
+    lambda {invoke(:FindDatastoresById, ["1234"])}.should raise_error(RuntimeError)
+  end
+
+  it 'should raise an error for invalid datastore id for DatastoreGetTags' do
+    lambda {invoke(:DatastoreGetTags,"1234")}.should raise_error(RuntimeError)
+  end
+
+  it "should be able to get and set datastore tags" do
+    FactoryGirl.create(:classification_cost_center_with_tags)
+
+    datastore = FactoryGirl.create(:storage)
+    invoke(:DatastoreGetTags, datastore.id).should == []
+    invoke(:DatastoreSetTag, datastore.id, "cc", "001" )
+    res = invoke(:DatastoreGetTags, datastore.id)
+    res.should have(1).thing
+    result = res.first
+    result.tag_name.should == "001"
+    result.display_name.should == "Cost Center: Cost Center 001"
+    result.tag_path.should == "/managed/cc/001"
+    result.category.should == "cc"
+    result.tag_display_name.should == "Cost Center 001"
+  end
+
+  #vms
+  it 'should return a list of all VMs' do
+    FactoryGirl.create(:vm_vmware)
+    result = invoke(:EVM_vm_list, '*')
+    validate_ci_list(result, VmdbwsSupport::VmList)
+    result.should have(1).things
+    result = invoke(:EVM_vm_list, 'all')
+    validate_ci_list(result, VmdbwsSupport::VmList)
+    result.should have(1).things
+    result = invoke(:EVM_vm_list, 'none')
+    validate_ci_list(result, VmdbwsSupport::VmList)
+    result.should have(1).things
+  end
+
+  it 'should return VM ws attributes' do
+    FactoryGirl.create(:vm_vmware)
+    result = invoke(:EVM_vm_list, '*')
+    vms = invoke(:GetVmsByList,result)
+    vms.first.ws_attributes.count.should == get_ws_attribute_count(Vm)
+  end
+
+  it 'should return a list of VMs for a single host' do
+    db_host = FactoryGirl.create(:host_vmware)
+    db_vm = FactoryGirl.create(:vm_vmware, :host => db_host)
+
+    hosts = invoke(:EVM_host_list)
+    host = hosts.first
+    result = invoke(:EVM_vm_list, db_host.guid)
+    validate_ci_list(result, VmdbwsSupport::VmList)
+    result.should have(1).things
+  end
+
+  it 'should return hardware information for a VM' do
+    hardware = FactoryGirl.create(:hardware, :numvcpus => '2', :memory_cpu => '1234')
+    FactoryGirl.create(:vm_vmware, :hardware => hardware)
+
+    result = invoke(:GetVmList, "*")
+    vm = invoke(:GetVmsByList, result).first
+    vm.hardware.should_not be_nil
+    vm.hardware.numvcpus.to_i.should == 2
+    vm.hardware.memory_cpu.to_i.should == 1234
+  end
+
+  it 'should return tagged VMs' do
+    vm = FactoryGirl.create(:vm_vmware)
+    template = FactoryGirl.create(:miq_template, :name => "template", :location => "abc/abc.vmtx", :template => true, :vendor => "vmware")
+    Vm.find_tagged_with(:all => 'cc/001', :ns => '/managed').all.should be_empty
+    invoke(:GetVmsByTag, "cc/001").should be_empty
+    vm.tag_with("/managed/cc/001", :ns=>"*")
+    Vm.find_tagged_with(:all => 'cc/001', :ns => '/managed').all.should have(1).thing
+    invoke(:GetVmsByTag, "cc/001").should have(1).thing
+    # In v 4.x templates are returned with VMs
+    template.tag_with("/managed/cc/001", :ns=>"*")
+    Vm.find_tagged_with(:all => 'cc/001', :ns => '/managed').all.should have(1).thing
+    invoke(:GetVmsByTag, "cc/001").should have(1).thing
+  end
+
+  it "should be able to get and set vm tags" do
+    FactoryGirl.create(:classification_cost_center_with_tags)
+
+    vm = FactoryGirl.create(:vm_vmware)
+    invoke(:VmGetTags, vm.guid).should == []
+    invoke(:VmSetTag, vm.guid, "cc", "001")
+    res = invoke(:VmGetTags, vm.guid)
+    res.should have(1).thing
+    result = res.first
+    result.tag_name.should == "001"
+    result.display_name.should == "Cost Center: Cost Center 001"
+    result.tag_path.should == "/managed/cc/001"
+    result.category.should == "cc"
+    result.tag_display_name.should == "Cost Center 001"
+  end
+
+  it "invoke :VmGetTags" do
+    vm = FactoryGirl.create(:vm_vmware)
+    invoke(:VmGetTags, vm.guid).should == []
+
+    cl = FactoryGirl.create(:classification, :name => "one", :description => "two")
+    vm.tag_with(cl.tag.name, :ns=>"*")
+    res = invoke(:VmGetTags, vm.guid)
+
+    res.should have(1).thing
+    result = res.first
+    result.tag_name.should == "one"
+    result.display_name.should == "two: two"
+    result.tag_path.should == "/managed/one"
+    result.category.should == "one"
+    result.tag_display_name.should == "two"
+  end
+
+  it "should be able to get and set cluster tags" do
+    FactoryGirl.create(:classification_cost_center_with_tags)
+    cluster = FactoryGirl.create(:ems_cluster)
+
+    invoke(:ClusterGetTags, cluster.id).should == []
+    invoke(:ClusterSetTag, cluster.id, "cc", "001" )
+    res = invoke(:ClusterGetTags, cluster.id)
+    res.should have(1).thing
+    result = res.first
+    result.tag_name.should == "001"
+    result.display_name.should == "Cost Center: Cost Center 001"
+    result.tag_path.should == "/managed/cc/001"
+    result.category.should == "cc"
+    result.tag_display_name.should == "Cost Center 001"
+  end
+
+  it 'should return tagged Templates' do
+    vm = FactoryGirl.create(:vm_vmware)
+    template = FactoryGirl.create(:miq_template, :name => "template", :location => "abc/abc.vmtx", :template => true, :vendor => "vmware")
+
+    MiqTemplate.find_tagged_with(:all => 'cc/001', :ns => '/managed').all.should be_empty
+    invoke(:GetTemplatesByTag, "cc/001").should be_empty
+    vm.tag_with("/managed/cc/001", :ns=>"*")
+    invoke(:GetTemplatesByTag, "cc/001").should be_empty
+    template.tag_with("/managed/cc/001", :ns=>"*")
+    invoke(:GetTemplatesByTag, "cc/001").should have(1).things
+  end
+
   context "With a small environment containing a cluster with resource pools" do
     before(:each) do
-      @zone1 = FactoryGirl.create(:small_environment_cluster_with_resource_pools)
-    end
-
-    #ems
-    it 'should return a list of all Management Systems' do
-      result = invoke(:GetEmsList)
-      ems = invoke(:GetEmsByList, result)
-      validate_ci_list(result, VmdbwsSupport::EmsList)
-      ems.should have(ExtManagementSystem.count).things
-      result.should have(ExtManagementSystem.count).things
-    end
-
-    it 'should return Management System ws attributes ' do
-      result = invoke(:GetEmsList)
-      result.should have(ExtManagementSystem.count).things
-      ems = invoke(:GetEmsByList, result)
-      ems.first.ws_attributes.count.should == get_ws_attribute_count(ExtManagementSystem)
+      FactoryGirl.create(:small_environment_cluster_with_resource_pools)
     end
 
     it 'should return Management Systems relationships' do
@@ -82,106 +518,6 @@ describe VmdbwsController, :apis => true do
       ems.datastores.first.id.should == Storage.first.id.to_s
     end
 
-    it 'should return Management information for FindEmsByGuid' do
-      db_ems = ExtManagementSystem.first
-      ems = invoke(:FindEmsByGuid,db_ems.guid)
-      ems.guid.should == db_ems.guid
-    end
-
-    it 'should raise an error for invalid ems guid for FindEmsByGuid' do
-      lambda {invoke(:FindEmsByGuid,"1234")}.should raise_error(RuntimeError)
-    end
-
-    it 'should not raise error for valid ems guid for FindEmsByGuid' do
-      lambda {invoke(:FindEmsByGuid,ExtManagementSystem.first.guid)}.should_not raise_error
-    end
-
-    it 'should raise an error for invalid ems guid for EmsGetTags' do
-      lambda {invoke(:EmsGetTags,"1234")}.should raise_error(RuntimeError)
-    end
-
-    it "should be able to get and set ems tags" do
-      FactoryGirl.create(:classification_cost_center_with_tags)
-
-      ems = ExtManagementSystem.first
-      invoke(:EmsGetTags, ems.guid).should == []
-      invoke(:EmsSetTag, ems.guid, "cc", "001" )
-      res = invoke(:EmsGetTags, ems.guid)
-      res.should have(1).thing
-      result = res.first
-      result.tag_name.should == "001"
-      result.display_name.should == "Cost Center: Cost Center 001"
-      result.tag_path.should == "/managed/cc/001"
-      result.category.should == "cc"
-      result.tag_display_name.should == "Cost Center 001"
-    end
-
-
-    #hosts
-    it 'should return a list of all Hosts' do
-      result = invoke(:GetHostList,'*')
-      hosts = invoke(:GetHostsByList, result)
-      validate_ci_list(result, VmdbwsSupport::HostList)
-      hosts.should have(Host.count).things
-      result.should have(Host.count).things
-    end
-
-    it 'should return Host ws attributes' do
-      ems_list = invoke(:GetEmsList)
-      result = invoke(:GetHostList,ems_list.last.guid)
-      hosts = invoke(:GetHostsByList, result)
-      hosts.first.ws_attributes.count.should == get_ws_attribute_count(Host)
-    end
-
-    it 'should not return hardware information for a host' do
-      ems_list = invoke(:GetEmsList)
-      result = invoke(:GetHostList,ems_list.last.guid)
-      hosts = invoke(:GetHostsByList, result)
-      host = hosts.first
-      hosts.first.hardware.should be_nil
-    end
-
-    it 'should return hardware information for a host' do
-      ems_list = invoke(:GetEmsList)
-      result = invoke(:GetHostList,ems_list.last.guid)
-      hosts = invoke(:GetHostsByList, result)
-      h = Host.find_by_id(hosts.first.id)
-      h.hardware = FactoryGirl.create(:hardware, :numvcpus => '2', :memory_cpu => '1234')
-      h.save
-      hosts = invoke(:GetHostsByList, result)
-      host = hosts.first
-      host.hardware.should_not be_nil
-      host.hardware.numvcpus.to_i.should == 2
-      host.hardware.memory_cpu.to_i.should == 1234
-    end
-
-    it 'should return Host information' do
-      hosts = invoke(:GetHostList,'*')
-      host_info = invoke(:EVM_get_host, hosts.first.guid)
-      validate_ci_list(hosts, VmdbwsSupport::HostList)
-    end
-
-    it 'should return Host information for FindHostByGuid' do
-      db_host = Host.first
-      db_host.hardware = FactoryGirl.create(:hardware, :numvcpus => '2', :memory_cpu => '1234')
-      db_host.save
-      host = invoke(:FindHostByGuid,db_host.guid)
-      host.hardware.should be_kind_of(VmdbwsSupport::ProxyHardware)
-      host.hardware.id.should == db_host.hardware.id.to_s
-    end
-
-    it 'should raise an error for invalid host guid for FindHostByGuid' do
-      lambda {invoke(:FindHostByGuid,"1234")}.should raise_error(RuntimeError)
-    end
-
-    it 'should not raise error for valid host guid for FindHostByGuid' do
-      lambda {invoke(:FindHostByGuid,Host.first.guid)}.should_not raise_error
-    end
-
-    it 'should raise an error for invalid host guid for HostGetTags' do
-      lambda {invoke(:HostGetTags,"1234")}.should raise_error(RuntimeError)
-    end
-
     it 'should return Host relationships' do
       ems_list = invoke(:GetEmsList)
       result = invoke(:GetHostList,ems_list.last.guid)
@@ -200,45 +536,6 @@ describe VmdbwsController, :apis => true do
       host.parent_cluster.should be_kind_of(VmdbwsSupport::ClusterList)
       host.parent_cluster.id.should == db_host.parent_cluster.id.to_s
       host.resource_pools.should be_empty
-    end
-
-    #clusters
-    it 'should return a list of all Clusters' do
-      result = invoke(:GetClusterList, '*')
-      clusters = invoke(:GetClustersByList,result)
-      validate_ci_list(result, VmdbwsSupport::ClusterList, '@id')
-      result.should have(EmsCluster.count).things
-      clusters.should have(EmsCluster.count).things
-    end
-
-    it 'should return Cluster information using old style EVM methods' do
-      result = invoke(:EVM_cluster_list, '*')
-      validate_ci_list(result, VmdbwsSupport::ClusterList, '@id')
-      result.should have(EmsCluster.count).things
-      cluster = invoke(:EVM_get_cluster, result.first.id)
-      cluster.name.should == result.first.name
-    end
-
-    it 'should return Cluster ws attributes' do
-      result = invoke(:GetClusterList, '*')
-      result.should have(EmsCluster.count).things
-      clusters = invoke(:GetClustersByList,result)
-      clusters.first.ws_attributes.count.should == get_ws_attribute_count(EmsCluster)
-    end
-
-    it 'should return a list of Clusters for an EMS' do
-      cluster = EmsCluster.first
-      ems = ExtManagementSystem.find_by_id(cluster.ems_id)
-      count = EmsCluster.count(:conditions => {:ems_id => cluster.ems_id})
-      result = invoke(:GetClusterList, ems.guid)
-      result.should have(count).things
-    end
-
-    it 'should return tagged Clusters' do
-      cluster = EmsCluster.first
-      cluster.tag_with("/managed/cc/test", :ns=>"*")
-      EmsCluster.find_tagged_with(:all => 'cc/test', :ns => '/managed').all.should have(1).thing
-      invoke(:GetClustersByTag, "cc/test").should have(1).thing
     end
 
     it 'should return Cluster relationships' do
@@ -265,67 +562,6 @@ describe VmdbwsController, :apis => true do
       cluster.datastores.count.should == db_cluster.storages.count
     end
 
-    it 'should return Cluster information for FindClusterById' do
-      new_cluster =  FactoryGirl.create(:ems_cluster,   :name => "cluster 2")
-      all_cluster_ids = EmsCluster.find(:all).collect(&:id)
-      all_clusters = invoke(:FindClustersById,all_cluster_ids)
-      all_clusters.should have(EmsCluster.count).things
-      db_cluster = EmsCluster.first
-      cluster = invoke(:FindClusterById,db_cluster.id)
-      cluster.ext_management_system.guid.should == db_cluster.ext_management_system.guid
-    end
-
-    it 'should raise an error for invalid cluster id for FindClusterById' do
-      lambda {invoke(:FindClustersById, ["1234"])}.should raise_error(RuntimeError)
-    end
-
-    it 'should not raise error for valid cluster id for FindClusterById' do
-      lambda {invoke(:FindClustersById,EmsCluster.first.id)}.should_not raise_error
-    end
-
-    it 'should raise an error for invalid cluster id for ClusterGetTags' do
-      lambda {invoke(:ClusterGetTags,"1234")}.should raise_error(RuntimeError)
-    end
-
-    #resource_pools
-    it 'should return a list of all Resource Pools' do
-      result = invoke(:GetResourcePoolList, '*')
-      resource_pools = invoke(:GetResourcePoolsByList,result)
-      validate_ci_list(result, VmdbwsSupport::ResourcePoolList,'@id')
-      result.should have(ResourcePool.count).things
-      resource_pools.should have(ResourcePool.count).things
-    end
-
-    it 'should return Resource Pool information using old style EVM methods' do
-      result = invoke(:EVM_resource_pool_list, '*')
-      validate_ci_list(result, VmdbwsSupport::ResourcePoolList, '@id')
-      result.should have(ResourcePool.count).things
-      resourcepool = invoke(:EVM_get_resource_pool, result.first.id)
-      resourcepool.name.should == result.first.name
-    end
-
-    it 'should return Resource Pool ws attributes' do
-      result = invoke(:GetResourcePoolList, '*')
-      result.should have(ResourcePool.count).things
-      resourcepools = invoke(:GetResourcePoolsByList,result)
-      resourcepools.first.ws_attributes.count.should == get_ws_attribute_count(ResourcePool)
-    end
-
-    it 'should return a list of all Resource Pools for a given ems' do
-      ems = ExtManagementSystem.first
-      result = invoke(:GetResourcePoolList, ems.guid)
-      resource_pools = invoke(:GetResourcePoolsByList,result)
-      count = ResourcePool.count(:conditions => {:ems_id => ems.id})
-      resource_pools.should have(count).things
-    end
-
-    it 'should return tagged Resource Pools' do
-      resource_pool = ResourcePool.first
-      resource_pool.tag_with("/managed/cc/test", :ns=>"*")
-      ResourcePool.find_tagged_with(:all => 'cc/test', :ns => '/managed').all.should have(1).thing
-      invoke(:GetResourcePoolsByTag, "cc/test").should have(1).thing
-    end
-
     it 'should return Resource Pool relationships' do
       result = invoke(:GetResourcePoolList, '*')
       resource_pools = invoke(:GetResourcePoolsByList,result)
@@ -339,83 +575,6 @@ describe VmdbwsController, :apis => true do
       db_cluster = EmsCluster.find_by_id(resource_pool.parent_cluster.id)
       resource_pool.parent_cluster.id.should == db_cluster.id.to_s
       resource_pool.parent_cluster.should be_kind_of(VmdbwsSupport::ClusterList)
-    end
-
-    it 'should return Resource Pool information for FindResourcePoolById' do
-      all_resource_pool_ids = ResourcePool.find(:all).collect(&:id)
-      all_resource_pools = invoke(:FindResourcePoolsById,all_resource_pool_ids)
-      all_resource_pools.should have(ResourcePool.count).things
-      db_resource_pool = ResourcePool.first
-      resource_pool = invoke(:FindResourcePoolById,db_resource_pool.id)
-      resource_pool.vms.count.should == db_resource_pool.vms.count
-    end
-
-    it 'should raise an error for invalid resource pool id for FindResourcePoolById' do
-      lambda {invoke(:FindResourcePoolsById, ["1234"])}.should raise_error(RuntimeError)
-    end
-
-    it 'should not raise error for valid resource pool id for FindResourcePoolById' do
-      lambda {invoke(:FindResourcePoolsById, ResourcePool.first.id)}.should_not raise_error
-    end
-
-    it 'should raise an error for invalid resource pool id for ResourcePoolGetTags' do
-      lambda {invoke(:ResourcePoolGetTags, "1234")}.should raise_error(RuntimeError)
-    end
-
-    it "should be able to get and set resourcepool tags" do
-      FactoryGirl.create(:classification_cost_center_with_tags)
-
-      resourcepool = ResourcePool.first
-      invoke(:ResourcePoolGetTags, resourcepool.id).should == []
-      invoke(:ResourcePoolSetTag, resourcepool.id, "cc", "001" )
-      res = invoke(:ResourcePoolGetTags, resourcepool.id)
-      res.should have(1).thing
-      result = res.first
-      result.tag_name.should == "001"
-      result.display_name.should == "Cost Center: Cost Center 001"
-      result.tag_path.should == "/managed/cc/001"
-      result.category.should == "cc"
-      result.tag_display_name.should == "Cost Center 001"
-    end
-
-    #datastores
-    it 'should return a list of all Datastores' do
-      result = invoke(:GetDatastoreList, '*')
-      datastores = invoke(:GetDatastoresByList,result)
-      validate_ci_list(result, VmdbwsSupport::DatastoreList,'@id')
-      result.should have(Storage.count).things
-      datastores.should have(Storage.count).things
-    end
-
-    it 'should return a list of Datastores for an ems' do
-      storages = FactoryGirl.create(:storage, :name => "storage 3", :store_type => "VMFS")
-      ems = ExtManagementSystem.first
-      result = invoke(:GetDatastoreList, ems.guid)
-      datastores = invoke(:GetDatastoresByList,result)
-      validate_ci_list(result, VmdbwsSupport::DatastoreList,'@id')
-      result.should have(datastores.count).things
-    end
-
-    it 'should return Datastore information using old style EVM methods' do
-      result = invoke(:EVM_datastore_list, '*')
-      validate_ci_list(result, VmdbwsSupport::DatastoreList, '@id')
-      result.should have(Storage.count).things
-      datastore = invoke(:EVM_get_datastore, result.first.id)
-      datastore.name.should == result.first.name
-    end
-
-    it 'should return Datastore ws attributes' do
-      result = invoke(:GetDatastoreList, '*')
-      result.should have(Storage.count).things
-      datastores = invoke(:GetDatastoresByList,result)
-      datastores.first.ws_attributes.count.should == get_ws_attribute_count(Storage)
-    end
-
-    it 'should return tagged Datastores' do
-      datastore = Storage.first
-      datastore.tag_with("/managed/cc/test", :ns=>"*")
-      Storage.find_tagged_with(:all => 'cc/test', :ns => '/managed').all.should have(1).thing
-      invoke(:GetDatastoresByTag, "cc/test").should have(1).thing
     end
 
     it 'should return Datastore relationships' do
@@ -434,168 +593,6 @@ describe VmdbwsController, :apis => true do
       datastore.hosts.first.guid.should == Host.first.guid.to_s
       datastore.ext_management_systems.first.should be_kind_of(VmdbwsSupport::EmsList)
       datastore.ext_management_systems.first.guid.should == ExtManagementSystem.first.guid.to_s
-    end
-
-    it 'should return Datastore information for FindDatastoreById' do
-      all_storage_ids = Storage.find(:all).collect(&:id)
-      all_datastores = invoke(:FindDatastoresById,all_storage_ids)
-      all_datastores.should have(Storage.count).things
-      db_storage = Storage.first
-      datastore = invoke(:FindDatastoreById,db_storage.id)
-      datastore.vms.count.should == db_storage.vms.count
-    end
-
-    it 'should raise an error for invalid datastore id for FindDatastoresById' do
-      lambda {invoke(:FindDatastoresById, ["1234"])}.should raise_error(RuntimeError)
-    end
-
-    it 'should not raise error for valid datastore id for FindDatastoresById' do
-      lambda {invoke(:FindDatastoresById,Storage.first.id)}.should_not raise_error
-    end
-
-    it 'should raise an error for invalid datastore id for DatastoreGetTags' do
-      lambda {invoke(:DatastoreGetTags,"1234")}.should raise_error(RuntimeError)
-    end
-
-    it "should be able to get and set datastore tags" do
-      FactoryGirl.create(:classification_cost_center_with_tags)
-
-      datastore = Storage.first
-      invoke(:DatastoreGetTags, datastore.id).should == []
-      invoke(:DatastoreSetTag, datastore.id, "cc", "001" )
-      res = invoke(:DatastoreGetTags, datastore.id)
-      res.should have(1).thing
-      result = res.first
-      result.tag_name.should == "001"
-      result.display_name.should == "Cost Center: Cost Center 001"
-      result.tag_path.should == "/managed/cc/001"
-      result.category.should == "cc"
-      result.tag_display_name.should == "Cost Center 001"
-    end
-
-
-    #vms
-    it 'should return a list of all VMs' do
-      vm_count = Vm.count
-      result = invoke(:EVM_vm_list, '*')
-      validate_ci_list(result, VmdbwsSupport::VmList)
-      result.should have(vm_count).things
-      result = invoke(:EVM_vm_list, 'all')
-      validate_ci_list(result, VmdbwsSupport::VmList)
-      result.should have(vm_count).things
-      result = invoke(:EVM_vm_list, 'none')
-      validate_ci_list(result, VmdbwsSupport::VmList)
-      result.should have(vm_count).things
-    end
-
-    it 'should return VM ws attributes' do
-      vm_count = Vm.count
-      result = invoke(:EVM_vm_list, '*')
-      vms = invoke(:GetVmsByList,result)
-      vms.first.ws_attributes.count.should == get_ws_attribute_count(Vm)
-    end
-
-    it 'should return a list of VMs for a single host' do
-      hosts = invoke(:EVM_host_list)
-      host = hosts.first
-      result = invoke(:EVM_vm_list, host.guid)
-      validate_ci_list(result, VmdbwsSupport::VmList)
-      h = Host.find_by_guid(host.guid)
-      result.should have(h.vms.length).things
-    end
-
-    it 'should not return hardware information for a VM' do
-      result = invoke(:EVM_vm_list,"*")
-      vms = invoke(:GetVmsByList, result)
-      vm = vms.first
-      vm.hardware.should be_nil
-    end
-
-    it 'should return hardware information for a VM' do
-      Vm.all.each  do  |v|
-        v.hardware = FactoryGirl.create(:hardware, :numvcpus => '2', :memory_cpu => '1234')
-        v.save
-      end
-      result = invoke(:GetVmList, "*")
-      vms = invoke(:GetVmsByList, result)
-      vms.first.hardware.should_not be_nil
-      vms.first.hardware.numvcpus.to_i.should == 2
-      vms.first.hardware.memory_cpu.to_i.should == 1234
-    end
-
-    it 'should return tagged VMs' do
-      vm = Vm.first
-      template = FactoryGirl.create(:miq_template, :name => "template", :location => "abc/abc.vmtx", :template => true, :vendor => "vmware")
-      Vm.find_tagged_with(:all => 'cc/001', :ns => '/managed').all.should be_empty
-      invoke(:GetVmsByTag, "cc/001").should be_empty
-      vm.tag_with("/managed/cc/001", :ns=>"*")
-      Vm.find_tagged_with(:all => 'cc/001', :ns => '/managed').all.should have(1).thing
-      invoke(:GetVmsByTag, "cc/001").should have(1).thing
-      # In v 4.x templates are returned with VMs
-      template.tag_with("/managed/cc/001", :ns=>"*")
-      Vm.find_tagged_with(:all => 'cc/001', :ns => '/managed').all.should have(1).thing
-      invoke(:GetVmsByTag, "cc/001").should have(1).thing
-    end
-
-    it "should be able to get and set vm tags" do
-      FactoryGirl.create(:classification_cost_center_with_tags)
-
-      vm = Vm.first
-      invoke(:VmGetTags, vm.guid).should == []
-      invoke(:VmSetTag, vm.guid, "cc", "001")
-      res = invoke(:VmGetTags, vm.guid)
-      res.should have(1).thing
-      result = res.first
-      result.tag_name.should == "001"
-      result.display_name.should == "Cost Center: Cost Center 001"
-      result.tag_path.should == "/managed/cc/001"
-      result.category.should == "cc"
-      result.tag_display_name.should == "Cost Center 001"
-    end
-
-    it "invoke :VmGetTags" do
-      vm = Vm.first
-      invoke(:VmGetTags, vm.guid).should == []
-
-      cl = FactoryGirl.create(:classification, :name => "one", :description => "two")
-      vm.tag_with(cl.tag.name, :ns=>"*")
-      res = invoke(:VmGetTags, vm.guid)
-
-      res.should have(1).thing
-      result = res.first
-      result.tag_name.should == "one"
-      result.display_name.should == "two: two"
-      result.tag_path.should == "/managed/one"
-      result.category.should == "one"
-      result.tag_display_name.should == "two"
-    end
-
-    it "should be able to get and set cluster tags" do
-      FactoryGirl.create(:classification_cost_center_with_tags)
-
-      cluster = EmsCluster.first
-      invoke(:ClusterGetTags, cluster.id).should == []
-      invoke(:ClusterSetTag, cluster.id, "cc", "001" )
-      res = invoke(:ClusterGetTags, cluster.id)
-      res.should have(1).thing
-      result = res.first
-      result.tag_name.should == "001"
-      result.display_name.should == "Cost Center: Cost Center 001"
-      result.tag_path.should == "/managed/cc/001"
-      result.category.should == "cc"
-      result.tag_display_name.should == "Cost Center 001"
-    end
-
-    it 'should return tagged Templates' do
-      vm = Vm.first
-      template = FactoryGirl.create(:miq_template, :name => "template", :location => "abc/abc.vmtx", :template => true, :vendor => "vmware")
-
-      MiqTemplate.find_tagged_with(:all => 'cc/001', :ns => '/managed').all.should be_empty
-      invoke(:GetTemplatesByTag, "cc/001").should be_empty
-      vm.tag_with("/managed/cc/001", :ns=>"*")
-      invoke(:GetTemplatesByTag, "cc/001").should be_empty
-      template.tag_with("/managed/cc/001", :ns=>"*")
-      invoke(:GetTemplatesByTag, "cc/001").should have(1).things
     end
 
     it 'should return VM relationships' do
@@ -621,6 +618,7 @@ describe VmdbwsController, :apis => true do
     before(:each) do
       @zone1 = FactoryGirl.create(:small_environment_host_with_resource_pools)
     end
+
     it 'should return Host resource pool relationships' do
       ems_list = invoke(:GetEmsList)
       result = invoke(:GetHostList,ems_list.last.guid)
@@ -737,6 +735,7 @@ describe VmdbwsController, :apis => true do
       hosts.first.resource_pools.count.should == 0
       hosts.first.default_resource_pool.id.should == ResourcePool.first.id.to_s
     end
+
   end
 
     def validate_ci_list(cis, klass, var = "@guid")
