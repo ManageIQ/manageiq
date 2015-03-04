@@ -1,6 +1,8 @@
 module MiqServer::RoleManagement
   extend ActiveSupport::Concern
 
+  ROLES_NEEDING_APACHE = %w(user_interface web_services).freeze
+
   included do
     has_many :assigned_server_roles, :dependent => :destroy
     has_many :server_roles,   :through => :assigned_server_roles
@@ -34,6 +36,12 @@ module MiqServer::RoleManagement
 
   def sync_active_roles
     @active_role_names = self.active_role_names
+  end
+
+  def apache_needed?
+    # TODO: We need to splat the Array into multiple arguments for now
+    # https://github.com/ManageIQ/more_core_extensions/pull/18
+    active_role_names.include_any?(*ROLES_NEEDING_APACHE)
   end
 
   def set_active_role_flags
