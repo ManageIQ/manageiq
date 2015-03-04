@@ -10,7 +10,7 @@
 
   %body{:style => 'margin: 0px; padding-top: 0px !important;'}
     = link_to('Ctrl-Alt-Del', '#', :id => 'sendCtrlAltDelButton', :class => 'btn btn-default', :onclick => 'sendCtrlAltDel()')
-    #spice-area{'data-port' => proxy_port, 'data-password' => password}
+    #spice-area{'data-port' => proxy_port, 'data-password' => password, 'data-encrypt' => encrypt}
       .console-status
         #spice-status.label{'data-host' => record_name}
           = _("Connecting (unencrypted) to: %s") % record_name
@@ -19,17 +19,22 @@
 
       :javascript
         var sc = null;
+        var encrypt;
+
         $(function () {
-          var scheme   = "ws://", uri; // FIXME: ssl
 
           var host     = window.location.hostname;
           var port     = $('#spice-area').data('port');
           var password = $('#spice-area').data('password');
+          encrypt      = $('#spice-area').data('password') !== undefined;
+          var scheme   = (encrypt ? "wss://" : "ws://"), uri;
 
-          if (!host || !port) {
-            console.log(__("must set host and port"));
+          if (!host || !port || !password) {
+            spice_error(__("must set host, port and password"));
             return;
           }
+
+          spice_connecting();
 
           uri = scheme + host + ":" + port;
 
@@ -52,8 +57,16 @@
           disconnect();
         }
 
+        function spice_connecting() {
+          var enc_text = encrypt ? 'encrypted' : 'unencrypted';
+          $('#spice-status').text('Connecteding ('+ enc_text + ') to: ' +
+            $('#spice-status').attr('data-host'));
+          $('#spice-status').addClass('label-success');
+        }
+
         function spice_success(m) {
-          $('#spice-status').text('Connected (unencrypted) to: ' +
+          var enc_text = encrypt ? 'encrypted' : 'unencrypted';
+          $('#spice-status').text('Connected ('+ enc_text + ') to: ' +
             $('#spice-status').attr('data-host'));
           $('#spice-status').addClass('label-success');
         }
