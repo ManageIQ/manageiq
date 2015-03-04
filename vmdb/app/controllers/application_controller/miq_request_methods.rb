@@ -346,7 +346,8 @@ module ApplicationController::MiqRequestMethods
   end
 
   def build_grid
-    if @edit[:wf].kind_of?(MiqProvisionWorkflow)
+    case @edit[:wf]
+    when MiqProvisionWorkflow
       if @edit[:new][:current_tab_key] == :service
         if @edit[:wf].class.kind_of?(MiqProvisionWorkflow) || @edit[:new][:st_prov_type]
           build_vm_grid(@edit[:wf].get_field(:src_vm_id,:service)[:values],@edit[:vm_sortdir],@edit[:vm_sortcol])
@@ -379,7 +380,7 @@ module ApplicationController::MiqRequestMethods
       elsif @edit[:new][:current_tab_key] == :purpose
         build_tags_tree(@edit[:wf],@edit[:new][:vm_tags],true)
       end
-    elsif @edit[:wf].class == VmMigrateWorkflow
+    when VmMigrateWorkflow
       if @edit[:new][:current_tab_key] == :environment
         build_host_grid(@edit[:wf].get_field(:placement_host_name,:environment)[:values],@edit[:host_sortdir],@edit[:host_sortcol]) if !@edit[:wf].get_field(:placement_host_name,:environment).blank?
         build_ds_grid(@edit[:wf].get_field(:placement_ds_name,:environment)[:values],@edit[:ds_sortdir],@edit[:ds_sortcol]) if !@edit[:wf].get_field(:placement_ds_name,:environment).blank?
