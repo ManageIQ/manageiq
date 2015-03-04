@@ -118,7 +118,7 @@
           %h3=_('Expression (Choose an element of the expression to edit)')
           = render(:partial => 'layouts/exp_editor')
         - else
-          - if !@edit[:new][:expression][:eval_method] == "nothing"
+          - if @edit[:new][:expression][:eval_method] != "nothing"
             %h3
               = h(MiqAlert.expression_types(@edit[:new][:db])[@edit[:new][:expression][:eval_method]])
               =_('Parameters')
