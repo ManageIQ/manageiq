@@ -106,7 +106,7 @@ describe VmOrTemplateController do
     users
     vm_pre_prov
     vmrc_console
-    vnc_console
+    html5_console
     wait_for_task
     win32_services
     x_button
