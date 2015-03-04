@@ -64,7 +64,7 @@ module MiqReport::Generator::Html
         row = 1 - row
 
         self.col_order.each_with_index do |c, c_idx|
-          style = self.get_style_class(c, d.data)
+          style = self.get_style_class(c, d.data, tz)
           style_class = !style.nil? ? " class='#{style}'" : nil
           if c == "resource_type"                     # Lookup models in resource_type col
             output << "<td#{style_class}>"
@@ -249,7 +249,7 @@ module MiqReport::Generator::Html
     return html_rows
   end
 
-  def get_style_class(col, row)
+  def get_style_class(col, row, tz = nil)
     atoms = self.col_options.fetch_path(col, :style) unless self.col_options.nil?
     return if atoms.nil?
 
@@ -260,7 +260,7 @@ module MiqReport::Generator::Html
       return atom[:class] if atom[:operator].downcase == "default"
 
       exp = expression_for_style_class(field, atom)
-      return atom[:class] if exp.evaluate(nh)
+      return atom[:class] if exp.evaluate(nh, {}, tz)
     end
     return nil
   end
