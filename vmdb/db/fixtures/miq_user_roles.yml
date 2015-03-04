@@ -760,6 +760,7 @@
   - my_settings_my_tags
   - my_settings_visuals
   - vm_clone
+  - vm_cloud_explorer
   - vm_filter_accord
   - vm_guest_restart
   - vm_guest_shutdown
@@ -809,6 +810,7 @@
   - provider_foreman_refresh
   - vm_console
   - vm_clone
+  - vm_cloud_explorer
   - vm_console
   - vm_drift
   - vm_edit
@@ -864,6 +866,7 @@
   - vm_analyze
   - vm_check_compliance
   - vm_clone
+  - vm_cloud_explorer
   - vm_collect_running_processes
   - vm_compare
   - vm_console
