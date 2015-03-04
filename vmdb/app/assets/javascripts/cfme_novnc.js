@@ -7,10 +7,10 @@ function sendCtrlAltDel() {
 }
 
 function updateState(rfb, state, oldstate, msg) {
-  var s, sb, cad, level;
-  s = $D('noVNC_status');
-  sb = $D('noVNC_status');
-  cad = $D('sendCtrlAltDelButton');
+  var level;
+  var s   = $D('noVNC_status');
+  var sb  = $D('noVNC_status');
+  var cad = $D('sendCtrlAltDelButton');
   switch (state) {
     case 'failed':       level = "danger";  break;
     case 'fatal':        level = "danger";  break;
@@ -29,23 +29,26 @@ function updateState(rfb, state, oldstate, msg) {
 }
 
 $(function() {
-  $D('sendCtrlAltDelButton').style.display = "inline";
+  $D('sendCtrlAltDelButton').style.display = "inline"; // FIXME
   $D('sendCtrlAltDelButton').onclick = sendCtrlAltDel;
 
-  var host = window.location.hostname;
-  var port = $('#vnc').attr('data-port');
-  var password = $('#vnc').attr('data-password');
+  var host     = window.location.hostname;
+  var vnc_el   = $('#vnc');
+  var port     = vnc_el.attr('data-port');
+  var password = vnc_el.attr('data-password');
+  var encrypt  = vnc_el.attr('data-encrypt') !== undefined;
   var path = "";
   rfb = new RFB({'target': $D('noVNC_canvas'),
-    'encrypt':      $('#vnc').data('encrypt'),
+    'encrypt':      encrypt,
     'true_color':   true,
     'local_cursor': true,
-    'shared':      true,
-    'view_only':   false,
+    'shared':       true,
+    'view_only':    false,
     'updateState':  updateState});
   rfb.connect(host, port, password, path);
-  console.log("host: " + host)
-  console.log("port: " + port)
-  console.log("password: " + password)
-  console.log("path: " + path)
+  console.log("host: "     + host);
+  console.log("port: "     + port);
+  console.log("password: " + password);
+  console.log("encrypt: "  + encrypt);
+  console.log("path: "     + path);
 });

@@ -120,19 +120,18 @@ module VmCommon
   end
 
   def launch_html5_console
-    password, host_address, host_port, proxy_address, proxy_port, protocol, ssl = @sb[:html5]
-    encrypt = false # get_vmdb_config.fetch_path(:server, :websocket_encrypt)
+    password, host_address, host_port, _proxy_address, _proxy_port, protocol, ssl = @sb[:html5]
+    encrypt = get_vmdb_config.fetch_path(:server, :websocket_encrypt)
 
     proxy_options = WsProxy.start(
       :host       => host_address,
       :host_port  => host_port,
       :password   => password,
-      :ssl_target => ssl,
-      :encrypt    => encrypt
+      :ssl_target => ssl,       # ssl on provider side
+      :encrypt    => encrypt    # ssl on web client side
     )
-
     if proxy_options.nil?
-      # failed to launch
+      # FIXME: failed to launch
     end
 
     case protocol

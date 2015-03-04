@@ -51,7 +51,7 @@ class WsProxy
       }
       run_options[:'ssl-target'] = nil if ssl_target
 
-      if vmdb_config.fetch_path(:server, :websocket_encrypt) && false # FIXME
+      if vmdb_config.fetch_path(:server, :websocket_encrypt)
         cert_file = File.join(Rails.root, vmdb_config.fetch_path(:server, :websocket_cert))
         key_file  = File.join(Rails.root, vmdb_config.fetch_path(:server, :websocket_key))
 
