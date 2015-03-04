@@ -1857,6 +1857,7 @@ class ApplicationController < ActionController::Base
     db     = db.to_s
     dbname = options[:dbname] || db.split("::").last.downcase # Get db name as text
     db_sym = dbname.to_sym                                    # Get db name as symbol
+    refresh_view = false
 
     # Determine if the view should be refreshed or use the existing view
     unless session[:view] &&                          # A view exists and
@@ -1866,7 +1867,7 @@ class ApplicationController < ActionController::Base
               params[:ppsetting] || params[:page] ||  # changed paging or
               params[:type]                           # gtl type
             )
-      @refresh_view = true
+      refresh_view = true
       session[:menu_click] = params[:menu_click]      # Creating a new view, remember if came from a menu_click
       session[:bc]         = params[:bc]              # Remember incoming breadcrumb as well
     end
@@ -1898,7 +1899,7 @@ class ApplicationController < ActionController::Base
     @gtl_type = get_view_calculate_gtl_type(db_sym)
 
     # Get the view for this db or use the existing one in the session
-    view = @refresh_view ? get_db_view(db.split("::").last, :association => association, :view_suffix => view_suffix) : session[:view]
+    view = refresh_view ? get_db_view(db.split("::").last, :association => association, :view_suffix => view_suffix) : session[:view]
 
     # Check for changed settings in params
     if params[:ppsetting]                             # User selected new per page value
