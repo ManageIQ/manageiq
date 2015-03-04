@@ -7,7 +7,7 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     @ems = FactoryGirl.create(:ems_openstack_infra, :zone => zone, :hostname => "192.0.2.1",
                               :ipaddress => "192.0.2.1", :port => 5000)
     @ems.update_authentication(
-        :default => {:userid => "admin", :password => "22ffdb40bb99703b3650a79c1c1305a65d83e898"})
+        :default => {:userid => "admin", :password => "3ddb6de300630a431ffae7f01104c9988ec4c89d"})
   end
 
   it "will perform a full refresh" do
@@ -36,7 +36,8 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     ExtManagementSystem.count.should == 1
     EmsFolder.count.should           == 0 # HACK: Folder structure for UI a la VMware
     EmsCluster.count.should          == 0
-    Host.count.should                == 7
+    Host.count.should                == 6
+    OrchestrationStack.count.should  == 0
     ResourcePool.count.should        == 0
     Vm.count.should                  == 0
     VmOrTemplate.count.should        == 0
@@ -44,12 +45,12 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     CustomizationSpec.count.should   == 0
     Disk.count.should                == 0
     GuestDevice.count.should         == 0
-    Hardware.count.should            == 7
+    Hardware.count.should            == 6
     Lan.count.should                 == 0
     MiqScsiLun.count.should          == 0
     MiqScsiTarget.count.should       == 0
     Network.count.should             == 0
-    OperatingSystem.count.should     == 0
+    OperatingSystem.count.should     == 6
     Snapshot.count.should            == 0
     Switch.count.should              == 0
     SystemService.count.should       == 0
@@ -69,7 +70,7 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     @ems.resource_pools.size.should      == 0
 
     @ems.storages.size.should            == 0
-    @ems.hosts.size.should               == 7
+    @ems.hosts.size.should               == 6
     @ems.vms_and_templates.size.should   == 0
     @ems.vms.size.should                 == 0
     @ems.miq_templates.size.should       == 0
@@ -77,20 +78,24 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
   end
 
   def assert_specific_host
-    @host = HostOpenstackInfra.find_by_name('d783b2e4-059e-4e2b-a1d1-21b3d1a7dab6')
+    @host = HostOpenstackInfra.find_by_name('06c2fb5a-22ab-450f-bd83-9342f7b823e6 (Controller)')
+
     @host.should have_attributes(
-      :ems_ref          => "d783b2e4-059e-4e2b-a1d1-21b3d1a7dab6",
-      :ems_ref_obj      => "492b83e2-1805-4022-a385-876230ce5d43",
-      :name             => "d783b2e4-059e-4e2b-a1d1-21b3d1a7dab6",
-      :hostname         => nil,
+      :ems_ref          => "06c2fb5a-22ab-450f-bd83-9342f7b823e6",
+      :ems_ref_obj      => "5de454a1-7f3c-418e-815d-0350aef47934",
+      :name             => "06c2fb5a-22ab-450f-bd83-9342f7b823e6 (Controller)",
       :ipaddress        => "192.0.2.8",
-      :mac_address      => "00:22:a4:80:56:c7",
+      :mac_address      => "00:6b:a4:4c:df:f3",
       :ipmi_address     => nil,
-      :vmm_vendor       => "Unknown",
+      :vmm_vendor       => "RedHat",
       :vmm_version      => nil,
-      :vmm_product      => nil,
+      :vmm_product      => "rhel (No hypervisor, Host Type is Controller)",
       :power_state      => "on",
-      :connection_state => nil
+      :connection_state => "connected"
+    )
+
+    @host.operating_system.should have_attributes(
+      :product_name     => "linux"
     )
 
     @host.hardware.should have_attributes(
