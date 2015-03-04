@@ -1242,3 +1242,197 @@
     period_start: "2013-08-28T11:14:20"
     avg: 4096.0
     sum: 58234626048.0
+  hardware.memory.swap.avail:
+  -
+    count: 1
+    duration_start: "2013-08-28T11:01:09"
+    min: 507942400.0
+    max: 507942400.0
+    duration_end: "2013-08-28T11:01:09"
+    period: 20
+    period_end: "2013-08-28T11:01:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:01:00"
+    avg: 4096.0
+    sum: 507942400.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:03:12"
+    min: 507942400.0
+    max: 507942400.0
+    duration_end: "2013-08-28T11:03:12"
+    period: 20
+    period_end: "2013-08-28T11:03:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:03:00"
+    avg: 4096.0
+    sum: 507942400.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:05:15"
+    min: 507942400.0
+    max: 507942400.0
+    duration_end: "2013-08-28T11:05:15"
+    period: 20
+    period_end: "2013-08-28T11:05:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:05:00"
+    avg: 4096.0
+    sum: 507942400.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:07:18"
+    min: 507942400.0
+    max: 507942400.0
+    duration_end: "2013-08-28T11:07:18"
+    period: 20
+    period_end: "2013-08-28T11:07:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:07:00"
+    avg: 4096.0
+    sum: 507942400.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:09:21"
+    min: 507942400.0
+    max: 507942400.0
+    duration_end: "2013-08-28T11:09:21"
+    period: 20
+    period_end: "2013-08-28T11:09:40"
+    duration: 0.0
+    period_start: "2013-08-28T11:09:20"
+    avg: 4096.0
+    sum: 507942400.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:11:23"
+    min: 507942400.0
+    max: 507942400.0
+    duration_end: "2013-08-28T11:11:23"
+    period: 20
+    period_end: "2013-08-28T11:11:40"
+    duration: 0.0
+    period_start: "2013-08-28T11:11:20"
+    avg: 4096.0
+    sum: 507942400.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:13:25"
+    min: 513942400.0
+    max: 513942400.0
+    duration_end: "2013-08-28T11:13:25"
+    period: 20
+    period_end: "2013-08-28T11:13:40"
+    duration: 0.0
+    period_start: "2013-08-28T11:13:20"
+    avg: 4096.0
+    sum: 513942400.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:15:27"
+    min: 507942400.0
+    max: 507942400.0
+    duration_end: "2013-08-28T11:15:27"
+    period: 20
+    period_end: "2013-08-28T11:15:40"
+    duration: 0.0
+    period_start: "2013-08-28T11:15:20"
+    avg: 4096.0
+    sum: 507942400.0
+  hardware.memory.swap.total:
+  -
+    count: 1
+    duration_start: "2013-08-28T11:00:09"
+    min: 58125377536.0
+    max: 58125377536.0
+    duration_end: "2013-08-28T11:00:09"
+    period: 20
+    period_end: "2013-08-28T11:00:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:00:00"
+    avg: 4096.0
+    sum: 58125377536.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:02:12"
+    min: 58149425152.0
+    max: 58149425152.0
+    duration_end: "2013-08-28T11:02:12"
+    period: 20
+    period_end: "2013-08-28T11:02:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:02:00"
+    avg: 4096.0
+    sum: 58149425152.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:04:15"
+    min: 58192719872.0
+    max: 58192719872.0
+    duration_end: "2013-08-28T11:04:15"
+    period: 20
+    period_end: "2013-08-28T11:04:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:04:00"
+    avg: 4096.0
+    sum: 58192719872.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:06:18"
+    min: 58206168192.0
+    max: 58206168192.0
+    duration_end: "2013-08-28T11:06:18"
+    period: 20
+    period_end: "2013-08-28T11:06:20"
+    duration: 0.0
+    period_start: "2013-08-28T11:06:00"
+    avg: 4096.0
+    sum: 58206168192.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:08:21"
+    min: 58212818944.0
+    max: 58212818944.0
+    duration_end: "2013-08-28T11:08:21"
+    period: 20
+    period_end: "2013-08-28T11:08:40"
+    duration: 0.0
+    period_start: "2013-08-28T11:08:20"
+    avg: 4096.0
+    sum: 58212818944.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:10:25"
+    min: 58223599616.0
+    max: 58223599616.0
+    duration_end: "2013-08-28T11:10:25"
+    period: 20
+    period_end: "2013-08-28T11:10:40"
+    duration: 0.0
+    period_start: "2013-08-28T11:10:20"
+    avg: 4096.0
+    sum: 58223599616.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:12:27"
+    min: 58229735424.0
+    max: 58229735424.0
+    duration_end: "2013-08-28T11:12:27"
+    period: 20
+    period_end: "2013-08-28T11:12:40"
+    duration: 0.0
+    period_start: "2013-08-28T11:12:20"
+    avg: 4096.0
+    sum: 58229735424.0
+  -
+    count: 1
+    duration_start: "2013-08-28T11:14:28"
+    min: 58234626048.0
+    max: 58234626048.0
+    duration_end: "2013-08-28T11:14:28"
+    period: 20
+    period_end: "2013-08-28T11:14:40"
+    duration: 0.0
+    period_start: "2013-08-28T11:14:20"
+    avg: 4096.0
+    sum: 58234626048.0
