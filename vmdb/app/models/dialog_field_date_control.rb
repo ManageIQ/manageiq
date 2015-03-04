@@ -49,7 +49,7 @@ class DialogFieldDateControl < DialogField
   end
 
   def refresh_json_value
-    {:date => Date.parse(default_value).strftime("%m/%d/%Y")}
+    {:date => Date.parse(value).strftime("%m/%d/%Y")}
   end
 
   private

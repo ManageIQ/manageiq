@@ -51,7 +51,7 @@ describe DialogFieldDateTimeControl do
     end
   end
 
-  describe "#default_value" do
+  describe "#value" do
     let(:dialog_field) { described_class.new(:dynamic => dynamic) }
 
     context "when the field is dynamic" do
@@ -62,13 +62,8 @@ describe DialogFieldDateTimeControl do
         dialog_field.value = nil
       end
 
-      it "stores the new value in the value attribute" do
-        dialog_field.default_value
-        expect(dialog_field.value).to eq("processor")
-      end
-
       it "returns the values from the value processor" do
-        expect(dialog_field.default_value).to eq("processor")
+        expect(dialog_field.value).to eq("processor")
       end
     end
 
@@ -81,7 +76,7 @@ describe DialogFieldDateTimeControl do
 
       it "returns tomorrow's date" do
         Timecop.freeze(Time.utc(2015, 1, 2, 4, 30)) do
-          expect(dialog_field.default_value).to eq("01/03/2015 04:30")
+          expect(dialog_field.value).to eq("01/03/2015 04:30")
         end
       end
     end
