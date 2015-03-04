@@ -15,13 +15,15 @@ class DashboardController < ApplicationController
   skip_before_filter :set_x_frame_options_header, :only => :iframe
 
   def iframe
-    item = if params[:id].present?
-             Menu::Manager.item(params[:id])
-           elsif params[:sid].present?
-             Menu::Manager.section(params[:sid])
-           end
+    @layout = nil
+    if params[:id].present?
+      item = Menu::Manager.item(params[:id])
+      @layout = item.id if item.present?
+    elsif params[:sid].present?
+      item = Menu::Manager.section(params[:sid])
+      @layout = (item.items[0].id rescue nil)
+    end
     @big_iframe = true
-    @layout     = nil
     render :locals => {:iframe_src => item.href}
   end
 
