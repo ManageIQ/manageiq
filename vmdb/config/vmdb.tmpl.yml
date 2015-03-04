@@ -108,6 +108,8 @@ log:
   level_rails: info
   level_aws: info
   level_aws_in_evm: error
+  level_kube: info
+  level_kube_in_evm: error
   level_api: info
   level_api_in_evm: error
   level_fog: info
@@ -290,6 +292,8 @@ workers:
         :event_catcher_openstack_infra: {}
       :event_catcher_amazon:
         :poll: 15.seconds
+      :event_catcher_kubernetes:
+        :poll: 1.seconds
     :queue_worker_base:
       :defaults:
         :cpu_usage_threshold: 100.percent
