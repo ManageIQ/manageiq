@@ -43,7 +43,7 @@
   - if @pivotby1 != NOTHING_STRING
     %h3
       = _('Specify Calculations of Numeric Values for Grouped Records')
-    %table.style3
+    %table.table.table-striped.table-bordered
       %thead
         %tr
           %th
@@ -57,7 +57,7 @@
           - next if [@pivotby1, @pivotby2, @pivotby3]. include?(f.last)
           - next unless MiqReport.get_col_info(f.last)[:numeric]
           %tr
-            %td.key
+            %td
               = h(f.first)
             - combo_id = "pivotcalc_id_#{f_idx}"
             - combo_name = "pivotcalc_#{f_idx}"

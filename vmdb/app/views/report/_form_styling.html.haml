@@ -4,14 +4,10 @@
 #styling_div
   %h3
     = _('Specify Column Styles')
-  %table.style3
+  %table.table.table-striped.table-bordered
     %thead
       %tr
-        - len = 0
-        - @edit[:new][:field_order].each do |f|
-          - len = f.first.length if f.first.length > len
-        - width = len > 70 ? "400px;" : "auto"
-        %th{:style => "width: #{width};"}
+        %th
           = _('Column Name')
         %th
           = _('Style')
@@ -24,7 +20,7 @@
         - col_name = f.last.include?(".") ? f.last.split(".").last.gsub("-", ".") : f.last.split("-").last
         - styles = @edit.fetch_path(:new, :col_options, col_name, :style) || []
         %tr
-          %td.key
+          %td
             = h(f.first)
           %td
             - 3.times do |s_idx|
