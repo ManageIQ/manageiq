@@ -148,12 +148,10 @@ module ApplicationController::DialogRunner
     # this problem applies not only to the action here, but also to all of the
     # app/views/shared/dialogs/_dialog_field.html.erb and more...
 
-    @edit = session[:edit]
+    field = load_dialog_field(params[:id])
+
     dialog_id = @edit[:rec_id]
     url = url_for(:action => 'dialog_field_changed', :id => dialog_id)
-
-    dialog = @edit[:wf].dialog
-    field  = dialog.field(params[:id])
 
     field.refresh_button_pressed
 
@@ -175,11 +173,7 @@ module ApplicationController::DialogRunner
   end
 
   def dynamic_radio_button_refresh
-    @edit = session[:edit]
-
-    dialog = @edit[:wf].dialog
-
-    field = dialog.field(params[:name])
+    field = load_dialog_field(params[:name])
     values = field.refresh_button_pressed
 
     checked_value = values.collect { |value_pair| value_pair[0].to_s }.include?(params[:checked_value]) ?
@@ -187,43 +181,39 @@ module ApplicationController::DialogRunner
 
     field.value = checked_value
 
-    json = {
-      :checked_value => checked_value,
-      :field_name    => field.name,
-      :values        => values
-    }
-
-    respond_to do |format|
-      format.json { render :json => json, :status => 200 }
-    end
+    response_json = {:checked_value => checked_value, :field_name => field.name, :values => values}
+    dynamic_refresh_response(response_json)
   end
 
   def dynamic_text_box_refresh
-    @edit = session[:edit]
-
-    dialog = @edit[:wf].dialog
-
-    field = dialog.field(params[:name])
+    field = load_dialog_field(params[:name])
     values = field.refresh_button_pressed
 
-    respond_to do |format|
-      format.json { render :json => {:field_name => field.name, :values => values}, :status => 200 }
-    end
+    response_json = {:field_name => field.name, :values => values}
+    dynamic_refresh_response(response_json)
   end
 
   def dynamic_checkbox_refresh
-    @edit = session[:edit]
+    field = load_dialog_field(params[:name])
 
-    dialog = @edit[:wf].dialog
+    response_json = {:field_name => field.name, :checked => field.checked?}
+    dynamic_refresh_response(response_json)
+  end
 
-    field = dialog.field(params[:name])
+  def dynamic_date_refresh
+    field = load_dialog_field(params[:name])
 
-    respond_to do |format|
-      format.json { render :json => {:field_name => field.name, :checked => field.checked?}, :status => 200 }
-    end
+    response_json = {:field_name => field.name, :date_value => field.value}
+    dynamic_refresh_response(response_json)
   end
 
   private     #######################
+
+  def dynamic_refresh_response(response_json)
+    respond_to do |format|
+      format.json { render :json => response_json, :status => 200 }
+    end
+  end
 
   def dialog_reset_form
     return unless load_edit("dialog_edit__#{params[:id]}","replace_cell__explorer")
@@ -264,7 +254,6 @@ module ApplicationController::DialogRunner
     @record = Dialog.find_by_id(@edit[:rec_id])
 
     params.each do |p|
-
       #if p[0] contains name w/ __protected(password field), so remove it
       p[0] = p[0].split("__protected").first if p[0].ends_with?("__protected")
 
@@ -311,6 +300,11 @@ module ApplicationController::DialogRunner
         @edit[:wf].set_value(p[0],p[1]) if @record.field_name_exist?(p[0])
       end
     end
+  end
 
+  def load_dialog_field(field_name)
+    @edit = session[:edit]
+    dialog = @edit[:wf].dialog
+    dialog.field(field_name)
   end
 end

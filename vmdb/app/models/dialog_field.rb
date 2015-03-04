@@ -54,6 +54,14 @@ class DialogField < ActiveRecord::Base
     "DialogFieldDynamicList"     => "Drop Down Dynamic List",
   }
 
+  DIALOG_FIELD_DYNAMIC_CLASSES = %w(
+    DialogFieldCheckBox
+    DialogFieldDateControl
+    DialogFieldRadioButton
+    DialogFieldTextAreaBox
+    DialogFieldTextBox
+  )
+
   def self.dialog_field_types
     DIALOG_FIELD_TYPES
   end
