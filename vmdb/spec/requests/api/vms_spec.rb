@@ -248,7 +248,7 @@ describe ApiController do
       vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
       vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
 
-      @success = run_post(@cfme[:vms_url], gen_request(:start, vm1_url, vm2_url))
+      @success = run_post(@cfme[:vms_url], gen_request(:start, nil, vm1_url, vm2_url))
 
       expect(@result).to have_key("results")
       results = @result["results"]
@@ -327,7 +327,7 @@ describe ApiController do
       vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
       vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
 
-      @success = run_post(@cfme[:vms_url], gen_request(:stop, vm1_url, vm2_url))
+      @success = run_post(@cfme[:vms_url], gen_request(:stop, nil, vm1_url, vm2_url))
 
       expect(@result).to have_key("results")
       results = @result["results"]
@@ -423,7 +423,7 @@ describe ApiController do
       vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
       vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
 
-      @success = run_post(@cfme[:vms_url], gen_request(:suspend, vm1_url, vm2_url))
+      @success = run_post(@cfme[:vms_url], gen_request(:suspend, nil, vm1_url, vm2_url))
 
       expect(@result).to have_key("results")
       results = @result["results"]
@@ -509,7 +509,7 @@ describe ApiController do
       vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
       vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
 
-      @success = run_post(@cfme[:vms_url], gen_request(:delete, vm1_url, vm2_url))
+      @success = run_post(@cfme[:vms_url], gen_request(:delete, nil, vm1_url, vm2_url))
 
       expect(@success).to be_true
       expect(@code).to eq(200)
@@ -527,7 +527,7 @@ describe ApiController do
       update_user_role(@role, action_identifier(:vms, :set_owner))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request_data(:set_owner, "owner" => "admin"))
+      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:set_owner, "owner" => "admin"))
 
       expect(@success).to be_false
       expect(@code).to eq(404)
@@ -539,7 +539,7 @@ describe ApiController do
       vm = FactoryGirl.create(:vm_vmware)
       vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
 
-      @success = run_post(vm_url, gen_request_data(:set_owner, "owner" => "admin"))
+      @success = run_post(vm_url, gen_request(:set_owner, "owner" => "admin"))
 
       expect(@success).to be_false
       expect(@code).to eq(403)
@@ -567,7 +567,7 @@ describe ApiController do
       vm = FactoryGirl.create(:vm_vmware)
       vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
 
-      @success = run_post(vm_url, gen_request_data(:set_owner, "owner" => "bad_user"))
+      @success = run_post(vm_url, gen_request(:set_owner, "owner" => "bad_user"))
 
       expect(@success).to be_true
       expect(@result).to have_key("success")
@@ -584,7 +584,7 @@ describe ApiController do
       vm = FactoryGirl.create(:vm_vmware)
       vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
 
-      @success = run_post(vm_url, gen_request_data(:set_owner, "owner" => @cfme[:user]))
+      @success = run_post(vm_url, gen_request(:set_owner, "owner" => @cfme[:user]))
 
       expect(@success).to be_true
       expect(@code).to eq(200)
@@ -607,7 +607,7 @@ describe ApiController do
       vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
       vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
 
-      @success = run_post(@cfme[:vms_url], gen_request_data(:set_owner, {"owner" => @cfme[:user]}, vm1_url, vm2_url))
+      @success = run_post(@cfme[:vms_url], gen_request(:set_owner, {"owner" => @cfme[:user]}, vm1_url, vm2_url))
 
       expect(@success).to be_true
       expect(@code).to eq(200)
@@ -711,7 +711,7 @@ describe ApiController do
       vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
       vm.custom_attributes = [ca1]
 
-      @success = run_post("#{vm_url}/custom_attributes", gen_request(:delete, vm_url))
+      @success = run_post("#{vm_url}/custom_attributes", gen_request(:delete, nil, vm_url))
 
       expect(@success).to be_false
       expect(@code).to eq(403)
@@ -727,7 +727,7 @@ describe ApiController do
       vm_ca_url = "#{@cfme[:vms_url]}/#{vm.id}/custom_attributes"
       vm.custom_attributes = [ca1]
 
-      @success = run_post(vm_ca_url, gen_request(:delete, "#{vm_ca_url}/#{ca1.id}"))
+      @success = run_post(vm_ca_url, gen_request(:delete, nil, "#{vm_ca_url}/#{ca1.id}"))
 
       expect(@success).to be_true
       expect(@code).to eq(200)
@@ -741,7 +741,7 @@ describe ApiController do
       vm = FactoryGirl.create(:vm_vmware)
       vm_ca_url = "#{@cfme[:vms_url]}/#{vm.id}/custom_attributes"
 
-      @success = run_post(vm_ca_url, gen_request_data(:add, "value" => "value1"))
+      @success = run_post(vm_ca_url, gen_request(:add, "value" => "value1"))
 
       expect(@success).to be_false
       expect(@code).to eq(400)
@@ -756,8 +756,8 @@ describe ApiController do
       vm = FactoryGirl.create(:vm_vmware)
       vm_ca_url = "#{@cfme[:vms_url]}/#{vm.id}/custom_attributes"
 
-      @success = run_post(vm_ca_url, gen_requests(:add, [{"name" => "name1", "value" => "value1"},
-                                                         {"name" => "name2", "value" => "value2"}]))
+      @success = run_post(vm_ca_url, gen_request(:add, [{"name" => "name1", "value" => "value1"},
+                                                        {"name" => "name2", "value" => "value2"}]))
 
       expect(@success).to be_true
       expect(@code).to eq(200)
@@ -778,7 +778,7 @@ describe ApiController do
       vm_ca_url = "#{vm_url}/custom_attributes"
       vm.custom_attributes = [ca1]
 
-      @success = run_post(vm_ca_url, gen_request_data(:edit, "name" => "name1", "value" => "value one"))
+      @success = run_post(vm_ca_url, gen_request(:edit, "name" => "name1", "value" => "value one"))
 
       expect(@success).to be_true
       expect(@code).to eq(200)
@@ -799,7 +799,7 @@ describe ApiController do
       vm_ca1_url = "#{vm_ca_url}/#{ca1.id}"
       vm.custom_attributes = [ca1]
 
-      @success = run_post(vm_ca_url, gen_request_data(:edit, "href" => vm_ca1_url, "value" => "new value1"))
+      @success = run_post(vm_ca_url, gen_request(:edit, "href" => vm_ca1_url, "value" => "new value1"))
 
       expect(@success).to be_true
       expect(@code).to eq(200)
@@ -820,8 +820,8 @@ describe ApiController do
       vm_ca_url = "#{vm_url}/custom_attributes"
       vm.custom_attributes = [ca1, ca2]
 
-      @success = run_post(vm_ca_url, gen_requests(:edit, [{"name" => "name1", "value" => "new value1"},
-                                                          {"name" => "name2", "value" => "new value2"}]))
+      @success = run_post(vm_ca_url, gen_request(:edit, [{"name" => "name1", "value" => "new value1"},
+                                                         {"name" => "name2", "value" => "new value2"}]))
 
       expect(@success).to be_true
       expect(@code).to eq(200)
@@ -846,7 +846,7 @@ describe ApiController do
       update_user_role(@role, action_identifier(:vms, :add_lifecycle_event))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request_data(:add_lifecycle_event, :event => "event 1"))
+      @success = run_post("#{@cfme[:vms_url]}/999999", gen_request(:add_lifecycle_event, :event => "event 1"))
 
       expect(@success).to be_false
       expect(@code).to eq(404)
@@ -855,7 +855,7 @@ describe ApiController do
     it "add_lifecycle_event without appropriate action role" do
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@vm_url, gen_request_data(:add_lifecycle_event, :event => "event 1"))
+      @success = run_post(@vm_url, gen_request(:add_lifecycle_event, :event => "event 1"))
 
       expect(@success).to be_false
       expect(@code).to eq(403)
@@ -865,7 +865,7 @@ describe ApiController do
       update_user_role(@role, action_identifier(:vms, :add_lifecycle_event))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@vm_url, gen_request_data(:add_lifecycle_event, @events[0]))
+      @success = run_post(@vm_url, gen_request(:add_lifecycle_event, @events[0]))
 
       expect(@success).to be_true
       expect(@code).to eq(200)
@@ -880,8 +880,8 @@ describe ApiController do
       update_user_role(@role, action_identifier(:vms, :add_lifecycle_event))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@cfme[:vms_url], gen_requests(:add_lifecycle_event,
-                                                        @events.collect { |e| {:href => @vm_url}.merge(e) }))
+      @success = run_post(@cfme[:vms_url], gen_request(:add_lifecycle_event,
+                                                       @events.collect { |e| {:href => @vm_url}.merge(e) }))
 
       expect(@success).to be_true
       expect(@code).to eq(200)
@@ -945,7 +945,7 @@ describe ApiController do
       vm1_url = "#{@cfme[:vms_url]}/#{vm1.id}"
       vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
 
-      @success = run_post(@cfme[:vms_url], gen_request(:scan, vm1_url, vm2_url))
+      @success = run_post(@cfme[:vms_url], gen_request(:scan, nil, vm1_url, vm2_url))
 
       expect(@success).to be_true
       expect(@code).to eq(200)
@@ -987,7 +987,7 @@ describe ApiController do
       vm = FactoryGirl.create(:vm_vmware, :host => @host, :ems_id => @ems.id, :raw_power_state => "poweredOn")
       vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
 
-      @success = run_post(vm_url, gen_request_data(:add_event, :event_type => "special", :event_message => "message"))
+      @success = run_post(vm_url, gen_request(:add_event, :event_type => "special", :event_message => "message"))
 
       expect(@success).to be_true
       expect(@code).to eq(200)
@@ -1010,9 +1010,9 @@ describe ApiController do
       vm2_url = "#{@cfme[:vms_url]}/#{vm2.id}"
 
       @success = run_post(@cfme[:vms_url],
-                          gen_requests(:add_event,
-                                       [{"href" => vm1_url, "event_type" => "etype1", "event_message" => "emsg1"},
-                                        {"href" => vm2_url, "event_type" => "etype2", "event_message" => "emsg2"}]))
+                          gen_request(:add_event,
+                                      [{"href" => vm1_url, "event_type" => "etype1", "event_message" => "emsg1"},
+                                       {"href" => vm2_url, "event_type" => "etype2", "event_message" => "emsg2"}]))
 
       expect(@success).to be_true
       expect(@code).to eq(200)

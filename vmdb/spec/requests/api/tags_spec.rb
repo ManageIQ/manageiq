@@ -179,9 +179,9 @@ describe ApiController do
     it "assigns a tag to a Vm without appropriate role" do
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@vm1_tags_url, gen_request_data(:assign,
-                                                          :category => @tag1[:category],
-                                                          :name     => @tag1[:name]))
+      @success = run_post(@vm1_tags_url, gen_request(:assign,
+                                                     :category => @tag1[:category],
+                                                     :name     => @tag1[:name]))
       expect(@success).to be_false
       expect(@code).to eq(403)
     end
@@ -190,9 +190,9 @@ describe ApiController do
       update_user_role(@role, subcollection_action_identifier(:vms, :tags, :assign))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@vm1_tags_url, gen_request_data(:assign,
-                                                          :category => @tag1[:category],
-                                                          :name     => @tag1[:name]))
+      @success = run_post(@vm1_tags_url, gen_request(:assign,
+                                                     :category => @tag1[:category],
+                                                     :name     => @tag1[:name]))
       expect(@success).to be_true
       expect(@code).to eq(200)
       expect(@result).to have_key("results")
@@ -209,7 +209,7 @@ describe ApiController do
       update_user_role(@role, subcollection_action_identifier(:vms, :tags, :assign))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@vm1_tags_url, gen_request_data(:assign, :name => @tag1[:path]))
+      @success = run_post(@vm1_tags_url, gen_request(:assign, :name => @tag1[:path]))
 
       expect(@success).to be_true
       expect(@code).to eq(200)
@@ -228,7 +228,7 @@ describe ApiController do
       basic_authorize @cfme[:user], @cfme[:password]
 
       tag = Tag.find_by_name(@tag1[:path])
-      @success = run_post(@vm1_tags_url, gen_request_data(:assign, :href => "#{@cfme[:tags_url]}/#{tag.id}"))
+      @success = run_post(@vm1_tags_url, gen_request(:assign, :href => "#{@cfme[:tags_url]}/#{tag.id}"))
 
       expect(@success).to be_true
       expect(@code).to eq(200)
@@ -246,7 +246,7 @@ describe ApiController do
       update_user_role(@role, subcollection_action_identifier(:vms, :tags, :assign))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@vm1_tags_url, gen_request_data(:assign, :href => "#{@cfme[:tags_url]}/999999"))
+      @success = run_post(@vm1_tags_url, gen_request(:assign, :href => "#{@cfme[:tags_url]}/999999"))
 
       expect(@success).to be_false
       expect(@code).to eq(404)
@@ -256,7 +256,7 @@ describe ApiController do
       update_user_role(@role, subcollection_action_identifier(:vms, :tags, :assign))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@vm1_tags_url, gen_request_data(:assign, :name => "/managed/bad_category/bad_name"))
+      @success = run_post(@vm1_tags_url, gen_request(:assign, :name => "/managed/bad_category/bad_name"))
 
       expect(@success).to be_true
       expect(@code).to eq(200)
@@ -272,7 +272,7 @@ describe ApiController do
       update_user_role(@role, subcollection_action_identifier(:vms, :tags, :assign))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@vm1_tags_url, gen_requests(:assign, [{:name => @tag1[:path]}, {:name => @tag2[:path]}]))
+      @success = run_post(@vm1_tags_url, gen_request(:assign, [{:name => @tag1[:path]}, {:name => @tag2[:path]}]))
 
       expect(@success).to be_true
       expect(@code).to eq(200)
@@ -294,8 +294,8 @@ describe ApiController do
       basic_authorize @cfme[:user], @cfme[:password]
 
       tag2 = Tag.find_by_name(@tag2[:path])
-      @success = run_post(@vm1_tags_url, gen_requests(:assign, [{:name => @tag1[:path]},
-                                                                {:href => "#{@cfme[:tags_url]}/#{tag2.id}"}]))
+      @success = run_post(@vm1_tags_url, gen_request(:assign, [{:name => @tag1[:path]},
+                                                               {:href => "#{@cfme[:tags_url]}/#{tag2.id}"}]))
 
       expect(@success).to be_true
       expect(@code).to eq(200)
@@ -315,9 +315,9 @@ describe ApiController do
     it "unassigns a tag from a Vm without appropriate role" do
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@vm1_tags_url, gen_request_data(:assign,
-                                                          :category => @tag1[:category],
-                                                          :name     => @tag1[:name]))
+      @success = run_post(@vm1_tags_url, gen_request(:assign,
+                                                     :category => @tag1[:category],
+                                                     :name     => @tag1[:name]))
       expect(@success).to be_false
       expect(@code).to eq(403)
     end
@@ -326,9 +326,9 @@ describe ApiController do
       update_user_role(@role, subcollection_action_identifier(:vms, :tags, :unassign))
       basic_authorize @cfme[:user], @cfme[:password]
 
-      @success = run_post(@vm2_tags_url, gen_request_data(:unassign,
-                                                          :category => @tag1[:category],
-                                                          :name     => @tag1[:name]))
+      @success = run_post(@vm2_tags_url, gen_request(:unassign,
+                                                     :category => @tag1[:category],
+                                                     :name     => @tag1[:name]))
       expect(@success).to be_true
       expect(@code).to eq(200)
       expect(@result).to have_key("results")
@@ -348,8 +348,8 @@ describe ApiController do
       basic_authorize @cfme[:user], @cfme[:password]
 
       tag2 = Tag.find_by_name(@tag2[:path])
-      @success = run_post(@vm2_tags_url, gen_requests(:unassign, [{:name => @tag1[:path]},
-                                                                  {:href => "#{@cfme[:tags_url]}/#{tag2.id}"}]))
+      @success = run_post(@vm2_tags_url, gen_request(:unassign, [{:name => @tag1[:path]},
+                                                                 {:href => "#{@cfme[:tags_url]}/#{tag2.id}"}]))
 
       expect(@success).to be_true
       expect(@code).to eq(200)
