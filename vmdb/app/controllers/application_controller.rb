@@ -970,7 +970,7 @@ class ApplicationController < ActionController::Base
     @data = Array.new
     if (!rec.settings || !rec.settings[:report_menus] || rec.settings[:report_menus].blank?) || mode == "default"
       #array of all reports if menu not configured
-      @rep = MiqReport.all.sort{|a,b| a.rpt_type + a.filename.to_s + a.name <=> b.rpt_type  + b.filename.to_s + b.name}
+      @rep = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
       if tree_type == "timeline"
         @rep.each do |r|
           if r.timeline != nil
@@ -1033,7 +1033,7 @@ class ApplicationController < ActionController::Base
       @custom_folder.push(@sb[:grp_title])
       subfolder.push("Custom")
       @custom_folder.push([subfolder]) unless @custom_folder.include?([subfolder])
-      custom = MiqReport.all.sort{|a,b| a.rpt_type + a.filename.to_s + a.name <=> b.rpt_type  + b.filename.to_s + b.name}
+      custom = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
       custom.each do |r|
         if r.rpt_type == "Custom" && (user.admin_user? || r.miq_group_id.to_i == session[:group].to_i)
           rep.push(r.name) unless rep.include?(r.name)
