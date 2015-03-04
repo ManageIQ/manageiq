@@ -187,7 +187,7 @@ module QcowDisk
       case version
       when 1
         header['l2bits']
-      when 2
+      when 2, 3
         cluster_bits - 3
       else
         raise "Unknown QCOW Version: #{version}"
@@ -221,7 +221,7 @@ module QcowDisk
       when 1
        shift = cluster_bits + l2_bits
        (size + (1 << shift) - 1) >> shift
-      when 2
+      when 2, 3
         header['l1_size']
       else
         raise "Unknown QCOW Version: #{version}"
@@ -441,7 +441,7 @@ module QcowDisk
       when 1
         raise "QCOW Version 1 is not supported"
         QCOW_HEADER_V1.decode(file_handle.read(SIZEOF_QCOW_HEADER_V1))
-      when 2
+      when 2, 3
         h = QCOW_HEADER_V2.decode(file_handle.read(SIZEOF_QCOW_HEADER_V2))
         # TODO: Handle Encryption
         raise "QCOW Encryption is not supported" if h['crypt_method'] == 1
@@ -495,7 +495,7 @@ module QcowDisk
       case version
       when 1
         0
-      when 2
+      when 2, 3
         1 << 63
       else
         raise "Unknown QCOW Version: #{version}"
@@ -508,7 +508,7 @@ module QcowDisk
       case version
       when 1
         1 << 63
-      when 2
+      when 2, 3
         1 << 62
       else
         raise "Unknown QCOW Version: #{version}"
