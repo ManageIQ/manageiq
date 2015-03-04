@@ -23,9 +23,8 @@
     %table.table.table-striped.table-bordered.table-hover
       %thead
         %tr
-          %th.icon
-            &nbsp;
-          %th{:nowrap => 1}
+          %th.narrow
+          %th
             = _('Description')
       %tbody
         - @temp[:miq_groups].sort_by(&:description).each do |g|

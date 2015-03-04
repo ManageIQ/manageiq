@@ -39,9 +39,6 @@
         = render :partial => 'layouts/info_msg', :locals => {:message => _("No Saved Reports available.")}
       - else
         %table.table.table-striped.table-bordered.table-hover
-          %thead
-            %th.narrow
-            %th
           %tbody
             - @sb[:menu].invert.each do |pp|
               %tr{:title => _("View this Profile"), :onclick => "cfmeDynatree_activateNode('#{@sb[:active_tree]}', 'g-#{to_cid(pp[1])}');"}
