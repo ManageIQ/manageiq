@@ -40,33 +40,15 @@
           %th.narrow
         - unless @no_listicon
           %th.narrow
-        - view.headers.each_with_index do |h, i|
-          - if !@embedded && @pages
-            -# Replaced to exclude non-view table fields from sorting
-            - if i == @sortcol
-              %th{:class => (@sortdir == "ASC") ? "sorting_asc" : "sorting_desc"}
-                = link_to(h(h),
-                  {:action => action_url, :sort_choice => h},
-                  "data-miq_sparkle_on"  => true,
-                  "data-miq_sparkle_off" => true,
-                  :remote                => true)
-            - else
-              %th
-                = link_to(h(h),
-                  {:action => action_url, :sort_choice => h},
-                  "data-miq_sparkle_on"  => true,
-                  "data-miq_sparkle_off" => true,
-                  :remote                => true)
-          - else
-            -# Disable column sorting when embedded, for now
-            %th
-              = h(h)
+        - view.headers.each do |h|
+          %th
+            = h(h)
       - if get_vmdb_config[:product][:vmdb_connections_filter] && view.db == "VmdbDatabaseConnection"
         %tr
           - unless @embedded || @no_checkboxes
-            %th
+            %th.narrow
           - unless @no_listicon
-            %th
+            %th.narrow
           - view.col_order.each do |col|
             %th
               - if %w(zone.name miq_worker.type address).include?(col)
