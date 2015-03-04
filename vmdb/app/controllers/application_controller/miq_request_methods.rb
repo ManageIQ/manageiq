@@ -589,10 +589,8 @@ module ApplicationController::MiqRequestMethods
   def prov_get_form_vars
     if params[:ids_checked]                         # User checked/unchecked a tree node
       ids = params[:ids_checked].split(",")
-      @edit.store_path(:new, tag_symbol_for_workflow, [])
-      ids.each do |id|
-        @edit[:new][tag_symbol_for_workflow].push(id.to_i) if id != "" #for some reason if tree is not expanded clicking on radiobuttons this.getAllChecked() sends up extra blanks
-      end
+      # for some reason if tree is not expanded clicking on radiobuttons this.getAllChecked() sends up extra blanks
+      @edit.store_path(:new, tag_symbol_for_workflow, ids.select(&:present?).collect(&:to_i))
     end
     id = params[:ou_id] if params[:ou_id]
     id.gsub!(/_-_/,",") if id
