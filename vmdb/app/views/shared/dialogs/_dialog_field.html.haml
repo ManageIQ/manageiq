@@ -99,12 +99,12 @@
         - if field.type == "DialogFieldDateControl"
           - if edit
             = text_field_tag("miq_date__#{field.name}",
-                             field.default_value,
+                             field.value,
                              :class                  => "css1 dynamic-date-#{field.id}",
                              :readonly               => "true",
                              "data-miq_observe_date" => {:url => url}.to_json)
           - else
-            = field.default_value
+            = field.value
 
         - if field.type == "DialogFieldDateTimeControl"
           - t = Time.now.in_time_zone(session[:user_tz]) + 1.day

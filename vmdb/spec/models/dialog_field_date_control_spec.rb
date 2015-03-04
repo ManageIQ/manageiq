@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe DialogFieldDateControl do
-  describe "#default_value" do
+  describe "#value" do
     let(:dialog_field) { described_class.new(:dynamic => dynamic) }
 
     context "when the field is dynamic" do
@@ -12,13 +12,8 @@ describe DialogFieldDateControl do
         dialog_field.value = nil
       end
 
-      it "stores the new value in the value attribute" do
-        dialog_field.default_value
-        expect(dialog_field.value).to eq("processor")
-      end
-
       it "returns the values from the value processor" do
-        expect(dialog_field.default_value).to eq("processor")
+        expect(dialog_field.value).to eq("processor")
       end
     end
 
@@ -31,7 +26,7 @@ describe DialogFieldDateControl do
 
       it "returns tomorrow's date" do
         Timecop.freeze(Time.new(2015, 1, 2)) do
-          expect(dialog_field.default_value).to eq("01/03/2015")
+          expect(dialog_field.value).to eq("01/03/2015")
         end
       end
     end
@@ -41,7 +36,7 @@ describe DialogFieldDateControl do
     let(:dialog_field) { described_class.new(:dynamic => true) }
     let(:automate_hash) do
       {
-        "default_value"   => default_value,
+        "value"           => value,
         "show_past_dates" => true
       }
     end
@@ -60,31 +55,26 @@ describe DialogFieldDateControl do
       end
     end
 
-    context "when the automate hash has a default value" do
-      context "when the default value is a date format" do
-        let(:default_value) { "01/02/2015" }
+    context "when the automate hash has a value" do
+      context "when the value is a date format" do
+        let(:value) { "01/02/2015" }
 
         it_behaves_like "DialogFieldDateControl#normalize_automate_values"
 
-        it "sets the default value as an iso format" do
+        it "sets the value as an iso format" do
           dialog_field.normalize_automate_values(automate_hash)
-          expect(dialog_field.read_attribute(:default_value)).to eq("2015-01-02")
+          expect(dialog_field.instance_variable_get(:@value)).to eq("2015-01-02")
         end
 
-        it "returns the default value in m/d/y format" do
+        it "returns the value in m/d/y format" do
           expect(dialog_field.normalize_automate_values(automate_hash)).to eq("01/02/2015")
         end
       end
 
-      context "when the default value is not a proper date format" do
-        let(:default_value) { "not a date" }
+      context "when the value is not a proper date format" do
+        let(:value) { "not a date" }
 
         it_behaves_like "DialogFieldDateControl#normalize_automate_values"
-
-        it "sets the default value to nil" do
-          dialog_field.normalize_automate_values(automate_hash)
-          expect(dialog_field.read_attribute(:default_value)).to eq(nil)
-        end
 
         it "returns the initial values" do
           Timecop.freeze(2015, 1, 2) do
@@ -94,15 +84,10 @@ describe DialogFieldDateControl do
       end
     end
 
-    context "when the automate hash does not have a default value" do
-      let(:default_value) { nil }
+    context "when the automate hash does not have a value" do
+      let(:value) { nil }
 
       it_behaves_like "DialogFieldDateControl#normalize_automate_values"
-
-      it "sets the default value" do
-        dialog_field.normalize_automate_values(automate_hash)
-        expect(dialog_field.read_attribute(:default_value)).to eq(nil)
-      end
 
       it "returns the initial values" do
         Timecop.freeze(2015, 1, 2) do

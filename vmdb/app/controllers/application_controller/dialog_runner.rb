@@ -203,7 +203,7 @@ module ApplicationController::DialogRunner
   def dynamic_date_refresh
     field = load_dialog_field(params[:name])
 
-    response_json = {:field_name => field.name, :date_value => field.default_value}
+    response_json = {:field_name => field.name, :date_value => field.value}
     dynamic_refresh_response(response_json)
   end
 

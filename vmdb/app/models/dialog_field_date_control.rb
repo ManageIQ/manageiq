@@ -16,16 +16,14 @@ class DialogFieldDateControl < DialogField
   end
 
   def automate_output_value
-    return nil unless value
-    Date.parse(value).iso8601
+    return nil unless @value
+    Date.parse(@value).iso8601
   end
 
-  def default_value
+  def value
     if dynamic
-      new_value = values_from_automate
-      write_attribute(:default_value, new_value)
-      @value = new_value
-      self[:default_value]
+      @value = values_from_automate
+      @value
     else
       default_time
     end
@@ -36,15 +34,14 @@ class DialogFieldDateControl < DialogField
       send("#{key}=", automate_hash[key]) if automate_hash.key?(key)
     end
 
-    return default_time if automate_hash["default_value"].blank?
+    return default_time if automate_hash["value"].blank?
     begin
-      self.default_value = Date.parse(automate_hash["default_value"]).iso8601
+      @value = Date.parse(automate_hash["value"]).iso8601
     rescue
-      self.default_value = nil
       return default_time
     end
 
-    Date.parse(self[:default_value]).strftime("%m/%d/%Y")
+    Date.parse(@value).strftime("%m/%d/%Y")
   end
 
   def script_error_values
