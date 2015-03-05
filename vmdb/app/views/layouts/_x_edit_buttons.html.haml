@@ -112,7 +112,7 @@
                   :class   => "btn btn-primary",
                   :alt     => save_text,
                   :title   => save_text,
-                  :onclick => "if (confirm('#{save_confirm_text}')) miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "save")}');")
+                  :onclick => "if (confirm('#{save_confirm_text}')) miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "save")}', #{serialize});")
               - else
                 = button_tag(_('Save'),
                   :class   => "btn btn-primary",

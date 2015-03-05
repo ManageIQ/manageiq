@@ -1,0 +1,14 @@
+---
+:model: OrchestrationTemplate
+:button_groups:
+- :name: ot_config
+  :items:
+  - :buttonSelect: ot_config_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: orchestration_templates_admin
+      :image: edit
+      :text: "Edit this Orchestration Template"
+      :title: "Edit this Orchestration Template"

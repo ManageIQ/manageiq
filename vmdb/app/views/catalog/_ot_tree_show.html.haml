@@ -1,30 +1,38 @@
-.maincontent{:xmlns => "http://www.w3.org/1999/html"}
+#main_div
   = render :partial => "layouts/flash_msg"
+  - read_only = @record.stacks.length > 0
+  %p.legend= _("Orchestration Template Information")
   %table
     %td{:valign => "top"}
       %table.style1
         %tr
           %td.key=_('Name')
-          %td.notwide= @record.name
+          %td= @record.name
         %tr
           %td.key=_('Description')
-          %td.notwide= @record.description
-        %tr
-          %td.key=_('Created On')
-          %td.notwide= @record.created_at
-        %tr
-          %td.key=_('Updated On')
-          %td.notwide= @record.updated_at
+          %td=@record.description
+        - unless @edit
+          %tr
+            %td.key=_('Read Only')
+            %td= read_only ? _("True") : _("False")
+          %tr
+            %td.key=_('Created On')
+            %td= @record.created_at
+          %tr
+            %td.key=_('Updated On')
+            %td= @record.updated_at
 
   %hr
-  - if @record.content
+  #form_div
     = text_area_tag("template_content", @record.content, :style => "display:none;")
     - if params[:action] != "explorer"
+      - url = url_for(:action => "ot_content_changed", :id => "#{@record[:id]}")
       = render :partial => "/layouts/my_code_mirror",
         :locals       => {:text_area_id => "template_content",
         :mode         => "yaml",
-        :line_numbers => false,
-        :read_only    => true}
+        :line_numbers => !read_only,
+        :read_only    => read_only,
+        :url          => url}
 
-:javascript
-  miqEditor.refresh();
+    :javascript
+      miqEditor.refresh();
