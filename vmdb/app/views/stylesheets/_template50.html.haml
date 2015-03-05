@@ -6,6 +6,7 @@
   - padding_top = session[:custom_logo] ? 83 : 70
   :css
     @media (min-width: 992px) {
+      .navbar-pf ul > li.active { margin-bottom: 0 !important; }
       .navbar-nav ul > li > ul { display:none }
       body { padding-top: #{padding_top}px !important }
     }
