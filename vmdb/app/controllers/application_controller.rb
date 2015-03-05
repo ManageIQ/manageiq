@@ -388,8 +388,8 @@ class ApplicationController < ActionController::Base
     return if record_no_longer_exists?(@record)
 
     @lastaction = "event_logs"
-    obj = @record.class.to_s == "Vm" ? "vm" : "host"
-    bc_text = @record.class.to_s == "Vm" ? "Event Logs" : "ESX Logs"
+    obj = @record.kind_of?(Vm) ? "vm" : "host"
+    bc_text = @record.kind_of?(Vm) ? "Event Logs" : "ESX Logs"
     @sb[:action] = params[:action]
     @explorer = true if @record.kind_of?(VmOrTemplate)
     if params[:show] != nil || params[:x_show] != nil

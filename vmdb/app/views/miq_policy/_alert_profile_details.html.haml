@@ -113,7 +113,7 @@
         - aa = @alert_profile.get_assigned_tos
         - if !aa[:objects].empty?
           - # Objects are assigned
-          - if aa[:objects].first.class.to_s == "MiqEnterprise"
+          - if aa[:objects].first.kind_of?(MiqEnterprise)
             - # Assigned to Enterprise object
             =_('The Enterprise')
           - else
