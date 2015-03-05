@@ -107,47 +107,49 @@ describe ExtManagementSystem do
   end
 
   context "validates" do
-    described_class.leaf_subclasses.collect{|ems| ems.name.underscore.to_sym}.each do |t|
-      next if t == :ems_amazon # Amazon is tested in ems_amazon_spec.rb
+    described_class.leaf_subclasses.each do |ems|
+      next if ems == EmsAmazon # Amazon is tested in ems_amazon_spec.rb
+      t = ems.name.underscore
 
-      context "for #{t}" do
+      context "for #{ems}" do
 
         it "name" do
           expect { FactoryGirl.create(t, :name => "ems_1", :ipaddress => "1.1.1.1", :hostname => "ems_1") }.to_not raise_error
           expect { FactoryGirl.create(t, :name => "ems_1", :ipaddress => "2.2.2.2", :hostname => "ems_2") }.to     raise_error
         end
 
-        context "ipaddress" do
-          it "duplicate ipaddress" do
-            expect { FactoryGirl.create(t, :ipaddress => "1.1.1.1", :hostname => "ems_1") }.to_not raise_error
-            expect { FactoryGirl.create(t, :ipaddress => "1.1.1.1", :hostname => "ems_2") }.to     raise_error
+        if ems.new.hostname_ipaddress_required?
+          context "ipaddress" do
+            it "duplicate ipaddress" do
+              expect { FactoryGirl.create(t, :ipaddress => "1.1.1.1", :hostname => "ems_1") }.to_not raise_error
+              expect { FactoryGirl.create(t, :ipaddress => "1.1.1.1", :hostname => "ems_2") }.to     raise_error
+            end
+
+            it "blank ipaddress" do
+              expect { FactoryGirl.create(t, :ipaddress => "", :hostname => "ems_1") }.to raise_error
+            end
+
+            it "nil ipaddress" do
+              expect { FactoryGirl.create(t, :ipaddress => nil, :hostname => "ems_1") }.to raise_error
+            end
           end
 
-          it "blank ipaddress" do
-            expect { FactoryGirl.create(t, :ipaddress => "", :hostname => "ems_1") }.to raise_error
-          end
+          context "hostname" do
+            it "duplicate hostname" do
+              expect { FactoryGirl.create(t, :ipaddress => "1.1.1.1", :hostname => "ems_1") }.to_not raise_error
+              expect { FactoryGirl.create(t, :ipaddress => "2.2.2.2", :hostname => "ems_1") }.to     raise_error
+              expect { FactoryGirl.create(t, :ipaddress => "3.3.3.3", :hostname => "EMS_1") }.to     raise_error
+            end
 
-          it "nil ipaddress" do
-            expect { FactoryGirl.create(t, :ipaddress => nil, :hostname => "ems_1") }.to raise_error
+            it "blank hostname" do
+              expect { FactoryGirl.create(t, :ipaddress => "1.1.1.1", :hostname => "") }.to raise_error
+            end
+
+            it "nil hostname" do
+              expect { FactoryGirl.create(t, :ipaddress => "1.1.1.1", :hostname => nil) }.to raise_error
+            end
           end
         end
-
-        context "hostname" do
-          it "duplicate hostname" do
-            expect { FactoryGirl.create(t, :ipaddress => "1.1.1.1", :hostname => "ems_1") }.to_not raise_error
-            expect { FactoryGirl.create(t, :ipaddress => "2.2.2.2", :hostname => "ems_1") }.to     raise_error
-            expect { FactoryGirl.create(t, :ipaddress => "3.3.3.3", :hostname => "EMS_1") }.to     raise_error
-          end
-
-          it "blank hostname" do
-            expect { FactoryGirl.create(t, :ipaddress => "1.1.1.1", :hostname => "") }.to raise_error
-          end
-
-          it "nil hostname" do
-            expect { FactoryGirl.create(t, :ipaddress => "1.1.1.1", :hostname => nil) }.to raise_error
-          end
-        end
-
       end
     end
 
