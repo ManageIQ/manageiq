@@ -27,16 +27,8 @@ module MiqAeMethodService
     expose :performances_maintains_value_for_duration?
     expose :reconfigured_hardware_value?
     expose :changed_vm_value?
-    expose :retire_now
     expose :files,                 :association => true
     expose :directories,           :association => true
-    expose :start_retirement
-    expose :finish_retirement
-    expose :retiring?
-    expose :error_retiring?
-    expose :retired?
-    expose :files
-    expose :directories
     expose :refresh, :method => :refresh_ems
 
     METHODS_WITH_NO_ARGS = %w{start stop suspend unregister collect_running_processes shutdown_guest standby_guest reboot_guest}

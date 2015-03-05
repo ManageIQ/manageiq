@@ -3,15 +3,9 @@ module MiqAeMethodService
     require_relative "mixins/miq_ae_service_retirement_mixin"
     include MiqAeServiceRetirementMixin
 
-    expose :retire_now
     expose :retire_service_resources
-    expose :service_resources
     expose :automate_retirement_entrypoint
-    expose :start_retirement
-    expose :finish_retirement
-    expose :retiring?
-    expose :error_retiring?
-    expose :retired?
+    expose :service_resources, :association => true
     expose :start
     expose :stop
     expose :suspend

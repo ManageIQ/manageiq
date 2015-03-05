@@ -15,10 +15,10 @@ module RetirementMixin
     end
   end
 
-  def retirement_warn=(seconds)
-    if self.retirement_warn != seconds
+  def retirement_warn=(days)
+    if self.retirement_warn != days
       self.retirement_last_warn = nil # Reset so that a new warning can be sent out when the time is right
-      write_attribute(:retirement_warn, seconds)
+      write_attribute(:retirement_warn, days)
     end
   end
 
