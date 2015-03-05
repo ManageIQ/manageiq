@@ -138,10 +138,9 @@ module VmCommon
     when 'spice'
       view = "vm_common/console_spice"
       proxy_options[:proxy_host] = 'localhost' # FIXME: appliance IP
-    when nil, 'vnc' # FIXME nil - from vmware
+    when nil, 'vnc' # FIXME: nil - from vmware
       view = "vm_common/console_vnc"
       proxy_options[:proxy_host] = 'localhost' # FIXME: appliance IP
-      #@sb[:vnc] = proxy_options[:proxy_port]
     end
 
     Rails.logger.error("PROXY options: #{proxy_options}")
