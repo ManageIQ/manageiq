@@ -26,7 +26,15 @@ module VmShowMixin
     end
 
     # Build the Explorer screen from scratch
-    build_trees_and_accordions features.select { |f| role_allows(:feature => f.role) }
+    allowed_features = features.select { |f| role_allows(:feature => f.role) }
+    allowed_features.each { |feature| build_vm_tree(feature.name, feature.tree_name) }
+
+    @trees = allowed_features.map(&:tree_name).map(&:to_s)
+    @accords = allowed_features.map do |feature|
+      { :name      => feature.accord_name,
+        :title     => feature.title,
+        :container => feature.container }
+    end
 
     params.merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)
@@ -45,18 +53,6 @@ module VmShowMixin
 
     render :layout => "explorer" unless redirected
   end
-
-  def build_trees_and_accordions(allowed_features)
-    @trees   = []
-    @accords = []
-
-    allowed_features.each do |feature|
-      build_vm_tree(feature.name, feature.tree_name)
-      @trees.push(feature.tree_name.to_s)
-      @accords.push({:name=>feature.accord_name, :title=>feature.title, :container=>feature.container})
-    end
-  end
-  private :build_trees_and_accordions
 
   def set_form_locals_for_sysprep
     _partial, action, @right_cell_text = set_right_cell_vars
