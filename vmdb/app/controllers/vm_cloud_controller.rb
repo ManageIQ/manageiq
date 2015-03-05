@@ -79,18 +79,10 @@ class VmCloudController < ApplicationController
   end
 
   def set_active_elements
-    if role_allows(:feature => "instances_accord")
-      self.x_active_tree   ||= 'instances_tree'
-      self.x_active_accord ||= 'instances'
-    elsif role_allows(:feature => "images_accord")
-      self.x_active_tree   ||= 'images_tree'
-      self.x_active_accord ||= 'images'
-    elsif role_allows(:feature => "instances_filter_accord")
-      self.x_active_tree   ||= 'instances_filter_tree'
-      self.x_active_accord ||= 'instances_filter'
-    elsif role_allows(:feature => "images_filter_accord")
-      self.x_active_tree   ||= 'images_filter_tree'
-      self.x_active_accord ||= 'images_filter'
+    feature = features.detect { |f| role_allows(:feature => f.role) }
+    if feature
+      self.x_active_tree   ||= feature.tree_list_name
+      self.x_active_accord ||= feature.accord_name
     end
     # Set active tree and accord to first allowed feature
     get_node_info(x_node)
