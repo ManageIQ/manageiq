@@ -9,15 +9,19 @@ describe OrchestrationTemplateCfn do
     end
   end
 
+  let(:sample) do
+    'spec/fixtures/orchestration_templates/cfn_parameters.json'
+  end
+
+  let(:valid_template) do
+    OrchestrationTemplateCfn.new(:content => IO.read(sample))
+  end
+
   context "when a raw template in JSON format is given" do
-    let(:sample) do
-      'spec/fixtures/orchestration_templates/cfn_parameters.json'
-    end
+
 
     it "parses parameters from a template" do
-      template = OrchestrationTemplateCfn.new(:content => IO.read(sample))
-
-      groups = template.parameter_groups
+      groups = valid_template.parameter_groups
       groups.size.should == 1
       groups[0].label.should == "Parameters"
 
@@ -130,5 +134,21 @@ describe OrchestrationTemplateCfn do
       :min_length  => 1,
       :max_length  => 41
     )
+  end
+
+  describe '#validate_format' do
+    it 'passes validation if no content' do
+      template = OrchestrationTemplateCfn.new
+      template.validate_format.should be_nil
+    end
+
+    it 'passes validation with correct JSON content' do
+      valid_template.validate_format.should be_nil
+    end
+
+    it 'fails validations with incorrect JSON content' do
+      template = OrchestrationTemplateCfn.new(:content => "invalid string")
+      template.validate_format.should_not be_nil
+    end
   end
 end

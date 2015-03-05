@@ -78,4 +78,26 @@ describe OrchestrationTemplate do
       @template.eligible_managers.should =~ [@aws, @openstack]
     end
   end
+
+  describe "#validate_content" do
+    before do
+      @template = FactoryGirl.create(:orchestration_template)
+      @manager = FactoryGirl.create(:ems_amazon)
+      @manager.stub(:orchestration_template_validate => "Validation Message")
+    end
+
+    it "uses caller provided manager to do validation" do
+      @template.validate_content(@manager).should == "Validation Message"
+    end
+
+    it "uses all eligible managers to do validation" do
+      @template.stub(:eligible_managers => [@manager])
+      @template.validate_content.should == "Validation Message"
+    end
+
+    it "gets an error message if no eligible managers" do
+      @template.stub(:eligible_managers => ["Invalid Object"])
+      @template.validate_content.should match(/No (.*) is capable to validate the template/)
+    end
+  end
 end

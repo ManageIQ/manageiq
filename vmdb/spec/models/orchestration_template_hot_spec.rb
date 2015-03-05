@@ -9,15 +9,13 @@ describe OrchestrationTemplateHot do
     end
   end
 
+  let(:sample) { 'spec/fixtures/orchestration_templates/hot_parameters.yml' }
+
+  let(:valid_template) { OrchestrationTemplateHot.new(:content => IO.read(sample)) }
+
   context "when a raw template in YAML format is given" do
-    let(:sample) do
-      'spec/fixtures/orchestration_templates/hot_parameters.yml'
-    end
-
     it "parses parameters from a template" do
-      template = OrchestrationTemplateHot.new(:content => IO.read(sample))
-
-      groups = template.parameter_groups
+      groups = valid_template.parameter_groups
       groups.size.should == 2
 
       assert_general_group(groups[0])
@@ -157,5 +155,21 @@ describe OrchestrationTemplateHot do
       :hidden        => false,
       :constraints   => [],
     )
+  end
+
+  describe '#validate_format' do
+    it 'passes validation if no content' do
+      template = OrchestrationTemplateHot.new
+      template.validate_format.should be_nil
+    end
+
+    it 'passes validation with correct YAML content' do
+      valid_template.validate_format.should be_nil
+    end
+
+    it 'fails validations with incorrect YAML content' do
+      template = OrchestrationTemplateHot.new(:content => ":-Invalid:\n-String")
+      template.validate_format.should_not be_nil
+    end
   end
 end

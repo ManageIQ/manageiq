@@ -60,6 +60,15 @@ class OrchestrationTemplate < ActiveRecord::Base
     self.class.eligible_managers
   end
 
+  # return the validation error message; otherwise nil
+  def validate_content(manager = nil)
+    test_managers = manager.nil? ? eligible_managers : [manager]
+    test_managers.each do |mgr|
+      return mgr.orchestration_template_validate(self) rescue nil
+    end
+    "No #{ui_lookup(:model => 'ExtManagementSystem').downcase} is capable to validate the template"
+  end
+
   private
 
   def ems_ref=(_md5)
