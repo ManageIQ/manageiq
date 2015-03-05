@@ -10,26 +10,35 @@ class VmOrTemplateController < ApplicationController
 
   private
 
+  Feature = Struct.new :role, :name, :accord_name, :tree_name, :title, :container
+
+  def features
+    [
+      Feature.new("vms_instances_filter_accord",
+                  :filter,
+                  "vms_instances_filter",
+                  :vms_instances_filter_tree,
+                  "VMs & Instances",
+                  "vms_instances_filter_tree_div"),
+
+      Feature.new("templates_images_filter_accord",
+                  :filter,
+                  "templates_images_filter",
+                  :templates_images_filter_tree,
+                  "Templates & Images",
+                  "templates_images_filter_tree_div"),
+    ]
+  end
+
   def build_trees_and_accordions
     @trees   = []
     @accords = []
-    if role_allows(:feature => "vms_instances_filter_accord")
-      build_vm_tree(:filter, :vms_instances_filter_tree)
-      @trees.push("vms_instances_filter_tree")
-      @accords.push(
-        :name      => "vms_instances_filter",
-        :title     => "VMs & Instances",
-        :container => "vms_instances_filter_tree_div"
-      )
-    end
-    if role_allows(:feature => "templates_images_filter_accord")
-      build_vm_tree(:filter, :templates_images_filter_tree)
-      @trees.push("templates_images_filter_tree")
-      @accords.push(
-        :name      => "templates_images_filter",
-        :title     => "Templates & Images",
-        :container => "templates_images_filter_tree_div"
-      )
+    features.each do |feature|
+      if role_allows(:feature=> feature.role)
+        build_vm_tree(feature.name, feature.tree_name)
+        @trees.push(feature.tree_name.to_s)
+        @accords.push({:name=>feature.accord_name, :title=>feature.title, :container=>feature.container})
+      end
     end
 
     # Commented out for first VMX version
