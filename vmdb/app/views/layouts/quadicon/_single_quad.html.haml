@@ -14,11 +14,8 @@
   - unless typ == :listnav
     - # Listnav, no clear image needed
     .flobj
+      - name = item.kind_of?(MiqCimInstance) ? item.evm_display_name : item.name
       - if !@embedded || @showlinks
-        - if item.class.base_class.to_s == "MiqCimInstance"
-          - name = item.evm_display_name
-        - else
-          - name = item.name
         - if @explorer
           = link_to(image_tag("/images/icons/#{size}/reflection.png", :width => size, :height => size, :title => h(name)),
             {:action => 'x_show', :id => to_cid(item.id)},
@@ -29,7 +26,6 @@
           %a{:href => url_for_record(item), :title => h(name)}
             %img{:src => "/images/clearpix.gif", :width => size, :height => size}
       - else
-        - name = item.class.base_class.to_s == "MiqCimInstance" ? item.evm_display_name : item.name
         %a{:title => h(name)}
           %img{:src => "/images/clearpix.gif", :width => size, :height => size}
 - else
