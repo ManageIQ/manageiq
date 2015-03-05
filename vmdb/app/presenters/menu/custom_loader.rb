@@ -43,10 +43,10 @@ module Menu
 
     def create_custom_menu_section(properties)
       placement    = properties.key?('placement')    ? properties['placement'].to_sym    : :default
-      after        = properties.key?('after')        ? properties['after'].to_sym        : nil
+      before       = properties.key?('before')       ? properties['before'].to_sym       : nil
       section_type = properties.key?('section_type') ? properties['section_type'].to_sym : :default
       href         = properties.key?('href')         ? properties['href'].to_sym         : nil
-      Section.new(properties['id'].to_sym, properties['name'], [], placement, after, section_type, href)
+      Section.new(properties['id'].to_sym, properties['name'], [], placement, before, section_type, href)
     end
   end
 end

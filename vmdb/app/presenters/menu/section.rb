@@ -1,6 +1,6 @@
 module Menu
-  Section = Struct.new(:id, :name, :items, :placement, :after, :type, :href) do
-    def initialize(an_id, name, items = [], placement = :default, after = nil, type = :default, href = nil)
+  Section = Struct.new(:id, :name, :items, :placement, :before, :type, :href) do
+    def initialize(an_id, name, items = [], placement = :default, before = nil, type = :default, href = nil)
       super
     end
 

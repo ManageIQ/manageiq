@@ -61,9 +61,9 @@ module Menu
 
     def merge_sections(sections)
       sections.each do |section|
-        if section.after
-          position = @menu.index { |existing_section| existing_section.id == section.after }
-          @menu.insert(position + 1, section)
+        if section.before
+          position = @menu.index { |existing_section| existing_section.id == section.before }
+          @menu.insert(position, section)
         else
           @menu << section
         end
