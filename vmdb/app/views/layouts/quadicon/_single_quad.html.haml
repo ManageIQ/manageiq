@@ -1,6 +1,6 @@
 - if @listicon.nil?
-  - if item.class.base_class.to_s.underscore == "miq_cim_instance"
-    - if item.class.to_s.underscore == "cim_storage_extent"
+  - if item.kind_of?(MiqCimInstance)
+    - if item.kind_of?(CimStorageExtent)
       - img = "cim_base_storage_extent"
     - else
       - img = item.class.to_s.underscore
