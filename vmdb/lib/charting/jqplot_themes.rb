@@ -5,12 +5,12 @@ class JqplotThemes
   THEMES = {
     # name of 1st theme is hardcoded in UiConstants
     'MIQ' => {
-      :seriesColors   => ['#0099d3', '#00618a', '#0b3a54', '#979a9c', '#686b6e', '#505459', '#393f44', '#bde0ed'],
+      :seriesColors   => ['#ec7a08', '#f4aa00', '#006e9c', '#0085cf', '#3f9c35', '#92D400', '#ccce00', '#ffff00', '#925bad', '#c0acdc', '#350000', '#a30000', '#cc0000',],
       :seriesDefaults => {
         :shadow          => false,
         :rendererOptions => {
           :dataLabelPositionFactor => 0.7,
-          :sliceMargin             => 4
+          :sliceMargin             => 2
         }
       },
       :grid           => {
