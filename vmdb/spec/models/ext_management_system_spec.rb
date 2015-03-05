@@ -8,32 +8,26 @@ describe ExtManagementSystem do
     described_class.model_name_from_emstype('foo').should be_nil
   end
 
-  it ".types" do
-    expected_types =  [
-      "vmwarews",
-      "ec2",
-      "scvmm",
-      "rhevm",
-      "openstack",
-      "openstack_infra",
-      "kubernetes"
-    ]
+  let(:all_types) do
+    %w(
+      ec2
+      foreman_configuration
+      foreman_provisioning
+      kubernetes
+      openstack
+      openstack_infra
+      rhevm
+      scvmm
+      vmwarews
+    )
+  end
 
-    described_class.types.should match_array(expected_types)
+  it ".types" do
+    described_class.types.should match_array(all_types)
   end
 
   it ".supported_types" do
-    expected_types =  [
-      "vmwarews",
-      "ec2",
-      "rhevm",
-      "scvmm",
-      "openstack",
-      "openstack_infra",
-      "kubernetes"
-    ]
-
-    described_class.supported_types.should match_array(expected_types)
+    described_class.supported_types.should match_array(all_types)
   end
 
   it ".ems_discovery_types" do

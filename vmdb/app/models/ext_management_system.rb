@@ -1,8 +1,10 @@
 class ExtManagementSystem < ActiveRecord::Base
   SUBCLASSES = %w(
+    ConfigurationManager
     EmsInfra
     EmsCloud
     EmsContainer
+    ProvisioningManager
   )
 
   def self.types
@@ -18,7 +20,9 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def self.supported_subclasses
-    subclasses.flat_map(&:supported_subclasses)
+    subclasses.flat_map do |s|
+      s.subclasses.empty? ? s : s.supported_subclasses
+    end
   end
 
   def self.supported_types_and_descriptions_hash

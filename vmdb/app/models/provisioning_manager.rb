@@ -8,3 +8,7 @@ class ProvisioningManager < ExtManagementSystem
     false
   end
 end
+
+# Preload any subclasses of this class, so that they will be part of the
+#   conditions that are generated on queries against this class.
+VMDB::Util.eager_load_subclasses('ProvisioningManager')
