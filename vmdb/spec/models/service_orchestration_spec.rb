@@ -1,14 +1,15 @@
 require "spec_helper"
 
 describe ServiceTemplate do
-  let(:orch_manager) { FactoryGirl.create(:ems_amazon) }
-  let(:orch_template) { FactoryGirl.create(:orchestration_template) }
-  let(:service) { FactoryGirl.create(:service_orchestration) }
+  let(:manager_by_setter)  { FactoryGirl.create(:ems_amazon) }
+  let(:template_by_setter) { FactoryGirl.create(:orchestration_template) }
+  let(:manager_by_dialog)  { FactoryGirl.create(:ems_amazon) }
+  let(:template_by_dialog) { FactoryGirl.create(:orchestration_template) }
 
   let(:dialog_options) do
     {
-      'dialog_stack_template'                 => '1',
-      'dialog_stack_manager'                  => '1',
+      'dialog_stack_template'                 => template_by_dialog.id,
+      'dialog_stack_manager'                  => manager_by_dialog.id,
       'dialog_stack_name'                     => 'test123',
       'dialog_stack_onfailure'                => 'ROLLBACK',
       'dialog_stack_timeout'                  => '30',
@@ -17,28 +18,28 @@ describe ServiceTemplate do
     }
   end
 
+  let(:service) { FactoryGirl.create(:service_orchestration) }
+
   let(:service_with_dialog_options) do
     service.options = {:dialog => dialog_options}
     service
   end
 
-  let(:service_fully_loaded) do
-    service.orchestration_template = orch_template
-    service.orchestration_manager = orch_manager
+  let(:service_mix_dialog_setter) do
+    service.orchestration_template = template_by_setter
+    service.orchestration_manager = manager_by_setter
     service.options = {:dialog => dialog_options}
     service
   end
 
   context "#stack_name" do
     it "gets stack name from dialog options" do
-      name = service_with_dialog_options.stack_name
-      name.should == 'test123'
+      service_with_dialog_options.stack_name.should == 'test123'
     end
 
     it "gets stack name from overridden value" do
-      service_orch = service_with_dialog_options
-      service_orch.stack_name = "new_name"
-      service_orch.stack_name.should == "new_name"
+      service_with_dialog_options.stack_name = "new_name"
+      service_with_dialog_options.stack_name.should == "new_name"
     end
   end
 
@@ -46,8 +47,6 @@ describe ServiceTemplate do
     before do
       allow_any_instance_of(ServiceOrchestration::OptionConverterAmazon).to(
         receive(:stack_create_options).and_return(dialog_options))
-      allow(OrchestrationTemplate).to receive(:find).and_return(FactoryGirl.create(:orchestration_template))
-      allow(ExtManagementSystem).to receive(:find).and_return(FactoryGirl.create(:ems_amazon))
     end
 
     it "gets stack options set by dialog" do
@@ -61,17 +60,62 @@ describe ServiceTemplate do
     end
 
     it "prefers the orchestration template set by dialog" do
-      service_fully_loaded.orchestration_template.should == orch_template
-      service_fully_loaded.stack_options
-      service_fully_loaded.orchestration_template.should_not == orch_template
-      service_fully_loaded.orchestration_template.should be_kind_of OrchestrationTemplate
+      service_mix_dialog_setter.orchestration_template.should == template_by_setter
+      service_mix_dialog_setter.stack_options
+      service_mix_dialog_setter.orchestration_template.should == template_by_dialog
     end
 
     it "prefers the orchestration manager set by dialog" do
-      service_fully_loaded.orchestration_manager.should == orch_manager
-      service_fully_loaded.stack_options
-      service_fully_loaded.orchestration_manager.should_not == orch_manager
-      service_fully_loaded.orchestration_manager.should be_kind_of ExtManagementSystem
+      service_mix_dialog_setter.orchestration_manager.should == manager_by_setter
+      service_mix_dialog_setter.stack_options
+      service_mix_dialog_setter.orchestration_manager.should == manager_by_dialog
+    end
+  end
+
+  context '#deploy_orchestration_stack' do
+    it 'creates a stack through cloud manager' do
+      EmsAmazon.any_instance.stub(:stack_create) do |name, template, opts|
+        name.should == 'test123'
+        template.should be_kind_of OrchestrationTemplate
+        opts.should be_kind_of Hash
+      end
+
+      service_mix_dialog_setter.deploy_orchestration_stack
+    end
+
+    it 'always saves options even when the manager fails to create a stack' do
+      ProvisionError = MiqException::MiqOrchestrationProvisionError
+      EmsAmazon.any_instance.stub(:stack_create).and_raise(ProvisionError, 'test failure')
+
+      service_mix_dialog_setter.should_receive(:save_options)
+      expect { service_mix_dialog_setter.deploy_orchestration_stack }.to raise_error(ProvisionError)
+    end
+  end
+
+  context '#orchestration_stack_status' do
+    it 'returns an error if stack has never been deployed' do
+      status, _message = service_mix_dialog_setter.orchestration_stack_status
+      status.should  == 'check_status_failed'
+    end
+
+    it 'returns current stack status through provider' do
+      EmsAmazon.any_instance.stub(:stack_status).and_return(['create_complete', 'no error'])
+
+      service_mix_dialog_setter.options[:stack_id] = 'abc'  # simulate stack deployed
+      status, message = service_mix_dialog_setter.orchestration_stack_status
+
+      status.should  == 'create_complete'
+      message.should == 'no error'
+    end
+
+    it 'returns an error message when the provider fails to retrieve the status' do
+      EmsAmazon.any_instance.stub(:stack_status)
+        .and_raise(MiqException::MiqOrchestrationStatusError, 'test failure')
+
+      service_mix_dialog_setter.options[:stack_id] = 'abc'  # simulate stack deployed
+      status, message = service_mix_dialog_setter.orchestration_stack_status
+      status.should  == 'check_status_failed'
+      message.should == 'test failure'
     end
   end
 
