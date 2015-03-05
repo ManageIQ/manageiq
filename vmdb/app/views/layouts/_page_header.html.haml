@@ -20,7 +20,7 @@
             %ul.dropdown-menu#custom_menu_div
               - menu_section.items.each do |menu_item|
                 %li
-                  %a{:href    => menu_item.href,
+                  %a{:href    => menu_item.url,
                      :onclick => 'return miqCheckForChanges()'}= menu_item.name
 
         = render :partial => "layouts/user_options"
