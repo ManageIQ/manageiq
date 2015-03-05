@@ -9,37 +9,35 @@ class VmCloudController < ApplicationController
 
   private
 
-  Feature = Struct.new :role, :name, :accord_name, :tree_name, :title, :container
-
   def features
     [
-      Feature.new("instances_accord",
-                  :instances,
-                  "instances",
-                  :instances_tree,
-                  "Instances by Provider",
-                  "instances_tree_div"),
+      ApplicationController::Feature.new("instances_accord",
+                                         :instances,
+                                         "instances",
+                                         :instances_tree,
+                                         "Instances by Provider",
+                                         "instances_tree_div"),
 
-      Feature.new("images_accord",
-                  :images,
-                  "images",
-                  :images_tree,
-                  "Images by Provider",
-                  "images_tree_div"),
+      ApplicationController::Feature.new("images_accord",
+                                         :images,
+                                         "images",
+                                         :images_tree,
+                                         "Images by Provider",
+                                         "images_tree_div"),
 
-      Feature.new("instances_filter_accord",
-                  :filter,
-                  "instances_filter",
-                  :instances_filter_tree,
-                  "Instances",
-                  "instances_filter_tree_div"),
+      ApplicationController::Feature.new("instances_filter_accord",
+                                         :filter,
+                                         "instances_filter",
+                                         :instances_filter_tree,
+                                         "Instances",
+                                         "instances_filter_tree_div"),
 
-      Feature.new("images_filter_accord",
-                  :filter,
-                  "images_filter",
-                  :images_filter_tree,
-                  "Images",
-                  "images_filter_tree_div")
+      ApplicationController::Feature.new("images_filter_accord",
+                                         :filter,
+                                         "images_filter",
+                                         :images_filter_tree,
+                                         "Images",
+                                         "images_filter_tree_div")
     ]
   end
 

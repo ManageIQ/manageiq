@@ -29,12 +29,8 @@ module VmShowMixin
     allowed_features = features.select { |f| role_allows(:feature => f.role) }
     allowed_features.each { |feature| build_vm_tree(feature.name, feature.tree_name) }
 
-    @trees = allowed_features.map(&:tree_name).map(&:to_s)
-    @accords = allowed_features.map do |feature|
-      { :name      => feature.accord_name,
-        :title     => feature.title,
-        :container => feature.container }
-    end
+    @trees = allowed_features.map(&:tree_list_name)
+    @accords = allowed_features.map(&:accord_hash)
 
     params.merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)

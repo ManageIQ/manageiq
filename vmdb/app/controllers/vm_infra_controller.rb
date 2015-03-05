@@ -10,30 +10,29 @@ class VmInfraController < ApplicationController
   after_filter :set_session_data
 
   private
-  Feature = Struct.new :role, :name, :accord_name, :tree_name, :title, :container
 
   def features
     [
-      Feature.new("vandt_accord",
-                  :vandt,
-                  "vandt",
-                  :vandt_tree,
-                  "VMs & Templates",
-                  "vandt_tree_div"),
+      ApplicationController::Feature.new("vandt_accord",
+                                         :vandt,
+                                         "vandt",
+                                         :vandt_tree,
+                                         "VMs & Templates",
+                                         "vandt_tree_div"),
 
-      Feature.new("vms_filter_accord",
-                  :filter,
-                  "vms_filter",
-                  :vms_filter_tree,
-                  "VMs",
-                  "vms_filter_tree_div"),
+      ApplicationController::Feature.new("vms_filter_accord",
+                                         :filter,
+                                         "vms_filter",
+                                         :vms_filter_tree,
+                                         "VMs",
+                                         "vms_filter_tree_div"),
 
-      Feature.new("templates_filter_accord",
-                  :filter,
-                  "templates_filter",
-                  :templates_filter_tree,
-                  "Templates",
-                  "templates_filter_tree_div"),
+      ApplicationController::Feature.new("templates_filter_accord",
+                                         :filter,
+                                         "templates_filter",
+                                         :templates_filter_tree,
+                                         "Templates",
+                                         "templates_filter_tree_div"),
     ]
   end
 

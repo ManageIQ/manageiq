@@ -10,23 +10,21 @@ class VmOrTemplateController < ApplicationController
 
   private
 
-  Feature = Struct.new :role, :name, :accord_name, :tree_name, :title, :container
-
   def features
     [
-      Feature.new("vms_instances_filter_accord",
-                  :filter,
-                  "vms_instances_filter",
-                  :vms_instances_filter_tree,
-                  "VMs & Instances",
-                  "vms_instances_filter_tree_div"),
+      ApplicationController::Feature.new("vms_instances_filter_accord",
+                                         :filter,
+                                         "vms_instances_filter",
+                                         :vms_instances_filter_tree,
+                                         "VMs & Instances",
+                                         "vms_instances_filter_tree_div"),
 
-      Feature.new("templates_images_filter_accord",
-                  :filter,
-                  "templates_images_filter",
-                  :templates_images_filter_tree,
-                  "Templates & Images",
-                  "templates_images_filter_tree_div"),
+      ApplicationController::Feature.new("templates_images_filter_accord",
+                                         :filter,
+                                         "templates_images_filter",
+                                         :templates_images_filter_tree,
+                                         "Templates & Images",
+                                         "templates_images_filter_tree_div"),
     ]
   end
 

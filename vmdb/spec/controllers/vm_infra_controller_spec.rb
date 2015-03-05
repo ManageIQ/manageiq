@@ -20,4 +20,3 @@ describe VmInfraController do
     expect(response.body).to_not be_empty
   end
 end
-
