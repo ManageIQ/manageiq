@@ -30,21 +30,6 @@ class VmOrTemplateController < ApplicationController
     ]
   end
 
-  def build_trees_and_accordions
-    @trees   = []
-    @accords = []
-    features.each do |feature|
-      if role_allows(:feature=> feature.role)
-        build_vm_tree(feature.name, feature.tree_name)
-        @trees.push(feature.tree_name.to_s)
-        @accords.push({:name=>feature.accord_name, :title=>feature.title, :container=>feature.container})
-      end
-    end
-
-    # Commented out for first VMX version
-    #  build_vm_tree(:handc, :handc_tree)  # Build H&C tree
-  end
-
   def prefix_by_nodetype(nodetype)
     case TreeBuilder.get_model_for_prefix(nodetype).underscore
     when "miq_template" then "templates_images"
