@@ -1930,7 +1930,9 @@ module ApplicationHelper
       else
         if x_active_tree == :ae_tree
           return center_toolbar_filename_automate
-        elsif [:sandt_tree, :svccat_tree, :stcat_tree, :svcs_tree, :ot_tree].include?(x_active_tree)
+        elsif x_active_tree == :containers_tree
+          return center_toolbar_filename_containers
+        elsif [:sandt_tree, :svccat_tree, :stcat_tree, :svcs_tree].include?(x_active_tree)
           return center_toolbar_filename_services
         elsif @layout == "chargeback"
           return center_toolbar_filename_chargeback
@@ -2043,6 +2045,10 @@ module ApplicationHelper
     elsif x_active_tree == :ot_tree
       return "ot_center_tb"
     end
+  end
+
+  def center_toolbar_filename_containers
+    TreeBuilder.get_model_for_prefix(@nodetype) == "Container" ? "containers_center_tb" : "container_center_tb"
   end
 
   def center_toolbar_filename_chargeback
@@ -2258,10 +2264,10 @@ module ApplicationHelper
     else
       #show_list and show screens
       if !@in_a_form
-        if %w(availability_zone ems_cloud ems_cluster ems_infra flavor host miq_proxy
-              ontap_file_share ontap_logical_disk ontap_storage_system orchestration_stack
-              repository resource_pool storage storage_manager timeline usage
-              security_group).include?(@layout)
+        if %w(availability_zone container_group container_node container_service ems_cloud ems_cluster
+              ems_container ems_infra flavor host miq_proxy ontap_file_share ontap_logical_disk
+              ontap_storage_system orchestration_stack repository resource_pool storage storage_manager
+              timeline usage security_group).include?(@layout)
           if ["show_list"].include?(@lastaction)
             return "#{@layout.pluralize}_center_tb"
           else
@@ -2302,7 +2308,8 @@ module ApplicationHelper
   end
 
   def display_adv_search?
-    %w(availability_zone vm miq_template offline retired templates
+    %w(availability_zone container_group container_node container_service
+       ems_container vm miq_template offline retired templates
        host service repository storage ems_cloud ems_cluster flavor
        resource_pool ems_infra ontap_storage_system ontap_storage_volume
        ontap_file_share snia_local_file_system ontap_logical_disk
@@ -2358,7 +2365,13 @@ module ApplicationHelper
 
   def model_for_ems(record)
     raise "Record is not ExtManagementSystem class" unless record.kind_of?(ExtManagementSystem)
-    record.kind_of?(EmsInfra) ? EmsInfra : EmsCloud
+    if record.kind_of?(EmsCloud)
+      EmsCloud
+    elsif record.kind_of?(EmsContainer)
+      EmsContainer
+    else
+      EmsInfra
+    end
   end
 
   def model_for_vm(record)
@@ -2572,12 +2585,12 @@ module ApplicationHelper
     "#{@options[:page_size] || "US-Legal"} #{@options[:page_layout]}"
   end
 
-  GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_tenant condition ems_cloud
-                        ems_cluster ems_infra event flavor host miq_proxy miq_schedule miq_template offline
-                        ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume
-                        orchestration_stack policy policy_group policy_profile repository resource_pool
-                        retired scan_profile security_group service snia_local_file_system storage
-                        storage_manager templates)
+  GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_tenant condition container_group
+                        container_node container_service ems_cloud ems_cluster ems_container ems_infra event
+                        flavor host miq_proxy miq_schedule miq_template offline ontap_file_share
+                        ontap_logical_disk ontap_storage_system ontap_storage_volume orchestration_stack
+                        policy policy_group policy_profile repository resource_pool retired scan_profile
+                        service snia_local_file_system storage storage_manager templates)
 
   def render_gtl_view_tb?
     GTL_VIEW_LAYOUTS.include?(@layout) && @gtl_type && !@tagitems &&
@@ -2635,10 +2648,12 @@ module ApplicationHelper
       "compare_sections"
     elsif %w(offline retired templates vm vm_cloud vm_or_template).include?(@layout)
       "vm"
-    elsif %w(action availability_zone cim_base_storage_extent cloud_tenant condition ems_cloud ems_cluster
-             ems_infra flavor host miq_proxy miq_schedule miq_template policy ontap_file_share ontap_logical_disk
-             ontap_storage_system ontap_storage_volume orchestration_stack repository resource_pool scan_profile
-             security_group service snia_local_file_system storage storage_manager timeline).include?(@layout)
+    elsif %w(action availability_zone cim_base_storage_extent cloud_tenant condition ontainer_group
+             container_node container_service ems_cloud ems_container ems_cluster ems_infra flavor
+             host miq_proxy miq_schedule miq_template policy ontap_file_share ontap_logical_disk
+             ontap_storage_system ontap_storage_volume orchestration_stack repository resource_pool
+             scan_profile security_group service snia_local_file_system storage
+             storage_manager timeline).include?(@layout)
       @layout
     else
       nil
@@ -2646,12 +2661,13 @@ module ApplicationHelper
   end
 
   def show_adv_search?
-    show_search = %w(availability_zone cim_base_storage_extent ems_cloud ems_cluster ems_infra flavor host
-                     miq_template offline ontap_file_share ontap_logical_disk ontap_storage_system
-                     ontap_storage_volume orchestration_stack repository resource_pool retired security_group service
+    show_search = %w(availability_zone cim_base_storage_extent container_group container_node container_service
+                     ems_cloud ems_cluster ems_container ems_infra flavor host miq_template offline
+                     ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume
+                     orchestration_stack repository resource_pool retired security_group service
                      snia_local_file_system storage storage_manager templates vm)
     (@lastaction == "show_list" && !session[:menu_click] && show_search.include?(@layout) && !@in_a_form) ||
-      (@explorer && x_tree && [:filter, :images, :instances, :vandt].include?(x_tree[:type]) && !@record)
+      (@explorer && x_tree && [:containers, :filter, :images, :instances, :vandt].include?(x_tree[:type]) && !@record)
   end
 
   def need_prov_dialogs?(type)

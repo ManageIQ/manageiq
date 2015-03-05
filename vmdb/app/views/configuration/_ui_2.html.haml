@@ -47,6 +47,26 @@
                     %td.key #{view_name}
                     %td
                       %ul#toolbars= render_view_buttons(resource, @edit[:new][:views][resource])
+        - if get_vmdb_config[:product][:containers]
+          - if role_allows(:feature => "ems_container_show_list")        ||
+          -    role_allows(:feature => "container_group_show_list")      ||
+          -    role_allows(:feature => "container_node_show_list")       ||
+          -    role_allows(:feature => "container_service_accord")       ||
+          -    role_allows(:feature => "containers_filter_accord")       ||
+          -    role_allows(:feature => "containers_accord")
+            %fieldset
+              %h3= _('Containers')
+              %table.style1
+                - keys = {:emscontainer     => "ems_container",
+                          :containernode    => "container_node",
+                          :containergroup   => "container_group",
+                          :containerservice => "container_service",
+                          :container        => "container"}
+                - keys.each do |resource, table_view_name|
+                  %tr
+                    %td.key= ui_lookup(:tables => table_view_name)
+                    %td
+                      %ul#toolbars= render_view_buttons(resource, @edit[:new][:views][resource])
       .col-sm-12.col-md-12.col-lg-6
         - if role_allows(:feature => "ems_cloud_show_list")           ||
         -    role_allows(:feature => "availability_zone_show_list")   ||

@@ -715,6 +715,7 @@ class ConfigurationController < ApplicationController
   end
 
   NAV_TAB_PATH =  {
+                    :container => ["Containers", "Containers"],
                     :host => ["Infrastructure", "Hosts"],
                     :miqtemplate => ["Services", "Workloads", "Templates & Images"],
                     :storage => ["Infrastructure", "Datastores"],

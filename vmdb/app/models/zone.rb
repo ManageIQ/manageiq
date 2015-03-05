@@ -153,6 +153,10 @@ class Zone < ActiveRecord::Base
     self.ext_management_systems.select { |e| e.kind_of? EmsInfra }
   end
 
+  def ems_containers
+    self.ext_management_systems.select {|e| e.kind_of? EmsContainer }
+  end
+
   def ems_clouds
     self.ext_management_systems.select { |e| e.kind_of? EmsCloud }
   end

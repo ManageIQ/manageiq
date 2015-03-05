@@ -22,6 +22,8 @@ class TreeBuilder
     when :cb_assignments_tree           then ["Assignments",                  "Assignments"]
     when :cb_rates_tree                 then ["Rates",                        "Rates"]
     when :cb_reports_tree               then ["Saved Chargeback Reports",     "Saved Chargeback Reports"]
+    when :containers_tree               then ["All Containers",               "All Containers"]
+    when :containers_filter_tree               then ["All Containers",        "All Containers"]
     when :customization_templates_tree  then
       title = "All #{ui_lookup(:models => "CustomizationTemplate")} - #{ui_lookup(:models => "PxeImageType")}"
       [title, title]
@@ -338,6 +340,7 @@ class TreeBuilder
     "al"  => "MiqAlert",
     "ap"  => "MiqAlertSet",
     "az"  => "AvailabilityZone",
+    "cnt" => "Container",
     "co"  => "Condition",
     "cbg" => "CustomButtonSet",
     "cb"  => "CustomButton",

@@ -1,5 +1,6 @@
 class ContainerService < ActiveRecord::Base
   include CustomAttributeMixin
+  include ReportableMixin
   # :name, :uid, :creation_timestamp, :resource_version, :namespace
   # :labels, :selector, :protocol, :port, :container_port, :portal_ip, :session_affinity
 

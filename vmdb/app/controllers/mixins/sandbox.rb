@@ -40,6 +40,8 @@ module Sandbox
     cb_rates_tree
     cb_reports_tree
     condition_tree
+    containers_tree
+    containers_filter_tree
     customization_templates_tree
     db_tree
     diagnostics_tree
@@ -88,6 +90,8 @@ module Sandbox
     cb_rates
     cb_reports
     condition
+    containers
+    containers_filter
     customization_templates
     db
     diagnostics

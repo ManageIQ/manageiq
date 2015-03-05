@@ -65,3 +65,8 @@ function miqAccordSvcSelect(itemId){
 function miqAccordChargebackSelect(itemId){
 	return miqAjaxRequest(itemId,"/chargeback/accordion_select");	
 }
+
+//function to pass ajax request to server, to remember tree states for Container Explorer
+function miqAccordContainerSelect(itemId){
+  return miqAjaxRequest(itemId,"/container/accordion_select");
+}
