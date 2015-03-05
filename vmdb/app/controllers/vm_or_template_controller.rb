@@ -51,8 +51,7 @@ class VmOrTemplateController < ApplicationController
     get_node_info(x_node)
   end
 
-  def set_active_elements
-    feature = features.detect { |f| role_allows(:feature => f.role) }
+  def set_active_elements(feature)
     if feature
       self.x_active_tree   ||= feature.tree_list_name
       self.x_active_accord ||= feature.accord_name

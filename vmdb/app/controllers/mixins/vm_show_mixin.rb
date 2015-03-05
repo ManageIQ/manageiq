@@ -44,7 +44,7 @@ module VmShowMixin
       # to explorer with params[:id] and you get into the true branch
       redirected = set_elements_and_redirect_unauthorized_user
     else
-      set_active_elements unless @upload_sysprep_file
+      set_active_elements(allowed_features.first) unless @upload_sysprep_file
     end
 
     render :layout => "explorer" unless redirected
