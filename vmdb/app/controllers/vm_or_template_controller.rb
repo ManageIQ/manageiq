@@ -52,13 +52,10 @@ class VmOrTemplateController < ApplicationController
   end
 
   def set_active_elements
-    # Set active tree and accord to first allowed feature
-    if role_allows(:feature => "vms_instances_filter_accord")
-      self.x_active_tree   ||= 'vms_instances_filter_tree'
-      self.x_active_accord ||= 'vms_instances_filter'
-    elsif role_allows(:feature => "templates_images_filter_accord")
-      self.x_active_tree   ||= 'templates_images_filter_tree'
-      self.x_active_accord ||= 'templates_images_filter'
+    feature = features.detect { |f| role_allows(:feature => f.role) }
+    if feature
+      self.x_active_tree   ||= feature.tree_list_name
+      self.x_active_accord ||= feature.accord_name
     end
     get_node_info(x_node)
   end
