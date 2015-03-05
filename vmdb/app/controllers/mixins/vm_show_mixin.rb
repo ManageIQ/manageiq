@@ -26,7 +26,7 @@ module VmShowMixin
     end
 
     # Build the Explorer screen from scratch
-    build_trees_and_accordions
+    build_trees_and_accordions features.select { |f| role_allows(:feature => f.role) }
 
     params.merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)
@@ -46,15 +46,14 @@ module VmShowMixin
     render :layout => "explorer" unless redirected
   end
 
-  def build_trees_and_accordions
+  def build_trees_and_accordions(allowed_features)
     @trees   = []
     @accords = []
-    features.each do |feature|
-      if role_allows(:feature=> feature.role)
-        build_vm_tree(feature.name, feature.tree_name)
-        @trees.push(feature.tree_name.to_s)
-        @accords.push({:name=>feature.accord_name, :title=>feature.title, :container=>feature.container})
-      end
+
+    allowed_features.each do |feature|
+      build_vm_tree(feature.name, feature.tree_name)
+      @trees.push(feature.tree_name.to_s)
+      @accords.push({:name=>feature.accord_name, :title=>feature.title, :container=>feature.container})
     end
   end
   private :build_trees_and_accordions
