@@ -121,9 +121,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
         @values[:forced_sysprep_domain_name] = [@values[:sysprep_domain_name].first]
       end
 
-      if @values[:sysprep_enabled].kind_of?(String) && !@values[:sysprep_enabled].blank?
-        @values[:forced_sysprep_enabled] = 'fields' if @values[:sysprep_enabled] == 'fields'
-      end
+      @values[:forced_sysprep_enabled] = 'fields' if @values[:sysprep_enabled] == 'fields'
     end
 
     password_helper(@values, false) # Decrypt passwords in the hash for the UI
