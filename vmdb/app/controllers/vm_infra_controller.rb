@@ -13,26 +13,29 @@ class VmInfraController < ApplicationController
 
   def features
     [
-      ApplicationController::Feature.new("vandt_accord",
-                                         :vandt,
-                                         "vandt",
-                                         :vandt_tree,
-                                         "VMs & Templates",
-                                         "vandt_tree_div"),
+      ApplicationController::Feature.new_with_hash(
+        :role        => "vandt_accord",
+        :name        => :vandt,
+        :accord_name => "vandt",
+        :tree_name   => :vandt_tree,
+        :title       => "VMs & Templates",
+        :container   => "vandt_tree_div"),
 
-      ApplicationController::Feature.new("vms_filter_accord",
-                                         :filter,
-                                         "vms_filter",
-                                         :vms_filter_tree,
-                                         "VMs",
-                                         "vms_filter_tree_div"),
+      ApplicationController::Feature.new_with_hash(
+        :role        => "vms_filter_accord",
+        :name        => :filter,
+        :accord_name => "vms_filter",
+        :tree_name   => :vms_filter_tree,
+        :title       => "VMs",
+        :container   => "vms_filter_tree_div"),
 
-      ApplicationController::Feature.new("templates_filter_accord",
-                                         :filter,
-                                         "templates_filter",
-                                         :templates_filter_tree,
-                                         "Templates",
-                                         "templates_filter_tree_div"),
+      ApplicationController::Feature.new_with_hash(
+        :role        => "templates_filter_accord",
+        :name        => :filter,
+        :accord_name => "templates_filter",
+        :tree_name   => :templates_filter_tree,
+        :title       => "Templates",
+        :container   => "templates_filter_tree_div"),
     ]
   end
 

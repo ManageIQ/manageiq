@@ -11,33 +11,37 @@ class VmCloudController < ApplicationController
 
   def features
     [
-      ApplicationController::Feature.new("instances_accord",
-                                         :instances,
-                                         "instances",
-                                         :instances_tree,
-                                         "Instances by Provider",
-                                         "instances_tree_div"),
+      ApplicationController::Feature.new_with_hash(
+        :role        => "instances_accord",
+        :name        => :instances,
+        :accord_name => "instances",
+        :tree_name   => :instances_tree,
+        :title       => "Instances by Provider",
+        :container   => "instances_tree_div"),
 
-      ApplicationController::Feature.new("images_accord",
-                                         :images,
-                                         "images",
-                                         :images_tree,
-                                         "Images by Provider",
-                                         "images_tree_div"),
+      ApplicationController::Feature.new_with_hash(
+        :role        => "images_accord",
+        :name        => :images,
+        :accord_name => "images",
+        :tree_name   => :images_tree,
+        :title       => "Images by Provider",
+        :container   => "images_tree_div"),
 
-      ApplicationController::Feature.new("instances_filter_accord",
-                                         :filter,
-                                         "instances_filter",
-                                         :instances_filter_tree,
-                                         "Instances",
-                                         "instances_filter_tree_div"),
+      ApplicationController::Feature.new_with_hash(
+        :role        => "instances_filter_accord",
+        :name        => :filter,
+        :accord_name => "instances_filter",
+        :tree_name   => :instances_filter_tree,
+        :title       => "Instances",
+        :container   => "instances_filter_tree_div"),
 
-      ApplicationController::Feature.new("images_filter_accord",
-                                         :filter,
-                                         "images_filter",
-                                         :images_filter_tree,
-                                         "Images",
-                                         "images_filter_tree_div")
+      ApplicationController::Feature.new_with_hash(
+        :role        => "images_filter_accord",
+        :name        => :filter,
+        :accord_name => "images_filter",
+        :tree_name   => :images_filter_tree,
+        :title       => "Images",
+        :container   => "images_filter_tree_div")
     ]
   end
 

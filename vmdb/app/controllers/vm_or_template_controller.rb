@@ -12,19 +12,21 @@ class VmOrTemplateController < ApplicationController
 
   def features
     [
-      ApplicationController::Feature.new("vms_instances_filter_accord",
-                                         :filter,
-                                         "vms_instances_filter",
-                                         :vms_instances_filter_tree,
-                                         "VMs & Instances",
-                                         "vms_instances_filter_tree_div"),
+      ApplicationController::Feature.new_with_hash(
+        :role        => "vms_instances_filter_accord",
+        :name        => :filter,
+        :accord_name => "vms_instances_filter",
+        :tree_name   => :vms_instances_filter_tree,
+        :title       => "VMs & Instances",
+        :container   => "vms_instances_filter_tree_div"),
 
-      ApplicationController::Feature.new("templates_images_filter_accord",
-                                         :filter,
-                                         "templates_images_filter",
-                                         :templates_images_filter_tree,
-                                         "Templates & Images",
-                                         "templates_images_filter_tree_div"),
+      ApplicationController::Feature.new_with_hash(
+        :role        => "templates_images_filter_accord",
+        :name        => :filter,
+        :accord_name => "templates_images_filter",
+        :tree_name   => :templates_images_filter_tree,
+        :title       => "Templates & Images",
+        :container   => "templates_images_filter_tree_div"),
     ]
   end
 
