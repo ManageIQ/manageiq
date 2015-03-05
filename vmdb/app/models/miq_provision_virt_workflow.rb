@@ -116,9 +116,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     if @running_pre_dialog == true
       @running_pre_dialog = false
 
-      if @values[:sysprep_domain_name].kind_of?(String) && !@values[:sysprep_domain_name].blank?
-        @values[:sysprep_domain_name] = [@values[:sysprep_domain_name], @values[:sysprep_domain_name]]
-        @values[:forced_sysprep_domain_name] = [@values[:sysprep_domain_name].first]
+      if (sdn = @values[:sysprep_domain_name]).presence.kind_of?(String)
+        @values[:sysprep_domain_name]        = [sdn, sdn]
+        @values[:forced_sysprep_domain_name] = [sdn]
       end
 
       @values[:forced_sysprep_enabled] = 'fields' if @values[:sysprep_enabled] == 'fields'
