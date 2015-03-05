@@ -130,20 +130,14 @@ module VmCommon
       :ssl_target => ssl,       # ssl on provider side
       :encrypt    => encrypt    # ssl on web client side
     )
-    if proxy_options.nil?
-      # FIXME: failed to launch
-    end
+    raise _("Console access failed: proxy errror") if proxy_options.nil?
 
-    case protocol
-    when 'spice'
-      view = "vm_common/console_spice"
-      proxy_options[:proxy_host] = 'localhost' # FIXME: appliance IP
-    when nil, 'vnc' # FIXME: nil - from vmware
-      view = "vm_common/console_vnc"
-      proxy_options[:proxy_host] = 'localhost' # FIXME: appliance IP
-    end
-
-    Rails.logger.error("PROXY options: #{proxy_options}")
+    view = case protocol   # spice, vnc - from rhevm
+           when 'spice'
+             "vm_common/console_spice"
+           when nil, 'vnc' # nil - from vmware
+             "vm_common/console_vnc"
+           end
 
     render :template => view,
            :layout   => false,

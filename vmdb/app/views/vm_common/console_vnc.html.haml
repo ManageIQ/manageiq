@@ -10,7 +10,7 @@
 
   %body{:style => 'margin: 0px; padding-top: 0px !important;'}
     = link_to('Ctrl-Alt-Del', '#', :id => 'sendCtrlAltDelButton', :class => 'btn btn-default')
-    #vnc{'data-host' => proxy_host, 'data-port' => proxy_port, 'data-password' => password, 'data-encrypt' => encrypt}
+    #vnc{'data-port' => proxy_port, 'data-password' => password, 'data-encrypt' => encrypt}
       #noVNC_status_bar.console-status
         #noVNC_status.label
           = _('Loading ...')
