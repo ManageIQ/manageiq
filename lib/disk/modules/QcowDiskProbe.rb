@@ -1,5 +1,5 @@
 module QcowDiskProbe
-  QCOW_MAGIC   = "QFI\xfb"
+  QCOW_MAGIC   = "QFI\xfb".force_encoding("ASCII-8BIT")
   QCOW_DISK    = "QcowDisk"
 
   def QcowDiskProbe.probe(ostruct)
