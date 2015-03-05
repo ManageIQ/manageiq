@@ -1,10 +1,10 @@
 #classification_entries_div
   %h3= "#{@cat.description} Entries"
   = render :partial => "layouts/flash_msg"
-  %table.style3
+  %table.table.table-striped.table-bordered.table-hover
     %thead
       %tr
-        %th.icon
+        %th.narrow
         %th=_("Name")
         %th=_("Display Name")
     %tbody

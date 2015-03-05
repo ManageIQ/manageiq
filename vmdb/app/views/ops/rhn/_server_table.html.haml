@@ -42,9 +42,9 @@
                                                   true);")
     %br
     #form_div
-      %table{:class => 'style3'}
+      %table.table.table-striped.table-bordered.table-hover
         %thead
-          %th.checkbox
+          %th
             = check_box_tag('masterToggle', 1, @check_all,
                             :onclick => "miqUpdateAllCheckboxes('rhn_buttons', null);")
           %th=_("Appliance")
@@ -56,8 +56,8 @@
           %th=_("Last Message")
         %tbody
           -Array(@updates).each do |update|
-            %tr{:class => cycle('row0', 'row1')}
-              %td.checkbox
+            %tr
+              %td.narrow
                 = check_box_tag('check_server_'+update.id.to_s, 1,
                                 update.checked,
                                 :id => 'listcheckbox',

@@ -9,7 +9,7 @@
                      :alt   => t = _("Add this LDAP Server"),
                      :title => t,
                      :type  => "submit")
-      %td.all
+      %td
         = text_field("entry", "hostname", :maxlength => MAX_NAME_LEN)
       %td
         - url1 = url_for(:action => 'ldap_entry_changed',
@@ -17,7 +17,7 @@
         = select_tag('entry_mode',
                      options_for_select([[_("LDAP"), 'ldap'], [_("LDAPS"), 'ldaps']], "ldaps"),
                      "data-miq_observe" => {:url => url1}.to_json)
-      %td.all
+      %td
         = text_field("entry", "port",
                      :maxlength => 6,
                      :value     => "636")
@@ -32,7 +32,7 @@
                      :title     => t,
                      :domain_id => domain_id,
                      :type      => "submit")
-      %td.all
+      %td
         = text_field("entry", "hostname",
                      :maxlength => MAX_NAME_LEN,
                      "value"    => entry[:hostname])
@@ -42,7 +42,7 @@
         = select_tag('entry_mode',
                      options_for_select([[_("LDAP"), 'ldap'], [_("LDAPS"), 'ldaps']], entry[:mode]),
                      "data-miq_observe" => {:url => url1}.to_json)
-      %td.all
+      %td
         = text_field("entry", "port",
                      :maxlength => 6,
                      "value"    => entry[:port])

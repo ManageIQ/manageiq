@@ -1,50 +1,59 @@
 - if @sb[:active_tab] == "settings_details"
   - if session[:userrole] == "super_administrator"
     = render :partial => "layouts/flash_msg"
-    .ops_details
+    - region = MiqRegion.my_region
+    - if @edit
+      - url = url_for(:action=>'region_form_field_changed', :id=>"#{region.id || "new"}")
       %fieldset
-        - region = MiqRegion.my_region
-        - if @edit
-          - url = url_for(:action=>'region_form_field_changed', :id=>"#{region.id || "new"}")
-          %fieldset
-            %h3=_("Region Information")
-            %table.style1
-              %tr
-                %td.key=_("Description")
-                %td
-                  = text_field_tag("region_description",
-                    @edit[:new][:description],
-                    :maxlength=>50,
-                    "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
-                  = javascript_tag(javascript_focus('region_description'))
-          = render(:partial=>'/layouts/edit_form_buttons',
-            :locals=>{:record_id=>region.id,
-            :action_url=>'region_edit',
-            :force_cancel_button=>true,
-            :ajax_buttons=>true})
-        - else
-          %div{:onclick => remote_function(:url=>{:action=>'region_edit', :id=>region.id}), :onmouseover => "this.style.cursor='pointer'", :title => _("Edit this Region")}
-            %img{:src => "/images/icons/new/miq_region.png"}/
-            = h(region.description)
-            [#{h(region.region)}]
-  .ops_details
-    %fieldset
-      %div{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-sis');", :onmouseover => "this.style.cursor='pointer'", :title => _("View Analysis Profiles")}
-        %img{:src => "/images/icons/new/scan_item_set.png"}>/
-        =_("Analysis Profiles")
-        (#{h(@temp[:scan_items].size)})
-    %fieldset
-      %div{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-z');", :onmouseover => "this.style.cursor='pointer'", :title => _("View Zones")}
-        %img{:src => "/images/icons/new/zone.png"}>/
-        =_("Zones")
-        (#{h(@temp[:zones].size)})
-    %fieldset
-      %div{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-msc');", :onmouseover => "this.style.cursor='pointer'", :title => _("View Schedules")}
-        %img{:src => "/images/icons/new/miq_schedule.png"}>/
-        =_("Schedules")
-        (#{h(@temp[:miq_schedules].size)})
-    %fieldset
-      %div{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-l');", :onmouseover => "this.style.cursor='pointer'", :title => _("View LDAP Regions")}
-        %img{:src => "/images/icons/new/ldap_region.png"}>/
-        =_("LDAP Regions")
-        (#{h(@temp[:ldap_regions].size)})
+        %h3=_("Region Information")
+        %table.style1
+          %tr
+            %td.key=_("Description")
+            %td
+              = text_field_tag("region_description",
+                @edit[:new][:description],
+                :maxlength=>50,
+                "data-miq_observe"=>{:interval=>'.5', :url=>url}.to_json)
+              = javascript_tag(javascript_focus('region_description'))
+      = render(:partial=>'/layouts/edit_form_buttons',
+        :locals=>{:record_id=>region.id,
+        :action_url=>'region_edit',
+        :force_cancel_button=>true,
+        :ajax_buttons=>true})
+
+    .spacer
+
+    %table.table.table-striped.table-bordered.table-hover
+      %tbody
+        - unless @edit
+          %tr
+            %td.narrow{:onclick => remote_function(:url=>{:action=>'region_edit', :id=>region.id}), :title => _("Edit this Region")}
+              %img{:src => "/images/icons/new/miq_region.png"}/
+            %td{:onclick => remote_function(:url=>{:action=>'region_edit', :id=>region.id}), :title => _("Edit this Region")}
+              = h(region.description)
+              [#{h(region.region)}]
+        %tr
+          %td.narrow{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-sis');", :title => _("View Analysis Profiles")}
+            %img{:src => "/images/icons/new/scan_item_set.png"}>/
+          %td{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-sis');", :title => _("View Analysis Profiles")}
+            =_("Analysis Profiles")
+            (#{h(@temp[:scan_items].size)})
+        %tr
+          %td.narrow{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-z');", :title => _("View Zones")}
+            %img{:src => "/images/icons/new/zone.png"}>/
+          %td{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-z');", :title => _("View Zones")}
+            =_("Zones")
+            (#{h(@temp[:zones].size)})
+        %tr
+          %td.narrow{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-msc');", :title => _("View Schedules")}
+            %img{:src => "/images/icons/new/miq_schedule.png"}>/
+          %td{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-msc');", :title => _("View Schedules")}
+            =_("Schedules")
+            (#{h(@temp[:miq_schedules].size)})
+        - if get_vmdb_config[:product][:new_ldap]
+          %tr
+            %td.narrow{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-l');", :title => _("View LDAP Regions")}
+              %img{:src => "/images/icons/new/ldap_region.png"}>/
+            %td{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-l');", :title => _("View LDAP Regions")}
+              =_("LDAP Regions")
+              (#{h(@temp[:ldap_regions].size)})

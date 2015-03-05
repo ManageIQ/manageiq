@@ -51,9 +51,9 @@
   - if @temp[:indexes].blank?
     = _("No Indexes found for this table.")
   - else
-    %table.style3
+    %table.table.table-striped.table-bordered.table-hover
       %thead
-        %th.icon
+        %th.narrow
         %th= _("Name")
         %th= _("Rows")
         %th= _("Size")
@@ -61,9 +61,10 @@
         %th= _("Percent Bloat")
       %tbody
         - @temp[:indexes].each_with_index do |ind, _|
-          %tr{:class => "#{cycle('row0', 'row1')}", :onclick => "#{remote_function(:url => "/ops/x_show/#{ind.id}")}", :onmouseover => "this.style.cursor = 'pointer'", :title => _("Click to view index")}
-            %td.icon{:nowrap => "nowrap"}
-              %img{:border => 0, :height => 20, :src => "/images/icons/new/vmdbindex.png", :valign => "middle", :width => 20}/
+          %tr{:onclick => "#{remote_function(:url => "/ops/x_show/#{ind.id}")}",
+            :onmouseover => "this.style.cursor = 'pointer'", :title => _("Click to view index")}
+            %td.narrow
+              %img{:src => "/images/icons/new/vmdbindex.png"}/
             %td= ind.name
             - metrics = ind.latest_hourly_metric
             - if metrics

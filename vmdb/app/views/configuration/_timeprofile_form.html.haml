@@ -79,9 +79,9 @@
   - unless @timeprofile.miq_reports.empty?
     %fieldset
       %h3=_('Reports Currently Using This Time Profile')
-      %table.style3
+      %table.table.table-striped.table-bordered.table-hover
         %tr
-          %td{:width => "50%", :valign => "top"}
+          %td
             %table.admintable
               %thead
                 %tr
@@ -89,7 +89,7 @@
                   %th.nowrap=_('Name')
                   %th.nowrap=_('Title')
               %tbody
-                = @timeprofile.miq_reports.sort_by { |a| a.name.downcase }.each do |r|
+                - @timeprofile.miq_reports.sort_by { |a| a.name.downcase }.each do |r|
                   %tr
                     %td.icon
                       %img{:src => "/images/icons/new/report.png", :valign => "middle", :border => "0", :height =>"20", :width => "20"}
