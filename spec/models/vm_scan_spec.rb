@@ -99,6 +99,27 @@ describe VmScan do
           @job.state.should == "waiting_to_start"
           @job.dispatch_status.should == "active"
         end
+
+        context "when signaled with 'start'" do
+          before(:each) do
+            FactoryGirl.create(:miq_event_definition, :name => "vm_scan_start")
+            q = MiqQueue.last
+            q.delivered(*q.deliver)
+            @job.reload
+          end
+
+          it "should go to state of 'wait_for_policy'" do
+            @job.state.should == 'wait_for_policy'
+            MiqQueue.where(:class_name => "MiqAeEngine", :method_name => "deliver").count.should eq(1)
+          end
+
+          it "should call callback when message is delivered" do
+            VmScan.any_instance.stub(:signal => true)
+            VmScan.any_instance.should_receive(:check_policy_complete)
+            q = MiqQueue.where(:class_name => "MiqAeEngine", :method_name => "deliver").first
+            q.delivered(*q.deliver)
+          end
+        end
       end
     end
 
