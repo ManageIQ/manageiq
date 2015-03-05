@@ -33,6 +33,9 @@ module Menu
     def create_custom_menu_item(properties)
       rbac = properties['rbac'].each_with_object({}) { |(k, v), h| h[k.to_sym] = v }
       item_type = properties.key?('item_type') ? properties['item_type'].to_sym : :detault
+      %w(id name rbac parent).each do |property|
+        raise Menu::Manager::InvalidMenuDefinition, "incomplete definition -- missing #{property}" if properties[property].blank?
+      end
       item = CustomItem.new(properties['id'], properties['name'], properties['feature'], rbac, properties['href'], item_type)
       item.parent = properties['parent'].to_sym
       item
