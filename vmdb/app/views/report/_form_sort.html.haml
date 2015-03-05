@@ -132,7 +132,7 @@
     %fieldset
       %h3
         = _("Specify Calculations for Summary Rows")
-      %table.style3
+      %table.table.table-striped.table-bordered
         %thead
           %tr
             %th
@@ -146,9 +146,9 @@
         %tbody
           - @edit[:new][:field_order].each_with_index do |f, f_idx|
             %tr
-              %td.key
+              %td
                 = h(f.first)
-              %td.wide
+              %td
                 = h(@edit[:new][:headers][f.last])
               - combo_id = "calc_id_#{f_idx}"
               - combo_name = "calc_#{f_idx}"

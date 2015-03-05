@@ -16,7 +16,7 @@
   %hr
   %h3
     = _('Specify Column Headers and Formats')
-  %table.style3
+  %table.table.table-striped.table-bordered
     %thead
       %tr
         %th
@@ -28,9 +28,9 @@
     %tbody
       - @edit[:new][:field_order].each do |f|
         %tr
-          %td.key
+          %td
             = h(f.first)
-          %td.wide
+          %td
             %div{:id => "hdr_#{f.last}_div"}
               = text_field_tag("hdr_#{f.last}", @edit[:new][:headers][f.last],
                 :maxlength         => 40,
