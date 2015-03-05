@@ -1,3 +1,4 @@
+# encoding: US-ASCII
 module QcowDiskProbe
   QCOW_MAGIC   = "QFI\xfb"
   QCOW_DISK    = "QcowDisk"
