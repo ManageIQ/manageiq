@@ -438,11 +438,8 @@ class MiqRequestController < ApplicationController
     end
 
     if opts[:applied_states].present?
-      or_hash = {"or" => []}
-      opts[:applied_states].each do |state|
-        or_hash["or"].push("=" => {"value" => state, "field" => "MiqRequest-approval_state"})
-      end
-      cond.push(or_hash)
+      states = opts[:applied_states].collect { |s| {"=" => {"value" => s, "field" => "MiqRequest-approval_state"}} }
+      cond.push("or" => states)
     end
 
     # Add time condition
