@@ -452,12 +452,8 @@ class MiqRequestController < ApplicationController
       end
     or_hash = {"or" => []}
     request_types = MiqRequest::MODEL_REQUEST_TYPES[req_typ]
-    request_types.each do |typ|
-      typ.each do |k|
-        if k.class == Symbol
-          or_hash["or"].push("=" => {"value" => k.to_s, "field" => "MiqRequest-resource_type"})
-        end
-      end
+    request_types.each_key do |k|
+      or_hash["or"].push("=" => {"value" => k.to_s, "field" => "MiqRequest-resource_type"})
     end
     cond.push(or_hash)
 
