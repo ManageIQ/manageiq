@@ -9,14 +9,18 @@ module EmsRefresh::SaveInventoryHelper
       save_child_inventory(found, h, child_keys)
     end
 
-    # Delete the items no longer found
-    unless deletes.blank?
-      $log.info("MIQ(#{self.name}.save_#{type}_inventory) Deleting #{self.log_format_deletes(deletes)}")
-      parent.send(type).delete(deletes)
-    end
+    if block_given?
+      yield new_records, deletes
+    else
+      # Delete the items no longer found
+      unless deletes.blank?
+        $log.info("MIQ(#{name}.save_#{type}_inventory) Deleting #{log_format_deletes(deletes)}")
+        parent.send(type).delete(deletes)
+      end
 
-    # Add the new items
-    parent.send(type).push(new_records)
+      # Add the new items
+      parent.send(type).push(new_records)
+    end
   end
 
   def save_inventory_single(type, parent, hash, child_keys = [], extra_keys = [])
