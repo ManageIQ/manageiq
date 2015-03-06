@@ -437,9 +437,8 @@ class MiqRequestController < ApplicationController
       cond.push("=" => {"value" => opts[:user_choice], "field" => "MiqRequest-requester_id"})
     end
 
-    if opts[:applied_states].present?
-      states = opts[:applied_states].collect { |s| {"=" => {"value" => s, "field" => "MiqRequest-approval_state"}} }
-      cond.push("or" => states)
+    if (a_s = opts[:applied_states].presence)
+      cond.push("or" => a_s.collect { |s| {"=" => {"value" => s, "field" => "MiqRequest-approval_state"}} })
     end
 
     # Add time condition
