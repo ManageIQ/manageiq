@@ -430,15 +430,11 @@ class MiqRequestController < ApplicationController
     requester = User.find_by_userid(session[:userid])
 
     if !is_approver
-      cond_hash = Hash.new
-      cond_hash["="] = {"value"=> requester ? requester.id : nil,"field"=>"MiqRequest-requester_id"}
-      cond.push(cond_hash)
+      cond.push("=" => {"value" => requester.try(:id), "field" => "MiqRequest-requester_id"})
     end
 
     if opts[:user_choice] && opts[:user_choice] != "all"
-      cond_hash = Hash.new
-      cond_hash["="] = {"value"=>opts[:user_choice],"field"=>"MiqRequest-requester_id"}
-      cond.push(cond_hash)
+      cond.push("=" => {"value" => opts[:user_choice], "field" => "MiqRequest-requester_id"})
     end
 
     if opts[:applied_states].present?
