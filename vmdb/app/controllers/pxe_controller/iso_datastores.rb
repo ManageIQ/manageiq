@@ -308,7 +308,7 @@ module PxeController::IsoDatastores
   def iso_datastore_get_node_info(treenodeid)
     if treenodeid == "root"
       iso_datastore_list
-      @right_cell_text = @right_cell_text = _("All %s") % ui_lookup(:models=>"IsoDatastore")
+      @right_cell_text = _("All %s") % ui_lookup(:models => "IsoDatastore")
       @right_cell_div  = "iso_datastore_list"
     else
       @right_cell_div = "iso_datastore_details"

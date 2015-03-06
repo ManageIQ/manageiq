@@ -213,7 +213,7 @@ module PxeController::PxeImageTypes
   def pxe_image_type_get_node_info(treenodeid)
     if treenodeid == "root"
       pxe_image_type_list
-      @right_cell_text = @right_cell_text = _("All %s") % ui_lookup(:models=>"PxeImageType")
+      @right_cell_text = _("All %s") % ui_lookup(:models => "PxeImageType")
       @right_cell_div  = "pxe_image_type_list"
     else
       @right_cell_div = "pxe_image_type_details"
