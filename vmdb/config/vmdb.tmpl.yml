@@ -326,20 +326,17 @@ workers:
           :memory_threshold: 2.gigabytes
           :nice_delta: 7
           :poll: 10.seconds
+          :poll_method: :normal
           :queue_timeout: 120.minutes
           :restart_interval: 2.hours
-        :ems_refresh_worker_amazon:
-          :poll_method: :normal
-        :ems_refresh_worker_microsoft:
-          :poll_method: :normal
-        :ems_refresh_worker_redhat:
-          :poll_method: :normal
-        :ems_refresh_worker_openstack:
-          :poll_method: :normal
-        :ems_refresh_worker_openstack_infra:
-          :poll_method: :normal
-        :ems_refresh_worker_vmware:
-          :poll_method: :normal
+        :ems_refresh_worker_amazon: {}
+        :ems_refresh_worker_foreman_configuration: {}
+        :ems_refresh_worker_foreman_provisioning: {}
+        :ems_refresh_worker_microsoft: {}
+        :ems_refresh_worker_redhat: {}
+        :ems_refresh_worker_openstack: {}
+        :ems_refresh_worker_openstack_infra: {}
+        :ems_refresh_worker_vmware: {}
       :event_handler:
         :cpu_usage_threshold: 0.percent
         :nice_delta: 7
