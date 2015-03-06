@@ -1,11 +1,11 @@
 class ExtManagementSystem < ActiveRecord::Base
   SUBCLASSES = %w(
+    ConfigurationManager
     EmsInfra
     EmsCloud
     EmsContainer
+    ProvisioningManager
   )
-
-  include EmsRefresh::Manager
 
   def self.types
     leaf_subclasses.collect(&:ems_type)
@@ -20,7 +20,9 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def self.supported_subclasses
-    subclasses.flat_map(&:supported_subclasses)
+    subclasses.flat_map do |s|
+      s.subclasses.empty? ? s : s.supported_subclasses
+    end
   end
 
   def self.supported_types_and_descriptions_hash
@@ -28,6 +30,8 @@ class ExtManagementSystem < ActiveRecord::Base
       hash[klass.ems_type] = klass.description
     end
   end
+
+  belongs_to :provider
 
   has_many :hosts,  :foreign_key => "ems_id", :dependent => :nullify
   has_many :vms_and_templates, :foreign_key => "ems_id", :dependent => :nullify, :class_name => "VmOrTemplate"
@@ -60,7 +64,7 @@ class ExtManagementSystem < ActiveRecord::Base
   include NewWithTypeStiMixin
   include UuidMixin
   include WebServiceAttributeMixin
-
+  include EmsRefresh::Manager
 
   after_destroy { |record| $log.info "MIQ(ExtManagementSystem.after_destroy) Removed EMS [#{record.name}] id [#{record.id}]" }
 
