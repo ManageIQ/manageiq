@@ -454,9 +454,7 @@ class MiqRequestController < ApplicationController
     cond.push("or" => types.keys.collect { |k| {"=" => {"value" => k.to_s, "field" => "MiqRequest-resource_type"}} })
 
     if opts[:type_choice] && opts[:type_choice] != "all"  # Add request_type filter, if selected
-      cond_hash = Hash.new
-      cond_hash["="] = {"value"=>opts[:type_choice],"field"=>"MiqRequest-request_type"}
-      cond.push(cond_hash)
+      cond.push("=" => {"value" => opts[:type_choice], "field" => "MiqRequest-request_type"})
     end
 
     if opts[:reason_text]  && opts[:reason_text] != ""
