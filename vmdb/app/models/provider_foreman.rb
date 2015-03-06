@@ -54,11 +54,11 @@ class ProviderForeman < Provider
 
   def ensure_managers
     build_provisioning_manager unless provisioning_manager
-    provisioning_manager.name    = "Configuration Manager for Foreman Provider '#{name}'"
+    provisioning_manager.name    = "#{name} Provisioning Manager"
     provisioning_manager.zone_id = zone_id
 
     build_configuration_manager unless configuration_manager
-    configuration_manager.name    = "Provisioning Manager for Foreman Provider '#{name}'"
+    configuration_manager.name    = "#{name} Configuration Manager"
     configuration_manager.zone_id = zone_id
   end
 end
