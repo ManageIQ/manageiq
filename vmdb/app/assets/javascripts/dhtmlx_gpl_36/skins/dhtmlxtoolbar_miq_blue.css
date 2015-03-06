@@ -22,6 +22,7 @@
 /* align/rtl feature */
 .dhx_toolbar_base_18_miq_blue div.float_left {
     float: left;
+    margin-right: 15px;
 }
 .dhx_toolbar_base_18_miq_blue div.float_right {
     float: right;
@@ -35,14 +36,15 @@
   float: left;
   margin: 1px 1px 0 5px;
 /*  padding: 0 2px 5px 4px;*/
-  border: 1px solid #a8a8a8;
+  border: 1px solid #b6b5b5;
   border-right: 0;
   background-image: linear-gradient(to bottom, #FAFAFA 0px, #EDEDED 100%);
   -moz-user-select: none;
 }
 
-#miq_alone {border: 1px solid #a8a8a8;}
-#miq_alone.over, #miq_alone.press, #miq_alone.pres_dis {background: #eee;}
+#miq_alone {border: 1px solid #b6b5b5;}
+#miq_alone.over, #miq_alone.press {background: #eee;}
+#miq_alone.pres_dis {background: #ccc;}
 #miq_alone.dhx_toolbar_sep {width: 1px; height: 25px; border: 0; background: #eee}
 
 /* button disabled */
@@ -87,7 +89,7 @@
   padding: 0px 6px 5px 0;
   margin-left: -1px;
   margin-top: 1px;
-  border: 1px solid #a8a8a8;
+  border: 1px solid #b6b5b5;
   border-left: 0;
   background-image: linear-gradient(to bottom, #FAFAFA 0px, #EDEDED 100%);
 }
@@ -117,9 +119,9 @@
 /* polygon obj */
 div.dhx_toolbar_poly_18_miq_blue {
   background-image: linear-gradient(to bottom, #FAFAFA 0px, #EDEDED 100%);
-	border: 1px solid #999;
+	border: 1px solid #b6b5b5;
     position: absolute;
-    margin-top: 0;
+    margin-top: -1px;
     padding-top: 1px;
     padding-bottom: 1px;
     overflow: hidden;
