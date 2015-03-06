@@ -1336,18 +1336,22 @@ module ReportController::Reports::Editor
           inc_hash[table]["columns"] ||= []    # Create the columns array for this table
           f = field.split("-")[1].split("__").first   # Grab the field name after the hyphen, before the "__"
           inc_hash[table]["columns"].push(f) unless inc_hash[table]["columns"].include?(f) # Add the field to the columns, if not there
-          rpt.col_order.push(table + "." + field.split("-")[1]) # Add the table.field to the col_order array
+
+          table_field = tables.join('.') + "." + field.split("-")[1]
+          rpt.col_order.push(table_field)             # Add the table.field to the col_order array
+
           if field == sortby1                         # Is this the first sort field?
-            rpt.sortby = [table + "." + field.split("-")[1]] + rpt.sortby # Put the field first in the sortby array
+            rpt.sortby = [table_field] + rpt.sortby   # Put the field first in the sortby array
           elsif field == @edit[:new][:sortby2]        # Is this the second sort field?
-            rpt.sortby.push(table + "." + field.split("-")[1])  # Add the field to the sortby array
+            rpt.sortby.push(table_field)              # Add the field to the sortby array
           end
+
           if field == @edit[:new][:pivotby1]          # Save the group fields
-            @pg1 = table + "." + field.split("-")[1]
+            @pg1 = table_field
           elsif field == @edit[:new][:pivotby2]
-            @pg2 = table + "." + field.split("-")[1]
+            @pg2 = table_field
           elsif field == @edit[:new][:pivotby3]
-            @pg3 = table + "." + field.split("-")[1]
+            @pg3 = table_field
           end
         else                                          # Set up for the next embedded include hash
           inc_hash[table]["include"] ||= {}     # Create include hash for next level
