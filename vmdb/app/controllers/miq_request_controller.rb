@@ -427,9 +427,9 @@ class MiqRequestController < ApplicationController
   # Create a condition from the passed in options
   def prov_condition(opts)
     cond = Array.new
-    requester = User.find_by_userid(session[:userid])
 
     if !is_approver
+      requester = User.find_by_userid(session[:userid])
       cond.push("=" => {"value" => requester.try(:id), "field" => "MiqRequest-requester_id"})
     end
 
