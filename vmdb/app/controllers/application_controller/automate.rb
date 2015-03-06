@@ -105,14 +105,16 @@ module ApplicationController::Automate
       @resolve[:new][:instance_name] = nil
       @resolve[:new][:other_name] = @edit[:new][:other_name]
     end
-    @resolve[:new][:target_class] = Hash[*@resolve[:target_classes].flatten][@edit[:new][:target_class]]
-    target_class = @resolve[:target_classes].detect { |ui_name, _| @edit[:new][:target_class] == ui_name }.last
-    targets = target_class.constantize.all
-    @resolve[:targets] = targets.sort { |a, b| a.name.downcase <=> b.name.downcase }.collect { |t| [t.name, t.id.to_s] }
-    @resolve[:new][:target_id] = nil
-    @resolve[:new][:object_message] = @edit[:new][:object_message]
-    @resolve[:lastaction] = "simulate"
-    @resolve[:throw_ready] = ready_to_throw
+    if @edit[:new][:target_class]
+      @resolve[:new][:target_class] = Hash[*@resolve[:target_classes].flatten][@edit[:new][:target_class]]
+      target_class = @resolve[:target_classes].detect { |ui_name, _| @edit[:new][:target_class] == ui_name }.last
+      targets = target_class.constantize.all
+      @resolve[:targets] = targets.sort { |a, b| a.name.downcase <=> b.name.downcase }.collect { |t| [t.name, t.id.to_s] }
+      @resolve[:new][:target_id] = nil
+      @resolve[:new][:object_message] = @edit[:new][:object_message]
+      @resolve[:lastaction] = "simulate"
+      @resolve[:throw_ready] = ready_to_throw
+    end
 
     # workaround to get "Simulate button" work from customization explorer
     render :update do |page|
