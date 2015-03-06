@@ -1879,7 +1879,7 @@ class VmOrTemplate < ActiveRecord::Base
     EmsEvent.add(self.ems_id, event)
   end
 
-  def console_supported?
+  def console_supported?(_type)
     false
   end
 

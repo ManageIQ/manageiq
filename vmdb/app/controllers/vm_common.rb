@@ -87,31 +87,61 @@ module VmCommon
   # Launch a VM console
   def console
     console_type = get_vmdb_config.fetch_path(:server, :remote_console_type).downcase
-    unless params[:task_id]
-      console_before_task(console_type)
-    else
-      console_after_task(console_type)
-    end
+    params[:task_id] ? console_after_task(console_type) : console_before_task(console_type)
   end
   alias vmrc_console console  # VMRC needs its own URL for RBAC checking
-  alias vnc_console console   # VNC needs its own URL for RBAC checking
+
+  def html5_console
+    params[:task_id] ? console_after_task('html5') : console_before_task('html5')
+  end
 
   def launch_vmware_console
     console_type = get_vmdb_config.fetch_path(:server, :remote_console_type).downcase
     @vm = @record = identify_record(params[:id], VmOrTemplate)
-    case console_type
-    when "mks"
-      @mks_version = get_vmdb_config[:server][:mks_version]
-      @mks = @sb[:mks]
-    when "vmrc"
-      @vmrc = Hash.new
-      @vmrc[:host]        = @record.ext_management_system.ipaddress || @record.ext_management_system.hostname
-      @vmrc[:vmid]        = @record.ems_ref
-      @vmrc[:ticket]      = @sb[:vmrc_ticket]
-      @vmrc[:api_version] = @record.ext_management_system.api_version.to_s
-      @vmrc[:os]          = browser_info(:os).downcase
-    end
-    render :action=>"console"
+    options = case console_type
+              when "mks"
+                @sb[:mks].update(
+                  'version' => get_vmdb_config[:server][:mks_version]
+                )
+              when "vmrc"
+                {
+                  :host        => @record.ext_management_system.ipaddress ||
+                                  @record.ext_management_system.hostname,
+                  :vmid        => @record.ems_ref,
+                  :ticket      => @sb[:vmrc_ticket],
+                  :api_version => @record.ext_management_system.api_version.to_s,
+                  :os          => browser_info(:os).downcase,
+                  :name        => @record.name
+                }
+              end
+    render :template => "vm_common/console_#{console_type}",
+           :layout   => false,
+           :locals   => options
+  end
+
+  def launch_html5_console
+    password, host_address, host_port, _proxy_address, _proxy_port, protocol, ssl = @sb[:html5]
+    encrypt = get_vmdb_config.fetch_path(:server, :websocket_encrypt)
+
+    proxy_options = WsProxy.start(
+      :host       => host_address,
+      :host_port  => host_port,
+      :password   => password,
+      :ssl_target => ssl,       # ssl on provider side
+      :encrypt    => encrypt    # ssl on web client side
+    )
+    raise _("Console access failed: proxy errror") if proxy_options.nil?
+
+    view = case protocol   # spice, vnc - from rhevm
+           when 'spice'
+             "vm_common/console_spice"
+           when nil, 'vnc' # nil - from vmware
+             "vm_common/console_vnc"
+           end
+
+    render :template => view,
+           :layout   => false,
+           :locals   => proxy_options
   end
 
   # VM clicked on in the explorer right cell
@@ -1374,24 +1404,32 @@ module VmCommon
     replace_right_cell
   end
 
-  private ############################
+  private
 
   # First time thru, kick off the acquire ticket task
   def console_before_task(console_type)
-    @vm = @record = identify_record(params[:id], VmOrTemplate)
-    api_version = @record.ext_management_system.api_version.to_s
-    if !api_version.starts_with?("5")
-      add_flash(_("Console access failed: %s") %  "Unsupported Provider API version #{api_version}", :error)
-    else
-      task_id = @record.remote_console_acquire_ticket_queue(console_type.to_sym, session[:userid], MiqServer.my_server.id)
-      unless task_id.is_a?(Fixnum)
-        add_flash(_("Console access failed: %s") %  "Task start failed: ID [#{task_id.inspect}]", :error)
+    ticket_type = console_type.to_sym
+
+    record = identify_record(params[:id], VmOrTemplate)
+    ems = record.ext_management_system
+    if ems.class.ems_type == 'vmwarews'
+      ticket_type = :vnc if console_type == 'html5'
+      begin
+        ems.validate_remote_console_vmrc_support
+      rescue MiqException::RemoteConsoleNotSupportedError => e
+        add_flash(_("Console access failed: %s") % e.message, :error)
+        render :partial => "shared/ajax/flash_msg_replace"
+        return
       end
     end
+
+    task_id = record.remote_console_acquire_ticket_queue(ticket_type, session[:userid], MiqServer.my_server.id)
+    add_flash(_("Console access failed: %s") % "Task start failed: ID [#{task_id.inspect}]", :error) unless task_id.is_a?(Fixnum)
+
     if @flash_array
       render :partial => "shared/ajax/flash_msg_replace"
     else
-      initiate_wait_for_task(:task_id => task_id) # Spin the Q until the task is done
+      initiate_wait_for_task(:task_id => task_id)
     end
   end
 
@@ -1399,35 +1437,19 @@ module VmCommon
   def console_after_task(console_type)
     miq_task = MiqTask.find(params[:task_id])
     if miq_task.status == "Error" || miq_task.task_results.blank?
-      add_flash(_("Console access failed: %s") %  miq_task.message, :error)
+      add_flash(_("Console access failed: %s") % miq_task.message, :error)
     else
       @vm = @record = identify_record(params[:id], VmOrTemplate)
-      case console_type
-      when "mks"
-        @sb[:mks] = miq_task.task_results
-      when "vmrc"
-        @sb[:vmrc_ticket] = miq_task.task_results
-      end
+      @sb[console_type.to_sym] = miq_task.task_results # html5, VNC?, MKS or VMRC
     end
     render :update do |page|
       if @flash_array
-        page.replace(:flash_msg_div, :partial=>"layouts/flash_msg")
+        page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
         page << "miqSparkle(false);"
-
-      elsif console_type == "vnc" # VNC - send down the miqvncplugin and launch it
-        page << "if (typeof miqvncplugin == 'undefined')"
-        page.insert_html(:after, "page_footer_div", :partial=>"layouts/miq_vnc_plugin")
-        pwd, host, port, proxy, proxy_port = miq_task.task_results  # Split array into parms
-        if proxy.blank? || proxy_port.blank?
-          page << "miqLaunchMiqVncConsole('#{pwd}', '#{host}', #{port});"
-        else
-          page << "miqLaunchMiqVncConsole('#{pwd}', '#{host}', #{port}, '#{proxy}', #{proxy_port});"
-        end
+      else # open a window to show a VNC or VMWare console
+        console_action = console_type == 'html5' ? 'launch_html5_console' : 'launch_vmware_console'
         page << "miqSparkle(false);"
-
-      else                        # MKS or VMRC - open a new web page
-        page << "miqSparkle(false);"
-        page << "window.open('#{url_for :controller => controller_name, :action => 'launch_vmware_console', :id => @record.id}');"
+        page << "window.open('#{url_for :controller => controller_name, :action => console_action, :id => @record.id}');"
       end
     end
   end

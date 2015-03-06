@@ -1514,6 +1514,7 @@ Vmdb::Application.routes.draw do
         drift_to_txt
         explorer
         launch_vmware_console
+        launch_html5_console
         perf_chart_chooser
         policies
         protect
@@ -1573,6 +1574,8 @@ Vmdb::Application.routes.draw do
         users
         vmrc_console
         vm_pre_prov
+        vm_vdi
+        html5_console
         wait_for_task
         win32_services
       ) +
@@ -1659,7 +1662,7 @@ Vmdb::Application.routes.draw do
         util_chart_chooser
         vm_pre_prov
         vmrc_console
-        vnc_console
+        html5_console
         wait_for_task
         win32_services
         x_button

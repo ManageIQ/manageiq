@@ -24,3 +24,5 @@
 //= require jqplot-plugins/jqplot.cursor
 //= require jqplot-plugins/jqplot.enhancedLegendRenderer
 //= require cfme_jqplot
+//= require spice-html5
+//= require novnc-rails
