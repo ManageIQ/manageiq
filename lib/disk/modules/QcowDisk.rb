@@ -52,6 +52,15 @@ module QcowDisk
   ])
   SIZEOF_QCOW_HEADER_V2 = QCOW_HEADER_V2.size
 
+  QCOW_HEADER_V3 = BinaryStruct.new(QCOW_HEADER_V2.definition + [
+    'Q', 'incompatible_features',
+    'Q', 'compatible_features',
+    'Q', 'autoclear_features',
+    'N', 'refcount_order',
+    'N', 'header_length'
+  ])
+  SIZEOF_QCOW_HEADER_V3 = QCOW_HEADER_V3.size
+
   # indicate that the refcount of the referenced cluster is exactly one.
   QCOW_OFLAG_COPIED     = (1 << 63)
 
@@ -67,6 +76,27 @@ module QcowDisk
 
   SECTOR_SIZE       = 512
   ZLIB_WINDOW_BITS  = -12
+
+  INCOMPATIBLE_FEATURES_MASK = {
+    :dirty   => 0x1,
+    :corrupt => 0x2
+  }
+
+  COMPATIBLE_FEATURES_MASK = {
+    :lazy_refcounts => 0x1
+  }
+
+  AUTOCLEAR_FEATURES_MASK = {
+  }
+
+  HEADER_EXTENSION_TYPE_SIZE   = 4
+  HEADER_EXTENSION_LENGTH_SIZE = 4
+  HEADER_EXTENSION_TYPES = {
+    :end_of_header_extension_area => 0x00000000,
+    :backing_file_format_name     => 0xE2792ACA,
+    :feature_table_name           => 0x6803f857
+  }
+
 
   def d_init
     self.diskType = "QCOW"
@@ -252,6 +282,14 @@ module QcowDisk
     entries
   end
 
+  def refcount_order
+    version < 3 ? 4 : @header['refcount_order']
+  end
+
+  def header_length
+    version < 3 ? SIZEOF_QCOW_HEADER_V2 : @header['header_length']
+  end
+
   def refcount_table_clusters
     return nil if version == 1
     @refcount_table_clusters ||= header['refcount_table_clusters']
@@ -363,6 +401,7 @@ module QcowDisk
         rbuf = decompress_cluster(cluster_offset)
         rbuf = rbuf[index_in_cluster * SECTOR_SIZE, nbytes]
       else
+        # TODO if LSB of cluster_offset is '1', return all 0's
         cluster_offset &= L2E_OFFSET_MASK
         file_offset = cluster_offset + (index_in_cluster * SECTOR_SIZE)
         rbuf = read_image_file(file_offset, nbytes)
@@ -441,15 +480,25 @@ module QcowDisk
       when 1
         raise "QCOW Version 1 is not supported"
         QCOW_HEADER_V1.decode(file_handle.read(SIZEOF_QCOW_HEADER_V1))
-      when 2, 3
+      when 2
         h = QCOW_HEADER_V2.decode(file_handle.read(SIZEOF_QCOW_HEADER_V2))
         # TODO: Handle Encryption
+        raise "QCOW Encryption is not supported" if h['crypt_method'] == 1
+        h
+      when 3
+        h = QCOW_HEADER_V3.decode(file_handle.read(SIZEOF_QCOW_HEADER_V3))
+        # TODO raise error if unknown incompatible bits set
+        # TODO warning if dirty or corrupt
         raise "QCOW Encryption is not supported" if h['crypt_method'] == 1
         h
       else
         raise "Uknown Version: #{partial_header['version'].inspect}"
       end
     end
+  end
+
+  def header_extensions
+    # ...
   end
 
   UINT64 = BinaryStruct.new([
@@ -571,6 +620,30 @@ module QcowDisk
     @cluster_offset_mask ||= (1 << csize_shift) - 1
   end
 
+  def incompatible_features
+    version < 3 ? 0 : @header['incompatible_features']
+  end
+
+  def compatible_features
+    version < 3 ? 0 : @header['compatible_features']
+  end
+
+  def autoclear_features
+    version < 3 ? 0 : @header['autoclear_features']
+  end
+
+  def dirty
+    (incompatible_features & INCOMPATIBLE_FEATURES_MASK[:dirty]) == INCOMPATIBLE_FEATURES_MASK[:dirty]
+  end
+
+  def corrupt
+    (incompatible_features & INCOMPATIBLE_FEATURES_MASK[:corrupt]) == INCOMPATIBLE_FEATURES_MASK[:corrupt] 
+  end
+
+  def lazy_refcounts
+    compatible_features & COMPATIBLE_FEATURES_MASK[:lazy_refcounts]
+  end
+
   def dump
     out = "\#<#{self.class}:0x#{'%08x' % self.object_id}>\n"
     out << "Version                  : #{version}\n"
@@ -592,6 +665,13 @@ module QcowDisk
     out << "Snapshot Offset          : #{snapshots_offset}\n"
     out << "RefCount Table Offset    : #{refcount_table_offset}\n"
     out << "RefCount Table Clusters  : #{refcount_table_clusters}\n"
+    out << "RefCount Order           : #{refcount_order}\n"
+    out << "Header length            : #{header_length}\n"
+    out << "Incompatible Features    : #{incompatible_features}\n"
+    out << "Compatible Features      : #{compatible_features}\n"
+    out << "Autoclear Features       : #{autoclear_features}\n"
+    out << "Dirty                    : #{dirty}\n"
+    out << "Corrupt                  : #{corrupt}\n"
     return out
   end
 
