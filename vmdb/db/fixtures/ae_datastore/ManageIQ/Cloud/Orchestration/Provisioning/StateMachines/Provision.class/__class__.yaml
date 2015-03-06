@@ -1,0 +1,293 @@
+---
+object_type: class
+version: 1.0
+object:
+  attributes:
+    description: Orchestration Provision State Machine
+    display_name: 
+    name: Provision
+    type: 
+    inherits: 
+    visibility: 
+    owner: 
+  schema:
+  - field:
+      aetype: state
+      name: pre1
+      display_name: 
+      datatype: string
+      priority: 1
+      owner: 
+      default_value: /Cloud/Orchestration/Provisioning/StateMachines/Methods/Preprovision
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_serviceprovision_status(status => 'Processing Pre1')
+      on_exit: update_serviceprovision_status(status => 'Processed Pre1')
+      on_error: update_serviceprovision_status(status => 'Error Processing Pre1')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: pre2
+      display_name: 
+      datatype: string
+      priority: 2
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_serviceprovision_status(status => 'Processing Pre2')
+      on_exit: update_serviceprovision_status(status => 'Processed Pre2')
+      on_error: update_serviceprovision_status(status => 'Error Processing Pre2')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: pre3
+      display_name: 
+      datatype: string
+      priority: 3
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_serviceprovision_status(status => 'Processing Pre3')
+      on_exit: update_serviceprovision_status(status => 'Processed Pre3')
+      on_error: update_serviceprovision_status(status => 'Error Processing Pre3')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: pre4
+      display_name: 
+      datatype: string
+      priority: 4
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_serviceprovision_status(status => 'Processing Pre4')
+      on_exit: update_serviceprovision_status(status => 'Processed Pre4')
+      on_error: update_serviceprovision_status(status => 'Error Processing Pre4')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: pre5
+      display_name: 
+      datatype: string
+      priority: 5
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_serviceprovision_status(status => 'Processing Pre5')
+      on_exit: update_serviceprovision_status(status => 'Processed Pre5')
+      on_error: update_serviceprovision_status(status => 'Error Processing Pre5')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: provision
+      display_name: 
+      datatype: string
+      priority: 6
+      owner: 
+      default_value: /Cloud/Orchestration/Provisioning/StateMachines/Methods/Provision
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_serviceprovision_status(status => 'Creating Service')
+      on_exit: update_serviceprovision_status(status => 'Creating Service')
+      on_error: update_serviceprovision_status(status => '${/#ae_reason}')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: checkprovisioned
+      display_name: 
+      datatype: string
+      priority: 7
+      owner: 
+      default_value: /Cloud/Orchestration/Provisioning/StateMachines/Methods/CheckProvisioned
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: update_serviceprovision_status(status => 'Creating Service')
+      on_error: update_serviceprovision_status(status => '${/#ae_reason}')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: post1
+      display_name: 
+      datatype: string
+      priority: 8
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_serviceprovision_status(status => 'Processing Post1 Customizations')
+      on_exit: update_serviceprovision_status(status => 'Processed Post1 Customizations')
+      on_error: update_serviceprovision_status(status => 'Error Processing Post1 Customizations')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: post2
+      display_name: 
+      datatype: string
+      priority: 9
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_serviceprovision_status(status => 'Processing Post2 Customizations')
+      on_exit: update_serviceprovision_status(status => 'Processed Post2 Customizations')
+      on_error: update_serviceprovision_status(status => 'Error Processing Post2 Customizations')
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: state
+      name: post3
+      display_name: 
+      datatype: string
+      priority: 10
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_serviceprovision_status(status => 'Processing Post3 Customizations')
+      on_exit: update_serviceprovision_status(status => 'Processed Post3 Customizations')
+      on_error: update_serviceprovision_status(status => 'Error Processing Post3 Customizations')
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: state
+      name: post4
+      display_name: 
+      datatype: string
+      priority: 11
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_serviceprovision_status(status => 'Processing Post4 Customizations')
+      on_exit: update_serviceprovision_status(status => 'Processed Post4 Customizations')
+      on_error: update_serviceprovision_status(status => 'Error Processing Post4 Customizations')
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: state
+      name: post5
+      display_name: 
+      datatype: string
+      priority: 12
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_serviceprovision_status(status => 'Processing Post5 Customizations')
+      on_exit: update_serviceprovision_status(status => 'Processed Post5 Customizations')
+      on_error: update_serviceprovision_status(status => 'Error Processing Post5 Customizations')
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: state
+      name: EmailOwner
+      display_name: 
+      datatype: string
+      priority: 13
+      owner: 
+      default_value: /Cloud/Orchestration/Provisioning/Email/ServiceProvision_complete?event=service_provisioned
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_serviceprovision_status(status => 'Emailing Owner')
+      on_exit: update_serviceprovision_status(status => 'Emailed Owner')
+      on_error: update_serviceprovision_status(status => 'Error Emailing Owner')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: Finished
+      display_name: 
+      datatype: string
+      priority: 14
+      owner: 
+      default_value: /System/CommonMethods/StateMachineMethods/service_provision_finished
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: '100'
+      max_time: 

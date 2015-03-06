@@ -77,7 +77,8 @@ class VmOrTemplate < ActiveRecord::Base
   has_many                  :win32_services, -> { where "typename = 'win32_service'" }, :class_name => "SystemService"
   has_many                  :kernel_drivers, -> { where "typename = 'kernel' OR typename = 'misc'" }, :class_name => "SystemService"
   has_many                  :filesystem_drivers, -> { where "typename = 'filesystem'" },  :class_name => "SystemService"
-  has_many                  :linux_initprocesses, -> { where "typename = 'linux_initprocess'" }, :class_name => "SystemService"
+  has_many                  :linux_initprocesses, -> { where "typename = 'linux_initprocess' OR typename = 'linux_systemd'" }, :class_name => "SystemService"
+  has_many                  :linux_initprocesses, :class_name => "SystemService", :conditions => "typename = 'linux_initprocess' OR typename = 'linux_systemd'"
 
   has_many                  :filesystems, :as => :resource, :dependent => :destroy
   has_many                  :directories, -> { where "rsc_type = 'dir'" }, :as => :resource, :class_name => "Filesystem"
@@ -1755,12 +1756,6 @@ class VmOrTemplate < ActiveRecord::Base
     self.direct_service.try(:root_service)
   end
 
-  #Enable once we decide what it should return (seconds or some time format)
-  #def uptime
-  #  return nil if self.state != "on" || self.boot_time.nil?
-  #  return Time.now - self.boot_time
-  #end
-
   #
   # UI Button Validation Methods
   #
@@ -1881,7 +1876,7 @@ class VmOrTemplate < ActiveRecord::Base
     EmsEvent.add(self.ems_id, event)
   end
 
-  def console_supported?
+  def console_supported?(_type)
     false
   end
 

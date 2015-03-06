@@ -38,15 +38,11 @@
       - if @sb[:menu].empty?
         = render :partial => 'layouts/info_msg', :locals => {:message => _("No Saved Reports available.")}
       - else
-        %table.style3
-          %thead
-            %th.icon
-            %th
+        %table.table.table-striped.table-bordered.table-hover
           %tbody
             - @sb[:menu].invert.each do |pp|
-              %tr{:class => cycle('row0', 'row1'), :title => _("View this Profile"),  :onmouseover => "this.style.cursor = 'pointer';",
-                :onclick => "cfmeDynatree_activateNode('#{@sb[:active_tree]}', 'g-#{to_cid(pp[1])}');"}
-                %td.icon
+              %tr{:title => _("View this Profile"), :onclick => "cfmeDynatree_activateNode('#{@sb[:active_tree]}', 'g-#{to_cid(pp[1])}');"}
+                %td.narrow
                   %ul.icons
                     %li
                       %span.product.product-group

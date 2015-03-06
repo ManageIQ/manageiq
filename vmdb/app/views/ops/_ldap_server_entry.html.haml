@@ -9,7 +9,7 @@
                      :alt   => t = _("Add this LDAP Server"),
                      :title => t,
                      :type  => "submit")
-      %td.all
+      %td
         = text_field("entry", "hostname", :maxlength => MAX_NAME_LEN)
       %td
         - url1 = url_for(:action => 'ldap_entry_changed',
@@ -17,7 +17,7 @@
         = select_tag('entry_mode',
                      options_for_select([[_("LDAP"), 'ldap'], [_("LDAPS"), 'ldaps']], "ldaps"),
                      "data-miq_observe" => {:url => url1}.to_json)
-      %td.all
+      %td
         = text_field("entry", "port",
                      :maxlength => 6,
                      :value     => "636")
@@ -32,7 +32,7 @@
                      :title     => t,
                      :domain_id => domain_id,
                      :type      => "submit")
-      %td.all
+      %td
         = text_field("entry", "hostname",
                      :maxlength => MAX_NAME_LEN,
                      "value"    => entry[:hostname])
@@ -42,7 +42,7 @@
         = select_tag('entry_mode',
                      options_for_select([[_("LDAP"), 'ldap'], [_("LDAPS"), 'ldaps']], entry[:mode]),
                      "data-miq_observe" => {:url => url1}.to_json)
-      %td.all
+      %td
         = text_field("entry", "port",
                      :maxlength => 6,
                      "value"    => entry[:port])
@@ -71,13 +71,13 @@
       %td{:onclick => remote_function(:url => {:action => 'ls_select', :id => entry_idx, :field => "port", :domain_id => domain_id}), :title => t}
         = entry[:port]
       %td{:title => t}
-        = link_to(button_tag(_('Validate'),
-                             :class => "btn btn-primary",
-                             :alt   => t = _("Validate the LDAP Settings by binding with the Host")),
+        = link_to(_('Validate'),
                   {:action    => "ldap_domain_edit",
                    :button    => "verify",
                    :id        => entry_idx,
                    :domain_id => domain_id},
+                  :class                 => "btn btn-primary",
+                  :alt                   => t = _("Validate the LDAP Settings by binding with the Host"),
                   "data-miq_sparkle_on"  => true,
                   "data-miq_sparkle_off" => true,
                   :remote                => true,

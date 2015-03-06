@@ -261,7 +261,7 @@ module MiqExpressionToSqlSpec
 
       sql, incl, attrs = exp.to_sql
       attrs[:supported_by_sql].should be_true
-      sql.should == "vms.id IN (SELECT DISTINCT vm_or_template_id FROM system_services WHERE (name = 'httpd') AND (typename = 'linux_initprocess'))"
+      sql.should == "vms.id IN (SELECT DISTINCT vm_or_template_id FROM system_services WHERE (name = 'httpd') AND (typename = 'linux_initprocess' OR typename = 'linux_systemd'))"
 
       exp = YAML.load '--- !ruby/object:MiqExpression
     context_type:

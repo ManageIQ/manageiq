@@ -5,9 +5,9 @@
         = image_submit_tag("/images/toolbars/import.png",
           :class=>"rollover small",
           :id=>"accept", :name=>"accept", :alt=>"Add this entry", :title=>"Add this entry")
-      %td.all
+      %td
         = text_field("entry", "name", :maxlength=>MAX_NAME_LEN)
-      %td.all
+      %td
         = text_field("entry", "description", :maxlength=>MAX_DESC_LEN)
   - else
     %tr{:class => cycle('row0', 'row1'), :id => "#{entry.id}_tr"}
@@ -15,9 +15,9 @@
         = image_submit_tag("/images/toolbars/import.png",
           :class=>"rollover small",
           :id=>"accept", :name=>"accept", :alt=>"Update this entry", :title=>"Update this entry")
-      %td.all
+      %td
         = text_field("entry", "name", :maxlength=>MAX_NAME_LEN, "value"=>entry.name)
-      %td.all
+      %td
         = text_field("entry", "description", :maxlength=>MAX_DESC_LEN, "value"=>entry.description)
 - else
   - if entry == "new"

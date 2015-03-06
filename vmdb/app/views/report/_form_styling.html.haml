@@ -4,14 +4,10 @@
 #styling_div
   %h3
     = _('Specify Column Styles')
-  %table.style3
+  %table.table.table-striped.table-bordered
     %thead
       %tr
-        - len = 0
-        - @edit[:new][:field_order].each do |f|
-          - len = f.first.length if f.first.length > len
-        - width = len > 70 ? "400px;" : "auto"
-        %th{:style => "width: #{width};"}
+        %th
           = _('Column Name')
         %th
           = _('Style')
@@ -24,7 +20,7 @@
         - col_name = f.last.include?(".") ? f.last.split(".").last.gsub("-", ".") : f.last.split("-").last
         - styles = @edit.fetch_path(:new, :col_options, col_name, :style) || []
         %tr
-          %td.key
+          %td
             = h(f.first)
           %td
             - 3.times do |s_idx|
@@ -85,18 +81,15 @@
                         "data-miq_observe"     => {:url => url}.to_json)
               - elsif !styles[s_idx]
                 = _('Default')
-          %td
-            %table.admintable{:cellspacing => "0", :cellpadding => "0", :style => "padding:0px"}
-              %tbody
-                - 3.times do |s_idx|
-                  %tr{:style => "padding: 0px;"}
-                    %td{:style => "padding: 0px;"}
-                      - break if s_idx > 0 && (styles[s_idx - 1].blank? || styles[s_idx - 1][:operator] == "DEFAULT")
-                      - if styles[s_idx] && styles[s_idx][:class]
-                        %span{:class => styles[s_idx][:class].to_s}
-                          &nbsp;
-                          = _('Sample')
-                          &nbsp;
+          - 3.times do |s_idx|
+            - break if s_idx > 0 && (styles[s_idx - 1].blank? || styles[s_idx - 1][:operator] == "DEFAULT")
+            - if styles[s_idx] && styles[s_idx][:class]
+              %td{:class => styles[s_idx][:class].to_s}
+                &nbsp;
+                = _('Sample')
+                &nbsp;
+            - else
+              %td
   %br
   = _('* Style "If" conditions are evaluated top to bottom for each column')
 

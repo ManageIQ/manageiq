@@ -140,6 +140,7 @@ module MiqServer::WorkerManagement::Monitor
       self.log_role_changes           if roles_changed
       self.sync_active_roles          if roles_changed
       self.set_active_role_flags      if roles_changed
+      self.stop_apache                if roles_changed && !apache_needed?
 
       self.sync_config                if config_changed
       self.reset_queue_messages       if config_changed || roles_changed

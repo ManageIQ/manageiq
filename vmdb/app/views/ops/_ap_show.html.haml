@@ -22,15 +22,15 @@
       %hr/
   - if @file
     %h3=_("File Items")
-    %table.style3
+    %table.table.table-striped.table-bordered.table-hover
       %thead
         %tr
-          %th{:width => "200"}=_("Name")
+          %th=_("Name")
           %th Collect Contents?
       %tbody
         - @file.sort.each do |f|
           %tr
-            %td{:width => "200"}= h(f)
+            %td= h(f)
             %td= h(@file_stats["#{f}"])
     %hr/
   - unless @selected_scan.mode == "Host"

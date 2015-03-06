@@ -7,7 +7,7 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     @ems = FactoryGirl.create(:ems_openstack_infra, :zone => zone, :hostname => "192.0.2.1",
                               :ipaddress => "192.0.2.1", :port => 5000)
     @ems.update_authentication(
-        :default => {:userid => "admin", :password => "22ffdb40bb99703b3650a79c1c1305a65d83e898"})
+        :default => {:userid => "admin", :password => "3ddb6de300630a431ffae7f01104c9988ec4c89d"})
   end
 
   it "will perform a full refresh" do
@@ -29,6 +29,7 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
       assert_table_counts
       assert_ems
       assert_specific_host
+      assert_specific_public_template
     end
   end
 
@@ -36,26 +37,27 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     ExtManagementSystem.count.should == 1
     EmsFolder.count.should           == 0 # HACK: Folder structure for UI a la VMware
     EmsCluster.count.should          == 0
-    Host.count.should                == 7
+    Host.count.should                == 6
+    OrchestrationStack.count.should  == 0
     ResourcePool.count.should        == 0
     Vm.count.should                  == 0
-    VmOrTemplate.count.should        == 0
+    VmOrTemplate.count.should        == 16
     CustomAttribute.count.should     == 0
     CustomizationSpec.count.should   == 0
     Disk.count.should                == 0
     GuestDevice.count.should         == 0
-    Hardware.count.should            == 7
+    Hardware.count.should            == 6
     Lan.count.should                 == 0
     MiqScsiLun.count.should          == 0
     MiqScsiTarget.count.should       == 0
     Network.count.should             == 0
-    OperatingSystem.count.should     == 0
+    OperatingSystem.count.should     == 6
     Snapshot.count.should            == 0
     Switch.count.should              == 0
     SystemService.count.should       == 0
     Relationship.count.should        == 0
 
-    MiqQueue.count.should            == 3
+    MiqQueue.count.should            == 19
     Storage.count.should             == 0
   end
 
@@ -69,28 +71,32 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     @ems.resource_pools.size.should      == 0
 
     @ems.storages.size.should            == 0
-    @ems.hosts.size.should               == 7
-    @ems.vms_and_templates.size.should   == 0
+    @ems.hosts.size.should               == 6
+    @ems.vms_and_templates.size.should   == 16
     @ems.vms.size.should                 == 0
-    @ems.miq_templates.size.should       == 0
+    @ems.miq_templates.size.should       == 16
     @ems.customization_specs.size.should == 0
   end
 
   def assert_specific_host
-    @host = HostOpenstackInfra.find_by_name('d783b2e4-059e-4e2b-a1d1-21b3d1a7dab6')
+    @host = HostOpenstackInfra.find_by_name('06c2fb5a-22ab-450f-bd83-9342f7b823e6 (Controller)')
+
     @host.should have_attributes(
-      :ems_ref          => "d783b2e4-059e-4e2b-a1d1-21b3d1a7dab6",
-      :ems_ref_obj      => "492b83e2-1805-4022-a385-876230ce5d43",
-      :name             => "d783b2e4-059e-4e2b-a1d1-21b3d1a7dab6",
-      :hostname         => nil,
+      :ems_ref          => "06c2fb5a-22ab-450f-bd83-9342f7b823e6",
+      :ems_ref_obj      => "5de454a1-7f3c-418e-815d-0350aef47934",
+      :name             => "06c2fb5a-22ab-450f-bd83-9342f7b823e6 (Controller)",
       :ipaddress        => "192.0.2.8",
-      :mac_address      => "00:22:a4:80:56:c7",
+      :mac_address      => "00:6b:a4:4c:df:f3",
       :ipmi_address     => nil,
-      :vmm_vendor       => "Unknown",
+      :vmm_vendor       => "RedHat",
       :vmm_version      => nil,
-      :vmm_product      => nil,
+      :vmm_product      => "rhel (No hypervisor, Host Type is Controller)",
       :power_state      => "on",
-      :connection_state => nil
+      :connection_state => "connected"
+    )
+
+    @host.operating_system.should have_attributes(
+      :product_name     => "linux"
     )
 
     @host.hardware.should have_attributes(
@@ -109,5 +115,47 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
       :cpu_usage          => nil,
       :memory_usage       => nil
     )
+  end
+
+  def assert_specific_public_template
+    assert_specific_template("overcloud-control", "1734551c-dff7-472c-9925-f713e7af5a52", true)
+  end
+
+  def assert_specific_template(name, uid, is_public = false)
+    template = TemplateOpenstack.where(:name => name).first
+    template.should have_attributes(
+      :template              => true,
+      :publicly_available    => is_public,
+      :ems_ref_obj           => nil,
+      :uid_ems               => uid,
+      :vendor                => "OpenStack",
+      :power_state           => "never",
+      :location              => "unknown",
+      :tools_status          => nil,
+      :boot_time             => nil,
+      :standby_action        => nil,
+      :connection_state      => nil,
+      :cpu_affinity          => nil,
+      :memory_reserve        => nil,
+      :memory_reserve_expand => nil,
+      :memory_limit          => nil,
+      :memory_shares         => nil,
+      :memory_shares_level   => nil,
+      :cpu_reserve           => nil,
+      :cpu_reserve_expand    => nil,
+      :cpu_limit             => nil,
+      :cpu_shares            => nil,
+      :cpu_shares_level      => nil
+    )
+    template.ems_ref.should be_guid
+
+    template.ext_management_system.should  == @ems
+    template.operating_system.should       be_nil # TODO: This should probably not be nil
+    template.custom_attributes.size.should == 0
+    template.snapshots.size.should         == 0
+    template.hardware.should               be_nil
+
+    template.parent.should                 be_nil
+    template
   end
 end

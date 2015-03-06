@@ -976,6 +976,23 @@ describe ReportController do
           )
         end
       end
+
+      context "when the widget importer raises a non valid widget yaml error" do
+        before do
+          widget_import_service.stub(:store_for_import).and_raise(WidgetImportValidator::InvalidWidgetYamlError)
+        end
+
+        it "redirects with an error message" do
+          xhr :post, :upload_widget_import_file, params
+          response.should redirect_to(
+            :action  => :review_import,
+            :message => {
+              :message => "Error: the file uploaded contains no widgets",
+              :level   => :error
+            }.to_json
+          )
+        end
+      end
     end
 
     context "when the upload parameter is nil" do

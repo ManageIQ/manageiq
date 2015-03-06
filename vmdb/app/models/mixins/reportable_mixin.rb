@@ -5,6 +5,10 @@ module ReportableMixin
   end
 
   module ClassMethods
+    def sortable?
+      true
+    end
+
     def report_table(number = :all, options = {})
       only = options.delete(:only).collect {|c| "category." == c[0..8] ? nil : c}.compact
       except = options.delete(:except)

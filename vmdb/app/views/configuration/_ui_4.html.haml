@@ -2,21 +2,19 @@
   = render :partial => "layouts/flash_msg"
   %div{:style => "padding-top:10px"}
     - if @temp[:timeprofiles].empty?
-      .alert.alert-info
-        %span.pficon.pficon
-        %strong=_('No Records Found')
+      = render :partial => 'layouts/info_msg', :locals => {:message => _("No Records Found.")}
     - else
-      %table.style3
+      %table.table.table-striped.table-bordered.table-hover
         %thead
           %tr
-            %th.checkbox{:width => "10"}
+            %th
             - [_('Description'), _('Type'), _('User ID'), _('Days'), _('Hours'), _('Timezone'), _('Roll Up Performance')].each do |title|
-              %th.nowrap
+              %th
                 = title
         %tbody
           - @temp[:timeprofiles].each do |row|
-            %tr{:class => "#{cycle("row0", "row1")}"}
-              %td.checkbox
+            %tr
+              %td.narrow
                 = check_box_tag("check_#{row['id']}", "1", false, :id => "listcheckbox", :onclick => "miqUpdateButtons(this, 'center_tb');")
               - title = row["description"] == "UTC" ? _("Click to view Time Profile") : _("Click to view/edit Time Profile")
               - [row["description"], row["profile_type"], row["profile_key"],

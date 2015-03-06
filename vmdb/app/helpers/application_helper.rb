@@ -803,16 +803,13 @@ module ApplicationHelper
     when "miq_task_canceljob"
       return true if !["all_tasks", "all_ui_tasks"].include?(@layout)
     when "vm_console"
-      return true if !@record.console_supported? ||
-          (get_vmdb_config[:server][:remote_console_type] && get_vmdb_config[:server][:remote_console_type] != "MKS")
+      type = get_vmdb_config.fetch_path(:server, :remote_console_type)
+      return type != 'MKS' || !@record.console_supported?(type)
     when "vm_vnc_console"
-      return true if !@record.console_supported? ||
-          !get_vmdb_config[:server][:remote_console_type] ||
-          (get_vmdb_config[:server][:remote_console_type] && get_vmdb_config[:server][:remote_console_type] != "VNC")
+      return !@record.console_supported?('vnc')
     when "vm_vmrc_console"
-      return true if !@record.console_supported? ||
-          !get_vmdb_config[:server][:remote_console_type] ||
-          (get_vmdb_config[:server][:remote_console_type] && get_vmdb_config[:server][:remote_console_type] != "VMRC")
+      type = get_vmdb_config.fetch_path(:server, :remote_console_type)
+      return type != 'VMRC' || !@record.console_supported?(type)
     # Check buttons behind SMIS setting
     when "ontap_storage_system_statistics", "ontap_logical_disk_statistics", "ontap_storage_volume_statistics",
         "ontap_file_share_statistics"
@@ -1015,6 +1012,11 @@ module ApplicationHelper
       when "miq_template_refresh", "miq_template_reload"
         return true unless @perf_options[:typ] == "realtime"
       end
+    when "OrchestrationTemplate", "OrchestrationTemplateCfn", "OrchestrationTemplateHot"
+      case id
+      when "orchestration_templates_admin"
+        return true unless role_allows(:feature => "orchestration_templates_admin")
+      end
     when "NilClass"
       case id
       when "action_new"
@@ -1033,6 +1035,8 @@ module ApplicationHelper
         return true if ["workers", "download_logs"].include?(@lastaction)
       when "logdepot_edit"
         return true if ["workers", "evm_logs", "audit_logs"].include?(@lastaction)
+      when "orchestration_templates_admin"
+        return true unless @report
       when "policy_new"
         return true unless role_allows(:feature => "policy_new")
       when "profile_new"
@@ -1926,7 +1930,7 @@ module ApplicationHelper
       else
         if x_active_tree == :ae_tree
           return center_toolbar_filename_automate
-        elsif [:sandt_tree, :svccat_tree, :stcat_tree, :svcs_tree].include?(x_active_tree)
+        elsif [:sandt_tree, :svccat_tree, :stcat_tree, :svcs_tree, :ot_tree].include?(x_active_tree)
           return center_toolbar_filename_services
         elsif @layout == "chargeback"
           return center_toolbar_filename_chargeback
@@ -2036,6 +2040,8 @@ module ApplicationHelper
       else
         return "services_center_tb"
       end
+    elsif x_active_tree == :ot_tree
+      return "ot_center_tb"
     end
   end
 
@@ -2644,5 +2650,9 @@ module ApplicationHelper
                      snia_local_file_system storage storage_manager templates vm)
     (@lastaction == "show_list" && !session[:menu_click] && show_search.include?(@layout) && !@in_a_form) ||
       (@explorer && x_tree && [:filter, :images, :instances, :vandt].include?(x_tree[:type]) && !@record)
+  end
+
+  def need_prov_dialogs?(type)
+    !type.starts_with?("generic")
   end
 end

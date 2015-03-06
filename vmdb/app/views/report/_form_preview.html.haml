@@ -34,8 +34,10 @@
         %tr
           %td{:align => "right"}
             -t = _("Generate Report preview")
-            = link_to(button_tag(_("Load"), :class => "btn btn-primary", :alt => t),
+            = link_to(_("Load"),
               {:action => "show_preview",  :id => "#{@edit[:rpt_id] || 'new'}"},
+              :class                => "btn btn-primary",
+              :alt                  => t,
               "data-miq_sparkle_on" => true,
               :remote               => true,
               :title                => t)

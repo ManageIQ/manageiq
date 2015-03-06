@@ -26,13 +26,13 @@
                                                        :id     => id,
                                                        :button => "validate")}', true);")
   - else
-    = link_to(button_tag(_("Validate"),
-                         :class  => "btn btn-primary btn-xs",
-                         :alt    => verify_title_on),
+    = link_to(_("Validate"),
               {:action => validate_url,
                :button => "validate",
                :type   => valtype,
                :id     => id},
+              :class                 => "btn btn-primary btn-xs",
+              :alt                   => verify_title_on,
               :title                 => verify_title_on,
               :id                    => "val",
               "data-miq_sparkle_on"  => true,

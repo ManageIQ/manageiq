@@ -125,6 +125,20 @@ class EmsAmazon < EmsCloud
     $log.error "MIQ(#{self.class.name}##{__method__}) vm=[#{vm.name}], error: #{err}"
   end
 
+  def stack_create(stack_name, template, options = {})
+    cloud_formation.stacks.create(stack_name, template.content, options).stack_id
+  rescue => err
+    $log.error "MIQ(#{self.class.name}##{__method__}) stack=[#{stack_name}], error: #{err}"
+    raise MiqException::MiqOrchestrationProvisionError, err.to_s, err.backtrace
+  end
+
+  def stack_status(stack_name, _stack_id)
+    stack = cloud_formation.stacks[stack_name]
+    return stack.status, stack.status_reason if stack
+  rescue => err
+    $log.error "MIQ(#{self.class.name}##{__method__}) stack=[#{stack_name}], error: #{err}"
+    raise MiqException::MiqOrchestrationStatusError, err.to_s, err.backtrace
+  end
 
   #
   # Discovery

@@ -53,13 +53,18 @@
               :onclick => "miqAjaxButton('#{url_for(:action => action_url, :button => "add")}', #{serialize});")
           - else
             - if apply_button
-              = link_to(button_tag(_("Apply"), :class => "btn btn-primary", :alt => apply_text),
+              = link_to(_("Apply"),
                 {:action => action_url, :button => "apply", :id => record_id},
+                :class => "btn btn-primary",
+                :alt   => apply_text,
                 :title => apply_text)
             - elsif export_button
               - t = _("Download Report to YAML")
-              = link_to(button_tag(_("Export"), :class => "btn btn-primary", :type => "application/txt", :alt => t),
+              = link_to(_("Export"),
                 {:action => action_url},
+                :class  => "btn btn-primary",
+                :type   => "application/txt",
+                :alt    => t,
                 :title  => t)
             - elsif download_button
               - if @build.component.downcase != "smartproxy"
@@ -70,8 +75,11 @@
                   :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "download")}');")
               - else
                 - t = _("Download SmartProxy version for manual installation")
-                = link_to(button_tag(_("Download"), :class => "btn btn-primary", :type => "application/txt", :alt => t),
+                = link_to(_("Download"),
                   {:action => 'fetch_build', :id => record_id},
+                  :class => "btn btn-primary",
+                  :type  => "application/txt",
+                  :alt   => t,
                   :title => t)
             - elsif submit_button
               = button_tag(t = _('Submit'),
@@ -104,7 +112,7 @@
                   :class   => "btn btn-primary",
                   :alt     => save_text,
                   :title   => save_text,
-                  :onclick => "if (confirm('#{save_confirm_text}')) miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "save")}');")
+                  :onclick => "if (confirm('#{save_confirm_text}')) miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "save")}', #{serialize});")
               - else
                 = button_tag(_('Save'),
                   :class   => "btn btn-primary",

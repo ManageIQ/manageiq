@@ -238,7 +238,7 @@ module ApplicationController::MiqRequestMethods
   # get the sort column that was clicked on, else use the current one
   def sort_host_grid
     return unless load_edit("prov_edit__#{params[:id]}","show_list")
-    @edit[:wf].class.to_s == "MiqHostProvisionWorkflow" ? sort_grid('host', @edit[:wf].get_field(:src_host_ids,:service)[:values]) : sort_grid('host', @edit[:wf].get_field(:placement_host_name,:environment)[:values])
+    @edit[:wf].kind_of?(MiqHostProvisionWorkflow) ? sort_grid('host', @edit[:wf].get_field(:src_host_ids, :service)[:values]) : sort_grid('host', @edit[:wf].get_field(:placement_host_name, :environment)[:values])
   end
 
   # get the sort column that was clicked on, else use the current one
@@ -318,7 +318,7 @@ module ApplicationController::MiqRequestMethods
     options = @edit || @options
     options[:host_sortdir] = sort_order
     #non-editable grid for host prov to display hosts being provisoned
-    if options[:wf].class.to_s == "MiqHostProvisionWorkflow"
+    if options[:wf].kind_of?(MiqHostProvisionWorkflow)
       options[:host_headers] = {
         "name"=>"Name",
         "mac_address"=>"MAC Address"
@@ -346,9 +346,10 @@ module ApplicationController::MiqRequestMethods
   end
 
   def build_grid
-    if @edit[:wf].kind_of?(MiqProvisionWorkflow)
+    case @edit[:wf]
+    when MiqProvisionWorkflow
       if @edit[:new][:current_tab_key] == :service
-        if @edit[:wf].class.kind_of?(MiqProvisionWorkflow) || @edit[:new][:st_prov_type]
+        if @edit[:new][:st_prov_type]
           build_vm_grid(@edit[:wf].get_field(:src_vm_id,:service)[:values],@edit[:vm_sortdir],@edit[:vm_sortcol])
         else
           @temp[:vm] = VmOrTemplate.find_by_id(@edit[:new][:src_vm_id] && @edit[:new][:src_vm_id][0])
@@ -379,7 +380,7 @@ module ApplicationController::MiqRequestMethods
       elsif @edit[:new][:current_tab_key] == :purpose
         build_tags_tree(@edit[:wf],@edit[:new][:vm_tags],true)
       end
-    elsif @edit[:wf].class == VmMigrateWorkflow
+    when VmMigrateWorkflow
       if @edit[:new][:current_tab_key] == :environment
         build_host_grid(@edit[:wf].get_field(:placement_host_name,:environment)[:values],@edit[:host_sortdir],@edit[:host_sortcol]) if !@edit[:wf].get_field(:placement_host_name,:environment).blank?
         build_ds_grid(@edit[:wf].get_field(:placement_ds_name,:environment)[:values],@edit[:ds_sortdir],@edit[:ds_sortcol]) if !@edit[:wf].get_field(:placement_ds_name,:environment).blank?
@@ -390,8 +391,7 @@ module ApplicationController::MiqRequestMethods
         build_pxe_img_grid(@edit[:wf].get_field(:pxe_image_id,:service)[:values],@edit[:pxe_img_sortdir],@edit[:pxe_img_sortcol])
         build_iso_img_grid(@edit[:wf].get_field(:iso_image_id,:service)[:values],@edit[:iso_img_sortdir],@edit[:iso_img_sortcol]) if @edit[:wf].supports_iso?
       elsif @edit[:new][:current_tab_key] == :purpose
-        fld = @edit[:wf].kind_of?(MiqHostProvisionWorkflow) ? "tag_ids" : "vm_tags"
-        build_tags_tree(@edit[:wf],@edit[:new]["#{fld}".to_sym],true)
+        build_tags_tree(@edit[:wf], @edit.fetch_path(:new, tag_symbol_for_workflow), true)
       elsif @edit[:new][:current_tab_key] == :environment
         build_ds_grid(@edit[:wf].get_field(:attached_ds,:environment)[:values],@edit[:ds_sortdir],@edit[:ds_sortcol])
       elsif @edit[:new][:current_tab_key] == :customize
@@ -496,6 +496,10 @@ module ApplicationController::MiqRequestMethods
     end
   end
 
+  def tag_symbol_for_workflow
+    (@edit || @options)[:wf].kind_of?(MiqHostProvisionWorkflow) ? :tag_ids : :vm_tags
+  end
+
   def validate_fields
     # Update/create returned false, validation failed
     @edit[:wf].get_dialog_order.each do |d|                           # Go thru all dialogs, in order that they are displayed
@@ -586,28 +590,32 @@ module ApplicationController::MiqRequestMethods
   def prov_get_form_vars
     if params[:ids_checked]                         # User checked/unchecked a tree node
       ids = params[:ids_checked].split(",")
-      fld = @edit[:wf].kind_of?(MiqHostProvisionWorkflow) ? "tag_ids" : "vm_tags"
-      @edit[:new]["#{fld}".to_sym] = Array.new
-      ids.each do |id|
-        @edit[:new]["#{fld}".to_sym].push(id.to_i) if id != "" #for some reason if tree is not expanded clicking on radiobuttons this.getAllChecked() sends up extra blanks
-      end
+      # for some reason if tree is not expanded clicking on radiobuttons this.getAllChecked() sends up extra blanks
+      @edit.store_path(:new, tag_symbol_for_workflow, ids.select(&:present?).collect(&:to_i))
     end
     id = params[:ou_id] if params[:ou_id]
     id.gsub!(/_-_/,",") if id
     @edit[:new][:ldap_ous] = id.match(/(.*)\,(.*)/)[1..2] if id                       # ou selected in a tree
+
+    @edit[:new][:start_date]    = params[:miq_date_1] if params[:miq_date_1]
+    @edit[:new][:start_hour]    = params[:start_hour] if params[:start_hour]
+    @edit[:new][:start_min]     = params[:start_min] if params[:start_min]
+    @edit[:new][:schedule_time] = Time.zone.parse("#{@edit[:new][:start_date]} #{@edit[:new][:start_hour]}:#{@edit[:new][:start_min]}")
+
     params.keys.each do |key|
-      @edit[:new][:start_date] = params[:miq_date_1] if params[:miq_date_1]
-      @edit[:new][:start_hour] = params[:start_hour] if params[:start_hour]
-      @edit[:new][:start_min] = params[:start_min] if params[:start_min]
-      #@edit[:new][:schedule_time] = format_timezone("#{@edit[:new][:start_date]} #{@edit[:new][:start_hour]}:#{@edit[:new][:start_min]}".to_time,Time.zone,"raw")
-      @edit[:new][:schedule_time] = Time.zone.parse("#{@edit[:new][:start_date]} #{@edit[:new][:start_hour]}:#{@edit[:new][:start_min]}")
       next unless key.include?("__")
-      d, f = key.split("__")                                                    # Parse dialog and field names from the parameter key
-      field = @edit[:wf].get_field(f.to_sym, d.to_sym)                          # Get the field hash
-      val = field[:data_type] == :integer ? params[key].to_i : params[key]      # Get the value, convert to integer if needed
-      if field[:data_type] == :boolean
-        val = (params[key].to_s == "true")
-      end
+      d, f  = key.split("__")  # Parse dialog and field names from the parameter key
+      field = @edit[:wf].get_field(f.to_sym, d.to_sym)  # Get the field hash
+      val   =
+        case field[:data_type]  # Get the value, convert to integer or boolean if needed
+        when :integer
+          params[key].to_i
+        when :boolean
+          params[key].to_s == "true"
+        else
+          params[key]
+        end
+
       if field[:values]                                                         # If a choice was made
         if field[:values].kind_of?(Hash)
           #set an array of selected ids for security groups field
@@ -728,9 +736,8 @@ module ApplicationController::MiqRequestMethods
             break
           end
         end
-        fld = options[:wf].kind_of?(MiqHostProvisionWorkflow) ? "tag_ids" : "vm_tags"
-        @options["#{fld}".to_sym] = Array.new if @options["#{fld}".to_sym].nil?   #Initialize if came back nil from record
-        build_tags_tree(options[:wf],@options["#{fld}".to_sym],false) if @miq_request.resource_type != "VmMigrateRequest"
+        @options[tag_symbol_for_workflow] ||= []  # Initialize if came back nil from record
+        build_tags_tree(options[:wf], @options[tag_symbol_for_workflow], false) if @miq_request.resource_type != "VmMigrateRequest"
         if !["MiqHostProvisionRequest", "VmMigrateRequest"].include?(@miq_request.resource_type)
           build_ous_tree(options[:wf],@options[:ldap_ous])
           @sb[:vm_os] = VmOrTemplate.find_by_id(@options[:src_vm_id][0]).platform if @options[:src_vm_id] && @options[:src_vm_id][0]
@@ -844,8 +851,7 @@ module ApplicationController::MiqRequestMethods
           @edit[:new][:start_min] = "00"
         end
       end
-      fld = @edit[:wf].kind_of?(MiqHostProvisionWorkflow) ? "tag_ids" : "vm_tags"
-      @edit[:new]["#{fld}".to_sym] = Array.new if @edit[:new]["#{fld}".to_sym].nil?     #Initialize for new record
+      @edit[:new][tag_symbol_for_workflow] ||= []  # Initialize for new record
       @edit[:current] ||= Hash.new
       @edit[:current] = copy_hash(@edit[:new])
       # Give the model a change to modify the dialog based on the default settings
@@ -886,8 +892,7 @@ module ApplicationController::MiqRequestMethods
         else
           build_vc_grid(@edit[:wf].send("allowed_customization_specs"),@edit[:vc_sortdir],@edit[:vc_sortcol])
         end
-      elsif @edit[:wf].class.to_s == "VmMigrateWorkflow"
-        #build_ds_grid(@edit[:wf].send("allowed_storages"),@edit[:ds_sortdir],@edit[:ds_sortcol])
+      elsif @edit[:wf].kind_of?(VmMigrateWorkflow)
       else
         @edit[:pxe_img_sortdir] ||= "ASC"
         @edit[:pxe_img_sortcol] ||= "name"
@@ -995,7 +1000,6 @@ module ApplicationController::MiqRequestMethods
 
   def build_tags_tree(wf,vm_tags,edit_mode)
     tags = wf.send("allowed_tags")
-    fld = wf.kind_of?(MiqHostProvisionWorkflow) ? ":tag_ids" : "vm_tags"
     @curr_tag = nil
     # Build the default filters tree for the search views
     all_tags = []                          # Array to hold all CIs
@@ -1036,10 +1040,10 @@ module ApplicationController::MiqRequestMethods
             else
               temp[:select] = false
             end
-            if @edit && @edit[:current]["#{fld}".to_sym] != @edit[:new]["#{fld}".to_sym]
+            if @edit && @edit[:current][tag_symbol_for_workflow] != @edit[:new][tag_symbol_for_workflow]
               #checking to see if id is in current but not in new, change them to blue OR if id is in current but deleted from new
-              if (!@edit[:current]["#{fld}".to_sym].include?(c[0].to_i) && @edit[:new]["#{fld}".to_sym].include?(c[0].to_i)) ||
-                  (!@edit[:new]["#{fld}".to_sym].include?(c[0].to_i) && @edit[:current]["#{fld}".to_sym].include?(c[0].to_i))
+              if (!@edit[:current][tag_symbol_for_workflow].include?(c[0].to_i) && @edit[:new][tag_symbol_for_workflow].include?(c[0].to_i)) ||
+                  (!@edit[:new][tag_symbol_for_workflow].include?(c[0].to_i) && @edit[:current][tag_symbol_for_workflow].include?(c[0].to_i))
                 temp[:addClass] = "cfme-blue-bold-node"
               end
             end

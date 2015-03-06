@@ -8,7 +8,7 @@
         %td.key
           = _('Show Costs by')
         %td
-          - opts = [["<{_('Choose')}>", nil], ["#{_('Owner')}", "owner"], ["%s Tag" % session[:customer_name], "tag"]]
+          - opts = [["<#{_('Choose')}>", nil], ["#{_('Owner')}", "owner"], ["%s Tag" % session[:customer_name], "tag"]]
           = select_tag("cb_show_typ",
             options_for_select(opts, @edit[:new][:cb_show_typ]),
             "data-miq_sparkle_on"  => true,

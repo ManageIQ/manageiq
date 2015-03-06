@@ -166,11 +166,31 @@ li.brand-white-label.whitelabeled {
 }
 
 /* overrides dhtmlx layout conflicts with patternfly accordion */
-
 #custom_left_cell_div .panel-group .panel-default {
   border-right: 0;
 }
 
 #custom_left_cell_div h4.panel-title {
   font-size: 12px !important
+}
+
+/* Table customizations */
+
+table.table tbody td img {
+  height: 20px;
+  padding-right: 5px
+}
+
+.table > thead > tr > th {
+  font-family: inherit !important;
+}
+
+table.table .narrow {
+  width: 1%
+}
+
+/* instead of using onmouseover="this.style.cursor='pointer'" */
+.table-hover tbody tr:hover > td {
+  cursor: pointer;
+  cursor: hand;
 }

@@ -20,4 +20,36 @@ describe ProviderForeman do
       end
     end
   end
+
+  describe "#destroy" do
+    it "will remove all child objects" do
+      provider = FactoryGirl.create(:provider_foreman, :zone => FactoryGirl.create(:zone))
+
+      provider.configuration_manager.configured_systems = [
+        FactoryGirl.create(:configured_system, :computer_system =>
+          FactoryGirl.create(:computer_system,
+            :operating_system => FactoryGirl.create(:operating_system),
+            :hardware         => FactoryGirl.create(:hardware),
+          )
+        )
+      ]
+      provider.configuration_manager.configuration_profiles =
+        [FactoryGirl.create(:configuration_profile)]
+      provider.provisioning_manager.operating_system_flavors =
+        [FactoryGirl.create(:operating_system_flavor)]
+      provider.provisioning_manager.customization_scripts =
+        [FactoryGirl.create(:customization_script)]
+
+      provider.destroy
+
+      expect(Provider.count).to              eq(0)
+      expect(ConfiguredSystem.count).to      eq(0)
+      expect(ComputerSystem.count).to        eq(0)
+      expect(OperatingSystem.count).to       eq(0)
+      expect(Hardware.count).to              eq(0)
+      expect(ConfigurationProfile.count).to  eq(0)
+      expect(OperatingSystemFlavor.count).to eq(0)
+      expect(CustomizationScript.count).to   eq(0)
+    end
+  end
 end

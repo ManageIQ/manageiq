@@ -5,18 +5,14 @@
       = render :partial => 'layouts/info_msg',
                :locals  => {:message => _("No Zones found.")}
     - else
-      %table.style3
-        %thead
-          %th.icon
-          %th
+      %table.table.table-striped.table-bordered.table-hover
         %tbody
           - @zones.sort{|a,b| a.name <=> b.name}.each do |z|
-            %tr{:class => cycle('row0', 'row1'),
-              :onclick => "cfmeDynatree_activateNode('settings_tree', 'z-#{to_cid(z.id)}');",
+            %tr{:onclick => "cfmeDynatree_activateNode('settings_tree', 'z-#{to_cid(z.id)}');",
               :onmouseover => "this.style.cursor='pointer'",
               :title => _("View this Zone's settings")}
-              %td{:nowrap => ""}
-                %img{:border => "0", :height => "20", :src => "/images/icons/new/zone.png", :valign => "middle", :width => "20"}/
+              %td.narrow
+                %img{:src => "/images/icons/new/zone.png"}/
               %td
                 - if @sb[:my_zone] == z.name
                   %b

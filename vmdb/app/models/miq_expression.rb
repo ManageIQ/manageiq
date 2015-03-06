@@ -992,8 +992,8 @@ class MiqExpression
     return false
   end
 
-  def self.evaluate(expression, obj, inputs={})
-    ruby_exp = expression.is_a?(Hash) ? self.new(expression).to_ruby : expression.to_ruby
+  def self.evaluate(expression, obj, inputs = {}, tz = nil)
+    ruby_exp = expression.is_a?(Hash) ? self.new(expression).to_ruby(tz) : expression.to_ruby(tz)
     $log.debug("MIQ(Expression-evaluate) Expression before substitution: #{ruby_exp}")
     subst_expr = self.subst(ruby_exp, obj, inputs)
     $log.debug("MIQ(Expression-evaluate) Expression after substitution: #{subst_expr}")
@@ -1002,8 +1002,8 @@ class MiqExpression
     return result
   end
 
-  def evaluate(obj, inputs={})
-    self.class.evaluate(self, obj, inputs)
+  def evaluate(obj, inputs = {}, tz = nil)
+    self.class.evaluate(self, obj, inputs, tz)
   end
 
   def self.evaluate_atoms(exp, obj, inputs={})

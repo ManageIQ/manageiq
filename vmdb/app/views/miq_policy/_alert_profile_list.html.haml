@@ -7,16 +7,13 @@
         %strong
           =_("No %s Alert Profiles are defined%s.") % [ui_lookup(:model => @sb[:folder]), @search_text.blank? ? "" : _(" that match the entered search string")]
     - else
-      %table.style3
-        %thead
-          %th.icon
-          %th
+      %table.table.table-striped.table-bordered.table-hover
         %tbody
           - @alert_profiles.each do |ap|
-            %tr{:class => cycle('row0', 'row1'), :onclick => "cfmeDynatree_activateNode('alert_profile_tree', 'xx-#{ap.mode}_ap-#{to_cid(ap.id)}');",
+            %tr{:onclick => "cfmeDynatree_activateNode('alert_profile_tree', 'xx-#{ap.mode}_ap-#{to_cid(ap.id)}');",
               :onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Alert Profile")}
-              %td.icon{:nowrap => 1}
-                %img{:src => "/images/icons/new/miq_alert_profile.png", :valign => "middle", :border => "0"}
+              %td.narrow
+                %img{:src => "/images/icons/new/miq_alert_profile.png"}
               %td
                 = ap.description
   %hr

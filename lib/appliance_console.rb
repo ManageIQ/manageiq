@@ -170,7 +170,8 @@ loop do
 
     clear_screen
 
-    say("#{I18n.t("product.name")} Virtual Appliance\n\nTo administer this appliance, browse to https://#{ip}\n")
+    say("#{I18n.t("product.name")} Virtual Appliance\n")
+    say("To administer this appliance, browse to https://#{ip}\n") if ApplianceConsole::DatabaseConfiguration.configured?
     if $MIQDEBUG
       $MIQDEBUG_FILES.each { |f| puts "Modified #{(Time.now - File.mtime(f)).to_i / 60} minutes ago - #{f}" }
     end
@@ -201,6 +202,7 @@ loop do
         timezone = Env["TIMEZONE"]
         region   = File.read(REGION_FILE).chomp  if File.exist?(REGION_FILE)
         version  = File.read(VERSION_FILE).chomp if File.exist?(VERSION_FILE)
+        configured = ApplianceConsole::DatabaseConfiguration.configured?
 
         clear_screen
 
@@ -219,11 +221,11 @@ To modify the configuration, use a web browser to access the management page.
         MAC Address:       #{mac}
         Timezone:          #{timezone}
         Local Database:    #{ApplianceConsole::Utilities.pg_status}
-        EVM Database:      #{dbtype} @ #{dbhost}
-        Database/Region:   #{database} / #{region || 0}
+        EVM Database:      #{configured ? "#{dbtype} @ #{dbhost}" : "not configured"}
+        Database/Region:   #{configured ? "#{database} / #{region || 0}" : "not configured"}
         External Auth:     #{ExternalHttpdAuthentication.config_status}
         EVM Version:       #{version}
-        EVM Console:       https://#{ip}
+        EVM Console:       #{configured ? "https://#{ip}" : "not configured"}
         EOL
 
         say("Note: Use the Ctrl-Alt-Del to exit out of any screen and return to the summary screen.")
@@ -428,7 +430,7 @@ Date and Time Configuration
 
         when I18n.t("advanced_settings.dbregion_setup")
           say("#{selection}\n\n")
-          unless DatabaseConfiguration.configured?
+          unless configured
             say("There is no database configured yet, please choose #{I18n.t("advanced_settings.db_config")} instead.")
             press_any_key
             raise MiqSignalError

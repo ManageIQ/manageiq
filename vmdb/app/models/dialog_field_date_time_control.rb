@@ -1,7 +1,7 @@
 class DialogFieldDateTimeControl < DialogFieldDateControl
 
   def automate_output_value
-    with_current_user_timezone { Time.zone.parse(self.value).utc.iso8601 }
+    with_current_user_timezone { Time.zone.parse(@value).utc.iso8601 }
   end
 
   def default_value

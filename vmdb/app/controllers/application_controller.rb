@@ -970,7 +970,7 @@ class ApplicationController < ActionController::Base
     @data = Array.new
     if (!rec.settings || !rec.settings[:report_menus] || rec.settings[:report_menus].blank?) || mode == "default"
       #array of all reports if menu not configured
-      @rep = MiqReport.all.sort{|a,b| a.rpt_type + a.filename.to_s + a.name <=> b.rpt_type  + b.filename.to_s + b.name}
+      @rep = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
       if tree_type == "timeline"
         @rep.each do |r|
           if r.timeline != nil
@@ -1033,7 +1033,7 @@ class ApplicationController < ActionController::Base
       @custom_folder.push(@sb[:grp_title])
       subfolder.push("Custom")
       @custom_folder.push([subfolder]) unless @custom_folder.include?([subfolder])
-      custom = MiqReport.all.sort{|a,b| a.rpt_type + a.filename.to_s + a.name <=> b.rpt_type  + b.filename.to_s + b.name}
+      custom = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
       custom.each do |r|
         if r.rpt_type == "Custom" && (user.admin_user? || r.miq_group_id.to_i == session[:group].to_i)
           rep.push(r.name) unless rep.include?(r.name)
@@ -1304,6 +1304,10 @@ class ApplicationController < ActionController::Base
     respond_to do |format|
       format.html do
         redirect_to :controller => 'dashboard', :action => 'login', :timeout => timed_out
+      end
+
+      format.json do
+        render :nothing => true, :status => :unauthorized
       end
 
       format.js do
@@ -1794,12 +1798,12 @@ class ApplicationController < ActionController::Base
   end
 
   def get_view_calculate_gtl_type(db_sym)
-    @gtl_type = @settings[:views][db_sym] unless ['scanitemset', 'miqschedule', 'pxeserver', 'customizationtemplate'].include?(db_sym.to_s)
+    gtl_type = @settings[:views][db_sym] unless ['scanitemset', 'miqschedule', 'pxeserver', 'customizationtemplate'].include?(db_sym.to_s)
     # Force list view for certain types and areas
-    @gtl_type = 'list' if ['filesystems', 'registry_items', 'chargeback_rates', 'miq_request'].include?(@listicon)
-    @gtl_type = 'list' if @gtl_type.nil?
-    @gtl_type = 'grid' if ['vm'].include?(db_sym.to_s) && request.parameters[:controller] == 'service'
-    @gtl_type
+    gtl_type = 'list' if ['filesystems', 'registry_items', 'chargeback_rates', 'miq_request'].include?(@listicon)
+    gtl_type = 'list' if gtl_type.nil?
+    gtl_type = 'grid' if ['vm'].include?(db_sym.to_s) && request.parameters[:controller] == 'service'
+    gtl_type
   end
   private :get_view_calculate_gtl_type
 
@@ -1853,6 +1857,7 @@ class ApplicationController < ActionController::Base
     db     = db.to_s
     dbname = options[:dbname] || db.split("::").last.downcase # Get db name as text
     db_sym = dbname.to_sym                                    # Get db name as symbol
+    refresh_view = false
 
     # Determine if the view should be refreshed or use the existing view
     unless session[:view] &&                          # A view exists and
@@ -1862,7 +1867,7 @@ class ApplicationController < ActionController::Base
               params[:ppsetting] || params[:page] ||  # changed paging or
               params[:type]                           # gtl type
             )
-      @refresh_view = true
+      refresh_view = true
       session[:menu_click] = params[:menu_click]      # Creating a new view, remember if came from a menu_click
       session[:bc]         = params[:bc]              # Remember incoming breadcrumb as well
     end
@@ -1884,7 +1889,7 @@ class ApplicationController < ActionController::Base
 
     # Build sorting keys - Use association name, if available, else dbname
     # need to add check for miqreportresult, need to use different sort in savedreports/report tree for saved reports list
-    sort_prefix = association ? association : (dbname == "miqreportresult" && x_active_tree ? x_active_tree.to_s : dbname)
+    sort_prefix = association || (dbname == "miqreportresult" && x_active_tree ? x_active_tree.to_s : dbname)
     sortcol_sym = "#{sort_prefix}_sortcol".to_sym
     sortdir_sym = "#{sort_prefix}_sortdir".to_sym
 
@@ -1894,7 +1899,7 @@ class ApplicationController < ActionController::Base
     @gtl_type = get_view_calculate_gtl_type(db_sym)
 
     # Get the view for this db or use the existing one in the session
-    view = @refresh_view ? get_db_view(db.split("::").last, :association => association, :view_suffix => view_suffix) : session[:view]
+    view = refresh_view ? get_db_view(db.split("::").last, :association => association, :view_suffix => view_suffix) : session[:view]
 
     # Check for changed settings in params
     if params[:ppsetting]                             # User selected new per page value
@@ -2053,12 +2058,10 @@ class ApplicationController < ActionController::Base
   end
 
   def view_yaml_filename(db, options)
-    association = options[:association] || nil
-    view_suffix = options[:view_suffix] || nil
+    suffix = options[:association] || options[:view_suffix]
 
     # Build the view file name
-    if association || view_suffix
-      suffix = association ? association : view_suffix
+    if suffix
       viewfile = "#{VIEWS_FOLDER}/#{db}-#{suffix}.yaml"
       viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{suffix}-#{session[:userrole]}.yaml"
     else

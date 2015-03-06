@@ -15,26 +15,28 @@ class CatalogController < ApplicationController
   end
 
   CATALOG_X_BUTTON_ALLOWED_ACTIONS = {
-    'ab_button_new'           => :ab_button_new,
-    'ab_button_edit'          => :ab_button_edit,
-    'ab_button_delete'        => :ab_button_delete,
-    'ab_group_delete'         => :ab_group_delete,
-    'ab_group_edit'           => :ab_group_edit,
-    'ab_group_new'            => :ab_group_new,
-    'ab_group_reorder'        => :ab_group_reorder,
-    'svc_catalog_provision'   => :svc_catalog_provision,
-    'st_catalog_delete'       => :st_catalog_delete,
+    'ab_button_new'                 => :ab_button_new,
+    'ab_button_edit'                => :ab_button_edit,
+    'ab_button_delete'              => :ab_button_delete,
+    'ab_group_delete'               => :ab_group_delete,
+    'ab_group_edit'                 => :ab_group_edit,
+    'ab_group_new'                  => :ab_group_new,
+    'ab_group_reorder'              => :ab_group_reorder,
+    'svc_catalog_provision'         => :svc_catalog_provision,
+    'st_catalog_delete'             => :st_catalog_delete,
 
-    'atomic_catalogitem_edit' => :servicetemplate_edit,
-    'atomic_catalogitem_new'  => :servicetemplate_edit,
-    'catalogitem_edit'        => :servicetemplate_edit,
-    'catalogitem_new'         => :servicetemplate_edit,
+    'atomic_catalogitem_edit'       => :servicetemplate_edit,
+    'atomic_catalogitem_new'        => :servicetemplate_edit,
+    'catalogitem_edit'              => :servicetemplate_edit,
+    'catalogitem_new'               => :servicetemplate_edit,
 
-    'catalogitem_delete'      => :st_delete,
-    'catalogitem_tag'         => :st_tags_edit,
+    'catalogitem_delete'            => :st_delete,
+    'catalogitem_tag'               => :st_tags_edit,
 
-    'st_catalog_edit'         => :st_catalog_edit,
-    'st_catalog_new'          => :st_catalog_edit,
+    'orchestration_templates_admin' => :ot_edit,
+    'ot_edit_submit'                => :ot_edit_submit,
+    'st_catalog_edit'               => :st_catalog_edit,
+    'st_catalog_new'                => :st_catalog_edit,
   }.freeze
 
   def x_button
@@ -92,7 +94,7 @@ class CatalogController < ApplicationController
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
-      if !@record.id.nil? && @record.prov_type != "generic"
+      if !@record.id.nil? && need_prov_dialogs?(@record.prov_type)
         prov_set_form_vars(MiqRequest.find(@record.service_resources[0].resource_id))      # Set vars from existing request
         @edit[:new][:st_prov_type] = @record.prov_type
       else
@@ -101,20 +103,21 @@ class CatalogController < ApplicationController
         @edit[:new] ||= Hash.new
         @edit[:current] ||= Hash.new
         @edit[:key] = "prov_edit__new"
-        @edit[:new][:st_prov_type] = @record.prov_type if !@record.id.nil?
+        @edit[:new][:st_prov_type] = @record.prov_type if @record.try(:id)
         @edit[:st_prov_types] = {
-            "amazon"    => "Amazon",
-            "openstack" => "OpenStack",
-            "redhat"    => "RHEV",
-            "generic"   => "Generic",
-            "vmware"    => "VMware"
+          "amazon"                => "Amazon",
+          "openstack"             => "OpenStack",
+          "generic_orchestration" => "Orchestration",
+          "redhat"                => "RHEV",
+          "generic"               => "Generic",
+          "vmware"                => "VMware"
         }
       end
 
       #set name and description for ServiceTemplate record
       set_form_vars
       @edit[:new][:service_type] = "atomic"
-      @edit[:rec_id] = @record ? @record.id : nil
+      @edit[:rec_id] = @record.try(:id)
       @edit[:current] = copy_hash(@edit[:new])
 
       @tabactive = "#{@edit[:new][:current_tab_key]}_div"
@@ -130,11 +133,12 @@ class CatalogController < ApplicationController
     return unless load_edit("prov_edit__#{id}","replace_cell__explorer")
     get_form_vars
     changed = (@edit[:new] != @edit[:current])
-    build_ae_tree(:automate, :automate_tree) if params[:display] # Build Catalog Items tree unless @edit[:ae_tree_select]
+    # Build Catalog Items tree unless @edit[:ae_tree_select]
+    build_ae_tree(:automate, :automate_tree) if params[:display] || params[:template_id]
     if params[:st_prov_type] #build request screen for selected item type
       @_params[:org_controller] = "service_template"
-      prov_set_form_vars if params[:st_prov_type] != "generic"
-      @record = ServiceTemplate.new                                                             #set name and description for ServiceTemplate record
+      prov_set_form_vars if need_prov_dialogs?(params[:st_prov_type])
+      @record = class_service_template(params[:st_prov_type]).new
       set_form_vars
       @edit[:new][:st_prov_type] = params[:st_prov_type] if params[:st_prov_type]
       @edit[:new][:service_type] = "atomic"
@@ -143,7 +147,7 @@ class CatalogController < ApplicationController
     end
     render :update do |page|                    # Use JS to update the display
       page.replace_html("form_div", :partial=>"st_form") if params[:st_prov_type]
-      page.replace_html("basic_info_div", :partial=>"form_basic_info") if params[:display]
+      page.replace_html("basic_info_div", :partial => "form_basic_info") if params[:display] || params[:template_id]
       if params[:display]
         show_or_hide = (params[:display] == "1") ? "show" : "hide"
         page << "miq_jquery_show_hide_tab('li_details','#{show_or_hide}')"
@@ -152,7 +156,7 @@ class CatalogController < ApplicationController
         page << javascript_for_miq_button_visibility(changed)
         session[:changed] = changed
       end
-      page << "miqSparkle(false);"
+      page << set_spinner_off
     end
   end
 
@@ -663,7 +667,58 @@ class CatalogController < ApplicationController
   end
   hide_action :process_sts
 
+  def ot_edit
+    assert_privileges("orchestration_templates_admin")
+    ot_edit_set_form_vars
+    replace_right_cell("ot_edit")
+  end
+
+  def ot_edit_submit
+    self.x_active_tree = 'ot_tree'
+    case params[:button]
+    when "cancel"
+      ot_edit_submit_cancel
+    when "save"
+      ot_edit_submit_save
+    when "reset"
+      ot_edit_submit_reset
+    end
+  end
+
+  def ot_form_field_changed
+    id = session[:edit][:rec_id]
+    return unless load_edit("ot_edit__#{id}", "replace_cell__explorer")
+    ot_edit_get_form_vars
+    changed = (@edit[:new] != @edit[:current])
+    render :update do |page|
+      page << javascript_for_miq_button_visibility(changed)
+      page << "miqSparkle(false);"
+    end
+  end
+
+  def ot_content_changed
+    render :update do |page|
+      page << javascript_hide("buttons_off")
+      page << javascript_show("buttons_on")
+    end
+  end
+
+  def ot_content_submit
+    case params[:button]
+    when "reset"
+      ot_content_submit_reset
+    when "save"
+      ot_content_submit_save
+    end
+  end
+
   private      #######################
+
+  def class_service_template(prov_type)
+    prov_type.starts_with?('generic') ?
+      prov_type.gsub(/(generic)(_.*)?/, 'service_template\2').classify.constantize :
+      ServiceTemplate
+  end
 
   def atomic_req_submit
     id = session[:edit][:req_id] || "new"
@@ -674,7 +729,7 @@ class CatalogController < ApplicationController
     end
 
     #set request for non generic ST
-    if @edit[:wf] && @edit[:new][:st_prov_type] != "generic"
+    if @edit[:wf] && need_prov_dialogs?(@edit[:new][:st_prov_type])
       request = @edit[:req_id] ? @edit[:wf].update_request(@edit[:req_id], @edit[:new], session[:userid]) :
                                   @edit[:wf].create_request(@edit[:new], session[:userid])
       if request && request.errors.present?
@@ -693,7 +748,9 @@ class CatalogController < ApplicationController
       return
     end
     get_form_vars   #need to get long_description
-    st = @edit[:rec_id] ? ServiceTemplate.find_by_id(@edit[:rec_id]) : ServiceTemplate.new
+    st = @edit[:rec_id] ?
+      ServiceTemplate.find_by_id(@edit[:rec_id]) :
+      class_service_template(@edit[:new][:st_prov_type]).new
     st.name = @edit[:new][:name]
     st.description = @edit[:new][:description]
     st.long_description = @edit[:new][:display] ? @edit[:new][:long_description] : nil
@@ -705,14 +762,17 @@ class CatalogController < ApplicationController
     else
       st.service_template_catalog = nil
     end
+    add_orchestration_template_vars(st) if st.kind_of?(ServiceTemplateOrchestration)
     st.service_type = "atomic"
     st.prov_type = @edit[:new][:st_prov_type]
-    set_resource_action(st)
+    set_resource_action(st) if params[:button] == "save"
     if request
       st.remove_all_resources
-      st.add_resource(request) if @edit[:new][:st_prov_type] != "generic"
+      st.add_resource(request) if need_prov_dialogs?(@edit[:new][:st_prov_type])
     end
+
     if st.save
+      set_resource_action(st) if params[:button] == "add"
       flash_key = params[:button] == "save" ? _("%{model} \"%{name}\" was saved") : _("%{model} \"%{name}\" was added")
       add_flash(flash_key % {:model => ui_lookup(:model => "ServiceTemplate"), :name => @edit[:new][:name]})
       @changed = session[:changed] = false
@@ -742,6 +802,96 @@ class CatalogController < ApplicationController
     options[:model] = "ServiceCatalog" if !options[:model]
     options[:where_clause] = condition
     process_show_list(options)
+  end
+
+  def ot_edit_get_form_vars
+    @edit[:new][:name] = params[:name] if params[:name]
+    @edit[:new][:description] = params[:description] if params[:description]
+  end
+
+  def ot_edit_set_form_vars
+    @record = OrchestrationTemplate.find_by_id(from_cid(params[:id]))
+    @edit = {:current => {:name        => @record.name,
+                          :description => @record.description,
+                          :content     => @record.content},
+             :rec_id  => @record.id}
+    @edit[:new] = @edit[:current].dup
+    @edit[:key] = "ot_edit__#{@record.id}"
+    @right_cell_text = _("Editing %s") % @record.name
+    @in_a_form = true
+  end
+
+  def ot_edit_submit_cancel
+    add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") %
+      {:model => "Orchestration Template", :name => session[:edit][:new][:name]})
+    @in_a_form = false
+    @edit = @record = nil
+    replace_right_cell
+  end
+
+  def ot_edit_submit_save
+    assert_privileges("orchestration_templates_admin")
+    id = session[:edit][:rec_id]
+    return unless load_edit("ot_edit__#{id}", "replace_cell__explorer")
+    ot = OrchestrationTemplate.find_by_id(@edit[:rec_id])
+    ot.name = @edit[:new][:name]
+    ot.description = @edit[:new][:description]
+    begin
+      ot.save
+    rescue StandardError => bang
+      add_flash(_("Error during '%s': ") % "Orchestration Template Edit" << bang.message, :error)
+    else
+      add_flash(_("%{model} \"%{name}\" was saved") %
+                {:model => ui_lookup(:model => 'OrchestrationTemplate'),
+                 :name  => @edit[:new][:name]})
+    end
+    if @flash_array
+      render :update do |page|
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+      end
+    end
+    @changed = session[:changed] = false
+    @in_a_form = false
+    @edit = session[:edit] = nil
+    replace_right_cell(nil, trees_to_replace([:ot]))
+  end
+
+  def ot_edit_submit_reset
+    add_flash(_("All changes have been reset"), :warning)
+    ot_edit_set_form_vars
+    @changed = session[:changed] = false
+    replace_right_cell("ot_edit")
+  end
+
+  def ot_content_submit_reset
+    add_flash(_("All changes have been reset"), :warning)
+    replace_right_cell
+  end
+
+  def ot_content_submit_save
+    assert_privileges("orchestration_templates_admin")
+    ot = OrchestrationTemplate.find_by_id(params[:id])
+    if ot.stacks.length > 0
+      add_flash(_("The Orchestration Template \"%s\" is read-only.") % ot.name, :error)
+    else
+      ot.content = params['template_content']
+      begin
+        ot.save
+      rescue StandardError => bang
+        add_flash(_("Error during '%s': ") % "Orchestration Template Content Edit" << bang.message, :error)
+      else
+        add_flash(_("%{model} \"%{name}\" was saved") %
+                  {:model => ui_lookup(:model => 'OrchestrationTemplate'),
+                   :name  => ot.name})
+      end
+    end
+    render :update do |page|
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+    end
+    @changed = session[:changed] = false
+    @in_a_form = false
+    @edit = session[:edit] = nil
+    replace_right_cell
   end
 
   def st_catalog_get_form_vars
@@ -903,7 +1053,9 @@ class CatalogController < ApplicationController
     available_catalogs.each do |stc|
       @edit[:new][:available_catalogs].push([stc.name,stc.id])
     end
-    @edit[:new][:available_catalogs].sort!                  # Sort the available fields array
+    @edit[:new][:available_catalogs].sort!
+    available_templates if @record.kind_of?(ServiceTemplateOrchestration)
+
     # initialize fqnames
     @edit[:new][:fqname] = @edit[:new][:reconfigure_fqname] = @edit[:new][:retire_fqname] = ""
     @record.resource_actions.each do |ra|
@@ -1030,6 +1182,47 @@ class CatalogController < ApplicationController
     @edit[:st_prov_type] = @edit[:new][:st_prov_type] = params[:st_prov_type] if params[:st_prov_type]
     @edit[:new][:long_description] = params[:long_description] if params[:long_description]
     @edit[:new][:long_description] = @edit[:new][:long_description].to_s + "..." if params[:transOne]
+
+    if params[:template_id]
+      if params[:template_id] == ""
+        @edit[:new][:available_managers] = []
+        @edit[:new][:template_id]        = nil
+        @edit[:new][:manager_id]         = nil
+      else
+        @edit[:new][:template_id] = params[:template_id]
+        available_managers(params[:template_id])
+      end
+    end
+    @edit[:new][:manager_id] = params[:manager_id] if params[:manager_id]
+  end
+
+  def available_managers(template_id)
+    available_managers = OrchestrationTemplate.find_by_id(template_id).eligible_managers
+    @edit[:new][:available_managers] = []
+    available_managers.each do |manager|
+      @edit[:new][:available_managers].push([manager.name, manager.id])
+    end
+    @edit[:new][:available_managers].sort!
+  end
+
+  def available_templates
+    available_templates = OrchestrationTemplate.find(:all)
+    @edit[:new][:available_templates] = []
+    available_templates.each do |template|
+      @edit[:new][:available_templates].push([template.name, template.id])
+    end
+    @edit[:new][:available_templates].sort!
+
+    @edit[:new][:template_id] = @record.orchestration_template.try(:id)
+    @edit[:new][:manager_id] = @record.orchestration_manager.try(:id)
+    available_managers(@record.orchestration_template.id) if @record.orchestration_template
+  end
+
+  def add_orchestration_template_vars(st)
+    st.orchestration_template = @edit[:new][:template_id].nil? ?
+      nil : OrchestrationTemplate.find_by_id(@edit[:new][:template_id])
+    st.orchestration_manager  = @edit[:new][:manager_id].nil? ?
+      nil : ExtManagementSystem.find_by_id(@edit[:new][:manager_id])
   end
 
   def st_get_form_vars
@@ -1211,7 +1404,7 @@ class CatalogController < ApplicationController
             else
               show_record(from_cid(id))
               add_pictures_to_sync(@record.picture.id) if @record.picture
-              if @record.atomic? && @record.prov_type != "generic"
+              if @record.atomic? && need_prov_dialogs?(@record.prov_type)
                 @miq_request = MiqRequest.find_by_id(@record.service_resources[0].resource_id)
                 prov_set_show_vars
               end
@@ -1373,6 +1566,8 @@ class CatalogController < ApplicationController
         r[:partial=>"stcat_form"]
       elsif action == "dialog_provision"
         r[:partial=>"shared/dialogs/dialog_provision"]
+      elsif action == "ot_edit"
+        r[:partial => "ot_edit"]
       elsif record_showing
         if TreeBuilder.get_model_for_prefix(@nodetype) == "MiqTemplate"
           r[:partial=>"vm_common/main", :locals=>{:controller=>"vm"}]
@@ -1444,6 +1639,14 @@ class CatalogController < ApplicationController
           end
         end
         presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_dialog_buttons", :locals => {:action_url =>"dialog_form_button_pressed", :record_id => @edit[:rec_id]}]
+      elsif action == "ot_edit"
+        presenter[:expand_collapse_cells][:a] = 'collapse'
+        presenter[:expand_collapse_cells][:c] = 'expand'
+        presenter[:set_visible_elements][:form_buttons_div] = true
+        presenter[:set_visible_elements][:pc_div_1] = false
+        locals = {:record_id  => @edit[:rec_id],
+                  :action_url => "ot_edit_submit"}
+        presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
       else
         # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box when trying to change a node on tree after saving a record
         presenter[:set_visible_elements][:buttons_on] = false
@@ -1467,6 +1670,22 @@ class CatalogController < ApplicationController
     presenter[:miq_record_id] = @record && !@in_a_form ? @record.id : @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
 
     presenter[:lock_unlock_trees][x_active_tree] = @edit && @edit[:current]
+
+    # Render Orchestration Template content edit form buttons (for templates without stacks only)
+    if @record && !@in_a_form && x_active_tree == :ot_tree && @record.stacks.length == 0
+      locals = {
+        :record_id         => @record.id,
+        :action_url        => "ot_content_submit",
+        :save_confirm_text => _("Are you sure you want to save the modified content?"),
+        :no_cancel         => true,
+        :serialize         => true,
+      }
+      presenter[:set_visible_elements][:form_buttons_div] = true
+      presenter[:set_visible_elements][:pc_div_1] = false
+      presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
+      presenter[:expand_collapse_cells][:a] = 'expand'
+      presenter[:expand_collapse_cells][:c] = 'expand'
+    end
 
     # Save open nodes, if any were added
     presenter[:save_open_states_trees] = [@sb[:active_tree].to_s] if add_nodes

@@ -344,7 +344,7 @@ module EmsCommon
       if result
         add_flash(_("Credential validation was successful"))
       else
-        add_flash(_("Credential validation was not successful"))
+        add_flash(_("Credential validation was not successful"), :error)
       end
     end
     render_flash

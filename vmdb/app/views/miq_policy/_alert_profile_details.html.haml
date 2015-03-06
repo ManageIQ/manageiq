@@ -29,15 +29,12 @@
         - if @alert_profile_alerts.empty?
           = render :partial => 'layouts/info_msg', :locals => {:message => _("No Alerts are defined.")}
         - else
-          %table.style3
-            %thead
-              %th.icon
-              %th
+          %table.table.table-striped.table-bordered.table-hover
             %tbody
               - @alert_profile_alerts.each do |a|
-                %tr{:class => cycle('row0', 'row1'), :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_al-#{to_cid(a.id)}');",
+                %tr{:onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_al-#{to_cid(a.id)}');",
                   :onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Alert")}
-                  %td.icon
+                  %td.narrow
                     %img{:src => "/images/icons/new/miq_alert.png"}
                   %td
                     = h(a.description)
@@ -126,20 +123,20 @@
                 %td.key
                   = ui_lookup(:models => aa[:objects].first.class.to_s)
                 %td
-                  %table.style3{:style => "border-spacing: 0px;"}
-                    - reset_cycle("default")
-                    - objs = []
-                    - aa[:objects].each do |o|
-                      - if o.is_a?(EmsFolder)
-                        - objs.push("#{o.ext_management_system.name}/#{o.folder_path(:exclude_root_folder => true, :exclude_non_display_folders => true)}")
-                      - elsif o.is_a?(ResourcePool)
-                        objs.push(o.absolute_path(:exclude_hidden => true))
-                      - else
-                        objs.push(o.name)
-                    - objs.sort(&:downcase).each do |obj|
-                      %tr{:class => cycle('row0', 'row1')}
-                        %td
-                          = h(obj)
+                  %table
+                    %tbody
+                      - objs = []
+                      - aa[:objects].each do |o|
+                        - if o.is_a?(EmsFolder)
+                          - objs.push("#{o.ext_management_system.name}/#{o.folder_path(:exclude_root_folder => true, :exclude_non_display_folders => true)}")
+                        - elsif o.is_a?(ResourcePool)
+                          objs.push(o.absolute_path(:exclude_hidden => true))
+                        - else
+                          objs.push(o.name)
+                      - objs.sort(&:downcase).each do |obj|
+                        %tr
+                          %td
+                            = h(obj)
         - elsif !aa[:tags].empty?
           - # Tags are assigned
           %table.style1

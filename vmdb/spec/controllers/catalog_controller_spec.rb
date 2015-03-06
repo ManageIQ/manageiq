@@ -76,4 +76,63 @@ describe CatalogController do
       assigns(:record).should == nil
     end
   end
+
+  context "#ot_name_and_description_edit" do
+    it "Orchestration Template name and description are edited" do
+      controller.instance_variable_set(:@sb, {})
+      controller.instance_variable_set(:@_params, :button => "save")
+      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
+      ot = FactoryGirl.create(:orchestration_template)
+      controller.instance_variable_set(:@record, ot)
+      new_name = "New Name"
+      new_description = "New Description"
+      edit = {
+        :new    => {
+          :name        => new_name,
+          :description => new_description},
+        :key    => "ot_edit__#{ot.id}",
+        :rec_id => ot.id,
+      }
+      controller.instance_variable_set(:@edit, edit)
+      session[:edit] = edit
+      controller.stub(:replace_right_cell)
+      controller.send(:ot_edit_submit)
+      ot.reload
+      ot.name.should == new_name
+      ot.description.should == new_description
+    end
+  end
+
+  context "#ot_content_edit" do
+    it "Orchestration Template content is edited" do
+      controller.instance_variable_set(:@sb, {})
+      controller.instance_variable_set(:@_params, :button => "save")
+      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
+      ot = FactoryGirl.create(:orchestration_template)
+      new_content = "New Content"
+      controller.params.merge!(:id => ot.id, 'template_content' => new_content)
+      controller.stub(:replace_right_cell)
+      controller.send(:ot_content_submit)
+      ot.reload
+      ot.content.should == new_content
+    end
+  end
+
+  context "#ot_read_only_content_edit" do
+    it "Read-only Orchestration Template content cannot be edited" do
+      controller.instance_variable_set(:@sb, {})
+      controller.instance_variable_set(:@_params, :button => "save")
+      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
+      ot = FactoryGirl.create(:orchestration_template_with_stacks)
+      original_content = ot.content
+      new_content = "New Content"
+      controller.params.merge!(:id => ot.id, 'template_content' => new_content)
+      controller.stub(:replace_right_cell)
+      controller.send(:ot_content_submit)
+      controller.send(:flash_errors?).should be_true
+      ot.reload
+      ot.content.should == original_content
+    end
+  end
+
 end

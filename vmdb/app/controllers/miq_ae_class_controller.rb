@@ -178,15 +178,11 @@ class MiqAeClassController < ApplicationController
           records = Array.new
           # Add Namespaces under a namespace
           details = @record.ae_namespaces
-          details.flatten.sort{|a,b| a.display_name.to_s + a.name.to_s <=> b.display_name.to_s + b.name.to_s}.each do |r|
-            records.push(r)
-          end
+          records += details.flatten.sort_by { |d| [d.display_name.to_s, d.name.to_s] }
           # Add classes under a namespace
           details_cls = @record.ae_classes
           if !details_cls.nil?
-            details_cls.flatten.sort{|a,b| a.display_name.to_s + a.name.to_s <=> b.display_name.to_s + b.name.to_s}.each do |r|
-              records.push(r)
-            end
+            records += details_cls.flatten.sort_by { |d| [d.display_name.to_s, d.name.to_s] }
           end
           @temp[:grid_ns_xml] = build_details_grid(records,false)
           @temp[:combo_xml] = get_combo_xml([MiqAeField.new])

@@ -8,10 +8,10 @@ module ReportHelper
     :miq_rpt_green_bg     => "Green Background",
     :miq_rpt_blue_text    => "Blue Text",
     :miq_rpt_blue_bg      => "Blue Background",
+    :miq_rpt_maroon_text  => "Light Blue Text",
+    :miq_rpt_maroon_bg    => "Light Blue Background",
     :miq_rpt_purple_text  => "Purple Text",
     :miq_rpt_purple_bg    => "Purple Background",
-    :miq_rpt_maroon_text  => "Maroon Text",
-    :miq_rpt_maroon_bg    => "Maroon Background",
     :miq_rpt_gray_text    => "Gray Text",
     :miq_rpt_gray_bg      => "Gray Background"
   }

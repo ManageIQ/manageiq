@@ -432,7 +432,6 @@ describe Rbac do
       it "works when targets are empty" do
         results, attrs = Rbac.search(:class => "Service", :results_format => :objects)
         results.length.should == 5
-        results.first.should be_kind_of(Service)
       end
     end
   end
@@ -446,30 +445,20 @@ describe Rbac do
         FactoryGirl.create(:host, :name => "Host4", :hostname => "host4.local")
       ]
 
-      100.times do |i|
-        case i
-        when  0..24 then group = 1
-        when 25..49 then group = 2
-        when 50..74 then group = 3
-        when 75..99 then group = 4
-        end
+      4.times do |i|
+        group = i + 1
         guest_os = %w{_none_ windows ubuntu windows ubuntu}[group]
         vm = FactoryGirl.build(:vm_vmware, :name => "Test Group #{group} VM #{i}")
         vm.hardware = FactoryGirl.build(:hardware, :numvcpus => (group * 2), :memory_cpu => (group * 1.megabytes), :guest_os => guest_os)
         vm.host = @hosts[group-1]
-        vm.evm_owner_id = @user.id  if ((i % 5) == 0)
-        vm.miq_group_id = @group.id if ((i % 7) == 0)
+        vm.evm_owner_id = @user.id  if (i.even?)
+        vm.miq_group_id = @group.id if (i.odd?)
         vm.save
         tags = []
-        @tags.each { |n,t| tags << t if (i % n) == 0 }
+        @tags.each { |n,t| tags << t if (i > 0) }
         vm.tag_with(tags.join(" "), :ns => "*") unless tags.empty?
       end
 
-      10.times do |i|
-        FactoryGirl.create(:ems_event, :timestamp => Time.now.utc, :message => "Event #{i}")
-      end
-
-      Vm.scope :group_3_scope, :conditions => ["name LIKE ?", "Test Group 3%"]
       Vm.scope :group_scope,   lambda { |group_num| {:conditions => ["name LIKE ?", "Test Group #{group_num}%"]} }
     end
 
@@ -478,10 +467,8 @@ describe Rbac do
       it "self-service group" do
         MiqGroup.any_instance.stub(:self_service? => true)
 
-        # VMs: 0 7 14 21 28 35 42 49 56 63 70 77 84 91 98
         results, attrs = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @user.current_group.id)
-        results.length.should == 15
-        results.first.should be_kind_of(Vm)
+        results.length.should == 2
       end
 
       context "with self-service user" do
@@ -491,28 +478,15 @@ describe Rbac do
 
         it "works when targets are empty" do
           User.with_userid(@user.userid) do
-            # VMs: 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 (User: divisible by 5)
-            # VMs: 7, 14, 21, 28, 35, 42, 49, 56, 63, 70, 77, 84, 91, 98 (User: divisible by 7)
-            #
-            # Union of the above and removing dups yields:
-            # VMs: 0, 5, 7, 10, 14, 15, 20, 21, 25, 28, 30, 35, 40, 42, 45, 49, 50, 55, 56, 60, 63, 65, 70, 75, 77, 80, 84, 85, 90, 91, 95, 98
             results, attrs = Rbac.search(:class => "Vm", :results_format => :objects)
-            results.length.should == 32
-            results.first.should be_kind_of(Vm)
+            results.length.should == 4
           end
         end
 
         it "works when passing a named_scope" do
           User.with_userid(@user.userid) do
-            # VMs: 50, 55, 56, 60, 63, 65, 70
-            results, attrs = Rbac.search(:class => "Vm", :results_format => :objects, :named_scope => :group_3_scope)
-            results.length.should == 7
-            results.first.should be_kind_of(Vm)
-
-            # VMs: 0, 5, 7, 10, 14, 15, 20, 21
             results, attrs = Rbac.search(:class => "Vm", :results_format => :objects, :named_scope => [:group_scope, 1])
-            results.length.should == 8
-            results.first.should be_kind_of(Vm)
+            results.length.should == 1
           end
         end
       end
@@ -521,10 +495,8 @@ describe Rbac do
         MiqGroup.any_instance.stub(:self_service? => true)
         MiqGroup.any_instance.stub(:limited_self_service? => true)
 
-        # VMs: 0 7 14 21 28 35 42 49 56 63 70 77 84 91 98
         results, attrs = Rbac.search(:class => "Vm", :results_format => :objects, :miq_group_id => @user.current_group.id)
-        results.length.should == 15
-        results.first.should be_kind_of(Vm)
+        results.length.should == 2
       end
 
       context "with limited self-service user" do
@@ -535,53 +507,40 @@ describe Rbac do
 
         it "works when targets are empty" do
           User.with_userid(@user.userid) do
-            # VMs: 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95
             results, attrs = Rbac.search(:class => "Vm", :results_format => :objects)
-            results.length.should == 20
-            results.first.should be_kind_of(Vm)
+            results.length.should == 2
           end
         end
 
         it "works when passing a named_scope" do
           User.with_userid(@user.userid) do
-            # VMs: 50, 55, 60, 65, 70
-            results, attrs = Rbac.search(:class => "Vm", :results_format => :objects, :named_scope => :group_3_scope)
-            results.length.should == 5
-            results.first.should be_kind_of(Vm)
-
-            # VMs: 0, 5, 10, 15, 20
             results, attrs = Rbac.search(:class => "Vm", :results_format => :objects, :named_scope => [:group_scope, 1])
-            results.length.should == 5
-            results.first.should be_kind_of(Vm)
+            results.length.should == 1
+
+            results, attrs = Rbac.search(:class => "Vm", :results_format => :objects, :named_scope => [:group_scope, 2])
+            results.length.should == 0
           end
         end
       end
 
-
       it "works when targets are a list of ids" do
         results, attrs = Rbac.search(:targets => Vm.all.collect(&:id), :class => "Vm", :results_format => :objects)
-        results.length.should == 100
+        results.length.should == 4
         results.first.should be_kind_of(Vm)
 
         results, attrs = Rbac.search(:targets => Vm.all.collect(&:id), :class => "Vm", :results_format => :ids)
-        results.length.should == 100
+        results.length.should == 4
         results.first.should be_kind_of(Integer)
       end
 
       it "works when targets are empty" do
         results, attrs = Rbac.search(:class => "Vm", :results_format => :objects)
-        results.length.should == 100
-        results.first.should be_kind_of(Vm)
+        results.length.should == 4
       end
 
       it "works when passing a named_scope" do
-        results, attrs = Rbac.search(:class => "Vm", :results_format => :objects, :named_scope => :group_3_scope)
-        results.length.should == 25
-        results.first.should be_kind_of(Vm)
-
-        results, attrs = Rbac.search(:class => "Vm", :results_format => :objects, :named_scope => [:group_scope, 1])
-        results.length.should == 25
-        results.first.should be_kind_of(Vm)
+        results, attrs = Rbac.search(:class => "Vm", :results_format => :objects, :named_scope => [:group_scope, 4])
+        results.length.should == 1
       end
 
       it "works when the filter is not fully supported in SQL (FB11080)" do
@@ -596,7 +555,7 @@ describe Rbac do
               field: Vm-host_name
         '
         results, attrs = Rbac.search(:class => "Vm", :filter => YAML.load(filter), :results_format => :objects)
-        results.length.should == 50
+        results.length.should == 2
       end
     end
 
@@ -630,15 +589,17 @@ describe Rbac do
                 field: Vm-name
           ")
           results, attrs = Rbac.search(:class => "Vm", :filter => exp, :userid => @user.userid, :results_format => :objects, :limit => 2, :offset => 2, :order => "vms.name desc")
-          # results.each {|r| $log.info("XXX: result: #{r.name}")}
-          results.length.should == 2
-          results.first.name.should == "Test Group 3 VM 70"
-          results.last.name.should  == "Test Group 3 VM 60"
-          attrs[:auth_count].should == 10
-          attrs[:total_count].should == 100
+          results.length.should == 1
+          results.first.name.should == "Test Group 2 VM 1"
+          attrs[:auth_count].should == 3
+          attrs[:total_count].should == 4
         end
 
         it "works when class does not participate in RBAC and user filters are passed" do
+          2.times do |i|
+            FactoryGirl.create(:ems_event, :timestamp => Time.now.utc, :message => "Event #{i}")
+          end
+
           report = MiqReport.new(:db => "EmsEvent")
           exp = YAML.load '--- !ruby/object:MiqExpression
           exp:
@@ -651,10 +612,10 @@ describe Rbac do
 
           EmsEvent.all.each {|r| $log.info("XXX: event: [#{r.id}], #{r.timestamp}")}
           results.each {|r| $log.info("XXX: result: #{r.message}")}
-          results.length.should == 10
-          attrs[:auth_count].should == 10
+          results.length.should == 2
+          attrs[:auth_count].should == 2
           attrs[:user_filters]["managed"].should == @group.filters['managed']
-          attrs[:total_count].should == 10
+          attrs[:total_count].should == 2
         end
       end
     end
@@ -830,18 +791,18 @@ describe Rbac do
     before(:each) do
       role2 = FactoryGirl.create(:miq_user_role, :name => 'support')
       group2 = FactoryGirl.create(:miq_group, :description => "Support Group", :miq_user_role => role2)
-      100.times do |i|
+      4.times do |i|
         case i
-        when  0..24
+        when 0
           group_id = @group.id
           state = 'connected'
-        when  25..49
+        when 1
           group_id = group2.id
           state = 'connected'
-        when 50..74
+        when 2
           group_id = @group.id
           state = 'disconnected'
-        when 75..99
+        when 3
           group_id = group2.id
           state = 'disconnected'
         end

@@ -98,6 +98,6 @@ module JsHelper
   end
 
   def partial_replace(from, partial, locals)
-    "$(\"##{h(from)}\").replaceWith(\"#{escape_javascript(render_to_string(:partial => partial, :locals => locals))}\");".html_safe
+    "$(\"##{h(from)}\").replaceWith(\"#{escape_javascript(render(:partial => partial, :locals => locals))}\");".html_safe
   end
 end

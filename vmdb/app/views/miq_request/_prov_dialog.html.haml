@@ -3,8 +3,6 @@
 
 - current_tab = @edit && @edit[:new] ? @edit[:new][:current_tab_key] : @options[:current_tab_key]
 - prefix = "/miq_request/"
-%br
-
 - if dialog == current_tab
   - case current_tab
   - when :requester

@@ -96,18 +96,28 @@
             });
 
       - when 'DialogFieldDateControl', 'DialogFieldDateTimeControl'
-        - t = Time.now.in_time_zone(session[:user_tz]) + 1.day
-        - date_val = wf.value(field.name) ? wf.value(field.name).split(" ") : ["#{t.month}/#{t.day}/#{t.year}"]
-        - if edit
-          = text_field_tag("miq_date__#{field.name}",
-                           date_val[0],
-                           :class                  => "css1",
-                           :readonly               => "true",
-                           "data-miq_observe_date" => {:url => url}.to_json)
-        - else
-          = date_val[0]
+        - if field.type == "DialogFieldDateControl"
+          - if edit
+            = text_field_tag("miq_date__#{field.name}",
+                             field.value,
+                             :class                  => "css1 dynamic-date-#{field.id}",
+                             :readonly               => "true",
+                             "data-miq_observe_date" => {:url => url}.to_json)
+          - else
+            = field.value
 
         - if field.type == "DialogFieldDateTimeControl"
+          - t = Time.now.in_time_zone(session[:user_tz]) + 1.day
+          - date_val = wf.value(field.name) ? wf.value(field.name).split(" ") : ["#{t.month}/#{t.day}/#{t.year}"]
+          - if edit
+            = text_field_tag("miq_date__#{field.name}",
+                             date_val[0],
+                             :class                  => "css1 dynamic-date-#{field.id}",
+                             :readonly               => "true",
+                             "data-miq_observe_date" => {:url => url}.to_json)
+          - else
+            = date_val[0]
+
           &nbsp;at&nbsp;
           - start_hour = date_val.length >= 2 ? date_val[1].split(":").first : '0'
           - start_min = date_val.length >= 2 ? date_val[1].split(":").last : '0'
@@ -123,6 +133,22 @@
             = "#{start_hour.rjust(2, '0')}:#{start_min.rjust(2, '0')}"
           &nbsp;
           = session[:user_tz]
+
+        - if field.dynamic && field.show_refresh_button?
+          = button_tag('Refresh', :id => "refresh-dynamic-date-#{field.id}", :class => "btn btn-default")
+
+          :javascript
+            $('#refresh-dynamic-date-#{field.id}').click(function() {
+              miqSparkleOn();
+
+              var fieldId = "#{field.id}";
+              var fieldName = "#{field.name}";
+
+              $.post('dynamic_date_refresh', {name: fieldName}, function(data) {
+                $('.dynamic-date-' + fieldId).val(data.date_value);
+                miqSparkleOff();
+              });
+            });
 
       - when 'DialogFieldDynamicList'
         - if edit

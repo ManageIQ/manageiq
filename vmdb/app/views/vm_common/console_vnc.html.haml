@@ -1,0 +1,19 @@
+!!! XML
+%html
+  %head
+    %title
+      = _('VNC Console')
+    = stylesheet_link_tag 'application'
+    = javascript_include_tag 'jquery/jquery-1.8.3.min', 'jquery/jquery-ui-1.9.2.custom.min'
+    = javascript_include_tag 'application'
+    = javascript_include_tag 'cfme_novnc'
+
+  %body{:style => 'margin: 0px; padding-top: 0px !important;'}
+    = link_to('Ctrl-Alt-Del', '#', :id => 'sendCtrlAltDelButton', :class => 'btn btn-default')
+    #vnc{'data-port' => proxy_port, 'data-password' => password, 'data-encrypt' => encrypt}
+      #noVNC_status_bar.console-status
+        #noVNC_status.label
+          = _('Loading ...')
+
+    %canvas#noVNC_canvas.console-screen
+      = _('Canvas not supported.')

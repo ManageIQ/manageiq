@@ -114,6 +114,10 @@ module MiqServer::EnvironmentManagement
     MiqApache::Control.restart(false)
   end
 
+  def stop_apache
+    MiqApache::Control.stop(false)
+  end
+
   def check_disk_usage(disks)
     @vmdb_config = VMDB::Config.new("vmdb")
     threshold = @vmdb_config.config.fetch_path(:server, :events, :disk_usage_gt_percent) || 80

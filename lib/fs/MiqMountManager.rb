@@ -136,6 +136,11 @@ class MiqMountManager < MiqFS
   	    fs.fileDirectory?(p)
   	end
 
+    def fileSymLink?(f)
+      fs, p = getFsPath(f)
+      fs.fileSymLink?(p)
+    end
+
   	def fileOpen(f, mode="r", &block)
   	    fs, p = getFsPath(f)
   	    fs.fileOpen(p, mode, &block)

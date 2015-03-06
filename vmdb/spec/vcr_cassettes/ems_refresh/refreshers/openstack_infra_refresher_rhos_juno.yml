@@ -5,10 +5,10 @@ http_interactions:
     uri: http://192.0.2.1:5000/v2.0/tokens
     body:
       encoding: UTF-8
-      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"22ffdb40bb99703b3650a79c1c1305a65d83e898"},"tenantName":"admin"}}'
+      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"3ddb6de300630a431ffae7f01104c9988ec4c89d"},"tenantName":"admin"}}'
     headers:
       User-Agent:
-      - fog/1.26.0 fog-core/1.27.2
+      - fog/1.28.0 fog-core/1.29.0
       Content-Type:
       - application/json
   response:
@@ -23,52 +23,52 @@ http_interactions:
       Content-Length:
       - '3484'
       Date:
-      - Mon, 19 Jan 2015 12:16:23 GMT
+      - Fri, 20 Feb 2015 11:16:47 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-01-19T12:16:23.092641", "expires":
-        "2015-01-19T16:16:23Z", "id": "fd5d866258e142959dc6e8f1e95b3cbf", "tenant":
-        {"description": null, "enabled": true, "id": "23e55ecf26c54fb4b15fa2bc12323bfa",
-        "name": "admin"}, "audit_ids": ["x8jqM5dxRHSYXi3eVy7nlQ"]}, "serviceCatalog":
+      string: '{"access": {"token": {"issued_at": "2015-02-20T11:16:47.588703", "expires":
+        "2015-02-20T15:16:47Z", "id": "fd8d39f8600a4fc5828170bfe91ab238", "tenant":
+        {"description": null, "enabled": true, "id": "50f2f94aef674a9c931ecb287c493909",
+        "name": "admin"}, "audit_ids": ["ZcumlKtvS4SC0FNOPGS18g"]}, "serviceCatalog":
         [{"endpoints": [{"adminURL": "http://192.0.2.1:8585/", "region": "regionOne",
-        "internalURL": "http://192.0.2.1:8585/", "id": "152468315aa340918eff6a18bb505525",
+        "internalURL": "http://192.0.2.1:8585/", "id": "27b82f74c9e94d0597a3f5f233a6ffcf",
         "publicURL": "http://192.0.2.1:8585/"}], "endpoints_links": [], "type": "management",
-        "name": "tuskar"}, {"endpoints": [{"adminURL": "http://192.0.2.1:8774/v2/23e55ecf26c54fb4b15fa2bc12323bfa",
-        "region": "regionOne", "internalURL": "http://192.0.2.1:8774/v2/23e55ecf26c54fb4b15fa2bc12323bfa",
-        "id": "6de52bddaf2641149fe80f30f954009b", "publicURL": "http://192.0.2.1:8774/v2/23e55ecf26c54fb4b15fa2bc12323bfa"}],
+        "name": "tuskar"}, {"endpoints": [{"adminURL": "http://192.0.2.1:8774/v2/50f2f94aef674a9c931ecb287c493909",
+        "region": "regionOne", "internalURL": "http://192.0.2.1:8774/v2/50f2f94aef674a9c931ecb287c493909",
+        "id": "44368999bcf0463fa355a9f53854d8c5", "publicURL": "http://192.0.2.1:8774/v2/50f2f94aef674a9c931ecb287c493909"}],
         "endpoints_links": [], "type": "compute", "name": "nova"}, {"endpoints": [{"adminURL":
         "http://192.0.2.1:9696/", "region": "regionOne", "internalURL": "http://192.0.2.1:9696/",
-        "id": "16ef96c367674890b3c345586a2eb06b", "publicURL": "http://192.0.2.1:9696/"}],
+        "id": "0fcdded0cbac4fd792c4adb45530dc22", "publicURL": "http://192.0.2.1:9696/"}],
         "endpoints_links": [], "type": "network", "name": "neutron"}, {"endpoints":
         [{"adminURL": "http://192.0.2.1:8774/v3", "region": "regionOne", "internalURL":
-        "http://192.0.2.1:8774/v3", "id": "5294cae61be14f97ae4c964840290b17", "publicURL":
+        "http://192.0.2.1:8774/v3", "id": "76ae9913827544f88515ca717de9ed43", "publicURL":
         "http://192.0.2.1:8774/v3"}], "endpoints_links": [], "type": "computev3",
         "name": "nova"}, {"endpoints": [{"adminURL": "http://192.0.2.1:9292/", "region":
-        "regionOne", "internalURL": "http://192.0.2.1:9292/", "id": "43a1b517c63e47f0ac39e8a8bb6b96ac",
+        "regionOne", "internalURL": "http://192.0.2.1:9292/", "id": "33c808f15c7046f889ee91d4b1e843cc",
         "publicURL": "http://192.0.2.1:9292/"}], "endpoints_links": [], "type": "image",
         "name": "glance"}, {"endpoints": [{"adminURL": "http://192.0.2.1:8777/", "region":
-        "regionOne", "internalURL": "http://192.0.2.1:8777/", "id": "26f0f85070b5431c940ad4ca138ceafc",
+        "regionOne", "internalURL": "http://192.0.2.1:8777/", "id": "20b0aaa95f3c43b4b179b1b916a5dd60",
         "publicURL": "http://192.0.2.1:8777/"}], "endpoints_links": [], "type": "metering",
         "name": "ceilometer"}, {"endpoints": [{"adminURL": "http://192.0.2.1:6385/",
-        "region": "regionOne", "internalURL": "http://192.0.2.1:6385/", "id": "0d22d1138b3e40a2ae638a56386d038e",
+        "region": "regionOne", "internalURL": "http://192.0.2.1:6385/", "id": "805c633e4f0e411b9bfc6ccf397f9aa4",
         "publicURL": "http://192.0.2.1:6385/"}], "endpoints_links": [], "type": "baremetal",
         "name": "ironic"}, {"endpoints": [{"adminURL": "http://192.0.2.1:8773/services/Admin",
         "region": "regionOne", "internalURL": "http://192.0.2.1:8773/services/Cloud",
-        "id": "89d317a1d1074f52b7d4deab02c499f7", "publicURL": "http://192.0.2.1:8773/services/Cloud"}],
+        "id": "045fb6c69e144ee4bca7e3a076dca0aa", "publicURL": "http://192.0.2.1:8773/services/Cloud"}],
         "endpoints_links": [], "type": "ec2", "name": "ec2"}, {"endpoints": [{"adminURL":
-        "http://192.0.2.1:8004/v1/23e55ecf26c54fb4b15fa2bc12323bfa", "region": "regionOne",
-        "internalURL": "http://192.0.2.1:8004/v1/23e55ecf26c54fb4b15fa2bc12323bfa",
-        "id": "0b9ee1174ad44c52b2c4fa4657e4d96c", "publicURL": "http://192.0.2.1:8004/v1/23e55ecf26c54fb4b15fa2bc12323bfa"}],
+        "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909", "region": "regionOne",
+        "internalURL": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909",
+        "id": "2d89c3bb34c6419a852814324022475b", "publicURL": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909"}],
         "endpoints_links": [], "type": "orchestration", "name": "heat"}, {"endpoints":
         [{"adminURL": "http://192.0.2.1:35357/v2.0", "region": "regionOne", "internalURL":
-        "http://192.0.2.1:5000/v2.0", "id": "07d4e7b17bee41d8ad85905d2479c31c", "publicURL":
+        "http://192.0.2.1:5000/v2.0", "id": "8484a59369354460bf90a45946b68b3a", "publicURL":
         "http://192.0.2.1:5000/v2.0"}], "endpoints_links": [], "type": "identity",
         "name": "keystone"}], "user": {"username": "admin", "roles_links": [], "id":
-        "effb6d5263c6428ca5fba20b03241ca2", "roles": [{"name": "_member_"}, {"name":
-        "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab",
-        "ee61ad27f6104d56997b9b3f4a4fee1c"]}}}'
+        "4e1c9f34e30b4e80b31e33fd0dd7c6e0", "roles": [{"name": "admin"}, {"name":
+        "_member_"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles": ["6e523abb6b754c2eb118187a91e8dffe",
+        "9fe2ff9ee4384b1894a90878d3e92bab"]}}}'
     http_version: 
-  recorded_at: Mon, 19 Jan 2015 12:16:22 GMT
+  recorded_at: Fri, 20 Feb 2015 11:16:48 GMT
 - request:
     method: get
     uri: http://192.0.2.1:5000/v2.0/tenants
@@ -77,13 +77,13 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.26.0 fog-core/1.27.2
+      - fog/1.28.0 fog-core/1.29.0
       Content-Type:
       - application/json
       Accept:
       - application/json
       X-Auth-Token:
-      - fd5d866258e142959dc6e8f1e95b3cbf
+      - fd8d39f8600a4fc5828170bfe91ab238
   response:
     status:
       code: 200
@@ -96,19 +96,226 @@ http_interactions:
       Content-Length:
       - '133'
       Date:
-      - Mon, 19 Jan 2015 12:16:23 GMT
+      - Fri, 20 Feb 2015 11:16:47 GMT
     body:
       encoding: UTF-8
       string: '{"tenants_links": [], "tenants": [{"description": null, "enabled":
-        true, "id": "23e55ecf26c54fb4b15fa2bc12323bfa", "name": "admin"}]}'
+        true, "id": "50f2f94aef674a9c931ecb287c493909", "name": "admin"}]}'
     http_version: 
-  recorded_at: Mon, 19 Jan 2015 12:16:22 GMT
+  recorded_at: Fri, 20 Feb 2015 11:16:48 GMT
 - request:
     method: post
     uri: http://192.0.2.1:5000/v2.0/tokens
     body:
       encoding: UTF-8
-      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"22ffdb40bb99703b3650a79c1c1305a65d83e898"},"tenantName":"admin"}}'
+      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"3ddb6de300630a431ffae7f01104c9988ec4c89d"},"tenantName":"admin"}}'
+    headers:
+      User-Agent:
+      - fog/1.28.0 fog-core/1.29.0
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Vary:
+      - X-Auth-Token
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '3484'
+      Date:
+      - Fri, 20 Feb 2015 11:16:48 GMT
+    body:
+      encoding: UTF-8
+      string: '{"access": {"token": {"issued_at": "2015-02-20T11:16:48.190357", "expires":
+        "2015-02-20T15:16:48Z", "id": "b380c7376243456bbe4c9c4daf6ce3b9", "tenant":
+        {"description": null, "enabled": true, "id": "50f2f94aef674a9c931ecb287c493909",
+        "name": "admin"}, "audit_ids": ["aBGXjZURSMirX5JgeNW5EA"]}, "serviceCatalog":
+        [{"endpoints": [{"adminURL": "http://192.0.2.1:8585/", "region": "regionOne",
+        "internalURL": "http://192.0.2.1:8585/", "id": "27b82f74c9e94d0597a3f5f233a6ffcf",
+        "publicURL": "http://192.0.2.1:8585/"}], "endpoints_links": [], "type": "management",
+        "name": "tuskar"}, {"endpoints": [{"adminURL": "http://192.0.2.1:8774/v2/50f2f94aef674a9c931ecb287c493909",
+        "region": "regionOne", "internalURL": "http://192.0.2.1:8774/v2/50f2f94aef674a9c931ecb287c493909",
+        "id": "44368999bcf0463fa355a9f53854d8c5", "publicURL": "http://192.0.2.1:8774/v2/50f2f94aef674a9c931ecb287c493909"}],
+        "endpoints_links": [], "type": "compute", "name": "nova"}, {"endpoints": [{"adminURL":
+        "http://192.0.2.1:9696/", "region": "regionOne", "internalURL": "http://192.0.2.1:9696/",
+        "id": "0fcdded0cbac4fd792c4adb45530dc22", "publicURL": "http://192.0.2.1:9696/"}],
+        "endpoints_links": [], "type": "network", "name": "neutron"}, {"endpoints":
+        [{"adminURL": "http://192.0.2.1:8774/v3", "region": "regionOne", "internalURL":
+        "http://192.0.2.1:8774/v3", "id": "76ae9913827544f88515ca717de9ed43", "publicURL":
+        "http://192.0.2.1:8774/v3"}], "endpoints_links": [], "type": "computev3",
+        "name": "nova"}, {"endpoints": [{"adminURL": "http://192.0.2.1:9292/", "region":
+        "regionOne", "internalURL": "http://192.0.2.1:9292/", "id": "33c808f15c7046f889ee91d4b1e843cc",
+        "publicURL": "http://192.0.2.1:9292/"}], "endpoints_links": [], "type": "image",
+        "name": "glance"}, {"endpoints": [{"adminURL": "http://192.0.2.1:8777/", "region":
+        "regionOne", "internalURL": "http://192.0.2.1:8777/", "id": "20b0aaa95f3c43b4b179b1b916a5dd60",
+        "publicURL": "http://192.0.2.1:8777/"}], "endpoints_links": [], "type": "metering",
+        "name": "ceilometer"}, {"endpoints": [{"adminURL": "http://192.0.2.1:6385/",
+        "region": "regionOne", "internalURL": "http://192.0.2.1:6385/", "id": "805c633e4f0e411b9bfc6ccf397f9aa4",
+        "publicURL": "http://192.0.2.1:6385/"}], "endpoints_links": [], "type": "baremetal",
+        "name": "ironic"}, {"endpoints": [{"adminURL": "http://192.0.2.1:8773/services/Admin",
+        "region": "regionOne", "internalURL": "http://192.0.2.1:8773/services/Cloud",
+        "id": "045fb6c69e144ee4bca7e3a076dca0aa", "publicURL": "http://192.0.2.1:8773/services/Cloud"}],
+        "endpoints_links": [], "type": "ec2", "name": "ec2"}, {"endpoints": [{"adminURL":
+        "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909", "region": "regionOne",
+        "internalURL": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909",
+        "id": "2d89c3bb34c6419a852814324022475b", "publicURL": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909"}],
+        "endpoints_links": [], "type": "orchestration", "name": "heat"}, {"endpoints":
+        [{"adminURL": "http://192.0.2.1:35357/v2.0", "region": "regionOne", "internalURL":
+        "http://192.0.2.1:5000/v2.0", "id": "8484a59369354460bf90a45946b68b3a", "publicURL":
+        "http://192.0.2.1:5000/v2.0"}], "endpoints_links": [], "type": "identity",
+        "name": "keystone"}], "user": {"username": "admin", "roles_links": [], "id":
+        "4e1c9f34e30b4e80b31e33fd0dd7c6e0", "roles": [{"name": "admin"}, {"name":
+        "_member_"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles": ["6e523abb6b754c2eb118187a91e8dffe",
+        "9fe2ff9ee4384b1894a90878d3e92bab"]}}}'
+    http_version: 
+  recorded_at: Fri, 20 Feb 2015 11:16:48 GMT
+- request:
+    method: post
+    uri: http://192.0.2.1:5000/v2.0/tokens
+    body:
+      encoding: UTF-8
+      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"3ddb6de300630a431ffae7f01104c9988ec4c89d"},"tenantName":"admin"}}'
+    headers:
+      User-Agent:
+      - fog/1.28.0 fog-core/1.29.0
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Vary:
+      - X-Auth-Token
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '3484'
+      Date:
+      - Fri, 20 Feb 2015 11:16:48 GMT
+    body:
+      encoding: UTF-8
+      string: '{"access": {"token": {"issued_at": "2015-02-20T11:16:48.432439", "expires":
+        "2015-02-20T15:16:48Z", "id": "31f8a0ef0e454494b5738ecd759cbbc7", "tenant":
+        {"description": null, "enabled": true, "id": "50f2f94aef674a9c931ecb287c493909",
+        "name": "admin"}, "audit_ids": ["StTYhM1QQe2hvkXtrUTK6g"]}, "serviceCatalog":
+        [{"endpoints": [{"adminURL": "http://192.0.2.1:8585/", "region": "regionOne",
+        "internalURL": "http://192.0.2.1:8585/", "id": "27b82f74c9e94d0597a3f5f233a6ffcf",
+        "publicURL": "http://192.0.2.1:8585/"}], "endpoints_links": [], "type": "management",
+        "name": "tuskar"}, {"endpoints": [{"adminURL": "http://192.0.2.1:8774/v2/50f2f94aef674a9c931ecb287c493909",
+        "region": "regionOne", "internalURL": "http://192.0.2.1:8774/v2/50f2f94aef674a9c931ecb287c493909",
+        "id": "44368999bcf0463fa355a9f53854d8c5", "publicURL": "http://192.0.2.1:8774/v2/50f2f94aef674a9c931ecb287c493909"}],
+        "endpoints_links": [], "type": "compute", "name": "nova"}, {"endpoints": [{"adminURL":
+        "http://192.0.2.1:9696/", "region": "regionOne", "internalURL": "http://192.0.2.1:9696/",
+        "id": "0fcdded0cbac4fd792c4adb45530dc22", "publicURL": "http://192.0.2.1:9696/"}],
+        "endpoints_links": [], "type": "network", "name": "neutron"}, {"endpoints":
+        [{"adminURL": "http://192.0.2.1:8774/v3", "region": "regionOne", "internalURL":
+        "http://192.0.2.1:8774/v3", "id": "76ae9913827544f88515ca717de9ed43", "publicURL":
+        "http://192.0.2.1:8774/v3"}], "endpoints_links": [], "type": "computev3",
+        "name": "nova"}, {"endpoints": [{"adminURL": "http://192.0.2.1:9292/", "region":
+        "regionOne", "internalURL": "http://192.0.2.1:9292/", "id": "33c808f15c7046f889ee91d4b1e843cc",
+        "publicURL": "http://192.0.2.1:9292/"}], "endpoints_links": [], "type": "image",
+        "name": "glance"}, {"endpoints": [{"adminURL": "http://192.0.2.1:8777/", "region":
+        "regionOne", "internalURL": "http://192.0.2.1:8777/", "id": "20b0aaa95f3c43b4b179b1b916a5dd60",
+        "publicURL": "http://192.0.2.1:8777/"}], "endpoints_links": [], "type": "metering",
+        "name": "ceilometer"}, {"endpoints": [{"adminURL": "http://192.0.2.1:6385/",
+        "region": "regionOne", "internalURL": "http://192.0.2.1:6385/", "id": "805c633e4f0e411b9bfc6ccf397f9aa4",
+        "publicURL": "http://192.0.2.1:6385/"}], "endpoints_links": [], "type": "baremetal",
+        "name": "ironic"}, {"endpoints": [{"adminURL": "http://192.0.2.1:8773/services/Admin",
+        "region": "regionOne", "internalURL": "http://192.0.2.1:8773/services/Cloud",
+        "id": "045fb6c69e144ee4bca7e3a076dca0aa", "publicURL": "http://192.0.2.1:8773/services/Cloud"}],
+        "endpoints_links": [], "type": "ec2", "name": "ec2"}, {"endpoints": [{"adminURL":
+        "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909", "region": "regionOne",
+        "internalURL": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909",
+        "id": "2d89c3bb34c6419a852814324022475b", "publicURL": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909"}],
+        "endpoints_links": [], "type": "orchestration", "name": "heat"}, {"endpoints":
+        [{"adminURL": "http://192.0.2.1:35357/v2.0", "region": "regionOne", "internalURL":
+        "http://192.0.2.1:5000/v2.0", "id": "8484a59369354460bf90a45946b68b3a", "publicURL":
+        "http://192.0.2.1:5000/v2.0"}], "endpoints_links": [], "type": "identity",
+        "name": "keystone"}], "user": {"username": "admin", "roles_links": [], "id":
+        "4e1c9f34e30b4e80b31e33fd0dd7c6e0", "roles": [{"name": "admin"}, {"name":
+        "_member_"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles": ["6e523abb6b754c2eb118187a91e8dffe",
+        "9fe2ff9ee4384b1894a90878d3e92bab"]}}}'
+    http_version: 
+  recorded_at: Fri, 20 Feb 2015 11:16:49 GMT
+- request:
+    method: post
+    uri: http://192.0.2.1:5000/v2.0/tokens
+    body:
+      encoding: UTF-8
+      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"3ddb6de300630a431ffae7f01104c9988ec4c89d"},"tenantName":"admin"}}'
+    headers:
+      User-Agent:
+      - fog/1.28.0 fog-core/1.29.0
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Vary:
+      - X-Auth-Token
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '3484'
+      Date:
+      - Fri, 20 Feb 2015 11:16:48 GMT
+    body:
+      encoding: UTF-8
+      string: '{"access": {"token": {"issued_at": "2015-02-20T11:16:48.854093", "expires":
+        "2015-02-20T15:16:48Z", "id": "4442d4834e8b4f39a5377675da8da616", "tenant":
+        {"description": null, "enabled": true, "id": "50f2f94aef674a9c931ecb287c493909",
+        "name": "admin"}, "audit_ids": ["9dvgUq3QRqqiW6E-JdijEQ"]}, "serviceCatalog":
+        [{"endpoints": [{"adminURL": "http://192.0.2.1:8585/", "region": "regionOne",
+        "internalURL": "http://192.0.2.1:8585/", "id": "27b82f74c9e94d0597a3f5f233a6ffcf",
+        "publicURL": "http://192.0.2.1:8585/"}], "endpoints_links": [], "type": "management",
+        "name": "tuskar"}, {"endpoints": [{"adminURL": "http://192.0.2.1:8774/v2/50f2f94aef674a9c931ecb287c493909",
+        "region": "regionOne", "internalURL": "http://192.0.2.1:8774/v2/50f2f94aef674a9c931ecb287c493909",
+        "id": "44368999bcf0463fa355a9f53854d8c5", "publicURL": "http://192.0.2.1:8774/v2/50f2f94aef674a9c931ecb287c493909"}],
+        "endpoints_links": [], "type": "compute", "name": "nova"}, {"endpoints": [{"adminURL":
+        "http://192.0.2.1:9696/", "region": "regionOne", "internalURL": "http://192.0.2.1:9696/",
+        "id": "0fcdded0cbac4fd792c4adb45530dc22", "publicURL": "http://192.0.2.1:9696/"}],
+        "endpoints_links": [], "type": "network", "name": "neutron"}, {"endpoints":
+        [{"adminURL": "http://192.0.2.1:8774/v3", "region": "regionOne", "internalURL":
+        "http://192.0.2.1:8774/v3", "id": "76ae9913827544f88515ca717de9ed43", "publicURL":
+        "http://192.0.2.1:8774/v3"}], "endpoints_links": [], "type": "computev3",
+        "name": "nova"}, {"endpoints": [{"adminURL": "http://192.0.2.1:9292/", "region":
+        "regionOne", "internalURL": "http://192.0.2.1:9292/", "id": "33c808f15c7046f889ee91d4b1e843cc",
+        "publicURL": "http://192.0.2.1:9292/"}], "endpoints_links": [], "type": "image",
+        "name": "glance"}, {"endpoints": [{"adminURL": "http://192.0.2.1:8777/", "region":
+        "regionOne", "internalURL": "http://192.0.2.1:8777/", "id": "20b0aaa95f3c43b4b179b1b916a5dd60",
+        "publicURL": "http://192.0.2.1:8777/"}], "endpoints_links": [], "type": "metering",
+        "name": "ceilometer"}, {"endpoints": [{"adminURL": "http://192.0.2.1:6385/",
+        "region": "regionOne", "internalURL": "http://192.0.2.1:6385/", "id": "805c633e4f0e411b9bfc6ccf397f9aa4",
+        "publicURL": "http://192.0.2.1:6385/"}], "endpoints_links": [], "type": "baremetal",
+        "name": "ironic"}, {"endpoints": [{"adminURL": "http://192.0.2.1:8773/services/Admin",
+        "region": "regionOne", "internalURL": "http://192.0.2.1:8773/services/Cloud",
+        "id": "045fb6c69e144ee4bca7e3a076dca0aa", "publicURL": "http://192.0.2.1:8773/services/Cloud"}],
+        "endpoints_links": [], "type": "ec2", "name": "ec2"}, {"endpoints": [{"adminURL":
+        "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909", "region": "regionOne",
+        "internalURL": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909",
+        "id": "2d89c3bb34c6419a852814324022475b", "publicURL": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909"}],
+        "endpoints_links": [], "type": "orchestration", "name": "heat"}, {"endpoints":
+        [{"adminURL": "http://192.0.2.1:35357/v2.0", "region": "regionOne", "internalURL":
+        "http://192.0.2.1:5000/v2.0", "id": "8484a59369354460bf90a45946b68b3a", "publicURL":
+        "http://192.0.2.1:5000/v2.0"}], "endpoints_links": [], "type": "identity",
+        "name": "keystone"}], "user": {"username": "admin", "roles_links": [], "id":
+        "4e1c9f34e30b4e80b31e33fd0dd7c6e0", "roles": [{"name": "admin"}, {"name":
+        "_member_"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles": ["6e523abb6b754c2eb118187a91e8dffe",
+        "9fe2ff9ee4384b1894a90878d3e92bab"]}}}'
+    http_version: 
+  recorded_at: Fri, 20 Feb 2015 11:16:49 GMT
+- request:
+    method: post
+    uri: http://192.0.2.1:5000/v2.0/tokens
+    body:
+      encoding: UTF-8
+      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"f593665c68a605c4728d91a112b4513143f16a7d"},"tenantName":"admin"}}'
     headers:
       User-Agent:
       - fog/1.26.0 fog-core/1.27.2
@@ -126,124 +333,55 @@ http_interactions:
       Content-Length:
       - '3484'
       Date:
-      - Mon, 19 Jan 2015 12:16:23 GMT
+      - Tue, 03 Feb 2015 23:11:04 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-01-19T12:16:23.274823", "expires":
-        "2015-01-19T16:16:23Z", "id": "5af5cb4d7638412b86aef932d4b412ad", "tenant":
-        {"description": null, "enabled": true, "id": "23e55ecf26c54fb4b15fa2bc12323bfa",
-        "name": "admin"}, "audit_ids": ["qF0AsN7_ReG970dDfPuOiw"]}, "serviceCatalog":
+      string: '{"access": {"token": {"issued_at": "2015-02-03T23:11:04.239968", "expires":
+        "2015-02-04T03:11:04Z", "id": "f04739b65cca4658b1fd02104de9bc33", "tenant":
+        {"description": null, "enabled": true, "id": "51bcb84d79174b6680284bfbd44c23a8",
+        "name": "admin"}, "audit_ids": ["OqTCXcM9T8uZ88uzD428vg"]}, "serviceCatalog":
         [{"endpoints": [{"adminURL": "http://192.0.2.1:8585/", "region": "regionOne",
-        "internalURL": "http://192.0.2.1:8585/", "id": "152468315aa340918eff6a18bb505525",
+        "internalURL": "http://192.0.2.1:8585/", "id": "24ffdec8d8554612a3c80868fc2c7e33",
         "publicURL": "http://192.0.2.1:8585/"}], "endpoints_links": [], "type": "management",
-        "name": "tuskar"}, {"endpoints": [{"adminURL": "http://192.0.2.1:8774/v2/23e55ecf26c54fb4b15fa2bc12323bfa",
-        "region": "regionOne", "internalURL": "http://192.0.2.1:8774/v2/23e55ecf26c54fb4b15fa2bc12323bfa",
-        "id": "6de52bddaf2641149fe80f30f954009b", "publicURL": "http://192.0.2.1:8774/v2/23e55ecf26c54fb4b15fa2bc12323bfa"}],
+        "name": "tuskar"}, {"endpoints": [{"adminURL": "http://192.0.2.1:8774/v2/51bcb84d79174b6680284bfbd44c23a8",
+        "region": "regionOne", "internalURL": "http://192.0.2.1:8774/v2/51bcb84d79174b6680284bfbd44c23a8",
+        "id": "5f7b874fc7794ffeba97959e88a696ca", "publicURL": "http://192.0.2.1:8774/v2/51bcb84d79174b6680284bfbd44c23a8"}],
         "endpoints_links": [], "type": "compute", "name": "nova"}, {"endpoints": [{"adminURL":
         "http://192.0.2.1:9696/", "region": "regionOne", "internalURL": "http://192.0.2.1:9696/",
-        "id": "16ef96c367674890b3c345586a2eb06b", "publicURL": "http://192.0.2.1:9696/"}],
+        "id": "548693814a5a4dc3b456818a8109065b", "publicURL": "http://192.0.2.1:9696/"}],
         "endpoints_links": [], "type": "network", "name": "neutron"}, {"endpoints":
         [{"adminURL": "http://192.0.2.1:8774/v3", "region": "regionOne", "internalURL":
-        "http://192.0.2.1:8774/v3", "id": "5294cae61be14f97ae4c964840290b17", "publicURL":
+        "http://192.0.2.1:8774/v3", "id": "1ef9abaabe034f57a575e86d12646ed3", "publicURL":
         "http://192.0.2.1:8774/v3"}], "endpoints_links": [], "type": "computev3",
         "name": "nova"}, {"endpoints": [{"adminURL": "http://192.0.2.1:9292/", "region":
-        "regionOne", "internalURL": "http://192.0.2.1:9292/", "id": "43a1b517c63e47f0ac39e8a8bb6b96ac",
+        "regionOne", "internalURL": "http://192.0.2.1:9292/", "id": "04058e401124416fa4afaf29246e897f",
         "publicURL": "http://192.0.2.1:9292/"}], "endpoints_links": [], "type": "image",
         "name": "glance"}, {"endpoints": [{"adminURL": "http://192.0.2.1:8777/", "region":
-        "regionOne", "internalURL": "http://192.0.2.1:8777/", "id": "26f0f85070b5431c940ad4ca138ceafc",
+        "regionOne", "internalURL": "http://192.0.2.1:8777/", "id": "4fb7ca88434b4b2993fabd4c8dfd3ac4",
         "publicURL": "http://192.0.2.1:8777/"}], "endpoints_links": [], "type": "metering",
         "name": "ceilometer"}, {"endpoints": [{"adminURL": "http://192.0.2.1:6385/",
-        "region": "regionOne", "internalURL": "http://192.0.2.1:6385/", "id": "0d22d1138b3e40a2ae638a56386d038e",
+        "region": "regionOne", "internalURL": "http://192.0.2.1:6385/", "id": "00e46e4c1cae42d2a7b1fc243d6c9ab7",
         "publicURL": "http://192.0.2.1:6385/"}], "endpoints_links": [], "type": "baremetal",
         "name": "ironic"}, {"endpoints": [{"adminURL": "http://192.0.2.1:8773/services/Admin",
         "region": "regionOne", "internalURL": "http://192.0.2.1:8773/services/Cloud",
-        "id": "89d317a1d1074f52b7d4deab02c499f7", "publicURL": "http://192.0.2.1:8773/services/Cloud"}],
+        "id": "4c89f8e5eaae41758c4bcfac98936307", "publicURL": "http://192.0.2.1:8773/services/Cloud"}],
         "endpoints_links": [], "type": "ec2", "name": "ec2"}, {"endpoints": [{"adminURL":
-        "http://192.0.2.1:8004/v1/23e55ecf26c54fb4b15fa2bc12323bfa", "region": "regionOne",
-        "internalURL": "http://192.0.2.1:8004/v1/23e55ecf26c54fb4b15fa2bc12323bfa",
-        "id": "0b9ee1174ad44c52b2c4fa4657e4d96c", "publicURL": "http://192.0.2.1:8004/v1/23e55ecf26c54fb4b15fa2bc12323bfa"}],
+        "http://192.0.2.1:8004/v1/51bcb84d79174b6680284bfbd44c23a8", "region": "regionOne",
+        "internalURL": "http://192.0.2.1:8004/v1/51bcb84d79174b6680284bfbd44c23a8",
+        "id": "66fdcf06f2914da4a976e805f2fd55bb", "publicURL": "http://192.0.2.1:8004/v1/51bcb84d79174b6680284bfbd44c23a8"}],
         "endpoints_links": [], "type": "orchestration", "name": "heat"}, {"endpoints":
         [{"adminURL": "http://192.0.2.1:35357/v2.0", "region": "regionOne", "internalURL":
-        "http://192.0.2.1:5000/v2.0", "id": "07d4e7b17bee41d8ad85905d2479c31c", "publicURL":
+        "http://192.0.2.1:5000/v2.0", "id": "8fc1c2cec4c9456aa67bf92172f941dc", "publicURL":
         "http://192.0.2.1:5000/v2.0"}], "endpoints_links": [], "type": "identity",
         "name": "keystone"}], "user": {"username": "admin", "roles_links": [], "id":
-        "effb6d5263c6428ca5fba20b03241ca2", "roles": [{"name": "_member_"}, {"name":
+        "82e74051c5b440e0859d358affa643da", "roles": [{"name": "_member_"}, {"name":
         "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab",
-        "ee61ad27f6104d56997b9b3f4a4fee1c"]}}}'
+        "e85e029eb267481c9331c21ab8e23f7c"]}}}'
     http_version: 
-  recorded_at: Mon, 19 Jan 2015 12:16:22 GMT
-- request:
-    method: post
-    uri: http://192.0.2.1:5000/v2.0/tokens
-    body:
-      encoding: UTF-8
-      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"22ffdb40bb99703b3650a79c1c1305a65d83e898"},"tenantName":"admin"}}'
-    headers:
-      User-Agent:
-      - fog/1.26.0 fog-core/1.27.2
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: ''
-    headers:
-      Vary:
-      - X-Auth-Token
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '3484'
-      Date:
-      - Mon, 19 Jan 2015 12:16:23 GMT
-    body:
-      encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-01-19T12:16:23.722605", "expires":
-        "2015-01-19T16:16:23Z", "id": "5b0b076ba31e4889a0daed67c2137ded", "tenant":
-        {"description": null, "enabled": true, "id": "23e55ecf26c54fb4b15fa2bc12323bfa",
-        "name": "admin"}, "audit_ids": ["6xABxVIXTaqFigdJ9186og"]}, "serviceCatalog":
-        [{"endpoints": [{"adminURL": "http://192.0.2.1:8585/", "region": "regionOne",
-        "internalURL": "http://192.0.2.1:8585/", "id": "152468315aa340918eff6a18bb505525",
-        "publicURL": "http://192.0.2.1:8585/"}], "endpoints_links": [], "type": "management",
-        "name": "tuskar"}, {"endpoints": [{"adminURL": "http://192.0.2.1:8774/v2/23e55ecf26c54fb4b15fa2bc12323bfa",
-        "region": "regionOne", "internalURL": "http://192.0.2.1:8774/v2/23e55ecf26c54fb4b15fa2bc12323bfa",
-        "id": "6de52bddaf2641149fe80f30f954009b", "publicURL": "http://192.0.2.1:8774/v2/23e55ecf26c54fb4b15fa2bc12323bfa"}],
-        "endpoints_links": [], "type": "compute", "name": "nova"}, {"endpoints": [{"adminURL":
-        "http://192.0.2.1:9696/", "region": "regionOne", "internalURL": "http://192.0.2.1:9696/",
-        "id": "16ef96c367674890b3c345586a2eb06b", "publicURL": "http://192.0.2.1:9696/"}],
-        "endpoints_links": [], "type": "network", "name": "neutron"}, {"endpoints":
-        [{"adminURL": "http://192.0.2.1:8774/v3", "region": "regionOne", "internalURL":
-        "http://192.0.2.1:8774/v3", "id": "5294cae61be14f97ae4c964840290b17", "publicURL":
-        "http://192.0.2.1:8774/v3"}], "endpoints_links": [], "type": "computev3",
-        "name": "nova"}, {"endpoints": [{"adminURL": "http://192.0.2.1:9292/", "region":
-        "regionOne", "internalURL": "http://192.0.2.1:9292/", "id": "43a1b517c63e47f0ac39e8a8bb6b96ac",
-        "publicURL": "http://192.0.2.1:9292/"}], "endpoints_links": [], "type": "image",
-        "name": "glance"}, {"endpoints": [{"adminURL": "http://192.0.2.1:8777/", "region":
-        "regionOne", "internalURL": "http://192.0.2.1:8777/", "id": "26f0f85070b5431c940ad4ca138ceafc",
-        "publicURL": "http://192.0.2.1:8777/"}], "endpoints_links": [], "type": "metering",
-        "name": "ceilometer"}, {"endpoints": [{"adminURL": "http://192.0.2.1:6385/",
-        "region": "regionOne", "internalURL": "http://192.0.2.1:6385/", "id": "0d22d1138b3e40a2ae638a56386d038e",
-        "publicURL": "http://192.0.2.1:6385/"}], "endpoints_links": [], "type": "baremetal",
-        "name": "ironic"}, {"endpoints": [{"adminURL": "http://192.0.2.1:8773/services/Admin",
-        "region": "regionOne", "internalURL": "http://192.0.2.1:8773/services/Cloud",
-        "id": "89d317a1d1074f52b7d4deab02c499f7", "publicURL": "http://192.0.2.1:8773/services/Cloud"}],
-        "endpoints_links": [], "type": "ec2", "name": "ec2"}, {"endpoints": [{"adminURL":
-        "http://192.0.2.1:8004/v1/23e55ecf26c54fb4b15fa2bc12323bfa", "region": "regionOne",
-        "internalURL": "http://192.0.2.1:8004/v1/23e55ecf26c54fb4b15fa2bc12323bfa",
-        "id": "0b9ee1174ad44c52b2c4fa4657e4d96c", "publicURL": "http://192.0.2.1:8004/v1/23e55ecf26c54fb4b15fa2bc12323bfa"}],
-        "endpoints_links": [], "type": "orchestration", "name": "heat"}, {"endpoints":
-        [{"adminURL": "http://192.0.2.1:35357/v2.0", "region": "regionOne", "internalURL":
-        "http://192.0.2.1:5000/v2.0", "id": "07d4e7b17bee41d8ad85905d2479c31c", "publicURL":
-        "http://192.0.2.1:5000/v2.0"}], "endpoints_links": [], "type": "identity",
-        "name": "keystone"}], "user": {"username": "admin", "roles_links": [], "id":
-        "effb6d5263c6428ca5fba20b03241ca2", "roles": [{"name": "_member_"}, {"name":
-        "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab",
-        "ee61ad27f6104d56997b9b3f4a4fee1c"]}}}'
-    http_version: 
-  recorded_at: Mon, 19 Jan 2015 12:16:23 GMT
+  recorded_at: Tue, 03 Feb 2015 23:11:04 GMT
 - request:
     method: get
-    uri: http://192.0.2.1:8774/v2/23e55ecf26c54fb4b15fa2bc12323bfa/servers/detail.json
+    uri: http://192.0.2.1:9292/
     body:
       encoding: US-ASCII
       string: ''
@@ -255,7 +393,44 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 5af5cb4d7638412b86aef932d4b412ad
+      - 10da4d149bc14131b27fdd0b2e1d2e91
+  response:
+    status:
+      code: 300
+      message: ''
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Content-Length:
+      - '530'
+      Date:
+      - Tue, 03 Feb 2015 23:11:04 GMT
+    body:
+      encoding: UTF-8
+      string: '{"versions": [{"status": "CURRENT", "id": "v2.2", "links": [{"href":
+        "http://192.0.2.1:9292/v2/", "rel": "self"}]}, {"status": "SUPPORTED", "id":
+        "v2.1", "links": [{"href": "http://192.0.2.1:9292/v2/", "rel": "self"}]},
+        {"status": "SUPPORTED", "id": "v2.0", "links": [{"href": "http://192.0.2.1:9292/v2/",
+        "rel": "self"}]}, {"status": "CURRENT", "id": "v1.1", "links": [{"href": "http://192.0.2.1:9292/v1/",
+        "rel": "self"}]}, {"status": "SUPPORTED", "id": "v1.0", "links": [{"href":
+        "http://192.0.2.1:9292/v1/", "rel": "self"}]}]}'
+    http_version: 
+  recorded_at: Tue, 03 Feb 2015 23:11:04 GMT
+- request:
+    method: get
+    uri: http://192.0.2.1:8774/v2/50f2f94aef674a9c931ecb287c493909/servers/detail.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.28.0 fog-core/1.29.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - b380c7376243456bbe4c9c4daf6ce3b9
   response:
     status:
       code: 200
@@ -266,52 +441,52 @@ http_interactions:
       Content-Length:
       - '3623'
       X-Compute-Request-Id:
-      - req-b8c0f55f-db9b-47f2-b3ca-834bcb0f1b1c
+      - req-e8f7e47b-fdbc-47d8-9393-a409fa46760a
       Date:
-      - Mon, 19 Jan 2015 12:16:23 GMT
+      - Fri, 20 Feb 2015 11:16:49 GMT
     body:
       encoding: UTF-8
-      string: '{"servers": [{"status": "ACTIVE", "updated": "2015-01-14T18:35:28Z",
-        "hostId": "28abf6512a3ccd089a4eda2c1bd624323a24a8355d11959718c11da2", "OS-EXT-SRV-ATTR:host":
-        "undercloud", "addresses": {"ctlplane": [{"OS-EXT-IPS-MAC:mac_addr": "00:cb:fb:96:43:2a",
+      string: '{"servers": [{"status": "ACTIVE", "updated": "2015-01-22T10:33:34Z",
+        "hostId": "b68daf841f1409d7a1d45deed462067651f43bf0fabc2ce814fd0487", "OS-EXT-SRV-ATTR:host":
+        "undercloud", "addresses": {"ctlplane": [{"OS-EXT-IPS-MAC:mac_addr": "00:35:1b:de:67:be",
         "version": 4, "addr": "192.0.2.9", "OS-EXT-IPS:type": "fixed"}]}, "links":
-        [{"href": "http://192.0.2.1:8774/v2/23e55ecf26c54fb4b15fa2bc12323bfa/servers/6bca632b-f549-4dd5-b854-f15f4bd3b059",
-        "rel": "self"}, {"href": "http://192.0.2.1:8774/23e55ecf26c54fb4b15fa2bc12323bfa/servers/6bca632b-f549-4dd5-b854-f15f4bd3b059",
-        "rel": "bookmark"}], "key_name": "default", "image": {"id": "e31ba837-f24b-4d4f-a8ef-5cdd46cab149",
-        "links": [{"href": "http://192.0.2.1:8774/23e55ecf26c54fb4b15fa2bc12323bfa/images/e31ba837-f24b-4d4f-a8ef-5cdd46cab149",
+        [{"href": "http://192.0.2.1:8774/v2/50f2f94aef674a9c931ecb287c493909/servers/b4b40028-2a74-4b83-a232-d1741b0071ae",
+        "rel": "self"}, {"href": "http://192.0.2.1:8774/50f2f94aef674a9c931ecb287c493909/servers/b4b40028-2a74-4b83-a232-d1741b0071ae",
+        "rel": "bookmark"}], "key_name": "default", "image": {"id": "fc1b086f-f35e-4d3b-b80b-17f46a5653d9",
+        "links": [{"href": "http://192.0.2.1:8774/50f2f94aef674a9c931ecb287c493909/images/fc1b086f-f35e-4d3b-b80b-17f46a5653d9",
         "rel": "bookmark"}]}, "OS-EXT-STS:task_state": null, "OS-EXT-STS:vm_state":
         "active", "OS-EXT-SRV-ATTR:instance_name": "instance-00000002", "OS-SRV-USG:launched_at":
-        "2015-01-14T18:35:28.000000", "OS-EXT-SRV-ATTR:hypervisor_hostname": "9262d80e-7a25-4ded-abca-3261a77dbae1",
-        "flavor": {"id": "a116702d-93d1-489f-af57-f7e9c6a290f2", "links": [{"href":
-        "http://192.0.2.1:8774/23e55ecf26c54fb4b15fa2bc12323bfa/flavors/a116702d-93d1-489f-af57-f7e9c6a290f2",
-        "rel": "bookmark"}]}, "id": "6bca632b-f549-4dd5-b854-f15f4bd3b059", "security_groups":
+        "2015-01-22T10:33:34.000000", "OS-EXT-SRV-ATTR:hypervisor_hostname": "fa492556-0232-4a20-ba58-f64276b97716",
+        "flavor": {"id": "d93d267a-fdc7-42c5-a537-48d28fb1db61", "links": [{"href":
+        "http://192.0.2.1:8774/50f2f94aef674a9c931ecb287c493909/flavors/d93d267a-fdc7-42c5-a537-48d28fb1db61",
+        "rel": "bookmark"}]}, "id": "b4b40028-2a74-4b83-a232-d1741b0071ae", "security_groups":
         [{"name": "default"}], "OS-SRV-USG:terminated_at": null, "OS-EXT-AZ:availability_zone":
-        "nova", "user_id": "effb6d5263c6428ca5fba20b03241ca2", "name": "ov-5k3yffowqqo-0-dgyl7pxkouox-Controller-o7jcxepqguso",
-        "created": "2015-01-14T18:26:50Z", "tenant_id": "23e55ecf26c54fb4b15fa2bc12323bfa",
+        "nova", "user_id": "4e1c9f34e30b4e80b31e33fd0dd7c6e0", "name": "ov-ftwygzyut5-0-ybdywaguhfsi-NovaCompute-ww3pmslvnbwj",
+        "created": "2015-01-22T10:29:14Z", "tenant_id": "50f2f94aef674a9c931ecb287c493909",
         "OS-DCF:diskConfig": "MANUAL", "os-extended-volumes:volumes_attached": [],
         "accessIPv4": "", "accessIPv6": "", "progress": 0, "OS-EXT-STS:power_state":
-        1, "config_drive": "", "metadata": {}}, {"status": "ACTIVE", "updated": "2015-01-14T18:29:53Z",
-        "hostId": "28abf6512a3ccd089a4eda2c1bd624323a24a8355d11959718c11da2", "OS-EXT-SRV-ATTR:host":
-        "undercloud", "addresses": {"ctlplane": [{"OS-EXT-IPS-MAC:mac_addr": "00:22:a4:80:56:c7",
+        1, "config_drive": "", "metadata": {}}, {"status": "ACTIVE", "updated": "2015-01-22T10:32:13Z",
+        "hostId": "b68daf841f1409d7a1d45deed462067651f43bf0fabc2ce814fd0487", "OS-EXT-SRV-ATTR:host":
+        "undercloud", "addresses": {"ctlplane": [{"OS-EXT-IPS-MAC:mac_addr": "00:6b:a4:4c:df:f3",
         "version": 4, "addr": "192.0.2.8", "OS-EXT-IPS:type": "fixed"}]}, "links":
-        [{"href": "http://192.0.2.1:8774/v2/23e55ecf26c54fb4b15fa2bc12323bfa/servers/492b83e2-1805-4022-a385-876230ce5d43",
-        "rel": "self"}, {"href": "http://192.0.2.1:8774/23e55ecf26c54fb4b15fa2bc12323bfa/servers/492b83e2-1805-4022-a385-876230ce5d43",
-        "rel": "bookmark"}], "key_name": "default", "image": {"id": "cec16cf0-fce8-4d2e-8398-962700521c0c",
-        "links": [{"href": "http://192.0.2.1:8774/23e55ecf26c54fb4b15fa2bc12323bfa/images/cec16cf0-fce8-4d2e-8398-962700521c0c",
+        [{"href": "http://192.0.2.1:8774/v2/50f2f94aef674a9c931ecb287c493909/servers/5de454a1-7f3c-418e-815d-0350aef47934",
+        "rel": "self"}, {"href": "http://192.0.2.1:8774/50f2f94aef674a9c931ecb287c493909/servers/5de454a1-7f3c-418e-815d-0350aef47934",
+        "rel": "bookmark"}], "key_name": "default", "image": {"id": "d31a60ba-71a3-4c6f-912f-eceaa22d41dc",
+        "links": [{"href": "http://192.0.2.1:8774/50f2f94aef674a9c931ecb287c493909/images/d31a60ba-71a3-4c6f-912f-eceaa22d41dc",
         "rel": "bookmark"}]}, "OS-EXT-STS:task_state": null, "OS-EXT-STS:vm_state":
         "active", "OS-EXT-SRV-ATTR:instance_name": "instance-00000001", "OS-SRV-USG:launched_at":
-        "2015-01-14T18:29:53.000000", "OS-EXT-SRV-ATTR:hypervisor_hostname": "d783b2e4-059e-4e2b-a1d1-21b3d1a7dab6",
-        "flavor": {"id": "a116702d-93d1-489f-af57-f7e9c6a290f2", "links": [{"href":
-        "http://192.0.2.1:8774/23e55ecf26c54fb4b15fa2bc12323bfa/flavors/a116702d-93d1-489f-af57-f7e9c6a290f2",
-        "rel": "bookmark"}]}, "id": "492b83e2-1805-4022-a385-876230ce5d43", "security_groups":
+        "2015-01-22T10:32:13.000000", "OS-EXT-SRV-ATTR:hypervisor_hostname": "06c2fb5a-22ab-450f-bd83-9342f7b823e6",
+        "flavor": {"id": "d93d267a-fdc7-42c5-a537-48d28fb1db61", "links": [{"href":
+        "http://192.0.2.1:8774/50f2f94aef674a9c931ecb287c493909/flavors/d93d267a-fdc7-42c5-a537-48d28fb1db61",
+        "rel": "bookmark"}]}, "id": "5de454a1-7f3c-418e-815d-0350aef47934", "security_groups":
         [{"name": "default"}], "OS-SRV-USG:terminated_at": null, "OS-EXT-AZ:availability_zone":
-        "nova", "user_id": "effb6d5263c6428ca5fba20b03241ca2", "name": "ov-tji6rlvasz-0-tton77kuwzt7-NovaCompute-pac2lccjnb5e",
-        "created": "2015-01-14T18:26:48Z", "tenant_id": "23e55ecf26c54fb4b15fa2bc12323bfa",
+        "nova", "user_id": "4e1c9f34e30b4e80b31e33fd0dd7c6e0", "name": "ov-nqkx3sauhjy-0-mb6vmg53gmzp-Controller-peilm5dksd55",
+        "created": "2015-01-22T10:29:12Z", "tenant_id": "50f2f94aef674a9c931ecb287c493909",
         "OS-DCF:diskConfig": "MANUAL", "os-extended-volumes:volumes_attached": [],
         "accessIPv4": "", "accessIPv6": "", "progress": 0, "OS-EXT-STS:power_state":
         1, "config_drive": "", "metadata": {}}]}'
     http_version: 
-  recorded_at: Mon, 19 Jan 2015 12:16:23 GMT
+  recorded_at: Fri, 20 Feb 2015 11:16:50 GMT
 - request:
     method: get
     uri: http://192.0.2.1:6385/ports/detail
@@ -320,52 +495,560 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - fog/1.26.0 fog-core/1.27.2
+      - fog/1.28.0 fog-core/1.29.0
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 5b0b076ba31e4889a0daed67c2137ded
+      - 31f8a0ef0e454494b5738ecd759cbbc7
   response:
     status:
       code: 200
       message: ''
     headers:
       Date:
-      - Mon, 19 Jan 2015 12:16:24 GMT
+      - Fri, 20 Feb 2015 11:16:49 GMT
       Server:
       - WSGIServer/0.1 Python/2.7.5
       Content-Length:
-      - '1869'
+      - '2653'
       Content-Type:
       - application/json; charset=UTF-8
     body:
       encoding: UTF-8
-      string: '{"ports": [{"node_uuid": "a085de77-b2ee-4876-9c90-e5d6cc8ade77", "uuid":
-        "365deb98-c6c0-468c-8239-35dd013e709b", "links": [{"href": "http://192.0.2.1:6385/v1/ports/365deb98-c6c0-468c-8239-35dd013e709b",
-        "rel": "self"}, {"href": "http://192.0.2.1:6385/ports/365deb98-c6c0-468c-8239-35dd013e709b",
-        "rel": "bookmark"}], "extra": {}, "created_at": "2015-01-14T18:25:17+00:00",
-        "updated_at": "2015-01-15T08:53:38+00:00", "address": "00:c8:73:28:9b:3c"},
-        {"node_uuid": "5470033e-1c2a-4c5c-90c7-7d96da56ba61", "uuid": "1f89b985-51a3-40ca-8952-c44d41caeb54",
-        "links": [{"href": "http://192.0.2.1:6385/v1/ports/1f89b985-51a3-40ca-8952-c44d41caeb54",
-        "rel": "self"}, {"href": "http://192.0.2.1:6385/ports/1f89b985-51a3-40ca-8952-c44d41caeb54",
-        "rel": "bookmark"}], "extra": {}, "created_at": "2015-01-14T18:25:17+00:00",
-        "updated_at": "2015-01-15T08:53:26+00:00", "address": "00:25:9b:01:7b:79"},
-        {"node_uuid": "d783b2e4-059e-4e2b-a1d1-21b3d1a7dab6", "uuid": "4d3bf1af-e1b8-4f30-830f-32c66eed5175",
-        "links": [{"href": "http://192.0.2.1:6385/v1/ports/4d3bf1af-e1b8-4f30-830f-32c66eed5175",
-        "rel": "self"}, {"href": "http://192.0.2.1:6385/ports/4d3bf1af-e1b8-4f30-830f-32c66eed5175",
-        "rel": "bookmark"}], "extra": {"vif_port_id": "026d2cd9-8751-4234-ae72-0c9cc17a0ecb"},
-        "created_at": "2015-01-14T18:25:18+00:00", "updated_at": "2015-01-14T18:27:02+00:00",
-        "address": "00:22:a4:80:56:c7"}, {"node_uuid": "9262d80e-7a25-4ded-abca-3261a77dbae1",
-        "uuid": "61586268-1ee0-46f3-ad75-228973c41fce", "links": [{"href": "http://192.0.2.1:6385/v1/ports/61586268-1ee0-46f3-ad75-228973c41fce",
-        "rel": "self"}, {"href": "http://192.0.2.1:6385/ports/61586268-1ee0-46f3-ad75-228973c41fce",
-        "rel": "bookmark"}], "extra": {"vif_port_id": "956c1d5a-e897-4164-b49c-171d42ca7b49"},
-        "created_at": "2015-01-14T18:25:18+00:00", "updated_at": "2015-01-14T18:27:18+00:00",
-        "address": "00:cb:fb:96:43:2a"}]}'
+      string: '{"ports": [{"node_uuid": "d2194f0a-54c2-4d3c-a393-b060507891cd", "uuid":
+        "7e1a8fd0-0b58-4953-99c3-98d585a32afe", "links": [{"href": "http://192.0.2.1:6385/v1/ports/7e1a8fd0-0b58-4953-99c3-98d585a32afe",
+        "rel": "self"}, {"href": "http://192.0.2.1:6385/ports/7e1a8fd0-0b58-4953-99c3-98d585a32afe",
+        "rel": "bookmark"}], "extra": {}, "created_at": "2015-01-22T10:27:30+00:00",
+        "updated_at": null, "address": "00:e1:1a:49:3a:3f"}, {"node_uuid": "21231c17-ad9a-48b9-848e-c8cc2d950407",
+        "uuid": "145471dd-61c8-49da-bf5a-2c5955fc01c5", "links": [{"href": "http://192.0.2.1:6385/v1/ports/145471dd-61c8-49da-bf5a-2c5955fc01c5",
+        "rel": "self"}, {"href": "http://192.0.2.1:6385/ports/145471dd-61c8-49da-bf5a-2c5955fc01c5",
+        "rel": "bookmark"}], "extra": {}, "created_at": "2015-01-22T10:27:30+00:00",
+        "updated_at": null, "address": "00:fb:43:58:34:1f"}, {"node_uuid": "0896f621-fb83-4ca0-9745-2213eeb2eb11",
+        "uuid": "eb424b69-d71f-4c83-b28b-1f11486ffd5a", "links": [{"href": "http://192.0.2.1:6385/v1/ports/eb424b69-d71f-4c83-b28b-1f11486ffd5a",
+        "rel": "self"}, {"href": "http://192.0.2.1:6385/ports/eb424b69-d71f-4c83-b28b-1f11486ffd5a",
+        "rel": "bookmark"}], "extra": {}, "created_at": "2015-01-22T10:27:31+00:00",
+        "updated_at": null, "address": "00:2e:69:6d:49:43"}, {"node_uuid": "fa492556-0232-4a20-ba58-f64276b97716",
+        "uuid": "c6eaa1e2-9f47-4b9d-a12b-444001d0b396", "links": [{"href": "http://192.0.2.1:6385/v1/ports/c6eaa1e2-9f47-4b9d-a12b-444001d0b396",
+        "rel": "self"}, {"href": "http://192.0.2.1:6385/ports/c6eaa1e2-9f47-4b9d-a12b-444001d0b396",
+        "rel": "bookmark"}], "extra": {"vif_port_id": "6b510de5-6fcc-4dc0-bc24-be40ba66cc71"},
+        "created_at": "2015-01-22T10:27:31+00:00", "updated_at": "2015-01-22T10:29:29+00:00",
+        "address": "00:35:1b:de:67:be"}, {"node_uuid": "3326440a-b655-4a96-b31c-3623ca18e2a8",
+        "uuid": "ac38bd60-f5ab-4bcd-bf05-b1afe5ce3902", "links": [{"href": "http://192.0.2.1:6385/v1/ports/ac38bd60-f5ab-4bcd-bf05-b1afe5ce3902",
+        "rel": "self"}, {"href": "http://192.0.2.1:6385/ports/ac38bd60-f5ab-4bcd-bf05-b1afe5ce3902",
+        "rel": "bookmark"}], "extra": {}, "created_at": "2015-01-22T10:27:32+00:00",
+        "updated_at": null, "address": "00:73:83:61:45:b5"}, {"node_uuid": "06c2fb5a-22ab-450f-bd83-9342f7b823e6",
+        "uuid": "5b823edb-af51-44a2-acfa-ea89c3dce54f", "links": [{"href": "http://192.0.2.1:6385/v1/ports/5b823edb-af51-44a2-acfa-ea89c3dce54f",
+        "rel": "self"}, {"href": "http://192.0.2.1:6385/ports/5b823edb-af51-44a2-acfa-ea89c3dce54f",
+        "rel": "bookmark"}], "extra": {"vif_port_id": "ccfb1614-cac4-48a4-9e41-3a1314a9be2f"},
+        "created_at": "2015-01-22T10:27:32+00:00", "updated_at": "2015-01-22T10:29:25+00:00",
+        "address": "00:6b:a4:4c:df:f3"}]}'
+    http_version: 
+  recorded_at: Fri, 20 Feb 2015 11:16:50 GMT
+- request:
+    method: get
+    uri: http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.28.0 fog-core/1.29.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 4442d4834e8b4f39a5377675da8da616
+      X-Auth-User:
+      - admin
+      X-Auth-Key:
+      - 3ddb6de300630a431ffae7f01104c9988ec4c89d
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Content-Length:
+      - '471'
+      X-Openstack-Request-Id:
+      - req-7a409655-4bf9-47e8-bf82-8e829824d7bb
+      Date:
+      - Fri, 20 Feb 2015 11:16:49 GMT
+    body:
+      encoding: UTF-8
+      string: '{"stacks": [{"parent": null, "description": "No description", "links":
+        [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
+        "rel": "self"}], "stack_status_reason": "Stack CREATE completed successfully",
+        "stack_name": "overcloud", "creation_time": "2015-01-22T10:29:05Z", "updated_time":
+        null, "stack_owner": "admin", "stack_status": "CREATE_COMPLETE", "id": "415396e3-baa4-46b5-85ab-643fa79f8848"}]}'
+    http_version: 
+  recorded_at: Fri, 20 Feb 2015 11:16:50 GMT
+- request:
+    method: get
+    uri: http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources?nested_depth=50
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.28.0 fog-core/1.29.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 4442d4834e8b4f39a5377675da8da616
+      X-Auth-User:
+      - admin
+      X-Auth-Key:
+      - 3ddb6de300630a431ffae7f01104c9988ec4c89d
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Content-Length:
+      - '35111'
+      X-Openstack-Request-Id:
+      - req-6739222e-4ac3-461e-bdaf-00dd19dae01e
+      Date:
+      - Fri, 20 Feb 2015 11:16:50 GMT
+    body:
+      encoding: UTF-8
+      string: '{"resources": [{"resource_name": "SwiftDevicesAndProxyConfig", "links":
+        [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources/SwiftDevicesAndProxyConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
+        "rel": "stack"}], "logical_resource_id": "SwiftDevicesAndProxyConfig", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:32:20Z", "required_by":
+        ["ControllerSwiftDeployment", "ObjectStorageSwiftDeployment"], "resource_status_reason":
+        "state changed", "physical_resource_id": "4f04b5a1-c812-47a2-a8a3-c91790839d8b",
+        "resource_type": "OS::Heat::StructuredConfig"}, {"resource_name": "controller-1-servers",
+        "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources/controller-1-servers",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy/239db625-dfbe-4514-8b05-312e724922ff",
+        "rel": "nested"}], "logical_resource_id": "controller-1-servers", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:29:09Z", "required_by":
+        ["ControllerBootstrapNodeDeployment", "ControllerSwiftDeployment", "allNodesConfig",
+        "ControllerClusterDeployment", "ControllerBootstrapNodeConfig", "SwiftDevicesAndProxyConfig",
+        "ControllerClusterConfig", "ControllerAllNodesDeployment"], "resource_status_reason":
+        "state changed", "physical_resource_id": "239db625-dfbe-4514-8b05-312e724922ff",
+        "resource_type": "OS::Heat::ResourceGroup"}, {"parent_resource": "controller-1-servers",
+        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy/239db625-dfbe-4514-8b05-312e724922ff/resources/0",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy/239db625-dfbe-4514-8b05-312e724922ff",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3",
+        "rel": "nested"}], "logical_resource_id": "0", "resource_status_reason": "state
+        changed", "updated_time": "2015-01-22T10:29:09Z", "required_by": [], "resource_status":
+        "CREATE_COMPLETE", "physical_resource_id": "82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3",
+        "resource_type": "Tuskar::controller-1"}, {"parent_resource": "0", "resource_name":
+        "ControllerSSLDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3/resources/ControllerSSLDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3",
+        "rel": "stack"}], "logical_resource_id": "ControllerSSLDeployment", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:32:14Z", "required_by":
+        [], "resource_status_reason": "state changed", "physical_resource_id": "bca30b89-d79c-4eb3-92b0-0b6ad7f6e1b4",
+        "resource_type": "OS::Heat::StructuredDeployment"}, {"parent_resource": "0",
+        "resource_name": "ControllerPassthroughConfigSpecific", "links": [{"href":
+        "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3/resources/ControllerPassthroughConfigSpecific",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3",
+        "rel": "stack"}], "logical_resource_id": "ControllerPassthroughConfigSpecific",
+        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-01-22T10:29:11Z",
+        "required_by": ["ControllerPassthroughSpecificDeployment"], "resource_status_reason":
+        "state changed", "physical_resource_id": "c4dcaef9-f9de-49d5-8f01-51c2d7ee15fe",
+        "resource_type": "OS::Heat::StructuredConfig"}, {"parent_resource": "0", "resource_name":
+        "ControllerPassthroughDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3/resources/ControllerPassthroughDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3",
+        "rel": "stack"}], "logical_resource_id": "ControllerPassthroughDeployment",
+        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-01-22T10:32:14Z",
+        "required_by": ["ControllerPassthroughSpecificDeployment"], "resource_status_reason":
+        "state changed", "physical_resource_id": "4cda7dee-bb30-4f29-a409-677fb500b2a7",
+        "resource_type": "OS::Heat::StructuredDeployment"}, {"parent_resource": "0",
+        "resource_name": "Controller", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3/resources/Controller",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3",
+        "rel": "stack"}], "logical_resource_id": "Controller", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:29:11Z", "required_by":
+        ["ControllerSSLDeployment", "SwiftStorageDeploy", "ControllerDeployment",
+        "ControllerPassthroughDeployment", "ControllerPassthroughSpecificDeployment"],
+        "resource_status_reason": "state changed", "physical_resource_id": "5de454a1-7f3c-418e-815d-0350aef47934",
+        "resource_type": "OS::Nova::Server"}, {"parent_resource": "0", "resource_name":
+        "ControllerPassthroughSpecificDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3/resources/ControllerPassthroughSpecificDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3",
+        "rel": "stack"}], "logical_resource_id": "ControllerPassthroughSpecificDeployment",
+        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-01-22T10:32:17Z",
+        "required_by": [], "resource_status_reason": "state changed", "physical_resource_id":
+        "834ad718-5d2f-4e1b-8e04-c769e9e36ceb", "resource_type": "OS::Heat::StructuredDeployment"},
+        {"parent_resource": "0", "resource_name": "ControllerDeployment", "links":
+        [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3/resources/ControllerDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3",
+        "rel": "stack"}], "logical_resource_id": "ControllerDeployment", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:32:15Z", "required_by":
+        [], "resource_status_reason": "state changed", "physical_resource_id": "9c3f9e8f-ea47-455c-8190-b6e78be4a68b",
+        "resource_type": "OS::Heat::StructuredDeployment"}, {"parent_resource": "0",
+        "resource_name": "ControllerConfig", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3/resources/ControllerConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3",
+        "rel": "stack"}], "logical_resource_id": "ControllerConfig", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:29:13Z", "required_by":
+        ["ControllerDeployment"], "resource_status_reason": "state changed", "physical_resource_id":
+        "05307807-4958-41ce-9ac9-bd3369515380", "resource_type": "OS::Heat::StructuredConfig"},
+        {"parent_resource": "0", "resource_name": "ControllerPassthroughConfig", "links":
+        [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3/resources/ControllerPassthroughConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3",
+        "rel": "stack"}], "logical_resource_id": "ControllerPassthroughConfig", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:29:10Z", "required_by":
+        ["ControllerPassthroughDeployment"], "resource_status_reason": "state changed",
+        "physical_resource_id": "82d4a60d-6162-404d-bdb1-e2a1a5e03b3f", "resource_type":
+        "OS::Heat::StructuredConfig"}, {"parent_resource": "0", "resource_name": "SwiftConfig",
+        "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3/resources/SwiftConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3",
+        "rel": "stack"}], "logical_resource_id": "SwiftConfig", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:29:13Z", "required_by":
+        ["SwiftStorageDeploy"], "resource_status_reason": "state changed", "physical_resource_id":
+        "94864deb-31d2-45de-a44d-944e0425447b", "resource_type": "OS::Heat::StructuredConfig"},
+        {"parent_resource": "0", "resource_name": "SSLConfig", "links": [{"href":
+        "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3/resources/SSLConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3",
+        "rel": "stack"}], "logical_resource_id": "SSLConfig", "resource_status": "CREATE_COMPLETE",
+        "updated_time": "2015-01-22T10:29:11Z", "required_by": ["ControllerSSLDeployment"],
+        "resource_status_reason": "state changed", "physical_resource_id": "49e7889f-7966-4f80-8e4b-1cf499250f5b",
+        "resource_type": "OS::Heat::StructuredConfig"}, {"parent_resource": "0", "resource_name":
+        "SwiftStorageDeploy", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3/resources/SwiftStorageDeploy",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-controller-1-servers-qnqkx3sauhjy-0-mb6vmg53gmzp/82b7d9a0-eb19-4733-b46e-6f2a8e63ccb3",
+        "rel": "stack"}], "logical_resource_id": "SwiftStorageDeploy", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:32:14Z", "required_by":
+        [], "resource_status_reason": "state changed", "physical_resource_id": "d25bec4a-be7a-49ca-8e9c-27816ea01bc0",
+        "resource_type": "OS::Heat::StructuredDeployment"}, {"resource_name": "ControllerBootstrapNodeDeployment",
+        "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources/ControllerBootstrapNodeDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-ControllerBootstrapNodeDeployment-chsxfangf73y/2acca5c3-11e0-4a16-bf7a-00db7a019d91",
+        "rel": "nested"}], "logical_resource_id": "ControllerBootstrapNodeDeployment",
+        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-01-22T10:32:24Z",
+        "required_by": [], "resource_status_reason": "state changed", "physical_resource_id":
+        "2acca5c3-11e0-4a16-bf7a-00db7a019d91", "resource_type": "OS::Heat::StructuredDeployments"},
+        {"parent_resource": "ControllerBootstrapNodeDeployment", "resource_name":
+        "0", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-ControllerBootstrapNodeDeployment-chsxfangf73y/2acca5c3-11e0-4a16-bf7a-00db7a019d91/resources/0",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-ControllerBootstrapNodeDeployment-chsxfangf73y/2acca5c3-11e0-4a16-bf7a-00db7a019d91",
+        "rel": "stack"}], "logical_resource_id": "0", "resource_status": "CREATE_COMPLETE",
+        "updated_time": "2015-01-22T10:32:24Z", "required_by": [], "resource_status_reason":
+        "state changed", "physical_resource_id": "3f6f65b5-3f92-46de-b24b-bf86f077de60",
+        "resource_type": "OS::Heat::StructuredDeployment"}, {"resource_name": "ObjectStorageSwiftDeployment",
+        "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources/ObjectStorageSwiftDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
+        "rel": "stack"}], "logical_resource_id": "ObjectStorageSwiftDeployment", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:32:23Z", "required_by":
+        [], "resource_status_reason": "state changed", "physical_resource_id": "495685d4-aa10-4c1a-8361-f7ea42b152d9",
+        "resource_type": "OS::Heat::StructuredDeployments"}, {"resource_name": "ControllerSwiftDeployment",
+        "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources/ControllerSwiftDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-ControllerSwiftDeployment-mnx4iur7h7vc/8f1a82c0-703c-4d7b-95c7-3c09ac3b6d69",
+        "rel": "nested"}], "logical_resource_id": "ControllerSwiftDeployment", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:32:22Z", "required_by":
+        [], "resource_status_reason": "state changed", "physical_resource_id": "8f1a82c0-703c-4d7b-95c7-3c09ac3b6d69",
+        "resource_type": "OS::Heat::StructuredDeployments"}, {"parent_resource": "ControllerSwiftDeployment",
+        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-ControllerSwiftDeployment-mnx4iur7h7vc/8f1a82c0-703c-4d7b-95c7-3c09ac3b6d69/resources/0",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-ControllerSwiftDeployment-mnx4iur7h7vc/8f1a82c0-703c-4d7b-95c7-3c09ac3b6d69",
+        "rel": "stack"}], "logical_resource_id": "0", "resource_status": "CREATE_COMPLETE",
+        "updated_time": "2015-01-22T10:32:22Z", "required_by": [], "resource_status_reason":
+        "state changed", "physical_resource_id": "bc454fa9-3b8d-4980-8c16-91ae0325c38d",
+        "resource_type": "OS::Heat::StructuredDeployment"}, {"resource_name": "RabbitCookie",
+        "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources/RabbitCookie",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
+        "rel": "stack"}], "logical_resource_id": "RabbitCookie", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:29:07Z", "required_by":
+        ["controller-1-servers"], "resource_status_reason": "state changed", "physical_resource_id":
+        "vkogzI0GR72BWmbIulhJ", "resource_type": "OS::Heat::RandomString"}, {"resource_name":
+        "ControlVirtualIP", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources/ControlVirtualIP",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
+        "rel": "stack"}], "logical_resource_id": "ControlVirtualIP", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:29:06Z", "required_by":
+        ["cinder-storage-1-servers", "compute-1-servers", "controller-1-servers",
+        "swift-storage-1-servers"], "resource_status_reason": "state changed", "physical_resource_id":
+        "637211e5-235b-4571-a8b6-aa2401b4542b", "resource_type": "OS::Neutron::Port"},
+        {"resource_name": "ControllerClusterDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources/ControllerClusterDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-ControllerClusterDeployment-7hczytmhc65o/86d06d1e-58ef-4629-92f1-a548c9d81c5d",
+        "rel": "nested"}], "logical_resource_id": "ControllerClusterDeployment", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:32:23Z", "required_by":
+        [], "resource_status_reason": "state changed", "physical_resource_id": "86d06d1e-58ef-4629-92f1-a548c9d81c5d",
+        "resource_type": "OS::Heat::StructuredDeployments"}, {"parent_resource": "ControllerClusterDeployment",
+        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-ControllerClusterDeployment-7hczytmhc65o/86d06d1e-58ef-4629-92f1-a548c9d81c5d/resources/0",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-ControllerClusterDeployment-7hczytmhc65o/86d06d1e-58ef-4629-92f1-a548c9d81c5d",
+        "rel": "stack"}], "logical_resource_id": "0", "resource_status": "CREATE_COMPLETE",
+        "updated_time": "2015-01-22T10:32:23Z", "required_by": [], "resource_status_reason":
+        "state changed", "physical_resource_id": "63911689-0591-4fb6-8a85-fc37abac58da",
+        "resource_type": "OS::Heat::StructuredDeployment"}, {"resource_name": "ControllerBootstrapNodeConfig",
+        "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources/ControllerBootstrapNodeConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
+        "rel": "stack"}], "logical_resource_id": "ControllerBootstrapNodeConfig",
+        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-01-22T10:32:20Z",
+        "required_by": ["ControllerBootstrapNodeDeployment"], "resource_status_reason":
+        "state changed", "physical_resource_id": "74a1c7ab-fadf-48d1-ac5a-d4962bcec148",
+        "resource_type": "OS::Heat::StructuredConfig"}, {"resource_name": "allNodesConfig",
+        "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources/allNodesConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
+        "rel": "stack"}], "logical_resource_id": "allNodesConfig", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:33:40Z", "required_by":
+        ["ControllerAllNodesDeployment", "ComputeAllNodesDeployment"], "resource_status_reason":
+        "state changed", "physical_resource_id": "555f2a28-d4cd-4b80-a9d3-a35a19715b2e",
+        "resource_type": "OS::Heat::StructuredConfig"}, {"resource_name": "MysqlRootPassword",
+        "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources/MysqlRootPassword",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
+        "rel": "stack"}], "logical_resource_id": "MysqlRootPassword", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:29:07Z", "required_by":
+        ["controller-1-servers"], "resource_status_reason": "state changed", "physical_resource_id":
+        "8vH8KI0mu7", "resource_type": "OS::Heat::RandomString"}, {"resource_name":
+        "MysqlClusterUniquePart", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources/MysqlClusterUniquePart",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
+        "rel": "stack"}], "logical_resource_id": "MysqlClusterUniquePart", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:29:06Z", "required_by":
+        ["controller-1-servers"], "resource_status_reason": "state changed", "physical_resource_id":
+        "46BvzXeMuT", "resource_type": "OS::Heat::RandomString"}, {"resource_name":
+        "ControllerAllNodesDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources/ControllerAllNodesDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-ControllerAllNodesDeployment-7rtckasdngqj/264287e3-2ec8-429f-a132-9ec25222f18e",
+        "rel": "nested"}], "logical_resource_id": "ControllerAllNodesDeployment",
+        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-01-22T10:33:41Z",
+        "required_by": [], "resource_status_reason": "state changed", "physical_resource_id":
+        "264287e3-2ec8-429f-a132-9ec25222f18e", "resource_type": "OS::Heat::StructuredDeployments"},
+        {"parent_resource": "ControllerAllNodesDeployment", "resource_name": "0",
+        "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-ControllerAllNodesDeployment-7rtckasdngqj/264287e3-2ec8-429f-a132-9ec25222f18e/resources/0",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-ControllerAllNodesDeployment-7rtckasdngqj/264287e3-2ec8-429f-a132-9ec25222f18e",
+        "rel": "stack"}], "logical_resource_id": "0", "resource_status": "CREATE_COMPLETE",
+        "updated_time": "2015-01-22T10:33:41Z", "required_by": [], "resource_status_reason":
+        "state changed", "physical_resource_id": "481e4154-35eb-452b-ba8e-af1b24ebdc99",
+        "resource_type": "OS::Heat::StructuredDeployment"}, {"resource_name": "PublicVirtualIP",
+        "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources/PublicVirtualIP",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
+        "rel": "stack"}], "logical_resource_id": "PublicVirtualIP", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:29:06Z", "required_by":
+        ["compute-1-servers", "controller-1-servers"], "resource_status_reason": "state
+        changed", "physical_resource_id": "4fa85cfe-12a8-4446-b8c1-5e5499552058",
+        "resource_type": "OS::Neutron::Port"}, {"resource_name": "swift-storage-1-servers",
+        "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources/swift-storage-1-servers",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
+        "rel": "stack"}], "logical_resource_id": "swift-storage-1-servers", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:29:09Z", "required_by":
+        ["allNodesConfig", "SwiftDevicesAndProxyConfig", "ObjectStorageSwiftDeployment"],
+        "resource_status_reason": "state changed", "physical_resource_id": "3a6da422-d929-416d-b55e-bb7566591b57",
+        "resource_type": "OS::Heat::ResourceGroup"}, {"resource_name": "ControllerClusterConfig",
+        "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources/ControllerClusterConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
+        "rel": "stack"}], "logical_resource_id": "ControllerClusterConfig", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:32:20Z", "required_by":
+        ["ControllerClusterDeployment"], "resource_status_reason": "state changed",
+        "physical_resource_id": "7fd9cef9-f3b4-41de-ba3b-57d55f890465", "resource_type":
+        "OS::Heat::StructuredConfig"}, {"resource_name": "cinder-storage-1-servers",
+        "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources/cinder-storage-1-servers",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
+        "rel": "stack"}], "logical_resource_id": "cinder-storage-1-servers", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:29:13Z", "required_by":
+        ["allNodesConfig"], "resource_status_reason": "state changed", "physical_resource_id":
+        "da5b7ec0-3fe2-4f3c-b6d9-8fc6763623c0", "resource_type": "OS::Heat::ResourceGroup"},
+        {"resource_name": "ComputeAllNodesDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources/ComputeAllNodesDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-ComputeAllNodesDeployment-evhwprrjxpzf/cd9e2d3a-2b63-497a-8601-b35328c15d86",
+        "rel": "nested"}], "logical_resource_id": "ComputeAllNodesDeployment", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:33:41Z", "required_by":
+        [], "resource_status_reason": "state changed", "physical_resource_id": "cd9e2d3a-2b63-497a-8601-b35328c15d86",
+        "resource_type": "OS::Heat::StructuredDeployments"}, {"parent_resource": "ComputeAllNodesDeployment",
+        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-ComputeAllNodesDeployment-evhwprrjxpzf/cd9e2d3a-2b63-497a-8601-b35328c15d86/resources/0",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-ComputeAllNodesDeployment-evhwprrjxpzf/cd9e2d3a-2b63-497a-8601-b35328c15d86",
+        "rel": "stack"}], "logical_resource_id": "0", "resource_status": "CREATE_COMPLETE",
+        "updated_time": "2015-01-22T10:33:41Z", "required_by": [], "resource_status_reason":
+        "state changed", "physical_resource_id": "c19b3226-c391-4903-b44f-2a880092f9c4",
+        "resource_type": "OS::Heat::StructuredDeployment"}, {"resource_name": "compute-1-servers",
+        "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848/resources/compute-1-servers",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud/415396e3-baa4-46b5-85ab-643fa79f8848",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-compute-1-servers-25ftwygzyut5/f8166a70-6476-43c5-84c9-c23908b57ef6",
+        "rel": "nested"}], "logical_resource_id": "compute-1-servers", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:29:13Z", "required_by":
+        ["allNodesConfig", "ComputeAllNodesDeployment"], "resource_status_reason":
+        "state changed", "physical_resource_id": "f8166a70-6476-43c5-84c9-c23908b57ef6",
+        "resource_type": "OS::Heat::ResourceGroup"}, {"parent_resource": "compute-1-servers",
+        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-compute-1-servers-25ftwygzyut5/f8166a70-6476-43c5-84c9-c23908b57ef6/resources/0",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-compute-1-servers-25ftwygzyut5/f8166a70-6476-43c5-84c9-c23908b57ef6",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-compute-1-servers-25ftwygzyut5-0-ybdywaguhfsi/2f7a3cce-b440-40f2-a6f5-57b63dc885d7",
+        "rel": "nested"}], "logical_resource_id": "0", "resource_status_reason": "state
+        changed", "updated_time": "2015-01-22T10:29:13Z", "required_by": [], "resource_status":
+        "CREATE_COMPLETE", "physical_resource_id": "2f7a3cce-b440-40f2-a6f5-57b63dc885d7",
+        "resource_type": "Tuskar::compute-1"}, {"parent_resource": "0", "resource_name":
+        "NovaComputePassthroughDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-compute-1-servers-25ftwygzyut5-0-ybdywaguhfsi/2f7a3cce-b440-40f2-a6f5-57b63dc885d7/resources/NovaComputePassthroughDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-compute-1-servers-25ftwygzyut5-0-ybdywaguhfsi/2f7a3cce-b440-40f2-a6f5-57b63dc885d7",
+        "rel": "stack"}], "logical_resource_id": "NovaComputePassthroughDeployment",
+        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-01-22T10:33:37Z",
+        "required_by": ["NovaComputePassthroughDeploymentSpecific"], "resource_status_reason":
+        "state changed", "physical_resource_id": "18566892-f5bb-4307-a3ef-9d825c80c00a",
+        "resource_type": "OS::Heat::StructuredDeployment"}, {"parent_resource": "0",
+        "resource_name": "NovaComputePassthroughSpecific", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-compute-1-servers-25ftwygzyut5-0-ybdywaguhfsi/2f7a3cce-b440-40f2-a6f5-57b63dc885d7/resources/NovaComputePassthroughSpecific",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-compute-1-servers-25ftwygzyut5-0-ybdywaguhfsi/2f7a3cce-b440-40f2-a6f5-57b63dc885d7",
+        "rel": "stack"}], "logical_resource_id": "NovaComputePassthroughSpecific",
+        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-01-22T10:29:15Z",
+        "required_by": ["NovaComputePassthroughDeploymentSpecific"], "resource_status_reason":
+        "state changed", "physical_resource_id": "7254ca32-452c-4737-9cb1-bca7bea1a667",
+        "resource_type": "OS::Heat::StructuredConfig"}, {"parent_resource": "0", "resource_name":
+        "NovaCompute", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-compute-1-servers-25ftwygzyut5-0-ybdywaguhfsi/2f7a3cce-b440-40f2-a6f5-57b63dc885d7/resources/NovaCompute",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-compute-1-servers-25ftwygzyut5-0-ybdywaguhfsi/2f7a3cce-b440-40f2-a6f5-57b63dc885d7",
+        "rel": "stack"}], "logical_resource_id": "NovaCompute", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:29:14Z", "required_by":
+        ["NovaComputePassthroughDeployment", "NovaComputePassthroughDeploymentSpecific",
+        "NovaComputeDeployment"], "resource_status_reason": "state changed", "physical_resource_id":
+        "b4b40028-2a74-4b83-a232-d1741b0071ae", "resource_type": "OS::Nova::Server"},
+        {"parent_resource": "0", "resource_name": "NovaComputePassthroughDeploymentSpecific",
+        "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-compute-1-servers-25ftwygzyut5-0-ybdywaguhfsi/2f7a3cce-b440-40f2-a6f5-57b63dc885d7/resources/NovaComputePassthroughDeploymentSpecific",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-compute-1-servers-25ftwygzyut5-0-ybdywaguhfsi/2f7a3cce-b440-40f2-a6f5-57b63dc885d7",
+        "rel": "stack"}], "logical_resource_id": "NovaComputePassthroughDeploymentSpecific",
+        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-01-22T10:33:38Z",
+        "required_by": [], "resource_status_reason": "state changed", "physical_resource_id":
+        "0f755d43-d251-4991-ada5-274dbc8c711e", "resource_type": "OS::Heat::StructuredDeployment"},
+        {"parent_resource": "0", "resource_name": "NovaComputeDeployment", "links":
+        [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-compute-1-servers-25ftwygzyut5-0-ybdywaguhfsi/2f7a3cce-b440-40f2-a6f5-57b63dc885d7/resources/NovaComputeDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-compute-1-servers-25ftwygzyut5-0-ybdywaguhfsi/2f7a3cce-b440-40f2-a6f5-57b63dc885d7",
+        "rel": "stack"}], "logical_resource_id": "NovaComputeDeployment", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:33:35Z", "required_by":
+        ["NovaComputePassthroughDeployment"], "resource_status_reason": "state changed",
+        "physical_resource_id": "cc2516e9-1b4c-44dc-a004-5bb71e71b81a", "resource_type":
+        "OS::Heat::StructuredDeployment"}, {"parent_resource": "0", "resource_name":
+        "NovaComputeConfig", "links": [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-compute-1-servers-25ftwygzyut5-0-ybdywaguhfsi/2f7a3cce-b440-40f2-a6f5-57b63dc885d7/resources/NovaComputeConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-compute-1-servers-25ftwygzyut5-0-ybdywaguhfsi/2f7a3cce-b440-40f2-a6f5-57b63dc885d7",
+        "rel": "stack"}], "logical_resource_id": "NovaComputeConfig", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:29:15Z", "required_by":
+        ["NovaComputeDeployment"], "resource_status_reason": "state changed", "physical_resource_id":
+        "28ca4c0e-5141-41a9-93f7-fe9b640d0236", "resource_type": "OS::Heat::StructuredConfig"},
+        {"parent_resource": "0", "resource_name": "NovaComputePassthrough", "links":
+        [{"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-compute-1-servers-25ftwygzyut5-0-ybdywaguhfsi/2f7a3cce-b440-40f2-a6f5-57b63dc885d7/resources/NovaComputePassthrough",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/50f2f94aef674a9c931ecb287c493909/stacks/overcloud-compute-1-servers-25ftwygzyut5-0-ybdywaguhfsi/2f7a3cce-b440-40f2-a6f5-57b63dc885d7",
+        "rel": "stack"}], "logical_resource_id": "NovaComputePassthrough", "resource_status":
+        "CREATE_COMPLETE", "updated_time": "2015-01-22T10:29:15Z", "required_by":
+        ["NovaComputePassthroughDeployment"], "resource_status_reason": "state changed",
+        "physical_resource_id": "13434824-834d-4354-8b71-c6f2c4b0853f", "resource_type":
+        "OS::Heat::StructuredConfig"}]}'
+    http_version: 
+  recorded_at: Fri, 20 Feb 2015 11:16:50 GMT
+- request:
+    method: get
+    uri: http://192.0.2.1:6385/nodes/detail
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.28.0 fog-core/1.29.0
+      Content-Type:
+      - application/json
+      X-Auth-Token:
+      - 31f8a0ef0e454494b5738ecd759cbbc7
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Fri, 20 Feb 2015 11:16:50 GMT
+      Server:
+      - WSGIServer/0.1 Python/2.7.5
+      Content-Length:
+      - '17689'
+      Content-Type:
+      - application/json; charset=UTF-8
+    body:
+      encoding: UTF-8
+      string: '{"nodes": [{"instance_uuid": null, "target_power_state": null, "maintenance":
+        false, "uuid": "d2194f0a-54c2-4d3c-a393-b060507891cd", "driver_info": {"ssh_username":
+        "stack", "ssh_virt_type": "virsh", "ssh_address": "192.168.122.1", "ssh_key_contents":
+        "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAr8iyVYymC7bzjLutZ9dYmxGjKkx4vSh1CTMo6xRnFGgvN9Vn\nQ/Bcax53ugf+86xQ3xeKnzVtQgg/38/EomuoBXGSr7oH3sUALX1KNQxIwZCN6Cma\nncvfCIjIUh0fZ+5ET+D5Yw4h3ADsePh2FxAfkg5UnEllKQyhSQV3rIzLI/D7IJez\npmDUH0o8viTNqw8jkV3wHPfSi5/cIgMfPtk2H4o5B6VSyflQ66gyTp8GJAAM0mAy\nXuDDLBJX5QyH+7OhCM/LFhcVPFmEzl/WD+KM+uSt9+js7fqyL7koh4pgzW8ty7KS\nmejkGFKN5OL+L0YHP3XgsqoGkiyBZXGI887ePwIDAQABAoIBAEBjnZ9ko7YKz++v\nF3fAE/7JWSE3Xcq8NRKnoMdrc86v0wv6qZbjRpceU/Da2PLdHcp6Txa+dUUIzIzp\nCDgOgz9rOLYRyKw7MTN4f2QrGcN9dd2iz7YZZZs0r1wUutpRFsjDudYk6RYzaGtv\nZ6JPD6FqimetItcEf1fGHu4frJF/KgwWn9cv0OE4j36V7OIskFauYT2ODQ9HRFfX\nfL7AID4R6WIwS2u5hsFNaNlFv02HKsTYOvFBz/FpHeWxOPbqOzCB5bEk3zvtclSS\ntzcAUBnRY1YZAon+Ej4gPhC9JbZWGnE8rN2ytqZx+24n4/b9HmalUIEAZG3S97tc\noD2bUoECgYEA6JioR2vkV4aBTaE1ChKDhEBf/PqYJ3lLI7LJ2flrmWeEF9vvDVqG\nHpj7qEM7TC/HfkvZ+xeE/MffIbXkIMYDn8ETMdbV2Bcv5kmd8sDVhxys0s4r9d6o\nqrin+wKbCNvlGvNIPQkNJnkc6lNXZG1YyIrcq2TlxcDFvYa1KP5KSyECgYEAwXii\nysGU3Siw3lDP/bE6UIR4WhtHbt6ryQ745XwPrE652FsbMxJdTxXoo9KhH6HeVgx/\nAmQJX0HqJjjkjUHlTXS6KkQyaW9Vh+OtWfAq6bwprpfO6p1sIdMMsmdRmMlAsm2z\nD8bSm83/FU8uCIwP3eZx7l0MmpXRQrREmdyyXV8CgYByvtTNnzlfwHhLnsq2tFlz\nRfrUp5+mYZ0i+FHCGdzuKfYtew+ci9r8f0YvRTOcqzmEYdEgoQK3XbcDP2NSk703\n850PikemuhGkTw7/sgflBs1vlcx0GCsnRb+BAlEPdsO4nuo1SiDVqQwNwZ2sapFR\nJcglObps62Ph0vHOTlzCYQKBgQC2W0q16biyrEPpiCpDaOUaN4JpDAVMjz1ECYS4\naTMsqhepwlXk0Y55mKDqqQGNmzjByo18Z2YeDzbwR/fE3TOQylEevaD2mCX6K7Od\nbi5EmUKAej5iDXd6ej8heRkD9c2xYIzCdhjVGlkwcK1nCP17nlYM4k+a9VOEl/2B\nOPA16QKBgQCjqK63ySRBZagnWlWwjp9BRBy0OfOxXimtVRsxWKVsBrz3sGG7TOCs\nACQjoeZXrLPajjRmzPYnQCvAraA1hrfybV/cxA4WDMPRywk12WaWTFAXYdh5F8ej\n17RSzIQMXRJxsMJs8o6WXJSpC1ZJaFxa+X5EGYELw3V+M1NDVKI5EA==\n-----END
+        RSA PRIVATE KEY-----"}, "target_provision_state": null, "updated_at": "2015-02-20T11:15:59+00:00",
+        "last_error": null, "console_enabled": false, "extra": {}, "driver": "pxe_ssh",
+        "links": [{"href": "http://192.0.2.1:6385/v1/nodes/d2194f0a-54c2-4d3c-a393-b060507891cd",
+        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/d2194f0a-54c2-4d3c-a393-b060507891cd",
+        "rel": "bookmark"}], "properties": {"memory_mb": "4096", "cpu_arch": "x86_64",
+        "local_gb": "40", "cpus": "1"}, "provision_updated_at": null, "chassis_uuid":
+        null, "power_state": "power off", "provision_state": null, "reservation":
+        null, "created_at": "2015-01-22T10:27:30+00:00", "instance_info": {}, "ports":
+        [{"href": "http://192.0.2.1:6385/v1/nodes/d2194f0a-54c2-4d3c-a393-b060507891cd/ports",
+        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/d2194f0a-54c2-4d3c-a393-b060507891cd/ports",
+        "rel": "bookmark"}]}, {"instance_uuid": null, "target_power_state": null,
+        "maintenance": false, "uuid": "21231c17-ad9a-48b9-848e-c8cc2d950407", "driver_info":
+        {"ssh_username": "stack", "ssh_virt_type": "virsh", "ssh_address": "192.168.122.1",
+        "ssh_key_contents": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAr8iyVYymC7bzjLutZ9dYmxGjKkx4vSh1CTMo6xRnFGgvN9Vn\nQ/Bcax53ugf+86xQ3xeKnzVtQgg/38/EomuoBXGSr7oH3sUALX1KNQxIwZCN6Cma\nncvfCIjIUh0fZ+5ET+D5Yw4h3ADsePh2FxAfkg5UnEllKQyhSQV3rIzLI/D7IJez\npmDUH0o8viTNqw8jkV3wHPfSi5/cIgMfPtk2H4o5B6VSyflQ66gyTp8GJAAM0mAy\nXuDDLBJX5QyH+7OhCM/LFhcVPFmEzl/WD+KM+uSt9+js7fqyL7koh4pgzW8ty7KS\nmejkGFKN5OL+L0YHP3XgsqoGkiyBZXGI887ePwIDAQABAoIBAEBjnZ9ko7YKz++v\nF3fAE/7JWSE3Xcq8NRKnoMdrc86v0wv6qZbjRpceU/Da2PLdHcp6Txa+dUUIzIzp\nCDgOgz9rOLYRyKw7MTN4f2QrGcN9dd2iz7YZZZs0r1wUutpRFsjDudYk6RYzaGtv\nZ6JPD6FqimetItcEf1fGHu4frJF/KgwWn9cv0OE4j36V7OIskFauYT2ODQ9HRFfX\nfL7AID4R6WIwS2u5hsFNaNlFv02HKsTYOvFBz/FpHeWxOPbqOzCB5bEk3zvtclSS\ntzcAUBnRY1YZAon+Ej4gPhC9JbZWGnE8rN2ytqZx+24n4/b9HmalUIEAZG3S97tc\noD2bUoECgYEA6JioR2vkV4aBTaE1ChKDhEBf/PqYJ3lLI7LJ2flrmWeEF9vvDVqG\nHpj7qEM7TC/HfkvZ+xeE/MffIbXkIMYDn8ETMdbV2Bcv5kmd8sDVhxys0s4r9d6o\nqrin+wKbCNvlGvNIPQkNJnkc6lNXZG1YyIrcq2TlxcDFvYa1KP5KSyECgYEAwXii\nysGU3Siw3lDP/bE6UIR4WhtHbt6ryQ745XwPrE652FsbMxJdTxXoo9KhH6HeVgx/\nAmQJX0HqJjjkjUHlTXS6KkQyaW9Vh+OtWfAq6bwprpfO6p1sIdMMsmdRmMlAsm2z\nD8bSm83/FU8uCIwP3eZx7l0MmpXRQrREmdyyXV8CgYByvtTNnzlfwHhLnsq2tFlz\nRfrUp5+mYZ0i+FHCGdzuKfYtew+ci9r8f0YvRTOcqzmEYdEgoQK3XbcDP2NSk703\n850PikemuhGkTw7/sgflBs1vlcx0GCsnRb+BAlEPdsO4nuo1SiDVqQwNwZ2sapFR\nJcglObps62Ph0vHOTlzCYQKBgQC2W0q16biyrEPpiCpDaOUaN4JpDAVMjz1ECYS4\naTMsqhepwlXk0Y55mKDqqQGNmzjByo18Z2YeDzbwR/fE3TOQylEevaD2mCX6K7Od\nbi5EmUKAej5iDXd6ej8heRkD9c2xYIzCdhjVGlkwcK1nCP17nlYM4k+a9VOEl/2B\nOPA16QKBgQCjqK63ySRBZagnWlWwjp9BRBy0OfOxXimtVRsxWKVsBrz3sGG7TOCs\nACQjoeZXrLPajjRmzPYnQCvAraA1hrfybV/cxA4WDMPRywk12WaWTFAXYdh5F8ej\n17RSzIQMXRJxsMJs8o6WXJSpC1ZJaFxa+X5EGYELw3V+M1NDVKI5EA==\n-----END
+        RSA PRIVATE KEY-----"}, "target_provision_state": null, "updated_at": "2015-02-20T11:16:00+00:00",
+        "last_error": null, "console_enabled": false, "extra": {}, "driver": "pxe_ssh",
+        "links": [{"href": "http://192.0.2.1:6385/v1/nodes/21231c17-ad9a-48b9-848e-c8cc2d950407",
+        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/21231c17-ad9a-48b9-848e-c8cc2d950407",
+        "rel": "bookmark"}], "properties": {"memory_mb": "4096", "cpu_arch": "x86_64",
+        "local_gb": "40", "cpus": "1"}, "provision_updated_at": null, "chassis_uuid":
+        null, "power_state": "power off", "provision_state": null, "reservation":
+        null, "created_at": "2015-01-22T10:27:30+00:00", "instance_info": {}, "ports":
+        [{"href": "http://192.0.2.1:6385/v1/nodes/21231c17-ad9a-48b9-848e-c8cc2d950407/ports",
+        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/21231c17-ad9a-48b9-848e-c8cc2d950407/ports",
+        "rel": "bookmark"}]}, {"instance_uuid": null, "target_power_state": null,
+        "maintenance": false, "uuid": "0896f621-fb83-4ca0-9745-2213eeb2eb11", "driver_info":
+        {"ssh_username": "stack", "ssh_virt_type": "virsh", "ssh_address": "192.168.122.1",
+        "ssh_key_contents": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAr8iyVYymC7bzjLutZ9dYmxGjKkx4vSh1CTMo6xRnFGgvN9Vn\nQ/Bcax53ugf+86xQ3xeKnzVtQgg/38/EomuoBXGSr7oH3sUALX1KNQxIwZCN6Cma\nncvfCIjIUh0fZ+5ET+D5Yw4h3ADsePh2FxAfkg5UnEllKQyhSQV3rIzLI/D7IJez\npmDUH0o8viTNqw8jkV3wHPfSi5/cIgMfPtk2H4o5B6VSyflQ66gyTp8GJAAM0mAy\nXuDDLBJX5QyH+7OhCM/LFhcVPFmEzl/WD+KM+uSt9+js7fqyL7koh4pgzW8ty7KS\nmejkGFKN5OL+L0YHP3XgsqoGkiyBZXGI887ePwIDAQABAoIBAEBjnZ9ko7YKz++v\nF3fAE/7JWSE3Xcq8NRKnoMdrc86v0wv6qZbjRpceU/Da2PLdHcp6Txa+dUUIzIzp\nCDgOgz9rOLYRyKw7MTN4f2QrGcN9dd2iz7YZZZs0r1wUutpRFsjDudYk6RYzaGtv\nZ6JPD6FqimetItcEf1fGHu4frJF/KgwWn9cv0OE4j36V7OIskFauYT2ODQ9HRFfX\nfL7AID4R6WIwS2u5hsFNaNlFv02HKsTYOvFBz/FpHeWxOPbqOzCB5bEk3zvtclSS\ntzcAUBnRY1YZAon+Ej4gPhC9JbZWGnE8rN2ytqZx+24n4/b9HmalUIEAZG3S97tc\noD2bUoECgYEA6JioR2vkV4aBTaE1ChKDhEBf/PqYJ3lLI7LJ2flrmWeEF9vvDVqG\nHpj7qEM7TC/HfkvZ+xeE/MffIbXkIMYDn8ETMdbV2Bcv5kmd8sDVhxys0s4r9d6o\nqrin+wKbCNvlGvNIPQkNJnkc6lNXZG1YyIrcq2TlxcDFvYa1KP5KSyECgYEAwXii\nysGU3Siw3lDP/bE6UIR4WhtHbt6ryQ745XwPrE652FsbMxJdTxXoo9KhH6HeVgx/\nAmQJX0HqJjjkjUHlTXS6KkQyaW9Vh+OtWfAq6bwprpfO6p1sIdMMsmdRmMlAsm2z\nD8bSm83/FU8uCIwP3eZx7l0MmpXRQrREmdyyXV8CgYByvtTNnzlfwHhLnsq2tFlz\nRfrUp5+mYZ0i+FHCGdzuKfYtew+ci9r8f0YvRTOcqzmEYdEgoQK3XbcDP2NSk703\n850PikemuhGkTw7/sgflBs1vlcx0GCsnRb+BAlEPdsO4nuo1SiDVqQwNwZ2sapFR\nJcglObps62Ph0vHOTlzCYQKBgQC2W0q16biyrEPpiCpDaOUaN4JpDAVMjz1ECYS4\naTMsqhepwlXk0Y55mKDqqQGNmzjByo18Z2YeDzbwR/fE3TOQylEevaD2mCX6K7Od\nbi5EmUKAej5iDXd6ej8heRkD9c2xYIzCdhjVGlkwcK1nCP17nlYM4k+a9VOEl/2B\nOPA16QKBgQCjqK63ySRBZagnWlWwjp9BRBy0OfOxXimtVRsxWKVsBrz3sGG7TOCs\nACQjoeZXrLPajjRmzPYnQCvAraA1hrfybV/cxA4WDMPRywk12WaWTFAXYdh5F8ej\n17RSzIQMXRJxsMJs8o6WXJSpC1ZJaFxa+X5EGYELw3V+M1NDVKI5EA==\n-----END
+        RSA PRIVATE KEY-----"}, "target_provision_state": null, "updated_at": "2015-02-20T11:16:01+00:00",
+        "last_error": null, "console_enabled": false, "extra": {}, "driver": "pxe_ssh",
+        "links": [{"href": "http://192.0.2.1:6385/v1/nodes/0896f621-fb83-4ca0-9745-2213eeb2eb11",
+        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/0896f621-fb83-4ca0-9745-2213eeb2eb11",
+        "rel": "bookmark"}], "properties": {"memory_mb": "4096", "cpu_arch": "x86_64",
+        "local_gb": "40", "cpus": "1"}, "provision_updated_at": null, "chassis_uuid":
+        null, "power_state": "power off", "provision_state": null, "reservation":
+        null, "created_at": "2015-01-22T10:27:31+00:00", "instance_info": {}, "ports":
+        [{"href": "http://192.0.2.1:6385/v1/nodes/0896f621-fb83-4ca0-9745-2213eeb2eb11/ports",
+        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/0896f621-fb83-4ca0-9745-2213eeb2eb11/ports",
+        "rel": "bookmark"}]}, {"instance_uuid": "b4b40028-2a74-4b83-a232-d1741b0071ae",
+        "target_power_state": null, "maintenance": false, "uuid": "fa492556-0232-4a20-ba58-f64276b97716",
+        "driver_info": {"pxe_deploy_ramdisk": "3754f9b6-4c0c-42c7-9a2c-871005df2b20",
+        "ssh_username": "stack", "ssh_key_contents": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAr8iyVYymC7bzjLutZ9dYmxGjKkx4vSh1CTMo6xRnFGgvN9Vn\nQ/Bcax53ugf+86xQ3xeKnzVtQgg/38/EomuoBXGSr7oH3sUALX1KNQxIwZCN6Cma\nncvfCIjIUh0fZ+5ET+D5Yw4h3ADsePh2FxAfkg5UnEllKQyhSQV3rIzLI/D7IJez\npmDUH0o8viTNqw8jkV3wHPfSi5/cIgMfPtk2H4o5B6VSyflQ66gyTp8GJAAM0mAy\nXuDDLBJX5QyH+7OhCM/LFhcVPFmEzl/WD+KM+uSt9+js7fqyL7koh4pgzW8ty7KS\nmejkGFKN5OL+L0YHP3XgsqoGkiyBZXGI887ePwIDAQABAoIBAEBjnZ9ko7YKz++v\nF3fAE/7JWSE3Xcq8NRKnoMdrc86v0wv6qZbjRpceU/Da2PLdHcp6Txa+dUUIzIzp\nCDgOgz9rOLYRyKw7MTN4f2QrGcN9dd2iz7YZZZs0r1wUutpRFsjDudYk6RYzaGtv\nZ6JPD6FqimetItcEf1fGHu4frJF/KgwWn9cv0OE4j36V7OIskFauYT2ODQ9HRFfX\nfL7AID4R6WIwS2u5hsFNaNlFv02HKsTYOvFBz/FpHeWxOPbqOzCB5bEk3zvtclSS\ntzcAUBnRY1YZAon+Ej4gPhC9JbZWGnE8rN2ytqZx+24n4/b9HmalUIEAZG3S97tc\noD2bUoECgYEA6JioR2vkV4aBTaE1ChKDhEBf/PqYJ3lLI7LJ2flrmWeEF9vvDVqG\nHpj7qEM7TC/HfkvZ+xeE/MffIbXkIMYDn8ETMdbV2Bcv5kmd8sDVhxys0s4r9d6o\nqrin+wKbCNvlGvNIPQkNJnkc6lNXZG1YyIrcq2TlxcDFvYa1KP5KSyECgYEAwXii\nysGU3Siw3lDP/bE6UIR4WhtHbt6ryQ745XwPrE652FsbMxJdTxXoo9KhH6HeVgx/\nAmQJX0HqJjjkjUHlTXS6KkQyaW9Vh+OtWfAq6bwprpfO6p1sIdMMsmdRmMlAsm2z\nD8bSm83/FU8uCIwP3eZx7l0MmpXRQrREmdyyXV8CgYByvtTNnzlfwHhLnsq2tFlz\nRfrUp5+mYZ0i+FHCGdzuKfYtew+ci9r8f0YvRTOcqzmEYdEgoQK3XbcDP2NSk703\n850PikemuhGkTw7/sgflBs1vlcx0GCsnRb+BAlEPdsO4nuo1SiDVqQwNwZ2sapFR\nJcglObps62Ph0vHOTlzCYQKBgQC2W0q16biyrEPpiCpDaOUaN4JpDAVMjz1ECYS4\naTMsqhepwlXk0Y55mKDqqQGNmzjByo18Z2YeDzbwR/fE3TOQylEevaD2mCX6K7Od\nbi5EmUKAej5iDXd6ej8heRkD9c2xYIzCdhjVGlkwcK1nCP17nlYM4k+a9VOEl/2B\nOPA16QKBgQCjqK63ySRBZagnWlWwjp9BRBy0OfOxXimtVRsxWKVsBrz3sGG7TOCs\nACQjoeZXrLPajjRmzPYnQCvAraA1hrfybV/cxA4WDMPRywk12WaWTFAXYdh5F8ej\n17RSzIQMXRJxsMJs8o6WXJSpC1ZJaFxa+X5EGYELw3V+M1NDVKI5EA==\n-----END
+        RSA PRIVATE KEY-----", "pxe_deploy_kernel": "84917c45-2fd8-4044-97d6-cb89adde1f0b",
+        "ssh_address": "192.168.122.1", "ssh_virt_type": "virsh"}, "target_provision_state":
+        null, "updated_at": "2015-02-20T11:16:02+00:00", "last_error": null, "console_enabled":
+        false, "extra": {}, "driver": "pxe_ssh", "links": [{"href": "http://192.0.2.1:6385/v1/nodes/fa492556-0232-4a20-ba58-f64276b97716",
+        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/fa492556-0232-4a20-ba58-f64276b97716",
+        "rel": "bookmark"}], "properties": {"memory_mb": "4096", "cpu_arch": "x86_64",
+        "local_gb": "40", "cpus": "1"}, "provision_updated_at": "2015-01-22T10:33:33+00:00",
+        "chassis_uuid": null, "power_state": "power on", "provision_state": "active",
+        "reservation": null, "created_at": "2015-01-22T10:27:31+00:00", "instance_info":
+        {"ramdisk": "63e62bc4-ad7a-474c-b336-3596bb5dc6ec", "kernel": "cb3ae2fd-733c-4f93-b451-7d022e9fd58e",
+        "root_gb": "30", "image_source": "fc1b086f-f35e-4d3b-b80b-17f46a5653d9", "deploy_key":
+        "535VSW6U4MFO0Y7XUE3M5ZK49R4GLF1C", "swap_mb": "0"}, "ports": [{"href": "http://192.0.2.1:6385/v1/nodes/fa492556-0232-4a20-ba58-f64276b97716/ports",
+        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/fa492556-0232-4a20-ba58-f64276b97716/ports",
+        "rel": "bookmark"}]}, {"instance_uuid": null, "target_power_state": null,
+        "maintenance": false, "uuid": "3326440a-b655-4a96-b31c-3623ca18e2a8", "driver_info":
+        {"ssh_username": "stack", "ssh_virt_type": "virsh", "ssh_address": "192.168.122.1",
+        "ssh_key_contents": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAr8iyVYymC7bzjLutZ9dYmxGjKkx4vSh1CTMo6xRnFGgvN9Vn\nQ/Bcax53ugf+86xQ3xeKnzVtQgg/38/EomuoBXGSr7oH3sUALX1KNQxIwZCN6Cma\nncvfCIjIUh0fZ+5ET+D5Yw4h3ADsePh2FxAfkg5UnEllKQyhSQV3rIzLI/D7IJez\npmDUH0o8viTNqw8jkV3wHPfSi5/cIgMfPtk2H4o5B6VSyflQ66gyTp8GJAAM0mAy\nXuDDLBJX5QyH+7OhCM/LFhcVPFmEzl/WD+KM+uSt9+js7fqyL7koh4pgzW8ty7KS\nmejkGFKN5OL+L0YHP3XgsqoGkiyBZXGI887ePwIDAQABAoIBAEBjnZ9ko7YKz++v\nF3fAE/7JWSE3Xcq8NRKnoMdrc86v0wv6qZbjRpceU/Da2PLdHcp6Txa+dUUIzIzp\nCDgOgz9rOLYRyKw7MTN4f2QrGcN9dd2iz7YZZZs0r1wUutpRFsjDudYk6RYzaGtv\nZ6JPD6FqimetItcEf1fGHu4frJF/KgwWn9cv0OE4j36V7OIskFauYT2ODQ9HRFfX\nfL7AID4R6WIwS2u5hsFNaNlFv02HKsTYOvFBz/FpHeWxOPbqOzCB5bEk3zvtclSS\ntzcAUBnRY1YZAon+Ej4gPhC9JbZWGnE8rN2ytqZx+24n4/b9HmalUIEAZG3S97tc\noD2bUoECgYEA6JioR2vkV4aBTaE1ChKDhEBf/PqYJ3lLI7LJ2flrmWeEF9vvDVqG\nHpj7qEM7TC/HfkvZ+xeE/MffIbXkIMYDn8ETMdbV2Bcv5kmd8sDVhxys0s4r9d6o\nqrin+wKbCNvlGvNIPQkNJnkc6lNXZG1YyIrcq2TlxcDFvYa1KP5KSyECgYEAwXii\nysGU3Siw3lDP/bE6UIR4WhtHbt6ryQ745XwPrE652FsbMxJdTxXoo9KhH6HeVgx/\nAmQJX0HqJjjkjUHlTXS6KkQyaW9Vh+OtWfAq6bwprpfO6p1sIdMMsmdRmMlAsm2z\nD8bSm83/FU8uCIwP3eZx7l0MmpXRQrREmdyyXV8CgYByvtTNnzlfwHhLnsq2tFlz\nRfrUp5+mYZ0i+FHCGdzuKfYtew+ci9r8f0YvRTOcqzmEYdEgoQK3XbcDP2NSk703\n850PikemuhGkTw7/sgflBs1vlcx0GCsnRb+BAlEPdsO4nuo1SiDVqQwNwZ2sapFR\nJcglObps62Ph0vHOTlzCYQKBgQC2W0q16biyrEPpiCpDaOUaN4JpDAVMjz1ECYS4\naTMsqhepwlXk0Y55mKDqqQGNmzjByo18Z2YeDzbwR/fE3TOQylEevaD2mCX6K7Od\nbi5EmUKAej5iDXd6ej8heRkD9c2xYIzCdhjVGlkwcK1nCP17nlYM4k+a9VOEl/2B\nOPA16QKBgQCjqK63ySRBZagnWlWwjp9BRBy0OfOxXimtVRsxWKVsBrz3sGG7TOCs\nACQjoeZXrLPajjRmzPYnQCvAraA1hrfybV/cxA4WDMPRywk12WaWTFAXYdh5F8ej\n17RSzIQMXRJxsMJs8o6WXJSpC1ZJaFxa+X5EGYELw3V+M1NDVKI5EA==\n-----END
+        RSA PRIVATE KEY-----"}, "target_provision_state": null, "updated_at": "2015-02-20T11:16:03+00:00",
+        "last_error": null, "console_enabled": false, "extra": {}, "driver": "pxe_ssh",
+        "links": [{"href": "http://192.0.2.1:6385/v1/nodes/3326440a-b655-4a96-b31c-3623ca18e2a8",
+        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/3326440a-b655-4a96-b31c-3623ca18e2a8",
+        "rel": "bookmark"}], "properties": {"memory_mb": "4096", "cpu_arch": "x86_64",
+        "local_gb": "40", "cpus": "1"}, "provision_updated_at": null, "chassis_uuid":
+        null, "power_state": "power off", "provision_state": null, "reservation":
+        null, "created_at": "2015-01-22T10:27:32+00:00", "instance_info": {}, "ports":
+        [{"href": "http://192.0.2.1:6385/v1/nodes/3326440a-b655-4a96-b31c-3623ca18e2a8/ports",
+        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/3326440a-b655-4a96-b31c-3623ca18e2a8/ports",
+        "rel": "bookmark"}]}, {"instance_uuid": "5de454a1-7f3c-418e-815d-0350aef47934",
+        "target_power_state": null, "maintenance": false, "uuid": "06c2fb5a-22ab-450f-bd83-9342f7b823e6",
+        "driver_info": {"pxe_deploy_ramdisk": "3754f9b6-4c0c-42c7-9a2c-871005df2b20",
+        "ssh_username": "stack", "ssh_key_contents": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAr8iyVYymC7bzjLutZ9dYmxGjKkx4vSh1CTMo6xRnFGgvN9Vn\nQ/Bcax53ugf+86xQ3xeKnzVtQgg/38/EomuoBXGSr7oH3sUALX1KNQxIwZCN6Cma\nncvfCIjIUh0fZ+5ET+D5Yw4h3ADsePh2FxAfkg5UnEllKQyhSQV3rIzLI/D7IJez\npmDUH0o8viTNqw8jkV3wHPfSi5/cIgMfPtk2H4o5B6VSyflQ66gyTp8GJAAM0mAy\nXuDDLBJX5QyH+7OhCM/LFhcVPFmEzl/WD+KM+uSt9+js7fqyL7koh4pgzW8ty7KS\nmejkGFKN5OL+L0YHP3XgsqoGkiyBZXGI887ePwIDAQABAoIBAEBjnZ9ko7YKz++v\nF3fAE/7JWSE3Xcq8NRKnoMdrc86v0wv6qZbjRpceU/Da2PLdHcp6Txa+dUUIzIzp\nCDgOgz9rOLYRyKw7MTN4f2QrGcN9dd2iz7YZZZs0r1wUutpRFsjDudYk6RYzaGtv\nZ6JPD6FqimetItcEf1fGHu4frJF/KgwWn9cv0OE4j36V7OIskFauYT2ODQ9HRFfX\nfL7AID4R6WIwS2u5hsFNaNlFv02HKsTYOvFBz/FpHeWxOPbqOzCB5bEk3zvtclSS\ntzcAUBnRY1YZAon+Ej4gPhC9JbZWGnE8rN2ytqZx+24n4/b9HmalUIEAZG3S97tc\noD2bUoECgYEA6JioR2vkV4aBTaE1ChKDhEBf/PqYJ3lLI7LJ2flrmWeEF9vvDVqG\nHpj7qEM7TC/HfkvZ+xeE/MffIbXkIMYDn8ETMdbV2Bcv5kmd8sDVhxys0s4r9d6o\nqrin+wKbCNvlGvNIPQkNJnkc6lNXZG1YyIrcq2TlxcDFvYa1KP5KSyECgYEAwXii\nysGU3Siw3lDP/bE6UIR4WhtHbt6ryQ745XwPrE652FsbMxJdTxXoo9KhH6HeVgx/\nAmQJX0HqJjjkjUHlTXS6KkQyaW9Vh+OtWfAq6bwprpfO6p1sIdMMsmdRmMlAsm2z\nD8bSm83/FU8uCIwP3eZx7l0MmpXRQrREmdyyXV8CgYByvtTNnzlfwHhLnsq2tFlz\nRfrUp5+mYZ0i+FHCGdzuKfYtew+ci9r8f0YvRTOcqzmEYdEgoQK3XbcDP2NSk703\n850PikemuhGkTw7/sgflBs1vlcx0GCsnRb+BAlEPdsO4nuo1SiDVqQwNwZ2sapFR\nJcglObps62Ph0vHOTlzCYQKBgQC2W0q16biyrEPpiCpDaOUaN4JpDAVMjz1ECYS4\naTMsqhepwlXk0Y55mKDqqQGNmzjByo18Z2YeDzbwR/fE3TOQylEevaD2mCX6K7Od\nbi5EmUKAej5iDXd6ej8heRkD9c2xYIzCdhjVGlkwcK1nCP17nlYM4k+a9VOEl/2B\nOPA16QKBgQCjqK63ySRBZagnWlWwjp9BRBy0OfOxXimtVRsxWKVsBrz3sGG7TOCs\nACQjoeZXrLPajjRmzPYnQCvAraA1hrfybV/cxA4WDMPRywk12WaWTFAXYdh5F8ej\n17RSzIQMXRJxsMJs8o6WXJSpC1ZJaFxa+X5EGYELw3V+M1NDVKI5EA==\n-----END
+        RSA PRIVATE KEY-----", "pxe_deploy_kernel": "84917c45-2fd8-4044-97d6-cb89adde1f0b",
+        "ssh_address": "192.168.122.1", "ssh_virt_type": "virsh"}, "target_provision_state":
+        null, "updated_at": "2015-02-20T11:16:04+00:00", "last_error": null, "console_enabled":
+        false, "extra": {}, "driver": "pxe_ssh", "links": [{"href": "http://192.0.2.1:6385/v1/nodes/06c2fb5a-22ab-450f-bd83-9342f7b823e6",
+        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/06c2fb5a-22ab-450f-bd83-9342f7b823e6",
+        "rel": "bookmark"}], "properties": {"memory_mb": "4096", "cpu_arch": "x86_64",
+        "local_gb": "40", "cpus": "1"}, "provision_updated_at": "2015-01-22T10:32:10+00:00",
+        "chassis_uuid": null, "power_state": "power on", "provision_state": "active",
+        "reservation": null, "created_at": "2015-01-22T10:27:32+00:00", "instance_info":
+        {"ramdisk": "4ff46d5b-f4d4-4b75-bbcd-983321ec22ce", "kernel": "0f048b6f-7522-4062-9f70-44a306429338",
+        "root_gb": "30", "image_source": "d31a60ba-71a3-4c6f-912f-eceaa22d41dc", "deploy_key":
+        "CI0TV0R6QHGYCI7ZUUWIVKLNT0N9EOVZ", "swap_mb": "0"}, "ports": [{"href": "http://192.0.2.1:6385/v1/nodes/06c2fb5a-22ab-450f-bd83-9342f7b823e6/ports",
+        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/06c2fb5a-22ab-450f-bd83-9342f7b823e6/ports",
+        "rel": "bookmark"}]}]}'
     http_version: 
   recorded_at: Mon, 19 Jan 2015 12:16:23 GMT
 - request:
     method: get
-    uri: http://192.0.2.1:6385/nodes/detail
+    uri: http://192.0.2.1:9292/v1.1/images/detail
     body:
       encoding: US-ASCII
       string: ''
@@ -375,119 +1058,153 @@ http_interactions:
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 5b0b076ba31e4889a0daed67c2137ded
+      - 10da4d149bc14131b27fdd0b2e1d2e91
   response:
     status:
       code: 200
       message: ''
     headers:
-      Date:
-      - Mon, 19 Jan 2015 12:16:24 GMT
-      Server:
-      - WSGIServer/0.1 Python/2.7.5
-      Content-Length:
-      - '15266'
       Content-Type:
       - application/json; charset=UTF-8
+      Content-Length:
+      - '8724'
+      X-Openstack-Request-Id:
+      - req-987d3199-a954-41d2-a4fc-0523fc96f579
+      Date:
+      - Tue, 03 Feb 2015 23:11:05 GMT
     body:
       encoding: UTF-8
-      string: '{"nodes": [{"instance_uuid": null, "target_power_state": null, "maintenance":
-        false, "uuid": "a085de77-b2ee-4876-9c90-e5d6cc8ade77", "driver_info": {"pxe_deploy_ramdisk":
-        "2f5510da-a5fa-4d1d-b7cb-f844095d836a", "ssh_username": "stack", "ssh_key_contents":
-        "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAr8iyVYymC7bzjLutZ9dYmxGjKkx4vSh1CTMo6xRnFGgvN9Vn\nQ/Bcax53ugf+86xQ3xeKnzVtQgg/38/EomuoBXGSr7oH3sUALX1KNQxIwZCN6Cma\nncvfCIjIUh0fZ+5ET+D5Yw4h3ADsePh2FxAfkg5UnEllKQyhSQV3rIzLI/D7IJez\npmDUH0o8viTNqw8jkV3wHPfSi5/cIgMfPtk2H4o5B6VSyflQ66gyTp8GJAAM0mAy\nXuDDLBJX5QyH+7OhCM/LFhcVPFmEzl/WD+KM+uSt9+js7fqyL7koh4pgzW8ty7KS\nmejkGFKN5OL+L0YHP3XgsqoGkiyBZXGI887ePwIDAQABAoIBAEBjnZ9ko7YKz++v\nF3fAE/7JWSE3Xcq8NRKnoMdrc86v0wv6qZbjRpceU/Da2PLdHcp6Txa+dUUIzIzp\nCDgOgz9rOLYRyKw7MTN4f2QrGcN9dd2iz7YZZZs0r1wUutpRFsjDudYk6RYzaGtv\nZ6JPD6FqimetItcEf1fGHu4frJF/KgwWn9cv0OE4j36V7OIskFauYT2ODQ9HRFfX\nfL7AID4R6WIwS2u5hsFNaNlFv02HKsTYOvFBz/FpHeWxOPbqOzCB5bEk3zvtclSS\ntzcAUBnRY1YZAon+Ej4gPhC9JbZWGnE8rN2ytqZx+24n4/b9HmalUIEAZG3S97tc\noD2bUoECgYEA6JioR2vkV4aBTaE1ChKDhEBf/PqYJ3lLI7LJ2flrmWeEF9vvDVqG\nHpj7qEM7TC/HfkvZ+xeE/MffIbXkIMYDn8ETMdbV2Bcv5kmd8sDVhxys0s4r9d6o\nqrin+wKbCNvlGvNIPQkNJnkc6lNXZG1YyIrcq2TlxcDFvYa1KP5KSyECgYEAwXii\nysGU3Siw3lDP/bE6UIR4WhtHbt6ryQ745XwPrE652FsbMxJdTxXoo9KhH6HeVgx/\nAmQJX0HqJjjkjUHlTXS6KkQyaW9Vh+OtWfAq6bwprpfO6p1sIdMMsmdRmMlAsm2z\nD8bSm83/FU8uCIwP3eZx7l0MmpXRQrREmdyyXV8CgYByvtTNnzlfwHhLnsq2tFlz\nRfrUp5+mYZ0i+FHCGdzuKfYtew+ci9r8f0YvRTOcqzmEYdEgoQK3XbcDP2NSk703\n850PikemuhGkTw7/sgflBs1vlcx0GCsnRb+BAlEPdsO4nuo1SiDVqQwNwZ2sapFR\nJcglObps62Ph0vHOTlzCYQKBgQC2W0q16biyrEPpiCpDaOUaN4JpDAVMjz1ECYS4\naTMsqhepwlXk0Y55mKDqqQGNmzjByo18Z2YeDzbwR/fE3TOQylEevaD2mCX6K7Od\nbi5EmUKAej5iDXd6ej8heRkD9c2xYIzCdhjVGlkwcK1nCP17nlYM4k+a9VOEl/2B\nOPA16QKBgQCjqK63ySRBZagnWlWwjp9BRBy0OfOxXimtVRsxWKVsBrz3sGG7TOCs\nACQjoeZXrLPajjRmzPYnQCvAraA1hrfybV/cxA4WDMPRywk12WaWTFAXYdh5F8ej\n17RSzIQMXRJxsMJs8o6WXJSpC1ZJaFxa+X5EGYELw3V+M1NDVKI5EA==\n-----END
-        RSA PRIVATE KEY-----", "pxe_deploy_kernel": "47bb9ae5-01c4-4589-9ad9-8312d76e59cf",
-        "ssh_address": "192.168.122.1", "ssh_virt_type": "virsh"}, "target_provision_state":
-        null, "updated_at": "2015-01-19T12:15:41+00:00", "last_error": null, "console_enabled":
-        false, "extra": {}, "driver": "pxe_ssh", "links": [{"href": "http://192.0.2.1:6385/v1/nodes/a085de77-b2ee-4876-9c90-e5d6cc8ade77",
-        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/a085de77-b2ee-4876-9c90-e5d6cc8ade77",
-        "rel": "bookmark"}], "properties": {"memory_mb": "4096", "cpu_arch": "x86_64",
-        "local_gb": "40", "cpus": "1"}, "provision_updated_at": null, "chassis_uuid":
-        null, "power_state": "power off", "provision_state": null, "reservation":
-        null, "created_at": "2015-01-14T18:25:17+00:00", "instance_info": {"root_gb":
-        "30", "image_source": "1a5e6e37-ad8e-4b41-a578-e85d35eea0a3", "swap_mb": "0"},
-        "ports": [{"href": "http://192.0.2.1:6385/v1/nodes/a085de77-b2ee-4876-9c90-e5d6cc8ade77/ports",
-        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/a085de77-b2ee-4876-9c90-e5d6cc8ade77/ports",
-        "rel": "bookmark"}]}, {"instance_uuid": null, "target_power_state": null,
-        "maintenance": false, "uuid": "5470033e-1c2a-4c5c-90c7-7d96da56ba61", "driver_info":
-        {"pxe_deploy_ramdisk": "2f5510da-a5fa-4d1d-b7cb-f844095d836a", "ssh_username":
-        "stack", "ssh_key_contents": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAr8iyVYymC7bzjLutZ9dYmxGjKkx4vSh1CTMo6xRnFGgvN9Vn\nQ/Bcax53ugf+86xQ3xeKnzVtQgg/38/EomuoBXGSr7oH3sUALX1KNQxIwZCN6Cma\nncvfCIjIUh0fZ+5ET+D5Yw4h3ADsePh2FxAfkg5UnEllKQyhSQV3rIzLI/D7IJez\npmDUH0o8viTNqw8jkV3wHPfSi5/cIgMfPtk2H4o5B6VSyflQ66gyTp8GJAAM0mAy\nXuDDLBJX5QyH+7OhCM/LFhcVPFmEzl/WD+KM+uSt9+js7fqyL7koh4pgzW8ty7KS\nmejkGFKN5OL+L0YHP3XgsqoGkiyBZXGI887ePwIDAQABAoIBAEBjnZ9ko7YKz++v\nF3fAE/7JWSE3Xcq8NRKnoMdrc86v0wv6qZbjRpceU/Da2PLdHcp6Txa+dUUIzIzp\nCDgOgz9rOLYRyKw7MTN4f2QrGcN9dd2iz7YZZZs0r1wUutpRFsjDudYk6RYzaGtv\nZ6JPD6FqimetItcEf1fGHu4frJF/KgwWn9cv0OE4j36V7OIskFauYT2ODQ9HRFfX\nfL7AID4R6WIwS2u5hsFNaNlFv02HKsTYOvFBz/FpHeWxOPbqOzCB5bEk3zvtclSS\ntzcAUBnRY1YZAon+Ej4gPhC9JbZWGnE8rN2ytqZx+24n4/b9HmalUIEAZG3S97tc\noD2bUoECgYEA6JioR2vkV4aBTaE1ChKDhEBf/PqYJ3lLI7LJ2flrmWeEF9vvDVqG\nHpj7qEM7TC/HfkvZ+xeE/MffIbXkIMYDn8ETMdbV2Bcv5kmd8sDVhxys0s4r9d6o\nqrin+wKbCNvlGvNIPQkNJnkc6lNXZG1YyIrcq2TlxcDFvYa1KP5KSyECgYEAwXii\nysGU3Siw3lDP/bE6UIR4WhtHbt6ryQ745XwPrE652FsbMxJdTxXoo9KhH6HeVgx/\nAmQJX0HqJjjkjUHlTXS6KkQyaW9Vh+OtWfAq6bwprpfO6p1sIdMMsmdRmMlAsm2z\nD8bSm83/FU8uCIwP3eZx7l0MmpXRQrREmdyyXV8CgYByvtTNnzlfwHhLnsq2tFlz\nRfrUp5+mYZ0i+FHCGdzuKfYtew+ci9r8f0YvRTOcqzmEYdEgoQK3XbcDP2NSk703\n850PikemuhGkTw7/sgflBs1vlcx0GCsnRb+BAlEPdsO4nuo1SiDVqQwNwZ2sapFR\nJcglObps62Ph0vHOTlzCYQKBgQC2W0q16biyrEPpiCpDaOUaN4JpDAVMjz1ECYS4\naTMsqhepwlXk0Y55mKDqqQGNmzjByo18Z2YeDzbwR/fE3TOQylEevaD2mCX6K7Od\nbi5EmUKAej5iDXd6ej8heRkD9c2xYIzCdhjVGlkwcK1nCP17nlYM4k+a9VOEl/2B\nOPA16QKBgQCjqK63ySRBZagnWlWwjp9BRBy0OfOxXimtVRsxWKVsBrz3sGG7TOCs\nACQjoeZXrLPajjRmzPYnQCvAraA1hrfybV/cxA4WDMPRywk12WaWTFAXYdh5F8ej\n17RSzIQMXRJxsMJs8o6WXJSpC1ZJaFxa+X5EGYELw3V+M1NDVKI5EA==\n-----END
-        RSA PRIVATE KEY-----", "pxe_deploy_kernel": "47bb9ae5-01c4-4589-9ad9-8312d76e59cf",
-        "ssh_address": "192.168.122.1", "ssh_virt_type": "virsh"}, "target_provision_state":
-        null, "updated_at": "2015-01-19T12:15:42+00:00", "last_error": null, "console_enabled":
-        false, "extra": {}, "driver": "pxe_ssh", "links": [{"href": "http://192.0.2.1:6385/v1/nodes/5470033e-1c2a-4c5c-90c7-7d96da56ba61",
-        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/5470033e-1c2a-4c5c-90c7-7d96da56ba61",
-        "rel": "bookmark"}], "properties": {"memory_mb": "4096", "cpu_arch": "x86_64",
-        "local_gb": "40", "cpus": "1"}, "provision_updated_at": null, "chassis_uuid":
-        null, "power_state": "power off", "provision_state": null, "reservation":
-        null, "created_at": "2015-01-14T18:25:17+00:00", "instance_info": {"root_gb":
-        "30", "image_source": "1a5e6e37-ad8e-4b41-a578-e85d35eea0a3", "swap_mb": "0"},
-        "ports": [{"href": "http://192.0.2.1:6385/v1/nodes/5470033e-1c2a-4c5c-90c7-7d96da56ba61/ports",
-        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/5470033e-1c2a-4c5c-90c7-7d96da56ba61/ports",
-        "rel": "bookmark"}]}, {"instance_uuid": "492b83e2-1805-4022-a385-876230ce5d43",
-        "target_power_state": null, "maintenance": false, "uuid": "d783b2e4-059e-4e2b-a1d1-21b3d1a7dab6",
-        "driver_info": {"pxe_deploy_ramdisk": "2f5510da-a5fa-4d1d-b7cb-f844095d836a",
-        "ssh_username": "stack", "ssh_key_contents": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAr8iyVYymC7bzjLutZ9dYmxGjKkx4vSh1CTMo6xRnFGgvN9Vn\nQ/Bcax53ugf+86xQ3xeKnzVtQgg/38/EomuoBXGSr7oH3sUALX1KNQxIwZCN6Cma\nncvfCIjIUh0fZ+5ET+D5Yw4h3ADsePh2FxAfkg5UnEllKQyhSQV3rIzLI/D7IJez\npmDUH0o8viTNqw8jkV3wHPfSi5/cIgMfPtk2H4o5B6VSyflQ66gyTp8GJAAM0mAy\nXuDDLBJX5QyH+7OhCM/LFhcVPFmEzl/WD+KM+uSt9+js7fqyL7koh4pgzW8ty7KS\nmejkGFKN5OL+L0YHP3XgsqoGkiyBZXGI887ePwIDAQABAoIBAEBjnZ9ko7YKz++v\nF3fAE/7JWSE3Xcq8NRKnoMdrc86v0wv6qZbjRpceU/Da2PLdHcp6Txa+dUUIzIzp\nCDgOgz9rOLYRyKw7MTN4f2QrGcN9dd2iz7YZZZs0r1wUutpRFsjDudYk6RYzaGtv\nZ6JPD6FqimetItcEf1fGHu4frJF/KgwWn9cv0OE4j36V7OIskFauYT2ODQ9HRFfX\nfL7AID4R6WIwS2u5hsFNaNlFv02HKsTYOvFBz/FpHeWxOPbqOzCB5bEk3zvtclSS\ntzcAUBnRY1YZAon+Ej4gPhC9JbZWGnE8rN2ytqZx+24n4/b9HmalUIEAZG3S97tc\noD2bUoECgYEA6JioR2vkV4aBTaE1ChKDhEBf/PqYJ3lLI7LJ2flrmWeEF9vvDVqG\nHpj7qEM7TC/HfkvZ+xeE/MffIbXkIMYDn8ETMdbV2Bcv5kmd8sDVhxys0s4r9d6o\nqrin+wKbCNvlGvNIPQkNJnkc6lNXZG1YyIrcq2TlxcDFvYa1KP5KSyECgYEAwXii\nysGU3Siw3lDP/bE6UIR4WhtHbt6ryQ745XwPrE652FsbMxJdTxXoo9KhH6HeVgx/\nAmQJX0HqJjjkjUHlTXS6KkQyaW9Vh+OtWfAq6bwprpfO6p1sIdMMsmdRmMlAsm2z\nD8bSm83/FU8uCIwP3eZx7l0MmpXRQrREmdyyXV8CgYByvtTNnzlfwHhLnsq2tFlz\nRfrUp5+mYZ0i+FHCGdzuKfYtew+ci9r8f0YvRTOcqzmEYdEgoQK3XbcDP2NSk703\n850PikemuhGkTw7/sgflBs1vlcx0GCsnRb+BAlEPdsO4nuo1SiDVqQwNwZ2sapFR\nJcglObps62Ph0vHOTlzCYQKBgQC2W0q16biyrEPpiCpDaOUaN4JpDAVMjz1ECYS4\naTMsqhepwlXk0Y55mKDqqQGNmzjByo18Z2YeDzbwR/fE3TOQylEevaD2mCX6K7Od\nbi5EmUKAej5iDXd6ej8heRkD9c2xYIzCdhjVGlkwcK1nCP17nlYM4k+a9VOEl/2B\nOPA16QKBgQCjqK63ySRBZagnWlWwjp9BRBy0OfOxXimtVRsxWKVsBrz3sGG7TOCs\nACQjoeZXrLPajjRmzPYnQCvAraA1hrfybV/cxA4WDMPRywk12WaWTFAXYdh5F8ej\n17RSzIQMXRJxsMJs8o6WXJSpC1ZJaFxa+X5EGYELw3V+M1NDVKI5EA==\n-----END
-        RSA PRIVATE KEY-----", "pxe_deploy_kernel": "47bb9ae5-01c4-4589-9ad9-8312d76e59cf",
-        "ssh_address": "192.168.122.1", "ssh_virt_type": "virsh"}, "target_provision_state":
-        null, "updated_at": "2015-01-19T12:15:43+00:00", "last_error": null, "console_enabled":
-        false, "extra": {}, "driver": "pxe_ssh", "links": [{"href": "http://192.0.2.1:6385/v1/nodes/d783b2e4-059e-4e2b-a1d1-21b3d1a7dab6",
-        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/d783b2e4-059e-4e2b-a1d1-21b3d1a7dab6",
-        "rel": "bookmark"}], "properties": {"memory_mb": "4096", "cpu_arch": "x86_64",
-        "local_gb": "40", "cpus": "1"}, "provision_updated_at": "2015-01-14T18:29:52+00:00",
-        "chassis_uuid": null, "power_state": "power on", "provision_state": "active",
-        "reservation": null, "created_at": "2015-01-14T18:25:18+00:00", "instance_info":
-        {"ramdisk": "f4da32de-5dfb-4b73-8cf4-f38c49cb4e91", "kernel": "57ba27b3-3588-460d-b1e0-f814cc45aa3e",
-        "root_gb": "30", "image_source": "cec16cf0-fce8-4d2e-8398-962700521c0c", "deploy_key":
-        "FJP6Z7CABW2LYATFY5LPT9M33MFEF0HC", "swap_mb": "0"}, "ports": [{"href": "http://192.0.2.1:6385/v1/nodes/d783b2e4-059e-4e2b-a1d1-21b3d1a7dab6/ports",
-        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/d783b2e4-059e-4e2b-a1d1-21b3d1a7dab6/ports",
-        "rel": "bookmark"}]}, {"instance_uuid": "6bca632b-f549-4dd5-b854-f15f4bd3b059",
-        "target_power_state": null, "maintenance": false, "uuid": "9262d80e-7a25-4ded-abca-3261a77dbae1",
-        "driver_info": {"pxe_deploy_ramdisk": "2f5510da-a5fa-4d1d-b7cb-f844095d836a",
-        "ssh_username": "stack", "ssh_key_contents": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAr8iyVYymC7bzjLutZ9dYmxGjKkx4vSh1CTMo6xRnFGgvN9Vn\nQ/Bcax53ugf+86xQ3xeKnzVtQgg/38/EomuoBXGSr7oH3sUALX1KNQxIwZCN6Cma\nncvfCIjIUh0fZ+5ET+D5Yw4h3ADsePh2FxAfkg5UnEllKQyhSQV3rIzLI/D7IJez\npmDUH0o8viTNqw8jkV3wHPfSi5/cIgMfPtk2H4o5B6VSyflQ66gyTp8GJAAM0mAy\nXuDDLBJX5QyH+7OhCM/LFhcVPFmEzl/WD+KM+uSt9+js7fqyL7koh4pgzW8ty7KS\nmejkGFKN5OL+L0YHP3XgsqoGkiyBZXGI887ePwIDAQABAoIBAEBjnZ9ko7YKz++v\nF3fAE/7JWSE3Xcq8NRKnoMdrc86v0wv6qZbjRpceU/Da2PLdHcp6Txa+dUUIzIzp\nCDgOgz9rOLYRyKw7MTN4f2QrGcN9dd2iz7YZZZs0r1wUutpRFsjDudYk6RYzaGtv\nZ6JPD6FqimetItcEf1fGHu4frJF/KgwWn9cv0OE4j36V7OIskFauYT2ODQ9HRFfX\nfL7AID4R6WIwS2u5hsFNaNlFv02HKsTYOvFBz/FpHeWxOPbqOzCB5bEk3zvtclSS\ntzcAUBnRY1YZAon+Ej4gPhC9JbZWGnE8rN2ytqZx+24n4/b9HmalUIEAZG3S97tc\noD2bUoECgYEA6JioR2vkV4aBTaE1ChKDhEBf/PqYJ3lLI7LJ2flrmWeEF9vvDVqG\nHpj7qEM7TC/HfkvZ+xeE/MffIbXkIMYDn8ETMdbV2Bcv5kmd8sDVhxys0s4r9d6o\nqrin+wKbCNvlGvNIPQkNJnkc6lNXZG1YyIrcq2TlxcDFvYa1KP5KSyECgYEAwXii\nysGU3Siw3lDP/bE6UIR4WhtHbt6ryQ745XwPrE652FsbMxJdTxXoo9KhH6HeVgx/\nAmQJX0HqJjjkjUHlTXS6KkQyaW9Vh+OtWfAq6bwprpfO6p1sIdMMsmdRmMlAsm2z\nD8bSm83/FU8uCIwP3eZx7l0MmpXRQrREmdyyXV8CgYByvtTNnzlfwHhLnsq2tFlz\nRfrUp5+mYZ0i+FHCGdzuKfYtew+ci9r8f0YvRTOcqzmEYdEgoQK3XbcDP2NSk703\n850PikemuhGkTw7/sgflBs1vlcx0GCsnRb+BAlEPdsO4nuo1SiDVqQwNwZ2sapFR\nJcglObps62Ph0vHOTlzCYQKBgQC2W0q16biyrEPpiCpDaOUaN4JpDAVMjz1ECYS4\naTMsqhepwlXk0Y55mKDqqQGNmzjByo18Z2YeDzbwR/fE3TOQylEevaD2mCX6K7Od\nbi5EmUKAej5iDXd6ej8heRkD9c2xYIzCdhjVGlkwcK1nCP17nlYM4k+a9VOEl/2B\nOPA16QKBgQCjqK63ySRBZagnWlWwjp9BRBy0OfOxXimtVRsxWKVsBrz3sGG7TOCs\nACQjoeZXrLPajjRmzPYnQCvAraA1hrfybV/cxA4WDMPRywk12WaWTFAXYdh5F8ej\n17RSzIQMXRJxsMJs8o6WXJSpC1ZJaFxa+X5EGYELw3V+M1NDVKI5EA==\n-----END
-        RSA PRIVATE KEY-----", "pxe_deploy_kernel": "47bb9ae5-01c4-4589-9ad9-8312d76e59cf",
-        "ssh_address": "192.168.122.1", "ssh_virt_type": "virsh"}, "target_provision_state":
-        null, "updated_at": "2015-01-19T12:15:44+00:00", "last_error": null, "console_enabled":
-        false, "extra": {}, "driver": "pxe_ssh", "links": [{"href": "http://192.0.2.1:6385/v1/nodes/9262d80e-7a25-4ded-abca-3261a77dbae1",
-        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/9262d80e-7a25-4ded-abca-3261a77dbae1",
-        "rel": "bookmark"}], "properties": {"memory_mb": "4096", "cpu_arch": "x86_64",
-        "local_gb": "40", "cpus": "1"}, "provision_updated_at": "2015-01-14T18:35:25+00:00",
-        "chassis_uuid": null, "power_state": "power on", "provision_state": "active",
-        "reservation": null, "created_at": "2015-01-14T18:25:18+00:00", "instance_info":
-        {"ramdisk": "b2df3862-fbbf-43ae-9c87-6e56b058e8ca", "kernel": "70dec03a-7f5b-4417-a434-1c1654a2c889",
-        "root_gb": "30", "image_source": "e31ba837-f24b-4d4f-a8ef-5cdd46cab149", "deploy_key":
-        "849WUO7Z5J346HQIHHO27S9QZXG4YXAY", "swap_mb": "0"}, "ports": [{"href": "http://192.0.2.1:6385/v1/nodes/9262d80e-7a25-4ded-abca-3261a77dbae1/ports",
-        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/9262d80e-7a25-4ded-abca-3261a77dbae1/ports",
-        "rel": "bookmark"}]}, {"instance_uuid": null, "target_power_state": null,
-        "maintenance": false, "uuid": "ebf4e459-ddd6-4ce9-bef5-5181987cb62c", "driver_info":
-        {}, "target_provision_state": null, "updated_at": "2015-01-19T12:15:44+00:00",
-        "last_error": null, "console_enabled": false, "extra": {}, "driver": "pxe_ipmitool",
-        "links": [{"href": "http://192.0.2.1:6385/v1/nodes/ebf4e459-ddd6-4ce9-bef5-5181987cb62c",
-        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/ebf4e459-ddd6-4ce9-bef5-5181987cb62c",
-        "rel": "bookmark"}], "properties": {}, "provision_updated_at": null, "chassis_uuid":
-        null, "power_state": null, "provision_state": null, "reservation": null, "created_at":
-        "2015-01-15T09:22:23+00:00", "instance_info": {}, "ports": [{"href": "http://192.0.2.1:6385/v1/nodes/ebf4e459-ddd6-4ce9-bef5-5181987cb62c/ports",
-        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/ebf4e459-ddd6-4ce9-bef5-5181987cb62c/ports",
-        "rel": "bookmark"}]}, {"instance_uuid": null, "target_power_state": null,
-        "maintenance": false, "uuid": "72fd8584-c69d-4d55-a05a-bbb37d2dca3b", "driver_info":
-        {}, "target_provision_state": null, "updated_at": "2015-01-19T12:15:44+00:00",
-        "last_error": null, "console_enabled": false, "extra": {}, "driver": "pxe_ipmitool",
-        "links": [{"href": "http://192.0.2.1:6385/v1/nodes/72fd8584-c69d-4d55-a05a-bbb37d2dca3b",
-        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/72fd8584-c69d-4d55-a05a-bbb37d2dca3b",
-        "rel": "bookmark"}], "properties": {}, "provision_updated_at": null, "chassis_uuid":
-        null, "power_state": null, "provision_state": null, "reservation": null, "created_at":
-        "2015-01-15T09:23:17+00:00", "instance_info": {}, "ports": [{"href": "http://192.0.2.1:6385/v1/nodes/72fd8584-c69d-4d55-a05a-bbb37d2dca3b/ports",
-        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/72fd8584-c69d-4d55-a05a-bbb37d2dca3b/ports",
-        "rel": "bookmark"}]}, {"instance_uuid": null, "target_power_state": null,
-        "maintenance": false, "uuid": "f088d3fc-df14-43ec-a04f-eb74c9abbe84", "driver_info":
-        {}, "target_provision_state": null, "updated_at": "2015-01-19T12:15:44+00:00",
-        "last_error": null, "console_enabled": false, "extra": {}, "driver": "pxe_ipmitool",
-        "links": [{"href": "http://192.0.2.1:6385/v1/nodes/f088d3fc-df14-43ec-a04f-eb74c9abbe84",
-        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/f088d3fc-df14-43ec-a04f-eb74c9abbe84",
-        "rel": "bookmark"}], "properties": {}, "provision_updated_at": null, "chassis_uuid":
-        null, "power_state": null, "provision_state": null, "reservation": null, "created_at":
-        "2015-01-15T09:24:04+00:00", "instance_info": {}, "ports": [{"href": "http://192.0.2.1:6385/v1/nodes/f088d3fc-df14-43ec-a04f-eb74c9abbe84/ports",
-        "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/f088d3fc-df14-43ec-a04f-eb74c9abbe84/ports",
-        "rel": "bookmark"}]}]}'
+      string: '{"images": [{"status": "active", "deleted_at": null, "name": "discovery-ramdisk",
+        "deleted": false, "container_format": "ari", "created_at": "2015-01-31T00:55:41",
+        "disk_format": "ari", "updated_at": "2015-01-31T00:55:42", "min_disk": 0,
+        "protected": false, "id": "7634252f-5332-4b5e-bac6-636762113045", "min_ram":
+        0, "checksum": "b88c84888a00f1c12583b4916ab5bc85", "owner": "51bcb84d79174b6680284bfbd44c23a8",
+        "is_public": false, "virtual_size": null, "properties": {"type": "discovery
+        ramdisk"}, "size": 34093840}, {"status": "active", "deleted_at": null, "name":
+        "discovery-kernel", "deleted": false, "container_format": "aki", "created_at":
+        "2015-01-31T00:55:40", "disk_format": "aki", "updated_at": "2015-01-31T00:55:42",
+        "min_disk": 0, "protected": false, "id": "29cd688d-b8de-4f07-90f5-776c3f0f819e",
+        "min_ram": 0, "checksum": "6c73db790b2c8caeddb20a8cc00d63d1", "owner": "51bcb84d79174b6680284bfbd44c23a8",
+        "is_public": false, "virtual_size": null, "properties": {"type": "discovery
+        kernel"}, "size": 5707784}, {"status": "active", "deleted_at": null, "name":
+        "bm-deploy-ramdisk", "deleted": false, "container_format": "ari", "created_at":
+        "2015-01-31T00:55:38", "disk_format": "ari", "updated_at": "2015-01-31T00:55:43",
+        "min_disk": 0, "protected": false, "id": "54251916-9c21-46d0-bfa8-e0b3e8ce9a25",
+        "min_ram": 0, "checksum": "5452d492ce20587153ebc9108e3c56c4", "owner": "51bcb84d79174b6680284bfbd44c23a8",
+        "is_public": false, "virtual_size": null, "properties": {"type": "deploy ramdisk"},
+        "size": 33731827}, {"status": "active", "deleted_at": null, "name": "bm-deploy-kernel",
+        "deleted": false, "container_format": "aki", "created_at": "2015-01-31T00:55:37",
+        "disk_format": "aki", "updated_at": "2015-01-31T00:55:43", "min_disk": 0,
+        "protected": false, "id": "976f1154-2ca0-41a2-9d44-277cd6538122", "min_ram":
+        0, "checksum": "ec468d5114f00be727b7725bd2028467", "owner": "51bcb84d79174b6680284bfbd44c23a8",
+        "is_public": false, "virtual_size": null, "properties": {"type": "deploy kernel"},
+        "size": 5594840}, {"status": "active", "deleted_at": null, "name": "overcloud-swift-storage",
+        "deleted": false, "container_format": "bare", "created_at": "2015-01-31T00:55:33",
+        "disk_format": "qcow2", "updated_at": "2015-01-31T00:55:48", "min_disk": 0,
+        "protected": false, "id": "3e0f048d-78b1-4c49-aa37-93db49501781", "min_ram":
+        0, "checksum": "cae1cbdde93f29ca3da6480bbb73b02d", "owner": "51bcb84d79174b6680284bfbd44c23a8",
+        "is_public": true, "virtual_size": null, "properties": {"kernel_id": "44d25747-4d88-4621-9de8-dfe498b4f1db",
+        "ramdisk_id": "4a667392-b772-4212-af1a-209d13179952", "type": "overcloud provisioning"},
+        "size": 579076096}, {"status": "active", "deleted_at": null, "name": "overcloud-swift-storage-initrd",
+        "deleted": false, "container_format": "ari", "created_at": "2015-01-31T00:55:32",
+        "disk_format": "ari", "updated_at": "2015-01-31T00:55:49", "min_disk": 0,
+        "protected": false, "id": "4a667392-b772-4212-af1a-209d13179952", "min_ram":
+        0, "checksum": "0f36fbee1a1b1c51af2c1cb5e4411940", "owner": "51bcb84d79174b6680284bfbd44c23a8",
+        "is_public": true, "virtual_size": null, "properties": {"type": "overcloud
+        provisioning ramdisk"}, "size": 22762033}, {"status": "active", "deleted_at":
+        null, "name": "overcloud-swift-storage-vmlinuz", "deleted": false, "container_format":
+        "aki", "created_at": "2015-01-31T00:55:32", "disk_format": "aki", "updated_at":
+        "2015-01-31T00:55:49", "min_disk": 0, "protected": false, "id": "44d25747-4d88-4621-9de8-dfe498b4f1db",
+        "min_ram": 0, "checksum": "ec468d5114f00be727b7725bd2028467", "owner": "51bcb84d79174b6680284bfbd44c23a8",
+        "is_public": true, "virtual_size": null, "properties": {"type": "overcloud
+        provisioning kernel"}, "size": 5594840}, {"status": "active", "deleted_at":
+        null, "name": "overcloud-cinder-volume", "deleted": false, "container_format":
+        "bare", "created_at": "2015-01-31T00:55:19", "disk_format": "qcow2", "updated_at":
+        "2015-01-31T00:55:47", "min_disk": 0, "protected": false, "id": "336a9a6b-e094-447c-b6f2-43ea2f2303cf",
+        "min_ram": 0, "checksum": "9f6733467f8e5604847babba6f236125", "owner": "51bcb84d79174b6680284bfbd44c23a8",
+        "is_public": true, "virtual_size": null, "properties": {"kernel_id": "cf7f6c3c-8e51-4d18-b01d-996099e71c06",
+        "ramdisk_id": "7789dc3c-6a75-4348-abf0-101aef40ac28", "type": "overcloud provisioning"},
+        "size": 656744448}, {"status": "active", "deleted_at": null, "name": "overcloud-cinder-volume-initrd",
+        "deleted": false, "container_format": "ari", "created_at": "2015-01-31T00:55:18",
+        "disk_format": "ari", "updated_at": "2015-01-31T00:55:47", "min_disk": 0,
+        "protected": false, "id": "7789dc3c-6a75-4348-abf0-101aef40ac28", "min_ram":
+        0, "checksum": "443787c875bed4a574341c192313a266", "owner": "51bcb84d79174b6680284bfbd44c23a8",
+        "is_public": true, "virtual_size": null, "properties": {"type": "overcloud
+        provisioning ramdisk"}, "size": 26741363}, {"status": "active", "deleted_at":
+        null, "name": "overcloud-cinder-volume-vmlinuz", "deleted": false, "container_format":
+        "aki", "created_at": "2015-01-31T00:55:17", "disk_format": "aki", "updated_at":
+        "2015-01-31T00:55:48", "min_disk": 0, "protected": false, "id": "cf7f6c3c-8e51-4d18-b01d-996099e71c06",
+        "min_ram": 0, "checksum": "ec468d5114f00be727b7725bd2028467", "owner": "51bcb84d79174b6680284bfbd44c23a8",
+        "is_public": true, "virtual_size": null, "properties": {"type": "overcloud
+        provisioning kernel"}, "size": 5594840}, {"status": "active", "deleted_at":
+        null, "name": "overcloud-compute", "deleted": false, "container_format": "bare",
+        "created_at": "2015-01-31T00:54:50", "disk_format": "qcow2", "updated_at":
+        "2015-01-31T00:55:45", "min_disk": 0, "protected": false, "id": "e3a47c76-a69a-4126-95b5-1213369a9155",
+        "min_ram": 0, "checksum": "b97ef8c71484ad9a827ee13f3f7730b7", "owner": "51bcb84d79174b6680284bfbd44c23a8",
+        "is_public": true, "virtual_size": null, "properties": {"kernel_id": "0b4ebca8-eea9-491e-9582-9e408d92a6ed",
+        "ramdisk_id": "ae0c3aee-1342-4fea-b4d8-3602094ac706", "type": "overcloud provisioning"},
+        "size": 683976192}, {"status": "active", "deleted_at": null, "name": "overcloud-compute-initrd",
+        "deleted": false, "container_format": "ari", "created_at": "2015-01-31T00:54:50",
+        "disk_format": "ari", "updated_at": "2015-01-31T00:55:46", "min_disk": 0,
+        "protected": false, "id": "ae0c3aee-1342-4fea-b4d8-3602094ac706", "min_ram":
+        0, "checksum": "a27089af7c80663db9e1f35e56bc8195", "owner": "51bcb84d79174b6680284bfbd44c23a8",
+        "is_public": true, "virtual_size": null, "properties": {"type": "overcloud
+        provisioning ramdisk"}, "size": 20692263}, {"status": "active", "deleted_at":
+        null, "name": "overcloud-compute-vmlinuz", "deleted": false, "container_format":
+        "aki", "created_at": "2015-01-31T00:54:49", "disk_format": "aki", "updated_at":
+        "2015-01-31T00:55:46", "min_disk": 0, "protected": false, "id": "0b4ebca8-eea9-491e-9582-9e408d92a6ed",
+        "min_ram": 0, "checksum": "ec468d5114f00be727b7725bd2028467", "owner": "51bcb84d79174b6680284bfbd44c23a8",
+        "is_public": true, "virtual_size": null, "properties": {"type": "overcloud
+        provisioning kernel"}, "size": 5594840}, {"status": "active", "deleted_at":
+        null, "name": "overcloud-control", "deleted": false, "container_format": "bare",
+        "created_at": "2015-01-31T00:54:41", "disk_format": "qcow2", "updated_at":
+        "2015-01-31T00:55:44", "min_disk": 0, "protected": false, "id": "1734551c-dff7-472c-9925-f713e7af5a52",
+        "min_ram": 0, "checksum": "5f886f0ddc38ce8e16aa66b57d7c8b61", "owner": "51bcb84d79174b6680284bfbd44c23a8",
+        "is_public": true, "virtual_size": null, "properties": {"kernel_id": "aaa7b6f9-b1ba-4907-96c7-a213cd2e0901",
+        "ramdisk_id": "7cbea504-473e-49bf-aad5-5b8e1a50194b", "type": "overcloud provisioning"},
+        "size": 795477504}, {"status": "active", "deleted_at": null, "name": "overcloud-control-initrd",
+        "deleted": false, "container_format": "ari", "created_at": "2015-01-31T00:54:40",
+        "disk_format": "ari", "updated_at": "2015-01-31T00:55:44", "min_disk": 0,
+        "protected": false, "id": "7cbea504-473e-49bf-aad5-5b8e1a50194b", "min_ram":
+        0, "checksum": "b94813b3ac7ae81b19f8cc9941667671", "owner": "51bcb84d79174b6680284bfbd44c23a8",
+        "is_public": true, "virtual_size": null, "properties": {"type": "overcloud
+        provisioning ramdisk"}, "size": 20673913}, {"status": "active", "deleted_at":
+        null, "name": "overcloud-control-vmlinuz", "deleted": false, "container_format":
+        "aki", "created_at": "2015-01-31T00:54:39", "disk_format": "aki", "updated_at":
+        "2015-01-31T00:55:45", "min_disk": 0, "protected": false, "id": "aaa7b6f9-b1ba-4907-96c7-a213cd2e0901",
+        "min_ram": 0, "checksum": "ec468d5114f00be727b7725bd2028467", "owner": "51bcb84d79174b6680284bfbd44c23a8",
+        "is_public": true, "virtual_size": null, "properties": {"type": "overcloud
+        provisioning kernel"}, "size": 5594840}]}'
     http_version: 
-  recorded_at: Mon, 19 Jan 2015 12:16:23 GMT
-recorded_with: VCR 2.9.3
+  recorded_at: Tue, 03 Feb 2015 23:11:05 GMT
+- request:
+    method: get
+    uri: http://192.0.2.1:9292/v1.1/images/detail?marker=aaa7b6f9-b1ba-4907-96c7-a213cd2e0901
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.26.0 fog-core/1.27.2
+      Content-Type:
+      - application/json
+      X-Auth-Token:
+      - 10da4d149bc14131b27fdd0b2e1d2e91
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Content-Length:
+      - '14'
+      X-Openstack-Request-Id:
+      - req-29383ed6-8e46-4d0a-9ea1-0b4967e25976
+      Date:
+      - Tue, 03 Feb 2015 23:11:05 GMT
+    body:
+      encoding: UTF-8
+      string: '{"images": []}'
+    http_version: 
+  recorded_at: Tue, 03 Feb 2015 23:11:05 GMT

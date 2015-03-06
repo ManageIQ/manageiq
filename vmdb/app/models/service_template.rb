@@ -60,6 +60,9 @@ class ServiceTemplate < ActiveRecord::Base
     # Hide child services by default
     nh[:display] = false if parent_svc
 
+    # convert template class name to service class name by naming convention
+    nh[:type] = self.class.name.sub('Template', '')
+
     # Determine service name
     # target_name = self.get_option(:target_name)
     # nh.merge!('name' => target_name) unless target_name.blank?

@@ -176,14 +176,9 @@ module Manageiq
     end
 
     def validate_from_time(ost)
-      if ost.from_time
-        # Delete the "from_time" field if there is no time passed on there is no blackbox
-        ost.delete_field("from_time") if (ost.from_time.strip.empty? || !self.exist?)
-
-        # If there is only one data collection time and it does not match the "from_time"
-        # remove the value so we send what we have.
-        ost.delete_field("from_time") if (ost.from_time && @xmlData.length==1 && @xmlData[0][:time] != ost.from_time)
-      end
+      # Delete the "from_time" field
+      # TODO: do we still need to add from_time in the first place?
+      ost.delete_field("from_time") if ost.from_time
     end
   end
 end

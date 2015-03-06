@@ -67,7 +67,7 @@ describe ApiController do
     update_user_role(@role, subcollection_action_identifier(collection, subcollection, :assign))
     basic_authorize @cfme[:user], @cfme[:password]
 
-    @success = run_post(object_policies_url, gen_request_data(:assign, :href => "/api/#{subcollection}/999999"))
+    @success = run_post(object_policies_url, gen_request(:assign, :href => "/api/#{subcollection}/999999"))
 
     expect(@success).to be_false
     expect(@code).to eq(404)
@@ -77,7 +77,7 @@ describe ApiController do
     update_user_role(@role, subcollection_action_identifier(collection, subcollection, :assign))
     basic_authorize @cfme[:user], @cfme[:password]
 
-    @success = run_post(object_policies_url, gen_request_data(:assign, :guid => "xyzzy"))
+    @success = run_post(object_policies_url, gen_request(:assign, :guid => "xyzzy"))
 
     expect(@success).to be_true
     expect(@code).to eq(200)
@@ -95,7 +95,7 @@ describe ApiController do
     object = options[:object]
     policies = options[:policies]
 
-    @success = run_post(object_policies_url, gen_requests(:assign, policies.collect { |p| {:guid => p.guid} }))
+    @success = run_post(object_policies_url, gen_request(:assign, policies.collect { |p| {:guid => p.guid} }))
 
     expect(@success).to be_true
     expect(@code).to eq(200)
@@ -125,7 +125,7 @@ describe ApiController do
     update_user_role(@role, subcollection_action_identifier(collection, subcollection, :unassign))
     basic_authorize @cfme[:user], @cfme[:password]
 
-    @success = run_post(object_policies_url, gen_request_data(:unassign, :href => "/api/#{subcollection}/999999"))
+    @success = run_post(object_policies_url, gen_request(:unassign, :href => "/api/#{subcollection}/999999"))
 
     expect(@success).to be_false
     expect(@code).to eq(404)
@@ -135,7 +135,7 @@ describe ApiController do
     update_user_role(@role, subcollection_action_identifier(collection, subcollection, :unassign))
     basic_authorize @cfme[:user], @cfme[:password]
 
-    @success = run_post(object_policies_url, gen_request_data(:unassign, :guid => "xyzzy"))
+    @success = run_post(object_policies_url, gen_request(:unassign, :guid => "xyzzy"))
 
     expect(@success).to be_true
     expect(@code).to eq(200)
@@ -153,7 +153,7 @@ describe ApiController do
     object = options[:object]
 
     [@p1, @p2, @p3].each { |p| object.add_policy(p) }
-    @success = run_post(object_policies_url, gen_requests(:unassign, [{:guid => @p2.guid}, {:guid => @p3.guid}]))
+    @success = run_post(object_policies_url, gen_request(:unassign, [{:guid => @p2.guid}, {:guid => @p3.guid}]))
 
     expect(@success).to be_true
     expect(@code).to eq(200)
@@ -171,7 +171,7 @@ describe ApiController do
 
     object = options[:object]
     [@ps1, @ps2].each { |ps| object.add_policy(ps) }
-    @success = run_post(object_policies_url, gen_requests(:unassign, [{:guid => @ps2.guid}]))
+    @success = run_post(object_policies_url, gen_request(:unassign, [{:guid => @ps2.guid}]))
 
     expect(@success).to be_true
     expect(@code).to eq(200)

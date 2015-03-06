@@ -1,6 +1,8 @@
 module EmsRefresh
   module Parsers
     class OpenstackInfra < Infra
+      include EmsRefresh::Parsers::OpenstackCommon::Images
+      
       def self.ems_inv_to_hashes(ems, options = nil)
         new(ems, options).ems_inv_to_hashes
       end
@@ -18,6 +20,10 @@ module EmsRefresh
         @compute_service        = @connection # for consistency
         @baremetal_service      = @os_handle.detect_baremetal_service
         @baremetal_service_name = @os_handle.baremetal_service_name
+        @orchestration_service      = @os_handle.detect_orchestration_service
+        @orchestration_service_name = @os_handle.orchestration_service_name
+        @image_service        = @os_handle.detect_image_service
+        @image_service_name   = @os_handle.image_service_name
       end
 
       def ems_inv_to_hashes
@@ -26,6 +32,7 @@ module EmsRefresh
         $fog_log.info("#{log_header}...")
 
         load_hosts
+        get_images
 
         $fog_log.info("#{log_header}...Complete")
         @data
@@ -45,6 +52,20 @@ module EmsRefresh
         @hosts_ports ||= @baremetal_service.ports.details
       end
 
+      def resources
+        return @resources if @resources
+
+        resources = []
+        @orchestration_service.stacks.each do |stack|
+          # Nested depth 50 just for sure, although nobody should nest templates that much
+          all_stack_resources = @orchestration_service.list_resources(stack, :nested_depth => 50)
+          # Filtering just OS::Nova::Server, which is important to us for getting Purpose of the node
+          # (compute, controller, etc.).
+          resources += all_stack_resources.body['resources'].select { |x| x["resource_type"] == 'OS::Nova::Server' }
+        end
+        @resources = resources
+      end
+
       def load_hosts
         # Servers contains assigned IP address of hosts, there can be only
         # one nova server per host, only if the host is provisioned.
@@ -56,25 +77,34 @@ module EmsRefresh
         indexed_hosts_ports = {}
         hosts_ports.each { |p|  (indexed_hosts_ports[p.uuid] ||= []) <<  p }
 
+        # Indexed Heat resources, we are interested only in OS::Nova::Server
+        indexed_resources = {}
+        resources.each { |p| indexed_resources[p['physical_resource_id']] = p }
+
         process_collection(hosts, :hosts) do  |host|
-          parse_host(host, indexed_servers, indexed_hosts_ports)
+          parse_host(host, indexed_servers, indexed_hosts_ports, indexed_resources)
         end
       end
 
-      def parse_host(host, indexed_servers, _indexed_hosts_ports)
+      def parse_host(host, indexed_servers, _indexed_hosts_ports, indexed_resources)
         uid = host.uuid
+        host_name = identify_host_name(indexed_resources, host.instance_uuid, uid)
 
         new_result = {
-          :name         => uid,
-          :type         => 'HostOpenstackInfra',
-          :uid_ems      => uid,
-          :ems_ref      => uid,
-          :ems_ref_obj  => host.instance_uuid,
-          :ipaddress    => identify_primary_ip_address(host, indexed_servers),
-          :mac_address  => identify_primary_mac_address(host, indexed_servers),
-          :ipmi_address => identify_ipmi_address(host),
-          :power_state  => lookup_power_state(host.power_state),
-          :hardware     => process_host_hardware(host)
+          :name             => host_name,
+          :type             => 'HostOpenstackInfra',
+          :uid_ems          => uid,
+          :ems_ref          => uid,
+          :ems_ref_obj      => host.instance_uuid,
+          :operating_system => {:product_name => 'linux'},
+          :vmm_vendor       => 'RedHat',
+          :vmm_product      => identify_product(indexed_resources, host.instance_uuid),
+          :ipaddress        => identify_primary_ip_address(host, indexed_servers),
+          :mac_address      => identify_primary_mac_address(host, indexed_servers),
+          :ipmi_address     => identify_ipmi_address(host),
+          :power_state      => lookup_power_state(host.power_state),
+          :connection_state => lookup_connection_state(host.power_state),
+          :hardware         => process_host_hardware(host)
         }
 
         return uid, new_result
@@ -95,6 +125,28 @@ module EmsRefresh
         server.addresses.try(:[], 'ctlplane').try(:[], 0).try(:[], key) if server
       end
 
+      def get_purpose(indexed_resources, instance_uuid)
+        indexed_resources.fetch_path(instance_uuid, 'resource_name')
+      end
+
+      def identify_product(indexed_resources, instance_uuid)
+        purpose = get_purpose(indexed_resources, instance_uuid)
+        return nil unless purpose
+
+        if purpose == 'NovaCompute'
+          'rhel (Nova Compute hypervisor)'
+        else
+          "rhel (No hypervisor, Host Type is #{purpose})"
+        end
+      end
+
+      def identify_host_name(indexed_resources, instance_uuid, uid)
+        purpose = get_purpose(indexed_resources, instance_uuid)
+        return uid unless purpose
+
+        "#{uid} (#{purpose})"
+      end
+
       def identify_primary_mac_address(host, indexed_servers)
         server_address(indexed_servers[host.instance_uuid], 'OS-EXT-IPS-MAC:mac_addr')
       end
@@ -112,6 +164,14 @@ module EmsRefresh
         when "power on"               then "on"
         when "power off", "rebooting" then "off"
         else                               "unknown"
+        end
+      end
+
+      def lookup_connection_state(power_state_input)
+        case power_state_input
+        when "power on"               then "connected"
+        when "power off", "rebooting" then "disconnected"
+        else                               "disconnected"
         end
       end
 

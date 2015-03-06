@@ -132,24 +132,13 @@ module ApiSpecHelper
     action_identifier(type, action, "#{subtype}_subcollection_actions".to_sym)
   end
 
-  def gen_request(action, *hrefs)
-    request = {"action" => action.to_s}
-    request["resources"] = hrefs.collect { |href| {"href" => href} } if hrefs.present?
-    request
-  end
-
-  def gen_requests(action, data)
-    request = {"action" => action.to_s}
-    request["resources"] = data
-    request
-  end
-
-  def gen_request_data(action, data, *hrefs)
+  def gen_request(action, data = nil, *hrefs)
     request = {"action" => action.to_s}
     if hrefs.present?
+      data ||= {}
       request["resources"] = hrefs.collect { |href| data.dup.merge("href" => href) }
-    else
-      request["resource"] = data
+    elsif data.present?
+      request[data.kind_of?(Array) ? "resources" : "resource"] = data
     end
     request
   end

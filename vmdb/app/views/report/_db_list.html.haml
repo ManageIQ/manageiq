@@ -1,18 +1,17 @@
 - if x_active_tree == :db_tree
   - if @sb[:nodes].nil? || (@sb[:nodes] && @sb[:nodes].length == 1)
     = render :partial => "layouts/flash_msg"
-    %table.style3
+    %table.table.table-striped.table-bordered.table-hover
       %thead
         %tr
-          %th.icon{:nowrap => 1}
-          %th{:nowrap => 1}
+          %th.narrow
+          %th
             = _('Type')
       %tbody
         - @temp[:db_nodes_order].each do |node|
-          %tr{:class => cycle('row0', 'row1'), :onmouseover => "this.style.cursor = 'pointer';",
-            :title => _("Click to view '%s'") % @temp[:db_nodes][node][:title],
+          %tr{:title => _("Click to view '%s'") % @temp[:db_nodes][node][:title],
             :onclick => "cfmeDynatree_activateNode('#{@sb[:active_tree]}', '#{@temp[:db_nodes][node][:id]}');"}
-            %td.icon{:nowrap => 1 }
+            %td.narrow{:nowrap => 1}
               %ul.icons
                 %li
                   %span{:class => @temp[:db_nodes][node][:glyph]}
@@ -21,46 +20,42 @@
   - elsif @sb[:nodes] && @sb[:nodes].last == "g" && !@in_a_form
     = render :partial => "layouts/flash_msg"
     - # All Groups node is selected
-    %table.style3
+    %table.table.table-striped.table-bordered.table-hover
       %thead
         %tr
-          %th.icon
-            &nbsp;
-          %th{:nowrap => 1}
+          %th.narrow
+          %th
             = _('Description')
       %tbody
         - @temp[:miq_groups].sort_by(&:description).each do |g|
-          %tr{:class => cycle('row0', 'row1')}
-            %td{:onclick => remote_function(:loading => "miqSparkle(true);", :complete => "miqSparkle(false);",
+          %tr{:onclick => remote_function(:loading => "miqSparkle(true);", :complete => "miqSparkle(false);",
               :url => {:action => 'tree_select', :id => "xx-g_g-#{to_cid(g.id)}"}), :title => _("Click to view %s ") % g.description, :class => "icon"}
+            %td.narrow
               %ul.icons
                 %li
                   %span.product.product-group
-            %td{:onclick => remote_function(:loading => "miqSparkle(true);", :complete => "miqSparkle(false);",
-              :url => {:action => 'tree_select', :id => "xx-g_g-#{to_cid(g.id)}"}), :title => _("Click to view '%s'") % g.description}
+            %td
               = h(g.description)
   - elsif @sb[:nodes].length == 3 && @sb[:nodes][1] == "g_g" && !@in_a_form
     = render :partial => "layouts/flash_msg"
     - if @temp[:widgetsets].empty?
       = render :partial => 'layouts/info_msg', :locals => {:message => _("No Dashboards are defined for this group. Default dashboard will be shown.")}
     - else
-      %table.style3
+      %table.table.table-striped.table-bordered.table-hover
         %thead
           %tr
-            %th.icon
-              &nbsp;
-            %th{:nowrap => 1}
+            %th.narrow
+            %th
               = _('Description')
         %tbody
           - @temp[:widgetsets].each do |ws|
-            %tr{:class => cycle('row0', 'row1')}
-              %td{:onclick => remote_function(:loading => "miqSparkle(true);", :complete => "miqSparkle(false);", :url => {:action => 'tree_select',
+            %tr{:onclick => remote_function(:loading => "miqSparkle(true);", :complete => "miqSparkle(false);", :url => {:action => 'tree_select',
                 :id => "xx-g_g-#{@sb[:nodes][2]}_-#{to_cid(ws.id)}"}), :title => _("Click to view '%s (%s)'") % [ws.description, ws.name], :class => "icon"}
-                %ul.iconss
+              %td.narrow
+                %ul.icons
                   %li
                     %span.fa.fa-dashboard{:title => ws.description}
-              %td{:onclick => remote_function(:loading => "miqSparkle(true);", :complete => "miqSparkle(false);", :url => {:action => 'tree_select',
-                :id => "xx-g_g-#{@sb[:nodes][2]}_-#{to_cid(ws.id)}"}), :title => _("Click to view '%s (%s)'") % [ws.description, ws.name]}
+              %td
                 = "#{h(ws.description)} (#{h(ws.name)})"
   - elsif ((@sb[:nodes].length == 4 && @sb[:nodes][1] == "g_g") || (@sb[:nodes].length == 2 && @sb[:nodes].first == "xx")) && !@in_a_form
     = render :partial => "layouts/flash_msg"

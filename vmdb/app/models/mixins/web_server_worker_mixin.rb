@@ -75,6 +75,9 @@ module WebServerWorkerMixin
       result  = { :adds => [], :deletes => [] }
       ports = self.all_ports_in_use
 
+      # TODO: This tracking of adds/deletes of pids and ports is not DRY
+      ports_hash = {:deletes => [], :adds => []}
+
       if current != desired
         $log.info("MIQ(#{self.name}.sync_workers) Workers are being synchronized: Current #: [#{current}], Desired #: [#{desired}]")
 
@@ -83,6 +86,7 @@ module WebServerWorkerMixin
             port = self.reserve_port(ports)
             $log.info("MIQ(#{self.name}.sync_workers) Reserved port=#{port}, Current ports in use: #{ports.inspect}")
             ports << port
+            ports_hash[:adds] << port
             w = self.start_worker(:uri => build_uri(port))
             result[:adds] << w.pid
           end
@@ -91,6 +95,7 @@ module WebServerWorkerMixin
             w = workers.pop
             port = w.port
             ports.delete(port)
+            ports_hash[:deletes] << port
 
             $log.info("MIQ(#{self.name}.sync_workers) Unreserved port=#{port}, Current ports in use: #{ports.inspect}")
             result[:deletes] << w.pid
@@ -99,7 +104,7 @@ module WebServerWorkerMixin
         end
       end
 
-      self.modify_apache_ports(:adds => ports) if !ports.empty? && MiqEnvironment::Command.supports_apache?
+      self.modify_apache_ports(ports_hash) if MiqEnvironment::Command.supports_apache?
 
       result
     end
@@ -151,7 +156,10 @@ module WebServerWorkerMixin
       if saved
         self.registered_ports += adds
         self.registered_ports -= deletes
-        MiqServer.my_server.queue_restart_apache
+
+        # Update the apache load balancer regardless but only restart apache
+        # when adding a new port to the balancer.
+        MiqServer.my_server.queue_restart_apache unless adds.empty?
         $log.info("MIQ(#{self.name}.modify_apache_ports) Added/removed port(s) #{adds.inspect}/#{deletes.inspect}, registered ports after #{self.registered_ports.inspect}")
       end
       return saved

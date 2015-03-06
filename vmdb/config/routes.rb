@@ -37,6 +37,7 @@ Vmdb::Application.routes.draw do
     dialog_field_changed
     dialog_form_button_pressed
     dynamic_checkbox_refresh
+    dynamic_date_refresh
     dynamic_list_refresh
     dynamic_radio_button_refresh
     dynamic_text_box_refresh
@@ -173,6 +174,7 @@ Vmdb::Application.routes.draw do
       :get  => %w(
         download_data
         explorer
+        ot_edit
         show
       ),
       :post => %w(
@@ -189,6 +191,10 @@ Vmdb::Application.routes.draw do
         group_form_field_changed
         group_update
         identify_catalog
+        ot_content_changed
+        ot_content_submit
+        ot_edit_submit
+        ot_form_field_changed
         process_sts
         prov_field_changed
         reload
@@ -1274,6 +1280,7 @@ Vmdb::Application.routes.draw do
 
     :security_group => {
       :get => %w(
+        download_data
         index
         show
         show_list
@@ -1507,6 +1514,7 @@ Vmdb::Application.routes.draw do
         drift_to_txt
         explorer
         launch_vmware_console
+        launch_html5_console
         perf_chart_chooser
         policies
         protect
@@ -1566,6 +1574,8 @@ Vmdb::Application.routes.draw do
         users
         vmrc_console
         vm_pre_prov
+        vm_vdi
+        html5_console
         wait_for_task
         win32_services
       ) +
@@ -1652,7 +1662,7 @@ Vmdb::Application.routes.draw do
         util_chart_chooser
         vm_pre_prov
         vmrc_console
-        vnc_console
+        html5_console
         wait_for_task
         win32_services
         x_button

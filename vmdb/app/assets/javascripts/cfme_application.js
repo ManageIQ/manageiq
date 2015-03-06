@@ -1266,5 +1266,3 @@ function miqDomElementExists(element){
 function miqSerializeForm(element){
   return $('#' + element).find('input,select,textarea').serialize();
 }
-
-

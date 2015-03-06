@@ -1,9 +1,9 @@
 %fieldset
   %h3=_("Event Log Entry")
-  %table.style3
+  %table.table.table-striped.table-bordered.table-hover
     %thead
       %tr
-        %th.icon
+        %th.narrow
         %th=_("Name")
         %th=_("Filter Message")
         %th=_("Level")
@@ -11,7 +11,7 @@
         %th=_(" # of Days")
     %tbody
       - if (!params[:add] && session[:nteventlog_data].empty?) || params[:edit_entry]
-        %tr#new_tr{:class => cycle('row0', 'row1'), :onclick => remote_function(:url=>{:action=>'ap_ce_select', :add=>'new', :item1=>"nteventlog", :id=>"#{@scan.id || "new"}"}), :title => _("Click to add a new entry")}
+        %tr#new_tr{:onclick => remote_function(:url=>{:action=>'ap_ce_select', :add=>'new', :item1=>"nteventlog", :id=>"#{@scan.id || "new"}"}), :title => _("Click to add a new entry")}
           %td= image_tag("/images/toolbars/new.png", :class=>"rollover small")
           %td=_("<New Entry>")
           %td=_("<Click on this row to create a new entry>")
@@ -19,7 +19,7 @@
           %td=_("<Click on this row to create a new entry>")
           %td=_("<Click on this row to create a new entry>")
       - else
-        %tr#new_tr{:class => cycle('row0', 'row1')}
+        %tr#new_tr
           %td
             = image_submit_tag("/images/toolbars/import.png",
               :class     => "rollover small",
@@ -29,24 +29,24 @@
               :title     => _("Add this entry"),
               :item_type => "nteventlog",
               :id        => "#{@scan.id || "new"}")
-          %td.all
+          %td
             = text_field("entry", "name", :maxlength=>MAX_NAME_LEN, "value"=>session[:nteventlog_data][:name])
-          %td.all
+          %td
             = text_field("entry", "message", :maxlength=>MAX_NAME_LEN, "value"=>session[:nteventlog_data][:message])
-          %td.all
+          %td
             = text_field("entry", "level", :maxlength=>MAX_NAME_LEN, "value"=>session[:nteventlog_data][:level])
           - if false
-            %td.all
+            %td
               = text_field("entry", "rec_count", :maxlength=>MAX_NAME_LEN, "value"=>session[:nteventlog_data][:rec_count])
-          %td.all
+          %td
             = text_field("entry", "source", :maxlength=>MAX_NAME_LEN, "value"=>session[:nteventlog_data][:source])
-          %td.all
+          %td
             = text_field("entry", "num_days", :maxlength=>MAX_NAME_LEN, "value"=>session[:nteventlog_data][:numdays])
           = hidden_field("item", "type3", :value=>"nteventlog")
       - if !session[:nteventlog_entries].nil? && !session[:nteventlog_entries].empty?
         - session[:nteventlog_entries].sort_by { |r| r[:name] }.each_with_index do |nteventlog,i|
           - if session[:nteventlog_data][:name] == nteventlog[:name] && session[:nteventlog_data][:selected].to_i == i
-            %tr{:class => cycle('row0', 'row1'), :id => "edit_tr"}
+            %tr{:id => "edit_tr"}
               %td
                 = image_submit_tag("/images/toolbars/import.png",
                   :class      => "rollover small",
@@ -56,23 +56,23 @@
                   :alt        => _("Update this entry"),
                   :title      => _("Update this entry"),
                   :id         => "#{@scan.id || "new"}")
-              %td.all
+              %td
                 = text_field("entry", "name", :maxlength=>MAX_NAME_LEN, "value"=>session[:nteventlog_data][:name])
-              %td.all
+              %td
                 = text_field("entry", "message", :maxlength=>MAX_NAME_LEN, "value"=>session[:nteventlog_data][:message])
-              %td.all
+              %td
                 = text_field("entry", "level", :maxlength=>MAX_NAME_LEN, "value"=>h(session[:nteventlog_data][:level]))
               - if false
-                %td.all
+                %td
                   = text_field("entry", "rec_count", :maxlength=>MAX_NAME_LEN, "value"=>session[:nteventlog_data][:rec_count])
-              %td.all
+              %td
                 = text_field("entry", "source", :maxlength=>MAX_NAME_LEN, "value"=>session[:nteventlog_data][:source])
-              %td.all
+              %td
                 = text_field("entry", "num_days", :maxlength=>MAX_NAME_LEN, "value"=>session[:nteventlog_data][:num_days])
               = hidden_field("item", "type3", :value=>"nteventlog")
               = hidden_field("item", "id", :value=>i)
           - else
-            %tr{:class => cycle('row0', 'row1'), :id => "#{i}_tr"}
+            %tr{:id => "#{i}_tr"}
               %td{:onclick => remote_function(:url=>{:action=>'ap_ce_delete', :item2=>"nteventlog", :nteventlog_name=>nteventlog[:name], :entry_id=>i, :id=>"#{@scan.id || "new"}"}), :title => _("Click to delete this entry")}
                 = image_tag("/images/toolbars/delete.png", :class=>"rollover small")
               %td{:onclick => remote_function(:url=>{:action=>'ap_ce_select', :entry_id=>i, :item2=>"nteventlog", :nteventlog_name=>nteventlog[:name], :edit_entry=>'edit_nteventlog', :field=>"name", :id=>"#{@scan.id || "new"}"}), :title => _("Click to update this entry")}
