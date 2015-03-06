@@ -450,12 +450,8 @@ class MiqRequestController < ApplicationController
       when "miq_request_host" then :Host
       else                         :Vm
       end
-    or_hash = {"or" => []}
-    request_types = MiqRequest::MODEL_REQUEST_TYPES[req_typ]
-    request_types.each_key do |k|
-      or_hash["or"].push("=" => {"value" => k.to_s, "field" => "MiqRequest-resource_type"})
-    end
-    cond.push(or_hash)
+    types = MiqRequest::MODEL_REQUEST_TYPES[req_typ]
+    cond.push("or" => types.keys.collect { |k| {"=" => {"value" => k.to_s, "field" => "MiqRequest-resource_type"}} })
 
     if opts[:type_choice] && opts[:type_choice] != "all"  # Add request_type filter, if selected
       cond_hash = Hash.new
