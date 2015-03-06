@@ -441,13 +441,7 @@ class MiqRequestController < ApplicationController
       opts[:applied_states].each_with_index do |state, i|
         @or_hash         = {} if i == 0
         @or_hash["or"] ||= []
-        if i == 0
-          @or_hash["or"].push("=" => {"value" => state, "field" => "MiqRequest-approval_state"})
-        elsif i == opts[:applied_states].length-1
-          @or_hash["or"].push("=" => {"value" => state, "field" => "MiqRequest-approval_state"})
-        else
-          @or_hash["or"].push("=" => {"value" => state, "field" => "MiqRequest-approval_state"})
-        end
+        @or_hash["or"].push("=" => {"value" => state, "field" => "MiqRequest-approval_state"})
       end
       cond.push(@or_hash)
     end
