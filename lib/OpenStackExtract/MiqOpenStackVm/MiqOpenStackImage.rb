@@ -70,9 +70,17 @@ class MiqOpenStackImage
       :response_block => response_block
     )
 
+    tf.close
+
     checksum = rv.headers['X-Image-Meta-Checksum']
     $log.debug "#{log_pref}: Checksum: #{checksum}" if $log.debug?
     $log.debug "#{log_pref}: #{`ls -l #{tf.path}`}" if $log.debug?
+
+    if tf.size != isize
+      $log.error "#{log_pref}: Error downloading image #{iname}"
+      $log.error "#{log_pref}: Downloaded size does not match image size #{tf.size} != #{isize}"
+      raise "Image download failed"
+    end
 
     return tf
   end
