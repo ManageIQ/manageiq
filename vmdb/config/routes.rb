@@ -547,6 +547,7 @@ Vmdb::Application.routes.draw do
         show
         show_list
         tagging_edit
+        scaling
       ) +
         compare_get,
       :post => %w(
@@ -568,6 +569,7 @@ Vmdb::Application.routes.draw do
         tree_autoload_quads
         update
         wait_for_task
+        scaling
       ) +
         adv_search_post +
         compare_post +
