@@ -6,6 +6,15 @@ class DialogFieldDateTimeControl < DialogFieldDateControl
     with_current_user_timezone { Time.zone.parse(@value).utc.iso8601 }
   end
 
+  def value
+    if dynamic
+      @value = values_from_automate
+      DateTime.parse(@value).strftime("%m/%d/%Y %H:%M")
+    else
+      default_time
+    end
+  end
+
   def refresh_json_value
     date_time_value = DateTime.parse(value)
 

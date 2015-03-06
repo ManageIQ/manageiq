@@ -58,12 +58,12 @@ describe DialogFieldDateTimeControl do
       let(:dynamic) { true }
 
       before do
-        DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("processor")
+        DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("2015-01-02")
         dialog_field.value = nil
       end
 
       it "returns the values from the value processor" do
-        expect(dialog_field.value).to eq("processor")
+        expect(dialog_field.value).to eq("01/02/2015 00:00")
       end
     end
 

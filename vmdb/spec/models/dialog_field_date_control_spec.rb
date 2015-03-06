@@ -8,12 +8,12 @@ describe DialogFieldDateControl do
       let(:dynamic) { true }
 
       before do
-        DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("processor")
+        DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("2015-01-02")
         dialog_field.value = nil
       end
 
       it "returns the values from the value processor" do
-        expect(dialog_field.value).to eq("processor")
+        expect(dialog_field.value).to eq("01/02/2015")
       end
     end
 
@@ -61,13 +61,8 @@ describe DialogFieldDateControl do
 
         it_behaves_like "DialogFieldDateControl#normalize_automate_values"
 
-        it "sets the value as an iso format" do
-          dialog_field.normalize_automate_values(automate_hash)
-          expect(dialog_field.instance_variable_get(:@value)).to eq("2015-01-02T00:00:00+00:00")
-        end
-
-        it "returns the value in m/d/y format" do
-          expect(dialog_field.normalize_automate_values(automate_hash)).to eq("01/02/2015")
+        it "returns the value in iso format" do
+          expect(dialog_field.normalize_automate_values(automate_hash)).to eq("2015-01-02T00:00:00+00:00")
         end
       end
 
