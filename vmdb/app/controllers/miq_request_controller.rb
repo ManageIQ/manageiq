@@ -442,9 +442,7 @@ class MiqRequestController < ApplicationController
     end
 
     # Add time condition
-    cond_hash = Hash.new
-    cond_hash["AFTER"] = {"value"=>"#{opts[:time_period].to_i} Days Ago","field"=>"MiqRequest-created_on"}
-    cond.push(cond_hash)
+    cond.push("AFTER" => {"value"=>"#{opts[:time_period].to_i} Days Ago","field"=>"MiqRequest-created_on"})
 
     case @layout
     when "miq_request_ae"
