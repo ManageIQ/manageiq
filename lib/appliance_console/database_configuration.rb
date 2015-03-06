@@ -118,7 +118,9 @@ module ApplianceConsole
       self.host     = ask_for_ip_or_hostname("database hostname or IP address", host) if host.blank? || !local?
       self.database = just_ask("name of the database on #{host}", database) unless local?
       self.username = just_ask("username", username) unless local?
+      count = 0
       loop do
+        count += 1
         password1   = ask_for_password_or_none("database password on #{host}", password)
         # if they took the default, just bail
         break if (password1 == password)
@@ -126,6 +128,8 @@ module ApplianceConsole
         if password1 == password2
           self.password = password1
           break
+        elsif count > 1 # only reprompt password once
+          raise ArgumentError, "passwords did not match"
         else
           say("\nThe passwords did not match, please try again")
         end

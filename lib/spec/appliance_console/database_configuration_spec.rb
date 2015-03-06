@@ -202,6 +202,12 @@ describe ApplianceConsole::DatabaseConfiguration do
       subject.ask_for_database_credentials
       expect(subject.password).to eq("pass3")
     end
+
+    it "should raise an error if passwords do not match twice" do
+      subject.should_receive(:just_ask).with(/password/i, anything).twice.and_return(*%w(pass1 pass2 pass3 pass4))
+
+      expect { subject.ask_for_database_credentials }.to raise_error(ArgumentError, "passwords did not match")
+    end
   end
 
   context "#create_or_join_region" do
@@ -370,8 +376,8 @@ describe ApplianceConsole::DatabaseConfiguration do
   def stubbed_say(clazz)
     Class.new(clazz) do
       include ApplianceConsole::Prompts
-      # global variable
-      def say(*args)
+      # don't display the messages prompted to the end user
+      def say(*_args)
       end
     end.new
   end
