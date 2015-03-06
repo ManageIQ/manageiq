@@ -33,6 +33,10 @@ class VmdbDatabaseConnection < ActiveRecord::Base
 
   attr_reader :vmdb_database_id
 
+  def self.sortable?
+    false
+  end
+
   def vmdb_database_id
     @vmdb_database_id ||= self.class.vmdb_database.id
   end
