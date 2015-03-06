@@ -1,0 +1,44 @@
+#form_div
+  #basic_info_div
+    = render :partial => "layouts/flash_msg"
+    - url = url_for(:action => "ot_content_changed", :id => @edit[:rec_id])
+    %p.legend= _("New Orchestration Template Information")
+    %table
+      %td{:valign => "top"}
+        %table.style1
+          %tr
+            %td.key=_('Name')
+            %td
+              = text_field_tag("name",
+                               @edit[:current][:name],
+                               :autocomplete => 'off',
+                               :diabled => false,
+                               :size => 80,
+                               :maxlength => 255,
+                               "data-miq_observe" => {:interval => '.5',
+                                                      :url      => url}.to_json)
+          %tr
+            %td.key=_('Description')
+            %td
+              = text_area_tag("description",
+                              @edit[:current][:description],
+                              :autocomplete => 'off',
+                              :disabled => false,
+                              :rows => 15,
+                              :cols => 80,
+                              "data-miq_observe" => {:interval => '.5',
+                                                     :url      => url}.to_json)
+
+    %hr
+
+    = text_area_tag("template_content", @edit[:current][:content], :style => "display:none;")
+    - if params[:action] != "explorer"
+      = render :partial => "/layouts/my_code_mirror",
+        :locals       => {:text_area_id => "template_content",
+        :mode         => "yaml",
+        :line_numbers => true,
+        :read_only    => false,
+        :url          => url}
+
+      :javascript
+        miqEditor.refresh();
