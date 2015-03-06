@@ -1,15 +1,13 @@
-require 'manageiq_foreman'
-require 'manageiq_foreman/inventory'
-
 module EmsRefresh
   module Refreshers
     class ForemanProvisioningRefresher < BaseRefresher
       include EmsRefresherMixin
 
       def parse_inventory(manager, targets)
-        foreman = ManageiqForeman::Inventory.from_attributes(manager.connection_attrs)
-        raw_ems_data = foreman.refresh_provisioning(targets)
-        EmsRefresh::Parsers::Foreman.provisioning_inv_to_hashes(raw_ems_data)
+        manager.with_provider_connection do |connection|
+          raw_ems_data = connection.inventory.refresh_provisioning(targets)
+          EmsRefresh::Parsers::Foreman.provisioning_inv_to_hashes(raw_ems_data)
+        end
       end
 
       def save_inventory(manager, targets, hashes)
