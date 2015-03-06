@@ -1,16 +1,14 @@
-body {font: 12px/1.231 Arial,Helvetica,sans-serif;}
+body {font: 12px/1.231 Arial,Helvetica,sans-serif; padding-top: 100px;}
 
 #xyz_main {
     position: absolute;
     top: 0px;
     left: 50%;
-    height: 72px;
+    height: 200px !important;
     width: 100px;
     margin-left: -55px;
     text-align: left;
 }
-
-.maincontent{padding-top:100px;}
 
 #quadicon {color: #e3e4e4;float:left; height: 72px; padding: 0px 1px 1px 0px;position: relative;text-transform: none;width: 72px;}
 #quadicon img {border:0px;}	

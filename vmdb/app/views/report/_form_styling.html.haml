@@ -81,18 +81,15 @@
                         "data-miq_observe"     => {:url => url}.to_json)
               - elsif !styles[s_idx]
                 = _('Default')
-          %td
-            %table.admintable{:cellspacing => "0", :cellpadding => "0", :style => "padding:0px"}
-              %tbody
-                - 3.times do |s_idx|
-                  %tr{:style => "padding: 0px;"}
-                    %td{:style => "padding: 0px;"}
-                      - break if s_idx > 0 && (styles[s_idx - 1].blank? || styles[s_idx - 1][:operator] == "DEFAULT")
-                      - if styles[s_idx] && styles[s_idx][:class]
-                        %span{:class => styles[s_idx][:class].to_s}
-                          &nbsp;
-                          = _('Sample')
-                          &nbsp;
+          - 3.times do |s_idx|
+            - break if s_idx > 0 && (styles[s_idx - 1].blank? || styles[s_idx - 1][:operator] == "DEFAULT")
+            - if styles[s_idx] && styles[s_idx][:class]
+              %td{:class => styles[s_idx][:class].to_s}
+                &nbsp;
+                = _('Sample')
+                &nbsp;
+            - else
+              %td
   %br
   = _('* Style "If" conditions are evaluated top to bottom for each column')
 
