@@ -1,15 +1,27 @@
-class VmdbDatabaseConnection < ActsAsArModel
-  set_columns_hash(
-    :address           => :string,
-    :application       => :string,
-    :blocked_by        => :integer,
-    :command           => :string,
-    :spid              => :integer,
-    :task_state        => :string,
-    :wait_resource     => :string,
-    :wait_time         => :integer,
-    :vmdb_database_id  => :integer
-  )
+class VmdbDatabaseConnection < ActiveRecord::Base
+  class << self
+    attr_accessor :aar_columns
+  end
+  self.aar_columns = []
+
+  self.table_name = 'pg_stat_activity'
+  self.primary_key = nil
+
+  has_many :vmdb_database_locks, :primary_key => 'pid', :foreign_key => 'pid'
+
+  default_scope do
+    current_database = VmdbDatabaseConnection.connection.current_database
+    where(:datname => current_database).includes(:vmdb_database_locks)
+  end
+
+  virtual_column :address,           :type => :string
+  virtual_column :application,       :type => :string
+  virtual_column :command,           :type => :string
+  virtual_column :spid,              :type => :integer
+  virtual_column :task_state,        :type => :string
+  virtual_column :wait_resource,     :type => :string
+  virtual_column :wait_time,         :type => :integer
+  virtual_column :vmdb_database_id,  :type => :integer
 
   virtual_belongs_to :vmdb_database
   virtual_belongs_to :zone
@@ -17,27 +29,68 @@ class VmdbDatabaseConnection < ActsAsArModel
   virtual_belongs_to :miq_worker
 
   virtual_column :pid, :type => :integer
+  virtual_column :blocked_by, :type => :integer
 
-  def initialize(values = {})
-    values[:vmdb_database] ||= self.class.vmdb_database
-    super(values)
+  attr_reader :vmdb_database_id
+
+  def vmdb_database_id
+    @vmdb_database_id ||= self.class.vmdb_database.id
   end
 
-  #
-  # Attributes and Reflections
-  #
-
-  def model_name
-    self.name.singularize.camelize
+  def address
+    client_addr
   end
 
-  def model
-    return @model if instance_variable_defined?(:@model)
-    @model = self.model_name.constantize rescue nil
+  def application
+    application_name
   end
 
-  def arel_table
-    Arel::Table.new(self.name)
+  def command
+    query
+  end
+
+  def spid
+    read_attribute 'pid'
+  end
+
+  def task_state
+    waiting
+  end
+
+  def wait_time
+    wait_time_ms
+  end
+
+  def wait_resource
+    lock = vmdb_database_locks.first
+    lock && lock.relation
+  end
+
+  def wait_time_ms
+    (Time.now - query_start).to_i
+  end
+
+  def blocked_by
+    lock_info = vmdb_database_locks.where(:granted => false).first
+    lock_info && lock_info.blocking_lock.pid
+  end
+
+  def to_csv_hash
+    {
+      'session_id'              => spid,
+      'xact_start'              => xact_start,
+      'last_request_start_time' => query_start,
+      'command'                 => query,
+      'task_state'              => waiting,
+      'login'                   => usename,
+      'application'             => application_name,
+      'request_id'              => usesysid,
+      'net_address'             => client_addr,
+      'host_name'               => client_hostname,
+      'client_port'             => client_port,
+      'wait_time_ms'            => wait_time_ms,
+      'blocked_by'              => blocked_by,
+    }
   end
 
   def vmdb_database
@@ -69,49 +122,4 @@ class VmdbDatabaseConnection < ActsAsArModel
     parent = miq_worker || miq_server
     @pid = parent && parent.pid
   end
-
-  #
-  # Finders
-  #
-
-  def self.find(*args)
-    connections = self.vmdb_database_connections
-
-    options = args.extract_options!
-
-    case args.first
-    when :first then connections.empty? ? nil : self.new(connections.first)
-    when :last  then connections.empty? ? nil : self.new(connections.last)
-    when :all   then connections.collect { |hash| self.new(hash) }
-    end
-  end
-
-  protected
-
-  def self.vmdb_database
-    @vmdb_database ||= VmdbDatabase.my_database
-  end
-
-  def self.vmdb_database_connections
-    connections = ActiveRecord::Base.connection.activity_stats if ActiveRecord::Base.connection.respond_to?(:activity_stats)
-    return [] if connections.nil?
-    connections.collect { |hash| filtered_hash(hash) }
-  end
-
-  def self.filtered_hash(hash)
-    dictionary = {
-      :address       => 'net_address',
-      :application   => 'application',
-      :blocked_by    => 'blocked_by',
-      :command       => 'command',
-      :spid          => 'session_id',
-      :task_state    => 'task_state',
-      :wait_resource => 'wait_resource',
-      :wait_time     => 'wait_time_ms',
-    }
-    filtered_hash = {}
-    dictionary.each { |key, pg_key| filtered_hash[key] = hash[pg_key] }
-    filtered_hash
-  end
-
 end
