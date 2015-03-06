@@ -2674,5 +2674,16 @@ module ApplicationHelper
     !type.starts_with?("generic")
   end
 
+  def db_for_quadicon
+    case @layout
+    when "ems_infra"
+      :ems
+    when "ems_cloud"
+      :ems_cloud
+    else
+      :ems_container
+    end
+  end
+
   attr_reader :big_iframe
 end

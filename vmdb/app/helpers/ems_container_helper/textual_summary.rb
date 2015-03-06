@@ -4,23 +4,18 @@ module EmsContainerHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w{hostname ipaddress type port }
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-  end
-
-  def textual_group_relationships
-    items = %w{}
-   # items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items = %w(hostname ipaddress type port)
+    items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
   def textual_group_status
     items = %w(authentications refresh_status)
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
   def textual_group_tags
-    items = %w{zone tags}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items = %w(zone tags)
+    items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
   #
@@ -48,7 +43,8 @@ module EmsContainerHelper::TextualSummary
   # end
   #
   # def textual_memory_resources
-  #   {:label => "Aggregate Host Memory", :value => number_to_human_size(@ems.aggregate_memory * 1.megabyte,:precision=>0)}
+  #   {:label => "Aggregate Host Memory",
+  #    :value => number_to_human_size(@ems.aggregate_memory * 1.megabyte,:precision=>0)}
   # end
   #
   # def textual_cpus
@@ -147,8 +143,8 @@ module EmsContainerHelper::TextualSummary
     authentications.collect do |auth|
       label =
         case auth.authtype
-        when "default"; "Default"
-        when "metrics"; "C & U Database"
+        when "default" then "Default"
+        when "metrics" then "C & U Database"
         else;           "<Unknown>"
         end
 
@@ -183,10 +179,8 @@ module EmsContainerHelper::TextualSummary
       h[:image] = "smarttag"
       h[:value] = "No #{label} have been assigned"
     else
-      h[:value] = tags.sort_by { |category, assigned| category.downcase }.collect { |category, assigned| {:image => "smarttag", :label => category, :value => assigned } }
+      h[:value] = tags.sort_by { |category, assigned| category.downcase }.collect { |category, assigned| {:image => "smarttag", :label => category, :value => assigned} }
     end
     h
   end
-
-
 end

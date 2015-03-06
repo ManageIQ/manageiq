@@ -8,11 +8,6 @@ module ContainerNodeHelper::TextualSummary
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
-  def textual_group_relationships
-    items = %w{}
-    # items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-  end
-
   #
   # Items
   #

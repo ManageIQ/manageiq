@@ -26,15 +26,16 @@ class TreeBuilderContainersFilter < TreeBuilder
          :tip         => "Global Shared Filters",
          :cfmeNoClick => true}
       ]
-    return objects
+    objects
   end
 
   def x_get_tree_custom_kids(object, options)
     case object[:id]
     when "global" # Global filters
-      objects = MiqSearch.all(:conditions => ["(search_type=? or (search_type=? and (search_key is null or search_key<>?))) and db=?", "global", "default", "_hidden_",
+      objects = MiqSearch.all(:conditions => ["(search_type=? or (search_type=? and (search_key is null
+                                                or search_key<>?))) and db=?", "global", "default", "_hidden_",
                                               options[:leaf]]).sort_by { |a| a.description.downcase }
     end
-    return options[:count_only] ? objects.length : objects
+    options[:count_only] ? objects.length : objects
   end
 end

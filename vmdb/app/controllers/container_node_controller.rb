@@ -1,5 +1,7 @@
 class ContainerNodeController < ApplicationController
- #before_filter :check_privileges
+  include ContainersCommonMixin
+
+  before_filter :check_privileges
   before_filter :get_session_data
   after_filter :cleanup_action
   after_filter :set_session_data
@@ -40,22 +42,4 @@ class ContainerNodeController < ApplicationController
   end
 
   private ############################
-
-  def get_session_data
-    @title      = ui_lookup(:tables => "container_node")
-    @layout     = "container_node"
-    @table_name = request.parameters[:controller]
-    @model      = Container
-    @lastaction = session[:container_node_lastaction]
-    @display    = session[:container_node_display]
-    @filters    = session[:container_node_filters]
-    @catinfo    = session[:container_node_catinfo]
-  end
-
-  def set_session_data
-    session[:container_node_lastaction] = @lastaction
-    session[:container_node_display]    = @display unless @display.nil?
-    session[:container_node_filters]    = @filters
-    session[:container_node_catinfo]    = @catinfo
-  end
 end

@@ -1,5 +1,7 @@
 class ContainerServiceController < ApplicationController
-  #before_filter :check_privileges
+  include ContainersCommonMixin
+
+  before_filter :check_privileges
   before_filter :get_session_data
   after_filter :cleanup_action
   after_filter :set_session_data
@@ -40,22 +42,4 @@ class ContainerServiceController < ApplicationController
   end
 
   private ############################
-
-  def get_session_data
-    @title      = ui_lookup(:tables => "container_service")
-    @layout     = "container_service"
-    @table_name = request.parameters[:controller]
-    @model      = Container
-    @lastaction = session[:container_service_lastaction]
-    @display    = session[:container_service_display]
-    @filters    = session[:container_service_filters]
-    @catinfo    = session[:container_service_catinfo]
-  end
-
-  def set_session_data
-    session[:container_service_lastaction] = @lastaction
-    session[:container_service_display]    = @display unless @display.nil?
-    session[:container_service_filters]    = @filters
-    session[:container_service_catinfo]    = @catinfo
-  end
 end

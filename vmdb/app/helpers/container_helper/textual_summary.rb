@@ -4,13 +4,8 @@ module ContainerHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w{image}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-  end
-
-  def textual_group_relationships
-    items = %w{}
-   # items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items = %w(image)
+    items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
   #

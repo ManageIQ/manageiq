@@ -1,4 +1,5 @@
 class ContainerController < ApplicationController
+  include ContainersCommonMixin
 
   before_filter :check_privileges
   before_filter :get_session_data
@@ -158,10 +159,6 @@ class ContainerController < ApplicationController
 
   private
 
-  def get_record_display_name(record)
-    record.name
-  end
-
   # Get all info for the node about to be displayed
   def get_node_info(treenodeid)
     @show_adv_search = true
@@ -194,7 +191,6 @@ class ContainerController < ApplicationController
 
   #set partial name and cell header for edit screens
   def set_right_cell_vars(action)
-    name = @record ? @record.name.to_s.gsub(/'/,"\\\\'") : "" # If record, get escaped name
     case action
     when "container_edit"
       partial = "container_form"
@@ -240,17 +236,13 @@ class ContainerController < ApplicationController
       page << "dhxLayoutB.cells('b').setText('#{escape_javascript(h(@right_cell_text))}');"
 
       # Replace right cell divs
-      if ["container_edit"].include?(action)
+      if action == "container_edit"
         page.replace_html("main_div", :partial=>partial)
       elsif params[:display]
-        partial_locals = Hash.new
-        partial_locals[:controller] = "container"
+        partial_locals = {:controller => "container", :action_url => @lastaction}
         partial = "layouts/x_gtl"
-        if partial == "layouts/x_gtl"
-          partial_locals[:action_url] = @lastaction
-          page << "miq_parent_id = '#{@record.id}';"  # Set parent rec id for JS function miqGridSort to build URL
-          page << "miq_parent_class = '#{request[:controller]}';" # Set parent class for URL also
-        end
+        page << "miq_parent_id = '#{@record.id}';"  # Set parent rec id for JS function miqGridSort to build URL
+        page << "miq_parent_class = '#{request[:controller]}';" # Set parent class for URL also
         page.replace_html("main_div", :partial => partial, :locals => partial_locals)
 
       elsif record_showing
@@ -266,7 +258,7 @@ class ContainerController < ApplicationController
       page << set_element_visible("adv_searchbox_div", !(@record || @in_a_form))
 
 #     # Decide whether to show paging controls
-      if ["container_edit"].include?(action)
+      if action == "container_edit"
         page << "dhxLayoutB.cells('a').collapse();"
         page << "dhxLayoutB.cells('c').expand();" #incase it was collapsed for summary screen, and incase there were no records on show_list
         page << javascript_show("form_buttons_div")
@@ -329,7 +321,7 @@ class ContainerController < ApplicationController
 
       page << "cfmeDynatree_activateNodeSilently('#{x_active_tree}','#{x_node}');" if params[:id]
       page << "$('##{x_active_tree}box').dynatree('#{@in_a_form && @edit ? 'disable' : 'enable'}');"
-      dim_div = @in_a_form && @edit && @edit[:current] ? true : false
+      dim_div = @in_a_form && @edit && @edit[:current]
       page << javascript_dim("#{x_active_tree}_div", dim_div)
       page << "miqSparkle(false);"
     end
@@ -355,15 +347,5 @@ class ContainerController < ApplicationController
     @showtype = "config"
     identify_container(id)
     return if record_no_longer_exists?(@record)
-  end
-
-  def get_session_data
-    @title      = "Containers"
-    @layout     = "containers"
-    @lastaction = session[:container_lastaction]
-  end
-
-  def set_session_data
-    session[:container_lastaction] = @lastaction
   end
 end

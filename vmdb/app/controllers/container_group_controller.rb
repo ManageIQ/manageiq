@@ -1,5 +1,7 @@
 class ContainerGroupController < ApplicationController
-  #before_filter :check_privileges
+  include ContainersCommonMixin
+
+  before_filter :check_privileges
   before_filter :get_session_data
   after_filter :cleanup_action
   after_filter :set_session_data
@@ -27,35 +29,17 @@ class ContainerGroupController < ApplicationController
                     true)
     case @display
     when "download_pdf", "main", "summary_only"
-      drop_breadcrumb( {:name => @container_group.name + " (Summary)",
-                        :url  => "/container_group/show/#{@container_group.id}"} )
+      drop_breadcrumb(:name => "#{@container_group.name} (Summary)",
+                      :url  => "/container_group/show/#{@container_group.id}")
       @showtype = "main"
       set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
     end
 
     # Came in from outside show_list partial
-    if params[:ppsetting]  || params[:searchtag] || params[:entry] || params[:sort_choice]
+    if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
       replace_gtl_main_div
     end
   end
 
   private ############################
-
-  def get_session_data
-    @title      = ui_lookup(:tables => "container_group")
-    @layout     = "container_group"
-    @table_name = request.parameters[:controller]
-    @model      = Container
-    @lastaction = session[:container_group_lastaction]
-    @display    = session[:container_group_display]
-    @filters    = session[:container_group_filters]
-    @catinfo    = session[:container_group_catinfo]
-  end
-
-  def set_session_data
-    session[:container_group_lastaction] = @lastaction
-    session[:container_group_display]    = @display unless @display.nil?
-    session[:container_group_filters]    = @filters
-    session[:container_group_catinfo]    = @catinfo
-  end
 end

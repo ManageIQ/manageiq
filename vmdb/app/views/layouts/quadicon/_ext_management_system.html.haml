@@ -1,12 +1,4 @@
-- db = case @layout
-- when "ems_infra"
-  - :ems
-- when "ems_cloud"
-  - :ems_cloud
-- else
-  - :ems_container
-
-- if @settings[:quadicons][db]
+- if @settings[:quadicons][db_for_quadicon]
   .flobj
     %img{:src => "/images/icons/#{size}/base.png", :width => size, :height => size}
 
