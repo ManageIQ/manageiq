@@ -444,37 +444,22 @@ class MiqRequestController < ApplicationController
     # Add time condition
     cond.push("AFTER" => {"value"=>"#{opts[:time_period].to_i} Days Ago","field"=>"MiqRequest-created_on"})
 
-    case @layout
-    when "miq_request_ae"
-      req_typ = :AutomationRequest
-    when "miq_request_host"
-      req_typ = :Host
-    else
-      req_typ = :Vm
-    end
+    req_typ =
+      case @layout
+      when "miq_request_ae"   then :AutomationRequest
+      when "miq_request_host" then :Host
+      else                         :Vm
+      end
+    or_hash = {"or" => []}
     request_types = MiqRequest::MODEL_REQUEST_TYPES[req_typ]
-    request_types.each_with_index do |typ,i|
+    request_types.each do |typ|
       typ.each do |k|
         if k.class == Symbol
-          if i == 0
-            @or_hash = Hash.new   # need this  incase there are more than one type
-            @or_hash["or"] = Array.new
-            cond_hash = Hash.new
-            cond_hash["="] = {"value"=>k.to_s,"field"=>"MiqRequest-resource_type"}
-            @or_hash["or"].push(cond_hash)
-          elsif i == request_types.length-1
-            cond_hash = Hash.new
-            cond_hash["="] = {"value"=>k.to_s,"field"=>"MiqRequest-resource_type"}
-            @or_hash["or"].push(cond_hash)
-          else
-            cond_hash = Hash.new
-            cond_hash["="] = {"value"=>k.to_s,"field"=>"MiqRequest-resource_type"}
-            @or_hash["or"].push(cond_hash)
-          end
+          or_hash["or"].push("=" => {"value" => k.to_s, "field" => "MiqRequest-resource_type"})
         end
       end
     end
-    cond.push(@or_hash)
+    cond.push(or_hash)
 
     if opts[:type_choice] && opts[:type_choice] != "all"  # Add request_type filter, if selected
       cond_hash = Hash.new
