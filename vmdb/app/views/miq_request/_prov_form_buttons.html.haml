@@ -4,38 +4,28 @@
       %td{:align => "right"}
         #buttons_on{:style => session[:changed] ? "" : "display: none;"}
           - @edit[:buttons].each do |button|
-            - url = url_for(:action => 'prov_continue', :id => "#{@edit[:req_id] || 'new'}", :button => button)
-            - case button
-            - when :continue
-              = button_tag(_('Continue'),
-                :class   => "btn btn-primary",
-                :alt     => (t = _("Continue this provisioning request")),
-                :title   => t,
-                :onclick => "miqAjaxButton(#{url});")
-            - when :submit
-              = button_tag(_('Submit'),
-                :class   => "btn btn-primary",
-                :alt     => (t = _("Submit this provisioning request")),
-                :title   => t,
-                :onclick => "miqAjaxButton('#{url}');")
-            - when :cancel
-              = button_tag(_('Cancel'),
-                :class   => "btn btn-default",
-                :alt     => (t = _("Cancel this provisioning request")),
-                :title   => t,
-                :onclick => "miqAjaxButton('#{url}');")
+            - next unless [:cancel, :continue, :submit].include?(button)
+            - action       = button == :continue ? 'prov_continue' : 'prov_edit'
+            - button_class = button == :cancel   ? 'default'       : 'primary'
+            - button_name  = button.to_s.capitalize
+            - text         = _("#{button_name} this provisioning request")
+            - url          = url_for(:action => action, :id => "#{@edit[:req_id] || 'new'}", :button => button)
+            = button_tag(_(button_name),
+              :class   => "btn btn-#{button_class}",
+              :alt     => text,
+              :title   => text,
+              :onclick => "miqAjaxButton('#{url}');")
 
         #buttons_off{:style => session[:changed] ? "display: none;" : ""}
           - @edit[:buttons].each do |button|
-            - url = url_for(:action => 'prov_continue', :id => "#{@edit[:req_id] || 'new'}", :button => button)
+            - button_name = button.to_s.capitalize
             - case button
-            - when :continue
-              = button_tag(_("Continue"), :class => "btn btn-primary btn-disabled")
-            - when :submit
-              = button_tag(_("Submit"), :class => "btn btn-primary btn-disabled")
+            - when :continue, :submit
+              = button_tag(_(button_name), :class => "btn btn-primary btn-disabled")
             - when :cancel
-              = button_tag('Cancel',
+              - url = url_for(:action => 'prov_edit', :id => "#{@edit[:req_id] || 'new'}", :button => button)
+              = button_tag(_(button_name),
                 :class   => "btn btn-default",
-                :alt     => (t = _("Cancel this provisioning request")),
+                :alt     => (t = _("#{button_name} this provisioning request")),
                 :title   => t,
                 :onclick => "miqAjaxButton('#{url}');")
