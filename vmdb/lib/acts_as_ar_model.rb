@@ -16,6 +16,10 @@ class ActsAsArModel
     ActiveRecord::Base.connection
   end
 
+  def self.sortable?
+    false
+  end
+
   def connection
     self.class.connection
   end

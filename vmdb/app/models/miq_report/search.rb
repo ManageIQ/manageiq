@@ -33,7 +33,7 @@ module MiqReport::Search
 
   def get_order_info
     order = nil
-    apply_sortby_in_search = !self.db_class.table_name.nil?
+    apply_sortby_in_search = db_class.sortable?
     if apply_sortby_in_search && !self.sortby.nil?
       # Convert sort cols from sub-tables from the form of assoc_name.column to the form of table_name.column
       order = self.sortby.to_miq_a.collect do |c|
