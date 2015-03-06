@@ -469,12 +469,7 @@ class MiqRequestController < ApplicationController
       cond.push(hash_key => {"value" => new_text, "field" => "MiqRequest-reason"})
     end
 
-    condition = Hash.new
-    condition["and"] = Array.new
-    cond.each do |c|
-      condition["and"].push(c)
-    end
-    return  MiqExpression.new(condition)
+    MiqExpression.new("and" => cond)
   end
 
   # Set all task options to default
