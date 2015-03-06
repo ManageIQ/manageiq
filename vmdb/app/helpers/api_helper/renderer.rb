@@ -394,7 +394,8 @@ module ApiHelper
       return [] unless cspec.key?(target)
       cspec[target].each.collect do |method, action_definitions|
         if cspec[:methods].include?(method)
-          action_definitions.each.collect do |action|
+          typed_action_definitions = fetch_typed_subcollection_actions(method, is_subcollection) || action_definitions
+          typed_action_definitions.each.collect do |action|
             if !action[:disabled] && api_user_role_allows?(action[:identifier])
               {"name" => action[:name], "method" => method, "href" => (href ? href : collection)}
             end
@@ -408,13 +409,21 @@ module ApiHelper
       return [] unless cspec.key?(target)
       cspec[target].each.collect do |method, action_definitions|
         if cspec[:methods].include?(method)
-          action_definitions.each.collect do |action|
+          typed_action_definitions = fetch_typed_subcollection_actions(method, is_subcollection) || action_definitions
+          typed_action_definitions.each.collect do |action|
             if !action[:disabled] && api_user_role_allows?(action[:identifier])
               {"name" => action[:name], "method" => method, "href" => href}
             end
           end
         end
       end.flatten.compact
+    end
+
+    def fetch_typed_subcollection_actions(method, is_subcollection)
+      return unless is_subcollection
+      ctype = @req[:collection].to_sym
+      sakey = "#{@req[:subcollection]}_subcollection_actions".to_sym
+      collection_config.fetch_path(ctype, sakey, method.to_sym)
     end
 
     def api_user_role_allows?(action_identifier)
