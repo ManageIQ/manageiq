@@ -457,24 +457,16 @@ class MiqRequestController < ApplicationController
       cond.push("=" => {"value" => opts[:type_choice], "field" => "MiqRequest-request_type"})
     end
 
-    if opts[:reason_text]  && opts[:reason_text] != ""
-      cond_hash = Hash.new
-      if opts[:reason_text].starts_with?("*") && opts[:reason_text].ends_with?("*")   # Replace beginning/ending * chars with % for SQL
-        hash_key = "INCLUDES"
-        reason_text = opts[:reason_text][1..-2]
-      elsif opts[:reason_text].starts_with?("*")
-        hash_key = "ENDS WITH"
-        reason_text = opts[:reason_text][1..-1]
-      elsif opts[:reason_text].ends_with?("*")
-        hash_key = "STARTS WITH"
-        reason_text = opts[:reason_text][0..-2]
-      else
-        hash_key = "INCLUDES"
-        reason_text = opts[:reason_text]
-      end
+    if (text = opts[:reason_text].presence)
+      new_text = text.gsub(/\A\*/, "").chomp("*")  # Remove leading and/or trailing "*"
+      hash_key =
+        case text
+        when /\A\*(.+?)[^*]\z/ then "STARTS WITH"  # Starts with and does not end with "*"
+        when /\A[^*](.+?)\*\z/ then "ENDS WITH"    # Ends with and does not start with "*"
+        else                        "INCLUDES"
+        end
 
-      cond_hash["#{hash_key}"] = {"value"=>reason_text,"field"=>"MiqRequest-reason"}
-      cond.push(cond_hash)
+      cond.push(hash_key => {"value" => new_text, "field" => "MiqRequest-reason"})
     end
 
     condition = Hash.new
