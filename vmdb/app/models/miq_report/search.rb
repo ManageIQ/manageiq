@@ -14,7 +14,7 @@ module MiqReport::Search
   end
 
   def get_sqltable(assoc)
-    r = self.db_class.reflect_on_association(assoc.to_sym)
+    r = db_class.reflection_with_virtual(assoc.to_sym)
     raise "Invalid reflection <#{assoc}> on model <#{self.db_class.name}>" if r.nil?
     r.klass.table_name
   end
