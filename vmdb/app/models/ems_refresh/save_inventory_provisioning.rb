@@ -14,7 +14,7 @@ module EmsRefresh
 
     def save_customization_scripts_inventory(manager, hashes, target)
       delete_missing_records = target.nil? || manager == target
-      save_inventory_assoc(:customization_scripts, manager, hashes, delete_missing_records, :manager_ref)
+      save_inventory_assoc(:customization_scripts, manager, hashes, delete_missing_records, [:type, :manager_ref])
     end
 
     def save_operating_system_flavors_inventory(manager, hashes, target)
