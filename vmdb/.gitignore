@@ -2,6 +2,7 @@
 .sass-cache/
 .tags
 *.cmd
+*.pyc
 /bin/
 /data/
 /productization
