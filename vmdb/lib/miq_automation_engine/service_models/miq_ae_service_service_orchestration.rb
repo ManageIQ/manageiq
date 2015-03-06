@@ -4,6 +4,7 @@ module MiqAeMethodService
     expose :orchestration_manager
     expose :stack_name
     expose :stack_name=
+    expose :stack_ems_ref
     expose :stack_options
     expose :stack_options=
     expose :orchestration_stack_status

@@ -101,7 +101,7 @@ describe ServiceTemplate do
     it 'returns current stack status through provider' do
       EmsAmazon.any_instance.stub(:stack_status).and_return(['create_complete', 'no error'])
 
-      service_mix_dialog_setter.options[:stack_id] = 'abc'  # simulate stack deployed
+      service_mix_dialog_setter.options[:stack_ems_ref] = 'abc'  # simulate stack deployed
       status, message = service_mix_dialog_setter.orchestration_stack_status
 
       status.should  == 'create_complete'
@@ -112,7 +112,7 @@ describe ServiceTemplate do
       EmsAmazon.any_instance.stub(:stack_status)
         .and_raise(MiqException::MiqOrchestrationStatusError, 'test failure')
 
-      service_mix_dialog_setter.options[:stack_id] = 'abc'  # simulate stack deployed
+      service_mix_dialog_setter.options[:stack_ems_ref] = 'abc'  # simulate stack deployed
       status, message = service_mix_dialog_setter.orchestration_stack_status
       status.should  == 'check_status_failed'
       message.should == 'test failure'

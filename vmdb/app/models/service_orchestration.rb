@@ -12,21 +12,21 @@ class ServiceOrchestration < Service
     @stack_name ||= options[:stack_name] || OptionConverter.get_stack_name(options[:dialog] || {})
   end
 
-  def stack_id
-    @stack_id ||= options[:stack_id]
+  def stack_ems_ref
+    @stack_ems_ref ||= options[:stack_ems_ref]
   end
 
   def orchestration_stack_status
-    return "check_status_failed", "stack has not been deployed" unless stack_id
+    return "check_status_failed", "stack has not been deployed" unless stack_ems_ref
 
-    orchestration_manager.stack_status(stack_name, stack_id)
+    orchestration_manager.stack_status(stack_name, stack_ems_ref)
   rescue MiqException::MiqOrchestrationStatusError => err
     # naming convention requires status to end with "failed"
     return "check_status_failed", err.message
   end
 
   def deploy_orchestration_stack
-    @stack_id = orchestration_manager.stack_create(stack_name, orchestration_template, stack_options)
+    @stack_ems_ref = orchestration_manager.stack_create(stack_name, orchestration_template, stack_options)
   ensure
     save_options
   end
@@ -53,7 +53,7 @@ class ServiceOrchestration < Service
     parameters.each { |key, val| parameters[key] = MiqPassword.encrypt(val) if key.downcase =~ /password/ }
 
     self.options = options.merge(:stack_name     => stack_name,
-                                 :stack_id       => @stack_id,
+                                 :stack_ems_ref  => @stack_ems_ref,
                                  :create_options => options_dump)
     save!
   end
