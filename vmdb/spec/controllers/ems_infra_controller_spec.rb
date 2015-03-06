@@ -72,4 +72,39 @@ describe EmsInfraController do
       controller.send(:flash_errors?).should_not be_true
     end
   end
+
+  describe "#scaling" do
+
+    before do
+      set_user_privileges
+      @ems = FactoryGirl.create(:ems_openstack_infra_with_stack)
+      @orchestration_stack_parameter_compute = FactoryGirl.create(:orchestration_stack_parameter_openstack_infra_compute)
+    end
+
+    it "when values are not changed" do
+      post :scaling, :id => @ems.id, :scale => "", :orchestration_stack_id => @ems.orchestration_stacks.first.id
+      controller.send(:flash_errors?).should be_true
+      flash_messages = assigns(:flash_array)
+      flash_messages.first[:message].should include(_("A value must be changed or provider will not be scaled"))
+    end
+
+    it "when values are changed, but exceed number of hosts available" do
+      post :scaling, :id => @ems.id, :scale => "", :orchestration_stack_id => @ems.orchestration_stacks.first.id,
+           @orchestration_stack_parameter_compute.name => @ems.hosts.count * 2
+      controller.send(:flash_errors?).should be_true
+      flash_messages = assigns(:flash_array)
+      flash_messages.first[:message].should include(
+      _("Assigning #{@ems.hosts.count * 2} but only have #{@ems.hosts.count} hosts available."))
+    end
+
+    it "when values are changed, and values do not exceed number of hosts available" do
+      OrchestrationStackOpenstackInfra.any_instance.stub(:raw_update_stack)
+      post :scaling, :id => @ems.id, :scale => "", :orchestration_stack_id => @ems.orchestration_stacks.first.id,
+           @orchestration_stack_parameter_compute.name => 2
+      controller.send(:flash_errors?).should be_false
+      response.body.should include("redirected")
+      response.body.should include("show")
+      response.body.should include("1+to+2")
+    end
+  end
 end
