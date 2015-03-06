@@ -1,5 +1,8 @@
 module ApplicationController::MiqRequestMethods
   extend ActiveSupport::Concern
+  included do
+    helper_method :dialog_partial_for_workflow
+  end
 
   # AJAX driven routine to check for changes on the provision form
   def prov_field_changed
@@ -35,13 +38,7 @@ module ApplicationController::MiqRequestMethods
         if refresh_divs
           @edit[:wf].get_all_dialogs.keys.each do |d|
             if @edit[:wf].get_dialog(d)[:display] == :show && d == @edit[:new][:current_tab_key]
-              if @edit[:wf].kind_of?(MiqProvisionWorkflow)
-                page.replace_html("#{d}_div", :partial=>"/miq_request/prov_dialog", :locals=>{:wf=>@edit[:wf], :dialog=>d})
-              elsif @edit[:wf].class.to_s == "VmMigrateWorkflow"
-                page.replace_html("#{d}_div", :partial=>"prov_vm_migrate_dialog", :locals=>{:wf=>@edit[:wf], :dialog=>d})
-              else
-                page.replace_html("#{d}_div", :partial=>"prov_host_dialog", :locals=>{:wf=>@edit[:wf], :dialog=>d})
-              end
+              page.replace_html("#{d}_div", :partial => dialog_partial_for_workflow, :locals => {:wf => @edit[:wf], :dialog => d})
             end
           end
         end
@@ -475,6 +472,17 @@ module ApplicationController::MiqRequestMethods
     sorted = templates.sort_by { |t| t.deep_send(sort_by).to_s.send(post_sort_method) }
     sorted = sorted.reverse unless sort_order == "ASC"
     @temp[:templates] = sorted.uniq
+  end
+
+  def dialog_partial_for_workflow
+    case (@edit || @options).try(:[], :wf)
+    when MiqProvisionWorkflow
+      "prov_dialog"
+    when MiqHostProvisionWorkflow
+      "prov_host_dialog"
+    when VmMigrateWorkflow
+      "prov_vm_migrate_dialog"
+    end
   end
 
   def sort_grid(what, values)
