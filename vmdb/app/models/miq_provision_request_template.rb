@@ -21,7 +21,6 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
         task.options[:owner_last_name]  = user.last_name
       end
       task.save!
-      task.after_request_task_create
       service_task.miq_request.miq_request_tasks << task
 
       tasks << task
