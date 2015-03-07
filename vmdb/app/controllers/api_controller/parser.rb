@@ -34,7 +34,7 @@ class ApiController
         @req.each { |k, v| msg << "\n  #{k[0..14].ljust(14, ' ')}: #{v}" if v.present? }
         if params.size > 0
           msg << "\n\n  Parameters:"
-          params.each { |k, v| msg << "\n    #{k[0..12].ljust(12, ' ')}: #{v}" }
+          params.each { |k, v| msg << "\n    #{k[0..12].ljust(12, ' ')}: #{filter_value(k, v)}" }
         end
         api_log_debug(msg)
       end
@@ -108,6 +108,15 @@ class ApiController
     end
 
     private
+
+    def filter_value(k, v)
+      return filter_hash(v) if v.kind_of?(Hash)
+      k.to_s.match(/password/i) ? "........" : v
+    end
+
+    def filter_hash(h)
+      h.keys.each_with_object({}) { |k, res| res[k] = filter_value(k, h[k]) }
+    end
 
     #
     # For Posts we need to support actions, let's validate those
