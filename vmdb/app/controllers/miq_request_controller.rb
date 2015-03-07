@@ -441,14 +441,7 @@ class MiqRequestController < ApplicationController
       cond.push("or" => a_s.collect { |s| {"=" => {"value" => s, "field" => "MiqRequest-approval_state"}} })
     end
 
-    req_typ =
-      case @layout
-      when "miq_request_ae"   then :AutomationRequest
-      when "miq_request_host" then :Host
-      else                         :Vm
-      end
-    types = MiqRequest::MODEL_REQUEST_TYPES[req_typ]
-    cond.push("or" => types.keys.collect { |k| {"=" => {"value" => k.to_s, "field" => "MiqRequest-resource_type"}} })
+    cond.push("or" => request_types_for_model.collect { |k| {"=" => {"value" => k.to_s, "field" => "MiqRequest-resource_type"}} })
 
     if opts[:type_choice] && opts[:type_choice] != "all"  # Add request_type filter, if selected
       cond.push("=" => {"value" => opts[:type_choice], "field" => "MiqRequest-request_type"})
@@ -459,6 +452,18 @@ class MiqRequestController < ApplicationController
     end
 
     MiqExpression.new("and" => cond)
+  end
+
+  def request_types_for_model
+    MiqRequest::MODEL_REQUEST_TYPES[model_request_type_from_layout].keys
+  end
+
+  def model_request_type_from_layout
+    case @layout
+    when "miq_request_ae"   then :AutomationRequest
+    when "miq_request_host" then :Host
+    else                         :Vm
+    end
   end
 
   def prov_condition_reason_text_sanitized(text)
