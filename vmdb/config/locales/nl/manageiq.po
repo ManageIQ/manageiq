@@ -72,7 +72,7 @@ msgid "%s Conditions"
 msgstr "%s Condities"
 
 msgid "%s Credentials validated successfully"
-msgstr "%s Credentials succesvol gevallideerd"
+msgstr "%s Inloggegevens succesvol gevallideerd"
 
 msgid "%s Discovery returned: "
 msgstr ""
@@ -150,7 +150,7 @@ msgid "%s must be alphanumeric characters and underscores without spaces"
 msgstr ""
 
 msgid "%s must be an integer"
-msgstr "%s moet een getal zijn"
+msgstr "%s moet een geheel getal zijn"
 
 msgid "%s must be configured"
 msgstr "%s moet geconfigureerd zijn"
@@ -348,7 +348,7 @@ msgid "(Default: %s)"
 msgstr "(Standaard: %s)"
 
 msgid "(Enter the value between 4 - 65636 MB)"
-msgstr "(Enter een waarde tussen 4 - 65636 MB)"
+msgstr "(Voer een waarde in tussen 4 - 65636 MB)"
 
 msgid "(MB) memory"
 msgstr "(MB) geheugen"
@@ -684,7 +684,7 @@ msgid "All custom classes and instances have been reset to default"
 msgstr ""
 
 msgid "All selected %s are not in the current region"
-msgstr "Alle geselecteerde $s zijn niet in de huidige regio"
+msgstr "Alle geselecteerde %s zijn niet in de huidige regio"
 
 msgid "Amazon Settings validation was successful"
 msgstr ""
