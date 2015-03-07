@@ -28,7 +28,7 @@
           = _("Show")
         %dd
           = select_tag("perf_minutes",
-                       options_for_select(REALTIME_CHOICES.invert.sort { |a, b| a.last <=> b.last },
+                       options_for_select(REALTIME_CHOICES.invert.sort_by { |_name, value| value },
                        @perf_options[:rt_minutes]),
                        "data-miq_sparkle_on" => true,
                        "data-miq_observe"    => {:url => url}.to_json)
@@ -52,7 +52,7 @@
             = _("Show")
           %dd
             = select_tag("perf_days",
-                          options_for_select(WEEK_CHOICES.invert.sort { |a, b| a.last <=> b.last },
+                          options_for_select(WEEK_CHOICES.invert.sort_by { |_name, value| value },
                             @perf_options[:days].to_i),
                           "data-miq_sparkle_on" => true,
                           "data-miq_observe"    => {:url => url}.to_json)
@@ -64,7 +64,7 @@
               = _("Group by")
             %dd
               = select_tag("perf_cat",
-                           options_for_select(Array(@perf_options[:cats].invert).sort { |a, b| a.first <=> b.first },
+                           options_for_select(Array(@perf_options[:cats].invert).sort_by { |name, _value| name },
                                               "#{@perf_options[:cat_model]}:#{@perf_options[:cat]}"),
                            "data-miq_sparkle_on" => true,
                            "data-miq_observe"    => {:url => url}.to_json)

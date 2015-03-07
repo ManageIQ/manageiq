@@ -9,7 +9,7 @@
         %td.key=_("Name (from chosen Host)")
         %td.wide{:colspan => "2"}
           = select_tag("host",
-            options_for_select([["<#{_('Choose')}>", "<Choose>"]] + Array(@edit[:avail_hosts].invert).sort_by{ |a,b| a[0].downcase <=> b[0].downcase }, @edit[:host]),
+            options_for_select([["<#{_('Choose')}>", "<Choose>"]] + Array(@edit[:avail_hosts].invert).sort_by { |name, _id| name.downcase }, @edit[:host]),
             "data-miq_observe" => {:url => url}.to_json)
   - else
     %h3=_("Settings")

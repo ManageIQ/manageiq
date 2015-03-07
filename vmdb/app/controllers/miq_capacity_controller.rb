@@ -150,7 +150,7 @@ class MiqCapacityController < ApplicationController
       @sb[:planning][:options][:filter_value] = nil
       if params[:filter_typ] == "all"
         @sb[:planning][:vms] = Hash.new
-        find_filtered(Vm, :all).sort{|a,b| a.name.downcase<=>b.name.downcase}.each{|e|@sb[:planning][:vms][e.id.to_s] = e.name}
+        find_filtered(Vm, :all).sort_by { |v| v.name.downcase }.each { |e| @sb[:planning][:vms][e.id.to_s] = e.name }
       end
     end
     if params[:filter_value]

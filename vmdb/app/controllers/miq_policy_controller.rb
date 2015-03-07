@@ -979,14 +979,14 @@ class MiqPolicyController < ApplicationController
         @right_cell_div = "policy_list"
       end
     elsif x_active_tree == :condition_tree
-      @conditions = Condition.find_all_by_towhat(@sb[:folder].titleize).sort{|a,b|a.description.downcase<=>b.description.downcase}
+      @conditions = Condition.find_all_by_towhat(@sb[:folder].titleize).sort_by { |c| c.description.downcase }
       set_search_text
       @conditions = apply_search_filter(@search_text, @conditions) if !@search_text.blank?
       @right_cell_text = "All #{ui_lookup(:model=>@sb[:folder])} Conditions"
       @right_cell_text = _("All %{typ} %{model}") % {:typ=>ui_lookup(:model=>@sb[:folder]), :model=>ui_lookup(:models=>"Condition")}
       @right_cell_div = "condition_list"
     elsif x_active_tree == :alert_profile_tree
-      @alert_profiles = MiqAlertSet.all(:conditions=>["mode = ?", @sb[:folder]]).sort{|a,b|a.description.downcase<=>b.description.downcase}
+      @alert_profiles = MiqAlertSet.all(:conditions=>["mode = ?", @sb[:folder]]).sort_by { |as| as.description.downcase }
       set_search_text
       @alert_profiles = apply_search_filter(@search_text, @alert_profiles) if !@search_text.blank?
       @right_cell_text = "All #{ui_lookup(:model=>@sb[:folder])} Alert Profiles"

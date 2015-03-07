@@ -29,7 +29,7 @@
                   =_("None")
               - else
                 = select_tag('vm_restriction',
-                             options_for_select([[_("None"), _("none")]] + MiqUserRole::RESTRICTIONS.invert.sort { |a, b| a[0].downcase <=> b[0].downcase },
+                             options_for_select([[_("None"), _("none")]] + MiqUserRole::RESTRICTIONS.invert.sort_by { |name, _value| name.downcase },
                              @edit[:new][:vm_restriction].to_sym),
                              "data-miq_observe" => {:url => url}.to_json)
           - unless @edit

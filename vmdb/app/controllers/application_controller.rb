@@ -772,7 +772,7 @@ class ApplicationController < ActionController::Base
   # Build the user_emails hash for edit screens needing the edit_email view
   def build_user_emails_for_edit
     @edit[:user_emails] = Hash.new
-    User.all.sort{|a,b| a.name.downcase <=> b.name.downcase}.each do |u|
+    User.all.sort_by { |u| u.name.downcase }.each do |u|
       unless u.email.blank? ||
               (@edit[:new][:email][:to] && @edit[:new][:email][:to].include?(u.email))
         @edit[:user_emails][u.email] = "#{u.name} (#{u.email})"

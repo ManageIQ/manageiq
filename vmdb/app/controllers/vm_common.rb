@@ -1093,7 +1093,7 @@ module VmCommon
   end
 
   def profile_build
-   session[:vm].resolve_profiles(session[:policies].keys).sort{|a,b| a["description"] <=> b["description"]}.each do | policy |
+   session[:vm].resolve_profiles(session[:policies].keys).sort_by { |p| p["description"] }.each do | policy |
       @catinfo ||= Hash.new                               # Hash to hold category squashed states
       policy.each do | key, cat|
        if key == "description"

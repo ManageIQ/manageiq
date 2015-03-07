@@ -109,7 +109,7 @@ module ApplicationController::Automate
       @resolve[:new][:target_class] = Hash[*@resolve[:target_classes].flatten][@edit[:new][:target_class]]
       target_class = @resolve[:target_classes].detect { |ui_name, _| @edit[:new][:target_class] == ui_name }.last
       targets = target_class.constantize.all
-      @resolve[:targets] = targets.sort { |a, b| a.name.downcase <=> b.name.downcase }.collect { |t| [t.name, t.id.to_s] }
+      @resolve[:targets] = targets.sort_by { |t| t.name.downcase }.collect { |t| [t.name, t.id.to_s] }
       @resolve[:new][:target_id] = nil
       @resolve[:new][:object_message] = @edit[:new][:object_message]
       @resolve[:lastaction] = "simulate"

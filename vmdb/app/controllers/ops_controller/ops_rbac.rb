@@ -937,7 +937,7 @@ module OpsController::OpsRbac
   def rbac_build_myco_tree
     cats = Array.new                            # Array of categories
     categories = Classification.categories.collect {|c| c unless !c.show || ["folder_path_blue", "folder_path_yellow"].include?(c.name)}.compact
-    categories.sort{|a,b| a.description.downcase <=> b.description.downcase}.each do |category|
+    categories.sort_by { |c| c.description.downcase }.each do |category|
       kids_checked = false
       cat_node = Hash.new
       cat_node[:key] = category.name
@@ -947,7 +947,7 @@ module OpsController::OpsRbac
       cat_node[:icon] = "folder.png"
       cat_node[:hideCheckbox] = true
       cat_kids = Array.new
-      category.entries.sort{|a,b| a.description.downcase <=> b.description.downcase}.each do |tag|
+      category.entries.sort_by { |e| e.description.downcase }.each do |tag|
         tag_node = Hash.new
         tag_node[:key] = [category.name, tag.name].join("-")
         tag_node[:title] = tag.description

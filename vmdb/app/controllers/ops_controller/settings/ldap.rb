@@ -427,7 +427,7 @@ module OpsController::Settings::Ldap
     @edit[:new][:bind_dn] = @ldap_domain.authentication_userid
     @edit[:new][:bind_pwd] = @ldap_domain.authentication_password
     @edit[:new][:ldap_servers] = Array.new
-    @ldap_domain.ldap_servers.sort{|a,b| a.hostname.to_s <=> b.hostname.to_s}.each do |svr|
+    @ldap_domain.ldap_servers.sort_by { |svr| svr.hostname.to_s }.each do |svr|
       server = Hash.new
       server[:id] = svr.id
       server[:hostname] = svr.hostname

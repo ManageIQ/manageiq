@@ -382,7 +382,7 @@ Methods updated/added: %{method_stats}") % stat_options)
       whitelisted_class_name = CustomButton.button_classes.detect { |klass| klass == params[:target_class] }
       unless whitelisted_class_name.nil?
         targets = whitelisted_class_name.constantize.all
-        @resolve[:targets] = targets.sort{|a,b|a.name.downcase<=>b.name.downcase}.collect{|t|[t.name, t.id.to_s]}
+        @resolve[:targets] = targets.sort_by { |t| t.name.downcase }.collect { |t| [t.name, t.id.to_s] }
         @resolve[:new][:target_id] = nil
       end
     end

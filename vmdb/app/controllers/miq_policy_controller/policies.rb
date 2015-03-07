@@ -244,7 +244,7 @@ module MiqPolicyController::Policies
     @expression_table = @policy.expression.is_a?(MiqExpression) ? exp_build_table(@policy.expression.exp) : nil
 
     if x_active_tree == :policy_tree
-      @policy_profiles = @policy.memberof.sort{|a,b|a.description.downcase<=>b.description.downcase}
+      @policy_profiles = @policy.memberof.sort_by { |pp| pp.description.downcase }
     end
   end
 
