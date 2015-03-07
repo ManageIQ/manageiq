@@ -56,6 +56,12 @@
     :collection_actions:
       :post:
       - :name: create
+  :availability_zones:
+    :description: Availability Zones
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: AvailabilityZone
   :clusters:
     :description: Clusters
     :options:
@@ -130,6 +136,12 @@
     - :subcollection
     :methods: *70174834086080
     :klass: MiqEvent
+  :flavors:
+    :description: Flavors
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: Flavor
   :groups:
     :description: Groups
     :options:
@@ -468,6 +480,12 @@
       :delete:
       - :name: delete
         :identifier: rbac_role_delete
+  :security_groups:
+    :description: Security Groups
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: SecurityGroup
   :servers:
     :description: EVM Servers
     :options:
