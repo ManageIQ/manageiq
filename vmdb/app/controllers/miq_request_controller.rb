@@ -426,7 +426,7 @@ class MiqRequestController < ApplicationController
 
   # Create a condition from the passed in options
   def prov_condition(opts)
-    cond = Array.new
+    cond = [{"AFTER" => {"value" => "#{opts[:time_period].to_i} Days Ago", "field" => "MiqRequest-created_on"}}]  # Start with setting time
 
     if !is_approver
       requester = User.find_by_userid(session[:userid])
@@ -440,9 +440,6 @@ class MiqRequestController < ApplicationController
     if (a_s = opts[:applied_states].presence)
       cond.push("or" => a_s.collect { |s| {"=" => {"value" => s, "field" => "MiqRequest-approval_state"}} })
     end
-
-    # Add time condition
-    cond.push("AFTER" => {"value"=>"#{opts[:time_period].to_i} Days Ago","field"=>"MiqRequest-created_on"})
 
     req_typ =
       case @layout
