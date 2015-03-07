@@ -173,8 +173,7 @@ module PxeController::PxeCustomizationTemplates
     @edit[:current] = Hash.new
     @edit[:key] = "ct_edit__#{@ct.id || "new"}"
     @edit[:rec_id] = @ct.id || nil
-    @edit[:pxe_image_types] = Array.new
-    PxeImageType.all.sort{|a,b| a.name <=> b.name}.collect{|img| @edit[:pxe_image_types].push([img.name,img.id])}
+    @edit[:pxe_image_types] = PxeImageType.order(:name).collect { |img| [img.name, img.id] }
     @edit[:new][:name] = @ct.name
     @edit[:new][:description] = @ct.description
     @edit[:new][:typ] = @ct.type

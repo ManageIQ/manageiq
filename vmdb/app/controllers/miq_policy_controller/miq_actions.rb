@@ -158,7 +158,7 @@ module MiqPolicyController::MiqActions
   end
 
   def get_tags_tree
-    cats =  Classification.categories.collect {|c| c unless !c.show}.compact.sort{|a,b| a.name <=> b.name}
+    cats = Classification.categories.select(&:show).sort_by(&:name)
     if !cats.nil?
       action_build_cat_tree(cats)
     end
@@ -244,7 +244,7 @@ module MiqPolicyController::MiqActions
     end
 
     if !@edit[:new][:options][:tags].nil?
-      cats =  Classification.categories.collect {|c| c unless !c.show}.compact.sort{|a,b| a.name <=> b.name}
+      cats =  Classification.categories.select(&:show).sort_by(&:name)
       cats.each do |c|
         c.entries.each do |e|
           if e.tag.name == @edit[:new][:options][:tags][0]
@@ -254,10 +254,7 @@ module MiqPolicyController::MiqActions
       end
     end
 
-    @edit[:new][:scan_profiles] = Array.new
-    ScanItemSet.all.sort{|a,b| a.name <=> b.name}.each do |sp|
-     @edit[:new][:scan_profiles].push(sp.name)
-    end
+    @edit[:new][:scan_profiles] = ScanItemSet.order(:name).pluck(:name)
 
     action_build_alert_choices
     if !@edit[:new][:options][:alert_guids].nil?
@@ -441,8 +438,8 @@ module MiqPolicyController::MiqActions
     end
 
     if ["inherit_parent_tags","remove_tags"].include?(@action.action_type)
-      cats = @action.options[:cats].collect{|c| Classification.find_by_name(c)}.compact
-      @temp[:cats] = cats.collect(&:description).sort{|a,b| a.downcase <=> b.downcase}.join(" | ")
+      cats = Classification.where(:name => @action.options[:cats]).pluck(:description)
+      @temp[:cats] = cats.sort_by(&:downcase).join(" | ")
     end
   end
 

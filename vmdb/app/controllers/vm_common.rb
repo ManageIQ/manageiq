@@ -763,10 +763,7 @@ module VmCommon
     @lastaction = "rsop"
     @showtype = "policies"
     drop_breadcrumb( {:name=>"Policy Simulation Details for " + @record.name, :url=>"/vm/policies/#{@record.id}"} )
-    @polArr = Array.new
-    @record.resolve_profiles(session[:policies].keys).sort{|a,b| a["description"] <=> b["description"]}.each do | a |
-      @polArr.push(a)
-    end
+    @polArr = @record.resolve_profiles(session[:policies].keys).sort_by { |p| p["description"] }
     @policy_options = Hash.new
     @policy_options[:out_of_scope] = true
     @policy_options[:passed] = true

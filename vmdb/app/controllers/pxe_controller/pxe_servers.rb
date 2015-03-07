@@ -336,8 +336,7 @@ module PxeController::PxeServers
     @edit[:current] = Hash.new
     @edit[:key] = "pxe_img_edit__#{@img.id || "new"}"
     @edit[:rec_id] = @img.id || nil
-    @edit[:pxe_image_types] = Array.new
-    PxeImageType.all.sort{|a,b| a.name <=> b.name}.collect{|img| @edit[:pxe_image_types].push([img.name,img.id])}
+    @edit[:pxe_image_types] = PxeImageType.order(:name).collect { |img| [img.name, img.id] }
     @edit[:new][:img_type] = @img.pxe_image_type ? @img.pxe_image_type.id : nil
     @edit[:new][:default_for_windows] = @img.default_for_windows
 
@@ -365,8 +364,7 @@ module PxeController::PxeServers
     @edit[:current] = Hash.new
     @edit[:key] = "pxe_wimg_edit__#{@wimg.id || "new"}"
     @edit[:rec_id] = @wimg.id || nil
-    @edit[:pxe_image_types] = Array.new
-    PxeImageType.all.sort{|a,b| a.name <=> b.name}.collect{|img| @edit[:pxe_image_types].push([img.name,img.id])}
+    @edit[:pxe_image_types] = PxeImageType.order(:name).collect { |img| [img.name, img.id] }
     @edit[:new][:img_type] = @wimg.pxe_image_type ? @wimg.pxe_image_type.id : nil
 
     @edit[:current] = copy_hash(@edit[:new])

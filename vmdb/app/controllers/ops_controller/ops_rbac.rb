@@ -804,10 +804,7 @@ module OpsController::OpsRbac
     @edit[:new][:password] = @user.password
     @edit[:new][:password2] = @user.password
 
-    @edit[:groups] = Array.new
-    MiqGroup.all.sort{|a,b| a.description.downcase<=>b.description.downcase}.each do | g |
-      @edit[:groups].push([g.description, g.id])
-    end
+    @edit[:groups] = MiqGroup.all.sort_by { |g| g.description.downcase }.collect { |g| [g.description, g.id] }
     @edit[:new][:group] = @user.current_group ? @user.current_group.id : nil
 
     @edit[:current] = copy_hash(@edit[:new])

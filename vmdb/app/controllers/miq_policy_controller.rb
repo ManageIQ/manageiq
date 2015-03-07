@@ -1028,20 +1028,13 @@ class MiqPolicyController < ApplicationController
     if type == "export"
       @sb[:new][:choices_chosen] = Array.new
       @sb[:new][:choices] = Array.new
-      @sb[:new][:chosen] = Array.new
-      if dbtype == "pp"
-        MiqPolicySet.all.sort{|a,b| a.description.downcase <=> b.description.downcase}.each do |ps|
-          @sb[:new][:choices].push([ps.description, ps.id])
+      chooser_class =
+        case dbtype
+        when "pp" then MiqPolicySet
+        when "p"  then MiqPolicy
+        when "al" then MiqAlert
         end
-      elsif dbtype == "p"
-        MiqPolicy.all.sort{|a,b| a.description.downcase <=> b.description.downcase}.each do |p|
-          @sb[:new][:choices].push([p.description, p.id])
-        end
-      elsif dbtype == "al"
-        MiqAlert.all.sort{|a,b| a.description.downcase <=> b.description.downcase}.each do |a|
-          @sb[:new][:choices].push([a.description, a.id])
-        end
-      end
+      @sb[:new][:chosen] = chooser_class.all.sort_by { |c| c.description.downcase }.collect { |c| [c.description, c.id] }
     else
       @sb[:import_file] = ""
     end

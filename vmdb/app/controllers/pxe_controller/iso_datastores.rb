@@ -238,8 +238,7 @@ module PxeController::IsoDatastores
     @edit[:current] = Hash.new
     @edit[:key] = "iso_img_edit__#{@img.id || "new"}"
     @edit[:rec_id] = @img.id || nil
-    @edit[:pxe_image_types] = Array.new
-    PxeImageType.all.sort{|a,b| a.name <=> b.name}.collect{|img| @edit[:pxe_image_types].push([img.name,img.id])}
+    @edit[:pxe_image_types] = PxeImageType.all.sort_by(&:name).collect { |img| [img.name, img.id] }
     @edit[:new][:img_type] = @img.pxe_image_type ? @img.pxe_image_type.id : nil
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit] = @edit
@@ -286,10 +285,9 @@ module PxeController::IsoDatastores
     @edit[:key] = "isd_edit__#{@isd.id || "new"}"
     @edit[:rec_id] = @isd.id || nil
     @edit[:new][:ems_id] = @isd.ext_management_system ? @isd.ext_management_system.id : nil
-    @edit[:emses] = Array.new
-    EmsRedhat.find(:all).delete_if{|e| e.iso_datastore != nil}.sort{|a,b| a.name <=> b.name}.each do |ems|
-      @edit[:emses].push([ems.name,ems.id])
-    end
+
+    emses_with_iso_datastores = EmsRedhat.includes(:iso_datastore).select(&:iso_datastore)
+    @edit[:emses] = emses_with_iso_datastores.sort_by(&:name).collect { |ems| [ems.name, ems.id] }
 
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit] = @edit
