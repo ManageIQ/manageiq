@@ -455,18 +455,20 @@ class MiqRequestController < ApplicationController
     end
 
     if (text = opts[:reason_text].presence)
-      new_text = text.gsub(/\A\*/, "").chomp("*")  # Remove leading and/or trailing "*"
-      hash_key =
-        case text
-        when /\A\*(.+?)[^*]\z/ then "STARTS WITH"  # Starts with and does not end with "*"
-        when /\A[^*](.+?)\*\z/ then "ENDS WITH"    # Ends with and does not start with "*"
-        else                        "INCLUDES"
-        end
-
-      cond.push(hash_key => {"value" => new_text, "field" => "MiqRequest-reason"})
+      cond.push(prov_condition_reason_text_expression_key(text) => {"value" => prov_condition_reason_text_sanitized(text), "field" => "MiqRequest-reason"})
     end
 
     MiqExpression.new("and" => cond)
+  end
+
+  def prov_condition_reason_text_sanitized(text)
+    text.sub(/\A\*?(.+?)\*?\z/, '\1')  # Remove leading and/or trailing "*"
+  end
+
+  def prov_condition_reason_text_expression_key(text)
+    return "STARTS WITH" if text =~ /\A\*(.+?)[^*]\z/  # Starts with and does not end with "*"
+    return "ENDS WITH"   if text =~ /\A[^*](.+?)\*\z/  # Ends with and does not start with "*"
+    "INCLUDES"
   end
 
   # Set all task options to default
