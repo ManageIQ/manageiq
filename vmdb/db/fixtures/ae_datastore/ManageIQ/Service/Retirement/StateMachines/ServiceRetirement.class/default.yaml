@@ -15,4 +15,4 @@ object:
   - markserviceasretired:
       value: "#/Service/Retirement/StateMachines/Methods/markserviceasretired"
   - deleteservicefromVMDB:
-      value: "#/Service/Retirement/StateMachines/Methods/DeleteFromVMDB"
+      value: "#/Service/Retirement/StateMachines/Methods/deleteservicefromvmdb"
