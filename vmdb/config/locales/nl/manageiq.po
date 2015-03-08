@@ -1,14 +1,14 @@
 # Dutch translations for manageiq package.
 # Copyright (C) 2014 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the manageiq package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# FIRST AUTHOR jeroen@tomorrowsit.nl, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2014-09-17 17:14+0200\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Last-Translator:Jeroen Spaans <jeroen@tomorrowsit.nl>\n"
 "Language-Team: Dutch\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -18,13 +18,13 @@ msgstr ""
 "\n"
 
 msgid " %s Assignments"
-msgstr "%s Opdrachten"
+msgstr " %s Opdrachten"
 
 msgid " (Names with \"%s\")"
 msgstr " (Namen met \"%s\")"
 
 msgid " Selected Actions:"
-msgstr  "Geselecteerde Acties:"
+msgstr  " Geselecteerde Acties:"
 
 msgid " Selected Alerts:"
 msgstr " Geselecteerde Meldingen:"
