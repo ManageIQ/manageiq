@@ -223,114 +223,73 @@ class ContainerController < ApplicationController
     end
     h_buttons, h_xml = build_toolbar_buttons_and_xml("x_history_tb") unless @in_a_form
 
-    render :update do |page|
-      # Build hash of trees to replace and optional new node to be selected
-      trees.each do |tree_name, tree|
-        page.replace(
-          "#{tree_name}_tree_div",
-          :partial => 'shared/tree',
-          :locals  => {
-            :tree => tree,
-            :name => tree.name
-          }
-        )
-      end
-      page << "dhxLayoutB.cells('b').setText('#{escape_javascript(h(@right_cell_text))}');"
+    # Build presenter to render the JS command for the tree update
+    presenter = ExplorerPresenter.new(
+      :active_tree => x_active_tree,
+      :temp        => @temp
+    )
+    r = proc { |opts| render_to_string(opts) }
 
-      # Replace right cell divs
-      if action == "container_edit"
-        page.replace_html("main_div", :partial => partial)
-      elsif params[:display]
-        partial_locals = {:controller => "container", :action_url => @lastaction}
-        partial = "layouts/x_gtl"
-        page << "miq_parent_id = '#{@record.id}';"  # Set parent rec id for JS function miqGridSort to build URL
-        page << "miq_parent_class = '#{request[:controller]}';" # Set parent class for URL also
-        page.replace_html("main_div", :partial => partial, :locals => partial_locals)
-
-      elsif record_showing
-        page.replace_html("main_div", :partial => "container/container_show", :locals => {:controller => "container"})
-      else
-        page.replace_html("main_div",   :partial => "layouts/x_gtl")
-        page.replace_html("paging_div", :partial => "layouts/x_pagingcontrols")
-      end
-
-      page.replace("adv_searchbox_div",
-                   :partial => "layouts/x_adv_searchbox")
-      # Hide/show searchbox depending on if a list is showing
-      page << set_element_visible("adv_searchbox_div", !(@record || @in_a_form))
-
-      # Decide whether to show paging controls
-      if action == "container_edit"
-        page << "dhxLayoutB.cells('a').collapse();"
-        # incase it was collapsed for summary screen, and incase there were no records on show_list
-        page << "dhxLayoutB.cells('c').expand();"
-        page << javascript_show("form_buttons_div")
-        page << javascript_hide_if_exists("pc_div_1")
-        locals = {:record_id => @edit[:rec_id], :action_url => action_url}
-        page.replace_html("form_buttons_div", :partial => "layouts/x_edit_buttons", :locals => locals)
-      elsif record_showing ||
-        (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0))
-        # Added so buttons can be turned off even tho div is not being displayed it still pops up
-        # Abandon changes box when trying to change a node on tree after saving a record
-        page << javascript_hide_if_exists("buttons_on")
-        page << "dhxLayoutB.cells('a').expand();"
-        page << "dhxLayoutB.cells('c').collapse();"
-      else
-        page << javascript_hide_if_exists("form_buttons_div")
-        page << javascript_show("pc_div_1")
-        page << "dhxLayoutB.cells('a').expand();"
-        page << "dhxLayoutB.cells('c').expand();"
-      end
-
-      page << "$('#main_div').scrollTop();"  # Scroll to top of main div
-
-      # Clear the JS gtl_list_grid var if changing to a type other than list
-      if @gtl_type && @gtl_type != "list"
-        page << "if (typeof gtl_list_grid != 'undefined') gtl_list_grid = undefined;"
-      end
-
-      # Rebuild the toolbars
-      if h_buttons && h_xml
-        page << javascript_for_toolbar_reload('history_tb', h_buttons, h_xml)
-        page << javascript_show_if_exists("history_buttons_div")
-      else
-        page << javascript_hide_if_exists("history_buttons_div")
-      end
-
-      if v_buttons && v_xml
-        page << javascript_for_toolbar_reload('view_tb', v_buttons, v_xml)
-        page << javascript_show_if_exists("view_buttons_div")
-      else
-        page << javascript_hide_if_exists("view_buttons_div")
-      end
-
-      if c_buttons && c_xml
-        page << javascript_for_toolbar_reload('center_tb', c_buttons, c_xml)
-        page << javascript_show_if_exists("center_buttons_div")
-      else
-        page << javascript_hide_if_exists("center_buttons_div")
-      end
-
-      if h_buttons || c_buttons || v_buttons
-        page << "dhxLayoutB.cells('a').expand();"
-      else
-        page << "dhxLayoutB.cells('a').collapse();"
-      end
-
-      if @record
-        page << "miq_record_id = '#{@record.id}';"  # Create miq_record_id JS var, if @record is present
-      else
-        # reset this, otherwise it remembers previously selected id and sends up from list view
-        # when add button is pressed
-        page << "miq_record_id = undefined;"
-      end
-
-      page << "cfmeDynatree_activateNodeSilently('#{x_active_tree}','#{x_node}');" if params[:id]
-      page << "$('##{x_active_tree}box').dynatree('#{@in_a_form && @edit ? 'disable' : 'enable'}');"
-      dim_div = @in_a_form && @edit && @edit[:current]
-      page << javascript_dim("#{x_active_tree}_div", dim_div)
-      page << "miqSparkle(false);"
+    # Build hash of trees to replace and optional new node to be selected
+    replace_trees.each do |t|
+      tree = trees[t]
+      presenter[:replace_partials]["#{t}_tree_div".to_sym] = r[
+        :partial => 'shared/tree',
+        :locals  => {:tree => tree,
+                     :name => tree.name.to_s
+        }
+      ]
     end
+    presenter[:right_cell_text] = @right_cell_text
+
+    if action == "container_edit"
+      presenter[:update_partials][:main_div] = r[:partial => partial]
+    elsif params[:display]
+      partial_locals = {:controller => "container", :action_url => @lastaction}
+      partial = "layouts/x_gtl"
+      presenter[:miq_parent_id]    = @record.id           # Set parent rec id for JS function miqGridSort to build URL
+      presenter[:miq_parent_class] = request[:controller] # Set parent class for URL also
+      presenter[:update_partials][:main_div] = r[:partial => partial, :locals => partial_locals]
+    elsif record_showing
+      presenter[:update_partials][:main_div] = r[:partial => "container/container_show", :locals => {:controller => "container"}]
+      presenter[:set_visible_elements][:pc_div_1] = false
+      presenter[:expand_collapse_cells][:c] = 'collapse'
+    else
+      presenter[:update_partials][:main_div] = r[:partial => "layouts/x_gtl"]
+      presenter[:update_partials][:paging_div] = r[:partial => "layouts/x_pagingcontrols"]
+      presenter[:set_visible_elements][:form_buttons_div] = false
+      presenter[:set_visible_elements][:pc_div_1] = true
+      presenter[:expand_collapse_cells][:c] = 'expand'
+    end
+
+    presenter[:replace_partials][:adv_searchbox_div] = r[:partial => 'layouts/x_adv_searchbox']
+
+    # Clear the JS gtl_list_grid var if changing to a type other than list
+    presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
+
+    # Rebuild the toolbars
+    presenter[:set_visible_elements][:history_buttons_div] = h_buttons  && h_xml
+    presenter[:set_visible_elements][:center_buttons_div]  = c_buttons  && c_xml
+    presenter[:set_visible_elements][:view_buttons_div]    = v_buttons  && v_xml
+
+    presenter[:reload_toolbars][:history] = {:buttons => h_buttons,  :xml => h_xml}  if h_buttons  && h_xml
+    presenter[:reload_toolbars][:center]  = {:buttons => c_buttons,  :xml => c_xml}  if c_buttons  && c_xml
+    presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons  && v_xml
+
+    presenter[:expand_collapse_cells][:a] = h_buttons || c_buttons || v_buttons ? 'expand' : 'collapse'
+
+    presenter[:miq_record_id] = @record ? @record.id : nil
+
+    # Hide/show searchbox depending on if a list is showing
+    presenter[:set_visible_elements][:adv_searchbox_div] = !(@record || @in_a_form)
+
+    presenter[:osf_node] = x_node  # Open, select, and focus on this node
+
+    presenter[:set_visible_elements][:blocker_div]    = false unless @edit && @edit[:adv_search_open]
+    presenter[:set_visible_elements][:quicksearchbox] = false
+    presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit
+    # Render the JS responses to update the explorer screen
+    render :js => presenter.to_html
   end
 
   # Build a Containers explorer tree
@@ -350,7 +309,7 @@ class ContainerController < ApplicationController
   def show_record(id = nil)
     @display = params[:display] || "main" unless control_selected?
     @lastaction = "show"
-    @showtype = "config"
+    @showtype = "main"
     identify_container(id)
     return if record_no_longer_exists?(@record)
   end
