@@ -237,7 +237,10 @@ module MiqPolicyController::Policies
   # Get information for a policy
   def policy_get_info(policy)
     @record = @policy = policy
-    @right_cell_text = _("%{model} \"%{name}\"") % {:model=>"#{ui_lookup(:model=>@sb[:folder])} #{@sb[:mode]} Policy", :name=>@policy.description.gsub(/'/,"\\'")}
+    @right_cell_text = _("%{model} \"%{name}\"") % {
+      :model => "#{@sb[:mode]} Policy",
+      :name  => @policy.description.gsub(/'/, "\\'")
+    }
     @right_cell_div = "policy_details"
     @policy_conditions = @policy.conditions
     @policy_events = @policy.miq_events
