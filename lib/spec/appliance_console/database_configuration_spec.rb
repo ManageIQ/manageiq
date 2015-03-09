@@ -134,15 +134,10 @@ describe ApplianceConsole::DatabaseConfiguration do
   context "#ask_for_database_credentials" do
     subject do
       # Note: this will move from External to DatabaseConfiguration
-      Class.new(ApplianceConsole::ExternalDatabaseConfiguration) do
-        include ApplianceConsole::Prompts
-        # global variable
-        def say(*args)
-        end
-      end.new
+      stubbed_say(ApplianceConsole::ExternalDatabaseConfiguration)
     end
 
-    it "should default prompts based upon previous values (no password)" do
+    it "should default prompts based upon previous values (no default password)" do
       subject.host     = "defaulthost"
       subject.database = "defaultdb"
       subject.username = "defaultuser"
@@ -151,12 +146,12 @@ describe ApplianceConsole::DatabaseConfiguration do
       subject.should_receive(:just_ask).with(/hostname/i, "defaulthost", anything, anything).and_return("newhost")
       subject.should_receive(:just_ask).with(/the database/i, "defaultdb").and_return("x")
       subject.should_receive(:just_ask).with(/user/i, "defaultuser").and_return("x")
-      subject.should_receive(:just_ask).with(/password/i, nil).and_return("x")
+      subject.should_receive(:just_ask).with(/password/i, nil).twice.and_return("x")
 
       subject.ask_for_database_credentials
     end
 
-    it "should default password prompt with stars" do
+    it "should default password prompt with stars (choosing default doesnt confirm password)" do
       subject.password = "defaultpass"
 
       subject.should_receive(:just_ask).with(/hostname/i, anything, anything, anything).and_return("x")
@@ -167,18 +162,18 @@ describe ApplianceConsole::DatabaseConfiguration do
       subject.ask_for_database_credentials
     end
 
-    it "should ask for user/password if not local" do
+    it "should ask for user/password (with confirm) if not local" do
       subject.should_receive(:just_ask).with(/hostname/i, anything, anything, anything).and_return("host")
       subject.should_receive(:just_ask).with(/the database/i, anything).and_return("x")
       subject.should_receive(:just_ask).with(/user/i,     anything).and_return("x")
-      subject.should_receive(:just_ask).with(/password/i, anything).and_return("*****")
+      subject.should_receive(:just_ask).with(/password/i, anything).twice.and_return("the password")
 
       subject.ask_for_database_credentials
     end
 
-    it "should only ask for password if local" do
+    it "should only ask for password (with confirm) if local" do
       subject.should_receive(:just_ask).with(/hostname/i, anything, anything, anything).and_return("localhost")
-      subject.should_receive(:just_ask).with(/password/i, anything).and_return("the password")
+      subject.should_receive(:just_ask).with(/password/i, anything).twice.and_return("the password")
 
       subject.ask_for_database_credentials
     end
@@ -192,12 +187,26 @@ describe ApplianceConsole::DatabaseConfiguration do
         def say(*_args)
         end
       end.new
+      stubbed_say(ApplianceConsole::InternalDatabaseConfiguration)
     end
 
-    it "should ask for password if local" do
-      subject.should_receive(:just_ask).with(/password/i, anything).and_return("the password")
+    it "should ask for password (with confirm) if local" do
+      subject.should_receive(:just_ask).with(/password/i, anything).twice.and_return("the password")
 
       subject.ask_for_database_credentials
+    end
+
+    it "should prompt again if passwords do not match" do
+      subject.should_receive(:just_ask).with(/password/i, anything).twice.and_return(*%w(pass1 pass2 pass3 pass3))
+
+      subject.ask_for_database_credentials
+      expect(subject.password).to eq("pass3")
+    end
+
+    it "should raise an error if passwords do not match twice" do
+      subject.should_receive(:just_ask).with(/password/i, anything).twice.and_return(*%w(pass1 pass2 pass3 pass4))
+
+      expect { subject.ask_for_database_credentials }.to raise_error(ArgumentError, "passwords did not match")
     end
   end
 
@@ -362,5 +371,14 @@ describe ApplianceConsole::DatabaseConfiguration do
         end
       end
     end
+  end
+
+  def stubbed_say(clazz)
+    Class.new(clazz) do
+      include ApplianceConsole::Prompts
+      # don't display the messages prompted to the end user
+      def say(*_args)
+      end
+    end.new
   end
 end

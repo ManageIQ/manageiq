@@ -490,7 +490,13 @@ Date and Time Configuration
 
           ApplianceConsole::Logging.logger = VMDBLogger.new(LOGFILE)
           database_configuration = ApplianceConsole.const_get("#{loc_selection}DatabaseConfiguration").new
-          database_configuration.ask_questions
+          begin
+            database_configuration.ask_questions
+          rescue ArgumentError => e
+            say("\nConfiguration failed: #{e.message}\n")
+            press_any_key
+            raise MiqSignalError
+          end
 
           clear_screen
           say "Activating the configuration using the following settings...\n"
