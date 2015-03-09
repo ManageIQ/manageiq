@@ -689,26 +689,9 @@ class CatalogController < ApplicationController
     id = session[:edit][:rec_id]
     return unless load_edit("ot_edit__#{id}", "replace_cell__explorer")
     ot_edit_get_form_vars
-    changed = (@edit[:new] != @edit[:current])
-    render :update do |page|
-      page << javascript_for_miq_button_visibility(changed)
-      page << "miqSparkle(false);"
-    end
-  end
-
-  def ot_content_changed
     render :update do |page|
       page << javascript_hide("buttons_off")
       page << javascript_show("buttons_on")
-    end
-  end
-
-  def ot_content_submit
-    case params[:button]
-    when "reset"
-      ot_content_submit_reset
-    when "save"
-      ot_content_submit_save
     end
   end
 
@@ -831,11 +814,12 @@ class CatalogController < ApplicationController
 
   def ot_edit_submit_save
     assert_privileges("orchestration_templates_admin")
-    id = session[:edit][:rec_id]
+    id = params[:id]
     return unless load_edit("ot_edit__#{id}", "replace_cell__explorer")
     ot = OrchestrationTemplate.find_by_id(@edit[:rec_id])
     ot.name = @edit[:new][:name]
     ot.description = @edit[:new][:description]
+    ot.content = params[:template_content] if ot.stacks.length == 0
     begin
       ot.save
     rescue StandardError => bang
@@ -861,37 +845,6 @@ class CatalogController < ApplicationController
     ot_edit_set_form_vars
     @changed = session[:changed] = false
     replace_right_cell("ot_edit")
-  end
-
-  def ot_content_submit_reset
-    add_flash(_("All changes have been reset"), :warning)
-    replace_right_cell
-  end
-
-  def ot_content_submit_save
-    assert_privileges("orchestration_templates_admin")
-    ot = OrchestrationTemplate.find_by_id(params[:id])
-    if ot.stacks.length > 0
-      add_flash(_("The Orchestration Template \"%s\" is read-only.") % ot.name, :error)
-    else
-      ot.content = params['template_content']
-      begin
-        ot.save
-      rescue StandardError => bang
-        add_flash(_("Error during '%s': ") % "Orchestration Template Content Edit" << bang.message, :error)
-      else
-        add_flash(_("%{model} \"%{name}\" was saved") %
-                  {:model => ui_lookup(:model => 'OrchestrationTemplate'),
-                   :name  => ot.name})
-      end
-    end
-    render :update do |page|
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-    end
-    @changed = session[:changed] = false
-    @in_a_form = false
-    @edit = session[:edit] = nil
-    replace_right_cell
   end
 
   def st_catalog_get_form_vars
@@ -1645,7 +1598,8 @@ class CatalogController < ApplicationController
         presenter[:set_visible_elements][:form_buttons_div] = true
         presenter[:set_visible_elements][:pc_div_1] = false
         locals = {:record_id  => @edit[:rec_id],
-                  :action_url => "ot_edit_submit"}
+                  :action_url => "ot_edit_submit",
+                  :serialize  => true}
         presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
       else
         # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box when trying to change a node on tree after saving a record
@@ -1670,22 +1624,6 @@ class CatalogController < ApplicationController
     presenter[:miq_record_id] = @record && !@in_a_form ? @record.id : @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
 
     presenter[:lock_unlock_trees][x_active_tree] = @edit && @edit[:current]
-
-    # Render Orchestration Template content edit form buttons (for templates without stacks only)
-    if @record && !@in_a_form && x_active_tree == :ot_tree && @record.stacks.length == 0
-      locals = {
-        :record_id         => @record.id,
-        :action_url        => "ot_content_submit",
-        :save_confirm_text => _("Are you sure you want to save the modified content?"),
-        :no_cancel         => true,
-        :serialize         => true,
-      }
-      presenter[:set_visible_elements][:form_buttons_div] = true
-      presenter[:set_visible_elements][:pc_div_1] = false
-      presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
-      presenter[:expand_collapse_cells][:a] = 'expand'
-      presenter[:expand_collapse_cells][:c] = 'expand'
-    end
 
     # Save open nodes, if any were added
     presenter[:save_open_states_trees] = [@sb[:active_tree].to_s] if add_nodes

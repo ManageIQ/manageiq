@@ -86,6 +86,7 @@ describe CatalogController do
       controller.instance_variable_set(:@record, ot)
       new_name = "New Name"
       new_description = "New Description"
+      new_content = "New Content"
       edit = {
         :new    => {
           :name        => new_name,
@@ -93,6 +94,7 @@ describe CatalogController do
         :key    => "ot_edit__#{ot.id}",
         :rec_id => ot.id,
       }
+      controller.params.merge!(:id => ot.id, :template_content => new_content)
       controller.instance_variable_set(:@edit, edit)
       session[:edit] = edit
       controller.stub(:replace_right_cell)
@@ -100,20 +102,6 @@ describe CatalogController do
       ot.reload
       ot.name.should == new_name
       ot.description.should == new_description
-    end
-  end
-
-  context "#ot_content_edit" do
-    it "Orchestration Template content is edited" do
-      controller.instance_variable_set(:@sb, {})
-      controller.instance_variable_set(:@_params, :button => "save")
-      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
-      ot = FactoryGirl.create(:orchestration_template)
-      new_content = "New Content"
-      controller.params.merge!(:id => ot.id, 'template_content' => new_content)
-      controller.stub(:replace_right_cell)
-      controller.send(:ot_content_submit)
-      ot.reload
       ot.content.should == new_content
     end
   end
@@ -124,12 +112,20 @@ describe CatalogController do
       controller.instance_variable_set(:@_params, :button => "save")
       controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
       ot = FactoryGirl.create(:orchestration_template_with_stacks)
+      edit = {
+        :new    => {
+          :name        => "New Name",
+          :description => "New Description"},
+        :key    => "ot_edit__#{ot.id}",
+        :rec_id => ot.id,
+      }
+      controller.instance_variable_set(:@edit, edit)
+      session[:edit] = edit
       original_content = ot.content
       new_content = "New Content"
-      controller.params.merge!(:id => ot.id, 'template_content' => new_content)
+      controller.params.merge!(:id => ot.id, :template_content => new_content)
       controller.stub(:replace_right_cell)
-      controller.send(:ot_content_submit)
-      controller.send(:flash_errors?).should be_true
+      controller.send(:ot_edit_submit)
       ot.reload
       ot.content.should == original_content
     end
