@@ -972,7 +972,7 @@ class ApplicationController < ActionController::Base
       #array of all reports if menu not configured
       @rep = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
       if tree_type == "timeline"
-        @data = @rep.reject { |r| r.timeline == nil }
+        @data = @rep.reject { |r| r.timeline.nil? }
       else
         @data = @rep.select do |r|
           r.template_type == "report" && !r.template_type.blank?
@@ -1018,7 +1018,6 @@ class ApplicationController < ActionController::Base
       temp = Array.new
       subfolder = %w{ Custom }
       @custom_folder = [ @sb[:grp_title] ]
-      @custom_folder.push(@sb[:grp_title])
       @custom_folder.push([subfolder]) unless @custom_folder.include?([subfolder])
 
       custom = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
