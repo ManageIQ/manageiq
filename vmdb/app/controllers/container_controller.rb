@@ -7,13 +7,14 @@ class ContainerController < ApplicationController
   after_filter :set_session_data
 
   CONTAINER_X_BUTTON_ALLOWED_ACTIONS = {
-    'container_delete'      => :container_delete,
-    'container_edit'        => :container_edit
+    'container_delete' => :container_delete,
+    'container_edit'   => :container_edit
   }
 
   def button
     custom_buttons if params[:pressed] == "custom_button"
-    return if ["custom_button"].include?(params[:pressed])    # custom button screen, so return, let custom_buttons method handle everything
+    # custom button screen, so return, let custom_buttons method handle everything
+    return if ["custom_button"].include?(params[:pressed])
   end
 
   def whitelisted_action(action)
@@ -21,7 +22,7 @@ class ContainerController < ApplicationController
       CONTAINER_X_BUTTON_ALLOWED_ACTIONS.key?(action)
 
     send_action = CONTAINER_X_BUTTON_ALLOWED_ACTIONS[action]
-    self.send(send_action)
+    send(send_action)
     send_action
   end
   hide_action :whitelisted_action
@@ -39,7 +40,7 @@ class ContainerController < ApplicationController
     else
       add_flash(_("Button not yet implemented") + " #{model}:#{action}", :error) unless @flash_array
       render :update do |page|
-        page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
   end
@@ -47,14 +48,14 @@ class ContainerController < ApplicationController
   # Container show selected, redirect to proper controller
   def show
     record = Container.find_by_id(from_cid(params[:id]))
-    if !@explorer
+    unless @explorer
       tree_node_id = TreeBuilder.build_node_id(record)
       redirect_to :controller => "container",
                   :action     => "explorer",
                   :id         => tree_node_id
       return
     end
-    redirect_to :action => 'show', :controller=>record.class.base_model.to_s.underscore, :id=>record.id
+    redirect_to :action => 'show', :controller => record.class.base_model.to_s.underscore, :id => record.id
   end
 
   def explorer
@@ -112,7 +113,7 @@ class ContainerController < ApplicationController
     respond_to do |format|
       format.js do                  # AJAX, select the node
         @explorer = true
-        params[:id] = x_build_node_id(@record,nil,x_tree(:containers_tree))  # Get the tree node id
+        params[:id] = x_build_node_id(@record,nil, x_tree(:containers_tree))  # Get the tree node id
         tree_select
       end
       format.html do                # HTML, redirect to explorer
@@ -120,7 +121,7 @@ class ContainerController < ApplicationController
         session[:exp_parms] = {:id => tree_node_id}
         redirect_to :action => "explorer"
       end
-      format.any {render :nothing => true, :status => 404}
+      format.any { render :nothing => true, :status => 404 }
     end
   end
 
@@ -135,7 +136,7 @@ class ContainerController < ApplicationController
       search_id = @nodetype == "root" ? 0 : from_cid(id)
       adv_search_build(vm_model_from_active_tree(x_active_tree))
       session[:edit] = @edit              # Set because next method will restore @edit from session
-      listnav_search_selected(search_id) unless params.has_key?(:search_text) # Clear or set the adv search filter
+      listnav_search_selected(search_id) unless params.key?(:search_text) # Clear or set the adv search filter
       if @edit[:adv_search_applied] &&
         MiqExpression.quick_search?(@edit[:adv_search_applied][:exp]) &&
         %w(reload tree_select).include?(params[:action])
@@ -163,7 +164,7 @@ class ContainerController < ApplicationController
   def get_node_info(treenodeid)
     @show_adv_search = true
     @nodetype, id = valid_active_node(treenodeid).split("_").last.split("-")
-    #resetting action that was stored during edit to determine what is being edited
+    # resetting action that was stored during edit to determine what is being edited
     @sb[:action] = nil
     if x_node == "root" || TreeBuilder.get_model_for_prefix(@nodetype) == "MiqSearch"
       typ = "Container"
@@ -171,7 +172,7 @@ class ContainerController < ApplicationController
       @right_cell_text = _("All %s") % ui_lookup(:models => typ)
     else
       show_record(from_cid(id))
-      @right_cell_text = _("%{model} \"%{name}\"") % {:name => @record.name,
+      @right_cell_text = _("%{model} \"%{name}\"") % {:name  => @record.name,
                                                       :model => ui_lookup(:model => TreeBuilder.get_model_for_prefix(@nodetype))}
     end
 
@@ -189,7 +190,7 @@ class ContainerController < ApplicationController
     end
   end
 
-  #set partial name and cell header for edit screens
+  # set partial name and cell header for edit screens
   def set_right_cell_vars(action)
     case action
     when "container_edit"
@@ -200,13 +201,14 @@ class ContainerController < ApplicationController
     else
       action = nil
     end
-    return partial,action,header
+    return partial, action, header
   end
 
   # Replace the right cell of the explorer
   def replace_right_cell(action = nil, replace_trees = [])
     @explorer = true
-    partial, action_url, @right_cell_text = set_right_cell_vars(action) if action # Set partial name, action and cell header
+    # Set partial name, action and cell header
+    partial, action_url, @right_cell_text = set_right_cell_vars(action) if action
     get_node_info(x_node) if !@in_a_form && !params[:display]
     replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
     type, _ = x_node.split("_").last.split("-")
@@ -237,7 +239,7 @@ class ContainerController < ApplicationController
 
       # Replace right cell divs
       if action == "container_edit"
-        page.replace_html("main_div", :partial=>partial)
+        page.replace_html("main_div", :partial => partial)
       elsif params[:display]
         partial_locals = {:controller => "container", :action_url => @lastaction}
         partial = "layouts/x_gtl"
@@ -257,17 +259,19 @@ class ContainerController < ApplicationController
       # Hide/show searchbox depending on if a list is showing
       page << set_element_visible("adv_searchbox_div", !(@record || @in_a_form))
 
-#     # Decide whether to show paging controls
+      # Decide whether to show paging controls
       if action == "container_edit"
         page << "dhxLayoutB.cells('a').collapse();"
-        page << "dhxLayoutB.cells('c').expand();" #incase it was collapsed for summary screen, and incase there were no records on show_list
+        # incase it was collapsed for summary screen, and incase there were no records on show_list
+        page << "dhxLayoutB.cells('c').expand();"
         page << javascript_show("form_buttons_div")
         page << javascript_hide_if_exists("pc_div_1")
         locals = {:record_id => @edit[:rec_id], :action_url => action_url}
         page.replace_html("form_buttons_div", :partial => "layouts/x_edit_buttons", :locals => locals)
       elsif record_showing ||
         (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0))
-        #Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box when trying to change a node on tree after saving a record
+        # Added so buttons can be turned off even tho div is not being displayed it still pops up
+        # Abandon changes box when trying to change a node on tree after saving a record
         page << javascript_hide_if_exists("buttons_on")
         page << "dhxLayoutB.cells('a').expand();"
         page << "dhxLayoutB.cells('c').collapse();"
@@ -316,7 +320,9 @@ class ContainerController < ApplicationController
       if @record
         page << "miq_record_id = '#{@record.id}';"  # Create miq_record_id JS var, if @record is present
       else
-        page << "miq_record_id = undefined;"  # reset this, otherwise it remembers previously selected id and sends up from list view when add button is pressed
+        # reset this, otherwise it remembers previously selected id and sends up from list view
+        # when add button is pressed
+        page << "miq_record_id = undefined;"
       end
 
       page << "cfmeDynatree_activateNodeSilently('#{x_active_tree}','#{x_node}');" if params[:id]

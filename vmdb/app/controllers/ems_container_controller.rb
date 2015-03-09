@@ -1,6 +1,5 @@
 class EmsContainerController < ApplicationController
   include EmsCommon        # common methods for EmsInfra/Cloud/Container controllers
-  include ContainersCommonMixin
 
   before_filter :check_privileges
   before_filter :get_session_data
@@ -18,6 +17,4 @@ class EmsContainerController < ApplicationController
   def index
     redirect_to :action => 'show_list'
   end
-
-  private ############################
 end

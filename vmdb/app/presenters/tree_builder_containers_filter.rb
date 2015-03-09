@@ -1,7 +1,7 @@
 class TreeBuilderContainersFilter < TreeBuilder
   private
 
-  def tree_init_options(tree_name)
+  def tree_init_options(_)
     {
       :leaf     => "Container",
       :full_ids => true

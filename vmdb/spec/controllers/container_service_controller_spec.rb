@@ -18,7 +18,8 @@ describe ContainerServiceController do
     get :show, :id => container_service.id
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
-    expect(assigns(:breadcrumbs)).to eq([{:name=>"Test Service (Summary)", :url=>"/container_service/show/#{container_service.id}"}])
+    expect(assigns(:breadcrumbs)).to eq([{:name => "Test Service (Summary)",
+                                          :url  => "/container_service/show/#{container_service.id}"}])
   end
 
   it "renders show_list" do

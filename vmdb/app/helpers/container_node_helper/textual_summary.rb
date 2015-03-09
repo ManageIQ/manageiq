@@ -4,8 +4,8 @@ module ContainerNodeHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w{name}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+    items = %w(name)
+    items.collect {|m| send("textual_#{m}")}.flatten.compact
   end
 
   #

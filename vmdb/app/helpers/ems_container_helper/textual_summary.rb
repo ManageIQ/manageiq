@@ -8,6 +8,10 @@ module EmsContainerHelper::TextualSummary
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
+  def textual_group_relationships
+    # items = %w()
+  end
+
   def textual_group_status
     items = %w(authentications refresh_status)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
@@ -179,7 +183,7 @@ module EmsContainerHelper::TextualSummary
       h[:image] = "smarttag"
       h[:value] = "No #{label} have been assigned"
     else
-      h[:value] = tags.sort_by { |category, assigned| category.downcase }.collect { |category, assigned| {:image => "smarttag", :label => category, :value => assigned} }
+      h[:value] = tags.sort_by { |category, _| category.downcase }.collect { |category, assigned| {:image => "smarttag", :label => category, :value => assigned} }
     end
     h
   end
