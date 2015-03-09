@@ -5,32 +5,33 @@
     - if !@in_a_form_props
       = render :partial => "layouts/flash_msg", :locals  => {:div_num => "_class_props"}
       %h3=_('Properties')
-      %table.style3
-        %thead
+      %table.table.table-striped.table-bordered
+        %tbody
           %tr
-            %th
-            %th
-        %tr.no-hover{:class => cycle('row0', 'row1')}
-          %td.label
-            = Dictionary::gettext('fqname', :type => :column, :notfound => :titleize)
-          %td.wide
-            = h(@sb[:namespace_path])
-        %tr.no-hover{:class => cycle('row0', 'row1')}
-          %td.label=_('Name')
-          %td
-            = @ae_class.name
-        %tr.no-hover{:class => cycle('row0', 'row1')}
-          %td.label=_('Display Name')
-          %td
-            = @ae_class.display_name
-        %tr.no-hover{:class => cycle('row0', 'row1')}
-          %td.label=_('Description')
-          %td
-            = @ae_class.description
-        %tr.no-hover{:class => cycle('row0', 'row1')}
-          %td.label=_('Instances')
-          %td
-            = h(@ae_class.ae_instances.length)
+            %td
+              = Dictionary::gettext('fqname', :type => :column, :notfound => :titleize)
+            %td
+              = h(@sb[:namespace_path])
+          %tr
+            %td
+              =_('Name')
+            %td
+              = @ae_class.name
+          %tr
+            %td
+              =_('Display Name')
+            %td
+              = @ae_class.display_name
+          %tr
+            %td
+              =_('Description')
+            %td
+              = @ae_class.description
+          %tr
+            %td
+              =_('Instances')
+            %td
+              = h(@ae_class.ae_instances.length)
       = render :partial => "domain_overrides", :locals  => {:node_prefix => "aec", :model => "Class"}
     - else
       #form_div

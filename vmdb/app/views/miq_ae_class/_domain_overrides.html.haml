@@ -1,21 +1,16 @@
 - if @domain_overrides && @domain_overrides.count > 1
   %h3=_('Domain Overrides (by priority)')
-  %table.style3
-    %thead
-      %tr
-        %th
+  %table.table.table-striped.table-bordered.table-hover
     %tbody
       - @domain_overrides.each do |name, id|
         - if id
-          %tr{:class => cycle('row0', 'row1'),
-              :onclick => remote_function(:loading => "miqSparkle(true);",
+          %tr{:onclick => remote_function(:loading => "miqSparkle(true);",
                                           :complete => "miqSparkle(false);",
                                           :url     => "/miq_ae_class/x_show?id=#{node_prefix}-#{to_cid(id)}"),
-              :onmouseover => "this.style.cursor='pointer'",
               :title => _("Click to view this %s in the \"%s\" Domain") % [model, name]}
             %td
               =name
         - else
-          %tr{:class => cycle('row0 no-hover', 'row1 no-hover')}
+          %tr
             %td
               =name
