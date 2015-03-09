@@ -31,6 +31,10 @@ class DialogFieldCheckBox < DialogField
     automate_hash["value"].to_s
   end
 
+  def refresh_json_value
+    {:checked => checked?}
+  end
+
   private
 
   def default_resource_action

@@ -90,7 +90,7 @@
               var fieldName = "#{field.name}";
 
               $.post('dynamic_checkbox_refresh', {name: fieldName}, function(data) {
-                $('.dynamic-checkbox-' + fieldId).prop('checked', data.checked);
+                $('.dynamic-checkbox-' + fieldId).prop('checked', data.values.checked);
                 miqSparkleOff();
               });
             });
