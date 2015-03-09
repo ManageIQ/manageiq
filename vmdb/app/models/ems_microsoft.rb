@@ -25,9 +25,9 @@ class EmsMicrosoft < EmsInfra
     WinRM::WinRMWebService.new(auth_url, :ssl, :user => username, :pass => password, :disable_sspi => true)
   end
 
-  def self.auth_url(ipaddress, port = nil)
+  def self.auth_url(hostname, port = nil)
     port ||= 5985
-    "http://#{ipaddress}:#{port}/wsman"
+    "http://#{hostname}:#{port}/wsman"
   end
 
   def connect(options = {})
@@ -35,8 +35,8 @@ class EmsMicrosoft < EmsInfra
 
     username = options[:user] || authentication_userid(options[:auth_type])
     password = options[:pass] || authentication_password(options[:auth_type])
-    ipaddress = options[:ipaddress] || self.ipaddress
-    auth_url = self.class.auth_url(ipaddress, port)
+    hostname = options[:hostname] || self.hostname
+    auth_url = self.class.auth_url(hostname, port)
     self.class.raw_connect(username, password, auth_url)
   end
 
