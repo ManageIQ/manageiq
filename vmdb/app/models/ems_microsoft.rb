@@ -25,9 +25,14 @@ class EmsMicrosoft < EmsInfra
     WinRM::WinRMWebService.new(auth_url, :ssl, :user => username, :pass => password, :disable_sspi => true)
   end
 
+  # Utilize URI::Generic#hostname to add support for IPv6 literals
+  # TODO: simplify this once https://github.com/ruby/ruby/pull/765 lands in our ruby
   def self.auth_url(hostname, port = nil)
     port ||= 5985
-    "http://#{hostname}:#{port}/wsman"
+    require 'uri'
+    uri = URI::HTTP.build(:port => port, :path => "/wsman")
+    uri.hostname = hostname
+    uri.to_s
   end
 
   def connect(options = {})
