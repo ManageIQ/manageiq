@@ -140,6 +140,13 @@ class EmsAmazon < EmsCloud
     raise MiqException::MiqOrchestrationStatusError, err.to_s, err.backtrace
   end
 
+  def orchestration_template_validate(template)
+    cloud_formation.validate_template(template.content)[:message]
+  rescue => err
+    $log.error "MIQ(#{self.class.name}##{__method__}) template=[#{template.name}], error: #{err}"
+    raise MiqException::MiqOrchestrationValidationError, err.to_s, err.backtrace
+  end
+
   #
   # Discovery
   #
