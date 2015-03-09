@@ -246,7 +246,7 @@ class MiqRequestWorkflow
     dialog = @dialogs.fetch_path(:dialogs, dialog_name.to_sym)
     return {} unless dialog
 
-    dialog[:fields].each_key {|f| get_field(dialog_name, f)}
+    dialog[:fields].each_key { |f| get_field(f, dialog_name) }
     return dialog[:fields]
   end
 
