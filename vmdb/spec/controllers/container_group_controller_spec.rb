@@ -20,4 +20,10 @@ describe ContainerGroupController do
     expect(response.body).to_not be_empty
     expect(assigns(:breadcrumbs)).to eq([{:name=>"Test Group (Summary)", :url=>"/container_group/show/#{container_group.id}"}])
   end
+
+  it "renders show_list" do
+    get :show_list
+    expect(response.status).to eq(200)
+    expect(response.body).to_not be_empty
+  end
 end

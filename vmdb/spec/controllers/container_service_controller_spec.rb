@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe ContainerNodeController do
+describe ContainerServiceController do
   render_views
   before(:each) do
     set_user_privileges
@@ -14,11 +14,11 @@ describe ContainerNodeController do
 
   it "renders show screen" do
     ems = FactoryGirl.create(:ext_management_system)
-    container_node = ContainerNode.create(:ext_management_system => ems, :name => "Test Node")
-    get :show, :id => container_node.id
+    container_service = ContainerService.create(:ext_management_system => ems, :name => "Test Service")
+    get :show, :id => container_service.id
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
-    expect(assigns(:breadcrumbs)).to eq([{:name=>"Test Node (Summary)", :url=>"/container_node/show/#{container_node.id}"}])
+    expect(assigns(:breadcrumbs)).to eq([{:name=>"Test Service (Summary)", :url=>"/container_service/show/#{container_service.id}"}])
   end
 
   it "renders show_list" do
