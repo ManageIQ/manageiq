@@ -15,7 +15,6 @@ class ContainerNodeController < ApplicationController
   end
 
   def show
-    return if perfmenu_click?
     @display = params[:display] || "main" unless control_selected?
 
     @lastaction = "show"
