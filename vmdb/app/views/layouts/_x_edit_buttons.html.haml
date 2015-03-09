@@ -31,6 +31,8 @@
 - save_text ||= nil
 - # need to show title on apply button on import config screens
 - apply_text ||= nil
+- # should apply :get or :post the request
+- apply_method ||= :get
 - # need to show download button on product updates screen
 - download_button ||= nil
 - # need to show title on download button on product updates screen
@@ -55,6 +57,7 @@
             - if apply_button
               = link_to(_("Apply"),
                 {:action => action_url, :button => "apply", :id => record_id},
+                :method => apply_method,
                 :class => "btn btn-primary",
                 :alt   => apply_text,
                 :title => apply_text)

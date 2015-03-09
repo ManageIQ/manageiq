@@ -338,12 +338,13 @@ class OpsController < ApplicationController
         record_id = @sb[:my_server_id]
       end
     elsif x_active_tree == :settings_tree
-      if ["settings_import","settings_import_tags"].include?@sb[:active_tab]
+      if ["settings_import","settings_import_tags"].include? @sb[:active_tab]
         action_url = "apply_imports"
         record_id = @sb[:active_tab].split("settings_").last
         locals[:no_reset] = true
         locals[:apply_button] = true
         locals[:no_cancel] = true
+        locals[:apply_method] = :post
         if @sb[:active_tab] == "settings_import"
           locals[:apply_text] = "Apply the good VM custom variable value records"
         elsif @sb[:active_tab] == "settings_import_tags"
