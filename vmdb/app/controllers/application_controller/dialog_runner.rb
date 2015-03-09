@@ -175,28 +175,28 @@ module ApplicationController::DialogRunner
   def dynamic_radio_button_refresh
     field = load_dialog_field(params[:name])
 
-    response_json = {:field_name => field.name, :values => field.refresh_json_value(params[:checked_value])}
+    response_json = {:values => field.refresh_json_value(params[:checked_value])}
     dynamic_refresh_response(response_json)
   end
 
   def dynamic_text_box_refresh
     field = load_dialog_field(params[:name])
 
-    response_json = {:field_name => field.name, :values => field.refresh_json_value}
+    response_json = {:values => field.refresh_json_value}
     dynamic_refresh_response(response_json)
   end
 
   def dynamic_checkbox_refresh
     field = load_dialog_field(params[:name])
 
-    response_json = {:field_name => field.name, :values => field.refresh_json_value}
+    response_json = {:values => field.refresh_json_value}
     dynamic_refresh_response(response_json)
   end
 
   def dynamic_date_refresh
     field = load_dialog_field(params[:name])
 
-    response_json = {:field_name => field.name, :values => field.refresh_json_value}
+    response_json = {:values => field.refresh_json_value}
     dynamic_refresh_response(response_json)
   end
 
