@@ -1652,29 +1652,32 @@ module ReportController::Reports::Editor
     pivot_cols = {}
     rpt.col_formats ||= Array.new(rpt.col_order.length)   # Create array of nils if col_formats not present (backward compat)
     rpt.col_order.each_with_index do |col, idx|
-      unless col.include?(".")  # Main table field
+      if !col.include?(".")  # Main table field
         field_key = rpt.db + "-" + col
         field_value = friendly_model_name(rpt.db) +
                       Dictionary.gettext(rpt.db + "." + col.split("__").first, :type => :column, :notfound => :titleize)
       else                      # Included table field
         inc_string = find_includes(col.split("__").first, rpt.include)  # Get the full include string
-        field_key = rpt.db + "." + inc_string.to_s + "-" + col.split(".")[1]
-        if inc_string.to_s == "managed" # don't titleize tag name, need it to lookup later to get description by tag name
-          field_value = friendly_model_name(rpt.db + "." + inc_string.to_s) + col.split(".")[1]
+        field_key = rpt.db + "." + inc_string.to_s + "-" + col.split(".").last
+        if inc_string.to_s.ends_with?(".managed") || inc_string.to_s == "managed"
+          # don't titleize tag name, need it to lookup later to get description by tag name
+          field_value = friendly_model_name(rpt.db + "." + inc_string.to_s) + col.split(".").last
         else
           field_value = friendly_model_name(rpt.db + "." + inc_string.to_s) +
-                        Dictionary.gettext(col.split(".")[1].split("__").first, :type => :column, :notfound => :titleize)
+                        Dictionary.gettext(col.split(".").last.split("__").first, :type => :column, :notfound => :titleize)
         end
       end
+
       if field_key.include?("__")                           # Check for calculated pivot column
         field_key1, calc_typ = field_key.split("__")
         pivot_cols[field_key1] ||= []
         pivot_cols[field_key1] << calc_typ.to_sym
         pivot_cols[field_key1].sort!                          # Sort the array
-        fields.push([field_value, field_key1])  unless fields.include?([field_value, field_key1]) # Add original col to fields array
+        fields.push([field_value, field_key1]) unless fields.include?([field_value, field_key1]) # Add original col to fields array
       else
         fields.push([field_value, field_key])               # Add to fields array
       end
+
       # Create the groupby keys if groupby array is present
       if rpt.rpt_options &&
          rpt.rpt_options[:pivot] &&
@@ -1690,6 +1693,7 @@ module ReportController::Reports::Editor
           @edit[:new][:pivotby3] = field_key if col == rpt.rpt_options[:pivot][:group_cols][2]
         end
       end
+
       # Create the sortby keys if sortby array is present
       if rpt.sortby.kind_of?(Array)
         if rpt.sortby.length > 0
@@ -1754,24 +1758,34 @@ module ReportController::Reports::Editor
 
   # Build the full includes string by finding the column in the includes hash
   def find_includes(col, includes)
-    table = col.split(".")[0]
-    field = col.split(".")[1]
-    if includes[table]                              # Does this level include have the table name?
-      if includes[table]["columns"].include?(field) # If so, does the columns have the field name?
-        return table                                # Yes, return the table name
-      end
-    else                                            # Need to go to the next level
-      includes.each_pair do |key, inc|              # Check each included table
-        if inc["include"]                           # Does the included table have an include?
-          inc_table = find_includes(col, inc["include"])  # Yes, recursively search it for the table.col
-          if inc_table.nil?                         # If it comes back nil, we never found it
-            return nil
-          else
-            return key + "." + inc_table          # Otherwise, return the table name + the included string
-          end
-        end
+    tables = col.split(".")[0..-2]
+    field = col.split(".").last
+
+    table = tables.first
+
+    # Does this level include have the table name and does columns have the field name?
+    if includes[table] && includes[table]["columns"] && includes[table]["columns"].include?(field)
+      return table                                # Yes, return the table name
+    end
+
+    if includes[table] && includes[table]["include"]
+      new_col = [ tables[1..-1], field ].flatten.join('.')
+      # recursively search it for the table.col
+      inc_table = find_includes(new_col, includes[table]["include"])
+      return table + '.' + inc_table if inc_table
+    end
+
+    # Need to go to the next level
+    includes.each_pair do |key, inc|              # Check each included table
+      if inc["include"]                           # Does the included table have an include?
+        inc_table = find_includes(col, inc["include"])  # Yes, recursively search it for the table.col
+        return nil if inc_table.nil?                         # If it comes back nil, we never found it
+
+        # Otherwise, return the table name + the included string
+        return key + "." + inc_table
       end
     end
+
     nil
   end
 
