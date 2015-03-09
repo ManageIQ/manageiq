@@ -15,8 +15,12 @@ class EmsOpenstackInfra < EmsInfra
     true
   end
 
+  def supported_auth_types
+    %w(default amqp)
+  end
+
   def supports_authentication?(authtype)
-    %w(default amqp).include?(authtype.to_s)
+    supported_auth_types.include?(authtype.to_s)
   end
 
   def self.event_monitor_class

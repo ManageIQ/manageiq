@@ -14,6 +14,10 @@ module AuthenticationMixin
     end
   end
 
+  def supported_auth_attributes
+    %w(userid password)
+  end
+
   def authentication_userid_passwords
     authentications.select { |a| a.kind_of?(AuthUseridPassword) }
   end
