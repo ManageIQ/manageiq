@@ -35,7 +35,7 @@ class VmOrTemplate < ActiveRecord::Base
     "xen"       => "XenSource",
     "parallels" => "Parallels",
     "amazon"    => "Amazon",
-    "redhat"    => "RedHat",
+    "redhat"    => "Red Hat",
     "openstack" => "OpenStack",
     "unknown"   => "Unknown"
   }
@@ -1095,7 +1095,7 @@ class VmOrTemplate < ActiveRecord::Base
     when 'VMware'
       # VM cannot be scanned by server if they are on a repository
       return [] if self.storage_id.blank? || self.repository_vm?
-    when 'RedHat'
+    when 'Red Hat'
       return [] if self.storage_id.blank?
     else
       return []
@@ -1112,9 +1112,9 @@ class VmOrTemplate < ActiveRecord::Base
     miq_servers.select do |svr|
       result = svr.status == "started" && svr.has_zone?(self.my_zone)
       result = result && svr.is_vix_disk? if vm_vendor == 'VMware'
-      # RedHat VMs must be scanned from an EVM server who's host is attached to the same
+      # Red Hat VMs must be scanned from an EVM server who's host is attached to the same
       # storage as the VM unless overridden via SmartProxy affinity
-      if vm_vendor == 'RedHat' && !svr.vm_scan_host_affinity? && !svr.vm_scan_storage_affinity?
+      if vm_vendor == 'Red Hat' && !svr.vm_scan_host_affinity? && !svr.vm_scan_storage_affinity?
         svr_vm = svr.vm
         if svr_vm && svr_vm.host
           missing_storage_ids = storages.collect(&:id) - svr_vm.host.storages.collect(&:id)
@@ -1294,7 +1294,7 @@ class VmOrTemplate < ActiveRecord::Base
     # Return location if it contains a fully-qualified file URI
     return self.location if self.location.starts_with?('file://')
     # Return location for RHEV-M VMs
-    return rhevm_config_path if self.vendor.to_s == 'RedHat'
+    return rhevm_config_path if self.vendor.to_s == 'Red Hat'
 
     case self.storage.store_type
     when "VMFS" then "[#{storage.name}] #{location}"

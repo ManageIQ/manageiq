@@ -224,7 +224,7 @@ module VmOrTemplate::Scanning
   # TODO: Vmware specfic
   def require_snapshot_for_scan?
     return false unless self.runnable?
-    return false if ['RedHat'].include?(self.vendor)
+    return false if self.vendor == 'Red Hat'
     return false if self.host && self.host.platform == "windows"
     return true
   end
@@ -393,12 +393,12 @@ module VmOrTemplate::Scanning
         bb.postSync()
         bb.close
       end
-      
+
       $log.info "#{log_pref} Starting:  Sending vm summary to server.  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
       $log.debug "#{log_pref}: xml_summary2 = #{xml_summary.class.name}"
       driver.SaveVmmetadata(vmId, xml_summary.miqEncode, "b64,zlib,xml", ost.taskid)
       $log.info "#{log_pref} Completed: Sending vm summary to server.  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
-      
+
       UpdateAgentState(driver, ost, "Synchronize", "Synchronization complete")
 
       raise syncErr if syncErr

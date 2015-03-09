@@ -2,7 +2,7 @@ module EmsRefresh
   module Parsers
     class OpenstackInfra < Infra
       include EmsRefresh::Parsers::OpenstackCommon::Images
-      
+
       def self.ems_inv_to_hashes(ems, options = nil)
         new(ems, options).ems_inv_to_hashes
       end
@@ -147,7 +147,7 @@ module EmsRefresh
           :ems_ref          => uid,
           :ems_ref_obj      => host.instance_uuid,
           :operating_system => {:product_name => 'linux'},
-          :vmm_vendor       => 'RedHat',
+          :vmm_vendor       => 'Red Hat',
           :vmm_product      => identify_product(indexed_resources, host.instance_uuid),
           :ipaddress        => identify_primary_ip_address(host, indexed_servers),
           :mac_address      => identify_primary_mac_address(host, indexed_servers),

@@ -167,7 +167,7 @@ class VmScan < Job
 
     # Disable connecting to EMS for COS SmartProxy.  Embedded Proxy will
     # enable this if needed in the scan_sync_vm method in server_smart_proxy.rb.
-    ems_list['connect'] = false if vm.vendor.to_s == 'RedHat'
+    ems_list['connect'] = false if vm.vendor.to_s == 'Red Hat'
     ems_list
   end
 
@@ -177,7 +177,7 @@ class VmScan < Job
     # Check if Policy returned scan profiles to use, otherwise use the default profile if available.
     scan_args["vmScanProfiles"] = self.options[:scan_profiles] || vm.scan_profile_list
     scan_args['snapshot']['forceFleeceDefault'] = false if vm.scan_via_ems? && vm.template?
-    scan_args['permissions'] = { 'group' => 36 } if vm.vendor.to_s == 'RedHat'
+    scan_args['permissions'] = { 'group' => 36 } if vm.vendor.to_s == 'Red Hat'
     scan_args
   end
 

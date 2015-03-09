@@ -116,7 +116,7 @@ module MiqServer::ServerSmartProxy
         temp_args['ems'][:use_vim_broker]      = MiqServer.use_broker_for_embedded_proxy?(temp_args['ems']['connect_to'])
         temp_args['ems'][:vim_broker_drb_port] = MiqVimBrokerWorker.drb_port if temp_args['ems'][:use_vim_broker]
         # RHEV-M setup
-        if v.vendor.to_s == 'RedHat'
+        if v.vendor.to_s == 'Red Hat'
           temp_args[:mount] = v.ext_management_system.storage_mounts_for_vm(v, ost.taskid)
           temp_args['ems']['connect'] = true if temp_args[:mount].blank?
         end

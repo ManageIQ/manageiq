@@ -18,7 +18,7 @@ class Host < ActiveRecord::Base
   VENDOR_TYPES = {
     # DB            Displayed
     "microsoft"       => "Microsoft",
-    "redhat"          => "RedHat",
+    "redhat"          => "Red Hat",
     "vmware"          => "VMware",
     "openstack_infra" => "OpenStack Infrastructure",
     "unknown"         => "Unknown",
@@ -631,7 +631,7 @@ class Host < ActiveRecord::Base
     begin
       if data.is_a?(Hash) && data[:type] == :ems_events
         $log.info("MIQ(host-add_elements): Adding HASH elements for Host id:[#{self.id}]-[#{self.name}] from [#{data[:type]}]")
-        add_ems_events(data) 
+        add_ems_events(data)
       end
     rescue => err
       $log.log_backtrace(err)
