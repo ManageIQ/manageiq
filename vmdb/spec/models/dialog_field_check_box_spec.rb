@@ -158,4 +158,12 @@ describe DialogFieldCheckBox do
       end
     end
   end
+
+  describe "#refresh_json_value" do
+    let(:dialog_field) { described_class.new }
+
+    it "returns the checked value in a hash" do
+      expect(dialog_field.refresh_json_value).to eq(:checked => false)
+    end
+  end
 end

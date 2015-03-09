@@ -46,7 +46,9 @@ describe CatalogController do
 
     let(:dialog) { active_record_instance_double("Dialog") }
     let(:wf) { double(:dialog => dialog) }
-    let(:dialog_field) { active_record_instance_double("DialogFieldCheckBox", :checked? => true, :name => "potato") }
+    let(:dialog_field) do
+      active_record_instance_double("DialogFieldCheckBox", :refresh_json_value=> "true", :name => "potato")
+    end
 
     let(:params)  { {:name => "name"} }
     let(:session) { {:edit => {:wf => wf}} }
@@ -57,7 +59,7 @@ describe CatalogController do
 
     it "returns the correct json response" do
       xhr :post, :dynamic_checkbox_refresh, params, session
-      expect(response.body).to eq({:field_name => "potato", :checked => true}.to_json)
+      expect(response.body).to eq({:field_name => "potato", :values => "true"}.to_json)
     end
   end
 

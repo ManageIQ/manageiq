@@ -196,7 +196,7 @@ module ApplicationController::DialogRunner
   def dynamic_checkbox_refresh
     field = load_dialog_field(params[:name])
 
-    response_json = {:field_name => field.name, :checked => field.checked?}
+    response_json = {:field_name => field.name, :values => field.refresh_json_value}
     dynamic_refresh_response(response_json)
   end
 
