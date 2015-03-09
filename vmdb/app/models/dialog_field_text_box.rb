@@ -1,17 +1,17 @@
 class DialogFieldTextBox < DialogField
-  AUTOMATE_VALUE_FIELDS = %w(default_value protected required validator_rule validator_type)
+  AUTOMATE_VALUE_FIELDS = %w(protected required validator_rule validator_type)
 
   has_one :resource_action, :as => :resource, :dependent => :destroy
 
   after_initialize :default_resource_action
 
   def refresh_button_pressed
-    default_value
+    value
   end
 
-  def default_value
-    write_attribute(:default_value, values_from_automate) if dynamic
-    read_attribute(:default_value)
+  def value
+    @value = values_from_automate if dynamic
+    @value
   end
 
   def initial_values
@@ -56,7 +56,7 @@ class DialogFieldTextBox < DialogField
   end
 
   def sample_text
-    dynamic ? "Sample Text" : default_value
+    dynamic ? "Sample Text" : value
   end
 
   def normalize_automate_values(automate_hash)
@@ -64,8 +64,8 @@ class DialogFieldTextBox < DialogField
       send("#{key}=", automate_hash[key]) if automate_hash.key?(key)
     end
 
-    return initial_values if automate_hash["default_value"].blank?
-    automate_hash["default_value"].to_s
+    return initial_values if automate_hash["value"].blank?
+    automate_hash["value"].to_s
   end
 
   private

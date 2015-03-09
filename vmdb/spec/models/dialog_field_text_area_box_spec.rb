@@ -7,7 +7,7 @@ describe DialogFieldTextAreaBox do
     let(:automate_hash) do
       {
         "data_type"      => "datatype",
-        "default_value"  => default_value,
+        "value"          => value,
         "protected"      => true,
         "required"       => true,
         "validator_rule" => "rule",
@@ -37,32 +37,22 @@ describe DialogFieldTextAreaBox do
       end
     end
 
-    context "when the automate hash does not have a default value" do
-      let(:default_value) { nil }
+    context "when the automate hash does not have a value" do
+      let(:value) { nil }
 
       it_behaves_like "DialogFieldTextBox#normalize_automate_values"
-
-      it "sets the default_value" do
-        dialog_field.normalize_automate_values(automate_hash)
-        expect(dialog_field.default_value).to eq(nil)
-      end
 
       it "returns the initial values" do
         expect(dialog_field.normalize_automate_values(automate_hash)).to eq("<None>")
       end
     end
 
-    context "when the automate hash has a default value" do
-      let(:default_value) { '123' }
+    context "when the automate hash has a value" do
+      let(:value) { '123' }
 
       it_behaves_like "DialogFieldTextBox#normalize_automate_values"
 
-      it "sets the default_value" do
-        dialog_field.normalize_automate_values(automate_hash)
-        expect(dialog_field.default_value).to eq('123')
-      end
-
-      it "returns the default value in string format" do
+      it "returns the value in string format" do
         expect(dialog_field.normalize_automate_values(automate_hash)).to eq("123")
       end
     end
