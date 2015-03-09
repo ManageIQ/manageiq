@@ -109,36 +109,6 @@ describe DialogFieldTextBox do
     end
   end
 
-  describe "#refresh_button_pressed" do
-    let(:dialog_field) { described_class.new(:dynamic => dynamic) }
-
-    context "when the dialog field is dynamic" do
-      let(:dynamic) { true }
-
-      before do
-        DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("processor")
-
-        dialog_field.value = "some value"
-      end
-
-      it "returns the values from the value processor" do
-        expect(dialog_field.refresh_button_pressed).to eq("processor")
-      end
-    end
-
-    context "when the dialog field is not dynamic" do
-      let(:dynamic) { false }
-
-      before do
-        dialog_field.value = "some value"
-      end
-
-      it "returns the current values" do
-        expect(dialog_field.refresh_button_pressed).to eq("some value")
-      end
-    end
-  end
-
   describe "#value" do
     let(:dialog_field) { described_class.new(:dynamic => dynamic, :value => "test") }
 
@@ -244,6 +214,14 @@ describe DialogFieldTextBox do
       it "returns the value" do
         expect(dialog_field.sample_text).to eq("defaultvalue")
       end
+    end
+  end
+
+  describe "#refresh_json_value" do
+    let(:dialog_field) { described_class.new(:value => "test") }
+
+    it "returns the value in a hash format" do
+      expect(dialog_field.refresh_json_value).to eq(:text => "test")
     end
   end
 end

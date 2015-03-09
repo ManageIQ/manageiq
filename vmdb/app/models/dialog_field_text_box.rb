@@ -5,10 +5,6 @@ class DialogFieldTextBox < DialogField
 
   after_initialize :default_resource_action
 
-  def refresh_button_pressed
-    value
-  end
-
   def value
     @value = values_from_automate if dynamic
     @value
@@ -66,6 +62,10 @@ class DialogFieldTextBox < DialogField
 
     return initial_values if automate_hash["value"].blank?
     automate_hash["value"].to_s
+  end
+
+  def refresh_json_value
+    {:text => value}
   end
 
   private

@@ -187,9 +187,8 @@ module ApplicationController::DialogRunner
 
   def dynamic_text_box_refresh
     field = load_dialog_field(params[:name])
-    values = field.refresh_button_pressed
 
-    response_json = {:field_name => field.name, :values => values}
+    response_json = {:field_name => field.name, :values => field.refresh_json_value}
     dynamic_refresh_response(response_json)
   end
 
