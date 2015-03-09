@@ -13,15 +13,17 @@
       %ul{:class => "nav navbar-nav navbar-utility"}
         %li{:class => "brand-white-label #{session[:custom_logo] ? "whitelabeled" : ""}"}
         -Menu::Manager.menu(:top_right) do |menu_section|
-          %li.dropdown
-            %a{:href => "#", :class => "dropdown-toggle", "data-toggle" => "dropdown"}
-              = menu_section.name
-              %b.caret
-            %ul.dropdown-menu#custom_menu_div
-              - menu_section.items.each do |menu_item|
-                %li
-                  %a{:href    => menu_item.url,
-                     :onclick => 'return miqCheckForChanges()'}= menu_item.name
+          -if role_allows(:main_tab_id => menu_section.id)
+            %li.dropdown
+              %a{:href => "#", :class => "dropdown-toggle", "data-toggle" => "dropdown"}
+                = menu_section.name
+                %b.caret
+              %ul.dropdown-menu#custom_menu_div
+                - menu_section.items.each do |menu_item|
+                  -if role_allows(menu_item.rbac_feature)
+                    %li
+                      %a{:href    => menu_item.url,
+                         :onclick => 'return miqCheckForChanges()'}= menu_item.name
 
         = render :partial => "layouts/user_options"
       = render :partial => "layouts/page_header_navbar"
