@@ -14,10 +14,11 @@ class RequestRefererService
     'vm_or_template' => %w(show:id explorer),  # http://localhost:3000/vm_or_template/show/400r75
     # Valid vm_or_template/show/:id redirects to {vm_infra,vm_cloud,vm_or_template}/explorer
     # the decision is done in 'controller_for_vm'.
-    'vm_infra'       => %w(explorer),
-    'vm_cloud'       => %w(explorer),
-
-    'vm'             => %w(show:id show_list), # http://localhost:3000/vm/show/400r6
+    'vm_infra'       => %w(launch_html5_console explorer),
+    'vm_cloud'       => %w(launch_html5_console explorer),
+    'vm'             => %w(launch_html5_console show:id show_list), # http://localhost:3000/vm/show/400r6
+    # 'launch_html5_console' above added due to IE even in version 11 does not set the referrer headir
+    # most likely when the new window is opened by JavaScript code
     'host'           => %w(show:id show_list), # http://localhost:3000/host/show/400r6
     'miq_request'    => %w(show:id show_list), # http://localhost:3000/miq_request/show/400r3
     'ems_cluster'    => %w(show:id show_list), # http://localhost:3000/ems_cluster/show/400r2
