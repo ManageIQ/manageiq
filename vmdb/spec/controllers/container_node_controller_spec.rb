@@ -14,9 +14,10 @@ describe ContainerNodeController do
 
   it "renders show screen" do
     ems = FactoryGirl.create(:ext_management_system)
-    container_node = ContainerNode.create(:ext_management_system => ems)
+    container_node = ContainerNode.create(:ext_management_system => ems, :name => "Test Node")
     get :show, :id => container_node.id
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
+    expect(assigns(:breadcrumbs)).to eq([{:name=>"Test Node (Summary)", :url=>"/container_node/show/#{container_node.id}"}])
   end
 end
