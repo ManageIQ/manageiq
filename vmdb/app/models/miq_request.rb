@@ -356,6 +356,9 @@ class MiqRequest < ActiveRecord::Base
     update_attributes(:request_state => req_state, :status => req_status, :message => display_message(msg))
   end
 
+  def post_create_request_tasks
+  end
+
   def my_zone
     MiqServer.my_zone
   end
@@ -402,7 +405,6 @@ class MiqRequest < ActiveRecord::Base
 
     begin
       requested_tasks = requested_task_idx
-      tasks_requested = requested_tasks.length
       request_task_created = 0
       requested_tasks.each do |idx|
         req_task = create_request_task(idx)
@@ -411,11 +413,7 @@ class MiqRequest < ActiveRecord::Base
         request_task_created += 1
       end
       update_request_status
-
-      if tasks_requested == 1
-        single_description = miq_request_tasks.first.description
-        update_attribute(:description, single_description)
-      end
+      post_create_request_tasks
     rescue
       $log.log_backtrace($ERROR_INFO)
       request_state, status = request_task_created.zero? ? %w(finished Error) : %w(active Warn)
