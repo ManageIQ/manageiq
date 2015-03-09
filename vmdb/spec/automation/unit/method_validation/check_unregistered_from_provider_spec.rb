@@ -22,7 +22,7 @@ describe "check_unregistered_from_provider Method Validation" do
   it "returns 'retry' if the vm is still connected to ems" do
     @vm.update_attributes(:host => @host, :ems_id => @ems.id,
                           :registered => true)
-
+    Vm.any_instance.stub(:refresh_ems)
     ws.root['ae_result'].should         eql("retry")
     ws.root['vm']['registered'].should  == true
   end
