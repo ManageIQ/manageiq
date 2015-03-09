@@ -455,7 +455,7 @@ class MiqRequestController < ApplicationController
   end
 
   def request_types_for_model
-    MiqRequest::MODEL_REQUEST_TYPES[model_request_type_from_layout].keys
+    MiqRequest::MODEL_REQUEST_TYPES[model_request_type_from_layout]
   end
 
   def model_request_type_from_layout
@@ -476,33 +476,19 @@ class MiqRequestController < ApplicationController
     "INCLUDES"
   end
 
+  def request_types_for_dropdown
+    request_types_for_model.values.each_with_object({}) { |t, h| t.each { |k, v| h[k] = v } }
+  end
+
   # Set all task options to default
   def prov_set_default_options
     resource_type = get_request_tab_type
     opts = @sb[:prov_options][resource_type.to_sym] = Hash.new
     opts[:states] = PROV_STATES
     opts[:reason_text] = nil
-    opts[:types] = Hash.new
-    case @layout
-    when "miq_request_vm"
-      typ = :Vm
-    when "miq_request_host"
-      typ = :Host
-    when "miq_request_ae"
-      typ = :AutomationRequest
-    end
-    request_types = MiqRequest::MODEL_REQUEST_TYPES[typ]
-    request_types.each do |typ|
-      typ.each do |k|
-        if k.class == Hash
-          k.each do |hsh,val|
-            opts[:types][hsh] = val
-          end
-        end
-      end
-    end
+    opts[:types] = request_types_for_dropdown
     time_period = 30        # fetch uniq requesters from this time frame, since that's the highest time period in pull down.
-    conditions = ["created_on>=? AND created_on<=? AND type IN (?)", time_period.days.ago.utc, Time.now.utc, request_types.keys]
+    conditions = ["created_on>=? AND created_on<=? AND type IN (?)", time_period.days.ago.utc, Time.now.utc, request_types_for_model.keys]
     opts[:users] = MiqRequest.all_requesters(conditions)
     unless is_approver
       username = session[:username]
