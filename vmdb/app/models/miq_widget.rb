@@ -147,19 +147,11 @@ class MiqWidget < ActiveRecord::Base
   end
 
   def timeout_stalled_task
-    task = self.miq_task
-    return unless task
-
-    messages = MiqQueue.where(
-      :method_name => "generate_content",
-      :class_name  => self.class.name,
-      :instance_id => self.id ).all
-
-    unless messages.any?(&:unfinished?)
-      unless task.state == MiqTask::STATE_FINISHED
-        task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_TIMEOUT, "Timed out stalled task.")
-      end
-    end
+    return unless miq_task && miq_task.state != MiqTask::STATE_FINISHED &&
+                  !MiqQueue.where(:method_name => "generate_content",
+                                  :class_name  => self.class.name,
+                                  :instance_id => id).any?(&:unfinished?)
+    miq_task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_TIMEOUT, "Timed out stalled task.")
   end
 
   def queue_generate_content_for_users_or_group(*args)
