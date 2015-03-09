@@ -5,6 +5,7 @@ module ApiHelper
     def action_result(success, message = nil, options = {})
       res = {:success => success}
       res[:message] = message if message.present?
+      res[:result]  = options[:result] unless options[:result].nil?
       add_task_to_result(res, options[:task_id]) if options[:task_id].present?
       res
     end
