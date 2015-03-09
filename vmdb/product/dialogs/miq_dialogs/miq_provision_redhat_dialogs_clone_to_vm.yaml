@@ -1,6 +1,6 @@
 ---
 :name: miq_provision_redhat_dialogs_clone_to_vm
-:description: Sample RedHat VM Clone to VM Dialog
+:description: Sample Red Hat VM Clone to VM Dialog
 :dialog_type: MiqProvisionWorkflow
 :content:
   :buttons:
