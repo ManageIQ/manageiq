@@ -217,12 +217,12 @@
               $.post('dynamic_radio_button_refresh', {name: fieldName, checked_value: checkedValue}, function(data) {
                 var radioButtons = [];
 
-                $.each(data.values, function(index, value) {
+                $.each(data.values.refreshed_values, function(index, value) {
                   var radio = '<input type="radio" ';
                   radio += 'id="' + fieldId + '" ';
                   radio += 'value="' + value[0] + '" ';
                   radio += 'name="' + data.field_name + '" ';
-                  if (data.checked_value === value[0].toString()) {
+                  if (data.values.checked_value === value[0].toString()) {
                     radio += 'checked="" ';
                   }
                   radio += 'onclick="' + "#{remote_function(
