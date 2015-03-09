@@ -15,30 +15,31 @@ class CatalogController < ApplicationController
   end
 
   CATALOG_X_BUTTON_ALLOWED_ACTIONS = {
-    'ab_button_new'               => :ab_button_new,
-    'ab_button_edit'              => :ab_button_edit,
-    'ab_button_delete'            => :ab_button_delete,
-    'ab_group_delete'             => :ab_group_delete,
-    'ab_group_edit'               => :ab_group_edit,
-    'ab_group_new'                => :ab_group_new,
-    'ab_group_reorder'            => :ab_group_reorder,
-    'svc_catalog_provision'       => :svc_catalog_provision,
-    'st_catalog_delete'           => :st_catalog_delete,
+    'ab_button_new'                 => :ab_button_new,
+    'ab_button_edit'                => :ab_button_edit,
+    'ab_button_delete'              => :ab_button_delete,
+    'ab_group_delete'               => :ab_group_delete,
+    'ab_group_edit'                 => :ab_group_edit,
+    'ab_group_new'                  => :ab_group_new,
+    'ab_group_reorder'              => :ab_group_reorder,
+    'svc_catalog_provision'         => :svc_catalog_provision,
+    'st_catalog_delete'             => :st_catalog_delete,
 
-    'atomic_catalogitem_edit'     => :servicetemplate_edit,
-    'atomic_catalogitem_new'      => :servicetemplate_edit,
-    'catalogitem_edit'            => :servicetemplate_edit,
-    'catalogitem_new'             => :servicetemplate_edit,
+    'atomic_catalogitem_edit'       => :servicetemplate_edit,
+    'atomic_catalogitem_new'        => :servicetemplate_edit,
+    'catalogitem_edit'              => :servicetemplate_edit,
+    'catalogitem_new'               => :servicetemplate_edit,
 
-    'catalogitem_delete'          => :st_delete,
-    'catalogitem_tag'             => :st_tags_edit,
+    'catalogitem_delete'            => :st_delete,
+    'catalogitem_tag'               => :st_tags_edit,
 
-    'orchestration_template_edit' => :ot_edit,
-    'orchestration_template_copy' => :ot_copy,
-    'ot_copy_submit'              => :ot_copy_submit,
-    'ot_edit_submit'              => :ot_edit_submit,
-    'st_catalog_edit'             => :st_catalog_edit,
-    'st_catalog_new'              => :st_catalog_edit,
+    'orchestration_template_edit'   => :ot_edit,
+    'orchestration_template_copy'   => :ot_copy,
+    'orchestration_template_remove' => :ot_remove_submit,
+    'ot_copy_submit'                => :ot_copy_submit,
+    'ot_edit_submit'                => :ot_edit_submit,
+    'st_catalog_edit'               => :st_catalog_edit,
+    'st_catalog_new'                => :st_catalog_edit,
   }.freeze
 
   def x_button
@@ -712,6 +713,20 @@ class CatalogController < ApplicationController
     when "save"
       ot_copy_submit_save
     end
+  end
+
+  def ot_remove_submit
+    assert_privileges("orchestration_templates_admin")
+    ot = OrchestrationTemplate.find_by_id(params[:id])
+    begin
+      ot.delete
+    rescue StandardError => bang
+      add_flash(_("Error during '%s': ") % "Orchestration Template Deletion" << bang.message, :error)
+    else
+      add_flash(_("Orchestration Template \"%s\" was deleted.") % ot.name)
+    end
+    self.x_node = 'root'
+    replace_right_cell(nil, trees_to_replace([:ot]))
   end
 
   private

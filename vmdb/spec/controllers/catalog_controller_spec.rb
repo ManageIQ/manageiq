@@ -153,4 +153,17 @@ describe CatalogController do
     end
   end
 
+  context "#ot_delete" do
+    it "Orchestration Template is deleted" do
+      ot = FactoryGirl.create(:orchestration_template)
+      controller.instance_variable_set(:@sb, {})
+      controller.instance_variable_set(:@_params, :id => ot.id, :pressed => "orchestration_template_remove")
+      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
+      controller.stub(:replace_right_cell)
+      controller.send(:ot_remove_submit)
+      controller.send(:flash_errors?).should_not be_true
+      assigns(:flash_array).first[:message].should include("was deleted")
+      OrchestrationTemplate.find_by_id(ot.id).should be_nil
+    end
+  end
 end

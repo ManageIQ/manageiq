@@ -16,3 +16,8 @@
       :image: copy
       :text: "Copy this Orchestration Template"
       :title: "Copy this Orchestration Template"
+    - :button: orchestration_template_remove
+      :image: remove
+      :text: "Remove this Orchestration Template"
+      :title: "Remove this Orchestration Template"
+      :confirm: "Remove this Orchestration Template?"

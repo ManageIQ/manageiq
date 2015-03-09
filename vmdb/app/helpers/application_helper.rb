@@ -1014,7 +1014,7 @@ module ApplicationHelper
       end
     when "OrchestrationTemplate", "OrchestrationTemplateCfn", "OrchestrationTemplateHot"
       case id
-      when "orchestration_template_edit", "orchestration_template_copy"
+      when "orchestration_template_edit", "orchestration_template_copy", "orchestration_template_remove"
         return true unless role_allows(:feature => "orchestration_templates_admin")
       end
     when "NilClass"
@@ -1035,7 +1035,7 @@ module ApplicationHelper
         return true if ["workers", "download_logs"].include?(@lastaction)
       when "logdepot_edit"
         return true if ["workers", "evm_logs", "audit_logs"].include?(@lastaction)
-      when "orchestration_template_edit", "orchestration_template_copy"
+      when "orchestration_template_edit", "orchestration_template_copy", "orchestration_template_remove"
         return true unless @report
       when "policy_new"
         return true unless role_allows(:feature => "policy_new")
