@@ -307,6 +307,7 @@ Vmdb::Application.routes.draw do
     :dashboard => {
       :get => %w(
         auth_error
+        iframe
         change_tab
         index
         login

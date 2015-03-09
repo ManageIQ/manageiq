@@ -17,7 +17,8 @@ class MiqUserRole < ActiveRecord::Base
   include ReportableMixin
 
   FIXTURE_DIR  = File.join(Rails.root, "db/fixtures")
-  FIXTURE_YAML = File.join(FIXTURE_DIR, "#{self.table_name}.yml")
+  FIXTURE_PATH = File.join(FIXTURE_DIR, self.table_name)
+  FIXTURE_YAML = "#{FIXTURE_PATH}.yml"
 
   SCOPES = [:base, :one, :sub ]
 
@@ -149,10 +150,14 @@ class MiqUserRole < ActiveRecord::Base
   def self.seed
     MiqRegion.my_region.lock do
       self.seed_from_array(YAML.load_file(FIXTURE_YAML))
+
+      Dir.glob(File.join(FIXTURE_PATH, "*.yml")).each do |fixture|
+        self.seed_from_array(YAML.load_file(fixture), true)
+      end
     end
   end
 
-  def self.seed_from_array(array)
+  def self.seed_from_array(array, merge_features = false)
     new_roles = []
     array.each do |hash|
       feature_ids = hash.delete(:miq_product_feature_identifiers)
@@ -160,6 +165,7 @@ class MiqUserRole < ActiveRecord::Base
       hash[:miq_product_features] = MiqProductFeature.where(:identifier => feature_ids).to_a
       role = self.find_by_name(hash[:name]) || self.new(hash)
       new_role = role.new_record?
+      hash[:miq_product_features] &&= role.miq_product_features if !new_role && merge_features
       unless role.settings.nil? # Makse sure existing settings are merged in with the new ones.
         new_settings = hash.delete(:settings) || {}
         role.settings.merge!(new_settings)

@@ -2,14 +2,14 @@
   -Menu::Manager.menu do |menu_section|
     -if role_allows(:main_tab_id => menu_section.id)
       %li(class="#{primary_nav_class(menu_section.id)}")
-        %a{:href         => "/dashboard/maintab/?tab=#{menu_section.id}",
-           :class        => "dropdown-toggle visible-xs visible-sm", 
-           "data-toggle" => "dropdown", 
+        %a{:href         => menu_section.url,
+           :class        => "dropdown-toggle visible-xs visible-sm",
+           "data-toggle" => "dropdown",
            :onclick      => 'return miqCheckForChanges()'}
           = h(menu_section.name)
-        %a{:href        => "/dashboard/maintab/?tab=#{menu_section.id}",
-           :class       => "dropdown-toggle visible-md visible-lg", 
-           "data-hover" => "dropdown", 
+        %a{:href         => menu_section.url,
+           :class       => "dropdown-toggle visible-md visible-lg",
+           "data-hover" => "dropdown",
            "data-delay" => "1000",
            :onclick     => 'return miqCheckForChanges()'}
           = h(menu_section.name)
@@ -18,5 +18,5 @@
           - menu_section.items.each do |menu_item|
             -if role_allows(menu_item.rbac_feature)
               %li(class="#{secondary_nav_class(menu_item.id)}")
-                %a{:href    => menu_item.href,
+                %a{:href    => menu_item.url,
                    :onclick => 'return miqCheckForChanges()'}= menu_item.name
