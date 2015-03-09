@@ -174,14 +174,8 @@ module ApplicationController::DialogRunner
 
   def dynamic_radio_button_refresh
     field = load_dialog_field(params[:name])
-    values = field.refresh_button_pressed
 
-    checked_value = values.collect { |value_pair| value_pair[0].to_s }.include?(params[:checked_value]) ?
-      params[:checked_value] : field.default_value
-
-    field.value = checked_value
-
-    response_json = {:checked_value => checked_value, :field_name => field.name, :values => values}
+    response_json = {:field_name => field.name, :values => field.refresh_json_value(params[:checked_value])}
     dynamic_refresh_response(response_json)
   end
 
