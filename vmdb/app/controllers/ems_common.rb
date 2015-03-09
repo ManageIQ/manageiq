@@ -476,31 +476,32 @@ module EmsCommon
   private ############################
 
   def set_verify_status
-    if @edit[:new][:emstype] == "ec2"
-      if @edit[:new][:default_userid].blank? || @edit[:new][:provider_region].blank?
+    edit_new = @edit[:new]
+    if edit_new[:emstype] == "ec2"
+      if edit_new[:default_userid].blank? || edit_new[:provider_region].blank?
         @edit[:default_verify_status] = false
       else
-        @edit[:default_verify_status] = (@edit[:new][:default_password] == @edit[:new][:default_verify])
+        @edit[:default_verify_status] = (edit_new[:default_password] == edit_new[:default_verify])
       end
     else
-      if @edit[:new][:default_userid].blank? || @edit[:new][:ipaddress].blank? || @edit[:new][:emstype].blank?
+      if edit_new[:default_userid].blank? || edit_new[:ipaddress].blank? || edit_new[:emstype].blank?
         @edit[:default_verify_status] = false
       else
-        @edit[:default_verify_status] = (@edit[:new][:default_password] == @edit[:new][:default_verify])
+        @edit[:default_verify_status] = (edit_new[:default_password] == edit_new[:default_verify])
       end
     end
 
-    if @edit[:new][:metrics_userid].blank? || @edit[:new][:ipaddress].blank? || @edit[:new][:emstype].blank?
+    if edit_new[:metrics_userid].blank? || edit_new[:ipaddress].blank? || edit_new[:emstype].blank?
       @edit[:metrics_verify_status] = false
     else
-      @edit[:metrics_verify_status] = (@edit[:new][:metrics_password] == @edit[:new][:metrics_verify])
+      @edit[:metrics_verify_status] = (edit_new[:metrics_password] == edit_new[:metrics_verify])
     end
 
     # check if any of amqp_userid, amqp_password, amqp_verify, :ipaddress, :emstype are blank
-    if any_blank_fields?(@edit[:new], [:amqp_userid, :amqp_password, :amqp_verify, :ipaddress, :emstype])
+    if any_blank_fields?(edit_new, [:amqp_userid, :amqp_password, :amqp_verify, :ipaddress, :emstype])
       @edit[:amqp_verify_status] = false
     else
-      @edit[:amqp_verify_status] = (@edit[:new][:amqp_password] == @edit[:new][:amqp_verify])
+      @edit[:amqp_verify_status] = (edit_new[:amqp_password] == edit_new[:amqp_verify])
     end
   end
 
