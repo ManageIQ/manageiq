@@ -9,6 +9,10 @@ describe EmsMicrosoft do
     described_class.description.should == 'Microsoft System Center VMM'
   end
 
+  it ".auth_url handles ipv6" do
+    described_class.auth_url("::1").should == "http://[::1]:5985/wsman"
+  end
+
   context "#connect" do
     before do
       @e = FactoryGirl.create(:ems_microsoft, :hostname => "host", :ipaddress => "127.0.0.1")
