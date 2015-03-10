@@ -1,4 +1,4 @@
-- if @settings[:quadicons][@layout == 'ems_infra' ? :ems : :ems_cloud]
+- if @settings[:quadicons][db_for_quadicon]
   .flobj
     %img{:src => "/images/icons/#{size}/base.png", :width => size, :height => size}
 

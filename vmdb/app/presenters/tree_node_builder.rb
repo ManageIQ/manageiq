@@ -52,6 +52,7 @@ class TreeNodeBuilder
       "#{ui_lookup(:table=>object.kind_of?(EmsInfra) ? "ems_infra" : "ems_cloud")}: #{object.name}")
     when ChargebackRate       then generic_node(object.description, "chargeback_rates.png")
     when Condition            then generic_node(object.description, "miq_condition.png")
+    when Container            then generic_node(object.name, "container.png")
     when CustomButton         then generic_node(object.name, object.options && object.options[:button_image] ? "custom-#{object.options[:button_image]}.png" : "leaf.gif",
       "Button: #{object.description}")
     when CustomButtonSet      then custom_button_set_node

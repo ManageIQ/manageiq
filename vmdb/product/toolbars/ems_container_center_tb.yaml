@@ -1,0 +1,24 @@
+#
+# Toolbar config file
+#
+---
+:model: EmsContainer
+:button_groups:
+- :name: ems_container_vmdb
+  :items:
+  - :buttonSelect: ems_container_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: ems_container_edit
+      :image: edit
+      :text: 'Edit this #{ui_lookup(:table=>"ems_container")}'
+      :title: 'Edit this #{ui_lookup(:table=>"ems_container")}'
+      :url: '/edit'
+    - :button: ems_container_delete
+      :image: delete
+      :text: 'Remove this #{ui_lookup(:table=>"ems_container")} from the VMDB'
+      :title: 'Remove this #{ui_lookup(:table=>"ems_container")} from the VMDB'
+      :url_parms: '&refresh=y'
+      :confirm: 'Warning: This #{ui_lookup(:table=>"ems_container")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this #{ui_lookup(:table=>"ems_container")}?'

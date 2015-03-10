@@ -109,6 +109,10 @@ class MiqRegion < ActiveRecord::Base
     self.ext_management_systems.select {|e| e.kind_of? EmsInfra }
   end
 
+  def ems_containers
+    ext_management_systems.select { |e| e.kind_of? EmsContainer }
+  end
+
   def assigned_roles
     self.miq_servers.collect(&:assigned_roles).flatten.uniq.compact
   end

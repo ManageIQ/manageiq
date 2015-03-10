@@ -851,4 +851,23 @@ module EmsCommon
     fields = [fields] unless fields.is_a? Array
     fields.any? {|f| !hash.has_key?(f) || hash[f].blank? }
   end
+
+  def get_session_data
+    prefix      = self.class.session_key_prefix
+    @title      = ui_lookup(:tables => prefix)
+    @layout     = prefix
+    @table_name = request.parameters[:controller]
+    @lastaction = session["#{prefix}_lastaction".to_sym]
+    @display    = session["#{prefix}_display".to_sym]
+    @filters    = session["#{prefix}_filters".to_sym]
+    @catinfo    = session["#{prefix}_catinfo".to_sym]
+  end
+
+  def set_session_data
+    prefix                                 = self.class.session_key_prefix
+    session["#{prefix}_lastaction".to_sym] = @lastaction
+    session["#{prefix}_display".to_sym]    = @display unless @display.nil?
+    session["#{prefix}_filters".to_sym]    = @filters
+    session["#{prefix}_catinfo".to_sym]    = @catinfo
+  end
 end
