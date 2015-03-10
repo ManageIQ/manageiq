@@ -42,7 +42,7 @@ module VimConnectMixin
       $log.warn("#{log_header} Reported the broker unavailable")
       raise
     ensure
-      vim.disconnect if vim rescue nil
+      vim.try(:disconnect) rescue nil
     end
   end
 end

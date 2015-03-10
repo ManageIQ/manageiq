@@ -60,7 +60,7 @@ class EmsRedhat < EmsInfra
       connection = self.connect(options)
       yield connection
     ensure
-      connection.disconnect if connection rescue nil
+      connection.try(:disconnect) rescue nil
     end
   end
 
