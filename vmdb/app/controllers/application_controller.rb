@@ -2395,7 +2395,7 @@ class ApplicationController < ActionController::Base
     end
 
     if data.kind_of?(Hash) && data_size > SESSION_ELEMENT_THRESHOLD
-      data.keys.sort {|a,b| a.to_s <=> b.to_s}.each do |k|
+      data.keys.sort_by(&:to_s).each do |k|
         value = data[k]
         log_data_size(k, value, indent)
         get_data_size(value, indent + 1)  if value.kind_of?(Hash) || value.kind_of?(Array)
@@ -2424,7 +2424,7 @@ class ApplicationController < ActionController::Base
     end
 
     if data.kind_of?(Hash)
-      data.keys.sort {|a,b| a.to_s <=> b.to_s}.each do |k|
+      data.keys.sort_by(&:to_s).each do |k|
         value = data[k]
         log_data_size(k, value, indent)
         dump_session_data(value, indent + 1) if value.kind_of?(Hash) || value.kind_of?(Array)

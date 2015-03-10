@@ -93,7 +93,7 @@ module ApplicationController::CiProcessing
 
     @edit[:new][:user] = @edit[:new][:group] = DONT_CHANGE_OWNER if @edit[:ownership_items].length > 1
 
-    @ownershipitems = @edit[:klass].find(@edit[:ownership_items]).sort{|a,b| a.name <=> b.name} # Get the db records that are being tagged
+    @ownershipitems = @edit[:klass].find(@edit[:ownership_items]).sort_by(&:name) # Get the db records that are being tagged
     @view = get_db_view(@edit[:klass] == VmOrTemplate ? Vm : @edit[:klass])       # Instantiate the MIQ Report view object
     @view.table = MiqFilter.records2table(@ownershipitems, :only=>@view.cols + ['id'])
   end
@@ -259,7 +259,7 @@ module ApplicationController::CiProcessing
     session[:changed] = @changed = true
     drop_breadcrumb( {:name=>"Retire #{kls.to_s.pluralize}", :url=>"/#{session[:controller]}/tagging"} )
     session[:cat] = nil                 # Clear current category
-    @retireitems = kls.find(session[:retire_items]).sort{|a,b| a.name <=> b.name} # Get the db records
+    @retireitems = kls.find(session[:retire_items]).sort_by(&:name) # Get the db records
     build_targets_hash(@retireitems)
     @view = get_db_view(kls)              # Instantiate the MIQ Report view object
     @view.table = MiqFilter.records2table(@retireitems, :only=>@view.cols + ['id'])
@@ -1043,7 +1043,7 @@ module ApplicationController::CiProcessing
 
   # Build the ownership assignment screen
   def reconfigure_build_screen
-    @reconfigureitems = Vm.find(@edit[:reconfigure_items]).sort{|a,b| a.name <=> b.name}  # Get the db records that are being tagged
+    @reconfigureitems = Vm.find(@edit[:reconfigure_items]).sort_by(&:name)  # Get the db records that are being tagged
     if !@edit[:req_id]
       set_memory_cpu
       @edit[:new][:memory] = @edit[:new][:old_memory]

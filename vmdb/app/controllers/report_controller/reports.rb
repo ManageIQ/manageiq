@@ -235,7 +235,7 @@ module ReportController::Reports
         schedules = MiqSchedule.all(:conditions=>["towhat=? AND userid=?", "MiqReport", session[:userid]])
       end
       @temp[:schedules] = Array.new
-      schedules.sort { |a,b| a.name <=> b.name }.each do |s|
+      schedules.sort_by(&:name).each do |s|
         if s.filter.exp["="]["value"].to_i == @miq_report.id.to_i
          @temp[:schedules].push(s)
         end

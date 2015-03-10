@@ -312,7 +312,7 @@ module OpsController::Settings::CapAndU
       else
         cl_node[:select] = -1
       end
-      hosts.sort{|a,b| a.name <=> b.name}.each do |h|
+      hosts.sort_by(&:name).each do |h|
         temp = Hash.new
         temp[:key] = "Cluster_" + c[:id].to_s + ":Host_" + h.id.to_s
         temp[:title] = h.name

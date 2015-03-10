@@ -1110,7 +1110,7 @@ module OpsController::Settings::Common
           category_get_all
         when "settings_co_tags"
           # dont hide the disabled categories, so user can remove tags from the disabled ones
-          cats = Classification.categories.sort{|a,b| a.description <=> b.description}  # Get the categories, sort by name
+          cats = Classification.categories.sort_by(&:description)  # Get the categories, sort by name
           @cats = Hash.new                                        # Classifications array for first chooser
           cats.each do |c|
             @cats[c.description] = c.name if !c.read_only?    # Show the non-read_only categories

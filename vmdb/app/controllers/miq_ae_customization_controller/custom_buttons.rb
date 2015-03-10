@@ -69,7 +69,7 @@ module MiqAeCustomizationController::CustomButtons
     elsif @nodetype.length == 1 && nodeid[1] == "ub"        #Unassigned buttons group selected
       @sb[:buttons] = Array.new
       @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>@sb[:target_classes].invert[nodeid[2]], :model=>"Button Group", :name=>"Unassigned Buttons"}
-      uri = CustomButton.buttons_for(nodeid[2]).sort{|a,b| a.name <=> b.name }
+      uri = CustomButton.buttons_for(nodeid[2]).sort_by(&:name)
       if !uri.blank?
         uri.each do |b|
           if b.parent.nil?
@@ -96,9 +96,9 @@ module MiqAeCustomizationController::CustomButtons
       end
       @sb[:user_roles] = Array.new
       if @temp[:custom_button].visibility && @temp[:custom_button].visibility[:roles] && @temp[:custom_button].visibility[:roles][0] != "_ALL_"
-#         User.roles.sort{|a,b| a.name <=> b.name}.each do |r|
+#         User.roles.sort_by(&:name).each do |r|
 #           @sb[:user_roles].push(r.description) if @temp[:custom_button].visibility[:roles].include?(r.name) && !@sb[:user_roles].include?(r.description)
-        MiqUserRole.all.sort{|a,b| a.name <=> b.name}.each do |r|
+        MiqUserRole.all.sort_by(&:name).each do |r|
           @sb[:user_roles].push(r.name) if @temp[:custom_button].visibility[:roles].include?(r.name)
         end
       end

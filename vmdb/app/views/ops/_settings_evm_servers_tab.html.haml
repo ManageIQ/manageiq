@@ -22,7 +22,7 @@
     - else
       %table.table.table-striped.table-bordered.table-hover
         %tbody
-          - @servers.sort{|a,b| a.id <=> b.id}.each do |s|
+          - @servers.sort_by(&:id).each do |s|
             %tr{:onclick => "cfmeDynatree_activateNode('settings_tree', 'svr-#{to_cid(s.id)}');",
             :onmouseover => "this.style.cursor='pointer'", :title => _("View this MiqServer")}
               %td.narrow
