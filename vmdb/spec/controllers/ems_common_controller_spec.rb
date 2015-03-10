@@ -66,36 +66,28 @@ describe EmsCloudController do
     end
 
     context "#update_button_validate" do
-      context "when verify_credentials" do
+      context "when authentication_check" do
         let(:mocked_ems_cloud) { mock_model(EmsCloud) }
         before(:each) do
           controller.instance_variable_set(:@_params, :id => "42", :type => "amqp")
           controller.should_receive(:find_by_id_filtered).with(EmsCloud, "42").and_return(mocked_ems_cloud)
           controller.should_receive(:set_record_vars).with(mocked_ems_cloud, :validate).and_return(mocked_ems_cloud)
         end
-        context "returns true" do
-          it "renders successful flash message" do
-            mocked_ems_cloud.should_receive(:verify_credentials).with("amqp").and_return(true)
-            controller.should_receive(:add_flash).with(_("Credential validation was successful"))
-            controller.should_receive(:render_flash)
-            controller.send(:update_button_validate)
-          end
+
+        it "successful flash message (unchanged)" do
+          controller.stub(:edit_changed? => false)
+          mocked_ems_cloud.should_receive(:authentication_check).with("amqp", :save => true).and_return([:valid, ""])
+          controller.should_receive(:add_flash).with(_("Credential validation was successful"))
+          controller.should_receive(:render_flash)
+          controller.send(:update_button_validate)
         end
-        context "returns false" do
-          it "renders unsuccessful flash message" do
-            mocked_ems_cloud.should_receive(:verify_credentials).with("amqp").and_return(false)
-            controller.should_receive(:add_flash).with(_("Credential validation was not successful"), :error)
-            controller.should_receive(:render_flash)
-            controller.send(:update_button_validate)
-          end
-        end
-        context "raises StandardError" do
-          it "renders error flash message with StandardError" do
-            mocked_ems_cloud.should_receive(:verify_credentials).with("amqp").and_raise(StandardError)
-            controller.should_receive(:add_flash).with(_("StandardError"), :error)
-            controller.should_receive(:render_flash)
-            controller.send(:update_button_validate)
-          end
+
+        it "unsuccessful flash message (changed)" do
+          controller.stub(:edit_changed? => true)
+          mocked_ems_cloud.should_receive(:authentication_check).with("amqp", :save => false).and_return([:invalid, "Invalid"])
+          controller.should_receive(:add_flash).with(_("Credential validation was not successful: Invalid"), :error)
+          controller.should_receive(:render_flash)
+          controller.send(:update_button_validate)
         end
       end
     end
