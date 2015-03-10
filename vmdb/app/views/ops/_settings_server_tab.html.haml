@@ -72,12 +72,12 @@
           %tr
             %td.key=_("Server Roles")
             %td
-              - session[:server_roles].sort{|a,b| a[1]<=>b[1]}.each do |k,v|
-                - checked = !session[:selected_roles].nil? && session[:selected_roles].include?(k) ? true : false
-                = check_box_tag("server_roles_#{k}", value="1",
+              - session[:server_roles].sort_by { |_name, desc| desc }.each do |name, desc|
+                - checked = !session[:selected_roles].nil? && session[:selected_roles].include?(name)
+                = check_box_tag("server_roles_#{name}", value="1",
                   checked=checked,
                   "data-miq_observe_checkbox"=>{:url=>url}.to_json)
-                = h(v)
+                = h(desc)
                 %br/
           %tr
             %td.key=_("Default Repository SmartProxy")

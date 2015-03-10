@@ -20,12 +20,7 @@ module ApiHelper
 
   def json_body
     @req[:body] ||= begin
-      body =
-        if request.body
-          request.body.read.tap do |b|
-            api_log_debug("\n#{@name} Request Body:\n#{b}") if api_log_debug? && b
-          end
-        end
+      body = request.body.read if request.body
       body.blank? ? {} : JSON.parse(body)
     end
   end

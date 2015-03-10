@@ -46,7 +46,7 @@
 
                     - elsif @edit[:qs_tokens][token].key?(:tag)
                       = select_tag("value_#{token}",
-                                   options_for_select(["<Choose>"] + MiqExpression.get_entry_details(@edit[:qs_tokens][token][:tag]).sort { |a, b| a.first.downcase <=> b.first.downcase },
+                                   options_for_select(["<Choose>"] + MiqExpression.get_entry_details(@edit[:qs_tokens][token][:tag]).sort_by { |desc, _name| desc.downcase },
                                                        nil),
                                    :multiple              => false,
                                    :class                 => "widthed",

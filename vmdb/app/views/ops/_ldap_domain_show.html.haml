@@ -88,7 +88,7 @@
           %th= _("Mode")
           %th= _("Port")
         %tbody
-          - @selected_ld.ldap_servers.sort { |a, b| a.hostname.to_s <=> b.hostname.to_s }.each do |svr|
+          - @selected_ld.ldap_servers.sort_by { |svr| svr.hostname.to_s }.each do |svr|
             %tr{:class => "no-hover #{cycle('row0', 'row1')}"}
               %td.narrow
                 %img{:src => "/images/icons/new/ldap_server.png"}/

@@ -13,12 +13,12 @@ object:
   schema:
   - field:
       aetype: state
-      name: CheckPoweredOff
+      name: StartRetirement
       display_name: 
       datatype: string
       priority: 1
       owner: 
-      default_value: "/Cloud/VM/Retirement/StateMachines/Methods/CheckPoweredOff"
+      default_value: "/Cloud/VM/Retirement/StateMachines/Methods/StartRetirement"
       substitute: true
       message: create
       visibility: 
@@ -26,9 +26,49 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_retirement_status(status => 'Powering Off VM')
-      on_exit: update_retirement_status(status => 'Powered Off VM')
-      on_error: update_retirement_status(status => 'Error Powering Off VM')
+      on_entry: update_retirement_status(status => 'Starting Retirement')
+      on_exit: update_retirement_status(status => 'Started Retirement')
+      on_error: update_retirement_status(status => 'Error Starting Retirement')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: PreRetirement
+      display_name: 
+      datatype: string
+      priority: 2
+      owner: 
+      default_value: "/Cloud/VM/Retirement/StateMachines/Methods/PreRetirement#${/#vm.vendor}"
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_retirement_status(status => 'PreRetirement')
+      on_exit: update_retirement_status(status => 'PreRetirement Successful')
+      on_error: update_retirement_status(status => 'Error in PreRetirement')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: CheckPreRetirement
+      display_name: 
+      datatype: string
+      priority: 3
+      owner: 
+      default_value: "/Cloud/VM/Retirement/StateMachines/Methods/CheckPreRetirement#${/#vm.vendor}"
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_retirement_status(status => 'Check PreRetirement')
+      on_exit: update_retirement_status(status => 'CheckPreRetirement successful')
+      on_error: update_retirement_status(status => 'Error in CheckPreRetirement')
       max_retries: '100'
       max_time: 
   - field:
@@ -36,7 +76,7 @@ object:
       name: DeactivateCMDB
       display_name: 
       datatype: string
-      priority: 2
+      priority: 4
       owner: 
       default_value: 
       substitute: true
@@ -53,30 +93,10 @@ object:
       max_time: 
   - field:
       aetype: state
-      name: UnregisterDHCP
-      display_name: 
-      datatype: string
-      priority: 3
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: update_retirement_status(status => 'Unregistering from DHCP')
-      on_exit: update_retirement_status(status => 'Unregistered from DHCP')
-      on_error: update_retirement_status(status => 'Error Unregistering from DHCP')
-      max_retries: '100'
-      max_time: 
-  - field:
-      aetype: state
       name: UnregisterAD
       display_name: 
       datatype: string
-      priority: 4
+      priority: 5
       owner: 
       default_value: 
       substitute: true
@@ -93,10 +113,30 @@ object:
       max_time: 
   - field:
       aetype: state
+      name: UnregisterDHCP
+      display_name: 
+      datatype: string
+      priority: 6
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_retirement_status(status => 'Unregistering from DHCP')
+      on_exit: update_retirement_status(status => 'Unregistered from DHCP')
+      on_error: update_retirement_status(status => 'Error Unregistering from DHCP')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
       name: UnregisterDNS
       display_name: 
       datatype: string
-      priority: 5
+      priority: 7
       owner: 
       default_value: 
       substitute: true
@@ -116,7 +156,7 @@ object:
       name: ReleaseMACAddress
       display_name: 
       datatype: string
-      priority: 6
+      priority: 8
       owner: 
       default_value: 
       substitute: true
@@ -129,46 +169,6 @@ object:
       on_entry: update_retirement_status(status => 'Releasing MAC Address')
       on_exit: update_retirement_status(status => 'Released MAC Address')
       on_error: update_retirement_status(status => 'Error Releasing MAC Address')
-      max_retries: '100'
-      max_time: 
-  - field:
-      aetype: state
-      name: ReleaseIPAddress
-      display_name: 
-      datatype: string
-      priority: 7
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: update_retirement_status(status => 'Releasing IP Address')
-      on_exit: update_retirement_status(status => 'Released IP Address')
-      on_error: update_retirement_status(status => 'Error Releasing IP Address')
-      max_retries: '100'
-      max_time: 
-  - field:
-      aetype: state
-      name: PreDeleteEmailOwner
-      display_name: 
-      datatype: string
-      priority: 8
-      owner: 
-      default_value: "#/Cloud/VM/Retirement/Email/vm_retirement_emails?event=vm_entered_retirement"
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: update_retirement_status(status => 'Notifying VM Owner')
-      on_exit: update_retirement_status(status => 'Notified VM Owner')
-      on_error: update_retirement_status(status => 'Error Notifying VM Owner')
       max_retries: '100'
       max_time: 
   - field:
@@ -194,12 +194,32 @@ object:
       max_time: 
   - field:
       aetype: state
-      name: RemoveFromProvider
+      name: ReleaseIPAddress
       display_name: 
       datatype: string
       priority: 10
       owner: 
-      default_value: /Cloud/VM/Retirement/StateMachines/Methods/RemoveFromProvider
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_retirement_status(status => 'Releasing IP Address')
+      on_exit: update_retirement_status(status => 'Released IP Address')
+      on_error: update_retirement_status(status => 'Error Releasing IP Address')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: RemoveFromProvider
+      display_name: 
+      datatype: string
+      priority: 11
+      owner: 
+      default_value: "/Cloud/VM/Retirement/StateMachines/Methods/RemoveFromProvider"
       substitute: true
       message: create
       visibility: 
@@ -214,10 +234,30 @@ object:
       max_time: 
   - field:
       aetype: state
+      name: PreDeleteEmailOwner
+      display_name: 
+      datatype: string
+      priority: 12
+      owner: 
+      default_value: "#/Cloud/VM/Retirement/Email/vm_retirement_emails?event=vm_entered_retirement"
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_retirement_status(status => 'Notifying VM Owner')
+      on_exit: update_retirement_status(status => 'Notified VM Owner')
+      on_error: update_retirement_status(status => 'Error Notifying VM Owner')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
       name: EmailOwner
       display_name: 
       datatype: string
-      priority: 11
+      priority: 13
       owner: 
       default_value: "/Cloud/VM/Retirement/Email/vm_retirement_emails?event=vm_retired"
       substitute: true
@@ -237,9 +277,9 @@ object:
       name: CheckRemovedFromProvider
       display_name: 
       datatype: string
-      priority: 12
+      priority: 14
       owner: 
-      default_value: /Cloud/VM/Retirement/StateMachines/Methods/CheckRemovedFromProvider
+      default_value: "/Cloud/VM/Retirement/StateMachines/Methods/CheckRemovedFromProvider"
       substitute: true
       message: create
       visibility: 
@@ -257,7 +297,7 @@ object:
       name: DeleteFromVMDB
       display_name: 
       datatype: string
-      priority: 13
+      priority: 15
       owner: 
       default_value: "/Cloud/VM/Retirement/StateMachines/Methods/DeleteFromVMDB"
       substitute: true
@@ -274,12 +314,12 @@ object:
       max_time: 
   - field:
       aetype: state
-      name: Finished
+      name: FinishRetirement
       display_name: 
       datatype: string
-      priority: 14
+      priority: 16
       owner: 
-      default_value: 
+      default_value: "/Cloud/VM/Retirement/StateMachines/Methods/FinishRetirement"
       substitute: true
       message: create
       visibility: 
@@ -287,8 +327,8 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
+      on_entry: update_retirement_status(status => 'Finishing Retirement')
+      on_exit: update_retirement_status(status => 'Finished Retirement')
+      on_error: update_retirement_status(status => 'Error Finishing Retirement')
       max_retries: '100'
       max_time: 

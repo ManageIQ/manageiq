@@ -119,8 +119,8 @@ module ReportController::Usage
 
   # Build the category pulldown for usage report
   def usage_build_cats
-#   cats = Classification.categories.sort{|a,b| a.description <=> b.description}  # Get the categories, sort by name
-    cats = Classification.categories.collect {|c| c unless !c.show}.compact                                             # Get the categories
+#   cats = Classification.categories.sort_by(&:description)  # Get the categories, sort by name
+    cats = Classification.categories.select(&:show)                        # Get the categories
     cats.delete_if{ |c| c.read_only? || c.entries.length == 0}              # Remove categories that are read only or have no entries
     ret_cats = {"<Choose>"=>"<Choose>"}                                           # Classifications hash for chooser
     cats.each {|c| ret_cats[c.name] = c.description}                              # Add categories to the hash

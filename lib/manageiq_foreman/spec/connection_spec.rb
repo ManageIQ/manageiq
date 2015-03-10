@@ -62,4 +62,10 @@ describe ManageiqForeman::Connection do
       end
     end
   end
+
+  it "#inventory" do
+    inventory = connection.inventory
+    expect(inventory).to            be_instance_of(ManageiqForeman::Inventory)
+    expect(inventory.connection).to eq(connection)
+  end
 end

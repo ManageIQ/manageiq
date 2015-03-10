@@ -56,6 +56,12 @@
     :collection_actions:
       :post:
       - :name: create
+  :availability_zones:
+    :description: Availability Zones
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: AvailabilityZone
   :clusters:
     :description: Clusters
     :options:
@@ -130,6 +136,12 @@
     - :subcollection
     :methods: *70174834086080
     :klass: MiqEvent
+  :flavors:
+    :description: Flavors
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: Flavor
   :groups:
     :description: Groups
     :options:
@@ -283,10 +295,12 @@
       :post:
       - :name: assign
       - :name: unassign
+      - :name: resolve
     :subresource_actions:
       :post:
       - :name: assign
       - :name: unassign
+      - :name: resolve
   :policy_actions:
     :description: Actions
     :options:
@@ -327,10 +341,12 @@
       :post:
       - :name: assign
       - :name: unassign
+      - :name: resolve
     :subresource_actions:
       :post:
       - :name: assign
       - :name: unassign
+      - :name: resolve
   :providers:
     :description: Providers
     :options:
@@ -468,6 +484,12 @@
       :delete:
       - :name: delete
         :identifier: rbac_role_delete
+  :security_groups:
+    :description: Security Groups
+    :options:
+    - :collection
+    :methods: *70174834086080
+    :klass: SecurityGroup
   :servers:
     :description: EVM Servers
     :options:
@@ -675,12 +697,16 @@
         :identifier: miq_template_protect
       - :name: unassign
         :identifier: miq_template_protect
+      - :name: resolve
+        :identifier: miq_template_policy_sim
     :policy_profiles_subcollection_actions:
       :post:
       - :name: assign
         :identifier: miq_template_protect
       - :name: unassign
         :identifier: miq_template_protect
+      - :name: resolve
+        :identifier: miq_template_policy_sim
   :users:
     :description: Users
     :options:
@@ -821,12 +847,16 @@
         :identifier: vm_protect
       - :name: unassign
         :identifier: vm_protect
+      - :name: resolve
+        :identifier: vm_policy_sim
     :policy_profiles_subcollection_actions:
       :post:
       - :name: assign
         :identifier: vm_protect
       - :name: unassign
         :identifier: vm_protect
+      - :name: resolve
+        :identifier: vm_policy_sim
   :zones:
     :description: Zones
     :options:

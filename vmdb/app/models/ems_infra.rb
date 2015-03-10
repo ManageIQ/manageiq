@@ -6,10 +6,6 @@ class EmsInfra < ExtManagementSystem
     EmsVmware
   }
 
-  def self.supported_subclasses
-    subclasses
-  end
-
   #
   # ems_timeouts is a general purpose proc for obtaining
   # read and open timeouts for any ems type and optional service.

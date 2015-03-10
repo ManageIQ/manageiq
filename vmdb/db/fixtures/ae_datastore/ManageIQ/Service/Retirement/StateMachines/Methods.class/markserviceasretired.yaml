@@ -4,9 +4,9 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: markserviceasretired
+    name: MarkServiceAsRetired
     inherits: 
     description: 
   fields:
   - execute:
-      value: markserviceasretired
+      value: mark_service_as_retired

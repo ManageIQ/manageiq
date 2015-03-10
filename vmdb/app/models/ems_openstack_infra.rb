@@ -1,6 +1,8 @@
 class EmsOpenstackInfra < EmsInfra
   include EmsOpenstackMixin
 
+  has_many :orchestration_stacks, :foreign_key => :ems_id, :dependent => :destroy
+
   def self.ems_type
     @ems_type ||= "openstack_infra".freeze
   end

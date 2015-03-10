@@ -784,7 +784,7 @@ module ApplicationHelper
     return true if !role_allows(:feature=>"miq_request_approval") && ["miq_request_approve","miq_request_deny"].include?(id)
 
     # don't check for feature RBAC if id is miq_request_approve/deny
-    if @layout != "miq_policy"
+    unless %w(miq_policy catalogs).include?(@layout)
       return true if !role_allows(:feature=>id) && !["miq_request_approve","miq_request_deny"].include?(id) &&
           !id.starts_with?("dialog_") && !id.starts_with?("miq_task_")
     end
@@ -1014,7 +1014,7 @@ module ApplicationHelper
       end
     when "OrchestrationTemplate", "OrchestrationTemplateCfn", "OrchestrationTemplateHot"
       case id
-      when "orchestration_templates_admin"
+      when "orchestration_template_edit", "orchestration_template_copy", "orchestration_template_remove"
         return true unless role_allows(:feature => "orchestration_templates_admin")
       end
     when "NilClass"
@@ -1035,7 +1035,7 @@ module ApplicationHelper
         return true if ["workers", "download_logs"].include?(@lastaction)
       when "logdepot_edit"
         return true if ["workers", "evm_logs", "audit_logs"].include?(@lastaction)
-      when "orchestration_templates_admin"
+      when "orchestration_template_edit", "orchestration_template_copy", "orchestration_template_remove"
         return true unless @report
       when "policy_new"
         return true unless role_allows(:feature => "policy_new")
@@ -2526,6 +2526,8 @@ module ApplicationHelper
     # FIXME: exception behavior to remove
     test_layout = 'my_tasks' if %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout)
 
+    return "dropdown-menu" if big_iframe
+
     Menu::Manager.item_in_section?(test_layout, nav_id) ? "nav navbar-nav navbar-persistent" : "dropdown-menu"
   end
 
@@ -2655,4 +2657,6 @@ module ApplicationHelper
   def need_prov_dialogs?(type)
     !type.starts_with?("generic")
   end
+
+  attr_reader :big_iframe
 end

@@ -3,7 +3,7 @@
     %td.key=_('Region')
     %td.wide
       = select_tag("provider_region",
-                   options_for_select([["<#{_('Choose')}>", nil]] + Array(@edit[:amazon_regions].invert).sort { |a, b| a[0] <=> b[0] },
+                   options_for_select([["<#{_('Choose')}>", nil]] + Array(@edit[:amazon_regions].invert).sort_by { |desc, _name| desc },
                                       @edit[:new][:provider_region]),
                    "data-miq_observe" => {:url => url}.to_json)
 - elsif @edit[:new][:emstype].present?

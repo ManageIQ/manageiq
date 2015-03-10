@@ -772,7 +772,7 @@ class ApplicationController < ActionController::Base
   # Build the user_emails hash for edit screens needing the edit_email view
   def build_user_emails_for_edit
     @edit[:user_emails] = Hash.new
-    User.all.sort{|a,b| a.name.downcase <=> b.name.downcase}.each do |u|
+    User.all.sort_by { |u| u.name.downcase }.each do |u|
       unless u.email.blank? ||
               (@edit[:new][:email][:to] && @edit[:new][:email][:to].include?(u.email))
         @edit[:user_emails][u.email] = "#{u.name} (#{u.email})"
@@ -2395,7 +2395,7 @@ class ApplicationController < ActionController::Base
     end
 
     if data.kind_of?(Hash) && data_size > SESSION_ELEMENT_THRESHOLD
-      data.keys.sort {|a,b| a.to_s <=> b.to_s}.each do |k|
+      data.keys.sort_by(&:to_s).each do |k|
         value = data[k]
         log_data_size(k, value, indent)
         get_data_size(value, indent + 1)  if value.kind_of?(Hash) || value.kind_of?(Array)
@@ -2424,7 +2424,7 @@ class ApplicationController < ActionController::Base
     end
 
     if data.kind_of?(Hash)
-      data.keys.sort {|a,b| a.to_s <=> b.to_s}.each do |k|
+      data.keys.sort_by(&:to_s).each do |k|
         value = data[k]
         log_data_size(k, value, indent)
         dump_session_data(value, indent + 1) if value.kind_of?(Hash) || value.kind_of?(Array)

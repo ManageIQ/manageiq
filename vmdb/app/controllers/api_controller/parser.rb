@@ -28,13 +28,14 @@ class ApiController
     end
 
     def log_api_request
+      @parameter_filter ||= ActionDispatch::Http::ParameterFilter.new(Rails.application.config.filter_parameters)
       api_log_info("\n#{@name} Request URL: #{@req[:url]}")
       if api_log_debug?
         msg  = "\n#{@name} Request Details"
         @req.each { |k, v| msg << "\n  #{k[0..14].ljust(14, ' ')}: #{v}" if v.present? }
         if params.size > 0
           msg << "\n\n  Parameters:"
-          params.each { |k, v| msg << "\n    #{k[0..12].ljust(12, ' ')}: #{v}" }
+          @parameter_filter.filter(params).each { |k, v| msg << "\n    #{k[0..12].ljust(12, ' ')}: #{v}" }
         end
         api_log_debug(msg)
       end
@@ -140,6 +141,7 @@ class ApiController
       target = request_type_target.last
       aspec = cspec["#{target}_actions".to_sym]
       action_hash = fetch_action_hash(aspec, method_name, action_name)
+      raise BadRequestError, "Disabled action #{action_name}" if action_hash[:disabled]
       unless api_user_role_allows?(action_hash[:identifier])
         raise Forbidden, "Use of the #{action_name} action is forbidden"
       end
@@ -163,6 +165,7 @@ class ApiController
       aspec = cspec[aspecnames.to_sym]
       action_hash = fetch_action_hash(aspec, mname, aname)
       raise BadRequestError, "Unsupported Action #{aname} for the #{cname} #{type} specified" if action_hash.blank?
+      raise BadRequestError, "Disabled Action #{aname} for the #{cname} #{type} specified" if action_hash[:disabled]
       raise Forbidden, "Use of Action #{aname} is forbidden" unless api_user_role_allows?(action_hash[:identifier])
 
       validate_post_api_action_as_subcollection(cname, mname, aname)
@@ -209,6 +212,8 @@ class ApiController
       return unless aspec
 
       action_hash = fetch_action_hash(aspec, mname, aname)
+      raise BadRequestError, "Unsupported Action #{aname} for the #{cname} sub-collection" if action_hash.blank?
+      raise BadRequestError, "Disabled Action #{aname} for the #{cname} sub-collection" if action_hash[:disabled]
 
       unless api_user_role_allows?(action_hash[:identifier])
         raise Forbidden, "Use of Action #{aname} for the #{cname} sub-collection is forbidden"

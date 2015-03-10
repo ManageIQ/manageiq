@@ -1110,7 +1110,7 @@ module OpsController::Settings::Common
           category_get_all
         when "settings_co_tags"
           # dont hide the disabled categories, so user can remove tags from the disabled ones
-          cats = Classification.categories.sort{|a,b| a.description <=> b.description}  # Get the categories, sort by name
+          cats = Classification.categories.sort_by(&:description)  # Get the categories, sort by name
           @cats = Hash.new                                        # Classifications array for first chooser
           cats.each do |c|
             @cats[c.description] = c.name if !c.read_only?    # Show the non-read_only categories
@@ -1208,10 +1208,9 @@ module OpsController::Settings::Common
       @temp[:zones] = Zone.in_my_region.all
       @temp[:ldap_regions] = LdapRegion.in_my_region.all
       @temp[:miq_schedules] = Array.new
-      MiqSchedule.all(:conditions=>"prod_default != 'system' or prod_default is null").sort{
-                          |a,b| a.name.downcase <=> b.name.downcase}.each do |z|
-        if z.adhoc.nil? && (z.towhat != "DatabaseBackup" || (z.towhat == "DatabaseBackup" && DatabaseBackup.backup_supported?))
-          @temp[:miq_schedules].push(z) unless @temp[:miq_schedules].include?(z)
+      MiqSchedule.all(:conditions=>"prod_default != 'system' or prod_default is null").sort_by { |s| s.name.downcase }.each do |s|
+        if s.adhoc.nil? && (s.towhat != "DatabaseBackup" || (s.towhat == "DatabaseBackup" && DatabaseBackup.backup_supported?))
+          @temp[:miq_schedules].push(s) unless @temp[:miq_schedules].include?(s)
         end
       end
 #   # Enterprise Roles tab

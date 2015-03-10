@@ -125,7 +125,7 @@ module ApplicationController::PolicySupport
 
   def profile_build
     session[:assignments] = session[:protect_item].get_policies
-    session[:assignments].sort{|a,b| a["description"] <=> b["description"]}.each do | policy |
+    session[:assignments].sort_by { |a| a["description"] }.each do |policy|
       @catinfo ||= Hash.new                               # Hash to hold category squashed states
       cat = policy["description"]
       if @catinfo[cat] ==  nil
@@ -198,7 +198,7 @@ module ApplicationController::PolicySupport
       :url=>"/#{request.parameters["controller"]}/protecting"}
     )
     #session[:pol_db] = session[:pol_db] == Vm ? VmOrTemplate : session[:pol_db]
-    @politems = session[:pol_db].find(session[:pol_items]).sort{|a,b| a.name <=> b.name}  # Get the db records
+    @politems = session[:pol_db].find(session[:pol_items]).sort_by(&:name)  # Get the db records
     @view = get_db_view(session[:pol_db])             # Instantiate the MIQ Report view object
     @view.table = MiqFilter.records2table(@politems, :only=>@view.cols + ['id'])
 
@@ -219,7 +219,7 @@ module ApplicationController::PolicySupport
   # Create policy assignment audit record
   def protect_audit(pp, mode, db, recs)
     msg = "[#{pp.name}] Policy Profile #{mode} (db:[#{db}]"
-    msg += ", ids:[#{recs.sort{|a,b|a.to_i<=>b.to_i}.join(',')}])"
+    msg += ", ids:[#{recs.sort_by(&:to_i).join(',')}])"
     event = "policyset_" + mode
     audit = {:event=>event, :target_id=>pp.id, :target_class=>pp.class.base_class.name, :userid => session[:userid], :message=>msg}
   end
@@ -251,7 +251,7 @@ module ApplicationController::PolicySupport
 
   # Build the policy simulation screen
   def policy_sim_build_screen
-    @tagitems = session[:tag_db].find(session[:tag_items]).sort{|a,b| a.name <=> b.name}  # Get the db records that are being tagged
+    @tagitems = session[:tag_db].find(session[:tag_items]).sort_by(&:name)  # Get the db records that are being tagged
     @catinfo = Hash.new
     @lastaction = "policy_sim"
     @pol_view = get_db_view(session[:tag_db])       # Instantiate the MIQ Report view object

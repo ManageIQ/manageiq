@@ -32,7 +32,7 @@
             - else
               - default_option = [_("<Choose>"), nil]
               - schedules_ary = Array(@edit[:backup_schedules].invert)
-              - schedules_ary.sort! { |a, b| a.first <=> b.first }
+              - schedules_ary.sort_by! { |name, _id| name }
               - options = options_for_select([default_option] + schedules_ary, @edit[:selected_backup_schedule])
 
               = select_tag('backup_schedule', options, "data-miq_observe" => {:url => url}.to_json)

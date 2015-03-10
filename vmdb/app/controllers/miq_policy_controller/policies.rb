@@ -237,14 +237,17 @@ module MiqPolicyController::Policies
   # Get information for a policy
   def policy_get_info(policy)
     @record = @policy = policy
-    @right_cell_text = _("%{model} \"%{name}\"") % {:model=>"#{ui_lookup(:model=>@sb[:folder])} #{@sb[:mode]} Policy", :name=>@policy.description.gsub(/'/,"\\'")}
+    @right_cell_text = _("%{model} \"%{name}\"") % {
+      :model => "#{@sb[:mode]} Policy",
+      :name  => @policy.description.gsub(/'/, "\\'")
+    }
     @right_cell_div = "policy_details"
     @policy_conditions = @policy.conditions
     @policy_events = @policy.miq_events
     @expression_table = @policy.expression.is_a?(MiqExpression) ? exp_build_table(@policy.expression.exp) : nil
 
     if x_active_tree == :policy_tree
-      @policy_profiles = @policy.memberof.sort{|a,b|a.description.downcase<=>b.description.downcase}
+      @policy_profiles = @policy.memberof.sort_by { |pp| pp.description.downcase }
     end
   end
 

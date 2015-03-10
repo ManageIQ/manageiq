@@ -274,8 +274,8 @@ module ApplicationController::Filter
             @edit[@expkey][:exp_field] = nil
             @edit[@expkey][:exp_skey] = nil
           end
-          if @edit[@expkey][:exp_cfield] != nil &&  # Clear expression check portion
-              (@edit[@expkey][:exp_field] == @edit[@expkey][:exp_cfield] || # if find field matches check field
+          if (@edit[@expkey][:exp_cfield].present? && @edit[@expkey][:exp_field].present?) &&  # Clear expression check portion
+             (@edit[@expkey][:exp_field] == @edit[@expkey][:exp_cfield] || # if find field matches check field
               @edit[@expkey][:exp_cfield].split("-").first != @edit[@expkey][:exp_field].split("-").first)  # or user chose a different table field
             @edit[@expkey][:exp_check] = "checkall"
             @edit[@expkey][:exp_cfield] = nil
@@ -392,15 +392,17 @@ module ApplicationController::Filter
     end
 
     # Check for changes in date format
-    if params[:date_format_1]
-      @edit[@expkey][:val1][:date_format] = params[:date_format_1]
-      @edit[@expkey][:exp_value].collect!{|v| v = params[:date_format_1] == "s" ? nil : EXP_TODAY}
-      @edit[@expkey][:val1][:through_choices] = exp_through_choices(@edit[@expkey][:exp_value][0]) if params[:date_format_1] == "r"
-    end
-    if params[:date_format_2]
-      @edit[@expkey][:val2][:date_format] = params[:date_format_2]
-      @edit[@expkey][:exp_cvalue].collect!{|v| v = params[:date_format_2] == "s" ? nil : EXP_TODAY}
-      @edit[@expkey][:val2][:through_choices] = exp_through_choices(@edit[@expkey][:exp_cvalue][0]) if params[:date_format_2] == "r"
+    if @edit[@expkey][:exp_value].present? && @edit[@expkey][:exp_cvalue].present?
+      if params[:date_format_1]
+        @edit[@expkey][:val1][:date_format] = params[:date_format_1]
+        @edit[@expkey][:exp_value].collect! { |_| params[:date_format_1] == "s" ? nil : EXP_TODAY }
+        @edit[@expkey][:val1][:through_choices] = exp_through_choices(@edit[@expkey][:exp_value][0]) if params[:date_format_1] == "r"
+      end
+      if params[:date_format_2]
+        @edit[@expkey][:val2][:date_format] = params[:date_format_2]
+        @edit[@expkey][:exp_cvalue].collect! { |_| params[:date_format_2] == "s" ? nil : EXP_TODAY }
+        @edit[@expkey][:val2][:through_choices] = exp_through_choices(@edit[@expkey][:exp_cvalue][0]) if params[:date_format_2] == "r"
+      end
     end
 
     # Check for suffixes changed
@@ -1722,9 +1724,9 @@ module ApplicationController::Filter
     temp = MiqSearch.new
     temp.description = "ALL"
     temp.id = 0
-    @def_searches = MiqSearch.all(:conditions=>["(search_type=? or (search_type=? and (search_key is null or search_key<>?))) and db=?", "global","default","_hidden_",db]).sort{|a,b| a.description.downcase<=>b.description.downcase}
+    @def_searches = MiqSearch.all(:conditions=>["(search_type=? or (search_type=? and (search_key is null or search_key<>?))) and db=?", "global","default","_hidden_",db]).sort_by { |s| s.description.downcase }
     @def_searches = @def_searches.unshift(temp) if !@def_searches.blank?
-    @my_searches = MiqSearch.all(:conditions=>["search_type=? and search_key=? and db=?", "user",session[:userid],db]).sort{|a,b| a.description.downcase<=>b.description.downcase}
+    @my_searches = MiqSearch.all(:conditions=>["search_type=? and search_key=? and db=?", "user",session[:userid],db]).sort_by { |s| s.description.downcase }
   end
 
   def process_changed_expression(params, chosen_key, exp_key, exp_value, exp_valx)

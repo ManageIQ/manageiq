@@ -1,23 +1,23 @@
 require "spec_helper"
 
+require "manageiq_foreman"
+
 describe ProviderForeman do
   let(:provider) { FactoryGirl.build(:provider_foreman) }
   let(:attrs)    { {:base_url => "example.com", :username => "admin", :password => "smartvm", :verify_ssl => nil} }
 
-  describe "#connection_attrs" do
-    context "with no port" do
-      it "has correct connection attributes" do
-        expect(provider.connection_attrs).to eq(attrs)
-      end
+  describe "#connect" do
+    it "with no port" do
+      expect(ManageiqForeman::Connection).to receive(:new).with(attrs)
+      provider.connect
     end
 
-    context "with a port" do
-      before { provider.url = "example.com:555" }
+    it "with a port" do
+      provider.url = "example.com:555"
+      attrs[:base_url] = "example.com:555"
 
-      it "has correct connection attributes" do
-        attrs[:base_url] = "example.com:555"
-        expect(provider.connection_attrs).to eq(attrs)
-      end
+      expect(ManageiqForeman::Connection).to receive(:new).with(attrs)
+      provider.connect
     end
   end
 

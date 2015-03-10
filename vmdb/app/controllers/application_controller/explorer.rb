@@ -873,8 +873,8 @@ module ApplicationController::Explorer
     #if options[:count_only]
     #  return options[:type] = :svccat ? 0 : (object.vms_and_templates.count + object.service_templates.count)
     #else
-    #  return options[:type] = :svccat ? [] : (object.vms_and_templates.sort{|a,b| a.name.downcase <=> b.name.downcase} +
-    #      object.service_templates.sort{|a,b| a.name.downcase <=> b.name.downcase})
+    #  return options[:type] = :svccat ? [] : (object.vms_and_templates.sort_by { |v| v.name.downcase } +
+    #      object.service_templates.sort_by { |st| st.name.downcase })
     #end
     if options[:count_only]
       if options[:type] == :svccat

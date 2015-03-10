@@ -2,10 +2,6 @@ class EmsContainer < ExtManagementSystem
   SUBCLASSES = %w(
     EmsKubernetes
   )
-
-  def self.supported_subclasses
-    subclasses
-  end
 end
 
 # Preload any subclasses of this class, so that they will be part of the

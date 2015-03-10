@@ -1,15 +1,12 @@
-class ConfigurationManager < ActiveRecord::Base
-  include NewWithTypeStiMixin
-  include EmsRefresh::Manager
-  include ReportableMixin
-
-  acts_as_miq_taggable
-  belongs_to :provider
-
+class ConfigurationManager < ExtManagementSystem
   has_many :configured_systems,     :dependent => :destroy
   has_many :configuration_profiles, :dependent => :destroy
 
-  delegate :zone, :my_zone, :zone_name, :to => :provider
-
-  virtual_column :name,                :type => :string,      :uses => :provider
+  def hostname_ipaddress_required?
+    false
+  end
 end
+
+# Preload any subclasses of this class, so that they will be part of the
+#   conditions that are generated on queries against this class.
+VMDB::Util.eager_load_subclasses('ConfigurationManager')

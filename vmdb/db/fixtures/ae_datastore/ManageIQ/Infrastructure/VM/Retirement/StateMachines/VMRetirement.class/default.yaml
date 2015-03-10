@@ -3,14 +3,14 @@ object_type: instance
 version: 1.0
 object:
   attributes:
-    display_name: Default
+    display_name: 
     name: Default
     inherits: 
     description: 
   fields:
   - RemoveFromProvider:
-      value: /Infrastructure/VM/Retirement/StateMachines/Methods/RemoveFromProvider
+      value: "/Infrastructure/VM/Retirement/StateMachines/Methods/RemoveFromProvider"
   - CheckRemovedFromProvider:
-      value: /Infrastructure/VM/Retirement/StateMachines/Methods/CheckRemovedFromProvider
+      value: "/Infrastructure/VM/Retirement/StateMachines/Methods/CheckRemovedFromProvider"
   - DeleteFromVMDB:
       value: "/Infrastructure/VM/Retirement/StateMachines/Methods/DeleteFromVMDB"

@@ -17,6 +17,11 @@ module ManageiqForeman
       @connection_attrs = connection_attrs
     end
 
+    def verify?
+      results = Array(fetch(:home).try(:results)).first
+      results.respond_to?(:key?) && results.key?("links")
+    end
+
     def all(resource, filter = {})
       page = 0
       all = []
@@ -43,6 +48,10 @@ module ManageiqForeman
 
     def host(manager_ref)
       ::ManageiqForeman::Host.new(self, manager_ref)
+    end
+
+    def inventory
+      Inventory.new(self)
     end
 
     private

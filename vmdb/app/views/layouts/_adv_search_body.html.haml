@@ -74,6 +74,12 @@
                                    "data-miq_focus"   => true,
                                    "data-miq_observe" => { :interval => ".5",
                                                            :url      => url2}.to_json)
-            - checked = (session[:userrole] == "super_administrator" || session[:userrole] == "administrator")
-            = check_box_tag("search_type", "1", checked, :style                      => "width: 20px",
-                                                         "data-miq_observe_checkbox" => {:url => url2}.to_json)
+            - if session[:userrole] == "super_administrator" || session[:userrole] == "administrator"
+              %tr
+                %td.key
+                  = _("Global search:")
+                %td.notwide
+                  - checked = @edit && @edit[:expression] && @edit[:expression][:selected] && @edit[:expression][:selected][:typ] == "global"
+                  = check_box_tag("search_type", "1", checked,
+                    :style                      => "width: 20px",
+                    "data-miq_observe_checkbox" => {:url => url2}.to_json)

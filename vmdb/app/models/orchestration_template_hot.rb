@@ -41,6 +41,13 @@ class OrchestrationTemplateHot < OrchestrationTemplate
     [EmsOpenstack]
   end
 
+  # return the parsing error message if not valid JSON; otherwise nil
+  def validate_format
+    YAML.parse(content) && nil if content
+  rescue Psych::SyntaxError => err
+    err.message
+  end
+
   private
 
   def parse_constraints(raw_constraints)

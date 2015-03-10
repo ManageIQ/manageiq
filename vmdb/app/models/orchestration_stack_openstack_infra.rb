@@ -1,0 +1,2 @@
+class OrchestrationStackOpenstackInfra < OrchestrationStack
+end

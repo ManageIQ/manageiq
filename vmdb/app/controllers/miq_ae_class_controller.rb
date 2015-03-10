@@ -475,15 +475,13 @@ class MiqAeClassController < ApplicationController
     new_column.add_attribute("type", 'ro')
     new_column.text = header
 
-    records = Array.new
     # passing in mode, don't need to sort records for namaspace node, it will be passed in sorted order, need to show Namesaces first and then Classes
-    if mode
-      view.flatten.sort{|a,b| a.display_name.to_s + a.name.to_s <=> b.display_name.to_s + b.name.to_s}.each do |r|
-        records.push(r)
+    records =
+      if mode
+        view.flatten.sort_by { |v| [v.display_name.to_s, v.name.to_s] }
+      else
+        view
       end
-    else
-        records = view
-    end
     records.each do |kids|
       cls,img_name = set_cls(kids.class)
       rec_name = get_rec_name(kids)
@@ -836,14 +834,14 @@ class MiqAeClassController < ApplicationController
             var.starts_with?("cls_inst_collect") || var.starts_with?("cls_inst_on_entry") ||
             var.starts_with?("cls_inst_on_exit") || var.starts_with?("cls_inst_on_error") ||
             var.starts_with?("cls_inst_max_retries") || var.starts_with?("cls_inst_max_time")
-          @ae_class.ae_fields.sort! { |a,b| a.priority.to_i <=> b.priority.to_i } if @ae_class
+          @ae_class.ae_fields.sort_by! { |f| f.priority.to_i } if @ae_class
         end
         # for instance node selected in the left tree
         if var.starts_with?("inst_value") || var.starts_with?("inst_password_value") ||
             var.starts_with?("inst_collect") || var.starts_with?("inst_on_entry") ||
             var.starts_with?("inst_on_exit") || var.starts_with?("inst_on_error") ||
             var.starts_with?("inst_max_retries") || var.starts_with?("inst_max_time")
-          @ae_class.ae_fields.sort! { |a,b| a.priority.to_i <=> b.priority.to_i } if @ae_class
+          @ae_class.ae_fields.sort_by! { |f| f.priority.to_i } if @ae_class
         end
       end
 

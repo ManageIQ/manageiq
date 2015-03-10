@@ -34,6 +34,13 @@ class OrchestrationTemplateCfn < OrchestrationTemplate
     [EmsAmazon, EmsOpenstack]
   end
 
+  # return the parsing error message if not valid JSON; otherwise nil
+  def validate_format
+    JSON.parse(content) && nil if content
+  rescue JSON::ParserError => err
+    err.message
+  end
+
   private
 
   def add_allowed_values(parameter, val)

@@ -1,6 +1,5 @@
 #main_div
   = render :partial => "layouts/flash_msg"
-  - read_only = @record.stacks.length > 0
   %p.legend= _("Orchestration Template Information")
   %table
     %td{:valign => "top"}
@@ -14,7 +13,7 @@
         - unless @edit
           %tr
             %td.key=_('Read Only')
-            %td= read_only ? _("True") : _("False")
+            %td= @record.stacks.length > 0 ? _("True") : _("False")
           %tr
             %td.key=_('Created On')
             %td= @record.created_at
@@ -26,13 +25,11 @@
   #form_div
     = text_area_tag("template_content", @record.content, :style => "display:none;")
     - if params[:action] != "explorer"
-      - url = url_for(:action => "ot_content_changed", :id => "#{@record[:id]}")
       = render :partial => "/layouts/my_code_mirror",
-        :locals       => {:text_area_id => "template_content",
-        :mode         => "yaml",
-        :line_numbers => !read_only,
-        :read_only    => read_only,
-        :url          => url}
+        :locals => {:text_area_id => "template_content",
+                    :mode         => "yaml",
+                    :line_numbers => true,
+                    :read_only    => true}
 
     :javascript
       miqEditor.refresh();

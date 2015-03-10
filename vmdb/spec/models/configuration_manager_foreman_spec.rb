@@ -1,19 +1,15 @@
 require "spec_helper"
 
 describe ConfigurationManagerForeman do
+  let(:provider) { FactoryGirl.build(:provider_foreman) }
   let(:configuration_manager) do
-    described_class.create(:provider => provider)
+    FactoryGirl.build(:configuration_manager_foreman, :provider => provider)
   end
 
-  describe "#connection_attrs" do
-    context "manager with provider" do
-      let(:provider) do
-        Provider.new.tap { |p| p.stub(:connection_attrs => "ABC") }
-      end
-
-      it "delegates configuration attributes" do
-        expect(configuration_manager.connection_attrs).to eq("ABC")
-      end
+  describe "#connect" do
+    it "delegates to the provider" do
+      expect(provider).to receive(:connect)
+      configuration_manager.connect
     end
   end
 end

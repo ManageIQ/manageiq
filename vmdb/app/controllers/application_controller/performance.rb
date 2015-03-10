@@ -1546,7 +1546,7 @@ module ApplicationController::Performance
 
   # Build the category pulldown for tag charts
   def perf_build_cats(model)
-    cats = Classification.categories.collect {|c| c unless !c.show}.compact.sort{|a,b| a.description <=> b.description} # Get the categories, sort by name
+    cats = Classification.categories.select(&:show).sort_by(&:description) # Get the categories, sort by name
     cats.delete_if{ |c| c.read_only? || c.entries.length == 0}                    # Remove categories that are read only or have no entries
     ret_cats = {"<None>"=>"<None>"}                                               # Classifications hash for chooser
     case model

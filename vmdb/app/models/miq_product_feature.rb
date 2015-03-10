@@ -7,7 +7,8 @@ class MiqProductFeature < ActiveRecord::Base
   validates_uniqueness_of :identifier
 
   FIXTURE_DIR  = File.join(Rails.root, "db/fixtures")
-  FIXTURE_YAML = File.join(FIXTURE_DIR, "#{self.table_name}.yml")
+  FIXTURE_PATH = File.join(FIXTURE_DIR, self.table_name)
+  FIXTURE_YAML = "#{FIXTURE_PATH}.yml"
 
   DETAIL_ATTRS = [
     :name,
@@ -83,6 +84,11 @@ class MiqProductFeature < ActiveRecord::Base
     log_header = "MIQ(#{self.name}.seed_features)"
     idents_from_hash = []
     self.seed_from_hash(YAML.load_file(FIXTURE_YAML), idents_from_hash)
+
+    root_feature = MiqProductFeature.where(:identifier => 'everything').first
+    Dir.glob(File.join(FIXTURE_PATH, "*.yml")).each do |fixture|
+      self.seed_from_hash(YAML.load_file(fixture), idents_from_hash, root_feature)
+    end
 
     idents_from_db = self.all.collect(&:identifier)
     deletes = idents_from_db - (idents_from_db & idents_from_hash)

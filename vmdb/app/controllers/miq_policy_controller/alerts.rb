@@ -594,7 +594,7 @@ module MiqPolicyController::Alerts
     @expression_table = exp_build_table(@alert.expression.exp) if @alert.expression.is_a?(MiqExpression)
 
     if x_active_tree == :alert_tree
-      @alert_profiles = @alert.memberof.sort{|a,b|a.description.downcase<=>b.description.downcase}
+      @alert_profiles = @alert.memberof.sort_by { |p| p.description.downcase }
     end
 
     unless @alert.expression.is_a?(MiqExpression) # Get the EMS if it's in the expression

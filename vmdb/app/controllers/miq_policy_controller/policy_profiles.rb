@@ -137,7 +137,7 @@ module MiqPolicyController::PolicyProfiles
   end
 
   def profile_get_all
-    @profiles = MiqPolicySet.all.sort{|a,b|a.description.downcase<=>b.description.downcase}
+    @profiles = MiqPolicySet.all.sort_by { |ps| ps.description.downcase }
     set_search_text
     @profiles = apply_search_filter(@search_text, @profiles) if !@search_text.blank?
     @right_cell_text = _("All %s") % ui_lookup(:models=>"MiqPolicySet")
@@ -167,7 +167,7 @@ module MiqPolicyController::PolicyProfiles
   end
 
   def profile_get_all
-    @profiles = MiqPolicySet.all.sort{|a,b|a.description.downcase<=>b.description.downcase}
+    @profiles = MiqPolicySet.all.sort_by { |ps| ps.description.downcase }
     set_search_text
     @profiles = apply_search_filter(@search_text, @profiles) if !@search_text.blank?
     @right_cell_text = _("All %s") % ui_lookup(:models=>"MiqPolicySet")

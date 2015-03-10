@@ -28,9 +28,7 @@ end
 
 # Look in the Root Object for a Provision/Request
 prov = $evm.root['miq_provision_request'] || $evm.root['miq_provision']
-if vm.nil?
-  vm = prov.vm unless prov.nil?
-end
+vm = prov.vm if prov && vm.nil?
 
 raise "User not specified" if vm.nil?
 
@@ -46,7 +44,7 @@ owner = nil
 owner = $evm.vmdb('user', evm_owner_id) unless evm_owner_id.nil?
 
 # to_email_address from owner.email then from model if nil
-unless owner.nil?
+if owner
   to = owner.email
 else
   to = $evm.object['to_email_address']
@@ -73,7 +71,8 @@ if event_type == "vm_retire_warn"
   # Build email body
   body = "Hello, "
   body += "<br><br>Your virtual machine: [#{vm_name}] will be retired on [#{vm['retires_on']}]."
-  body += "<br><br>If you need to use this virtual machine past this date please request an extension by contacting Support."
+  body += "<br><br>If you need to use this virtual machine past this date please request"
+  body += "<br><br>an extension by contacting Support."
   body += "<br><br> Thank you,"
   body += "<br> #{signature}"
 end
@@ -99,7 +98,8 @@ if event_type == "vm_retire_extend"
   # Build email body
   body = "Hello, "
   body += "<br><br>Your virtual machine: [#{vm_name}] will now be retired on [#{vm['retires_on']}]."
-  body += "<br><br>If you need to use this virtual machine past this date please request an extension by contacting Support."
+  body += "<br><br>If you need to use this virtual machine past this date please request"
+  body += "<br><br>an extension by contacting Support."
   body += "<br><br> Thank you,"
   body += "<br> #{signature}"
 end

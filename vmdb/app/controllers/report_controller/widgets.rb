@@ -290,13 +290,13 @@ module ReportController::Widgets
       if @widget.visibility && @widget.visibility[:roles]
         @sb[:user_roles] = Array.new
         if @widget.visibility[:roles][0] != "_ALL_"
-          MiqUserRole.all.sort{|a,b| a.name <=> b.name}.each do |r|
+          MiqUserRole.all.sort_by(&:name).each do |r|
             @sb[:user_roles].push(r.name) if @widget.visibility[:roles].include?(r.name)
           end
         end
       elsif @widget.visibility && @widget.visibility[:groups]
         @sb[:groups] = Array.new
-        MiqGroup.all.sort{|a,b| a.description <=> b.description}.each do |r|
+        MiqGroup.all.sort_by(&:description).each do |r|
           @sb[:groups].push(r.description) if @widget.visibility[:groups].include?(r.description)
         end
       end
@@ -352,16 +352,14 @@ module ReportController::Widgets
       @edit[:new][:groups].sort! unless @edit[:new][:groups].blank?
     end
     @edit[:new][:roles] ||= Array.new   # initializing incase of new widget since visibility is not set yet.
-    @edit[:sorted_user_roles] = Array.new
-    MiqUserRole.all.sort{|a,b| a.name.downcase <=> b.name.downcase}.each do |r|
-      @edit[:sorted_user_roles].push(r.name=>to_cid(r.id))
-    end
+    @edit[:sorted_user_roles] =
+      MiqUserRole.all.sort_by { |r| r.name.downcase }
+        .collect { |r| {r.name => to_cid(r.id)} }
 
     @edit[:new][:groups] ||= Array.new    # initializing incase of new widget since visibility is not set yet.
-    @edit[:sorted_groups] = Array.new
-    MiqGroup.all.sort{|a,b| a.description.downcase <=> b.description.downcase}.each do |g|
-      @edit[:sorted_groups].push(g.description=>to_cid(g.id))
-    end
+    @edit[:sorted_groups] =
+      MiqGroup.all.sort_by { |g| g.description.downcase }
+        .collect { |g| {g.description => to_cid(g.id)} }
 
     # Schedule Box - create new sched for copy/new, use existing for edit
     @edit[:schedule] = @widget.id && !@widget.miq_schedule.nil? ?
@@ -403,7 +401,9 @@ module ReportController::Widgets
       end
     elsif ["m"].include?(@sb[:wtype])
       @edit[:new][:shortcuts] = Hash.new
-      @widget.miq_widget_shortcuts.sort{|a,b| a.sequence <=> b.sequence}.each{|ws| @edit[:new][:shortcuts][ws.miq_shortcut.id] = ws.description}
+      @widget.miq_widget_shortcuts.sort_by(&:sequence).each do |ws|
+        @edit[:new][:shortcuts][ws.miq_shortcut.id] = ws.description
+      end
       @edit[:new][:shortcut_keys] = @edit[:new][:shortcuts].keys  # Save the keys array so we can compare the hash order
       @edit[:avail_shortcuts] = widget_build_avail_shortcuts
     end

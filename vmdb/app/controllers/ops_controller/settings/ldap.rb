@@ -378,10 +378,7 @@ module OpsController::Settings::Ldap
     @edit[:new][:name] = @ldap_region.name
     @edit[:new][:description] = @ldap_region.description
     @edit[:new][:zone_id] = @ldap_region.zone ? @ldap_region.zone.id : nil
-    @edit[:zones] = Array.new
-    Zone.all.sort{|a,b| a.name.to_s <=> b.name.to_s}.each do |zone|
-      @edit[:zones].push([zone.name,zone.id])
-    end
+    @edit[:zones] = Zone.all.sort_by { |z| z.name.to_s }.collect { |z| [z.name, z.id] }
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit] = @edit
   end
@@ -427,7 +424,7 @@ module OpsController::Settings::Ldap
     @edit[:new][:bind_dn] = @ldap_domain.authentication_userid
     @edit[:new][:bind_pwd] = @ldap_domain.authentication_password
     @edit[:new][:ldap_servers] = Array.new
-    @ldap_domain.ldap_servers.sort{|a,b| a.hostname.to_s <=> b.hostname.to_s}.each do |svr|
+    @ldap_domain.ldap_servers.sort_by { |svr| svr.hostname.to_s }.each do |svr|
       server = Hash.new
       server[:id] = svr.id
       server[:hostname] = svr.hostname

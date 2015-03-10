@@ -102,7 +102,7 @@ module MiqPolicyController::Events
   end
 
   def event_get_all
-    @events = MiqPolicy.all_policy_events.sort{|a,b|a.description.downcase<=>b.description.downcase}
+    @events = MiqPolicy.all_policy_events.sort_by { |e| e.description.downcase }
     set_search_text
     @events = apply_search_filter(@search_text, @events) if !@search_text.blank?
     @right_cell_text = _("All %s") % ui_lookup(:tables=>"miq_event")
@@ -117,7 +117,7 @@ module MiqPolicyController::Events
     @right_cell_div = "event_details"
 
     if x_active_tree == :event_tree
-      @event_policies = @event.miq_policies.sort{|a,b|a.description.downcase<=>b.description.downcase}
+      @event_policies = @event.miq_policies.sort_by { |p| p.description.downcase }
     else
       @event_true_actions = MiqPolicy.find(from_cid(@sb[:node_ids][x_active_tree]["p"])).actions_for_event(event, :success)
       @event_false_actions = MiqPolicy.find(from_cid(@sb[:node_ids][x_active_tree]["p"])).actions_for_event(event, :failure)

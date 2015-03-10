@@ -200,7 +200,7 @@ module MiqPolicyController::AlertProfiles
           :hideCheckbox => true
         )
         root_node[:children] = []
-        @temp[:objects].sort{|a,b| (a[:name] || a[:description]).downcase <=> (b[:name] || b[:description]).downcase}.each do |o|
+        @temp[:objects].sort_by { |o| (o[:name] || o[:description]).downcase }.each do |o|
           if @assign[:new][:assign_to].ends_with?("-tags")
             icon = "tag.png"
           else
@@ -318,7 +318,7 @@ module MiqPolicyController::AlertProfiles
   end
 
   def alert_profile_get_all_folders
-    @ap_folders = MiqAlert.base_tables.sort{|a,b| ui_lookup(:model=>a)<=>ui_lookup(:model=>b)}.collect do |db|
+    @ap_folders = MiqAlert.base_tables.sort_by { |db| ui_lookup(:model => db) }.collect do |db|
       [ui_lookup(:model=>db), db]
     end
 #   @folders = ["Compliance", "Control"]
@@ -327,7 +327,7 @@ module MiqPolicyController::AlertProfiles
   end
 
   def alert_profile_get_all
-    @alert_profiles = MiqAlertSet.all.sort{|a,b|a.description.downcase<=>b.description.downcase}
+    @alert_profiles = MiqAlertSet.all.sort_by { |as| as.description.downcase }
     set_search_text
     @alert_profiles = apply_search_filter(@search_text,@alert_profiles) if !@search_text.blank?
     @right_cell_text = _("All %s") % ui_lookup(:models=>"MiqAlertSet")
@@ -339,9 +339,7 @@ module MiqPolicyController::AlertProfiles
     @record = @alert_profile = alert_profile
     aa = @alert_profile.get_assigned_tos
     @temp[:alert_profile_tag] = Classification.find(aa[:tags].first.first.parent_id) if !aa[:tags].empty?
-    @alert_profile_alerts = @alert_profile.miq_alerts.sort do |a,b|
-      a.description.downcase<=>b.description.downcase
-    end
+    @alert_profile_alerts = @alert_profile.miq_alerts.sort_by { |a| a.description.downcase }
     @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqAlertSet"), :name=>alert_profile.description}
     @right_cell_div = "alert_profile_details"
   end

@@ -6,7 +6,7 @@ module Menu
       extend Forwardable
 
       delegate [:menu, :tab_features_by_id, :tab_features_by_name, :tab_name,
-                :each_feature_title_with_subitems, :item_in_section?] => :instance
+                :each_feature_title_with_subitems, :item_in_section?, :item, :section] => :instance
     end
 
     private
@@ -14,10 +14,24 @@ module Menu
     class InvalidMenuDefinition < Exception
     end
 
-    def menu(type = :default)
+    def menu(placement = :default)
       @menu.each do |menu_section|
-        yield menu_section if menu_section.type == type
+        yield menu_section if menu_section.placement == placement
       end
+    end
+
+    def item(item_id)
+      @menu.each do |menu_section|
+        the_item = menu_section.items.detect { |item| item.id == item_id }
+        return the_item if the_item.present?
+      end
+    end
+
+    def section(section_id)
+      if section_id.kind_of?(String) # prevent .to_sym call on section_id
+        section_id = @id_to_section.keys.detect { |k| k.to_s == section_id }
+      end
+      @id_to_section[section_id]
     end
 
     def item_in_section?(item_id, section_id)
@@ -45,24 +59,39 @@ module Menu
       load_custom_items
     end
 
-    def load_custom_items
-      sections, items = Menu::CustomLoader.load
-      sections.each { |section| @menu << section }
-      preprocess_items
+    def merge_sections(sections)
+      sections.each do |section|
+        if section.before
+          position = @menu.index { |existing_section| existing_section.id == section.before }
+          @menu.insert(position, section)
+        else
+          @menu << section
+        end
+      end
+    end
+
+    def merge_items(items)
       items.each do |item|
         raise InvalidMenuDefinition, 'Invalid parent' unless @id_to_section.key?(item.parent)
         @id_to_section[item.parent].items << item
       end
     end
 
-    def preprocess_items
-      @id_to_section   = @menu.index_by(&:id)
-      @name_to_section = @menu.index_by(&:name)
+    def load_custom_items
+      sections, items = Menu::CustomLoader.load
+      merge_sections(sections)
+      preprocess_sections
+      merge_items(items)
     end
 
     def load_default_items
       @menu = Menu::DefaultMenu.default_menu
-      preprocess_items
+      preprocess_sections
+    end
+
+    def preprocess_sections
+      @id_to_section   = @menu.index_by(&:id)
+      @name_to_section = @menu.index_by(&:name)
     end
   end
 end

@@ -705,7 +705,7 @@ module ApplicationController::TreeSupport
         end
         node[:icon] = "host.png"
         h_kids = Array.new
-        folder.resource_pools.sort{|a,b|a.name.downcase<=>b.name.downcase}.each do |rp|
+        folder.resource_pools.sort_by { |rp| rp.name.downcase }.each do |rp|
           kid_node, kid_checked = user_get_tree_node(rp, node[:key], vat)
           h_kids += kid_node
           kids_checked ||= kid_checked

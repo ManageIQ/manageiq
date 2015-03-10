@@ -227,7 +227,7 @@ module MiqPolicyController::Conditions
   end
 
   def condition_get_all
-    @conditions = Condition.all.sort{|a,b|a.description.downcase<=>b.description.downcase}
+    @conditions = Condition.all.sort_by { |c| c.description.downcase }
     set_search_text
     @conditions = apply_search_filter(@search_text, @conditions) if !@search_text.blank?
     @right_cell_text = _("All %s") % ui_lookup(:models=>"Condition")
@@ -242,7 +242,7 @@ module MiqPolicyController::Conditions
     @expression_table = @condition.expression.is_a?(MiqExpression) ? exp_build_table(@condition.expression.exp) : nil
     @applies_to_exp_table = @condition.applies_to_exp.is_a?(MiqExpression) ? exp_build_table(@condition.applies_to_exp.exp) : nil
     if x_active_tree == :condition_tree
-      @condition_policies = @condition.miq_policies.sort{|a,b|a.description.downcase<=>b.description.downcase}
+      @condition_policies = @condition.miq_policies.sort_by { |p| p.description.downcase }
     else
       @condition_policy = MiqPolicy.find(from_cid(@sb[:node_ids][x_active_tree]["p"]))
     end

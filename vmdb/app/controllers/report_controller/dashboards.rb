@@ -248,7 +248,7 @@ module ReportController::Dashboards
           end
         end
       else
-        widgetsets.sort{|a,b| a.name <=> b.name}.each do |ws|
+        widgetsets.sort_by(&:name).each do |ws|
           @temp[:widgetsets].push(ws)
         end
       end
@@ -387,7 +387,7 @@ module ReportController::Dashboards
       end
     else
       dbs = MiqWidgetSet.find_all_by_owner_type_and_owner_id("MiqGroup",g.id)
-      dbs.sort{|a,b| a.name <=> b.name}.each do |ws|
+      dbs.sort_by(&:name).each do |ws|
         @edit[:new][:dashboard_order].push(ws.name)
       end
     end
