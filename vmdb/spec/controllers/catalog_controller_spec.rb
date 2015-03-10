@@ -131,4 +131,39 @@ describe CatalogController do
     end
   end
 
+  context "#ot_copy" do
+    it "Orchestration Template is copied" do
+      controller.instance_variable_set(:@sb, {})
+      controller.instance_variable_set(:@_params, :button => "save")
+      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
+      ot = FactoryGirl.create(:orchestration_template)
+      controller.x_node = "xx-ot_othot-#{ot.id}"
+      new_name = "New Name"
+      new_description = "New Description"
+      new_content = "New Content"
+      controller.params.merge!(:id               => ot.id,
+                               :name             => new_name,
+                               :description      => new_description,
+                               :template_content => new_content)
+      controller.stub(:replace_right_cell)
+      controller.send(:ot_copy_submit)
+      controller.send(:flash_errors?).should_not be_true
+      assigns(:flash_array).first[:message].should include("was saved")
+      OrchestrationTemplate.find_by_name(new_name).should_not be_nil
+    end
+  end
+
+  context "#ot_delete" do
+    it "Orchestration Template is deleted" do
+      ot = FactoryGirl.create(:orchestration_template)
+      controller.instance_variable_set(:@sb, {})
+      controller.instance_variable_set(:@_params, :id => ot.id, :pressed => "orchestration_template_remove")
+      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
+      controller.stub(:replace_right_cell)
+      controller.send(:ot_remove_submit)
+      controller.send(:flash_errors?).should_not be_true
+      assigns(:flash_array).first[:message].should include("was deleted")
+      OrchestrationTemplate.find_by_id(ot.id).should be_nil
+    end
+  end
 end

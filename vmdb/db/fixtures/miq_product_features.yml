@@ -794,6 +794,23 @@
       :description: Modify Orchestration Templates
       :feature_type: admin
       :identifier: orchestration_templates_admin
+      :children:
+      - :name: Add Orchestration Template
+        :description: Add Orchestration Template
+        :identifier: orchestration_template_add
+        :feature_type: admin
+      - :name: Edit Orchestration Template
+        :description: Edit Orchestration Template
+        :identifier: orchestration_template_edit
+        :feature_type: admin
+      - :name: Copy Orchestration Template
+        :description: Copy Orchestration Template
+        :identifier: orchestration_template_copy
+        :feature_type: admin
+      - :name: Remove Orchestration Template
+        :description: Remove Orchestration Template
+        :identifier: orchestration_template_remove
+        :feature_type: admin
       
 # My Services
 - :name: My Services
