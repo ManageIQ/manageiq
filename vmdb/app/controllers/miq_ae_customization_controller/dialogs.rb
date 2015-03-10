@@ -685,7 +685,7 @@ module MiqAeCustomizationController::Dialogs
         res = false
       end
       if needs_entry_point?
-        add_flash(_("Entry Point must be given for field \"%s\".") %  @edit[:field_name], :error)
+        add_flash(_("Entry Point must be given."), :error)
         res = false
       end
       if @edit[:field_name].to_s !~ %r{^[a-z0-9_]+$}i
