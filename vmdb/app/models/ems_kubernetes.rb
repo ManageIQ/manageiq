@@ -40,7 +40,7 @@ class EmsKubernetes < EmsContainer
 
   def authentication_check
     # TODO: support real authentication using certificates
-    true
+    [:valid, ""]
   end
 
   def verify_credentials(_auth_type = nil, _options = {})
