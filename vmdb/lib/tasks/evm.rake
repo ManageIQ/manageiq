@@ -36,7 +36,8 @@ namespace :evm do
     EvmApplication.update_stop
   end
 
-  task :compile_assets => :environment do
+  task :compile_assets do
+    ENV["DATABASE_URL"] ||= "postgresql://user:pass@127.0.0.1/dbname"
     Rake::Task["assets:clean"].invoke
     Rake::Task["assets:precompile"].invoke
   end
