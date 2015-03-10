@@ -525,7 +525,7 @@ stop_miqtop() {
 }
 
 stop_httpd() {
-  service httpd stop > /dev/null 2>> $ERR_FILE
+  service httpd24-httpd stop > /dev/null 2>> $ERR_FILE
 }
 
 stop_vmdb() {
