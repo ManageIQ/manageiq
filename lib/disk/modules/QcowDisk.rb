@@ -83,6 +83,8 @@ module QcowDisk
     :corrupt => 0x2
   }
 
+  KNOWN_INCOMPATIBLE_FEATURES_MASK = 0x3
+
   COMPATIBLE_FEATURES_MASK = {
     :lazy_refcounts => 0x1
   }
@@ -491,9 +493,9 @@ module QcowDisk
         h
       when 3
         h = QCOW_HEADER_V3.decode(file_handle.read(SIZEOF_QCOW_HEADER_V3))
-        # TODO raise error if unknown incompatible bits set
-        # TODO warning if dirty or corrupt
+        # TODO: warning if dirty or corrupt (?)
         raise "QCOW Encryption is not supported" if h['crypt_method'] == 1
+        raise "Unknown QCOW incompatible features" if h['incompatible_features'] & ~KNOWN_INCOMPATIBLE_FEATURES_MASK > 0
         h
       else
         raise "Uknown Version: #{partial_header['version'].inspect}"
