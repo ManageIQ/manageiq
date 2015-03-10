@@ -339,39 +339,53 @@ describe AuthenticationMixin do
           @host.stub(:has_credentials?).and_return(false)
           @host.authentication_check
 
-          events = MiqQueue.find(:all, :conditions => {:class_name => "MiqEvent", :method_name => "raise_evm_event" })
+          events = MiqQueue.where(:class_name => "MiqEvent").where(:method_name => "raise_evm_event")
           args = [ [@host.class.name, @host.id], 'host_auth_incomplete', {}]
           events.any? {|e| e.args == args }.should be_true, "#{events.inspect} with args: #{args.inspect} expected"
         end
 
+        it "(:save => true) updates status" do
+          @host.stub(:verify_credentials).and_return(true)
+          @host.authentication_check(:save => true)
+          @host.authentication_type(:default).status.should == "Valid"
+          MiqQueue.where(:class_name => "MiqEvent").where(:method_name => "raise_evm_event").count.should == 1
+        end
+
+        it "(:save => false) does not update status" do
+          @host.stub(:verify_credentials).and_return(true)
+          @host.authentication_check(:save => false)
+          @host.authentication_type(:default).status.should be_nil
+          MiqQueue.where(:class_name => "MiqEvent").where(:method_name => "raise_evm_event").count.should == 0
+        end
+
         it "missing credentials" do
           @host.stub(:has_credentials?).and_return(false)
-          @host.authentication_check.should_not be_true
+          @host.authentication_check.should == [:incomplete, "Missing credentials"]
         end
 
         it "verify_credentials fails" do
           @host.stub(:verify_credentials).and_return(false)
-          @host.authentication_check.should_not be_true
+          @host.authentication_check.should == [:invalid, "Unknown reason"]
         end
 
         it "verify_credentials successful" do
           @host.stub(:verify_credentials).and_return(true)
-          @host.authentication_check.should be_true
+          @host.authentication_check.should == [:valid, ""]
         end
 
         it "verify_credentials raising 'Unreachable' error" do
           @host.stub(:verify_credentials).and_raise(MiqException::MiqUnreachableError)
-          @host.authentication_check.should_not be_true
+          @host.authentication_check.should == [:unreachable, "MiqException::MiqUnreachableError"]
         end
 
         it "verify_credentials raising invalid credentials" do
           @host.stub(:verify_credentials).and_raise(MiqException::MiqInvalidCredentialsError)
-          @host.authentication_check.should_not be_true
+          @host.authentication_check.should == [:invalid, "MiqException::MiqInvalidCredentialsError"]
         end
 
         it "verify_credentials raising an unexpected error" do
           @host.stub(:verify_credentials).and_raise(RuntimeError)
-          @host.authentication_check.should_not be_true
+          @host.authentication_check.should == [:error, "RuntimeError"]
         end
       end
 
