@@ -73,6 +73,7 @@ module QcowDisk
   L1E_OFFSET_MASK                 = 0x00fffffffffffe00
   L2E_OFFSET_MASK                 = 0x00fffffffffffe00
   L2E_COMPRESSED_OFFSET_SIZE_MASK = 0x3fffffffffffffff
+  L2E_PREALLOCATED_MASK           = 0x1
 
   SECTOR_SIZE       = 512
   ZLIB_WINDOW_BITS  = -12
@@ -400,8 +401,11 @@ module QcowDisk
       elsif compressed?(cluster_offset)
         rbuf = decompress_cluster(cluster_offset)
         rbuf = rbuf[index_in_cluster * SECTOR_SIZE, nbytes]
+
+      elsif preallocated?(cluster_offset)
+        rbuf = "\0" * nbytes
+
       else
-        # TODO if LSB of cluster_offset is '1', return all 0's
         cluster_offset &= L2E_OFFSET_MASK
         file_offset = cluster_offset + (index_in_cluster * SECTOR_SIZE)
         rbuf = read_image_file(file_offset, nbytes)
@@ -571,6 +575,10 @@ module QcowDisk
 
   def copied?(cluster_offset)
     (cluster_offset & copied_mask) > 0
+  end
+
+  def preallocated?(cluster_offset)
+    cluster_offset & L2E_PREALLOCATED_MASK > 0
   end
 
   def count_contiguous_clusters(nb_clusters, cluster_size, l2_table, l2_index, start = 0)
