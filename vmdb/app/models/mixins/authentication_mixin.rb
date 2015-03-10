@@ -155,7 +155,6 @@ module AuthenticationMixin
   end
 
   # TODO: :valid, :incomplete, and friends shouldn't be littered in here and authentication
-  # Check callers of authentication_check
   def authentication_check(*args)
     options         = args.last.kind_of?(Hash) ? args.last : {}
     save            = options.fetch(:save, true)
