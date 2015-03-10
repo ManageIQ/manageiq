@@ -16,8 +16,8 @@ src_files:
   - javascripts/jquery.js
   - javascripts/prototype.js
   - javascripts/dollar_j.js
-  - javascripts/cfme_application.js
-  - javascripts/cfme_angular_application.js
+  - javascripts/miq_application.js
+  - javascripts/miq_angular_application.js
   - javascripts/services/miq_service.js
   - javascripts/services/timer_option_service.js
   - javascripts/controllers/schedule/schedule_form_controller.js
