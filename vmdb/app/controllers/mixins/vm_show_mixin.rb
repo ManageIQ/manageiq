@@ -81,7 +81,11 @@ module VmShowMixin
 
   # Add the children of a node that is being expanded (autoloaded), called by generic tree_autoload method
   def tree_add_child_nodes(id)
-    return x_get_child_nodes_dynatree(x_active_tree, id)
+    #return x_get_child_nodes_dynatree(x_active_tree, id)
+    binding.pry
+    # :instances_tree
+    tb = TreeBuilder.new(x_active_tree.to_s, x_active_tree, @sb)
+    tb.x_get_child_nodes(id)
   end
 
   def show_record(id = nil)

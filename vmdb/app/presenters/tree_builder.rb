@@ -87,6 +87,11 @@ class TreeBuilder
     end
   end
 
+  def tree_init_options(tree_name)
+    $log.warn "MIQ(#{self.class.name}) - TreeBuilder descendants should have their own tree_init_options"
+    {}
+  end
+
   # Get nodes model (folder, Vm, Cluster, etc)
   def self.get_model_for_prefix(node_prefix)
     X_TREE_NODE_PREFIXES[node_prefix]

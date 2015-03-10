@@ -345,30 +345,30 @@ module ApplicationController::Explorer
     TreeNodeBuilder.build_id(object, pid, options)
   end
 
-  # Get the children of a dynatree node that is being expanded (autoloaded)
-  def x_get_child_nodes_dynatree(tree, id)
-    prefix, rec_id = id.split("_").last.split('-')      # Get this nodes model and id
-    model = TreeBuilder.get_model_for_prefix(prefix)                # Get this nodes model (folder, Vm, Cluster, etc)
-    if model == "Hash"
-      object = {:type=>prefix, :id=>rec_id, :full_id=>id}
-    elsif model.nil? && [:sandt_tree, :svccat_tree, :stcat_tree].include?(x_active_tree)   #creating empty record to show items under unassigned catalog node
-      object = ServiceTemplateCatalog.new()   # Get the object from the DB
-    else
-      object = model.constantize.find(from_cid(rec_id))   # Get the object from the DB
-    end
+  ## Get the children of a dynatree node that is being expanded (autoloaded)
+  #def x_get_child_nodes_dynatree(tree, id)
+  #  prefix, rec_id = id.split("_").last.split('-')      # Get this nodes model and id
+  #  model = TreeBuilder.get_model_for_prefix(prefix)                # Get this nodes model (folder, Vm, Cluster, etc)
+  #  if model == "Hash"
+  #    object = {:type=>prefix, :id=>rec_id, :full_id=>id}
+  #  elsif model.nil? && [:sandt_tree, :svccat_tree, :stcat_tree].include?(x_active_tree)   #creating empty record to show items under unassigned catalog node
+  #    object = ServiceTemplateCatalog.new()   # Get the object from the DB
+  #  else
+  #    object = model.constantize.find(from_cid(rec_id))   # Get the object from the DB
+  #  end
 
-    kids = Array.new
-    x_tree(tree)[:open_nodes].push(id) unless x_tree(tree)[:open_nodes].include?(id) # Save node as open
+  #  kids = Array.new
+  #  x_tree(tree)[:open_nodes].push(id) unless x_tree(tree)[:open_nodes].include?(id) # Save node as open
 
-    options = x_tree(tree)         # Get options from sandbox
+  #  options = x_tree(tree)         # Get options from sandbox
 
-    # Process the node's children
-    x_get_tree_objects(options.merge({:parent=>object})).each do |o|
-      kids += x_build_node_dynatree(o, id, options)
-    end
+  #  # Process the node's children
+  #  x_get_tree_objects(options.merge({:parent=>object})).each do |o|
+  #    kids += x_build_node_dynatree(o, id, options)
+  #  end
 
-    return kids                                         # Return the node's children
-  end
+  #  return kids                                         # Return the node's children
+  #end
 
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(options)
