@@ -7,8 +7,6 @@ module Psych
   module Visitors
     class ToRuby
       def revive_hash hash, o
-        @st[o.anchor] = hash if o.anchor
-
           o.children.each_slice(2) { |k,v|
           key = accept(k)
 
