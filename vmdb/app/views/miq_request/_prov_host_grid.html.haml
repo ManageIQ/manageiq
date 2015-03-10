@@ -20,7 +20,7 @@
             - else
               = h(options[:host_headers][h])
     %tbody
-      - if options[:wf].class.to_s != "MiqHostProvisionWorkflow"
+      - unless options[:wf].kind_of?(MiqHostProvisionWorkflow)
         - cls = @edit[:new][:placement_host_name] && @edit[:new][:placement_host_name][0].nil? ? "row3" : cycle('row0', 'row1')
         %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=__HOST__NONE__&id=#{id}');", :nowrap => 1}
           %td{:onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
@@ -31,7 +31,7 @@
           %td
       - @temp[:hosts].each do |row|
         - @id = row.id
-        - if options[:wf].class.to_s == "MiqHostProvisionWorkflow"
+        - if options[:wf].kind_of?(MiqHostProvisionWorkflow)
           %tr{:class => cycle('row0', 'row1'), :nowrap => 1}
             - options[:host_columns].each do |col|
               %td{:align => "left", :onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}

@@ -16,9 +16,9 @@
       - wf.get_dialog_order.each do |d|
         - unless wf.get_dialog(d).blank? || wf.get_dialog(d)[:display] == :ignore
           %div{:id => "#{d}_div", :width => "150px", :name => wf.get_dialog(d)[:description]}
-            - if wf.is_a?(MiqProvisionWorkflow)
+            - if wf.kind_of?(MiqProvisionWorkflow)
               = render :partial => "/miq_request/prov_dialog", :locals => {:wf => wf, :dialog => d}
-            - elsif wf.class.to_s == "VmMigrateWorkflow"
+            - elsif wf.kind_of?(VmMigrateWorkflow)
               = render :partial => "/miq_request/prov_vm_migrate_dialog", :locals => {:wf => wf, :dialog => d}
             - else
               = render :partial => "/miq_request/prov_host_dialog", :locals => {:wf => wf, :dialog => d}
