@@ -6,15 +6,19 @@
     - if chart_data
       - if !perf_parent? && !perf_compare_vm?
         - if charts && chart_data.length > 0
-          - (0..chart_data.length - 1).each do |c|
-            - unless charts[c][:type] == "None" || chart_data[c].nil?
-              = render(:partial    => '/layouts/perf_chart',
-                       :locals     => {:charts      => charts,
-                                       :chart_data  => chart_data,
-                                       :chart_set   => chart_set,
-                                       :chart_index => c,
-                                       :width       => width,
-                                       :height      => height})
+          .row
+            - (0..chart_data.length - 1).each do |c|
+              - unless charts[c][:type] == "None" || chart_data[c].nil?
+                - chart_render = render(:partial => '/layouts/perf_chart',
+                                        :locals  => {:charts      => charts,
+                                                     :chart_data  => chart_data,
+                                                     :chart_set   => chart_set,
+                                                     :chart_index => c,
+                                                     :width       => width,
+                                                     :height      => height})
+
+                .col-sm-6.col-md-6.col-lg-4
+                  = chart_render
         - else
           = render :partial => 'layouts/info_msg', :locals => {:message => _("No Capacity & Utilization data available.")}
         - if @html
