@@ -4,10 +4,11 @@ describe Compliance do
   context "A small virtual infrastructure" do
     before(:each) do
       @guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
-      @ems   = FactoryGirl.create(:ems_vmware,    :name => "Test EMS", :zone => @zone)
-      @host1 = FactoryGirl.create(:host,      :name => "Host1", :ext_management_system => @ems)
-      @host2 = FactoryGirl.create(:host,      :name => "Host2")
-      @vm1   = FactoryGirl.create(:vm_vmware, :name => "VM1", :host => @host1, :ext_management_system => @ems)
+      @ems       = FactoryGirl.create(:ems_vmware,      :name => "Test EMS", :zone => @zone)
+      @host1     = FactoryGirl.create(:host,            :name => "Host1", :ext_management_system => @ems)
+      @host2     = FactoryGirl.create(:host,            :name => "Host2")
+      @vm1       = FactoryGirl.create(:vm_vmware,       :name => "VM1", :host => @host1, :ext_management_system => @ems)
+      @template1 = FactoryGirl.create(:template_vmware, :name => "Template1", :host => @host1, :ext_management_system => @ems)
     end
 
     it "should queue single vm for compliance" do
@@ -24,6 +25,22 @@ describe Compliance do
       MiqQueue.count.should == 1
       msg = MiqQueue.first
       validate_compliance_message(msg, @vm1)
+    end
+
+    it "should queue single template for compliance" do
+      Compliance.check_compliance_queue(@template1)
+
+      MiqQueue.count.should == 1
+      msg = MiqQueue.first
+      validate_compliance_message(msg, @template1)
+    end
+
+    it "should queue single template for compliance via template method" do
+      @template1.check_compliance_queue
+
+      MiqQueue.count.should == 1
+      msg = MiqQueue.first
+      validate_compliance_message(msg, @template1)
     end
 
     it "should queue single host for compliance" do
@@ -43,15 +60,16 @@ describe Compliance do
     end
 
     it "should queue multiple objects for compliance" do
-      Compliance.check_compliance_queue([@vm1, @host1])
+      Compliance.check_compliance_queue([@vm1, @template1, @host1])
 
-      MiqQueue.count.should == 2
+      MiqQueue.count.should == 3
       MiqQueue.all.each do |qitem|
         klass, id = qitem.args.first
         target = klass.constantize.find(id)
         case target
-        when Vm;   target.should == @vm1
-        when Host; target.should == @host1
+        when Vm;          target.should == @vm1
+        when MiqTemplate; target.should == @template1
+        when Host;        target.should == @host1
         end
         validate_compliance_message(qitem, target)
       end
@@ -59,15 +77,16 @@ describe Compliance do
 
     it "should queue multiple objects for compliance with inputs" do
       inputs = { :foo => 'bar' }
-      Compliance.check_compliance_queue([@vm1, @host1], inputs)
+      Compliance.check_compliance_queue([@vm1, @template1, @host1], inputs)
 
-      MiqQueue.count.should == 2
+      MiqQueue.count.should == 3
       MiqQueue.all.each do |qitem|
         klass, id = qitem.args.first
         target = klass.constantize.find(id)
         case target
-        when Vm;   target.should == @vm1
-        when Host; target.should == @host1
+        when Vm;          target.should == @vm1
+        when MiqTemplate; target.should == @template1
+        when Host;        target.should == @host1
         end
         validate_compliance_message(qitem, target, inputs)
       end
@@ -98,7 +117,7 @@ describe Compliance do
 
     it "should queue multiple objects for scan_and_check_compliance with inputs" do
       inputs = { :foo => 'bar' }
-      Compliance.scan_and_check_compliance_queue([@vm1, @host1, @host2], inputs)
+      Compliance.scan_and_check_compliance_queue([@template1, @host1, @host2], inputs)
 
       MiqQueue.count.should == 2
       MiqQueue.all.each do |qitem|
