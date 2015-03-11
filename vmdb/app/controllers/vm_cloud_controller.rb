@@ -9,29 +9,40 @@ class VmCloudController < ApplicationController
 
   private
 
-  def build_trees_and_accordions
-    @trees   = []
-    @accords = []
-    if role_allows(:feature=>"instances_accord")
-      build_vm_tree(:instances, :instances_tree)  # Build V&T tree
-      @trees.push("instances_tree")
-      @accords.push({:name=>"instances", :title=>"Instances by Provider", :container=>"instances_tree_div"})
-    end
-    if role_allows(:feature=>"images_accord")
-      build_vm_tree(:images, :images_tree)  # Build V&T tree
-      @trees.push("images_tree")
-      @accords.push({:name=>"images", :title=>"Images by Provider", :container=>"images_tree_div"})
-    end
-    if role_allows(:feature=>"instances_filter_accord")
-      build_vm_tree(:filter, :instances_filter_tree) # Build VM filter tree
-      @trees.push("instances_filter_tree")
-      @accords.push({:name=>"instances_filter", :title=>"Instances", :container=>"instances_filter_tree_div"})
-    end
-    if role_allows(:feature=>"images_filter_accord")
-      build_vm_tree(:filter, :images_filter_tree) # Build Template filter tree
-      @trees.push("images_filter_tree")
-      @accords.push({:name=>"images_filter", :title=>"Images", :container=>"images_filter_tree_div"})
-    end
+  def features
+    [
+      ApplicationController::Feature.new_with_hash(
+        :role        => "instances_accord",
+        :name        => :instances,
+        :accord_name => "instances",
+        :tree_name   => :instances_tree,
+        :title       => "Instances by Provider",
+        :container   => "instances_tree_div"),
+
+      ApplicationController::Feature.new_with_hash(
+        :role        => "images_accord",
+        :name        => :images,
+        :accord_name => "images",
+        :tree_name   => :images_tree,
+        :title       => "Images by Provider",
+        :container   => "images_tree_div"),
+
+      ApplicationController::Feature.new_with_hash(
+        :role        => "instances_filter_accord",
+        :name        => :filter,
+        :accord_name => "instances_filter",
+        :tree_name   => :instances_filter_tree,
+        :title       => "Instances",
+        :container   => "instances_filter_tree_div"),
+
+      ApplicationController::Feature.new_with_hash(
+        :role        => "images_filter_accord",
+        :name        => :filter,
+        :accord_name => "images_filter",
+        :tree_name   => :images_filter_tree,
+        :title       => "Images",
+        :container   => "images_filter_tree_div")
+    ]
   end
 
   # redefine get_filters from VmShow
@@ -68,24 +79,6 @@ class VmCloudController < ApplicationController
     end
     nodetype, id = params[:id].split("-")
     self.x_node = "#{nodetype}-#{to_cid(id)}"
-    get_node_info(x_node)
-  end
-
-  def set_active_elements
-    # Set active tree and accord to first allowed feature
-    if role_allows(:feature => "instances_accord")
-      self.x_active_tree   ||= 'instances_tree'
-      self.x_active_accord ||= 'instances'
-    elsif role_allows(:feature => "images_accord")
-      self.x_active_tree   ||= 'images_tree'
-      self.x_active_accord ||= 'images'
-    elsif role_allows(:feature => "instances_filter_accord")
-      self.x_active_tree   ||= 'instances_filter_tree'
-      self.x_active_accord ||= 'instances_filter'
-    elsif role_allows(:feature => "images_filter_accord")
-      self.x_active_tree   ||= 'images_filter_tree'
-      self.x_active_accord ||= 'images_filter'
-    end
     get_node_info(x_node)
   end
 end

@@ -13,24 +13,32 @@ class VmInfraController < ApplicationController
 
   private
 
-  def build_trees_and_accordions
-    @trees   = []
-    @accords = []
-    if role_allows(:feature => "vandt_accord")
-      build_vm_tree(:vandt, :vandt_tree)  # Build V&T tree
-      @trees.push("vandt_tree")
-      @accords.push(:name => "vandt", :title => "VMs & Templates", :container => "vandt_tree_div")
-    end
-    if role_allows(:feature => "vms_filter_accord")
-      build_vm_tree(:filter, :vms_filter_tree) # Build VM filter tree
-      @trees.push("vms_filter_tree")
-      @accords.push(:name => "vms_filter", :title => "VMs", :container => "vms_filter_tree_div")
-    end
-    if role_allows(:feature => "templates_filter_accord")
-      build_vm_tree(:filter, :templates_filter_tree) # Build Template filter tree
-      @trees.push("templates_filter_tree")
-      @accords.push(:name => "templates_filter", :title => "Templates", :container => "templates_filter_tree_div")
-    end
+  def features
+    [
+      ApplicationController::Feature.new_with_hash(
+        :role        => "vandt_accord",
+        :name        => :vandt,
+        :accord_name => "vandt",
+        :tree_name   => :vandt_tree,
+        :title       => "VMs & Templates",
+        :container   => "vandt_tree_div"),
+
+      ApplicationController::Feature.new_with_hash(
+        :role        => "vms_filter_accord",
+        :name        => :filter,
+        :accord_name => "vms_filter",
+        :tree_name   => :vms_filter_tree,
+        :title       => "VMs",
+        :container   => "vms_filter_tree_div"),
+
+      ApplicationController::Feature.new_with_hash(
+        :role        => "templates_filter_accord",
+        :name        => :filter,
+        :accord_name => "templates_filter",
+        :tree_name   => :templates_filter_tree,
+        :title       => "Templates",
+        :container   => "templates_filter_tree_div"),
+    ]
   end
 
   def prefix_by_nodetype(nodetype)
@@ -60,21 +68,6 @@ class VmInfraController < ApplicationController
     end
     nodetype, id = params[:id].split("-")
     self.x_node = "#{nodetype}-#{to_cid(id)}"
-    get_node_info(x_node)
-  end
-
-  def set_active_elements
-    # Set active tree and accord to first allowed feature
-    if role_allows(:feature => "vandt_accord")
-      self.x_active_tree   ||= 'vandt_tree'
-      self.x_active_accord ||= 'vandt'
-    elsif role_allows(:feature => "vms_filter_accord")
-      self.x_active_tree   ||= 'vms_filter_tree'
-      self.x_active_accord ||= 'vms_filter'
-    elsif role_allows(:feature => "templates_filter_accord")
-      self.x_active_tree   ||= 'templates_filter_tree'
-      self.x_active_accord ||= 'templates_filter'
-    end
     get_node_info(x_node)
   end
 end
