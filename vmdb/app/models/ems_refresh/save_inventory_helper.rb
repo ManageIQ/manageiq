@@ -1,6 +1,8 @@
 module EmsRefresh::SaveInventoryHelper
   def save_inventory_multi(type, parent, hashes, deletes, find_key, child_keys = [], extra_keys = [])
+    deletes = deletes.to_a # make sure to load the association if it's an association
     child_keys, extra_keys, remove_keys = self.save_inventory_prep(child_keys, extra_keys)
+
     record_index, record_index_columns = self.save_inventory_prep_record_index(parent.send(type), find_key)
 
     new_records = []
