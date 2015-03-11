@@ -426,112 +426,58 @@ class MiqRequestController < ApplicationController
 
   # Create a condition from the passed in options
   def prov_condition(opts)
-    cond = Array.new
-    requester = User.find_by_userid(session[:userid])
+    cond = [{"AFTER" => {"value" => "#{opts[:time_period].to_i} Days Ago", "field" => "MiqRequest-created_on"}}]  # Start with setting time
 
     if !is_approver
-      cond_hash = Hash.new
-      cond_hash["="] = {"value"=> requester ? requester.id : nil,"field"=>"MiqRequest-requester_id"}
-      cond.push(cond_hash)
+      requester = User.find_by_userid(session[:userid])
+      cond.push("=" => {"value" => requester.try(:id), "field" => "MiqRequest-requester_id"})
     end
 
     if opts[:user_choice] && opts[:user_choice] != "all"
-      cond_hash = Hash.new
-      cond_hash["="] = {"value"=>opts[:user_choice],"field"=>"MiqRequest-requester_id"}
-      cond.push(cond_hash)
+      cond.push("=" => {"value" => opts[:user_choice], "field" => "MiqRequest-requester_id"})
     end
 
-    if opts[:applied_states].present?
-      opts[:applied_states].each_with_index do |state,i|
-        if i == 0
-          @or_hash = Hash.new
-          @or_hash["or"] = Array.new
-          cond_hash = Hash.new
-          cond_hash["="] = {"value"=>state,"field"=>"MiqRequest-approval_state"}
-          @or_hash["or"].push(cond_hash)
-        elsif i == opts[:applied_states].length-1
-          cond_hash = Hash.new
-          cond_hash["="] = {"value"=>state,"field"=>"MiqRequest-approval_state"}
-          @or_hash["or"].push(cond_hash)
-          #cond.push(@or_hash)
-        else
-          cond_hash = Hash.new
-          cond_hash["="] = {"value"=>state,"field"=>"MiqRequest-approval_state"}
-          @or_hash["or"].push(cond_hash)
-        end
-      end
-      cond.push(@or_hash)
+    if (a_s = opts[:applied_states].presence)
+      cond.push("or" => a_s.collect { |s| {"=" => {"value" => s, "field" => "MiqRequest-approval_state"}} })
     end
 
-    # Add time condition
-    cond_hash = Hash.new
-    cond_hash["AFTER"] = {"value"=>"#{opts[:time_period].to_i} Days Ago","field"=>"MiqRequest-created_on"}
-    cond.push(cond_hash)
-
-    case @layout
-    when "miq_request_ae"
-      req_typ = :AutomationRequest
-    when "miq_request_host"
-      req_typ = :Host
-    else
-      req_typ = :Vm
-    end
-    request_types = MiqRequest::MODEL_REQUEST_TYPES[req_typ]
-    request_types.each_with_index do |typ,i|
-      typ.each do |k|
-        if k.class == Symbol
-          if i == 0
-            @or_hash = Hash.new   # need this  incase there are more than one type
-            @or_hash["or"] = Array.new
-            cond_hash = Hash.new
-            cond_hash["="] = {"value"=>k.to_s,"field"=>"MiqRequest-resource_type"}
-            @or_hash["or"].push(cond_hash)
-          elsif i == request_types.length-1
-            cond_hash = Hash.new
-            cond_hash["="] = {"value"=>k.to_s,"field"=>"MiqRequest-resource_type"}
-            @or_hash["or"].push(cond_hash)
-          else
-            cond_hash = Hash.new
-            cond_hash["="] = {"value"=>k.to_s,"field"=>"MiqRequest-resource_type"}
-            @or_hash["or"].push(cond_hash)
-          end
-        end
-      end
-    end
-    cond.push(@or_hash)
+    cond.push("or" => request_types_for_model.collect { |k| {"=" => {"value" => k.to_s, "field" => "MiqRequest-resource_type"}} })
 
     if opts[:type_choice] && opts[:type_choice] != "all"  # Add request_type filter, if selected
-      cond_hash = Hash.new
-      cond_hash["="] = {"value"=>opts[:type_choice],"field"=>"MiqRequest-request_type"}
-      cond.push(cond_hash)
+      cond.push("=" => {"value" => opts[:type_choice], "field" => "MiqRequest-request_type"})
     end
 
-    if opts[:reason_text]  && opts[:reason_text] != ""
-      cond_hash = Hash.new
-      if opts[:reason_text].starts_with?("*") && opts[:reason_text].ends_with?("*")   # Replace beginning/ending * chars with % for SQL
-        hash_key = "INCLUDES"
-        reason_text = opts[:reason_text][1..-2]
-      elsif opts[:reason_text].starts_with?("*")
-        hash_key = "ENDS WITH"
-        reason_text = opts[:reason_text][1..-1]
-      elsif opts[:reason_text].ends_with?("*")
-        hash_key = "STARTS WITH"
-        reason_text = opts[:reason_text][0..-2]
-      else
-        hash_key = "INCLUDES"
-        reason_text = opts[:reason_text]
-      end
-
-      cond_hash["#{hash_key}"] = {"value"=>reason_text,"field"=>"MiqRequest-reason"}
-      cond.push(cond_hash)
+    if (text = opts[:reason_text].presence)
+      cond.push(prov_condition_reason_text_expression_key(text) => {"value" => prov_condition_reason_text_sanitized(text), "field" => "MiqRequest-reason"})
     end
 
-    condition = Hash.new
-    condition["and"] = Array.new
-    cond.each do |c|
-      condition["and"].push(c)
+    MiqExpression.new("and" => cond)
+  end
+
+  def request_types_for_model
+    MiqRequest::MODEL_REQUEST_TYPES[model_request_type_from_layout]
+  end
+
+  def model_request_type_from_layout
+    case @layout
+    when "miq_request_ae"   then :AutomationRequest
+    when "miq_request_host" then :Host
+    else                         :Vm
     end
-    return  MiqExpression.new(condition)
+  end
+
+  def prov_condition_reason_text_sanitized(text)
+    text.sub(/\A\*?(.+?)\*?\z/, '\1')  # Remove leading and/or trailing "*"
+  end
+
+  def prov_condition_reason_text_expression_key(text)
+    return "STARTS WITH" if text =~ /\A\*(.+?)[^*]\z/  # Starts with and does not end with "*"
+    return "ENDS WITH"   if text =~ /\A[^*](.+?)\*\z/  # Ends with and does not start with "*"
+    "INCLUDES"
+  end
+
+  def request_types_for_dropdown
+    request_types_for_model.values.each_with_object({}) { |t, h| t.each { |k, v| h[k] = v } }
   end
 
   # Set all task options to default
@@ -540,27 +486,9 @@ class MiqRequestController < ApplicationController
     opts = @sb[:prov_options][resource_type.to_sym] = Hash.new
     opts[:states] = PROV_STATES
     opts[:reason_text] = nil
-    opts[:types] = Hash.new
-    case @layout
-    when "miq_request_vm"
-      typ = :Vm
-    when "miq_request_host"
-      typ = :Host
-    when "miq_request_ae"
-      typ = :AutomationRequest
-    end
-    request_types = MiqRequest::MODEL_REQUEST_TYPES[typ]
-    request_types.each do |typ|
-      typ.each do |k|
-        if k.class == Hash
-          k.each do |hsh,val|
-            opts[:types][hsh] = val
-          end
-        end
-      end
-    end
+    opts[:types] = request_types_for_dropdown
     time_period = 30        # fetch uniq requesters from this time frame, since that's the highest time period in pull down.
-    conditions = ["created_on>=? AND created_on<=? AND type IN (?)", time_period.days.ago.utc, Time.now.utc, request_types.keys]
+    conditions = ["created_on>=? AND created_on<=? AND type IN (?)", time_period.days.ago.utc, Time.now.utc, request_types_for_model.keys]
     opts[:users] = MiqRequest.all_requesters(conditions)
     unless is_approver
       username = session[:username]
