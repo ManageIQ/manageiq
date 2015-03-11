@@ -117,7 +117,7 @@
                 %td
                   #retire_fqname_div{:style => @edit[:new][:retire_fqname] != "" ? "" : "display:none"}
                     = link_to(image_tag('/images/toolbars/discard.png', :class => "rollover small", :alt => "Remove this Retirement Entry Point"),
-                      {:action => 'ae_tree_select_discard', :typ => "retirement"},
+                      {:action => 'ae_tree_select_discard', :typ => "retire"},
                       "data-miq_sparkle_on" => true,
                       "data-miq_sparkle_off" => true,
                       "data-confirm" => _("Are you sure you want to remove this Retirement Entry Point?"),
