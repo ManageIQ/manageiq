@@ -27,18 +27,15 @@ module ApplicationController::MiqRequestMethods
       changed = (@edit[:new] != @edit[:current])
       render :update do |page|                    # Use JS to update the display
         #Going thru all dialogs to see if model has set any of the dialog display to hide/ignore
-        @edit[:wf].get_all_dialogs.keys.each do |d|
-          page << "li_id = '#{d}_li';"
-          if @edit[:wf].get_dialog(d)[:display] == :show
-            page << "miq_jquery_show_hide_tab(li_id, 'show');"
-          else
-            page << "miq_jquery_show_hide_tab(li_id, 'hide');"
-          end
+        all_dialogs = @edit[:wf].get_all_dialogs
+        all_dialogs.each do |dialog_name, dialog|
+          page << "li_id = '#{dialog_name}_li';"
+          page << "miq_jquery_show_hide_tab(li_id, #{dialog[:display] == :show ? "'show'" : "'hide'"});"
         end
         if refresh_divs
-          @edit[:wf].get_all_dialogs.keys.each do |d|
-            if @edit[:wf].get_dialog(d)[:display] == :show && d == @edit[:new][:current_tab_key]
-              page.replace_html("#{d}_div", :partial => dialog_partial_for_workflow, :locals => {:wf => @edit[:wf], :dialog => d})
+          all_dialogs.each do |dialog_name, dialog|
+            if dialog[:display] == :show && dialog_name == @edit[:new][:current_tab_key]
+              page.replace_html("#{dialog_name}_div", :partial => dialog_partial_for_workflow, :locals => {:wf => @edit[:wf], :dialog => dialog_name})
             end
           end
         end
