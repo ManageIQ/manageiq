@@ -1,3 +1,5 @@
+require 'active_support/deprecation'
+
 class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   SUBCLASSES = %w{
     MiqProvisionCloudWorkflow
@@ -669,19 +671,14 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def allowed_datastore_storage_controller(_options = {})
-    # TODO: NetAppFiler is an ActAsArModel and doesn't support arel syntax yet
-    NetAppFiler.all.collect(&:name).index_by { |n| n }
+    {}
   end
+  deprecate :allowed_datastore_storage_controller
 
   def allowed_datastore_aggregate(_options = {})
-    result = {}
-    controller = get_value(@values[:new_datastore_storage_controller])
-    return result if controller.blank?
-    naf = NetAppFiler.find_by_name(controller)
-    naf_type = get_value(@values[:new_datastore_fs_type]) == "NFS" ? :aggregates : :volumes
-    naf.send(naf_type).each { |a| result[a] = a }
-    result
+    {}
   end
+  deprecate :allowed_datastore_aggregate
 
   def get_source_vm
     get_source_and_targets[:vm]
