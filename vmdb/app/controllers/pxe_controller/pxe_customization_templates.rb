@@ -123,7 +123,7 @@ module PxeController::PxeCustomizationTemplates
       template_set_record_vars(ct)
 
       if !flash_errors? && ct.valid? && ct.save
-        flash_key = ct_id ? _("%{model} \"%{name}\" was saved") : _("%{model} \"%{name}\" was added")
+        flash_key = ct.id ? _("%{model} \"%{name}\" was saved") : _("%{model} \"%{name}\" was added")
         add_flash(flash_key % {:model => ui_lookup(:model => "PxeCustomizationTemplate"), :name  => ct.name})
           AuditEvent.success(build_created_audit(ct, @edit))
           @edit = session[:edit] = nil # clean out the saved info
