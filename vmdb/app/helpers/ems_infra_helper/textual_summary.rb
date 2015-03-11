@@ -157,7 +157,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_orchestration_stacks_status
-    return nil unless @ems.orchestration_stacks
+    return nil if !@ems.respond_to?(:orchestration_stacks) || !@ems.orchestration_stacks
 
     label         = "States of Orchestration Stacks"
     stacks_states = @ems.orchestration_stacks.collect { |x| "#{x.name} status: #{x.status}" }.join(", ")
@@ -166,7 +166,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_orchestration_stacks
-    return nil unless @ems.orchestration_stacks
+    return nil if !@ems.respond_to?(:orchestration_stacks) || !@ems.orchestration_stacks
 
     label = ui_lookup(:tables => "orchestration_stack")
     num   = @ems.number_of(:orchestration_stacks)
