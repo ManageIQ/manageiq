@@ -857,6 +857,7 @@ module EmsCommon
     @title      = ui_lookup(:tables => prefix)
     @layout     = prefix
     @table_name = request.parameters[:controller]
+    @model      = self.class.model
     @lastaction = session["#{prefix}_lastaction".to_sym]
     @display    = session["#{prefix}_display".to_sym]
     @filters    = session["#{prefix}_filters".to_sym]
