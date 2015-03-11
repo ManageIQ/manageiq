@@ -192,7 +192,7 @@ class Condition < ActiveRecord::Base
     if checkmode == "count"
       e = check.gsub(/<count>/i, list.length.to_s)
       MiqPolicy.logger.debug("MIQ(condition-_subst_find): Check Expression after substitution: [#{e}]")
-      result = !!proc { $SAFE = 4; eval(e) }.call
+      result = !!proc { $SAFE = 3; eval(e) }.call
       MiqPolicy.logger.debug("MIQ(condition-_subst_find): Check Expression result: [#{result}]")
       return result
     end
