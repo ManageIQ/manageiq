@@ -91,6 +91,10 @@ class MiqWorker < ActiveRecord::Base
     where(:miq_server_id => server_id)
   end
 
+  def self.no_subclasses_scope
+    where(:type => self.to_s)
+  end
+
   CONDITION_CURRENT = {:status => STATUSES_CURRENT}
   def self.find_current(server_id = nil)
     self.server_scope(server_id).where(CONDITION_CURRENT)
@@ -117,7 +121,7 @@ class MiqWorker < ActiveRecord::Base
   end
 
   def self.find_current_or_starting(server_id = nil)
-    self.server_scope(server_id).where(:status => STATUSES_CURRENT_OR_STARTING)
+    self.server_scope(server_id).no_subclasses_scope.where(:status => STATUSES_CURRENT_OR_STARTING)
   end
 
   def self.find_alive(server_id = nil)
