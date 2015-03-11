@@ -43,47 +43,47 @@ class MiqRegion < ActiveRecord::Base
   PERF_ROLLUP_CHILDREN = [:ext_management_systems, :storages]
 
   def database_backups
-    DatabaseBackup.in_region(region)
+    DatabaseBackup.in_region(region_number)
   end
 
   def ext_management_systems
-    ExtManagementSystem.in_region(region)
+    ExtManagementSystem.in_region(region_number)
   end
 
   def hosts
-    Host.in_region(region)
+    Host.in_region(region_number)
   end
 
   def storages
-    Storage.in_region(region)
+    Storage.in_region(region_number)
   end
 
   def policy_events
-    PolicyEvent.in_region(region)
+    PolicyEvent.in_region(region_number)
   end
 
   def zones
-    Zone.in_region(region)
+    Zone.in_region(region_number)
   end
 
   def miq_servers
-    MiqServer.in_region(region)
+    MiqServer.in_region(region_number)
   end
 
   def active_miq_servers
-    MiqServer.in_region(region).active_miq_servers
+    MiqServer.in_region(region_number).active_miq_servers
   end
 
   def vms_and_templates
-    VmOrTemplate.in_region(region)
+    VmOrTemplate.in_region(region_number)
   end
 
   def miq_templates
-    MiqTemplate.in_region(region)
+    MiqTemplate.in_region(region_number)
   end
 
   def vms
-    Vm.in_region(region)
+    Vm.in_region(region_number)
   end
 
   def perf_rollup_parent(interval_name=nil)
