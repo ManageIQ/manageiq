@@ -305,6 +305,118 @@ Vmdb::Application.routes.draw do
       )
     },
 
+    :container => {
+      :get  => %w(
+        download_data
+        explorer
+        show
+      ),
+      :post => %w(
+        accordion_select
+        button
+        container_edit
+        container_form_field_changed
+        explorer
+        quick_search
+        reload
+        save_col_widths
+        tree_autoload_dynatree
+        tree_select
+        x_button
+        x_history
+        x_search_by_name
+        x_settings_changed
+        x_show
+      ) +
+        adv_search_post +
+        exp_post +
+        save_post
+    },
+
+    :container_group => {
+      :get => %w(
+        download_data
+        edit
+        index
+        new
+        show
+        show_list
+      ),
+      :post => %w(
+        button
+        create
+        dynamic_checkbox_refresh
+        form_field_changed
+        listnav_search_selected
+        panel_control
+        quick_search
+        save_col_widths
+        sections_field_changed
+        show
+        show_list
+        update
+      ) +
+        adv_search_post +
+        exp_post +
+        save_post
+    },
+
+    :container_node => {
+      :get => %w(
+        download_data
+        edit
+        index
+        new
+        show
+        show_list
+      ),
+      :post => %w(
+        button
+        create
+        dynamic_checkbox_refresh
+        form_field_changed
+        listnav_search_selected
+        panel_control
+        quick_search
+        save_col_widths
+        sections_field_changed
+        show
+        show_list
+        update
+      ) +
+        adv_search_post +
+        exp_post +
+        save_post
+    },
+
+    :container_service => {
+      :get => %w(
+        download_data
+        edit
+        index
+        new
+        show
+        show_list
+      ),
+      :post => %w(
+        button
+        create
+        dynamic_checkbox_refresh
+        form_field_changed
+        listnav_search_selected
+        panel_control
+        quick_search
+        save_col_widths
+        sections_field_changed
+        show
+        show_list
+        update
+      ) +
+        adv_search_post +
+        exp_post +
+        save_post
+    },
+
     :dashboard => {
       :get => %w(
         auth_error
@@ -464,6 +576,36 @@ Vmdb::Application.routes.draw do
         compare_post +
         dialog_runner_post +
         discover_get_post +
+        exp_post +
+        save_post
+    },
+
+    :ems_container => {
+      :get => %w(
+        download_data
+        edit
+        index
+        new
+        show
+        show_list
+      ) +
+        compare_get,
+      :post => %w(
+        button
+        create
+        dynamic_checkbox_refresh
+        form_field_changed
+        listnav_search_selected
+        panel_control
+        quick_search
+        save_col_widths
+        sections_field_changed
+        show
+        show_list
+        update
+      ) +
+        adv_search_post +
+        compare_post +
         exp_post +
         save_post
     },

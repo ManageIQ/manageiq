@@ -388,8 +388,8 @@ class ApplicationController < ActionController::Base
     return if record_no_longer_exists?(@record)
 
     @lastaction = "event_logs"
-    obj = @record.class.to_s == "Vm" ? "vm" : "host"
-    bc_text = @record.class.to_s == "Vm" ? "Event Logs" : "ESX Logs"
+    obj = @record.kind_of?(Vm) ? "vm" : "host"
+    bc_text = @record.kind_of?(Vm) ? "Event Logs" : "ESX Logs"
     @sb[:action] = params[:action]
     @explorer = true if @record.kind_of?(VmOrTemplate)
     if params[:show] != nil || params[:x_show] != nil
@@ -1200,24 +1200,24 @@ class ApplicationController < ActionController::Base
     p  = "/images/icons/"
     pn = "#{p}new/"
 
-    image = case item.class.base_class.to_s
-            when "ExtManagementSystem"   then "#{pn}/vendor-#{item.image_name}.png"
-            when "Filesystem"            then "#{p}ico/win/#{item.image_name.downcase}.ico"
-            when "Host"                  then "#{pn}vendor-#{item.vmm_vendor.downcase}.png"
-            when "MiqEvent"              then "#{pn}event-#{item.name.downcase}.png"
-            when "MiqRequest"
+    image = case item
+            when ExtManagementSystem   then "#{pn}/vendor-#{item.image_name}.png"
+            when Filesystem            then "#{p}ico/win/#{item.image_name.downcase}.ico"
+            when Host                  then "#{pn}vendor-#{item.vmm_vendor.downcase}.png"
+            when MiqEvent              then "#{pn}event-#{item.name.downcase}.png"
+            when MiqRequest
               pn + case item.request_status.to_s.downcase
                    when "ok"    then "checkmark.png"
                    when "error" then "x.png"
                    else              "#{@listicon.downcase}.png"
                    end
-            when "RegistryItem"          then "#{pn}#{item.image_name.downcase}.png"
-            when "ResourcePool"          then "#{pn}#{item.vapp ? "vapp" : "resource_pool"}.png"
-            when "Vm", "VmOrTemplate"    then "#{pn}vendor-#{item.vendor.downcase}.png"
-            when "ServiceResource"       then "#{pn}#{item.resource_type.to_s == "VmOrTemplate" ? "vm" : "service_template"}.png"
-            when "Storage"               then "#{pn}piecharts/datastore/#{calculate_pct_img(item.v_free_space_percent_of_total)}.png"
-            when "OsProcess", "EventLog" then "#{pn}#{@listicon.downcase}.png"
-            when "Service", "ServiceTemplate"
+            when RegistryItem          then "#{pn}#{item.image_name.downcase}.png"
+            when ResourcePool          then "#{pn}#{item.vapp ? "vapp" : "resource_pool"}.png"
+            when VmOrTemplate          then "#{pn}vendor-#{item.vendor.downcase}.png"
+            when ServiceResource       then "#{pn}#{item.resource_type.to_s == "VmOrTemplate" ? "vm" : "service_template"}.png"
+            when Storage               then "#{pn}piecharts/datastore/#{calculate_pct_img(item.v_free_space_percent_of_total)}.png"
+            when OsProcess, EventLog   then "#{pn}#{@listicon.downcase}.png"
+            when Service, ServiceTemplate
               if item.try(:picture)
                 add_pictures_to_sync(item.picture.id)
                 "../../../pictures/#{item.picture.basename}"
@@ -2319,6 +2319,8 @@ class ApplicationController < ActionController::Base
         session[:tab_url][:clo] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
       when "ems_cluster", "ems_infra", "host", "pxe", "repository", "resource_pool", "storage", "vm_infra"
         session[:tab_url][:inf] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
+      when "container", "container_group", "container_node", "container_service", "ems_container"
+        session[:tab_url][:cnt] = inbound_url if %w(explorer show show_list).include?(action_name)
       when "miq_request"
         session[:tab_url][:svc] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "vm"
         session[:tab_url][:inf] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "host"

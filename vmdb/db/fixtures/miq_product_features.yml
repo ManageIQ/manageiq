@@ -3496,4 +3496,192 @@
       :feature_type: control
       :identifier: orchestration_stack_tag
 
+# EmsContainer
+- :name: Providers
+  :description: Everything under Containers Providers
+  :feature_type: node
+  :identifier: ems_container
+  :children:
+  - :name: View
+    :description: View Containers Providers
+    :feature_type: view
+    :identifier: ems_container_view
+    :children:
+    - :name: List
+      :description: Display Lists of Containers Providers
+      :feature_type: view
+      :identifier: ems_container_show_list
+    - :name: Show
+      :description: Display Individual Containers Providers
+      :feature_type: view
+      :identifier: ems_container_show
+  - :name: Modify
+    :description: Modify Containers Providers
+    :feature_type: admin
+    :identifier: ems_container_admin
+    :children:
+    - :name: Remove
+      :description: Remove Containers Providers from the VMDB
+      :feature_type: admin
+      :identifier: ems_container_delete
+    - :name: Edit
+      :description: Edit a Containers Provider
+      :feature_type: admin
+      :identifier: ems_container_edit
+    - :name: Add
+      :description: Add a Containers Provider
+      :feature_type: admin
+      :identifier: ems_container_new
 
+# ContainerGroup
+- :name: Container Groups
+  :description: Everything under Container Groups
+  :feature_type: node
+  :identifier: container_group
+  :children:
+  - :name: View
+    :description: View Container Groups
+    :feature_type: view
+    :identifier: container_group_view
+    :children:
+    - :name: List
+      :description: Display Lists of Container Groups
+      :feature_type: view
+      :identifier: container_group_show_list
+    - :name: Show
+      :description: Display Individual Container Groups
+      :feature_type: view
+      :identifier: container_group_show
+  - :name: Modify
+    :description: Modify Container Groups
+    :feature_type: admin
+    :identifier: container_group_admin
+    :children:
+    - :name: Remove
+      :description: Remove Container Groups from the VMDB
+      :feature_type: admin
+      :identifier: container_group_delete
+    - :name: Edit
+      :description: Edit a Container Groups
+      :feature_type: admin
+      :identifier: container_group_edit
+    - :name: Add
+      :description: Add a Container Groups
+      :feature_type: admin
+      :identifier: container_group_new
+
+# ContainerNode
+- :name: Nodes
+  :description: Everything under Container Nodes
+  :feature_type: node
+  :identifier: container_node
+  :children:
+  - :name: View
+    :description: View Container Nodes
+    :feature_type: view
+    :identifier: container_node_view
+    :children:
+    - :name: List
+      :description: Display Lists of Container Nodes
+      :feature_type: view
+      :identifier: container_node_show_list
+    - :name: Show
+      :description: Display Individual Container Nodes
+      :feature_type: view
+      :identifier: container_node_show
+  - :name: Modify
+    :description: Modify Container Nodes
+    :feature_type: admin
+    :identifier: container_node_admin
+    :children:
+    - :name: Remove
+      :description: Remove Container Nodes from the VMDB
+      :feature_type: admin
+      :identifier: container_node_delete
+    - :name: Edit
+      :description: Edit a Container Nodes
+      :feature_type: admin
+      :identifier: container_node_edit
+    - :name: Add
+      :description: Add a Container Nodes
+      :feature_type: admin
+      :identifier: container_node_new
+
+# ContainerService
+- :name: Services
+  :description: Everything under Container Services
+  :feature_type: node
+  :identifier: container_service
+  :children:
+  - :name: View
+    :description: View Container Services
+    :feature_type: view
+    :identifier: container_service_view
+    :children:
+    - :name: List
+      :description: Display Lists of Container Services
+      :feature_type: view
+      :identifier: container_service_show_list
+    - :name: Show
+      :description: Display Individual Container Services
+      :feature_type: view
+      :identifier: container_service_show
+  - :name: Modify
+    :description: Modify Container Services
+    :feature_type: admin
+    :identifier: container_service_admin
+    :children:
+    - :name: Remove
+      :description: Remove Container Services from the VMDB
+      :feature_type: admin
+      :identifier: container_service_delete
+    - :name: Edit
+      :description: Edit a Container Services
+      :feature_type: admin
+      :identifier: container_service_edit
+    - :name: Add
+      :description: Add a Container Services
+      :feature_type: admin
+      :identifier: container_service_new
+
+# Container
+- :name: Containers Explorer
+  :description: Everything under Containers
+  :feature_type: node
+  :identifier: containers
+  :children:
+  - :name: Relationships
+    :description: Everything under All Containers Accordion
+    :feature_type: node
+    :identifier: container_filter_accord
+    :children:
+    - :name: View Containers
+      :description: View Catalog Items
+      :feature_type: view
+      :identifier: container_filter_view
+  - :name: All Containers
+    :description: Everything under All Containers Accordion
+    :feature_type: node
+    :identifier: container_accord
+    :children:
+    - :name: View Containers
+      :description: View Containers
+      :feature_type: view
+      :identifier: container_view
+    - :name: Modify
+      :description: Modify Containers
+      :feature_type: admin
+      :identifier: container_admin
+      :children:
+      - :name: Remove Container
+        :description: Remove Containers from the VMDB
+        :feature_type: admin
+        :identifier: container_delete
+      - :name: Edit Container
+        :description: Edit a Container
+        :feature_type: admin
+        :identifier: container_edit
+      - :name: Add Container
+        :description: Add a Container
+        :feature_type: admin
+        :identifier: container_new

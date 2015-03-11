@@ -398,7 +398,7 @@ class MiqCapacityController < ApplicationController
   def util_get_node_info(treenodeid, refresh=nil)
     treenodeid = valid_active_node(treenodeid)
     get_nodetype_and_record(treenodeid)
-    @right_cell_text = @record.class.base_class.to_s == "MiqEnterprise" ?
+    @right_cell_text = @record.kind_of?(MiqEnterprise) ?
       _("%s") %  ui_lookup(:model => "MiqEnterprise") :
       _("%{model} \"%{name}\" %{typ}") % {:model => ui_lookup(:model => @record.class.base_class.to_s), :name => @record.name, :typ => "Utilization Trend Summary"}
     @sb[:util][:title] = @right_cell_text
@@ -643,7 +643,7 @@ class MiqCapacityController < ApplicationController
     @lastaction = "bottleneck_show_timeline"
 
     get_nodetype_and_record(treenodeid)
-    @right_cell_text = @record.class.base_class.to_s == "MiqEnterprise" ?
+    @right_cell_text = @record.kind_of?(MiqEnterprise) ?
         _("%s") %  ui_lookup(:model => "MiqEnterprise") :
         _("%{model} \"%{name}\" %{typ}") % {:model => ui_lookup(:model => @record.class.base_class.to_s), :name => @record.name, :typ => "Bottlenecks Summary"}
 

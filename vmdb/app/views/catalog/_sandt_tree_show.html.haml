@@ -40,8 +40,7 @@
             %td= h(@record.orchestration_manager.name)
       - entry_points = [[_("Provisioning"), :fqname]]
       - unless @record.prov_type == "generic_orchestration"
-        - entry_points.push([_("Provisioning"), :fqname],
-           [_("Reconfigure"),  :reconfigure_fqname],
+        - entry_points.push([_("Reconfigure"),  :reconfigure_fqname],
            [_("Retirement"),   :retire_fqname])
       - entry_points.each do |entry_points_op|
         %tr

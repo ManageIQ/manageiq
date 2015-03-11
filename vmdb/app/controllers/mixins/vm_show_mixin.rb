@@ -26,7 +26,11 @@ module VmShowMixin
     end
 
     # Build the Explorer screen from scratch
-    build_trees_and_accordions
+    allowed_features = features.select { |f| role_allows(:feature => f.role) }
+    allowed_features.each { |feature| build_vm_tree(feature.name, feature.tree_name) }
+
+    @trees = allowed_features.map(&:tree_list_name)
+    @accords = allowed_features.map(&:accord_hash)
 
     params.merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)
@@ -40,7 +44,7 @@ module VmShowMixin
       # to explorer with params[:id] and you get into the true branch
       redirected = set_elements_and_redirect_unauthorized_user
     else
-      set_active_elements unless @upload_sysprep_file
+      set_active_elements(allowed_features.first) unless @upload_sysprep_file
     end
 
     render :layout => "explorer" unless redirected
@@ -67,6 +71,14 @@ module VmShowMixin
   end
 
   private
+
+  def set_active_elements(feature)
+    if feature
+      self.x_active_tree   ||= feature.tree_list_name
+      self.x_active_accord ||= feature.accord_name
+    end
+    get_node_info(x_node)
+  end
 
   def set_active_elements_authorized_user(tree_name, accord_name, add_nodes, klass, id)
     self.x_active_tree   = tree_name

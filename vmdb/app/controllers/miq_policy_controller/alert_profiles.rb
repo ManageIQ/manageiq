@@ -282,7 +282,7 @@ module MiqPolicyController::AlertProfiles
     @assign[:new][:objects] = Array.new
     aa = @alert_profile.get_assigned_tos
     if !aa[:objects].empty?                                   # Objects are assigned
-      if aa[:objects].first.class.to_s == "MiqEnterprise"     # Assigned to Enterprise object
+      if aa[:objects].first.kind_of?(MiqEnterprise)           # Assigned to Enterprise object
         @assign[:new][:assign_to] = "enterprise"
       else                                                    # Assigned to CIs
         @assign[:new][:assign_to] = aa[:objects].first.class.base_class.to_s.underscore

@@ -1,5 +1,5 @@
 //= require vendor/angular
-//= require cfme_angular_application
+//= require miq_angular_application
 //= require services/miq_service
 //= require directives/miqrequired
 //= require directives/checkchange
@@ -9,7 +9,7 @@
 //= require services/timer_option_service
 //= require controllers/repository/repository_form_controller
 //= require controllers/schedule/schedule_form_controller
-//= require cfme_application
+//= require miq_application
 //= require miq_dynatree_replacement
 //= require dialog_import_export
 //= require widget_import_export
@@ -23,6 +23,6 @@
 //= require jqplot-plugins/jqplot.highlighter
 //= require jqplot-plugins/jqplot.cursor
 //= require jqplot-plugins/jqplot.enhancedLegendRenderer
-//= require cfme_jqplot
+//= require miq_jqplot
 //= require spice-html5
 //= require novnc-rails

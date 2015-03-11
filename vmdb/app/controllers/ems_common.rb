@@ -476,31 +476,32 @@ module EmsCommon
   private ############################
 
   def set_verify_status
-    if @edit[:new][:emstype] == "ec2"
-      if @edit[:new][:default_userid].blank? || @edit[:new][:provider_region].blank?
+    edit_new = @edit[:new]
+    if edit_new[:emstype] == "ec2"
+      if edit_new[:default_userid].blank? || edit_new[:provider_region].blank?
         @edit[:default_verify_status] = false
       else
-        @edit[:default_verify_status] = (@edit[:new][:default_password] == @edit[:new][:default_verify])
+        @edit[:default_verify_status] = (edit_new[:default_password] == edit_new[:default_verify])
       end
     else
-      if @edit[:new][:default_userid].blank? || @edit[:new][:ipaddress].blank? || @edit[:new][:emstype].blank?
+      if edit_new[:default_userid].blank? || edit_new[:ipaddress].blank? || edit_new[:emstype].blank?
         @edit[:default_verify_status] = false
       else
-        @edit[:default_verify_status] = (@edit[:new][:default_password] == @edit[:new][:default_verify])
+        @edit[:default_verify_status] = (edit_new[:default_password] == edit_new[:default_verify])
       end
     end
 
-    if @edit[:new][:metrics_userid].blank? || @edit[:new][:ipaddress].blank? || @edit[:new][:emstype].blank?
+    if edit_new[:metrics_userid].blank? || edit_new[:ipaddress].blank? || edit_new[:emstype].blank?
       @edit[:metrics_verify_status] = false
     else
-      @edit[:metrics_verify_status] = (@edit[:new][:metrics_password] == @edit[:new][:metrics_verify])
+      @edit[:metrics_verify_status] = (edit_new[:metrics_password] == edit_new[:metrics_verify])
     end
 
     # check if any of amqp_userid, amqp_password, amqp_verify, :ipaddress, :emstype are blank
-    if any_blank_fields?(@edit[:new], [:amqp_userid, :amqp_password, :amqp_verify, :ipaddress, :emstype])
+    if any_blank_fields?(edit_new, [:amqp_userid, :amqp_password, :amqp_verify, :ipaddress, :emstype])
       @edit[:amqp_verify_status] = false
     else
-      @edit[:amqp_verify_status] = (@edit[:new][:amqp_password] == @edit[:new][:amqp_verify])
+      @edit[:amqp_verify_status] = (edit_new[:amqp_password] == edit_new[:amqp_verify])
     end
   end
 
@@ -850,5 +851,25 @@ module EmsCommon
   def any_blank_fields?(hash, fields)
     fields = [fields] unless fields.is_a? Array
     fields.any? {|f| !hash.has_key?(f) || hash[f].blank? }
+  end
+
+  def get_session_data
+    prefix      = self.class.session_key_prefix
+    @title      = ui_lookup(:tables => prefix)
+    @layout     = prefix
+    @table_name = request.parameters[:controller]
+    @model      = self.class.model
+    @lastaction = session["#{prefix}_lastaction".to_sym]
+    @display    = session["#{prefix}_display".to_sym]
+    @filters    = session["#{prefix}_filters".to_sym]
+    @catinfo    = session["#{prefix}_catinfo".to_sym]
+  end
+
+  def set_session_data
+    prefix                                 = self.class.session_key_prefix
+    session["#{prefix}_lastaction".to_sym] = @lastaction
+    session["#{prefix}_display".to_sym]    = @display unless @display.nil?
+    session["#{prefix}_filters".to_sym]    = @filters
+    session["#{prefix}_catinfo".to_sym]    = @catinfo
   end
 end
