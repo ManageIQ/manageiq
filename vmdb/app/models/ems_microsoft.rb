@@ -96,7 +96,7 @@ class EmsMicrosoft < EmsInfra
     return unless vm_uid_ems.guid?
 
     params  = parameters.join(" ")
-    command = "powershell #{cmdlet}-SCVirtualMachine -VM (Get-SCVirtualMachine -ID #{vm_uid_ems}) #{params}"
+    command = "powershell Import-Module VirtualMachineManager; Get-VMMServer #{ipaddress}; #{cmdlet}-SCVirtualMachine -VM (Get-SCVirtualMachine -ID #{vm_uid_ems}) #{params}"
     run_dos_command(command)
   end
 end
