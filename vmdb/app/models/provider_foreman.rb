@@ -42,12 +42,13 @@ class ProviderForeman < Provider
 
   def verify_credentials(auth_type = nil, options = {})
     with_provider_connection(options.merge(:auth_type => auth_type), &:verify?)
-  rescue SocketError => err
+  rescue SocketError,
+         Errno::ECONNREFUSED,
+         RestClient::ResourceNotFound,
+         RestClient::InternalServerError => err
     raise MiqException::MiqUnreachableError, err.message, err.backtrace
   rescue RestClient::Unauthorized => err
-    raise MiqException::MiqInvalidCredentialsError, err.message, err.backtrace if err.http_code == 401 # Unauthorized
-    raise MiqException::MiqUnreachableError, err.message, err.backtrace        if err.http_code == 404 # Resource Not Found
-    raise
+    raise MiqException::MiqInvalidCredentialsError, err.message, err.backtrace
   end
 
   private
