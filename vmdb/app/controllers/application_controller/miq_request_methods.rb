@@ -755,15 +755,15 @@ module ApplicationController::MiqRequestMethods
 
   # Set form variables for provision request
   def prov_set_form_vars(req = nil)
-    @edit                   ||= {}
-    session[:prov_options]    = @options = nil  # Clearing out options that were set on show screen
-    @edit[:req_id]            = req.try(:id)    # Save existing request record id, if passed in
-    @edit[:key]               = "prov_edit__#{@edit[:req_id] || "new"}"
-    options                   = req.try(:get_options) || {}  # Use existing request options, if passed in
-    @edit[:new]               = options unless @workflow_exists
-    @edit[:org_controller]    = params[:org_controller] if params[:org_controller]  # request originated from controller
-    @edit[:prov_option_types] = MiqRequest::MODEL_REQUEST_TYPES[@layout == "miq_request_vm" ? :Vm : :Host]
-    @edit[:wf]                = workflow_instance_from_vars(req)
+    @edit                     ||= {}
+    session[:prov_options]      = @options = nil  # Clearing out options that were set on show screen
+    @edit[:req_id]              = req.try(:id)    # Save existing request record id, if passed in
+    @edit[:key]                 = "prov_edit__#{@edit[:req_id] || "new"}"
+    options                     = req.try(:get_options) || {}  # Use existing request options, if passed in
+    @edit[:new]                 = options unless @workflow_exists
+    @edit[:org_controller]      = params[:org_controller] if params[:org_controller]  # request originated from controller
+    @edit[:prov_option_types]   = MiqRequest::MODEL_REQUEST_TYPES[@layout == "miq_request_vm" ? :Vm : :Host]
+    @edit[:wf], pre_prov_values = workflow_instance_from_vars(req)
 
     if @edit[:wf]
       @edit[:wf].get_dialog_order.each do |d|
@@ -792,9 +792,9 @@ module ApplicationController::MiqRequestMethods
       # Give the model a change to modify the dialog based on the default settings
       #common grids
       @edit[:wf].refresh_field_values(@edit[:new], session[:userid])
-      if @pre_prov_values
+      if pre_prov_values
         @edit[:new] = @edit[:new].reject { |_k, v| v.nil? }
-        @edit[:new] = @edit[:new].merge @pre_prov_values.select { |k| !@edit[:new].keys.include?(k) }
+        @edit[:new] = @edit[:new].merge pre_prov_values.select { |k| !@edit[:new].keys.include?(k) }
       end
       @edit[:ds_sortdir] ||= "DESC"
       @edit[:ds_sortcol] ||= "free_space"
@@ -846,7 +846,8 @@ module ApplicationController::MiqRequestMethods
   end
 
   def workflow_instance_from_vars(req)
-    options = {}
+    options         = {}
+    pre_prov_values = nil
     if ["miq_template", "service_template", "vm"].include?(@edit[:org_controller])
       if params[:prov_type] && !req  # only do this new requests
         @edit[:prov_id] = params[:prov_id]
@@ -888,7 +889,7 @@ module ApplicationController::MiqRequestMethods
           else # handle copy button for host provisioning
             MiqHostProvisionWorkflow
           end
-        @pre_prov_values = copy_hash(@edit[:wf].values) if @edit[:wf]
+        pre_prov_values = copy_hash(@edit[:wf].values) if @edit[:wf]
 
         @edit[:prov_type]   = req.try(:request_type) && req.request_type_display
         @edit[:prov_type] ||= req.try(:type) == "VmMigrateRequest" ? "VM Migrate" : "VM Provision"
@@ -902,7 +903,7 @@ module ApplicationController::MiqRequestMethods
       wf_type = MiqHostProvisionWorkflow
     end
 
-    wf_type.new(@edit[:new], session[:userid], options)  # Create a new workflow for this edit session
+    [wf_type.new(@edit[:new], session[:userid], options), pre_prov_values]  # Return the new workflow and any pre_prov_values
   rescue MiqException::MiqVmError => bang
     # only add this message if showing a list of Catalog items, show screen already handles this
     @no_wf_msg = _("Cannot create Request Info, error: ") << bang.message
