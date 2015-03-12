@@ -793,7 +793,7 @@ module ApplicationController::MiqRequestMethods
       #common grids
       @edit[:wf].refresh_field_values(@edit[:new], session[:userid])
       if pre_prov_values
-        @edit[:new] = @edit[:new].reject { |_k, v| v.nil? }
+        @edit[:new] = @edit[:new].delete_nils
         @edit[:new] = @edit[:new].merge pre_prov_values.select { |k| !@edit[:new].keys.include?(k) }
       end
       @edit[:ds_sortdir] ||= "DESC"
