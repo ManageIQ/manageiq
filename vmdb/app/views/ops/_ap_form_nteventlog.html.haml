@@ -30,18 +30,30 @@
               :item_type => "nteventlog",
               :id        => "#{@scan.id || "new"}")
           %td
-            = text_field("entry", "name", :maxlength=>MAX_NAME_LEN, "value"=>session[:nteventlog_data][:name])
+            = text_field("entry", "name",
+              :maxlength => MAX_NAME_LEN,
+              "value"    => session[:nteventlog_data][:name],
+              :style     => "width: 100%;")
           %td
-            = text_field("entry", "message", :maxlength=>MAX_NAME_LEN, "value"=>session[:nteventlog_data][:message])
+            = text_field("entry", "message",
+              :maxlength => MAX_NAME_LEN,
+              "value"    => session[:nteventlog_data][:message],
+              :style     => "width: 100%;")
           %td
-            = text_field("entry", "level", :maxlength=>MAX_NAME_LEN, "value"=>session[:nteventlog_data][:level])
-          - if false
-            %td
-              = text_field("entry", "rec_count", :maxlength=>MAX_NAME_LEN, "value"=>session[:nteventlog_data][:rec_count])
+            = text_field("entry", "level",
+              :maxlength => MAX_NAME_LEN,
+              "value"    => session[:nteventlog_data][:level],
+              :style => "width: 100%;")
           %td
-            = text_field("entry", "source", :maxlength=>MAX_NAME_LEN, "value"=>session[:nteventlog_data][:source])
+            = text_field("entry", "source",
+              :maxlength => MAX_NAME_LEN,
+              "value"    => session[:nteventlog_data][:source],
+              :style     => "width: 100%;")
           %td
-            = text_field("entry", "num_days", :maxlength=>MAX_NAME_LEN, "value"=>session[:nteventlog_data][:numdays])
+            = text_field("entry", "num_days",
+              :maxlength => MAX_NAME_LEN,
+              "value"    => session[:nteventlog_data][:numdays],
+              :style     => "width: 100%;")
           = hidden_field("item", "type3", :value=>"nteventlog")
       - if !session[:nteventlog_entries].nil? && !session[:nteventlog_entries].empty?
         - session[:nteventlog_entries].sort_by { |r| r[:name] }.each_with_index do |nteventlog,i|
@@ -57,18 +69,30 @@
                   :title      => _("Update this entry"),
                   :id         => "#{@scan.id || "new"}")
               %td
-                = text_field("entry", "name", :maxlength=>MAX_NAME_LEN, "value"=>session[:nteventlog_data][:name])
+                = text_field("entry", "name",
+                :maxlength => MAX_NAME_LEN,
+                "value"    => session[:nteventlog_data][:name],
+                :style     => "width: 100%;")
               %td
-                = text_field("entry", "message", :maxlength=>MAX_NAME_LEN, "value"=>session[:nteventlog_data][:message])
+                = text_field("entry", "message",
+                  :maxlength => MAX_NAME_LEN,
+                  "value"    => session[:nteventlog_data][:message],
+                  :style     => "width: 100%;")
               %td
-                = text_field("entry", "level", :maxlength=>MAX_NAME_LEN, "value"=>h(session[:nteventlog_data][:level]))
-              - if false
-                %td
-                  = text_field("entry", "rec_count", :maxlength=>MAX_NAME_LEN, "value"=>session[:nteventlog_data][:rec_count])
+                = text_field("entry", "level",
+                  :maxlength => MAX_NAME_LEN,
+                  "value"    => h(session[:nteventlog_data][:level]),
+                  :style     => "width: 100%;")
               %td
-                = text_field("entry", "source", :maxlength=>MAX_NAME_LEN, "value"=>session[:nteventlog_data][:source])
+                = text_field("entry", "source",
+                  :maxlength => MAX_NAME_LEN,
+                  "value"    => session[:nteventlog_data][:source],
+                  :style     => "width: 100%;")
               %td
-                = text_field("entry", "num_days", :maxlength=>MAX_NAME_LEN, "value"=>session[:nteventlog_data][:num_days])
+                = text_field("entry", "num_days",
+                  :maxlength => MAX_NAME_LEN,
+                  "value"    => session[:nteventlog_data][:num_days],
+                  :style     => "width: 100%;")
               = hidden_field("item", "type3", :value=>"nteventlog")
               = hidden_field("item", "id", :value=>i)
           - else

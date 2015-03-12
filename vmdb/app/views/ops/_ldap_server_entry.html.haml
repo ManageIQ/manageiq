@@ -10,7 +10,7 @@
                      :title => t,
                      :type  => "submit")
       %td
-        = text_field("entry", "hostname", :maxlength => MAX_NAME_LEN)
+        = text_field("entry", "hostname", :maxlength => MAX_NAME_LEN, :style => "width: 100%;")
       %td
         - url1 = url_for(:action => 'ldap_entry_changed',
                          :id     => @edit[:ldap_domain_id] || "new")
@@ -20,7 +20,8 @@
       %td
         = text_field("entry", "port",
                      :maxlength => 6,
-                     :value     => "636")
+                     :value     => "636",
+                     :style     => "width: 100%;")
   - else
     %tr{:id => "#{entry[:id]}_tr", :class => cycle('row0', 'row1')}
       %td
@@ -35,7 +36,8 @@
       %td
         = text_field("entry", "hostname",
                      :maxlength => MAX_NAME_LEN,
-                     "value"    => entry[:hostname])
+                     "value"    => entry[:hostname],
+                     :style     => "width: 100%;")
       %td
         - url1 = url_for(:action => 'ldap_entry_changed',
                          :id     => "#{@edit[:ldap_domain_id] || "new"}")
@@ -45,7 +47,8 @@
       %td
         = text_field("entry", "port",
                      :maxlength => 6,
-                     "value"    => entry[:port])
+                     "value"    => entry[:port],
+                     :style     => "width: 100%;")
       = hidden_field("entry", "idx", "value" => entry_idx)
 - else
   - if entry == "new"

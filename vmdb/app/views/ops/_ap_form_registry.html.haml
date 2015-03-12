@@ -25,9 +25,15 @@
           %td
             =_("HKLM")
           %td
-            = text_field("entry", "kname", :maxlength=>MAX_NAME_LEN, "value"=>session[:reg_data][:key])
+            = text_field("entry", "kname",
+              :maxlength => MAX_NAME_LEN,
+              "value"    => session[:reg_data][:key],
+              :style     => "width: 100%;")
           %td
-            = text_field("entry", "value", :maxlength=>MAX_NAME_LEN, "value"=>session[:reg_data][:value])
+            = text_field("entry", "value",
+              :maxlength => MAX_NAME_LEN,
+              "value"    => session[:reg_data][:value],
+              :style     => "width: 100%;")
           = hidden_field("item", "type2", :value=>"registry")
       - if !session[:reg_entries].nil? && !session[:reg_entries].empty?
         - session[:reg_entries].sort_by { |r| r["key"] }.each_with_index do |reg,i|
@@ -40,9 +46,15 @@
               %td
                 =_("HKLM")
               %td
-                = text_field("entry", "kname", :maxlength=>MAX_NAME_LEN, "value"=>session[:reg_data][:key])
+                = text_field("entry", "kname",
+                  :maxlength => MAX_NAME_LEN,
+                  "value"    => session[:reg_data][:key],
+                  :style     => "width: 100%;")
               %td
-                = text_field("entry", "value", :maxlength=>MAX_NAME_LEN, "value"=>session[:reg_data][:value])
+                = text_field("entry", "value",
+                  :maxlength => MAX_NAME_LEN,
+                  "value"    => session[:reg_data][:value],
+                  :style     => "width: 100%;")
               = hidden_field("item", "type2", :value=>"registry")
               = hidden_field("entry", "id", :value=>i)
           - else
