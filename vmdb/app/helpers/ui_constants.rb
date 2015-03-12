@@ -21,6 +21,9 @@ module UiConstants
   MAX_DESC_LEN = 255        # Default maximum description length
   MAX_HOSTNAME_LEN = 255    # Default maximum host name length
 
+  # Max length of ipv6 is 45: http://stackoverflow.com/a/1076755
+  MAX_IPADDRESS_LEN = 45
+
   MAX_DASHBOARD_COUNT = 10  # Default maximum count of Dashboard per group
 
   REPORTS_FOLDER = File.join(Rails.root, "product/reports")

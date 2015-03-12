@@ -25,7 +25,7 @@
         %td.wide
           = text_field_tag("ipaddress",
             @edit[:new][:ipaddress],
-            :maxlength => 15,
+            :maxlength => MAX_IPADDRESS_LEN,
             "data-miq_observe" => observe)
       %tr
         %td.key=_('Custom Identifier')
@@ -47,7 +47,7 @@
         %td.wide
           = text_field_tag("ipmi_address",
             @edit[:new][:ipmi_address],
-            :maxlength => 15,
+            :maxlength => MAX_IPADDRESS_LEN,
             "data-miq_observe" => observe)
       %tr
         %td.key=_('MAC Address')
