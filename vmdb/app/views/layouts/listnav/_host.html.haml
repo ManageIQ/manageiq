@@ -12,9 +12,14 @@
 
       %div{:style => "margin-top: -23px; line-height: 13px;"}
         %center{:style => "color: #000;"}
-          = h(@record.product_name)
-          %br
-          = h(@record.service_pack)
+          - unless @record.vmm_product.nil?
+            = h(@record.vmm_product)
+          - unless @record.vmm_version.nil?
+            &nbsp;
+            = h(@record.vmm_version)
+          - unless @record.vmm_buildnumber.nil?
+            %br
+            = h(@record.vmm_buildnumber)
 
     = patternfly_accordion_panel(_("Properties"), false, "host_prop") do
       %ul.nav.nav-pills.nav-stacked
