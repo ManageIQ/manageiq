@@ -16,9 +16,10 @@ describe VmdbDatabaseConnection do
 
     get_connection = Thread.new do
       VmdbDatabaseConnection.connection.transaction do
-        made_connection.release
-        continue.release
+        # make an empty txn to ensure we've sent something to the db
       end
+      made_connection.release
+      continue.await # block until the main thread has found this connection.
     end
 
     made_connection.await # wait until the thread has made a db connection
