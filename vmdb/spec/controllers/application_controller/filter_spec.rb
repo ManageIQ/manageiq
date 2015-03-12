@@ -17,6 +17,103 @@ describe ApplicationController do
   end
 
   context "exp_changed" do
+    context "field type didn't change" do
+      attr_reader :controller
+
+      before(:each) do
+        @controller = FakeController.new
+        @controller.expkey = :expression
+        @controller.params = {}
+        @controller.session = {
+          :edit => { controller.expkey => { } }
+        }
+      end
+
+      def set_chosen_typ(type)
+        set_expkey_value :exp_typ, type
+        set_param_value :exp_typ, type
+      end
+
+      def set_expkey_value(key, value)
+        controller.session[:edit][controller.expkey][key] = value
+      end
+
+      def set_param_value(key, value)
+        controller.params[key] = value
+      end
+      
+      context "exp_typ is field" do
+        before(:each) do
+          set_chosen_typ "field"
+        end
+
+        it "detects changed exp_field with <Choose>" do
+          set_expkey_value :exp_field, "foo"
+          set_param_value :chosen_field, "<Choose>"
+          controller.exp_changed
+          expect(controller.edit).to eq({:expression => {:exp_typ   => "field",
+                                                         :exp_field => nil,
+                                                         :exp_value => nil,
+                                                         :exp_key   => nil,
+                                                         :alias     => nil},
+                                         :suffix     => nil})
+        end
+
+        context "changed exp_field with non-<Choose> chosen field" do
+          before(:each) do
+            set_expkey_value :exp_field, "foo"
+            set_param_value :chosen_field, "something"
+          end
+
+          it "detects changes when :chosen_field is a truthy value" do
+            controller.exp_changed
+            expect(controller.edit).to eq({:expression => {:exp_typ   => "field",
+                                                           :exp_field => "something",
+                                                           :exp_value => nil,
+                                                           :exp_key   => "=",
+                                                           :val1      => {:type  => :string,
+                                                                          :title => "Enter a Text String"},
+                                                           :val2      => {:type=>nil},
+                                                           :alias     => nil},
+
+                                           :suffix    => nil})
+          end
+
+          it "exp_model is not _display_filter_ and exp_field is plural" do
+            set_param_value :chosen_field, "User.miq_widgets"
+            set_expkey_value :exp_model, "foo"
+            controller.exp_changed
+            expect(controller.edit).to eq({:expression => {:exp_typ   => "field",
+                                                           :exp_field => "User.miq_widgets",
+                                                           :exp_model => "foo",
+                                                           :exp_value => nil,
+                                                           :exp_key   => "CONTAINS",
+                                                           :val1      => {:type  => :string,
+                                                                          :title => "Enter a Text String"},
+                                                           :val2      => {:type=>nil},
+                                                           :alias     => nil},
+                                           :suffix     => nil})
+          end
+
+          it "leaves exp_key alone" do
+            set_expkey_value :exp_field, "string"
+            set_expkey_value :exp_key, "STARTS WITH"
+            controller.exp_changed
+            expect(controller.edit).to eq({:expression => {:exp_typ   => "field",
+                                                           :exp_field => "something",
+                                                           :exp_value => nil,
+                                                           :exp_key   => "STARTS WITH",
+                                                           :val1      => {:type  => :string,
+                                                                          :title => "Enter a Text String"},
+                                                           :val2      => {:type=>nil},
+                                                           :alias     => nil},
+
+                                           :suffix    => nil})
+          end
+        end
+      end
+    end
+
     context "field type changed" do
       attr_reader :controller
 
