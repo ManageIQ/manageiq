@@ -13,7 +13,7 @@ describe OrchestrationTemplate do
         record.name.should        == query_hash[:name]
         record.content.should     == query_hash[:content]
         record.description.should == query_hash[:description]
-        record.ems_ref.should_not be_nil
+        record.md5.should_not be_nil
       end
     end
 

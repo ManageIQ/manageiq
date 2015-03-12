@@ -7,20 +7,22 @@ class OrchestrationTemplate < ActiveRecord::Base
 
   has_many :stacks, :class_name => "OrchestrationStack"
 
+  validates_uniqueness_of :md5
+
   # Find only by template content. Here we only compare md5 considering the table is expected
   # to be small and the chance of md5 collision is minimal.
   #
   def self.find_or_create_by_contents(hashes)
     hashes = [hashes] unless hashes.kind_of?(Array)
-    ems_refs = hashes.collect { |hash| Digest::MD5.hexdigest(hash[:content]) }
-    existing_templates = find_all_by_ems_ref(ems_refs).index_by(&:ems_ref)
+    md5s = hashes.collect { |hash| Digest::MD5.hexdigest(hash[:content]) }
+    existing_templates = where(:md5 => md5s).index_by(&:md5)
 
-    hashes.zip(ems_refs).collect do |hash, ems_ref|
-      template = existing_templates[ems_ref]
+    hashes.zip(md5s).collect do |hash, md5|
+      template = existing_templates[md5]
       unless template
-        hash.delete(:ems_ref)     # remove the field if exists, :ems_ref is read only from outside
+        hash.delete(:md5)     # remove the field if exists, :md5 is read only from outside
         template = create(hash)
-        existing_templates[ems_ref] = template
+        existing_templates[md5] = template
       end
       template
     end
@@ -28,7 +30,7 @@ class OrchestrationTemplate < ActiveRecord::Base
 
   def content=(c)
     super
-    self.ems_ref = Digest::MD5.hexdigest(c)
+    self.md5 = Digest::MD5.hexdigest(c)
   end
 
   # Check whether a template has been referenced by any stack. A template that is in use should be
@@ -71,7 +73,7 @@ class OrchestrationTemplate < ActiveRecord::Base
 
   private
 
-  def ems_ref=(_md5)
+  def md5=(_md5)
     super
   end
 end
