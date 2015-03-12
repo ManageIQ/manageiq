@@ -765,72 +765,7 @@ module ApplicationController::MiqRequestMethods
     @edit[:new] = options unless @workflow_exists
     @edit[:org_controller] = params[:org_controller]  if params[:org_controller]          #request originated from controller
     @edit[:prov_option_types] = MiqRequest::MODEL_REQUEST_TYPES[@layout == "miq_request_vm" ? :Vm : :Host]
-    if ["miq_template","service_template","vm"].include?(@edit[:org_controller])
-      if params[:prov_type] && !req
-        # only do this new requests
-        @edit[:prov_type] =  @edit[:prov_option_types][params[:prov_type].to_sym]
-        @edit[:prov_id] =  params[:prov_id]
-        if params[:prov_type] == "migrate"
-          @edit[:prov_type] = "VM Migrate"
-          @edit[:new][:src_ids] = params[:prov_id]
-          @edit[:wf] = VmMigrateWorkflow.new(@edit[:new],session[:userid])                        # Create a new provision workflow for this edit session
-        else
-          @edit[:prov_type] = "VM Provision"
-          options = Hash.new
-          if @edit[:org_controller] == "service_template"
-            options[:service_template_request] = true
-          else
-            options[:src_vm_id] = @edit[:prov_id]
-            options[:request_type] = params[:prov_type].to_sym
-          end
-          #setting class to MiqProvisionVmwareWorkflow for requests where src_vm_id is not already set, i.e catalogitem
-          wf_type = !options[:src_vm_id].blank? ? MiqProvisionWorkflow.class_for_source(options[:src_vm_id]) : MiqProvisionVmwareWorkflow
-          @edit[:wf] = wf_type.new(@edit[:new],session[:userid],options)                        # Create a new provision workflow for this edit session
-        end
-      else
-        options = Hash.new
-        if @edit[:org_controller] == "service_template"
-          options[:service_template_request] = true
-        end
-        options[:initial_pass] = true if req.nil?
-        #setting class to MiqProvisionVmwareWorkflow for requests where src_vm_id is not already set, i.e catalogitem
-        src_vm_id = if @edit[:new][:src_vm_id] && !@edit[:new][:src_vm_id][0].blank?
-          @edit[:new][:src_vm_id]
-        elsif @src_vm_id || params[:src_vm_id]  # Set vm id if pre-prov chose one
-          options[:src_vm_id] = [@src_vm_id || params[:src_vm_id].to_i]
-        end
-
-        options[:use_pre_dialog] = false if @workflow_exists
-
-        if src_vm_id && !src_vm_id[0].blank?
-          wf_type = MiqProvisionWorkflow.class_for_source(src_vm_id[0])
-        else
-          #handle copy button for host provisioning
-          wf_type = @edit[:st_prov_type] ? MiqProvisionWorkflow.class_for_platform(@edit[:st_prov_type]) : MiqHostProvisionWorkflow
-        end
-        pre_prov_values = copy_hash(@edit[:wf].values) if @edit[:wf]
-        begin
-          @edit[:wf] = req && req.type == "VmMigrateRequest" ? VmMigrateWorkflow.new(@edit[:new],session[:userid]) : wf_type.new(@edit[:new],session[:userid], options)   # Create a new provision workflow for this edit session
-        rescue MiqException::MiqVmError => bang
-          #only add this message if showing a list of Catalog items, show screen already handles this
-          @no_wf_msg = _("Cannot create Request Info, error: ") << bang.message
-        end
-        @edit[:prov_type] = req && req.request_type ? req.request_type_display : (req && req.type == "VmMigrateRequest" ? "VM Migrate" : "VM Provision")
-      end
-    else
-      @edit[:prov_type] = "Host"
-      if @edit[:new].empty?
-        # only need to set this for new records
-        @edit[:new][:src_host_ids] = Array.new
-        if params[:prov_id].kind_of?(Array)
-          #multiple hosts selected
-          @edit[:new][:src_host_ids] = params[:prov_id]
-        else
-          @edit[:new][:src_host_ids].push(params[:prov_id])
-        end
-      end
-      @edit[:wf] = MiqHostProvisionWorkflow.new(@edit[:new],session[:userid])                       # Create a new provision workflow for this edit session
-    end
+    @edit[:wf]                = workflow_instance_from_vars(req)
 
     if @edit[:wf]
       @edit[:wf].get_dialog_order.each do |d|
@@ -859,9 +794,9 @@ module ApplicationController::MiqRequestMethods
       # Give the model a change to modify the dialog based on the default settings
       #common grids
       @edit[:wf].refresh_field_values(@edit[:new],session[:userid])
-      unless pre_prov_values.nil?
+      unless @pre_prov_values.nil?
         @edit[:new] = @edit[:new].reject { |_k, v| v.nil? }
-        @edit[:new] = @edit[:new].merge pre_prov_values.select { |k| !@edit[:new].keys.include? k }
+        @edit[:new] = @edit[:new].merge @pre_prov_values.select { |k| !@edit[:new].keys.include? k }
       end
       @edit[:ds_sortdir] ||= "DESC"
       @edit[:ds_sortcol] ||= "free_space"
@@ -909,6 +844,75 @@ module ApplicationController::MiqRequestMethods
     else
       @edit[:current] ||= Hash.new
       @edit[:current] = copy_hash(@edit[:new])
+    end
+  end
+
+  def workflow_instance_from_vars(req)
+    if ["miq_template","service_template","vm"].include?(@edit[:org_controller])
+      if params[:prov_type] && !req
+        # only do this new requests
+        @edit[:prov_type] =  @edit[:prov_option_types][params[:prov_type].to_sym]
+        @edit[:prov_id] =  params[:prov_id]
+        if params[:prov_type] == "migrate"
+          @edit[:prov_type] = "VM Migrate"
+          @edit[:new][:src_ids] = params[:prov_id]
+          @edit[:wf] = VmMigrateWorkflow.new(@edit[:new],session[:userid])                        # Create a new provision workflow for this edit session
+        else
+          @edit[:prov_type] = "VM Provision"
+          options = Hash.new
+          if @edit[:org_controller] == "service_template"
+            options[:service_template_request] = true
+          else
+            options[:src_vm_id] = @edit[:prov_id]
+            options[:request_type] = params[:prov_type].to_sym
+          end
+          #setting class to MiqProvisionVmwareWorkflow for requests where src_vm_id is not already set, i.e catalogitem
+          wf_type = !options[:src_vm_id].blank? ? MiqProvisionWorkflow.class_for_source(options[:src_vm_id]) : MiqProvisionVmwareWorkflow
+          @edit[:wf] = wf_type.new(@edit[:new],session[:userid],options)                        # Create a new provision workflow for this edit session
+        end
+      else
+        options = Hash.new
+        if @edit[:org_controller] == "service_template"
+          options[:service_template_request] = true
+        end
+        options[:initial_pass] = true if req.nil?
+        #setting class to MiqProvisionVmwareWorkflow for requests where src_vm_id is not already set, i.e catalogitem
+        src_vm_id = if @edit[:new][:src_vm_id] && !@edit[:new][:src_vm_id][0].blank?
+          @edit[:new][:src_vm_id]
+        elsif @src_vm_id || params[:src_vm_id]  # Set vm id if pre-prov chose one
+          options[:src_vm_id] = [@src_vm_id || params[:src_vm_id].to_i]
+        end
+
+        options[:use_pre_dialog] = false if @workflow_exists
+
+        if src_vm_id && !src_vm_id[0].blank?
+          wf_type = MiqProvisionWorkflow.class_for_source(src_vm_id[0])
+        else
+          #handle copy button for host provisioning
+          wf_type = @edit[:st_prov_type] ? MiqProvisionWorkflow.class_for_platform(@edit[:st_prov_type]) : MiqHostProvisionWorkflow
+        end
+        @pre_prov_values = copy_hash(@edit[:wf].values) if @edit[:wf]
+        begin
+          @edit[:wf] = req && req.type == "VmMigrateRequest" ? VmMigrateWorkflow.new(@edit[:new],session[:userid]) : wf_type.new(@edit[:new],session[:userid], options)   # Create a new provision workflow for this edit session
+        rescue MiqException::MiqVmError => bang
+          #only add this message if showing a list of Catalog items, show screen already handles this
+          @no_wf_msg = _("Cannot create Request Info, error: ") << bang.message
+        end
+        @edit[:prov_type] = req && req.request_type ? req.request_type_display : (req && req.type == "VmMigrateRequest" ? "VM Migrate" : "VM Provision")
+      end
+    else
+      @edit[:prov_type] = "Host"
+      if @edit[:new].empty?
+        # only need to set this for new records
+        @edit[:new][:src_host_ids] = Array.new
+        if params[:prov_id].kind_of?(Array)
+          #multiple hosts selected
+          @edit[:new][:src_host_ids] = params[:prov_id]
+        else
+          @edit[:new][:src_host_ids].push(params[:prov_id])
+        end
+      end
+      @edit[:wf] = MiqHostProvisionWorkflow.new(@edit[:new],session[:userid])                       # Create a new provision workflow for this edit session
     end
   end
 
