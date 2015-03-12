@@ -900,14 +900,8 @@ module ApplicationController::MiqRequestMethods
     else
       @edit[:prov_type] = "Host"
       if @edit[:new].empty?
-        # only need to set this for new records
-        @edit[:new][:src_host_ids] = Array.new
-        if params[:prov_id].kind_of?(Array)
-          # multiple hosts selected
-          @edit[:new][:src_host_ids] = params[:prov_id]
-        else
-          @edit[:new][:src_host_ids].push(params[:prov_id])
-        end
+        # multiple / single hosts selected, src_host_ids should always be an array
+        @edit[:new][:src_host_ids] = params[:prov_id].kind_of?(Array) ? params[:prov_id] : [params[:prov_id]]
       end
       @edit[:wf] = MiqHostProvisionWorkflow.new(@edit[:new], session[:userid])  # Create a new provision workflow for this edit session
     end
