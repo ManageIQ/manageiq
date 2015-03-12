@@ -947,17 +947,12 @@ module ApplicationController::Filter
     session[:adv_search] ||= {}
     session[:adv_search][@edit[@expkey][:exp_model]] = copy_hash(@edit) # Save by model name in settings
 
-    js_options = {:hide_show_elements => {}}
-    js_options[:hide_show_elements][:quicksearchbox] = false
-    if @edit[:adv_search_open]
-      js_options[:hide_show_elements][:advsearchbox] = true
-    else
-      js_options[:hide_show_elements][:blocker_div] = false
+    render :update do |page|
+      page << "cfmeDynatree_activateNodeSilently('#{x_active_tree.to_s}', '#{x_node}');" if @edit[:in_explorer]
+      page << javascript_hide_if_exists("blocker_div")
+      page << javascript_hide_if_exists("quicksearchbox")
+      page << "miqSparkle(false);"
     end
-    js_options[:sf_node] = x_node if @edit[:in_explorer] # select a focus
-    js_options[:miq_button_visibility] = false
-    # Render the JS responses to update the quick_search
-    render :partial => "shared/quick_search", :locals => {:options => js_options}
   end
   private :quick_search_cancel_click
 
@@ -1028,10 +1023,11 @@ module ApplicationController::Filter
     end
 
     render :update do |page|
-      page.replace(:quicksearchbox, :partial => "layouts/quick_search")
+      page.replace(:user_input_filter, :partial => "layouts/user_input_filter")
       page << javascript_hide_if_exists("advsearchbox")
       page << javascript_show("blocker_div")
       page << javascript_show("quicksearchbox")
+      page << "$('#quicksearchbox').addClass('modal fade in');"
       page << "miqSparkle(false);"
     end
   end
