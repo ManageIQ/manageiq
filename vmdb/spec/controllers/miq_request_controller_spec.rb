@@ -66,12 +66,13 @@ describe MiqRequestController do
 
     it "MiqRequest-resource_type" do
       content = [
-        {"=" => {"value" => "[:MiqProvisionRequest, {:template=>\"VM Provision\", :clone_to_vm=>\"VM Clone\", :clone_to_template=>\"VM Publish\"}]", "field" => "MiqRequest-resource_type"}},
-        {"=" => {"value" => "[:VmReconfigureRequest, {:vm_reconfigure=>\"VM Reconfigure\"}]", "field" => "MiqRequest-resource_type"}},
-        {"=" => {"value" => "[:VmMigrateRequest, {:vm_migrate=>\"VM Migrate\"}]", "field" => "MiqRequest-resource_type"}},
-        {"=" => {"value" => "[:ServiceTemplateProvisionRequest, {:clone_to_service=>\"Service Provision\"}]", "field" => "MiqRequest-resource_type"}},
-        {"=" => {"value" => "[:ServiceReconfigureRequest, {:service_reconfigure=>\"Service Reconfigure\"}]", "field" => "MiqRequest-resource_type"}},
+        {"=" => {"value" => "MiqProvisionRequest",             "field" => "MiqRequest-resource_type"}},
+        {"=" => {"value" => "VmReconfigureRequest",            "field" => "MiqRequest-resource_type"}},
+        {"=" => {"value" => "VmMigrateRequest",                "field" => "MiqRequest-resource_type"}},
+        {"=" => {"value" => "ServiceTemplateProvisionRequest", "field" => "MiqRequest-resource_type"}},
+        {"=" => {"value" => "ServiceReconfigureRequest",       "field" => "MiqRequest-resource_type"}},
       ]
+
       MiqExpression.should_receive(:new).with { |h| expect(h.fetch_path("and", 2, "or")).to eq(content) }
       controller.send(:prov_condition, {})
     end
