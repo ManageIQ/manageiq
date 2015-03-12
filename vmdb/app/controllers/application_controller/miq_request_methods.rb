@@ -758,10 +758,10 @@ module ApplicationController::MiqRequestMethods
   # Set form variables for provision request
   def prov_set_form_vars(req = nil)
     @edit                   ||= Hash.new
-    session[:prov_options]    = @options = nil  #Clearing out options that were set on show screen
-    @edit[:req_id]            = req ? req.id : nil  # Save existing request record id, if passed in
+    session[:prov_options]    = @options = nil  # Clearing out options that were set on show screen
+    @edit[:req_id]            = req.try(:id)    # Save existing request record id, if passed in
     @edit[:key]               = "prov_edit__#{@edit[:req_id] && @edit[:req_id] || "new"}"
-    options                   = req ? req.get_options : Hash.new  # Use existing request options, if passed in
+    options                   = req.try(:get_options) || {}  # Use existing request options, if passed in
     @edit[:new]               = options unless @workflow_exists
     @edit[:org_controller]    = params[:org_controller]  if params[:org_controller]  # request originated from controller
     @edit[:prov_option_types] = MiqRequest::MODEL_REQUEST_TYPES[@layout == "miq_request_vm" ? :Vm : :Host]
