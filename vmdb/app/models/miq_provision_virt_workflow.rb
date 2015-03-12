@@ -107,29 +107,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   def continue_request(values, _requester_id)
     return false unless validate(values)
 
-    if @running_pre_dialog == true
-      @values[:pre_dialog_vm_tags] = @values[:vm_tags].dup
-    end
-
-    @dialogs = get_dialogs
-
-    if @running_pre_dialog == true
-      @running_pre_dialog = false
-
-      if @values[:sysprep_domain_name].kind_of?(String) && !@values[:sysprep_domain_name].blank?
-        @values[:sysprep_domain_name] = [@values[:sysprep_domain_name], @values[:sysprep_domain_name]]
-        @values[:forced_sysprep_domain_name] = [@values[:sysprep_domain_name].first]
-      end
-
-      if @values[:sysprep_enabled].kind_of?(String) && !@values[:sysprep_enabled].blank?
-        @values[:forced_sysprep_enabled] = 'fields' if @values[:sysprep_enabled] == 'fields'
-      end
-    end
-
+    exit_pre_dialog if @running_pre_dialog
     password_helper(@values, false) # Decrypt passwords in the hash for the UI
+    @dialogs    = get_dialogs
     @last_vm_id = get_value(@values[:src_vm_id])
-    # Force tags to reload
-    @tags = nil
+    @tags       = nil  # Force tags to reload
     set_default_values
 
     true
@@ -1384,6 +1366,19 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   rescue => err
     $log.error "#{log_header}: <#{err}>"
     raise err
+  end
+
+  private
+
+  def exit_pre_dialog
+    @running_pre_dialog              = false
+    @values[:pre_dialog_vm_tags]     = @values[:vm_tags].dup
+    @values[:forced_sysprep_enabled] = 'fields' if @values[:sysprep_enabled] == 'fields'
+
+    if (sdn = @values[:sysprep_domain_name]).presence.kind_of?(String)
+      @values[:sysprep_domain_name]        = [sdn, sdn]
+      @values[:forced_sysprep_domain_name] = [sdn]
+    end
   end
 end
 
