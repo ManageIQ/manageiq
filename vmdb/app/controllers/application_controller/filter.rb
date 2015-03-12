@@ -1413,11 +1413,13 @@ module ApplicationController::Filter
       elsif @edit[@expkey][:exp_value] == nil
         add_flash(_("A %s must be chosen to commit this expression element") % "tag value", :error)
       else
-        exp.delete(@edit[@expkey][:exp_orig_key])                     # Remove the old exp fields
-        exp[@edit[@expkey][:exp_key]] = Hash.new                        # Add in the new key
-        exp[@edit[@expkey][:exp_key]]["tag"] = @edit[@expkey][:exp_tag]         # Set the tag
-        exp[@edit[@expkey][:exp_key]]["value"] = @edit[@expkey][:exp_value]     # Set the value
-        exp[@edit[@expkey][:exp_key]]["alias"] = @edit[@expkey][:alias] if @edit.fetch_path(@expkey, :alias)
+        if exp.present?
+          exp.delete(@edit[@expkey][:exp_orig_key])                     # Remove the old exp fields
+          exp[@edit[@expkey][:exp_key]] = Hash.new                        # Add in the new key
+          exp[@edit[@expkey][:exp_key]]["tag"] = @edit[@expkey][:exp_tag]         # Set the tag
+          exp[@edit[@expkey][:exp_key]]["value"] = @edit[@expkey][:exp_value]     # Set the value
+          exp[@edit[@expkey][:exp_key]]["alias"] = @edit[@expkey][:alias] if @edit.fetch_path(@expkey, :alias)
+        end
       end
     when "regkey"
       if @edit[@expkey][:exp_regkey].blank?
