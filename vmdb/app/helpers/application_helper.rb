@@ -1932,7 +1932,7 @@ module ApplicationHelper
           return center_toolbar_filename_automate
         elsif x_active_tree == :containers_tree
           return center_toolbar_filename_containers
-        elsif [:sandt_tree, :svccat_tree, :stcat_tree, :svcs_tree].include?(x_active_tree)
+        elsif [:sandt_tree, :svccat_tree, :stcat_tree, :svcs_tree, :ot_tree].include?(x_active_tree)
           return center_toolbar_filename_services
         elsif @layout == "chargeback"
           return center_toolbar_filename_chargeback
