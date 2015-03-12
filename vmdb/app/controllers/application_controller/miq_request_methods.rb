@@ -851,8 +851,7 @@ module ApplicationController::MiqRequestMethods
     options = {}
     if ["miq_template", "service_template", "vm"].include?(@edit[:org_controller])
       if params[:prov_type] && !req  # only do this new requests
-        @edit[:prov_type] =  @edit[:prov_option_types][params[:prov_type].to_sym]
-        @edit[:prov_id]   =  params[:prov_id]
+        @edit[:prov_id] = params[:prov_id]
         if params[:prov_type] == "migrate"
           @edit[:prov_type]     = "VM Migrate"
           @edit[:new][:src_ids] = params[:prov_id]
