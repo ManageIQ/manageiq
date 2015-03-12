@@ -873,12 +873,12 @@ module ApplicationController::MiqRequestMethods
         options[:service_template_request] = true  if @edit[:org_controller] == "service_template"
         options[:use_pre_dialog]           = false if @workflow_exists
         # setting class to MiqProvisionVmwareWorkflow for requests where src_vm_id is not already set, i.e catalogitem
-        src_vm_id = if @edit[:new][:src_vm_id] && !@edit[:new][:src_vm_id][0].blank?
-          @edit[:new][:src_vm_id]
-        elsif @src_vm_id || params[:src_vm_id]  # Set vm id if pre-prov chose one
-          options[:src_vm_id] = [@src_vm_id || params[:src_vm_id].to_i]
-        end
-
+        src_vm_id =
+          if @edit.fetch_path(:new, :src_vm_id, 0).present?
+            @edit[:new][:src_vm_id]
+          elsif @src_vm_id || params[:src_vm_id]  # Set vm id if pre-prov chose one
+            options[:src_vm_id] = [@src_vm_id || params[:src_vm_id].to_i]
+          end
 
         if src_vm_id && !src_vm_id[0].blank?
           wf_type = MiqProvisionWorkflow.class_for_source(src_vm_id[0])
