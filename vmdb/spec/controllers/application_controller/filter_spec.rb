@@ -38,8 +38,20 @@ describe ApplicationController do
         controller.session[:edit][controller.expkey][key] = value
       end
 
+      def get_expkey_value(key)
+        controller.session[:edit][controller.expkey][key]
+      end
+
       def set_param_value(key, value)
         controller.params[key] = value
+      end
+
+      def set_edit_value(key, value)
+        controller.session[:edit][key] = value
+      end
+
+      def get_edit_value(key)
+        controller.session[:edit][key]
       end
       
       context "exp_typ is field" do
@@ -57,6 +69,16 @@ describe ApplicationController do
                                                          :exp_key   => nil,
                                                          :alias     => nil},
                                          :suffix     => nil})
+        end
+
+        it "detects chosen key changes and deletes suffix" do
+          set_param_value :chosen_key, "RUBY"
+          set_expkey_value :exp_key, "hello"
+          set_edit_value :suffix, Object.new
+          controller.exp_changed
+
+          expect(get_edit_value(:suffix)).to be_nil
+          expect(get_expkey_value(:exp_key)).to eq("RUBY")
         end
 
         context "changed exp_field with non-<Choose> chosen field" do
