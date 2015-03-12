@@ -31,7 +31,7 @@
         "data-miq_observe" => obs)
 %hr
 %h3=_('Fields')
-%table.style3{:cellspacing => '1'}
+%table.table.table-striped.table-bordered
   %thead
     %tr
       %th=_('Name')
@@ -42,7 +42,7 @@
       %th=_('Collect')
   %tbody
     - @edit[:new][:ae_values].each_with_index do |flds, i|
-      %tr{:class => cycle('row0', 'row1')}
+      %tr
         - image = @edit[:new][:ae_fields][i]["substitute"] ? "passed.png" : "failed.png"
         %td
           %img{:src => "/images/icons/new/ae_#{@edit[:new][:ae_fields][i]["aetype"]}.png",
