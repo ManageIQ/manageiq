@@ -392,17 +392,15 @@ module ApplicationController::Filter
     end
 
     # Check for changes in date format
-    if @edit[@expkey][:exp_value].present? && @edit[@expkey][:exp_cvalue].present?
-      if params[:date_format_1]
-        @edit[@expkey][:val1][:date_format] = params[:date_format_1]
-        @edit[@expkey][:exp_value].collect! { |_| params[:date_format_1] == "s" ? nil : EXP_TODAY }
-        @edit[@expkey][:val1][:through_choices] = exp_through_choices(@edit[@expkey][:exp_value][0]) if params[:date_format_1] == "r"
-      end
-      if params[:date_format_2]
-        @edit[@expkey][:val2][:date_format] = params[:date_format_2]
-        @edit[@expkey][:exp_cvalue].collect! { |_| params[:date_format_2] == "s" ? nil : EXP_TODAY }
-        @edit[@expkey][:val2][:through_choices] = exp_through_choices(@edit[@expkey][:exp_cvalue][0]) if params[:date_format_2] == "r"
-      end
+    if params[:date_format_1] && @edit[@expkey][:exp_value].present?
+      @edit[@expkey][:val1][:date_format] = params[:date_format_1]
+      @edit[@expkey][:exp_value].collect! { |_| params[:date_format_1] == "s" ? nil : EXP_TODAY }
+      @edit[@expkey][:val1][:through_choices] = exp_through_choices(@edit[@expkey][:exp_value][0]) if params[:date_format_1] == "r"
+    end
+    if params[:date_format_2] && @edit[@expkey][:exp_cvalue].present?
+      @edit[@expkey][:val2][:date_format] = params[:date_format_2]
+      @edit[@expkey][:exp_cvalue].collect! { |_| params[:date_format_2] == "s" ? nil : EXP_TODAY }
+      @edit[@expkey][:val2][:through_choices] = exp_through_choices(@edit[@expkey][:exp_cvalue][0]) if params[:date_format_2] == "r"
     end
 
     # Check for suffixes changed
