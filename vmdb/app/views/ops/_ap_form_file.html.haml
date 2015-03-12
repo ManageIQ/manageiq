@@ -27,7 +27,7 @@
                 :item_type => "file",
                 :id        => "#{@scan.id || "new"}")
           %td
-            = text_field("entry", "fname", :maxlength=>MAX_NAME_LEN)
+            = text_field("entry", "fname", :maxlength => MAX_NAME_LEN, :style => "width: 100%;")
             = hidden_field("item", "type1", :value=>"file")
           %td
             = check_box_tag("entry_content", value="1", checked=false, :id=>"entry_content")
