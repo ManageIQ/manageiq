@@ -757,10 +757,10 @@ module ApplicationController::MiqRequestMethods
 
   # Set form variables for provision request
   def prov_set_form_vars(req = nil)
-    @edit                   ||= Hash.new
+    @edit                   ||= {}
     session[:prov_options]    = @options = nil  # Clearing out options that were set on show screen
     @edit[:req_id]            = req.try(:id)    # Save existing request record id, if passed in
-    @edit[:key]               = "prov_edit__#{@edit[:req_id] && @edit[:req_id] || "new"}"
+    @edit[:key]               = "prov_edit__#{@edit[:req_id] || "new"}"
     options                   = req.try(:get_options) || {}  # Use existing request options, if passed in
     @edit[:new]               = options unless @workflow_exists
     @edit[:org_controller]    = params[:org_controller]  if params[:org_controller]  # request originated from controller
@@ -794,7 +794,7 @@ module ApplicationController::MiqRequestMethods
       # Give the model a change to modify the dialog based on the default settings
       #common grids
       @edit[:wf].refresh_field_values(@edit[:new],session[:userid])
-      unless @pre_prov_values.nil?
+      if @pre_prov_values
         @edit[:new] = @edit[:new].reject { |_k, v| v.nil? }
         @edit[:new] = @edit[:new].merge @pre_prov_values.select { |k| !@edit[:new].keys.include? k }
       end
