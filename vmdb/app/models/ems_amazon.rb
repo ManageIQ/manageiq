@@ -10,7 +10,7 @@ class EmsAmazon < EmsCloud
     @description ||= "Amazon EC2".freeze
   end
 
-  def hostname_ipaddress_required?
+  def hostname_required?
     false
   end
 
