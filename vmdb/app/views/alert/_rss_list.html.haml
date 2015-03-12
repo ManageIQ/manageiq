@@ -6,10 +6,10 @@
         %span.pficon.pficon-warning-exclamation
       %strong= _('No RSS Feeds Found')
   - else
-    %table.style3
+    %table.table.table-striped.table-bordered.table-hover
       %thead
         %tr
-          %th.special{:colspan => 4}
+          %th{:colspan => 4}
             = _('Admin Role Filter:')
             = select_tag('role',
                          options_for_select(@rss_roles, @rss_role),
@@ -17,17 +17,17 @@
                          "data-miq_observe" => {:url => url_for(:action => 'role_selected')}.to_json)
             = javascript_tag(javascript_focus('role'))
         %tr
-          %th.icon
+          %th.narrow
           %th= _('Title')
           %th= _('Description')
           %th= _('Feed URL')
       %tbody
         - @rss_feeds.each do |feed|
-          %tr{:class => cycle('row0', 'row1')}
-            %td.icon{:onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+          %tr{:title =>_("Subscribe to this feed"),:onclick => "DoNav('#{feed.link}');"}
+            %td.narrow
               %ul.icons
                 %li
-                  = link_to("", feed.link, :title => _("Subscribe to this feed"), :class => "fa fa-rss")
+                  %span.pficon{:class => "fa fa-rss"}
             %td
               = h(feed.title)
             %td
