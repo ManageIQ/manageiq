@@ -65,13 +65,9 @@ describe MiqRequestController do
     end
 
     it "MiqRequest-resource_type" do
-      content = [
-        {"=" => {"value" => "MiqProvisionRequest",             "field" => "MiqRequest-resource_type"}},
-        {"=" => {"value" => "VmReconfigureRequest",            "field" => "MiqRequest-resource_type"}},
-        {"=" => {"value" => "VmMigrateRequest",                "field" => "MiqRequest-resource_type"}},
-        {"=" => {"value" => "ServiceTemplateProvisionRequest", "field" => "MiqRequest-resource_type"}},
-        {"=" => {"value" => "ServiceReconfigureRequest",       "field" => "MiqRequest-resource_type"}},
-      ]
+      content = %w(MiqProvisionRequest VmReconfigureRequest VmMigrateRequest ServiceTemplateProvisionRequest ServiceReconfigureRequest).collect do |type|
+        {"=" => {"value" => type, "field" => "MiqRequest-resource_type"}}
+      end
 
       MiqExpression.should_receive(:new).with { |h| expect(h.fetch_path("and", 2, "or")).to eq(content) }
       controller.send(:prov_condition, {})
