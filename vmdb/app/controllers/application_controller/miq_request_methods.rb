@@ -893,7 +893,9 @@ module ApplicationController::MiqRequestMethods
           # only add this message if showing a list of Catalog items, show screen already handles this
           @no_wf_msg = _("Cannot create Request Info, error: ") << bang.message
         end
-        @edit[:prov_type] = req && req.request_type ? req.request_type_display : (req && req.type == "VmMigrateRequest" ? "VM Migrate" : "VM Provision")
+
+        @edit[:prov_type]   = req.try(:request_type) && req.request_type_display
+        @edit[:prov_type] ||= req.try(:type) == "VmMigrateRequest" ? "VM Migrate" : "VM Provision"
       end
     else
       @edit[:prov_type] = "Host"
