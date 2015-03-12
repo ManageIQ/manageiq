@@ -441,7 +441,7 @@ class MiqRequestController < ApplicationController
       cond.push("or" => a_s.collect { |s| {"=" => {"value" => s, "field" => "MiqRequest-approval_state"}} })
     end
 
-    cond.push("or" => request_types_for_model.collect { |k| {"=" => {"value" => k.to_s, "field" => "MiqRequest-resource_type"}} })
+    cond.push("or" => request_types_for_model.keys.collect { |k| {"=" => {"value" => k.to_s, "field" => "MiqRequest-resource_type"}} })
 
     if opts[:type_choice] && opts[:type_choice] != "all"  # Add request_type filter, if selected
       cond.push("=" => {"value" => opts[:type_choice], "field" => "MiqRequest-request_type"})
