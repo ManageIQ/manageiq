@@ -142,7 +142,7 @@ module ApplicationController::Filter
       exp_hash[k] = nil
     end
 
-    case exp_hash[:exp_typ]                   # Change the exp fields based on the new type
+    case chosen_typ                   # Change the exp fields based on the new type
     when "<Choose>"
       exp_hash[:exp_typ] = nil
     when "field"
@@ -169,7 +169,6 @@ module ApplicationController::Filter
   # Handle items changed in the expression editor
   def exp_changed
     @edit = session[:edit]
-    exp_hash = @edit[@expkey]
 
     div_num = @edit[:flash_div_num] ? @edit[:flash_div_num] : ""
     if params[:chosen_typ] && params[:chosen_typ] != @edit[@expkey][:exp_typ] # Did the type field change?
