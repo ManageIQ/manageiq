@@ -294,30 +294,10 @@ object:
       max_time: 
   - field:
       aetype: state
-      name: DeleteFromVMDB
-      display_name: 
-      datatype: string
-      priority: 15
-      owner: 
-      default_value: "/Infrastructure/VM/Retirement/StateMachines/Methods/DeleteFromVMDB"
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: update_retirement_status(status => 'Removing from VMDB')
-      on_exit: update_retirement_status(status => 'Removed from VMDB')
-      on_error: update_retirement_status(status => 'Error Removing from VMDB')
-      max_retries: '100'
-      max_time: 
-  - field:
-      aetype: state
       name: FinishRetirement
       display_name: 
       datatype: string
-      priority: 16
+      priority: 15
       owner: 
       default_value: "/Infrastructure/VM/Retirement/StateMachines/Methods/FinishRetirement"
       substitute: true
@@ -330,5 +310,25 @@ object:
       on_entry: update_retirement_status(status => 'Finishing Retirement')
       on_exit: update_retirement_status(status => 'Finished Retirement')
       on_error: update_retirement_status(status => 'Error Finishing Retirement')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: DeleteFromVMDB
+      display_name: 
+      datatype: string
+      priority: 16
+      owner: 
+      default_value: "/Infrastructure/VM/Retirement/StateMachines/Methods/DeleteFromVMDB"
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_retirement_status(status => 'Removing from VMDB')
+      on_exit: update_retirement_status(status => 'Removed from VMDB')
+      on_error: update_retirement_status(status => 'Error Removing from VMDB')
       max_retries: '100'
       max_time: 
