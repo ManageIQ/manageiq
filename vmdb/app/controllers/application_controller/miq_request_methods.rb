@@ -869,10 +869,9 @@ module ApplicationController::MiqRequestMethods
           @edit[:wf] = wf_type.new(@edit[:new], session[:userid], options)  # Create a new provision workflow for this edit session
         end
       else
-        if @edit[:org_controller] == "service_template"
-          options[:service_template_request] = true
-        end
-        options[:initial_pass] = true if req.nil?
+        options[:initial_pass]             = true  unless req
+        options[:service_template_request] = true  if @edit[:org_controller] == "service_template"
+        options[:use_pre_dialog]           = false if @workflow_exists
         # setting class to MiqProvisionVmwareWorkflow for requests where src_vm_id is not already set, i.e catalogitem
         src_vm_id = if @edit[:new][:src_vm_id] && !@edit[:new][:src_vm_id][0].blank?
           @edit[:new][:src_vm_id]
@@ -880,7 +879,6 @@ module ApplicationController::MiqRequestMethods
           options[:src_vm_id] = [@src_vm_id || params[:src_vm_id].to_i]
         end
 
-        options[:use_pre_dialog] = false if @workflow_exists
 
         if src_vm_id && !src_vm_id[0].blank?
           wf_type = MiqProvisionWorkflow.class_for_source(src_vm_id[0])
