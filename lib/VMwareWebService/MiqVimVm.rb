@@ -721,7 +721,7 @@ class MiqVimVm
 	# If backingFile is just the datastore name, "[storage 1]" for example,
 	#    file names will be generated as appropriate.
 	#
-	def addDisk(backingFile, sizeInMB, label=nil, summary=nil, thinProvisioned=false)
+	def addDisk(backingFile, sizeInMB, label=nil, summary=nil, thinProvisioned=false, dependent=false, persistent=true)
 	    ck, un = getScsiCandU
 	    raise "addDisk: no SCSI controller found" if !ck
 
@@ -749,9 +749,12 @@ class MiqVimVm
 						    con.startConnected		= "true"
 						    con.connected			= "true"
 						end
+						mode = (dependent ? 
+							  (persistent ? VirtualDiskMode::Persistent : VirtualDiskMode::Nonpersistent ) 
+							: (persistent ? VirtualDiskMode::Independent_persistent : VirtualDiskMode::Independent_nonpersistent )
+						)
 						vDev.backing = VimHash.new("VirtualDiskFlatVer2BackingInfo") do |bck|
-							# bck.diskMode = VirtualDiskMode::Independent_nonpersistent
-							bck.diskMode		= VirtualDiskMode::Independent_persistent
+							bck.diskMode		= mode
 						    bck.split			= "false"
 						    bck.thinProvisioned	= thinProvisioned.to_s
 						    bck.writeThrough	= "false"
