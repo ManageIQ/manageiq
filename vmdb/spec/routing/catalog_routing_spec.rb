@@ -37,6 +37,7 @@ describe 'routes for CatalogController' do
     group_form_field_changed
     group_update
     identify_catalog
+    orchestration_template_add
     orchestration_template_copy
     orchestration_template_edit
     ot_copy_submit

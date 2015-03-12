@@ -180,4 +180,62 @@ describe CatalogController do
       OrchestrationTemplate.find_by_id(ot.id).should_not be_nil
     end
   end
+
+  context "#ot_create" do
+    before(:each) do
+      @new_name = "New Name"
+      new_description = "New Description"
+      new_type = "OrchestrationTemplateCfn"
+      @new_content = "New Content"
+      edit = {
+        :new => {
+          :name        => @new_name,
+          :description => new_description,
+          :content     => @new_content,
+          :type        => new_type,
+          :draft       => false},
+        :key => "ot_add__new",
+      }
+      session[:edit] = edit
+      controller.instance_variable_set(:@sb, :trees => {:ot_tree => {:open_nodes => []}}, :active_tree => :ot_tree)
+    end
+
+    it "Orchestration Template is created" do
+      controller.instance_variable_set(:@_params, :content => @new_content, :button => "add")
+      controller.should_receive(:render)
+      controller.stub(:replace_right_cell)
+      controller.send(:ot_add_submit)
+      controller.send(:flash_errors?).should_not be_true
+      assigns(:flash_array).first[:message].should include("was saved")
+      assigns(:edit).should be_nil
+      expect(response.status).to eq(200)
+      OrchestrationTemplate.find_by_name(@new_name).should_not be_nil
+    end
+
+    it "Orchestration Template draft is created" do
+      controller.instance_variable_set(:@_params, :content => @new_content, :button => "add")
+      session[:edit][:new][:draft] = true
+      controller.should_receive(:render)
+      controller.stub(:replace_right_cell)
+      controller.send(:ot_add_submit)
+      controller.send(:flash_errors?).should_not be_true
+      assigns(:flash_array).first[:message].should include("was saved")
+      assigns(:edit).should be_nil
+      expect(response.status).to eq(200)
+      ot = OrchestrationTemplate.find_by_name(@new_name)
+      ot.should_not be_nil
+      ot.draft.should be_true
+    end
+
+    it "Orchestration Template creation is cancelled" do
+      controller.instance_variable_set(:@_params, :content => @new_content, :button => "cancel")
+      controller.stub(:replace_right_cell)
+      controller.send(:ot_add_submit)
+      controller.send(:flash_errors?).should_not be_true
+      assigns(:flash_array).first[:message].should include("was cancelled")
+      assigns(:edit).should be_nil
+      expect(response.status).to eq(200)
+      OrchestrationTemplate.find_by_name(@new_name).should be_nil
+    end
+  end
 end

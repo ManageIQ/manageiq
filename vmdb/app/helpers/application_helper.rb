@@ -1012,10 +1012,7 @@ module ApplicationHelper
         return true unless @perf_options[:typ] == "realtime"
       end
     when "OrchestrationTemplate", "OrchestrationTemplateCfn", "OrchestrationTemplateHot"
-      case id
-      when "orchestration_template_edit", "orchestration_template_copy", "orchestration_template_remove"
-        return true unless role_allows(:feature => "orchestration_templates_admin")
-      end
+      return true unless role_allows(:feature => id)
     when "NilClass"
       case id
       when "action_new"
@@ -1036,6 +1033,8 @@ module ApplicationHelper
         return true if ["workers", "evm_logs", "audit_logs"].include?(@lastaction)
       when "orchestration_template_edit", "orchestration_template_copy", "orchestration_template_remove"
         return true unless @report
+      when "orchestration_template_add"
+        return true unless role_allows(:feature => "orchestration_template_add")
       when "policy_new"
         return true unless role_allows(:feature => "policy_new")
       when "profile_new"
@@ -2045,7 +2044,11 @@ module ApplicationHelper
         return "services_center_tb"
       end
     elsif x_active_tree == :ot_tree
-      return "ot_center_tb"
+      if %w(root xx-otcfn xx-othot).include?(x_node)
+        return "ot_list_center_tb"
+      else
+        return "ot_center_tb"
+      end
     end
   end
 
