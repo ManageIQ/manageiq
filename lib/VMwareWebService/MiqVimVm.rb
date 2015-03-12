@@ -720,6 +720,13 @@ class MiqVimVm
 	#    In this case, backingFile must be the path to the existing VMDK.
 	# If backingFile is just the datastore name, "[storage 1]" for example,
 	#    file names will be generated as appropriate.
+	# 
+	# thinProvisioned - if new disk is thin (grow on demand, allowing storage overcommitment) or thick (pre-allocated)
+	# dependent       - if new disk is dependent (usual one) or not (meaning no delta file and no live snapshots of running VM)
+	# persistent      - if new disk should really save changes or discard them on VM poweroff
+	# 
+	# P.S. Good overview of use cases for dependent / independent and persistent / nonpersistent disks
+	# can be found at http://cormachogan.com/2013/04/16/what-are-dependent-independent-disks-persistent-and-non-persisent-modes/
 	#
 	def addDisk(backingFile, sizeInMB, label=nil, summary=nil, thinProvisioned=false, dependent=false, persistent=true)
 	    ck, un = getScsiCandU
@@ -749,10 +756,12 @@ class MiqVimVm
 						    con.startConnected		= "true"
 						    con.connected			= "true"
 						end
-						mode = (dependent ? 
-							  (persistent ? VirtualDiskMode::Persistent : VirtualDiskMode::Nonpersistent ) 
-							: (persistent ? VirtualDiskMode::Independent_persistent : VirtualDiskMode::Independent_nonpersistent )
-						)
+						mode = VirtualDiskMode::Independent_persistent
+						if dependent
+							mode = (persistent ? VirtualDiskMode::Persistent : VirtualDiskMode::Nonpersistent)
+						else
+							mode = (persistent ? VirtualDiskMode::Independent_persistent : VirtualDiskMode::Independent_nonpersistent)
+						end
 						vDev.backing = VimHash.new("VirtualDiskFlatVer2BackingInfo") do |bck|
 							bck.diskMode		= mode
 						    bck.split			= "false"
