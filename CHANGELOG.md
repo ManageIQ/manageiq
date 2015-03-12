@@ -2,6 +2,53 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased - as of Sprint 20 end 2015-03-09
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+20+Ending+Mar+9%2C+2015%22+label%3Aenhancement)
+
+- UI
+  - Implement HTML5 Console for RHEVM and VMware
+  - Menu plugins for external sites
+  - Orchestration templates UI updates
+  - HAML and I18n strings 100% completed in views
+- Automate
+  - New retirement workflow
+  - Added edit/copy/remove for Orchestration Templates
+  - Enabled CloudFormation Provisioning through Services
+  - New Cloud Objects exposed to Automate 
+- Rest API: Total parity with SOAP API
+- Fleecing: Systemd fleecing support
+- Providers (Backend completion)
+  - OpenStack Infrastructure: Heat stacks, images, additional metrics
+  - Kubernetes (Containers): Event catcher
+- Foreman Integration (Backed completion)
+  - Reorganized backend tables of managers by consolidating into ext_management_systems
+  - Verification of credentials
+  - Workers for EMS Refresh
+  - Provisioning
+
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+20+Ending+Mar+9%2C+2015%22+label%3Aenhancement)
+
+- Appliance
+  - Replaced authentication_(valid|invalid)? with (has|missing)_credentials?
+  - Stop/start apache if user_interface and web_services are inactive/active
+  - Rails server listen on loopback in production mode
+  - Make memcached listen on loopback address, not all addresses
+  - Migrate empty memcache_server_opts to bind on localhost by default  
+- IPv6:  Merged support for IPv6 addresses with RHEVM/oVirt (requires ip6tables 443 open)
+- Providers
+  - Hosts and Providers will now default to use the hostname column for communication instead of IP address.  UI changes are still to be done.
+  - Use rest-client master branch for IPv6 fixes
+- Automate Service Dialogs: Enabled dynamic date control
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+20+Ending+Mar+9%2C+2015%22+label%3Abug)
+
+Notable fixes include:
+- RHEVM/oVirt discovery fixed to eliminate false positives
+- Appliance no longer automatically creates database.yml, created after database is configured.
+- Corrected ManageIQ/Infrastructure/vm/retirement method retry criteria
+
 ## Unreleased - as of Sprint 19 end 2015-02-16
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+19+Ending+Feb+16%2C+2015%22+label%3Aenhancement)
