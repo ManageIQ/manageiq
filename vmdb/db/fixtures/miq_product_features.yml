@@ -1138,6 +1138,10 @@
       :description: Add a Infrastructure Provider
       :feature_type: admin
       :identifier: ems_infra_new
+    - :name: Scale
+      :description: Scale a Infrastructure Provider
+      :feature_type: admin
+      :identifier: ems_infra_scale
 
 # Datacenters
 - :name: Datacenters
