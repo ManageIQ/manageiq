@@ -848,6 +848,7 @@ module ApplicationController::MiqRequestMethods
   end
 
   def workflow_instance_from_vars(req)
+    options = {}
     if ["miq_template", "service_template", "vm"].include?(@edit[:org_controller])
       if params[:prov_type] && !req  # only do this new requests
         @edit[:prov_type] =  @edit[:prov_option_types][params[:prov_type].to_sym]
@@ -858,7 +859,6 @@ module ApplicationController::MiqRequestMethods
           @edit[:wf]            = VmMigrateWorkflow.new(@edit[:new], session[:userid])  # Create a new provision workflow for this edit session
         else
           @edit[:prov_type] = "VM Provision"
-          options           = Hash.new
           if @edit[:org_controller] == "service_template"
             options[:service_template_request] = true
           else
@@ -870,7 +870,6 @@ module ApplicationController::MiqRequestMethods
           @edit[:wf] = wf_type.new(@edit[:new], session[:userid], options)  # Create a new provision workflow for this edit session
         end
       else
-        options = Hash.new
         if @edit[:org_controller] == "service_template"
           options[:service_template_request] = true
         end
