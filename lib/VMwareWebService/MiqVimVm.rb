@@ -756,7 +756,6 @@ class MiqVimVm
 						    con.startConnected		= "true"
 						    con.connected			= "true"
 						end
-						mode = VirtualDiskMode::Independent_persistent
 						if dependent
 							mode = (persistent ? VirtualDiskMode::Persistent : VirtualDiskMode::Nonpersistent)
 						else
