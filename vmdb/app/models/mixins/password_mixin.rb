@@ -6,12 +6,24 @@ module PasswordMixin
   end
 
   module ClassMethods
+    def encrypted_columns
+      @encrypted_columns ||= []
+    end
+
+    def add_encrypted_column(column)
+      @encrypted_columns ||= []
+      @encrypted_columns |= [column] if column.present?
+    end
+
     def encrypt_column(column)
       # Given a column of "password", create 4 instance methods:
       #   password            : Get the password in plain text
       #   password=           : Set the password in plain text
       #   password_encrypted  : Get the password in cryptext
       #   password_encrypted= : Set the password in cryptext
+
+      add_encrypted_column(column.to_s)
+      add_encrypted_column("#{column}_encrypted")
 
       mod = generated_methods_for_password_mixin
 

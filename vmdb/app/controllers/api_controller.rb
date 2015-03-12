@@ -66,8 +66,9 @@ class ApiController < ApplicationController
   # Converted to @attr_<type> hashes at init, much faster access.
   #
   ATTR_TYPES = {
-    :time => %w(expires_on),
-    :url  => %w(href)
+    :time      => %w(expires_on),
+    :url       => %w(href),
+    :encrypted => %w(password)
   }
 
   #

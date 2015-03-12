@@ -95,22 +95,36 @@ class ApiController
       # Accessed as @attr_<type>[<name>], much faster than array include?
       #
       def gen_attr_type_hash
-        @attr_time = {}
-        @attr_url  = {}
+        @attr_url       = {}
+        @attr_time      = {}
+        @attr_encrypted = {}
 
-        ATTR_TYPES[:time].each { |attr| @attr_time[attr] = true }
-        ATTR_TYPES[:url].each  { |attr| @attr_url[attr]  = true }
-        #
-        # Let's dynamically get the :date and :datetime attributes from the Classes we care about.
-        #
+        ATTR_TYPES[:time].each      { |attr| @attr_time[attr]      = true }
+        ATTR_TYPES[:url].each       { |attr| @attr_url[attr]       = true }
+        ATTR_TYPES[:encrypted].each { |attr| @attr_encrypted[attr] = true }
+
+        gen_time_attr_type_hash
+        gen_encrypted_attr_type_hash
+      end
+
+      #
+      # Let's dynamically get the :date and :datetime attributes from the Classes we care about.
+      #
+      def gen_time_attr_type_hash
         collection_config.values.each do |cspec|
-          unless cspec[:klass].blank?
-            klass = cspec[:klass].constantize
-            klass.columns_hash.collect  do |name, typeobj|
-              @attr_time[name] = true if %w(date datetime).include?(typeobj.type.to_s)
-            end
+          next if cspec[:klass].blank?
+          klass = cspec[:klass].constantize
+          klass.columns_hash.collect  do |name, typeobj|
+            @attr_time[name] = true if %w(date datetime).include?(typeobj.type.to_s)
           end
         end
+      end
+
+      #
+      # Let's get all encrypted attributes
+      #
+      def gen_encrypted_attr_type_hash
+        ::Authentication.all_encrypted_columns.each { |attr| @attr_encrypted[attr] = true }
       end
     end
   end

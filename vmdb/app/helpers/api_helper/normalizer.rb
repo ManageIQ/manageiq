@@ -53,9 +53,11 @@ module ApiHelper
     def normalize_attr_byname(type, attr, value)
       return if value.nil?
       if self.class.attr_type_hash(:time).key?(attr.to_s)
-        normalize_attr(type, :time, value)
+        normalize_attr(type, :time,       value)
       elsif self.class.attr_type_hash(:url).key?(attr.to_s)
-        normalize_attr(type, :url,  value)
+        normalize_attr(type, :url,        value)
+      elsif self.class.attr_type_hash(:encrypted).key?(attr.to_s)
+        normalize_attr(type, :encrypted,  value)
       else
         value
       end
@@ -89,6 +91,13 @@ module ApiHelper
     #
     def normalize_href(type, value)
       normalize_url(type, "#{type}/#{value}")
+    end
+
+    #
+    # Let's filter encrypted attributes, i.e. passwords
+    #
+    def normalize_encrypted(_type, _value)
+      "[FILTERED]"
     end
 
     private
