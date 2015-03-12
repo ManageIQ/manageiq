@@ -174,6 +174,10 @@ class ExtManagementSystem < ActiveRecord::Base
   end
 
   def hostname_required?
+    self.class.hostname_required?
+  end
+
+  def self.hostname_required?
     true
   end
 

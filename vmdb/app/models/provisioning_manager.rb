@@ -4,7 +4,7 @@ class ProvisioningManager < ExtManagementSystem
   has_many :customization_script_ptables
   has_many :customization_script_media
 
-  def hostname_required?
+  def self.hostname_required?
     false
   end
 end
