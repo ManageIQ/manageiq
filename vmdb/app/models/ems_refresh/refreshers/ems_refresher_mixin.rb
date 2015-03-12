@@ -39,6 +39,7 @@ module EmsRefresh
 
             # record the failed status and skip post-processing
             ems.update_attributes(:last_refresh_error => e.to_s, :last_refresh_date => Time.now.utc)
+            raise if Rails.env.development?
             next
           ensure
             post_refresh_ems_cleanup(ems, targets)
