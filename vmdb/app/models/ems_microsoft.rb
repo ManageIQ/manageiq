@@ -96,7 +96,7 @@ class EmsMicrosoft < EmsInfra
     return unless vm_uid_ems.guid?
 
     params  = parameters.join(" ")
-    
+
     # TODO: If localhost could feasibly be changed to an IPv6 address such as "::1", we need to
     # wrap the IPv6 address in square brackets,  similar to the a URIs's host field, "[::1]".
     command = "powershell Import-Module VirtualMachineManager; Get-SCVMMServer localhost;\
