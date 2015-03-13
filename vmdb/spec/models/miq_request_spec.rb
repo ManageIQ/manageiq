@@ -57,66 +57,71 @@ describe MiqRequest do
   end
 
   context "A new request" do
-    before(:each) do
+    let(:event_name) { "hello" }
+
+    before do
       @fred          = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
       @approver_role = UiTaskSet.create(:name => "approver", :description => "Approver")
       @request       = FactoryGirl.create(:miq_request, :requester => @fred)
     end
 
+    it { expect(@request).to be_valid }
     describe("#request_type_display") { it { expect(@request.request_type_display).to eq("Unknown") } }
-
-    it "should validate" do
-      @request.should be_valid
-    end
+    describe("#requester_userid")     { it { expect(@request.requester_userid).to eq(@fred.userid) } }
 
     it "should not fail when using :select" do
-      lambda { MiqRequest.find(:all, :select=>"requester_name") }.should_not raise_error
+      expect { MiqRequest.find(:all, :select => "requester_name") }.to_not raise_error
     end
 
     it "#call_automate_event_queue" do
-      zone_name = "New York"
+      zone_name  = "New York"
+
       MiqServer.stub(:my_zone).and_return(zone_name)
-      event_name = "hello"
-      MiqQueue.count.should == 0
+
+      expect(MiqQueue.count).to eq(0)
+
       @request.call_automate_event_queue(event_name)
-      MiqQueue.count.should == 1
       msg = MiqQueue.first
-      msg.class_name.should  == @request.class.name
-      msg.instance_id.should == @request.id
-      msg.method_name.should == "call_automate_event"
-      msg.zone.should        == zone_name
-      msg.args.should        == [event_name]
-      msg.msg_timeout.should == 1.hour
+
+      expect(MiqQueue.count).to  eq(1)
+      expect(msg.class_name).to  eq(@request.class.name)
+      expect(msg.instance_id).to eq(@request.id)
+      expect(msg.method_name).to eq("call_automate_event")
+      expect(msg.zone).to        eq(zone_name)
+      expect(msg.args).to        eq([event_name])
+      expect(msg.msg_timeout).to eq(1.hour)
     end
 
-    it "#call_automate_event" do
-      event_name = "hello"
-      ws         = "foo"
-      err_msg    = "bogus automate error"
-      MiqAeEvent.stub(:raise_evm_event).and_return(ws)
-      @request.call_automate_event(event_name).should == ws
+    context "#call_automate_event" do
+      it "successful" do
+        MiqAeEvent.stub(:raise_evm_event).and_return("foo")
 
-      MiqAeEvent.stub(:raise_evm_event).and_raise(MiqAeException::AbortInstantiation.new(err_msg))
-      lambda { @request.call_automate_event(event_name) }.should raise_error(MiqAeException::Error, err_msg)
+        expect(@request.call_automate_event(event_name)).to eq("foo")
+      end
+
+      it "re-raises exceptions" do
+        MiqAeEvent.stub(:raise_evm_event).and_raise(MiqAeException::AbortInstantiation.new("bogus automate error"))
+
+        expect { @request.call_automate_event(event_name) }.to raise_error(MiqAeException::Error, "bogus automate error")
+      end
     end
 
     it "#pending" do
       @request.should_receive(:call_automate_event_queue).with("request_pending").once
+
       @request.pending
     end
 
     it "#approval_denied" do
       @request.should_receive(:call_automate_event_queue).with("request_denied").once
-      @request.approval_denied
-      @request.approval_state.should == 'denied'
-    end
 
-    it "#requester_userid" do
-      @request.requester_userid.should == @fred.userid
+      @request.approval_denied
+
+      expect(@request.approval_state).to eq('denied')
     end
 
     context "using Polymorphic Resource" do
-      before(:each) do
+      before do
         @template = FactoryGirl.create(:template_vmware)
         @resource = FactoryGirl.create(:miq_provision_request, :userid => @fred.userid, :src_vm_id => @template.id)
         @resource.create_request
@@ -171,7 +176,7 @@ describe MiqRequest do
     end
 
     context "using MiqApproval" do
-      before(:each) do
+      before do
         @reason         = "Why Not?"
         @wilma          = FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'wilma',  :email => 'wilma@bedrock.gov')
         @barney         = FactoryGirl.create(:user, :name => 'Barney Rubble',    :userid => 'barney', :email => 'barney@bedrock.gov')
