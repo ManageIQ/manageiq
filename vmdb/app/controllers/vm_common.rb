@@ -1785,6 +1785,7 @@ module VmCommon
 
     # Hide/show searchbox depending on if a list is showing
     presenter[:set_visible_elements][:adv_searchbox_div] = !(@record || @in_a_form)
+    presenter[:clear_search_show_or_hide] = clear_search_show_or_hide
 
     presenter[:osf_node] = x_node  # Open, select, and focus on this node
 
