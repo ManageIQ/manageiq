@@ -1750,7 +1750,7 @@ module ApplicationHelper
       @edit[:new][:timer_weeks]  = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "weekly"
       @edit[:new][:timer_days]   = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "daily"
       @edit[:new][:timer_hours]  = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "hourly"
-      t                          = schedule.run_at[:start_time].to_time.in_time_zone(@edit[:tz])
+      t                          = schedule.run_at[:start_time].to_time(:utc).in_time_zone(@edit[:tz])
       @edit[:new][:start_hour]   = t.strftime("%H")
       @edit[:new][:start_min]    = t.strftime("%M")
     end
@@ -1932,7 +1932,7 @@ module ApplicationHelper
           return center_toolbar_filename_automate
         elsif x_active_tree == :containers_tree
           return center_toolbar_filename_containers
-        elsif [:sandt_tree, :svccat_tree, :stcat_tree, :svcs_tree].include?(x_active_tree)
+        elsif [:sandt_tree, :svccat_tree, :stcat_tree, :svcs_tree, :ot_tree].include?(x_active_tree)
           return center_toolbar_filename_services
         elsif @layout == "chargeback"
           return center_toolbar_filename_chargeback

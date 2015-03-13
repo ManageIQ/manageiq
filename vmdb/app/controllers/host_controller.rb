@@ -10,6 +10,11 @@ class HostController < ApplicationController
     redirect_to :action => 'show_list'
   end
 
+  def drift_history
+    set_config(identify_record(params[:id]))
+    super
+  end
+
   def show
     return if perfmenu_click?
 

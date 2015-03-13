@@ -1090,15 +1090,10 @@ module VmCommon
   end
 
   def profile_build
-   session[:vm].resolve_profiles(session[:policies].keys).sort_by { |p| p["description"] }.each do | policy |
-      @catinfo ||= Hash.new                               # Hash to hold category squashed states
-      policy.each do | key, cat|
-       if key == "description"
-        if @catinfo[cat] ==  nil
-          @catinfo[cat] = true                                # Set compressed if no entry present yet
-        end
-       end
-      end
+    @catinfo ||= {}
+    session[:vm].resolve_profiles(session[:policies].keys).each do |policy|
+      cat = policy["description"]
+      @catinfo[cat] = true unless @catinfo.key?(cat)
     end
   end
 

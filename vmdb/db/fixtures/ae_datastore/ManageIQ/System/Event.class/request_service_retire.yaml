@@ -10,5 +10,7 @@ object:
   fields:
   - logical_event:
       value: request_service_retire
+  - rel1:
+      value: "/Service/Retirement/StateMachines/Methods/GetRetirementEntryPoint"
   - rel4:
-      value: "/Service/Lifecycle/Retirement?service_id=${process#service_id}"
+      value: "${/#retirement_entry_point}?service_id=${process#service_id}"

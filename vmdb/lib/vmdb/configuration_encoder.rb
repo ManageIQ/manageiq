@@ -28,6 +28,9 @@ module Vmdb
       end
 
       hash = YAML.load(data)
+      # shouldn't be necessary: fixes issue when data was double encoded
+      hash = YAML.load(hash) if hash.kind_of?(String)
+
       symbolize!(stringify!(hash)) if symbolize_keys
 
       if block_given?

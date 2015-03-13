@@ -52,11 +52,11 @@
                              @edit[:new][:namespace],
                              :onFocus => 'miqShowAE_Tree("namespace");miqButtons("hide");')
   %p
-    %table.style3
+    %table.table.table-striped.table-bordered
       %thead
         %th #{@edit[:selected_items].count} #{n_('Item', 'Items', @edit[:selected_items].count)} #{_('selected to copy')}
       %tbody
         - @edit[:selected_items].values.each do |item|
-          %tr{:class => cycle('row0 no-hover', 'row1 no-hover')}
+          %tr
             %td
               = item

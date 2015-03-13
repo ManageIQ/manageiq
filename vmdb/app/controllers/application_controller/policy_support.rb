@@ -124,13 +124,11 @@ module ApplicationController::PolicySupport
   end
 
   def profile_build
+    @catinfo ||= {}
     session[:assignments] = session[:protect_item].get_policies
-    session[:assignments].sort_by { |a| a["description"] }.each do |policy|
-      @catinfo ||= Hash.new                               # Hash to hold category squashed states
+    session[:assignments].each do |policy|
       cat = policy["description"]
-      if @catinfo[cat] ==  nil
-        @catinfo[cat] = true                                # Set compressed if no entry present yet
-      end
+      @catinfo[cat] = true unless @catinfo.key?(cat)
     end
   end
 

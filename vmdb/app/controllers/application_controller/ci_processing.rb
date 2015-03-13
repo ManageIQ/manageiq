@@ -1530,7 +1530,7 @@ module ApplicationController::CiProcessing
   end
 
   # Common Stacks button handler routines
-  def process_orchestration_stacks(stacks, task, _)
+  def process_orchestration_stacks(stacks, task, _ = nil)
     stacks, _ = filter_ids_in_region(stacks, "OrchestrationStack")
     return if stacks.empty?
 

@@ -66,34 +66,8 @@ class MiqRequest < ActiveRecord::Base
     }
   }
 
-  REQUEST_TYPES = {
-    :MiqProvisionRequest             => {
-      :template          => "VM Provision",
-      :clone_to_vm       => "VM Clone",
-      :clone_to_template => "VM Publish",
-    },
-    :MiqProvisionRequestTemplate     => {
-      :template => "VM Provision Template"
-    },
-    :MiqHostProvisionRequest         => {
-      :host_pxe_install => "Host Provision"
-    },
-    :VmReconfigureRequest            => {
-      :vm_reconfigure => "VM Reconfigure"
-    },
-    :VmMigrateRequest                => {
-      :vm_migrate => "VM Migrate"
-    },
-    :AutomationRequest               => {
-      :automation => "AutomationRequest"
-    },
-    :ServiceTemplateProvisionRequest => {
-      :clone_to_service => "Service Provision"
-    },
-    :ServiceReconfigureRequest       => {
-      :service_reconfigure => "Service Reconfigure"
-    }
-  }
+  REQUEST_TYPES_BACKEND_ONLY = {:MiqProvisionRequestTemplate => {:template => "VM Provision Template"}}
+  REQUEST_TYPES = MODEL_REQUEST_TYPES.values.each_with_object(REQUEST_TYPES_BACKEND_ONLY) { |i, h| i.each { |k, v| h[k] = v } }
 
   # Supports old-style requests where specific request was a seperate table connected as a resource
   def resource
@@ -226,8 +200,7 @@ class MiqRequest < ActiveRecord::Base
   end
 
   def request_type_display
-    return "Unknown" if self.request_type.nil?
-    REQUEST_TYPES[self.type.to_sym][self.request_type.to_sym].to_s
+    request_type.nil? ? "Unknown" : REQUEST_TYPES.fetch_path(type.to_sym, request_type.to_sym)
   end
 
   def request_status

@@ -118,22 +118,7 @@ describe ExtManagementSystem do
           expect { FactoryGirl.create(t, :name => "ems_1", :ipaddress => "2.2.2.2", :hostname => "ems_2") }.to     raise_error
         end
 
-        if ems.new.hostname_ipaddress_required?
-          context "ipaddress" do
-            it "duplicate ipaddress" do
-              expect { FactoryGirl.create(t, :ipaddress => "1.1.1.1", :hostname => "ems_1") }.to_not raise_error
-              expect { FactoryGirl.create(t, :ipaddress => "1.1.1.1", :hostname => "ems_2") }.to     raise_error
-            end
-
-            it "blank ipaddress" do
-              expect { FactoryGirl.create(t, :ipaddress => "", :hostname => "ems_1") }.to raise_error
-            end
-
-            it "nil ipaddress" do
-              expect { FactoryGirl.create(t, :ipaddress => nil, :hostname => "ems_1") }.to raise_error
-            end
-          end
-
+        if ems.new.hostname_required?
           context "hostname" do
             it "duplicate hostname" do
               expect { FactoryGirl.create(t, :ipaddress => "1.1.1.1", :hostname => "ems_1") }.to_not raise_error
@@ -166,24 +151,11 @@ describe ExtManagementSystem do
         end
       end
 
-      it "duplicate ipaddress" do
-        described_class.leaf_subclasses.collect{|ems| ems.name.underscore.to_sym}.each do |t|
-          provider = FactoryGirl.build(t, :ipaddress => @ems.ipaddress, :hostname => @different_host_name)
-
-          if provider.hostname_ipaddress_required?
-            expect { provider.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: IP Address has already been taken")
-          else
-            expect { provider.save! }.to_not raise_error
-            provider.destroy
-          end
-        end
-      end
-
       it "duplicate hostname" do
         described_class.leaf_subclasses.collect{|ems| ems.name.underscore.to_sym}.each do |t|
           provider = FactoryGirl.build(t, :hostname => @same_host_name)
 
-          if provider.hostname_ipaddress_required?
+          if provider.hostname_required?
             expect { provider.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Host Name has already been taken")
           else
             expect { provider.save! }.to_not raise_error

@@ -1,37 +1,36 @@
 - if edit
   - if entry == "new"
-    %tr#new_tr{:class => cycle('row0', 'row1')}
+    %tr#new_tr
       %td
         = image_submit_tag("/images/toolbars/import.png",
           :class => "rollover small",
           :id => "accept", :name => "accept", :alt => (t = _("Add this entry")), :title => t)
-      %td.all
+      %td
         = text_field("entry", "value", :maxlength => MAX_NAME_LEN)
-      %td.all
+      %td
         = text_field("entry", "description", :maxlength => MAX_DESC_LEN)
   - else
-    %tr{:class => cycle('row0', 'row1'), :id => "#{idx}_tr"}
+    %tr{:id => "#{idx}_tr"}
       %td
         = image_submit_tag("/images/toolbars/import.png",
           :class => "rollover small",
           :id => "accept", :name => "accept", :alt => (t = _("Update this entry")), :title => t)
-      %td.all
+      %td
         = text_field("entry", "value", :maxlength => MAX_NAME_LEN, "value" => entry[0])
-      %td.all
+      %td
         = text_field("entry", "description", :maxlength => MAX_DESC_LEN, "value" => entry[1])
         = hidden_field("entry", "id", "value" => h(idx))
 - else
   - if entry == "new"
-    %tr#new_tr{:class => cycle('row0', 'row1'),
-      :onclick => remote_function(:url => {:action => 'field_value_select', :id => "#{@record.id || 'new'}", :entry_id => 'new'}),
-      :title => _("Click to add a new entry")}
+    %tr#new_tr{:title => _("Click to add a new entry"),
+      :onclick => remote_function(:url => {:action => 'field_value_select', :id => "#{@record.id || 'new'}", :entry_id => 'new'})}
       %td
         = image_tag("/images/toolbars/new.png", :class => "rollover small")
       %td
         = h("<#{_('New Entry')}>")
       %td= h("<#{_('Click on this row to create a new entry')}>")
   - else
-    %tr{:class => cycle('row0', 'row1'), :id => "#{idx}_tr"}
+    %tr{:id => "#{idx}_tr"}
       - if @edit[:field_sort_by] == "none"
         %td
           %nobr

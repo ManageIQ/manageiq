@@ -436,7 +436,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   def assert_specific_orchestration_template
     @orch_template = OrchestrationTemplateCfn.where(:name => "cloudformation-spec-WebServerInstance-QS899ZNAHZU6").first
     @orch_template.should have_attributes(
-      :ems_ref => "e929859521d64ac28ee29f8526d33e8f",
+      :md5 => "e929859521d64ac28ee29f8526d33e8f",
     )
     @orch_template.description.should start_with("AWS CloudFormation Sample Template WordPress_Simple:")
     @orch_template.content.should start_with("{\n  \"AWSTemplateFormatVersion\" : \"2010-09-09\",")

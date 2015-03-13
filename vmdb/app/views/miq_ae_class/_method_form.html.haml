@@ -52,17 +52,17 @@
             {:action => 'expand_toggle', :id => "exp_collapse"}, :remote  => true)
 
   #inputs_div{:style => @sb[:squash_state] ? "display: none;" : ""}
-    %table.style3
+    %table.table.table-striped.table-bordered.table-hover
       %thead
         %tr
-          %th.icon
+          %th.narrow
           %th=_('Name')
           %th=_('Default Value')
           %th=_('Data Type')
       %tbody
         - @edit[:new][:fields].each_with_index do |flds, i|
           - unless @edit[:fields_to_delete].include?(flds["id"])
-            %tr{:class => cycle('row0', 'row1')}
+            %tr
               %td
                 = link_to(image_tag("/images/icons/16/notequal-red.png", :alt => _("Click to delete this input field from method")),
                   {:action => "field_method_delete", :id => flds["id"].to_s, :arr_id => i},
@@ -88,9 +88,8 @@
                   options_for_select(@edit[:new][:available_datatypes], flds["datatype"]),
                   "data-miq_observe" => {:url => url}.to_json)
         - if !params[:add] && params[:add] != "new" && (session[:field_data].blank? || session[:field_data].empty?)
-          %tr{:class => cycle('row0', 'row1'),
-            :onclick => remote_function(:url => {:action => 'field_method_select', :add => 'new', :item => "field"}),
-            :title => _("Click to add a new parameter")}
+          %tr{:title => _("Click to add a new parameter"),
+            :onclick => remote_function(:url => {:action => 'field_method_select', :add => 'new', :item => "field"})}
             %td
               = image_tag("/images/icons/16/equal-green.png")
             %td
@@ -100,7 +99,7 @@
             %td
               &nbsp;
         - else
-          %tr{:class => cycle('row0', 'row1')}
+          %tr
             %td
               = link_to(image_tag("/images/icons/16/na.png", :alt => "Add this entry"),
               {:action => "field_method_accept", :button => "accept"},

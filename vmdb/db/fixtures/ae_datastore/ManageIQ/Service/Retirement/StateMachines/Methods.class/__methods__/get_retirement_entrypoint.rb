@@ -1,20 +1,14 @@
-
 service = $evm.root['service']
-entry_point = service.automate_retirement_entrypoint
-$evm.log("info", "get_retirement_entrypoint entry_point: #{entry_point} ")
-if entry_point.blank?
-  entry_point = '/Service/Retirement/StateMachines/ServiceRetirement/Default'
-  $evm.log("info", "automate_retirement_entrypoint setting default entry_point to: #{entry_point} ")
+if service.nil?
+  $evm.log('error', 'get_retirement_entrypoint: missing service object')
+  exit MIQ_ABORT
 end
 
-parts = entry_point.split('/')
-parts.shift  if entry_point[0, 1]  == '/'
-retirement_instance    = parts.pop
-retirement_class       = parts.pop
-retirement_ns          = parts.join('/')
+entry_point = service.automate_retirement_entrypoint
+if entry_point.blank?
+  entry_point = '/Service/Retirement/StateMachines/ServiceRetirement/Default'
+  $evm.log("info", "retirement_entrypoint not specified using default: #{entry_point}")
+end
 
-$evm.root['retirement_ns']       = retirement_ns
-$evm.root['retirement_class']    = retirement_class
-$evm.root['retirement_instance'] = retirement_instance
-
-$evm.log("info", "entry_point: ns: #{retirement_ns} class: #{retirement_class} instance: #{retirement_instance} ")
+$evm.root['retirement_entry_point']	= entry_point
+$evm.log("info", "retirement_entrypoint: #{entry_point}")

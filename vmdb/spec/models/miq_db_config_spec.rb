@@ -15,25 +15,35 @@ describe MiqDbConfig do
                    wait_time_ms
                    blocked_by )
 
-
-  it ".log_activity_statistics" do
-    FactoryGirl.create(:vmdb_database)
-    buffer = StringIO.new
-    class << buffer
-      alias_method :info, :write
+  context ".log_activity_statistics" do
+    before do
+      FactoryGirl.create(:vmdb_database)
+      @buffer = StringIO.new
+      class << @buffer
+        alias_method :info, :write
+        alias_method :warn, :write
+      end
     end
 
-    MiqDbConfig.log_activity_statistics(buffer)
-    lines = buffer.string.lines
-    expect(lines.shift).to eq "MIQ(DbConfig.log_activity_statistics) <<-ACTIVITY_STATS_CSV\n"
-    expect(lines.pop).to eq "ACTIVITY_STATS_CSV"
+    it "normal" do
+      MiqDbConfig.log_activity_statistics(@buffer)
+      lines = @buffer.string.lines
+      expect(lines.shift).to eq "MIQ(DbConfig.log_activity_statistics) <<-ACTIVITY_STATS_CSV\n"
+      expect(lines.pop).to eq "ACTIVITY_STATS_CSV"
 
-    header, *rows = CSV.parse lines.join
-    expect(header).to eq(CSV_HEADER)
+      header, *rows = CSV.parse lines.join
+      expect(header).to eq(CSV_HEADER)
 
-    expect(rows.length).to be > 0
-    rows.each do |row|
-      expect(row.first).to be
+      expect(rows.length).to be > 0
+      rows.each do |row|
+        expect(row.first).to be
+      end
+    end
+
+    it "exception" do
+      VmdbDatabaseConnection.stub(:all).and_raise("FAILURE")
+      MiqDbConfig.log_activity_statistics(@buffer)
+      @buffer.string.lines.first.should == "MIQ(DbConfig.log_activity_statistics) Unable to log stats, 'FAILURE'"
     end
   end
 

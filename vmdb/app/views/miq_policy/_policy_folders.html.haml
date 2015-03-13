@@ -3,9 +3,11 @@
   %table.table.table-striped.table-bordered.table-hover
     %tbody
       - @folders.each do |f|
-        - t = %w(Compliance Control).include?(f) ? "#{f.downcase}" : "#{f.split.last.downcase}_xx#{f.split[1].downcase}-#{f.split[0].downcase}"
-        %tr{:onclick => "cfmeDynatree_activateNode('policy_tree', 'xx-%s');" % t,
-          :onmouseover => "this.style.cursor =' pointer'", :title => _("Open Folder")}
+        - if %w(Compliance Control).include?(f)
+          - click = f.downcase
+        - else
+          - click = "#{f.split.last.downcase}_xx-#{f.split[1].downcase}-#{f.split[0].downcase}"
+        %tr{:onclick => "cfmeDynatree_activateNode('policy_tree', 'xx-#{click}');", :title => _("Open Folder")}
           %td.narrow
             %img{:src => "/images/icons/new/#{f.split.first.downcase}.png"}
           %td
