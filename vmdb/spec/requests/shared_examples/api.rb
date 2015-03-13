@@ -1,10 +1,10 @@
 # Methods defining commong expect patterns
 def expect_result_to_include_data(collection, data)
   expect(@result).to have_key(collection)
-  data.each do |key, value|
+  fetch_value(data).each do |key, value|
     value_list = fetch_value(value)
     expect(@result[collection].size).to eq(value_list.size)
-    expect(@result[collection].collect { |r| r[key] }.sort).to eq(value_list.sort)
+    expect(@result[collection].collect { |r| r[key] }).to match_array(value_list)
   end
 end
 
@@ -27,6 +27,45 @@ def expect_result_resources_to_match_key_data(collection, key, values)
   end
 end
 
+def expect_result_resource_keys_to_match_pattern(collection, key, pattern)
+  pattern = fetch_value(pattern)
+  expect(@result).to have_key(collection)
+  expect(@result[collection].all? { |result| result[key].match(pattern) }).to be_true
+end
+
+def expect_result_to_have_keys(keys)
+  fetch_value(keys).each { |key| expect(@result).to have_key(key) }
+end
+
+def expect_result_to_match_hash(result, attr_hash)
+  fetch_value(attr_hash).each do |key, value|
+    expect(result).to have_key(key)
+    value = fetch_value(value)
+    if key == "href" || value.kind_of?(Regexp)
+      expect(result[key]).to match(value)
+    else
+      expect(result[key]).to eq(value)
+    end
+  end
+end
+
+def expect_result_resource_keys_to_be_like_klass(collection, key, klass)
+  expect(@result).to have_key(collection)
+  expect(@result[collection].all? { |result| result[key].kind_of?(klass) }).to be_true
+end
+
+def expect_result_to_include_keys(collection, keys)
+  expect(@result).to have_key(collection)
+  results = @result[collection]
+  fetch_value(keys).each { |key| expect(results.all? { |r| r.key?(key) }).to be_true }
+end
+
+def expect_result_to_have_only_keys(collection, keys)
+  key_list = fetch_value(keys).sort
+  expect(@result).to have_key(collection)
+  expect(@result[collection].all? { |result| result.keys.sort == key_list }).to be_true
+end
+
 def call_custom_expects(method)
   expect(respond_to?(method)).to be_true
   public_send(method)
@@ -34,7 +73,6 @@ end
 
 shared_examples_for "bad_request" do |error_message|
   it "request failed with bad request (400) #{error_message}" do
-    expect(@success).to be_false
     expect(@code).to eq(400)
 
     if error_message.present?
@@ -46,21 +84,18 @@ end
 
 shared_examples_for "user_unauthorized" do
   it "request failed with unauthorized (401)" do
-    expect(@success).to be_false
     expect(@code).to eq(401)
   end
 end
 
 shared_examples_for "request_forbidden" do
   it "request failed with request forbidden (403)" do
-    expect(@success).to be_false
     expect(@code).to eq(403)
   end
 end
 
 shared_examples_for "resource_not_found" do
   it "request failed with resource not found (404)" do
-    expect(@success).to be_false
     expect(@code).to eq(404)
   end
 end
@@ -68,7 +103,6 @@ end
 shared_examples_for "request_success" do |options|
   it "request succeeded with (200)" do
     options ||= {}
-    expect(@success).to be_true
     expect(@code).to eq(200)
     expect_result_to_include_data(*options[:includes_data]) if options[:includes_data].present?
     call_custom_expects(options[:custom_expects]) if options[:custom_expects].present?
@@ -77,14 +111,12 @@ end
 
 shared_examples_for "request_success_no_content" do
   it "request succeeded with no content (204)" do
-    expect(@success).to be_true
     expect(@code).to eq(204)
   end
 end
 
 shared_examples_for "empty_query_result" do |collection|
   it "collection result for #{collection} to be empty" do
-    expect(@success).to be_true
     expect(@code).to eq(200)
     expect(@result).to have_key("name")
     expect(@result["name"]).to eq(collection.to_s)
@@ -93,9 +125,8 @@ shared_examples_for "empty_query_result" do |collection|
 end
 
 shared_examples_for "query_result" do |collection, size, options|
-  it "collection result for #{collection} to be empty" do
+  it "collection result for #{collection} to contain data" do
     options ||= {}
-    expect(@success).to be_true
     expect(@code).to eq(200)
     expect(@result).to have_key("name")
     expect(@result["name"]).to eq(collection.to_s)
@@ -104,18 +135,16 @@ shared_examples_for "query_result" do |collection, size, options|
     expect(@result["resources"].size).to eq(fetch_value(size))
     expect_result_to_include_hrefs(*options[:includes_hrefs]) if options[:includes_hrefs].present?
     expect_result_to_include_data(*options[:includes_data]) if options[:includes_data].present?
-  end
-end
-
-shared_examples_for "results_include_hrefs" do |collection, href_list|
-  it "result resources include hrefs" do
-    expect_result_to_include_hrefs(collection, href_list)
-  end
-end
-
-shared_examples_for "results_include_data" do |collection, data|
-  it "result resources include data" do
-    expect_result_to_include_data(collection, data)
+    expect_result_to_include_keys(*options[:includes_keys]) if options[:includes_keys].present?
+    expect_result_to_have_only_keys(*options[:only_keys]) if options[:only_keys].present?
+    if options[:match_hash].present?
+      @result["resources"].zip(fetch_value(options[:match_hash])).each do |actual, expected|
+        expect_result_to_match_hash(actual, expected)
+      end
+    end
+    expect_result_resources_to_match_key_data(*options[:match_key_data]) if options[:match_key_data].present?
+    expect_result_resource_keys_to_match_pattern(*options[:match_key_pattern]) if options[:match_key_pattern].present?
+    expect_result_resource_keys_to_be_like_klass(*options[:key_like_klass]) if options[:key_like_klass].present?
   end
 end
 
@@ -126,12 +155,6 @@ shared_examples_for "results_include_keys" do |collection, keys|
     keys.each do |key|
       expect(results.all? { |r| r.key?(key) }).to be_true
     end
-  end
-end
-
-shared_examples_for "results_match_key_data" do |collection, key, values|
-  it "result resources matches key data" do
-    expect_result_resources_to_match_key_data(collection, key, values)
   end
 end
 
@@ -146,26 +169,20 @@ end
 shared_examples_for "single_resource_query" do |attr_hash|
   it "single resource query with data" do
     attr_hash ||= {}
-    expect(@success).to be_true
+    attr_hash = fetch_value(attr_hash)
     expect(@code).to eq(200)
     includes_hrefs = attr_hash.delete(:includes_hrefs)
     includes_data  = attr_hash.delete(:includes_data)
-    attr_hash.each do |key, value|
-      expect(@result).to have_key(key)
-      if key == "href"
-        expect(@result[key]).to match(fetch_value(value))
-      else
-        expect(@result[key]).to eq(fetch_value(value))
-      end
-    end
+    has_keys  = attr_hash.delete(:has_keys)
+    expect_result_to_match_hash(@result, attr_hash)
     expect_result_to_include_hrefs(*includes_hrefs) if includes_hrefs.present?
     expect_result_to_include_data(*includes_data)   if includes_data.present?
+    expect_result_to_have_keys(has_keys)            if has_keys.present?
   end
 end
 
 shared_examples_for "single_action" do |options|
   it "processed a single action" do
-    expect(@success).to be_true
     expect(@code).to eq(200)
     if options[:success]
       expect(@result).to have_key("success")
@@ -190,7 +207,6 @@ end
 shared_examples_for "multiple_actions" do |count, options|
   it "processed multiple actions" do
     options ||= {}
-    expect(@success).to be_true
     expect(@code).to eq(200)
     expect(@result).to have_key("results")
     results = @result["results"]
@@ -210,10 +226,10 @@ shared_examples_for "multiple_actions" do |count, options|
   end
 end
 
-shared_examples_for "tagging_result" do |tagging_results|
+shared_examples_for "tagging_result" do |tagging_results, options|
   it "processed tagging requests" do
+    options ||= {}
     tag_results = fetch_value(tagging_results)
-    expect(@success).to be_true
     expect(@code).to eq(200)
     expect(@result).to have_key("results")
     results = @result["results"]
@@ -224,5 +240,6 @@ shared_examples_for "tagging_result" do |tagging_results|
       expect(result["tag_category"]).to eq(tag_result[:tag_category])
       expect(result["tag_name"]).to eq(tag_result[:tag_name])
     end
+    call_custom_expects(options[:custom_expects]) if options[:custom_expects].present?
   end
 end

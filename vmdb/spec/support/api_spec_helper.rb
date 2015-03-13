@@ -101,6 +101,8 @@ module ApiSpecHelper
   end
 
   def define_url_methods
+    define_entrypoint_url_methods
+
     collections  = %w(vms tags providers hosts data_stores resource_pools clusters
                       policies policy_profiles templates policy_actions events conditions)
 
@@ -112,6 +114,17 @@ module ApiSpecHelper
         define_method("#{collection.singularize}_url".to_sym) do |id|
           "#{@cfme["#{collection}_url".to_sym]}/#{id}"
         end
+      end
+    end
+  end
+
+  def define_entrypoint_url_methods
+    self.class.class_eval do
+      define_method(:entrypoint_url) do
+        @cfme[:entrypoint]
+      end
+      define_method(:auth_url) do
+        "#{@cfme[:entrypoint]}/auth"
       end
     end
   end

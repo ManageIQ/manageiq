@@ -53,6 +53,7 @@ describe ApiController do
     context "query VM accounts subcollection with two related accounts" do
       before do
         api_basic_authorize
+        # create resources
         acct1
         acct2
 
@@ -65,7 +66,6 @@ describe ApiController do
     context "query VM accounts subcollection with a valid Account Id" do
       before do
         api_basic_authorize
-        acct1
 
         run_get acct1_url
       end
@@ -76,7 +76,6 @@ describe ApiController do
     context "query VM accounts subcollection with an invalid Account Id" do
       before do
         api_basic_authorize
-        acct1
 
         run_get "#{vm_accounts_url}/999999"
       end
@@ -87,6 +86,7 @@ describe ApiController do
     context "query VM accounts subcollection with two related accounts using expand directive" do
       before do
         api_basic_authorize
+        # create resources
         acct1
         acct2
 
@@ -120,6 +120,7 @@ describe ApiController do
     context "query VM software subcollection with two related software" do
       before do
         api_basic_authorize
+        # create resources
         sw1
         sw2
 
@@ -142,7 +143,6 @@ describe ApiController do
     context "query VM software subcollection with an invalid Software Id" do
       before do
         api_basic_authorize
-        sw1
 
         run_get "#{vm_software_url}/999999"
       end
@@ -153,6 +153,7 @@ describe ApiController do
     context "query VM software subcollection with two related software using expand directive" do
       before do
         api_basic_authorize
+        # create resources
         sw1
         sw2
 
