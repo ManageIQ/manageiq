@@ -7,14 +7,15 @@ describe MiqRequest do
   context "CONSTANTS" do
     it "REQUEST_TYPES" do
       expected_request_types = {
-        :MiqProvisionRequest             => {:template            => "VM Provision", :clone_to_vm => "VM Clone", :clone_to_template => "VM Publish"},
-        :MiqProvisionRequestTemplate     => {:template            => "VM Provision Template"},
-        :MiqHostProvisionRequest         => {:host_pxe_install    => "Host Provision"},
-        :VmReconfigureRequest            => {:vm_reconfigure      => "VM Reconfigure"},
-        :VmMigrateRequest                => {:vm_migrate          => "VM Migrate"},
-        :AutomationRequest               => {:automation          => "Automation"},
-        :ServiceTemplateProvisionRequest => {:clone_to_service    => "Service Provision"},
-        :ServiceReconfigureRequest       => {:service_reconfigure => "Service Reconfigure"},
+        :MiqProvisionRequest                 => {:template              => "VM Provision", :clone_to_vm => "VM Clone", :clone_to_template => "VM Publish"},
+        :MiqProvisionRequestTemplate         => {:template              => "VM Provision Template"},
+        :MiqHostProvisionRequest             => {:host_pxe_install      => "Host Provision"},
+        :MiqProvisionConfiguredSystemRequest => {:provision_via_foreman => "Foreman Provision"},
+        :VmReconfigureRequest                => {:vm_reconfigure        => "VM Reconfigure"},
+        :VmMigrateRequest                    => {:vm_migrate            => "VM Migrate"},
+        :AutomationRequest                   => {:automation            => "Automation"},
+        :ServiceTemplateProvisionRequest     => {:clone_to_service      => "Service Provision"},
+        :ServiceReconfigureRequest           => {:service_reconfigure   => "Service Reconfigure"},
       }
 
       expect(described_class::REQUEST_TYPES).to eq(expected_request_types)

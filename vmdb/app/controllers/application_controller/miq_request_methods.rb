@@ -227,6 +227,12 @@ module ApplicationController::MiqRequestMethods
   end
 
   # get the sort column that was clicked on, else use the current one
+  def sort_configured_system_grid
+    return unless load_edit("prov_edit__#{params[:id]}", "show_list")
+    sort_grid('configured_system', @edit[:wf].get_field(:src_configured_system_ids, :service)[:values])
+  end
+
+  # get the sort column that was clicked on, else use the current one
   def sort_pxe_img_grid
     return unless load_edit("prov_edit__#{params[:id]}","show_list")
     sort_grid('pxe_img', @edit[:wf].get_field(:pxe_image_id,:service)[:values])
@@ -256,6 +262,17 @@ module ApplicationController::MiqRequestMethods
   end
 
   private ############################
+
+  def build_configured_system_grid(configured_systems, sort_order = nil, sort_by = nil)
+    @edit[:configured_system_headers] = {
+      "hostname"    => "Hostname",
+    }
+    @edit[:configured_system_sortcol] = sort_by    ||= "hostname"
+    @edit[:configured_system_sortdir] = sort_order ||= "ASC"
+
+    sorted = configured_systems.sort_by { |pi| pi.deep_send(sort_by).to_s.downcase }.uniq
+    @temp[:configured_systems] = (sort_order == "ASC") ? sorted : sorted.reverse
+  end
 
   def build_pxe_img_grid(pxe_imgs, sort_order = nil, sort_by = nil)
     @edit[:pxe_img_headers] = {  # Using it to get column display name on screen to show sort by
@@ -331,6 +348,8 @@ module ApplicationController::MiqRequestMethods
 
   def build_grid
     case @edit[:wf]
+    when MiqProvisionConfiguredSystemWorkflow
+      build_dialog_page_miq_provision_configured_system_workflow
     when MiqProvisionVirtWorkflow
       if @edit[:new][:current_tab_key] == :service
         if @edit[:new][:st_prov_type]
@@ -379,6 +398,15 @@ module ApplicationController::MiqRequestMethods
       elsif @edit[:new][:current_tab_key] == :customize
         build_template_grid(@edit[:wf].get_field(:customization_template_id,:customize)[:values],@edit[:template_sortdir],@edit[:template_sortcol])
       end
+    end
+  end
+
+  def build_dialog_page_miq_provision_configured_system_workflow
+    case @edit[:new][:current_tab_key]
+    when :purpose
+      build_tags_tree(@edit[:wf], @edit.fetch_path(:new, tag_symbol_for_workflow), true)
+    when :service
+      build_configured_system_grid(@edit[:wf].get_field(:src_configured_system_ids, :service)[:values], @edit[:configured_system_sortdir], @edit[:configured_system_sortcol])
     end
   end
 

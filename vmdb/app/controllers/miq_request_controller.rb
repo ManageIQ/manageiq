@@ -407,9 +407,10 @@ class MiqRequestController < ApplicationController
 
   def get_request_tab_type
     case @layout
-    when "miq_request_ae"   then "AutomateRequest"
-    when "miq_request_host" then "MiqHostProvisionRequest"
-    when "miq_request_vm"   then "MiqProvisionRequest"
+    when "miq_request_ae"                then "AutomateRequest"
+    when "miq_request_configured_system" then "MiqProvisionConfiguredSystemRequest"
+    when "miq_request_host"              then "MiqHostProvisionRequest"
+    when "miq_request_vm"                then "MiqProvisionRequest"
     end
   end
 
