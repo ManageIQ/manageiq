@@ -1,6 +1,23 @@
 require "spec_helper"
 
 describe MiqRequest do
+  context "CONSTANTS" do
+    it "REQUEST_TYPES" do
+      expected_request_types = {
+        :MiqProvisionRequest             => {:template            => "VM Provision", :clone_to_vm => "VM Clone", :clone_to_template => "VM Publish"},
+        :MiqProvisionRequestTemplate     => {:template            => "VM Provision Template"},
+        :MiqHostProvisionRequest         => {:host_pxe_install    => "Host Provision"},
+        :VmReconfigureRequest            => {:vm_reconfigure      => "VM Reconfigure"},
+        :VmMigrateRequest                => {:vm_migrate          => "VM Migrate"},
+        :AutomationRequest               => {:automation          => "Automation"},
+        :ServiceTemplateProvisionRequest => {:clone_to_service    => "Service Provision"},
+        :ServiceReconfigureRequest       => {:service_reconfigure => "Service Reconfigure"},
+      }
+
+      expect(described_class::REQUEST_TYPES).to eq(expected_request_types)
+    end
+  end
+
   context "Class Methods" do
     before(:each) do
       @fred          = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
@@ -45,6 +62,8 @@ describe MiqRequest do
       @approver_role = UiTaskSet.create(:name => "approver", :description => "Approver")
       @request       = FactoryGirl.create(:miq_request, :requester => @fred)
     end
+
+    describe("#request_type_display") { it { expect(@request.request_type_display).to eq("Unknown") } }
 
     it "should validate" do
       @request.should be_valid
@@ -144,9 +163,7 @@ describe MiqRequest do
         @request.request_type.should == @resource.provision_type
       end
 
-      it "#request_type_display" do
-        @request.request_type_display.should == "VM Provision"
-      end
+      describe("#request_type_display") { it { expect(@request.request_type_display).to eq("VM Provision") } }
 
       it "#workflow_class" do
         @request.workflow_class.should == MiqProvisionVmwareWorkflow
