@@ -13,6 +13,7 @@ describe ContainerGroupController do
   end
 
   it "renders show screen" do
+    Authentication.any_instance.stub(:after_authentication_changed)
     ems = FactoryGirl.create(:ems_kubernetes)
     container_group = ContainerGroup.create(:ext_management_system => ems, :name => "Test Group")
     get :show, :id => container_group.id
