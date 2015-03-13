@@ -20,8 +20,8 @@ describe MiqRequest do
 
   context "Class Methods" do
     before(:each) do
-      @fred          = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
-      @barney        = FactoryGirl.create(:user, :name => 'Barney Rubble',    :userid => 'barney')
+      @fred                = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
+      @barney              = FactoryGirl.create(:user, :name => 'Barney Rubble',    :userid => 'barney')
       @requests_for_fred   = []
       @requests_for_barney = []
       @requests_for_fred   << FactoryGirl.create(:miq_request, :requester => @fred)
@@ -70,7 +70,7 @@ describe MiqRequest do
     end
 
     it "should not fail when using :select" do
-      lambda { MiqRequest.find(:all,  :select=>"requester_name") }.should_not raise_error
+      lambda { MiqRequest.find(:all, :select=>"requester_name") }.should_not raise_error
     end
 
     it "#call_automate_event_queue" do

@@ -3,9 +3,9 @@ class MiqRequest < ActiveRecord::Base
 
   belongs_to :source,            :polymorphic => true
   belongs_to :destination,       :polymorphic => true
-  belongs_to :requester,         :class_name => "User"
-  has_many   :miq_approvals,     :dependent => :destroy
-  has_many   :miq_request_tasks, :dependent => :destroy
+  belongs_to :requester,         :class_name  => "User"
+  has_many   :miq_approvals,     :dependent   => :destroy
+  has_many   :miq_request_tasks, :dependent   => :destroy
 
   alias_attribute :state, :request_state
 
@@ -22,13 +22,13 @@ class MiqRequest < ActiveRecord::Base
 
   include ReportableMixin
 
-  virtual_column  :reason,              :type => :string, :uses => :miq_approvals
-  virtual_column  :v_approved_by,       :type => :string, :uses => :miq_approvals
-  virtual_column  :v_approved_by_email, :type => :string, :uses => {:miq_approvals => :stamper}
-  virtual_column  :stamped_on,          :type => :datetime, :uses => :miq_approvals
+  virtual_column  :reason,               :type => :string,   :uses => :miq_approvals
+  virtual_column  :v_approved_by,        :type => :string,   :uses => :miq_approvals
+  virtual_column  :v_approved_by_email,  :type => :string,   :uses => {:miq_approvals => :stamper}
+  virtual_column  :stamped_on,           :type => :datetime, :uses => :miq_approvals
   virtual_column  :request_type_display, :type => :string
-  virtual_column  :resource_type,       :type => :string
-  virtual_column  :state,               :type => :string
+  virtual_column  :resource_type,        :type => :string
+  virtual_column  :state,                :type => :string
 
   before_validation :initialize_attributes, :on => :create
 
@@ -36,21 +36,21 @@ class MiqRequest < ActiveRecord::Base
 
   MODEL_REQUEST_TYPES = {
     :Service => {
-      :MiqProvisionRequest             => {
+      :MiqProvisionRequest => {
         :template          => "VM Provision",
         :clone_to_vm       => "VM Clone",
         :clone_to_template => "VM Publish",
       },
-      :VmReconfigureRequest            => {
+      :VmReconfigureRequest => {
         :vm_reconfigure => "VM Reconfigure"
       },
-      :VmMigrateRequest                => {
+      :VmMigrateRequest => {
         :vm_migrate => "VM Migrate"
       },
       :ServiceTemplateProvisionRequest => {
         :clone_to_service => "Service Provision"
       },
-      :ServiceReconfigureRequest       => {
+      :ServiceReconfigureRequest => {
         :service_reconfigure => "Service Reconfigure"
       }
     },
@@ -83,10 +83,10 @@ class MiqRequest < ActiveRecord::Base
   end
 
   def initialize_attributes
-    self.requester_name ||= requester.name                      if requester.kind_of?(User)
-    self.requester      ||= User.find_by_name(self.requester_name)   if self.requester_name.kind_of?(String)
+    self.requester_name ||= requester.name                         if requester.kind_of?(User)
+    self.requester      ||= User.find_by_name(self.requester_name) if self.requester_name.kind_of?(String)
     self.approval_state ||= "pending_approval"
-    miq_approvals   << build_default_approval
+    miq_approvals << build_default_approval
   end
 
   # TODO: Move call_automate_event_queue from MiqProvisionWorkflow to be done here automagically
@@ -316,8 +316,8 @@ class MiqRequest < ActiveRecord::Base
 
     task_count = miq_request_tasks.count
     miq_request_tasks.each do |p|
-      states[p.state] += 1
-      states[:total] += 1
+      states[p.state]  += 1
+      states[:total]   += 1
       status[p.status] += 1
     end
     total = states.delete(:total).to_i
@@ -328,15 +328,16 @@ class MiqRequest < ActiveRecord::Base
     req_state = (states.length == 1) ? states.keys.first : "active"
 
     # Determine status to report
-    req_status = if status.keys.include?('Error')
-                   'Error'
-                 elsif status.keys.include?('Timeout')
-                   'Timeout'
-                 elsif status.keys.include?('Warn')
-                   'Warn'
-                 else
-                   'Ok'
-    end
+    req_status =
+      if status.keys.include?('Error')
+        'Error'
+      elsif status.keys.include?('Timeout')
+        'Timeout'
+      elsif status.keys.include?('Warn')
+        'Warn'
+      else
+        'Ok'
+      end
 
     if req_state == "finished"
       update_attribute(:fulfilled_on, Time.now.utc)
@@ -443,13 +444,13 @@ class MiqRequest < ActiveRecord::Base
   # Helper method when not using workflow
   def self.create_request(values, requester_id, auto_approve, request_type, target_class, event_message)
     values[:src_ids] = values[:src_ids].to_miq_a unless values[:src_ids].nil?
-    request = create(:options => values, :userid => requester_id, :request_type => request_type)
+    request          = create(:options => values, :userid => requester_id, :request_type => request_type)
     request.save!  # Force validation errors to raise now
 
     request.set_description
     request.create_request
 
-    event_name    = "#{name.underscore}_created"
+    event_name = "#{name.underscore}_created"
     AuditEvent.success(:event => event_name, :target_class => target_class, :userid => requester_id, :message => event_message)
 
     request.call_automate_event_queue("request_created")
@@ -462,8 +463,13 @@ class MiqRequest < ActiveRecord::Base
     request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
     request.update_attribute(:options, request.options.merge(values))
 
-    event_name    = "#{name.underscore}_updated"
-    AuditEvent.success(:event => event_name, :target_class => target_class, :userid => requester_id, :message => event_message)
+    event_name = "#{name.underscore}_updated"
+    AuditEvent.success(
+      :event        => event_name,
+      :target_class => target_class,
+      :userid       => requester_id,
+      :message      => event_message,
+    )
 
     request.call_automate_event_queue("request_updated")
     request
