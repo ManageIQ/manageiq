@@ -595,8 +595,7 @@ module ApplicationController::MiqRequestMethods
       # for some reason if tree is not expanded clicking on radiobuttons this.getAllChecked() sends up extra blanks
       @edit.store_path(:new, tag_symbol_for_workflow, ids.select(&:present?).collect(&:to_i))
     end
-    id = params[:ou_id] if params[:ou_id]
-    id.gsub!(/_-_/,",") if id
+    id = params[:ou_id].gsub(/_-_/,",") if params[:ou_id]
     @edit[:new][:ldap_ous] = id.match(/(.*)\,(.*)/)[1..2] if id                       # ou selected in a tree
 
     @edit[:new][:start_date]    = params[:miq_date_1] if params[:miq_date_1]
@@ -649,7 +648,6 @@ module ApplicationController::MiqRequestMethods
                   else
                     @edit[:new][f.to_sym].push(val)                             # Save [value, description]
                   end
-
                 end
               end
             elsif v.class.name == "MiqHashStruct" && v.evm_object_class == :Host
@@ -757,80 +755,15 @@ module ApplicationController::MiqRequestMethods
 
   # Set form variables for provision request
   def prov_set_form_vars(req = nil)
-    @edit ||= Hash.new
-    session[:prov_options] = @options = nil     #Clearing out options that were set on show screen
-    @edit[:req_id] = req ? req.id : nil                           # Save existing request record id, if passed in
-    @edit[:key] = "prov_edit__#{@edit[:req_id] && @edit[:req_id] || "new"}"
-    options = req ? req.get_options : Hash.new                    # Use existing request options, if passed in
-    @edit[:new] = options unless @workflow_exists
-    @edit[:org_controller] = params[:org_controller]  if params[:org_controller]          #request originated from controller
-    @edit[:prov_option_types] = MiqRequest::MODEL_REQUEST_TYPES[@layout == "miq_request_vm" ? :Vm : :Host]
-    if ["miq_template","service_template","vm"].include?(@edit[:org_controller])
-      if params[:prov_type] && !req
-        # only do this new requests
-        @edit[:prov_type] =  @edit[:prov_option_types][params[:prov_type].to_sym]
-        @edit[:prov_id] =  params[:prov_id]
-        if params[:prov_type] == "migrate"
-          @edit[:prov_type] = "VM Migrate"
-          @edit[:new][:src_ids] = params[:prov_id]
-          @edit[:wf] = VmMigrateWorkflow.new(@edit[:new],session[:userid])                        # Create a new provision workflow for this edit session
-        else
-          @edit[:prov_type] = "VM Provision"
-          options = Hash.new
-          if @edit[:org_controller] == "service_template"
-            options[:service_template_request] = true
-          else
-            options[:src_vm_id] = @edit[:prov_id]
-            options[:request_type] = params[:prov_type].to_sym
-          end
-          #setting class to MiqProvisionVmwareWorkflow for requests where src_vm_id is not already set, i.e catalogitem
-          wf_type = !options[:src_vm_id].blank? ? MiqProvisionWorkflow.class_for_source(options[:src_vm_id]) : MiqProvisionVmwareWorkflow
-          @edit[:wf] = wf_type.new(@edit[:new],session[:userid],options)                        # Create a new provision workflow for this edit session
-        end
-      else
-        options = Hash.new
-        if @edit[:org_controller] == "service_template"
-          options[:service_template_request] = true
-        end
-        options[:initial_pass] = true if req.nil?
-        #setting class to MiqProvisionVmwareWorkflow for requests where src_vm_id is not already set, i.e catalogitem
-        src_vm_id = if @edit[:new][:src_vm_id] && !@edit[:new][:src_vm_id][0].blank?
-          @edit[:new][:src_vm_id]
-        elsif @src_vm_id || params[:src_vm_id]  # Set vm id if pre-prov chose one
-          options[:src_vm_id] = [@src_vm_id || params[:src_vm_id].to_i]
-        end
-
-        options[:use_pre_dialog] = false if @workflow_exists
-
-        if src_vm_id && !src_vm_id[0].blank?
-          wf_type = MiqProvisionWorkflow.class_for_source(src_vm_id[0])
-        else
-          #handle copy button for host provisioning
-          wf_type = @edit[:st_prov_type] ? MiqProvisionWorkflow.class_for_platform(@edit[:st_prov_type]) : MiqHostProvisionWorkflow
-        end
-        pre_prov_values = copy_hash(@edit[:wf].values) if @edit[:wf]
-        begin
-          @edit[:wf] = req && req.type == "VmMigrateRequest" ? VmMigrateWorkflow.new(@edit[:new],session[:userid]) : wf_type.new(@edit[:new],session[:userid], options)   # Create a new provision workflow for this edit session
-        rescue MiqException::MiqVmError => bang
-          #only add this message if showing a list of Catalog items, show screen already handles this
-          @no_wf_msg = _("Cannot create Request Info, error: ") << bang.message
-        end
-        @edit[:prov_type] = req && req.request_type ? req.request_type_display : (req && req.type == "VmMigrateRequest" ? "VM Migrate" : "VM Provision")
-      end
-    else
-      @edit[:prov_type] = "Host"
-      if @edit[:new].empty?
-        # only need to set this for new records
-        @edit[:new][:src_host_ids] = Array.new
-        if params[:prov_id].kind_of?(Array)
-          #multiple hosts selected
-          @edit[:new][:src_host_ids] = params[:prov_id]
-        else
-          @edit[:new][:src_host_ids].push(params[:prov_id])
-        end
-      end
-      @edit[:wf] = MiqHostProvisionWorkflow.new(@edit[:new],session[:userid])                       # Create a new provision workflow for this edit session
-    end
+    @edit                     ||= {}
+    session[:prov_options]      = @options = nil  # Clearing out options that were set on show screen
+    @edit[:req_id]              = req.try(:id)    # Save existing request record id, if passed in
+    @edit[:key]                 = "prov_edit__#{@edit[:req_id] || "new"}"
+    options                     = req.try(:get_options) || {}  # Use existing request options, if passed in
+    @edit[:new]                 = options unless @workflow_exists
+    @edit[:org_controller]      = params[:org_controller] if params[:org_controller]  # request originated from controller
+    @edit[:prov_option_types]   = MiqRequest::MODEL_REQUEST_TYPES[@layout == "miq_request_vm" ? :Vm : :Host]
+    @edit[:wf], pre_prov_values = workflow_instance_from_vars(req)
 
     if @edit[:wf]
       @edit[:wf].get_dialog_order.each do |d|
@@ -840,10 +773,10 @@ module ApplicationController::MiqRequestMethods
         end
       end
       @edit[:buttons] = @edit[:wf].get_buttons
-      @edit[:wf].init_from_dialog(@edit[:new],session[:userid])                                 # Create a new provision workflow for this edit session
+      @edit[:wf].init_from_dialog(@edit[:new], session[:userid]) # Create a new provision workflow for this edit session
       @timezone_offset = get_timezone_offset
       if @edit[:new][:schedule_time]
-        @edit[:new][:schedule_time] = format_timezone(@edit[:new][:schedule_time],Time.zone,"raw")
+        @edit[:new][:schedule_time] = format_timezone(@edit[:new][:schedule_time], Time.zone, "raw")
         @edit[:new][:start_date] = "#{@edit[:new][:schedule_time].month}/#{@edit[:new][:schedule_time].day}/#{@edit[:new][:schedule_time].year}" # Set the start date
         if params[:id]
           @edit[:new][:start_hour] = "#{@edit[:new][:schedule_time].hour}"
@@ -854,21 +787,21 @@ module ApplicationController::MiqRequestMethods
         end
       end
       @edit[:new][tag_symbol_for_workflow] ||= []  # Initialize for new record
-      @edit[:current] ||= Hash.new
+      @edit[:current] ||= {}
       @edit[:current] = copy_hash(@edit[:new])
       # Give the model a change to modify the dialog based on the default settings
       #common grids
-      @edit[:wf].refresh_field_values(@edit[:new],session[:userid])
-      unless pre_prov_values.nil?
-        @edit[:new] = @edit[:new].reject { |_k, v| v.nil? }
-        @edit[:new] = @edit[:new].merge pre_prov_values.select { |k| !@edit[:new].keys.include? k }
+      @edit[:wf].refresh_field_values(@edit[:new], session[:userid])
+      if pre_prov_values
+        @edit[:new] = @edit[:new].delete_nils
+        @edit[:new] = @edit[:new].merge pre_prov_values.select { |k| !@edit[:new].keys.include?(k) }
       end
       @edit[:ds_sortdir] ||= "DESC"
       @edit[:ds_sortcol] ||= "free_space"
       @edit[:host_sortdir] ||= "ASC"
       @edit[:host_sortcol] ||= "name"
-      build_host_grid(@edit[:wf].send("allowed_hosts"),@edit[:host_sortdir],@edit[:host_sortcol])
-      build_ds_grid(@edit[:wf].send("allowed_storages"),@edit[:ds_sortdir],@edit[:ds_sortcol])
+      build_host_grid(@edit[:wf].send("allowed_hosts"), @edit[:host_sortdir], @edit[:host_sortcol])
+      build_ds_grid(@edit[:wf].send("allowed_storages"), @edit[:ds_sortdir], @edit[:ds_sortcol])
       if @edit[:wf].kind_of?(MiqProvisionWorkflow)
         @edit[:vm_sortdir] ||= "ASC"
         @edit[:vm_sortcol] ||= "name"
@@ -876,21 +809,21 @@ module ApplicationController::MiqRequestMethods
         @edit[:vc_sortcol] ||= "name"
         @edit[:template_sortdir] ||= "ASC"
         @edit[:template_sortcol] ||= "name"
-        build_vm_grid(@edit[:wf].send("allowed_templates"),@edit[:vm_sortdir],@edit[:vm_sortcol])
-        build_tags_tree(@edit[:wf],@edit[:new][:vm_tags],true)
-        build_ous_tree(@edit[:wf],@edit[:new][:ldap_ous])
+        build_vm_grid(@edit[:wf].send("allowed_templates"), @edit[:vm_sortdir], @edit[:vm_sortcol])
+        build_tags_tree(@edit[:wf], @edit[:new][:vm_tags], true)
+        build_ous_tree(@edit[:wf], @edit[:new][:ldap_ous])
         if @edit[:wf].supports_pxe?
           @edit[:windows_image_sortdir] ||= "ASC"
           @edit[:windows_image_sortcol] ||= "name"
-          build_pxe_img_grid(@edit[:wf].send("allowed_images"),@edit[:pxe_img_sortdir],@edit[:pxe_img_sortcol])
-          build_host_grid(@edit[:wf].send("allowed_hosts"),@edit[:host_sortdir],@edit[:host_sortcol])
-          build_template_grid(@edit[:wf].send("allowed_customization_templates"),@edit[:template_sortdir],@edit[:template_sortcol])
+          build_pxe_img_grid(@edit[:wf].send("allowed_images"), @edit[:pxe_img_sortdir], @edit[:pxe_img_sortcol])
+          build_host_grid(@edit[:wf].send("allowed_hosts"), @edit[:host_sortdir], @edit[:host_sortcol])
+          build_template_grid(@edit[:wf].send("allowed_customization_templates"), @edit[:template_sortdir], @edit[:template_sortcol])
         elsif @edit[:wf].supports_iso?
           @edit[:iso_img_sortdir] ||= "ASC"
           @edit[:iso_img_sortcol] ||= "name"
-          build_iso_img_grid(@edit[:wf].send("allowed_iso_images"),@edit[:iso_img_sortdir],@edit[:iso_img_sortcol])
+          build_iso_img_grid(@edit[:wf].send("allowed_iso_images"), @edit[:iso_img_sortdir], @edit[:iso_img_sortcol])
         else
-          build_vc_grid(@edit[:wf].send("allowed_customization_specs"),@edit[:vc_sortdir],@edit[:vc_sortcol])
+          build_vc_grid(@edit[:wf].send("allowed_customization_specs"), @edit[:vc_sortdir], @edit[:vc_sortcol])
         end
       elsif @edit[:wf].kind_of?(VmMigrateWorkflow)
       else
@@ -900,16 +833,80 @@ module ApplicationController::MiqRequestMethods
         @edit[:windows_image_sortcol] ||= "name"
         @edit[:template_sortdir] ||= "ASC"
         @edit[:template_sortcol] ||= "name"
-        build_tags_tree(@edit[:wf],@edit[:new][:tag_ids],true)
-        build_pxe_img_grid(@edit[:wf].send("allowed_images"),@edit[:pxe_img_sortdir],@edit[:pxe_img_sortcol])
-        build_iso_img_grid(@edit[:wf].send("allowed_iso_images"),@edit[:iso_img_sortdir],@edit[:iso_img_sortcol])
-        build_host_grid(@edit[:wf].send("allowed_hosts"),@edit[:host_sortdir],@edit[:host_sortcol])
-        build_template_grid(@edit[:wf].send("allowed_customization_templates"),@edit[:template_sortdir],@edit[:template_sortcol])
+        build_tags_tree(@edit[:wf], @edit[:new][:tag_ids], true)
+        build_pxe_img_grid(@edit[:wf].send("allowed_images"), @edit[:pxe_img_sortdir], @edit[:pxe_img_sortcol])
+        build_iso_img_grid(@edit[:wf].send("allowed_iso_images"), @edit[:iso_img_sortdir], @edit[:iso_img_sortcol])
+        build_host_grid(@edit[:wf].send("allowed_hosts"), @edit[:host_sortdir], @edit[:host_sortcol])
+        build_template_grid(@edit[:wf].send("allowed_customization_templates"), @edit[:template_sortdir], @edit[:template_sortcol])
       end
     else
-      @edit[:current] ||= Hash.new
+      @edit[:current] ||= {}
       @edit[:current] = copy_hash(@edit[:new])
     end
+  end
+
+  def workflow_instance_from_vars(req)
+    options         = {}
+    pre_prov_values = nil
+    if ["miq_template", "service_template", "vm"].include?(@edit[:org_controller])
+      if params[:prov_type] && !req  # only do this new requests
+        @edit[:prov_id] = params[:prov_id]
+        wf_type =
+          if params[:prov_type] == "migrate"
+            @edit[:prov_type]     = "VM Migrate"
+            @edit[:new][:src_ids] = params[:prov_id]
+            VmMigrateWorkflow
+          else
+            @edit[:prov_type] = "VM Provision"
+            if @edit[:org_controller] == "service_template"
+              options[:service_template_request] = true
+              MiqProvisionVmwareWorkflow
+            else
+              options[:src_vm_id]    = @edit[:prov_id]
+              options[:request_type] = params[:prov_type].to_sym
+              MiqProvisionWorkflow.class_for_source(options[:src_vm_id])
+            end
+          end
+      else
+        options[:initial_pass]             = true  unless req
+        options[:service_template_request] = true  if @edit[:org_controller] == "service_template"
+        options[:use_pre_dialog]           = false if @workflow_exists
+        # setting class to MiqProvisionVmwareWorkflow for requests where src_vm_id is not already set, i.e catalogitem
+        src_vm_id =
+          if @edit.fetch_path(:new, :src_vm_id, 0).present?
+            @edit[:new][:src_vm_id]
+          elsif @src_vm_id || params[:src_vm_id]  # Set vm id if pre-prov chose one
+            options[:src_vm_id] = [@src_vm_id || params[:src_vm_id].to_i]
+          end
+
+        wf_type =
+          if req.try(:type) == "VmMigrateRequest"
+            VmMigrateWorkflow
+          elsif src_vm_id.try(:first).present?
+            MiqProvisionWorkflow.class_for_source(src_vm_id[0])
+          elsif @edit[:st_prov_type]
+            MiqProvisionWorkflow.class_for_platform(@edit[:st_prov_type])
+          else # handle copy button for host provisioning
+            MiqHostProvisionWorkflow
+          end
+        pre_prov_values = copy_hash(@edit[:wf].values) if @edit[:wf]
+
+        @edit[:prov_type]   = req.try(:request_type) && req.request_type_display
+        @edit[:prov_type] ||= req.try(:type) == "VmMigrateRequest" ? "VM Migrate" : "VM Provision"
+      end
+    else
+      @edit[:prov_type] = "Host"
+      if @edit[:new].empty?
+        # multiple / single hosts selected, src_host_ids should always be an array
+        @edit[:new][:src_host_ids] = params[:prov_id].kind_of?(Array) ? params[:prov_id] : [params[:prov_id]]
+      end
+      wf_type = MiqHostProvisionWorkflow
+    end
+
+    [wf_type.new(@edit[:new], session[:userid], options), pre_prov_values]  # Return the new workflow and any pre_prov_values
+  rescue MiqException::MiqVmError => bang
+    # only add this message if showing a list of Catalog items, show screen already handles this
+    @no_wf_msg = _("Cannot create Request Info, error: ") << bang.message
   end
 
   def build_ous_tree(wf,ldap_ous)
@@ -1063,6 +1060,4 @@ module ApplicationController::MiqRequestMethods
     session[:tree] = "all_tags"
     session[:tree_name] = "all_tags_tree"
   end
-
-
 end
