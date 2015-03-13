@@ -116,4 +116,6 @@ $(document).ready(function () {
   $('[data-miq_focus]').each(function (index) {
     this.focus();
   });
+
+  $('table.table.datatable').DataTable();
 });

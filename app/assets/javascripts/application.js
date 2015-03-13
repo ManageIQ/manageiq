@@ -5,6 +5,8 @@
 //= require angular-ui-bootstrap
 //= require angular-ui-bootstrap-tpls
 //= require moment
+//= require dataTables/jquery.dataTables
+//= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
 //= require miq_angular_application
 //= require services/miq_service
 //= require services/miq_db_backup_service

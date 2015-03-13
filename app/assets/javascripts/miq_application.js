@@ -67,6 +67,9 @@ function miqOnLoad() {
       $('#search_text').focus();
     } catch (er) {}
   }
+
+  // Call Datatables on tables with .datatable
+  $('table.table.datatable').DataTable();
 }
 
 function miqPrepRightCellForm(tree) {

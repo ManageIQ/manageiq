@@ -179,6 +179,9 @@ class ExplorerPresenter
 
     @out << "$('#quicksearchbox').modal('hide');" if @options[:hide_modal]
 
+    # Call Datatables on tables with .datatable
+    @out << "$('table.table.datatable').DataTable();"
+
     # Don't turn off spinner for charts/timelines
     @out << set_spinner_off unless @options[:ajax_action]
   end
