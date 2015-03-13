@@ -3,6 +3,9 @@ module MiqReportable
   def self.records2table(records, options)
     return Ruport::Data::Table.new if records.blank?
 
+    db = records.first.class
+    db.aar_columns = []
+
     data = records.map {|r|
       options[:include]["categories"] = options[:include_categories] if options[:include] && options[:include_categories]
       r.reportable_data(:include => options[:include],
@@ -14,7 +17,7 @@ module MiqReportable
 
     data = data[0..options[:limit] - 1] if options[:limit] # apply limit after includes are processed
     Ruport::Data::Table.new(:data => data,
-                            :column_names => [],
+                            :column_names => db.aar_columns,
                             :record_class => options[:record_class],
                             :filters => options[:filters])
   end
