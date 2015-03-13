@@ -147,17 +147,9 @@ describe MiqRequest do
         request.request_status.should == 'Unknown'
       end
 
-      it "#message" do
-        request.message.should == request.message
-      end
-
       it "#get_options" do
         request.options = {:foo => 1, :bar => 2}
         request.get_options.should == request.options
-      end
-
-      it "#status" do
-        request.status.should == request.status
       end
 
       it "#request_type" do
