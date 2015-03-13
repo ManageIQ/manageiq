@@ -121,57 +121,53 @@ describe MiqRequest do
     end
 
     context "using Polymorphic Resource" do
-      before do
-        @template = FactoryGirl.create(:template_vmware)
-        @resource = FactoryGirl.create(:miq_provision_request, :userid => @fred.userid, :src_vm_id => @template.id)
-        @resource.create_request
-        @request = @resource
-      end
+      let(:template) { FactoryGirl.create(:template_vmware) }
+      let(:request)  { FactoryGirl.create(:miq_provision_request, :userid => @fred.userid, :src_vm_id => template.id).create_request }
 
       it "#approval_approved" do
-        @request.stub(:approved?).and_return(false)
-        @request.approval_approved.should be_false
+        request.stub(:approved?).and_return(false)
+        request.approval_approved.should be_false
 
-        @request.stub(:approved?).and_return(true)
-        @request.should_receive(:call_automate_event_queue).with("request_approved").once
-        @request.resource.should_receive(:execute).once
-        @request.approval_approved
-        @request.approval_state.should == 'approved'
+        request.stub(:approved?).and_return(true)
+        request.should_receive(:call_automate_event_queue).with("request_approved").once
+        request.resource.should_receive(:execute).once
+        request.approval_approved
+        request.approval_state.should == 'approved'
       end
 
       it "#request_status" do
-        @request.approval_state  = 'approved'
-        @request.resource.status = 'hello'
-        @request.request_status.should == @request.resource.status
-        @request.resource.status = nil
-        @request.request_status.should == 'Unknown'
-        @request.approval_state  = 'denied'
-        @request.request_status.should == 'Error'
-        @request.approval_state  = 'pending_approval'
-        @request.request_status.should == 'Unknown'
+        request.approval_state  = 'approved'
+        request.resource.status = 'hello'
+        request.request_status.should == request.resource.status
+        request.resource.status = nil
+        request.request_status.should == 'Unknown'
+        request.approval_state  = 'denied'
+        request.request_status.should == 'Error'
+        request.approval_state  = 'pending_approval'
+        request.request_status.should == 'Unknown'
       end
 
       it "#message" do
-        @request.message.should == @resource.message
+        request.message.should == request.message
       end
 
       it "#get_options" do
-        @resource.options = {:foo => 1, :bar => 2}
-        @request.get_options.should == @resource.options
+        request.options = {:foo => 1, :bar => 2}
+        request.get_options.should == request.options
       end
 
       it "#status" do
-        @request.status.should == @resource.status
+        request.status.should == request.status
       end
 
       it "#request_type" do
-        @request.request_type.should == @resource.provision_type
+        request.request_type.should == request.provision_type
       end
 
-      describe("#request_type_display") { it { expect(@request.request_type_display).to eq("VM Provision") } }
+      describe("#request_type_display") { it { expect(request.request_type_display).to eq("VM Provision") } }
 
       it "#workflow_class" do
-        @request.workflow_class.should == MiqProvisionVmwareWorkflow
+        request.workflow_class.should == MiqProvisionVmwareWorkflow
       end
     end
 
