@@ -186,16 +186,7 @@ module ApplicationController::MiqRequestMethods
     elsif params[:button] == "submit"                           # Update or create the request from the workflow with the new options
       prov_req_submit
     else                                                        # First time in, build provision request screen
-      case params[:org_controller]
-      when "vm"
-        @layout = "miq_request_vm"
-      when "host"
-        @layout = "miq_request_host"
-      when "ae"
-        @layout = "miq_request_ae"
-      else
-        @layout = "miq_request_vm"
-      end
+      @layout = layout_from_tab_name(params[:org_controller])
       if params[:commit] == "Upload" && session.fetch_path(:edit, :new, :sysprep_enabled, 1) == "Sysprep Answer File"
         upload_sysprep_file
         @tabactive = "customize_div"
@@ -476,6 +467,14 @@ module ApplicationController::MiqRequestMethods
       "prov_host_dialog"
     when VmMigrateWorkflow
       "prov_vm_migrate_dialog"
+    end
+  end
+
+  def layout_from_tab_name(tab_name)
+    case tab_name
+    when "host" then "miq_request_host"
+    when "ae"   then "miq_request_ae"
+    else             "miq_request_vm"  # Includes "vm"
     end
   end
 
