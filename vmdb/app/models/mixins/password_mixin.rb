@@ -7,12 +7,7 @@ module PasswordMixin
 
   module ClassMethods
     def encrypted_columns
-      @encrypted_columns ||= []
-    end
-
-    def add_encrypted_column(column)
-      @encrypted_columns ||= []
-      @encrypted_columns |= [column] if column.present?
+      @@encrypted_columns ||= []    # rubocop:disable Style/ClassVars
     end
 
     def encrypt_column(column)
@@ -22,8 +17,8 @@ module PasswordMixin
       #   password_encrypted  : Get the password in cryptext
       #   password_encrypted= : Set the password in cryptext
 
-      add_encrypted_column(column.to_s)
-      add_encrypted_column("#{column}_encrypted")
+      encrypted_columns << column.to_s
+      encrypted_columns << "#{column}_encrypted"
 
       mod = generated_methods_for_password_mixin
 

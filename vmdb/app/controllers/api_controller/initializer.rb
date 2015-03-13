@@ -36,6 +36,17 @@ class ApiController
         @config[:collections]
       end
 
+      #
+      # Let's fetch encrypted attribute names of objects being rendered if not already done
+      #
+      def fetch_encrypted_attribute_names(obj)
+        @encrypted_objects_checked ||= {}
+        klass = obj.class.name
+        return unless @encrypted_objects_checked[klass].nil?
+        @encrypted_objects_checked[klass] = object_encrypted_attributes(obj)
+        @encrypted_objects_checked[klass].each { |attr| @attr_encrypted[attr] = true }
+      end
+
       private
 
       def log_kv(key, val, pref = "")
@@ -95,16 +106,15 @@ class ApiController
       # Accessed as @attr_<type>[<name>], much faster than array include?
       #
       def gen_attr_type_hash
-        @attr_url       = {}
-        @attr_time      = {}
+        @attr_time = {}
+        @attr_url  = {}
         @attr_encrypted = {}
 
-        ATTR_TYPES[:time].each      { |attr| @attr_time[attr]      = true }
-        ATTR_TYPES[:url].each       { |attr| @attr_url[attr]       = true }
+        ATTR_TYPES[:time].each { |attr| @attr_time[attr] = true }
+        ATTR_TYPES[:url].each  { |attr| @attr_url[attr]  = true }
         ATTR_TYPES[:encrypted].each { |attr| @attr_encrypted[attr] = true }
 
         gen_time_attr_type_hash
-        gen_encrypted_attr_type_hash
       end
 
       #
@@ -120,11 +130,8 @@ class ApiController
         end
       end
 
-      #
-      # Let's get all encrypted attributes
-      #
-      def gen_encrypted_attr_type_hash
-        ::Authentication.all_encrypted_columns.each { |attr| @attr_encrypted[attr] = true }
+      def object_encrypted_attributes(obj)
+        obj.class.respond_to?(:encrypted_columns) ? obj.class.encrypted_columns : []
       end
     end
   end

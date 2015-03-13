@@ -8,6 +8,7 @@ module ApiHelper
     # virtual subcollections is added.
 
     def normalize_hash(type, obj, opts = {})
+      ApiController.fetch_encrypted_attribute_names(obj)
       attrs = normalize_select_attributes(obj, opts)
       result = {}
 
@@ -32,6 +33,7 @@ module ApiHelper
     end
 
     def normalize_virtual_hash(vtype, obj, options)
+      ApiController.fetch_encrypted_attribute_names(obj)
       attrs = (obj.respond_to?(:attributes) ? obj.attributes.keys : obj.keys)
       attrs.each_with_object({}) do |k, res|
         value = normalize_virtual(vtype, k, obj[k], options)
@@ -53,10 +55,10 @@ module ApiHelper
     def normalize_attr_byname(type, attr, value)
       return if value.nil?
       if self.class.attr_type_hash(:time).key?(attr.to_s)
-        normalize_attr(type, :time,       value)
+        normalize_attr(type, :time, value)
       elsif self.class.attr_type_hash(:url).key?(attr.to_s)
-        normalize_attr(type, :url,        value)
-      elsif self.class.attr_type_hash(:encrypted).key?(attr.to_s)
+        normalize_attr(type, :url,  value)
+      elsif self.class.attr_type_hash(:encrypted).key?(attr.to_s) || attr.to_s.include?("password")
         normalize_attr(type, :encrypted,  value)
       else
         value
@@ -94,10 +96,10 @@ module ApiHelper
     end
 
     #
-    # Let's filter encrypted attributes, i.e. passwords
+    # Let's filter out encrypted attributes, i.e. passwords
     #
     def normalize_encrypted(_type, _value)
-      "[FILTERED]"
+      nil
     end
 
     private

@@ -8,10 +8,6 @@ class Authentication < ActiveRecord::Base
     end
   end
 
-  def self.all_encrypted_columns
-    (encrypted_columns | MiqDatabase.encrypted_columns).sort
-  end
-
   include PasswordMixin
   encrypt_column :auth_key
 

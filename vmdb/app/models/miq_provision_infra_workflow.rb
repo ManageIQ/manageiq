@@ -1,7 +1,7 @@
 class MiqProvisionInfraWorkflow < MiqProvisionVirtWorkflow
   SUBCLASSES = %w{
-    MiqProvisionRedhat
-    MiqProvisionVmware
+    MiqProvisionRedhatWorkflow
+    MiqProvisionVmwareWorkflow
   }
 
   def set_or_default_hardware_field_values(vm)
@@ -62,4 +62,4 @@ end
 
 # Preload any subclasses of this class, so that they will be part of the
 #   conditions that are generated on queries against this class.
-MiqProvisionInfraWorkflow::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}_workflow.rb").to_s }
+MiqProvisionInfraWorkflow::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}.rb").to_s }

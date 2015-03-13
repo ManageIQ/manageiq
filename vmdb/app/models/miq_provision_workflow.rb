@@ -8,6 +8,20 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
     MiqProvisionWorkflow
   end
 
+  def self.all_encrypted_options_fields(klass = nil, encrypted_fields = {})
+    klass ||= self
+    return encrypted_fields[klass.name] if encrypted_fields.key?(klass.name)
+    encrypted_fields[klass.name] = Array.wrap(
+      klass.respond_to?(:encrypted_options_fields) ? klass.encrypted_options_fields : nil
+    )
+    if defined?(klass::SUBCLASSES)
+      klass::SUBCLASSES.each do |c|
+        encrypted_fields[klass.name] |= all_encrypted_options_fields(c.constantize, encrypted_fields)
+      end
+    end
+    encrypted_fields[klass.name]
+  end
+
   def self.class_for_platform(platform)
     "MiqProvision#{platform.titleize}Workflow".constantize
   end
