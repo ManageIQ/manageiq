@@ -721,14 +721,21 @@ class MiqVimVm
 	# If backingFile is just the datastore name, "[storage 1]" for example,
 	#    file names will be generated as appropriate.
 	# 
-	# thinProvisioned - if new disk is thin (grow on demand, allowing storage overcommitment) or thick (pre-allocated)
+	# Options available:
+	# thin_provisioned - if new disk is thin (grow on demand, allowing storage overcommitment) or thick (pre-allocated)
 	# dependent       - if new disk is dependent (usual one) or not (meaning no delta file and no live snapshots of running VM)
 	# persistent      - if new disk should really save changes or discard them on VM poweroff
 	# 
 	# P.S. Good overview of use cases for dependent / independent and persistent / nonpersistent disks
 	# can be found at http://cormachogan.com/2013/04/16/what-are-dependent-independent-disks-persistent-and-non-persisent-modes/
 	#
-	def addDisk(backingFile, sizeInMB, label=nil, summary=nil, thinProvisioned=false, dependent=false, persistent=true)
+	def addDisk(backingFile, sizeInMB, label=nil, summary=nil, options={})
+		# Remove nil keys if any, since the next line may not work
+		options.reject!{|k,v| v.nil?}
+		# Merge default values:
+		# - persistent is set to true to be backward compatible
+		# - thin_provisioned is set to false explicitly since we call to_s on it further, so nil will not work for us
+		options = {:persistent => true, :thin_provisioned => false}.merge(options)
 	    ck, un = getScsiCandU
 	    raise "addDisk: no SCSI controller found" if !ck
 
@@ -756,15 +763,15 @@ class MiqVimVm
 						    con.startConnected		= "true"
 						    con.connected			= "true"
 						end
-						if dependent
-							mode = (persistent ? VirtualDiskMode::Persistent : VirtualDiskMode::Nonpersistent)
+						if options[:dependent]
+							mode = (options[:persistent] ? VirtualDiskMode::Persistent : VirtualDiskMode::Nonpersistent)
 						else
-							mode = (persistent ? VirtualDiskMode::Independent_persistent : VirtualDiskMode::Independent_nonpersistent)
+							mode = (options[:persistent] ? VirtualDiskMode::Independent_persistent : VirtualDiskMode::Independent_nonpersistent)
 						end
 						vDev.backing = VimHash.new("VirtualDiskFlatVer2BackingInfo") do |bck|
 							bck.diskMode		= mode
 						    bck.split			= "false"
-						    bck.thinProvisioned	= thinProvisioned.to_s
+						    bck.thinProvisioned	= options[:thin_provisioned].to_s
 						    bck.writeThrough	= "false"
 						    bck.fileName		= backingFile
 							begin
