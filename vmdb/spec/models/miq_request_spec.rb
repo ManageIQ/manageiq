@@ -19,40 +19,40 @@ describe MiqRequest do
   end
 
   context "Class Methods" do
-    before(:each) do
-      @fred                = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
-      @barney              = FactoryGirl.create(:user, :name => 'Barney Rubble',    :userid => 'barney')
-      @requests_for_fred   = []
-      @requests_for_barney = []
-      @requests_for_fred   << FactoryGirl.create(:miq_request, :requester => @fred)
-      @requests_for_fred   << FactoryGirl.create(:miq_request, :requester => @fred)
-      @requests_for_barney << FactoryGirl.create(:miq_request, :requester => @barney)
+    let(:fred)   { FactoryGirl.create(:user, :name => 'Fred Flintstone', :userid => 'fred') }
+    let(:barney) { FactoryGirl.create(:user, :name => 'Barney Rubble',   :userid => 'barney') }
+
+    before do
+      @requests_for_fred   = [FactoryGirl.create(:miq_request, :requester => fred), FactoryGirl.create(:miq_request, :requester => fred)]
+      @requests_for_barney = [FactoryGirl.create(:miq_request, :requester => barney)]
     end
 
     it "#requests_for_userid" do
-      MiqRequest.requests_for_userid(@barney.userid).should match_array(@requests_for_barney)
-      MiqRequest.requests_for_userid(@fred.userid).should   match_array(@requests_for_fred)
+      expect(MiqRequest.requests_for_userid(barney.userid)).to match_array(@requests_for_barney)
+      expect(MiqRequest.requests_for_userid(fred.userid)).to   match_array(@requests_for_fred)
     end
 
     it "#all_requesters" do
-      expected_hash = {}
-      [@fred, @barney].each { |user| expected_hash[user.id] = user.name }
-      MiqRequest.all_requesters.should == expected_hash
+      expected_hash = [fred, barney].each_with_object({}) { |user, hash| hash[user.id] = user.name }
 
-      expected_hash[@barney.id] = "#{@barney.name} (no longer exists)"
-      @barney.destroy
-      MiqRequest.all_requesters.should == expected_hash
+      expect(MiqRequest.all_requesters).to eq(expected_hash)
 
-      old_name = @fred.name
-      new_name = "Fred Flintstone, Sr."
-      @fred.update_attributes(:name => new_name)
-      expected_hash[@fred.id] = old_name
-      MiqRequest.all_requesters.should == expected_hash
-      @fred.update_attributes(:name => old_name)
+      expected_hash[barney.id] = "#{barney.name} (no longer exists)"
+      barney.destroy
 
-      expected_hash[@fred.id] = "#{@fred.name} (no longer exists)"
-      @fred.destroy
-      MiqRequest.all_requesters.should == expected_hash
+      expect(MiqRequest.all_requesters).to eq(expected_hash)
+
+      old_name = expected_hash[fred.id] = fred.name
+      fred.update_attributes(:name => "Fred Flintstone, Sr.")
+
+      expect(MiqRequest.all_requesters).to eq(expected_hash)
+
+      fred.update_attributes(:name => old_name)
+
+      expected_hash[fred.id] = "#{fred.name} (no longer exists)"
+      fred.destroy
+
+      expect(MiqRequest.all_requesters).to eq(expected_hash)
     end
   end
 
