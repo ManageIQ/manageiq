@@ -151,7 +151,7 @@ describe MiqRequest do
       end
 
       it "#get_options" do
-        @resource.options = { :foo => 1, :bar => 2 }
+        @resource.options = {:foo => 1, :bar => 2}
         @request.get_options.should == @resource.options
       end
 
@@ -264,13 +264,12 @@ describe MiqRequest do
         @request.miq_approvals = []
         @request.approver.should be_nil
       end
-
     end
 
     it "#deny" do
       MiqServer.stub(:my_zone).and_return("default")
       vm_template = FactoryGirl.create(:template_vmware, :name => "template1")
-      pr = FactoryGirl.create(:miq_provision_request, :userid => @fred.userid, :src_vm_id => vm_template.id )
+      pr = FactoryGirl.create(:miq_provision_request, :userid => @fred.userid, :src_vm_id => vm_template.id)
       MiqApproval.any_instance.stub(:authorized?).and_return(true)
 
       reason   = "Why Not?"
