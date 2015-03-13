@@ -35,7 +35,7 @@ class MiqRequest < ActiveRecord::Base
   include MiqRequestMixin
 
   MODEL_REQUEST_TYPES = {
-    :Vm                => {
+    :Service => {
       :MiqProvisionRequest             => {
         :template          => "VM Provision",
         :clone_to_vm       => "VM Clone",
@@ -54,12 +54,12 @@ class MiqRequest < ActiveRecord::Base
         :service_reconfigure => "Service Reconfigure"
       }
     },
-    :Host              => {
+    :Infrastructure => {
       :MiqHostProvisionRequest => {
         :host_pxe_install => "Host Provision"
       },
     },
-    :AutomationRequest => {
+    :Automate => {
       :AutomationRequest => {
         :automation => "Automation"
       }

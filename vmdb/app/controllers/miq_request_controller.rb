@@ -449,9 +449,9 @@ class MiqRequestController < ApplicationController
 
   def model_request_type_from_layout
     case @layout
-    when "miq_request_ae"   then :AutomationRequest
-    when "miq_request_host" then :Host
-    else                         :Vm
+    when "miq_request_ae"   then :Automate
+    when "miq_request_host" then :Infrastructure
+    else                         :Service
     end
   end
 
