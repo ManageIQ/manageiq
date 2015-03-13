@@ -295,7 +295,7 @@
           :description: Provision Type
           :required: true
           :display: :edit
-          :default: iso
+          :default: native_clone
           :data_type: :string
         :linked_clone:
           :values:
