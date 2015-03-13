@@ -1026,6 +1026,7 @@ module ApplicationController::Filter
       page << javascript_show("blocker_div")
       page << javascript_show("quicksearchbox")
       page << "$('#quicksearchbox').addClass('modal fade in');"
+      page << "if (miqDomElementExists('value_1')) $('#value_1').focus();"
       page << "miqSparkle(false);"
     end
   end
