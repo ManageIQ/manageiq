@@ -158,10 +158,30 @@ object:
       max_time: 
   - field:
       aetype: state
-      name: DeleteServiceFromVMDB
+      name: FinishRetirement
       display_name: 
       datatype: string
       priority: 8
+      owner: 
+      default_value: "/Service/Retirement/StateMachines/Methods/FinishRetirement"
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_service_retirement_status(status => 'Finishing Retirement')
+      on_exit: update_service_retirement_status(status => 'Finished Retirement')
+      on_error: update_service_retirement_status(status => 'Error Finishing Retirement')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: DeleteServiceFromVMDB
+      display_name: 
+      datatype: string
+      priority: 9
       owner: 
       default_value: "/Service/Retirement/StateMachines/Methods/DeleteServiceFromVMDB"
       substitute: true
@@ -177,25 +197,5 @@ object:
         from VMDB')
       on_error: update_service_retirement_status(status => 'Error Deleting Retired
         Service from VMDB')
-      max_retries: '100'
-      max_time: 
-  - field:
-      aetype: state
-      name: FinishRetirement
-      display_name: 
-      datatype: string
-      priority: 9
-      owner: 
-      default_value: "/Service/Retirement/StateMachines/Methods/FinishRetirement"
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: update_service_retirement_status(status => 'Finishing Retirement')
-      on_exit: update_service_retirement_status(status => 'Finished Retirement')
-      on_error: update_service_retirement_status(status => 'Error Finishing Retirement')
       max_retries: '100'
       max_time: 
