@@ -39,7 +39,7 @@ describe OpsController do
         @sch = FactoryGirl.create(:miq_schedule)
         silence_warnings { OpsController::Settings::Schedules::STGROOT = 'ST' }
 
-        controller.stub(:find_checked_items).and_return([@sch.id])
+        controller.params["check_#{controller.to_cid(@sch.id)}"] = '1'
         controller.should_receive(:render).never
         controller.should_receive(:schedule_build_list)
         controller.should_receive(:settings_get_info)
