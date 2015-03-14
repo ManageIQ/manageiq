@@ -61,10 +61,6 @@ describe MiqRequest do
     let(:fred)       { FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred') }
     let(:request)    { FactoryGirl.create(:miq_request, :requester => fred) }
 
-    before do
-      @approver_role = UiTaskSet.create(:name => "approver", :description => "Approver")
-    end
-
     it { expect(request).to be_valid }
     describe("#request_type_display") { it { expect(request.request_type_display).to eq("Unknown") } }
     describe("#requester_userid")     { it { expect(request.requester_userid).to eq(fred.userid) } }
