@@ -116,56 +116,56 @@ describe MiqRequest do
     end
 
     context "using Polymorphic Resource" do
-      let(:template) { FactoryGirl.create(:template_vmware) }
-      let(:request)  { FactoryGirl.create(:miq_provision_request, :userid => fred.userid, :src_vm_id => template.id).create_request }
+      let(:template)          { FactoryGirl.create(:template_vmware) }
+      let(:provision_request) { FactoryGirl.create(:miq_provision_request, :userid => fred.userid, :src_vm_id => template.id).create_request }
 
-      it { expect(request.workflow_class).to eq(MiqProvisionVmwareWorkflow) }
-      describe("#get_options")          { it { expect(request.get_options).to eq(:number_of_vms => 1) } }
-      describe("#request_type")         { it { expect(request.request_type).to eq(request.provision_type) } }
-      describe("#request_type_display") { it { expect(request.request_type_display).to eq("VM Provision") } }
+      it { expect(provision_request.workflow_class).to eq(MiqProvisionVmwareWorkflow) }
+      describe("#get_options")          { it { expect(provision_request.get_options).to eq(:number_of_vms => 1) } }
+      describe("#request_type")         { it { expect(provision_request.request_type).to eq(provision_request.provision_type) } }
+      describe("#request_type_display") { it { expect(provision_request.request_type_display).to eq("VM Provision") } }
 
       context "#approval_approved" do
         it "not approved" do
-          request.stub(:approved?).and_return(false)
+          provision_request.stub(:approved?).and_return(false)
 
-          expect(request.approval_approved).to be_false
+          expect(provision_request.approval_approved).to be_false
         end
 
         it "approved" do
-          request.stub(:approved?).and_return(true)
+          provision_request.stub(:approved?).and_return(true)
 
-          request.should_receive(:call_automate_event_queue).with("request_approved").once
-          request.resource.should_receive(:execute).once
+          provision_request.should_receive(:call_automate_event_queue).with("request_approved").once
+          provision_request.resource.should_receive(:execute).once
 
-          request.approval_approved
+          provision_request.approval_approved
 
-          expect(request.approval_state).to eq('approved')
+          expect(provision_request.approval_state).to eq('approved')
         end
       end
 
       context "#request_status" do
         context "status nil" do
           it "approval_state approved" do
-            request.status = nil
-            request.approval_state = 'approved'
-            expect(request.request_status).to eq('Unknown')
+            provision_request.status = nil
+            provision_request.approval_state = 'approved'
+            expect(provision_request.request_status).to eq('Unknown')
           end
         end
 
         context "with status" do
           it "status hello" do
-            request.approval_state = 'approved'
-            expect(request.request_status).to eq('Ok')
+            provision_request.approval_state = 'approved'
+            expect(provision_request.request_status).to eq('Ok')
           end
 
           it "approval_state denied" do
-            request.approval_state  = 'denied'
-            expect(request.request_status).to eq('Error')
+            provision_request.approval_state  = 'denied'
+            expect(provision_request.request_status).to eq('Error')
           end
 
           it "approval_state pending_approval" do
-            request.approval_state  = 'pending_approval'
-            expect(request.request_status).to eq('Unknown')
+            provision_request.approval_state  = 'pending_approval'
+            expect(provision_request.request_status).to eq('Unknown')
           end
         end
       end
