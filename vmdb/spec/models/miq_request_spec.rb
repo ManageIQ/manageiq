@@ -195,10 +195,18 @@ describe MiqRequest do
         let(:reason) { "Why Not?" }
         let(:wilma)  { FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'wilma',  :email => 'wilma@bedrock.gov') }
         let(:betty)  { FactoryGirl.create(:user, :name => 'Betty Rubble',     :userid => 'betty',  :email => 'betty@bedrock.gov') }
-        let(:wilma_approval) { FactoryGirl.create(:miq_approval, :approver => wilma, :reason => reason) }
+        let(:wilma_approval) { FactoryGirl.create(:miq_approval, :approver => wilma, :reason => reason, :stamper => betty, :stamped_on => Time.now) }
         let(:betty_approval) { FactoryGirl.create(:miq_approval, :approver => betty) }
 
         before { request.miq_approvals = [wilma_approval, betty_approval] }
+
+        it "default values" do
+          expect(request.approver).to       eq(wilma.name)
+          expect(request.first_approval).to eq(wilma_approval)
+          expect(request.reason).to         eq(reason)
+          expect(request.stamped_by).to     eq(betty.userid)
+          expect(request.stamped_on).to     eq(wilma_approval.stamped_on)
+        end
 
         it "#approved? requires all approvals" do
           expect(request).to_not be_approved
@@ -242,22 +250,6 @@ describe MiqRequest do
 
           request.deny(wilma.userid, reason)
         end
-
-        describe("#first_approval") { it { expect(request.first_approval).to eq(wilma_approval) } }
-
-        it "#stamped_by" do
-          wilma_approval.stamper = betty
-
-          expect(request.stamped_by).to eq(betty.userid)
-        end
-
-        it "#stamped_on" do
-          wilma_approval.stamped_on = Time.now
-          expect(request.stamped_on).to eq(wilma_approval.stamped_on)
-        end
-
-        describe("#reason") { it { expect(request.reason).to     eq(reason) } }
-        describe("#approver") { it { expect(request.approver).to eq(wilma.name) } }
       end
     end
 
