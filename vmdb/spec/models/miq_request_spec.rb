@@ -172,21 +172,22 @@ describe MiqRequest do
     end
 
     context "using MiqApproval" do
+      let(:reason) { "Why Not?" }
+      let(:wilma)  { FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'wilma',  :email => 'wilma@bedrock.gov') }
+      let(:betty)  { FactoryGirl.create(:user, :name => 'Betty Rubble',     :userid => 'betty',  :email => 'betty@bedrock.gov') }
+      let(:wilma_approval) { FactoryGirl.create(:miq_approval, :approver => wilma) }
+      let(:betty_approval) { FactoryGirl.create(:miq_approval, :approver => betty) }
+
       before do
-        @reason         = "Why Not?"
-        @wilma          = FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'wilma',  :email => 'wilma@bedrock.gov')
         @barney         = FactoryGirl.create(:user, :name => 'Barney Rubble',    :userid => 'barney', :email => 'barney@bedrock.gov')
-        @betty          = FactoryGirl.create(:user, :name => 'Betty Rubble',     :userid => 'betty',  :email => 'betty@bedrock.gov')
-        @wilma_approval = FactoryGirl.create(:miq_approval, :approver => @wilma)
-        @betty_approval = FactoryGirl.create(:miq_approval, :approver => @betty)
-        request.miq_approvals = [@wilma_approval, @betty_approval]
+        request.miq_approvals = [wilma_approval, betty_approval]
       end
 
       it "#approved?" do
         request.approved?.should be_false
-        @wilma_approval.state = 'approved'
+        wilma_approval.state = 'approved'
         request.approved?.should be_false
-        @betty_approval.state = 'approved'
+        betty_approval.state = 'approved'
         request.approved?.should be_true
       end
 
@@ -197,71 +198,71 @@ describe MiqRequest do
       end
 
       it "#v_approved_by" do
-        @wilma_approval.approve(@wilma.userid, @reason)
-        request.v_approved_by.should == "#{@wilma.name}"
-        @betty_approval.approve(@betty.userid, @reason)
-        request.v_approved_by.should == "#{@wilma.name}, #{@betty.name}"
+        wilma_approval.approve(wilma.userid, reason)
+        request.v_approved_by.should == "#{wilma.name}"
+        betty_approval.approve(betty.userid, reason)
+        request.v_approved_by.should == "#{wilma.name}, #{betty.name}"
         request.miq_approvals = []
         request.v_approved_by.should == ""
       end
 
       it "#v_approved_by_email" do
-        @wilma_approval.approve(@wilma.userid, @reason)
-        request.v_approved_by_email.should == "#{@wilma.email}"
-        @betty_approval.approve(@betty.userid, @reason)
-        request.v_approved_by_email.should == "#{@wilma.email}, #{@betty.email}"
+        wilma_approval.approve(wilma.userid, reason)
+        request.v_approved_by_email.should == "#{wilma.email}"
+        betty_approval.approve(betty.userid, reason)
+        request.v_approved_by_email.should == "#{wilma.email}, #{betty.email}"
         request.miq_approvals = []
         request.v_approved_by_email.should == ""
       end
 
       it "#approve" do
         request.stub(:approved?).and_return(true, false)
-        @wilma_approval.should_receive(:approve).once
-        2.times { request.approve(@wilma.userid, @reason) }
+        wilma_approval.should_receive(:approve).once
+        2.times { request.approve(wilma.userid, reason) }
       end
 
       it "#deny" do
-        @wilma_approval.should_receive(:deny).once
-        request.deny(@wilma.userid, @reason)
+        wilma_approval.should_receive(:deny).once
+        request.deny(wilma.userid, reason)
       end
 
       it "#first_approval" do
-        request.first_approval.should == @wilma_approval
+        request.first_approval.should == wilma_approval
         request.miq_approvals = []
         request.first_approval.should be_kind_of(MiqApproval)
       end
 
       it "#stamped_by" do
-        @wilma_approval.stamper = @betty
-        request.stamped_by.should == @betty.userid
+        wilma_approval.stamper = betty
+        request.stamped_by.should == betty.userid
         request.miq_approvals = []
         request.stamped_by.should be_nil
       end
 
       it "#stamped_on" do
         now = Time.now
-        @wilma_approval.stamped_on = now
+        wilma_approval.stamped_on = now
         request.stamped_on.should == now
         request.miq_approvals = []
         request.stamped_on.should be_nil
       end
 
       it "#reason" do
-        @wilma_approval.reason = @reason
-        request.reason.should == @reason
+        wilma_approval.reason = reason
+        request.reason.should == reason
         request.miq_approvals = []
         request.reason.should be_nil
       end
 
       it "#approver" do
-        request.approver.should == @wilma.name
+        request.approver.should == wilma.name
         request.miq_approvals = []
         request.approver.should be_nil
       end
 
       # TODO: This is IDENTICAL to #approver method
       it "#approver_role" do
-        request.approver.should == @wilma.name
+        request.approver.should == wilma.name
         request.miq_approvals = []
         request.approver.should be_nil
       end
