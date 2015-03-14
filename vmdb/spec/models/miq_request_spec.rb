@@ -1,6 +1,9 @@
 require "spec_helper"
 
 describe MiqRequest do
+  let(:fred)   { FactoryGirl.create(:user, :name => 'Fred Flintstone', :userid => 'fred') }
+  let(:barney) { FactoryGirl.create(:user, :name => 'Barney Rubble',   :userid => 'barney') }
+
   context "CONSTANTS" do
     it "REQUEST_TYPES" do
       expected_request_types = {
@@ -19,9 +22,6 @@ describe MiqRequest do
   end
 
   context "Class Methods" do
-    let(:fred)   { FactoryGirl.create(:user, :name => 'Fred Flintstone', :userid => 'fred') }
-    let(:barney) { FactoryGirl.create(:user, :name => 'Barney Rubble',   :userid => 'barney') }
-
     before do
       @requests_for_fred   = [FactoryGirl.create(:miq_request, :requester => fred), FactoryGirl.create(:miq_request, :requester => fred)]
       @requests_for_barney = [FactoryGirl.create(:miq_request, :requester => barney)]
@@ -58,7 +58,6 @@ describe MiqRequest do
 
   context "A new request" do
     let(:event_name) { "hello" }
-    let(:fred)       { FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred') }
     let(:request)    { FactoryGirl.create(:miq_request, :requester => fred) }
 
     it { expect(request).to be_valid }
