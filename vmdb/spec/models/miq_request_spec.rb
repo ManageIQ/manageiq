@@ -193,26 +193,42 @@ describe MiqRequest do
 
         before { request.miq_approvals = [wilma_approval, betty_approval] }
 
-        it "#approved?" do
-          request.approved?.should be_false
+        it "#approved? requires all approvals" do
+          expect(request).to_not be_approved
+
           wilma_approval.state = 'approved'
-          request.approved?.should be_false
+
+          expect(request).to_not be_approved
+
           betty_approval.state = 'approved'
-          request.approved?.should be_true
+
+          expect(request).to     be_approved
         end
 
-        it "#v_approved_by" do
-          wilma_approval.approve(wilma.userid, reason)
-          request.v_approved_by.should == "#{wilma.name}"
-          betty_approval.approve(betty.userid, reason)
-          request.v_approved_by.should == "#{wilma.name}, #{betty.name}"
+        context "#v_approved_by" do
+          it "with one approval" do
+            wilma_approval.approve(wilma.userid, reason)
+            expect(request.v_approved_by).to eq(wilma.name)
+          end
+
+          it "with two approvals" do
+            wilma_approval.approve(wilma.userid, reason)
+            betty_approval.approve(betty.userid, reason)
+            expect(request.v_approved_by).to eq("#{wilma.name}, #{betty.name}")
+          end
         end
 
-        it "#v_approved_by_email" do
-          wilma_approval.approve(wilma.userid, reason)
-          request.v_approved_by_email.should == "#{wilma.email}"
-          betty_approval.approve(betty.userid, reason)
-          request.v_approved_by_email.should == "#{wilma.email}, #{betty.email}"
+        context "#v_approved_by_email" do
+          it "with one approval" do
+            wilma_approval.approve(wilma.userid, reason)
+            expect(request.v_approved_by_email).to eq(wilma.email)
+          end
+
+          it "with two approvals" do
+            wilma_approval.approve(wilma.userid, reason)
+            betty_approval.approve(betty.userid, reason)
+            expect(request.v_approved_by_email).to eq("#{wilma.email}, #{betty.email}")
+          end
         end
 
         it "#approve" do
