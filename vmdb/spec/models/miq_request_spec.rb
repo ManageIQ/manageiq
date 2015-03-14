@@ -180,7 +180,12 @@ describe MiqRequest do
           expect(approval.approver).to    be_nil
         end
 
-        describe("#v_approved_by")       { it { expect(request.v_approved_by).to be_blank } }
+        describe("#approver")            { it { expect(request.approver).to            be_nil } }
+        describe("#first_approval")      { it { expect(request.first_approval).to      be_kind_of(MiqApproval) } }
+        describe("#reason")              { it { expect(request.reason ).to             be_nil } }
+        describe("#stamped_by")          { it { expect(request.stamped_by).to          be_nil } }
+        describe("#stamped_on")          { it { expect(request.stamped_on).to          be_nil } }
+        describe("#v_approved_by")       { it { expect(request.v_approved_by).to       be_blank } }
         describe("#v_approved_by_email") { it { expect(request.v_approved_by_email).to be_blank } }
       end
 
@@ -235,36 +240,26 @@ describe MiqRequest do
 
         it "#first_approval" do
           request.first_approval.should == wilma_approval
-          request.miq_approvals = []
-          request.first_approval.should be_kind_of(MiqApproval)
         end
 
         it "#stamped_by" do
           wilma_approval.stamper = betty
           request.stamped_by.should == betty.userid
-          request.miq_approvals = []
-          request.stamped_by.should be_nil
         end
 
         it "#stamped_on" do
           now = Time.now
           wilma_approval.stamped_on = now
           request.stamped_on.should == now
-          request.miq_approvals = []
-          request.stamped_on.should be_nil
         end
 
         it "#reason" do
           wilma_approval.reason = reason
           request.reason.should == reason
-          request.miq_approvals = []
-          request.reason.should be_nil
         end
 
         it "#approver" do
           request.approver.should == wilma.name
-          request.miq_approvals = []
-          request.approver.should be_nil
         end
 
         # TODO: This is IDENTICAL to #approver method
