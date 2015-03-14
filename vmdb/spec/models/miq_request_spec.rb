@@ -180,13 +180,15 @@ describe MiqRequest do
           expect(approval.approver).to    be_nil
         end
 
-        describe("#approver")            { it { expect(request.approver).to            be_nil } }
-        describe("#first_approval")      { it { expect(request.first_approval).to      be_kind_of(MiqApproval) } }
-        describe("#reason")              { it { expect(request.reason ).to             be_nil } }
-        describe("#stamped_by")          { it { expect(request.stamped_by).to          be_nil } }
-        describe("#stamped_on")          { it { expect(request.stamped_on).to          be_nil } }
-        describe("#v_approved_by")       { it { expect(request.v_approved_by).to       be_blank } }
-        describe("#v_approved_by_email") { it { expect(request.v_approved_by_email).to be_blank } }
+        it "default values" do
+          expect(request.approver).to            be_nil
+          expect(request.first_approval).to      be_kind_of(MiqApproval)
+          expect(request.reason).to              be_nil
+          expect(request.stamped_by).to          be_nil
+          expect(request.stamped_on).to          be_nil
+          expect(request.v_approved_by).to       be_blank
+          expect(request.v_approved_by_email).to be_blank
+        end
       end
 
       context "with user approvals" do
