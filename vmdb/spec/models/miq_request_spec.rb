@@ -179,7 +179,6 @@ describe MiqRequest do
       let(:betty_approval) { FactoryGirl.create(:miq_approval, :approver => betty) }
 
       before do
-        @barney         = FactoryGirl.create(:user, :name => 'Barney Rubble',    :userid => 'barney', :email => 'barney@bedrock.gov')
         request.miq_approvals = [wilma_approval, betty_approval]
       end
 
