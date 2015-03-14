@@ -24,7 +24,7 @@ module EmsRefresh
           hash[:customization_script_ids] = hash[:customization_scripts].map { |cp| cp[:id] }
         end
       end
-      save_inventory_assoc(:operating_system_flavors, manager, hashes, delete_missing_records, :manager_ref, nil,
+      save_inventory_assoc(:operating_system_flavors, manager, hashes, delete_missing_records, [:manager_ref], nil,
                            [:customization_scripts])
     end
   end
