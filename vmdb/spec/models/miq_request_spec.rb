@@ -258,13 +258,6 @@ describe MiqRequest do
 
         describe("#reason") { it { expect(request.reason).to     eq(reason) } }
         describe("#approver") { it { expect(request.approver).to eq(wilma.name) } }
-
-        # TODO: This is IDENTICAL to #approver method
-        it "#approver_role" do
-          request.approver.should == wilma.name
-          request.miq_approvals = []
-          request.approver.should be_nil
-        end
       end
     end
 

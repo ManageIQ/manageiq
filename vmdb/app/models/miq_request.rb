@@ -257,7 +257,6 @@ class MiqRequest < ActiveRecord::Base
   def approver
     first_approval.approver.try(:name)
   end
-
   alias_method :approver_role, :approver  # TODO: Is this needed anymore?
 
   def requester_userid
