@@ -172,98 +172,98 @@ describe MiqRequest do
     end
 
     context "using MiqApproval" do
-      let(:reason) { "Why Not?" }
-      let(:wilma)  { FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'wilma',  :email => 'wilma@bedrock.gov') }
-      let(:betty)  { FactoryGirl.create(:user, :name => 'Betty Rubble',     :userid => 'betty',  :email => 'betty@bedrock.gov') }
-      let(:wilma_approval) { FactoryGirl.create(:miq_approval, :approver => wilma) }
-      let(:betty_approval) { FactoryGirl.create(:miq_approval, :approver => betty) }
-
-      before do
-        request.miq_approvals = [wilma_approval, betty_approval]
-      end
-
-      it "#approved?" do
-        request.approved?.should be_false
-        wilma_approval.state = 'approved'
-        request.approved?.should be_false
-        betty_approval.state = 'approved'
-        request.approved?.should be_true
-      end
-
       it "#build_default_approval" do
         approval = request.build_default_approval
         approval.description.should == "Default Approval"
         approval.approver.should    be_nil
       end
 
-      it "#v_approved_by" do
-        wilma_approval.approve(wilma.userid, reason)
-        request.v_approved_by.should == "#{wilma.name}"
-        betty_approval.approve(betty.userid, reason)
-        request.v_approved_by.should == "#{wilma.name}, #{betty.name}"
-        request.miq_approvals = []
-        request.v_approved_by.should == ""
-      end
+      context "with user approvals" do
+        let(:reason) { "Why Not?" }
+        let(:wilma)  { FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'wilma',  :email => 'wilma@bedrock.gov') }
+        let(:betty)  { FactoryGirl.create(:user, :name => 'Betty Rubble',     :userid => 'betty',  :email => 'betty@bedrock.gov') }
+        let(:wilma_approval) { FactoryGirl.create(:miq_approval, :approver => wilma) }
+        let(:betty_approval) { FactoryGirl.create(:miq_approval, :approver => betty) }
 
-      it "#v_approved_by_email" do
-        wilma_approval.approve(wilma.userid, reason)
-        request.v_approved_by_email.should == "#{wilma.email}"
-        betty_approval.approve(betty.userid, reason)
-        request.v_approved_by_email.should == "#{wilma.email}, #{betty.email}"
-        request.miq_approvals = []
-        request.v_approved_by_email.should == ""
-      end
+        before { request.miq_approvals = [wilma_approval, betty_approval] }
 
-      it "#approve" do
-        request.stub(:approved?).and_return(true, false)
-        wilma_approval.should_receive(:approve).once
-        2.times { request.approve(wilma.userid, reason) }
-      end
+        it "#approved?" do
+          request.approved?.should be_false
+          wilma_approval.state = 'approved'
+          request.approved?.should be_false
+          betty_approval.state = 'approved'
+          request.approved?.should be_true
+        end
 
-      it "#deny" do
-        wilma_approval.should_receive(:deny).once
-        request.deny(wilma.userid, reason)
-      end
+        it "#v_approved_by" do
+          wilma_approval.approve(wilma.userid, reason)
+          request.v_approved_by.should == "#{wilma.name}"
+          betty_approval.approve(betty.userid, reason)
+          request.v_approved_by.should == "#{wilma.name}, #{betty.name}"
+          request.miq_approvals = []
+          request.v_approved_by.should == ""
+        end
 
-      it "#first_approval" do
-        request.first_approval.should == wilma_approval
-        request.miq_approvals = []
-        request.first_approval.should be_kind_of(MiqApproval)
-      end
+        it "#v_approved_by_email" do
+          wilma_approval.approve(wilma.userid, reason)
+          request.v_approved_by_email.should == "#{wilma.email}"
+          betty_approval.approve(betty.userid, reason)
+          request.v_approved_by_email.should == "#{wilma.email}, #{betty.email}"
+          request.miq_approvals = []
+          request.v_approved_by_email.should == ""
+        end
 
-      it "#stamped_by" do
-        wilma_approval.stamper = betty
-        request.stamped_by.should == betty.userid
-        request.miq_approvals = []
-        request.stamped_by.should be_nil
-      end
+        it "#approve" do
+          request.stub(:approved?).and_return(true, false)
+          wilma_approval.should_receive(:approve).once
+          2.times { request.approve(wilma.userid, reason) }
+        end
 
-      it "#stamped_on" do
-        now = Time.now
-        wilma_approval.stamped_on = now
-        request.stamped_on.should == now
-        request.miq_approvals = []
-        request.stamped_on.should be_nil
-      end
+        it "#deny" do
+          wilma_approval.should_receive(:deny).once
+          request.deny(wilma.userid, reason)
+        end
 
-      it "#reason" do
-        wilma_approval.reason = reason
-        request.reason.should == reason
-        request.miq_approvals = []
-        request.reason.should be_nil
-      end
+        it "#first_approval" do
+          request.first_approval.should == wilma_approval
+          request.miq_approvals = []
+          request.first_approval.should be_kind_of(MiqApproval)
+        end
 
-      it "#approver" do
-        request.approver.should == wilma.name
-        request.miq_approvals = []
-        request.approver.should be_nil
-      end
+        it "#stamped_by" do
+          wilma_approval.stamper = betty
+          request.stamped_by.should == betty.userid
+          request.miq_approvals = []
+          request.stamped_by.should be_nil
+        end
 
-      # TODO: This is IDENTICAL to #approver method
-      it "#approver_role" do
-        request.approver.should == wilma.name
-        request.miq_approvals = []
-        request.approver.should be_nil
+        it "#stamped_on" do
+          now = Time.now
+          wilma_approval.stamped_on = now
+          request.stamped_on.should == now
+          request.miq_approvals = []
+          request.stamped_on.should be_nil
+        end
+
+        it "#reason" do
+          wilma_approval.reason = reason
+          request.reason.should == reason
+          request.miq_approvals = []
+          request.reason.should be_nil
+        end
+
+        it "#approver" do
+          request.approver.should == wilma.name
+          request.miq_approvals = []
+          request.approver.should be_nil
+        end
+
+        # TODO: This is IDENTICAL to #approver method
+        it "#approver_role" do
+          request.approver.should == wilma.name
+          request.miq_approvals = []
+          request.approver.should be_nil
+        end
       end
     end
 
