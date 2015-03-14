@@ -172,10 +172,16 @@ describe MiqRequest do
     end
 
     context "using MiqApproval" do
-      it "#build_default_approval" do
-        approval = request.build_default_approval
-        approval.description.should == "Default Approval"
-        approval.approver.should    be_nil
+      context "no approvals" do
+        it "#build_default_approval" do
+          approval = request.build_default_approval
+
+          expect(approval.description).to eq("Default Approval")
+          expect(approval.approver).to    be_nil
+        end
+
+        describe("#v_approved_by")       { it { expect(request.v_approved_by).to be_blank } }
+        describe("#v_approved_by_email") { it { expect(request.v_approved_by_email).to be_blank } }
       end
 
       context "with user approvals" do
@@ -200,8 +206,6 @@ describe MiqRequest do
           request.v_approved_by.should == "#{wilma.name}"
           betty_approval.approve(betty.userid, reason)
           request.v_approved_by.should == "#{wilma.name}, #{betty.name}"
-          request.miq_approvals = []
-          request.v_approved_by.should == ""
         end
 
         it "#v_approved_by_email" do
@@ -209,8 +213,6 @@ describe MiqRequest do
           request.v_approved_by_email.should == "#{wilma.email}"
           betty_approval.approve(betty.userid, reason)
           request.v_approved_by_email.should == "#{wilma.email}, #{betty.email}"
-          request.miq_approvals = []
-          request.v_approved_by_email.should == ""
         end
 
         it "#approve" do
