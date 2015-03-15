@@ -1,8 +1,8 @@
 require "spec_helper"
 
 describe MiqRequest do
-  let(:fred)   { FactoryGirl.create(:user, :name => 'Fred Flintstone', :userid => 'fred') }
-  let(:barney) { FactoryGirl.create(:user, :name => 'Barney Rubble',   :userid => 'barney') }
+  let(:fred)   { FactoryGirl.create(:user, :name => 'Fred Flintstone', :userid => 'fred',   :email => "fred@example.com") }
+  let(:barney) { FactoryGirl.create(:user, :name => 'Barney Rubble',   :userid => 'barney', :email => "barney@example.com") }
 
   context "CONSTANTS" do
     it "REQUEST_TYPES" do
@@ -192,63 +192,61 @@ describe MiqRequest do
       end
 
       context "with user approvals" do
-        let(:reason) { "Why Not?" }
-        let(:wilma)  { FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'wilma',  :email => 'wilma@bedrock.gov') }
-        let(:betty)  { FactoryGirl.create(:user, :name => 'Betty Rubble',     :userid => 'betty',  :email => 'betty@bedrock.gov') }
-        let(:wilma_approval) { FactoryGirl.create(:miq_approval, :approver => wilma, :reason => reason, :stamper => betty, :stamped_on => Time.now) }
-        let(:betty_approval) { FactoryGirl.create(:miq_approval, :approver => betty) }
+        let(:reason)          { "Why Not?" }
+        let(:fred_approval)   { FactoryGirl.create(:miq_approval, :approver => fred, :reason => reason, :stamper => barney, :stamped_on => Time.now) }
+        let(:barney_approval) { FactoryGirl.create(:miq_approval, :approver => barney) }
 
-        before { request.miq_approvals = [wilma_approval, betty_approval] }
+        before { request.miq_approvals = [fred_approval, barney_approval] }
 
         it "default values" do
-          expect(request.approver).to       eq(wilma.name)
-          expect(request.first_approval).to eq(wilma_approval)
+          expect(request.approver).to       eq(fred.name)
+          expect(request.first_approval).to eq(fred_approval)
           expect(request.reason).to         eq(reason)
-          expect(request.stamped_by).to     eq(betty.userid)
-          expect(request.stamped_on).to     eq(wilma_approval.stamped_on)
+          expect(request.stamped_by).to     eq(barney.userid)
+          expect(request.stamped_on).to     eq(fred_approval.stamped_on)
         end
 
         it "#approved? requires all approvals" do
           expect(request).to_not be_approved
 
-          wilma_approval.state = 'approved'
+          fred_approval.state = 'approved'
 
           expect(request).to_not be_approved
 
-          betty_approval.state = 'approved'
+          barney_approval.state = 'approved'
 
           expect(request).to     be_approved
         end
 
         context "#v_approved_by methods" do
           it "with one approval" do
-            wilma_approval.approve(wilma.userid, reason)
+            fred_approval.approve(fred.userid, reason)
 
-            expect(request.v_approved_by).to       eq(wilma.name)
-            expect(request.v_approved_by_email).to eq(wilma.email)
+            expect(request.v_approved_by).to       eq(fred.name)
+            expect(request.v_approved_by_email).to eq(fred.email)
           end
 
           it "with two approvals" do
-            wilma_approval.approve(wilma.userid, reason)
-            betty_approval.approve(betty.userid, reason)
+            fred_approval.approve(fred.userid, reason)
+            barney_approval.approve(barney.userid, reason)
 
-            expect(request.v_approved_by).to       eq("#{wilma.name}, #{betty.name}")
-            expect(request.v_approved_by_email).to eq("#{wilma.email}, #{betty.email}")
+            expect(request.v_approved_by).to       eq("#{fred.name}, #{barney.name}")
+            expect(request.v_approved_by_email).to eq("#{fred.email}, #{barney.email}")
           end
         end
 
         it "#approve" do
           request.stub(:approved?).and_return(true, false)
 
-          wilma_approval.should_receive(:approve).once
+          fred_approval.should_receive(:approve).once
 
-          2.times { request.approve(wilma.userid, reason) }
+          2.times { request.approve(fred.userid, reason) }
         end
 
         it "#deny" do
-          wilma_approval.should_receive(:deny).once
+          fred_approval.should_receive(:deny).once
 
-          request.deny(wilma.userid, reason)
+          request.deny(fred.userid, reason)
         end
       end
     end
