@@ -59,6 +59,7 @@ describe MiqRequest do
   context "A new request" do
     let(:event_name) { "hello" }
     let(:request)    { FactoryGirl.create(:miq_request, :requester => fred) }
+    let(:template)   { FactoryGirl.create(:template_vmware) }
 
     it { expect(request).to be_valid }
     describe("#request_type_display") { it { expect(request.request_type_display).to eq("Unknown") } }
@@ -116,7 +117,6 @@ describe MiqRequest do
     end
 
     context "using Polymorphic Resource" do
-      let(:template)          { FactoryGirl.create(:template_vmware) }
       let(:provision_request) { FactoryGirl.create(:miq_provision_request, :userid => fred.userid, :src_vm_id => template.id).create_request }
 
       it { expect(provision_request.workflow_class).to eq(MiqProvisionVmwareWorkflow) }
@@ -253,7 +253,6 @@ describe MiqRequest do
 
     it "#deny" do
       MiqServer.stub(:my_zone).and_return("default")
-      vm_template = FactoryGirl.create(:template_vmware, :name => "template1")
       pr = FactoryGirl.create(:miq_provision_request, :userid => fred.userid, :src_vm_id => vm_template.id)
       MiqApproval.any_instance.stub(:authorized?).and_return(true)
 
