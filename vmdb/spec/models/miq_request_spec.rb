@@ -250,23 +250,20 @@ describe MiqRequest do
     end
 
     it "#deny" do
-      MiqServer.stub(:my_zone).and_return("default")
-      pr = FactoryGirl.create(:miq_provision_request, :userid => fred.userid, :src_vm_id => vm_template.id)
-      MiqApproval.any_instance.stub(:authorized?).and_return(true)
+      MiqApproval.any_instance.stub(:authorized? => true)
+      MiqServer.stub(:my_zone => "default")
 
-      reason   = "Why Not?"
-      pr.deny(fred.userid, reason)
+      provision_request = FactoryGirl.create(:miq_provision_request, :userid => fred.userid, :src_vm_id => template.id)
 
-      pr.miq_approvals.each do |approval|
-        approval.state.should == 'denied'
-      end
+      provision_request.deny(fred.userid, "Why Not?")
 
-      pr.reload
-      pr.status.should == 'Denied'
-      pr.request_state.should == 'finished'
-      pr.approval_state.should == 'denied'
+      provision_request.miq_approvals.each { |approval| expect(approval.state).to eq('denied') }
+
+      provision_request.reload
+
+      expect(provision_request.status).to         eq('Denied')
+      expect(provision_request.request_state).to  eq('finished')
+      expect(provision_request.approval_state).to eq('denied')
     end
-
   end
-
 end
