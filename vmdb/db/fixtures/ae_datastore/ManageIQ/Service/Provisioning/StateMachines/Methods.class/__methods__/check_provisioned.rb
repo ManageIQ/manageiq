@@ -9,7 +9,7 @@ $evm.log("info", "===========================================")
 # Get current provisioning status
 task = $evm.root['service_template_provision_task']
 task_status = task['status']
-result = task.status
+result = task.statemachine_task_status
 
 $evm.log('info', "Service ProvisionCheck returned <#{result}> for state <#{task.state}> and status <#{task_status}>")
 

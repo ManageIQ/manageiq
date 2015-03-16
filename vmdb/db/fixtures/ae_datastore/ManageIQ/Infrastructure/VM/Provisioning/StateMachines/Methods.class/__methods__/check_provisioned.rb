@@ -5,7 +5,7 @@
 # Get current provisioning status
 task = $evm.root['miq_provision']
 task_status = task['status']
-result = task.status
+result = task.statemachine_task_status
 
 $evm.log('info', "ProvisionCheck returned <#{result}> for state <#{task.state}> and status <#{task_status}>")
 
