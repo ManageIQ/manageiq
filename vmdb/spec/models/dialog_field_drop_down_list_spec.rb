@@ -89,4 +89,24 @@ describe DialogFieldDropDownList do
       @df.automate_key_name.should == "dialog_drop_down_list"
     end
   end
+
+  describe "#raw_values" do
+    let(:dialog_field) { described_class.new(:dynamic => dynamic) }
+
+    context "when the dialog_field is dynamic" do
+      let(:dynamic) { true }
+
+      it "returns the values from automate" do
+
+      end
+    end
+
+    context "when the dialog_field is not dynamic" do
+      let(:dynamic) { false }
+
+      it "returns the values" do
+
+      end
+    end
+  end
 end
