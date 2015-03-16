@@ -58,6 +58,7 @@ class DialogField < ActiveRecord::Base
     DialogFieldCheckBox
     DialogFieldDateControl
     DialogFieldDateTimeControl
+    DialogFieldDropDownList
     DialogFieldRadioButton
     DialogFieldTextAreaBox
     DialogFieldTextBox

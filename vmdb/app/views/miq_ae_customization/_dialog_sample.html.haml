@@ -64,10 +64,14 @@
                             = button_tag('Refresh', :disabled => true)
                         - when "DialogFieldDropDownList", "DialogFieldRadioButton"
                           - if field.dynamic
-                            %input#dialog_field_radio_sample_1(type="radio" name="dialog_field_radio")
-                            %label(for="dialog_field_radio_sample_1") Option 1
-                            %input#dialog_field_radio_sample_2(type="radio" name="dialog_field_radio")
-                            %label(for="dialog_field_radio_sample_2") Option 2
+                            - if field.type == "DialogFieldRadioButton"
+                              %input#dialog_field_radio_sample_1(type="radio" name="dialog_field_radio")
+                              %label(for="dialog_field_radio_sample_1") Option 1
+                              %input#dialog_field_radio_sample_2(type="radio" name="dialog_field_radio")
+                              %label(for="dialog_field_radio_sample_2") Option 2
+
+                            - if field.type == "DialogFieldDropDownList"
+                              = select_tag("#{field.id}", options_for_select([_("Option 1"), _("Option 2")]))
 
                             - if field.show_refresh_button?
                               = button_tag('Refresh', :disabled => true)
