@@ -331,7 +331,7 @@ module ApplicationController::MiqRequestMethods
 
   def build_grid
     case @edit[:wf]
-    when MiqProvisionWorkflow
+    when MiqProvisionVirtWorkflow
       if @edit[:new][:current_tab_key] == :service
         if @edit[:new][:st_prov_type]
           build_vm_grid(@edit[:wf].get_field(:src_vm_id,:service)[:values],@edit[:vm_sortdir],@edit[:vm_sortcol])
@@ -461,7 +461,7 @@ module ApplicationController::MiqRequestMethods
 
   def dialog_partial_for_workflow
     case (@edit || @options).try(:[], :wf)
-    when MiqProvisionWorkflow
+    when MiqProvisionVirtWorkflow
       "prov_dialog"
     when MiqHostProvisionWorkflow
       "prov_host_dialog"
