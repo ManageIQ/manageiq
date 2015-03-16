@@ -73,7 +73,7 @@ module FixAuth
 
     def fix_database_yml
       FixDatabaseYml.file_name = "#{options[:root]}/config/database.yml"
-      FixDatabaseYml.run(run_options.merge(:hardcode => options[:password]))
+      FixDatabaseYml.run({:hardcode => options[:password]}.merge(run_options))
     end
 
     def run
