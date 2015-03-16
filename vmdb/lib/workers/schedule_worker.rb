@@ -224,10 +224,10 @@ class ScheduleWorker < WorkerBase
 
     # Schedule every 24 hours
     at = worker_setting_or_default(:storage_file_collection_time_utc)
-    if Time.now.strftime("%Y-%m-%d #{at}").to_time < Time.now.utc
-      time_at = 1.day.from_now.utc.strftime("%Y-%m-%d #{at}").to_time
+    if Time.now.strftime("%Y-%m-%d #{at}").to_time(:utc) < Time.now.utc
+      time_at = 1.day.from_now.utc.strftime("%Y-%m-%d #{at}").to_time(:utc)
     else
-      time_at = Time.now.strftime("%Y-%m-%d #{at}").to_time
+      time_at = Time.now.strftime("%Y-%m-%d #{at}").to_time(:utc)
     end
     @schedules[:scheduler] << self.system_schedule_every(worker_setting_or_default(:storage_file_collection_interval), :first_at => time_at) do |rufus_job|
       @queue.enq :storage_scan_timer
