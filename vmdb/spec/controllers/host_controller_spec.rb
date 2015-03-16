@@ -2,6 +2,20 @@ require "spec_helper"
 
 describe HostController do
   context "#button" do
+    render_views
+
+    it "doesn't break" do
+      set_user_privileges
+      h1 = FactoryGirl.create(:host)
+      h2 = FactoryGirl.create(:host)
+      session[:host_items] = [h1.id, h2.id]
+      session[:settings] = {:views     => {:host => 'grid'},
+                            :display   => {:quad_truncate => 'f'},
+                            :quadicons => {:host => 'foo'}}
+      get :edit
+      expect(response.status).to eq(200)
+    end
+
     it "when VM Right Size Recommendations is pressed" do
       controller.instance_variable_set(:@_params, {:pressed => "vm_right_size"})
       controller.should_receive(:vm_right_size)
