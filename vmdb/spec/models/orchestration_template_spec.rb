@@ -21,7 +21,7 @@ describe OrchestrationTemplate do
       before do
         @existing_record = FactoryGirl.create(:orchestration_template)
         # prepare the query with different name and description; it is considered the same template
-        # because the body (:template and :ems_ref) does not change
+        # because the body (:template and :md5) does not change
         @query_hash = @existing_record.as_json.symbolize_keys
         @query_hash[:name]        = "renamed"
         @query_hash[:description] = "modified description"
@@ -31,6 +31,13 @@ describe OrchestrationTemplate do
         OrchestrationTemplate.count.should == 1
         @existing_record.should == OrchestrationTemplate.find_or_create_by_contents(@query_hash)[0]
         OrchestrationTemplate.count.should == 1
+      end
+
+      it "creates a draft template even though the content is a duplicate" do
+        OrchestrationTemplate.count.should == 1
+        @query_hash[:draft] = true
+        @existing_record.should_not == OrchestrationTemplate.find_or_create_by_contents(@query_hash)[0]
+        OrchestrationTemplate.count.should == 2
       end
     end
   end
@@ -98,6 +105,47 @@ describe OrchestrationTemplate do
     it "gets an error message if no eligible managers" do
       @template.stub(:eligible_managers => ["Invalid Object"])
       @template.validate_content.should match(/No (.*) is capable to validate the template/)
+    end
+  end
+
+  describe "#draft=" do
+    context "when existing record is not a draft" do
+      let(:existing_template) { FactoryGirl.create(:orchestration_template, :draft => false) }
+
+      it "allows duplicated draft record to be added" do
+        dup_template = existing_template.dup
+        dup_template.update_attributes!(:draft => true)
+      end
+
+      it "forbids duplicated final record from being added" do
+        dup_template = existing_template.dup
+        dup_template.draft = false
+        expect { dup_template.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      end
+    end
+
+    context "when existing record is a draft" do
+      let(:existing_template) { FactoryGirl.create(:orchestration_template, :draft => true) }
+
+      it "allows duplicated draft record to be added" do
+        dup_template = existing_template.dup
+        dup_template.update_attributes!(:draft => true)
+      end
+
+      it "allows duplicated final record to be added" do
+        dup_template = existing_template.dup
+        dup_template.update_attributes!(:draft => false)
+      end
+    end
+  end
+
+  describe ".find_with_content" do
+    it "avoids content comparison but through content hash value comparison" do
+      existing_template = FactoryGirl.create(:orchestration_template)
+      allow(Digest::MD5).to receive(:hexdigest).and_return(existing_template.md5)
+
+      result = OrchestrationTemplate.find_with_content("#{existing_template.content} content changed")
+      result.should == existing_template
     end
   end
 end

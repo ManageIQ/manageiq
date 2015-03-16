@@ -7,30 +7,49 @@ class OrchestrationTemplate < ActiveRecord::Base
 
   has_many :stacks, :class_name => "OrchestrationStack"
 
-  validates_uniqueness_of :md5
+  default_value_for :draft, false
+
+  validates :md5, :uniqueness => {:scope => :draft}, :unless => :draft?
+
+  def self.available
+    where(:draft => false)
+  end
+
+  def self.find_with_content(template_content)
+    available.where(:md5 => calc_md5(template_content)).first
+  end
 
   # Find only by template content. Here we only compare md5 considering the table is expected
   # to be small and the chance of md5 collision is minimal.
   #
   def self.find_or_create_by_contents(hashes)
     hashes = [hashes] unless hashes.kind_of?(Array)
-    md5s = hashes.collect { |hash| Digest::MD5.hexdigest(hash[:content]) }
-    existing_templates = where(:md5 => md5s).index_by(&:md5)
+    md5s = []
+    hashes = hashes.reject do |hash|
+               if hash[:draft]
+                 create!(hash.except(:md5)) # always create a new template if it is a draft
+                 true
+               else
+                 md5s << calc_md5(hash[:content])
+                 false
+               end
+             end
+
+    existing_templates = available.where(:md5 => md5s).index_by(&:md5)
 
     hashes.zip(md5s).collect do |hash, md5|
       template = existing_templates[md5]
       unless template
-        hash.delete(:md5)     # remove the field if exists, :md5 is read only from outside
-        template = create(hash)
+        template = create!(hash.except(:md5))
         existing_templates[md5] = template
       end
       template
     end
   end
 
-  def content=(c)
+  def content=(text)
     super
-    self.md5 = Digest::MD5.hexdigest(c)
+    self.md5 = calc_md5(text)
   end
 
   # Check whether a template has been referenced by any stack. A template that is in use should be
@@ -75,5 +94,13 @@ class OrchestrationTemplate < ActiveRecord::Base
 
   def md5=(_md5)
     super
+  end
+
+  def self.calc_md5(text)
+    Digest::MD5.hexdigest(text) if text
+  end
+
+  def calc_md5(text)
+    self.class.calc_md5(text)
   end
 end

@@ -1263,13 +1263,8 @@ class CatalogController < ApplicationController
   end
 
   def available_templates
-    available_templates = OrchestrationTemplate.find(:all)
-    @edit[:new][:available_templates] = []
-    available_templates.each do |template|
-      @edit[:new][:available_templates].push([template.name, template.id])
-    end
-    @edit[:new][:available_templates].sort!
-
+    @edit[:new][:available_templates] =
+      OrchestrationTemplate.available.collect { |template| [template.name.to_s, template.id] }.sort!
     @edit[:new][:template_id] = @record.orchestration_template.try(:id)
     @edit[:new][:manager_id] = @record.orchestration_manager.try(:id)
     available_managers(@record.orchestration_template.id) if @record.orchestration_template
