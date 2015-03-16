@@ -106,5 +106,25 @@ describe OpsController do
         include_examples "logs_collect", "zone"
       end
     end
+
+    context "#log_depot_edit" do
+      it "renders validate button" do
+        server_id = @miq_server.id
+        sb_hash = {
+          :selected_server_id => server_id,
+          :selected_typ       => "miq_server"
+        }
+        edit = {
+          :new => {},
+          :key => "logdepot_edit__#{server_id}"
+        }
+        session[:edit] = edit
+        controller.instance_variable_set(:@sb, sb_hash)
+        controller.instance_variable_set(:@_params, :button => "validate", :id => server_id)
+        controller.should_receive(:render)
+        expect(response.status).to eq(200)
+        controller.send(:log_depot_edit)
+      end
+    end
   end
 end
