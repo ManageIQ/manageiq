@@ -322,12 +322,12 @@ module VmCommon
   end
 
   def vmtree(vm)
-    session[:base_vm] = "_h-" + vm.id.to_s + "|"
+    session[:base_vm] = "_h-" + vm.id.to_s
     if vm.parents.length > 0
       vm_parent = vm.parents
       @tree_vms.push(vm_parent[0]) unless @tree_vms.include?(vm_parent[0])
       parent_node = Hash.new
-      session[:parent_vm] = "_v-" + vm_parent[0].id.to_s  + "|"       # setting base node id to be passed for check/uncheck all button
+      session[:parent_vm] = "_v-" + vm_parent[0].id.to_s       # setting base node id to be passed for check/uncheck all button
       image = ""
       if vm_parent[0].retired == true
         image = "retired.png"
@@ -343,7 +343,7 @@ module VmCommon
         end
       end
       parent_node = TreeNodeBuilder.generic_tree_node(
-        "_v-#{vm_parent[0].id}|",
+        "_v-#{vm_parent[0].id}",
         "#{vm_parent[0].name} (Parent)",
         image,
         "VM: #{vm_parent[0].name} (Click to view)",
@@ -370,11 +370,11 @@ module VmCommon
   # Recursive method to build a snapshot tree node
   def vm_kidstree(vm)
     branch = Hash.new
-    key = "_v-#{vm.id}|"
+    key = "_v-#{vm.id}"
     title = vm.name
     style = ""
     tooltip = "VM: #{vm.name} (Click to view)"
-    if session[:base_vm] == "_h-#{vm.id}|"
+    if session[:base_vm] == "_h-#{vm.id}"
       title << " (Selected)"
       key = session[:base_vm]
       style = "dynatree-cfme-active cfme-no-cursor-node"
@@ -462,11 +462,10 @@ module VmCommon
 
   def vmtree_selected
     base = params[:id].split('-')
-    base = base[1].slice(0,base[1].length-1)
-    session[:base_vm] = "_h-" + base.to_s
+    session[:base_vm] = "_h-#{base[1]}"
     @display = "vmtree_info"
     render :update do |page|                    # Use RJS to update the display
-      page.redirect_to :action=>"show", :id=>base,:vm_tree=>"vmtree_info"
+      page.redirect_to :action => "show", :id => base[1], :vm_tree => "vmtree_info"
     end
   end
 
