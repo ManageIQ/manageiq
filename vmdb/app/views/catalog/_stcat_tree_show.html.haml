@@ -17,12 +17,17 @@
         %th=_('Catalog Items')
       %tbody
         - @record_service_templates.sort_by { |a| a.name.downcase }.each do |obj|
-          %tr{:class       => cycle("row0", "row1"),
-              :onclick     => remote_function(:loading  => "miqSparkle(true);",
-                                              :complete => "miqSparkle(false);",
-                                              :url      => "/catalog/x_show/#{to_cid(@record.id)}?rec_id=#{to_cid(obj.id)}"),
-              :onmouseover => "this.style.cursor='pointer'",
-              :title       => _("Click to this Catalog Item")}
-            %td=obj.name
+          - if role_allows(:feature => "catalog_items_view")
+            %tr{:class       => cycle("row0", "row1"),
+                :onclick     => remote_function(:loading  => "miqSparkle(true);",
+                                                :complete => "miqSparkle(false);",
+                                                :url      => "/catalog/x_show/#{to_cid(@record.id)}?rec_id=#{to_cid(obj.id)}"),
+                :onmouseover => "this.style.cursor='pointer'",
+                :title       => _("Click to this Catalog Item")}
+              %td=obj.name
+          - else
+            %tr{:class => cycle("row0", "row1")}
+              %td=obj.name
+
   - else
     = render :partial => 'layouts/info_msg', :locals => {:message => _("No Catalog Items found.")}
