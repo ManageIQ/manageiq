@@ -100,7 +100,6 @@ module QcowDisk
     :feature_table_name           => 0x6803f857
   }
 
-
   def d_init
     self.diskType = "QCOW"
     self.blockSize = SECTOR_SIZE
@@ -286,10 +285,12 @@ module QcowDisk
   end
 
   def refcount_order
+    # https://github.com/qemu/qemu/blob/v2.2.0/docs/specs/qcow2.txt#L108
     version < 3 ? 4 : @header['refcount_order']
   end
 
   def header_length
+    # https://github.com/qemu/qemu/blob/v2.2.0/docs/specs/qcow2.txt#L115
     version < 3 ? SIZEOF_QCOW_HEADER_V2 : @header['header_length']
   end
 
@@ -642,15 +643,15 @@ module QcowDisk
     version < 3 ? 0 : @header['autoclear_features']
   end
 
-  def dirty
+  def dirty?
     (incompatible_features & INCOMPATIBLE_FEATURES_MASK[:dirty]) == INCOMPATIBLE_FEATURES_MASK[:dirty]
   end
 
-  def corrupt
+  def corrupt?
     (incompatible_features & INCOMPATIBLE_FEATURES_MASK[:corrupt]) == INCOMPATIBLE_FEATURES_MASK[:corrupt] 
   end
 
-  def lazy_refcounts
+  def lazy_refcounts?
     compatible_features & COMPATIBLE_FEATURES_MASK[:lazy_refcounts]
   end
 
@@ -680,8 +681,8 @@ module QcowDisk
     out << "Incompatible Features    : #{incompatible_features}\n"
     out << "Compatible Features      : #{compatible_features}\n"
     out << "Autoclear Features       : #{autoclear_features}\n"
-    out << "Dirty                    : #{dirty}\n"
-    out << "Corrupt                  : #{corrupt}\n"
+    out << "Dirty                    : #{dirty?}\n"
+    out << "Corrupt                  : #{corrupt?}\n"
     return out
   end
 
