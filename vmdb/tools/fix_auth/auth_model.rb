@@ -25,15 +25,19 @@ module FixAuth
         end.join(" OR ")
       end
 
+      def hardcode(_old_value, new_value)
+        MiqPassword.encrypt(new_value)
+      end
+
       def recrypt(old_value, options = {})
         if options[:hardcode]
-          MiqPassword.encrypt(options[:hardcode])
+          hardcode(old_value, options[:hardcode])
         else
           MiqPassword.new.recrypt(old_value)
         end
       rescue
         if options[:invalid]
-          MiqPassword.encrypt(options[:invalid])
+          hardcode(old_value, options[:invalid])
         else
           raise
         end
