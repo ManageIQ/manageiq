@@ -24,7 +24,7 @@ class VmOpenstack
         :instance_id => id,
         :method_name => 'remote_console_acquire_ticket',
         :priority    => MiqQueue::HIGH_PRIORITY,
-        :role        => 'ems_operations',  # FIXME
+        :role        => 'ems_operations',
         :zone        => my_zone,
         :args        => [protocol, proxy_miq_server]
       }

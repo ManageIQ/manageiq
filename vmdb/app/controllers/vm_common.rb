@@ -1447,10 +1447,7 @@ module VmCommon
         page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
         page << "miqSparkle(false);"
       else # open a window to show a VNC or VMWare console
-        console_action = case console_type
-                         when 'html5' then 'launch_html5_console'
-                         else 'launch_vmware_console'
-                         end
+        console_action = console_type == 'html5' ? 'launch_html5_console' : 'launch_vmware_console'
         page << "miqSparkle(false);"
         page << "window.open('#{url_for :controller => controller_name, :action => console_action, :id => @record.id}');"
       end
