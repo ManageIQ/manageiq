@@ -129,8 +129,12 @@ function cfme_expand_parent_nodes(treename, selected_node){
 
 function cfme_dynatree_node_add_class(treename, key, klass){
   var node = $("#" + treename + "box").dynatree('getTree').getNodeByKey(key);
-  node.data.addClass = klass;
-  node.render();
+  if (node !== null) {
+    node.data.addClass = klass;
+    node.render();
+  } else {
+    console.debug('cannot find node for key: ' + key);
+  }
 }
 
 function cfme_dynatree_node_remove_class(treename, key){
