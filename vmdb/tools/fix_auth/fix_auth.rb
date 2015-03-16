@@ -81,7 +81,7 @@ module FixAuth
 
       generate_password if options[:key]
       fix_database_yml if options[:databaseyml]
-      fix_database_passwords if !options[:key] && !options[:databaseyml]
+      fix_database_passwords if options[:db]
     end
   end
 end

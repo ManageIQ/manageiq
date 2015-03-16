@@ -39,4 +39,28 @@ describe FixAuth::Cli do
       :databases => %w(vmdb_production),
       :hardcode  => "hardcoded")
   end
+
+  it "defaults to updating the database" do
+    options = described_class.new.parse(%w())
+      .options.slice(:db, :databaseyml, :key)
+    expect(options).to eq(:db => true)
+  end
+
+  it "doesnt default to database if running another task" do
+    options = described_class.new.parse(%w(--databaseyml))
+      .options.slice(:db, :databaseyml, :key)
+    expect(options).to eq(:databaseyml => true)
+  end
+
+  it "doesnt default to database if running another task 2" do
+    options = described_class.new.parse(%w(--key))
+      .options.slice(:db, :databaseyml, :key)
+    expect(options).to eq(:key => true)
+  end
+
+  it "can run all 3 tasks" do
+    options = described_class.new.parse(%w(--key --db --databaseyml))
+      .options.slice(:db, :databaseyml, :key)
+    expect(options).to eq(:db => true, :databaseyml => true, :key => true)
+  end
 end

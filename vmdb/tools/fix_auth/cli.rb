@@ -22,9 +22,12 @@ module FixAuth
         opt :root,     "Rails Root",        :type => :string,  :short => "r",
             :default => (env['RAILS_ROOT'] || File.expand_path(File.join(File.dirname(__FILE__), %w{.. ..})))
         opt :databaseyml, "rewrite databaseyml", :type => :boolean, :short => "y", :default => false
+        opt :db,       "Upgrade database",  :type => :boolean, :short => 'x', :default => false
       end
 
       options[:databases] = args.presence || %w(vmdb_production)
+      # default to updating the db
+      options[:db] = true if !options[:key] && !options[:databaseyml]
       self.options = options.delete_if { |n, v| v.blank? }
       self
     end
