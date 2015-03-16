@@ -57,14 +57,14 @@ function cfmeOnLazyRead_GetNodeChildren(node, tree, controller) {
 }
 
 function miqMenuEditor(id) {
-    nid = id.split('__');
-    if(nid[0]!='r') {
-      var url = click_url + '?node_id=' + encodeURIComponent(id) + '&node_clicked=1'
-      miqJqueryRequest(url, {beforeSend: true,
-        complete: true,
-        no_encoding: true
-      });
-    }
+  var nid = id.split('__');
+  if(nid[0]!='r') {
+    var url = click_url + '?node_id=' + encodeURIComponent(id) + '&node_clicked=1'
+    miqJqueryRequest(url, {beforeSend: true,
+      complete: true,
+      no_encoding: true
+    });
+  }
 }
 
 // Bind hover events to the tree's <a> tags
@@ -80,13 +80,13 @@ function cfme_bind_hover_event(tree_name) {
 
 // OnClick handler to run tree_select server method
 function cfmeOnClick_SelectTreeNode(id) {
-  rec_id = id.split('__')
+  var rec_id = id.split('__')
   var url = '/' + miq_controller + '/tree_select/?id=' + rec_id[0];
   miqJqueryRequest(url, {beforeSend: true});
 }
 
 function cfmeOnClick_SelectDlgEditTreeNode(id) {
-  rec_id = id.split('__')
+  var rec_id = id.split('__')
   var url = 'tree_select/?id=' + rec_id[0]
   miqJqueryRequest(url, {beforeSend: true, complete: true});
 }
@@ -112,7 +112,7 @@ function cfmeDynatree_activateNodeSilently(tree, key) {
 
 // OnClick handler for catgories Tree
 function miqOnClick_ProvLdapOus(id) {
-  node = $("#ldap_ous_treebox").dynatree("getTree").getNodeByKey(id)
+  var node = $("#ldap_ous_treebox").dynatree("getTree").getNodeByKey(id)
   node.expand();
   node._activate(false, true);
   if (id.split('_-_').length > 1) {
@@ -123,18 +123,18 @@ function miqOnClick_ProvLdapOus(id) {
 
 //expand all parent nodes of selected node on initial load
 function cfme_expand_parent_nodes(treename, selected_node){
-  node = $("#" + treename + "box").dynatree("getTree").getNodeByKey(selected_node)
+  var node = $("#" + treename + "box").dynatree("getTree").getNodeByKey(selected_node)
   node.makeVisible()
 }
 
 function cfme_dynatree_node_add_class(treename, key, klass){
-  node = $("#" + treename + "box").dynatree('getTree').getNodeByKey(key);
+  var node = $("#" + treename + "box").dynatree('getTree').getNodeByKey(key);
   node.data.addClass = klass;
   node.render();
 }
 
 function cfme_dynatree_node_remove_class(treename, key){
-  node = $("#" + treename + "box").dynatree('getTree').getNodeByKey(key);
+  var node = $("#" + treename + "box").dynatree('getTree').getNodeByKey(key);
   node.data.addClass = "";
   node.render();
 }
@@ -145,8 +145,8 @@ function cfme_dynatree_redraw(treename){
 
 // OnCheck handler for the tags trees
 function miqOnCheck_ProvTags(node, treename) {
-  tree = $("#" + treename + "box").dynatree("getTree")
-  parent_key = node.data.cfme_parent_key
+  var tree = $("#" + treename + "box").dynatree("getTree")
+  var parent_key = node.data.cfme_parent_key
   var selectedNodes = tree.getSelectedNodes();
   var all_checked = $.map(selectedNodes, function(node){
     return node.data.key;
@@ -213,7 +213,7 @@ function cfme_dynatree_toggle_expand(treename, expand_mode){
 
 // OnCheck handler for the Protect screen
 function miqOnCheck_Protect(node, treename) {
-  ppid = node.data.key.split('_').pop();
+  var ppid = node.data.key.split('_').pop();
   var url = check_url + ppid + '?check=' + (node.isSelected() ? '0' : '1')
   miqJqueryRequest(url);
   return true;
@@ -227,7 +227,7 @@ function miqOnClick_snapshot_tree(id) {
 
 // Show the hidden quad icon div when mousing over VMs in the Host Network tree
 function miqOnMouseIn_HostNet(id) {
-  nid = hover_node_id(id);
+  var nid = hover_node_id(id);
   if (nid)  {                                         // and div id exists
     var node = $('#' + id);                                  // Get html node
     var top = getAbsoluteTop(node);
@@ -317,7 +317,7 @@ function cfmeOnClick_GenealogyTree(id) {
 
 function cfmeGetChecked(node, treename) {
   var count = 0;
-  tree = $("#" + treename + "box").dynatree("getTree")
+  var tree = $("#" + treename + "box").dynatree("getTree")
   var selectedNodes = tree.getSelectedNodes();
   var selectedKeys = $.map(selectedNodes, function(checkedNode){
     return checkedNode.data.key;
@@ -346,7 +346,7 @@ function cfmeCheckAll(cb, treename) {
     //calling _select to avoid onclick event when check all is clicked
     node._select(cb.checked);
     });
-  tree = $("#" + treename + "box").dynatree("getTree")
+  var tree = $("#" + treename + "box").dynatree("getTree")
   var selectedNodes = tree.getSelectedNodes();
   var selectedKeys = $.map(selectedNodes, function(node){
     return node.data.key;
@@ -409,7 +409,7 @@ function miqCheck_CU_All(cb, treename) {
     //calling _select to avoid onclick event when check all is clicked
     node._select(cb.checked);
   });
-  tree = $("#" + treename + "box").dynatree("getTree")
+  var tree = $("#" + treename + "box").dynatree("getTree")
   var selectedNodes = tree.getSelectedNodes();
   var selectedKeys = $.map(selectedNodes, function(node){
     return node.data.key;
@@ -427,10 +427,10 @@ function miqOnCheck_CU_Filters(tree_name, key, checked) {
 }
 
 function miqMenuChangeRow(grid,action,click_url) {
-  id = folder_list_grid.getSelectedId();
+  var id = folder_list_grid.getSelectedId();
   var ids = folder_list_grid.getAllRowIds().split(',')
   var count = ids.length
-  ret = false
+  var ret = false
   switch(action)
   {
     case "up":
