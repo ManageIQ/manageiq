@@ -13,21 +13,21 @@ module FixAuth
         puts "  #{r.id}:"
       end
 
-      def display_column(r, column)
+      def display_column(r, column, options)
         puts "    #{column}:"
-        traverse_column([], YAML.load(r.send(column)))
+        traverse_column([], YAML.load(r.send(column)), options)
       end
 
       def password_field?(key)
         key.to_s.in?(password_fields) || (password_prefix && key.to_s.include?(password_prefix))
       end
 
-      def traverse_column(names, hash)
+      def traverse_column(names, hash, options)
         hash.each_pair do |n, v|
           if password_field?(n)
-            puts "      #{names.join(".")}.#{n}: #{v}"
+            puts "      #{names.join(".")}.#{n}: #{highlight_password(v, options)}"
           elsif v.is_a?(Hash)
-            traverse_column(names + [n], v)
+            traverse_column(names + [n], v, options)
           end
         end
       end

@@ -53,6 +53,17 @@ module FixAuth
         obj
       end
 
+      def highlight_password(value, options)
+        return if value.blank?
+        if options[:hardcode] && (value == MiqPassword.encrypt(options[:hardcode]))
+          "#{value} HARDCODED"
+        elsif options[:invalid] && (value == MiqPassword.encrypt(options[:invalid]))
+          "#{value} HARDCODED (WAS INVALID)"
+        else
+          value
+        end
+      end
+
       def in_destination_format?(value)
         value.blank? || value =~ /^v2:\{.*\}$/
       end
@@ -61,11 +72,12 @@ module FixAuth
         puts "  #{r.id}:"
       end
 
-      def display_column(r, column)
+      def display_column(r, column, options)
+        v = r.send(column)
         if r.send("#{column}_changed?")
-          puts "    #{column}: #{r.send("#{column}_was").inspect} => #{r.send(column).inspect} "
+          puts "    #{column}: #{r.send("#{column}_was").inspect} => #{highlight_password(v, options)}"
         elsif r.send(column).present?
-          puts "    #{column}: #{r.send(column).inspect} (not changed)"
+          puts "    #{column}: #{v.inspect} (not changed)"
         end
       end
 
@@ -75,7 +87,7 @@ module FixAuth
           if options[:verbose]
             display_record(r)
             available_columns.each do |column|
-              display_column(r, column)
+              display_column(r, column, options)
             end
           end
           r.save! unless options[:dry_run]
