@@ -1840,7 +1840,7 @@ class VmOrTemplate < ActiveRecord::Base
 
   def self.event_by_property(property, value, event_type, event_message, event_time=nil, options={})
     $log.info "MIQ(#{self.name}.event_by_property) event_vm_by_property called with property:[#{property}] value:[#{value}] type:[#{event_type}] message:[#{event_message}] event_time:[#{event_time}]"
-    event_timestamp = event_time.blank? ? Time.now.utc.iso8601 : Time.parse(event_time).utc.iso8601
+    event_timestamp = event_time.blank? ? Time.now.utc : event_time.to_time(:utc)
 
     case property
     when "ipaddress"

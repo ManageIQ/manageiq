@@ -12,7 +12,7 @@ describe VmOrTemplate do
         @vm              = FactoryGirl.create(:vm_vmware, :host  => @host, :name => "vm", :uid_ems => "1", :ems_id => 101)
 
         @event_type      = "foo"
-        @event_timestamp = Time.now.utc.iso8601
+        @event_timestamp = Time.now.utc
       end
 
       after(:each) do
