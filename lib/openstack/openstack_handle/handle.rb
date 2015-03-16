@@ -25,16 +25,20 @@ module OpenstackHandle
       "Orchestration" => :orchestration
     }
 
+    # Tries both non-SSL and SSL connections to Openstack
+    def self.try_connection
+      # attempt to connect without SSL
+      yield "http", {}
+    rescue Excon::Errors::SocketError => err
+      raise unless err.message.include?("end of file reached (EOFError)")
+      # attempt the same connection with SSL
+      yield "https", {:ssl_verify_peer => false}
+    end
+
     def self.raw_connect_try_ssl(username, password, address, port, service = "Compute", opts = nil)
-      auth_url = auth_url(address, port)
-      begin
-        # attempt to connect without SSL
-        raw_connect(username, password, auth_url, service, opts)
-      rescue Excon::Errors::SocketError => err
-        raise unless err.message.include?("end of file reached (EOFError)")
-        # if the error looks like an SSL-related failure, try again with SSL
-        auth_url = auth_url(address, port, true)
-        opts[:connection_options] = (opts[:connection_options] || {}).merge(:ssl_verify_peer => false)
+      try_connection do |scheme, connection_options|
+        auth_url = auth_url(address, port, scheme)
+        opts[:connection_options] = (opts[:connection_options] || {}).merge(connection_options)
         raw_connect(username, password, auth_url, service, opts)
       end
     end
@@ -60,9 +64,15 @@ module OpenstackHandle
       raise
     end
 
-    def self.auth_url(address, port = 5000, ssl = false)
-      scheme = ssl ? "https" : "http"
-      "#{scheme}://#{address}:#{port}/v2.0/tokens"
+    def self.auth_url(address, port = 5000, scheme = "http")
+      url(address, port, scheme)
+    end
+
+    def self.url(address, port = 5000, scheme = "http", path = "/v2.0/tokens")
+      port = port.to_i
+      uri = URI::Generic.build(:scheme => scheme, :port => port, :path => path)
+      uri.hostname = address
+      uri.to_s
     end
 
     def self.connection_options=(hash)

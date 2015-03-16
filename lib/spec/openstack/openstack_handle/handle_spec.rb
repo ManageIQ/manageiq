@@ -45,7 +45,7 @@ describe OpenstackHandle::Handle do
       fog            = double('fog')
       handle         = OpenstackHandle::Handle.new("dummy", "dummy", "address")
       auth_url_nossl = OpenstackHandle::Handle.auth_url("address")
-      auth_url_ssl   = OpenstackHandle::Handle.auth_url("address", 5000, true)
+      auth_url_ssl   = OpenstackHandle::Handle.auth_url("address", 5000, "https")
 
       # setup the socket error for the initial non-ssl failure
       socket_error = double('socket_error')
