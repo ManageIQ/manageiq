@@ -761,7 +761,6 @@ module ApplicationController::MiqRequestMethods
     options                     = req.try(:get_options) || {}  # Use existing request options, if passed in
     @edit[:new]                 = options unless @workflow_exists
     @edit[:org_controller]      = params[:org_controller] if params[:org_controller]  # request originated from controller
-    @edit[:prov_option_types]   = MiqRequest::MODEL_REQUEST_TYPES[@layout == "miq_request_vm" ? :Service : :Infrastructure]
     @edit[:wf], pre_prov_values = workflow_instance_from_vars(req)
 
     if @edit[:wf]
