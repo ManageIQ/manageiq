@@ -113,16 +113,8 @@ class MiqRequestController < ApplicationController
     @breadcrumbs = Array.new
     bc_name = "Requests"
     @request_tab = params[:typ] if params[:typ]                       # set this to be used to identify which Requests subtab was clicked
-    case @request_tab
-    when "vm"
-      @layout = "miq_request_vm"
-    when "host"
-      @layout = "miq_request_host"
-    when "ae"
-      @layout = "miq_request_ae"
-    else
-      @layout = "miq_request_vm"
-    end
+    @layout = layout_from_tab_name(@request_tab)
+
     drop_breadcrumb( {:name=>bc_name, :url=>"/miq_request/show_list?typ=#{@request_tab}"} )
     @lastaction = "show_list"
     @gtl_url = "/miq_request/show_list/?"
@@ -558,23 +550,10 @@ class MiqRequestController < ApplicationController
     end
   end
 
-  def get_layout
-    case @request_tab
-    when "vm"
-      "miq_request_vm"
-    when "host"
-      "miq_request_host"
-    when "ae"
-      "miq_request_ae"
-    else
-      "miq_request_vm"
-    end
-  end
-
   def get_session_data
     @title        = "Requests"
     @request_tab  = session[:request_tab] if session[:request_tab]
-    @layout       = get_layout
+    @layout       = layout_from_tab_name(@request_tab)
     @lastaction   = session[:request_lastaction]
     @showtype     = session[:request_lastaction]
     @display      = session[:request_display]
