@@ -9,7 +9,7 @@
 - disabled ||= false
 - pfx = "miq_request/"
 
-- unless field_hash[:display] == :hide || field_hash[:display] == :ignore
+- unless [:hide, :ignore].include?(field_hash[:display])
   = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "calendar"}
 
   :javascript
