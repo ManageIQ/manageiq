@@ -2615,8 +2615,8 @@ module ApplicationHelper
 
   def render_gtl_view_tb?
     GTL_VIEW_LAYOUTS.include?(@layout) && @gtl_type && !@tagitems &&
-    !@ownershipitems && !@retireitems && !@politems && !@new_policy &&
-    !@in_a_form
+      !@ownershipitems && !@retireitems && !@politems && !@in_a_form &&
+      %w(show show_list).include?(params[:action])
   end
 
   def update_url_parms(url_parm)

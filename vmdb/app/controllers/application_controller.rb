@@ -1784,13 +1784,8 @@ class ApplicationController < ActionController::Base
 
   def get_view_calculate_gtl_type(db_sym)
     gtl_type = @settings.fetch_path(:views, db_sym) unless %w(scanitemset miqschedule pxeserver customizationtemplate).include?(db_sym.to_s)
-
-    # Force list view for certain types and areas
-    gtl_type = 'list' if ['filesystems', 'registry_items', 'chargeback_rates', 'miq_request'].include?(@listicon)
-    gtl_type = 'list' if gtl_type.nil?
     gtl_type = 'grid' if ['vm'].include?(db_sym.to_s) && request.parameters[:controller] == 'service'
-
-    gtl_type ||= 'grid' # return a sane default
+    gtl_type ||= 'list' # return a sane default
     gtl_type
   end
   private :get_view_calculate_gtl_type
