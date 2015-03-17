@@ -559,7 +559,7 @@ class MiqWidget < ActiveRecord::Base
     elsif unit == "hourly"
       ts = (Time.now.utc + 1.hour).iso8601
       ts[14..18] = "00:00"
-      sched_time = ts.to_time.in_time_zone(server_tz)
+      sched_time = ts.to_time(:utc).in_time_zone(server_tz)
     else
       raise "Unsupported interval '#{interval}'"
     end

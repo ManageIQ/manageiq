@@ -45,7 +45,9 @@ class MiqSchedule < ActiveRecord::Base
     val = read_attribute(:run_at)
     if val.kind_of?(Hash)
       st = val[:start_time]
-      val[:start_time] = st.to_time.utc if st
+      if st && String === st
+        val[:start_time] = st.to_time(:utc).utc
+      end
     end
     return val
   end

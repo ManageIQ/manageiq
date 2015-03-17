@@ -1215,7 +1215,7 @@ class MiqExpression
       return mode == :sql ? ActiveRecord::Base.connection.quote(val) : "\'#{val}\'.to_date"
     when "datetime"
       return "nil" if val.blank? # treat nil value as empty string
-      return mode == :sql ? ActiveRecord::Base.connection.quote(val.iso8601) : "\'#{val.iso8601}\'.to_time"
+      return mode == :sql ? ActiveRecord::Base.connection.quote(val.iso8601) : "\'#{val.iso8601}\'.to_time(:utc)"
     when "integer", "decimal", "fixnum"
       return val.to_s.to_i_with_method
     when "float"
