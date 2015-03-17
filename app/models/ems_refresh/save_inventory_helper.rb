@@ -1,7 +1,8 @@
 module EmsRefresh::SaveInventoryHelper
   def save_inventory_multi(type, parent, hashes, deletes, find_key, child_keys = [], extra_keys = [])
     deletes = deletes.to_a # make sure to load the association if it's an association
-    child_keys, extra_keys, remove_keys = self.save_inventory_prep(child_keys, extra_keys)
+    child_keys = Array.wrap(child_keys)
+    remove_keys = Array.wrap(extra_keys) + child_keys
 
     record_index, record_index_columns = self.save_inventory_prep_record_index(parent.send(type), find_key)
 
@@ -22,21 +23,14 @@ module EmsRefresh::SaveInventoryHelper
   end
 
   def save_inventory_single(type, parent, hash, child_keys = [], extra_keys = [])
-    child_keys, extra_keys, remove_keys = self.save_inventory_prep(child_keys, extra_keys)
+    child_keys = Array.wrap(child_keys)
+    remove_keys = Array.wrap(extra_keys) + child_keys
     if hash.blank?
       parent.send(type).try(:destroy)
     else
       save_inventory(type, parent, hash.except(*remove_keys))
       save_child_inventory(parent.send(type), hash, child_keys)
     end
-  end
-
-  def save_inventory_prep(child_keys, extra_keys)
-    # Normalize the keys for different types on inputs
-    child_keys = [child_keys].compact unless child_keys.kind_of?(Array)
-    extra_keys = [extra_keys].compact unless extra_keys.kind_of?(Array)
-    remove_keys = child_keys + extra_keys
-    return child_keys, extra_keys, remove_keys
   end
 
   def save_inventory(type, parent, hash)
