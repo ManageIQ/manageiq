@@ -186,9 +186,7 @@ module EmsRefresh
 
       $log.info("#{log_header} Updating Vm [#{vm.name}] id: [#{vm.id}] location: [#{vm.location}] storage id: [#{vm.storage_id}] uid_ems: [#{vm.uid_ems}]")
       vm.update_attributes!(hash.except(*remove_keys))
-
-      save_child_inventory(vm, hash.slice(*child_keys), child_keys)
-
+      save_child_inventory(vm, hash, child_keys)
       vm.save!
       hash[:id] = vm.id
     rescue => err
