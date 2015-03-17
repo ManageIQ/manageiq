@@ -46,7 +46,7 @@
     %fieldset
       %h3=_('Options')
       %table.style1
-        - if 'DialogFieldDynamicList' == @edit[:field_typ] || @edit[:field_dynamic] == true
+        - if @edit[:field_dynamic] == true
           %tr
             %td.key=_('Entry Point (NS/Cls/Inst)')
             %td.wide
@@ -131,7 +131,7 @@
                 @edit[:field_past_dates],
                 "data-miq_observe_checkbox" => {:url => url}.to_json)
 
-        - elsif 'DialogFieldDynamicList' == @edit[:field_typ] || @edit[:field_dynamic] == true
+        - elsif @edit[:field_dynamic] == true
           %tr
             %td.key=_('Entry Point (NS/Cls/Inst)')
             %td.wide
