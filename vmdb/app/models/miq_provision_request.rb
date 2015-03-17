@@ -39,7 +39,6 @@ class MiqProvisionRequest < MiqRequest
     case suffix
     when "Vmware"
       case MiqRequestMixin.get_option(:provision_type, nil, attribs['options'])
-      when "netapp_rcu"; suffix << "ViaNetAppRcu"
       when "pxe";        suffix << "ViaPxe"
       end
     when "Redhat"
