@@ -1,0 +1,33 @@
+- if edit
+  - if field.protected?
+    = password_field_tag(field.name + "__protected", field.value,
+                         :maxlength         => 50,
+                         :class             => "dynamic-text-box-#{field.id}",
+                         "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+  - else
+    = text_field_tag(field.name, field.value,
+                     :maxlength         => 50,
+                     :class             => "dynamic-text-box-#{field.id}",
+                     "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+
+  - if field.dynamic && field.show_refresh_button?
+    = button_tag('Refresh', :id => "refresh-dynamic-text-field-#{field.id}", :class => "btn btn-default")
+
+    :javascript
+      $('#refresh-dynamic-text-field-#{field.id}').click(function() {
+        miqSparkleOn();
+
+        var fieldId = "#{field.id}";
+        var fieldName = "#{field.name}";
+
+        $.post('dynamic_text_box_refresh', {name: fieldName}, function(data) {
+          $('.dynamic-text-box-' + fieldId).val(data.values.text);
+          miqSparkleOff();
+        });
+      });
+
+- else
+  - if field.protected?
+    ********
+  - else
+    = h(field.value)
