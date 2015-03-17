@@ -133,6 +133,8 @@ module OpsController::Diagnostics
         replace_right_cell(x_node)
       end
     when "validate"
+      id = params[:id] ? params[:id] : "new"
+      return unless load_edit("logdepot_edit__#{id}", "replace_cell__explorer")
       settings = {
         :username => @edit[:new][:log_userid],
         :password => @edit[:new][:log_password],
