@@ -101,7 +101,8 @@ module VmCommon
     options = case console_type
               when "mks"
                 @sb[:mks].update(
-                  'version' => get_vmdb_config[:server][:mks_version]
+                  :version     => get_vmdb_config[:server][:mks_version],
+                  :mks_classid => get_vmdb_config[:server][:mks_classid]
                 )
               when "vmrc"
                 {
