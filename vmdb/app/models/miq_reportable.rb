@@ -13,8 +13,9 @@ module MiqReportable
     }.flatten
 
     data = data[0..options[:limit] - 1] if options[:limit] # apply limit after includes are processed
+
     Ruport::Data::Table.new(:data => data,
-                            :column_names => [],
+                            :column_names => options[:only],
                             :record_class => options[:record_class],
                             :filters => options[:filters])
   end
