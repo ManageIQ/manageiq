@@ -6,7 +6,6 @@ require "fix_auth/fix_auth"
 require "fix_auth/models"
 
 describe FixAuth::FixAuth do
-
   describe "#fix_database_yml" do
     it "respects --hardcode" do
       subject = described_class.new(:password => 'newpass', :root => '/', :databaseyml => true)

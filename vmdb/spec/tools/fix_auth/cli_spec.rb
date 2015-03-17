@@ -7,7 +7,7 @@ require "fix_auth/cli"
 describe FixAuth::Cli do
   it "should assign defaults" do
     options = described_class.new.parse([], {})
-      .options.slice(:hostname, :username, :password, :hardcode, :databases)
+              .options.slice(:hostname, :username, :password, :hardcode, :databases)
     expect(options).to eq(
       :username  => "root",
       :databases => %w(vmdb_production))
@@ -15,7 +15,7 @@ describe FixAuth::Cli do
 
   it "should pickup env variables" do
     options = described_class.new.parse([], "PGUSER" => "envuser", "PGPASSWORD" => "envpass", "PGHOST" => "envhost")
-      .options.slice(:hostname, :username, :password, :hardcode, :databases)
+              .options.slice(:hostname, :username, :password, :hardcode, :databases)
     expect(options).to eq(
       :username  => "envuser",
       :databases => %w(vmdb_production),
@@ -25,7 +25,7 @@ describe FixAuth::Cli do
 
   it "should parse database names" do
     options = described_class.new.parse(%w(DB1 DB2))
-      .options.slice(:hostname, :username, :password, :hardcode, :databases)
+              .options.slice(:hostname, :username, :password, :hardcode, :databases)
     expect(options).to eq(
       :username  => "root",
       :databases => %w(DB1 DB2))
@@ -33,7 +33,7 @@ describe FixAuth::Cli do
 
   it "should parse hardcoded password" do
     options = described_class.new.parse(%w(-P hardcoded))
-      .options.slice(:hostname, :username, :password, :hardcode, :databases)
+              .options.slice(:hostname, :username, :password, :hardcode, :databases)
     expect(options).to eq(
       :username  => "root",
       :databases => %w(vmdb_production),
@@ -42,25 +42,25 @@ describe FixAuth::Cli do
 
   it "defaults to updating the database" do
     options = described_class.new.parse(%w())
-      .options.slice(:db, :databaseyml, :key)
+              .options.slice(:db, :databaseyml, :key)
     expect(options).to eq(:db => true)
   end
 
   it "doesnt default to database if running another task" do
     options = described_class.new.parse(%w(--databaseyml))
-      .options.slice(:db, :databaseyml, :key)
+              .options.slice(:db, :databaseyml, :key)
     expect(options).to eq(:databaseyml => true)
   end
 
   it "doesnt default to database if running another task 2" do
     options = described_class.new.parse(%w(--key))
-      .options.slice(:db, :databaseyml, :key)
+              .options.slice(:db, :databaseyml, :key)
     expect(options).to eq(:key => true)
   end
 
   it "can run all 3 tasks" do
     options = described_class.new.parse(%w(--key --db --databaseyml))
-      .options.slice(:db, :databaseyml, :key)
+              .options.slice(:db, :databaseyml, :key)
     expect(options).to eq(:db => true, :databaseyml => true, :key => true)
   end
 end
