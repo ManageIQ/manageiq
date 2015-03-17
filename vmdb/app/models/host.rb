@@ -185,7 +185,11 @@ class Host < ActiveRecord::Base
   end
 
   def hostname_required?
-    self.vmm_vendor == "vmware"
+    self.class.hostname_required?
+  end
+
+  def self.hostname_required?
+    true
   end
 
   # host settings
