@@ -200,23 +200,6 @@ class ScheduleWorker < WorkerBase
       @queue.enq [:check_for_stuck_dispatch, threshold_seconds]
     end
 
-    # Schedule - Periodic refresh for all EMS's
-    eri = VMDB::Config.new("vmdb").config.fetch_path(:ems_refresh, :refresh_interval)
-    eri = eri.respond_to?(:to_i_with_method) ? eri.to_i_with_method : eri.to_i
-    unless eri == 0
-      @schedules[:scheduler] << self.system_schedule_every(eri, :first_in => eri) do |rufus_job|
-        @queue.enq :ems_refresh_all_ems_timer
-      end
-    end
-
-    eri = VMDB::Config.new("vmdb").config.fetch_path(:ems_refresh, :scvmm, :refresh_interval)
-    eri = eri.respond_to?(:to_i_with_method) ? eri.to_i_with_method : eri.to_i
-    unless eri == 0
-      @schedules[:scheduler] << self.system_schedule_every(eri, :first_in => eri) do |rufus_job|
-        @queue.enq :ems_refresh_all_scvmm_timer
-      end
-    end
-
     # Schedule - Hourly Alert Evaluation Timer
     @schedules[:scheduler] << self.system_schedule_every(1.hour, :first_in => 5.minutes) do |job_id, at, params|
       @queue.enq :miq_alert_evaluate_hourly_timer
@@ -233,6 +216,23 @@ class ScheduleWorker < WorkerBase
       @queue.enq :storage_scan_timer
     end
 
+    schedules_for_ems_refresh
+  end
+
+  def schedules_for_ems_refresh
+    config = VMDB::Config.new("vmdb").config.fetch(:ems_refresh, {})
+
+    ExtManagementSystem.leaf_subclasses.each do |klass|
+      every   = config.fetch_path(klass.ems_type.to_sym, :refresh_interval)
+      every ||= config.fetch(:refresh_interval, 24.hours)
+
+      every   = every.respond_to?(:to_i_with_method) ? every.to_i_with_method : every.to_i
+      next if every == 0
+
+      @schedules[:scheduler] << self.system_schedule_every(every, :first_in => every) do |rufus_job|
+        @queue.enq [:ems_refresh_timer, klass]
+      end
+    end
   end
 
   def schedules_for_database_operations_role
