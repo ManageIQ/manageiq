@@ -393,7 +393,7 @@
 
         #{os == 'linux' ? '$(vmrc).height($(window).height() - ($("#container").offset().top + 10));' : '$(vmrc).width( $(window).width());'}
 
-        } catch (error) {
+      } catch (error) {
         hideSpinner();
         console.error(error);
 
@@ -442,11 +442,12 @@
       =_('The Remote Console is connecting')
       \...
     #container
-      / [if IE]
-        %object#vmrc{:classid => "CLSID:4AEA1010-0A0C-405E-9B74-767FC8A998CB"}
-      / else
-      / [if !IE]
-        %object#vmrc{:type => "application/x-vmware-remote-console-2012"}
-      / <![endif]
+      :plain
+        <!--[if IE]>
+          <object id='vmrc' classid='CLSID:4AEA1010-0A0C-405E-9B74-767FC8A998CB'></object>
+        <![endif]-->
+        <!--[if !IE]> -->
+          <object id='vmrc' type='application/x-vmware-remote-console-2012'></object>
+        <!-- <![endif]-->
     #glassPane
     #spinner
