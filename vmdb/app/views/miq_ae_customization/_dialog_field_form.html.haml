@@ -42,6 +42,11 @@
           %td
             = check_box_tag('field_dynamic', '1', @edit[:field_dynamic], "data-miq_observe_checkbox" => {:url => url}.to_json)
 
+      %tr
+        %td.key=_('Read only')
+        %td
+          = check_box_tag('field_read_only', '1', @edit[:field_read_only], "data-miq_observe_checkbox" => {:url => url}.to_json)
+
   - unless @edit[:field_typ].nil?
     %fieldset
       %h3=_('Options')
