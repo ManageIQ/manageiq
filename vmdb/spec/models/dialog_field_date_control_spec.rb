@@ -25,7 +25,7 @@ describe DialogFieldDateControl do
       end
 
       it "returns tomorrow's date" do
-        Timecop.freeze(Time.new(2015, 1, 2)) do
+        Timecop.freeze(Time.new(2015, 1, 2, 0, 0, 0, 0)) do
           expect(dialog_field.value).to eq("01/03/2015")
         end
       end
