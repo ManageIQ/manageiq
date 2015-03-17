@@ -305,7 +305,8 @@ class MiqRequest < ActiveRecord::Base
 
   def set_description(force = false)
     if description.nil? || force == true
-      update_attribute(:description, request_task_class.get_description(self))
+      description = default_description || request_task_class.get_description(self)
+      update_attributes(:description => description)
     end
   end
 
@@ -474,4 +475,8 @@ class MiqRequest < ActiveRecord::Base
     request
   end
 
+  private
+
+  def default_description
+  end
 end
