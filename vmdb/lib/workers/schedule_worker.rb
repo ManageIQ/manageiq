@@ -216,19 +216,7 @@ class ScheduleWorker < WorkerBase
       @queue.enq :storage_scan_timer
     end
 
-    schedules_for_ems_refresh
-  end
-
-  def schedules_for_ems_refresh
-    config = VMDB::Config.new("vmdb").config.fetch(:ems_refresh, {})
-
-    ExtManagementSystem.leaf_subclasses.each do |klass|
-      every   = config.fetch_path(klass.ems_type.to_sym, :refresh_interval)
-      every ||= config.fetch(:refresh_interval, 24.hours)
-
-      every   = every.respond_to?(:to_i_with_method) ? every.to_i_with_method : every.to_i
-      next if every == 0
-
+    schedule_settings_for_ems_refresh.each do |klass, every|
       @schedules[:scheduler] << self.system_schedule_every(every, :first_in => every) do |rufus_job|
         @queue.enq [:ems_refresh_timer, klass]
       end
@@ -569,5 +557,20 @@ class ScheduleWorker < WorkerBase
 
     # If no work in queue, update users schedules which have been updated since last check
     self.sync_updated_user_schedules if @active_roles.include?("scheduler")
+  end
+
+  private
+
+  def schedule_settings_for_ems_refresh
+    config = VMDB::Config.new("vmdb").config.fetch(:ems_refresh, {})
+
+    ExtManagementSystem.leaf_subclasses.each.with_object({}) do |klass, hash|
+      every   = config.fetch_path(klass.ems_type.to_sym, :refresh_interval)
+      every ||= config.fetch(:refresh_interval, 24.hours)
+
+      every   = every.respond_to?(:to_i_with_method) ? every.to_i_with_method : every.to_i
+
+      hash[klass] = every unless every == 0
+    end
   end
 end
