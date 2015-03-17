@@ -21,9 +21,8 @@ class MiqProvisionVmwareWorkflow < MiqProvisionInfraWorkflow
 
   def allowed_provision_types(options={})
     {
-      "vmware"     => "VMware",
-      "pxe"        => "PXE",
-      "netapp_rcu" => "NetApp"
+      "vmware" => "VMware",
+      "pxe"    => "PXE"
     }
   end
 
