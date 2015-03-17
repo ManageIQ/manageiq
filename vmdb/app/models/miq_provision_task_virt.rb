@@ -1,10 +1,4 @@
 class MiqProvisionTaskVirt < MiqProvisionTask
-  SUBCLASSES = %w{
-    MiqProvisionCloud
-    MiqProvisionRedhat
-    MiqProvisionVmware
-  }
-
   include MiqProvisionMixin
   include_concern 'Automate'
   include_concern 'CustomAttributes'
@@ -26,23 +20,23 @@ class MiqProvisionTaskVirt < MiqProvisionTask
   alias_attribute :vm,                    :destination
   alias_attribute :vm_template,           :source
 
-  CLONE_SYNCHRONOUS = false
-  CLONE_TIME_LIMIT  = 4.hours
-
-  DEFAULT_IMPORT = File.expand_path(File.join(Rails.root, "db/fixtures/miq_provision_automate.xml"))
-  PROVISION_AE_CLASSES = ["EVM/PROVISION", "EVM/MAX_VMS", "EVM/TTL_WARNINGS", "EVM/TTL"]
-  SUPPORTED_EMS_CLASSES = %w{EmsVmware EmsRedhat EmsAmazon EmsOpenstack}
-
   virtual_belongs_to :vm
   virtual_belongs_to :vm_template
 
-  virtual_column     :placement_auto,       :type => :boolean
+  virtual_column :placement_auto, :type => :boolean
+
+  before_create :set_template_and_networking
+
+  CLONE_SYNCHRONOUS     = false
+  CLONE_TIME_LIMIT      = 4.hours
+  DEFAULT_IMPORT        = File.expand_path(File.join(Rails.root, "db/fixtures/miq_provision_automate.xml"))
+  PROVISION_AE_CLASSES  = ["EVM/PROVISION", "EVM/MAX_VMS", "EVM/TTL_WARNINGS", "EVM/TTL"]
+  SUBCLASSES            = %w(MiqProvisionCloud MiqProvisionRedhat MiqProvisionVmware)
+  SUPPORTED_EMS_CLASSES = %w{EmsVmware EmsRedhat EmsAmazon EmsOpenstack}
 
   def self.base_model
     MiqProvisionTaskVirt
   end
-
-  before_create      :set_template_and_networking
 
   def set_template_and_networking
     self.source = get_source
