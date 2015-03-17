@@ -10,6 +10,33 @@ describe VmdbDatabaseConnection do
     expect(connections.length).to be > 0
   end
 
+  it 'computes wait_time' do
+    setting = VmdbDatabaseConnection.all.first
+    expect(setting.wait_time).to be_kind_of(Fixnum)
+  end
+
+  [
+    :address,
+    :application,
+    :blocked_by,
+    :command,
+    :spid,
+    :task_state,
+    :wait_resource,
+    :wait_time,
+    :vmdb_database_id,
+    :vmdb_database,
+    :zone,
+    :miq_server,
+    :miq_worker,
+    :pid,
+  ].each do |field|
+    it "has a #{field}" do
+      setting = VmdbDatabaseConnection.all.first
+      expect(setting).to respond_to(field)
+    end
+  end
+
   it 'returns nil for wait_resource where there are no locks' do
     continue = ActiveSupport::Concurrency::Latch.new
     made_connection = ActiveSupport::Concurrency::Latch.new
@@ -67,32 +94,5 @@ describe VmdbDatabaseConnection do
     continue_latch.release
     get_lock.join
     wait_for_lock.join
-  end
-
-  it 'computes wait_time' do
-    setting = VmdbDatabaseConnection.all.first
-    expect(setting.wait_time).to be_kind_of(Fixnum)
-  end
-
-  [
-    :address,
-    :application,
-    :blocked_by,
-    :command,
-    :spid,
-    :task_state,
-    :wait_resource,
-    :wait_time,
-    :vmdb_database_id,
-    :vmdb_database,
-    :zone,
-    :miq_server,
-    :miq_worker,
-    :pid,
-  ].each do |field|
-    it "has a #{field}" do
-      setting = VmdbDatabaseConnection.all.first
-      expect(setting).to respond_to(field)
-    end
   end
 end
