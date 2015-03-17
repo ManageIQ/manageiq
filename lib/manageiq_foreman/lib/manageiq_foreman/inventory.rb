@@ -7,9 +7,19 @@ module ManageiqForeman
     end
 
     def refresh_configuration(_target = nil)
+      hosts = connection.all(:hosts)
+      hostgroups = connection.all(:hostgroups)
+
+      # if locations or organizations are enabled (detected by presence in host records)
+      #    but it is not present in hostgroups
+      #   fetch details for a hostgroups (to get location and organization information)
+      if (hosts.first.key?("location_id") && !hostgroups.first.key?("locations")) ||
+         (hosts.first.key?("organization_id") && !hostgroups.first.key?("organizations"))
+        hostgroups = connection.load_details(hostgroups, :hostgroups)
+      end
       {
-        :hosts      => connection.all(:hosts),
-        :hostgroups => connection.all(:hostgroups).denormalize,
+        :hosts      => hosts,
+        :hostgroups => hostgroups.denormalize
       }
     end
 
@@ -18,6 +28,8 @@ module ManageiqForeman
         :operating_systems => connection.all_with_details(:operating_systems),
         :media             => connection.all(:media),
         :ptables           => connection.all(:ptables),
+        :locations         => connection.all(:locations),
+        :organizations     => connection.all(:organizations)
       }
     end
   end

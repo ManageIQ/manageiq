@@ -6,6 +6,8 @@ describe EmsRefresh::Parsers::Foreman do
   let(:flavors) { {"10" => "110", "20" => "120", "30" => "130"} }
   let(:media)   { {"10" => "210", "20" => "220", "30" => "230"} }
   let(:ptables) { {"10" => "310", "20" => "320", "30" => "330"} }
+  let(:locations)     { {"10" => "410", "20" => "420", "30" => "430"} }
+  let(:organizations) { {"10" => "510", "20" => "520", "30" => "530"} }
   let(:hostgroups) do
     [
       {
@@ -15,6 +17,22 @@ describe EmsRefresh::Parsers::Foreman do
         "operatingsystem_id" => 10,
         "medium_id"          => 20,
         "ptable_id"          => 10,
+        "organizations"      => [
+          {
+            "id" => 10,
+          }
+        ],
+        "locations"          => [
+          {
+            "id"    => 10,
+            "name"  => "l1",
+            "title" => "Loc1"
+          }, {
+            "id"    => 20,
+            "name"  => "l2",
+            "title" => "Loc1/Loc2"
+          }
+        ]
       }, {
         "id"                 => 9,
         "name"               => "hg9",
@@ -22,6 +40,18 @@ describe EmsRefresh::Parsers::Foreman do
         "operatingsystem_id" => 20,
         "medium_id"          => 10,
         "ptable_id"          => 30,
+        "organizations"      => [
+          {
+            "id" => 10,
+          }
+        ],
+        "locations"          => [
+          {
+            "id"    => 10,
+            "name"  => "l1",
+            "title" => "Loc1"
+          }
+        ],
       },
     ]
   end
@@ -35,7 +65,9 @@ describe EmsRefresh::Parsers::Foreman do
         "medium_id"          => 10,
         "ptable_id"          => 30,
         "last_compile"       => nil,
-        "build"              => false
+        "location_id"        => 10,
+        "organization_id"    => 20,
+        "build"              => false,
       },
       {
         "id"                 => 2,
@@ -45,6 +77,8 @@ describe EmsRefresh::Parsers::Foreman do
         "medium_id"          => 20,
         "ptable_id"          => 10,
         "last_compile"       => date1,
+        "location_id"        => 20,
+        "organization_id"    => 10,
         "build"              => true
       },
     ]
@@ -59,7 +93,9 @@ describe EmsRefresh::Parsers::Foreman do
         :media                    => media,
         :ptables                  => ptables,
         :hostgroups               => hostgroups,
-        :hosts                    => hosts
+        :hosts                    => hosts,
+        :locations                => locations,
+        :organizations            => organizations,
       )
 
       expect(result[:needs_provisioning_refresh]).not_to be_true
@@ -72,7 +108,9 @@ describe EmsRefresh::Parsers::Foreman do
           :media                    => media,
           :ptables                  => ptables,
           :hostgroups               => hostgroups,
-          :hosts                    => hosts
+          :hosts                    => hosts,
+          :locations                => locations,
+          :organizations            => organizations,
         )
 
         expect(result[:needs_provisioning_refresh]).to be_true
@@ -85,7 +123,9 @@ describe EmsRefresh::Parsers::Foreman do
         :media                    => media,
         :ptables                  => ptables,
         :hostgroups               => hostgroups,
-        :hosts                    => hosts
+        :hosts                    => hosts,
+        :locations                => locations,
+        :organizations            => organizations,
       )
 
       expect(result[:configured_systems].first[:build_state]).to be_blank
@@ -98,7 +138,9 @@ describe EmsRefresh::Parsers::Foreman do
         :media                    => media,
         :ptables                  => ptables,
         :hostgroups               => hostgroups,
-        :hosts                    => hosts
+        :hosts                    => hosts,
+        :locations                => locations,
+        :organizations            => organizations,
       )
 
       expect(result[:configured_systems].first[:last_checkin]).to be_blank

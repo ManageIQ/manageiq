@@ -8,7 +8,13 @@ module EmsRefresh
   module SaveInventoryProvisioning
     def save_provisioning_manager_inventory(manager, hashes, target = nil)
       return if hashes.nil?
-      save_child_inventory(manager, hashes, [:customization_scripts, :operating_system_flavors], target)
+      child_keys = [
+        :customization_scripts,
+        :operating_system_flavors,
+        :configuration_locations,
+        :configuration_organizations
+      ]
+      save_child_inventory(manager, hashes, child_keys, target)
       manager.save
     end
 
@@ -26,6 +32,16 @@ module EmsRefresh
       end
       save_inventory_assoc(:operating_system_flavors, manager, hashes, delete_missing_records, [:manager_ref], nil,
                            [:customization_scripts])
+    end
+
+    def save_configuration_locations_inventory(manager, hashes, target)
+      delete_missing_records = target.nil? || manager == target
+      save_inventory_assoc(:configuration_locations, manager, hashes, delete_missing_records, :manager_ref)
+    end
+
+    def save_configuration_organizations_inventory(manager, hashes, target)
+      delete_missing_records = target.nil? || manager == target
+      save_inventory_assoc(:configuration_organizations, manager, hashes, delete_missing_records, :manager_ref)
     end
   end
 end

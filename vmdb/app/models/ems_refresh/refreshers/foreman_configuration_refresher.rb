@@ -18,11 +18,16 @@ module EmsRefresh
 
       private
 
+      # this data was fetched from the provisioning_refresher/provider
+      # but the local data needs to link to it.
+      # this method makes it available
       def fetch_provisioning_manager_data(hash, manager)
         scripts = manager.customization_scripts.to_a.group_by(&:type)
         hash[:ptables] = manager_ref_hash(scripts["CustomizationScriptPtable"] || [])
         hash[:media] = manager_ref_hash(scripts["CustomizationScriptMedium"] || [])
         hash[:operating_system_flavors] = manager_ref_hash(manager.operating_system_flavors)
+        hash[:locations] = manager_ref_hash(manager.configuration_locations)
+        hash[:organizations] = manager_ref_hash(manager.configuration_organizations)
       end
 
       def manager_ref_hash(records)

@@ -24,6 +24,8 @@ module EmsRefresh
 
     def save_configured_systems_inventory(manager, hashes, target)
       delete_missing_records = target.nil? || manager == target
+      # these records are cross referenced to the hashes
+      # get the id out and store in this record
       hashes.each do |hash|
         hash[:configuration_profile_id] = hash.fetch_path(:configuration_profile, :id)
       end
