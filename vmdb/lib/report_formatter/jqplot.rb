@@ -55,9 +55,9 @@ module ReportFormatter
           :seriesDefaults => {:fill => true},
         )
       elsif mri.graph[:type] =~ /Line/
-        # Optimize / Utilization / Details has no titles inside charts
-        mri.chart[:options][:title] = ''
-        # FIXME: horizontal cursor missing here
+        mri.chart[:options][:title] = '' # Optimize / Utilization / Details has no titles inside charts
+        mri.chart.store_path(:options, :highlighter, :show, true)
+        mri.chart.store_path(:options, :highlighter, :tooltipAxes, 'y')
       end
 
       horizontal_legend
