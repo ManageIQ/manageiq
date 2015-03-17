@@ -1219,7 +1219,7 @@ class Host < ActiveRecord::Base
     self.reload
 
     self.attributes.each do |key, value|
-      next if %w{id guid ipmi_address mac_address name created_on updated_on vmm_vendor}.include?(key)
+      next if %w{id guid hostname ipmi_address mac_address name created_on updated_on vmm_vendor}.include?(key)
       self.send("#{key}=", nil)
     end
 
