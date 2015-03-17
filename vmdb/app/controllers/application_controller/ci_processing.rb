@@ -508,16 +508,12 @@ module ApplicationController::CiProcessing
 
     # Build the vm detail gtl view
   def show_details(db, options={})  # Pass in the db, parent vm is in @vm
-    dbname = db.to_s.downcase
-    association = options[:association] || nil
-
+    association    = options[:association] || nil
     # generate the grid/tile/list url to come back here when gtl buttons are pressed
-    @gtl_url = "/#{@db}/" + @listicon.pluralize + "/" + @record.id.to_s + "?"
-
-    @showtype = "details"
-
+    @gtl_url       = "/#{@db}/#{@listicon.pluralize}/#{@record.id.to_s}?"
+    @showtype      = "details"
     @no_checkboxes = true
-    @showlinks = true
+    @showlinks     = true
 
     @view, @pages = get_view(db,
                             :parent=>@record,
@@ -1851,4 +1847,45 @@ module ApplicationController::CiProcessing
     @edit[:new][owner] != @edit[:current][owner]
   end
 
+  def show_association(action, display_name, listicon, method, klass, association = nil)
+    @explorer = true if request.xml_http_request? # Ajax request means in explorer
+    if @explorer  # Save vars for tree history array
+      @x_show = params[:x_show]
+      @sb[:action] = @lastaction = action
+    end
+    @record = identify_record(params[:id])
+    @view = session[:view]                  # Restore the view from the session to get column names for the display
+    return if record_no_longer_exists?(@record, klass.to_s)
+    @lastaction = action
+    if params[:show] || params[:x_show]
+      id = params[:show] ? params[:show] : params[:x_show]
+      if method.kind_of?(Array)
+        obj = @record
+        while meth = method.shift do
+          obj = obj.send(meth)
+        end
+        @item = obj.find(from_cid(id))
+      else
+        @item = @record.send(method).find(from_cid(id))
+      end
+
+      drop_breadcrumb({:name => "#{@record.name} (#{display_name})",
+                       :url => "/#{controller_name}/#{action}/#{@record.id}?page=#{@current_page}"})
+      drop_breadcrumb(:name => @item.name,
+                      :url => "/#{controller_name}/#{action}/#{@record.id}?show=#{@item.id}")
+      @view = get_db_view(klass, :association=>association)
+      show_item
+    else
+      drop_breadcrumb({:name => @record.name,
+                       :url  => "/#{controller_name}/show/#{@record.id}"}, true)
+      drop_breadcrumb(:name => "#{@record.name} (#{display_name})",
+                      :url  => "/#{controller_name}/#{action}/#{@record.id}")
+      @listicon = listicon
+      if association.nil?
+        show_details(klass)
+      else
+        show_details(klass, :association => association )
+      end
+    end
+  end
 end

@@ -613,46 +613,6 @@ module VmCommon
     new_column.text = "Percent Used of Provisioned Size"
   end
 
-  def show_association(action, display_name, listicon, method, klass, association = nil)
-    @explorer = true if request.xml_http_request? # Ajax request means in explorer
-    if @explorer  # Save vars for tree history array
-      @action = action
-      @x_show = params[:x_show]
-    end
-    @vm = @record = identify_record(params[:id], VmOrTemplate)
-    return if record_no_longer_exists?(@vm)
-    rec_cls = "vm"
-
-    @sb[:action] = @lastaction = action
-    if params[:show] != nil || params[:x_show] != nil
-      id = params[:show] ? params[:show] : params[:x_show]
-      if method.kind_of?(Array)
-        obj = @record
-        while meth = method.shift do
-          obj = obj.send(meth)
-        end
-        @item = obj.find(from_cid(id))
-      else
-        @item = @record.send(method).find(from_cid(id))
-      end
-
-      drop_breadcrumb( { :name => "#{@record.name} (#{display_name})", :url=>"/#{rec_cls}/#{action}/#{@record.id}?page=#{@current_page}"} )
-      drop_breadcrumb( { :name => @item.name,                      :url=>"/#{rec_cls}/#{action}/#{@record.id}?show=#{@item.id}"} )
-      @view = get_db_view(klass, :association=>association)
-      show_item
-    else
-      drop_breadcrumb( { :name => @record.name,                        :url=>"/#{rec_cls}/show/#{@record.id}"}, true )
-      drop_breadcrumb( { :name => "#{@record.name} (#{display_name})", :url=>"/#{rec_cls}/#{action}/#{@record.id}"} )
-      @listicon = listicon
-      if association.nil?
-        show_details(klass)
-      else
-        show_details(klass, :association => association )
-      end
-    end
-
-  end
-
   def processes
     show_association('processes', 'Running Processes', 'processes', [:operating_system, :processes], OsProcess, 'processes')
   end

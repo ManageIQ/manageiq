@@ -176,66 +176,6 @@ class OrchestrationStackController < ApplicationController
 
   private ############################
 
-  def show_association(action, display_name, listicon, method, klass, association = nil)
-    @orchestration_stack = @record = identify_record(params[:id])
-    @view = session[:view]                  # Restore the view from the session to get column names for the display
-    return if record_no_longer_exists?(@orchestration_stack, 'OrchestrationStack')
-
-    @lastaction = action
-    if params[:show]
-      if method.kind_of?(Array)
-        obj = @orchestration_stack
-        while meth = method.shift do
-          obj = obj.send(meth)
-        end
-        @item = obj.find(from_cid(params[:show]))
-      else
-        @item = @orchestration_stack.send(method).find(from_cid(params[:show]))
-      end
-
-      drop_breadcrumb(:name => "#{@orchestration_stack.name} (#{display_name})",
-                      :url  => "/orchestration_stack/#{action}/#{@orchestration_stack.id}?page=#{@current_page}")
-      drop_breadcrumb(:name => @item.respond_to?("name") ? @item.name : @item.key,
-                      :url  => "/orchestration_stack/#{action}/#{@orchestration_stack.id}?show=#{@item.id}")
-      show_item
-    else
-      drop_breadcrumb({:name => @orchestration_stack.name,
-                       :url  => "/orchestration_stack/show/#{@orchestration_stack.id}"}, true)
-      drop_breadcrumb(:name => "#{@orchestration_stack.name} (#{display_name})",
-                      :url  => "/orchestration_stack/#{action}/#{@orchestration_stack.id}")
-      @listicon = listicon
-      if association.nil?
-        show_details(klass)
-      else
-        show_details(klass, :association => association)
-      end
-    end
-  end
-
-  def show_details(db, options = {})  # Pass in the db, parent vm is in @vm
-    dbname = db.to_s.downcase
-    association = options[:association] || nil
-
-    # generate the grid/tile/list url to come back here when gtl buttons are pressed
-    @gtl_url = "/orchestration_stack/" + @lastaction + "/" + @orchestration_stack.id.to_s + "?"
-
-    @showtype = "details"
-    @no_checkboxes = true
-    @showlinks = true
-
-    @view, @pages = get_view(db,
-                             :parent      => @orchestration_stack,
-                             :association => association,
-                             :dbname      => "orchestrationstackitem")  # Get the records into a view & paginator
-
-    # Came in from outside, use RJS to redraw gtl partial
-    if params[:ppsetting]  || params[:searchtag] || params[:entry] || params[:sort_choice]
-      replace_gtl_main_div
-    else
-      render :action => 'show'
-    end
-  end
-
   def get_session_data
     @title      = "Stack"
     @layout     = "orchestration_stack"
