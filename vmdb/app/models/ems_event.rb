@@ -261,7 +261,7 @@ class EmsEvent < ActiveRecord::Base
     new_event = EmsEvent.create(event) unless EmsEvent.exists?(
       {
         :event_type => event[:event_type],
-        :timestamp => event[:timestamp].to_time,
+        :timestamp => event[:timestamp],
         :chain_id => event[:chain_id],
         :ems_id => event[:ems_id]
       }
