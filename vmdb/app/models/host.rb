@@ -185,7 +185,11 @@ class Host < ActiveRecord::Base
   end
 
   def hostname_required?
-    self.vmm_vendor == "vmware"
+    self.class.hostname_required?
+  end
+
+  def self.hostname_required?
+    true
   end
 
   # host settings
@@ -1215,7 +1219,7 @@ class Host < ActiveRecord::Base
     self.reload
 
     self.attributes.each do |key, value|
-      next if %w{id guid ipmi_address mac_address name created_on updated_on vmm_vendor}.include?(key)
+      next if %w{id guid hostname ipmi_address mac_address name created_on updated_on vmm_vendor}.include?(key)
       self.send("#{key}=", nil)
     end
 
