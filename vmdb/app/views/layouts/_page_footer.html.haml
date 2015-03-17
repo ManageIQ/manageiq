@@ -1,4 +1,4 @@
 %nav.navbar.navbar-default.navbar-fixed-bottom
   .container-fluid
     %script{:type => "text/javascript"}
-      ="dT('#{Time.zone.now.utc_offset}','#{Time.zone.now.strftime("%Z")}');"
+      ="dT('#{Time.zone.now.utc_offset}','#{Time.zone.now.strftime("%Z")}', true);"
