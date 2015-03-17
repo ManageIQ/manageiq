@@ -718,15 +718,22 @@ class CatalogController < ApplicationController
   def ot_remove_submit
     assert_privileges("orchestration_templates_admin")
     ot = OrchestrationTemplate.find_by_id(params[:id])
-    begin
-      ot.delete
-    rescue StandardError => bang
-      add_flash(_("Error during '%s': ") % "Orchestration Template Deletion" << bang.message, :error)
+    if ot.stacks.length > 0
+      add_flash(_("Orchestration template \"%s\" is read-only and cannot be deleted.") % ot.name, :error)
+      render :update do |page|
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+      end
     else
-      add_flash(_("Orchestration Template \"%s\" was deleted.") % ot.name)
+      begin
+        ot.delete
+      rescue StandardError => bang
+        add_flash(_("Error during '%s': ") % "Orchestration Template Deletion" << bang.message, :error)
+      else
+        add_flash(_("Orchestration Template \"%s\" was deleted.") % ot.name)
+      end
+      self.x_node = 'root'
+      replace_right_cell(nil, trees_to_replace([:ot]))
     end
-    self.x_node = 'root'
-    replace_right_cell(nil, trees_to_replace([:ot]))
   end
 
   private
