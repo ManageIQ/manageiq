@@ -745,6 +745,11 @@ class CatalogController < ApplicationController
       add_flash(_("%s is required") % "Name", :error)
     end
 
+    if @edit[:new][:display] && !@edit[:new][:dialog_id]
+      # check for dialog if catalog is selected
+      add_flash(_("Dialog has to be set if Display in Catalog is chosen"), :error)
+    end
+
     #set request for non generic ST
     if @edit[:wf] && need_prov_dialogs?(@edit[:new][:st_prov_type])
       request = @edit[:req_id] ? @edit[:wf].update_request(@edit[:req_id], @edit[:new], session[:userid]) :
