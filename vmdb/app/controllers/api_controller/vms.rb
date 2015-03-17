@@ -180,7 +180,7 @@ class ApiController
 
     def vm_event(vm, event_type, event_message, event_time)
       desc = "Adding Event type=#{event_type} message=#{event_message}"
-      event_timestamp = event_time.blank? ? Time.now.utc.iso8601 : Time.parse(event_time).utc.iso8601
+      event_timestamp = event_time.blank? ? Time.now.utc : event_time.to_time(:utc)
 
       vm.add_ems_event(event_type, event_message, event_timestamp)
       action_result(true, desc)

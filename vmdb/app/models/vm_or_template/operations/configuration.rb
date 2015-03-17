@@ -71,13 +71,14 @@ module VmOrTemplate::Operations::Configuration
     raw_disconnect_floppies
   end
 
-  def raw_add_disk(disk_name, disk_size_mb, thin_provisioned=false)
+  def raw_add_disk(disk_name, disk_size_mb, options={})
     raise "VM has no EMS, unable to add disk" unless self.ext_management_system
-    run_command_via_parent(:vm_add_disk, :diskName => disk_name, :diskSize => disk_size_mb, :thinProvisioned => thin_provisioned)
+    run_command_via_parent(:vm_add_disk, :diskName => disk_name, :diskSize => disk_size_mb, 
+        :thinProvisioned => options[:thin_provisioned], :dependent => options[:dependent], :persistent => options[:persistent])
   end
 
-  def add_disk(disk_name, disk_size_mb, thin_provisioned=false)
-    raw_add_disk(disk_name, disk_size_mb, thin_provisioned)
+  def add_disk(disk_name, disk_size_mb, options={})
+    raw_add_disk(disk_name, disk_size_mb, options)
   end
 
   def spec_reconfigure(spec)

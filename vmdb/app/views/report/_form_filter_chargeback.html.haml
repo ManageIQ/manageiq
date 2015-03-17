@@ -19,7 +19,7 @@
           %td.key{:style => "width:120px;"}
             = _('Owner')
           %td
-            - opts = [["<#{_('Choose an Owner')}>", nil]] + Array(@edit[:cb_users].invert).sort { |a| a.first.downcase }
+            - opts = [["<#{_('Choose an Owner')}>", nil]] + Array(@edit[:cb_users].invert).sort_by { |a| a.first.downcase }
             = select_tag("cb_owner_id",
               options_for_select(opts, @edit[:new][:cb_owner_id]),
               "data-miq_sparkle_on"  => true,
@@ -30,7 +30,7 @@
           %td.key{:style => "width:120px;"}
             = _('Tag Category')
           %td
-            - opts = [["<#{_('Choose a Category')}>", nil]] + Array(@edit[:cb_cats].invert).sort { |a| a.first.downcase }
+            - opts = [["<#{_('Choose a Category')}>", nil]] + Array(@edit[:cb_cats].invert).sort_by { |a| a.first.downcase }
             = select_tag("cb_tag_cat",
               options_for_select(opts, @edit[:new][:cb_tag_cat]),
               "data-miq_sparkle_on"  => true,

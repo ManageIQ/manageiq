@@ -6,12 +6,12 @@ module ApplicationController::MiqRequestMethods
 
   # AJAX driven routine to check for changes on the provision form
   def prov_field_changed
-    if !params[:tab_id]
-      return unless load_edit("prov_edit__#{params[:id]}","show_list")
-    else
+    if params[:tab_id]
       @edit = session[:edit]
+    else
+      return unless load_edit("prov_edit__#{params[:id]}","show_list")
     end
-    if !@edit || (@edit && @edit[:stamp_typ])     #load tab for show screen
+    if @edit.nil? || @edit.try(:[], :stamp_typ)  # load tab for show screen
       if params[:tab_id]
         @options[:current_tab_key] = params[:tab_id].split('_')[0].to_sym
         @options[:wf].refresh_field_values(@options,session[:userid])
@@ -22,7 +22,7 @@ module ApplicationController::MiqRequestMethods
         @edit[:new][:current_tab_key] = params[:tab_id].split('_')[0].to_sym
         @edit[:wf].refresh_field_values(@edit[:new],session[:userid])
       end
-      refresh_divs = prov_get_form_vars                           # Get changed option, returns true if divs need refreshing
+      refresh_divs = prov_get_form_vars  # Get changed option, returns true if divs need refreshing
       build_grid if refresh_divs
       changed = (@edit[:new] != @edit[:current])
       render :update do |page|                    # Use JS to update the display
@@ -39,7 +39,7 @@ module ApplicationController::MiqRequestMethods
             end
           end
         end
-        if @edit[:new][:schedule_time] && @edit[:new][:schedule_type][0] == "schedule"
+        if @edit.fetch_path(:new, :schedule_type, 0) == "schedule"
           page << "miq_cal_dateFrom = new Date(#{@timezone_offset});"
           page << "miqBuildCalendar();"
         end
@@ -186,16 +186,7 @@ module ApplicationController::MiqRequestMethods
     elsif params[:button] == "submit"                           # Update or create the request from the workflow with the new options
       prov_req_submit
     else                                                        # First time in, build provision request screen
-      case params[:org_controller]
-      when "vm"
-        @layout = "miq_request_vm"
-      when "host"
-        @layout = "miq_request_host"
-      when "ae"
-        @layout = "miq_request_ae"
-      else
-        @layout = "miq_request_vm"
-      end
+      @layout = layout_from_tab_name(params[:org_controller])
       if params[:commit] == "Upload" && session.fetch_path(:edit, :new, :sysprep_enabled, 1) == "Sysprep Answer File"
         upload_sysprep_file
         @tabactive = "customize_div"
@@ -340,7 +331,7 @@ module ApplicationController::MiqRequestMethods
 
   def build_grid
     case @edit[:wf]
-    when MiqProvisionWorkflow
+    when MiqProvisionVirtWorkflow
       if @edit[:new][:current_tab_key] == :service
         if @edit[:new][:st_prov_type]
           build_vm_grid(@edit[:wf].get_field(:src_vm_id,:service)[:values],@edit[:vm_sortdir],@edit[:vm_sortcol])
@@ -367,7 +358,7 @@ module ApplicationController::MiqRequestMethods
           build_vc_grid(@edit[:wf].get_field(:sysprep_custom_spec,:customize)[:values],@edit[:vc_sortdir],@edit[:vc_sortcol])
         end
         build_ous_tree(@edit[:wf],@edit[:new][:ldap_ous])
-        @sb[:vm_os] = VmOrTemplate.find_by_id(@edit[:new][:src_vm_id][0]).platform if @edit[:new][:src_vm_id] && @edit[:new][:src_vm_id][0]
+        @sb[:vm_os] = VmOrTemplate.find_by_id(@edit.fetch_path(:new, :src_vm_id, 0)).platform if @edit.fetch_path(:new, :src_vm_id, 0)
       elsif @edit[:new][:current_tab_key] == :purpose
         build_tags_tree(@edit[:wf],@edit[:new][:vm_tags],true)
       end
@@ -470,12 +461,20 @@ module ApplicationController::MiqRequestMethods
 
   def dialog_partial_for_workflow
     case (@edit || @options).try(:[], :wf)
-    when MiqProvisionWorkflow
+    when MiqProvisionVirtWorkflow
       "prov_dialog"
     when MiqHostProvisionWorkflow
       "prov_host_dialog"
     when VmMigrateWorkflow
       "prov_vm_migrate_dialog"
+    end
+  end
+
+  def layout_from_tab_name(tab_name)
+    case tab_name
+    when "host" then "miq_request_host"
+    when "ae"   then "miq_request_ae"
+    else             "miq_request_vm"  # Includes "vm"
     end
   end
 
@@ -762,7 +761,6 @@ module ApplicationController::MiqRequestMethods
     options                     = req.try(:get_options) || {}  # Use existing request options, if passed in
     @edit[:new]                 = options unless @workflow_exists
     @edit[:org_controller]      = params[:org_controller] if params[:org_controller]  # request originated from controller
-    @edit[:prov_option_types]   = MiqRequest::MODEL_REQUEST_TYPES[@layout == "miq_request_vm" ? :Vm : :Host]
     @edit[:wf], pre_prov_values = workflow_instance_from_vars(req)
 
     if @edit[:wf]

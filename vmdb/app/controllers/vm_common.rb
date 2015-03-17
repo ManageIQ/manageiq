@@ -123,6 +123,16 @@ module VmCommon
     password, host_address, host_port, _proxy_address, _proxy_port, protocol, ssl = @sb[:html5]
     encrypt = get_vmdb_config.fetch_path(:server, :websocket_encrypt)
 
+    case protocol
+    when 'spice'     # spice, vnc - from rhevm
+      view = "vm_common/console_spice"
+    when nil, 'vnc'  # nil - from vmware
+      view = "vm_common/console_vnc"
+    when 'novnc_url' # from OpenStack
+      redirect_to host_address
+      return
+    end
+
     proxy_options = WsProxy.start(
       :host       => host_address,
       :host_port  => host_port,
@@ -131,13 +141,6 @@ module VmCommon
       :encrypt    => encrypt    # ssl on web client side
     )
     raise _("Console access failed: proxy errror") if proxy_options.nil?
-
-    view = case protocol   # spice, vnc - from rhevm
-           when 'spice'
-             "vm_common/console_spice"
-           when nil, 'vnc' # nil - from vmware
-             "vm_common/console_vnc"
-           end
 
     render :template => view,
            :layout   => false,

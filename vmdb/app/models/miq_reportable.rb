@@ -5,18 +5,18 @@ module MiqReportable
 
     data = records.map {|r|
       options[:include]["categories"] = options[:include_categories] if options[:include] && options[:include_categories]
-      r.reportable_data(:include => options[:include],
-                             :only => options[:only],
-                             :except => options[:except],
-                             :tag_filters => options[:tag_filters],
-                             :methods => options[:methods])
-    }.flatten
+      r.reportable_data_with_columns(:include     => options[:include],
+                                     :only        => options[:only],
+                                     :except      => options[:except],
+                                     :tag_filters => options[:tag_filters],
+                                     :methods     => options[:methods])
+    }
 
     data = data[0..options[:limit] - 1] if options[:limit] # apply limit after includes are processed
-    Ruport::Data::Table.new(:data => data,
-                            :column_names => [],
+    Ruport::Data::Table.new(:data         => data.collect(&:last).flatten,
+                            :column_names => data.collect(&:first).flatten.uniq,
                             :record_class => options[:record_class],
-                            :filters => options[:filters])
+                            :filters      => options[:filters])
   end
 
   # generate a ruport table from an array of hashes where the keys are the column names

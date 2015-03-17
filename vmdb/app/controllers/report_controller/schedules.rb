@@ -127,15 +127,13 @@ module ReportController::Schedules
 
   def schedule_toggle(enable)
     assert_privileges("miq_report_schedule_#{enable ? 'enable' : 'disable'}")
-    present_action, msg1, msg2 = if enable
-                                   ['enable',
-                                    _("No %s were selected to be enabled"),
-                                    _("The selected %s were enabled")]
-                                 else
-                                   ['disable',
-                                    _("No %s were selected to be disabled"),
-                                    _("The selected %s were disabled")]
-                                 end
+    msg1, msg2 = if enable
+                   [_("No %s were selected to be enabled"),
+                    _("The selected %s were enabled")]
+                 else
+                   [_("No %s were selected to be disabled"),
+                    _("The selected %s were disabled")]
+                 end
     scheds = find_checked_items
     if scheds.empty?
       add_flash(msg1 % "#{ui_lookup(:model => "MiqReport")} #{ui_lookup(:models => "MiqSchedule")}",
@@ -144,7 +142,7 @@ module ReportController::Schedules
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
-    schedule_enable_disable(scheds, present_action) unless scheds.empty?
+    schedule_enable_disable(scheds, enable) unless scheds.empty?
     add_flash(msg2 % "#{ui_lookup(:model => "MiqReport")} #{ui_lookup(:models => "MiqSchedule")}",
               :info, true) unless flash_errors?
     schedule_get_all

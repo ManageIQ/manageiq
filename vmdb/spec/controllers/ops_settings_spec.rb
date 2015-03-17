@@ -36,32 +36,56 @@ describe OpsController do
         server.stub(:zone_id => 1)
         MiqServer.stub(:my_server).and_return(server)
 
-        @sch = FactoryGirl.create(:miq_schedule, :enabled => true, :updated_at => 1.hour.ago.utc)
+        @sch = FactoryGirl.create(:miq_schedule)
         silence_warnings { OpsController::Settings::Schedules::STGROOT = 'ST' }
 
-        controller.stub(:find_checked_items).and_return([@sch])
+        controller.params["check_#{controller.to_cid(@sch.id)}"] = '1'
         controller.should_receive(:render).never
         controller.should_receive(:schedule_build_list)
         controller.should_receive(:settings_get_info)
         controller.should_receive(:replace_right_cell)
       end
 
+      it "doesn't update schedules that don't change" do
+        # set it to disabled
+        @sch.update_attribute(:enabled, false)
+
+        # enable the schedule and save it
+        controller.schedule_disable
+        controller.send(:flash_errors?).should_not be_true
+
+        @sch.reload
+
+        # assert that it's disabled
+        @sch.should_not be_enabled
+      end
+
       it "#schedule_enable" do
+        # set it to disabled
+        @sch.update_attribute(:enabled, false)
+
+        # enable the schedule and save it
         controller.schedule_enable
         controller.send(:flash_errors?).should_not be_true
+
         @sch.reload
+
+        # assert that it's enabled
         @sch.should be_enabled
-        @sch.updated_at.should be > 10.minutes.ago.utc
       end
 
       it "#schedule_disable" do
-        @sch.update_attribute(:enabled, false)
+        # set it to enabled
+        @sch.update_attribute(:enabled, true)
 
+        # disable the schedule and save it
         controller.schedule_disable
         controller.send(:flash_errors?).should_not be_true
+
         @sch.reload
+
+        # assert that it's disabled
         @sch.should_not be_enabled
-        @sch.updated_at.should be > 10.minutes.ago.utc
       end
     end
   end

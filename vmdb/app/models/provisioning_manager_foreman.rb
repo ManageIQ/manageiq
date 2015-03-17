@@ -7,6 +7,9 @@ class ProvisioningManagerForeman < ProvisioningManager
            :with_provider_connection,
            :to => :provider
 
+  has_many :configuration_locations,    :foreign_key => :provisioning_manager_id
+  has_many :configuration_organizations, :foreign_key => :provisioning_manager_id
+
   def self.ems_type
     "foreman_provisioning".freeze
   end

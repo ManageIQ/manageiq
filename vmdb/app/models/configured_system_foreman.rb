@@ -1,6 +1,9 @@
 class ConfiguredSystemForeman < ConfiguredSystem
   include ProviderObjectMixin
 
+  belongs_to :configuration_location
+  belongs_to :configuration_organization
+
   def provider_object(connection = nil)
     (connection || connection_source.raw_connect).host(manager_ref)
   end

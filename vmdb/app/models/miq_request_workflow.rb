@@ -116,7 +116,7 @@ class MiqRequestWorkflow
 
     self.get_all_dialogs.keys.each do |d|                         # Go thru all dialogs
       self.get_all_fields(d).keys.each do |f|                     # Go thru all field
-        unless options[f].nil?
+        if !options[f].nil?
           values_new[f] = options[f]                              # Set the existing option value
         else
           field = self.get_field(f, d)
@@ -1280,7 +1280,7 @@ class MiqRequestWorkflow
     if dlg_field.has_key?(:values)
       field_values = dlg_field[:values]
       $log.info "#{log_header} processing key <#{dialog_name}:#{key}(#{data_type})> with values <#{field_values.inspect}>"
-      if !field_values.blank?
+      if field_values.present?
         result = if field_values.first.kind_of?(MiqHashStruct)
                    found = field_values.detect {|v| v.id == set_value}
                    [found.id, found.name] if found
@@ -1311,7 +1311,7 @@ class MiqRequestWorkflow
     if dlg_field.has_key?(:values)
       field_values = dlg_field[:values]
       $log.info "#{log_header} processing key <#{dialog_name}:#{key}(#{data_type})> with values <#{field_values.inspect}>"
-      if !field_values.blank?
+      if field_values.present?
         result = if field_values.first.kind_of?(MiqHashStruct)
                    found = field_values.detect {|v| v.send(obj_key).to_s.downcase == find_value}
                    [found.id, found.send(obj_key)] if found
@@ -1461,7 +1461,7 @@ class MiqRequestWorkflow
     data.delete(:user_name)
 
     # get owner values from LDAP if configured
-    if !data[:owner_email].blank? && MiqLdap.using_ldap?
+    if data[:owner_email].present? && MiqLdap.using_ldap?
       email = data[:owner_email]
       unless email.include?('@')
         suffix = VMDB::Config.new("vmdb").config[:authentication].fetch_path(:user_suffix)

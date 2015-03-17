@@ -102,7 +102,7 @@
         %h3
           = _('Notes')
         - if @alert_profile.notes.blank?
-          = render :partial => 'layouts/info_msg', :locals => {:message => _(">No notes have been entered.")}
+          = render :partial => 'layouts/info_msg', :locals => {:message => _("No notes have been entered.")}
         - else
           = text_area_tag("notes", @alert_profile.notes, :readonly => true, :rows => 4)
         %hr
@@ -130,9 +130,9 @@
                         - if o.is_a?(EmsFolder)
                           - objs.push("#{o.ext_management_system.name}/#{o.folder_path(:exclude_root_folder => true, :exclude_non_display_folders => true)}")
                         - elsif o.is_a?(ResourcePool)
-                          objs.push(o.absolute_path(:exclude_hidden => true))
+                          - objs.push(o.absolute_path(:exclude_hidden => true))
                         - else
-                          objs.push(o.name)
+                          - objs.push(o.name)
                       - objs.sort(&:downcase).each do |obj|
                         %tr
                           %td

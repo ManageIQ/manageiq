@@ -21,7 +21,7 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(:container_nodes, ems, hashes, deletes, :ems_ref)
+    save_inventory_multi(:container_nodes, ems, hashes, deletes, [:ems_ref])
     store_ids_for_new_records(ems.container_nodes, hashes, :ems_ref)
   end
 
@@ -36,7 +36,7 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(:container_services, ems, hashes, deletes, :ems_ref, [:labels, :selector_parts])
+    save_inventory_multi(:container_services, ems, hashes, deletes, [:ems_ref], [:labels, :selector_parts])
     store_ids_for_new_records(ems.container_services, hashes, :ems_ref)
   end
 
@@ -51,7 +51,7 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(:container_groups, ems, hashes, deletes, :ems_ref, [:container_definitions, :containers, :labels])
+    save_inventory_multi(:container_groups, ems, hashes, deletes, [:ems_ref], [:container_definitions, :containers, :labels])
     store_ids_for_new_records(ems.container_groups, hashes, :ems_ref)
   end
 
@@ -65,7 +65,7 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(:container_definitions, container_group, hashes, deletes, :ems_ref, :container_port_configs)
+    save_inventory_multi(:container_definitions, container_group, hashes, deletes, [:ems_ref], :container_port_configs)
     store_ids_for_new_records(container_group.container_definitions, hashes, :ems_ref)
   end
 
@@ -79,7 +79,7 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(:container_port_configs, container_definition, hashes, deletes, :ems_ref)
+    save_inventory_multi(:container_port_configs, container_definition, hashes, deletes, [:ems_ref])
     store_ids_for_new_records(container_definition.container_port_configs, hashes, :ems_ref)
   end
 
@@ -93,7 +93,7 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(:containers, container_group, hashes, deletes, :ems_ref)
+    save_inventory_multi(:containers, container_group, hashes, deletes, [:ems_ref])
     store_ids_for_new_records(container_group.containers, hashes, :ems_ref)
   end
 

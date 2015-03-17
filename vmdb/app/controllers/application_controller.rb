@@ -762,9 +762,9 @@ class ApplicationController < ActionController::Base
   end
 
   # Common method enable/disable schedules
-  def schedule_enable_disable(schedules, task)
-    MiqSchedule.find_all_by_id(schedules, :order => "lower(name)").each do |schedule|
-      schedule.enabled = (task == "enable")
+  def schedule_enable_disable(schedules, enabled)
+    MiqSchedule.where(:id => schedules, :enabled => !enabled).order("lower(name)").each do |schedule|
+      schedule.enabled = enabled
       schedule.save!
     end
   end

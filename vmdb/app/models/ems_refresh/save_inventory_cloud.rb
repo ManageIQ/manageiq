@@ -85,7 +85,7 @@ module EmsRefresh::SaveInventoryCloud
       []
     end
 
-    save_inventory_multi(:flavors, ems, hashes, deletes, :ems_ref)
+    save_inventory_multi(:flavors, ems, hashes, deletes, [:ems_ref])
     self.store_ids_for_new_records(ems.flavors, hashes, :ems_ref)
   end
 
@@ -99,7 +99,7 @@ module EmsRefresh::SaveInventoryCloud
       []
     end
 
-    save_inventory_multi(:availability_zones, ems, hashes, deletes, :ems_ref)
+    save_inventory_multi(:availability_zones, ems, hashes, deletes, [:ems_ref])
     self.store_ids_for_new_records(ems.availability_zones, hashes, :ems_ref)
   end
 
@@ -113,7 +113,7 @@ module EmsRefresh::SaveInventoryCloud
       []
     end
 
-    save_inventory_multi(:cloud_tenants, ems, hashes, deletes, :ems_ref)
+    save_inventory_multi(:cloud_tenants, ems, hashes, deletes, [:ems_ref])
     self.store_ids_for_new_records(ems.cloud_tenants, hashes, :ems_ref)
   end
 
@@ -145,7 +145,7 @@ module EmsRefresh::SaveInventoryCloud
       []
     end
 
-    save_inventory_multi(:key_pairs, ems, hashes, deletes, :name)
+    save_inventory_multi(:key_pairs, ems, hashes, deletes, [:name])
     self.store_ids_for_new_records(ems.key_pairs, hashes, :name)
   end
 
@@ -169,7 +169,7 @@ module EmsRefresh::SaveInventoryCloud
                          ems,
                          hashes,
                          deletes,
-                         :ems_ref,
+                         [:ems_ref],
                          :cloud_subnets,
                          [:cloud_tenant, :orchestration_stack])
     store_ids_for_new_records(ems.cloud_networks, hashes, :ems_ref)
@@ -182,7 +182,7 @@ module EmsRefresh::SaveInventoryCloud
       h[:availability_zone_id] = h.fetch_path(:availability_zone, :id)
     end
 
-    save_inventory_multi(:cloud_subnets, cloud_network, hashes, deletes, :ems_ref, nil, :availability_zone)
+    save_inventory_multi(:cloud_subnets, cloud_network, hashes, deletes, [:ems_ref], nil, :availability_zone)
 
     cloud_network.save!
     self.store_ids_for_new_records(cloud_network.cloud_subnets, hashes, :ems_ref)
@@ -207,7 +207,7 @@ module EmsRefresh::SaveInventoryCloud
     save_inventory_multi(:security_groups,
                          ems, hashes,
                          deletes,
-                         :ems_ref,
+                         [:ems_ref],
                          :firewall_rules,
                          [:cloud_network, :cloud_tenant, :orchestration_stack])
     store_ids_for_new_records(ems.security_groups, hashes, :ems_ref)
@@ -239,7 +239,7 @@ module EmsRefresh::SaveInventoryCloud
       h[:cloud_tenant_id] = h.fetch_path(:cloud_tenant, :id) if h.key?(:cloud_tenant)
     end
 
-    save_inventory_multi(:floating_ips, ems, hashes, deletes, :ems_ref, nil, [:vm, :cloud_tenant])
+    save_inventory_multi(:floating_ips, ems, hashes, deletes, [:ems_ref], nil, [:vm, :cloud_tenant])
     self.store_ids_for_new_records(ems.floating_ips, hashes, :ems_ref)
   end
 
@@ -268,7 +268,7 @@ module EmsRefresh::SaveInventoryCloud
                                   ems,
                                   hashes,
                                   deletes,
-                                  :ems_ref,
+                                  [:ems_ref],
                                   [:parameters, :outputs, :resources],
                                   [:parent, :orchestration_template])
     store_ids_for_new_records(ems.orchestration_stacks, hashes, :ems_ref)
@@ -290,7 +290,7 @@ module EmsRefresh::SaveInventoryCloud
                          orchestration_stack,
                          hashes,
                          deletes,
-                         :ems_ref)
+                         [:ems_ref])
   end
 
   def save_outputs_inventory(orchestration_stack, hashes)
@@ -300,7 +300,7 @@ module EmsRefresh::SaveInventoryCloud
                          orchestration_stack,
                          hashes,
                          deletes,
-                         :ems_ref)
+                         [:ems_ref])
   end
 
   def save_resources_inventory(orchestration_stack, hashes)
@@ -310,7 +310,7 @@ module EmsRefresh::SaveInventoryCloud
                          orchestration_stack,
                          hashes,
                          deletes,
-                         :ems_ref)
+                         [:ems_ref])
   end
 
   def save_cloud_volumes_inventory(ems, hashes, target = nil)
@@ -330,7 +330,7 @@ module EmsRefresh::SaveInventoryCloud
       # Defer setting :cloud_volume_snapshot_id until after snapshots are saved.
     end
 
-    save_inventory_multi(:cloud_volumes, ems, hashes, deletes, :ems_ref, nil, [:tenant, :availability_zone, :base_snapshot])
+    save_inventory_multi(:cloud_volumes, ems, hashes, deletes, [:ems_ref], nil, [:tenant, :availability_zone, :base_snapshot])
     self.store_ids_for_new_records(ems.cloud_volumes, hashes, :ems_ref)
   end
 
@@ -350,7 +350,7 @@ module EmsRefresh::SaveInventoryCloud
       h[:cloud_volume_id] = h.fetch_path(:volume, :id)
     end
 
-    save_inventory_multi(:cloud_volume_snapshots, ems, hashes, deletes, :ems_ref, nil, [:tenant, :volume])
+    save_inventory_multi(:cloud_volume_snapshots, ems, hashes, deletes, [:ems_ref], nil, [:tenant, :volume])
     self.store_ids_for_new_records(ems.cloud_volume_snapshots, hashes, :ems_ref)
   end
 
@@ -380,7 +380,7 @@ module EmsRefresh::SaveInventoryCloud
       h[:cloud_tenant_id] = h.fetch_path(:tenant, :id)
     end
 
-    save_inventory_multi(:cloud_object_store_containers, ems, hashes, deletes, :ems_ref, nil, :tenant)
+    save_inventory_multi(:cloud_object_store_containers, ems, hashes, deletes, [:ems_ref], nil, :tenant)
     self.store_ids_for_new_records(ems.cloud_object_store_containers, hashes, :ems_ref)
   end
 
@@ -400,7 +400,7 @@ module EmsRefresh::SaveInventoryCloud
       h[:cloud_object_store_container_id] = h.fetch_path(:container, :id)
     end
 
-    save_inventory_multi(:cloud_object_store_objects, ems, hashes, deletes, :ems_ref, nil, [:tenant, :container])
+    save_inventory_multi(:cloud_object_store_objects, ems, hashes, deletes, [:ems_ref], nil, [:tenant, :container])
     self.store_ids_for_new_records(ems.cloud_object_store_objects, hashes, :ems_ref)
   end
 end
