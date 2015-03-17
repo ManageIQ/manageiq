@@ -210,6 +210,7 @@ module ApplicationController::PolicySupport
     end
     @edit[:current] = @edit[:new].dup                 # Save the existing counts
     session[:changed] = false
+    @in_a_form = true
     protect_build_tree                                # Build the protect tree
     build_targets_hash(@politems)
   end
