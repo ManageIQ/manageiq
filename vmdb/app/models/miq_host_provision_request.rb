@@ -68,8 +68,9 @@ class MiqHostProvisionRequest < MiqRequest
     'ems_operations'
   end
 
-  def description
-    @description ||= "PXE install on [#{self.host_name}] from image [#{get_option_last(:pxe_image_id)}]"
-  end
+  private
 
+  def default_description
+    "PXE install on [#{self.host_name}] from image [#{get_option_last(:pxe_image_id)}]"
+  end
 end

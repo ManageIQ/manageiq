@@ -57,9 +57,10 @@ describe MiqRequest do
   end
 
   context "A new request" do
-    let(:event_name) { "hello" }
-    let(:request)    { FactoryGirl.create(:miq_request, :requester => fred) }
-    let(:template)   { FactoryGirl.create(:template_vmware) }
+    let(:event_name)   { "hello" }
+    let(:host_request) { FactoryGirl.build(:miq_host_provision_request, :options => {:src_host_ids => [1]}) }
+    let(:request)      { FactoryGirl.create(:miq_request, :requester => fred) }
+    let(:template)     { FactoryGirl.create(:template_vmware) }
 
     it { expect(request).to be_valid }
     describe("#request_type_display") { it { expect(request.request_type_display).to eq("Unknown") } }
@@ -67,6 +68,29 @@ describe MiqRequest do
 
     it "should not fail when using :select" do
       expect { MiqRequest.find(:all, :select => "requester_name") }.to_not raise_error
+    end
+
+    context "#set_description" do
+      it "should set a description when nil" do
+        expect(host_request.description).to be_nil
+        host_request.should_receive(:update_attributes).with(:description => "PXE install on [] from image []")
+
+        host_request.set_description
+      end
+
+      it "should not set description when one exists" do
+        host_request.description = "test description"
+        host_request.set_description
+
+        expect(host_request.description).to eq("test description")
+      end
+
+      it "should set description when :force => true" do
+        host_request.description = "test description"
+        host_request.should_receive(:update_attributes).with(:description => "PXE install on [] from image []")
+
+        host_request.set_description(true)
+      end
     end
 
     it "#call_automate_event_queue" do
