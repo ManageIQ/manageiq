@@ -1,6 +1,9 @@
 require "spec_helper"
 
 describe MiqRequest do
+  let(:fred)   { FactoryGirl.create(:user, :name => 'Fred Flintstone', :userid => 'fred',   :email => "fred@example.com") }
+  let(:barney) { FactoryGirl.create(:user, :name => 'Barney Rubble',   :userid => 'barney', :email => "barney@example.com") }
+
   context "CONSTANTS" do
     it "REQUEST_TYPES" do
       expected_request_types = {
@@ -19,273 +22,248 @@ describe MiqRequest do
   end
 
   context "Class Methods" do
-    before(:each) do
-      @fred          = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
-      @barney        = FactoryGirl.create(:user, :name => 'Barney Rubble',    :userid => 'barney')
-      @requests_for_fred   = []
-      @requests_for_barney = []
-      @requests_for_fred   << FactoryGirl.create(:miq_request, :requester => @fred)
-      @requests_for_fred   << FactoryGirl.create(:miq_request, :requester => @fred)
-      @requests_for_barney << FactoryGirl.create(:miq_request, :requester => @barney)
+    before do
+      @requests_for_fred   = [FactoryGirl.create(:miq_request, :requester => fred), FactoryGirl.create(:miq_request, :requester => fred)]
+      @requests_for_barney = [FactoryGirl.create(:miq_request, :requester => barney)]
     end
 
     it "#requests_for_userid" do
-      MiqRequest.requests_for_userid(@barney.userid).should match_array(@requests_for_barney)
-      MiqRequest.requests_for_userid(@fred.userid).should   match_array(@requests_for_fred)
+      expect(MiqRequest.requests_for_userid(barney.userid)).to match_array(@requests_for_barney)
+      expect(MiqRequest.requests_for_userid(fred.userid)).to   match_array(@requests_for_fred)
     end
 
     it "#all_requesters" do
-      expected_hash = {}
-      [@fred, @barney].each { |user| expected_hash[user.id] = user.name }
-      MiqRequest.all_requesters.should == expected_hash
+      expected_hash = [fred, barney].each_with_object({}) { |user, hash| hash[user.id] = user.name }
 
-      expected_hash[@barney.id] = "#{@barney.name} (no longer exists)"
-      @barney.destroy
-      MiqRequest.all_requesters.should == expected_hash
+      expect(MiqRequest.all_requesters).to eq(expected_hash)
 
-      old_name = @fred.name
-      new_name = "Fred Flintstone, Sr."
-      @fred.update_attributes(:name => new_name)
-      expected_hash[@fred.id] = old_name
-      MiqRequest.all_requesters.should == expected_hash
-      @fred.update_attributes(:name => old_name)
+      expected_hash[barney.id] = "#{barney.name} (no longer exists)"
+      barney.destroy
 
-      expected_hash[@fred.id] = "#{@fred.name} (no longer exists)"
-      @fred.destroy
-      MiqRequest.all_requesters.should == expected_hash
+      expect(MiqRequest.all_requesters).to eq(expected_hash)
+
+      old_name = expected_hash[fred.id] = fred.name
+      fred.update_attributes(:name => "Fred Flintstone, Sr.")
+
+      expect(MiqRequest.all_requesters).to eq(expected_hash)
+
+      fred.update_attributes(:name => old_name)
+
+      expected_hash[fred.id] = "#{fred.name} (no longer exists)"
+      fred.destroy
+
+      expect(MiqRequest.all_requesters).to eq(expected_hash)
     end
   end
 
   context "A new request" do
-    before(:each) do
-      @fred          = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
-      @approver_role = UiTaskSet.create(:name => "approver", :description => "Approver")
-      @request       = FactoryGirl.create(:miq_request, :requester => @fred)
-    end
+    let(:event_name) { "hello" }
+    let(:request)    { FactoryGirl.create(:miq_request, :requester => fred) }
+    let(:template)   { FactoryGirl.create(:template_vmware) }
 
-    describe("#request_type_display") { it { expect(@request.request_type_display).to eq("Unknown") } }
-
-    it "should validate" do
-      @request.should be_valid
-    end
+    it { expect(request).to be_valid }
+    describe("#request_type_display") { it { expect(request.request_type_display).to eq("Unknown") } }
+    describe("#requester_userid")     { it { expect(request.requester_userid).to eq(fred.userid) } }
 
     it "should not fail when using :select" do
-      lambda { MiqRequest.find(:all,  :select=>"requester_name") }.should_not raise_error
+      expect { MiqRequest.find(:all, :select => "requester_name") }.to_not raise_error
     end
 
     it "#call_automate_event_queue" do
-      zone_name = "New York"
-      MiqServer.stub(:my_zone).and_return(zone_name)
-      event_name = "hello"
-      MiqQueue.count.should == 0
-      @request.call_automate_event_queue(event_name)
-      MiqQueue.count.should == 1
+      MiqServer.stub(:my_zone).and_return("New York")
+
+      expect(MiqQueue.count).to eq(0)
+
+      request.call_automate_event_queue(event_name)
       msg = MiqQueue.first
-      msg.class_name.should  == @request.class.name
-      msg.instance_id.should == @request.id
-      msg.method_name.should == "call_automate_event"
-      msg.zone.should        == zone_name
-      msg.args.should        == [event_name]
-      msg.msg_timeout.should == 1.hour
+
+      expect(MiqQueue.count).to  eq(1)
+      expect(msg.class_name).to  eq(request.class.name)
+      expect(msg.instance_id).to eq(request.id)
+      expect(msg.method_name).to eq("call_automate_event")
+      expect(msg.zone).to        eq("New York")
+      expect(msg.args).to        eq([event_name])
+      expect(msg.msg_timeout).to eq(1.hour)
     end
 
-    it "#call_automate_event" do
-      event_name = "hello"
-      ws         = "foo"
-      err_msg    = "bogus automate error"
-      MiqAeEvent.stub(:raise_evm_event).and_return(ws)
-      @request.call_automate_event(event_name).should == ws
+    context "#call_automate_event" do
+      it "successful" do
+        MiqAeEvent.stub(:raise_evm_event).and_return("foo")
 
-      MiqAeEvent.stub(:raise_evm_event).and_raise(MiqAeException::AbortInstantiation.new(err_msg))
-      lambda { @request.call_automate_event(event_name) }.should raise_error(MiqAeException::Error, err_msg)
+        expect(request.call_automate_event(event_name)).to eq("foo")
+      end
+
+      it "re-raises exceptions" do
+        MiqAeEvent.stub(:raise_evm_event).and_raise(MiqAeException::AbortInstantiation.new("bogus automate error"))
+
+        expect { request.call_automate_event(event_name) }.to raise_error(MiqAeException::Error, "bogus automate error")
+      end
     end
 
     it "#pending" do
-      @request.should_receive(:call_automate_event_queue).with("request_pending").once
-      @request.pending
+      request.should_receive(:call_automate_event_queue).with("request_pending").once
+
+      request.pending
     end
 
     it "#approval_denied" do
-      @request.should_receive(:call_automate_event_queue).with("request_denied").once
-      @request.approval_denied
-      @request.approval_state.should == 'denied'
-    end
+      request.should_receive(:call_automate_event_queue).with("request_denied").once
 
-    it "#requester_userid" do
-      @request.requester_userid.should == @fred.userid
+      request.approval_denied
+
+      expect(request.approval_state).to eq('denied')
     end
 
     context "using Polymorphic Resource" do
-      before(:each) do
-        @template = FactoryGirl.create(:template_vmware)
-        @resource = FactoryGirl.create(:miq_provision_request, :userid => @fred.userid, :src_vm_id => @template.id)
-        @resource.create_request
-        @request = @resource
+      let(:provision_request) { FactoryGirl.create(:miq_provision_request, :userid => fred.userid, :src_vm_id => template.id).create_request }
+
+      it { expect(provision_request.workflow_class).to eq(MiqProvisionVmwareWorkflow) }
+      describe("#get_options")          { it { expect(provision_request.get_options).to eq(:number_of_vms => 1) } }
+      describe("#request_type")         { it { expect(provision_request.request_type).to eq(provision_request.provision_type) } }
+      describe("#request_type_display") { it { expect(provision_request.request_type_display).to eq("VM Provision") } }
+
+      context "#approval_approved" do
+        it "not approved" do
+          provision_request.stub(:approved?).and_return(false)
+
+          expect(provision_request.approval_approved).to be_false
+        end
+
+        it "approved" do
+          provision_request.stub(:approved?).and_return(true)
+
+          provision_request.should_receive(:call_automate_event_queue).with("request_approved").once
+          provision_request.resource.should_receive(:execute).once
+
+          provision_request.approval_approved
+
+          expect(provision_request.approval_state).to eq('approved')
+        end
       end
 
-      it "#approval_approved" do
-        @request.stub(:approved?).and_return(false)
-        @request.approval_approved.should be_false
+      context "#request_status" do
+        context "status nil" do
+          it "approval_state approved" do
+            provision_request.status = nil
+            provision_request.approval_state = 'approved'
+            expect(provision_request.request_status).to eq('Unknown')
+          end
+        end
 
-        @request.stub(:approved?).and_return(true)
-        @request.should_receive(:call_automate_event_queue).with("request_approved").once
-        @request.resource.should_receive(:execute).once
-        @request.approval_approved
-        @request.approval_state.should == 'approved'
-      end
+        context "with status" do
+          it "status hello" do
+            provision_request.approval_state = 'approved'
+            expect(provision_request.request_status).to eq('Ok')
+          end
 
-      it "#request_status" do
-        @request.approval_state  = 'approved'
-        @request.resource.status = 'hello'
-        @request.request_status.should == @request.resource.status
-        @request.resource.status = nil
-        @request.request_status.should == 'Unknown'
-        @request.approval_state  = 'denied'
-        @request.request_status.should == 'Error'
-        @request.approval_state  = 'pending_approval'
-        @request.request_status.should == 'Unknown'
-      end
+          it "approval_state denied" do
+            provision_request.approval_state  = 'denied'
+            expect(provision_request.request_status).to eq('Error')
+          end
 
-      it "#message" do
-        @request.message.should == @resource.message
-      end
-
-      it "#get_options" do
-        @resource.options = { :foo => 1, :bar => 2 }
-        @request.get_options.should == @resource.options
-      end
-
-      it "#status" do
-        @request.status.should == @resource.status
-      end
-
-      it "#request_type" do
-        @request.request_type.should == @resource.provision_type
-      end
-
-      describe("#request_type_display") { it { expect(@request.request_type_display).to eq("VM Provision") } }
-
-      it "#workflow_class" do
-        @request.workflow_class.should == MiqProvisionVmwareWorkflow
+          it "approval_state pending_approval" do
+            provision_request.approval_state  = 'pending_approval'
+            expect(provision_request.request_status).to eq('Unknown')
+          end
+        end
       end
     end
 
     context "using MiqApproval" do
-      before(:each) do
-        @reason         = "Why Not?"
-        @wilma          = FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'wilma',  :email => 'wilma@bedrock.gov')
-        @barney         = FactoryGirl.create(:user, :name => 'Barney Rubble',    :userid => 'barney', :email => 'barney@bedrock.gov')
-        @betty          = FactoryGirl.create(:user, :name => 'Betty Rubble',     :userid => 'betty',  :email => 'betty@bedrock.gov')
-        @wilma_approval = FactoryGirl.create(:miq_approval, :approver => @wilma)
-        @betty_approval = FactoryGirl.create(:miq_approval, :approver => @betty)
-        @request.miq_approvals = [@wilma_approval, @betty_approval]
+      context "no approvals" do
+        it "#build_default_approval" do
+          approval = request.build_default_approval
+
+          expect(approval.description).to eq("Default Approval")
+          expect(approval.approver).to    be_nil
+        end
+
+        it "default values" do
+          expect(request.approver).to            be_nil
+          expect(request.first_approval).to      be_kind_of(MiqApproval)
+          expect(request.reason).to              be_nil
+          expect(request.stamped_by).to          be_nil
+          expect(request.stamped_on).to          be_nil
+          expect(request.v_approved_by).to       be_blank
+          expect(request.v_approved_by_email).to be_blank
+        end
       end
 
-      it "#approved?" do
-        @request.approved?.should be_false
-        @wilma_approval.state = 'approved'
-        @request.approved?.should be_false
-        @betty_approval.state = 'approved'
-        @request.approved?.should be_true
-      end
+      context "with user approvals" do
+        let(:reason)          { "Why Not?" }
+        let(:fred_approval)   { FactoryGirl.create(:miq_approval, :approver => fred, :reason => reason, :stamper => barney, :stamped_on => Time.now) }
+        let(:barney_approval) { FactoryGirl.create(:miq_approval, :approver => barney) }
 
-      it "#build_default_approval" do
-        approval = @request.build_default_approval
-        approval.description.should == "Default Approval"
-        approval.approver.should    be_nil
-      end
+        before { request.miq_approvals = [fred_approval, barney_approval] }
 
-      it "#v_approved_by" do
-        @wilma_approval.approve(@wilma.userid, @reason)
-        @request.v_approved_by.should == "#{@wilma.name}"
-        @betty_approval.approve(@betty.userid, @reason)
-        @request.v_approved_by.should == "#{@wilma.name}, #{@betty.name}"
-        @request.miq_approvals = []
-        @request.v_approved_by.should == ""
-      end
+        it "default values" do
+          expect(request.approver).to       eq(fred.name)
+          expect(request.first_approval).to eq(fred_approval)
+          expect(request.reason).to         eq(reason)
+          expect(request.stamped_by).to     eq(barney.userid)
+          expect(request.stamped_on).to     eq(fred_approval.stamped_on)
+        end
 
-      it "#v_approved_by_email" do
-        @wilma_approval.approve(@wilma.userid, @reason)
-        @request.v_approved_by_email.should == "#{@wilma.email}"
-        @betty_approval.approve(@betty.userid, @reason)
-        @request.v_approved_by_email.should == "#{@wilma.email}, #{@betty.email}"
-        @request.miq_approvals = []
-        @request.v_approved_by_email.should == ""
-      end
+        it "#approved? requires all approvals" do
+          expect(request).to_not be_approved
 
-      it "#approve" do
-        @request.stub(:approved?).and_return(true, false)
-        @wilma_approval.should_receive(:approve).once
-        2.times { @request.approve(@wilma.userid, @reason) }
-      end
+          fred_approval.state = 'approved'
 
-      it "#deny" do
-        @wilma_approval.should_receive(:deny).once
-        @request.deny(@wilma.userid, @reason)
-      end
+          expect(request).to_not be_approved
 
-      it "#first_approval" do
-        @request.first_approval.should == @wilma_approval
-        @request.miq_approvals = []
-        @request.first_approval.should be_kind_of(MiqApproval)
-      end
+          barney_approval.state = 'approved'
 
-      it "#stamped_by" do
-        @wilma_approval.stamper = @betty
-        @request.stamped_by.should == @betty.userid
-        @request.miq_approvals = []
-        @request.stamped_by.should be_nil
-      end
+          expect(request).to     be_approved
+        end
 
-      it "#stamped_on" do
-        now = Time.now
-        @wilma_approval.stamped_on = now
-        @request.stamped_on.should == now
-        @request.miq_approvals = []
-        @request.stamped_on.should be_nil
-      end
+        context "#v_approved_by methods" do
+          it "with one approval" do
+            fred_approval.approve(fred.userid, reason)
 
-      it "#reason" do
-        @wilma_approval.reason = @reason
-        @request.reason.should == @reason
-        @request.miq_approvals = []
-        @request.reason.should be_nil
-      end
+            expect(request.v_approved_by).to       eq(fred.name)
+            expect(request.v_approved_by_email).to eq(fred.email)
+          end
 
-      it "#approver" do
-        @request.approver.should == @wilma.name
-        @request.miq_approvals = []
-        @request.approver.should be_nil
-      end
+          it "with two approvals" do
+            fred_approval.approve(fred.userid, reason)
+            barney_approval.approve(barney.userid, reason)
 
-      # TODO: This is IDENTICAL to #approver method
-      it "#approver_role" do
-        @request.approver.should == @wilma.name
-        @request.miq_approvals = []
-        @request.approver.should be_nil
-      end
+            expect(request.v_approved_by).to       eq("#{fred.name}, #{barney.name}")
+            expect(request.v_approved_by_email).to eq("#{fred.email}, #{barney.email}")
+          end
+        end
 
+        it "#approve" do
+          request.stub(:approved?).and_return(true, false)
+
+          fred_approval.should_receive(:approve).once
+
+          2.times { request.approve(fred.userid, reason) }
+        end
+
+        it "#deny" do
+          fred_approval.should_receive(:deny).once
+
+          request.deny(fred.userid, reason)
+        end
+      end
     end
 
     it "#deny" do
-      MiqServer.stub(:my_zone).and_return("default")
-      vm_template = FactoryGirl.create(:template_vmware, :name => "template1")
-      pr = FactoryGirl.create(:miq_provision_request, :userid => @fred.userid, :src_vm_id => vm_template.id )
-      MiqApproval.any_instance.stub(:authorized?).and_return(true)
+      MiqApproval.any_instance.stub(:authorized? => true)
+      MiqServer.stub(:my_zone => "default")
 
-      reason   = "Why Not?"
-      pr.deny(@fred.userid, reason)
+      provision_request = FactoryGirl.create(:miq_provision_request, :userid => fred.userid, :src_vm_id => template.id)
 
-      pr.miq_approvals.each do |approval|
-        approval.state.should == 'denied'
-      end
+      provision_request.deny(fred.userid, "Why Not?")
 
-      pr.reload
-      pr.status.should == 'Denied'
-      pr.request_state.should == 'finished'
-      pr.approval_state.should == 'denied'
+      provision_request.miq_approvals.each { |approval| expect(approval.state).to eq('denied') }
+
+      provision_request.reload
+
+      expect(provision_request.status).to         eq('Denied')
+      expect(provision_request.request_state).to  eq('finished')
+      expect(provision_request.approval_state).to eq('denied')
     end
-
   end
-
 end
