@@ -94,7 +94,6 @@ describe CatalogController do
 
     after(:each) do
       expect(response.status).to eq(200)
-      assigns(:edit).should be_nil
     end
 
     it "Orchestration Template name and description are edited" do
@@ -111,6 +110,8 @@ describe CatalogController do
       ot.name.should == @new_name
       ot.description.should == @new_description
       ot.content.should == @new_content
+      expect(response.status).to eq(200)
+      assigns(:edit).should be_nil
     end
 
     it "Read-only Orchestration Template content cannot be edited" do
@@ -121,6 +122,25 @@ describe CatalogController do
       session[:edit][:rec_id] = ot.id
       controller.stub(:replace_right_cell)
       controller.send(:ot_edit_submit)
+      ot.reload
+      ot.content.should == original_content
+      expect(response.status).to eq(200)
+      assigns(:edit).should be_nil
+    end
+
+    it "Orchestration Template content cannot be empty during edit" do
+      controller.instance_variable_set(:@_params, :button => "save")
+      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
+      ot = FactoryGirl.create(:orchestration_template)
+      session[:edit][:key] = "ot_edit__#{ot.id}"
+      session[:edit][:rec_id] = ot.id
+      original_content = ot.content
+      new_content = ""
+      controller.params.merge!(:id => ot.id, :template_content => new_content)
+      controller.stub(:replace_right_cell)
+      controller.send(:ot_edit_submit)
+      controller.send(:flash_errors?).should be_true
+      assigns(:flash_array).first[:message].should include("cannot be empty")
       ot.reload
       ot.content.should == original_content
     end
@@ -135,6 +155,7 @@ describe CatalogController do
       controller.send(:ot_edit_submit)
       ot.reload
       ot.draft.should be_true
+      assigns(:edit).should be_nil
     end
   end
 

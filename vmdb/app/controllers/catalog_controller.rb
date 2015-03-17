@@ -901,31 +901,33 @@ class CatalogController < ApplicationController
     assert_privileges("orchestration_template_edit")
     id = params[:id]
     return unless load_edit("ot_edit__#{id}", "replace_cell__explorer")
-    ot = OrchestrationTemplate.find_by_id(@edit[:rec_id])
-    ot.name = @edit[:new][:name]
-    ot.description = @edit[:new][:description]
-    if ot.stacks.length == 0
-      ot.content = params[:template_content]
-      ot.draft = @edit[:new][:draft]
-    end
-    begin
-      ot.save!
-    rescue StandardError => bang
-      add_flash(_("Error during '%s': ") % "Orchestration Template Edit" << bang.message, :error)
+    if params.key?(:template_content) && params[:template_content] == ""
+      add_flash(_("New template content cannot be empty"), :error)
+      ot_action_submit_flash
     else
-      add_flash(_("%{model} \"%{name}\" was saved") %
-                {:model => ui_lookup(:model => 'OrchestrationTemplate'),
-                 :name  => @edit[:new][:name]})
-    end
-    if @flash_array
-      render :update do |page|
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+      ot = OrchestrationTemplate.find_by_id(@edit[:rec_id])
+      ot.name = @edit[:new][:name]
+      ot.description = @edit[:new][:description]
+      if ot.stacks.length == 0
+        ot.content = params[:template_content]
+        ot.draft = @edit[:new][:draft]
+      end
+      begin
+        ot.save!
+      rescue StandardError => bang
+        add_flash(_("Error during '%s': ") % "Orchestration Template Edit" << bang.message, :error)
+        ot_action_submit_flash
+      else
+        add_flash(_("%{model} \"%{name}\" was saved") %
+                  {:model => ui_lookup(:model => 'OrchestrationTemplate'),
+                   :name  => @edit[:new][:name]})
+        ot_action_submit_flash
+        @changed = session[:changed] = false
+        @in_a_form = false
+        @edit = session[:edit] = nil
+        replace_right_cell(nil, trees_to_replace([:ot]))
       end
     end
-    @changed = session[:changed] = false
-    @in_a_form = false
-    @edit = session[:edit] = nil
-    replace_right_cell(nil, trees_to_replace([:ot]))
   end
 
   def ot_edit_submit_reset
@@ -1019,10 +1021,10 @@ class CatalogController < ApplicationController
     load_edit("ot_add__new", "replace_cell__explorer")
     if !%w(OrchestrationTemplateHot OrchestrationTemplateCfn).include?(@edit[:new][:type])
       add_flash(_("\"%s\" is not a valid Orchestration Template type") % @edit[:new][:type], :error)
-      ot_add_submit_flash
+      ot_action_submit_flash
     elsif params[:content].nil? || params[:content].strip == ""
       add_flash(_("Error during Orchestration Template creation: new template content cannot be empty"), :error)
-      ot_add_submit_flash
+      ot_action_submit_flash
     else
       ot = OrchestrationTemplate.new(
         :name        => @edit[:new][:name],
@@ -1034,7 +1036,7 @@ class CatalogController < ApplicationController
         ot.save!
       rescue StandardError => bang
         add_flash(_("Error during '%s': ") % "Orchestration Template creation" << bang.message, :error)
-        ot_add_submit_flash
+        ot_action_submit_flash
       else
         add_flash(_("%{model} \"%{name}\" was saved") %
                     {:model => ui_lookup(:model => 'OrchestrationTemplate'),
@@ -1044,7 +1046,7 @@ class CatalogController < ApplicationController
         self.x_node = "xx-%{type}_ot-%{cid}" % {:type => ot.type == "OrchestrationTemplateHot" ? "othot" : "otcfn",
                                                 :cid  => to_cid(ot.id)}
         self.x_tree[:open_nodes].push(self.x_node)
-        ot_add_submit_flash
+        ot_action_submit_flash
         @changed = session[:changed] = false
         @in_a_form = false
         @edit = session[:edit] = nil
@@ -1053,7 +1055,7 @@ class CatalogController < ApplicationController
     end
   end
 
-  def ot_add_submit_flash
+  def ot_action_submit_flash
     render :update do |page|
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
     end
