@@ -33,7 +33,7 @@ module MiqAeServiceMiqProvisionMixin
   end
 
   def check_quota(quota_type, options={})
-    object_send(:check_quota, quota_type, options)
+    drb_return(object_send(:check_quota, quota_type, options))
   end
 
   def eligible_resources(rsc_type)
