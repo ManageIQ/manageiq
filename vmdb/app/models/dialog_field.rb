@@ -50,8 +50,7 @@ class DialogField < ActiveRecord::Base
     "DialogFieldTagControl"      => "Tag Control",
     "DialogFieldDateControl"     => "Date Control",
     "DialogFieldDateTimeControl" => "Date/Time Control",
-    "DialogFieldRadioButton"     => "Radio Button",
-    "DialogFieldDynamicList"     => "Drop Down Dynamic List",
+    "DialogFieldRadioButton"     => "Radio Button"
   }
 
   DIALOG_FIELD_DYNAMIC_CLASSES = %w(

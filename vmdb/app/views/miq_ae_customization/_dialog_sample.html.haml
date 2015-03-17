@@ -58,10 +58,7 @@
                             = select_tag("start_hour", options_for_select(Array.new(24) { |i| i }, 0))
                             \:
                             = select_tag("start_min", options_for_select(Array.new(12)  { |i| i * 5 }, 0))
-                        - when 'DialogFieldDynamicList'
-                          = select_tag('field.id', options_for_select([_('Option 1'), _('Option 2')], field.default_value))
-                          - if field.show_refresh_button?
-                            = button_tag('Refresh', :disabled => true)
+
                         - when "DialogFieldDropDownList", "DialogFieldRadioButton"
                           - if field.dynamic
                             - if field.type == "DialogFieldRadioButton"

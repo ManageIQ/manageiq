@@ -22,22 +22,6 @@
       - when 'DialogFieldDateControl', 'DialogFieldDateTimeControl'
         = render(:partial => "shared/dialogs/dialog_field_date_and_date_time_control.haml", :locals => locals)
 
-      - when 'DialogFieldDynamicList'
-        - if edit
-          = select_tag(field.name,
-                       options_for_select(field.values.collect(&:reverse), wf.value(field.name)),
-                       'data-miq_sparkle_on'  => true,
-                       'data-miq_sparkle_off' => true,
-                       'data-miq_observe'     => { :url => url }.to_json)
-          - if field.show_refresh_button?
-            = button_tag(_('Refresh'),
-                         :onclick  => remote_function(:url      => { :action => 'dynamic_list_refresh',
-                                                                     :id     => field.name },
-                                                      :loading  => "miqSparkle(true);",
-                                                      :complete => "miqSparkle(false);"))
-        - else
-          = h(field.values.detect { |k, _v| k == wf.value(field.name) }.try(:last) || wf.value(field.name))
-
       - when "DialogFieldRadioButton"
         = render(:partial => "shared/dialogs/dialog_field_radio_button", :locals => locals)
 
