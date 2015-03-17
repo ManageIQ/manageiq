@@ -181,17 +181,12 @@ module EmsRefresh
     child_keys = [:operating_system, :hardware]
     remove_keys = child_keys
 
-    # Backup keys that cannot be written directly to the database
-    key_backup = backup_keys(hash, remove_keys)
-
     begin
       raise MiqException::MiqIncompleteData if hash[:invalid]
 
       $log.info("#{log_header} Updating Vm [#{vm.name}] id: [#{vm.id}] location: [#{vm.location}] storage id: [#{vm.storage_id}] uid_ems: [#{vm.uid_ems}]")
-      vm.update_attributes!(hash)
-
-      save_child_inventory(vm, key_backup, child_keys)
-
+      vm.update_attributes!(hash.except(*remove_keys))
+      save_child_inventory(vm, hash, child_keys)
       vm.save!
       hash[:id] = vm.id
     rescue => err
@@ -200,8 +195,6 @@ module EmsRefresh
       name = hash[:name] || hash[:uid_ems] || hash[:ems_ref]
       $log.send(err.kind_of?(MiqException::MiqIncompleteData) ? :warn : :error, "#{log_header} Processing Vm: [#{name}] failed with error [#{err}]. Skipping Vm.")
       $log.log_backtrace(err) unless err.kind_of?(MiqException::MiqIncompleteData)
-    ensure
-      restore_keys(hash, remove_keys, key_backup)
     end
   end
 
