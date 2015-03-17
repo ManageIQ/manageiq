@@ -1589,6 +1589,7 @@ Vmdb::Application.routes.draw do
         drift_to_pdf
         drift_to_txt
         explorer
+        launch_html5_console
         perf_chart_chooser
         protect
         show
@@ -1602,11 +1603,13 @@ Vmdb::Application.routes.draw do
         edit_vm
         event_logs
         explorer
+        launch_html5_console
         filesystems
         filesystem_drivers
         form_field_changed
         guest_applications
         groups
+        html5_console
         kernel_drivers
         linux_initprocesses
         ownership_field_changed

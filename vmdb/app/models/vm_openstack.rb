@@ -1,5 +1,6 @@
 class VmOpenstack < VmCloud
   include_concern 'Operations'
+  include_concern 'RemoteConsole'
 
   belongs_to :cloud_tenant
 
