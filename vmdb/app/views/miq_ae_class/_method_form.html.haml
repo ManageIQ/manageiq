@@ -39,10 +39,10 @@
   = render :partial => "method_data", :locals => {:field_name => "#{prefix}method"}
   %hr
   %h3=_("Input Parameters")
-  %table.style3{:style => "margin: 0;"}
+  %table.table.table-bordered.table-striped
     %thead
       %tr
-        %th.special
+        %th
           = link_to(image_tag("/images/toolbars/squashed-#{@sb[:squash_state]}.png",
             :class => "rollover small",
             :id    => "exp_collapse_img",
