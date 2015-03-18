@@ -75,7 +75,7 @@ module Metric::CiMixin::Rollup
       new_perf = {
         :timestamp => time,
         :capture_interval_name => (interval_name == 'historical' ? 'hourly' : interval_name)
-      }.with_indifferent_access
+      }
       new_perf[:time_profile_id] = time_profile_id unless time_profile_id.nil?
 
       perf = nil
@@ -85,7 +85,7 @@ module Metric::CiMixin::Rollup
       end
 
       Benchmark.realtime_block(:rollup_perfs) do
-        new_perf = Metric::Rollup.send("rollup_#{interval_name}", self, time, interval_name, time_profile, new_perf, perf.attributes)
+        new_perf = Metric::Rollup.send("rollup_#{interval_name}", self, time, interval_name, time_profile, new_perf, perf.attributes.symbolize_keys)
       end
 
       Benchmark.realtime_block(:db_update_perf) { perf.update_attributes(new_perf) }
