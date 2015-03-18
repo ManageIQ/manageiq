@@ -1,6 +1,6 @@
 ---
 :name: miq_provision_redhat_dialogs_template
-:description: Sample RedHat VM Provisioning Dialog
+:description: Sample Red Hat VM Provisioning Dialog
 :dialog_type: MiqProvisionWorkflow
 :content:
   :buttons:
