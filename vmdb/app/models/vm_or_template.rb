@@ -60,7 +60,7 @@ class VmOrTemplate < ActiveRecord::Base
   belongs_to                :ext_management_system, :foreign_key => "ems_id"
 
   has_one                   :miq_provision, :dependent => :nullify, :as => :destination
-  has_many                  :miq_provisions_from_template, :class_name => "MiqProvision", :as => :source, :dependent => :nullify
+  has_many                  :miq_provisions_from_template, :class_name => "MiqProvisionTaskVirt", :as => :source, :dependent => :nullify
   has_many                  :miq_provision_vms, :through => :miq_provisions_from_template, :source => :vm, :class_name => "Vm"
   has_many                  :miq_provision_requests, :as => :source, :dependent => :destroy
 

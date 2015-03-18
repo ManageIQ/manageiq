@@ -1,4 +1,4 @@
-module MiqProvision::Ownership
+module MiqProvisionTaskVirt::Ownership
   def set_ownership(vm, user)
     log_header = "MIQ(#{self.class.name}#set_ownership)"
 

@@ -1,4 +1,4 @@
-class MiqProvisionRedhat < MiqProvision
+class MiqProvisionRedhat < MiqProvisionTaskVirt
   include_concern 'Cloning'
   include_concern 'Configuration'
   include_concern 'Placement'

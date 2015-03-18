@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe MiqProvision do
+describe MiqProvisionTaskVirt do
   context "A new provision request," do
     before(:each) do
       @os = OperatingSystem.new(:product_name => 'Microsoft Windows')
@@ -29,7 +29,7 @@ describe MiqProvision do
         before(:each) do
           @pr       = FactoryGirl.create(:miq_provision_request, :userid => @user.userid, :src_vm_id => @vm_template.id )
           @options[:src_vm_id] = [@vm_template.id, @vm_template.name]
-          @vm_prov = FactoryGirl.create(:miq_provision, :userid => @user.userid, :miq_request => @pr, :source => @vm_template, :request_type => 'template', :state => 'pending', :status => 'Ok', :options => @options )
+          @vm_prov = FactoryGirl.create(:miq_provision_task_virt, :userid => @user.userid, :miq_request => @pr, :source => @vm_template, :request_type => 'template', :state => 'pending', :status => 'Ok', :options => @options )
         end
 
         it "should get values out of an arrays in the options hash" do
@@ -145,7 +145,7 @@ describe MiqProvision do
 
   context "#eligible_resources" do
     it "workflow should be called with placement_auto = false and skip_dialog_load = true" do
-      prov     = FactoryGirl.build(:miq_provision)
+      prov     = FactoryGirl.build(:miq_provision_task_virt)
       host     = active_record_instance_double('Host', :id => 1, :name => 'my_host')
       workflow = instance_double("MiqProvisionWorkflow", :allowed_hosts => [host])
 

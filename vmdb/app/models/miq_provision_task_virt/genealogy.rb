@@ -1,4 +1,4 @@
-module MiqProvision::Genealogy
+module MiqProvisionTaskVirt::Genealogy
   def set_genealogy(child, parent)
     log_header = "MIQ(#{self.class.name}#set_genealogy)"
 

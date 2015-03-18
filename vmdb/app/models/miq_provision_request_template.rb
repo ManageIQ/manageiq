@@ -30,7 +30,7 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
   end
 
   def request_task_class
-    MiqProvision
+    MiqProvisionTaskVirt
   end
 
   def execute

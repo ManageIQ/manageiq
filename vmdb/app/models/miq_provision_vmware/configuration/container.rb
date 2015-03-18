@@ -66,7 +66,7 @@ module MiqProvisionVmware::Configuration::Container
   end
 
   def set_spec_option(obj, property, key, default_value=nil, modifier=nil, override_value=nil)
-    log_header = "MiqProvision.set_spec_option"
+    log_header = "#{self.class.name}.set_spec_option"
     if key.nil?
       value = get_option(nil, override_value)
     else
@@ -110,7 +110,7 @@ module MiqProvisionVmware::Configuration::Container
   end
 
   def set_cpu_and_memory_allocation(vm)
-    log_header = "MIQ (MiqProvision#set_cpu_and_memory_allocation)"
+    log_header = "MIQ (#{self.class.name}#set_cpu_and_memory_allocation)"
 
     config_spec = VimHash.new("VirtualMachineConfigSpec") do |vmcs|
       vmcs.cpuAllocation    = VimHash.new("ResourceAllocationInfo") do |rai|

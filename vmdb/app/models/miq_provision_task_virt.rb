@@ -1,10 +1,5 @@
-class MiqProvision < MiqRequestTask
-  SUBCLASSES = %w{
-    MiqProvisionCloud
-    MiqProvisionRedhat
-    MiqProvisionVmware
-  }
-
+class MiqProvisionTaskVirt < MiqProvisionTask
+  include MiqProvisionMixin
   include_concern 'Automate'
   include_concern 'CustomAttributes'
   include_concern 'Description'
@@ -21,39 +16,27 @@ class MiqProvision < MiqRequestTask
   include_concern 'StateMachine'
   include_concern 'Tagging'
 
-  alias_attribute :provision_type,        :request_type
   alias_attribute :miq_provision_request, :miq_request
   alias_attribute :vm,                    :destination
   alias_attribute :vm_template,           :source
 
-  include ReportableMixin
-
-  validates_inclusion_of :state,          :in => %w{ pending queued active provisioned finished }, :message => "should be pending, queued, active, provisioned or finished"
-  #validates_presence_of  :source_id,      :message => "must have valid template"
-
-  include MiqProvisionMixin
-  include MiqProvisionQuotaMixin
-
-  AUTOMATE_DRIVES   = true
-  CLONE_SYNCHRONOUS = false
-  CLONE_TIME_LIMIT  = 4.hours
-
-  DEFAULT_IMPORT = File.expand_path(File.join(Rails.root, "db/fixtures/miq_provision_automate.xml"))
-  PROVISION_AE_CLASSES = ["EVM/PROVISION", "EVM/MAX_VMS", "EVM/TTL_WARNINGS", "EVM/TTL"]
-  SUPPORTED_EMS_CLASSES = %w{EmsVmware EmsRedhat EmsAmazon EmsOpenstack}
-
-  virtual_belongs_to :miq_provision_request
   virtual_belongs_to :vm
   virtual_belongs_to :vm_template
 
-  virtual_column     :provision_type,       :type => :string
-  virtual_column     :placement_auto,       :type => :boolean
+  virtual_column :placement_auto, :type => :boolean
+
+  before_create :set_template_and_networking
+
+  CLONE_SYNCHRONOUS     = false
+  CLONE_TIME_LIMIT      = 4.hours
+  DEFAULT_IMPORT        = File.expand_path(File.join(Rails.root, "db/fixtures/miq_provision_automate.xml"))
+  PROVISION_AE_CLASSES  = ["EVM/PROVISION", "EVM/MAX_VMS", "EVM/TTL_WARNINGS", "EVM/TTL"]
+  SUBCLASSES            = %w(MiqProvisionCloud MiqProvisionRedhat MiqProvisionVmware)
+  SUPPORTED_EMS_CLASSES = %w(EmsVmware EmsRedhat EmsAmazon EmsOpenstack)
 
   def self.base_model
-    MiqProvision
+    MiqProvisionTaskVirt
   end
-
-  before_create      :set_template_and_networking
 
   def set_template_and_networking
     self.source = get_source
@@ -80,11 +63,11 @@ class MiqProvision < MiqRequestTask
   end
 
   def after_request_task_create
-    vm_name                           = self.get_next_vm_name
-    self.options[:vm_target_name]     = vm_name
-    self.options[:vm_target_hostname] = get_hostname(vm_name)
-    self.description                  = self.class.get_description(self, vm_name)
-    self.save
+    vm_name                      = get_next_vm_name
+    options[:vm_target_name]     = vm_name
+    options[:vm_target_hostname] = get_hostname(vm_name)
+    self.description             = self.class.get_description(self, vm_name)
+    save
   end
 
   def after_ae_delivery(ae_result)
@@ -93,12 +76,12 @@ class MiqProvision < MiqRequestTask
     $log.info("#{log_header} ae_result=#{ae_result.inspect}")
 
     return if ae_result == 'retry'
-    return if self.miq_request.state == 'finished'
+    return if miq_request.state == 'finished'
 
     if ae_result == 'ok'
-      update_and_notify_parent(:state => "finished", :status => "Ok",    :message => "#{self.request_class::TASK_DESCRIPTION} completed")
+      update_and_notify_parent(:state => "finished", :status => "Ok", :message => "#{request_class::TASK_DESCRIPTION} completed")
     else
-      update_and_notify_parent(:state => "finished", :status => "Error" )
+      update_and_notify_parent(:state => "finished", :status => "Error")
     end
   end
 
@@ -116,4 +99,4 @@ end
 
 # Preload any subclasses of this class, so that they will be part of the
 #   conditions that are generated on queries against this class.
-MiqProvision::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}.rb").to_s }
+MiqProvisionTaskVirt::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}.rb").to_s }

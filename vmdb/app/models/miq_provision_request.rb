@@ -64,7 +64,7 @@ class MiqProvisionRequest < MiqRequest
   def set_description(force = false)
     prov_description = nil
     if self.description.nil? || force == true
-      prov_description = MiqProvision.get_description(self, MiqProvision.get_next_vm_name(self, false))
+      prov_description = MiqProvisionTaskVirt.get_description(self, MiqProvisionTaskVirt.get_next_vm_name(self, false))
     end
     # Capture self.options after running 'get_next_vm_name' method since automate may update the object
     attrs = {:options => self.options.merge(:delivered_on => nil)}
@@ -93,7 +93,7 @@ class MiqProvisionRequest < MiqRequest
   def self.ready?(userid)
     # must have at least one dept, env
     # if env includes prod must have at least one service_level
-    prov = MiqProvision.new(:userid => userid)
+    prov = MiqProvisionTaskVirt.new(:userid => userid)
     dept = prov.allowed(:department)
     env  = prov.allowed(:environment)
 

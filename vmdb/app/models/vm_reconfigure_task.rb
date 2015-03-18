@@ -62,7 +62,7 @@ class VmReconfigureTask < MiqRequestTask
 
   # Set the value if it is not nil
   def set_spec_option(obj, property, key, default_value=nil, modifier=nil, override_value=nil)
-    log_header = "MiqProvision.set_spec_option"
+    log_header = "#{self.class.name}.set_spec_option"
     if key.nil?
       value = get_option(nil, override_value)
     else

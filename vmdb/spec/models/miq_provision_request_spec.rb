@@ -125,7 +125,7 @@ describe MiqProvisionRequest do
           stats[:count].should == 2
           stats[:memory].should == 2048
           stats[:cpu].should == 4
-          stats.fetch_path(:active, :class_name).should == "MiqProvision"
+          stats.fetch_path(:active, :class_name).should == "MiqProvisionTaskVirt"
         end
       end
 

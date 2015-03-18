@@ -1,4 +1,4 @@
-module MiqProvision::Naming
+module MiqProvisionTaskVirt::Naming
   extend ActiveSupport::Concern
 
   NAME_VIA_AUTOMATE = true
@@ -6,14 +6,14 @@ module MiqProvision::Naming
   SOURCE_IDENTIFIER = "provisioning"  # a unique name for the source column in custom_attributes table
 
   module ClassMethods
-    def get_next_vm_name(prov_obj, determine_index=true)
-      log_header = "MiqProvision.get_next_vm_name"
+    def get_next_vm_name(prov_obj, determine_index = true)
+      log_header = "#{self.class.name}.get_next_vm_name"
 
       unresolved_vm_name = nil
 
       if NAME_VIA_AUTOMATE == true
         prov_obj.save
-        attrs = { 'request' => 'UI_PROVISION_INFO', 'message' => 'get_vmname' }
+        attrs = {'request' => 'UI_PROVISION_INFO', 'message' => 'get_vmname'}
         attrs[MiqAeEngine.create_automation_attribute_key(prov_obj.get_user)] = MiqAeEngine.create_automation_attribute_value(prov_obj.get_user) unless prov_obj.get_user.nil?
         uri = MiqAeEngine.create_automation_object("REQUEST", attrs, :vmdb_object => prov_obj)
         ws  = MiqAeEngine.resolve_automation_object(uri)
@@ -37,13 +37,13 @@ module MiqProvision::Naming
       end
 
       vm_name = get_vm_full_name(unresolved_vm_name, prov_obj, determine_index)
-      return vm_name
+      vm_name
     end
 
     def get_vm_full_name(unresolved_vm_name, prov_obj, determine_index)
       # Split name to find the index substitution string
       if unresolved_vm_name =~ NAME_SEQUENCE_REGEX
-        name = {:prefix => $`, :suffix => $', :index => $&, :index_length => $1.to_i}
+        name = {:prefix => $`, :suffix => $', :index => $&, :index_length => Regexp.last_match(1).to_i}
       else
         # If we did not find the index substitution string just return what was passed in
         return unresolved_vm_name
@@ -76,7 +76,7 @@ module MiqProvision::Naming
     end
   end
 
-  def get_next_vm_name()
+  def get_next_vm_name
     self.class.get_next_vm_name(self)
   end
 end
