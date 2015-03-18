@@ -52,11 +52,11 @@
           %h3=_('Windows Images')
           %table.table.table-bordered.table-hover.table-striped
             %thead
-            %tr
-              %th=_('Name')
-              %th=_('Description')
-              %th=_('Path')
-              %th=_('Index')
+              %tr
+                %th=_('Name')
+                %th=_('Description')
+                %th=_('Path')
+                %th=_('Index')
             %tbody
               - @ps.windows_images.sort_by { |a| a.name.downcase }.each do |i|
                 %tr{:title => _("View this Windows Image"),
