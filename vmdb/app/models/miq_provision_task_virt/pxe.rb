@@ -37,7 +37,7 @@ module MiqProvisionTaskVirt::Pxe
   def cidr
     subnet_mask = get_option(:subnet_mask)
     require 'ipaddr'
-    Integer(32 - Math.log2((IPAddr.new(subnet_mask.to_s,Socket::AF_INET).to_i ^ 0xffffffff) + 1))
+    Integer(32 - Math.log2((IPAddr.new(subnet_mask.to_s, Socket::AF_INET).to_i ^ 0xffffffff) + 1))
   rescue ArgumentError => err
     $log.warn "MIQ(#{self.class.name}#cidr) Cannot convert subnet #{subnet_mask.inspect} to CIDR because #{err.message}"
     return nil
@@ -46,11 +46,11 @@ module MiqProvisionTaskVirt::Pxe
   def prepare_customization_template_substitution_options(mac_address = nil)
     substitution_options = nil
     if customization_template
-      substitution_options = self.options.dup
-      substitution_options[:miq_provision_id]             = self.id
+      substitution_options                             = options.dup
+      substitution_options[:miq_provision_id]          = id
       substitution_options[:post_install_callback_url] = post_install_callback_url
-      substitution_options[:cidr]                         = cidr
-      substitution_options[:mac_address]                  = mac_address if mac_address
+      substitution_options[:cidr]                      = cidr
+      substitution_options[:mac_address]               = mac_address if mac_address
     end
     substitution_options
   end

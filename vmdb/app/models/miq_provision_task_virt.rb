@@ -32,7 +32,7 @@ class MiqProvisionTaskVirt < MiqProvisionTask
   DEFAULT_IMPORT        = File.expand_path(File.join(Rails.root, "db/fixtures/miq_provision_automate.xml"))
   PROVISION_AE_CLASSES  = ["EVM/PROVISION", "EVM/MAX_VMS", "EVM/TTL_WARNINGS", "EVM/TTL"]
   SUBCLASSES            = %w(MiqProvisionCloud MiqProvisionRedhat MiqProvisionVmware)
-  SUPPORTED_EMS_CLASSES = %w{EmsVmware EmsRedhat EmsAmazon EmsOpenstack}
+  SUPPORTED_EMS_CLASSES = %w(EmsVmware EmsRedhat EmsAmazon EmsOpenstack)
 
   def self.base_model
     MiqProvisionTaskVirt
@@ -63,11 +63,11 @@ class MiqProvisionTaskVirt < MiqProvisionTask
   end
 
   def after_request_task_create
-    vm_name                           = self.get_next_vm_name
-    self.options[:vm_target_name]     = vm_name
-    self.options[:vm_target_hostname] = get_hostname(vm_name)
-    self.description                  = self.class.get_description(self, vm_name)
-    self.save
+    vm_name                      = get_next_vm_name
+    options[:vm_target_name]     = vm_name
+    options[:vm_target_hostname] = get_hostname(vm_name)
+    self.description             = self.class.get_description(self, vm_name)
+    save
   end
 
   def after_ae_delivery(ae_result)
@@ -76,12 +76,12 @@ class MiqProvisionTaskVirt < MiqProvisionTask
     $log.info("#{log_header} ae_result=#{ae_result.inspect}")
 
     return if ae_result == 'retry'
-    return if self.miq_request.state == 'finished'
+    return if miq_request.state == 'finished'
 
     if ae_result == 'ok'
-      update_and_notify_parent(:state => "finished", :status => "Ok",    :message => "#{self.request_class::TASK_DESCRIPTION} completed")
+      update_and_notify_parent(:state => "finished", :status => "Ok", :message => "#{request_class::TASK_DESCRIPTION} completed")
     else
-      update_and_notify_parent(:state => "finished", :status => "Error" )
+      update_and_notify_parent(:state => "finished", :status => "Error")
     end
   end
 
