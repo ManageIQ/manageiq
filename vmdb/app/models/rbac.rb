@@ -152,7 +152,7 @@ module Rbac
           "(#{original_conditions}) OR (#{ids_clause})"
         end
       end
-    scope.where(cond_for_count).includes(includes).count
+    scope.where(cond_for_count).includes(includes).references(includes).count
   end
 
   def self.find_reflection(klass, association_to_match)
@@ -164,7 +164,7 @@ module Rbac
   end
 
   def self.find_targets_filtered_by_parent_ids(parent_class, klass, scope, find_options, filtered_ids)
-    total_count = scope.where(find_options[:conditions]).includes(find_options[:include]).count
+    total_count = scope.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count
     if filtered_ids.kind_of?(Array)
       reflection = find_reflection(klass, parent_class.name.underscore.to_sym)
       if reflection
@@ -177,7 +177,7 @@ module Rbac
       $log.debug("MIQ(RBAC.find_targets_filtered_by_parent_ids): New Find options: #{find_options.inspect}")
     end
     targets     = self.method_with_scope(scope, find_options)
-    auth_count  = scope.where(find_options[:conditions]).includes(find_options[:include]).count
+    auth_count  = scope.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count
 
     return targets, total_count, auth_count
   end
@@ -191,7 +191,7 @@ module Rbac
       $log.debug("MIQ(RBAC.find_targets_filtered_by_ids): New Find options: #{find_options.inspect}")
     end
     targets     = self.method_with_scope(scope, find_options)
-    auth_count  = klass.count(:conditions => find_options[:conditions], :include => find_options[:include])
+    auth_count  = klass.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count
 
     return targets, total_count, auth_count
   end
@@ -230,7 +230,7 @@ module Rbac
       end
 
       cond, incl = MiqExpression.merge_where_clauses_and_includes([find_options[:condition], cond].compact, [find_options[:include]].compact)
-      targets = klass.all(find_options.merge(:conditions => cond, :include => incl))
+      targets = klass.all(find_options.except(:conditions, :include)).where(cond).includes(incl).references(incl)
 
       [targets, targets.length, targets.length]
     else
@@ -247,7 +247,7 @@ module Rbac
 
   def self.find_targets_without_rbac(klass, scope, find_options = {})
     targets     = self.method_with_scope(scope, find_options)
-    total_count = find_options[:limit] ? scope.where(find_options[:conditions]).includes(find_options[:include]).count : targets.length
+    total_count = find_options[:limit] ? scope.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count : targets.length
 
     return targets, total_count, total_count
   end
