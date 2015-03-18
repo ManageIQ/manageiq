@@ -1262,6 +1262,11 @@ module ApplicationHelper
       when "db_delete"
         return "Default Dashboard cannot be deleted" if @db.read_only
       end
+    when "OrchestrationTemplateCfn", "OrchestrationTemplateHot"
+      case id
+      when "orchestration_template_remove"
+        return "Read-only Orchestration Template cannot be deleted" if @record.stacks.length > 0
+      end
     when "Service"
       case id
       when "service_retire_now"

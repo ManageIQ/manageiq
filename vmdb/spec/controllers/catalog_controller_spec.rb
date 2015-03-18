@@ -166,4 +166,18 @@ describe CatalogController do
       OrchestrationTemplate.find_by_id(ot.id).should be_nil
     end
   end
+
+  context "#ot_ro_cannot_delete" do
+    it "Read-only Orchestration Template cannot deleted" do
+      ot = FactoryGirl.create(:orchestration_template_with_stacks)
+      controller.instance_variable_set(:@sb, {})
+      controller.instance_variable_set(:@_params, :id => ot.id, :pressed => "orchestration_template_remove")
+      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
+      controller.stub(:replace_right_cell)
+      controller.send(:ot_remove_submit)
+      controller.send(:flash_errors?).should be_true
+      assigns(:flash_array).first[:message].should include("read-only and cannot be deleted")
+      OrchestrationTemplate.find_by_id(ot.id).should_not be_nil
+    end
+  end
 end
