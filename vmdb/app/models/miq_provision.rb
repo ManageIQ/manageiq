@@ -1,10 +1,5 @@
 class MiqProvision < MiqProvisionTask
-  SUBCLASSES = %w{
-    MiqProvisionCloud
-    MiqProvisionRedhat
-    MiqProvisionVmware
-  }
-
+  include MiqProvisionMixin
   include_concern 'Automate'
   include_concern 'CustomAttributes'
   include_concern 'Description'
@@ -21,31 +16,28 @@ class MiqProvision < MiqProvisionTask
   include_concern 'StateMachine'
   include_concern 'Tagging'
 
-  alias_attribute :vm,                    :destination
-  alias_attribute :vm_template,           :source
+  alias_attribute :vm,          :destination
+  alias_attribute :vm_template, :source
 
+  before_create :set_template_and_networking
 
   #validates_presence_of  :source_id,      :message => "must have valid template"
 
-  include MiqProvisionMixin
+  virtual_belongs_to :vm
+  virtual_belongs_to :vm_template
+  virtual_column     :provision_type, :type => :string
+  virtual_column     :placement_auto, :type => :boolean
 
   CLONE_SYNCHRONOUS = false
   CLONE_TIME_LIMIT  = 4.hours
-
   DEFAULT_IMPORT = File.expand_path(File.join(Rails.root, "db/fixtures/miq_provision_automate.xml"))
   PROVISION_AE_CLASSES = ["EVM/PROVISION", "EVM/MAX_VMS", "EVM/TTL_WARNINGS", "EVM/TTL"]
+  SUBCLASSES = %w{MiqProvisionCloud MiqProvisionRedhat MiqProvisionVmware}
   SUPPORTED_EMS_CLASSES = %w{EmsVmware EmsRedhat EmsAmazon EmsOpenstack}
-
-  virtual_belongs_to :vm
-  virtual_belongs_to :vm_template
-
-  virtual_column     :placement_auto,       :type => :boolean
 
   def self.base_model
     MiqProvision
   end
-
-  before_create      :set_template_and_networking
 
   def set_template_and_networking
     self.source = get_source
