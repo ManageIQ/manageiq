@@ -1,4 +1,4 @@
-class MiqProvision < MiqRequestTask
+class MiqProvision < MiqProvisionTask
   SUBCLASSES = %w{
     MiqProvisionCloud
     MiqProvisionRedhat
@@ -21,20 +21,14 @@ class MiqProvision < MiqRequestTask
   include_concern 'StateMachine'
   include_concern 'Tagging'
 
-  alias_attribute :provision_type,        :request_type
-  alias_attribute :miq_provision_request, :miq_request
   alias_attribute :vm,                    :destination
   alias_attribute :vm_template,           :source
 
-  include ReportableMixin
 
-  validates_inclusion_of :state,          :in => %w{ pending queued active provisioned finished }, :message => "should be pending, queued, active, provisioned or finished"
   #validates_presence_of  :source_id,      :message => "must have valid template"
 
   include MiqProvisionMixin
-  include MiqProvisionQuotaMixin
 
-  AUTOMATE_DRIVES   = true
   CLONE_SYNCHRONOUS = false
   CLONE_TIME_LIMIT  = 4.hours
 
@@ -42,11 +36,9 @@ class MiqProvision < MiqRequestTask
   PROVISION_AE_CLASSES = ["EVM/PROVISION", "EVM/MAX_VMS", "EVM/TTL_WARNINGS", "EVM/TTL"]
   SUPPORTED_EMS_CLASSES = %w{EmsVmware EmsRedhat EmsAmazon EmsOpenstack}
 
-  virtual_belongs_to :miq_provision_request
   virtual_belongs_to :vm
   virtual_belongs_to :vm_template
 
-  virtual_column     :provision_type,       :type => :string
   virtual_column     :placement_auto,       :type => :boolean
 
   def self.base_model
@@ -69,10 +61,6 @@ class MiqProvision < MiqRequestTask
   def execute_queue
     super(:zone        => my_zone,
           :msg_timeout => CLONE_SYNCHRONOUS ? CLONE_TIME_LIMIT : MiqQueue::TIMEOUT)
-  end
-
-  def do_request
-    signal :run_provision
   end
 
   def placement_auto
