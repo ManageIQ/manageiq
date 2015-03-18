@@ -46,8 +46,8 @@
     :items:
     - :button: rbac_user_tags_edit
       :image: tag
-      :text: "Edit '#{session[:customer_name]}' Tags for the selected Users"
-      :title: "Edit '#{session[:customer_name]}' Tags for the selected Users"
+      :text: "Edit '<%= session[:customer_name] %>' Tags for the selected Users"
+      :title: "Edit '<%= session[:customer_name] %>' Tags for the selected Users"
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1+'

@@ -18,16 +18,16 @@
       :url_parms: '?typ=basic'
     - :button: policy_copy
       :image: copy
-      :text: 'Copy this #{ui_lookup(:model=>@policy.towhat)} Policy'
-      :title: 'Copy this Policy to new Policy [#{truncate("Copy of #{@policy.description}", :length => 255, :omission => "")}]'
-      :confirm: 'Are you sure you want to create Policy [#{truncate("Copy of #{@policy.description}", :length => 255, :omission => "")}] from this Policy?'
+      :text: 'Copy this <%= ui_lookup(:model=>@policy.towhat) %> Policy'
+      :title: 'Copy this Policy to new Policy [<%= truncate("Copy of <%= @policy.description %>", :length => 255, :omission => "") %>]'
+      :confirm: 'Are you sure you want to create Policy [<%= truncate("Copy of <%= @policy.description %>", :length => 255, :omission => "") %>] from this Policy?'
       :url_parms: 'main_div'
     - :button: policy_delete
       :image: delete
-      :text: 'Delete this #{ui_lookup(:model=>@policy.towhat)} Policy'
-      :title: 'Delete this #{ui_lookup(:model=>@policy.towhat)} Policy'
+      :text: 'Delete this <%= ui_lookup(:model=>@policy.towhat) %> Policy'
+      :title: 'Delete this <%= ui_lookup(:model=>@policy.towhat) %> Policy'
       :url_parms: 'main_div'
-      :confirm: 'Are you sure you want to delete this #{ui_lookup(:model=>@policy.towhat)} Policy?'
+      :confirm: 'Are you sure you want to delete this <%= ui_lookup(:model=>@policy.towhat) %> Policy?'
     - :button: condition_edit
       :image: new-condition
       :text: 'Create a new Condition assigned to this Policy'
