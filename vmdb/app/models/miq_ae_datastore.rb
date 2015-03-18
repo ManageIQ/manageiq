@@ -7,6 +7,7 @@ module MiqAeDatastore
   DEFAULT_OBJECT_NAMESPACE = "$"
   TEMP_DOMAIN_PREFIX = "TEMP_DOMAIN"
   ALL_DOMAINS = "*"
+  PRESERVED_ATTRS = [:priority, :enabled, :system]
 
   # deprecated module
   module Import
@@ -168,10 +169,13 @@ module MiqAeDatastore
 
   def self.reset_to_defaults
     raise "Datastore directory [#{DATASTORE_DIRECTORY}] not found" unless Dir.exist?(DATASTORE_DIRECTORY)
+    saved_attrs = preserved_attrs_for_domains
     Dir.glob(DATASTORE_DIRECTORY.join("*", MiqAeDomain::DOMAIN_YAML_FILENAME)).each do |domain_file|
       domain_name = File.basename(File.dirname(domain_file))
       reset_domain(DATASTORE_DIRECTORY, domain_name)
     end
+
+    restore_attrs_for_domains(saved_attrs)
     reset_default_namespace
   end
 
@@ -219,5 +223,16 @@ module MiqAeDatastore
     arel = MiqAeDomain.where("lower(name) = ?", name.downcase)
     arel = arel.where(:enabled => enabled) unless enabled.nil?
     arel.first
+  end
+
+  def self.preserved_attrs_for_domains
+    MiqAeDomain.all.each_with_object({}) do |dom, h|
+      next if dom.name.downcase == MANAGEIQ_DOMAIN.downcase
+      h[dom.name] = PRESERVED_ATTRS.each_with_object({}) { |attr, ih| ih[attr] = dom[attr] }
+    end
+  end
+
+  def self.restore_attrs_for_domains(hash)
+    hash.each { |dom, attrs| MiqAeDomain.find_by_fqname(dom, false).update_attributes(attrs) }
   end
 end # module MiqAeDatastore

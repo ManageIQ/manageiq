@@ -130,6 +130,19 @@ describe MiqAeDatastore do
       miq_ae_yaml_import_zipfs.should_receive(:import).once
       MiqAeDatastore.restore(dummy_zipfile)
     end
+
+    it "#restore_attrs_for_domains" do
+      d1 = FactoryGirl.create(:miq_ae_domain, :enabled => false, :system => true,
+                              :priority => 10, :name => "DOM1")
+      d2 = FactoryGirl.create(:miq_ae_domain, :enabled => true, :system => false,
+                              :priority => 11, :name => "DOM2")
+      domain_attributes = MiqAeDatastore.preserved_attrs_for_domains
+      d2.update_attributes(:priority => 6, :enabled => false, :system => true)
+      d1.update_attributes(:priority => 1, :enabled => true, :system => false)
+      MiqAeDatastore.preserved_attrs_for_domains.should_not eq(domain_attributes)
+      MiqAeDatastore.restore_attrs_for_domains(domain_attributes)
+      MiqAeDatastore.preserved_attrs_for_domains.should eq(domain_attributes)
+    end
   end
 
 end
