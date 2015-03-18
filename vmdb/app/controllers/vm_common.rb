@@ -120,9 +120,14 @@ module VmCommon
            :locals   => options
   end
 
+  def websocket_use_ssl?
+    ssl_requested = get_vmdb_config.fetch_path(:server, :websocket, :encrypt)
+    request.ssl? ? ssl_requested != false : ssl_requested == true
+  end
+  private :websocket_use_ssl?
+
   def launch_html5_console
     password, host_address, host_port, _proxy_address, _proxy_port, protocol, ssl = @sb[:html5]
-    encrypt = get_vmdb_config.fetch_path(:server, :websocket_encrypt)
 
     case protocol
     when 'spice'     # spice, vnc - from rhevm
@@ -138,8 +143,8 @@ module VmCommon
       :host       => host_address,
       :host_port  => host_port,
       :password   => password,
-      :ssl_target => ssl,       # ssl on provider side
-      :encrypt    => encrypt    # ssl on web client side
+      :ssl_target => ssl,               # ssl on provider side
+      :encrypt    => websocket_use_ssl? # ssl on web client side
     )
     raise _("Console access failed: proxy errror") if proxy_options.nil?
 

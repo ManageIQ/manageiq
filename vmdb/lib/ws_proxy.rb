@@ -3,6 +3,8 @@ class WsProxy
   attr_reader :proxy_port
 
   PORT_RANGE = 5900..5999
+  DEFAULT_CERT_FILE = 'certs/server.cer'
+  DEFAULT_KEY_FILE  = 'certs/server.cer.key'
 
   def initialize(attributes)
     # setup all attributes.
@@ -42,6 +44,15 @@ class WsProxy
 
   private
 
+  def file_or_default(config_path, default)
+    file_requested = vmdb_config.fetch_path(:server, *config_path)
+    if file_requested.present?
+      file_requested = File.join(Rails.root, cert_file_requested)
+      return file_requested if File.file?(file_requested)
+    end
+    default
+  end
+
   def common_run_options
     @common_run_options ||= (
       run_options = {
@@ -51,12 +62,9 @@ class WsProxy
       }
       run_options[:'ssl-target'] = nil if ssl_target
 
-      if vmdb_config.fetch_path(:server, :websocket_encrypt)
-        cert_file = File.join(Rails.root, vmdb_config.fetch_path(:server, :websocket_cert))
-        key_file  = File.join(Rails.root, vmdb_config.fetch_path(:server, :websocket_key))
-
-        run_options[:cert] = cert_file if File.file?(cert_file)
-        run_options[:key]  = key_file  if File.file?(key_file)
+      if encrypt
+        run_options[:cert] = file_or_default([:server, :websocket, :cert], DEFAULT_CERT_FILE)
+        run_options[:key]  = file_or_default([:server, :websocket, :key],  DEFAULT_KEY_FILE)
       end
 
       run_options
