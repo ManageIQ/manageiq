@@ -13,17 +13,18 @@
       - if k != :cpu
         %hr
       - if @sb[:util][:summary][k] && !@sb[:util][:summary][k].empty?
-        %table.style3
+        %table.table.table-bordered.table-striped
           %thead
-            %th{:colspan => 2, :align => "left"}
+            %th{:colspan => 2}
               = v
-          - @sb[:util][:summary][k].each do |c|
-            - if (c.first.include?("Trend:") && c.first.include?("Max")) || (c.first.include?("Available") && @sb[:util][:options][:model] != "Host") || c.first.include?("Total")
-              %tr{:class => cycle('row0', 'row1')}
-                %td{:style => "width: 50%;"}
-                  = c.first
-                %td
-                  = c.last
+          %tbody
+            - @sb[:util][:summary][k].each do |c|
+              - if (c.first.include?("Trend:") && c.first.include?("Max")) || (c.first.include?("Available") && @sb[:util][:options][:model] != "Host") || c.first.include?("Total")
+                %tr
+                  %td
+                    = c.first
+                  %td
+                    = c.last
   - else
     .alert.alert-info
       %span.pficon.pficon-info
