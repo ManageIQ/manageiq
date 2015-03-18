@@ -74,6 +74,7 @@ module EmsOpenstackMixin
 
   def verify_api_credentials(options={})
     begin
+      options[:service] = "Identity"
       with_provider_connection(options) {}
     rescue Excon::Errors::Unauthorized => err
       $log.error("MIQ(#{self.class.name}.verify_api_credentials) Error Class=#{err.class.name}, Message=#{err.message}")
