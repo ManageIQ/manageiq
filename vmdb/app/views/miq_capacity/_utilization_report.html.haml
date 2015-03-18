@@ -3,17 +3,13 @@
   - if @sb[:util] && @sb[:util][:trend_rpt] && @sb[:util][:summary]
     = render :partial => "utilization_options", :locals => {:cap_type => "report"}
     %hr
-    %table.table.table-bordered.table-striped
-      %thead
-        %tr
-          %th{:colspan => 2}=_('Basic Information')
-      %tbody
-        - @sb[:util][:summary][:info].each do |si|
-          %tr
-            %td
-              = si.first
-            %td
-              = si.last
+    %h3=_('Basic Information')
+    %dl.dl-horizontal
+      - @sb[:util][:summary][:info].each do |si|
+        %dt
+          = si.first
+        %dd
+          = si.last
   - else
     .alert.alert-info
       %span.pficon.pficon-info
