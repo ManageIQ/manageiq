@@ -39,11 +39,11 @@ module AutomationSpecHelper
   end
 
   def default_ae_model_attributes(attrs = {})
-    attrs[:ae_class] = 'CLASS1' unless attrs.key?(:ae_class)
-    attrs[:ae_namespace] = 'A/B/C' unless attrs.key?(:ae_namespace)
-    attrs[:priority] = 10 unless attrs.key?(:priority)
-    attrs[:enabled] = true unless attrs.key?(:enabled)
-    attrs[:instance_name] = 'instance1' unless attrs.key?(:instance_name)
-    attrs
+    attrs.reverse_merge!(
+      :ae_class      => 'CLASS1',
+      :ae_namespace  => 'A/B/C',
+      :priority      => 10,
+      :enabled       => true,
+      :instance_name => 'instance1')
   end
 end
