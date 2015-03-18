@@ -65,7 +65,7 @@ class OrchestrationTemplate < ActiveRecord::Base
 
   # Find all not in use thus editable templates
   def self.not_in_use
-    includes(:stacks).where(OrchestrationStack.arel_table[:orchestration_template_id].eq(nil))
+    includes(:stacks).where(:orchestration_stacks => {:orchestration_template_id => nil})
   end
 
   def parameter_groups
