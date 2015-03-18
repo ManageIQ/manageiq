@@ -24,19 +24,20 @@
     %hr
     - if @sb[:planning][:chart_data] && @sb[:planning][:chart_data]["planning"]
       %h3=_("Eligible %s ") % ui_lookup(:models => @sb[:planning][:options][:target_typ])
-      %table.style3
+      %table.table.table-bordered.table-striped
         %thead
           %tr
             %th=_('Rank')
             %th=_('Name')
             %th=_('Max VMs')
-        - if @sb[:planning][:rpt]
-          - @sb[:planning][:rpt].table.data.each_with_index do |r, r_idx|
-            - break if r_idx > 9 || r[1].to_i == 0
-            %tr{:class => cycle('row0', 'row1')}
-              %td{:align => "center"}=(r_idx + 1).ordinalize
-              %td=r["name"]
-              %td{:align => "center"}=r["total_vm_count"]
+        %tbody
+          - if @sb[:planning][:rpt]
+            - @sb[:planning][:rpt].table.data.each_with_index do |r, r_idx|
+              - break if r_idx > 9 || r[1].to_i == 0
+              %tr
+                %td=(r_idx + 1).ordinalize
+                %td=r["name"]
+                %td=r["total_vm_count"]
 
       - if @sb[:planning][:rpt] && @sb[:planning][:rpt].extras[:vm_profile]
         = render :partial => "planning_vm_profile"
