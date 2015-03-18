@@ -1,4 +1,4 @@
-module MiqProvision::Automate
+module MiqProvisionTaskVirt::Automate
   extend ActiveSupport::Concern
 
   module ClassMethods
@@ -218,5 +218,4 @@ module MiqProvision::Automate
 
     return true
   end
-
 end

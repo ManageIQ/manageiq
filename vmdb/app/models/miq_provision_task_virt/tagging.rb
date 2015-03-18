@@ -1,4 +1,4 @@
-module MiqProvision::Tagging
+module MiqProvisionTaskVirt::Tagging
   def get_user_managed_filters
     user = get_user
     user && user.get_managed_filters.flatten

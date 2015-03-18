@@ -143,7 +143,7 @@ module MiqProvisionMixin
       end
       self.update_attribute(:options, self.options.merge({:placement_folder_name => result})) unless result.nil?
     rescue => err
-      $log.error "MIQ(MiqProvision.set_folder) #{err}\n#{err.backtrace.join("\n")}"
+      $log.error "MIQ(#{self.class.name}.set_folder) #{err}\n#{err.backtrace.join("\n")}"
     end
     return result
   end

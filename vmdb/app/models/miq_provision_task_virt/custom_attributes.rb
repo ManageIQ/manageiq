@@ -1,4 +1,4 @@
-module MiqProvision::CustomAttributes
+module MiqProvisionTaskVirt::CustomAttributes
   def set_miq_custom_attributes(vm, custom_attrs)
     return if custom_attrs.blank?
 

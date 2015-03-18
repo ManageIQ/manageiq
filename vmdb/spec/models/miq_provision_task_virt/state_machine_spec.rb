@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe MiqProvision do
+describe MiqProvisionTaskVirt do
   context "::StateMachine" do
     let(:ems)      { FactoryGirl.create(:ems_openstack_with_authentication) }
     let(:flavor)   { FactoryGirl.create(:flavor_openstack, :ems_ref => 24) }

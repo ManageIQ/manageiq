@@ -1,4 +1,4 @@
-class MiqProvisionVmware < MiqProvision
+class MiqProvisionVmware < MiqProvisionTaskVirt
   include_concern 'Cloning'
   include_concern 'Configuration'
   include_concern 'Customization'
@@ -15,7 +15,6 @@ class MiqProvisionVmware < MiqProvision
     else                            ""
     end
   end
-
 end
 
 # Preload any subclasses of this class, so that they will be part of the

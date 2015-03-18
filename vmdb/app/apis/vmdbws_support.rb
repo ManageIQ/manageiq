@@ -117,7 +117,7 @@ module VmdbwsSupport
 
   # Create a Proxy webservice struct for each ActiveRecord class, that will
   # expose all non-serialized columns and all virtual columns.
-  [ExtManagementSystem, Host, Vm, EmsCluster, ResourcePool, Storage, CustomAttribute, MiqProvisionRequest, MiqProvision, AutomationRequest, AutomationTask, Hardware].each do |ar_klass|
+  [ExtManagementSystem, Host, Vm, EmsCluster, ResourcePool, Storage, CustomAttribute, MiqProvisionRequest, MiqProvisionTaskVirt, AutomationRequest, AutomationTask, Hardware].each do |ar_klass|
     proxy_class_name = WS_PROXY_NAMES.has_key?(ar_klass.name) ? WS_PROXY_NAMES[ar_klass.name] : ar_klass.name
     proxy = self.const_set("Proxy#{proxy_class_name}", Class.new(MiqActionWebServiceStruct))
 

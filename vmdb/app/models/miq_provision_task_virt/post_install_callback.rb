@@ -1,4 +1,4 @@
-module MiqProvision::PostInstallCallback
+module MiqProvisionTaskVirt::PostInstallCallback
   extend ActiveSupport::Concern
 
   # This method will be called via callback if the VM is unable to shut itself down.

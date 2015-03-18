@@ -1,4 +1,4 @@
-module MiqProvision::OptionsHelper
+module MiqProvisionTaskVirt::OptionsHelper
   def dest_name
     get_option(:vm_target_name)
   end
@@ -25,7 +25,7 @@ module MiqProvision::OptionsHelper
     raise MiqException::MiqProvisionError, "Unable to find source Template/Vm with id [#{source_id}]" if source.nil?
     ems = source.ext_management_system
     raise MiqException::MiqProvisionError, "#{source.class.name} [#{source.name}] is not attached to a Management System" if ems.nil?
-    raise MiqException::MiqProvisionError, "#{source.class.name} [#{source.name}] is attached to <#{ems.class.name}: #{ems.name}> that does not support Provisioning" unless MiqProvision::SUPPORTED_EMS_CLASSES.include?(ems.class.name)
+    raise MiqException::MiqProvisionError, "#{source.class.name} [#{source.name}] is attached to <#{ems.class.name}: #{ems.name}> that does not support Provisioning" unless MiqProvisionTaskVirt::SUPPORTED_EMS_CLASSES.include?(ems.class.name)
     raise MiqException::MiqProvisionError, "#{source.class.name} [#{source.name}] is attached to <#{ems.class.name}: #{ems.name}> with missing credentials" if ems.missing_credentials?
     source
   end

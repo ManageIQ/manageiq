@@ -1,15 +1,14 @@
-class MiqProvisionCloud < MiqProvision
-
-  SUBCLASSES = %w{
-    MiqProvisionAmazon
-    MiqProvisionOpenstack
-  }
-
+class MiqProvisionCloud < MiqProvisionTaskVirt
   include_concern 'Cloning'
   include_concern 'OptionsHelper'
   include_concern 'Placement'
   include_concern 'StateMachine'
   include_concern 'Configuration'
+
+  SUBCLASSES = %w{
+    MiqProvisionAmazon
+    MiqProvisionOpenstack
+  }
 
   def destination_type
     "Vm"

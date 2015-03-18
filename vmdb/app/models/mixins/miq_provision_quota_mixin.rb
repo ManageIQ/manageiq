@@ -284,7 +284,7 @@ module MiqProvisionQuotaMixin
         prov_ids << args[:object_id] if args[:object_type] == 'MiqProvision' && !args[:object_id].blank?
       end
     end
-    MiqProvision.find(:all, :conditions => ["id in (?)", prov_ids], :select => "id,miq_request_id").each do |p|
+    MiqProvisionTaskVirt.find(:all, :conditions => ["id in (?)", prov_ids], :select => "id,miq_request_id").each do |p|
       prov_req_ids << p.miq_request_id
     end
 
@@ -294,7 +294,7 @@ module MiqProvisionQuotaMixin
   def quota_provision_stats(prov_method, options)
     result = {:count => 0, :memory => 0, :cpu => 0, :storage => 0, :ids => [], :class_name => MiqProvisionRequest.name,
               :active => {
-                :class_name => MiqProvision.name, :ids => [], :storage_by_id => Hash.new {|k,v| k[v] = 0},
+                :class_name => MiqProvisionTaskVirt.name, :ids => [], :storage_by_id => Hash.new {|k,v| k[v] = 0},
                 :memory_by_host_id => Hash.new {|k,v| k[v] = 0},  :cpu_by_host_id => Hash.new {|k,v| k[v] = 0},
                 :vms_by_storage_id => Hash.new {|k,v| k[v] = []}
               }

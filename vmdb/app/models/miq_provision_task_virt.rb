@@ -1,4 +1,4 @@
-class MiqProvision < MiqRequestTask
+class MiqProvisionTaskVirt < MiqRequestTask
   SUBCLASSES = %w{
     MiqProvisionCloud
     MiqProvisionRedhat
@@ -50,7 +50,7 @@ class MiqProvision < MiqRequestTask
   virtual_column     :placement_auto,       :type => :boolean
 
   def self.base_model
-    MiqProvision
+    MiqProvisionTaskVirt
   end
 
   before_create      :set_template_and_networking
@@ -116,4 +116,4 @@ end
 
 # Preload any subclasses of this class, so that they will be part of the
 #   conditions that are generated on queries against this class.
-MiqProvision::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}.rb").to_s }
+MiqProvisionTaskVirt::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}.rb").to_s }

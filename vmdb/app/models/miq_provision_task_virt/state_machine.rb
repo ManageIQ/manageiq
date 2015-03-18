@@ -1,4 +1,4 @@
-module MiqProvision::StateMachine
+module MiqProvisionTaskVirt::StateMachine
   def run_provision
     self.source = get_source  # just in case automate changed src_vm_id in the options hash
     signal :create_destination
@@ -105,5 +105,4 @@ module MiqProvision::StateMachine
       $log.info("MIQ(#{self.class.name}#finish) Executing provision request: [#{self.description}], Pass: #{pass} of #{number_of_vms}... Complete")
     end
   end
-
 end

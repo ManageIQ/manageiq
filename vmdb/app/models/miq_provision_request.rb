@@ -64,7 +64,7 @@ class MiqProvisionRequest < MiqRequest
   def set_description(force = false)
     prov_description = nil
     if self.description.nil? || force == true
-      prov_description = MiqProvision.get_description(self, MiqProvision.get_next_vm_name(self, false))
+      prov_description = MiqProvisionTaskVirt.get_description(self, MiqProvisionTaskVirt.get_next_vm_name(self, false))
     end
     # Capture self.options after running 'get_next_vm_name' method since automate may update the object
     attrs = {:options => self.options.merge(:delivered_on => nil)}

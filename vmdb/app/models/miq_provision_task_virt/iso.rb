@@ -1,4 +1,4 @@
-module MiqProvision::Iso
+module MiqProvisionTaskVirt::Iso
   def iso_image
     @iso_image ||= begin
       klass, id = get_option(:iso_image_id).to_s.split('::')

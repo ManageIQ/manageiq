@@ -1,4 +1,4 @@
-module MiqProvision::Naming
+module MiqProvisionTaskVirt::Naming
   extend ActiveSupport::Concern
 
   NAME_VIA_AUTOMATE = true
