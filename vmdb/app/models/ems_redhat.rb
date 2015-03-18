@@ -77,8 +77,8 @@ class EmsRedhat < EmsInfra
 
   def rhevm_metrics_connect_options(options = {})
     server   = options[:hostname] || self.hostname
-    username = options[:user] || self.authentication_userid(:metrics)
-    password = options[:pass] || self.authentication_password(:metrics)
+    username = options[:user]     || self.authentication_userid(:metrics)
+    password = options[:pass]     || self.authentication_password(:metrics)
     database = options[:database]
 
     {
