@@ -240,7 +240,7 @@ module MiqProvisionVmware::Customization
   end
 
   def set_spec_password_option(obj, property, key, pwd_type)
-    log_header = "MiqProvision.set_spec_password_option"
+    log_header = "#{self.class.name}.set_spec_password_option"
 
     value = get_option(key).to_s.strip
     value = MiqPassword.try_decrypt(value)
@@ -262,7 +262,7 @@ module MiqProvisionVmware::Customization
   end
 
   def set_spec_array_option(obj, property, key, override_value=nil)
-    log_header = "MiqProvision.set_spec_array_option"
+    log_header = "#{self.class.name}.set_spec_array_option"
     if key.nil?
       value = get_option(nil, override_value)
     else

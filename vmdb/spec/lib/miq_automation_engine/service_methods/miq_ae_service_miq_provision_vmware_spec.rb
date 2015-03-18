@@ -90,7 +90,7 @@ module MiqAeServiceMiqProvisionVmwareSpec
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision'].execute"
       @ae_method.update_attributes(:data => method)
 
-      MiqProvision.any_instance.should_receive(:execute_queue).once
+      MiqProvisionTaskVirt.any_instance.should_receive(:execute_queue).once
       invoke_ae.root(@ae_result_key).should be_true
     end
 

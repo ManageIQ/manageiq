@@ -51,7 +51,7 @@ en:
         rhn:
           missing_information: "Please, fill in the form before saving."
 
-    provision: 
+    provision:
       cancelled: "Provision %{model} was cancelled by the user"
 
     policy:
@@ -848,7 +848,7 @@ en:
       MiqGroup:                 EVM Group
       MiqPolicy:                Policy
       MiqPolicySet:             Policy Profile
-      MiqProvision:             Provision
+      MiqProvisionTaskVirt:     Provision
       MiqProxy:                 SmartProxy
       MiqRegion:                Region
       MiqReport:                Report

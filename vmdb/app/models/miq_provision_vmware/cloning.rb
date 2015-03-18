@@ -86,7 +86,7 @@ module MiqProvisionVmware::Cloning
   def start_clone(clone_options)
     vim_clone_options = {
       :name     => clone_options[:name],
-      :wait     => MiqProvision::CLONE_SYNCHRONOUS,
+      :wait     => MiqProvisionTaskVirt::CLONE_SYNCHRONOUS,
       :template => self.create_template?
     }
 
@@ -99,7 +99,7 @@ module MiqProvisionVmware::Cloning
     end
 
     task_mor = self.clone_vm(vim_clone_options)
-    $log.info("MIQ(#{self.class.name}#start_clone) Provisioning completed for [#{vim_clone_options[:name]}] from source [#{self.source.name}]") if MiqProvision::CLONE_SYNCHRONOUS
+    $log.info("MIQ(#{self.class.name}#start_clone) Provisioning completed for [#{vim_clone_options[:name]}] from source [#{self.source.name}]") if MiqProvisionTaskVirt::CLONE_SYNCHRONOUS
     task_mor
   end
 

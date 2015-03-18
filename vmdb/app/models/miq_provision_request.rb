@@ -93,7 +93,7 @@ class MiqProvisionRequest < MiqRequest
   def self.ready?(userid)
     # must have at least one dept, env
     # if env includes prod must have at least one service_level
-    prov = MiqProvision.new(:userid => userid)
+    prov = MiqProvisionTaskVirt.new(:userid => userid)
     dept = prov.allowed(:department)
     env  = prov.allowed(:environment)
 

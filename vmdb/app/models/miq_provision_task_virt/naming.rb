@@ -7,7 +7,7 @@ module MiqProvisionTaskVirt::Naming
 
   module ClassMethods
     def get_next_vm_name(prov_obj, determine_index = true)
-      log_header = "MiqProvision.get_next_vm_name"
+      log_header = "#{self.class.name}.get_next_vm_name"
 
       unresolved_vm_name = nil
 

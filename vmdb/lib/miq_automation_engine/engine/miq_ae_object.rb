@@ -31,7 +31,7 @@ module MiqAeEngine
       'host_provision'         => 'MiqHostProvision',
       'host_provision_request' => 'MiqHostProvisionRequest',
       'policy'                 => 'MiqPolicy',
-      'provision'              => 'MiqProvision',
+      'provision'              => 'MiqProvisionTaskVirt',
       'provision_request'      => 'MiqProvisionRequest',
       'proxy'                  => 'MiqProxy',
       'request'                => 'MiqRequest',

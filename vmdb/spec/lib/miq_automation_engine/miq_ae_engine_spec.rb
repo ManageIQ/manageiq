@@ -181,7 +181,7 @@ module MiqAeEngineSpec
           attrs.should == saved
         }
 
-        prov = MiqProvision.new
+        prov = MiqProvisionTaskVirt.new
         prov.id = 42
         MiqAeEngine.create_automation_object('REQUEST', { 'request' => 'UI_PROVISION_INFO', 'message' => 'get_host_and_storage' }, :vmdb_object => prov).should == "/System/Process/REQUEST?MiqProvision%3A%3Amiq_provision=#{prov.id}&message=get_host_and_storage&object_name=REQUEST&request=UI_PROVISION_INFO&vmdb_object_type=miq_provision"
 
@@ -665,9 +665,9 @@ module MiqAeEngineSpec
 
     it "properly processes substitution with methods" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "miq_ae_engine_spec4"), @domain)
-      MiqProvision.any_instance.stub(:validate).and_return(:true)
-      MiqProvision.any_instance.stub(:set_template_and_networking)
-      prov = MiqProvision.create!(:provision_type => 'clone_to_template', :state => 'pending', :status => 'Ok')
+      MiqProvisionTaskVirt.any_instance.stub(:validate).and_return(:true)
+      MiqProvisionTaskVirt.any_instance.stub(:set_template_and_networking)
+      prov = MiqProvisionTaskVirt.create!(:provision_type => 'clone_to_template', :state => 'pending', :status => 'Ok')
       ws   = MiqAeEngine.instantiate "/System/Process/REQUEST?MiqProvision::miq_provision=#{prov.id}&request=test_subst"
       ws.should_not be_nil
 

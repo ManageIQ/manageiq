@@ -206,7 +206,7 @@ module MiqProvisionTaskVirt::Automate
           :zone        => my_zone,
           :role        => my_role,
           :task_id     => my_task_id,
-          :msg_timeout => MiqProvision::CLONE_SYNCHRONOUS ? MiqProvision::CLONE_TIME_LIMIT : MiqQueue::TIMEOUT,
+          :msg_timeout => MiqProvisionTaskVirt::CLONE_SYNCHRONOUS ? MiqProvisionTaskVirt::CLONE_TIME_LIMIT : MiqQueue::TIMEOUT,
           :deliver_on  => Time.now.utc + interval
         )
         message = "Request [#{ae_message}] has been re-queued for processing in #{interval} seconds"

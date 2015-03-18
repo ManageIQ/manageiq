@@ -89,7 +89,7 @@ module MiqProvisionTaskVirt::StateMachine
       $log.log_backtrace(err)
     end
 
-    if MiqProvision::AUTOMATE_DRIVES
+    if MiqProvisionTaskVirt::AUTOMATE_DRIVES
       update_and_notify_parent(:state => 'provisioned', :message => "Finished New VM Customization")
     else
       update_and_notify_parent(:state => 'finished', :message => "Request #{pass} of #{number_of_vms} is complete")

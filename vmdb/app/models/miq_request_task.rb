@@ -92,7 +92,7 @@ class MiqRequestTask < ActiveRecord::Base
   end
 
   def self.request_class
-    if self.is_or_subclass_of?(MiqProvision)
+    if self.is_or_subclass_of?(MiqProvisionTaskVirt)
       MiqProvisionRequest
     elsif self.is_or_subclass_of?(MiqHostProvision)
       MiqHostProvisionRequest
