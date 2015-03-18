@@ -52,7 +52,7 @@ module EmsOpenstackMixin
 
   def event_monitor_options
     @event_monitor_options ||= begin
-      opts = {:hostname => self.ipaddress}
+      opts = {:hostname => self.hostname}
       opts[:port] = MiqEventCatcherOpenstack.worker_settings[:amqp_port]
       if self.has_authentication_type? :amqp
         # authentication_userid/password will happily return the "default"
