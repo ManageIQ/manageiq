@@ -41,6 +41,9 @@ class MiqRequest < ActiveRecord::Base
         :clone_to_vm       => "VM Clone",
         :clone_to_template => "VM Publish",
       },
+      :MiqProvisionConfiguredSystemRequest => {
+        :provision_via_foreman => "Foreman Provision"
+      },
       :VmReconfigureRequest => {
         :vm_reconfigure => "VM Reconfigure"
       },

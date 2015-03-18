@@ -227,6 +227,12 @@ module ApplicationController::MiqRequestMethods
   end
 
   # get the sort column that was clicked on, else use the current one
+  def sort_configured_system_grid
+    return unless load_edit("prov_edit__#{params[:id]}", "show_list")
+    sort_grid('configured_system', @edit[:wf].get_field(:src_configured_system_ids, :service)[:values])
+  end
+
+  # get the sort column that was clicked on, else use the current one
   def sort_pxe_img_grid
     return unless load_edit("prov_edit__#{params[:id]}","show_list")
     sort_grid('pxe_img', @edit[:wf].get_field(:pxe_image_id,:service)[:values])
@@ -256,6 +262,17 @@ module ApplicationController::MiqRequestMethods
   end
 
   private ############################
+
+  def build_configured_system_grid(configured_systems, sort_order = nil, sort_by = nil)
+    @edit[:configured_system_headers] = {
+      "hostname"    => "Hostname",
+    }
+    @edit[:configured_system_sortcol] = sort_by    ||= "hostname"
+    @edit[:configured_system_sortdir] = sort_order ||= "ASC"
+
+    sorted = configured_systems.sort_by { |pi| pi.deep_send(sort_by).to_s.downcase }.uniq
+    @temp[:configured_systems] = (sort_order == "ASC") ? sorted : sorted.reverse
+  end
 
   def build_pxe_img_grid(pxe_imgs, sort_order = nil, sort_by = nil)
     @edit[:pxe_img_headers] = {  # Using it to get column display name on screen to show sort by
@@ -331,6 +348,8 @@ module ApplicationController::MiqRequestMethods
 
   def build_grid
     case @edit[:wf]
+    when MiqProvisionConfiguredSystemWorkflow
+      build_dialog_page_miq_provision_configured_system_workflow
     when MiqProvisionVirtWorkflow
       if @edit[:new][:current_tab_key] == :service
         if @edit[:new][:st_prov_type]
@@ -379,6 +398,15 @@ module ApplicationController::MiqRequestMethods
       elsif @edit[:new][:current_tab_key] == :customize
         build_template_grid(@edit[:wf].get_field(:customization_template_id,:customize)[:values],@edit[:template_sortdir],@edit[:template_sortcol])
       end
+    end
+  end
+
+  def build_dialog_page_miq_provision_configured_system_workflow
+    case @edit[:new][:current_tab_key]
+    when :purpose
+      build_tags_tree(@edit[:wf], @edit.fetch_path(:new, tag_symbol_for_workflow), true)
+    when :service
+      build_configured_system_grid(@edit[:wf].get_field(:src_configured_system_ids, :service)[:values], @edit[:configured_system_sortdir], @edit[:configured_system_sortcol])
     end
   end
 
@@ -463,6 +491,8 @@ module ApplicationController::MiqRequestMethods
     case (@edit || @options).try(:[], :wf)
     when MiqProvisionVirtWorkflow
       "prov_dialog"
+    when MiqProvisionConfiguredSystemForemanWorkflow
+      "prov_configured_system_foreman_dialog"
     when MiqHostProvisionWorkflow
       "prov_host_dialog"
     when VmMigrateWorkflow
@@ -472,9 +502,10 @@ module ApplicationController::MiqRequestMethods
 
   def layout_from_tab_name(tab_name)
     case tab_name
-    when "host" then "miq_request_host"
-    when "ae"   then "miq_request_ae"
-    else             "miq_request_vm"  # Includes "vm"
+    when "ae"                then "miq_request_ae"
+    when "configured_system" then "miq_request_configured_system"
+    when "host"              then "miq_request_host"
+    else                          "miq_request_vm"  # Includes "vm"
     end
   end
 
@@ -794,48 +825,53 @@ module ApplicationController::MiqRequestMethods
         @edit[:new] = @edit[:new].delete_nils
         @edit[:new] = @edit[:new].merge pre_prov_values.select { |k| !@edit[:new].keys.include?(k) }
       end
-      @edit[:ds_sortdir] ||= "DESC"
-      @edit[:ds_sortcol] ||= "free_space"
-      @edit[:host_sortdir] ||= "ASC"
-      @edit[:host_sortcol] ||= "name"
-      build_host_grid(@edit[:wf].send("allowed_hosts"), @edit[:host_sortdir], @edit[:host_sortcol])
-      build_ds_grid(@edit[:wf].send("allowed_storages"), @edit[:ds_sortdir], @edit[:ds_sortcol])
-      if @edit[:wf].kind_of?(MiqProvisionWorkflow)
-        @edit[:vm_sortdir] ||= "ASC"
-        @edit[:vm_sortcol] ||= "name"
-        @edit[:vc_sortdir] ||= "ASC"
-        @edit[:vc_sortcol] ||= "name"
-        @edit[:template_sortdir] ||= "ASC"
-        @edit[:template_sortcol] ||= "name"
-        build_vm_grid(@edit[:wf].send("allowed_templates"), @edit[:vm_sortdir], @edit[:vm_sortcol])
-        build_tags_tree(@edit[:wf], @edit[:new][:vm_tags], true)
-        build_ous_tree(@edit[:wf], @edit[:new][:ldap_ous])
-        if @edit[:wf].supports_pxe?
-          @edit[:windows_image_sortdir] ||= "ASC"
-          @edit[:windows_image_sortcol] ||= "name"
-          build_pxe_img_grid(@edit[:wf].send("allowed_images"), @edit[:pxe_img_sortdir], @edit[:pxe_img_sortcol])
-          build_host_grid(@edit[:wf].send("allowed_hosts"), @edit[:host_sortdir], @edit[:host_sortcol])
-          build_template_grid(@edit[:wf].send("allowed_customization_templates"), @edit[:template_sortdir], @edit[:template_sortcol])
-        elsif @edit[:wf].supports_iso?
+
+      if @edit[:wf].kind_of?(MiqProvisionConfiguredSystemForemanWorkflow)
+        # BD TODO
+      else
+        @edit[:ds_sortdir] ||= "DESC"
+        @edit[:ds_sortcol] ||= "free_space"
+        @edit[:host_sortdir] ||= "ASC"
+        @edit[:host_sortcol] ||= "name"
+        build_host_grid(@edit[:wf].send("allowed_hosts"), @edit[:host_sortdir], @edit[:host_sortcol])
+        build_ds_grid(@edit[:wf].send("allowed_storages"), @edit[:ds_sortdir], @edit[:ds_sortcol])
+        if @edit[:wf].kind_of?(MiqProvisionWorkflow)
+          @edit[:vm_sortdir] ||= "ASC"
+          @edit[:vm_sortcol] ||= "name"
+          @edit[:vc_sortdir] ||= "ASC"
+          @edit[:vc_sortcol] ||= "name"
+          @edit[:template_sortdir] ||= "ASC"
+          @edit[:template_sortcol] ||= "name"
+          build_vm_grid(@edit[:wf].send("allowed_templates"), @edit[:vm_sortdir], @edit[:vm_sortcol])
+          build_tags_tree(@edit[:wf], @edit[:new][:vm_tags], true)
+          build_ous_tree(@edit[:wf], @edit[:new][:ldap_ous])
+          if @edit[:wf].supports_pxe?
+            @edit[:windows_image_sortdir] ||= "ASC"
+            @edit[:windows_image_sortcol] ||= "name"
+            build_pxe_img_grid(@edit[:wf].send("allowed_images"), @edit[:pxe_img_sortdir], @edit[:pxe_img_sortcol])
+            build_host_grid(@edit[:wf].send("allowed_hosts"), @edit[:host_sortdir], @edit[:host_sortcol])
+            build_template_grid(@edit[:wf].send("allowed_customization_templates"), @edit[:template_sortdir], @edit[:template_sortcol])
+          elsif @edit[:wf].supports_iso?
+            @edit[:iso_img_sortdir] ||= "ASC"
+            @edit[:iso_img_sortcol] ||= "name"
+            build_iso_img_grid(@edit[:wf].send("allowed_iso_images"), @edit[:iso_img_sortdir], @edit[:iso_img_sortcol])
+          else
+            build_vc_grid(@edit[:wf].send("allowed_customization_specs"), @edit[:vc_sortdir], @edit[:vc_sortcol])
+          end
+        elsif @edit[:wf].kind_of?(VmMigrateWorkflow)
+        else
           @edit[:iso_img_sortdir] ||= "ASC"
           @edit[:iso_img_sortcol] ||= "name"
+          @edit[:windows_image_sortdir] ||= "ASC"
+          @edit[:windows_image_sortcol] ||= "name"
+          @edit[:template_sortdir] ||= "ASC"
+          @edit[:template_sortcol] ||= "name"
+          build_tags_tree(@edit[:wf], @edit[:new][:tag_ids], true)
+          build_pxe_img_grid(@edit[:wf].send("allowed_images"), @edit[:pxe_img_sortdir], @edit[:pxe_img_sortcol])
           build_iso_img_grid(@edit[:wf].send("allowed_iso_images"), @edit[:iso_img_sortdir], @edit[:iso_img_sortcol])
-        else
-          build_vc_grid(@edit[:wf].send("allowed_customization_specs"), @edit[:vc_sortdir], @edit[:vc_sortcol])
+          build_host_grid(@edit[:wf].send("allowed_hosts"), @edit[:host_sortdir], @edit[:host_sortcol])
+          build_template_grid(@edit[:wf].send("allowed_customization_templates"), @edit[:template_sortdir], @edit[:template_sortcol])
         end
-      elsif @edit[:wf].kind_of?(VmMigrateWorkflow)
-      else
-        @edit[:iso_img_sortdir] ||= "ASC"
-        @edit[:iso_img_sortcol] ||= "name"
-        @edit[:windows_image_sortdir] ||= "ASC"
-        @edit[:windows_image_sortcol] ||= "name"
-        @edit[:template_sortdir] ||= "ASC"
-        @edit[:template_sortcol] ||= "name"
-        build_tags_tree(@edit[:wf], @edit[:new][:tag_ids], true)
-        build_pxe_img_grid(@edit[:wf].send("allowed_images"), @edit[:pxe_img_sortdir], @edit[:pxe_img_sortcol])
-        build_iso_img_grid(@edit[:wf].send("allowed_iso_images"), @edit[:iso_img_sortdir], @edit[:iso_img_sortcol])
-        build_host_grid(@edit[:wf].send("allowed_hosts"), @edit[:host_sortdir], @edit[:host_sortcol])
-        build_template_grid(@edit[:wf].send("allowed_customization_templates"), @edit[:template_sortdir], @edit[:template_sortcol])
       end
     else
       @edit[:current] ||= {}
@@ -892,6 +928,10 @@ module ApplicationController::MiqRequestMethods
         @edit[:prov_type]   = req.try(:request_type) && req.request_type_display
         @edit[:prov_type] ||= req.try(:type) == "VmMigrateRequest" ? "VM Migrate" : "VM Provision"
       end
+    elsif @edit[:org_controller] == "configured_system"
+      @edit[:prov_type] = "ConfiguredSystem"
+      @edit[:new][:src_configured_system_ids] = params[:prov_id].kind_of?(Array) ? params[:prov_id] : [params[:prov_id]]
+      wf_type = MiqProvisionConfiguredSystemForemanWorkflow
     else
       @edit[:prov_type] = "Host"
       if @edit[:new].empty?

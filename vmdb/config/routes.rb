@@ -969,6 +969,7 @@ Vmdb::Application.routes.draw do
         retrieve_email
         save_col_widths
         show_list
+        sort_configured_system_grid
         sort_ds_grid
         sort_host_grid
         sort_iso_img_grid

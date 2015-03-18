@@ -1,0 +1,31 @@
+- options = @edit || @options
+- id = options.try(:[], :req_id) || "new"
+
+#prov_configured_system_div{:style => "height: 150px; overflow: auto;"}
+  %table.style3
+    %thead
+      %tr
+      - options[:configured_system_headers].each do |header, name|
+        %th{:nowrap => 1}
+          - #  Replaced to exclude non-view table fields from sorting
+          - # dont show sort on show screen, need @edit variables for sort to work
+          - if @edit
+            = link_to(h(name),
+              {:action => "sort_configured_system_grid", :sort_choice => header, :field_id => field_id, :id => id.to_s},
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              :remote                => true)
+            - if name == options[:configured_system_sortcol]
+              %img{:src => "/images/icons/16/sort_#{@edit[:configured_system_sortdir] == 'ASC' ? 'up' : 'down'}.png"}
+          - else
+            = h(header)
+    %tbody
+    - @temp[:configured_systems].each do |row|
+      - @id = row.id
+      %tr{:class => cycle('row0', 'row1'), :nowrap => 1}
+        - options[:configured_system_headers].each do |col, _|
+          %td{:align => "left", :onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+            = h(row.send(col))
+    %tfoot
+      %tr
+        %td{:colspan => "40"}
