@@ -21,8 +21,6 @@ class MiqProvision < MiqProvisionTask
 
   before_create :set_template_and_networking
 
-  #validates_presence_of  :source_id,      :message => "must have valid template"
-
   virtual_belongs_to :vm
   virtual_belongs_to :vm_template
   virtual_column     :provision_type, :type => :string
