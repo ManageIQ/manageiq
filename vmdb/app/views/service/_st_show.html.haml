@@ -25,10 +25,10 @@
         = _('Resources')
       - resources = @record.service_resources
       - if !resources.empty?
-        %table.style3
+        %table.table.table-bordered.table-striped.table-hover
           %thead
             %tr
-              %th.icon
+              %th.narrow
               - titles = [_('Name'), _("Description"), _("Group Order")]
               - titles.each do |title|
                 %th{:colspan => "1"}
@@ -42,10 +42,9 @@
                 - prev_group = r.group_idx
                 %tr#new_tr.seperator
                   %td{:colspan => col_span}
-              %tr{:class => cycle('row0', 'row1'), :onmouseover => "this.style.cursor='pointer'", :title => "Click to view details",
-                onclick => "sandt_tree.selectItem('#{x_node}_st-#{to_cid(r.resource_id)}', true);"}
-                %td.icon{:nowrap => 1}
-                  %img{:src => "/images/icons/new/service_template.png", :valign => "middle", :border => "0", :height => "20", :width => "20"}
+              %tr{:title => "Click to view details", :onclick => "sandt_tree.selectItem('#{x_node}_st-#{to_cid(r.resource_id)}', true);"}
+                %td.narrow
+                  %img{:src => "/images/icons/new/service_template.png"}
                 - keys = %w(resource_name resource_description group_idx)
                 - keys.each do |key|
                   %td
