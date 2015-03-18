@@ -12,15 +12,14 @@
           :locals  => {:title => binf, :items => textual_iso_datastore_basicinfo})
         - unless @isd.iso_images.empty?
           %h3=_('ISO Images')
-          %table.style3
+          %table.table.table-bordered.table-striped.table-hover
             %thead
               %tr
                 %th=_('Name')
             %tbody
               - @isd.iso_images.sort_by{ |a| a.name.downcase }.each do |i|
-                %tr{:class => cycle('row0', 'row1'), :title => _("View this ISO Image"),
-                  :onclick => "cfmeDynatree_activateNode('iso_datastores_tree', 'isi-#{to_cid(i.id)}');",
-                  :onmouseover => "this.style.cursor='pointer'"}
+                %tr{:title => _("View this ISO Image"),
+                  :onclick => "cfmeDynatree_activateNode('iso_datastores_tree', 'isi-#{to_cid(i.id)}');"}
                   %td
                     = h(i.name)
 

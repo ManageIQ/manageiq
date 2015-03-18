@@ -17,19 +17,19 @@
           - if !@ps.pxe_menus.empty?
             %hr
             %h3=_('PXE Image Menus')
-            %table.style3
+            %table.table.table-bordered.table-striped
               %thead
                 %tr
                   %th=_('Filename')
               %tbody
                 - @ps.pxe_menus.sort_by{ |a| a.file_name }.each do |menu|
-                  %tr{:class => cycle('row0', 'row1')}
+                  %tr
                     %td
                       = h(menu.file_name)
         - unless @ps.pxe_images.empty?
           %hr
           %h3=_('PXE Images')
-          %table.style3
+          %table.table.table-bordered.table-hover.table-striped
             %thead
               %tr
                 %th=_('Name')
@@ -38,21 +38,19 @@
                 %th=_('Windows Boot Env')
             %tbody
               - @ps.pxe_images.sort_by { |a| a.name.downcase }.each do |i|
-                %tr{:class => cycle('row0', 'row1'), :title => _("View this PXE Image"),
-                  :onclick => "cfmeDynatree_activateNode('pxe_servers_tree', 'pi-#{to_cid(i.id)}');",
-                  :onmouseover => "this.style.cursor='pointer'"}
+                %tr{:title => _("View this PXE Image"), :onclick => "cfmeDynatree_activateNode('pxe_servers_tree', 'pi-#{to_cid(i.id)}');"}
                   %td
                     = h(i.name)
                   %td
                     = h(i.description)
                   %td
                     = h(i.kernel)
-                  %td{:style => "text-align: center;"}
+                  %td
                     = h(i.default_for_windows ? "Yes" : "")
         - unless @ps.windows_images.empty?
           %hr
           %h3=_('Windows Images')
-          %table.style3
+          %table.table.table-bordered.table-hover.table-striped
             %thead
             %tr
               %th=_('Name')
@@ -61,16 +59,15 @@
               %th=_('Index')
             %tbody
               - @ps.windows_images.sort_by { |a| a.name.downcase }.each do |i|
-                %tr{:class => cycle('row0', 'row1'), :title => _("View this Windows Image"),
-                  :onclick => "cfmeDynatree_activateNode('pxe_servers_tree', 'pi-#{to_cid(i.id)}');",
-                  :onmouseover => "this.style.cursor='pointer'"}
+                %tr{:title => _("View this Windows Image"),
+                  :onclick => "cfmeDynatree_activateNode('pxe_servers_tree', 'pi-#{to_cid(i.id)}');"}
                   %td
                     = h(i.name)
                   %td
                     = h(i.description)
                   %td
                     = h(i.path)
-                  %td{:style => "text-align: center;"}
+                  %td
                     = h(i.index)
 
   - # PXE Image is selected
