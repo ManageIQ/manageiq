@@ -274,7 +274,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     auto_placement = show_flag = auto_placement_enabled? ? :hide : :edit
     f[show_flag] += [:placement_host_name, :placement_ds_name, :host_filter, :ds_filter, :cluster_filter, :placement_cluster_name, :rp_filter, :placement_rp_name]
 
-    show_flag = get_value(@values[:sysprep_enabled]).in?('fields', 'file') || self.supports_pxe? || self.supports_iso? ? :edit : :hide
+    show_flag = get_value(@values[:sysprep_enabled]).in?(%w(fields file)) || self.supports_pxe? || self.supports_iso? ? :edit : :hide
     f[show_flag] += [:addr_mode]
 
     # If we are hiding the network fields always hide.  If available then the show_flag depends on the addr_mode
@@ -484,7 +484,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
         hosts.each { |h| h.lans.each { |l| vlans[l.name] = l.name } }
 
         # Remove certain networks
-        vlans.delete_if { |_k, v| v.in?('Service Console', 'VMkernel') }
+        vlans.delete_if { |_k, v| v.in?(['Service Console', 'VMkernel']) }
         rails_logger('allowed_vlans', 1)
       end
 
