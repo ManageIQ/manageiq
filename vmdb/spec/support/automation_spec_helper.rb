@@ -27,5 +27,23 @@ module AutomationSpecHelper
     roots.should have(1).item
     roots.first.attributes['method_executed'].should == value
   end
-end
 
+  def create_ae_model(attrs = {})
+    attrs = default_ae_model_attributes(attrs)
+    instance_name = attrs.delete(:instance_name)
+    ae_fields = {'field1' => {:aetype => 'relationship', :datatype => 'string'}}
+    ae_instances = {instance_name => {'field1' => {:value => 'hello world'}}}
+
+    FactoryGirl.create(:miq_ae_domain, :with_small_model, :with_instances,
+                       attrs.merge('ae_fields' => ae_fields, 'ae_instances' => ae_instances))
+  end
+
+  def default_ae_model_attributes(attrs = {})
+    attrs[:ae_class] = 'CLASS1' unless attrs.key?(:ae_class)
+    attrs[:ae_namespace] = 'A/B/C' unless attrs.key?(:ae_namespace)
+    attrs[:priority] = 10 unless attrs.key?(:priority)
+    attrs[:enabled] = true unless attrs.key?(:enabled)
+    attrs[:instance_name] = 'instance1' unless attrs.key?(:instance_name)
+    attrs
+  end
+end

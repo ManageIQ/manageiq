@@ -235,4 +235,9 @@ module MiqAeDatastore
   def self.restore_attrs_for_domains(hash)
     hash.each { |dom, attrs| MiqAeDomain.find_by_fqname(dom, false).update_attributes(attrs) }
   end
+
+  def self.path_includes_domain?(path, options = {})
+    nsd, _, _ = ::MiqAeEngine::MiqAePath.split(path, options)
+    MiqAeNamespace.find_by_fqname(nsd, false) != nil
+  end
 end # module MiqAeDatastore
