@@ -26,11 +26,9 @@ class MiqProvision < MiqProvisionTask
   virtual_column     :provision_type, :type => :string
   virtual_column     :placement_auto, :type => :boolean
 
-  CLONE_SYNCHRONOUS = false
-  CLONE_TIME_LIMIT  = 4.hours
-  DEFAULT_IMPORT = File.expand_path(File.join(Rails.root, "db/fixtures/miq_provision_automate.xml"))
-  PROVISION_AE_CLASSES = ["EVM/PROVISION", "EVM/MAX_VMS", "EVM/TTL_WARNINGS", "EVM/TTL"]
-  SUBCLASSES = %w{MiqProvisionCloud MiqProvisionRedhat MiqProvisionVmware}
+  CLONE_SYNCHRONOUS     = false
+  CLONE_TIME_LIMIT      = 4.hours
+  SUBCLASSES            = %w{MiqProvisionCloud MiqProvisionRedhat MiqProvisionVmware}
   SUPPORTED_EMS_CLASSES = %w{EmsVmware EmsRedhat EmsAmazon EmsOpenstack}
 
   def self.base_model
