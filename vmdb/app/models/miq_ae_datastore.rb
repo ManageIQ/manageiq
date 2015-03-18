@@ -174,8 +174,8 @@ module MiqAeDatastore
       domain_name = File.basename(File.dirname(domain_file))
       reset_domain(DATASTORE_DIRECTORY, domain_name)
     end
-    saved_attrs.each { |dom, attrs| MiqAeDomain.find_by_fqname(dom).update_attributes(attrs) }
 
+    restore_attrs_for_domains(saved_attrs)
     reset_default_namespace
   end
 
@@ -230,5 +230,9 @@ module MiqAeDatastore
       next if dom.name.downcase == MANAGEIQ_DOMAIN.downcase
       h[dom.name] = PRESERVED_ATTRS.each_with_object({}) { |attr, ih| ih[attr] = dom[attr] }
     end
+  end
+
+  def self.restore_attrs_for_domains(hash)
+    hash.each { |dom, attrs| MiqAeDomain.find_by_fqname(dom, false).update_attributes(attrs) }
   end
 end # module MiqAeDatastore
