@@ -49,6 +49,7 @@ describe MiqHostProvisionWorkflow do
         end
 
         it "should create an MiqRequest when calling from_ws" do
+          pending "requires actionwebservice"
           request = MiqHostProvisionWorkflow.from_ws("1.1", "admin", @templateFields, @hostFields, @requester, false, nil, nil)
           request.should be_a_kind_of(MiqRequest)
           opt = request.options
