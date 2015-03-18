@@ -6,10 +6,10 @@ class HostMicrosoft < Host
   def verify_credentials(auth_type=nil, options={})
     raise "no credentials defined" if self.missing_credentials?(auth_type)
 
-    return verify_credentials_windows(self.ipaddress, *self.auth_user_pwd(auth_type)) if MiqServer.my_server(true).has_role?(authentication_check_role)
+    return verify_credentials_windows(self.hostname, *self.auth_user_pwd(auth_type)) if MiqServer.my_server(true).has_role?(authentication_check_role)
 
     # Initiate a verify call from another EVM server if possible.
-    return verify_credentials_task(self.ipaddress, *self.auth_user_pwd(auth_type))
+    return verify_credentials_task(self.hostname, *self.auth_user_pwd(auth_type))
   end
 
   def verify_credentials_task(*authentication)
