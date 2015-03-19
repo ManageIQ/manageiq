@@ -33,11 +33,11 @@
   # production log
   - :button: refresh_production_log
     :image: reload
-    :title: 'Reload the #{@sb[:rails_log]} Log Display'
+    :title: 'Reload the <%= @sb[:rails_log] %> Log Display'
   - :button: fetch_production_log
     :url: '/fetch_production_log'
     :image: download
-    :title: 'Download the Entire #{@sb[:rails_log]} Log File'
+    :title: 'Download the Entire <%= @sb[:rails_log] %> Log File'
 - :name: ldap_domain_vmdb
   :items:
   # collect logs tab
@@ -49,15 +49,15 @@
     - :button: collect_current_logs
       :image: collect_current
       :text: 'Collect current logs'
-      :title: 'Collect the current logs from the selected #{ui_lookup(:table=>"miq_servers")}'
+      :title: 'Collect the current logs from the selected <%= ui_lookup(:table=>"miq_servers") %>'
     - :button: collect_logs
       :image: collect_all
       :text: 'Collect all logs'
-      :title: 'Collect all logs from the selected #{ui_lookup(:table=>"miq_servers")}'
+      :title: 'Collect all logs from the selected <%= ui_lookup(:table=>"miq_servers") %>'
   - :button: log_depot_edit
     :image: edit
     :text: 'Edit'
-    :title: 'Edit the Log Depot settings for the selected #{ui_lookup(:table=>"miq_servers")}'
+    :title: 'Edit the Log Depot settings for the selected <%= ui_lookup(:table=>"miq_servers") %>'
   - :buttonSelect: support_vmdb_choice
     :image: vmdb
     :title: Configuration

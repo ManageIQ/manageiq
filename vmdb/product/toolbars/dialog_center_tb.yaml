@@ -38,26 +38,26 @@
       :image: new
       :text: "Add a new Tab to this Dialog"
       :title: Add a new Tab to this Dialog
-      :url_parms: '?typ=tab&id=#{@edit[:rec_id]}'
+      :url_parms: '?typ=tab&id=<%= @edit[:rec_id] %>'
     - :button: dialog_add_box
       :image: new
       :text: "Add a new Box to this Tab"
       :title: Add a new Box to this Tab
-      :url_parms: '?typ=box&id=#{@edit[:rec_id]}'
+      :url_parms: '?typ=box&id=<%= @edit[:rec_id] %>'
     - :button: dialog_add_element
       :image: new
       :text: "Add a new Element to this Box"
       :title: Add a new Element to this Box
-      :url_parms: '?typ=element&id=#{@edit[:rec_id]}'
+      :url_parms: '?typ=element&id=<%= @edit[:rec_id] %>'
 - :name: dialog_discard
   :items:
   - :button: dialog_res_discard
     :image: discard
-    :title: 'Discard this new #{@sb[:node_typ].titleize}'
-    :url_parms: '?id=#{@edit[:rec_id]}'
+    :title: 'Discard this new <%= @sb[:node_typ].titleize %>'
+    :url_parms: '?id=<%= @edit[:rec_id] %>'
 - :name: dialog_edit_delete
   :items:
   - :button: dialog_resource_remove
     :image: delete
-    :title: "Delete selected #{@sb[:txt]}"
-    :url_parms: '?id=#{@edit[:rec_id]}'
+    :title: "Delete selected <%= @sb[:txt] %>"
+    :url_parms: '?id=<%= @edit[:rec_id] %>'

@@ -8,9 +8,9 @@
   :items:
   - :button: server_delete
     :image: delete
-    :title: 'Delete Server #{session[:tree_selection].name} [#{session[:tree_selection].id}]'
+    :title: 'Delete Server <%= session[:tree_selection].name %> [<%= session[:tree_selection].id %>]'
     :url_parms: 'main_div'
-    :confirm: 'Do you want to delete Server #{session[:tree_selection].name} [#{session[:tree_selection].id}]?'
+    :confirm: 'Do you want to delete Server <%= session[:tree_selection].name %> [<%= session[:tree_selection].id %>]?'
   - :button: role_suspend
     :image: suspend
     :title: 'Suspend the Role on Server'

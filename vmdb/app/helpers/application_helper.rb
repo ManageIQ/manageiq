@@ -259,7 +259,10 @@ module ApplicationHelper
   def build_toolbar_buttons_and_xml(tb_name)
     text = nil                                                      # Local vars for text and title
     title = nil
-    tb_hash = tb_name == "custom_buttons_tb" ? build_custom_buttons_toolbar(@record) : YAML::load(File.open("#{TOOLBARS_FOLDER}/#{tb_name}.yaml"))
+    tb_hash = tb_name == "custom_buttons_tb" ?
+      build_custom_buttons_toolbar(@record) :
+      YAML::load(ERB.new(File.read("#{TOOLBARS_FOLDER}/#{tb_name}.yaml")).result(binding))
+
     # Add custom buttons hash to tb button_groups array
     #custom_hash = custom_buttons_hash(@record) if @record && @lastaction == "show" &&
     # tb_name.ends_with?("center_tb") &&
@@ -341,15 +344,13 @@ module ApplicationHelper
                   props["text"] = CGI.escapeHTML(x_tree_history[bsi[:button].split("_").last.to_i][:text])
                 end
               else
-                eval("text = \"#{bsi[:text]}\"") unless bsi[:text].blank? # Evaluate substitutions in text
-                props["text"] = CGI.escapeHTML("#{text}") unless bsi[:text].blank?
+                props["text"] = CGI.escapeHTML(bsi[:text]) unless bsi[:text].blank?
               end
               props["enabled"] = "#{bsi[:enabled]}" unless bsi[:enabled].blank?
               dis_title = build_toolbar_disable_button(bsi[:button])
               props["enabled"] = "false" if dis_title
               bsi[:title] = dis_title if dis_title
-              eval("title = \"#{bsi[:title]}\"") unless bsi[:title].blank?  # Evaluate substitutions in text
-              props["title"] = dis_title.is_a?(String) ? CGI.escapeHTML(dis_title) : CGI.escapeHTML("#{title}")
+              props["title"] = dis_title.is_a?(String) ? CGI.escapeHTML(dis_title) : CGI.escapeHTML(bsi[:title].to_s)
             end
             bs_node.add_element("item", props)                      # Add buttonSelect child button node
             build_toolbar_save_button(tb_buttons, bsi, bgi[:buttonSelect]) if bsi[:button]  # Save if a button (not sep)
@@ -384,8 +385,7 @@ module ApplicationHelper
           props["text"] = CGI.escapeHTML("#{bgi[:text]}") unless bgi[:text].blank?
           #set pdf button to be hidden if graphical summary screen is set by default
           bgi[:hidden] = %w(download_view vm_download_pdf).include?(bgi[:button]) && button_hide
-          eval("title = \"#{bgi[:title]}\"") if !bgi[:title].blank? # Evaluate substitutions in text
-          props["title"] = dis_title.is_a?(String) ? dis_title : title
+          props["title"] = dis_title.is_a?(String) ? dis_title : bgi[:title]
 
           if bgi[:button] == "chargeback_report_only" && x_active_tree == :cb_reports_tree &&
              @report && !@report.contains_records?
@@ -410,7 +410,6 @@ module ApplicationHelper
                               "type"=>"buttonTwoState",
                               "img"=>"#{bgi[:image] ? bgi[:image] : bgi[:buttonTwoState]}.png",
                               "imgdis"=>"#{bgi[:image] ? bgi[:image] : bgi[:buttonTwoState]}.png"}
-          eval("title = \"#{bgi[:title]}\"") unless bgi[:title].blank?
           props["title"] = bgi[:title] unless bgi[:title].blank?
           props["enabled"] = "#{bgi[:enabled]}" unless bgi[:enabled].blank?
           props["enabled"] = "false" if build_toolbar_disable_button(bgi[:buttonTwoState])
@@ -1494,9 +1493,8 @@ module ApplicationHelper
     tb_buttons[button][:name] = button
     tb_buttons[button][:pressed] = item[:pressed] if item[:pressed]
     tb_buttons[button][:hidden] = item[:hidden] ? true : false
-    eval("title = \"#{item[:title]}\"") if parent && item[:title]
-    tb_buttons[button][:title] = title if parent && item[:title]
-    eval("url = \"#{item[:url]}\"") if item[:url]
+    tb_buttons[button][:title] = item[:title] if parent && item[:title]
+    url = item[:url] if item[:url]
     if ["view_grid","view_tile","view_list"].include?(tb_buttons[button][:name])
       # blows up in sub screens for CI's, need to get rid of first directory and anything after last slash in @gtl_url, that's being manipulated in JS function
       url.gsub!(/^\/[a-z|A-Z|0-9|_|-]+/,"")
@@ -1527,10 +1525,9 @@ module ApplicationHelper
     if tb_buttons[button][:name].in?(collect_log_buttons) && @record.try(:log_depot).try(:requires_support_case?)
       tb_buttons[button][:prompt] = true
     end
-    eval("parms = \"#{item[:url_parms]}\"") if item[:url_parms]
+    parms = item[:url_parms] if item[:url_parms]
     tb_buttons[button][:url_parms] = update_url_parms(parms) if item[:url_parms]
-    # doing eval for ui_lookup in confirm message
-    eval("confirm_title = \"#{item[:confirm]}\"") if item[:confirm]
+    confirm_title = item[:confirm] if item[:confirm]
     tb_buttons[button][:confirm] = confirm_title if item[:confirm]
     tb_buttons[button][:onwhen] = item[:onwhen] if item[:onwhen]
   end

@@ -31,6 +31,6 @@
     - :button: availability_zone_timeline
       :image: timeline
       :text: 'Timelines'
-      :title: 'Show Timelines for this #{ui_lookup(:table=>"availability_zone")}'
+      :title: 'Show Timelines for this <%= ui_lookup(:table=>"availability_zone") %>'
       :url: '/show'
       :url_parms: '?display=timeline'

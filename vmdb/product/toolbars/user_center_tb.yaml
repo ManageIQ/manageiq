@@ -34,5 +34,5 @@
     :items:
     - :button: rbac_user_tags_edit
       :image: tag
-      :text: "Edit '#{session[:customer_name]}' Tags for this User"
-      :title: "Edit '#{session[:customer_name]}' Tags for this User"
+      :text: "Edit '<%= session[:customer_name] %>' Tags for this User"
+      :title: "Edit '<%= session[:customer_name] %>' Tags for this User"

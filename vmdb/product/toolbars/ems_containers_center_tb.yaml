@@ -14,20 +14,20 @@
     - :button: ems_container_new
       :image: new
       :url: '/new'
-      :text: 'Add a New #{ui_lookup(:table=>"ems_container")}'
-      :title: 'Add a New #{ui_lookup(:table=>"ems_container")}'
+      :text: 'Add a New <%= ui_lookup(:table=>"ems_container") %>'
+      :title: 'Add a New <%= ui_lookup(:table=>"ems_container") %>'
     - :button: ems_container_edit
       :image: edit
-      :text: 'Edit Selected #{ui_lookup(:table=>"ems_container")}'
-      :title: 'Select a single #{ui_lookup(:table=>"ems_container")} to edit'
+      :text: 'Edit Selected <%= ui_lookup(:table=>"ems_container") %>'
+      :title: 'Select a single <%= ui_lookup(:table=>"ems_container") %> to edit'
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
     - :button: ems_container_delete
       :image: remove
-      :text: 'Remove #{ui_lookup(:tables=>"ems_containers")} from the VMDB'
-      :title: 'Remove selected #{ui_lookup(:tables=>"ems_containers")} from the VMDB'
+      :text: 'Remove <%= ui_lookup(:tables=>"ems_containers") %> from the VMDB'
+      :title: 'Remove selected <%= ui_lookup(:tables=>"ems_containers") %> from the VMDB'
       :url_parms: 'main_div'
-      :confirm: 'Warning: The selected #{ui_lookup(:tables=>"ems_containers")} and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected #{ui_lookup(:tables=>"ems_containers")}?'
+      :confirm: 'Warning: The selected <%= ui_lookup(:tables=>"ems_containers") %> and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected <%= ui_lookup(:tables=>"ems_containers") %>?'
       :enabled: 'false'
       :onwhen: '1+'
