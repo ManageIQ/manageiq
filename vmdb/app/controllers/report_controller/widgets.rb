@@ -327,6 +327,8 @@ module ReportController::Widgets
     @edit[:new][:title]       = @widget.title
     @edit[:new][:description] = @widget.description
     @edit[:new][:enabled]     = @widget.enabled
+    @edit[:new][:roles] = []   # initializing incase of new widget since visibility is not set yet.
+    @edit[:new][:groups] = []    # initializing incase of new widget since visibility is not set yet.
 
     @edit[:visibility_types] = [["<To All Users>","all"],["<By Role>","role"],["<By Group>","group"]]
     #Visibility Box
@@ -335,21 +337,13 @@ module ReportController::Widgets
       if @widget.visibility[:roles][0] == "_ALL_"
         @edit[:new][:roles] = ["_ALL_"]
       else
-        @edit[:new][:roles] ||= Array.new
-        @widget.visibility[:roles].each do |r|
-          role = MiqUserRole.find_by_name(r)
-          @edit[:new][:roles].push(to_cid(role.id)) if role
-        end
+        roles = MiqUserRole.find_by_name(@widget.visibility[:roles])
+        @edit[:new][:roles] = roles.collect { |role| to_cid(role.id) }.sort
       end
-      @edit[:new][:roles].sort! unless @edit[:new][:roles].blank?
     elsif @widget.visibility && @widget.visibility[:groups]
       @edit[:new][:visibility_typ] = "group"
-      @edit[:new][:groups] ||= Array.new
-      @widget.visibility[:groups].each do |g|
-        group = MiqGroup.find_by_description(g)
-        @edit[:new][:groups].push(to_cid(group.id)) if group
-      end
-      @edit[:new][:groups].sort! unless @edit[:new][:groups].blank?
+      groups = MiqGroup.find_by_description(@widget.visibility[:groups])
+      @edit[:new][:groups] = groups.collect { |group| to_cid(group.id) }.sort
     end
     @edit[:new][:roles] ||= Array.new   # initializing incase of new widget since visibility is not set yet.
     @edit[:sorted_user_roles] =
@@ -372,7 +366,6 @@ module ReportController::Widgets
       @edit[:rpt] = MiqReport.find_by_id(@widget.resource_id)
       @menu = get_reports_menu
       if @sb[:wtype] == "r"
-        @menu = get_reports_menu
         @menu.each do |m|
           m[1].each do |f|
               f.each do |r|

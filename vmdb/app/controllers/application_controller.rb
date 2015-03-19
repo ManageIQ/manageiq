@@ -972,27 +972,16 @@ class ApplicationController < ActionController::Base
       #array of all reports if menu not configured
       @rep = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
       if tree_type == "timeline"
-        @rep.each do |r|
-          if r.timeline != nil
-            @data.push(r)
-          end
-        end
+        @data = @rep.reject { |r| r.timeline.nil? }
       else
-        @rep.each do |r|
-          if r.template_type == "report" && !r.template_type.blank?
-            @data.push(r)
-          end
+        @data = @rep.select do |r|
+          r.template_type == "report" && !r.template_type.blank?
         end
       end
       @data.each do |r|
         next if r.template_type != "report" && ! r.template_type.blank?
         r_group = r.rpt_group == "Custom" ? "#{@sb[:grp_title]} - Custom" : r.rpt_group # Get the report group
-        title = r_group.split('-')
-        i = 0
-        while i < title.length
-          title[i] = title[i].strip
-          i += 1
-        end
+        title = r_group.split('-').collect(&:strip)
         if @temp_title != title[0]
           @temp_title = title[0]
           reports = Array.new
@@ -1027,18 +1016,15 @@ class ApplicationController < ActionController::Base
     else
       # Building custom reports array for super_admin/admin roles, it doesnt show up on menu if their menu was set which didnt contain custom folder in it
       temp = Array.new
-      subfolder = Array.new
-      rep = Array.new
-      @custom_folder = Array.new
-      @custom_folder.push(@sb[:grp_title])
-      subfolder.push("Custom")
+      subfolder = %w{ Custom }
+      @custom_folder = [ @sb[:grp_title] ]
       @custom_folder.push([subfolder]) unless @custom_folder.include?([subfolder])
+
       custom = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
-      custom.each do |r|
-        if r.rpt_type == "Custom" && (user.admin_user? || r.miq_group_id.to_i == session[:group].to_i)
-          rep.push(r.name) unless rep.include?(r.name)
-        end
-      end
+      rep = custom.select do |r|
+        r.rpt_type == "Custom" && (user.admin_user? || r.miq_group_id.to_i == session[:group].to_i)
+      end.map(&:name).uniq
+
       subfolder.push(rep) unless subfolder.include?(rep)
       temp.push(@custom_folder) unless temp.include?(@custom_folder)
       if tree_type == "timeline"
