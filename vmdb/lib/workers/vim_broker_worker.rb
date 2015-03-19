@@ -239,7 +239,7 @@ class VimBrokerWorker < WorkerBase
       @waitForUpdates_sleep = nil
       @notification_enabled = false
       self.create_miq_vim_broker_server
-      self.prime_all_ems(emses_to_prime) if emses_to_prime.kind_of?(Array)
+      self.prime_all_ems(emses_to_prime) if emses_to_prime
 
       $log.info("#{self.log_prefix} Starting broker server...Complete")
     rescue => err
