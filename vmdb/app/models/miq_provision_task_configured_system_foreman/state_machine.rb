@@ -47,16 +47,4 @@ module MiqProvisionTaskConfiguredSystemForeman::StateMachine
   def build?
     options.key?(:build) ? options[:build] : true
   end
-
-  def powered_off?
-    !source.with_provider_object(&:powered_on?)
-  end
-
-  def building?
-    source.pending?
-  end
-
-  def refresh
-    EmsRefresh.queue_refresh(source)
-  end
 end
