@@ -11,8 +11,12 @@ class EmsRedhat < EmsInfra
     true
   end
 
+  def supported_auth_types
+    %w(default metrics)
+  end
+
   def supports_authentication?(authtype)
-    %w(default metrics).include?(authtype.to_s)
+    supported_auth_types.include?(authtype.to_s)
   end
 
   def self.raw_connect(server, port, username, password, service = "Service")

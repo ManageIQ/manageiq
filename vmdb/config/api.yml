@@ -351,7 +351,7 @@
     :description: Providers
     :options:
     - :collection
-    :methods: *70174834085860
+    :methods: *70174834085620
     :klass: ExtManagementSystem
     :subcollections:
     - :tags
@@ -359,26 +359,22 @@
     - :policy_profiles
     :collection_actions:
       :post:
-      - :name: add
+      - :name: create
         :identifier: ems_infra_new
-        :disabled: true
       - :name: edit
         :identifier: ems_infra_edit
-        :disabled: true
       - :name: refresh
         :identifier: ems_infra_refresh
-        :disabled: true
       - :name: delete
         :identifier: ems_infra_delete
-        :disabled: true
     :resource_actions:
       :post:
       - :name: edit
         :identifier: ems_infra_edit
-        :disabled: true
       - :name: refresh
+        :identifier: ems_infra_refresh
+      - :name: delete
         :identifier: ems_infra_delete
-        :disabled: true
       :delete:
       - :name: delete
         :identifier: ems_infra_delete
