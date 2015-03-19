@@ -102,7 +102,7 @@ class MiqAeClass < ActiveRecord::Base
   end
 
   def state_machine?
-    ae_fields.detect { |f| f.aetype == 'state' } != nil
+    ae_fields.any? { |f| f.aetype == 'state' }
   end
 
   def self.get_homonymic_across_domains(fqname, enabled = nil)
