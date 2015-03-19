@@ -723,7 +723,7 @@ class ConfigurationController < ApplicationController
                     :templateinfra => %w(Infrastructure Virtual\ Machines Templates),
                     :vm            => %w(Services Workloads VMs\ &\ Instances),
                     :vmcloud       => %w(Cloud Instances Instances),
-                    :vminfra       => %w(Infrastructure Virtual Machines VMs)
+                    :vminfra       => %w(Infrastructure Virtual\ Machines VMs)
                   }
 
   def merge_in_user_settings(settings)
