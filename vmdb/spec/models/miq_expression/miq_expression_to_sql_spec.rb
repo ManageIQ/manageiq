@@ -261,7 +261,7 @@ module MiqExpressionToSqlSpec
 
       sql, incl, attrs = exp.to_sql
       attrs[:supported_by_sql].should be_true
-      sql.should == "vms.id IN (SELECT DISTINCT vm_or_template_id FROM system_services WHERE (name = 'httpd') AND (typename = 'linux_initprocess' OR typename = 'linux_systemd'))"
+      sql.should == "vms.id IN (SELECT DISTINCT vm_or_template_id FROM system_services WHERE (name = 'httpd') AND ((typename = 'linux_initprocess' OR typename = 'linux_systemd')))"
 
       exp = YAML.load '--- !ruby/object:MiqExpression
     context_type:
@@ -273,7 +273,7 @@ module MiqExpressionToSqlSpec
 
       sql, incl, attrs = exp.to_sql
       attrs[:supported_by_sql].should be_true
-      sql.should == "vms.id IN (SELECT DISTINCT vm_or_template_id FROM accounts WHERE (name = 'GT') AND (\"accttype\" = 'user'))"
+      sql.should == "vms.id IN (SELECT DISTINCT vm_or_template_id FROM accounts WHERE (name = 'GT') AND (\"accounts\".\"accttype\" = 'user'))"
     end
 
     it "should test_fb10645" do
