@@ -14,20 +14,20 @@
     - :button: container_group_new
       :image: new
       :url: '/new'
-      :text: 'Add a New <%= ui_lookup(:table=>"container_group") %>'
-      :title: 'Add a New <%= ui_lookup(:table=>"container_group") %>'
+      :text: 'Add a New #{ui_lookup(:table=>"container_group")}'
+      :title: 'Add a New #{ui_lookup(:table=>"container_group")}'
     - :button: container_group_edit
       :image: edit
-      :text: 'Edit Selected <%= ui_lookup(:table=>"container_group") %>'
-      :title: 'Select a single <%= ui_lookup(:table=>"container_group") %> to edit'
+      :text: 'Edit Selected #{ui_lookup(:table=>"container_group")}'
+      :title: 'Select a single #{ui_lookup(:table=>"container_group")} to edit'
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
     - :button: container_group_delete
       :image: remove
-      :text: 'Remove <%= ui_lookup(:tables=>"container_groups") %> from the VMDB'
-      :title: 'Remove selected <%= ui_lookup(:tables=>"container_groups") %> from the VMDB'
+      :text: 'Remove #{ui_lookup(:tables=>"container_groups")} from the VMDB'
+      :title: 'Remove selected #{ui_lookup(:tables=>"container_groups")} from the VMDB'
       :url_parms: 'main_div'
-      :confirm: 'Warning: The selected <%= ui_lookup(:tables=>"container_groups") %> and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected <%= ui_lookup(:tables=>"container_groups") %>?'
+      :confirm: 'Warning: The selected #{ui_lookup(:tables=>"container_groups")} and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected #{ui_lookup(:tables=>"container_groups")}?'
       :enabled: 'false'
       :onwhen: '1+'

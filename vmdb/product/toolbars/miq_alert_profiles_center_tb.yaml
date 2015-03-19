@@ -13,5 +13,5 @@
     :items:
     - :button: alert_profile_new
       :image: new
-      :text: 'Add a New <%= ui_lookup(:model=>@sb[:folder]) %> Alert Profile'
-      :title: 'Add a New <%= ui_lookup(:model=>@sb[:folder]) %> Alert Profile'
+      :text: 'Add a New #{ui_lookup(:model=>@sb[:folder])} Alert Profile'
+      :title: 'Add a New #{ui_lookup(:model=>@sb[:folder])} Alert Profile'

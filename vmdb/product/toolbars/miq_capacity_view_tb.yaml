@@ -13,15 +13,15 @@
     - :button: miq_capacity_download_text
       :image: txt
       :title: "Download this report in text format"
-      :url: '/<%= x_active_tree == :utilization_tree ? "util_report" : "planning_report" %>_download'
+      :url: '/#{x_active_tree == :utilization_tree ? "util_report" : "planning_report"}_download'
       :url_parms: "?typ=txt"
     - :button: miq_capacity_download_csv
       :image: csv
       :title: "Download this report in CSV format"
-      :url: '/<%= x_active_tree == :utilization_tree ? "util_report" : "planning_report" %>_download'
+      :url: '/#{x_active_tree == :utilization_tree ? "util_report" : "planning_report"}_download'
       :url_parms: "?typ=csv"
     - :button: miq_capacity_download_pdf
       :image: pdf
       :title: "Download this report in PDF format"
-      :url: '/<%= x_active_tree == :utilization_tree ? "util_report" : "planning_report" %>_download'
+      :url: '/#{x_active_tree == :utilization_tree ? "util_report" : "planning_report"}_download'
       :url_parms: "?typ=pdf"

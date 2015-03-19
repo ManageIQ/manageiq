@@ -8,8 +8,8 @@
   :items:
   - :button: refresh_log
     :image: reload
-    :title: 'Reload the <%= @msg_title %> Log Display'
+    :title: 'Reload the #{@msg_title} Log Display'
   - :button: fetch_log
     :image: download
-    :title: 'Download the Entire <%= @msg_title %> Log File'
+    :title: 'Download the Entire #{@msg_title} Log File'
     :url: '/fetch_log'

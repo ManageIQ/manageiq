@@ -22,4 +22,4 @@
     - :button: ab_group_reorder
       :image: edit-assign
       :text: 'Reorder'
-      :title: 'Reorder <%= x_active_tree == :ab_tree ? "Buttons Groups" : "Buttons and Groups" %>'
+      :title: 'Reorder #{x_active_tree == :ab_tree ? "Buttons Groups" : "Buttons and Groups"}'

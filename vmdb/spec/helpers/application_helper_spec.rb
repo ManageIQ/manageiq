@@ -2,55 +2,6 @@ require "spec_helper"
 include JsHelper
 
 describe ApplicationHelper do
-  context "build_custom_buttons_toolbar" do
-    class Controller
-      include ApplicationHelper
-
-      attr_reader :request
-
-      def initialize(sb, request)
-        @sb      = sb
-        @request = request
-      end
-
-      def role_allows(options)
-        true
-      end
-    end
-
-    it 'should substitute dynamic function values' do
-      req        = ActionDispatch::Request.new Rack::MockRequest.env_for '/?controller=foo'
-      controller = Controller.new({:active_tree => :cb_reports_tree}, req)
-      json,      = controller.build_toolbar_buttons_and_xml 'storages_center_tb'
-      title_text = ui_lookup(:tables => "storages")
-      menu_info  = JSON.parse json
-
-      menu_info.each_value do |value|
-        %w( title confirm ).each do |field|
-          if value[field]
-            expect(value[field]).to match(title_text)
-          end
-        end
-      end
-    end
-
-    it 'should substitute dynamic ivar values' do
-      req = ActionDispatch::Request.new Rack::MockRequest.env_for '/?controller=foo'
-      controller = Controller.new({:active_tree => :cb_reports_tree,
-                                   :nodeid      => 'storages',
-                                   :mode        => 'foo' }, req)
-
-      json, = controller.build_toolbar_buttons_and_xml 'miq_policies_center_tb'
-      title_text = ui_lookup(:model => "storages")
-
-      menu_info = JSON.parse json
-      menu_info.each_value do |value|
-        next unless value['title']
-        expect(value['title']).to match(title_text)
-        expect(value['title']).to match("Foo") # from :mode
-      end
-    end
-  end
 
   describe "#role_allows" do
     before(:each) do
