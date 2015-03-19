@@ -108,11 +108,9 @@ module ApiSpecHelper
 
     collections.each do |collection|
       self.class.class_eval do
-        define_method("#{collection}_url".to_sym) do
-          @cfme["#{collection}_url".to_sym]
-        end
-        define_method("#{collection.singularize}_url".to_sym) do |id|
-          "#{@cfme["#{collection}_url".to_sym]}/#{id}"
+        define_method("#{collection}_url".to_sym) do |id = nil|
+          path = @cfme["#{collection}_url".to_sym]
+          id.nil? ? path : "#{path}/#{id}"
         end
       end
     end
@@ -180,5 +178,185 @@ module ApiSpecHelper
 
   def fetch_value(value)
     value.kind_of?(Symbol) && respond_to?(value) ? public_send(value) : value
+  end
+
+  # Rest API Expects
+
+  def expect_request_success
+    expect(@code).to eq(Rack::Utils.status_code(:ok))           # 200
+  end
+
+  def expect_request_success_with_no_content
+    expect(@code).to eq(Rack::Utils.status_code(:no_content))   # 204
+  end
+
+  def expect_bad_request(error_message = nil)
+    expect(@code).to eq(Rack::Utils.status_code(:bad_request))  # 400
+    return if error_message.blank?
+
+    expect(@result).to have_key("error")
+    expect(@result["error"]["message"]).to match(error_message)
+  end
+
+  def expect_user_unauthorized
+    expect(@code).to eq(Rack::Utils.status_code(:unauthorized)) # 401
+  end
+
+  def expect_request_forbidden
+    expect(@code).to eq(Rack::Utils.status_code(:forbidden))    # 403
+  end
+
+  def expect_resource_not_found
+    expect(@code).to eq(Rack::Utils.status_code(:not_found))    # 404
+  end
+
+  def expect_result_resources_to_include_data(collection, data)
+    expect(@result).to have_key(collection)
+    fetch_value(data).each do |key, value|
+      value_list = fetch_value(value)
+      expect(@result[collection].size).to eq(value_list.size)
+      expect(@result[collection].collect { |r| r[key] }).to match_array(value_list)
+    end
+  end
+
+  def expect_result_resources_to_include_hrefs(collection, hrefs)
+    expect(@result).to have_key(collection)
+    href_list = fetch_value(hrefs)
+    expect(@result[collection].size).to eq(href_list.size)
+    href_list.each do |href|
+      expect(resources_include_suffix?(@result[collection], "href", href)).to be_true
+    end
+  end
+
+  def expect_result_resources_to_match_key_data(collection, key, values)
+    value_list = fetch_value(values)
+    expect(@result).to have_key(collection)
+    expect(@result[collection].size).to eq(value_list.size)
+    @result[collection].zip(value_list).each do |hash, value|
+      expect(hash).to have_key(key)
+      expect(hash[key]).to match(value)
+    end
+  end
+
+  def expect_result_resource_keys_to_match_pattern(collection, key, pattern)
+    pattern = fetch_value(pattern)
+    expect(@result).to have_key(collection)
+    expect(@result[collection].all? { |result| result[key].match(pattern) }).to be_true
+  end
+
+  def expect_result_to_have_keys(keys)
+    fetch_value(keys).each { |key| expect(@result).to have_key(key) }
+  end
+
+  def expect_result_to_match_hash(result, attr_hash)
+    fetch_value(attr_hash).each do |key, value|
+      expect(result).to have_key(key)
+      value = fetch_value(value)
+      if key == "href" || value.kind_of?(Regexp)
+        expect(result[key]).to match(value)
+      else
+        expect(result[key]).to eq(value)
+      end
+    end
+  end
+
+  def expect_result_resources_to_match_hash(result_hash)
+    expect(@result).to have_key("resources")
+    @result["resources"].zip(fetch_value(result_hash)).each do |actual, expected|
+      expect_result_to_match_hash(actual, expected)
+    end
+  end
+
+  def expect_result_resource_keys_to_be_like_klass(collection, key, klass)
+    expect(@result).to have_key(collection)
+    expect(@result[collection].all? { |result| result[key].kind_of?(klass) }).to be_true
+  end
+
+  def expect_result_resources_to_include_keys(collection, keys)
+    expect(@result).to have_key(collection)
+    results = @result[collection]
+    fetch_value(keys).each { |key| expect(results.all? { |r| r.key?(key) }).to be_true }
+  end
+
+  def expect_result_resources_to_have_only_keys(collection, keys)
+    key_list = fetch_value(keys).sort
+    expect(@result).to have_key(collection)
+    expect(@result[collection].all? { |result| result.keys.sort == key_list }).to be_true
+  end
+
+  def expect_results_match_key_pattern(collection, key, value)
+    pattern = fetch_value(value)
+    expect(@result).to have_key(collection)
+    expect(@result[collection].all? { |result| result[key].match(pattern) }).to be_true
+  end
+
+  def expect_result_to_represent_task(result)
+    expect(result).to have_key("task_id")
+    expect(result).to have_key("task_href")
+  end
+
+  # Primary result construct methods
+
+  def expect_empty_query_result(collection)
+    expect_request_success
+    expect(@result).to have_key("name")
+    expect(@result["name"]).to eq(collection.to_s)
+    expect(@result["resources"]).to be_empty
+  end
+
+  def expect_query_result(collection, subcount, count = nil)
+    expect_request_success
+    expect(@result).to have_key("name")
+    expect(@result["name"]).to eq(collection.to_s)
+    expect(@result["subcount"]).to eq(fetch_value(subcount))
+    expect(@result["resources"].size).to eq(fetch_value(subcount))
+    expect(@result["count"]).to eq(fetch_value(count)) if count.present?
+  end
+
+  def expect_single_resource_query(attr_hash = {})
+    expect_request_success
+    expect_result_to_match_hash(@result, fetch_value(attr_hash))
+  end
+
+  def expect_single_action_result(options = {})
+    expect_request_success
+    if options[:success]
+      expect(@result).to have_key("success")
+      expect(@result["success"]).to eq(options[:success])
+    end
+    if options[:message]
+      expect(@result).to have_key("message")
+      expect(@result["message"]).to match(options[:message])
+    end
+    if options[:href]
+      expect(@result).to have_key("href")
+      expect(@result["href"]).to match(fetch_value(options[:href]))
+    end
+
+    expect_result_to_represent_task(@result) if options[:task]
+  end
+
+  def expect_multiple_action_result(count, options = {})
+    expect_request_success
+    expect(@result).to have_key("results")
+    results = @result["results"]
+    expect(results.size).to eq(count)
+    expect(results.all? { |r| r["success"] }).to be_true
+
+    results.each { |r| expect_result_to_represent_task(r) } if options[:task]
+  end
+
+  def expect_tagging_result(tagging_results)
+    expect_request_success
+    tag_results = fetch_value(tagging_results)
+    expect(@result).to have_key("results")
+    results = @result["results"]
+    expect(results.size).to eq(tag_results.size)
+    [results, tag_results].transpose do |result, tag_result|
+      expect(result["success"]).to      eq(tag_result[:success])
+      expect(result["href"]).to         match(tag_result[:href])
+      expect(result["tag_category"]).to eq(tag_result[:tag_category])
+      expect(result["tag_name"]).to     eq(tag_result[:tag_name])
+    end
   end
 end
