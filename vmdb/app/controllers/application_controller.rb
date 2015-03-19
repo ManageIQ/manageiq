@@ -102,6 +102,7 @@ class ApplicationController < ActionController::Base
       end
       format.html do                # HTML, send error screen
         @layout = "exception"
+        response.status = 500
         render(:template => "layouts/exception", :locals => { :message => msg })
       end
       format.any { render :nothing => true, :status => 404 }  # Anything else, just send 404

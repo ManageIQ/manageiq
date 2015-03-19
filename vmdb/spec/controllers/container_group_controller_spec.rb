@@ -23,6 +23,14 @@ describe ContainerGroupController do
   end
 
   it "renders show_list" do
+    session[:settings] = {:default_search => 'foo',
+                          :views          => {:containernode => 'list'},
+                          :perpage        => {:list => 10}}
+    session[:userid] = User.current_user.userid
+    session[:eligible_groups] = []
+    FactoryGirl.create(:vmdb_database)
+    EvmSpecHelper.create_guid_miq_server_zone
+
     get :show_list
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
