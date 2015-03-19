@@ -39,10 +39,10 @@ module EmsRefresh::SaveInventoryHelper
     # Find the record, and update if found, else create it
     found = parent.send(type)
     if found.nil?
-      found = parent.send("build_#{type}", hash)
+      found = parent.send("build_#{type}", hash.except(:id))
       parent.send("#{type}=", found)
     else
-      found.update_attributes!(hash.except(:type))
+      found.update_attributes!(hash.except(:id, :type))
     end
     found
   end
@@ -51,10 +51,10 @@ module EmsRefresh::SaveInventoryHelper
     # Find the record, and update if found, else create it
     found = save_inventory_record_index_fetch(record_index, record_index_columns, hash, find_key)
     if found.nil?
-      found = parent.send(type).build(hash)
+      found = parent.send(type).build(hash.except(:id))
       new_records << found
     else
-      found.update_attributes!(hash.except(:type))
+      found.update_attributes!(hash.except(:id, :type))
       deletes.delete(found) unless deletes.blank?
     end
     found
