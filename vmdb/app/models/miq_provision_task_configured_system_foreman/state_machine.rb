@@ -4,10 +4,6 @@ module MiqProvisionTaskConfiguredSystemForeman::StateMachine
     log_clone_options(options)
   end
 
-  def do_request
-    signal :run_provision
-  end
-
   def run_provision
     source.with_provider_object { |p| p.update(options) }
     signal build? ? :power_off : :provision_complete
