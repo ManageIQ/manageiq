@@ -5,7 +5,7 @@ class MiqProvisionTask < MiqRequestTask
   validates_inclusion_of :state, :in => %w(pending queued active provisioned finished), :message => "should be pending, queued, active, provisioned or finished"
 
   AUTOMATE_DRIVES = true
-  SUBCLASSES      = %w(MiqProvision)
+  SUBCLASSES      = %w(MiqProvision MiqProvisionTaskConfiguredSystemForeman)
 
   def self.base_model
     MiqProvisionTask
