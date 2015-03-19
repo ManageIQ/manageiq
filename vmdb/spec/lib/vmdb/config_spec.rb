@@ -10,6 +10,29 @@ describe VMDB::Config do
     described_class.load_config_file("test.yml").should == {:smtp => {:password => password}}
   end
 
+  context "#config_mtime_from_db" do
+    let(:config) { described_class.new("vmdb") }
+
+    it "nil server" do
+      config.config_mtime_from_db.should == Time.at(0)
+    end
+
+    it "server with configuration changes" do
+      _guid, server, _zone = EvmSpecHelper.create_guid_miq_server_zone
+      server.configurations << Configuration.create(:typ => "vmdb")
+      db_record = server.reload.configurations.first
+      time = config.config_mtime_from_db
+      time.should be_utc
+      time.should be_within(1.second).of(db_record.updated_on)
+    end
+
+    it "server without configuration changes" do
+      _guid, _server, _zone = EvmSpecHelper.create_guid_miq_server_zone
+      # Note: server.configurations is empty
+      config.config_mtime_from_db.should == Time.at(0)
+    end
+  end
+
   it ".get_file" do
     server        = EvmSpecHelper.create_guid_miq_server_zone[1]
     config        = VMDB::Config.new("vmdb")
