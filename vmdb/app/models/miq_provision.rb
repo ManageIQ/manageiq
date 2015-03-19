@@ -16,15 +16,18 @@ class MiqProvision < MiqProvisionTask
   include_concern 'StateMachine'
   include_concern 'Tagging'
 
-  alias_attribute :vm,          :destination
-  alias_attribute :vm_template, :source
+  alias_attribute :miq_provision_request, :miq_request   # Legacy provisioning support
+  alias_attribute :provision_type,        :request_type  # Legacy provisioning support
+  alias_attribute :vm,                    :destination
+  alias_attribute :vm_template,           :source
 
   before_create :set_template_and_networking
 
+  virtual_belongs_to :miq_provision_request  # Legacy provisioning support
   virtual_belongs_to :vm
   virtual_belongs_to :vm_template
-  virtual_column     :provision_type, :type => :string
   virtual_column     :placement_auto, :type => :boolean
+  virtual_column     :provision_type, :type => :string  # Legacy provisioning support
 
   CLONE_SYNCHRONOUS     = false
   CLONE_TIME_LIMIT      = 4.hours
