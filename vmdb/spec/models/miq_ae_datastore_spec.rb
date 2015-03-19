@@ -1,5 +1,6 @@
 require "spec_helper"
 require 'miq_ae_yaml_import_zipfs'
+include AutomationSpecHelper
 
 describe MiqAeDatastore do
   before(:each) do
@@ -145,4 +146,20 @@ describe MiqAeDatastore do
     end
   end
 
+  describe "#path_includes_domain?" do
+    it "instance path" do
+      create_ae_model(:name => 'DOM1', :priority => 20, :ae_class => 'cLaSS1',
+                      :ae_namespace => 'A/b/C', :instance_name => 'Fred')
+      MiqAeDatastore.path_includes_domain?('/DOM1/A/b/C/Class1/Fred').should be_true
+      MiqAeDatastore.path_includes_domain?('/A/b/C/Class1/Fred').should be_false
+    end
+
+    it "class path" do
+      options = {:has_instance_name => false}
+      create_ae_model(:name => 'DOM1', :priority => 20, :ae_class => 'cLaSS1',
+                      :ae_namespace => 'A/b/C', :instance_name => 'Fred')
+      MiqAeDatastore.path_includes_domain?('/DOM1/A/b/C/Class1', options).should be_true
+      MiqAeDatastore.path_includes_domain?('/A/b/C/Class1', options).should be_false
+    end
+  end
 end
