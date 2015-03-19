@@ -2,6 +2,8 @@ require "spec_helper"
 
 describe EmsRefresh::Refreshers::OpenstackRefresher do
   before(:each) do
+    EmsRefresh.debug_failures = false
+
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(
       :ems_openstack,
