@@ -221,12 +221,19 @@ function miqSparkle(status) {
 }
 
 function miqSparkleOn() {
-  if($('#notification').length) $('#notification').show();
-  miqSpinner(true);
+  if (miqDomElementExists('advsearchModal') && ($('#advsearchModal').hasClass('modal fade in'))) {
+    if (miqDomElementExists('searching_spinner_center')) miqSearchSpinner(true);
+    miqSpinner(false);
+    if($('#notification').length) $('#notification').hide();
+  } else {
+    if($('#notification').length) $('#notification').show();
+    miqSpinner(true);
+  }
 }
 
 function miqSparkleOff() {
   miqSpinner(false);
+  if (miqDomElementExists('searching_spinner_center')) miqSearchSpinner(false);
   if($('#notification').length) $('#notification').hide();
   if($('#rep_notification').length) $('#rep_notification').hide();
 }
@@ -1229,6 +1236,39 @@ function miqSpinner(status){
     }
   } else {
     if (typeof spinner != "undefined") spinner.stop();
+  }
+}
+
+// Start/stop the search spinner
+function miqSearchSpinner(status){
+  if (status) {
+    if(miqDomElementExists('search_notification')) $('#search_notification').show();
+    if (typeof search_spinner == "undefined") {
+      var opts = {
+        lines: 13, // The number of lines to draw
+        length: 20, // The length of each line
+        width: 10, // The line thickness
+        radius: 30, // The radius of the inner circle
+        corners: 1, // Corner roundness (0..1)
+        rotate: 0, // The rotation offset
+        direction: 1, // 1: clockwise, -1: counterclockwise
+        color: '#000', // #rgb or #rrggbb or array of colors
+        speed: 1, // Rounds per second
+        trail: 60, // Afterglow percentage
+        shadow: false, // Whether to render a shadow
+        hwaccel: false, // Whether to use hardware acceleration
+        className: 'spinner', // The CSS class to assign to the spinner
+        zIndex: 2e9, // The z-index (defaults to 2000000000)
+        top: 'auto', // Top position relative to parent in px
+        left:'auto' // Left position relative to parent in px
+      };
+      search_spinner = new Spinner(opts).spin($('#searching_spinner_center')[0]);
+    } else {
+      search_spinner.spin($('#searching_spinner_center')[0]);
+    }
+  } else {
+    if(miqDomElementExists('search_notification')) $('#search_notification').hide();
+    if (typeof search_spinner != "undefined") search_spinner.stop();
   }
 }
 
