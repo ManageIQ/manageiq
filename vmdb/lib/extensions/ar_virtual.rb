@@ -318,6 +318,7 @@ module ActiveRecord
   module Associations
     class Preloader
       def preloaders_on_with_virtual(association, records, preload_scope = nil)
+        records = records.compact
         records_model = records.first.class
         return preloaders_on_without_virtual(association, records, preload_scope) if records.empty?
 
