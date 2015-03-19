@@ -286,8 +286,8 @@ module PxeController::IsoDatastores
     @edit[:rec_id] = @isd.id || nil
     @edit[:new][:ems_id] = @isd.ext_management_system ? @isd.ext_management_system.id : nil
 
-    emses_with_iso_datastores = EmsRedhat.includes(:iso_datastore).select(&:iso_datastore)
-    @edit[:emses] = emses_with_iso_datastores.sort_by(&:name).collect { |ems| [ems.name, ems.id] }
+    emses_without_iso_datastores = EmsRedhat.includes(:iso_datastore).where(:iso_datastores => {:id => nil})
+    @edit[:emses] = emses_without_iso_datastores.sort_by(&:name).collect { |ems| [ems.name, ems.id] }
 
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit] = @edit
