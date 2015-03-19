@@ -18,6 +18,8 @@ status_state = $evm.root['ae_status_state']
 $evm.log("info", "Server:<#{server.name}> Ae_Result:<#{$evm.root['ae_result']}> State:<#{state}>")
 $evm.log("info", "Step:<#{step}> Status_State:<#{status_state}> Status:<#{status}>")
 
+vm = $evm.root['vm']
+
 # Update Status for on_error for all states other than the first state which is startretirement
 # in the retirement state machine.
 if $evm.root['ae_result'] == 'error'
