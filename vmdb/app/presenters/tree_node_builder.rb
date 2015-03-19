@@ -168,8 +168,24 @@ class TreeNodeBuilder
 
   def node_with_display_name(image)
     text = object.display_name.blank? ? object.name : "#{object.display_name} (#{object.name})"
-    text = add_read_only_suffix(text) if object.kind_of?(MiqAeNamespace) && object.domain? && !object.editable?
-    generic_node(text, image_for_node(object, image), "#{tooltip_prefix_for_node(object)}: #{text}")
+    if object.kind_of?(MiqAeNamespace) && object.domain? && (!object.editable? || !object.enabled)
+      text = add_read_only_suffix(object, text)
+      miq_ae_node(object.enabled, text, image_for_node(object, image), "#{tooltip_prefix_for_node(object)}: #{text}")
+    else
+      generic_node(text, image_for_node(object, image), "#{tooltip_prefix_for_node(object)}: #{text}")
+    end
+  end
+
+  def miq_ae_node(enabled, text, image, tip)
+    text = ERB::Util.html_escape(text) unless text.html_safe?
+    @node = {
+      :key   => build_object_id,
+      :title => text,
+      :icon  => image
+    }
+    @node[:addClass] = "product-strikethru-node" unless enabled
+    @node[:expand] = true if options[:open_all]  # Start with all nodes open
+    tooltip(tip)
   end
 
   def image_for_node(object, image)
