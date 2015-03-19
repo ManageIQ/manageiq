@@ -2,47 +2,47 @@
   = render :partial => "layouts/flash_msg"
   - case @display
   - when "devices"
-    %table.style3
+    %table.table.table-bordered.table-striped
       %thead
         %tr
-          %th{:colspan => 2, :align => 'left'}=_('Devices')
+          %th=_('Devices')
       - unless @devices.empty?
         - @devices.each do |item|
-          %tr.no-hover{:class => cycle('row0', 'row1'), :name => 'rel'}
-            %td.label
+          %tr
+            %th
               = h(item[:device])
             %td
               %img{:src => "/images/icons/new/hardware-#{item[:icon].downcase}.png"}
               = h(item[:description])
   - when "os_info"
     - if @osinfo
-      %table.style3
+      %table.table.table-bordered.table-striped
         %thead
           %tr
             %th{:colspan => 2, :align => 'left'}=_('OS Information')
         - @osinfo.each do |item|
-          %tr.no-hover{:class => cycle('row0', 'row1'), :name => 'rel'}
-            %td.label
+          %tr
+            %th
               = h(item[:osinfo])
             %td
               = h(item[:description])
-        %tr.no-hover{:class => cycle('row0', 'row1')}
-          %td.label=_('Hostname')
+        %tr
+          %th=_('Hostname')
           %td
             = h(@host.hostname)
-        %tr.no-hover{:class => cycle('row0', 'row1')}
-          %td.label=_('IP Address')
+        %tr
+          %th=_('IP Address')
           %td
             = h(@host.ipaddress)
   - when "hv_info"
     - if @vmminfo
-      %table.style3
+      %table.table.table-bordered.table-striped
         %thead
           %tr
-            %th{:colspan => 2, :align => 'left'}=_('OS Information')
+            %th{:colspan => 2}=_('OS Information')
         - @vmminfo.each do |item|
-          %tr.no-hover{:class => cycle('row0', 'row1')}
-            %td.label
+          %tr
+            %th
               = h(item[:vmminfo])
             %td
               = h(item[:description])
