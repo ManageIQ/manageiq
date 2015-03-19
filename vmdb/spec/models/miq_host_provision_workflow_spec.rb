@@ -36,6 +36,7 @@ describe MiqHostProvisionWorkflow do
 
       context "Without a Valid IPMI Host," do
         it "should not create an MiqRequest when calling from_ws" do
+          pending "requires actionwebservice"
           lambda { MiqHostProvisionWorkflow.from_ws("1.1", "admin", @templateFields, @hostFields, @requester, false, nil, nil)}.should raise_error(RuntimeError)
         end
       end
