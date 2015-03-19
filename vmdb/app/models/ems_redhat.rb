@@ -23,7 +23,7 @@ class EmsRedhat < EmsInfra
     require 'ovirt'
     params = {
       :server     => server,
-      :port       => port,
+      :port       => port.presence && port.to_i,
       :username   => username,
       :password   => password,
       :verify_ssl => false
