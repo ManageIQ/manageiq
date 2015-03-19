@@ -201,7 +201,8 @@ describe GenericMailer do
 
   describe "#test_mail" do
     it "should be called directly" do
-      GenericMailer.test_email(@args[:to], settings = {})
+      mail = GenericMailer.test_email(@args[:to], settings = {})
+      mail.subject.should start_with I18n.t("product.name")
     end
 
     it "should not change the input parameters" do
