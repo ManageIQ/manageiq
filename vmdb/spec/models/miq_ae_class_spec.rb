@@ -274,4 +274,41 @@ describe MiqAeClass do
     c1 = MiqAeClass.create(:namespace => "TEST/ABC", :name => "oleg")
     c1.domain.name.should eql('TEST')
   end
+
+  context "state_machine_class tests" do
+    before(:each) do
+      @c1 = MiqAeClass.create(:namespace => "TEST", :name => "ae_class_test")
+    end
+
+    it "add a new state field" do
+      @c1.ae_fields.create(:name => "test_field", :substitute => false, :aetype => 'state')
+      @c1.reload
+      @c1.state_machine?.should be_true
+    end
+
+    it "update the field to state" do
+      field1 = @c1.ae_fields.create(:name => "test_field", :substitute => false, :aetype => 'attribute')
+      @c1.reload
+      @c1.state_machine?.should be_false
+      field1.update_attributes(:aetype => 'state')
+      @c1.reload
+      @c1.state_machine?.should be_true
+      field1.update_attributes(:aetype => 'attribute')
+      @c1.reload
+      @c1.state_machine?.should be_false
+    end
+
+    it "remove the state field" do
+      field1 = @c1.ae_fields.create(:name => "test_field1", :substitute => false, :aetype => 'state')
+      field2 = @c1.ae_fields.create(:name => "test_field2", :substitute => false, :aetype => 'state')
+      @c1.reload
+      @c1.state_machine?.should be_true
+      field1.destroy
+      @c1.reload
+      @c1.state_machine?.should be_true
+      field2.destroy
+      @c1.reload
+      @c1.state_machine?.should be_false
+    end
+  end
 end

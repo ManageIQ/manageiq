@@ -101,6 +101,10 @@ class MiqAeClass < ActiveRecord::Base
     @class_methods ||= scoped_methods("class")
   end
 
+  def state_machine?
+    ae_fields.detect { |f| f.aetype == 'state' } != nil
+  end
+
   def self.get_homonymic_across_domains(fqname, enabled = nil)
     MiqAeDatastore.get_homonymic_across_domains(::MiqAeClass, fqname, enabled)
   end
