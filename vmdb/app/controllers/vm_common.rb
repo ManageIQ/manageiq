@@ -101,14 +101,15 @@ module VmCommon
     options = case console_type
               when "mks"
                 @sb[:mks].update(
-                  'version' => get_vmdb_config[:server][:mks_version]
+                  :version     => get_vmdb_config[:server][:mks_version],
+                  :mks_classid => get_vmdb_config[:server][:mks_classid]
                 )
               when "vmrc"
                 {
                   :host        => @record.ext_management_system.ipaddress ||
                                   @record.ext_management_system.hostname,
                   :vmid        => @record.ems_ref,
-                  :ticket      => @sb[:vmrc_ticket],
+                  :ticket      => @sb[:vmrc],
                   :api_version => @record.ext_management_system.api_version.to_s,
                   :os          => browser_info(:os).downcase,
                   :name        => @record.name
@@ -119,9 +120,14 @@ module VmCommon
            :locals   => options
   end
 
+  def websocket_use_ssl?
+    ssl_requested = get_vmdb_config.fetch_path(:server, :websocket, :encrypt)
+    request.ssl? ? ssl_requested != false : ssl_requested == true
+  end
+  private :websocket_use_ssl?
+
   def launch_html5_console
     password, host_address, host_port, _proxy_address, _proxy_port, protocol, ssl = @sb[:html5]
-    encrypt = get_vmdb_config.fetch_path(:server, :websocket_encrypt)
 
     case protocol
     when 'spice'     # spice, vnc - from rhevm
@@ -137,8 +143,8 @@ module VmCommon
       :host       => host_address,
       :host_port  => host_port,
       :password   => password,
-      :ssl_target => ssl,       # ssl on provider side
-      :encrypt    => encrypt    # ssl on web client side
+      :ssl_target => ssl,               # ssl on provider side
+      :encrypt    => websocket_use_ssl? # ssl on web client side
     )
     raise _("Console access failed: proxy errror") if proxy_options.nil?
 

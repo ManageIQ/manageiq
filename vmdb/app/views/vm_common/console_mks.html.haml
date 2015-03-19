@@ -5,7 +5,7 @@
         =_("VM %s Remote Console") % @record.name
       :javascript
         function connect() {
-          mks.Connect("<%= @mks["host"] %>", 902, "<%= @mks["cfgFile"] %>", "<%= @mks["ticket"] %>", "<%= @mks["ticket"] %>");
+          mks.Connect("<%= host %>", 902, "<%= cfgFile %>", "<%= ticket] %>", "<%= ticket %>");
         }
         function shut() {
           mks.disconnect();
@@ -40,7 +40,7 @@
           :cdata
             mks.height = mks.VMScreenHeight + 1;
             mks.width = mks.VMScreenWidth + 1;
-        %object#mks{:classid => "CLSID:#{get_vmdb_config[:server][:mks_classid]}", :height => "100%", :width => "100%"}
+        %object#mks{:classid => "CLSID:#{mks_classid}", :height => "100%", :width => "100%"}
 
 - elsif is_browser?("firefox")
   %html
@@ -57,7 +57,7 @@
       var mks = null;
       function connect() {
         // Check if the plugin is loaded.
-        if (!navigator.mimeTypes["application/x-vmware-mks;version=<%= @mks_version %>"]) {
+        if (!navigator.mimeTypes["application/x-vmware-mks;version=<%= version %>"]) {
           document.getElementById("install").style.display = '';
           return;
         }
@@ -71,7 +71,7 @@
         mks.sizeChangeListener = new SizeChangeListener();
         mks.connectionStateListener = new ConnectionStateListener();
 
-        mks.connect("<%= @mks["host"] %>", 902, "<%= @mks["cfgFile"] %>", "<%= @mks["ticket"] %>", "<%= @mks["ticket"] %>");
+        mks.connect("<%= host %>", 902, "<%= cfgFile %>", "<%= ticket %>", "<%= ticket %>");
       }
 
       function shut() {

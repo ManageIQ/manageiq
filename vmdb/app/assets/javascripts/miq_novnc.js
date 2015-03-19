@@ -39,12 +39,12 @@ $(function() {
   var encrypt  = vnc_el.attr('data-encrypt') !== undefined;
   var path = "";
   rfb = new RFB({'target': $D('noVNC_canvas'),
-    'encrypt':      encrypt,
-    'true_color':   true,
-    'local_cursor': true,
-    'shared':       true,
-    'view_only':    false,
-    'updateState':  updateState});
+    'encrypt':        encrypt,
+    'true_color':     true,
+    'local_cursor':   true,
+    'shared':         true,
+    'view_only':      false,
+    'onUpdateState':  updateState});
   rfb.connect(host, port, password, path);
   console.log("host: "     + host);
   console.log("port: "     + port);
