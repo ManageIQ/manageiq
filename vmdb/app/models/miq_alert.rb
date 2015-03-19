@@ -185,7 +185,7 @@ class MiqAlert < ActiveRecord::Base
     delay_next_evaluation = (self.options || {}).fetch_path(:notifications, :delay_next_evaluation)
     start_skipping_at = Time.now.utc - (delay_next_evaluation || 10.minutes).to_i
 
-    statuses_not_expired = self.miq_alert_statuses.count(:conditions => ["result = ? AND resource_type = ? AND resource_id = ? AND evaluated_on > ?", true, target.class.base_class.name, target.id, start_skipping_at])
+    statuses_not_expired = self.miq_alert_statuses.where("result = ? AND resource_type = ? AND resource_id = ? AND evaluated_on > ?", true, target.class.base_class.name, target.id, start_skipping_at).count
     if statuses_not_expired > 0
       $log.info("MIQ(Alert-postpone_evaluation?): Skipping re-evaluation of Alert [#{self.description}] for target: [#{target.name}] with delay_next_evaluation [#{delay_next_evaluation}]")
       return true
@@ -496,7 +496,7 @@ class MiqAlert < ActiveRecord::Base
   end
 
   def self.alarm_has_alerts?(alarm_event)
-    self.count(:conditions => ["responds_to_events LIKE ?", "%#{alarm_event}%"]) > 0
+    self.where("responds_to_events LIKE ?", "%#{alarm_event}%").count > 0
   end
 
   def responds_to_events_from_expression
