@@ -1270,16 +1270,19 @@ Vmdb::Application.routes.draw do
       ),
       :post => %w(
         accordion_select
+        authentication_validate
         button
+        delete
+        edit
         explorer
         exp_button
         exp_changed
         exp_token_pressed
         form_field_changed
+        new
         panel_control
-        authentication_validate
-        edit
         quick_search
+        refresh
         reload
         save_col_widths
         show
@@ -1292,8 +1295,7 @@ Vmdb::Application.routes.draw do
         x_history
         x_search_by_name
         x_show
-      ) +
-        adv_search_post
+      ) + adv_search_post
     },
 
     :pxe => {

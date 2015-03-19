@@ -13,28 +13,10 @@ class ProviderForemanController < ApplicationController
     redirect_to :action => 'explorer'
   end
 
-  PROVIDER_FOREMAN_X_BUTTON_ALLOWED_ACTIONS = {
-    'provider_foreman_new'                     => :new,
-    'provider_foreman_edit'                    => :edit,
-    'provider_foreman_delete'                  => :delete,
-    'provider_foreman_refresh'                 => :refresh,
-    'provider_foreman_authentication_validate' => :authentication_validate
-  }.freeze
-
-  def x_button
-    @sb[:action] = action = params[:pressed]
-
-    raise ActionController::RoutingError.new('invalid button action') unless
-        PROVIDER_FOREMAN_X_BUTTON_ALLOWED_ACTIONS.key?(action)
-
-    send(PROVIDER_FOREMAN_X_BUTTON_ALLOWED_ACTIONS[action])
-  end
-
   def new
     assert_privileges("provider_foreman_new")
-    @in_a_form = true
     @provider_foreman = ProviderForeman.new
-    replace_right_cell
+    render_form
   end
 
   def edit
@@ -47,8 +29,7 @@ class ProviderForemanController < ApplicationController
       save_provider_foreman
     else
       @provider_foreman = find_by_id_filtered(ConfigurationManagerForeman, from_cid(params[:miq_grid_checks]))
-      @in_a_form = true
-      replace_right_cell
+      render_form
     end
   end
 
@@ -75,17 +56,12 @@ class ProviderForemanController < ApplicationController
                     {:task        => "Delete",
                      :count_model => pluralize(foremen.length, "Provider")})
     end
-    @in_a_form = false
-    @sb[:action] = nil
     replace_right_cell
   end
 
   def refresh
     assert_privileges("provider_foreman_refresh")
-    @explorer = true
-    foreman_refresh
-    @in_a_form = false
-    @sb[:action] = nil
+    refreshvms("provider_foreman_refresh")
     replace_right_cell
   end
 
@@ -197,11 +173,9 @@ class ProviderForemanController < ApplicationController
   end
 
   def tree_select
-    @explorer = true
     @lastaction = "explorer"
     self.x_active_tree = params[:tree] if params[:tree]
     self.x_node = params[:id]
-    @sb[:action] = nil
     load_or_clear_adv_search
     replace_right_cell
   end
@@ -297,10 +271,9 @@ class ProviderForemanController < ApplicationController
     if @record.class.base_model.to_s == "ConfiguredSystem"
       rec_cls = @record.class.base_model.to_s.underscore
     end
-    if %w(download_pdf main).include?(@display)
-      @showtype = "main"
-      @button_group = "#{rec_cls}"
-    end
+    return unless %w(download_pdf main).include?(@display)
+    @showtype = "main"
+    @button_group = "#{rec_cls}"
   end
 
   def explorer
@@ -394,6 +367,7 @@ class ProviderForemanController < ApplicationController
       self.x_active_accord ||= 'cs_filter'
     end
     get_node_info(x_node)
+    @in_a_form = false
   end
 
   def get_node_info(treenodeid)
@@ -479,21 +453,63 @@ class ProviderForemanController < ApplicationController
   end
 
   def default_node
-    if x_node == "root"
-      if self.x_active_tree == :foreman_providers_tree
-        options = {:model => "ConfigurationManagerForeman"}
-        process_show_list(options)
-        @right_cell_text = _("All Foreman Providers")
-      elsif self.x_active_tree == :cs_filter_tree
-        options = {:model => "ConfiguredSystem"}
-        process_show_list(options)
-        @right_cell_text = _("All Foreman Configured Systems")
-      end
+    return unless x_node == "root"
+    if self.x_active_tree == :foreman_providers_tree
+      options = {:model => "ConfigurationManagerForeman"}
+      process_show_list(options)
+      @right_cell_text = _("All Foreman Providers")
+    elsif self.x_active_tree == :cs_filter_tree
+      options = {:model => "ConfiguredSystem"}
+      process_show_list(options)
+      @right_cell_text = _("All Foreman Configured Systems")
     end
+  end
+
+  def rendering_objects
+    presenter = ExplorerPresenter.new(
+        :active_tree => x_active_tree,
+        :temp        => @temp,
+        :delete_node => @delete_node,
+    )
+    r = proc { |opts| render_to_string(opts) }
+    return presenter, r
+  end
+
+  def render_form
+    presenter, r = rendering_objects
+    @in_a_form = true
+    presenter[:update_partials][:main_div] = r[:partial => 'form', :locals => {:controller => 'provider_foreman'}]
+    update_title(presenter)
+    rebuild_toolbars(false, presenter)
+    handle_bottom_cell(presenter, r)
+    render :js => presenter.to_html
+  end
+
+  def update_tree_and_render_list(replace_trees)
+    @explorer = true
+    get_node_info(x_node)
+    presenter, r = rendering_objects
+    replace_explorer_trees(replace_trees, presenter, r)
+
+    presenter[:update_partials][:main_div] = r[:partial => 'layouts/x_gtl']
+    rebuild_toolbars(false, presenter)
+    handle_bottom_cell(presenter, r)
+    render :js => presenter.to_html
+  end
+
+  def update_title(presenter)
+    if params[:action] == "new"
+      @right_cell_text = _("Add a new Foreman Provider")
+    elsif params[:pressed] == "provider_foreman_edit"
+      @right_cell_text = _("Edit Foreman Provider")
+    end
+    presenter[:right_cell_text] = @right_cell_text
   end
 
   def replace_right_cell(replace_trees = [])
     @explorer = true
+    @in_a_form = false
+    @sb[:action] = nil
 
     record_showing = leaf_record
 
@@ -511,18 +527,17 @@ class ProviderForemanController < ApplicationController
     replace_explorer_trees(replace_trees, presenter, r)
     rebuild_toolbars(record_showing, presenter)
     presenter[:right_cell_text] = @right_cell_text
+    presenter[:osf_node] = x_node  # Open, select, and focus on this node
 
     # Render the JS responses to update the explorer screen
     render :js => presenter.to_html
   end
 
   def leaf_record
-    if !@in_a_form && !@sb[:action]
-      get_node_info(x_node)
-      @delete_node = params[:id] if @replace_trees
-      type, _id = x_node.split("_").last.split("-")
-      type && ["ConfiguredSystem"].include?(TreeBuilder.get_model_for_prefix(type))
-    end
+    get_node_info(x_node)
+    @delete_node = params[:id] if @replace_trees
+    type, _id = x_node.split("_").last.split("-")
+    type && ["ConfiguredSystem"].include?(TreeBuilder.get_model_for_prefix(type))
   end
 
   def update_partials(record_showing, presenter, r)
@@ -599,7 +614,7 @@ class ProviderForemanController < ApplicationController
       end
     end
 
-    h_buttons, h_xml = build_toolbar_buttons_and_xml("x_history_tb") if !@in_a_form
+    h_buttons, h_xml = build_toolbar_buttons_and_xml("x_history_tb") unless @in_a_form
 
     # Rebuild the toolbars
     presenter[:set_visible_elements][:history_buttons_div] = h_buttons  && h_xml
@@ -617,8 +632,6 @@ class ProviderForemanController < ApplicationController
 
     # Hide/show searchbox depending on if a list is showing
     presenter[:set_visible_elements][:adv_searchbox_div] = !(@record || @in_a_form)
-
-    presenter[:osf_node] = x_node  # Open, select, and focus on this node
 
     presenter[:set_visible_elements][:blocker_div]    = false unless @edit && @edit[:adv_search_open]
     presenter[:set_visible_elements][:quicksearchbox] = false

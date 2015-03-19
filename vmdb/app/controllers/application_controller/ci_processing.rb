@@ -1228,16 +1228,23 @@ module ApplicationController::CiProcessing
     vm_button_operation('sync', 'for Virtual Black Box synchronization')
   end
 
+  DEFAULT_PRIVILEGE = Object.new # :nodoc:
+
   # Refresh the power states for selected or single VMs
-  def refreshvms
-    assert_privileges(params[:pressed])
+  def refreshvms(privilege = DEFAULT_PRIVILEGE)
+    if privilege == DEFAULT_PRIVILEGE
+      ActiveSupport::Deprecation.warn(<<-MSG.strip_heredoc)
+      Please pass the privilege you want to check for when refreshing
+      MSG
+      privilege = params[:pressed]
+    end
+    assert_privileges(privilege)
     vm_button_operation('refresh_ems', 'Refresh')
   end
   alias image_refresh refreshvms
   alias instance_refresh refreshvms
   alias vm_refresh refreshvms
   alias miq_template_refresh refreshvms
-  alias foreman_refresh refreshvms
 
   # Import info for all selected or single displayed vm(s)
   def scanvms

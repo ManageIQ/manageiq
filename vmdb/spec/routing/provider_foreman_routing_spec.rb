@@ -22,16 +22,19 @@ describe 'routes for ProviderForeman' do
 
   %w(
     accordion_select
+    authentication_validate
     button
+    delete
+    edit
     explorer
     exp_button
     exp_changed
     exp_token_pressed
     form_field_changed
+    new
     panel_control
-    provider_foreman_authentication_validate
-    provider_foreman_edit
     quick_search
+    refresh
     reload
     save_col_widths
     show
