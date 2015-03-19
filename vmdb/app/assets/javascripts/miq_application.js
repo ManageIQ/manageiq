@@ -789,15 +789,18 @@ function miqAttachTextAreaWithLines(id){
 function miqInitDashboardCols() {
   if (miqDomElementExists('col1')) {
     $('#col1').sortable({connectWith:'#col2, #col3', handle:"h2"});
-    $('#col1').bind('sortupdate', miqDropComplete);
+    $('#col1').off('sortupdate');
+    $('#col1').on('sortupdate', miqDropComplete);
   }
   if (miqDomElementExists('col2')) {
     $('#col2').sortable({connectWith:'#col1, #col3', handle:"h2"});
-    $('#col2').bind('sortupdate', miqDropComplete);
+    $('#col2').off('sortupdate');
+    $('#col2').on('sortupdate', miqDropComplete);
   }
   if (miqDomElementExists('col3')) {
     $('#col3').sortable({connectWith:'#col1, #col2', handle:"h2"});
-    $('#col3').bind('sortupdate', miqDropComplete);
+    $('#col3').off('sortupdate');
+    $('#col3').on('sortupdate', miqDropComplete);
   }
 }
 

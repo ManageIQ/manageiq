@@ -372,47 +372,46 @@ module MiqAeCustomizationController::Dialogs
 
   # Reorder dialog resources
   def dialog_res_reorder
-    return unless load_edit("dialog_edit__#{params[:id]}","replace_cell__explorer")
+    return unless load_edit("dialog_edit__#{params[:id]}", "replace_cell__explorer")
     @record = @edit[:dialog]
+
     nodes = x_node.split('_')
-    if nodes.length == 1      #Reorder tabs
-      temp = []
-      params[:col1].each_with_index do |col,i|
-        #previous position before drag-drop of the objects that came in
-        pos = col.split('|').first.to_i
-        temp.push(@edit[:new][:tabs][pos])
-      end
-      # saving original order in sandbox to be used if discard button is pressed
-      @sb[:tabs] = @edit[:new][:tabs]
-      @edit[:new][:tabs] = temp
-    elsif nodes.length == 2   #Reorder groups
-      temp = []
-      params[:col1].each_with_index do |col,i|
-        #previous position before drag-drop of the objects that came in
-        pos = col.split('|').first.to_i
-        temp.push(@edit[:new][:tabs][nodes[1].split('-').last.to_i][:groups][pos])
-      end
-      # saving original order in sandbox to be used if discard button is pressed
-      @sb[:groups] = @edit[:new][:tabs][nodes[1].split('-').last.to_i][:groups]
-      @edit[:new][:tabs][nodes[1].split('-').last.to_i][:groups] = temp
-    elsif nodes.length == 3   #Reorder fields
-      temp = []
-      params[:col1].each do |col|
-        # previous position before drag-drop of the objects that came in
-        pos = col.split('|').first.to_i
-        temp.push(@edit[:new][:tabs][nodes[1].split('-').last.to_i][:groups][nodes[2].split('-').last.to_i][:fields][pos])
-      end
-      # saving original order in sandbox to be used if discard button is pressed
-      @sb[:fields] = @edit[:new][:tabs][nodes[1].split('-').last.to_i][:groups][nodes[2].split('-').last.to_i][:fields]
-      @edit[:new][:tabs][nodes[1].split('-').last.to_i][:groups][nodes[2].split('-').last.to_i][:fields] = temp
+
+    name = :tabs
+    parent = @edit[:new]
+    items = parent[name]
+    if nodes.length > 1
+      name = :groups
+      # node = <id> "-" <original position>
+      parent = items.select { |i| i[:id] == nodes[1].split('-').first.to_i }.first
+      items = parent[name]
     end
+    if nodes.length > 2
+      name = :fields
+      parent = items.select { |i| i[:id] == nodes[2].split('-').first.to_i }.first
+      items = parent[name]
+    end
+
+    temp = []
+    params[:col1].each do |col|
+      # col = <original position> "|" <id>
+      id = col.split('|').last.to_i
+      temp << items.select { |i| i[:id] == id }.first
+    end
+
+    # saving original order in sandbox to be used if discard button is pressed
+    # FIXME: do we really want the previous order and not the original one?
+    @sb[name] = copy_array(items)
+
+    parent[name] = temp
+
     dialog_edit_build_tree
     render :update do |page|                    # Use JS to update the display
       session[:changed] = changed = (@edit[:new] != @edit[:current])
       page << javascript_for_miq_button_visibility(changed)
-      page.replace_html("custom_left_cell_div", :partial=>"dialog_edit_tree")
-      # url to be used in url in miqDropComplete method
-      page << "miq_widget_dd_url = 'miq_ae_customization/dialog_res_reorder'"
+      page.replace_html("custom_left_cell_div", :partial => "dialog_edit_tree")
+      # url to be used in miqDropComplete method
+      page << "miq_widget_dd_url = 'miq_ae_customization/dialog_res_reorder';"
       page << "miqInitDashboardCols();"
       page << "miqSparkle(false);"
     end
