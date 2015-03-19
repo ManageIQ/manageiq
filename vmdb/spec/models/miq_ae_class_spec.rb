@@ -274,4 +274,41 @@ describe MiqAeClass do
     c1 = MiqAeClass.create(:namespace => "TEST/ABC", :name => "oleg")
     c1.domain.name.should eql('TEST')
   end
+
+  context "state_machine_class tests" do
+    before(:each) do
+      n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :priority => 10, :system => true)
+      @c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
+    end
+
+    it "class with only state field" do
+      @c1.ae_fields.create(:name => "test_field", :substitute => false, :aetype => 'state')
+      @c1.reload
+      @c1.state_machine?.should be_true
+    end
+
+    it "class with only attribute field" do
+      @c1.ae_fields.create(:name => "test_field", :substitute => false, :aetype => 'attribute')
+      @c1.reload
+      @c1.state_machine?.should be_false
+    end
+
+    it "update the field from attribute to state" do
+      field1 = @c1.ae_fields.create(:name => "test_field", :substitute => false, :aetype => 'attribute')
+      @c1.reload
+      @c1.state_machine?.should be_false
+      field1.update_attributes(:aetype => 'state')
+      @c1.reload
+      @c1.state_machine?.should be_true
+    end
+
+    it "remove the state field" do
+      field1 = @c1.ae_fields.create(:name => "test_field1", :substitute => false, :aetype => 'state')
+      @c1.reload
+      @c1.state_machine?.should be_true
+      field1.destroy
+      @c1.reload
+      @c1.state_machine?.should be_false
+    end
+  end
 end
