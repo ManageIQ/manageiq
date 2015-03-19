@@ -135,6 +135,6 @@ module EmsRefresh::SaveInventoryHelper
     # if this association isn't the definitive source
     top_level = reflection.options[:dependent] == :destroy
 
-    top_level && (target == true || target.nil? || parent == target) ? parent.send(reflection.name).dup : []
+    top_level && (target == true || target.nil? || parent == target) ? parent.send(reflection.name).to_a.dup : []
   end
 end
