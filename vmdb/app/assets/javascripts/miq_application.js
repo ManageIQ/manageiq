@@ -155,44 +155,44 @@ function miqExpressionPrefill(count) {
   var title;
   var miq_exp_prefill_count;
 
-  if (miqDomElementExists('chosen_value') && $('#chosen_value')[0].type.indexOf('text') == 0) {
+  if (miqDomElementExists('chosen_value') && $('#chosen_value')[0].type.indexOf('text') === 0) {
     miqPrefill($('#chosen_value')[0], '/images/layout/expression/' + miq_val1_type + '.png');
     $('#chosen_value').prop('title', miq_val1_title);
     $('#chosen_value').prop('alt', miq_val1_title);
   }
-  if (miqDomElementExists('chosen_cvalue') && $('#chosen_cvalue')[0].type.indexOf('text') == 0) {
+  if (miqDomElementExists('chosen_cvalue') && $('#chosen_cvalue')[0].type.indexOf('text') === 0) {
     miqPrefill($('#chosen_cvalue')[0], '/images/layout/expression/' + miq_val2_type + '.png');
     $('#chosen_cvalue').prop('title', miq_val2_title);
     $('#chosen_cvalue').prop('alt', miq_val2_title);
   }
-  if (miqDomElementExists('chosen_regkey') && $('#chosen_regkey')[0].type.indexOf('text') == 0) {
+  if (miqDomElementExists('chosen_regkey') && $('#chosen_regkey')[0].type.indexOf('text') === 0) {
     miqPrefill($('#chosen_regkey')[0], '/images/layout/expression/string.png');
     title = "Registry Key";
     $('#chosen_regkey').prop('title', title);
     $('#chosen_regkey').prop('alt', title);
   }
-  if (miqDomElementExists('chosen_regval') && $('#chosen_regval')[0].type.indexOf('text') == 0) {
+  if (miqDomElementExists('chosen_regval') && $('#chosen_regval')[0].type.indexOf('text') === 0) {
     miqPrefill($('#chosen_regval')[0], '/images/layout/expression/string.png');
     title = "Registry Key Value";
     $('#chosen_regval').prop('title', title);
     $('#chosen_regval').prop('alt', title);
   }
-  if (miqDomElementExists('miq_date_1_0') && $('#miq_date_1_0')[0].type.indexOf('text') == 0) {
+  if (miqDomElementExists('miq_date_1_0') && $('#miq_date_1_0')[0].type.indexOf('text') === 0) {
     miqPrefill($('#miq_date_1_0')[0], '/images/layout/expression/' + miq_val1_type + '.png');
     $('#miq_date_1_0').prop('title', miq_val1_title);
     $('#miq_date_1_0').prop('alt', miq_val1_title);
   }
-  if (miqDomElementExists('miq_date_1_1') && $('#miq_date_1_1')[0].type.indexOf('text') == 0) {
+  if (miqDomElementExists('miq_date_1_1') && $('#miq_date_1_1')[0].type.indexOf('text') === 0) {
     miqPrefill($('#miq_date_1_1')[0], '/images/layout/expression/' + miq_val1_type + '.png');
     $('#miq_date_1_1').prop('title', miq_val1_title);
     $('#miq_date_1_1').prop('alt', miq_val1_title);
   }
-  if (miqDomElementExists('miq_date_2_0') && $('#miq_date_2_0')[0].type.indexOf('text') == 0) {
+  if (miqDomElementExists('miq_date_2_0') && $('#miq_date_2_0')[0].type.indexOf('text') === 0) {
     miqPrefill($('#miq_date_2_0')[0], '/images/layout/expression/' + miq_val2_type + '.png');
     $('#miq_date_2_0').prop('title', miq_val2_title);
     $('#miq_date_2_0').prop('alt', miq_val2_title);
   }
-  if (miqDomElementExists('miq_date_2_1') && $('#miq_date_2_1')[0].type.indexOf('text') == 0) {
+  if (miqDomElementExists('miq_date_2_1') && $('#miq_date_2_1')[0].type.indexOf('text') === 0) {
     miqPrefill($('#miq_date_2_1')[0], '/images/layout/expression/' + miq_val2_type + '.png');
     $('#miq_date_2_1').prop('title', miq_val2_title);
     $('#miq_date_2_1').prop('alt', miq_val2_title);
@@ -236,7 +236,7 @@ function miqValueStylePrefill(count) {
 
 // Prefill text entry field when blank
 function miqPrefill(element, image, blank_image) {
-  if (element.value == '') {
+  if (element.value === '') {
     element.style.background = "url(" + image + ") no-repeat transparent";
   } else {
     if (blank_image === undefined) {
@@ -343,7 +343,7 @@ function miqCheckForChanges() {
   if (miqAngularApplication.$scope) {
     if (miqAngularApplication.$scope.form.$dirty) {
       answer = confirm('Abandon changes?');
-      if (answer == true) {
+      if (answer === true) {
         miqAngularApplication.$scope.form.$setPristine(true);
       }
       return answer;
@@ -383,11 +383,11 @@ function miqDownloadLogFiles(theUrl, count) {
 function miqNewTagPrompt() {
   var text = prompt('Enter new tags, separated by blanks', '');
 
-  if (text == null) {
-    return false;
-  } else {
+  if (text !== null) {
     $('#new_tag').val(text);
     return true;
+  } else {
+    return false;
   }
 }
 
@@ -432,7 +432,7 @@ function miqValidateButtons(h_or_s, prefix) {
 
 // Convert Button image to hyperlink
 function toggleConvertButtonToLink(button, url, toggle) {
-  if (toggle == true) {
+  if (toggle) {
     if (button.hasClass('dimmed')) {
       button.removeClass('dimmed');
     }
@@ -486,7 +486,7 @@ function miqUpdateAllCheckboxes(button_div, override) {
       });
       crows = gtl_list_grid.getCheckedRows(0);
       $('#miq_grid_checks').val(crows);
-      count = crows == "" ? 0:crows.split(",").length;
+      var count = !crows ? 0 : crows.split(",").length;
       miqSetButtons(count, button_div);
     }
   }
@@ -525,9 +525,9 @@ function miqSetButtons(count, button_div) {
       tb = miq_toolbars[button_div].obj;
       buttons = miq_toolbars[button_div].buttons;
       for (var button in buttons) {
-        onwhen = eval("buttons." + button + ".onwhen");
+        var onwhen = eval("buttons." + button + ".onwhen");
         if (typeof onwhen != "undefined") {
-          if (count == 0) {
+          if (count === 0) {
             if (button.indexOf("__") >= 0) {
               tb.disableListOption(button.split("__")[0], button);
             } else {
@@ -567,7 +567,7 @@ function miqSetButtons(count, button_div) {
     }
   } else if (button_div.match("_buttons$")) {
     // Handle newer divs with button elements
-    if (count == 0) {
+    if (count === 0) {
       $("#" + button_div + " button[id$=on_1]").each(function() { this.disabled = true; });
     } else if (count == 1) {
       $("#" + button_div + " button[id$=on_1]").each(function() { this.disabled = false; });
@@ -576,14 +576,14 @@ function miqSetButtons(count, button_div) {
     }
   } else {
     // Handle older li based buttons
-    if (count == 0) {
+    if (count === 0) {
       $('#' + button_div + ' li[id~=on_1]').each(function() { $(this).hide(); });
       $('#' + button_div + ' li[id~=on_2]').each(function() { $(this).hide(); });
       $('#' + button_div + ' li[id~=on_only_1]').each(function() { $(this).hide(); });
       $('#' + button_div + ' li[id~=off_0]').each(function() { $(this).show(); });
       $('#' + button_div + ' li[id~=off_1]').each(function() { $(this).show(); });
       $('#' + button_div + ' li[id~=off_not_1]').each(function() { $(this).show(); });
-    } else if (count == 1) {
+    } else if (count === 1) {
       $('#' + button_div + ' li[id~=off_0]').each(function() { $(this).hide(); });
       $('#' + button_div + ' li[id~=on_2]').each(function() { $(this).hide(); });
       $('#' + button_div + ' li[id~=off_not_1]').each(function() { $(this).hide(); });
@@ -762,7 +762,7 @@ function miqLoadCharts() {
 }
 
 function miqLoadChart(chart_id) {
-  var chart_object = 'undefined';
+  var chart_object;
 
   if (typeof document.getElementById(chart_id) != 'undefined' &&
       typeof document.getElementById(chart_id).Update_XML != 'undefined') {
@@ -773,7 +773,11 @@ function miqLoadChart(chart_id) {
     chart_object = document.getElementsByName(chart_id)[0];
   }
 
-  chart_object == 'undefined' ? setTimeout(function() { miqLoadChart(chart_id); }, 100) : doLoadChart(chart_id, chart_object);
+  if (chart_object === undefined) {
+    setTimeout(function() { miqLoadChart(chart_id); }, 100);
+  } else {
+    doLoadChart(chart_id, chart_object);
+  }
 }
 
 function miqChartLinkData(col, row, value, category, series, id, message) {
@@ -781,7 +785,7 @@ function miqChartLinkData(col, row, value, category, series, id, message) {
   if (typeof miqMenu != "undefined") {
     miqMenu.hideContextMenu();
   }
-  if (category.indexOf("<Other(") == 0) {
+  if (category.indexOf("<Other(") === 0) {
     // No menus for <Other> category
     return;
   }
@@ -837,7 +841,7 @@ var miqAjaxTimers = 0;
 
 // Handle an ajax form button press (i.e. Submit) by starting the spinning Q, then waiting for .7 seconds for observers to finish
 function miqAjaxButton(url, serialize_fields) {
-  if (typeof serialize_fields == "unknown") {
+  if (typeof serialize_fields == "undefined") {
     serialize_fields = false;
   }
   if ($('#notification').length) {
@@ -878,9 +882,9 @@ var miqOneTrans = 0;
 
 // Function to generate an Ajax request, but only once for a drawn screen
 function miqSendOneTrans(url) {
-  if (typeof miqIEButtonPressed != "undefined") {
+  if (typeof miqIEButtonPressed !== "undefined") {
     // page replace after clicking save/reset was making observe_field on text_area in IE send up a trascation to form_field_changed method
-    delete miqIEButtonPressed;
+    miqIEButtonPressed = undefined;
     return;
   }
   if (miqOneTrans == 1) {
@@ -895,15 +899,11 @@ function lZ(x) {
   return (x > 9) ? x : '0' + x;
 }
 
-function dT(offset, abbr, pageLoading) {
+function dateTime(offset, abbr) {
   var date = miqCalendarDateConversion(offset);
 
-  if (pageLoading) {
-    document.write('<span id="tP"></span>');
-  }
 
-  document.getElementById('tP').innerHTML =
-    (date.getMonth()+1) +
+  document.getElementById('tP').innerHTML = (date.getMonth()+1) +
     '/' +
     date.getDate() +
     '/' +
@@ -914,7 +914,7 @@ function dT(offset, abbr, pageLoading) {
     lZ(date.getMinutes()) +
     ' ' +
     abbr;
-  setTimeout(function() { dT(offset, abbr, false); }, 1000);
+  setTimeout(function() { dateTime(offset, abbr); }, 1000);
 }
 
 // this deletes the remembered treestate when called
@@ -937,13 +937,13 @@ function miqClearTreeState(prefix) {
 
 // Check max length on a text area and set remaining chars
 function miqCheckMaxLength(obj) {
-  var ml = obj.getAttribute ? parseInt(obj.getAttribute("maxlength")) : "";
+  var ml = obj.getAttribute ? parseInt(obj.getAttribute("maxlength"), 10) : "";
   var counter = obj.getAttribute ? obj.getAttribute("counter") : "";
 
   if (obj.getAttribute && obj.value.length > ml) {
     obj.value=obj.value.substring(0, ml);
   }
-  if (counter != "") {
+  if (counter) {
     if (miq_browser != 'Explorer') {
       $('#' + counter)[0].textContent = obj.value.length;
     } else {
@@ -1065,7 +1065,7 @@ function miqDropComplete(event, ui) {
 function miqBuildCalendar(bAngular) {
   var all;
 
-  if (bAngular == undefined) {
+  if (bAngular === undefined) {
     // Get all of the input boxes with ids starting with "miq_date_"
     all = $('input[id^=miq_date_]');
   } else {
@@ -1079,7 +1079,7 @@ function miqBuildCalendar(bAngular) {
 
     cal.setDateFormat("%m/%d/%Y");
 
-    if (el.val() == "" && typeof miq_cal_dateTo != "undefined") {
+    if ((!el.val()) && typeof miq_cal_dateTo != "undefined") {
       cal.setDate(miq_cal_dateTo);
     } else {
       cal.setDate(this.value);
@@ -1098,7 +1098,7 @@ function miqBuildCalendar(bAngular) {
     }
     if (typeof miq_cal_skipDays != "undefined" &&
         miq_cal_skipDays != null &&
-        miq_cal_skipDays != '') {
+        miq_cal_skipDays) {
       cal.setInsensitiveRange(miq_cal_skipDays);
     }
 
@@ -1163,16 +1163,12 @@ function miqBuildExplorerView(options) {
       position: 'center'
     };
 
-    // Passed in if a div will be used, else we're nesting mainLayout, so leave null
-    if (settings.header != null) {
-      body: settings.center_div;
-    }
     // Only add header if option specified (because passing header:null still shows a thin header)
     if (settings.header != null) {
       centerHash.header = settings.header;
     }
     // Build the layout
-    if (settings.left == 0) {
+    if (!settings.left) {
       settings.left = settings.width/settings.divider;
     }
 
@@ -1286,7 +1282,7 @@ function miqSetLayoutHeader(unitId, text) {
 
 //common function to pass ajax request to server
 function miqAjaxRequest(itemId, path) {
-  if (miqCheckForChanges() == false) {
+  if (!miqCheckForChanges()) {
     return false;
   } else {
     miqJqueryRequest(path + '?id=' + itemId, {beforeSend: true, complete: true});
@@ -1360,7 +1356,7 @@ function miq_jquery_tabs_init(options) {
 // OnSelect handler for change tab transaction for jquery ui tabs
 // getting in ui element of tabs, url to use for ajax transaction and whether to check for changes, prov screens don't need to check for changes on tab change
 function miq_jquery_tab_select(ui, url, checkChanges) {
-  if (checkChanges && miqCheckForChanges() == false) {
+  if (checkChanges && !miqCheckForChanges()) {
     return false;
   } else {
     miqJqueryRequest(url + '?tab_id=' + ui.panel.id, {beforeSend: true});
@@ -1568,8 +1564,8 @@ $( document ).ajaxSend(function( event, request, settings ) {
   var csrf_meta_tag = $('#meta[name=csrf-token]')[0];
 
   if (csrf_meta_tag) {
-    var header = 'X-CSRF-Token',
-      token = csrf_meta_tag.readAttribute('content');
+    var header = 'X-CSRF-Token';
+    var token = csrf_meta_tag.readAttribute('content');
   }
 });
 
