@@ -7,12 +7,12 @@ module Metric::CiMixin::StateFinders
     if state.nil?
       if self.vim_performance_states.loaded?
         # Look for requested time in cache
-        t = ts.to_time
+        t = ts.to_time(:utc)
         state = self.vim_performance_states.detect { |s| s.timestamp == t }
         if state.nil?
           # Look for state for current hour in cache if still nil because the
           #   capture will return a state for the current hour only.
-          t = Metric::Helper.nearest_hourly_timestamp(Time.now.utc).to_time
+          t = Metric::Helper.nearest_hourly_timestamp(Time.now.utc).to_time(:utc)
           state = self.vim_performance_states.detect { |s| s.timestamp == t }
         end
       else
