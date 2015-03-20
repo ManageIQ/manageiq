@@ -4,8 +4,13 @@ describe HostController do
   context "#button" do
     render_views
 
-    it "doesn't break" do
+    before(:each) do
       set_user_privileges
+      FactoryGirl.create(:vmdb_database)
+      EvmSpecHelper.create_guid_miq_server_zone
+    end
+
+    it "doesn't break" do
       h1 = FactoryGirl.create(:host)
       h2 = FactoryGirl.create(:host)
       session[:host_items] = [h1.id, h2.id]
@@ -17,52 +22,44 @@ describe HostController do
     end
 
     it "when VM Right Size Recommendations is pressed" do
-      controller.instance_variable_set(:@_params, {:pressed => "vm_right_size"})
       controller.should_receive(:vm_right_size)
-      controller.button
+      post :button, :pressed => 'vm_right_size', :format => :js
       controller.send(:flash_errors?).should_not be_true
     end
 
     it "when VM Migrate is pressed" do
-      controller.instance_variable_set(:@_params, {:pressed => "vm_migrate"})
       controller.should_receive(:prov_redirect).with("migrate")
-      controller.should_receive(:render)
-      controller.button
+      post :button, :pressed => 'vm_migrate', :format => :js
       controller.send(:flash_errors?).should_not be_true
     end
 
     it "when VM Retire is pressed" do
-      controller.instance_variable_set(:@_params, {:pressed => "vm_retire"})
       controller.should_receive(:retirevms).once
-      controller.button
+      post :button, :pressed => 'vm_retire', :format => :js
       controller.send(:flash_errors?).should_not be_true
     end
 
     it "when VM Manage Policies is pressed" do
-      controller.instance_variable_set(:@_params, {:pressed => "vm_protect"})
       controller.should_receive(:assign_policies).with(VmOrTemplate)
-      controller.button
+      post :button, :pressed => 'vm_protect', :format => :js
       controller.send(:flash_errors?).should_not be_true
     end
 
     it "when MiqTemplate Manage Policies is pressed" do
-      controller.instance_variable_set(:@_params, {:pressed => "miq_template_protect"})
       controller.should_receive(:assign_policies).with(VmOrTemplate)
-      controller.button
+      post :button, :pressed => 'miq_template_protect', :format => :js
       controller.send(:flash_errors?).should_not be_true
     end
 
     it "when VM Tag is pressed" do
-      controller.instance_variable_set(:@_params, {:pressed => "vm_tag"})
       controller.should_receive(:tag).with(VmOrTemplate)
-      controller.button
+      post :button, :pressed => 'vm_tag', :format => :js
       controller.send(:flash_errors?).should_not be_true
     end
 
     it "when MiqTemplate Tag is pressed" do
-      controller.instance_variable_set(:@_params, {:pressed => "miq_template_tag"})
       controller.should_receive(:tag).with(VmOrTemplate)
-      controller.button
+      post :button, :pressed => 'miq_template_tag', :format => :js
       controller.send(:flash_errors?).should_not be_true
     end
 
@@ -77,15 +74,14 @@ describe HostController do
       custom_button.save
       user = FactoryGirl.create(:user, :userid => 'wilma')
       session[:userid] = "wilma"
-      controller.should_receive(:render)
       post :button, :pressed => "custom_button", :id => host.id, :button_id => custom_button.id
+      expect(response.status).to eq(200)
       controller.send(:flash_errors?).should_not be_true
     end
 
     it "when Drift button is pressed" do
-      controller.instance_variable_set(:@_params, {:pressed => "common_drift"})
       controller.should_receive(:drift_analysis)
-      controller.button
+      post :button, :pressed => 'common_drift', :format => :js
       controller.send(:flash_errors?).should_not be_true
     end
   end
