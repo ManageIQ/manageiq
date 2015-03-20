@@ -43,10 +43,10 @@
         %hr
         %h3
           = _('Selected Resources')
-        %table.style3
+        %table.table.table-bordered.table-striped
           %thead
             %tr
-              %th.icon
+              %th.narrow
               - titles = [_('Name'), _("Group Order")]
               - colspan = []
               - titles.each do |title|
@@ -60,7 +60,7 @@
                 %tr#new_tr.seperator
                   %td{:colspan => col_span}
               - groups.sort_by { | g | g[:name].downcase }.each do |sr|
-                %tr.no-hover{:class => cycle('row0', 'row1')}
+                %tr
                   %td
                     - t = _("Click to remove this Resource from the Catalog Item")
                     = link_to(image_tag("/images/icons/16/notequal-red.png", :border => "0", :alt => t),
