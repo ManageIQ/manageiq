@@ -77,9 +77,11 @@ RSpec.configure do |config|
     EvmSpecHelper.clear_caches
   end
 
-  config.backtrace_exclusion_patterns -= [%r{/lib\d*/ruby/}, %r{/gems/}]
-  config.backtrace_exclusion_patterns << %r{/lib\d*/ruby/[0-9]}
-  config.backtrace_exclusion_patterns << %r{/gems/[0-9][^/]+/gems/}
+  if config.backtrace_exclusion_patterns.delete(%r{/lib\d*/ruby/}) ||
+      config.backtrace_exclusion_patterns.delete(%r{/gems/})
+    config.backtrace_exclusion_patterns << %r{/lib\d*/ruby/[0-9]}
+    config.backtrace_exclusion_patterns << %r{/gems/[0-9][^/]+/gems/}
+  end
 end
 
 # PATCH: Temporary monkey patch until a new version of webmock is released
