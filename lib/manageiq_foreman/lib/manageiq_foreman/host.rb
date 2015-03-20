@@ -25,6 +25,10 @@ module ManageiqForeman
       connection.fetch(:hosts, :power, "id" => manager_ref, "power_action" => action).first["power"]
     end
 
+    def powered_off?
+      power_state == "off"
+    end
+
     def powered_on?
       power_state == "on"
     end
