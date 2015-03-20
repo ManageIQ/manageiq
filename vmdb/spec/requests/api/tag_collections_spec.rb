@@ -47,68 +47,48 @@ describe ApiController do
     let(:provider_url)      { providers_url(provider.id) }
     let(:provider_tags_url) { "#{provider_url}/tags" }
 
-    context "query all tags of a Provider and verify tag category and names" do
-      before do
-        api_basic_authorize
-        classify_resource(provider)
+    it "query all tags of a Provider and verify tag category and names" do
+      api_basic_authorize
+      classify_resource(provider)
 
-        run_get "#{provider_tags_url}?expand=resources"
-      end
+      run_get "#{provider_tags_url}?expand=resources"
 
-      it "query_result" do
-        expect_query_result(:tags, 2, :tag_count)
-        expect_result_resources_to_include_data("resources", "name" => :tag_paths)
-      end
+      expect_query_result(:tags, 2, :tag_count)
+      expect_result_resources_to_include_data("resources", "name" => :tag_paths)
     end
 
-    context "assigns a tag to a Provider without appropriate role" do
-      before do
-        api_basic_authorize
+    it "assigns a tag to a Provider without appropriate role" do
+      api_basic_authorize
 
-        run_post(provider_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
-      end
+      run_post(provider_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      it "request_forbidden" do
-        expect_request_forbidden
-      end
+      expect_request_forbidden
     end
 
-    context "assigns a tag to a Provider" do
-      before do
-        api_basic_authorize subcollection_action_identifier(:providers, :tags, :assign)
+    it "assigns a tag to a Provider" do
+      api_basic_authorize subcollection_action_identifier(:providers, :tags, :assign)
 
-        run_post(provider_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
-      end
+      run_post(provider_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      it "tagging_result" do
-        expect_tagging_result(tag1_results(provider_url))
-      end
+      expect_tagging_result(tag1_results(provider_url))
     end
 
-    context "unassigns a tag from a Provider without appropriate role" do
-      before do
-        api_basic_authorize
+    it "unassigns a tag from a Provider without appropriate role" do
+      api_basic_authorize
 
-        run_post(provider_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
-      end
+      run_post(provider_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      it "request_forbidden" do
-        expect_request_forbidden
-      end
+      expect_request_forbidden
     end
 
-    context "unassigns a tag from a Provider" do
-      before do
-        api_basic_authorize subcollection_action_identifier(:providers, :tags, :unassign)
-        classify_resource(provider)
+    it "unassigns a tag from a Provider" do
+      api_basic_authorize subcollection_action_identifier(:providers, :tags, :unassign)
+      classify_resource(provider)
 
-        run_post(provider_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
-      end
+      run_post(provider_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      it "tagging_result" do
-        expect_tagging_result(tag1_results(provider_url))
-        verify_resource_has_single_tag_left(provider)
-      end
+      expect_tagging_result(tag1_results(provider_url))
+      verify_resource_has_single_tag_left(provider)
     end
   end
 
@@ -116,68 +96,48 @@ describe ApiController do
     let(:host_url)      { hosts_url(host.id) }
     let(:host_tags_url) { "#{host_url}/tags" }
 
-    context "query all tags of a Host and verify tag category and names" do
-      before do
-        api_basic_authorize
-        classify_resource(host)
+    it "query all tags of a Host and verify tag category and names" do
+      api_basic_authorize
+      classify_resource(host)
 
-        run_get "#{host_tags_url}?expand=resources"
-      end
+      run_get "#{host_tags_url}?expand=resources"
 
-      it "query_result" do
-        expect_query_result(:tags, 2, :tag_count)
-        expect_result_resources_to_include_data("resources", "name" => :tag_paths)
-      end
+      expect_query_result(:tags, 2, :tag_count)
+      expect_result_resources_to_include_data("resources", "name" => :tag_paths)
     end
 
-    context "assigns a tag to a Host without appropriate role" do
-      before do
-        api_basic_authorize
+    it "assigns a tag to a Host without appropriate role" do
+      api_basic_authorize
 
-        run_post(host_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
-      end
+      run_post(host_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      it "request_forbidden" do
-        expect_request_forbidden
-      end
+      expect_request_forbidden
     end
 
-    context "assigns a tag to a Host" do
-      before do
-        api_basic_authorize subcollection_action_identifier(:hosts, :tags, :assign)
+    it "assigns a tag to a Host" do
+      api_basic_authorize subcollection_action_identifier(:hosts, :tags, :assign)
 
-        run_post(host_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
-      end
+      run_post(host_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      it "tagging_result" do
-        expect_tagging_result(tag1_results(host_url))
-      end
+      expect_tagging_result(tag1_results(host_url))
     end
 
-    context "unassigns a tag from a Host without appropriate role" do
-      before do
-        api_basic_authorize
+    it "unassigns a tag from a Host without appropriate role" do
+      api_basic_authorize
 
-        run_post(host_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
-      end
+      run_post(host_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      it "request_forbidden" do
-        expect_request_forbidden
-      end
+      expect_request_forbidden
     end
 
-    context "unassigns a tag from a Host" do
-      before do
-        api_basic_authorize subcollection_action_identifier(:hosts, :tags, :unassign)
-        classify_resource(host)
+    it "unassigns a tag from a Host" do
+      api_basic_authorize subcollection_action_identifier(:hosts, :tags, :unassign)
+      classify_resource(host)
 
-        run_post(host_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
-      end
+      run_post(host_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      it "tagging_result" do
-        expect_tagging_result(tag1_results(host_url))
-        verify_resource_has_single_tag_left(host)
-      end
+      expect_tagging_result(tag1_results(host_url))
+      verify_resource_has_single_tag_left(host)
     end
   end
 
@@ -186,68 +146,48 @@ describe ApiController do
     let(:ds_url)      { data_stores_url(ds.id) }
     let(:ds_tags_url) { "#{ds_url}/tags" }
 
-    context "query all tags of a Data Store and verify tag category and names" do
-      before do
-        api_basic_authorize
-        classify_resource(ds)
+    it "query all tags of a Data Store and verify tag category and names" do
+      api_basic_authorize
+      classify_resource(ds)
 
-        run_get "#{ds_tags_url}?expand=resources"
-      end
+      run_get "#{ds_tags_url}?expand=resources"
 
-      it "query_result" do
-        expect_query_result(:tags, 2, :tag_count)
-        expect_result_resources_to_include_data("resources", "name" => :tag_paths)
-      end
+      expect_query_result(:tags, 2, :tag_count)
+      expect_result_resources_to_include_data("resources", "name" => :tag_paths)
     end
 
-    context "assigns a tag to a Data Store without appropriate role" do
-      before do
-        api_basic_authorize
+    it "assigns a tag to a Data Store without appropriate role" do
+      api_basic_authorize
 
-        run_post(ds_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
-      end
+      run_post(ds_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      it "request_forbidden" do
-        expect_request_forbidden
-      end
+      expect_request_forbidden
     end
 
-    context "assigns a tag to a Data Store" do
-      before do
-        api_basic_authorize subcollection_action_identifier(:data_stores, :tags, :assign)
+    it "assigns a tag to a Data Store" do
+      api_basic_authorize subcollection_action_identifier(:data_stores, :tags, :assign)
 
-        run_post(ds_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
-      end
+      run_post(ds_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      it "tagging_result" do
-        expect_tagging_result(tag1_results(ds_url))
-      end
+      expect_tagging_result(tag1_results(ds_url))
     end
 
-    context "unassigns a tag from a Data Store without appropriate role" do
-      before do
-        api_basic_authorize
+    it "unassigns a tag from a Data Store without appropriate role" do
+      api_basic_authorize
 
-        run_post(ds_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
-      end
+      run_post(ds_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      it "request_forbidden" do
-        expect_request_forbidden
-      end
+      expect_request_forbidden
     end
 
-    context "unassigns a tag from a Data Store" do
-      before do
-        api_basic_authorize subcollection_action_identifier(:data_stores, :tags, :unassign)
-        classify_resource(ds)
+    it "unassigns a tag from a Data Store" do
+      api_basic_authorize subcollection_action_identifier(:data_stores, :tags, :unassign)
+      classify_resource(ds)
 
-        run_post(ds_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
-      end
+      run_post(ds_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      it "tagging_result" do
-        expect_tagging_result(tag1_results(ds_url))
-        verify_resource_has_single_tag_left(ds)
-      end
+      expect_tagging_result(tag1_results(ds_url))
+      verify_resource_has_single_tag_left(ds)
     end
   end
 
@@ -256,68 +196,48 @@ describe ApiController do
     let(:rp_url)      { resource_pools_url(rp.id) }
     let(:rp_tags_url) { "#{rp_url}/tags" }
 
-    context "query all tags of a Resource Pool and verify tag category and names" do
-      before do
-        api_basic_authorize
-        classify_resource(rp)
+    it "query all tags of a Resource Pool and verify tag category and names" do
+      api_basic_authorize
+      classify_resource(rp)
 
-        run_get "#{rp_tags_url}?expand=resources"
-      end
+      run_get "#{rp_tags_url}?expand=resources"
 
-      it "query_result" do
-        expect_query_result(:tags, 2, :tag_count)
-        expect_result_resources_to_include_data("resources", "name" => :tag_paths)
-      end
+      expect_query_result(:tags, 2, :tag_count)
+      expect_result_resources_to_include_data("resources", "name" => :tag_paths)
     end
 
-    context "assigns a tag to a Resource Pool without appropriate role" do
-      before do
-        api_basic_authorize
+    it "assigns a tag to a Resource Pool without appropriate role" do
+      api_basic_authorize
 
-        run_post(rp_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
-      end
+      run_post(rp_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      it "request_forbidden" do
-        expect_request_forbidden
-      end
+      expect_request_forbidden
     end
 
-    context "assigns a tag to a Resource Pool" do
-      before do
-        api_basic_authorize subcollection_action_identifier(:resource_pools, :tags, :assign)
+    it "assigns a tag to a Resource Pool" do
+      api_basic_authorize subcollection_action_identifier(:resource_pools, :tags, :assign)
 
-        run_post(rp_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
-      end
+      run_post(rp_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      it "tagging_result" do
-        expect_tagging_result(tag1_results(rp_url))
-      end
+      expect_tagging_result(tag1_results(rp_url))
     end
 
-    context "unassigns a tag from a Resource Pool without appropriate role" do
-      before do
-        api_basic_authorize
+    it "unassigns a tag from a Resource Pool without appropriate role" do
+      api_basic_authorize
 
-        run_post(rp_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
-      end
+      run_post(rp_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      it "request_forbidden" do
-        expect_request_forbidden
-      end
+      expect_request_forbidden
     end
 
-    context "unassigns a tag from a Resource Pool" do
-      before do
-        api_basic_authorize subcollection_action_identifier(:resource_pools, :tags, :unassign)
-        classify_resource(rp)
+    it "unassigns a tag from a Resource Pool" do
+      api_basic_authorize subcollection_action_identifier(:resource_pools, :tags, :unassign)
+      classify_resource(rp)
 
-        run_post(rp_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
-      end
+      run_post(rp_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      it "tagging_result" do
-        expect_tagging_result(tag1_results(rp_url))
-        verify_resource_has_single_tag_left(rp)
-      end
+      expect_tagging_result(tag1_results(rp_url))
+      verify_resource_has_single_tag_left(rp)
     end
   end
 
@@ -333,71 +253,48 @@ describe ApiController do
     let(:cluster_url)      { clusters_url(cluster.id) }
     let(:cluster_tags_url) { "#{cluster_url}/tags" }
 
-    context "query all tags of a Cluster and verify tag category and names" do
-      before do
-        api_basic_authorize
-        classify_resource(cluster)
+    it "query all tags of a Cluster and verify tag category and names" do
+      api_basic_authorize
+      classify_resource(cluster)
 
-        run_get "#{cluster_tags_url}?expand=resources"
-      end
+      run_get "#{cluster_tags_url}?expand=resources"
 
-      it "query_result" do
-        expect_query_result(:tags, 2, :tag_count)
-        expect_result_resources_to_include_data("resources", "name" => :tag_paths)
-      end
+      expect_query_result(:tags, 2, :tag_count)
+      expect_result_resources_to_include_data("resources", "name" => :tag_paths)
     end
 
-    context "assigns a tag to a Cluster without appropriate role" do
-      before do
-        api_basic_authorize
+    it "assigns a tag to a Cluster without appropriate role" do
+      api_basic_authorize
 
-        run_post(cluster_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
-      end
+      run_post(cluster_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      it "request_forbidden" do
-        expect_request_forbidden
-      end
+      expect_request_forbidden
     end
 
-    context "assigns a tag to a Cluster" do
-      before do
-        api_basic_authorize subcollection_action_identifier(:clusters, :tags, :assign)
+    it "assigns a tag to a Cluster" do
+      api_basic_authorize subcollection_action_identifier(:clusters, :tags, :assign)
 
-        run_post(cluster_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
-      end
+      run_post(cluster_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      it "tagging_result" do
-        expect_tagging_result(tag1_results(cluster_url))
-      end
+      expect_tagging_result(tag1_results(cluster_url))
     end
 
-    context "unassigns a tag from a Cluster without appropriate role" do
-      before do
-        api_basic_authorize
+    it "unassigns a tag from a Cluster without appropriate role" do
+      api_basic_authorize
 
-        run_post(cluster_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
-      end
+      run_post(cluster_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      it "request_forbidden" do
-        expect_request_forbidden
-      end
+      expect_request_forbidden
     end
 
-    context "unassigns a tag from a Cluster" do
-      let(:tag_results)  { tag1_results(cluster_url) }
-      let(:verify_model) { verify_resource_has_single_tag_left(cluster) }
+    it "unassigns a tag from a Cluster" do
+      api_basic_authorize subcollection_action_identifier(:clusters, :tags, :unassign)
+      classify_resource(cluster)
 
-      before do
-        api_basic_authorize subcollection_action_identifier(:clusters, :tags, :unassign)
-        classify_resource(cluster)
+      run_post(cluster_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-        run_post(cluster_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
-      end
-
-      it "tagging_result" do
-        expect_tagging_result(tag1_results(cluster_url))
-        verify_resource_has_single_tag_left(cluster)
-      end
+      expect_tagging_result(tag1_results(cluster_url))
+      verify_resource_has_single_tag_left(cluster)
     end
   end
 end
