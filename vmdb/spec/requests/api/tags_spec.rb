@@ -42,313 +42,212 @@ describe ApiController do
   end
 
   context "Tag collection" do
-    context "query all tags" do
-      before do
-        api_basic_authorize
+    it "query all tags" do
+      api_basic_authorize
 
-        run_get tags_url
-      end
+      run_get tags_url
 
-      it "query_result" do
-        expect_query_result(:tags, :tag_count)
-      end
+      expect_query_result(:tags, :tag_count)
     end
 
-    context "query a tag with an invalid Id" do
-      before do
-        api_basic_authorize
+    it "query a tag with an invalid Id" do
+      api_basic_authorize
 
-        run_get invalid_tag_url
-      end
+      run_get invalid_tag_url
 
-      it "resource_not_found" do
-        expect_resource_not_found
-      end
+      expect_resource_not_found
     end
 
-    context "query tags with expanded resources" do
-      before do
-        api_basic_authorize
+    it "query tags with expanded resources" do
+      api_basic_authorize
 
-        run_get "#{tags_url}?expand=resources"
-      end
+      run_get "#{tags_url}?expand=resources"
 
-      it "query_result" do
-        expect_query_result(:tags, :tag_count, :tag_count)
-        expect_result_resources_to_include_keys("resources", %w(id name))
-      end
+      expect_query_result(:tags, :tag_count, :tag_count)
+      expect_result_resources_to_include_keys("resources", %w(id name))
     end
 
-    context "query tag details with multiple virtual attributes" do
-      before do
-        api_basic_authorize
+    it "query tag details with multiple virtual attributes" do
+      api_basic_authorize
 
-        attr_list = "category.name,category.description,classification.name,classification.description"
-        run_get "#{tags_url(Tag.last.id)}?attributes=#{attr_list}"
-      end
+      tag = Tag.last
+      attr_list = "category.name,category.description,classification.name,classification.description"
+      run_get "#{tags_url(tag.id)}?attributes=#{attr_list}"
 
-      it "single_resource_query" do
-        tag = Tag.last
-        expect_single_resource_query(
-          "href"           => tags_url(tag.id),
-          "id"             => tag.id,
-          "name"           => tag.name,
-          "category"       => {"name" => tag.category.name,       "description" => tag.category.description},
-          "classification" => {"name" => tag.classification.name, "description" => tag.classification.description}
-        )
-      end
+      expect_single_resource_query(
+        "href"           => tags_url(tag.id),
+        "id"             => tag.id,
+        "name"           => tag.name,
+        "category"       => {"name" => tag.category.name,       "description" => tag.category.description},
+        "classification" => {"name" => tag.classification.name, "description" => tag.classification.description}
+      )
     end
 
-    context "query tag details with categorization" do
-      before do
-        api_basic_authorize
+    it "query tag details with categorization" do
+      api_basic_authorize
 
-        run_get "#{tags_url(Tag.last.id)}?attributes=categorization"
-      end
+      tag = Tag.last
+      run_get "#{tags_url(tag.id)}?attributes=categorization"
 
-      it "single_resource_query" do
-        tag = Tag.last
-        expect_single_resource_query(
-         "href"           => tags_url(tag.id),
-         "id"             => tag.id,
-         "name"           => tag.name,
-         "categorization" => {
-           "name"         => tag.classification.name,
-           "description"  => tag.classification.description,
-           "display_name" => "#{tag.category.description}: #{tag.classification.description}",
-           "category"     => {"name" => tag.category.name, "description" => tag.category.description}
-         }
-       )
-      end
+      expect_single_resource_query(
+       "href"           => tags_url(tag.id),
+       "id"             => tag.id,
+       "name"           => tag.name,
+       "categorization" => {
+         "name"         => tag.classification.name,
+         "description"  => tag.classification.description,
+         "display_name" => "#{tag.category.description}: #{tag.classification.description}",
+         "category"     => {"name" => tag.category.name, "description" => tag.category.description}
+       }
+      )
     end
 
-    context "query all tags with categorization" do
-      before do
-        api_basic_authorize
+    it "query all tags with categorization" do
+      api_basic_authorize
 
-        run_get "#{tags_url}?expand=resources&attributes=categorization"
-      end
+      run_get "#{tags_url}?expand=resources&attributes=categorization"
 
-      it "query_result" do
-        expect_query_result(:tags, :tag_count, :tag_count)
-        expect_result_resources_to_include_keys("resources", %w(id name categorization))
-      end
+      expect_query_result(:tags, :tag_count, :tag_count)
+      expect_result_resources_to_include_keys("resources", %w(id name categorization))
     end
   end
 
   context "Vm Tag subcollection" do
-    context "query all tags of a Vm with no tags" do
-      before do
-        api_basic_authorize
+    it "query all tags of a Vm with no tags" do
+      api_basic_authorize
 
-        run_get vm1_tags_url
-      end
+      run_get vm1_tags_url
 
-      it "empty_query_result" do
-        expect_empty_query_result(:tags)
-      end
+      expect_empty_query_result(:tags)
     end
 
-    context "query all tags of a Vm" do
-      before do
-        api_basic_authorize
+    it "query all tags of a Vm" do
+      api_basic_authorize
 
-        run_get vm2_tags_url
-      end
+      run_get vm2_tags_url
 
-      it "query_result" do
-        expect_query_result(:tags, 2, :tag_count)
-      end
+      expect_query_result(:tags, 2, :tag_count)
     end
 
-    context "query all tags of a Vm and verify tag category and names" do
-      def tag_paths
-        [tag1[:path], tag2[:path]]
-      end
+    it "query all tags of a Vm and verify tag category and names" do
+      api_basic_authorize
 
-      before do
-        api_basic_authorize
+      run_get "#{vm2_tags_url}?expand=resources"
 
-        run_get "#{vm2_tags_url}?expand=resources"
-      end
-
-      it "query_result" do
-        expect_query_result(:tags, 2, :tag_count)
-        expect_result_resources_to_include_data("resources", "name" => :tag_paths)
-      end
+      expect_query_result(:tags, 2, :tag_count)
+      expect_result_resources_to_include_data("resources", "name" => [tag1[:path], tag2[:path]])
     end
 
-    context "assigns a tag to a Vm without appropriate role" do
-      before do
-        api_basic_authorize
+    it "assigns a tag to a Vm without appropriate role" do
+      api_basic_authorize
 
-        run_post(vm1_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
-      end
+      run_post(vm1_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      it "request_forbidden" do
-        expect_request_forbidden
-      end
+      expect_request_forbidden
     end
 
-    context "assigns a tag to a Vm" do
-      let(:tag_results) do
+    it "assigns a tag to a Vm" do
+      api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
+
+      run_post(vm1_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
+
+      expect_tagging_result(
         [{:success => true, :href => vm1_url, :tag_category => tag1[:category], :tag_name => tag1[:name]}]
-      end
-
-      before do
-        api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
-
-        run_post(vm1_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
-      end
-
-      it "tagging_result" do
-        expect_tagging_result(:tag_results)
-      end
+      )
     end
 
-    context "assigns a tag to a Vm by name path" do
-      let(:tag_results) do
+    it "assigns a tag to a Vm by name path" do
+      api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
+
+      run_post(vm1_tags_url, gen_request(:assign, :name => tag1[:path]))
+
+      expect_tagging_result(
         [{:success => true, :href => vm1_url, :tag_category => tag1[:category], :tag_name => tag1[:name]}]
-      end
-
-      before do
-        api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
-
-        run_post(vm1_tags_url, gen_request(:assign, :name => tag1[:path]))
-      end
-
-      it "tagging_result" do
-        expect_tagging_result(:tag_results)
-      end
+      )
     end
 
-    context "assigns a tag to a Vm by href" do
-      let(:tag_results) do
+    it "assigns a tag to a Vm by href" do
+      api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
+
+      run_post(vm1_tags_url, gen_request(:assign, :href => tags_url(Tag.find_by_name(tag1[:path]).id)))
+
+      expect_tagging_result(
         [{:success => true, :href => vm1_url, :tag_category => tag1[:category], :tag_name => tag1[:name]}]
-      end
-
-      before do
-        api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
-
-        tag = Tag.find_by_name(tag1[:path])
-        run_post(vm1_tags_url, gen_request(:assign, :href => tags_url(tag.id)))
-      end
-
-      it "tagging_result" do
-        expect_tagging_result(:tag_results)
-      end
+      )
     end
 
-    context "assigns an invalid tag by href to a Vm" do
-      before do
-        api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
+    it "assigns an invalid tag by href to a Vm" do
+      api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
 
-        run_post(vm1_tags_url, gen_request(:assign, :href => invalid_tag_url))
-      end
+      run_post(vm1_tags_url, gen_request(:assign, :href => invalid_tag_url))
 
-      it "resource_not_found" do
-        expect_resource_not_found
-      end
+      expect_resource_not_found
     end
 
-    context "assigns an invalid tag to a Vm" do
-      let(:tag_results) do
+    it "assigns an invalid tag to a Vm" do
+      api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
+
+      run_post(vm1_tags_url, gen_request(:assign, :name => "/managed/bad_category/bad_name"))
+
+      expect_tagging_result(
         [{:success => false, :href => vm1_url, :tag_category => "bad_category", :tag_name => "bad_name"}]
-      end
-
-      before do
-        api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
-
-        run_post(vm1_tags_url, gen_request(:assign, :name => "/managed/bad_category/bad_name"))
-      end
-
-      it "tagging_result" do
-        expect_tagging_result(:tag_results)
-      end
+      )
     end
 
-    context "assigns multiple tags to a Vm" do
-      let(:tag_results) do
+    it "assigns multiple tags to a Vm" do
+      api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
+
+      run_post(vm1_tags_url, gen_request(:assign, [{:name => tag1[:path]}, {:name => tag2[:path]}]))
+
+      expect_tagging_result(
         [{:success => true, :href => vm1_url, :tag_category => tag1[:category], :tag_name => tag1[:name]},
          {:success => true, :href => vm1_url, :tag_category => tag2[:category], :tag_name => tag2[:name]}]
-      end
-
-      before do
-        api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
-
-        run_post(vm1_tags_url, gen_request(:assign, [{:name => tag1[:path]}, {:name => tag2[:path]}]))
-      end
-
-      it "tagging_result" do
-        expect_tagging_result(:tag_results)
-      end
+      )
     end
 
-    context "assigns tags by mixed specification to a Vm" do
-      let(:tag_results) do
+    it "assigns tags by mixed specification to a Vm" do
+      api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
+
+      tag = Tag.find_by_name(tag2[:path])
+      run_post(vm1_tags_url, gen_request(:assign, [{:name => tag1[:path]}, {:href => tags_url(tag.id)}]))
+
+      expect_tagging_result(
         [{:success => true, :href => vm1_url, :tag_category => tag1[:category], :tag_name => tag1[:name]},
          {:success => true, :href => vm1_url, :tag_category => tag2[:category], :tag_name => tag2[:name]}]
-      end
-
-      before do
-        api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
-
-        tag = Tag.find_by_name(tag2[:path])
-        run_post(vm1_tags_url, gen_request(:assign, [{:name => tag1[:path]}, {:href => tags_url(tag.id)}]))
-      end
-
-      it "tagging_result" do
-        expect_tagging_result(:tag_results)
-      end
+      )
     end
 
-    context "unassigns a tag from a Vm without appropriate role" do
-      before do
-        api_basic_authorize
+    it "unassigns a tag from a Vm without appropriate role" do
+      api_basic_authorize
 
-        run_post(vm1_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
-      end
+      run_post(vm1_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      it "request_forbidden" do
-        expect_request_forbidden
-      end
+      expect_request_forbidden
     end
 
-    context "unassigns a tag from a Vm" do
-      let(:tag_results) do
+    it "unassigns a tag from a Vm" do
+      api_basic_authorize subcollection_action_identifier(:vms, :tags, :unassign)
+
+      run_post(vm2_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
+
+      expect_tagging_result(
         [{:success => true, :href => vm2_url, :tag_category => tag1[:category], :tag_name => tag1[:name]}]
-      end
-
-      before do
-        api_basic_authorize subcollection_action_identifier(:vms, :tags, :unassign)
-
-        run_post(vm2_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
-      end
-
-      it "tagging_result" do
-        expect_tagging_result(:tag_results)
-        expect(vm2.tags.count).to eq(1)
-        expect(vm2.tags.first.name).to eq(tag2[:path])
-      end
+      )
+      expect(vm2.tags.count).to eq(1)
+      expect(vm2.tags.first.name).to eq(tag2[:path])
     end
 
-    context "unassigns multiple tags from a Vm" do
-      let(:tag_results) do
+    it "unassigns multiple tags from a Vm" do
+      api_basic_authorize subcollection_action_identifier(:vms, :tags, :unassign)
+
+      tag = Tag.find_by_name(tag2[:path])
+      run_post(vm2_tags_url, gen_request(:unassign, [{:name => tag1[:path]}, {:href => tags_url(tag.id)}]))
+
+      expect_tagging_result(
         [{:success => true, :href => vm2_url, :tag_category => tag1[:category], :tag_name => tag1[:name]},
          {:success => true, :href => vm2_url, :tag_category => tag2[:category], :tag_name => tag2[:name]}]
-      end
-
-      before do
-        api_basic_authorize subcollection_action_identifier(:vms, :tags, :unassign)
-
-        tag = Tag.find_by_name(tag2[:path])
-        run_post(vm2_tags_url, gen_request(:unassign, [{:name => tag1[:path]}, {:href => tags_url(tag.id)}]))
-      end
-
-      it "tagging_result" do
-        expect_tagging_result(:tag_results)
-        expect(vm2.tags.count).to eq(0)
-      end
+      )
+      expect(vm2.tags.count).to eq(0)
     end
   end
 end
