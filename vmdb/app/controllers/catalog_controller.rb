@@ -57,6 +57,7 @@ class CatalogController < ApplicationController
   def servicetemplate_edit
     assert_privileges(params[:pressed]) if params[:pressed]
     checked = find_checked_items
+    @sb[:fqname_array] = MiqAeClass.fqnames_for_state_machines
     checked[0] = params[:id] if checked.blank? && params[:id]
     @record = checked[0] ? find_by_id_filtered(ServiceTemplate, checked[0]) : ServiceTemplate.new
     @sb[:st_form_active_tab] = "basic"
