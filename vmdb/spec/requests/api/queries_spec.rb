@@ -7,15 +7,18 @@ describe ApiController do
 
   include Rack::Test::Methods
 
+  let(:zone)       { FactoryGirl.create(:zone, :name => "api_zone") }
+  let(:miq_server) { FactoryGirl.create(:miq_server, :guid => miq_server_guid, :zone => zone) }
+  let(:ems)        { FactoryGirl.create(:ems_vmware, :zone => zone) }
+  let(:host)       { FactoryGirl.create(:host) }
+
+  let(:vm1)        { FactoryGirl.create(:vm_vmware, :host => host, :ems_id => ems.id, :raw_power_state => "poweredOn") }
+  let(:vm1_url)    { vms_url(vm1.id) }
+
+  let(:vm_href_pattern) { %r{^http://.*/api/vms/[0-9]+$} }
+
   before(:each) do
     init_api_spec_env
-
-    @zone       = FactoryGirl.create(:zone, :name => "api_zone")
-    @miq_server = FactoryGirl.create(:miq_server, :guid => miq_server_guid, :zone => @zone)
-    @ems        = FactoryGirl.create(:ems_vmware, :zone => @zone)
-    @host       = FactoryGirl.create(:host)
-
-    Host.any_instance.stub(:miq_proxy).and_return(@miq_server)
   end
 
   def app
@@ -28,127 +31,90 @@ describe ApiController do
 
   context "Query collections" do
     it "to return resource lists with only hrefs" do
-      basic_authorize @cfme[:user], @cfme[:password]
-
+      api_basic_authorize
       create_vms(3)
 
-      @success = run_get @cfme[:vms_url]
+      run_get vms_url
 
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result["name"]).to eq("vms")
-      results = @result["resources"]
-      expect(results.size).to eq(3)
-      expect(results.all? do |result|
-               result.keys == ["href"] && result["href"].match(%r{^http://.*/api/vms/[0-9]+$})
-             end).to be_true
+      expect_query_result(:vms, 3, 3)
+      expect_result_resources_to_have_only_keys("resources", %w(href))
+      expect_result_resource_keys_to_match_pattern("resources", "href", :vm_href_pattern)
     end
 
     it "to return seperate ids and href when expanded" do
-      basic_authorize @cfme[:user], @cfme[:password]
-
+      api_basic_authorize
       create_vms(3)
 
-      @success = run_get "#{@cfme[:vms_url]}?expand=resources"
+      run_get "#{vms_url}?expand=resources"
 
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result["name"]).to eq("vms")
-      results = @result["resources"]
-      expect(results.size).to eq(3)
-      expect(results.all? { |result| result["id"].kind_of?(Integer) }).to be_true
-      expect(results.all? { |result| result["href"].match(%r{^http://.*/api/vms/[0-9]+$}) }).to be_true
-      expect(results.all? { |result| result.key?("guid") }).to be_true
+      expect_query_result(:vms, 3, 3)
+      expect_result_resource_keys_to_match_pattern("resources", "href", :vm_href_pattern)
+      expect_result_resource_keys_to_be_like_klass("resources", "id", Integer)
+      expect_result_resources_to_include_keys("resources", %w(guid))
     end
 
     it "to always return ids and href when asking for specific attributes" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
+      vm1   # create resource
 
-      vm = FactoryGirl.create(:vm_vmware)
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+      run_get "#{vms_url}?expand=resources&attributes=guid"
 
-      @success = run_get "#{@cfme[:vms_url]}?expand=resources&attributes=guid"
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result["name"]).to eq("vms")
-      expect(@result).to have_key("resources")
-      expect(@result["resources"].size).to eq(1)
-      result = @result["resources"].first
-      expect(result["id"]).to eq(vm.id)
-      expect(result["href"]).to match(vm_url)
-      expect(result["guid"]).to eq(vm.guid)
+      expect_query_result(:vms, 1, 1)
+      expect_result_resources_to_match_hash([{"id" => vm1.id, "href" => vm1_url, "guid" => vm1.guid}])
     end
   end
 
   context "Query resource" do
     it "to return both id and href" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
+      vm1   # create resource
 
-      vm = FactoryGirl.create(:vm_vmware)
-      vm_url = "#{@cfme[:vms_url]}/#{vm.id}"
+      run_get vm1_url
 
-      @success = run_get vm_url
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result["id"]).to eq(vm.id)
-      expect(@result["href"]).to match(vm_url)
-      expect(@result["guid"]).to eq(vm.guid)
+      expect_single_resource_query("id" => vm1.id, "href" => vm1_url, "guid" => vm1.guid)
     end
   end
 
   context "Query subcollections" do
-    before(:each) do
-      @vm = FactoryGirl.create(:vm_vmware)
-      @vm_url = "#{@cfme[:vms_url]}/#{@vm.id}"
-      @vm_accounts_url = "#{@vm_url}/accounts"
-      @acct1 = FactoryGirl.create(:account, :vm_or_template_id => @vm.id, :name => "John")
-      @acct2 = FactoryGirl.create(:account, :vm_or_template_id => @vm.id, :name => "Jane")
-    end
+    let(:acct1) { FactoryGirl.create(:account, :vm_or_template_id => vm1.id, :name => "John") }
+    let(:acct2) { FactoryGirl.create(:account, :vm_or_template_id => vm1.id, :name => "Jane") }
+    let(:vm1_accounts_url) { "#{vm1_url}/accounts" }
+    let(:acct1_url)        { "#{vm1_accounts_url}/#{acct1.id}" }
+    let(:acct2_url)        { "#{vm1_accounts_url}/#{acct2.id}" }
+    let(:vm1_accounts_url_list) { [acct1_url, acct2_url] }
 
     it "to return just href when not expanded" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
+      # create resources
+      acct1
+      acct2
 
-      @success = run_get "#{@vm_url}/accounts"
+      run_get vm1_accounts_url
 
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result["name"]).to eq("accounts")
-      results = @result["resources"]
-      expect(results.size).to eq(2)
-      expect(results.all? { |result| result.keys == ["href"] }).to be_true
-      expect(resources_include_suffix?(results, "href", "#{@vm_accounts_url}/#{@acct1.id}")).to be_true
-      expect(resources_include_suffix?(results, "href", "#{@vm_accounts_url}/#{@acct2.id}")).to be_true
+      expect_query_result(:accounts, 2)
+      expect_result_resources_to_include_hrefs("resources", :vm1_accounts_url_list)
     end
 
     it "to include both id and href when getting a single resource" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
 
-      acct1_url = "#{@vm_url}/accounts/#{@acct1.id}"
-      @success = run_get acct1_url
+      run_get acct1_url
 
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result["id"]).to eq(@acct1.id)
-      expect(@result["href"]).to match(acct1_url)
-      expect(@result["name"]).to eq(@acct1.name)
+      expect_single_resource_query("id" => acct1.id, "href" => acct1_url, "name" => acct1.name)
     end
 
     it "to include both id and href when expanded" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
+      # create resources
+      acct1
+      acct2
 
-      @success = run_get "#{@vm_url}/accounts?expand=resources"
+      run_get "#{vm1_accounts_url}?expand=resources"
 
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result["name"]).to eq("accounts")
-      results = @result["resources"]
-      expect(results.size).to eq(2)
-      expect(results.all? { |result| result.key?("href") && result.key?("id") }).to be_true
-      expect(resources_include_suffix?(results, "href", "#{@vm_accounts_url}/#{@acct1.id}")).to be_true
-      expect(resources_include_suffix?(results, "href", "#{@vm_accounts_url}/#{@acct2.id}")).to be_true
-      expect(results.collect { |r| r["id"] }).to match_array([@acct1.id, @acct2.id])
+      expect_query_result(:accounts, 2)
+      expect_result_resources_to_include_keys("resources", %w(id href))
+      expect_result_resources_to_include_hrefs("resources", :vm1_accounts_url_list)
+      expect_result_resources_to_include_data("resources", "id" => [acct1.id, acct2.id])
     end
   end
 end
