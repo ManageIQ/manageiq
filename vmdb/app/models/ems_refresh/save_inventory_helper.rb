@@ -104,7 +104,7 @@ module EmsRefresh::SaveInventoryHelper
   def store_ids_for_new_records(records, hashes, keys)
     keys = Array(keys)
     hashes.each do |h|
-      r = records.detect { |r| keys.all? { |k| r.send(k) == h[k] } }
+      r = records.detect { |r| keys.all? { |k| r.send(k).to_s == h[k].to_s } }
       h[:id] = r.id
     end
   end
