@@ -873,13 +873,15 @@ class CatalogController < ApplicationController
   def ot_edit_get_form_vars
     @edit[:new][:name] = params[:name] if params[:name]
     @edit[:new][:description] = params[:description] if params[:description]
+    @edit[:new][:draft] = params[:draft] == "true" ? true : false if params[:draft]
   end
 
   def ot_edit_set_form_vars(right_cell_text)
     @record = OrchestrationTemplate.find_by_id(from_cid(params[:id]))
     @edit = {:current => {:name        => @record.name,
                           :description => @record.description,
-                          :content     => @record.content},
+                          :content     => @record.content,
+                          :draft       => @record.draft},
              :rec_id  => @record.id}
     @edit[:new] = @edit[:current].dup
     @edit[:key] = "ot_edit__#{@record.id}"
@@ -902,9 +904,12 @@ class CatalogController < ApplicationController
     ot = OrchestrationTemplate.find_by_id(@edit[:rec_id])
     ot.name = @edit[:new][:name]
     ot.description = @edit[:new][:description]
-    ot.content = params[:template_content] if ot.stacks.length == 0
+    if ot.stacks.length == 0
+      ot.content = params[:template_content]
+      ot.draft = @edit[:new][:draft]
+    end
     begin
-      ot.save
+      ot.save!
     rescue StandardError => bang
       add_flash(_("Error during '%s': ") % "Orchestration Template Edit" << bang.message, :error)
     else
