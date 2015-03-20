@@ -31,6 +31,10 @@ describe ApiController do
     Vmdb::Application
   end
 
+  def update_raw_power_state(state, *vms)
+    vms.each { |vm| vm.update_attributes!(:raw_power_state => state) }
+  end
+
   context "Vm accounts subcollection" do
     let(:acct1) { FactoryGirl.create(:account, :vm_or_template_id => vm.id, :name => "John") }
     let(:acct2) { FactoryGirl.create(:account, :vm_or_template_id => vm.id, :name => "Jane") }
@@ -39,72 +43,52 @@ describe ApiController do
     let(:acct2_url)            { "#{vm_accounts_url}/#{acct2.id}" }
     let(:vm_accounts_url_list) { [acct1_url, acct2_url] }
 
-    context "query VM accounts subcollection with no related accounts" do
-      before do
-        api_basic_authorize
+    it "query VM accounts subcollection with no related accounts" do
+      api_basic_authorize
 
-        run_get vm_accounts_url
-      end
+      run_get vm_accounts_url
 
-      it "empty_query_result" do
-        expect_empty_query_result(:accounts)
-      end
+      expect_empty_query_result(:accounts)
     end
 
-    context "query VM accounts subcollection with two related accounts" do
-      before do
-        api_basic_authorize
-        # create resources
-        acct1
-        acct2
+    it "query VM accounts subcollection with two related accounts" do
+      api_basic_authorize
+      # create resources
+      acct1
+      acct2
 
-        run_get vm_accounts_url
-      end
+      run_get vm_accounts_url
 
-      it "query_result" do
-        expect_query_result(:accounts, 2)
-        expect_result_resources_to_include_hrefs("resources", :vm_accounts_url_list)
-      end
+      expect_query_result(:accounts, 2)
+      expect_result_resources_to_include_hrefs("resources", :vm_accounts_url_list)
     end
 
-    context "query VM accounts subcollection with a valid Account Id" do
-      before do
-        api_basic_authorize
+    it "query VM accounts subcollection with a valid Account Id" do
+      api_basic_authorize
 
-        run_get acct1_url
-      end
+      run_get acct1_url
 
-      it "single_resource_query" do
-        expect_single_resource_query("name" => "John")
-      end
+      expect_single_resource_query("name" => "John")
     end
 
-    context "query VM accounts subcollection with an invalid Account Id" do
-      before do
-        api_basic_authorize
+    it "query VM accounts subcollection with an invalid Account Id" do
+      api_basic_authorize
 
-        run_get "#{vm_accounts_url}/999999"
-      end
+      run_get "#{vm_accounts_url}/999999"
 
-      it "resource_not_found" do
-        expect_resource_not_found
-      end
+      expect_resource_not_found
     end
 
-    context "query VM accounts subcollection with two related accounts using expand directive" do
-      before do
-        api_basic_authorize
-        # create resources
-        acct1
-        acct2
+    it "query VM accounts subcollection with two related accounts using expand directive" do
+      api_basic_authorize
+      # create resources
+      acct1
+      acct2
 
-        run_get "#{vm_url}?expand=accounts"
-      end
+      run_get "#{vm_url}?expand=accounts"
 
-      it "single_resource_query" do
-        expect_single_resource_query("guid" => :vm_guid)
-        expect_result_resources_to_include_hrefs("accounts", :vm_accounts_url_list)
-      end
+      expect_single_resource_query("guid" => :vm_guid)
+      expect_result_resources_to_include_hrefs("accounts", :vm_accounts_url_list)
     end
   end
 
@@ -116,436 +100,298 @@ describe ApiController do
     let(:sw2_url)              { "#{vm_software_url}/#{sw2.id}" }
     let(:vm_software_url_list) { [sw1_url, sw2_url] }
 
-    context "query VM software subcollection with no related software" do
-      before do
-        api_basic_authorize
+    it "query VM software subcollection with no related software" do
+      api_basic_authorize
 
-        run_get vm_software_url
-      end
+      run_get vm_software_url
 
-      it "empty_query_resource" do
-        expect_empty_query_result(:software)
-      end
+      expect_empty_query_result(:software)
     end
 
-    context "query VM software subcollection with two related software" do
-      before do
-        api_basic_authorize
-        # create resources
-        sw1
-        sw2
+    it "query VM software subcollection with two related software" do
+      api_basic_authorize
+      # create resources
+      sw1
+      sw2
 
-        run_get vm_software_url
-      end
+      run_get vm_software_url
 
-      it "query_result" do
-        expect_query_result(:software, 2)
-        expect_result_resources_to_include_hrefs("resources", :vm_software_url_list)
-      end
+      expect_query_result(:software, 2)
+      expect_result_resources_to_include_hrefs("resources", :vm_software_url_list)
     end
 
-    context "query VM software subcollection with a valid Software Id" do
-      before do
-        api_basic_authorize
+    it "query VM software subcollection with a valid Software Id" do
+      api_basic_authorize
 
-        run_get sw1_url
-      end
+      run_get sw1_url
 
-      it "single_resource_query" do
-        expect_single_resource_query("name" => "Word")
-      end
+      expect_single_resource_query("name" => "Word")
     end
 
-    context "query VM software subcollection with an invalid Software Id" do
-      before do
-        api_basic_authorize
+    it "query VM software subcollection with an invalid Software Id" do
+      api_basic_authorize
 
-        run_get "#{vm_software_url}/999999"
-      end
+      run_get "#{vm_software_url}/999999"
 
-      it "resource_not_found" do
-        expect_resource_not_found
-      end
+      expect_resource_not_found
     end
 
-    context "query VM software subcollection with two related software using expand directive" do
-      before do
-        api_basic_authorize
-        # create resources
-        sw1
-        sw2
+    it "query VM software subcollection with two related software using expand directive" do
+      api_basic_authorize
+      # create resources
+      sw1
+      sw2
 
-        run_get "#{vms_url(vm.id)}?expand=software"
-      end
+      run_get "#{vms_url(vm.id)}?expand=software"
 
-      it "single_resource_query" do
-        expect_single_resource_query("guid" => :vm_guid)
-        expect_result_resources_to_include_hrefs("software", :vm_software_url_list)
-      end
+      expect_single_resource_query("guid" => :vm_guid)
+      expect_result_resources_to_include_hrefs("software", :vm_software_url_list)
     end
   end
 
   context "Vm start action" do
-    context "starts an invalid vm" do
-      before do
-        api_basic_authorize action_identifier(:vms, :start)
+    it "starts an invalid vm" do
+      api_basic_authorize action_identifier(:vms, :start)
 
-        run_post(invalid_vm_url, gen_request(:start))
-      end
+      run_post(invalid_vm_url, gen_request(:start))
 
-      it "resource_not_found" do
-        expect_resource_not_found
-      end
+      expect_resource_not_found
     end
 
-    context "starts an invalid vm without appropriate role" do
-      before do
-        api_basic_authorize
+    it "starts an invalid vm without appropriate role" do
+      api_basic_authorize
 
-        run_post(invalid_vm_url, gen_request(:start))
-      end
+      run_post(invalid_vm_url, gen_request(:start))
 
-      it "request_forbidden" do
-        expect_request_forbidden
-      end
+      expect_request_forbidden
     end
 
-    context "starts a powered on vm" do
-      before do
-        api_basic_authorize action_identifier(:vms, :start)
+    it "starts a powered on vm" do
+      api_basic_authorize action_identifier(:vms, :start)
 
-        run_post(vm_url, gen_request(:start))
-      end
+      run_post(vm_url, gen_request(:start))
 
-      it "single_action_result" do
-        expect_single_action_result(:success => false, :message => "is powered on", :href => :vm_url)
-      end
+      expect_single_action_result(:success => false, :message => "is powered on", :href => :vm_url)
     end
 
-    context "starts a vm" do
-      let(:vm)  { FactoryGirl.create(:vm_vmware, :host => host, :ems_id => ems.id, :raw_power_state => "poweredOff") }
+    it "starts a vm" do
+      api_basic_authorize action_identifier(:vms, :start)
+      update_raw_power_state("poweredOff", vm)
 
-      before do
-        api_basic_authorize action_identifier(:vms, :start)
+      run_post(vm_url, gen_request(:start))
 
-        run_post(vm_url, gen_request(:start))
-      end
-
-      it "single_action_result" do
-        expect_single_action_result(:success => true, :message => "starting", :href => :vm_url, :task => true)
-      end
+      expect_single_action_result(:success => true, :message => "starting", :href => :vm_url, :task => true)
     end
 
-    context "starts multiple vms" do
-      let(:vm1) { FactoryGirl.create(:vm_vmware, :host => host, :ems_id => ems.id, :raw_power_state => "poweredOff") }
-      let(:vm2) { FactoryGirl.create(:vm_vmware, :host => host, :ems_id => ems.id, :raw_power_state => "poweredOff") }
+    it "starts multiple vms" do
+      api_basic_authorize action_identifier(:vms, :start)
+      update_raw_power_state("poweredOff", vm1, vm2)
 
-      before do
-        api_basic_authorize action_identifier(:vms, :start)
+      run_post(vms_url, gen_request(:start, nil, vm1_url, vm2_url))
 
-        run_post(vms_url, gen_request(:start, nil, vm1_url, vm2_url))
-      end
-
-      it "multiple_action_result" do
-        expect_multiple_action_result(2, :task => true)
-        expect_result_resources_to_include_hrefs("results", :vms_list)
-      end
+      expect_multiple_action_result(2, :task => true)
+      expect_result_resources_to_include_hrefs("results", :vms_list)
     end
   end
 
   context "Vm stop action" do
-    context "stops an invalid vm" do
-      before do
-        api_basic_authorize action_identifier(:vms, :stop)
+    it "stops an invalid vm" do
+      api_basic_authorize action_identifier(:vms, :stop)
 
-        run_post(invalid_vm_url, gen_request(:stop))
-      end
+      run_post(invalid_vm_url, gen_request(:stop))
 
-      it "resource_not_found" do
-        expect_resource_not_found
-      end
+      expect_resource_not_found
     end
 
-    context "stops an invalid vm without appropriate role" do
-      before do
-        api_basic_authorize
+    it "stops an invalid vm without appropriate role" do
+      api_basic_authorize
 
-        run_post(invalid_vm_url, gen_request(:stop))
-      end
+      run_post(invalid_vm_url, gen_request(:stop))
 
-      it "request_forbidden" do
-        expect_request_forbidden
-      end
+      expect_request_forbidden
     end
 
-    context "stops a powered off vm" do
-      let(:vm)  { FactoryGirl.create(:vm_vmware, :host => host, :ems_id => ems.id, :raw_power_state => "poweredOff") }
+    it "stops a powered off vm" do
+      api_basic_authorize action_identifier(:vms, :stop)
+      update_raw_power_state("poweredOff", vm)
 
-      before do
-        api_basic_authorize action_identifier(:vms, :stop)
+      run_post(vm_url, gen_request(:stop))
 
-        run_post(vm_url, gen_request(:stop))
-      end
-
-      it "single_action_result" do
-        expect_single_action_result(:success => false, :message => "is not powered on", :href => :vm_url)
-      end
+      expect_single_action_result(:success => false, :message => "is not powered on", :href => :vm_url)
     end
 
-    context "stops a vm" do
-      before do
-        api_basic_authorize action_identifier(:vms, :stop)
+    it "stops a vm" do
+      api_basic_authorize action_identifier(:vms, :stop)
 
-        run_post(vm_url, gen_request(:stop))
-      end
+      run_post(vm_url, gen_request(:stop))
 
-      it "single_action_result" do
-        expect_single_action_result(:success => true, :message => "stopping", :href => :vm_url, :task => true)
-      end
+      expect_single_action_result(:success => true, :message => "stopping", :href => :vm_url, :task => true)
     end
 
-    context "stops multiple vms" do
-      before do
-        api_basic_authorize action_identifier(:vms, :stop)
+    it "stops multiple vms" do
+      api_basic_authorize action_identifier(:vms, :stop)
 
-        run_post(vms_url, gen_request(:stop, nil, vm1_url, vm2_url))
-      end
+      run_post(vms_url, gen_request(:stop, nil, vm1_url, vm2_url))
 
-      it "multiple_action_result" do
-        expect_multiple_action_result(2, :task => true)
-        expect_result_resources_to_include_hrefs("results", :vms_list)
-      end
+      expect_multiple_action_result(2, :task => true)
+      expect_result_resources_to_include_hrefs("results", :vms_list)
     end
   end
 
   context "Vm suspend action" do
-    context "suspends an invalid vm" do
-      before do
-        api_basic_authorize action_identifier(:vms, :suspend)
+    it "suspends an invalid vm" do
+      api_basic_authorize action_identifier(:vms, :suspend)
 
-        run_post(invalid_vm_url, gen_request(:suspend))
-      end
+      run_post(invalid_vm_url, gen_request(:suspend))
 
-      it "resource_not_found" do
-        expect_resource_not_found
-      end
+      expect_resource_not_found
     end
 
-    context "suspends an invalid vm without appropriate role" do
-      before do
-        api_basic_authorize
+    it "suspends an invalid vm without appropriate role" do
+      api_basic_authorize
 
-        run_post(invalid_vm_url, gen_request(:suspend))
-      end
+      run_post(invalid_vm_url, gen_request(:suspend))
 
-      it "request_forbidden" do
-        expect_request_forbidden
-      end
+      expect_request_forbidden
     end
 
-    context "suspends a powered off vm" do
-      let(:vm) { FactoryGirl.create(:vm_vmware, :host => host, :ems_id => ems.id, :raw_power_state => "poweredOff") }
+    it "suspends a powered off vm" do
+      api_basic_authorize action_identifier(:vms, :suspend)
+      update_raw_power_state("poweredOff", vm)
 
-      before do
-        api_basic_authorize action_identifier(:vms, :suspend)
+      run_post(vm_url, gen_request(:suspend))
 
-        run_post(vm_url, gen_request(:suspend))
-      end
-
-      it "single_action_result" do
-        expect_single_action_result(:success => false, :message => "is not powered on", :href => :vm_url)
-      end
+      expect_single_action_result(:success => false, :message => "is not powered on", :href => :vm_url)
     end
 
-    context "suspends a suspended vm" do
-      let(:vm) { FactoryGirl.create(:vm_vmware, :host => host, :ems_id => ems.id, :raw_power_state => "suspended") }
+    it "suspends a suspended vm" do
+      api_basic_authorize action_identifier(:vms, :suspend)
+      update_raw_power_state("suspended", vm)
 
-      before do
-        api_basic_authorize action_identifier(:vms, :suspend)
+      run_post(vm_url, gen_request(:suspend))
 
-        run_post(vm_url, gen_request(:suspend))
-      end
-
-      it "single_action_result" do
-        expect_single_action_result(:success => false, :message => "is not powered on", :href => :vm_url)
-      end
+      expect_single_action_result(:success => false, :message => "is not powered on", :href => :vm_url)
     end
 
-    context "suspends a vm" do
-      before do
-        api_basic_authorize action_identifier(:vms, :suspend)
+    it "suspends a vm" do
+      api_basic_authorize action_identifier(:vms, :suspend)
 
-        run_post(vm_url, gen_request(:suspend))
-      end
+      run_post(vm_url, gen_request(:suspend))
 
-      it "single_action_result" do
-        expect_single_action_result(:success => true, :message => "suspending", :href => :vm_url, :task => true)
-      end
+      expect_single_action_result(:success => true, :message => "suspending", :href => :vm_url, :task => true)
     end
 
-    context "suspends multiple vms" do
-      before do
-        api_basic_authorize action_identifier(:vms, :suspend)
+    it "suspends multiple vms" do
+      api_basic_authorize action_identifier(:vms, :suspend)
 
-        run_post(vms_url, gen_request(:suspend, nil, vm1_url, vm2_url))
-      end
+      run_post(vms_url, gen_request(:suspend, nil, vm1_url, vm2_url))
 
-      it "multiple_action_result" do
-        expect_multiple_action_result(2, :task => true)
-        expect_result_resources_to_include_hrefs("results", :vms_list)
-      end
+      expect_multiple_action_result(2, :task => true)
+      expect_result_resources_to_include_hrefs("results", :vms_list)
     end
   end
 
   context "Vm delete action" do
-    context "deletes an invalid vm" do
-      before do
-        api_basic_authorize action_identifier(:vms, :delete)
+    it "deletes an invalid vm" do
+      api_basic_authorize action_identifier(:vms, :delete)
 
-        run_post(invalid_vm_url, gen_request(:delete))
-      end
+      run_post(invalid_vm_url, gen_request(:delete))
 
-      it "resource_not_found" do
-        expect_resource_not_found
-      end
+      expect_resource_not_found
     end
 
-    context "deletes a vm via a resource POST without appropriate role" do
-      before do
-        api_basic_authorize
+    it "deletes a vm via a resource POST without appropriate role" do
+      api_basic_authorize
 
-        run_post(invalid_vm_url, gen_request(:delete))
-      end
+      run_post(invalid_vm_url, gen_request(:delete))
 
-      it "request_forbidden" do
-        expect_request_forbidden
-      end
+      expect_request_forbidden
     end
 
-    context "deletes a vm via a resource DELETE without appropriate role" do
-      before do
-        api_basic_authorize
+    it "deletes a vm via a resource DELETE without appropriate role" do
+      api_basic_authorize
 
-        run_delete(invalid_vm_url)
-      end
+      run_delete(invalid_vm_url)
 
-      it "request_forbidden" do
-        expect_request_forbidden
-      end
+      expect_request_forbidden
     end
 
-    context "deletes a vm via a resource POST" do
-      before do
-        api_basic_authorize action_identifier(:vms, :delete)
+    it "deletes a vm via a resource POST" do
+      api_basic_authorize action_identifier(:vms, :delete)
 
-        run_post(vm_url, gen_request(:delete))
-      end
+      run_post(vm_url, gen_request(:delete))
 
-      it "single_action_result" do
-        expect_single_action_result(:success => true, :message => "deleting", :href => :vm_url, :task => true)
-      end
+      expect_single_action_result(:success => true, :message => "deleting", :href => :vm_url, :task => true)
     end
 
-    context "deletes a vm via a resource DELETE" do
-      before do
-        api_basic_authorize action_identifier(:vms, :delete)
+    it "deletes a vm via a resource DELETE" do
+      api_basic_authorize action_identifier(:vms, :delete)
 
-        run_delete(vm_url)
-      end
+      run_delete(vm_url)
 
-      it "request_success_with_no_content" do
-        expect_request_success_with_no_content
-      end
+      expect_request_success_with_no_content
     end
 
-    context "deletes multiple vms" do
-      before do
-        api_basic_authorize action_identifier(:vms, :delete)
+    it "deletes multiple vms" do
+      api_basic_authorize action_identifier(:vms, :delete)
 
-        run_post(vms_url, gen_request(:delete, nil, vm1_url, vm2_url))
-      end
+      run_post(vms_url, gen_request(:delete, nil, vm1_url, vm2_url))
 
-      it "multiple_action_result" do
-        expect_multiple_action_result(2, :task => true)
-      end
+      expect_multiple_action_result(2, :task => true)
     end
   end
 
   context "Vm set_owner action" do
-    context "set_owner to an invalid vm" do
-      before do
-        api_basic_authorize action_identifier(:vms, :set_owner)
+    it "set_owner to an invalid vm" do
+      api_basic_authorize action_identifier(:vms, :set_owner)
 
-        run_post(invalid_vm_url, gen_request(:set_owner, "owner" => "admin"))
-      end
+      run_post(invalid_vm_url, gen_request(:set_owner, "owner" => "admin"))
 
-      it "resource_not_found" do
-        expect_resource_not_found
-      end
+      expect_resource_not_found
     end
 
-    context "set_owner without appropriate action role" do
-      before do
-        api_basic_authorize
+    it "set_owner without appropriate action role" do
+      api_basic_authorize
 
-        run_post(vm_url, gen_request(:set_owner, "owner" => "admin"))
-      end
+      run_post(vm_url, gen_request(:set_owner, "owner" => "admin"))
 
-      it "request_forbidden" do
-        expect_request_forbidden
-      end
+      expect_request_forbidden
     end
 
-    context "set_owner with missing owner" do
-      before do
-        api_basic_authorize action_identifier(:vms, :set_owner)
+    it "set_owner with missing owner" do
+      api_basic_authorize action_identifier(:vms, :set_owner)
 
-        run_post(vm_url, gen_request(:set_owner))
-      end
+      run_post(vm_url, gen_request(:set_owner))
 
-      it "bad_request" do
-        expect_bad_request("Must specify an owner")
-      end
+      expect_bad_request("Must specify an owner")
     end
 
-    context "set_owner with invalid owner" do
-      before do
-        api_basic_authorize action_identifier(:vms, :set_owner)
+    it "set_owner with invalid owner" do
+      api_basic_authorize action_identifier(:vms, :set_owner)
 
-        run_post(vm_url, gen_request(:set_owner, "owner" => "bad_user"))
-      end
+      run_post(vm_url, gen_request(:set_owner, "owner" => "bad_user"))
 
-      it "single_action_result" do
-        expect_single_action_result(:success => false, :message => /.*/, :href => :vm_url)
-      end
+      expect_single_action_result(:success => false, :message => /.*/, :href => :vm_url)
     end
 
-    context "set_owner to a vm" do
-      before do
-        api_basic_authorize action_identifier(:vms, :set_owner)
+    it "set_owner to a vm" do
+      api_basic_authorize action_identifier(:vms, :set_owner)
 
-        run_post(vm_url, gen_request(:set_owner, "owner" => @cfme[:user]))
-      end
+      run_post(vm_url, gen_request(:set_owner, "owner" => @cfme[:user]))
 
-      it "single_action_result" do
-        expect_single_action_result(:success => true, :message => "setting owner", :href => :vm_url)
-        expect(vm.reload.evm_owner).to eq(@user)
-      end
+      expect_single_action_result(:success => true, :message => "setting owner", :href => :vm_url)
+      expect(vm.reload.evm_owner).to eq(@user)
     end
 
-    context "set_owner to multiple vms" do
-      before do
-        api_basic_authorize action_identifier(:vms, :set_owner)
+    it "set_owner to multiple vms" do
+      api_basic_authorize action_identifier(:vms, :set_owner)
 
-        run_post(vms_url, gen_request(:set_owner, {"owner" => @cfme[:user]}, vm1_url, vm2_url))
-      end
+      run_post(vms_url, gen_request(:set_owner, {"owner" => @cfme[:user]}, vm1_url, vm2_url))
 
-      it "multiple_action_result" do
-        expect_multiple_action_result(2)
-        expect_result_resources_to_include_hrefs("results", :vms_list)
-        expect(vm1.reload.evm_owner).to eq(@user)
-        expect(vm2.reload.evm_owner).to eq(@user)
-      end
+      expect_multiple_action_result(2)
+      expect_result_resources_to_include_hrefs("results", :vms_list)
+      expect(vm1.reload.evm_owner).to eq(@user)
+      expect(vm2.reload.evm_owner).to eq(@user)
     end
   end
 
@@ -557,159 +403,115 @@ describe ApiController do
     let(:ca2_url)        { "#{vm_ca_url}/#{ca2.id}" }
     let(:vm_ca_url_list) { [ca1_url, ca2_url] }
 
-    context "getting custom_attributes from a vm with no custom_attributes" do
-      before do
-        api_basic_authorize
+    it "getting custom_attributes from a vm with no custom_attributes" do
+      api_basic_authorize
 
-        run_get(vm_ca_url)
-      end
+      run_get(vm_ca_url)
 
-      it "empty_query_result" do
-        expect_empty_query_result(:custom_attributes)
-      end
+      expect_empty_query_result(:custom_attributes)
     end
 
-    context "getting custom_attributes from a vm" do
-      before do
-        api_basic_authorize
-        vm.custom_attributes = [ca1, ca2]
+    it "getting custom_attributes from a vm" do
+      api_basic_authorize
+      vm.custom_attributes = [ca1, ca2]
 
-        run_get vm_ca_url
-      end
+      run_get vm_ca_url
 
-      it "query_result" do
-        expect_query_result(:custom_attributes, 2)
-        expect_result_resources_to_include_hrefs("resources", :vm_ca_url_list)
-      end
+      expect_query_result(:custom_attributes, 2)
+      expect_result_resources_to_include_hrefs("resources", :vm_ca_url_list)
     end
 
-    context "getting custom_attributes from a vm in expanded form" do
-      before do
-        api_basic_authorize
-        vm.custom_attributes = [ca1, ca2]
+    it "getting custom_attributes from a vm in expanded form" do
+      api_basic_authorize
+      vm.custom_attributes = [ca1, ca2]
 
-        run_get "#{vm_ca_url}?expand=resources"
-      end
+      run_get "#{vm_ca_url}?expand=resources"
 
-      it "query_result" do
-        expect_query_result(:custom_attributes, 2)
-        expect_result_resources_to_include_data("resources", "name" => %w(name1 name2))
-      end
+      expect_query_result(:custom_attributes, 2)
+      expect_result_resources_to_include_data("resources", "name" => %w(name1 name2))
     end
 
-    context "getting custom_attributes from a vm using expand" do
-      before do
-        api_basic_authorize
-        vm.custom_attributes = [ca1, ca2]
+    it "getting custom_attributes from a vm using expand" do
+      api_basic_authorize
+      vm.custom_attributes = [ca1, ca2]
 
-        run_get "#{vm_url}?expand=custom_attributes"
-      end
+      run_get "#{vm_url}?expand=custom_attributes"
 
-      it "single_resource_query" do
-        expect_single_resource_query("guid" => :vm_guid)
-        expect_result_resources_to_include_data("custom_attributes", "name" => %w(name1 name2))
-      end
+      expect_single_resource_query("guid" => :vm_guid)
+      expect_result_resources_to_include_data("custom_attributes", "name" => %w(name1 name2))
     end
 
-    context "delete a custom_attribute without appropriate role" do
-      before do
-        api_basic_authorize
-        vm.custom_attributes = [ca1]
+    it "delete a custom_attribute without appropriate role" do
+      api_basic_authorize
+      vm.custom_attributes = [ca1]
 
-        run_post(vm_ca_url, gen_request(:delete, nil, vm_url))
-      end
+      run_post(vm_ca_url, gen_request(:delete, nil, vm_url))
 
-      it "request_forbidden" do
-        expect_request_forbidden
-      end
+      expect_request_forbidden
     end
 
-    context "delete a custom_attribute from a vm via the delete action" do
-      before do
-        api_basic_authorize action_identifier(:vms, :edit)
-        vm.custom_attributes = [ca1]
+    it "delete a custom_attribute from a vm via the delete action" do
+      api_basic_authorize action_identifier(:vms, :edit)
+      vm.custom_attributes = [ca1]
 
-        run_post(vm_ca_url, gen_request(:delete, nil, ca1_url))
-      end
+      run_post(vm_ca_url, gen_request(:delete, nil, ca1_url))
 
-      it "request_success" do
-        expect_request_success
-        expect(vm.reload.custom_attributes).to be_empty
-      end
+      expect_request_success
+      expect(vm.reload.custom_attributes).to be_empty
     end
 
-    context "add custom attribute to a vm without a name" do
-      before do
-        api_basic_authorize action_identifier(:vms, :edit)
+    it "add custom attribute to a vm without a name" do
+      api_basic_authorize action_identifier(:vms, :edit)
 
-        run_post(vm_ca_url, gen_request(:add, "value" => "value1"))
-      end
+      run_post(vm_ca_url, gen_request(:add, "value" => "value1"))
 
-      it "bad_request" do
-        expect_bad_request("Must specify a name")
-      end
+      expect_bad_request("Must specify a name")
     end
 
-    context "add custom attributes to a vm" do
-      before do
-        api_basic_authorize action_identifier(:vms, :edit)
+    it "add custom attributes to a vm" do
+      api_basic_authorize action_identifier(:vms, :edit)
 
-        run_post(vm_ca_url, gen_request(:add, [{"name" => "name1", "value" => "value1"},
-                                               {"name" => "name2", "value" => "value2"}]))
-      end
+      run_post(vm_ca_url, gen_request(:add, [{"name" => "name1", "value" => "value1"},
+                                             {"name" => "name2", "value" => "value2"}]))
 
-      it "request_success" do
-        expect_request_success
-        expect_result_resources_to_include_data("results", "name" => %w(name1 name2))
-        expect(vm.custom_attributes.size).to eq(2)
-        expect(vm.custom_attributes.pluck(:value).sort).to eq(%w(value1 value2))
-      end
+      expect_request_success
+      expect_result_resources_to_include_data("results", "name" => %w(name1 name2))
+      expect(vm.custom_attributes.size).to eq(2)
+      expect(vm.custom_attributes.pluck(:value).sort).to eq(%w(value1 value2))
     end
 
-    context "edit a custom attribute by name" do
-      before do
-        api_basic_authorize action_identifier(:vms, :edit)
-        vm.custom_attributes = [ca1]
+    it "edit a custom attribute by name" do
+      api_basic_authorize action_identifier(:vms, :edit)
+      vm.custom_attributes = [ca1]
 
-        run_post(vm_ca_url, gen_request(:edit, "name" => "name1", "value" => "value one"))
-      end
+      run_post(vm_ca_url, gen_request(:edit, "name" => "name1", "value" => "value one"))
 
-      it "request_success" do
-        expect_request_success
-        expect_result_resources_to_include_data("results", "value" => ["value one"])
-        expect(vm.reload.custom_attributes.first.value).to eq("value one")
-      end
+      expect_request_success
+      expect_result_resources_to_include_data("results", "value" => ["value one"])
+      expect(vm.reload.custom_attributes.first.value).to eq("value one")
     end
 
-    context "edit a custom attribute by href" do
-      before do
-        api_basic_authorize action_identifier(:vms, :edit)
-        vm.custom_attributes = [ca1]
+    it "edit a custom attribute by href" do
+      api_basic_authorize action_identifier(:vms, :edit)
+      vm.custom_attributes = [ca1]
 
-        run_post(vm_ca_url, gen_request(:edit, "href" => ca1_url, "value" => "new value1"))
-      end
+      run_post(vm_ca_url, gen_request(:edit, "href" => ca1_url, "value" => "new value1"))
 
-      it "request_success" do
-        expect_request_success
-        expect_result_resources_to_include_data("results", "value" => ["new value1"])
-        expect(vm.reload.custom_attributes.first.value).to eq("new value1")
-      end
+      expect_request_success
+      expect_result_resources_to_include_data("results", "value" => ["new value1"])
+      expect(vm.reload.custom_attributes.first.value).to eq("new value1")
     end
 
-    context "edit multiple custom attributes" do
-      before do
-        api_basic_authorize action_identifier(:vms, :edit)
-        vm.custom_attributes = [ca1, ca2]
+    it "edit multiple custom attributes" do
+      api_basic_authorize action_identifier(:vms, :edit)
+      vm.custom_attributes = [ca1, ca2]
 
-        run_post(vm_ca_url, gen_request(:edit, [{"name" => "name1", "value" => "new value1"},
-                                                {"name" => "name2", "value" => "new value2"}]))
-      end
+      run_post(vm_ca_url, gen_request(:edit, [{"name" => "name1", "value" => "new value1"},
+                                              {"name" => "name2", "value" => "new value2"}]))
 
-      it "request_success" do
-        expect_request_success
-        expect_result_resources_to_include_data("results", "value" => ["new value1", "new value2"])
-        expect(vm.reload.custom_attributes.pluck(:value).sort).to eq(["new value1", "new value2"])
-      end
+      expect_request_success
+      expect_result_resources_to_include_data("results", "value" => ["new value1", "new value2"])
+      expect(vm.reload.custom_attributes.pluck(:value).sort).to eq(["new value1", "new value2"])
     end
   end
 
@@ -720,164 +522,116 @@ describe ApiController do
       end
     end
 
-    context "add_lifecycle_event to an invalid vm" do
-      before do
-        api_basic_authorize action_identifier(:vms, :add_lifecycle_event)
+    it "add_lifecycle_event to an invalid vm" do
+      api_basic_authorize action_identifier(:vms, :add_lifecycle_event)
 
-        run_post(invalid_vm_url, gen_request(:add_lifecycle_event, :event => "event 1"))
-      end
+      run_post(invalid_vm_url, gen_request(:add_lifecycle_event, :event => "event 1"))
 
-      it "resource_not_found" do
-        expect_resource_not_found
-      end
+      expect_resource_not_found
     end
 
-    context "add_lifecycle_event without appropriate action role" do
-      before do
-        api_basic_authorize
+    it "add_lifecycle_event without appropriate action role" do
+      api_basic_authorize
 
-        run_post(vm_url, gen_request(:add_lifecycle_event, :event => "event 1"))
-      end
+      run_post(vm_url, gen_request(:add_lifecycle_event, :event => "event 1"))
 
-      it "request_forbidden" do
-        expect_request_forbidden
-      end
+      expect_request_forbidden
     end
 
-    context "add_lifecycle_event to a vm" do
-      before do
-        api_basic_authorize action_identifier(:vms, :add_lifecycle_event)
+    it "add_lifecycle_event to a vm" do
+      api_basic_authorize action_identifier(:vms, :add_lifecycle_event)
 
-        run_post(vm_url, gen_request(:add_lifecycle_event, events[0]))
-      end
+      run_post(vm_url, gen_request(:add_lifecycle_event, events[0]))
 
-      it "single_action_result" do
-        expect_single_action_result(:success => true, :message => /adding lifecycle event/i, :href => :vm_url)
-        expect(vm.lifecycle_events.size).to eq(1)
-        expect(vm.lifecycle_events.first.event).to eq(events[0][:event])
-      end
+      expect_single_action_result(:success => true, :message => /adding lifecycle event/i, :href => :vm_url)
+      expect(vm.lifecycle_events.size).to eq(1)
+      expect(vm.lifecycle_events.first.event).to eq(events[0][:event])
     end
 
-    context "add_lifecycle_event to multiple vms" do
-      before do
-        api_basic_authorize action_identifier(:vms, :add_lifecycle_event)
+    it "add_lifecycle_event to multiple vms" do
+      api_basic_authorize action_identifier(:vms, :add_lifecycle_event)
 
-        run_post(vms_url, gen_request(:add_lifecycle_event,
-                                      events.collect { |e| {:href => vm_url}.merge(e) }))
-      end
+      run_post(vms_url, gen_request(:add_lifecycle_event,
+                                    events.collect { |e| {:href => vm_url}.merge(e) }))
 
-      it "multiple_action_result" do
-        expect_multiple_action_result(3)
-        expect(vm.lifecycle_events.size).to eq(events.size)
-        expect(vm.lifecycle_events.collect(&:event)).to match_array(events.collect { |e| e[:event] })
-      end
+      expect_multiple_action_result(3)
+      expect(vm.lifecycle_events.size).to eq(events.size)
+      expect(vm.lifecycle_events.collect(&:event)).to match_array(events.collect { |e| e[:event] })
     end
   end
 
   context "Vm scan action" do
-    context "scans an invalid vm" do
-      before do
-        api_basic_authorize action_identifier(:vms, :scan)
+    it "scans an invalid vm" do
+      api_basic_authorize action_identifier(:vms, :scan)
 
-        run_post(invalid_vm_url, gen_request(:scan))
-      end
+      run_post(invalid_vm_url, gen_request(:scan))
 
-      it "resource_not_found" do
-        expect_resource_not_found
-      end
+      expect_resource_not_found
     end
 
-    context "scans an invalid Vm without appropriate role" do
-      before do
-        api_basic_authorize
+    it "scans an invalid Vm without appropriate role" do
+      api_basic_authorize
 
-        run_post(invalid_vm_url, gen_request(:scan))
-      end
+      run_post(invalid_vm_url, gen_request(:scan))
 
-      it "request_forbidden" do
-        expect_request_forbidden
-      end
+      expect_request_forbidden
     end
 
-    context "scan a Vm" do
-      before do
-        api_basic_authorize action_identifier(:vms, :scan)
+    it "scan a Vm" do
+      api_basic_authorize action_identifier(:vms, :scan)
 
-        run_post(vm_url, gen_request(:scan))
-      end
+      run_post(vm_url, gen_request(:scan))
 
-      it "single_action_result" do
-        expect_single_action_result(:success => true, :message => "scanning", :href => :vm_url, :task => true)
-      end
+      expect_single_action_result(:success => true, :message => "scanning", :href => :vm_url, :task => true)
     end
 
-    context "scan multiple Vms" do
-      before do
-        api_basic_authorize action_identifier(:vms, :scan)
+    it "scan multiple Vms" do
+      api_basic_authorize action_identifier(:vms, :scan)
 
-        run_post(vms_url, gen_request(:scan, nil, vm1_url, vm2_url))
-      end
+      run_post(vms_url, gen_request(:scan, nil, vm1_url, vm2_url))
 
-      it "multiple_action_result" do
-        expect_multiple_action_result(2, :task => true)
-        expect_result_resources_to_include_hrefs("results", :vms_list)
-      end
+      expect_multiple_action_result(2, :task => true)
+      expect_result_resources_to_include_hrefs("results", :vms_list)
     end
   end
 
   context "Vm add_event action" do
-    context "to an invalid vm" do
-      before do
-        api_basic_authorize action_identifier(:vms, :add_event)
+    it "to an invalid vm" do
+      api_basic_authorize action_identifier(:vms, :add_event)
 
-        run_post(invalid_vm_url, gen_request(:add_event))
-      end
+      run_post(invalid_vm_url, gen_request(:add_event))
 
-      it "resource_not_found" do
-        expect_resource_not_found
-      end
+      expect_resource_not_found
     end
 
-    context "to an invalid vm without appropriate role" do
-      before do
-        api_basic_authorize
+    it "to an invalid vm without appropriate role" do
+      api_basic_authorize
 
-        run_post(invalid_vm_url, gen_request(:add_event))
-      end
+      run_post(invalid_vm_url, gen_request(:add_event))
 
-      it "request_forbidden" do
-        expect_request_forbidden
-      end
+      expect_request_forbidden
     end
 
-    context "to a single Vm" do
-      before do
-        api_basic_authorize collection_action_identifier(:vms, :add_event)
+    it "to a single Vm" do
+      api_basic_authorize collection_action_identifier(:vms, :add_event)
 
-        run_post(vm_url, gen_request(:add_event, :event_type => "special", :event_message => "message"))
-      end
+      run_post(vm_url, gen_request(:add_event, :event_type => "special", :event_message => "message"))
 
-      it "single_action_result" do
-        expect_single_action_result(:success => true, :message => /adding event/i, :href => :vm_url)
-      end
+      expect_single_action_result(:success => true, :message => /adding event/i, :href => :vm_url)
     end
 
-    context "to multiple Vms" do
-      before do
-        api_basic_authorize collection_action_identifier(:vms, :add_event)
+    it "to multiple Vms" do
+      api_basic_authorize collection_action_identifier(:vms, :add_event)
 
-        run_post(vms_url,
-                 gen_request(:add_event,
-                             [{"href" => vm1_url, "event_type" => "etype1", "event_message" => "emsg1"},
-                              {"href" => vm2_url, "event_type" => "etype2", "event_message" => "emsg2"}]))
-      end
+      run_post(vms_url,
+               gen_request(:add_event,
+                           [{"href" => vm1_url, "event_type" => "etype1", "event_message" => "emsg1"},
+                            {"href" => vm2_url, "event_type" => "etype2", "event_message" => "emsg2"}]))
 
-      it "multiple_action_result" do
-        expect_multiple_action_result(2)
-        expect_result_resources_to_include_hrefs("results", :vms_list)
-        expect_result_resources_to_match_key_data("results", "message",
-                                                  [/adding event .*etype1/i, /adding event .*etype2/i])
-      end
+      expect_multiple_action_result(2)
+      expect_result_resources_to_include_hrefs("results", :vms_list)
+      expect_result_resources_to_match_key_data("results", "message",
+                                                [/adding event .*etype1/i, /adding event .*etype2/i])
     end
   end
 end
