@@ -84,7 +84,7 @@ describe CatalogController do
       controller.should_receive(:render)
       @new_name = "New Name"
       @new_description = "New Description"
-      @new_content = "New Content"
+      @new_content = "New Content\n"
       session[:edit] = {
         :new    => {
           :name        => @new_name,
