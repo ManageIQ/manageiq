@@ -148,4 +148,25 @@ describe OrchestrationTemplate do
       result.should == existing_template
     end
   end
+
+  context "when content has non-universal newlines" do
+    let(:raw_text) { "abc\r\nxyz\r123\nend" }
+    let(:content) { "abc\nxyz\n123\nend\n" }
+    let(:existing_template) { FactoryGirl.create(:orchestration_template, :content => raw_text) }
+
+    it "stores content with universal newlines" do
+      existing_template.content.should == content
+    end
+
+    it "is retrievable through either raw or normalized content" do
+      existing_template.should == OrchestrationTemplate.find_with_content(raw_text)
+      existing_template.should == OrchestrationTemplate.find_with_content(content)
+    end
+
+    it "does not save a new template if the request has either the raw or normalized content" do
+      existing_template.should == OrchestrationTemplate.find_or_create_by_contents(:content => raw_text)[0]
+      existing_template.should == OrchestrationTemplate.find_or_create_by_contents(:content => content)[0]
+      OrchestrationTemplate.count.should == 1
+    end
+  end
 end
