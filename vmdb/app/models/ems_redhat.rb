@@ -79,24 +79,26 @@ class EmsRedhat < EmsInfra
     end
   end
 
-  def verify_credentials_for_rhevm_metrics(options={})
-    log_header = "MIQ(#{self.class.name}.verify_credentials_for_rhevm_metrics)"
-
-    server   = options[:ip]   || self.ipaddress
-    username = options[:user] || self.authentication_userid(:metrics)
-    password = options[:pass] || self.authentication_password(:metrics)
+  def rhevm_metrics_connect_options(options = {})
+    server   = options[:hostname] || hostname
+    username = options[:user]     || authentication_userid(:metrics)
+    password = options[:pass]     || authentication_password(:metrics)
     database = options[:database]
 
-    conn_info = {
+    {
       :host     => server,
       :database => database,
       :username => username,
       :password => password
     }
+  end
+
+  def verify_credentials_for_rhevm_metrics(options = {})
+    log_header = "MIQ(#{self.class.name}.verify_credentials_for_rhevm_metrics)"
 
     begin
       require 'ovirt_metrics'
-      OvirtMetrics.connect(conn_info)
+      OvirtMetrics.connect(rhevm_metrics_connect_options(options))
       OvirtMetrics.connected?
     rescue PGError => e
       message = (e.message.starts_with?("FATAL:") ? e.message[6..-1] : e.message).strip

@@ -3,13 +3,15 @@ require 'MiqScvmm'
 #require 'MiqScvmmBroker'
 
 class HostMicrosoft < Host
-  def verify_credentials(auth_type=nil, options={})
-    raise "no credentials defined" if self.missing_credentials?(auth_type)
+  def verify_credentials(auth_type = nil, _options = {})
+    raise "no credentials defined" if missing_credentials?(auth_type)
 
-    return verify_credentials_windows(self.ipaddress, *self.auth_user_pwd(auth_type)) if MiqServer.my_server(true).has_role?(authentication_check_role)
-
-    # Initiate a verify call from another EVM server if possible.
-    return verify_credentials_task(self.ipaddress, *self.auth_user_pwd(auth_type))
+    if MiqServer.my_server(true).has_role?(authentication_check_role)
+      verify_credentials_windows(hostname, *auth_user_pwd(auth_type))
+    else
+      # Initiate a verify call from another EVM server if possible.
+      verify_credentials_task(hostname, *auth_user_pwd(auth_type))
+    end
   end
 
   def verify_credentials_task(*authentication)
