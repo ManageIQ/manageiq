@@ -2004,7 +2004,7 @@ module VmCommon
         @detail_sortdir = "ASC"
       else
         if @detail_sortcol == params[:sortby].to_i                        # if same column was selected
-          @detail_sortdir = @detail_sortdir == "ASC" ? "DESC" : "ASC"     #   switch around ascending/descending
+          @detail_sortdir = flip_sort_direction(@detail_sortdir)
         else
           @detail_sortdir = "ASC"
         end

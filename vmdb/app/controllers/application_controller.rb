@@ -1504,7 +1504,7 @@ class ApplicationController < ActionController::Base
   def get_sort_col
     unless params[:sortby] == nil
       if @sortcol == params[:sortby].to_i                       # if same column was selected
-        @sortdir = @sortdir == "ASC" ? "DESC" : "ASC"     #   switch around ascending/descending
+        @sortdir = flip_sort_direction(@sortdir)
       else
         @sortdir = "ASC"
       end
@@ -2731,5 +2731,9 @@ class ApplicationController < ActionController::Base
       locale = user_locale
     end
     FastGettext.set_locale(locale)
+  end
+
+  def flip_sort_direction(direction)
+    direction == "ASC" ? "DESC" : "ASC" # flip ascending/descending
   end
 end
