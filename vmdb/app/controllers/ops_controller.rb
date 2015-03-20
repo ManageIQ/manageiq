@@ -162,7 +162,7 @@ class OpsController < ApplicationController
       @ldap_group = nil
     else
       session[:changed] = @sb[:show_button] if params[:no_refresh] &&
-        ["settings_import","settings_import_tags"].include?(@sb[:active_tab])#show apply button enabled if this is set
+        %w(settings_import settings_import_tags).include?(@sb[:active_tab]) # show apply button enabled if this is set
     end
     # setting active record object here again, since they are no longer there due to redirect
     if params[:cls_id]
@@ -317,7 +317,7 @@ class OpsController < ApplicationController
       @sb[:active_tab] = "analytics_details"
     when :vmdb_tree
       nodes = x_node.split('-')
-      @sb[:active_tab] = ["ti","xx"].include?(nodes[0]) ? "db_indexes" : "db_summary"
+      @sb[:active_tab] = %w(ti xx).include?(nodes[0]) ? "db_indexes" : "db_summary"
     end
   end
 
@@ -338,12 +338,13 @@ class OpsController < ApplicationController
         record_id = @sb[:my_server_id]
       end
     elsif x_active_tree == :settings_tree
-      if ["settings_import","settings_import_tags"].include?@sb[:active_tab]
+      if %w(settings_import settings_import_tags).include?(@sb[:active_tab])
         action_url = "apply_imports"
         record_id = @sb[:active_tab].split("settings_").last
         locals[:no_reset] = true
         locals[:apply_button] = true
         locals[:no_cancel] = true
+        locals[:apply_method] = :post
         if @sb[:active_tab] == "settings_import"
           locals[:apply_text] = "Apply the good VM custom variable value records"
         elsif @sb[:active_tab] == "settings_import_tags"
@@ -359,17 +360,17 @@ class OpsController < ApplicationController
         locals[:no_reset] = true
         locals[:download_button] = true
         locals[:download_text] = "Download SmartProxy version for manual installation"
-      elsif ["settings_evm_servers","settings_list"].include?(@sb[:active_tab]) && @in_a_form
-        if ["ap_copy","ap_edit","ap_host_edit","ap_vm_edit"].include?(@sb[:action])
+      elsif %w(settings_evm_servers settings_list).include?(@sb[:active_tab]) && @in_a_form
+        if %w(ap_copy ap_edit ap_host_edit ap_vm_edit).include?(@sb[:action])
           action_url = "ap_edit"
           record_id = @edit[:scan_id] ? @edit[:scan_id] : nil
-        elsif ["ldap_region_add","ldap_region_edit"].include?(@sb[:action])
+        elsif %w(ldap_region_add ldap_region_edit).include?(@sb[:action])
           action_url = "ldap_region_edit"
           record_id = @edit[:ldap_region_id] ? @edit[:ldap_region_id] : nil
-        elsif ["ldap_domain_add","ldap_domain_edit"].include?(@sb[:action])
+        elsif %w(ldap_domain_add ldap_domain_edit).include?(@sb[:action])
           action_url = "ldap_domain_edit"
           record_id = @edit[:ldap_domain_id] ? @edit[:ldap_domain_id] : nil
-        elsif ["schedule_add","schedule_edit"].include?(@sb[:action])
+        elsif %w(schedule_add schedule_edit).include?(@sb[:action])
           action_url = "schedule_edit"
           record_id = @edit[:sched_id] ? @edit[:sched_id] : nil
         elsif %w(zone_edit zone_new).include?(@sb[:action])
@@ -395,13 +396,13 @@ class OpsController < ApplicationController
         end
       end
     elsif x_active_tree == :rbac_tree
-      if ["rbac_user_add","rbac_user_copy","rbac_user_edit"].include?(@sb[:action])
+      if %w(rbac_user_add rbac_user_copy rbac_user_edit).include?(@sb[:action])
         action_url = "rbac_user_edit"
         record_id = @edit[:user_id] ? @edit[:user_id] : nil
-      elsif ["rbac_role_add","rbac_role_copy","rbac_role_edit"].include?(@sb[:action])
+      elsif %w(rbac_role_add rbac_role_copy rbac_role_edit).include?(@sb[:action])
         action_url = "rbac_role_edit"
         record_id = @edit[:role_id] ? @edit[:role_id] : nil
-      elsif ["rbac_group_add","rbac_group_edit"].include?(@sb[:action])
+      elsif %w(rbac_group_add rbac_group_edit).include?(@sb[:action])
         action_url = "rbac_group_edit"
         record_id = @edit[:group_id] ? @edit[:group_id] : nil
       elsif %(rbac_group_tags_edit rbac_user_tags_edit).include?(@sb[:action])
@@ -577,7 +578,7 @@ class OpsController < ApplicationController
           end
           page << "dhxLayoutB.cells('b').setText('#{escape_javascript(h(@right_cell_text))}');"
           page << "var miq_double_click = false;" # Make sure the double_click var is there
-          if ["accordion_select","change_tab","tree_select"].include?(params[:action])
+          if %w(accordion_select change_tab tree_select).include?(params[:action])
             page.replace("ops_tabs", :partial=>"all_tabs")
           elsif nodetype == "group_seq"
             page.replace("flash_msg_div", :partial => "layouts/flash_msg")
@@ -659,10 +660,10 @@ class OpsController < ApplicationController
             when 'rhn'          # rhn subscription edit
                 page.replace_html('settings_rhn', :partial=>"#{@sb[:active_tab]}_tab")
             else
-              if ["accordion_select","change_tab","tree_select"].include?(params[:action]) &&
+              if %w(accordion_select change_tab tree_select).include?(params[:action]) &&
                   params[:tab_id] != "settings_advanced"
                 page.replace("ops_tabs", :partial=>"all_tabs")
-              elsif ["zone_delete"].include?(params[:pressed])
+              elsif %w(zone_delete).include?(params[:pressed])
                 page.replace("ops_tabs", :partial=>"all_tabs")
               else
                 page.replace_html(@sb[:active_tab], :partial=>"#{@sb[:active_tab]}_tab")
@@ -673,7 +674,7 @@ class OpsController < ApplicationController
                 #show all the tabs if on current server node
                 @temp[:selected_server] ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
                 page << "miqOneTrans = 0;"          #resetting miqOneTrans when tab loads
-                page << "miqIEButtonPressed = true" if ["save","reset"].include?(params[:button]) && is_browser_ie?
+                page << "miqIEButtonPressed = true" if %w(save reset).include?(params[:button]) && is_browser_ie?
               elsif x_node.split("-").first.split("__")[1] == "svr" && @sb[:my_server_id] != active_id.to_i
                 #show only 4 tabs if not on current server node
                 @temp[:selected_server] ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
@@ -710,7 +711,7 @@ class OpsController < ApplicationController
           else
             page.replace_html("analytics_details", :partial=>"analytics_details_tab")
           end
-          if ["settings_import","settings_import_tags"].include?@sb[:active_tab]
+          if %w(settings_import settings_import_tags).include?(@sb[:active_tab])
             #setting changed here to enable/disable Apply button
             @changed = @sb[:good] && @sb[:good] > 0 ? true : false
           end
