@@ -18,11 +18,8 @@ module MiqProvisionTaskConfiguredSystemForeman::OptionsHelper
     dumpObj(phase_context[:provider_options], "MIQ(#{self.class.name}##{__method__}) Default Provider Options: ", $log, :info)
   end
 
-  def set_source_from_options
-    source_id = get_option(:src_configured_system_id)
-    source    = model_class.where(:id => source_id).first
+  def validate_source
     raise MiqException::MiqProvisionError, "Unable to find #{model_class} with id #{source_id.inspect}" if source.blank?
-    update_attrubites(:source => source)
   end
 
   def dest_configuration_profile

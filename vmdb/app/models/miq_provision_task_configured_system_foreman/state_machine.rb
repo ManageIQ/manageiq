@@ -1,50 +1,65 @@
 require 'manageiq_foreman'
 module MiqProvisionTaskConfiguredSystemForeman::StateMachine
-  def start_clone_task
-    log_clone_options(options)
-  end
-
   def run_provision
-    source.with_provider_object { |p| p.update(options) }
-    signal build? ? :power_off : :provision_complete
+    validate_source
+    signal :prepare_provision
   end
 
-  def power_off
-    source.with_provider_object(&:stop)
-    signal :poll_powered_off
+  def prepare_provision
+    prepare_provider_options
+    merge_provider_options_from_automate
+    signal :start_configuration_task
   end
 
-  def poll_powered_off
-    if powered_off?
-      signal :boot_source
+  def start_configuration_task
+    update_and_notify_parent(:message => "Starting configuration of #{source.name}")
+    log_provider_options
+    signal :system_power_off_in_foreman
+  end
+
+  def system_power_off_in_foreman
+    update_and_notify_parent(:message => "Powering off #{source.name}")
+    source.provider_object.stop
+    signal :poll_system_powered_off_in_foreman
+  end
+
+  def poll_system_powered_off_in_foreman
+    update_and_notify_parent(:message => "Waiting for power off of #{source.name}")
+    if source.provider_object.powered_off?
+      signal :update_configuration
     else
       requeue_phase
     end
   end
 
-  def boot_source
-    source.with_provider_object(&:start)
-    signal :poll_build_complete
+  def update_configuration
+    update_and_notify_parent(:message => "Updating configuration of #{source.name}")
+    source.with_provider_object { |cs| cs.update(phase_context[:provider_options]) }
+    signal :enable_build_mode
   end
 
-  def poll_build_complete
-    refresh # actively queue a refresh, is this ok?
-    if building?
-      requeue_phase
+  def enable_build_mode
+    update_and_notify_parent(:message => "Setting build flag on #{source.name}")
+    source.with_provider_object { |cs| cs.update("id" => source.manager_ref, "build" => true) }
+    signal :os_build
+  end
+
+  def os_build
+    update_and_notify_parent(:message => "Building OS on #{source.name}")
+    if source.with_provider_object(&:powered_on?)
+      signal :poll_os_built
     else
-      signal :provision_complete
+      source.with_provider_object(&:reboot)
+      requeue_phase
     end
   end
 
-  def provision_complete
-    refresh # actively queue a refresh, ok?
-  end
-
-  private
-
-  # provisioning builds the box
-  # vs alternative that just sets the attributes and doesn't rebuild
-  def build?
-    options.key?(:build) ? options[:build] : true
+  def poll_os_built
+    update_and_notify_parent(:message => "Waiting for OS build on #{source.name}")
+    if source.provider_object.building?
+      requeue_phase
+    else
+      signal :mark_as_completed
+    end
   end
 end
