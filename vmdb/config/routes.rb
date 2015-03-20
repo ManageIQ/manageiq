@@ -191,8 +191,11 @@ Vmdb::Application.routes.draw do
         group_form_field_changed
         group_update
         identify_catalog
+        orchestration_template_add
         orchestration_template_copy
         orchestration_template_edit
+        ot_add_form_field_changed
+        ot_add_submit
         ot_copy_submit
         ot_edit_submit
         ot_form_field_changed

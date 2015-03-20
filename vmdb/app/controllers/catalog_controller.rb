@@ -33,11 +33,10 @@ class CatalogController < ApplicationController
     'catalogitem_delete'            => :st_delete,
     'catalogitem_tag'               => :st_tags_edit,
 
+    'orchestration_template_add'    => :ot_add,
     'orchestration_template_edit'   => :ot_edit,
     'orchestration_template_copy'   => :ot_copy,
     'orchestration_template_remove' => :ot_remove_submit,
-    'ot_copy_submit'                => :ot_copy_submit,
-    'ot_edit_submit'                => :ot_edit_submit,
     'st_catalog_edit'               => :st_catalog_edit,
     'st_catalog_new'                => :st_catalog_edit,
   }.freeze
@@ -671,13 +670,13 @@ class CatalogController < ApplicationController
   hide_action :process_sts
 
   def ot_edit
-    assert_privileges("orchestration_templates_admin")
+    assert_privileges("orchestration_template_edit")
     ot_edit_set_form_vars(_("Editing %s"))
     replace_right_cell("ot_edit")
   end
 
   def ot_copy
-    assert_privileges("orchestration_templates_admin")
+    assert_privileges("orchestration_template_copy")
     ot_edit_set_form_vars(_("Copying %s"))
     replace_right_cell("ot_copy")
   end
@@ -716,7 +715,7 @@ class CatalogController < ApplicationController
   end
 
   def ot_remove_submit
-    assert_privileges("orchestration_templates_admin")
+    assert_privileges("orchestration_template_remove")
     ot = OrchestrationTemplate.find_by_id(params[:id])
     if ot.stacks.length > 0
       add_flash(_("Orchestration template \"%s\" is read-only and cannot be deleted.") % ot.name, :error)
@@ -733,6 +732,44 @@ class CatalogController < ApplicationController
       end
       self.x_node = 'root'
       replace_right_cell(nil, trees_to_replace([:ot]))
+    end
+  end
+
+  def ot_add
+    assert_privileges("orchestration_template_add")
+    ot_type = x_node == "xx-othot" ? "OrchestrationTemplateHot" : "OrchestrationTemplateCfn"
+    @edit = {:new => {:name        => "",
+                      :description => "",
+                      :content     => "",
+                      :type        => ot_type,
+                      :draft       => false}}
+    @edit[:current] = @edit[:new].dup
+    @edit[:key] = "ot_add__new"
+    @right_cell_text = _("Adding a new Orchestration Template")
+    @in_a_form = true
+    replace_right_cell("ot_add")
+  end
+
+  def ot_add_submit
+    case params[:button]
+    when "cancel"
+      ot_add_submit_cancel
+    when "add"
+      ot_add_submit_save
+    end
+  end
+
+  def ot_add_form_field_changed
+    return unless load_edit("ot_add__new", "replace_cell__explorer")
+    @edit[:new][:name] = params[:name] if params[:name]
+    @edit[:new][:description] = params[:description] if params[:description]
+    @edit[:new][:type] = params[:type] if params[:type]
+    @edit[:new][:content] = params[:content] if params[:content]
+    @edit[:new][:draft] = params[:draft] == "true" ? true : false if params[:draft]
+    render :update do |page|
+      page << javascript_hide("buttons_off")
+      page << javascript_show("buttons_on")
+      page << "miqSparkle(false);"
     end
   end
 
@@ -859,7 +896,7 @@ class CatalogController < ApplicationController
   end
 
   def ot_edit_submit_save
-    assert_privileges("orchestration_templates_admin")
+    assert_privileges("orchestration_template_edit")
     id = params[:id]
     return unless load_edit("ot_edit__#{id}", "replace_cell__explorer")
     ot = OrchestrationTemplate.find_by_id(@edit[:rec_id])
@@ -909,7 +946,7 @@ class CatalogController < ApplicationController
   end
 
   def ot_copy_submit_save
-    assert_privileges("orchestration_templates_admin")
+    assert_privileges("orchestration_template_copy")
     old_ot = OrchestrationTemplate.find_by_id(params[:id])
     if params[:template_content] == old_ot.content
       add_flash(
@@ -961,6 +998,58 @@ class CatalogController < ApplicationController
     @right_cell_text = _("Copying %s") % params[:name]
     @in_a_form = true
     replace_right_cell("ot_copy")
+  end
+
+  def ot_add_submit_cancel
+    add_flash(_("Creation of a new Orchestration Template was cancelled by the user"))
+    @in_a_form = false
+    @edit = @record = nil
+    replace_right_cell
+  end
+
+  def ot_add_submit_save
+    assert_privileges("orchestration_template_add")
+    load_edit("ot_add__new", "replace_cell__explorer")
+    if !%w(OrchestrationTemplateHot OrchestrationTemplateCfn).include?(@edit[:new][:type])
+      add_flash(_("\"%s\" is not a valid Orchestration Template type") % @edit[:new][:type], :error)
+      ot_add_submit_flash
+    elsif params[:content].nil? || params[:content].strip == ""
+      add_flash(_("Error during Orchestration Template creation: new template content cannot be empty"), :error)
+      ot_add_submit_flash
+    else
+      ot = OrchestrationTemplate.new(
+        :name        => @edit[:new][:name],
+        :description => @edit[:new][:description],
+        :type        => @edit[:new][:type],
+        :content     => params[:content],
+        :draft       => @edit[:new][:draft])
+      begin
+        ot.save!
+      rescue StandardError => bang
+        add_flash(_("Error during '%s': ") % "Orchestration Template creation" << bang.message, :error)
+        ot_add_submit_flash
+      else
+        add_flash(_("%{model} \"%{name}\" was saved") %
+                    {:model => ui_lookup(:model => 'OrchestrationTemplate'),
+                     :name  => @edit[:new][:name]})
+        subtree = ot.type == "OrchestrationTemplateHot" ? "xx-othot" : "xx-otcfn"
+        self.x_tree[:open_nodes].push(subtree) unless self.x_tree[:open_nodes].include?(subtree)
+        self.x_node = "xx-%{type}_ot-%{cid}" % {:type => ot.type == "OrchestrationTemplateHot" ? "othot" : "otcfn",
+                                                :cid  => to_cid(ot.id)}
+        self.x_tree[:open_nodes].push(self.x_node)
+        ot_add_submit_flash
+        @changed = session[:changed] = false
+        @in_a_form = false
+        @edit = session[:edit] = nil
+        replace_right_cell(nil, trees_to_replace([:ot]))
+      end
+    end
+  end
+
+  def ot_add_submit_flash
+    render :update do |page|
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+    end
   end
 
   def st_catalog_get_form_vars
@@ -1630,10 +1719,8 @@ class CatalogController < ApplicationController
         r[:partial=>"stcat_form"]
       elsif action == "dialog_provision"
         r[:partial=>"shared/dialogs/dialog_provision"]
-      elsif action == "ot_edit"
-        r[:partial => "ot_edit"]
-      elsif action == "ot_copy"
-        r[:partial => "ot_copy"]
+      elsif %w(ot_add ot_copy ot_edit).include?(action)
+        r[:partial => action]
       elsif record_showing
         if TreeBuilder.get_model_for_prefix(@nodetype) == "MiqTemplate"
           r[:partial=>"vm_common/main", :locals=>{:controller=>"vm"}]
@@ -1705,7 +1792,7 @@ class CatalogController < ApplicationController
           end
         end
         presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_dialog_buttons", :locals => {:action_url =>"dialog_form_button_pressed", :record_id => @edit[:rec_id]}]
-      elsif %w(ot_edit ot_copy).include?(action)
+      elsif %w(ot_edit ot_copy ot_add).include?(action)
         presenter[:expand_collapse_cells][:a] = 'collapse'
         presenter[:expand_collapse_cells][:c] = 'expand'
         presenter[:set_visible_elements][:form_buttons_div] = true
