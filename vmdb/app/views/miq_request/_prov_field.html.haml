@@ -153,7 +153,7 @@
             = options[field].is_a?(Array) ? options[field].last : options[field]
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
             - # Display notes if available
-            <%= field_hash[:notes] %>
+            = field_hash[:notes]
       - elsif [:customization_template_script, :sysprep_upload_text].include?(field)
         - # text Area field to display uploaded file contents
         %td.wide
@@ -382,7 +382,7 @@
             = options[field].last
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
             - #  Display notes if available
-            <%= field_hash[:notes] %>
+            = field_hash[:notes]
       - elsif [:sysprep_timezone].include?(field)
         - # Pull down with Array of Arrays
         %td.wide

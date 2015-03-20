@@ -5,7 +5,7 @@
         =_("VM %s Remote Console") % @record.name
       :javascript
         function connect() {
-          mks.Connect("<%= host %>", 902, "<%= cfgFile %>", "<%= ticket] %>", "<%= ticket %>");
+          mks.Connect("#{host}", 902, "#{cfgFile}", "#{ticket}", "#{ticket}");
         }
         function shut() {
           mks.disconnect();
@@ -57,7 +57,7 @@
       var mks = null;
       function connect() {
         // Check if the plugin is loaded.
-        if (!navigator.mimeTypes["application/x-vmware-mks;version=<%= version %>"]) {
+        if (!navigator.mimeTypes["application/x-vmware-mks;version=#{version}"]) {
           document.getElementById("install").style.display = '';
           return;
         }
@@ -71,7 +71,7 @@
         mks.sizeChangeListener = new SizeChangeListener();
         mks.connectionStateListener = new ConnectionStateListener();
 
-        mks.connect("<%= host %>", 902, "<%= cfgFile %>", "<%= ticket %>", "<%= ticket %>");
+        mks.connect("#{host}", 902, "#{cfgFile}", "#{ticket}", "#{ticket}");
       }
 
       function shut() {

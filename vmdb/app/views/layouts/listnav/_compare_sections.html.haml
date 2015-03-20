@@ -62,7 +62,7 @@
                 = @drift_obj.vms.count
           - else
             .flobj
-              %img{:src => "/images/icons/<%= size %>/base-single.png"}
+              %img{:src => "/images/icons/#{size}/base-single.png"}
             %div{:class => "flobj e#{size}"}
               %img{:src => "/images/icons/new/vendor-#{h(@host.vmm_vendor.downcase)}.png", :width => "#{width * 1.8}", :height => "#{height * 1.8}"}
           - if @host.number_of(:get_policies) > 0
