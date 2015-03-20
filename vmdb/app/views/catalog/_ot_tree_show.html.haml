@@ -10,16 +10,18 @@
         %tr
           %td.key=_('Description')
           %td=@record.description
-        - unless @edit
-          %tr
-            %td.key=_('Read Only')
-            %td= @record.stacks.length > 0 ? _("True") : _("False")
-          %tr
-            %td.key=_('Created On')
-            %td= @record.created_at
-          %tr
-            %td.key=_('Updated On')
-            %td= @record.updated_at
+        %tr
+          %td.key=_('Draft')
+          %td=@record.draft ? _("True") : _("False")
+        %tr
+          %td.key=_('Read Only')
+          %td= @record.stacks.length > 0 ? _("True") : _("False")
+        %tr
+          %td.key=_('Created On')
+          %td= @record.created_at
+        %tr
+          %td.key=_('Updated On')
+          %td= @record.updated_at
 
   %hr
   #form_div
