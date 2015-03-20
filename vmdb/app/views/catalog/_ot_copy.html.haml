@@ -28,6 +28,12 @@
                               :cols => 80,
                               "data-miq_observe" => {:interval => '.5',
                                                      :url      => url}.to_json)
+          %tr
+            %td.key=_('Draft')
+            %td
+              = check_box_tag("draft", value = true, checked = @edit[:new][:draft],
+                "data-miq_observe_checkbox" => {:url => url}.to_json)
+
 
     %hr
 

@@ -968,9 +968,10 @@ class CatalogController < ApplicationController
         :name        => params[:name],
         :description => params[:description],
         :type        => old_ot.type,
-        :content     => params[:template_content])
+        :content     => params[:template_content],
+        :draft       => params[:draft] == "true" ? true : false)
       begin
-        ot.save
+        ot.save!
       rescue StandardError => bang
         add_flash(_("Error during '%s': ") % "Orchestration Template Copy" << bang.message, :error)
       else
@@ -996,7 +997,8 @@ class CatalogController < ApplicationController
   def ot_copy_submit_fallback
     @edit = {:current => {:name        => params[:name],
                           :description => params[:description],
-                          :content     => params[:template_content]},
+                          :content     => params[:template_content],
+                          :draft       => params[:draft]},
              :rec_id  => params[:id]}
     @edit[:new] = @edit[:current].dup
     @edit[:key] = "ot_edit__#{params[:id]}"
