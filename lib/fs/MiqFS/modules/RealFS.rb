@@ -8,7 +8,7 @@ module RealFS
 				self.fsType = "NTFS"
 				@guestOS = "Windows"
 			when :linux
-				self.fsType = `df -T / | tail -1 | awk '{ print $2 }'`
+				self.fsType = `df -lT / | tail -1 | awk '{ print $2 }'`
 				@guestOS = "Linux"
 			when :macosx
 		end
