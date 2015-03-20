@@ -1,5 +1,5 @@
 module MiqAeMethodService
-  class MiqAeServiceMiqProvision < MiqAeServiceMiqRequestTask
+  class MiqAeServiceMiqProvision < MiqAeServiceMiqProvisionTask
     require_relative "mixins/miq_ae_service_miq_provision_mixin"
     include MiqAeServiceMiqProvisionMixin
 
