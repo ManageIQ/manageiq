@@ -77,53 +77,48 @@ describe CatalogController do
     end
   end
 
-  context "#ot_name_and_description_edit" do
-    it "Orchestration Template name and description are edited" do
+  context "#ot_edit" do
+    before(:each) do
       controller.instance_variable_set(:@sb, {})
       controller.instance_variable_set(:@_params, :button => "save")
-      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
+      controller.should_receive(:render)
+      @new_name = "New Name"
+      @new_description = "New Description"
+      @new_content = "New Content"
+      session[:edit] = {
+        :new    => {
+          :name        => @new_name,
+          :description => @new_description},
+      }
+    end
+
+    after(:each) do
+      expect(response.status).to eq(200)
+      assigns(:edit).should be_nil
+    end
+
+    it "Orchestration Template name and description are edited" do
       ot = FactoryGirl.create(:orchestration_template)
       controller.instance_variable_set(:@record, ot)
-      new_name = "New Name"
-      new_description = "New Description"
-      new_content = "New Content"
-      edit = {
-        :new    => {
-          :name        => new_name,
-          :description => new_description},
-        :key    => "ot_edit__#{ot.id}",
-        :rec_id => ot.id,
-      }
-      controller.params.merge!(:id => ot.id, :template_content => new_content)
-      controller.instance_variable_set(:@edit, edit)
-      session[:edit] = edit
+      controller.params.merge!(:id => ot.id, :template_content => @new_content)
+      session[:edit][:key] = "ot_edit__#{ot.id}"
+      session[:edit][:rec_id] = ot.id
       controller.stub(:replace_right_cell)
       controller.send(:ot_edit_submit)
+      controller.send(:flash_errors?).should_not be_true
+      assigns(:flash_array).first[:message].should include("was saved")
       ot.reload
-      ot.name.should == new_name
-      ot.description.should == new_description
-      ot.content.should == new_content
+      ot.name.should == @new_name
+      ot.description.should == @new_description
+      ot.content.should == @new_content
     end
-  end
 
-  context "#ot_read_only_content_edit" do
     it "Read-only Orchestration Template content cannot be edited" do
-      controller.instance_variable_set(:@sb, {})
-      controller.instance_variable_set(:@_params, :button => "save")
-      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
       ot = FactoryGirl.create(:orchestration_template_with_stacks)
-      edit = {
-        :new    => {
-          :name        => "New Name",
-          :description => "New Description"},
-        :key    => "ot_edit__#{ot.id}",
-        :rec_id => ot.id,
-      }
-      controller.instance_variable_set(:@edit, edit)
-      session[:edit] = edit
       original_content = ot.content
-      new_content = "New Content"
-      controller.params.merge!(:id => ot.id, :template_content => new_content)
+      controller.params.merge!(:id => ot.id, :template_content => @new_content)
+      session[:edit][:key] = "ot_edit__#{ot.id}"
+      session[:edit][:rec_id] = ot.id
       controller.stub(:replace_right_cell)
       controller.send(:ot_edit_submit)
       ot.reload
@@ -135,7 +130,7 @@ describe CatalogController do
     it "Orchestration Template is copied" do
       controller.instance_variable_set(:@sb, {})
       controller.instance_variable_set(:@_params, :button => "save")
-      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
+      controller.should_receive(:render)
       ot = FactoryGirl.create(:orchestration_template)
       controller.x_node = "xx-ot_othot-#{ot.id}"
       new_name = "New Name"
@@ -149,30 +144,36 @@ describe CatalogController do
       controller.send(:ot_copy_submit)
       controller.send(:flash_errors?).should_not be_true
       assigns(:flash_array).first[:message].should include("was saved")
+      expect(response.status).to eq(200)
       OrchestrationTemplate.find_by_name(new_name).should_not be_nil
     end
   end
 
   context "#ot_delete" do
+    before(:each) do
+      controller.instance_variable_set(:@sb, {})
+      controller.instance_variable_set(:@_params, :pressed => "orchestration_template_remove")
+    end
+
+    after(:each) do
+      expect(response.status).to eq(200)
+    end
+
     it "Orchestration Template is deleted" do
       ot = FactoryGirl.create(:orchestration_template)
-      controller.instance_variable_set(:@sb, {})
-      controller.instance_variable_set(:@_params, :id => ot.id, :pressed => "orchestration_template_remove")
       controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
+      controller.params.merge!(:id => ot.id)
       controller.stub(:replace_right_cell)
       controller.send(:ot_remove_submit)
       controller.send(:flash_errors?).should_not be_true
       assigns(:flash_array).first[:message].should include("was deleted")
       OrchestrationTemplate.find_by_id(ot.id).should be_nil
     end
-  end
 
-  context "#ot_ro_cannot_delete" do
     it "Read-only Orchestration Template cannot deleted" do
       ot = FactoryGirl.create(:orchestration_template_with_stacks)
-      controller.instance_variable_set(:@sb, {})
-      controller.instance_variable_set(:@_params, :id => ot.id, :pressed => "orchestration_template_remove")
-      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
+      controller.params.merge!(:id => ot.id)
+      controller.should_receive(:render)
       controller.stub(:replace_right_cell)
       controller.send(:ot_remove_submit)
       controller.send(:flash_errors?).should be_true
