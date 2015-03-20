@@ -21,6 +21,8 @@ describe ApiController do
     Vmdb::Application
   end
 
+  let(:miq_action_guid_list) { MiqAction.pluck(:guid) }
+
   def create_actions(count)
     1.upto(count) do |i|
       FactoryGirl.create(:miq_action, :name => "custom_action_#{i}", :description => "Custom Action #{i}")
@@ -29,108 +31,82 @@ describe ApiController do
 
   context "Policy Action collection" do
     it "query invalid action" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
 
-      @success = run_get "#{@cfme[:policy_actions_url]}/999999"
+      run_get policy_actions_url(999_999)
 
-      expect(@code).to eq(404)
+      expect_resource_not_found
     end
 
     it "query policy actions with no actions defined" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
 
-      @success = run_get @cfme[:policy_actions_url]
+      run_get policy_actions_url
 
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("policy_actions")
-      expect(@result["resources"].size).to eq(0)
+      expect_empty_query_result(:policy_actions)
     end
 
     it "query policy actions" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
+      create_actions(4)
 
-      create_actions(10)
-      @success = run_get @cfme[:policy_actions_url]
+      run_get policy_actions_url
 
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("policy_actions")
-      expect(@result["resources"].size).to eq(10)
-      hrefs_ids = @result["resources"].collect { |r| r["href"].sub(/^.*#{@cfme[:policy_actions_url]}\//, '') }
-      expect(hrefs_ids).to match_array(MiqAction.pluck(:id).collect(&:to_s))
+      expect_query_result(:policy_actions, 4, 4)
+      expect_result_resources_to_include_hrefs("resources",
+                                               MiqAction.pluck(:id).collect { |id| /^.*#{policy_actions_url(id)}$/ })
     end
 
     it "query policy actions in expanded form" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
+      create_actions(4)
 
-      create_actions(10)
-      @success = run_get "#{@cfme[:policy_actions_url]}?expand=resources"
+      run_get "#{policy_actions_url}?expand=resources"
 
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("policy_actions")
-      expect(@result["resources"].size).to eq(10)
-      guids = @result["resources"].collect { |r| r["guid"] }
-      expect(guids).to match_array(MiqAction.pluck(:guid))
+      expect_query_result(:policy_actions, 4, 4)
+      expect_result_resources_to_include_data("resources", "guid" => :miq_action_guid_list)
     end
   end
 
   context "Policy Action subcollection" do
-    before(:each) do
-      @policy = FactoryGirl.create(:miq_policy, :name => "Policy 1")
-      @policy_url = "#{@cfme[:policies_url]}/#{@policy.id}"
-      @policy_actions_url = "#{@policy_url}/policy_actions"
+    let(:policy)             { FactoryGirl.create(:miq_policy, :name => "Policy 1") }
+    let(:policy_url)         { policies_url(policy.id) }
+    let(:policy_actions_url) { "#{policy_url}/policy_actions" }
+
+    def relate_actions_to(policy)
+      MiqAction.all.collect(&:id).each do |action_id|
+        MiqPolicyContent.create(:miq_policy_id => policy.id, :miq_action_id => action_id)
+      end
     end
 
     it "query policy actions with no actions defined" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
 
-      @success = run_get @policy_actions_url
+      run_get policy_actions_url
 
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("policy_actions")
-      expect(@result["resources"].size).to eq(0)
+      expect_empty_query_result(:policy_actions)
     end
 
     it "query policy actions" do
-      basic_authorize @cfme[:user], @cfme[:password]
-
+      api_basic_authorize
       create_actions(4)
-      MiqAction.all.collect(&:id).each do |action_id|
-        MiqPolicyContent.create(:miq_policy_id => @policy.id, :miq_action_id => action_id)
-      end
+      relate_actions_to(policy)
 
-      @success = run_get "#{@policy_actions_url}?expand=resources"
+      run_get "#{policy_actions_url}?expand=resources"
 
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("policy_actions")
-      expect(@result["resources"].size).to eq(4)
-      guids = @result["resources"].collect { |r| r["guid"] }
-      expect(guids).to match_array(MiqAction.pluck(:guid))
+      expect_query_result(:policy_actions, 4, 4)
+      expect_result_resources_to_include_data("resources", "guid" => :miq_action_guid_list)
     end
 
     it "query policy with expanded policy actions" do
-      basic_authorize @cfme[:user], @cfme[:password]
-
+      api_basic_authorize
       create_actions(4)
-      MiqAction.all.collect(&:id).each do |action_id|
-        MiqPolicyContent.create(:miq_policy_id => @policy.id, :miq_action_id => action_id)
-      end
+      relate_actions_to(policy)
 
-      @success = run_get "#{@policy_url}?expand=policy_actions"
+      run_get "#{policy_url}?expand=policy_actions"
 
-      expect(@code).to eq(200)
-      expect(@result["name"]).to eq(@policy.name)
-      expect(@result["description"]).to eq(@policy.description)
-      expect(@result["guid"]).to eq(@policy.guid)
-      expect(@result).to have_key("policy_actions")
-      policy_actions = @result["policy_actions"]
-      expect(policy_actions.size).to eq(4)
-      guids = policy_actions.collect { |r| r["guid"] }
-      expect(guids).to match_array(MiqAction.pluck(:guid))
+      expect_single_resource_query("name" => policy.name, "description" => policy.description, "guid" => policy.guid)
+      expect_result_resources_to_include_data("policy_actions", "guid" => :miq_action_guid_list)
     end
   end
 end
