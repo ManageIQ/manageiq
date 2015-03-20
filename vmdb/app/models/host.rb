@@ -2138,8 +2138,10 @@ class Host < ActiveRecord::Base
 
     time_range = if range.kind_of?(Array)
       range
-    elsif range.kind_of?(Time) || range.kind_of?(String)
-      [range.to_time.utc, Time.now.utc]
+    elsif range.kind_of?(Time)
+      [range.utc, Time.now.utc]
+    elsif range.kind_of?(String)
+      [range.to_time(:utc), Time.now.utc]
     elsif range.kind_of?(Integer)
       [range.seconds.ago.utc, Time.now.utc]
     else
