@@ -320,7 +320,8 @@ module EmsRefresh::Parsers::Rhevm
       }
 
       result << new_result
-      guest_device[:network] = new_result unless guest_device.nil?
+      # set network device to empty (stating it does not exist) vs nil (it is unknown)
+      guest_device[:network] = guest_device ? new_result : {}
     end
     return result
   end
@@ -470,7 +471,7 @@ module EmsRefresh::Parsers::Rhevm
     # So if there is only 1 of each link them together.
     if result.length == 1 && guest_device_uids.length == 1
       guest_device = guest_device_uids[guest_device_uids.keys.first]
-      guest_device[:network] = result.first unless guest_device.nil?
+      guest_device[:network] = guest_device ? result.first : {}
     end
 
     return result

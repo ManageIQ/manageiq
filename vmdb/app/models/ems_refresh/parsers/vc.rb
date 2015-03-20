@@ -514,7 +514,8 @@ module EmsRefresh::Parsers::Vc
       }
 
       result << new_result
-      guest_device[:network] = new_result unless guest_device.nil?
+      # set network device to empty (stating it does not exist) vs nil (it is unknown)
+      guest_device[:network] = guest_device ? new_result : {}
     end
     return result
   end
