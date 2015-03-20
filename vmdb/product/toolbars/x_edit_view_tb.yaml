@@ -9,23 +9,23 @@
     :image: add
     :title: "Add"
     :text: Add
-    :url: '<%= @edit[:url] %>'
+    :url: '#{@edit[:url]}'
     :url_parms: '?button=add'
   - :button: button_save
     :image: save
     :title: "Save Changes"
     :text: Save
-    :url: '<%= @edit[:url] %>'
+    :url: '#{@edit[:url]}'
     :url_parms: '?button=save'
   - :button: button_reset
     :image: reset
     :title: "Reset"
     :text: Reset
-    :url: '<%= @edit[:url] %>'
+    :url: '#{@edit[:url]}'
     :url_parms: '?button=reset'
   - :button: button_cancel
     :image: cancel
     :title: "Cancel Changes"
     :text: Cancel
-    :url: '<%= @edit[:url] %>'
+    :url: '#{@edit[:url]}'
     :url_parms: '?button=cancel'

@@ -9,15 +9,15 @@
     :image: compare_all
     :title: "All attributes"
     :url: 'compare_miq_all'
-    :url_parms: '?id=<%= $vms_comp %>&compare_task=all'
+    :url_parms: '?id=#{$vms_comp}&compare_task=all'
   - :buttonTwoState: compare_diff
     :title: "Attributes with different values"
     :url: 'compare_miq_differences'
-    :url_parms: '?id=<%= $vms_comp %>&compare_task=different'
+    :url_parms: '?id=#{$vms_comp}&compare_task=different'
   - :buttonTwoState: compare_same
     :title: "Attributes with same values"
     :url: 'compare_miq_same'
-    :url_parms: '?id=<%= $vms_comp %>&compare_task=same'
+    :url_parms: '?id=#{$vms_comp}&compare_task=same'
 - :name: compare_mode
   :items:
   - :buttonTwoState: comparemode_details

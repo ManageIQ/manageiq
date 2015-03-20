@@ -14,15 +14,15 @@
     - :button: storage_scan
       :image: scan
       :text: 'Perform SmartState Analysis'
-      :title: 'Perform SmartState Analysis on this <%= ui_lookup(:table=>"storages") %>'
-      :confirm: 'Perform SmartState Analysis on this <%= ui_lookup(:table=>"storages") %>?'
+      :title: 'Perform SmartState Analysis on this #{ui_lookup(:table=>"storages")}'
+      :confirm: 'Perform SmartState Analysis on this #{ui_lookup(:table=>"storages")}?'
     - :separator:
     - :button: storage_delete
       :image: remove
       :text: 'Remove from the VMDB'
-      :title: 'Remove this <%= ui_lookup(:table=>"storages") %> from the VMDB'
+      :title: 'Remove this #{ui_lookup(:table=>"storages")} from the VMDB'
       :url_parms: '&refresh=y'
-      :confirm: 'Warning: This <%= ui_lookup(:table=>"storages") %> and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this <%= ui_lookup(:table=>"storages") %>?'
+      :confirm: 'Warning: This #{ui_lookup(:table=>"storages")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this #{ui_lookup(:table=>"storages")}?'
 - :name: storage_policy
   :items:
   - :buttonSelect: storage_policy_choice
@@ -33,7 +33,7 @@
     - :button: storage_tag
       :image: tag
       :text: 'Edit Tags'
-      :title: 'Edit Tags for this <%= ui_lookup(:table=>"storages") %>'
+      :title: 'Edit Tags for this #{ui_lookup(:table=>"storages")}'
 - :name: storage_monitoring
   :items:
   - :buttonSelect: storage_monitoring_choice
@@ -44,6 +44,6 @@
     - :button: storage_perf
       :image: capacity
       :text: 'Utilization'
-      :title: 'Show Capacity & Utilization data for this <%= ui_lookup(:table=>"storages") %>'
+      :title: 'Show Capacity & Utilization data for this #{ui_lookup(:table=>"storages")}'
       :url: '/show'
       :url_parms: '?display=performance'

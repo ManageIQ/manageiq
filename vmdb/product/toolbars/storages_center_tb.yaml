@@ -16,17 +16,17 @@
     - :button: storage_scan
       :image: scan
       :text: 'Perform SmartState Analysis'
-      :title: 'Perform SmartState Analysis on the selected <%= ui_lookup(:tables=>"storages") %>'
+      :title: 'Perform SmartState Analysis on the selected #{ui_lookup(:tables=>"storages")}'
       :url_parms: 'main_div'
-      :confirm: 'Perform SmartState Analysis on the selected <%= ui_lookup(:tables=>"storages") %>?'
+      :confirm: 'Perform SmartState Analysis on the selected #{ui_lookup(:tables=>"storages")}?'
       :enabled: 'false'
       :onwhen: '1+'
     - :button: storage_delete
       :image: remove
-      :text: 'Remove <%= ui_lookup(:tables=>"storages") %> from the VMDB'
-      :title: 'Remove selected <%= ui_lookup(:tables=>"storages") %> from the VMDB'
+      :text: 'Remove #{ui_lookup(:tables=>"storages")} from the VMDB'
+      :title: 'Remove selected #{ui_lookup(:tables=>"storages")} from the VMDB'
       :url_parms: 'main_div'
-      :confirm: 'Warning: The selected <%= ui_lookup(:tables=>"storages") %> and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected <%= ui_lookup(:tables=>"storages") %>?'
+      :confirm: 'Warning: The selected #{ui_lookup(:tables=>"storages")} and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected #{ui_lookup(:tables=>"storages")}?'
       :enabled: 'false'
       :onwhen: '1+'
 - :name: storage_policy
@@ -41,7 +41,7 @@
     - :button: storage_tag
       :image: tag
       :text: 'Edit Tags'
-      :title: 'Edit Tags for the selected <%= ui_lookup(:tables=>"storages") %>'
+      :title: 'Edit Tags for the selected #{ui_lookup(:tables=>"storages")}'
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1+'

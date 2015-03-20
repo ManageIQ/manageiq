@@ -58,6 +58,24 @@ end
 
 describe OpsController do
   render_views
+  context "#tree_select" do
+    it "renders zone list for diagnostics_tree root node" do
+      set_user_privileges
+      FactoryGirl.create(:vmdb_database)
+      EvmSpecHelper.create_guid_miq_server_zone
+
+      expect(MiqServer.my_guid).to be
+      expect(MiqServer.my_server).to be
+
+      session[:userid] = User.current_user.userid
+      session[:sandboxes] = { "ops" => { :active_tree => :diagnostics_tree } }
+      post :tree_select, :id => 'root', :format => :js
+
+      response.should render_template('ops/_diagnostics_zones_tab')
+      expect(response.status).to eq(200)
+    end
+  end
+
   context "::Diagnostics" do
     before do
       set_user_privileges
