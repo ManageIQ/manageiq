@@ -57,7 +57,7 @@ class MiqReport < ActiveRecord::Base
   #   ::miq_group_id: An MiqGroup id on which to filter
   #   ::select:       An Array of MiqReport columns to fetch
   def self.having_report_results(options = {})
-    q = self.joins(:miq_report_results).group(arel_table[:id])
+    q = self.joins(:miq_report_results).order(arel_table[:id])
 
     miq_group = MiqGroup.extract_ids(options[:miq_group] || options[:miq_group_id])
     q = q.where(MiqReportResult.arel_table[:miq_group_id].eq(miq_group)) unless miq_group.nil?
