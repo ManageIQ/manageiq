@@ -76,9 +76,9 @@ class EmsRedhat < EmsInfra
   end
 
   def rhevm_metrics_connect_options(options = {})
-    server   = options[:hostname] || self.hostname
-    username = options[:user]     || self.authentication_userid(:metrics)
-    password = options[:pass]     || self.authentication_password(:metrics)
+    server   = options[:hostname] || hostname
+    username = options[:user]     || authentication_userid(:metrics)
+    password = options[:pass]     || authentication_password(:metrics)
     database = options[:database]
 
     {
@@ -89,7 +89,7 @@ class EmsRedhat < EmsInfra
     }
   end
 
-  def verify_credentials_for_rhevm_metrics(options={})
+  def verify_credentials_for_rhevm_metrics(options = {})
     log_header = "MIQ(#{self.class.name}.verify_credentials_for_rhevm_metrics)"
 
     begin
