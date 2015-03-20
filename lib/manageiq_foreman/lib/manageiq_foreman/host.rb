@@ -29,6 +29,10 @@ module ManageiqForeman
       connection.fetch(:hosts, :boot, "id" => manager_ref, "device" => mode)
     end
 
+    def attributes
+      connection.fetch(:hosts, :show, "id" => manager_ref).first
+    end
+
     def update(params)
       connection.fetch(:hosts, :update, params.merge("id" => manager_ref))
     end
