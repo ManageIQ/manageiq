@@ -5,7 +5,7 @@ class ConfiguredSystemForeman < ConfiguredSystem
   belongs_to :configuration_organization
 
   def provider_object(connection = nil)
-    (connection || connection_source.raw_connect).host(manager_ref)
+    (connection || connection_source.connect).host(manager_ref)
   end
 
   # system is pending a build
