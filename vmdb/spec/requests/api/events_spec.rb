@@ -21,114 +21,90 @@ describe ApiController do
     Vmdb::Application
   end
 
+  let(:miq_event_guid_list) { MiqEvent.pluck(:guid) }
+
   def create_events(count)
     count.times { FactoryGirl.create(:miq_event) }
   end
 
   context "Event collection" do
     it "query invalid event" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
 
-      @success = run_get "#{@cfme[:events_url]}/999999"
+      run_get events_url(999_999)
 
-      expect(@code).to eq(404)
+      expect_resource_not_found
     end
 
     it "query events with no events defined" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
 
-      @success = run_get @cfme[:events_url]
+      run_get events_url
 
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("events")
-      expect(@result["resources"].size).to eq(0)
+      expect_empty_query_result(:events)
     end
 
     it "query events" do
-      basic_authorize @cfme[:user], @cfme[:password]
-
+      api_basic_authorize
       create_events(3)
-      @success = run_get @cfme[:events_url]
 
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("events")
-      expect(@result["resources"].size).to eq(3)
-      hrefs_ids = @result["resources"].collect { |r| r["href"].sub(/^.*#{@cfme[:events_url]}\//, '') }
-      expect(hrefs_ids).to match_array(MiqEvent.pluck(:id).collect(&:to_s))
+      run_get events_url
+
+      expect_query_result(:events, 3, 3)
+      expect_result_resources_to_include_hrefs("resources",
+                                               MiqEvent.pluck(:id).collect { |id| /^.*#{events_url(id)}$/ })
     end
 
     it "query events in expanded form" do
-      basic_authorize @cfme[:user], @cfme[:password]
-
+      api_basic_authorize
       create_events(3)
-      @success = run_get "#{@cfme[:events_url]}?expand=resources"
 
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("events")
-      expect(@result["resources"].size).to eq(3)
-      guids = @result["resources"].collect { |r| r["guid"] }
-      expect(guids).to match_array(MiqEvent.pluck(:guid))
+      run_get "#{events_url}?expand=resources"
+
+      expect_query_result(:events, 3, 3)
+      expect_result_resources_to_include_data("resources", "guid" => :miq_event_guid_list)
     end
   end
 
   context "Event subcollection" do
-    before(:each) do
-      @policy = FactoryGirl.create(:miq_policy, :name => "Policy 1")
-      @policy_url = "#{@cfme[:policies_url]}/#{@policy.id}"
-      @events_url = "#{@policy_url}/events"
+    let(:policy)             { FactoryGirl.create(:miq_policy, :name => "Policy 1") }
+    let(:policy_url)         { policies_url(policy.id) }
+    let(:policy_events_url)  { "#{policy_url}/events" }
+
+    def relate_events_to(policy)
+      MiqEvent.all.collect(&:id).each do |event_id|
+        MiqPolicyContent.create(:miq_policy_id => policy.id, :miq_event_id => event_id)
+      end
     end
 
     it "query events with no events defined" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
 
-      @success = run_get @events_url
+      run_get policy_events_url
 
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("events")
-      expect(@result["resources"].size).to eq(0)
+      expect_empty_query_result(:events)
     end
 
     it "query events" do
-      basic_authorize @cfme[:user], @cfme[:password]
-
+      api_basic_authorize
       create_events(3)
-      MiqEvent.all.collect(&:id).each do |event_id|
-        MiqPolicyContent.create(:miq_policy_id => @policy.id, :miq_event_id => event_id)
-      end
+      relate_events_to(policy)
 
-      @success = run_get "#{@events_url}?expand=resources"
+      run_get "#{policy_events_url}?expand=resources"
 
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("events")
-      expect(@result["resources"].size).to eq(3)
-      guids = @result["resources"].collect { |r| r["guid"] }
-      expect(guids).to match_array(MiqEvent.pluck(:guid))
+      expect_query_result(:events, 3, 3)
+      expect_result_resources_to_include_data("resources", "guid" => :miq_event_guid_list)
     end
 
     it "query policy with expanded events" do
-      basic_authorize @cfme[:user], @cfme[:password]
-
+      api_basic_authorize
       create_events(3)
-      MiqEvent.all.collect(&:id).each do |event_id|
-        MiqPolicyContent.create(:miq_policy_id => @policy.id, :miq_event_id => event_id)
-      end
+      relate_events_to(policy)
 
-      @success = run_get "#{@policy_url}?expand=events"
+      run_get "#{policy_url}?expand=events"
 
-      expect(@code).to eq(200)
-      expect(@result["name"]).to eq(@policy.name)
-      expect(@result["description"]).to eq(@policy.description)
-      expect(@result["guid"]).to eq(@policy.guid)
-      expect(@result).to have_key("events")
-      events = @result["events"]
-      expect(events.size).to eq(3)
-      guids = events.collect { |r| r["guid"] }
-      expect(guids).to match_array(MiqEvent.pluck(:guid))
+      expect_single_resource_query("name" => policy.name, "description" => policy.description, "guid" => policy.guid)
+      expect_result_resources_to_include_data("events", "guid" => :miq_event_guid_list)
     end
   end
 end
