@@ -12,6 +12,7 @@ describe 'routes for ProviderForeman' do
     explorer
     provider_foreman_form_fields
     show
+    show_list
   ).each do |task|
     describe "##{task}" do
       it 'routes with GET' do
@@ -33,6 +34,7 @@ describe 'routes for ProviderForeman' do
     form_field_changed
     new
     panel_control
+    provision
     quick_search
     refresh
     reload

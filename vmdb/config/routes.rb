@@ -1270,6 +1270,7 @@ Vmdb::Application.routes.draw do
         explorer
         provider_foreman_form_fields
         show
+        show_list
       ),
       :post => %w(
         accordion_select
@@ -1284,6 +1285,7 @@ Vmdb::Application.routes.draw do
         form_field_changed
         new
         panel_control
+        provision
         quick_search
         refresh
         reload

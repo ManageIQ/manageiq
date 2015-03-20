@@ -296,6 +296,7 @@
   - provider_foreman_edit
   - provider_foreman_delete
   - provider_foreman_new
+  - provider_foreman_provision
   - provider_foreman_refresh
   - vm_clone
   - vm_compare
@@ -379,6 +380,7 @@
   - provider_foreman_edit
   - provider_foreman_delete
   - provider_foreman_new
+  - provider_foreman_provision
   - provider_foreman_refresh
   - storage_manager_new
   - storage_manager_edit
@@ -790,6 +792,7 @@
   - provider_foreman_edit
   - provider_foreman_delete
   - provider_foreman_new
+  - provider_foreman_provision
   - provider_foreman_refresh
   - vm_console
   - vm_clone
@@ -853,6 +856,7 @@
   - provider_foreman_edit
   - provider_foreman_delete
   - provider_foreman_new
+  - provider_foreman_provision
   - provider_foreman_refresh
   - vm_analyze
   - vm_check_compliance
