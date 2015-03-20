@@ -396,8 +396,7 @@ class MiqSystem
   #
   ##############################################################################################################################
   def self.disk_usage(file=nil)
-    file = nil if file.blank?
-    raise "file #{file} does not exist" unless File.exist?(file.to_s) || file.nil?
+    file = normalize_df_file_argument(file)
 
     case Platform::IMPL
     when :linux
@@ -460,6 +459,13 @@ class MiqSystem
     end
   end
 
+  def self.normalize_df_file_argument(file = nil)
+    # limit disk usage to local filesystems if no file provided
+    return "-l" if file.blank?
+
+    raise "file #{file} does not exist" unless File.exist?(file)
+    file
+  end
 
   ##############################################################################################################################
   # DU(1)                                                         User Commands                                                        DU(1)

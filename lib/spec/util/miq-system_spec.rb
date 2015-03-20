@@ -4,6 +4,28 @@ $:.push(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. util})))
 require 'miq-system'
 
 describe MiqSystem do
+  context ".normalize_df_file_argument" do
+    it "nil" do
+      expect(described_class.normalize_df_file_argument).to eq("-l")
+    end
+
+    it "blank" do
+      expect(described_class.normalize_df_file_argument("  ")).to eq("-l")
+    end
+
+    it "file exists" do
+      file = "/dev/null"
+      File.stub(:exist?).with(file).and_return(true)
+      expect(described_class.normalize_df_file_argument(file)).to eq(file)
+    end
+
+    it "file missing" do
+      file = "/dev/null"
+      File.stub(:exist?).with(file).and_return(false)
+      expect { described_class.normalize_df_file_argument(file) }.to raise_error(RuntimeError, "file /dev/null does not exist")
+    end
+  end
+
   context ".disk_usage" do
     it "linux" do
       linux_df_output_bytes = <<EOF
@@ -97,8 +119,8 @@ EOF
       ]
 
       stub_const("Platform::IMPL", :linux)
-      MiqUtil.should_receive(:runcmd).with("df -T -P ").and_return(linux_df_output_bytes)
-      MiqUtil.should_receive(:runcmd).with("df -T -P -i ").and_return(linux_df_output_inodes)
+      MiqUtil.should_receive(:runcmd).with("df -T -P -l").and_return(linux_df_output_bytes)
+      MiqUtil.should_receive(:runcmd).with("df -T -P -i -l").and_return(linux_df_output_inodes)
 
       expect(described_class.disk_usage).to eq(expected)
     end
