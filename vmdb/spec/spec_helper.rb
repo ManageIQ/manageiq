@@ -73,6 +73,9 @@ RSpec.configure do |config|
   }
   config.include RakeTaskExampleGroup, :type => :rake_task
 
+  config.before(:each) do
+    EmsRefresh.debug_failures = true
+  end
   config.after(:each) do
     EvmSpecHelper.clear_caches
   end

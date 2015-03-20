@@ -53,6 +53,8 @@ module EmsRefresh::Refreshers
 
           $log.info "#{log_header} Refreshing targets for EMS...Complete - Timings: #{timings.inspect}"
         rescue => e
+          raise if EmsRefresh.debug_failures
+
           $log.log_backtrace(e)
           $log.error("#{log_header} Unable to perform refresh for the following targets:" )
           targets.each { |t| $log.error "#{log_header}   #{t.class}: [#{t.name}], id: [#{t.id}]" }
