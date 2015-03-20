@@ -5,6 +5,7 @@ module MiqBulkImport
     log_prefix = 'MIQ(MiqBulkImport.upload)'
     $log.info "#{log_prefix} Uploading CSV file"
     data = fd.read
+    raise _("File is empty") if data.empty?
     data.gsub!(/\r/, "\n")
     begin
       reader = CSV.parse(data)
