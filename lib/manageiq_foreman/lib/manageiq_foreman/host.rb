@@ -8,6 +8,10 @@ module ManageiqForeman
       @manager_ref = manager_ref
     end
 
+    def building?
+      attributes["build"]
+    end
+
     def start
       power_state("on")
     end

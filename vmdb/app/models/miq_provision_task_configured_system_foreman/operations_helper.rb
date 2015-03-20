@@ -3,10 +3,6 @@ module MiqProvisionTaskConfiguredSystemForeman::OperationsHelper
     !source.with_provider_object(&:powered_on?)
   end
 
-  def building?
-    source.pending?
-  end
-
   def refresh
     EmsRefresh.queue_refresh(source)
   end
