@@ -16,51 +16,54 @@ describe ApiController do
   end
 
   context "Basic Authentication" do
-
     it "test basic authentication with bad credentials" do
       basic_authorize "baduser", "badpassword"
-      @success = run_get @cfme[:entrypoint]
-      expect(@success).to be_false
-      expect(@code).to eq(401)
+
+      run_get entrypoint_url
+
+      expect_user_unauthorized
     end
 
     it "test basic authentication with correct credentials" do
-      basic_authorize @cfme[:user], @cfme[:password]
-      @success = run_get @cfme[:entrypoint]
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-    end
+      api_basic_authorize
 
+      run_get entrypoint_url
+
+      expect_single_resource_query
+      expect_result_to_have_keys(%w(name description version versions collections))
+    end
   end
 
   context "Token Based Authentication" do
-
     it "gets a token based identifier" do
-      basic_authorize @cfme[:user], @cfme[:password]
-      @success = run_get @cfme[:auth_url]
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("auth_token")
+      api_basic_authorize
+
+      run_get auth_url
+
+      expect_single_resource_query
+      expect_result_to_have_keys(%w(auth_token expires_on))
     end
 
     it "authentication using a bad token" do
-      @success = run_get @cfme[:entrypoint], "auth_token" => "badtoken"
-      expect(@success).to be_false
-      expect(@code).to eq(401)
+      run_get entrypoint_url, "auth_token" => "badtoken"
+
+      expect_user_unauthorized
     end
 
     it "authentication using a valid token" do
-      basic_authorize @cfme[:user], @cfme[:password]
-      @success = run_get @cfme[:auth_url]
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("auth_token")
+      api_basic_authorize
+
+      run_get auth_url
+
+      expect_single_resource_query
+      expect_result_to_have_keys(%w(auth_token))
+
       auth_token = @result["auth_token"]
-      @success = run_get @cfme[:entrypoint], "auth_token" => auth_token
-      expect(@success).to be_true
-      expect(@code).to eq(200)
+
+      run_get entrypoint_url, "auth_token" => auth_token
+
+      expect_single_resource_query
+      expect_result_to_have_keys(%w(name description version versions collections))
     end
-
   end
-
 end
