@@ -83,7 +83,7 @@ class MiqWorker < ActiveRecord::Base
   self.required_roles         = []
 
   def self.server_scope(server_id = nil)
-    return current_scope if current_scope && current_scope.where_values_hash.include?(:miq_server_id)
+    return current_scope if current_scope && current_scope.where_values_hash.include?('miq_server_id')
     if server_id.nil?
       server = MiqServer.my_server
       server_id = server.id unless server.nil?
