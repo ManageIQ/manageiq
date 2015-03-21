@@ -342,6 +342,7 @@ module MiqReport::Generator
 
   def build_table(data, db, options={})
     klass = db.respond_to?(:constantize) ? db.constantize : db
+    data = data.to_a
     objs = data[0] && data[0].is_a?(Integer) ? klass.find_all_by_id(data) : data.compact
 
     # Add resource columns to performance reports cols and col_order arrays for widget click thru support
