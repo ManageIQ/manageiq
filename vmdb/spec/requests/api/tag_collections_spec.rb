@@ -26,9 +26,10 @@ describe ApiController do
     [{:success => true, :href => resource_href, :tag_category => tag1[:category], :tag_name => tag1[:name]}]
   end
 
-  def verify_resource_has_single_tag_left(resource)
-    expect(resource.tags.count).to eq(1)
-    expect(resource.tags.first.name).to eq(tag2[:path])
+  def expect_resource_has_tags(resource, tag_names)
+    tag_names = Array.wrap(tag_names)
+    expect(resource.tags.count).to eq(tag_names.count)
+    expect(resource.tags.map(&:name).sort).to eq(tag_names.sort)
   end
 
   before(:each) do
@@ -88,7 +89,7 @@ describe ApiController do
       run_post(provider_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
       expect_tagging_result(tag1_results(provider_url))
-      verify_resource_has_single_tag_left(provider)
+      expect_resource_has_tags(provider, tag2[:path])
     end
   end
 
@@ -137,7 +138,7 @@ describe ApiController do
       run_post(host_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
       expect_tagging_result(tag1_results(host_url))
-      verify_resource_has_single_tag_left(host)
+      expect_resource_has_tags(host, tag2[:path])
     end
   end
 
@@ -187,7 +188,7 @@ describe ApiController do
       run_post(ds_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
       expect_tagging_result(tag1_results(ds_url))
-      verify_resource_has_single_tag_left(ds)
+      expect_resource_has_tags(ds, tag2[:path])
     end
   end
 
@@ -237,7 +238,7 @@ describe ApiController do
       run_post(rp_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
       expect_tagging_result(tag1_results(rp_url))
-      verify_resource_has_single_tag_left(rp)
+      expect_resource_has_tags(rp, tag2[:path])
     end
   end
 
@@ -294,7 +295,7 @@ describe ApiController do
       run_post(cluster_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
       expect_tagging_result(tag1_results(cluster_url))
-      verify_resource_has_single_tag_left(cluster)
+      expect_resource_has_tags(cluster, tag2[:path])
     end
   end
 end
