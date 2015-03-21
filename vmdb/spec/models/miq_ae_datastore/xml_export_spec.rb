@@ -20,6 +20,10 @@ describe MiqAeDatastore::XmlExport do
     end
 
     before do
+      # Populate the doubles *before* we start messing with .all
+      miq_ae_classes
+      custom_buttons
+
       MiqAeClass.stub(:all).and_return(miq_ae_classes)
       CustomButton.stub(:all).and_return(custom_buttons)
     end
