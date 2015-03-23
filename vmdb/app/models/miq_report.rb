@@ -132,7 +132,8 @@ class MiqReport < ActiveRecord::Base
   end
 
   def contains_records?
-    table && table.data.length > 0
+    (extras.key?(:total_html_rows) && extras[:total_html_rows] > 0) ||
+      (table && table.data.length > 0)
   end
 
   #
