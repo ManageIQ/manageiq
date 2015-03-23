@@ -51,7 +51,20 @@ module VmOrTemplate::Operations::Snapshot
     end
   end
 
+  #
+  # For some types of VMs, the process for removing
+  # evm stapshots is very different from that of
+  # removing normal snapshots.
+  #
+  # Here, we differentiate between the two, so the
+  # methods can be overridden by the subclass as needed.
+  #
+
   def remove_snapshot(snapshot_id)
+    raw_remove_snapshot(snapshot_id)
+  end
+
+  def remove_evm_snapshot(snapshot_id)
     raw_remove_snapshot(snapshot_id)
   end
 
@@ -60,6 +73,18 @@ module VmOrTemplate::Operations::Snapshot
       :class_name  => self.class.name,
       :instance_id => self.id,
       :method_name => 'remove_snapshot',
+      :args        => [snapshot_id],
+      :role        => "ems_operations",
+      :zone        => self.my_zone,
+      :task_id     => task_id
+    )
+  end
+
+  def remove_evm_snapshot_queue(snapshot_id, task_id = nil)
+    MiqQueue.put_unless_exists(
+      :class_name  => self.class.name,
+      :instance_id => self.id,
+      :method_name => 'remove_evm_snapshot',
       :args        => [snapshot_id],
       :role        => "ems_operations",
       :zone        => self.my_zone,

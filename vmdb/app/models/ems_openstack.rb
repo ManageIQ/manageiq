@@ -60,4 +60,63 @@ class EmsOpenstack < EmsCloud
   rescue => err
     $log.error "MIQ(#{self.class.name}##{__method__}) vm=[#{vm.name}], error: #{err}"
   end
+
+  # TODO: Should this be in a VM-specific subclass or mixin?
+  #       This is a general EMS question.
+  def vm_create_evm_snapshot(vm, options = {})
+    require "OpenStackExtract/MiqOpenStackVm/MiqOpenStackInstance"
+
+    log_prefix = "MIQ(#{self.class.name}##{__method__}) vm=[#{vm.name}]"
+
+    miq_openstack_instance = MiqOpenStackInstance.new(vm.ems_ref, :openstack_handle => openstack_handle)
+    miq_snapshot = miq_openstack_instance.create_evm_snapshot(options)
+
+    # Add new snapshot image to the vms table. Type is TemplateOpenstack.
+    miq_templates.create!(
+      :type     => "TemplateOpenstack",
+      :vendor   => "openstack",
+      :name     => miq_snapshot.name,
+      :uid_ems  => miq_snapshot.id,
+      :ems_ref  => miq_snapshot.id,
+      :template => true,
+      :location => "unknown"
+    )
+
+    # Add new snapshot to the snapshots table.
+    vm.snapshots.create!(
+      :name        => miq_snapshot.name,
+      :description => options[:desc],
+      :uid         => miq_snapshot.id,
+      :uid_ems     => miq_snapshot.id,
+      :ems_ref     => miq_snapshot.id
+    )
+    return miq_snapshot.id
+  rescue => err
+    $log.error "#{log_prefix}, error: #{err}"
+    $log.debug err.backtrace.join("\n") if $log.debug?
+    raise
+  end
+
+  def vm_delete_evm_snapshot(vm, image_id)
+    require "OpenStackExtract/MiqOpenStackVm/MiqOpenStackInstance"
+
+    log_prefix = "MIQ(#{self.class.name}##{__method__}) snapshot=[#{image_id}]"
+
+    miq_openstack_instance = MiqOpenStackInstance.new(vm.ems_ref, :openstack_handle => openstack_handle)
+    miq_openstack_instance.delete_evm_snapshot(image_id)
+
+    # Remove from the snapshots table.
+    snapshot_ci = vm.snapshots.where(:ems_ref  => image_id).first
+    $log.debug "#{log_prefix}: snapshot_ci = #{snapshot_ci.class.name}"
+    snapshot_ci.destroy if snapshot_ci
+
+    # Remove from the vms table.
+    template_ci = miq_templates.where(:ems_ref  => image_id).first
+    $log.debug "#{log_prefix}: template_ci = #{template_ci.class.name}"
+    template_ci.destroy if template_ci
+  rescue => err
+    $log.error "#{log_prefix}, error: #{err}"
+    $log.debug err.backtrace.join("\n") if $log.debug?
+    raise
+  end
 end
