@@ -35,6 +35,8 @@
     - if @explorer
       - if db == "ServiceResource"
         - name = row['resource_name']
+      - elsif db == "ConfiguredSystem"
+        - name = row['hostname']
       - else
         - name = row['name']
       - if request.parameters[:controller] == "service" && @view.db == "Vm"
