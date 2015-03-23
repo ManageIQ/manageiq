@@ -7,21 +7,36 @@ describe ApiController do
 
   include Rack::Test::Methods
 
+  let(:zone)         { FactoryGirl.create(:zone, :name => "api_zone") }
+  let(:miq_server)   { FactoryGirl.create(:miq_server, :guid => miq_server_guid, :zone => zone) }
+  let(:ems)          { FactoryGirl.create(:ems_vmware, :zone => zone) }
+  let(:host)         { FactoryGirl.create(:host) }
+
+  let(:tag1)         { {:category => "department", :name => "finance", :path => "/managed/department/finance"} }
+  let(:tag2)         { {:category => "cc",         :name => "001",     :path => "/managed/cc/001"} }
+  let(:tag_paths)    { [tag1[:path], tag2[:path]] }
+  let(:tag_count)    { Tag.count }
+
+  def classify_resource(resource)
+    Classification.classify(resource, tag1[:category], tag1[:name])
+    Classification.classify(resource, tag2[:category], tag2[:name])
+  end
+
+  def tag1_results(resource_href)
+    [{:success => true, :href => resource_href, :tag_category => tag1[:category], :tag_name => tag1[:name]}]
+  end
+
+  def expect_resource_has_tags(resource, tag_names)
+    tag_names = Array.wrap(tag_names)
+    expect(resource.tags.count).to eq(tag_names.count)
+    expect(resource.tags.map(&:name).sort).to eq(tag_names.sort)
+  end
+
   before(:each) do
     init_api_spec_env
 
-    @zone       = FactoryGirl.create(:zone, :name => "api_zone")
-    @miq_server = FactoryGirl.create(:miq_server, :guid => miq_server_guid, :zone => @zone)
-    @ems        = FactoryGirl.create(:ems_vmware, :zone => @zone)
-    @host       = FactoryGirl.create(:host)
-
-    Host.any_instance.stub(:miq_proxy).and_return(@miq_server)
-
     FactoryGirl.create(:classification_department_with_tags)
     FactoryGirl.create(:classification_cost_center_with_tags)
-
-    @tag1 = {:category => "department", :name => "finance", :path => "/managed/department/finance"}
-    @tag2 = {:category => "cc",         :name => "001",     :path => "/managed/cc/001"}
   end
 
   def app
@@ -29,441 +44,258 @@ describe ApiController do
   end
 
   context "Provider Tag subcollection" do
-    before(:each) do
-      @provider          = @ems
-      @provider_url      = "#{@cfme[:providers_url]}/#{@ems.id}"
-      @provider_tags_url = "#{@provider_url}/tags"
-    end
+    let(:provider)          { ems }
+    let(:provider_url)      { providers_url(provider.id) }
+    let(:provider_tags_url) { "#{provider_url}/tags" }
 
     it "query all tags of a Provider and verify tag category and names" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
+      classify_resource(provider)
 
-      Classification.classify(@provider, @tag1[:category], @tag1[:name])
-      Classification.classify(@provider, @tag2[:category], @tag2[:name])
+      run_get "#{provider_tags_url}?expand=resources"
 
-      @success = run_get "#{@provider_tags_url}?expand=resources"
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result["name"]).to eq("tags")
-      expect(@result["count"]).to eq(Tag.count)
-      expect(@result["resources"].size).to eq(2)
-      results = @result["resources"]
-      expect(resources_include_suffix?(results, "name", @tag1[:path])).to be_true
-      expect(resources_include_suffix?(results, "name", @tag2[:path])).to be_true
+      expect_query_result(:tags, 2, :tag_count)
+      expect_result_resources_to_include_data("resources", "name" => :tag_paths)
     end
 
     it "assigns a tag to a Provider without appropriate role" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
 
-      @success = run_post(@provider_tags_url, gen_request(:assign,
-                                                          :category => @tag1[:category],
-                                                          :name     => @tag1[:name]))
-      expect(@success).to be_false
-      expect(@code).to eq(403)
+      run_post(provider_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
+
+      expect_request_forbidden
     end
 
     it "assigns a tag to a Provider" do
-      update_user_role(@role, subcollection_action_identifier(:providers, :tags, :assign))
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize subcollection_action_identifier(:providers, :tags, :assign)
 
-      @success = run_post(@provider_tags_url, gen_request(:assign,
-                                                          :category => @tag1[:category],
-                                                          :name     => @tag1[:name]))
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("results")
-      results = @result["results"]
-      expect(results.size).to eq(1)
-      result = results.first
-      expect(result["success"]).to be_true
-      expect(result["href"]).to match(@provider_url)
-      expect(result["tag_category"]).to eq(@tag1[:category])
-      expect(result["tag_name"]).to eq(@tag1[:name])
+      run_post(provider_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
+
+      expect_tagging_result(tag1_results(provider_url))
     end
 
     it "unassigns a tag from a Provider without appropriate role" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
 
-      @success = run_post(@provider_tags_url, gen_request(:unassign,
-                                                          :category => @tag1[:category],
-                                                          :name     => @tag1[:name]))
-      expect(@success).to be_false
-      expect(@code).to eq(403)
+      run_post(provider_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
+
+      expect_request_forbidden
     end
 
     it "unassigns a tag from a Provider" do
-      update_user_role(@role, subcollection_action_identifier(:providers, :tags, :unassign))
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize subcollection_action_identifier(:providers, :tags, :unassign)
+      classify_resource(provider)
 
-      Classification.classify(@provider, @tag1[:category], @tag1[:name])
-      Classification.classify(@provider, @tag2[:category], @tag2[:name])
+      run_post(provider_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      @success = run_post(@provider_tags_url, gen_request(:unassign,
-                                                          :category => @tag1[:category],
-                                                          :name     => @tag1[:name]))
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("results")
-      results = @result["results"]
-      expect(results.size).to eq(1)
-      result = results.first
-      expect(result["success"]).to be_true
-      expect(result["href"]).to match(@provider_url)
-      expect(result["tag_category"]).to eq(@tag1[:category])
-      expect(result["tag_name"]).to eq(@tag1[:name])
-      expect(@provider.tags.count).to eq(1)
-      expect(@provider.tags.first.name).to eq(@tag2[:path])
+      expect_tagging_result(tag1_results(provider_url))
+      expect_resource_has_tags(provider, tag2[:path])
     end
   end
 
   context "Host Tag subcollection" do
-    before(:each) do
-      @host_url      = "#{@cfme[:hosts_url]}/#{@host.id}"
-      @host_tags_url = "#{@host_url}/tags"
-    end
+    let(:host_url)      { hosts_url(host.id) }
+    let(:host_tags_url) { "#{host_url}/tags" }
 
     it "query all tags of a Host and verify tag category and names" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
+      classify_resource(host)
 
-      Classification.classify(@host, @tag1[:category], @tag1[:name])
-      Classification.classify(@host, @tag2[:category], @tag2[:name])
+      run_get "#{host_tags_url}?expand=resources"
 
-      @success = run_get "#{@host_tags_url}?expand=resources"
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result["name"]).to eq("tags")
-      expect(@result["count"]).to eq(Tag.count)
-      expect(@result["resources"].size).to eq(2)
-      results = @result["resources"]
-      expect(resources_include_suffix?(results, "name", @tag1[:path])).to be_true
-      expect(resources_include_suffix?(results, "name", @tag2[:path])).to be_true
+      expect_query_result(:tags, 2, :tag_count)
+      expect_result_resources_to_include_data("resources", "name" => :tag_paths)
     end
 
     it "assigns a tag to a Host without appropriate role" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
 
-      @success = run_post(@host_tags_url, gen_request(:assign,
-                                                      :category => @tag1[:category],
-                                                      :name     => @tag1[:name]))
-      expect(@success).to be_false
-      expect(@code).to eq(403)
+      run_post(host_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
+
+      expect_request_forbidden
     end
 
     it "assigns a tag to a Host" do
-      update_user_role(@role, subcollection_action_identifier(:hosts, :tags, :assign))
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize subcollection_action_identifier(:hosts, :tags, :assign)
 
-      @success = run_post(@host_tags_url, gen_request(:assign,
-                                                      :category => @tag1[:category],
-                                                      :name     => @tag1[:name]))
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("results")
-      results = @result["results"]
-      expect(results.size).to eq(1)
-      result = results.first
-      expect(result["success"]).to be_true
-      expect(result["href"]).to match(@host_url)
-      expect(result["tag_category"]).to eq(@tag1[:category])
-      expect(result["tag_name"]).to eq(@tag1[:name])
+      run_post(host_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
+
+      expect_tagging_result(tag1_results(host_url))
     end
 
     it "unassigns a tag from a Host without appropriate role" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
 
-      @success = run_post(@host_tags_url, gen_request(:unassign,
-                                                      :category => @tag1[:category],
-                                                      :name     => @tag1[:name]))
-      expect(@success).to be_false
-      expect(@code).to eq(403)
+      run_post(host_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
+
+      expect_request_forbidden
     end
 
     it "unassigns a tag from a Host" do
-      update_user_role(@role, subcollection_action_identifier(:hosts, :tags, :unassign))
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize subcollection_action_identifier(:hosts, :tags, :unassign)
+      classify_resource(host)
 
-      Classification.classify(@host, @tag1[:category], @tag1[:name])
-      Classification.classify(@host, @tag2[:category], @tag2[:name])
+      run_post(host_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      @success = run_post(@host_tags_url, gen_request(:unassign,
-                                                      :category => @tag1[:category],
-                                                      :name     => @tag1[:name]))
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("results")
-      results = @result["results"]
-      expect(results.size).to eq(1)
-      result = results.first
-      expect(result["success"]).to be_true
-      expect(result["href"]).to match(@host_url)
-      expect(result["tag_category"]).to eq(@tag1[:category])
-      expect(result["tag_name"]).to eq(@tag1[:name])
-      expect(@host.tags.count).to eq(1)
-      expect(@host.tags.first.name).to eq(@tag2[:path])
+      expect_tagging_result(tag1_results(host_url))
+      expect_resource_has_tags(host, tag2[:path])
     end
   end
 
   context "Data Store Tag subcollection" do
-    before(:each) do
-      @ds          = FactoryGirl.create(:storage, :name => "Storage 1", :store_type => "VMFS")
-      @ds_url      = "#{@cfme[:data_stores_url]}/#{@ds.id}"
-      @ds_tags_url = "#{@ds_url}/tags"
-    end
+    let(:ds)          { FactoryGirl.create(:storage, :name => "Storage 1", :store_type => "VMFS") }
+    let(:ds_url)      { data_stores_url(ds.id) }
+    let(:ds_tags_url) { "#{ds_url}/tags" }
 
     it "query all tags of a Data Store and verify tag category and names" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
+      classify_resource(ds)
 
-      Classification.classify(@ds, @tag1[:category], @tag1[:name])
-      Classification.classify(@ds, @tag2[:category], @tag2[:name])
+      run_get "#{ds_tags_url}?expand=resources"
 
-      @success = run_get "#{@ds_tags_url}?expand=resources"
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result["name"]).to eq("tags")
-      expect(@result["count"]).to eq(Tag.count)
-      expect(@result["resources"].size).to eq(2)
-      results = @result["resources"]
-      expect(resources_include_suffix?(results, "name", @tag1[:path])).to be_true
-      expect(resources_include_suffix?(results, "name", @tag2[:path])).to be_true
+      expect_query_result(:tags, 2, :tag_count)
+      expect_result_resources_to_include_data("resources", "name" => :tag_paths)
     end
 
     it "assigns a tag to a Data Store without appropriate role" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
 
-      @success = run_post(@ds_tags_url, gen_request(:assign, :category => @tag1[:category], :name => @tag1[:name]))
+      run_post(ds_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect(@success).to be_false
-      expect(@code).to eq(403)
+      expect_request_forbidden
     end
 
     it "assigns a tag to a Data Store" do
-      update_user_role(@role, subcollection_action_identifier(:data_stores, :tags, :assign))
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize subcollection_action_identifier(:data_stores, :tags, :assign)
 
-      @success = run_post(@ds_tags_url, gen_request(:assign, :category => @tag1[:category], :name => @tag1[:name]))
+      run_post(ds_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("results")
-      results = @result["results"]
-      expect(results.size).to eq(1)
-      result = results.first
-      expect(result["success"]).to be_true
-      expect(result["href"]).to match(@ds_url)
-      expect(result["tag_category"]).to eq(@tag1[:category])
-      expect(result["tag_name"]).to eq(@tag1[:name])
+      expect_tagging_result(tag1_results(ds_url))
     end
 
     it "unassigns a tag from a Data Store without appropriate role" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
 
-      @success = run_post(@ds_tags_url, gen_request(:unassign, :category => @tag1[:category], :name => @tag1[:name]))
+      run_post(ds_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect(@success).to be_false
-      expect(@code).to eq(403)
+      expect_request_forbidden
     end
 
     it "unassigns a tag from a Data Store" do
-      update_user_role(@role, subcollection_action_identifier(:data_stores, :tags, :unassign))
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize subcollection_action_identifier(:data_stores, :tags, :unassign)
+      classify_resource(ds)
 
-      Classification.classify(@ds, @tag1[:category], @tag1[:name])
-      Classification.classify(@ds, @tag2[:category], @tag2[:name])
+      run_post(ds_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      @success = run_post(@ds_tags_url, gen_request(:unassign, :category => @tag1[:category], :name => @tag1[:name]))
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("results")
-      results = @result["results"]
-      expect(results.size).to eq(1)
-      result = results.first
-      expect(result["success"]).to be_true
-      expect(result["href"]).to match(@ds_url)
-      expect(result["tag_category"]).to eq(@tag1[:category])
-      expect(result["tag_name"]).to eq(@tag1[:name])
-      expect(@ds.tags.count).to eq(1)
-      expect(@ds.tags.first.name).to eq(@tag2[:path])
+      expect_tagging_result(tag1_results(ds_url))
+      expect_resource_has_tags(ds, tag2[:path])
     end
   end
 
   context "Resource Pool Tag subcollection" do
-    before(:each) do
-      @rp          = FactoryGirl.create(:resource_pool, :name => "Resource Pool 1")
-      @rp_url      = "#{@cfme[:resource_pools_url]}/#{@rp.id}"
-      @rp_tags_url = "#{@rp_url}/tags"
-    end
+    let(:rp)          { FactoryGirl.create(:resource_pool, :name => "Resource Pool 1") }
+    let(:rp_url)      { resource_pools_url(rp.id) }
+    let(:rp_tags_url) { "#{rp_url}/tags" }
 
     it "query all tags of a Resource Pool and verify tag category and names" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
+      classify_resource(rp)
 
-      Classification.classify(@rp, @tag1[:category], @tag1[:name])
-      Classification.classify(@rp, @tag2[:category], @tag2[:name])
+      run_get "#{rp_tags_url}?expand=resources"
 
-      @success = run_get "#{@rp_tags_url}?expand=resources"
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result["name"]).to eq("tags")
-      expect(@result["count"]).to eq(Tag.count)
-      expect(@result["resources"].size).to eq(2)
-      results = @result["resources"]
-      expect(resources_include_suffix?(results, "name", @tag1[:path])).to be_true
-      expect(resources_include_suffix?(results, "name", @tag2[:path])).to be_true
+      expect_query_result(:tags, 2, :tag_count)
+      expect_result_resources_to_include_data("resources", "name" => :tag_paths)
     end
 
     it "assigns a tag to a Resource Pool without appropriate role" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
 
-      @success = run_post(@rp_tags_url, gen_request(:assign, :category => @tag1[:category], :name => @tag1[:name]))
+      run_post(rp_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect(@success).to be_false
-      expect(@code).to eq(403)
+      expect_request_forbidden
     end
 
     it "assigns a tag to a Resource Pool" do
-      update_user_role(@role, subcollection_action_identifier(:resource_pools, :tags, :assign))
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize subcollection_action_identifier(:resource_pools, :tags, :assign)
 
-      @success = run_post(@rp_tags_url, gen_request(:assign, :category => @tag1[:category], :name => @tag1[:name]))
+      run_post(rp_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("results")
-      results = @result["results"]
-      expect(results.size).to eq(1)
-      result = results.first
-      expect(result["success"]).to be_true
-      expect(result["href"]).to match(@rp_url)
-      expect(result["tag_category"]).to eq(@tag1[:category])
-      expect(result["tag_name"]).to eq(@tag1[:name])
+      expect_tagging_result(tag1_results(rp_url))
     end
 
     it "unassigns a tag from a Resource Pool without appropriate role" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
 
-      @success = run_post(@rp_tags_url, gen_request(:unassign, :category => @tag1[:category], :name => @tag1[:name]))
+      run_post(rp_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect(@success).to be_false
-      expect(@code).to eq(403)
+      expect_request_forbidden
     end
 
     it "unassigns a tag from a Resource Pool" do
-      update_user_role(@role, subcollection_action_identifier(:resource_pools, :tags, :unassign))
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize subcollection_action_identifier(:resource_pools, :tags, :unassign)
+      classify_resource(rp)
 
-      Classification.classify(@rp, @tag1[:category], @tag1[:name])
-      Classification.classify(@rp, @tag2[:category], @tag2[:name])
+      run_post(rp_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      @success = run_post(@rp_tags_url, gen_request(:unassign, :category => @tag1[:category], :name => @tag1[:name]))
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("results")
-      results = @result["results"]
-      expect(results.size).to eq(1)
-      result = results.first
-      expect(result["success"]).to be_true
-      expect(result["href"]).to match(@rp_url)
-      expect(result["tag_category"]).to eq(@tag1[:category])
-      expect(result["tag_name"]).to eq(@tag1[:name])
-      expect(@rp.tags.count).to eq(1)
-      expect(@rp.tags.first.name).to eq(@tag2[:path])
+      expect_tagging_result(tag1_results(rp_url))
+      expect_resource_has_tags(rp, tag2[:path])
     end
   end
 
   context "Cluster Tag subcollection" do
-    before(:each) do
-      @cluster = FactoryGirl.create(:ems_cluster,
-                                    :name                  => "cluster 1",
-                                    :ext_management_system => @ems,
-                                    :hosts                 => [@host],
-                                    :vms                   => [])
-
-      @cluster_url      = "#{@cfme[:clusters_url]}/#{@cluster.id}"
-      @cluster_tags_url = "#{@cluster_url}/tags"
+    let(:cluster) do
+      FactoryGirl.create(:ems_cluster,
+                         :name                  => "cluster 1",
+                         :ext_management_system => ems,
+                         :hosts                 => [host],
+                         :vms                   => [])
     end
 
+    let(:cluster_url)      { clusters_url(cluster.id) }
+    let(:cluster_tags_url) { "#{cluster_url}/tags" }
+
     it "query all tags of a Cluster and verify tag category and names" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
+      classify_resource(cluster)
 
-      Classification.classify(@cluster, @tag1[:category], @tag1[:name])
-      Classification.classify(@cluster, @tag2[:category], @tag2[:name])
+      run_get "#{cluster_tags_url}?expand=resources"
 
-      @success = run_get "#{@cluster_tags_url}?expand=resources"
-
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result["name"]).to eq("tags")
-      expect(@result["count"]).to eq(Tag.count)
-      expect(@result["resources"].size).to eq(2)
-      results = @result["resources"]
-      expect(resources_include_suffix?(results, "name", @tag1[:path])).to be_true
-      expect(resources_include_suffix?(results, "name", @tag2[:path])).to be_true
+      expect_query_result(:tags, 2, :tag_count)
+      expect_result_resources_to_include_data("resources", "name" => :tag_paths)
     end
 
     it "assigns a tag to a Cluster without appropriate role" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
 
-      @success = run_post(@cluster_tags_url, gen_request(:assign, :category => @tag1[:category], :name => @tag1[:name]))
+      run_post(cluster_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect(@success).to be_false
-      expect(@code).to eq(403)
+      expect_request_forbidden
     end
 
     it "assigns a tag to a Cluster" do
-      update_user_role(@role, subcollection_action_identifier(:clusters, :tags, :assign))
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize subcollection_action_identifier(:clusters, :tags, :assign)
 
-      @success = run_post(@cluster_tags_url, gen_request(:assign, :category => @tag1[:category], :name => @tag1[:name]))
+      run_post(cluster_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("results")
-      results = @result["results"]
-      expect(results.size).to eq(1)
-      result = results.first
-      expect(result["success"]).to be_true
-      expect(result["href"]).to match(@cluster_url)
-      expect(result["tag_category"]).to eq(@tag1[:category])
-      expect(result["tag_name"]).to eq(@tag1[:name])
+      expect_tagging_result(tag1_results(cluster_url))
     end
 
     it "unassigns a tag from a Cluster without appropriate role" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
 
-      @success = run_post(@cluster_tags_url, gen_request(:unassign,
-                                                         :category => @tag1[:category],
-                                                         :name     => @tag1[:name]))
-      expect(@success).to be_false
-      expect(@code).to eq(403)
+      run_post(cluster_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
+
+      expect_request_forbidden
     end
 
     it "unassigns a tag from a Cluster" do
-      update_user_role(@role, subcollection_action_identifier(:clusters, :tags, :unassign))
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize subcollection_action_identifier(:clusters, :tags, :unassign)
+      classify_resource(cluster)
 
-      Classification.classify(@cluster, @tag1[:category], @tag1[:name])
-      Classification.classify(@cluster, @tag2[:category], @tag2[:name])
+      run_post(cluster_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      @success = run_post(@cluster_tags_url, gen_request(:unassign,
-                                                         :category => @tag1[:category],
-                                                         :name     => @tag1[:name]))
-      expect(@success).to be_true
-      expect(@code).to eq(200)
-      expect(@result).to have_key("results")
-      results = @result["results"]
-      expect(results.size).to eq(1)
-      result = results.first
-      expect(result["success"]).to be_true
-      expect(result["href"]).to match(@cluster_url)
-      expect(result["tag_category"]).to eq(@tag1[:category])
-      expect(result["tag_name"]).to eq(@tag1[:name])
-      expect(@cluster.tags.count).to eq(1)
-      expect(@cluster.tags.first.name).to eq(@tag2[:path])
+      expect_tagging_result(tag1_results(cluster_url))
+      expect_resource_has_tags(cluster, tag2[:path])
     end
   end
 end
