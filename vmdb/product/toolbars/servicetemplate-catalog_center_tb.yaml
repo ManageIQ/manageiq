@@ -6,7 +6,7 @@
 :button_groups:
 - :name: svc_catalog_lifecycle
   :items:
-  - :button: svc_catalog_provision_not    # Added _not so no buttons show for now
+  - :button: svc_catalog_provision
     :image: order
     :text: "Order Now"
     :title: "Order this Service"
