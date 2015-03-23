@@ -1568,7 +1568,8 @@ module ApplicationHelper
 
   # Derive the browser title text based on the layout value
   def title_from_layout(layout)
-    title = _("ManageIQ")
+    # TODO: leave I18n until we have productization capability in gettext
+    title = I18n.t('product.name')
     if layout.blank?  # no layout, leave title alone
     elsif ["configuration", "dashboard", "chargeback", "about"].include?(layout)
       title += ": #{layout.titleize}"
