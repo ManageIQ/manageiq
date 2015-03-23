@@ -841,6 +841,23 @@ class CatalogController < ApplicationController
       add_flash(_("Dialog has to be set if Display in Catalog is chosen"), :error)
     end
 
+    # Check the validity of the entry points
+    %w(fqname reconfigure_fqname retire_fqname).each do |fqname|
+      if @edit[:new][fqname.to_sym].present? &&
+         MiqAeClass.find_homonymic_instances_across_domains(@edit[:new][fqname.to_sym]).empty?
+        level = :error
+        msg = _('Please correct invalid %s Entry Point prior to saving')
+        case fqname
+        when 'fqname'
+          add_flash(msg % _('Provisioning'), level)
+        when 'reconfigure_fqname'
+          add_flash(msg % _('Reconfigure'), level)
+        when 'retire_fqname'
+          add_flash(msg % _('Retirement'), level)
+        end
+      end
+    end
+
     #set request for non generic ST
     if @edit[:wf] && need_prov_dialogs?(@edit[:new][:st_prov_type])
       request = @edit[:req_id] ? @edit[:wf].update_request(@edit[:req_id], @edit[:new], session[:userid]) :

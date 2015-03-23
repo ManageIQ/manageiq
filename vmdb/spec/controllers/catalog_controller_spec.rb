@@ -30,13 +30,18 @@ describe CatalogController do
   end
 
   context "#atomic_st_edit" do
-    it "Atomic Service Template and it's Resource Actions are saved" do
+    it "Atomic Service Template and it's valid Resource Actions are saved" do
       controller.instance_variable_set(:@sb, {})
       controller.instance_variable_set(:@_params, {:button => "save"})
       st = FactoryGirl.create(:service_template)
-      retire_fqname = "ns/cls/inst"
-      provision_fqname = "ns1/cls1/inst1"
-      recon_fqname = "ns2/cls2/inst2"
+      3.times.each_with_index do |i|
+        ns = FactoryGirl.create(:miq_ae_namespace, :name => "ns#{i}")
+        cls = FactoryGirl.create(:miq_ae_class, :namespace_id => ns.id, :name => "cls#{i}")
+        FactoryGirl.create(:miq_ae_instance, :class_id => cls.id, :name => "inst#{i}")
+      end
+      retire_fqname    = 'ns0/cls0/inst0'
+      provision_fqname = 'ns1/cls1/inst1'
+      recon_fqname     = 'ns2/cls2/inst2'
       edit = {
         :new          => {
           :name               => "New Name",
@@ -54,6 +59,39 @@ describe CatalogController do
       controller.send(:atomic_st_edit)
       {'Provision' => provision_fqname, 'Reconfigure' => recon_fqname, 'Retirement' => retire_fqname}.each do |k, v|
         st.resource_actions.find_by_action(k).fqname.should == "/#{v}"
+      end
+    end
+
+    it "Atomic Service Template and it's invalid Resource Actions are not saved" do
+      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
+      controller.instance_variable_set(:@sb, {})
+      controller.instance_variable_set(:@_params, :button => 'save')
+      st = FactoryGirl.create(:service_template)
+      retire_fqname    = 'ns/cls/inst'
+      provision_fqname = 'ns1/cls1/inst1'
+      recon_fqname     = 'ns2/cls2/inst2'
+      edit = {
+        :new          => {
+          :name               => 'New Name',
+          :description        => 'New Description',
+          :reconfigure_fqname => recon_fqname,
+          :retire_fqname      => retire_fqname,
+          :fqname             => provision_fqname},
+        :key          => 'prov_edit__new',
+        :rec_id       => st.id,
+        :st_prov_type => 'generic'
+      }
+      controller.instance_variable_set(:@edit, edit)
+      session[:edit] = edit
+      controller.stub(:replace_right_cell)
+      controller.send(:atomic_st_edit)
+      controller.send(:flash_errors?).should be_true
+      flash_messages = assigns(:flash_array)
+      expect(flash_messages).to have_exactly(3).items
+      entry_point_names = %w(Provisioning Reconfigure Retirement)
+      flash_messages.each_with_index do |msg, i|
+        expect(msg[:message]).to eq("Please correct invalid #{entry_point_names[i]} Entry Point prior to saving")
+        expect(msg[:level]).to eq(:error)
       end
     end
   end
