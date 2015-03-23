@@ -5,7 +5,7 @@ class WorkerBase
   attr_accessor :last_hb, :worker, :worker_settings
   attr_reader   :vmdb_config, :active_roles
 
-  INTERRUPT_SIGNALS = ["INT", "TERM", "KILL"]
+  INTERRUPT_SIGNALS = ["INT", "TERM"]
 
   OPTIONS_PARSER_SETTINGS = [
     [:guid,       'EVM Worker GUID',       String],
