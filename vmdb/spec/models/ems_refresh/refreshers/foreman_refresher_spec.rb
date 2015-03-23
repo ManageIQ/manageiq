@@ -122,12 +122,16 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
     system = configuration_manager.configured_systems.where("hostname like 'providerrefreshspec%'").first
 
     expect(system).to have_attributes(
+      :ipaddress   => "169.254.169.254",
+      :mac_address => "00:00:00:00:00:00",
       :type        => "ConfiguredSystemForeman",
       :hostname    => "providerrefreshspec-hostbaremetal.example.com",
       :manager_ref => "38",
     )
-    expect(system.operating_system_flavor).to eq(mine(osfs))
-    expect(system.configuration_profile).to   eq(child)
+    expect(system.operating_system_flavor).to     eq(mine(osfs))
+    expect(system.customization_script_medium).to eq(mine(media))
+    expect(system.customization_script_ptable).to eq(mine(ptables))
+    expect(system.configuration_profile).to       eq(child)
   end
 
   private

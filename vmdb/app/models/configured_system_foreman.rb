@@ -3,6 +3,8 @@ class ConfiguredSystemForeman < ConfiguredSystem
 
   belongs_to :configuration_location
   belongs_to :configuration_organization
+  belongs_to :customization_script_medium
+  belongs_to :customization_script_ptable
 
   def provider_object(connection = nil)
     (connection || connection_source.raw_connect).host(manager_ref)

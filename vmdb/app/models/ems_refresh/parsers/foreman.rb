@@ -57,6 +57,8 @@ module EmsRefresh
         result[:configured_systems] = configured_system_inv_to_hashes(inv[:hosts],
                                                                       ids,
                                                                       inv[:operating_system_flavors],
+                                                                      inv[:media],
+                                                                      inv[:ptables],
                                                                       inv[:locations],
                                                                       inv[:organizations])
         result[:needs_provisioning_refresh] = true if needs_provisioning_refresh
@@ -130,18 +132,22 @@ module EmsRefresh
         end
       end
 
-      def configured_system_inv_to_hashes(recs, profiles, operatingsystems, locations, organizations)
+      def configured_system_inv_to_hashes(recs, profiles, operatingsystems, media, ptables, locations, organizations)
         recs.collect do |cs|
           {
-            :type                          => "ConfiguredSystemForeman",
-            :manager_ref                   => cs["id"].to_s,
-            :hostname                      => cs["name"],
-            :configuration_profile         => id_lookup(profiles, cs, "hostgroup_id"),
-            :operating_system_flavor_id    => id_lookup(operatingsystems, cs, "operatingsystem_id"),
-            :last_checkin                  => cs["last_compile"],
-            :build_state                   => cs["build"] ? "pending" : nil,
-            :configuration_location_id     => id_lookup(locations, cs, "location_id"),
-            :configuration_organization_id => id_lookup(organizations, cs, "organization_id"),
+            :type                           => "ConfiguredSystemForeman",
+            :manager_ref                    => cs["id"].to_s,
+            :hostname                       => cs["name"],
+            :configuration_profile          => id_lookup(profiles, cs, "hostgroup_id"),
+            :operating_system_flavor_id     => id_lookup(operatingsystems, cs, "operatingsystem_id"),
+            :customization_script_medium_id => id_lookup(media, cs, "medium_id"),
+            :customization_script_ptable_id => id_lookup(ptables, cs, "ptable_id"),
+            :last_checkin                   => cs["last_compile"],
+            :build_state                    => cs["build"] ? "pending" : nil,
+            :ipaddress                      => cs["ip"],
+            :mac_address                    => cs["mac"],
+            :configuration_location_id      => id_lookup(locations, cs, "location_id"),
+            :configuration_organization_id  => id_lookup(organizations, cs, "organization_id"),
           }
         end
       end
