@@ -62,4 +62,21 @@ module MiqProvisionTaskConfiguredSystemForeman::StateMachine
       signal :mark_as_completed
     end
   end
+
+  def mark_as_completed
+    begin
+      MiqEvent.raise_evm_event(source, 'configured_system_provisioned', :configured_system => source)
+    rescue => err
+      $log.log_backtrace(err)
+    end
+
+    update_and_notify_parent(:state => 'provisioned', :message => "Finished Configured System Customization")
+    signal :finish
+  end
+
+  def finish
+    if status != 'Error'
+      $log.info("MIQ(#{self.class.name}##{__method__}) Executing provision request: [#{description}]... Complete")
+    end
+  end
 end
