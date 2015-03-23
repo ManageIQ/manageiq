@@ -291,4 +291,38 @@ describe MiqRequest do
       expect(provision_request.approval_state).to eq('denied')
     end
   end
+
+  context '#post_create_request_tasks' do
+    context 'VM provisioning' do
+      let(:description) { 'my original information' }
+      let(:template)    { FactoryGirl.create(:template_vmware, :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication)) }
+      let(:request)     { FactoryGirl.build(:miq_provision_request, :userid => fred.userid, :description => description, :src_vm_id => template.id) }
+
+      it 'with 1 task' do
+        request.options[:src_vm_id] = template.id
+        request.create_request_task(template.id)
+        request.post_create_request_tasks
+        expect(request.description).to_not eq(description)
+      end
+
+      it 'with 0 tasks' do
+        request.stub(:requested_task_idx).and_return([])
+        request.post_create_request_tasks
+        expect(request.description).to eq(description)
+      end
+
+      it 'with >1 tasks' do
+        request.stub(:requested_task_idx).and_return([1, 2])
+        request.post_create_request_tasks
+        expect(request.description).to eq(description)
+      end
+    end
+
+    it 'non VM provisioning' do
+      description = 'Service Request'
+      request   = FactoryGirl.create(:service_template_provision_request, :description => description, :userid => fred.userid)
+      request.post_create_request_tasks
+      expect(request.description).to eq(description)
+    end
+  end
 end
