@@ -115,31 +115,34 @@ function miqToolbarOnClick(id){
 //	tb_hash = miq_toolbars.get(this.base.id);	// Use this line for toolbar v2.1
 		tb_hash = miq_toolbars[this.base.parentNode.id];	// Use this line for toolbar v3.0
 
-	eval("button = tb_hash['buttons']." + id);
-	if (typeof button != "undefined") {
-		if (typeof button.confirm != "undefined" && typeof button.popup == "undefined") {
+        if (!tb_hash['buttons'].hasOwnProperty(id)) {
+          return false;
+        }
+
+	button = tb_hash['buttons'][id];
+		if (button.hasOwnProperty("confirm") && !button.hasOwnProperty("popup")) {
 			if (!confirm(button.confirm)) return;
-		} else if (typeof button.confirm != "undefined" && typeof button.popup != "undefined") {
+		} else if (button.hasOwnProperty("confirm") && button.hasOwnProperty("popup")) {
 			// to open console in a new window
 			if (confirm(button.confirm)) {
-				if (typeof button.popup != "undefined" && button.popup) {					
-					if (typeof button.console_url != "undefined"){
+				if (button.popup != "undefined" && button.popup) {
+					if (button.hasOwnProperty("console_url")){
 						window.open(button.console_url);
 			}	}	}
 			return;			
-		} else if (typeof button.confirm == "undefined" && typeof button.popup != "undefined") {
+		} else if (!button.hasOwnProperty("confirm") && button.hasOwnProperty("popup")) {
 			// to open readonly report in a new window, doesnt have confirm message
-			if (typeof button.popup != "undefined" && button.popup) {
-				if (typeof button.console_url != "undefined"){
+			if (button.popup) {
+				if (button.hasOwnProperty("console_url")){
 					window.open(button.console_url);
 			}	}
 			return;
-	}	}
-	if (typeof button != "undefined" && typeof button.url != "undefined") {		// See if a url is defined
+	}
+	if (button.hasOwnProperty("url")) {		// See if a url is defined
 		if (button.url.indexOf("/") == 0) {			   															// If url starts with / it is non-ajax
 			tb_url = "/" + miq_controller + button.url;
 			if (typeof miq_record_id != "undefined" && miq_record_id != null) tb_url += "/" + miq_record_id;
-			if (typeof button.url_parms != "undefined") tb_url += button.url_parms;
+			if (button.hasOwnProperty("url_parms")) tb_url += button.url_parms;
 			DoNav(encodeURI(tb_url));
 			return;
 		} else {																																// An ajax url was defined
@@ -147,17 +150,6 @@ function miqToolbarOnClick(id){
 			if (button.url.indexOf("x_history") != 0)	// If not an explorer history button
 				if (typeof miq_record_id != "undefined" && miq_record_id != null) tb_url += "/" + miq_record_id;
 		}
-	}	else {																																	// No url specified, run standard button ajax transaction
-		if (typeof button.explorer != "undefined" && button.explorer)						// Use x_button method for explorer ajax
-			tb_url = "/" + miq_controller + "/x_button";
-		else
-			tb_url = "/" + miq_controller + "/button";
-		if (typeof miq_record_id != "undefined" && miq_record_id != null) tb_url += "/" + miq_record_id;
-		tb_url += "?pressed=";
-		if (typeof button.pressed == "undefined")
-			tb_url += id.split("__").pop();
-		else
-			tb_url += button.pressed;
 	}
 
   collect_log_buttons = ['support_vmdb_choice__collect_logs',
@@ -172,7 +164,7 @@ function miqToolbarOnClick(id){
 
 	// put url_parms into params var, if defined
 	var params;
-	if (typeof button.url_parms != "undefined") {
+	if (button.hasOwnProperty("url_parms")) {
 		if (button.url_parms.match("_div$")) {
       if (miqDomElementExists('miq_grid_checks')) {
       params = "miq_grid_checks=" + $('#miq_grid_checks').val();
