@@ -2376,9 +2376,8 @@ module ApplicationHelper
 
   def saved_report_paging?
     # saved report doesn't use miq_report object,
-    #need to use a different paging view to page thru a saved report
-    return @sb[:pages] && @html &&
-        [:reports_tree,:savedreports_tree].include?(x_active_tree) ? true : false
+    # need to use a different paging view to page thru a saved report
+    @sb[:pages] && @html && [:reports_tree, :savedreports_tree, :cb_reports_tree].include?(x_active_tree)
   end
 
   def pressed2model_action(pressed)

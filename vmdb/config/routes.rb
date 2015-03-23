@@ -247,6 +247,7 @@ Vmdb::Application.routes.draw do
         cb_rate_show
         cb_rates_delete
         cb_rates_list
+        saved_report_paging
         tree_autoload_dynatree
         tree_select
         x_button
