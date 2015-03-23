@@ -783,6 +783,13 @@ class ChargebackController < ApplicationController
         presenter[:expand_collapse_cells][:a] = 'collapse'
       end
       presenter[:update_partials][:main_div] = r[:partial => 'reports_list']
+      if @html
+        presenter[:update_partials][:paging_div] = r[:partial => 'layouts/saved_report_paging_bar',
+                                                     :locals  => @sb[:pages]]
+        presenter[:set_visible_elements][:paging_div] = true
+      else
+        presenter[:set_visible_elements][:paging_div] = false
+      end
     end
 
     if @record || @in_a_form ||
