@@ -133,6 +133,7 @@ class MiqRequestTask < ActiveRecord::Base
       args[:instance_name] = "AUTOMATION"
       args[:user_id]       = self.get_user.id
 
+      zone ||= source.respond_to?(:my_zone) ? source.my_zone : MiqServer.my_zone
       MiqQueue.put(
         :class_name  => 'MiqAeEngine',
         :method_name => 'deliver',

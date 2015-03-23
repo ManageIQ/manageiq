@@ -68,6 +68,11 @@ class VmReconfigureRequest < MiqRequest
     return errors
   end
 
+  def my_zone
+    vm = Vm.where(:id => options[:src_ids]).first
+    vm.nil? ? super : vm.my_zone
+  end
+
   def my_role
     'ems_operations'
   end
