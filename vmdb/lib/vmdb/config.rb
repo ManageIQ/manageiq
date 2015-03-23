@@ -162,10 +162,10 @@ module VMDB
     def config_mtime_from_db
       #log_header = "MIQ(Config.config_mtime_from_db) [#{@name}]"
       server = MiqServer.my_server(true)
-      return if server.nil?
+      return Time.at(0) if server.nil?
 
       conf = server.configurations.select("updated_on").where(:typ => @name).first
-      return if conf.nil?
+      return Time.at(0) if conf.nil?
 
       mtime = conf.updated_on
       #$log.debug("#{log_header} Config mtime retrieved from db [#{mtime}]") unless $log.nil? || mtime.nil?

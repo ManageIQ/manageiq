@@ -21,110 +21,88 @@ describe ApiController do
     Vmdb::Application
   end
 
+  let(:condition_guid_list) { Condition.pluck(:guid) }
+
   def create_conditions(count)
     count.times { FactoryGirl.create(:condition) }
   end
 
+  def assign_conditions_to(resource)
+    resource.conditions = Condition.all
+  end
+
   context "Condition collection" do
     it "query invalid collection" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
 
-      @success = run_get "#{@cfme[:conditions_url]}/999999"
+      run_get conditions_url(999_999)
 
-      expect(@code).to eq(404)
+      expect_resource_not_found
     end
 
     it "query conditions with no conditions defined" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
 
-      @success = run_get @cfme[:conditions_url]
+      run_get conditions_url
 
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("conditions")
-      expect(@result["resources"].size).to eq(0)
+      expect_empty_query_result(:conditions)
     end
 
     it "query conditions" do
-      basic_authorize @cfme[:user], @cfme[:password]
-
+      api_basic_authorize
       create_conditions(3)
-      @success = run_get @cfme[:conditions_url]
 
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("conditions")
-      expect(@result["resources"].size).to eq(3)
-      hrefs_ids = @result["resources"].collect { |r| r["href"].sub(/^.*#{@cfme[:conditions_url]}\//, '') }
-      expect(hrefs_ids).to match_array(Condition.pluck(:id).collect(&:to_s))
+      run_get conditions_url
+
+      expect_query_result(:conditions, 3, 3)
+      expect_result_resources_to_include_hrefs("resources",
+                                               Condition.pluck(:id).collect { |id| /^.*#{conditions_url(id)}$/ })
     end
 
     it "query conditions in expanded form" do
-      basic_authorize @cfme[:user], @cfme[:password]
-
+      api_basic_authorize
       create_conditions(3)
-      @success = run_get "#{@cfme[:conditions_url]}?expand=resources"
 
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("conditions")
-      expect(@result["resources"].size).to eq(3)
-      guids = @result["resources"].collect { |r| r["guid"] }
-      expect(guids).to match_array(Condition.pluck(:guid))
+      run_get "#{conditions_url}?expand=resources"
+
+      expect_query_result(:conditions, 3, 3)
+      expect_result_resources_to_include_data("resources", "guid" => :condition_guid_list)
     end
   end
 
   context "Condition subcollection" do
-    before(:each) do
-      @policy = FactoryGirl.create(:miq_policy, :name => "Policy 1")
-      @policy_url = "#{@cfme[:policies_url]}/#{@policy.id}"
-      @policy_conditions_url = "#{@policy_url}/conditions"
-    end
+    let(:policy)                { FactoryGirl.create(:miq_policy, :name => "Policy 1") }
+    let(:policy_url)            { policies_url(policy.id) }
+    let(:policy_conditions_url) { "#{policy_url}/conditions" }
 
     it "query conditions with no conditions defined" do
-      basic_authorize @cfme[:user], @cfme[:password]
+      api_basic_authorize
 
-      @success = run_get @policy_conditions_url
+      run_get policy_conditions_url
 
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("conditions")
-      expect(@result["resources"].size).to eq(0)
+      expect_empty_query_result(:conditions)
     end
 
     it "query conditions" do
-      basic_authorize @cfme[:user], @cfme[:password]
-
+      api_basic_authorize
       create_conditions(3)
-      @policy.conditions = Condition.all
+      assign_conditions_to(policy)
 
-      @success = run_get "#{@policy_conditions_url}?expand=resources"
+      run_get "#{policy_conditions_url}?expand=resources"
 
-      expect(@code).to eq(200)
-      expect(@result).to have_key("name")
-      expect(@result["name"]).to eq("conditions")
-      expect(@result["resources"].size).to eq(3)
-      guids = @result["resources"].collect { |r| r["guid"] }
-      expect(guids).to match_array(Condition.pluck(:guid))
+      expect_query_result(:conditions, 3, 3)
+      expect_result_resources_to_include_data("resources", "guid" => :condition_guid_list)
     end
 
     it "query policy with expanded conditions" do
-      basic_authorize @cfme[:user], @cfme[:password]
-
+      api_basic_authorize
       create_conditions(3)
-      @policy.conditions = Condition.all
+      assign_conditions_to(policy)
 
-      @success = run_get "#{@policy_url}?expand=conditions"
+      run_get "#{policy_url}?expand=conditions"
 
-      expect(@code).to eq(200)
-      expect(@result["name"]).to eq(@policy.name)
-      expect(@result["description"]).to eq(@policy.description)
-      expect(@result["guid"]).to eq(@policy.guid)
-      expect(@result).to have_key("conditions")
-      conditions = @result["conditions"]
-      expect(conditions.size).to eq(3)
-      guids = conditions.collect { |r| r["guid"] }
-      expect(guids).to eq(Condition.pluck(:guid))
+      expect_single_resource_query("name" => policy.name, "description" => policy.description, "guid" => policy.guid)
+      expect_result_resources_to_include_data("conditions", "guid" => :condition_guid_list)
     end
   end
 end

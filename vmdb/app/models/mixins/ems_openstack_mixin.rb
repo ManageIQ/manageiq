@@ -52,7 +52,7 @@ module EmsOpenstackMixin
 
   def event_monitor_options
     @event_monitor_options ||= begin
-      opts = {:hostname => self.ipaddress}
+      opts = {:hostname => self.hostname}
       opts[:port] = MiqEventCatcherOpenstack.worker_settings[:amqp_port]
       if self.has_authentication_type? :amqp
         # authentication_userid/password will happily return the "default"
@@ -74,6 +74,7 @@ module EmsOpenstackMixin
 
   def verify_api_credentials(options={})
     begin
+      options[:service] = "Identity"
       with_provider_connection(options) {}
     rescue Excon::Errors::Unauthorized => err
       $log.error("MIQ(#{self.class.name}.verify_api_credentials) Error Class=#{err.class.name}, Message=#{err.message}")

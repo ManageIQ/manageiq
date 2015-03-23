@@ -3685,3 +3685,64 @@
         :description: Add a Container
         :feature_type: admin
         :identifier: container_new
+
+# Foreman
+- :name: Provider Foreman
+  :description: Foreman Provider Views and Access Rules
+  :feature_type: node
+  :identifier: provider_foreman_explorer
+  :children:
+  - :name: Accordions
+    :description: All Accordions under Foreman
+    :feature_type: node
+    :identifier: provider_foreman_explorer_accords
+    :children:
+    - :name: Providers
+      :description: Providers Accordion
+      :feature_type: node
+      :identifier: providers_accord
+    - :name: Configured Systems
+      :description: Configured Systems Accordion
+      :feature_type: node
+      :identifier: configured_systems_filter_accord
+
+# Foreman access rules
+  - :name: Provider Foreman Access Rules
+    :description: Access Rules for Provider Foreman
+    :feature_type: node
+    :identifier: provider_foreman
+    :children:
+    - :name: View
+      :description: View Provider Foreman
+      :feature_type: view
+      :identifier: provider_foreman_view
+      :children:
+      - :name: List
+        :description: Display Lists of Provider Foreman related to a CI
+        :feature_type: view
+        :identifier: provider_foreman_show_list
+      - :name: Show
+        :description: Display Individual Provider Foreman related to a CI
+        :feature_type: view
+        :identifier: provider_foreman_show
+      :children:
+      - :name: Refresh
+        :description: Refresh relationships for all items related of Provider Foreman
+        :feature_type: control
+        :identifier: provider_foreman_refresh
+      - :name: Remove
+        :description: Remove Providers from the VMDB
+        :feature_type: admin
+        :identifier: provider_foreman_delete
+      - :name: Edit
+        :description: Edit a Provider
+        :feature_type: admin
+        :identifier: provider_foreman_edit
+      - :name: Add
+        :description: Add a Foreman Provider
+        :feature_type: admin
+        :identifier: provider_foreman_new
+      - :name: Validate
+        :description: Validate a Foreman Provider
+        :feature_type: admin
+        :identifier: provider_foreman_authentication_validate

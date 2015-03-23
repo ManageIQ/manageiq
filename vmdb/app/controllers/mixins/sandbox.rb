@@ -42,6 +42,7 @@ module Sandbox
     condition_tree
     containers_tree
     containers_filter_tree
+    cs_filter_tree
     customization_templates_tree
     db_tree
     diagnostics_tree
@@ -61,6 +62,7 @@ module Sandbox
     policy_tree
     pxe_image_types_tree
     pxe_servers_tree
+    foreman_providers_tree
     rbac_tree
     reports_tree
     roles_tree
@@ -92,6 +94,7 @@ module Sandbox
     condition
     containers
     containers_filter
+    cs_filter
     customization_templates
     db
     diagnostics
@@ -99,6 +102,7 @@ module Sandbox
     dialogs
     event
     export
+    foreman_providers
     images
     images_filter
     instances

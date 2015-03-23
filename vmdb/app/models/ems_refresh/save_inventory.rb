@@ -110,8 +110,13 @@ module EmsRefresh::SaveInventory
         # If a vm failed to process, mark it as invalid and log an error
         h[:invalid] = invalids_found = true
         name = h[:name] || h[:uid_ems] || h[:ems_ref]
-        $log.send(err.kind_of?(MiqException::MiqIncompleteData) ? :warn : :error, "#{log_header} Processing Vm: [#{name}] failed with error [#{err}]. Skipping Vm.")
-        $log.log_backtrace(err) unless err.kind_of?(MiqException::MiqIncompleteData)
+        if err.kind_of?(MiqException::MiqIncompleteData)
+          $log.warn("#{log_header} Processing Vm: [#{name}] failed with error [#{err}]. Skipping Vm.")
+        else
+          raise if EmsRefresh.debug_failures
+          $log.error("#{log_header} Processing Vm: [#{name}] failed with error [#{err}]. Skipping Vm.")
+          $log.log_backtrace(err)
+        end
       ensure
         restore_keys(h, remove_keys, key_backup)
       end

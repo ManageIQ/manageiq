@@ -16,7 +16,7 @@ class OrchestrationTemplate < ActiveRecord::Base
   end
 
   def self.find_with_content(template_content)
-    available.where(:md5 => calc_md5(template_content)).first
+    available.where(:md5 => calc_md5(with_universal_newline(template_content))).first
   end
 
   # Find only by template content. Here we only compare md5 considering the table is expected
@@ -30,7 +30,7 @@ class OrchestrationTemplate < ActiveRecord::Base
                  create!(hash.except(:md5)) # always create a new template if it is a draft
                  true
                else
-                 md5s << calc_md5(hash[:content])
+                 md5s << calc_md5(with_universal_newline(hash[:content]))
                  false
                end
              end
@@ -48,8 +48,8 @@ class OrchestrationTemplate < ActiveRecord::Base
   end
 
   def content=(text)
-    super
-    self.md5 = calc_md5(text)
+    super(with_universal_newline(text))
+    self.md5 = calc_md5(content)
   end
 
   # Check whether a template has been referenced by any stack. A template that is in use should be
@@ -102,5 +102,14 @@ class OrchestrationTemplate < ActiveRecord::Base
 
   def calc_md5(text)
     self.class.calc_md5(text)
+  end
+
+  def self.with_universal_newline(text)
+    # ensure universal new lines and content ending with a new line
+    text.encode(:universal_newline => true).chomp.concat("\n")
+  end
+
+  def with_universal_newline(text)
+    self.class.with_universal_newline(text)
   end
 end

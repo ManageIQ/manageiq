@@ -6,7 +6,7 @@ module ActiveRecord
     # ==== Example
     #
     #   Post.truncate
-    def truncate
+    def self.truncate
       connection.truncate(table_name, "#{name} Truncate")
     end
   end

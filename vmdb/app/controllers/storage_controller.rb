@@ -196,39 +196,6 @@ class StorageController < ApplicationController
     end
   end
 
-  def show_association(action, display_name, listicon, method, klass, association = nil)
-    @storage = @record = identify_record(params[:id])
-    @view = session[:view]                  # Restore the view from the session to get column names for the display
-    return if record_no_longer_exists?(@storage)
-
-    @lastaction = action
-    unless params[:show].nil?
-      if method.kind_of?(Array)
-        obj = @storage
-        while meth = method.shift do
-          obj = obj.send(meth)
-        end
-        @item = obj.find(params[:show])
-      else
-        @item = @storage.send(method).find(from_cid(params[:show]))
-      end
-
-      drop_breadcrumb( { :name => "#{@storage.name} (#{display_name})", :url=>"/storage/#{action}/#{@storage.id}?page=#{@current_page}"} )
-      drop_breadcrumb( { :name => @item.name,                           :url=>"/storage/#{action}/#{@storage.id}?show=#{@item.id}"} )
-      show_item
-    else
-      drop_breadcrumb( { :name => "#{@storage.name} (#{display_name})", :url=>"/storage/#{action}/#{@storage.id}"} )
-      @listicon = listicon
-      @showtype = "details"
-      if association.nil?
-        show_details(klass)
-      else
-        show_details(klass, :association => association )
-      end
-    end
-
-  end
-
   def files
     show_association('files', 'All Files', 'storage_files', :storage_files, StorageFile, 'files')
   end
@@ -251,31 +218,6 @@ class StorageController < ApplicationController
 
   def debris_files
     show_association('debris_files', 'Non-VM Files', 'storage_non_vm_files', :storage_files, StorageFile, 'debris_files')
-  end
-
-  # Build the vm detail gtl view
-  def show_details(db, options={})  # Pass in the db, parent storage is in @storage
-    association = options[:association] || nil
-    condition = options[:conditions] || nil
-
-    # generate the grid/tile/list url to come back here when gtl buttons are pressed
-    @gtl_url = "/storage/" + @lastaction + "/" + @storage.id.to_s + "?"
-
-    @showtype = "details"
-    @no_checkboxes = true
-    @showlinks = true
-
-    @view, @pages = get_view(db,
-                            :parent => @storage,
-                            :association => association,
-                            :conditions => condition) # Get the records into a view & paginator
-
-    # Came in from outside, use RJS to redraw gtl partial
-    if params[:ppsetting]  || params[:searchtag] || params[:entry] || params[:sort_choice]
-      replace_gtl_main_div
-    else
-      render :action => 'show'
-    end
   end
 
   private ############################

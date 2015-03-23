@@ -129,8 +129,12 @@ function cfme_expand_parent_nodes(treename, selected_node){
 
 function cfme_dynatree_node_add_class(treename, key, klass){
   var node = $("#" + treename + "box").dynatree('getTree').getNodeByKey(key);
-  node.data.addClass = klass;
-  node.render();
+  if (node !== null) {
+    node.data.addClass = klass;
+    node.render();
+  } else {
+    console.debug('cannot find node for key: ' + key);
+  }
 }
 
 function cfme_dynatree_node_remove_class(treename, key){
@@ -246,7 +250,7 @@ function miqOnMouseOut_HostNet(id) {
 }
 
 function hover_node_id(id){
-  var ids = id.split('|')[0].split('_');              // Break apart the node ids
+  var ids = id.split('_');                            // Break apart the node ids
   var nid = ids[ids.length - 1];                      // Get the last part of the node id
   return ((nid.split('-')[0] == 'v' ||                // Check for VM node
     nid.split('-')[0] == 'h')                         // or Host node

@@ -52,14 +52,10 @@
       %table(width="100%")
         %tr
           %td(align="right")
-            #buttons
-              %ul#form_buttons
-                %li
-                  = hidden_field_tag(:import_file_upload_id, '', :class => "hidden-import-file-upload-id")
-                  = button_tag(_("Commit"), :class => "import-commit btn btn-primary")
+            = hidden_field_tag(:import_file_upload_id, '', :class => "hidden-import-file-upload-id")
+            = button_tag(_("Commit"), :class => "import-commit btn btn-primary")
 
-                %li
-                  = button_tag(_("Back"), :class => "import-back btn btn-default")
+            = button_tag(_("Back"), :class => "import-back btn btn-default")
 
 :javascript
   $(function() {

@@ -36,7 +36,6 @@ class Host < ActiveRecord::Base
   }
 
   validates_presence_of     :name
-  validates_presence_of     :hostname, :if => :hostname_required?
   validates_uniqueness_of   :name
   validates_inclusion_of    :user_assigned_os, :in => ["linux_generic", "windows_generic", nil]
   validates_inclusion_of    :vmm_vendor, :in => VENDOR_TYPES.values
@@ -180,10 +179,6 @@ class Host < ActiveRecord::Base
   def v_annotation
     return nil if self.hardware.nil?
     self.hardware.annotation
-  end
-
-  def hostname_required?
-    self.vmm_vendor == "vmware"
   end
 
   # host settings
@@ -2141,8 +2136,10 @@ class Host < ActiveRecord::Base
 
     time_range = if range.kind_of?(Array)
       range
-    elsif range.kind_of?(Time) || range.kind_of?(String)
-      [range.to_time.utc, Time.now.utc]
+    elsif range.kind_of?(Time)
+      [range.utc, Time.now.utc]
+    elsif range.kind_of?(String)
+      [range.to_time(:utc), Time.now.utc]
     elsif range.kind_of?(Integer)
       [range.seconds.ago.utc, Time.now.utc]
     else

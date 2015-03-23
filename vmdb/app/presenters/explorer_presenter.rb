@@ -144,8 +144,7 @@ class ExplorerPresenter
     @out << "var show_clear_search = undefined"
     @out << "
       if ($('#advsearchModal').hasClass('modal fade in')){
-        $('#advsearchModal').modal('hide');
-        show_clear_search = true; }"
+        $('#advsearchModal').modal('hide');}"
 
     # Update elements in the DOM with rendered partials
     @options[:update_partials].each { |element, content| @out << update_partial(element, content) }
@@ -213,11 +212,9 @@ class ExplorerPresenter
     @out << @options[:extra_js].join("\n")
 
     # Position the clear_search link
-    @out << "
-      $('.dhtmlxInfoBarLabel').filter(':visible').append($('#clear_search')[0]);
-      miqResizeTaskbarCell();"
+    @out << "$('.dhtmlxInfoBarLabel').filter(':visible').append($('#clear_search')[0]);"
 
-    @out << "if (typeof show_clear_search != 'undefined') $('#clear_search').show();"
+    @out << "$('#clear_search').#{@options[:clear_search_show_or_hide]}();" if @options[:clear_search_show_or_hide]
 
     # Don't turn off spinner for charts/timelines
     @out << set_spinner_off unless @options[:ajax_action]

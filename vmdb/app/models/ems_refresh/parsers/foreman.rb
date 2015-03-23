@@ -97,7 +97,7 @@ module EmsRefresh
         organizations.collect do |m|
           {
             :manager_ref => m["id"].to_s,
-            :type        => "ConfigurationOraganization",
+            :type        => "ConfigurationOrganization",
             :name        => m["name"],
           }
         end

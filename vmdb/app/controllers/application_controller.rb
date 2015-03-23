@@ -102,6 +102,7 @@ class ApplicationController < ActionController::Base
       end
       format.html do                # HTML, send error screen
         @layout = "exception"
+        response.status = 500
         render(:template => "layouts/exception", :locals => { :message => msg })
       end
       format.any { render :nothing => true, :status => 404 }  # Anything else, just send 404
@@ -972,27 +973,16 @@ class ApplicationController < ActionController::Base
       #array of all reports if menu not configured
       @rep = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
       if tree_type == "timeline"
-        @rep.each do |r|
-          if r.timeline != nil
-            @data.push(r)
-          end
-        end
+        @data = @rep.reject { |r| r.timeline.nil? }
       else
-        @rep.each do |r|
-          if r.template_type == "report" && !r.template_type.blank?
-            @data.push(r)
-          end
+        @data = @rep.select do |r|
+          r.template_type == "report" && !r.template_type.blank?
         end
       end
       @data.each do |r|
         next if r.template_type != "report" && ! r.template_type.blank?
         r_group = r.rpt_group == "Custom" ? "#{@sb[:grp_title]} - Custom" : r.rpt_group # Get the report group
-        title = r_group.split('-')
-        i = 0
-        while i < title.length
-          title[i] = title[i].strip
-          i += 1
-        end
+        title = r_group.split('-').collect(&:strip)
         if @temp_title != title[0]
           @temp_title = title[0]
           reports = Array.new
@@ -1027,18 +1017,15 @@ class ApplicationController < ActionController::Base
     else
       # Building custom reports array for super_admin/admin roles, it doesnt show up on menu if their menu was set which didnt contain custom folder in it
       temp = Array.new
-      subfolder = Array.new
-      rep = Array.new
-      @custom_folder = Array.new
-      @custom_folder.push(@sb[:grp_title])
-      subfolder.push("Custom")
+      subfolder = %w{ Custom }
+      @custom_folder = [ @sb[:grp_title] ]
       @custom_folder.push([subfolder]) unless @custom_folder.include?([subfolder])
+
       custom = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
-      custom.each do |r|
-        if r.rpt_type == "Custom" && (user.admin_user? || r.miq_group_id.to_i == session[:group].to_i)
-          rep.push(r.name) unless rep.include?(r.name)
-        end
-      end
+      rep = custom.select do |r|
+        r.rpt_type == "Custom" && (user.admin_user? || r.miq_group_id.to_i == session[:group].to_i)
+      end.map(&:name).uniq
+
       subfolder.push(rep) unless subfolder.include?(rep)
       temp.push(@custom_folder) unless temp.include?(@custom_folder)
       if tree_type == "timeline"
@@ -2108,10 +2095,10 @@ class ApplicationController < ActionController::Base
       page << "miqSetButtons(0,'center_tb');"                             # Reset the center toolbar
       page << "}";
       if ! (@layout == "dashboard" && ["show","change_tab","auth_error"].include?(@controller.action_name) ||
-                @layout == "report" ||
-                ["configuration","about","diagnostics","rss","server_build","product_update",
-                  "my_tasks","my_ui_tasks","all_tasks","all_ui_tasks","miq_ae_tools","miq_policy",
-                  "miq_ae_export","miq_ae_automate_button","miq_ae_customization","miq_ae_logs","miq_policy_logs","miq_policy_export","miq_request_vm","miq_request_host","miq_request_ae"].include?(@layout))
+        ["about", "all_tasks", "all_ui_tasks", "configuration", "diagnostics", "miq_ae_automate_button",
+          "miq_ae_customization", "miq_ae_export", "miq_ae_logs", "miq_ae_tools", "miq_policy", "miq_policy_export",
+          "miq_policy_logs", "miq_request_ae", "miq_request_configured_system", "miq_request_host", "miq_request_vm",
+          "my_tasks", "my_ui_tasks", "product_update", "report", "rss", "server_build"].include?(@layout))
         page.replace(:listnav_div, :partial=>"layouts/listnav")               # Replace accordion, if list_nav_div is there
       end
       if @grid_xml                                  # Replacing a grid
@@ -2324,6 +2311,8 @@ class ApplicationController < ActionController::Base
       when "miq_request"
         session[:tab_url][:svc] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "vm"
         session[:tab_url][:inf] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "host"
+      when "provider_foreman"
+        session[:tab_url][:inf] = inbound_url if %w(show explorer).include?(action_name)
       end
     end
 

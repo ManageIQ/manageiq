@@ -58,7 +58,11 @@ class UserValidationService
                                                 get_vmdb_config[:product][:maindb] &&
                                                   !get_vmdb_config[:product][:maindb].constantize.first
 
-    ValidateResult.new(:pass, nil, start_url_for_user(start_url))
+    startpage = start_url_for_user(start_url)
+    unless startpage
+      return ValidateResult.new(:fail, "The user's role is not authorized for any access, please contact the administrator!")
+    end
+    ValidateResult.new(:pass, nil, startpage)
   end
 
   private

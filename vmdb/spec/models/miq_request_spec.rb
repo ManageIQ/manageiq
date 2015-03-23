@@ -7,14 +7,15 @@ describe MiqRequest do
   context "CONSTANTS" do
     it "REQUEST_TYPES" do
       expected_request_types = {
-        :MiqProvisionRequest             => {:template            => "VM Provision", :clone_to_vm => "VM Clone", :clone_to_template => "VM Publish"},
-        :MiqProvisionRequestTemplate     => {:template            => "VM Provision Template"},
-        :MiqHostProvisionRequest         => {:host_pxe_install    => "Host Provision"},
-        :VmReconfigureRequest            => {:vm_reconfigure      => "VM Reconfigure"},
-        :VmMigrateRequest                => {:vm_migrate          => "VM Migrate"},
-        :AutomationRequest               => {:automation          => "Automation"},
-        :ServiceTemplateProvisionRequest => {:clone_to_service    => "Service Provision"},
-        :ServiceReconfigureRequest       => {:service_reconfigure => "Service Reconfigure"},
+        :MiqProvisionRequest                 => {:template              => "VM Provision", :clone_to_vm => "VM Clone", :clone_to_template => "VM Publish"},
+        :MiqProvisionRequestTemplate         => {:template              => "VM Provision Template"},
+        :MiqHostProvisionRequest             => {:host_pxe_install      => "Host Provision"},
+        :MiqProvisionConfiguredSystemRequest => {:provision_via_foreman => "Foreman Provision"},
+        :VmReconfigureRequest                => {:vm_reconfigure        => "VM Reconfigure"},
+        :VmMigrateRequest                    => {:vm_migrate            => "VM Migrate"},
+        :AutomationRequest                   => {:automation            => "Automation"},
+        :ServiceTemplateProvisionRequest     => {:clone_to_service      => "Service Provision"},
+        :ServiceReconfigureRequest           => {:service_reconfigure   => "Service Reconfigure"},
       }
 
       expect(described_class::REQUEST_TYPES).to eq(expected_request_types)
@@ -57,9 +58,10 @@ describe MiqRequest do
   end
 
   context "A new request" do
-    let(:event_name) { "hello" }
-    let(:request)    { FactoryGirl.create(:miq_request, :requester => fred) }
-    let(:template)   { FactoryGirl.create(:template_vmware) }
+    let(:event_name)   { "hello" }
+    let(:host_request) { FactoryGirl.build(:miq_host_provision_request, :options => {:src_host_ids => [1]}) }
+    let(:request)      { FactoryGirl.create(:miq_request, :requester => fred) }
+    let(:template)     { FactoryGirl.create(:template_vmware) }
 
     it { expect(request).to be_valid }
     describe("#request_type_display") { it { expect(request.request_type_display).to eq("Unknown") } }
@@ -67,6 +69,29 @@ describe MiqRequest do
 
     it "should not fail when using :select" do
       expect { MiqRequest.find(:all, :select => "requester_name") }.to_not raise_error
+    end
+
+    context "#set_description" do
+      it "should set a description when nil" do
+        expect(host_request.description).to be_nil
+        host_request.should_receive(:update_attributes).with(:description => "PXE install on [] from image []")
+
+        host_request.set_description
+      end
+
+      it "should not set description when one exists" do
+        host_request.description = "test description"
+        host_request.set_description
+
+        expect(host_request.description).to eq("test description")
+      end
+
+      it "should set description when :force => true" do
+        host_request.description = "test description"
+        host_request.should_receive(:update_attributes).with(:description => "PXE install on [] from image []")
+
+        host_request.set_description(true)
+      end
     end
 
     it "#call_automate_event_queue" do
@@ -264,6 +289,40 @@ describe MiqRequest do
       expect(provision_request.status).to         eq('Denied')
       expect(provision_request.request_state).to  eq('finished')
       expect(provision_request.approval_state).to eq('denied')
+    end
+  end
+
+  context '#post_create_request_tasks' do
+    context 'VM provisioning' do
+      let(:description) { 'my original information' }
+      let(:template)    { FactoryGirl.create(:template_vmware, :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication)) }
+      let(:request)     { FactoryGirl.build(:miq_provision_request, :userid => fred.userid, :description => description, :src_vm_id => template.id) }
+
+      it 'with 1 task' do
+        request.options[:src_vm_id] = template.id
+        request.create_request_task(template.id)
+        request.post_create_request_tasks
+        expect(request.description).to_not eq(description)
+      end
+
+      it 'with 0 tasks' do
+        request.stub(:requested_task_idx).and_return([])
+        request.post_create_request_tasks
+        expect(request.description).to eq(description)
+      end
+
+      it 'with >1 tasks' do
+        request.stub(:requested_task_idx).and_return([1, 2])
+        request.post_create_request_tasks
+        expect(request.description).to eq(description)
+      end
+    end
+
+    it 'non VM provisioning' do
+      description = 'Service Request'
+      request   = FactoryGirl.create(:service_template_provision_request, :description => description, :userid => fred.userid)
+      request.post_create_request_tasks
+      expect(request.description).to eq(description)
     end
   end
 end

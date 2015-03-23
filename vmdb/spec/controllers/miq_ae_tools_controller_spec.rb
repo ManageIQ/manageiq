@@ -44,7 +44,7 @@ describe MiqAeToolsController do
 
     it "returns the flash messages" do
       xhr :post, :cancel_import, params
-      expect(response.body).to eq([{:message => "Datastore import was cancelled", :level => :info}].to_json)
+      expect(response.body).to eq([{:message => "Datastore import was cancelled or is finished", :level => :info}].to_json)
     end
   end
 

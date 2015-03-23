@@ -15,6 +15,10 @@ module EmsRefresh
     false
   end
 
+  # If true, Refreshers will raise any exceptions encountered, instead
+  # of quietly recording them as failures and continuing.
+  mattr_accessor :debug_failures
+
   # Development helper method for setting up the selector specs for VC
   def self.init_console(use_vim_broker = false)
     EmsRefresh::Refreshers::VcRefresher.init_console(use_vim_broker)
@@ -193,8 +197,13 @@ module EmsRefresh
       # If a vm failed to process, mark it as invalid and log an error
       hash[:invalid] = true
       name = hash[:name] || hash[:uid_ems] || hash[:ems_ref]
-      $log.send(err.kind_of?(MiqException::MiqIncompleteData) ? :warn : :error, "#{log_header} Processing Vm: [#{name}] failed with error [#{err}]. Skipping Vm.")
-      $log.log_backtrace(err) unless err.kind_of?(MiqException::MiqIncompleteData)
+      if err.kind_of?(MiqException::MiqIncompleteData)
+        $log.warn("#{log_header} Processing Vm: [#{name}] failed with error [#{err}]. Skipping Vm.")
+      else
+        raise if EmsRefresh.debug_failures
+        $log.error("#{log_header} Processing Vm: [#{name}] failed with error [#{err}]. Skipping Vm.")
+        $log.log_backtrace(err)
+      end
     end
   end
 

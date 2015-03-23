@@ -101,14 +101,15 @@ module VmCommon
     options = case console_type
               when "mks"
                 @sb[:mks].update(
-                  'version' => get_vmdb_config[:server][:mks_version]
+                  :version     => get_vmdb_config[:server][:mks_version],
+                  :mks_classid => get_vmdb_config[:server][:mks_classid]
                 )
               when "vmrc"
                 {
                   :host        => @record.ext_management_system.ipaddress ||
                                   @record.ext_management_system.hostname,
                   :vmid        => @record.ems_ref,
-                  :ticket      => @sb[:vmrc_ticket],
+                  :ticket      => @sb[:vmrc],
                   :api_version => @record.ext_management_system.api_version.to_s,
                   :os          => browser_info(:os).downcase,
                   :name        => @record.name
@@ -119,9 +120,14 @@ module VmCommon
            :locals   => options
   end
 
+  def websocket_use_ssl?
+    ssl_requested = get_vmdb_config.fetch_path(:server, :websocket, :encrypt)
+    request.ssl? ? ssl_requested != false : ssl_requested == true
+  end
+  private :websocket_use_ssl?
+
   def launch_html5_console
     password, host_address, host_port, _proxy_address, _proxy_port, protocol, ssl = @sb[:html5]
-    encrypt = get_vmdb_config.fetch_path(:server, :websocket_encrypt)
 
     case protocol
     when 'spice'     # spice, vnc - from rhevm
@@ -137,8 +143,8 @@ module VmCommon
       :host       => host_address,
       :host_port  => host_port,
       :password   => password,
-      :ssl_target => ssl,       # ssl on provider side
-      :encrypt    => encrypt    # ssl on web client side
+      :ssl_target => ssl,               # ssl on provider side
+      :encrypt    => websocket_use_ssl? # ssl on web client side
     )
     raise _("Console access failed: proxy errror") if proxy_options.nil?
 
@@ -325,12 +331,12 @@ module VmCommon
   end
 
   def vmtree(vm)
-    session[:base_vm] = "_h-" + vm.id.to_s + "|"
+    session[:base_vm] = "_h-" + vm.id.to_s
     if vm.parents.length > 0
       vm_parent = vm.parents
       @tree_vms.push(vm_parent[0]) unless @tree_vms.include?(vm_parent[0])
       parent_node = Hash.new
-      session[:parent_vm] = "_v-" + vm_parent[0].id.to_s  + "|"       # setting base node id to be passed for check/uncheck all button
+      session[:parent_vm] = "_v-" + vm_parent[0].id.to_s       # setting base node id to be passed for check/uncheck all button
       image = ""
       if vm_parent[0].retired == true
         image = "retired.png"
@@ -346,7 +352,7 @@ module VmCommon
         end
       end
       parent_node = TreeNodeBuilder.generic_tree_node(
-        "_v-#{vm_parent[0].id}|",
+        "_v-#{vm_parent[0].id}",
         "#{vm_parent[0].name} (Parent)",
         image,
         "VM: #{vm_parent[0].name} (Click to view)",
@@ -373,11 +379,11 @@ module VmCommon
   # Recursive method to build a snapshot tree node
   def vm_kidstree(vm)
     branch = Hash.new
-    key = "_v-#{vm.id}|"
+    key = "_v-#{vm.id}"
     title = vm.name
     style = ""
     tooltip = "VM: #{vm.name} (Click to view)"
-    if session[:base_vm] == "_h-#{vm.id}|"
+    if session[:base_vm] == "_h-#{vm.id}"
       title << " (Selected)"
       key = session[:base_vm]
       style = "dynatree-cfme-active cfme-no-cursor-node"
@@ -465,11 +471,10 @@ module VmCommon
 
   def vmtree_selected
     base = params[:id].split('-')
-    base = base[1].slice(0,base[1].length-1)
-    session[:base_vm] = "_h-" + base.to_s
+    session[:base_vm] = "_h-#{base[1]}"
     @display = "vmtree_info"
     render :update do |page|                    # Use RJS to update the display
-      page.redirect_to :action=>"show", :id=>base,:vm_tree=>"vmtree_info"
+      page.redirect_to :action => "show", :id => base[1], :vm_tree => "vmtree_info"
     end
   end
 
@@ -611,46 +616,6 @@ module VmCommon
     new_column = head.add_element("column", {"width"=>"#{col_width}","sort"=>"na"})
     new_column.add_attribute("type", 'ro')
     new_column.text = "Percent Used of Provisioned Size"
-  end
-
-  def show_association(action, display_name, listicon, method, klass, association = nil)
-    @explorer = true if request.xml_http_request? # Ajax request means in explorer
-    if @explorer  # Save vars for tree history array
-      @action = action
-      @x_show = params[:x_show]
-    end
-    @vm = @record = identify_record(params[:id], VmOrTemplate)
-    return if record_no_longer_exists?(@vm)
-    rec_cls = "vm"
-
-    @sb[:action] = @lastaction = action
-    if params[:show] != nil || params[:x_show] != nil
-      id = params[:show] ? params[:show] : params[:x_show]
-      if method.kind_of?(Array)
-        obj = @record
-        while meth = method.shift do
-          obj = obj.send(meth)
-        end
-        @item = obj.find(from_cid(id))
-      else
-        @item = @record.send(method).find(from_cid(id))
-      end
-
-      drop_breadcrumb( { :name => "#{@record.name} (#{display_name})", :url=>"/#{rec_cls}/#{action}/#{@record.id}?page=#{@current_page}"} )
-      drop_breadcrumb( { :name => @item.name,                      :url=>"/#{rec_cls}/#{action}/#{@record.id}?show=#{@item.id}"} )
-      @view = get_db_view(klass, :association=>association)
-      show_item
-    else
-      drop_breadcrumb( { :name => @record.name,                        :url=>"/#{rec_cls}/show/#{@record.id}"}, true )
-      drop_breadcrumb( { :name => "#{@record.name} (#{display_name})", :url=>"/#{rec_cls}/#{action}/#{@record.id}"} )
-      @listicon = listicon
-      if association.nil?
-        show_details(klass)
-      else
-        show_details(klass, :association => association )
-      end
-    end
-
   end
 
   def processes
@@ -1783,6 +1748,7 @@ module VmCommon
 
     # Hide/show searchbox depending on if a list is showing
     presenter[:set_visible_elements][:adv_searchbox_div] = !(@record || @in_a_form)
+    presenter[:clear_search_show_or_hide] = clear_search_show_or_hide
 
     presenter[:osf_node] = x_node  # Open, select, and focus on this node
 

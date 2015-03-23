@@ -1,7 +1,7 @@
 !!! Strict
 %html
   %head
-    - if %w(5.1 5.5).include?(@vmrc[:api_version]) && is_browser_ie? && browser_info("version").to_i > 9
+    - if %w(5.1 5.5).include?(api_version) && is_browser_ie? && browser_info("version").to_i > 9
       %meta{:content => "IE=8", "http-equiv" => "X-UA-Compatible"}
     %meta{:content => "text/html; charset=ISO-8859-1", "http-equiv" => "Content-Type"}
     = stylesheet_link_tag "vmrc"
@@ -340,12 +340,12 @@
 
         var startupId = vmrc.startup(2, 2, "");
 
-        ticket = "#{@vmrc[:ticket]}";
+        ticket = "#{ticket}";
 
         if (startupId) {
           console.info("VMRC startup: " + startupId);
 
-        var connected = vmrc.connect("#{@vmrc[:host]}", "", true, ticket, "", "", "#{@vmrc[:vmid]}", "", "");
+        var connected = vmrc.connect("#{host}", "", true, ticket, "", "", "#{vmid}", "", "");
 
           if (connected) {
             console.info("VMRC connected successfully.");
@@ -391,9 +391,9 @@
 
         initVmrc();
 
-        #{@vmrc[:os] == 'linux' ? '$(vmrc).height($(window).height() - ($("#container").offset().top + 10));' : '$(vmrc).width( $(window).width());'}
+        #{os == 'linux' ? '$(vmrc).height($(window).height() - ($("#container").offset().top + 10));' : '$(vmrc).width( $(window).width());'}
 
-        } catch (error) {
+      } catch (error) {
         hideSpinner();
         console.error(error);
 
@@ -442,11 +442,12 @@
       =_('The Remote Console is connecting')
       \...
     #container
-      / [if IE]
-        %object#vmrc{:classid => "CLSID:4AEA1010-0A0C-405E-9B74-767FC8A998CB"}
-      / else
-      / [if !IE]
-        %object#vmrc{:type => "application/x-vmware-remote-console-2012"}
-      / <![endif]
+      :plain
+        <!--[if IE]>
+          <object id='vmrc' classid='CLSID:4AEA1010-0A0C-405E-9B74-767FC8A998CB'></object>
+        <![endif]-->
+        <!--[if !IE]> -->
+          <object id='vmrc' type='application/x-vmware-remote-console-2012'></object>
+        <!-- <![endif]-->
     #glassPane
     #spinner

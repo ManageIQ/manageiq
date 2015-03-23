@@ -44,4 +44,11 @@ describe EmsOpenstack do
     end
   end
 
+  it "event_monitor_options" do
+    MiqEventCatcherOpenstack.stub(:worker_settings => {:amqp_port => 1234})
+    @ems = FactoryGirl.build(:ems_openstack, :hostname => "host", :ipaddress => "::1")
+    require 'openstack/openstack_event_monitor'
+
+    @ems.event_monitor_options.should == {:hostname => "host", :port => 1234}
+  end
 end

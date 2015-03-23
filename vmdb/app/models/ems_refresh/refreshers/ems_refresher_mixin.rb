@@ -29,6 +29,8 @@ module EmsRefresh
             end
             save_inventory(ems, targets, hashes)
           rescue => e
+            raise if EmsRefresh.debug_failures
+
             $log.error("#{log_ems_target} Refresh failed")
             $log.log_backtrace(e)
             $log.error("#{log_ems_target} Unable to perform refresh for the following targets:")

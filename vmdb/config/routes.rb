@@ -191,8 +191,11 @@ Vmdb::Application.routes.draw do
         group_form_field_changed
         group_update
         identify_catalog
+        orchestration_template_add
         orchestration_template_copy
         orchestration_template_edit
+        ot_add_form_field_changed
+        ot_add_submit
         ot_copy_submit
         ot_edit_submit
         ot_form_field_changed
@@ -969,6 +972,7 @@ Vmdb::Application.routes.draw do
         retrieve_email
         save_col_widths
         show_list
+        sort_configured_system_grid
         sort_ds_grid
         sort_host_grid
         sort_iso_img_grid
@@ -1258,6 +1262,43 @@ Vmdb::Application.routes.draw do
         adv_search_post +
         exp_post +
         save_post
+    },
+
+    :provider_foreman => {
+      :get  => %w(
+        download_data
+        explorer
+        provider_foreman_form_fields
+        show
+      ),
+      :post => %w(
+        accordion_select
+        authentication_validate
+        button
+        delete
+        edit
+        explorer
+        exp_button
+        exp_changed
+        exp_token_pressed
+        form_field_changed
+        new
+        panel_control
+        quick_search
+        refresh
+        reload
+        save_col_widths
+        show
+        show_list
+        tree_autoload_dynatree
+        tree_select
+        users
+        wait_for_task
+        x_button
+        x_history
+        x_search_by_name
+        x_show
+      ) + adv_search_post
     },
 
     :pxe => {

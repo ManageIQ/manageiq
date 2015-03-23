@@ -15,13 +15,13 @@
                   {:multiple => true, :style => "width: 450px", :size => 20, :id => "seq_fields"})
               %td{:width => "30", :align => "left", :valign => "middle"}
                 = link_image_if(:cond => (@edit[:new][:domain_order].length < 2),
-                  :img                => "/images/toolbars/up.png",
+                  :image                => "/images/toolbars/up.png",
                   :opts_true          => {:class  => "dimmed small"},
                   :opts_false         => {:class  => "rollover small", :alt => t = _("Move selected fields up")},
                   :link               => {:action => 'priority_form_field_changed', :button => 'up', :id => "priority__edit"},
                   :opts_link          => {:remote => true, "data-submit" => "domains_list", :title => t})
                 = link_image_if(:cond => (@edit[:new][:domain_order].length < 2),
-                  :img                => "/images/toolbars/down.png",
+                  :image                => "/images/toolbars/down.png",
                   :opts_true          => {:class => "dimmed small"},
                   :opts_false         => {:class => "rollover small", :alt => (t = _("Move selected fields down"))},
                   :link               => {:action => 'priority_form_field_changed', :button => 'down', :id => "priority__edit"},

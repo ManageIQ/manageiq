@@ -482,44 +482,11 @@ module ApplicationController::Filter
     @edit = session[:edit]
     @edit[:selected] = true # Set a flag, this is checked whether to load initial default or clear was clicked
     if id.to_i == 0
-      @edit[:adv_search_applied] = nil
-      @edit[@expkey][:expression] = {"???"=>"???"}                              # Set as new exp element
-      @edit[:new][@expkey] = copy_hash(@edit[@expkey][:expression])             # Copy to new exp
-      exp_array(:init, @edit[@expkey][:expression])                             # Initialize the exp array
-      @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression]) # Rebuild the expression table
-      #@edit[@expkey][:exp_last_loaded] = nil                                   # Clear the last search loaded
-      #@edit[@expkey][:exp_last_loaded] = {:id=>0}                                # Save the last search loaded
-      @edit[@expkey][:selected] = {:id=>0}                                      # Save the last search loaded
-      @edit[:adv_search_name] = nil                                             # Clear search name
-      @edit[:adv_search_report] = nil                                           # Clear the report name
+      clear_selected_search
     else
-      @expkey = :expression     # Reset to use default expression key
-      @edit[:new] = Hash.new
-      s = MiqSearch.find(id.to_s)
-      @edit[:new][@expkey] = s.filter.exp
-      if s.filter.quick_search?
-        @quick_search_active = true
-        @edit[:qs_prev_x_node] = x_node if @edit[:in_explorer] # Remember current tree node
-        @edit[@expkey][:pre_qs_selected] = @edit[@expkey][:selected]            # Save previous selected search
-        @edit[:qs_prev_adv_search_applied] = @edit[:adv_search_applied]         # Save any existing adv search
-      end
-      @edit[@expkey][:selected] = {:id=>s.id, :name=>s.name, :description=>s.description, :typ=>s.search_type}        # Save the last search loaded
-      @edit[:new_search_name] = @edit[:adv_search_name] = @edit[@expkey][:selected] == nil ? nil : @edit[@expkey][:selected][:description]
-      @edit[@expkey][:expression] = copy_hash(@edit[:new][@expkey])
-      @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression])       # Build the expression table
-      exp_array(:init, @edit[@expkey][:expression])
-      @edit[@expkey][:exp_token] = nil                                        # Clear the current selected token
-      @edit[:adv_search_applied] = Hash.new
-#      if s.filter.quick_search?
-#        @edit[:qs_prev_x_node] = x_node # Remember current tree node
-#      end
-      adv_search_set_text # Set search text filter suffix
-      @edit[:adv_search_applied][:exp] = @edit[:new][@expkey]   # Save the expression to be applied
-      @edit[@expkey].delete(:exp_token)                         # Remove any existing atom being edited
-      @edit[:adv_search_open] = false                           # Close the adv search box
+      load_selected_search(id)
     end
-    session[:adv_search] ||= Hash.new                         # Create/reuse the adv search hash
-    session[:adv_search][@edit[@expkey][:exp_model]] = copy_hash(@edit) # Save by model name in settings
+
     unless @explorer
       respond_to do |format|
         format.js do
@@ -536,6 +503,49 @@ module ApplicationController::Filter
         end
       end
     end
+  end
+
+  def clear_selected_search
+    @edit[:adv_search_applied] = nil
+    @edit[@expkey][:expression] = {"???" => "???"}                            # Set as new exp element
+    @edit[:new][@expkey] = copy_hash(@edit[@expkey][:expression])             # Copy to new exp
+    exp_array(:init, @edit[@expkey][:expression])                             # Initialize the exp array
+    @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression]) # Rebuild the expression table
+    @edit[@expkey][:selected] = {:id => 0}                                    # Save the last search loaded
+    @edit[:adv_search_name] = nil                                             # Clear search name
+    @edit[:adv_search_report] = nil                                           # Clear the report name
+    session[:adv_search] ||= {}                                               # Create/reuse the adv search hash
+    session[:adv_search][@edit[@expkey][:exp_model]] = copy_hash(@edit)       # Save by model name in settings
+  end
+
+  def load_selected_search(id)
+    @expkey = :expression     # Reset to use default expression key
+    @edit[:new] = {}
+    s = MiqSearch.find(id.to_s)
+    @edit[:new][@expkey] = s.filter.exp
+    if s.filter.quick_search?
+      @quick_search_active = true
+      @edit[:qs_prev_x_node] = x_node if @edit[:in_explorer] # Remember current tree node
+      @edit[@expkey][:pre_qs_selected] = @edit[@expkey][:selected]            # Save previous selected search
+      @edit[:qs_prev_adv_search_applied] = @edit[:adv_search_applied]         # Save any existing adv search
+    end
+    @edit[@expkey][:selected] = {:id          => s.id,
+                                 :name        => s.name,
+                                 :description => s.description,
+                                 :typ         => s.search_type}               # Save the last search loaded
+    @edit[:new_search_name] = @edit[:adv_search_name] = @edit.fetch_path(@expkey, :selected, :description)
+    @edit[@expkey][:expression] = copy_hash(@edit[:new][@expkey])
+    @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression]) # Build the expression table
+    exp_array(:init, @edit[@expkey][:expression])
+    @edit[@expkey][:exp_token] = nil                                        # Clear the current selected token
+    @edit[:adv_search_applied] = {}
+
+    adv_search_set_text                                                 # Set search text filter suffix
+    @edit[:adv_search_applied][:exp] = @edit[:new][@expkey]             # Save the expression to be applied
+    @edit[@expkey].delete(:exp_token)                                   # Remove any existing atom being edited
+    @edit[:adv_search_open] = false                                     # Close the adv search box
+    session[:adv_search] ||= {}                                         # Create/reuse the adv search hash
+    session[:adv_search][@edit[@expkey][:exp_model]] = copy_hash(@edit) # Save by model name in settings
   end
 
   def clear_default_search
@@ -772,7 +782,11 @@ module ApplicationController::Filter
 
     if ["delete","saveit"].include?(params[:button])
       if @edit[:in_explorer]
-        build_vm_tree(:filter, x_active_tree) # Rebuild active VM filter tree
+        if "cs_filter_tree" == x_active_tree.to_s
+          build_foreman_tree(:filter, x_active_tree)
+        else
+          build_vm_tree(:filter, x_active_tree) # Rebuild active VM filter tree
+        end
       else
         build_listnav_search_list(@edit[@expkey][:exp_model])
       end
@@ -793,7 +807,11 @@ module ApplicationController::Filter
       if ["delete","saveit"].include?(params[:button])
         if @edit[:in_explorer]
           tree = x_active_tree.to_s
-          page.replace_html("#{tree}_div", :partial=>"vm_common/#{tree}")
+          if "cs_filter_tree" == tree
+            page.replace_html("#{tree}_div", :partial => "provider_foreman/#{tree}")
+          else
+            page.replace_html("#{tree}_div", :partial => "vm_common/#{tree}")
+          end
         else
           page.replace(:listnav_div, :partial=>"layouts/listnav")
         end
@@ -844,7 +862,11 @@ module ApplicationController::Filter
         if x_tree[:type] == :filter &&
             !["Vm", "MiqTemplate"].include?(TreeBuilder.get_model_for_prefix(@nodetype))
           search_id = 0
-          adv_search_build(vm_model_from_active_tree(x_active_tree))
+          if x_active_tree == :cs_filter_tree
+            adv_search_build("ConfiguredSystem")
+          else
+            adv_search_build(vm_model_from_active_tree(x_active_tree))
+          end
           session[:edit] = @edit              # Set because next method will restore @edit from session
           listnav_search_selected(search_id)  # Clear or set the adv search filter
           self.x_node = "root"
@@ -1026,6 +1048,7 @@ module ApplicationController::Filter
       page << javascript_show("blocker_div")
       page << javascript_show("quicksearchbox")
       page << "$('#quicksearchbox').addClass('modal fade in');"
+      page << "if (miqDomElementExists('value_1')) $('#value_1').focus();"
       page << "miqSparkle(false);"
     end
   end

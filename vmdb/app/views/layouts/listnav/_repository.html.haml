@@ -6,9 +6,9 @@
     = patternfly_accordion_panel(_("Properties"), false, "repo_prop") do
       %ul.nav.nav-pills.nav-stacked
         %li
-        = link_to(_('Summary'),
-          {:action => 'show', :id => @record, :display => 'main'},
-          :title => _("Show Summary"))
+          = link_to(_('Summary'),
+            {:action => 'show', :id => @record, :display => 'main'},
+            :title => _("Show Summary"))
 
     = patternfly_accordion_panel(_("Relationships"), false, "repo_rel") do
       %ul.nav.nav-pills.nav-stacked

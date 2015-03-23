@@ -70,8 +70,8 @@ module OpsController::Settings::Upload
           end
         end
       rescue StandardError => bang
-         msg = _("Error during '%s': ") % "upload" << bang
-         err = true
+        msg = _("Error during '%s': ") % "upload" << bang.message
+        err = true
       else
         imp.errors.each do |field,msg|
           msg = msg

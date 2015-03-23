@@ -128,6 +128,8 @@ module ApplicationHelper
       return url_for(:controller=>@record.class.to_s.underscore, :action=>"snia_local_file_systems", :id=>@record, :show=>@id)
     elsif db == "MiqCimInstance" && @db && @db == "cim_base_storage_extent"
       return url_for(:controller=>@record.class.to_s.underscore, :action=>"cim_base_storage_extents", :id=>@record, :show=>@id)
+    elsif db == "ConfiguredSystem"
+      return url_for(:controller => "provider_foreman", :action => @lastaction, :id => @record, :show => @id)
     else
       controller, action = db_to_controller(db, action)
       return url_for(:controller=>controller, :action=>action, :id=>@id)
@@ -172,6 +174,11 @@ module ApplicationHelper
           elsif ["Vm"].include?(view.db) && parent && request.parameters[:controller] != "vm"
             # this is to handle link to a vm in vm explorer from service explorer
             return url_for(:controller=>"vm_or_template", :action=>"show") + "/"
+          elsif %w(ConfigurationProfile).include?(view.db) &&
+                request.parameters[:controller] == "provider_foreman"
+            return url_for(:action => action, :id => nil) + "/"
+          elsif %w(ConfiguredSystem).include?(view.db) && request.parameters[:controller] == "provider_foreman"
+            return url_for(:action => action, :id => nil) + "/"
           else
             return url_for(:action=>action) + "/" # In explorer, don't jump to other controllers
           end
@@ -1013,10 +1020,7 @@ module ApplicationHelper
         return true unless @perf_options[:typ] == "realtime"
       end
     when "OrchestrationTemplate", "OrchestrationTemplateCfn", "OrchestrationTemplateHot"
-      case id
-      when "orchestration_template_edit", "orchestration_template_copy", "orchestration_template_remove"
-        return true unless role_allows(:feature => "orchestration_templates_admin")
-      end
+      return true unless role_allows(:feature => id)
     when "NilClass"
       case id
       when "action_new"
@@ -1037,6 +1041,8 @@ module ApplicationHelper
         return true if ["workers", "evm_logs", "audit_logs"].include?(@lastaction)
       when "orchestration_template_edit", "orchestration_template_copy", "orchestration_template_remove"
         return true unless @report
+      when "orchestration_template_add"
+        return true unless role_allows(:feature => "orchestration_template_add")
       when "policy_new"
         return true unless role_allows(:feature => "policy_new")
       when "profile_new"
@@ -1261,6 +1267,11 @@ module ApplicationHelper
       case id
       when "db_delete"
         return "Default Dashboard cannot be deleted" if @db.read_only
+      end
+    when "OrchestrationTemplateCfn", "OrchestrationTemplateHot"
+      case id
+      when "orchestration_template_remove"
+        return "Read-only Orchestration Template cannot be deleted" if @record.stacks.length > 0
       end
     when "Service"
       case id
@@ -1557,7 +1568,8 @@ module ApplicationHelper
 
   # Derive the browser title text based on the layout value
   def title_from_layout(layout)
-    title = _("ManageIQ")
+    # TODO: leave I18n until we have productization capability in gettext
+    title = I18n.t('product.name')
     if layout.blank?  # no layout, leave title alone
     elsif ["configuration", "dashboard", "chargeback", "about"].include?(layout)
       title += ": #{layout.titleize}"
@@ -1927,6 +1939,10 @@ module ApplicationHelper
         end
       elsif @layout == "miq_policy_rsop"
         return session[:rsop_tree] ? "miq_policy_rsop_center_tb" : "blank_view_tb"
+      elsif @layout == "provider_foreman"
+        if x_active_tree == :foreman_providers_tree || :cs_filter_tree
+          return center_toolbar_filename_foreman_providers
+        end
       else
         if x_active_tree == :ae_tree
           return center_toolbar_filename_automate
@@ -2043,7 +2059,11 @@ module ApplicationHelper
         return "services_center_tb"
       end
     elsif x_active_tree == :ot_tree
-      return "ot_center_tb"
+      if %w(root xx-otcfn xx-othot).include?(x_node)
+        return "ot_list_center_tb"
+      else
+        return "ot_center_tb"
+      end
     end
   end
 
@@ -2279,7 +2299,7 @@ module ApplicationHelper
           return "diagnostics_center_tb"
         elsif @layout == "miq_policy_logs" || @layout == "miq_ae_logs"
           return "logs_center_tb"
-        elsif ["miq_request_host","miq_request_vm"].include?(@layout)
+        elsif ["miq_request_configured_system", "miq_request_host", "miq_request_vm"].include?(@layout)
           if ["show_list"].include?(@lastaction)
             return "miq_requests_center_tb"
           else
@@ -2291,6 +2311,29 @@ module ApplicationHelper
       end
     end
     return "blank_view_tb"
+  end
+
+  def center_toolbar_filename_foreman_providers
+    nodes = x_node.split('-')
+    if x_active_tree == :foreman_providers_tree
+      foreman_providers_tree_center_tb(nodes)
+    elsif x_active_tree == :cs_filter_tree
+      cs_filter_tree_center_tb(nodes)
+    end
+  end
+
+  def foreman_providers_tree_center_tb(nodes)
+    case nodes.first
+    when "root" then  "provider_foreman_center_tb"
+    when "e"  then  "configuration_profile_foreman_center_tb"
+    when "cp"   then  "configured_system_foreman_center_tb"
+    end
+  end
+
+  def cs_filter_tree_center_tb(nodes)
+    case nodes.first
+    when "root", "ms" then  "configured_system_foreman_center_tb"
+    end
   end
 
   # check if back to summary button needs to be show
@@ -2667,7 +2710,10 @@ module ApplicationHelper
                      orchestration_stack repository resource_pool retired security_group service
                      snia_local_file_system storage storage_manager templates vm)
     (@lastaction == "show_list" && !session[:menu_click] && show_search.include?(@layout) && !@in_a_form) ||
-      (@explorer && x_tree && [:containers, :filter, :images, :instances, :vandt].include?(x_tree[:type]) && !@record)
+      (@explorer &&
+       x_tree &&
+       [:containers, :filter, :images, :instances, :providers, :vandt].include?(x_tree[:type]) &&
+       !@record)
   end
 
   def need_prov_dialogs?(type)

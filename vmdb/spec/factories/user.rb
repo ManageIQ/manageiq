@@ -13,6 +13,11 @@ FactoryGirl.define do
     password_digest "$2a$10$FTbGT/y/PQ1HvoOoc1FcyuuTtHzfop/uG/mcEAJLYpzmsUIJcGT7W"
   end
 
+  factory :user_with_email, :parent => :user do
+    sequence(:userid) { |s| "user#{s}" }
+    sequence(:email) { |s| "user#{s}@example.com" }
+  end
+
   factory :user_admin, :parent => :user do
     userid          "admin"
     name            "Administrator"

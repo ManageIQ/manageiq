@@ -4,6 +4,8 @@
       - img = "cim_base_storage_extent"
     - else
       - img = item.class.to_s.underscore
+  - elsif item.kind_of?(ConfigurationManagerForeman)
+    - img = "vendor-foreman_configuration"
   - else
     - img = item.class.base_class.to_s.underscore
   .flobj

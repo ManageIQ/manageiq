@@ -2078,8 +2078,8 @@ private
 
   def get_rec_name(rec)
     column = rec.display_name.blank? ? :name : :display_name
-    if rec.kind_of?(MiqAeNamespace) && rec.domain? && !rec.editable?
-      add_read_only_suffix(rec.send(column))
+    if rec.kind_of?(MiqAeNamespace) && rec.domain? && (!rec.editable? || !rec.enabled)
+      add_read_only_suffix(rec, rec.send(column))
     else
       rec.send(column)
     end
@@ -2719,7 +2719,7 @@ private
     }
     domains = MiqAeDomain.order('priority DESC')
     order = @edit[:new][:domain_order]
-    domains.collect { |d| order.push("#{d.editable? ? d.name : add_read_only_suffix(d.name)}") unless d.priority == 0 }
+    domains.collect { |d| order.push("#{d.editable? ? d.name : add_read_only_suffix(d, d.name)}") unless d.priority == 0 }
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit]  = @edit
   end

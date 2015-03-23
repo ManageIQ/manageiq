@@ -508,16 +508,12 @@ module ApplicationController::CiProcessing
 
     # Build the vm detail gtl view
   def show_details(db, options={})  # Pass in the db, parent vm is in @vm
-    dbname = db.to_s.downcase
-    association = options[:association] || nil
-
+    association    = options[:association] || nil
     # generate the grid/tile/list url to come back here when gtl buttons are pressed
-    @gtl_url = "/#{@db}/" + @listicon.pluralize + "/" + @record.id.to_s + "?"
-
-    @showtype = "details"
-
+    @gtl_url       = "/#{@db}/#{@listicon.pluralize}/#{@record.id.to_s}?"
+    @showtype      = "details"
     @no_checkboxes = true
-    @showlinks = true
+    @showlinks     = true
 
     @view, @pages = get_view(db,
                             :parent=>@record,
@@ -948,7 +944,7 @@ module ApplicationController::CiProcessing
     @lastaction  = "show_list"
     @gtl_url = "/#{self.class.table_name}/show_list/?"
 
-    model = options.delete(:model)  # Get passed in model override
+    model = options.delete(:model) # Get passed in model override
     @view, @pages = get_view(model || self.class.model, options)  # Get the records (into a view) and the paginator
     if session[:bc] && session[:menu_click]               # See if we came from a perf chart menu click
       drop_breadcrumb( {:name => session[:bc],
@@ -1112,6 +1108,8 @@ module ApplicationController::CiProcessing
       else
         if request.parameters["controller"] == "service"
           self.send("process_services", vms, method)
+        elsif request.parameters["controller"] == "provider_foreman"
+          process_foreman(vms, method) unless vms.empty?
         else
           self.send("process_vms", vms, method, display_name)
         end
@@ -1132,6 +1130,8 @@ module ApplicationController::CiProcessing
         vms.push(params[:id])
         if request.parameters["controller"] == "service"
           self.send("process_services", vms, method) unless vms.empty?
+        elsif request.parameters["controller"] == "provider_foreman"
+          process_foreman(vms, method) unless vms.empty?
         else
           self.send("process_vms", vms, method, display_name) unless vms.empty?
         end
@@ -1197,6 +1197,21 @@ module ApplicationController::CiProcessing
     end
   end
 
+  def process_foreman(providers, task)
+    providers, _services_out_region = filter_ids_in_region(providers, "ConfigurationManagerForeman")
+    return if providers.empty?
+
+    options = {:ids => providers, :task => task, :userid => session[:userid]}
+    kls = ConfigurationManagerForeman.find_by_id(providers.first).class.base_model
+    ConfigurationManagerForeman.process_tasks(options)
+    rescue StandardError => bang                            # Catch any errors
+      add_flash(_("Error during '%s': ") % task << bang.message, :error)
+  else
+    add_flash(_("%{task} initiated for %{count_model} (Foreman) from the CFME Database") %
+      {:task        => Dictionary.gettext(task, :type => :task).titleize,
+       :count_model => pluralize(providers.length, ui_lookup(:model => kls.to_s))})
+  end
+
   # Delete all selected or single displayed VM(s)
   def deletevms
     assert_privileges(params[:pressed])
@@ -1213,9 +1228,17 @@ module ApplicationController::CiProcessing
     vm_button_operation('sync', 'for Virtual Black Box synchronization')
   end
 
+  DEFAULT_PRIVILEGE = Object.new # :nodoc:
+
   # Refresh the power states for selected or single VMs
-  def refreshvms
-    assert_privileges(params[:pressed])
+  def refreshvms(privilege = DEFAULT_PRIVILEGE)
+    if privilege == DEFAULT_PRIVILEGE
+      ActiveSupport::Deprecation.warn(<<-MSG.strip_heredoc)
+      Please pass the privilege you want to check for when refreshing
+      MSG
+      privilege = params[:pressed]
+    end
+    assert_privileges(privilege)
     vm_button_operation('refresh_ems', 'Refresh')
   end
   alias image_refresh refreshvms
@@ -1817,33 +1840,35 @@ module ApplicationController::CiProcessing
   end
 
   def process_vm_buttons(pfx)
-    polsimvms if params[:pressed] == "#{pfx}_policy_sim"
-    comparemiq if params[:pressed] == "#{pfx}_compare"
-    scanvms if params[:pressed] == "#{pfx}_scan"
-    getprocessesvms if params[:pressed] == "#{pfx}_collect_running_processes"
-    syncvms if params[:pressed] == "#{pfx}_sync"
-    tag(VmOrTemplate) if params[:pressed] == "#{pfx}_tag"
-    deletevms if params[:pressed] == "#{pfx}_delete"
-    assign_policies(VmOrTemplate) if params[:pressed] == "#{pfx}_protect"
-    edit_record  if params[:pressed] == "#{pfx}_edit"
-    refreshvms if params[:pressed] == "#{pfx}_refresh"
-    startvms if params[:pressed] == "#{pfx}_start"
-    stopvms if params[:pressed] == "#{pfx}_stop"
-    suspendvms if params[:pressed] == "#{pfx}_suspend"
-    resetvms if params[:pressed] == "#{pfx}_reset"
-    check_compliance_vms if params[:pressed] == "#{pfx}_check_compliance"
-    reconfigurevms if params[:pressed] == "#{pfx}_reconfigure"
-    retirevms if params[:pressed] == "#{pfx}_retire"
-    retirevms_now if params[:pressed] == "#{pfx}_retire_now"
-    vm_right_size if params[:pressed] == "#{pfx}_right_size"
-    set_ownership if params[:pressed] == "#{pfx}_ownership"
-    guestshutdown if params[:pressed] == "#{pfx}_guest_shutdown"
-    gueststandby if params[:pressed] == "#{pfx}_guest_standby"
-    guestreboot if params[:pressed] == "#{pfx}_guest_restart"
-    prov_redirect if params[:pressed] == "#{pfx}_miq_request_new"
-    prov_redirect("clone") if params[:pressed] == "#{pfx}_clone"
-    prov_redirect("migrate") if params[:pressed] == "#{pfx}_migrate"
-    prov_redirect("publish") if params[:pressed] == "#{pfx}_publish"
+    case params[:pressed]
+    when "#{pfx}_policy_sim"                then polsimvms
+    when "#{pfx}_compare"                   then comparemiq
+    when "#{pfx}_scan"                      then scanvms
+    when "#{pfx}_collect_running_processes" then getprocessesvms
+    when "#{pfx}_sync"                      then syncvms
+    when "#{pfx}_tag"                       then tag(VmOrTemplate)
+    when "#{pfx}_delete"                    then deletevms
+    when "#{pfx}_protect"                   then assign_policies(VmOrTemplate)
+    when "#{pfx}_edit"                      then edit_record
+    when "#{pfx}_refresh"                   then refreshvms
+    when "#{pfx}_start"                     then startvms
+    when "#{pfx}_stop"                      then stopvms
+    when "#{pfx}_suspend"                   then suspendvms
+    when "#{pfx}_reset"                     then resetvms
+    when "#{pfx}_check_compliance"          then check_compliance_vms
+    when "#{pfx}_reconfigure"               then reconfigurevms
+    when "#{pfx}_retire"                    then retirevms
+    when "#{pfx}_retire_now"                then retirevms_now
+    when "#{pfx}_right_size"                then vm_right_size
+    when "#{pfx}_ownership"                 then set_ownership
+    when "#{pfx}_guest_shutdown"            then guestshutdown
+    when "#{pfx}_guest_standby"             then gueststandby
+    when "#{pfx}_guest_restart"             then guestreboot
+    when "#{pfx}_miq_request_new"           then prov_redirect
+    when "#{pfx}_clone"                     then prov_redirect("clone")
+    when "#{pfx}_migrate"                   then prov_redirect("migrate")
+    when "#{pfx}_publish"                   then prov_redirect("publish")
+    end
   end
 
   def owner_changed?(owner)
@@ -1851,4 +1876,45 @@ module ApplicationController::CiProcessing
     @edit[:new][owner] != @edit[:current][owner]
   end
 
+  def show_association(action, display_name, listicon, method, klass, association = nil)
+    @explorer = true if request.xml_http_request? # Ajax request means in explorer
+    if @explorer  # Save vars for tree history array
+      @x_show = params[:x_show]
+      @sb[:action] = @lastaction = action
+    end
+    @record = identify_record(params[:id])
+    @view = session[:view]                  # Restore the view from the session to get column names for the display
+    return if record_no_longer_exists?(@record, klass.to_s)
+    @lastaction = action
+    if params[:show] || params[:x_show]
+      id = params[:show] ? params[:show] : params[:x_show]
+      if method.kind_of?(Array)
+        obj = @record
+        while meth = method.shift do
+          obj = obj.send(meth)
+        end
+        @item = obj.find(from_cid(id))
+      else
+        @item = @record.send(method).find(from_cid(id))
+      end
+
+      drop_breadcrumb({:name => "#{@record.name} (#{display_name})",
+                       :url => "/#{controller_name}/#{action}/#{@record.id}?page=#{@current_page}"})
+      drop_breadcrumb(:name => @item.name,
+                      :url => "/#{controller_name}/#{action}/#{@record.id}?show=#{@item.id}")
+      @view = get_db_view(klass, :association=>association)
+      show_item
+    else
+      drop_breadcrumb({:name => @record.name,
+                       :url  => "/#{controller_name}/show/#{@record.id}"}, true)
+      drop_breadcrumb(:name => "#{@record.name} (#{display_name})",
+                      :url  => "/#{controller_name}/#{action}/#{@record.id}")
+      @listicon = listicon
+      if association.nil?
+        show_details(klass)
+      else
+        show_details(klass, :association => association )
+      end
+    end
+  end
 end

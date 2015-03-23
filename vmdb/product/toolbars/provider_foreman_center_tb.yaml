@@ -1,0 +1,48 @@
+#
+# Toolbar config file
+#
+---
+:model: ProviderForeman
+:button_groups:
+- :name: provider_vmdb
+  :items:
+  - :buttonSelect: provider_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :enabled: 'true'
+    :items:
+    - :button: provider_foreman_refresh
+      :image: refresh
+      :text: "Refresh Relationships and Power states"
+      :title: "Refresh relationships for all items related to the selected items"
+      :url: refresh
+      :url_parms: 'main_div'
+      :confirm: "Refresh relationships for all items related to the selected items?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :separator:
+    - :button: provider_foreman_new
+      :image: new
+      :text: "Add a new Foreman Provider"
+      :title: "Add a new Foreman Provider"
+      :enabled: 'true'
+      :url: new
+    - :button: provider_foreman_edit
+      :image: edit
+      :text: Edit Selected item
+      :title: Select a single item to edit
+      :url: edit
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1'
+    - :button: provider_foreman_delete
+      :image: remove
+      :text: Remove selected items from the VMDB
+      :title: Remove selected items from the VMDB
+      :url: delete
+      :url_parms: 'main_div'
+      :confirm: "Warning: The selected items and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected items?"
+      :enabled: 'false'
+      :onwhen: '1+'
+    - :separator:

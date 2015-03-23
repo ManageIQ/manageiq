@@ -7,6 +7,7 @@
 //= require directives/repository/valid_unc_path
 //= require services/miq_service
 //= require services/timer_option_service
+//= require controllers/provider_foreman/provider_foreman_form_controller
 //= require controllers/repository/repository_form_controller
 //= require controllers/schedule/schedule_form_controller
 //= require miq_application

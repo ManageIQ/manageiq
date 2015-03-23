@@ -1,0 +1,27 @@
+- content_for :trees do
+  = render(:partial => "layouts/x_adv_searchbox", :locals => {:nameonly => [:foreman_providers_tree, :cs_filter_tree].include?(x_active_tree)})
+  = render(:partial => 'layouts/quick_search')
+
+  - @trees.each do |tree|
+    %div{:style => "display:none;"}
+      = render(:partial => "provider_foreman/#{tree}")
+
+  - # Custom left cell div for compare options to use
+  = render :partial => "layouts/custom_left_cell"
+
+
+- content_for :accords do
+  - # Create the explorer dhtmlx layout/accordion JS objects
+  = render(:partial => "layouts/dhtmlxlayout_explorer",
+    :locals => {:accords                => @accords,
+                :active_accord          => @sb[:active_accord],
+                :accord_select_function => "miqAccordProviderForemanSelect"})
+
+- # These are the initial divs that will go inside center_cell_div
+- if @record
+  - # Showing a specific VM or Template record
+  #main_div.main_div
+    = render(:partial => 'provider_foreman/main', :locals => {:controller => "provider_foreman"})
+- else
+  #main_div.main_div
+    = render(:partial => 'layouts/x_gtl')

@@ -127,7 +127,7 @@ class GenericMailer < ActionMailer::Base
     options = {
       :to      => to,
       :from    => settings[:from],
-      :subject => "#{_("ManageIQ")} Test Email",
+      :subject => "#{I18n.t("product.name")} Test Email",
       :body    => "If you have received this email, your SMTP settings are correct."
     }
     prepare_generic_email(options)

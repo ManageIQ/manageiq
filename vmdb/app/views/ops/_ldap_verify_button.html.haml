@@ -1,4 +1,6 @@
-= hidden_div_if(@edit[:new][:authentication][:ldaphost].empty? || @edit[:new][:authentication][:ldapport].nil?, :id => "verify_button_on") do
+- validate_disabled = @edit[:new][:authentication][:ldaphost].empty? || @edit[:new][:authentication][:ldapport].nil?
+
+= hidden_div_if(validate_disabled, :id => "verify_button_on") do
   = link_to(_("Validate"),
     {:action => "settings_update",
      :button => "verify",
@@ -10,7 +12,7 @@
     :remote                => true,
     :title                 => _("Validate the LDAP Settings by binding with the Host"))
 
-= hidden_div_if(@edit[:new][:authentication][:ldaphost].empty? || @edit[:new][:authentication][:ldapport].nil?, :id => "verify_button_off") do
+= hidden_div_if(! validate_disabled, :id => "verify_button_off") do
   = button_tag(_("Validate"),
     :class => "btn btn-primary btn-xs btn-disabled",
     :title => _("LDAP Host Name and Port fields are needed to perform verification of LDAP Settings"))

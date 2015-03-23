@@ -117,7 +117,7 @@
               - when "MiqPolicy"
                 - click = "cfmeDynatree_activateNode('policy_tree', '#{x_node}_p-#{to_cid(row['id'])}');"
               - when  "User"
-                - click = "cfmeDynatree_activateNode('rbac_tree', 'u-<%= to_cid(row['id'])%>');"
+                - click = "cfmeDynatree_activateNode('rbac_tree', 'u-#{to_cid(row['id'])}');"
               - when "MiqGroup"
                 - click = "cfmeDynatree_activateNode('rbac_tree', 'g-#{to_cid(row['id'])}');"
               - when "MiqUserRole"

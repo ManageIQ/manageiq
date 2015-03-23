@@ -108,6 +108,15 @@ class ApiController
       subcollection ? [subcollection.to_sym, s_id] : [collection.to_sym, c_id]
     end
 
+    def parse_id(resource, collection)
+      return nil if resource.blank?
+
+      href = resource["href"]
+      return href.match(%r{^.*/#{collection}/([0-9]+)$}) && Regexp.last_match(1) if href.present?
+
+      resource["id"].kind_of?(Integer) ? resource["id"] : nil
+    end
+
     private
 
     #

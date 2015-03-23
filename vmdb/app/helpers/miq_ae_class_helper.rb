@@ -1,6 +1,13 @@
 module MiqAeClassHelper
-  def add_read_only_suffix(node_string)
-    "#{node_string} (Locked)"
+  def add_read_only_suffix(rec, node_string)
+    if rec.enabled && !rec.editable?
+      suffix = "Locked"
+    elsif rec.editable? && !rec.enabled
+      suffix = "Disabled"
+    else # !rec.enabled && !rec.editable?
+      suffix = "Locked & Disabled"
+    end
+    "#{node_string} (#{suffix})"
   end
 
   def domain_display_name(domain)

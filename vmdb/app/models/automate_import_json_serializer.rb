@@ -12,7 +12,7 @@ class AutomateImportJsonSerializer
         :title    => File.dirname(domain),
         :key      => File.dirname(domain),
         :icon     => "/images/icons/new/ae_domain.png",
-        :children => build_namespace_list(ae_import, File.dirname(domain))
+        :children => children(ae_import, File.dirname(domain))
       }
     end
 
@@ -21,6 +21,10 @@ class AutomateImportJsonSerializer
 
   private
 
+  def children(ae_import, domain)
+    build_namespace_list(ae_import, domain) + build_class_list(ae_import, domain)
+  end
+
   def build_namespace_list(ae_import, domain_or_namespace_name)
     ae_import.namespace_files(domain_or_namespace_name).collect do |namespace|
       namespace_name = File.dirname(namespace)
@@ -28,7 +32,18 @@ class AutomateImportJsonSerializer
         :title    => namespace_name.split("/").last,
         :key      => namespace_name.split("/")[1..-1].join("/"),
         :icon     => "/images/icons/new/ae_namespace.png",
-        :children => build_namespace_list(ae_import, namespace_name)
+        :children => children(ae_import, namespace_name)
+      }
+    end
+  end
+
+  def build_class_list(ae_import, domain_or_namespace_name)
+    ae_import.class_files(domain_or_namespace_name).collect do |klass|
+      class_name = File.dirname(klass)
+      {
+        :title => class_name.split("/").last,
+        :key   => class_name.split("/")[1..-1].join("/"),
+        :icon  => "/images/icons/new/ae_class.png"
       }
     end
   end

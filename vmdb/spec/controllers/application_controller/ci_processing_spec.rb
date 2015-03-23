@@ -190,3 +190,46 @@ describe ApplicationController do
     end
   end
 end
+
+describe HostController do
+  context "#show_association" do
+    before(:each) do
+      @host = FactoryGirl.create(:host)
+      @guest_application = FactoryGirl.create(:guest_application, :name => "foo", :host_id => @host.id)
+    end
+    it "renders show_item" do
+      controller.instance_variable_set(:@_params, :id => @host.id, :show => @guest_application.id)
+      controller.instance_variable_set(:@breadcrumbs, [])
+      controller.stub(:get_view)
+      controller.should_receive(:show_item).once
+      controller.send(:show_association,
+                      'guest_applications',
+                      'Packages',
+                      'guest_application',
+                      :guest_applications,
+                      GuestApplication)
+      expect(response.status).to eq(200)
+      expect(assigns(:breadcrumbs)).to eq([{:name => "#{@host.name} (Packages)",
+                                            :url  => "/host/guest_applications/#{@host.id}?page="},
+                                           {:name => "foo",
+                                            :url  => "/host/guest_applications/#{@host.id}?show=#{@guest_application.id}"}
+                                          ])
+    end
+
+    it "renders show_details" do
+      controller.instance_variable_set(:@_params, :id => @host.id)
+      controller.instance_variable_set(:@breadcrumbs, [])
+      controller.stub(:get_view)
+      controller.should_receive(:show_details).once
+      controller.send(:show_association,
+                      'guest_applications',
+                      'Packages',
+                      'guest_application',
+                      :guest_applications,
+                      GuestApplication)
+      expect(response.status).to eq(200)
+      expect(assigns(:breadcrumbs)).to eq([{:name => "#{@host.name} (Packages)",
+                                            :url  => "/host/guest_applications/#{@host.id}"}])
+    end
+  end
+end

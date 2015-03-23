@@ -140,39 +140,6 @@ class HostController < ApplicationController
     end
   end
 
-  def show_association(action, display_name, listicon, method, klass, association = nil)
-    @host = @record = identify_record(params[:id])
-    @view = session[:view]                  # Restore the view from the session to get column names for the display
-    return if record_no_longer_exists?(@host, 'Host')
-
-    @lastaction = action
-    unless params[:show].nil?
-      if method.kind_of?(Array)
-        obj = @host
-        while meth = method.shift do
-          obj = obj.send(meth)
-        end
-        @item = obj.find(from_cid(params[:show]))
-      else
-        @item = @host.send(method).find(from_cid(params[:show]))
-      end
-
-      drop_breadcrumb( { :name => "#{@host.name} (#{display_name})", :url=>"/host/#{action}/#{@host.id}?page=#{@current_page}"} )
-      drop_breadcrumb( { :name => @item.name,                        :url=>"/host/#{action}/#{@host.id}?show=#{@item.id}"} )
-      show_item
-    else
-      drop_breadcrumb( { :name => @host.name,                        :url=>"/host/show/#{@host.id}"}, true )
-      drop_breadcrumb( { :name => "#{@host.name} (#{display_name})", :url=>"/host/#{action}/#{@host.id}"} )
-      @listicon = listicon
-      if association.nil?
-        show_details(klass)
-      else
-        show_details(klass, :association => association )
-      end
-    end
-
-  end
-
   def filesystems
     show_association('filesystems', 'Files', 'filesystems', :filesystems, Filesystem)
   end
@@ -191,35 +158,6 @@ class HostController < ApplicationController
 
   def guest_applications
     show_association('guest_applications', 'Packages', 'guest_application', :guest_applications, GuestApplication)
-  end
-
-    # Build the vm detail gtl view
-  def show_details(db, options={})  # Pass in the db, parent vm is in @vm
-    dbname = db.to_s.downcase
-    association = options[:association] || nil
-
-    # generate the grid/tile/list url to come back here when gtl buttons are pressed
-    @gtl_url = "/host/" + @lastaction + "/" + @host.id.to_s + "?"
-
-    @showtype = "details"
-    @no_checkboxes = true
-    @showlinks = true
-
-    @view, @pages = get_view(db,
-                            :parent=>@host,
-                            :association=>association,
-                            :dbname=>"hostitem")  # Get the records into a view & paginator
-
-
-    # Came in from outside, use RJS to redraw gtl partial
-    if params[:ppsetting]  || params[:searchtag] || params[:entry] || params[:sort_choice]
-#     render :update do |page|                    # Use RJS to update the display
-#       page.replace_html("main_div", :partial=>"layouts/gtl", :locals=>{:action_url=>@lastaction})
-#     end
-      replace_gtl_main_div
-    else
-      render :action => 'show'
-    end
   end
 
   def toggle_policy_profile
