@@ -17,7 +17,7 @@ module ServiceHelper::TextualSummary
   end
 
   def textual_group_lifecycle
-    items = %w{retirement_date owner group created}
+    items = %w(retirement_date retirement_state owner group created)
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
@@ -79,6 +79,10 @@ module ServiceHelper::TextualSummary
 
   def textual_retirement_date
     {:label => "Retirement Date", :image => "retirement", :value => (@record.retires_on.nil? ? "Never" : @record.retires_on.to_time.strftime("%x"))}
+  end
+
+  def textual_retirement_state
+    {:label => "Retirement State", :value => @record.retirement_state.to_s.capitalize}
   end
 
   def textual_catalog_item

@@ -10,11 +10,6 @@ module VmCloudHelper::TextualSummary
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
-  def textual_group_lifecycle
-    items = %w{discovered analyzed retirement_date provisioned owner group}
-    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-  end
-
   def textual_group_relationships
     items = %w{ems cluster host resource_pool storage service parent_vm genealogy drift scan_history}
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
@@ -205,34 +200,6 @@ module VmCloudHelper::TextualSummary
 
   def textual_guid
     {:label => "Management Engine GUID", :value => @record.guid}
-  end
-
-  def textual_discovered
-    {:label => "Discovered", :image => "discover", :value => format_timezone(@record.created_on)}
-  end
-
-  def textual_analyzed
-    {:label => "Last Analyzed", :image => "scan", :value => (@record.last_sync_on.nil? ? "Never" : format_timezone(@record.last_sync_on))}
-  end
-
-  def textual_retirement_date
-    {:label => "Retirement Date", :image => "retirement", :value => (@record.retires_on.nil? ? "Never" : @record.retires_on.to_time.strftime("%x"))}
-  end
-
-  def textual_provisioned
-    req = @record.miq_provision.nil? ? nil : @record.miq_provision.miq_request
-    return nil if req.nil?
-    {:label => "Provisioned On", :value => req.fulfilled_on.nil? ? "" : format_timezone(req.fulfilled_on)}
-  end
-
-  def textual_owner
-    return nil if @record.evm_owner.nil?
-    {:label => "Owner", :value => @record.evm_owner.name}
-  end
-
-  def textual_group
-    return nil if @record.miq_group.nil?
-    {:label => "Group", :value => @record.miq_group.description}
   end
 
   def textual_ems
