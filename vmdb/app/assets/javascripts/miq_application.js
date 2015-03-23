@@ -1183,15 +1183,8 @@ function miqLaunchMiqVncConsole(pwd, hostAddress, hostPort, proxyAddress, proxyP
 }
 
 // Toggle the user options div in the page header
-function miqToggleUserOptions(e, id){
-  $('#' + id).toggle();
-  miqStopBubble(e);
-}
-
-function miqStopBubble(e) {
-  if (e.stopPropagation) e.stopPropagation();
-  e.cancelBubble = true;
-  return false;
+function miqToggleUserOptions(id){
+  miqJqueryRequest("/dashboard/change_group?to_group=" + id)
 }
 
 // Check for enter/escape on quick search box
