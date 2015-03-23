@@ -36,12 +36,12 @@ module EmsRefresh
 
     def save_configuration_locations_inventory(manager, hashes, target)
       delete_missing_records = target.nil? || manager == target
-      save_inventory_assoc(:configuration_locations, manager, hashes, delete_missing_records, :manager_ref)
+      save_inventory_assoc(:configuration_locations, manager, hashes, delete_missing_records, [:manager_ref])
     end
 
     def save_configuration_organizations_inventory(manager, hashes, target)
       delete_missing_records = target.nil? || manager == target
-      save_inventory_assoc(:configuration_organizations, manager, hashes, delete_missing_records, :manager_ref)
+      save_inventory_assoc(:configuration_organizations, manager, hashes, delete_missing_records, [:manager_ref])
     end
   end
 end

@@ -17,11 +17,12 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
   it "loads data with locations and organizations" do
     EmsRefresh.stub(:queue_refresh) { |*args| EmsRefresh.refresh(*args) }
 
-    VCR.use_cassette("#{described_class.name.underscore}_api_locations_v2") do
-      EmsRefresh.refresh(provisioning_manager)
-      expect(provisioning_manager.reload.last_refresh_error).to be_nil
-      EmsRefresh.refresh(configuration_manager)
-      expect(configuration_manager.reload.last_refresh_error).to be_nil
+    2.times do
+      VCR.use_cassette("#{described_class.name.underscore}_api_locations_v2") do
+        EmsRefresh.refresh(provisioning_manager)
+        expect(configuration_manager.reload.last_refresh_error).to be_nil
+        expect(provisioning_manager.reload.last_refresh_error).to be_nil
+      end
     end
 
     orgs = provisioning_manager.configuration_organizations.where(spec_related)
