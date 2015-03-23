@@ -503,7 +503,8 @@ class ChargebackController < ApplicationController
     @sb[:last_run_on] = Hash.new
     @sb[:timezone_abbr] = @timezone_abbr if @timezone_abbr  #Saving converted time to be displayed on saved reports list view
     saved_reports.each do |s|
-      @sb[:last_run_on][s.last_run_on] = "#{convert_time_from_utc(s.last_run_on).strftime('%m/%d/%Y %I:%M')} #{@sb[:timezone_abbr]}"
+      @sb[:last_run_on][s.last_run_on] =
+        "#{convert_time_from_utc(s.last_run_on).strftime('%m/%d/%Y %I:%M')} #{@sb[:timezone_abbr]}" if s.last_run_on
     end
     @sb[:tree_typ] = "reports"
     @right_cell_text = _("%{model} \"%{name}\"") % {:model=>"Reports", :name=>miq_report.name}
