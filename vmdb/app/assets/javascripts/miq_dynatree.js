@@ -187,6 +187,10 @@ function cfmeOnClick_SelectAETreeNode(id) {
   miqJqueryRequest('/' + miq_controller + '/ae_tree_select/?id=' + id + '&tree=automate_tree');
 }
 
+function miqOnClick_IncludeDomainPrefix() {
+    miqJqueryRequest('/' + miq_controller + '/ae_tree_select_toggle?button=domain');
+}
+
 function cfmeOnClick_SelectOptimizeTreeNode(id) {
     if ($('#miq_capacity_utilization').length == 1)
         tree = "utilization_tree"
