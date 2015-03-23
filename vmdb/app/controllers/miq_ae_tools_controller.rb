@@ -112,7 +112,7 @@ class MiqAeToolsController < ApplicationController
 
   def cancel_import
     automate_import_service.cancel_import(params[:import_file_upload_id])
-    add_flash(_("Datastore import was cancelled"), :info)
+    add_flash(_("Datastore import was cancelled or is finished"), :info)
 
     respond_to do |format|
       format.js { render :json => @flash_array.to_json, :status => 200 }

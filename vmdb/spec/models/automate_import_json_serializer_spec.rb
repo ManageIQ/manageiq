@@ -28,6 +28,10 @@ describe AutomateImportJsonSerializer do
                 :key      => "EVMApplications/Operations/Profile",
                 :icon     => "/images/icons/new/ae_namespace.png",
                 :children => [],
+              }, {
+                :title => "Profile.class",
+                :key   => "EVMApplications/Operations/Profile.class",
+                :icon  => "/images/icons/new/ae_class.png"
               }],
             }],
           }]
@@ -56,6 +60,14 @@ describe AutomateImportJsonSerializer do
         "Customer/EVMApplications/Operations/Profile/test.yml"
       ])
       miq_ae_yaml_import_zipfs.stub(:namespace_files).with("Customer/EVMApplications/Operations/Profile").and_return([])
+
+      miq_ae_yaml_import_zipfs.stub(:class_files).with("Customer").and_return([])
+      miq_ae_yaml_import_zipfs.stub(:class_files).with("Customer/EVMApplications").and_return([])
+      miq_ae_yaml_import_zipfs.stub(:class_files).with("Customer/EVMApplications/Operations").and_return([
+        "Customer/EVMApplications/Operations/Profile.class/test.yml"
+      ])
+      miq_ae_yaml_import_zipfs.stub(:class_files).with("Customer/EVMApplications/Operations/Profile").and_return([])
+      miq_ae_yaml_import_zipfs.stub(:class_files).with("ManageIQ").and_return([])
     end
 
     it "returns the correct json" do

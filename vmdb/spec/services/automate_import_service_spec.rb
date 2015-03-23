@@ -35,7 +35,8 @@ describe AutomateImportService do
 
     let(:miq_ae_import) { instance_double("MiqAeYamlImportZipfs", :import_stats => "import stats") }
 
-    let(:removable_entry) { double(:name => "carrot/something_else") }
+    let(:removable_entry) { double(:name => "carrot/something_else/namespace.yaml") }
+    let(:removable_class_entry) { double(:name => "carrot/something_else.class/class.yaml") }
 
     before do
       import_options = {
@@ -49,6 +50,10 @@ describe AutomateImportService do
         removable_entry,
         double(:name => "something_else/carrot"),
       ])
+      miq_ae_import.stub(:all_class_files).and_return([
+        removable_class_entry,
+        double(:name => "something_else/carrot.class/class.yaml")
+      ])
       miq_ae_import.stub(:remove_entry)
       miq_ae_import.stub(:update_sorted_entries)
       miq_ae_import.stub(:import)
@@ -59,8 +64,13 @@ describe AutomateImportService do
       automate_import_service.import_datastore(import_file_upload, "carrot", "potato", ["starch"])
     end
 
-    it "removes the correct file" do
+    it "removes the correct namespace file" do
       miq_ae_import.should_receive(:remove_entry).with(removable_entry)
+      automate_import_service.import_datastore(import_file_upload, "carrot", "potato", ["starch"])
+    end
+
+    it "removes the correct class file" do
+      miq_ae_import.should_receive(:remove_entry).with(removable_class_entry)
       automate_import_service.import_datastore(import_file_upload, "carrot", "potato", ["starch"])
     end
 

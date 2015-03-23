@@ -57,9 +57,9 @@ var Automate = {
     $.each(domains, function(index, child) {
       $('.importing-domains').append(
         $('<option>', {
-        value: child.title,
-        text: child.title
-      })
+          value: child.title,
+          text: child.title
+        })
       );
     });
   },
@@ -88,7 +88,8 @@ var Automate = {
   },
 
   setUpAutomateImportClickHandlers: function() {
-    $('.import-commit').click(function() {
+    $('.import-commit').click(function(event) {
+      event.preventDefault();
       miqSparkleOn();
       clearMessages();
 
@@ -97,7 +98,7 @@ var Automate = {
       postData = postData.concat($.param($('.domain-tree').dynatree('getTree').serializeArray()));
 
       $.post('import_automate_datastore', postData, function(data) {
-        var flashMessage = JSON.parse(data).first();
+        var flashMessage = JSON.parse(data)[0];
         if (flashMessage.level == 'error') {
           showErrorMessage(flashMessage.message);
         } else {
@@ -108,14 +109,15 @@ var Automate = {
       });
     });
 
-    $('.import-back').click(function() {
+    $('.import-back').click(function(event) {
+      event.preventDefault();
       miqSparkleOn();
       clearMessages();
 
       $('.domain-tree').dynatree('destroy');
 
       $.post('cancel_import', $('#import-form').serialize(), function(data) {
-        var flashMessage = JSON.parse(data).first();
+        var flashMessage = JSON.parse(data)[0];
         showSuccessMessage(flashMessage.message);
 
         $('.import-or-export').show();

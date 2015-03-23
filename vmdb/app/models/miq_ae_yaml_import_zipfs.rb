@@ -50,6 +50,10 @@ class MiqAeYamlImportZipfs < MiqAeYamlImport
     @sorted_entries.select { |entry| entry.name.match(NAMESPACE_YAML_FILENAME) }
   end
 
+  def all_class_files
+    @sorted_entries.select { |entry| entry.name.match(CLASS_YAML_FILENAME) }
+  end
+
   def remove_unrelated_entries(domain_name)
     unrelated_entries = @sorted_entries.reject { |entry| entry.name.match(domain_name) }
 
