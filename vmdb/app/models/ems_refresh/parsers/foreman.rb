@@ -57,43 +57,19 @@ module EmsRefresh
       end
 
       def media_inv_to_hashes(media)
-        media.collect do |m|
-          {
-            :manager_ref => m["id"].to_s,
-            :type        => "CustomizationScriptMedium",
-            :name        => m["name"]
-          }
-        end
+        basic_hash(media, "CustomizationScriptMedium")
       end
 
       def ptables_inv_to_hashes(ptables)
-        ptables.collect do |m|
-          {
-            :manager_ref => m["id"].to_s,
-            :type        => "CustomizationScriptPtable",
-            :name        => m["name"]
-          }
-        end
+        basic_hash(ptables, "CustomizationScriptPtable")
       end
 
       def location_inv_to_hashes(locations)
-        locations.collect do |m|
-          {
-            :manager_ref => m["id"].to_s,
-            :type        => "ConfigurationLocation",
-            :name        => m["name"],
-          }
-        end
+        basic_hash(locations, "ConfigurationLocation", "title")
       end
 
       def organization_inv_to_hashes(organizations)
-        organizations.collect do |m|
-          {
-            :manager_ref => m["id"].to_s,
-            :type        => "ConfigurationOrganization",
-            :name        => m["name"],
-          }
-        end
+        basic_hash(organizations, "ConfigurationOrganization", "title")
       end
 
       def operating_system_flavors_inv_to_hashes(flavors_inv, indexes)
@@ -161,6 +137,18 @@ module EmsRefresh
 
       def ids_lookup(ids, records, id_key = "id")
         (records || []).collect { |record| id_lookup(ids, record, id_key) }.compact
+      end
+
+      def basic_hash(collection, type, extra_field = nil)
+        collection.collect do |m|
+          {
+            :manager_ref => m["id"].to_s,
+            :type        => type,
+            :name        => m["name"],
+          }.tap do |h|
+            h[extra_field] = m[extra_field] if extra_field
+          end
+        end
       end
     end
   end
