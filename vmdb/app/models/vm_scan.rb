@@ -47,10 +47,10 @@ class VmScan < Job
       #       or, make type-specific Job classes.
       if vm.kind_of?(VmOpenstack)
         if vm.ext_management_system
-          sn_description = self.snapshotDescription()
+          sn_description = snapshotDescription
           $log.info("MIQ(scan-action-call_snapshot_create) Creating snapshot, description: [#{sn_description}]")
-          user_event = self.start_user_event_message(vm, false)
-          self.options[:snapshot] = :server
+          user_event = start_user_event_message(vm, false)
+          options[:snapshot] = :server
           begin
             # TODO: should this be a vm method?
             sn = vm.ext_management_system.vm_create_evm_snapshot(vm, :desc => sn_description, :user_event => user_event).to_s
@@ -60,11 +60,11 @@ class VmScan < Job
             err.kind_of?(MiqException::MiqVimBrokerUnavailable) ? signal(:broker_unavailable) : signal(:abort, msg, "error")
             return
           end
-          self.context[:snapshot_mor] = sn
-          $log.info("MIQ(scan-action-call_snapshot_create) Created snapshot, description: [#{sn_description}], reference: [#{self.context[:snapshot_mor]}]")
-          set_status("Snapshot created: reference: [#{self.context[:snapshot_mor]}]")
-          self.options[:snapshot] = :created
-          self.options[:use_existing_snapshot] = true
+          context[:snapshot_mor] = sn
+          $log.info("MIQ(scan-action-call_snapshot_create) Created snapshot, description: [#{sn_description}], reference: [#{context[:snapshot_mor]}]")
+          set_status("Snapshot created: reference: [#{context[:snapshot_mor]}]")
+          options[:snapshot] = :created
+          options[:use_existing_snapshot] = true
         else
           signal(:abort, "No #{ui_lookup(:table => "ext_management_systems")} available to create snapshot, skipping", "error")
           return

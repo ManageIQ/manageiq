@@ -23,18 +23,18 @@ class VmOpenstack < VmCloud
 
     log_pref = "MIQ(#{self.class.name}##{__method__})"
 
-    instance_id = self.ems_ref
+    instance_id = ems_ref
     $log.debug "#{log_pref} instance_id = #{instance_id}"
     ost.scanTime = Time.now.utc unless ost.scanTime
 
-    ems = self.ext_management_system
+    ems = ext_management_system
     os_handle = ems.openstack_handle
 
     begin
-      miqVm = MiqOpenStackInstance.new(instance_id, :openstack_handle => os_handle)
-      scan_via_miq_vm(miqVm, ost)
+      miq_vm = MiqOpenStackInstance.new(instance_id, :openstack_handle => os_handle)
+      scan_via_miq_vm(miq_vm, ost)
     ensure
-      miqVm.unmount if miqVm
+      miq_vm.unmount if miq_vm
     end
   end
 
@@ -56,16 +56,18 @@ class VmOpenstack < VmCloud
   end
 
   # TODO: Does this code need to be reimplemented?
-  def proxies4job(job=nil)
+  def proxies4job(_job)
     {
       :proxies => [MiqServer.my_server],
       :message => 'Perform SmartState Analysis on this Instance'
     }
   end
+
   def has_active_proxy?
-    return true
+    true
   end
+
   def has_proxy?
-    return true
+    true
   end
 end

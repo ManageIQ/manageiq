@@ -83,11 +83,11 @@ module VmOrTemplate::Operations::Snapshot
   def remove_evm_snapshot_queue(snapshot_id, task_id = nil)
     MiqQueue.put_unless_exists(
       :class_name  => self.class.name,
-      :instance_id => self.id,
+      :instance_id => id,
       :method_name => 'remove_evm_snapshot',
       :args        => [snapshot_id],
       :role        => "ems_operations",
-      :zone        => self.my_zone,
+      :zone        => my_zone,
       :task_id     => task_id
     )
   end
