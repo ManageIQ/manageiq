@@ -523,7 +523,7 @@ class ApplicationController < ActionController::Base
         flash_div_num = "validate"
       end
     else
-      if session[:edit] && session[:edit][:pxe]
+      if session[:edit] && session[:edit].key?(:pxe_id)
         #add/edit pxe server
         pfx = "pxe"
         flash_div_num = ""
