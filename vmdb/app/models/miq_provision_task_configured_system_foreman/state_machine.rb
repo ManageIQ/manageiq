@@ -59,6 +59,7 @@ module MiqProvisionTaskConfiguredSystemForeman::StateMachine
     if source.provider_object.building?
       requeue_phase
     else
+      EmsRefresh.queue_refresh(source)
       signal :mark_as_completed
     end
   end
