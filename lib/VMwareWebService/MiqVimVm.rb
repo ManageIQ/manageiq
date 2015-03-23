@@ -13,7 +13,7 @@ class MiqVimVm
 
 	include MiqVimVdlVcConnectionMod
 
-    EVM_SNAPSHOT_NAME    = "EvmSnapshot"
+    EVM_SNAPSHOT_NAME    = "EvmSnapshot" # TODO: externalize - not VIM specific
     CH_SNAPSHOT_NAME     = /^Consolidate Helper/
     VCB_SNAPSHOT_NAME    = '_VCB-BACKUP_'
     NETAPP_SNAPSHOT_NAME = /^smvi/
