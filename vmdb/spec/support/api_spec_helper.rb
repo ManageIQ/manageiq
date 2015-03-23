@@ -260,11 +260,15 @@ module ApiSpecHelper
     end
   end
 
-  def expect_result_resources_to_match_hash(result_hash)
-    expect(@result).to have_key("resources")
-    @result["resources"].zip(fetch_value(result_hash)).each do |actual, expected|
+  def expect_results_to_match_hash(collection, result_hash)
+    expect(@result).to have_key(collection)
+    @result[collection].zip(fetch_value(result_hash)).each do |actual, expected|
       expect_result_to_match_hash(actual, expected)
     end
+  end
+
+  def expect_result_resources_to_match_hash(result_hash)
+    expect_results_to_match_hash("resources", result_hash)
   end
 
   def expect_result_resource_keys_to_be_like_klass(collection, key, klass)
