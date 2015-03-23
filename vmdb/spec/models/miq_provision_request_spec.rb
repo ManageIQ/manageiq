@@ -4,7 +4,7 @@ describe MiqProvisionRequest do
   it ".request_task_class_from" do
     vm = FactoryGirl.create(:vm_vmware)
     described_class.request_task_class_from('options' => {:src_vm_id => vm.id}).should == MiqProvisionVmware
-    described_class.request_task_class_from('options' => {:src_vm_id => vm.id, :provision_type => 'netapp_rcu'}).should == MiqProvisionVmwareViaNetAppRcu
+
     vm = FactoryGirl.create(:vm_redhat)
     described_class.request_task_class_from('options' => {:src_vm_id => vm.id}).should == MiqProvisionRedhat
   end

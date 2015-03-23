@@ -367,20 +367,6 @@
     :environment:
       :description: Environment
       :fields:
-        :new_datastore_grow_increment:
-          :description: Grow Increment (GB)
-          :required: false
-          :display: :hide
-          :data_type: :integer
-        :new_datastore_create:
-          :values:
-            false: 0
-            true: 1
-          :description: Create Datastore
-          :required: false
-          :display: :hide
-          :default: false
-          :data_type: :boolean
         :placement_cluster_name:
           :values_from:
             :method: :allowed_clusters
@@ -389,25 +375,6 @@
           :required: false
           :display: :edit
           :data_type: :integer
-        :new_datastore_aggregate:
-          :values_from:
-            :method: :allowed_datastore_aggregate
-          :description: Aggregate
-          :required: false
-          :display: :edit
-          :data_type: :string
-        :new_datastore_max_size:
-          :description: Max Size (GB)
-          :required: false
-          :display: :hide
-          :data_type: :integer
-        :new_datastore_storage_controller:
-          :values_from:
-            :method: :allowed_datastore_storage_controller
-          :description: Controller
-          :required: false
-          :display: :edit
-          :data_type: :string
         :cluster_filter:
           :values_from:
             :options:
@@ -438,13 +405,6 @@
           :required: false
           :display: :edit
           :data_type: :integer
-        :new_datastore_volume:
-          :values_from:
-            :method: :allowed_datastore_aggregate
-          :description: Volume
-          :required: false
-          :display: :hide
-          :data_type: :string
         :placement_host_name:
           :values_from:
             :method: :allowed_hosts
@@ -465,15 +425,6 @@
           :display: :edit
           :data_type: :integer
           :required_description: Datastore Name
-        :new_datastore_fs_type:
-          :values:
-            NFS: NFS
-            VMFS: VMFS
-          :description: FS Type
-          :required: false
-          :display: :hide
-          :default: NFS
-          :data_type: :string
         :rp_filter:
           :values_from:
             :options:
@@ -484,11 +435,6 @@
           :required: false
           :display: :edit
           :data_type: :integer
-        :new_datastore_thin_provision:
-          :description: Thin Provision
-          :required: false
-          :display: :hide
-          :data_type: :string
         :placement_auto:
           :values:
             false: 0
@@ -498,20 +444,6 @@
           :display: :edit
           :default: false
           :data_type: :boolean
-        :new_datastore_size:
-          :description: Size (GB)
-          :required: false
-          :display: :hide
-          :data_type: :integer
-        :new_datastore_autogrow:
-          :values:
-            false: 0
-            true: 1
-          :description: Autogrow
-          :required: false
-          :display: :hide
-          :default: false
-          :data_type: :string
         :placement_folder_name:
           :values_from:
             :method: :allowed_folders
@@ -520,11 +452,6 @@
           :required: false
           :display: :edit
           :data_type: :integer
-        :new_datastore_name:
-          :description: Name
-          :required: false
-          :display: :hide
-          :data_type: :string
         :placement_rp_name:
           :values_from:
             :method: :allowed_respools

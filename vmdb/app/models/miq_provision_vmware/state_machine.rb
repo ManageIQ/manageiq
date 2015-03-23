@@ -6,27 +6,9 @@ module MiqProvisionVmware::StateMachine
   def determine_placement
     host, datastore = self.placement
 
-    self.options[:dest_host] = [host.id, host.name]
-
-    if get_option(:new_datastore_create) == true
-      signal :poll_placement_completed
-    else
-      self.options[:dest_storage] = [datastore.id, datastore.name]
-      signal :start_clone_task
-    end
-  end
-
-  def poll_placement_completed
-    ds_name = get_option(:new_datastore_name)
-    datastore = dest_host.storages.detect {|s| s.name == ds_name}
-
-    if datastore
-      self.options[:dest_storage] = [datastore.id, datastore.name]
-      signal :start_clone_task
-    else
-      $log.info("MIQ(#{self.class.name}#poll_placement_completed) Unable to find Datastore: [#{ds_name}], will retry")
-      requeue_phase
-    end
+    self.options[:dest_host]    = [host.id, host.name]
+    self.options[:dest_storage] = [datastore.id, datastore.name]
+    signal :start_clone_task
   end
 
   def start_clone_task

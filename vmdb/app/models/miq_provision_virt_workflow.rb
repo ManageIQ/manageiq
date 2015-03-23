@@ -1,3 +1,5 @@
+require 'active_support/deprecation'
+
 class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   SUBCLASSES = %w{
     MiqProvisionCloudWorkflow
@@ -183,7 +185,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     return nil unless value.blank?
     return nil if get_value(values[:placement_auto]) == true
     return nil unless get_value(values[field]).blank?
-    return nil if get_value(@values[:new_datastore_create]) == true
     "#{required_description(dlg, fld)} is required"
   end
 
@@ -261,38 +262,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     show_flag = get_value(@values[:sysprep_custom_spec]).blank? ? :hide : :edit
     f[show_flag] += [:sysprep_spec_override]
-
-    new_ds_ctrls = [:new_datastore_storage_controller, :new_datastore_fs_type, :new_datastore_size, :new_datastore_name,
-      :new_datastore_aggregate, :new_datastore_volume, :new_datastore_thin_provision, :new_datastore_autogrow]
-    new_ds_grow  = [:new_datastore_grow_increment, :new_datastore_max_size]
-
-    if auto_placement == :hide
-      # Hide everything since auto-placement is selected
-      f[:hide] += new_ds_ctrls + new_ds_grow
-    else
-      f[:edit] += [:new_datastore_create]
-      show_flag = get_value(@values[:new_datastore_create]) ? :edit : :hide
-      if show_flag == :hide
-        f[show_flag] += new_ds_ctrls + new_ds_grow
-        f[:edit] += [:placement_ds_name]
-      else
-        f[:edit] += new_ds_ctrls
-        f[:hide] += [:placement_ds_name]
-        f[:edit] -= [:placement_ds_name]
-
-        f[:edit] -= [:new_datastore_aggregate, :new_datastore_volume]
-        if get_value(@values[:new_datastore_fs_type]) == "NFS"
-          f[:edit] += [:new_datastore_aggregate]
-          f[:hide] += [:new_datastore_volume]
-          show_flag = get_value(@values[:new_datastore_autogrow]).to_s == "true" ? :edit : :hide
-          f[show_flag] += new_ds_grow
-        else
-          f[:hide] += [:new_datastore_aggregate, :new_datastore_autogrow] + new_ds_grow
-          f[:edit] += [:new_datastore_volume]
-          f[:edit] -= [:new_datastore_autogrow]
-        end
-      end
-    end
 
     # Hide VM filter if we are using a pre-selected VM
     if [:clone_to_vm, :clone_to_template].include?(request_type)
@@ -669,19 +638,14 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def allowed_datastore_storage_controller(_options = {})
-    # TODO: NetAppFiler is an ActAsArModel and doesn't support arel syntax yet
-    NetAppFiler.all.collect(&:name).index_by { |n| n }
+    {}
   end
+  deprecate :allowed_datastore_storage_controller
 
   def allowed_datastore_aggregate(_options = {})
-    result = {}
-    controller = get_value(@values[:new_datastore_storage_controller])
-    return result if controller.blank?
-    naf = NetAppFiler.find_by_name(controller)
-    naf_type = get_value(@values[:new_datastore_fs_type]) == "NFS" ? :aggregates : :volumes
-    naf.send(naf_type).each { |a| result[a] = a }
-    result
+    {}
   end
+  deprecate :allowed_datastore_aggregate
 
   def get_source_vm
     get_source_and_targets[:vm]

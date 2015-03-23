@@ -121,15 +121,6 @@
           :prefix                     => prefix,
           :keys                       => keys,
           :extra_table_attributes     => "width=100%"})
-      - if wf.is_a?(MiqProvisionVmwareWorkflow)
-        - keys = [:new_datastore_create, :new_datastore_storage_controller, :new_datastore_fs_type, :new_datastore_size, :new_datastore_name, :new_datastore_aggregate, :new_datastore_volume, :new_datastore_thin_provision, :new_datastore_autogrow, :new_datastore_grow_increment, :new_datastore_max_size]
-        = render(:partial => "#{prefix}prov_dialog_fieldset",
-          :locals         => {:workflow => wf,
-            :dialog                     => dialog,
-            :label                      => _("Datastore"),
-            :prefix                     => prefix,
-            :keys                       => keys,
-            :extra_table_attributes     => "width=100%"})
       - unless wf.is_a?(MiqProvisionCloudWorkflow)
         - keys = [:ds_filter, :placement_ds_name]
         = render(:partial => "#{prefix}prov_dialog_fieldset",
