@@ -19,13 +19,13 @@ module MiqProvisionTaskConfiguredSystemForeman::StateMachine
 
   def system_power_off_in_foreman
     update_and_notify_parent(:message => "Powering off #{source.name}")
-    source.provider_object.stop
+    source.with_provider_object(&:stop)
     signal :poll_system_powered_off_in_foreman
   end
 
   def poll_system_powered_off_in_foreman
     update_and_notify_parent(:message => "Waiting for power off of #{source.name}")
-    if source.provider_object.powered_off?
+    if source.with_provider_object(&:powered_off?)
       signal :update_configuration
     else
       requeue_phase
@@ -56,7 +56,7 @@ module MiqProvisionTaskConfiguredSystemForeman::StateMachine
 
   def poll_os_built
     update_and_notify_parent(:message => "Waiting for OS build on #{source.name}")
-    if source.provider_object.building?
+    if source.with_provider_object(&:building?)
       requeue_phase
     else
       EmsRefresh.queue_refresh(source)
