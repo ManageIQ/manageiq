@@ -7,9 +7,8 @@
       %td.key
         = _('Run')
       %td
-        - timer_types = [_("Hourly"), _("Daily"), _("Weekly"), _("Monthly")]
-        - if x_active_tree == :widgets_tree
-          - timer_types.unshift(_("Once"))
+        - timer_types = [_("Once"), _("Hourly"), _("Daily"), _("Weekly"), _("Monthly")]
+        - timer_types.shift if x_active_tree == :widgets_tree
         = select_tag("timer_typ",
           options_for_select(timer_types, @edit[:new][:timer_typ]),
           "data-miq_observe" => {:url => url}.to_json)
