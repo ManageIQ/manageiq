@@ -212,7 +212,7 @@ module EmsRefresh::SaveInventory
   def save_networks_inventory(hardware, hashes, mode = :refresh)
     return if hashes.nil?
 
-    deletes = hardware.networks(true).dup
+    deletes = hardware.networks(true).to_a.dup
 
     case mode
     when :refresh

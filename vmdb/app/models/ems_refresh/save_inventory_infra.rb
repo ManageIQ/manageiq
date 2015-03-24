@@ -101,7 +101,7 @@ module EmsRefresh::SaveInventoryInfra
     log_header = "MIQ(#{self.name}.save_hosts_inventory) EMS: [#{ems.name}], id: [#{ems.id}]"
 
     disconnects = if (target == ems)
-      target.hosts(true).dup
+      target.hosts(true).to_a.dup
     elsif target.kind_of?(Host)
       [target.clone]
     else
