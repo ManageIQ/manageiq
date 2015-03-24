@@ -4,7 +4,6 @@
 require 'spec_helper'
 
 describe ApiController do
-
   include Rack::Test::Methods
 
   let(:zone)       { FactoryGirl.create(:zone, :name => "api_zone") }
@@ -85,7 +84,7 @@ describe ApiController do
       acct1
       acct2
 
-      run_get "#{vm_url}?expand=accounts"
+      run_get vm_url, :expand => "accounts"
 
       expect_single_resource_query("guid" => :vm_guid)
       expect_result_resources_to_include_hrefs("accounts", :vm_accounts_url_list)
@@ -142,7 +141,7 @@ describe ApiController do
       sw1
       sw2
 
-      run_get "#{vms_url(vm.id)}?expand=software"
+      run_get vms_url(vm.id), :expand => "software"
 
       expect_single_resource_query("guid" => :vm_guid)
       expect_result_resources_to_include_hrefs("software", :vm_software_url_list)
@@ -425,7 +424,7 @@ describe ApiController do
       api_basic_authorize
       vm.custom_attributes = [ca1, ca2]
 
-      run_get "#{vm_ca_url}?expand=resources"
+      run_get vm_ca_url, :expand => "resources"
 
       expect_query_result(:custom_attributes, 2)
       expect_result_resources_to_include_data("resources", "name" => %w(name1 name2))
@@ -435,7 +434,7 @@ describe ApiController do
       api_basic_authorize
       vm.custom_attributes = [ca1, ca2]
 
-      run_get "#{vm_url}?expand=custom_attributes"
+      run_get vm_url, :expand => "custom_attributes"
 
       expect_single_resource_query("guid" => :vm_guid)
       expect_result_resources_to_include_data("custom_attributes", "name" => %w(name1 name2))

@@ -10,7 +10,6 @@
 require 'spec_helper'
 
 describe ApiController do
-
   include Rack::Test::Methods
 
   before(:each) do
@@ -59,7 +58,7 @@ describe ApiController do
       api_basic_authorize
       create_events(3)
 
-      run_get "#{events_url}?expand=resources"
+      run_get events_url, :expand => "resources"
 
       expect_query_result(:events, 3, 3)
       expect_result_resources_to_include_data("resources", "guid" => :miq_event_guid_list)
@@ -90,7 +89,7 @@ describe ApiController do
       create_events(3)
       relate_events_to(policy)
 
-      run_get "#{policy_events_url}?expand=resources"
+      run_get policy_events_url, :expand => "resources"
 
       expect_query_result(:events, 3, 3)
       expect_result_resources_to_include_data("resources", "guid" => :miq_event_guid_list)
@@ -101,7 +100,7 @@ describe ApiController do
       create_events(3)
       relate_events_to(policy)
 
-      run_get "#{policy_url}?expand=events"
+      run_get policy_url, :expand => "events"
 
       expect_single_resource_query("name" => policy.name, "description" => policy.description, "guid" => policy.guid)
       expect_result_resources_to_include_data("events", "guid" => :miq_event_guid_list)

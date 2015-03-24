@@ -25,7 +25,6 @@
 require 'spec_helper'
 
 describe ApiController do
-
   include Rack::Test::Methods
 
   let(:zone)        { FactoryGirl.create(:zone, :name => "api_zone") }
@@ -79,7 +78,7 @@ describe ApiController do
     object.add_policy(p1)
     object.add_policy(ps2)
 
-    run_get "#{object_policies_url}?expand=resources"
+    run_get object_policies_url, :expand => "resources"
 
     expect_query_result(:policies, 1)
     expect_result_resources_to_match_hash([{"name" => p1.name, "description" => p1.description, "guid" => p1.guid}])
@@ -92,7 +91,7 @@ describe ApiController do
     object.add_policy(p2)
     object.add_policy(ps2)
 
-    run_get "#{object_policies_url}?expand=resources"
+    run_get object_policies_url, :expand => "resources"
 
     expect_query_result(:policies, 2)
     expect_result_resources_to_include_data("resources", "guid" => p_guids)
@@ -104,7 +103,7 @@ describe ApiController do
     object.add_policy(p1)
     object.add_policy(ps2)
 
-    run_get "#{object_policy_profiles_url}?expand=resources"
+    run_get object_policy_profiles_url, :expand => "resources"
 
     expect_query_result(:policy_profiles, 1)
     expect_result_resources_to_include_data("resources", "guid" => Array.wrap(ps2.guid))
@@ -132,7 +131,7 @@ describe ApiController do
     it "query policies in expanded form" do
       api_basic_authorize
 
-      run_get "#{policies_url}?expand=resources"
+      run_get policies_url, :expand => "resources"
 
       expect_query_result(:policies, 3, 3)
       expect_result_resources_to_include_data("resources", "guid" => p_all_guids)
@@ -174,7 +173,7 @@ describe ApiController do
     it "query Policy Profile policies subcollection" do
       api_basic_authorize
 
-      run_get "#{policy_profile_url}/policies?expand=resources"
+      run_get "#{policy_profile_url}/policies", :expand => "resources"
 
       expect_query_result(:policies, p_guids.count)
       expect_result_resources_to_include_data("resources", "guid" => p_guids)
@@ -183,7 +182,7 @@ describe ApiController do
     it "query Policy Profile with expanded policies subcollection" do
       api_basic_authorize
 
-      run_get "#{policy_profile_url}?expand=policies"
+      run_get policy_profile_url, :expand => "policies"
 
       expect_single_resource_query(
         "name" => policy_profile.name, "description" => policy_profile.description, "guid" => policy_profile.guid

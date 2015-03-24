@@ -36,8 +36,9 @@ module ApiSpecHelper
     headers.merge(DEF_HEADERS)
   end
 
-  def run_get(url, headers = {})
-    get url, {}, update_headers(headers)
+  def run_get(url, options = {})
+    headers = options.delete(:headers) || {}
+    get url, options.stringify_keys, update_headers(headers)
     parse_response
   end
 

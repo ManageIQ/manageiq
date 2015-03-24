@@ -18,7 +18,6 @@
 require 'spec_helper'
 
 describe ApiController do
-
   include Rack::Test::Methods
 
   let(:zone)       { FactoryGirl.create(:zone, :name => "api_zone") }
