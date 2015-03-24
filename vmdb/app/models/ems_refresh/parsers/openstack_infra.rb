@@ -63,6 +63,27 @@ module EmsRefresh
         @hosts ||= @baremetal_service.nodes.details
       end
 
+      def clouds
+        @ems.provider.try(:cloud_ems)
+      end
+
+      def cloud_ems_hosts_attributes
+        hosts_attributes = []
+        return hosts_attributes unless clouds
+
+        clouds.each do |cloud_ems|
+          connection = cloud_ems.connect
+          compute_hosts  = connection.hosts.select { |x| x.service_name == "compute" }
+          compute_hosts.each do |compute_host|
+            # We need to take correct zone id from correct provider, since the zone name can be the same
+            # across providers
+            availability_zone_id = cloud_ems.availability_zones.where(:name => compute_host.zone).first.try(:id)
+            hosts_attributes << {:host_name => compute_host.host_name, :availability_zone_id => availability_zone_id}
+          end
+        end
+        hosts_attributes
+      end
+
       def hosts_ports
         @hosts_ports ||= @baremetal_service.ports.details
       end
@@ -83,32 +104,41 @@ module EmsRefresh
         all_server_resources.each { |p| indexed_resources[p['physical_resource_id']] = p }
 
         process_collection(hosts, :hosts) do  |host|
-          parse_host(host, indexed_servers, indexed_hosts_ports, indexed_resources)
+          parse_host(host, indexed_servers, indexed_hosts_ports, indexed_resources, cloud_ems_hosts_attributes)
         end
       end
 
-      def parse_host(host, indexed_servers, _indexed_hosts_ports, indexed_resources)
-        uid = host.uuid
-        host_name = identify_host_name(indexed_resources, host.instance_uuid, uid)
-        ip_address = identify_primary_ip_address(host, indexed_servers)
+      def parse_host(host, indexed_servers, _indexed_hosts_ports, indexed_resources, cloud_hosts_attributes)
+        uid                 = host.uuid
+        host_name           = identify_host_name(indexed_resources, host.instance_uuid, uid)
+        hypervisor_hostname = identify_hypervisor_hostname(host, indexed_servers)
+        ip_address          = identify_primary_ip_address(host, indexed_servers)
+
+        # Get the cloud_host_attributes by hypervisor hostname, only compute hosts can get this
+        cloud_host_attributes = cloud_hosts_attributes.select do |x|
+          hypervisor_hostname && x[:host_name].include?(hypervisor_hostname.downcase)
+        end
+        cloud_host_attributes = cloud_host_attributes.first if cloud_host_attributes
 
         new_result = {
-          :name                => host_name,
-          :type                => 'HostOpenstackInfra',
-          :uid_ems             => uid,
-          :ems_ref             => uid,
-          :ems_ref_obj         => host.instance_uuid,
-          :operating_system    => {:product_name => 'linux'},
-          :vmm_vendor          => 'RedHat',
-          :vmm_product         => identify_product(indexed_resources, host.instance_uuid),
-          :ipaddress           => ip_address,
-          :hostname            => ip_address,
-          :mac_address         => identify_primary_mac_address(host, indexed_servers),
-          :ipmi_address        => identify_ipmi_address(host),
-          :power_state         => lookup_power_state(host.power_state),
-          :connection_state    => lookup_connection_state(host.power_state),
-          :hardware            => process_host_hardware(host),
-          :hypervisor_hostname => identify_hypervisor_hostname(host, indexed_servers)
+          :name                 => host_name,
+          :type                 => 'HostOpenstackInfra',
+          :uid_ems              => uid,
+          :ems_ref              => uid,
+          :ems_ref_obj          => host.instance_uuid,
+          :operating_system     => {:product_name => 'linux'},
+          :vmm_vendor           => 'RedHat',
+          :vmm_product          => identify_product(indexed_resources, host.instance_uuid),
+          :ipaddress            => ip_address,
+          :hostname             => ip_address,
+          :mac_address          => identify_primary_mac_address(host, indexed_servers),
+          :ipmi_address         => identify_ipmi_address(host),
+          :power_state          => lookup_power_state(host.power_state),
+          :connection_state     => lookup_connection_state(host.power_state),
+          :hardware             => process_host_hardware(host),
+          :hypervisor_hostname  => hypervisor_hostname,
+          # Attributes taken from the Cloud provider
+          :availability_zone_id => cloud_host_attributes.try(:[], :availability_zone_id)
         }
 
         return uid, new_result
