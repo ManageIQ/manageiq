@@ -39,8 +39,12 @@
                              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
           = javascript_tag(javascript_focus('uri'))
         - if @edit[:new][:requires_credentials]
+          -# log depot validation is handled by log_depot_edit :validate case,
+          -# the rest (db backup, pxe, schedule, ..?) by log_depot_validate
+          - validate_url = 'log_depot_validate'
+          - validate_url = 'log_depot_edit' if action == 'log_depot_field_changed'
           = render(:partial => "/layouts/auth_credentials",
                    :locals  => {:pfx          => "log",
                                 :change_url   => action,
-                                :validate_url => "log_depot_edit",
+                                :validate_url => validate_url,
                                 :record       => record})
