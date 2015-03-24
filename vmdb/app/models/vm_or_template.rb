@@ -416,6 +416,9 @@ class VmOrTemplate < ActiveRecord::Base
     elsif ["create_snapshot"].include?(options[:task])
       options[:invoke_by] = :task
       args = [options[:name], options[:description], options[:memory]]
+    elsif ["retire_now"].include?(options[:task])
+      options[:invoke_by] = :task
+      args = [options[:userid]]
     else
       options[:invoke_by] = :task
       args = []

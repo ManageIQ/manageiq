@@ -101,7 +101,7 @@ class Service < ActiveRecord::Base
 
   def self.invoke_tasks_local(options)
     options[:invoke_by] = :task
-    args = []
+    args = options[:task] == 'retire_now' ? [options[:userid]] : []
 
     services, tasks = self.validate_tasks(options)
 
