@@ -91,22 +91,22 @@ module ApiSpecHelper
       :entrypoint => "/api"
     }
 
-    collections  = %w(auth vms tags providers hosts data_stores resource_pools clusters
-                      policies policy_profiles templates policy_actions events conditions)
+    collections  = %w(auth automation_requests availability_zones clusters conditions data_stores
+                      events flavors groups hosts policies policy_actions policy_profiles providers
+                      provision_requests request_tasks requests resource_pools roles security_groups
+                      servers service_catalogs service_requests service_templates services tags
+                      tasks templates users vms zones)
 
     collections.each { |collection| @cfme["#{collection}_url".to_sym] = "#{@cfme[:entrypoint]}/#{collection}" }
 
     define_user
-    define_url_methods
+    define_url_methods(collections)
   end
 
-  def define_url_methods
+  def define_url_methods(collections)
     define_entrypoint_url_methods
 
-    collections  = %w(vms tags providers hosts data_stores resource_pools clusters
-                      policies policy_profiles templates policy_actions events conditions)
-
-    collections.each do |collection|
+    (collections - %w(auth)).each do |collection|
       self.class.class_eval do
         define_method("#{collection}_url".to_sym) do |id = nil|
           path = @cfme["#{collection}_url".to_sym]
