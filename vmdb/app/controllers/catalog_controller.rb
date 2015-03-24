@@ -694,7 +694,7 @@ class CatalogController < ApplicationController
   end
 
   def ot_form_field_changed
-    id = session[:edit][:rec_id]
+    id = params[:id]
     return unless load_edit("ot_edit__#{id}", "replace_cell__explorer")
     ot_edit_get_form_vars
     render :update do |page|
@@ -959,12 +959,12 @@ class CatalogController < ApplicationController
       add_flash(
         _("Unable to create a new template copy \"%s\": old and new template content have to differ.") % params[:name],
         :error)
-      ot_copy_submit_fallback
+      ot_action_submit_flash
     elsif params[:template_content].nil? || params[:template_content] == ""
       add_flash(
         _("Unable to create a new template copy \"%s\": new template content cannot be empty.") %     params[:name],
         :error)
-      ot_copy_submit_fallback
+      ot_action_submit_flash
     else
       ot = OrchestrationTemplate.new(
         :name        => params[:name],
@@ -976,6 +976,7 @@ class CatalogController < ApplicationController
         ot.save!
       rescue StandardError => bang
         add_flash(_("Error during '%s': ") % "Orchestration Template Copy" << bang.message, :error)
+        ot_action_submit_flash
       else
         add_flash(_("%{model} \"%{name}\" was saved") %
                     {:model => ui_lookup(:model => 'OrchestrationTemplate'),
@@ -983,30 +984,13 @@ class CatalogController < ApplicationController
         x_node_elems = self.x_node.split('-')
         x_node_elems[2] = to_cid(ot.id)
         self.x_node = x_node_elems.join('-')
-        if @flash_array
-          render :update do |page|
-            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-          end
-        end
+        ot_action_submit_flash
         @changed = session[:changed] = false
         @in_a_form = false
         @edit = session[:edit] = nil
         replace_right_cell(nil, trees_to_replace([:ot]))
       end
     end
-  end
-
-  def ot_copy_submit_fallback
-    @edit = {:current => {:name        => params[:name],
-                          :description => params[:description],
-                          :content     => params[:template_content],
-                          :draft       => params[:draft]},
-             :rec_id  => params[:id]}
-    @edit[:new] = @edit[:current].dup
-    @edit[:key] = "ot_edit__#{params[:id]}"
-    @right_cell_text = _("Copying %s") % params[:name]
-    @in_a_form = true
-    replace_right_cell("ot_copy")
   end
 
   def ot_add_submit_cancel
