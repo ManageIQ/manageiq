@@ -152,25 +152,27 @@ class MiqAeClass < ActiveRecord::Base
       )
     end
   end
-  def self.fqnames_for_state_machines
-    paths = []
+
+  def self.waypoint_ids_for_state_machines
+    ids = []
     MiqAeClass.all.select(&:state_machine?).each do |klass|
-      paths << klass.fqname
-      next if paths.include?(klass.namespace)
-      sub_namespaces(klass.ae_namespace.fqname, paths)
+      ids << klass.id
+      next if ids.include?(klass.ae_namespace.id)
+      sub_namespaces(klass.ae_namespace, ids)
     end
-    paths
+    ids
   end
 
   private
 
-  def self.sub_namespaces(fqname, paths)
-    nslist = fqname.split('/')
-    for i in 1..nslist.length - 1
-      ns = nslist[0..i].join('/')
-      paths << ns unless paths.include?(ns)
+  def self.sub_namespaces(ns_obj, ids)
+    loop do
+      break if ns_obj.nil? || (ns_obj && ids.include?(ns_obj.id))
+      ids << ns_obj.id
+      ns_obj = ns_obj.parent
     end
   end
+
   private_class_method :sub_namespaces
 
   def scoped_methods(s)
