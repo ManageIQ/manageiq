@@ -9,14 +9,14 @@ class DialogFieldDateTimeControl < DialogFieldDateControl
   def value
     if dynamic
       @value = values_from_automate
-      DateTime.parse(@value).strftime("%m/%d/%Y %H:%M")
+      Time.parse(@value).strftime("%m/%d/%Y %H:%M")
     else
       default_time
     end
   end
 
   def refresh_json_value
-    date_time_value = DateTime.parse(value)
+    date_time_value = with_current_user_timezone { Time.parse(value) }
 
     {
       :date => date_time_value.strftime("%m/%d/%Y"),

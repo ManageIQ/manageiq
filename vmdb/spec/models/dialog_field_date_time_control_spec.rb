@@ -86,14 +86,14 @@ describe DialogFieldDateTimeControl do
     let(:dialog_field) { described_class.new }
 
     before do
-      described_class.stub(:server_timezone).and_return("UTC")
+      described_class.stub(:server_timezone).and_return("Hawaii")
     end
 
     it "returns the default value in a hash" do
       Timecop.freeze(Time.utc(2015, 2, 3, 4, 50)) do
         expect(dialog_field.refresh_json_value).to eq(
-          :date => "02/04/2015",
-          :hour => "04",
+          :date => "02/03/2015",
+          :hour => "18",
           :min  => "50"
         )
       end
