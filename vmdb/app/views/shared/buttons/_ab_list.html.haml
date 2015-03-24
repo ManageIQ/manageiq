@@ -1,14 +1,14 @@
 - # showing list of CIs
 - if @sb[:obj_list]
   = render :partial => "layouts/flash_msg"
-  %table.style3
+  %table.table.table-bordered.table-hover.table-striped
     %thead
       %th
         = _('Object Types')
     %tbody
       - # CI node level
       - @sb[:obj_list].sort.each do |obj|
-        %tr{:class => cycle('row0', 'row1'), :title => _("Click to view details"), :onmouseover => "this.style.cursor='pointer'",
+        %tr{:title => _("Click to view details"),
           :onclick => "cfmeDynatree_activateNode('ab_tree', 'xx-#{obj[1].split('_').first}_#{@sb[:target_classes][obj[0]]}')"}
           %td
             = obj[0]
@@ -19,9 +19,9 @@
     = render :partial => 'layouts/info_msg', :locals => {:message => _("No Items found.")}
   - else
     = render :partial => "layouts/flash_msg"
-    %table.style3
+    %table.table.table-bordered.table-hover.table-striped
       %thead
-        %th.icon
+        %th.narrow
         %th
           = _('Text')
         - if x_active_tree == :sandt_tree
@@ -32,10 +32,9 @@
       %tbody
         - @sb[:button_groups].each do |obj|
           - if obj.kind_of?(String)
-            %tr{:class => cycle('row0', 'row1'), :onmouseover => "this.style.cursor='pointer'", :title => _("Click to view details"),
-              :onclick => "cfmeDynatree_activateNode('ab_tree', '-ub-#{@nodetype[1]}')"}
-              %td
-                %img{:src => "/images/icons/new/folder.png", :align => "left", :width => "20", :height => "20"}
+            %tr{:title => _("Click to view details"), :onclick => "cfmeDynatree_activateNode('ab_tree', '-ub-#{@nodetype[1]}')"}
+              %td.narrow
+                %img{:src => "/images/icons/new/folder.png"}
               %td
                 = obj
               %td
@@ -51,10 +50,9 @@
               - typ = "cbg"
               - img = obj[:button_image]
               - rec_type = "Group"
-            %tr{:class => cycle('row0', 'row1'), :onmouseover => "this.style.cursor='pointer'", :title => _("Click to view details"),
-              :onclick => "cfmeDynatree_activateNode('#{tree_box}', '#{tree_id}_#{typ}-#{to_cid(obj[:id])}')"}
-              %td
-                %img{:src => "/images/icons/new/custom-#{img}.png", :align => "left", :width => "20", :height => "20"}
+            %tr{:title => _("Click to view details"), :onclick => "cfmeDynatree_activateNode('#{tree_box}', '#{tree_id}_#{typ}-#{to_cid(obj[:id])}')"}
+              %td.narrow
+                %img{:src => "/images/icons/new/custom-#{img}.png"}
               %td
                 = obj[:name].split("|").first
               - if x_active_tree == :sandt_tree
@@ -94,9 +92,9 @@
     = render :partial => 'layouts/info_msg', :locals => {:message => _("No Buttons found.")}
   - else
     %hr
-    %table.style3
+    %table.table.table-bordered.table-hover.table-striped
       %thead
-        %th.icon
+        %th.narrow
         %th
           = _('Text')
         %th
@@ -105,10 +103,9 @@
         - @sb[:buttons].each do |obj|
           - tree_box = x_active_tree == :sandt_tree ? 'sandt_tree' : 'ab_tree'
           - id = @nodetype[0].split('-')[1] == "ub" ? "#{@nodetype[0]}_cb-#{to_cid(obj[:id])}" : "#{x_node}_cb-#{to_cid(obj[:id])}"
-          %tr{:class => cycle('row0', 'row1'), :onmouseover => "this.style.cursor='pointer'", :title => _("Click to view details"),
-            :onclick => "cfmeDynatree_activateNode('#{tree_box}', '#{id}')"}
-            %td
-              %img{:src => "/images/icons/new/custom-#{obj[:button_image]}.png", :align => "left", :width => "20", :height => "20"}
+          %tr{:title => _("Click to view details"), :onclick => "cfmeDynatree_activateNode('#{tree_box}', '#{id}')"}
+            %td.narrow
+              %img{:src => "/images/icons/new/custom-#{obj[:button_image]}.png"}
             %td
               = obj[:name]
             %td
