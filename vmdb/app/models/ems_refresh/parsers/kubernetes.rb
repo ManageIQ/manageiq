@@ -14,8 +14,10 @@ module EmsRefresh::Parsers
     def ems_inv_to_hashes(inventory)
       get_nodes(inventory)
       get_pods(inventory)
+      get_replication_controllers(inventory)
       get_endpoints(inventory)
       get_services(inventory)
+
       EmsRefresh.log_inv_debug_trace(@data, "data:")
       @data
     end
@@ -41,10 +43,16 @@ module EmsRefresh::Parsers
 
     def get_endpoints(inventory)
       process_collection(inventory["endpoint"], :container_endpoints) { |n| parse_endpoint(n) }
+
       @data[:container_endpoints].each do |ep|
         @data_index.store_path(:container_endpoints, :by_namespace_and_name,
                                ep[:namespace], ep[:name], ep)
       end
+    end
+
+    def get_replication_controllers(inventory)
+      process_collection(inventory["replication_controller"], :container_replication_controllers)\
+                                                                                { |n| parse_replication_controllers(n) }
     end
 
     def process_collection(collection, key, &block)
@@ -160,6 +168,20 @@ module EmsRefresh::Parsers
           endpoint.targetRef["table"][:namespace], endpoint.targetRef.name)
         new_result[:container_groups] << cg unless cg.nil?
       end
+
+      new_result
+    end
+
+    def parse_replication_controllers(container_replication_controller)
+      new_result = parse_base_item(container_replication_controller)
+
+      # TODO: parse template
+      new_result.merge!(
+        :replicas         => container_replication_controller.spec.replicas,
+        :current_replicas => container_replication_controller.status.replicas,
+        :labels           => parse_labels(container_replication_controller),
+        :selector_parts   => parse_selector_parts(container_replication_controller)
+      )
 
       new_result
     end

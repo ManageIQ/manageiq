@@ -2,6 +2,7 @@ class EmsKubernetes < EmsContainer
   has_many :container_nodes,                      :foreign_key => :ems_id, :dependent => :destroy
   has_many :container_groups,                     :foreign_key => :ems_id, :dependent => :destroy
   has_many :container_services,                   :foreign_key => :ems_id, :dependent => :destroy
+  has_many :container_replication_controllers,    :foreign_key => :ems_id, :dependent => :destroy
 
   default_value_for :port, 6443
 
