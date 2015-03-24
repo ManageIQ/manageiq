@@ -24,10 +24,11 @@ module EmsOpenstackMixin
   def openstack_handle(options = {})
     require 'openstack/openstack_handle'
     @openstack_handle ||= begin
-      raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
+      raise MiqException::MiqInvalidCredentialsError, "No credentials defined" if self.missing_credentials?(options[:auth_type])
 
       username = options[:user] || self.authentication_userid(options[:auth_type])
       password = options[:pass] || self.authentication_password(options[:auth_type])
+
       osh = OpenstackHandle::Handle.new(username, password, address, port)
       osh.connection_options = {:instrumentor => $fog_log}
       osh
@@ -79,6 +80,8 @@ module EmsOpenstackMixin
     rescue Excon::Errors::Unauthorized => err
       $log.error("MIQ(#{self.class.name}.verify_api_credentials) Error Class=#{err.class.name}, Message=#{err.message}")
       raise MiqException::MiqEVMLoginError, "Login failed due to a bad username or password."
+    rescue MiqException::MiqInvalidCredentialsError
+      raise
     rescue Exception => err
       $log.error("MIQ(#{self.class.name}.verify_api_credentials) Error Class=#{err.class.name}, Message=#{err.message}")
       raise MiqException::MiqEVMLoginError, "Unexpected response returned from system, see log for details"
@@ -107,6 +110,10 @@ module EmsOpenstackMixin
     when 'amqp';    verify_amqp_credentials(options)
     else;           raise "Invalid OpenStack Authentication Type: #{auth_type.inspect}"
     end
+  end
+
+  def required_credential_fields(type)
+    [:userid, :password]
   end
 
   def stack_create(stack_name, template, options = {})
