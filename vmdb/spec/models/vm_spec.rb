@@ -99,6 +99,20 @@ describe Vm do
       Vm.stub(:start).and_raise(MiqException::MiqVimBrokerUnavailable)
       msg.deliver
     end
+
+    it "retirement passes in userid" do
+      options = {:task => "retire_now", :invoke_by => :task, :ids => [@vm.id], :userid => "Freddy"}
+      Vm.invoke_tasks_local(options)
+      MiqTask.count.should == 1
+      task = MiqTask.first
+      MiqQueue.count.should == 1
+      msg = MiqQueue.first
+
+      msg.miq_callback.should == {:class_name => "MiqTask", :method_name => :queue_callback,
+                                  :instance_id => task.id, :args => ["Finished"]}
+      msg.args.should == ["Freddy"]
+    end
+
   end
 
   context "#start" do

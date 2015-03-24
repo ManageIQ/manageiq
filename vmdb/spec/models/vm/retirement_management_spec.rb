@@ -37,6 +37,26 @@ describe "VM Retirement Management" do
     @vm.retire_now
   end
 
+  it "#retire_now with userid" do
+    event_name = 'request_vm_retire'
+    event_hash = {:vm => @vm, :host => @vm.host, :type => "VmVmware",
+                  :retirement_initiator => "user", :user_id => 'freddy'}
+
+    expect(MiqAeEvent).to receive(:raise_evm_event).with(event_name, @vm, event_hash).once
+
+    @vm.retire_now('freddy')
+  end
+
+  it "#retire_now without userid" do
+    event_name = 'request_vm_retire'
+    event_hash = {:vm => @vm, :host => @vm.host, :type => "VmVmware",
+                  :retirement_initiator => "system"}
+
+    expect(MiqAeEvent).to receive(:raise_evm_event).with(event_name, @vm, event_hash).once
+
+    @vm.retire_now
+  end
+
   it "#retire warn" do
     expect(AuditEvent).to receive(:success).once
     options = {}
@@ -127,7 +147,8 @@ describe "VM Retirement Management" do
 
   it "#raise_retirement_event" do
     event_name = 'foo'
-    event_hash = {:vm => @vm, :host => @vm.host, :type => "VmVmware"}
+    event_hash = {:vm => @vm, :host => @vm.host, :type => "VmVmware",
+                  :retirement_initiator => "system"}
 
     expect(MiqAeEvent).to receive(:raise_evm_event).with(event_name, @vm, event_hash).once
 

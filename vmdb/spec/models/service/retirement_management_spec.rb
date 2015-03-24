@@ -37,6 +37,30 @@ describe "Service Retirement Management" do
     @service.reload
   end
 
+  it "#retire_now with userid" do
+    expect(@service.retirement_state).to be_nil
+    event_name = 'request_service_retire'
+    event_hash = {:service => @service, :type => "Service",
+                  :retirement_initiator => "user", :user_id => "freddy"}
+
+    expect(MiqAeEvent).to receive(:raise_evm_event).with(event_name, @service, event_hash).once
+
+    @service.retire_now('freddy')
+    @service.reload
+  end
+
+  it "#retire_now without userid" do
+    expect(@service.retirement_state).to be_nil
+    event_name = 'request_service_retire'
+    event_hash = {:service => @service, :type => "Service",
+                  :retirement_initiator => "system"}
+
+    expect(MiqAeEvent).to receive(:raise_evm_event).with(event_name, @service, event_hash).once
+
+    @service.retire_now
+    @service.reload
+  end
+
   it "#retire warn" do
     expect(AuditEvent).to receive(:success).once
     options = {}
@@ -61,6 +85,26 @@ describe "Service Retirement Management" do
     @service << vm
     expect(@service.service_resources).to have(1).thing
     expect(@service.service_resources.first.resource).to receive(:retire_now).once
+    @service.retire_service_resources
+  end
+
+  it "#retire_service_resources should get service's retirement_requester" do
+    ems = FactoryGirl.create(:ems_vmware, :zone => @zone)
+    vm  = FactoryGirl.create(:vm_vmware, :ems_id => ems.id)
+    userid = 'freddy'
+    @service.update_attributes(:retirement_requester => userid)
+    @service << vm
+    expect(@service.service_resources).to have(1).thing
+    expect(@service.service_resources.first.resource).to receive(:retire_now).with(userid).once
+    @service.retire_service_resources
+  end
+
+  it "#retire_service_resources should get service's nil retirement_requester" do
+    ems = FactoryGirl.create(:ems_vmware, :zone => @zone)
+    vm  = FactoryGirl.create(:vm_vmware, :ems_id => ems.id)
+    @service << vm
+    expect(@service.service_resources).to have(1).thing
+    expect(@service.service_resources.first.resource).to receive(:retire_now).with(nil).once
     @service.retire_service_resources
   end
 
@@ -128,7 +172,7 @@ describe "Service Retirement Management" do
 
   it "#raise_retirement_event" do
     event_name = 'foo'
-    event_hash = {:service => @service, :type => "Service"}
+    event_hash = {:service => @service, :type => "Service", :retirement_initiator => "system"}
     expect(MiqAeEvent).to receive(:raise_evm_event).with(event_name, @service, event_hash)
     @service.raise_retirement_event(event_name)
   end

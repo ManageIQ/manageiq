@@ -74,6 +74,7 @@ module RetirementMixin
       end
     end
 
+    self.retirement_requester = nil
     save
 
     raise_retire_audit_event(message)
@@ -101,17 +102,19 @@ module RetirementMixin
     retire_now if retirement_due?
   end
 
-  def retire_now
+  def retire_now(requester = nil)
     log_prefix = "MIQ(#{retirement_object_title}#retire_now)"
 
     if retired
       return if retired_validated?
       $log.info("#{log_prefix} #{retirement_object_title}: [#{self.name}], Retires On Date: [#{self.retires_on_date}], was previously retired, but currently #{retired_invalid_reason}")
     else
+      self.retirement_requester = requester
+      save
       event_name = "request_#{retirement_event_prefix}_retire"
       $log.info("#{log_prefix} calling #{event_name}")
       begin
-        raise_retirement_event(event_name)
+        raise_retirement_event(event_name, requester)
       rescue => err
         $log.log_backtrace(err)
       end
@@ -162,13 +165,9 @@ module RetirementMixin
     @retired_event_name ||= "#{retirement_event_prefix}_retired".freeze
   end
 
-  def raise_retirement_event(event_name)
-    event_hash = {}
-    event_hash[retirement_base_model_name.underscore.to_sym] = self
-    event_hash[:host] = self.host if self.respond_to?(:host)
+  def raise_retirement_event(event_name, requester = nil)
     $log.info("Raising Retirement Event for [#{name}]")
-    event_hash[:type] ||= self.class.name
-    MiqAeEvent.raise_evm_event(event_name, self, event_hash)
+    MiqAeEvent.raise_evm_event(event_name, self, setup_event_hash(requester))
   end
 
   def raise_audit_event(event_name, message)
@@ -187,5 +186,19 @@ module RetirementMixin
 
   def error_retiring?
     retirement_state == ERROR_RETIRING
+  end
+
+  private
+
+  def setup_event_hash(requester)
+    event_hash = {:retirement_initiator => "system"}
+    event_hash[retirement_base_model_name.underscore.to_sym] = self
+    event_hash[:host] = host if self.respond_to?(:host)
+    if requester
+      event_hash[:user_id] = requester
+      event_hash[:retirement_initiator] = "user"
+    end
+    event_hash[:type] ||= self.class.name
+    event_hash
   end
 end
