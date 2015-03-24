@@ -2,12 +2,12 @@
 #tab_div
   %h3
     = _("Tag Assignment%s") % (@tagitems.length > 1 ? " (#{_('Tags common to all selected items')})" : "")
-  %table.style3{:style => "margin-bottom: 0;"}
+  %table.table.table-bordered{:style => "margin-bottom: 0;"}
     %thead
       %tr
-        %th.special{:colspan => "3"}
-          %strong
-            = _("Select a customer tag to assign:")
+        %th
+          = _("Select a customer tag to assign:")
+        %th
           - @categories.each do | cat_key, cat_val |
             - if session[:assigned_filters].include?(cat_val.downcase)
               - @categories.delete(cat_key)
@@ -16,6 +16,7 @@
             "data-miq_sparkle_on"  => true,
             "data-miq_sparkle_off" => true,
             "data-miq_observe"     => {:url => url}.to_json)
+        %th
           = render :partial => "layouts/tag_edit_cat_tags"
   = render :partial => 'layouts/tag_edit_assignments', :locals => {:entry => nil}
   %br

@@ -1,9 +1,8 @@
 #assignments_div
-  %table.style3
+  %table.table.table-striped.table-bordered.table-hover
     %thead
       %tr
-        %th.icon
-          &nbsp;
+        %th.narrow
         %th
           = _("Category")
         %th
@@ -11,7 +10,7 @@
     %tbody
       - # assignments = Classification.find(@edit.fetch_path(:new, :assignments))
       - if @assignments.length == 0
-        %tr{:class => cycle('row0', 'row1')}
+        %tr
           %td
           %td
             - if @edit[:object_ids].length == 1
@@ -21,7 +20,7 @@
           %td
       - else
         - @assignments.sort_by { |a| [a.parent.description, a.description] }.each do |a|
-          %tr{:id => "#{a.id}_tr", :class => cycle('row0', 'row1')}
+          %tr{:id => "#{a.id}_tr"}
             - if !session[:assigned_filters].include?(a.parent.description.downcase)
               - cl = remote_function(:url => {:action => 'tag_edit_form_field_changed', :id => @sb[:rec_id] || @edit[:object_ids][0], :tag_remove => a.id},
                 :loading  => "miqSparkle(true);",
