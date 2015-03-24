@@ -18,8 +18,10 @@ module ApplicationHelper::PageLayouts
   end
 
   def layout_uses_tabs?
-    if (["timeline"].include?(@layout) && ! @in_a_form) || ["login","authenticate","auth_error"].include?(controller.action_name) ||
+    if (["timeline"].include?(@layout) && ! @in_a_form) ||
+       ["login", "authenticate", "auth_error"].include?(controller.action_name) ||
        @layout == "exception" ||
+       (@layout == 'vm' && controller.action_name == 'edit') ||
        (@layout == "report" && ["new","create","edit","copy","update","explorer"].include?(controller.action_name))
       return false
     elsif @layout == "dashboard" # Dashboard tabs are located in taskbar because they are otherwise hidden behind the taskbar regardless of z-index -->
