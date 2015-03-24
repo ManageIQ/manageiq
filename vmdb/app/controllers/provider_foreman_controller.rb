@@ -662,6 +662,10 @@ class ProviderForemanController < ApplicationController
                    :verify_ssl => params[:verify_ssl]}
   end
 
+  def breadcrumb_name
+    ui_lookup_for_model(self.class.model_name).singularize
+  end
+
   def set_root_node
     self.x_node = "root"
     get_node_info(x_node)
