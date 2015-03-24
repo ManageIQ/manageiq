@@ -79,12 +79,18 @@ module EmsOpenstackMixin
       with_provider_connection(options) {}
     rescue Excon::Errors::Unauthorized => err
       $log.error("MIQ(#{self.class.name}.verify_api_credentials) Error Class=#{err.class.name}, Message=#{err.message}")
-      raise MiqException::MiqEVMLoginError, "Login failed due to a bad username or password."
+      raise MiqException::MiqInvalidCredentialsError, "Login failed due to a bad username or password."
+    rescue Excon::Errors::Timeout => err
+      $log.error("MIQ(#{self.class.name}.verify_api_credentials) Error Class=#{err.class.name}, Message=#{err.message}")
+      raise MiqException::MiqUnreachableError, "Login attempt timed out"
+    rescue Excon::Errors::SocketError => err
+      $log.error("MIQ(#{self.class.name}.verify_api_credentials) Error Class=#{err.class.name}, Message=#{err.message}")
+      raise MiqException::MiqHostError, "Socket error: #{err.message}"
     rescue MiqException::MiqInvalidCredentialsError
       raise
     rescue Exception => err
       $log.error("MIQ(#{self.class.name}.verify_api_credentials) Error Class=#{err.class.name}, Message=#{err.message}")
-      raise MiqException::MiqEVMLoginError, "Unexpected response returned from system, see log for details"
+      raise MiqException::MiqEVMLoginError, "Unexpected response returned from system: #{err.message}"
     end
     true
   end
@@ -112,7 +118,7 @@ module EmsOpenstackMixin
     end
   end
 
-  def required_credential_fields(type)
+  def required_credential_fields(_type)
     [:userid, :password]
   end
 
