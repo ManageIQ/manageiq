@@ -57,12 +57,8 @@ module WebServerWorkerMixin
       self.server_scope.all.collect { |w| w.port unless w.is_stopped? && !MiqProcess.is_worker?(w.pid)}.compact
     end
 
-    # Utilize URI::Generic#hostname to add support for IPv6 literals
-    # TODO: simplify this once https://github.com/ruby/ruby/pull/765 lands in our ruby
     def self.build_uri(port)
-      uri = URI::HTTP.build(:port => port)
-      uri.hostname = binding_address
-      uri.to_s
+      URI::HTTP.build(:host => binding_address, :port => port).to_s
     end
 
     def self.sync_workers

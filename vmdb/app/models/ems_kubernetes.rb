@@ -18,14 +18,7 @@ class EmsKubernetes < EmsContainer
   end
 
   def self.raw_api_endpoint(hostname, port)
-    require 'uri'
-
-    uri = URI::HTTP.build(:path => "/api", :port => port.to_i)
-
-    # URI::Generic#hostname= was added in ruby 1.9.3 and will automatically
-    # wrap an ipv6 address in []
-    uri.hostname = hostname
-    uri
+    URI::HTTP.build(:host => hostname, :port => port.to_i, :path => "/api")
   end
 
   def api_endpoint
