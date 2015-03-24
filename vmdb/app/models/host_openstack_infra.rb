@@ -1,4 +1,16 @@
 class HostOpenstackInfra < Host
+  belongs_to :availability_zone
+
+  # TODO(lsmola) for some reason UI can't handle joined table cause there is hardcoded somewhere that it selects
+  # DISTINCT id, with joined tables, id needs to be prefixed with table name. When this is figured out, replace
+  # cloud tenant with rails relations
+  # has_many :vms, :class_name => 'VmOpenstack', :foreign_key => :host_id
+  # has_many :cloud_tenants, :through => :vms, :uniq => true
+
+  def cloud_tenants
+    CloudTenant.where(:id => vms.collect(&:cloud_tenant_id).uniq)
+  end
+
   def ssh_users_and_passwords
     # HostOpenstackInfra is using auth key set on ext_management_system level, not individual hosts
     rl_user, auth_key = self.auth_user_keypair(:ssh_keypair)

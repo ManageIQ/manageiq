@@ -5,6 +5,14 @@ class EmsOpenstackInfra < EmsInfra
 
   has_many :orchestration_stacks, :foreign_key => :ems_id, :dependent => :destroy
 
+  def cloud_tenants
+    CloudTenant.where(:ems_id => provider.try(:cloud_ems).try(:collect, &:id).try(:uniq))
+  end
+
+  def availability_zones
+    AvailabilityZone.where(:ems_id => provider.try(:cloud_ems).try(:collect, &:id).try(:uniq))
+  end
+
   def ensure_parent_provider
     # TODO(lsmola) this might move to a general management of Providers, but for now, we will ensure, every
     # EmsOpenstackInfra has associated a Provider. This relation will serve for relating EmsOpenstackInfra
