@@ -1,12 +1,15 @@
 - if items
-  %table.style3
+  %table.table.table-bordered.table-striped
     %thead
       %tr
         %th{:colspan => 6, :align => "left"}
-          =title
+          = title
     - labels.each do |label|
-      %td.label= label
+      %td
+        %strong
+          = label
     - items.each do |item|
-      %tr{:class => cycle('row0', 'row1', :name => title)}
+      %tr
         - item.each do |value|
-          %td= value
+          %td
+            = value
