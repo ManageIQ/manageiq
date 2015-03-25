@@ -67,7 +67,7 @@ describe CatalogController do
     let(:dialog) { active_record_instance_double("Dialog") }
     let(:wf) { double(:dialog => dialog) }
     let(:dialog_field) do
-      active_record_instance_double("DialogFieldDateControl", :value => "01/02/2015", :name => "potato")
+      active_record_instance_double("DialogFieldDateControl", :refresh_json_value => "01/02/2015", :name => "potato")
     end
 
     let(:params) { {:name => "name"} }
@@ -79,7 +79,7 @@ describe CatalogController do
 
     it "returns the correct json response" do
       xhr :post, :dynamic_date_refresh, params, session
-      expect(response.body).to eq({:field_name => "potato", :date_value => "01/02/2015"}.to_json)
+      expect(response.body).to eq({:field_name => "potato", :values => "01/02/2015"}.to_json)
     end
   end
 end

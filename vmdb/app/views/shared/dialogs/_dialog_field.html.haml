@@ -107,30 +107,29 @@
             = field.value
 
         - if field.type == "DialogFieldDateTimeControl"
-          - t = Time.now.in_time_zone(session[:user_tz]) + 1.day
-          - date_val = wf.value(field.name) ? wf.value(field.name).split(" ") : ["#{t.month}/#{t.day}/#{t.year}"]
+          - date_val = field.refresh_json_value
           - if edit
             = text_field_tag("miq_date__#{field.name}",
-                             date_val[0],
+                             date_val[:date],
                              :class                  => "css1 dynamic-date-#{field.id}",
                              :readonly               => "true",
                              "data-miq_observe_date" => {:url => url}.to_json)
           - else
-            = date_val[0]
+            = date_val[:date]
 
           &nbsp;at&nbsp;
-          - start_hour = date_val.length >= 2 ? date_val[1].split(":").first : '0'
-          - start_min = date_val.length >= 2 ? date_val[1].split(":").last : '0'
           - if edit
             = select_tag("start_hour",
-                         options_for_select(Array.new(24) {|i| i}, start_hour.to_i),
+                         options_for_select(Array.new(24) {|i| i.to_s.rjust(2, '0')}, date_val[:hour]),
+                         :class => "dynamic-date-hour-#{field.id}",
                          "data-miq_observe" => {:url => url}.to_json)
             = ':'
             = select_tag("start_min",
-                         options_for_select(Array.new(12) {|i| i*5}, start_min.to_i),
+                         options_for_select(Array.new(59) {|i| i.to_s.rjust(2, '0')}, date_val[:min]),
+                         :class => "dynamic-date-min-#{field.id}",
                          "data-miq_observe" => {:url => url}.to_json)
           - else
-            = "#{start_hour.rjust(2, '0')}:#{start_min.rjust(2, '0')}"
+            = "#{date_val[:hour].rjust(2, '0')}:#{date_val[:min].rjust(2, '0')}"
           &nbsp;
           = session[:user_tz]
 
@@ -145,7 +144,13 @@
               var fieldName = "#{field.name}";
 
               $.post('dynamic_date_refresh', {name: fieldName}, function(data) {
-                $('.dynamic-date-' + fieldId).val(data.date_value);
+                $('.dynamic-date-' + fieldId).val(data.values.date);
+
+                if (data.values.hour !== undefined && data.values.min !== undefined) {
+                  $('.dynamic-date-hour-' + fieldId).val(data.values.hour);
+                  $('.dynamic-date-min-' + fieldId).val(data.values.min);
+                }
+
                 miqSparkleOff();
               });
             });

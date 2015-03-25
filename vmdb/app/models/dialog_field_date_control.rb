@@ -23,7 +23,7 @@ class DialogFieldDateControl < DialogField
   def value
     if dynamic
       @value = values_from_automate
-      @value
+      Date.parse(@value).strftime("%m/%d/%Y")
     else
       default_time
     end
@@ -36,16 +36,18 @@ class DialogFieldDateControl < DialogField
 
     return default_time if automate_hash["value"].blank?
     begin
-      @value = Date.parse(automate_hash["value"]).iso8601
+      return DateTime.parse(automate_hash["value"]).iso8601
     rescue
       return default_time
     end
-
-    Date.parse(@value).strftime("%m/%d/%Y")
   end
 
   def script_error_values
     "<Script error>"
+  end
+
+  def refresh_json_value
+    {:date => Date.parse(value).strftime("%m/%d/%Y")}
   end
 
   private
