@@ -23,15 +23,14 @@ class VmOpenstack < VmCloud
 
     log_pref = "MIQ(#{self.class.name}##{__method__})"
 
-    instance_id = ems_ref
-    $log.debug "#{log_pref} instance_id = #{instance_id}"
+    $log.debug "#{log_pref} instance_id = #{ems_ref}"
     ost.scanTime = Time.now.utc unless ost.scanTime
 
     ems = ext_management_system
     os_handle = ems.openstack_handle
 
     begin
-      miq_vm = MiqOpenStackInstance.new(instance_id, :openstack_handle => os_handle)
+      miq_vm = MiqOpenStackInstance.new(ems_ref, os_handle)
       scan_via_miq_vm(miq_vm, ost)
     ensure
       miq_vm.unmount if miq_vm

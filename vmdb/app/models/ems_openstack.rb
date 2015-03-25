@@ -68,7 +68,7 @@ class EmsOpenstack < EmsCloud
 
     log_prefix = "MIQ(#{self.class.name}##{__method__}) vm=[#{vm.name}]"
 
-    miq_openstack_instance = MiqOpenStackInstance.new(vm.ems_ref, :openstack_handle => openstack_handle)
+    miq_openstack_instance = MiqOpenStackInstance.new(vm.ems_ref, openstack_handle)
     miq_snapshot = miq_openstack_instance.create_evm_snapshot(options)
 
     # Add new snapshot image to the vms table. Type is TemplateOpenstack.
@@ -102,18 +102,18 @@ class EmsOpenstack < EmsCloud
 
     log_prefix = "MIQ(#{self.class.name}##{__method__}) snapshot=[#{image_id}]"
 
-    miq_openstack_instance = MiqOpenStackInstance.new(vm.ems_ref, :openstack_handle => openstack_handle)
+    miq_openstack_instance = MiqOpenStackInstance.new(vm.ems_ref, openstack_handle)
     miq_openstack_instance.delete_evm_snapshot(image_id)
 
     # Remove from the snapshots table.
-    snapshot_ci = vm.snapshots.where(:ems_ref  => image_id).first
-    $log.debug "#{log_prefix}: snapshot_ci = #{snapshot_ci.class.name}"
-    snapshot_ci.destroy if snapshot_ci
+    ar_snapshot = vm.snapshots.where(:ems_ref  => image_id).first
+    $log.debug "#{log_prefix}: ar_snapshot = #{ar_snapshot.class.name}"
+    ar_snapshot.destroy if ar_snapshot
 
     # Remove from the vms table.
-    template_ci = miq_templates.where(:ems_ref  => image_id).first
-    $log.debug "#{log_prefix}: template_ci = #{template_ci.class.name}"
-    template_ci.destroy if template_ci
+    ar_template = miq_templates.where(:ems_ref  => image_id).first
+    $log.debug "#{log_prefix}: ar_template = #{ar_template.class.name}"
+    ar_template.destroy if ar_template
   rescue => err
     $log.error "#{log_prefix}, error: #{err}"
     $log.debug err.backtrace.join("\n") if $log.debug?

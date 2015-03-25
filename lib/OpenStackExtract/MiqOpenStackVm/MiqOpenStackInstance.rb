@@ -9,11 +9,9 @@ require_relative '../../MiqVm/MiqVm'
 class MiqOpenStackInstance
   SUPPORTED_METHODS = [:vmRootTrees, :extract, :diskInitErrors]
 
-  def initialize(instance_id, args)
+  def initialize(instance_id, openstack_handle)
     @instance_id      = instance_id
-    @args             = args
-    @openstack_handle = args[:openstack_handle]
-    raise ArgumentError, "#{self.class.name}: required arg openstack_handle missing"  unless @openstack_handle
+    @openstack_handle = openstack_handle
   end
 
   def compute_service
@@ -130,26 +128,26 @@ class MiqOpenStackInstance
   end
 
   def get_image_file(image_id)
-    log_pref = "#{self.class.name}##{__method__}"
+    log_prefix = "#{self.class.name}##{__method__}"
 
     cimage = compute_service.images.get(image_id)
     raise "Image #{image_id} not found" unless cimage
-    $log.debug "#{log_pref}: cimage = #{cimage.class.name}"
+    $log.debug "#{log_prefix}: cimage = #{cimage.class.name}"
 
     iname = cimage.attributes[:name]
     isize = cimage.attributes['OS-EXT-IMG-SIZE:size'].to_i
-    $log.debug "#{log_pref}: iname = #{iname}"
-    $log.debug "#{log_pref}: isize = #{isize}"
+    $log.debug "#{log_prefix}: iname = #{iname}"
+    $log.debug "#{log_prefix}: isize = #{isize}"
 
     raise "Image: #{iname} (#{image_id}) is empty" unless isize > 0
 
     tot = 0
     tf = MiqTempfile.new(iname, :encoding => 'ascii-8bit')
-    $log.debug "#{log_pref}: saving image to #{tf.path}"
+    $log.debug "#{log_prefix}: saving image to #{tf.path}"
     response_block = lambda do |buf, rem, sz|
       tf.write buf
       tot += buf.length
-      $log.debug "#{log_pref}: response_block: #{tot} bytes written of #{sz}"
+      $log.debug "#{log_prefix}: response_block: #{tot} bytes written of #{sz}"
     end
 
     #
@@ -168,12 +166,12 @@ class MiqOpenStackInstance
     tf.close
 
     checksum = rv.headers['X-Image-Meta-Checksum']
-    $log.debug "#{log_pref}: Checksum: #{checksum}" if $log.debug?
-    $log.debug "#{log_pref}: #{`ls -l #{tf.path}`}" if $log.debug?
+    $log.debug "#{log_prefix}: Checksum: #{checksum}" if $log.debug?
+    $log.debug "#{log_prefix}: #{`ls -l #{tf.path}`}" if $log.debug?
 
     if tf.size != isize
-      $log.error "#{log_pref}: Error downloading image #{iname}"
-      $log.error "#{log_pref}: Downloaded size does not match image size #{tf.size} != #{isize}"
+      $log.error "#{log_prefix}: Error downloading image #{iname}"
+      $log.error "#{log_prefix}: Downloaded size does not match image size #{tf.size} != #{isize}"
       raise "Image download failed"
     end
 
@@ -181,7 +179,7 @@ class MiqOpenStackInstance
   end
 
   def method_missing(sym, *args)
-    super unless SUPPORTED_METHODS.include? sym
+    return super unless SUPPORTED_METHODS.include? sym
     return miq_vm.send(sym) if args.empty?
     miq_vm.send(sym, args)
   end
