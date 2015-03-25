@@ -3,7 +3,7 @@ require 'pid_file'
 
 class EvmServer
   SOFT_INTERRUPT_SIGNALS = ["TERM", "USR1", "USR2"]
-  HARD_INTERRUPT_SIGNALS = ["INT", "KILL"]
+  HARD_INTERRUPT_SIGNALS = ["INT"]
 
   OPTIONS_PARSER_SETTINGS = [
     [:mode, 'EVM Server Mode', String],
