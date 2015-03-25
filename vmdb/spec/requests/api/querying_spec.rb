@@ -20,44 +20,38 @@ describe ApiController do
     Vmdb::Application
   end
 
-  def create_vms(count)
-    count.times.collect { FactoryGirl.create(:vm_vmware) }
-  end
-
   def create_vms_by_name(names)
     names.each.collect { |name| FactoryGirl.create(:vm_vmware, :name => name) }
   end
 
-  context "Query - paging vms" do
-    it "to support offset" do
-      api_basic_authorize
-      create_vms(3)
+  describe "Querying vms" do
+    before { api_basic_authorize }
+
+    it "supports offset" do
+      create_vms_by_name(%w(aa bb cc))
 
       run_get vms_url, :offset => 2
 
       expect_query_result(:vms, 1, 3)
     end
 
-    it "to support limit" do
-      api_basic_authorize
-      create_vms(3)
+    it "supports limit" do
+      create_vms_by_name(%w(aa bb cc))
 
       run_get vms_url, :limit => 2
 
       expect_query_result(:vms, 2, 3)
     end
 
-    it "to support offset and limit" do
-      api_basic_authorize
-      create_vms(3)
+    it "supports offset and limit" do
+      create_vms_by_name(%w(aa bb cc))
 
       run_get vms_url, :offset => 1, :limit => 1
 
       expect_query_result(:vms, 1, 3)
     end
 
-    it "to support paging via offset and limit" do
-      api_basic_authorize
+    it "supports paging via offset and limit" do
       create_vms_by_name %w(aa bb cc dd ee)
 
       run_get vms_url, :offset => 0, :limit => 2, :sort_by => "name", :expand => "resources"
@@ -77,9 +71,10 @@ describe ApiController do
     end
   end
 
-  context "Query - sorting vms" do
-    it "to support sorting by name in ascending order" do
-      api_basic_authorize
+  describe "Sorting vms by attribute" do
+    before { api_basic_authorize }
+
+    it "supports ascending order" do
       create_vms_by_name %w(cc aa bb)
 
       run_get vms_url, :sort_by => "name", :sort_order => "asc", :expand => "resources"
@@ -88,8 +83,7 @@ describe ApiController do
       expect_result_resources_to_match_hash([{"name" => "aa"}, {"name" => "bb"}, {"name" => "cc"}])
     end
 
-    it "to support sorting by name in decending order" do
-      api_basic_authorize
+    it "supports decending order" do
       create_vms_by_name %w(cc aa bb)
 
       run_get vms_url, :sort_by => "name", :sort_order => "desc", :expand => "resources"
@@ -99,9 +93,10 @@ describe ApiController do
     end
   end
 
-  context "Query - filtering vms" do
-    it "by exact name using double quotes" do
-      api_basic_authorize
+  describe "Filtering vms" do
+    before { api_basic_authorize }
+
+    it "supports attribute equality test using double quotes" do
       _vm1, vm2 = create_vms_by_name(%w(aa bb))
 
       run_get vms_url, :expand => "resources", :filter => ['name="bb"']
@@ -110,8 +105,7 @@ describe ApiController do
       expect_result_resources_to_match_hash([{"name" => vm2.name, "guid" => vm2.guid}])
     end
 
-    it "by exact name using single quotes" do
-      api_basic_authorize
+    it "supports attribute equality test using single quotes" do
       vm1, _vm2 = create_vms_by_name(%w(aa bb))
 
       run_get vms_url, :expand => "resources", :filter => ["name='aa'"]
@@ -120,8 +114,7 @@ describe ApiController do
       expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid}])
     end
 
-    it "by name match" do
-      api_basic_authorize
+    it "supports attribute pattern matching via %" do
       vm1, _vm2, vm3 = create_vms_by_name(%w(aa_B2 bb aa_A1))
 
       run_get vms_url, :expand => "resources", :filter => ["name='aa%'"], :sort_by => "name"
@@ -131,8 +124,7 @@ describe ApiController do
                                              {"name" => vm1.name, "guid" => vm1.guid}])
     end
 
-    it "by name inequality match via !=" do
-      api_basic_authorize
+    it "supports inequality test via !=" do
       vm1, _vm2, vm3 = create_vms_by_name(%w(aa bb cc))
 
       run_get vms_url, :expand => "resources", :filter => ["name!='b%'"], :sort_by => "name"
@@ -142,8 +134,7 @@ describe ApiController do
                                              {"name" => vm3.name, "guid" => vm3.guid}])
     end
 
-    it "by id comparison using <" do
-      api_basic_authorize
+    it "supports numerical less than comparison via <" do
       vm1, vm2, vm3 = create_vms_by_name(%w(aa bb cc))
 
       run_get vms_url, :expand => "resources", :filter => ["id < #{vm3.id}"], :sort_by => "name"
@@ -153,8 +144,7 @@ describe ApiController do
                                              {"name" => vm2.name, "guid" => vm2.guid}])
     end
 
-    it "by id comparison using <=" do
-      api_basic_authorize
+    it "supports numerical less than or equal comparison via <=" do
       vm1, vm2, _vm3 = create_vms_by_name(%w(aa bb cc))
 
       run_get vms_url, :expand => "resources", :filter => ["id <= #{vm2.id}"], :sort_by => "name"
@@ -164,8 +154,7 @@ describe ApiController do
                                              {"name" => vm2.name, "guid" => vm2.guid}])
     end
 
-    it "by id comparison using >" do
-      api_basic_authorize
+    it "support greater than numerical comparison via >" do
       vm1, vm2 = create_vms_by_name(%w(aa bb))
 
       run_get vms_url, :expand => "resources", :filter => ["id > #{vm1.id}"], :sort_by => "name"
@@ -174,8 +163,7 @@ describe ApiController do
       expect_result_resources_to_match_hash([{"name" => vm2.name, "guid" => vm2.guid}])
     end
 
-    it "by id comparison using >=" do
-      api_basic_authorize
+    it "supports greater or equal than numerical comparison via >=" do
       _vm1, vm2, vm3 = create_vms_by_name(%w(aa bb cc))
 
       run_get vms_url, :expand => "resources", :filter => ["id >= #{vm2.id}"], :sort_by => "name"
@@ -185,8 +173,7 @@ describe ApiController do
                                              {"name" => vm3.name, "guid" => vm3.guid}])
     end
 
-    it "by compound id comparison using = and > (OR)" do
-      api_basic_authorize
+    it "supports compound logical OR comparisons" do
       vm1, vm2, vm3 = create_vms_by_name(%w(aa bb cc))
 
       run_get vms_url, :expand  => "resources",
@@ -198,8 +185,7 @@ describe ApiController do
                                              {"name" => vm3.name, "guid" => vm3.guid}])
     end
 
-    it "by multilple comparisons (AND)" do
-      api_basic_authorize
+    it "supports multiple logical AND comparisons" do
       vm1, _vm2 = create_vms_by_name(%w(aa bb))
 
       run_get vms_url, :expand => "resources",
@@ -209,8 +195,7 @@ describe ApiController do
       expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid}])
     end
 
-    it "by multilple comparisons (AND and OR)" do
-      api_basic_authorize
+    it "supports multiple comparisons with both AND and OR" do
       vm1, vm2, vm3 = create_vms_by_name(%w(aa bb cc))
 
       run_get vms_url, :expand  => "resources",
@@ -223,8 +208,8 @@ describe ApiController do
     end
   end
 
-  context "Query - selecting attributes of a vm" do
-    it "to request specific attributes" do
+  describe "Querying vm attributes" do
+    it "supports requests specific attributes" do
       api_basic_authorize
       vm = create_vms_by_name(%w(aa)).first
 
@@ -235,7 +220,7 @@ describe ApiController do
       expect_result_resources_to_match_hash([{"name" => "aa", "id" => vm.id, "href" => vms_url(vm.id)}])
     end
 
-    it "to request an invalid attribute" do
+    it "skips requests of invalid attributes" do
       api_basic_authorize
       vm = create_vms_by_name(%w(aa)).first
 
@@ -247,8 +232,8 @@ describe ApiController do
     end
   end
 
-  context "Query - search vms" do
-    it "by tag" do
+  describe "Querying vms by tag" do
+    it "is supported" do
       api_basic_authorize
       vm1, _vm2, vm3 = create_vms_by_name(%w(aa bb cc))
 
@@ -264,9 +249,10 @@ describe ApiController do
     end
   end
 
-  context "Query - vms" do
-    it "without expand parameter" do
-      api_basic_authorize
+  describe "Querying vms" do
+    before { api_basic_authorize }
+
+    it "is supported without expanding resources" do
       create_vms_by_name(%w(aa bb))
 
       run_get vms_url
@@ -275,8 +261,7 @@ describe ApiController do
       expect_result_resources_to_have_only_keys("resources", %w(href))
     end
 
-    it "with expanding resources" do
-      api_basic_authorize
+    it "supports expanding resources" do
       create_vms_by_name(%w(aa bb))
 
       run_get vms_url, :expand => "resources"
@@ -285,8 +270,7 @@ describe ApiController do
       expect_result_resources_to_include_keys("resources", %w(id href guid name vendor))
     end
 
-    it "with expanding resources and software subcollection" do
-      api_basic_authorize
+    it "supports expanding resources and subcollections" do
       vm1 = create_vms_by_name(%w(aa)).first
       FactoryGirl.create(:guest_application, :vm_or_template_id => vm1.id, :name => "LibreOffice")
 
