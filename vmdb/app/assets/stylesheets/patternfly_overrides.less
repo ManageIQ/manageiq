@@ -189,6 +189,11 @@ table.table .narrow {
   width: 1%
 }
 
+table.table.table-selectable tbody tr.selected td {
+  background-color: @link-color;
+  color: #fff
+}
+
 /* instead of using onmouseover="this.style.cursor='pointer'" */
 .table-hover tbody tr:hover > td {
   cursor: pointer;

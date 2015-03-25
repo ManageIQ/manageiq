@@ -135,8 +135,8 @@ module ApplicationController::MiqRequestMethods
     elsif params[:sel_id]
       @edit = session[:edit]
       render :update do |page|                        # Use RJS to update the display
-        page << "$('#row_#{j_str(@edit[:src_vm_id])}').removeClass('row3');" if @edit[:src_vm_id]
-        page << "$('#row_#{j_str(params[:sel_id])}').addClass('row3');"
+        page << "$('#row_#{j_str(@edit[:src_vm_id])}').removeClass('selected');" if @edit[:src_vm_id]
+        page << "$('#row_#{j_str(params[:sel_id])}').addClass('selected');"
         session[:changed] = true
         page << javascript_for_miq_button_visibility(session[:changed])
         @edit[:src_vm_id] = params[:sel_id].to_i

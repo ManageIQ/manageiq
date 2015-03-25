@@ -1,12 +1,12 @@
 #prov_host_div{:style => "height: 150px; overflow: auto;"}
-  %table.style3
+  %table.table.table-bordered.table-hover.table-striped.table-selectable
     %thead
       %tr
         - # need to set options from @edit/@option based upon calling screen: show/edit
         - options = @edit ? @edit : @options
         - id = @edit && @edit[:req_id] || "new"
         - options[:host_columns].each_with_index do |h, i|
-          %th{:nowrap => 1}
+          %th
             - #  Replaced to exclude non-view table fields from sorting
             - # dont show sort on show screen, need @edit variables for sort to work
             - if @edit
@@ -21,9 +21,9 @@
               = h(options[:host_headers][h])
     %tbody
       - unless options[:wf].kind_of?(MiqHostProvisionWorkflow)
-        - cls = @edit[:new][:placement_host_name] && @edit[:new][:placement_host_name][0].nil? ? "row3" : cycle('row0', 'row1')
-        %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=__HOST__NONE__&id=#{id}');", :nowrap => 1}
-          %td{:onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+        - cls = @edit[:new][:placement_host_name] && @edit[:new][:placement_host_name][0].nil? ? "selected" : ""
+        %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=__HOST__NONE__&id=#{id}');"}
+          %td
             = "<#{_('None')}>"
           %td
           %td
@@ -32,16 +32,13 @@
       - @temp[:hosts].each do |row|
         - @id = row.id
         - if options[:wf].kind_of?(MiqHostProvisionWorkflow)
-          %tr{:class => cycle('row0', 'row1'), :nowrap => 1}
+          %tr
             - options[:host_columns].each do |col|
-              %td{:align => "left", :onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+              %td
                 = h(row.send(col))
         - else
-          - cls = @edit[:new][:placement_host_name] && @edit[:new][:placement_host_name][0] == @id ? "row3" : cycle('row0', 'row1')
-          %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=#{@id}&id=#{id}');", :nowrap => 1}
+          - cls = @edit[:new][:placement_host_name] && @edit[:new][:placement_host_name][0] == @id ? "selected" : ""
+          %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=#{@id}&id=#{id}');"}
             - options[:host_columns].each do |col|
-              %td{:align => "left", :onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+              %td
                 = h(row.send(col))
-    %tfoot
-      %tr
-        %td{:colspan => "40"}

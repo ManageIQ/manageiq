@@ -1,10 +1,10 @@
 #prov_vc_div{:style => "height: 150px; overflow: auto;"}
-  %table.style3
+  %table.table.table-bordered.table-striped.table-hover.table-selectable
     %thead
       %tr
         - id = @edit[:req_id] || "new"
         - @edit[:vc_columns].each_with_index do |h, i|
-          %th{:nowrap => 1}
+          %th
             - # Replaced to exclude non-view table fields from sorting
             = link_to(h(@edit[:vc_headers][h]),
               {:action => "sort_vc_grid", :sort_choice => h, :field_id => field_id, :id => id.to_s},
@@ -14,19 +14,16 @@
             - if @edit[:vc_columns][i] == @edit[:vc_sortcol]
               %img{:src => "/imgas/icons/16/sort_#{@edit[:vc_sortdir] == 'ASC' ? 'up' : 'down'}"}
     %tbody
-      - cls = @edit[:new][:sysprep_custom_spec] && @edit[:new][:sysprep_custom_spec][0].nil? ? "row3" : cycle('row0', 'row1')
+      - cls = @edit[:new][:sysprep_custom_spec] && @edit[:new][:sysprep_custom_spec][0].nil? ? "selected" : ""
       - unless spec_required
-        %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=__VC__NONE__&id=#{id}');", :nowrap => 1}
-          %td{:onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+        %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=__VC__NONE__&id=#{id}');"}
+          %td
             = "<#{_('None')}>"
           %td
-          %td>
+          %td
       - @temp[:vcs].each do |row|
-        - cls = @edit[:new][:sysprep_custom_spec] && @edit[:new][:sysprep_custom_spec][0] == row.id.to_s ? "row3" : cycle('row0', 'row1')
-        %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=#{row.id}&id=#{id}');", :nowrap => 1}
+        - cls = @edit[:new][:sysprep_custom_spec] && @edit[:new][:sysprep_custom_spec][0] == row.id.to_s ? "selected" : ""
+        %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=#{row.id}&id=#{id}');"}
           - @edit[:vc_columns].each do |col|
-            %td{:align => 'left', :onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+            %td
               = h(row.send(col))
-    %tfoot
-      %tr
-        %td{:colspan => "40"}
