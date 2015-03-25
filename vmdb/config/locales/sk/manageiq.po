@@ -17,10 +17,19 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "\n"
 
+msgid " # of Days"
+msgstr ""
+
 msgid " %s Assignments"
 msgstr ""
 
 msgid " (Names with \"%s\")"
+msgstr ""
+
+msgid " (current)"
+msgstr ""
+
+msgid " * Multiple UI workers can not be configured with session store as memory"
 msgstr ""
 
 msgid " Selected Actions:"
@@ -32,7 +41,13 @@ msgstr ""
 msgid " that match the entered search string"
 msgstr ""
 
+msgid " will shut down "
+msgstr ""
+
 msgid "\"#{db}Performance.#{c}\""
+msgstr ""
+
+msgid "\"%s\" is not a valid Orchestration Template type"
 msgstr ""
 
 msgid "\"%s\" was executed"
@@ -59,7 +74,19 @@ msgstr ""
 msgid "% Savings"
 msgstr ""
 
+msgid "%d Months Ago"
+msgstr ""
+
+msgid "%d Weeks Ago"
+msgstr ""
+
 msgid "%s"
+msgstr ""
+
+msgid "%s  Ending with"
+msgstr ""
+
+msgid "%s Being Tagged"
 msgstr ""
 
 msgid "%s Button not yet implemented"
@@ -72,6 +99,14 @@ msgid "%s Conditions"
 msgstr ""
 
 msgid "%s Credentials validated successfully"
+msgstr ""
+
+msgid "%s Day"
+msgid_plural "%s Days"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%s Days Ago"
 msgstr ""
 
 msgid "%s Discovery returned: "
@@ -91,6 +126,16 @@ msgstr ""
 
 msgid "%s Guide"
 msgstr ""
+
+msgid "%s Hour"
+msgid_plural "%s Hours"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%s Month"
+msgid_plural "%s Months"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "%s Policies"
 msgstr ""
@@ -116,7 +161,15 @@ msgstr ""
 msgid "%s Utilization"
 msgstr ""
 
+msgid "%s Week"
+msgid_plural "%s Weeks"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "%s are not in the current region and will be skipped"
+msgstr ""
+
+msgid "%s bytes"
 msgstr ""
 
 msgid "%s cancelled by user"
@@ -182,6 +235,9 @@ msgstr ""
 msgid "%s no longer exists, this alert must be reconfigured"
 msgstr ""
 
+msgid "%s record no longer exists"
+msgstr ""
+
 msgid "%s saved"
 msgstr ""
 
@@ -209,7 +265,13 @@ msgstr ""
 msgid "%s with %s Tags"
 msgstr ""
 
+msgid "%s: None"
+msgstr ""
+
 msgid "%{action} \"%{item_name}\" for %{model} \"%{name}\""
+msgstr ""
+
+msgid "%{action} %{model} was cancelled by the user"
 msgstr ""
 
 msgid "%{field1} and %{field2} fields can't be blank"
@@ -234,6 +296,9 @@ msgid "%{model} \"%{name}\" already exists"
 msgstr ""
 
 msgid "%{model} \"%{name}\" successfully added to Service \"%{to_name}\""
+msgstr ""
+
+msgid "%{model} \"%{name}\" was %{action}"
 msgstr ""
 
 msgid "%{model} \"%{name}\" was added"
@@ -275,6 +340,9 @@ msgstr ""
 msgid "%{record} - \"%{button_text}\""
 msgstr ""
 
+msgid "%{role} on %{model}: %{name} [%{id}]"
+msgstr ""
+
 msgid "%{tab} tab is not available until %{field} field has been selected"
 msgstr ""
 
@@ -291,6 +359,9 @@ msgid "%{task} does not apply because you selected at least one %{model}"
 msgstr ""
 
 msgid "%{task} does not apply to selected %{model}"
+msgstr ""
+
+msgid "%{task} initiated for %{count_model} (Foreman) from the CFME Database"
 msgstr ""
 
 msgid "%{task} initiated for %{count_model} from the CFME Database"
@@ -338,10 +409,16 @@ msgstr ""
 msgid "(%s bytes)"
 msgstr ""
 
+msgid "(1-999 MB)"
+msgstr ""
+
 msgid "(All)"
 msgstr ""
 
 msgid "(Check All)"
+msgstr ""
+
+msgid "(Click to remove)"
 msgstr ""
 
 msgid "(Default: %s)"
@@ -350,10 +427,25 @@ msgstr ""
 msgid "(Enter the value between 4 - 65636 MB)"
 msgstr ""
 
+msgid "(Look Up LDAP Groups)"
+msgstr ""
+
 msgid "(MB) memory"
 msgstr ""
 
 msgid "(NS/Cls/Inst)"
+msgstr ""
+
+msgid "(Row %{start_number} of %{pages})"
+msgstr ""
+
+msgid "(Rows %{start_number}-%{end_number} of %{pages_items})"
+msgstr ""
+
+msgid "(Rows %{start_number}-%{pages_items} of %{pages_items})"
+msgstr ""
+
+msgid "(current)"
 msgstr ""
 
 msgid "(leave blank for default)"
@@ -362,7 +454,28 @@ msgstr ""
 msgid "(max 6 digits)"
 msgstr ""
 
+msgid "(optional) the address of an alternate service"
+msgstr ""
+
+msgid "(optional) your HTTP proxy information"
+msgstr ""
+
+msgid "* 'Name' and 'Single Value' fields cannot be edited after adding a category."
+msgstr ""
+
+msgid "* Base the report on"
+msgstr ""
+
 msgid "* Cannot be changed while this Alert belongs to an Alert Profile."
+msgstr ""
+
+msgid "* Caution: Changing these fields will clear all selected values below them!"
+msgstr ""
+
+msgid "* Changing the Time Zone will reset the Starting Date and Time fields below"
+msgstr ""
+
+msgid "* Changing the Zone will reset all of this Server's priorities to secondary."
 msgstr ""
 
 msgid ""
@@ -373,6 +486,20 @@ msgstr ""
 msgid "* Click on any MyTag to permanently delete and unassign it."
 msgstr ""
 
+msgid ""
+"* Daily charts only include days for which all 24 hours of data has been colle"
+"cted."
+msgstr ""
+
+msgid "* Dashboard name cannot be changed"
+msgstr ""
+
+msgid "* Dates/Times on this page are based on UTC Time."
+msgstr ""
+
+msgid "* Dates/Times on this page are based on time zone: %s."
+msgstr ""
+
 msgid "* Enter Policy Simulation options on the left and press Submit"
 msgstr ""
 
@@ -380,6 +507,9 @@ msgid "* Enter a reason for this approval and press Submit"
 msgstr ""
 
 msgid "* Enter a reason for this denial and press Submit"
+msgstr ""
+
+msgid "* Fields are read only for default Widgets"
 msgstr ""
 
 msgid ""
@@ -412,10 +542,28 @@ msgstr ""
 msgid "* Only a single value can be assigned from these Tag Categories"
 msgstr ""
 
+msgid "* Performance Interval"
+msgstr ""
+
+msgid "* Policy Profile is only applied to some of the items below."
+msgstr ""
+
+msgid "* Primary Server Roles shown as %{bold} text."
+msgstr ""
+
 msgid "* Recommendations are subject to minimum of CPU: %s and Memory: %s."
 msgstr ""
 
+msgid "* Report is not owned by your group so it cannot be removed"
+msgstr ""
+
 msgid "* Requirements - Type: jpg/png  Size: 100x100"
+msgstr ""
+
+msgid "* Requirements: CSV formatted file."
+msgstr ""
+
+msgid "* Requirements: File-type - PNG; Dimensions - 1280x1000."
 msgstr ""
 
 msgid "* Requirements: File-type - PNG; Dimensions - 350x70."
@@ -433,7 +581,19 @@ msgstr ""
 msgid "* Set in Time Profile"
 msgstr ""
 
+msgid "* Some charts my not produce desired results with a single sort field"
+msgstr ""
+
+msgid "* Specified NTP settings apply to this zone only and are not global."
+msgstr ""
+
+msgid "* Style \"If\" conditions are evaluated top to bottom for each column"
+msgstr ""
+
 msgid "1 - Select a Reference VM."
+msgstr ""
+
+msgid "1 Week Ago"
 msgstr ""
 
 msgid "1 Week before retirement"
@@ -465,13 +625,40 @@ msgstr ""
 msgid "5 - Press the Submit button."
 msgstr ""
 
-msgid ">No notes have been entered."
+msgid "<Choose a Group>"
+msgstr ""
+
+msgid "<Choose>"
+msgstr ""
+
+msgid "<Click on this row to create a new LDAP Server>"
+msgstr ""
+
+msgid "<Click on this row to create a new category>"
+msgstr ""
+
+msgid "<Click on this row to create a new entry>"
+msgstr ""
+
+msgid "<Click on this row to create a new forest>"
+msgstr ""
+
+msgid "<New Entry>"
+msgstr ""
+
+msgid "<New LDAP Server>"
+msgstr ""
+
+msgid "<No Depot>"
 msgstr ""
 
 msgid "A %s must be chosen to commit this expression element"
 msgstr ""
 
 msgid "A %s must be entered to commit this expression element"
+msgstr ""
+
+msgid "A Red Hat subscription that covers your product"
 msgstr ""
 
 msgid "A User Group must be assigned a Role"
@@ -492,7 +679,33 @@ msgstr ""
 msgid "AM:"
 msgstr ""
 
+msgid "AMQP"
+msgstr ""
+
+msgid "AMQP Messaging"
+msgstr ""
+
+msgid "AND with a new expression element"
+msgstr ""
+
+msgid "API Port"
+msgstr ""
+
+msgid "About"
+msgstr ""
+
+msgid "Access Key"
+msgstr ""
+
+msgid "Access Key ID"
+msgstr ""
+
 msgid "Access URL"
+msgstr ""
+
+msgid ""
+"Accessing Management Engine from multiple tabs or windows of the same browser "
+"on a single machine."
 msgstr ""
 
 msgid "Account"
@@ -555,6 +768,9 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
+msgid "Add (enter manually)"
+msgstr ""
+
 msgid "Add VM \"%s\" to a Service was cancelled by the user"
 msgstr ""
 
@@ -564,10 +780,25 @@ msgstr ""
 msgid "Add a Resource"
 msgstr ""
 
+msgid "Add a User"
+msgstr ""
+
+msgid "Add a new Foreman Provider"
+msgstr ""
+
 msgid "Add of new %s was cancelled by the user"
 msgstr ""
 
+msgid "Add subfolder to selected folder"
+msgstr ""
+
+msgid "Add this %s"
+msgstr ""
+
 msgid "Add this Host"
+msgstr ""
+
+msgid "Add this LDAP Server"
 msgstr ""
 
 msgid "Add this SmartProxy"
@@ -585,10 +816,22 @@ msgstr ""
 msgid "Adding a new %s"
 msgstr ""
 
+msgid "Adding a new Orchestration Template"
+msgstr ""
+
 msgid "Admin Role Filter:"
 msgstr ""
 
 msgid "Advanced"
+msgstr ""
+
+msgid "Advanced Search"
+msgstr ""
+
+msgid "Advanced Settings (%s)"
+msgstr ""
+
+msgid "Advanced Settings (0)"
 msgstr ""
 
 msgid "Advanced setting"
@@ -625,6 +868,9 @@ msgid "AdvancedSetting|Updated on"
 msgstr ""
 
 msgid "AdvancedSetting|Value"
+msgstr ""
+
+msgid "Affected Items"
 msgstr ""
 
 msgid "Affected VMs"
@@ -668,10 +914,37 @@ msgid ""
 "classes and instances to default?"
 msgstr ""
 
+msgid "All Files"
+msgstr ""
+
+msgid "All Foreman Configured Systems"
+msgstr ""
+
+msgid "All Foreman Providers"
+msgstr ""
+
+msgid "All Templates: %s"
+msgstr ""
+
+msgid "All Templates: 0"
+msgstr ""
+
 msgid "All Users"
 msgstr ""
 
 msgid "All VMs"
+msgstr ""
+
+msgid "All VMs (Tree View): %s"
+msgstr ""
+
+msgid "All VMs (Tree View): 0"
+msgstr ""
+
+msgid "All VMs: %s"
+msgstr ""
+
+msgid "All VMs: 0"
 msgstr ""
 
 msgid "All Zones"
@@ -683,16 +956,37 @@ msgstr ""
 msgid "All custom classes and instances have been reset to default"
 msgstr ""
 
+msgid "All fields are needed to perform verification of Database Settings"
+msgstr ""
+
 msgid "All selected %s are not in the current region"
+msgstr ""
+
+msgid "Amazon"
+msgstr ""
+
+msgid "Amazon Primary AWS Account Settings for IAM"
 msgstr ""
 
 msgid "Amazon Settings validation was successful"
 msgstr ""
 
+msgid "Amazon access key and secret are needed to validate Amazon Settings"
+msgstr ""
+
 msgid "An alert must contain a valid expression."
 msgstr ""
 
+msgid "An internal system error."
+msgstr ""
+
+msgid "Analysis"
+msgstr ""
+
 msgid "Analysis Affinity was saved"
+msgstr ""
+
+msgid "Analysis History (%s)"
 msgstr ""
 
 msgid "Analysis Profile"
@@ -701,11 +995,35 @@ msgstr ""
 msgid "Analysis Profiles"
 msgstr ""
 
+msgid "Analytics Report"
+msgstr ""
+
 msgid "Any"
 msgstr ""
 
+#, fuzzy
+msgid "Appliance"
+msgstr "Zariadenie:"
+
+#, fuzzy
+msgid "Appliance Name"
+msgstr "Zariadenie:"
+
+msgid "Appliance Time Zone"
+msgstr ""
+
+#, fuzzy
+msgid "Appliance Updates"
+msgstr "Zariadenie:"
+
 msgid "Appliance:"
 msgstr "Zariadenie:"
+
+msgid "Appliances in this region can be registered with:"
+msgstr ""
+
+msgid "Applications (%s)"
+msgstr ""
 
 msgid "Applied Tag"
 msgstr ""
@@ -713,7 +1031,22 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
+msgid "Apply CFME Update"
+msgstr ""
+
+msgid "Apply sections"
+msgstr ""
+
+msgid "Apply the current filter"
+msgstr ""
+
+msgid "Apply the current filter (Enter)"
+msgstr ""
+
 msgid "Apply the selected filters"
+msgstr ""
+
+msgid "Apply this filter"
 msgstr ""
 
 msgid "Approval State"
@@ -728,13 +1061,39 @@ msgstr ""
 msgid "Approved/Denied on"
 msgstr ""
 
+msgid "Are you sure you want to Run Database Garbage Collection Now?"
+msgstr ""
+
+msgid "Are you sure you want to Run a Database Backup Now?"
+msgstr ""
+
+msgid "Are you sure you want to delete build %s?"
+msgstr ""
+
+msgid "Are you sure you want to delete build %{row_build} for %{row_platform}?"
+msgstr ""
+
+msgid "Are you sure you want to delete category '%s'?"
+msgstr ""
+
 msgid "Are you sure you want to delete field from schema?"
+msgstr ""
+
+msgid "Are you sure you want to delete forest %s ?"
 msgstr ""
 
 msgid "Are you sure you want to delete input field from method?"
 msgstr ""
 
+msgid "Are you sure you want to delete orphaned records for user '%{user}'?"
+msgstr ""
+
 msgid "Are you sure you want to remove '%s'from the Dashboard?"
+msgstr ""
+
+msgid ""
+"Are you sure you want to remove the '%{a_parent}[%{a}]' assignment from all of"
+" the items below?"
 msgstr ""
 
 msgid "Are you sure you want to remove this Custom Image?"
@@ -749,10 +1108,19 @@ msgstr ""
 msgid "Are you sure you want to remove this Retirement Entry Point?"
 msgstr ""
 
+msgid "Asc. by:"
+msgstr ""
+
 msgid "Ascending"
 msgstr ""
 
+msgid "Assign Buttons"
+msgstr ""
+
 msgid "Assign Catalog Items"
+msgstr ""
+
+msgid "Assign Filters"
 msgstr ""
 
 msgid "Assign To"
@@ -761,7 +1129,13 @@ msgstr ""
 msgid "Assigned Analysis Profile"
 msgstr ""
 
+msgid "Assigned Filters (read only)"
+msgstr ""
+
 msgid "Assigned To"
+msgstr ""
+
+msgid "Assigned Value"
 msgstr ""
 
 msgid "Assigned server role"
@@ -803,10 +1177,16 @@ msgstr ""
 msgid "Attached to Policy"
 msgstr ""
 
+msgid "Attachments"
+msgstr ""
+
 msgid "Attribute Name"
 msgstr ""
 
 msgid "Attribute/Value Pairs"
+msgstr ""
+
+msgid "Audit Log"
 msgstr ""
 
 msgid "Audit event"
@@ -914,10 +1294,10 @@ msgstr ""
 msgid "AvailabilityZone|Name"
 msgstr ""
 
-msgid "Available % Conditions:"
+msgid "Available %s Alerts:"
 msgstr ""
 
-msgid "Available %s Alerts:"
+msgid "Available %s Conditions:"
 msgstr ""
 
 msgid "Available %s:"
@@ -926,10 +1306,28 @@ msgstr ""
 msgid "Available Actions:"
 msgstr ""
 
+msgid "Available Active Data"
+msgstr ""
+
 msgid "Available Alerts:"
 msgstr ""
 
+msgid "Available Custom Reports:"
+msgstr ""
+
+msgid "Available Fields:"
+msgstr ""
+
 msgid "Available Policies:"
+msgstr ""
+
+msgid "Available Product Updates"
+msgstr ""
+
+msgid "Available Product version:"
+msgstr ""
+
+msgid "Available Reports:"
 msgstr ""
 
 msgid "Available Snapshots"
@@ -938,7 +1336,13 @@ msgstr ""
 msgid "Available VMs:"
 msgstr ""
 
+msgid "Available Widgets:"
+msgstr ""
+
 msgid "Average"
+msgstr ""
+
+msgid "Averages Based On"
 msgstr ""
 
 msgid "Back"
@@ -947,7 +1351,19 @@ msgstr "Späť"
 msgid "Back (ABCD...)"
 msgstr ""
 
+msgid "Backup Schedules"
+msgstr ""
+
+msgid "Base DN"
+msgstr ""
+
+msgid "Base Timeline on"
+msgstr ""
+
 msgid "Based On"
+msgstr ""
+
+msgid "Based On:"
 msgstr ""
 
 msgid "Basic Info"
@@ -957,6 +1373,9 @@ msgid "Basic Information"
 msgstr ""
 
 msgid "Basic Options"
+msgstr ""
+
+msgid "Basic Report Info"
 msgstr ""
 
 msgid "Belongs to Alert Profiles"
@@ -1001,6 +1420,13 @@ msgstr ""
 msgid "BinaryBlob|Size"
 msgstr ""
 
+msgid "Bind DN"
+msgstr ""
+
+#, fuzzy
+msgid "Bind Password"
+msgstr "Nové heslo"
+
 msgid "Bottleneck Event Details"
 msgstr ""
 
@@ -1034,6 +1460,9 @@ msgstr ""
 msgid "BottleneckEvent|Timestamp"
 msgstr ""
 
+msgid "Bottlenecks"
+msgstr ""
+
 msgid "Box Information"
 msgstr ""
 
@@ -1044,6 +1473,27 @@ msgid "Browser OS"
 msgstr ""
 
 msgid "Browser Version"
+msgstr ""
+
+msgid "Button Group Hover Text"
+msgstr ""
+
+msgid "Button Group Image"
+msgstr ""
+
+msgid "Button Group Order:"
+msgstr ""
+
+msgid "Button Group Text"
+msgstr ""
+
+msgid "Button Hover Text"
+msgstr ""
+
+msgid "Button Image"
+msgstr ""
+
+msgid "Button Text"
 msgstr ""
 
 msgid "Button not yet implemented"
@@ -1058,10 +1508,33 @@ msgstr ""
 msgid "By Filter"
 msgstr ""
 
+msgid "By Group"
+msgstr ""
+
 msgid "By Host"
 msgstr ""
 
+#, fuzzy
+#, fuzzy
+msgid "By Role"
+msgstr "Používatelské meno"
+
 msgid "By User ID %s %s"
+msgstr ""
+
+msgid "C & U Collection"
+msgstr ""
+
+msgid "C & U Database"
+msgstr ""
+
+msgid "C & U Gap Collection"
+msgstr ""
+
+msgid "C &amp; U Data Collectors"
+msgstr ""
+
+msgid "C &amp; U Data Processors"
 msgstr ""
 
 msgid "CFME Appliance restart initiated successfully"
@@ -1070,13 +1543,22 @@ msgstr ""
 msgid "CFME Database settings validation was successful"
 msgstr ""
 
+msgid "CFME Log"
+msgstr ""
+
 msgid "CFME Server \"%{name}\" set as %{priority} for Role \"%{role_description}\""
+msgstr ""
+
+msgid "CFME Version"
 msgstr ""
 
 msgid "CPU"
 msgstr ""
 
 msgid "CPU Limit"
+msgstr ""
+
+msgid "CPU Percent"
 msgstr ""
 
 msgid "CPU Reserve"
@@ -1094,7 +1576,16 @@ msgstr ""
 msgid "CPU Speed"
 msgstr ""
 
+msgid "CPU Time"
+msgstr ""
+
 msgid "CPU Usage"
+msgstr ""
+
+msgid "CSV"
+msgstr ""
+
+msgid "Calculations"
 msgstr ""
 
 msgid ""
@@ -1103,6 +1594,9 @@ msgid ""
 msgstr ""
 
 msgid "Cancel"
+msgstr ""
+
+msgid "Cancel (Esc)"
 msgstr ""
 
 msgid "Cancel Changes"
@@ -1114,7 +1608,13 @@ msgstr ""
 msgid "Cancel Simulation to go back to Button details"
 msgstr ""
 
-msgid "Cancel this provisioning request"
+msgid "Cancel after"
+msgstr ""
+
+msgid "Cancel the load"
+msgstr ""
+
+msgid "Cancel the save"
 msgstr ""
 
 msgid "Cannot create Request Info, error: "
@@ -1128,6 +1628,12 @@ msgstr ""
 msgid "Cannot start log collection, requires a started server"
 msgstr ""
 
+msgid "Canvas not supported."
+msgstr ""
+
+msgid "Capacity & Utilization"
+msgstr ""
+
 msgid "Capacity & Utilization data for %{model} \"%{name}\""
 msgstr ""
 
@@ -1135,6 +1641,12 @@ msgid "Capacity Data"
 msgstr ""
 
 msgid "Capacity and Utilization Collection settings saved"
+msgstr ""
+
+msgid "Capture C & U Data"
+msgstr ""
+
+msgid "Capture C & U Data by Tag"
 msgstr ""
 
 msgid "Catalog"
@@ -1146,10 +1658,22 @@ msgstr ""
 msgid "Catalog Items"
 msgstr ""
 
+msgid "Catalogs"
+msgstr ""
+
 msgid "Categories"
 msgstr ""
 
 msgid "Category"
+msgstr ""
+
+msgid "Category '%s' cannot be deleted"
+msgstr ""
+
+msgid "Category Information"
+msgstr ""
+
+msgid "Category Selection"
 msgstr ""
 
 msgid "Category Tag Entries"
@@ -1158,10 +1682,31 @@ msgstr ""
 msgid "Caution:"
 msgstr ""
 
+msgid "Caution: Changing the Database settings could make the Server unstartable!"
+msgstr ""
+
+msgid "Caution: Manual changes to configuration files can disable the Server!"
+msgstr ""
+
 msgid "Change %s value to submit reconfigure request"
 msgstr ""
 
+msgid "Change Password / Confirm Password"
+msgstr ""
+
+msgid "Changes"
+msgstr ""
+
 msgid "Changing the UI Workers Count will immediately restart the webserver"
+msgstr ""
+
+msgid "Chargeback"
+msgstr ""
+
+msgid "Chargeback Filters"
+msgstr ""
+
+msgid "Chargeback Interval"
 msgstr ""
 
 msgid "Chargeback rate"
@@ -1221,10 +1766,34 @@ msgstr ""
 msgid "ChargebackRate|Updated on"
 msgstr ""
 
+msgid "Chart"
+msgstr ""
+
+msgid "Chart Preview (up to 50 rows)"
+msgstr ""
+
+msgid "Chart Report"
+msgstr ""
+
+msgid "Chart Settings"
+msgstr ""
+
 msgid "Chart Theme"
 msgstr ""
 
+msgid "Chart no longer exists"
+msgstr ""
+
 msgid "Check All"
+msgstr ""
+
+msgid "Check Any"
+msgstr ""
+
+msgid "Check Count"
+msgstr ""
+
+msgid "Check for Updates"
 msgstr ""
 
 msgid "Check for updates"
@@ -1242,10 +1811,16 @@ msgstr ""
 msgid "Choose"
 msgstr ""
 
+msgid "Choose Policies"
+msgstr ""
+
 msgid "Choose a %s"
 msgstr ""
 
 msgid "Choose a %s first"
+msgstr ""
+
+msgid "Choose a %s report filter"
 msgstr ""
 
 msgid "Choose a Category"
@@ -1257,13 +1832,46 @@ msgstr ""
 msgid "Choose a Host"
 msgstr ""
 
+msgid "Choose a Report from the menus on the left."
+msgstr ""
+
+msgid "Choose a Report to edit from the menus on the left."
+msgstr ""
+
+msgid "Choose a Report to view from the menus on the left."
+msgstr ""
+
+msgid "Choose a Role to edit from the left."
+msgstr ""
+
+msgid "Choose a Schedule to view from the menus on the left."
+msgstr ""
+
 msgid "Choose a Timeline from the menus on the left."
 msgstr ""
 
 msgid "Choose a VM"
 msgstr ""
 
+msgid "Choose a Value"
+msgstr ""
+
+msgid "Choose a chart type"
+msgstr ""
+
+msgid "Choose a saved %s filter:"
+msgstr ""
+
+msgid "Choose a saved filter or report filter to load"
+msgstr ""
+
+msgid "Choose an Owner"
+msgstr ""
+
 msgid "Choose the type of custom variables to be imported"
+msgstr ""
+
+msgid "Choose>"
 msgstr ""
 
 msgid "Class Schema Sequence was saved"
@@ -1311,7 +1919,28 @@ msgstr ""
 msgid "Click to add a new entry"
 msgstr ""
 
+msgid "Click to add a new forest"
+msgstr ""
+
 msgid "Click to add a new parameter"
+msgstr ""
+
+msgid "Click to change to a relative Date/Time format"
+msgstr ""
+
+msgid "Click to change to a specific Date/Time format"
+msgstr ""
+
+msgid "Click to delete Orphaned Records for this user"
+msgstr ""
+
+msgid "Click to delete this LDAP Server"
+msgstr ""
+
+msgid "Click to delete this build"
+msgstr ""
+
+msgid "Click to delete this category"
 msgstr ""
 
 msgid "Click to delete this entry"
@@ -1320,22 +1949,49 @@ msgstr ""
 msgid "Click to delete this field from schema"
 msgstr ""
 
+msgid "Click to delete this forest"
+msgstr ""
+
 msgid "Click to delete this input field from method"
+msgstr ""
+
+msgid "Click to edit this forest"
 msgstr ""
 
 msgid "Click to go to this location"
 msgstr ""
 
+msgid "Click to remove messages"
+msgstr ""
+
 msgid "Click to remove this Resource from the Catalog Item"
 msgstr ""
 
-msgid "Click to select the %s theme"
+msgid "Click to remove this assignment"
+msgstr ""
+
+msgid "Click to remove this policy"
 msgstr ""
 
 msgid "Click to this Catalog Item"
 msgstr ""
 
+msgid "Click to update this LDAP Server"
+msgstr ""
+
 msgid "Click to update this entry"
+msgstr ""
+
+msgid "Click to view %s"
+msgstr ""
+
+msgid "Click to view %s "
+msgstr ""
+
+msgid "Click to view '%s (%s)'"
+msgstr ""
+
+msgid "Click to view '%s'"
 msgstr ""
 
 msgid "Click to view Policy"
@@ -1347,13 +2003,34 @@ msgstr ""
 msgid "Click to view details"
 msgstr ""
 
+msgid "Click to view index"
+msgstr ""
+
 msgid "Click to view saved report"
+msgstr ""
+
+msgid "Click to view selected widget"
+msgstr ""
+
+msgid "Click to view target %s"
 msgstr ""
 
 msgid "Click to view this %s in the \"%s\" Domain"
 msgstr ""
 
+msgid "Click to view this VM"
+msgstr ""
+
 msgid "Click to view/edit Time Profile"
+msgstr ""
+
+msgid "Client Connections"
+msgstr ""
+
+msgid "Close any duplicate browser sessions, then select a menu option above."
+msgstr ""
+
+msgid "Cloud Networks (%s)"
 msgstr ""
 
 msgid "Cloud Quota"
@@ -1530,16 +2207,72 @@ msgstr ""
 msgid "Clusters"
 msgstr ""
 
+msgid "Clusters (%s)"
+msgstr ""
+
 msgid "Collapse All"
 msgstr ""
 
 msgid "Collect"
 msgstr ""
 
+msgid "Collect Contents?"
+msgstr ""
+
+msgid "Collect Logs"
+msgstr ""
+
+msgid "Collect for All Clusters"
+msgstr ""
+
+msgid ""
+"Collect for All Clusters must be checked to be able to collect C & U data from"
+" Cloud Providers such as Red Hat OpenStack or Amazon EC2"
+msgstr ""
+
+msgid "Collect for All Datastores"
+msgstr ""
+
+msgid "Collection Options"
+msgstr ""
+
+msgid "Column %s"
+msgstr ""
+
+msgid "Column 1"
+msgstr ""
+
+msgid "Column 2"
+msgstr ""
+
+msgid "Column 3"
+msgstr ""
+
+msgid "Column 4"
+msgstr ""
+
+msgid "Column Name"
+msgstr ""
+
+msgid "Column:"
+msgstr ""
+
 msgid "Commit"
 msgstr ""
 
+msgid "Commit Changes"
+msgstr ""
+
 msgid "Commit Import"
+msgstr ""
+
+msgid "Commit expression element changes"
+msgstr ""
+
+msgid "Commit report management changes"
+msgstr ""
+
+msgid "Company Name"
 msgstr ""
 
 msgid "Compare"
@@ -1551,10 +2284,19 @@ msgstr ""
 msgid "Compare Mode"
 msgstr ""
 
+msgid "Compare To"
+msgstr ""
+
+msgid "Comparison Sections"
+msgstr ""
+
 msgid "Completed"
 msgstr ""
 
 msgid "Compliance"
+msgstr ""
+
+msgid "Compliance Check"
 msgstr ""
 
 msgid "Compliance detail"
@@ -1686,6 +2428,17 @@ msgstr ""
 msgid "Configuration"
 msgstr ""
 
+msgid ""
+"Configuration File selection can not be changed until changes are saved or res"
+"et."
+msgstr ""
+
+msgid "Configuration File to Edit"
+msgstr ""
+
+msgid "Configuration Management"
+msgstr ""
+
 msgid "Configuration settings saved"
 msgstr ""
 
@@ -1701,6 +2454,18 @@ msgstr ""
 msgid "Configuration|Updated on"
 msgstr ""
 
+msgid "Configure Report Columns"
+msgstr ""
+
+msgid "Configured Systems"
+msgstr ""
+
+msgid "Connecting (unencrypted) to: %s"
+msgstr ""
+
+msgid "Connection Broker"
+msgstr ""
+
 msgid "Connection Broker cache cleared successfully"
 msgstr ""
 
@@ -1710,28 +2475,55 @@ msgstr ""
 msgid "Console access failed: %s"
 msgstr ""
 
+msgid "Console access failed: proxy errror"
+msgstr ""
+
+msgid "Consolidating records will not show detail records in the report."
+msgstr ""
+
+msgid "Container"
+msgstr ""
+
+msgid "Containers"
+msgstr ""
+
 msgid "Content"
 msgstr ""
 
 msgid "Content generation for this Widget has been initiated"
 msgstr ""
 
-msgid "Continue"
+msgid "Contents"
 msgstr ""
 
-msgid "Continue this provisioning request"
+msgid "Continue"
 msgstr ""
 
 msgid "Control"
 msgstr ""
 
+msgid "Copy"
+msgstr ""
+
 msgid "Copy %s was cancelled by the user"
+msgstr ""
+
+msgid "Copy of %{model} \"%{name}\" was cancelled by the user"
 msgstr ""
 
 msgid "Copy selected %s was saved"
 msgstr ""
 
 msgid "Copy to same path"
+msgstr ""
+
+msgid "Copying %s"
+msgstr ""
+
+msgid "Count"
+msgstr ""
+
+msgid "Counts"
 msgstr ""
 
 msgid "Create"
@@ -1749,6 +2541,9 @@ msgstr ""
 msgid "Created On"
 msgstr ""
 
+msgid "Creation of a new Orchestration Template was cancelled by the user"
+msgstr ""
+
 msgid "Credential validation returned: %s"
 msgstr ""
 
@@ -1759,6 +2554,9 @@ msgid "Credential validation was successful"
 msgstr ""
 
 msgid "Credentials"
+msgstr ""
+
+msgid "Credentials - Windows Domain"
 msgstr ""
 
 msgid "Credentials are not required because this SmartProxy is currently active."
@@ -1776,7 +2574,13 @@ msgstr ""
 msgid "Current %{model} \"%{name}\" cannot be deleted"
 msgstr ""
 
+msgid "Current Backlog"
+msgstr ""
+
 msgid "Current Rates"
+msgstr ""
+
+msgid "Current Status"
 msgstr ""
 
 msgid "Current User"
@@ -1809,10 +2613,28 @@ msgstr ""
 msgid "Custom Image successfully removed"
 msgstr ""
 
+msgid "Custom Login Background Image"
+msgstr ""
+
+msgid "Custom Login Panel Text ("
+msgstr ""
+
+msgid "Custom Logo Image (Shown on top right of all screens)"
+msgstr ""
+
 msgid "Custom Logo file \"%s\" uploaded"
 msgstr ""
 
+msgid "Custom Logos"
+msgstr ""
+
+msgid "Custom Reports"
+msgstr ""
+
 msgid "Custom Specification"
+msgstr ""
+
+msgid "Custom Support URL"
 msgstr ""
 
 msgid "Custom Support URL and Description both must be entered."
@@ -1920,6 +2742,9 @@ msgstr ""
 msgid "Customer Information successfully saved"
 msgstr ""
 
+msgid "Customization"
+msgstr ""
+
 msgid "Customization Directory"
 msgstr ""
 
@@ -1971,7 +2796,17 @@ msgstr ""
 msgid "DNS Server"
 msgstr ""
 
+msgid "Daily"
+msgstr ""
+
+#, fuzzy
+msgid "Dashboard"
+msgstr "Heslo"
+
 msgid "Dashboard Sequence was saved"
+msgstr ""
+
+msgid "Dashboards:"
 msgstr ""
 
 msgid "Data"
@@ -1984,6 +2819,21 @@ msgid "Data Type:"
 msgstr ""
 
 msgid "Data validated successfully"
+msgstr ""
+
+msgid "Data:"
+msgstr ""
+
+msgid "Database"
+msgstr ""
+
+msgid "Database Backup"
+msgstr ""
+
+msgid "Database Backup Settings"
+msgstr ""
+
+msgid "Database Name"
 msgstr ""
 
 msgid "Database backup"
@@ -2012,7 +2862,7 @@ msgstr ""
 msgid "Datastore Space"
 msgstr ""
 
-msgid "Datastore import was cancelled"
+msgid "Datastore import was cancelled or is finished"
 msgstr ""
 
 msgid ""
@@ -2023,7 +2873,13 @@ msgid ""
 "Methods updated/added: %{method_stats}"
 msgstr ""
 
+msgid "Date"
+msgstr ""
+
 msgid "Date Approved/Denied"
+msgstr ""
+
+msgid "Day"
 msgstr ""
 
 msgid "Days"
@@ -2047,13 +2903,25 @@ msgstr ""
 msgid "Default Gateway"
 msgstr ""
 
+msgid "Default Group for Users"
+msgstr ""
+
 msgid "Default Items Per Page"
+msgstr ""
+
+msgid "Default Locale"
+msgstr ""
+
+msgid "Default Repository SmartProxy"
 msgstr ""
 
 msgid "Default Value"
 msgstr ""
 
 msgid "Delay (mins)"
+msgstr ""
+
+msgid "Delete"
 msgstr ""
 
 msgid "Delete and unassign MyTag '%s'"
@@ -2065,6 +2933,21 @@ msgstr ""
 msgid "Delete if older than"
 msgstr ""
 
+msgid "Delete selected folder and its contents"
+msgstr ""
+
+msgid "Delete the %{model} filter named %{filter}?"
+msgstr ""
+
+msgid "Delete the filter named %s"
+msgstr ""
+
+msgid "Deleting the '%s' LDAP Server, are you sure?"
+msgstr ""
+
+msgid "Deleting the '%s' entry will also unassign it from all items, are you sure?"
+msgstr ""
+
 msgid "Deleting the MyTag '%s' will also unassign it from all items, are you sure?"
 msgstr ""
 
@@ -2074,13 +2957,22 @@ msgstr ""
 msgid "Deploy of SmartProxy to Host \"%s\" was initiated"
 msgstr ""
 
+msgid "Depot Name"
+msgstr ""
+
 msgid "Depot Type"
+msgstr ""
+
+msgid "Desc. by:"
 msgstr ""
 
 msgid "Descending"
 msgstr ""
 
 msgid "Description"
+msgstr ""
+
+msgid "Detail"
 msgstr ""
 
 msgid "Details"
@@ -2114,6 +3006,9 @@ msgid "Dialog field"
 msgstr ""
 
 msgid "Dialog group"
+msgstr ""
+
+msgid "Dialog has to be set if Display in Catalog is chosen"
 msgstr ""
 
 msgid "Dialog tab"
@@ -2230,13 +3125,37 @@ msgstr ""
 msgid "Dialog|Label"
 msgstr ""
 
+msgid "Direct VMs: %s"
+msgstr ""
+
+msgid "Direct VMs: 0"
+msgstr ""
+
 msgid "Direction"
+msgstr ""
+
+msgid "Discard expression element changes"
+msgstr ""
+
+msgid "Discard report management changes"
+msgstr ""
+
+msgid "Discover"
+msgstr ""
+
+msgid "Discovered VMs (%s)"
 msgstr ""
 
 msgid "Disk"
 msgstr ""
 
 msgid "Disk Space"
+msgstr ""
+
+msgid "Disks (%s)"
+msgstr ""
+
+msgid "Disks (0)"
 msgstr ""
 
 msgid "Disk|Auto detect"
@@ -2302,7 +3221,19 @@ msgstr ""
 msgid "Display in Catalog"
 msgstr ""
 
+msgid "Display on Button"
+msgstr ""
+
+msgid "Distinguished Name (CN=<user>)"
+msgstr ""
+
+msgid "Distinguished Name (UID=<user>)"
+msgstr ""
+
 msgid "Do Nothing"
+msgstr ""
+
+msgid "Domain"
 msgstr ""
 
 msgid "Domain Information"
@@ -2311,10 +3242,31 @@ msgstr ""
 msgid "Domain Overrides (by priority)"
 msgstr ""
 
+msgid "Domain Prefix: <domain>\\<user>"
+msgstr ""
+
 msgid "Domains:"
 msgstr ""
 
+msgid "Don't change"
+msgstr ""
+
 msgid "Double Click on 'New Folder' to edit"
+msgstr ""
+
+msgid "Double click a feature to open/close all children."
+msgstr ""
+
+msgid "Download"
+msgstr ""
+
+msgid "Download Report to YAML"
+msgstr ""
+
+msgid "Download SmartProxy Build"
+msgstr ""
+
+msgid "Download SmartProxy version for manual installation"
 msgstr ""
 
 msgid "Download the SmartProxy log as a Zip File"
@@ -2323,13 +3275,31 @@ msgstr ""
 msgid "Download the full report (all rows) as a PDF file"
 msgstr ""
 
+msgid "Draft"
+msgstr ""
+
+msgid "Drag this Shortcut to a new location"
+msgstr ""
+
 msgid "Drag this Tab to a new location"
+msgstr ""
+
+msgid "Drag/drop Widget \"%s\""
 msgstr ""
 
 msgid "Drift"
 msgstr ""
 
+msgid "Drift History (%s)"
+msgstr ""
+
+msgid "Drift History (0)"
+msgstr ""
+
 msgid "Drift Mode"
+msgstr ""
+
+msgid "Drift Sections"
 msgstr ""
 
 msgid "Drift for %{model} \"%{name}\""
@@ -2353,16 +3323,37 @@ msgstr ""
 msgid "Dynamic"
 msgstr ""
 
+msgid "E-Mail after Running"
+msgstr ""
+
+msgid "E-mail"
+msgstr ""
+
+msgid "E-mail Address"
+msgstr ""
+
+msgid "E-mail Options"
+msgstr ""
+
 msgid "E-mail Settings"
 msgstr ""
 
 msgid "E-mail address '%s' is not valid"
 msgstr ""
 
+msgid "E-mail after Running"
+msgstr ""
+
+msgid "ESX Logs"
+msgstr ""
+
 msgid "Edit CFME Server Relationship for %{model} \"%{name}\""
 msgstr ""
 
 msgid "Edit Compute Rate Assignments"
+msgstr ""
+
+msgid "Edit Foreman Provider"
 msgstr ""
 
 msgid "Edit Log Depot settings was cancelled by the user"
@@ -2410,10 +3401,28 @@ msgstr ""
 msgid "Edit policy assignments was cancelled by the user"
 msgstr ""
 
+msgid "Edit the Record Filter"
+msgstr ""
+
 msgid "Edit this Expression"
 msgstr ""
 
+msgid "Edit this Region"
+msgstr ""
+
 msgid "Edit this Scope"
+msgstr ""
+
+msgid "Edit this Widget to configure a timer."
+msgstr ""
+
+msgid "Editing"
+msgstr ""
+
+msgid "Editing %s"
+msgstr ""
+
+msgid "Editing %s File"
 msgstr ""
 
 msgid "Editing %{model} \"%{name}\""
@@ -2423,6 +3432,9 @@ msgid "Editing %{model} for \"%{name}\""
 msgstr ""
 
 msgid "Editing %{model} sequence for \"%{name}\""
+msgstr ""
+
+msgid "Editing Log Depot Settings for %{class}: %{display}"
 msgstr ""
 
 msgid "Editing MyTags"
@@ -2563,7 +3575,19 @@ msgstr ""
 msgid "EmsFolder|Updated on"
 msgstr ""
 
+msgid "Enable Collection by Cluster"
+msgstr ""
+
+msgid "Enable Collection by Datastore"
+msgstr ""
+
+msgid "Enable Single Sign-On"
+msgstr ""
+
 msgid "Enabled"
+msgstr ""
+
+msgid "End Date"
 msgstr ""
 
 msgid "End Date cannot be greater than Start Date"
@@ -2573,6 +3597,9 @@ msgid "End Port"
 msgstr ""
 
 msgid "Enter Automation Simulation options on the left and press Submit."
+msgstr ""
+
+msgid "Enter URL Manually"
 msgstr ""
 
 msgid "Entity:"
@@ -2587,7 +3614,7 @@ msgstr ""
 msgid "Entry Point (NS/Cls/Inst)"
 msgstr ""
 
-msgid "Entry Point must be given for field \"%s\"."
+msgid "Entry Point must be given."
 msgstr ""
 
 msgid "Error"
@@ -2609,6 +3636,11 @@ msgid "Error during %{task}: Status [%{status}] Message [%{message}]"
 msgstr ""
 
 msgid "Error during '%s': "
+msgstr ""
+
+msgid ""
+"Error during Orchestration Template creation: new template content cannot be e"
+"mpty"
 msgstr ""
 
 msgid "Error during Orphaned Records delete for user %s: "
@@ -2640,6 +3672,9 @@ msgstr ""
 msgid "Error retrieving LDAP info: "
 msgstr ""
 
+msgid "Error text:"
+msgstr ""
+
 msgid "Error: Datastore import file upload expired"
 msgstr ""
 
@@ -2652,7 +3687,13 @@ msgstr ""
 msgid "Error: Widget import file upload expired"
 msgstr ""
 
+msgid "Error: the file uploaded contains no widgets"
+msgstr ""
+
 msgid "Error: the file uploaded is not of the supported format"
+msgstr ""
+
+msgid "Errors in Management Engine can be caused by:"
 msgstr ""
 
 msgid "Event Group"
@@ -2661,13 +3702,40 @@ msgstr ""
 msgid "Event Groups"
 msgstr ""
 
+msgid "Event Log"
+msgstr ""
+
+msgid "Event Log Entry"
+msgstr ""
+
+msgid "Event Log Items"
+msgstr ""
+
+msgid "Event Logs"
+msgstr ""
+
+msgid "Event Logs (Available)"
+msgstr ""
+
+msgid "Event Logs (Not Available)"
+msgstr ""
+
+msgid "Event Monitor"
+msgstr ""
+
 msgid "Event Name"
 msgstr ""
 
 msgid "Event Selection"
 msgstr ""
 
+msgid "Event Type"
+msgstr ""
+
 msgid "Event log"
+msgstr ""
+
+msgid "Event to position at:"
 msgstr ""
 
 msgid "Event:"
@@ -2700,6 +3768,9 @@ msgstr ""
 msgid "Events"
 msgstr ""
 
+msgid "Execute Methods"
+msgstr ""
+
 msgid "Exist Mode"
 msgstr ""
 
@@ -2710,6 +3781,9 @@ msgid "Expand All"
 msgstr ""
 
 msgid "Expanded View"
+msgstr ""
+
+msgid "Explorer"
 msgstr ""
 
 msgid "Export"
@@ -2778,16 +3852,31 @@ msgstr ""
 msgid "ExtManagementSystem|Updated on"
 msgstr ""
 
-msgid "Failed"
+msgid "External"
 msgstr ""
 
-msgid "Failed to add depot. See logs for detail."
+msgid "External (httpd)"
+msgstr ""
+
+msgid "External Authentication (httpd) Settings"
+msgstr ""
+
+msgid "External RSS Feed/URL"
+msgstr ""
+
+msgid "Failed"
 msgstr ""
 
 msgid "False"
 msgstr ""
 
 msgid "Feed URL"
+msgstr ""
+
+msgid "Fetch settings from a schedule"
+msgstr ""
+
+msgid "Field"
 msgstr ""
 
 msgid "Fields"
@@ -2798,7 +3887,22 @@ msgid ""
 "of %{max} fields"
 msgstr ""
 
+msgid "File"
+msgstr ""
+
+msgid "File Entry"
+msgstr ""
+
+msgid "File Items"
+msgstr ""
+
+msgid "File System Drivers (%s)"
+msgstr ""
+
 msgid "File depot"
+msgstr ""
+
+msgid "File is empty"
 msgstr ""
 
 msgid "FileDepot|Name"
@@ -2814,6 +3918,12 @@ msgid "FileDepot|Uri"
 msgstr ""
 
 msgid "Filename"
+msgstr ""
+
+msgid "Files (%s)"
+msgstr ""
+
+msgid "Files (0)"
 msgstr ""
 
 msgid "Filesystem"
@@ -2879,6 +3989,9 @@ msgstr ""
 msgid "Filter By"
 msgstr ""
 
+msgid "Filter Message"
+msgstr ""
+
 msgid "Filters"
 msgstr ""
 
@@ -2886,6 +3999,12 @@ msgid "Finished Task cannot be cancelled"
 msgstr ""
 
 msgid "Firewall Rules"
+msgstr ""
+
+msgid "Firewall Rules (%s)"
+msgstr ""
+
+msgid "Firewall Rules (0)"
 msgstr ""
 
 msgid "Firewall rule"
@@ -2934,6 +4053,15 @@ msgid "FirewallRule|Source ip range"
 msgstr ""
 
 msgid "FirewallRule|Updated on"
+msgstr ""
+
+msgid "First"
+msgstr ""
+
+msgid "First %s"
+msgstr ""
+
+msgid "First band unit:"
 msgstr ""
 
 msgid "Flavor"
@@ -2993,7 +4121,16 @@ msgstr ""
 msgid "Folder"
 msgstr ""
 
-msgid "For questions or problem reporting, go to the %s"
+msgid "Follow Referrals"
+msgstr ""
+
+msgid "For questions or problem reporting, go to the"
+msgstr ""
+
+msgid "Format"
+msgstr ""
+
+msgid "Format on Summary Row"
 msgstr ""
 
 msgid "Friday"
@@ -3002,7 +4139,13 @@ msgstr ""
 msgid "From"
 msgstr ""
 
+msgid "From Address"
+msgstr ""
+
 msgid "From Domain"
+msgstr ""
+
+msgid "From E-mail"
 msgstr ""
 
 msgid "From E-mail Address"
@@ -3017,13 +4160,40 @@ msgstr ""
 msgid "GB"
 msgstr ""
 
+msgid "Genealogy"
+msgstr ""
+
 msgid "General"
+msgstr ""
+
+msgid "Generate Report Preview"
+msgstr ""
+
+msgid "Generate Report preview"
+msgstr ""
+
+msgid "Generic Workers"
+msgstr ""
+
+msgid "Get Roles from Home Forest"
+msgstr ""
+
+msgid "Get User Groups from Amazon"
+msgstr ""
+
+msgid "Get User Groups from External Authentication (httpd)"
+msgstr ""
+
+msgid "Get User Groups from LDAP"
 msgstr ""
 
 msgid "Global Default"
 msgstr ""
 
 msgid "Global Time Profile cannot be edited"
+msgstr ""
+
+msgid "Global search:"
 msgstr ""
 
 msgid "Grid View"
@@ -3035,7 +4205,28 @@ msgstr ""
 msgid "Group"
 msgstr ""
 
+msgid "Group Information"
+msgstr ""
+
 msgid "Group Order"
+msgstr ""
+
+msgid "Group Records by up to 3 Columns"
+msgstr ""
+
+msgid "Group by"
+msgstr ""
+
+msgid "Groups"
+msgstr ""
+
+msgid "Groups (%s)"
+msgstr ""
+
+msgid "Groups (0)"
+msgstr ""
+
+msgid "Groups Using this Role"
 msgstr ""
 
 msgid "Guest application"
@@ -3137,6 +4328,9 @@ msgstr ""
 msgid "GuestDevice|Uid ems"
 msgstr ""
 
+msgid "HKLM"
+msgstr ""
+
 msgid "Hardware"
 msgstr ""
 
@@ -3224,10 +4418,13 @@ msgstr ""
 msgid "Hardware|Vmotion enabled"
 msgstr ""
 
-msgid "Header Accent Color"
+msgid "Header"
 msgstr ""
 
 msgid "Heartbeat Frequency"
+msgstr ""
+
+msgid "Hide Detail Rows"
 msgstr ""
 
 msgid "Hide Input Parameters"
@@ -3240,6 +4437,12 @@ msgid "Hint: Press Ctrl-Alt to release the cursor from the guest"
 msgstr ""
 
 msgid "Host"
+msgstr ""
+
+msgid "Host Based SmartProxy Settings"
+msgstr ""
+
+msgid "Host Default VNC Port Range"
 msgstr ""
 
 msgid "Host Item"
@@ -3262,10 +4465,21 @@ msgstr ""
 msgid "Host platform"
 msgstr ""
 
+msgid ""
+"Host to validate against, User ID and matching password fields are needed to p"
+"erform verification of credentials"
+msgstr ""
+
 msgid "Hostname"
 msgstr ""
 
 msgid "Hosts"
+msgstr ""
+
+msgid "Hosts & Clusters"
+msgstr ""
+
+msgid "Hosts (%s)"
 msgstr ""
 
 msgid "Host|Admin disabled"
@@ -3352,10 +4566,19 @@ msgstr ""
 msgid "Host|Vmm version"
 msgstr ""
 
+msgid "Hour"
+msgstr ""
+
+msgid "Hourly"
+msgstr ""
+
 msgid "Hourly Timer"
 msgstr ""
 
 msgid "Hours"
+msgstr ""
+
+msgid "Hover Text"
 msgstr ""
 
 msgid "IP Address"
@@ -3365,6 +4588,9 @@ msgid "IP Address Information"
 msgstr ""
 
 msgid "IPAddress"
+msgstr ""
+
+msgid "IPMI"
 msgstr ""
 
 msgid "IPMI IP Address"
@@ -3379,15 +4605,27 @@ msgstr ""
 msgid "Identification"
 msgstr ""
 
+msgid "If"
+msgstr ""
+
 msgid ""
 "If this widget is new or has just been added to your dashboard, the data is be"
 "ing generated and should be available soon."
 msgstr ""
 
+msgid "Image"
+msgstr ""
+
 msgid "Image Type"
 msgstr ""
 
+msgid "Image shown at 25% of actual size"
+msgstr ""
+
 msgid "Images"
+msgstr ""
+
+msgid "Images (%s)"
 msgstr ""
 
 msgid "Import"
@@ -3405,6 +4643,12 @@ msgstr ""
 msgid "Import Service Dialogs"
 msgstr ""
 
+msgid "Import Tags"
+msgstr ""
+
+msgid "Import Widgets"
+msgstr ""
+
 msgid "Import file cannot be empty"
 msgstr ""
 
@@ -3420,7 +4664,13 @@ msgstr ""
 msgid "In use by %s reports, cannot be disabled"
 msgstr ""
 
+msgid "Inactive"
+msgstr ""
+
 msgid "Index"
+msgstr ""
+
+msgid "Indexes"
 msgstr ""
 
 msgid "Indexes for %{model} \"%{name}\""
@@ -3444,6 +4694,9 @@ msgstr ""
 msgid "Inherit Tags Settings"
 msgstr ""
 
+msgid "Init Processes (%s)"
+msgstr ""
+
 msgid "Input Parameters"
 msgstr ""
 
@@ -3453,16 +4706,34 @@ msgstr ""
 msgid "Install Selected SmartProxy Build"
 msgstr ""
 
+msgid "Installed on Host: %s"
+msgstr ""
+
+msgid "Installed on Host: None"
+msgstr ""
+
 msgid "Instance Type:"
 msgstr ""
 
 msgid "Instances"
 msgstr ""
 
+msgid "Instances (%s)"
+msgstr ""
+
 msgid "Integer"
 msgstr ""
 
 msgid "Integration Services"
+msgstr ""
+
+msgid "Internal"
+msgstr ""
+
+msgid "Internal RSS Feed"
+msgstr ""
+
+msgid "Interval"
 msgstr ""
 
 msgid "Invalid button action."
@@ -3560,10 +4831,60 @@ msgstr ""
 msgid "Kernel"
 msgstr ""
 
+msgid "Kernel Drivers (%s)"
+msgstr ""
+
+msgid "Key:"
+msgstr ""
+
+msgid "LDAP"
+msgstr ""
+
+msgid "LDAP Domains"
+msgstr ""
+
+msgid "LDAP Group Look Up"
+msgstr ""
+
+msgid "LDAP Group Lookup"
+msgstr ""
+
+msgid "LDAP Groups for User"
+msgstr ""
+
+msgid "LDAP Host Name"
+msgstr ""
+
+msgid ""
+"LDAP Host Name and Port fields are needed to perform verification of LDAP Sett"
+"ings"
+msgstr ""
+
+msgid "LDAP Host Names"
+msgstr ""
+
+msgid "LDAP Port"
+msgstr ""
+
+msgid "LDAP Regions"
+msgstr ""
+
+msgid "LDAP Servers"
+msgstr ""
+
+msgid "LDAP Settings"
+msgstr ""
+
 msgid "LDAP Settings validation was successful"
 msgstr ""
 
+msgid "LDAPS"
+msgstr ""
+
 msgid "Label"
+msgstr ""
+
+msgid "Label on Summary Row"
 msgstr ""
 
 msgid "Lan"
@@ -3605,16 +4926,37 @@ msgstr ""
 msgid "Large Trees"
 msgstr ""
 
+msgid "Largest Tables"
+msgstr ""
+
+msgid "Last"
+msgstr ""
+
+msgid "Last 1000 lines from server %{name} [%{id}] in zone %{zone}"
+msgstr ""
+
 msgid "Last 1000 lines from the Automation log"
 msgstr ""
 
+msgid "Last Checked for updates"
+msgstr ""
+
+msgid "Last Log Collection"
+msgstr ""
+
 msgid "Last Message"
+msgstr ""
+
+msgid "Last Run Time"
 msgstr ""
 
 msgid "Last Update"
 msgstr ""
 
 msgid "Last Updated"
+msgstr ""
+
+msgid "Last Week"
 msgstr ""
 
 msgid "Last selected %s no longer exists"
@@ -3773,6 +5115,14 @@ msgstr ""
 msgid "LdapUser|Zip"
 msgstr ""
 
+msgid ""
+"Leave all options unchecked to show the original column value from the first r"
+"ecord in the group."
+msgstr ""
+
+msgid "Level"
+msgstr ""
+
 msgid "Lifecycle"
 msgstr ""
 
@@ -3812,7 +5162,22 @@ msgstr ""
 msgid "List View"
 msgstr ""
 
+msgid "Load"
+msgstr ""
+
 msgid "Load Values on Init"
+msgstr ""
+
+msgid "Load a filter"
+msgstr ""
+
+msgid "Load the filter shown above"
+msgstr ""
+
+msgid "Load..."
+msgstr ""
+
+msgid "Loading ..."
 msgstr ""
 
 msgid "Locale"
@@ -3824,16 +5189,25 @@ msgstr ""
 msgid "Location"
 msgstr ""
 
+msgid "Locked"
+msgstr ""
+
+msgid "Log"
+msgstr ""
+
 msgid "Log Depot Settings were saved"
 msgstr ""
 
 msgid "Log Depot Settings were validated"
 msgstr ""
 
-msgid "Log In"
-msgstr "Prihlásenie"
+msgid "Log Depot URI"
+msgstr ""
 
 msgid "Log Level"
+msgstr ""
+
+msgid "Log Viewer"
 msgstr ""
 
 msgid "Log Wrap Size"
@@ -3884,6 +5258,10 @@ msgstr ""
 msgid "LogFile|Updated on"
 msgstr ""
 
+#, fuzzy
+msgid "Logging"
+msgstr "Prihlásenie"
+
 msgid "Login"
 msgstr ""
 
@@ -3911,7 +5289,19 @@ msgstr ""
 msgid "Main Info"
 msgstr ""
 
-msgid "ManageIQ"
+msgid "Maintenance"
+msgstr ""
+
+msgid "Manage Accordions"
+msgstr ""
+
+msgid "Manage Accordions & Folders"
+msgstr ""
+
+msgid "Manage Reports"
+msgstr ""
+
+msgid "Managed VMs (%s)"
 msgstr ""
 
 msgid "Management Engine"
@@ -3926,6 +5316,12 @@ msgstr ""
 msgid "Max"
 msgstr ""
 
+msgid "Max Active VM Scans"
+msgstr ""
+
+msgid "Max Concurrent"
+msgstr ""
+
 msgid "Max Retries"
 msgstr ""
 
@@ -3933,6 +5329,9 @@ msgid "Max Time"
 msgstr ""
 
 msgid "Max VMs"
+msgstr ""
+
+msgid "Member VMs (%s)"
 msgstr ""
 
 msgid "Memory"
@@ -3959,10 +5358,24 @@ msgstr ""
 msgid "Memory Usage"
 msgstr ""
 
+msgid "Memory threshold"
+msgstr ""
+
+#, fuzzy
+#, fuzzy
+msgid "Menu Name"
+msgstr "Používatelské meno"
+
+msgid "Menu Shortcuts"
+msgstr ""
+
 msgid "Message"
 msgstr ""
 
 msgid "Message Filter"
+msgstr ""
+
+msgid "Messages"
 msgstr ""
 
 msgid "Method Inputs"
@@ -4164,6 +5577,9 @@ msgid "MetricRollup|Tag names"
 msgstr ""
 
 msgid "MetricRollup|Timestamp"
+msgstr ""
+
+msgid "Metrics"
 msgstr ""
 
 msgid "Metric|Assoc ids"
@@ -5120,9 +6536,6 @@ msgstr ""
 msgid "MiqEvent|Updated on"
 msgstr ""
 
-msgid "MiqGroup"
-msgstr ""
-
 msgid "MiqGroup|Created on"
 msgstr ""
 
@@ -5960,7 +7373,16 @@ msgstr ""
 msgid "MiqWorker|Uri"
 msgstr ""
 
+msgid "Mode"
+msgstr ""
+
 msgid "Monday"
+msgstr ""
+
+msgid "Month"
+msgstr ""
+
+msgid "Monthly"
 msgstr ""
 
 msgid "Move Selected buttons left"
@@ -6014,13 +7436,70 @@ msgstr ""
 msgid "Move selected fields down"
 msgstr ""
 
+msgid "Move selected fields left"
+msgstr ""
+
+msgid "Move selected fields right"
+msgstr ""
+
+msgid "Move selected fields to bottom"
+msgstr ""
+
+msgid "Move selected fields to top"
+msgstr ""
+
 msgid "Move selected fields up"
+msgstr ""
+
+msgid "Move selected folder down"
+msgstr ""
+
+msgid "Move selected folder to bottom"
+msgstr ""
+
+msgid "Move selected folder top"
+msgstr ""
+
+msgid "Move selected folder up"
+msgstr ""
+
+msgid "Move selected reports down"
+msgstr ""
+
+msgid "Move selected reports left"
+msgstr ""
+
+msgid "Move selected reports right"
+msgstr ""
+
+msgid "Move selected reports to bottom"
+msgstr ""
+
+msgid "Move selected reports to top"
+msgstr ""
+
+msgid "Move selected reports up"
+msgstr ""
+
+msgid "My Filters"
 msgstr ""
 
 msgid "My Services"
 msgstr ""
 
+msgid "My Settings"
+msgstr ""
+
 msgid "N/A"
+msgstr ""
+
+msgid "NONE"
+msgstr ""
+
+msgid "NOT"
+msgstr ""
+
+msgid "NTP Servers"
 msgstr ""
 
 msgid "Name"
@@ -6030,6 +7509,18 @@ msgid "Name (from chosen Host)"
 msgstr ""
 
 msgid "Name / Description"
+msgstr ""
+
+msgid "Name: %s | %s Type: %s"
+msgstr ""
+
+msgid "Name: %s | Host Name: %s"
+msgstr ""
+
+msgid "Name: %s | Host Name: %s | IP Address: %s | Refresh Status: %s"
+msgstr ""
+
+msgid "Name: %s | Path: %s"
 msgstr ""
 
 msgid "Namespace"
@@ -6057,6 +7548,9 @@ msgid "Network Protocol"
 msgstr ""
 
 msgid "Network Type"
+msgstr ""
+
+msgid "Networks"
 msgstr ""
 
 msgid "Network|Default gateway"
@@ -6113,19 +7607,32 @@ msgstr ""
 msgid "New Name"
 msgstr ""
 
+msgid "New Orchestration Template Information"
+msgstr ""
+
 msgid "New Parameter"
 msgstr ""
 
-msgid "New Password"
-msgstr "Nové heslo"
-
 msgid "New setting will affect %s"
 msgstr ""
+
+msgid "New setting will affect Service"
+msgid_plural "New setting will affect Services"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "New setting will affect VM"
+msgid_plural "New setting will affect VMs"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "New settings have been activated"
 msgstr ""
 
 msgid "Next"
+msgstr ""
+
+msgid "Next Run Time"
 msgstr ""
 
 msgid "No"
@@ -6141,6 +7648,15 @@ msgid "No %s Conditions are defined%s."
 msgstr ""
 
 msgid "No %s Policy Profiles are defined%s."
+msgstr ""
+
+msgid "No %s Tags are assigned"
+msgstr ""
+
+msgid "No %s Tags are common to all of the items below"
+msgstr ""
+
+msgid "No %s Tags have been assigned"
 msgstr ""
 
 msgid "No %s found"
@@ -6215,6 +7731,18 @@ msgstr ""
 msgid "No Attribute/Value Pairs found"
 msgstr ""
 
+msgid "No Attribute/Value Pairs found."
+msgstr ""
+
+msgid "No Backup Schedules are defined"
+msgstr ""
+
+msgid "No Buttons found."
+msgstr ""
+
+msgid "No Capacity & Utilization data available."
+msgstr ""
+
 msgid "No Catalog Items found."
 msgstr ""
 
@@ -6222,6 +7750,15 @@ msgid "No Choices Available"
 msgstr ""
 
 msgid "No Class found for explorer tree node type '%s'"
+msgstr ""
+
+msgid "No Clusters found in the current region."
+msgstr ""
+
+msgid "No Dashboards are defined for this group. Default dashboard will be shown."
+msgstr ""
+
+msgid "No Datastores found in the current region."
 msgstr ""
 
 msgid ""
@@ -6232,13 +7769,31 @@ msgstr ""
 msgid "No Dialog"
 msgstr ""
 
+msgid "No Display Filter defined."
+msgstr ""
+
+msgid "No Group"
+msgstr ""
+
+msgid "No Indexes found for this table."
+msgstr ""
+
+msgid "No Items found."
+msgstr ""
+
 msgid "No MyTags have been created"
 msgstr ""
 
 msgid "No Ordering Dialog is available"
 msgstr ""
 
+msgid "No Owner"
+msgstr ""
+
 msgid "No Policies are defined."
+msgstr ""
+
+msgid "No Policy Profiles available."
 msgstr ""
 
 msgid "No Policy scope defined, the scope of this policy includes all elements."
@@ -6250,10 +7805,10 @@ msgstr ""
 msgid "No RSS Feeds Found"
 msgstr ""
 
-msgid "No Records Found"
+msgid "No Record Filter defined."
 msgstr ""
 
-msgid "No Records found"
+msgid "No Records Found."
 msgstr ""
 
 msgid "No Report Schedules were selected to be Run now"
@@ -6268,7 +7823,19 @@ msgstr ""
 msgid "No Resources found."
 msgstr ""
 
+msgid "No Saved Reports available."
+msgstr ""
+
+msgid "No Schedules available."
+msgstr ""
+
 msgid "No Server was selected"
+msgstr ""
+
+msgid "No Servers Found."
+msgstr ""
+
+msgid "No Servers found."
 msgstr ""
 
 msgid "No Time Profile Selected"
@@ -6283,6 +7850,9 @@ msgstr ""
 msgid "No Utilization data available"
 msgstr ""
 
+msgid "No Utilization data available for this Server's Virtual Machine."
+msgstr ""
+
 msgid "No Utilization data available to generate planning results"
 msgstr ""
 
@@ -6293,6 +7863,12 @@ msgid "No VMs match the selection criteria"
 msgstr ""
 
 msgid "No Widget compatible Reports found"
+msgstr ""
+
+msgid "No Widgets available."
+msgstr ""
+
+msgid "No Zones found."
 msgstr ""
 
 msgid "No alarms found for the selected %s"
@@ -6315,6 +7891,11 @@ msgstr ""
 msgid "No data found."
 msgstr ""
 
+msgid ""
+"No drift history found, an Analysis or Virtual Black Box Synchronization for t"
+"his VM may need to be run."
+msgstr ""
+
 msgid "No events available for this timeline"
 msgstr ""
 
@@ -6325,6 +7906,9 @@ msgid "No explorer tree node type found for '%s'"
 msgstr ""
 
 msgid "No expression defined, a condition must contain a valid expression."
+msgstr ""
+
+msgid "No filters defined."
 msgstr ""
 
 msgid "No log available, press Retrieve to get the SmartProxy log"
@@ -6342,16 +7926,28 @@ msgstr ""
 msgid "No planning data is available for the selected item."
 msgstr ""
 
+msgid "No policies have been chosen yet"
+msgstr ""
+
 msgid "No records found for this report"
 msgstr ""
 
 msgid "No records found for this timeline"
 msgstr ""
 
+msgid "No saved filters or report filters are available to load"
+msgstr ""
+
 msgid "No scope defined, the scope of this condition includes all elements."
 msgstr ""
 
 msgid "No shortcuts are authorized for this user, contact your Administrator"
+msgstr ""
+
+msgid "No task target captured"
+msgstr ""
+
+msgid "No timer is attached to this Widget, its contents will not be updated."
 msgstr ""
 
 msgid "No usage data found for specified options"
@@ -6363,7 +7959,7 @@ msgstr ""
 msgid "No variables configured."
 msgstr ""
 
-msgid "No virtual machines were selected to delete Virtual BlackBoxes on"
+msgid "Non-VM Files"
 msgstr ""
 
 msgid ""
@@ -6375,6 +7971,12 @@ msgid "None"
 msgstr ""
 
 msgid "None Available"
+msgstr ""
+
+msgid "None Available or All Selected"
+msgstr ""
+
+msgid "Normal"
 msgstr ""
 
 msgid "Normal Operating Ranges (over 30 days)"
@@ -6389,7 +7991,16 @@ msgstr ""
 msgid "Not a Server"
 msgstr ""
 
+msgid "Note:"
+msgstr ""
+
 msgid "Note: Fields marked with * are required."
+msgstr ""
+
+msgid "Note: Gap Collection is only available for VMware vSphere Infrastructures"
+msgstr ""
+
+msgid "Note: Only Time Profiles with 'Roll Up Performance' set are shown."
 msgstr ""
 
 msgid "Notes"
@@ -6407,13 +8018,25 @@ msgstr ""
 msgid "Number of Instances"
 msgstr ""
 
+msgid "Number of Rows to Show"
+msgstr ""
+
 msgid "Number of VMs"
+msgstr ""
+
+msgid "OR with a new expression element"
+msgstr ""
+
+msgid "OS %s"
 msgstr ""
 
 msgid "OS Information"
 msgstr ""
 
 msgid "Object"
+msgstr ""
+
+msgid "Object Attribute"
 msgstr ""
 
 msgid "Object Attribute Name"
@@ -6431,6 +8054,9 @@ msgstr ""
 msgid "Object Info"
 msgstr ""
 
+msgid "Object Types"
+msgstr ""
+
 msgid "Ok"
 msgstr ""
 
@@ -6441,6 +8067,9 @@ msgid "On Error"
 msgstr ""
 
 msgid "On Exit"
+msgstr ""
+
+msgid "Once"
 msgstr ""
 
 msgid "One or more %{model} must be selected to %{task}"
@@ -7730,6 +9359,9 @@ msgstr ""
 msgid "Open the full report in a new window"
 msgstr ""
 
+msgid "Operating System"
+msgstr ""
+
 msgid "Operating system"
 msgstr ""
 
@@ -7805,6 +9437,24 @@ msgstr ""
 msgid "Options"
 msgstr ""
 
+msgid "Options %s"
+msgstr ""
+
+msgid "Options %s: %s"
+msgstr ""
+
+msgid "Orchestration Template"
+msgstr ""
+
+msgid "Orchestration Template \"%s\" was deleted."
+msgstr ""
+
+msgid "Orchestration Template Information"
+msgstr ""
+
+msgid "Orchestration Templates"
+msgstr ""
+
 msgid "Orchestration stack"
 msgstr ""
 
@@ -7818,6 +9468,9 @@ msgid "Orchestration stack resource"
 msgstr ""
 
 msgid "Orchestration template"
+msgstr ""
+
+msgid "Orchestration template \"%s\" is read-only and cannot be deleted."
 msgstr ""
 
 msgid "OrchestrationStackOutput|Description"
@@ -7907,6 +9560,15 @@ msgstr ""
 msgid "Order this Service"
 msgstr ""
 
+msgid "Organization"
+msgstr ""
+
+msgid "Original Value"
+msgstr ""
+
+msgid "Orphaned Data"
+msgstr ""
+
 msgid "Orphaned Records for userid %s were successfully deleted"
 msgstr ""
 
@@ -7943,7 +9605,31 @@ msgstr ""
 msgid "OsProcess|Updated on"
 msgstr ""
 
+msgid "Other"
+msgstr ""
+
+msgid "Other VM Files"
+msgstr ""
+
+msgid "Outgoing SMTP E-mail Server"
+msgstr ""
+
+msgid "Outputs (%s)"
+msgstr ""
+
+msgid "Overwrite existing reports?"
+msgstr ""
+
+msgid "Owner"
+msgstr ""
+
 msgid "Ownership saved for selected %s"
+msgstr ""
+
+msgid "PDF"
+msgstr ""
+
+msgid "PDF Output"
 msgstr ""
 
 msgid "PM:"
@@ -7961,7 +9647,31 @@ msgstr ""
 msgid "PXE Images"
 msgstr ""
 
+msgid "Packages (%s)"
+msgstr ""
+
+msgid "Packages (0)"
+msgstr ""
+
+msgid "Page Size"
+msgstr ""
+
 msgid "Parameters"
+msgstr ""
+
+msgid "Parameters (%s)"
+msgstr ""
+
+msgid "Parent Cluster: %s"
+msgstr ""
+
+msgid "Parent Cluster: None"
+msgstr ""
+
+msgid "Parent Host: %s"
+msgstr ""
+
+msgid "Parent Host: None"
 msgstr ""
 
 msgid "Parent Type"
@@ -7974,6 +9684,12 @@ msgid "Parent VM Selection"
 msgstr ""
 
 msgid "Parent VM can not be one of the child VMs"
+msgstr ""
+
+msgid "Parent VM: %s"
+msgstr ""
+
+msgid "Parent VM: None"
 msgstr ""
 
 msgid "Partition"
@@ -8024,10 +9740,24 @@ msgstr ""
 msgid "Password"
 msgstr "Heslo"
 
+msgid "Password fields must match to Validate Database Configuration"
+msgstr ""
+
 msgid "Password/Verify Password do not match"
 msgstr ""
 
+msgid ""
+"Paste is not available, no object information has been copied from the Simulat"
+"ion screen"
+msgstr ""
+
+msgid "Paste object details for use in a Button."
+msgstr ""
+
 msgid "Patch"
+msgstr ""
+
+msgid "Patches (%s)"
 msgstr ""
 
 msgid "Patch|Created on"
@@ -8072,6 +9802,21 @@ msgstr ""
 msgid "Per Unit"
 msgstr ""
 
+msgid "Per page:"
+msgstr ""
+
+msgid "Percent Bloat"
+msgstr ""
+
+msgid "Performance Interval"
+msgstr ""
+
+msgid "Performance Timeframe"
+msgstr ""
+
+msgid "Period"
+msgstr ""
+
 msgid "Picture"
 msgstr ""
 
@@ -8087,10 +9832,22 @@ msgstr ""
 msgid "Plan for VM placement on Clusters or Hosts"
 msgstr ""
 
+msgid "Planning"
+msgstr ""
+
 msgid "Planning options have been reset by the user"
 msgstr ""
 
+msgid "Platform Updates Available"
+msgstr ""
+
+msgid "Please contact your administrator for assistance."
+msgstr ""
+
 msgid "Please select a Cloud Tenant from the Environment Tab"
+msgstr ""
+
+msgid "Please select a node at left to edit."
 msgstr ""
 
 msgid "Please select an Instance Type from above"
@@ -8105,6 +9862,9 @@ msgstr ""
 msgid "Policy Profiles"
 msgstr ""
 
+msgid "Policy Profiles in Effect"
+msgstr ""
+
 msgid "Policy Selection"
 msgstr ""
 
@@ -8114,10 +9874,16 @@ msgstr ""
 msgid "Policy Simulation Results"
 msgstr ""
 
+msgid "Policy Simulation for %s"
+msgstr ""
+
 msgid "Policy Simulation generation returned: "
 msgstr ""
 
 msgid "Policy assignments successfully changed"
+msgstr ""
+
+msgid "Policy changes will affect %s"
 msgstr ""
 
 msgid "Policy event"
@@ -8177,6 +9943,9 @@ msgstr ""
 msgid "Press commit to Import"
 msgstr ""
 
+msgid "Press submit to start the Database Vacuum process"
+msgstr ""
+
 msgid "Press the Apply button to import the good records into the CFME database"
 msgstr ""
 
@@ -8191,13 +9960,40 @@ msgid ""
 "SmartProxy build to the Host."
 msgstr ""
 
+msgid "Pressing the Activate button"
+msgstr ""
+
+msgid "Pressing the back button during a session."
+msgstr ""
+
+msgid "Primary (Record) Filter"
+msgstr ""
+
+msgid "Primary (Record) Filter - Filters the %s table records"
+msgstr ""
+
+msgid "Priority"
+msgstr ""
+
 msgid "Priority Order was saved"
+msgstr ""
+
+msgid "Priority Workers"
+msgstr ""
+
+msgid "Process ID"
 msgstr ""
 
 msgid "Processors"
 msgstr ""
 
 msgid "Product Assistance"
+msgstr ""
+
+msgid "Product Features (%s)"
+msgstr ""
+
+msgid "Product Update Info"
 msgstr ""
 
 msgid "Product update"
@@ -8249,6 +10045,12 @@ msgid "Properties"
 msgstr ""
 
 msgid "Protected"
+msgstr ""
+
+msgid "Provider"
+msgstr ""
+
+msgid "Providers"
 msgstr ""
 
 msgid "Provision %s"
@@ -8374,10 +10176,25 @@ msgstr ""
 msgid "Queued"
 msgstr ""
 
+msgid "Queued At"
+msgstr ""
+
 msgid "Quick Start"
 msgstr ""
 
 msgid "Quotas"
+msgstr ""
+
+msgid "RSS"
+msgstr ""
+
+msgid "RSS Feed Options"
+msgstr ""
+
+msgid "RSS Feed no longer exists"
+msgstr ""
+
+msgid "Range"
 msgstr ""
 
 msgid "Rank"
@@ -8387,6 +10204,9 @@ msgid "Rate"
 msgstr ""
 
 msgid "Rate Details"
+msgstr ""
+
+msgid "Read Only"
 msgstr ""
 
 msgid "Read Only %{model} \"%{name}\" can not be edited"
@@ -8437,6 +10257,12 @@ msgstr ""
 msgid "Red Hat Customer Portal"
 msgstr ""
 
+msgid "Red Hat Updates"
+msgstr ""
+
+msgid "Redo the next change"
+msgstr ""
+
 msgid "Reference VM Profile"
 msgstr ""
 
@@ -8446,13 +10272,52 @@ msgstr ""
 msgid "Referenced by Actions"
 msgstr ""
 
+msgid "Refresh"
+msgstr ""
+
+msgid "Refresh List"
+msgstr ""
+
 msgid "Refresh of recent C&U data has been initiated"
 msgstr ""
 
 msgid "Region"
 msgstr ""
 
+msgid "Region Information"
+msgstr ""
+
+msgid "Region based nodes shown as %{dimmed} text."
+msgstr ""
+
+msgid "Region:"
+msgstr ""
+
+msgid "Register"
+msgstr ""
+
 msgid "Registration"
+msgstr ""
+
+msgid "Registry"
+msgstr ""
+
+msgid "Registry Entries (%s)"
+msgstr ""
+
+msgid "Registry Entry"
+msgstr ""
+
+msgid "Registry Hive"
+msgstr ""
+
+msgid "Registry Items"
+msgstr ""
+
+msgid "Registry Key"
+msgstr ""
+
+msgid "Registry Value"
 msgstr ""
 
 msgid "Registry item"
@@ -8497,6 +10362,15 @@ msgstr ""
 msgid "Remote Console plugin is not properly installed."
 msgstr ""
 
+msgid "Remote Login"
+msgstr ""
+
+msgid "Remove"
+msgstr ""
+
+msgid "Remove %s"
+msgstr ""
+
 msgid "Remove Tags Settings"
 msgstr ""
 
@@ -8530,6 +10404,9 @@ msgstr ""
 msgid "Remove selected Policies from this Profile"
 msgstr ""
 
+msgid "Remove the current filter"
+msgstr ""
+
 msgid "Remove this %s"
 msgstr ""
 
@@ -8545,13 +10422,58 @@ msgstr ""
 msgid "Remove this Retirement Entry Point"
 msgstr ""
 
+msgid "Remove this Shortcut"
+msgstr ""
+
+msgid "Remove this expression element"
+msgstr ""
+
+msgid "Remove this widget"
+msgstr ""
+
 msgid "Replace items if they already exist?"
+msgstr ""
+
+msgid "Replace me."
+msgstr ""
+
+msgid "Replicate to Host"
+msgstr ""
+
+msgid "Replication"
+msgstr ""
+
+msgid "Replication Process"
+msgstr ""
+
+msgid "Replication Worker"
 msgstr ""
 
 msgid "Report"
 msgstr ""
 
+msgid "Report Creation Timeout"
+msgstr ""
+
+msgid "Report Filter"
+msgstr ""
+
+msgid "Report Info"
+msgstr ""
+
+msgid "Report Menus for"
+msgstr ""
+
 msgid "Report Options"
+msgstr ""
+
+msgid "Report Preview (up to 50 rows)"
+msgstr ""
+
+msgid "Report Results by User"
+msgstr ""
+
+msgid "Report Selection"
 msgstr ""
 
 msgid "Report can not be saved unless sort field has been configured for Charts"
@@ -8560,16 +10482,31 @@ msgstr ""
 msgid "Report cannot be deleted if it's being used by one or more Widgets"
 msgstr ""
 
+msgid "Report doesn't belong to Widgets."
+msgstr ""
+
 msgid "Report generation returned: Status [%{status}] Message [%{message}]"
 msgstr ""
 
 msgid "Report has been successfully queued to run"
 msgstr ""
 
+msgid "Report is not Scheduled."
+msgstr ""
+
 msgid "Report is not authorized for the logged in user"
 msgstr ""
 
+msgid "Report no longer exists"
+msgstr ""
+
+msgid "Report not found."
+msgstr ""
+
 msgid "Report preview generation returned: Status [%{status}] Message [%{message}]"
+msgstr ""
+
+msgid "Reporting Workers"
 msgstr ""
 
 msgid "Reports"
@@ -8635,7 +10572,16 @@ msgstr ""
 msgid "Requester:"
 msgstr ""
 
+msgid "Requests"
+msgstr ""
+
 msgid "Required"
+msgstr ""
+
+msgid "Required if SSH login is disabled for the Default account."
+msgstr ""
+
+msgid "Required. Should have privileged access, such as root or administrator."
 msgstr ""
 
 msgid "Reserve"
@@ -8650,6 +10596,15 @@ msgstr ""
 msgid "Reset"
 msgstr ""
 
+msgid "Reset All menus to CFME defaults"
+msgstr ""
+
+msgid "Reset All menus to defaults"
+msgstr ""
+
+msgid "Reset Changes"
+msgstr ""
+
 msgid "Reset all Datastore custom classes and instances to default"
 msgstr ""
 
@@ -8662,6 +10617,18 @@ msgstr ""
 msgid "Reset filter changes"
 msgstr ""
 
+msgid "Reset the filter"
+msgstr ""
+
+msgid "Reset this Shortcut's text"
+msgstr ""
+
+msgid "Reset to Default"
+msgstr ""
+
+msgid "Resides on VM"
+msgstr ""
+
 msgid "Resolve conflicts to import the file"
 msgstr ""
 
@@ -8669,6 +10636,12 @@ msgid "Resource Pool"
 msgstr ""
 
 msgid "Resource Pools"
+msgstr ""
+
+msgid "Resource Pools (%s)"
+msgstr ""
+
+msgid "Resource Pools (0)"
 msgstr ""
 
 msgid "Resource action"
@@ -8755,7 +10728,13 @@ msgstr ""
 msgid "Resources"
 msgstr ""
 
+msgid "Resources (%s)"
+msgstr ""
+
 msgid "Restore"
+msgstr ""
+
+msgid "Result"
 msgstr ""
 
 msgid "Retirement"
@@ -8794,6 +10773,21 @@ msgstr ""
 msgid "Right-Sizing (Moderate - derived from High NORM)"
 msgstr ""
 
+msgid "Role"
+msgstr ""
+
+msgid "Role Information"
+msgstr ""
+
+msgid "Role Settings"
+msgstr ""
+
+msgid "Roles (%s)"
+msgstr ""
+
+msgid "Roles by Servers"
+msgstr ""
+
 msgid "Roll Up Daily Performance"
 msgstr ""
 
@@ -8801,6 +10795,9 @@ msgid "Roll Up Performance"
 msgstr ""
 
 msgid "Row Count"
+msgstr ""
+
+msgid "Rows"
 msgstr ""
 
 msgid "Rr pending change"
@@ -8854,10 +10851,42 @@ msgstr ""
 msgid "RssFeed|Yml file mtime"
 msgstr ""
 
+msgid "Ruby Script"
+msgstr ""
+
+msgid "Run"
+msgstr ""
+
+msgid "Run At"
+msgstr ""
+
+msgid "Run Database Garbage Collection Now"
+msgstr ""
+
 msgid "Run On"
 msgstr ""
 
+msgid "Run a Database Backup Now"
+msgstr ""
+
 msgid "Running"
+msgstr ""
+
+msgid "Running Processes (%s Ago)"
+msgstr ""
+
+msgid "Running Processes (%s)"
+msgstr ""
+
+msgid "Running Processes (0)"
+msgstr ""
+
+msgid "Running Processes (Not Available)"
+msgstr ""
+
+msgid ""
+"SMTP E-mail Server settings and Test E-mail Address are needed to send test em"
+"ail"
 msgstr ""
 
 msgid "SNMP Trap"
@@ -8866,7 +10895,10 @@ msgstr ""
 msgid "SNMP Trap Settings"
 msgstr ""
 
-msgid "SSO Log In"
+msgid "SPICE Console"
+msgstr ""
+
+msgid "SSL Verify Mode"
 msgstr ""
 
 msgid "SSO Login"
@@ -8878,13 +10910,37 @@ msgstr ""
 msgid "Sample %{model} \"%{name}\" can not be edited"
 msgstr ""
 
+msgid "Sample Dashboard"
+msgstr ""
+
+msgid "Sample Timeline"
+msgstr ""
+
 msgid "Saturday"
 msgstr ""
 
 msgid "Save"
 msgstr ""
 
+msgid "Save Changes"
+msgstr ""
+
+msgid "Save the current filter"
+msgstr ""
+
+msgid "Save the current search"
+msgstr ""
+
+msgid "Save this %s search as:"
+msgstr ""
+
+msgid "Save..."
+msgstr ""
+
 msgid "Saved Report \"%s\" not found, Schedule may have failed"
+msgstr ""
+
+msgid "Saved Reports"
 msgstr ""
 
 msgid "Savings"
@@ -8989,6 +11045,9 @@ msgstr ""
 msgid "Schedule Info"
 msgstr ""
 
+msgid "Schedules"
+msgstr ""
+
 msgid "Schema"
 msgstr ""
 
@@ -9013,10 +11072,37 @@ msgstr ""
 msgid "Script"
 msgstr ""
 
+msgid "Search Expression"
+msgstr ""
+
+msgid "Search Expression Preview"
+msgstr ""
+
 msgid "Search by Name within results"
 msgstr ""
 
+msgid "Second band unit:"
+msgstr ""
+
+msgid "Secondary (Display) Filter"
+msgstr ""
+
+msgid "Secondary (Display) Filter - Filters the rows based on child table fields"
+msgstr ""
+
+msgid "Secret Access Key"
+msgstr ""
+
+msgid "Secret Key"
+msgstr ""
+
 msgid "Security"
+msgstr ""
+
+msgid "Security Groups"
+msgstr ""
+
+msgid "Security Groups (%s)"
 msgstr ""
 
 msgid "Security group"
@@ -9037,6 +11123,15 @@ msgstr ""
 msgid "Select Alerts to be Evaluated"
 msgstr ""
 
+msgid "Select Entry Point %s"
+msgstr ""
+
+msgid "Select Host to validate against"
+msgstr ""
+
+msgid "Select Policy Profiles"
+msgstr ""
+
 msgid "Select Server:"
 msgstr ""
 
@@ -9046,10 +11141,22 @@ msgstr ""
 msgid "Select Tags to apply"
 msgstr ""
 
+msgid "Select a Group:"
+msgstr ""
+
+msgid "Select a Policy Profile to add:"
+msgstr ""
+
 msgid "Select a Tag to Apply"
 msgstr ""
 
 msgid "Select a VM to Submit the Simulation Options"
+msgstr ""
+
+msgid "Select a customer tag to assign:"
+msgstr ""
+
+msgid "Select a filter to set it as my default"
 msgstr ""
 
 msgid "Select a node on the left to view Bottlenecks report."
@@ -9064,7 +11171,13 @@ msgstr ""
 msgid "Select a node on the left to view Utilization report."
 msgstr ""
 
+msgid "Select a product update to view activation options"
+msgstr ""
+
 msgid "Select a reference VM or Manual Input source to Submit the Planning Options"
+msgstr ""
+
+msgid "Select an Owner:"
 msgstr ""
 
 msgid "Select an expression element type"
@@ -9077,6 +11190,9 @@ msgid "Select existing domain to import into:"
 msgstr ""
 
 msgid "Select namespaces you wish to import:"
+msgstr ""
+
+msgid "Select one or more consecutive groups to move up or down."
 msgstr ""
 
 msgid "Select only one or consecutive %s to move down"
@@ -9103,6 +11219,15 @@ msgstr ""
 msgid "Selected Day"
 msgstr ""
 
+msgid "Selected Fields:"
+msgstr ""
+
+msgid "Selected Item"
+msgstr ""
+
+msgid "Selected Reports:"
+msgstr ""
+
 msgid "Selected Resources"
 msgstr ""
 
@@ -9113,6 +11238,9 @@ msgid "Selected VM"
 msgstr ""
 
 msgid "Selected:"
+msgstr ""
+
+msgid "Selection"
 msgstr ""
 
 msgid "Selections"
@@ -9133,16 +11261,44 @@ msgstr ""
 msgid "Send a Management Event"
 msgstr ""
 
+msgid "Send an E-mail"
+msgstr ""
+
 msgid "Send an SNMP Trap"
 msgstr ""
 
+msgid "Send if Report is Empty"
+msgstr ""
+
+msgid "Send test email"
+msgstr ""
+
 msgid "Send&#160;Ctrl-Alt-Delete"
+msgstr ""
+
+msgid "Server"
+msgstr ""
+
+msgid "Server Address"
+msgstr ""
+
+msgid "Server Control"
 msgstr ""
 
 msgid "Server License"
 msgstr ""
 
 msgid "Server Name"
+msgstr ""
+
+#, fuzzy
+#, fuzzy
+msgid "Server Roles"
+msgstr "Používatelské meno"
+
+msgid ""
+"Server information, User ID and matching password fields are needed to perform"
+" verification of credentials"
 msgstr ""
 
 msgid "Server role"
@@ -9175,6 +11331,9 @@ msgstr ""
 msgid "Servers"
 msgstr ""
 
+msgid "Servers by Roles"
+msgstr ""
+
 msgid "Service"
 msgstr ""
 
@@ -9197,6 +11356,12 @@ msgid "Service template"
 msgstr ""
 
 msgid "Service template catalog"
+msgstr ""
+
+msgid "Service: %s"
+msgstr ""
+
+msgid "Service: None"
 msgstr ""
 
 msgid "ServiceResource|Group idx"
@@ -9268,6 +11433,12 @@ msgstr ""
 msgid "Services"
 msgstr ""
 
+msgid "Services (%s)"
+msgstr ""
+
+msgid "Services (0)"
+msgstr ""
+
 msgid "Service|Description"
 msgstr ""
 
@@ -9301,6 +11472,9 @@ msgstr ""
 msgid "Session Information"
 msgstr ""
 
+msgid "Session Timeout"
+msgstr ""
+
 msgid "Session was timed out due to inactivity. Please log in again."
 msgstr ""
 
@@ -9317,6 +11491,12 @@ msgid "Set selected Actions to Asynchronous"
 msgstr ""
 
 msgid "Set selected Actions to Synchronous"
+msgstr ""
+
+msgid "Set the current filter as my default"
+msgstr ""
+
+msgid "Set to blank"
 msgstr ""
 
 msgid "Set/Remove Retirement Date"
@@ -9340,16 +11520,55 @@ msgstr ""
 msgid "Settings and Operations"
 msgstr ""
 
+msgid "Shortcuts"
+msgstr ""
+
 msgid "Show"
+msgstr ""
+
+msgid "Show %s"
 msgstr ""
 
 msgid "Show %s Quadrants"
 msgstr ""
 
+msgid "Show Capacity & Utilization"
+msgstr ""
+
+msgid "Show Costs by"
+msgstr ""
+
+msgid "Show Event Logs on this VM"
+msgstr ""
+
 msgid "Show Host Events"
 msgstr ""
 
+msgid "Show Host OS information"
+msgstr ""
+
+msgid "Show Host devices"
+msgstr ""
+
+msgid "Show Host network"
+msgstr ""
+
+msgid "Show Host storage adapters"
+msgstr ""
+
+msgid "Show Hosts"
+msgstr ""
+
+msgid "Show Hosts & Clusters"
+msgstr ""
+
 msgid "Show Input Parameters"
+msgstr ""
+
+msgid "Show Other VM files on this %s"
+msgstr ""
+
+msgid "Show Parent Host"
 msgstr ""
 
 msgid "Show Past Dates"
@@ -9358,7 +11577,154 @@ msgstr ""
 msgid "Show Refresh Button"
 msgstr ""
 
+msgid "Show Resource Pools"
+msgstr ""
+
+msgid "Show Resources of this VM"
+msgstr ""
+
+msgid "Show Running Processes on this VM"
+msgstr ""
+
+msgid "Show Sort Breaks"
+msgstr ""
+
+msgid "Show Summary"
+msgstr ""
+
+msgid "Show Timelines"
+msgstr ""
+
+msgid "Show VM"
+msgstr ""
+
+msgid "Show VM Provisioned Disk Files on this %s"
+msgstr ""
+
+msgid "Show VM Types"
+msgstr ""
+
+msgid "Show VM memory files on this %s"
+msgstr ""
+
+msgid "Show VM snapshot files on this %s"
+msgstr ""
+
+msgid "Show VMM information"
+msgstr ""
+
+msgid "Show VMs"
+msgstr ""
+
+msgid "Show VMs & Templates"
+msgstr ""
+
+msgid "Show VMs in this Cluster, but not in Resource Pools below"
+msgstr ""
+
+msgid "Show VMs in this Resource Pool, but not in Resource Pools below"
+msgstr ""
+
+msgid "Show all %s"
+msgstr ""
+
+msgid "Show all Cloud Networks"
+msgstr ""
+
+msgid "Show all Images"
+msgstr ""
+
+msgid "Show all Instances"
+msgstr ""
+
+msgid "Show all Outputs"
+msgstr ""
+
+msgid "Show all Parameters"
+msgstr ""
+
+msgid "Show all Resources"
+msgstr ""
+
+msgid "Show all Security Groups"
+msgstr ""
+
+msgid "Show all Templates"
+msgstr ""
+
+msgid "Show all Templates in this Cluster"
+msgstr ""
+
+msgid "Show all VMs"
+msgstr ""
+
+msgid "Show all VMs in this Cluster"
+msgstr ""
+
+msgid "Show all VMs in this Resource Pool"
+msgstr ""
+
+msgid "Show all discovered Templates"
+msgstr ""
+
+msgid "Show all discovered VMs"
+msgstr ""
+
+msgid "Show all files on this %s"
+msgstr ""
+
+msgid "Show all managed %s"
+msgstr ""
+
+msgid "Show all managed Clusters"
+msgstr ""
+
+msgid "Show all managed Hosts"
+msgstr ""
+
+msgid "Show all managed VMs"
+msgstr ""
+
+msgid "Show all registered Hosts"
+msgstr ""
+
 msgid "Show at Login"
+msgstr ""
+
+msgid "Show cluster drift history"
+msgstr ""
+
+msgid "Show configuration"
+msgstr ""
+
+msgid "Show daily data from:"
+msgstr ""
+
+msgid "Show disks"
+msgstr ""
+
+msgid "Show esx logs on this VM"
+msgstr ""
+
+msgid "Show event logs on this VM"
+msgstr ""
+
+msgid "Show events from last:"
+msgstr ""
+
+msgid "Show host drift history"
+msgstr ""
+
+msgid "Show hourly data from:"
+msgstr ""
+
+msgid "Show in Console"
+msgstr ""
+
+msgid "Show member VMs"
+msgstr ""
+
+msgid "Show non-VM files on this %s"
 msgstr ""
 
 msgid "Show on Timeline"
@@ -9367,10 +11733,145 @@ msgstr ""
 msgid "Show out of scope items:"
 msgstr ""
 
+msgid "Show parent %s for this %s"
+msgstr ""
+
 msgid "Show policies:"
 msgstr ""
 
+msgid "Show policy details for %s"
+msgstr ""
+
+msgid "Show registered VMs"
+msgstr ""
+
+msgid "Show running process on this VM"
+msgstr ""
+
+msgid "Show snapshot info"
+msgstr ""
+
+msgid "Show the Host this SmartProxy is installed on"
+msgstr ""
+
+msgid "Show the Win32 services installed on this VM"
+msgstr ""
+
+msgid "Show the advanced settings on this Host"
+msgstr ""
+
+msgid "Show the advanced settings on this VM"
+msgstr ""
+
+msgid "Show the applications installed on this VM"
+msgstr ""
+
+msgid "Show the file system drivers installed on this VM"
+msgstr ""
+
+msgid "Show the files on this Host"
+msgstr ""
+
+msgid "Show the files on this VM"
+msgstr ""
+
+msgid "Show the firewall rules on this Host"
+msgstr ""
+
+msgid "Show the groups defined on this Host"
+msgstr ""
+
+msgid "Show the groups defined on this VM"
+msgstr ""
+
+msgid "Show the kernel drivers installed on this VM"
+msgstr ""
+
+msgid "Show the packages installed on this Host"
+msgstr ""
+
+msgid "Show the patches installed on this Host"
+msgstr ""
+
+msgid "Show the patches installed on this VM"
+msgstr ""
+
+msgid "Show the registry items on this VM"
+msgstr ""
+
+msgid "Show the services installed on this Host"
+msgstr ""
+
+msgid "Show the users defined on this Host"
+msgstr ""
+
+msgid "Show the users defined on this VM"
+msgstr ""
+
+msgid "Show this Availability Zone's parent %s"
+msgstr ""
+
+msgid "Show this Cloud Tenant's parent %s"
+msgstr ""
+
+msgid "Show this Flavor's parent %s"
+msgstr ""
+
+msgid "Show this Host's parent %s"
+msgstr ""
+
+msgid "Show this Host's parent Cluster"
+msgstr ""
+
+msgid "Show this Security Group's parent %s"
+msgstr ""
+
+msgid "Show this SmartProxy's %s"
+msgstr ""
+
+msgid "Show this VM's parent"
+msgstr ""
+
+msgid "Show this VM's parent Host"
+msgstr ""
+
+msgid "Show this VM's parent Service"
+msgstr ""
+
+msgid "Show this Vm's parent %s"
+msgstr ""
+
+msgid "Show tree of all VMs by Resource Pool in this Cluster"
+msgstr ""
+
+msgid "Show tree of all VMs in this Resource Pool"
+msgstr ""
+
+msgid "Show virtual machine Analysis History"
+msgstr ""
+
+msgid "Show virtual machine OS information"
+msgstr ""
+
+msgid "Show virtual machine container information"
+msgstr ""
+
+msgid "Show virtual machine drift history"
+msgstr ""
+
+msgid "Show virtual machine genealogy"
+msgstr ""
+
+msgid "Show virtual machine networks"
+msgstr ""
+
 msgid "Shutdown"
+msgstr ""
+
+msgid "Simulation"
+msgstr ""
+
+msgid "Simulation Parameters"
 msgstr ""
 
 msgid "Simulation unavailable: Required Class \"System/Process\" is missing"
@@ -9380,6 +11881,9 @@ msgid "Single Select"
 msgstr ""
 
 msgid "Single VM"
+msgstr ""
+
+msgid "Single Value"
 msgstr ""
 
 msgid "Size"
@@ -9397,9 +11901,18 @@ msgstr ""
 msgid "SmartProxies"
 msgstr ""
 
+msgid "SmartProxy"
+msgstr ""
+
 msgid ""
 "SmartProxy \"%s\" log retrieval has been started . . . refresh page to view the "
 "log"
+msgstr ""
+
+msgid "SmartProxy Affinity"
+msgstr ""
+
+msgid "SmartProxy Server IP"
 msgstr ""
 
 msgid "SmartProxy default settings saved"
@@ -9421,6 +11934,9 @@ msgid "Snapshot Settings"
 msgstr ""
 
 msgid "Snapshot VM memory"
+msgstr ""
+
+msgid "Snapshots"
 msgstr ""
 
 msgid "Snapshot|Create time"
@@ -9465,28 +11981,73 @@ msgstr ""
 msgid "Snapshot|Updated on"
 msgstr ""
 
+msgid ""
+"Software updates have not yet been configured. Select Edit Registration to reg"
+"ister appliances in this region with Red Hat to receive software updates and o"
+"ther benefits."
+msgstr ""
+
 msgid "Sorry, the username or password you entered is incorrect."
 msgstr ""
 
 msgid "Sort By"
 msgstr ""
 
+msgid "Sort Criteria"
+msgstr ""
+
 msgid "Sort Order"
+msgstr ""
+
+msgid "Sort the Report By"
 msgstr ""
 
 msgid "Source"
 msgstr ""
 
+msgid "Specified NTP settings applied here will override Zone NTP settings."
+msgstr ""
+
+msgid "Specify Calculations for Summary Rows"
+msgstr ""
+
+msgid "Specify Calculations of Numeric Values for Grouped Records"
+msgstr ""
+
+msgid "Specify Column Headers and Formats"
+msgstr ""
+
+msgid "Specify Column Styles"
+msgstr ""
+
+msgid "Stacks"
+msgstr ""
+
 msgid "Start"
+msgstr ""
+
+msgid "Start Date"
 msgstr ""
 
 msgid "Start Page"
 msgstr ""
 
+msgid "Start TLS Automatically"
+msgstr ""
+
 msgid "Start the Host Discovery"
 msgstr ""
 
+msgid "Started On"
+msgstr ""
+
+msgid "Starting Date"
+msgstr ""
+
 msgid "Starting Message"
+msgstr ""
+
+msgid "Starting Time"
 msgstr ""
 
 msgid "Starting Time (%s)"
@@ -9501,10 +12062,25 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
+msgid "Status = %s"
+msgstr ""
+
+msgid "Status of Regional Roles for Servers in %{kind} %{description}"
+msgstr ""
+
+msgid "Status of Roles for Servers in %{kind} %{description}"
+msgstr ""
+
 msgid "Stop"
 msgstr ""
 
+msgid "Stopped On"
+msgstr ""
+
 msgid "Storage"
+msgstr ""
+
+msgid "Storage Adapters"
 msgstr ""
 
 msgid "Storage Managers"
@@ -9627,6 +12203,9 @@ msgstr ""
 msgid "String"
 msgstr ""
 
+msgid "Style"
+msgstr ""
+
 msgid "Styling for '%s', first value is in error: "
 msgstr ""
 
@@ -9654,13 +12233,13 @@ msgstr ""
 msgid "Submit this Create Logical Disk request"
 msgstr ""
 
-msgid "Submit this provisioning request"
-msgstr ""
-
 msgid "Submit this reconfigure request"
 msgstr ""
 
 msgid "Subnet Mask"
+msgstr ""
+
+msgid "Subnet Range"
 msgstr ""
 
 msgid "Subscribe to this feed"
@@ -9670,6 +12249,9 @@ msgid "Substitution:"
 msgstr ""
 
 msgid "Successfully deleted %s from the CFME Database"
+msgstr ""
+
+msgid "Sum 'Other' values"
 msgstr ""
 
 msgid "Summary"
@@ -9714,7 +12296,13 @@ msgstr ""
 msgid "Sysprep \"%s\" upload was successful"
 msgstr ""
 
+msgid "System Default"
+msgstr ""
+
 msgid "System service"
+msgstr ""
+
+msgid "System/Process/"
 msgstr ""
 
 msgid "SystemService|Depend on group"
@@ -9756,10 +12344,28 @@ msgstr ""
 msgid "SystemService|Typename"
 msgstr ""
 
+msgid "THROUGH"
+msgstr ""
+
 msgid "Tab Information"
 msgstr ""
 
+msgid "Tab Title"
+msgstr ""
+
+msgid "Table"
+msgstr ""
+
+msgid "Tables with Most Rows"
+msgstr ""
+
+msgid "Tables with Most Wasted Space"
+msgstr ""
+
 msgid "Tag"
+msgstr ""
+
+msgid "Tag Assignment%s"
 msgstr ""
 
 msgid "Tag Category"
@@ -9777,6 +12383,12 @@ msgstr ""
 msgid "Tagging|Taggable type"
 msgstr ""
 
+msgid "Tags"
+msgstr ""
+
+msgid "Tags common to all selected items"
+msgstr ""
+
 msgid "Tag|Name"
 msgstr ""
 
@@ -9792,7 +12404,13 @@ msgstr ""
 msgid "Task Status:"
 msgstr ""
 
+msgid "Tasks"
+msgstr ""
+
 msgid "Template"
+msgstr ""
+
+msgid "Template Type"
 msgstr ""
 
 msgid "Templates"
@@ -9801,7 +12419,19 @@ msgstr ""
 msgid "Templates & Images"
 msgstr ""
 
-msgid "The %s theme is currently selected"
+msgid "Templates (%s)"
+msgstr ""
+
+msgid "Templates (0)"
+msgstr ""
+
+msgid "Tenants"
+msgstr ""
+
+msgid "Test E-mail Address"
+msgstr ""
+
+msgid "Text"
 msgstr ""
 
 msgid ""
@@ -9894,6 +12524,9 @@ msgstr ""
 msgid "The selected job no longer exists, Delete all older Tasks was not completed"
 msgstr ""
 
+msgid "The server is initializing; access is being retried every 10 seconds %s"
+msgstr ""
+
 msgid "The test email is being delivered, check \"%s\" to verify it was successful"
 msgstr ""
 
@@ -9906,6 +12539,9 @@ msgstr ""
 msgid ""
 "There is an error in the selected expression element, perhaps it was imported "
 "or edited manually."
+msgstr ""
+
+msgid "Third band unit:"
 msgstr ""
 
 msgid "This Action is not assigned to any Policies."
@@ -9929,7 +12565,16 @@ msgstr ""
 msgid "This Event is not assigned to any Policies."
 msgstr ""
 
+msgid "This Month (partial)"
+msgstr ""
+
 msgid "This Policy is not assigned to any Profiles."
+msgstr ""
+
+msgid "This Server's Virtual Machine has not been identified."
+msgstr ""
+
+msgid "This Week (partial)"
 msgstr ""
 
 msgid ""
@@ -9941,6 +12586,15 @@ msgid "This page requires the VMware MKS plugin. Install the plugin and try agai
 msgstr ""
 
 msgid "This policy does not currently respond to any Events."
+msgstr ""
+
+msgid "This user is limited to items with the selected tags."
+msgstr ""
+
+msgid "This user is limited to the selected folders and their children."
+msgstr ""
+
+msgid "This user is limited to the selected items and their children."
 msgstr ""
 
 msgid ""
@@ -9995,7 +12649,22 @@ msgstr ""
 msgid "Timeline Event"
 msgstr ""
 
+msgid "Timeline Preview (up to 50 rows)"
+msgstr ""
+
+msgid "Timeline Settings"
+msgstr ""
+
+msgid "Timelines"
+msgstr ""
+
 msgid "Timelines for %{model} \"%{name}\""
+msgstr ""
+
+msgid "Timer"
+msgstr ""
+
+msgid "Timestamp"
 msgstr ""
 
 msgid "Timezone"
@@ -10004,10 +12673,25 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
+msgid "Title:"
+msgstr ""
+
 msgid "To"
 msgstr ""
 
+msgid "To Address"
+msgstr ""
+
+msgid "To All"
+msgstr ""
+
+msgid "To All Users"
+msgstr ""
+
 msgid "To Domain"
+msgstr ""
+
+msgid "To E-mail"
 msgstr ""
 
 msgid "To E-mail Address"
@@ -10021,7 +12705,16 @@ msgid ""
 "uired"
 msgstr ""
 
+msgid "Today (partial)"
+msgstr ""
+
 msgid "Toggle All/None"
+msgstr ""
+
+msgid "Top values to show"
+msgstr ""
+
+msgid "Total VMs: 0"
 msgstr ""
 
 msgid "Total number of VMs that can fit on all of the above %s: %s"
@@ -10048,7 +12741,16 @@ msgstr ""
 msgid "Trend Options"
 msgstr ""
 
+msgid "Trend Target Limit"
+msgstr ""
+
+msgid "Trend Target Percents"
+msgstr ""
+
 msgid "Trend for Past"
+msgstr ""
+
+msgid "Trending for"
 msgstr ""
 
 msgid "Trends for past"
@@ -10058,6 +12760,9 @@ msgid "True"
 msgstr ""
 
 msgid "Truncate Long Text"
+msgstr ""
+
+msgid "Trusted Forest Settings"
 msgstr ""
 
 msgid "Tuesday"
@@ -10072,7 +12777,13 @@ msgstr ""
 msgid "Type:"
 msgstr ""
 
+msgid "UI Worker"
+msgstr ""
+
 msgid "URI"
+msgstr ""
+
+msgid "URL (i.e. www.mypage.com)"
 msgstr ""
 
 msgid "Ui task"
@@ -10132,6 +12843,16 @@ msgstr ""
 msgid "UiTask|Updated on"
 msgstr ""
 
+msgid ""
+"Unable to create a new template copy \"%s\": new template content cannot be empt"
+"y."
+msgstr ""
+
+msgid ""
+"Unable to create a new template copy \"%s\": old and new template content have t"
+"o differ."
+msgstr ""
+
 msgid "Unassigned"
 msgstr ""
 
@@ -10141,10 +12862,19 @@ msgstr ""
 msgid "Unattended GUI"
 msgstr ""
 
+msgid "Undo the previous change"
+msgstr ""
+
+msgid "Unexpected error encountered"
+msgstr ""
+
 msgid "Unknown"
 msgstr ""
 
 msgid "Unknown error has occurred"
+msgstr ""
+
+msgid "Unlimited"
 msgstr ""
 
 msgid "Update"
@@ -10154,8 +12884,18 @@ msgstr ""
 msgid "Update Password"
 msgstr "Zmena hesla"
 
+#, fuzzy
+msgid "Update Repository"
+msgstr "Zmena hesla"
+
+msgid "Update Status"
+msgstr ""
+
 msgid "Update password"
 msgstr "Zmena hesla"
+
+msgid "Update this LDAP Server"
+msgstr ""
 
 msgid "Update this entry"
 msgstr ""
@@ -10166,7 +12906,13 @@ msgstr ""
 msgid "Updated On"
 msgstr ""
 
+msgid "Updated On:"
+msgstr ""
+
 msgid "Upload"
+msgstr ""
+
+msgid "Upload Custom Variable Values"
 msgstr ""
 
 msgid "Upload File"
@@ -10175,10 +12921,25 @@ msgstr ""
 msgid "Uploaded File '%s'"
 msgstr ""
 
+msgid "Use"
+msgstr ""
+
+msgid "Use Alias"
+msgstr ""
+
 msgid "Use CTRL-ALT-Enter to toggle full screen"
 msgstr ""
 
 msgid "Use CTRL-ALT-INS for CTRL-ALT-DEL"
+msgstr ""
+
+msgid "Use Custom Login Background Image"
+msgstr ""
+
+msgid "Use Custom Login Text"
+msgstr ""
+
+msgid "Use Custom Logo Image"
 msgstr ""
 
 msgid "Use the Browse button to locate %s file"
@@ -10193,6 +12954,18 @@ msgstr ""
 msgid "Use the Browse button to locate an Upload file"
 msgstr ""
 
+msgid "Used for access to IPMI."
+msgstr ""
+
+msgid "Used for access to Web Services."
+msgstr ""
+
+msgid "Used to authenticate with OpenStack AMQP Messaging Bus for event handling."
+msgstr ""
+
+msgid "Used to gather Capacity & Utilization metrics."
+msgstr ""
+
 msgid "User"
 msgstr ""
 
@@ -10202,10 +12975,21 @@ msgstr ""
 msgid "User Group Sequence was saved"
 msgstr ""
 
+msgid "User Group Sequencing for LDAP Look Up:"
+msgstr ""
+
 msgid "User ID"
 msgstr ""
 
 msgid "User ID must be entered if Password is entered"
+msgstr ""
+
+#, fuzzy
+#, fuzzy
+msgid "User Id"
+msgstr "Používatelské meno"
+
+msgid "User Information"
 msgstr ""
 
 msgid "User Interface settings saved for User %s"
@@ -10218,15 +13002,55 @@ msgstr ""
 msgid "User Name"
 msgstr "Používatelské meno"
 
+msgid "User Principal Name"
+msgstr ""
+
 #, fuzzy
 msgid "User Role"
 msgstr "Používatelské meno"
 
+#, fuzzy
+#, fuzzy
+msgid "User Roles"
+msgstr "Používatelské meno"
+
+msgid "User Suffix"
+msgstr ""
+
+msgid "User Suffix:"
+msgstr ""
+
+#, fuzzy
+#, fuzzy
+msgid "User Type"
+msgstr "Používatelské meno"
+
+msgid "User to Look Up"
+msgstr ""
+
+msgid "User will input the value"
+msgstr ""
+
 msgid "User:"
+msgstr ""
+
+msgid "Userid"
 msgstr ""
 
 msgid "Username"
 msgstr "Používatelské meno"
+
+msgid "Users"
+msgstr ""
+
+msgid "Users (%s)"
+msgstr ""
+
+msgid "Users (0)"
+msgstr ""
+
+msgid "Users in this Group"
+msgstr ""
 
 msgid "User|Created on"
 msgstr ""
@@ -10270,6 +13094,9 @@ msgstr ""
 msgid "User|Userid"
 msgstr ""
 
+msgid "Utilization"
+msgstr ""
+
 msgid "VC Custom Attributes"
 msgstr ""
 
@@ -10279,22 +13106,31 @@ msgstr ""
 msgid "VM %s Remote Console"
 msgstr ""
 
+msgid "VM & Template Access Restriction"
+msgstr ""
+
+msgid "VM Analysis Collectors"
+msgstr ""
+
 msgid "VM Counts per %s"
 msgstr ""
 
 msgid "VM Hardware"
 msgstr ""
 
-msgid "VM Item"
+msgid "VM Limits"
 msgstr ""
 
-msgid "VM Limits"
+msgid "VM Memory Files"
 msgstr ""
 
 msgid "VM Number"
 msgstr ""
 
 msgid "VM Options"
+msgstr ""
+
+msgid "VM Provisioned Disk Files"
 msgstr ""
 
 msgid "VM Reconfigure Request was cancelled by the user"
@@ -10309,10 +13145,21 @@ msgstr ""
 msgid "VM Selection"
 msgstr ""
 
-msgid "VM and Instance Items"
+msgid "VM Snapshot Files"
+msgstr ""
+
+msgid ""
+"VM data will be collected for VMs under selected Hosts only. Data is collected"
+" for a Cluster and all of its Hosts when at least one Host is selected."
 msgstr ""
 
 msgid "VM successfully removed from service \"%s\""
+msgstr ""
+
+msgid "VM/Instance"
+msgstr ""
+
+msgid "VMM Information"
 msgstr ""
 
 msgid "VMs"
@@ -10321,7 +13168,52 @@ msgstr ""
 msgid "VMs & Instances"
 msgstr ""
 
+msgid "VMs & Templates"
+msgstr ""
+
+msgid "VMs (%s)"
+msgstr ""
+
+msgid "VMs (0)"
+msgstr ""
+
 msgid "VMsafe"
+msgstr ""
+
+msgid "VMware Console Support"
+msgstr ""
+
+msgid "VMware MKS Plugin Version"
+msgstr ""
+
+msgid "VNC Console"
+msgstr ""
+
+msgid "VNC Proxy Address"
+msgstr ""
+
+msgid "VNC Proxy Port"
+msgstr ""
+
+msgid "Validate"
+msgstr ""
+
+msgid "Validate Database Configuration"
+msgstr ""
+
+msgid "Validate Database Settings for the Server"
+msgstr ""
+
+msgid "Validate the Amazon Settings"
+msgstr ""
+
+msgid "Validate the LDAP Settings by binding with the Host"
+msgstr ""
+
+msgid "Validate the credentials by logging into the Server"
+msgstr ""
+
+msgid "Validate the credentials by logging into the selected Host"
 msgstr ""
 
 msgid "Validator Rule"
@@ -10339,16 +13231,41 @@ msgstr ""
 msgid "Value to Set"
 msgstr ""
 
+msgid "Value:"
+msgstr ""
+
 msgid "Variable Object ID"
 msgstr ""
 
 msgid "Variables"
 msgstr ""
 
+msgid "Vendor A"
+msgstr ""
+
+msgid "Vendor B"
+msgstr ""
+
+msgid "Vendor C"
+msgstr ""
+
+msgid "Vendor D"
+msgstr ""
+
+msgid "Verify"
+msgstr ""
+
+#, fuzzy
+msgid "Verify %s"
+msgstr "Potvrďte heslo"
+
 msgid "Verify Password"
 msgstr "Potvrďte heslo"
 
 msgid "Version"
+msgstr ""
+
+msgid "Version / Build"
 msgstr ""
 
 msgid "Version Info"
@@ -10363,6 +13280,9 @@ msgstr ""
 msgid "View '%s' Folder"
 msgstr ""
 
+msgid "View Analysis Profiles"
+msgstr ""
+
 msgid "View Compute Rates"
 msgstr ""
 
@@ -10372,13 +13292,39 @@ msgstr ""
 msgid "View Examples (read only)' Folder"
 msgstr ""
 
+msgid "View Groups"
+msgstr ""
+
+msgid "View Instances"
+msgstr ""
+
+msgid "View LDAP Regions"
+msgstr ""
+
+#, fuzzy
+#, fuzzy
+msgid "View Roles"
+msgstr "Používatelské meno"
+
+msgid "View Schedules"
+msgstr ""
+
 msgid "View Storage Rates"
 msgstr ""
 
 msgid "View This Alert"
 msgstr ""
 
+msgid "View Users"
+msgstr ""
+
+msgid "View Zones"
+msgstr ""
+
 msgid "View the %s Guide"
+msgstr ""
+
+msgid "View the SmartProxy log"
 msgstr ""
 
 msgid "View this %s Policy"
@@ -10399,7 +13345,13 @@ msgstr ""
 msgid "View this Event Action"
 msgstr ""
 
+msgid "View this Group"
+msgstr ""
+
 msgid "View this ISO Image"
+msgstr ""
+
+msgid "View this MiqServer"
 msgstr ""
 
 msgid "View this PXE Image"
@@ -10414,7 +13366,25 @@ msgstr ""
 msgid "View this Report"
 msgstr ""
 
+msgid "View this Role"
+msgstr ""
+
+msgid "View this Schedule"
+msgstr ""
+
+msgid "View this User"
+msgstr ""
+
+msgid "View this Widget"
+msgstr ""
+
 msgid "View this Windows Image"
+msgstr ""
+
+msgid "View this Zone"
+msgstr ""
+
+msgid "View this Zone's settings"
 msgstr ""
 
 msgid "Vim performance operating range"
@@ -10466,6 +13436,12 @@ msgid "VimPerformanceTagValue|Tag name"
 msgstr ""
 
 msgid "VimPerformanceTagValue|Value"
+msgstr ""
+
+msgid "Virtual Machines"
+msgstr ""
+
+msgid "Visibility"
 msgstr ""
 
 msgid "Vm or template"
@@ -10824,10 +13800,25 @@ msgid ""
 "configured"
 msgstr ""
 
+msgid "Wasted"
+msgstr ""
+
+msgid "Web Service Workers"
+msgstr ""
+
+msgid "Web Services"
+msgstr ""
+
 msgid "Web Services Listen Port"
 msgstr ""
 
 msgid "Wednesday"
+msgstr ""
+
+msgid "Week"
+msgstr ""
+
+msgid "Weekly"
 msgstr ""
 
 msgid "What to Evaluate"
@@ -10842,7 +13833,13 @@ msgstr ""
 msgid "Widget import cancelled"
 msgstr ""
 
+msgid "Widgets"
+msgstr ""
+
 msgid "Widgets imported successfully"
+msgstr ""
+
+msgid "Win32 Services (%s)"
 msgstr ""
 
 msgid "Windows Boot Env"
@@ -10875,13 +13872,28 @@ msgstr ""
 msgid "WindowsImage|Path"
 msgstr ""
 
+msgid "Within Above Field, Sort By"
+msgstr ""
+
+msgid "Workers"
+msgstr ""
+
 msgid "Workgroup Information"
+msgstr ""
+
+msgid "Workloads"
+msgstr ""
+
+msgid "Wrap this expression element with a NOT"
 msgstr ""
 
 msgid "XML View"
 msgstr ""
 
 msgid "Yes"
+msgstr ""
+
+msgid "Yesterday"
 msgstr ""
 
 msgid ""
@@ -10895,7 +13907,25 @@ msgstr ""
 msgid "You must select at least one namespace to import"
 msgstr ""
 
+msgid "You will need the following to register:"
+msgstr ""
+
+msgid "Your Red Hat Account login or Red Hat Network Satellite login"
+msgstr ""
+
 msgid "Zone"
+msgstr ""
+
+msgid "Zone Information"
+msgstr ""
+
+msgid "Zone*"
+msgstr ""
+
+msgid "Zone:"
+msgstr ""
+
+msgid "Zones"
 msgstr ""
 
 msgid "Zone|Created on"
@@ -10916,16 +13946,26 @@ msgstr ""
 msgid "Zoom in on this chart"
 msgstr ""
 
+msgid "[Server '%{server_name}' is currently running Version %{server_version}]"
+msgstr ""
+
+msgid "active"
+msgstr ""
+
+msgid "and restart the Server!"
+msgstr ""
+
 msgid "at"
 msgstr ""
 
 msgid "available"
 msgstr ""
 
-msgid "avg_read_size"
-msgstr ""
+#, fuzzy
+msgid "back"
+msgstr "Späť"
 
-msgid "avg_write_size"
+msgid "bold"
 msgstr ""
 
 msgid "choose"
@@ -10934,31 +13974,43 @@ msgstr ""
 msgid "cpu_affinity"
 msgstr ""
 
+msgid "days back"
+msgstr ""
+
+msgid "dimmed"
+msgstr ""
+
 msgid "do not change the outcome of the scope or expression"
 msgstr ""
 
-msgid "fqname"
+msgid "every"
+msgstr ""
+
+msgid "false"
+msgstr ""
+
+msgid "going back"
+msgstr ""
+
+msgid "h"
 msgstr ""
 
 msgid "instances"
 msgstr ""
 
-msgid "interval"
-msgstr ""
-
-msgid "k_bytes_read_per_sec"
-msgstr ""
-
-msgid "k_bytes_transferred_per_sec"
-msgstr ""
-
-msgid "k_bytes_written_per_sec"
-msgstr ""
-
 msgid "locale_name"
 msgstr "Slovensky"
 
+msgid "m"
+msgstr ""
+
 msgid "memory_cpu"
+msgstr ""
+
+msgid "none"
+msgstr ""
+
+msgid "normal"
 msgstr ""
 
 msgid "not specified"
@@ -10967,46 +14019,31 @@ msgstr ""
 msgid "numvcpus"
 msgstr ""
 
-msgid "pct_hit"
-msgstr ""
-
-msgid "pct_read"
-msgstr ""
-
-msgid "pct_write"
-msgstr ""
-
-msgid "queue_depth"
-msgstr ""
-
-msgid "read_hit_ios_per_sec"
-msgstr ""
-
-msgid "read_ios_per_sec"
+msgid "primary"
 msgstr ""
 
 msgid "red italics"
 msgstr ""
 
-msgid "response_time_sec"
+msgid "secondary"
 msgstr ""
 
 msgid "selected to copy"
 msgstr ""
 
-msgid "service_time_sec"
-msgstr ""
-
-msgid "statistic_time"
-msgstr ""
-
 msgid "that match the entered search string"
 msgstr ""
 
-msgid "total_ios_per_sec"
+msgid "true"
 msgstr ""
 
-msgid "utilization"
+msgid "unavailable"
+msgstr ""
+
+msgid "unlimited"
+msgstr ""
+
+msgid "user input"
 msgstr ""
 
 msgid "vCPU Count"
@@ -11019,13 +14056,4 @@ msgid "vCPUs per Core"
 msgstr ""
 
 msgid "vcpus"
-msgstr ""
-
-msgid "wait_time_sec"
-msgstr ""
-
-msgid "write_hit_ios_per_sec"
-msgstr ""
-
-msgid "write_ios_per_sec"
 msgstr ""
