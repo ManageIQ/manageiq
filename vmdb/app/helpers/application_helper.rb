@@ -2326,7 +2326,7 @@ module ApplicationHelper
     case nodes.first
     when "root" then  "provider_foreman_center_tb"
     when "e"  then  "configuration_profile_foreman_center_tb"
-    when "cp"   then  "configured_system_foreman_center_tb"
+    when "cp"   then  "configured_systems_foreman_center_tb"
     end
   end
 

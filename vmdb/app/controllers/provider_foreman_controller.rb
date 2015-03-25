@@ -65,6 +65,20 @@ class ProviderForemanController < ApplicationController
     replace_right_cell
   end
 
+  def provision
+    assert_privileges("provider_foreman_provision")
+    @prov_id = find_checked_items
+    @prov_id = params[:id] if @prov_id.empty?
+
+    render :update do |page|
+      page.redirect_to :controller     => "miq_request",
+                       :action         => "prov_edit",
+                       :prov_id        => @prov_id,
+                       :org_controller => "configured_system",
+                       :escape         => false
+    end
+  end
+
   def add_provider_foreman
     if params[:id] == "new"
       @provider_foreman = ProviderForeman.new(:name       => params[:name],
@@ -646,6 +660,10 @@ class ProviderForemanController < ApplicationController
     @edit[:new] = {:name       => params[:name],
                    :url        => params[:url],
                    :verify_ssl => params[:verify_ssl]}
+  end
+
+  def breadcrumb_name
+    ui_lookup_for_model(self.class.model_name).singularize
   end
 
   def set_root_node

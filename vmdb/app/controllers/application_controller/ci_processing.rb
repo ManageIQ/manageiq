@@ -957,7 +957,7 @@ module ApplicationController::CiProcessing
                         } )
     else
       @breadcrumbs = Array.new
-      bc_name = ui_lookup(:tables => self.class.table_name)
+      bc_name = breadcrumb_name
       bc_name += " - " + session["#{self.class.session_key_prefix}_type".to_sym].titleize if session["#{self.class.session_key_prefix}_type".to_sym]
       bc_name += " (filtered)" if @filters && (!@filters[:tags].blank? || !@filters[:cats].blank?)
       action = %w(container service vm_cloud vm_infra vm_or_template).include?(self.class.table_name) ? "explorer" : "show_list"
@@ -972,6 +972,10 @@ module ApplicationController::CiProcessing
         replace_gtl_main_div
       end
     end
+  end
+
+  def breadcrumb_name
+    ui_lookup_for_model(self.class.model_name).pluralize
   end
 
   # Reconfigure selected VMs

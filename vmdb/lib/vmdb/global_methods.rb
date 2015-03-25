@@ -126,16 +126,25 @@ module Vmdb
     def ui_lookup(options = {})
       # Pass in singular or plural key to determine format of returned string
       if options[:table]
-        Dictionary::gettext(options[:table], :type=>:table, :notfound=>:titleize).singularize
+        ui_lookup_for_table(options[:table]).singularize
       elsif options[:tables]
-        Dictionary::gettext(options[:tables], :type=>:table, :notfound=>:titleize).pluralize
+        ui_lookup_for_table(options[:tables]).pluralize
       elsif options[:model]
-        Dictionary::gettext(options[:model], :type=>:model, :notfound=>:titleize).singularize
+        ui_lookup_for_model(options[:model]).singularize
       elsif options[:models]
-        Dictionary::gettext(options[:models], :type=>:model, :notfound=>:titleize).pluralize
+        ui_lookup_for_model(options[:models]).pluralize
       else
         ''
       end
+    end
+
+    def ui_lookup_for_table(text)
+      # Pass in singular or plural key to determine format of returned string
+      Dictionary.gettext(text, :type => :table, :notfound => :titleize)
+    end
+
+    def ui_lookup_for_model(text)
+      Dictionary.gettext(text, :type => :model, :notfound => :titleize)
     end
 
     # Wrap a report html table body with html table tags and headers for the columns

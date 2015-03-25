@@ -231,5 +231,9 @@ describe HostController do
       expect(assigns(:breadcrumbs)).to eq([{:name => "#{@host.name} (Packages)",
                                             :url  => "/host/guest_applications/#{@host.id}"}])
     end
+
+    it "plularizes breadcrumb name" do
+      expect(controller.send(:breadcrumb_name)).to eq("Hosts")
+    end
   end
 end

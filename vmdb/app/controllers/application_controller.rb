@@ -52,7 +52,11 @@ class ApplicationController < ActionController::Base
   #   CimBaseStorageExtentController => CimBaseStorageExtent
   #   OntapFileShareController        => OntapFileShare
   def self.model
-    @model ||= self.name[0..-11].constantize
+    @model ||= model_name.constantize
+  end
+
+  def self.model_name
+    name[0..-11]
   end
 
   # Examples:

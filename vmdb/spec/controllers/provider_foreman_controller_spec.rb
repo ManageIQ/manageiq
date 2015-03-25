@@ -105,6 +105,10 @@ describe ProviderForemanController do
     end
   end
 
+  it "singularizes breadcrumb name" do
+    expect(controller.send(:breadcrumb_name)).to eq("Provider Foreman")
+  end
+
   def find_treenode_for_provider(provider)
     key =  ems_key_for_provider(provider)
     temp = controller.instance_variable_get(:@temp)

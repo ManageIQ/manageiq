@@ -3746,3 +3746,8 @@
         :description: Validate a Foreman Provider
         :feature_type: admin
         :identifier: provider_foreman_authentication_validate
+      - :name: Provision
+        :description: Provision a Foreman Configured System
+        :feature_type: admin
+        :identifier: provider_foreman_provision
+
