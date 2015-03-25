@@ -3,8 +3,7 @@
 module EmsRefresh::Parsers
   class Openstack < Cloud
     include EmsRefresh::Parsers::OpenstackCommon::Images
-    # TODO(lsmola) HEAT SUPPORT, add this and write tests for all supported OpenStack versions
-    # include EmsRefresh::Parsers::OpenstackCommon::OrchestrationStacks
+    include EmsRefresh::Parsers::OpenstackCommon::OrchestrationStacks
 
     # Openstack uses numbers to represent different power states. Each openstack
     # power state value corresponds to an array index for the human readable
@@ -34,9 +33,7 @@ module EmsRefresh::Parsers
       @storage_service            = @os_handle.detect_storage_service
       @storage_service_name       = @os_handle.storage_service_name
       @identity_service           = @os_handle.identity_service
-      # TODO(lsmola) HEAT SUPPORT, add this and write tests for all supported OpenStack versions
-      # @orchestration_service      = @os_handle.detect_orchestration_service
-      # @orchestration_service_name = @os_handle.orchestration_service_name
+      @orchestration_service      = @os_handle.detect_orchestration_service
     end
 
     def ems_inv_to_hashes
@@ -57,8 +54,7 @@ module EmsRefresh::Parsers
       get_snapshots
       get_object_store
       get_floating_ips
-      # TODO(lsmola) HEAT SUPPORT, add this and write tests for all supported OpenStack versions
-      # load_orchestration_stacks
+      load_orchestration_stacks
 
       $fog_log.info("#{log_header}...Complete")
 

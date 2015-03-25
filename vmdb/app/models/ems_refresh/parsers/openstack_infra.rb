@@ -199,11 +199,6 @@ module EmsRefresh
           @data_index.store_path(key, uid, new_result)
         end
       end
-
-      # Compose an ems_ref combining some existing keys
-      def compose_ems_ref(*keys)
-        keys.join('_')
-      end
     end
   end
 end
