@@ -11,8 +11,9 @@ module EmsRefresh::Parsers
 
     def ems_inv_to_hashes(inventory)
       get_nodes(inventory)
-      get_services(inventory)
       get_pods(inventory)
+      get_endpoints(inventory)
+      get_services(inventory)
       EmsRefresh.log_inv_debug_trace(@data, "data:")
       @data
     end
@@ -30,6 +31,18 @@ module EmsRefresh::Parsers
 
     def get_pods(inventory)
       process_collection(inventory["pod"], :container_groups) { |n| parse_pod(n) }
+      @data[:container_groups].each do |cg|
+        @data_index.store_path(:container_groups, :by_namespace_and_name,
+                               cg[:namespace], cg[:name], cg)
+      end
+    end
+
+    def get_endpoints(inventory)
+      process_collection(inventory["endpoint"], :container_endpoints) { |n| parse_endpoint(n) }
+      @data[:container_endpoints].each do |ep|
+        @data_index.store_path(:container_endpoints, :by_namespace_and_name,
+                               ep[:namespace], ep[:name], ep)
+      end
     end
 
     def process_collection(collection, key, &block)
@@ -54,6 +67,20 @@ module EmsRefresh::Parsers
 
     def parse_service(service)
       new_result = parse_base_item(service)
+      container_groups = []
+
+      endpoint_container_groups = @data_index.fetch_path(
+        :container_endpoints, :by_namespace_and_name, new_result[:namespace],
+        new_result[:name], :container_groups)
+      endpoint_container_groups ||= []
+
+      endpoint_container_groups.each do |group|
+        cg = @data_index.fetch_path(
+          :container_groups, :by_namespace_and_name, group[:namespace],
+          group[:name])
+        container_groups << cg unless cg.nil?
+      end
+
       new_result.merge!(
         :port             => service.spec.port,
         :protocol         => service.spec.protocol,
@@ -62,7 +89,8 @@ module EmsRefresh::Parsers
         :session_affinity => service.spec.sessionAffinity,
 
         :labels           => parse_labels(service),
-        :selector_parts   => parse_selector_parts(service)
+        :selector_parts   => parse_selector_parts(service),
+        :container_groups => container_groups
       )
       new_result
     end
@@ -103,6 +131,32 @@ module EmsRefresh::Parsers
       end
 
       new_result[:labels] = parse_labels(pod)
+      new_result
+    end
+
+    def parse_endpoint(entity)
+      new_result = parse_base_item(entity)
+      new_result[:container_groups] = []
+
+      # TODO: remove once kubernetes api v1beta3/v1.0 will be stable
+      if !entity.respond_to?(:subsets) || entity.subsets.nil?
+        $log.warn("your kubernetes endpoints are not providing subsets, " \
+                  "please upgrade, see https://github.com/" \
+                  "GoogleCloudPlatform/kubernetes/pull/5939")
+        return new_result
+      end
+
+      entity.subsets.each do |subset|
+        subset.fetch('addresses', []).each do |address|
+          target_ref = address['targetRef']
+          next if target_ref.nil? || target_ref['kind'] != 'Pod'
+          cg = @data_index.fetch_path(
+            :container_groups, :by_namespace_and_name, target_ref['namespace'],
+            target_ref['name'])
+          new_result[:container_groups] << cg unless cg.nil?
+        end
+      end
+
       new_result
     end
 
