@@ -1,6 +1,6 @@
 - if @folders
   = render :partial => "layouts/flash_msg"
-  %table.table.table-striped.table-bordered
+  %table.table.table-striped.table-bordered.table-hover
     %tbody
       - @folders.each do |f|
         %tr{:title => (_("View %s Folder") % f[0]),
