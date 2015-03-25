@@ -196,7 +196,7 @@ module ApplicationController::DialogRunner
   def refresh_for_textbox_checkbox_or_date
     field = load_dialog_field(params[:name])
 
-    dynamic_refresh_response({:values => field.refresh_json_value})
+    dynamic_refresh_response(:values => field.refresh_json_value)
   end
 
   def dynamic_refresh_response(response_json)
