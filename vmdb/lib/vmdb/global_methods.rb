@@ -140,11 +140,11 @@ module Vmdb
 
     def ui_lookup_for_table(text)
       # Pass in singular or plural key to determine format of returned string
-      Dictionary::gettext(text, :type => :table, :notfound => :titleize)
+      Dictionary.gettext(text, :type => :table, :notfound => :titleize)
     end
 
     def ui_lookup_for_model(text)
-      Dictionary::gettext(text, :type => :model, :notfound => :titleize)
+      Dictionary.gettext(text, :type => :model, :notfound => :titleize)
     end
 
     # Wrap a report html table body with html table tags and headers for the columns
