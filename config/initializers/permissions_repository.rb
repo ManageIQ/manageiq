@@ -5,7 +5,7 @@ Vmdb::PermissionStores.configure do |config|
     config.backend = 'null'
   else
     config.backend = 'yaml'
-    config.options[:filename] = File.join Rails.root, 'config', 'permissions.yml'
+    config.options[:filename] = Rails.root.join 'config', 'permissions.yml'
   end
 end
 Vmdb::PermissionStores.initialize!
