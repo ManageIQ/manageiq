@@ -3,6 +3,9 @@
 module EmsRefresh::Parsers
   class Openstack < Cloud
     include EmsRefresh::Parsers::OpenstackCommon::Images
+    # TODO(lsmola) HEAT SUPPORT, add this and write tests for all supported OpenStack versions
+    # include EmsRefresh::Parsers::OpenstackCommon::OrchestrationStacks
+
     # Openstack uses numbers to represent different power states. Each openstack
     # power state value corresponds to an array index for the human readable
     # power state.
@@ -20,17 +23,20 @@ module EmsRefresh::Parsers
       @data_index    = {}
       @known_flavors = Set.new
 
-      @os_handle            = ems.openstack_handle
-      @compute_service      = @connection # for consistency
-      @network_service      = @os_handle.detect_network_service
-      @network_service_name = @os_handle.network_service_name
-      @image_service        = @os_handle.detect_image_service
-      @image_service_name   = @os_handle.image_service_name
-      @volume_service       = @os_handle.detect_volume_service
-      @volume_service_name  = @os_handle.volume_service_name
-      @storage_service      = @os_handle.detect_storage_service
-      @storage_service_name = @os_handle.storage_service_name
-      @identity_service     = @os_handle.identity_service
+      @os_handle                  = ems.openstack_handle
+      @compute_service            = @connection # for consistency
+      @network_service            = @os_handle.detect_network_service
+      @network_service_name       = @os_handle.network_service_name
+      @image_service              = @os_handle.detect_image_service
+      @image_service_name         = @os_handle.image_service_name
+      @volume_service             = @os_handle.detect_volume_service
+      @volume_service_name        = @os_handle.volume_service_name
+      @storage_service            = @os_handle.detect_storage_service
+      @storage_service_name       = @os_handle.storage_service_name
+      @identity_service           = @os_handle.identity_service
+      # TODO(lsmola) HEAT SUPPORT, add this and write tests for all supported OpenStack versions
+      # @orchestration_service      = @os_handle.detect_orchestration_service
+      # @orchestration_service_name = @os_handle.orchestration_service_name
     end
 
     def ems_inv_to_hashes
@@ -51,6 +57,9 @@ module EmsRefresh::Parsers
       get_snapshots
       get_object_store
       get_floating_ips
+      # TODO(lsmola) HEAT SUPPORT, add this and write tests for all supported OpenStack versions
+      # load_orchestration_stacks
+
       $fog_log.info("#{log_header}...Complete")
 
       link_vm_genealogy

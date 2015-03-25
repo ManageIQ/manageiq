@@ -28,6 +28,8 @@
 #   - customization_specs
 #
 #   - link
+#   - orchestration_stacks
+#   - orchestration_templates
 #
 
 module EmsRefresh::SaveInventoryInfra
@@ -50,7 +52,7 @@ module EmsRefresh::SaveInventoryInfra
     end
 
     child_keys = [:storages, :clusters, :hosts, :vms, :folders, :resource_pools, :customization_specs,
-                  :orchestration_stacks]
+                  :orchestration_templates, :orchestration_stacks]
 
     # Save and link other subsections
     save_child_inventory(ems, hashes, child_keys, target)
