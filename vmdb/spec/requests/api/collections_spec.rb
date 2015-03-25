@@ -4,7 +4,6 @@
 require 'spec_helper'
 
 describe ApiController do
-
   include Rack::Test::Methods
 
   let(:zone)       { FactoryGirl.create(:zone, :name => "api_zone") }
@@ -24,14 +23,13 @@ describe ApiController do
   def test_collection_query(collection, collection_url, klass, attr = :id)
     api_basic_authorize
 
-    run_get "#{collection_url}?expand=resources"
+    run_get collection_url, :expand => "resources"
 
     expect_query_result(collection, klass.count, klass.count)
     expect_result_resources_to_include_data("resources", attr.to_s => klass.pluck(attr))
   end
 
   context "Collections" do
-
     it "query Automation Requests" do
       FactoryGirl.create(:automation_request)
       test_collection_query(:automation_requests, automation_requests_url, AutomationRequest)

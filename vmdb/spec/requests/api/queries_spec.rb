@@ -4,7 +4,6 @@
 require 'spec_helper'
 
 describe ApiController do
-
   include Rack::Test::Methods
 
   let(:zone)       { FactoryGirl.create(:zone, :name => "api_zone") }
@@ -45,7 +44,7 @@ describe ApiController do
       api_basic_authorize
       create_vms(3)
 
-      run_get "#{vms_url}?expand=resources"
+      run_get vms_url, :expand => "resources"
 
       expect_query_result(:vms, 3, 3)
       expect_result_resource_keys_to_match_pattern("resources", "href", :vm_href_pattern)
@@ -57,7 +56,7 @@ describe ApiController do
       api_basic_authorize
       vm1   # create resource
 
-      run_get "#{vms_url}?expand=resources&attributes=guid"
+      run_get vms_url, :expand => "resources", :attributes => "guid"
 
       expect_query_result(:vms, 1, 1)
       expect_result_resources_to_match_hash([{"id" => vm1.id, "href" => vm1_url, "guid" => vm1.guid}])
@@ -109,7 +108,7 @@ describe ApiController do
       acct1
       acct2
 
-      run_get "#{vm1_accounts_url}?expand=resources"
+      run_get vm1_accounts_url, :expand => "resources"
 
       expect_query_result(:accounts, 2)
       expect_result_resources_to_include_keys("resources", %w(id href))

@@ -4,7 +4,6 @@
 require 'spec_helper'
 
 describe ApiController do
-
   include Rack::Test::Methods
 
   let(:zone)         { FactoryGirl.create(:zone, :name => "api_zone") }
@@ -52,7 +51,7 @@ describe ApiController do
       api_basic_authorize
       classify_resource(provider)
 
-      run_get "#{provider_tags_url}?expand=resources"
+      run_get provider_tags_url, :expand => "resources"
 
       expect_query_result(:tags, 2, :tag_count)
       expect_result_resources_to_include_data("resources", "name" => :tag_paths)
@@ -101,7 +100,7 @@ describe ApiController do
       api_basic_authorize
       classify_resource(host)
 
-      run_get "#{host_tags_url}?expand=resources"
+      run_get host_tags_url, :expand => "resources"
 
       expect_query_result(:tags, 2, :tag_count)
       expect_result_resources_to_include_data("resources", "name" => :tag_paths)
@@ -151,7 +150,7 @@ describe ApiController do
       api_basic_authorize
       classify_resource(ds)
 
-      run_get "#{ds_tags_url}?expand=resources"
+      run_get ds_tags_url, :expand => "resources"
 
       expect_query_result(:tags, 2, :tag_count)
       expect_result_resources_to_include_data("resources", "name" => :tag_paths)
@@ -201,7 +200,7 @@ describe ApiController do
       api_basic_authorize
       classify_resource(rp)
 
-      run_get "#{rp_tags_url}?expand=resources"
+      run_get rp_tags_url, :expand => "resources"
 
       expect_query_result(:tags, 2, :tag_count)
       expect_result_resources_to_include_data("resources", "name" => :tag_paths)
@@ -258,7 +257,7 @@ describe ApiController do
       api_basic_authorize
       classify_resource(cluster)
 
-      run_get "#{cluster_tags_url}?expand=resources"
+      run_get cluster_tags_url, :expand => "resources"
 
       expect_query_result(:tags, 2, :tag_count)
       expect_result_resources_to_include_data("resources", "name" => :tag_paths)
