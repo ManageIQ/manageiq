@@ -157,7 +157,12 @@ module ApiSpecHelper
   end
 
   def subcollection_action_identifier(type, subtype, action)
-    action_identifier(type, action, "#{subtype}_subcollection_actions".to_sym)
+    subtype_actions = "#{subtype}_subcollection_actions".to_sym
+    if collection_config.fetch_path(type, subtype_actions).present?
+      action_identifier(type, action, subtype_actions)
+    else
+      action_identifier(subtype, action, :subcollection_actions)
+    end
   end
 
   def gen_request(action, data = nil, *hrefs)
