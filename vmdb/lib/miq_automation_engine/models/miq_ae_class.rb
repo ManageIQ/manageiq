@@ -261,6 +261,10 @@ class MiqAeClass < MiqAeBase
     @class_methods ||= scoped_methods('class')
   end
 
+  def state_machine?
+    ae_fields.any? { |f| f.aetype == 'state' }
+  end
+
   def self.find_homonymic_instances_across_domains(fqname)
     return [] if fqname.blank?
     path = MiqAeEngine::MiqAeUri.path(fqname, "miqaedb")

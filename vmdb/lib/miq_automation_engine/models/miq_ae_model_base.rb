@@ -162,6 +162,6 @@ module MiqAeModelBase
   end
 
   def ==(other)
-    other.id.eql?(id)
+    other.class == self.class && other.id.eql?(id)
   end
 end
