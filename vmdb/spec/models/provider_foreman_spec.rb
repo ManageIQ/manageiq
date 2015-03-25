@@ -28,8 +28,8 @@ describe ProviderForeman do
       provider.configuration_manager.configured_systems = [
         FactoryGirl.create(:configured_system, :computer_system =>
           FactoryGirl.create(:computer_system,
-            :operating_system => FactoryGirl.create(:operating_system),
-            :hardware         => FactoryGirl.create(:hardware),
+                             :operating_system => FactoryGirl.create(:operating_system),
+                             :hardware         => FactoryGirl.create(:hardware),
           )
         )
       ]
