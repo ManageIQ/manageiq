@@ -7,7 +7,6 @@ describe ApiController do
 
   include Rack::Test::Methods
 
-  let(:api_user)   { @cfme[:user] }
   let(:zone)       { FactoryGirl.create(:zone, :name => "api_zone") }
   let(:miq_server) { FactoryGirl.create(:miq_server, :zone => zone) }
   let(:template) do
@@ -99,7 +98,7 @@ describe ApiController do
     end
 
     it "query Provision Requests" do
-      FactoryGirl.create(:miq_provision_request, :source => template, :userid => api_user)
+      FactoryGirl.create(:miq_provision_request, :source => template, :userid => api_config(:user))
       test_collection_query(:provision_requests, provision_requests_url, MiqProvisionRequest)
     end
 
@@ -139,7 +138,7 @@ describe ApiController do
     end
 
     it "query Service Requests" do
-      FactoryGirl.create(:service_template_provision_request, :userid => api_user)
+      FactoryGirl.create(:service_template_provision_request, :userid => api_config(:user))
       test_collection_query(:service_requests, service_requests_url, ServiceTemplateProvisionRequest)
     end
 
