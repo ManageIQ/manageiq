@@ -1,4 +1,4 @@
-//= require vendor/angular
+//= require angular
 //= require miq_angular_application
 //= require services/miq_service
 //= require directives/miqrequired
