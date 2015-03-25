@@ -31,6 +31,8 @@ function load_jqplot_charts() {
 }
 
 function load_jqplot_chart(chart_set, index) {
+  if (null == miq_chart_data[chart_set][index]) return;
+
   var chart_id  = "miq_" + chart_set + "_" + index;
   var chart2_id = "miq_" + chart_set + "_" + index + "_2";
   var data  = miq_chart_data[chart_set][index].xml;
