@@ -94,10 +94,13 @@
                       :method => :post,
                       :id     => "cancel_button",
                       :title  => t)
-    = javascript_tag(javascript_focus_if_exists('value_1'))
 :javascript
   $(function(){
-    $("button[data-dismiss='modal']").click(function(){
+    $('#quicksearchbox').on('shown.bs.modal', function () {
+      if (miqDomElementExists('value_1')) $('#value_1').focus();
+    })
+    $('#quicksearchbox').off("click");
+    $('#quicksearchbox').on('click', '[data-dismiss="modal"]', function() {
       miqJqueryRequest("quick_search?button=cancel", {beforeSend: true});
       return true;
     });

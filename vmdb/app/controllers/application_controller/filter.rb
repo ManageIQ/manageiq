@@ -969,8 +969,7 @@ module ApplicationController::Filter
 
     render :update do |page|
       page << "cfmeDynatree_activateNodeSilently('#{x_active_tree.to_s}', '#{x_node}');" if @edit[:in_explorer]
-      page << javascript_hide_if_exists("blocker_div")
-      page << javascript_hide_if_exists("quicksearchbox")
+      page << "$('#quicksearchbox').modal('hide');"
       page << "miqSparkle(false);"
     end
   end
@@ -1044,11 +1043,8 @@ module ApplicationController::Filter
 
     render :update do |page|
       page.replace(:user_input_filter, :partial => "layouts/user_input_filter")
-      page << javascript_hide_if_exists("advsearchbox")
-      page << javascript_show("blocker_div")
-      page << javascript_show("quicksearchbox")
-      page << "$('#quicksearchbox').addClass('modal fade in');"
-      page << "if (miqDomElementExists('value_1')) $('#value_1').focus();"
+      page << "$('#advsearchModal').modal('hide');"
+      page << "$('#quicksearchbox').modal('show');"
       page << "miqSparkle(false);"
     end
   end

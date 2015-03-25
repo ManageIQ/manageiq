@@ -28,7 +28,8 @@
           = render(:partial => 'layouts/adv_search_footer', :locals => {:mode => mode})
 :javascript
   $(function(){
-    $("button[data-dismiss='modal']").click(function(){
+    $('#advsearchModal').off("click");
+    $('#advsearchModal').on('click', '[data-dismiss="modal"]', function() {
       miqJqueryRequest("adv_search_toggle", {beforeSend: true});
       return true;
     });
