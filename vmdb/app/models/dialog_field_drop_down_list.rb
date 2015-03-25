@@ -25,8 +25,11 @@ class DialogFieldDropDownList < DialogFieldSortedItem
 
     refreshed_values = values
 
-    @value = refreshed_values.collect { |value_pair| value_pair[0].to_s }.include?(checked_value) ?
-      checked_value : default_value
+    if refreshed_values.collect { |value_pair| value_pair[0].to_s }.include?(checked_value)
+      @value = checked_value
+    else
+      @value = default_value
+    end
 
     {:refreshed_values => refreshed_values, :checked_value => @value}
   end
