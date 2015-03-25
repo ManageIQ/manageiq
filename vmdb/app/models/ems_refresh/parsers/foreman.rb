@@ -24,8 +24,8 @@ module EmsRefresh
         ptables = ptables_inv_to_hashes(inv[:ptables])
         # pull out ids for operating system flavors cross link to the customization scripts
         indexes = {
-          :media   => add_ids({}, media),
-          :ptables => add_ids({}, ptables),
+          :media   => add_ids(media),
+          :ptables => add_ids(ptables),
         }
 
         result[:customization_scripts] = media + ptables
@@ -50,7 +50,7 @@ module EmsRefresh
         }
         result = {}
         result[:configuration_profiles] = configuration_profile_inv_to_hashes(inv[:hostgroups], indexes)
-        indexes[:profiles] = add_ids({}, result[:configuration_profiles])
+        indexes[:profiles] = add_ids(result[:configuration_profiles])
         result[:configured_systems] = configured_system_inv_to_hashes(inv[:hosts], indexes)
         result[:needs_provisioning_refresh] = true if needs_provisioning_refresh
         result
@@ -122,9 +122,8 @@ module EmsRefresh
 
       private
 
-      def add_ids(target, recs, key = :manager_ref)
-        recs.each { |r| target[r[key]] = r }
-        target
+      def add_ids(recs, key = :manager_ref)
+        recs.each_with_object({}) { |r, target| target[r[key]] = r }
       end
 
       def id_lookup(ids, key)
