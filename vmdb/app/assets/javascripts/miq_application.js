@@ -57,7 +57,7 @@ function miqOnLoad() {
   // Position clear search link in right cell header
   if (miqDomElementExists('clear_search')) {
     // Find the right cell header div
-    $('.dhtmlxInfoBarLabel:visible').append($('#clear_search')[0]);
+    $('.dhtmlxInfoBarLabel:visible').append($('#clear_search'));
   }
   // Run MIQ after onload code if present
   if (typeof miq_after_onload == "string") {
@@ -197,7 +197,7 @@ function miqExpressionPrefill(count) {
     $('#miq_date_2_1').prop('title', miq_val2_title);
     $('#miq_date_2_1').prop('alt', miq_val2_title);
   }
-  if (count === undefined) {
+  if (!count) {
     miq_exp_prefill_count = 0;
     setTimeout(function() { miqExpressionPrefill(miq_exp_prefill_count); }, 200);
   } else if (count == miq_exp_prefill_count) {
@@ -343,7 +343,7 @@ function miqCheckForChanges() {
   if (miqAngularApplication.$scope) {
     if (miqAngularApplication.$scope.form.$dirty) {
       answer = confirm('Abandon changes?');
-      if (answer === true) {
+      if (answer) {
         miqAngularApplication.$scope.form.$setPristine(true);
       }
       return answer;
@@ -383,7 +383,7 @@ function miqDownloadLogFiles(theUrl, count) {
 function miqNewTagPrompt() {
   var text = prompt('Enter new tags, separated by blanks', '');
 
-  if (text !== null) {
+  if (text.length) {
     $('#new_tag').val(text);
     return true;
   } else {
@@ -468,23 +468,18 @@ function miqUpdateAllCheckboxes(button_div, override) {
     }
     if (typeof gtl_list_grid == "undefined" && ($("input[id^='listcheckbox']").length)) {
       // No dhtmlx grid on the screen
-      var cbs = $("input[id^='listcheckbox']");
-      cbs.each(function() {
-        this.checked=state;
-      });
+      $("input[id^='listcheckbox']").prop('checked', state);
       miqUpdateButtons(cbs[0], button_div);
     } else if (typeof gtl_list_grid == "undefined" && $("input[id^='storage_cb']").length) {
       // to handle check/uncheck all for C&U collection
-      $("input[id^='storage_cb']").each(function() {
-        this.checked = state;
-      });
+      $("input[id^='storage_cb']").prop('checked', state);
       miqJqueryRequest("/configuration/form_field_changed?storage_cb_all=" + state);
       return true;
     } else {                                                // Set checkboxes in dhtmlx grid
       gtl_list_grid.forEachRow(function(id) {
-        gtl_list_grid.cells(id, 0).setValue(state ? 1:0);
+        gtl_list_grid.cells(id, 0).setValue(state ? 1 : 0);
       });
-      crows = gtl_list_grid.getCheckedRows(0);
+      var crows = gtl_list_grid.getCheckedRows(0);
       $('#miq_grid_checks').val(crows);
       var count = !crows ? 0 : crows.split(",").length;
       miqSetButtons(count, button_div);
@@ -501,14 +496,15 @@ function miqUpdateButtons(obj, button_div) {
 
   if (typeof obj.id != "undefined" ) {
     $("input[id^='" + obj.id + "']").each(function() {
-      if (this.checked && ! this.disabled) {
+      if (this.checked && !this.disabled) {
         count++;
       }
       if (count > 1) {
         return false;
       }
     });
-  } else if (typeof obj == 'number') {      // Check for number object, as passed from snapshot tree
+  // Check for number object, as passed from snapshot tree
+  } else if (typeof obj == 'number') {
     count = 1;
   }
 
@@ -568,35 +564,35 @@ function miqSetButtons(count, button_div) {
   } else if (button_div.match("_buttons$")) {
     // Handle newer divs with button elements
     if (count === 0) {
-      $("#" + button_div + " button[id$=on_1]").each(function() { this.disabled = true; });
+      $("#" + button_div + " button[id$=on_1]").prop('disabled', true);
     } else if (count == 1) {
-      $("#" + button_div + " button[id$=on_1]").each(function() { this.disabled = false; });
+      $("#" + button_div + " button[id$=on_1]").prop('disabled', false);
     } else {
-      $("#" + button_div + " button[id$=on_1]").each(function() { this.disabled = false; });
+      $("#" + button_div + " button[id$=on_1]").prop('disabled', false);
     }
   } else {
     // Handle older li based buttons
     if (count === 0) {
-      $('#' + button_div + ' li[id~=on_1]').each(function() { $(this).hide(); });
-      $('#' + button_div + ' li[id~=on_2]').each(function() { $(this).hide(); });
-      $('#' + button_div + ' li[id~=on_only_1]').each(function() { $(this).hide(); });
-      $('#' + button_div + ' li[id~=off_0]').each(function() { $(this).show(); });
-      $('#' + button_div + ' li[id~=off_1]').each(function() { $(this).show(); });
-      $('#' + button_div + ' li[id~=off_not_1]').each(function() { $(this).show(); });
+      $('#' + button_div + ' li[id~=on_1]').hide();
+      $('#' + button_div + ' li[id~=on_2]').hide();
+      $('#' + button_div + ' li[id~=on_only_1]').hide();
+      $('#' + button_div + ' li[id~=off_0]').show();
+      $('#' + button_div + ' li[id~=off_1]').show();
+      $('#' + button_div + ' li[id~=off_not_1]').show();
     } else if (count === 1) {
-      $('#' + button_div + ' li[id~=off_0]').each(function() { $(this).hide(); });
-      $('#' + button_div + ' li[id~=on_2]').each(function() { $(this).hide(); });
-      $('#' + button_div + ' li[id~=off_not_1]').each(function() { $(this).hide(); });
-      $('#' + button_div + ' li[id~=off_1]').each(function() { $(this).show(); });
-      $('#' + button_div + ' li[id~=on_1]').each(function() { $(this).show(); });
-      $('#' + button_div + ' li[id~=on_only_1]').each(function() { $(this).show(); });
+      $('#' + button_div + ' li[id~=off_0]').hide();
+      $('#' + button_div + ' li[id~=on_2]').hide();
+      $('#' + button_div + ' li[id~=off_not_1]').hide();
+      $('#' + button_div + ' li[id~=off_1]').show();
+      $('#' + button_div + ' li[id~=on_1]').show();
+      $('#' + button_div + ' li[id~=on_only_1]').show();
     } else {
-      $('#' + button_div + ' li[id~=off_0]').each(function() { $(this).hide(); });
-      $('#' + button_div + ' li[id~=off_1]').each(function() { $(this).hide(); });
-      $('#' + button_div + ' li[id~=on_only_1]').each(function() { $(this).hide(); });
-      $('#' + button_div + ' li[id~=on_1]').each(function() { $(this).show(); });
-      $('#' + button_div + ' li[id~=on_2]').each(function() { $(this).show(); });
-      $('#' + button_div + ' li[id~=off_not_1]').each(function() { $(this).show(); });
+      $('#' + button_div + ' li[id~=off_0]').hide();
+      $('#' + button_div + ' li[id~=off_1]').hide();
+      $('#' + button_div + ' li[id~=on_only_1]').hide();
+      $('#' + button_div + ' li[id~=on_1]').show();
+      $('#' + button_div + ' li[id~=on_2]').show();
+      $('#' + button_div + ' li[id~=off_not_1]').show();
     }
   }
 }
@@ -895,7 +891,7 @@ function miqSendOneTrans(url) {
   miqJqueryRequest(url);
 }
 
-function lZ(x) {
+function leadingZero(x) {
   return (x > 9) ? x : '0' + x;
 }
 
@@ -909,9 +905,9 @@ function dateTime(offset, abbr) {
     '/' +
     date.getFullYear() +
     ' ' +
-    lZ(date.getHours()) +
+    leadingZero(date.getHours()) +
     ':' +
-    lZ(date.getMinutes()) +
+    leadingZero(date.getMinutes()) +
     ' ' +
     abbr;
   setTimeout(function() { dateTime(offset, abbr); }, 1000);
@@ -1516,7 +1512,7 @@ function miqSpinner(status) {
 }
 
 // Start/stop the search spinner
-function miqSearchSpinner(status){
+function miqSearchSpinner(status) {
   if (status) {
     if (miqDomElementExists('search_notification')) {
       $('#search_notification').show();
