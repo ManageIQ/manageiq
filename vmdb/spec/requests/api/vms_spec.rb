@@ -377,7 +377,7 @@ describe ApiController do
     it "set_owner to a vm" do
       api_basic_authorize action_identifier(:vms, :set_owner)
 
-      run_post(vm_url, gen_request(:set_owner, "owner" => @cfme[:user]))
+      run_post(vm_url, gen_request(:set_owner, "owner" => api_config(:user)))
 
       expect_single_action_result(:success => true, :message => "setting owner", :href => :vm_url)
       expect(vm.reload.evm_owner).to eq(@user)
@@ -386,7 +386,7 @@ describe ApiController do
     it "set_owner to multiple vms" do
       api_basic_authorize action_identifier(:vms, :set_owner)
 
-      run_post(vms_url, gen_request(:set_owner, {"owner" => @cfme[:user]}, vm1_url, vm2_url))
+      run_post(vms_url, gen_request(:set_owner, {"owner" => api_config(:user)}, vm1_url, vm2_url))
 
       expect_multiple_action_result(2)
       expect_result_resources_to_include_hrefs("results", :vms_list)
