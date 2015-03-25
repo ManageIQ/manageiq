@@ -6,11 +6,11 @@ function miqOnLoad() {
   miq_widget_dd_url = "dashboard/widget_dd_done";
 
   // Initialize the dashboard column sortables
-  if (miqDomElementExists('col1')) {
+  if ($('#col1').length) {
     miqInitDashboardCols();
   }
   // Initialize the dashboard widget pulldown
-  if (miqDomElementExists('widget_select_div')) {
+  if ($('#widget_select_div').length) {
     miqInitWidgetPulldown();
   }
   // Need this since IE will not run JS correctly until after page is loaded
@@ -23,7 +23,7 @@ function miqOnLoad() {
   });
 
   // Need to do this here for IE, rather then right after the grid is initialized
-  if (miqDomElementExists('compare_grid')) {
+  if ($('#compare_grid').length) {
     compare_grid.enableAutoHeight(true);
     compare_grid.enableAutoWidth(true);
   }
@@ -55,7 +55,7 @@ function miqOnLoad() {
     eval(miq_tree_focus);
   }
   // Position clear search link in right cell header
-  if (miqDomElementExists('clear_search')) {
+  if ($('#clear_search').length) {
     // Find the right cell header div
     $('.dhtmlxInfoBarLabel:visible').append($('#clear_search'));
   }
@@ -73,7 +73,7 @@ function miqOnLoad() {
 }
 
 function miqPrepRightCellForm(tree) {
-  if (miqDomElementExists('adv_searchbox_div')) {
+  if ($('#adv_searchbox_div').length) {
     $('#adv_searchbox_div').hide();
   }
 
@@ -132,19 +132,11 @@ function miqGetMouseXY(positionX, positionY) {
 
 // Prefill text entry field when blank
 function miqLoginPrefill() {
-  if (miqDomElementExists('user_name')) {
-    miqPrefill($('#user_name')[0]);
-  }
-  if (miqDomElementExists('user_password')) {
-    miqPrefill($('#user_password')[0]);
-  }
-  if (miqDomElementExists('user_new_password')) {
-    miqPrefill($('#user_new_password')[0]);
-  }
-  if (miqDomElementExists('user_verify_password')) {
-    miqPrefill($('#user_verify_password')[0]);
-  }
-  if (miqDomElementExists('user_name')) {
+  miqPrefill($('#user_name'));
+  miqPrefill($('#user_password'));
+  miqPrefill($('#user_new_password'));
+  miqPrefill($('#user_verify_password'));
+  if ($('#user_name').length) {
     // Retry in .2 seconds, if user name field is present
     setTimeout(miqLoginPrefill, 200);
   }
@@ -155,45 +147,45 @@ function miqExpressionPrefill(count) {
   var title;
   var miq_exp_prefill_count;
 
-  if (miqDomElementExists('chosen_value') && $('#chosen_value')[0].type.indexOf('text') === 0) {
-    miqPrefill($('#chosen_value')[0], '/images/layout/expression/' + miq_val1_type + '.png');
+  if ($('#chosen_value[type=text]').length) {
+    miqPrefill($('#chosen_value'), '/images/layout/expression/' + miq_val1_type + '.png');
     $('#chosen_value').prop('title', miq_val1_title);
     $('#chosen_value').prop('alt', miq_val1_title);
   }
-  if (miqDomElementExists('chosen_cvalue') && $('#chosen_cvalue')[0].type.indexOf('text') === 0) {
-    miqPrefill($('#chosen_cvalue')[0], '/images/layout/expression/' + miq_val2_type + '.png');
+  if ($('#chosen_cvalue[type=text]').length) {
+    miqPrefill($('#chosen_cvalue'), '/images/layout/expression/' + miq_val2_type + '.png');
     $('#chosen_cvalue').prop('title', miq_val2_title);
     $('#chosen_cvalue').prop('alt', miq_val2_title);
   }
-  if (miqDomElementExists('chosen_regkey') && $('#chosen_regkey')[0].type.indexOf('text') === 0) {
-    miqPrefill($('#chosen_regkey')[0], '/images/layout/expression/string.png');
+  if ($('#chosen_regkey[type=text]').length) {
+    miqPrefill($('#chosen_regkey'), '/images/layout/expression/string.png');
     title = "Registry Key";
     $('#chosen_regkey').prop('title', title);
     $('#chosen_regkey').prop('alt', title);
   }
-  if (miqDomElementExists('chosen_regval') && $('#chosen_regval')[0].type.indexOf('text') === 0) {
-    miqPrefill($('#chosen_regval')[0], '/images/layout/expression/string.png');
+  if ($('#chosen_regval[type=text]').length) {
+    miqPrefill($('#chosen_regval'), '/images/layout/expression/string.png');
     title = "Registry Key Value";
     $('#chosen_regval').prop('title', title);
     $('#chosen_regval').prop('alt', title);
   }
-  if (miqDomElementExists('miq_date_1_0') && $('#miq_date_1_0')[0].type.indexOf('text') === 0) {
-    miqPrefill($('#miq_date_1_0')[0], '/images/layout/expression/' + miq_val1_type + '.png');
+  if ($('#miq_date_1_0[type=text]').length) {
+    miqPrefill($('#miq_date_1_0'), '/images/layout/expression/' + miq_val1_type + '.png');
     $('#miq_date_1_0').prop('title', miq_val1_title);
     $('#miq_date_1_0').prop('alt', miq_val1_title);
   }
-  if (miqDomElementExists('miq_date_1_1') && $('#miq_date_1_1')[0].type.indexOf('text') === 0) {
-    miqPrefill($('#miq_date_1_1')[0], '/images/layout/expression/' + miq_val1_type + '.png');
+  if ($('#miq_date_1_1[type=text]').length) {
+    miqPrefill($('#miq_date_1_1'), '/images/layout/expression/' + miq_val1_type + '.png');
     $('#miq_date_1_1').prop('title', miq_val1_title);
     $('#miq_date_1_1').prop('alt', miq_val1_title);
   }
-  if (miqDomElementExists('miq_date_2_0') && $('#miq_date_2_0')[0].type.indexOf('text') === 0) {
-    miqPrefill($('#miq_date_2_0')[0], '/images/layout/expression/' + miq_val2_type + '.png');
+  if ($('#miq_date_2_0[type=text]').length) {
+    miqPrefill($('#miq_date_2_0'), '/images/layout/expression/' + miq_val2_type + '.png');
     $('#miq_date_2_0').prop('title', miq_val2_title);
     $('#miq_date_2_0').prop('alt', miq_val2_title);
   }
-  if (miqDomElementExists('miq_date_2_1') && $('#miq_date_2_1')[0].type.indexOf('text') === 0) {
-    miqPrefill($('#miq_date_2_1')[0], '/images/layout/expression/' + miq_val2_type + '.png');
+  if ($('#miq_date_2_1[type=text]').length) {
+    miqPrefill($('#miq_date_2_1'), '/images/layout/expression/' + miq_val2_type + '.png');
     $('#miq_date_2_1').prop('title', miq_val2_title);
     $('#miq_date_2_1').prop('alt', miq_val2_title);
   }
@@ -215,8 +207,8 @@ function miqValueStylePrefill(count) {
   var miq_vs_prefill_count;
 
   for (var field in miq_value_styles) {
-    if (miqDomElementExists(field)) {
-      miqPrefill($('#' + field)[0], '/images/layout/expression/' + miq_value_styles[field] + '.png');
+    if ($(field).length) {
+      miqPrefill($(field), '/images/layout/expression/' + miq_value_styles[field] + '.png');
       found = true;
     }
   }
@@ -236,13 +228,15 @@ function miqValueStylePrefill(count) {
 
 // Prefill text entry field when blank
 function miqPrefill(element, image, blank_image) {
-  if (element.value === '') {
-    element.style.background = "url(" + image + ") no-repeat transparent";
-  } else {
-    if (blank_image === undefined) {
-      element.style.background = "transparent";
+  if (element.length) {
+    if (!$(element).val()) {
+      $(element).css('background', 'url(' + image + ') no-repeat transparent');
     } else {
-      element.style.background = "url(" + blank_image + ") no-repeat transparent";
+      if (blank_image === '') {
+        $(element).css('background-color', 'transparent');
+      } else {
+        $(element).css('background', 'url(' + blank_image + ') no-repeat transparent');
+      }
     }
   }
 }
@@ -298,8 +292,8 @@ function miqSparkle(status) {
 }
 
 function miqSparkleOn() {
-  if (miqDomElementExists('advsearchModal') && ($('#advsearchModal').hasClass('modal fade in'))) {
-    if (miqDomElementExists('searching_spinner_center')) {
+  if ($('#advsearchModal').length && ($('#advsearchModal').hasClass('modal fade in'))) {
+    if ($('#searching_spinner_center').length) {
       miqSearchSpinner(true);
     }
     miqSpinner(false);
@@ -316,7 +310,7 @@ function miqSparkleOn() {
 
 function miqSparkleOff() {
   miqSpinner(false);
-  if (miqDomElementExists('searching_spinner_center')) {
+  if ($('#searching_spinner_center').length) {
     miqSearchSpinner(false);
   }
   if ($('#notification').length) {
@@ -349,10 +343,10 @@ function miqCheckForChanges() {
       return answer;
     }
   } else {
-    if (((miqDomElementExists('buttons_on') &&
+    if ((($('#buttons_on').length &&
           $('#buttons_on').is(":visible")) ||
          typeof miq_changes != "undefined") &&
-        !miqDomElementExists('ignore_form_changes')) {
+        !$('#ignore_form_changes').length) {
       return confirm('Abandon changes?');
     }
   }
@@ -406,25 +400,24 @@ function miqButtons(h_or_s, prefix) {
 
 // Hide/show form buttons
 function miqValidateButtons(h_or_s, prefix) {
-  prefix = (prefix == null) ? "" : prefix;
-  var on_id = prefix + 'validate_buttons_on';
-  var off_id = prefix + 'validate_buttons_off';
+  var on_id = '#' + prefix + 'validate_buttons_on';
+  var off_id = '#' + prefix + 'validate_buttons_off';
 
-  if (miqDomElementExists('flash_msg_div')) {
+  if ($('#flash_msg_div').length) {
     $('flash_msg_div').hide();
   }
   if (h_or_s == "show") {
-    if (miqDomElementExists(on_id)) {
+    if ($(on_id).length) {
       $("#" + on_id).show();
     }
-    if (miqDomElementExists(off_id)) {
+    if ($(off_id).length) {
       $("#" + off_id).hide();
     }
   } else {
-    if (miqDomElementExists(off_id)) {
+    if ($(off_id).length) {
       $("#" + off_id).show();
     }
-    if (miqDomElementExists(on_id)) {
+    if ($(on_id).length) {
       $("#" + on_id).hide();
     }
   }
@@ -461,7 +454,7 @@ function toggleConvertButtonToLink(button, url, toggle) {
 function miqUpdateAllCheckboxes(button_div, override) {
   miqSparkle(true);
 
-  if (miqDomElementExists('masterToggle')) {
+  if ($('#masterToggle').length) {
     var state = $('#masterToggle').prop('checked');
     if (override != null) {
       state = override;
@@ -988,10 +981,10 @@ function miqEnableLoginFields(enabled) {
   $('#user_name').prop('readonly', !enabled);
   $('#user_password').prop('readonly', !enabled);
 
-  if (miqDomElementExists('user_new_password')) {
+  if ($('#user_new_password').length) {
     $('#user_new_password').prop('readonly', !enabled);
   }
-  if (miqDomElementExists('user_verify_password')) {
+  if ($('#user_verify_password').length) {
     $('#user_verify_password').prop('readonly', !enabled);
   }
 }
@@ -1027,17 +1020,17 @@ function miqAttachTextAreaWithLines(id) {
 
 // Initialize dashboard column jQuery sortables
 function miqInitDashboardCols() {
-  if (miqDomElementExists('col1')) {
+  if ($('#col1').length) {
     $('#col1').sortable({connectWith:'#col2, #col3', handle:"h2"});
     $('#col1').off('sortupdate');
     $('#col1').on('sortupdate', miqDropComplete);
   }
-  if (miqDomElementExists('col2')) {
+  if ($('#col2').length) {
     $('#col2').sortable({connectWith:'#col1, #col3', handle:"h2"});
     $('#col2').off('sortupdate');
     $('#col2').on('sortupdate', miqDropComplete);
   }
-  if (miqDomElementExists('col3')) {
+  if ($('#col3').length) {
     $('#col3').sortable({connectWith:'#col1, #col2', handle:"h2"});
     $('#col3').off('sortupdate');
     $('#col3').on('sortupdate', miqDropComplete);
@@ -1186,7 +1179,7 @@ function miqBuildExplorerView(options) {
     });
 
     expLayout.on('render', function() {
-      if (miqDomElementExists('main_div')) {
+      if ($('#main_div').length) {
         miqBuildMainLayout(this, settings.header);
       }
     });
@@ -1217,7 +1210,7 @@ function miqBuildMainLayout(parentLayout, header) {
   var el = parentLayout.getUnitByPosition('center').get('wrap');
   var paging_height;
 
-  if (miqDomElementExists('paging_div')) {
+  if ($('#paging_div').length) {
     paging_height = 35;
   } else {
     paging_height = 0;
@@ -1584,10 +1577,6 @@ function miqJqueryRequest(url, options) {
   }
 
   new $.ajax(options.no_encoding ? url : encodeURI(url), ajax_options);
-}
-
-function miqDomElementExists(element) {
-  return $('#' + element).length;
 }
 
 function miqSerializeForm(element) {
