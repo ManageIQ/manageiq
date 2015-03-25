@@ -297,4 +297,104 @@ describe ApiController do
       expect_resource_has_tags(cluster, tag2[:path])
     end
   end
+
+  context "Service Tag subcollection" do
+    let(:service)          { FactoryGirl.create(:service) }
+    let(:service_url)      { services_url(service.id) }
+    let(:service_tags_url) { "#{service_url}/tags" }
+
+    it "query all tags of a Service and verify tag category and names" do
+      api_basic_authorize
+      classify_resource(service)
+
+      run_get service_tags_url, :expand => "resources"
+
+      expect_query_result(:tags, 2, :tag_count)
+      expect_result_resources_to_include_data("resources", "name" => :tag_paths)
+    end
+
+    it "assigns a tag to a Service without appropriate role" do
+      api_basic_authorize
+
+      run_post(service_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
+
+      expect_request_forbidden
+    end
+
+    it "assigns a tag to a Service" do
+      api_basic_authorize subcollection_action_identifier(:services, :tags, :assign)
+
+      run_post(service_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
+
+      expect_tagging_result(tag1_results(service_url))
+    end
+
+    it "unassigns a tag from a Service without appropriate role" do
+      api_basic_authorize
+
+      run_post(service_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
+
+      expect_request_forbidden
+    end
+
+    it "unassigns a tag from a Service" do
+      api_basic_authorize subcollection_action_identifier(:services, :tags, :unassign)
+      classify_resource(service)
+
+      run_post(service_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
+
+      expect_tagging_result(tag1_results(service_url))
+      expect_resource_has_tags(service, tag2[:path])
+    end
+  end
+
+  context "Service Template Tag subcollection" do
+    let(:service_template)          { FactoryGirl.create(:service_template) }
+    let(:service_template_url)      { service_templates_url(service_template.id) }
+    let(:service_template_tags_url) { "#{service_template_url}/tags" }
+
+    it "query all tags of a Service Template and verify tag category and names" do
+      api_basic_authorize
+      classify_resource(service_template)
+
+      run_get service_template_tags_url, :expand => "resources"
+
+      expect_query_result(:tags, 2, :tag_count)
+      expect_result_resources_to_include_data("resources", "name" => :tag_paths)
+    end
+
+    it "assigns a tag to a Service Template without appropriate role" do
+      api_basic_authorize
+
+      run_post(service_template_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
+
+      expect_request_forbidden
+    end
+
+    it "assigns a tag to a Service Template" do
+      api_basic_authorize subcollection_action_identifier(:service_templates, :tags, :assign)
+
+      run_post(service_template_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
+
+      expect_tagging_result(tag1_results(service_template_url))
+    end
+
+    it "unassigns a tag from a Service Template without appropriate role" do
+      api_basic_authorize
+
+      run_post(service_template_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
+
+      expect_request_forbidden
+    end
+
+    it "unassigns a tag from a Service Template" do
+      api_basic_authorize subcollection_action_identifier(:service_templates, :tags, :unassign)
+      classify_resource(service_template)
+
+      run_post(service_template_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
+
+      expect_tagging_result(tag1_results(service_template_url))
+      expect_resource_has_tags(service_template, tag2[:path])
+    end
+  end
 end
