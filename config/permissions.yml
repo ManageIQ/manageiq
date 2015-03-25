@@ -1,4 +1,9 @@
 ---
-- permission one
-- permission two
+- :vi
 - :svc
+- :clo
+- :inf
+- :con
+- :aut
+- :opt
+- :set
