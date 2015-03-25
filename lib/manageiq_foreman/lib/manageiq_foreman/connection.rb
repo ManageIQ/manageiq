@@ -1,5 +1,7 @@
 module ManageiqForeman
   class Connection
+    # some foreman servers don't have locations or organizations, just return nil
+    ALLOW_404 = [:locations, :organizations]
     CLASSES = {
       :config_templates  => ForemanApi::Resources::ConfigTemplate,
       :home              => ForemanApi::Resources::Home,
@@ -31,6 +33,7 @@ module ManageiqForeman
       loop do
         page_params = {:page => (page += 1), :per_page => 50}.merge(filter)
         small = fetch(resource, :index, page_params)
+        return if small.nil? # 404
         all += small.to_a
         break if small.empty? || all.size >= small.total
       end
@@ -43,13 +46,16 @@ module ManageiqForeman
     end
 
     def load_details(resources, resource)
-      resources.map! { |os| fetch(resource, :show, "id" => os["id"]).first }
+      resources.map! { |os| fetch(resource, :show, "id" => os["id"]).first } if resources
     end
 
     # filter: "page" => 2, "per_page" => 50, "search" => "field=value", "value"
     def fetch(resource, action = :index, filter = {})
       action, filter = :index, action if action.kind_of?(Hash)
       PagedResponse.new(raw(resource).send(action, filter).first)
+    rescue RestClient::ResourceNotFound
+      raise unless ALLOW_404.include?(resource)
+      nil
     end
 
     def host(manager_ref)
