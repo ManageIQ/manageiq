@@ -46,7 +46,7 @@ describe CatalogController do
 
     let(:dialog) { active_record_instance_double("Dialog") }
     let(:wf) { double(:dialog => dialog) }
-    let(:dialog_field) { active_record_instance_double("DialogFieldTextBox", :refresh_json_value=> "lol") }
+    let(:dialog_field) { active_record_instance_double("DialogFieldTextBox", :refresh_json_value => "lol") }
 
     let(:params)  { {:name => "name"} }
     let(:session) { {:edit => {:wf => wf}} }
@@ -66,7 +66,7 @@ describe CatalogController do
 
     let(:dialog) { active_record_instance_double("Dialog") }
     let(:wf) { double(:dialog => dialog) }
-    let(:dialog_field) { active_record_instance_double("DialogFieldCheckBox", :refresh_json_value=> "true") }
+    let(:dialog_field) { active_record_instance_double("DialogFieldCheckBox", :refresh_json_value => "true") }
 
     let(:params)  { {:name => "name"} }
     let(:session) { {:edit => {:wf => wf}} }
