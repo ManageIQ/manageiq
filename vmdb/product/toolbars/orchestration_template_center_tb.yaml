@@ -8,6 +8,11 @@
     :title: Configuration
     :text: Configuration
     :items:
+    - :button: service_dialog_from_ot
+      :image: add
+      :text: "Create Service Dialog from Orchestration Template"
+      :title: "Create Service Dialog from Orchestration Template"
+    - :separator:
     - :button: orchestration_template_edit
       :image: edit
       :text: "Edit this Orchestration Template"

@@ -38,6 +38,7 @@ class CatalogController < ApplicationController
     'orchestration_template_copy'   => :ot_copy,
     'orchestration_template_remove' => :ot_remove_submit,
     'orchestration_template_tag'    => :ot_tags_edit,
+    'service_dialog_from_ot'        => :service_dialog_from_ot,
     'st_catalog_edit'               => :st_catalog_edit,
     'st_catalog_new'                => :st_catalog_edit,
   }.freeze
@@ -790,6 +791,25 @@ class CatalogController < ApplicationController
     end
   end
 
+  def service_dialog_from_ot
+    assert_privileges("service_dialog_from_ot")
+    ot = OrchestrationTemplate.find_by_id(params[:id])
+    @right_cell_text = _("Adding a new Service Dialog from Orchestration Template \"%s\"") % ot.name
+    @edit = {:new    => {:dialog_name => ""},
+             :key    => "ot_edit__#{ot.id}",
+             :rec_id => ot.id}
+    replace_right_cell("service_dialog_from_ot")
+  end
+
+  def service_dialog_from_ot_submit
+    case params[:button]
+    when "cancel"
+      service_dialog_from_ot_submit_cancel
+    when "save"
+      service_dialog_from_ot_submit_save
+    end
+  end
+
   private
 
   def class_service_template(prov_type)
@@ -891,6 +911,7 @@ class CatalogController < ApplicationController
     @edit[:new][:name] = params[:name] if params[:name]
     @edit[:new][:description] = params[:description] if params[:description]
     @edit[:new][:draft] = params[:draft] == "true" ? true : false if params[:draft]
+    @edit[:new][:dialog_name] = params[:dialog_name] if params[:dialog_name]
   end
 
   def ot_edit_set_form_vars(right_cell_text)
@@ -1061,6 +1082,32 @@ class CatalogController < ApplicationController
   def ot_action_submit_flash
     render :update do |page|
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+    end
+  end
+
+  def service_dialog_from_ot_submit_cancel
+    add_flash(_("Creation of a new Service Dialog was cancelled by the user"))
+    @in_a_form = false
+    @edit = @record = nil
+    replace_right_cell
+  end
+
+  def service_dialog_from_ot_submit_save
+    assert_privileges("service_dialog_from_ot")
+    load_edit("ot_edit__#{params[:id]}", "replace_cell__explorer")
+    begin
+      ot = OrchestrationTemplate.find_by_id(params[:id])
+      OrchestrationTemplateDialogService.new.create_dialog(@edit[:new][:dialog_name], ot)
+    rescue => bang
+      add_flash(_("Error when creating a Service Dialog from Orchestration Template: ") << bang.message, :error)
+      render :update do |page|
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+      end
+    else
+      add_flash(_("Service Dialog \"%s\" was successfully created") % @edit[:new][:dialog_name], :info)
+      @in_a_form = false
+      @edit = @record = nil
+      replace_right_cell
     end
   end
 
@@ -1733,7 +1780,7 @@ class CatalogController < ApplicationController
         r[:partial=>"stcat_form"]
       elsif action == "dialog_provision"
         r[:partial=>"shared/dialogs/dialog_provision"]
-      elsif %w(ot_add ot_copy ot_edit).include?(action)
+      elsif %w(ot_add ot_copy ot_edit service_dialog_from_ot).include?(action)
         r[:partial => action]
       elsif record_showing
         if TreeBuilder.get_model_for_prefix(@nodetype) == "MiqTemplate"
@@ -1807,7 +1854,7 @@ class CatalogController < ApplicationController
           end
         end
         presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_dialog_buttons", :locals => {:action_url =>"dialog_form_button_pressed", :record_id => @edit[:rec_id]}]
-      elsif %w(ot_edit ot_copy ot_add).include?(action)
+      elsif %w(ot_edit ot_copy ot_add service_dialog_from_ot).include?(action)
         presenter[:expand_collapse_cells][:a] = 'collapse'
         presenter[:expand_collapse_cells][:c] = 'expand'
         presenter[:set_visible_elements][:form_buttons_div] = true
@@ -1815,6 +1862,7 @@ class CatalogController < ApplicationController
         locals = {:record_id  => @edit[:rec_id],
                   :action_url => "#{action}_submit",
                   :serialize  => true}
+        locals[:no_reset] = true if action == "service_dialog_from_ot"
         presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
       else
         # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box when trying to change a node on tree after saving a record

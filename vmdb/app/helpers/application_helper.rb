@@ -1039,10 +1039,6 @@ module ApplicationHelper
         return true if ["workers", "download_logs"].include?(@lastaction)
       when "logdepot_edit"
         return true if ["workers", "evm_logs", "audit_logs"].include?(@lastaction)
-      # when "orchestration_template_edit", "orchestration_template_copy", "orchestration_template_remove"
-      #   return true unless @report
-      # when "orchestration_template_add"
-      #   return true unless role_allows(:feature => "orchestration_template_add")
       when "policy_new"
         return true unless role_allows(:feature => "policy_new")
       when "profile_new"

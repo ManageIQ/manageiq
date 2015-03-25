@@ -206,6 +206,7 @@ Vmdb::Application.routes.draw do
         resolve
         resource_delete
         save_col_widths
+        service_dialog_from_ot_submit
         servicetemplate_edit
         sort_ds_grid
         sort_host_grid

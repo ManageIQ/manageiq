@@ -342,4 +342,32 @@ describe CatalogController do
       assigns(:edit).should be_nil
     end
   end
+
+  context "#service_dialog_create_from_ot" do
+    before(:each) do
+      @ot = FactoryGirl.create(:orchestration_template_with_content)
+      @dialog_label = "New Dialog 01"
+      session[:edit] = {
+        :new    => {:dialog_name => @dialog_label},
+        :key    => "ot_edit__#{@ot.id}",
+        :rec_id => @ot.id
+      }
+      controller.instance_variable_set(:@sb, :trees => {:ot_tree => {:open_nodes => []}}, :active_tree => :ot_tree)
+      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
+    end
+
+    after(:each) do
+      controller.send(:flash_errors?).should_not be_true
+      assigns(:edit).should be_nil
+      expect(response.status).to eq(200)
+    end
+
+    it "Service Dialog is created from an Orchestration Template" do
+      controller.instance_variable_set(:@_params, :button => "save", :id => @ot.id)
+      controller.stub(:replace_right_cell)
+      controller.send(:service_dialog_from_ot_submit)
+      assigns(:flash_array).first[:message].should include("was successfully created")
+      Dialog.where(:label => @dialog_label).first.should_not be_nil
+    end
+  end
 end
