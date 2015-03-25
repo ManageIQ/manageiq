@@ -310,12 +310,16 @@ class Classification < ActiveRecord::Base
     tag.nil? ? nil : self.class.find_by_tag_id(tag.id)
   end
 
-  def self.find_by_name(name, region_id = self.my_region_number, ns = DEFAULT_NAMESPACE)
+  def self.find_tag_by_name(name, region_id = self.my_region_number, ns = DEFAULT_NAMESPACE)
     if region_id.nil?
-      tag = Tag.find_by_name(Classification.name2tag(name, 0, ns))
+      Tag.find_by_name(Classification.name2tag(name, 0, ns))
     else
-      tag = Tag.in_region(region_id).find_by_name(Classification.name2tag(name, 0, ns))
+      Tag.in_region(region_id).find_by_name(Classification.name2tag(name, 0, ns))
     end
+  end
+
+  def self.find_by_name(name, region_id = self.my_region_number, ns = DEFAULT_NAMESPACE)
+    tag = self.find_tag_by_name(name, region_id, ns)
     tag.nil? ? nil : self.find_by_tag_id(tag.id)
   end
 
