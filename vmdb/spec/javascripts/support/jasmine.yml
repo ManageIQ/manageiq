@@ -13,7 +13,7 @@
 src_files:
   - assets/application
   - assets/angular-mocks
-  - javascripts/jquery/jquery-1.8.3.min.js
+  - assets/jquery
   - javascripts/miq_application.js
   - javascripts/miq_angular_application.js
   - javascripts/services/miq_service.js
