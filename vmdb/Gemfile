@@ -73,11 +73,6 @@ gem "uglifier",                       "~>2.4.0",      :require => false
 gem "novnc-rails",                    "~>0.2"
 gem 'spice-html5-rails'
 
-## Include plugin gems
-Dir["#{File.dirname(__FILE__)}/bundler.d/*.rb"].each do |bundle|
-  self.instance_eval(Bundler.read_file(bundle))
-end
-
 ### Start of gems excluded from the appliances.
 # The gems listed below do not need to be packaged until we find it necessary or useful.
 # Only add gems here that we do not need on an appliance.
@@ -143,3 +138,9 @@ end
 if File.exist?(File.expand_path("Gemfile.dev.rb", File.dirname(__FILE__)))
   MiqBundler.include_gemfile("Gemfile.dev.rb", binding)
 end
+
+# Load plugins that are packaged as Gems
+Dir["#{File.dirname(__FILE__)}/bundler.d/*.rb"].each do |bundle|
+  MiqBundler.include_gemfile(bundle, binding)
+end
+
