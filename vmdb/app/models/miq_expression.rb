@@ -1209,7 +1209,8 @@ class MiqExpression
     case typ.to_s
     when "string", "text", "boolean", nil
       val = "" if val.nil? # treat nil value as empty string
-      return mode == :sql ? ActiveRecord::Base.connection.quote(val) : "'" + val.to_s.gsub(/'/, "\\\\'") + "'" # escape any embedded single quotes
+      # escape any embedded single quotes, etc. - needs to be able to handle even values with trailing backslash
+      return mode == :sql ? ActiveRecord::Base.connection.quote(val) : val.to_s.inspect
     when "date"
       return "nil" if val.blank? # treat nil value as empty string
       return mode == :sql ? ActiveRecord::Base.connection.quote(val) : "\'#{val}\'.to_date"
