@@ -826,8 +826,8 @@ http_interactions:
       - application/json
   response:
     status:
-      code: 200
-      message: OK
+      code: 404
+      message: Not Found
     headers:
       Date:
       - Thu, 12 Mar 2015 22:33:50 GMT
@@ -856,28 +856,14 @@ http_interactions:
       Set-Cookie:
       - _session_id=395cf329e10451d91688d2fa57b0c1a9; path=/; HttpOnly
       Status:
-      - 200 OK
+      - 404 Not Found
       Connection:
       - close
       Transfer-Encoding:
       - chunked
       Content-Type:
       - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      string: |
-        {
-          "total": 0,
-          "subtotal": 0,
-          "page": 1,
-          "per_page": 50,
-          "search": null,
-          "sort": {
-            "by": null,
-            "order": null
-          },
-          "results": []
-        }
+    body: ! '{"error":"The requested resource could not be found"}'
     http_version:
   recorded_at: Thu, 12 Mar 2015 22:33:51 GMT
 - request:
@@ -897,8 +883,8 @@ http_interactions:
       - application/json
   response:
     status:
-      code: 200
-      message: OK
+      code: 404
+      message: Not Found
     headers:
       Date:
       - Thu, 12 Mar 2015 22:33:52 GMT
@@ -927,28 +913,14 @@ http_interactions:
       Set-Cookie:
       - _session_id=9bbb115e04e43228d4030eea858b00d1; path=/; HttpOnly
       Status:
-      - 200 OK
+      - 404 Not Found
       Connection:
       - close
       Transfer-Encoding:
       - chunked
       Content-Type:
       - application/json; charset=utf-8
-    body:
-      encoding: UTF-8
-      string: |
-        {
-          "total": 0,
-          "subtotal": 0,
-          "page": 1,
-          "per_page": 50,
-          "search": null,
-          "sort": {
-            "by": null,
-            "order": null
-          },
-          "results": []
-        }
+    body: ! '{"error":"The requested resource could not be found"}'
     http_version:
   recorded_at: Thu, 12 Mar 2015 22:33:52 GMT
 recorded_with: VCR 2.9.3
