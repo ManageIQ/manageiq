@@ -871,8 +871,8 @@ en:
       OntapStorageVolume:       Storage - LUN
       OntapVolumeMetricsRollup: Storage Performance - Volumes
       OrchestrationTemplate:    Orchestration Template
-      OrchestrationTemplateCfn: Orchestration Template - CloudFormation
-      OrchestrationTemplateHot: Orchestration Template - Heat
+      OrchestrationTemplateCfn: CloudFormation Template
+      OrchestrationTemplateHot: Heat Template
       ProductUpdate:            Product Update
       PxeCustomizationTemplate: Customization Template
       PxeImage:                 PXE Image

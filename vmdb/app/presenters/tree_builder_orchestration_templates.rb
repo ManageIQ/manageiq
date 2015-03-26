@@ -5,9 +5,9 @@ class TreeBuilderOrchestrationTemplates < TreeBuilder
     children = [
       {:id    => 'otcfn',
        :tree  => "otcfn_tree",
-       :text  => "Cloudformation Templates",
+       :text  => "CloudFormation Templates",
        :image => "orchestration_template_cfn",
-       :tip   => "Cloudformation Templates"},
+       :tip   => "CloudFormation Templates"},
       {:id    => 'othot',
        :tree  => "othot_tree",
        :text  => "Heat Templates",
