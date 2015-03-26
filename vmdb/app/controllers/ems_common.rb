@@ -628,6 +628,9 @@ module EmsCommon
     @edit[:new][:amqp_password] = @ems.has_authentication_type?(:amqp) ? @ems.authentication_password(:amqp).to_s : ""
     @edit[:new][:amqp_verify] = @ems.has_authentication_type?(:amqp) ? @ems.authentication_password(:amqp).to_s : ""
 
+    @edit[:new][:keypair_userid] = @ems.has_authentication_type?(:keypair) ? @ems.authentication_userid(:keypair).to_s : ""
+    @edit[:new][:keypair_password] = @ems.has_authentication_type?(:keypair) ? @ems.authentication_key(:keypair).to_s : ""
+
     if @ems.is_a?(EmsVmware)
       @edit[:new][:host_default_vnc_port_start] = @ems.host_default_vnc_port_start.to_s
       @edit[:new][:host_default_vnc_port_end] = @ems.host_default_vnc_port_end.to_s
@@ -683,6 +686,9 @@ module EmsCommon
     @edit[:new][:amqp_password] = params[:amqp_password] if params[:amqp_password]
     @edit[:new][:amqp_verify] = params[:amqp_verify] if params[:amqp_verify]
 
+    @edit[:new][:keypair_userid] = params[:keypair_userid] if params[:keypair_userid]
+    @edit[:new][:keypair_password] = params[:keypair_password] if params[:keypair_password]
+
     @edit[:new][:host_default_vnc_port_start] = params[:host_default_vnc_port_start] if params[:host_default_vnc_port_start]
     @edit[:new][:host_default_vnc_port_end] = params[:host_default_vnc_port_end] if params[:host_default_vnc_port_end]
     @edit[:amazon_regions] = get_amazon_regions if @edit[:new][:emstype] == "ec2"
@@ -711,6 +717,9 @@ module EmsCommon
     end
     if ems.supports_authentication?(:amqp) && !@edit[:new][:amqp_userid].blank?
       creds[:amqp] = {:userid => @edit[:new][:amqp_userid], :password => @edit[:new][:amqp_password]}
+    end
+    if ems.supports_authentication?(:keypair) && !@edit[:new][:keypair_userid].blank?
+      creds[:keypair] = {:userid => @edit[:new][:keypair_userid], :auth_key => @edit[:new][:keypair_password]}
     end
     ems.update_authentication(creds, {:save=>(mode != :validate)})
   end
