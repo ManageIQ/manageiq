@@ -5,7 +5,7 @@ class WorkerBase
   attr_accessor :last_hb, :worker, :worker_settings
   attr_reader   :vmdb_config, :active_roles
 
-  INTERRUPT_SIGNALS = ["INT", "TERM"]
+  INTERRUPT_SIGNALS = ["SIGINT", "SIGTERM"]
 
   OPTIONS_PARSER_SETTINGS = [
     [:guid,       'EVM Worker GUID',       String],
@@ -45,10 +45,6 @@ class WorkerBase
   def initialize(cfg = {})
     @cfg = cfg
     @cfg[:guid] ||= ENV['MIQ_GUID']
-
-    self.class.interrupt_signals.each do |s|
-      trap(s) { do_exit("Interrupt signal (#{s}) received.") } if Signal.list.keys.include?(s)
-    end
 
     $log ||= Rails.logger
 
@@ -124,6 +120,13 @@ class WorkerBase
   def start
     prepare
     run
+
+  rescue SignalException => e
+    if e.kind_of?(Interrupt) || self.class.interrupt_signals.include?(e.message)
+      do_exit("Interrupt signal (#{e}) received.")
+    else
+      raise
+    end
   end
 
   def prepare
@@ -342,7 +345,7 @@ class WorkerBase
       do_heartbeat_work
     rescue DRb::DRbError => err
       do_exit("Error heartbeating to MiqServer because #{err.class.name}: #{err.message}", 1)
-    rescue SystemExit
+    rescue SystemExit, SignalException
       raise
     rescue Exception => err
       do_exit("Error heartbeating because #{err.class.name}: #{err.message}\n#{err.backtrace.join('\n')}", 1)
