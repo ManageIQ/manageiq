@@ -42,7 +42,7 @@ class DialogFieldCheckBox < DialogField
   end
 
   def required_value_error?
-    @value != "t"
+    value != "t"
   end
 
   def values_from_automate
