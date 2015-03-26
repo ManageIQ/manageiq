@@ -21,6 +21,7 @@ db: OrchestrationTemplateHot
 cols:
 - name
 - type
+- draft
 - description
 - created_at
 - updated_at
@@ -32,6 +33,7 @@ include:
 col_order:
 - name
 - type
+- draft
 - description
 - created_at
 - updated_at
@@ -40,6 +42,7 @@ col_order:
 headers:
 - Name
 - Template Type
+- Draft
 - Description
 - Created On
 - Updated On
@@ -47,6 +50,7 @@ headers:
 col_formats:
 -
 -
+- :boolean_yes_no
 -
 -
 -

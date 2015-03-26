@@ -124,28 +124,53 @@ describe CatalogController do
       ot.reload
       ot.content.should == original_content
     end
+
+    it "Draft flag is set for an Orchestration Template" do
+      ot = FactoryGirl.create(:orchestration_template)
+      controller.params.merge!(:id => ot.id, :template_content => @new_content)
+      session[:edit][:key] = "ot_edit__#{ot.id}"
+      session[:edit][:rec_id] = ot.id
+      session[:edit][:new][:draft] = "true"
+      controller.stub(:replace_right_cell)
+      controller.send(:ot_edit_submit)
+      ot.reload
+      ot.draft.should be_true
+    end
   end
 
   context "#ot_copy" do
-    it "Orchestration Template is copied" do
+    before(:each) do
       controller.instance_variable_set(:@sb, {})
       controller.instance_variable_set(:@_params, :button => "save")
       controller.should_receive(:render)
       ot = FactoryGirl.create(:orchestration_template)
       controller.x_node = "xx-ot_othot-#{ot.id}"
-      new_name = "New Name"
+      @new_name = "New Name"
       new_description = "New Description"
       new_content = "New Content"
       controller.params.merge!(:id               => ot.id,
-                               :name             => new_name,
+                               :name             => @new_name,
                                :description      => new_description,
                                :template_content => new_content)
-      controller.stub(:replace_right_cell)
-      controller.send(:ot_copy_submit)
+    end
+
+    after(:each) do
       controller.send(:flash_errors?).should_not be_true
       assigns(:flash_array).first[:message].should include("was saved")
       expect(response.status).to eq(200)
-      OrchestrationTemplate.find_by_name(new_name).should_not be_nil
+      OrchestrationTemplate.where(:name => @new_name).first.should_not be_nil
+    end
+
+    it "Orchestration Template is copied" do
+      controller.stub(:replace_right_cell)
+      controller.send(:ot_copy_submit)
+    end
+
+    it "Orchestration Template is copied as a draft" do
+      controller.params.merge!(:draft => "true")
+      controller.stub(:replace_right_cell)
+      controller.send(:ot_copy_submit)
+      OrchestrationTemplate.where(:name => @new_name).first.draft.should be_true
     end
   end
 
@@ -210,7 +235,7 @@ describe CatalogController do
       assigns(:flash_array).first[:message].should include("was saved")
       assigns(:edit).should be_nil
       expect(response.status).to eq(200)
-      OrchestrationTemplate.find_by_name(@new_name).should_not be_nil
+      OrchestrationTemplate.where(:name => @new_name).first.should_not be_nil
     end
 
     it "Orchestration Template draft is created" do
@@ -223,7 +248,7 @@ describe CatalogController do
       assigns(:flash_array).first[:message].should include("was saved")
       assigns(:edit).should be_nil
       expect(response.status).to eq(200)
-      ot = OrchestrationTemplate.find_by_name(@new_name)
+      ot = OrchestrationTemplate.where(:name => @new_name).first
       ot.should_not be_nil
       ot.draft.should be_true
     end
@@ -236,7 +261,7 @@ describe CatalogController do
       assigns(:flash_array).first[:message].should include("was cancelled")
       assigns(:edit).should be_nil
       expect(response.status).to eq(200)
-      OrchestrationTemplate.find_by_name(@new_name).should be_nil
+      OrchestrationTemplate.where(:name => @new_name).first.should be_nil
     end
   end
 end

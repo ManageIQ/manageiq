@@ -28,6 +28,13 @@
                               :cols => 80,
                               "data-miq_observe" => {:interval => '.5',
                                                      :url      => url}.to_json)
+          - if @record.stacks.length == 0
+            %tr
+              %td.key=_('Draft')
+              %td
+                = check_box_tag("draft", value = true, checked = @edit[:new][:draft],
+                  "data-miq_observe_checkbox" => {:url => url}.to_json)
+
   %hr
     = text_area_tag("template_content", @edit[:current][:content], :style => "display:none;")
     - if params[:action] != "explorer" && @record.stacks.length == 0
