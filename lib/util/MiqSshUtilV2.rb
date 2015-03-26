@@ -24,6 +24,9 @@ class MiqSshUtil
     @shell    = nil
     @options  = {:password => @password, :remember_host=>false, :verbose => :warn}.merge(options)
 
+    # Seems like in 2.9.2, there needs to be blank :keys, when we are passing private key as string
+    @options[:keys] = [] if options[:key_data]
+
     # Pull the 'remember_host' key out of the hash because the SSH initializer will complain
     @remember_host = @options.delete(:remember_host)
     @su_user     = @options.delete(:su_user)
