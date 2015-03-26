@@ -9,6 +9,7 @@ MiqBundler.include_gemfile("../lib/Gemfile", binding)
 
 gem "jquery-rjs", "=0.1.1", :git => 'https://github.com/amatsuda/jquery-rjs.git'
 # gem 'jquery-rails'
+gem 'angularjs-rails', '=1.2.4'
 
 gem "sprockets-sass",  "~>1.2.0"
 gem "sprockets-less",  "~>0.6.1"

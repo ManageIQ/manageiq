@@ -11,8 +11,8 @@
 #   - dist/**/*.js
 #
 src_files:
-  - javascripts/vendor/angular.js
-  - javascripts/vendor/angular-mocks.js
+  - assets/application
+  - assets/angular-mocks
   - javascripts/jquery/jquery-1.8.3.min.js
   - javascripts/miq_application.js
   - javascripts/miq_angular_application.js
