@@ -7,7 +7,7 @@ class EmsContainerController < ApplicationController
   after_filter :set_session_data
 
   def self.model
-    @model ||= EmsContainer
+    EmsContainer
   end
 
   def self.table_name

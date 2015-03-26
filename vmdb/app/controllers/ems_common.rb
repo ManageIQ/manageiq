@@ -38,7 +38,7 @@ module EmsCommon
     elsif @display == "timeline"
       @showtype = "timeline"
       session[:tl_record_id] = params[:id] if params[:id]
-      @record = find_by_id_filtered(@model, session[:tl_record_id])
+      @record = find_by_id_filtered(model, session[:tl_record_id])
       @timeline = @timeline_filter = true
       @lastaction = "show_timeline"
       tl_build_timeline                       # Create the timeline report
@@ -148,8 +148,8 @@ module EmsCommon
   end
 
   def new
-    assert_privileges("#{@model.to_s.underscore}_new")
-    @ems = @model.new
+    assert_privileges("#{model.to_s.underscore}_new")
+    @ems = model.new
     set_form_vars
     @in_a_form = true
     session[:changed] = nil
@@ -157,20 +157,20 @@ module EmsCommon
   end
 
   def create
-    assert_privileges("#{@model.to_s.underscore}_new")
+    assert_privileges("#{model.to_s.underscore}_new")
     return unless load_edit("ems_edit__new")
     get_form_vars
     case params[:button]
     when "cancel"
       render :update do |page|
-        page.redirect_to :action=>'show_list', :flash_msg=>_("Add of new %s was cancelled by the user") % ui_lookup(:model=>@model.to_s)
+        page.redirect_to :action=>'show_list', :flash_msg=>_("Add of new %s was cancelled by the user") % ui_lookup(:model=>model.to_s)
       end
     when "add"
       if @edit[:new][:emstype].blank?
         add_flash(_("%s is required") % "Type", :error)
       end
       if !@flash_array
-        add_ems = @model.model_from_emstype(@edit[:new][:emstype]).new
+        add_ems = model.model_from_emstype(@edit[:new][:emstype]).new
         set_record_vars(add_ems)
       end
       if !@flash_array && valid_record?(add_ems) && add_ems.save
@@ -193,7 +193,7 @@ module EmsCommon
         end
       end
     when "validate"
-      verify_ems = @model.model_from_emstype(@edit[:new][:emstype]).new
+      verify_ems = model.model_from_emstype(@edit[:new][:emstype]).new
       set_record_vars(verify_ems, :validate)
       @in_a_form = true
       begin
@@ -210,8 +210,8 @@ module EmsCommon
   end
 
   def edit
-    assert_privileges("#{@model.to_s.underscore}_edit")
-    @ems = find_by_id_filtered(@model, params[:id])
+    assert_privileges("#{model.to_s.underscore}_edit")
+    @ems = find_by_id_filtered(model, params[:id])
     set_form_vars
     @in_a_form = true
     session[:changed] = false
@@ -269,7 +269,7 @@ module EmsCommon
   end
 
   def update
-    assert_privileges("#{@model.to_s.underscore}_edit")
+    assert_privileges("#{model.to_s.underscore}_edit")
     return unless load_edit("ems_edit__#{params[:id]}")
     get_form_vars
     case params[:button]
@@ -285,19 +285,19 @@ module EmsCommon
     render :update do |page|
       page.redirect_to(:action => @lastaction, :id => @ems.id, :display => session[:ems_display],
                        :flash_msg => _("Edit of %{model} \"%{name}\" was cancelled by the user") %
-                       {:model => ui_lookup(:model => @model.to_s), :name => @ems.name})
+                       {:model => ui_lookup(:model => model.to_s), :name => @ems.name})
     end
   end
   private :update_button_cancel
 
   def update_button_save
     changed = (@edit[:new] != @edit[:current])
-    update_ems = find_by_id_filtered(@model, params[:id])
+    update_ems = find_by_id_filtered(model, params[:id])
     set_record_vars(update_ems)
     if valid_record?(update_ems) && update_ems.save
       update_ems.reload
       flash = _("%{model} \"%{name}\" was saved") %
-              {:model => ui_lookup(:model => @model.to_s), :name => update_ems.name}
+              {:model => ui_lookup(:model => model.to_s), :name => update_ems.name}
       AuditEvent.success(build_saved_audit(update_ems, @edit))
       session[:edit] = nil  # clean out the saved info
       render :update do |page|
@@ -332,7 +332,7 @@ module EmsCommon
   private :update_button_reset
 
   def update_button_validate
-    verify_ems = find_by_id_filtered(@model, params[:id])
+    verify_ems = find_by_id_filtered(model, params[:id])
     set_record_vars(verify_ems, :validate)
     @in_a_form = true
     @changed = session[:changed]
@@ -417,8 +417,8 @@ module EmsCommon
       deleteemss if params[:pressed] == "#{@table_name}_delete"
       refreshemss if params[:pressed] == "#{@table_name}_refresh"
 #     scanemss if params[:pressed] == "scan"
-      tag(@model) if params[:pressed] == "#{@table_name}_tag"
-      assign_policies(@model) if params[:pressed] == "#{@table_name}_protect"
+      tag(model) if params[:pressed] == "#{@table_name}_tag"
+      assign_policies(model) if params[:pressed] == "#{@table_name}_protect"
       edit_record if params[:pressed] == "#{@table_name}_edit"
       custom_buttons if params[:pressed] == "custom_button"
 
@@ -515,7 +515,7 @@ module EmsCommon
     # do not want to store ems object in session hash,
     # need to get record incase coming from treesize to rebuild refreshed tree
     @sb[:ems_id] = @ems.id if @ems
-    @ems = @model.find(@sb[:ems_id]) unless @ems
+    @ems = model.find(@sb[:ems_id]) unless @ems
     # Build the ems node
     ems_node = TreeNodeBuilder.generic_tree_node(
       "ems-#{to_cid(@ems.id)}",
@@ -625,7 +625,7 @@ module EmsCommon
       @edit[:new][:host_default_vnc_port_start] = @ems.host_default_vnc_port_start.to_s
       @edit[:new][:host_default_vnc_port_end] = @ems.host_default_vnc_port_end.to_s
     end
-    @edit[:ems_types] = @model.supported_types_and_descriptions_hash
+    @edit[:ems_types] = model.supported_types_and_descriptions_hash
     @edit[:saved_default_verify_status] = nil
     @edit[:saved_metrics_verify_status] = nil
     @edit[:saved_amqp_verify_status] = nil
@@ -645,7 +645,7 @@ module EmsCommon
 
   # Get variables from edit form
   def get_form_vars
-    @ems = @edit[:ems_id] ? @model.find_by_id(@edit[:ems_id]) : @model.new
+    @ems = @edit[:ems_id] ? model.find_by_id(@edit[:ems_id]) : model.new
 
     @edit[:new][:name] = params[:name] if params[:name]
     @edit[:new][:ipaddress] = @edit[:new][:hostname] = "" if params[:server_emstype]
@@ -711,47 +711,47 @@ module EmsCommon
     return if emss.empty?
 
     if task == "refresh_ems"
-      @model.refresh_ems(emss, true)
+      model.refresh_ems(emss, true)
       add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task=>Dictionary::gettext(task, :type=>:task).titleize.gsub("Ems","#{ui_lookup(:tables=>@table_name)}"), :count_model=>pluralize(emss.length,ui_lookup(:table=>@table_name))})
       AuditEvent.success(:userid=>session[:userid],:event=>"#{@table_name}_#{task}",
           :message=>"'#{task}' successfully initiated for #{pluralize(emss.length,"#{ui_lookup(:tables=>@table_name)}")}",
-          :target_class=>@model.to_s)
+          :target_class=>model.to_s)
     elsif task == "destroy"
-      @model.find_all_by_id(emss, :order => "lower(name)").each do |ems|
+      model.find_all_by_id(emss, :order => "lower(name)").each do |ems|
         id = ems.id
         ems_name = ems.name
-        audit = {:event=>"ems_record_delete_initiated", :message=>"[#{ems_name}] Record delete initiated", :target_id=>id, :target_class=>@model.to_s, :userid => session[:userid]}
+        audit = {:event=>"ems_record_delete_initiated", :message=>"[#{ems_name}] Record delete initiated", :target_id=>id, :target_class=>model.to_s, :userid => session[:userid]}
         AuditEvent.success(audit)
       end
-      @model.destroy_queue(emss)
+      model.destroy_queue(emss)
       add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task=>"Delete", :count_model=>pluralize(emss.length,ui_lookup(:table=>@table_name))}) if @flash_array == nil
     else
-      @model.find_all_by_id(emss, :order => "lower(name)").each do |ems|
+      model.find_all_by_id(emss, :order => "lower(name)").each do |ems|
         id = ems.id
         ems_name = ems.name
         if task == "destroy"
-          audit = {:event=>"ems_record_delete", :message=>"[#{ems_name}] Record deleted", :target_id=>id, :target_class=>@model.to_s, :userid => session[:userid]}
+          audit = {:event=>"ems_record_delete", :message=>"[#{ems_name}] Record deleted", :target_id=>id, :target_class=>model.to_s, :userid => session[:userid]}
         end
         begin
           ems.send(task.to_sym) if ems.respond_to?(task)    # Run the task
         rescue StandardError => bang
-          add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model=>@model.to_s, :name=>ems_name, :task=>task} << bang.message,
+          add_flash(_("%{model} \"%{name}\": Error during '%{task}': ") % {:model=>model.to_s, :name=>ems_name, :task=>task} << bang.message,
                     :error)
           AuditEvent.failure(:userid=>session[:userid],:event=>"#{@table_name}_#{task}",
             :message=>"#{ems_name}: Error during '" << task << "': " << bang.message,
-            :target_class=>@model.to_s, :target_id=>id)
+            :target_class=>model.to_s, :target_id=>id)
         else
           if task == "destroy"
             AuditEvent.success(audit)
-            add_flash(_("%{model} \"%{name}\": Delete successful") % {:model=>ui_lookup(:model=>@model.to_s), :name=>ems_name})
+            add_flash(_("%{model} \"%{name}\": Delete successful") % {:model=>ui_lookup(:model=>model.to_s), :name=>ems_name})
             AuditEvent.success(:userid=>session[:userid],:event=>"#{@table_name}_#{task}",
               :message=>"#{ems_name}: Delete successful",
-              :target_class=>@model.to_s, :target_id=>id)
+              :target_class=>model.to_s, :target_id=>id)
           else
-            add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model=>@model.to_s, :name=>ems_name, :task=>task})
+            add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model=>model.to_s, :name=>ems_name, :task=>task})
             AuditEvent.success(:userid=>session[:userid],:event=>"#{@table_name}_#{task}",
               :message=>"#{ems_name}: '" + task + "' successfully initiated",
-              :target_class=>@model.to_s, :target_id=>id)
+              :target_class=>model.to_s, :target_id=>id)
           end
         end
       end
@@ -770,7 +770,7 @@ module EmsCommon
       process_emss(emss, "destroy") if ! emss.empty?
       add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task=>"Delete", :count_model=>pluralize(emss.length,ui_lookup(:table=>@table_name))}) if @flash_array == nil
     else # showing 1 ems, scan it
-      if params[:id] == nil || @model.find_by_id(params[:id]).nil?
+      if params[:id] == nil || model.find_by_id(params[:id]).nil?
         add_flash(_("%s no longer exists") % ui_lookup(:table=>@table_name), :error)
       else
         emss.push(params[:id])
@@ -799,7 +799,7 @@ module EmsCommon
       show_list
       @refresh_partial = "layouts/gtl"
     else # showing 1 ems, scan it
-      if params[:id] == nil || @model.find_by_id(params[:id]).nil?
+      if params[:id] == nil || model.find_by_id(params[:id]).nil?
         add_flash(_("%s no longer exists") % ui_lookup(:tables=>@table_name), :error)
       else
         emss.push(params[:id])
@@ -830,7 +830,7 @@ module EmsCommon
       show_list
       @refresh_partial = "layouts/gtl"
     else # showing 1 ems, scan it
-      if params[:id] == nil || @model.find_by_id(params[:id]).nil?
+      if params[:id] == nil || model.find_by_id(params[:id]).nil?
         add_flash(_("%s no longer exists") % ui_lookup(:table=>@table_name), :error)
       else
         emss.push(params[:id])
@@ -858,7 +858,6 @@ module EmsCommon
     @title      = ui_lookup(:tables => prefix)
     @layout     = prefix
     @table_name = request.parameters[:controller]
-    @model      = self.class.model
     @lastaction = session["#{prefix}_lastaction".to_sym]
     @display    = session["#{prefix}_display".to_sym]
     @filters    = session["#{prefix}_filters".to_sym]
@@ -871,5 +870,9 @@ module EmsCommon
     session["#{prefix}_display".to_sym]    = @display unless @display.nil?
     session["#{prefix}_filters".to_sym]    = @filters
     session["#{prefix}_catinfo".to_sym]    = @catinfo
+  end
+
+  def model
+    self.class.model
   end
 end

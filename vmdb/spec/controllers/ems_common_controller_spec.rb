@@ -4,7 +4,6 @@ describe EmsCloudController do
   context "::EmsCommon" do
     context "#get_form_vars" do
       it "check if the default port for openstack/openstack_infra/rhevm is set" do
-        controller.instance_variable_set(:@model, EmsCloud)
         controller.instance_variable_set(:@edit, {:new => {}})
         controller.instance_variable_set(:@_params, {:server_emstype => "openstack"})
         controller.send(:get_form_vars)
@@ -43,7 +42,6 @@ describe EmsCloudController do
     context "#create" do
       it "displays correct attribute name in error message when adding cloud EMS" do
         set_user_privileges
-        controller.instance_variable_set(:@model, EmsCloud)
         controller.instance_variable_set(:@edit, {:new => {:name => "EMS 1", :emstype => "ec2"},
                                                   :key => "ems_edit__new"})
         session[:edit] = assigns(:edit)
@@ -56,7 +54,6 @@ describe EmsCloudController do
 
       it "displays correct attribute name in error message when adding infra EMS" do
         set_user_privileges
-        controller.instance_variable_set(:@model, EmsCloud)
         controller.instance_variable_set(:@edit, {:new => {:name => "EMS 2", :emstype => "rhevm"},
                                                   :key => "ems_edit__new"})
         session[:edit] = assigns(:edit)
@@ -73,7 +70,6 @@ describe EmsCloudController do
         let(:mocked_ems_cloud) { mock_model(EmsCloud) }
         before(:each) do
           controller.instance_variable_set(:@_params, :id => "42", :type => "amqp")
-          controller.instance_variable_set(:@model, EmsCloud)
           controller.should_receive(:find_by_id_filtered).with(EmsCloud, "42").and_return(mocked_ems_cloud)
           controller.should_receive(:set_record_vars).with(mocked_ems_cloud, :validate).and_return(mocked_ems_cloud)
         end
