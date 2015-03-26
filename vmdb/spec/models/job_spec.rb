@@ -234,7 +234,7 @@ describe Job do
     q = MiqQueue.first
     q.instance_id.should == @vm.id
     q.class_name.should  == @vm.class.name
-    q.method_name.should == "remove_snapshot"
+    q.method_name.should == "remove_evm_snapshot"
     q.args.should        == [@snapshot.id]
     q.role.should        == "ems_operations"
     q.zone.should        == @zone.name

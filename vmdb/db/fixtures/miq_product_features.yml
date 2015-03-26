@@ -445,6 +445,10 @@
       :feature_type: control
       :identifier: instance_control
       :children:
+      - :name: Analysis
+        :description: Perform SmartState Analysis on Instances
+        :feature_type: control
+        :identifier: instance_scan
       - :name: Check Compliance
         :description: Check Compliance of Last Known Configuration
         :feature_type: control
