@@ -3,9 +3,13 @@ module Metric::Purging
     value = VMDB::Config.new("vmdb").config.fetch_path(:performance, :history, type.to_sym)
     return if value.nil?
 
-    value = value.to_i.days if value.kind_of?(Fixnum) # Default unit is days
-    value = value.to_i_with_method.ago.utc unless value.nil?
-    return value
+    case value
+    when Numeric
+      value.days.ago.utc
+    when String
+      value.to_i_with_method.seconds.ago.utc
+    when nil
+    end
   end
 
   def self.purge_all_timer
