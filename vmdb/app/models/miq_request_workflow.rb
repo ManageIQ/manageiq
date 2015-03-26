@@ -2,6 +2,13 @@ require 'enumerator'
 require 'miq-hash_struct'
 
 class MiqRequestWorkflow
+  SUBCLASSES = %w(
+    MiqHostProvisionWorkflow
+    MiqProvisionWorkflow
+    ResourceActionWorkflow
+    VmMigrateWorkflow
+  )
+
   attr_accessor :dialogs, :requester, :values, :last_vm_id
 
   def self.automate_dialog_request
@@ -17,7 +24,11 @@ class MiqRequestWorkflow
   end
 
   def self.encrypted_options_fields
-    nil
+    []
+  end
+
+  def self.all_encrypted_options_fields
+    descendants.flat_map(&:encrypted_options_fields).uniq
   end
 
   def initialize(values, requester, options={})
@@ -756,7 +767,7 @@ class MiqRequestWorkflow
   end
 
   def password_helper(values, encrypt=true)
-    self.class.encrypted_options_fields.to_miq_a.each do |pwd_key|
+    self.class.encrypted_options_fields.each do |pwd_key|
       next if values[pwd_key].blank?
       if encrypt
         values[pwd_key].replace(MiqPassword.try_encrypt(values[pwd_key]))
@@ -1512,3 +1523,7 @@ class MiqRequestWorkflow
     end
   end
 end
+
+# Preload any subclasses of this class, so that they will be part of the
+#   conditions that are generated on queries against this class.
+MiqRequestWorkflow::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}.rb").to_s }
