@@ -9,10 +9,10 @@
 #
 
 # Report title
-title: Cloudformations Orchestration Templates
+title: CloudFormations Orchestration Templates
 
 # Menu name
-name: Clouformations Orchestration Template
+name: CloudFormations Orchestration Template
 
 # Main DB table report is based on
 db: OrchestrationTemplateCfn
