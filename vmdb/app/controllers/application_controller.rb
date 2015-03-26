@@ -1333,7 +1333,7 @@ class ApplicationController < ActionController::Base
     if MiqProductFeature.feature_exists?(ident)
       role_allows(:feature => ident, :any => true)
     else
-      valid_route?(request.request_method, controller_name, action_name)
+      true
     end
   end
 
@@ -2690,11 +2690,6 @@ class ApplicationController < ActionController::Base
   def assert_privileges(feature)
     raise MiqException::RbacPrivilegeException,
           _("The user is not authorized for this task or item.") unless role_allows(:feature => feature)
-  end
-
-  def valid_route?(request_method, controller,  action)
-    valid_actions = CONTROLLER_ACTIONS.fetch_path(controller.to_sym, request_method.downcase.to_sym) || []
-    valid_actions.include?(action)
   end
 
   def previous_breadcrumb_url
