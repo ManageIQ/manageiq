@@ -14,4 +14,16 @@ class UiWorker < WorkerBase
   def do_before_work_loop
     @worker.release_db_connection
   end
+
+  def self.start_worker(*args)
+     cfg = {}
+     opts = OptionParser.new
+     self::OPTIONS_PARSER_SETTINGS.each do |key, desc, type|
+       opts.on("--#{key} VAL", desc, type) {|v| cfg[key] = v}
+     end
+     opts.parse(*args)
+
+     # Start the worker object
+     self.new(cfg).start
+  end
 end

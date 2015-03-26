@@ -12,15 +12,15 @@ class WorkerBase
   ]
 
   def self.start_worker(*args)
-    cfg = {}
-    opts = OptionParser.new
-    self::OPTIONS_PARSER_SETTINGS.each do |key, desc, type|
-      opts.on("--#{key} VAL", desc, type) {|v| cfg[key] = v}
-    end
-    opts.parse(*args)
+    # cfg = {}
+    # opts = OptionParser.new
+    # self::OPTIONS_PARSER_SETTINGS.each do |key, desc, type|
+    #   opts.on("--#{key} VAL", desc, type) {|v| cfg[key] = v}
+    # end
+    # opts.parse(*args)
 
     # Start the worker object
-    self.new(cfg).start
+    self.new(*args).start
   end
 
   def poll_method
