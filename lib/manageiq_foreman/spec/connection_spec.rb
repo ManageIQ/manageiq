@@ -1,6 +1,14 @@
 require_relative 'spec_helper'
 
 describe ManageiqForeman::Connection do
+  before do
+    unless connection.api_cached?
+      with_vcr("_json_info") do
+        connection.ensure_api_cached
+      end
+    end
+  end
+
   let(:connection) do
     described_class.new(:base_url => "example.com", :username => "admin", :password => "smartvm", :verify_ssl => nil)
   end
@@ -27,7 +35,7 @@ describe ManageiqForeman::Connection do
 
   describe "#operating_system_detail" do
     context "with 2 operating_system details" do
-      let(:results) { connection.all_with_details(:operating_systems, "per_page" => 2) }
+      let(:results) { connection.all_with_details(:operatingsystems, "per_page" => 2) }
 
       it "fetches 2 operating_system details" do
         with_vcr("_2_operating_systems") do
@@ -42,7 +50,7 @@ describe ManageiqForeman::Connection do
       with_vcr("_all_methods") do
         expect(connection.fetch(:hosts, :per_page => 2).size).to eq(2)
         expect(connection.fetch(:hostgroups, :per_page => 2).size).to eq(2)
-        expect(connection.fetch(:operating_systems, :per_page => 2).size).to eq(2)
+        expect(connection.fetch(:operatingsystems, :per_page => 2).size).to eq(2)
         expect(connection.fetch(:media, :per_page => 2).size).to eq(2)
         expect(connection.fetch(:ptables, :per_page => 2).size).to eq(2)
         expect(connection.fetch(:config_templates, :per_page => 2).size).to eq(2)

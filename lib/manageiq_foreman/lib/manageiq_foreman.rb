@@ -1,6 +1,6 @@
 require "manageiq_foreman/version"
 
-require 'foreman_api'
+require 'apipie-bindings'
 
 require "manageiq_foreman/paged_response"
 require "manageiq_foreman/connection"
