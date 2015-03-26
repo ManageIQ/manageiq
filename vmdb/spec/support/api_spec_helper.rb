@@ -47,6 +47,16 @@ module ApiSpecHelper
     parse_response
   end
 
+  def run_put(url, body = {}, headers = {})
+    put url, {}, update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
+    parse_response
+  end
+
+  def run_patch(url, body = {}, headers = {})
+    patch url, {}, update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
+    parse_response
+  end
+
   def run_delete(url, headers = {})
     delete url, {}, update_headers(headers)
     parse_response
