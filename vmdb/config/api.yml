@@ -558,6 +558,7 @@
     :resource_actions:
       :post:
       - :name: edit
+        :identifier: catalogitem_edit
       :delete:
       - :name: delete
         :identifier: catalogitem_delete
