@@ -85,5 +85,3 @@ class EvmServer
     self.new(cfg).start
   end
 end
-
-EvmServer.start(*ARGV) if MiqEnvironment::Process.is_rails_runner?
