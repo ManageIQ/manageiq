@@ -24,7 +24,7 @@ cols:
 - draft
 - description
 - created_at
-- update_at
+- updated_at
 
 # Included tables (joined, has_one, has_many) and columns
 include:

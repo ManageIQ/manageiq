@@ -178,6 +178,7 @@ describe CatalogController do
     before(:each) do
       controller.instance_variable_set(:@sb, {})
       controller.instance_variable_set(:@_params, :pressed => "orchestration_template_remove")
+      controller.stub(:replace_right_cell)
     end
 
     after(:each) do
@@ -188,7 +189,6 @@ describe CatalogController do
       ot = FactoryGirl.create(:orchestration_template)
       controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
       controller.params.merge!(:id => ot.id)
-      controller.stub(:replace_right_cell)
       controller.send(:ot_remove_submit)
       controller.send(:flash_errors?).should_not be_true
       assigns(:flash_array).first[:message].should include("was deleted")
@@ -198,8 +198,6 @@ describe CatalogController do
     it "Read-only Orchestration Template cannot deleted" do
       ot = FactoryGirl.create(:orchestration_template_with_stacks)
       controller.params.merge!(:id => ot.id)
-      controller.should_receive(:render)
-      controller.stub(:replace_right_cell)
       controller.send(:ot_remove_submit)
       controller.send(:flash_errors?).should be_true
       assigns(:flash_array).first[:message].should include("read-only and cannot be deleted")
@@ -262,6 +260,65 @@ describe CatalogController do
       assigns(:edit).should be_nil
       expect(response.status).to eq(200)
       OrchestrationTemplate.where(:name => @new_name).first.should be_nil
+    end
+  end
+
+  describe "#tags_edit" do
+    before(:each) do
+      @ot = FactoryGirl.create(:orchestration_template, :name => "foo")
+      user = FactoryGirl.create(:user, :userid => 'testuser')
+      session[:userid] = user.userid
+      @ot.stub(:tagged_with).with(:cat => "testuser").and_return("my tags")
+      classification = FactoryGirl.create(:classification, :name => "department", :description => "Department")
+      @tag1 = FactoryGirl.create(:classification_tag,
+                                 :name   => "tag1",
+                                 :parent => classification
+      )
+      @tag2 = FactoryGirl.create(:classification_tag,
+                                 :name   => "tag2",
+                                 :parent => classification
+      )
+      Classification.stub(:find_assigned_entries).with(@ot).and_return([@tag1, @tag2])
+      controller.instance_variable_set(:@sb,
+                                       :trees       => {:ot_tree => {:active_node => "root"}},
+                                       :active_tree => :ot_tree)
+      controller.stub(:get_node_info)
+      controller.stub(:replace_right_cell)
+      session[:tag_db] = "OrchestrationTemplate"
+      edit = {
+        :key        => "OrchestrationTemplate_edit_tags__#{@ot.id}",
+        :tagging    => "OrchestrationTemplate",
+        :object_ids => [@ot.id],
+        :current    => {:assignments => []},
+        :new        => {:assignments => [@tag1.id, @tag2.id]}
+      }
+      session[:edit] = edit
+    end
+
+    after(:each) do
+      expect(response.status).to eq(200)
+    end
+
+    it "builds tagging screen" do
+      controller.instance_variable_set(:@sb, :action => "ot_tags_edit")
+      controller.instance_variable_set(:@_params, :miq_grid_checks => @ot.id.to_s)
+      controller.send(:tags_edit, "OrchestrationTemplate")
+      assigns(:flash_array).should be_nil
+      assigns(:entries).should_not be_nil
+    end
+
+    it "cancels tags edit" do
+      controller.instance_variable_set(:@_params, :button => "cancel", :id => @ot.id)
+      controller.send(:tags_edit, "OrchestrationTemplate")
+      assigns(:flash_array).first[:message].should include("was cancelled")
+      assigns(:edit).should be_nil
+    end
+
+    it "save tags" do
+      controller.instance_variable_set(:@_params, :button => "save", :id => @ot.id)
+      controller.send(:tags_edit, "OrchestrationTemplate")
+      assigns(:flash_array).first[:message].should include("Tag edits were successfully saved")
+      assigns(:edit).should be_nil
     end
   end
 end

@@ -88,4 +88,25 @@ describe ApplicationController do
       view_yaml.should include("VmCloud.yaml")
     end
   end
+
+  context "#find_checked_items" do
+    it "returns empty array when button is pressed from summary screen with params as symbol" do
+      controller.instance_variable_set(:@_params, :id => "1")
+      result = controller.send(:find_checked_items)
+      result.should eq([])
+    end
+
+    it "returns empty array when button is pressed from summary screen with params as string" do
+      controller.instance_variable_set(:@_params, "id" => "1")
+      result = controller.send(:find_checked_items)
+      result.should eq([])
+    end
+
+    it "returns list of items selected from list view" do
+      controller.instance_variable_set(:@_params, :miq_grid_checks => "1, 2, 3, 4")
+      result = controller.send(:find_checked_items)
+      result.count eq(4)
+      result.should eq([1, 2, 3, 4])
+    end
+  end
 end

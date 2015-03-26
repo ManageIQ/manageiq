@@ -1724,7 +1724,7 @@ class ApplicationController < ActionController::Base
       items = Array.new
       session[:base_miq] = ""
       params.each do |var, val|
-        vars=var.split("_")
+        vars = var.to_s.split("_")
         if vars[0]==prefix && val=="1"
           ids = vars[1..-1].collect{|v| v = from_cid(v)}  # Decompress any compressed ids
           items.push(ids.join("_"))

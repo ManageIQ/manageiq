@@ -199,6 +199,7 @@ Vmdb::Application.routes.draw do
         ot_copy_submit
         ot_edit_submit
         ot_form_field_changed
+        ot_tags_edit
         process_sts
         prov_field_changed
         reload

@@ -37,6 +37,7 @@ class CatalogController < ApplicationController
     'orchestration_template_edit'   => :ot_edit,
     'orchestration_template_copy'   => :ot_copy,
     'orchestration_template_remove' => :ot_remove_submit,
+    'orchestration_template_tag'    => :ot_tags_edit,
     'st_catalog_edit'               => :st_catalog_edit,
     'st_catalog_new'                => :st_catalog_edit,
   }.freeze
@@ -502,13 +503,24 @@ class CatalogController < ApplicationController
   # Edit user or group tags
   def st_tags_edit
     assert_privileges("catalogitem_edit")
+    tags_edit("ServiceTemplate")
+  end
+
+  # Edit user or group tags
+  def ot_tags_edit
+    assert_privileges("orchestration_template_tag")
+    tags_edit("OrchestrationTemplate")
+  end
+
+  # Edit user or group tags
+  def tags_edit(klass)
     case params[:button]
     when "cancel"
       x_edit_tags_cancel
     when "save", "add"
       x_edit_tags_save
     when "reset", nil  # Reset or first time in
-      x_edit_tags_reset("ServiceTemplate")  #pass in the DB
+      x_edit_tags_reset(klass)  # pass in the DB
     end
   end
 
@@ -716,23 +728,24 @@ class CatalogController < ApplicationController
 
   def ot_remove_submit
     assert_privileges("orchestration_template_remove")
-    ot = OrchestrationTemplate.find_by_id(params[:id])
-    if ot.stacks.length > 0
-      add_flash(_("Orchestration template \"%s\" is read-only and cannot be deleted.") % ot.name, :error)
-      render :update do |page|
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
-    else
-      begin
-        ot.delete
-      rescue StandardError => bang
-        add_flash(_("Error during '%s': ") % "Orchestration Template Deletion" << bang.message, :error)
+    checked = find_checked_items
+    checked[0] = params[:id] if checked.blank? && params[:id]
+    elements = OrchestrationTemplate.where(:id => checked)
+    elements.each do |ot|
+      if ot.stacks.length > 0
+        add_flash(_("Orchestration template \"%s\" is read-only and cannot be deleted.") % ot.name, :error)
       else
-        add_flash(_("Orchestration Template \"%s\" was deleted.") % ot.name)
+        begin
+          ot.delete
+        rescue StandardError => bang
+          add_flash(_("Error during '%s': ") % "Orchestration Template Deletion" << bang.message, :error)
+        else
+          add_flash(_("Orchestration Template \"%s\" was deleted.") % ot.name)
+        end
       end
-      self.x_node = 'root'
-      replace_right_cell(nil, trees_to_replace([:ot]))
     end
+    self.x_node = 'root'
+    replace_right_cell(nil, trees_to_replace([:ot]))
   end
 
   def ot_add
@@ -877,7 +890,9 @@ class CatalogController < ApplicationController
   end
 
   def ot_edit_set_form_vars(right_cell_text)
-    @record = OrchestrationTemplate.find_by_id(from_cid(params[:id]))
+    checked = find_checked_items
+    checked[0] = params[:id] if checked.blank? && params[:id]
+    @record = checked[0] ? find_by_id_filtered(OrchestrationTemplate, checked[0]) : OrchestrationTemplate.new
     @edit = {:current => {:name        => @record.name,
                           :description => @record.description,
                           :content     => @record.content,
@@ -1523,7 +1538,7 @@ class CatalogController < ApplicationController
             :ot_tree     => "OrchestrationTemplate"
           }
           typ = types[x_active_tree]
-          @no_checkboxes = true if [:svcs_tree, :ot_tree].include?(x_active_tree)
+          @no_checkboxes = true if x_active_tree == :svcs_tree
           if x_active_tree == :svccat_tree
             condition = ["display=? and service_template_catalog_id IS NOT NULL", true]
             service_template_list(condition, {:no_checkboxes => true})
@@ -1534,7 +1549,6 @@ class CatalogController < ApplicationController
           sync_view_pictures_to_disk(@view) if ["grid", "tile"].include?(@gtl_type)
         elsif ["xx-otcfn", "xx-othot"].include?(x_node)
           typ = x_node == "xx-otcfn" ? "OrchestrationTemplateCfn" : "OrchestrationTemplateHot"
-          @no_checkboxes = true
           @right_cell_text = _("All %s") % ui_lookup(:models => typ)
           process_show_list(:model => typ.constantize)
           sync_view_pictures_to_disk(@view) if ["grid", "tile"].include?(@gtl_type)
@@ -1676,11 +1690,13 @@ class CatalogController < ApplicationController
           build_toolbar_buttons_and_xml("x_gtl_view_tb")
         end
       when :svccat_tree, :stcat_tree, :ot_tree
-        build_toolbar_buttons_and_xml("x_gtl_view_tb") unless record_showing
+        build_toolbar_buttons_and_xml("x_gtl_view_tb") unless record_showing || @in_a_form
       end
 
-    c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
-    h_buttons, h_xml = build_toolbar_buttons_and_xml("x_history_tb")
+    unless @in_a_form
+      c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
+      h_buttons, h_xml = build_toolbar_buttons_and_xml("x_history_tb")
+    end
 
     presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
@@ -1719,7 +1735,8 @@ class CatalogController < ApplicationController
     # Replace right cell divs
     presenter[:update_partials][:main_div] =
       if @tagging
-        r[:partial=>"layouts/x_tagging", :locals => {:action_url => "st_tags_edit"}]
+        action_url = x_active_tree == :ot_tree ? "ot_tags_edit" : "st_tags_edit"
+        r[:partial => "layouts/x_tagging", :locals => {:action_url => action_url}]
       elsif action && ["at_st_new", "st_new"].include?(action)
         r[:partial=>"st_form"]
       elsif action && ["st_catalog_new", "st_catalog_edit"].include?(action)
@@ -1753,11 +1770,12 @@ class CatalogController < ApplicationController
     if @tagging
       presenter[:expand_collapse_cells][:a] = 'collapse'
       presenter[:expand_collapse_cells][:c] = 'expand'
+      action_url = x_active_tree == :ot_tree ? "ot_tags_edit" : "st_tags_edit"
       locals = {
-        :record_id            => @edit[:object_ids][0],
-        :action_url           => "st_tags_edit",
-        :force_cancel_button  => true,
-        :ajax_buttons         => true
+        :record_id           => @edit[:object_ids][0],
+        :action_url          => action_url,
+        :force_cancel_button => true,
+        :ajax_buttons        => true
       }
       presenter[:set_visible_elements][:form_buttons_div] = true
       presenter[:set_visible_elements][:pc_div_1] = false
@@ -1822,11 +1840,13 @@ class CatalogController < ApplicationController
     end
 
     # Rebuild the toolbars
-    presenter[:reload_toolbars][:history] = { :buttons => h_buttons, :xml => h_xml }
-    presenter[:reload_toolbars][:view]    = { :buttons => v_buttons, :xml => v_xml } if v_buttons && v_xml
-    presenter[:reload_toolbars][:center]  = { :buttons => c_buttons, :xml => c_xml } if c_buttons && c_xml
-    presenter[:set_visible_elements][:center_buttons_div] = c_buttons && c_xml
-    presenter[:set_visible_elements][:view_buttons_div]   = v_buttons && v_xml
+    presenter[:set_visible_elements][:history_buttons_div] = h_buttons  && h_xml
+    presenter[:set_visible_elements][:center_buttons_div]  = c_buttons  && c_xml
+    presenter[:set_visible_elements][:view_buttons_div]    = v_buttons  && v_xml
+    presenter[:reload_toolbars][:history] = {:buttons => h_buttons,  :xml => h_xml}  if h_buttons  && h_xml
+    presenter[:reload_toolbars][:center]  = {:buttons => c_buttons,  :xml => c_xml}  if c_buttons  && c_xml
+    presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons  && v_xml
+    presenter[:expand_collapse_cells][:a] = h_buttons || c_buttons || v_buttons ? 'expand' : 'collapse'
 
     presenter[:miq_record_id] = @record && !@in_a_form ? @record.id : @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
 
