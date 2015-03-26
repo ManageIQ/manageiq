@@ -90,6 +90,7 @@ module EmsRefresh
       def parse_host(host, indexed_servers, _indexed_hosts_ports, indexed_resources)
         uid = host.uuid
         host_name = identify_host_name(indexed_resources, host.instance_uuid, uid)
+        ip_address = identify_primary_ip_address(host, indexed_servers)
 
         new_result = {
           :name                => host_name,
@@ -100,7 +101,8 @@ module EmsRefresh
           :operating_system    => {:product_name => 'linux'},
           :vmm_vendor          => 'RedHat',
           :vmm_product         => identify_product(indexed_resources, host.instance_uuid),
-          :ipaddress           => identify_primary_ip_address(host, indexed_servers),
+          :ipaddress           => ip_address,
+          :hostname            => ip_address,
           :mac_address         => identify_primary_mac_address(host, indexed_servers),
           :ipmi_address        => identify_ipmi_address(host),
           :power_state         => lookup_power_state(host.power_state),
