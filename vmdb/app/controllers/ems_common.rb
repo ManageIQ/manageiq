@@ -486,21 +486,21 @@ module EmsCommon
         @edit[:default_verify_status] = (edit_new[:default_password] == edit_new[:default_verify])
       end
     else
-      if edit_new[:default_userid].blank? || edit_new[:ipaddress].blank? || edit_new[:emstype].blank?
+      if edit_new[:default_userid].blank? || edit_new[:hostname].blank? || edit_new[:emstype].blank?
         @edit[:default_verify_status] = false
       else
         @edit[:default_verify_status] = (edit_new[:default_password] == edit_new[:default_verify])
       end
     end
 
-    if edit_new[:metrics_userid].blank? || edit_new[:ipaddress].blank? || edit_new[:emstype].blank?
+    if edit_new[:metrics_userid].blank? || edit_new[:hostname].blank? || edit_new[:emstype].blank?
       @edit[:metrics_verify_status] = false
     else
       @edit[:metrics_verify_status] = (edit_new[:metrics_password] == edit_new[:metrics_verify])
     end
 
-    # check if any of amqp_userid, amqp_password, amqp_verify, :ipaddress, :emstype are blank
-    if any_blank_fields?(edit_new, [:amqp_userid, :amqp_password, :amqp_verify, :ipaddress, :emstype])
+    # check if any of amqp_userid, amqp_password, amqp_verify, :hostname, :emstype are blank
+    if any_blank_fields?(edit_new, [:amqp_userid, :amqp_password, :amqp_verify, :hostname, :emstype])
       @edit[:amqp_verify_status] = false
     else
       @edit[:amqp_verify_status] = (edit_new[:amqp_password] == edit_new[:amqp_verify])
@@ -596,7 +596,6 @@ module EmsCommon
     @edit[:new][:name] = @ems.name
     @edit[:new][:provider_region] = @ems.provider_region
     @edit[:new][:hostname] = @ems.hostname
-    @edit[:new][:ipaddress] = @ems.ipaddress
     @edit[:new][:emstype] = @ems.emstype
     @edit[:amazon_regions] = get_amazon_regions if @ems.kind_of?(EmsAmazon)
     @edit[:new][:port] = @ems.port
@@ -658,7 +657,6 @@ module EmsCommon
     @edit[:new][:ipaddress] = @edit[:new][:hostname] = "" if params[:server_emstype]
     @edit[:new][:provider_region] = params[:provider_region] if params[:provider_region]
     @edit[:new][:hostname] = params[:hostname] if params[:hostname]
-    @edit[:new][:ipaddress] = params[:ipaddress] if params[:ipaddress]
     if params[:server_emstype]
       @edit[:new][:emstype] = params[:server_emstype]
       if ["openstack", "openstack_infra"].include?(params[:server_emstype])
@@ -694,7 +692,6 @@ module EmsCommon
     ems.name = @edit[:new][:name]
     ems.provider_region = @edit[:new][:provider_region]
     ems.hostname = @edit[:new][:hostname]
-    ems.ipaddress = @edit[:new][:ipaddress]
     ems.port = @edit[:new][:port] if ems.supports_port?
     ems.provider_id = @edit[:new][:provider_id] if ems.supports_provider_id?
     ems.zone = Zone.find_by_name(@edit[:new][:zone])
