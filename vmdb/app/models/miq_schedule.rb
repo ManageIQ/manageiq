@@ -336,8 +336,8 @@ class MiqSchedule < ActiveRecord::Base
   end
 
   def next_interval_time
-    unless self.valid? || self.errors.on(:run_at).empty?
-      $log.warn("Miq(Schedule.next_interval_time) Invalid schedule [#{self.id}] [#{self.name}]: #{self.errors.on(:run_at).to_miq_a.join(", ")}")
+    unless self.valid? || errors[:run_at].blank?
+      $log.warn("Miq(Schedule.next_interval_time) Invalid schedule [#{self.id}] [#{self.name}]: #{errors[:run_at].to_miq_a.join(", ")}")
       return nil
     end
 
@@ -399,8 +399,8 @@ class MiqSchedule < ActiveRecord::Base
   end
 
   def interval
-    unless self.valid? || self.errors.on(:run_at).empty?
-      $log.warn("Miq(Schedule.interval) Invalid schedule [#{self.id}] [#{self.name}]: #{self.errors.on(:run_at).to_miq_a.join(", ")}")
+    unless self.valid? || errors[:run_at].blank?
+      $log.warn("Miq(Schedule.interval) Invalid schedule [#{self.id}] [#{self.name}]: #{errors[:run_at].to_miq_a.join(", ")}")
       return nil
     end
 
