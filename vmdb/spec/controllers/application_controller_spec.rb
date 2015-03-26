@@ -64,18 +64,6 @@ describe ApplicationController do
     end
   end
 
-  context "#valid_route?" do
-    it "should return true for a valid route" do
-      result = controller.send(:valid_route?, 'POST', 'host', 'show')
-      result.should be_true
-    end
-
-    it "should return false for an invalid route" do
-      result = controller.send(:valid_route?, 'POST', 'host', 'some_route')
-      result.should be_false
-    end
-  end
-
   context "#view_yaml_filename" do
     before do
       EvmSpecHelper.seed_specific_product_features("vm_infra_explorer", "host_edit")
