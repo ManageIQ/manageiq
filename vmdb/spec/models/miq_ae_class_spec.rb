@@ -324,5 +324,10 @@ describe MiqAeClass do
       ids += class_fqnames.collect { |cls| MiqAeClass.find_by_fqname(cls).id }
       MiqAeClass.waypoint_ids_for_state_machines.should match_array(ids)
     end
+
+    it "no state machine classes" do
+      create_ae_model(:name => 'MARIO', :ae_class => 'CLASS3', :ae_namespace  => 'C/D/E')
+      MiqAeClass.waypoint_ids_for_state_machines.should be_empty
+    end
   end
 end

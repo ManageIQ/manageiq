@@ -154,20 +154,18 @@ class MiqAeClass < ActiveRecord::Base
   end
 
   def self.waypoint_ids_for_state_machines
-    ids = []
-    MiqAeClass.all.select(&:state_machine?).each do |klass|
+    MiqAeClass.all.select(&:state_machine?).each_with_object([]) do |klass, ids|
       ids << klass.id
       next if ids.include?(klass.ae_namespace.id)
       sub_namespaces(klass.ae_namespace, ids)
     end
-    ids
   end
 
   private
 
   def self.sub_namespaces(ns_obj, ids)
     loop do
-      break if ns_obj.nil? || (ns_obj && ids.include?(ns_obj.id))
+      break if ns_obj.nil? || ids.include?(ns_obj.id)
       ids << ns_obj.id
       ns_obj = ns_obj.parent
     end
