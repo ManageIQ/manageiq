@@ -59,7 +59,6 @@ module EmsRefresh::Parsers
         :protocol         => service.spec.protocol,
         :portal_ip        => service.spec.portalIP,
         :container_port   => service.spec.containerPort,
-        :namespace        => service.metadata.instance_values["table"][:namespace],
         :session_affinity => service.spec.sessionAffinity,
 
         :labels           => parse_labels(service),
@@ -79,8 +78,6 @@ module EmsRefresh::Parsers
         pod_restart_policy = pod.spec.restartPolicy
       end
       new_result.merge!(
-        # namespace is overriden in more_core_extensions and hence needs a non method access
-        :namespace      => pod.metadata.instance_values["table"][:namespace],
         :restart_policy => pod_restart_policy,
         :dns_policy     => pod.spec.dnsPolicy
       )
@@ -184,6 +181,9 @@ module EmsRefresh::Parsers
       {
         :ems_ref            => item.metadata.uid,
         :name               => item.metadata.name,
+        # namespace is overriden in more_core_extensions and hence needs
+        # a non method access
+        :namespace          => item.metadata[:namespace],
         :creation_timestamp => item.metadata.creationTimestamp,
         :resource_version   => item.metadata.resourceVersion
       }

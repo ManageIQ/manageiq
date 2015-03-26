@@ -21,7 +21,8 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(:container_nodes, ems, hashes, deletes, [:ems_ref])
+    save_inventory_multi(:container_nodes, ems, hashes, deletes, [:ems_ref],
+                         nil, [:namespace])
     store_ids_for_new_records(ems.container_nodes, hashes, :ems_ref)
   end
 
