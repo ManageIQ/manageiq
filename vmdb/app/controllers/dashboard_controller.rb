@@ -516,9 +516,9 @@ class DashboardController < ApplicationController
       end
     when :fail
       session[:userid], session[:username], session[:user_tags] = nil
-      flash_msg = validation.flash_msg || "Error: Authentication failed"
+      add_flash(validation.flash_msg || "Error: Authentication failed", :error)
       render :update do |page|
-        page.replace_html('flash_div', flash_msg)
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page << javascript_show("flash_div")
         page << "miqSparkle(false);"
         page << "miqEnableLoginFields(true);"
