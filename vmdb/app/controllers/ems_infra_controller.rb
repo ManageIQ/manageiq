@@ -7,7 +7,7 @@ class EmsInfraController < ApplicationController
   after_filter :set_session_data
 
   def self.model
-    @model ||= EmsInfra
+    EmsInfra
   end
 
   def self.table_name
