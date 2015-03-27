@@ -682,7 +682,6 @@ class ReportController < ApplicationController
 
     presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
-      :temp        => @temp,
     )
     # Clicked on right cell record, open the tree enough to show the node, if not already showing
     # Open the parent nodes of selected record, if not open

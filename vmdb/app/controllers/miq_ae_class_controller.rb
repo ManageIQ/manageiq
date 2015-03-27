@@ -282,7 +282,6 @@ class MiqAeClassController < ApplicationController
 
     presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
-      :temp        => @temp,
     )
 
     if add_nodes

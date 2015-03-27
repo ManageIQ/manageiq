@@ -1799,7 +1799,6 @@ class CatalogController < ApplicationController
 
     presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
-      :temp        => @temp,
     )
     # Update the tree with any new nodes
     presenter[:add_nodes] = add_nodes if add_nodes

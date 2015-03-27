@@ -1590,7 +1590,6 @@ module VmCommon
     # Build presenter to render the JS command for the tree update
     presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
-      :temp        => @temp,
       :add_nodes   => add_nodes,         # Update the tree with any new nodes
       :delete_node => @delete_node,      # Remove a new node from the tree
     )

@@ -229,7 +229,6 @@ class ContainerController < ApplicationController
     # Build presenter to render the JS command for the tree update
     presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
-      :temp        => @temp
     )
     r = proc { |opts| render_to_string(opts) }
 

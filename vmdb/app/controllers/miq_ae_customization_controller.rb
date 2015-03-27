@@ -230,7 +230,7 @@ class MiqAeCustomizationController < ApplicationController
     end
 
     @explorer = true
-    presenter = ExplorerPresenter.new(:active_tree => x_active_tree, :temp => @temp)
+    presenter = ExplorerPresenter.new(:active_tree => x_active_tree)
 
     r = proc { |opts| render_to_string(opts) }
     trees.each do |tree_name, tree|

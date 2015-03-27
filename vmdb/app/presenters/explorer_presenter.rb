@@ -34,10 +34,8 @@ class ExplorerPresenter
   #   exp               --
   #
   #   active_tree       -- x_active_tree view state from controller
-  #   temp              -- @temp         view state from controller
   #
   # Following options are hashes:
-  #   trees_to_replace          -- trees to be replaced
   #   lock_unlock_trees         -- trees to lock/unlock
   #   update_partials           -- partials to update contents
   #   replace_partials          -- partials to replace (also wrapping tag)
@@ -56,7 +54,6 @@ class ExplorerPresenter
       :element_updates       => {},
       :replace_partials      => {},
       :reload_toolbars       => {},
-      :trees_to_replace      => {},
       :extra_js              => [],
       :object_tree_json      => '',
       :exp                   => {},

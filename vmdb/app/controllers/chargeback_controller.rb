@@ -741,7 +741,6 @@ class ChargebackController < ApplicationController
     # Build a presenter to render the JS
     presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
-      :temp        => @temp
     )
     r = proc { |opts| render_to_string(opts) }
 

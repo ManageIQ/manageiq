@@ -576,7 +576,6 @@ class ProviderForemanController < ApplicationController
   def rendering_objects
     presenter = ExplorerPresenter.new(
         :active_tree => x_active_tree,
-        :temp        => @temp,
         :delete_node => @delete_node,
     )
     r = proc { |opts| render_to_string(opts) }
@@ -638,7 +637,6 @@ class ProviderForemanController < ApplicationController
     # Build presenter to render the JS command for the tree update
     presenter = ExplorerPresenter.new(
         :active_tree => x_active_tree,
-        :temp        => @temp,
         :delete_node => @delete_node,      # Remove a new node from the tree
     )
     r = proc { |opts| render_to_string(opts) }
