@@ -464,18 +464,13 @@ Vmdb::Application.routes.draw do
         dialog_load
         discover
         download_data
-        edit
-        index
-        new
         protect
-        show
         show_list
         tagging_edit
       ) +
         compare_get,
       :post => %w(
         button
-        create
         dynamic_checkbox_refresh
         dynamic_list_refresh
         dynamic_radio_button_refresh
@@ -1888,7 +1883,9 @@ Vmdb::Application.routes.draw do
   CONTROLLER_ACTIONS.each do |controller_name, controller_actions|
 
     # Default route with no action to controller's index action
-    match "#{controller_name}", :controller => controller_name, :action => :index, :via => :get
+    unless controller_name == :ems_cloud
+      match "#{controller_name}", :controller => controller_name, :action => :index, :via => :get
+    end
 
     # One-by-one get/post routes for defined controllers
     if controller_actions.is_a?(Hash)
@@ -1909,4 +1906,7 @@ Vmdb::Application.routes.draw do
       end
     end
   end
+
+  resources :ems_cloud, :as => :ems_clouds
+
 end

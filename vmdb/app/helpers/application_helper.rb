@@ -115,7 +115,10 @@ module ApplicationHelper
   end
 
   # Create a url for a record that links to the proper controller
-  def url_for_db(db, action="show") # Default action is show
+  def url_for_db(db, action="show", item = nil) # Default action is show
+    if item && EmsCloud === item
+      return ems_cloud_path(item.id)
+    end
     if @vm && ["Account", "User", "Group", "Patch", "GuestApplication"].include?(db)
       return url_for(:controller => "vm_or_template",
                      :action     => @lastaction,
@@ -1503,11 +1506,15 @@ module ApplicationHelper
     eval("title = \"#{item[:title]}\"") if parent && item[:title]
     tb_buttons[button][:title] = title if parent && item[:title]
     eval("url = \"#{item[:url]}\"") if item[:url]
+
     if ["view_grid","view_tile","view_list"].include?(tb_buttons[button][:name])
       # blows up in sub screens for CI's, need to get rid of first directory and anything after last slash in @gtl_url, that's being manipulated in JS function
       url.gsub!(/^\/[a-z|A-Z|0-9|_|-]+/,"")
       ridx = url.rindex('/') if url
       url = url.slice(0..ridx-1)  if ridx
+    end
+    if item[:full_path]
+      tb_buttons[button][:full_path] = ERB.new(item[:full_path]).result(binding)
     end
     tb_buttons[button][:url] = url if item[:url]
     tb_buttons[button][:explorer] = true if @explorer && !item[:url]  # Add explorer = true if ajax button

@@ -18,6 +18,8 @@ class EmsCloud < ExtManagementSystem
   has_many :orchestration_stacks,          :foreign_key => :ems_id, :dependent => :destroy
   has_many :key_pairs,                     :class_name  => "AuthPrivateKey", :as => :resource, :dependent => :destroy
 
+  validates_presence_of :zone
+
   # Development helper method for Rails console for opening a browser to the EMS.
   #
   # This method is NOT meant to be called from production code.

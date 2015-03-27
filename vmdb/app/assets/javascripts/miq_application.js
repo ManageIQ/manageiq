@@ -646,6 +646,23 @@ function miqChartMenuClick(itemId, itemValue) {
 
 var miqAjaxTimers = 0;
 
+function miqRESTAjaxButton(url, button) {
+  var form = $(button).parents('form:first')[0];
+  if (form) {
+    $(form).submit(function(e) {
+      e.preventDefault();
+      return false;
+    });
+    miqJqueryRequest(form.action, {
+      beforeSend: true,
+      complete: true,
+      data: $(form).serialize()
+    });
+  } else {
+    miqAjaxButton(url, false);
+  }
+}
+
 // Handle an ajax form button press (i.e. Submit) by starting the spinning Q, then waiting for .7 seconds for observers to finish
 function miqAjaxButton(url, serialize_fields){
   if (typeof serialize_fields == "unknown") serialize_fields = false;
@@ -653,6 +670,7 @@ function miqAjaxButton(url, serialize_fields){
   miqAjaxTimers++;
   self.setTimeout("miqAjaxButtonSend('" + url + "', " + serialize_fields + ")",700);
 }
+
 
 // Send ajax url after any outstanding ajax requests, wait longer if needed
 function miqAjaxButtonSend(url, serialize_fields){

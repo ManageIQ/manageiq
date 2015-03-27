@@ -135,6 +135,11 @@ function miqToolbarOnClick(id){
 			}	}
 			return;
 	}	}
+        if (button.hasOwnProperty("full_path")) {
+          DoNav(encodeURI(button.full_path));
+          return;
+        }
+
 	if (typeof button != "undefined" && typeof button.url != "undefined") {		// See if a url is defined
 		if (button.url.indexOf("/") == 0) {			   															// If url starts with / it is non-ajax
 			tb_url = "/" + miq_controller + button.url;
