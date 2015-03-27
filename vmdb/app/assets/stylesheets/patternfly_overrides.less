@@ -128,7 +128,12 @@ li.brand-white-label.whitelabeled {
   padding-bottom: 0 !imporant;
 }
 
-#notification {
+.ie8 > body > .container {
+  background-color: none !important;
+  background: url(/images/layout/overlay_dark.png) !important;
+}
+
+#notification { 
   position:absolute;
   left:0;
   bottom:0;
@@ -136,7 +141,7 @@ li.brand-white-label.whitelabeled {
   display: block;
   margin:0;
   padding:0;
-  width: 100%;
+  width: 100%; 
   height:100%;
   background-color: rgba(0, 0, 0, 0.5);
 }
