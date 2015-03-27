@@ -9,24 +9,24 @@ module EmsCommon
     @ems = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@ems)
 
-    @gtl_url = "/#{@table_name}/show/" << @ems.id.to_s << "?"
+    @gtl_url = show_link(@ems) << "?"
     @showtype = "config"
     drop_breadcrumb({:name=>ui_lookup(:tables=>@table_name), :url=>"/#{@table_name}/show_list?page=#{@current_page}&refresh=y"}, true)
 
     if ["download_pdf","main","summary_only"].include?(@display)
       get_tagdata(@ems)
-      drop_breadcrumb( {:name=>@ems.name + " (Summary)", :url=>"/#{@table_name}/show/#{@ems.id}"} )
+      drop_breadcrumb( {:name=>@ems.name + " (Summary)", :url=>show_link(@ems)} )
       @showtype = "main"
       set_summary_pdf_data if ["download_pdf","summary_only"].include?(@display)
     elsif @display == "props"
-      drop_breadcrumb( {:name=>@ems.name+" (Properties)", :url=>"/#{@table_name}/show/#{@ems.id}?display=props"} )
+      drop_breadcrumb( {:name=>@ems.name+" (Properties)", :url=>show_link(@ems, :display => "props") } )
     elsif @display == "ems_folders"
       if params[:vat]
         drop_breadcrumb({:name=>@ems.name+" (VMs & Templates)",
-                        :url=>"/#{@table_name}/show/#{@ems.id}?display=ems_folders&vat=true"})
+                        :url=>show_link(@ems, :display => "ems_folder", :vat => "true")})
       else
         drop_breadcrumb({:name=>@ems.name+" (Hosts & Clusters)",
-                        :url=>"/#{@table_name}/show/#{@ems.id}?display=ems_folders"} )
+                        :url=>show_link(@ems, :display => "ems_folders")} )
       end
       @showtype = "config"
       build_dc_tree
@@ -37,7 +37,7 @@ module EmsCommon
       @timeline = @timeline_filter = true
       @lastaction = "show_timeline"
       tl_build_timeline                       # Create the timeline report
-      drop_breadcrumb( {:name=>"Timelines", :url=>"/#{@table_name}/show/#{@record.id}?refresh=n&display=timeline"} )
+      drop_breadcrumb(:name=>"Timelines", :url=>show_link(@record.id, :refresh => "n", :display => "timeline"))
     elsif ["instances","images","miq_templates","vms"].include?(@display) || session[:display] == "vms" && params[:display].nil?
       if @display == "instances"
         title = "Instances"
@@ -52,7 +52,7 @@ module EmsCommon
         title = "VMs"
         kls = Vm
       end
-      drop_breadcrumb( {:name=>@ems.name+" (All #{title})", :url=>"/#{@table_name}/show/#{@ems.id}?display=#{@display}"} )
+      drop_breadcrumb(:name=>@ems.name+" (All #{title})", :url=>show_link(@ems, :display => @display))
       @view, @pages = get_view(kls, :parent=>@ems)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
@@ -61,7 +61,7 @@ module EmsCommon
       end
     elsif @display == "availability_zones" || session[:display] == "availability_zones" && params[:display].nil?
       title = "Availability Zones"
-      drop_breadcrumb( {:name=>@ems.name+" (All #{title})", :url=>"/#{@table_name}/show/#{@ems.id}?display=#{@display}"} )
+      drop_breadcrumb(:name=>@ems.name+" (All #{title})", :url=>show_link(@ems, :display => @display))
       @view, @pages = get_view(AvailabilityZone, :parent=>@ems)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
@@ -179,7 +179,7 @@ module EmsCommon
       end
     elsif @display == "cloud_tenants" || (session[:display] == "cloud_tenants" && params[:display].nil?)
       title = "Cloud Tenants"
-      drop_breadcrumb( {:name => "#{@ems.name} (All #{title})", :url => "/#{@table_name}/show/#{@ems.id}?display=#{@display}"} )
+      drop_breadcrumb(:name => "#{@ems.name} (All #{title})", :url => show_link(@ems, :display => @display))
       @view, @pages = get_view(CloudTenant, :parent => @ems) # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] && @view.extras[:total_count] > @view.extras[:auth_count]
@@ -187,7 +187,7 @@ module EmsCommon
       end
     elsif @display == "flavors" || session[:display] == "flavors" && params[:display].nil?
       title = "Flavors"
-      drop_breadcrumb( {:name=>@ems.name+" (All #{title})", :url=>"/#{@table_name}/show/#{@ems.id}?display=#{@display}"} )
+      drop_breadcrumb(:name=>@ems.name+" (All #{title})", :url=>show_link(@ems, :display => @display))
       @view, @pages = get_view(Flavor, :parent=>@ems)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
@@ -196,7 +196,7 @@ module EmsCommon
       end
     elsif @display == "security_groups" || session[:display] == "security_groups" && params[:display].nil?
       title = "Security Groups"
-      drop_breadcrumb( {:name=>@ems.name+" (All #{title})", :url=>"/#{@table_name}/show/#{@ems.id}?display=#{@display}"} )
+      drop_breadcrumb(:name=>@ems.name+" (All #{title})", :url=>show_link(@ems, :display => @display))
       @view, @pages = get_view(SecurityGroup, :parent=>@ems)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
@@ -204,7 +204,7 @@ module EmsCommon
         @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") + " on this " + ui_lookup(:tables=>@table_name)
       end
     elsif @display == "storages" || session[:display] == "storages" && params[:display].nil?
-      drop_breadcrumb( {:name=>@ems.name+" (All Managed #{ui_lookup(:tables=>"storages")})", :url=>"/#{@table_name}/show/#{@ems.id}?display=storages"} )
+      drop_breadcrumb(:name=>@ems.name+" (All Managed #{ui_lookup(:tables=>"storages")})", :url=>show_link(@ems, :display => "storages"))
       @view, @pages = get_view(Storage, :parent=>@ems)  # Get the records (into a view) and the paginator
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
           @view.extras[:total_count] > @view.extras[:auth_count]
@@ -221,7 +221,7 @@ module EmsCommon
     elsif @display == "orchestration_stacks" || session[:display] == "orchestration_stacks" && params[:display].nil?
       title = "Stacks"
       drop_breadcrumb(:name => "#{@ems.name} (All #{title})",
-                      :url  => "/#{@table_name}/show/#{@ems.id}?display=#{@display}")
+                      :url  => show_link(@ems, :display => @display))
       @view, @pages = get_view(OrchestrationStack, :parent => @ems)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] &&
@@ -231,7 +231,7 @@ module EmsCommon
         @bottom_msg = "* You are not authorized to view #{count_text} on this #{ui_lookup(:tables => @table_name)}"
       end
     else  # Must be Hosts # FIXME !!!
-      drop_breadcrumb( {:name=>@ems.name+" (All Managed Hosts)", :url=>"/#{@table_name}/show/#{@ems.id}?display=hosts"} )
+      drop_breadcrumb(:name=>@ems.name+" (All Managed Hosts)", :url=>show_link(@ems, :display => :hosts))
       @view, @pages = get_view(Host, :parent=>@ems) # Get the records (into a view) and the paginator
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
           @view.extras[:total_count] > @view.extras[:auth_count]
@@ -1025,5 +1025,11 @@ module EmsCommon
 
   def permission_prefix
     self.class.permission_prefix
+  end
+
+  def show_link(ems, options = {})
+    url_for(options.merge(:controller => @table_name,
+                          :action     => "show",
+                          :id         => ems.id))
   end
 end

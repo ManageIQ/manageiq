@@ -1,13 +1,14 @@
 - save_text ||= _("Save Changes")
 - save_confirm_text ||= nil
 - show_validate_button ||= nil
-- action_url ||= "update"
-- record_id ||= nil
-- noreset ||= nil
-- align ||= "right"
-- ajax_buttons ||= false
-- serialize ||= false
-- continue_button ||= nil
+- action_url           ||= "update"
+- record_id            ||= nil
+- noreset              ||= nil
+- align                ||= "right"
+- ajax_buttons         ||= false
+- serialize            ||= false
+- continue_button      ||= nil
+- restful              ||= false
 - show_cancel_button = %w(user_edit user_update menu_tree zone_edit zone_update ldap_seq_edit rbac_group_edit rbac_group_update rbac_group_field_changed category_edit category_update timeprofile_edit timeprofile_update timeprofile_copy)
 - force_cancel_button ||= false
 &nbsp;
@@ -43,13 +44,15 @@
                                                                    :id     => record_id,
                                                                    :button => "continue")}');")
               - else
+                - function = restful ? "miqRESTAjaxButton" : "miqAjaxButton"
+                - extra = restful ? ", this" : ""
                 = button_tag(_("Save"),
                              :class   => 'btn btn-primary',
                              :alt     => save_text,
                              :title   => save_text,
-                             :onclick => "miqAjaxButton('#{url_for(:action => action_url,
+                             :onclick => "#{function}('#{url_for(:action => action_url,
                                                                    :id     => record_id,
-                                                                   :button => "save")}');")
+                                                                   :button => "save")}'#{extra});")
             - else
               = button_tag(_("Save"),
                            :class   => 'btn btn-primary',
