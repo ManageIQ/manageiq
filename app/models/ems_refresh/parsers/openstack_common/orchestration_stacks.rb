@@ -51,8 +51,7 @@ module EmsRefresh
             :description            => stack.description,
             :status                 => stack.stack_status,
             :status_reason          => stack.stack_status_reason,
-            # TODO(lsmola) expose attribute parent in Fog and change this to stack.attribute
-            :parent_stack_id        => stack.attributes['parent'],
+            :parent_stack_id        => stack.parent,
             :resources              => resources,
             :outputs                => find_stack_outputs(stack),
             :parameters             => find_stack_parameters(stack),
@@ -98,9 +97,7 @@ module EmsRefresh
         end
 
         def parse_stack_resource(resource)
-          # TODO(lsmola) expose physical_resource_id in Fog and replace all occurrences with
-          # resource.physical_resource_id
-          uid = resource.attributes['physical_resource_id']
+          uid = resource.physical_resource_id
           new_result = {
             :ems_ref                => uid,
             :logical_resource       => resource.logical_resource_id,
@@ -159,12 +156,12 @@ module EmsRefresh
           raw_resources = stack_resources(stack)
 
           # physical_resource_id can be empty if the resource was not successfully created; ignore such
-          raw_resources.reject! { |r| r.attributes['physical_resource_id'].nil? }
+          raw_resources.reject! { |r| r.physical_resource_id.nil? }
 
           get_stack_resources(raw_resources)
 
           raw_resources.collect do |resource|
-            physical_id = resource.attributes['physical_resource_id']
+            physical_id = resource.physical_resource_id
             @data_index.fetch_path(:orchestration_stack_resources, physical_id)
           end
         end
