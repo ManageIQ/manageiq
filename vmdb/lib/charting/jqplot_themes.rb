@@ -17,7 +17,7 @@ class JqplotThemes
         :drawGridlines => true,     # mind the lowecase 'l'
         :gridLineColor => '#e1e1e1',
         :borderWidth => 0,
-        :background => 'transparent',
+        :background => '#fff',
         :shadow => false,
       },
       # use EnhancedLegendRenderer by default
