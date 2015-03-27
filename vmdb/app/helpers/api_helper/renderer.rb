@@ -190,14 +190,15 @@ module ApiHelper
       filter_options = filter_param(klass)
       res = res.where(filter_options)             if filter_options.present? && res.respond_to?(:where)
 
-      sort_options = sort_params(klass)
-      res = res.reorder(sort_options)             if sort_options.present? && res.respond_to?(:reorder)
+      sort_options = sort_params(klass)           if res.respond_to?(:reorder)
+      res = res.reorder(sort_options)             if sort_options.present?
 
       options = {
         :targets        => res,
         :userid         => @auth_user,
         :results_format => :objects
       }
+      options[:order] = sort_options              if sort_options.present?
       options[:offset], options[:limit] = expand_paginate_params if paginate_params?
 
       Rbac.search(options).first
