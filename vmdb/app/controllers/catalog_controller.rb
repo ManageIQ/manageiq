@@ -744,7 +744,11 @@ class CatalogController < ApplicationController
         end
       end
     end
-    self.x_node = 'root'
+    if elements.length > 1
+      self.x_node = 'root'
+    else
+      self.x_node = elements[0].kind_of?(OrchestrationTemplateHot) ? "xx-othot" : "xx-otcfn"
+    end
     replace_right_cell(nil, trees_to_replace([:ot]))
   end
 
