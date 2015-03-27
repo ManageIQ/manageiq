@@ -117,7 +117,10 @@ module ApplicationHelper
   end
 
   # Create a url for a record that links to the proper controller
-  def url_for_db(db, action="show") # Default action is show
+  def url_for_db(db, action="show", item = nil) # Default action is show
+    if item && EmsCloud === item
+      return ems_cloud_path(item.id)
+    end
     if @vm && ["Account", "User", "Group", "Patch", "GuestApplication"].include?(db)
       return url_for(:controller => "vm_or_template",
                      :action     => @lastaction,
@@ -162,6 +165,9 @@ module ApplicationHelper
     end
     if association == nil
       controller, action = db_to_controller(view.db)
+      if controller == "ems_cloud" && action == "show"
+        return ems_clouds_path
+      end
       if parent && parent.class.base_model.to_s == "MiqCimInstance" && ["CimBaseStorageExtent","SniaLocalFileSystem"].include?(view.db)
         return url_for(:controller=>controller, :action=>action, :id=>parent.id) + "?show="
       else

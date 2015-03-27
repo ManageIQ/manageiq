@@ -22,6 +22,7 @@ class CloudManager < BaseManager
 
   alias_method :all_cloud_networks, :cloud_networks
 
+  validates_presence_of :zone
   include HasManyOrchestrationStackMixin
 
   # Development helper method for Rails console for opening a browser to the EMS.
