@@ -142,7 +142,7 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
     system = configuration_manager.configured_systems.where("hostname like 'providerrefreshspec%'").first
 
     expect(system).to have_attributes(
-      :ipaddress   => "169.254.169.254",
+      :ipaddress   => "192.168.169.254",
       :mac_address => "00:00:00:00:00:00",
       :type        => "ConfiguredSystemForeman",
       :hostname    => "providerrefreshspec-hostbaremetal.example.com",
