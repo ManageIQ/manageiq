@@ -82,7 +82,6 @@ function miqPrepRightCellForm(tree) {
 
 // Things to be done on page resize
 function miqOnResize() {
-//  if ($('miq_timeline')) miqResizeTL();
   if (typeof dhxLayout != "undefined") {
     dhxLayout.setSizes();
   }
@@ -363,8 +362,6 @@ function miqDownloadLogFiles(theUrl, count) {
     window.open(new_url, winName,
       'top=0,' +
       'left=0,' +
-      'width=1,' +
-      'height=1,' +
       'directories=no,' +
       'location=no,' +
       'menubar=no,' +
@@ -720,28 +717,6 @@ function wrapFish() {
   document.body.appendChild(catfish);
 }
 
-// Commented out addLoadEvent and code to run it, now running wrapFish(); in globalheader since
-//   it was stepping on inline JS to set focus and log postitioning.
-//// Add a function to the onload event
-//function addLoadEvent(func) {
-//  var oldonload = window.onload;
-//  if (typeof window.onload != 'function') {
-//    window.onload = func;
-//  } else {
-//    window.onload = function() {
-//      if (oldonload) {
-//        oldonload();
-//      }
-//      func();
-//    }
-//  }
-//}
-//
-//// Setup the notification area at the bottom of the screen when the page loads
-//addLoadEvent(function() {
-//  wrapFish();
-//});
-
 // Load XML/SWF charts data (non-IE)
 // This method is called by the XML/SWF charts when a chart is loaded into the DOM
 var miq_chart_data;
@@ -838,8 +813,6 @@ function miqBuildChartMenu(col, row, value, category, series, id, message) {
     miqMenu = new dhtmlXMenuObject(null, "dhx_web");
     miqMenu.setImagePath("/assets/dhtmlx_gpl_36/imgs/");
     miqMenu.renderAsContextMenu();
-    // Removed with version 3.5
-    //miqMenu.setOpenMode("win");
     miqMenu.setWebModeTimeout(1000);
     miqMenu.attachEvent("onClick", miqChartMenuClick);
     miqMenu.setAutoHideMode(true);
@@ -867,7 +840,6 @@ function miqChartMenuClick(itemId, itemValue) {
   if ($('#menu_div').length) {
     $('#menu_div').hide();
   }
-//  if (itemId != "cancel") miqAjax("?menu_click=" + itemId);
   if (itemId != "cancel") {
     miqAsyncAjax("?menu_click=" + itemId);
   }
@@ -1123,8 +1095,6 @@ function miqAttachTextAreaWithLines(id) {
   ta.onmousemove = function() { el.scrollTop = ta.scrollTop; }
 }
 
-///////////// place all jQuery functions below this line /////////////////////
-
 // Initialize dashboard column jQuery sortables
 function miqInitDashboardCols() {
   if (miqDomElementExists('col1')) {
@@ -1256,10 +1226,7 @@ function miqBuildExplorerView(options) {
     var centerHash = {
       position: 'center'
     };
-    // Passed in if a div will be used, else we're nesting mainLayout, so leave null
-    if (settings.header != null) {
-      body: settings.center_div
-    };
+
     // Only add header if option specified (because passing header:null still shows a thin header)
     if (settings.header != null) {
       centerHash["header"] = settings.header
@@ -1310,13 +1277,7 @@ function miqBuildExplorerView(options) {
       active: "#" + settings.active_accord,
       icons: false,
       animated: false
-//      event: 'mouseover'
-//      clearStyle: true
-//      autoHeight: false
     });
-//    $("#" + settings.left_div).accordion("option", "autoHeight", false);
-//    $("#" + settings.left_div).accordion("option", "fillSpace", true);
-//    $("#" + settings.left_div).accordion("option", "clearStyle", true);
   });
 
 }
@@ -1324,7 +1285,6 @@ function miqBuildExplorerView(options) {
 // Build the nested GTL layout inside the explorer layout
 function miqBuildMainLayout(parentLayout, header) {
   var el = parentLayout.getUnitByPosition('center').get('wrap');
-//  parentLayout.getUnitByPosition('center').set('header', "Test");
   if (miqDomElementExists('paging_div')) {
     var paging_height = 35;
   } else {
@@ -1332,7 +1292,6 @@ function miqBuildMainLayout(parentLayout, header) {
   }
 
   var mainLayout = new YAHOO.widget.Layout(el, {
-//  var mainLayout = new YAHOO.widget.Layout('center_div', {
     parent: parentLayout,
     id: 'main_layout',
     units: [
@@ -1368,7 +1327,6 @@ function miqBuildMainLayout(parentLayout, header) {
 }
 
 function miqExplorerResize(e) {
-//  alert("Event: " + e.type + " old: " + e.oldValue + " new: " + e.newValue);
   var url = "/dashboard/window_sizes";
   var args = [];
   args.push("exp_controller");
@@ -1380,8 +1338,6 @@ function miqExplorerResize(e) {
 }
 
 function miqAccordionChange(event, ui, url) {
-//  alert ("Accordion Changed from " + ui.oldHeader.text() + " to " + ui.newHeader.text())
-//  alert ("Accordion changed to " + ui.newHeader.context.id)
   return miqAjaxRequest(ui.newHeader.context.id, url);
 }
 
