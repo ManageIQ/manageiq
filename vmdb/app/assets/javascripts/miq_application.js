@@ -510,8 +510,8 @@ function miqSetButtons(count, button_div) {
 
   if (button_div.match("_tb$")) {
     if (typeof miq_toolbars[button_div] != "undefined") {
-      tb = miq_toolbars[button_div]["obj"];
-      buttons = miq_toolbars[button_div]["buttons"];
+      tb = miq_toolbars[button_div].obj;
+      buttons = miq_toolbars[button_div].buttons;
       for (var button in buttons) {
         onwhen = eval("buttons." + button + ".onwhen");
         if (typeof onwhen != "undefined") {
@@ -1230,7 +1230,7 @@ function miqBuildExplorerView(options) {
 
     // Only add header if option specified (because passing header:null still shows a thin header)
     if (settings.header != null) {
-      centerHash["header"] = settings.header;
+      centerHash.header = settings.header;
     }
 
     // Build the layout
@@ -1369,18 +1369,18 @@ function miqClickAndPop(el) {
 // method takes 4 parameters tabs div id, active tab label, url to go to when tab is changed, and whether to check for abandon changes or not
 function miq_jquery_tabs_init(options) {
   // initializing tabs
-  $("#" + options['tabs_div']).tabs();
+  $("#" + options.tabs_div).tabs();
 
   // setting active tab after tabs are loaded using name of tab
-  if (options['active_tab']) {
-    var index = $('#' + options['tabs_div'] + ' a[href=\"#' + options['active_tab'] + '\" ]').parent().index();
-    $('#' + options['tabs_div']).tabs('select', index);
+  if (options.active_tab) {
+    var index = $('#' + options.tabs_div + ' a[href=\"#' + options.active_tab + '\" ]').parent().index();
+    $('#' + options.tabs_div).tabs('select', index);
   }
 
-  if (options['url']) {
+  if (options.url) {
     // passing in ui element of tabs, url to use for ajax transaction and whether to check for changes,
     // used bind to prevent from extra tab change transaction when all tabs are loaded from controller and active tab is changed
-    $( "#" + options['tabs_div'] ).bind("tabsselect", function(event, ui) {
+    $( "#" + options.tabs_div).bind("tabsselect", function(event, ui) {
       // added a workaround to make sure that bind url for main outer tabs is not being used as a url for sub tabs
       // do not bind if subtabs dont need to send up a transaction
       var bind_url = ui.panel.parentNode.getAttribute('data-miq_url');
@@ -1389,20 +1389,20 @@ function miq_jquery_tabs_init(options) {
       } else if (bind_url != null) {
         return miq_jquery_tab_select(ui, bind_url, false);
       } else {
-        return miq_jquery_tab_select(ui, options['url'], options['tab_changes'] ? options['tab_changes'] : false);
+        return miq_jquery_tab_select(ui, options.url, options.tab_changes ? options.tab_changes : false);
       }
     });
-  } else if (options['cm_tab']) {
+  } else if (options.cm_tab) {
     // forcing to refresh the codemirror text box when tab is changed, so it displays properly
-    $( "#" + options['tabs_div'] ).bind("tabsshow", function(event, ui) {
-      if (options['cm_tab'] == ui.panel.id) {
+    $( "#" + options.tabs_div).bind("tabsshow", function(event, ui) {
+      if (options.cm_tab == ui.panel.id) {
         miqEditor.refresh();
       }
     });
-  } else if (options['show_buttons_tab']) {
+  } else if (options.show_buttons_tab) {
     // show/hide toolbar div based on selected tab
-    $( "#" + options['tabs_div'] ).bind( "tabsselect", function(event, ui) {
-      if (options['show_buttons_tab'] == ui.panel.id) {
+    $( "#" + options.tabs_div).bind("tabsselect", function(event, ui) {
+      if (options.show_buttons_tab == ui.panel.id) {
         $("#center_buttons_div").show();
       } else {
         $("#center_buttons_div").hide();
@@ -1411,11 +1411,11 @@ function miq_jquery_tabs_init(options) {
   }
 
   // Hide the first tab, if only one
-  if ($("#" + options['tabs_div'] + " ul:first li").length == 1) {
-    $("#" + options['tabs_div'] + " ul:first li").hide();
+  if ($("#" + options.tabs_div + " ul:first li").length == 1) {
+    $("#" + options.tabs_div + " ul:first li").hide();
   }
 
-  $("#" + options['tabs_div']).show();
+  $("#" + options.tabs_div).show();
 }
 
 // OnSelect handler for change tab transaction for jquery ui tabs
@@ -1626,21 +1626,21 @@ function miqJqueryRequest(url, options) {
   options = options || {};
   ajax_options = {};
 
-  if (options['dataType'] === undefined) {
-    ajax_options['accepts'] = {script: '*/*;q=0.5, ' + $.ajaxSettings.accepts.script};
-    ajax_options['dataType'] = 'script';
+  if (options.dataType === undefined) {
+    ajax_options.accepts = {script: '*/*;q=0.5, ' + $.ajaxSettings.accepts.script};
+    ajax_options.dataType = 'script';
   }
 
-  if (options['data']) {
-    ajax_options['data'] = options['data'];
+  if (options.data) {
+    ajax_options.data = options.data;
   }
-  if (options['beforeSend']) {
-    ajax_options['beforeSend'] = function(request) {miqSparkle(true);};
+  if (options.beforeSend) {
+    ajax_options.beforeSend = function(request) {miqSparkle(true);};
   }
-  if (options['complete']) {
-    ajax_options['complete'] = function(request) { miqSparkle(false); };
+  if (options.complete) {
+    ajax_options.complete = function(request) { miqSparkle(false); };
   }
-  new $.ajax(options['no_encoding'] ? url : encodeURI(url), ajax_options);
+  new $.ajax(options.no_encoding ? url : encodeURI(url), ajax_options);
 }
 
 function miqDomElementExists(element) {
