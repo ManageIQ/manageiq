@@ -1679,23 +1679,30 @@ class CatalogController < ApplicationController
     x_history_add_item(:id=>treenodeid, :text=>@right_cell_text)
   end
 
-  # Check for parent nodes missing from vandt tree and return them if any
   def open_parent_nodes(record)
     existing_node = nil                      # Init var
 
-    parent_rec = ServiceTemplateCatalog.find_by_id(record.service_template_catalog_id)
-    if parent_rec.nil?
-      parents = [parent_rec, {:id=>"-Unassigned"}]
+    if record.kind_of?(OrchestrationTemplate)
+      parents = if record.type == "OrchestrationTemplateCfn"
+                  [:id => "otcfn"]
+                else
+                  [:id => "othot"]
+                end
     else
-      parents = [parent_rec, {:id=>"stc-#{to_cid(record.service_template_catalog_id)}"}]
-      #parents = [parent_rec]
+      # Check for parent nodes missing from vandt tree and return them if any
+      parent_rec = ServiceTemplateCatalog.find_by_id(record.service_template_catalog_id)
+      if parent_rec.nil?
+        parents = [parent_rec, :id => "-Unassigned"]
+      else
+        parents = [parent_rec, :id => "stc-#{to_cid(record.service_template_catalog_id)}"]
+      end
     end
-                                             # Go up thru the parents and find the highest level unopened, mark all as opened along the way
+    # Go up thru the parents and find the highest level unopened, mark all as opened along the way
     unless parents.empty? ||  # Skip if no parents or parent already open
         x_tree[:open_nodes].include?(parents.last[:id])
       parents.reverse.each do |p|
-        if !p.nil?
-          p_node = x_build_node_id(p,nil,{:full_ids=>true})
+        unless p.nil?
+          p_node = x_build_node_id(p, nil, :full_ids => true)
           unless x_tree[:open_nodes].include?(p_node)
             x_tree[:open_nodes].push(p_node)
             existing_node = p_node
@@ -1707,11 +1714,13 @@ class CatalogController < ApplicationController
                  :children => TreeBuilder.tree_add_child_nodes(@sb,
                                                                x_tree[:klass_name],
                                                                existing_node)} if existing_node
-    if params[:rec_id]
-      self.x_node = "stc-#{to_cid(record.service_template_catalog_id)}_st-#{to_cid(record.id)}"
-    else
-      self.x_node = "#{existing_node ? existing_node : parents.last[:id]}_#{params[:id]}"
-    end
+    self.x_node = if params[:rec_id]
+                    "stc-#{to_cid(record.service_template_catalog_id)}_st-#{to_cid(record.id)}"
+                  elsif record.kind_of?(OrchestrationTemplate)
+                    "xx-#{parents.last[:id]}_ot-#{to_cid(record.id)}"
+                  else
+                    existing_node ? existing_node : "#{parents.last[:id]}_#{params[:id]}"
+                  end
     return add_nodes
   end
 
@@ -1737,7 +1746,7 @@ class CatalogController < ApplicationController
     record_showing = (type && allowed_records.include?(TreeBuilder.get_model_for_prefix(type)) && !@view) ||
                      params[:action] == "x_show"
     # Clicked on right cell record, open the tree enough to show the node, if not already showing
-    if params[:action] == "x_show" && ! [:stcat_tree, :ot_tree].include?(x_active_tree) &&
+    if params[:action] == "x_show" && x_active_tree != :stcat_tree &&
         @record &&                                # Showing a record
         !@in_a_form                               # Not in a form
       add_nodes = open_parent_nodes(@record)      # Open the parent nodes of selected record, if not open
