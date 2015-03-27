@@ -815,6 +815,15 @@
         :description: Remove Orchestration Template
         :identifier: orchestration_template_remove
         :feature_type: admin
+    - :name: Operate
+      :description: Perform Operations on Orchestration Templates
+      :feature_type: control
+      :identifier: orchestration_template_control
+      :children:
+      - :name: Edit Tags
+        :description: Edit Orchestration Templates Tags
+        :feature_type: control
+        :identifier: orchestration_template_tag
       
 # My Services
 - :name: My Services

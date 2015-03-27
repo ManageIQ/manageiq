@@ -1,9 +1,9 @@
 ---
 :model: OrchestrationTemplate
 :button_groups:
-- :name: ot_config
+- :name: orchestration_template_vmdb
   :items:
-  - :buttonSelect: ot_config_choice
+  - :buttonSelect: orchestration_template_vmdb_choice
     :image: vmdb
     :title: Configuration
     :text: Configuration
@@ -21,3 +21,14 @@
       :text: "Remove this Orchestration Template"
       :title: "Remove this Orchestration Template"
       :confirm: "Remove this Orchestration Template?"
+- :name: orchestration_template_policy
+  :items:
+  - :buttonSelect: orchestration_template_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: orchestration_template_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: 'Edit Tags for this Orchestration Template'
