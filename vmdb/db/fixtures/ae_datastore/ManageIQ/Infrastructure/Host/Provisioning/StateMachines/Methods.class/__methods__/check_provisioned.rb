@@ -6,7 +6,7 @@
 prov = $evm.root['miq_provision'] || $evm.root['miq_host_provision']
 
 # Get current provisioning status
-result = prov.status
+result = prov.statemachine_task_status
 
 $evm.log('info', "ProvisionCheck returned <#{result}>")
 

@@ -11,7 +11,7 @@ task = $evm.root['service_template_provision_task']
 
 # check if the task is in a runnable state, otherwise abort processing
 unless task.attributes['status'] == 'Ok'
-  $evm.log('info', "Aborting due to task status: <#{task.status}>  task real status: <#{task.attributes['status']}> for Task: <#{task.id}> Description: <#{task.description}> state: <#{task.state}>.")
+  $evm.log('info', "Aborting due to task status: <#{task.statemachine_task_status}>  task real status: <#{task.attributes['status']}> for Task: <#{task.id}> Description: <#{task.description}> state: <#{task.state}>.")
   exit MIQ_ABORT
 end
 
