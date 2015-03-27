@@ -52,6 +52,13 @@ class WorkerBase
 
     $log ||= Rails.logger
 
+    worker_initialization
+    after_initialize
+
+    @worker.release_db_connection if @worker.respond_to?(:release_db_connection)
+  end
+
+  def worker_initialization
     starting_worker_record
 
     # Sync the config and roles early since heartbeats and logging require the configuration
@@ -59,10 +66,6 @@ class WorkerBase
     sync_config
 
     set_connection_pool_size
-
-    after_initialize
-
-    @worker.release_db_connection if @worker.respond_to?(:release_db_connection)
   end
 
   def set_connection_pool_size
