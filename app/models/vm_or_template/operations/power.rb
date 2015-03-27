@@ -4,7 +4,7 @@ module VmOrTemplate::Operations::Power
   end
 
   def start
-    raw_start unless policy_prevented?(:request_vm_start)
+    check_policy_prevent(:request_vm_start, :raw_start)
   end
 
   def raw_stop
@@ -12,7 +12,7 @@ module VmOrTemplate::Operations::Power
   end
 
   def stop
-    raw_stop unless policy_prevented?(:request_vm_poweroff)
+    check_policy_prevent(:request_vm_poweroff, :raw_stop)
   end
 
   # Suspend saves the state of the VM to disk and shuts it down
@@ -21,7 +21,7 @@ module VmOrTemplate::Operations::Power
   end
 
   def suspend
-    raw_suspend unless policy_prevented?(:request_vm_suspend)
+    check_policy_prevent(:request_vm_suspend, :raw_suspend)
   end
 
   # All associated data and resources are kept but anything still in memory is not retained.
@@ -49,6 +49,6 @@ module VmOrTemplate::Operations::Power
   end
 
   def pause
-    raw_pause unless policy_prevented?(:request_vm_pause)
+    check_policy_prevent(:request_vm_pause, :raw_pause)
   end
 end

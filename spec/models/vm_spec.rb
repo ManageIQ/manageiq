@@ -152,29 +152,29 @@ describe Vm do
   end
 
   context "#start" do
-    before(:each) do
-      @guid, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
       @host = FactoryGirl.create(:host_vmware)
       @vm = FactoryGirl.create(:vm_vmware, :host => @host)
-      @task = FactoryGirl.create(:miq_task)
-      callback = {:class_name => @vm.class.base_class.name, :method_name => :powerops_callback, :instance_id => @vm.id, :args => [@task.id]}
-      @msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'Vm', :instance_id => @vm.id, :method_name => 'start', :miq_callback => callback)
+      FactoryGirl.create(:miq_event_definition, :name => :request_vm_start)
     end
 
-    it "queue message with powerops_callback calls MiqTask#queue_callback when Broker is Available" do
-      ManageIQ::Providers::Vmware::InfraManager::Vm.any_instance.stub(:run_command_via_parent).and_return(true)
-      status, message, result = @msg.deliver
-      status.should == MiqQueue::STATUS_OK
-      MiqTask.any_instance.should_receive(:queue_callback).with("Finished", status, message, result)
-      @msg.delivered(status, message, result)
+    it "policy passes" do
+      expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:raw_start)
+
+      @vm.start
+      status, message, result = MiqQueue.first.deliver
+      MiqQueue.first.delivered(status, message, result)
     end
 
-    it "queue message with powerops_callback retries in 1 minute when Broker is NOT Available" do
-      ManageIQ::Providers::Vmware::InfraManager::Vm.any_instance.stub(:run_command_via_parent).and_raise(MiqException::MiqVimBrokerUnavailable)
-      status, message, result = @msg.deliver
-      status.should == MiqQueue::STATUS_ERROR
-      @msg.should_receive(:requeue)
-      @msg.delivered(status, message, result)
+    it "policy prevented" do
+      expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm).to_not receive(:raw_start)
+
+      event = {:attributes => {"full_data" => {:policy => {:pprevented => true}}}}
+      MiqAeEngine::MiqAeWorkspaceRuntime.any_instance.stub(:get_obj_from_path).with("/").and_return(:event_stream => event)
+      @vm.start
+      status, message, _result = MiqQueue.first.deliver
+      MiqQueue.first.delivered(status, message, MiqAeEngine::MiqAeWorkspaceRuntime.new)
     end
   end
 

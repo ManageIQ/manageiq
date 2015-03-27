@@ -114,6 +114,7 @@ describe Host do
 
   context "power operations" do
     before(:each) do
+      EvmSpecHelper.create_guid_miq_server_zone
       @host = FactoryGirl.create(:host)
     end
 
@@ -122,17 +123,25 @@ describe Host do
         described_class.any_instance.stub(:validate_start   => {})
         described_class.any_instance.stub(:validate_ipmi    => {:available => true, :message => nil})
         described_class.any_instance.stub(:run_ipmi_command => "off")
+        FactoryGirl.create(:miq_event_definition, :name => :request_host_start)
       end
 
       it "policy passes" do
         described_class.any_instance.should_receive(:ipmi_power_on)
+
         @host.start
+        status, message, result = MiqQueue.first.deliver
+        MiqQueue.first.delivered(status, message, result)
       end
 
       it "policy prevented" do
-        MiqEvent.should_receive(:raise_evm_event).and_raise(MiqException::PolicyPreventAction)
         described_class.any_instance.should_not_receive(:ipmi_power_on)
+
+        event = {:attributes => {"full_data" => {:policy => {:pprevented => true}}}}
+        MiqAeEngine::MiqAeWorkspaceRuntime.any_instance.stub(:get_obj_from_path).with("/").and_return(:event_stream => event)
         @host.start
+        status, message, _result = MiqQueue.first.deliver
+        MiqQueue.first.delivered(status, message, MiqAeEngine::MiqAeWorkspaceRuntime.new)
       end
     end
 

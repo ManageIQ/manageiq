@@ -354,13 +354,22 @@ class Host < ActiveRecord::Base
     ipmi.send(verb)
   end
 
-  def policy_prevented?(request)
-    MiqEvent.raise_evm_event(self, request, :host => self)
-  rescue MiqException::PolicyPreventAction => err
-    _log.info "#{err}"
-    true
-  else
-    false
+  # request:   the event sent to automate for policy resolution
+  # cb_method: the MiqQueue callback method along with the parameters that is called 
+  #            when automate process is done and the request is not prevented to proceed by policy
+  def check_policy_prevent(request, *cb_method)
+    cb = {:class_name => self.class.to_s, :instance_id => self.id, :method_name => :check_policy_prevent_callback, :args => [*cb_method], :server_guid => MiqServer.my_guid}
+    MiqEvent.raise_evm_event(self, request, {:host => self}, {:miq_callback => cb})
+  end
+
+  def check_policy_prevent_callback(*action, _status, _message, result)
+    prevented = false
+    if result.kind_of?(MiqAeEngine::MiqAeWorkspaceRuntime)
+      event = result.get_obj_from_path("/")['event_stream']
+      data  = event.attributes["full_data"]
+      prevented = data.fetch_path(:policy, :prevented) if data
+    end
+    prevented ?  _log.info("#{event.attributes["message"]}") : self.send(*action)
   end
 
   def ipmi_power_on
@@ -378,7 +387,7 @@ class Host < ActiveRecord::Base
   def reset
     msg = validate_reset
     if msg[:available]
-      ipmi_power_reset unless policy_prevented?("request_host_reset")
+      check_policy_prevent("request_host_reset", "ipmi_power_reset")
     else
       _log.warn("Cannot stop because <#{msg[:message]}>")
     end
@@ -386,13 +395,13 @@ class Host < ActiveRecord::Base
 
   def start
     if validate_start[:available] && power_state == 'standby' && respond_to?(:vim_power_up_from_standby)
-      vim_power_up_from_standby unless policy_prevented?("request_host_start")
+      check_policy_prevent("request_host_start", "vim_power_up_from_standby")
     else
       msg = validate_ipmi
       if msg[:available]
         pstate = run_ipmi_command(:power_state)
         if pstate == 'off'
-          ipmi_power_on unless policy_prevented?("request_host_start")
+          check_policy_prevent("request_host_start", "ipmi_power_on")
         else
           _log.warn("Non-Startable IPMI power state = <#{pstate.inspect}>")
         end
@@ -405,7 +414,7 @@ class Host < ActiveRecord::Base
   def stop
     msg = validate_stop
     if msg[:available]
-      ipmi_power_off unless policy_prevented?("request_host_stop")
+      check_policy_prevent("request_host_stop", "ipmi_power_off")
     else
       _log.warn("Cannot stop because <#{msg[:message]}>")
     end
@@ -415,7 +424,7 @@ class Host < ActiveRecord::Base
     msg = validate_standby
     if msg[:available]
       if power_state == 'on' && respond_to?(:vim_power_down_to_standby)
-        vim_power_down_to_standby unless policy_prevented?("request_host_standby")
+        check_policy_prevent("request_host_standby", "vim_power_down_to_standby")
       else
         _log.warn("Cannot go into standby mode from power state = <#{power_state.inspect}>")
       end
@@ -428,7 +437,7 @@ class Host < ActiveRecord::Base
     msg = validate_enter_maint_mode
     if msg[:available]
       if power_state == 'on' && respond_to?(:vim_enter_maintenance_mode)
-        vim_enter_maintenance_mode unless policy_prevented?("request_host_enter_maintenance_mode")
+        check_policy_prevent("request_host_enter_maintenance_mode", "vim_enter_maintenance_mode")
       else
         _log.warn("Cannot enter maintenance mode from power state = <#{power_state.inspect}>")
       end
@@ -440,7 +449,7 @@ class Host < ActiveRecord::Base
   def exit_maint_mode
     msg = validate_enter_maint_mode
     if msg[:available] && respond_to?(:vim_exit_maintenance_mode)
-      vim_exit_maintenance_mode unless policy_prevented?("request_host_exit_maintenance_mode")
+      check_policy_prevent("request_host_exit_maintenance_mode", "vim_exit_maintenance_mode")
     else
       _log.warn("Cannot exit maintenance mode because <#{msg[:message]}>")
     end
@@ -449,7 +458,7 @@ class Host < ActiveRecord::Base
   def shutdown
     msg = validate_shutdown
     if msg[:available] && respond_to?(:vim_shutdown)
-      vim_shutdown unless policy_prevented?("request_host_shutdown")
+      check_policy_prevent("request_host_shutdown", "vim_shutdown")
     else
       _log.warn("Cannot shutdown because <#{msg[:message]}>")
     end
@@ -458,7 +467,7 @@ class Host < ActiveRecord::Base
   def reboot
     msg = validate_reboot
     if msg[:available] && respond_to?(:vim_reboot)
-      vim_reboot unless policy_prevented?("request_host_reboot")
+      check_policy_prevent("request_host_reboot", "vim_reboot")
     else
       _log.warn("Cannot reboot because <#{msg[:message]}>")
     end
@@ -467,7 +476,7 @@ class Host < ActiveRecord::Base
   def enable_vmotion
     msg = validate_enable_vmotion
     if msg[:available] && respond_to?(:vim_enable_vmotion)
-      vim_enable_vmotion unless policy_prevented?("request_host_enable_vmotion")
+      check_policy_prevent("request_host_enable_vmotion", "vim_enable_vmotion")
     else
       _log.warn("Cannot enable vmotion because <#{msg[:message]}>")
     end
@@ -476,7 +485,7 @@ class Host < ActiveRecord::Base
   def disable_vmotion
     msg = validate_disable_vmotion
     if msg[:available] && respond_to?(:vim_disable_vmotion)
-      vim_disable_vmotion unless policy_prevented?("request_host_disable_vmotion")
+      check_policy_prevent("request_host_disable_vmotion", "vim_disable_vmotion")
     else
       _log.warn("Cannot disable vmotion because <#{msg[:message]}>")
     end
@@ -485,7 +494,7 @@ class Host < ActiveRecord::Base
   def vmotion_enabled?
     msg = validate_vmotion_enabled?
     if msg[:available] && respond_to?(:vim_vmotion_enabled?)
-      vim_vmotion_enabled? unless policy_prevented?("request_host_vmotion_enabled")
+      check_policy_prevent("request_host_vmotion_enabled", "vim_vmotion_enabled?")
     else
       _log.warn("Cannot check if vmotion is enabled because <#{msg[:message]}>")
     end
