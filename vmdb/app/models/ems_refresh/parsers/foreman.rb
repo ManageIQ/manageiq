@@ -116,6 +116,7 @@ module EmsRefresh
             :build_state                    => cs["build"] ? "pending" : nil,
             :ipaddress                      => cs["ip"],
             :mac_address                    => cs["mac"],
+            :ipmi_present                   => cs["sp_ip"].present?,
             :configuration_location_id      => id_lookup(indexes[:locations], cs["location_id"] || 0),
             :configuration_organization_id  => id_lookup(indexes[:organizations], cs["organization_id"] || 0),
           }
