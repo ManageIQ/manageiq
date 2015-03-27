@@ -19,7 +19,6 @@ module EmsRefresh
       #   :locations
       #   :organizations
       def provisioning_inv_to_hashes(inv)
-        result = {}
         media = media_inv_to_hashes(inv[:media])
         ptables = ptables_inv_to_hashes(inv[:ptables])
         # pull out ids for operating system flavors cross link to the customization scripts
@@ -28,11 +27,12 @@ module EmsRefresh
           :ptables => add_ids(ptables),
         }
 
-        result[:customization_scripts] = media + ptables
-        result[:operating_system_flavors] = operating_system_flavors_inv_to_hashes(inv[:operating_systems], indexes)
-        result[:configuration_locations] = location_inv_to_hashes(inv[:locations])
-        result[:configuration_organizations] = organization_inv_to_hashes(inv[:organizations])
-        result
+        {
+          :customization_scripts       => media + ptables,
+          :operating_system_flavors    => operating_system_flavors_inv_to_hashes(inv[:operating_systems], indexes),
+          :configuration_locations     => location_inv_to_hashes(inv[:locations]),
+          :configuration_organizations => organization_inv_to_hashes(inv[:organizations]),
+        }
       end
 
       # data coming in from foreman:
@@ -48,12 +48,12 @@ module EmsRefresh
           :locations     => inv[:locations],
           :organizations => inv[:organizations],
         }
-        result = {}
-        result[:configuration_profiles] = configuration_profile_inv_to_hashes(inv[:hostgroups], indexes)
-        indexes[:profiles] = add_ids(result[:configuration_profiles])
-        result[:configured_systems] = configured_system_inv_to_hashes(inv[:hosts], indexes)
-        result[:needs_provisioning_refresh] = true if needs_provisioning_refresh
-        result
+
+        {
+          :configuration_profiles     => configuration_profile_inv_to_hashes(inv[:hostgroups], indexes),
+          :configured_systems         => configured_system_inv_to_hashes(inv[:hosts], indexes),
+          :needs_provisioning_refresh => needs_provisioning_refresh,
+        }
       end
 
       def media_inv_to_hashes(media)
@@ -97,6 +97,8 @@ module EmsRefresh
             :configuration_location_ids     => ids_lookup(indexes[:locations], profile["locations"] || tax_refs),
             :configuration_organization_ids => ids_lookup(indexes[:organizations], profile["organizations"] || tax_refs),
           }
+        end.tap do |profiles|
+          indexes[:profiles] = add_ids(profiles)
         end
       end
 
