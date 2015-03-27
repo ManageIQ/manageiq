@@ -2325,7 +2325,7 @@ module ApplicationHelper
   def foreman_providers_tree_center_tb(nodes)
     case nodes.first
     when "root" then  "provider_foreman_center_tb"
-    when "e"  then  "configuration_profile_foreman_center_tb"
+    when "e"    then  "configuration_profile_foreman_center_tb"
     when "cp"   then  "configured_systems_foreman_center_tb"
     end
   end
@@ -2729,6 +2729,13 @@ module ApplicationHelper
     else
       :ems_container
     end
+  end
+
+  def x_gtl_view_tb_render?
+    no_gtl_view_buttons = %w(chargeback miq_ae_class miq_ae_customization miq_ae_tools miq_capacity_planning
+                             miq_capacity_utilization miq_policy miq_policy_rsop report ops pxe)
+    (@record.nil? && @explorer && !no_gtl_view_buttons.include?(@layout) ||
+      @record && @layout == "provider_foreman" && x_active_tree == :foreman_providers_tree)
   end
 
   attr_reader :big_iframe
