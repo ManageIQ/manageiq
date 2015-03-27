@@ -11,6 +11,8 @@ class ConfiguredSystem < ActiveRecord::Base
 
   alias_method :manager, :configuration_manager
 
+  delegate :my_zone, :zone, :to => :manager
+
   def name
     hostname
   end
