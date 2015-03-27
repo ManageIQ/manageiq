@@ -40,12 +40,12 @@ describe Condition do
 
       it "string type registry key data is single quoted" do
         expr = "<registry>#{@reg_string.name}</registry>"
-        Condition.subst(expr, @vm, nil).should == "'y'"
+        Condition.subst(expr, @vm, nil).should == '"y"'
       end
 
       it "numerical type registry key data is single quoted" do
         expr = "<registry>#{@reg_num.name}</registry>"
-        Condition.subst(expr, @vm, nil).should == "'0'"
+        Condition.subst(expr, @vm, nil).should == '"0"'
       end
     end
   end
