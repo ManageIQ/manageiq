@@ -104,6 +104,14 @@ class Tag < ActiveRecord::Base
     list
   end
 
+  def self.find_by_classification_name(name, region_id = Classification.my_region_number, ns = Classification::DEFAULT_NAMESPACE)
+    if region_id.nil?
+      Tag.find_by_name(Classification.name2tag(name, 0, ns))
+    else
+      Tag.in_region(region_id).find_by_name(Classification.name2tag(name, 0, ns))
+    end
+  end
+
   def ==(comparison_object)
     super || name.downcase == comparison_object.to_s.downcase
   end
