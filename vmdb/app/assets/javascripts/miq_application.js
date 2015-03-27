@@ -19,7 +19,7 @@ function miqOnLoad() {
   }
 
   $(document).mousemove(function(e) {
-    miqGetMouseXY(e.pageX, e.pageY)
+    miqGetMouseXY(e.pageX, e.pageY);
   });
 
   // Need to do this here for IE, rather then right after the grid is initialized
@@ -57,7 +57,7 @@ function miqOnLoad() {
   // Position clear search link in right cell header
   if (miqDomElementExists('clear_search')) {
     // Find the right cell header div
-    $('.dhtmlxInfoBarLabel:visible').append($('#clear_search')[0])
+    $('.dhtmlxInfoBarLabel:visible').append($('#clear_search')[0]);
   }
   // Run MIQ after onload code if present
   if (typeof miq_after_onload == "string") {
@@ -108,10 +108,10 @@ function miqCalendarDateConversion(server_offset) {
     tN().getUTCSeconds()
   );
   if (server_offset >= 0) {
-    x.setTime(x.getTime() + (Number(server_offset)) * 1000)
+    x.setTime(x.getTime() + (Number(server_offset)) * 1000);
   } else {
-    x.setTime(x.getTime() - (Number(server_offset.slice(1, server_offset.length))) * 1000)
-  };
+    x.setTime(x.getTime() - (Number(server_offset.slice(1, server_offset.length))) * 1000);
+  }
   return x;
 }
 
@@ -120,7 +120,7 @@ var miqMouseX;
 var miqMouseY;
 
 function miqGetMouseXY(positionX, positionY) {
-  miqMouseX = positionX,
+  miqMouseX = positionX;
   miqMouseY = positionY;
 }
 
@@ -357,8 +357,8 @@ function miqCheckForChanges() {
 // go to the specified URL when a download all log files button is pressed
 function miqDownloadLogFiles(theUrl, count) {
   for(i = 0; i < count; i++) {
-    new_url = theUrl + "?i=" + i
-    winName = "log" + i
+    new_url = theUrl + "?i=" + i;
+    winName = "log" + i;
     window.open(new_url, winName,
       'top=0,' +
       'left=0,' +
@@ -369,7 +369,7 @@ function miqDownloadLogFiles(theUrl, count) {
       'scrollbars=no,' +
       'status=no,' +
       'toolbar=no'
-    )
+    );
   }
 }
 
@@ -428,14 +428,14 @@ function miqValidateButtons(h_or_s, prefix) {
 function toggleConvertButtonToLink(button, url, toggle) {
   if (toggle == true) {
     if (button.hasClass('dimmed')) {
-      button.removeClass('dimmed')
+      button.removeClass('dimmed');
     }
     if (button[0].parentNode.outerHTML.indexOf('<a href') == -1) {
       button[0].outerHTML = "<a href=" + url + " title='" + button[0].getAttribute('alt') + "'>" + button[0].outerHTML + "</a>";
     }
   } else {
     if (!button.hasClass('dimmed')) {
-      button.addClass('dimmed')
+      button.addClass('dimmed');
     }
     if (button[0].parentNode.outerHTML.indexOf('<a href') > -1) {
       button[0].parentNode.outerHTML = button[0].outerHTML;
@@ -455,7 +455,7 @@ function miqUpdateAllCheckboxes(button_div, override) {
     if (typeof gtl_list_grid == "undefined" &&
         ($("input[id^='listcheckbox']").length > 0)) {
       // No dhtmlx grid on the screen
-      cbs = $("input[id^='listcheckbox']")
+      cbs = $("input[id^='listcheckbox']");
       cbs.each(function() {
         this.checked = state;
       });
@@ -472,7 +472,7 @@ function miqUpdateAllCheckboxes(button_div, override) {
       // Set checkboxes in dhtmlx grid
       gtl_list_grid.forEachRow(function(id) {
         gtl_list_grid.cells(id, 0).setValue(state ? 1 : 0);
-      })
+      });
       crows = gtl_list_grid.getCheckedRows(0);
       $('#miq_grid_checks').val(crows);
       count = crows == "" ? 0:crows.split(",").length;
@@ -495,7 +495,7 @@ function miqUpdateButtons(obj, button_div) {
       if (count > 1) {
         return false;
       }
-    })
+    });
   // Check for number object, as passed from snapshot tree
   } else if (typeof obj == 'number') {
     count = 1;
@@ -556,35 +556,35 @@ function miqSetButtons(count, button_div) {
   } else if (button_div.match("_buttons$")) {
     // Handle newer divs with button elements
     if (count == 0) {
-      $("#" + button_div + " button[id$=on_1]").each(function() {this.disabled = true});
+      $("#" + button_div + " button[id$=on_1]").each(function() {this.disabled = true;});
     } else if (count == 1) {
-      $("#" + button_div + " button[id$=on_1]").each(function() {this.disabled = false});
+      $("#" + button_div + " button[id$=on_1]").each(function() {this.disabled = false;});
     } else {
-      $("#" + button_div + " button[id$=on_1]").each(function() {this.disabled = false});
+      $("#" + button_div + " button[id$=on_1]").each(function() {this.disabled = false;});
     }
   } else {
     // Handle older li based buttons
     if (count == 0) {
-      $('#' + button_div + ' li[id~=on_1]').each(function() {$(this).hide()})
-      $('#' + button_div + ' li[id~=on_2]').each(function() {$(this).hide()})
-      $('#' + button_div + ' li[id~=on_only_1]').each(function() {$(this).hide()})
-      $('#' + button_div + ' li[id~=off_0]').each(function() {$(this).show()})
-      $('#' + button_div + ' li[id~=off_1]').each(function() {$(this).show()})
-      $('#' + button_div + ' li[id~=off_not_1]').each(function() {$(this).show()})
+      $('#' + button_div + ' li[id~=on_1]').each(function() {$(this).hide();});
+      $('#' + button_div + ' li[id~=on_2]').each(function() {$(this).hide();});
+      $('#' + button_div + ' li[id~=on_only_1]').each(function() {$(this).hide();});
+      $('#' + button_div + ' li[id~=off_0]').each(function() {$(this).show();});
+      $('#' + button_div + ' li[id~=off_1]').each(function() {$(this).show();});
+      $('#' + button_div + ' li[id~=off_not_1]').each(function() {$(this).show();});
     } else if (count == 1) {
-      $('#' + button_div + ' li[id~=off_0]').each(function() {$(this).hide()})
-      $('#' + button_div + ' li[id~=on_2]').each(function() {$(this).hide()})
-      $('#' + button_div + ' li[id~=off_not_1]').each(function() {$(this).hide()})
-      $('#' + button_div + ' li[id~=off_1]').each(function() {$(this).show()})
-      $('#' + button_div + ' li[id~=on_1]').each(function() {$(this).show()})
-      $('#' + button_div + ' li[id~=on_only_1]').each(function() {$(this).show()})
+      $('#' + button_div + ' li[id~=off_0]').each(function() {$(this).hide();});
+      $('#' + button_div + ' li[id~=on_2]').each(function() {$(this).hide();});
+      $('#' + button_div + ' li[id~=off_not_1]').each(function() {$(this).hide();});
+      $('#' + button_div + ' li[id~=off_1]').each(function() {$(this).show();});
+      $('#' + button_div + ' li[id~=on_1]').each(function() {$(this).show();});
+      $('#' + button_div + ' li[id~=on_only_1]').each(function() {$(this).show();});
     } else {
-      $('#' + button_div + ' li[id~=off_0]').each(function() {$(this).hide()})
-      $('#' + button_div + ' li[id~=off_1]').each(function() {$(this).hide()})
-      $('#' + button_div + ' li[id~=on_only_1]').each(function() {$(this).hide()})
-      $('#' + button_div + ' li[id~=on_1]').each(function() {$(this).show()})
-      $('#' + button_div + ' li[id~=on_2]').each(function() {$(this).show()})
-      $('#' + button_div + ' li[id~=off_not_1]').each(function() {$(this).show()})
+      $('#' + button_div + ' li[id~=off_0]').each(function() {$(this).hide();});
+      $('#' + button_div + ' li[id~=off_1]').each(function() {$(this).hide();});
+      $('#' + button_div + ' li[id~=on_only_1]').each(function() {$(this).hide();});
+      $('#' + button_div + ' li[id~=on_1]').each(function() {$(this).show();});
+      $('#' + button_div + ' li[id~=on_2]').each(function() {$(this).show();});
+      $('#' + button_div + ' li[id~=off_not_1]').each(function() {$(this).show();});
     }
   }
 }
@@ -1014,9 +1014,9 @@ function miqCheckMaxLength(obj) {
 
 function miqSetInputClass(fld, cname, typ) {
   if (typ == "remove") {
-    $(fld).removeClass(cname)
+    $(fld).removeClass(cname);
   } else {
-    $(fld).addClass(cname)
+    $(fld).addClass(cname);
   }
 }
 
@@ -1090,10 +1090,10 @@ function miqAttachTextAreaWithLines(id) {
   el.scrollTop = ta.scrollTop;
 
   ta.focus();
-  ta.onkeydown = function() { el.scrollTop = ta.scrollTop; }
-  ta.onmousedown = function() { el.scrollTop = ta.scrollTop; }
-  ta.onmouseup = function() { el.scrollTop = ta.scrollTop; }
-  ta.onmousemove = function() { el.scrollTop = ta.scrollTop; }
+  ta.onkeydown = function() { el.scrollTop = ta.scrollTop; };
+  ta.onmousedown = function() { el.scrollTop = ta.scrollTop; };
+  ta.onmouseup = function() { el.scrollTop = ta.scrollTop; };
+  ta.onmousemove = function() { el.scrollTop = ta.scrollTop; };
 }
 
 // Initialize dashboard column jQuery sortables
@@ -1171,7 +1171,7 @@ function miqBuildCalendar(bAngular) {
     if (el.attr('data-miq_observe_date') == "execAngular") {
       el.change(function() {
         miqSetAngularDate(el);
-      })
+      });
       cal.attachEvent("onClick", function() {
         miqSetAngularDate(el);
       });
@@ -1179,7 +1179,7 @@ function miqBuildCalendar(bAngular) {
       if (this.getAttribute('data-miq_observe_date')) {
         el.change(function() {
           miqSendDateRequest(el);
-        })
+        });
         cal.attachEvent("onClick", function() {
           miqSendDateRequest(el);
         });
@@ -1230,8 +1230,8 @@ function miqBuildExplorerView(options) {
 
     // Only add header if option specified (because passing header:null still shows a thin header)
     if (settings.header != null) {
-      centerHash["header"] = settings.header
-    };
+      centerHash["header"] = settings.header;
+    }
 
     // Build the layout
     if (settings.left == 0) {
@@ -1273,7 +1273,7 @@ function miqBuildExplorerView(options) {
 
     // Build the accordion
     $("#" + settings.left_div).accordion({
-      change: function(event, ui) {miqAccordionChange(event, ui, settings.accord_url)},
+      change: function(event, ui) {miqAccordionChange(event, ui, settings.accord_url);},
       fillSpace: true,
       active: "#" + settings.active_accord,
       icons: false,
@@ -1448,9 +1448,9 @@ function miq_jquery_disable_inactive_tabs(tabs_div) {
 function miq_jquery_show_hide_tab(tab_li_id, s_or_h) {
   // there is no default method to show/hide jquery tabs, need to have unique li id to do a show/hide on those
   if (s_or_h == "hide") {
-    $("#" + tab_li_id).css("display", "none")
+    $("#" + tab_li_id).css("display", "none");
   } else {
-    $("#" + tab_li_id).css("display", "list-item")
+    $("#" + tab_li_id).css("display", "list-item");
   }
 }
 
@@ -1511,7 +1511,7 @@ function miqLaunchMiqVncConsole(pwd, hostAddress, hostPort, proxyAddress, proxyP
 
 // Toggle the user options div in the page header
 function miqToggleUserOptions(id) {
-  miqJqueryRequest("/dashboard/change_group?to_group=" + id)
+  miqJqueryRequest("/dashboard/change_group?to_group=" + id);
 }
 
 // Check for enter/escape on quick search box
@@ -1644,7 +1644,7 @@ function miqJqueryRequest(url, options) {
 }
 
 function miqDomElementExists(element) {
-  return $('#' + element).length
+  return $('#' + element).length;
 }
 
 function miqSerializeForm(element) {
