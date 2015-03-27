@@ -147,7 +147,7 @@
       :title: "Terminate this Instance"
       :confirm: "Terminate this Instance?"
   - :button: vm_vnc_console
-    :image: console
+    :image: console-html5
     :url: 'html5_console'
     :title: "Open a web-based VNC or SPICE console for this VM"
     :confirm: "Opening a web-based VM VNC or SPICE console requires that the Provider is pre-configured to allow VNC connections.  Are you sure?"
