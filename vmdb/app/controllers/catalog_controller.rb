@@ -893,7 +893,7 @@ class CatalogController < ApplicationController
     checked = find_checked_items
     checked[0] = params[:id] if checked.blank? && params[:id]
     @record = checked[0] ? find_by_id_filtered(OrchestrationTemplate, checked[0]) : OrchestrationTemplate.new
-    @edit = {:current => {:name        => @record.name,
+    @edit = {:current => {:name        => "Copy of #{@record.name}",
                           :description => @record.description,
                           :content     => @record.content,
                           :draft       => @record.draft},
