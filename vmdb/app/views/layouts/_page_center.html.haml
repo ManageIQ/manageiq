@@ -14,13 +14,13 @@
               .col-md-12
                 = render :partial => "layouts/taskbar"
           .row
-            .col-sm-5.col-md-5.pull-right
-              %br
-              = render :partial => 'layouts/searchbar'
-            .col-sm-7.col-md-7
+            .col-sm-12.col-md-7
               = render :partial => "layouts/breadcrumbs"
               - if layout_uses_tabs?
                 = render :partial => 'layouts/tabs'
+            .col-sm-12.col-md-5
+              %br
+              = render :partial => 'layouts/searchbar'
           .row#main_content
             .col-md-12
               = yield
