@@ -244,27 +244,15 @@ module EmsCommon
       end
       if @edit[:default_verify_status] != @edit[:saved_default_verify_status]
         @edit[:saved_default_verify_status] = @edit[:default_verify_status]
-        if @edit[:default_verify_status]
-          page << "miqValidateButtons('show', 'default_');"
-        else
-          page << "miqValidateButtons('hide', 'default_');"
-        end
+        page << "miqValidateButtons('#{@edit[:default_verify_status] ? 'show' : 'hide'}', 'default_');"
       end
       if @edit[:metrics_verify_status] != @edit[:saved_metrics_verify_status]
         @edit[:saved_metrics_verify_status] = @edit[:metrics_verify_status]
-        if @edit[:metrics_verify_status]
-          page << "miqValidateButtons('show', 'metrics_');"
-        else
-          page << "miqValidateButtons('hide', 'metrics_');"
-        end
+        page << "miqValidateButtons('#{@edit[:metrics_verify_status] ? 'show' : 'hide'}', 'metrics_');"
       end
       if @edit[:amqp_verify_status] != @edit[:saved_amqp_verify_status]
         @edit[:saved_amqp_verify_status] = @edit[:amqp_verify_status]
-        if @edit[:amqp_verify_status]
-          page << "miqValidateButtons('show', 'amqp_');"
-        else
-          page << "miqValidateButtons('hide', 'amqp_');"
-        end
+        page << "miqValidateButtons('#{@edit[:amqp_verify_status] ? 'show' : 'hide'}', 'amqp_');"
       end
     end
   end
