@@ -228,12 +228,7 @@ module EmsCommon
     assert_privileges("#{model.to_s.underscore}_new")
     return unless load_edit("ems_edit__new")
     get_form_vars
-    _model = model # render blocks instance eval, so cache the value on the stack
     case params[:button]
-    when "cancel"
-      render :update do |page|
-        page.redirect_to :action=>'show_list', :flash_msg=>_("Add of new %s was cancelled by the user") % ui_lookup(:model=>_model.to_s)
-      end
     when "add"
       if @edit[:new][:emstype].blank?
         add_flash(_("%s is required") % "Type", :error)
