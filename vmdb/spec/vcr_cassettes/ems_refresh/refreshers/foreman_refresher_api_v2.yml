@@ -2,6 +2,178 @@
 http_interactions:
 - request:
     method: get
+    uri: http://admin:smartvm@example.com/api/architectures?page=1&per_page=50
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json;version=2
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sat, 01 Jan 2000 00:00:00 GMT
+      Foreman-Version:
+      - 1.5.3
+      Foreman-Api-Version:
+      - '2'
+      Apipie-Checksum:
+      - f0c66204518b52fe5a1aa2c2163e7166
+      Etag:
+      - c15ce0b593ab74018a5162399548a38d
+      Set-Cookie:
+      - _session_id=xxx; path=/; HttpOnly
+      Status:
+      - 200 OK
+      Connection:
+      - close
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: '{"total":2,"subtotal":2,"page":1,"per_page":50,"search":null,"sort":{"by":null,"order":null},"results":[{"name":"i386","id":2,"created_at":"2014-07-24T22:22:02Z","updated_at":"2014-07-24T22:22:02Z"},{"name":"x86_64","id":1,"created_at":"2014-07-24T22:22:02Z","updated_at":"2014-07-24T22:22:02Z"}]}'
+    http_version:
+  recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
+- request:
+    method: get
+    uri: http://admin:smartvm@example.com/api/compute_profiles?page=1&per_page=50
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json;version=2
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sat, 01 Jan 2000 00:00:00 GMT
+      Foreman-Version:
+      - 1.5.3
+      Foreman-Api-Version:
+      - '2'
+      Apipie-Checksum:
+      - f0c66204518b52fe5a1aa2c2163e7166
+      Etag:
+      - c15ce0b593ab74018a5162399548a38d
+      Set-Cookie:
+      - _session_id=xxx; path=/; HttpOnly
+      Status:
+      - 200 OK
+      Connection:
+      - close
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: '{"total":3,"subtotal":3,"page":1,"per_page":50,"search":null,"sort":{"by":null,"order":null},"results":[{"id":1,"name":"1-Small","created_at":"2014-07-24T22:22:13Z","updated_at":"2014-07-24T22:22:13Z"},{"id":2,"name":"2-Medium","created_at":"2014-07-24T22:22:14Z","updated_at":"2014-07-24T22:22:14Z"},{"id":3,"name":"3-Large","created_at":"2014-07-24T22:22:14Z","updated_at":"2014-07-24T22:22:14Z"}]}'
+    http_version:
+  recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
+- request:
+    method: get
+    uri: http://admin:smartvm@example.com/api/domains?page=1&per_page=50
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json;version=2
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sat, 01 Jan 2000 00:00:00 GMT
+      Foreman-Version:
+      - 1.5.3
+      Foreman-Api-Version:
+      - '2'
+      Apipie-Checksum:
+      - f0c66204518b52fe5a1aa2c2163e7166
+      Etag:
+      - c15ce0b593ab74018a5162399548a38d
+      Set-Cookie:
+      - _session_id=xxx; path=/; HttpOnly
+      Status:
+      - 200 OK
+      Connection:
+      - close
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: '{"total":1,"subtotal":1,"page":1,"per_page":50,"search":null,"sort":{"by":null,"order":null},"results":[{"id":1,"name":"cloudforms.example.com","fullname":"","dns_id":null,"created_at":"2014-07-24T22:55:07Z","updated_at":"2015-03-12T21:32:56Z"}]}'
+    http_version:
+  recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
+- request:
+    method: get
+    uri: http://admin:smartvm@example.com/api/environments?page=1&per_page=50
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json;version=2
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sat, 01 Jan 2000 00:00:00 GMT
+      Foreman-Version:
+      - 1.5.3
+      Foreman-Api-Version:
+      - '2'
+      Apipie-Checksum:
+      - f0c66204518b52fe5a1aa2c2163e7166
+      Etag:
+      - c15ce0b593ab74018a5162399548a38d
+      Set-Cookie:
+      - _session_id=xxx; path=/; HttpOnly
+      Status:
+      - 200 OK
+      Connection:
+      - close
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: '{"total":1,"subtotal":1,"page":1,"per_page":50,"search":null,"sort":{"by":null,"order":null},"results":[{"name":"production","id":1,"created_at":"2014-07-24T22:55:07Z","updated_at":"2014-07-24T22:55:07Z"}]}'
+    http_version:
+  recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
+- request:
+    method: get
     uri: http://admin:smartvm@example.com/api/hostgroups?page=1&per_page=50
     body:
       encoding: US-ASCII
@@ -130,7 +302,7 @@ http_interactions:
       - application/json; charset=utf-8
     body:
       encoding: UTF-8
-      string: '{"total":39,"subtotal":39,"page":1,"per_page":50,"search":null,"sort":{"by":null,"order":null},"results":[{"name":"abc.example.com","id":29,"ip":"192.168.1.199","environment_id":1,"environment_name":"production","last_report":null,"mac":"00:00:00:00:f6:6c","realm_id":null,"realm_name":null,"sp_mac":"78:2b:cb:00:f6:6e","sp_ip":"192.168.1.210","sp_name":"","domain_id":1,"domain_name":"example.com","architecture_id":1,"architecture_name":"x86_64","operatingsystem_id":3,"operatingsystem_name":"RHEL
+      string: '{"total":39,"subtotal":39,"page":1,"per_page":50,"search":null,"sort":{"by":null,"order":null},"results":[{"name":"abc.example.com","id":29,"ip":"192.168.1.199","environment_id":1,"environment_name":"production","last_report":null,"mac":"00:00:00:00:f6:6c","realm_id":null,"realm_name":null,"sp_mac":"00:00:00:00:f6:6e","sp_ip":"192.168.1.210","sp_name":"","domain_id":1,"domain_name":"example.com","architecture_id":1,"architecture_name":"x86_64","operatingsystem_id":3,"operatingsystem_name":"RHEL
         Server 6.6","subnet_id":2,"subnet_name":"Mahwah","sp_subnet_id":null,"ptable_id":7,"ptable_name":"Kickstart
         default","medium_id":7,"medium_name":"RHEL Server mirror","build":true,"comment":"","disk":"","installed_at":null,"model_id":null,"model_name":null,"hostgroup_id":2,"hostgroup_name":"Raleigh/Metal","owner_id":1,"owner_type":"User","enabled":true,"puppet_ca_proxy_id":1,"managed":true,"use_image":null,"image_file":"","uuid":null,"compute_resource_id":null,"compute_resource_name":null,"compute_profile_id":null,"compute_profile_name":null,"capabilities":["build"],"provision_method":"build","puppet_proxy_id":1,"certname":"abc.example.com","image_id":null,"image_name":null,"created_at":"2014-11-13T20:40:16Z","updated_at":"2014-11-13T22:04:50Z","last_compile":null,"last_freshcheck":null,"serial":null,"source_file_id":null,"puppet_status":0},{"name":"bdbaremetal.example.com","id":25,"ip":null,"environment_id":1,"environment_name":"production","last_report":null,"mac":"00:00:00:00:84:fc","realm_id":null,"realm_name":null,"sp_mac":null,"sp_ip":null,"sp_name":null,"domain_id":1,"domain_name":"example.com","architecture_id":1,"architecture_name":"x86_64","operatingsystem_id":3,"operatingsystem_name":"RHEL
         Server 6.6","subnet_id":null,"subnet_name":null,"sp_subnet_id":null,"ptable_id":7,"ptable_name":"Kickstart
@@ -250,7 +422,7 @@ http_interactions:
       - application/json; charset=utf-8
     body:
       encoding: UTF-8
-      string: '{"total":39,"subtotal":39,"page":1,"per_page":50,"search":null,"sort":{"by":null,"order":null},"results":[{"name":"abc.example.com","id":29,"ip":"192.168.1.199","environment_id":1,"environment_name":"production","last_report":null,"mac":"00:00:00:00:f6:6c","realm_id":null,"realm_name":null,"sp_mac":"78:2b:cb:00:f6:6e","sp_ip":"192.168.1.210","sp_name":"","domain_id":1,"domain_name":"example.com","architecture_id":1,"architecture_name":"x86_64","operatingsystem_id":3,"operatingsystem_name":"RHEL
+      string: '{"total":39,"subtotal":39,"page":1,"per_page":50,"search":null,"sort":{"by":null,"order":null},"results":[{"name":"abc.example.com","id":29,"ip":"192.168.1.199","environment_id":1,"environment_name":"production","last_report":null,"mac":"00:00:00:00:f6:6c","realm_id":null,"realm_name":null,"sp_mac":"00:00:00:00:f6:6e","sp_ip":"192.168.1.210","sp_name":"","domain_id":1,"domain_name":"example.com","architecture_id":1,"architecture_name":"x86_64","operatingsystem_id":3,"operatingsystem_name":"RHEL
         Server 6.6","subnet_id":2,"subnet_name":"Mahwah","sp_subnet_id":null,"ptable_id":7,"ptable_name":"Kickstart
         default","medium_id":7,"medium_name":"RHEL Server mirror","build":true,"comment":"","disk":"","installed_at":null,"model_id":null,"model_name":null,"hostgroup_id":2,"hostgroup_name":"Raleigh/Metal","owner_id":1,"owner_type":"User","enabled":true,"puppet_ca_proxy_id":1,"managed":true,"use_image":null,"image_file":"","uuid":null,"compute_resource_id":null,"compute_resource_name":null,"compute_profile_id":null,"compute_profile_name":null,"capabilities":["build"],"provision_method":"build","puppet_proxy_id":1,"certname":"abc.example.com","image_id":null,"image_name":null,"created_at":"2014-11-13T20:40:16Z","updated_at":"2014-11-13T22:04:50Z","last_compile":null,"last_freshcheck":null,"serial":null,"source_file_id":null,"puppet_status":0},{"name":"bdbaremetal.example.com","id":25,"ip":null,"environment_id":1,"environment_name":"production","last_report":null,"mac":"00:00:00:00:84:fc","realm_id":null,"realm_name":null,"sp_mac":null,"sp_ip":null,"sp_name":null,"domain_id":1,"domain_name":"example.com","architecture_id":1,"architecture_name":"x86_64","operatingsystem_id":3,"operatingsystem_name":"RHEL
         Server 6.6","subnet_id":null,"subnet_name":null,"sp_subnet_id":null,"ptable_id":7,"ptable_name":"Kickstart
@@ -368,7 +540,9 @@ http_interactions:
       - chunked
       Content-Type:
       - application/json; charset=utf-8
-    body: '{"error":"The requested resource could not be found"}'
+    body:
+      encoding: UTF-8
+      string: '{"error":"The requested resource could not be found"}'
     http_version:
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
@@ -739,7 +913,9 @@ http_interactions:
       - chunked
       Content-Type:
       - application/json; charset=utf-8
-    body: '{"error":"The requested resource could not be found"}'
+    body:
+      encoding: UTF-8
+      string: '{"error":"The requested resource could not be found"}'
     http_version:
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
@@ -792,6 +968,49 @@ http_interactions:
         default","id":7,"os_family":"Redhat","created_at":"2014-07-24T22:22:04Z","updated_at":"2014-07-24T22:22:04Z"},{"name":"Preseed
         custom LVM","id":9,"os_family":"Debian","created_at":"2014-07-24T22:22:05Z","updated_at":"2014-07-24T22:22:05Z"},{"name":"Preseed
         default","id":8,"os_family":"Debian","created_at":"2014-07-24T22:22:05Z","updated_at":"2014-07-24T22:22:05Z"},{"name":"ProviderRefreshSpec-PartitionTable","id":12,"os_family":null,"created_at":"2015-01-15T19:48:08Z","updated_at":"2015-01-15T19:48:08Z"}]}'
+    http_version:
+  recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
+- request:
+    method: get
+    uri: http://admin:smartvm@example.com/api/realms?page=1&per_page=50
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json;version=2
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sat, 01 Jan 2000 00:00:00 GMT
+      Foreman-Version:
+      - 1.5.3
+      Foreman-Api-Version:
+      - '2'
+      Apipie-Checksum:
+      - f0c66204518b52fe5a1aa2c2163e7166
+      Etag:
+      - c15ce0b593ab74018a5162399548a38d
+      Set-Cookie:
+      - _session_id=xxx; path=/; HttpOnly
+      Status:
+      - 200 OK
+      Connection:
+      - close
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: '{"total":0,"subtotal":0,"page":1,"per_page":50,"search":null,"sort":{"by":null,"order":null},"results":[]}'
     http_version:
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 recorded_with: VCR 2.9.3
