@@ -265,7 +265,11 @@ module ApplicationController::MiqRequestMethods
 
   def build_configured_system_grid(configured_systems, sort_order = nil, sort_by = nil)
     @edit[:configured_system_headers] = {
-      "hostname"    => "Hostname",
+      "hostname"                        => "Hostname",
+      "configuration_location_name"     => "Configuration Location",
+      "configuration_organization_name" => "Configuration Organization",
+      "operating_system_flavor_name"    => "Operating System",
+      "provider_name"                   => "Provider",
     }
     @edit[:configured_system_sortcol] = sort_by    ||= "hostname"
     @edit[:configured_system_sortdir] = sort_order ||= "ASC"
