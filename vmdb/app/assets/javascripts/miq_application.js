@@ -99,13 +99,14 @@ function miqInitWidgetPulldown() {
 }
 
 function miqCalendarDateConversion(server_offset) {
+  var date = new Date();
   var x = new Date(
-    tN().getUTCFullYear(),
-    tN().getUTCMonth(),
-    tN().getUTCDate(),
-    tN().getUTCHours(),
-    tN().getUTCMinutes(),
-    tN().getUTCSeconds()
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate(),
+    date.getUTCHours(),
+    date.getUTCMinutes(),
+    date.getUTCSeconds()
   );
   if (server_offset >= 0) {
     x.setTime(x.getTime() + (Number(server_offset)) * 1000);
@@ -916,74 +917,26 @@ function miqSendOneTrans(url) {
   miqJqueryRequest(url);
 }
 
-// Anytime Anywhere Web Page Clock Generator
-// Clock Script Generated at
-// http://www.rainbow.arch.scriptmania.com/tools/clock
-function tS() {
-  var x = new Date(
-    tN().getUTCFullYear(),
-    tN().getUTCMonth(),
-    tN().getUTCDate(),
-    tN().getUTCHours(),
-    tN().getUTCMinutes(),
-    tN().getUTCSeconds()
-  );
-
-  if (zone_offset >= 0) {
-    x.setTime(x.getTime() + (Number(zone_offset)) * 1000);
-  } else {
-    x.setTime(x.getTime() - (Number(zone_offset.slice(1, zone_offset.length))) * 1000);
-  }
-
-  return x;
-}
-
-function tN() {
-  return new Date();
-}
-
-function lZ(x) {
+function leadingZero(x) {
   return (x > 9) ? x : '0' + x;
 }
 
-function y2(x) {
-  x = (x < 500) ? x + 1900 : x;
-  return String(x).substring(2, 4);
+function dateTime(offset, abbr) {
+  var date = miqCalendarDateConversion(offset);
+
+  document.getElementById('tP').innerHTML = (date.getMonth() + 1) +
+    '/' +
+    date.getDate() +
+    '/' +
+    date.getFullYear() +
+    ' ' +
+    leadingZero(date.getHours()) +
+    ':' +
+    leadingZero(date.getMinutes()) +
+    ' ' +
+    abbr;
+  setTimeout(function() { dateTime(offset, abbr); }, 1000);
 }
-
-var zone_offset;
-var zone_abbr;
-
-function dT(offset, abbr) {
-  if (offset != undefined) {
-    zone_offset = offset;
-  }
-  if (abbr != undefined) {
-    zone_abbr = abbr;
-  }
-  if (fr === 0) {
-    fr = 1;
-    document.write('<span id="tP">' + eval(oT) + '</span>');
-  }
-
-  document.getElementById('tP').innerHTML = eval(oT);
-  setTimeout('dT(zone_offset, zone_abbr)', 1000);
-}
-
-var dN = new Array('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
-var mN = new Array('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12');
-var fr = 0;
-var oT = "mN[tS().getMonth()]+" +
-         "'/'+" +
-         "tS().getDate()+" +
-         "'/'+" +
-         "y2(tS().getYear())+" +
-         "' '+" +
-         "lZ(tS().getHours())+" +
-         "':'+" +
-         "lZ(tS().getMinutes())+" +
-         "' '+" +
-         "zone_abbr";
 
 // this deletes the remembered treestate when called
 function miqClearTreeState(prefix) {
