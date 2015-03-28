@@ -1,0 +1,2 @@
+class ConfigurationArchitecture < ConfigurationTag
+end
