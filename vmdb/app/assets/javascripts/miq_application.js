@@ -99,7 +99,7 @@ function miqInitWidgetPulldown() {
 }
 
 function miqCalendarDateConversion(server_offset) {
-  x = new Date(
+  var x = new Date(
     tN().getUTCFullYear(),
     tN().getUTCMonth(),
     tN().getUTCDate(),
@@ -146,6 +146,9 @@ function miqLoginPrefill() {
 
 // Prefill expression value text entry fields when blank
 function miqExpressionPrefill(count) {
+  var title;
+  var miq_exp_prefill_count;
+
   if (miqDomElementExists('chosen_value') && $('#chosen_value')[0].type.indexOf('text') === 0) {
     miqPrefill($('#chosen_value')[0], '/images/layout/expression/' + miq_val1_type + '.png');
     $('#chosen_value').prop('title', miq_val1_title);
@@ -158,13 +161,13 @@ function miqExpressionPrefill(count) {
   }
   if (miqDomElementExists('chosen_regkey') && $('#chosen_regkey')[0].type.indexOf('text') === 0) {
     miqPrefill($('#chosen_regkey')[0], '/images/layout/expression/string.png');
-    var title = "Registry Key";
+    title = "Registry Key";
     $('#chosen_regkey').prop('title', title);
     $('#chosen_regkey').prop('alt', title);
   }
   if (miqDomElementExists('chosen_regval') && $('#chosen_regval')[0].type.indexOf('text') === 0) {
     miqPrefill($('#chosen_regval')[0], '/images/layout/expression/string.png');
-    var title = "Registry Key Value";
+    title = "Registry Key Value";
     $('#chosen_regval').prop('title', title);
     $('#chosen_regval').prop('alt', title);
   }
@@ -205,7 +208,9 @@ function miqExpressionPrefill(count) {
 // (written more generic for reuse, just have to build the miq_value_styles hash)
 function miqValueStylePrefill(count) {
   var found = false;
-  for (field in miq_value_styles) {
+  var miq_vs_prefill_count;
+
+  for (var field in miq_value_styles) {
     if (miqDomElementExists(field)) {
       miqPrefill($('#' + field)[0], '/images/layout/expression/' + miq_value_styles[field] + '.png');
       found = true;
@@ -337,7 +342,7 @@ function miqDimDiv(divname, status) {
 function miqCheckForChanges() {
   if (miqAngularApplication.$scope) {
     if (miqAngularApplication.$scope.form.$dirty) {
-      answer = confirm("Abandon changes?");
+      var answer = confirm("Abandon changes?");
       if (answer) {
         miqAngularApplication.$scope.form.$setPristine(true);
       }
@@ -356,9 +361,9 @@ function miqCheckForChanges() {
 
 // go to the specified URL when a download all log files button is pressed
 function miqDownloadLogFiles(theUrl, count) {
-  for(i = 0; i < count; i++) {
-    new_url = theUrl + "?i=" + i;
-    winName = "log" + i;
+  for(var i = 0; i < count; i++) {
+    var new_url = theUrl + "?i=" + i;
+    var winName = "log" + i;
     window.open(new_url, winName,
       'top=0,' +
       'left=0,' +
@@ -375,7 +380,7 @@ function miqDownloadLogFiles(theUrl, count) {
 
 // Prompt for new tags
 function miqNewTagPrompt() {
-  text = prompt('Enter new tags, separated by blanks', '');
+  var text = prompt('Enter new tags, separated by blanks', '');
   if (text !== null) {
     $('#new_tag').val(text);
     return true;
@@ -399,9 +404,9 @@ function miqButtons(h_or_s, prefix) {
 
 // Hide/show form buttons
 function miqValidateButtons(h_or_s, prefix) {
-  var prefix = (prefix == null) ? "" : prefix;
-  on_id = prefix + 'validate_buttons_on';
-  off_id = prefix + 'validate_buttons_off';
+  prefix = (prefix == null) ? "" : prefix;
+  var on_id = prefix + 'validate_buttons_on';
+  var off_id = prefix + 'validate_buttons_off';
 
   if (miqDomElementExists('flash_msg_div')) {
     $('flash_msg_div').hide();
@@ -455,7 +460,7 @@ function miqUpdateAllCheckboxes(button_div, override) {
     if (typeof gtl_list_grid == "undefined" &&
         ($("input[id^='listcheckbox']").length > 0)) {
       // No dhtmlx grid on the screen
-      cbs = $("input[id^='listcheckbox']");
+      var cbs = $("input[id^='listcheckbox']");
       cbs.each(function() {
         this.checked = state;
       });
@@ -473,9 +478,9 @@ function miqUpdateAllCheckboxes(button_div, override) {
       gtl_list_grid.forEachRow(function(id) {
         gtl_list_grid.cells(id, 0).setValue(state ? 1 : 0);
       });
-      crows = gtl_list_grid.getCheckedRows(0);
+      var crows = gtl_list_grid.getCheckedRows(0);
       $('#miq_grid_checks').val(crows);
-      count = !crows ? 0:crows.split(",").length;
+      var count = !crows ? 0:crows.split(",").length;
       miqSetButtons(count, button_div);
     }
   }
@@ -513,7 +518,7 @@ function miqSetButtons(count, button_div) {
       tb = miq_toolbars[button_div].obj;
       buttons = miq_toolbars[button_div].buttons;
       for (var button in buttons) {
-        onwhen = eval("buttons." + button + ".onwhen");
+        var onwhen = eval("buttons." + button + ".onwhen");
         if (typeof onwhen != "undefined") {
           if (count === 0) {
             if (button.indexOf("__") >= 0) {
@@ -628,6 +633,7 @@ function miqResetSizeTimer() {
   var url = "/dashboard/window_sizes";
   var args = [];
   var offset = 427;
+  var h;
 
   args.push("width");
   args.push(theArray[0]);
@@ -697,8 +703,9 @@ function miqPassFields(url, args) {
 function wrapFish() {
   var catfish = document.getElementById('notification');
   var subelements = [];
+  var i;
 
-  for (var i = 0; i < document.body.childNodes.length; i++) {
+  for (i = 0; i < document.body.childNodes.length; i++) {
     subelements[i] = document.body.childNodes[i];
   }
 
@@ -707,7 +714,7 @@ function wrapFish() {
   // call it zip
   zip.id = 'zip';
 
-  for (var i = 0; i < subelements.length; i++) {
+  for (i = 0; i < subelements.length; i++) {
     zip.appendChild(subelements[i]);
   }
 
@@ -730,9 +737,9 @@ function Loaded_Chart(chart_id) {
 
 function doLoadChart(chart_id, chart_object) {
   var id_splitted = chart_id.split('_');
-  set = id_splitted[1];
-  idx = id_splitted[2];
-  comp = id_splitted[3];
+  var set = id_splitted[1];
+  var idx = id_splitted[2];
+  var comp = id_splitted[3];
 
   if (typeof(comp) === 'undefined') {
     chart_object.Update_XML(miq_chart_data[set][idx].xml, false);
@@ -805,13 +812,13 @@ function miqChartLinkData(col, row, value, category, series, id, message) {
 }
 
 function miqBuildChartMenu(col, row, value, category, series, id, message) {
-  set = id.split('_')[1]; // Get the chart set
-  idx = id.split('_')[2]; // Get the chart index
+  var set = id.split('_')[1]; // Get the chart set
+  var idx = id.split('_')[2]; // Get the chart index
   var chart_data = miq_chart_data[set];
 
   if (chart_data[idx].menu != null && chart_data[idx].menu.length > 0) {
     var rowcolidx = "_" + row + "-" + col+ "-" + idx;
-    miqMenu = new dhtmlXMenuObject(null, "dhx_web");
+    var miqMenu = new dhtmlXMenuObject(null, "dhx_web");
     miqMenu.setImagePath("/assets/dhtmlx_gpl_36/imgs/");
     miqMenu.renderAsContextMenu();
     miqMenu.setWebModeTimeout(1000);
@@ -913,7 +920,7 @@ function miqSendOneTrans(url) {
 // Clock Script Generated at
 // http://www.rainbow.arch.scriptmania.com/tools/clock
 function tS() {
-  x = new Date(
+  var x = new Date(
     tN().getUTCFullYear(),
     tN().getUTCMonth(),
     tN().getUTCDate(),
@@ -964,27 +971,29 @@ function dT(offset, abbr) {
 }
 
 var dN = new Array('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
-mN = new Array('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12');
-fr = 0;
-oT = "mN[tS().getMonth()]+" +
-     "'/'+" +
-     "tS().getDate()+" +
-     "'/'+" +
-     "y2(tS().getYear())+" +
-     "' '+" +
-     "lZ(tS().getHours())+" +
-     "':'+" +
-     "lZ(tS().getMinutes())+" +
-     "' '+" +
-     "zone_abbr";
+var mN = new Array('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12');
+var fr = 0;
+var oT = "mN[tS().getMonth()]+" +
+         "'/'+" +
+         "tS().getDate()+" +
+         "'/'+" +
+         "y2(tS().getYear())+" +
+         "' '+" +
+         "lZ(tS().getHours())+" +
+         "':'+" +
+         "lZ(tS().getMinutes())+" +
+         "' '+" +
+         "zone_abbr";
 
 // this deletes the remembered treestate when called
 function miqClearTreeState(prefix) {
+  var to_remove = [];
+  var i;
+
   if (prefix === undefined) {
     prefix = 'treeOpenStatex';
   }
-  var to_remove = [];
-  for (var i = 0; i < localStorage.length; i++) {
+  for (i = 0; i < localStorage.length; i++) {
     if (localStorage.key(i).match('^' + prefix)) {
       to_remove.push(localStorage.key(i));
     }
@@ -1130,11 +1139,13 @@ function miqDropComplete(event, ui) {
 
 // Attach a calendar control to all text boxes that start with miq_date_
 function miqBuildCalendar(bAngular) {
+  var all;
+
   if (bAngular === undefined) {
     // Get all of the input boxes with ids starting with "miq_date_"
-    var all = $('input[id^=miq_date_]');
+    all = $('input[id^=miq_date_]');
   } else {
-    var all = $('input[id^=miq_angular_date_]');
+    all = $('input[id^=miq_angular_date_]');
   }
   all.each(function() {
     // Attach dhtmlxcalendars to each one
@@ -1286,10 +1297,12 @@ function miqBuildExplorerView(options) {
 // Build the nested GTL layout inside the explorer layout
 function miqBuildMainLayout(parentLayout, header) {
   var el = parentLayout.getUnitByPosition('center').get('wrap');
+  var paging_height;
+
   if (miqDomElementExists('paging_div')) {
-    var paging_height = 35;
+    paging_height = 35;
   } else {
-    var paging_height = 0;
+    paging_height = 0;
   }
 
   var mainLayout = new YAHOO.widget.Layout(el, {
@@ -1358,7 +1371,7 @@ function miqAjaxRequest(itemId, path) {
 
 // Handle an element onclick to open href in a new window with optional confirmation
 function miqClickAndPop(el) {
-  conmsg = el.getAttribute("data-miq_confirm");
+  var conmsg = el.getAttribute("data-miq_confirm");
 
   if (conmsg == null || confirm(conmsg)) {
     window.open(el.href);
@@ -1431,9 +1444,9 @@ function miq_jquery_tab_select(ui, url, checkChanges) {
 
 function miq_jquery_disable_inactive_tabs(tabs_div) {
   // getting length of tabs on screen
-  tab_len = $('#' + tabs_div).tabs('length');
+  var tab_len = $('#' + tabs_div).tabs('length');
   // getting index of currently active tabs
-  curTab = $('#' + tabs_div).tabs().tabs('option', 'selected').valueOf();
+  var curTab = $('#' + tabs_div).tabs().tabs('option', 'selected').valueOf();
   // building array of tab indexes to be disabled, excluding active tab index
   var arr = [];
 
@@ -1456,7 +1469,7 @@ function miq_jquery_show_hide_tab(tab_li_id, s_or_h) {
 
 function miq_jquery_disable_all_tabs(tabs_div) {
   // getting length of tabs on screen
-  tab_len = $('#' + tabs_div).tabs('length');
+  var tab_len = $('#' + tabs_div).tabs('length');
   // building array of tab indexes to be disabled, excluding active tab index
   var arr = [];
   for (var i = 1; i <= tab_len; i++) {
@@ -1624,7 +1637,7 @@ $(document).ajaxSend(function(event, request, settings) {
 
 function miqJqueryRequest(url, options) {
   options = options || {};
-  ajax_options = {};
+  var ajax_options = {};
 
   if (options.dataType === undefined) {
     ajax_options.accepts = {script: '*/*;q=0.5, ' + $.ajaxSettings.accepts.script};
