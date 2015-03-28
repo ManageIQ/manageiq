@@ -28,6 +28,11 @@ module EmsRefresh
           :operating_system_flavors => manager_ref_hash(manager.operating_system_flavors),
           :locations                => manager_ref_hash(manager.configuration_locations),
           :organizations            => manager_ref_hash(manager.configuration_organizations),
+          :architectures            => manager_ref_hash(manager.configuration_architectures),
+          :compute_profiles         => manager_ref_hash(manager.configuration_compute_profiles),
+          :domains                  => manager_ref_hash(manager.configuration_domains),
+          :environments             => manager_ref_hash(manager.configuration_environments),
+          :realms                   => manager_ref_hash(manager.configuration_realms),
         )
       end
 
