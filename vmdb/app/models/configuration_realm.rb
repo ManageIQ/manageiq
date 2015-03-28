@@ -1,0 +1,2 @@
+class ConfigurationRealm < ConfigurationTag
+end

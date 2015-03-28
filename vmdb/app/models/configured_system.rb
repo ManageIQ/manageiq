@@ -7,6 +7,7 @@ class ConfiguredSystem < ActiveRecord::Base
   belongs_to :configuration_profile
   belongs_to :operating_system_flavor
   has_one    :computer_system, :as => :managed_entity, :dependent => :destroy
+  has_and_belongs_to_many :configuration_tags
 
   delegate :name,                      :to => :operating_system_flavor, :prefix => true, :allow_nil => true
   delegate :name,                      :to => :provider,                :prefix => true, :allow_nil => true
