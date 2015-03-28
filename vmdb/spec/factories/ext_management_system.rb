@@ -66,6 +66,7 @@ FactoryGirl.define do
 
   factory :ems_amazon, :class => "EmsAmazon", :parent => :ems_cloud do
     provider_region "us-east-1"
+    zone {  Zone.first || FactoryGirl.create(:zone) }
   end
 
   factory :ems_amazon_with_authentication, :parent => :ems_amazon do
@@ -81,6 +82,7 @@ FactoryGirl.define do
   end
 
   factory :ems_openstack, :class => "EmsOpenstack", :parent => :ems_cloud do
+    zone {  Zone.first || FactoryGirl.create(:zone) }
   end
 
   factory :ems_openstack_with_authentication, :parent => :ems_openstack do
