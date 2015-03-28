@@ -50,14 +50,10 @@ function miqOnLoad() {
   if (typeof miqEditor != "undefined") {
     miqEditor.refresh();
   }
-  // Focus on certain tree node, if set
-  if (typeof miq_tree_focus == "string") {
-    eval(miq_tree_focus);
-  }
   // Position clear search link in right cell header
   if ($('#clear_search').length) {
     // Find the right cell header div
-    $('.dhtmlxInfoBarLabel:visible').append($('#clear_search')[0]);
+    $('.dhtmlxInfoBarLabel:visible').append($('#clear_search'));
   }
   // Run MIQ after onload code if present
   if (typeof miq_after_onload == "string") {
@@ -133,7 +129,7 @@ function miqLoginPrefill() {
   miqPrefill($('#user_verify_password'));
   if ($('#user_name').length) {
     // Retry in .2 seconds, if user name field is present
-    self.setTimeout('miqLoginPrefill()', 200);
+    setTimeout(miqLoginPrefill, 200);
   }
 }
 
@@ -186,14 +182,12 @@ function miqExpressionPrefill(count) {
   }
   if (typeof count == 'undefined') {
     miq_exp_prefill_count = 0;
-    eval("self.setTimeout('miqExpressionPrefill("+ miq_exp_prefill_count + ")', 200);");
-  }
-  else if (count == miq_exp_prefill_count) {
-    miq_exp_prefill_count += 1;
-    if (miq_exp_prefill_count > 100) {
+    setTimeout(function() { miqExpressionPrefill(miq_exp_prefill_count); }, 200);
+  } else if (count == miq_exp_prefill_count) {
+    if (++miq_exp_prefill_count > 100) {
       miq_exp_prefill_count = 0;
     }
-    eval("self.setTimeout('miqExpressionPrefill("+ miq_exp_prefill_count + ")', 200);");
+    setTimeout(function() { miqExpressionPrefill(miq_exp_prefill_count); }, 200);
   }
 }
 
@@ -212,13 +206,12 @@ function miqValueStylePrefill(count) {
   if (found) {
     if (typeof count == 'undefined') {
       miq_vs_prefill_count = 0;
-      eval("self.setTimeout('miqValueStylePrefill("+ miq_vs_prefill_count + ")', 200);");
+      setTimeout(function() { miqValueStylePrefill(miq_vs_prefill_count); }, 200);
     } else if (count == miq_vs_prefill_count) {
-      miq_vs_prefill_count += 1;
-      if (miq_vs_prefill_count > 100) {
+      if (++miq_vs_prefill_count > 100) {
         miq_vs_prefill_count = 0;
       }
-      eval("self.setTimeout('miqValueStylePrefill("+ miq_vs_prefill_count + ")', 200);");
+      setTimeout(function() { miqValueStylePrefill(miq_vs_prefill_count); }, 200);
     }
   }
 }
@@ -241,17 +234,16 @@ function miqPrefill(element, image, blank_image) {
 // Get user's time zone offset
 function miqGetTZO() {
   var uDate = new Date();
-  if (uDate) {
-    if ($('#user_TZO').length) {
-      $('#user_TZO').val(uDate.getTimezoneOffset()/60);
-    }
+
+  if ($('#user_TZO').length) {
+    $('#user_TZO').val(uDate.getTimezoneOffset() / 60);
   }
 }
 
 // Get user's browswer info
 function miqGetBrowserInfo() {
-  var bd;
-  bd = miqBrowserDetect();
+  var bd = miqBrowserDetect();
+
   if ($('#browser_name').length) {
     $('#browser_name').val(bd.browser);
   }
@@ -280,7 +272,7 @@ function miqHighlight(elem, status) {
 function miqSparkle(status) {
   if (status) {
     // Make sure an ajax request is active before sparkling
-    if ($.active > 0) {
+    if ($.active) {
       miqSparkleOn();
     }
   } else {
@@ -362,13 +354,13 @@ function miqDownloadLogFiles(theUrl, count) {
     window.open(new_url, winName,
       'top=0,' +
       'left=0,' +
-      'directories=no,' +
-      'location=no,' +
-      'menubar=no,' +
-      'resizable=no,' +
-      'scrollbars=no,' +
-      'status=no,' +
-      'toolbar=no'
+      'directories=0,' +
+      'location=0,' +
+      'menubar=0,' +
+      'resizable=0,' +
+      'scrollbars=0,' +
+      'status=0,' +
+      'toolbar=0'
     );
   }
 }
@@ -391,7 +383,7 @@ function miqButtons(h_or_s, prefix) {
   var on  = h_or_s == 'show' ? 'on'  : 'off';
   var off = h_or_s == 'show' ? 'off' : 'on';
 
-  prefix = (typeof(prefix) === 'undefined' || prefix === '') ? '' : (prefix + '_');
+  prefix = (typeof prefix === 'undefined' || prefix === '') ? '' : (prefix + '_');
 
   $('#' + prefix + 'buttons_' + on).show();
   $('#' + prefix + 'buttons_' + off).hide();
@@ -453,19 +445,14 @@ function miqUpdateAllCheckboxes(button_div, override) {
       state = override;
     }
     if (typeof gtl_list_grid == "undefined" &&
-        ($("input[id^='listcheckbox']").length > 0)) {
+        ($("input[id^='listcheckbox']").length)) {
       // No dhtmlx grid on the screen
-      var cbs = $("input[id^='listcheckbox']");
-      cbs.each(function() {
-        this.checked = state;
-      });
+      $("input[id^='listcheckbox']").prop('checked', state);
       miqUpdateButtons(cbs[0], button_div);
     } else if (typeof gtl_list_grid == "undefined" &&
-               $("input[id^='storage_cb']").length > 0) {
+               $("input[id^='storage_cb']").length) {
       // to handle check/uncheck all for C&U collection
-      $("input[id^='storage_cb']").each(function() {
-        this.checked = state;
-      });
+      $("input[id^='storage_cb']").prop('checked', state);
       miqJqueryRequest("/configuration/form_field_changed?storage_cb_all=" + state);
       return true;
     } else {
@@ -475,7 +462,7 @@ function miqUpdateAllCheckboxes(button_div, override) {
       });
       var crows = gtl_list_grid.getCheckedRows(0);
       $('#miq_grid_checks').val(crows);
-      var count = !crows ? 0:crows.split(",").length;
+      var count = !crows ? 0 : crows.split(",").length;
       miqSetButtons(count, button_div);
     }
   }
@@ -513,7 +500,7 @@ function miqSetButtons(count, button_div) {
       tb = miq_toolbars[button_div].obj;
       buttons = miq_toolbars[button_div].buttons;
       for (var button in buttons) {
-        var onwhen = eval("buttons." + button + ".onwhen");
+        var onwhen = buttons[button].onwhen;
         if (typeof onwhen != "undefined") {
           if (count === 0) {
             if (button.indexOf("__") >= 0) {
@@ -556,35 +543,35 @@ function miqSetButtons(count, button_div) {
   } else if (button_div.match("_buttons$")) {
     // Handle newer divs with button elements
     if (count === 0) {
-      $("#" + button_div + " button[id$=on_1]").each(function() {this.disabled = true;});
+      $("#" + button_div + " button[id$=on_1]").prop('disabled', true);
     } else if (count == 1) {
-      $("#" + button_div + " button[id$=on_1]").each(function() {this.disabled = false;});
+      $("#" + button_div + " button[id$=on_1]").prop('disabled', false);
     } else {
-      $("#" + button_div + " button[id$=on_1]").each(function() {this.disabled = false;});
+      $("#" + button_div + " button[id$=on_1]").prop('disabled', false);
     }
   } else {
     // Handle older li based buttons
     if (count === 0) {
-      $('#' + button_div + ' li[id~=on_1]').each(function() {$(this).hide();});
-      $('#' + button_div + ' li[id~=on_2]').each(function() {$(this).hide();});
-      $('#' + button_div + ' li[id~=on_only_1]').each(function() {$(this).hide();});
-      $('#' + button_div + ' li[id~=off_0]').each(function() {$(this).show();});
-      $('#' + button_div + ' li[id~=off_1]').each(function() {$(this).show();});
-      $('#' + button_div + ' li[id~=off_not_1]').each(function() {$(this).show();});
+      $('#' + button_div + ' li[id~=on_1]').hide();
+      $('#' + button_div + ' li[id~=on_2]').hide();
+      $('#' + button_div + ' li[id~=on_only_1]').hide();
+      $('#' + button_div + ' li[id~=off_0]').show();
+      $('#' + button_div + ' li[id~=off_1]').show();
+      $('#' + button_div + ' li[id~=off_not_1]').show();
     } else if (count === 1) {
-      $('#' + button_div + ' li[id~=off_0]').each(function() {$(this).hide();});
-      $('#' + button_div + ' li[id~=on_2]').each(function() {$(this).hide();});
-      $('#' + button_div + ' li[id~=off_not_1]').each(function() {$(this).hide();});
-      $('#' + button_div + ' li[id~=off_1]').each(function() {$(this).show();});
-      $('#' + button_div + ' li[id~=on_1]').each(function() {$(this).show();});
-      $('#' + button_div + ' li[id~=on_only_1]').each(function() {$(this).show();});
+      $('#' + button_div + ' li[id~=off_0]').hide();
+      $('#' + button_div + ' li[id~=on_2]').hide();
+      $('#' + button_div + ' li[id~=off_not_1]').hide();
+      $('#' + button_div + ' li[id~=off_1]').show();
+      $('#' + button_div + ' li[id~=on_1]').show();
+      $('#' + button_div + ' li[id~=on_only_1]').show();
     } else {
-      $('#' + button_div + ' li[id~=off_0]').each(function() {$(this).hide();});
-      $('#' + button_div + ' li[id~=off_1]').each(function() {$(this).hide();});
-      $('#' + button_div + ' li[id~=on_only_1]').each(function() {$(this).hide();});
-      $('#' + button_div + ' li[id~=on_1]').each(function() {$(this).show();});
-      $('#' + button_div + ' li[id~=on_2]').each(function() {$(this).show();});
-      $('#' + button_div + ' li[id~=off_not_1]').each(function() {$(this).show();});
+      $('#' + button_div + ' li[id~=off_0]').hide();
+      $('#' + button_div + ' li[id~=off_1]').hide();
+      $('#' + button_div + ' li[id~=on_only_1]').hide();
+      $('#' + button_div + ' li[id~=on_1]').show();
+      $('#' + button_div + ' li[id~=on_2]').show();
+      $('#' + button_div + ' li[id~=off_not_1]').show();
     }
   }
 }
@@ -619,7 +606,7 @@ function miqGetBrowserSize() {
     return;
   }
   size_timer = true;
-  self.setTimeout('miqResetSizeTimer()', 1000);
+  setTimeout(miqResetSizeTimer, 1000);
 }
 
 function miqResetSizeTimer() {
@@ -687,7 +674,7 @@ function miqGetSize() {
 function miqPassFields(url, args) {
   url += '?';
 
-  for (var i = 0; i < args.length; i = i + 2) {
+  for (var i = 0; i < args.length; i += 2) {
     url += args[i] + '=' + args[i+1] + '&';
   }
 
@@ -748,7 +735,7 @@ function miqLoadCharts() {
   if (typeof miq_chart_data != 'undefined' && miq_browser == 'Explorer') {
     for (var set in miq_chart_data) {
       var mcd = miq_chart_data[set];
-      for (var i = 0; i < mcd.length; i = i + 1) {
+      for (var i = 0; i < mcd.length; i++) {
         miqLoadChart("miq_" + set + "_" + i);
         if (typeof mcd[i].xml2 != "undefined") {
           miqLoadChart("miq_" + set + "_" + i + "_2");
@@ -759,7 +746,7 @@ function miqLoadCharts() {
 }
 
 function miqLoadChart(chart_id) {
-  var chart_object = 'undefined';
+  var chart_object;
 
   if (document.getElementById(chart_id) != undefined &&
       typeof document.getElementById(chart_id) != 'undefined' &&
@@ -770,8 +757,8 @@ function miqLoadChart(chart_id) {
              typeof document.getElementsByName(chart_id)[0].Update_XML != 'undefined') {
     chart_object = document.getElementsByName(chart_id)[0];
   }
-  if (chart_object == 'undefined') {
-    self.setTimeout(function() { miqLoadChart(chart_id); }, 100);
+  if (chart_object === undefined) {
+    setTimeout(function() { miqLoadChart(chart_id); }, 100);
   } else {
     doLoadChart(chart_id, chart_object);
   }
@@ -787,23 +774,7 @@ function miqChartLinkData(col, row, value, category, series, id, message) {
     return;
   }
   // Added delay before showing menus to get it work in version 3.5
-  self.setTimeout(
-    "miqBuildChartMenu('" +
-    col +
-    "', '" +
-    row +
-    "', '" +
-    value +
-    "', '" +
-    category +
-    "', '" +
-    series +
-    "', '" +
-    id +
-    "', '" +
-    message +
-    "')", 250
-  );
+  setTimeout(function() { miqBuildChartMenu(col, row, value, category, series, id, message); }, 250);
 }
 
 function miqBuildChartMenu(col, row, value, category, series, id, message) {
@@ -811,7 +782,7 @@ function miqBuildChartMenu(col, row, value, category, series, id, message) {
   var idx = id.split('_')[2]; // Get the chart index
   var chart_data = miq_chart_data[set];
 
-  if (chart_data[idx].menu != null && chart_data[idx].menu.length > 0) {
+  if (chart_data[idx].menu != null && chart_data[idx].menu.length) {
     var rowcolidx = "_" + row + "-" + col+ "-" + idx;
     var miqMenu = new dhtmlXMenuObject(null, "dhx_web");
     miqMenu.setImagePath("/assets/dhtmlx_gpl_36/imgs/");
@@ -860,20 +831,14 @@ function miqAjaxButton(url, serialize_fields) {
   }
 
   miqAjaxTimers++;
-  self.setTimeout(
-    "miqAjaxButtonSend('" +
-    url +
-    "', " +
-    serialize_fields +
-    ")", 700
-  );
+  setTimeout(function() { miqAjaxButtonSend(url, serialize_fields); }, 700);
 }
 
 // Send ajax url after any outstanding ajax requests, wait longer if needed
 function miqAjaxButtonSend(url, serialize_fields) {
-  if ($.active > 0) {
+  if ($.active) {
     miqAjaxTimers++;
-    self.setTimeout("miqAjaxButtonSend('" + url + "')", 700);
+    setTimeout(function() { miqAjaxButtonSend(url); }, 700);
   } else {
     miqAjax(url, serialize_fields);
   }
@@ -894,13 +859,13 @@ function miqAsyncAjax(url) {
   miqJqueryRequest(url, {beforeSend: true});
 }
 
-// Function to generate an Ajax request, but only once for a drawn screen
 var miqOneTrans = 0;
 
+// Function to generate an Ajax request, but only once for a drawn screen
 function miqSendOneTrans(url) {
   if (typeof miqIEButtonPressed != "undefined") {
     // page replace after clicking save/reset was making observe_field on text_area in IE send up a trascation to form_field_changed method
-    delete miqIEButtonPressed;
+    miqIEButtonPressed = undefined;
     return;
   }
   if (miqOneTrans == 1) {
@@ -953,7 +918,7 @@ function miqClearTreeState(prefix) {
 
 // Check max length on a text area and set remaining chars
 function miqCheckMaxLength(obj) {
-  var ml = obj.getAttribute ? parseInt(obj.getAttribute("maxlength")) : "";
+  var ml = obj.getAttribute ? parseInt(obj.getAttribute("maxlength"), 10) : "";
   var counter = obj.getAttribute ? obj.getAttribute("counter") : "";
 
   if (obj.getAttribute && obj.value.length > ml) {
@@ -1032,7 +997,7 @@ function miqAttachTextAreaWithLines(id) {
   var string = '';
 
   for (var no = 1; no < 300; no++) {
-    if (string.length > 0) {
+    if (string.length) {
       string += '\n';
     }
     string += no;
