@@ -18,7 +18,10 @@ module ApiHelper
         attrs -= ["href"]
       end
 
-      attrs.each { |k| result[k] = normalize_direct(type, k, obj[k]) }
+      attrs.each do |k|
+        value =  normalize_direct(type, k, obj[k])
+        result[k] = value unless value.nil?
+      end
       result
     end
 
