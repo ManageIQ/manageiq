@@ -153,7 +153,7 @@ class ExtManagementSystem < ActiveRecord::Base
 
   # UI methods for determining availability of fields
   def supports_port?
-    false
+    true
   end
 
   def supports_authentication?(authtype)
