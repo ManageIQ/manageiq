@@ -361,7 +361,7 @@ module OpsController::Settings::Schedules
 
   def schedule_validate?(sched)
     valid = true
-    if params[:action_typ] != "db_backup"
+    if params[:action] != "db_backup"
       if %w(global my).include?(params[:filter_typ])
         if params[:filter_value].blank?  # Check for search filter chosen
           add_flash(_("%s must be selected") % "filter", :error)
@@ -426,11 +426,11 @@ module OpsController::Settings::Schedules
       schedule.sched_action = {:method=>"scan"}
     end
 
-    if params[:action_typ] != "db_backup"
+    if params[:action] != "db_backup"
       unless %w(global my).include?(params[:filter_typ]) # Unless a search filter is chosen
         # Build the filter expression
         exp = Hash.new
-        if params[:action_typ] == "storage"
+        if params[:action] == "storage"
           case params[:filter_typ]
             when "ems"
               exp["CONTAINS"] = {"field" => "Storage.ext_management_systems-name", "value" => params[:filter_value]}
@@ -441,7 +441,7 @@ module OpsController::Settings::Schedules
             else
               exp["IS NOT NULL"] = {"field" => "Storage-name"}
           end
-        elsif params[:action_typ] == "host"
+        elsif params[:action] == "host"
           case params[:filter_typ]
             when "ems"
               exp["="] = {"field" => "Host.ext_management_system-name", "value" => params[:filter_value]}
@@ -462,7 +462,7 @@ module OpsController::Settings::Schedules
             else
               exp["IS NOT NULL"] = {"field" => "Host-name"}
           end
-        elsif params[:action_typ] == "emscluster"
+        elsif params[:action] == "emscluster"
           case params[:filter_typ]
             when "ems"
               exp["="] = {"field" => "EmsCluster.ext_management_system-name", "value" => params[:filter_value]}
@@ -479,22 +479,22 @@ module OpsController::Settings::Schedules
             else
               exp["IS NOT NULL"] = {"field" => "EmsCluster-name"}
           end
-        elsif params[:action_typ].ends_with?("check_compliance")
+        elsif params[:action].ends_with?("check_compliance")
           case params[:filter_typ]
           when "ems"
             exp["="] = {
-              "field" => "#{params[:action_typ].split("_").first.capitalize}.ext_management_system-name",
+              "field" => "#{params[:action].split("_").first.capitalize}.ext_management_system-name",
               "value" => params[:filter_value]
             }
           when "cluster"
             unless params[:filter_value].blank?
               exp["AND"] = [
                 {"=" => {
-                  "field" => "#{params[:action_typ].split("_").first.capitalize}-v_owning_cluster",
+                  "field" => "#{params[:action].split("_").first.capitalize}-v_owning_cluster",
                   "value" => params[:filter_value].split("__").first
                 }},
                 {"=" => {
-                  "field" => "#{params[:action_typ].split("_").first.capitalize}-v_owning_datacenter",
+                  "field" => "#{params[:action].split("_").first.capitalize}-v_owning_datacenter",
                   "value" => params[:filter_value].split("__").size == 1 ? "" : params[:filter_value].split("__").last
                 }}
               ]
@@ -504,10 +504,10 @@ module OpsController::Settings::Schedules
           when "vm"
             exp["="] = {"field" => "Vm-name", "value" => params[:filter_value]}
           else
-            exp["IS NOT NULL"] = {"field" => "#{params[:action_typ].split("_").first.capitalize}-name"}
+            exp["IS NOT NULL"] = {"field" => "#{params[:action].split("_").first.capitalize}-name"}
           end
         else
-          model = params[:action_typ].starts_with?("vm") ? "Vm" : "MiqTemplate"
+          model = params[:action].starts_with?("vm") ? "Vm" : "MiqTemplate"
           case params[:filter_typ]
             when "ems"
               exp["="] = {"field" => "#{model}.ext_management_system-name", "value" => params[:filter_value]}
