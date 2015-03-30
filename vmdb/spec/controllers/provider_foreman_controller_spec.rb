@@ -65,7 +65,7 @@ describe ProviderForemanController do
       controller.send(:x_node_set, key, :foreman_providers_tree)
       controller.send(:get_node_info, key)
       right_cell_text = controller.instance_variable_get(:@right_cell_text)
-      expect(right_cell_text).to eq("Provider \"test Configuration Manager\"")
+      expect(right_cell_text).to eq("Configuration Profiles under Provider \"test Configuration Manager\"")
     end
   end
 

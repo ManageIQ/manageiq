@@ -1,15 +1,5 @@
-- no_toggle_dash_buttons = ["compare_miq", "vmtree",         "drift",              "policies",
-                            "rsop",        "patches",        "guest_applications", "registry_items",
-                            "groups",      "kernel_drivers", "filesystem_drivers", "filesystems",
-                            "users",       "files",          "win32_services",     "linux_initprocesses",
-                            "disk_files",  "snapshot_files", "vm_ram_files",       "debris_files",
-                            "host_services"]
-- no_gtl_view_buttons = ["chargeback",   "miq_ae_class",          "miq_ae_customization",
-                         "miq_ae_tools", "miq_capacity_planning", "miq_capacity_utilization",
-                         "miq_policy",   "miq_policy_rsop",       "report",
-                         "ops",          "pxe"]
 #view_buttons_div
-  - if @record.nil? && @explorer && !no_gtl_view_buttons.include?(@layout)
+  - if x_gtl_view_tb_render?
     = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "x_gtl_view_tb"}
   - elsif %w(miq_capacity_planning miq_capacity_utilization).include?(@layout)
     = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "miq_capacity_view_tb"}

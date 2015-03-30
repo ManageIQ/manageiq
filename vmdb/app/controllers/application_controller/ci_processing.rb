@@ -1112,8 +1112,6 @@ module ApplicationController::CiProcessing
       else
         if request.parameters["controller"] == "service"
           self.send("process_services", vms, method)
-        elsif request.parameters["controller"] == "provider_foreman"
-          process_foreman(vms, method) unless vms.empty?
         else
           self.send("process_vms", vms, method, display_name)
         end
@@ -1134,8 +1132,6 @@ module ApplicationController::CiProcessing
         vms.push(params[:id])
         if request.parameters["controller"] == "service"
           self.send("process_services", vms, method) unless vms.empty?
-        elsif request.parameters["controller"] == "provider_foreman"
-          process_foreman(vms, method) unless vms.empty?
         else
           self.send("process_vms", vms, method, display_name) unless vms.empty?
         end
@@ -1199,6 +1195,25 @@ module ApplicationController::CiProcessing
     else
       add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task=>Dictionary::gettext(task, :type=>:task).titleize, :count_model=>pluralize(services.length,ui_lookup(:model=>kls.to_s))})
     end
+  end
+
+  def foreman_button_operation(method, display_name)
+    items = []
+    if params[:id]
+      if params[:id].nil? || ExtManagementSystem.exists?(params[:id]).nil?
+        add_flash(_("%s no longer exists") % ui_lookup(:table => controller_name), :error)
+      else
+        items.push(params[:id])
+        @single_delete = true if method == 'destroy' && !flash_errors?
+      end
+    else
+      items = find_checked_items
+      if items.empty?
+        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => controller_name),
+                                                                :task  => display_name}, :error)
+      end
+    end
+    process_foreman(items, method) unless items.empty? && !flash_errors?
   end
 
   def process_foreman(providers, task)
