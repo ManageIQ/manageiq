@@ -1,5 +1,5 @@
 module EmsRefresh::SaveInventoryHelper
-  def save_inventory_multi(type, parent, hashes, deletes, find_key, child_keys = [], extra_keys = [])
+  def save_inventory_multi(type, parent, hashes, deletes, find_key, child_keys = [], extra_keys = [], store_ref = false)
     deletes = deletes.to_a # make sure to load the association if it's an association
     child_keys, extra_keys, remove_keys = self.save_inventory_prep(child_keys, extra_keys)
 
@@ -9,6 +9,7 @@ module EmsRefresh::SaveInventoryHelper
     hashes.each do |h|
       found = save_inventory_with_findkey(type, parent, h.except(*remove_keys), deletes, new_records, record_index, record_index_columns, find_key)
       save_child_inventory(found, h, child_keys)
+      h[:ar_object] = found if store_ref
     end
 
     # Delete the items no longer found
@@ -114,8 +115,7 @@ module EmsRefresh::SaveInventoryHelper
   def save_inventory_assoc(type, parent, hashes, target, find_key, child_keys = [], extra_keys = [])
     deletes = relation_values(parent, type, target)
 
-    save_inventory_multi(type, parent, hashes, deletes, find_key, child_keys, extra_keys)
-    store_ids_for_new_records(parent.send(type), hashes, find_key)
+    save_inventory_multi(type, parent, hashes, deletes, find_key, child_keys, extra_keys, true)
   end
 
   # We need to determine our intent:

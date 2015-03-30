@@ -27,10 +27,9 @@ module EmsRefresh
       # these records are cross referenced to the hashes
       # get the id out and store in this record
       hashes.each do |hash|
-        hash[:configuration_profile_id] = hash.fetch_path(:configuration_profile, :id)
+        hash[:configuration_profile] = hash.fetch_path(:configuration_profile, :ar_object)
       end
-      save_inventory_assoc(:configured_systems, manager, hashes, delete_missing_records, [:manager_ref], nil,
-                           [:configuration_profile])
+      save_inventory_assoc(:configured_systems, manager, hashes, delete_missing_records, [:manager_ref])
     end
   end
 end
