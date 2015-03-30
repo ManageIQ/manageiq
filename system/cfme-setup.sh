@@ -31,6 +31,13 @@ cat <<'EOF' > /etc/httpd/conf.d/ssl.conf
 # upgraded.
 EOF
 
+# Incorporate the iptable updates
+if [[ -f /etc/sysconfig/iptables.miq ]]; then
+  /sbin/iptables-save > /etc/sysconfig/iptables.SYSTEM
+  /sbin/iptables-restore /var/www/miq/system/TEMPLATE/etc/sysconfig/iptables
+  /sbin/service iptables save
+fi
+
 /usr/sbin/semanage fcontext -a -t httpd_log_t "/var/www/miq/vmdb/log(/.*)?"
 /usr/sbin/semanage fcontext -a -t cert_t "/var/www/miq/vmdb/certs(/.*)?"
 /usr/sbin/semanage fcontext -a -t logrotate_exec_t /var/www/miq/system/logrotate_free_space_check.sh
