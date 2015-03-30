@@ -37,7 +37,6 @@ class EmsKubernetes < EmsContainer
     self.class.raw_api_endpoint(hostname, port)
   end
 
-
   def connect(_options = {})
     self.class.raw_connect(hostname, port, api_version)
   end
