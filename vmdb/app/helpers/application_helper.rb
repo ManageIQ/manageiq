@@ -256,6 +256,8 @@ module ApplicationHelper
     when "MiqWorker"
       controller = request.parameters[:controller]
       action = "diagnostics_worker_selected"
+    when "CloudNetwork", "OrchestrationStackOutput", "OrchestrationStackParameter", "OrchestrationStackResource"
+      controller = request.parameters[:controller]
     else
       controller = db.underscore
     end
