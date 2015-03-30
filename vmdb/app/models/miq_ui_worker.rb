@@ -36,5 +36,5 @@ class MiqUiWorker < MiqWorker
     end
   end
 
-  include WebServerWorkerMixin
+  include MiqWebServerWorkerMixin
 end

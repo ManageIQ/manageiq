@@ -26,5 +26,5 @@ class MiqWebServiceWorker < MiqWorker
     end
   end
 
-  include WebServerWorkerMixin
+  include MiqWebServerWorkerMixin
 end
