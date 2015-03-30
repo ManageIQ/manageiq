@@ -33,8 +33,8 @@ module ManageiqForeman
       power_state == "on"
     end
 
-    def reboot(mode = "pxe")
-      connection.fetch(:hosts, :boot, "id" => manager_ref, "device" => mode)
+    def set_boot_mode(mode = "pxe")
+      connection.fetch(:hosts, :boot, "id" => manager_ref, "device" => mode).first["boot"]
     end
 
     def attributes
