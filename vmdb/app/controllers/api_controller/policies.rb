@@ -76,7 +76,7 @@ class ApiController
       end
 
       add_parent_href_to_result(result)
-      add_policy_to_result(result, ctype, policy)
+      add_subcollection_resource_to_result(result, ctype, policy)
       log_result(result)
       result
     end

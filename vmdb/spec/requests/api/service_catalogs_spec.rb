@@ -237,7 +237,8 @@ describe ApiController do
 
       run_post(sc_templates_url(sc.id), gen_request(:assign, "href" => service_templates_url(999_999)))
 
-      expect_resource_not_found
+      expect_request_success
+      expect_results_to_match_hash("results", [{"success" => false, "href" => service_catalogs_url(sc.id)}])
     end
 
     it "supports assign requests" do
@@ -249,6 +250,11 @@ describe ApiController do
       run_post(sc_templates_url(sc.id), gen_request(:assign, "href" => service_templates_url(st.id)))
 
       expect_request_success
+      expect_results_to_match_hash("results", [{"success"               => true,
+                                                "href"                  => service_catalogs_url(sc.id),
+                                                "service_template_id"   => st.id,
+                                                "service_template_href" => /^.*#{service_templates_url(st.id)}$/,
+                                                "message"               => /assigning/i}])
       expect(sc.reload.service_templates.pluck(:id)).to eq([st.id])
     end
 
@@ -263,6 +269,11 @@ describe ApiController do
       run_post(sc_templates_url(sc.id), gen_request(:unassign, "href" => service_templates_url(st1.id)))
 
       expect_request_success
+      expect_results_to_match_hash("results", [{"success"               => true,
+                                                "href"                  => service_catalogs_url(sc.id),
+                                                "service_template_id"   => st1.id,
+                                                "service_template_href" => /^.*#{service_templates_url(st1.id)}$/,
+                                                "message"               => /unassigning/i}])
       expect(sc.reload.service_templates.pluck(:id)).to eq([st2.id])
     end
   end
