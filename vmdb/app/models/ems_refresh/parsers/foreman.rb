@@ -152,7 +152,7 @@ module EmsRefresh
             :type        => type,
             :name        => m["name"],
           }.tap do |h|
-            h[extra_field] = m[extra_field] if extra_field
+            h[extra_field.to_sym] = m[extra_field] if extra_field
           end
         end
       end
