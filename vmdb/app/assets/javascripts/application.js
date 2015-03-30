@@ -1,4 +1,6 @@
 //= require angular
+//= require jquery
+//= require jquery_overrides
 //= require miq_angular_application
 //= require services/miq_service
 //= require directives/miqrequired

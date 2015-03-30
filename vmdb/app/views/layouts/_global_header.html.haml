@@ -12,6 +12,7 @@
     = tag :link, :rel => "shortcut icon", :href => image_path("favicon.ico")
     = stylesheet_link_tag 'application'
     = render :partial => "stylesheets/template50"
+    = javascript_include_tag 'application'
 
     -# HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries
     /[if lt IE 9]
@@ -19,8 +20,7 @@
       = javascript_include_tag 'respond.min'
     -# IE8 requires jQuery and Bootstrap JS to load in head to prevent rendering bugs
     -# IE8 requires jQuery v1.x
-    = javascript_include_tag 'jquery/jquery-1.8.3.min',
-                             'jquery/jquery-ui-1.9.2.custom.min'
+    = javascript_include_tag 'jquery/jquery-ui-1.9.2.custom.min'
     = javascript_include_tag 'bootstrap.min'
     = javascript_include_tag 'bootstrap-hover-dropdown/bootstrap-hover-dropdown.min'
     = javascript_include_tag 'patternfly.min'
@@ -33,7 +33,6 @@
     = javascript_include_tag 'jquery.form' # Form plugin (for file uploads
     = javascript_include_tag 'jquery.cookie' # Cookie plugin (dynatree)
     = csrf_meta_tag
-    = javascript_include_tag 'application'
     = javascript_include_tag 'dhtmlx_gpl_36/dhtmlxcommon.js',
                              'dhtmlx_gpl_36/dhtmlxcontainer.js'
     = javascript_include_tag 'dynatree_1.2.4/jquery.dynatree',

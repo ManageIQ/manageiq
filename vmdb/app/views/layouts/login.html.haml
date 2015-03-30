@@ -7,19 +7,16 @@
       = h(title_from_layout(@layout))
     = tag :link, :rel => "shortcut icon", :href => image_path("favicon.ico")
     = stylesheet_link_tag 'application'
+    = javascript_include_tag 'application'
     - # HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries
     /[if lt IE 9]
       = javascript_include_tag 'html5shiv.min'
       = javascript_include_tag 'respond.min'
     - # IE8 requires jQuery and Bootstrap JS to load in head to prevent rendering bugs
     - # IE8 requires jQuery v1.x
-    = javascript_include_tag 'jquery/jquery-1.8.3.min', 'jquery/jquery-ui-1.9.2.custom.min'
+    = javascript_include_tag 'jquery/jquery-ui-1.9.2.custom.min'
     = javascript_include_tag 'bootstrap.min'
     = javascript_include_tag 'patternfly.min'
-
-    - # Override jQuery $ to $
-    :javascript
-      $ = jQuery;
 
     - # Observe field plugin
     = javascript_include_tag 'jquery.observe_field'
@@ -30,7 +27,6 @@
 
     = csrf_meta_tag
 
-    = javascript_include_tag 'application'
     - # Always include the dhtmlx common JS
     = javascript_include_tag 'dhtmlx_gpl_36/dhtmlxcommon.js'
     = javascript_include_tag 'spin'
