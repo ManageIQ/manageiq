@@ -35,5 +35,4 @@ module ContainerGroupHelper::TextualSummary
   def textual_dns_policy
     {:label => "DNS Policy", :value => @record.dns_policy}
   end
-
 end
