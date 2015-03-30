@@ -2738,5 +2738,9 @@ module ApplicationHelper
       @record && @layout == "provider_foreman" && x_active_tree == :foreman_providers_tree)
   end
 
+  def explorer_controller?
+    %w(vm_cloud vm_infra vm_or_template).include?(controller_name)
+  end
+
   attr_reader :big_iframe
 end
