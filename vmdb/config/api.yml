@@ -512,6 +512,8 @@
       :post:
       - :name: edit
         :identifier: st_catalog_edit
+      - :name: delete
+        :identifier: st_catalog_delete
       :delete:
       - :name: delete
         :identifier: st_catalog_delete

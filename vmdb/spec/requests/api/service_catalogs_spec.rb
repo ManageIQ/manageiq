@@ -6,6 +6,7 @@
 # - Edit a service catalog                /api/service_catalogs/:id             action "edit"
 # - Edit multiple service catalogs        /api/service_catalogs                 action "edit"
 # - Delete a service catalog              /api/service_catalogs/:id             DELETE
+# - Delete a service catalog              /api/service_catalogs/:id             action "delete"
 # - Delete service catalogs               /api/service_catalogs                 action "delete"
 #
 # - Assign service templates    /api/service_catalogs/:id/service_templates     action "assign"
@@ -181,6 +182,17 @@ describe ApiController do
       run_delete(service_catalogs_url(sc.id))
 
       expect_request_success_with_no_content
+      expect { sc.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "supports resource deletes via action" do
+      api_basic_authorize collection_action_identifier(:service_catalogs, :delete)
+
+      sc = FactoryGirl.create(:service_template_catalog, :name => "sc", :description => "sc description")
+
+      run_post(service_catalogs_url(sc.id), gen_request(:delete))
+
+      expect_single_action_result(:success => true, :message => "deleting", :href => service_catalogs_url(sc.id))
       expect { sc.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
