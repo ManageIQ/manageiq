@@ -1,3 +1,5 @@
+require 'miq-iecunits'
+
 module EmsRefresh::Parsers
   class Kubernetes
     def self.ems_inv_to_hashes(inventory)
@@ -61,7 +63,23 @@ module EmsRefresh::Parsers
 
     def parse_node(node)
       new_result = parse_base_item(node)
-      # TODO, add more properties such as resources
+
+      new_result.merge!(
+        :identity_infra   => node.spec.externalID,
+        :identity_machine => node.status.nodeInfo.machineID,
+        :identity_system  => node.status.nodeInfo.systemUUID
+      )
+
+      node_memory = node.status.capacity.memory
+      node_memory &&= MiqIECUnits.string_to_value(node_memory) / 1.megabyte
+
+      new_result[:computer_system] = {
+        :hardware => {
+          :logical_cpus => node.status.capacity.cpu,
+          :memory_cpu   => node_memory
+        }
+      }
+
       new_result
     end
 
