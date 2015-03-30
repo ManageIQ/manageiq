@@ -23,6 +23,7 @@ class MiqVm
       @vmDir = File.dirname(vmCfg)
     end
 
+<<<<<<< HEAD
     $log.debug "MiqVm::initialize: @ost.openParent = #{@ost.openParent}" if $log
 
     #
@@ -88,6 +89,11 @@ class MiqVm
           esx_password     = @ost.miqVimVm.invObj.password
           thumb_print      = ESXThumbPrint.new(esx_host, esx_username, esx_password)
           @vdlConnection   = @ost.miqVimVm.vdlVcConnection(thumb_print) unless @vdlConnection
+        elsif (@scvmm = @ost.miq_scvmm)
+          $log.debug "MiqVm::initialize: accessing VM through SCVMM server" if $log.debug?
+          @scvmm_vm = @scvmm.get_vm(vmCfg)
+          $log.debug "MiqVm::initialize: setting @ost.miq_scvmm_vm = #{@scvmm_vm.class}" if $log.debug?
+          @vmConfig = VmConfig.new(@scvmm_vm.getCfg(@ost.snapId))
         else
           @vdlConnection = @ost.miqVim.vdlConnection unless @vdlConnection
           $log.debug "openDisks (ESX): using disk file path: #{dInfo.vixDiskInfo[:fileName]}"
