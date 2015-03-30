@@ -17,6 +17,10 @@ class EmsOpenstack < EmsCloud
     %w(default amqp)
   end
 
+  def supports_provider_id?
+    true
+  end
+
   def supports_authentication?(authtype)
     supported_auth_types.include?(authtype.to_s)
   end

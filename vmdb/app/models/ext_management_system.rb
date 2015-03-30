@@ -156,6 +156,10 @@ class ExtManagementSystem < ActiveRecord::Base
     false
   end
 
+  def supports_provider_id?
+    false
+  end
+
   def supports_authentication?(authtype)
     authtype.to_s == "default"
   end

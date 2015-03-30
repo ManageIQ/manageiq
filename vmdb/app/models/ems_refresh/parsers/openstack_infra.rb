@@ -92,20 +92,21 @@ module EmsRefresh
         host_name = identify_host_name(indexed_resources, host.instance_uuid, uid)
 
         new_result = {
-          :name             => host_name,
-          :type             => 'HostOpenstackInfra',
-          :uid_ems          => uid,
-          :ems_ref          => uid,
-          :ems_ref_obj      => host.instance_uuid,
-          :operating_system => {:product_name => 'linux'},
-          :vmm_vendor       => 'RedHat',
-          :vmm_product      => identify_product(indexed_resources, host.instance_uuid),
-          :ipaddress        => identify_primary_ip_address(host, indexed_servers),
-          :mac_address      => identify_primary_mac_address(host, indexed_servers),
-          :ipmi_address     => identify_ipmi_address(host),
-          :power_state      => lookup_power_state(host.power_state),
-          :connection_state => lookup_connection_state(host.power_state),
-          :hardware         => process_host_hardware(host)
+          :name                => host_name,
+          :type                => 'HostOpenstackInfra',
+          :uid_ems             => uid,
+          :ems_ref             => uid,
+          :ems_ref_obj         => host.instance_uuid,
+          :operating_system    => {:product_name => 'linux'},
+          :vmm_vendor          => 'RedHat',
+          :vmm_product         => identify_product(indexed_resources, host.instance_uuid),
+          :ipaddress           => identify_primary_ip_address(host, indexed_servers),
+          :mac_address         => identify_primary_mac_address(host, indexed_servers),
+          :ipmi_address        => identify_ipmi_address(host),
+          :power_state         => lookup_power_state(host.power_state),
+          :connection_state    => lookup_connection_state(host.power_state),
+          :hardware            => process_host_hardware(host),
+          :hypervisor_hostname => identify_hypervisor_hostname(host, indexed_servers)
         }
 
         return uid, new_result
@@ -123,7 +124,7 @@ module EmsRefresh
         # TODO(lsmola) Nova is missing information which address is primary now,
         # so just taking first. We need to figure out how to identify it if
         # there are multiple.
-        server.addresses.try(:[], 'ctlplane').try(:[], 0).try(:[], key) if server
+        server.addresses.fetch_path('ctlplane', 0, key) if server
       end
 
       def get_purpose(indexed_resources, instance_uuid)
@@ -158,6 +159,10 @@ module EmsRefresh
 
       def identify_ipmi_address(host)
         host.driver_info["ipmi_address"]
+      end
+
+      def identify_hypervisor_hostname(host, indexed_servers)
+        indexed_servers.fetch_path(host.instance_uuid).try(:name)
       end
 
       def lookup_power_state(power_state_input)

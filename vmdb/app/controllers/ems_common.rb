@@ -598,15 +598,20 @@ module EmsCommon
     @edit[:new][:emstype] = @ems.emstype
     @edit[:amazon_regions] = get_amazon_regions if @ems.kind_of?(EmsAmazon)
     @edit[:new][:port] = @ems.port
+    @edit[:new][:provider_id] = @ems.provider_id
     if @ems.zone.nil? || @ems.my_zone == ""
       @edit[:new][:zone] = "default"
     else
       @edit[:new][:zone] = @ems.my_zone
     end
-    @edit[:server_zones] = Array.new
+    @edit[:server_zones] = []
     zones = Zone.order('lower(description)')
     zones.each do |zone|
       @edit[:server_zones].push([zone.description, zone.name])
+    end
+    
+    @edit[:openstack_infra_providers] = ProviderOpenstack.order('lower(name)').each_with_object([["---", nil]]) do |openstack_infra_provider, x|
+      x.push([openstack_infra_provider.name, openstack_infra_provider.id])
     end
 
     @edit[:new][:default_userid] = @ems.authentication_userid
@@ -661,6 +666,7 @@ module EmsCommon
       end
     end
     @edit[:new][:port] = params[:port] if params[:port]
+    @edit[:new][:provider_id] = params[:provider_id] if params[:provider_id]
     @edit[:new][:zone] = params[:server_zone] if params[:server_zone]
 
     @edit[:new][:default_userid] = params[:default_userid] if params[:default_userid]
@@ -688,6 +694,7 @@ module EmsCommon
     ems.hostname = @edit[:new][:hostname]
     ems.ipaddress = @edit[:new][:ipaddress]
     ems.port = @edit[:new][:port] if ems.supports_port?
+    ems.provider_id = @edit[:new][:provider_id] if ems.supports_provider_id?
     ems.zone = Zone.find_by_name(@edit[:new][:zone])
 
     if ems.is_a?(EmsVmware)
