@@ -824,6 +824,10 @@
         :description: Edit Orchestration Templates Tags
         :feature_type: control
         :identifier: orchestration_template_tag
+    - :name: Create Service Dialog from Orchestration Template
+      :description: Create Service Dialog from Orchestration Template
+      :identifier: service_dialog_from_ot
+      :feature_type: admin
       
 # My Services
 - :name: My Services
