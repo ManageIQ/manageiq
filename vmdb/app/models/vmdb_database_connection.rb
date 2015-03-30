@@ -71,6 +71,8 @@ class VmdbDatabaseConnection < ActiveRecord::Base
   end
 
   def wait_time_ms
+    return 0 if query_start.nil?
+
     (Time.now - query_start).to_i
   end
 
