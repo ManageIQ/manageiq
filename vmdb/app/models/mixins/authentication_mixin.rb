@@ -51,7 +51,8 @@ module AuthenticationMixin
   end
 
   def missing_credentials?(type = nil)
-    !has_credentials?(type)
+    # TODO(lsmola) re-factor, make keypairs part of best_with, but containing also delegation to parents
+    !has_credentials?(type) && !auth_user_keypair(type)
   end
 
   def authentication_status
