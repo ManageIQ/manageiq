@@ -37,7 +37,7 @@ class EmsCloudController < ApplicationController
         page.redirect_to ems_cloud_path(@ems, :flash_msg => flash)
       end
     else
-      @ems.errors.each do |field,msg|
+      @ems.errors.each do |field, msg|
         add_flash("#{@ems.class.human_attribute_name(field)} #{msg}", :error)
       end
       drop_breadcrumb(:name => "Edit #{ui_lookup(:table => @table_name)} '#{@ems.name}'",
@@ -54,26 +54,26 @@ class EmsCloudController < ApplicationController
     if params[:server_emstype].blank?
       add_flash(_("%s is required") % "Type", :error)
       render :update do |page|
-        page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     else
       @ems = model.model_from_emstype(params[:server_emstype]).new
       set_model_data @ems, params
 
-      name = ui_lookup(:tables=>table_name)
+      name = ui_lookup(:tables => table_name)
 
       if @ems.valid? && @ems.save
         render :update do |page|
           page.redirect_to :action => 'show_list', :flash_msg => _("%{model} \"%{name}\" was saved") % {:model => name, :name => @ems.name}
         end
       else
-        @ems.errors.each do |field,msg|
+        @ems.errors.each do |field, msg|
           add_flash("#{@ems.class.human_attribute_name(field)} #{msg}", :error)
         end
 
-        drop_breadcrumb( {:name=>"Add New #{name}", :url=> new_polymorphic_path(self.class.model)} )
+        drop_breadcrumb(:name => "Add New #{name}", :url => new_polymorphic_path(self.class.model))
         render :update do |page|
-          page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
     end
@@ -118,17 +118,17 @@ class EmsCloudController < ApplicationController
     ems.port            = params[:port]
     ems.zone            = Zone.find_by_name(params[:server_zone] || "default")
 
-    if ems.is_a?(EmsVmware)
+    if ems.kind_of?(EmsVmware)
       ems.host_default_vnc_port_start = no_blank(params[:host_default_vnc_port_start])
       ems.host_default_vnc_port_end = no_blank(params[:host_default_vnc_port_end])
     end
 
     creds = {
       :default => {
-      :default_userid   => no_blank(params[:default_userid]),
-      :default_password => no_blank(params[:default_password]),
-      :default_verify   => no_blank(params[:default_verify]),
-    }
+        :default_userid   => no_blank(params[:default_userid]),
+        :default_password => no_blank(params[:default_password]),
+        :default_verify   => no_blank(params[:default_verify]),
+      }
     }
 
     if ems.supports_authentication?(:metrics)
