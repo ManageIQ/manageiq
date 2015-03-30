@@ -6,6 +6,7 @@ module EmsRefresh
           return @resources[stack.id] if @resources && !@resources.fetch_path(stack.id).blank?
           @resources = {} unless @resources
           # TODO(lsmola) catch exception when nested-depth is not supported, it's supported from Juno OpenStack
+          # TODO(lsmola) @resources[stack.id] = stack.resources(:nested_depth => 50)
           @resources[stack.id] = @orchestration_service.list_resources(stack, :nested_depth => 50).body['resources']
         end
 
@@ -21,10 +22,16 @@ module EmsRefresh
         end
 
         def detailed_stacks
+          return [] unless @orchestration_service
           # TODO(lsmola) We need a support of GET /{tenant_id}/stacks/detail in FOG, it was implemented here
           # https://review.openstack.org/#/c/35034/, but never documented in API reference, so right now we
           # can't get list of detailed stacks in one API call.
           @orchestration_service.stacks.collect(&:details)
+        rescue Excon::Errors::Forbidden
+          # Orchestration service is detected but not open to the user
+          log_prefix = "MIQ(OrchestrationStacks.detailed_stacks)"
+          $log.warn("#{log_prefix} Skip refreshing stacks because the user cannot access the orchestration service")
+          []
         end
 
         def parse_stack(stack)
@@ -139,7 +146,7 @@ module EmsRefresh
         end
 
         def find_stack_outputs(stack)
-          raw_outputs = stack.outputs
+          raw_outputs = stack.outputs || []
           get_stack_outputs(stack.id, raw_outputs)
           raw_outputs.collect do |output|
             @data_index.fetch_path(:orchestration_stack_outputs, compose_ems_ref(stack.id, output['output_key']))
@@ -181,6 +188,11 @@ module EmsRefresh
             end
             stack.delete(:children)
           end
+        end
+
+        # Compose an ems_ref combining some existing keys
+        def compose_ems_ref(*keys)
+          keys.join('_')
         end
       end
     end
