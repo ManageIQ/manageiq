@@ -283,10 +283,11 @@ module EmsCommon
 
   def update_button_cancel
     session[:edit] = nil  # clean out the saved info
+    _model = model
     render :update do |page|
       page.redirect_to(:action => @lastaction, :id => @ems.id, :display => session[:ems_display],
                        :flash_msg => _("Edit of %{model} \"%{name}\" was cancelled by the user") %
-                       {:model => ui_lookup(:model => model.to_s), :name => @ems.name})
+                       {:model => ui_lookup(:model => _model.to_s), :name => @ems.name})
     end
   end
   private :update_button_cancel
