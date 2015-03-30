@@ -28,9 +28,15 @@ class EmsKubernetes < EmsContainer
     uri
   end
 
+  # UI methods for determining availability of fields
+  def supports_port?
+    false
+  end
+  
   def api_endpoint
     self.class.raw_api_endpoint(hostname, port)
   end
+
 
   def connect(_options = {})
     self.class.raw_connect(hostname, port, api_version)
