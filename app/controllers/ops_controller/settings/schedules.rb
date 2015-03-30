@@ -444,7 +444,8 @@ module OpsController::Settings::Schedules
       schedule.miq_search = params[:filter_value] ? MiqSearch.find(params[:filter_value]) : nil # Set up the search relationship
     else  # Build the filter expression
       exp = Hash.new
-      if params[:action] == "storage"
+      case params[:action]
+      when "storage"
         case params[:filter_typ]
           when "ems"
             exp["CONTAINS"] = {"field" => "Storage.ext_management_systems-name", "value" => params[:filter_value]}
@@ -455,7 +456,7 @@ module OpsController::Settings::Schedules
           else
             exp["IS NOT NULL"] = {"field" => "Storage-name"}
         end
-      elsif params[:action] == "host"
+      when "host"
         case params[:filter_typ]
           when "ems"
             exp["="] = {"field" => "Host.ext_management_system-name", "value" => params[:filter_value]}
@@ -476,7 +477,7 @@ module OpsController::Settings::Schedules
           else
             exp["IS NOT NULL"] = {"field" => "Host-name"}
         end
-      elsif params[:action] == "emscluster"
+      when "emscluster"
         case params[:filter_typ]
           when "ems"
             exp["="] = {"field" => "EmsCluster.ext_management_system-name", "value" => params[:filter_value]}
@@ -493,7 +494,7 @@ module OpsController::Settings::Schedules
           else
             exp["IS NOT NULL"] = {"field" => "EmsCluster-name"}
         end
-      elsif params[:action].ends_with?("check_compliance")
+      when /check_compliance\z/
         case params[:filter_typ]
         when "ems"
           exp["="] = {
