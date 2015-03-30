@@ -1,11 +1,19 @@
-shared_examples_for "A controller that has advanced search routes" do
+shared_examples_for "A controller that has advanced search routes" do |restful|
   describe "#quick_search" do
     it "routes with POST" do
       expect(post("/#{controller_name}/quick_search")).to route_to("#{controller_name}#quick_search")
     end
 
-    it "does not route with GET" do
-      expect(get("/#{controller_name}/quick_search")).not_to be_routable
+    if restful
+      it "does not route with GET" do
+        expect(get("/#{controller_name}/quick_search")).to route_to(:action     => "show",
+                                                                    :controller => "ems_cloud",
+                                                                    :id         => "quick_search")
+      end
+    else
+      it "does not route with GET" do
+        expect(get("/#{controller_name}/quick_search")).not_to be_routable
+      end
     end
   end
 
@@ -20,8 +28,16 @@ shared_examples_for "A controller that has advanced search routes" do
       expect(post("/#{controller_name}/adv_search_clear")).to route_to("#{controller_name}#adv_search_clear")
     end
 
-    it "does not route with GET" do
-      expect(get("/#{controller_name}/adv_search_clear")).not_to be_routable
+    if restful
+      it "does not route with GET" do
+        expect(get("/#{controller_name}/adv_search_clear")).to route_to(:action     => "show",
+                                                                        :controller => "ems_cloud",
+                                                                        :id         => "adv_search_clear")
+      end
+    else
+      it "does not route with GET" do
+        expect(get("/#{controller_name}/adv_search_clear")).not_to be_routable
+      end
     end
   end
 
