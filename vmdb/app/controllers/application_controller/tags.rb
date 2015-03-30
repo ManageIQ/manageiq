@@ -109,7 +109,7 @@ module ApplicationController::Tags
     return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}","replace_cell__explorer")
 
     if params[:tag_cat]
-      @edit[:cat] = Classification.find_by_name(params[:tag_cat])
+      @edit[:cat] = Classification.find_by_id(params[:tag_cat])
       tag_edit_build_entries_pulldown
     elsif params[:tag_add]
       @edit[:new][:assignments].push(params[:tag_add].to_i)
@@ -392,9 +392,9 @@ module ApplicationController::Tags
     cats.delete_if{ |c| c.read_only? || c.entries.length == 0}  # Remove categories that are read only or have no entries
     cats.each do |c|
         if c.single_value?
-          @categories[c.description + " *"] = c.name
+          @categories[c.description + " *"] = c.id
         else
-          @categories[c.description] = c.name
+          @categories[c.description] = c.id
         end
     end
 
