@@ -153,7 +153,7 @@ class ExtManagementSystem < ActiveRecord::Base
 
   # UI methods for determining availability of fields
   def supports_port?
-    true
+    false
   end
 
   def supports_provider_id?

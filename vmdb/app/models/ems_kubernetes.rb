@@ -26,9 +26,15 @@ class EmsKubernetes < EmsContainer
     URI::HTTPS.build(:host => hostname, :port => port.to_i)
   end
 
+  # UI methods for determining availability of fields
+  def supports_port?
+    false
+  end
+  
   def api_endpoint
     self.class.raw_api_endpoint(hostname, port)
   end
+
 
   def connect(_options = {})
     self.class.raw_connect(hostname, port)
