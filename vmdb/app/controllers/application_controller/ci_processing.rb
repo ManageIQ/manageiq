@@ -1896,7 +1896,8 @@ module ApplicationController::CiProcessing
   end
 
   def show_association(action, display_name, listicon, method, klass, association = nil)
-    @explorer = true if request.xml_http_request? # Ajax request means in explorer
+    # Ajax request means in explorer, or if current explorer is one of the explorer controllers
+    @explorer = true if request.xml_http_request? && explorer_controller?
     if @explorer  # Save vars for tree history array
       @x_show = params[:x_show]
       @sb[:action] = @lastaction = action
