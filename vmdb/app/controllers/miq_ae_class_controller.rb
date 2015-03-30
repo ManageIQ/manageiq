@@ -1129,7 +1129,7 @@ class MiqAeClassController < ApplicationController
           page << javascript_hide("field_default_value")
           page << javascript_show("field_password_value")
           page << "$('#field_password_value').val('');"
-        else
+        elsif params[:field_datatype]
           page << javascript_hide("field_password_value")
           page << javascript_show("field_default_value")
           page << "$('#field_default_value').val('');"
