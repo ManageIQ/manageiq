@@ -443,7 +443,7 @@ module OpsController::Settings::Schedules
       schedule.filter = nil  # Clear out existing filter expression
       schedule.miq_search = params[:filter_value] ? MiqSearch.find(params[:filter_value]) : nil # Set up the search relationship
     else  # Build the filter expression
-      exp = Hash.new
+      exp = {}
       case params[:action]
       when "storage"
         case params[:filter_typ]
