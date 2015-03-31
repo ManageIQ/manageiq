@@ -38,6 +38,16 @@ module AutomationSpecHelper
                        attrs.merge('ae_fields' => ae_fields, 'ae_instances' => ae_instances))
   end
 
+  def create_state_ae_model(attrs = {})
+    attrs = default_ae_model_attributes(attrs)
+    instance_name = attrs.delete(:instance_name)
+    ae_fields = {'field1' => {:aetype => 'state', :datatype => 'string'}}
+    ae_instances = {instance_name => {'field1' => {:value => 'phases of matter'}}}
+
+    FactoryGirl.create(:miq_ae_domain, :with_small_model, :with_instances,
+                       attrs.merge('ae_fields' => ae_fields, 'ae_instances' => ae_instances))
+  end
+
   def default_ae_model_attributes(attrs = {})
     attrs.reverse_merge!(
       :ae_class      => 'CLASS1',
