@@ -1,11 +1,7 @@
 - if edit
   - if field.values.length > 1
     - select_values = field.values.collect(&:reverse)
-    = select_tag(field.name, options_for_select(select_values, field.default_value),
-                 :class                 => "dynamic-drop-down-#{field.id}",
-                 "data-miq_sparkle_on"  => true,
-                 "data-miq_sparkle_off" => true,
-                 "data-miq_observe"     => {:url => url}.to_json)
+    = select_tag(field.name, options_for_select(select_values, field.default_value), drop_down_options(field, url))
 
   - else
     = h(field.values[0].last) if !field.values.empty?
