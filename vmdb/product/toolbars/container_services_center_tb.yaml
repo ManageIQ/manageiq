@@ -16,6 +16,7 @@
       :url: '/new'
       :text: 'Add a New #{ui_lookup(:table=>"container_service")}'
       :title: 'Add a New #{ui_lookup(:table=>"container_service")}'
+      :enabled: 'false'
     - :button: container_service_edit
       :image: edit
       :text: 'Edit Selected #{ui_lookup(:table=>"container_service")}'
