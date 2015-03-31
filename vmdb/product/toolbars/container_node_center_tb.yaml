@@ -16,9 +16,11 @@
       :text: 'Edit this #{ui_lookup(:table=>"container_node")}'
       :title: 'Edit this #{ui_lookup(:table=>"container_node")}'
       :url: '/edit'
+      :enabled: 'false'
     - :button: container_node_delete
       :image: delete
       :text: 'Remove this #{ui_lookup(:table=>"container_node")} from the VMDB'
       :title: 'Remove this #{ui_lookup(:table=>"container_node")} from the VMDB'
       :url_parms: '&refresh=y'
       :confirm: 'Warning: This #{ui_lookup(:table=>"container_node")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this #{ui_lookup(:table=>"container_node")}?'
+      :enabled: 'false'
