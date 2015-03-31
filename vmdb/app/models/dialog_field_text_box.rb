@@ -49,7 +49,7 @@ class DialogFieldTextBox < DialogField
   end
 
   def sample_text
-    dynamic ? "Sample Text" : value
+    dynamic ? "Sample Text" : (value || default_value)
   end
 
   def normalize_automate_values(automate_hash)
