@@ -1,6 +1,7 @@
 #
 # Rest API Request Tests - Service Catalogs specs
 #
+# - Creating single new service catalog   /api/service_catalogs                 POST
 # - Creating single new service catalog   /api/service_catalogs                 action "add"
 # - Creating multiple service catalogs    /api/service_catalogs                 action "add"
 # - Edit a service catalog                /api/service_catalogs/:id             action "edit"
@@ -41,6 +42,14 @@ describe ApiController do
       expect_request_forbidden
     end
 
+    it "rejects resource creation via create action without appropriate role" do
+      api_basic_authorize
+
+      run_post(service_catalogs_url, "name" => "sample service catalog")
+
+      expect_request_forbidden
+    end
+
     it "rejects resource creation with id specified" do
       api_basic_authorize collection_action_identifier(:service_catalogs, :add)
 
@@ -53,6 +62,20 @@ describe ApiController do
       api_basic_authorize collection_action_identifier(:service_catalogs, :add)
 
       run_post(service_catalogs_url, gen_request(:add, "name" => "sample service catalog"))
+
+      expect_request_success
+      expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
+      expect_results_to_match_hash("results", [{"name" => "sample service catalog"}])
+
+      sc_id = @result["results"].first["id"]
+
+      expect(ServiceTemplateCatalog.find(sc_id)).to be_true
+    end
+
+    it "supports single resource creation via create action" do
+      api_basic_authorize collection_action_identifier(:service_catalogs, :add)
+
+      run_post(service_catalogs_url, "name" => "sample service catalog")
 
       expect_request_success
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
