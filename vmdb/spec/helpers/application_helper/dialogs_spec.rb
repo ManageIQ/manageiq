@@ -57,5 +57,36 @@ describe ApplicationHelper do
         end
       end
     end
+
+    describe "#textarea_tag_options" do
+      let(:dialog_field) { active_record_instance_double("DialogField", :id => "100", :read_only => read_only) }
+
+      context "when the field is read_only" do
+        let(:read_only) { true }
+
+        it "returns the tag options with a disabled true" do
+          expect(helper.textarea_tag_options(dialog_field, "url")).to eq({
+            :class     => "dynamic-text-area-100",
+            :maxlength => 8192,
+            :size      => "50x6",
+            :disabled  => true,
+            :title     => "This element is disabled because it is read only"
+          })
+        end
+      end
+
+      context "when the dialog field is not read only" do
+        let(:read_only) { false }
+
+        it "returns the tag options with a data-miq-observe" do
+          expect(helper.textarea_tag_options(dialog_field, "url")).to eq({
+            :class             => "dynamic-text-area-100",
+            :maxlength         => 8192,
+            :size              => "50x6",
+            "data-miq_observe" => "{\"interval\":\".5\",\"url\":\"url\"}"
+          })
+        end
+      end
+    end
   end
 end
