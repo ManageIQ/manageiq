@@ -73,6 +73,17 @@ module ApplicationHelper::Dialogs
     add_options_unless_read_only(extra_options, tag_options, field)
   end
 
+  def drop_down_options(field, url)
+    tag_options = {:class => "dynamic-drop-down-#{field.id}"}
+    extra_options = {
+      "data-miq_sparkle_on"  => true,
+      "data-miq_sparkle_off" => true,
+      "data-miq_observe"     => {:url => url}.to_json
+    }
+
+    add_options_unless_read_only(extra_options, tag_options, field)
+  end
+
   private
 
   def add_options_unless_read_only(options_to_add, options_to_add_to, field)
