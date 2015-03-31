@@ -49,7 +49,7 @@
 //= require SlickGrid-2.1/slick.dataview
 //= require SlickGrid-2.1/plugins/slick.autotooltips
 //= require miq_slickgrid
-//= require codemirror-4.2/lib/codemirror.js
-//= require codemirror-4.2/mode/yaml/yaml.js
+//= require codemirror
+//= require codemirror/modes/yaml
 //= require spin
 //= require jquery-hotkeys

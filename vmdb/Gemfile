@@ -11,6 +11,7 @@ gem "jquery-rjs", "=0.1.1", :git => 'https://github.com/amatsuda/jquery-rjs.git'
 gem 'angularjs-rails', '=1.2.4'
 gem 'jquery-rails', "=2.1.4"
 gem 'jquery-hotkeys-rails'
+gem 'codemirror-rails', "=4.2"
 
 gem "sprockets-sass",  "~>1.2.0"
 gem "sprockets-less",  "~>0.6.1"
