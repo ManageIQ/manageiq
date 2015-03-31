@@ -5,4 +5,8 @@ class ServiceTemplateOrchestration < ServiceTemplate
     # no sub task is needed for this service
     []
   end
+
+  def self.default_provisioning_entry_point
+    '/ManageIQ/Cloud/Orchestration/Provisioning/StateMachines/Provision/default'
+  end
 end

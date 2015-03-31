@@ -172,4 +172,12 @@ class ServiceTemplate < ActiveRecord::Base
     end
     service.save
   end
+
+  def self.default_provisioning_entry_point
+    '/ManageIQ/Service/Provisioning/StateMachines/ServiceProvision_Template/default'
+  end
+
+  def self.default_retirement_entry_point
+    '/ManageIQ/Service/Retirement/StateMachines/ServiceRetirement/default'
+  end
 end
