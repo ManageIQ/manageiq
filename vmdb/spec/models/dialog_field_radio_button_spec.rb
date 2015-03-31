@@ -144,8 +144,8 @@ describe DialogFieldRadioButton do
       let(:refreshed_values_from_automate) { [%w(123 123), %w(456 456)] }
 
       it "returns the list of refreshed values and checked value as a hash" do
-        expect(dialog_field_radio_button.refresh_json_value("456")).to eq(
-          :refreshed_values => refreshed_values_from_automate, :checked_value => "456"
+        expect(dialog_field_radio_button.refresh_json_value("123")).to eq(
+          {:refreshed_values => refreshed_values_from_automate, :checked_value => "123", :read_only => nil}
         )
       end
     end
@@ -155,7 +155,7 @@ describe DialogFieldRadioButton do
 
       it "returns the list of refreshed values and checked (default) value as a hash" do
         expect(dialog_field_radio_button.refresh_json_value("321")).to eq(
-          :refreshed_values => refreshed_values_from_automate, :checked_value => "123"
+          {:refreshed_values => refreshed_values_from_automate, :checked_value => "123", :read_only => nil}
         )
       end
     end

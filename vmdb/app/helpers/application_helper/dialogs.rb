@@ -84,6 +84,27 @@ module ApplicationHelper::Dialogs
     add_options_unless_read_only(extra_options, tag_options, field)
   end
 
+  def radio_options(field, url, value)
+    tag_options = {
+      :type     => 'radio',
+      :id       => field.id,
+      :value    => value,
+      :name     => field.name,
+      :checked  => field.default_value.to_s == value.to_s ? '' : nil
+    }
+
+    extra_options = {
+      :onclick  => remote_function(
+        :with     => "miqSerializeForm(this)",
+        :url      => url,
+        :loading  => "miqSparkle(true);",
+        :complete => "miqSparkle(false);"
+      )
+    }
+
+    add_options_unless_read_only(extra_options, tag_options, field)
+  end
+
   private
 
   def add_options_unless_read_only(options_to_add, options_to_add_to, field)
