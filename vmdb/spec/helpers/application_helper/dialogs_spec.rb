@@ -117,5 +117,61 @@ describe ApplicationHelper do
         end
       end
     end
+
+    describe "#date_tag_options" do
+      let(:dialog_field) { active_record_instance_double("DialogField", :id => "100", :read_only => read_only) }
+
+      context "when the field is read_only" do
+        let(:read_only) { true }
+
+        it "returns the tag options with a disabled true" do
+          expect(helper.date_tag_options(dialog_field, "url")).to eq({
+            :class    => "css1 dynamic-date-100",
+            :readonly => "true",
+            :disabled => true,
+            :title    => "This element is disabled because it is read only"
+          })
+        end
+      end
+
+      context "when the dialog field is not read only" do
+        let(:read_only) { false }
+
+        it "returns the tag options with a few data-miq attributes" do
+          expect(helper.date_tag_options(dialog_field, "url")).to eq({
+            :class                  => "css1 dynamic-date-100",
+            :readonly               => "true",
+            "data-miq_observe_date" => "{\"url\":\"url\"}"
+          })
+        end
+      end
+    end
+
+    describe "#time_tag_options" do
+      let(:dialog_field) { active_record_instance_double("DialogField", :id => "100", :read_only => read_only) }
+
+      context "when the field is read_only" do
+        let(:read_only) { true }
+
+        it "returns the tag options with a disabled true" do
+          expect(helper.time_tag_options(dialog_field, "url", "hour_or_min")).to eq({
+            :class    => "dynamic-date-hour_or_min-100",
+            :disabled => true,
+            :title    => "This element is disabled because it is read only"
+          })
+        end
+      end
+
+      context "when the dialog field is not read only" do
+        let(:read_only) { false }
+
+        it "returns the tag options with a few data-miq attributes" do
+          expect(helper.time_tag_options(dialog_field, "url", "hour_or_min")).to eq({
+            :class             => "dynamic-date-hour_or_min-100",
+            "data-miq_observe" => "{\"url\":\"url\"}"
+          })
+        end
+      end
+    end
   end
 end
