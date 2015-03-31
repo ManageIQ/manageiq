@@ -160,10 +160,11 @@ module EmsCommon
     assert_privileges("#{model.to_s.underscore}_new")
     return unless load_edit("ems_edit__new")
     get_form_vars
+    _model = model # render blocks instance eval, so cache the value on the stack
     case params[:button]
     when "cancel"
       render :update do |page|
-        page.redirect_to :action=>'show_list', :flash_msg=>_("Add of new %s was cancelled by the user") % ui_lookup(:model=>model.to_s)
+        page.redirect_to :action=>'show_list', :flash_msg=>_("Add of new %s was cancelled by the user") % ui_lookup(:model=>_model.to_s)
       end
     when "add"
       if @edit[:new][:emstype].blank?
@@ -282,10 +283,11 @@ module EmsCommon
 
   def update_button_cancel
     session[:edit] = nil  # clean out the saved info
+    _model = model
     render :update do |page|
       page.redirect_to(:action => @lastaction, :id => @ems.id, :display => session[:ems_display],
                        :flash_msg => _("Edit of %{model} \"%{name}\" was cancelled by the user") %
-                       {:model => ui_lookup(:model => model.to_s), :name => @ems.name})
+                       {:model => ui_lookup(:model => _model.to_s), :name => @ems.name})
     end
   end
   private :update_button_cancel
