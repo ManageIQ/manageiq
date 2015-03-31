@@ -16,6 +16,7 @@
       :url: '/new'
       :text: 'Add a New #{ui_lookup(:table=>"container_node")}'
       :title: 'Add a New #{ui_lookup(:table=>"container_node")}'
+      :enabled: 'false'
     - :button: container_node_edit
       :image: edit
       :text: 'Edit Selected #{ui_lookup(:table=>"container_node")}'
