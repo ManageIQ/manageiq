@@ -21,6 +21,11 @@ class EmsKubernetes < EmsContainer
     URI::HTTP.build(:host => hostname, :port => port.to_i, :path => "/api")
   end
 
+  # UI methods for determining availability of fields
+  def supports_port?
+    true
+  end
+
   def api_endpoint
     self.class.raw_api_endpoint(hostname, port)
   end
