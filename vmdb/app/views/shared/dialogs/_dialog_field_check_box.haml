@@ -1,9 +1,4 @@
-= check_box_tag(field.name, "1", field.checked?,
-                :disabled                   => !edit,
-                :class                      => "dynamic-checkbox-#{field.id}",
-                "data-miq_sparkle_on"       => true,
-                "data-miq_sparkle_off"      => true,
-                "data-miq_observe_checkbox" => {:url => url}.to_json)
+= check_box_tag(field.name, "1", field.checked?, {:disabled => !edit}.merge(checkbox_tag_options(field, url)))
 
 - if field.dynamic && field.show_refresh_button?
   = button_tag('Refresh', :id => "refresh-dynamic-checkbox-#{field.id}", :class => "btn btn-default")
