@@ -19,6 +19,7 @@ module RetirementMixin
     if self.retirement_warn != days
       self.retirement_last_warn = nil # Reset so that a new warning can be sent out when the time is right
       write_attribute(:retirement_warn, days)
+      self.retirement_requester = nil
     end
   end
 
@@ -39,6 +40,7 @@ module RetirementMixin
       self.retired              = false if timestamp.nil? || (timestamp.to_date > Date.today)
       self.retirement_last_warn = nil # Reset so that a new warning can be sent out when the time is right
       write_attribute(:retires_on, timestamp)
+      self.retirement_requester = nil
     end
   end
 
@@ -74,7 +76,6 @@ module RetirementMixin
       end
     end
 
-    self.retirement_requester = nil
     save
 
     raise_retire_audit_event(message)
@@ -109,8 +110,7 @@ module RetirementMixin
       return if retired_validated?
       $log.info("#{log_prefix} #{retirement_object_title}: [#{self.name}], Retires On Date: [#{self.retires_on_date}], was previously retired, but currently #{retired_invalid_reason}")
     else
-      self.retirement_requester = requester
-      save
+      update_attributes(:retirement_requester => requester)
       event_name = "request_#{retirement_event_prefix}_retire"
       $log.info("#{log_prefix} calling #{event_name}")
       begin
