@@ -10,6 +10,7 @@ class OrchestrationTemplate < ActiveRecord::Base
   default_value_for :draft, false
 
   validates :md5, :uniqueness => {:scope => :draft}, :unless => :draft?
+  validates_presence_of :name
 
   def self.available
     where(:draft => false)
