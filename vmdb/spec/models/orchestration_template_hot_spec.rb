@@ -9,9 +9,7 @@ describe OrchestrationTemplateHot do
     end
   end
 
-  let(:sample) { 'spec/fixtures/orchestration_templates/hot_parameters.yml' }
-
-  let(:valid_template) { OrchestrationTemplateHot.new(:content => IO.read(sample)) }
+  let(:valid_template) { FactoryGirl.create(:orchestration_template_hot_with_content) }
 
   context "when a raw template in YAML format is given" do
     it "parses parameters from a template" do
