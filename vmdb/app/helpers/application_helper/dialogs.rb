@@ -19,6 +19,14 @@ module ApplicationHelper::Dialogs
     category && category[:single_value]
   end
 
+  def hour_select_options(value)
+    options_for_select(Array.new(24) {|i| i.to_s.rjust(2, '0')}, value)
+  end
+
+  def minute_select_options(value)
+    options_for_select(Array.new(59) {|i| i.to_s.rjust(2, '0')}, value)
+  end
+
   def textbox_tag_options(field, url)
     tag_options = {
       :maxlength => 50,
@@ -47,6 +55,20 @@ module ApplicationHelper::Dialogs
       "data-miq_sparkle_off"      => true,
       "data-miq_observe_checkbox" => {:url => url}.to_json
     }
+
+    add_options_unless_read_only(extra_options, tag_options, field)
+  end
+
+  def date_tag_options(field, url)
+    tag_options = {:class => "css1 dynamic-date-#{field.id}", :readonly => "true"}
+    extra_options = {"data-miq_observe_date" => {:url => url}.to_json}
+
+    add_options_unless_read_only(extra_options, tag_options, field)
+  end
+
+  def time_tag_options(field, url, hour_or_min)
+    tag_options = {:class => "dynamic-date-#{hour_or_min}-#{field.id}"}
+    extra_options = {"data-miq_observe" => {:url => url}.to_json}
 
     add_options_unless_read_only(extra_options, tag_options, field)
   end
