@@ -71,6 +71,14 @@ describe MiqPassword do
 
   MIQ_PASSWORD_CASES.each do |(pass, enc_v1, enc_v2, enc_v0)|
     context "with #{pass.inspect}" do
+      before do
+        MiqPassword.add_legacy_key("v0_key", :v0)
+        MiqPassword.add_legacy_key("v1_key")
+      end
+      after do
+        MiqPassword.v0_key = nil
+        MiqPassword.v1_key = nil
+      end
       it(".encrypt")        { expect(MiqPassword.encrypt(pass)).to             be_encrypted(pass) }
       it(".decrypt v1")     { expect(MiqPassword.decrypt(enc_v1)).to           be_decrypted(pass) }
       it(".decrypt erb")    { expect(MiqPassword.decrypt(erberize(enc_v0))).to be_decrypted(pass) }
@@ -109,8 +117,8 @@ describe MiqPassword do
       it("#split (non-encrypted)") { expect(MiqPassword.split(pass).first).to             be_nil }
 
       it("#recrypt v2")     { expect(MiqPassword.new.recrypt(enc_v2)).to eq(enc_v2) }
-      it("#recrypt v1")     { expect(MiqPassword.new.recrypt(enc_v1)).to be_encrypted_version("2") }
-      it("#recrypt legacy") { expect(MiqPassword.new.recrypt(enc_v0)).to be_encrypted_version("2") }
+      it("#recrypt v1")     { expect(MiqPassword.new.recrypt(enc_v1)).to eq(enc_v2) }
+      it("#recrypt legacy") { expect(MiqPassword.new.recrypt(enc_v0)).to eq(enc_v2) }
     end
   end
 
@@ -174,15 +182,7 @@ describe MiqPassword do
 
   context "with missing v1_key" do
     it "should report decent error when decryption with missing an encryption key" do
-      MiqPassword.v1_key = nil
-      File.should_receive(:exist?).with(/v1_key/).and_return false
       expect { described_class.decrypt("v1:{KSOqhNiOWJbR0lz7v6PTJg==}") }.to raise_error("no encryption key v1_key")
-    end
-
-    it "should remember keyfile is not found" do
-      MiqPassword.v1_key = nil
-      File.should_receive(:exist?).with(/v1_key/).and_return false
-      expect(MiqPassword.v1_key).to be_false
     end
   end
 
@@ -192,7 +192,9 @@ describe MiqPassword do
     end
 
     it "with an encrypted string" do
+      MiqPassword.add_legacy_key("v1_key")
       expect(MiqPassword.md5crypt("v1:{Wv/+DC0XBqnIbRCIAI+CSQ==}")).to eq("$1$miq$Ho9GNOzRsxMpJSsgwG/y01")
+      MiqPassword.v1_key = nil
     end
   end
 
@@ -203,8 +205,10 @@ describe MiqPassword do
     end
 
     it "with an encrypted string" do
+      MiqPassword.add_legacy_key("v1_key")
       expect(MiqPassword.sysprep_crypt("v1:{Wv/+DC0XBqnIbRCIAI+CSQ==}")).to eq(
         "cABhAHMAcwB3AG8AcgBkAEEAZABtAGkAbgBpAHMAdAByAGEAdABvAHIAUABhAHMAcwB3AG8AcgBkAA==")
+      MiqPassword.v1_key = nil
     end
   end
 

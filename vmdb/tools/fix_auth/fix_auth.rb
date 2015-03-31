@@ -76,8 +76,14 @@ module FixAuth
       FixDatabaseYml.run({:hardcode => options[:password]}.merge(run_options))
     end
 
-    def run
+    def set_passwords
       MiqPassword.key_root = cert_dir if cert_dir
+      MiqPassword.add_legacy_key("v0_key", :v0)
+      MiqPassword.add_legacy_key("v1_key", :v1)
+    end
+
+    def run
+      set_passwords
 
       generate_password if options[:key]
       fix_database_yml if options[:databaseyml]
