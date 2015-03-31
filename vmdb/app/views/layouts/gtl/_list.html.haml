@@ -33,27 +33,25 @@
         :sortdir                         => @sortdir ? @sortdir[0..2] : nil,
         :alt_row                         => true}})
 - else
-  %table.style3
+  %table.table.table-striped.table-bordered.table-hover
     %thead
       %tr
         - unless @embedded || @no_checkboxes
           %th.narrow
-            &nbsp;
         - unless @no_listicon
           %th.narrow
-            &nbsp;
         - view.headers.each_with_index do |h, i|
           - if !@embedded && @pages
             - # Replaced to exclude non-view table fields from sorting
             - if i == @sortcol
-              %th{:nowrap => 1, :class => (@sortdir == "ASC") ? "sorting_asc" : "sorting_desc"}
+              %th{:class => (@sortdir == "ASC") ? "sorting_asc" : "sorting_desc"}
                 = link_to(h(h),
                   {:action => action_url, :sort_choice => h},
                   "data-miq_sparkle_on"  => true,
                   "data-miq_sparkle_off" => true,
                   :remote                => true)
             - else
-              %th{:nowrap => 1}
+              %th
                 = link_to(h(h),
                   {:action => action_url, :sort_choice => h},
                   "data-miq_sparkle_on"  => true,
@@ -61,18 +59,16 @@
                   :remote                => true)
           - else
             - # Disable column sorting when embedded, for now
-            %th{:nowrap => 1}
+            %th
               = h(h)
       - if get_vmdb_config[:product][:vmdb_connections_filter] && view.db == "VmdbDatabaseConnection"
         %tr
           - unless @embedded || @no_checkboxes
-            %th.narrow
-              &nbsp;
+            %th
           - unless @no_listicon
-            %th.narrow
-              &nbsp;
+            %th
           - view.col_order.each do |col|
-            %th{:nowrap => 1}
+            %th
               - if %w(zone.name miq_worker.type address).include?(col)
                 - url = url_for(:action => 'list_view_filter')
                 - if col == "zone.name"
@@ -82,11 +78,14 @@
     %tbody
       - table.data[@first_item..@last_item].each do |row|
         - @id = to_cid(row['id'])
-        - cls = view.db == "MiqWorker" && @sb[:selected_worker_id].to_i == row['id'].to_i ? "row3" : cycle('row0', 'row1')
-        %tr{:class => cls}
-          - cursor = %w(MiqEvent MiqTask VmdbDatabaseConnection VmdbDatabaseSetting).include?(view.db) || @embedded ? "default" : "pointer"
+        - classes = []
+        - if view.db == "MiqWorker" && @sb[:selected_worker_id].to_i == row['id'].to_i
+          - classes.append("selected")
+        - if %w(MiqEvent MiqTask VmdbDatabaseConnection VmdbDatabaseSetting).include?(view.db) || @embedded
+          - classes.append("no-hover")
+        %tr{:class => classes.join(' ')}
           - unless @embedded || @no_checkboxes
-            %td{:class => "narrow", :style => "cursor: #{cursor}"}
+            %td.narrow
               = check_box_tag("check_#{@id}", 1, false,
                 :id      => "listcheckbox",
                 :onclick => "miqUpdateButtons(this, '#{button_div}');")
@@ -164,14 +163,11 @@
                 - click = remote_function(:url => {:action => 'diagnostics_worker_selected', :id => "#{row['id']}"})
               - else
                 - click = "DoNav('#{url_for_db(view.db)}');"
-            %td.narrow{:title => title, :onclick => click, :nowrap => true,
-              :onmouseover  => "ChangeColor(this, true); this.style.cursor='#{cursor}';",
-              :onmouseout   => "ChangeColor(this, false);"}
+            %td.narrow{:title => title, :onclick => click}
               = render :partial => "layouts/listicon", :locals => {:db => view.db, :row => row, :icon_image => listicon_image}
           - view.col_order.each do |col|
             - title = ""
             - click = ""
-            - nowrap = false
             - unless (@embedded || @no_checkboxes) && ! @showlinks
               - if %w(MiqTask MiqEvent).include?(view.db)
               - elsif view.db == "MiqProvision"
@@ -275,17 +271,7 @@
                         - click = "DoNav('/host/edit/?selected_host=#{@id}');"
                       - else
                         - click = "DoNav('#{url_for_db(view.db)}');"
-            - if %w(message comment).include?(col)
-              - nowrap = false
-            - elsif %w(data name).include?(col) && row[col].nil? && view.db == "RegistryItems"
-              - nowrap = false
-            - elsif col == "name" && row[col].nil? && view.db == "MiqReportResult"
-              - nowrap = false
-            - else
-              - nowrap = true
-            %td{:onclick => click, :title => title, :nowrap => nowrap,
-              :onmouseover => "ChangeColor(this, true); this.style.cursor = '#{cursor}';",
-              :onmouseout  => "ChangeColor(this, false);"}
+            %td{:onclick => click, :title => title}
               - if %w(updated_on created_on started_on last_scan_on finished_on).include?(col) && !row[col].blank?
                 - row[col] = row[col].to_time if row[col].kind_of?(String)
               - if %w(state status).include?(col) && row[col].nil? && view.db == "Job"
