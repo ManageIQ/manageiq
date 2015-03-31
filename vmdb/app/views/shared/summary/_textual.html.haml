@@ -1,5 +1,5 @@
 - if items
-  %table.style3
+  %table.table.table-bordered.table-hover.table-striped
     %thead
       %tr
         %th{:colspan => "2", :align => "left"}
@@ -12,12 +12,12 @@
           - click = remote_function(:url => item[:link])
       - else
         - click = "DoNav('#{item[:link]}');"
-      - c = "#{cycle('row0', 'row1')}#{item[:link] ? "" : " no-hover"}"
+      - c = "#{item[:link] ? "" : "no-hover"}"
 
       %tr{:class => c, :title => item[:title] ? item[:title] : "", :onclick => item[:link] ? click : ""}
         %td.label
           = item[:label]
         %td
           - if item[:image]
-            %img{:style => "width: 20px; height: 20px", :src => File.absolute_path("#{item[:image]}#{File.extname(item[:image]).blank? ? '.png' : ''}", '/images/icons/new')}
+            %img{:src => File.absolute_path("#{item[:image]}#{File.extname(item[:image]).blank? ? '.png' : ''}", '/images/icons/new')}
           = !item[:value].kind_of?(Array) ? item[:value] : render(:partial => "shared/summary/textual_multivalue", :locals => {:items => item[:value]})
