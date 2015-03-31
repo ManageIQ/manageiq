@@ -5,7 +5,15 @@ FactoryGirl.define do
     sequence(:description) { |n| "some description #{seq_padded_for_sorting(n)}" }
   end
 
+  factory :orchestration_template_cfn, :parent => :orchestration_template, :class => OrchestrationTemplateCfn do
+    sequence(:content)     { |n| "{\"AWSTemplateFormatVersion\" : \"version(#{seq_padded_for_sorting(n)})\"}" }
+  end
+
   factory :orchestration_template_with_stacks, :parent => :orchestration_template do
+    stacks { [FactoryGirl.create(:orchestration_stack)] }
+  end
+
+  factory :orchestration_template_cfn_with_stacks, :parent => :orchestration_template_cfn do
     stacks { [FactoryGirl.create(:orchestration_stack)] }
   end
 
