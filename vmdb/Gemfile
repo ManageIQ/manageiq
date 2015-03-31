@@ -13,7 +13,6 @@ gem 'jquery-rails', "=2.1.4"
 
 gem "sprockets-sass",  "~>1.2.0"
 gem "sprockets-less",  "~>0.6.1"
-gem 'therubyracer'
 gem 'less-rails'
 
 # Vendored and required
@@ -78,6 +77,8 @@ gem 'spice-html5-rails'
 # Only add gems here that we do not need on an appliance.
 #
 unless ENV['APPLIANCE']
+  gem 'therubyracer'
+
   group :development do
     gem "ruby-prof",                    :require => false
 
