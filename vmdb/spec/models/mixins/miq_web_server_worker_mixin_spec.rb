@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe WebServerWorkerMixin do
+describe MiqWebServerWorkerMixin do
   it "build_uri (ipv6)" do
     test_class = Class.new do
-      include WebServerWorkerMixin
+      include MiqWebServerWorkerMixin
     end
 
     test_class.stub(:binding_address => "::1")
