@@ -4,11 +4,14 @@ class DialogFieldImporter
   def import_field(dialog_field_attributes)
     if DialogField::DIALOG_FIELD_TYPES.include?(dialog_field_attributes["type"])
       dialog_field_type_class = dialog_field_attributes["type"].constantize
-      dialog_field = dialog_field_type_class.new(dialog_field_attributes)
+      resource_action_attributes = dialog_field_attributes.delete("resource_action")
+      resource_action = ResourceAction.new(resource_action_attributes)
+      dialog_field = dialog_field_type_class.new(dialog_field_attributes.merge("resource_action" => resource_action))
       dialog_field.save
 
       dialog_field
     elsif dialog_field_attributes["type"].nil?
+      dialog_field_attributes.delete("resource_action")
       DialogField.create(dialog_field_attributes)
     else
       raise InvalidDialogFieldTypeError
