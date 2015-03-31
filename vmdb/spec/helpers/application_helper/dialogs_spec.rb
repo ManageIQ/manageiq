@@ -202,5 +202,88 @@ describe ApplicationHelper do
         end
       end
     end
+
+    describe "#radio_options" do
+      let(:dialog_field) do
+        active_record_instance_double(
+          "DialogField",
+          :default_value => "some_value",
+          :name          => "field_name",
+          :id            => "100",
+          :read_only     => read_only,
+          :value         => value
+        )
+      end
+
+      context "when the field is read_only" do
+        let(:read_only) { true }
+
+        context "when the current value is equal to the default value" do
+          let(:value) { "some_value" }
+
+          it "returns the tag options with a disabled true and checked" do
+            expect(helper.radio_options(dialog_field, "url", value)).to eq({
+              :type     => "radio",
+              :id       => "100",
+              :value    => "some_value",
+              :name     => "field_name",
+              :checked  => '',
+              :disabled => true,
+              :title    => "This element is disabled because it is read only"
+            })
+          end
+        end
+
+        context "when the current value is not equal to the default value" do
+          let(:value) { "bogus" }
+
+          it "returns the tag options with a disabled true and checked" do
+            expect(helper.radio_options(dialog_field, "url", value)).to eq({
+              :type     => "radio",
+              :id       => "100",
+              :value    => "bogus",
+              :name     => "field_name",
+              :checked  => nil,
+              :disabled => true,
+              :title    => "This element is disabled because it is read only"
+            })
+          end
+        end
+      end
+
+      context "when the dialog field is not read only" do
+        let(:read_only) { false }
+
+        context "when the current value is equal to the default value" do
+          let(:value) { "some_value" }
+
+          it "returns the tag options with a disabled true and checked" do
+            expect(helper.radio_options(dialog_field, "url", value)).to eq({
+              :type    => "radio",
+              :id      => "100",
+              :value   => "some_value",
+              :name    => "field_name",
+              :checked => '',
+              :onclick => "$.ajax({beforeSend:function(request){miqSparkle(true);}, complete:function(request){miqSparkle(false);}, data:miqSerializeForm(this), dataType:'script', type:'post', url:'url'})"
+            })
+          end
+        end
+
+        context "when the current value is not equal to the default value" do
+          let(:value) { "bogus" }
+
+          it "returns the tag options with a disabled true and checked" do
+            expect(helper.radio_options(dialog_field, "url", value)).to eq({
+              :type    => "radio",
+              :id      => "100",
+              :value   => "bogus",
+              :name    => "field_name",
+              :checked => nil,
+              :onclick => "$.ajax({beforeSend:function(request){miqSparkle(true);}, complete:function(request){miqSparkle(false);}, data:miqSerializeForm(this), dataType:'script', type:'post', url:'url'})"
+            })
+          end
+        end
+      end
+    end
   end
 end
