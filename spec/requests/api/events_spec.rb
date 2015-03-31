@@ -20,10 +20,10 @@ describe ApiController do
     Vmdb::Application
   end
 
-  let(:miq_event_guid_list) { MiqEvent.pluck(:guid) }
+  let(:miq_event_guid_list) { MiqEventDefinition.pluck(:guid) }
 
   def create_events(count)
-    count.times { FactoryGirl.create(:miq_event) }
+    count.times { FactoryGirl.create(:miq_event_definition) }
   end
 
   context "Event collection" do
@@ -51,7 +51,7 @@ describe ApiController do
 
       expect_query_result(:events, 3, 3)
       expect_result_resources_to_include_hrefs("resources",
-                                               MiqEvent.pluck(:id).collect { |id| /^.*#{events_url(id)}$/ })
+                                               MiqEventDefinition.pluck(:id).collect { |id| /^.*#{events_url(id)}$/ })
     end
 
     it "query events in expanded form" do
@@ -71,8 +71,8 @@ describe ApiController do
     let(:policy_events_url)  { "#{policy_url}/events" }
 
     def relate_events_to(policy)
-      MiqEvent.all.collect(&:id).each do |event_id|
-        MiqPolicyContent.create(:miq_policy_id => policy.id, :miq_event_id => event_id)
+      MiqEventDefinition.all.collect(&:id).each do |event_id|
+        MiqPolicyContent.create(:miq_policy_id => policy.id, :miq_event_definition_id => event_id)
       end
     end
 

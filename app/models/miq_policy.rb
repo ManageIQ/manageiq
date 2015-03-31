@@ -78,7 +78,7 @@ class MiqPolicy < ActiveRecord::Base
     @@built_in_policies.each {|bp|
       p = OpenStruct.new(bp)
       p.attributes = {"name" => "(Built-in) " + bp[:name], "description" => "(Built-in) " + bp[:description], :applies_to? => true}
-      p.event_definitions = [MiqEventDefinition.find_by_name(p.event)]
+      p.events = [MiqEventDefinition.find_by_name(p.event)]
       p.conditions = []
       if p.condition
         p.conditions = [Condition.new(
@@ -271,7 +271,7 @@ class MiqPolicy < ActiveRecord::Base
     policies = list.nil? ? self.all : self.where(:name => list)
     result = []
     policies.each {|p|
-      next if event && !p.event_definitions.include?(event)
+      next if event && !p.events.include?(event)
 
       policy_hash = {"result" => "allow", "conditions" => [], "actions" => []}
       policy_hash["scope"] = MiqExpression.evaluate_atoms(p.expression, rec) unless p.expression.nil?
@@ -408,10 +408,10 @@ class MiqPolicy < ActiveRecord::Base
     plist.collect! {|p|
       if p.is_a?(MiqPolicy)
         # p if p.contains?(erec)
-        p if p.event_definitions.include?(erec)
+        p if p.events.include?(erec)
       else
         # built-in policies are OpenStructs
-        p if p.event_definitions.include?(erec)
+        p if p.events.include?(erec)
       end
     }.compact! unless event == "rsop"
 
