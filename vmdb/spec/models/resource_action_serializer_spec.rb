@@ -6,14 +6,14 @@ describe ResourceActionSerializer do
   describe "#serialize" do
     let(:resource_action) do
       ResourceAction.new(
-        :dialog_id => 123,
-        :resource_id => 321,
-        :created_at => Time.now,
-        :updated_at => Time.now,
+        :dialog_id     => 123,
+        :resource_id   => 321,
+        :created_at    => Time.now,
+        :updated_at    => Time.now,
         :resource_type => "DialogField",
-        :ae_namespace => "Customer/Sample",
-        :ae_class => "Methods",
-        :ae_instance => "Testing"
+        :ae_namespace  => "Customer/Sample",
+        :ae_class      => "Methods",
+        :ae_instance   => "Testing"
       )
     end
 

@@ -15,9 +15,9 @@ describe DialogFieldImporter do
 
     let(:resource_action) do
       {
-        "ae_namespace"  => "Customer/Sample",
-        "ae_class"      => "Methods",
-        "ae_instance"   => "Testing"
+        "ae_namespace" => "Customer/Sample",
+        "ae_class"     => "Methods",
+        "ae_instance"  => "Testing"
       }
     end
 
@@ -36,7 +36,7 @@ describe DialogFieldImporter do
 
       it "creates a ResourceAction with the given attributes" do
         dialog_field_importer.import_field(dialog_field)
-        expect(DialogFieldTextBox.first.resource_action.fqname).to eq("Customer/Sample/Methods/Testing")
+        expect(DialogFieldTextBox.first.resource_action.fqname).to eq("/Customer/Sample/Methods/Testing")
       end
 
       it "returns the created object of that type" do
