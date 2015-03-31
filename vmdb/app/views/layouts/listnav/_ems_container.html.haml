@@ -11,6 +11,14 @@
       %ul.nav.nav-pills.nav-stacked
         %li
           = link_to(_('Summary'), {:action => 'show', :id => @record, :display => 'main'}, :title => _("Show Summary"))
+        - if @record.has_events? || @record.has_events?(:policy_events)
+          %li
+            = link_to(_('Timelines'),
+              {:action => 'show', :id => @record, :display => 'timeline'},
+              :title => _("Show Timelines"))
+        - else
+          %li.disabled
+            = link_to(_('Timelines'), "#")
 
     = patternfly_accordion_panel(_("Relationships"), false, "ems_container_rel") do
       %ul.nav.nav-pills.nav-stacked
