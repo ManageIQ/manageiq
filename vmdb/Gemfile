@@ -77,6 +77,8 @@ gem 'spice-html5-rails'
 # Only add gems here that we do not need on an appliance.
 #
 unless ENV['APPLIANCE']
+  gem 'therubyracer'
+
   group :development do
     gem "ruby-prof",                    :require => false
 
@@ -85,7 +87,6 @@ unless ENV['APPLIANCE']
     gem "gettext",          "3.1.4",    :require => false
     # used for finding translations inside HAML
     gem 'ruby_parser',                  :require => false
-    gem 'therubyracer'
   end
 
   group :test do
