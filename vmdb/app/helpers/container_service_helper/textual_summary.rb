@@ -4,7 +4,7 @@ module ContainerServiceHelper::TextualSummary
   #
 
   def textual_group_properties
-    itemsapp/helpers/vm_infra_helper/textual_summary.rb = %w(namespace name port creation_timestamp resource_version session_affinity portal_ip protocol container_port)
+    item = %w(namespace name port creation_timestamp resource_version session_affinity portal_ip protocol container_port)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
