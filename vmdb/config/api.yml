@@ -502,6 +502,8 @@
     - :service_templates
     :collection_actions:
       :post:
+      - :name: create
+        :identifier: st_catalog_new
       - :name: add
         :identifier: st_catalog_new
       - :name: edit
