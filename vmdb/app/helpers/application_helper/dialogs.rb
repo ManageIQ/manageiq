@@ -29,6 +29,17 @@ module ApplicationHelper::Dialogs
     add_options_unless_read_only(extra_options, tag_options, field)
   end
 
+  def textarea_tag_options(field, url)
+    tag_options = {
+      :class     => "dynamic-text-area-#{field.id}",
+      :maxlength => 8192,
+      :size      => "50x6"
+    }
+    extra_options = {"data-miq_observe" => {:interval => '.5', :url => url}.to_json}
+
+    add_options_unless_read_only(extra_options, tag_options, field)
+  end
+
   private
 
   def add_options_unless_read_only(options_to_add, options_to_add_to, field)

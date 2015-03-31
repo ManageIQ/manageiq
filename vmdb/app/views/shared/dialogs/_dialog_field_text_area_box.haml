@@ -1,10 +1,5 @@
 - if edit
-  = text_area_tag(field.name,
-                  field.value,
-                  :class             => "dynamic-text-area-#{field.id}",
-                  :maxlength         => 8192,
-                  :size              => "50x6",
-                  "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+  = text_area_tag(field.name, field.value, textarea_tag_options(field, url))
 - else
   = h(field.value)
 
