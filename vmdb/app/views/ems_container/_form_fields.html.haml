@@ -13,3 +13,10 @@
         @edit[:new][:ipaddress],
         :maxlength => 15,
         "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+  %tr
+    %td.key=_('Port')
+    %td.wide
+      = text_field_tag("port",
+        @edit[:new][:port],
+        :maxlength => 5,
+        "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
