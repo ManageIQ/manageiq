@@ -11,8 +11,6 @@ http_interactions:
       - application/json
       Accept-Encoding:
       - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.alpha (darwin13.4.0 x86_64) ruby/2.0.0p576
       Content-Type:
       - application/json
   response:
@@ -21,27 +19,13 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Tue, 24 Mar 2015 20:59:44 GMT
-      Server:
-      - Apache/2.2.15 (Red Hat)
+      - Sat, 01 Jan 2000 00:00:00 GMT
       Content-Disposition:
       - inline; filename="v2.json"
       Content-Transfer-Encoding:
       - binary
-      Cache-Control:
-      - private
       Apipie-Checksum:
       - f0c66204518b52fe5a1aa2c2163e7166
-      X-Ua-Compatible:
-      - IE=Edge,chrome=1
-      X-Request-Id:
-      - 45fe338e5ce1b2327a19d099f3b1914c
-      X-Runtime:
-      - '0.018285'
-      X-Rack-Cache:
-      - miss
-      X-Powered-By:
-      - Phusion Passenger 4.0.18
       Status:
       - 200 OK
       Connection:
@@ -1443,5 +1427,5 @@ http_interactions:
         be String","metadata":null,"show":true,"expected_type":"string"}],"examples":[],"metadata":null,"see":[]}]},"statistics":{"doc_url":"../apidoc/v2/statistics","api_url":"/api","name":"Statistics","short_description":null,"full_description":null,"version":"v2","formats":null,"metadata":null,"methods":[{"doc_url":"../apidoc/v2/statistics/index","name":"index","apis":[{"api_url":"/api/statistics","http_method":"GET","short_description":"Get
         statistics"}],"formats":null,"full_description":"","errors":[],"params":[],"examples":[],"metadata":null,"see":[]}]}}}}'
     http_version:
-  recorded_at: Tue, 24 Mar 2015 20:59:44 GMT
+  recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 recorded_with: VCR 2.9.3
