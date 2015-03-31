@@ -1725,7 +1725,7 @@ class CatalogController < ApplicationController
             build_toolbar_buttons_and_xml("summary_view_tb")
           end
         else
-          build_toolbar_buttons_and_xml("x_gtl_view_tb")
+          build_toolbar_buttons_and_xml("x_gtl_view_tb") unless @in_a_form
         end
       when :svccat_tree, :stcat_tree, :ot_tree
         build_toolbar_buttons_and_xml("x_gtl_view_tb") unless record_showing || @in_a_form
