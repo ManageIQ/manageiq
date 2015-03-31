@@ -32,7 +32,7 @@ cat <<'EOF' > /etc/httpd/conf.d/ssl.conf
 EOF
 
 # Incorporate the iptable updates
-if [[ -f /etc/sysconfig/iptables.miq ]]; then
+if [[ -f /var/www/miq/system/TEMPLATE/etc/sysconfig/iptables ]]; then
   /sbin/iptables-save > /etc/sysconfig/iptables.SYSTEM
   /sbin/iptables-restore /var/www/miq/system/TEMPLATE/etc/sysconfig/iptables
   /sbin/service iptables save
