@@ -147,6 +147,7 @@ class CatalogController < ApplicationController
       set_form_vars
       @edit[:new][:st_prov_type] = params[:st_prov_type] if params[:st_prov_type]
       @edit[:new][:service_type] = "atomic"
+      default_entry_point if %w(generic generic_orchestration).include?(params[:st_prov_type])
       @edit[:rec_id] = @record ? @record.id : nil
       @tabactive = "#{@edit[:new][:current_tab_key]}_div"
     end
@@ -1389,6 +1390,13 @@ class CatalogController < ApplicationController
       @edit[:new][:available_resources][r.id] = r.name if  r.id.to_s != @edit[:rec_id].to_s &&
               !@edit[:new][:selected_resources].include?(r.id)  #don't add the servicetemplate record that's being edited, or add all vm templates
     end
+  end
+
+  def default_entry_point
+    new = @edit[:new]
+    new[:fqname] = class_service_template(@edit[:new][:st_prov_type]).default_provisioning_entry_point
+    new[:retire_fqname] =
+      class_service_template(@edit[:new][:st_prov_type]).default_retirement_entry_point if params[:st_prov_type] == "generic"
   end
 
   def get_form_vars
