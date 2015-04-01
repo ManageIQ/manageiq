@@ -12,7 +12,7 @@ class CopyVimPerformancesDataToMetricsSubtablesOnPostgres < ActiveRecord::Migrat
   class VimPerformance < ActiveRecord::Base; end
 
   def self.up
-    return unless postgresql? && connection.table_exists?("vim_performances")
+    return unless connection.table_exists?("vim_performances")
 
     copy_vim_performances_data_to_metrics_subtables
     copy_vim_performances_data_to_metric_rollups_subtables
@@ -22,8 +22,6 @@ class CopyVimPerformancesDataToMetricsSubtablesOnPostgres < ActiveRecord::Migrat
   end
 
   def self.down
-    return unless postgresql?
-
     (0..23).each { |n| drop_performances_indexes subtable_name(:metrics, n) }
     (1..12).each { |n| drop_performances_indexes subtable_name(:metric_rollups, n) }
 
