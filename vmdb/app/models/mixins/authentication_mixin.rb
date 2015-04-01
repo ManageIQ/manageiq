@@ -56,6 +56,7 @@ module AuthenticationMixin
   end
 
   def authentication_status
+    return authentication_status_by_parent if self.respond_to?(:authentication_status_by_parent) && !authentication_status_by_parent.blank?
     ordered_auths = authentication_userid_passwords.sort_by(&:status_severity)
     ordered_auths.last.try(:status) || "None"
   end
