@@ -217,9 +217,9 @@ class CollapsedInitialMigration < ActiveRecord::Migration
       t.integer  "hardware_id"
       t.string   "mode"
       t.string   "controller_type"
-      numeric_column_with_db_differences(t, "size")
-      numeric_column_with_db_differences(t, "free_space")
-      numeric_column_with_db_differences(t, "size_on_disk")
+      t.bigint   "size"
+      t.bigint   "free_space"
+      t.bigint   "size_on_disk"
       t.boolean  "present",         :default => true
       t.boolean  "start_connected", :default => true
       t.boolean  "auto_detect"
@@ -331,7 +331,7 @@ class CollapsedInitialMigration < ActiveRecord::Migration
     create_table "filesystems" do |t|
       t.text     "name"
       t.string   "md5"
-      numeric_column_with_db_differences(t, "size")
+      t.bigint   "size"
       t.datetime "atime"
       t.datetime "mtime"
       t.datetime "ctime"
@@ -403,9 +403,9 @@ class CollapsedInitialMigration < ActiveRecord::Migration
       t.integer "hardware_id"
       t.string  "mode"
       t.string  "controller_type"
-      numeric_column_with_db_differences(t, "size")
-      numeric_column_with_db_differences(t, "free_space")
-      numeric_column_with_db_differences(t, "size_on_disk")
+      t.bigint   "size"
+      t.bigint   "free_space"
+      t.bigint   "size_on_disk"
       t.string  "address"
       t.integer "switch_id"
       t.integer "lan_id"
@@ -439,7 +439,7 @@ class CollapsedInitialMigration < ActiveRecord::Migration
       t.integer "host_id"
       t.integer "cpu_speed"
       t.string  "cpu_type"
-      numeric_column_with_db_differences(t, "size_on_disk")
+      t.bigint   "size_on_disk"
       t.string  "manufacturer",         :default => ""
       t.string  "model",                :default => ""
       t.integer "number_of_nics"
@@ -448,8 +448,8 @@ class CollapsedInitialMigration < ActiveRecord::Migration
       t.integer "cores_per_socket"
       t.integer "logical_cpus"
       t.integer "vmotion_enabled"
-      numeric_column_with_db_differences(t, "disk_free_space")
-      numeric_column_with_db_differences(t, "disk_capacity")
+      t.bigint   "disk_free_space"
+      t.bigint   "disk_capacity"
       t.string  "guest_os_full_name"
       t.text    "reserved"
       t.integer "memory_console"
@@ -1183,9 +1183,9 @@ class CollapsedInitialMigration < ActiveRecord::Migration
     create_table "partitions" do |t|
       t.integer  "disk_id"
       t.string   "name"
-      numeric_column_with_db_differences(t, "size")
-      numeric_column_with_db_differences(t, "free_space")
-      numeric_column_with_db_differences(t, "used_space")
+      t.bigint   "size"
+      t.bigint   "free_space"
+      t.bigint   "used_space"
       t.datetime "created_on"
       t.datetime "updated_on"
       t.integer  "location"
@@ -1431,7 +1431,7 @@ class CollapsedInitialMigration < ActiveRecord::Migration
       t.string   "name"
       t.text     "description"
       t.integer  "current"
-      numeric_column_with_db_differences(t, "total_size")
+      t.bigint   "total_size"
       t.string   "filename"
       t.datetime "create_time"
       t.text     "disks"
@@ -1480,8 +1480,8 @@ class CollapsedInitialMigration < ActiveRecord::Migration
     create_table "storages" do |t|
       t.string   "name"
       t.string   "store_type"
-      numeric_column_with_db_differences(t, "total_space")
-      numeric_column_with_db_differences(t, "free_space")
+      t.bigint   "total_space"
+      t.bigint   "free_space"
       t.datetime "created_on"
       t.datetime "updated_on"
       t.integer  "multiplehostaccess"
@@ -1796,9 +1796,9 @@ class CollapsedInitialMigration < ActiveRecord::Migration
       t.integer  "hardware_id"
       t.string   "volume_group"
       t.string   "uid"
-      numeric_column_with_db_differences(t, "size")
-      numeric_column_with_db_differences(t, "free_space")
-      numeric_column_with_db_differences(t, "used_space")
+      t.bigint   "size"
+      t.bigint   "free_space"
+      t.bigint   "used_space"
       t.text     "reserved"
     end
 
@@ -1929,14 +1929,6 @@ class CollapsedInitialMigration < ActiveRecord::Migration
 
     say_with_time("Clean old migrations from schema_migrations") do
       connection.truncate("schema_migrations")
-    end
-  end
-
-  def numeric_column_with_db_differences(t, column)
-    if sqlserver?
-      t.decimal column, :precision => 20, :scale => 0
-    else
-      t.bigint  column
     end
   end
 end
