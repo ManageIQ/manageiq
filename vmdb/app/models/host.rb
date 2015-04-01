@@ -1470,10 +1470,14 @@ class Host < ActiveRecord::Base
       end
 
       services.each do |service|
-        s = xml.add_element(:service, {'name' => service[:name], 'systemd_load' => service[:systemd_load],
-                                       'systemd_sub' => service[:systemd_sub], 'description' => service[:description],
-                                       'running' => service[:running], 'systemd_active' => service[:systemd_active],
-                                       'typename' => service[:typename]})
+        s = xml.add_element(:service,
+                            'name'           => service[:name],
+                            'systemd_load'   => service[:systemd_load],
+                            'systemd_sub'    => service[:systemd_sub],
+                            'description'    => service[:description],
+                            'running'        => service[:running],
+                            'systemd_active' => service[:systemd_active],
+                            'typename'       => service[:typename])
         service[:enable_run_level].each  { |l| s.add_element(:enable_run_level,  'value' => l) } unless service[:enable_run_level].nil?
         service[:disable_run_level].each { |l| s.add_element(:disable_run_level, 'value' => l) } unless service[:disable_run_level].nil?
       end

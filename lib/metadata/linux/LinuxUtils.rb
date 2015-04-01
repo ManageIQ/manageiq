@@ -129,9 +129,15 @@ module MiqLinux
         # TODO(lsmola) investigate adding systemd targets, which are used instead of runlevels. Drawback, it's not
         # returned by any command, so we would have to parse the dir structure of /etc/systemd/system/
         # There is already MiqLinux::Systemd.new(@systemFs) called from class MIQExtract, we should leverage that
-        {:name => name, :systemd_load => parts[1], :systemd_active => parts[2], :systemd_sub => parts[3],
-         :typename => 'linux_systemd', :description => parts[4..-1].join(" "), :enable_run_level => nil,
-         :disable_run_level => nil, :running => parts[3] == 'running' }
+        {:name              => name,
+         :systemd_load      => parts[1],
+         :systemd_active    => parts[2],
+         :systemd_sub       => parts[3],
+         :typename          => 'linux_systemd',
+         :description       => parts[4..-1].join(" "),
+         :enable_run_level  => nil,
+         :disable_run_level => nil,
+         :running           => parts[3] == 'running'}
       end.compact!
     end
   end
