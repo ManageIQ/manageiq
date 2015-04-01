@@ -86,7 +86,6 @@ unless ENV['APPLIANCE']
     gem "gettext",          "3.1.4",    :require => false
     # used for finding translations inside HAML
     gem 'ruby_parser',                  :require => false
-    gem 'therubyracer'
   end
 
   group :test do
