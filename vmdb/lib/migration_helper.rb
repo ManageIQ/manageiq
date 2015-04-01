@@ -35,33 +35,9 @@ module MigrationHelper
     id_cols.each { |c| change_id_column(table, c, type) }
   end
 
-  def change_id_columns_for_large_tables(table, id_cols, type)
-    if sqlserver? && !table_empty?(table)
-      change_id_columns_via_table_copy_for_sqlserver table, id_cols, type
-    else
-      change_id_columns table, id_cols, type
-    end
-  end
-
-  def change_id_columns_via_table_copy_for_sqlserver(table, id_cols, type)
-    orig = "#{table}_orig".to_sym
-    rename_table table, orig
-    copy_schema_only orig, table
-    id_cols.each do |c|
-      change_column table, c, type
-    end
-    add_pk table
-    copy_data orig, table
-    drop_table orig
-  end
-
   #
   # Helper methods
   #
-
-  def sqlserver?
-    connection.adapter_name == "SQLServer"
-  end
 
   def postgresql?
     connection.adapter_name == "PostgreSQL"
