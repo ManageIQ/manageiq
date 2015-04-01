@@ -3532,6 +3532,15 @@
       :description: Display Individual Containers Providers
       :feature_type: view
       :identifier: ems_container_show
+  - :name: Operate
+    :description: Perform Operations on Containers Providers
+    :feature_type: control
+    :identifier: ems_container_control
+    :children:
+    - :name: Refresh
+      :description: Refresh Containers Providers
+      :feature_type: control
+      :identifier: ems_container_refresh
   - :name: Modify
     :description: Modify Containers Providers
     :feature_type: admin
