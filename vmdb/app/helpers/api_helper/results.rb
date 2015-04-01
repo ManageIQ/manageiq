@@ -33,10 +33,11 @@ module ApiHelper
       hash
     end
 
-    def add_policy_to_result(hash, ctype, policy)
-      return hash if policy.blank?
-      hash["#{ctype.to_s.singularize}_id".to_sym]   = policy.id
-      hash["#{ctype.to_s.singularize}_href".to_sym] = "#{@req[:base]}#{@req[:prefix]}/#{ctype}/#{policy.id}"
+    def add_subcollection_resource_to_result(hash, ctype, object)
+      return hash if object.blank?
+      ctype_pref = ctype.to_s.singularize
+      hash["#{ctype_pref}_id".to_sym]   = object.id
+      hash["#{ctype_pref}_href".to_sym] = "#{@req[:base]}#{@req[:prefix]}/#{ctype}/#{object.id}"
       hash
     end
 
