@@ -31,8 +31,4 @@ module ContainerHelper::TextualSummary
   def textual_container_id
     {:label => "Container ID", :value => @record.container_id}
   end
-
-  def textual_image
-    {:label => "image", :value => @record.image}
-  end
 end
