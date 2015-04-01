@@ -33,4 +33,22 @@ class ContainerNode < ActiveRecord::Base
       ["ems_id = ?", ems_id]
     end
   end
+
+  # Metrics destroy is handled by purger
+  has_many :metrics, :as => :resource
+  has_many :metric_rollups, :as => :resource
+  has_many :vim_performance_states, :as => :resource
+
+  include Metric::CiMixin
+
+  # TODO: children will be container groups
+  PERF_ROLLUP_CHILDREN = nil
+
+  acts_as_miq_taggable
+
+  delegate :my_zone, :to => :ext_management_system
+
+  def perf_rollup_parent(_interval_name = nil)
+    ext_management_system
+  end
 end

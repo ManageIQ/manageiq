@@ -18,7 +18,7 @@ class MiqEmsMetricsCollectorWorker < MiqQueueWorkerBase
     old_collector_worker_settings = configuration.config.fetch_path(*old_path)
     unless old_collector_worker_settings.nil?
       # The subclass list should be discoverable and not hardcoded here
-      subclasses = %w{amazon redhat vmware openstack}.collect { |k| "ems_metrics_collector_worker_#{k}".to_sym }
+      subclasses = %w{amazon kubernetes redhat vmware openstack}.collect { |k| "ems_metrics_collector_worker_#{k}".to_sym }
       $log.info("MIQ(#{self.name}) Migrating Settings")
       defaults = old_collector_worker_settings
       subclasses.each { |subclass_key| defaults.delete(subclass_key)}

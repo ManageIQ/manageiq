@@ -137,8 +137,9 @@ module Metric::Capture
 
   def self.perf_target_to_interval_name(target)
     case target
-    when Host, VmOrTemplate; "realtime"
-    when Storage;            "hourly"
+    when Host, VmOrTemplate;                       "realtime"
+    when ContainerNode, Container, ContainerGroup; "realtime"
+    when Storage;                                  "hourly"
     end
   end
 
