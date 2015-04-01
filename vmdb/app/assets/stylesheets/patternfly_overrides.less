@@ -183,6 +183,7 @@ table.table tbody td img {
 
 .table > thead > tr > th {
   font-family: inherit !important;
+  white-space: nowrap
 }
 
 table .narrow {
@@ -213,4 +214,21 @@ table.table.table-selectable tbody tr.selected td {
 .table-hover tbody tr:hover > td {
   cursor: pointer;
   cursor: hand;
+}
+
+/* modified dl styling for tile view */
+
+@media (min-width: 400px) {
+  .dl-horizontal.tile {
+    dt {
+      float: left;
+      width: (@component-offset-horizontal - 80);
+      clear: left;
+      text-align: right;
+      .text-overflow();
+    }
+    dd {
+      margin-left: 110px;
+    }
+  }
 }
