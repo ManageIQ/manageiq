@@ -58,8 +58,9 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
     child = orgs.first
     parent = orgs.last
     expect(child).to have_attributes(
-      :title => "Infra/ProviderRefreshSpecOrganization/ProviderRefreshSpecChildOrganization",
-      :name  => "ProviderRefreshSpecChildOrganization",
+      :title     => "Infra/ProviderRefreshSpecOrganization/ProviderRefreshSpecChildOrganization",
+      :name      => "ProviderRefreshSpecChildOrganization",
+      :parent_id => parent.id,
     )
     expect(parent).to have_attributes(
       :title => "Infra/ProviderRefreshSpecOrganization",
@@ -72,8 +73,9 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
     child = locs.first
     parent = locs.last
     expect(child).to have_attributes(
-      :title => "ProviderRefreshSpec-Location/ProviderRefreshSpec-ChildLocation",
-      :name  => "ProviderRefreshSpec-ChildLocation",
+      :title     => "ProviderRefreshSpec-Location/ProviderRefreshSpec-ChildLocation",
+      :name      => "ProviderRefreshSpec-ChildLocation",
+      :parent_id => parent.id,
     )
     expect(parent).to have_attributes(
       :title => "ProviderRefreshSpec-Location",
