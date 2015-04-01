@@ -12,7 +12,6 @@ class Zone < ActiveRecord::Base
   has_many :miq_servers
   has_many :active_miq_servers, :class_name => "MiqServer", :conditions => {:status => MiqServer::STATUSES_ACTIVE}
   has_many :ext_management_systems
-  has_many :file_depots, :dependent => :destroy, :as => :resource
   has_many :miq_groups, :as => :resource
   has_many :miq_schedules, :dependent => :destroy
   has_many :storage_managers
