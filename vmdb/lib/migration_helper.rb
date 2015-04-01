@@ -39,10 +39,6 @@ module MigrationHelper
   # Helper methods
   #
 
-  def postgresql?
-    connection.adapter_name == "PostgreSQL"
-  end
-
   def add_pk(*args)
     meth = "add_pk_#{connection.adapter_name.downcase}"
     self.send(meth, *args) if self.respond_to?(meth)
