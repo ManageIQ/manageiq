@@ -6,6 +6,7 @@ module EmsRefresh::Parsers
 
     def initialize
       @data = {}
+      @data_index = {}
     end
 
     def ems_inv_to_hashes(inventory)
@@ -18,6 +19,9 @@ module EmsRefresh::Parsers
 
     def get_nodes(inventory)
       process_collection(inventory["node"], :container_nodes) { |n| parse_node(n) }
+      @data[:container_nodes].each do |cn|
+        @data_index.store_path(:container_nodes, :by_name, cn[:name], cn)
+      end
     end
 
     def get_services(inventory)
@@ -80,6 +84,12 @@ module EmsRefresh::Parsers
         :restart_policy => pod_restart_policy,
         :dns_policy     => pod.spec.dnsPolicy
       )
+      if pod.spec.respond_to?(:host)
+        new_result[:container_node] = @data_index.fetch_path(
+          :container_nodes, :by_name, pod.spec.host)
+      else
+        new_result[:container_node] = nil
+      end
       # TODO, map volumes
       # TODO, podIP
       containers = pod.spec.containers

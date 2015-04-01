@@ -51,7 +51,13 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(:container_groups, ems, hashes, deletes, [:ems_ref], [:container_definitions, :containers, :labels])
+    hashes.each do |h|
+      h[:container_node_id] = h.fetch_path(:container_node, :id)
+    end
+
+    save_inventory_multi(:container_groups, ems, hashes, deletes, [:ems_ref],
+                         [:container_definitions, :containers, :labels],
+                         [:container_node])
     store_ids_for_new_records(ems.container_groups, hashes, :ems_ref)
   end
 

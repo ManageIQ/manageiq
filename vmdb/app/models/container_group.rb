@@ -8,6 +8,7 @@ class ContainerGroup < ActiveRecord::Base
   has_many :container_definitions
   belongs_to  :ext_management_system, :foreign_key => "ems_id"
   has_many :labels, :class_name => CustomAttribute, :as => :resource, :conditions => {:section => "labels"}
+  belongs_to :container_node
 
   # validates :restart_policy, :inclusion => { :in => %w(always onFailure never) }
   # validates :dns_policy, :inclusion => { :in => %w(ClusterFirst Default) }
