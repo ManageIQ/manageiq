@@ -150,14 +150,14 @@ module Vmdb
     # Wrap a report html table body with html table tags and headers for the columns
     def report_build_html_table(report, table_body)
       html = String.new
-      html << "<table class='style3'>"
+      html << "<table class='table table-striped table-bordered'>"
       html << "<thead>"
       html << "<tr>"
 
       # table headings
       unless report.headers.nil?
         report.headers.each do |h|
-          html << "<th class='title'>" << CGI.escapeHTML(h.to_s) << "</th>"
+          html << "<th>" << CGI.escapeHTML(h.to_s) << "</th>"
         end
         html << "</tr>"
         html << "</thead>"

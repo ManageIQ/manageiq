@@ -42,12 +42,11 @@ class RssFeed < ActiveRecord::Base
   def self.to_html(feed, options)
     limit = options[:limit_to_count]
     output = ""
-    output << '<table class="style3">'
+    output << '<table class="table table-striped table-bordered table-hover">'
     output << '<tbody>'
     items = options[:limit_to_count] ? feed.items[0..options[:limit_to_count] - 1] : feed.items
     items.each_with_index do |i,idx|
-      row_class = idx % 2 == 0 ? 'row0' : 'row1'
-      output << "<tr class=\"#{row_class}\" onclick='window.location=\"#{i.link}\";'>"
+      output << "<tr onclick='window.location=\"#{i.link}\";'>"
       output << '<td>'
       output << i.title
       output << '<br/>'
