@@ -4,7 +4,7 @@ class RecreateVimPerformancesAsParentOfMetricsSubtablesOnPostgres < ActiveRecord
   extend MigrationHelper
 
   def self.up
-    return unless postgresql? && connection.table_exists?("vim_performances")
+    return unless connection.table_exists?("vim_performances")
 
     max_id = connection.select_value("SELECT MAX(id) FROM vim_performances")
     drop_table :vim_performances
@@ -17,8 +17,6 @@ class RecreateVimPerformancesAsParentOfMetricsSubtablesOnPostgres < ActiveRecord
   end
 
   def self.down
-    return unless postgresql?
-
     drop_vim_performances_inheritance_trigger
     drop_table_inheritance :metrics,        :vim_performances
     drop_table_inheritance :metric_rollups, :vim_performances

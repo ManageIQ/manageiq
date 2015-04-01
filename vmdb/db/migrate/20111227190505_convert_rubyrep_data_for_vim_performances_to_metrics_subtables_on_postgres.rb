@@ -48,7 +48,7 @@ class ConvertRubyrepDataForVimPerformancesToMetricsSubtablesOnPostgres < ActiveR
   end
 
   def up
-    return unless postgresql? && VimPerformance.table_exists? && RrPendingChange.table_exists?
+    return unless VimPerformance.table_exists? && RrPendingChange.table_exists?
 
     say_with_time("Converting vim_performances records in #{RrPendingChange.table_name}") do
       rows = RrPendingChange.count(:conditions => {:change_table => "vim_performances"})
@@ -105,7 +105,7 @@ class ConvertRubyrepDataForVimPerformancesToMetricsSubtablesOnPostgres < ActiveR
   end
 
   def down
-    return unless postgresql? && RrPendingChange.table_exists?
+    return unless RrPendingChange.table_exists?
   end
 
   def subtable_name(inherit_from, index)
