@@ -2,6 +2,7 @@ require 'fileutils'
 require 'tempfile'
 require 'appliance_console/principal'
 require 'appliance_console/certificate'
+require 'util/miq_apache/config'
 
 module ApplianceConsole
   # configure ssl certificates for postgres communication
@@ -108,8 +109,9 @@ module ApplianceConsole
       ).request
       if cert.complete?
         say "configuring apache to use certs"
-        FileUtils.cp("#{TEMPLATES}/etc/httpd/conf.d/cfme-https-cert.conf", "/etc/httpd/conf.d/cfme-https-cert.conf")
-        LinuxAdmin::Service.new("httpd").restart
+        FileUtils.cp("#{TEMPLATES}/etc/httpd/conf.d/cfme-https-cert.conf",
+                     MiqApache.root_dir.join("etc/httpd/conf.d/cfme-https-cert.conf"))
+        LinuxAdmin::Service.new(MiqApache.service_name).restart
       end
       self.api = cert.status
     end

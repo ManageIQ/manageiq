@@ -20,11 +20,17 @@ sed -i 's@ACTIVE_CONSOLES=/dev/tty\[1-6\]@ACTIVE_CONSOLES=/dev/tty3@' /etc/sysco
 # httpd needs to connect to backend workers on :3000 and :4000
 setsebool -P httpd_can_network_connect on
 
+# Default value for MIQ_APACHE_ROOT_DIR is / unless overridden
+# via an enviornmental variable in /etc/default/evm for SCL Apache
+
+: ${MIQ_APACHE_ROOT_DIR:="/"}
+SSL_CONF_FILE=${MIQ_APACHE_ROOT_DIR}etc/httpd/conf.d/ssl.conf
+
 # backup the default ssl.conf
-mv /etc/httpd/conf.d/ssl.conf{,.orig}
+mv $SSL_CONF_FILE{,.orig}
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=1020042
-cat <<'EOF' > /etc/httpd/conf.d/ssl.conf
+cat <<'EOF' > $SSL_CONF_FILE
 # This file intentionally left blank.  CFME maintains its own SSL
 # configuration.  The presence of this file prevents the version
 # supplied by mod_ssl from being installed when the mod_ssl package is

@@ -1,9 +1,10 @@
+require 'util/miq_apache/config'
 class MiqWebServiceWorker < MiqWorker
   REQUIRED_ROLE = 'web_services'
   self.required_roles = [REQUIRED_ROLE]
 
-  BALANCE_MEMBER_CONFIG_FILE = '/etc/httpd/conf.d/cfme-balancer-ws.conf'
-  REDIRECTS_CONFIG_FILE      = '/etc/httpd/conf.d/cfme-redirects-ws'
+  BALANCE_MEMBER_CONFIG_FILE = MiqApache.root_dir.join('etc/httpd/conf.d/cfme-balancer-ws.conf')
+  REDIRECTS_CONFIG_FILE      = MiqApache.root_dir.join('etc/httpd/conf.d/cfme-redirects-ws')
   STARTING_PORT              = 4000
   LB_METHOD                  = :busy
   REDIRECTS                  = ['/Miqservices/', '/miqservices/', '/vmdbws/', '/api']

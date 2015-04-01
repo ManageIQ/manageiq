@@ -1,3 +1,4 @@
+require 'util/miq_apache/config'
 class MiqUiWorker < MiqWorker
   REQUIRED_ROLE = 'user_interface'
   self.required_roles = [REQUIRED_ROLE]
@@ -12,8 +13,8 @@ class MiqUiWorker < MiqWorker
     end
   end
 
-  BALANCE_MEMBER_CONFIG_FILE = '/etc/httpd/conf.d/cfme-balancer-ui.conf'
-  REDIRECTS_CONFIG_FILE      = '/etc/httpd/conf.d/cfme-redirects-ui'
+  BALANCE_MEMBER_CONFIG_FILE = MiqApache.root_dir.join('etc/httpd/conf.d/cfme-balancer-ui.conf')
+  REDIRECTS_CONFIG_FILE      = MiqApache.root_dir.join('etc/httpd/conf.d/cfme-redirects-ui')
   STARTING_PORT              = 3000
   LB_METHOD                  = :busy
   REDIRECTS                  = '/'

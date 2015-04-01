@@ -23,6 +23,7 @@ repo --name=SCL --baseurl=http://mirror.centos.org/centos/6/SCL/x86_64/
 repo --name=manageiq-scl --baseurl=http://copr-be.cloud.fedoraproject.org/results/jrafanie/manageiq-scl/epel-6-x86_64/
 repo --name=ipa --baseurl=http://copr-be.cloud.fedoraproject.org/results/adelton/identity_demo/epel-6-x86_64/
 repo --name=certmonger --baseurl=http://copr-be.cloud.fedoraproject.org/results/nalin/certmonger/epel-6-x86_64/
+repo --name=ipa_scl --baseurl=http://copr-be.cloud.fedoraproject.org/results/adelton/identity_demo_scl/epel-6-x86_64/
 
 lang en_US.UTF-8
 keyboard us
@@ -63,7 +64,7 @@ epel-release       # http://dl.fedoraproject.org/pub/epel/6Server/x86_64/epel-re
 createrepo
 freeipmi
 fuse-libs
-httpd
+httpd24-httpd
 ipmitool
 
 # ruby dependencies auto-installed by ruby-install
@@ -83,7 +84,7 @@ libxml2-devel                    # For nokogiri gem
 libxslt-devel                    # For nokogiri gem
 lshw                             # From epel
 memcached
-mod_ssl
+httpd24-mod_ssl
 net-snmp
 net-snmp-libs
 net-snmp-utils
@@ -99,15 +100,19 @@ qpid-cpp-client-ssl              # Enable AMQP SSL connections: https://github.c
 scl-utils-build                  # build requires
 yum-utils
 zip                              # build requires
+git                              # Automate GIT Support
+
+# Postgres DB for Apache Authentication
+httpd24-apr-util-pgsql
 
 # IPA Identity RPMs for External Authentication
 c-ares
 ipa-client
 sssd-dbus
-mod_intercept_form_submit
-mod_auth_kerb
-mod_authnz_pam
-mod_lookup_identity
+httpd24-mod_intercept_form_submit
+httpd24-mod_auth_kerb
+httpd24-mod_authnz_pam
+httpd24-mod_lookup_identity
 mod_lookup_identity-selinux      # Only needed for CentOS 6.5.  It will not be needed on CentOS 6.6 and later.
 
 # IPA RPMs for certificate support
@@ -200,8 +205,6 @@ popd
 
 #copy etc dir from COPY
 cp -vr system/COPY/etc /
-#copy var dir from COPY
-cp -vr system/COPY/var /
 popd
 
 # post install repos
@@ -211,6 +214,7 @@ popd
 pushd /etc/yum.repos.d/
   wget http://copr.fedoraproject.org/coprs/jrafanie/manageiq-scl/repo/epel-6-x86_64/jrafanie-manageiq-scl-epel-6-x86_64.repo
   wget http://copr.fedoraproject.org/coprs/adelton/identity_demo/repo/epel-6/adelton-identity_demo-epel-6.repo
+  wget http://copr.fedoraproject.org/coprs/adelton/identity_demo_scl/repo/epel-6/adelton-identity_demo_scl-epel-6.repo
   wget http://copr.fedoraproject.org/coprs/nalin/certmonger/repo/epel-6/nalin-certmonger-epel-6.repo
 popd
 
@@ -244,7 +248,7 @@ export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
 [[ -s /etc/default/evm ]] && source /etc/default/evm
-gem install bundler -v "~>1.5"
+gem install bundler -v "~>1.7.0"
 
 /var/www/miq/system/cfme-setup.sh
 
@@ -262,4 +266,8 @@ rm -f /var/www/miq/vmdb/certs/v2_key
 
 [[ -s /etc/default/evm ]] && source /etc/default/evm
 appliance_console_cli --region 0 --internal --password smartvm
+
+pushd $app_root
+#copy opt dir from COPY
+cp -vr system/COPY/opt /
 %end
