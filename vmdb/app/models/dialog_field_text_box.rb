@@ -60,8 +60,7 @@ class DialogFieldTextBox < DialogField
       send("#{key}=", automate_hash[key]) if automate_hash.key?(key)
     end
 
-    return initial_values if automate_hash["value"].blank?
-    automate_hash["value"].to_s
+    automate_hash["value"].to_s.presence || initial_values
   end
 
   def refresh_json_value
