@@ -242,7 +242,7 @@ class ConvertIdsTo64bit < ActiveRecord::Migration
     end
 
     LARGE_TABLES.each_slice(2) do |table, id_cols|
-      change_id_columns_for_large_tables table, id_cols, :bigint
+      change_id_columns table, id_cols, :bigint
     end
 
     INDEXES.each do |args|
@@ -268,7 +268,7 @@ class ConvertIdsTo64bit < ActiveRecord::Migration
     end
 
     LARGE_TABLES.each_slice(2) do |table, id_cols|
-      change_id_columns_for_large_tables table, id_cols, :integer
+      change_id_columns table, id_cols, :integer
     end
 
     INDEXES.each do |args|
