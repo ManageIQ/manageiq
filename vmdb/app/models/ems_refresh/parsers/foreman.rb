@@ -89,6 +89,7 @@ module EmsRefresh
           {
             :type                           => "ConfigurationProfileForeman",
             :manager_ref                    => profile["id"].to_s,
+            :parent_ref                     => (profile["ancestry"] || "").split("/").last.presence,
             :name                           => profile["name"],
             :description                    => profile["title"],
             :operating_system_flavor_id     => id_lookup(indexes[:flavors], profile["operatingsystem_id"]),

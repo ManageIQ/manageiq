@@ -109,6 +109,13 @@ module EmsRefresh::SaveInventoryHelper
     end
   end
 
+  def link_children_references(records)
+    records.each do |rec|
+      parent = records.detect { |r| r.manager_ref == rec.parent_ref } if rec.parent_ref.present?
+      rec.update_attributes(:parent_id => parent.try(:id))
+    end
+  end
+
   # most of the refresh_inventory_multi calls follow the same pattern
   # this pulls it out
   def save_inventory_assoc(type, parent, hashes, target, find_key, child_keys = [], extra_keys = [])
