@@ -295,7 +295,18 @@ workers:
         :duration: 10.seconds
         :capacity: 50
         :amqp_port: 5672
-        :event_catcher_openstack_infra: {}
+      :event_catcher_openstack_infra:
+        :poll: 15.seconds
+        :topics:
+          :nova: "notifications.*"
+          :cinder: "notifications.*"
+          :glance: "notifications.*"
+          :neutron: "notifications.*"
+          :heat: "notifications.*"
+          :ironic: "notifications.*"
+        :duration: 10.seconds
+        :capacity: 50
+        :amqp_port: 5672
       :event_catcher_amazon:
         :poll: 15.seconds
       :event_catcher_kubernetes:
