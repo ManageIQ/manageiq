@@ -38,6 +38,11 @@ if [[ -f /var/www/miq/system/TEMPLATE/etc/sysconfig/iptables ]]; then
   /sbin/service iptables save
 fi
 
+# Copy the ctrl-alt-del override if it doesn't exist
+if [[ ! -f /etc/init/control-alt-delete.override ]] && [[ -f /var/www/miq/system/TEMPLATE/etc/init/control-alt-delete.override ]] ; then
+  cp /var/www/miq/system/TEMPLATE/etc/init/control-alt-delete.override /etc/init
+fi
+
 /usr/sbin/semanage fcontext -a -t httpd_log_t "/var/www/miq/vmdb/log(/.*)?"
 /usr/sbin/semanage fcontext -a -t cert_t "/var/www/miq/vmdb/certs(/.*)?"
 /usr/sbin/semanage fcontext -a -t logrotate_exec_t /var/www/miq/system/logrotate_free_space_check.sh
