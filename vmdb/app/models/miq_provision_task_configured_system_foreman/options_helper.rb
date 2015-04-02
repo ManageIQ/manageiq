@@ -6,7 +6,7 @@ module MiqProvisionTaskConfiguredSystemForeman::OptionsHelper
 
   def merge_provider_options_from_automate
     phase_context[:provider_options].merge!(get_option(:provider_options) || {}).delete_nils
-    dumpObj(phase_context[:provider_options], "MIQ(#{self.class.name}##{__method__}) Merged Provider Options: ", $log, :info)
+    dumpObj(phase_context[:provider_options], "MIQ(#{self.class.name}##{__method__}) Merged Provider Options: ", $log, :info, :protected => {:path => /root_pass/})
   end
 
   def prepare_provider_options
@@ -15,7 +15,7 @@ module MiqProvisionTaskConfiguredSystemForeman::OptionsHelper
     h["ip"]        = options[:ip_addr]                            if options[:ip_addr]
     h["root_pass"] = MiqPassword.decrypt(options[:root_password]) if options[:root_password]
     phase_context[:provider_options] = h
-    dumpObj(phase_context[:provider_options], "MIQ(#{self.class.name}##{__method__}) Default Provider Options: ", $log, :info)
+    dumpObj(phase_context[:provider_options], "MIQ(#{self.class.name}##{__method__}) Default Provider Options: ", $log, :info, :protected => {:path => /root_pass/})
   end
 
   def validate_source
