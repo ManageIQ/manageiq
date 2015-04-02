@@ -31,16 +31,20 @@ cat <<'EOF' > /etc/httpd/conf.d/ssl.conf
 # upgraded.
 EOF
 
+MIQ_ROOT="/var/www/miq"
+SOURCE_IPTABLES="$MIQ_ROOT/system/TEMPLATE/etc/sysconfig/iptables"
+SOURCE_CTRL_ALT_DEL="$MIQ_ROOT/system/TEMPLATE/etc/init/control-alt-delete.override"
+
 # Incorporate the iptable updates
-if [[ -f /var/www/miq/system/TEMPLATE/etc/sysconfig/iptables ]]; then
+if [[ -f $SOURCE_IPTABLES ]]; then
   /sbin/iptables-save > /etc/sysconfig/iptables.SYSTEM
-  /sbin/iptables-restore /var/www/miq/system/TEMPLATE/etc/sysconfig/iptables
+  /sbin/iptables-restore $SOURCE_IPTABLES
   /sbin/service iptables save
 fi
 
 # Copy the ctrl-alt-del override if it doesn't exist
-if [[ ! -f /etc/init/control-alt-delete.override ]] && [[ -f /var/www/miq/system/TEMPLATE/etc/init/control-alt-delete.override ]] ; then
-  cp /var/www/miq/system/TEMPLATE/etc/init/control-alt-delete.override /etc/init
+if [[ ! -f /etc/init/control-alt-delete.override ]] && [[ -f $SOURCE_CTRL_ALT_DEL ]] ; then
+  cp $SOURCE_CTRL_ALT_DEL /etc/init
 fi
 
 /usr/sbin/semanage fcontext -a -t httpd_log_t "/var/www/miq/vmdb/log(/.*)?"
