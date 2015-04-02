@@ -79,6 +79,7 @@ module EmsRefresh::Parsers
       new_result = parse_base_item(node)
 
       new_result.merge!(
+        :type             => 'ContainerNodeKubernetes',
         :identity_infra   => node.spec.externalID,
         :identity_machine => node.status.nodeInfo.machineID,
         :identity_system  => node.status.nodeInfo.systemUUID
@@ -143,6 +144,7 @@ module EmsRefresh::Parsers
       new_result = parse_base_item(pod)
 
       new_result.merge!(
+        :type                 => 'ContainerGroupKubernetes',
         :restart_policy       => pod.spec.restartPolicy,
         :dns_policy           => pod.spec.dnsPolicy,
         :ipaddress            => pod.status.podIP,
@@ -273,6 +275,7 @@ module EmsRefresh::Parsers
 
     def parse_container(container, pod_id)
       {
+        :type          => 'ContainerKubernetes',
         :ems_ref       => "#{pod_id}_#{container.name}_#{container.image}",
         :name          => container.name,
         :image         => container.image,
