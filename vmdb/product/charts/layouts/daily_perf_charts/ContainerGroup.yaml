@@ -1,0 +1,17 @@
+# Container group daily performance chart layouts
+---
+- :title: Cores Used
+  :type: Line
+  :columns:
+  - derived_logicalcpus_used
+  - derived_logicalcpus_available
+
+- :title: Memory (MB)
+  :type: Line
+  :columns:
+  - derived_memory_used
+
+- :title: Network I/O (KBps)
+  :type: Line
+  :columns:
+  - net_usage_rate_average

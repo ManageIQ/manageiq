@@ -8,7 +8,8 @@ class ContainerController < ApplicationController
 
   CONTAINER_X_BUTTON_ALLOWED_ACTIONS = {
     'container_delete' => :container_delete,
-    'container_edit'   => :container_edit
+    'container_edit'   => :container_edit,
+    'container_perf'   => :container_perf
   }
 
   def button
@@ -316,5 +317,8 @@ class ContainerController < ApplicationController
     @showtype = "main"
     identify_container(id)
     return if record_no_longer_exists?(@record)
+  end
+
+  def container_perf
   end
 end

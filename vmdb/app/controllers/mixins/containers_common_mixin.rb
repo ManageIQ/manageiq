@@ -35,6 +35,12 @@ module ContainersCommonMixin
       drop_breadcrumb(:name => "Timelines",
                       :url  => "/#{controller_name}/show/#{record.id}" \
                                "?refresh=n&display=timeline")
+    elsif @display == "performance"
+      @showtype = "performance"
+      drop_breadcrumb(:name => "#{record.name} Capacity & Utilization",
+                      :url  => "/#{controller_name}/show/#{record.id}" \
+                               "?display=#{@display}&refresh=n")
+      perf_gen_init_options # Intialize options, charts are generated async
     elsif @display == "container_groups" || session[:display] == "container_groups" && params[:display].nil?
       title = ui_lookup(:tables => "container_groups")
       drop_breadcrumb(:name => record.name + " (All #{title})",

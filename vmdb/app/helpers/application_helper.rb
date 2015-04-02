@@ -1331,7 +1331,7 @@ module ApplicationHelper
       end
     when "Vm"
       case id
-      when "instance_perf", "vm_perf"
+      when "instance_perf", "vm_perf", "container_perf"
         return "No Capacity & Utilization data has been collected for this VM" unless @record.has_perf_data?
       when "instance_check_compliance", "vm_check_compliance"
         model = model_for_vm(@record).to_s
