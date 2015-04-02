@@ -315,6 +315,7 @@ class SniaFileShare < MiqCimInstance
     nrs                = storage_system.storage_managers.first
     raise "Could not find manager entry for NetApp filer: #{self.evm_display_name}" if nrs.nil?
 
+    # TODO: Log hostname, not ipaddress
     $log.info("#{log_prefix} Found service entry for NetApp filer: #{self.evm_display_name} -> #{nrs.ipaddress}")
 
     # Add the ESX hosts to the root hosts list for the NFS share.
