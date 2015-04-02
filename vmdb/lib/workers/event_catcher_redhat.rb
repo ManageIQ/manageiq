@@ -8,7 +8,7 @@ class EventCatcherRedhat < EventCatcher
 
   def event_monitor_options
     {
-      :server     => @ems.ipaddress,
+      :server     => @ems.hostname,
       :port       => @ems.port.blank? ? nil : @ems.port.to_i,
       :username   => @ems.authentication_userid,
       :password   => @ems.authentication_password,
