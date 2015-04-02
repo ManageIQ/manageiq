@@ -4,7 +4,7 @@ require "workers/event_catcher_redhat"
 
 describe EventCatcherRedhat do
   context "#event_monitor_options" do
-    let(:ems)     { FactoryGirl.create(:ems_redhat, :ipaddress => "1.1.1.1") }
+    let(:ems)     { FactoryGirl.create(:ems_redhat, :hostname => "hostname") }
     let(:catcher) { described_class.new(:ems_id => ems) }
 
     before do
