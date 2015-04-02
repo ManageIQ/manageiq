@@ -75,6 +75,8 @@ ems_refresh:
   foreman_provisioning:
     :refresh_interval: 1.hour
   full_refresh_threshold: 100
+  kubernetes:
+    :refresh_interval: 15.minutes
   raise_vm_snapshot_complete_if_created_within: 15.minutes
   refresh_interval: 24.hours
   scvmm:
