@@ -29,7 +29,18 @@ module MiqAeServiceServiceTemplateProvisionTaskSpec
     it "#user_message" do
       service_service_template_provision_task.user_message = "fred"
 
+      expect(@service_template_provision_task.reload.message).to eq("fred")
       expect(@service_template_provision_task.reload.options[:user_message]).to eq("fred")
+    end
+
+    it "#user_message reset" do
+      service_service_template_provision_task.user_message = "fred"
+      expect(@service_template_provision_task.reload.message).to eq("fred")
+      expect(@service_template_provision_task.reload.options[:user_message]).to eq("fred")
+
+      service_service_template_provision_task.user_message = ""
+      expect(@service_template_provision_task.reload.message).to eq("fred")
+      expect(@service_template_provision_task.reload.options[:user_message]).to be_blank
     end
 
     context "#status" do

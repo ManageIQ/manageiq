@@ -17,6 +17,7 @@ module MiqRequestMixin
   def user_message=(msg)
     options[:user_message] = msg
     update_attribute(:options, options)
+    update_attributes(:message => msg) unless msg.blank?
   end
 
   def self.get_option_last(key, from)
