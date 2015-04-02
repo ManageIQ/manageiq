@@ -1,8 +1,7 @@
 require 'manageiq_foreman'
 module MiqProvisionTaskConfiguredSystemForeman::OptionsHelper
   def log_provider_options
-    log_header = "MIQ(#{self.class.name}##{__method__})"
-    $log.info("#{log_header} Provisioning [#{source.name}]")
+    $log.info("MIQ(#{self.class.name}##{__method__}) Provisioning [#{source.name}]")
   end
 
   def merge_provider_options_from_automate
