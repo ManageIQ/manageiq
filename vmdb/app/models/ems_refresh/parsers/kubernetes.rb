@@ -164,7 +164,8 @@ module EmsRefresh::Parsers
         :ems_ref   => "#{pod_id}_#{container_name}_#{port_config["containerPort"]}_#{port_config["hostPort"]}_#{port_config["protocol"]}",
         :port      => port_config["containerPort"],
         :host_port => port_config["hostPort"],
-        :protocol  => port_config["protocol"]
+        :protocol  => port_config["protocol"],
+        :name      => port_config["name"]
       }
     end
 
