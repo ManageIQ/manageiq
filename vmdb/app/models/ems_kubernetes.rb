@@ -11,10 +11,10 @@ class EmsKubernetes < EmsContainer
     @description ||= "Kubernetes".freeze
   end
 
-  def self.raw_connect(hostname, port, api_version)
+  def self.raw_connect(hostname, port)
     require 'kubeclient'
     api_endpoint = raw_api_endpoint(hostname, port)
-    Kubeclient::Client.new(api_endpoint, api_version)
+    Kubeclient::Client.new(api_endpoint)
   end
 
   def self.raw_api_endpoint(hostname, port)
@@ -26,7 +26,7 @@ class EmsKubernetes < EmsContainer
   end
 
   def connect(_options = {})
-    self.class.raw_connect(hostname, port, api_version)
+    self.class.raw_connect(hostname, port)
   end
 
   def self.event_monitor_class
