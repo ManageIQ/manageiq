@@ -1,6 +1,8 @@
 class ContainerGroup < ActiveRecord::Base
   include CustomAttributeMixin
   include ReportableMixin
+  include NewWithTypeStiMixin
+
   # :name, :uid, :creation_timestamp, :resource_version, :namespace
   # :labels, :restart_policy, :dns_policy
 
