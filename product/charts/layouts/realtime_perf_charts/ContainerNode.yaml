@@ -1,0 +1,12 @@
+# Container node real time performance chart layouts
+---
+- :title: CPU (%)
+  :type: Line
+  :columns:
+  - cpu_usage_rate_average
+
+- :title: Memory (MB)
+  :type: Line
+  :columns:
+  - derived_memory_used
+  - derived_memory_available

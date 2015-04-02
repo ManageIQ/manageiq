@@ -3115,6 +3115,10 @@
       :description: Display Timelines for Pods
       :feature_type: view
       :identifier: container_group_timeline
+    - :name: Utilization
+      :description: Show Capacity & Utilization data of Pods
+      :feature_type: view
+      :identifier: container_group_perf
   - :name: Modify
     :description: Modify Pods
     :feature_type: admin
@@ -3161,6 +3165,10 @@
       :description: Display Individual Container Nodes
       :feature_type: view
       :identifier: container_node_show
+    - :name: Utilization
+      :description: Show Capacity & Utilization data of Nodes
+      :feature_type: view
+      :identifier: container_node_perf
     - :name: Timeline
       :description: Display Timelines for Container Nodes
       :feature_type: view
@@ -3467,6 +3475,10 @@
         :description: Add a Container
         :feature_type: admin
         :identifier: container_new
+      - :name: Utilization
+        :description: Show Capacity & Utilization data of Containers
+        :feature_type: view
+        :identifier: container_perf
   - :name: Operate
     :description: Perform Operations on Containers
     :feature_type: control
