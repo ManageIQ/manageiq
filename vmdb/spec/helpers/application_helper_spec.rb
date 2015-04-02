@@ -3394,8 +3394,8 @@ describe ApplicationHelper do
       @date = "6/28/2012"
       @hour = "0#{11-4}"
       @min = "14"
-      @run_at = { :start_time => "2012-06-28 11:14:00",
-                  :interval => {:value => @interval }}
+      @run_at = {:start_time => "2012-06-28 11:14:00".to_time(:utc),
+                 :interval   => {:value => @interval}}
       @schedule = double( :run_at => @run_at )
     end
 
