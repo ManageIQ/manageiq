@@ -42,6 +42,7 @@ class StorageManager < ActiveRecord::Base
   end
 
   def self.add(ipaddress, username, password, agent_type, zone_id=nil, hostname=nil, name=nil)
+    # TODO: Use hostname, not ipaddress
     agent = self.where(:ipaddress => ipaddress, :agent_type => agent_type).first
     unless (agent)
       agent = self.new
@@ -53,6 +54,7 @@ class StorageManager < ActiveRecord::Base
 
       if username
         auth = Authentication.new
+        # TODO: Use hostname, not ipaddress
         auth.name     = "#{self.name} #{ipaddress}"
         auth.authtype   = "default"
         auth.userid     = username
