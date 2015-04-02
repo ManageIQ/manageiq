@@ -9,7 +9,10 @@ class OrchestrationTemplate < ActiveRecord::Base
 
   default_value_for :draft, false
 
-  validates :md5, :uniqueness => {:scope => :draft}, :unless => :draft?
+  validates :md5,
+            :uniqueness => {:scope => :draft, :message => "of content already exists (content must be unique)"},
+            :unless     => :draft?
+  validates_presence_of :name
 
   def self.available
     where(:draft => false)
@@ -88,6 +91,16 @@ class OrchestrationTemplate < ActiveRecord::Base
       return mgr.orchestration_template_validate(self) rescue nil
     end
     "No #{ui_lookup(:model => 'ExtManagementSystem').downcase} is capable to validate the template"
+  end
+
+  def validate_format
+    raise NotImplementedError, "validate_format must be implemented in subclass"
+  end
+
+  def save_with_format_validation!
+    error_msg = validate_format unless draft
+    raise MiqException::MiqParsingError, error_msg if error_msg
+    save!
   end
 
   private

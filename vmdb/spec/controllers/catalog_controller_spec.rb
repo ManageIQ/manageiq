@@ -84,7 +84,7 @@ describe CatalogController do
       controller.should_receive(:render)
       @new_name = "New Name"
       @new_description = "New Description"
-      @new_content = "New Content\n"
+      @new_content = "{\"AWSTemplateFormatVersion\" : \"new-version\"}\n"
       session[:edit] = {
         :new    => {
           :name        => @new_name,
@@ -97,7 +97,7 @@ describe CatalogController do
     end
 
     it "Orchestration Template name and description are edited" do
-      ot = FactoryGirl.create(:orchestration_template)
+      ot = FactoryGirl.create(:orchestration_template_cfn)
       controller.instance_variable_set(:@record, ot)
       controller.params.merge!(:id => ot.id, :template_content => @new_content)
       session[:edit][:key] = "ot_edit__#{ot.id}"
@@ -115,7 +115,7 @@ describe CatalogController do
     end
 
     it "Read-only Orchestration Template content cannot be edited" do
-      ot = FactoryGirl.create(:orchestration_template_with_stacks)
+      ot = FactoryGirl.create(:orchestration_template_cfn_with_stacks)
       original_content = ot.content
       controller.params.merge!(:id => ot.id, :template_content => @new_content)
       session[:edit][:key] = "ot_edit__#{ot.id}"
@@ -164,11 +164,11 @@ describe CatalogController do
       controller.instance_variable_set(:@sb, {})
       controller.instance_variable_set(:@_params, :button => "save")
       controller.should_receive(:render)
-      ot = FactoryGirl.create(:orchestration_template)
+      ot = FactoryGirl.create(:orchestration_template_cfn)
       controller.x_node = "xx-ot_othot-#{ot.id}"
       @new_name = "New Name"
       new_description = "New Description"
-      new_content = "New Content"
+      new_content = "{\"AWSTemplateFormatVersion\" : \"new-version\"}"
       controller.params.merge!(:id               => ot.id,
                                :name             => @new_name,
                                :description      => new_description,
@@ -231,7 +231,7 @@ describe CatalogController do
       @new_name = "New Name"
       new_description = "New Description"
       new_type = "OrchestrationTemplateCfn"
-      @new_content = "New Content"
+      @new_content = '{"AWSTemplateFormatVersion" : "2010-09-09"}'
       edit = {
         :new => {
           :name        => @new_name,

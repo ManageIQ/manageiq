@@ -956,7 +956,7 @@ class CatalogController < ApplicationController
         ot.draft = @edit[:new][:draft]
       end
       begin
-        ot.save!
+        ot.save_with_format_validation!
       rescue StandardError => bang
         add_flash(_("Error during '%s': ") % "Orchestration Template Edit" << bang.message, :error)
         ot_action_submit_flash
@@ -1016,7 +1016,7 @@ class CatalogController < ApplicationController
         :content     => params[:template_content],
         :draft       => params[:draft] == "true" ? true : false)
       begin
-        ot.save!
+        ot.save_with_format_validation!
       rescue StandardError => bang
         add_flash(_("Error during '%s': ") % "Orchestration Template Copy" << bang.message, :error)
         ot_action_submit_flash
@@ -1060,7 +1060,7 @@ class CatalogController < ApplicationController
         :content     => params[:content],
         :draft       => @edit[:new][:draft])
       begin
-        ot.save!
+        ot.save_with_format_validation!
       rescue StandardError => bang
         add_flash(_("Error during '%s': ") % "Orchestration Template creation" << bang.message, :error)
         ot_action_submit_flash
