@@ -1,12 +1,11 @@
 class KubernetesEventMonitor
-  def initialize(api_endpoint, api_version)
+  def initialize(api_endpoint)
     @api_endpoint = api_endpoint
-    @api_version = api_version
   end
 
   def inventory
     require 'kubeclient'
-    @inventory ||= Kubeclient::Client.new(@api_endpoint, @api_version)
+    @inventory ||= Kubeclient::Client.new(@api_endpoint)
   end
 
   def watcher(version = nil)
