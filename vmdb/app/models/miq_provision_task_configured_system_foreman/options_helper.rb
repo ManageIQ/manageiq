@@ -12,7 +12,6 @@ module MiqProvisionTaskConfiguredSystemForeman::OptionsHelper
 
   def prepare_provider_options
     phase_context[:provider_options] = {
-      "id"           => source.manager_ref,
       "hostgroup_id" => dest_configuration_profile.manager_ref,
     }
     dumpObj(phase_context[:provider_options], "MIQ(#{self.class.name}##{__method__}) Default Provider Options: ", $log, :info)
