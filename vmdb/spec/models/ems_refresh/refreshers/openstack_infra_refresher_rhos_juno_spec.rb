@@ -36,7 +36,7 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
   def assert_table_counts
     ExtManagementSystem.count.should         == 1
     EmsFolder.count.should                   == 0 # HACK: Folder structure for UI a la VMware
-    EmsCluster.count.should                  == 0
+    EmsCluster.count.should                  == 2
     Host.count.should                        == 4
     OrchestrationStack.count.should          == 1
     OrchestrationStackParameter.count.should == 130
@@ -71,7 +71,7 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     )
 
     @ems.ems_folders.size.should          == 0 # HACK: Folder structure for UI a la VMware
-    @ems.ems_clusters.size.should         == 0
+    @ems.ems_clusters.size.should         == 2
     @ems.resource_pools.size.should       == 0
     @ems.storages.size.should             == 0
     @ems.hosts.size.should                == 4
