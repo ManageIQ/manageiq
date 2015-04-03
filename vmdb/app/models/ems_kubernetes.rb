@@ -14,11 +14,14 @@ class EmsKubernetes < EmsContainer
   def self.raw_connect(hostname, port)
     require 'kubeclient'
     api_endpoint = raw_api_endpoint(hostname, port)
-    Kubeclient::Client.new(api_endpoint)
+    kube = Kubeclient::Client.new(api_endpoint)
+    # TODO: support real authentication using certificates
+    kube.ssl_options(:verify_ssl => OpenSSL::SSL::VERIFY_NONE)
+    kube
   end
 
   def self.raw_api_endpoint(hostname, port)
-    URI::HTTP.build(:host => hostname, :port => port.to_i, :path => "/api")
+    URI::HTTPS.build(:host => hostname, :port => port.to_i, :path => "/api")
   end
 
   def api_endpoint
