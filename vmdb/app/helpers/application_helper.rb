@@ -1851,7 +1851,7 @@ module ApplicationHelper
   TRUNC_TO = 10
   def truncate_for_quad(value)
     return value if value.to_s.length < TRUNC_AT
-    case @settings[:display][:quad_truncate]
+    case @settings.fetch_path(:display, :quad_truncate)
     when "b"  # Old version, used first x chars followed by ...
       return value[0...TRUNC_TO] + "..."
     when "f"  # Chop off front
