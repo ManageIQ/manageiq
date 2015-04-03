@@ -20,9 +20,7 @@ describe VmInfraController do
       session[:sandboxes] = {
         "vm_infra" => {
           :trees => {
-            :vandt_tree => {
-              :active_node => "v-#{vm.id}" # need this?
-            }
+            :vandt_tree => {}
           },
           :active_tree => :vandt_tree
         }
@@ -42,9 +40,7 @@ describe VmInfraController do
       session[:sandboxes] = {
         "vm_infra" => {
           :trees => {
-            :vms_filter_tree => {
-              #:active_node => "v-#{vm.id}" # need this?
-            }
+            :vms_filter_tree => {}
           },
           :active_tree => :vms_filter_tree
         }
@@ -64,9 +60,7 @@ describe VmInfraController do
       session[:sandboxes] = {
         "vm_infra" => {
           :trees => {
-            :templates_filter_tree => {
-              #:active_node => "v-#{vm.id}" # need this?
-            }
+            :templates_filter_tree => {}
           },
           :active_tree => :templates_filter_tree
         }
