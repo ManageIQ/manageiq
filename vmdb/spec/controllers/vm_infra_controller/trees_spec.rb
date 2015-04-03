@@ -13,10 +13,10 @@ describe VmInfraController do
   end
 
   context "VMs & Templates #tree_select" do
-    it "renders VM and Template grid for vandt_tree root node" do
+    it "renders VM and Template list for vandt_tree root node" do
       vm = FactoryGirl.create(:vm_vmware)
 
-      session[:settings] = {:views => { :vmortemplate => 'grid' }, :perpage => {:grid => 10}}
+      session[:settings] = {}
       session[:sandboxes] = {
         "vm_infra" => {
           :trees => {
@@ -29,20 +29,16 @@ describe VmInfraController do
       }
       post :tree_select, :id => 'root', :format => :js
 
-      response.should render_template('layouts/gtl/_grid')
+      response.should render_template('layouts/gtl/_list')
       expect(response.status).to eq(200)
     end
   end
 
   context "VMs #tree_select" do
-    it "renders grid with VMS for vms_filter_tree root node" do
+    it "renders list with VMS for vms_filter_tree root node" do
       FactoryGirl.create(:vm_vmware)
 
-      session[:settings] = {
-        :views     => {:vminfra => 'grid'},
-        :perpage   => {:grid => 10},
-        :quadicons => {}
-      }
+      session[:settings] = {}
       session[:sandboxes] = {
         "vm_infra" => {
           :trees => {
@@ -55,20 +51,16 @@ describe VmInfraController do
       }
       post :tree_select, :id => 'root', :format => :js
 
-      response.should render_template('layouts/gtl/_grid')
+      response.should render_template('layouts/gtl/_list')
       expect(response.status).to eq(200)
     end
   end
 
   context "Templates #tree_select" do
-    it "renders grid with templates for templates_filter_tree root node" do
+    it "renders list with templates for templates_filter_tree root node" do
       FactoryGirl.create(:template_vmware)
 
-      session[:settings] = {
-        :views     => {:templateinfra => 'grid'},
-        :perpage   => {:grid => 10},
-        :quadicons => {}
-      }
+      session[:settings] = {}
       session[:sandboxes] = {
         "vm_infra" => {
           :trees => {
@@ -81,7 +73,7 @@ describe VmInfraController do
       }
       post :tree_select, :id => 'root', :format => :js
 
-      response.should render_template('layouts/gtl/_grid')
+      response.should render_template('layouts/gtl/_list')
       expect(response.status).to eq(200)
     end
   end
