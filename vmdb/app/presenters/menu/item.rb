@@ -4,6 +4,10 @@ module Menu
       super
     end
 
+    def visible?
+      ApplicationHelper.role_allows_intern(rbac_feature)
+    end
+
     def url
       case type
       when :big_iframe then "/dashboard/iframe?id=#{id}"

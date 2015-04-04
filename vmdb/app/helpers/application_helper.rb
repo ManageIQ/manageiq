@@ -63,25 +63,23 @@ module ApplicationHelper
 
   # Check role based authorization for a UI task
   def role_allows(options={})
-    role_allows_intern(options) rescue false
+    ApplicationHelper.role_allows_intern(options) rescue false
   end
 
   def role_allows_intern(options = {})
+    userid  = User.current_userid
     role_id = User.current_user.miq_user_role.try(:id)
     if options[:feature]
       auth = options[:any] ? User.current_user.role_allows_any?(:identifiers => [options[:feature]]) :
                              User.current_user.role_allows?(:identifier => options[:feature])
-      $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{session[:userid]}], role id [#{role_id}], feature identifier [#{options[:feature]}]")
-    elsif options[:main_tab_id] # FIXME: used only in tab definition
-      tab = Menu::Manager.tab_features_by_id(options[:main_tab_id])
-      auth = User.current_user.role_allows_any?(:identifiers => tab)
-      $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{session[:userid]}], role id [#{role_id}], main tab [#{options[:main_tab]}]")
+      $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{userid}], role id [#{role_id}], feature identifier [#{options[:feature]}]")
     else
       auth = false
-      $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{session[:userid]}], role id [#{role_id}], no main tab or feature passed to role_allows")
+      $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{userid}], role id [#{role_id}], no main tab or feature passed to role_allows")
     end
     auth
   end
+  module_function :role_allows_intern
 
   # Check group based filtered authorization for a UI task
   def group_allows(options={})
