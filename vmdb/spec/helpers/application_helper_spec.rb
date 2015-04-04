@@ -90,12 +90,12 @@ describe ApplicationHelper do
     context "when with :main_tab_id" do
       include UiConstants
       it "and entitled" do
-        role_allows(:main_tab_id => :svc).should be_true
+        Menu::DefaultMenu.services_menu_section.visible?.should be_true
       end
 
       it "and not entitled" do
         User.stub_chain(:current_user, :role_allows_any?).and_return(false)
-        role_allows(:main_tab_id => :svc).should be_false
+        Menu::DefaultMenu.services_menu_section.visible?.should be_false
       end
     end
 
