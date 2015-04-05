@@ -108,16 +108,19 @@ module EmsRefresh::Parsers
       end
 
       new_result.merge!(
-        :port             => service.spec.port,
-        :protocol         => service.spec.protocol,
         :portal_ip        => service.spec.portalIP,
-        :container_port   => service.spec.containerPort,
         :session_affinity => service.spec.sessionAffinity,
 
         :labels           => parse_labels(service),
         :selector_parts   => parse_selector_parts(service),
         :container_groups => container_groups
       )
+
+      ports = service.spec.ports
+      new_result[:container_service_port_configs] = Array(ports).collect do |port_entry|
+        parse_service_port_config(port_entry, new_result[:ems_ref])
+      end
+
       new_result
     end
 
@@ -159,14 +162,16 @@ module EmsRefresh::Parsers
       new_result = parse_base_item(entity)
       new_result[:container_groups] = []
 
-      (entity.endpoints || []).each do |endpoint|
-        next unless endpoint.targetRef.try(:kind) == 'Pod'
-        cg = @data_index.fetch_path(
-          :container_groups, :by_namespace_and_name,
-          # namespace is overriden in more_core_extensions and hence needs
-          # a non method access
-          endpoint.targetRef["table"][:namespace], endpoint.targetRef.name)
-        new_result[:container_groups] << cg unless cg.nil?
+      (entity.subsets || []).each do |subset|
+        (subset.addresses || []).each do |address|
+          next if address.targetRef.try(:kind) != 'Pod'
+          cg = @data_index.fetch_path(
+              :container_groups, :by_namespace_and_name,
+              # namespace is overriden in more_core_extensions and hence needs
+              # a non method access
+              address.targetRef["table"][:namespace], address.targetRef.name)
+          new_result[:container_groups] << cg unless cg.nil?
+        end
       end
 
       new_result
@@ -254,6 +259,16 @@ module EmsRefresh::Parsers
         :host_port => port_config.hostPort,
         :protocol  => port_config.protocol,
         :name      => port_config.name
+      }
+    end
+
+    def parse_service_port_config(port_config, service_id)
+      {
+        :ems_ref     => "#{service_id}_#{port_config.port}_#{port_config.targetPort}",
+        :name        => port_config.name,
+        :port        => port_config.port,
+        :target_port => port_config.targetPort,
+        :protocol    => port_config.protocol
       }
     end
 
