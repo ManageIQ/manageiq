@@ -16,8 +16,6 @@ class EmsEvent < ActiveRecord::Base
   belongs_to :dest_miq_template,   :class_name => "MiqTemplate", :foreign_key => :dest_vm_or_template_id
   belongs_to :dest_host,           :class_name => "Host"
 
-  belongs_to :service
-
   include_concern 'Automate'
   include ReportableMixin
 
