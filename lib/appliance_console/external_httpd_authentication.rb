@@ -63,7 +63,6 @@ module ApplianceConsole
         configure_pam
         configure_sssd
         configure_ipa_http_service
-        configure_httpd_external_auth
         configure_httpd
         configure_selinux
       rescue AwesomeSpawn::CommandResultError => e
@@ -113,7 +112,7 @@ module ApplianceConsole
 
     def configure_pam
       say("Configuring pam ...")
-      config_file_write(PAM_CONFIGURATION, PAM_CONFIG, @timestamp)
+      cp_template(TEMPLATE_FILE[:pam_module], path_join(TEMPLATE_BASE_DIR, PAM_CONFIG_DIR), PAM_CONFIG_DIR)
     end
 
     def configure_sssd
@@ -135,16 +134,9 @@ module ApplianceConsole
       FileUtils.chmod(0600, HTTP_KEYTAB)
     end
 
-    def configure_httpd_external_auth
-      say("Configuring httpd External Authentication ...")
-      config_file_write(httpd_mod_intercept_config, HTTPD_EXTERNAL_AUTH, @timestamp)
-    end
-
     def configure_httpd
       say("Configuring httpd ...")
-      config = config_file_read(HTTPD_CONFIG)
-      configure_httpd_application(config)
-      config_file_write(config, HTTPD_CONFIG, @timestamp)
+      configure_httpd_application
     end
 
     def configure_selinux
