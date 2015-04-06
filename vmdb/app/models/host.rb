@@ -1916,11 +1916,11 @@ class Host < ActiveRecord::Base
   def get_ports(*args)
     return [] if self.operating_system.nil?
     if args.length == 3
-      rules = self.operating_system.firewall_rules.find_all_by_enabled_and_protocol_and_direction(*args)
+      rules = operating_system.firewall_rules.find_all_by_enabled_and_host_protocol_and_direction(*args)
     elsif args.length == 2
-      rules = self.operating_system.firewall_rules.find_all_by_enabled_and_direction(*args)
+      rules = operating_system.firewall_rules.find_all_by_enabled_and_direction(*args)
     elsif args.length == 1
-      rules = self.operating_system.firewall_rules.find_all_by_enabled(*args)
+      rules = operating_system.firewall_rules.find_all_by_enabled(*args)
     else
       return []
     end
