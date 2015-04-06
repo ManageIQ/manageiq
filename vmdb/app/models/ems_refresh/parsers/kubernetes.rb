@@ -17,9 +17,14 @@ module EmsRefresh::Parsers
       get_replication_controllers(inventory)
       get_endpoints(inventory)
       get_services(inventory)
+      get_namespaces(inventory)
 
       EmsRefresh.log_inv_debug_trace(@data, "data:")
       @data
+    end
+
+    def get_namespaces(inventory)
+      process_collection(inventory["namespace"], :container_namespaces) { |n| parse_namespace(n) }
     end
 
     def get_nodes(inventory)
@@ -66,6 +71,17 @@ module EmsRefresh::Parsers
       new_result = yield(item)
 
       @data[key] << new_result
+      new_result
+    end
+
+    def parse_namespace(namespace)
+      new_result = parse_base_item(namespace).except!(:namespace)
+
+      new_result.merge!(
+        :phase  => namespace.status.phase,
+        :labels => parse_labels(namespace),
+      )
+
       new_result
     end
 
