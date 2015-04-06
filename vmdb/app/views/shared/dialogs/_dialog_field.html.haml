@@ -33,7 +33,7 @@
                 var fieldName = "#{field.name}";
 
                 $.post('dynamic_text_box_refresh', {name: fieldName}, function(data) {
-                  $('.dynamic-text-box-' + fieldId).val(data.values);
+                  $('.dynamic-text-box-' + fieldId).val(data.values.text);
                   miqSparkleOff();
                 });
               });
@@ -66,7 +66,7 @@
               var fieldName = "#{field.name}";
 
               $.post('dynamic_text_box_refresh', {name: fieldName}, function(data) {
-                $('.dynamic-text-area-' + fieldId).val(data.values);
+                $('.dynamic-text-area-' + fieldId).val(data.values.text);
                 miqSparkleOff();
               });
             });
