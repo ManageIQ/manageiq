@@ -4,30 +4,33 @@ module ApplianceConsole
       #
       # External Authentication Definitions
       #
+      COPY_BASE_DIR       = "/var/www/miq/system/COPY/"
+      TEMPLATE_BASE_DIR   = "/var/www/miq/system/TEMPLATE/"
+
+      PAM_CONFIG_DIR      = "/etc/pam.d/"
+      HTTPD_CONFIG_DIR    = "/etc/httpd/conf.d"
+
       IPA_COMMAND         = "/usr/bin/ipa"
       IPA_INSTALL_COMMAND = "/usr/sbin/ipa-client-install"
       IPA_GETKEYTAB       = "/usr/sbin/ipa-getkeytab"
 
-      PAM_MODULE          = "httpd-auth"
-      PAM_CONFIG          = "/etc/pam.d/#{PAM_MODULE}"
-      PAM_CONFIGURATION   = <<EOS
-auth    required pam_sss.so
-account required pam_sss.so
-EOS
       SSSD_CONFIG         = "/etc/sssd/sssd.conf"
       HTTP_KEYTAB         = "/etc/http.keytab"
 
-      EXTERNAL_AUTH_FILE  = "conf.d/cfme-external-auth"
-      HTTPD_EXTERNAL_AUTH = "/etc/httpd/#{EXTERNAL_AUTH_FILE}"
-      HTTPD_CONFIG        = "/etc/httpd/conf.d/cfme-https-application.conf"
+      CONFIG_FILE = {
+        :pam_module    => "httpd-auth",
+        :external_auth => "cfme-external-auth.conf",
+        :remote_user   => "cfme-remote-user.conf"
+      }
+
+      TEMPLATE_FILE = CONFIG_FILE.merge(
+        :external_auth => "cfme-external-auth.conf.erb"
+      )
 
       GETSEBOOL_COMMAND   = "/usr/sbin/getsebool"
       SETSEBOOL_COMMAND   = "/usr/sbin/setsebool"
       GETENFORCE_COMMAND  = "/usr/sbin/getenforce"
 
-      INTERCEPT_FORM      = "/dashboard/authenticate"
-      KERBEROS_AUTH       = "/dashboard/kerberos_authenticate"
-      INTERNAL_LOGIN      = "admin"
       APACHE_USER         = "apache"
 
       TIMESTAMP_FORMAT    = "%Y%m%d_%H%M%S"
@@ -62,122 +65,21 @@ EOS
       end
 
       def unconfigure_httpd
-        timestamp = Time.now.strftime(TIMESTAMP_FORMAT)
-
         say("Unconfiguring httpd ...")
-        config = config_file_read(HTTPD_CONFIG)
-        unconfigure_httpd_application(config)
-        config_file_write(config, HTTPD_CONFIG, timestamp)
+        unconfigure_httpd_application
 
         say("Restarting httpd ...")
         LinuxAdmin::Service.new("httpd").restart
       end
 
-      #
-      # HTTPD Configuration Methods
-      #
-      def httpd_mod_intercept_config
-        <<EOS
-
-LoadModule authnz_pam_module modules/mod_authnz_pam.so
-LoadModule intercept_form_submit_module modules/mod_intercept_form_submit.so
-LoadModule lookup_identity_module modules/mod_lookup_identity.so
-LoadModule auth_kerb_module modules/mod_auth_kerb.so
-#{httpd_mod_intercept_config_ui}
-#{httpd_mod_intercept_config_api}
-EOS
+      def configure_httpd_application
+        cp_template(TEMPLATE_FILE[:external_auth], path_join(TEMPLATE_BASE_DIR, HTTPD_CONFIG_DIR), HTTPD_CONFIG_DIR)
+        cp_template(TEMPLATE_FILE[:remote_user],   path_join(TEMPLATE_BASE_DIR, HTTPD_CONFIG_DIR), HTTPD_CONFIG_DIR)
       end
 
-      def httpd_mod_intercept_config_ui
-        <<EOS
-
-<Location #{KERBEROS_AUTH}>
-  AuthType  Kerberos
-  AuthName  "Kerberos Login"
-  KrbMethodNegotiate On
-  KrbMethodK5Passwd Off
-  KrbAuthRealms #{realm}
-  Krb5KeyTab #{HTTP_KEYTAB}
-  Require pam-account #{PAM_MODULE}
-
-  ErrorDocument 401 /proxy_pages/invalid_sso_credentials.js
-</Location>
-
-<Location #{INTERCEPT_FORM}>
-  InterceptFormPAMService #{PAM_MODULE}
-  InterceptFormLogin      user_name
-  InterceptFormPassword   user_password
-  InterceptFormLoginSkip  #{INTERNAL_LOGIN}
-  InterceptFormClearRemoteUserForSkipped on
-</Location>
-
-<LocationMatch ^#{INTERCEPT_FORM}$|^#{KERBEROS_AUTH}$>
-#{httpd_mod_intercept_config_attrs}
-</LocationMatch>
-EOS
-      end
-
-      def httpd_mod_intercept_config_api
-        <<EOS
-
-<LocationMatch ^/api|^/vmdbws/wsdl|^/vmdbws/api>
-  SetEnvIf Authorization '^Basic +YWRtaW46' let_admin_in
-  SetEnvIf X-Auth-Token  '^.+$'             let_api_token_in
-
-  AuthType Basic
-  AuthName "External Authentication (httpd) for API"
-  AuthBasicProvider PAM
-
-  AuthPAMService #{PAM_MODULE}
-  Require valid-user
-  Order Allow,Deny
-  Allow from env=let_admin_in
-  Allow from env=let_api_token_in
-  Satisfy Any
-
-#{httpd_mod_intercept_config_attrs}
-</LocationMatch>
-EOS
-      end
-
-      def httpd_mod_intercept_config_attrs
-        config = ""
-        LDAP_ATTRS.each { |ldap, http| config << "  LookupUserAttr #{ldap} #{http}\n" }
-        config << "
-  LookupUserGroups        REMOTE_USER_GROUPS \":\"
-  LookupDbusTimeout       5000
-"
-      end
-
-      def httpd_external_auth_config
-        config = "RequestHeader unset X_REMOTE_USER\n"
-        attrs = %w(REMOTE_USER EXTERNAL_AUTH_ERROR) + LDAP_ATTRS.values + %w(REMOTE_USER_GROUPS)
-        attrs.each { |attr| config << "RequestHeader set X_#{attr} %{#{attr}}e env=#{attr}\n" }
-        config.chomp!
-      end
-
-      def configure_httpd_application(config)
-        ext_auth_include = "Include #{EXTERNAL_AUTH_FILE}"
-        unless config.include?(ext_auth_include)
-          config[/(\n)<VirtualHost/, 1] = "\n#{ext_auth_include}\n\n"
-        end
-
-        if config.include?("set X_REMOTE_USER")
-          config[/RequestHeader unset X_REMOTE_USER(\n.*)+env=REMOTE_USER_GROUPS/] = httpd_external_auth_config
-        else
-          config[/set X_FORWARDED_PROTO 'https'(\n)/, 1] = "\n\n#{httpd_external_auth_config}\n"
-        end
-      end
-
-      def unconfigure_httpd_application(config)
-        ext_auth_include = "Include #{EXTERNAL_AUTH_FILE}"
-        if config.include?(ext_auth_include)
-          config[/#{ext_auth_include}\n\n/] = ""
-        end
-
-        if config.include?("set X_REMOTE_USER")
-          config[/RequestHeader unset X_REMOTE_USER(\n.*)+env=REMOTE_USER_GROUPS\n\n/] = ""
-        end
+      def unconfigure_httpd_application
+        rm_file(CONFIG_FILE[:external_auth], HTTPD_CONFIG_DIR)
+        rm_file(CONFIG_FILE[:remote_user],   HTTPD_CONFIG_DIR)
       end
 
       #
@@ -275,6 +177,27 @@ EOS
         end
         say("Succeeded.")
         true
+      end
+
+      def cp_template(file, src_dir, dest_dir)
+        src_path = path_join(src_dir, file)
+        if src_path.to_s.include?(".erb")
+          dest_path = path_join(dest_dir, file.gsub(".erb", ""))
+          File.write(dest_path, ERB.new(File.read(src_path), nil, '-').result(binding))
+        else
+          FileUtils.cp src_path, dest_dir
+        end
+      end
+
+      def rm_file(file, dir)
+        path = path_join(dir, file)
+        File.delete(path) if File.exist?(path)
+      end
+
+      def path_join(*args)
+        path = Pathname.new(args.shift)
+        args.each { |path_seg| path = path.join("./#{path_seg}") }
+        path
       end
     end
 
