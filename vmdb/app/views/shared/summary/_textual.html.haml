@@ -15,7 +15,7 @@
       - c = "#{item[:link] ? "" : "no-hover"}"
 
       %tr{:class => c, :title => item[:title] ? item[:title] : "", :onclick => item[:link] ? click : ""}
-        %td
+        %td.label
           = item[:label]
         %td
           - if item[:image]
