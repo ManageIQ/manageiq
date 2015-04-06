@@ -28,8 +28,8 @@ class DialogFieldTextBox < DialogField
   end
 
   def automate_output_value
-    return MiqPassword.encrypt(value) if self.protected?
-    value
+    return MiqPassword.encrypt(@value) if self.protected?
+    @value
   end
 
   def automate_key_name
