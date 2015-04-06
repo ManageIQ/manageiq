@@ -10,7 +10,7 @@
           - item[:value].each_with_index do |subitem, i|
             %tr
               - if i == 0
-                %th{:rowspan => item[:value].length}
+                %td{:rowspan => item[:value].length}
                   = item[:label]
               %td
                 %img{:src => "/images/icons/new/#{subitem[:image]}.png"}
