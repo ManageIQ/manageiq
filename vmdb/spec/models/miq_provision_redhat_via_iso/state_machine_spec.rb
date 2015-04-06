@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe MiqProvisionRedhat do
+describe MiqProvisionRedhatViaIso do
   context "::StateMachine" do
     before do
       ems      = FactoryGirl.create(:ems_redhat_with_authentication)
