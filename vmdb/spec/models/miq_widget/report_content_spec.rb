@@ -40,7 +40,7 @@ describe "Widget Report Content" do
     content.contents.scan("</th>").length.should == widget.options[:col_order].length
     content.miq_report_result.html_rows(:offset => 0, :limit => 1).first.scan("</td>").length.should == widget.resource.col_order.length
     content.miq_report_result.html_rows.count {|c| c.match("<td>VMware</td>") }.should == VmVmware.count
-    content.contents.should match "<tr><th class='title'>Name</th><th class='title'>Container</th></tr>"
+    content.contents.should match "<tr><th>Name</th><th>Container</th></tr>"
     widget.contents_for_user(@admin).should == content
   end
 
@@ -52,7 +52,7 @@ describe "Widget Report Content" do
     content.contents.scan("</th>").length.should == widget.options[:col_order].length
     content.miq_report_result.html_rows(:offset => 0, :limit => 1).first.scan("</td>").length.should == widget.resource.col_order.length
     content.miq_report_result.html_rows.count {|c| c.match("<td>VMware</td>") }.should == VmVmware.count
-    content.contents.should match "<tr><th class='title'>Name</th><th class='title'>Container</th></tr>"
+    content.contents.should match "<tr><th>Name</th><th>Container</th></tr>"
     widget.contents_for_user(@admin).should == content
   end
 
