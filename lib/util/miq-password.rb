@@ -121,21 +121,18 @@ class MiqPassword
     @v2_key ||= ez_load("#{key_root}/v2_key")
   end
 
-  def self.v1_key
-    @v1_key ||= ez_load("#{key_root}/v1_key")
-  end
-
-  def self.v0_key
-    @v0_key ||= File.exist?("#{key_root}/v0_key") &&
-      begin
-        params = YAML.load_file("#{key_root}/v0_key")
-        CryptString.new(nil, params[:algorithm], params[:key], params[:iv])
-      end
+  def self.add_legacy_key(filename, type = :v1)
+    case type
+    when :v0
+      @v0_key = ez_load_v0(File.expand_path(filename, key_root))
+    when :v1
+      @v1_key = ez_load(File.expand_path(filename, key_root))
+    end
   end
 
   class << self
-    attr_writer :v0_key
-    attr_writer :v1_key
+    attr_accessor :v0_key
+    attr_accessor :v1_key
     attr_writer :v2_key
   end
 
@@ -154,6 +151,13 @@ class MiqPassword
 
   def self.ez_load(filename)
     File.exist?(filename) && EzCrypto::Key.load(filename)
+  end
+
+  def self.ez_load_v0(filename)
+    if File.exist?(filename)
+      params = YAML.load_file(filename)
+      CryptString.new(nil, params[:algorithm], params[:key], params[:iv])
+    end
   end
 
   def encrypt_version_2(str)
