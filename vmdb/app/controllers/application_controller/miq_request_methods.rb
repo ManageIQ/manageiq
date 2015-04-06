@@ -494,7 +494,7 @@ module ApplicationController::MiqRequestMethods
   def dialog_partial_for_workflow
     case (@edit || @options).try(:[], :wf)
     when MiqProvisionVirtWorkflow
-      "prov_dialog"
+      "shared/views/prov_dialog"
     when MiqProvisionConfiguredSystemForemanWorkflow
       "prov_configured_system_foreman_dialog"
     when MiqHostProvisionWorkflow
