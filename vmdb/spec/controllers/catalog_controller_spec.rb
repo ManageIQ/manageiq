@@ -345,7 +345,7 @@ describe CatalogController do
 
   context "#service_dialog_create_from_ot" do
     before(:each) do
-      @ot = FactoryGirl.create(:orchestration_template_with_content)
+      @ot = FactoryGirl.create(:orchestration_template_cfn_with_content)
       @dialog_label = "New Dialog 01"
       session[:edit] = {
         :new    => {:dialog_name => @dialog_label},
