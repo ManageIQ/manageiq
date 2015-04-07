@@ -320,8 +320,8 @@ describe MiqAeClass do
       create_ae_model(:name => 'MARIO', :ae_class => 'CLASS3', :ae_namespace  => 'C/D/E')
       ns_fqnames = %w(FRED FRED/A FRED/A/B FRED/A/B/C FREDDY FREDDY/C FREDDY/C/D FREDDY/C/D/E)
       class_fqnames = %w(/FRED/A/B/C/CLASS1 /FREDDY/C/D/E/CLASS2)
-      ids = ns_fqnames.collect { |ns| MiqAeNamespace.find_by_fqname(ns, false).id }
-      ids += class_fqnames.collect { |cls| MiqAeClass.find_by_fqname(cls).id }
+      ids = ns_fqnames.collect { |ns| "MiqAeNamespace::#{MiqAeNamespace.find_by_fqname(ns, false).id}" }
+      ids += class_fqnames.collect { |cls| "MiqAeClass::#{MiqAeClass.find_by_fqname(cls).id}" }
       MiqAeClass.waypoint_ids_for_state_machines.should match_array(ids)
     end
 

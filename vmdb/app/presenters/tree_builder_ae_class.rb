@@ -44,6 +44,8 @@ class TreeBuilderAeClass  < TreeBuilder
 
   def filter_ae_objects(objects)
     return objects unless @sb[:cached_waypoint_ids]
-    objects.select { |obj| @sb[:cached_waypoint_ids].include?(obj.id) }
+    klass_name = objects.first.class.name
+    prefix = klass_name == "MiqAeDomain" ? "MiqAeNamespace" : klass_name
+    objects.select { |obj| @sb[:cached_waypoint_ids].include?("#{prefix}::#{obj.id}") }
   end
 end
