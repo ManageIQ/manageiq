@@ -67,4 +67,27 @@ describe Tag do
       expect(categorization).to eq(expected_categorization)
     end
   end
+
+  context "classification" do
+    before do
+      parent = FactoryGirl.create(:classification, :name => "test_category")
+      FactoryGirl.create(:classification_tag,      :name => "test_entry",         :parent => parent)
+      FactoryGirl.create(:classification_tag,      :name => "another_test_entry", :parent => parent)
+    end
+
+    it "finds tag by name" do
+      Tag.find_by_classification_name("test_category").should_not.nil?
+      Tag.find_by_classification_name("test_category").name.should == '/managed/test_category'
+    end
+
+    it "doesn't find non tag" do
+      Tag.find_by_classification_name("test_entry").should.nil?
+    end
+
+    it "finds tag by name and ns" do
+      ns = '/managed/test_category'
+      Tag.find_by_classification_name("test_entry", nil, ns).should_not.nil?
+      Tag.find_by_classification_name("test_entry", nil, ns).name.should == "#{ns}/test_entry"
+    end
+  end
 end
