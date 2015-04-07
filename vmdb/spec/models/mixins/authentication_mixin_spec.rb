@@ -329,7 +329,7 @@ describe AuthenticationMixin do
       end
 
       context "#authentication_check" do
-        it "updates status" do
+        it "updates status by default" do
           @host.stub(:has_credentials?).and_return(false)
           @host.authentication_check
           @host.authentication_type(:default).status.should == 'Incomplete'
@@ -360,32 +360,32 @@ describe AuthenticationMixin do
 
         it "missing credentials" do
           @host.stub(:has_credentials?).and_return(false)
-          @host.authentication_check.should == [:incomplete, "Missing credentials"]
+          @host.authentication_check.should == [false, "Missing credentials"]
         end
 
         it "verify_credentials fails" do
           @host.stub(:verify_credentials).and_return(false)
-          @host.authentication_check.should == [:invalid, "Unknown reason"]
+          @host.authentication_check.should == [false, "Unknown reason"]
         end
 
         it "verify_credentials successful" do
           @host.stub(:verify_credentials).and_return(true)
-          @host.authentication_check.should == [:valid, ""]
+          @host.authentication_check.should == [true, ""]
         end
 
         it "verify_credentials raising 'Unreachable' error" do
           @host.stub(:verify_credentials).and_raise(MiqException::MiqUnreachableError)
-          @host.authentication_check.should == [:unreachable, "MiqException::MiqUnreachableError"]
+          @host.authentication_check.should == [false, "MiqException::MiqUnreachableError"]
         end
 
         it "verify_credentials raising invalid credentials" do
           @host.stub(:verify_credentials).and_raise(MiqException::MiqInvalidCredentialsError)
-          @host.authentication_check.should == [:invalid, "MiqException::MiqInvalidCredentialsError"]
+          @host.authentication_check.should == [false, "MiqException::MiqInvalidCredentialsError"]
         end
 
         it "verify_credentials raising an unexpected error" do
           @host.stub(:verify_credentials).and_raise(RuntimeError)
-          @host.authentication_check.should == [:error, "RuntimeError"]
+          @host.authentication_check.should == [false, "RuntimeError"]
         end
       end
 

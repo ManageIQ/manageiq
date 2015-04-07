@@ -13,7 +13,7 @@ describe EmsRefreshCoreWorker do
     described_class.any_instance.stub(:sync_config)
     described_class.any_instance.stub(:set_connection_pool_size)
     described_class.any_instance.stub(:heartbeat_using_drb?).and_return(false)
-    EmsVmware.any_instance.stub(:authentication_check).and_return([:valid, ""])
+    EmsVmware.any_instance.stub(:authentication_check).and_return([true, ""])
 
     @worker = EmsRefreshCoreWorker.new({:guid => @worker_record.guid, :ems_id => @ems.id})
   end

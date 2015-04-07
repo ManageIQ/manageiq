@@ -76,7 +76,7 @@ describe EmsCloudController do
 
         it "successful flash message (unchanged)" do
           controller.stub(:edit_changed? => false)
-          mocked_ems_cloud.should_receive(:authentication_check).with("amqp", :save => true).and_return([:valid, ""])
+          mocked_ems_cloud.should_receive(:authentication_check).with("amqp", :save => true).and_return([true, ""])
           controller.should_receive(:add_flash).with(_("Credential validation was successful"))
           controller.should_receive(:render_flash)
           controller.send(:update_button_validate)
@@ -84,7 +84,7 @@ describe EmsCloudController do
 
         it "unsuccessful flash message (changed)" do
           controller.stub(:edit_changed? => true)
-          mocked_ems_cloud.should_receive(:authentication_check).with("amqp", :save => false).and_return([:invalid, "Invalid"])
+          mocked_ems_cloud.should_receive(:authentication_check).with("amqp", :save => false).and_return([false, "Invalid"])
           controller.should_receive(:add_flash).with(_("Credential validation was not successful: Invalid"), :error)
           controller.should_receive(:render_flash)
           controller.send(:update_button_validate)

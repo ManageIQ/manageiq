@@ -166,7 +166,7 @@ module AuthenticationMixin
       status == :valid ? auth.validation_successful : auth.validation_failed(status, details)
     end
 
-    return status, details
+    return status == :valid, details
   end
 
   def authentication_check_no_validation(type, options)
