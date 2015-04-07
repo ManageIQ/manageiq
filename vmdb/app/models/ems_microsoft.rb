@@ -17,13 +17,13 @@ class EmsMicrosoft < EmsInfra
     # The gssapi code outputs the following warning:
     #   WARNING: Could not load IOV methods. Check your GSSAPI C library for an update
     #   WARNING: Could not load AEAD methods. Check your GSSAPI C library for an update
-    # After much googling, this warning is considered benign and can be ignored.
+    # This warning is considered benign and can be ignored.
     # Please note - the webmock gem depends on gssapi too and prints out the
     # above warning when rspec tests are run.
 
     silence_warnings { require 'winrm' }
 
-    winrmm = WinRM::WinRMWebService.new(auth_url, security_protocol.to_sym, connect_params)
+    winrm = WinRM::WinRMWebService.new(auth_url, security_protocol.to_sym, connect_params)
     winrm.set_timeout(1800)
     winrm
   end

@@ -276,7 +276,7 @@ module EmsCommon
         # Hide/show port field
         page << "$('#port_tr').#{%w(openstack openstack_infra rhevm).include?(params[:server_emstype]) ? "show" : "hide"}();"
       end
-      page << javascript_for_miq_button_visibility(@changed)
+      page << javascript_for_miq_button_visibility(changed)
       if @edit[:default_verify_status] != @edit[:saved_default_verify_status]
         @edit[:saved_default_verify_status] = @edit[:default_verify_status]
         page << "miqValidateButtons('#{@edit[:default_verify_status] ? 'show' : 'hide'}', 'default_');"
