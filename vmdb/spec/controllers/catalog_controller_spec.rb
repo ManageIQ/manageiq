@@ -162,17 +162,23 @@ describe CatalogController do
   context "#ot_copy" do
     before(:each) do
       controller.instance_variable_set(:@sb, {})
-      controller.instance_variable_set(:@_params, :button => "save")
+      controller.instance_variable_set(:@_params, :button => "add")
       controller.should_receive(:render)
+      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
       ot = FactoryGirl.create(:orchestration_template_cfn)
-      controller.x_node = "xx-ot_othot-#{ot.id}"
+      controller.x_node = "xx-otcfn_ot-#{ot.id}"
       @new_name = "New Name"
       new_description = "New Description"
       new_content = "{\"AWSTemplateFormatVersion\" : \"new-version\"}"
-      controller.params.merge!(:id               => ot.id,
-                               :name             => @new_name,
-                               :description      => new_description,
+      controller.params.merge!(:original_ot_id   => ot.id,
                                :template_content => new_content)
+      session[:edit] = {
+        :new => {
+          :name        => @new_name,
+          :description => new_description
+        },
+        :key => "ot_edit__#{ot.id}"
+      }
     end
 
     after(:each) do
@@ -188,7 +194,7 @@ describe CatalogController do
     end
 
     it "Orchestration Template is copied as a draft" do
-      controller.params.merge!(:draft => "true")
+      session[:edit][:new][:draft] = "true"
       controller.stub(:replace_right_cell)
       controller.send(:ot_copy_submit)
       OrchestrationTemplate.where(:name => @new_name).first.draft.should be_true

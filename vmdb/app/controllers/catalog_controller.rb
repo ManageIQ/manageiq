@@ -723,10 +723,8 @@ class CatalogController < ApplicationController
     case params[:button]
     when "cancel"
       ot_copy_submit_cancel
-    when "reset"
-      ot_copy_submit_reset
-    when "save"
-      ot_copy_submit_save
+    when "add"
+      ot_copy_submit_add
     end
   end
 
@@ -988,33 +986,28 @@ class CatalogController < ApplicationController
     replace_right_cell
   end
 
-  def ot_copy_submit_reset
-    add_flash(_("All changes have been reset"), :warning)
-    ot_edit_set_form_vars(_("Copying %s"))
-    @changed = session[:changed] = false
-    replace_right_cell("ot_copy")
-  end
-
-  def ot_copy_submit_save
+  def ot_copy_submit_add
     assert_privileges("orchestration_template_copy")
-    old_ot = OrchestrationTemplate.find_by_id(params[:id])
+    id = params[:original_ot_id]
+    return unless load_edit("ot_edit__#{id}", "replace_cell__explorer")
+    old_ot = OrchestrationTemplate.find_by_id(id)
     if params[:template_content] == old_ot.content
       add_flash(
-        _("Unable to create a new template copy \"%s\": old and new template content have to differ.") % params[:name],
-        :error)
+        _("Unable to create a new template copy \"%s\": old and new template content have to differ.") %
+          @edit[:new][:name], :error)
       ot_action_submit_flash
     elsif params[:template_content].nil? || params[:template_content] == ""
       add_flash(
-        _("Unable to create a new template copy \"%s\": new template content cannot be empty.") %     params[:name],
+        _("Unable to create a new template copy \"%s\": new template content cannot be empty.") % @edit[:new][:name],
         :error)
       ot_action_submit_flash
     else
       ot = OrchestrationTemplate.new(
-        :name        => params[:name],
-        :description => params[:description],
+        :name        => @edit[:new][:name],
+        :description => @edit[:new][:description],
         :type        => old_ot.type,
         :content     => params[:template_content],
-        :draft       => params[:draft] == "true" ? true : false)
+        :draft       => @edit[:new][:draft] == "true" ? true : false)
       begin
         ot.save_with_format_validation!
       rescue StandardError => bang
@@ -1023,7 +1016,7 @@ class CatalogController < ApplicationController
       else
         add_flash(_("%{model} \"%{name}\" was saved") %
                     {:model => ui_lookup(:model => 'OrchestrationTemplate'),
-                     :name  => params[:name]})
+                     :name  => @edit[:new][:name]})
         x_node_elems = self.x_node.split('-')
         x_node_elems[2] = to_cid(ot.id)
         self.x_node = x_node_elems.join('-')
@@ -1889,7 +1882,12 @@ class CatalogController < ApplicationController
         locals = {:record_id  => @edit[:rec_id],
                   :action_url => "#{action}_submit",
                   :serialize  => true}
-        locals[:no_reset] = true if action == "service_dialog_from_ot"
+        if action == "ot_copy"
+          presenter[:set_visible_elements][:buttons_on] = true
+          presenter[:set_visible_elements][:buttons_off] = false
+          locals[:record_id] = nil
+        end
+        locals[:no_reset] = true if %w(ot_copy service_dialog_from_ot).include?(action)
         presenter[:update_partials][:form_buttons_div] = r[:partial => "layouts/x_edit_buttons", :locals => locals]
       else
         # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box when trying to change a node on tree after saving a record
