@@ -64,5 +64,19 @@ describe FixAuth::Cli do
              .options.slice(:db, :databaseyml, :key)
       expect(opts).to eq(:db => true, :databaseyml => true, :key => true)
     end
+
+    describe "v2" do
+      it "defaults to true" do
+        expect(described_class.new.parse(%w()).options[:v2]).to be_true
+      end
+
+      it "allows v2 to be passed" do
+        expect(described_class.new.parse(%w(--v2)).options[:v2]).to be_true
+      end
+
+      it "allows v2 to be negative" do
+        expect(described_class.new.parse(%w(--no-v2)).options[:v2]).to be_false
+      end
+    end
   end
 end
