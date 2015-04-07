@@ -147,12 +147,13 @@ module EmsRefresh::Parsers
       end
 
       entity.subsets.each do |subset|
-        subset.fetch('addresses', []).each do |address|
-          target_ref = address['targetRef']
-          next if target_ref.nil? || target_ref['kind'] != 'Pod'
+        (subset.addresses || []).each do |address|
+          next if address.targetRef.nil? || address.targetRef.kind != 'Pod'
           cg = @data_index.fetch_path(
-            :container_groups, :by_namespace_and_name, target_ref['namespace'],
-            target_ref['name'])
+            :container_groups, :by_namespace_and_name,
+            # namespace is overriden in more_core_extensions and hence needs
+            # a non method access
+            address.targetRef["table"][:namespace], address.targetRef.name)
           new_result[:container_groups] << cg unless cg.nil?
         end
       end
@@ -238,7 +239,7 @@ module EmsRefresh::Parsers
         :name               => item.metadata.name,
         # namespace is overriden in more_core_extensions and hence needs
         # a non method access
-        :namespace          => item.metadata[:namespace],
+        :namespace          => item.metadata["table"][:namespace],
         :creation_timestamp => item.metadata.creationTimestamp,
         :resource_version   => item.metadata.resourceVersion
       }
