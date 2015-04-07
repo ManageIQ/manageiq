@@ -48,7 +48,7 @@ module EmsContainerHelper::TextualSummary
   end
 
   def textual_zone_id
-    {:label => "Zone", :value => @ems.zone_id}
+    {:label => "Managed by Zone", :image => "zone", :value => @ems.zone.name}
   end
 
   # def textual_cpu_resources
