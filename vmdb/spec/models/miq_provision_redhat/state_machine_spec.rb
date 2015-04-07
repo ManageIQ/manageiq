@@ -60,9 +60,16 @@ describe MiqProvisionRedhat do
 
       @task.should_receive(:configure_container)
       @task.should_receive(:attach_floppy_payload)
-      @task.should_receive(:poll_destination_powered_off_in_vmdb)
+      @task.should_receive(:poll_destination_powered_off_in_provider)
 
       @task.customize_destination
+    end
+
+    it "#poll_destination_powered_off_in_provider" do
+      VmRedhat.any_instance.should_receive(:with_provider_object).and_return(:state => "up")
+      @task.should_receive(:requeue_phase)
+
+      @task.poll_destination_powered_off_in_provider
     end
   end
 end
