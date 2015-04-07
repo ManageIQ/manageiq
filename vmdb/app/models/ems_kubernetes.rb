@@ -3,6 +3,8 @@ class EmsKubernetes < EmsContainer
   has_many :container_groups,                     :foreign_key => :ems_id, :dependent => :destroy
   has_many :container_services,                   :foreign_key => :ems_id, :dependent => :destroy
 
+  default_value_for :port, 6443
+
   def self.ems_type
     @ems_type ||= "kubernetes".freeze
   end
@@ -21,7 +23,7 @@ class EmsKubernetes < EmsContainer
   end
 
   def self.raw_api_endpoint(hostname, port)
-    URI::HTTPS.build(:host => hostname, :port => port.to_i, :path => "/api")
+    URI::HTTPS.build(:host => hostname, :port => port.to_i)
   end
 
   def api_endpoint
