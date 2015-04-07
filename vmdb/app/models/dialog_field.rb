@@ -112,7 +112,7 @@ class DialogField < ActiveRecord::Base
   end
 
   def value_from_dialog_fields(dialog_values)
-    dialog_values[automate_key_name]
+    dialog_values[automate_key_name] || dialog_values[name]
   end
 
   def get_default_value
