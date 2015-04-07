@@ -755,7 +755,6 @@ class HostController < ApplicationController
 
     @edit[:new][:name]              = @host.name
     @edit[:new][:hostname]          = @host.hostname
-    @edit[:new][:ipaddress]         = @host.ipaddress
     @edit[:new][:ipmi_address]      = @host.ipmi_address
     @edit[:new][:custom_1]          = @host.custom_1
     @edit[:new][:user_assigned_os]  = @host.user_assigned_os
@@ -801,7 +800,6 @@ class HostController < ApplicationController
 
     @edit[:new][:name]              = params[:name]             if params[:name]
     @edit[:new][:hostname]          = params[:hostname]         if params[:hostname]
-    @edit[:new][:ipaddress]         = params[:ipaddress]        if params[:ipaddress]
     @edit[:new][:ipmi_address]      = params[:ipmi_address]     if params[:ipmi_address]
     @edit[:new][:mac_address]       = params[:mac_address]      if params[:mac_address]
     @edit[:new][:custom_1]          = params[:custom_1]         if params[:custom_1]
@@ -837,19 +835,19 @@ class HostController < ApplicationController
   end
 
   def set_verify_status
-    if @edit[:new][:default_userid].blank? || @edit[:new][:ipaddress].blank?
+    if @edit[:new][:default_userid].blank? || @edit[:new][:hostname].blank?
       @edit[:default_verify_status] = false
     else
       @edit[:default_verify_status] = (@edit[:new][:default_password] == @edit[:new][:default_verify])
     end
 
-    if @edit[:new][:remote_userid].blank? || @edit[:new][:ipaddress].blank?
+    if @edit[:new][:remote_userid].blank? || @edit[:new][:hostname].blank?
       @edit[:remote_verify_status] = false
     else
       @edit[:remote_verify_status] = (@edit[:new][:remote_password] == @edit[:new][:remote_verify])
     end
 
-    if @edit[:new][:ws_userid].blank? || @edit[:new][:ipaddress].blank?
+    if @edit[:new][:ws_userid].blank? || @edit[:new][:hostname].blank?
       @edit[:ws_verify_status] = false
     else
       @edit[:ws_verify_status] = (@edit[:new][:ws_password] == @edit[:new][:ws_verify])
@@ -867,19 +865,19 @@ class HostController < ApplicationController
       @edit[:default_verify_status] = @edit[:ws_verify_status] = @edit[:remote_verify_status]= @edit[:ipmi_verify_status] = false
     else
       host = find_by_id_filtered(Host, id.to_i)
-      if @edit[:new][:default_userid].blank? || host.ipaddress.blank?
+      if @edit[:new][:default_userid].blank? || host.hostname.blank?
         @edit[:default_verify_status] = false
       else
         @edit[:default_verify_status] = (@edit[:new][:default_password] == @edit[:new][:default_verify])
       end
 
-      if @edit[:new][:remote_userid].blank? || host.ipaddress.blank?
+      if @edit[:new][:remote_userid].blank? || host.hostname.blank?
         @edit[:remote_verify_status] = false
       else
         @edit[:remote_verify_status] = (@edit[:new][:remote_password] == @edit[:new][:remote_verify])
       end
 
-      if @edit[:new][:ws_userid].blank? || host.ipaddress.blank?
+      if @edit[:new][:ws_userid].blank? || host.hostname.blank?
         @edit[:ws_verify_status] = false
       else
         @edit[:ws_verify_status] = (@edit[:new][:ws_password] == @edit[:new][:ws_verify])
@@ -897,7 +895,6 @@ class HostController < ApplicationController
   def set_record_vars(host, mode = nil)
     host.name             = @edit[:new][:name]
     host.hostname         = @edit[:new][:hostname]
-    host.ipaddress        = @edit[:new][:ipaddress]
     host.ipmi_address     = @edit[:new][:ipmi_address]
     host.mac_address      = @edit[:new][:mac_address]
     host.custom_1         = @edit[:new][:custom_1]
