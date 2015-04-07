@@ -5,7 +5,7 @@ class ApiController
     #
 
     def service_templates_query_resource(object)
-      klass = collection_config[:service_templates][:klass].constantize
+      klass = collection_class(:service_templates)
       object ? klass.where(:service_template_catalog_id => object.id) : {}
     end
 
@@ -30,7 +30,7 @@ class ApiController
     end
 
     def service_templates_order_resource(_object, _type, id = nil, data = nil)
-      klass = collection_config[:service_templates][:klass].constantize
+      klass = collection_class(:service_templates)
       st    = klass.find(id)
 
       requester_id     = @auth_user
@@ -68,7 +68,7 @@ class ApiController
     end
 
     def service_template_subcollection_action(type, id)
-      klass = collection_config[:service_templates][:klass].constantize
+      klass = collection_class(:service_templates)
       result =
         begin
           st = resource_search(id, type, klass)

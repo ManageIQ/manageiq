@@ -4,8 +4,7 @@ module ApiHelper
     # Helper proc for rendering a collection of type specified.
     #
     def render_collection_type(type, id, is_subcollection = false)
-      cspec = collection_config[type]
-      klass = cspec[:klass].constantize
+      klass = collection_class(type)
       opts  = {
         :name               => type.to_s,
         :is_subcollection   => is_subcollection,
@@ -98,7 +97,7 @@ module ApiHelper
       return reftype unless resource.respond_to?(:attributes)
 
       rclass = resource.class
-      if collection_config.fetch_path(type.to_sym, :klass).constantize != rclass
+      if collection_class(type) != rclass
         matched_type, _ = collection_config.detect do |_collection, spec|
           spec[:klass] && spec[:klass].constantize == rclass
         end

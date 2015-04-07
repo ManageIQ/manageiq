@@ -3,8 +3,7 @@ class ApiController
     private
 
     def api_action(type, id, options = {})
-      cspec = collection_config[type]
-      klass = cspec[:klass].constantize
+      klass = collection_class(type)
 
       result = yield(klass) if block_given?
 
