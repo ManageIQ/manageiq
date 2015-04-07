@@ -27,14 +27,14 @@ module ReportFormatter
     def build_document_body
       mri = options.mri
       tz = mri.get_time_zone(Time.zone.name)
-      output << "<table class='style3'>"
+      output << "<table class='table table-striped table-bordered'>"
       output << "<thead>"
       output << "<tr>"
 
       # table heading
       unless mri.headers.nil?
         mri.headers.each do |h|
-          output << "<th class='title'>" << CGI.escapeHTML(h.to_s) << "</th>"
+          output << "<th>" << CGI.escapeHTML(h.to_s) << "</th>"
         end
         output << "</tr>"
         output << "</thead>"
