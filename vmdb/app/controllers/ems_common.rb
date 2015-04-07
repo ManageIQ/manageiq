@@ -370,7 +370,7 @@ module EmsCommon
     # validate button should say "revalidate" if the form is unchanged
     revalidating = !edit_changed?
     result, details = verify_ems.authentication_check(params[:type], :save => revalidating)
-    if result == :valid
+    if result
       add_flash(_("Credential validation was successful"))
     else
       add_flash(_("Credential validation was not successful: #{details}"), :error)

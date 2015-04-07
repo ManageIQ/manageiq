@@ -13,7 +13,7 @@ class EmsRefreshCoreWorker < WorkerBase
   def after_initialize
     @ems = ExtManagementSystem.find(@cfg[:ems_id])
     do_exit("Unable to find instance for EMS id [#{@cfg[:ems_id]}].", 1) if @ems.nil?
-    do_exit("EMS id [#{@cfg[:ems_id]}] failed authentication check.", 1) unless @ems.authentication_check.first == :valid
+    do_exit("EMS id [#{@cfg[:ems_id]}] failed authentication check.", 1) unless @ems.authentication_check.first
 
     # Global Work Queue
     @queue = Queue.new
