@@ -10,7 +10,7 @@ class DialogFieldCheckBox < DialogField
   end
 
   def value
-    @value = values_from_automate if dynamic
+    @value = values_from_automate if dynamic && @value.blank?
     @value
   end
 
@@ -32,6 +32,8 @@ class DialogFieldCheckBox < DialogField
   end
 
   def refresh_json_value
+    @value = values_from_automate
+
     {:checked => checked?}
   end
 

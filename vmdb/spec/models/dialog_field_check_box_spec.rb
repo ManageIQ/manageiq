@@ -2,22 +2,35 @@ require "spec_helper"
 
 describe DialogFieldCheckBox do
   describe "#value" do
-    let(:dialog_field) { described_class.new(:dynamic => dynamic, :value => "test") }
+    let(:dialog_field) { described_class.new(:dynamic => dynamic, :value => value) }
 
     context "when the dialog field is dynamic" do
       let(:dynamic) { true }
 
-      before do
-        DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("processor")
+      context "when the current value is blank" do
+        let(:value) { "" }
+
+        before do
+          DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("processor")
+        end
+
+        it "returns the values from the value processor" do
+          expect(dialog_field.value).to eq("processor")
+        end
       end
 
-      it "returns the values from the value processor" do
-        expect(dialog_field.value).to eq("processor")
+      context "when the current value is not blank" do
+        let(:value) { "test" }
+
+        it "returns the current value" do
+          expect(dialog_field.value).to eq("test")
+        end
       end
     end
 
     context "when the dialog field is not dynamic" do
       let(:dynamic) { false }
+      let(:value) { "test" }
 
       it "returns the current value" do
         expect(dialog_field.value).to eq("test")
@@ -162,8 +175,17 @@ describe DialogFieldCheckBox do
   describe "#refresh_json_value" do
     let(:dialog_field) { described_class.new }
 
+    before do
+      DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("f")
+    end
+
     it "returns the checked value in a hash" do
       expect(dialog_field.refresh_json_value).to eq(:checked => false)
+    end
+
+    it "assigns the processed value to value" do
+      dialog_field.refresh_json_value
+      expect(dialog_field.value).to eq("f")
     end
   end
 end
