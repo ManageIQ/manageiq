@@ -108,4 +108,39 @@ describe OpsController do
       flash_messages.first[:level].should == :error
     end
   end
+
+  context "#db_backup" do
+    it "posts db_backup action" do
+      session[:settings] = {:default_search => '',
+                            :views          => {},
+                            :perpage        => {:list => 10}}
+      session[:userid] = User.current_user.userid
+      session[:eligible_groups] = []
+      EvmSpecHelper.create_guid_miq_server_zone
+
+      miq_schedule = FactoryGirl.create(:miq_schedule,
+                                        :name        => "test_db_schedule",
+                                        :description => "test_db_schedule_desc",
+                                        :towhat      => "DatabaseBackup",
+                                        :run_at      => {:start_time => "2015-04-19 00:00:00 UTC",
+                                                         :tz         => "UTC",
+                                                         :interval   => {:unit => "once", :value => ""}
+                                                        })
+      file_depot = FactoryGirl.create(:file_depot,
+                                      :name          => "test_depot",
+                                      :resource_id   => miq_schedule.id,
+                                      :resource_type => "MiqSchedule",
+                                      :uri           => "nfs://test_location"
+      )
+
+      post :db_backup,
+           :backup_schedule => miq_schedule.id,
+           :uri             => file_depot.uri,
+           :uri_prefix      => file_depot.uri.split("://")[0],
+           :action_typ      => "db_backup",
+           :format          => :js
+      expect(response.status).to eq(200)
+      expect(response.body).to_not be_empty
+    end
+  end
 end

@@ -65,7 +65,9 @@ module OpsController::Settings::Schedules
                                                                  :value => schedule.run_at[:interval][:value]
                                                                 }
                                                 }) if schedule.run_at
+      schedule_set_basic_record_vars(schedule)
       schedule_set_record_vars(schedule)
+      schedule_set_timer_record_vars(schedule)
       schedule_validate?(schedule)
       schedule.save
       AuditEvent.success(build_saved_audit_hash(old_schedule_attributes, schedule, params[:button] == "add"))
@@ -416,10 +418,6 @@ module OpsController::Settings::Schedules
   end
 
   def schedule_set_record_vars(schedule)
-    schedule.name = params[:name]
-    schedule.description = params[:description]
-    schedule.enabled = params[:enabled]
-
     if params[:action_typ] == "db_backup"
       schedule.towhat = "DatabaseBackup"
     elsif params[:action_typ].ends_with?("check_compliance")
@@ -562,14 +560,6 @@ module OpsController::Settings::Schedules
         :name     => params[:depot_name]
       }
     end
-
-    schedule.run_at ||= Hash.new
-    run_at = create_time_in_utc("#{params[:miq_angular_date_1]} #{params[:start_hour]}:#{params[:start_min]}:00", params[:time_zone])
-    schedule.run_at[:start_time] = "#{run_at} Z"
-    schedule.run_at[:tz] = params[:time_zone]
-    schedule.run_at[:interval] ||= {}
-    schedule.run_at[:interval][:unit] = params[:timer_typ].downcase
-    schedule.run_at[:interval][:value] = params[:timer_value]
   end
 
   # Common Schedule button handler routines follow
@@ -635,8 +625,37 @@ module OpsController::Settings::Schedules
       (@storage_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
       (@storage_my_filters.empty? ? [] : [["My Filters", "my"]])
 
+    build_db_options_for_select
+  end
+
+  def build_db_options_for_select
     @protocols_arr = []
     DatabaseBackup.supported_depots.each { |depot| @protocols_arr.push(depot[1]) }
     @database_backup_options_for_select = @protocols_arr.sort
+  end
+
+  def schedule_set_basic_record_vars(schedule)
+    schedule.name = params[:name]
+    schedule.description = params[:description]
+    schedule.enabled = params[:enabled]
+  end
+
+  def schedule_set_timer_record_vars(schedule)
+    schedule.run_at ||= {}
+    schedule.run_at[:tz] = params[:time_zone]
+    schedule_set_start_time_record_vars(schedule)
+    schedule_set_interval_record_vars(schedule)
+  end
+
+  def schedule_set_start_time_record_vars(schedule)
+    run_at = create_time_in_utc("#{params[:miq_angular_date_1]} #{params[:start_hour]}:#{params[:start_min]}:00",
+                                params[:time_zone])
+    schedule.run_at[:start_time] = "#{run_at} Z"
+  end
+
+  def schedule_set_interval_record_vars(schedule)
+    schedule.run_at[:interval] ||= {}
+    schedule.run_at[:interval][:unit] = params[:timer_typ].downcase
+    schedule.run_at[:interval][:value] = params[:timer_value]
   end
 end

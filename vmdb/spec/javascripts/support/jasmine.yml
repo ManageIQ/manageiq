@@ -17,7 +17,9 @@ src_files:
   - javascripts/miq_application.js
   - javascripts/miq_angular_application.js
   - javascripts/services/miq_service.js
+  - javascripts/services/miq_db_backup_service.js
   - javascripts/services/timer_option_service.js
+  - javascripts/controllers/ops/diagnostics_database_form_controller.js
   - javascripts/controllers/schedule/schedule_form_controller.js
   - javascripts/controllers/repository/repository_form_controller.js
   - javascripts/directives/repository/valid_unc_path.js
