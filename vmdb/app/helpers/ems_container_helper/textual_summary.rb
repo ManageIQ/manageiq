@@ -4,7 +4,7 @@ module EmsContainerHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(name type hostname ipaddress port zone_id)
+    items = %w(name type hostname ipaddress port zone)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
@@ -19,7 +19,7 @@ module EmsContainerHelper::TextualSummary
   end
 
   def textual_group_tags
-    items = %w(zone tags)
+    items = %w(tags)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
@@ -47,7 +47,7 @@ module EmsContainerHelper::TextualSummary
     @ems.supports_port? ? {:label => "Port", :value => @ems.port} : nil
   end
 
-  def textual_zone_id
+  def textual_zone
     {:label => "Managed by Zone", :image => "zone", :value => @ems.zone.name}
   end
 
