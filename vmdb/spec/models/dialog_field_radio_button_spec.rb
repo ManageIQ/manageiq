@@ -30,7 +30,7 @@ describe DialogFieldRadioButton do
               [["processor", 123]]
             )
 
-            dialog_field_radio_button.initialize_with_values("lolvalues")
+            dialog_field_radio_button.initialize_with_values({"lolvalues" => 321})
           end
 
           it "gets values from automate" do
@@ -46,7 +46,7 @@ describe DialogFieldRadioButton do
           before do
             dialog_field_radio_button.dynamic = false
             dialog_field_radio_button.values = [["testing", 123]]
-            dialog_field_radio_button.initialize_with_values("lolvalues")
+            dialog_field_radio_button.initialize_with_values({"lolvalues" => 321})
           end
 
           it "sets raw values from values attribute" do
@@ -58,7 +58,7 @@ describe DialogFieldRadioButton do
       context "when load values on init is false" do
         before do
           dialog_field_radio_button.load_values_on_init = false
-          dialog_field_radio_button.initialize_with_values("lolvalues")
+          dialog_field_radio_button.initialize_with_values({"lolvalues" => 321})
         end
 
         it "sets raw_values to initial values" do
@@ -79,7 +79,7 @@ describe DialogFieldRadioButton do
             [["processor", 123]]
           )
 
-          dialog_field_radio_button.initialize_with_values("lolvalues")
+          dialog_field_radio_button.initialize_with_values({"lolvalues" => 321})
         end
 
         it "gets values from automate" do
@@ -91,7 +91,7 @@ describe DialogFieldRadioButton do
         before do
           dialog_field_radio_button.dynamic = false
           dialog_field_radio_button.values = [["testing", 123]]
-          dialog_field_radio_button.initialize_with_values("lolvalues")
+          dialog_field_radio_button.initialize_with_values({"lolvalues" => 321})
         end
 
         it "gets values from values attribute" do
