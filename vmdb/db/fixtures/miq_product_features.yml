@@ -755,8 +755,8 @@
       :feature_type: admin
       :identifier: svc_catalog_admin
       :children:
-      - :name: Provision Services
-        :description: Request to Provision Services
+      - :name: Order Services
+        :description: Request to Order Services
         :feature_type: admin
         :identifier: svc_catalog_provision
   - :name: Catalogs
