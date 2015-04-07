@@ -292,12 +292,12 @@ module ApplicationController::MiqRequestMethods
   end
 
   def build_iso_img_grid(iso_imgs,sort_order="ASC",sort_by="name")
-    @edit[:iso_img_sortdir] = sort_order
     @edit[:iso_img_headers] = {
         "name"=>"Name"
-    }                                                         #Using it to get column display name on screen to show sort by
-    @edit[:iso_img_columns] = ["name"] #Using it to get column names for sort
-    @edit[:iso_img_sortcol] = sort_by                 # in case sort column is not set, set the defaults
+    }                                                       # Using it to get column display name on screen to show sort by
+    @edit[:iso_img_columns] = ["name"]                      # Using it to get column names for sort
+    @edit[:iso_img_sortcol] = sort_by    ||= "name"         # in case sort column is not set, set the defaults
+    @edit[:iso_img_sortdir] = sort_order ||= "ASC"
 
     sorted = iso_imgs.sort_by { |img| img.deep_send(sort_by).to_s.downcase }
     sorted = sorted.reverse unless sort_order == "ASC"
@@ -305,13 +305,13 @@ module ApplicationController::MiqRequestMethods
   end
 
   def build_windows_image_grid(windows_images,sort_order="ASC",sort_by="name")
-    @edit[:windows_image_sortdir] = sort_order
     @edit[:windows_image_headers] = {
       "name"=>"Name",
       "description"=>"Description"
-    }                                                         #Using it to get column display name on screen to show sort by
-    @edit[:windows_image_columns] = ["name","description"] #Using it to get column names for sort
-    @edit[:windows_image_sortcol] = sort_by                 # in case sort column is not set, set the defaults
+    }                                                       # Using it to get column display name on screen to show sort by
+    @edit[:windows_image_columns] = ["name","description"]  # Using it to get column names for sort
+    @edit[:windows_image_sortcol] = sort_by    ||= "name"   # in case sort column is not set, set the defaults
+    @edit[:windows_image_sortdir] = sort_order ||= "ASC"
 
     sorted = windows_images.sort_by { |pi| pi.deep_send(sort_by).to_s.downcase }
     sorted = sorted.reverse unless sort_order == "ASC"
@@ -362,8 +362,6 @@ module ApplicationController::MiqRequestMethods
           @temp[:vm] = VmOrTemplate.find_by_id(@edit[:new][:src_vm_id] && @edit[:new][:src_vm_id][0])
         end
         if @edit[:wf].supports_pxe?
-          @edit[:windows_image_sortdir] ||= "ASC"
-          @edit[:windows_image_sortcol] ||= "name"
           build_pxe_img_grid(@edit[:wf].send("allowed_images"),@edit[:pxe_img_sortdir],@edit[:pxe_img_sortcol])
         end
         if @edit[:wf].supports_iso?
@@ -846,24 +844,16 @@ module ApplicationController::MiqRequestMethods
           build_tags_tree(@edit[:wf], @edit[:new][:vm_tags], true)
           build_ous_tree(@edit[:wf], @edit[:new][:ldap_ous])
           if @edit[:wf].supports_pxe?
-            @edit[:windows_image_sortdir] ||= "ASC"
-            @edit[:windows_image_sortcol] ||= "name"
             build_pxe_img_grid(@edit[:wf].send("allowed_images"), @edit[:pxe_img_sortdir], @edit[:pxe_img_sortcol])
             build_host_grid(@edit[:wf].send("allowed_hosts"), @edit[:host_sortdir], @edit[:host_sortcol])
             build_template_grid(@edit[:wf].send("allowed_customization_templates"), @edit[:template_sortdir], @edit[:template_sortcol])
           elsif @edit[:wf].supports_iso?
-            @edit[:iso_img_sortdir] ||= "ASC"
-            @edit[:iso_img_sortcol] ||= "name"
             build_iso_img_grid(@edit[:wf].send("allowed_iso_images"), @edit[:iso_img_sortdir], @edit[:iso_img_sortcol])
           else
             build_vc_grid(@edit[:wf].send("allowed_customization_specs"), @edit[:vc_sortdir], @edit[:vc_sortcol])
           end
         elsif @edit[:wf].kind_of?(VmMigrateWorkflow)
         else
-          @edit[:iso_img_sortdir] ||= "ASC"
-          @edit[:iso_img_sortcol] ||= "name"
-          @edit[:windows_image_sortdir] ||= "ASC"
-          @edit[:windows_image_sortcol] ||= "name"
           @edit[:template_sortdir] ||= "ASC"
           @edit[:template_sortcol] ||= "name"
           build_tags_tree(@edit[:wf], @edit[:new][:tag_ids], true)
