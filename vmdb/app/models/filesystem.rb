@@ -5,6 +5,7 @@ class Filesystem < ActiveRecord::Base
   belongs_to :resource, :polymorphic => true
   belongs_to :miq_set    #ScanItemSet
   belongs_to :scan_item
+  belongs_to :host_service_group
 
   has_one :binary_blob, :as => :resource, :dependent => :destroy
 
