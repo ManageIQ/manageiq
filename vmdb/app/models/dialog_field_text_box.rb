@@ -6,7 +6,7 @@ class DialogFieldTextBox < DialogField
   after_initialize :default_resource_action
 
   def value
-    @value = values_from_automate if dynamic
+    @value = values_from_automate if dynamic && @value.blank?
     @value
   end
 
@@ -64,7 +64,9 @@ class DialogFieldTextBox < DialogField
   end
 
   def refresh_json_value
-    {:text => value}
+    @value = values_from_automate
+
+    {:text => @value}
   end
 
   private

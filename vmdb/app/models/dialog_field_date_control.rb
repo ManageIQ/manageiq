@@ -21,12 +21,11 @@ class DialogFieldDateControl < DialogField
   end
 
   def value
-    if dynamic
-      @value = values_from_automate
-      Date.parse(@value).strftime("%m/%d/%Y")
-    else
-      default_time
+    if @value.blank?
+      @value = dynamic ? values_from_automate : default_time
     end
+
+    Date.parse(@value).strftime("%m/%d/%Y")
   end
 
   def normalize_automate_values(automate_hash)
@@ -47,7 +46,9 @@ class DialogFieldDateControl < DialogField
   end
 
   def refresh_json_value
-    {:date => Date.parse(value).strftime("%m/%d/%Y")}
+    @value = values_from_automate
+
+    {:date => Date.parse(@value).strftime("%m/%d/%Y")}
   end
 
   private
