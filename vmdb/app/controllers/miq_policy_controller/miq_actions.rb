@@ -437,8 +437,9 @@ module MiqPolicyController::MiqActions
       @action_policies = @action.miq_policies.sort_by { |p| p.description.downcase }
     end
 
-    if ["inherit_parent_tags","remove_tags"].include?(@action.action_type)
-      cats = Classification.where(:name => @action.options[:cats]).pluck(:description)
+    if %w(inherit_parent_tags remove_tags).include?(@action.action_type)
+      tag = Tag.find_by_classification_name(@action.options[:cats])
+      cats = Classification.where(:tag_id => tag.id).pluck(:description)
       @temp[:cats] = cats.sort_by(&:downcase).join(" | ")
     end
   end
