@@ -24,7 +24,7 @@ module MiqProvisionRedhatViaIso::StateMachine
       # Temporarily set the database raw_power_state in case the refresh has not come along yet.
       self.destination.update_attributes(:raw_power_state => "wait_for_launch")
 
-      signal :poll_destination_powered_off_in_vmdb
+      signal :poll_destination_powered_off_in_provider
     end
   end
 
