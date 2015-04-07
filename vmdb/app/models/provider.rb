@@ -5,7 +5,22 @@ class Provider < ActiveRecord::Base
   include AsyncDeleteMixin
   include EmsRefresh::Manager
 
+  SUBCLASSES = %w(
+    ProviderForeman
+  )
+
   belongs_to :zone
+  has_many :managers, :class_name => "ExtManagementSystem"
+
+  def self.leaf_subclasses
+    descendants.select { |d| d.subclasses.empty? }
+  end
+
+  def self.supported_subclasses
+    subclasses.flat_map do |s|
+      s.subclasses.empty? ? s : s.supported_subclasses
+    end
+  end
 
   def verify_ssl=(val)
     val = resolve_verify_ssl_value(val)
@@ -27,6 +42,12 @@ class Provider < ActiveRecord::Base
   end
   alias_method :zone_name, :my_zone
 
+  def refresh_ems
+    raise "no #{ui_lookup(:table => "provider")} credentials defined" if self.missing_credentials?
+    raise "#{ui_lookup(:table => "provider")} failed last authentication check" unless self.authentication_status_ok?
+    managers.each { |manager| EmsRefresh.queue_refresh(manager) }
+  end
+
   private
 
   def resolve_verify_ssl_value(val)
@@ -37,3 +58,7 @@ class Provider < ActiveRecord::Base
     end
   end
 end
+
+# Preload any subclasses of this class, so that they will be part of the
+#   conditions that are generated on queries against this class.
+Provider::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}.rb").to_s }

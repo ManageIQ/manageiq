@@ -21,8 +21,11 @@ class ApiController
 
     def parent_resource_obj
       type  = @req[:collection].to_sym
-      klass = collection_config[type][:klass].constantize
-      resource_search(@req[:c_id], type, klass)
+      resource_search(@req[:c_id], type, collection_class(type))
+    end
+
+    def collection_class(type)
+      (@collection_klasses[type.to_sym] || collection_config[type.to_sym][:klass]).constantize
     end
 
     def put_resource(type, id)
