@@ -79,7 +79,8 @@
                       = text_field_tag("fields_default_value_#{i}", default_value,
                         :style             => field['datatype'] == "password" ? "display:none" : "",
                         "data-miq_observe" => obs)
-                      = password_field_tag("fields_password_value_#{i}", default_value,
+                      = password_field_tag("fields_password_value_#{i}", '',
+                        :placeholder       => placeholder_if_present(default_value),
                         :style             => field['datatype'] == "password" ? "" : "display:none",
                         "data-miq_observe" => obs)
                     - else
@@ -126,7 +127,8 @@
                     = text_field_tag("field_default_value", session[:field_data][:default_value],
                       :style             => session[:field_data][:datatype] == "password" ? "display:none" : "",
                       "data-miq_observe" => obs)
-                    = password_field_tag("field_password_value", session[:field_data][:default_value],
+                    = password_field_tag("field_password_value", '',
+                      :placeholder       => placeholder_if_present(session[:field_data][:default_value]),
                       :style             => session[:field_data][:datatype] == "password" ? "" : "display:none",
                       "data-miq_observe" => obs)
                   - else
