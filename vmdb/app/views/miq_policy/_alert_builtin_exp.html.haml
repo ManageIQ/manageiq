@@ -16,7 +16,11 @@
           "data-miq_sparkle_off" => true,
           "data-miq_observe"     => observe)
       - else
-        = h(@sb[:alert][:events][@alert.expression[:options][:event_types].first])
+        - if @alert.expression[:options][:event_types].nil?
+          %span.bg-warning
+            =_("No type set")
+        - else
+          = h(@sb[:alert][:events][@alert.expression[:options][:event_types].first])
   - when :time_threshold
     %td.key
       = h(option[:description])
