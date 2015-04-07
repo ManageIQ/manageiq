@@ -42,11 +42,25 @@ module MiqProvisionRedhat::StateMachine
       configure_container
       attach_floppy_payload
 
+      signal :poll_destination_powered_off_in_provider
+    end
+  end
+
+  def poll_destination_powered_off_in_provider
+    update_and_notify_parent(:message => "Waiting for provider PowerOff of #{for_destination}")
+
+    if powered_off_in_provider?
       signal :poll_destination_powered_off_in_vmdb
+    else
+      requeue_phase
     end
   end
 
   private
+
+  def powered_off_in_provider?
+    destination.with_provider_object(&:status)[:state] == "down"
+  end
 
   def clone_direction
     "[#{self.source.name}] to #{destination_type} [#{dest_name}]"
@@ -55,5 +69,4 @@ module MiqProvisionRedhat::StateMachine
   def for_destination
     "#{destination_type} id: [#{self.destination.id}], name: [#{dest_name}]"
   end
-
 end
