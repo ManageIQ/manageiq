@@ -138,24 +138,14 @@ module EmsRefresh::Parsers
       new_result = parse_base_item(entity)
       new_result[:container_groups] = []
 
-      # TODO: remove once kubernetes api v1beta3/v1.0 will be stable
-      if !entity.respond_to?(:subsets) || entity.subsets.nil?
-        $log.warn("your kubernetes endpoints are not providing subsets, " \
-                  "please upgrade, see https://github.com/" \
-                  "GoogleCloudPlatform/kubernetes/pull/5939")
-        return new_result
-      end
-
-      entity.subsets.each do |subset|
-        (subset.addresses || []).each do |address|
-          next if address.targetRef.nil? || address.targetRef.kind != 'Pod'
-          cg = @data_index.fetch_path(
-            :container_groups, :by_namespace_and_name,
-            # namespace is overriden in more_core_extensions and hence needs
-            # a non method access
-            address.targetRef["table"][:namespace], address.targetRef.name)
-          new_result[:container_groups] << cg unless cg.nil?
-        end
+      (entity.endpoints || []).each do |endpoint|
+        next unless endpoint.targetRef.try(:kind) == 'Pod'
+        cg = @data_index.fetch_path(
+          :container_groups, :by_namespace_and_name,
+          # namespace is overriden in more_core_extensions and hence needs
+          # a non method access
+          endpoint.targetRef["table"][:namespace], endpoint.targetRef.name)
+        new_result[:container_groups] << cg unless cg.nil?
       end
 
       new_result
