@@ -86,6 +86,8 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
     @ems.vms.size.should                  == 27
     @ems.miq_templates.size.should        == 19
     @ems.orchestration_stacks.size.should == 2
+
+    @ems.direct_orchestration_stacks.size.should == 1
   end
 
   def assert_specific_flavor
