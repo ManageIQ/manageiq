@@ -22,6 +22,10 @@ module AuthenticationMixin
     authentications.select { |a| a.kind_of?(AuthUseridPassword) }
   end
 
+  def authentication_key_pairs
+    authentications.select { |a| a.kind_of?(AuthKeyPairOpenstackInfra) }
+  end
+
   def has_authentication_type?(type)
     authentication_types.include?(type)
   end
@@ -32,6 +36,10 @@ module AuthenticationMixin
 
   def authentication_password(type = nil)
     authentication_component(type, :password)
+  end
+
+  def authentication_key(type = nil)
+    authentication_component(type, :auth_key)
   end
 
   def authentication_password_encrypted(type = nil)
@@ -61,6 +69,12 @@ module AuthenticationMixin
     [cred.userid, cred.password]
   end
 
+  def auth_user_keypair(type = nil)
+    cred = authentication_best_fit(type)
+    return nil if cred.nil? || cred.userid.blank?
+    [cred.userid, cred.auth_key]
+  end
+
   def update_authentication(data, options = {})
     return if data.blank?
 
@@ -74,8 +88,20 @@ module AuthenticationMixin
     data.each_pair do |type, value|
       cred = self.authentication_type(type)
       current = {:new => nil, :old => nil}
-      current[:new] = {:user => value[:userid], :password => value[:password]} unless value[:userid].blank?
-      current[:old] = {:user => cred.userid, :password => cred.password} if cred
+
+      if value[:auth_key]
+        # TODO(lsmola) figure out if there is a better way. Password field is replacing \n with \s, I need to replace
+        # them back
+        fixed_auth_key = value[:auth_key].gsub(/-----BEGIN\sRSA\sPRIVATE\sKEY-----/, '')
+        fixed_auth_key = fixed_auth_key.gsub(/-----END\sRSA\sPRIVATE\sKEY-----/, '')
+        fixed_auth_key = fixed_auth_key.gsub(/\s/, "\n")
+        value[:auth_key] = '-----BEGIN RSA PRIVATE KEY-----' + fixed_auth_key + '-----END RSA PRIVATE KEY-----'
+      end
+
+      unless value[:userid].blank?
+        current[:new] = {:user => value[:userid], :password => value[:password], :auth_key => value[:auth_key]}
+      end
+      current[:old] = {:user => cred.userid, :password => cred.password, :auth_key => cred.auth_key} if cred
 
       # Raise an error if required fields are blank
       Array(options[:required]).each { |field| raise(ArgumentError, "#{field} is required") if value[field].blank? }
@@ -92,8 +118,18 @@ module AuthenticationMixin
       end
 
       # Update or create
-      cred = self.authentications.build(:name => "#{self.class.name} #{self.name}", :authtype => type.to_s, :type => "AuthUseridPassword") if cred.nil?
-      cred.userid, cred.password = value[:userid], value[:password]
+      if cred.nil?
+        if self.kind_of?(EmsOpenstackInfra) && value[:auth_key]
+          # TODO(lsmola) investigate why build throws an exception, that it needs to be subclass of AuthUseridPassword
+          cred = AuthKeyPairOpenstackInfra.new(:name => "#{self.class.name} #{self.name}", :authtype => type.to_s,
+                                               :resource_id => id, :resource_type => "ExtManagementSystem")
+          self.authentications << cred
+        else
+          cred = self.authentications.build(:name => "#{self.class.name} #{self.name}", :authtype => type.to_s,
+                                            :type => "AuthUseridPassword")
+        end
+      end
+      cred.userid, cred.password, cred.auth_key = value[:userid], value[:password], value[:auth_key]
 
       cred.save if options[:save] && id
     end
@@ -111,7 +147,7 @@ module AuthenticationMixin
 
   def authentication_type(type)
     return nil if type.nil?
-    authentication_userid_passwords.detect do |a|
+    available_authentications.detect do |a|
       a.authentication_type.to_s == type.to_s
     end
   end
@@ -207,8 +243,12 @@ module AuthenticationMixin
     return value.blank? ? nil : value
   end
 
+  def available_authentications
+    authentication_userid_passwords + authentication_key_pairs
+  end
+
   def authentication_types
-    authentication_userid_passwords.collect(&:authentication_type).uniq
+    available_authentications.collect(&:authentication_type).uniq
   end
 
   def authentication_delete(type)

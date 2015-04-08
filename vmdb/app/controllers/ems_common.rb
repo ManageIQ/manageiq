@@ -244,29 +244,73 @@ module EmsCommon
       end
       if @edit[:default_verify_status] != @edit[:saved_default_verify_status]
         @edit[:saved_default_verify_status] = @edit[:default_verify_status]
-        if @edit[:default_verify_status]
-          page << "miqValidateButtons('show', 'default_');"
-        else
-          page << "miqValidateButtons('hide', 'default_');"
-        end
+        page << "miqValidateButtons('#{@edit[:default_verify_status] ? 'show' : 'hide'}', 'default_');"
       end
       if @edit[:metrics_verify_status] != @edit[:saved_metrics_verify_status]
         @edit[:saved_metrics_verify_status] = @edit[:metrics_verify_status]
-        if @edit[:metrics_verify_status]
-          page << "miqValidateButtons('show', 'metrics_');"
-        else
-          page << "miqValidateButtons('hide', 'metrics_');"
-        end
+        page << "miqValidateButtons('#{@edit[:metrics_verify_status] ? 'show' : 'hide'}', 'metrics_');"
       end
       if @edit[:amqp_verify_status] != @edit[:saved_amqp_verify_status]
         @edit[:saved_amqp_verify_status] = @edit[:amqp_verify_status]
-        if @edit[:amqp_verify_status]
-          page << "miqValidateButtons('show', 'amqp_');"
-        else
-          page << "miqValidateButtons('hide', 'amqp_');"
-        end
+        page << "miqValidateButtons('#{@edit[:amqp_verify_status] ? 'show' : 'hide'}', 'amqp_');"
       end
     end
+  end
+
+  def key_json
+    respond_to do |format|
+      if @flash_array && @flash_array.count
+        format.json { render :json => @flash_array.first.to_json, :status => 500 }
+      else
+        format.json { render :json => automate_json }
+      end
+    end
+  end
+
+  def cancel_import
+    key_import_service.cancel_import(params[:import_file_upload_id])
+    add_flash(_("Key import was cancelled or is finished"), :info)
+
+    respond_to do |format|
+      format.js { render :json => @flash_array.to_json, :status => 200 }
+    end
+  end
+
+  def import_key
+    import_file_upload = ImportFileUpload.where(:id => params[:import_file_upload_id]).first
+
+    if import_file_upload
+      add_flash(_("Key import was successful.", :info))
+    else
+      add_flash(_("Error: Key import file upload expired"), :error)
+    end
+
+    respond_to do |format|
+      format.js { render :json => @flash_array.to_json, :status => 200 }
+    end
+  end
+
+  def upload_key_file
+    redirect_options = {:action => :review_key}
+
+    upload_file = params.fetch_path(:upload, :file)
+
+    if upload_file.nil?
+      add_flash("Use the browse button to locate a key file", :warning)
+    else
+      import_file_upload_id = key_import_service.store_for_import(upload_file.read)
+      add_flash(_("Key file was uploaded successfully"), :info)
+      redirect_options[:key_file_upload_id] = key_file_upload_id
+    end
+
+    redirect_options[:message] = @flash_array.first.to_json
+
+    redirect_to redirect_options
+  end
+
+  def review_key
+    @key_file_upload_id = params[:key_file_upload_id]
+    @message = params[:message]
   end
 
   def update
@@ -477,6 +521,10 @@ module EmsCommon
 
   private ############################
 
+  def key_import_service
+    @key_import_service ||= KeyImportService.new
+  end
+
   def set_verify_status
     edit_new = @edit[:new]
     if edit_new[:emstype] == "ec2"
@@ -627,6 +675,9 @@ module EmsCommon
     @edit[:new][:amqp_password] = @ems.has_authentication_type?(:amqp) ? @ems.authentication_password(:amqp).to_s : ""
     @edit[:new][:amqp_verify] = @ems.has_authentication_type?(:amqp) ? @ems.authentication_password(:amqp).to_s : ""
 
+    @edit[:new][:keypair_userid] = @ems.has_authentication_type?(:keypair) ? @ems.authentication_userid(:keypair).to_s : ""
+    @edit[:new][:keypair_password] = @ems.has_authentication_type?(:keypair) ? @ems.authentication_key(:keypair).to_s : ""
+
     if @ems.is_a?(EmsVmware)
       @edit[:new][:host_default_vnc_port_start] = @ems.host_default_vnc_port_start.to_s
       @edit[:new][:host_default_vnc_port_end] = @ems.host_default_vnc_port_end.to_s
@@ -681,6 +732,10 @@ module EmsCommon
     @edit[:new][:amqp_password] = params[:amqp_password] if params[:amqp_password]
     @edit[:new][:amqp_verify] = params[:amqp_verify] if params[:amqp_verify]
 
+    @edit[:new][:keypair_userid] = params[:keypair_userid] if params[:keypair_userid]
+    #@edit[:new][:keypair_password] = ImportFileUpload.where(:id => params[:import_file_upload_id]).first.uploaded_content if params[:import_file_upload_id]
+    @edit[:new][:keypair_password] = ImportFileUpload.last.uploaded_content
+
     @edit[:new][:host_default_vnc_port_start] = params[:host_default_vnc_port_start] if params[:host_default_vnc_port_start]
     @edit[:new][:host_default_vnc_port_end] = params[:host_default_vnc_port_end] if params[:host_default_vnc_port_end]
     @edit[:amazon_regions] = get_amazon_regions if @edit[:new][:emstype] == "ec2"
@@ -708,6 +763,9 @@ module EmsCommon
     end
     if ems.supports_authentication?(:amqp) && !@edit[:new][:amqp_userid].blank?
       creds[:amqp] = {:userid => @edit[:new][:amqp_userid], :password => @edit[:new][:amqp_password]}
+    end
+    if ems.supports_authentication?(:keypair) && !@edit[:new][:keypair_userid].blank?
+      creds[:keypair] = {:userid => @edit[:new][:keypair_userid], :auth_key => @edit[:new][:keypair_password]}
     end
     ems.update_authentication(creds, {:save=>(mode != :validate)})
   end

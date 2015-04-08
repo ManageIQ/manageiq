@@ -467,9 +467,11 @@ Vmdb::Application.routes.draw do
         discover
         download_data
         edit
+        key_json
         index
         new
         protect
+        review_key
         show
         show_list
         tagging_edit
@@ -477,12 +479,14 @@ Vmdb::Application.routes.draw do
         compare_get,
       :post => %w(
         button
+        cancel_import
         create
         dynamic_checkbox_refresh
         dynamic_list_refresh
         dynamic_radio_button_refresh
         dynamic_text_box_refresh
         form_field_changed
+        import_key
         listnav_search_selected
         panel_control
         protect
@@ -495,6 +499,7 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tl_chooser
         update
+        upload_key_file
         wait_for_task
       ) +
         adv_search_post +
@@ -550,8 +555,10 @@ Vmdb::Application.routes.draw do
         download_data
         edit
         index
+        key_json
         new
         protect
+        review_key
         show
         show_list
         tagging_edit
@@ -559,8 +566,10 @@ Vmdb::Application.routes.draw do
         compare_get,
       :post => %w(
         button
+        cancel_import
         create
         form_field_changed
+        import_key
         listnav_search_selected
         panel_control
         protect
@@ -575,6 +584,7 @@ Vmdb::Application.routes.draw do
         tree_autoload_dynatree
         tree_autoload_quads
         update
+        upload_key_file
         wait_for_task
       ) +
         adv_search_post +

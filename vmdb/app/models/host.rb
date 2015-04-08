@@ -1391,8 +1391,7 @@ class Host < ActiveRecord::Base
     name
   end
 
-  def connect_ssh(options={})
-    require 'MiqSshUtil'
+  def ssh_users_and_passwords
     if self.has_authentication_type?(:remote)
       rl_user, rl_password = self.auth_user_pwd(:remote)
       su_user, su_password = self.auth_user_pwd(:root)
@@ -1400,6 +1399,14 @@ class Host < ActiveRecord::Base
       rl_user, rl_password = self.auth_user_pwd(:root)
       su_user, su_password = nil, nil
     end
+    return rl_user, rl_password, su_user, su_password, {}
+  end
+
+  def connect_ssh(options={})
+    require 'MiqSshUtil'
+
+    rl_user, rl_password, su_user, su_password, additional_options = ssh_users_and_passwords
+    options.merge!(additional_options)
 
     prompt_delay = VMDB::Config.new("vmdb").config.fetch_path(:ssh, :authentication_prompt_delay)
     options[:authentication_prompt_delay] = prompt_delay unless prompt_delay.nil?

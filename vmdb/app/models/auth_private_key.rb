@@ -1,6 +1,7 @@
 class AuthPrivateKey < Authentication
   SUBCLASSES = [
     'AuthKeyPairCloud',
+    'AuthKeyPairOpenstackInfra',
   ]
 end
 
