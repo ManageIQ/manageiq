@@ -34,7 +34,7 @@ class EmsOpenstackInfra < EmsInfra
   end
 
   def supported_auth_types
-    %w(default amqp)
+    %w(default amqp ssh_keypair)
   end
 
   def supports_authentication?(authtype)

@@ -244,27 +244,15 @@ module EmsCommon
       end
       if @edit[:default_verify_status] != @edit[:saved_default_verify_status]
         @edit[:saved_default_verify_status] = @edit[:default_verify_status]
-        if @edit[:default_verify_status]
-          page << "miqValidateButtons('show', 'default_');"
-        else
-          page << "miqValidateButtons('hide', 'default_');"
-        end
+        page << "miqValidateButtons('#{@edit[:default_verify_status] ? 'show' : 'hide'}', 'default_');"
       end
       if @edit[:metrics_verify_status] != @edit[:saved_metrics_verify_status]
         @edit[:saved_metrics_verify_status] = @edit[:metrics_verify_status]
-        if @edit[:metrics_verify_status]
-          page << "miqValidateButtons('show', 'metrics_');"
-        else
-          page << "miqValidateButtons('hide', 'metrics_');"
-        end
+        page << "miqValidateButtons('#{@edit[:metrics_verify_status] ? 'show' : 'hide'}', 'metrics_');"
       end
       if @edit[:amqp_verify_status] != @edit[:saved_amqp_verify_status]
         @edit[:saved_amqp_verify_status] = @edit[:amqp_verify_status]
-        if @edit[:amqp_verify_status]
-          page << "miqValidateButtons('show', 'amqp_');"
-        else
-          page << "miqValidateButtons('hide', 'amqp_');"
-        end
+        page << "miqValidateButtons('#{@edit[:amqp_verify_status] ? 'show' : 'hide'}', 'amqp_');"
       end
     end
   end
@@ -627,6 +615,9 @@ module EmsCommon
     @edit[:new][:amqp_password] = @ems.has_authentication_type?(:amqp) ? @ems.authentication_password(:amqp).to_s : ""
     @edit[:new][:amqp_verify] = @ems.has_authentication_type?(:amqp) ? @ems.authentication_password(:amqp).to_s : ""
 
+    @edit[:new][:ssh_keypair_userid] = @ems.has_authentication_type?(:ssh_keypair) ? @ems.authentication_userid(:ssh_keypair).to_s : ""
+    @edit[:new][:ssh_keypair_password] = @ems.has_authentication_type?(:ssh_keypair) ? @ems.authentication_key(:ssh_keypair).to_s : ""
+
     if @ems.is_a?(EmsVmware)
       @edit[:new][:host_default_vnc_port_start] = @ems.host_default_vnc_port_start.to_s
       @edit[:new][:host_default_vnc_port_end] = @ems.host_default_vnc_port_end.to_s
@@ -681,6 +672,9 @@ module EmsCommon
     @edit[:new][:amqp_password] = params[:amqp_password] if params[:amqp_password]
     @edit[:new][:amqp_verify] = params[:amqp_verify] if params[:amqp_verify]
 
+    @edit[:new][:ssh_keypair_userid] = params[:ssh_keypair_userid] if params[:ssh_keypair_userid]
+    @edit[:new][:ssh_keypair_password] = params[:ssh_keypair_password] if params[:ssh_keypair_password]
+
     @edit[:new][:host_default_vnc_port_start] = params[:host_default_vnc_port_start] if params[:host_default_vnc_port_start]
     @edit[:new][:host_default_vnc_port_end] = params[:host_default_vnc_port_end] if params[:host_default_vnc_port_end]
     @edit[:amazon_regions] = get_amazon_regions if @edit[:new][:emstype] == "ec2"
@@ -708,6 +702,9 @@ module EmsCommon
     end
     if ems.supports_authentication?(:amqp) && !@edit[:new][:amqp_userid].blank?
       creds[:amqp] = {:userid => @edit[:new][:amqp_userid], :password => @edit[:new][:amqp_password]}
+    end
+    if ems.supports_authentication?(:ssh_keypair) && !@edit[:new][:ssh_keypair_userid].blank?
+      creds[:ssh_keypair] = {:userid => @edit[:new][:ssh_keypair_userid], :auth_key => @edit[:new][:ssh_keypair_password]}
     end
     ems.update_authentication(creds, {:save=>(mode != :validate)})
   end
