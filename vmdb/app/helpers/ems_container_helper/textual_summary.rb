@@ -14,7 +14,7 @@ module EmsContainerHelper::TextualSummary
   end
 
   def textual_group_status
-    items = %w(authentications refresh_status)
+    items = %w(refresh_status)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
