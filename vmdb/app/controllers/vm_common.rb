@@ -1245,8 +1245,7 @@ module VmCommon
     if params[:all_checked]
       ids = params[:all_checked].split(',')
       ids.each do |id|
-        id = id.split('-')
-        id = id[1].slice(0,id[1].length-1)
+        id = id.split('-')[1]
         session[:checked_items].push(id) unless session[:checked_items].include?(id)
       end
     end
