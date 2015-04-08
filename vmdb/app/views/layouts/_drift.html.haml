@@ -4,12 +4,10 @@
 - if @compare.nil?
   = render :partial => 'layouts/info_msg', :locals => {:message => _("No Records Found.")}
 - else
-  #drift_grid_div{:style => "width: #{w}px; height: auto; cursor:hand;"}
+  #drift_grid_div{:style => "width: #{w}; height: #{center_div_height + 150}px; cursor: hand; overflow-x: auto; overflow-y: auto;"}
     = render :partial => 'layouts/slickgrid',
              :locals  => { :grid_id        => "drift_grid_div",
                            :grid_name      => "drift_grid",
                            :grid_rows_json => @temp[:grid_rows_json],
                            :grid_cols_json => @temp[:grid_cols_json],
-                           :autosize       => true,
-                           :set_sizes      => true,
-                           :skin           => "miq"}
+                           :autoheight     => false}
