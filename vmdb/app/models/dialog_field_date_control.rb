@@ -21,9 +21,7 @@ class DialogFieldDateControl < DialogField
   end
 
   def value
-    if @value.blank?
-      @value = dynamic ? values_from_automate : default_time
-    end
+    @value = dynamic ? values_from_automate : default_time if @value.blank?
 
     Date.parse(@value).strftime("%m/%d/%Y")
   end

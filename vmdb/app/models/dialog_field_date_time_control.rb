@@ -7,9 +7,7 @@ class DialogFieldDateTimeControl < DialogFieldDateControl
   end
 
   def value
-    if @value.blank?
-      @value = dynamic ? values_from_automate : default_time
-    end
+    @value = dynamic ? values_from_automate : default_time if @value.blank?
 
     Time.parse(@value).strftime("%m/%d/%Y %H:%M")
   end
