@@ -3581,6 +3581,10 @@
       :description: Display Individual Container Nodes
       :feature_type: view
       :identifier: container_node_show
+    - :name: Timeline
+      :description: Display Timelines for Container Nodes
+      :feature_type: view
+      :identifier: container_node_timeline
   - :name: Modify
     :description: Modify Container Nodes
     :feature_type: admin

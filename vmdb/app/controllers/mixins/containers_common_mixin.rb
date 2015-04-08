@@ -26,6 +26,15 @@ module ContainersCommonMixin
       drop_breadcrumb(:name => "#{record.name} (Summary)",
                       :url  => "/#{controller_name}/show/#{record.id}")
       set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
+    elsif @display == "timeline"
+      @showtype = "timeline"
+      session[:tl_record_id] = params[:id] if params[:id]
+      @lastaction = "show_timeline"
+      @timeline = @timeline_filter = true
+      tl_build_timeline # Create the timeline report
+      drop_breadcrumb(:name => "Timelines",
+                      :url  => "/#{controller_name}/show/#{record.id}" \
+                               "?refresh=n&display=timeline")
     elsif @display == "container_groups" || session[:display] == "container_groups" && params[:display].nil?
       title = ui_lookup(:tables => "container_groups")
       drop_breadcrumb(:name => record.name + " (All #{title})",
