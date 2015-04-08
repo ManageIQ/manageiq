@@ -13,6 +13,8 @@ module Metric::Processing
     :derived_vm_numvcpus, # This is actually logical cpus, but needs to be renamed.
                           # See VimPerformanceState#capture_numvcpus
     :derived_vm_used_disk_storage,
+    # TODO(lsmola) as described below, this field should be named derived_cpu_used
+    :cpu_usagemhz_rate_average
   ]
 
   VALID_PROCESS_TARGETS = [VmOrTemplate, Host, AvailabilityZone, EmsCluster, ExtManagementSystem, MiqRegion, MiqEnterprise]
@@ -57,6 +59,13 @@ module Metric::Processing
         else
           method = col.to_s.split("_")[1..-1].join("_")
           result[col] = state.send(method) if state.respond_to?(method)
+        end
+      when "rate"
+        if col.to_s == "cpu_usagemhz_rate_average" && attrs[:cpu_usagemhz_rate_average].blank?
+          # TODO(lsmola) for some reason, this column is used in chart, although from processing code above, it should
+          # be named derived_cpu_used. Investigate what is the right solution and make it right. For now lets fill
+          # the column shown in charts.
+          result[col] = ( attrs[:cpu_usage_rate_average] / 100 * total_cpu ) unless (total_cpu == 0 || attrs[:cpu_usage_rate_average].nil?)
         end
       when "reserved"
         method = group == "cpu" ? :reserve_cpu : :reserve_mem
