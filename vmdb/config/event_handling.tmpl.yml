@@ -62,6 +62,7 @@ event_groups:
     - image.update
     - image.create
     - image.upload
+    - servergroup.create
     :detail:
     - CloneVM_Task
     - CloneVM_Task_Complete
@@ -112,6 +113,10 @@ event_groups:
     - VmReconfiguredEvent
     - VmResourcePoolMovedEvent
     - VmToTemplate
+    - compute.instance.rebuild.end
+    - compute.instance.resize.end
+    - servergroup.update
+    - servergroup.addmemeber
     :detail:
     - EnterMaintenanceMode_Task
     - ExitMaintenanceMode_Task
@@ -156,6 +161,7 @@ event_groups:
     - VmDisconnectedEvent
     - VmRemovedEvent
     - image.delete
+    - servergroup.delete
     :detail:
     - Destroy_Task
     - Destroy_Task_Complete
@@ -493,7 +499,9 @@ event_groups:
     - VmStoppedEvent
     - VmSuspendedEvent
     - compute.instance.create.end
+    - compute.instance.create.error
     - compute.instance.shutdown.end
+    - compute.instance.shutdown.error
     - compute.instance.delete.end
     - compute.instance.power_off.end
     - compute.instance.power_on.end
@@ -539,6 +547,7 @@ event_groups:
     - USER_TRY_BACK_TO_SNAPSHOT
     - USER_TRY_BACK_TO_SNAPSHOT_FINISH_FAILURE
     - USER_TRY_BACK_TO_SNAPSHOT_FINISH_SUCCESS
+    - compute.instance.snapshot.end
     :detail: []
     :name: Snapshot Activity
   status:
@@ -632,6 +641,8 @@ event_groups:
     - USER_UPDATE_STORAGE_DOMAIN_FAILED
     - USER_UPDATE_STORAGE_POOL
     - USER_UPDATE_STORAGE_POOL_FAILED
+    - volume.create.end
+    - volume.delete.end
     :detail: []
     :name: Storage
 
@@ -1258,12 +1269,24 @@ event_handling:
   compute.instance.delete.end:
   - refresh:
     - ems
+  compute.instance.rebuild.end:
+  - refresh:
+    - ems
+  compute.instance.resize.end:
+  - refresh:
+    - ems
   compute.instance.shutdown.end:
   - refresh:
     - ems
   - policy:
     - src_vm
     - vm_shutdown_guest
+  compute.instance.snapshot.end:
+  - refresh:
+    - src_vm
+  - policy:
+    - src_vm
+    - vm_snapshot
   compute.instance.power_off.end:
   - refresh:
     - ems
@@ -1292,6 +1315,24 @@ event_handling:
   - refresh:
     - ems
   network.floating_ip.disassociate:
+  - refresh:
+    - ems
+  servergroup.create:
+  - refresh:
+    - ems
+  servergroup.delete:
+  - refresh:
+    - ems
+  servergroup.update:
+  - refresh:
+    - ems
+  servergroup.addmember:
+  - refresh:
+    - ems
+  volume.create.end:
+  - refresh:
+    - ems
+  volume.delete.end:
   - refresh:
     - ems
   ConfigurationItemChangeNotification:
