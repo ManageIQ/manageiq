@@ -37,11 +37,13 @@ module EmsRefresh
     def save_configuration_locations_inventory(manager, hashes, target)
       delete_missing_records = target.nil? || manager == target
       save_inventory_assoc(:configuration_locations, manager, hashes, delete_missing_records, [:manager_ref])
+      link_children_references(manager.configuration_locations)
     end
 
     def save_configuration_organizations_inventory(manager, hashes, target)
       delete_missing_records = target.nil? || manager == target
       save_inventory_assoc(:configuration_organizations, manager, hashes, delete_missing_records, [:manager_ref])
+      link_children_references(manager.configuration_organizations)
     end
   end
 end

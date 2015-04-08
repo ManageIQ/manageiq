@@ -65,11 +65,11 @@ module EmsRefresh
       end
 
       def location_inv_to_hashes(locations)
-        basic_hash(locations || tax_refs, "ConfigurationLocation", "title")
+        backfill_parent_ref(basic_hash(locations || tax_refs, "ConfigurationLocation", "title"))
       end
 
       def organization_inv_to_hashes(organizations)
-        basic_hash(organizations || tax_refs, "ConfigurationOrganization", "title")
+        backfill_parent_ref(basic_hash(organizations || tax_refs, "ConfigurationOrganization", "title"))
       end
 
       def operating_system_flavors_inv_to_hashes(flavors_inv, indexes)
@@ -89,6 +89,7 @@ module EmsRefresh
           {
             :type                           => "ConfigurationProfileForeman",
             :manager_ref                    => profile["id"].to_s,
+            :parent_ref                     => (profile["ancestry"] || "").split("/").last.presence,
             :name                           => profile["name"],
             :description                    => profile["title"],
             :operating_system_flavor_id     => id_lookup(indexes[:flavors], profile["operatingsystem_id"]),
@@ -152,9 +153,22 @@ module EmsRefresh
             :type        => type,
             :name        => m["name"],
           }.tap do |h|
-            h[extra_field] = m[extra_field] if extra_field
+            h[:parent_ref] = (m["ancestry"] || "").split("/").last.presence if m.key?("ancestry")
+            h[extra_field.to_sym] = m[extra_field] if extra_field
           end
         end
+      end
+
+      def backfill_parent_ref(collection)
+        collection.each do |rec|
+          rec[:parent_ref] = derive_parent_ref(rec, collection) unless rec.key?(:parent_ref)
+        end
+      end
+
+      # title = parent_title/name. we do this in reverse
+      def derive_parent_ref(rec, collection)
+        parent_title = (rec[:title] || "").sub(/\/?#{rec[:name]}/, "").presence
+        collection.detect { |c| c[:title].to_s == parent_title }.try(:[], :manager_ref) if parent_title
       end
     end
   end

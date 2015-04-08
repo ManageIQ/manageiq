@@ -109,11 +109,13 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
 
   def assert_configuration_profile_child
     child  = configuration_manager.configuration_profiles.where(:name => 'ProviderRefreshSpec-ChildHostGroup').first
+    parent = configuration_manager.configuration_profiles.where(:name => 'ProviderRefreshSpec-HostGroup').first
     expect(child).to have_attributes(
       :type        => "ConfigurationProfileForeman",
       :name        => "ProviderRefreshSpec-ChildHostGroup",
       :description => "ProviderRefreshSpec-HostGroup/ProviderRefreshSpec-ChildHostGroup",
       :manager_ref => "14",
+      :parent_id   => parent.id,
     )
     expect(child.operating_system_flavor).to     eq(mine(osfs))    # inherited from parent
     expect(child.customization_script_medium).to eq(mine(media))   # inherited from parent
