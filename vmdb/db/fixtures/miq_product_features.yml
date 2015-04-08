@@ -3544,6 +3544,10 @@
       :description: Display Individual Container Groups
       :feature_type: view
       :identifier: container_group_show
+    - :name: Timeline
+      :description: Display Timelines for Container Groups
+      :feature_type: view
+      :identifier: container_group_timeline
   - :name: Modify
     :description: Modify Container Groups
     :feature_type: admin
