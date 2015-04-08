@@ -8,7 +8,7 @@ class OrchestrationStack < ActiveRecord::Base
 
   has_ancestry
 
-  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "EmsCloud"
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ExtManagementSystem"
   belongs_to :orchestration_template
 
   has_many   :vms, :class_name => "VmCloud"
