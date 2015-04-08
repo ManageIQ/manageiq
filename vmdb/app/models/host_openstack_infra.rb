@@ -1,6 +1,8 @@
 class HostOpenstackInfra < Host
   belongs_to :availability_zone
 
+  has_many   :host_service_group_openstacks, :foreign_key => :host_id, :dependent => :destroy
+
   # TODO(lsmola) for some reason UI can't handle joined table cause there is hardcoded somewhere that it selects
   # DISTINCT id, with joined tables, id needs to be prefixed with table name. When this is figured out, replace
   # cloud tenant with rails relations
@@ -71,5 +73,27 @@ class HostOpenstackInfra < Host
         cred.status = 'None'
       end
     end
+  end
+
+  def refresh_openstack_services(ssu)
+    openstack_status = ssu.shell_exec("openstack-status")
+    services = MiqLinux::Utils.parse_openstack_status(openstack_status)
+    self.host_service_group_openstacks = services.map do |service|
+      # find OpenstackHostServiceGroup records by host and name and initialize if not found
+      host_service_group_openstacks.where(:name => service['name'])
+        .first_or_initialize.tap do |host_service_group_openstack|
+        # find SystemService records by host
+        # filter SystemService records by names from openstack-status results
+        sys_services = system_services.where(:name => service['services'].map { |ser| ser['name'] })
+        # associate SystemService record with OpenstackHostServiceGroup
+        host_service_group_openstack.system_services = sys_services
+
+        # save all changes
+        host_service_group_openstack.save
+      end
+    end
+  rescue => err
+    $log.log_backtrace(err)
+    raise err
   end
 end
