@@ -23,6 +23,7 @@ class MiqSmisAgent < StorageManager
   default_value_for :agent_type, DEFAULT_AGENT_TYPE
 
   def connect
+    # TODO: Use hostname, not ipaddress
     @conn = SmisClient.new(ipaddress, *self.auth_user_pwd(:default))
     return @conn
   end
@@ -53,6 +54,7 @@ class MiqSmisAgent < StorageManager
     pendingAgents = []
 
     agents.each do |agent|
+      # TODO: Log hostname, not ipaddress
       $log.info "MiqSmisAgent.update_smis: Checking agent: #{agent.ipaddress}"
       connectFailed = false
       begin
@@ -97,6 +99,7 @@ class MiqSmisAgent < StorageManager
         agent.save
         updated = true
       rescue Exception => err
+        # TODO: Log hostname, not ipaddress
         $log.error "MiqSmisAgent.update_smis: agent: #{agent.ipaddress} - #{err}"
         $log.error err.backtrace.join("\n")
         agent.last_update_status = STORAGE_UPDATE_FAILED
@@ -149,6 +152,7 @@ class MiqSmisAgent < StorageManager
 
   def self.update_stats
     self.find(:all, :conditions => {:agent_type => 'SMIS'}).each do |agent|
+      # TODO: Log hostname, not ipaddress
       $log.info "MiqSmisAgent.update_stats Agent: #{agent.ipaddress}"
 
       begin
@@ -195,6 +199,7 @@ class MiqSmisAgent < StorageManager
 
   def self.update_status
     self.find(:all, :conditions => {:agent_type => 'SMIS'}).each do |agent|
+      # TODO: Log hostname, not ipaddress
       $log.info "MiqSmisAgent.update_status Agent: #{agent.ipaddress}"
 
       begin

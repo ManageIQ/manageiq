@@ -14,6 +14,7 @@ class NetappRcu < StorageManager
     ra = []
     EmsVmware.where(:zone_id => zoneId).each do |vc|
       begin
+        # TODO: Use hostname, not ipaddress
         rcu = RcuClientBase.new(vc.ipaddress, *vc.auth_user_pwd(:default))
         rcu.getMoref("", "")
       rescue => err
@@ -26,6 +27,7 @@ class NetappRcu < StorageManager
 
   def self.add_from_ems(ems)
     raise "NetappRcu.add_from_ems: unsupported ems type: #{ems.type}" unless ems.kind_of?(EmsVmware)
+    # TODO: Use hostname, not ipaddress
     add(ems.ipaddress,
       ems.authentication_userid(:default),
       ems.authentication_password(:default),
@@ -41,14 +43,18 @@ class NetappRcu < StorageManager
   def self.get_rcu_for_object(obj)
     return nil unless obj.respond_to?(:ext_management_system)
     return nil unless (ems = obj.ext_management_system)
+
+    # TODO: Use hostname, not ipaddress
     return self.find_by_ipaddress(ems.ipaddress)
   end
 
   def rcu_client
+    # TODO: Use hostname, not ipaddress
     @rcuClient ||= RcuClientBase.new(self.ipaddress, self.authentication_userid, self.authentication_password)
   end
 
   def add_controller(ipaddress, username, password, hostname=nil, name=nil, rcuData={})
+    # TODO: Use hostname, not ipaddress
     c = NetappRemoteService.add(ipaddress, username, password, NetappRemoteService::DEFAULT_AGENT_TYPE, zone_id, hostname, name)
     controllers << c unless controllers.include?(c)
 
@@ -59,6 +65,7 @@ class NetappRcu < StorageManager
     cRcuData[:ssl]      ||= rcuData[:ssl]
 
     unless cRcuData[:aggregates] && cRcuData[:volumes]
+      # TODO: Use hostname, not ipaddress
       unless (oss = NetappRemoteService.find_controller_by_ip(ipaddress))
         $log.info "NetappRcu.add_controller: could not find controller #{ipaddress}"
       else
@@ -72,6 +79,7 @@ class NetappRcu < StorageManager
   end
 
   def get_controller_by_ipaddress(ip)
+    # TODO: Use hostname, not ipaddress
     controllers.find_by_ipaddress(ip)
   end
 
@@ -79,6 +87,7 @@ class NetappRcu < StorageManager
     controllers.find_by_name(name)
   end
 
+  # TODO: Use hostname, not ipaddress
   def set_current_controller_by_ipaddress(ip)
     @currentController = controllers.find_by_ipaddress(ip)
     @currentControllerSpec = nil
@@ -102,6 +111,7 @@ class NetappRcu < StorageManager
 
   def controller_spec
     @currentControllerSpec ||= RcuHash.new("ControllerSpec") do |cs|
+      # TODO: Use hostname, not ipaddress
       cs.ipAddress = current_controller.ipaddress
       cs.username  = current_controller.authentication_userid
       cs.password  = current_controller.authentication_password
