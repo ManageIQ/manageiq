@@ -1,10 +1,12 @@
 #!/bin/bash
 [[ -s /etc/default/evm ]] && source /etc/default/evm
 
-pushd /var/www/miq/vmdb
+MIQ_ROOT="/var/www/miq"
+
+pushd $MIQ_ROOT/vmdb
   bundle install $BUNDLE_CLI_OPTIONS
 
-  pushd /var/www/miq
+  pushd $MIQ_ROOT
     # rake after bundler may install rake
     rake build:shared_objects --trace
   popd
@@ -31,21 +33,29 @@ cat <<'EOF' > /etc/httpd/conf.d/ssl.conf
 # upgraded.
 EOF
 
+SOURCE_IPTABLES="$MIQ_ROOT/system/TEMPLATE/etc/sysconfig/iptables"
+SOURCE_CTRL_ALT_DEL="$MIQ_ROOT/system/TEMPLATE/etc/init/control-alt-delete.override"
+
 # Incorporate the iptable updates
-if [[ -f /var/www/miq/system/TEMPLATE/etc/sysconfig/iptables ]]; then
+if [[ -f $SOURCE_IPTABLES ]]; then
   /sbin/iptables-save > /etc/sysconfig/iptables.SYSTEM
-  /sbin/iptables-restore /var/www/miq/system/TEMPLATE/etc/sysconfig/iptables
+  /sbin/iptables-restore $SOURCE_IPTABLES
   /sbin/service iptables save
 fi
 
-/usr/sbin/semanage fcontext -a -t httpd_log_t "/var/www/miq/vmdb/log(/.*)?"
-/usr/sbin/semanage fcontext -a -t cert_t "/var/www/miq/vmdb/certs(/.*)?"
-/usr/sbin/semanage fcontext -a -t logrotate_exec_t /var/www/miq/system/logrotate_free_space_check.sh
+# Copy the ctrl-alt-del override if it doesn't exist
+if [[ ! -f /etc/init/control-alt-delete.override ]] && [[ -f $SOURCE_CTRL_ALT_DEL ]] ; then
+  cp $SOURCE_CTRL_ALT_DEL /etc/init
+fi
 
-[ -x /sbin/restorecon ] && /sbin/restorecon -R -v /var/www/miq/vmdb/log
+/usr/sbin/semanage fcontext -a -t httpd_log_t "$MIQ_ROOT/vmdb/log(/.*)?"
+/usr/sbin/semanage fcontext -a -t cert_t "$MIQ_ROOT/vmdb/certs(/.*)?"
+/usr/sbin/semanage fcontext -a -t logrotate_exec_t $MIQ_ROOT/system/logrotate_free_space_check.sh
+
+[ -x /sbin/restorecon ] && /sbin/restorecon -R -v $MIQ_ROOT/vmdb/log
 [ -x /sbin/restorecon ] && /sbin/restorecon -R -v /etc/sysconfig
-[ -x /sbin/restorecon ] && /sbin/restorecon -R -v /var/www/miq/vmdb/certs
-[ -x /sbin/restorecon ] && /sbin/restorecon -R -v /var/www/miq/system/logrotate_free_space_check.sh
+[ -x /sbin/restorecon ] && /sbin/restorecon -R -v $MIQ_ROOT/vmdb/certs
+[ -x /sbin/restorecon ] && /sbin/restorecon -R -v $MIQ_ROOT/system/logrotate_free_space_check.sh
 
 # relabel the pg_log directory in postgresql datadir, but defer restorecon
 # until after the database is initialized during firstboot configuration
