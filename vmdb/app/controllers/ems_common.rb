@@ -512,8 +512,8 @@ module EmsCommon
     # Build the datacenter JSON object
     @sb[:vat] = false if params[:action] != "treesize"        #need to set this, to remember vat, treesize doesnt pass in param[:vat]
     vat = params[:vat] ? true : (@sb[:vat] ? true : false)    #use @sb[:vat] when coming from treesize
-    @sb[:tree_hosts] = []                    # Capture all Host ids in the tree
-    @sb[:tree_vms] = []                      # Capture all VM ids in the tree
+    @sb[:tree_hosts_hash] = {} # Capture all Host ids in the tree
+    @sb[:tree_vms_hash]   = {} # Capture all VM ids in the tree
     # do not want to store ems object in session hash,
     # need to get record incase coming from treesize to rebuild refreshed tree
     @sb[:ems_id] = @ems.id if @ems
@@ -542,6 +542,7 @@ module EmsCommon
     else
       session[:tree_name] = "dc_tree"
     end
+    build_vm_host_array if %w{show treesize}.include?(params[:action])
   end
 
   # Add the children of a node that is being expanded (autoloaded)

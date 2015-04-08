@@ -22,9 +22,9 @@ module ApplicationController::TreeSupport
 
   def tree_autoload
     nodes = tree_add_child_nodes(params[:id])
-    build_vm_host_array     if !@sb[:tree_hosts].blank? || !@sb[:tree_vms].blank?   #set temp list of hosts/vms to be shown on DC tree on mousein event
+    build_vm_host_array if !@sb[:tree_hosts_hash].blank? || !@sb[:tree_vms_hash].blank? # set temp list of hosts/vms to be shown on DC tree on mousein event
     render :update do |page|
-      if !@sb[:tree_hosts].blank? || !@sb[:tree_vms].blank?
+      if !@sb[:tree_hosts_hash].blank? || !@sb[:tree_vms_hash].blank?
         page.replace("dc_tree_quads_div", :partial=>"layouts/dc_tree_quads")
       end
       page << "#{j_str(params[:tree])}.loadJSONObject(#{nodes.to_json});"
@@ -57,9 +57,9 @@ module ApplicationController::TreeSupport
 
   def tree_autoload_quads
     # set temp list of hosts/vms to be shown on DC tree on mousein event
-    build_vm_host_array if !@sb[:tree_hosts].blank? || !@sb[:tree_vms].blank?
+    build_vm_host_array if !@sb[:tree_hosts_hash].blank? || !@sb[:tree_vms_hash].blank?
     render :update do |page|
-      if !@sb[:tree_hosts].blank? || !@sb[:tree_vms].blank?
+      if !@sb[:tree_hosts_hash].blank? || !@sb[:tree_vms_hash].blank?
         page.replace("dc_tree_quads_div", :partial => "layouts/dc_tree_quads")
       end
       page << "miqSparkle(false);"
@@ -181,6 +181,9 @@ module ApplicationController::TreeSupport
 
   # Return datacenter tree node(s) for the passed in folder/datacenter/host/vm/cluster/resource pool
   def get_dc_node(folder, pid, vat=false)       # Called with folder node, parent tree node id, VM & Templates flag
+    @sb[:tree_vms_hash]   ||= {}
+    @sb[:tree_hosts_hash] ||= {}
+
     @temp[:tree_vms]   ||= []
     @temp[:tree_hosts] ||= []
     @sb[:vat] = vat
@@ -286,7 +289,7 @@ module ApplicationController::TreeSupport
 
     # Handle Hosts
     elsif folder.kind_of?(Host) && folder.authorized_for_user?(session[:userid])
-      @sb[:tree_hosts].push(folder.id) unless @sb[:tree_hosts].include?(folder.id)
+      @sb[:tree_hosts_hash][folder.id] = folder.id unless @sb[:tree_hosts_hash].key?(folder.id)
       # Build the host node
       node = TreeNodeBuilder.generic_tree_node(
         "#{pid}_h-#{to_cid(folder.id)}",
@@ -318,7 +321,7 @@ module ApplicationController::TreeSupport
 
     # Handle VMs
     elsif folder.kind_of?(Vm) && folder.authorized_for_user?(session[:userid])
-      @sb[:tree_vms].push(folder.id) unless @sb[:tree_vms].include?(folder.id)
+      @sb[:tree_vms_hash][folder.id] = folder.id unless @sb[:tree_vms_hash].key?(folder.id)
       # Build the VM node
       if folder.template?
         if folder.host
@@ -408,8 +411,7 @@ module ApplicationController::TreeSupport
       kids.push(node)
     end
     # build vms/hosts array on initial load incase vms/hosts are being shown on initial display
-    build_vm_host_array if %w{show treesize}.include?(params[:action])
-    return kids
+    kids
   end
 
   def set_node_tooltip_and_is_lazy(node, tooltip, children)

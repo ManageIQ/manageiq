@@ -438,18 +438,8 @@ class ApplicationController < ActionController::Base
   end
 
   def build_vm_host_array
-    @temp[:tree_hosts] = []
-    @temp[:tree_vms]   = []
-    if !@sb[:tree_hosts].blank?
-      @sb[:tree_hosts].each do |h|
-        @temp[:tree_hosts].push(Host.find_by_id(h))
-      end
-    end
-    if !@sb[:tree_vms].blank?
-      @sb[:tree_vms].each do |v|
-        @temp[:tree_vms].push(Vm.find_by_id(v))
-      end
-    end
+    @temp[:tree_hosts] = (@sb[:tree_hosts_hash] || {}).collect { |k,_| Host.find_by_id(k) }
+    @temp[:tree_vms]   = (@sb[:tree_vms_hash]   || {}).collect { |k,_| Vm.find_by_id(k) }
   end
 
   # Show the current widget report in pdf format
@@ -2549,11 +2539,9 @@ class ApplicationController < ActionController::Base
     @sb[:detail_sortcol] = @detail_sortcol
     @sb[:detail_sortdir] = @detail_sortdir
 
-    @sb[:tree_hosts] = nil if @sb[:tree_hosts] &&
-      (!%w{ems_folders descendant_vms}.include?(params[:display]) &&
+    @sb[:tree_hosts_hash] = nil if (!%w{ems_folders descendant_vms}.include?(params[:display]) &&
         !%w{treesize tree_autoload_dynatree tree_autoload_quads}.include?(params[:action]))
-    @sb[:tree_vms] = nil if @sb[:tree_vms] &&
-      (!%w{ems_folders descendant_vms}.include?(params[:display]) &&
+    @sb[:tree_vms_hash] = nil if (!%w{ems_folders descendant_vms}.include?(params[:display]) &&
         !%w{treesize tree_autoload_dynatree tree_autoload_quads}.include?(params[:action]))
 
     # Set/clear sandbox (@sb) per controller in the session object
