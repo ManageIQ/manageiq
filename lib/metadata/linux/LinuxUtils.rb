@@ -140,5 +140,32 @@ module MiqLinux
          :running           => parts[3] == 'running'}
       end.compact!
     end
+
+    def self.parse_openstack_status(lines)
+      lines.to_s.split("\n")
+        .slice_before do |line|
+        # get section for each OpenStack service
+        line.start_with?('== ') && line.end_with?(' ==')
+      end.map do |section|
+        {
+          # OpenStack service section name
+          'name'     => section.first.gsub('=', '').strip,
+          # get array of services
+          'services' => section[1..-1].map do |service_line|
+            # split service line by :, ( and ) and strip white space from results
+            service_line.split(/[:\(\)]/).map(&:strip)
+          end.map do |service|
+            {
+              'name'    => service.first,
+              'active'  => service[1] == 'active',
+              'enabled' => !(service[2] =~ /disabled/)
+            }
+          end
+        }
+      end.reject do |service|
+        # we omit Keystone users section
+        service['name'] == 'Keystone users'
+      end
+    end
   end
 end
