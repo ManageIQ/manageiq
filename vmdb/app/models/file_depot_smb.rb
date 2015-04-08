@@ -1,3 +1,5 @@
+require 'mount/miq_generic_mount_session'
+
 class FileDepotSmb < FileDepot
   def self.uri_prefix
     "smb"
