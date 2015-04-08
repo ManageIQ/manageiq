@@ -17,14 +17,6 @@
                 %td.key #{view_name}
                 %td
                   %ul#toolbars= render_view_buttons(resource, @edit[:new][:views][resource])
-        - if role_allows(:feature => "miq_proxy_show_list")
-          %fieldset
-            %h3= _('Management Engine')
-            %table.style1
-              %tr
-                %td.key= _('SmartProxies')
-                %td
-                  %ul#toolbars= render_view_buttons(:miqproxy, @edit[:new][:views][:miqproxy])
 
         - if role_allows(:feature => "service")                        ||
         -    role_allows(:feature => "catalog_items_accord")           ||

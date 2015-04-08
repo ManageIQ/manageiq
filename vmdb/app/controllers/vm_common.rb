@@ -223,13 +223,6 @@ module VmCommon
       drop_breadcrumb( {:name=>@record.name+" (Snapshots)", :url=>"/#{rec_cls}/show/#{@record.id}?display=#{@display}"} )
       build_snapshot_tree
       @button_group = "snapshot"
-    elsif @display == "miq_proxies"
-      drop_breadcrumb({:name=>"Virtual Machines", :url=>"/#{rec_cls}/show_list?page=#{@current_page}&refresh=y"}, true)
-      drop_breadcrumb( {:name=>@record.name+" (Managing SmartProxies)", :url=>"/#{rec_cls}/show/#{@record.id}?display=miq_proxies"} )
-      @view, @pages = get_view(MiqProxy, :parent=>@record)  # Get the records (into a view) and the paginator
-      @showtype = "miq_proxies"
-      @gtl_url = "/#{rec_cls}/show/" << @record.id.to_s << "?"
-
     elsif @display == "vmtree_info"
       @tree_vms = Array.new                     # Capture all VM ids in the tree
       drop_breadcrumb( {:name=>@record.name, :url=>"/#{rec_cls}/show/#{@record.id}"}, true )

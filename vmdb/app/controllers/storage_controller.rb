@@ -29,13 +29,6 @@ class StorageController < ApplicationController
           @view.extras[:total_count] > @view.extras[:auth_count]
         @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") + " on this Host"
       end
-
-    when "miq_proxies"
-      drop_breadcrumb( {:name=>@storage.name+" (Managing SmartProxies)", :url=>"/storage/show/#{@storage.id}?display=miq_proxies"} )
-      @view, @pages = get_view(MiqProxy, :parent=>@storage) # Get the records (into a view) and the paginator
-      @showtype = "miq_proxies"
-      @no_checkboxes = true
-
     when "hosts"
       @view, @pages = get_view(Host, :parent=>@storage) # Get the records (into a view) and the paginator
       drop_breadcrumb( {:name=>@storage.name+" (All Registered Hosts)", :url=>"/storage/show/#{@storage.id}?display=hosts"} )

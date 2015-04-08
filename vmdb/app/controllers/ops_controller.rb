@@ -166,11 +166,7 @@ class OpsController < ApplicationController
     end
     # setting active record object here again, since they are no longer there due to redirect
     if params[:cls_id]
-      if params[:cls_id].split('_')[0] == "b"
-        @build = ProductUpdate.find_by_id(params[:cls_id].split('_')[1])
-        @in_a_form = true
-        session[:changed] = true
-      elsif params[:cls_id].split('_')[0] == "lg"
+      if params[:cls_id].split('_')[0] == "lg"
         @ldap_group = @edit[:ldap_group]
       end
     end
@@ -354,12 +350,6 @@ class OpsController < ApplicationController
         action_url = "cu_collection_update"
         record_id = @sb[:active_tab].split("settings_").last
         locals[:no_cancel] = true
-      elsif @sb[:active_tab] == "settings_maintenance" && @build
-        action_url = "activate"
-        record_id = @build.id
-        locals[:no_reset] = true
-        locals[:download_button] = true
-        locals[:download_text] = "Download SmartProxy version for manual installation"
       elsif %w(settings_evm_servers settings_list).include?(@sb[:active_tab]) && @in_a_form
         if %w(ap_copy ap_edit ap_host_edit ap_vm_edit).include?(@sb[:action])
           action_url = "ap_edit"

@@ -81,11 +81,6 @@ class HostController < ApplicationController
       drop_breadcrumb( {:name=>@host.name+" (Storage Adapters)", :url=>"/host/show/#{@host.id}?display=storage_adapters"} )
       build_sa_tree
 
-    when "miq_proxies"
-      drop_breadcrumb( {:name=>@host.name+" (Managing SmartProxies)", :url=>"/host/show/#{@host.id}?display=miq_proxies"} )
-      @view, @pages = get_view(MiqProxy, :parent=>@host)  # Get the records (into a view) and the paginator
-      @showtype = "miq_proxies"
-
     when "miq_templates", "vms"
       title = @display == "vms" ? "VMs" : "Templates"
       kls = @display == "vms" ? Vm : MiqTemplate

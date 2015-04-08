@@ -11,10 +11,10 @@
     - if ["ems_cloud",    "ems_infra",    "resource_pool",   "policy_profile",
           "offline",      "retired",      "templates",       "ontap_file_share",
           "repository",   "policy_group", "event",           "snia_local_file_system",
-          "storage",      "service",      "miq_proxy",       "ontap_logical_disk",
+          "storage",      "service",      "policy",           "ontap_logical_disk",
           "action",       "scan_profile", "ems_cluster",     "ontap_storage_volume",
           "miq_schedule", "vm",           "storage_manager", "ontap_storage_system",
-          "host",         "condition",    "policy",          "cim_base_storage_extent"].include?(@layout) && @gtl_type && !@tagitems && !@ownershipitems && !@retireitems && !@politems && !@new_policy && !@in_a_form
+          "host",         "condition",    "cim_base_storage_extent"].include?(@layout) && @gtl_type && !@tagitems && !@ownershipitems && !@retireitems && !@politems && !@new_policy && !@in_a_form
       = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "gtl_view_tb"}
     - elsif %w(vm host ems_cluster).include?(@layout) && %(compare_miq compare_compress).include?(@lastaction)
       = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "compare_view_tb"}

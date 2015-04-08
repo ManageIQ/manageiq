@@ -132,9 +132,8 @@ class DashboardController < ApplicationController
             redirect_to :controller => "configuration", :action => "index", :config_tab => "ui"
           elsif role_allows(:feature => f)
             case f
-            when "tasks"        then redirect_to(:controller => "miq_proxy", :action => "index")
+            when "tasks"        then redirect_to(:controller => "configuration", :action => "index")
             when "ops_explorer" then redirect_to(:controller => "ops",       :action => "explorer")
-            when "miq_proxy"    then redirect_to(:controller => "miq_proxy", :action => "show_list")
             when "about"        then redirect_to(:controller => "support",   :action => "index", :support_tab => "about")
             end
           end

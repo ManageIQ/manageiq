@@ -39,7 +39,6 @@
   - my_settings
   - policy_simulation
   - policy_log
-  - miq_proxy
   - miq_report
   - miq_request
   - miq_template

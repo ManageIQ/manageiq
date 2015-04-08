@@ -6,7 +6,7 @@ module ApplicationHelper::PageLayouts
          @layout == "exception" ||
          @layout == "chargeback" ||
          @layout.starts_with?("miq_request") ||
-         ["configuration","about","diagnostics","rss","server_build","product_update",
+         ["configuration","about","diagnostics","rss","server_build",
           "my_tasks","my_ui_tasks","all_tasks","all_ui_tasks","miq_ae_tools","miq_policy",
           "miq_ae_export","miq_ae_automate_button","miq_ae_logs","miq_policy_logs",
           "miq_policy_export","ops","pxe"].include?(@layout)) &&

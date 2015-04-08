@@ -36,8 +36,6 @@
   = image_tag("#{img_path}new/vendor-#{h(vendor)}.png", img_attr_20)
 - elsif db == "Service"
   = image_tag("#{img_path}new/service.png", img_attr_20)
-- elsif db == "MiqProxy"
-  = image_tag("#{img_path}new/miqproxy.png", img_attr_20)
 - elsif db == "Storage"
   = image_tag("#{img_path}new/storage.png", img_attr_20)
 - elsif db == "MiqEvent"
@@ -118,23 +116,6 @@
   = image_tag("#{img_path}new/scan_item_set.png", img_attr_20)
 - elsif db == "ChargebackRate"
   = image_tag("#{img_path}new/chargeback_rates.png", img_attr_20)
-- elsif db == "MiqProxyBuild"
-  = link_to(image_tag("/images/toolbars/download.png",
-                      :class => "rollover small",
-                      :type  => "application/txt",
-                      :alt   => "Download SmartProxy Build"),
-            {:action => 'fetch_build', :id => @id},
-            :title => _("Download SmartProxy Build"))
-  = link_to(image_tag("/images/toolbars/delete.png",
-                      :class => "rollover small",
-                      :alt   => _("Click to delete this build")),
-            {:action => "delete_build", :id => @id},
-            "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true,
-            :confirm               => _("Are you sure you want to delete build %{row_build} for %{row_platform}?") % {:row_build    => row.build,
-                                                                                                                      :row_platform => row.platform.capitalize},
-            :remote                => true,
-            :title                 => _("Click to delete this build"))
 - elsif db == "ServerBuild"
   = link_to(image_tag("/images/toolbars/delete.png",
                       :class => "rollover small",

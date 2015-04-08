@@ -91,7 +91,6 @@ describe "routing for OpsController" do
     settings_update
     show
     show_product_update
-    smartproxy_affinity_field_changed
     tag_edit_form_field_changed
     tl_chooser
     tree_autoload_dynatree

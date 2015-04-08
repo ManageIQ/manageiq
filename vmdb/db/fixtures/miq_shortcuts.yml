@@ -159,13 +159,8 @@
   :url: /miq_capacity/bottlenecks
   :rbac_feature_name: bottlenecks
   :startup: true
-- :name: miq_proxys
-  :description: Configure / SmartProxies
-  :url: /miq_proxy/show_list
-  :rbac_feature_name: miq_proxy_show_list
-  :startup: true
 - :name: miq_proxy_tasks
   :description: Configure / Tasks
-  :url: /miq_proxy/index?jobs_tab=alltasks
+  :url: /configuration/index?jobs_tab=alltasks
   :rbac_feature_name: tasks
   :startup: true
