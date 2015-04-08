@@ -26,9 +26,9 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_serviceprovision_status(status => 'Processing Pre1')
-      on_exit: update_serviceprovision_status(status => 'Processed Pre1')
-      on_error: update_serviceprovision_status(status => 'Error Processing Pre1')
+      on_entry: update_serviceprovision_status(status => 'Processing Preprovision')
+      on_exit: update_serviceprovision_status(status => 'Processed Preprovision')
+      on_error: update_serviceprovision_status(status => 'Error Processing Preprovision')
       max_retries: '100'
       max_time: 
   - field:
@@ -126,8 +126,8 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry: update_serviceprovision_status(status => 'Creating Service')
-      on_exit: update_serviceprovision_status(status => 'Creating Service')
+      on_entry: update_serviceprovision_status(status => 'Creating Stack')
+      on_exit: update_serviceprovision_status(status => 'Creating Stack')
       on_error: update_serviceprovision_status(status => '${/#ae_reason}')
       max_retries: '100'
       max_time: 
@@ -147,7 +147,7 @@ object:
       description: 
       condition: 
       on_entry: 
-      on_exit: update_serviceprovision_status(status => 'Creating Service')
+      on_exit: update_serviceprovision_status(status => 'Creating Stack')
       on_error: update_serviceprovision_status(status => '${/#ae_reason}')
       max_retries: '100'
       max_time: 
