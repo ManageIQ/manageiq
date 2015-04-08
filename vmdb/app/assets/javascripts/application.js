@@ -17,6 +17,7 @@
 //= require dialog_import_export
 //= require widget_import_export
 //= require automate_import_export
+//= require key_import_export
 //= require excanvas
 //= require jquery.jqplot
 //= require jqplot-plugins/jqplot.pieRenderer

@@ -257,6 +257,62 @@ module EmsCommon
     end
   end
 
+  def key_json
+    respond_to do |format|
+      if @flash_array && @flash_array.count
+        format.json { render :json => @flash_array.first.to_json, :status => 500 }
+      else
+        format.json { render :json => automate_json }
+      end
+    end
+  end
+
+  def cancel_import
+    key_import_service.cancel_import(params[:import_file_upload_id])
+    add_flash(_("Key import was cancelled or is finished"), :info)
+
+    respond_to do |format|
+      format.js { render :json => @flash_array.to_json, :status => 200 }
+    end
+  end
+
+  def import_key
+    import_file_upload = ImportFileUpload.where(:id => params[:import_file_upload_id]).first
+
+    if import_file_upload
+      add_flash(_("Key import was successful.", :info))
+    else
+      add_flash(_("Error: Key import file upload expired"), :error)
+    end
+
+    respond_to do |format|
+      format.js { render :json => @flash_array.to_json, :status => 200 }
+    end
+  end
+
+  def upload_key_file
+    redirect_options = {:action => :review_key}
+
+    upload_file = params.fetch_path(:upload, :file)
+
+    if upload_file.nil?
+      add_flash("Use the browse button to locate a key file", :warning)
+    else
+      import_file_upload_id = key_import_service.store_for_import(upload_file.read)
+      add_flash(_("Key file was uploaded successfully"), :info)
+      redirect_options[:key_file_upload_id] = key_file_upload_id
+    end
+
+    redirect_options[:message] = @flash_array.first.to_json
+
+    redirect_to redirect_options
+  end
+
+  def review_key
+    @key_file_upload_id = params[:key_file_upload_id]
+    @message = params[:message]
+  end
+
   def update
     assert_privileges("#{model.to_s.underscore}_edit")
     return unless load_edit("ems_edit__#{params[:id]}")
@@ -464,6 +520,10 @@ module EmsCommon
   end
 
   private ############################
+
+  def key_import_service
+    @key_import_service ||= KeyImportService.new
+  end
 
   def set_verify_status
     edit_new = @edit[:new]
@@ -675,7 +735,8 @@ module EmsCommon
     @edit[:new][:amqp_verify] = params[:amqp_verify] if params[:amqp_verify]
 
     @edit[:new][:keypair_userid] = params[:keypair_userid] if params[:keypair_userid]
-    @edit[:new][:keypair_password] = params[:keypair_password] if params[:keypair_password]
+    #@edit[:new][:keypair_password] = ImportFileUpload.where(:id => params[:import_file_upload_id]).first.uploaded_content if params[:import_file_upload_id]
+    @edit[:new][:keypair_password] = ImportFileUpload.last.uploaded_content
 
     @edit[:new][:host_default_vnc_port_start] = params[:host_default_vnc_port_start] if params[:host_default_vnc_port_start]
     @edit[:new][:host_default_vnc_port_end] = params[:host_default_vnc_port_end] if params[:host_default_vnc_port_end]
