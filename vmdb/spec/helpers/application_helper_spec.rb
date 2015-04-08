@@ -723,22 +723,6 @@ describe ApplicationHelper do
       end
     end
 
-    context "when with ProductUpdate" do
-      before { @db = "ProductUpdate" }
-
-      it "and @explorer" do
-        @explorer = true
-        subject[0].should == "ops"
-        subject[1].should == "show_product_update"
-      end
-
-      it "and not @explorer" do
-        @explorer = nil
-        subject[0].should == "ops"
-        subject[1].should == "show_product_update"
-      end
-    end
-
     ["ServiceResource", "ServiceTemplate"].each do |db|
       context "when with #{db}" do
         before { @db = db }

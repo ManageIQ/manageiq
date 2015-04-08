@@ -1,5 +1,4 @@
 require "spec_helper"
-require "routing/shared_examples"
 
 describe "routes for MiqTaskController" do
   let(:controller_name) { "miq_task" }
