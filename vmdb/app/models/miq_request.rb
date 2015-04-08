@@ -476,6 +476,18 @@ class MiqRequest < ActiveRecord::Base
     request
   end
 
+  def request_pending_approval?
+    approval_state == "pending_approval"
+  end
+
+  def request_approved?
+    approval_state == "approved"
+  end
+
+  def request_denied?
+    approval_state == "denied"
+  end
+
   private
 
   def default_description

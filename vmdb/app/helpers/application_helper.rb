@@ -931,7 +931,7 @@ module ApplicationHelper
       end
     when "MiqProvisionRequest", "MiqHostProvisionRequest", "VmReconfigureRequest",
         "VmMigrateRequest", "AutomationRequest",
-        "ServiceReconfigureRequest", "ServiceTemplateProvisionRequest"
+        "ServiceReconfigureRequest", "ServiceTemplateProvisionRequest", "MiqProvisionConfiguredSystemRequest"
 
       # Don't hide certain buttons on AutomationRequest screen
       return true if @record.resource_type == "AutomationRequest" &&
@@ -948,7 +948,13 @@ module ApplicationHelper
         return true if requester.name != @record.requester_name || ["approved", "denied"].include?(@record.approval_state)
       when "miq_request_copy"
         requester = User.find_by_userid(session[:userid])
-        return true if !["MiqProvisionRequest", "MiqHostProvisionRequest"].include?(@record.resource_type) || ((requester.name != @record.requester_name || ["approved", "denied"].include?(@record.approval_state)) && @showtype == "miq_provisions")
+        resource_types_for_miq_request_copy = %w(MiqProvisionRequest
+                                                 MiqHostProvisionRequest
+                                                 MiqProvisionConfiguredSystemRequest)
+        return true if !resource_types_for_miq_request_copy.include?(@record.resource_type) ||
+                       ((requester.name != @record.requester_name ||
+                         !@record.request_pending_approval?) &&
+                        @showtype == "miq_provisions")
       end
     when "MiqServer", "MiqRegion"
       case id
