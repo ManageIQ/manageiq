@@ -174,40 +174,30 @@ module ApplicationController::DialogRunner
 
   def dynamic_radio_button_refresh
     field = load_dialog_field(params[:name])
-    values = field.refresh_button_pressed
 
-    checked_value = values.collect { |value_pair| value_pair[0].to_s }.include?(params[:checked_value]) ?
-      params[:checked_value] : field.default_value
-
-    field.value = checked_value
-
-    response_json = {:checked_value => checked_value, :field_name => field.name, :values => values}
+    response_json = {:values => field.refresh_json_value(params[:checked_value])}
     dynamic_refresh_response(response_json)
   end
 
   def dynamic_text_box_refresh
-    field = load_dialog_field(params[:name])
-    values = field.refresh_button_pressed
-
-    response_json = {:field_name => field.name, :values => values}
-    dynamic_refresh_response(response_json)
+    refresh_for_textbox_checkbox_or_date
   end
 
   def dynamic_checkbox_refresh
-    field = load_dialog_field(params[:name])
-
-    response_json = {:field_name => field.name, :checked => field.checked?}
-    dynamic_refresh_response(response_json)
+    refresh_for_textbox_checkbox_or_date
   end
 
   def dynamic_date_refresh
-    field = load_dialog_field(params[:name])
-
-    response_json = {:field_name => field.name, :values => field.refresh_json_value}
-    dynamic_refresh_response(response_json)
+    refresh_for_textbox_checkbox_or_date
   end
 
   private     #######################
+
+  def refresh_for_textbox_checkbox_or_date
+    field = load_dialog_field(params[:name])
+
+    dynamic_refresh_response(:values => field.refresh_json_value)
+  end
 
   def dynamic_refresh_response(response_json)
     respond_to do |format|

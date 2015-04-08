@@ -12,12 +12,12 @@
       - when 'DialogFieldTextBox'
         - if edit
           - if field.protected?
-            = password_field_tag(field.name + "__protected", field.default_value,
+            = password_field_tag(field.name + "__protected", field.value,
                                  :maxlength         => 50,
                                  :class             => "dynamic-text-box-#{field.id}",
                                  "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
           - else
-            = text_field_tag(field.name, field.default_value,
+            = text_field_tag(field.name, field.value,
                              :maxlength         => 50,
                              :class             => "dynamic-text-box-#{field.id}",
                              "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
@@ -33,7 +33,7 @@
                 var fieldName = "#{field.name}";
 
                 $.post('dynamic_text_box_refresh', {name: fieldName}, function(data) {
-                  $('.dynamic-text-box-' + fieldId).val(data.values);
+                  $('.dynamic-text-box-' + fieldId).val(data.values.text);
                   miqSparkleOff();
                 });
               });
@@ -42,18 +42,18 @@
           - if field.protected?
             ********
           - else
-            = h(field.default_value)
+            = h(field.value)
 
       - when 'DialogFieldTextAreaBox'
         - if edit
           = text_area_tag(field.name,
-                          field.default_value,
+                          field.value,
                           :class             => "dynamic-text-area-#{field.id}",
                           :maxlength         => 8192,
                           :size              => "50x6",
                           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
         - else
-          = h(field.default_value)
+          = h(field.value)
 
         - if field.dynamic && field.show_refresh_button?
           = button_tag('Refresh', :id => "refresh-dynamic-text-field-#{field.id}", :class => "btn btn-default")
@@ -66,7 +66,7 @@
               var fieldName = "#{field.name}";
 
               $.post('dynamic_text_box_refresh', {name: fieldName}, function(data) {
-                $('.dynamic-text-area-' + fieldId).val(data.values);
+                $('.dynamic-text-area-' + fieldId).val(data.values.text);
                 miqSparkleOff();
               });
             });
@@ -90,7 +90,7 @@
               var fieldName = "#{field.name}";
 
               $.post('dynamic_checkbox_refresh', {name: fieldName}, function(data) {
-                $('.dynamic-checkbox-' + fieldId).prop('checked', data.checked);
+                $('.dynamic-checkbox-' + fieldId).prop('checked', data.values.checked);
                 miqSparkleOff();
               });
             });
@@ -217,12 +217,12 @@
               $.post('dynamic_radio_button_refresh', {name: fieldName, checked_value: checkedValue}, function(data) {
                 var radioButtons = [];
 
-                $.each(data.values, function(index, value) {
+                $.each(data.values.refreshed_values, function(index, value) {
                   var radio = '<input type="radio" ';
                   radio += 'id="' + fieldId + '" ';
                   radio += 'value="' + value[0] + '" ';
-                  radio += 'name="' + data.field_name + '" ';
-                  if (data.checked_value === value[0].toString()) {
+                  radio += 'name="' + fieldName + '" ';
+                  if (data.values.checked_value === value[0].toString()) {
                     radio += 'checked="" ';
                   }
                   radio += 'onclick="' + "#{remote_function(

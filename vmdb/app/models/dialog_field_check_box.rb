@@ -1,17 +1,17 @@
 class DialogFieldCheckBox < DialogField
-  AUTOMATE_VALUE_FIELDS = %w(default_value required)
+  AUTOMATE_VALUE_FIELDS = %w(required)
 
   has_one :resource_action, :as => :resource, :dependent => :destroy
 
   after_initialize :default_resource_action
 
   def checked?
-    default_value == "t"
+    value == "t"
   end
 
-  def default_value
-    write_attribute(:default_value, values_from_automate) if dynamic
-    read_attribute(:default_value)
+  def value
+    @value = values_from_automate if dynamic && @value.blank?
+    @value
   end
 
   def initial_values
@@ -27,8 +27,14 @@ class DialogFieldCheckBox < DialogField
       send("#{key}=", automate_hash[key]) if automate_hash.key?(key)
     end
 
-    return initial_values if automate_hash["default_value"].blank?
-    automate_hash["default_value"].to_s
+    return initial_values if automate_hash["value"].blank?
+    automate_hash["value"].to_s
+  end
+
+  def refresh_json_value
+    @value = values_from_automate
+
+    {:checked => checked?}
   end
 
   private

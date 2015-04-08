@@ -109,56 +109,39 @@ describe DialogFieldTextBox do
     end
   end
 
-  describe "#refresh_button_pressed" do
-    let(:dialog_field) { described_class.new(:dynamic => dynamic) }
+  describe "#value" do
+    let(:dialog_field) { described_class.new(:dynamic => dynamic, :value => value) }
 
     context "when the dialog field is dynamic" do
       let(:dynamic) { true }
 
-      before do
-        DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("processor")
+      context "when the dialog field has a value already" do
+        let(:value) { "test" }
 
-        dialog_field.default_value = "some value"
+        it "returns the current value" do
+          expect(dialog_field.value).to eq("test")
+        end
       end
 
-      it "returns the values from the value processor" do
-        expect(dialog_field.refresh_button_pressed).to eq("processor")
+      context "when the dialog field does not have a value" do
+        let(:value) { "" }
+
+        before do
+          DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("processor")
+        end
+
+        it "returns the values from the value processor" do
+          expect(dialog_field.value).to eq("processor")
+        end
       end
     end
 
     context "when the dialog field is not dynamic" do
       let(:dynamic) { false }
-
-      before do
-        dialog_field.default_value = "some value"
-      end
-
-      it "returns the current values" do
-        expect(dialog_field.refresh_button_pressed).to eq("some value")
-      end
-    end
-  end
-
-  describe "#default_value" do
-    let(:dialog_field) { described_class.new(:dynamic => dynamic, :default_value => "test") }
-
-    context "when the dialog field is dynamic" do
-      let(:dynamic) { true }
-
-      before do
-        DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("processor")
-      end
-
-      it "returns the values from the value processor" do
-        expect(dialog_field.default_value).to eq("processor")
-      end
-    end
-
-    context "when the dialog field is not dynamic" do
-      let(:dynamic) { false }
+      let(:value) { "test" }
 
       it "returns the current value" do
-        expect(dialog_field.default_value).to eq("test")
+        expect(dialog_field.value).to eq("test")
       end
     end
   end
@@ -176,7 +159,7 @@ describe DialogFieldTextBox do
     let(:automate_hash) do
       {
         "data_type"      => "datatype",
-        "default_value"  => default_value,
+        "value"          => value,
         "protected"      => true,
         "required"       => true,
         "validator_type" => "regex",
@@ -206,39 +189,29 @@ describe DialogFieldTextBox do
       end
     end
 
-    context "when the automate hash does not have a default value" do
-      let(:default_value) { nil }
+    context "when the automate hash does not have a value" do
+      let(:value) { nil }
 
       it_behaves_like "DialogFieldTextBox#normalize_automate_values"
-
-      it "sets the default_value" do
-        dialog_field.normalize_automate_values(automate_hash)
-        expect(dialog_field.default_value).to eq(nil)
-      end
 
       it "returns the initial values" do
         expect(dialog_field.normalize_automate_values(automate_hash)).to eq("<None>")
       end
     end
 
-    context "when the automate hash has a default value" do
-      let(:default_value) { '123' }
+    context "when the automate hash has a value" do
+      let(:value) { '123' }
 
       it_behaves_like "DialogFieldTextBox#normalize_automate_values"
 
-      it "sets the default_value" do
-        dialog_field.normalize_automate_values(automate_hash)
-        expect(dialog_field.default_value).to eq('123')
-      end
-
-      it "returns the default value in string format" do
+      it "returns the value in string format" do
         expect(dialog_field.normalize_automate_values(automate_hash)).to eq("123")
       end
     end
   end
 
   describe "#sample_text" do
-    let(:dialog_field) { described_class.new(:dynamic => dynamic, :default_value => "defaultvalue") }
+    let(:dialog_field) { described_class.new(:dynamic => dynamic, :value => "defaultvalue") }
 
     context "when the dialog is dynamic" do
       let(:dynamic) { true }
@@ -251,9 +224,26 @@ describe DialogFieldTextBox do
     context "when the dialog is not dynamic" do
       let(:dynamic) { false }
 
-      it "returns the default value" do
+      it "returns the value" do
         expect(dialog_field.sample_text).to eq("defaultvalue")
       end
+    end
+  end
+
+  describe "#refresh_json_value" do
+    let(:dialog_field) { described_class.new(:value => "test") }
+
+    before do
+      DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("processor")
+    end
+
+    it "returns the values from the value processor" do
+      expect(dialog_field.refresh_json_value).to eq(:text => "processor")
+    end
+
+    it "assigns the processed value to value" do
+      dialog_field.refresh_json_value
+      expect(dialog_field.value).to eq("processor")
     end
   end
 end
