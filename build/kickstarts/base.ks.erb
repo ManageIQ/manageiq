@@ -28,7 +28,10 @@ lang en_US.UTF-8
 keyboard us
 network --onboot yes --device eth0 --bootproto dhcp
 rootpw  --iscrypted $1$DZprqvCu$mhqFBjfLTH/PVvZIompVP/
-firewall --service=ssh --port=80,443,5432
+
+# Note: 5900-5999 port range is for vnc and kickstart doesn't provide a way to specify a range
+firewall --enabled --port=22:tcp,80:tcp,80:udp,443:tcp,443:udp,5432:tcp,5900:tcp,5901:tcp,5902:tcp,5903:tcp,5904:tcp,5905:tcp,5906:tcp,5907:tcp,5908:tcp,5909:tcp,5910:tcp,5911:tcp,5912:tcp,5913:tcp,5914:tcp,5915:tcp,5916:tcp,5917:tcp,5918:tcp,5919:tcp,5920:tcp,5921:tcp,5922:tcp,5923:tcp,5924:tcp,5925:tcp,5926:tcp,5927:tcp,5928:tcp,5929:tcp,5930:tcp,5931:tcp,5932:tcp,5933:tcp,5934:tcp,5935:tcp,5936:tcp,5937:tcp,5938:tcp,5939:tcp,5940:tcp,5941:tcp,5942:tcp,5943:tcp,5944:tcp,5945:tcp,5946:tcp,5947:tcp,5948:tcp,5949:tcp,5950:tcp,5951:tcp,5952:tcp,5953:tcp,5954:tcp,5955:tcp,5956:tcp,5957:tcp,5958:tcp,5959:tcp,5960:tcp,5961:tcp,5962:tcp,5963:tcp,5964:tcp,5965:tcp,5966:tcp,5967:tcp,5968:tcp,5969:tcp,5970:tcp,5971:tcp,5972:tcp,5973:tcp,5974:tcp,5975:tcp,5976:tcp,5977:tcp,5978:tcp,5979:tcp,5980:tcp,5981:tcp,5982:tcp,5983:tcp,5984:tcp,5985:tcp,5986:tcp,5987:tcp,5988:tcp,5989:tcp,5990:tcp,5991:tcp,5992:tcp,5993:tcp,5994:tcp,5995:tcp,5996:tcp,5997:tcp,5998:tcp,5999:tcp
+
 authconfig --enableshadow --passalgo=sha512
 selinux --enforcing
 timezone --utc America/New_York
