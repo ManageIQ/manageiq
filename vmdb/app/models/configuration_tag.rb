@@ -7,4 +7,6 @@ class ConfigurationTag < ActiveRecord::Base
   belongs_to :manager
   has_and_belongs_to_many :configured_systems
   has_and_belongs_to_many :configuration_profiles
+
+  validates :name, :presence => true
 end

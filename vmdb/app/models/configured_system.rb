@@ -18,4 +18,9 @@ class ConfiguredSystem < ActiveRecord::Base
   def name
     hostname
   end
+
+  def all_tags
+    tag_hash = configuration_tags.index_by(&:class)
+    configuration_profile ? tag_hash.reverse_merge(configuration_profile.all_tags) : tag_hash
+  end
 end
