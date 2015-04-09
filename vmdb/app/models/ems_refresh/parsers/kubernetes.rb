@@ -180,39 +180,39 @@ module EmsRefresh::Parsers
 
     def parse_container_definition(container_def, pod_id)
       new_result = {
-        :ems_ref           => "#{pod_id}_#{container_def["name"]}_#{container_def["image"]}",
-        :name              => container_def["name"],
-        :image             => container_def["image"],
-        :image_pull_policy => container_def["imagePullPolicy"],
-        :memory            => container_def["memory"],
+        :ems_ref           => "#{pod_id}_#{container_def.name}_#{container_def.image}",
+        :name              => container_def.name,
+        :image             => container_def.image,
+        :image_pull_policy => container_def.imagePullPolicy,
+        :memory            => container_def.memory,
          # https://github.com/GoogleCloudPlatform/kubernetes/blob/0b801a91b15591e2e6e156cf714bfb866807bf30/pkg/api/v1beta3/types.go#L815
-        :cpu_cores         => container_def["cpu"].to_f / 1000
+        :cpu_cores         => container_def.cpu.to_f / 1000
       }
-      ports = container_def["ports"]
+      ports = container_def.ports
       new_result[:container_port_configs] = Array(ports).collect do |port_entry|
-        parse_container_port_config(port_entry, pod_id, container_def["name"])
+        parse_container_port_config(port_entry, pod_id, container_def.name)
       end
       new_result
     end
 
     def parse_container(container, pod_id)
       {
-        :ems_ref       => "#{pod_id}_#{container["name"]}_#{container["image"]}",
-        :name          => container["name"],
-        :image         => container["image"],
-        :restart_count => container["restartCount"],
-        :container_id  => container["containerID"]
+        :ems_ref       => "#{pod_id}_#{container.name}_#{container.image}",
+        :name          => container.name,
+        :image         => container.image,
+        :restart_count => container.restartCount,
+        :container_id  => container.containerID
       }
       # TODO, state
     end
 
     def parse_container_port_config(port_config, pod_id, container_name)
       {
-        :ems_ref   => "#{pod_id}_#{container_name}_#{port_config["containerPort"]}_#{port_config["hostPort"]}_#{port_config["protocol"]}",
-        :port      => port_config["containerPort"],
-        :host_port => port_config["hostPort"],
-        :protocol  => port_config["protocol"],
-        :name      => port_config["name"]
+        :ems_ref   => "#{pod_id}_#{container_name}_#{port_config.containerPort}_#{port_config.hostPort}_#{port_config.protocol}",
+        :port      => port_config.containerPort,
+        :host_port => port_config.hostPort,
+        :protocol  => port_config.protocol,
+        :name      => port_config.name
       }
     end
 
