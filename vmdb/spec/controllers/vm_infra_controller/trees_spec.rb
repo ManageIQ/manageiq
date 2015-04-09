@@ -14,7 +14,7 @@ describe VmInfraController do
 
   context "VMs & Templates #tree_select" do
     it "renders VM and Template list for vandt_tree root node" do
-      vm = FactoryGirl.create(:vm_vmware)
+      FactoryGirl.create(:vm_vmware)
 
       session[:settings] = {}
       session[:sandboxes] = {
