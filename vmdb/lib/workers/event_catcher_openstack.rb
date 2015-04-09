@@ -7,7 +7,7 @@ class EventCatcherOpenstack < EventCatcher
     require 'openstack/openstack_event_monitor'
     unless @event_monitor_handle
       options = {}
-      options[:hostname] = @ems.ipaddress
+      options[:hostname] = @ems.hostname
       options[:port]     = self.worker_settings[:amqp_port]
       if @ems.has_authentication_type? :amqp
         options[:username] = @ems.authentication_userid(:amqp)

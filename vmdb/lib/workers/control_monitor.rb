@@ -23,7 +23,7 @@ class ControlMonitor < WorkerBase
   end
 
   def log_prefix
-    @log_prefix ||= "MIQ(#{self.class.name}) EMS [#{@ems.ipaddress}] as [#{@ems.authentication_userid}] "
+    @log_prefix ||= "MIQ(#{self.class.name}) EMS [#{@ems.hostname}] as [#{@ems.authentication_userid}] "
   end
 
   alias old_do_exit do_exit
@@ -47,7 +47,7 @@ class ControlMonitor < WorkerBase
     STDOUT.sync = true
     tid = Thread.new do
       begin
-        vim_cm = MiqVimControlMonitor.new(@ems.ipaddress, @ems.authentication_userid, @ems.authentication_password, @cfg[:page])
+        vim_cm = MiqVimControlMonitor.new(@ems.hostname, @ems.authentication_userid, @ems.authentication_password, @cfg[:page])
         vim_cm.controlMonitor do |action|
           #$log.info "#{self.log_prefix}XXX: action: #{action.inspect}"
           #$log.info "#{self.log_prefix}XXX: action: methods: #{action.methods.sort.join("\n")}"

@@ -9,7 +9,7 @@ module Metric::CiMixin::Capture::Rhevm
     username, password = self.ext_management_system.auth_user_pwd(:metrics)
 
     conn_info = {
-      :host     => self.ext_management_system.ipaddress,
+      :host     => self.ext_management_system.hostname,
       :database => self.ext_management_system.history_database_name,
       :username => username,
       :password => password
