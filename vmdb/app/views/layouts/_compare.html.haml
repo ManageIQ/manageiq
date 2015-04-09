@@ -2,12 +2,10 @@
 - if @compare.nil?
   = render :partial => 'layouts/info_msg', :locals => {:message => _("No Records Found.")}
 - else
-  #compare_grid_div{:style => "width: #{@winW - 250}px; height:auto; cursor:hand;"}
+  #compare_grid_div{:style => "width: #{@winW - 250}; height: #{center_div_height + 150}px; cursor: hand; overflow-x: auto; overflow-y: auto;"}
     = render :partial => 'layouts/slickgrid',
              :locals  => { :grid_id        => "compare_grid_div",
                            :grid_name      => "compare_grid",
                            :grid_rows_json => @temp[:grid_rows_json],
                            :grid_cols_json => @temp[:grid_cols_json],
-                           :autosize       => true,
-                           :set_sizes      => true,
-                           :skin           => "miq" }
+                           :autoheight     => false }
