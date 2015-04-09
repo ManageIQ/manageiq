@@ -39,7 +39,7 @@ class MiqProvisionConfiguredSystemRequest < MiqRequest
     request_task_class_from(attribs).new(attribs)
   end
 
-  def org_controller
+  def originating_controller
     "configured_system"
   end
 

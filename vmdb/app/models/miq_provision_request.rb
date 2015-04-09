@@ -127,7 +127,7 @@ class MiqProvisionRequest < MiqRequest
     self.miq_provisions.collect(&:vm).compact
   end
 
-  def org_controller
+  def originating_controller
     "vm"
   end
 end
