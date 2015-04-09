@@ -97,6 +97,12 @@ class HostController < ApplicationController
         @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") + " on this Host"
       end
 
+    when "cloud_tenants"
+      drop_breadcrumb(:name => _("%s (All cloud tenants present on this host)") % @host.name,
+                      :url => "/host/show/#{@host.id}?display=cloud_tenants")
+      @view, @pages = get_view(CloudTenant, :parent => @host) # Get the records (into a view) and the paginator
+      @showtype = "cloud_tenants"
+
     when "resource_pools"
       drop_breadcrumb( {:name=>@host.name+" (All Resource Pools)", :url=>"/host/show/#{@host.id}?display=resource_pools"} )
       @view, @pages = get_view(ResourcePool, :parent=>@host)  # Get the records (into a view) and the paginator
