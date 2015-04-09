@@ -9,7 +9,8 @@ module EmsContainerHelper::TextualSummary
   end
 
   def textual_group_relationships
-    # items = %w()
+    items = %w(container_nodes container_services container_groups)
+    items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
   def textual_group_status
@@ -168,6 +169,39 @@ module EmsContainerHelper::TextualSummary
                  {:value => @ems.last_refresh_error.try(:truncate, 120)}],
       :title => @ems.last_refresh_error
     }
+  end
+
+  def textual_container_nodes
+    count_of_nodes = @ems.number_of(:container_nodes)
+    label = "Container Nodes"
+    h     = {:label => label, :image => "container_node", :value => count_of_nodes}
+    if count_of_nodes > 0 && role_allows(:feature => "container_node_show_list")
+      h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'container_nodes')
+      h[:title] = "Show all #{label}"
+    end
+    h
+  end
+
+  def textual_container_services
+    count_of_services = @ems.number_of(:container_services)
+    label = "Container Services"
+    h     = {:label => label, :image => "container_service", :value => count_of_services}
+    if count_of_services > 0 && role_allows(:feature => "container_service_show_list")
+      h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'container_services')
+      h[:title] = "Show all #{label}"
+    end
+    h
+  end
+
+  def textual_container_groups
+    count_of_groups = @ems.number_of(:container_groups)
+    label = "Container Groups"
+    h     = {:label => label, :image => "container_group", :value => count_of_groups}
+    if count_of_groups > 0 && role_allows(:feature => "container_group_show_list")
+      h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'container_groups')
+      h[:title] = "Show all #{label}"
+    end
+    h
   end
 
   def textual_zone
