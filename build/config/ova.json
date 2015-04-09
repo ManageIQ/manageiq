@@ -1,1 +1,1 @@
-{"ovf_cpu_count": "4", "ovf_memory_mb": "6144", "rhevm_description": "ManageIQ", "rhevm_default_display_type": "1", "rhevm_os_descriptor": "RHEL6",  "vsphere_product_name": "ManageIQ", "vsphere_product_vendor_name": "ManageIQ", "vsphere_product_version": "botvinnik-1-rc1"}
+{"ovf_cpu_count": "4", "ovf_memory_mb": "6144", "rhevm_description": "ManageIQ", "rhevm_default_display_type": "1", "rhevm_os_descriptor": "RHEL6",  "vsphere_product_name": "ManageIQ", "vsphere_product_vendor_name": "ManageIQ", "vsphere_product_version": "botvinnik-1-rc2"}
