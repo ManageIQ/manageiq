@@ -19,12 +19,22 @@ module EmsRefresh
       #   :locations
       #   :organizations
       def provisioning_inv_to_hashes(inv)
-        media = media_inv_to_hashes(inv[:media])
-        ptables = ptables_inv_to_hashes(inv[:ptables])
-        # pull out ids for operating system flavors cross link to the customization scripts
+        media            = media_inv_to_hashes(inv[:media])
+        ptables          = ptables_inv_to_hashes(inv[:ptables])
+        architectures    = architectures_inv_to_hashes(inv[:architectures])
+        compute_profiles = compute_profiles_inv_to_hashes(inv[:compute_profiles])
+        domains          = domains_inv_to_hashes(inv[:domains])
+        environments     = environments_inv_to_hashes(inv[:environments])
+        realms           = realms_inv_to_hashes(inv[:realms])
+
         indexes = {
-          :media   => add_ids(media),
-          :ptables => add_ids(ptables),
+          :media            => add_ids(media),
+          :ptables          => add_ids(ptables),
+          :architectures    => add_ids(architectures),
+          :compute_profiles => add_ids(compute_profiles),
+          :domains          => add_ids(domains),
+          :environments     => add_ids(environments),
+          :realms           => add_ids(realms),
         }
 
         {
@@ -32,6 +42,7 @@ module EmsRefresh
           :operating_system_flavors    => operating_system_flavors_inv_to_hashes(inv[:operating_systems], indexes),
           :configuration_locations     => location_inv_to_hashes(inv[:locations]),
           :configuration_organizations => organization_inv_to_hashes(inv[:organizations]),
+          :configuration_tags          => architectures + compute_profiles + domains + environments + realms,
         }
       end
 
@@ -42,11 +53,16 @@ module EmsRefresh
       #   see indexes variable
       def configuration_inv_to_hashes(inv)
         indexes = {
-          :flavors       => inv[:operating_system_flavors],
-          :media         => inv[:media],
-          :ptables       => inv[:ptables],
-          :locations     => inv[:locations],
-          :organizations => inv[:organizations],
+          :flavors          => inv[:operating_system_flavors],
+          :media            => inv[:media],
+          :ptables          => inv[:ptables],
+          :locations        => inv[:locations],
+          :organizations    => inv[:organizations],
+          :architectures    => inv[:architectures],
+          :compute_profiles => inv[:compute_profiles],
+          :domains          => inv[:domains],
+          :environments     => inv[:environments],
+          :realms           => inv[:realms],
         }
 
         {
@@ -72,6 +88,26 @@ module EmsRefresh
         backfill_parent_ref(basic_hash(organizations || tax_refs, "ConfigurationOrganization", "title"))
       end
 
+      def architectures_inv_to_hashes(architectures)
+        basic_hash(architectures, "ConfigurationArchitecture")
+      end
+
+      def compute_profiles_inv_to_hashes(compute_profiles)
+        basic_hash(compute_profiles, "ConfigurationComputeProfile")
+      end
+
+      def domains_inv_to_hashes(domains)
+        basic_hash(domains, "ConfigurationDomain")
+      end
+
+      def environments_inv_to_hashes(environments)
+        basic_hash(environments, "ConfigurationEnvironment")
+      end
+
+      def realms_inv_to_hashes(realms)
+        basic_hash(realms, "ConfigurationRealm")
+      end
+
       def operating_system_flavors_inv_to_hashes(flavors_inv, indexes)
         flavors_inv.collect do |os|
           {
@@ -92,6 +128,13 @@ module EmsRefresh
             :parent_ref                     => (profile["ancestry"] || "").split("/").last.presence,
             :name                           => profile["name"],
             :description                    => profile["title"],
+            :configuration_tag_ids          => [
+              id_lookup(indexes[:architectures], profile["architecture_id"]),
+              id_lookup(indexes[:compute_profiles], profile["compute_profile_id"]),
+              id_lookup(indexes[:domains], profile["domain_id"]),
+              id_lookup(indexes[:environments], profile["environment_id"]),
+              id_lookup(indexes[:realms], profile["realm_id"]),
+            ].compact,
             :operating_system_flavor_id     => id_lookup(indexes[:flavors], profile["operatingsystem_id"]),
             :customization_script_medium_id => id_lookup(indexes[:media], profile["medium_id"]),
             :customization_script_ptable_id => id_lookup(indexes[:ptables], profile["ptable_id"]),
@@ -113,6 +156,12 @@ module EmsRefresh
             :operating_system_flavor_id     => id_lookup(indexes[:flavors], cs["operatingsystem_id"]),
             :customization_script_medium_id => id_lookup(indexes[:media], cs["medium_id"]),
             :customization_script_ptable_id => id_lookup(indexes[:ptables], cs["ptable_id"]),
+            :configuration_tag_ids          => [
+              id_lookup(indexes[:architectures], cs["architecture_id"]),
+              id_lookup(indexes[:compute_profiles], cs["compute_profile_id"]),
+              id_lookup(indexes[:domains], cs["domain_id"]),
+              id_lookup(indexes[:environments], cs["environment_id"]),
+              id_lookup(indexes[:realms], cs["realm_id"])].compact,
             :last_checkin                   => cs["last_compile"],
             :build_state                    => cs["build"] ? "pending" : nil,
             :ipaddress                      => cs["ip"],

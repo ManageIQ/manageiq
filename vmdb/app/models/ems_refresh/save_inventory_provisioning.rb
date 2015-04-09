@@ -12,7 +12,8 @@ module EmsRefresh
         :customization_scripts,
         :operating_system_flavors,
         :configuration_locations,
-        :configuration_organizations
+        :configuration_organizations,
+        :configuration_tags,
       ]
       save_child_inventory(manager, hashes, child_keys, target)
       manager.save
@@ -44,6 +45,11 @@ module EmsRefresh
       delete_missing_records = target.nil? || manager == target
       save_inventory_assoc(:configuration_organizations, manager, hashes, delete_missing_records, [:manager_ref])
       link_children_references(manager.configuration_organizations)
+    end
+
+    def save_configuration_tags_inventory(manager, hashes, target)
+      delete_missing_records = target.nil? || manager == target
+      save_inventory_assoc(:configuration_tags, manager, hashes, delete_missing_records, [:type, :manager_ref])
     end
   end
 end

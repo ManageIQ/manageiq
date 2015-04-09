@@ -28,6 +28,12 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
   let(:default_location)      { provisioning_manager.configuration_locations.first }
   let(:default_organization)  { provisioning_manager.configuration_organizations.first }
 
+  let(:architectures)         { provisioning_manager.configuration_architectures }
+  let(:compute_profiles)      { provisioning_manager.configuration_compute_profiles }
+  let(:domains)               { provisioning_manager.configuration_domains }
+  let(:environments)          { provisioning_manager.configuration_environments }
+  let(:realms)                { provisioning_manager.configuration_realms }
+
   it "will perform a full refresh on api v2" do
     # Stub the queueing of the refresh so that when the manager
     #  queues up an alternate refresh we will execute it immediately.
@@ -46,6 +52,7 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
     assert_media
     assert_osf
     assert_loc_org
+    assert_configuration_tags
 
     assert_configuration_table_counts
     assert_configuration_profile_parent
@@ -100,6 +107,14 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
   def assert_loc_org
     expect(provisioning_manager.configuration_locations.count).to     eq(1)
     expect(provisioning_manager.configuration_organizations.count).to eq(1)
+  end
+
+  def assert_configuration_tags
+    expect(architectures.count).to eq(2)
+    expect(compute_profiles.count).to eq(3)
+    expect(domains.count).to eq(1)
+    expect(environments.count).to eq(1)
+    expect(realms.count).to eq(0)
   end
 
   def assert_configuration_table_counts
