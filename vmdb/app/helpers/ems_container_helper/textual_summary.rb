@@ -93,4 +93,3 @@ module EmsContainerHelper::TextualSummary
     h
   end
 end
-
