@@ -431,7 +431,7 @@ describe MiqTaskController do
                 "updated_on>=? AND "\
                 "updated_on<=? AND "\
                 "state=?"
-        expected = [ query, "admin", "Ok", "Error", "Warn", "Finished", "Queued"]
+        expected = [query, "admin", "Ok", "Error", "Warn", "Finished", "Queued"]
         expected += get_time_period(@opts[:time_period]) << "Initialized"
         subject.should == expected
       end
@@ -673,10 +673,10 @@ describe MiqTaskController do
                  :state_choice => "all",
                  :user_choice  => "all",
                  :time_period  => 0,
-                 :states       =>  [%w(Initialized Initialized),
-                                    %w(Queued Queued),
-                                    %w(Active Active),
-                                    %w(Finished Finished)]
+                 :states       => [%w(Initialized Initialized),
+                                   %w(Queued Queued),
+                                   %w(Active Active),
+                                   %w(Finished Finished)]
 
         }
       end

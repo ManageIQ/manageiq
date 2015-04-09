@@ -423,8 +423,7 @@ class MiqTaskController < ApplicationController
   def build_query_for_status_none_selected
     return ["(status!=? AND status!=? AND status!=? AND state!=? AND state!=?)",
             %w(ok error warn finished waiting_to_start)] if vm_analysis_task?
-    ["(status!=? AND status!=? AND status!=? AND state!=? AND state!=?)",
-      %w(Ok Error Warn Finished Queued)]
+    ["(status!=? AND status!=? AND status!=? AND state!=? AND state!=?)", %w(Ok Error Warn Finished Queued)]
   end
 
   def build_query_for_time_period(opts)
