@@ -28,7 +28,7 @@ class ConfigurationController < ApplicationController
     end
     @tabform = params[:load_edit_err] ? @tabform : @config_tab + "_#{active_tab}"
     case @config_tab
-    when "operations", "ui", "filters", "smartproxies"
+    when "operations", "ui", "filters"
       if @tabform == "operations_1" || @tabform == "operations_2"
         init_server_options
         @server_options[:server_id] = MiqServer.my_server.id

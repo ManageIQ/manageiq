@@ -3104,11 +3104,6 @@ describe ApplicationHelper do
       subject.should == title
     end
 
-    it "when layout = 'miq_proxy'" do
-      @layout = "miq_proxy"
-      subject.should == title + ": SmartProxies"
-    end
-
     it "when layout = 'miq_server'" do
       @layout = "miq_server"
       subject.should == title + ": Servers"
