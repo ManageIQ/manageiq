@@ -1499,6 +1499,8 @@ class Host < ActiveRecord::Base
     begin
       self.ssh_permit_root_login = nil
       permit_list = ssu.shell_exec("grep PermitRootLogin /etc/ssh/sshd_config")
+      # Setting default value to yes, which is default according to man sshd_config, if ssh returned something
+      self.ssh_permit_root_login = 'yes' if permit_list
       permit_list.each_line do |line|
         la = line.split(' ')
         if la.length == 2

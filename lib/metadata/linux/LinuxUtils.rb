@@ -27,11 +27,16 @@ module MiqLinux
     end
 
     def self.permissions_to_octal(perms)
-      if perms.length == 10
+      if perms.length == 9
+        ftype = nil
+      elsif perms.length == 10
         ftype = perms[0, 1]
         perms = perms[1..-1]
-      elsif perms.length == 9
-        ftype = nil
+      elsif perms.length == 11
+        # TODO when se-linux is present, the format is like this '-rw-rw-r--.', . means an SELinux ACL. (+ means a
+        # general ACL.). I need to figure out where to store this fact, ignoring it for now
+        ftype = perms[0, 1]
+        perms = perms[1..-2]
       else
         raise "Invalid perms length"
       end
@@ -85,7 +90,7 @@ module MiqLinux
       ret = []
       return ret if lines.nil? || lines.empty?
 
-      lines.each do |line|
+      lines.each_line do |line|
         line = line.chomp
         parts = line.split(' ')
         next unless parts.length >= 8
