@@ -27,21 +27,9 @@ module ContainerServiceHelper::TextualSummary
   def textual_port
     {:label => "Port", :value => @record.port}
   end
-  
-  def textual_ems
-    ems = @record.ext_management_system
-    return nil if ems.nil?
-    label = ui_lookup(:table => "ems_container")
-    h = {:label => label, :image => "vendor-#{ems.image_name}", :value => ems.name}
-    if role_allows(:feature => "ems_container_show")
-      h[:title] = "Show parent #{label} '#{ems.name}'"
-      h[:link]  = url_for(:controller => 'ems_container', :action => 'show', :id => ems)
-    end
-    h
-  end
 
   def textual_creation_timestamp
-    {:label => "Creation Timestamp", :value => @record.creation_timestamp}
+    {:label => "Creation Timestamp", :value => format_timezone(@record.creation_timestamp)}
   end
 
   def textual_resource_vers
@@ -62,5 +50,17 @@ module ContainerServiceHelper::TextualSummary
 
   def textual_container_port
     {:label => "Container Port", :value => @record.container_port}
+  end
+
+  def textual_ems
+    ems = @record.ext_management_system
+    return nil if ems.nil?
+    label = ui_lookup(:table => "ems_container")
+    h = {:label => label, :image => "vendor-#{ems.image_name}", :value => ems.name}
+    if role_allows(:feature => "ems_container_show")
+      h[:title] = "Show parent #{label} '#{ems.name}'"
+      h[:link]  = url_for(:controller => 'ems_container', :action => 'show', :id => ems)
+    end
+    h
   end
 end
