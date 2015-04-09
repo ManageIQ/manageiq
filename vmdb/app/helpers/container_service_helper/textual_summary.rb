@@ -4,7 +4,16 @@ module ContainerServiceHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(namespace name port creation_timestamp resource_vers session_affinity portal_ip protocol container_port)
+    items = %w(
+      namespace
+      name
+      port
+      creation_timestamp
+      resource_version
+      session_affinity
+      portal_ip
+      protocol
+      container_port)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
@@ -32,7 +41,7 @@ module ContainerServiceHelper::TextualSummary
     {:label => "Creation Timestamp", :value => format_timezone(@record.creation_timestamp)}
   end
 
-  def textual_resource_vers
+  def textual_resource_version
     {:label => "Resource Version", :value => @record.resource_version}
   end
 
