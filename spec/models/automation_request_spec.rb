@@ -134,7 +134,7 @@ describe AutomationRequest do
       root = {'ae_result' => 'ok'}
       ws = double('ws')
       ws.stub(:root => root)
-      AutomationRequest.any_instance.stub(:call_automate_event).and_return(ws)
+      AutomationRequest.any_instance.stub(:call_automate_event_sync).and_return(ws)
 
       @ar.create_request_tasks
       @ar.reload
