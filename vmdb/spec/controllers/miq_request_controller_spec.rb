@@ -101,4 +101,26 @@ describe MiqRequestController do
       controller.send(:prov_condition, {})
     end
   end
+
+  context "#button" do
+    before(:each) do
+      set_user_privileges
+      FactoryGirl.create(:vmdb_database)
+      EvmSpecHelper.create_guid_miq_server_zone
+      @miq_request = MiqProvisionConfiguredSystemRequest.create(:description    => "Foreman provision",
+                                                                :approval_state => "pending_approval",
+                                                                :userid         => User.current_user.userid)
+    end
+    it "when edit request button is pressed" do
+      post :button, :pressed => "miq_request_edit", :id => @miq_request.id, :format => :js
+      expect(response.status).to eq(200)
+      expect(response.body).to_not be_empty
+    end
+
+    it "when copy request button is pressed" do
+      post :button, :pressed => "miq_request_copy", :id => @miq_request.id, :format => :js
+      expect(response.status).to eq(200)
+      expect(response.body).to_not be_empty
+    end
+  end
 end
