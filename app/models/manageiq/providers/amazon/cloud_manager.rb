@@ -154,21 +154,6 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     _log.error "vm=[#{vm.name}], error: #{err}"
   end
 
-  def stack_create(stack_name, template, options = {})
-    cloud_formation.stacks.create(stack_name, template.content, options).stack_id
-  rescue => err
-    _log.error "stack=[#{stack_name}], error: #{err}"
-    raise MiqException::MiqOrchestrationProvisionError, err.to_s, err.backtrace
-  end
-
-  def stack_status(stack_name, _stack_id, _options = {})
-    stack = cloud_formation.stacks[stack_name]
-    return stack.status, stack.status_reason if stack
-  rescue => err
-    _log.error "stack=[#{stack_name}], error: #{err}"
-    raise MiqException::MiqOrchestrationStatusError, err.to_s, err.backtrace
-  end
-
   def orchestration_template_validate(template)
     cloud_formation.validate_template(template.content)[:message]
   rescue => err

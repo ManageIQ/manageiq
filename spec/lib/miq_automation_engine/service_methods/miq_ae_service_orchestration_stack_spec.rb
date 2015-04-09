@@ -18,5 +18,20 @@ module MiqAeServiceOrchestrationStackSpec
         expect { service_stack.add_to_service('wrong type') }.to raise_error
       end
     end
+
+    context "normalized_live_status" do
+      it "gets the live status of the stack and normalizes the status" do
+        status = ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack::Status.new('CREATING', nil)
+        OrchestrationStack.any_instance.stub(:raw_status) { status }
+
+        service_stack.normalized_live_status.should == ['transient', "CREATING"]
+      end
+
+      it "shows the status as not_exist for non-existing stacks" do
+        OrchestrationStack.any_instance.stub(:raw_status) { raise MiqException::MiqOrchestrationStackNotExistError, 'test failure' }
+
+        service_stack.normalized_live_status.should == ['not_exist', 'test failure']
+      end
+    end
   end
 end

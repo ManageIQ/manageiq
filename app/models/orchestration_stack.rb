@@ -41,34 +41,45 @@ class OrchestrationStack < ActiveRecord::Base
     cloud_networks.size
   end
 
-  # @param options [Hash] what to update for the stack. Option keys and values are:
-  #   :template (String, URI, S3::S3Object, Object) - A new stack template.
-  #     This may be provided in a number of formats including:
-  #       a String, containing the template in CFN or HOT format.
-  #       a URL String pointing to the document in S3.
-  #       a URI object pointing to the document in S3.
-  #       an S3::S3Object which contains the template.
-  #       an Object which responds to #to_json and returns the template.
-  #   :parameters (Hash) - A hash that specifies the input parameters of the new stack.
-  def raw_update_stack(_options)
+  def self.create_stack(orchestration_manager, stack_name, template, options = {})
+    klass = orchestration_manager.class::OrchestrationStack
+    ems_ref = klass.raw_create_stack(orchestration_manager, stack_name, template, options)
+
+    klass.create(:name                   => stack_name,
+                 :ems_ref                => ems_ref,
+                 :status                 => 'CREATE_IN_PROGRESS',
+                 :ext_management_system  => orchestration_manager,
+                 :orchestration_template => template)
+  end
+
+  def self.raw_create_stack(_orchestration_manager, _stack_name, _template, _options = {})
+    raise NotImplementedError, "raw_create_stack must be implemented in a subclass"
+  end
+
+  def raw_update_stack(_options = {})
     raise NotImplementedError, "raw_update_stack must be implemented in a subclass"
+  end
+
+  def update_stack(options = {})
+    raw_update_stack(options)
   end
 
   def raw_delete_stack
     raise NotImplementedError, "raw_delete_stack must be implemented in a subclass"
   end
 
+  def delete_stack
+    raw_delete_stack
+  end
+
   def raw_status
-    options = {}
-    options.merge!(:tenant_name => cloud_tenant.name) if cloud_tenant
-    ext_management_system.stack_status(name, ems_ref, options)
+    raise NotImplementedError, "raw_status must be implemented in a subclass"
   end
 
   def raw_exists?
-    status, _reason = raw_status
-    status.nil? || status.downcase == 'delete_complete' ? false : true
-  rescue => err
-    return false if err.to_s =~ /[S|s]tack.+does not exist/
-    raise
+    rstatus = raw_status
+    rstatus && !rstatus.deleted?
+  rescue MiqException::MiqOrchestrationStackNotExistError
+    false
   end
 end
