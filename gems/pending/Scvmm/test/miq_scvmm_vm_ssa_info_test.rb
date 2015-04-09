@@ -17,7 +17,6 @@ $log = Log4r::Logger.new 'toplog'
 Log4r::StderrOutputter.new('err_console', :level => Log4r::DEBUG, :formatter => ConsoleFormatter)
 $log.add 'err_console'
 
-
 HOST = raise "Please define SERVERNAME"
 PORT = raise "Please define PORT"
 USER = raise "Please define USER"

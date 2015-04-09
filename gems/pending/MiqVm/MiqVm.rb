@@ -93,6 +93,7 @@ class MiqVm
           $log.debug "MiqVm::initialize: accessing VM through SCVMM server" if $log.debug?
           @scvmm_vm = @scvmm.get_vm(vmCfg)
           $log.debug "MiqVm::initialize: setting @ost.miq_scvmm_vm = #{@scvmm_vm.class}" if $log.debug?
+          @ost.miq_scvmm_vm = @scvmm_vm
           @vmConfig = VmConfig.new(@scvmm_vm.getCfg(@ost.snapId))
         else
           @vdlConnection = @ost.miqVim.vdlConnection unless @vdlConnection

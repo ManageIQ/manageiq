@@ -1,4 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}/../util")
+$LOAD_PATH.push("#{File.dirname(__FILE__)}/../util")
 
 require 'miq_winrm'
 require 'miq_scvmm_parse_powershell'
