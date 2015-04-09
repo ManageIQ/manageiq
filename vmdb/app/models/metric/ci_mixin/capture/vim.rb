@@ -9,7 +9,7 @@ module Metric::CiMixin::Capture::Vim
     raise "#{@perf_resource} is not connected to an EMS" if ems.nil?
 
     @perf_intervals = {}
-    @perf_ems       = "EMS: [#{ems.ipaddress}]"
+    @perf_ems       = "EMS: [#{ems.hostname}]"
 
     log_header = "MIQ(#{self.class.name}.perf_init) #{@perf_resource}"
     begin
