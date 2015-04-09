@@ -165,11 +165,7 @@ class OpsController < ApplicationController
         %w(settings_import settings_import_tags).include?(@sb[:active_tab]) # show apply button enabled if this is set
     end
     # setting active record object here again, since they are no longer there due to redirect
-    if params[:cls_id]
-      if params[:cls_id].split('_')[0] == "lg"
-        @ldap_group = @edit[:ldap_group]
-      end
-    end
+    @ldap_group = @edit[:ldap_group] if params[:cls_id] && params[:cls_id].split('_')[0] == "lg"
     @temp[:x_edit_buttons_locals] = set_form_locals if @in_a_form
     @collapse_c_cell = @in_a_form || @pages ? false : true
     @sb[:center_tb_filename] = center_toolbar_filename

@@ -1,5 +1,4 @@
 class MiqTaskController < ApplicationController
-
   before_filter :check_privileges
   before_filter :get_session_data
   after_filter :cleanup_action
@@ -9,8 +8,10 @@ class MiqTaskController < ApplicationController
     @tabform = nil
     @tabform ||= "tasks_1" if role_allows(:feature => "job_my_smartproxy")
     @tabform ||= "tasks_2" if role_allows(:feature => "miq_task_my_ui")
-    @tabform ||= "tasks_3" if role_allows(:feature => "job_all_smartproxy") && role_allows(:feature => "job_all_smartproxy")
-    @tabform ||= "tasks_4" if role_allows(:feature => "miq_task_all_ui") && role_allows(:feature => "miq_task_all_ui")
+    @tabform ||= "tasks_3" if role_allows(:feature => "job_all_smartproxy") &&
+                              role_allows(:feature => "job_all_smartproxy")
+    @tabform ||= "tasks_4" if role_allows(:feature => "miq_task_all_ui") &&
+                              role_allows(:feature => "miq_task_all_ui")
     jobs
     render :action => "jobs"
   end
@@ -19,31 +20,31 @@ class MiqTaskController < ApplicationController
   def change_tab
     @tabform = "tasks_#{params[:tab]}"
     jobs
-    render :action=>"jobs"
+    render :action => "jobs"
   end
 
   def build_jobs_tab
     @pp_choices = PPCHOICES2  # Get special pp choices for jobs/tasks lists
     @settings[:perpage][:job_task] ||= 50       # Default to 50 per page until changed
     @tasks_options = HashWithIndifferentAccess.new if @tasks_options.blank?
-    @tasks_options[:zones] = Zone.all.collect{|z| z.name unless z.miq_servers.blank?}.compact
+    @tasks_options[:zones] = Zone.all.collect { |z| z.name unless z.miq_servers.blank? }.compact
     tasks_set_default_options if @tasks_options[@tabform].blank?
 
-    if role_allows(:feature=>"job_my_smartproxy")
-      @tabs ||= [ ["1", ""] ]
-      @tabs.push( ["1", "My VM Analysis Tasks"] )
+    if role_allows(:feature => "job_my_smartproxy")
+      @tabs ||= [["1", ""]]
+      @tabs.push(["1", "My VM Analysis Tasks"])
     end
-    if role_allows(:feature=>"miq_task_my_ui")
-      @tabs ||= [ ["2", ""] ]
-      @tabs.push( ["2", "My Other UI Tasks"] )
+    if role_allows(:feature => "miq_task_my_ui")
+      @tabs ||= [["2", ""]]
+      @tabs.push(["2", "My Other UI Tasks"])
     end
     if role_allows(:feature => "job_all_smartproxy") && role_allows(:feature => "job_all_smartproxy")
-      @tabs ||= [ ["3", ""] ]
-      @tabs.push( ["3", "All VM Analysis Tasks"] )
+      @tabs ||= [["3", ""]]
+      @tabs.push(["3", "All VM Analysis Tasks"])
     end
     if role_allows(:feature => "miq_task_all_ui") && role_allows(:feature => "miq_task_all_ui")
-      @tabs ||= [ ["4", ""] ]
-      @tabs.push( ["4", "All Other Tasks"] )
+      @tabs ||= [["4", ""]]
+      @tabs.push(["4", "All Other Tasks"])
     end
     case @tabform
     when "tasks_1"
@@ -64,8 +65,8 @@ class MiqTaskController < ApplicationController
     @breadcrumbs = []
     @lastaction = "jobs"
 
-    @edit = Hash.new
-    @edit[:opts] = Hash.new
+    @edit = {}
+    @edit[:opts] = {}
     @edit[:opts] = copy_hash(@tasks_options[@tabform])   # Backup current settings
 
     if params[:action] != "button" && (params[:ppsetting] || params[:searchtag] ||
@@ -85,20 +86,20 @@ class MiqTaskController < ApplicationController
       @layout = "my_tasks"
       @lastaction = "jobs"
       @view, @pages = get_view(Job, :conditions => conditions)  # Get the records (into a view) and the paginator
-      drop_breadcrumb( {:name => "My VM Analysis Tasks", :url => "/miq_task/index?jobs_tab=tasks"})
+      drop_breadcrumb(:name => "My VM Analysis Tasks", :url => "/miq_task/index?jobs_tab=tasks")
 
     elsif @tabform == "tasks_2"
-      #My UI Tasks
+      # My UI Tasks
       @layout = "my_ui_tasks"
       @lastaction = "ui_jobs"
       @view, @pages = get_view(MiqTask, :conditions => conditions)  # Get the records (into a view) and the paginator
-      drop_breadcrumb( {:name => "My Other UI Tasks", :url => "/miq_task/index?jobs_tab=tasks"})
+      drop_breadcrumb(:name => "My Other UI Tasks", :url => "/miq_task/index?jobs_tab=tasks")
 
     elsif @tabform == "tasks_3" || @tabform == "alltasks_1"
       @layout = "all_tasks"
       @lastaction = "all_jobs"
       @view, @pages = get_view(Job, :conditions => conditions)  # Get the records (into a view) and the paginator
-      drop_breadcrumb( {:name => "All VM Analysis Tasks", :url => "/miq_task/index?jobs_tab=alltasks"} )
+      drop_breadcrumb(:name => "All VM Analysis Tasks", :url => "/miq_task/index?jobs_tab=alltasks")
       @user_names = []
       job_recs = Job.all(:select => "userid", :group => "userid")
       job_recs.each do |j|
@@ -106,11 +107,11 @@ class MiqTaskController < ApplicationController
       end
 
     elsif @tabform == "tasks_4" || @tabform == "alltasks_2"
-      #All UI Tasks
+      # All UI Tasks
       @layout = "all_ui_tasks"
       @lastaction = "all_ui_jobs"
       @view, @pages = get_view(MiqTask, :conditions => conditions)  # Get the records (into a view) and the paginator
-      drop_breadcrumb( {:name => "All Other Tasks", :url => "/miq_task/index?jobs_tab=alltasks"} )
+      drop_breadcrumb(:name => "All Other Tasks", :url => "/miq_task/index?jobs_tab=alltasks")
       @user_names = []
       job_recs = MiqTask.all(:select => "userid", :group => "userid")
       job_recs.each do |j|
@@ -122,24 +123,23 @@ class MiqTaskController < ApplicationController
   # Cancel a single selected job
   def canceljobs
     assert_privileges("miq_task_canceljob")
-    job_id = Array.new
     job_id = find_checked_items
     if job_id.empty?
       add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "miq_task"),
                                                               :task  => "cancellation"}, :error)
     end
     case @layout
-      when "my_tasks", "all_tasks"
-        db_class = Job
-      when "my_ui_tasks","all_ui_tasks"
-        db_class = MiqTask
+    when "my_tasks", "all_tasks"
+      db_class = Job
+    when "my_ui_tasks", "all_ui_tasks"
+      db_class = MiqTask
     end
     job = db_class.find_by_id(job_id)
     if job["state"].downcase == "finished"
       add_flash(_("Finished Task cannot be cancelled"), :error)
     else
-      process_jobs(job_id, "cancel")  if ! job_id.empty?
-      add_flash(_("The selected Task was cancelled"), :error) if @flash_array == nil
+      process_jobs(job_id, "cancel")  unless job_id.empty?
+      add_flash(_("The selected Task was cancelled"), :error) if @flash_array.nil?
     end
     jobs
     @refresh_partial = "layouts/tasks"
@@ -148,24 +148,25 @@ class MiqTaskController < ApplicationController
   # Delete all selected or single displayed job(s)
   def deletejobs
     assert_privileges("miq_task_delete")
-    job_ids = Array.new
     job_ids = find_checked_items
     if job_ids.empty?
-      add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables=>"miq_task"),
+      add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "miq_task"),
                                                               :task  => "deletion"}, :error)
     else
       case @layout
-        when "my_tasks", "all_tasks"
-          db_class = Job
-        when "my_ui_tasks","all_ui_tasks"
-          db_class = MiqTask
+      when "my_tasks", "all_tasks"
+        db_class = Job
+      when "my_ui_tasks", "all_ui_tasks"
+        db_class = MiqTask
       end
       db_class.delete_by_id(job_ids)
-      AuditEvent.success(:userid => session[:userid],:event => "Delete selected tasks",
-          :message=>"Delete started for record ids: #{job_ids.inspect}",
-          :target_class=>db_class.base_class.name)
-      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task => "Delete",
-                                                                                    :count_model => pluralize(job_ids.length,ui_lookup(:tables => "miq_task"))}) if @flash_array == nil
+      AuditEvent.success(:userid       => session[:userid],
+                         :event        => "Delete selected tasks",
+                         :message      => "Delete started for record ids: #{job_ids.inspect}",
+                         :target_class => db_class.base_class.name)
+      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") %
+                  {:task        => "Delete",
+                   :count_model => pluralize(job_ids.length,ui_lookup(:tables => "miq_task"))}) if @flash_array.nil?
     end
     jobs
     @refresh_partial = "layouts/tasks"
@@ -174,7 +175,7 @@ class MiqTaskController < ApplicationController
   # Delete all finished job(s)
   def deletealljobs
     assert_privileges("miq_task_deleteall")
-    job_ids = Array.new
+    job_ids = []
     session[:view].table.data.each do |rec|
       job_ids.push(rec["id"])
     end
@@ -183,17 +184,19 @@ class MiqTaskController < ApplicationController
                                                               :task  => "deletion"}, :error)
     else
       case @layout
-        when "my_tasks", "all_tasks"
-          db_class = Job
-        when "my_ui_tasks","all_ui_tasks"
-          db_class = MiqTask
+      when "my_tasks", "all_tasks"
+        db_class = Job
+      when "my_ui_tasks", "all_ui_tasks"
+        db_class = MiqTask
       end
       db_class.delete_by_id(job_ids)
-      AuditEvent.success(:userid=>session[:userid],:event=>"Delete all finished tasks",
-          :message=>"Delete started for record ids: #{job_ids.inspect}",
-          :target_class=>db_class.base_class.name)
-      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task        => "Delete",
-                                                                                    :count_model => pluralize(job_ids.length,ui_lookup(:tables => "miq_task"))})  if @flash_array == nil
+      AuditEvent.success(:userid       => session[:userid],
+                         :event        => "Delete all finished tasks",
+                         :message      =>"Delete started for record ids: #{job_ids.inspect}",
+                         :target_class =>db_class.base_class.name)
+      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") %
+                  {:task        => "Delete",
+                   :count_model => pluralize(job_ids.length,ui_lookup(:tables => "miq_task"))})  if @flash_array.nil?
     end
     jobs
     @refresh_partial = "layouts/tasks"
@@ -204,39 +207,36 @@ class MiqTaskController < ApplicationController
     assert_privileges("miq_task_deleteolder")
     jobid = find_checked_items
     case @layout
-      when "my_tasks", "all_tasks"
-        db_class = Job
-      when "my_ui_tasks","all_ui_tasks"
-        db_class = MiqTask
+    when "my_tasks", "all_tasks"
+      db_class = Job
+    when "my_ui_tasks", "all_ui_tasks"
+      db_class = MiqTask
     end
     # fetching job record for the selected job
     job = db_class.find_by_id(jobid)
     if job
-      if @layout.starts_with?("my_")
-        uid = session[:userid]
-      else
-        uid = @tasks_options[@tabform][:user_choice].blank? ? nil : @tasks_options[@tabform][:user_choice]
-      end
       db_class.delete_older(job.updated_on, tasks_condition(@tasks_options[@tabform], false))
-      AuditEvent.success(:userid => session[:userid],:event => "Delete older tasks",
-          :message      => "Delete started for records older than #{job.updated_on}, conditions: #{@tasks_options[@tabform].inspect}",
-          :target_class => db_class.base_class.name)
-      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task        => "Delete all older Tasks",
-                                                                                    :count_model => pluralize(jobid.length,ui_lookup(:tables => "miq_task"))})
+      message = "Delete started for records older than #{job.updated_on}, conditions: #{@tasks_options[@tabform].inspect}"
+      AuditEvent.success(:userid       => session[:userid],
+                         :event        => "Delete older tasks",
+                         :message      => message,
+                         :target_class => db_class.base_class.name)
+      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") %
+                  {:task        => "Delete all older Tasks",
+                   :count_model => pluralize(jobid.length,ui_lookup(:tables => "miq_task"))})
     else
       add_flash(_("The selected job no longer exists, Delete all older Tasks was not completed"), :warning)
     end
-
     jobs
     @refresh_partial = "layouts/tasks"
   end
 
   def process_jobs(jobs, task)
     case @layout
-      when "my_tasks", "all_tasks"
-        db_class = Job
-      when "my_ui_tasks","all_ui_tasks"
-        db_class = MiqTask
+    when "my_tasks", "all_tasks"
+      db_class = Job
+    when "my_ui_tasks", "all_ui_tasks"
+      db_class = MiqTask
     end
     db_class.find_all_by_id(jobs, :order => "lower(name)").each do |job|
       id = job.id
@@ -276,7 +276,7 @@ class MiqTaskController < ApplicationController
     reloadjobs      if params[:pressed] == "miq_task_reload"
 
     render :update do |page|                    # Use RJS to update the display
-      if @refresh_partial != nil
+      unless @refresh_partial.nil?
         if @refresh_div == "flash_msg_div"
           page << "miqSetButtons(0,'center_tb');"                             # Reset the center toolbar
           page.replace(@refresh_div, :partial => @refresh_partial)
@@ -286,7 +286,6 @@ class MiqTaskController < ApplicationController
         end
       end
     end
-
   end
 
   # Gather any changed options
@@ -340,21 +339,18 @@ class MiqTaskController < ApplicationController
       :error        => true,
       :warn         => true,
       :running      => true,
-
-      :states       => ["tasks_1","tasks_3"].include?(@tabform) ? SP_STATES : UI_STATES,
+      :states       => %w(tasks_1 tasks_3).include?(@tabform) ? SP_STATES : UI_STATES,
       :state_choice => "all",
-
       :time_period  => 0,
     }
 
-    @tasks_options[@tabform][:zone]        = "<all>" if ["tasks_1","tasks_3"].include?(@tabform)
-    @tasks_options[@tabform][:user_choice] = "all"   if ["tasks_3","tasks_4"].include?(@tabform)
+    @tasks_options[@tabform][:zone]        = "<all>" if %w(tasks_1 tasks_3).include?(@tabform)
+    @tasks_options[@tabform][:user_choice] = "all"   if %w(tasks_1 tasks_4).include?(@tabform)
   end
 
   # Create a condition from the passed in options
   def tasks_condition(opts, use_times = true)
-    cond = [Array.new]
-
+    cond = [[]]
     cond = add_to_condition(cond, *build_query_for_userid(opts))
 
     if !opts[:ok] && !opts[:queued] && !opts[:error] && !opts[:warn] && !opts[:running]
@@ -373,7 +369,7 @@ class MiqTaskController < ApplicationController
     cond = add_to_condition(cond, *build_query_for_state(opts)) if opts[:state_choice] != "all"
 
     cond[0] = "#{cond[0].join(" AND ")}"
-    return cond.flatten
+    cond.flatten
   end
 
   def add_to_condition(cond, query, values)
@@ -383,20 +379,19 @@ class MiqTaskController < ApplicationController
   end
 
   def build_query_for_userid(opts)
-    return ["userid=?", session[:userid]] if ["tasks_1","tasks_2"].include?(@tabform)
+    return ["userid=?", session[:userid]] if %w(tasks_1 tasks_2).include?(@tabform)
     return ["userid=?", opts[:user_choice]] if opts[:user_choice] && opts[:user_choice] != "all"
     return nil,nil
   end
 
   def build_query_for_status(opts)
-    cond = [Array.new]
-
+    cond = [[]]
     [:queued, :ok, :error, :warn, :running].each do |st|
       cond = add_to_condition(cond, *send("build_query_for_" + st.to_s)) if opts[st]
     end
 
     cond[0] = "(#{cond[0].join(" OR ")})"
-    return cond
+    cond
   end
 
   def build_query_for_queued
@@ -417,19 +412,19 @@ class MiqTaskController < ApplicationController
 
   def build_query_for_status_completed(status)
     return ["(state=? AND status=?)", ["finished", status]] if vm_analysis_task?
-    return ["(state=? AND status=?)", ["Finished", status.capitalize]]
+    ["(state=? AND status=?)", ["Finished", status.capitalize]]
   end
 
   def build_query_for_running
     return ["(state!=? AND state!=? AND state!=?)", ["finished", "waiting_to_start", "queued"]] if vm_analysis_task?
-    return ["(state!=? AND state!=? AND state!=?)", ["Finished", "waiting_to_start", "Queued"]]
+    ["(state!=? AND state!=? AND state!=?)", ["Finished", "waiting_to_start", "Queued"]]
   end
 
   def build_query_for_status_none_selected
     return ["(status!=? AND status!=? AND status!=? AND state!=? AND state!=?)",
             ["ok", "error", "warn", "finished", "waiting_to_start"]] if vm_analysis_task?
-    return ["(status!=? AND status!=? AND status!=? AND state!=? AND state!=?)",
-            ["Ok", "Error", "Warn", "Finished", "Queued"]]
+    ["(status!=? AND status!=? AND status!=? AND state!=? AND state!=?)",
+      ["Ok", "Error", "Warn", "Finished", "Queued"]]
   end
 
   def build_query_for_time_period(opts)
@@ -446,7 +441,7 @@ class MiqTaskController < ApplicationController
   end
 
   def vm_analysis_task?
-    ["tasks_1","tasks_3"].include?(@tabform)
+    %w(tasks_1 tasks_3).include?(@tabform)
   end
 
   def reloadjobs
@@ -474,5 +469,4 @@ class MiqTaskController < ApplicationController
     session[:jobs_lastaction]     = @lastaction
     session[:tasks_options]       = @tasks_options unless @tasks_options.nil?
   end
-
 end

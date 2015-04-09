@@ -1942,7 +1942,7 @@ class ApplicationController < ActionController::Base
     @targets_hash             = attrs[:targets_hash] if attrs[:targets_hash]
 
     # Set up the grid variables for list view, with exception models below
-    if !["MiqTask", "Job", "MiqProvision", "MiqReportResult"].include?(view.db) &&
+    if !%w(Job MiqProvision MiqReportResult MiqTask).include?(view.db) &&
       !view.db.ends_with?("Build") && !@force_no_grid_xml && (@gtl_type == "list" || @force_grid_xml)
       @grid_xml = view_to_xml(view, 0, -1, :association => association)
     end
@@ -2094,10 +2094,10 @@ class ApplicationController < ActionController::Base
       page << "miqSetButtons(0,'center_tb');"                             # Reset the center toolbar
       page << "}";
       if ! (@layout == "dashboard" && ["show","change_tab","auth_error"].include?(@controller.action_name) ||
-        ["about", "all_tasks", "all_ui_tasks", "configuration", "diagnostics", "miq_ae_automate_button",
-          "miq_ae_customization", "miq_ae_export", "miq_ae_logs", "miq_ae_tools", "miq_policy", "miq_policy_export",
-          "miq_policy_logs", "miq_request_ae", "miq_request_configured_system", "miq_request_host", "miq_request_vm",
-          "my_tasks", "my_ui_tasks", "report", "rss", "server_build"].include?(@layout))
+        %w(about all_tasks all_ui_tasks configuration diagnostics miq_ae_automate_button
+           miq_ae_customization miq_ae_export miq_ae_logs miq_ae_tools miq_policy miq_policy_export
+           miq_policy_logs miq_request_ae miq_request_configured_system miq_request_host
+           miq_request_vm my_tasks my_ui_tasks report rss server_build).include?(@layout))
         page.replace(:listnav_div, :partial=>"layouts/listnav")               # Replace accordion, if list_nav_div is there
       end
       if @grid_xml                                  # Replacing a grid

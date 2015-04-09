@@ -365,7 +365,7 @@ module OpsController::Settings::Common
       replace_right_cell(@nodetype)
       return
     end
-    if !['settings_rhn_edit',"settings_workers","settings_database","settings_advanced"].include?(@sb[:active_tab]) &&
+    if !%w(settings_advanced settings_database settings_rhn_edit settings_workers).include?(@sb[:active_tab]) &&
         x_node.split("-").first != "z"
       @update.config.each_key do |category|
         @update.config[category] = @edit[:new][category].dup
@@ -705,8 +705,7 @@ module OpsController::Settings::Common
     end
 
     # This section scoops up the config second level keys changed in the UI
-
-    if !['settings_rhn_edit',"settings_database","settings_advanced"].include?(@sb[:active_tab])
+    unless %w(settings_advanced settings_database settings_rhn_edit).include?(@sb[:active_tab])
       @edit[:current].config.each_key do |category|
         @edit[:current].config[category].symbolize_keys.each_key do |key|
           if category == :smtp && key == :enable_starttls_auto  # Checkbox is handled differently

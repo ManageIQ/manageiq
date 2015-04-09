@@ -545,7 +545,7 @@ module ApplicationHelper
 
   def get_image(img, b_name)
     # to change summary screen button to green image
-    return "summary-green" if b_name == "show_summary" && ["scan_profile","miq_schedule","miq_task"].include?(@layout)
+    return "summary-green" if b_name == "show_summary" && %w(miq_schedule miq_task scan_profile).include?(@layout)
     img
   end
 
@@ -1791,13 +1791,12 @@ module ApplicationHelper
     if @show_taskbar.nil?
       @show_taskbar = false
       if ! (@layout == ""  &&
-      # if ! (@layout == "dashboard"  &&
-          ["show","change_tab","auth_error"].include?(controller.action_name) ||
-          ["about","rss","server_build","miq_policy","miq_ae_class",
-           "miq_capacity_utilization","miq_capacity_planning","miq_capacity_bottlenecks","miq_capacity_waste","chargeback",
-           "miq_ae_export","miq_ae_automate_button","miq_ae_tools","miq_policy_export","miq_policy_rsop","report",
-           "ops", "pxe", "exception"].include?(@layout) ||
-          (@layout == "configuration" && @tabform != "ui_4")) && !controller.action_name.end_with?("tagging_edit")
+        %w(auth_error change_tab show).include?(controller.action_name) ||
+        %w(about chargeback exception miq_ae_automate_button miq_ae_class miq_ae_export
+           miq_ae_tools miq_capacity_bottlenecks miq_capacity_planning miq_capacity_utilization
+           miq_capacity_waste miq_policy miq_policy_export miq_policy_rsop ops pxe report rss
+           server_build).include?(@layout) ||
+        (@layout == "configuration" && @tabform != "ui_4")) && !controller.action_name.end_with?("tagging_edit")
         unless @explorer
           @show_taskbar = true
         end
