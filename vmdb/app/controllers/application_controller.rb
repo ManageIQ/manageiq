@@ -1842,7 +1842,7 @@ class ApplicationController < ActionController::Base
   private :get_view_process_search_text
 
   def perpage_key(dbname)
-   %w(job miqtask).include?(dbname) ? :job_task : PERPAGE_TYPES[@gtl_type]
+    %w(job miqtask).include?(dbname) ? :job_task : PERPAGE_TYPES[@gtl_type]
   end
   private :perpage_key
 
