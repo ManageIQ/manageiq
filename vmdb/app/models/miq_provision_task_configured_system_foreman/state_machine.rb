@@ -61,8 +61,14 @@ module MiqProvisionTaskConfiguredSystemForeman::StateMachine
       requeue_phase
     else
       EmsRefresh.queue_refresh(source)
-      signal :mark_as_completed
+      signal :post_provision
     end
+  end
+
+  def post_provision
+    apply_tags(source)
+
+    signal :mark_as_completed
   end
 
   def mark_as_completed
