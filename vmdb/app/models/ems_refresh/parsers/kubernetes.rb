@@ -101,14 +101,15 @@ module EmsRefresh::Parsers
 
       new_result.merge!(
         :restart_policy => pod.spec.restartPolicy,
-        :dns_policy     => pod.spec.dnsPolicy
+        :dns_policy     => pod.spec.dnsPolicy,
+        :container_node => nil
       )
-      if pod.spec.respond_to?(:host)
+
+      unless pod.spec.host.nil?
         new_result[:container_node] = @data_index.fetch_path(
           :container_nodes, :by_name, pod.spec.host)
-      else
-        new_result[:container_node] = nil
       end
+
       # TODO, map volumes
       # TODO, podIP
       containers = pod.spec.containers
