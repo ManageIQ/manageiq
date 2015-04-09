@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe User do
+describe Authenticate do
   before do
     EvmSpecHelper.create_guid_miq_server_zone
     @auth_config = {
@@ -11,10 +11,11 @@ describe User do
         :user_type   => "userprincipalname",
       }
     }
+    @auth = Authenticate.new
   end
 
   context ".find_or_create_by_ldap_attr" do
-    let(:current_user) { described_class.find_or_create_by_ldap_attr(@user_type, @username) }
+    let(:current_user) { @auth.find_or_create_by_ldap_attr(@user_type, @username) }
 
     it "with invalid attribute" do
       @user_type = "invalid"
@@ -94,7 +95,7 @@ describe User do
       init_ldap_setup
       setup_to_get_fqdn
     end
-    subject { described_class.authenticate_ldap("username", @password) }
+    subject { @auth.authenticate_ldap("username", @password) }
 
     it "password is blank" do
       @password = ""
@@ -112,7 +113,7 @@ describe User do
     context "ldap binds" do
       it "get groups from ldap" do
         user = double("some user")
-        User.stub(:authorize_ldap_queue => user)
+        @auth.stub(:authorize_ldap_queue => user)
         expect(subject).to eq(user)
       end
 
@@ -167,7 +168,7 @@ describe User do
     @miq_ldap.stub(:get_user_object => "A Net::LDAP::Entry object")
     @miq_ldap.stub(:normalize => "some unique string")
     @miq_ldap.stub(:get_attr => "xx@xx.com")
-    User.stub(:getUserMembership => [group.description])
+    @auth.stub(:getUserMembership => [group.description])
   end
 
   def setup_to_get_fqdn

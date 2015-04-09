@@ -257,7 +257,7 @@ describe User do
         MiqLdap.stub(:new).and_return(@miq_ldap)
 
         AuditEvent.should_receive(:failure).once
-        User.authorize_ldap(@task.id, @fq_user).should be_nil
+        User.authenticator.authorize_ldap(@task.id, @fq_user).should be_nil
 
         @task.reload
         @task.state.should == "Finished"
@@ -270,10 +270,11 @@ describe User do
         @miq_ldap.stub(:get_attr => nil)
         @miq_ldap.stub(:normalize => "a-username")
         MiqLdap.stub(:new).and_return(@miq_ldap)
-        User.stub(:getUserMembership).and_return([])
+        authenticate = User.authenticator
+        authenticate.stub(:getUserMembership).and_return([])
 
         AuditEvent.should_receive(:failure).once
-        User.authorize_ldap(@task.id, @fq_user).should be_nil
+        authenticate.authorize_ldap(@task.id, @fq_user).should be_nil
 
         @task.reload
         @task.state.should == "Finished"
@@ -468,20 +469,20 @@ describe User do
     end
   end
 
-  context ".authenticate_with_http_basic" do
+  context "Authenticate#authenticate_with_http_basic" do
     let(:user) { FactoryGirl.create(:user, :password => "dummy") }
 
     it "should login with good username/password" do
-      User.authenticate_with_http_basic(user.userid, user.password).should eq([true, user.userid])
+      User.authenticator.authenticate_with_http_basic(user.userid, user.password).should eq([true, user.userid])
     end
 
     it "should fail with bad username" do
       bad_userid = "bad_userid"
-      User.authenticate_with_http_basic(bad_userid, user.password).should eq([false, bad_userid])
+      User.authenticator.authenticate_with_http_basic(bad_userid, user.password).should eq([false, bad_userid])
     end
 
     it "should fail with bad password" do
-      User.authenticate_with_http_basic(user.userid, "bad_pwd").should eq([false, user.userid])
+      User.authenticator.authenticate_with_http_basic(user.userid, "bad_pwd").should eq([false, user.userid])
     end
   end
 
