@@ -102,7 +102,8 @@ module EmsRefresh::Parsers
       new_result.merge!(
         :restart_policy => pod.spec.restartPolicy,
         :dns_policy     => pod.spec.dnsPolicy,
-        :container_node => nil
+        :container_node => nil,
+        :containers     => []
       )
 
       unless pod.spec.host.nil?
@@ -118,10 +119,9 @@ module EmsRefresh::Parsers
       end
 
       # container instances
-
-      unless pod.status.info.nil?
-        new_result[:containers] = pod.status.info.to_h.collect do |container_name, container|
-          parse_container(container, container_name, pod.metadata.uid)
+      unless pod.status.nil? || pod.status.containerStatuses.nil?
+        pod.status.containerStatuses.each do |cn|
+          new_result[:containers] << parse_container(cn, pod.metadata.uid)
         end
       end
 
@@ -195,10 +195,10 @@ module EmsRefresh::Parsers
       new_result
     end
 
-    def parse_container(container, container_name, pod_id)
+    def parse_container(container, pod_id)
       {
-        :ems_ref       => "#{pod_id}_#{container_name}_#{container["image"]}",
-        :name          => container_name,
+        :ems_ref       => "#{pod_id}_#{container["name"]}_#{container["image"]}",
+        :name          => container["name"],
         :image         => container["image"],
         :restart_count => container["restartCount"],
         :container_id  => container["containerID"]
