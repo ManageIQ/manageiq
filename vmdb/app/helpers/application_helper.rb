@@ -696,11 +696,26 @@ module ApplicationHelper
 
 
     # Hide configuration buttons for specific Container* entities
-    return true if ['container_node_edit', 'container_node_delete', 'container_node_new'].include?(id) && (@record.kind_of?(ContainerNode) || @record.nil?)
-    return true if ['container_service_edit', 'container_service_delete', 'container_service_new'].include?(id) && (@record.kind_of?(ContainerService) || @record.nil?)
-    return true if ['container_group_edit', 'container_group_delete', 'container_group_new'].include?(id) && (@record.kind_of?(ContainerGroup) || @record.nil?)
-    return true if ['container_edit', 'container_delete', 'container_new'].include?(id) && (@record.kind_of?(Container) || @record.nil?)
+    if %w[container_node_edit container_node_delete container_node_new].include?(id) &&
+        (@record.kind_of?(ContainerNode) || @record.nil?)
+      return true
+    end
 
+    if %w[container_service_edit container_service_delete container_service_new].include?(id) &&
+        (@record.kind_of?(ContainerService) || @record.nil?)
+      return true
+    end
+
+    if %w[container_group_edit container_group_delete container_group_new].include?(id) &&
+        (@record.kind_of?(ContainerGroup) || @record.nil?)
+      return true
+    end
+
+    if %w[container_edit container_delete container_new].include?(id) &&
+        (@record.kind_of?(Container) || @record.nil?)
+      return true
+    end
+    
     # hide timelines button for Amazon provider and instances
     # TODO: extend .is_available? support via refactoring task to cover this scenario
     return true if ['ems_cloud_timeline', 'instance_timeline'].include?(id) && (@record.kind_of?(EmsAmazon) || @record.kind_of?(VmAmazon))
