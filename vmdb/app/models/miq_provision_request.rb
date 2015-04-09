@@ -126,6 +126,10 @@ class MiqProvisionRequest < MiqRequest
   def vms
     self.miq_provisions.collect(&:vm).compact
   end
+
+  def org_controller
+    "vm"
+  end
 end
 
 # Preload any subclasses of this class, so that they will be part of the
