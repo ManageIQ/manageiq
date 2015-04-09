@@ -34,7 +34,6 @@ openstack-keystone:                     active
         host.system_services << FactoryGirl.create(:system_service)
         # create OpenStack related SystemService to test against
         host.system_services << FactoryGirl.create(:system_service, :name => 'openstack-nova-api')
-
         # create generic Filesystem
         host.filesystems << FactoryGirl.create(:filesystem)
         # create OpenStack related Filesystems to test against
@@ -50,6 +49,14 @@ openstack-keystone:                     active
         # create glance_registry and add it to Host object only
         glance_registry = FactoryGirl.create(:system_service, :name => 'openstack-glance-registry')
         host.system_services << glance_registry
+
+        # create glance_conf and add it both Host and HostServiceGroupOpenstack objects
+        glance_conf = FactoryGirl.create(:filesystem, :name => '/etc/glance.conf')
+        glance.filesystems << glance_conf
+        host.filesystems << glance_conf
+        # create glance_conf_2 and add it to Host object only
+        glance_conf_2 = FactoryGirl.create(:filesystem, :name => '/etc/glance/2.conf')
+        host.filesystems << glance_conf_2
 
         host.host_service_group_openstacks << glance
 
@@ -120,6 +127,24 @@ openstack-keystone:                     active
       it { should_not include(*unexpected) }
     end
 
+    describe "filesystems names" do
+      subject do
+        host.refresh_openstack_services(ssu)
+        host.filesystems.map(&:name)
+      end
+
+      let(:expected) do
+        [
+          '/etc/nova.conf',
+          '/etc/nova/api.conf',
+          '/etc/glance.conf',
+          '/etc/glance/2.conf',
+        ]
+      end
+
+      it { should include(*expected) }
+    end
+
     describe "existing HostServiceGroupOpenstack gets updated" do
       let(:glance_host_service_group) do
         host.refresh_openstack_services(ssu)
@@ -149,6 +174,29 @@ openstack-keystone:                     active
         it { should include(*expected) }
         it { should_not include(*unexpected) }
       end
+
+      describe "filesystem names" do
+        subject do
+          glance_host_service_group.filesystems.map(&:name)
+        end
+
+        let(:expected) do
+          [
+            '/etc/glance.conf',
+            '/etc/glance/2.conf',
+          ]
+        end
+
+        let(:unexpected) do
+          [
+            '/etc/nova.conf',
+            '/etc/nova/api.conf',
+          ]
+        end
+
+        it { should include(*expected) }
+        it { should_not include(*unexpected) }
+      end
     end
 
     it "creates association with existing SystemServices" do
@@ -156,6 +204,13 @@ openstack-keystone:                     active
       # we test if SystemServices with associated HostServiceGroupOpenstacks from current Host
       # are included among all SystemServices of that host
       host.system_services.should include(*(host.host_service_group_openstacks.flat_map(&:system_services)))
+    end
+
+    it "creates association with existing Filesystems" do
+      host.refresh_openstack_services(ssu)
+      # we test if Filesystems with associated HostServiceGroupOpenstacks from current Host
+      # are included among all Filesystems of that host
+      host.filesystems.should include(*(host.host_service_group_openstacks.flat_map(&:filesystems)))
     end
   end
 end

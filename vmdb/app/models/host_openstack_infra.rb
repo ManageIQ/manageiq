@@ -88,6 +88,15 @@ class HostOpenstackInfra < Host
         # associate SystemService record with OpenstackHostServiceGroup
         host_service_group_openstack.system_services = sys_services
 
+        # find Filesystem records by host
+        # filter Filesystem records by names
+        # we assume that /etc/<service name>* is good enough pattern
+        dir_name = "/etc/#{host_service_group_openstack.name.downcase.gsub(/\sservice.*/, '')}"
+
+        matcher = Filesystem.arel_table[:name].matches("#{dir_name}%")
+        files = filesystems.where(matcher)
+        host_service_group_openstack.filesystems = files
+
         # save all changes
         host_service_group_openstack.save
       end
