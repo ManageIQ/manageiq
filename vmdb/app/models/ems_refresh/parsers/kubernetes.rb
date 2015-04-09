@@ -98,15 +98,9 @@ module EmsRefresh::Parsers
     def parse_pod(pod)
       # pod in kubernetes is container group in manageiq
       new_result = parse_base_item(pod)
-      # TODO: remove hash support when old versions are not in use anymore
-      #       https://github.com/GoogleCloudPlatform/kubernetes/issues/3607
-      if pod.spec.restartPolicy.kind_of?(Hash)
-        pod_restart_policy = pod.spec.restartPolicy.keys.first.to_s
-      else
-        pod_restart_policy = pod.spec.restartPolicy
-      end
+
       new_result.merge!(
-        :restart_policy => pod_restart_policy,
+        :restart_policy => pod.spec.restartPolicy,
         :dns_policy     => pod.spec.dnsPolicy
       )
       if pod.spec.respond_to?(:host)
