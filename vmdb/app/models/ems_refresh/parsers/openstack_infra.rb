@@ -35,6 +35,8 @@ module EmsRefresh
         load_hosts
         get_images
         load_orchestration_stacks
+        # Cluster processing needs to run after host and stacks processing
+        get_clusters
 
         $fog_log.info("#{log_header}...Complete")
         @data
@@ -210,6 +212,70 @@ module EmsRefresh
         when "power on"               then "connected"
         when "power off", "rebooting" then "disconnected"
         else                               "disconnected"
+        end
+      end
+
+      def get_clusters
+        # This counts with hosts being already collected
+        hosts = @data.fetch_path(:hosts)
+        clusters = infer_clusters_from_hosts(hosts)
+
+        process_collection(clusters, :clusters) { |cluster| parse_cluster(cluster) }
+        set_relationship_on_hosts(hosts)
+      end
+
+      def host_type(host)
+        host_type = host[:name].scan(/\((.*?)\)/).first
+        host_type.first if host_type
+      end
+
+      def cluster_name_for_host(host)
+        # TODO(lsmola) name and uid should also contain stack name, add this after the patch that saves resources
+        # is merged. Adding Overcloud by hard now.
+        host_type = host_type(host)
+        "overcloud #{host_type}"
+      end
+
+      def cluster_index_for_host(host)
+        # TODO(lsmola) name and uid should also contain stack name, add this after the patch that saves resources
+        # is merged. Adding Overcloud by hard now.
+        host_type = host_type(host)
+        "overcloud__#{host_type}"
+      end
+
+      def infer_clusters_from_hosts(hosts)
+        # We will create Cluster per Stack Host type. This way we can work with the same host types together
+        # as a group, e.g. all Compute hosts all Object Storage hosts, etc.
+        clusters = []
+        hosts.each do |host|
+          host_type = host_type(host)
+          # skip the non-provisoned hosts
+          next unless host_type
+
+          name = cluster_name_for_host(host)
+          uid = cluster_index_for_host(host)
+
+          clusters << {:name => name, :uid => uid}
+        end
+        clusters.uniq
+      end
+
+      def parse_cluster(cluster)
+        name = cluster[:name]
+        uid = cluster[:uid]
+
+        new_result = {
+            :ems_ref => uid,
+            :uid_ems => uid,
+            :name    => name,
+            :type    => 'EmsClusterOpenstackInfra'
+        }
+        return uid, new_result
+      end
+
+      def set_relationship_on_hosts(hosts)
+        hosts.each do |host|
+          host[:ems_cluster] = @data_index.fetch_path(:clusters, cluster_index_for_host(host))
         end
       end
 

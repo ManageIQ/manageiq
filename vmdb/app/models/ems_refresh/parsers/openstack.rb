@@ -521,7 +521,6 @@ module EmsRefresh::Parsers
           :disks            => [], # Filled in later conditionally on flavor
           :networks         => [], # Filled in later conditionally on what's available
         },
-
         :host              => parent_host,
         :ems_cluster       => parent_cluster,
         :flavor            => flavor,
