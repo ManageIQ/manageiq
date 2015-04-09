@@ -21,6 +21,14 @@ module ContainerNodeHelper::TextualSummary
     {:label => "Name", :value => @record.name}
   end
 
+  def textual_creation_timestamp
+    {:label => "Creation Timestamp", :value => format_timezone(@record.creation_timestamp)}
+  end
+
+  def textual_resource_version
+    {:label => "Resource Version", :value => @record.resource_version}
+  end
+
   def textual_ems
     ems = @record.ext_management_system
     return nil if ems.nil?
@@ -31,13 +39,5 @@ module ContainerNodeHelper::TextualSummary
       h[:link]  = url_for(:controller => 'ems_container', :action => 'show', :id => ems)
     end
     h
-  end
-
-  def textual_creation_timestamp
-    {:label => "Creation Timestamp", :value => @record.creation_timestamp}
-  end
-
-  def textual_resource_version
-    {:label => "Resource Version", :value => @record.resource_version}
   end
 end
