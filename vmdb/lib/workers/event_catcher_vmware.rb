@@ -4,7 +4,7 @@ class EventCatcherVmware < EventCatcher
   def event_monitor_handle
     require 'VMwareWebService/MiqVimEventMonitor'
     @event_monitor_handle ||= MiqVimEventMonitor.new(
-                                @ems.ipaddress,
+                                @ems.hostname,
                                 @ems.authentication_userid,
                                 @ems.authentication_password,
                                 nil,
