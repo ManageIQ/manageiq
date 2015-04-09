@@ -16,13 +16,11 @@
       :url: '/new'
       :text: 'Add a New #{ui_lookup(:table=>"container")}'
       :title: 'Add a New #{ui_lookup(:table=>"container")}'
-      :enabled: 'false'
     - :button: container_edit
       :image: edit
       :text: 'Edit Selected #{ui_lookup(:table=>"container")}'
       :title: 'Select a single #{ui_lookup(:table=>"container")} to edit'
       :url_parms: 'main_div'
-      :enabled: 'false'
       :onwhen: '1'
     - :button: container_delete
       :image: remove
@@ -30,5 +28,4 @@
       :title: 'Remove selected #{ui_lookup(:tables=>"containers")} from the VMDB'
       :url_parms: 'main_div'
       :confirm: 'Warning: The selected #{ui_lookup(:tables=>"containers")} and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected #{ui_lookup(:tables=>"containers")}?'
-      :enabled: 'false'
       :onwhen: '1+'
