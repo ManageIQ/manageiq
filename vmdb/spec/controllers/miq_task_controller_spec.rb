@@ -21,17 +21,17 @@ describe MiqTaskController do
                  :state_choice => "all",
                  :zone         => "<all>",
                  :time_period  => 0,
-                 :states       => [["Initializing", "initializing"],
-                                   ["Waiting to Start", "waiting_to_start"],
-                                   ["Cancelling", "cancelling"],
-                                   ["Aborting", "aborting"],
-                                   ["Finished", "finished"],
-                                   ["Snapshot Create", "snapshot_create"],
-                                   ["Scanning", "scanning"],
-                                   ["Snapshot Delete", "snapshot_delete"],
-                                   ["Synchronizing", "synchronizing"],
-                                   ["Deploy Smartproxy", "deploy_smartproxy"]]
-                 }
+                 :states       => [%w(Initializing initializing),
+                                   %w(Waiting to Start waiting_to_start),
+                                   %w(Cancelling cancelling),
+                                   %w(Aborting aborting),
+                                   %w(Finished finished),
+                                   %w(Snapshot\ Create snapshot_create),
+                                   %w(Scanning scanning),
+                                   %w(Snapshot\ Delete snapshot_delete),
+                                   %w(Synchronizing synchronizing),
+                                   %w(Deploy\ Smartproxy deploy_smartproxy)]
+        }
       end
 
       it "all defaults" do
@@ -100,7 +100,7 @@ describe MiqTaskController do
       end
 
       it "zone: <All Zones>, Time period: Last 24, Status: Queued, Running, Ok, Error and Warn, State: Aborting" do
-        set_opts(:state_choice=>"aborting")
+        set_opts(:state_choice => "aborting")
 
         query = "userid=? AND "\
                 "((state=? OR state=?) OR "\
@@ -163,7 +163,14 @@ describe MiqTaskController do
       end
 
       it "zone: default, Time period: 1 Day Ago, Status: none, State: Waiting to Start" do
-        set_opts(:ok=>nil, :queued=>nil, :error=>nil, :warn=>nil, :running=>nil, :state_choice=>"waiting_to_start", :zone=>"default", :time_period=>1)
+        set_opts(:ok           => nil,
+                 :queued       => nil,
+                 :error        => nil,
+                 :warn         => nil,
+                 :running      => nil,
+                 :state_choice => "waiting_to_start",
+                 :zone         => "default",
+                 :time_period  => 1)
 
         query = "userid=? AND "\
                 "(status!=? AND status!=? AND status!=? AND state!=? AND state!=?) AND "\
@@ -177,7 +184,14 @@ describe MiqTaskController do
       end
 
       it "zone: default, Time period: 4 Days Ago, Status: Queued and Running, State: Synchronizing" do
-        set_opts(:ok=>nil, :queued=>"1", :error=>nil, :warn=>nil, :running=>"1", :state_choice=>"synchronizing", :zone=>"default", :time_period=>4)
+        set_opts(:ok           => nil,
+                 :queued       => "1",
+                 :error        => nil,
+                 :warn         => nil,
+                 :running      => "1",
+                 :state_choice => "synchronizing",
+                 :zone         => "default",
+                 :time_period  => 4)
 
         query = "userid=? AND "\
                 "((state=? OR state=?) OR "\
@@ -192,7 +206,14 @@ describe MiqTaskController do
       end
 
       it "zone: default, Time period: 4 Days Ago, Status: Queued and Running, State: Snapshot Delete" do
-        set_opts(:ok=>nil, :queued=>"1", :error=>nil, :warn=>nil, :running=>"1", :state_choice=>"snapshot_delete", :zone=>"default", :time_period=>4)
+        set_opts(:ok           => nil,
+                 :queued       => "1",
+                 :error        => nil,
+                 :warn         => nil,
+                 :running      => "1",
+                 :state_choice => "snapshot_delete",
+                 :zone         => "default",
+                 :time_period  => 4)
 
         query = "userid=? AND "\
                 "((state=? OR state=?) OR "\
@@ -218,12 +239,11 @@ describe MiqTaskController do
                  :running      => true,
                  :state_choice => "all",
                  :time_period  => 0,
-                 :states       => [["Initialized", "Initialized"],
-                                   ["Queued", "Queued"],
-                                   ["Active", "Active"],
-                                   ["Finished", "Finished"]
-                                  ]
-                }
+                 :states       => [%w(Initialized Initialized),
+                                   %w(Queued Queued),
+                                   %w(Active Active),
+                                   %w(Finished Finished)]
+        }
       end
 
       it "all defaults" do
@@ -243,7 +263,11 @@ describe MiqTaskController do
       end
 
       it "Time period: 6 Days ago, status: queued and running, state: initialized" do
-        set_opts(:ok=>nil, :error=>nil, :warn=>nil,  :state_choice=>"Initialized", :time_period=>6)
+        set_opts(:ok           => nil,
+                 :error        => nil,
+                 :warn         => nil,
+                 :state_choice => "Initialized",
+                 :time_period  => 6)
 
         query = "userid=? AND ("\
                 "(state=? OR state=?) OR "\
@@ -257,7 +281,11 @@ describe MiqTaskController do
       end
 
       it "Time period: 6 Days Ago, status: queued and running, state: active" do
-        set_opts(:ok=>nil, :error=>nil, :warn=>nil, :state_choice=>"Active", :time_period=>6)
+        set_opts(:ok           => nil,
+                 :error        => nil,
+                 :warn         => nil,
+                 :state_choice => "Active",
+                 :time_period  => 6)
 
         query = "userid=? AND "\
                 "((state=? OR state=?) OR "\
@@ -285,7 +313,7 @@ describe MiqTaskController do
       end
 
       it "Time period: 6 Days Ago, status: ok, state: queued" do
-        set_opts(:ok => "1",
+        set_opts(:ok           => "1",
                  :queued       => nil,
                  :error        => nil,
                  :warn         => nil,
@@ -305,7 +333,7 @@ describe MiqTaskController do
       end
 
       it "Time period: 6 Days Ago, status: ok and warn, state: queued" do
-        set_opts(:ok=>"1",
+        set_opts(:ok           => "1",
                  :queued       => nil,
                  :error        => nil,
                  :warn         => "1",
@@ -325,7 +353,7 @@ describe MiqTaskController do
       end
 
       it "Time period: 6 Days Ago, status: ok and warn and error, state: queued" do
-        set_opts(:ok=>"1",
+        set_opts(:ok           => "1",
                  :queued       => nil,
                  :error        => "1",
                  :warn         => "1",
@@ -440,17 +468,16 @@ describe MiqTaskController do
                  :zone         => "<all>",
                  :user_choice  => "all",
                  :time_period  => 0,
-                 :states       => [["Initializing", "initializing"],
-                                   ["Waiting to Start", "waiting_to_start"],
-                                   ["Cancelling", "cancelling"],
-                                   ["Aborting", "aborting"],
-                                   ["Finished", "finished"],
-                                   ["Snapshot Create", "snapshot_create"],
-                                   ["Scanning", "scanning"],
-                                   ["Snapshot Delete", "snapshot_delete"],
-                                   ["Synchronizing", "synchronizing"],
-                                   ["Deploy Smartproxy", "deploy_smartproxy"]
-                                  ]
+                 :states       => [%w(Initializing initializing),
+                                   %w(Waiting to Start waiting_to_start),
+                                   %w(Cancelling cancelling),
+                                   %w(Aborting aborting),
+                                   %w(Finished finished),
+                                   %w(Snapshot\ Create snapshot_create),
+                                   %w(Scanning scanning),
+                                   %w(Snapshot\ Delete snapshot_delete),
+                                   %w(Synchronizing synchronizing),
+                                   %w(Deploy\ Smartproxy deploy_smartproxy)]
                 }
       end
 
@@ -497,7 +524,7 @@ describe MiqTaskController do
                 "updated_on<=? AND "\
                 "zone=? AND "\
                 "state=?"
-        expected = [ query, "waiting_to_start", "Queued", "finished", "waiting_to_start", "queued"]
+        expected = [query, "waiting_to_start", "Queued", "finished", "waiting_to_start", "queued"]
         expected += get_time_period(@opts[:time_period]) << "default" << "snapshot_create"
         subject.should == expected
       end
@@ -646,12 +673,12 @@ describe MiqTaskController do
                  :state_choice => "all",
                  :user_choice  => "all",
                  :time_period  => 0,
-                 :states       => [["Initialized", "Initialized"],
-                                   ["Queued", "Queued"],
-                                   ["Active", "Active"],
-                                   ["Finished", "Finished"]
-                                  ]
-                 }
+                 :states       =>  [%w(Initialized Initialized),
+                                    %w(Queued Queued),
+                                    %w(Active Active),
+                                    %w(Finished Finished)]
+
+        }
       end
 
       it "all defaults" do
@@ -686,7 +713,7 @@ describe MiqTaskController do
       end
 
       it "user: all, Time period: 1 Day Ago, status: queued, running, ok, error and warn, state: finished" do
-        set_opts( :state_choice => "Finished", :time_period => 1)
+        set_opts(:state_choice => "Finished", :time_period => 1)
 
         query = "((state=? OR state=?) OR "\
                 "(state=? AND status=?) OR "\
@@ -794,7 +821,7 @@ describe MiqTaskController do
                  :running      => "1",
                  :state_choice => "Initialized",
                  :user_choice  => "system",
-                 :time_period  =>3)
+                 :time_period  => 3)
 
         query = "userid=? AND "\
                 "((state!=? AND state!=? AND state!=?)) AND "\
@@ -815,7 +842,7 @@ describe MiqTaskController do
     end
 
     def set_opts(hsh)
-      hsh.each_pair { |k,v| @opts[k] = v }
+      hsh.each_pair { |k, v| @opts[k] = v }
     end
   end
 end

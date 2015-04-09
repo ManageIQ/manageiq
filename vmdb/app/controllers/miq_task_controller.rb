@@ -166,7 +166,7 @@ class MiqTaskController < ApplicationController
                          :target_class => db_class.base_class.name)
       add_flash(_("%{task} initiated for %{count_model} from the CFME Database") %
                   {:task        => "Delete",
-                   :count_model => pluralize(job_ids.length,ui_lookup(:tables => "miq_task"))}) if @flash_array.nil?
+                   :count_model => pluralize(job_ids.length, ui_lookup(:tables => "miq_task"))}) if @flash_array.nil?
     end
     jobs
     @refresh_partial = "layouts/tasks"
@@ -192,11 +192,11 @@ class MiqTaskController < ApplicationController
       db_class.delete_by_id(job_ids)
       AuditEvent.success(:userid       => session[:userid],
                          :event        => "Delete all finished tasks",
-                         :message      =>"Delete started for record ids: #{job_ids.inspect}",
-                         :target_class =>db_class.base_class.name)
+                         :message      => "Delete started for record ids: #{job_ids.inspect}",
+                         :target_class => db_class.base_class.name)
       add_flash(_("%{task} initiated for %{count_model} from the CFME Database") %
                   {:task        => "Delete",
-                   :count_model => pluralize(job_ids.length,ui_lookup(:tables => "miq_task"))})  if @flash_array.nil?
+                   :count_model => pluralize(job_ids.length, ui_lookup(:tables => "miq_task"))})  if @flash_array.nil?
     end
     jobs
     @refresh_partial = "layouts/tasks"
@@ -223,7 +223,7 @@ class MiqTaskController < ApplicationController
                          :target_class => db_class.base_class.name)
       add_flash(_("%{task} initiated for %{count_model} from the CFME Database") %
                   {:task        => "Delete all older Tasks",
-                   :count_model => pluralize(jobid.length,ui_lookup(:tables => "miq_task"))})
+                   :count_model => pluralize(jobid.length, ui_lookup(:tables => "miq_task"))})
     else
       add_flash(_("The selected job no longer exists, Delete all older Tasks was not completed"), :warning)
     end
@@ -381,7 +381,7 @@ class MiqTaskController < ApplicationController
   def build_query_for_userid(opts)
     return ["userid=?", session[:userid]] if %w(tasks_1 tasks_2).include?(@tabform)
     return ["userid=?", opts[:user_choice]] if opts[:user_choice] && opts[:user_choice] != "all"
-    return nil,nil
+    return nil, nil
   end
 
   def build_query_for_status(opts)
@@ -395,7 +395,7 @@ class MiqTaskController < ApplicationController
   end
 
   def build_query_for_queued
-    ["(state=? OR state=?)", ["waiting_to_start", "Queued"]]
+    ["(state=? OR state=?)", %w(waiting_to_start Queued)]
   end
 
   def build_query_for_ok
@@ -416,15 +416,15 @@ class MiqTaskController < ApplicationController
   end
 
   def build_query_for_running
-    return ["(state!=? AND state!=? AND state!=?)", ["finished", "waiting_to_start", "queued"]] if vm_analysis_task?
-    ["(state!=? AND state!=? AND state!=?)", ["Finished", "waiting_to_start", "Queued"]]
+    return ["(state!=? AND state!=? AND state!=?)", %w(finished waiting_to_start queued)] if vm_analysis_task?
+    ["(state!=? AND state!=? AND state!=?)", %w(Finished waiting_to_start Queued)]
   end
 
   def build_query_for_status_none_selected
     return ["(status!=? AND status!=? AND status!=? AND state!=? AND state!=?)",
-            ["ok", "error", "warn", "finished", "waiting_to_start"]] if vm_analysis_task?
+            %w(ok error warn finished waiting_to_start)] if vm_analysis_task?
     ["(status!=? AND status!=? AND status!=? AND state!=? AND state!=?)",
-      ["Ok", "Error", "Warn", "Finished", "Queued"]]
+      %w(Ok Error Warn Finished Queued)]
   end
 
   def build_query_for_time_period(opts)
