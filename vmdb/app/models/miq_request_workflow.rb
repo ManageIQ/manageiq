@@ -1105,10 +1105,7 @@ class MiqRequestWorkflow
     host_ids = result_hosts_hash.to_a.transpose.first
     return [] if host_ids.nil?
 
-    find_all_ems_of_type(Host).collect do |h|
-      next unless host_ids.include?(h.id)
-      h
-    end.compact
+    find_all_ems_of_type(Host).collect { |h| h if host_ids.include?(h.id) }.compact
   end
 
   def allowed_datacenters(_options = {})
