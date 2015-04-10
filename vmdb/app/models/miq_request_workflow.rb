@@ -1343,12 +1343,8 @@ class MiqRequestWorkflow
   end
 
   def get_ws_dialog_fields(dialog_name)
-    log_header = "#{self.class.name}.get_ws_dialog_fields"
     dlg_fields = @dialogs.fetch_path(:dialogs, dialog_name, :fields)
-    if dlg_fields.nil?
-      $log.info "#{log_header} <#{dialog_name}> dialog not found in dialogs.  Field updates be skipped."
-      return
-    end
+    $log.info "#{self.class.name}##{__method__} <#{dialog_name}> dialog not found in dialogs.  Field updates will be skipped." if dlg_fields.nil?
     dlg_fields
   end
 
