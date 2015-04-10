@@ -67,8 +67,7 @@
             :maxlength         => 6,
             :size              => 6,
             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-  %hr
-  = render :partial => "/layouts/multi_auth_credentials", :locals  => {:record => @ems}
+
   - if @edit[:ems_id].nil?
     %table{:width => "100%"}
       %tr

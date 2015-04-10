@@ -7,6 +7,7 @@ class ContainerGroupController < ApplicationController
   after_filter :set_session_data
 
   def show_list
+    @no_checkboxes = true
     process_show_list
   end
 

@@ -692,6 +692,19 @@ module ApplicationHelper
   def build_toolbar_hide_button(id)
     return true if id == "blank_button" # Always hide the blank button placeholder
 
+    # Hide configuration buttons for specific Container* entities
+    return true if %w(container_node_edit container_node_delete container_node_new).include?(id) &&
+                   (@record.kind_of?(ContainerNode) || @record.nil?)
+
+    return true if %w(container_service_edit container_service_delete container_service_new).include?(id) &&
+                   (@record.kind_of?(ContainerService) || @record.nil?)
+
+    return true if %w(container_group_edit container_group_delete container_group_new).include?(id) &&
+                   (@record.kind_of?(ContainerGroup) || @record.nil?)
+
+    return true if %w(container_edit container_delete container_new).include?(id) &&
+                   (@record.kind_of?(Container) || @record.nil?)
+
     # hide timelines button for Amazon provider and instances
     # TODO: extend .is_available? support via refactoring task to cover this scenario
     return true if ['ems_cloud_timeline', 'instance_timeline'].include?(id) && (@record.kind_of?(EmsAmazon) || @record.kind_of?(VmAmazon))
