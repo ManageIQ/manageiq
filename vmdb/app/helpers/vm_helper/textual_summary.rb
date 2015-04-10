@@ -41,12 +41,12 @@ module VmHelper::TextualSummary
   end
 
   def textual_group_datastore_allocation
-    items = %w{disks disks_aligned thin_provisioned allocated_disks allocated_memory allocated_total}
+    items = %w{disks disks_aligned thin_provisioned allocated_disks allocated_total}
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
   def textual_group_datastore_usage
-    items = %w{usage_disks usage_memory usage_snapshots usage_disk_storage usage_overcommitted}
+    items = %w{usage_disks usage_snapshots usage_disk_storage usage_overcommitted}
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
