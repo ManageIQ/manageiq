@@ -1288,10 +1288,7 @@ class MiqRequestWorkflow
       end
     end
 
-    if result.nil?
-      $log.warn "#{log_header} Unable to find value for key <#{dialog_name}:#{key}(#{data_type})> with input value <#{set_value.inspect}>.  No matching item found."
-    end
-
+    $log.warn "#{log_header} Unable to find value for key <#{dialog_name}:#{key}(#{data_type})> with input value <#{set_value.inspect}>.  No matching item found." if result.nil?
     $log.info "#{log_header} setting key <#{dialog_name}:#{key}(#{data_type})> to value <#{set_value.inspect}>"
     values[key] = set_value
   end
