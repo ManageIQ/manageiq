@@ -1,4 +1,4 @@
-- if @settings[:quadicons][item.class.base_model.name.underscore.to_sym]
+- if @settings.fetch_path(:quadicons, item.class.base_model.name.underscore.to_sym)
   .flobj
     %img{:src => "/images/icons/#{size}/base.png", :width => size, :height => size}
   .flobj{:class => "a#{size}"}
