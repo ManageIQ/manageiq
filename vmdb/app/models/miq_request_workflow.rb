@@ -1076,16 +1076,9 @@ class MiqRequestWorkflow
     st = Time.now
     MiqPreloader.preload(hosts, :storages)
 
-    storage_ids = []
-    storages = hosts.inject([]) do |a, h|
-      h.storages.each do |s|
-        unless storage_ids.include?(s.id)
-          a << s
-          storage_ids << s.id
-        end
-      end
-      a
-    end
+    storages = hosts.each_with_object({}) do |host, hash|
+      host.storages.each { |s| hash[s.id] = s }
+    end.values
 
     allowed_storages_cache = process_filter(:ds_filter, Storage, storages).collect do |s|
       ci_to_hash_struct(s)
