@@ -3,6 +3,8 @@ class MiqProvisionRequest < MiqRequest
   alias_attribute :provision_type, :request_type
   alias_attribute :miq_provisions, :miq_request_tasks
 
+  delegate :my_zone, :to => :source
+
   include ReportableMixin
 
   TASK_DESCRIPTION  = 'VM Provisioning'
@@ -74,10 +76,6 @@ class MiqProvisionRequest < MiqRequest
   def post_create_request_tasks
     return unless requested_task_idx.length == 1
     update_attributes(:description => miq_request_tasks.first.description)
-  end
-
-  def my_zone
-    source.my_zone
   end
 
   def my_role

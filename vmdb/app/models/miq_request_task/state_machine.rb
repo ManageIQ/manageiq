@@ -1,10 +1,8 @@
 module MiqRequestTask::StateMachine
+  delegate :my_role, :to => :miq_request
+
   def my_task_id
     "#{self.class.base_model.name.underscore}_#{id}"
-  end
-
-  def my_role
-    self.miq_request.my_role
   end
 
   def my_zone
