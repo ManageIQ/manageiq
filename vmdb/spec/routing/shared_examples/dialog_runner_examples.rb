@@ -4,7 +4,6 @@ shared_examples_for "A controller that has dialog runner routes" do
     dialog_form_button_pressed
     dynamic_checkbox_refresh
     dynamic_date_refresh
-    dynamic_list_refresh
     dynamic_radio_button_refresh
     dynamic_text_box_refresh
   ).each do |path|

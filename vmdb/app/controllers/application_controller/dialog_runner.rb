@@ -143,35 +143,6 @@ module ApplicationController::DialogRunner
     render :action => "show"
   end
 
-  def dynamic_list_refresh
-    # FIXME: customer defined field names can clash with elements in the page!
-    # this problem applies not only to the action here, but also to all of the
-    # app/views/shared/dialogs/_dialog_field.html.erb and more...
-
-    field = load_dialog_field(params[:id])
-
-    dialog_id = @edit[:rec_id]
-    url = url_for(:action => 'dialog_field_changed', :id => dialog_id)
-
-    field.refresh_button_pressed
-
-    @select_options = field.values
-    @select_options = @select_options.collect(&:reverse) if field.type == "DialogFieldDynamicList"
-
-    render :update do |page|
-      data_params = {
-        'data-miq_sparkle_on'  => true,
-        'data-miq_sparkle_off' => true,
-        'data-miq_observe'     => {:url => url}.to_json
-      }
-
-      page.replace(
-        params[:id],
-        select_tag(field.name, options_for_select(@select_options, @edit[:wf].value(field.name)), data_params)
-      )
-    end
-  end
-
   def dynamic_radio_button_refresh
     field = load_dialog_field(params[:name])
 
