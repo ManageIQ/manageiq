@@ -694,6 +694,7 @@ class CatalogController < ApplicationController
   def ot_copy
     assert_privileges("orchestration_template_copy")
     ot_edit_set_form_vars(_("Copying %s"))
+    @edit[:new][:name] = @edit[:current][:name] = "Copy of %s" % @edit[:new][:name]
     replace_right_cell("ot_copy")
   end
 
@@ -921,7 +922,7 @@ class CatalogController < ApplicationController
     checked = find_checked_items
     checked[0] = params[:id] if checked.blank? && params[:id]
     @record = checked[0] ? find_by_id_filtered(OrchestrationTemplate, checked[0]) : OrchestrationTemplate.new
-    @edit = {:current => {:name        => "Copy of #{@record.name}",
+    @edit = {:current => {:name        => @record.name,
                           :description => @record.description,
                           :content     => @record.content,
                           :draft       => @record.draft},
