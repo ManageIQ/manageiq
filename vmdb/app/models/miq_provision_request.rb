@@ -2,6 +2,7 @@ class MiqProvisionRequest < MiqRequest
   alias_attribute :vm_template,    :source
   alias_attribute :provision_type, :request_type
   alias_attribute :miq_provisions, :miq_request_tasks
+  alias_attribute :src_vm_id,      :source_id
 
   delegate :my_zone, :to => :source
 
@@ -106,10 +107,6 @@ class MiqProvisionRequest < MiqRequest
     return false if env.include?("prod") && svc.empty?  # Make sure we have at least one
 
     true
-  end
-
-  def src_vm_id
-    self.source_id
   end
 
   def src_vm_id=(value)
