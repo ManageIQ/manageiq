@@ -508,7 +508,8 @@ module ApplicationController::CiProcessing
 
     # Build the vm detail gtl view
   def show_details(db, options={})  # Pass in the db, parent vm is in @vm
-    association    = options[:association] || nil
+    association = options[:association]
+    conditions  = options[:conditions]
     # generate the grid/tile/list url to come back here when gtl buttons are pressed
     @gtl_url       = "/#{@db}/#{@listicon.pluralize}/#{@record.id.to_s}?"
     @showtype      = "details"
@@ -518,6 +519,7 @@ module ApplicationController::CiProcessing
     @view, @pages = get_view(db,
                             :parent=>@record,
                             :association=>association,
+                            :conditions => conditions,
                             :dbname=>"#{@db}item")  # Get the records into a view & paginator
 
     if @explorer # In explorer?
@@ -1895,7 +1897,7 @@ module ApplicationController::CiProcessing
     @edit[:new][owner] != @edit[:current][owner]
   end
 
-  def show_association(action, display_name, listicon, method, klass, association = nil)
+  def show_association(action, display_name, listicon, method, klass, association = nil, conditions =nil)
     # Ajax request means in explorer, or if current explorer is one of the explorer controllers
     @explorer = true if request.xml_http_request? && explorer_controller?
     if @explorer  # Save vars for tree history array
@@ -1931,9 +1933,9 @@ module ApplicationController::CiProcessing
                       :url  => "/#{controller_name}/#{action}/#{@record.id}")
       @listicon = listicon
       if association.nil?
-        show_details(klass)
+        show_details(klass, :conditions => conditions)
       else
-        show_details(klass, :association => association )
+        show_details(klass, :association => association, :conditions => conditions)
       end
     end
   end
