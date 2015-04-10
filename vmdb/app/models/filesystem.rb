@@ -15,6 +15,10 @@ class Filesystem < ActiveRecord::Base
   virtual_column :contents,           :type => :string,  :uses => {:binary_blob => :binary_blob_parts}
   virtual_column :contents_available, :type => :boolean, :uses => :binary_blob
 
+  def self.host_service_group_condition(host_service_group_id)
+    arel_table[:host_service_group_id].eq(host_service_group_id)
+  end
+
   def self.add_elements(miq_set, scan_item, parent, xmlNode)
     options = {}
     options[:miq_set_id]   = miq_set.id   unless miq_set.nil?
