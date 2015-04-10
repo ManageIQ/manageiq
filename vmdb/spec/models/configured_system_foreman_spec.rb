@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe ConfiguredSystem do
+describe ConfiguredSystemForeman do
   subject { described_class.new }
 
   describe "#all_tags" do

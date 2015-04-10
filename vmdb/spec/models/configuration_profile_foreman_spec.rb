@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe ConfigurationProfile do
+describe ConfigurationProfileForeman do
   subject { described_class.new }
 
   describe "#all_tags" do
