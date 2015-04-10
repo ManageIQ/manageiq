@@ -438,8 +438,8 @@ class ApplicationController < ActionController::Base
   end
 
   def build_vm_host_array
-    @temp[:tree_hosts] = (@sb[:tree_hosts_hash] || {}).collect { |k,_| Host.find_by_id(k) }
-    @temp[:tree_vms]   = (@sb[:tree_vms_hash]   || {}).collect { |k,_| Vm.find_by_id(k) }
+    @temp[:tree_hosts] = Host.where(:id => (@sb[:tree_hosts_hash] || {}).keys)
+    @temp[:tree_vms]   = Vm.where(  :id => (@sb[:tree_vms_hash]   || {}).keys)
   end
 
   # Show the current widget report in pdf format
