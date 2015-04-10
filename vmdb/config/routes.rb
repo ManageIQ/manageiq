@@ -1934,12 +1934,13 @@ Vmdb::Application.routes.draw do
   root :to => 'dashboard#login'
 
   # Enablement for the REST API
-  get '/api'           => 'api#show',    :format => 'json'
-  get '/api/*suffix'   => 'api#show',    :format => 'json'
-  match '/api/*suffix' => 'api#update',  :format => 'json', :via => [:post, :put, :patch]
-  match '/api/*suffix' => 'api#destroy', :format => 'json', :via => [:delete]
   # OPTIONS requests for REST API pre-flight checks
   match '/api/*path'   => 'api#handle_options_request', :via => [:options]
+  get '/api(/:version)'           => 'api#show',    :format => 'json', :version => /v\d.*/
+
+  get    '/api(/:version)/:collection(/:c_id(/:subcollection(/:s_id)))' => 'api#show',    :format => 'json', :version => /v\d.*/
+  match  '/api(/:version)/:collection(/:c_id(/:subcollection(/:s_id)))' => 'api#update',  :format => 'json', :via => [:post, :put, :patch], :version => /v\d.*/
+  delete '/api(/:version)/:collection(/:c_id(/:subcollection(/:s_id)))' => 'api#destroy', :format => 'json', :version => /v\d.*/
 
   CONTROLLER_ACTIONS.each do |controller_name, controller_actions|
 

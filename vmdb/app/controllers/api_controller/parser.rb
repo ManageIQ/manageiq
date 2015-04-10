@@ -11,18 +11,18 @@ class ApiController
       path_split = @req[:path].split('/')
       @req[:prefix]        = "/#{path_split[1]}"           # /api
       @req[:version]       = @version                      # Default API Version
-      cidx                 = 2                             # collection starts @ index 2
-      if path_split[2]
-        ver = path_split[2]
+      if params[:version]
+        ver = params[:version]
         if ver.match(version_config[:regex])               # v#.# version signature
           @req[:version]   = ver[1..-1]                    # Switching API Version
           @req[:prefix]    = "#{@req[:prefix]}/#{ver}"     # /api/v#.#
-          cidx            += 1
         end
       end
 
-      @req[:collection],    @req[:c_id] = path_split[cidx..cidx + 1]
-      @req[:subcollection], @req[:s_id] = path_split[cidx + 2..cidx + 3]
+      @req[:collection]    = params[:collection]
+      @req[:c_id]          = params[:c_id]
+      @req[:subcollection] = params[:subcollection]
+      @req[:s_id]          = params[:s_id]
 
       log_api_request
     end
