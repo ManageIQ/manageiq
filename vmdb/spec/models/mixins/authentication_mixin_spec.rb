@@ -330,13 +330,13 @@ describe AuthenticationMixin do
 
       context "#authentication_check" do
         it "updates status by default" do
-          @host.stub(:has_credentials?).and_return(false)
+          @host.stub(:missing_credentials?).and_return(true)
           @host.authentication_check
           @host.authentication_type(:default).status.should == 'Incomplete'
         end
 
         it "raises auth event" do
-          @host.stub(:has_credentials?).and_return(false)
+          @host.stub(:missing_credentials?).and_return(true)
           @host.authentication_check
 
           event = MiqQueue.where(:class_name => "MiqEvent").where(:method_name => "raise_evm_event").first
@@ -352,14 +352,14 @@ describe AuthenticationMixin do
         end
 
         it "(:save => false) does not update status" do
-          @host.stub(:verify_credentials).and_return(true)
+          @host.stub(:missing_credentials?).and_return(false)
           @host.authentication_check(:save => false)
           @host.authentication_type(:default).status.should be_nil
           MiqQueue.where(:class_name => "MiqEvent").where(:method_name => "raise_evm_event").count.should == 0
         end
 
         it "missing credentials" do
-          @host.stub(:has_credentials?).and_return(false)
+          @host.stub(:missing_credentials?).and_return(true)
           @host.authentication_check.should == [false, "Missing credentials"]
         end
 
