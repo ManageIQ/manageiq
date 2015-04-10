@@ -1365,10 +1365,9 @@ class MiqRequestWorkflow
           @values[:customization_template_script] = c.script if c.id == customization_template_id
           build_ci_hash_struct(c, [:name, :description, :updated_at])
         end
-      end
+      end.compact
     end
 
-    result.compact!
     @values[:customization_template_script] = nil if result.blank?
     result
   end
@@ -1399,23 +1398,21 @@ class MiqRequestWorkflow
     pxe_server = get_pxe_server
     return [] if pxe_server.nil?
     prov_typ = self.class == MiqHostProvisionWorkflow ? "host" : "vm"
-    result = pxe_server.pxe_images.collect do |p|
+
+    pxe_server.pxe_images.collect do |p|
       next if p.pxe_image_type.nil? || p.default_for_windows
       # filter pxe images by provision_type to show vm/any or host/any
       build_ci_hash_struct(p, [:name, :description]) if p.pxe_image_type.provision_type.blank? || p.pxe_image_type.provision_type == prov_typ
-    end
-    result.compact!
-    result
+    end.compact
   end
 
   def allowed_windows_images(_options = {})
     pxe_server = get_pxe_server
     return [] if pxe_server.nil?
-    result = pxe_server.windows_images.collect do |p|
+
+    pxe_server.windows_images.collect do |p|
       build_ci_hash_struct(p, [:name, :description])
-    end
-    result.compact!
-    result
+    end.compact
   end
 
   def allowed_images(options = {})
@@ -1433,8 +1430,7 @@ class MiqRequestWorkflow
   def allowed_iso_images(_options = {})
     result = get_iso_images.collect do |p|
       build_ci_hash_struct(p, [:name])
-    end
-    result.compact!
+    end.compact
     # Change the ID to contain the class name since this is a mix class type
     result.each { |ci| ci.id = "#{ci.evm_object_class}::#{ci.id}" }
     result
