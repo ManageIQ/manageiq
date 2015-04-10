@@ -1,9 +1,11 @@
 module Authenticate
-  def self.for(config)
-    subclass_for(config).new(config)
+  def self.for(config, username=nil)
+    subclass_for(config, username).new(config)
   end
 
-  def self.subclass_for(config)
+  def self.subclass_for(config, username)
+    return Database if username == "admin"
+
     case config[:mode]
     when "database"      then Database
     when "ldap", "ldaps" then Ldap
@@ -17,32 +19,157 @@ module Authenticate
       new(config).authorize(*args)
     end
 
+    def self.short_name
+      self.class.name.demodulize.underscore
+    end
+
+    def audit_event
+      "authenticate_#{self.class.short_name}"
+    end
+
+    def authorize?
+      config[:"#{self.class.short_name}_role"] == true
+    end
+
+    def failure_reason
+      nil
+    end
+
+    def authorize_queue(username, request, *args)
+      task = MiqTask.create(:name => "#{self.class.proper_name} User Authorization of '#{username}'", :userid => username)
+      unless MiqEnvironment::Process.is_ui_worker_via_command_line?
+        cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
+        MiqQueue.put(
+          :queue_name   => "generic",
+          :class_name   => self.class.to_s,
+          :method_name  => "authorize",
+          :args         => [config, task.id, username, *args],
+          :server_guid  => MiqServer.my_guid,
+          :priority     => MiqQueue::HIGH_PRIORITY,
+          :miq_callback => cb
+        )
+      else
+        authorize(task.id, username, *args)
+      end
+
+      task.id
+    end
+
+    def run_task(taskid, status)
+      log_prefix = "MIQ(Authenticate#run_task):"
+
+      task = MiqTask.find_by_id(taskid)
+      if task.nil?
+        message = "#{log_prefix} Unable to find task with id: [#{taskid}]"
+        $log.error(message)
+        raise message
+      end
+      task.update_status("Active", "Ok", status)
+
+      begin
+        yield task
+      rescue Exception => err
+        $log.log_backtrace(err)
+        task.error(err.message)
+        task.state_finished
+        raise
+      end
+    end
+
+    def authorize(taskid, username, *args)
+      log_prefix = "MIQ(Authenticate#authorize):"
+      audit = {:event => "authorize", :userid => username}
+
+      run_task(taskid, "Authorizing") do |task|
+        begin
+          opaque = find_external_identity(username, *args)
+
+          unless opaque
+            msg = "Authentication failed for userid #{username}, unable to find user object in #{self.class.proper_name}"
+            $log.warn("#{log_prefix}: #{msg}")
+            AuditEvent.failure(audit.merge(:message => msg))
+            task.error(msg)
+            task.state_finished
+            return nil
+          end
+
+          matching_groups = match_groups(groups_for(opaque))
+          userid = userid_for(opaque, username)
+          user   = User.find_by_userid(userid) || User.new(:userid => userid)
+          update_user_attributes(user, opaque)
+          user.save_successful_logon(matching_groups, audit, task)
+        rescue Exception => err
+          AuditEvent.failure(audit.merge(:message => err.message))
+          raise
+        end
+      end
+    end
+
+    def match_groups(groups)
+      log_prefix  = "MIQ(Authenticate#match_groups)"
+
+      return [] if groups.empty?
+      groups = groups.collect(&:downcase)
+
+      miq_groups  = MiqServer.my_server.miq_groups
+      miq_groups  = MiqServer.my_server.zone.miq_groups if miq_groups.empty?
+      miq_groups  = MiqGroup.where(:resource_id => nil, :resource_type => nil) if miq_groups.empty?
+      miq_groups  = miq_groups.order(:sequence).to_a
+      groups.each       { |g| $log.debug("#{log_prefix} External Group: #{g}") }
+      miq_groups.each   { |g| $log.debug("#{log_prefix} Internal Group: #{g.description.downcase}") }
+      miq_groups.select { |g| groups.include?(g.description.downcase) }
+    end
+
+    def autocreate_user(username)
+      nil
+    end
+
+    def normalize_username(username)
+      username
+    end
+
     attr_reader :config
     def initialize(config)
       @config = config
     end
 
-    def admin_authenticator
-      @admin_authenticator ||= Database.new(config)
-    end
-
     def authenticate(username, password, request = nil, options = {})
-      if username == "admin"
-        admin_authenticator._authenticate(username, password, request, options)
-      else
-        _authenticate(username, password, request, options)
-      end
-    end
-
-    def _authenticate(username, password, request = nil, options = {})
       options = options.dup
       options[:require_user] ||= false
       fail_message = "Authentication failed"
 
-      begin
-        user_or_taskid = __authenticate(username, password, request)
+      user_or_taskid = nil
 
-        raise MiqException::MiqEVMLoginError, fail_message if user_or_taskid.nil?
+      begin
+        audit = {:event => audit_event, :userid => username}
+
+        username = normalize_username(username)
+
+        if _authenticate(username, password, request)
+          AuditEvent.success(audit.merge(:message => "User #{username} successfully validated by #{self.class.proper_name}"))
+
+          if authorize?
+            user_or_taskid = authorize_queue(username, request)
+          else
+            # If role_mode == database we will only use the external system for authentication. Also, the user must exist in our database
+            # otherwise we will fail authentication
+            user_or_taskid = User.find_by_userid(username)
+            user_or_taskid ||= autocreate_user(username)
+
+            unless user_or_taskid
+              AuditEvent.failure(audit.merge(:message => "User #{username} authenticated but not defined in EVM"))
+              raise MiqException::MiqEVMLoginError, "User authenticated but not defined in EVM, please contact your EVM administrator"
+            end
+          end
+
+          AuditEvent.success(audit.merge(:message => "Authentication successful for user #{username}"))
+        else
+          reason = failure_reason
+          reason = ": #{reason}" unless reason.blank?
+          AuditEvent.failure(audit.merge(:message => "Authentication failed for userid #{username}#{reason}"))
+          raise MiqException::MiqEVMLoginError, fail_message
+        end
+
       rescue MiqException::MiqEVMLoginError => err
         $log.warn err.message
         raise

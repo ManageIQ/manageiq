@@ -194,16 +194,16 @@ class User < ActiveRecord::Base
     self.miq_user_role.try(:name)
   end
 
-  def self.authenticator
-    @authenticator ||= Authenticate.new(VMDB::Config.new("vmdb").config[:authentication])
+  def self.authenticator(username=nil)
+    Authenticate.for(VMDB::Config.new("vmdb").config[:authentication], username)
   end
 
   def self.authenticate(username, password, request = nil, options = {})
-    authenticator.authenticate(username, password, request, options)
+    authenticator(username).authenticate(username, password, request, options)
   end
 
   def self.authenticate_with_http_basic(username, password, request = nil, options = {})
-    authenticator.authenticate_with_http_basic(username, password, request, options)
+    authenticator(username).authenticate_with_http_basic(username, password, request, options)
   end
 
   def logoff
@@ -237,28 +237,6 @@ class User < ActiveRecord::Base
 
   def self.find_or_create_by_ldap_upn(upn)
     authenticator.find_or_create_by_ldap_attr("userprincipalname", upn)
-  end
-
-  def update_attrs_from_ldap(ldap, obj)
-    self.userid     = ldap.normalize(ldap.get_attr(obj, :userprincipalname) || ldap.get_attr(obj, :dn))
-    self.name       = ldap.get_attr(obj, :displayname)
-    self.first_name = ldap.get_attr(obj, :givenname)
-    self.last_name  = ldap.get_attr(obj, :sn)
-    email           = ldap.get_attr(obj, :mail)
-    self.email      = email unless email.blank?
-  end
-
-  def update_attrs_from_httpd(user_attrs)
-    self.userid     = user_attrs[:username]
-    self.name       = user_attrs[:fullname]
-    self.first_name = user_attrs[:firstname]
-    self.last_name  = user_attrs[:lastname]
-    self.email      = user_attrs[:email] unless user_attrs[:email].blank?
-  end
-
-  def update_attrs_from_iam(amazon_auth, amazon_user, username)
-    self.userid     = username
-    self.name       = amazon_user.name
   end
 
   def save_successful_logon(matching_groups, audit = nil, task = nil)
