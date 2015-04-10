@@ -128,7 +128,7 @@ module EmsRefresh
             :parent_ref                     => (profile["ancestry"] || "").split("/").last.presence,
             :name                           => profile["name"],
             :description                    => profile["title"],
-            :configuration_tag_ids          => [
+            :raw_configuration_tag_ids      => [
               id_lookup(indexes[:architectures], profile["architecture_id"]),
               id_lookup(indexes[:compute_profiles], profile["compute_profile_id"]),
               id_lookup(indexes[:domains], profile["domain_id"]),
@@ -156,7 +156,7 @@ module EmsRefresh
             :operating_system_flavor_id     => id_lookup(indexes[:flavors], cs["operatingsystem_id"]),
             :customization_script_medium_id => id_lookup(indexes[:media], cs["medium_id"]),
             :customization_script_ptable_id => id_lookup(indexes[:ptables], cs["ptable_id"]),
-            :configuration_tag_ids          => [
+            :raw_configuration_tag_ids      => [
               id_lookup(indexes[:architectures], cs["architecture_id"]),
               id_lookup(indexes[:compute_profiles], cs["compute_profile_id"]),
               id_lookup(indexes[:domains], cs["domain_id"]),
