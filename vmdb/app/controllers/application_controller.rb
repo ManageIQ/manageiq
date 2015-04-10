@@ -1880,7 +1880,7 @@ class ApplicationController < ActionController::Base
     # Set up the list view type (grid/tile/list)
     @settings[:views][db_sym] = params[:type] if params[:type]  # Change the list view type, if it's sent in
 
-    @gtl_type = get_view_calculate_gtl_type(db_sym)
+    @gtl_type = get_view_calculate_gtl_type(options[:gtl_dbname] || db_sym)
 
     # Get the view for this db or use the existing one in the session
     view = refresh_view ? get_db_view(db.split("::").last, :association => association, :view_suffix => view_suffix) : session[:view]
