@@ -185,8 +185,7 @@ class MiqRequest < ActiveRecord::Base
   end
 
   def approved?
-    miq_approvals.each { |a| return false unless a.state == "approved" }
-    true
+    miq_approvals.all? { |a| a.state == "approved" }
   end
 
   def v_approved_by
