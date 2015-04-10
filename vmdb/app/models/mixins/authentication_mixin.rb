@@ -182,6 +182,8 @@ module AuthenticationMixin
     return status == :valid, details
   end
 
+  private
+
   def authentication_check_no_validation(type, options)
     header  = "MIQ(#{self.class.name}.#{__method__}) type: [#{type.inspect}] for [#{self.id}] [#{self.name}]"
     verify_args = self.is_a?(Host) ? [type, options] : type
@@ -206,8 +208,6 @@ module AuthenticationMixin
     $log.warn("#{header} Validation failed: #{status}, #{details}") unless status == :valid
     return status, details
   end
-
-  private
 
   def authentication_best_fit(type = nil)
     # Look for the supplied type and if that is not found return the default credentials
