@@ -95,7 +95,7 @@ class StorageController < ApplicationController
   # handle buttons pressed on the button bar
   def button
     @edit = session[:edit]                                  # Restore @edit for adv search box
-    params[:display] = @display if ["vms","hosts"].include?(@display) # Were we displaying vms or hosts
+    params[:display] = @display if %w(all_vms vms hosts).include?(@display) # Were we displaying vms or hosts
 
     if params[:pressed].starts_with?("vm_") ||      # Handle buttons from sub-items screen
         params[:pressed].starts_with?("miq_template_") ||
