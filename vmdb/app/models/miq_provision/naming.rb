@@ -76,7 +76,7 @@ module MiqProvision::Naming
     end
   end
 
-  def get_next_vm_name()
+  def get_next_vm_name
     self.class.get_next_vm_name(self)
   end
 end

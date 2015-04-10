@@ -57,7 +57,7 @@ module MiqProvisionVmware::Configuration::Container
     vm_notes = get_option(:vm_notes).to_s.strip
     vm_notes += "\n\n" unless vm_notes.blank?
     vm_notes += "MIQ GUID=#{new_vm_guid}"
-    service, service_resource = get_service_and_service_resource
+    service, _service_resource = get_service_and_service_resource
     if service
       vm_notes += "\n\nParent Service: #{service.name} (#{service.guid})"
     end

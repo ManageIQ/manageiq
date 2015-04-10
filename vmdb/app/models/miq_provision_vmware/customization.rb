@@ -95,7 +95,7 @@ module MiqProvisionVmware::Customization
       set_spec_option(userData, :fullName, :sysprep_full_name)
       set_spec_option(userData, :orgName, :sysprep_organization)
       set_spec_option(userData, :productId, :sysprep_product_id)
-      userData.computerName = customization_hostname()
+      userData.computerName = customization_hostname
     end
     identity
   end
@@ -104,7 +104,7 @@ module MiqProvisionVmware::Customization
     log_header = "MIQ(#{self.class.name}.customization_identity_linux)"
     identity = find_build_spec_path(spec, 'CustomizationLinuxPrep', 'identity')
     set_spec_option(identity, :domain, :linux_domain_name)
-    identity.hostName = customization_hostname()
+    identity.hostName = customization_hostname
     identity
   end
 
@@ -228,7 +228,7 @@ module MiqProvisionVmware::Customization
     found
   end
 
-  def customization_hostname()
+  def customization_hostname
     log_header = "MIQ(#{self.class.name}.customization_hostname)"
     VimHash.new("CustomizationFixedName") do |mach_name|
       computer_name = get_option(:vm_target_hostname)

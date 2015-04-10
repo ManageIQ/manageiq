@@ -1,7 +1,7 @@
 class MiqProvisionCloudWorkflow < MiqProvisionVirtWorkflow
   include CloudInitTemplateMixin
 
-  def allowed_availability_zones(options={})
+  def allowed_availability_zones(_options = {})
     source = load_ar_obj(get_source_vm)
     ems = source.try(:ext_management_system)
 
@@ -32,7 +32,7 @@ class MiqProvisionCloudWorkflow < MiqProvisionVirtWorkflow
     end
   end
 
-  def allowed_guest_access_key_pairs(options={})
+  def allowed_guest_access_key_pairs(_options = {})
     source = load_ar_obj(get_source_vm)
     ems = source.try(:ext_management_system)
 
@@ -64,15 +64,15 @@ class MiqProvisionCloudWorkflow < MiqProvisionVirtWorkflow
     true
   end
 
-  def set_or_default_hardware_field_values(vm)
+  def set_or_default_hardware_field_values(_vm)
   end
 
-  def update_field_visibility()
+  def update_field_visibility
     show_dialog(:customize, :show, "disabled")
     super(:force_platform => 'linux')
   end
 
-  def show_customize_fields(fields, platform)
+  def show_customize_fields(fields, _platform)
     show_customize_fields_pxe(fields)
   end
 

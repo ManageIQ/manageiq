@@ -29,7 +29,7 @@ class MiqProvisionRedhatWorkflow < MiqProvisionInfraWorkflow
     true
   end
 
-  def allowed_provision_types(options={})
+  def allowed_provision_types(_options = {})
     {
       "pxe"          => "PXE",
       "iso"          => "ISO",
@@ -41,11 +41,11 @@ class MiqProvisionRedhatWorkflow < MiqProvisionInfraWorkflow
     super(message, {'platform' => 'redhat'})
   end
 
-  def update_field_visibility()
+  def update_field_visibility
     super(:force_platform => 'linux')
   end
 
-  def update_field_visibility_linked_clone(options={}, f)
+  def update_field_visibility_linked_clone(_options = {}, f)
     show_flag = supports_native_clone? ? :edit : :hide
     f[show_flag] << :linked_clone
 

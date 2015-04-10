@@ -151,7 +151,7 @@ module MiqProvisionVmware::Configuration::Network
     devs.select { |d| d.has_key?('macAddress') }.sort_by { |d| d['unitNumber'] }
   end
 
-  def get_network_device(vimVm, vmcs, vim = nil, vlan = nil)
+  def get_network_device(vimVm, _vmcs, _vim = nil, vlan = nil)
     svm = source
     nic = svm.hardware.nil? ? nil : svm.hardware.nics.first
     unless nic.nil?

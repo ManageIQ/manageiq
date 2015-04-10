@@ -11,7 +11,7 @@ describe MiqProvisionRedhatWorkflow do
     let(:template) { FactoryGirl.create(:template_redhat, :name => "template", :ext_management_system => provider) }
 
     before do
-      MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return( {:dialogs => {}} )
+      MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
       MiqProvisionRedhatWorkflow.any_instance.stub(:update_field_visibility)
     end
 

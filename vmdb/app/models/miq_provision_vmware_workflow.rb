@@ -19,7 +19,7 @@ class MiqProvisionVmwareWorkflow < MiqProvisionInfraWorkflow
     super(message, {'platform' => 'vmware'})
   end
 
-  def allowed_provision_types(options={})
+  def allowed_provision_types(_options = {})
     {
       "vmware" => "VMware",
       "pxe"    => "PXE"
@@ -104,7 +104,7 @@ class MiqProvisionVmwareWorkflow < MiqProvisionInfraWorkflow
     ['300', "(GMT+13:00) Nuku'alofa"]
   ]
 
-  def get_timezones(options={})
+  def get_timezones(_options = {})
     SYSPREP_TIMEZONES.collect(&:reverse)
   end
 
@@ -133,7 +133,7 @@ class MiqProvisionVmwareWorkflow < MiqProvisionInfraWorkflow
     result
   end
 
-  def update_field_visibility()
+  def update_field_visibility
     options = {}
     vm = load_ar_obj(get_source_vm)
     unless vm.nil?

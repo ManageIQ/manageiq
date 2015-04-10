@@ -18,7 +18,7 @@ class MiqProvisionRequest < MiqRequest
   validate               :must_have_valid_vm
   validate               :must_have_user
 
-  default_value_for :options,      {:number_of_vms => 1}
+  default_value_for :options,      :number_of_vms => 1
   default_value_for :request_type, REQUEST_TYPES.first
   default_value_for :message,      "#{TASK_DESCRIPTION} - Request Created"
   default_value_for(:src_vm_id)    { |r| r.get_option(:src_vm_id) }

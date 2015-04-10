@@ -1,5 +1,5 @@
 class MiqProvisionOpenstackWorkflow < MiqProvisionCloudWorkflow
-  def allowed_instance_types(options={})
+  def allowed_instance_types(_options = {})
     source = load_ar_obj(get_source_vm)
     ems = source.try(:ext_management_system)
 
@@ -7,7 +7,7 @@ class MiqProvisionOpenstackWorkflow < MiqProvisionCloudWorkflow
     ems.flavors.each_with_object({}) { |f, h| h[f.id] = display_name_for_name_description(f) }
   end
 
-  def allowed_cloud_tenants(options={})
+  def allowed_cloud_tenants(_options = {})
     source = load_ar_obj(get_source_vm)
     if ems = source.try(:ext_management_system)
       ems.cloud_tenants.each_with_object({}) { |f, h| h[f.id] = f.name }

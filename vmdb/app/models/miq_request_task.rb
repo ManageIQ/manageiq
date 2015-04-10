@@ -81,7 +81,7 @@ class MiqRequestTask < ActiveRecord::Base
     update_and_notify_parent(:state => req_state, :status => req_status, :message => display_message(msg))
   end
 
-  def execute_callback(state, message, result)
+  def execute_callback(state, message, _result)
     unless state.to_s.downcase == "ok"
       update_and_notify_parent(:state => "finished", :status => "Error", :message => "Error: #{message}")
     end

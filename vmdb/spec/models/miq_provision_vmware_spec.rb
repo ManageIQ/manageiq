@@ -48,10 +48,10 @@ describe MiqProvisionVmware do
       end
 
       it "should return a transform spec" do
-        spec = @vm_prov.build_transform_spec()
+        spec = @vm_prov.build_transform_spec
         spec.should be_nil
         @vm_prov.options.merge!(:disk_format => 'thin')
-        spec = @vm_prov.build_transform_spec()
+        spec = @vm_prov.build_transform_spec
         spec.should be_kind_of(VimString)
         spec.vimType.should == 'VirtualMachineRelocateTransformation'
       end

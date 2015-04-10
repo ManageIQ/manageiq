@@ -65,7 +65,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     super(request, values, requester_id, 'Vm', 'vm_migrate_request_updated', event_message)
   end
 
-  def refresh_field_values(values, requester_id)
+  def refresh_field_values(values, _requester_id)
     log_header = "MIQ(#{self.class.name}#refresh_field_values)"
 
     begin
