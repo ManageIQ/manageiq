@@ -370,4 +370,38 @@ describe CatalogController do
       Dialog.where(:label => @dialog_label).first.should_not be_nil
     end
   end
+
+  context "#ot_rendering" do
+    render_views
+    before(:each) do
+      FactoryGirl.create(:vmdb_database)
+      EvmSpecHelper.create_guid_miq_server_zone
+      expect(MiqServer.my_guid).to be
+      expect(MiqServer.my_server).to be
+      session[:userid] = User.current_user.userid
+      session[:settings] = {
+        :views => {:orchestrationtemplate => "grid"}
+      }
+      session[:sandboxes] = {
+        "catalog" => {
+          :active_tree => :ot_tree
+        }
+      }
+
+      FactoryGirl.create(:orchestration_template_cfn_with_content)
+      FactoryGirl.create(:orchestration_template_hot_with_content)
+    end
+
+    after(:each) do
+      controller.send(:flash_errors?).should_not be_true
+      expect(response.status).to eq(200)
+    end
+
+    it "Renders list of orchestration templates using correct GTL type" do
+      %w(root xx-otcfn xx-othot).each do |id|
+        post :tree_select, :id => id, :format => :js
+        response.should render_template('layouts/gtl/_grid')
+      end
+    end
+  end
 end
