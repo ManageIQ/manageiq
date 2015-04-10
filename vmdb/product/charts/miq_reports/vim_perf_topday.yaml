@@ -25,6 +25,8 @@ cols:
 - resource_name
 - cpu_usagemhz_rate_average
 - cpu_usage_rate_average
+- derived_logicalcpus_used
+- derived_logicalcpus_available
 - v_pct_cpu_ready_delta_summation
 - derived_memory_used
 - disk_usage_rate_average
@@ -46,6 +48,8 @@ col_order:
 - resource_name
 - cpu_usagemhz_rate_average
 - cpu_usage_rate_average
+- derived_logicalcpus_used
+- derived_logicalcpus_available
 - v_pct_cpu_ready_delta_summation
 - derived_memory_used
 - disk_usage_rate_average
@@ -65,6 +69,8 @@ headers:
 - Avg CPU Used
 - Avg CPU % Used
 - Avg % CPU Ready
+- Used Cores
+- Total Cores
 - Avg RAM Used
 - Avg Disk I/O
 - Avg Net I/O

@@ -22,6 +22,8 @@ cols:
 - timestamp
 - cpu_usagemhz_rate_average
 - cpu_usage_rate_average
+- derived_logicalcpus_used
+- derived_logicalcpus_available
 - v_pct_cpu_ready_delta_summation
 - derived_memory_used
 - disk_usage_rate_average
@@ -41,6 +43,8 @@ col_order:
 - timestamp
 - cpu_usagemhz_rate_average
 - cpu_usage_rate_average
+- derived_logicalcpus_used
+- derived_logicalcpus_available
 - v_pct_cpu_ready_delta_summation
 - derived_memory_used
 - disk_usage_rate_average
@@ -57,6 +61,8 @@ headers:
 - Date/Time
 - Avg Used
 - Avg % Used
+- Used Cores
+- Total Cores
 - ! '% Ready'
 - Avg Used
 - Avg I/O
