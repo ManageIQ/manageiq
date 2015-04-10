@@ -47,11 +47,11 @@ describe ConfigurationProfileForeman do
         )
       end
 
-      context "and a parent" do
-        let(:parent_parent) { parent.build_parent }
-        it "loads tags from parent parent" do
+      context "and a grandparent" do
+        let(:grandparent) { parent.build_parent }
+        it "loads tags from grandparent" do
           parent.configuration_tags << cd
-          parent_parent.configuration_tags << cr
+          grandparent.configuration_tags << cr
           expect(subject.all_tags).to eq(
             ConfigurationRealm  => cr,
             ConfigurationDomain => cd,
@@ -60,8 +60,8 @@ describe ConfigurationProfileForeman do
 
         it "loads respects hierarchy" do
           parent.configuration_tags << cr
-          parent_parent.configuration_tags << cr2
-          parent_parent.configuration_tags << cd
+          grandparent.configuration_tags << cr2
+          grandparent.configuration_tags << cd
           expect(subject.all_tags).to eq(
             ConfigurationRealm  => cr,
             ConfigurationDomain => cd,
