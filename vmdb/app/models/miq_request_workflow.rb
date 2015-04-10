@@ -1138,7 +1138,7 @@ class MiqRequestWorkflow
     filtered_ids = filtered_targets.collect(&:id)
     allowed_ci(:respool, [:cluster, :host, :folder], filtered_ids)
   end
-  alias allowed_resource_pools allowed_respools
+  alias_method :allowed_resource_pools, :allowed_respools
 
   def allowed_folders(_options = {})
     allowed_ci(:folder, [:cluster, :host, :respool])
