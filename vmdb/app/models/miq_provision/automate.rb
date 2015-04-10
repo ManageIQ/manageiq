@@ -195,7 +195,7 @@ module MiqProvision::Automate
       if ae_result.casecmp("retry").zero?
         interval, unit = ae_message.split(".")
         interval = interval.to_i
-        interval = interval * 60           if unit == "minute" || unit == "minutes"
+        interval *= 60                     if unit == "minute" || unit == "minutes"
         interval = interval * 60 * 60      if unit == "hour"   || unit == "hours"
         interval = interval * 60 * 60 * 24 if unit == "day"    || unit == "days"
 

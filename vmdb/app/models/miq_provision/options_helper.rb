@@ -39,7 +39,7 @@ module MiqProvision::OptionsHelper
 
   def set_static_ip_address(pass = nil)
     pass ||= get_option(:pass).to_i
-    pass = pass - 1
+    pass -= 1
     return if pass <= 0
     ip_address = get_option(:ip_addr)
     return unless ip_address.to_s.ipv4?
