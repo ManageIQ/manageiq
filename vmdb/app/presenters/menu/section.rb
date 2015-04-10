@@ -8,6 +8,13 @@ module Menu
       Array(items).collect(&:feature).compact
     end
 
+    def visible?
+      auth   = User.current_user.role_allows_any?(:identifiers => features)
+      userid = User.current_userid
+      $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{userid}], main tab [#{id}]")
+      auth
+    end
+
     def url
       case type
       when :big_iframe then "/dashboard/iframe?sid=#{id}"
