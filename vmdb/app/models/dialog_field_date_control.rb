@@ -3,10 +3,6 @@ class DialogFieldDateControl < DialogField
 
   include TimezoneMixin
 
-  has_one :resource_action, :as => :resource, :dependent => :destroy
-
-  after_initialize :default_resource_action
-
   def show_past_dates
     self.options[:show_past_dates] || false
   end
@@ -50,10 +46,6 @@ class DialogFieldDateControl < DialogField
   end
 
   private
-
-  def default_resource_action
-    build_resource_action if resource_action.nil?
-  end
 
   def default_time
     with_current_user_timezone { Time.zone.now + 1.day }.strftime("%m/%d/%Y")

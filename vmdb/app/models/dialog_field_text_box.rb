@@ -1,10 +1,6 @@
 class DialogFieldTextBox < DialogField
   AUTOMATE_VALUE_FIELDS = %w(protected required validator_rule validator_type)
 
-  has_one :resource_action, :as => :resource, :dependent => :destroy
-
-  after_initialize :default_resource_action
-
   def value
     @value = values_from_automate if dynamic && @value.blank?
     @value
@@ -70,10 +66,6 @@ class DialogFieldTextBox < DialogField
   end
 
   private
-
-  def default_resource_action
-    build_resource_action if resource_action.nil?
-  end
 
   def values_from_automate
     DynamicDialogFieldValueProcessor.values_from_automate(self)

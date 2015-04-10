@@ -1,8 +1,4 @@
 class DialogFieldDropDownList < DialogFieldSortedItem
-  has_one :resource_action, :as => :resource, :dependent => :destroy
-
-  after_initialize :default_resource_action
-
   def initialize_with_values(dialog_values)
     if load_values_on_init?
       raw_values
@@ -39,10 +35,6 @@ class DialogFieldDropDownList < DialogFieldSortedItem
   def load_values_on_init?
     return true unless show_refresh_button
     load_values_on_init
-  end
-
-  def default_resource_action
-    build_resource_action if resource_action.nil?
   end
 
   def raw_values
