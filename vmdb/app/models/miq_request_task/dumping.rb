@@ -25,7 +25,7 @@ module MiqRequestTask::Dumping
     end
 
     def dumpHash(hd, prefix, prnt_obj, prnt_meth, options)
-      hd.each { |k, v| dumpObj(v, "#{prefix}[#{Symbol === k ? ":#{k}" : k}]", prnt_obj, prnt_meth, options) }
+      hd.each { |k, v| dumpObj(v, "#{prefix}[#{k.inspect}]", prnt_obj, prnt_meth, options) }
     end
 
     def dumpVimHash(hd, prefix, prnt_obj, prnt_meth, options)
