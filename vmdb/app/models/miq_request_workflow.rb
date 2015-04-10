@@ -936,7 +936,7 @@ class MiqRequestWorkflow
     node = load_ems_node(item, log_header)
     klass_name = klass.name.to_sym
     # Walk the xml document parents to find the requested class
-    while node.kind_of?(XmlHash::Element) do
+    while node.kind_of?(XmlHash::Element)
       ci = node.attributes[:object]
       if node.name == klass_name && (datacenter == false || datacenter == true && ci.is_datacenter?)
         result = ci
