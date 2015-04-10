@@ -218,7 +218,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     number_of_vms = get_value(@values[:number_of_vms]).to_i
 
     # Show/Hide Fields
-    f = Hash.new { |h, k| h[k] = Array.new }
+    f = Hash.new { |h, k| h[k] = [] }
 
     if get_value(@values[:service_template_request])
       f[:hide] = [:number_of_vms, :vm_description, :schedule_type, :schedule_time]
@@ -279,7 +279,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     f.each { |k, v| show_fields(k, v) }
 
     # Show/Hide Notes
-    f = Hash.new { |h, k| h[k] = Array.new }
+    f = Hash.new { |h, k| h[k] = [] }
 
     show_flag = number_of_vms > 1 ? :edit : :hide
     f[show_flag] += [:ip_addr]
