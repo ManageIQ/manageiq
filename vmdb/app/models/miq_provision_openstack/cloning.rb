@@ -38,7 +38,7 @@ module MiqProvisionOpenstack::Cloning
   end
 
   def start_clone(clone_options)
-    connection_options = {:tenant_name => options[:cloud_tenant][1]} if options[:cloud_tenant].is_a? Array
+    connection_options = {:tenant_name => options[:cloud_tenant][1]} if options[:cloud_tenant].kind_of? Array
     source.with_provider_connection(connection_options) do |openstack|
       instance = openstack.servers.create(clone_options)
       return instance.id

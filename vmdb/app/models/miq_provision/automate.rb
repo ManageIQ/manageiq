@@ -159,8 +159,8 @@ module MiqProvision::Automate
       # Remove passwords
       network[:dhcp_servers].each do |dhcp|
         domain = dhcp[:domain]
-        domain.delete(:bind_password) if domain.is_a?(Hash)
-      end if network[:dhcp_servers].is_a?(Array)
+        domain.delete(:bind_password) if domain.kind_of?(Hash)
+      end if network[:dhcp_servers].kind_of?(Array)
 
       return network
     end if networks.kind_of?(Array)
