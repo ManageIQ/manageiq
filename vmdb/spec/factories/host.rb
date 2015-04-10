@@ -19,6 +19,12 @@ FactoryGirl.define do
     end
   end
 
+  factory :host_vmware_esx_with_authentication, :parent => :host_vmware_esx do
+    after(:create) do |x|
+      x.authentications = [FactoryGirl.build(:authentication, :resource => x)]
+    end
+  end
+
   # Factories for perf_capture_timer and perf_capture_gap testing
   factory :host_target_vmware, :parent => :host do
     after(:create) do |x|

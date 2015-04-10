@@ -153,7 +153,7 @@ describe AuthenticationMixin do
 
     context "with a host and ems" do
       before(:each) do
-        @host = FactoryGirl.create(:host_with_authentication)
+        @host = FactoryGirl.create(:host_vmware_esx_with_authentication)
         @ems  = FactoryGirl.create(:ems_vmware_with_authentication)
         MiqQueue.destroy_all
         @auth = @ems.authentication_type(:default)
@@ -311,7 +311,7 @@ describe AuthenticationMixin do
 
       it "Host#authentication_check_types_queue with [:ssh, :default], :remember_host => true is passed down to verify_credentials" do
         @host.authentication_check_types_queue([:ssh, :default], :remember_host => true)
-        conditions = {:class_name => @host.class.name, :instance_id => @host.id, :method_name => 'authentication_check_types', :role => @host.authentication_check_role}
+        conditions = {:class_name => @host.class.base_class.name, :instance_id => @host.id, :method_name => 'authentication_check_types', :role => @host.authentication_check_role}
         queued_auth_checks = MiqQueue.where(conditions)
         queued_auth_checks.length.should == 1
         Host.any_instance.should_receive(:verify_credentials).with(:default, :remember_host => true)
@@ -339,9 +339,9 @@ describe AuthenticationMixin do
           @host.stub(:has_credentials?).and_return(false)
           @host.authentication_check
 
-          events = MiqQueue.where(:class_name => "MiqEvent").where(:method_name => "raise_evm_event")
-          args = [ [@host.class.name, @host.id], 'host_auth_incomplete', {}]
-          events.any? {|e| e.args == args }.should be_true, "#{events.inspect} with args: #{args.inspect} expected"
+          event = MiqQueue.where(:class_name => "MiqEvent").where(:method_name => "raise_evm_event").first
+          args = [[@host.class.name, @host.id], 'host_auth_incomplete', {}]
+          event.args.should eq args
         end
 
         it "(:save => true) updates status" do
