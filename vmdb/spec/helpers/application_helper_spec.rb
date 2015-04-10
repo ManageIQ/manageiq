@@ -1620,7 +1620,9 @@ describe ApplicationHelper do
         context "and id = miq_request_copy" do
           before do
             @id = "miq_request_copy"
-            @record.stub(:resource_type => "MiqProvisionRequest", :approval_state => "xx", :requester_name => @user.name)
+            @record.stub(:resource_type  => "MiqProvisionRequest",
+                         :approval_state => "pending_approval",
+                         :requester_name => @user.name)
             User.stub(:find_by_userid).and_return(@user)
           end
 
