@@ -716,15 +716,14 @@ class MiqRequestWorkflow
       end
 
       name = ws.root("dialog_name")
-      return name.blank? ? nil : name
+      return name.presence
     end
 
     nil
   end
 
   def self.request_type(type)
-    return request_class::REQUEST_TYPES.first if type.blank?
-    type.to_sym
+    type.presence.try(:to_sym) || request_class::REQUEST_TYPES.first
   end
 
   def request_type
