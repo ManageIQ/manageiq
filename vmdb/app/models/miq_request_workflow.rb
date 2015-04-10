@@ -1392,9 +1392,7 @@ class MiqRequestWorkflow
   end
 
   def allowed_pxe_servers(_options = {})
-    result = {}
-    PxeServer.all.each {|p| result[p.id] = p.name}
-    return result
+    PxeServer.all.each_with_object({}) { |p, h| h[p.id] = p.name }
   end
 
   def allowed_pxe_images(_options = {})
