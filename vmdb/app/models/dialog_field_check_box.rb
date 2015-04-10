@@ -1,10 +1,6 @@
 class DialogFieldCheckBox < DialogField
   AUTOMATE_VALUE_FIELDS = %w(required)
 
-  has_one :resource_action, :as => :resource, :dependent => :destroy
-
-  after_initialize :default_resource_action
-
   def checked?
     value == "t"
   end
@@ -38,10 +34,6 @@ class DialogFieldCheckBox < DialogField
   end
 
   private
-
-  def default_resource_action
-    build_resource_action if resource_action.nil?
-  end
 
   def required_value_error?
     value != "t"
