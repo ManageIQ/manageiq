@@ -28,13 +28,13 @@ module Authenticate
       [user_attrs, membership_list]
     end
 
-    def groups_for(opaque)
-      _user_attrs, membership_list = opaque
+    def groups_for(identity)
+      _user_attrs, membership_list = identity
       membership_list
     end
 
-    def update_user_attributes(user, opaque)
-      user_attrs, _membership_list = opaque
+    def update_user_attributes(user, identity)
+      user_attrs, _membership_list = identity
 
       user.userid     = user_attrs[:username]
       user.name       = user_attrs[:fullname]

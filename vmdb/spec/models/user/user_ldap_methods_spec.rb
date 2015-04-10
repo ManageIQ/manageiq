@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Authenticate do
+describe Authenticate::Ldap do
   before do
     EvmSpecHelper.create_guid_miq_server_zone
     @auth_config = {
@@ -11,7 +11,7 @@ describe Authenticate do
         :user_type   => "userprincipalname",
       }
     }
-    @auth = Authenticate.new
+    @auth = Authenticate::Ldap.new(@auth_config[:authentication])
   end
 
   context ".find_or_create_by_ldap_attr" do
@@ -88,14 +88,14 @@ describe Authenticate do
     end
   end
 
-  context ".authenticate_ldap" do
+  context ".authenticate" do
     before do
       @password = "secret"
       setup_vmdb_config
       init_ldap_setup
       setup_to_get_fqdn
     end
-    subject { @auth.authenticate_ldap("username", @password) }
+    subject { @auth.authenticate("username", @password, nil) }
 
     it "password is blank" do
       @password = ""
@@ -113,7 +113,7 @@ describe Authenticate do
     context "ldap binds" do
       it "get groups from ldap" do
         user = double("some user")
-        @auth.stub(:authorize_ldap_queue => user)
+        @auth.stub(:authorize_queue => user)
         expect(subject).to eq(user)
       end
 
@@ -154,7 +154,7 @@ describe Authenticate do
   def init_ldap_setup
     @miq_ldap = double('miq_ldap')
     @miq_ldap.stub(:bind => true)
-    MiqLdap.stub(:new).and_return(@miq_ldap)
+    @auth.stub(:ldap).and_return(@miq_ldap)
   end
 
   def setup_vmdb_config
@@ -168,7 +168,7 @@ describe Authenticate do
     @miq_ldap.stub(:get_user_object => "A Net::LDAP::Entry object")
     @miq_ldap.stub(:normalize => "some unique string")
     @miq_ldap.stub(:get_attr => "xx@xx.com")
-    @auth.stub(:getUserMembership => [group.description])
+    @auth.stub(:groups_for => [group.description])
   end
 
   def setup_to_get_fqdn

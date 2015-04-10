@@ -5,7 +5,7 @@ module Authenticate
     end
 
     def amazon_auth
-      @amazon_auth ||= AmazonAuth.new
+      @amazon_auth ||= AmazonAuth.new(:auth => config)
     end
 
     def _authenticate(username, password, _request)
@@ -14,6 +14,7 @@ module Authenticate
     end
 
     def find_external_identity(username)
+      log_prefix = "MIQ(Authenticate#find_external_identity)"
       # Amazon IAM will be used for authentication and role assignment
       $log.info("#{log_prefix} AWS key: [#{config[:amazon_key]}]")
       $log.info("#{log_prefix}  User: [#{username}]")

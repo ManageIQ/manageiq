@@ -5,10 +5,11 @@ module Authenticate
     end
 
     def verify_ldap_credentials(username, password)
-      username = normalize(username)
-      raise MiqException::MiqEVMLoginError, "authentication failed" unless ldap.bind(username, password)
+      username = normalize_username(username)
+      raise MiqException::MiqEVMLoginError, "authentication failed" unless ldap_bind(username, password)
     end
 
+    # TODO: This has a lot in common with autocreate_user & authorize
     def find_or_create_by_ldap_attr(attr, value)
       user = User.find_by_userid(value)
       return user if user
@@ -25,10 +26,7 @@ module Authenticate
 
       return user unless user.nil?
 
-      raise "Unable to auto-create user because LDAP authentication is not enabled"       unless config[:mode] == "ldap" || config[:mode] == "ldaps"
-      raise "Unable to auto-create user because LDAP bind credentials are not configured" unless config[:ldap_role] == true
-
-      ldap.bind(config[:bind_dn], config[:bind_pwd]) # now bind with bind_dn so that we can do our searches.
+      raise "Unable to auto-create user because LDAP bind credentials are not configured" unless authorize?
 
       uobj = ldap.get_user_object(value, attr)
       raise "Unable to auto-create user because LDAP search returned no data for user with #{attr}: [#{value}]" if uobj.nil?
@@ -49,17 +47,24 @@ module Authenticate
     private
 
     def ldap
-      @ldap ||= MiqLdap.new
+      @ldap ||= ldap_bind(config[:bind_dn], config[:bind_pwd])
     end
 
-    def autocreate_user(username)
+    def ldap_bind(username, password)
+      ldap = MiqLdap.new(:auth => config)
+      ldap if ldap.bind(username, password)
+    end
+
+    def autocreate_user(username, audit)
       default_group = MiqGroup.where(:description => config[:default_group_for_users]).first if config[:default_group_for_users]
       if default_group
         # when default group for ldap users is enabled, create the user
-        user = User.new
         lobj = ldap.get_user_object(username)
+
+        user = User.new
         update_user_attributes(user, lobj)
-        user.save_successful_logon([default_group], audit)
+        user.miq_groups = [default_group]
+        user.save!
         $log.info("MIQ(Authenticate#autocreate_user): Created User: [#{user.userid}]")
 
         user
@@ -72,13 +77,13 @@ module Authenticate
 
     def _authenticate(username, password, _request)
       password.present? &&
-        ldap.bind(username, password)
+        ldap_bind(username, password)
     end
 
     def find_external_identity(username)
+      log_prefix = "MIQ(Authenticate#find_external_identity)"
       # Ldap will be used for authentication and role assignment
       $log.info("#{log_prefix} Bind DN: [#{config[:bind_dn]}]")
-      ldap.bind(config[:bind_dn], config[:bind_pwd]) # now bind with bind_dn so that we can do our searches.
       $log.info("#{log_prefix}  User FQDN: [#{username}]")
       lobj = ldap.get_user_object(username)
       $log.debug("#{log_prefix} User obj from LDAP: #{lobj.inspect}")
@@ -90,7 +95,9 @@ module Authenticate
       ldap.normalize(ldap.get_attr(lobj, :userprincipalname) || username)
     end
 
-    def groups_for(lobj)
+    DEFAULT_GROUP_MEMBERSHIPS_MAX_DEPTH = 2
+
+    def groups_for(obj)
       authentication = config.dup
       authentication[:group_memberships_max_depth] ||= DEFAULT_GROUP_MEMBERSHIPS_MAX_DEPTH
 

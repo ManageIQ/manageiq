@@ -229,7 +229,7 @@ describe User do
       before(:each) do
         @fq_user = "thin1@manageiq.com"
         @task = MiqTask.create(:name => "LDAP User Authorization of '#{@fq_user}'", :userid => @fq_user)
-        auth_config =
+        @auth_config =
           {:authentication =>
             {:ldapport=>"389",
               :basedn=>"dc=manageiq,dc=com",
@@ -246,7 +246,7 @@ describe User do
             }
           }
         vmdb_config = double("vmdb_config")
-        vmdb_config.stub(:config => auth_config)
+        vmdb_config.stub(:config => @auth_config)
         VMDB::Config.stub(:new).with("vmdb").and_return(vmdb_config)
         @miq_ldap = double('miq_ldap')
         @miq_ldap.stub(:bind => false)
@@ -257,7 +257,7 @@ describe User do
         MiqLdap.stub(:new).and_return(@miq_ldap)
 
         AuditEvent.should_receive(:failure).once
-        User.authenticator.authorize_ldap(@task.id, @fq_user).should be_nil
+        Authenticate::Ldap.new(@auth_config[:authentication]).authorize(@task.id, @fq_user).should be_nil
 
         @task.reload
         @task.state.should == "Finished"
@@ -270,11 +270,11 @@ describe User do
         @miq_ldap.stub(:get_attr => nil)
         @miq_ldap.stub(:normalize => "a-username")
         MiqLdap.stub(:new).and_return(@miq_ldap)
-        authenticate = User.authenticator
-        authenticate.stub(:getUserMembership).and_return([])
+        authenticate = Authenticate::Ldap.new(@auth_config[:authentication])
+        authenticate.stub(:groups_for).and_return([])
 
         AuditEvent.should_receive(:failure).once
-        authenticate.authorize_ldap(@task.id, @fq_user).should be_nil
+        authenticate.authorize(@task.id, @fq_user).should be_nil
 
         @task.reload
         @task.state.should == "Finished"

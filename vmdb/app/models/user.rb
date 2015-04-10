@@ -48,8 +48,6 @@ class User < ActiveRecord::Base
   EVMROLE_SUPER_ADMIN_ROLE_NAME          = "EvmRole-super_administrator"
   EVMROLE_ADMIN_ROLE_NAME                = "EvmRole-administrator"
 
-  DEFAULT_GROUP_MEMBERSHIPS_MAX_DEPTH    = 2
-
   serialize     :settings, Hash   #Implement settings column as a hash
   default_value_for(:settings) { Hash.new }
 
@@ -237,30 +235,6 @@ class User < ActiveRecord::Base
 
   def self.find_or_create_by_ldap_upn(upn)
     authenticator.find_or_create_by_ldap_attr("userprincipalname", upn)
-  end
-
-  def save_successful_logon(matching_groups, audit = nil, task = nil)
-    log_prefix = "MIQ(User#save_successful_logon) User: [#{userid}]"
-    if matching_groups.empty?
-      msg = "Authentication failed for userid #{userid}, unable to match user's group membership to an EVM role"
-      AuditEvent.failure(audit.merge(:message => msg)) if audit
-      if task
-        $log.warn("#{log_prefix}: #{msg}")
-        task.error(msg)
-        task.state_finished
-      end
-      return nil
-    end
-
-    self.miq_groups = matching_groups
-    self.lastlogon = Time.now.utc unless task.nil?
-    save!
-    if task
-      $log.info("#{log_prefix}: Authorized User: [#{userid}]")
-      task.userid = userid
-      task.update_status("Finished", "Ok", "User authorized successfully")
-    end
-    self
   end
 
   def current_group=(group)
