@@ -1122,6 +1122,10 @@ class Host < ActiveRecord::Base
     return true
   end
 
+  def verify_credentials_with_ws(_auth_type = nil, _options = {})
+    raise NotImplementedError, "#{__method__} not implemented in #{self.class.name}"
+  end
+
   def verify_credentials_with_ssh(auth_type=nil, options={})
     raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(auth_type)
     raise MiqException::MiqHostError, "Logon to platform [#{self.os_image_name}] not supported" unless self.os_image_name =~ /linux_*/

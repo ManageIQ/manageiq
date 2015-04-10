@@ -259,7 +259,7 @@ module EmsCommon
   def form_field_changed
     return unless load_edit("ems_edit__#{params[:id]}")
     get_form_vars
-    changed = (@edit[:new] != @edit[:current])
+    changed = edit_changed?
 
     render :update do |page|                  # Use JS to update the display
       if params[:server_emstype]              # Server type changed
@@ -316,8 +316,12 @@ module EmsCommon
   end
   private :update_button_cancel
 
+  def edit_changed?
+    @edit[:new] != @edit[:current]
+  end
+
   def update_button_save
-    changed = (@edit[:new] != @edit[:current])
+    changed = edit_changed?
     update_ems = find_by_id_filtered(model, params[:id])
     set_record_vars(update_ems)
     if valid_record?(update_ems) && update_ems.save
@@ -362,17 +366,16 @@ module EmsCommon
     set_record_vars(verify_ems, :validate)
     @in_a_form = true
     @changed = session[:changed]
-    begin
-      result = verify_ems.verify_credentials(params[:type])
-    rescue StandardError => bang
-      add_flash("#{bang}", :error)
+
+    # validate button should say "revalidate" if the form is unchanged
+    revalidating = !edit_changed?
+    result, details = verify_ems.authentication_check(params[:type], :save => revalidating)
+    if result
+      add_flash(_("Credential validation was successful"))
     else
-      if result
-        add_flash(_("Credential validation was successful"))
-      else
-        add_flash(_("Credential validation was not successful"), :error)
-      end
+      add_flash(_("Credential validation was not successful: #{details}"), :error)
     end
+
     render_flash
   end
   private :update_button_validate

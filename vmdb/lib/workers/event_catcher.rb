@@ -14,7 +14,7 @@ class EventCatcher < WorkerBase
   def after_initialize
     @ems = ExtManagementSystem.find(@cfg[:ems_id])
     do_exit("Unable to find instance for EMS ID [#{@cfg[:ems_id]}].", 1) if @ems.nil?
-    do_exit("EMS ID [#{@cfg[:ems_id]}] failed authentication check.", 1) unless @ems.authentication_check
+    do_exit("EMS ID [#{@cfg[:ems_id]}] failed authentication check.", 1) unless @ems.authentication_check.first
 
     # Get the filtered events from the event_handling config
     @filtered_events = VMDB::Config.new("event_handling").config[:filtered_events]

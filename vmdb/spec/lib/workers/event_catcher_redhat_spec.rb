@@ -8,7 +8,7 @@ describe EventCatcherRedhat do
     let(:catcher) { described_class.new(:ems_id => ems) }
 
     before do
-      EmsRedhat.any_instance.stub(:authentication_check => true)
+      EmsRedhat.any_instance.stub(:authentication_check => [true, ""])
       WorkerBase.any_instance.stub(:worker_initialization)
     end
 
