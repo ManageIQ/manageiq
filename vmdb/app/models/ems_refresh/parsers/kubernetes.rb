@@ -98,23 +98,19 @@ module EmsRefresh::Parsers
     def parse_pod(pod)
       # pod in kubernetes is container group in manageiq
       new_result = parse_base_item(pod)
-      # TODO: remove hash support when old versions are not in use anymore
-      #       https://github.com/GoogleCloudPlatform/kubernetes/issues/3607
-      if pod.spec.restartPolicy.kind_of?(Hash)
-        pod_restart_policy = pod.spec.restartPolicy.keys.first.to_s
-      else
-        pod_restart_policy = pod.spec.restartPolicy
-      end
+
       new_result.merge!(
-        :restart_policy => pod_restart_policy,
-        :dns_policy     => pod.spec.dnsPolicy
+        :restart_policy => pod.spec.restartPolicy,
+        :dns_policy     => pod.spec.dnsPolicy,
+        :container_node => nil,
+        :containers     => []
       )
-      if pod.spec.respond_to?(:host)
+
+      unless pod.spec.host.nil?
         new_result[:container_node] = @data_index.fetch_path(
           :container_nodes, :by_name, pod.spec.host)
-      else
-        new_result[:container_node] = nil
       end
+
       # TODO, map volumes
       # TODO, podIP
       containers = pod.spec.containers
@@ -123,10 +119,9 @@ module EmsRefresh::Parsers
       end
 
       # container instances
-
-      unless pod.status.info.nil?
-        new_result[:containers] = pod.status.info.to_h.collect do |container_name, container|
-          parse_container(container, container_name, pod.metadata.uid)
+      unless pod.status.nil? || pod.status.containerStatuses.nil?
+        pod.status.containerStatuses.each do |cn|
+          new_result[:containers] << parse_container(cn, pod.metadata.uid)
         end
       end
 
@@ -185,39 +180,39 @@ module EmsRefresh::Parsers
 
     def parse_container_definition(container_def, pod_id)
       new_result = {
-        :ems_ref           => "#{pod_id}_#{container_def["name"]}_#{container_def["image"]}",
-        :name              => container_def["name"],
-        :image             => container_def["image"],
-        :image_pull_policy => container_def["imagePullPolicy"],
-        :memory            => container_def["memory"],
+        :ems_ref           => "#{pod_id}_#{container_def.name}_#{container_def.image}",
+        :name              => container_def.name,
+        :image             => container_def.image,
+        :image_pull_policy => container_def.imagePullPolicy,
+        :memory            => container_def.memory,
          # https://github.com/GoogleCloudPlatform/kubernetes/blob/0b801a91b15591e2e6e156cf714bfb866807bf30/pkg/api/v1beta3/types.go#L815
-        :cpu_cores         => container_def["cpu"].to_f / 1000
+        :cpu_cores         => container_def.cpu.to_f / 1000
       }
-      ports = container_def["ports"]
+      ports = container_def.ports
       new_result[:container_port_configs] = Array(ports).collect do |port_entry|
-        parse_container_port_config(port_entry, pod_id, container_def["name"])
+        parse_container_port_config(port_entry, pod_id, container_def.name)
       end
       new_result
     end
 
-    def parse_container(container, container_name, pod_id)
+    def parse_container(container, pod_id)
       {
-        :ems_ref       => "#{pod_id}_#{container_name}_#{container["image"]}",
-        :name          => container_name,
-        :image         => container["image"],
-        :restart_count => container["restartCount"],
-        :container_id  => container["containerID"]
+        :ems_ref       => "#{pod_id}_#{container.name}_#{container.image}",
+        :name          => container.name,
+        :image         => container.image,
+        :restart_count => container.restartCount,
+        :container_id  => container.containerID
       }
       # TODO, state
     end
 
     def parse_container_port_config(port_config, pod_id, container_name)
       {
-        :ems_ref   => "#{pod_id}_#{container_name}_#{port_config["containerPort"]}_#{port_config["hostPort"]}_#{port_config["protocol"]}",
-        :port      => port_config["containerPort"],
-        :host_port => port_config["hostPort"],
-        :protocol  => port_config["protocol"],
-        :name      => port_config["name"]
+        :ems_ref   => "#{pod_id}_#{container_name}_#{port_config.containerPort}_#{port_config.hostPort}_#{port_config.protocol}",
+        :port      => port_config.containerPort,
+        :host_port => port_config.hostPort,
+        :protocol  => port_config.protocol,
+        :name      => port_config.name
       }
     end
 
