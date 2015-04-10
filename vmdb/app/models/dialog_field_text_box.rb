@@ -40,11 +40,12 @@ class DialogFieldTextBox < DialogField
   def validate(dialog_tab, dialog_group)
     return if !required? && value.blank?
 
+    return "#{dialog_tab.label}/#{dialog_group.label}/#{label} is required" if required? && value.blank?
+
     case validator_type
     when 'regex'
       return "#{dialog_tab.label}/#{dialog_group.label}/#{label} is invalid" unless value.match(/#{validator_rule}/)
     end
-    super
   end
 
   def script_error_values
