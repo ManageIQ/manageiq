@@ -148,7 +148,7 @@ module MiqProvisionVmware::Configuration::Network
     end
 
     devs = inventory_hash.fetch_path("config", "hardware", "device") || []
-    devs.select { |d| d.has_key?('macAddress') }.sort_by { |d| d['unitNumber'] }
+    devs.select { |d| d.key?('macAddress') }.sort_by { |d| d['unitNumber'] }
   end
 
   def get_network_device(vimVm, _vmcs, _vim = nil, vlan = nil)

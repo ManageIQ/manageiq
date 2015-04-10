@@ -31,7 +31,7 @@ class MiqRequestTask < ActiveRecord::Base
   end
 
   def update_and_notify_parent(upd_attr)
-    upd_attr[:message] = upd_attr[:message][0, 255] if upd_attr.has_key?(:message)
+    upd_attr[:message] = upd_attr[:message][0, 255] if upd_attr.key?(:message)
     self.update_attributes!(upd_attr)
 
     # If this request has a miq_request_task parent use that, otherwise the parent is the miq_request

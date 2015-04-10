@@ -264,7 +264,7 @@ class MiqRequestWorkflow
     field = @dialogs.fetch_path(:dialogs, dialog_name.to_sym, :fields, field_name)
     return {} unless field
 
-    if field.has_key?(:values_from)
+    if field.key?(:values_from)
       options = field[:values_from][:options] || {}
       options[:prov_field_name] = field_name
       field[:values] = send(field[:values_from][:method], options)
@@ -277,7 +277,7 @@ class MiqRequestWorkflow
           end
         else
           currently_selected = get_value(@values[field_name])
-          unless currently_selected.nil? || field[:values].has_key?(currently_selected)
+          unless currently_selected.nil? || field[:values].key?(currently_selected)
             @values[field_name] = [nil, nil]
           end
         end
@@ -378,7 +378,7 @@ class MiqRequestWorkflow
 
   def find_dialog_from_field_name(field_name)
     @dialogs[:dialogs].each_key do |dialog_name|
-      return dialog_name if @dialogs[:dialogs][dialog_name][:fields].has_key?(field_name.to_sym)
+      return dialog_name if @dialogs[:dialogs][dialog_name][:fields].key?(field_name.to_sym)
     end
     nil
   end
@@ -392,11 +392,11 @@ class MiqRequestWorkflow
     field_names = values.keys
     fields do |fn, f, _dn, _d|
       if field_names.include?(fn)
-        if f.has_key?(:values)
+        if f.key?(:values)
           selected_key = nil
-          if f[:values].has_key?(values[fn])
+          if f[:values].key?(values[fn])
             selected_key = values[fn]
-          elsif f.has_key?(:default) && f[:values].has_key?(f[:default])
+          elsif f.key?(:default) && f[:values].key?(f[:default])
             selected_key = f[:default]
           else
             unless f[:values].blank?
@@ -415,7 +415,7 @@ class MiqRequestWorkflow
   def clear_field_values(field_names)
     fields do |fn, f, _dn, _d|
       if field_names.include?(fn)
-        @values[fn] = f.has_key?(:values) ? [nil,nil] : nil
+        @values[fn] = f.key?(:values) ? [nil, nil] : nil
       end
     end
   end
@@ -593,7 +593,7 @@ class MiqRequestWorkflow
       @tags[t.id] = {:name => t.name, :description => t.description, :single_value => single_value, :children => {}, :id => t.id}
     end
     ents.each do |t|
-      if @tags.has_key?(t.parent_id)
+      if @tags.key?(t.parent_id)
         full_tag_name = "#{@tags[t.parent_id][:name]}/#{t.name}"
         next if exclude_list.include?(full_tag_name)
         @tags[t.parent_id][:children][t.id] = {:name => t.name, :description => t.description}
@@ -692,7 +692,7 @@ class MiqRequestWorkflow
 
     @values.each_key do |k|
       key = "dialog_input_#{k.to_s.downcase}"
-      if attrs.has_key?(key)
+      if attrs.key?(key)
         $log.info "#{log_header}: Skipping key=<#{key}> because already set to <#{attrs[key]}>"
       else
         value = (k == :vm_tags) ? get_tags : get_value(@values[k]).to_s
@@ -1285,7 +1285,7 @@ class MiqRequestWorkflow
     end
 
     result = nil
-    if dlg_field.has_key?(:values)
+    if dlg_field.key?(:values)
       field_values = dlg_field[:values]
       $log.info "#{log_header} processing key <#{dialog_name}:#{key}(#{data_type})> with values <#{field_values.inspect}>"
       if field_values.present?
@@ -1293,7 +1293,7 @@ class MiqRequestWorkflow
                    found = field_values.detect { |v| v.id == set_value }
                    [found.id, found.name] if found
                  else
-                   [set_value, field_values[set_value]] if field_values.has_key?(set_value)
+                   [set_value, field_values[set_value]] if field_values.key?(set_value)
                  end
 
         set_value = [result.first, result.last] unless result.nil?
@@ -1316,7 +1316,7 @@ class MiqRequestWorkflow
     data_type = dlg_field[:data_type]
     find_value = value.to_s.downcase
 
-    if dlg_field.has_key?(:values)
+    if dlg_field.key?(:values)
       field_values = dlg_field[:values]
       $log.info "#{log_header} processing key <#{dialog_name}:#{key}(#{data_type})> with values <#{field_values.inspect}>"
       if field_values.present?
@@ -1340,13 +1340,13 @@ class MiqRequestWorkflow
 
   def set_ws_field_value_by_id_or_name(values, dlg_field, data, dialog_name, dlg_fields, data_key = nil, id_klass = nil)
     data_key = dlg_field if data_key.blank?
-    if data.has_key?(data_key)
+    if data.key?(data_key)
       data[data_key] = "#{id_klass}::#{data[data_key]}" unless id_klass.blank?
       data[dlg_field] = data.delete(data_key)
       set_ws_field_value(values, dlg_field, data, dialog_name, dlg_fields)
     else
       data_key_without_id = data_key.to_s.chomp('_id').to_sym
-      if data.has_key?(data_key_without_id)
+      if data.key?(data_key_without_id)
         data[data_key] = data.delete(data_key_without_id)
         data[dlg_field] = data.delete(data_key)
         set_ws_field_value_by_display_name(values, dlg_field, data, dialog_name, dlg_fields, :name)
