@@ -2,6 +2,8 @@ module Metric::Processing
   DERIVED_COLS = [
     :derived_cpu_available,
     :derived_cpu_reserved,
+    :derived_logicalcpus_used,
+    :derived_logicalcpus_available,
     :derived_host_count_off,
     :derived_host_count_on,
     :derived_memory_available,
@@ -23,6 +25,7 @@ module Metric::Processing
     ts = attrs[:timestamp] if ts.nil?
     state = obj.vim_performance_state_for_ts(ts)
     total_cpu = state.total_cpu || 0
+    logical_cpus = state.logical_cpus || 0
     total_mem = state.total_mem || 0
     result = {}
 
@@ -37,6 +40,8 @@ module Metric::Processing
         # values collected
         if group == "cpu"
           result[col] = total_cpu if have_cpu_metrics && total_cpu > 0
+        elsif group == "logicalcpus"
+          result[col] = logical_cpus
         else
           result[col] = total_mem if have_mem_metrics && total_mem > 0
         end
@@ -54,6 +59,10 @@ module Metric::Processing
           result[col] = ( attrs[:cpu_usage_rate_average]     / 100 * total_cpu ) unless (total_cpu == 0 || attrs[:cpu_usage_rate_average].nil?)
         elsif group == "memory"
           result[col] = ( attrs[:mem_usage_absolute_average] / 100 * total_mem ) unless (total_mem == 0  || attrs[:mem_usage_absolute_average].nil?)
+        elsif group == "logicalcpus"
+          unless logical_cpus == 0 || attrs[:cpu_usage_rate_average].nil?
+            result[col] = (attrs[:cpu_usage_rate_average] / 100 * logical_cpus)
+          end
         else
           method = col.to_s.split("_")[1..-1].join("_")
           result[col] = state.send(method) if state.respond_to?(method)

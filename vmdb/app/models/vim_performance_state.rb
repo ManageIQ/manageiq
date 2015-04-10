@@ -15,6 +15,7 @@ class VimPerformanceState < ActiveRecord::Base
     :tag_names,
     :numvcpus,
     :total_cpu,
+    :logical_cpus,
     :total_mem,
     :reserve_cpu,
     :reserve_mem,
@@ -29,6 +30,7 @@ class VimPerformanceState < ActiveRecord::Base
   # => assoc_ids
   # => total_memory
   # => total_cpu
+  # => logical_cpus
   # => reserve_memory
   # => reserve_cpu
   # => vm_count_on      (derive from assoc_ids)
@@ -53,6 +55,7 @@ class VimPerformanceState < ActiveRecord::Base
     state.parent_ems_cluster_id = self.capture_parent_cluster(obj)
     state.numvcpus = self.capture_numvcpus(obj)
     state.total_cpu = self.capture_total(obj, :cpu_speed)
+    state.logical_cpus = self.capture_logical_cpus(obj)
     state.total_mem = self.capture_total(obj, :memory)
     state.reserve_cpu = self.capture_reserve(obj, :cpu_reserve)
     state.reserve_mem = self.capture_reserve(obj, :memory_reserve)
@@ -190,5 +193,14 @@ class VimPerformanceState < ActiveRecord::Base
     # depending on the name :numvcpus
     # A larger patch should be done outside of a z-stream release
     return obj.hardware.logical_cpus
+  end
+
+  def self.capture_logical_cpus(obj)
+    # FIXME: this should probably include capture_numvcpus
+    if obj.respond_to?(:hardware) && obj.hardware
+      return obj.hardware.logical_cpus
+    elsif obj.respond_to?(:container_node) && obj.container_node.hardware
+      return obj.container_node.hardware.logical_cpus
+    end
   end
 end
