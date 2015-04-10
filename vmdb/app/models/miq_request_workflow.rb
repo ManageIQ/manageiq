@@ -815,7 +815,7 @@ class MiqRequestWorkflow
     end
     result = [] if result.nil?
     result.reject! { |k, _v| !filtered_ids.include?(k) } unless filtered_ids.nil?
-    result.inject({}) { |r, s| r[s[0]] = s[1]; r }
+    result.each_with_object({}) { |s, hash| hash[s[0]] = s[1] }
   end
 
   def process_filter(filter_prop, ci_klass, targets = [])
@@ -1148,21 +1148,21 @@ class MiqRequestWorkflow
 
   def ci_to_datacenter(src, ci, ci_type)
     sources = src[ci].nil? ? find_all_ems_of_type(ci_type) : [src[ci]]
-    sources.collect { |c| find_datacenter_for_ci(c) }.compact.uniq.inject({}) { |r, c| r[c.id] = c.name; r }
+    sources.collect { |c| find_datacenter_for_ci(c) }.compact.uniq.each_with_object({}) { |c, r| r[c.id] = c.name }
   end
 
   def respool_to_cluster(src)
     return nil unless ems_has_clusters?
     sources = src[:respool].nil? ? find_all_ems_of_type(ResourcePool) : [src[:respool]]
     targets = sources.collect { |rp| find_cluster_above_ci(rp) }.compact
-    targets.inject({}) { |r, c| r[c.id] = c.name; r }
+    targets.each_with_object({}) { |c, r| r[c.id] = c.name }
   end
 
   def host_to_cluster(src)
     return nil unless ems_has_clusters?
     sources = src[:host].nil? ? allowed_hosts_obj : [src[:host]]
     targets = sources.collect { |h| find_cluster_above_ci(h) }.compact
-    targets.inject({}) { |r, c| r[c.id] = c.name; r }
+    targets.each_with_object({}) { |c, r| r[c.id] = c.name }
   end
 
   def folder_to_cluster(src)
@@ -1170,14 +1170,14 @@ class MiqRequestWorkflow
     source = find_all_ems_of_type(EmsCluster)
     # If a folder is selected, reduce the cluster list to only clusters in the same data center as the folder
     source = source.reject { |c| find_datacenter_for_ci(c).id != src[:datacenter].id } unless src[:datacenter].nil?
-    source.inject({}) { |r, c| r[c.id] = c.name; r }
+    source.each_with_object({}) { |c, r| r[c.id] = c.name }
   end
 
   def cluster_to_respool(src)
     return nil unless ems_has_clusters?
     targets = src[:cluster].nil? ? find_all_ems_of_type(ResourcePool) : find_respools_under_ci(src[:cluster])
     res_pool_with_path = get_ems_respool(get_ems_metadata_tree(src))
-    targets.inject({}) { |r, rp| r[rp.id] = res_pool_with_path[rp.id]; r }
+    targets.each_with_object({}) { |rp, r| r[rp.id] = res_pool_with_path[rp.id] }
   end
 
   def folder_to_respool(src)
@@ -1185,7 +1185,7 @@ class MiqRequestWorkflow
     datacenter = find_datacenter_for_ci(src[:folder])
     targets = find_respools_under_ci(datacenter)
     res_pool_with_path = get_ems_respool(get_ems_metadata_tree(src))
-    targets.inject({}) { |r, rp| r[rp.id] = res_pool_with_path[rp.id]; r }
+    targets.each_with_object({}) { |rp, r| r[rp.id] = res_pool_with_path[rp.id] }
   end
 
   def host_to_respool(src)
@@ -1196,25 +1196,25 @@ class MiqRequestWorkflow
       find_respools_under_ci(source)
     end.flatten
     res_pool_with_path = get_ems_respool(get_ems_metadata_tree(src))
-    targets.inject({}) { |r, rp| r[rp.id] = res_pool_with_path[rp.id]; r }
+    targets.each_with_object({}) { |rp, r| r[rp.id] = res_pool_with_path[rp.id] }
   end
 
   def cluster_to_host(src)
     return nil unless ems_has_clusters?
     hosts = src[:cluster].nil? ? find_all_ems_of_type(Host) : find_hosts_under_ci(src[:cluster])
-    hosts.inject({}) { |r, h| r[h.id] = h.name; r }
+    hosts.each_with_object({}) { |h, r| r[h.id] = h.name }
   end
 
   def respool_to_host(src)
     hosts = src[:respool].nil? ? find_all_ems_of_type(Host) : find_hosts_for_respool(src[:respool])
-    hosts.inject({}) { |r, h| r[h.id] = h.name; r }
+    hosts.each_with_object({}) { |h, r| r[h.id] = h.name }
   end
 
   def folder_to_host(src)
     source = find_all_ems_of_type(Host)
     # If a folder is selected, reduce the host list to only hosts in the same datacenter as the folder
     source = source.reject { |h| find_datacenter_for_ci(h).id != src[:datacenter].id } unless src[:datacenter].nil?
-    source.inject({}) { |r, h| r[h.id] = h.name; r }
+    source.each_with_object({}) { |h, r| r[h.id] = h.name }
   end
 
   def host_to_folder(src)
