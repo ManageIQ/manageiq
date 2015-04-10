@@ -1193,7 +1193,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     data.keys.each do |k|
       key_name = k.to_s.split('.').first
       next unless key_name =~ regex_filter
-      item_id = $1.to_i
+      item_id = Regexp.last_match(1).to_i
       v = data.delete(k)
       $log.info "#{log_header} processing key <hardware:#{k}(#{v.class})> with value <#{v.inspect}>"
 

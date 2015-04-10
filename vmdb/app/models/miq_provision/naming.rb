@@ -43,7 +43,7 @@ module MiqProvision::Naming
     def get_vm_full_name(unresolved_vm_name, prov_obj, determine_index)
       # Split name to find the index substitution string
       if unresolved_vm_name =~ NAME_SEQUENCE_REGEX
-        name = {:prefix => $`, :suffix => $', :index => $&, :index_length => $1.to_i}
+        name = {:prefix => $`, :suffix => $', :index => $&, :index_length => Regexp.last_match(1).to_i}
       else
         # If we did not find the index substitution string just return what was passed in
         return unresolved_vm_name
