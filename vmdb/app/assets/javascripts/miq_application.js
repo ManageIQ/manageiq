@@ -1650,3 +1650,7 @@ function miqSerializeForm(element) {
   return $('#' + element).find('input,select,textarea').serialize();
 }
 
+function miqSerializeField(element, field_name) {
+  return $("#" + element + " :input[id=" + field_name + "]").serialize();
+}
+
