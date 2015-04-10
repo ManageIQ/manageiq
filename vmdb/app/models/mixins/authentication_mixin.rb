@@ -191,6 +191,19 @@ module AuthenticationMixin
     types.to_miq_a.each { |t| self.authentication_check(t, options)}
   end
 
+  # Returns [boolean check_result, string details]
+  # check_result is true if and only if:
+  #   * the system is reachable
+  #   * AND we have the required authentication information
+  #   * AND we successfully connected using the authentication
+  #
+  # details is a UI friendly message
+  #
+  # By default, the authentication's status is updated by the
+  # validation_successful or validation_failed callbacks.
+  #
+  # An optional :save => false can be passed to bypass these callbacks.
+  #
   # TODO: :valid, :incomplete, and friends shouldn't be littered in here and authentication
   def authentication_check(*args)
     options         = args.last.kind_of?(Hash) ? args.last : {}
