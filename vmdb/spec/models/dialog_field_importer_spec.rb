@@ -21,6 +21,34 @@ describe DialogFieldImporter do
       }
     end
 
+    context "when the type of the dialog field is an old DialogFieldDynamicList" do
+      let(:type) { "DialogFieldDynamicList" }
+
+      before do
+        @result = dialog_field_importer.import_field(dialog_field)
+      end
+
+      it "creates a DialogFieldDropDownList with the correct name" do
+        expect(DialogFieldDropDownList.first.name).to eq("Something")
+      end
+
+      it "creates a DialogFieldDropDownList with the correct label" do
+        expect(DialogFieldDropDownList.first.label).to eq("Something else")
+      end
+
+      it "creates a DialogFieldDropDownList with dynamic true" do
+        expect(DialogFieldDropDownList.first.dynamic).to be_true
+      end
+
+      it "creates a ResourceAction with the given attributes" do
+        expect(DialogFieldDropDownList.first.resource_action.fqname).to eq("/Customer/Sample/Methods/Testing")
+      end
+
+      it "returns the created object" do
+        expect(@result).to eq(DialogFieldDropDownList.first)
+      end
+    end
+
     context "when the type of the dialog field is included in DIALOG_FIELD_TYPES" do
       let(:type) { "DialogFieldTextBox" }
 
