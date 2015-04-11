@@ -35,7 +35,7 @@ module Authenticate
       raise "Unable to auto-create user because unable to match user's group membership to an EVM role" if matching_groups.empty?
 
       user = User.new
-      update_user_attributes(user, uobj)
+      update_user_attributes(user, value, uobj)
       user.miq_groups = matching_groups
       user.save
 
@@ -62,7 +62,7 @@ module Authenticate
         lobj = ldap.get_user_object(username)
 
         user = User.new
-        update_user_attributes(user, lobj)
+        update_user_attributes(user, username, lobj)
         user.miq_groups = [default_group]
         user.save!
         $log.info("MIQ(Authenticate#autocreate_user): Created User: [#{user.userid}]")
@@ -126,7 +126,7 @@ module Authenticate
       groups.uniq
     end
 
-    def update_user_attributes(user, lobj)
+    def update_user_attributes(user, username, lobj)
       user.userid     = ldap.normalize(ldap.get_attr(lobj, :userprincipalname) || ldap.get_attr(lobj, :dn))
       user.name       = ldap.get_attr(lobj, :displayname)
       user.first_name = ldap.get_attr(lobj, :givenname)

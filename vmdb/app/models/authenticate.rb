@@ -109,7 +109,7 @@ module Authenticate
           matching_groups = match_groups(groups_for(identity))
           userid = userid_for(identity, username)
           user   = User.find_by_userid(userid) || User.new(:userid => userid)
-          update_user_attributes(user, identity)
+          update_user_attributes(user, username, identity)
 
           if matching_groups.empty?
             msg = "Authentication failed for userid #{user.userid}, unable to match user's group membership to an EVM role"
