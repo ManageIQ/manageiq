@@ -161,6 +161,14 @@ open-vm-tools
 
 %post --log=/root/anaconda-post.log
 
+# Drop packets for INPUT/FORWARD that aren't whitelisted in the firewall setup
+for IPT in /etc/sysconfig/iptables /etc/sysconfig/iptables.old ; do
+  if [ -f $IPT ] ; then
+     sed -i "s/INPUT ACCEPT/INPUT DROP/g" $IPT
+     sed -i "s/FORWARD ACCEPT/FORWARD DROP/g" $IPT
+  fi
+done
+
 www_root="/var/www"
 app_root="$www_root/miq"
 
