@@ -102,6 +102,9 @@ FactoryGirl.define do
   factory :ems_kubernetes, :class => "EmsKubernetes", :parent => :ems_container do
   end
 
+  factory :ems_openshift,  :class => "EmsOpenshift", :parent => :ems_container do
+  end
+
   # Leaf classes for configuration_manager
 
   factory :configuration_manager_foreman, :class => "ConfigurationManagerForeman", :parent => :configuration_manager do
