@@ -7,7 +7,7 @@ class ConfigurationProfile < ActiveRecord::Base
   belongs_to :parent, :class_name => 'ConfigurationProfile'
   has_and_belongs_to_many :configuration_locations, :join_table => :configuration_locations_configuration_profiles
   has_and_belongs_to_many :configuration_organizations, :join_table => :configuration_organizations_configuration_profiles
-  has_and_belongs_to_many :configuration_tags
+  has_and_belongs_to_many :configuration_tags, :join_table => :configuration_profiles_configuration_tags
 
   def all_tags
     tag_hash = configuration_tags.index_by(&:class)
