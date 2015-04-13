@@ -19,5 +19,4 @@
           %li
             = link_to("#{ui_lookup(:table => "ext_management_systems")}: #{@record.ext_management_system.name}",
                 {:controller => "ems_container", :action => 'show', :id => @record.ext_management_system.id.to_s},
-                {:title => _("Show this Container Services parent %s") % ui_lookup(:table => "ems_container")},
-                '/images/icons/16/link_external.gif')
+                {:title => _("Show this Container Services parent %s") % ui_lookup(:table => "ems_container")})
