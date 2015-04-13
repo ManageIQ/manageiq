@@ -13,8 +13,7 @@
         %li
           = link_to(image_tag('/images/toolbars/undo.png',
                               :alt => 'Undo the previous change'),
-                    {:action  => 'exp_button',
-                     :pressed => 'undo'},
+                    advanced_searches_exp_button_path(:pressed => 'undo'),
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
                     :remote                => true,
@@ -54,8 +53,7 @@
             %li
               = link_to(image_tag("/images/toolbars/#{image}.png",
                                   :alt => title),
-                        {:action  => "exp_button",
-                         :pressed => pressed},
+                        advanced_searches_exp_button_path(:pressed => pressed),
                         "data-miq_sparkle_on"  => true,
                         "data-miq_sparkle_off" => true,
                         :remote                => true,
@@ -69,8 +67,7 @@
           %li
             = link_to(image_tag("/images/toolbars/#{image}.png",
                                 :alt => title),
-                      {:action  => 'exp_button',
-                       :pressed => pressed},
+                      advanced_searches_exp_button_path(:pressed => pressed),
                       "data-miq_sparkle_on"  => true,
                       "data-miq_sparkle_off" => true,
                       :remote                => true,
@@ -80,8 +77,7 @@
       - @edit[@expkey][:exp_table].each do |token|
         - if ! %w(AND OR ( ) ???).include?([token].flatten.first)
           = link_to(token.first,
-                    {:action => 'exp_token_pressed',
-                     :token  => token.last},
+                    advanced_searches_exp_token_pressed_path(:token => token.last),
                     :style                 => "color: black",
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
@@ -89,8 +85,7 @@
                     :id                    => "exp_#{token.last}")
         - elsif [token].flatten.first == "???"
           = link_to(token.first,
-                    {:action => 'exp_token_pressed',
-                     :token  => token.last},
+                    advanced_searches_exp_token_pressed_path(:token => token.last),
                     :style                 => "color: black; background-color: yellow",
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,

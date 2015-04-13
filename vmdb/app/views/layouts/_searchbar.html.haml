@@ -56,7 +56,7 @@
       });
     });
     $("button[data-target='#advsearchModal']").click(function(){
-      miqJqueryRequest("adv_search_toggle", {beforeSend: true});
+      miqJqueryRequest("#{advanced_searches_toggle_path(:target_controller => controller_name)}", {beforeSend: true});
       return true;
     });
   });

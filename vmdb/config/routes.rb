@@ -1,14 +1,4 @@
 Vmdb::Application.routes.draw do
-
-  #grouped routes
-  adv_search_post = %w(
-    adv_search_button
-    adv_search_clear
-    adv_search_load_choice
-    adv_search_name_typed
-    adv_search_toggle
-  )
-
   button_post = %w(
     button_create
     button_update
@@ -62,12 +52,6 @@ Vmdb::Application.routes.draw do
     drift_history
     drift_mode
     drift_same
-  )
-
-  exp_post = %w(
-    exp_button
-    exp_changed
-    exp_token_pressed
   )
 
   evm_relationship_post = %w(
@@ -157,7 +141,7 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         tl_chooser
         wait_for_task
-      ) + adv_search_post + compare_post + exp_post + perf_post
+      ) + compare_post + perf_post
     },
 
     :catalog                 => {
@@ -321,8 +305,6 @@ Vmdb::Application.routes.draw do
         tree_autoload_dynatree
         tree_select
       ) +
-        adv_search_post +
-        exp_post +
         save_post +
         x_post
     },
@@ -352,8 +334,6 @@ Vmdb::Application.routes.draw do
         update
         wait_for_task
       ) +
-        adv_search_post +
-        exp_post +
         save_post
     },
 
@@ -382,8 +362,6 @@ Vmdb::Application.routes.draw do
         update
         wait_for_task
       ) +
-        adv_search_post +
-        exp_post +
         save_post
     },
 
@@ -435,8 +413,6 @@ Vmdb::Application.routes.draw do
         show_list
         update
       ) +
-        adv_search_post +
-        exp_post +
         save_post
     },
 
@@ -561,11 +537,9 @@ Vmdb::Application.routes.draw do
         update
         wait_for_task
       ) +
-        adv_search_post +
         compare_post +
         dialog_runner_post +
         discover_get_post +
-        exp_post +
         save_post
     },
 
@@ -600,11 +574,9 @@ Vmdb::Application.routes.draw do
         tree_autoload_quads
         wait_for_task
       ) +
-        adv_search_post +
         compare_post +
         dialog_runner_post +
         drift_post +
-        exp_post +
         perf_post +
         save_post
     },
@@ -645,11 +617,9 @@ Vmdb::Application.routes.draw do
         wait_for_task
         scaling
       ) +
-        adv_search_post +
         compare_post +
         dialog_runner_post +
         discover_get_post +
-        exp_post +
         save_post
     },
 
@@ -679,9 +649,7 @@ Vmdb::Application.routes.draw do
         update
         wait_for_task
       ) +
-        adv_search_post +
         compare_post +
-        exp_post +
         save_post
     },
 
@@ -709,9 +677,7 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         tagging_edit
       ) +
-        adv_search_post +
-        compare_post +
-        exp_post
+        compare_post
     },
 
     :host  => {
@@ -775,11 +741,9 @@ Vmdb::Application.routes.draw do
         users
         wait_for_task
       ) +
-        adv_search_post +
         compare_post +
         dialog_runner_post +
         discover_get_post +
-        exp_post +
         perf_post +
         save_post
     },
@@ -972,8 +936,6 @@ Vmdb::Application.routes.draw do
         upload
         wait_for_task
       ) +
-        adv_search_post +
-        exp_post +
         x_post
     },
 
@@ -1084,9 +1046,7 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         tagging_edit
       ) +
-        adv_search_post +
-        compare_post +
-        exp_post
+        compare_post
     },
 
     :ontap_logical_disk     => {
@@ -1115,9 +1075,7 @@ Vmdb::Application.routes.draw do
         tagging_edit
         wait_for_task
       ) +
-        adv_search_post +
-        compare_post +
-        exp_post
+        compare_post
     },
 
     :ontap_storage_system   => {
@@ -1147,9 +1105,7 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         tagging_edit
       ) +
-        adv_search_post +
-        compare_post +
-        exp_post
+        compare_post
     },
 
     :ontap_storage_volume   => {
@@ -1175,9 +1131,7 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         tagging_edit
       ) +
-        adv_search_post +
-        compare_post +
-        exp_post
+        compare_post
     },
 
     :ops => {
@@ -1310,8 +1264,6 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
       ) +
-        adv_search_post +
-        exp_post +
         save_post
     },
 
@@ -1353,8 +1305,11 @@ Vmdb::Application.routes.draw do
         users
         wait_for_task
       ) +
-        adv_search_post +
-        x_post
+        x_button
+        x_history
+        x_search_by_name
+        x_show
+      )
     },
 
     :pxe => {
@@ -1453,8 +1408,7 @@ Vmdb::Application.routes.draw do
         x_history
         x_settings_changed
         x_show
-      ) +
-        exp_post
+      )
     },
 
     :repository => {
@@ -1484,9 +1438,7 @@ Vmdb::Application.routes.draw do
         tagging_edit
         update
       ) +
-        adv_search_post +
         compare_post +
-        exp_post +
         save_post
     },
 
@@ -1513,9 +1465,7 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         quick_search
       ) +
-        adv_search_post +
         compare_post +
-        exp_post +
         save_post
     },
 
@@ -1538,9 +1488,7 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         tagging_edit
       ) +
-        adv_search_post +
-        compare_post +
-        exp_post
+        compare_post
     },
 
     :service => {
@@ -1612,10 +1560,8 @@ Vmdb::Application.routes.draw do
         tagging_edit
         wait_for_task
       ) +
-        adv_search_post +
         compare_post +
         dialog_runner_post +
-        exp_post +
         save_post
     },
 
@@ -1638,9 +1584,7 @@ Vmdb::Application.routes.draw do
         show
         show_list
         update
-      ) +
-        adv_search_post +
-        exp_post
+      )
     },
 
     :support                => {
@@ -1738,12 +1682,10 @@ Vmdb::Application.routes.draw do
         wait_for_task
         win32_services
       ) +
-        adv_search_post +
         compare_post +
         dialog_runner_post +
         drift_post +
         evm_relationship_post +
-        exp_post +
         policy_post +
         pre_prov_post +
         retire_post +
@@ -1823,12 +1765,10 @@ Vmdb::Application.routes.draw do
         wait_for_task
         win32_services
       ) +
-        adv_search_post +
         compare_post +
         dialog_runner_post +
         drift_post +
         evm_relationship_post +
-        exp_post +
         policy_post +
         pre_prov_post +
         retire_post +
@@ -1914,11 +1854,9 @@ Vmdb::Application.routes.draw do
         x_search_by_name
         x_show
       ) +
-        adv_search_post +
         compare_post +
         dialog_runner_post +
         evm_relationship_post +
-        exp_post +
         policy_post +
         pre_prov_post +
         snap_post +
@@ -1940,6 +1878,16 @@ Vmdb::Application.routes.draw do
   match '/api/*suffix' => 'api#destroy', :format => 'json', :via => [:delete]
   # OPTIONS requests for REST API pre-flight checks
   match '/api/*path'   => 'api#handle_options_request', :via => [:options]
+
+  post '/advanced_searches/clear'             => 'advanced_searches#clear'
+  post '/advanced_searches/toggle'            => 'advanced_searches#toggle'
+  post '/advanced_searches/button'            => 'advanced_searches#button'
+  post '/advanced_searches/name_typed'        => 'advanced_searches#name_typed'
+  post '/advanced_searches/exp_button'        => 'advanced_searches#exp_button'
+  post '/advanced_searches/exp_token_pressed' => 'advanced_searches#exp_token_pressed'
+  post '/advanced_searches/exp_changed'       => 'advanced_searches#exp_changed'
+  post '/advanced_searches/exp_changed'       => 'advanced_searches#exp_changed'
+  post '/advanced_searches/load_choice'       => 'advanced_searches#load_choice'
 
   CONTROLLER_ACTIONS.each do |controller_name, controller_actions|
 

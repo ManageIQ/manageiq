@@ -1,5 +1,5 @@
-- url = url_for(:action =>'adv_search_load_choice')
-- url2 = url_for(:action =>'adv_search_name_typed')
+- url = advanced_searches_load_choice_path
+- url2 = advanced_searches_name_typed_path
 - report_expressions = MiqReport.get_expressions_by_model(@edit[@expkey][:exp_model])
 - mode ||= "search"
 
@@ -13,8 +13,7 @@
 
     - else
       = link_to(_("Load..."),
-                {:action => "adv_search_button",
-                 :button => 'load'},
+                 advanced_searches_button_path(:button => 'load'),
                  :alt    => t = _("Load a filter"),
                  :class  => "btn btn-primary pull-left",
                  :remote => true,
@@ -24,8 +23,7 @@
       = button_tag(_("Apply"), :class => "btn btn-primary btn-disabled")
     - else
       = link_to(_("Apply"),
-                {:action => "adv_search_button",
-                 :button => "apply"},
+                advanced_searches_button_path(:button => 'apply', :target_controller => target_controller),
                 "data-miq_sparkle_on"  => true,
                 "data-miq_sparkle_off" => true,
                 :class                 => "btn btn-primary",
@@ -38,8 +36,7 @@
       -    (session[:userrole] != "super_administrator" && session[:userrole] != "administrator" &&
       -    @edit[@expkey][:selected][:typ] == "user")
         = link_to(_("Delete"),
-                  {:action => "adv_search_button",
-                   :button => "delete" },
+                  advanced_searches_button_path(:button => 'delete'),
                   :confirm => _("Delete the %{model} filter named %{filter}?") % {:model  => ui_lookup(:model => @edit[@expkey][:exp_mode]),
                                                                                   :filter => @edit[:adv_search_name]},
                   :class   => "btn btn-danger",
@@ -50,8 +47,7 @@
       = button_tag(_("Save..."), :class => "btn btn-primary btn-disabled")
     - else
       = link_to(_("Save..."),
-                {:action => "adv_search_button",
-                 :button => "save"},
+                advanced_searches_button_path(:button => 'save'),
                 :class  => "btn btn-primary",
                 :alt    => t = _("Save the current filter"),
                 :remote => true,
@@ -60,8 +56,7 @@
       = button_tag("Reset", :class => "btn btn-default btn-disabled")
     - else
       = link_to(_("Reset"),
-                {:action => "adv_search_button",
-                 :button => "reset"},
+                advanced_searches_button_path(:button => 'reset'),
                 :class => "btn btn-default",
                 :alt   => t = _("Reset the filter"),
                 :remote => true,
@@ -74,30 +69,26 @@
                    :title => t)
     - else
       = link_to(_("Load"),
-                { :action => "adv_search_button",
-                  :button => "loadit" },
+                advanced_searches_button_path(:button => 'loadit'),
                 :class  => "btn btn-primary pull-left",
                 :alt    => t = _("Load the filter shown above"),
                 :remote => true,
                 :title  => t)
     = link_to(_("Cancel"),
-              { :action => "adv_search_button",
-                :button => "cancel" },
+              advanced_searches_button_path(:button => 'cancel'),
               :class => "btn btn-primary",
               :alt   => t = _("Cancel the load"),
               :remote => true,
               :title  => t)
   - elsif mode == "save"
     = link_to(_("Save"),
-                {:action => "adv_search_button",
-                 :button => "saveit"},
+                advanced_searches_button_path(:button => 'saveit'),
                 :class => "btn btn-primary",
                 :alt   => t = _("Save the current search"),
                 :remote => true,
                 :title  => t)
     = link_to(_("Cancel"),
-              {:action => "adv_search_button",
-               :button => "cancel"},
+              advanced_searches_button_path(:button => 'cancel'),
               :class => "btn btn-default",
               :alt   => t = _("Cancel the save"),
               :remote => true,

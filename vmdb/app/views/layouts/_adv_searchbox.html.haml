@@ -29,7 +29,7 @@
                         :style => "z-index:50",
                         :alt   => t = _("Advanced Search"),
                         :title => t),
-              {:action => 'adv_search_toggle'},
+              advanced_searches_toggle_path(:target_controller => controller_name),
               :remote  => true,
               :id      => "adv_search")
     %span#clear_search{:style => "display:none;"}
