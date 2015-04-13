@@ -18,9 +18,9 @@ def process_comma_separated_object_array(sequence_id, option_key, value, hash)
   return if value.nil?
   options_value_array = []
   value.split(",").each do |entry|
-    vmdb_obj = vmdb_object_from_array_entry(entry.to_s)
+    vmdb_obj = vmdb_object_from_array_entry(entry)
     next if vmdb_obj.nil?
-    options_value_array << vmdb_obj.name
+    options_value_array << vmdb_obj.respond_to?(:name) ? vmdb_obj.name : "#{vmdb_obj.class.name}::#{vmdb_obj.id}"
   end
   hash[sequence_id][option_key] = options_value_array
 end
@@ -71,8 +71,8 @@ def parse_dialog_entries(dialog_options)
   return options_hash, tags_hash
 end
 
-def parent_task_dialog_information
-  bundle_task = parent_task(@task)
+def parent_task_dialog_information(task)
+  bundle_task = parent_task(task)
   if bundle_task.nil?
     $evm.log('error', "Unable to locate Dialog information")
     exit MIQ_ABORT
@@ -84,25 +84,25 @@ def parent_task_dialog_information
   return options_hash, tags_hash
 end
 
-def save_parsed_dialog_information(options_hash, tags_hash)
-  @task.set_option(:parsed_dialog_options, YAML.dump(options_hash))
-  @task.set_option(:parsed_dialog_tags, YAML.dump(tags_hash))
-  $evm.log('info', "parsed_dialog_options: #{@task.get_option(:parsed_dialog_options).inspect}")
-  $evm.log('info', "parsed_dialog_tags: #{@task.get_option(:parsed_dialog_tags).inspect}")
+def save_parsed_dialog_information(options_hash, tags_hash, task)
+  task.set_option(:parsed_dialog_options, YAML.dump(options_hash))
+  task.set_option(:parsed_dialog_tags, YAML.dump(tags_hash))
+  $evm.log('info', "parsed_dialog_options: #{task.get_option(:parsed_dialog_options).inspect}")
+  $evm.log('info', "parsed_dialog_tags: #{task.get_option(:parsed_dialog_tags).inspect}")
 end
 
-@task = $evm.root['service_template_provision_task']
+task = $evm.root['service_template_provision_task']
 
-dialog_entries = @task.dialog_options
+dialog_entries = task.dialog_options
 
 $evm.log('info', "dialog_options: #{dialog_entries.inspect}")
 
 options_hash, tags_hash = parse_dialog_entries(dialog_entries)
 
 if options_hash.blank? && tags_hash.blank?
-  options_hash, tags_hash = parent_task_dialog_information
+  options_hash, tags_hash = parent_task_dialog_information(task)
 else
   $evm.log('info', "Current task has dialog information")
 end
 
-save_parsed_dialog_information(options_hash, tags_hash)
+save_parsed_dialog_information(options_hash, tags_hash, task)
