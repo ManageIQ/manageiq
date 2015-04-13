@@ -3,7 +3,6 @@
 .tags
 *.cmd
 *.pyc
-/bin/
 /data/
 /productization
 BUILD
