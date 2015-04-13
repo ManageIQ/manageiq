@@ -73,6 +73,8 @@ describe ApiController do
     end
 
     it "supports single provider creation" do
+      pending "requires actionwebservice"
+
       api_basic_authorize collection_action_identifier(:providers, :create)
 
       run_post(providers_url, sample_rhevm)
@@ -86,6 +88,8 @@ describe ApiController do
     end
 
     it "supports single provider creation via action" do
+      pending "requires actionwebservice"
+
       api_basic_authorize collection_action_identifier(:providers, :create)
 
       run_post(providers_url, gen_request(:create, sample_rhevm))
@@ -115,6 +119,8 @@ describe ApiController do
     end
 
     it "supports single provider creation with compound credentials" do
+      pending "requires actionwebservice"
+
       api_basic_authorize collection_action_identifier(:providers, :create)
 
       run_post(providers_url, sample_rhevm.merge("credentials" => compound_credentials))
@@ -133,6 +139,8 @@ describe ApiController do
     end
 
     it "supports multiple provider creation" do
+      pending "requires actionwebservice"
+
       api_basic_authorize collection_action_identifier(:providers, :create)
 
       run_post(providers_url, gen_request(:create, [sample_vmware, sample_rhevm]))

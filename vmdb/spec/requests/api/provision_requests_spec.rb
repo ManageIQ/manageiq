@@ -64,6 +64,8 @@ describe ApiController do
     end
 
     it "supports single request with normal post" do
+      pending "requires actionwebservice"
+
       api_basic_authorize collection_action_identifier(:provision_requests, :create)
 
       dialog  # Create the Provisioning dialog
@@ -78,6 +80,8 @@ describe ApiController do
     end
 
     it "supports single request with create action" do
+      pending "requires actionwebservice"
+
       api_basic_authorize collection_action_identifier(:provision_requests, :create)
 
       dialog  # Create the Provisioning dialog
@@ -92,6 +96,8 @@ describe ApiController do
     end
 
     it "supports multiple requests" do
+      pending "requires actionwebservice"
+
       api_basic_authorize collection_action_identifier(:provision_requests, :create)
 
       dialog  # Create the Provisioning dialog
