@@ -71,7 +71,7 @@ class ServiceTemplate < ActiveRecord::Base
     self.service_resources.each do |sr|
       nh = sr.attributes.dup
       %W{id created_at updated_at service_template_id}.each {|key| nh.delete(key)}
-      svc.add_resource(sr.resource, nh)
+      svc.add_resource(sr.resource, nh) unless sr.resource.nil?
     end
 
     parent_svc.add_resource!(svc) unless parent_svc.nil?
