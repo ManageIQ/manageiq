@@ -337,7 +337,7 @@ module ReportController::Widgets
       if @widget.visibility[:roles][0] == "_ALL_"
         @edit[:new][:roles] = ["_ALL_"]
       else
-        roles = MiqUserRole.find_by_name(@widget.visibility[:roles])
+        roles = MiqUserRole.where(:name => @widget.visibility[:roles])
         @edit[:new][:roles] = roles.collect { |role| to_cid(role.id) }.sort
       end
     elsif @widget.visibility && @widget.visibility[:groups]
@@ -740,7 +740,7 @@ module ReportController::Widgets
     if ["r", "c"].include?(@sb[:wtype]) && (!@edit[:new][:repfilter] || @edit[:new][:repfilter] == "")
       add_flash(_("%s must be selected") % "A Report", :error)
     end
-    if @sb[:wtype] == "rf" && @edit[:new][:visibility_typ] == "role" && @edit[:new][:roles].blank?
+    if @edit[:new][:visibility_typ] == "role" && @edit[:new][:roles].blank?
       add_flash(_("%s must be selected") % "A Role", :error)
     end
     if @sb[:wtype] == "r" && @edit[:new][:pivotby1] == "<<< Nothing >>>"
