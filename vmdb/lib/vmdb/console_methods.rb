@@ -16,7 +16,7 @@ module Vmdb
     def simulate_queue_worker(break_on_complete = false)
       raise NotImplementedError, "not implemented in production mode" if Rails.env.production?
       loop do
-        q = MiqQueue.order(:id).first
+        q = MiqQueue.where(MiqQueue.arel_table[:queue_name].not_eq("miq_server")).order(:id).first
         if q
           status, message, result = q.deliver
           q.delivered(status, message, result) unless status == MiqQueue::STATUS_RETRY

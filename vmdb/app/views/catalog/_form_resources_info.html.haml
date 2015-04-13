@@ -57,7 +57,7 @@
                     = h(@edit[:new][:selected_resources].length)
                   - else
                     = select_tag("provision_index_#{i}_#{k}",
-                      options_for_select(Array.new(@edit[:new][:rsc_groups].length) {|j| j+1}, (sr[:provision_index]+1).to_s),
+                      options_for_select(Array.new(@edit[:new][:provision_order].length) {|j| j+1}, (sr[:provision_index]+1).to_s),
                       "data-miq_sparkle_on" => true,
                       "data-miq_observe" => {:url => url}.to_json)
                 - start_action_values = [_('Do Nothing'), _('Power On')]

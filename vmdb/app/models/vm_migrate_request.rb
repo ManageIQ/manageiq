@@ -13,8 +13,12 @@ class VmMigrateRequest < MiqRequest
   default_value_for :message,      "#{TASK_DESCRIPTION} - Request Created"
   default_value_for(:requester)    { |r| r.get_user }
 
+  def my_zone
+    vm = Vm.where(:id => options[:src_ids]).first
+    vm.nil? ? super : vm.my_zone
+  end
+
   def my_role
     'ems_operations'
   end
-
 end

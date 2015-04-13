@@ -19,5 +19,9 @@ module MiqAeMethodService
       object_send(:update_and_notify_parent, :state => 'finished', :message => msg)
     end
 
+    def status
+      $miq_ae_logger.warn("[DEPRECATION] status method is deprecated.  Please use statemachine_task_status instead.")
+      statemachine_task_status
+    end
   end
 end

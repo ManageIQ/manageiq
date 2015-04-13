@@ -25,6 +25,8 @@ class NetappRemoteService < StorageManager
 
   def connect
     self.class.initialize_class_for_client
+
+    # TODO: Use hostname, not ipaddress
     @ontapClient = OntapClient.new(ipaddress, *self.auth_user_pwd(:default))
     @nmaClient = @ontapClient.conn
     return @ontapClient
@@ -178,6 +180,7 @@ class NetappRemoteService < StorageManager
 
     agent_query.update_all(:last_update_status => STORAGE_UPDATE_PENDING)
     agent_query.find_each do |agent|
+      # TODO: Log hostname, not ipaddress
       $log.info "NetappRemoteService.update_ontap: Checking agent: #{agent.ipaddress}"
       begin
         agent.connect
@@ -196,6 +199,7 @@ class NetappRemoteService < StorageManager
       agent.update_attribute(:last_update_status, STORAGE_UPDATE_IN_PROGRESS)
       agent.managed_elements.update_all(:last_update_status => STORAGE_UPDATE_AGENT_OK_NO_INSTANCE)
 
+      # TODO: Log hostname, not ipaddress
       begin
         agent.update_ontap
         $log.info "NetappRemoteService.update_ontap: agent: #{agent.ipaddress} STORAGE_UPDATE_OK"
@@ -223,6 +227,7 @@ class NetappRemoteService < StorageManager
     statistic_time ||= Time.now.utc
 
     self.agent_query(nrsIds).find_each do |agent|
+      # TODO: Log hostname, not ipaddress
       $log.info "NetappRemoteService.update_metrics Agent: #{agent.ipaddress} Start..."
 
       begin
@@ -245,6 +250,7 @@ class NetappRemoteService < StorageManager
 
   def self.rollup_hourly_metrics(rollup_time, nrsIds=[])
     self.agent_query(nrsIds).find_each do |agent|
+      # TODO: Log hostname, not ipaddress
       $log.info "NetappRemoteService.rollup_hourly_metrics Agent: #{agent.ipaddress} Start..."
 
       begin
@@ -260,6 +266,7 @@ class NetappRemoteService < StorageManager
   end
 
   def rollup_hourly_metrics(rollup_time)
+    # TODO: Log hostname, not ipaddress
     $log.info "NetappRemoteService.rollup_hourly_metrics Agent: #{self.ipaddress}, rollup_time: #{rollup_time}"
     topMe = self.top_managed_elements.first
     topMe.elements_with_metrics.each do |se|
@@ -281,6 +288,7 @@ class NetappRemoteService < StorageManager
     end
 
     self.agent_query(nrsIds).find_each do |agent|
+      # TODO: Log hostname, not ipaddress
       $log.info "NetappRemoteService.rollup_daily_metrics Agent: #{agent.ipaddress}, TZ: #{time_profile.tz} Start..."
 
       begin
@@ -296,6 +304,7 @@ class NetappRemoteService < StorageManager
   end
 
   def rollup_daily_metrics(rollup_time, time_profile)
+    # TODO: Log hostname, not ipaddress
     $log.info "NetappRemoteService.rollup_daily_metrics Agent: #{self.ipaddress}, rollup_time: #{rollup_time}, TZ: #{time_profile.tz}"
     topMe = self.top_managed_elements.first
     topMe.elements_with_metrics.each do |se|

@@ -6,13 +6,14 @@ module HostHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w{hostname ipaddress ipmi_ipaddress custom_1 vmm_vendor model asset_tag service_tag osinfo power_state lockdown_mode devices
-                network storage_adapters num_cpu num_cpu_cores cores_per_socket memory guid}
+    items = %w{hostname ipaddress ipmi_ipaddress custom_1 vmm_vendor model asset_tag service_tag osinfo
+               power_state lockdown_mode devices network storage_adapters num_cpu num_cpu_cores cores_per_socket memory
+               guid}
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
   def textual_group_relationships
-    items = %w{ems cluster storages resource_pools vms miq_templates drift_history}
+    items = %w{ems cluster availability_zone used_tenants storages resource_pools vms miq_templates drift_history}
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
@@ -254,6 +255,32 @@ module HostHelper::TextualSummary
     if num > 0
       h[:title] = "Show all #{label}"
       h[:link]  = url_for(:action => 'drift_history', :id => @record)
+    end
+    h
+  end
+
+  def textual_availability_zone
+    return nil if !@record.respond_to?(:availability_zone) || !@record.availability_zone
+
+    availability_zone = @record.availability_zone
+    label = ui_lookup(:table => "availability_zone")
+    h = {:label => label, :image => "availability_zone", :value => (availability_zone.nil? ? "None" : availability_zone.name)}
+    if availability_zone && role_allows(:feature => "availability_zone_show")
+      h[:title] = _("Show this VM's %s") % label
+      h[:link]  = url_for(:controller => 'availability_zone', :action => 'show', :id => availability_zone)
+    end
+    h
+  end
+
+  def textual_used_tenants
+    return nil if !@record.respond_to?(:cloud_tenants) || !@record.cloud_tenants
+
+    label = ui_lookup(:tables => "cloud_tenants")
+    num   = @record.cloud_tenants.count
+    h     = {:label => label, :image => "cloud_tenants", :value => num}
+    if num > 0 && role_allows(:feature => "cloud_tenant_show_list")
+      h[:title] = _("Show all used %s on this host") % label
+      h[:link]  = url_for(:action => "show", :id => @record, :display => "cloud_tenants")
     end
     h
   end

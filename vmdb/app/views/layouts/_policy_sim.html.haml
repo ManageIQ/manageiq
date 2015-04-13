@@ -3,35 +3,33 @@
   = render :partial => "layouts/flash_msg"
   %h3= _("Choose Policies")
   #tab_div
-    %table.style3
+    %table.table.table-bordered.table-striped
       %thead
         %tr
-          %th.special{:colspan => "2"}
+          %th{:colspan => "2"}
             %strong= _("Select a Policy Profile to add:")
             = select_tag("profile_id",
                          options_for_select(@temp[:all_profs].invert.sort_by { |desc, _id| desc.downcase }, "select"),
-                         "data-miq_sparkle_on"  => true, 
+                         "data-miq_sparkle_on"  => true,
                          "data-miq_sparkle_off" => true,
                          "data-miq_observe"     => {:url => url}.to_json)
         %tr
-          %th.icon
+          %th.narrow
           %th= _("Policy Profiles in Effect")
       %tbody
         - if session[:policies].length == 0
-          %tr{:class => "#{cycle('row0', 'row1')}"}
+          %tr
             %td
             %td
               = _("No policies have been chosen yet")
         - else
           - session[:policies].invert.sort.each do |desc, id|
-            %tr{:id => "#{desc}_tr", :class => "#{cycle('row0', 'row1')}"}
+            %tr{:id => "#{desc}_tr"}
               %td{:onclick => "#{remote_function(:loading  => "miqSparkle(true);",
                                                  :complete => "miqSparkle(false);",
                                                  :url      => {:action  => 'policy_sim_remove', :del_pol => id})}",
                   :title => t = _("Click to remove this policy")}
-                = image_tag("/images/toolbars/delete.png", 
-                            :class => "rollover small", 
-                            :alt   => t) 
+                = image_tag("/images/toolbars/delete.png", :alt => t)
               %td
                 = h(desc)
   %hr

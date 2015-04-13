@@ -10,7 +10,6 @@
 require 'spec_helper'
 
 describe ApiController do
-
   include Rack::Test::Methods
 
   before(:each) do
@@ -63,7 +62,7 @@ describe ApiController do
       api_basic_authorize
       create_conditions(3)
 
-      run_get "#{conditions_url}?expand=resources"
+      run_get conditions_url, :expand => "resources"
 
       expect_query_result(:conditions, 3, 3)
       expect_result_resources_to_include_data("resources", "guid" => :condition_guid_list)
@@ -88,7 +87,7 @@ describe ApiController do
       create_conditions(3)
       assign_conditions_to(policy)
 
-      run_get "#{policy_conditions_url}?expand=resources"
+      run_get policy_conditions_url, :expand => "resources"
 
       expect_query_result(:conditions, 3, 3)
       expect_result_resources_to_include_data("resources", "guid" => :condition_guid_list)
@@ -99,7 +98,7 @@ describe ApiController do
       create_conditions(3)
       assign_conditions_to(policy)
 
-      run_get "#{policy_url}?expand=conditions"
+      run_get policy_url, :expand => "conditions"
 
       expect_single_resource_query("name" => policy.name, "description" => policy.description, "guid" => policy.guid)
       expect_result_resources_to_include_data("conditions", "guid" => :condition_guid_list)

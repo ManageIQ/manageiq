@@ -906,10 +906,6 @@ module MiqAeCustomizationController::Dialogs
           @edit[:field_required]      = key[:required]  = false
         elsif params[:field_typ] =~ /Drop|Radio/
           @edit[:field_default_value] = key[:default_value] = nil
-        elsif params[:field_typ] =~ /DialogFieldDynamicList/
-          @edit[:field_entry_point]         = key[:entry_point] = ''
-          @edit[:field_show_refresh_button] = key[:show_refresh_button] = false
-          @edit[:field_load_on_init]        = key[:load_on_init] = false
         else
           @edit[:field_default_value] = key[:default_value] = false
         end
@@ -1369,10 +1365,10 @@ module MiqAeCustomizationController::Dialogs
   end
 
   def dynamic_field?(field)
-    field[:typ] == 'DialogFieldDynamicList' || field[:dynamic]
+    field[:dynamic]
   end
 
   def needs_entry_point?
-    (@edit[:field_typ].to_s == 'DialogFieldDynamicList' || @edit[:field_dynamic]) && @edit[:field_entry_point].blank?
+    @edit[:field_dynamic] && @edit[:field_entry_point].blank?
   end
 end

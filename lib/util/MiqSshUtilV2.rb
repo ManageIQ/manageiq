@@ -24,6 +24,9 @@ class MiqSshUtil
     @shell    = nil
     @options  = {:password => @password, :remember_host=>false, :verbose => :warn}.merge(options)
 
+    # Seems like in 2.9.2, there needs to be blank :keys, when we are passing private key as string
+    @options[:keys] = [] if options[:key_data]
+
     # Pull the 'remember_host' key out of the hash because the SSH initializer will complain
     @remember_host = @options.delete(:remember_host)
     @su_user     = @options.delete(:su_user)
@@ -39,7 +42,7 @@ class MiqSshUtil
   end # def initialize
   
   def cp(from, to)
-    Net::SFTP.start(@host, @user, :password => @password) do |sftp|
+    Net::SFTP.start(@host, @user, @options) do |sftp|
       $log.debug "MiqSshUtil::cp - Copying file #{from} to #{@host}:#{to}." if $log
       sftp.upload!(from, to)
       $log.debug "MiqSshUtil::cp - Copying of #{from} to #{@host}:#{to}, complete." if $log
@@ -47,7 +50,7 @@ class MiqSshUtil
   end # def cp
 
   def get_file(from, to)
-    Net::SFTP.start(@host, @user, :password => @password) do |sftp|
+    Net::SFTP.start(@host, @user, @options) do |sftp|
       $log.debug "MiqSshUtil::get_file - Copying file #{@host}:#{from} to #{to}." if $log
       data = sftp.download!(from, to)
       $log.debug "MiqSshUtil::get_file - Copying of #{@host}:#{from} to #{to}, complete." if $log

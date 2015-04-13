@@ -7,10 +7,3 @@
                            "data-backdrop"   => "static",
                            :style            => "display: none"}
   = render :partial => "layouts/user_input_filter"
-:javascript
-  $(function(){
-    $("button[data-dismiss='modal']").click(function(){
-      miqJqueryRequest("listnav_search_selected", {beforeSend: true});
-      return true;
-    });
-  });

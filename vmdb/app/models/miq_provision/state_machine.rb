@@ -31,7 +31,7 @@ module MiqProvision::StateMachine
   end
 
   def poll_destination_powered_off_in_vmdb
-    update_and_notify_parent(:message => "Waiting for PowerOff #{for_destination}")
+    update_and_notify_parent(:message => "Waiting for VMDB PowerOff of #{for_destination}")
 
     if self.destination.power_state == 'off'
       signal :post_provision

@@ -1,6 +1,14 @@
 require "spec_helper"
 
 describe EmsRefresh::Refreshers::ForemanRefresher do
+  before do
+    unless provider.api_cached?
+      VCR.use_cassette("ems_refresh/refreshers/foreman_refresher_api_doc") do
+        provider.ensure_api_cached
+      end
+    end
+  end
+
   let(:spec_related) { "name like 'ProviderRefreshSpec%'" }
   let(:provider) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
@@ -13,6 +21,8 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
 
   let(:provisioning_manager)  { provider.provisioning_manager }
   let(:configuration_manager) { provider.configuration_manager }
+  let(:orgs) { provisioning_manager.configuration_organizations.where(spec_related).sort_by(&:name) }
+  let(:locs) { provisioning_manager.configuration_locations.where(spec_related).sort_by(&:name) }
 
   it "loads data with locations and organizations" do
     EmsRefresh.stub(:queue_refresh) { |*args| EmsRefresh.refresh(*args) }
@@ -25,19 +35,52 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
       end
     end
 
-    orgs = provisioning_manager.configuration_organizations.where(spec_related)
-    locs = provisioning_manager.configuration_locations.where(spec_related)
+    test_orgs
+    test_locs
+    test_child
+    test_system
+  end
 
-    expect(orgs.size).to eq(2)
-    expect(locs.size).to eq(2)
-
+  def test_child
     child  = configuration_manager.configuration_profiles.where(:name => 'ProviderRefreshSpec-ChildHostGroup').first
-    expect(child.configuration_organizations.sort_by(&:id)).to eq(orgs.sort_by(&:id))
-    expect(child.configuration_locations.sort_by(&:id)).to     eq(locs.sort_by(&:id))
+    expect(child.configuration_organizations).to match_array(orgs)
+    expect(child.configuration_locations).to     match_array(locs)
+  end
 
+  def test_system
     system = configuration_manager.configured_systems.where("hostname like 'providerrefreshspec%'").first
     expect(system.configuration_organization).to eq(orgs.select { |h| h.name =~ /Child/ }.first)
     expect(system.configuration_location).to     eq(locs.select { |h| h.name =~ /Child/ }.first)
+  end
+
+  def test_orgs
+    expect(orgs.size).to eq(2)
+    child = orgs.first
+    parent = orgs.last
+    expect(child).to have_attributes(
+      :title     => "Infra/ProviderRefreshSpecOrganization/ProviderRefreshSpecChildOrganization",
+      :name      => "ProviderRefreshSpecChildOrganization",
+      :parent_id => parent.id,
+    )
+    expect(parent).to have_attributes(
+      :title => "Infra/ProviderRefreshSpecOrganization",
+      :name  => "ProviderRefreshSpecOrganization",
+    )
+  end
+
+  def test_locs
+    expect(locs.size).to eq(2)
+    child = locs.first
+    parent = locs.last
+    expect(child).to have_attributes(
+      :title     => "ProviderRefreshSpec-Location/ProviderRefreshSpec-ChildLocation",
+      :name      => "ProviderRefreshSpec-ChildLocation",
+      :parent_id => parent.id,
+    )
+    expect(parent).to have_attributes(
+      :title => "ProviderRefreshSpec-Location",
+      :name  => "ProviderRefreshSpec-Location",
+    )
   end
 
   private

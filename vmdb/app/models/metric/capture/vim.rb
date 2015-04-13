@@ -17,7 +17,7 @@ module Metric::Capture::Vim
     results = phr.fetch_path(:intervals, ems.id)
     return results unless results.nil?
 
-    log_header = "MIQ(#{self.name}.intervals) EMS: [#{ems.ipaddress}]"
+    log_header = "MIQ(#{self.name}.intervals) EMS: [#{ems.hostname}]"
     begin
       results = vim_hist.intervals
     rescue Handsoap::Fault, StandardError => err
@@ -34,7 +34,7 @@ module Metric::Capture::Vim
     results = phr.fetch_path(:realtime_interval, ems.id, mor)
     return results unless results.nil?
 
-    log_header = "MIQ(#{self.name}.realtime_interval) EMS: [#{ems.ipaddress}]"
+    log_header = "MIQ(#{self.name}.realtime_interval) EMS: [#{ems.hostname}]"
 
     begin
       summary = vim_hist.queryProviderSummary(mor)
@@ -59,7 +59,7 @@ module Metric::Capture::Vim
     results = phr.fetch_path(:hourly_interval, ems.id)
     return results unless results.nil?
 
-    log_header = "MIQ(#{self.name}.hourly_interval) EMS: [#{ems.ipaddress}]"
+    log_header = "MIQ(#{self.name}.hourly_interval) EMS: [#{ems.hostname}]"
 
     # Using the reporting value of 'hourly', get the vim interval 'Past Month'
     #   and look for that in the intervals data
@@ -83,7 +83,7 @@ module Metric::Capture::Vim
     results = phr.fetch_path(:counter_info_by_id, ems.id)
     return results unless results.nil?
 
-    log_header = "MIQ(#{self.name}.counter_info_by_id) EMS: [#{ems.ipaddress}]"
+    log_header = "MIQ(#{self.name}.counter_info_by_id) EMS: [#{ems.hostname}]"
     begin
       counter_info = vim_hist.id2Counter
     rescue Handsoap::Fault, StandardError => err
@@ -120,7 +120,7 @@ module Metric::Capture::Vim
     results = phr.fetch_path(:avail_metrics_for_entity, ems.id, mor, interval)
     return results unless results.nil?
 
-    log_header = "MIQ(#{self.name}.avail_metrics_for_entity) EMS: [#{ems.ipaddress}]"
+    log_header = "MIQ(#{self.name}.avail_metrics_for_entity) EMS: [#{ems.hostname}]"
     begin
       avail_metrics = vim_hist.availMetricsForEntity(mor, :intervalId => interval)
     rescue Handsoap::Fault, StandardError => err

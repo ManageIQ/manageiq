@@ -1,5 +1,6 @@
-
 $:.push(File.dirname(__FILE__))
+require 'pathname'
+require Pathname.new(__dir__).join("../util/extensions/miq-uri")
 
 require 'sync'
 require 'VimService'
@@ -36,17 +37,7 @@ class MiqVimClientBase < VimService
 	end
 
 	def sdk_uri
-		require 'uri'
-		uri = URI::HTTPS.build(:path => "/sdk")
-
-		# IPv6 addresses need to be wrapped in [] in URI's
-		# See: https://www.ietf.org/rfc/rfc2732.txt
-		# URI::Generic#hostname= will automatically wrap an ipv6 address in []
-		# uri.hostname = "::1"
-		# uri.to_s => "http://[::1]/foo"
-		# Feature request to URI::Generic.build: https://github.com/ruby/ruby/pull/765
-		uri.hostname = @server
-		uri
+		URI::HTTPS.build(:host => server, :path => "/sdk")
 	end
 	
 	def self.receiveTimeout=(val)

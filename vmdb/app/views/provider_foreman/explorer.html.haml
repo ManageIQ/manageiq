@@ -18,10 +18,10 @@
                 :accord_select_function => "miqAccordProviderForemanSelect"})
 
 - # These are the initial divs that will go inside center_cell_div
-- if @record
-  - # Showing a specific VM or Template record
-  #main_div.main_div
-    = render(:partial => 'provider_foreman/main', :locals => {:controller => "provider_foreman"})
-- else
+- if @view
   #main_div.main_div
     = render(:partial => 'layouts/x_gtl')
+- else
+  - # Showing a specific record
+  #main_div.main_div
+    = render(:partial => 'provider_foreman/main', :locals => {:controller => "provider_foreman"})

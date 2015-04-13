@@ -1,12 +1,14 @@
 class KubernetesEventMonitor
-  def initialize(api_endpoint, api_version)
+  def initialize(api_endpoint)
     @api_endpoint = api_endpoint
-    @api_version = api_version
   end
 
   def inventory
     require 'kubeclient'
-    @inventory ||= Kubeclient::Client.new(@api_endpoint, @api_version)
+    @inventory ||= Kubeclient::Client.new(@api_endpoint)
+    # TODO: support real authentication using certificates
+    @inventory.ssl_options(:verify_ssl => OpenSSL::SSL::VERIFY_NONE)
+    @inventory
   end
 
   def watcher(version = nil)

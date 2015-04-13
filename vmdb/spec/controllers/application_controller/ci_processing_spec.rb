@@ -194,21 +194,19 @@ end
 describe HostController do
   context "#show_association" do
     before(:each) do
+      set_user_privileges
+      FactoryGirl.create(:vmdb_database)
+      EvmSpecHelper.create_guid_miq_server_zone
       @host = FactoryGirl.create(:host)
       @guest_application = FactoryGirl.create(:guest_application, :name => "foo", :host_id => @host.id)
     end
+
     it "renders show_item" do
-      controller.instance_variable_set(:@_params, :id => @host.id, :show => @guest_application.id)
       controller.instance_variable_set(:@breadcrumbs, [])
       controller.stub(:get_view)
-      controller.should_receive(:show_item).once
-      controller.send(:show_association,
-                      'guest_applications',
-                      'Packages',
-                      'guest_application',
-                      :guest_applications,
-                      GuestApplication)
+      get :guest_applications, :id => @host.id, :show => @guest_application.id
       expect(response.status).to eq(200)
+      expect(response).to render_template('host/show')
       expect(assigns(:breadcrumbs)).to eq([{:name => "#{@host.name} (Packages)",
                                             :url  => "/host/guest_applications/#{@host.id}?page="},
                                            {:name => "foo",
@@ -217,19 +215,17 @@ describe HostController do
     end
 
     it "renders show_details" do
-      controller.instance_variable_set(:@_params, :id => @host.id)
       controller.instance_variable_set(:@breadcrumbs, [])
       controller.stub(:get_view)
-      controller.should_receive(:show_details).once
-      controller.send(:show_association,
-                      'guest_applications',
-                      'Packages',
-                      'guest_application',
-                      :guest_applications,
-                      GuestApplication)
+      get :guest_applications, :id => @host.id
       expect(response.status).to eq(200)
+      expect(response).to render_template('host/show')
       expect(assigns(:breadcrumbs)).to eq([{:name => "#{@host.name} (Packages)",
                                             :url  => "/host/guest_applications/#{@host.id}"}])
+    end
+
+    it "plularizes breadcrumb name" do
+      expect(controller.send(:breadcrumb_name)).to eq("Hosts")
     end
   end
 end

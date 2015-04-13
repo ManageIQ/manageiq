@@ -1,6 +1,5 @@
 module ProviderForemanHelper
   def textual_group_properties
-    @configuration_manager_foreman = ConfigurationManagerForeman.find(@record.configuration_manager_id)
     items = %w(hostname configuration_profile configuration_profile_desc provider provider_url zone)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
@@ -10,26 +9,22 @@ module ProviderForemanHelper
   end
 
   def textual_configuration_profile
-    {:label => "Configuration Profile",
-     :value => ConfigurationProfile.find(@record.configuration_profile_id).name}
+    {:label => "Configuration Profile", :value => @record.configuration_profile.name}
   end
 
   def textual_configuration_profile_desc
-    {:label => "Configuration Profile Description",
-     :value => ConfigurationProfile.find(@record.configuration_profile_id).description}
+    {:label => "Configuration Profile Description", :value => @record.configuration_profile.description}
   end
 
   def textual_provider
-    {:label => "Foreman Provider",
-     :value => ProviderForeman.find(@configuration_manager_foreman.provider_id).name}
+    {:label => "Foreman Provider", :value => @record.configuration_manager.provider.name}
   end
 
   def textual_provider_url
-    {:label => "Foreman Provider URL",
-     :value => ProviderForeman.find(@configuration_manager_foreman.provider_id).url}
+    {:label => "Foreman Provider URL", :value => @record.configuration_manager.provider.url}
   end
 
   def textual_zone
-    {:label => "Zone", :value => Zone.find(@configuration_manager_foreman.zone_id).name}
+    {:label => "Zone", :value => @record.configuration_manager.my_zone}
   end
 end

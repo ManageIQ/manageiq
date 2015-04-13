@@ -11,7 +11,7 @@ module VmHelper::TextualSummary
   end
 
   def textual_group_lifecycle
-    items = %w{discovered analyzed retirement_date provisioned owner group}
+    items = %w(discovered analyzed retirement_date retirement_state provisioned owner group)
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
@@ -41,12 +41,12 @@ module VmHelper::TextualSummary
   end
 
   def textual_group_datastore_allocation
-    items = %w{disks disks_aligned thin_provisioned allocated_disks allocated_memory allocated_total}
+    items = %w{disks disks_aligned thin_provisioned allocated_disks allocated_total}
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
   def textual_group_datastore_usage
-    items = %w{usage_disks usage_memory usage_snapshots usage_disk_storage usage_overcommitted}
+    items = %w{usage_disks usage_snapshots usage_disk_storage usage_overcommitted}
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
@@ -227,6 +227,10 @@ module VmHelper::TextualSummary
 
   def textual_retirement_date
     {:label => "Retirement Date", :image => "retirement", :value => (@record.retires_on.nil? ? "Never" : @record.retires_on.to_time.strftime("%x"))}
+  end
+
+  def textual_retirement_state
+    {:label => "Retirement State", :value => @record.retirement_state.to_s.capitalize}
   end
 
   def textual_provisioned

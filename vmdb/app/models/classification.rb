@@ -311,11 +311,7 @@ class Classification < ActiveRecord::Base
   end
 
   def self.find_by_name(name, region_id = self.my_region_number, ns = DEFAULT_NAMESPACE)
-    if region_id.nil?
-      tag = Tag.find_by_name(Classification.name2tag(name, 0, ns))
-    else
-      tag = Tag.in_region(region_id).find_by_name(Classification.name2tag(name, 0, ns))
-    end
+    tag = Tag.find_by_classification_name(name, region_id, ns)
     tag.nil? ? nil : self.find_by_tag_id(tag.id)
   end
 

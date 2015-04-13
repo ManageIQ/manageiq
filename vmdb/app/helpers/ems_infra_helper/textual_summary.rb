@@ -9,7 +9,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w(infrastructure_folders folders clusters hosts datastores vms templates orchestration_stacks)
+    items = %w(infrastructure_folders folders clusters hosts used_tenants used_availability_zones datastores vms templates orchestration_stacks)
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
@@ -103,6 +103,32 @@ module EmsInfraHelper::TextualSummary
     if num > 0 && role_allows(:feature => "host_show_list")
       h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'hosts')
       h[:title] = "Show all #{label}"
+    end
+    h
+  end
+
+  def textual_used_tenants
+    return nil if !@record.respond_to?(:cloud_tenants) || !@record.cloud_tenants
+
+    label = ui_lookup(:tables => "cloud_tenants")
+    num   = @record.cloud_tenants.count
+    h     = {:label => label, :image => "cloud_tenants", :value => num}
+    if num > 0 && role_allows(:feature => "cloud_tenant_show_list")
+      h[:title] = "Show all#{label} of this provider"
+      h[:link]  = url_for(:action => "show", :id => @record, :display => "cloud_tenants")
+    end
+    h
+  end
+
+  def textual_used_availability_zones
+    return nil if !@record.respond_to?(:availability_zones) || !@record.availability_zones
+
+    label = ui_lookup(:tables => "availability_zones")
+    num   = @record.availability_zones.count
+    h     = {:label => label, :image => "availability_zone", :value => num}
+    if num > 0 && role_allows(:feature => "availability_zone_show_list")
+      h[:title] = "Show all #{label} of this provider"
+      h[:link]  = url_for(:action => "show", :id => @record, :display => "availability_zones")
     end
     h
   end

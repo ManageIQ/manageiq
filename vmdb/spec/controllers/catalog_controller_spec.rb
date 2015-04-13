@@ -84,7 +84,7 @@ describe CatalogController do
       controller.should_receive(:render)
       @new_name = "New Name"
       @new_description = "New Description"
-      @new_content = "New Content\n"
+      @new_content = "{\"AWSTemplateFormatVersion\" : \"new-version\"}\n"
       session[:edit] = {
         :new    => {
           :name        => @new_name,
@@ -94,11 +94,10 @@ describe CatalogController do
 
     after(:each) do
       expect(response.status).to eq(200)
-      assigns(:edit).should be_nil
     end
 
     it "Orchestration Template name and description are edited" do
-      ot = FactoryGirl.create(:orchestration_template)
+      ot = FactoryGirl.create(:orchestration_template_cfn)
       controller.instance_variable_set(:@record, ot)
       controller.params.merge!(:id => ot.id, :template_content => @new_content)
       session[:edit][:key] = "ot_edit__#{ot.id}"
@@ -111,10 +110,12 @@ describe CatalogController do
       ot.name.should == @new_name
       ot.description.should == @new_description
       ot.content.should == @new_content
+      expect(response.status).to eq(200)
+      assigns(:edit).should be_nil
     end
 
     it "Read-only Orchestration Template content cannot be edited" do
-      ot = FactoryGirl.create(:orchestration_template_with_stacks)
+      ot = FactoryGirl.create(:orchestration_template_cfn_with_stacks)
       original_content = ot.content
       controller.params.merge!(:id => ot.id, :template_content => @new_content)
       session[:edit][:key] = "ot_edit__#{ot.id}"
@@ -123,29 +124,74 @@ describe CatalogController do
       controller.send(:ot_edit_submit)
       ot.reload
       ot.content.should == original_content
+      expect(response.status).to eq(200)
+      assigns(:edit).should be_nil
+    end
+
+    it "Orchestration Template content cannot be empty during edit" do
+      controller.instance_variable_set(:@_params, :button => "save")
+      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
+      ot = FactoryGirl.create(:orchestration_template)
+      session[:edit][:key] = "ot_edit__#{ot.id}"
+      session[:edit][:rec_id] = ot.id
+      original_content = ot.content
+      new_content = ""
+      controller.params.merge!(:id => ot.id, :template_content => new_content)
+      controller.stub(:replace_right_cell)
+      controller.send(:ot_edit_submit)
+      controller.send(:flash_errors?).should be_true
+      assigns(:flash_array).first[:message].should include("cannot be empty")
+      ot.reload
+      ot.content.should == original_content
+    end
+
+    it "Draft flag is set for an Orchestration Template" do
+      ot = FactoryGirl.create(:orchestration_template)
+      controller.params.merge!(:id => ot.id, :template_content => @new_content)
+      session[:edit][:key] = "ot_edit__#{ot.id}"
+      session[:edit][:rec_id] = ot.id
+      session[:edit][:new][:draft] = "true"
+      controller.stub(:replace_right_cell)
+      controller.send(:ot_edit_submit)
+      ot.reload
+      ot.draft.should be_true
+      assigns(:edit).should be_nil
     end
   end
 
   context "#ot_copy" do
-    it "Orchestration Template is copied" do
+    before(:each) do
       controller.instance_variable_set(:@sb, {})
       controller.instance_variable_set(:@_params, :button => "save")
       controller.should_receive(:render)
-      ot = FactoryGirl.create(:orchestration_template)
+      ot = FactoryGirl.create(:orchestration_template_cfn)
       controller.x_node = "xx-ot_othot-#{ot.id}"
-      new_name = "New Name"
+      @new_name = "New Name"
       new_description = "New Description"
-      new_content = "New Content"
+      new_content = "{\"AWSTemplateFormatVersion\" : \"new-version\"}"
       controller.params.merge!(:id               => ot.id,
-                               :name             => new_name,
+                               :name             => @new_name,
                                :description      => new_description,
                                :template_content => new_content)
-      controller.stub(:replace_right_cell)
-      controller.send(:ot_copy_submit)
+    end
+
+    after(:each) do
       controller.send(:flash_errors?).should_not be_true
       assigns(:flash_array).first[:message].should include("was saved")
       expect(response.status).to eq(200)
-      OrchestrationTemplate.find_by_name(new_name).should_not be_nil
+      OrchestrationTemplate.where(:name => @new_name).first.should_not be_nil
+    end
+
+    it "Orchestration Template is copied" do
+      controller.stub(:replace_right_cell)
+      controller.send(:ot_copy_submit)
+    end
+
+    it "Orchestration Template is copied as a draft" do
+      controller.params.merge!(:draft => "true")
+      controller.stub(:replace_right_cell)
+      controller.send(:ot_copy_submit)
+      OrchestrationTemplate.where(:name => @new_name).first.draft.should be_true
     end
   end
 
@@ -153,6 +199,7 @@ describe CatalogController do
     before(:each) do
       controller.instance_variable_set(:@sb, {})
       controller.instance_variable_set(:@_params, :pressed => "orchestration_template_remove")
+      controller.stub(:replace_right_cell)
     end
 
     after(:each) do
@@ -163,7 +210,6 @@ describe CatalogController do
       ot = FactoryGirl.create(:orchestration_template)
       controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
       controller.params.merge!(:id => ot.id)
-      controller.stub(:replace_right_cell)
       controller.send(:ot_remove_submit)
       controller.send(:flash_errors?).should_not be_true
       assigns(:flash_array).first[:message].should include("was deleted")
@@ -173,8 +219,6 @@ describe CatalogController do
     it "Read-only Orchestration Template cannot deleted" do
       ot = FactoryGirl.create(:orchestration_template_with_stacks)
       controller.params.merge!(:id => ot.id)
-      controller.should_receive(:render)
-      controller.stub(:replace_right_cell)
       controller.send(:ot_remove_submit)
       controller.send(:flash_errors?).should be_true
       assigns(:flash_array).first[:message].should include("read-only and cannot be deleted")
@@ -187,7 +231,7 @@ describe CatalogController do
       @new_name = "New Name"
       new_description = "New Description"
       new_type = "OrchestrationTemplateCfn"
-      @new_content = "New Content"
+      @new_content = '{"AWSTemplateFormatVersion" : "2010-09-09"}'
       edit = {
         :new => {
           :name        => @new_name,
@@ -210,7 +254,7 @@ describe CatalogController do
       assigns(:flash_array).first[:message].should include("was saved")
       assigns(:edit).should be_nil
       expect(response.status).to eq(200)
-      OrchestrationTemplate.find_by_name(@new_name).should_not be_nil
+      OrchestrationTemplate.where(:name => @new_name).first.should_not be_nil
     end
 
     it "Orchestration Template draft is created" do
@@ -223,7 +267,7 @@ describe CatalogController do
       assigns(:flash_array).first[:message].should include("was saved")
       assigns(:edit).should be_nil
       expect(response.status).to eq(200)
-      ot = OrchestrationTemplate.find_by_name(@new_name)
+      ot = OrchestrationTemplate.where(:name => @new_name).first
       ot.should_not be_nil
       ot.draft.should be_true
     end
@@ -236,7 +280,94 @@ describe CatalogController do
       assigns(:flash_array).first[:message].should include("was cancelled")
       assigns(:edit).should be_nil
       expect(response.status).to eq(200)
-      OrchestrationTemplate.find_by_name(@new_name).should be_nil
+      OrchestrationTemplate.where(:name => @new_name).first.should be_nil
+    end
+  end
+
+  describe "#tags_edit" do
+    before(:each) do
+      @ot = FactoryGirl.create(:orchestration_template, :name => "foo")
+      user = FactoryGirl.create(:user, :userid => 'testuser')
+      session[:userid] = user.userid
+      @ot.stub(:tagged_with).with(:cat => "testuser").and_return("my tags")
+      classification = FactoryGirl.create(:classification, :name => "department", :description => "Department")
+      @tag1 = FactoryGirl.create(:classification_tag,
+                                 :name   => "tag1",
+                                 :parent => classification
+      )
+      @tag2 = FactoryGirl.create(:classification_tag,
+                                 :name   => "tag2",
+                                 :parent => classification
+      )
+      Classification.stub(:find_assigned_entries).with(@ot).and_return([@tag1, @tag2])
+      controller.instance_variable_set(:@sb,
+                                       :trees       => {:ot_tree => {:active_node => "root"}},
+                                       :active_tree => :ot_tree)
+      controller.stub(:get_node_info)
+      controller.stub(:replace_right_cell)
+      session[:tag_db] = "OrchestrationTemplate"
+      edit = {
+        :key        => "OrchestrationTemplate_edit_tags__#{@ot.id}",
+        :tagging    => "OrchestrationTemplate",
+        :object_ids => [@ot.id],
+        :current    => {:assignments => []},
+        :new        => {:assignments => [@tag1.id, @tag2.id]}
+      }
+      session[:edit] = edit
+    end
+
+    after(:each) do
+      expect(response.status).to eq(200)
+    end
+
+    it "builds tagging screen" do
+      controller.instance_variable_set(:@sb, :action => "ot_tags_edit")
+      controller.instance_variable_set(:@_params, :miq_grid_checks => @ot.id.to_s)
+      controller.send(:tags_edit, "OrchestrationTemplate")
+      assigns(:flash_array).should be_nil
+      assigns(:entries).should_not be_nil
+    end
+
+    it "cancels tags edit" do
+      controller.instance_variable_set(:@_params, :button => "cancel", :id => @ot.id)
+      controller.send(:tags_edit, "OrchestrationTemplate")
+      assigns(:flash_array).first[:message].should include("was cancelled")
+      assigns(:edit).should be_nil
+    end
+
+    it "save tags" do
+      controller.instance_variable_set(:@_params, :button => "save", :id => @ot.id)
+      controller.send(:tags_edit, "OrchestrationTemplate")
+      assigns(:flash_array).first[:message].should include("Tag edits were successfully saved")
+      assigns(:edit).should be_nil
+    end
+  end
+
+  context "#service_dialog_create_from_ot" do
+    before(:each) do
+      @ot = FactoryGirl.create(:orchestration_template_cfn_with_content)
+      @dialog_label = "New Dialog 01"
+      session[:edit] = {
+        :new    => {:dialog_name => @dialog_label},
+        :key    => "ot_edit__#{@ot.id}",
+        :rec_id => @ot.id
+      }
+      controller.instance_variable_set(:@sb, :trees => {:ot_tree => {:open_nodes => []}}, :active_tree => :ot_tree)
+      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
+    end
+
+    after(:each) do
+      controller.send(:flash_errors?).should_not be_true
+      assigns(:edit).should be_nil
+      expect(response.status).to eq(200)
+    end
+
+    it "Service Dialog is created from an Orchestration Template" do
+      controller.instance_variable_set(:@_params, :button => "save", :id => @ot.id)
+      controller.stub(:replace_right_cell)
+      controller.send(:service_dialog_from_ot_submit)
+      assigns(:flash_array).first[:message].should include("was successfully created")
+      Dialog.where(:label => @dialog_label).first.should_not be_nil
     end
   end
 end

@@ -1125,16 +1125,14 @@ class MiqAeClassController < ApplicationController
     render :update do |page|                    # Use JS to update the display
       page.replace_html(@refresh_div, :partial=>@refresh_partial) if @refresh_div
       if !["up","down"].include?(params[:button])
-        if params[:field_datatype]
-          if session[:field_data][:datatype] == "password"
-            page << javascript_hide("field_default_value")
-            page << javascript_show("field_password_value")
-            page << "$('#field_password_value').val('');"
-          else
-            page << javascript_hide("field_password_value")
-            page << javascript_show("field_default_value")
-            page << "$('#field_default_value').val('');"
-          end
+        if params[:field_datatype] == "password"
+          page << javascript_hide("field_default_value")
+          page << javascript_show("field_password_value")
+          page << "$('#field_password_value').val('');"
+        elsif params[:field_datatype]
+          page << javascript_hide("field_password_value")
+          page << javascript_show("field_default_value")
+          page << "$('#field_default_value').val('');"
         end
         params.keys.each do |field|
           if field.to_s.starts_with?("fields_datatype")
@@ -2319,6 +2317,9 @@ private
           elsif %w(aetype datatype).include?(field)
             var_name = "fields_#{field}#{i}"
             fld[field] = params[var_name.to_sym] if params[var_name.to_sym]
+          elsif field == "default_value"
+            fld[field] = params[field_name] if params[field_name]
+            fld[field] = params["fields_password_value_#{i}".to_sym] if params["fields_password_value_#{i}".to_sym]
           else
             fld[field] = params[field_name] if params[field_name]
           end

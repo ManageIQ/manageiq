@@ -1,5 +1,6 @@
 require "spec_helper"
 
+include AutomationSpecHelper
 describe MiqAeClass do
 
   it { should validate_presence_of(:name) }
@@ -309,6 +310,24 @@ describe MiqAeClass do
       field1.destroy
       @c1.reload
       @c1.state_machine?.should be_false
+    end
+  end
+
+  context "waypoint_ids_for_state_machine" do
+    it "check ids" do
+      create_state_ae_model(:name => 'FRED', :ae_class => 'CLASS1', :ae_namespace  => 'A/B/C')
+      create_state_ae_model(:name => 'FREDDY', :ae_class => 'CLASS2', :ae_namespace  => 'C/D/E')
+      create_ae_model(:name => 'MARIO', :ae_class => 'CLASS3', :ae_namespace  => 'C/D/E')
+      ns_fqnames = %w(FRED FRED/A FRED/A/B FRED/A/B/C FREDDY FREDDY/C FREDDY/C/D FREDDY/C/D/E)
+      class_fqnames = %w(/FRED/A/B/C/CLASS1 /FREDDY/C/D/E/CLASS2)
+      ids = ns_fqnames.collect { |ns| "MiqAeNamespace::#{MiqAeNamespace.find_by_fqname(ns, false).id}" }
+      ids += class_fqnames.collect { |cls| "MiqAeClass::#{MiqAeClass.find_by_fqname(cls).id}" }
+      MiqAeClass.waypoint_ids_for_state_machines.should match_array(ids)
+    end
+
+    it "no state machine classes" do
+      create_ae_model(:name => 'MARIO', :ae_class => 'CLASS3', :ae_namespace  => 'C/D/E')
+      MiqAeClass.waypoint_ids_for_state_machines.should be_empty
     end
   end
 end

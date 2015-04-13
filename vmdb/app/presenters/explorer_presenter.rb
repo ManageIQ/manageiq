@@ -216,6 +216,8 @@ class ExplorerPresenter
 
     @out << "$('#clear_search').#{@options[:clear_search_show_or_hide]}();" if @options[:clear_search_show_or_hide]
 
+    @out << "$('#quicksearchbox').modal('hide');" if @options[:hide_modal]
+
     # Don't turn off spinner for charts/timelines
     @out << set_spinner_off unless @options[:ajax_action]
   end

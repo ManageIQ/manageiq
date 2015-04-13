@@ -14,13 +14,4 @@ module MiqProvision::Tagging
       end
     end
   end
-
-  def apply_tags(vm)
-    log_header = "MIQ(#{self.class.name}#apply_tags)"
-
-    self.tags do |tag, cat|
-      $log.info("#{log_header} Tagging [#{vm.name}], Category: [#{cat}], Tag: #{tag}")
-      Classification.classify(vm, cat.to_s, tag)
-    end
-  end
 end

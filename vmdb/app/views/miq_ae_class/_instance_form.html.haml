@@ -61,9 +61,8 @@
         %td
           - default_value = @edit[:new][:ae_fields][i]["default_value"]
           - if @edit[:new][:ae_fields][i]["datatype"] == "password"
-            = password_field_tag("#{prefix}inst_password_value_#{i}",
-              flds["value"].blank? ? '' : flds["value"],
-              :placeholder       => default_value,
+            = password_field_tag("#{prefix}inst_password_value_#{i}", '',
+              :placeholder       => placeholder_if_present(default_value),
               "data-miq_observe" => obs)
           - else
             = text_field_tag("#{prefix}inst_value_#{i}",

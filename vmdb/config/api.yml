@@ -502,6 +502,8 @@
     - :service_templates
     :collection_actions:
       :post:
+      - :name: create
+        :identifier: st_catalog_new
       - :name: add
         :identifier: st_catalog_new
       - :name: edit
@@ -512,6 +514,8 @@
       :post:
       - :name: edit
         :identifier: st_catalog_edit
+      - :name: delete
+        :identifier: st_catalog_delete
       :delete:
       - :name: delete
         :identifier: st_catalog_delete
@@ -558,6 +562,7 @@
     :resource_actions:
       :post:
       - :name: edit
+        :identifier: catalogitem_edit
       :delete:
       - :name: delete
         :identifier: catalogitem_delete

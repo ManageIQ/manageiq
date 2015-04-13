@@ -108,4 +108,30 @@ module EmsOpenstackMixin
     else;           raise "Invalid OpenStack Authentication Type: #{auth_type.inspect}"
     end
   end
+
+  def stack_create(stack_name, template, options = {})
+    create_options = {:stack_name => stack_name, :template => template.content}.merge(options)
+    openstack_handle.orchestration_service.stacks.new.save(create_options)["id"]
+  rescue => err
+    $log.error "MIQ(#{self.class.name}##{__method__}) stack=[#{stack_name}], error: #{err}"
+    raise MiqException::MiqOrchestrationProvisionError, err.to_s, err.backtrace
+  end
+
+  def stack_status(stack_name, stack_id)
+    stack = openstack_handle.orchestration_service.stacks.get(stack_name, stack_id)
+    return stack.stack_status, stack.stack_status_reason if stack
+  rescue => err
+    $log.error "MIQ(#{self.class.name}##{__method__}) stack=[#{stack_name}], error: #{err}"
+    raise MiqException::MiqOrchestrationStatusError, err.to_s, err.backtrace
+  end
+
+  def orchestration_template_validate(template)
+    openstack_handle.orchestration_service.templates.validate(:template => template.content)
+    nil
+  rescue Excon::Errors::BadRequest => bad
+    JSON.parse(bad.response.body)['error']['message']
+  rescue => err
+    $log.error "MIQ(#{self.class.name}##{__method__}) template=[#{template.name}], error: #{err}"
+    raise MiqException::MiqOrchestrationValidationError, err.to_s, err.backtrace
+  end
 end

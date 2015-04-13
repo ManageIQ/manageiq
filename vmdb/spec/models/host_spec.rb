@@ -433,6 +433,31 @@ describe Host do
     end
   end
 
+  context "#get_ports" do
+    before do
+      @host = FactoryGirl.create(:host_vmware)
+      os = FactoryGirl.create(:operating_system, :name => 'XUNIL')
+      @host.operating_system = os
+      fr1 = FactoryGirl.create(:firewall_rule, :name => 'fr1', :host_protocol => 'udp',
+                               :direction => "in", :enabled => true, :port => 1001)
+      fr2 = FactoryGirl.create(:firewall_rule, :name => 'fr2', :host_protocol => 'udp',
+                               :direction => "out", :enabled => true, :port => 1002)
+      fr3 = FactoryGirl.create(:firewall_rule, :name => 'fr3', :host_protocol => 'tcp',
+                               :direction => "in", :enabled => true, :port => 1003)
+      [fr1, fr2, fr3].each do |fr|
+        fr.update_attributes(:resource_type => os.class.name, :resource_id => os.id)
+      end
+    end
+
+    it "#enabled_udp_outbound_ports" do
+      @host.enabled_udp_outbound_ports.should match_array([1002])
+    end
+
+    it "#enabled_inbound_ports" do
+      @host.enabled_inbound_ports.should match_array([1003, 1001])
+    end
+  end
+
   def assert_default_credentials_validated
     @host.stub(:verify_credentials_with_ws)
     @host.update_authentication(@data, @options)

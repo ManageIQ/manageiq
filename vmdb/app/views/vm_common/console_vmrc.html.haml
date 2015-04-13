@@ -5,7 +5,9 @@
       %meta{:content => "IE=8", "http-equiv" => "X-UA-Compatible"}
     %meta{:content => "text/html; charset=ISO-8859-1", "http-equiv" => "Content-Type"}
     = stylesheet_link_tag "vmrc"
-    = javascript_include_tag 'jquery/jquery-1.8.3.min','jquery/jquery-ui-1.9.2.custom.min'
+    = javascript_include_tag 'jquery'
+    = javascript_include_tag 'jquery_overrides'
+    = javascript_include_tag 'jquery-ui'
 
     :javascript
       var vmrc = null;

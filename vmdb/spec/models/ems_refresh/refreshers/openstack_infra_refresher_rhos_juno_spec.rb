@@ -7,7 +7,7 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     @ems = FactoryGirl.create(:ems_openstack_infra, :zone => zone, :hostname => "192.0.2.1",
                               :ipaddress => "192.0.2.1", :port => 5000)
     @ems.update_authentication(
-        :default => {:userid => "admin", :password => "3ddb6de300630a431ffae7f01104c9988ec4c89d"})
+        :default => {:userid => "admin", :password => "a280e99820b2e01a42acc9535c81234842b45471"})
   end
 
   it "will perform a full refresh" do
@@ -36,10 +36,13 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
   def assert_table_counts
     ExtManagementSystem.count.should         == 1
     EmsFolder.count.should                   == 0 # HACK: Folder structure for UI a la VMware
-    EmsCluster.count.should                  == 0
-    Host.count.should                        == 6
+    EmsCluster.count.should                  == 2
+    Host.count.should                        == 4
     OrchestrationStack.count.should          == 1
-    OrchestrationStackParameter.count.should == 132
+    OrchestrationStackParameter.count.should == 130
+    OrchestrationStackResource.count.should  == 62
+    OrchestrationStackOutput.count.should    == 1
+    OrchestrationTemplate.count.should       == 1
     ResourcePool.count.should                == 0
     Vm.count.should                          == 0
     VmOrTemplate.count.should                == 16
@@ -47,12 +50,12 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     CustomizationSpec.count.should           == 0
     Disk.count.should                        == 0
     GuestDevice.count.should                 == 0
-    Hardware.count.should                    == 6
+    Hardware.count.should                    == 4
     Lan.count.should                         == 0
     MiqScsiLun.count.should                  == 0
     MiqScsiTarget.count.should               == 0
     Network.count.should                     == 0
-    OperatingSystem.count.should             == 6
+    OperatingSystem.count.should             == 4
     Snapshot.count.should                    == 0
     Switch.count.should                      == 0
     SystemService.count.should               == 0
@@ -68,10 +71,10 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     )
 
     @ems.ems_folders.size.should          == 0 # HACK: Folder structure for UI a la VMware
-    @ems.ems_clusters.size.should         == 0
+    @ems.ems_clusters.size.should         == 2
     @ems.resource_pools.size.should       == 0
     @ems.storages.size.should             == 0
-    @ems.hosts.size.should                == 6
+    @ems.hosts.size.should                == 4
     @ems.orchestration_stacks.size.should == 1
     @ems.vms_and_templates.size.should    == 16
     @ems.vms.size.should                  == 0
@@ -80,14 +83,14 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
   end
 
   def assert_specific_host
-    @host = HostOpenstackInfra.find_by_name('06c2fb5a-22ab-450f-bd83-9342f7b823e6 (Controller)')
+    @host = HostOpenstackInfra.all.select { |x| x.name.include?('(Controller)') }.first
+
+    @host.ems_ref.should_not be nil
+    @host.ems_ref_obj.should_not be nil
+    @host.mac_address.should_not be nil
+    @host.ipaddress.should_not be nil
 
     @host.should have_attributes(
-      :ems_ref          => "06c2fb5a-22ab-450f-bd83-9342f7b823e6",
-      :ems_ref_obj      => "5de454a1-7f3c-418e-815d-0350aef47934",
-      :name             => "06c2fb5a-22ab-450f-bd83-9342f7b823e6 (Controller)",
-      :ipaddress        => "192.0.2.8",
-      :mac_address      => "00:6b:a4:4c:df:f3",
       :ipmi_address     => nil,
       :vmm_vendor       => "RedHat",
       :vmm_version      => nil,
@@ -119,16 +122,15 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
   end
 
   def assert_specific_public_template
-    assert_specific_template("overcloud-control", "1734551c-dff7-472c-9925-f713e7af5a52", true)
+    assert_specific_template("overcloud-control", true)
   end
 
-  def assert_specific_template(name, uid, is_public = false)
+  def assert_specific_template(name, is_public = false)
     template = TemplateOpenstack.where(:name => name).first
     template.should have_attributes(
       :template              => true,
       :publicly_available    => is_public,
       :ems_ref_obj           => nil,
-      :uid_ems               => uid,
       :vendor                => "OpenStack",
       :power_state           => "never",
       :location              => "unknown",

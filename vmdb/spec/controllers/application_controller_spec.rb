@@ -64,18 +64,6 @@ describe ApplicationController do
     end
   end
 
-  context "#valid_route?" do
-    it "should return true for a valid route" do
-      result = controller.send(:valid_route?, 'POST', 'host', 'show')
-      result.should be_true
-    end
-
-    it "should return false for an invalid route" do
-      result = controller.send(:valid_route?, 'POST', 'host', 'some_route')
-      result.should be_false
-    end
-  end
-
   context "#view_yaml_filename" do
     before do
       EvmSpecHelper.seed_specific_product_features("vm_infra_explorer", "host_edit")
@@ -98,6 +86,27 @@ describe ApplicationController do
       @test_user_role[:settings] = {}
       view_yaml = controller.send(:view_yaml_filename, "VmCloud", {})
       view_yaml.should include("VmCloud.yaml")
+    end
+  end
+
+  context "#find_checked_items" do
+    it "returns empty array when button is pressed from summary screen with params as symbol" do
+      controller.instance_variable_set(:@_params, :id => "1")
+      result = controller.send(:find_checked_items)
+      result.should eq([])
+    end
+
+    it "returns empty array when button is pressed from summary screen with params as string" do
+      controller.instance_variable_set(:@_params, "id" => "1")
+      result = controller.send(:find_checked_items)
+      result.should eq([])
+    end
+
+    it "returns list of items selected from list view" do
+      controller.instance_variable_set(:@_params, :miq_grid_checks => "1, 2, 3, 4")
+      result = controller.send(:find_checked_items)
+      result.count eq(4)
+      result.should eq([1, 2, 3, 4])
     end
   end
 end

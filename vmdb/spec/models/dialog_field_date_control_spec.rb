@@ -2,31 +2,54 @@ require "spec_helper"
 
 describe DialogFieldDateControl do
   describe "#value" do
-    let(:dialog_field) { described_class.new(:dynamic => dynamic) }
+    let(:dialog_field) { described_class.new(:dynamic => dynamic, :value => value) }
 
-    context "when the field is dynamic" do
-      let(:dynamic) { true }
+    context "when the value is not blank" do
+      let(:value) { "2015-01-03" }
 
-      before do
-        DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("processor")
-        dialog_field.value = nil
+      context "when the field is dynamic" do
+        let(:dynamic) { true }
+
+        it "returns the current value" do
+          expect(dialog_field.value).to eq("01/03/2015")
+        end
       end
 
-      it "returns the values from the value processor" do
-        expect(dialog_field.value).to eq("processor")
+      context "when the field is not dynamic" do
+        let(:dynamic) { false }
+
+        it "returns the current value" do
+          expect(dialog_field.value).to eq("01/03/2015")
+        end
       end
     end
 
-    context "when the field is not dynamic" do
-      let(:dynamic) { false }
+    context "when the value is blank" do
+      let(:value) { "" }
 
-      before do
-        described_class.stub(:server_timezone).and_return("UTC")
+      context "when the field is dynamic" do
+        let(:dynamic) { true }
+
+        before do
+          DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("2015-01-02")
+        end
+
+        it "returns the values from the value processor" do
+          expect(dialog_field.value).to eq("01/02/2015")
+        end
       end
 
-      it "returns tomorrow's date" do
-        Timecop.freeze(Time.new(2015, 1, 2, 0, 0, 0, 0)) do
-          expect(dialog_field.value).to eq("01/03/2015")
+      context "when the field is not dynamic" do
+        let(:dynamic) { false }
+
+        before do
+          described_class.stub(:server_timezone).and_return("UTC")
+        end
+
+        it "returns tomorrow's date" do
+          Timecop.freeze(Time.new(2015, 1, 2, 0, 0, 0, 0)) do
+            expect(dialog_field.value).to eq("01/03/2015")
+          end
         end
       end
     end
@@ -61,13 +84,8 @@ describe DialogFieldDateControl do
 
         it_behaves_like "DialogFieldDateControl#normalize_automate_values"
 
-        it "sets the value as an iso format" do
-          dialog_field.normalize_automate_values(automate_hash)
-          expect(dialog_field.instance_variable_get(:@value)).to eq("2015-01-02")
-        end
-
-        it "returns the value in m/d/y format" do
-          expect(dialog_field.normalize_automate_values(automate_hash)).to eq("01/02/2015")
+        it "returns the value in iso format" do
+          expect(dialog_field.normalize_automate_values(automate_hash)).to eq("2015-01-02T00:00:00+00:00")
         end
       end
 
@@ -102,6 +120,23 @@ describe DialogFieldDateControl do
 
     it "returns a script error" do
       expect(dialog_field.script_error_values).to eq("<Script error>")
+    end
+  end
+
+  describe "#refresh_json_value" do
+    let(:dialog_field) { described_class.new }
+
+    before do
+      DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("2015-01-02")
+    end
+
+    it "returns the values from the value processor" do
+      expect(dialog_field.refresh_json_value).to eq(:date => "01/02/2015")
+    end
+
+    it "assigns the processed value to value" do
+      dialog_field.refresh_json_value
+      expect(dialog_field.value).to eq("01/02/2015")
     end
   end
 

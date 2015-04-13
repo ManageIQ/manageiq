@@ -3,6 +3,8 @@ class EmsKubernetes < EmsContainer
   has_many :container_groups,                     :foreign_key => :ems_id, :dependent => :destroy
   has_many :container_services,                   :foreign_key => :ems_id, :dependent => :destroy
 
+  default_value_for :port, 6443
+
   def self.ems_type
     @ems_type ||= "kubernetes".freeze
   end
@@ -11,21 +13,22 @@ class EmsKubernetes < EmsContainer
     @description ||= "Kubernetes".freeze
   end
 
-  def self.raw_connect(hostname, port, api_version)
+  def self.raw_connect(hostname, port)
     require 'kubeclient'
     api_endpoint = raw_api_endpoint(hostname, port)
-    Kubeclient::Client.new(api_endpoint, api_version)
+    kube = Kubeclient::Client.new(api_endpoint)
+    # TODO: support real authentication using certificates
+    kube.ssl_options(:verify_ssl => OpenSSL::SSL::VERIFY_NONE)
+    kube
   end
 
   def self.raw_api_endpoint(hostname, port)
-    require 'uri'
+    URI::HTTPS.build(:host => hostname, :port => port.to_i)
+  end
 
-    uri = URI::HTTP.build(:path => "/api", :port => port.to_i)
-
-    # URI::Generic#hostname= was added in ruby 1.9.3 and will automatically
-    # wrap an ipv6 address in []
-    uri.hostname = hostname
-    uri
+  # UI methods for determining availability of fields
+  def supports_port?
+    true
   end
 
   def api_endpoint
@@ -33,7 +36,7 @@ class EmsKubernetes < EmsContainer
   end
 
   def connect(_options = {})
-    self.class.raw_connect(hostname, port, api_version)
+    self.class.raw_connect(hostname, port)
   end
 
   def self.event_monitor_class
@@ -42,7 +45,7 @@ class EmsKubernetes < EmsContainer
 
   def authentication_check
     # TODO: support real authentication using certificates
-    true
+    [true, ""]
   end
 
   def verify_credentials(_auth_type = nil, _options = {})

@@ -957,7 +957,7 @@ module ApplicationController::CiProcessing
                         } )
     else
       @breadcrumbs = Array.new
-      bc_name = ui_lookup(:tables => self.class.table_name)
+      bc_name = breadcrumb_name
       bc_name += " - " + session["#{self.class.session_key_prefix}_type".to_sym].titleize if session["#{self.class.session_key_prefix}_type".to_sym]
       bc_name += " (filtered)" if @filters && (!@filters[:tags].blank? || !@filters[:cats].blank?)
       action = %w(container service vm_cloud vm_infra vm_or_template).include?(self.class.table_name) ? "explorer" : "show_list"
@@ -972,6 +972,10 @@ module ApplicationController::CiProcessing
         replace_gtl_main_div
       end
     end
+  end
+
+  def breadcrumb_name
+    ui_lookup_for_model(self.class.model_name).pluralize
   end
 
   # Reconfigure selected VMs
@@ -1108,8 +1112,6 @@ module ApplicationController::CiProcessing
       else
         if request.parameters["controller"] == "service"
           self.send("process_services", vms, method)
-        elsif request.parameters["controller"] == "provider_foreman"
-          process_foreman(vms, method) unless vms.empty?
         else
           self.send("process_vms", vms, method, display_name)
         end
@@ -1130,8 +1132,6 @@ module ApplicationController::CiProcessing
         vms.push(params[:id])
         if request.parameters["controller"] == "service"
           self.send("process_services", vms, method) unless vms.empty?
-        elsif request.parameters["controller"] == "provider_foreman"
-          process_foreman(vms, method) unless vms.empty?
         else
           self.send("process_vms", vms, method, display_name) unless vms.empty?
         end
@@ -1195,6 +1195,25 @@ module ApplicationController::CiProcessing
     else
       add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % {:task=>Dictionary::gettext(task, :type=>:task).titleize, :count_model=>pluralize(services.length,ui_lookup(:model=>kls.to_s))})
     end
+  end
+
+  def foreman_button_operation(method, display_name)
+    items = []
+    if params[:id]
+      if params[:id].nil? || ExtManagementSystem.exists?(params[:id]).nil?
+        add_flash(_("%s no longer exists") % ui_lookup(:table => controller_name), :error)
+      else
+        items.push(params[:id])
+        @single_delete = true if method == 'destroy' && !flash_errors?
+      end
+    else
+      items = find_checked_items
+      if items.empty?
+        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => controller_name),
+                                                                :task  => display_name}, :error)
+      end
+    end
+    process_foreman(items, method) unless items.empty? && !flash_errors?
   end
 
   def process_foreman(providers, task)
@@ -1877,7 +1896,8 @@ module ApplicationController::CiProcessing
   end
 
   def show_association(action, display_name, listicon, method, klass, association = nil)
-    @explorer = true if request.xml_http_request? # Ajax request means in explorer
+    # Ajax request means in explorer, or if current explorer is one of the explorer controllers
+    @explorer = true if request.xml_http_request? && explorer_controller?
     if @explorer  # Save vars for tree history array
       @x_show = params[:x_show]
       @sb[:action] = @lastaction = action

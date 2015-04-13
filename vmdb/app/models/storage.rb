@@ -703,16 +703,6 @@ class Storage < ActiveRecord::Base
     return self.miq_cim_instance.nil? ? [] : self.miq_cim_instance.logical_disk
   end
 
-  def netapp_filer
-    self.storage_systems.each do |ss|
-      next unless ss.class_name == 'ONTAP_StorageSystem'
-      naf = NetAppFiler.find_by_name(ss.element_name)
-      return naf unless naf.nil?
-    end
-
-    return nil
-  end
-
   #
   # Metric methods
   #

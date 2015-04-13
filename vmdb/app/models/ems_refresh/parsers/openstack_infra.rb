@@ -2,7 +2,8 @@ module EmsRefresh
   module Parsers
     class OpenstackInfra < Infra
       include EmsRefresh::Parsers::OpenstackCommon::Images
-      
+      include EmsRefresh::Parsers::OpenstackCommon::OrchestrationStacks
+
       def self.ems_inv_to_hashes(ems, options = nil)
         new(ems, options).ems_inv_to_hashes
       end
@@ -34,12 +35,27 @@ module EmsRefresh
         load_hosts
         get_images
         load_orchestration_stacks
+        # Cluster processing needs to run after host and stacks processing
+        get_clusters
 
         $fog_log.info("#{log_header}...Complete")
         @data
       end
 
       private
+
+      def all_server_resources
+        return @all_server_resources if @all_server_resources
+
+        resources = []
+        stacks.each do |stack|
+          all_stack_resources = stack_resources(stack)
+          # Filtering just OS::Nova::Server, which is important to us for getting Purpose of the node
+          # (compute, controller, etc.).
+          resources += all_stack_resources.select { |x| x["resource_type"] == 'OS::Nova::Server' }
+        end
+        @all_server_resources = resources
+      end
 
       def servers
         @servers ||= @connection.servers_for_accessible_tenants
@@ -49,30 +65,29 @@ module EmsRefresh
         @hosts ||= @baremetal_service.nodes.details
       end
 
+      def clouds
+        @ems.provider.try(:cloud_ems)
+      end
+
+      def cloud_ems_hosts_attributes
+        hosts_attributes = []
+        return hosts_attributes unless clouds
+
+        clouds.each do |cloud_ems|
+          connection = cloud_ems.connect
+          compute_hosts  = connection.hosts.select { |x| x.service_name == "compute" }
+          compute_hosts.each do |compute_host|
+            # We need to take correct zone id from correct provider, since the zone name can be the same
+            # across providers
+            availability_zone_id = cloud_ems.availability_zones.where(:name => compute_host.zone).first.try(:id)
+            hosts_attributes << {:host_name => compute_host.host_name, :availability_zone_id => availability_zone_id}
+          end
+        end
+        hosts_attributes
+      end
+
       def hosts_ports
         @hosts_ports ||= @baremetal_service.ports.details
-      end
-
-      def stacks
-        @stacks ||= detailed_stacks
-      end
-
-      def detailed_stacks
-        @orchestration_service.stacks.each_with_object([]) { |stack, detailed_stacks| detailed_stacks << stack.details }
-      end
-
-      def resources
-        return @resources if @resources
-
-        resources = []
-        stacks.each do |stack|
-          # Nested depth 50 just for sure, although nobody should nest templates that much
-          all_stack_resources = @orchestration_service.list_resources(stack, :nested_depth => 50)
-          # Filtering just OS::Nova::Server, which is important to us for getting Purpose of the node
-          # (compute, controller, etc.).
-          resources += all_stack_resources.body['resources'].select { |x| x["resource_type"] == 'OS::Nova::Server' }
-        end
-        @resources = resources
       end
 
       def load_hosts
@@ -88,73 +103,44 @@ module EmsRefresh
 
         # Indexed Heat resources, we are interested only in OS::Nova::Server
         indexed_resources = {}
-        resources.each { |p| indexed_resources[p['physical_resource_id']] = p }
+        all_server_resources.each { |p| indexed_resources[p['physical_resource_id']] = p }
 
         process_collection(hosts, :hosts) do  |host|
-          parse_host(host, indexed_servers, indexed_hosts_ports, indexed_resources)
+          parse_host(host, indexed_servers, indexed_hosts_ports, indexed_resources, cloud_ems_hosts_attributes)
         end
       end
 
-      def load_orchestration_stacks
-        process_collection(stacks, :orchestration_stacks) { |stack| parse_stack(stack) }
-      end
+      def parse_host(host, indexed_servers, _indexed_hosts_ports, indexed_resources, cloud_hosts_attributes)
+        uid                 = host.uuid
+        host_name           = identify_host_name(indexed_resources, host.instance_uuid, uid)
+        hypervisor_hostname = identify_hypervisor_hostname(host, indexed_servers)
+        ip_address          = identify_primary_ip_address(host, indexed_servers)
 
-      def parse_stack(stack)
-        uid = stack.id.to_s
-        new_result = {
-          :type        => "OrchestrationStackOpenstackInfra",
-          :ems_ref     => uid,
-          :name        => stack.stack_name,
-          :description => stack.description,
-          :status      => stack.stack_status,
-          :parameters  => find_stack_parameters(stack)
-        }
-        return uid, new_result
-      end
-
-      def find_stack_parameters(stack)
-        raw_parameters = stack.parameters
-        get_stack_parameters(stack.id, raw_parameters)
-        raw_parameters.collect do |parameter|
-          @data_index.fetch_path(:orchestration_stack_parameters, compose_ems_ref(stack.id, parameter[0]))
+        # Get the cloud_host_attributes by hypervisor hostname, only compute hosts can get this
+        cloud_host_attributes = cloud_hosts_attributes.select do |x|
+          hypervisor_hostname && x[:host_name].include?(hypervisor_hostname.downcase)
         end
-      end
-
-      def get_stack_parameters(stack_id, parameters)
-        process_collection(parameters, :orchestration_stack_parameters) do |param_key, param_val|
-          parse_stack_parameter(param_key, param_val, stack_id)
-        end
-      end
-
-      def parse_stack_parameter(param_key, param_val, stack_id)
-        uid = compose_ems_ref(stack_id, param_key)
-        new_result = {
-          :ems_ref => uid,
-          :name    => param_key,
-          :value   => param_val
-        }
-        return uid, new_result
-      end
-
-      def parse_host(host, indexed_servers, _indexed_hosts_ports, indexed_resources)
-        uid = host.uuid
-        host_name = identify_host_name(indexed_resources, host.instance_uuid, uid)
+        cloud_host_attributes = cloud_host_attributes.first if cloud_host_attributes
 
         new_result = {
-          :name             => host_name,
-          :type             => 'HostOpenstackInfra',
-          :uid_ems          => uid,
-          :ems_ref          => uid,
-          :ems_ref_obj      => host.instance_uuid,
-          :operating_system => {:product_name => 'linux'},
-          :vmm_vendor       => 'RedHat',
-          :vmm_product      => identify_product(indexed_resources, host.instance_uuid),
-          :ipaddress        => identify_primary_ip_address(host, indexed_servers),
-          :mac_address      => identify_primary_mac_address(host, indexed_servers),
-          :ipmi_address     => identify_ipmi_address(host),
-          :power_state      => lookup_power_state(host.power_state),
-          :connection_state => lookup_connection_state(host.power_state),
-          :hardware         => process_host_hardware(host)
+          :name                 => host_name,
+          :type                 => 'HostOpenstackInfra',
+          :uid_ems              => uid,
+          :ems_ref              => uid,
+          :ems_ref_obj          => host.instance_uuid,
+          :operating_system     => {:product_name => 'linux'},
+          :vmm_vendor           => 'RedHat',
+          :vmm_product          => identify_product(indexed_resources, host.instance_uuid),
+          :ipaddress            => ip_address,
+          :hostname             => ip_address,
+          :mac_address          => identify_primary_mac_address(host, indexed_servers),
+          :ipmi_address         => identify_ipmi_address(host),
+          :power_state          => lookup_power_state(host.power_state),
+          :connection_state     => lookup_connection_state(host.power_state),
+          :hardware             => process_host_hardware(host),
+          :hypervisor_hostname  => hypervisor_hostname,
+          # Attributes taken from the Cloud provider
+          :availability_zone_id => cloud_host_attributes.try(:[], :availability_zone_id)
         }
 
         return uid, new_result
@@ -172,7 +158,7 @@ module EmsRefresh
         # TODO(lsmola) Nova is missing information which address is primary now,
         # so just taking first. We need to figure out how to identify it if
         # there are multiple.
-        server.addresses.try(:[], 'ctlplane').try(:[], 0).try(:[], key) if server
+        server.addresses.fetch_path('ctlplane', 0, key) if server
       end
 
       def get_purpose(indexed_resources, instance_uuid)
@@ -209,6 +195,10 @@ module EmsRefresh
         host.driver_info["ipmi_address"]
       end
 
+      def identify_hypervisor_hostname(host, indexed_servers)
+        indexed_servers.fetch_path(host.instance_uuid).try(:name)
+      end
+
       def lookup_power_state(power_state_input)
         case power_state_input
         when "power on"               then "on"
@@ -222,6 +212,70 @@ module EmsRefresh
         when "power on"               then "connected"
         when "power off", "rebooting" then "disconnected"
         else                               "disconnected"
+        end
+      end
+
+      def get_clusters
+        # This counts with hosts being already collected
+        hosts = @data.fetch_path(:hosts)
+        clusters = infer_clusters_from_hosts(hosts)
+
+        process_collection(clusters, :clusters) { |cluster| parse_cluster(cluster) }
+        set_relationship_on_hosts(hosts)
+      end
+
+      def host_type(host)
+        host_type = host[:name].scan(/\((.*?)\)/).first
+        host_type.first if host_type
+      end
+
+      def cluster_name_for_host(host)
+        # TODO(lsmola) name and uid should also contain stack name, add this after the patch that saves resources
+        # is merged. Adding Overcloud by hard now.
+        host_type = host_type(host)
+        "overcloud #{host_type}"
+      end
+
+      def cluster_index_for_host(host)
+        # TODO(lsmola) name and uid should also contain stack name, add this after the patch that saves resources
+        # is merged. Adding Overcloud by hard now.
+        host_type = host_type(host)
+        "overcloud__#{host_type}"
+      end
+
+      def infer_clusters_from_hosts(hosts)
+        # We will create Cluster per Stack Host type. This way we can work with the same host types together
+        # as a group, e.g. all Compute hosts all Object Storage hosts, etc.
+        clusters = []
+        hosts.each do |host|
+          host_type = host_type(host)
+          # skip the non-provisoned hosts
+          next unless host_type
+
+          name = cluster_name_for_host(host)
+          uid = cluster_index_for_host(host)
+
+          clusters << {:name => name, :uid => uid}
+        end
+        clusters.uniq
+      end
+
+      def parse_cluster(cluster)
+        name = cluster[:name]
+        uid = cluster[:uid]
+
+        new_result = {
+            :ems_ref => uid,
+            :uid_ems => uid,
+            :name    => name,
+            :type    => 'EmsClusterOpenstackInfra'
+        }
+        return uid, new_result
+      end
+
+      def set_relationship_on_hosts(hosts)
+        hosts.each do |host|
+          host[:ems_cluster] = @data_index.fetch_path(:clusters, cluster_index_for_host(host))
         end
       end
 
@@ -247,11 +301,6 @@ module EmsRefresh
           @data[key] << new_result
           @data_index.store_path(key, uid, new_result)
         end
-      end
-
-      # Compose an ems_ref combining some existing keys
-      def compose_ems_ref(*keys)
-        keys.join('_')
       end
     end
   end

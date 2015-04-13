@@ -265,7 +265,6 @@ describe VmInfraController do
 
       it "Return Zones only in My Region" do
         my_region_zone = FactoryGirl.create(:zone)
-        non_my_region_zone = FactoryGirl.create(:zone, :id => "40", :name => "Zone2")
         controller.instance_variable_set(:@sb, {:trees =>
                                                     {:settings_tree => {:active_node => "root"}},
                                                 :active_tree => :utilization_tree})

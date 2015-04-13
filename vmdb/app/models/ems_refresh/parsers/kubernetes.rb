@@ -6,18 +6,23 @@ module EmsRefresh::Parsers
 
     def initialize
       @data = {}
+      @data_index = {}
     end
 
     def ems_inv_to_hashes(inventory)
       get_nodes(inventory)
-      get_services(inventory)
       get_pods(inventory)
+      get_endpoints(inventory)
+      get_services(inventory)
       EmsRefresh.log_inv_debug_trace(@data, "data:")
       @data
     end
 
     def get_nodes(inventory)
       process_collection(inventory["node"], :container_nodes) { |n| parse_node(n) }
+      @data[:container_nodes].each do |cn|
+        @data_index.store_path(:container_nodes, :by_name, cn[:name], cn)
+      end
     end
 
     def get_services(inventory)
@@ -26,6 +31,18 @@ module EmsRefresh::Parsers
 
     def get_pods(inventory)
       process_collection(inventory["pod"], :container_groups) { |n| parse_pod(n) }
+      @data[:container_groups].each do |cg|
+        @data_index.store_path(:container_groups, :by_namespace_and_name,
+                               cg[:namespace], cg[:name], cg)
+      end
+    end
+
+    def get_endpoints(inventory)
+      process_collection(inventory["endpoint"], :container_endpoints) { |n| parse_endpoint(n) }
+      @data[:container_endpoints].each do |ep|
+        @data_index.store_path(:container_endpoints, :by_namespace_and_name,
+                               ep[:namespace], ep[:name], ep)
+      end
     end
 
     def process_collection(collection, key, &block)
@@ -50,16 +67,30 @@ module EmsRefresh::Parsers
 
     def parse_service(service)
       new_result = parse_base_item(service)
+      container_groups = []
+
+      endpoint_container_groups = @data_index.fetch_path(
+        :container_endpoints, :by_namespace_and_name, new_result[:namespace],
+        new_result[:name], :container_groups)
+      endpoint_container_groups ||= []
+
+      endpoint_container_groups.each do |group|
+        cg = @data_index.fetch_path(
+          :container_groups, :by_namespace_and_name, group[:namespace],
+          group[:name])
+        container_groups << cg unless cg.nil?
+      end
+
       new_result.merge!(
         :port             => service.spec.port,
         :protocol         => service.spec.protocol,
         :portal_ip        => service.spec.portalIP,
         :container_port   => service.spec.containerPort,
-        :namespace        => service.metadata.instance_values["table"][:namespace],
         :session_affinity => service.spec.sessionAffinity,
 
         :labels           => parse_labels(service),
-        :selector_parts   => parse_selector_parts(service)
+        :selector_parts   => parse_selector_parts(service),
+        :container_groups => container_groups
       )
       new_result
     end
@@ -67,13 +98,19 @@ module EmsRefresh::Parsers
     def parse_pod(pod)
       # pod in kubernetes is container group in manageiq
       new_result = parse_base_item(pod)
+
       new_result.merge!(
-        # namespace is overriden in more_core_extensions and hence needs a non method access
-        :namespace      => pod.metadata.instance_values["table"][:namespace],
-        # workaround due to https://github.com/GoogleCloudPlatform/kubernetes/issues/3607
-        :restart_policy => pod.spec.restartPolicy.to_h.keys.first.to_s,
-        :dns_policy     => pod.spec.dnsPolicy
+        :restart_policy => pod.spec.restartPolicy,
+        :dns_policy     => pod.spec.dnsPolicy,
+        :container_node => nil,
+        :containers     => []
       )
+
+      unless pod.spec.host.nil?
+        new_result[:container_node] = @data_index.fetch_path(
+          :container_nodes, :by_name, pod.spec.host)
+      end
+
       # TODO, map volumes
       # TODO, podIP
       containers = pod.spec.containers
@@ -82,14 +119,30 @@ module EmsRefresh::Parsers
       end
 
       # container instances
-
-      unless pod.status.info.nil?
-        new_result[:containers] = pod.status.info.to_h.collect do |container_name, container|
-          parse_container(container, container_name, pod.metadata.uid)
+      unless pod.status.nil? || pod.status.containerStatuses.nil?
+        pod.status.containerStatuses.each do |cn|
+          new_result[:containers] << parse_container(cn, pod.metadata.uid)
         end
       end
 
       new_result[:labels] = parse_labels(pod)
+      new_result
+    end
+
+    def parse_endpoint(entity)
+      new_result = parse_base_item(entity)
+      new_result[:container_groups] = []
+
+      (entity.endpoints || []).each do |endpoint|
+        next unless endpoint.targetRef.try(:kind) == 'Pod'
+        cg = @data_index.fetch_path(
+          :container_groups, :by_namespace_and_name,
+          # namespace is overriden in more_core_extensions and hence needs
+          # a non method access
+          endpoint.targetRef["table"][:namespace], endpoint.targetRef.name)
+        new_result[:container_groups] << cg unless cg.nil?
+      end
+
       new_result
     end
 
@@ -127,38 +180,39 @@ module EmsRefresh::Parsers
 
     def parse_container_definition(container_def, pod_id)
       new_result = {
-        :ems_ref           => "#{pod_id}_#{container_def["name"]}_#{container_def["image"]}",
-        :name              => container_def["name"],
-        :image             => container_def["image"],
-        :image_pull_policy => container_def["imagePullPolicy"],
-        :memory            => container_def["memory"],
+        :ems_ref           => "#{pod_id}_#{container_def.name}_#{container_def.image}",
+        :name              => container_def.name,
+        :image             => container_def.image,
+        :image_pull_policy => container_def.imagePullPolicy,
+        :memory            => container_def.memory,
          # https://github.com/GoogleCloudPlatform/kubernetes/blob/0b801a91b15591e2e6e156cf714bfb866807bf30/pkg/api/v1beta3/types.go#L815
-        :cpu_cores         => container_def["cpu"].to_f / 1000
+        :cpu_cores         => container_def.cpu.to_f / 1000
       }
-      ports = container_def["ports"]
+      ports = container_def.ports
       new_result[:container_port_configs] = Array(ports).collect do |port_entry|
-        parse_container_port_config(port_entry, pod_id, container_def["name"])
+        parse_container_port_config(port_entry, pod_id, container_def.name)
       end
       new_result
     end
 
-    def parse_container(container, container_name, pod_id)
+    def parse_container(container, pod_id)
       {
-        :ems_ref       => "#{pod_id}_#{container_name}_#{container["image"]}",
-        :name          => container_name,
-        :image         => container["image"],
-        :restart_count => container["restartCount"],
-        :container_id  => container["containerID"]
+        :ems_ref       => "#{pod_id}_#{container.name}_#{container.image}",
+        :name          => container.name,
+        :image         => container.image,
+        :restart_count => container.restartCount,
+        :container_id  => container.containerID
       }
       # TODO, state
     end
 
     def parse_container_port_config(port_config, pod_id, container_name)
       {
-        :ems_ref   => "#{pod_id}_#{container_name}_#{port_config["containerPort"]}_#{port_config["hostPort"]}_#{port_config["protocol"]}",
-        :port      => port_config["containerPort"],
-        :host_port => port_config["hostPort"],
-        :protocol  => port_config["protocol"]
+        :ems_ref   => "#{pod_id}_#{container_name}_#{port_config.containerPort}_#{port_config.hostPort}_#{port_config.protocol}",
+        :port      => port_config.containerPort,
+        :host_port => port_config.hostPort,
+        :protocol  => port_config.protocol,
+        :name      => port_config.name
       }
     end
 
@@ -168,6 +222,9 @@ module EmsRefresh::Parsers
       {
         :ems_ref            => item.metadata.uid,
         :name               => item.metadata.name,
+        # namespace is overriden in more_core_extensions and hence needs
+        # a non method access
+        :namespace          => item.metadata["table"][:namespace],
         :creation_timestamp => item.metadata.creationTimestamp,
         :resource_version   => item.metadata.resourceVersion
       }

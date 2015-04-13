@@ -43,7 +43,33 @@ class VmScan < Job
       self.options[:snapshot] = :skipped
       self.options[:use_existing_snapshot] = false
 
-      if vm.require_snapshot_for_scan?
+      # TODO: should this logic be moved to a VM subclass implementation?
+      #       or, make type-specific Job classes.
+      if vm.kind_of?(VmOpenstack)
+        if vm.ext_management_system
+          sn_description = snapshotDescription
+          $log.info("MIQ(scan-action-call_snapshot_create) Creating snapshot, description: [#{sn_description}]")
+          user_event = start_user_event_message(vm, false)
+          options[:snapshot] = :server
+          begin
+            # TODO: should this be a vm method?
+            sn = vm.ext_management_system.vm_create_evm_snapshot(vm, :desc => sn_description, :user_event => user_event).to_s
+          rescue Exception => err
+            msg = "Failed to create evm snapshot with EMS. Error: [#{err.class.name}]: [#{err}]"
+            $log.error("MIQ(scan-call_snapshot_create #{msg}")
+            err.kind_of?(MiqException::MiqVimBrokerUnavailable) ? signal(:broker_unavailable) : signal(:abort, msg, "error")
+            return
+          end
+          context[:snapshot_mor] = sn
+          $log.info("MIQ(scan-action-call_snapshot_create) Created snapshot, description: [#{sn_description}], reference: [#{context[:snapshot_mor]}]")
+          set_status("Snapshot created: reference: [#{context[:snapshot_mor]}]")
+          options[:snapshot] = :created
+          options[:use_existing_snapshot] = true
+        else
+          signal(:abort, "No #{ui_lookup(:table => "ext_management_systems")} available to create snapshot, skipping", "error")
+          return
+        end
+      elsif vm.require_snapshot_for_scan?
         host  = Object.const_get(self.agent_class).find(self.agent_id)
         proxy = host.respond_to?("miq_proxy") ? host.miq_proxy : nil
 
@@ -68,6 +94,7 @@ class VmScan < Job
             user_event = self.start_user_event_message(vm, false)
             self.options[:snapshot] = :server
             begin
+              # TODO: should this be a vm method?
               sn = vm.ext_management_system.vm_create_evm_snapshot(vm, :desc => sn_description, :user_event => user_event).to_s
             rescue Exception => err
               msg = "Failed to create evm snapshot with EMS. Error: [#{err.class.name}]: [#{err}]"
@@ -199,7 +226,13 @@ class VmScan < Job
       if vm.ext_management_system
         $log.info("MIQ(scan-action-call_snapshot_delete) Deleting snapshot: reference: [#{mor}]")
         begin
-          delete_snapshot(mor)
+          # TODO: should this logic be moved to a VM subclass implementation?
+          #       or, make type-specific Job classes.
+          if vm.kind_of?(VmOpenstack)
+            vm.ext_management_system.vm_delete_evm_snapshot(vm, mor)
+          else
+            delete_snapshot(mor)
+          end
         rescue => err
           $log.error("MIQ(scan-action-call_snapshot_delete) #{err}")
           return

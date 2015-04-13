@@ -126,12 +126,39 @@ describe FixAuth::AuthModel do
         expect(leg.password).to be_encrypted_version(2)
         expect(leg.auth_key).to be_blank
       end
+
       it "should upgrade v2 columns" do
         subject.fix_passwords(v2, :hardcode => "newpass")
         expect(v2.password).to be_encrypted("newpass")
         expect(v2.password).to be_encrypted_version(2)
         expect(v2.auth_key).to be_blank
       end
+    end
+  end
+
+  context "#miq_database" do
+    subject { FixAuth::FixMiqDatabase }
+    let(:v1)  { subject.create(:session_secret_token => enc_v1) }
+    let(:v2)  { subject.create(:session_secret_token => enc_v2) }
+    let(:bad) { subject.create(:session_secret_token => bad_v2) }
+
+    it "uses random numbers for hardcode" do
+      subject.fix_passwords(v1, :hardcode => "newpass")
+      expect(v1.session_secret_token).to be_encrypted_version(2)
+      expect(v1.session_secret_token).not_to be_encrypted("newpass")
+      expect(v1.session_secret_token).not_to eq(enc_v2)
+    end
+
+    it "uses random numbers for invalid" do
+      subject.fix_passwords(bad, :invalid => "newpass")
+      expect(bad.session_secret_token).to be_encrypted_version(2)
+      expect(bad.session_secret_token).not_to be_encrypted("newpass")
+      expect(bad.session_secret_token).not_to eq(enc_v2)
+    end
+
+    it "upgrades" do
+      expect(subject.fix_passwords(v1).session_secret_token).to eq(enc_v2)
+      expect(subject.fix_passwords(v2).session_secret_token).to eq(enc_v2)
     end
   end
 

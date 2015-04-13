@@ -34,7 +34,7 @@ class VmdbStorageBridge
         begin
           vim = ems.connect
         rescue Exception => verr
-          $log.error "VmdbStorageBridge.collectData: could not connect to ems - #{ems.ipaddress}"
+          $log.error "VmdbStorageBridge.collectData: could not connect to ems - #{ems.hostname}"
           $log.error verr.to_s
           last_conn_error = verr
           next

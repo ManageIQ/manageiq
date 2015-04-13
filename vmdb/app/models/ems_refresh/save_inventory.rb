@@ -51,8 +51,8 @@ module EmsRefresh::SaveInventory
       key_backup = backup_keys(h, remove_keys)
 
       h[:ems_id]                 = ems.id
-      h[:host_id]                = key_backup.fetch_path(:host, :id)
-      h[:ems_cluster_id]         = key_backup.fetch_path(:ems_cluster, :id)
+      h[:host_id]                = key_backup.fetch_path(:host, :id) || key_backup.fetch_path(:host).try(:id)
+      h[:ems_cluster_id]         = key_backup.fetch_path(:ems_cluster, :id) || key_backup.fetch_path(:ems_cluster).try(:id)
       h[:storage_id]             = key_backup.fetch_path(:storage, :id)
       h[:flavor_id]              = key_backup.fetch_path(:flavor, :id)
       h[:availability_zone_id]   = key_backup.fetch_path(:availability_zone, :id)
@@ -212,7 +212,7 @@ module EmsRefresh::SaveInventory
   def save_networks_inventory(hardware, hashes, mode = :refresh)
     return if hashes.nil?
 
-    deletes = hardware.networks(true).dup
+    deletes = hardware.networks(true).to_a.dup
 
     case mode
     when :refresh

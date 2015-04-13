@@ -14,3 +14,36 @@
 
     = patternfly_accordion_panel(_("Relationships"), false, "ems_container_rel") do
       %ul.nav.nav-pills.nav-stacked
+
+        - if role_allows(:feature => "container_node_show_list")
+          - num_nodes = @record.number_of(:container_nodes)
+          - if num_nodes == 0
+            %li.disabled
+              = link_to(_('Container Nodes (0)'), "#")
+          - else
+            %li
+              = link_to(_("Container Nodes (%s)") % num_nodes,
+                  {:action  => 'show', :id => @record, :display => 'container_nodes'},
+                  :title => _("Show Container Nodes"))
+
+        - if role_allows(:feature => "container_service_show_list")
+          - num_services = @record.number_of(:container_services)
+          - if num_services == 0
+            %li.disabled
+              = link_to(_('Container Services (0)'), "#")
+          - else
+            %li
+              = link_to(_("Container Services (%s)") % num_services,
+                  {:action  => 'show', :id => @record, :display => 'container_services'},
+                  :title => _("Show Container Services"))
+
+        - if role_allows(:feature => "container_group_show_list")
+          - num_groups = @record.number_of(:container_groups)
+          - if num_groups == 0
+            %li.disabled
+              = link_to(_('Container Groups (0)'), "#")
+          - else
+            %li
+              = link_to(_("Container Groups (%s)") % num_groups,
+                  {:action  => 'show', :id => @record, :display => 'container_groups'},
+                  :title => _("Show Container Groups"))

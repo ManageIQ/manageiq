@@ -1,43 +1,56 @@
 require "spec_helper"
 
 describe DialogFieldCheckBox do
-  describe "#default_value" do
-    let(:dialog_field) { described_class.new(:dynamic => dynamic, :default_value => "test") }
+  describe "#value" do
+    let(:dialog_field) { described_class.new(:dynamic => dynamic, :value => value) }
 
     context "when the dialog field is dynamic" do
       let(:dynamic) { true }
 
-      before do
-        DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("processor")
+      context "when the current value is blank" do
+        let(:value) { "" }
+
+        before do
+          DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("processor")
+        end
+
+        it "returns the values from the value processor" do
+          expect(dialog_field.value).to eq("processor")
+        end
       end
 
-      it "returns the values from the value processor" do
-        expect(dialog_field.default_value).to eq("processor")
+      context "when the current value is not blank" do
+        let(:value) { "test" }
+
+        it "returns the current value" do
+          expect(dialog_field.value).to eq("test")
+        end
       end
     end
 
     context "when the dialog field is not dynamic" do
       let(:dynamic) { false }
+      let(:value) { "test" }
 
       it "returns the current value" do
-        expect(dialog_field.default_value).to eq("test")
+        expect(dialog_field.value).to eq("test")
       end
     end
   end
 
   describe "#checked?" do
-    let(:dialog_field) { described_class.new(:default_value => default_value) }
+    let(:dialog_field) { described_class.new(:value => value) }
 
-    context "when the default value is 't'" do
-      let(:default_value) { "t" }
+    context "when the value is 't'" do
+      let(:value) { "t" }
 
       it "returns true" do
         expect(dialog_field.checked?).to be_true
       end
     end
 
-    context "when the default value is anything else" do
-      let(:default_value) { "1" }
+    context "when the value is anything else" do
+      let(:value) { "1" }
 
       it "returns false" do
         expect(dialog_field.checked?).to be_false
@@ -65,8 +78,8 @@ describe DialogFieldCheckBox do
     let(:dialog_field) { described_class.new }
     let(:automate_hash) do
       {
-        "default_value" => default_value,
-        "required"      => true
+        "value"    => value,
+        "required" => true
       }
     end
 
@@ -80,29 +93,24 @@ describe DialogFieldCheckBox do
       end
     end
 
-    context "when the automate hash has a default value" do
-      let(:default_value) { '1' }
+    context "when the automate hash has a value" do
+      let(:value) { '1' }
 
       it_behaves_like "DialogFieldCheckbox#normalize_automate_values"
 
-      it "sets the default value" do
-        dialog_field.normalize_automate_values(automate_hash)
-        expect(dialog_field.default_value).to eq('1')
-      end
-
-      it "returns the default value in a string format" do
+      it "returns the value in a string format" do
         expect(dialog_field.normalize_automate_values(automate_hash)).to eq("1")
       end
     end
 
-    context "when the automate hash does not have a default value" do
-      let(:default_value) { nil }
+    context "when the automate hash does not have a value" do
+      let(:value) { nil }
 
       it_behaves_like "DialogFieldCheckbox#normalize_automate_values"
 
-      it "sets the default value" do
+      it "sets the value" do
         dialog_field.normalize_automate_values(automate_hash)
-        expect(dialog_field.default_value).to eq(nil)
+        expect(dialog_field.value).to eq(nil)
       end
 
       it "returns the initial values" do
@@ -161,6 +169,23 @@ describe DialogFieldCheckBox do
 
         it_behaves_like "DialogFieldCheckBox#validate that returns nil"
       end
+    end
+  end
+
+  describe "#refresh_json_value" do
+    let(:dialog_field) { described_class.new }
+
+    before do
+      DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return("f")
+    end
+
+    it "returns the checked value in a hash" do
+      expect(dialog_field.refresh_json_value).to eq(:checked => false)
+    end
+
+    it "assigns the processed value to value" do
+      dialog_field.refresh_json_value
+      expect(dialog_field.value).to eq("f")
     end
   end
 end

@@ -1755,8 +1755,8 @@ module VmCommon
     # Save open nodes, if any were added
     presenter[:save_open_states_trees] = [x_active_tree.to_s] if add_nodes
 
-    presenter[:set_visible_elements][:blocker_div]    = false unless @edit && @edit[:adv_search_open]
-    presenter[:set_visible_elements][:quicksearchbox] = false
+    presenter[:set_visible_elements][:blocker_div] = false unless @edit && @edit[:adv_search_open]
+    presenter[:hide_modal] = true
     presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit
     # Render the JS responses to update the explorer screen
     render :js => presenter.to_html

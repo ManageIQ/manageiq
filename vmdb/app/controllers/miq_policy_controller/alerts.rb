@@ -105,7 +105,7 @@ module MiqPolicyController::Alerts
       @edit[:new][:repeat_time] = alert_default_repeat_time
     end
 
-    @edit[:new][:expression][:options][:event_types] = [params[:event_types]] if params[:event_types]
+    @edit[:new][:expression][:options][:event_types] = [params[:event_types]].reject(&:blank?) if params[:event_types]
     @edit[:new][:expression][:options][:time_threshold] = params[:time_threshold].to_i if params[:time_threshold]
     @edit[:new][:expression][:options][:hourly_time_threshold] = params[:hourly_time_threshold].to_i if params[:hourly_time_threshold]
     @edit[:new][:expression][:options][:freq_threshold] = params[:freq_threshold] if params[:freq_threshold]
@@ -534,6 +534,10 @@ module MiqPolicyController::Alerts
     if alert.options[:notifications][:automate]
       add_flash(_("%s is required") % "Event Name", :error) if alert.options[:notifications][:automate][:event_name].blank?
     end
+    if alert.expression[:eval_method] == 'event_threshold'
+      add_flash(_("%s is required") % "Event to Check", :error) if alert.expression[:options][:event_types].blank?
+    end
+
     if @edit.fetch_path(:new, :expression, :eval_method) == "realtime_performance"
       vt = @edit.fetch_path(:new, :expression, :options, :value_threshold)
       unless vt && is_integer?(vt)

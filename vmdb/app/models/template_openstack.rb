@@ -24,7 +24,7 @@ class TemplateOpenstack < TemplateCloud
     ems = self.ext_management_system
 
     #
-    # TODO: XXX create single handle for provder?
+    # TODO: Convert to use OpenstackHandle.
     #
     fog_compute = ems.connect(:service => "Compute")
     fog_image   = ems.connect(:service => "Image")
@@ -41,7 +41,7 @@ class TemplateOpenstack < TemplateCloud
     sync_stashed_metadata(ost)
   end
 
-  # TODO: XXX Temp.
+  # TODO: Does this code need to be reimplemented?
   def proxies4job(job=nil)
     {
       :proxies => [MiqServer.my_server],

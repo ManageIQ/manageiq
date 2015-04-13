@@ -45,6 +45,7 @@ class ApiController < ApplicationController
   include_concern 'Events'
   include_concern 'ProvisionRequests'
   include_concern 'RequestTasks'
+  include_concern 'ServiceCatalogs'
   include_concern 'ServiceRequests'
   include_concern 'Software'
   include_concern 'ServiceTemplates'
@@ -66,8 +67,11 @@ class ApiController < ApplicationController
   # Converted to @attr_<type> hashes at init, much faster access.
   #
   ATTR_TYPES = {
-    :time => %w(expires_on),
-    :url  => %w(href)
+    :time      => %w(expires_on),
+    :url       => %w(href),
+    :encrypted => %w(password) |
+                  ::MiqRequestWorkflow.all_encrypted_options_fields.map(&:to_s) |
+                  ::Vmdb::ConfigurationEncoder::PASSWORD_FIELDS
   }
 
   #

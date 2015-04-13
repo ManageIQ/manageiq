@@ -290,6 +290,9 @@ module OpsController::Settings::Schedules
     case filter_type
     when "vm"
       filtered_item_list = find_filtered(Vm, :all).sort_by { |vm| vm.name.downcase }.collect { |vm| vm.name }.uniq
+    when "miq_template"
+      filtered_item_list =
+        find_filtered(MiqTemplate, :all).sort_by { |miq_template| miq_template.name.downcase }.collect(&:name).uniq
     when "host"
       filtered_item_list = find_filtered(Host, :all).sort_by { |vm| vm.name.downcase }.collect { |vm| vm.name }.uniq
     when "ems"

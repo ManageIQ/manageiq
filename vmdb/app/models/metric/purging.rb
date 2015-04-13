@@ -92,10 +92,10 @@ module Metric::Purging
         ids = ids[0, limit - total] if limit && total + ids.length > limit
 
         $log.info("#{log_header} Purging #{ids.length} #{interval} metrics.")
-        Benchmark.realtime_block(:purge_metrics) do
-          count  = klass.delete_all(:id => ids)
-          total += count
+        count, _ = Benchmark.realtime_block(:purge_metrics) do
+          klass.delete_all(:id => ids)
         end
+        total += count
 
         if interval != 'realtime'
           # Since VimPerformanceTagValues are 6 * number of tags per performance
@@ -103,11 +103,11 @@ module Metric::Purging
           count_tag_values = 0
           $log.info("#{log_header} Purging associated tag values.")
           ids.each_slice(50) do |vp_ids|
-            Benchmark.realtime_block(:purge_vim_performance_tag_values) do
-              count = VimPerformanceTagValue.delete_all(:metric_id => vp_ids, :metric_type => klass.name)
-              count_tag_values += count
-              total_tag_values += count
+            tv_count, _ = Benchmark.realtime_block(:purge_vim_performance_tag_values) do
+              VimPerformanceTagValue.delete_all(:metric_id => vp_ids, :metric_type => klass.name)
             end
+            count_tag_values += tv_count
+            total_tag_values += tv_count
           end
           $log.info("#{log_header} Purged #{count_tag_values} associated tag values.")
         end

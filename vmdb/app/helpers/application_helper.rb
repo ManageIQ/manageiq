@@ -63,25 +63,23 @@ module ApplicationHelper
 
   # Check role based authorization for a UI task
   def role_allows(options={})
-    role_allows_intern(options) rescue false
+    ApplicationHelper.role_allows_intern(options) rescue false
   end
 
   def role_allows_intern(options = {})
+    userid  = User.current_userid
     role_id = User.current_user.miq_user_role.try(:id)
     if options[:feature]
       auth = options[:any] ? User.current_user.role_allows_any?(:identifiers => [options[:feature]]) :
                              User.current_user.role_allows?(:identifier => options[:feature])
-      $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{session[:userid]}], role id [#{role_id}], feature identifier [#{options[:feature]}]")
-    elsif options[:main_tab_id] # FIXME: used only in tab definition
-      tab = Menu::Manager.tab_features_by_id(options[:main_tab_id])
-      auth = User.current_user.role_allows_any?(:identifiers => tab)
-      $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{session[:userid]}], role id [#{role_id}], main tab [#{options[:main_tab]}]")
+      $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{userid}], role id [#{role_id}], feature identifier [#{options[:feature]}]")
     else
       auth = false
-      $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{session[:userid]}], role id [#{role_id}], no main tab or feature passed to role_allows")
+      $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{userid}], role id [#{role_id}], no main tab or feature passed to role_allows")
     end
     auth
   end
+  module_function :role_allows_intern
 
   # Check group based filtered authorization for a UI task
   def group_allows(options={})
@@ -256,6 +254,8 @@ module ApplicationHelper
     when "MiqWorker"
       controller = request.parameters[:controller]
       action = "diagnostics_worker_selected"
+    when "CloudNetwork", "OrchestrationStackOutput", "OrchestrationStackParameter", "OrchestrationStackResource"
+      controller = request.parameters[:controller]
     else
       controller = db.underscore
     end
@@ -692,6 +692,19 @@ module ApplicationHelper
   def build_toolbar_hide_button(id)
     return true if id == "blank_button" # Always hide the blank button placeholder
 
+    # Hide configuration buttons for specific Container* entities
+    return true if %w(container_node_edit container_node_delete container_node_new).include?(id) &&
+                   (@record.kind_of?(ContainerNode) || @record.nil?)
+
+    return true if %w(container_service_edit container_service_delete container_service_new).include?(id) &&
+                   (@record.kind_of?(ContainerService) || @record.nil?)
+
+    return true if %w(container_group_edit container_group_delete container_group_new).include?(id) &&
+                   (@record.kind_of?(ContainerGroup) || @record.nil?)
+
+    return true if %w(container_edit container_delete container_new).include?(id) &&
+                   (@record.kind_of?(Container) || @record.nil?)
+
     # hide timelines button for Amazon provider and instances
     # TODO: extend .is_available? support via refactoring task to cover this scenario
     return true if ['ems_cloud_timeline', 'instance_timeline'].include?(id) && (@record.kind_of?(EmsAmazon) || @record.kind_of?(VmAmazon))
@@ -1001,7 +1014,7 @@ module ApplicationHelper
         return true if @record.host && @record.host.vmm_product.to_s.downcase == "workstation"
       when "vm_refresh"
         return true if @record && !@record.ext_management_system && !(@record.host && @record.host.vmm_product.downcase == "workstation")
-      when "vm_scan"
+      when "vm_scan", "instance_scan"
         return true if !@record.has_proxy?
       when "perf_refresh", "perf_reload", "vm_perf_refresh", "vm_perf_reload"
         return true unless @perf_options[:typ] == "realtime"
@@ -1039,10 +1052,6 @@ module ApplicationHelper
         return true if ["workers", "download_logs"].include?(@lastaction)
       when "logdepot_edit"
         return true if ["workers", "evm_logs", "audit_logs"].include?(@lastaction)
-      when "orchestration_template_edit", "orchestration_template_copy", "orchestration_template_remove"
-        return true unless @report
-      when "orchestration_template_add"
-        return true unless role_allows(:feature => "orchestration_template_add")
       when "policy_new"
         return true unless role_allows(:feature => "policy_new")
       when "profile_new"
@@ -1359,7 +1368,7 @@ module ApplicationHelper
       when "instance_retire", "instance_retire_now",
               "vm_retire", "vm_retire_now"
         return "#{@record.kind_of?(VmCloud) ? "Instance" : "VM"} is already retired" if @record.retired == true
-      when "vm_scan"
+      when "vm_scan", "instance_scan"
         return @record.active_proxy_error_message if !@record.has_active_proxy?
       when "vm_timeline"
         return "No Timeline data has been collected for this VM" unless @record.has_events? || @record.has_events?(:policy_events)
@@ -1762,7 +1771,7 @@ module ApplicationHelper
       @edit[:new][:timer_weeks]  = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "weekly"
       @edit[:new][:timer_days]   = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "daily"
       @edit[:new][:timer_hours]  = schedule.run_at[:interval][:value] if schedule.run_at[:interval][:unit] == "hourly"
-      t                          = schedule.run_at[:start_time].to_time(:utc).in_time_zone(@edit[:tz])
+      t                          = schedule.run_at[:start_time].utc.in_time_zone(@edit[:tz])
       @edit[:new][:start_hour]   = t.strftime("%H")
       @edit[:new][:start_min]    = t.strftime("%M")
     end
@@ -1855,7 +1864,7 @@ module ApplicationHelper
   TRUNC_TO = 10
   def truncate_for_quad(value)
     return value if value.to_s.length < TRUNC_AT
-    case @settings[:display][:quad_truncate]
+    case @settings.fetch_path(:display, :quad_truncate)
     when "b"  # Old version, used first x chars followed by ...
       return value[0...TRUNC_TO] + "..."
     when "f"  # Chop off front
@@ -2060,9 +2069,9 @@ module ApplicationHelper
       end
     elsif x_active_tree == :ot_tree
       if %w(root xx-otcfn xx-othot).include?(x_node)
-        return "ot_list_center_tb"
+        return "orchestration_templates_center_tb"
       else
-        return "ot_center_tb"
+        return "orchestration_template_center_tb"
       end
     end
   end
@@ -2325,8 +2334,8 @@ module ApplicationHelper
   def foreman_providers_tree_center_tb(nodes)
     case nodes.first
     when "root" then  "provider_foreman_center_tb"
-    when "e"  then  "configuration_profile_foreman_center_tb"
-    when "cp"   then  "configured_system_foreman_center_tb"
+    when "e"    then  "configuration_profile_foreman_center_tb"
+    when "cp"   then  "configured_systems_foreman_center_tb"
     end
   end
 
@@ -2729,6 +2738,17 @@ module ApplicationHelper
     else
       :ems_container
     end
+  end
+
+  def x_gtl_view_tb_render?
+    no_gtl_view_buttons = %w(chargeback miq_ae_class miq_ae_customization miq_ae_tools miq_capacity_planning
+                             miq_capacity_utilization miq_policy miq_policy_rsop report ops pxe)
+    (@record.nil? && @explorer && !no_gtl_view_buttons.include?(@layout) ||
+      @record && @layout == "provider_foreman" && x_active_tree == :foreman_providers_tree)
+  end
+
+  def explorer_controller?
+    %w(vm_cloud vm_infra vm_or_template).include?(controller_name)
   end
 
   attr_reader :big_iframe

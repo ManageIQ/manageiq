@@ -52,6 +52,15 @@ module QcowDisk
   ])
   SIZEOF_QCOW_HEADER_V2 = QCOW_HEADER_V2.size
 
+  QCOW_HEADER_V3 = BinaryStruct.new(QCOW_HEADER_V2.definition + [
+    'Q', 'incompatible_features',
+    'Q', 'compatible_features',
+    'Q', 'autoclear_features',
+    'N', 'refcount_order',
+    'N', 'header_length'
+  ])
+  SIZEOF_QCOW_HEADER_V3 = QCOW_HEADER_V3.size
+
   # indicate that the refcount of the referenced cluster is exactly one.
   QCOW_OFLAG_COPIED     = (1 << 63)
 
@@ -64,9 +73,32 @@ module QcowDisk
   L1E_OFFSET_MASK                 = 0x00fffffffffffe00
   L2E_OFFSET_MASK                 = 0x00fffffffffffe00
   L2E_COMPRESSED_OFFSET_SIZE_MASK = 0x3fffffffffffffff
+  L2E_PREALLOCATED_MASK           = 0x1
 
   SECTOR_SIZE       = 512
   ZLIB_WINDOW_BITS  = -12
+
+  INCOMPATIBLE_FEATURES_MASK = {
+    :dirty   => 0x1,
+    :corrupt => 0x2
+  }
+
+  KNOWN_INCOMPATIBLE_FEATURES_MASK = 0x3
+
+  COMPATIBLE_FEATURES_MASK = {
+    :lazy_refcounts => 0x1
+  }
+
+  AUTOCLEAR_FEATURES_MASK = {
+  }
+
+  HEADER_EXTENSION_TYPE_SIZE   = 4
+  HEADER_EXTENSION_LENGTH_SIZE = 4
+  HEADER_EXTENSION_TYPES = {
+    :end_of_header_extension_area => 0x00000000,
+    :backing_file_format_name     => 0xE2792ACA,
+    :feature_table_name           => 0x6803f857
+  }
 
   def d_init
     self.diskType = "QCOW"
@@ -187,7 +219,7 @@ module QcowDisk
       case version
       when 1
         header['l2bits']
-      when 2
+      when 2, 3
         cluster_bits - 3
       else
         raise "Unknown QCOW Version: #{version}"
@@ -221,7 +253,7 @@ module QcowDisk
       when 1
        shift = cluster_bits + l2_bits
        (size + (1 << shift) - 1) >> shift
-      when 2
+      when 2, 3
         header['l1_size']
       else
         raise "Unknown QCOW Version: #{version}"
@@ -250,6 +282,16 @@ module QcowDisk
     entries = Array.new
     file_handle.read(n * SIZEOF_UINT64).unpack("N*").each_slice(2) { |hi, lo| entries << uint64_from_hi_lo(hi, lo) }
     entries
+  end
+
+  def refcount_order
+    # https://github.com/qemu/qemu/blob/v2.2.0/docs/specs/qcow2.txt#L108
+    version < 3 ? 4 : @header['refcount_order']
+  end
+
+  def header_length
+    # https://github.com/qemu/qemu/blob/v2.2.0/docs/specs/qcow2.txt#L115
+    version < 3 ? SIZEOF_QCOW_HEADER_V2 : @header['header_length']
   end
 
   def refcount_table_clusters
@@ -362,6 +404,10 @@ module QcowDisk
       elsif compressed?(cluster_offset)
         rbuf = decompress_cluster(cluster_offset)
         rbuf = rbuf[index_in_cluster * SECTOR_SIZE, nbytes]
+
+      elsif preallocated?(cluster_offset)
+        rbuf = "\0" * nbytes
+
       else
         cluster_offset &= L2E_OFFSET_MASK
         file_offset = cluster_offset + (index_in_cluster * SECTOR_SIZE)
@@ -446,10 +492,20 @@ module QcowDisk
         # TODO: Handle Encryption
         raise "QCOW Encryption is not supported" if h['crypt_method'] == 1
         h
+      when 3
+        h = QCOW_HEADER_V3.decode(file_handle.read(SIZEOF_QCOW_HEADER_V3))
+        # TODO: warning if dirty or corrupt (?)
+        raise "QCOW Encryption is not supported" if h['crypt_method'] == 1
+        raise "Unknown QCOW incompatible features" if h['incompatible_features'] & ~KNOWN_INCOMPATIBLE_FEATURES_MASK > 0
+        h
       else
         raise "Uknown Version: #{partial_header['version'].inspect}"
       end
     end
+  end
+
+  def header_extensions
+    # ...
   end
 
   UINT64 = BinaryStruct.new([
@@ -495,7 +551,7 @@ module QcowDisk
       case version
       when 1
         0
-      when 2
+      when 2, 3
         1 << 63
       else
         raise "Unknown QCOW Version: #{version}"
@@ -508,7 +564,7 @@ module QcowDisk
       case version
       when 1
         1 << 63
-      when 2
+      when 2, 3
         1 << 62
       else
         raise "Unknown QCOW Version: #{version}"
@@ -522,6 +578,10 @@ module QcowDisk
 
   def copied?(cluster_offset)
     (cluster_offset & copied_mask) > 0
+  end
+
+  def preallocated?(cluster_offset)
+    cluster_offset & L2E_PREALLOCATED_MASK > 0
   end
 
   def count_contiguous_clusters(nb_clusters, cluster_size, l2_table, l2_index, start = 0)
@@ -571,6 +631,30 @@ module QcowDisk
     @cluster_offset_mask ||= (1 << csize_shift) - 1
   end
 
+  def incompatible_features
+    version < 3 ? 0 : @header['incompatible_features']
+  end
+
+  def compatible_features
+    version < 3 ? 0 : @header['compatible_features']
+  end
+
+  def autoclear_features
+    version < 3 ? 0 : @header['autoclear_features']
+  end
+
+  def dirty?
+    (incompatible_features & INCOMPATIBLE_FEATURES_MASK[:dirty]) == INCOMPATIBLE_FEATURES_MASK[:dirty]
+  end
+
+  def corrupt?
+    (incompatible_features & INCOMPATIBLE_FEATURES_MASK[:corrupt]) == INCOMPATIBLE_FEATURES_MASK[:corrupt] 
+  end
+
+  def lazy_refcounts?
+    compatible_features & COMPATIBLE_FEATURES_MASK[:lazy_refcounts]
+  end
+
   def dump
     out = "\#<#{self.class}:0x#{'%08x' % self.object_id}>\n"
     out << "Version                  : #{version}\n"
@@ -592,6 +676,13 @@ module QcowDisk
     out << "Snapshot Offset          : #{snapshots_offset}\n"
     out << "RefCount Table Offset    : #{refcount_table_offset}\n"
     out << "RefCount Table Clusters  : #{refcount_table_clusters}\n"
+    out << "RefCount Order           : #{refcount_order}\n"
+    out << "Header length            : #{header_length}\n"
+    out << "Incompatible Features    : #{incompatible_features}\n"
+    out << "Compatible Features      : #{compatible_features}\n"
+    out << "Autoclear Features       : #{autoclear_features}\n"
+    out << "Dirty                    : #{dirty?}\n"
+    out << "Corrupt                  : #{corrupt?}\n"
     return out
   end
 

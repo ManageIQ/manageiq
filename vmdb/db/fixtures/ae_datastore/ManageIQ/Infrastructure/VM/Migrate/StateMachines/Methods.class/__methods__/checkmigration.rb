@@ -3,7 +3,7 @@
 #
 
 # Get current provisioning status
-result = $evm.root["vm_migrate_task"].status
+result = $evm.root["vm_migrate_task"].statemachine_task_status
 
 $evm.log('info', "returned <#{result}>")
 

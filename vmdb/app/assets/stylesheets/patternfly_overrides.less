@@ -13,7 +13,7 @@ body, html {
 /* This media query makes the entire main row scrollable once the columns have collapsed */
 
 @media (max-width: @screen-sm) {
-  body {     
+  body {
     padding-top: 40px !important; //Body 'padding-top' is added because navbar-fixed-top class is applied
     padding-bottom: 30px !important;
   }
@@ -128,6 +128,11 @@ li.brand-white-label.whitelabeled {
   padding-bottom: 0 !imporant;
 }
 
+.ie8 > body > .container {
+  background-color: none !important;
+  background: url(/images/layout/overlay_dark.png) !important;
+}
+
 #notification { 
   position:absolute;
   left:0;
@@ -183,14 +188,52 @@ table.table tbody td img {
 
 .table > thead > tr > th {
   font-family: inherit !important;
+  white-space: nowrap
 }
 
-table.table .narrow {
+table .narrow {
   width: 1%
 }
 
+/* disables hover and pointer on row */
+
+table.table-hover tbody tr:nth-child(odd).no-hover:hover td {
+  background: transparent; cursor:default
+}
+
+table.table-hover tbody tr:nth-child(even).no-hover:hover td {
+  background-color: @table-bg-accent; cursor:default
+}
+
+/* summary screen formatting */
+
+table .label {display: table-cell;width: 20% !important; min-width: 200px; font: normal 12px OpenSansSemibold,Arial,Helvetica,sans-serif;cursor: default;color: #333; text-align: left;}
+
+table.table.table-selectable tbody tr.selected td {
+  background-color: @link-color;
+  color: #fff
+}
+
 /* instead of using onmouseover="this.style.cursor='pointer'" */
+
 .table-hover tbody tr:hover > td {
   cursor: pointer;
   cursor: hand;
+}
+
+/* modified dl styling for tile view */
+
+@media (min-width: 400px) {
+  .dl-horizontal.tile {
+    dt {
+      float: left;
+      width: (@component-offset-horizontal - 80);
+      clear: left;
+      text-align: right;
+      .text-overflow();
+    }
+    dd {
+      margin-left: 110px;
+    }
+  }
 }

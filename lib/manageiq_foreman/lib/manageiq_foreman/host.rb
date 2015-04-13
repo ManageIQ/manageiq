@@ -8,6 +8,10 @@ module ManageiqForeman
       @manager_ref = manager_ref
     end
 
+    def building?
+      attributes["build"]
+    end
+
     def start
       power_state("on")
     end
@@ -21,12 +25,20 @@ module ManageiqForeman
       connection.fetch(:hosts, :power, "id" => manager_ref, "power_action" => action).first["power"]
     end
 
+    def powered_off?
+      power_state == "off"
+    end
+
     def powered_on?
       power_state == "on"
     end
 
-    def reboot(mode = "pxe")
-      connection.fetch(:hosts, :boot, "id" => manager_ref, "device" => mode)
+    def set_boot_mode(mode = "pxe")
+      connection.fetch(:hosts, :boot, "id" => manager_ref, "device" => mode).first["boot"]
+    end
+
+    def attributes
+      connection.fetch(:hosts, :show, "id" => manager_ref).first
     end
 
     def update(params)

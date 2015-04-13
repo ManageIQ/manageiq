@@ -39,10 +39,10 @@ module EmsRefresh::SaveInventoryHelper
     # Find the record, and update if found, else create it
     found = parent.send(type)
     if found.nil?
-      found = parent.send("build_#{type}", hash)
+      found = parent.send("build_#{type}", hash.except(:id))
       parent.send("#{type}=", found)
     else
-      found.update_attributes!(hash.except(:type))
+      found.update_attributes!(hash.except(:id, :type))
     end
     found
   end
@@ -51,10 +51,10 @@ module EmsRefresh::SaveInventoryHelper
     # Find the record, and update if found, else create it
     found = save_inventory_record_index_fetch(record_index, record_index_columns, hash, find_key)
     if found.nil?
-      found = parent.send(type).build(hash)
+      found = parent.send(type).build(hash.except(:id))
       new_records << found
     else
-      found.update_attributes!(hash.except(:type))
+      found.update_attributes!(hash.except(:id, :type))
       deletes.delete(found) unless deletes.blank?
     end
     found
@@ -107,6 +107,13 @@ module EmsRefresh::SaveInventoryHelper
     end
   end
 
+  def link_children_references(records)
+    records.each do |rec|
+      parent = records.detect { |r| r.manager_ref == rec.parent_ref } if rec.parent_ref.present?
+      rec.update_attributes(:parent_id => parent.try(:id))
+    end
+  end
+
   # most of the refresh_inventory_multi calls follow the same pattern
   # this pulls it out
   def save_inventory_assoc(type, parent, hashes, target, find_key, child_keys = [], extra_keys = [])
@@ -133,6 +140,6 @@ module EmsRefresh::SaveInventoryHelper
     # if this association isn't the definitive source
     top_level = reflection.options[:dependent] == :destroy
 
-    top_level && (target == true || target.nil? || parent == target) ? parent.send(reflection.name).dup : []
+    top_level && (target == true || target.nil? || parent == target) ? parent.send(reflection.name).to_a.dup : []
   end
 end

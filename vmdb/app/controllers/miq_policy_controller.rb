@@ -1034,7 +1034,7 @@ class MiqPolicyController < ApplicationController
         when "p"  then MiqPolicy
         when "al" then MiqAlert
         end
-      @sb[:new][:chosen] = chooser_class.all.sort_by { |c| c.description.downcase }.collect { |c| [c.description, c.id] }
+      @sb[:new][:choices] = chooser_class.all.sort_by { |c| c.description.downcase }.collect { |c| [c.description, c.id] }
     else
       @sb[:import_file] = ""
     end

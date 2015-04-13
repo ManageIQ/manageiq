@@ -1,7 +1,7 @@
 #!/bin/sh
 file=$1
 logger_file=/var/www/miq/vmdb/log/appliance_console.log
-logvol_free_space=`df -k $file | awk '{ print $3 }' | tail -n 1`
+logvol_free_space=`df -lk $file | awk '{ print $3 }' | tail -n 1`
 existing_log_size=`du -k $file | awk '{ print $1 }' | tail -n 1`
 size_needed=$(($existing_log_size+($existing_log_size/5)))
 echo "$(date) Checking for enough free space to rotate: $file" >> $logger_file

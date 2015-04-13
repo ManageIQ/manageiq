@@ -3,10 +3,7 @@ require "spec_helper"
 describe OrchestrationTemplateDialogService do
   let(:dialog_service) { described_class.new }
 
-  let(:template) do
-    file = 'spec/fixtures/orchestration_templates/hot_parameters.yml'
-    OrchestrationTemplateHot.new(:content => IO.read(file))
-  end
+  let(:template) { FactoryGirl.create(:orchestration_template_hot_with_content) }
 
   describe "#create_dialog" do
     it "creates a dialog with stack basic info and parameters" do

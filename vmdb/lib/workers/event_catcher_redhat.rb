@@ -3,13 +3,17 @@ require 'workers/event_catcher'
 class EventCatcherRedhat < EventCatcher
   def event_monitor_handle
     require 'ovirt_provider/events/ovirt_event_monitor'
-    @event_monitor_handle ||= OvirtEventMonitor.new(
-      :server     => @ems.ipaddress,
-      :port       => @ems.port,
+    @event_monitor_handle ||= OvirtEventMonitor.new(event_monitor_options)
+  end
+
+  def event_monitor_options
+    {
+      :server     => @ems.hostname,
+      :port       => @ems.port.blank? ? nil : @ems.port.to_i,
       :username   => @ems.authentication_userid,
       :password   => @ems.authentication_password,
-      :verify_ssl => false,
-    )
+      :verify_ssl => false
+    }
   end
 
   def reset_event_monitor_handle

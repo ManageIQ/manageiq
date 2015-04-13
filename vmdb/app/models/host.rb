@@ -1120,6 +1120,10 @@ class Host < ActiveRecord::Base
     return true
   end
 
+  def verify_credentials_with_ws(_auth_type = nil, _options = {})
+    raise NotImplementedError, "#{__method__} not implemented in #{self.class.name}"
+  end
+
   def verify_credentials_with_ssh(auth_type=nil, options={})
     raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(auth_type)
     raise MiqException::MiqHostError, "Logon to platform [#{self.os_image_name}] not supported" unless self.os_image_name =~ /linux_*/
@@ -1389,8 +1393,7 @@ class Host < ActiveRecord::Base
     name
   end
 
-  def connect_ssh(options={})
-    require 'MiqSshUtil'
+  def ssh_users_and_passwords
     if self.has_authentication_type?(:remote)
       rl_user, rl_password = self.auth_user_pwd(:remote)
       su_user, su_password = self.auth_user_pwd(:root)
@@ -1398,6 +1401,14 @@ class Host < ActiveRecord::Base
       rl_user, rl_password = self.auth_user_pwd(:root)
       su_user, su_password = nil, nil
     end
+    return rl_user, rl_password, su_user, su_password, {}
+  end
+
+  def connect_ssh(options={})
+    require 'MiqSshUtil'
+
+    rl_user, rl_password, su_user, su_password, additional_options = ssh_users_and_passwords
+    options.merge!(additional_options)
 
     prompt_delay = VMDB::Config.new("vmdb").config.fetch_path(:ssh, :authentication_prompt_delay)
     options[:authentication_prompt_delay] = prompt_delay unless prompt_delay.nil?
@@ -1490,6 +1501,8 @@ class Host < ActiveRecord::Base
     begin
       self.ssh_permit_root_login = nil
       permit_list = ssu.shell_exec("grep PermitRootLogin /etc/ssh/sshd_config")
+      # Setting default value to yes, which is default according to man sshd_config, if ssh returned something
+      self.ssh_permit_root_login = 'yes' if permit_list
       permit_list.each_line do |line|
         la = line.split(' ')
         if la.length == 2
@@ -1914,11 +1927,11 @@ class Host < ActiveRecord::Base
   def get_ports(*args)
     return [] if self.operating_system.nil?
     if args.length == 3
-      rules = self.operating_system.firewall_rules.find_all_by_enabled_and_protocol_and_direction(*args)
+      rules = operating_system.firewall_rules.find_all_by_enabled_and_host_protocol_and_direction(*args)
     elsif args.length == 2
-      rules = self.operating_system.firewall_rules.find_all_by_enabled_and_direction(*args)
+      rules = operating_system.firewall_rules.find_all_by_enabled_and_direction(*args)
     elsif args.length == 1
-      rules = self.operating_system.firewall_rules.find_all_by_enabled(*args)
+      rules = operating_system.firewall_rules.find_all_by_enabled(*args)
     else
       return []
     end

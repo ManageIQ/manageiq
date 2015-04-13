@@ -36,6 +36,8 @@ describe EmsRefresh::Parsers::Foreman do
       }, {
         "id"                 => 9,
         "name"               => "hg9",
+        "title"              => "hg8",
+        "ancestry"           => "8",
         "description"        => "t",
         "operatingsystem_id" => 20,
         "medium_id"          => 10,
@@ -60,6 +62,8 @@ describe EmsRefresh::Parsers::Foreman do
       {
         "id"                 => 1,
         "name"               => "h1",
+        "ip"                 => "192.186.1.101",
+        "mac"                => "aa:bb:cc:dd:01",
         "hostgroup_id"       => 8,
         "operatingsystem_id" => 20,
         "medium_id"          => 10,
@@ -67,11 +71,14 @@ describe EmsRefresh::Parsers::Foreman do
         "last_compile"       => nil,
         "location_id"        => 10,
         "organization_id"    => 20,
+        "puppet_status"      => 0,
         "build"              => false,
       },
       {
         "id"                 => 2,
         "name"               => "h2",
+        "ip"                 => "192.186.1.102",
+        "mac"                => "aa:bb:cc:dd:02",
         "hostgroup_id"       => 9,
         "operatingsystem_id" => 30,
         "medium_id"          => 20,
@@ -79,7 +86,8 @@ describe EmsRefresh::Parsers::Foreman do
         "last_compile"       => date1,
         "location_id"        => 20,
         "organization_id"    => 10,
-        "build"              => true
+        "puppet_status"      => 0,
+        "build"              => true,
       },
     ]
   end
@@ -87,6 +95,26 @@ describe EmsRefresh::Parsers::Foreman do
   # end
 
   describe "#configuration_inv_to_hashes" do
+
+    it "links parents by ancestry" do
+      result = parser.configuration_inv_to_hashes(
+        :operating_system_flavors => flavors,
+        :media                    => media,
+        :ptables                  => ptables,
+        :hostgroups               => hostgroups,
+        :hosts                    => hosts,
+        :locations                => locations,
+        :organizations            => organizations,
+      )
+
+      # linked off of ancestry
+      profiles = result[:configuration_profiles]
+      parent = profiles.detect { |r| r[:manager_ref].to_s == "8" }
+      child  = profiles.detect { |r| r[:manager_ref].to_s == "9" }
+
+      expect(child[:parent_ref]).to eq(parent[:manager_ref])
+    end
+
     it "doesnt need provisioning_refresh" do
       result = parser.configuration_inv_to_hashes(
         :operating_system_flavors => flavors,

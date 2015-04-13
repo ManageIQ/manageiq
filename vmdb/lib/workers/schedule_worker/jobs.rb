@@ -69,14 +69,8 @@ class ScheduleWorker < WorkerBase
       queue_work_on_each_zone(:class_name  => "JobProxyDispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY, :role => "smartstate", :state => "ready")
     end
 
-    def ems_refresh_all_ems_timer
-      queue_work_on_each_zone(:class_name  => "ExtManagementSystem", :method_name => "refresh_all_ems_timer")
-    end
-
-    def ems_refresh_all_scvmm_timer
-      if EmsMicrosoft.any?
-        queue_work_on_each_zone(:class_name  => "EmsMicrosoft", :method_name => "refresh_all_ems_timer")
-      end
+    def ems_refresh_timer(klass)
+      queue_work_on_each_zone(:class_name  => klass.name, :method_name => "refresh_all_ems_timer") if klass.any?
     end
 
     def miq_alert_evaluate_hourly_timer

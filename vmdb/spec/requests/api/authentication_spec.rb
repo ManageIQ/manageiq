@@ -4,7 +4,6 @@
 require 'spec_helper'
 
 describe ApiController do
-
   include Rack::Test::Methods
 
   before(:each) do
@@ -45,7 +44,7 @@ describe ApiController do
     end
 
     it "authentication using a bad token" do
-      run_get entrypoint_url, "auth_token" => "badtoken"
+      run_get entrypoint_url, :headers => {"auth_token" => "badtoken"}
 
       expect_user_unauthorized
     end
@@ -60,7 +59,7 @@ describe ApiController do
 
       auth_token = @result["auth_token"]
 
-      run_get entrypoint_url, "auth_token" => auth_token
+      run_get entrypoint_url, :headers => {"auth_token" => auth_token}
 
       expect_single_resource_query
       expect_result_to_have_keys(%w(name description version versions collections))

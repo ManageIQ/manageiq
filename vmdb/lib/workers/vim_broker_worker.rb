@@ -9,7 +9,7 @@ class VimBrokerWorker < WorkerBase
     # Global Work Queue
     @queue = Queue.new
 
-    @initial_emses_to_monitor, invalid_emses = MiqVimBrokerWorker.emses_to_monitor.partition(&:authentication_check)
+    @initial_emses_to_monitor, invalid_emses = MiqVimBrokerWorker.emses_to_monitor.partition { |e| e.authentication_check.first }
     start_broker_server(@initial_emses_to_monitor)
     @worker.update_attributes(:uri => DRb.uri)
     $log.info("#{self.log_prefix} DRb URI: #{DRb.uri}")
@@ -239,7 +239,7 @@ class VimBrokerWorker < WorkerBase
       @waitForUpdates_sleep = nil
       @notification_enabled = false
       self.create_miq_vim_broker_server
-      self.prime_all_ems(emses_to_prime) if emses_to_prime.kind_of?(Array)
+      self.prime_all_ems(emses_to_prime) if emses_to_prime
 
       $log.info("#{self.log_prefix} Starting broker server...Complete")
     rescue => err

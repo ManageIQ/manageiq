@@ -35,9 +35,13 @@ class DialogImportValidator
 
   def check_dialog_fields_for_validity(dialog_fields)
     dialog_fields.each do |dialog_field|
-      unless DialogField::DIALOG_FIELD_TYPES.include?(dialog_field["type"]) || dialog_field["type"].nil?
+      unless valid_dialog_field_type?(dialog_field["type"])
         raise InvalidDialogFieldTypeError
       end
     end
+  end
+
+  def valid_dialog_field_type?(type)
+    DialogField::DIALOG_FIELD_TYPES.include?(type) || type.nil? || type == "DialogFieldDynamicList"
   end
 end

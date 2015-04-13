@@ -5,7 +5,6 @@
     %title
       = _('SPICE Console')
     = stylesheet_link_tag 'application'
-    = javascript_include_tag 'jquery/jquery-1.8.3.min', 'jquery/jquery-ui-1.9.2.custom.min'
     = javascript_include_tag 'application'
 
   %body{:style => 'margin: 0px; padding-top: 0px !important;'}
@@ -59,7 +58,7 @@
 
         function spice_connecting() {
           var enc_text = encrypt ? 'encrypted' : 'unencrypted';
-          $('#spice-status').text('Connecteding ('+ enc_text + ') to: ' +
+          $('#spice-status').text('Connecting ('+ enc_text + ') to: ' +
             $('#spice-status').attr('data-host'));
           $('#spice-status').addClass('label-success');
         }

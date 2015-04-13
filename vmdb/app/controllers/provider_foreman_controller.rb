@@ -28,7 +28,8 @@ class ProviderForemanController < ApplicationController
       add_provider_foreman
       save_provider_foreman
     else
-      @provider_foreman = find_by_id_filtered(ConfigurationManagerForeman, from_cid(params[:miq_grid_checks]))
+      @provider_foreman = find_by_id_filtered(ConfigurationManagerForeman,
+                                              from_cid(params[:miq_grid_checks] || params[:id]))
       render_form
     end
   end
@@ -36,6 +37,7 @@ class ProviderForemanController < ApplicationController
   def delete
     assert_privileges("provider_foreman_delete")
     checked_items = find_checked_items
+    checked_items.push(params[:id]) if params[:id]
     foremen = ConfigurationManagerForeman.where(:id => checked_items).pluck(:provider_id)
     if foremen.empty?
       add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "providers"),
@@ -61,8 +63,23 @@ class ProviderForemanController < ApplicationController
 
   def refresh
     assert_privileges("provider_foreman_refresh")
-    refreshvms("provider_foreman_refresh")
+    @explorer = true
+    foreman_button_operation('refresh_ems', 'Refresh')
     replace_right_cell
+  end
+
+  def provision
+    assert_privileges("provider_foreman_provision")
+    @prov_id = find_checked_items
+    @prov_id = params[:id] if @prov_id.empty?
+
+    render :update do |page|
+      page.redirect_to :controller     => "miq_request",
+                       :action         => "prov_edit",
+                       :prov_id        => @prov_id,
+                       :org_controller => "configured_system",
+                       :escape         => false
+    end
   end
 
   def add_provider_foreman
@@ -100,6 +117,7 @@ class ProviderForemanController < ApplicationController
       add_flash(_("%{model} \"%{name}\" was %{action}") % {:model  => ui_lookup(:model => "ProviderForeman"),
                                                            :name   => @provider_foreman.name,
                                                            :action => params[:id] == "new" ? "added" : "updated"})
+      process_foreman([@provider_foreman.configuration_manager.id], "refresh_ems") if params[:id] == "new"
       replace_right_cell([:foreman_providers])
     else
       @provider_foreman.errors.each do |field, msg|
@@ -177,7 +195,11 @@ class ProviderForemanController < ApplicationController
     self.x_active_tree = params[:tree] if params[:tree]
     self.x_node = params[:id]
     load_or_clear_adv_search
-    replace_right_cell
+    if params[:action] == "reload"
+      replace_right_cell([:foreman_providers])
+    else
+      replace_right_cell
+    end
   end
 
   def accordion_select
@@ -398,7 +420,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def provider_node(id, model)
-    provider = identify_record(id, ExtManagementSystem)
+    @record = provider = identify_record(id, ExtManagementSystem)
     if provider.nil?
       self.x_node = "root"
       get_node_info("root")
@@ -406,11 +428,13 @@ class ProviderForemanController < ApplicationController
     else
       options = {:model => "ConfigurationProfile"}
       options[:where_clause] = ["configuration_manager_id IN (?)", provider.id]
+      @no_checkboxes = true
       process_show_list(options)
+      record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
       @right_cell_text =
           _("%{model} \"%{name}\"") %
           {:name  => provider.name,
-           :model => "#{ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))}"}
+           :model => "#{ui_lookup(:tables => "configuration_profile")} under #{record_model}"}
     end
   end
 
@@ -424,10 +448,11 @@ class ProviderForemanController < ApplicationController
       options = {:model => "ConfiguredSystem"}
       options[:where_clause] = ["configuration_profile_id IN (?)", cpf.id]
       process_show_list(options)
+      record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
       @right_cell_text =
           _("%{model} \"%{name}\"") %
           {:name  => cpf.name,
-           :model => "#{ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))}"}
+           :model => "#{ui_lookup(:tables => "configured_system")} under #{record_model}"}
     end
   end
 
@@ -646,6 +671,10 @@ class ProviderForemanController < ApplicationController
     @edit[:new] = {:name       => params[:name],
                    :url        => params[:url],
                    :verify_ssl => params[:verify_ssl]}
+  end
+
+  def breadcrumb_name
+    ui_lookup_for_model(self.class.model_name).singularize
   end
 
   def set_root_node

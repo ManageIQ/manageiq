@@ -3,7 +3,7 @@ module MiqAeMethodService
     expose :miq_host_provision_request, :association => true
     expose :host,                       :association => true
 
-    def status
+    def statemachine_task_status
       ar_method do
         if ['finished', 'provisioned'].include?(@object.state)
           @object.host_rediscovered? ? 'ok' : 'error'

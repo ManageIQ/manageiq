@@ -1,22 +1,15 @@
 module ManageiqForeman
   class Connection
-    CLASSES = {
-      :config_templates  => ForemanApi::Resources::ConfigTemplate,
-      :home              => ForemanApi::Resources::Home,
-      :hostgroups        => ForemanApi::Resources::Hostgroup,
-      :hosts             => ForemanApi::Resources::Host,
-      :media             => ForemanApi::Resources::Medium,
-      :operating_systems => ForemanApi::Resources::OperatingSystem,
-      :ptables           => ForemanApi::Resources::Ptable,
-      :subnets           => ForemanApi::Resources::Subnet,
-      :locations         => ForemanApi::Resources::Location,
-      :organizations     => ForemanApi::Resources::Organization,
-    }
-
+    # some foreman servers don't have locations or organizations, just return nil
+    ALLOW_404 = [:locations, :organizations]
     attr_accessor :connection_attrs
 
-    def initialize(connection_attrs)
-      @connection_attrs = connection_attrs
+    def initialize(attrs)
+      self.connection_attrs = attrs.dup
+      connection_attrs[:uri] = connection_attrs.delete(:base_url)
+      connection_attrs[:api_version] ||= 2
+      connection_attrs[:apidoc_cache_dir] ||= tmpdir
+      @api = ApipieBindings::API.new(connection_attrs)
     end
 
     def verify?
@@ -31,6 +24,7 @@ module ManageiqForeman
       loop do
         page_params = {:page => (page += 1), :per_page => 50}.merge(filter)
         small = fetch(resource, :index, page_params)
+        return if small.nil? # 404
         all += small.to_a
         break if small.empty? || all.size >= small.total
       end
@@ -43,13 +37,16 @@ module ManageiqForeman
     end
 
     def load_details(resources, resource)
-      resources.map! { |os| fetch(resource, :show, "id" => os["id"]).first }
+      resources.map! { |os| fetch(resource, :show, "id" => os["id"]).first } if resources
     end
 
     # filter: "page" => 2, "per_page" => 50, "search" => "field=value", "value"
     def fetch(resource, action = :index, filter = {})
       action, filter = :index, action if action.kind_of?(Hash)
-      PagedResponse.new(raw(resource).send(action, filter).first)
+      PagedResponse.new(@api.resource(resource).action(action).call(filter))
+    rescue RestClient::ResourceNotFound
+      raise unless ALLOW_404.include?(resource)
+      nil
     end
 
     def host(manager_ref)
@@ -60,10 +57,26 @@ module ManageiqForeman
       Inventory.new(self)
     end
 
+    # used for tests to manually invoke loading api from server
+    # this keeps http calls consistent
+
+    def api_cached?
+      File.exist?(@api.apidoc_cache_file)
+    end
+
+    def ensure_api_cached
+      @api.apidoc
+    end
+
     private
 
-    def raw(resource)
-      CLASSES[resource].new(connection_attrs)
+    def tmpdir
+      if defined?(Rails)
+        Rails.root.join("tmp/foreman").to_s
+      else
+        require 'tmpdir'
+        "#{Dir.tmpdir}/foreman"
+      end
     end
   end
 end

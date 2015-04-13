@@ -445,6 +445,10 @@
       :feature_type: control
       :identifier: instance_control
       :children:
+      - :name: Analysis
+        :description: Perform SmartState Analysis on Instances
+        :feature_type: control
+        :identifier: instance_scan
       - :name: Check Compliance
         :description: Check Compliance of Last Known Configuration
         :feature_type: control
@@ -811,6 +815,19 @@
         :description: Remove Orchestration Template
         :identifier: orchestration_template_remove
         :feature_type: admin
+    - :name: Operate
+      :description: Perform Operations on Orchestration Templates
+      :feature_type: control
+      :identifier: orchestration_template_control
+      :children:
+      - :name: Edit Tags
+        :description: Edit Orchestration Templates Tags
+        :feature_type: control
+        :identifier: orchestration_template_tag
+    - :name: Create Service Dialog from Orchestration Template
+      :description: Create Service Dialog from Orchestration Template
+      :identifier: service_dialog_from_ot
+      :feature_type: admin
       
 # My Services
 - :name: My Services
@@ -3515,6 +3532,15 @@
       :description: Display Individual Containers Providers
       :feature_type: view
       :identifier: ems_container_show
+  - :name: Operate
+    :description: Perform Operations on Containers Providers
+    :feature_type: control
+    :identifier: ems_container_control
+    :children:
+    - :name: Refresh
+      :description: Refresh Containers Providers
+      :feature_type: control
+      :identifier: ems_container_refresh
   - :name: Modify
     :description: Modify Containers Providers
     :feature_type: admin
@@ -3746,3 +3772,8 @@
         :description: Validate a Foreman Provider
         :feature_type: admin
         :identifier: provider_foreman_authentication_validate
+      - :name: Provision
+        :description: Provision a Foreman Configured System
+        :feature_type: admin
+        :identifier: provider_foreman_provision
+

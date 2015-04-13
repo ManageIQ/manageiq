@@ -28,6 +28,8 @@
 #   - customization_specs
 #
 #   - link
+#   - orchestration_stacks
+#   - orchestration_templates
 #
 
 module EmsRefresh::SaveInventoryInfra
@@ -50,7 +52,7 @@ module EmsRefresh::SaveInventoryInfra
     end
 
     child_keys = [:storages, :clusters, :hosts, :vms, :folders, :resource_pools, :customization_specs,
-                  :orchestration_stacks]
+                  :orchestration_templates, :orchestration_stacks]
 
     # Save and link other subsections
     save_child_inventory(ems, hashes, child_keys, target)
@@ -101,7 +103,7 @@ module EmsRefresh::SaveInventoryInfra
     log_header = "MIQ(#{self.name}.save_hosts_inventory) EMS: [#{ems.name}], id: [#{ems.id}]"
 
     disconnects = if (target == ems)
-      target.hosts(true).dup
+      target.hosts(true).to_a.dup
     elsif target.kind_of?(Host)
       [target.clone]
     else
@@ -150,9 +152,6 @@ module EmsRefresh::SaveInventoryInfra
           # Adjust the names so they do not keep changing in the event of DNS problems
           ip_part  =  %r{[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+}
           ip_whole = %r{^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$}
-
-          #   Keep the previous name unless it's nil
-          h[:name] = found.name unless found.name.nil?
 
           # Keep the previous ip address if we don't have a new one or the new one is not an ip address
           h[:ipaddress] = found.ipaddress if h[:ipaddress].nil? || (h[:ipaddress] !~ ip_whole)

@@ -36,13 +36,24 @@ module ApiSpecHelper
     headers.merge(DEF_HEADERS)
   end
 
-  def run_get(url, headers = {})
-    get url, {}, update_headers(headers)
+  def run_get(url, options = {})
+    headers = options.delete(:headers) || {}
+    get url, options.stringify_keys, update_headers(headers)
     parse_response
   end
 
   def run_post(url, body = {}, headers = {})
     post url, {}, update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
+    parse_response
+  end
+
+  def run_put(url, body = {}, headers = {})
+    put url, {}, update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
+    parse_response
+  end
+
+  def run_patch(url, body = {}, headers = {})
+    patch url, {}, update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
     parse_response
   end
 
@@ -59,18 +70,25 @@ module ApiSpecHelper
     resources.any? { |r| r[key] == value }
   end
 
+  def api_config(param)
+    @api_config = {
+      :user       => "api_user_id",
+      :password   => "api_user_password",
+      :user_name  => "API User",
+      :group_name => "API User Group",
+      :role_name  => "API User Role",
+      :entrypoint => "/api"
+    }
+    @api_config[param]
+  end
+
   def define_user
-    @role  = FactoryGirl.create(:miq_user_role,
-                                :name => @cfme[:role_name])
-
-    @group = FactoryGirl.create(:miq_group,
-                                :description      => @cfme[:group_name],
-                                :miq_user_role_id => @role.id)
-
+    @role  = FactoryGirl.create(:miq_user_role, :name => api_config(:role_name))
+    @group = FactoryGirl.create(:miq_group, :description => api_config(:group_name), :miq_user_role_id => @role.id)
     @user  = FactoryGirl.create(:user,
-                                :name             => @cfme[:user_name],
-                                :userid           => @cfme[:user],
-                                :password_digest  => BCrypt::Password.create(@cfme[:password]),
+                                :name             => api_config(:user_name),
+                                :userid           => api_config(:user),
+                                :password_digest  => BCrypt::Password.create(api_config(:password)),
                                 :miq_groups       => [@group],
                                 :current_group_id => @group.id)
   end
@@ -81,55 +99,42 @@ module ApiSpecHelper
     Vmdb::Application.config.secret_token = MiqDatabase.first.session_secret_token
     @guid, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
-    @cfme = {
-      :user       => "api_user_id",
-      :password   => "api_user_password",
-      :user_name  => "API User",
-      :group_name => "API User Group",
-      :role_name  => "API User Role",
-      :auth_token => "",
-      :entrypoint => "/api"
-    }
+    collections  = %w(automation_requests availability_zones clusters conditions data_stores
+                      events flavors groups hosts policies policy_actions policy_profiles providers
+                      provision_requests request_tasks requests resource_pools roles security_groups
+                      servers service_catalogs service_requests service_templates services tags
+                      tasks templates users vms zones)
 
-    collections  = %w(auth vms tags providers hosts data_stores resource_pools clusters
-                      policies policy_profiles templates policy_actions events conditions)
-
-    collections.each { |collection| @cfme["#{collection}_url".to_sym] = "#{@cfme[:entrypoint]}/#{collection}" }
-
+    define_entrypoint_url_methods
+    define_url_methods(collections)
     define_user
-    define_url_methods
   end
 
-  def define_url_methods
-    define_entrypoint_url_methods
+  def define_entrypoint_url_methods
+    self.class.class_eval do
+      define_method(:entrypoint_url) do
+        api_config(:entrypoint)
+      end
+      define_method(:auth_url) do
+        "#{api_config(:entrypoint)}/auth"
+      end
+    end
+  end
 
-    collections  = %w(vms tags providers hosts data_stores resource_pools clusters
-                      policies policy_profiles templates policy_actions events conditions)
-
+  def define_url_methods(collections)
     collections.each do |collection|
       self.class.class_eval do
         define_method("#{collection}_url".to_sym) do |id = nil|
-          path = @cfme["#{collection}_url".to_sym]
+          path = "#{api_config(:entrypoint)}/#{collection}"
           id.nil? ? path : "#{path}/#{id}"
         end
       end
     end
   end
 
-  def define_entrypoint_url_methods
-    self.class.class_eval do
-      define_method(:entrypoint_url) do
-        @cfme[:entrypoint]
-      end
-      define_method(:auth_url) do
-        "#{@cfme[:entrypoint]}/auth"
-      end
-    end
-  end
-
   def api_basic_authorize(identifier = nil)
     update_user_role(@role, identifier) unless identifier.blank?
-    basic_authorize @cfme[:user], @cfme[:password]
+    basic_authorize api_config(:user), api_config(:password)
   end
 
   def update_user_role(role, *identifiers)
@@ -144,12 +149,12 @@ module ApiSpecHelper
     @miq_server_guid ||= MiqUUID.new_guid
   end
 
-  def api_config
-    @api_config ||= YAML.load_file(Rails.root.join("config/api.yml"))
+  def api_server_config
+    @api_server_config ||= YAML.load_file(Rails.root.join("config/api.yml"))
   end
 
   def collection_config
-    api_config[:collections]
+    api_server_config[:collections]
   end
 
   def action_identifier(type, action, selection = :resource_actions)
@@ -162,7 +167,12 @@ module ApiSpecHelper
   end
 
   def subcollection_action_identifier(type, subtype, action)
-    action_identifier(type, action, "#{subtype}_subcollection_actions".to_sym)
+    subtype_actions = "#{subtype}_subcollection_actions".to_sym
+    if collection_config.fetch_path(type, subtype_actions).present?
+      action_identifier(type, action, subtype_actions)
+    else
+      action_identifier(subtype, action, :subcollection_actions)
+    end
   end
 
   def gen_request(action, data = nil, *hrefs)
@@ -260,11 +270,15 @@ module ApiSpecHelper
     end
   end
 
-  def expect_result_resources_to_match_hash(result_hash)
-    expect(@result).to have_key("resources")
-    @result["resources"].zip(fetch_value(result_hash)).each do |actual, expected|
+  def expect_results_to_match_hash(collection, result_hash)
+    expect(@result).to have_key(collection)
+    @result[collection].zip(fetch_value(result_hash)).each do |actual, expected|
       expect_result_to_match_hash(actual, expected)
     end
+  end
+
+  def expect_result_resources_to_match_hash(result_hash)
+    expect_results_to_match_hash("resources", result_hash)
   end
 
   def expect_result_resource_keys_to_be_like_klass(collection, key, klass)

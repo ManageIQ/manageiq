@@ -5,7 +5,7 @@
       %tbody
         - @folders.each do |f|
           - t = %w(Compliance Control).include?(f) ? "#{PROROOT}-f_#{f}" : "#{PROROOT}-f_#{f.split[1]}-f_#{f.split.first}"
-          %tr{, :onmouseover => "this.style.cursor = 'pointer'", :title => _("Open Folder"),
+          %tr{:onmouseover => "this.style.cursor = 'pointer'", :title => _("Open Folder"),
             :onclick => "profile_tree.selectItem('%s', true);" % t }
             %td.narrow
               %img{:src => "/images/icons/new/#{f.split.first.downcase}.png"}

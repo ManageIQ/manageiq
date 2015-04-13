@@ -17,7 +17,7 @@ class TreeBuilderAeClass  < TreeBuilder
     objects = if MIQ_AE_COPY_ACTIONS.include?(@sb[:action])
                 [MiqAeDomain.find_by_id(@sb[:domain_id])] # GIT support can't use where
               else
-                MiqAeDomain.all
+                filter_ae_objects(MiqAeDomain.all)
               end
     count_only_or_objects(options[:count_only], objects, [:priority]).reverse
   end
@@ -34,11 +34,18 @@ class TreeBuilderAeClass  < TreeBuilder
   end
 
   def x_get_tree_ns_kids(object, options)
-    objects = object.ae_namespaces
+    objects = filter_ae_objects(object.ae_namespaces)
     unless MIQ_AE_COPY_ACTIONS.include?(@sb[:action])
-      ns_classes = object.ae_classes
+      ns_classes = filter_ae_objects(object.ae_classes)
       objects += ns_classes.flatten unless ns_classes.blank?
     end
     count_only_or_objects(options[:count_only], objects, [:display_name, :name])
+  end
+
+  def filter_ae_objects(objects)
+    return objects unless @sb[:cached_waypoint_ids]
+    klass_name = objects.first.class.name
+    prefix = klass_name == "MiqAeDomain" ? "MiqAeNamespace" : klass_name
+    objects.select { |obj| @sb[:cached_waypoint_ids].include?("#{prefix}::#{obj.id}") }
   end
 end

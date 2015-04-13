@@ -83,6 +83,12 @@ describe VmdbDatabaseConnection do
     expect(setting.wait_time).to be_kind_of(Fixnum)
   end
 
+  it 'wait_time_ms defaults to 0 on nil query_start' do
+    conn = VmdbDatabaseConnection.first
+    conn.stub(:query_start => nil)
+    expect(conn.wait_time_ms).to eq 0
+  end
+
   [
     :address,
     :application,

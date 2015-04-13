@@ -5,21 +5,23 @@
       = "#{session[:username]} | #{session[:vmdb_name]}"
       %b.caret
     %ul.dropdown-menu
-      %li
+      %li.disabled
         %a{:href => "#"}
           Server: #{session[:vmdb_name]}
-      %li
-        %a{:href => "#"}
-          Group:
-          - if session[:eligible_groups].length > 1
-            = select_tag("to_group",
-                         options_for_select(session[:eligible_groups], session[:group]),
-                         {:multiple => false,
-                          :title => "Select to change to another Group",
-                          :onclick => "miqToggleUserOptions(event, 'to_group');",
-                          "data-miq_sparkle_on" => true,
-                          "data-miq_observe" => {:url => "/dashboard/change_group"}.to_json})
-          - else
+          
+      - if session[:eligible_groups].length > 1
+        %li.dropdown-submenu
+          %a{:href => "#"}
+            Change Group:
+            %ul.dropdown-menu
+              - session[:eligible_groups].each do |group, id|
+                %li
+                  %a{:title => "Select to change to another Group", :href => "#",
+                        :onclick => "miqSparkle(true);miqToggleUserOptions(#{id})"}
+                    = id == session[:group] ? "#{group} (Current Group)" : group
+      - else
+        %li.disabled
+          %a{:href => "#"}
             = session[:group_description]
       %li.divider
       %li

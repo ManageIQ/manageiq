@@ -7,7 +7,7 @@ class EmsCloudController < ApplicationController
   after_filter :set_session_data
 
   def self.model
-    @model ||= EmsCloud
+    EmsCloud
   end
 
   def self.table_name
@@ -24,7 +24,6 @@ class EmsCloudController < ApplicationController
     @title      = ui_lookup(:tables => "ems_cloud")
     @layout     = "ems_cloud"
     @table_name = request.parameters[:controller]
-    @model      = EmsCloud
     @lastaction = session[:ems_cloud_lastaction]
     @display    = session[:ems_cloud_display]
     @filters    = session[:ems_cloud_filters]

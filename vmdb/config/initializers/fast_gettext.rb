@@ -18,17 +18,27 @@ def fix_i18n_available_locales
   I18n.available_locales += FastGettext.available_locales.grep(/_/).map { |i| i.gsub("_", "-") }
 end
 
-locale_path = Rails.root.join("config/locales")
+old_debug, $DEBUG = $DEBUG, nil
+begin
+  # The `gettext` gem unreasonably assumes that anyone with $DEBUG
+  # enabled must want a flood of racc/yydebug output. As we're actually
+  # trying to debug something other than their parser, we need to
+  # temporarily force it off while we load stuff.
 
-FastGettext.add_text_domain('manageiq',
-                            :path           => locale_path,
-                            :type           => :po,
-                            :report_warning => false)
-FastGettext.available_locales = Dir.entries(locale_path)
-  .select { |entry| (File.directory? File.join(locale_path, entry)) && entry != '.' && entry != '..' }
-  .sort
+  locale_path = Rails.root.join("config/locales")
 
-# temporary hack to fix a problem with locales including "_"
-fix_i18n_available_locales
-FastGettext.default_text_domain = 'manageiq'
-register_human_localenames
+  FastGettext.add_text_domain('manageiq',
+                              :path           => locale_path,
+                              :type           => :po,
+                              :report_warning => false)
+  FastGettext.available_locales = Dir.entries(locale_path)
+    .select { |entry| (File.directory? File.join(locale_path, entry)) && entry != '.' && entry != '..' }
+    .sort
+
+  # temporary hack to fix a problem with locales including "_"
+  fix_i18n_available_locales
+  FastGettext.default_text_domain = 'manageiq'
+  register_human_localenames
+ensure
+  $DEBUG = old_debug
+end

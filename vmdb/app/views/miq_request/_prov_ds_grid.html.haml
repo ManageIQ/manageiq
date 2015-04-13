@@ -1,10 +1,10 @@
 #prov_ds_div{:style => "height: 150px; overflow: auto;"}
-  %table.style3
+  %table.table.table-bordered.table-striped.table-hover.table-selectable
     %thead
       %tr
         - id = @edit[:req_id] || "new"
         - @edit[:ds_columns].each_with_index do |h, i|
-          %th{:nowrap => 1}
+          %th
             - # Replaced to exclude non-view table fields from sorting
             = link_to(h(@edit[:ds_headers][h]),
               {:action => "sort_ds_grid", :sort_choice => h, :field_id => field_id, :id => id.to_s},
@@ -15,28 +15,24 @@
               %img{:src => "/images/icons/16/sort_#{@edit[:ds_sortdir] == 'ASC' ? 'up' : 'down'}.png"}
     %tbody
       - if %w(miq_template vm).include?(@edit[:org_controller])
-        - cls = @edit[:new][:placement_ds_name] && @edit[:new][:placement_ds_name][0].nil? ? "row3" : cycle('row0', 'row1')
+        - cls = @edit[:new][:placement_ds_name] && @edit[:new][:placement_ds_name][0].nil? ? "selected" : ""
       - else
-        - cls = @edit[:new][:attached_ds] && @edit[:new][:attached_ds].empty? ? "row3" : cycle('row0', 'row1')
-      %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=__DS__NONE__&id=#{id}');", :nowrap => 1}
-        %td{:onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+        - cls = @edit[:new][:attached_ds] && @edit[:new][:attached_ds].empty? ? "selected" : ""
+      %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=__DS__NONE__&id=#{id}');"}
+        %td
           = "<#{_('None')}>"
         %td
         %td
       - @temp[:datastores].each do |row|
         - @id = row.id
         - if %w(miq_template service_template vm).include?(@edit[:org_controller])
-          - cls = @edit[:new][:placement_ds_name] && @edit[:new][:placement_ds_name][0] == @id ? "row3" : cycle('row0', 'row1')
+          - cls = @edit[:new][:placement_ds_name] && @edit[:new][:placement_ds_name][0] == @id ? "selected" : ""
         - else
-          - cls = @edit[:new][:attached_ds] && @edit[:new][:attached_ds].include?(@id.to_i) ? "row3" : cycle('row0', 'row1')
-        %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=#{@id}&id=#{id}');", :nowrap => 1}
+          - cls = @edit[:new][:attached_ds] && @edit[:new][:attached_ds].include?(@id.to_i) ? "selected" : ""
+        %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=#{@id}&id=#{id}');"}
           - @edit[:ds_columns].each do |col|
-            - align = %w(free_space total_space).include?(col) ? "right" : "left"
-            %td{:align => align, :onmouseover => "ChangeColor(this, true);", :onmouseout => "ChangeColor(this, false);"}
+            %td
               - if %w(free_space total_space).include?(col)
                 = h(number_to_human_size(row.send(col), :precision => 1))
               - else
                 = h(row.send(col))
-    %tfoot
-      %tr
-        %td{:colspan => "40"}

@@ -153,7 +153,24 @@ class MiqAeClass < ActiveRecord::Base
     end
   end
 
+  def self.waypoint_ids_for_state_machines
+    MiqAeClass.all.select(&:state_machine?).each_with_object([]) do |klass, ids|
+      ids << "#{klass.class.name}::#{klass.id}"
+      sub_namespaces(klass.ae_namespace, ids)
+    end
+  end
+
   private
+
+  def self.sub_namespaces(ns_obj, ids)
+    loop do
+      break if ns_obj.nil? || ids.include?("#{ns_obj.class.name}::#{ns_obj.id}")
+      ids << "#{ns_obj.class.name}::#{ns_obj.id}"
+      ns_obj = ns_obj.parent
+    end
+  end
+
+  private_class_method :sub_namespaces
 
   def scoped_methods(s)
     self.ae_methods.select { |m| m.scope == s }

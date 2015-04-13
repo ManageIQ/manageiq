@@ -13,7 +13,7 @@ class EmsRefreshCoreWorker < WorkerBase
   def after_initialize
     @ems = ExtManagementSystem.find(@cfg[:ems_id])
     do_exit("Unable to find instance for EMS id [#{@cfg[:ems_id]}].", 1) if @ems.nil?
-    do_exit("EMS id [#{@cfg[:ems_id]}] failed authentication check.", 1) unless @ems.authentication_check
+    do_exit("EMS id [#{@cfg[:ems_id]}] failed authentication check.", 1) unless @ems.authentication_check.first
 
     # Global Work Queue
     @queue = Queue.new
@@ -24,7 +24,7 @@ class EmsRefreshCoreWorker < WorkerBase
   end
 
   def log_prefix
-    @log_prefix ||= "MIQ(#{self.class.name}) EMS [#{@ems.ipaddress}] as [#{@ems.authentication_userid}]"
+    @log_prefix ||= "MIQ(#{self.class.name}) EMS [#{@ems.hostname}] as [#{@ems.authentication_userid}]"
   end
 
   def before_exit(message, exit_code)
@@ -63,7 +63,7 @@ class EmsRefreshCoreWorker < WorkerBase
 
     tid = Thread.new do
       begin
-        @vim = MiqVimCoreUpdater.new(@ems.ipaddress, @ems.authentication_userid, @ems.authentication_password)
+        @vim = MiqVimCoreUpdater.new(@ems.hostname, @ems.authentication_userid, @ems.authentication_password)
         @vim.monitorUpdates { |*u| @queue.enq(u) }
       rescue Handsoap::Fault => err
         if ( @exit_requested && (err.code == "ServerFaultCode") && (err.reason == "The task was canceled by a user.") )

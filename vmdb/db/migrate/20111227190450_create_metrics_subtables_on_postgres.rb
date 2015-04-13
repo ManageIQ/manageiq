@@ -4,7 +4,7 @@ class CreateMetricsSubtablesOnPostgres < ActiveRecord::Migration
   extend MigrationHelper
 
   def self.up
-    return unless postgresql? && connection.table_exists?("vim_performances")
+    return unless connection.table_exists?("vim_performances")
 
     create_trigger_language
 
@@ -26,8 +26,6 @@ class CreateMetricsSubtablesOnPostgres < ActiveRecord::Migration
   end
 
   def self.down
-    return unless postgresql?
-
     drop_trigger :metrics,        :metrics_inheritance
     drop_trigger :metric_rollups, :metric_rollups_inheritance
 

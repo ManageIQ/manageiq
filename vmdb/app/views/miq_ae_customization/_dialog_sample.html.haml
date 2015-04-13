@@ -46,9 +46,9 @@
                             :javascript
                               miq_cal_dateFrom = new Date("#{Time.now.in_time_zone(session[:user_tz]).strftime("%Y, %m, %d")}");
                           - t = Time.now.in_time_zone(session[:user_tz]) + 1.day
-                          - date_val = field.value ? field.value.split(" ") : "#{t.month}/#{t.day}/#{t.year}"
+                          - date_val = field.value ? field.value.split(" ") : ["#{t.month}/#{t.day}/#{t.year}"]
                           = text_field_tag("miq_date_1",
-                            h(date_val),
+                            h(date_val[0]),
                             :class    => "css1",
                             :readonly => "true")
                           - if field.type == "DialogFieldDateTimeControl"
@@ -58,16 +58,17 @@
                             = select_tag("start_hour", options_for_select(Array.new(24) { |i| i }, 0))
                             \:
                             = select_tag("start_min", options_for_select(Array.new(12)  { |i| i * 5 }, 0))
-                        - when 'DialogFieldDynamicList'
-                          = select_tag('field.id', options_for_select([_('Option 1'), _('Option 2')], field.default_value))
-                          - if field.show_refresh_button?
-                            = button_tag('Refresh', :disabled => true)
+
                         - when "DialogFieldDropDownList", "DialogFieldRadioButton"
                           - if field.dynamic
-                            %input#dialog_field_radio_sample_1(type="radio" name="dialog_field_radio")
-                            %label(for="dialog_field_radio_sample_1") Option 1
-                            %input#dialog_field_radio_sample_2(type="radio" name="dialog_field_radio")
-                            %label(for="dialog_field_radio_sample_2") Option 2
+                            - if field.type == "DialogFieldRadioButton"
+                              %input#dialog_field_radio_sample_1(type="radio" name="dialog_field_radio")
+                              %label(for="dialog_field_radio_sample_1") Option 1
+                              %input#dialog_field_radio_sample_2(type="radio" name="dialog_field_radio")
+                              %label(for="dialog_field_radio_sample_2") Option 2
+
+                            - if field.type == "DialogFieldDropDownList"
+                              = select_tag("#{field.id}", options_for_select([_("Option 1"), _("Option 2")]))
 
                             - if field.show_refresh_button?
                               = button_tag('Refresh', :disabled => true)

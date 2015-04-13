@@ -1,20 +1,26 @@
 #fieldset
   %h3
     = title
-  %table.style3
+  %table.table.table-bordered.table-striped.table-hover
     - items.each do |item|
-      - item[:headers].each do |h|
-        %th{:nowrap => 1}
-          = h(h)
-      - item[:value].each do |row|
-        - if row[:link]
-          - if row[:explorer]
-            - click = row[:link]
+      %thead
+        %tr
+          - item[:headers].each do |h|
+            %th
+              = h(h)
+      %tbody
+        - item[:value].each do |row|
+          - if row[:link]
+            - if row[:explorer]
+              - click = row[:link]
+            - else
+              - click = "DoNav('#{row[:link]}');"
+            %tr{:onclick => click}
+              - item[:col_order].each do |col|
+                %td
+                  = row[col.to_sym]
           - else
-            - click = "DoNav('#{row[:link]}');"
-        - else
-          - click = ""
-        %tr{:class => cycle('row0', 'row1'), :onclick => click}
-          - item[:col_order].each do |col|
-            %td{:width => "50%"}
-              = row[col.to_sym]
+            %tr.no-hover
+              - item[:col_order].each do |col|
+                %td
+                  = row[col.to_sym]

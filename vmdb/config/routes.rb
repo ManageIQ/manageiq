@@ -38,7 +38,6 @@ Vmdb::Application.routes.draw do
     dialog_form_button_pressed
     dynamic_checkbox_refresh
     dynamic_date_refresh
-    dynamic_list_refresh
     dynamic_radio_button_refresh
     dynamic_text_box_refresh
   )
@@ -199,12 +198,14 @@ Vmdb::Application.routes.draw do
         ot_copy_submit
         ot_edit_submit
         ot_form_field_changed
+        ot_tags_edit
         process_sts
         prov_field_changed
         reload
         resolve
         resource_delete
         save_col_widths
+        service_dialog_from_ot_submit
         servicetemplate_edit
         sort_ds_grid
         sort_host_grid
@@ -476,10 +477,6 @@ Vmdb::Application.routes.draw do
       :post => %w(
         button
         create
-        dynamic_checkbox_refresh
-        dynamic_list_refresh
-        dynamic_radio_button_refresh
-        dynamic_text_box_refresh
         form_field_changed
         listnav_search_selected
         panel_control
@@ -1270,6 +1267,7 @@ Vmdb::Application.routes.draw do
         explorer
         provider_foreman_form_fields
         show
+        show_list
       ),
       :post => %w(
         accordion_select
@@ -1284,6 +1282,7 @@ Vmdb::Application.routes.draw do
         form_field_changed
         new
         panel_control
+        provision
         quick_search
         refresh
         reload

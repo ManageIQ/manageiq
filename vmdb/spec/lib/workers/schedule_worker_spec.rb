@@ -561,5 +561,19 @@ describe ScheduleWorker do
         @schedule_worker.check_dst
       end
     end
+
+    it "#schedule_settings_for_ems_refresh (private)" do
+      VMDB::Config.any_instance.stub(:config).and_return(
+        :ems_refresh => {
+          :refresh_interval => 24.hours,
+          :scvmm            => {:refresh_interval => 15.minutes}
+        }
+      )
+
+      settings = @schedule_worker.send(:schedule_settings_for_ems_refresh)
+
+      expect(settings[EmsVmware]).to    eq(86_400) # Uses default
+      expect(settings[EmsMicrosoft]).to eq(900)    # Uses override
+    end
   end
 end

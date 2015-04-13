@@ -135,8 +135,8 @@ module ApplicationController::MiqRequestMethods
     elsif params[:sel_id]
       @edit = session[:edit]
       render :update do |page|                        # Use RJS to update the display
-        page << "$('#row_#{j_str(@edit[:src_vm_id])}').removeClass('row3');" if @edit[:src_vm_id]
-        page << "$('#row_#{j_str(params[:sel_id])}').addClass('row3');"
+        page << "$('#row_#{j_str(@edit[:src_vm_id])}').removeClass('selected');" if @edit[:src_vm_id]
+        page << "$('#row_#{j_str(params[:sel_id])}').addClass('selected');"
         session[:changed] = true
         page << javascript_for_miq_button_visibility(session[:changed])
         @edit[:src_vm_id] = params[:sel_id].to_i
@@ -265,7 +265,11 @@ module ApplicationController::MiqRequestMethods
 
   def build_configured_system_grid(configured_systems, sort_order = nil, sort_by = nil)
     @edit[:configured_system_headers] = {
-      "hostname"    => "Hostname",
+      "hostname"                        => "Hostname",
+      "configuration_location_name"     => "Configuration Location",
+      "configuration_organization_name" => "Configuration Organization",
+      "operating_system_flavor_name"    => "Operating System",
+      "provider_name"                   => "Provider",
     }
     @edit[:configured_system_sortcol] = sort_by    ||= "hostname"
     @edit[:configured_system_sortdir] = sort_order ||= "ASC"
@@ -489,14 +493,10 @@ module ApplicationController::MiqRequestMethods
 
   def dialog_partial_for_workflow
     case (@edit || @options).try(:[], :wf)
-    when MiqProvisionVirtWorkflow
-      "prov_dialog"
-    when MiqProvisionConfiguredSystemForemanWorkflow
-      "prov_configured_system_foreman_dialog"
-    when MiqHostProvisionWorkflow
-      "prov_host_dialog"
-    when VmMigrateWorkflow
-      "prov_vm_migrate_dialog"
+    when MiqProvisionVirtWorkflow                    then "shared/views/prov_dialog"
+    when MiqProvisionConfiguredSystemForemanWorkflow then "prov_configured_system_foreman_dialog"
+    when MiqHostProvisionWorkflow                    then "prov_host_dialog"
+    when VmMigrateWorkflow                           then "prov_vm_migrate_dialog"
     end
   end
 

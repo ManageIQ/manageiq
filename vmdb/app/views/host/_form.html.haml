@@ -14,18 +14,11 @@
             "data-miq_focus" => true,
             "data-miq_observe" => observe)
       %tr
-        %td.key=_('Host Name')
+        %td.key=_('Host Name (or IPv4 or IPv6 address)')
         %td.wide
           = text_field_tag("hostname",
             @edit[:new][:hostname],
             :maxlength => MAX_HOSTNAME_LEN,
-            "data-miq_observe" => observe)
-      %tr
-        %td.key=_('IP Address')
-        %td.wide
-          = text_field_tag("ipaddress",
-            @edit[:new][:ipaddress],
-            :maxlength => 15,
             "data-miq_observe" => observe)
       %tr
         %td.key=_('Custom Identifier')

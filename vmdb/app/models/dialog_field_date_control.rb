@@ -3,10 +3,6 @@ class DialogFieldDateControl < DialogField
 
   include TimezoneMixin
 
-  has_one :resource_action, :as => :resource, :dependent => :destroy
-
-  after_initialize :default_resource_action
-
   def show_past_dates
     self.options[:show_past_dates] || false
   end
@@ -21,12 +17,9 @@ class DialogFieldDateControl < DialogField
   end
 
   def value
-    if dynamic
-      @value = values_from_automate
-      @value
-    else
-      default_time
-    end
+    @value = dynamic ? values_from_automate : default_time if @value.blank?
+
+    Date.parse(@value).strftime("%m/%d/%Y")
   end
 
   def normalize_automate_values(automate_hash)
@@ -36,23 +29,23 @@ class DialogFieldDateControl < DialogField
 
     return default_time if automate_hash["value"].blank?
     begin
-      @value = Date.parse(automate_hash["value"]).iso8601
+      return DateTime.parse(automate_hash["value"]).iso8601
     rescue
       return default_time
     end
-
-    Date.parse(@value).strftime("%m/%d/%Y")
   end
 
   def script_error_values
     "<Script error>"
   end
 
-  private
+  def refresh_json_value
+    @value = values_from_automate
 
-  def default_resource_action
-    build_resource_action if resource_action.nil?
+    {:date => Date.parse(@value).strftime("%m/%d/%Y")}
   end
+
+  private
 
   def default_time
     with_current_user_timezone { Time.zone.now + 1.day }.strftime("%m/%d/%Y")

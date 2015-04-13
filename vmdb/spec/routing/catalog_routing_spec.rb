@@ -43,12 +43,14 @@ describe 'routes for CatalogController' do
     ot_copy_submit
     ot_edit_submit
     ot_form_field_changed
+    ot_tags_edit
     process_sts
     prov_field_changed
     reload
     resolve
     resource_delete
     save_col_widths
+    service_dialog_from_ot_submit
     servicetemplate_edit
     sort_ds_grid
     sort_host_grid

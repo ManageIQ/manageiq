@@ -1,15 +1,11 @@
 module MiqProvisionVmware::Placement
   extend ActiveSupport::Concern
 
-  include_concern 'NetApp'
-
   protected
 
   def placement
     if get_option(:placement_auto) == true
       automatic_placement
-    elsif get_option(:new_datastore_create) == true
-      create_netapp_datastore(source_vm_or_template) # Use NetApp to create datastore
     else
       manual_placement
     end

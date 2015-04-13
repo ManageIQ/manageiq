@@ -1295,6 +1295,7 @@ class VmOrTemplate < ActiveRecord::Base
 
     case self.storage.store_type
     when "VMFS" then "[#{storage.name}] #{location}"
+    when "VSAN" then "[#{storage.name}] #{location}"
     when "NFS"  then "[#{storage.name}] #{location}"
     when "NAS"  then File.join(storage.name, location)
     else

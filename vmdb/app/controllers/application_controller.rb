@@ -52,7 +52,11 @@ class ApplicationController < ActionController::Base
   #   CimBaseStorageExtentController => CimBaseStorageExtent
   #   OntapFileShareController        => OntapFileShare
   def self.model
-    @model ||= self.name[0..-11].constantize
+    @model ||= model_name.constantize
+  end
+
+  def self.model_name
+    name[0..-11]
   end
 
   # Examples:
@@ -1329,7 +1333,7 @@ class ApplicationController < ActionController::Base
     if MiqProductFeature.feature_exists?(ident)
       role_allows(:feature => ident, :any => true)
     else
-      valid_route?(request.request_method, controller_name, action_name)
+      true
     end
   end
 
@@ -1720,7 +1724,7 @@ class ApplicationController < ActionController::Base
       items = Array.new
       session[:base_miq] = ""
       params.each do |var, val|
-        vars=var.split("_")
+        vars = var.to_s.split("_")
         if vars[0]==prefix && val=="1"
           ids = vars[1..-1].collect{|v| v = from_cid(v)}  # Decompress any compressed ids
           items.push(ids.join("_"))
@@ -1785,11 +1789,14 @@ class ApplicationController < ActionController::Base
   end
 
   def get_view_calculate_gtl_type(db_sym)
-    gtl_type = @settings[:views][db_sym] unless ['scanitemset', 'miqschedule', 'pxeserver', 'customizationtemplate'].include?(db_sym.to_s)
+    gtl_type = @settings.fetch_path(:views, db_sym) unless %w(scanitemset miqschedule pxeserver customizationtemplate).include?(db_sym.to_s)
+
     # Force list view for certain types and areas
     gtl_type = 'list' if ['filesystems', 'registry_items', 'chargeback_rates', 'miq_request'].include?(@listicon)
     gtl_type = 'list' if gtl_type.nil?
     gtl_type = 'grid' if ['vm'].include?(db_sym.to_s) && request.parameters[:controller] == 'service'
+
+    gtl_type ||= 'grid' # return a sane default
     gtl_type
   end
   private :get_view_calculate_gtl_type
@@ -1835,7 +1842,7 @@ class ApplicationController < ActionController::Base
   private :get_view_process_search_text
 
   def perpage_key(dbname)
-   ["job", "miqtask"].include?(dbname) ? :job_task : PERPAGE_TYPES[@gtl_type]
+    %w(job miqtask).include?(dbname) ? :job_task : PERPAGE_TYPES[@gtl_type]
   end
   private :perpage_key
 
@@ -1912,12 +1919,7 @@ class ApplicationController < ActionController::Base
     view.sortby = [view.col_order[@sortcol]]      # Set sortby array in the view
     view.order = @sortdir.downcase == "desc" ? "Descending" : "Ascending" # Normalize sort order
 
-    @items_per_page = if ["job", "miqtask"].include?(dbname)
-                        @settings[:perpage][:job_task]
-                      else
-                        # Get per page for this gtl type
-                        controller_name.downcase == "miq_policy" ? ONE_MILLION : @settings[:perpage][PERPAGE_TYPES[@gtl_type]]
-                      end
+    @items_per_page = controller_name.downcase == "miq_policy" ? ONE_MILLION : get_view_pages_perpage(dbname)
     @items_per_page = ONE_MILLION if 'vm' == db_sym.to_s && controller_name == 'service'
 
     @current_page = options[:page] || (params[:page].nil? ? 1 : params[:page].to_i)
@@ -1999,14 +2001,21 @@ class ApplicationController < ActionController::Base
   end
   private :get_view_filter
 
+  def get_view_pages_perpage(dbname)
+    perpage = 10 # return a sane default
+    return perpage unless @settings.key?(:perpage)
+
+    key = perpage_key(dbname)
+    perpage = @settings[:perpage][key] if key && @settings[:perpage].key?(key)
+
+    perpage
+  end
+  private :get_view_pages_perpage
+
   # Create the pages hash and return with the view
   def get_view_pages(dbname, view)
     pages = {
-      :perpage => if ["job", "miqtask"].include?(dbname)
-                    @settings[:perpage][:job_task] # Set per page separate for job/task
-                  else
-                    @settings[:perpage][PERPAGE_TYPES[@gtl_type]]
-                  end,
+      :perpage => get_view_pages_perpage(dbname),
       :current => params[:page].nil? ? 1 : params[:page].to_i,
       :items   => view.extras[:auth_count] || view.extras[:total_count]
     }
@@ -2686,11 +2695,6 @@ class ApplicationController < ActionController::Base
   def assert_privileges(feature)
     raise MiqException::RbacPrivilegeException,
           _("The user is not authorized for this task or item.") unless role_allows(:feature => feature)
-  end
-
-  def valid_route?(request_method, controller,  action)
-    valid_actions = CONTROLLER_ACTIONS.fetch_path(controller.to_sym, request_method.downcase.to_sym) || []
-    valid_actions.include?(action)
   end
 
   def previous_breadcrumb_url

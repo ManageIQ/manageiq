@@ -4,7 +4,6 @@
 require 'spec_helper'
 
 describe ApiController do
-
   include Rack::Test::Methods
 
   let(:zone)         { FactoryGirl.create(:zone, :name => "api_zone") }
@@ -61,7 +60,7 @@ describe ApiController do
     it "query tags with expanded resources" do
       api_basic_authorize
 
-      run_get "#{tags_url}?expand=resources"
+      run_get tags_url, :expand => "resources"
 
       expect_query_result(:tags, :tag_count, :tag_count)
       expect_result_resources_to_include_keys("resources", %w(id name))
@@ -72,7 +71,7 @@ describe ApiController do
 
       tag = Tag.last
       attr_list = "category.name,category.description,classification.name,classification.description"
-      run_get "#{tags_url(tag.id)}?attributes=#{attr_list}"
+      run_get tags_url(tag.id), :attributes => attr_list
 
       expect_single_resource_query(
         "href"           => tags_url(tag.id),
@@ -87,7 +86,7 @@ describe ApiController do
       api_basic_authorize
 
       tag = Tag.last
-      run_get "#{tags_url(tag.id)}?attributes=categorization"
+      run_get tags_url(tag.id), :attributes => "categorization"
 
       expect_single_resource_query(
        "href"           => tags_url(tag.id),
@@ -105,7 +104,7 @@ describe ApiController do
     it "query all tags with categorization" do
       api_basic_authorize
 
-      run_get "#{tags_url}?expand=resources&attributes=categorization"
+      run_get tags_url, :expand => "resources", :attributes => "categorization"
 
       expect_query_result(:tags, :tag_count, :tag_count)
       expect_result_resources_to_include_keys("resources", %w(id name categorization))
@@ -132,7 +131,7 @@ describe ApiController do
     it "query all tags of a Vm and verify tag category and names" do
       api_basic_authorize
 
-      run_get "#{vm2_tags_url}?expand=resources"
+      run_get vm2_tags_url, :expand => "resources"
 
       expect_query_result(:tags, 2, :tag_count)
       expect_result_resources_to_include_data("resources", "name" => [tag1[:path], tag2[:path]])

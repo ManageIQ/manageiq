@@ -3,23 +3,15 @@
 #
 
 cur = $evm.object
-case cur['request']
-when 'vm_provision'
-  cur['target_component'] = 'VM'
-  cur['target_class']     = 'Lifecycle'
-  cur['target_instance']  = 'Provisioning'
-when 'vm_retired'
-  cur['target_component'] = 'VM'
-  cur['target_class']     = 'Lifecycle'
-  cur['target_instance']  = 'Retirement'
-when 'vm_migrate'
-  cur['target_component'] = 'VM'
-  cur['target_class']     = 'Lifecycle'
-  cur['target_instance']  = 'Migrate'
-when 'host_provision'
-  cur['target_component'] = 'Host'
-  cur['target_class']     = 'Lifecycle'
-  cur['target_instance']  = 'Provisioning'
-end
+cur['target_component'], cur['target_class'], cur['target_instance'] =
+  case cur['request']
+  when 'vm_provision'   then %w(VM   Lifecycle Provisioning)
+  when 'vm_retired'     then %w(VM   Lifecycle Retirement)
+  when 'vm_migrate'     then %w(VM   Lifecycle Migrate)
+  when 'host_provision' then %w(Host Lifecycle Provisioning)
+  when 'configured_system_provision'
+    $evm.root['ae_provider_category'] = 'infrastructure'
+    %w(Configured_System Lifecycle Provisioning)
+  end
 
 $evm.log("info", "Request:<#{cur['request']}> Target Component:<#{cur['target_component']}> Target Class:<#{cur['target_class']}> Target Instance:<#{cur['target_instance']}>")

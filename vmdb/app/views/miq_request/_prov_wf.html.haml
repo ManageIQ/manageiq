@@ -17,7 +17,7 @@
         - unless wf.get_dialog(d).blank? || wf.get_dialog(d)[:display] == :ignore
           %div{:id => "#{d}_div", :width => "150px", :name => wf.get_dialog(d)[:description]}
             - if wf.kind_of?(MiqProvisionWorkflow)
-              = render :partial => "/miq_request/prov_dialog", :locals => {:wf => wf, :dialog => d}
+              = render :partial => "/shared/views/prov_dialog", :locals => {:wf => wf, :dialog => d}
             - elsif wf.kind_of?(VmMigrateWorkflow)
               = render :partial => "/miq_request/prov_vm_migrate_dialog", :locals => {:wf => wf, :dialog => d}
             - else

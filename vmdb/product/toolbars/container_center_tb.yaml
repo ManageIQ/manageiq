@@ -22,3 +22,4 @@
       :title: 'Remove this #{ui_lookup(:table=>"container")} from the VMDB'
       :url_parms: '&refresh=y'
       :confirm: 'Warning: This #{ui_lookup(:table=>"container")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this #{ui_lookup(:table=>"container")}?'
+
