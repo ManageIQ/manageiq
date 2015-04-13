@@ -74,6 +74,7 @@ gem "rubywbem",    :require => false, :git => "git://github.com/ManageIQ/rubywbe
 #
 unless ENV['APPLIANCE']
   group :test do
+    gem "test-unit",              :require => false
     gem "camcorder",              :require => false
     gem "jasmine",    "~>2.0",    :require => false
     gem "rspec",      "~>2.14.0", :require => false
