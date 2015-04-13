@@ -1,3 +1,4 @@
+require 'haml-rails'
 class GenericMailer < ActionMailer::Base
 
   def self.deliver(method, options = {})
