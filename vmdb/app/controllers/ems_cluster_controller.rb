@@ -39,6 +39,7 @@ class EmsClusterController < ApplicationController
                       :url=>"/ems_cluster/show/#{@ems_cluster.id}?display=descendant_vms&treestate=true"})
       @showtype = "config"
       build_dc_tree
+      build_vm_host_array
 
     when "all_vms"
       drop_breadcrumb( {:name=>@ems_cluster.name+" (All VMs)", :url=>"/ems_cluster/show/#{@ems_cluster.id}?display=all_vms"} )
