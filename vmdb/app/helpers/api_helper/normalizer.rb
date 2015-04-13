@@ -26,7 +26,7 @@ module ApiHelper
     end
 
     def normalize_virtual(vtype, name, obj, options = {})
-      return normalize_virtual_array(vtype, name, obj, options) if obj.kind_of?(Array)
+      return normalize_virtual_array(vtype, name, obj, options) if obj.kind_of?(Array) || obj.kind_of?(ActiveRecord::Relation)
       return normalize_virtual_hash(vtype, obj, options) if obj.respond_to?(:attributes) || obj.respond_to?(:keys)
       normalize_attr_byname(vtype, name, obj)
     end
@@ -116,7 +116,7 @@ module ApiHelper
     end
 
     def normalize_direct(type, name, obj)
-      return normalize_direct_array(type, name, obj) if obj.kind_of?(Array)
+      return normalize_direct_array(type, name, obj) if obj.kind_of?(Array) || obj.kind_of?(ActiveRecord::Relation)
       return normalize_hash(type, obj) if obj.respond_to?(:attributes) || obj.respond_to?(:keys)
       normalize_attr_byname(type, name, obj)
     end
