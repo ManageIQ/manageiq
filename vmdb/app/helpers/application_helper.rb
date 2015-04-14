@@ -2693,7 +2693,7 @@ module ApplicationHelper
       "compare_sections"
     elsif %w(offline retired templates vm vm_cloud vm_or_template).include?(@layout)
       "vm"
-    elsif %w(action availability_zone cim_base_storage_extent cloud_tenant condition ontainer_group
+    elsif %w(action availability_zone cim_base_storage_extent cloud_tenant condition container_group
              container_node container_service ems_cloud ems_container ems_cluster ems_infra flavor
              host miq_proxy miq_schedule miq_template policy ontap_file_share ontap_logical_disk
              ontap_storage_system ontap_storage_volume orchestration_stack repository resource_pool
