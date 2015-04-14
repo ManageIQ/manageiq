@@ -106,9 +106,6 @@ module Vmdb
     def self.configure_external_loggers
       require 'awesome_spawn'
       AwesomeSpawn.logger = $log
-
-      require 'manageiq_foreman'
-      ManageiqForeman.logger = $log
     end
     private_class_method :configure_external_loggers
 

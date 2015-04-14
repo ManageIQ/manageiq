@@ -1,6 +1,3 @@
-require 'manageiq_foreman'
-require 'manageiq_foreman/inventory'
-
 module EmsRefresh
   module Refreshers
     class ForemanRefresher

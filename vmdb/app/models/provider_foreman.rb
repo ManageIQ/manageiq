@@ -22,6 +22,7 @@ class ProviderForeman < Provider
 
   def self.raw_connect(base_url, username, password, verify_ssl)
     require 'manageiq_foreman'
+    ManageiqForeman.logger ||= $log
     ManageiqForeman::Connection.new(
       :base_url   => base_url,
       :username   => username,
