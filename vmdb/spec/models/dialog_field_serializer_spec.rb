@@ -31,6 +31,7 @@ describe DialogFieldSerializer do
         "label"                   => "label",
         "load_values_on_init"     => false,
         "position"                => 1,
+        "read_only"               => false,
         "validator_type"          => "validator_type",
         "validator_rule"          => "validator_rule",
         "reconfigurable"          => nil

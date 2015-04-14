@@ -221,6 +221,7 @@ describe DialogFieldTextBox do
 
     context "when the dialog is dynamic" do
       let(:dynamic) { true }
+      let(:value) { "somevalue" }
 
       it "returns 'Sample Text'" do
         expect(dialog_field.sample_text).to eq("Sample Text")
