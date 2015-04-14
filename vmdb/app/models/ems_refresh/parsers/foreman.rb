@@ -123,23 +123,23 @@ module EmsRefresh
       def configuration_profile_inv_to_hashes(recs, indexes)
         recs.collect do |profile|
           {
-            :type                           => "ConfigurationProfileForeman",
-            :manager_ref                    => profile["id"].to_s,
-            :parent_ref                     => (profile["ancestry"] || "").split("/").last.presence,
-            :name                           => profile["name"],
-            :description                    => profile["title"],
-            :raw_configuration_tag_ids      => [
+            :type                               => "ConfigurationProfileForeman",
+            :manager_ref                        => profile["id"].to_s,
+            :parent_ref                         => (profile["ancestry"] || "").split("/").last.presence,
+            :name                               => profile["name"],
+            :description                        => profile["title"],
+            :raw_configuration_tag_ids          => [
               id_lookup(indexes[:architectures], profile["architecture_id"]),
               id_lookup(indexes[:compute_profiles], profile["compute_profile_id"]),
               id_lookup(indexes[:domains], profile["domain_id"]),
               id_lookup(indexes[:environments], profile["environment_id"]),
               id_lookup(indexes[:realms], profile["realm_id"]),
             ].compact,
-            :operating_system_flavor_id     => id_lookup(indexes[:flavors], profile["operatingsystem_id"]),
-            :customization_script_medium_id => id_lookup(indexes[:media], profile["medium_id"]),
-            :customization_script_ptable_id => id_lookup(indexes[:ptables], profile["ptable_id"]),
-            :configuration_location_ids     => ids_lookup(indexes[:locations], profile["locations"] || tax_refs),
-            :configuration_organization_ids => ids_lookup(indexes[:organizations], profile["organizations"] || tax_refs),
+            :raw_operating_system_flavor_id     => id_lookup(indexes[:flavors], profile["operatingsystem_id"]),
+            :raw_customization_script_medium_id => id_lookup(indexes[:media], profile["medium_id"]),
+            :raw_customization_script_ptable_id => id_lookup(indexes[:ptables], profile["ptable_id"]),
+            :configuration_location_ids         => ids_lookup(indexes[:locations], profile["locations"] || tax_refs),
+            :configuration_organization_ids     => ids_lookup(indexes[:organizations], profile["organizations"] || tax_refs),
           }
         end.tap do |profiles|
           indexes[:profiles] = add_ids(profiles)
@@ -149,26 +149,26 @@ module EmsRefresh
       def configured_system_inv_to_hashes(recs, indexes)
         recs.collect do |cs|
           {
-            :type                           => "ConfiguredSystemForeman",
-            :manager_ref                    => cs["id"].to_s,
-            :hostname                       => cs["name"],
-            :configuration_profile          => id_lookup(indexes[:profiles], cs["hostgroup_id"]),
-            :operating_system_flavor_id     => id_lookup(indexes[:flavors], cs["operatingsystem_id"]),
-            :customization_script_medium_id => id_lookup(indexes[:media], cs["medium_id"]),
-            :customization_script_ptable_id => id_lookup(indexes[:ptables], cs["ptable_id"]),
-            :raw_configuration_tag_ids      => [
+            :type                               => "ConfiguredSystemForeman",
+            :manager_ref                        => cs["id"].to_s,
+            :hostname                           => cs["name"],
+            :configuration_profile              => id_lookup(indexes[:profiles], cs["hostgroup_id"]),
+            :raw_operating_system_flavor_id     => id_lookup(indexes[:flavors], cs["operatingsystem_id"]),
+            :raw_customization_script_medium_id => id_lookup(indexes[:media], cs["medium_id"]),
+            :raw_customization_script_ptable_id => id_lookup(indexes[:ptables], cs["ptable_id"]),
+            :raw_configuration_tag_ids          => [
               id_lookup(indexes[:architectures], cs["architecture_id"]),
               id_lookup(indexes[:compute_profiles], cs["compute_profile_id"]),
               id_lookup(indexes[:domains], cs["domain_id"]),
               id_lookup(indexes[:environments], cs["environment_id"]),
               id_lookup(indexes[:realms], cs["realm_id"])].compact,
-            :last_checkin                   => cs["last_compile"],
-            :build_state                    => cs["build"] ? "pending" : nil,
-            :ipaddress                      => cs["ip"],
-            :mac_address                    => cs["mac"],
-            :ipmi_present                   => cs["sp_ip"].present?,
-            :configuration_location_id      => id_lookup(indexes[:locations], cs["location_id"] || 0),
-            :configuration_organization_id  => id_lookup(indexes[:organizations], cs["organization_id"] || 0),
+            :last_checkin                       => cs["last_compile"],
+            :build_state                        => cs["build"] ? "pending" : nil,
+            :ipaddress                          => cs["ip"],
+            :mac_address                        => cs["mac"],
+            :ipmi_present                       => cs["sp_ip"].present?,
+            :configuration_location_id          => id_lookup(indexes[:locations], cs["location_id"] || 0),
+            :configuration_organization_id      => id_lookup(indexes[:organizations], cs["organization_id"] || 0),
           }
         end
       end
