@@ -517,6 +517,7 @@ class MiqWidget < ActiveRecord::Base
   end
 
   def self.sync_from_hash(attrs)
+    attrs.delete "id"
     filename = attrs.delete("filename")
     rname = attrs.delete("resource_name")
     if rname && attrs["resource_type"]

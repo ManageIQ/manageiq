@@ -163,14 +163,14 @@ class MiqUserRole < ActiveRecord::Base
       feature_ids = hash.delete(:miq_product_feature_identifiers)
 
       hash[:miq_product_features] = MiqProductFeature.where(:identifier => feature_ids).to_a
-      role = self.find_by_name(hash[:name]) || self.new(hash)
+      role = self.find_by_name(hash[:name]) || self.new(hash.except(:id))
       new_role = role.new_record?
       hash[:miq_product_features] &&= role.miq_product_features if !new_role && merge_features
       unless role.settings.nil? # Makse sure existing settings are merged in with the new ones.
         new_settings = hash.delete(:settings) || {}
         role.settings.merge!(new_settings)
       end
-      role.update_attributes(hash)
+      role.update_attributes(hash.except(:id))
 
       new_roles << role if new_role
     end

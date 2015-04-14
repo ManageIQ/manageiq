@@ -113,7 +113,7 @@ class MiqProductFeature < ActiveRecord::Base
       end
     else
       $log.info("#{log_header} Creating product feature: Identifier: [#{hash[:identifier]}], Name: [#{hash[:name]}]")
-      feature = self.create(hash)
+      feature = self.create(hash.except(:id))
       feature.seed_vm_explorer_for_custom_roles
     end
     seen << hash[:identifier]
