@@ -573,7 +573,7 @@ class HostController < ApplicationController
   def build_network_tree
     @tree_vms = []                   # Capture all VM ids in the tree
     host_node = TreeNodeBuilder.generic_tree_node(
-      "h_#{@host.id}|",
+      "h_#{@host.id}",
       @host.name,
       "host.png",
       "Host: #{@host.name}",
@@ -587,7 +587,7 @@ class HostController < ApplicationController
   def add_host_branch
     @host.switches.collect do |s|
       switch_node = TreeNodeBuilder.generic_tree_node(
-        "s_#{s.id}|",
+        "s_#{s.id}",
         s.name,
         "switch.png",
         "Switch: #{s.name}"
@@ -603,7 +603,7 @@ class HostController < ApplicationController
   def add_guest_devices(switch)
     switch.guest_devices.collect do |p|
       TreeNodeBuilder.generic_tree_node(
-        "n_#{p.id}|",
+        "n_#{p.id}",
         p.device_name,
         "pnic.png",
         "Physical NIC: #{p.device_name}"
@@ -614,7 +614,7 @@ class HostController < ApplicationController
   def add_lans(switch)
     switch.lans.collect do |l|
       lan_node = TreeNodeBuilder.generic_tree_node(
-        "l_#{l.id}|",
+        "l_#{l.id}",
         l.name,
         "lan.png",
         "Port Group: #{l.name}"
@@ -635,7 +635,7 @@ class HostController < ApplicationController
           image = "#{v.current_state.downcase}.png"
         end
         TreeNodeBuilder.generic_tree_node(
-          "v-#{v.id}|",
+          "v-#{v.id}",
           v.name,
           image,
           "VM: #{v.name} (Click to view)"
@@ -647,7 +647,7 @@ class HostController < ApplicationController
   # Build the tree object to display the host storage adapter info
   def build_sa_tree
     host_node = TreeNodeBuilder.generic_tree_node(
-      "h_#{@host.id}|",
+      "h_#{@host.id}",
       @host.name,
       "host.png",
       "Host: #{@host.name}",
@@ -664,7 +664,7 @@ class HostController < ApplicationController
   def storage_adapters_node
     @host.hardware.storage_adapters.collect do |storage_adapter|
       storage_adapter_node = TreeNodeBuilder.generic_tree_node(
-          "sa_#{storage_adapter.id}|",
+          "sa_#{storage_adapter.id}",
           storage_adapter.device_name,
           "sa_#{storage_adapter.controller_type.downcase}.png",
           "#{storage_adapter.controller_type} Storage Adapter: #{storage_adapter.device_name}",
@@ -682,7 +682,7 @@ class HostController < ApplicationController
       name = name + " (#{scsi_target.iscsi_name})" unless scsi_target.iscsi_name.blank?
       target_text = name.blank? ? "[empty]" : name
       target_node = TreeNodeBuilder.generic_tree_node(
-          "t_#{scsi_target.id}|",
+          "t_#{scsi_target.id}",
           target_text,
           "target_scsi.png",
           "Target: #{target_text}",
@@ -696,7 +696,7 @@ class HostController < ApplicationController
   def add_miq_scsi_luns_nodes(target)
     target.miq_scsi_luns.collect do |l|
       TreeNodeBuilder.generic_tree_node(
-        "l_#{l.id}|",
+        "l_#{l.id}",
         l.canonical_name,
         "lun.png",
         "LUN: #{l.canonical_name}",
