@@ -20,11 +20,11 @@ module ApplicationHelper::Dialogs
   end
 
   def hour_select_options(value)
-    options_for_select(Array.new(24) {|i| i.to_s.rjust(2, '0')}, value)
+    options_for_select(Array.new(24) { |i| i.to_s.rjust(2, '0') }, value)
   end
 
   def minute_select_options(value)
-    options_for_select(Array.new(59) {|i| i.to_s.rjust(2, '0')}, value)
+    options_for_select(Array.new(59) { |i| i.to_s.rjust(2, '0') }, value)
   end
 
   def textbox_tag_options(field, url)
@@ -86,11 +86,11 @@ module ApplicationHelper::Dialogs
 
   def radio_options(field, url, value)
     tag_options = {
-      :type     => 'radio',
-      :id       => field.id,
-      :value    => value,
-      :name     => field.name,
-      :checked  => field.default_value.to_s == value.to_s ? '' : nil
+      :type    => 'radio',
+      :id      => field.id,
+      :value   => value,
+      :name    => field.name,
+      :checked => field.default_value.to_s == value.to_s ? '' : nil
     }
 
     extra_options = {
