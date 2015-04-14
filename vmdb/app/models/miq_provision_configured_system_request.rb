@@ -39,6 +39,10 @@ class MiqProvisionConfiguredSystemRequest < MiqRequest
     request_task_class_from(attribs).new(attribs)
   end
 
+  def originating_controller
+    "configured_system"
+  end
+
   private
 
   def default_description

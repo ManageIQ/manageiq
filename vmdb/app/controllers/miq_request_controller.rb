@@ -32,7 +32,13 @@ class MiqRequestController < ApplicationController
       end
     elsif ["miq_request_copy","miq_request_edit"].include?(params[:pressed])
       render :update do |page|
-        page.redirect_to :controller=>@redirect_controller, :action=>@refresh_partial, :id=>@redirect_id, :prov_type=>@prov_type, :req_id=>@req_id, :org_controller=>@org_controller
+        page.redirect_to :controller     => @redirect_controller,
+                         :action         => @refresh_partial,
+                         :id             => @redirect_id,
+                         :prov_type      => @prov_type,
+                         :req_id         => @req_id,
+                         :org_controller => @org_controller,
+                         :prov_id        => @prov_id
       end
     elsif params[:pressed].ends_with?("_edit")
       if @refresh_partial == "show_list"
@@ -83,15 +89,11 @@ class MiqRequestController < ApplicationController
 
   def request_edit
     assert_privileges("miq_request_edit")
-    prov = MiqRequest.find_by_id(params[:id])
-    if prov.workflow_class
-      @org_controller = prov.resource_type == "MiqHostProvisionRequest" ? "host" : "vm"                           #request originated for resource_type
-      @redirect_controller = "miq_request"
-      @refresh_partial = "prov_edit"
-      @req_id = params[:id]
-      @prov_type = prov.resource_type
+    provision_request = MiqRequest.find_by_id(params[:id])
+    if provision_request.workflow_class || provision_request.kind_of?(MiqProvisionConfiguredSystemRequest)
+      request_edit_settings(provision_request)
     else
-      session[:checked_items] = prov.options[:src_ids]
+      session[:checked_items] = provision_request.options[:src_ids]
       @refresh_partial = "reconfigure"
       @_params[:controller] = "vm"
       reconfigurevms
@@ -100,12 +102,9 @@ class MiqRequestController < ApplicationController
 
   def request_copy
     assert_privileges("miq_request_copy")
-    prov = MiqRequest.find_by_id(params[:id])
-    @redirect_controller = "miq_request"
+    provision_request = MiqRequest.find_by_id(params[:id])
     @refresh_partial = "prov_copy"
-    @org_controller = prov.kind_of?(MiqHostProvisionRequest) ? "host" : "vm"                            #request originated for resource_type
-    @req_id = params[:id]
-    @prov_type = prov.resource_type
+    request_settings_for_edit_or_copy(provision_request)
   end
 
   # Show the main Requests list view
@@ -255,7 +254,7 @@ class MiqRequestController < ApplicationController
     # couldn't set this in new hash becasue that's being set by model
     @edit[:current][:description] = "Copy of #{org_req.description}"
     session[:changed] = true                                # Turn on the submit button
-    drop_breadcrumb( {:name=>"Copy of VM Provision Request", :url=>"/vm/provision"} )
+    drop_breadcrumb(:name => "Copy of #{org_req.request_type_display} Request")
     @in_a_form = true
     render :action=>"prov_edit"
   end
@@ -549,6 +548,19 @@ class MiqRequestController < ApplicationController
         end
       end
     end
+  end
+
+  def request_settings_for_edit_or_copy(provision_request)
+    @org_controller = provision_request.originating_controller
+    @redirect_controller = "miq_request"
+    @req_id = provision_request.id
+    @prov_type = provision_request.resource_type
+    @prov_id = provision_request.options[:src_configured_system_ids]
+  end
+
+  def request_edit_settings(provision_request)
+    @refresh_partial = "prov_edit"
+    request_settings_for_edit_or_copy(provision_request)
   end
 
   def get_session_data
