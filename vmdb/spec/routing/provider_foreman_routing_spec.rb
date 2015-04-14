@@ -11,6 +11,7 @@ describe 'routes for ProviderForeman' do
     download_data
     explorer
     provider_foreman_form_fields
+    tagging_edit
     show
     show_list
   ).each do |task|
@@ -41,6 +42,9 @@ describe 'routes for ProviderForeman' do
     save_col_widths
     show
     show_list
+    tagging
+    tagging_edit
+    tag_edit_form_field_changed
     tree_autoload_dynatree
     tree_select
     users

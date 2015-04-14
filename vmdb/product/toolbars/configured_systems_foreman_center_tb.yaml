@@ -20,3 +20,18 @@
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1+'
+- :name: provider_foreman_policy
+  :items:
+  - :buttonSelect: provider_foreman_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :items:
+    - :button: provider_foreman_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: "Edit Tags for this Configured System"
+      :url: tagging
+      :url_parms: 'main_div'
+      :enabled: 'false'
+      :onwhen: '1+'

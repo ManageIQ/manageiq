@@ -573,6 +573,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def tagging_explorer_controller?
+    false
+  end
+
   private
 
   def move_cols_left_right(direction)

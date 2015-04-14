@@ -82,6 +82,12 @@ class ProviderForemanController < ApplicationController
     end
   end
 
+  def tagging
+    assert_privileges("provider_foreman_tag")
+    tagging_edit('ConfiguredSystem')
+    render_tagging_form
+  end
+
   def add_provider_foreman
     if params[:id] == "new"
       @provider_foreman = ProviderForeman.new(:name       => params[:name],
@@ -510,6 +516,19 @@ class ProviderForemanController < ApplicationController
     render :js => presenter.to_html
   end
 
+  def render_tagging_form
+    return if %w(cancel save).include?(params[:button])
+    @in_a_form = true
+    @right_cell_text = _("Edit Tags for Configured Systems")
+    clear_flash_msg
+    presenter, r = rendering_objects
+    update_tagging_partials(presenter, r)
+    update_title(presenter)
+    rebuild_toolbars(false, presenter)
+    handle_bottom_cell(presenter, r)
+    render :js => presenter.to_html
+  end
+
   def update_tree_and_render_list(replace_trees)
     @explorer = true
     get_node_info(x_node)
@@ -532,6 +551,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def replace_right_cell(replace_trees = [])
+    return if @in_a_form
     @explorer = true
     @in_a_form = false
     @sb[:action] = nil
@@ -673,8 +693,30 @@ class ProviderForemanController < ApplicationController
                    :verify_ssl => params[:verify_ssl]}
   end
 
+  def locals_for_tagging
+    {:action_url   => 'tagging',
+     :multi_record => true,
+     :record_id    => @sb[:rec_id] || @edit[:object_ids] && @edit[:object_ids][0]
+    }
+  end
+
+  def update_tagging_partials(presenter, r)
+    presenter[:update_partials][:main_div] = r[:partial => 'layouts/tagging',
+                                               :locals  => locals_for_tagging]
+    presenter[:update_partials][:form_buttons_div] = r[:partial => 'layouts/x_edit_buttons',
+                                                       :locals  => locals_for_tagging]
+  end
+
+  def clear_flash_msg
+    @flash_array = nil if params[:button] != "reset"
+  end
+
   def breadcrumb_name
     ui_lookup_for_model(self.class.model_name).singularize
+  end
+
+  def tagging_explorer_controller?
+    @explorer
   end
 
   def set_root_node

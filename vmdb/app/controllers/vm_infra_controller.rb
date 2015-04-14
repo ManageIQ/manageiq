@@ -70,4 +70,8 @@ class VmInfraController < ApplicationController
     self.x_node = "#{nodetype}-#{to_cid(id)}"
     get_node_info(x_node)
   end
+
+  def tagging_explorer_controller?
+    @explorer
+  end
 end

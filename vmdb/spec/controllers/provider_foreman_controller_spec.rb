@@ -9,6 +9,8 @@ describe ProviderForemanController do
     @config_mgr = ConfigurationManagerForeman.find_all_by_provider_id(@provider.id).first
     @config_profile = ConfigurationProfileForeman.create(:name                     => "testprofile",
                                                          :configuration_manager_id => @config_mgr.id)
+    @configured_system = ConfiguredSystemForeman.create(:hostname                 => "test_configured_system",
+                                                        :configuration_profile_id => @config_profile.id)
     sb = {}
     temp = {}
     sb[:active_tree] = :foreman_providers_tree
@@ -107,6 +109,17 @@ describe ProviderForemanController do
 
   it "singularizes breadcrumb name" do
     expect(controller.send(:breadcrumb_name)).to eq("Provider Foreman")
+  end
+
+  it "renders tagging editor" do
+    session[:settings] = {:views => {}, :perpage => {:list => 10}}
+    session[:tag_items] = [@configured_system.id]
+    session[:assigned_filters] = []
+    parent = FactoryGirl.create(:classification, :name => "test_category")
+    FactoryGirl.create(:classification_tag,      :name => "test_entry",         :parent => parent)
+    FactoryGirl.create(:classification_tag,      :name => "another_test_entry", :parent => parent)
+    post :tagging, :id => @configured_system.id, :format => :js
+    expect(response.status).to eq(200)
   end
 
   def find_treenode_for_provider(provider)

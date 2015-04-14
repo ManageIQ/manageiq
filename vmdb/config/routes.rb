@@ -1242,6 +1242,7 @@ Vmdb::Application.routes.draw do
         provider_foreman_form_fields
         show
         show_list
+        tagging_edit
       ),
       :post => %w(
         accordion_select
@@ -1263,6 +1264,9 @@ Vmdb::Application.routes.draw do
         save_col_widths
         show
         show_list
+        tagging
+        tagging_edit
+        tag_edit_form_field_changed
         tree_autoload_dynatree
         tree_select
         users
