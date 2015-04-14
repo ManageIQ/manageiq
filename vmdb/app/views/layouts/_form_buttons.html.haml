@@ -82,8 +82,8 @@
           = button_tag(_("Verify"),
             :class => "btn btn-primary btn-disabled",
             :title => _("All fields are needed to perform verification of Database Settings"))
-        = button_tag(_("Save"),  :class => "btn btn-primary btn-disabled")
-        = button_tag(_("Reset"), :class => "btn btn-default btn-disabled")
+        = button_tag(_("Save"),  :class => "btn btn-primary btn-disabled", :type => 'button')
+        = button_tag(_("Reset"), :class => "btn btn-default btn-disabled", :type => 'button')
 
         - unless  @layout == "configuration" || @layout == "ops" || @layout == "chargeback" || @layout == "miq_ae_class"
           = button_tag(t = _("Cancel"),
