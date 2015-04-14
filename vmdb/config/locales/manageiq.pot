@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-25 17:18+0100\n"
-"PO-Revision-Date: 2015-03-25 17:18+0100\n"
+"POT-Creation-Date: 2015-04-14 17:19+0200\n"
+"PO-Revision-Date: 2015-04-14 17:19+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -72,6 +72,9 @@ msgstr ""
 msgid "\"%{record}\": %{task} successfully initiated"
 msgstr ""
 
+msgid "\"Credential validation was not successful: #{details}\""
+msgstr ""
+
 msgid "% Savings"
 msgstr ""
 
@@ -85,6 +88,9 @@ msgid "%s"
 msgstr ""
 
 msgid "%s  Ending with"
+msgstr ""
+
+msgid "%s (All cloud tenants present on this host)"
 msgstr ""
 
 msgid "%s Being Tagged"
@@ -800,6 +806,9 @@ msgstr ""
 msgid "Adding a new Orchestration Template"
 msgstr ""
 
+msgid "Adding a new Service Dialog from Orchestration Template \"%s\""
+msgstr ""
+
 msgid "Admin Role Filter:"
 msgstr ""
 
@@ -1496,16 +1505,16 @@ msgstr ""
 msgid "C & U Collection"
 msgstr ""
 
+msgid "C & U Data Collectors"
+msgstr ""
+
+msgid "C & U Data Processors"
+msgstr ""
+
 msgid "C & U Database"
 msgstr ""
 
 msgid "C & U Gap Collection"
-msgstr ""
-
-msgid "C &amp; U Data Collectors"
-msgstr ""
-
-msgid "C &amp; U Data Processors"
 msgstr ""
 
 msgid "CFME Appliance restart initiated successfully"
@@ -2306,6 +2315,12 @@ msgstr ""
 msgid "Compute"
 msgstr ""
 
+msgid "Computer system"
+msgstr ""
+
+msgid "ComputerSystem|Managed entity type"
+msgstr ""
+
 msgid "Condition"
 msgstr ""
 
@@ -2402,7 +2417,43 @@ msgstr ""
 msgid "Configuration Management"
 msgstr ""
 
+msgid "Configuration location"
+msgstr ""
+
+msgid "Configuration organization"
+msgstr ""
+
+msgid "Configuration profile"
+msgstr ""
+
 msgid "Configuration settings saved"
+msgstr ""
+
+msgid "ConfigurationLocation|Manager ref"
+msgstr ""
+
+msgid "ConfigurationLocation|Name"
+msgstr ""
+
+msgid "ConfigurationLocation|Title"
+msgstr ""
+
+msgid "ConfigurationOrganization|Manager ref"
+msgstr ""
+
+msgid "ConfigurationOrganization|Name"
+msgstr ""
+
+msgid "ConfigurationOrganization|Title"
+msgstr ""
+
+msgid "ConfigurationProfile|Description"
+msgstr ""
+
+msgid "ConfigurationProfile|Manager ref"
+msgstr ""
+
+msgid "ConfigurationProfile|Name"
 msgstr ""
 
 msgid "Configuration|Created on"
@@ -2421,6 +2472,33 @@ msgid "Configure Report Columns"
 msgstr ""
 
 msgid "Configured Systems"
+msgstr ""
+
+msgid "Configured system"
+msgstr ""
+
+msgid "ConfiguredSystem|Build state"
+msgstr ""
+
+msgid "ConfiguredSystem|Hostname"
+msgstr ""
+
+msgid "ConfiguredSystem|Ipaddress"
+msgstr ""
+
+msgid "ConfiguredSystem|Ipmi present"
+msgstr ""
+
+msgid "ConfiguredSystem|Last checkin"
+msgstr ""
+
+msgid "ConfiguredSystem|Mac address"
+msgstr ""
+
+msgid "ConfiguredSystem|Manager ref"
+msgstr ""
+
+msgid "ConfiguredSystem|Puppet status"
 msgstr ""
 
 msgid "Connecting (unencrypted) to: %s"
@@ -2447,7 +2525,154 @@ msgstr ""
 msgid "Container"
 msgstr ""
 
+msgid "Container Groups (%s)"
+msgstr ""
+
+msgid "Container Groups (0)"
+msgstr ""
+
+msgid "Container Nodes (%s)"
+msgstr ""
+
+msgid "Container Nodes (0)"
+msgstr ""
+
+msgid "Container Services (%s)"
+msgstr ""
+
+msgid "Container Services (0)"
+msgstr ""
+
+msgid "Container definition"
+msgstr ""
+
+msgid "Container group"
+msgstr ""
+
+msgid "Container node"
+msgstr ""
+
+msgid "Container port config"
+msgstr ""
+
+msgid "Container service"
+msgstr ""
+
+msgid "ContainerDefinition|Cpu cores"
+msgstr ""
+
+msgid "ContainerDefinition|Ems ref"
+msgstr ""
+
+msgid "ContainerDefinition|Image"
+msgstr ""
+
+msgid "ContainerDefinition|Image pull policy"
+msgstr ""
+
+msgid "ContainerDefinition|Memory"
+msgstr ""
+
+msgid "ContainerDefinition|Name"
+msgstr ""
+
+msgid "ContainerGroup|Creation timestamp"
+msgstr ""
+
+msgid "ContainerGroup|Dns policy"
+msgstr ""
+
+msgid "ContainerGroup|Ems ref"
+msgstr ""
+
+msgid "ContainerGroup|Name"
+msgstr ""
+
+msgid "ContainerGroup|Namespace"
+msgstr ""
+
+msgid "ContainerGroup|Resource version"
+msgstr ""
+
+msgid "ContainerGroup|Restart policy"
+msgstr ""
+
+msgid "ContainerNode|Creation timestamp"
+msgstr ""
+
+msgid "ContainerNode|Ems ref"
+msgstr ""
+
+msgid "ContainerNode|Lives on type"
+msgstr ""
+
+msgid "ContainerNode|Name"
+msgstr ""
+
+msgid "ContainerNode|Resource version"
+msgstr ""
+
+msgid "ContainerPortConfig|Ems ref"
+msgstr ""
+
+msgid "ContainerPortConfig|Host port"
+msgstr ""
+
+msgid "ContainerPortConfig|Name"
+msgstr ""
+
+msgid "ContainerPortConfig|Port"
+msgstr ""
+
+msgid "ContainerPortConfig|Protocol"
+msgstr ""
+
+msgid "ContainerService|Container port"
+msgstr ""
+
+msgid "ContainerService|Creation timestamp"
+msgstr ""
+
+msgid "ContainerService|Ems ref"
+msgstr ""
+
+msgid "ContainerService|Name"
+msgstr ""
+
+msgid "ContainerService|Namespace"
+msgstr ""
+
+msgid "ContainerService|Port"
+msgstr ""
+
+msgid "ContainerService|Portal ip"
+msgstr ""
+
+msgid "ContainerService|Protocol"
+msgstr ""
+
+msgid "ContainerService|Resource version"
+msgstr ""
+
+msgid "ContainerService|Session affinity"
+msgstr ""
+
 msgid "Containers"
+msgstr ""
+
+msgid "Container|Ems ref"
+msgstr ""
+
+msgid "Container|Image"
+msgstr ""
+
+msgid "Container|Name"
+msgstr ""
+
+msgid "Container|Restart count"
+msgstr ""
+
+msgid "Container|State"
 msgstr ""
 
 msgid "Content"
@@ -2507,10 +2732,10 @@ msgstr ""
 msgid "Creation of a new Orchestration Template was cancelled by the user"
 msgstr ""
 
-msgid "Credential validation returned: %s"
+msgid "Creation of a new Service Dialog was cancelled by the user"
 msgstr ""
 
-msgid "Credential validation was not successful"
+msgid "Credential validation returned: %s"
 msgstr ""
 
 msgid "Credential validation was successful"
@@ -2711,10 +2936,19 @@ msgstr ""
 msgid "Customization Directory"
 msgstr ""
 
+msgid "Customization script"
+msgstr ""
+
 msgid "Customization spec"
 msgstr ""
 
 msgid "Customization template"
+msgstr ""
+
+msgid "CustomizationScript|Manager ref"
+msgstr ""
+
+msgid "CustomizationScript|Name"
 msgstr ""
 
 msgid "CustomizationSpec|Description"
@@ -2998,6 +3232,9 @@ msgstr ""
 msgid "DialogField|Label"
 msgstr ""
 
+msgid "DialogField|Load values on init"
+msgstr ""
+
 msgid "DialogField|Name"
 msgstr ""
 
@@ -3023,6 +3260,9 @@ msgid "DialogField|Required method"
 msgstr ""
 
 msgid "DialogField|Required method options"
+msgstr ""
+
+msgid "DialogField|Show refresh button"
 msgstr ""
 
 msgid "DialogField|Validator rule"
@@ -3628,6 +3868,9 @@ msgstr ""
 msgid "Error text:"
 msgstr ""
 
+msgid "Error when creating a Service Dialog from Orchestration Template: "
+msgstr ""
+
 msgid "Error: Datastore import file upload expired"
 msgstr ""
 
@@ -3788,6 +4031,12 @@ msgid "ExtManagementSystem|Hostname"
 msgstr ""
 
 msgid "ExtManagementSystem|Ipaddress"
+msgstr ""
+
+msgid "ExtManagementSystem|Last refresh date"
+msgstr ""
+
+msgid "ExtManagementSystem|Last refresh error"
 msgstr ""
 
 msgid "ExtManagementSystem|Name"
@@ -4405,6 +4654,9 @@ msgstr ""
 msgid "Host Name"
 msgstr ""
 
+msgid "Host Name (or IPv4 or IPv6 address)"
+msgstr ""
+
 msgid "Host OS is unknown or there are no available SmartProxy builds for the Host's OS"
 msgstr ""
 
@@ -4457,6 +4709,9 @@ msgid "Host|Hostname"
 msgstr ""
 
 msgid "Host|Hyperthreading"
+msgstr ""
+
+msgid "Host|Hypervisor hostname"
 msgstr ""
 
 msgid "Host|Ipaddress"
@@ -6366,6 +6621,9 @@ msgstr ""
 msgid "MiqDatabase|Registration organization"
 msgstr ""
 
+msgid "MiqDatabase|Registration organization display name"
+msgstr ""
+
 msgid "MiqDatabase|Registration server"
 msgstr ""
 
@@ -7455,7 +7713,7 @@ msgstr ""
 msgid "Name: %s | Host Name: %s"
 msgstr ""
 
-msgid "Name: %s | Host Name: %s | IP Address: %s | Refresh Status: %s"
+msgid "Name: %s | Host Name: %s | Refresh Status: %s"
 msgstr ""
 
 msgid "Name: %s | Path: %s"
@@ -7565,6 +7823,9 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "New settings have been activated"
+msgstr ""
+
+msgid "New template content cannot be empty"
 msgstr ""
 
 msgid "Next"
@@ -7880,6 +8141,9 @@ msgid "No task target captured"
 msgstr ""
 
 msgid "No timer is attached to this Widget, its contents will not be updated."
+msgstr ""
+
+msgid "No type set"
 msgstr ""
 
 msgid "No usage data found for specified options"
@@ -9289,10 +9553,25 @@ msgstr ""
 msgid "Open the full report in a new window"
 msgstr ""
 
+msgid "Openstack Infra provider"
+msgstr ""
+
 msgid "Operating System"
 msgstr ""
 
 msgid "Operating system"
+msgstr ""
+
+msgid "Operating system flavor"
+msgstr ""
+
+msgid "OperatingSystemFlavor|Description"
+msgstr ""
+
+msgid "OperatingSystemFlavor|Manager ref"
+msgstr ""
+
+msgid "OperatingSystemFlavor|Name"
 msgstr ""
 
 msgid "OperatingSystem|Bitness"
@@ -9472,7 +9751,10 @@ msgstr ""
 msgid "OrchestrationTemplate|Description"
 msgstr ""
 
-msgid "OrchestrationTemplate|Ems ref"
+msgid "OrchestrationTemplate|Draft"
+msgstr ""
+
+msgid "OrchestrationTemplate|Md5"
 msgstr ""
 
 msgid "OrchestrationTemplate|Name"
@@ -9907,6 +10189,9 @@ msgstr ""
 msgid "Priority Workers"
 msgstr ""
 
+msgid "Private Key"
+msgstr ""
+
 msgid "Process ID"
 msgstr ""
 
@@ -9977,6 +10262,18 @@ msgid "Provider"
 msgstr ""
 
 msgid "Providers"
+msgstr ""
+
+msgid "Provider|Guid"
+msgstr ""
+
+msgid "Provider|Name"
+msgstr ""
+
+msgid "Provider|Url"
+msgstr ""
+
+msgid "Provider|Verify ssl"
 msgstr ""
 
 msgid "Provision %s"
@@ -10109,6 +10406,9 @@ msgid "Quick Start"
 msgstr ""
 
 msgid "Quotas"
+msgstr ""
+
+msgid "RSA key pair"
 msgstr ""
 
 msgid "RSS"
@@ -10295,6 +10595,9 @@ msgid "Remove"
 msgstr ""
 
 msgid "Remove %s"
+msgstr ""
+
+msgid "Remove Tags"
 msgstr ""
 
 msgid "Remove Tags Settings"
@@ -10724,33 +11027,6 @@ msgid "Row Count"
 msgstr ""
 
 msgid "Rows"
-msgstr ""
-
-msgid "Rr pending change"
-msgstr ""
-
-msgid "Rr sync state"
-msgstr ""
-
-msgid "RrPendingChange|Change key"
-msgstr ""
-
-msgid "RrPendingChange|Change new key"
-msgstr ""
-
-msgid "RrPendingChange|Change table"
-msgstr ""
-
-msgid "RrPendingChange|Change time"
-msgstr ""
-
-msgid "RrPendingChange|Change type"
-msgstr ""
-
-msgid "RrSyncState|State"
-msgstr ""
-
-msgid "RrSyncState|Table name"
 msgstr ""
 
 msgid "Rss feed"
@@ -11260,6 +11536,15 @@ msgstr ""
 msgid "Service Catalogs"
 msgstr ""
 
+msgid "Service Dialog \"%s\" was successfully created"
+msgstr ""
+
+msgid "Service Dialog Information"
+msgstr ""
+
+msgid "Service Dialog Name"
+msgstr ""
+
 msgid "Service Selection"
 msgstr ""
 
@@ -11455,6 +11740,15 @@ msgstr ""
 msgid "Show Capacity & Utilization"
 msgstr ""
 
+msgid "Show Container Groups"
+msgstr ""
+
+msgid "Show Container Nodes"
+msgstr ""
+
+msgid "Show Container Services"
+msgstr ""
+
 msgid "Show Costs by"
 msgstr ""
 
@@ -11608,6 +11902,9 @@ msgstr ""
 msgid "Show all registered Hosts"
 msgstr ""
 
+msgid "Show all used %s on this host"
+msgstr ""
+
 msgid "Show at Login"
 msgstr ""
 
@@ -11734,6 +12031,15 @@ msgstr ""
 msgid "Show this Cloud Tenant's parent %s"
 msgstr ""
 
+msgid "Show this Container Groups parent %s"
+msgstr ""
+
+msgid "Show this Container Nodes parent %s"
+msgstr ""
+
+msgid "Show this Container Services parent %s"
+msgstr ""
+
 msgid "Show this Flavor's parent %s"
 msgstr ""
 
@@ -11747,6 +12053,9 @@ msgid "Show this Security Group's parent %s"
 msgstr ""
 
 msgid "Show this SmartProxy's %s"
+msgstr ""
+
+msgid "Show this VM's %s"
 msgstr ""
 
 msgid "Show this VM's parent"
@@ -12224,6 +12533,9 @@ msgid "SystemService|Depend on group"
 msgstr ""
 
 msgid "SystemService|Depend on service"
+msgstr ""
+
+msgid "SystemService|Dependencies"
 msgstr ""
 
 msgid "SystemService|Description"
@@ -12844,6 +13156,9 @@ msgstr ""
 msgid "Used for access to Web Services."
 msgstr ""
 
+msgid "Used for shh connection to all Hosts in this provider."
+msgstr ""
+
 msgid "Used to authenticate with OpenStack AMQP Messaging Bus for event handling."
 msgstr ""
 
@@ -13319,12 +13634,6 @@ msgid "Vm or template"
 msgstr ""
 
 msgid "VmOrTemplate|Autostart"
-msgstr ""
-
-msgid "VmOrTemplate|Blackbox exists"
-msgstr ""
-
-msgid "VmOrTemplate|Blackbox validated"
 msgstr ""
 
 msgid "VmOrTemplate|Boot time"
