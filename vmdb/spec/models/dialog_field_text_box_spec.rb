@@ -106,6 +106,12 @@ describe DialogFieldTextBox do
         df.validator_rule = ''
         df.validate(dt, dg).should == 'tab/group/test field is required'
       end
+
+      it "should return an error when a required value is nil" do
+        df.value = nil
+        df.validator_rule = nil
+        df.validate(dt, dg).should == 'tab/group/test field is required'
+      end
     end
   end
 
