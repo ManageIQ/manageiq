@@ -16,7 +16,7 @@ class HostOpenstackInfra < Host
 
   def ssh_users_and_passwords
     # HostOpenstackInfra is using auth key set on ext_management_system level, not individual hosts
-    rl_user, auth_key = self.auth_user_keypair(:ssh_keypair)
+    rl_user, auth_key = auth_user_keypair(:ssh_keypair)
     rl_password = nil
     su_user, su_password = nil, nil
     # TODO(lsmola) make sudo user work with password. We will not probably support su, as root will not have password
@@ -28,7 +28,7 @@ class HostOpenstackInfra < Host
 
   def get_parent_keypair(type = nil)
     # Get private key defined on Provider level, in the case all hosts has the same user
-    self.ext_management_system.try(:authentication_type, type)
+    ext_management_system.try(:authentication_type, type)
   end
 
   def authentication_best_fit(type = nil)
@@ -43,29 +43,30 @@ class HostOpenstackInfra < Host
 
   def authentication_status
     # Auth status is always stored in Host's auth record
-    self.authentication_type(:ssh_keypair).try(:status) || "None"
+    authentication_type(:ssh_keypair).try(:status) || "None"
   end
 
   def update_ssh_auth_status!
-    unless cred = self.authentication_type(:ssh_keypair)
-      # Creating just Auth status placeholder, the credentials are stored in parent or this auth, parent is
-      # EmsOpenstackInfra in this case. We will create Auth per Host where we will store state, if it not exists
-      cred = AuthKeyPairOpenstackInfra.new(:name => "#{self.class.name} #{self.name}", :authtype => :ssh_keypair,
-                                           :resource_id => id, :resource_type => 'Host')
-    end
+    # Creating just Auth status placeholder, the credentials are stored in parent or this auth, parent is
+    # EmsOpenstackInfra in this case. We will create Auth per Host where we will store state, if it not exists
+    cred = authentication_type(:ssh_keypair) ||
+           AuthKeyPairOpenstackInfra.new(:name          => "#{self.class.name} #{name}",
+                                         :authtype      => :ssh_keypair,
+                                         :resource_id   => id,
+                                         :resource_type => 'Host')
 
     begin
-      verified = self.verify_credentials_with_ssh
-    rescue StandardError, NotImplementedError
+      verified = verify_credentials_with_ssh
+    rescue StandardError, NotImplementedError => err
       verified = false
-      _log.warn("#{$!.inspect}")
+      _log.warn("#{err.inspect}")
     end
 
     if verified
       cred.status = 'Valid'
       cred.save
     else
-      if self.hostname && !self.missing_credentials?(:ssh_keypair)
+      if hostname && !missing_credentials?(:ssh_keypair)
         # The credentials exists and hostname is set and we are not able to verify, go to error state
         cred.status = 'Error'
       else

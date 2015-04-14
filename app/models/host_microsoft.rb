@@ -1,6 +1,6 @@
 $LOAD_PATH << File.join(GEMS_PENDING_ROOT, "Scvmm")
 require 'MiqScvmm'
-#require 'MiqScvmmBroker'
+# require 'MiqScvmmBroker'
 
 class HostMicrosoft < Host
   def verify_credentials(auth_type = nil, _options = {})
@@ -16,19 +16,26 @@ class HostMicrosoft < Host
 
   def verify_credentials_task(*authentication)
     svr_list = MiqServer.all.select { |s| s.has_role?(authentication_check_role) }
-    raise "No #{Dictionary::gettext("miq_servers", :type => :table)} were found to verify Windows credentials." if svr_list.blank?
-    svr_list.delete_if {|s| s.status != 'started'}
-    raise "No active #{Dictionary::gettext("miq_servers", :type => :table)} were found to verify Windows credentials." if svr_list.blank?
 
-    options = { :action => "Host(Windows) - Validate credentials", :userid => 'system'}
-    queue_options = {:class_name => self.class.name,
+    if svr_list.blank?
+      raise "No #{Dictionary.gettext("miq_servers", :type => :table)} were found to verify Windows credentials."
+    end
+
+    svr_list.delete_if {|s| s.status != 'started'}
+
+    if svr_list.blank?
+      raise "No active #{Dictionary.gettext("miq_servers", :type => :table)} were found to verify Windows credentials."
+    end
+
+    options = {:action => "Host(Windows) - Validate credentials", :userid => 'system'}
+    queue_options = {:class_name  => self.class.name,
                      :method_name => 'verify_credentials_windows',
-                     :args => authentication,
-                     :instance_id => self.id,
-                     :priority => MiqQueue::HIGH_PRIORITY,
-                     :role => authentication_check_role,
+                     :args        => authentication,
+                     :instance_id => id,
+                     :priority    => MiqQueue::HIGH_PRIORITY,
+                     :role        => authentication_check_role,
                      :msg_timeout => 60
-                     }
+    }
 
     task = MiqTask.wait_for_taskid(MiqTask.generic_action_with_callback(options, queue_options))
     return task.task_results if task.status == "Ok"
@@ -36,15 +43,13 @@ class HostMicrosoft < Host
   end
 
   def verify_credentials_windows(*authentication)
-    begin
-      require 'miq-wmi'
-      _log.info "Connecting to WMI to verify credentials: [#{authentication[0]}] -[#{authentication[1]}]"
-      WMIHelper.verify_credentials(*authentication)
-    rescue Exception
-      _log.warn("#{$!.inspect}")
-      raise "Unexpected response returned from #{ui_lookup(:table => "ext_management_systems")}, see log for details"
-    else
-      true
-    end
+    require 'miq-wmi'
+    _log.info "Connecting to WMI to verify credentials: [#{authentication[0]}] -[#{authentication[1]}]"
+    WMIHelper.verify_credentials(*authentication)
+  rescue Exception => err
+    _log.warn("#{err.inspect}")
+    raise "Unexpected response returned from #{ui_lookup(:table => "ext_management_systems")}, see log for details"
+  else
+    true
   end
 end
