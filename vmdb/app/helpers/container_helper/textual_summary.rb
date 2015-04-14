@@ -4,7 +4,7 @@ module ContainerHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(image name state restart_count container_id)
+    items = %w(image name state restart_count backing_ref)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
@@ -28,7 +28,7 @@ module ContainerHelper::TextualSummary
     {:label => "Restart Count", :value => @record.restart_count}
   end
 
-  def textual_container_id
-    {:label => "Container ID", :value => @record.container_id}
+  def textual_backing_ref
+    {:label => "Backing Ref (Container ID)", :value => @record.backing_ref}
   end
 end
