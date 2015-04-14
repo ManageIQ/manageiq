@@ -1,4 +1,3 @@
-require 'manageiq_foreman'
 module MiqProvisionTaskConfiguredSystemForeman::StateMachine
   def run_provision
     validate_source

@@ -1,4 +1,3 @@
-require 'manageiq_foreman'
 module MiqProvisionTaskConfiguredSystemForeman::OptionsHelper
   def log_provider_options
     $log.info("MIQ(#{self.class.name}##{__method__}) Provisioning [#{source.name}]")
