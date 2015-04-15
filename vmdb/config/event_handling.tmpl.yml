@@ -62,6 +62,8 @@ event_groups:
     - image.update
     - image.create
     - image.upload
+    - orchestration.stack.create.end
+    - orchestration.stack.create.error
     - servergroup.create
     :detail:
     - CloneVM_Task
@@ -115,6 +117,14 @@ event_groups:
     - VmToTemplate
     - compute.instance.rebuild.end
     - compute.instance.resize.end
+    - orchestration.stack.update.end
+    - orchestration.stack.update.error
+    - orchestration.stack.suspend.end
+    - orchestration.stack.suspend.error
+    - orchestration.stack.resume.end
+    - orchestration.stack.resume.error
+    - orchestration.autoscaling.end
+    - orchestration.autoscaling.error
     - servergroup.update
     - servergroup.addmemeber
     :detail:
@@ -161,6 +171,8 @@ event_groups:
     - VmDisconnectedEvent
     - VmRemovedEvent
     - image.delete
+    - orchestration.stack.delete.end
+    - orchestration.stack.delete.error
     - servergroup.delete
     :detail:
     - Destroy_Task
@@ -1303,6 +1315,24 @@ event_handling:
   - refresh:
     - ems
   image.delete:
+  - refresh:
+    - ems
+  orchestration.stack.create.end:
+  - refresh:
+    - ems
+  orchestration.stack.update.end:
+  - refresh:
+    - ems
+  orchestration.stack.delete.end:
+  - refresh:
+    - ems
+  orchestration.stack.suspend.end:
+  - refresh:
+    - ems
+  orchestration.stack.resume.end:
+  - refresh:
+    - ems
+  orchestration.autoscaling.end:
   - refresh:
     - ems
   network.floating_ip.allocate:
