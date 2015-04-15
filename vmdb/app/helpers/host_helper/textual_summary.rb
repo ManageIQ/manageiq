@@ -266,7 +266,7 @@ module HostHelper::TextualSummary
     label = ui_lookup(:table => "availability_zone")
     h = {:label => label, :image => "availability_zone", :value => (availability_zone.nil? ? "None" : availability_zone.name)}
     if availability_zone && role_allows(:feature => "availability_zone_show")
-      h[:title] = _("Show this VM's %s") % label
+      h[:title] = _("Show this Host's %s") % label
       h[:link]  = url_for(:controller => 'availability_zone', :action => 'show', :id => availability_zone)
     end
     h

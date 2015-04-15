@@ -68,6 +68,10 @@ class MiqHostProvisionRequest < MiqRequest
     'ems_operations'
   end
 
+  def originating_controller
+    "host"
+  end
+
   private
 
   def default_description

@@ -1,0 +1,1374 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://10.35.0.202:6443/api/v1beta3/pods
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.alpha (linux-gnu x86_64) ruby/2.0.0p598
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 13 Apr 2015 09:07:46 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "kind": "PodList",
+          "apiVersion": "v1beta3",
+          "metadata": {
+            "selfLink": "/api/v1beta3/pods",
+            "resourceVersion": "1645"
+          },
+          "items": [
+            {
+              "metadata": {
+                "name": "monitoring-heapster-controller-40yp7",
+                "generateName": "monitoring-heapster-controller-",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/pods/monitoring-heapster-controller-40yp7",
+                "uid": "49984e80-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "325",
+                "creationTimestamp": "2015-04-13T08:30:05Z",
+                "labels": {
+                  "name": "heapster",
+                  "uses": "monitoring-influxdb"
+                }
+              },
+              "spec": {
+                "volumes": [
+                  {
+                    "name": "ssl-certs",
+                    "hostPath": {
+                      "path": "/etc/ssl/certs"
+                    },
+                    "emptyDir": null,
+                    "gcePersistentDisk": null,
+                    "gitRepo": null,
+                    "secret": null,
+                    "nfs": null
+                  }
+                ],
+                "containers": [
+                  {
+                    "name": "heapster",
+                    "image": "kubernetes/heapster:v0.9",
+                    "env": [
+                      {
+                        "name": "INFLUXDB_HOST",
+                        "value": "monitoring-influxdb"
+                      },
+                      {
+                        "name": "SINK",
+                        "value": "influxdb"
+                      }
+                    ],
+                    "resources": {},
+                    "volumeMounts": [
+                      {
+                        "name": "ssl-certs",
+                        "readOnly": true,
+                        "mountPath": "/etc/ssl/certs"
+                      }
+                    ],
+                    "terminationMessagePath": "/dev/termination-log",
+                    "imagePullPolicy": "IfNotPresent",
+                    "capabilities": {}
+                  }
+                ],
+                "restartPolicy": "Always",
+                "dnsPolicy": "ClusterFirst",
+                "host": "dhcp-0-202.tlv.redhat.com"
+              },
+              "status": {
+                "phase": "Running",
+                "Condition": [
+                  {
+                    "type": "Ready",
+                    "status": "True"
+                  }
+                ],
+                "host": "dhcp-0-202.tlv.redhat.com",
+                "hostIP": "10.35.0.202",
+                "podIP": "172.17.0.7",
+                "containerStatuses": [
+                  {
+                    "name": "heapster",
+                    "state": {
+                      "running": {
+                        "startedAt": "2015-04-13T08:30:10Z"
+                      }
+                    },
+                    "lastState": {},
+                    "ready": true,
+                    "restartCount": 0,
+                    "image": "kubernetes/heapster:v0.9",
+                    "imageID": "docker://204dbb8fac26ee36633185b0781f8f10a544ada8fdd7e9832706db67d6249ee6",
+                    "containerID": "docker://87cd51044d7175c246fa1fa7699253fc2aecb769021837a966fa71e9dcb54d71"
+                  }
+                ]
+              }
+            },
+            {
+              "metadata": {
+                "name": "monitoring-influx-grafana-controller-2toua",
+                "generateName": "monitoring-influx-grafana-controller-",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/pods/monitoring-influx-grafana-controller-2toua",
+                "uid": "49b72714-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "1640",
+                "creationTimestamp": "2015-04-13T08:30:05Z",
+                "labels": {
+                  "name": "influxGrafana"
+                }
+              },
+              "spec": {
+                "volumes": null,
+                "containers": [
+                  {
+                    "name": "influxdb",
+                    "image": "kubernetes/heapster_influxdb:v0.3",
+                    "ports": [
+                      {
+                        "containerPort": 8083,
+                        "protocol": "TCP"
+                      },
+                      {
+                        "containerPort": 8086,
+                        "protocol": "TCP"
+                      }
+                    ],
+                    "resources": {},
+                    "terminationMessagePath": "/dev/termination-log",
+                    "imagePullPolicy": "IfNotPresent",
+                    "capabilities": {}
+                  },
+                  {
+                    "name": "grafana",
+                    "image": "kubernetes/heapster_grafana:v0.5",
+                    "ports": [
+                      {
+                        "containerPort": 8080,
+                        "protocol": "TCP"
+                      }
+                    ],
+                    "env": [
+                      {
+                        "name": "INFLUXDB_EXTERNAL_URL",
+                        "value": "/api/v1beta1/proxy/services/monitoring-grafana/db/"
+                      },
+                      {
+                        "name": "INFLUXDB_HOST",
+                        "value": "monitoring-influxdb"
+                      },
+                      {
+                        "name": "INFLUXDB_PORT",
+                        "value": "80"
+                      }
+                    ],
+                    "resources": {},
+                    "terminationMessagePath": "/dev/termination-log",
+                    "imagePullPolicy": "IfNotPresent",
+                    "capabilities": {}
+                  }
+                ],
+                "restartPolicy": "Always",
+                "dnsPolicy": "ClusterFirst",
+                "host": "dhcp-0-202.tlv.redhat.com"
+              },
+              "status": {
+                "phase": "Running",
+                "Condition": [
+                  {
+                    "type": "Ready",
+                    "status": "True"
+                  }
+                ],
+                "host": "dhcp-0-202.tlv.redhat.com",
+                "hostIP": "10.35.0.202",
+                "podIP": "172.17.0.8",
+                "containerStatuses": [
+                  {
+                    "name": "grafana",
+                    "state": {
+                      "running": {
+                        "startedAt": "2015-04-13T08:30:12Z"
+                      }
+                    },
+                    "lastState": {},
+                    "ready": true,
+                    "restartCount": 0,
+                    "image": "kubernetes/heapster_grafana:v0.5",
+                    "imageID": "docker://550cea8112c607e1a66ccf021ab75b8fbbb04cf171c8e39ccb7f300995ed60ed",
+                    "containerID": "docker://f9ae296270fe8891f74060006f00ddf247be7f771511a783ca0564bd0469de3a"
+                  },
+                  {
+                    "name": "influxdb",
+                    "state": {
+                      "running": {
+                        "startedAt": "2015-04-13T08:30:11Z"
+                      }
+                    },
+                    "lastState": {},
+                    "ready": true,
+                    "restartCount": 0,
+                    "image": "kubernetes/heapster_influxdb:v0.3",
+                    "imageID": "docker://514b330600afe3ed9f948f65fab7593b374075d194c65263fe3bafc43820fdad",
+                    "containerID": "docker://af741769b650a408f4a65d2d27043912b6d57e5e2a721faeb7a93a1989eef0c6"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+    http_version: 
+  recorded_at: Mon, 13 Apr 2015 09:07:46 GMT
+- request:
+    method: get
+    uri: https://10.35.0.202:6443/api/v1beta3/services
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.alpha (linux-gnu x86_64) ruby/2.0.0p598
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 13 Apr 2015 09:07:46 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "kind": "ServiceList",
+          "apiVersion": "v1beta3",
+          "metadata": {
+            "selfLink": "/api/v1beta3/services",
+            "resourceVersion": "1645"
+          },
+          "items": [
+            {
+              "metadata": {
+                "name": "kubernetes",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/services/kubernetes",
+                "uid": "ef9ca891-e1b5-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "6",
+                "creationTimestamp": "2015-04-13T08:20:25Z",
+                "labels": {
+                  "component": "apiserver",
+                  "provider": "kubernetes"
+                }
+              },
+              "spec": {
+                "port": 443,
+                "protocol": "TCP",
+                "selector": null,
+                "portalIP": "10.0.0.2",
+                "targetPort": 0,
+                "sessionAffinity": "None"
+              },
+              "status": {}
+            },
+            {
+              "metadata": {
+                "name": "kubernetes-ro",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/services/kubernetes-ro",
+                "uid": "ef98cd2f-e1b5-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "5",
+                "creationTimestamp": "2015-04-13T08:20:25Z",
+                "labels": {
+                  "component": "apiserver",
+                  "provider": "kubernetes"
+                }
+              },
+              "spec": {
+                "port": 80,
+                "protocol": "TCP",
+                "selector": null,
+                "portalIP": "10.0.0.1",
+                "targetPort": 0,
+                "sessionAffinity": "None"
+              },
+              "status": {}
+            },
+            {
+              "metadata": {
+                "name": "monitoring-grafana",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/services/monitoring-grafana",
+                "uid": "497e6b34-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "296",
+                "creationTimestamp": "2015-04-13T08:30:05Z"
+              },
+              "spec": {
+                "port": 80,
+                "protocol": "TCP",
+                "selector": {
+                  "name": "influxGrafana"
+                },
+                "portalIP": "10.0.0.189",
+                "targetPort": 8080,
+                "sessionAffinity": "None"
+              },
+              "status": {}
+            },
+            {
+              "metadata": {
+                "name": "monitoring-heapster",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/services/monitoring-heapster",
+                "uid": "49981230-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "298",
+                "creationTimestamp": "2015-04-13T08:30:05Z"
+              },
+              "spec": {
+                "port": 80,
+                "protocol": "TCP",
+                "selector": {
+                  "name": "heapster"
+                },
+                "portalIP": "10.0.0.42",
+                "targetPort": 8082,
+                "sessionAffinity": "None"
+              },
+              "status": {}
+            },
+            {
+              "metadata": {
+                "name": "monitoring-influxdb",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/services/monitoring-influxdb",
+                "uid": "49b6edac-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "302",
+                "creationTimestamp": "2015-04-13T08:30:05Z"
+              },
+              "spec": {
+                "port": 80,
+                "protocol": "TCP",
+                "selector": {
+                  "name": "influxGrafana"
+                },
+                "portalIP": "10.0.0.38",
+                "targetPort": 8086,
+                "sessionAffinity": "None"
+              },
+              "status": {}
+            },
+            {
+              "metadata": {
+                "name": "monitoring-influxdb-ui",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/services/monitoring-influxdb-ui",
+                "uid": "49c23d97-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "306",
+                "creationTimestamp": "2015-04-13T08:30:06Z"
+              },
+              "spec": {
+                "port": 80,
+                "protocol": "TCP",
+                "selector": {
+                  "name": "influxGrafana"
+                },
+                "portalIP": "10.0.0.196",
+                "targetPort": 8083,
+                "sessionAffinity": "None"
+              },
+              "status": {}
+            }
+          ]
+        }
+    http_version: 
+  recorded_at: Mon, 13 Apr 2015 09:07:46 GMT
+- request:
+    method: get
+    uri: https://10.35.0.202:6443/api/v1beta3/replicationcontrollers
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.alpha (linux-gnu x86_64) ruby/2.0.0p598
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 13 Apr 2015 09:07:46 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "kind": "ReplicationControllerList",
+          "apiVersion": "v1beta3",
+          "metadata": {
+            "selfLink": "/api/v1beta3/replicationcontrollers",
+            "resourceVersion": "1645"
+          },
+          "items": [
+            {
+              "metadata": {
+                "name": "monitoring-heapster-controller",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/replicationcontrollers/monitoring-heapster-controller",
+                "uid": "49880524-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "309",
+                "creationTimestamp": "2015-04-13T08:30:05Z",
+                "labels": {
+                  "name": "heapster"
+                }
+              },
+              "spec": {
+                "replicas": 1,
+                "selector": {
+                  "name": "heapster"
+                },
+                "template": {
+                  "metadata": {
+                    "creationTimestamp": null,
+                    "labels": {
+                      "name": "heapster",
+                      "uses": "monitoring-influxdb"
+                    }
+                  },
+                  "spec": {
+                    "volumes": [
+                      {
+                        "name": "ssl-certs",
+                        "hostPath": {
+                          "path": "/etc/ssl/certs"
+                        },
+                        "emptyDir": null,
+                        "gcePersistentDisk": null,
+                        "gitRepo": null,
+                        "secret": null,
+                        "nfs": null
+                      }
+                    ],
+                    "containers": [
+                      {
+                        "name": "heapster",
+                        "image": "kubernetes/heapster:v0.9",
+                        "env": [
+                          {
+                            "name": "INFLUXDB_HOST",
+                            "value": "monitoring-influxdb"
+                          },
+                          {
+                            "name": "SINK",
+                            "value": "influxdb"
+                          }
+                        ],
+                        "resources": {},
+                        "volumeMounts": [
+                          {
+                            "name": "ssl-certs",
+                            "readOnly": true,
+                            "mountPath": "/etc/ssl/certs"
+                          }
+                        ],
+                        "terminationMessagePath": "/dev/termination-log",
+                        "imagePullPolicy": "IfNotPresent",
+                        "capabilities": {}
+                      }
+                    ],
+                    "restartPolicy": "Always",
+                    "dnsPolicy": "ClusterFirst"
+                  }
+                }
+              },
+              "status": {
+                "replicas": 1
+              }
+            },
+            {
+              "metadata": {
+                "name": "monitoring-influx-grafana-controller",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/replicationcontrollers/monitoring-influx-grafana-controller",
+                "uid": "49a1e047-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "308",
+                "creationTimestamp": "2015-04-13T08:30:05Z",
+                "labels": {
+                  "name": "influxGrafana"
+                }
+              },
+              "spec": {
+                "replicas": 1,
+                "selector": {
+                  "name": "influxGrafana"
+                },
+                "template": {
+                  "metadata": {
+                    "creationTimestamp": null,
+                    "labels": {
+                      "name": "influxGrafana"
+                    }
+                  },
+                  "spec": {
+                    "volumes": null,
+                    "containers": [
+                      {
+                        "name": "influxdb",
+                        "image": "kubernetes/heapster_influxdb:v0.3",
+                        "ports": [
+                          {
+                            "containerPort": 8083,
+                            "protocol": "TCP"
+                          },
+                          {
+                            "containerPort": 8086,
+                            "protocol": "TCP"
+                          }
+                        ],
+                        "resources": {},
+                        "terminationMessagePath": "/dev/termination-log",
+                        "imagePullPolicy": "IfNotPresent",
+                        "capabilities": {}
+                      },
+                      {
+                        "name": "grafana",
+                        "image": "kubernetes/heapster_grafana:v0.5",
+                        "ports": [
+                          {
+                            "containerPort": 8080,
+                            "protocol": "TCP"
+                          }
+                        ],
+                        "env": [
+                          {
+                            "name": "INFLUXDB_EXTERNAL_URL",
+                            "value": "/api/v1beta1/proxy/services/monitoring-grafana/db/"
+                          },
+                          {
+                            "name": "INFLUXDB_HOST",
+                            "value": "monitoring-influxdb"
+                          },
+                          {
+                            "name": "INFLUXDB_PORT",
+                            "value": "80"
+                          }
+                        ],
+                        "resources": {},
+                        "terminationMessagePath": "/dev/termination-log",
+                        "imagePullPolicy": "IfNotPresent",
+                        "capabilities": {}
+                      }
+                    ],
+                    "restartPolicy": "Always",
+                    "dnsPolicy": "ClusterFirst"
+                  }
+                }
+              },
+              "status": {
+                "replicas": 1
+              }
+            }
+          ]
+        }
+    http_version: 
+  recorded_at: Mon, 13 Apr 2015 09:07:46 GMT
+- request:
+    method: get
+    uri: https://10.35.0.202:6443/api/v1beta3/nodes
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.alpha (linux-gnu x86_64) ruby/2.0.0p598
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 13 Apr 2015 09:07:46 GMT
+      Content-Length:
+      - '1272'
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "kind": "NodeList",
+          "apiVersion": "v1beta3",
+          "metadata": {
+            "selfLink": "/api/v1beta3/nodes",
+            "resourceVersion": "1646"
+          },
+          "items": [
+            {
+              "metadata": {
+                "name": "dhcp-0-202.tlv.redhat.com",
+                "selfLink": "/api/v1beta3/nodes/dhcp-0-202.tlv.redhat.com",
+                "uid": "f035c16a-e1b5-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "1645",
+                "creationTimestamp": "2015-04-13T08:20:26Z"
+              },
+              "spec": {
+                "externalID": "dhcp-0-202.tlv.redhat.com"
+              },
+              "status": {
+                "capacity": {
+                  "cpu": "2",
+                  "memory": "2937564Ki"
+                },
+                "conditions": [
+                  {
+                    "type": "Ready",
+                    "status": "True",
+                    "lastProbeTime": "2015-04-13T09:07:46Z",
+                    "lastTransitionTime": "2015-04-13T08:20:26Z",
+                    "reason": "kubelet is posting ready status"
+                  }
+                ],
+                "addresses": [
+                  {
+                    "type": "LegacyHostIP",
+                    "address": "10.35.0.202"
+                  }
+                ],
+                "nodeInfo": {
+                  "machineID": "8b4806e4334f470aa612265388e4121e",
+                  "systemUUID": "8B4806E4-334F-470A-A612-265388E4121E",
+                  "bootID": "8bf324a5-8d03-49ce-8324-14617e6ddec2"
+                }
+              }
+            }
+          ]
+        }
+    http_version: 
+  recorded_at: Mon, 13 Apr 2015 09:07:46 GMT
+- request:
+    method: get
+    uri: https://10.35.0.202:6443/api/v1beta3/events
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.alpha (linux-gnu x86_64) ruby/2.0.0p598
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 13 Apr 2015 09:07:46 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "kind": "EventList",
+          "apiVersion": "v1beta3",
+          "metadata": {
+            "selfLink": "/api/v1beta3/events",
+            "resourceVersion": "1646"
+          },
+          "items": [
+            {
+              "metadata": {
+                "name": "dhcp-0-202.tlv.redhat.com.13d4850244e78f5f",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/events/dhcp-0-202.tlv.redhat.com.13d4850244e78f5f",
+                "uid": "f05adcd5-e1b5-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "10",
+                "creationTimestamp": "2015-04-13T08:20:26Z",
+                "deletionTimestamp": "2015-04-13T09:20:26Z"
+              },
+              "involvedObject": {
+                "kind": "Node",
+                "name": "dhcp-0-202.tlv.redhat.com",
+                "uid": "dhcp-0-202.tlv.redhat.com"
+              },
+              "reason": "starting",
+              "message": "Starting kubelet.",
+              "source": {
+                "component": "kubelet",
+                "host": "dhcp-0-202.tlv.redhat.com"
+              },
+              "firstTimestamp": "2015-04-13T08:20:26Z",
+              "lastTimestamp": "2015-04-13T08:20:26Z",
+              "count": 1
+            },
+            {
+              "metadata": {
+                "name": "monitoring-heapster-controller-40yp7.13d485892e7393cf",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/events/monitoring-heapster-controller-40yp7.13d485892e7393cf",
+                "uid": "49bad6df-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "304",
+                "creationTimestamp": "2015-04-13T08:30:06Z",
+                "deletionTimestamp": "2015-04-13T09:30:06Z"
+              },
+              "involvedObject": {
+                "kind": "Pod",
+                "namespace": "default",
+                "name": "monitoring-heapster-controller-40yp7",
+                "uid": "49984e80-e1b7-11e4-b7dc-001a4a5f4a02",
+                "apiVersion": "v1beta1",
+                "resourceVersion": "299"
+              },
+              "reason": "scheduled",
+              "message": "Successfully assigned monitoring-heapster-controller-40yp7 to dhcp-0-202.tlv.redhat.com",
+              "source": {
+                "component": "scheduler"
+              },
+              "firstTimestamp": "2015-04-13T08:30:06Z",
+              "lastTimestamp": "2015-04-13T08:30:06Z",
+              "count": 1
+            },
+            {
+              "metadata": {
+                "name": "monitoring-heapster-controller-40yp7.13d485894b2b549a",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/events/monitoring-heapster-controller-40yp7.13d485894b2b549a",
+                "uid": "4a046471-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "312",
+                "creationTimestamp": "2015-04-13T08:30:06Z",
+                "deletionTimestamp": "2015-04-13T09:30:06Z"
+              },
+              "involvedObject": {
+                "kind": "Pod",
+                "namespace": "default",
+                "name": "monitoring-heapster-controller-40yp7",
+                "uid": "49984e80-e1b7-11e4-b7dc-001a4a5f4a02",
+                "apiVersion": "v1beta1",
+                "resourceVersion": "301",
+                "fieldPath": "implicitly required container POD"
+              },
+              "reason": "pulled",
+              "message": "Successfully pulled image \"kubernetes/pause:latest\"",
+              "source": {
+                "component": "kubelet",
+                "host": "dhcp-0-202.tlv.redhat.com"
+              },
+              "firstTimestamp": "2015-04-13T08:30:06Z",
+              "lastTimestamp": "2015-04-13T08:30:06Z",
+              "count": 1
+            },
+            {
+              "metadata": {
+                "name": "monitoring-heapster-controller-40yp7.13d48589b32f86cc",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/events/monitoring-heapster-controller-40yp7.13d48589b32f86cc",
+                "uid": "4b0ea210-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "317",
+                "creationTimestamp": "2015-04-13T08:30:08Z",
+                "deletionTimestamp": "2015-04-13T09:30:08Z"
+              },
+              "involvedObject": {
+                "kind": "Pod",
+                "namespace": "default",
+                "name": "monitoring-heapster-controller-40yp7",
+                "uid": "49984e80-e1b7-11e4-b7dc-001a4a5f4a02",
+                "apiVersion": "v1beta1",
+                "resourceVersion": "301",
+                "fieldPath": "implicitly required container POD"
+              },
+              "reason": "created",
+              "message": "Created with docker id d59c7248be04ff32796c62aa6f40b61316fa7a9fb34c11a45ddefb080b0de450",
+              "source": {
+                "component": "kubelet",
+                "host": "dhcp-0-202.tlv.redhat.com"
+              },
+              "firstTimestamp": "2015-04-13T08:30:08Z",
+              "lastTimestamp": "2015-04-13T08:30:08Z",
+              "count": 1
+            },
+            {
+              "metadata": {
+                "name": "monitoring-heapster-controller-40yp7.13d48589d93e6b2a",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/events/monitoring-heapster-controller-40yp7.13d48589d93e6b2a",
+                "uid": "4b7017a7-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "318",
+                "creationTimestamp": "2015-04-13T08:30:08Z",
+                "deletionTimestamp": "2015-04-13T09:30:08Z"
+              },
+              "involvedObject": {
+                "kind": "Pod",
+                "namespace": "default",
+                "name": "monitoring-heapster-controller-40yp7",
+                "uid": "49984e80-e1b7-11e4-b7dc-001a4a5f4a02",
+                "apiVersion": "v1beta1",
+                "resourceVersion": "301",
+                "fieldPath": "implicitly required container POD"
+              },
+              "reason": "started",
+              "message": "Started with docker id d59c7248be04ff32796c62aa6f40b61316fa7a9fb34c11a45ddefb080b0de450",
+              "source": {
+                "component": "kubelet",
+                "host": "dhcp-0-202.tlv.redhat.com"
+              },
+              "firstTimestamp": "2015-04-13T08:30:08Z",
+              "lastTimestamp": "2015-04-13T08:30:08Z",
+              "count": 1
+            },
+            {
+              "metadata": {
+                "name": "monitoring-heapster-controller-40yp7.13d4858a2fdb7e98",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/events/monitoring-heapster-controller-40yp7.13d4858a2fdb7e98",
+                "uid": "4c4e3b5d-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "322",
+                "creationTimestamp": "2015-04-13T08:30:10Z",
+                "deletionTimestamp": "2015-04-13T09:30:10Z"
+              },
+              "involvedObject": {
+                "kind": "Pod",
+                "namespace": "default",
+                "name": "monitoring-heapster-controller-40yp7",
+                "uid": "49984e80-e1b7-11e4-b7dc-001a4a5f4a02",
+                "apiVersion": "v1beta1",
+                "resourceVersion": "301",
+                "fieldPath": "spec.containers{heapster}"
+              },
+              "reason": "created",
+              "message": "Created with docker id 87cd51044d7175c246fa1fa7699253fc2aecb769021837a966fa71e9dcb54d71",
+              "source": {
+                "component": "kubelet",
+                "host": "dhcp-0-202.tlv.redhat.com"
+              },
+              "firstTimestamp": "2015-04-13T08:30:10Z",
+              "lastTimestamp": "2015-04-13T08:30:10Z",
+              "count": 1
+            },
+            {
+              "metadata": {
+                "name": "monitoring-heapster-controller-40yp7.13d4858a3d8e1b84",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/events/monitoring-heapster-controller-40yp7.13d4858a3d8e1b84",
+                "uid": "4c70da42-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "323",
+                "creationTimestamp": "2015-04-13T08:30:10Z",
+                "deletionTimestamp": "2015-04-13T09:30:10Z"
+              },
+              "involvedObject": {
+                "kind": "Pod",
+                "namespace": "default",
+                "name": "monitoring-heapster-controller-40yp7",
+                "uid": "49984e80-e1b7-11e4-b7dc-001a4a5f4a02",
+                "apiVersion": "v1beta1",
+                "resourceVersion": "301",
+                "fieldPath": "spec.containers{heapster}"
+              },
+              "reason": "started",
+              "message": "Started with docker id 87cd51044d7175c246fa1fa7699253fc2aecb769021837a966fa71e9dcb54d71",
+              "source": {
+                "component": "kubelet",
+                "host": "dhcp-0-202.tlv.redhat.com"
+              },
+              "firstTimestamp": "2015-04-13T08:30:10Z",
+              "lastTimestamp": "2015-04-13T08:30:10Z",
+              "count": 1
+            },
+            {
+              "metadata": {
+                "name": "monitoring-influx-grafana-controller-2toua.13d4858937990688",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/events/monitoring-influx-grafana-controller-2toua.13d4858937990688",
+                "uid": "49d2425f-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "307",
+                "creationTimestamp": "2015-04-13T08:30:06Z",
+                "deletionTimestamp": "2015-04-13T09:30:06Z"
+              },
+              "involvedObject": {
+                "kind": "Pod",
+                "namespace": "default",
+                "name": "monitoring-influx-grafana-controller-2toua",
+                "uid": "49b72714-e1b7-11e4-b7dc-001a4a5f4a02",
+                "apiVersion": "v1beta1",
+                "resourceVersion": "303"
+              },
+              "reason": "scheduled",
+              "message": "Successfully assigned monitoring-influx-grafana-controller-2toua to dhcp-0-202.tlv.redhat.com",
+              "source": {
+                "component": "scheduler"
+              },
+              "firstTimestamp": "2015-04-13T08:30:06Z",
+              "lastTimestamp": "2015-04-13T08:30:06Z",
+              "count": 1
+            },
+            {
+              "metadata": {
+                "name": "monitoring-influx-grafana-controller-2toua.13d485894b4bed33",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/events/monitoring-influx-grafana-controller-2toua.13d485894b4bed33",
+                "uid": "4a1be4fc-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "314",
+                "creationTimestamp": "2015-04-13T08:30:06Z",
+                "deletionTimestamp": "2015-04-13T09:30:06Z"
+              },
+              "involvedObject": {
+                "kind": "Pod",
+                "namespace": "default",
+                "name": "monitoring-influx-grafana-controller-2toua",
+                "uid": "49b72714-e1b7-11e4-b7dc-001a4a5f4a02",
+                "apiVersion": "v1beta1",
+                "resourceVersion": "305",
+                "fieldPath": "implicitly required container POD"
+              },
+              "reason": "pulled",
+              "message": "Successfully pulled image \"kubernetes/pause:latest\"",
+              "source": {
+                "component": "kubelet",
+                "host": "dhcp-0-202.tlv.redhat.com"
+              },
+              "firstTimestamp": "2015-04-13T08:30:06Z",
+              "lastTimestamp": "2015-04-13T08:30:06Z",
+              "count": 1
+            },
+            {
+              "metadata": {
+                "name": "monitoring-influx-grafana-controller-2toua.13d48589f50bf7aa",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/events/monitoring-influx-grafana-controller-2toua.13d48589f50bf7aa",
+                "uid": "4bb74443-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "319",
+                "creationTimestamp": "2015-04-13T08:30:09Z",
+                "deletionTimestamp": "2015-04-13T09:30:09Z"
+              },
+              "involvedObject": {
+                "kind": "Pod",
+                "namespace": "default",
+                "name": "monitoring-influx-grafana-controller-2toua",
+                "uid": "49b72714-e1b7-11e4-b7dc-001a4a5f4a02",
+                "apiVersion": "v1beta1",
+                "resourceVersion": "305",
+                "fieldPath": "implicitly required container POD"
+              },
+              "reason": "created",
+              "message": "Created with docker id 56e9d758e48e845dfeef6e6d4e7a2735b70547836e8902e4995f5325355a363b",
+              "source": {
+                "component": "kubelet",
+                "host": "dhcp-0-202.tlv.redhat.com"
+              },
+              "firstTimestamp": "2015-04-13T08:30:09Z",
+              "lastTimestamp": "2015-04-13T08:30:09Z",
+              "count": 1
+            },
+            {
+              "metadata": {
+                "name": "monitoring-influx-grafana-controller-2toua.13d4858a2e04d162",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/events/monitoring-influx-grafana-controller-2toua.13d4858a2e04d162",
+                "uid": "4c49126a-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "321",
+                "creationTimestamp": "2015-04-13T08:30:10Z",
+                "deletionTimestamp": "2015-04-13T09:30:10Z"
+              },
+              "involvedObject": {
+                "kind": "Pod",
+                "namespace": "default",
+                "name": "monitoring-influx-grafana-controller-2toua",
+                "uid": "49b72714-e1b7-11e4-b7dc-001a4a5f4a02",
+                "apiVersion": "v1beta1",
+                "resourceVersion": "305",
+                "fieldPath": "implicitly required container POD"
+              },
+              "reason": "started",
+              "message": "Started with docker id 56e9d758e48e845dfeef6e6d4e7a2735b70547836e8902e4995f5325355a363b",
+              "source": {
+                "component": "kubelet",
+                "host": "dhcp-0-202.tlv.redhat.com"
+              },
+              "firstTimestamp": "2015-04-13T08:30:10Z",
+              "lastTimestamp": "2015-04-13T08:30:10Z",
+              "count": 1
+            },
+            {
+              "metadata": {
+                "name": "monitoring-influx-grafana-controller-2toua.13d4858a718b8a62",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/events/monitoring-influx-grafana-controller-2toua.13d4858a718b8a62",
+                "uid": "4cf5f639-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "326",
+                "creationTimestamp": "2015-04-13T08:30:11Z",
+                "deletionTimestamp": "2015-04-13T09:30:11Z"
+              },
+              "involvedObject": {
+                "kind": "Pod",
+                "namespace": "default",
+                "name": "monitoring-influx-grafana-controller-2toua",
+                "uid": "49b72714-e1b7-11e4-b7dc-001a4a5f4a02",
+                "apiVersion": "v1beta1",
+                "resourceVersion": "305",
+                "fieldPath": "spec.containers{influxdb}"
+              },
+              "reason": "created",
+              "message": "Created with docker id af741769b650a408f4a65d2d27043912b6d57e5e2a721faeb7a93a1989eef0c6",
+              "source": {
+                "component": "kubelet",
+                "host": "dhcp-0-202.tlv.redhat.com"
+              },
+              "firstTimestamp": "2015-04-13T08:30:11Z",
+              "lastTimestamp": "2015-04-13T08:30:11Z",
+              "count": 1
+            },
+            {
+              "metadata": {
+                "name": "monitoring-influx-grafana-controller-2toua.13d4858a759ff420",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/events/monitoring-influx-grafana-controller-2toua.13d4858a759ff420",
+                "uid": "4d00676e-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "327",
+                "creationTimestamp": "2015-04-13T08:30:11Z",
+                "deletionTimestamp": "2015-04-13T09:30:11Z"
+              },
+              "involvedObject": {
+                "kind": "Pod",
+                "namespace": "default",
+                "name": "monitoring-influx-grafana-controller-2toua",
+                "uid": "49b72714-e1b7-11e4-b7dc-001a4a5f4a02",
+                "apiVersion": "v1beta1",
+                "resourceVersion": "305",
+                "fieldPath": "spec.containers{influxdb}"
+              },
+              "reason": "started",
+              "message": "Started with docker id af741769b650a408f4a65d2d27043912b6d57e5e2a721faeb7a93a1989eef0c6",
+              "source": {
+                "component": "kubelet",
+                "host": "dhcp-0-202.tlv.redhat.com"
+              },
+              "firstTimestamp": "2015-04-13T08:30:11Z",
+              "lastTimestamp": "2015-04-13T08:30:11Z",
+              "count": 1
+            },
+            {
+              "metadata": {
+                "name": "monitoring-influx-grafana-controller-2toua.13d4858ab406e706",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/events/monitoring-influx-grafana-controller-2toua.13d4858ab406e706",
+                "uid": "4da01b6f-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "329",
+                "creationTimestamp": "2015-04-13T08:30:12Z",
+                "deletionTimestamp": "2015-04-13T09:30:12Z"
+              },
+              "involvedObject": {
+                "kind": "Pod",
+                "namespace": "default",
+                "name": "monitoring-influx-grafana-controller-2toua",
+                "uid": "49b72714-e1b7-11e4-b7dc-001a4a5f4a02",
+                "apiVersion": "v1beta1",
+                "resourceVersion": "305",
+                "fieldPath": "spec.containers{grafana}"
+              },
+              "reason": "created",
+              "message": "Created with docker id f9ae296270fe8891f74060006f00ddf247be7f771511a783ca0564bd0469de3a",
+              "source": {
+                "component": "kubelet",
+                "host": "dhcp-0-202.tlv.redhat.com"
+              },
+              "firstTimestamp": "2015-04-13T08:30:12Z",
+              "lastTimestamp": "2015-04-13T08:30:12Z",
+              "count": 1
+            },
+            {
+              "metadata": {
+                "name": "monitoring-influx-grafana-controller-2toua.13d4858ab7a76b2d",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/events/monitoring-influx-grafana-controller-2toua.13d4858ab7a76b2d",
+                "uid": "4da96d57-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "330",
+                "creationTimestamp": "2015-04-13T08:30:12Z",
+                "deletionTimestamp": "2015-04-13T09:30:12Z"
+              },
+              "involvedObject": {
+                "kind": "Pod",
+                "namespace": "default",
+                "name": "monitoring-influx-grafana-controller-2toua",
+                "uid": "49b72714-e1b7-11e4-b7dc-001a4a5f4a02",
+                "apiVersion": "v1beta1",
+                "resourceVersion": "305",
+                "fieldPath": "spec.containers{grafana}"
+              },
+              "reason": "started",
+              "message": "Started with docker id f9ae296270fe8891f74060006f00ddf247be7f771511a783ca0564bd0469de3a",
+              "source": {
+                "component": "kubelet",
+                "host": "dhcp-0-202.tlv.redhat.com"
+              },
+              "firstTimestamp": "2015-04-13T08:30:12Z",
+              "lastTimestamp": "2015-04-13T08:30:12Z",
+              "count": 1
+            }
+          ]
+        }
+    http_version: 
+  recorded_at: Mon, 13 Apr 2015 09:07:46 GMT
+- request:
+    method: get
+    uri: https://10.35.0.202:6443/api/v1beta3/endpoints
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.alpha (linux-gnu x86_64) ruby/2.0.0p598
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 13 Apr 2015 09:07:46 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "kind": "EndpointsList",
+          "apiVersion": "v1beta3",
+          "metadata": {
+            "selfLink": "/api/v1beta3/endpoints",
+            "resourceVersion": "1646"
+          },
+          "items": [
+            {
+              "metadata": {
+                "name": "kubernetes",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/endpoints/kubernetes",
+                "uid": "efa65825-e1b5-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "8",
+                "creationTimestamp": "2015-04-13T08:20:25Z"
+              },
+              "protocol": "TCP",
+              "endpoints": [
+                {
+                  "ip": "10.35.0.202",
+                  "port": 6443
+                }
+              ]
+            },
+            {
+              "metadata": {
+                "name": "kubernetes-ro",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/endpoints/kubernetes-ro",
+                "uid": "efa27967-e1b5-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "7",
+                "creationTimestamp": "2015-04-13T08:20:25Z"
+              },
+              "protocol": "TCP",
+              "endpoints": [
+                {
+                  "ip": "10.35.0.202",
+                  "port": 7080
+                }
+              ]
+            },
+            {
+              "metadata": {
+                "name": "monitoring-grafana",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/endpoints/monitoring-grafana",
+                "uid": "49f60fec-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "1646",
+                "creationTimestamp": "2015-04-13T08:30:06Z"
+              },
+              "protocol": "TCP",
+              "endpoints": [
+                {
+                  "ip": "172.17.0.8",
+                  "port": 8080,
+                  "targetRef": {
+                    "kind": "Pod",
+                    "namespace": "default",
+                    "name": "monitoring-influx-grafana-controller-2toua",
+                    "uid": "49b72714-e1b7-11e4-b7dc-001a4a5f4a02",
+                    "resourceVersion": "1640"
+                  }
+                }
+              ]
+            },
+            {
+              "metadata": {
+                "name": "monitoring-heapster",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/endpoints/monitoring-heapster",
+                "uid": "4a03bc06-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "336",
+                "creationTimestamp": "2015-04-13T08:30:06Z"
+              },
+              "protocol": "TCP",
+              "endpoints": [
+                {
+                  "ip": "172.17.0.7",
+                  "port": 8082,
+                  "targetRef": {
+                    "kind": "Pod",
+                    "namespace": "default",
+                    "name": "monitoring-heapster-controller-40yp7",
+                    "uid": "49984e80-e1b7-11e4-b7dc-001a4a5f4a02",
+                    "resourceVersion": "325"
+                  }
+                }
+              ]
+            },
+            {
+              "metadata": {
+                "name": "monitoring-influxdb",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/endpoints/monitoring-influxdb",
+                "uid": "4a0df38f-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "1598",
+                "creationTimestamp": "2015-04-13T08:30:06Z"
+              },
+              "protocol": "TCP",
+              "endpoints": [
+                {
+                  "ip": "172.17.0.8",
+                  "port": 8086,
+                  "targetRef": {
+                    "kind": "Pod",
+                    "namespace": "default",
+                    "name": "monitoring-influx-grafana-controller-2toua",
+                    "uid": "49b72714-e1b7-11e4-b7dc-001a4a5f4a02",
+                    "resourceVersion": "1592"
+                  }
+                }
+              ]
+            },
+            {
+              "metadata": {
+                "name": "monitoring-influxdb-ui",
+                "namespace": "default",
+                "selfLink": "/api/v1beta3/namespaces/%7Bnamespaces%7D/endpoints/monitoring-influxdb-ui",
+                "uid": "4a23229e-e1b7-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "1599",
+                "creationTimestamp": "2015-04-13T08:30:06Z"
+              },
+              "protocol": "TCP",
+              "endpoints": [
+                {
+                  "ip": "172.17.0.8",
+                  "port": 8083,
+                  "targetRef": {
+                    "kind": "Pod",
+                    "namespace": "default",
+                    "name": "monitoring-influx-grafana-controller-2toua",
+                    "uid": "49b72714-e1b7-11e4-b7dc-001a4a5f4a02",
+                    "resourceVersion": "1592"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+    http_version: 
+  recorded_at: Mon, 13 Apr 2015 09:07:46 GMT
+- request:
+    method: get
+    uri: https://10.35.0.202:6443/api/v1beta3/namespaces
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.alpha (linux-gnu x86_64) ruby/2.0.0p598
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 13 Apr 2015 09:07:46 GMT
+      Content-Length:
+      - '564'
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "kind": "NamespaceList",
+          "apiVersion": "v1beta3",
+          "metadata": {
+            "selfLink": "/api/v1beta3/namespaces",
+            "resourceVersion": "1647"
+          },
+          "items": [
+            {
+              "metadata": {
+                "name": "default",
+                "selfLink": "/api/v1beta3/namespaces/default",
+                "uid": "ef94940d-e1b5-11e4-b7dc-001a4a5f4a02",
+                "resourceVersion": "4",
+                "creationTimestamp": "2015-04-13T08:20:25Z"
+              },
+              "spec": {
+                "finalizers": [
+                  "kubernetes"
+                ]
+              },
+              "status": {
+                "phase": "Active"
+              }
+            }
+          ]
+        }
+    http_version: 
+  recorded_at: Mon, 13 Apr 2015 09:07:46 GMT
+recorded_with: VCR 2.9.3

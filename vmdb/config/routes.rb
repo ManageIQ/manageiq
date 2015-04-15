@@ -527,6 +527,8 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         tagging_edit
         tl_chooser
+        tree_autoload_dynatree
+        tree_autoload_quads
         wait_for_task
       ) +
         adv_search_post +
@@ -1296,6 +1298,7 @@ Vmdb::Application.routes.draw do
         x_button
         x_history
         x_search_by_name
+        x_settings_changed
         x_show
       ) + adv_search_post
     },

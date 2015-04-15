@@ -212,9 +212,9 @@ class ResourcePoolController < ApplicationController
 
   # Build the tree object to display the resource_pool datacenter info
   def build_dc_tree
-      @sb[:tree_hosts] = Array.new                    # Capture all Host ids in the tree
-      @sb[:tree_vms]   = Array.new                    # Capture all VM ids in the tree
-      @sb[:rp_id] = @record.id if @record                 # do not want to store ems object in session hash, need to get record incase coming from treesize to rebuild refreshed tree
+      @sb[:tree_hosts_hash] = {} # Capture all Host ids in the tree
+      @sb[:tree_vms_hash]   = {} # Capture all VM ids in the tree
+      @sb[:rp_id] = @record.id if @record # do not want to store ems object in session hash, need to get record incase coming from treesize to rebuild refreshed tree
       if !@record
         @record = ResourcePool.find(@sb[:rp_id])
       end

@@ -944,7 +944,7 @@ module ApplicationHelper
       end
     when "MiqProvisionRequest", "MiqHostProvisionRequest", "VmReconfigureRequest",
         "VmMigrateRequest", "AutomationRequest",
-        "ServiceReconfigureRequest", "ServiceTemplateProvisionRequest"
+        "ServiceReconfigureRequest", "ServiceTemplateProvisionRequest", "MiqProvisionConfiguredSystemRequest"
 
       # Don't hide certain buttons on AutomationRequest screen
       return true if @record.resource_type == "AutomationRequest" &&
@@ -961,7 +961,13 @@ module ApplicationHelper
         return true if requester.name != @record.requester_name || ["approved", "denied"].include?(@record.approval_state)
       when "miq_request_copy"
         requester = User.find_by_userid(session[:userid])
-        return true if !["MiqProvisionRequest", "MiqHostProvisionRequest"].include?(@record.resource_type) || ((requester.name != @record.requester_name || ["approved", "denied"].include?(@record.approval_state)) && @showtype == "miq_provisions")
+        resource_types_for_miq_request_copy = %w(MiqProvisionRequest
+                                                 MiqHostProvisionRequest
+                                                 MiqProvisionConfiguredSystemRequest)
+        return true if !resource_types_for_miq_request_copy.include?(@record.resource_type) ||
+                       ((requester.name != @record.requester_name ||
+                         !@record.request_pending_approval?) &&
+                        @showtype == "miq_provisions")
       end
     when "MiqServer", "MiqRegion"
       case id
@@ -2700,7 +2706,7 @@ module ApplicationHelper
       "compare_sections"
     elsif %w(offline retired templates vm vm_cloud vm_or_template).include?(@layout)
       "vm"
-    elsif %w(action availability_zone cim_base_storage_extent cloud_tenant condition ontainer_group
+    elsif %w(action availability_zone cim_base_storage_extent cloud_tenant condition container_group
              container_node container_service ems_cloud ems_container ems_cluster ems_infra flavor
              host miq_proxy miq_schedule miq_template policy ontap_file_share ontap_logical_disk
              ontap_storage_system ontap_storage_volume orchestration_stack repository resource_pool

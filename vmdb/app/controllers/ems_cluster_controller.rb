@@ -39,6 +39,7 @@ class EmsClusterController < ApplicationController
                       :url=>"/ems_cluster/show/#{@ems_cluster.id}?display=descendant_vms&treestate=true"})
       @showtype = "config"
       build_dc_tree
+      build_vm_host_array
 
     when "all_vms"
       drop_breadcrumb( {:name=>@ems_cluster.name+" (All VMs)", :url=>"/ems_cluster/show/#{@ems_cluster.id}?display=all_vms"} )
@@ -262,8 +263,8 @@ class EmsClusterController < ApplicationController
 
   # Build the tree object to display the ems_cluster datacenter info
   def build_dc_tree
-    @sb[:tree_hosts]  = []                    # Capture all Host ids in the tree
-    @sb[:tree_vms]    = []                    # Capture all VM ids in the tree
+    @sb[:tree_hosts]    = []                    # Capture all Host ids in the tree
+    @sb[:tree_vms_hash] = {}                    # Capture all VM ids in the tree
     @sb[:cl_id] = @ems_cluster.id if @ems_cluster   # do not want to store cl object in session hash, need to get record incase coming from treesize to rebuild refreshed tree
     if !@ems_cluster
       @ems_cluster = EmsCluster.find(@sb[:cl_id])

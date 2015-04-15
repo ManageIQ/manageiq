@@ -191,6 +191,12 @@ table.table tbody td img {
   white-space: nowrap
 }
 
+/* override font-weight for dropdowns withing table headers */
+
+.table thead th select {
+  font-weight: normal
+}
+
 table .narrow {
   width: 1%
 }
@@ -219,6 +225,14 @@ table.table.table-selectable tbody tr.selected td {
 .table-hover tbody tr:hover > td {
   cursor: pointer;
   cursor: hand;
+}
+
+/* prevents empty dd from collapsing */
+
+.dl-horizontal > dd:after {
+  display: table;
+  content: "";
+  clear: both;
 }
 
 /* modified dl styling for tile view */
