@@ -504,7 +504,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_authentications
-    authentications = @record.authentication_userid_passwords
+    authentications = @record.authentication_userid_passwords + @record.authentication_key_pairs
     return [{:label => "Default Authentication", :title => "None", :value => "None"}] if authentications.blank?
 
     authentications.collect do |auth|
@@ -514,6 +514,7 @@ module HostHelper::TextualSummary
         when "ipmi"; "IPMI"
         when "remote";  "Remote Login"
         when "ws"; "Web Services"
+        when "ssh_keypair"; "SSH keypair"
         else;           "<Unknown>"
         end
 
