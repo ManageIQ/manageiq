@@ -17,8 +17,8 @@
 
         - if role_allows(:feature => "ems_container_show") && !@record.ext_management_system.nil?
           %li
-            = link_to("#{ui_lookup(:table => "ext_management_systems")}: #{@record.ext_management_system.name}",
+            = link_to("#{ui_lookup(:table => "ems_container")}: #{@record.ext_management_system.name}",
                 {:controller => "ems_container", :action => 'show', :id => @record.ext_management_system.id.to_s},
-                {:title => _("Show this Container Nodes parent %s") % ui_lookup(:table => "ems_container")},
+                {:title => _("Show this container node's parent %s") % ui_lookup(:table => "ems_container")},
                 '/images/icons/16/link_external.gif')
 

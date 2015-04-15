@@ -949,8 +949,8 @@ en:
       ems_folders:                 Folders
       ems_infra:                   Infrastructure Provider
       ems_infras:                  Infrastructure Providers
-      ems_container:               Provider
-      ems_containers:              Providers
+      ems_container:               Containers Provider
+      ems_containers:              Containers Providers
       evm_owner:                   EVM Owner
       ext_management_system:       Cloud/Infrastructure Provider
       ext_management_systems:      Cloud/Infrastructure Providers
