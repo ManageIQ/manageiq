@@ -65,28 +65,11 @@ module OpsController::Settings::Schedules
                                                                  :value => schedule.run_at[:interval][:value]
                                                                 }
                                                 }) if schedule.run_at
-      humanized_old = old_schedule_attributes
-
       schedule_set_record_vars(schedule)
       schedule_validate?(schedule)
-
-      humanized_new = schedule.attributes.merge(
-        "depot_hash" => schedule.depot_hash,
-        "filter"     => schedule.filter.try(:to_human),
-        "run_at"     => schedule.run_at
-      )
-
-      attribute_difference = humanized_old.diff(humanized_new)
-
-      if attribute_difference.blank?
-        add_flash(I18n.t("flash.edit.nothing_changed", :name => schedule.name))
-      else
-        schedule.save
-
-        AuditEvent.success(build_saved_audit_hash(old_schedule_attributes, schedule, params[:button] == "add"))
-
-        add_flash(I18n.t("flash.edit.saved", :model => ui_lookup(:model => "MiqSchedule"), :name => schedule.name))
-      end
+      schedule.save
+      AuditEvent.success(build_saved_audit_hash(old_schedule_attributes, schedule, params[:button] == "add"))
+      add_flash(I18n.t("flash.edit.saved", :model => ui_lookup(:model => "MiqSchedule"), :name => schedule.name))
 
       if params[:button] == "add"
         self.x_node  = "xx-msc"
