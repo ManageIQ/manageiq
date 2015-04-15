@@ -1616,7 +1616,7 @@ class CatalogController < ApplicationController
         elsif ["xx-otcfn", "xx-othot"].include?(x_node)
           typ = x_node == "xx-otcfn" ? "OrchestrationTemplateCfn" : "OrchestrationTemplateHot"
           @right_cell_text = _("All %s") % ui_lookup(:models => typ)
-          process_show_list(:model => typ.constantize)
+          process_show_list(:model => typ.constantize, :gtl_dbname => :orchestrationtemplate)
           sync_view_pictures_to_disk(@view) if ["grid", "tile"].include?(@gtl_type)
         else
           if x_active_tree == :stcat_tree
