@@ -42,7 +42,7 @@ module ManageiqForeman
     end
 
     def update(params)
-      connection.fetch(:hosts, :update, params.merge("id" => manager_ref))
+      connection.fetch(:hosts, :update, "id" => manager_ref, "host" => params)
     end
   end
 end
