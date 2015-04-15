@@ -95,9 +95,9 @@ module EmsRefresh::Parsers
       name  = p[:ClusterName]
 
       new_result = {
-        :ems_ref      => uid,
-        :uid_ems      => uid,
-        :name         => name,
+        :ems_ref => uid,
+        :uid_ems => uid,
+        :name    => name,
       }
       set_relationship_on_hosts(new_result, nodes)
 
