@@ -1,14 +1,12 @@
 //= require_directory ../SlickGrid-2.1/
 var rows;
 
-$.getJSON("get_json?import_file_upload_id=" + import_file_upload_id, function(rows_json){
-
+$.getJSON("get_json?import_file_upload_id=" + import_file_upload_id, function (rows_json) {
   rows = rows_json;
-  function myFilter(item) {
 
+  function myFilter(item) {
     if (item.parent != null) {
       var parent = rows[item.parent];
-
       while (parent) {
         if (parent._collapsed) {
           return false;
@@ -16,15 +14,15 @@ $.getJSON("get_json?import_file_upload_id=" + import_file_upload_id, function(ro
         parent = rows[parent.parent];
       }
     }
-
     return true;
   };
 
   var PolicyNameFormatter = function (row, cell, value, columnDef, dataContext) {
-    var spacer = "<span style='display:inline-block;height:1px;width:" + (15 * dataContext["indent"]) + "px'></span>";
-    var status_img = "<img src=" + dataContext.status_icon + ">"
-
+    var spacer = "<span style='display:inline-block;height:1px;width:" +
+                 (15 * dataContext.indent) + "px'></span>";
+    var status_img = "<img src=" + dataContext.status_icon + ">";
     var idx = dataview.getIdxById(dataContext.id);
+
     if (rows[idx + 1] && rows[idx + 1].indent > rows[idx].indent) {
       if (dataContext._collapsed) {
         return spacer + " <span class='toggle expand'></span>&nbsp;" + status_img + value;
@@ -38,10 +36,20 @@ $.getJSON("get_json?import_file_upload_id=" + import_file_upload_id, function(ro
 
   var grid;
   var dataview = new Slick.Data.DataView();
-
   var columns = [
-    {id: "title", name: "Details", field: "title", width: 300, formatter: PolicyNameFormatter },
-    {id: "msg", name: "Message", field: "msg", width: 300}
+    {
+      id: "title",
+      name: "Details",
+      field: "title",
+      width: 300,
+      formatter: PolicyNameFormatter
+    },
+    {
+      id: "msg",
+      name: "Message",
+      field: "msg",
+      width: 300
+    }
   ];
 
   var options = {
@@ -56,7 +64,6 @@ $.getJSON("get_json?import_file_upload_id=" + import_file_upload_id, function(ro
   dataview.endUpdate();
 
   grid = new Slick.Grid("#import_grid", dataview, columns, options);
-
   grid.onClick.subscribe(function (e, args) {
     if ($(e.target).hasClass("toggle")) {
       var item = dataview.getItem(args.row);
@@ -73,7 +80,7 @@ $.getJSON("get_json?import_file_upload_id=" + import_file_upload_id, function(ro
     }
   });
 
-  // wire up model events to drive the grid
+  // Wire up model events to drive the grid
   dataview.onRowCountChanged.subscribe(function (e, args) {
     grid.updateRowCount();
     grid.render();
