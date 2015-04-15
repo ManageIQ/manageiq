@@ -15,6 +15,7 @@ class ProviderForeman < Provider
   before_validation :ensure_managers
 
   validates :name, :presence => true, :uniqueness => true
+  validates :url,  :presence => true, :uniqueness => true
 
   def self.ems_type
     @ems_type ||= "foreman".freeze
