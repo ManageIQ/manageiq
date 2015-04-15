@@ -718,7 +718,7 @@ describe MiqAeDatastore do
 
   def setup_export_dir
     @export_dir = File.join(Dir.tmpdir, "rspec_export_tests")
-    @export_as  = "manageiq"*2
+    @export_as  = "manageiq" * 2
     @zip_file   = File.join(Dir.tmpdir, "yaml_model.zip")
     @yaml_file  = File.join(Dir.tmpdir, "yaml_model.yml")
     FileUtils.rm_rf(@export_dir) if File.exist?(@export_dir)
