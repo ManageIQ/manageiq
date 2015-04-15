@@ -718,7 +718,7 @@ describe MiqAeDatastore do
 
   def setup_export_dir
     @export_dir = File.join(Dir.tmpdir, "rspec_export_tests")
-    @export_as  = "barney"
+    @export_as  = "manageiq"*2
     @zip_file   = File.join(Dir.tmpdir, "yaml_model.zip")
     @yaml_file  = File.join(Dir.tmpdir, "yaml_model.yml")
     FileUtils.rm_rf(@export_dir) if File.exist?(@export_dir)
@@ -766,6 +766,7 @@ describe MiqAeDatastore do
   end
 
   def create_bogus_zip_file
+    require 'zip/zipfilesystem'
     Zip::ZipFile.open(@zip_file, Zip::ZipFile::CREATE) do |zh|
       zh.file.open("first.txt", "w") { |f| f.puts "Hello world" }
       zh.dir.mkdir("mydir")

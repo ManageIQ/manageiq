@@ -82,7 +82,7 @@ class MiqAeYamlExport
       domain_obj.name = @options['export_as']
     end
     envelope_hash = setup_envelope(domain_obj, DOMAIN_OBJ_TYPE).to_yaml
-    write_export_file('fqname'          => swap_domain_name(domain_obj.name),
+    write_export_file('fqname'          => domain_obj.name,
                       'output_filename' => DOMAIN_YAML_FILENAME,
                       'export_data'     => envelope_hash,
                       'created_on'      => domain_obj.created_on,
