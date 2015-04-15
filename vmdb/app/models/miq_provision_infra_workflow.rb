@@ -2,6 +2,7 @@ class MiqProvisionInfraWorkflow < MiqProvisionVirtWorkflow
   SUBCLASSES = %w{
     MiqProvisionRedhatWorkflow
     MiqProvisionVmwareWorkflow
+    MiqProvisionMicrosoftWorkflow
   }
 
   def set_or_default_hardware_field_values(vm)

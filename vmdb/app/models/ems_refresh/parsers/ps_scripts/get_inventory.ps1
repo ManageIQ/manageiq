@@ -18,6 +18,8 @@ function get_vms{
   }
   $dvds = Get-SCVirtualDVDDrive -VM $_ | Select-Object -ExpandProperty "ISO"
   $vm_hash["DVDs"] = $dvds
+  $vmnet = Get-SCVirtualNetworkAdapter -VM $_ | Select-Object VMNetwork
+  $vm_hash["vmnet"] = $vmnet
   $results[$id]= $vm_hash
  }
  return $results
@@ -33,6 +35,8 @@ function get_images{
   $i_hash["Properties"] = $_
   $dvds = Get-SCVirtualDVDDrive -VMTemplate $_ | Select-Object -ExpandProperty "ISO"
   $i_hash["DVDs"] = $dvds
+  $vmnet = Get-SCVirtualNetworkAdapter -VMTemplate $_ | Select-Object VMNetwork
+  $i_hash["vmnet"] = $vmnet
   $results[$id]= $i_hash
  }
  return $results
@@ -44,6 +48,8 @@ function get_host_inventory {
  $hosts | ForEach-Object {
   $host_hash = @{}
   $host_hash["NetworkAdapters"] = @(Get-VMHostNetworkAdapter -VMHost $_)
+  $host_hash["VirtualSwitch"] = @(Get-SCVirtualNetwork -VMHost $_)
+  # $host_hash["VLANs"] = @(Get-SCVirtualNetwork -VMHost $_ | Select-Object -ExpandProperty "VMHostNetworkAdapters" | Select-Object -ExpandProperty "SubnetVLans")
   $host_hash["Properties"] = $_
   $results[$_.ID] = $host_hash
   $_.DiskVolumes | where-object VolumeLabel -ne "System Reserved" | ForEach-Object {

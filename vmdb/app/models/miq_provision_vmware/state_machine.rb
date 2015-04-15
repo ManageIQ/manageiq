@@ -83,12 +83,4 @@ module MiqProvisionVmware::StateMachine
     self.destination.start
   end
 
-  def clone_direction
-    "[#{self.source.name}] to #{destination_type} [#{dest_name}]"
-  end
-
-  def for_destination
-    "#{destination_type} id: [#{self.destination.id}], name: [#{dest_name}]"
-  end
-
 end

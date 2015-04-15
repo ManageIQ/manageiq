@@ -217,7 +217,12 @@
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
             - #  Display notes if available
             = field_hash[:notes]
-      - elsif [:instance_type, :guest_access_key_pair, :security_groups, :monitoring, :vm_tag_1, :vm_tag_2, :vm_tag_3, :vm_tag_4, :vm_tag_5, :vm_tag_6, :vm_tag_7, :vm_tag_8, :vm_tag_9, :vm_tag_10, :provision_type, :network_adapters, :retirement, :retirement_warn, :cloud_network, :cloud_subnet, :floating_ip_address, :sysprep_auto_logon_count, :sysprep_domain_name, :sysprep_server_license_mode, :vlan, :cloud_tenant, :src_configuration_profile_id].include?(field)
+      - elsif [:instance_type, :guest_access_key_pair, :security_groups, :monitoring, :vm_tag_1,
+               :vm_tag_2, :vm_tag_3, :vm_tag_4, :vm_tag_5, :vm_tag_6, :vm_tag_7, :vm_tag_8,
+               :vm_tag_9, :vm_tag_10, :provision_type, :network_adapters, :retirement,
+               :retirement_warn, :cloud_network, :cloud_subnet, :floating_ip_address,
+               :sysprep_auto_logon_count, :sysprep_domain_name, :sysprep_server_license_mode,
+               :vlan, :cloud_tenant, :src_configuration_profile_id, :vm_minimum_memory, :vm_maximum_memory].include?(field)
         - # ### Pull Down fields
         - # ### Multiple select Pull Down fields
         - multiple = field == :security_groups
@@ -414,7 +419,8 @@
             - # Just show the field value %>
             - # Description is in the second, last, array element
             = options[field].last
-      - elsif [:linked_clone, :placement_auto, :stateless, :sysprep_auto_logon, :sysprep_change_sid, :sysprep_delete_accounts, :sysprep_spec_override, :vm_auto_start].include?(field)
+      - elsif [:linked_clone, :placement_auto, :stateless, :sysprep_auto_logon, :sysprep_change_sid,
+               :sysprep_delete_accounts, :sysprep_spec_override, :vm_auto_start, :vm_dynamic_memory].include?(field)
         - # ### Checkbox fields
         %td{:style => "vertical-align: top;"}
           - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]
