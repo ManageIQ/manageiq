@@ -802,6 +802,7 @@ class CatalogController < ApplicationController
     @edit = {:new    => {:dialog_name => ""},
              :key    => "ot_edit__#{ot.id}",
              :rec_id => ot.id}
+    @in_a_form = true
     replace_right_cell("service_dialog_from_ot")
   end
 
