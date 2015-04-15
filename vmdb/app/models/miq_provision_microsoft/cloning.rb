@@ -98,7 +98,8 @@ module MiqProvisionMicrosoft::Cloning
 
   def network_adapter_ps_script
     if dest_virtual_network.nil?
-      raise MiqException::MiqProvisionError, "Virtual Network is not available"
+      $scvmm_log.info("Virtual Network is not available, network adapter will not be set")
+      return
     end
 
     "$adapter = $vm | SCVirtualNetworkAdapter; \

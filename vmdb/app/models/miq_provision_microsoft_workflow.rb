@@ -46,4 +46,10 @@ class MiqProvisionMicrosoftWorkflow < MiqProvisionInfraWorkflow
   def allowed_datacenters(_options = {})
     allowed_ci(:datacenter, [:cluster, :host, :folder])
   end
+  
+  def allowed_clusters(options={})
+    filtered_targets = process_filter_all(:cluster_filter, EmsCluster)
+    filtered_ids = filtered_targets.collect(&:id)
+    allowed_ci(:cluster, [:host], filtered_ids)
+  end
 end

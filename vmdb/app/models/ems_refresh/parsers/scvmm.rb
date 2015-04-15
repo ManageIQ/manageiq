@@ -98,7 +98,6 @@ module EmsRefresh::Parsers
         :ems_ref      => uid,
         :uid_ems      => uid,
         :name         => name,
-        :ems_children => {:resource_pools => [default_resource_pool(name, uid)]}
       }
       set_relationship_on_hosts(new_result, nodes)
 
@@ -520,19 +519,6 @@ module EmsRefresh::Parsers
 
     def unclustered_hosts
       @data[:hosts].select { |h| h[:ems_cluster].nil? }
-    end
-
-    def default_resource_pool(name, uid)
-      default_res_pool = {
-        :name         => "Default for Cluster #{name}",
-        :uid_ems      => "#{uid}_respool",
-        :is_default   => true,
-        :ems_children => {:vms => []}
-      }
-      @data[:resource_pools] = [default_res_pool]
-      @data_index.store_path(:resource_pools, "#{uid}_respool", [default_res_pool])
-
-      default_res_pool
     end
 
     def identify_primary_ip(nics, host)
