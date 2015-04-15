@@ -407,15 +407,19 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def self.invoke_tasks_local(options)
-    if ["scan","sync"].include?(options[:task])
+    case options[:task]
+    when "scan", "sync" then
       options[:invoke_by] = :job
       args = [options[:userid]]
-    elsif ["remove_snapshot", "revert_to_snapshot"].include?(options[:task])
+    when "remove_snapshot", "revert_to_snapshot" then
       options[:invoke_by] = :task
       args = [options[:snap_selected]]
-    elsif ["create_snapshot"].include?(options[:task])
+    when "create_snapshot" then
       options[:invoke_by] = :task
       args = [options[:name], options[:description], options[:memory]]
+    when "retire_now" then
+      options[:invoke_by] = :task
+      args = [options[:userid]]
     else
       options[:invoke_by] = :task
       args = []
