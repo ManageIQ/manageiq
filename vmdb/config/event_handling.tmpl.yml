@@ -316,6 +316,7 @@ event_groups:
     - VM_SET_TO_UNKNOWN_STATUS
     - VM_WAS_SET_DOWN_DUE_TO_HOST_REBOOT_OR_MANUAL_FENCE
     - VM_RENAMED
+    - hardware.ipmi.metrics.update
     :detail: []
     :name: General Activity
   import_export:
