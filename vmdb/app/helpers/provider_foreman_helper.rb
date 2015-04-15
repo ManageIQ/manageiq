@@ -9,11 +9,11 @@ module ProviderForemanHelper
   end
 
   def textual_configuration_profile
-    {:label => "Configuration Profile", :value => @record.configuration_profile.name}
+    {:label => "Configuration Profile", :value => @record.configuration_profile.try(:name)}
   end
 
   def textual_configuration_profile_desc
-    {:label => "Configuration Profile Description", :value => @record.configuration_profile.description}
+    {:label => "Configuration Profile Description", :value => @record.configuration_profile.try(:description)}
   end
 
   def textual_provider
