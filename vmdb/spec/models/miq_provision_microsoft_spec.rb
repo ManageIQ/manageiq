@@ -106,8 +106,7 @@ describe MiqProvisionMicrosoft do
       end
 
       it "set adapter" do
-        expect { @vm_prov.send(:network_adapter_ps_script) }.to raise_error(
-          MiqException::MiqProvisionError, "Virtual Network is not available")
+        expect(@vm_prov.network_adapter_ps_script).to be_nil
       end
     end
 
@@ -126,7 +125,7 @@ describe MiqProvisionMicrosoft do
       end
 
       it "set adapter" do
-        expect { @vm_prov.send(:network_adapter_ps_script) }.to_not raise_error
+        expect(@vm_prov.network_adapter_ps_script).to_not be_nil
       end
     end
   end
