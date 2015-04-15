@@ -34,8 +34,4 @@ class ConfigurationManagerForeman < ConfigurationManager
   def self.unknown_task_exception(options)
     raise "Unknown task, #{options[:task]}" unless instance_methods.collect(&:to_s).include?(options[:task])
   end
-
-  def self.refresh_ems(provider_ids)
-    EmsRefresh.queue_refresh(Array.wrap(provider_ids).collect { |id| [base_class, id] })
-  end
 end
