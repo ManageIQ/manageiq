@@ -10,7 +10,7 @@ class OrchestrationTemplateCfn < OrchestrationTemplate
 
   def parameters
     raw_parameters = JSON.load(content)["Parameters"]
-    raw_parameters.collect do |key, val|
+    (raw_parameters || {}).collect do |key, val|
       parameter = OrchestrationTemplate::OrchestrationParameter.new(
         :name          => key,
         :label         => key.titleize,

@@ -24,7 +24,7 @@ class OrchestrationTemplateHot < OrchestrationTemplate
 
   def parameters(content_hash = nil)
     content_hash = YAML.load(content) unless content_hash
-    content_hash["parameters"].collect do |key, val|
+    (content_hash["parameters"] || {}).collect do |key, val|
       OrchestrationTemplate::OrchestrationParameter.new(
         :name          => key,
         :label         => val.key?('label') ? val['label'] : key.titleize,
