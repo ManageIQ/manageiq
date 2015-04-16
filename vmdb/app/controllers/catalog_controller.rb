@@ -109,14 +109,7 @@ class CatalogController < ApplicationController
         @edit[:current] ||= Hash.new
         @edit[:key] = "prov_edit__new"
         @edit[:new][:st_prov_type] = @record.prov_type if @record.try(:id)
-        @edit[:st_prov_types] = {
-          "amazon"                => "Amazon",
-          "openstack"             => "OpenStack",
-          "generic_orchestration" => "Orchestration",
-          "redhat"                => "RHEV",
-          "generic"               => "Generic",
-          "vmware"                => "VMware"
-        }
+        @edit[:st_prov_types] = catalog_item_types
       end
 
       #set name and description for ServiceTemplate record
@@ -130,6 +123,18 @@ class CatalogController < ApplicationController
       session[:changed] = false
       replace_right_cell("at_st_new")
     end
+  end
+
+  def catalog_item_types
+    {
+      "amazon"                => "Amazon",
+      "generic"               => "Generic",
+      "generic_orchestration" => "Orchestration",
+      "microsoft"             => "SCVMM",
+      "openstack"             => "OpenStack",
+      "redhat"                => "RHEV",
+      "vmware"                => "VMware"
+    }
   end
 
   def atomic_form_field_changed
