@@ -14,6 +14,7 @@ module EmsRefresh
         @data              = {}
         @data_index        = {}
         @host_hash_by_name = {}
+        @resource_to_stack = {}
 
         @known_flavors = Set.new
 
