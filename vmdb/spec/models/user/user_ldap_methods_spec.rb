@@ -14,77 +14,33 @@ describe Authenticate::Ldap do
     @auth = Authenticate::Ldap.new(@auth_config[:authentication])
   end
 
-  context ".find_or_create_by_ldap_attr" do
-    let(:current_user) { @auth.find_or_create_by_ldap_attr(@user_type, @username) }
+  context ".lookup_by_identity" do
+    let(:current_user) { @auth.lookup_by_identity(@username) }
 
-    it "with invalid attribute" do
-      @user_type = "invalid"
-      expect { current_user }.to raise_error
+    before do
+      @username    = "upnuser"
+      @user_suffix = @auth_config.fetch_path(:authentication, :user_suffix)
+      @fqusername  = "#{@username}@#{@user_suffix}"
+
+      init_ldap_setup
+      @ldap.stub(:fqusername => @fqusername)
     end
 
-    context "with userid" do
-      before { @user_type = "ignored" }
-
-      it "user exists" do
-        user       = FactoryGirl.create(:user_admin, :userid => "testuser")
-        @username  = user.userid
-
-        expect(current_user).to eq(user)
-      end
+    it "initial status" do
+      expect(User.all.size).to eq(0)
     end
 
-    context "with userprincipalname" do
-      before do
-        @username    = "upnuser"
-        @user_type   = @auth_config.fetch_path(:authentication, :user_type)
-        @user_suffix = @auth_config.fetch_path(:authentication, :user_suffix)
-        @fqusername  = "#{@username}@#{@user_suffix}"
-
-        init_ldap_setup
-        @miq_ldap.stub(:fqusername => @fqusername)
-      end
-
-      it "initial status" do
-        expect(User.all.size).to eq(0)
-      end
-
-      it "user exists" do
-        user = FactoryGirl.create(:user_admin, :userid => @fqusername)
-        expect(current_user).to eq(user)
-      end
-
-      it "user does not exist" do
-        group = create_super_admin_group
-        setup_to_create_user(group)
-
-        expect(current_user).to be_present
-        expect(User.all.size).to eq(1)
-      end
+    it "user exists" do
+      user = FactoryGirl.create(:user_admin, :userid => @fqusername)
+      expect(current_user).to eq(user)
     end
 
-    context "with mail" do
-      before do
-        @username    = "mailuser@bymail.com"
-        @user_type   = "mail"
-        init_ldap_setup
-      end
+    it "user does not exist" do
+      group = create_super_admin_group
+      setup_to_create_user(group)
 
-      it "initial status" do
-        expect(User.all.size).to eq(0)
-      end
-
-      it "user exists" do
-        user = FactoryGirl.create(:user_admin, :userid => "mailuser", :email => @username)
-        expect(current_user).to eq(user)
-      end
-
-      it "user does not exist" do
-        group = create_super_admin_group
-        setup_to_create_user(group)
-
-        expect(current_user).to be_present
-        expect(User.all.size).to eq(1)
-      end
+      expect(current_user).to be_present
+      expect(User.all.size).to eq(1)
     end
   end
 
@@ -100,14 +56,14 @@ describe Authenticate::Ldap do
     it "password is blank" do
       @password = ""
       expect(AuditEvent).to receive(:failure)
-      expect(subject).to be_nil
+      expect(-> { subject }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
     end
 
     it "ldap bind fails" do
-      @miq_ldap.stub(:bind => false)
+      @login_ldap.stub(:bind => false)
 
       expect(AuditEvent).to receive(:failure)
-      expect(subject).to be_nil
+      expect(-> { subject }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
     end
 
     context "ldap binds" do
@@ -152,9 +108,12 @@ describe Authenticate::Ldap do
   end
 
   def init_ldap_setup
-    @miq_ldap = double('miq_ldap')
-    @miq_ldap.stub(:bind => true)
-    @auth.stub(:ldap).and_return(@miq_ldap)
+    @login_ldap = double('login_ldap')
+    @login_ldap.stub(:bind => true)
+    MiqLdap.stub(:new).and_return(@login_ldap)
+
+    @ldap = double('ldap')
+    @auth.stub(:ldap => @ldap)
   end
 
   def setup_vmdb_config
@@ -165,14 +124,14 @@ describe Authenticate::Ldap do
 
   def setup_to_create_user(group)
     setup_vmdb_config
-    @miq_ldap.stub(:get_user_object => "A Net::LDAP::Entry object")
-    @miq_ldap.stub(:normalize => "some unique string")
-    @miq_ldap.stub(:get_attr => "xx@xx.com")
+    @ldap.stub(:get_user_object => "A Net::LDAP::Entry object")
+    @ldap.stub(:normalize => "some unique string")
+    @ldap.stub(:get_attr => "xx@xx.com")
     @auth.stub(:groups_for => [group.description])
   end
 
   def setup_to_get_fqdn
-    @miq_ldap.stub(:fqusername => "some FQDN")
-    @miq_ldap.stub(:normalize => "some normalized name")
+    @ldap.stub(:fqusername => "some FQDN")
+    @ldap.stub(:normalize => "some normalized name")
   end
 end

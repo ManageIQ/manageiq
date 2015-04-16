@@ -254,10 +254,12 @@ describe User do
 
       it "will fail task if user object not found in ldap" do
         @miq_ldap.stub(:get_user_object => nil)
-        MiqLdap.stub(:new).and_return(@miq_ldap)
 
         AuditEvent.should_receive(:failure).once
-        Authenticate::Ldap.new(@auth_config[:authentication]).authorize(@task.id, @fq_user).should be_nil
+        authenticate = Authenticate::Ldap.new(@auth_config[:authentication])
+        authenticate.stub(:ldap => @miq_ldap)
+
+        authenticate.authorize(@task.id, @fq_user).should be_nil
 
         @task.reload
         @task.state.should == "Finished"
@@ -269,9 +271,10 @@ describe User do
         @miq_ldap.stub(:get_user_object => "user object")
         @miq_ldap.stub(:get_attr => nil)
         @miq_ldap.stub(:normalize => "a-username")
-        MiqLdap.stub(:new).and_return(@miq_ldap)
+
         authenticate = Authenticate::Ldap.new(@auth_config[:authentication])
-        authenticate.stub(:groups_for).and_return([])
+        authenticate.stub(:ldap => @miq_ldap)
+        authenticate.stub(:groups_for => [])
 
         AuditEvent.should_receive(:failure).once
         authenticate.authorize(@task.id, @fq_user).should be_nil

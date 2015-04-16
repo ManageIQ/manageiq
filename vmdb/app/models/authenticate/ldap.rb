@@ -9,37 +9,32 @@ module Authenticate
       raise MiqException::MiqEVMLoginError, "authentication failed" unless ldap_bind(username, password)
     end
 
-    # TODO: This has a lot in common with autocreate_user & authorize
-    def find_or_create_by_ldap_attr(attr, value)
-      user = User.find_by_userid(value)
-      return user if user
+    def lookup_by_identity(username)
+      super ||
+        find_or_create_by_ldap_upn(username)
+    end
 
-      user = case attr
-             when "mail"
-               User.find_by_email(value)
-             when "userprincipalname"
-               value = ldap.fqusername(value)
-               User.find_by_userid(value)
-             else
-               raise "Attribute '#{attr}' is not supported"
-             end
+    # TODO: This has a lot in common with autocreate_user & authorize
+    def find_or_create_by_ldap_upn(username)
+      username = ldap.fqusername(username)
+      user = User.find_by_userid(username)
 
       return user unless user.nil?
 
       raise "Unable to auto-create user because LDAP bind credentials are not configured" unless authorize?
 
-      uobj = ldap.get_user_object(value, attr)
-      raise "Unable to auto-create user because LDAP search returned no data for user with #{attr}: [#{value}]" if uobj.nil?
+      uobj = ldap.get_user_object(username, "userprincipalname")
+      raise "Unable to auto-create user because LDAP search returned no data for user with userprincipalname: [#{username}]" if uobj.nil?
 
       matching_groups = match_groups(groups_for(uobj))
       raise "Unable to auto-create user because unable to match user's group membership to an EVM role" if matching_groups.empty?
 
       user = User.new
-      update_user_attributes(user, value, uobj)
+      update_user_attributes(user, username, uobj)
       user.miq_groups = matching_groups
       user.save
 
-      $log.info("MIQ(Authenticate#find_or_create_by_ldap_attr): Created User: [#{user.userid}]")
+      $log.info("MIQ(Authenticate#find_or_create_by_ldap_upn): Created User: [#{user.userid}]")
 
       user
     end

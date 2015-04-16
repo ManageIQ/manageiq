@@ -204,6 +204,10 @@ class User < ActiveRecord::Base
     authenticator(username).authenticate_with_http_basic(username, password, request, options)
   end
 
+  def self.lookup_by_identity(username)
+    authenticator.lookup_by_identity(username)
+  end
+
   def logoff
     self.lastlogoff = Time.now.utc
     self.save
@@ -227,14 +231,6 @@ class User < ActiveRecord::Base
 
   def get_timezone
     self.settings.fetch_path(:display, :timezone) || self.class.server_timezone
-  end
-
-  def self.find_or_create_by_ldap_email(email)
-    authenticator.find_or_create_by_ldap_attr("mail", email)
-  end
-
-  def self.find_or_create_by_ldap_upn(upn)
-    authenticator.find_or_create_by_ldap_attr("userprincipalname", upn)
   end
 
   def current_group=(group)

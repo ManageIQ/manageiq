@@ -148,6 +148,10 @@ module Authenticate
       [!!result, username]
     end
 
+    def lookup_by_identity(username)
+      User.find_by_userid(username)
+    end
+
     # FIXME: LDAP
     def find_by_principalname(username)
       unless (user = User.find_by_userid(username))
@@ -170,7 +174,6 @@ module Authenticate
     end
 
     def authorize?
-      p [self.class, :authorize?, :"#{self.class.short_name}_role", config[:"#{self.class.short_name}_role"]]
       config[:"#{self.class.short_name}_role"] == true
     end
 
