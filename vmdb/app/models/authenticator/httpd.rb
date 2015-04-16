@@ -1,4 +1,4 @@
-module Authenticate
+module Authenticator
   class Httpd < Base
     def self.proper_name
       'External httpd'

@@ -1,4 +1,4 @@
-module Authenticate
+module Authenticator
   class Database < Base
     def self.proper_name
       'EVM'

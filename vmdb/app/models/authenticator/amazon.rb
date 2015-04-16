@@ -1,4 +1,4 @@
-module Authenticate
+module Authenticator
   class Amazon < Base
     def self.proper_name
       'Amazon IAM'
@@ -24,7 +24,7 @@ module Authenticate
     def admin_connect
       @admin_iam ||=
         begin
-          log_prefix = "MIQ(Authenticate.admin_connect)"
+          log_prefix = "MIQ(Authenticator.admin_connect)"
           log_auth = VMDB::Config.clone_auth_for_log(config)
           $log.info("#{log_prefix} Server Settings: #{log_auth.inspect}")
 
@@ -41,7 +41,7 @@ module Authenticate
     def _authenticate(username, password, _request)
       return if password.blank?
 
-      log_prefix = "MIQ(Authenticate.iam_authenticate)"
+      log_prefix = "MIQ(Authenticator.iam_authenticate)"
       $log.info("#{log_prefix} Verifying IAM User: [#{username}]...")
       begin
         verify_credentials(username, password)
@@ -60,7 +60,7 @@ module Authenticate
     end
 
     def find_external_identity(username)
-      log_prefix = "MIQ(Authenticate.find_external_identity)"
+      log_prefix = "MIQ(Authenticator.find_external_identity)"
       # Amazon IAM will be used for authentication and role assignment
       $log.info("#{log_prefix} AWS key: [#{config[:amazon_key]}]")
       $log.info("#{log_prefix}  User: [#{username}]")

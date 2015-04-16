@@ -193,7 +193,7 @@ class User < ActiveRecord::Base
   end
 
   def self.authenticator(username=nil)
-    Authenticate.for(VMDB::Config.new("vmdb").config[:authentication], username)
+    Authenticator.for(VMDB::Config.new("vmdb").config[:authentication], username)
   end
 
   def self.authenticate(username, password, request = nil, options = {})

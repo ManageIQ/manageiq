@@ -1,4 +1,4 @@
-module Authenticate
+module Authenticator
   class Ldap < Base
     def self.proper_name
       'LDAP'
@@ -34,7 +34,7 @@ module Authenticate
       user.miq_groups = matching_groups
       user.save
 
-      $log.info("MIQ(Authenticate#find_or_create_by_ldap_upn): Created User: [#{user.userid}]")
+      $log.info("MIQ(Authenticator#find_or_create_by_ldap_upn): Created User: [#{user.userid}]")
 
       user
     end
@@ -60,7 +60,7 @@ module Authenticate
         update_user_attributes(user, username, lobj)
         user.miq_groups = [default_group]
         user.save!
-        $log.info("MIQ(Authenticate#autocreate_user): Created User: [#{user.userid}]")
+        $log.info("MIQ(Authenticator#autocreate_user): Created User: [#{user.userid}]")
 
         user
       end
@@ -76,7 +76,7 @@ module Authenticate
     end
 
     def find_external_identity(username)
-      log_prefix = "MIQ(Authenticate#find_external_identity)"
+      log_prefix = "MIQ(Authenticator#find_external_identity)"
       # Ldap will be used for authentication and role assignment
       $log.info("#{log_prefix} Bind DN: [#{config[:bind_dn]}]")
       $log.info("#{log_prefix}  User FQDN: [#{username}]")
@@ -98,7 +98,7 @@ module Authenticate
 
       if authentication.key?(:user_proxies)       && !authentication[:user_proxies].blank?  &&
          authentication.key?(:get_direct_groups)  && authentication[:get_direct_groups] == false
-        $log.info("MIQ(Authenticate#groups_for) Skipping getting group memberships directly assigned to user bacause it has been disabled in the configuration")
+        $log.info("MIQ(Authenticator#groups_for) Skipping getting group memberships directly assigned to user bacause it has been disabled in the configuration")
         groups = []
       else
         groups = ldap.get_memberships(obj, authentication[:group_memberships_max_depth])
@@ -110,11 +110,11 @@ module Authenticate
             begin
               groups += user_proxy_membership(auth, MiqLdap.sid_to_s(sid))
             rescue Exception => err
-              $log.warn("MIQ(Authenticate#groups_for) #{err.message} (from Authenticate#user_proxy_membership)")
+              $log.warn("MIQ(Authenticator#groups_for) #{err.message} (from Authenticator#user_proxy_membership)")
             end
           end
         else
-          $log.warn("MIQ(Authenticate#groups_for) User Object has no objectSID")
+          $log.warn("MIQ(Authenticator#groups_for) User Object has no objectSID")
         end
       end
 
@@ -132,7 +132,7 @@ module Authenticate
 
     REQUIRED_LDAP_USER_PROXY_KEYS = [:basedn, :bind_dn, :bind_pwd, :ldaphost, :ldapport, :mode]
     def user_proxy_membership(auth, sid)
-      log_prefix = "MIQ(Authenticate#user_proxy_membership)"
+      log_prefix = "MIQ(Authenticator#user_proxy_membership)"
 
       authentication    = config
       auth[:bind_dn]  ||= authentication[:bind_dn]

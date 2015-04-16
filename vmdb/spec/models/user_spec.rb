@@ -256,7 +256,7 @@ describe User do
         @miq_ldap.stub(:get_user_object => nil)
 
         AuditEvent.should_receive(:failure).once
-        authenticate = Authenticate::Ldap.new(@auth_config[:authentication])
+        authenticate = Authenticator::Ldap.new(@auth_config[:authentication])
         authenticate.stub(:ldap => @miq_ldap)
 
         authenticate.authorize(@task.id, @fq_user).should be_nil
@@ -272,7 +272,7 @@ describe User do
         @miq_ldap.stub(:get_attr => nil)
         @miq_ldap.stub(:normalize => "a-username")
 
-        authenticate = Authenticate::Ldap.new(@auth_config[:authentication])
+        authenticate = Authenticator::Ldap.new(@auth_config[:authentication])
         authenticate.stub(:ldap => @miq_ldap)
         authenticate.stub(:groups_for => [])
 
@@ -472,7 +472,7 @@ describe User do
     end
   end
 
-  context "Authenticate#authenticate_with_http_basic" do
+  context "Authenticator#authenticate_with_http_basic" do
     let(:user) { FactoryGirl.create(:user, :password => "dummy") }
 
     it "should login with good username/password" do

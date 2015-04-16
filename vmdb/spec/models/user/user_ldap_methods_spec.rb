@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Authenticate::Ldap do
+describe Authenticator::Ldap do
   before do
     EvmSpecHelper.create_guid_miq_server_zone
     @auth_config = {
@@ -11,7 +11,7 @@ describe Authenticate::Ldap do
         :user_type   => "userprincipalname",
       }
     }
-    @auth = Authenticate::Ldap.new(@auth_config[:authentication])
+    @auth = Authenticator::Ldap.new(@auth_config[:authentication])
   end
 
   context ".lookup_by_identity" do

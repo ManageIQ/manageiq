@@ -1,4 +1,4 @@
-module Authenticate
+module Authenticator
   def self.for(config, username = nil)
     subclass_for(config, username).new(config)
   end
@@ -90,7 +90,7 @@ module Authenticate
     end
 
     def authorize(taskid, username, *args)
-      log_prefix = "MIQ(Authenticate#authorize):"
+      log_prefix = "MIQ(Authenticator#authorize):"
       audit = {:event => "authorize", :userid => username}
 
       run_task(taskid, "Authorizing") do |task|
@@ -206,7 +206,7 @@ module Authenticate
     end
 
     def run_task(taskid, status)
-      log_prefix = "MIQ(Authenticate#run_task):"
+      log_prefix = "MIQ(Authenticator#run_task):"
 
       task = MiqTask.find_by_id(taskid)
       if task.nil?
@@ -227,7 +227,7 @@ module Authenticate
     end
 
     def match_groups(groups)
-      log_prefix  = "MIQ(Authenticate#match_groups)"
+      log_prefix  = "MIQ(Authenticator#match_groups)"
 
       return [] if groups.empty?
       groups = groups.collect(&:downcase)
