@@ -28,6 +28,10 @@ module Authenticator
       @config = config
     end
 
+    def password?
+      false
+    end
+
     def authenticate(username, password, request = nil, options = {})
       options = options.dup
       options[:require_user] ||= false

@@ -4,6 +4,12 @@ module Authenticator
       'EVM'
     end
 
+    def password?
+      true
+    end
+
+    private
+
     def _authenticate(username, password, _request)
       user = User.find_by_userid(username)
 

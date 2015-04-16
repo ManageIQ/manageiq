@@ -107,14 +107,14 @@ class User < ActiveRecord::Base
 
   def dummy_password_for_external_auth
     if self.password.blank? && self.password_digest.blank? &&
-        self.class.authenticator.config[:mode] != "database"
+        !self.class.authenticator(userid).password?
       self.password = "dummy"
     end
   end
 
   def change_password(oldpwd, newpwd)
-    mode = self.class.authenticator.config[:mode]
-    raise MiqException::MiqEVMLoginError, "password change not allowed when authentication mode is #{mode}" unless mode == "database"
+    auth = self.class.authenticator(userid)
+    raise MiqException::MiqEVMLoginError, "password change not allowed when authentication mode is #{auth.class.proper_name}" unless auth.password?
     raise MiqException::MiqEVMLoginError, "old password does not match current password" unless User.authenticate(self.userid, oldpwd)
 
     self.password = newpwd
@@ -205,7 +205,7 @@ class User < ActiveRecord::Base
   end
 
   def self.lookup_by_identity(username)
-    authenticator.lookup_by_identity(username)
+    authenticator(username).lookup_by_identity(username)
   end
 
   def logoff
