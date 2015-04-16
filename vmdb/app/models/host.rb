@@ -82,6 +82,8 @@ class Host < ActiveRecord::Base
 
   has_one                   :miq_cim_instance, :as => :vmdb_obj, :dependent => :destroy
 
+  has_many                  :host_service_groups, :dependent => :destroy
+
   serialize                 :settings
 
   # TODO: Remove all callers of address

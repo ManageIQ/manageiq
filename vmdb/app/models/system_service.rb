@@ -3,6 +3,7 @@ class SystemService < ActiveRecord::Base
   belongs_to :vm,           :foreign_key => :vm_or_template_id
   belongs_to :miq_template, :foreign_key => :vm_or_template_id
   belongs_to :host
+  belongs_to :host_service_group
 
   serialize :dependencies, Hash
 

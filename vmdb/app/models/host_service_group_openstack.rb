@@ -1,0 +1,2 @@
+class HostServiceGroupOpenstack < HostServiceGroup
+end
