@@ -553,12 +553,14 @@ module OpsController::Settings::Schedules
       end
     else
       schedule.filter = nil
-      schedule.depot_hash = {
-        :uri      => "#{params[:uri_prefix]}://#{params[:uri]}",
-        :username => params[:log_userid],
-        :password => params[:log_password],
-        :name     => params[:depot_name]
-      }
+      MiqSchedule.verify_file_depot(
+        :name       => params[:depot_name],
+        :password   => params[:log_password],
+        :username   => params[:log_username],
+        :uri        => "#{params[:uri_prefix]}://#{params[:uri]}",
+        :uri_prefix => params[:uri_prefix],
+        :save       => true,
+      )
     end
   end
 

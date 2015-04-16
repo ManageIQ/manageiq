@@ -483,18 +483,6 @@ describe MiqSchedule do
       end
     end
 
-    it "should verify_depot_hash with good hash and FileDepot.verify_depot_hash good" do
-      @depot_hash = {:uri => "smb://dev005.manageiq.com/share1", :username => "samba_one", :password => "Zug-drep5s" }
-      FileDepotSmb.stub(:validate_settings).and_return(true)
-      MiqSchedule.verify_depot_hash(@depot_hash).should be_true
-    end
-
-    it "should verify_depot_hash with good hash and FileDepot.verify_depot_hash bad" do
-      @depot_hash = {:uri => "smb://dev005.manageiq.com/share1", :username => "samba_one", :password => "Zug-drep5s" }
-      FileDepotSmb.stub(:validate_settings).and_return(false)
-      MiqSchedule.verify_depot_hash(@depot_hash).should_not be_true
-    end
-
     context "valid db_gc unsaved schedule, run_adhoc_db_gc" do
       before(:each) do
         @task_id = MiqSchedule.run_adhoc_db_gc(:userid => "admin", :aggressive => true)
@@ -755,7 +743,6 @@ describe MiqSchedule do
 
       it "should do nothing if setting the depot_hash to it's existing values" do
         @valid_schedules.each do |sch|
-          FileDepot.should_receive(:verify_depot_hash).never
           before = sch.depot_hash
           sch.depot_hash = before
           sch.save
@@ -764,7 +751,6 @@ describe MiqSchedule do
 
       it "should update the file depot and it's authentication if the depot_hash is changed but not actually test the depot" do
         @valid_schedules.each do |sch|
-          FileDepot.should_receive(:verify_depot_hash).never
           before = sch.depot_hash
           before[:uri] = "smb://someotherhost/share1"
           before[:username] = "test1"

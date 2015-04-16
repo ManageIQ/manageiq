@@ -303,36 +303,24 @@ class MiqSchedule < ActiveRecord::Base
     end
   end
 
-  def validate_file_depot
+  def validate_file_depot  # TODO: Do we need this if the validations are on the FileDepot classes?
     if self.sched_action.kind_of?(Hash) && self.sched_action[:method] == "db_backup" && self.file_depot
       errors.add(:file_depot, "is missing credentials") if !file_depot.uri.to_s.starts_with?("nfs") && file_depot.missing_credentials?
       errors.add(:file_depot, "is missing uri") if file_depot.uri.blank?
     end
   end
 
-  def self.verify_depot_hash(hsh)
-    prefix      = hsh[:uri].split("://").first
-    depot_class = Object.const_get(FileDepot.supported_protocols[prefix])
-    return true unless depot_class.requires_credentials?
-
-    begin
-      depot_class.validate_settings(hsh)
-    rescue => err
-      $log.error("Miq(Schedule.verify_depot_hash) #{err.message}.")
-      false
+  def verify_file_depot(params)  # TODO: This logic belongs in the UI, not sure where
+    depot_class = FileDepot.supported_protocols[params[:uri_prefix]]
+    depot       = file_depot.class.name == depot_class ? file_depot : build_file_depot(:type => depot_class)
+    depot.name  = params[:name]
+    depot.uri   = params[:uri]
+    if params[:save]
+      file_depot.save!
+      file_depot.update_authentication(:default => {:userid => params[:username], :password => params[:password]}) if (params[:username] || params[:password]) && depot.class.requires_credentials?
+    else
+      depot.verify_credentials(nil, params.slice(:username, :password)) if depot.class.requires_credentials?
     end
-  end
-
-  def depot_hash=(hsh = {})
-    hsh            ||= {}
-    depot            = self.file_depot(:include => :authentications) || self.build_file_depot
-    depot.depot_hash = hsh
-  end
-
-  def depot_hash
-    depot        = self.file_depot(:include => :authentications)
-    depot_hash   = depot.depot_hash if depot
-    depot_hash ||= {}
   end
 
   def next_interval_time

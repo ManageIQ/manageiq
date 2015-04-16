@@ -330,11 +330,19 @@ module OpsController::Diagnostics
       end
       return
     end
-    settings = {:uri      => params[:uri_prefix] + "://" + params[:uri],
-                :username => params[:log_userid],
-                :password => params[:log_password],
-                :name     => params[:depot_name]}
-      @schedule.depot_hash=(settings) if MiqSchedule.verify_depot_hash(settings)
+
+    # only verify_depot_hash if anything has changed in depot settings
+    if [:uri_prefix, :uri, :log_userid, :log_password].any? { |param| @edit[:new][param] != @edit[:current][param] }
+      @schedule.verify_depot_hash(
+        :uri        => "#{@edit[:new][:uri_prefix]}://#{@edit[:new][:uri]}",
+        :uri_prefix => @edit[:new][:uri_prefix],
+        :username   => @edit[:new][:log_userid],
+        :password   => @edit[:new][:log_password],
+        :name       => @edit[:new][:depot_name],
+        :save       => true,
+      )
+    end
+
     schedule_set_record_vars(@schedule)
     schedule_validate?(@schedule)
     if @schedule.valid? && !flash_errors? && @schedule.save

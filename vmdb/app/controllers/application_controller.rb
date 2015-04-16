@@ -543,7 +543,7 @@ class ApplicationController < ActionController::Base
         PxeServer.verify_depot_settings(settings)
       else
         msg = 'Depot Settings successfuly validated'
-        MiqSchedule.verify_depot_hash(settings)
+        MiqSchedule.new.verify_file_depot(settings)
       end
     rescue StandardError => bang
       add_flash(_("Error during '%s': ") % "Validate" << bang.message, :error)
