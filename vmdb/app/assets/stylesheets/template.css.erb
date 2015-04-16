@@ -289,10 +289,7 @@ table.style1 td.key { padding: 6px;width: 200px;border: 1px solid #ccc;backgroun
 table.style1 td.keyimage img { float: left; padding-right: 2px;width: 64px;height: 64px;}
 table.style1 td.keyimage  { padding: 6px;width: 80px;border: 1px solid #ccc;background: #f8f8f8;color: #4b4b4b;text-align: right;font: normal 12px OpenSansSemibold,Arial,Helvetica,sans-serif;}
 
-table.style3 {width: 100%; border-spacing:0px;border-left: 1px solid #d1d1d1;border-collapse:separate; margin-bottom: 15px; color: #4d5258;}
-table.style3 .pagination {display:table;  margin:0 auto; padding:0;}
-table.style3 thead tr th{height: 19px;margin: 0;padding: 4px;padding-left:10px;border-right: 1px solid #d1d1d1;border-left: 0px !important;border-top: 1px solid #d1d1d1;border-bottom: 1px #d1d1d1 solid;font: normal 12px OpenSansSemibold,Arial,Helvetica,sans-serif !important;line-height: 19px;}
-table.style3 thead tr th, .modtitle{ 
+.modtitle{ 
   background-image: -webkit-linear-gradient(top, #fafafa, #ededed); /* For Chrome and Safari */
   background-image:    -moz-linear-gradient(top, #fafafa, #ededed); /* For old Fx (3.6 to 15) */
   background-image:     -ms-linear-gradient(top, #fafafa, #ededed); /* For pre-releases of IE 10*/
@@ -300,23 +297,6 @@ table.style3 thead tr th, .modtitle{
   background-image:         linear-gradient(top, #fafafa, #ededed); /* Standard syntax; must be last */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */  
 } 
-table.style3 thead tr th.special{height: 30px; border-bottom:0px; text-align: left;} /*special header formatting for dropdowns, etc  within table above table data*/
-table.style3 thead tr th.special div {display:inline-block}
-
-table.style3 tbody tr[class*="row1"] {background: #f5f5f5}
-table.style3 tbody tr.row3 {border-color: #2b7db1 !important;background-color: #40a0ce !important;color: #fff} /*styling for selected row (vm provisioning, etc)*/
-table.style3 tbody tr:hover td {background: #d5ecf8 !important; cursor: pointer;cursor: hand;}
-table.style3 tbody tr.no-hover:hover td {background: none !important; cursor:default} /*disables hover and pointer on row*/
-table.style3 tbody tr.seperator td {margin:0; padding:0;height:5px;border: 0;background: #ccc;font-size: 2%;}
-table.style3 tbody tr td {border: 1px solid transparent;border-right: 1px solid #d1d1d1;border-bottom-color: #e7e7e7;padding: 2px 2px 2px 10px;margin: 0;vertical-align: top;cursor: default;}
-table.style3 tbody tr td.group_spacer {font: normal 12px OpenSansSemibold,Arial,Helvetica,sans-serif;} /*used in miq_report*/ 
-table.style3 tbody tr td.label {display: table-cell;width: 20% !important; min-width: 200px; font: normal 12px OpenSansSemibold,Arial,Helvetica,sans-serif;cursor: default;color: #333; text-align: left;}
-table.style3 tbody tr td.select {text-align:center;}
-table.style3 tbody tr td.narrow {padding-left: 3px;}
-table.style3 tfoot {display: none}
-
-.rss_widget table.style3 tbody tr td {font-style:italic;}
-.rss_widget table.style3 tbody tr td a {font: normal 12px OpenSansSemibold,Arial,Helvetica,sans-serif;}
 
 .miq_rpt_red_bg {background: #fbdbdb !important}
 .miq_rpt_yellow_bg {background: #ffdc99 !important}   
