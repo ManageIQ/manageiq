@@ -34,7 +34,7 @@ module Vmdb
           resolved = resolved.relative_path_from(Rails.root) if resolved.to_s.start_with?(Rails.root.to_s)
           if include
             puts "+ #{resolved}"
-          elsif ENV["DEBUG_PRECOMPILE"]
+          elsif
             puts "- #{resolved}"
           end
 
