@@ -12,8 +12,7 @@ class FileDepotFtp < FileDepot
   end
 
   def self.validate_settings(settings)
-    depot = new(:uri => settings[:uri])
-    depot.with_connection(:username => settings[:username], :password => settings[:password]) { |c| c.last_response }
+    new(:uri => settings[:uri]).verify_credentials(nil, settings.slice(:username, :password))
   end
 
   def upload_file(file)
@@ -46,8 +45,8 @@ class FileDepotFtp < FileDepot
     $log.info("#{log_header(__method__)} Removing log file [#{destination_file}]...complete")
   end
 
-  def verify_credentials(_auth_type = nil)
-    with_connection(&:last_response)
+  def verify_credentials(_auth_type = nil, cred_hash = nil)
+    with_connection(cred_hash, &:last_response)
   rescue
     false
   end
