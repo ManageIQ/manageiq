@@ -40,7 +40,7 @@ class ConfiguredSystemForeman < ConfiguredSystem
   end
 
   def configuration_architecture
-    tag_hash[configurationArchitecture]
+    tag_hash[ConfigurationArchitecture]
   end
 
   def configuration_compute_profile
@@ -72,8 +72,10 @@ class ConfiguredSystemForeman < ConfiguredSystem
   end
 
   def tag_hash
-    tag_hash = raw_configuration_tags.index_by(&:class)
-    configuration_profile ? tag_hash.reverse_merge(configuration_profile.tag_hash) : tag_hash
+    @tag_hash ||= begin
+      tag_hash = raw_configuration_tags.index_by(&:class)
+      configuration_profile ? tag_hash.reverse_merge(configuration_profile.tag_hash) : tag_hash
+    end
   end
 
   private

@@ -24,17 +24,17 @@ class ConfigurationProfileForeman < ConfigurationProfile
   delegate :name, :to => :customization_script_medium,   :prefix => true, :allow_nil => true
   delegate :name, :to => :customization_script_ptable,   :prefix => true, :allow_nil => true
 
-  virtual_belongs_to :operating_system_flavor,     :class_name  => 'OperatingSystemFlavor'
+  virtual_has_many   :configuration_tags,          :class_name => 'ConfigurationTag'
   virtual_belongs_to :customization_script_ptable, :class_name  => 'CustomizationScriptPtable'
   virtual_belongs_to :customization_script_medium, :class_name  => 'CustomizationScriptMedium'
-  virtual_has_many   :configuration_tags,          :class_name => 'ConfigurationTag'
+  virtual_belongs_to :operating_system_flavor,     :class_name  => 'OperatingSystemFlavor'
 
   def configuration_tags
     tag_hash.values
   end
 
   def configuration_architecture
-    tag_hash[configurationArchitecture]
+    tag_hash[ConfigurationArchitecture]
   end
 
   def configuration_compute_profile
@@ -66,7 +66,9 @@ class ConfigurationProfileForeman < ConfigurationProfile
   end
 
   def tag_hash
-    tag_hash = raw_configuration_tags.index_by(&:class)
-    parent ? tag_hash.reverse_merge(parent.tag_hash) : tag_hash
+    @tag_hash ||= begin
+      tag_hash = raw_configuration_tags.index_by(&:class)
+      parent ? tag_hash.reverse_merge(parent.tag_hash) : tag_hash
+    end
   end
 end
