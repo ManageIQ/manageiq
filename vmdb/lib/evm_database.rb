@@ -17,9 +17,9 @@ class EvmDatabase
     VmdbDatabase
   }
 
-  def self.model_class_names
-    @model_class_names ||= begin
-      Dir.glob(File.join(Rails.root, "app/models/*.rb")).collect { |f| File.basename(f, ".*").camelize }.compact.sort
+  def self.seedable_model_class_names
+    @seedable_model_class_names ||= begin
+      Dir.glob(Rails.root.join("app/models/*.rb")).collect { |f| File.basename(f, ".*").camelize if File.read(f).include?("self.seed") }.compact.sort
     end
   end
 
@@ -28,14 +28,14 @@ class EvmDatabase
   end
 
   def self.seed_last
-    self.seed(model_class_names - PRIMORDIAL_CLASSES)
+    self.seed(seedable_model_class_names - PRIMORDIAL_CLASSES)
   end
 
   def self.seed(classes = nil, exclude_list = [])
     log_prefix = "EvmDatabase.seed"
     $log.info("#{log_prefix} Seeding...") if $log
 
-    classes ||= PRIMORDIAL_CLASSES + (model_class_names - PRIMORDIAL_CLASSES)
+    classes ||= PRIMORDIAL_CLASSES + (seedable_model_class_names - PRIMORDIAL_CLASSES)
     classes  -= exclude_list
 
     classes.each do |klass|
