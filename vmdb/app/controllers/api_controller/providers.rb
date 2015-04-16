@@ -20,8 +20,7 @@ class ApiController
       raise BadRequestError, "Must specify an id for editing a #{type} resource" unless id
       raise BadRequestError, "Provider type cannot be updated" if data.key?(TYPE_ATTR)
 
-      klass = collection_config[:providers][:klass].constantize
-      provider = resource_search(id, type, klass)
+      provider = resource_search(id, type, collection_class(:providers))
       edit_provider(provider, data)
     end
 
@@ -68,8 +67,7 @@ class ApiController
     end
 
     def create_provider(data)
-      klass = collection_config[:providers][:klass].constantize
-      provider_klass = fetch_provider_klass(klass, data)
+      provider_klass = fetch_provider_klass(collection_class(:providers), data)
       create_data    = fetch_provider_data(provider_klass, data, :requires_zone => true)
       provider       = provider_klass.create!(create_data)
       update_provider_authentication(provider, data)

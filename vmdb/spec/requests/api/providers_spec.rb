@@ -47,6 +47,27 @@ describe ApiController do
     Vmdb::Application
   end
 
+  describe "Providers actions on Provider class" do
+    it "rejects requests with invalid provider_class" do
+      api_basic_authorize
+
+      run_get providers_url, :provider_class => "bad_class"
+
+      expect_bad_request(/unsupported/i)
+    end
+
+    it "supports requests with valid provider_class" do
+      api_basic_authorize
+
+      FactoryGirl.build(:provider_foreman)
+      run_get providers_url, :provider_class => "provider", :expand => "resources"
+
+      klass = Provider
+      expect_query_result(:providers, klass.count, klass.count)
+      expect_result_resources_to_include_data("resources", "name" => klass.pluck(:name))
+    end
+  end
+
   describe "Providers create" do
     it "rejects creation without appropriate role" do
       api_basic_authorize

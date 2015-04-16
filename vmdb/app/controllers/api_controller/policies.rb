@@ -6,12 +6,12 @@ class ApiController
 
     def policies_query_resource(object)
       return {} unless object
-      policy_profile_klass = collection_config[:policy_profiles][:klass].constantize
+      policy_profile_klass = collection_class(:policy_profiles)
       (object.kind_of?(policy_profile_klass)) ? object.members : object_policies(object)
     end
 
     def policy_profiles_query_resource(object)
-      policy_profile_klass = collection_config[:policy_profiles][:klass].constantize
+      policy_profile_klass = collection_class(:policy_profiles)
       object ? object.get_policies.select { |p| p.kind_of?(policy_profile_klass) } : {}
     end
 
@@ -49,7 +49,7 @@ class ApiController
     end
 
     def object_policies(object)
-      policy_klass = collection_config[:policies][:klass].constantize
+      policy_klass = collection_class(:policies)
       object.get_policies.select { |p| p.kind_of?(policy_klass) }
     end
 
@@ -82,7 +82,7 @@ class ApiController
     end
 
     def policy_assign_action(object, ctype, id, data)
-      klass  = collection_config[ctype][:klass].constantize
+      klass  = collection_class(ctype)
       policy = policy_specified(id, data, ctype, klass)
       policy_subcollection_action(ctype, policy) do
         api_log_info("Assigning #{policy_ident(ctype, policy)}")
@@ -91,7 +91,7 @@ class ApiController
     end
 
     def policy_unassign_action(object, ctype, id, data)
-      klass  = collection_config[ctype][:klass].constantize
+      klass  = collection_class(ctype)
       policy = policy_specified(id, data, ctype, klass)
       policy_subcollection_action(ctype, policy) do
         api_log_info("Unassigning #{policy_ident(ctype, policy)}")
@@ -100,7 +100,7 @@ class ApiController
     end
 
     def policy_resolve_action(object, ctype, id, data)
-      klass  = collection_config[ctype][:klass].constantize
+      klass  = collection_class(ctype)
       policy = policy_specified(id, data, ctype, klass)
       policy_subcollection_action(ctype, policy) do
         api_log_info("Resolving #{policy_ident(ctype, policy)}")

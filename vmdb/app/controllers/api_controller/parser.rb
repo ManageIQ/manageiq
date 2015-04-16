@@ -42,6 +42,8 @@ class ApiController
     end
 
     def validate_api_request
+      validate_optional_collection_classes
+
       # API Version Validation
       if @req[:version]
         vname = @req[:version]
@@ -63,6 +65,20 @@ class ApiController
       end
 
       validate_api_parameters
+    end
+
+    def validate_optional_collection_classes
+      @collection_klasses = {}  # Default all to config classes
+      param = params['provider_class']
+      return unless param.present?
+
+      raise BadRequestError, "Unsupported provider_class #{param} specified" if param != "provider"
+      %w(tags policies policy_profiles).each do |cname|
+        if @req[:subcollection] == cname || expand?(cname)
+          raise BadRequestError, "Management of #{cname} is unsupported for the Provider class"
+        end
+      end
+      @collection_klasses[:providers] = "Provider"
     end
 
     def validate_api_action
