@@ -358,6 +358,7 @@ module MiqAeMethodService
       dom, _, _, _ = MiqAeEngine::MiqAePath.get_domain_ns_klass_inst(path)
       domain = MiqAeDomain.find_by_fqname(dom, false)
       return false unless domain
+      $log.warn "path=#{path.inspect} : is not editable" unless domain.editable?
       domain.editable?
     end
   end
