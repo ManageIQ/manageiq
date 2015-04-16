@@ -5,10 +5,11 @@
 export RAILS_ENV=production
 export APPLIANCE=true
 export HOME=${HOME:-/root}
+# Force ExecJS to use node
+export EXECJS_RUNTIME='Node'
 # workaround for virtual memory spike observed with RHEL6
 export MALLOC_ARENA_MAX=1
 export MALLOC_MMAP_THRESHOLD=131072
-
 # Environment variables required to enable SSL for the Qpid C++ client.  This
 # allows CFME to collect OpenStack events from Qpid over SSL.
 # - location of the QPID SSL module
