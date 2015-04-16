@@ -2055,12 +2055,6 @@ module ApplicationHelper
       else
         return "servicetemplates_center_tb"
       end
-    elsif x_active_tree == :svccat_tree
-      if TreeBuilder.get_model_for_prefix(@nodetype) == "ServiceTemplate"
-        return "servicetemplate-catalog_center_tb"
-      else
-        return "servicetemplates-catalogs_center_tb"
-      end
     elsif x_active_tree == :stcat_tree
       if TreeBuilder.get_model_for_prefix(@nodetype) == "ServiceTemplateCatalog"
         return "servicetemplatecatalog_center_tb"

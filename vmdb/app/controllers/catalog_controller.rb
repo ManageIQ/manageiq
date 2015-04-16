@@ -908,9 +908,11 @@ class CatalogController < ApplicationController
     if x_active_tree == :svccat_tree
       @temp[:gtl_buttons] = ["view_list","view_tile"]
       @temp[:gtl_small_tiles] = true
-      @row_button = {:image    => "Order", 
-                     :function => "miqOrderService", 
-                     :title    => "Order this Service"} # Show a button instead of the checkbox
+      if role_allows(:feature => 'svc_catalog_provision')
+        @row_button = {:image    => "Order",
+                       :function => "miqOrderService",
+                       :title    => "Order this Service"} # Show a button instead of the checkbox
+      end
     end
     options[:model] = "ServiceCatalog" if !options[:model]
     options[:where_clause] = condition
@@ -1774,7 +1776,7 @@ class CatalogController < ApplicationController
       end
 
     unless @in_a_form
-      c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename)
+      c_buttons, c_xml = build_toolbar_buttons_and_xml(center_toolbar_filename) unless x_active_tree == :svccat_tree
       h_buttons, h_xml = build_toolbar_buttons_and_xml("x_history_tb")
     end
 
