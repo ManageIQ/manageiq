@@ -4,39 +4,9 @@ module Authenticator
       'LDAP'
     end
 
-    def verify_ldap_credentials(username, password)
-      username = normalize_username(username)
-      raise MiqException::MiqEVMLoginError, "authentication failed" unless ldap_bind(username, password)
-    end
-
     def lookup_by_identity(username)
       super ||
-        find_or_create_by_ldap_upn(username)
-    end
-
-    # TODO: This has a lot in common with autocreate_user & authorize
-    def find_or_create_by_ldap_upn(username)
-      username = ldap.fqusername(username)
-      user = User.find_by_userid(username)
-
-      return user unless user.nil?
-
-      raise "Unable to auto-create user because LDAP bind credentials are not configured" unless authorize?
-
-      uobj = ldap.get_user_object(username, "userprincipalname")
-      raise "Unable to auto-create user because LDAP search returned no data for user with userprincipalname: [#{username}]" if uobj.nil?
-
-      matching_groups = match_groups(groups_for(uobj))
-      raise "Unable to auto-create user because unable to match user's group membership to an EVM role" if matching_groups.empty?
-
-      user = User.new
-      update_user_attributes(user, username, uobj)
-      user.miq_groups = matching_groups
-      user.save
-
-      $log.info("MIQ(Authenticator#find_or_create_by_ldap_upn): Created User: [#{user.userid}]")
-
-      user
+        find_or_create_by_ldap(username)
     end
 
     private
@@ -50,20 +20,41 @@ module Authenticator
       ldap if ldap.bind(username, password)
     end
 
-    def autocreate_user(username, audit)
-      default_group = MiqGroup.where(:description => config[:default_group_for_users]).first if config[:default_group_for_users]
-      if default_group
-        # when default group for ldap users is enabled, create the user
-        lobj = ldap.get_user_object(username)
+    def find_or_create_by_ldap(username)
+      username = ldap.fqusername(username)
+      user = User.find_by_userid(username)
+      return user unless user.nil?
 
-        user = User.new
-        update_user_attributes(user, username, lobj)
-        user.miq_groups = [default_group]
-        user.save!
-        $log.info("MIQ(Authenticator#autocreate_user): Created User: [#{user.userid}]")
+      raise "Unable to auto-create user because LDAP bind credentials are not configured" unless authorize?
 
-        user
+      create_user_from_ldap(username) do |lobj|
+        groups = match_groups(groups_for(lobj))
+        raise "Unable to auto-create user because unable to match user's group membership to an EVM role" if groups.empty?
+        groups
       end
+    end
+
+    def autocreate_user(username)
+      # when default group for ldap users is enabled, create the user
+      return unless config[:default_group_for_users]
+      default_group = MiqGroup.where(:description => config[:default_group_for_users]).first
+      return unless default_group
+      create_user_from_ldap(username) { [default_group] }
+    end
+
+    def create_user_from_ldap(username)
+      lobj = ldap.get_user_object(username)
+      raise "Unable to auto-create user because LDAP search returned no data for user: [#{username}]" if lobj.nil?
+
+      groups = yield lobj
+
+      user = User.new
+      update_user_attributes(user, username, lobj)
+      user.miq_groups = groups
+      user.save!
+      $log.info("MIQ(Authenticator#create_user_from_ldap): Created User: [#{user.userid}]")
+
+      user
     end
 
     def normalize_username(username)
