@@ -1,4 +1,5 @@
 module MiqReport::Search
+  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   module ClassMethods
@@ -132,7 +133,7 @@ module MiqReport::Search
     attrs[:apply_sortby_in_search] = apply_sortby_in_search
     self.extras[:attrs_for_paging] = attrs.merge(:targets_hash => nil) unless self.extras[:target_ids_for_paging].nil?
 
-    $log.debug("MIQ(MiqReport#paged_view_search): Attrs: #{attrs.merge(:targets_hash => "...").inspect}")
+    _log.debug("Attrs: #{attrs.merge(:targets_hash => "...").inspect}")
     return self.table, attrs
   end
 end

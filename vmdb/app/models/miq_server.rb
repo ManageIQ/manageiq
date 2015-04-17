@@ -12,6 +12,7 @@ class MiqServer < ActiveRecord::Base
   include_concern 'UpdateManagement'
   include_concern 'RhnMirror'
 
+  include Vmdb::NewLogging
   include UuidMixin
   include MiqPolicyMixin
   acts_as_miq_taggable
@@ -51,8 +52,6 @@ class MiqServer < ActiveRecord::Base
   end
 
   def self.atStartup
-    log_prefix = "MIQ(MiqServer.atStartup)"
-
     configuration  = VMDB::Config.new("vmdb")
     starting_roles = configuration.config.fetch_path(:server, :role)
 
@@ -78,12 +77,12 @@ class MiqServer < ActiveRecord::Base
       server.set_active_role_flags
     end
 
-    $log.info("#{log_prefix} Invoking startup methods")
+    _log.info("Invoking startup methods")
     begin
       RUN_AT_STARTUP.each do |klass|
         klass = Object.const_get(klass) if klass.class == String
         if klass.respond_to?("atStartup")
-          $log.info("#{log_prefix} Invoking startup method for #{klass}")
+          _log.info("Invoking startup method for #{klass}")
           begin
             klass.atStartup
           rescue => err
@@ -131,20 +130,18 @@ class MiqServer < ActiveRecord::Base
   end
 
   def start
-    log_prefix = "MIQ(MiqServer.start)"
-
     begin
       MiqEvent.raise_evm_event(self, "evm_server_start")
     rescue MiqException::PolicyPreventAction => err
-      $log.warn "#{log_prefix} #{err}"
+      _log.warn "#{err}"
       # TODO: Need to decide what to do here. Should the cluster be stopped?
       return
     rescue Exception => err
-      $log.error "#{log_prefix} #{err}"
+      _log.error "#{err}"
     end
 
     msg = "Server starting in #{self.class.startup_mode} mode."
-    $log.info("#{log_prefix} #{msg}")
+    _log.info("#{msg}")
     puts "** #{msg}"
 
     @vmdb_config = VMDB::Config.new("vmdb")
@@ -194,18 +191,16 @@ class MiqServer < ActiveRecord::Base
   def self.seed
     MiqRegion.my_region.lock do
       unless self.exists?(:guid => self.my_guid)
-        $log.info("MIQ(MiqServer.seed) Creating Default MiqServer with guid=[#{self.my_guid}], zone=[#{Zone.default_zone.name}]")
+        _log.info("Creating Default MiqServer with guid=[#{self.my_guid}], zone=[#{Zone.default_zone.name}]")
         self.create!(:guid => self.my_guid, :zone => Zone.default_zone)
         self.my_server_clear_cache
-        $log.info("MIQ(MiqServer.seed) Creating Default MiqServer... Complete")
+        _log.info("Creating Default MiqServer... Complete")
       end
       self.my_server
     end
   end
 
   def self.start
-    log_prefix = "MIQ(MiqServer.start)"
-
     self.validate_database
 
     EvmDatabase.seed_primordial
@@ -254,15 +249,15 @@ class MiqServer < ActiveRecord::Base
     svr.update_attributes(svr_hash)
     self.my_server_clear_cache
 
-    $log.info("#{log_prefix} Server IP Address: #{svr.ipaddress}")    unless svr.ipaddress.blank?
-    $log.info("#{log_prefix} Server Hostname: #{svr.hostname}")       unless svr.hostname.blank?
-    $log.info("#{log_prefix} Server MAC Address: #{svr.mac_address}") unless svr.mac_address.blank?
-    $log.info "#{log_prefix} Server GUID: #{self.my_guid}"
-    $log.info "#{log_prefix} Server Zone: #{self.my_zone}"
-    $log.info "#{log_prefix} Server Role: #{self.my_role}"
+    _log.info("Server IP Address: #{svr.ipaddress}")    unless svr.ipaddress.blank?
+    _log.info("Server Hostname: #{svr.hostname}")       unless svr.hostname.blank?
+    _log.info("Server MAC Address: #{svr.mac_address}") unless svr.mac_address.blank?
+    _log.info "Server GUID: #{self.my_guid}"
+    _log.info "Server Zone: #{self.my_zone}"
+    _log.info "Server Role: #{self.my_role}"
     region = MiqRegion.my_region
-    $log.info "#{log_prefix} Server Region number: #{region.region}, name: #{region.name}" unless region.nil?
-    $log.info "#{log_prefix} Database Latency: #{self.db_ping} ms"
+    _log.info "Server Region number: #{region.region}, name: #{region.name}" unless region.nil?
+    _log.info "Database Latency: #{self.db_ping} ms"
 
     Vmdb::Appliance.log_config_on_startup
 
@@ -282,7 +277,7 @@ class MiqServer < ActiveRecord::Base
     unless self.is_deleteable?
       msg = @error_message
       @error_message = nil
-      $log.error("MIQ(#{self.class.name}.before_destroy) #{msg}")
+      _log.error("#{msg}")
       raise msg
     end
   end
@@ -298,16 +293,14 @@ class MiqServer < ActiveRecord::Base
   end
 
   def heartbeat
-    log_prefix = "MIQ(MiqServer.heartbeat)"
-
     # Heartbeat the server
     t = Time.now.utc
-    $log.info("#{log_prefix} Heartbeat [#{t}]...")
+    _log.info("Heartbeat [#{t}]...")
     self.reload
     self.last_heartbeat = t
     self.status = "started" if self.status == "not responding"
     self.save
-    $log.info("#{log_prefix} Heartbeat [#{t}]...Complete")
+    _log.info("Heartbeat [#{t}]...Complete")
   end
 
   def log_active_servers
@@ -382,40 +375,36 @@ class MiqServer < ActiveRecord::Base
     rescue SystemExit
       raise
     rescue Exception => err
-      log_prefix = "MIQ(MiqServer.monitor)"
-      $log.error("#{log_prefix} #{err.message}")
+      _log.error("#{err.message}")
       $log.log_backtrace(err)
 
       begin
-        $log.info("#{log_prefix} Reconnecting to database after error...")
+        _log.info("Reconnecting to database after error...")
         ActiveRecord::Base.connection.reconnect!
       rescue Exception => err
-        $log.error("#{log_prefix} #{err.message}, during reconnect!")
+        _log.error("#{err.message}, during reconnect!")
       else
-        $log.info("#{log_prefix} Reconnecting to database after error...Successful")
+        _log.info("Reconnecting to database after error...Successful")
       end
     end
   end
 
   def monitor_loop
-    log_prefix = "MIQ(MiqServer.monitor_loop)"
-
     loop do
       _dummy, timings = Benchmark.realtime_block(:total_time) { self.monitor }
-      $log.info "#{log_prefix} Server Monitoring Complete - Timings: #{timings.inspect}" unless timings[:total_time] < server_log_timings_threshold
+      _log.info "Server Monitoring Complete - Timings: #{timings.inspect}" unless timings[:total_time] < server_log_timings_threshold
       sleep monitor_poll
     end
   end
 
   def stop(sync = false)
-    log_prefix = "MIQ(MiqServer.stop)"
     begin
       return if self.stopped?
 
       self.shutdown_and_exit_queue
       self.wait_for_stopped if sync
     rescue Exception => err
-      $log.error "#{log_prefix} #{err}"
+      _log.error "#{err}"
     end
   end
 
@@ -434,19 +423,18 @@ class MiqServer < ActiveRecord::Base
   end
 
   def kill
-    log_prefix = "MIQ(MiqServer.kill)"
     begin
       # Kill all the workers of this server
       self.kill_all_workers
 
       # Then kill this server
-      $log.info("#{log_prefix} initiated for #{format_full_log_msg}")
+      _log.info("initiated for #{format_full_log_msg}")
       self.update_attributes(:stopped_on => Time.now.utc, :status => "killed", :is_master => false)
       (self.pid == Process.pid) ? self.shutdown_and_exit : Process.kill(9, self.pid)
     rescue SystemExit
       raise
     rescue Exception => err
-      $log.error "#{log_prefix} #{err}"
+      _log.error "#{err}"
     end
   end
 
@@ -457,15 +445,14 @@ class MiqServer < ActiveRecord::Base
   end
 
   def shutdown
-    log_prefix = "MIQ(MiqServer.shutdown)"
-    $log.info("#{log_prefix} initiated for #{format_full_log_msg}")
+    _log.info("initiated for #{format_full_log_msg}")
     begin
       MiqEvent.raise_evm_event(self, "evm_server_stop")
     rescue MiqException::PolicyPreventAction => err
-      $log.warn "#{log_prefix} #{err}"
+      _log.warn "#{err}"
       return
     rescue Exception => err
-      $log.error "#{log_prefix} #{err}"
+      _log.error "#{err}"
     end
 
     self.quiesce
@@ -499,13 +486,12 @@ class MiqServer < ActiveRecord::Base
 
   # Restart the local server
   def restart
-    log_prefix = "MIQ(MiqServer#restart)"
     raise "Server reset is only supported on Linux" unless MiqEnvironment::Command.is_linux?
 
-    $log.info("#{log_prefix} Server restart initiating...")
+    _log.info("Server restart initiating...")
     self.update_attribute(:status, "restarting")
 
-    $log.info("#{log_prefix} Server shutting down...")
+    _log.info("Server shutting down...")
     self.class.stop
 
     logfile = File.expand_path(File.join(Rails.root, "log/vmdb_restart.log"))

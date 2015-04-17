@@ -1,4 +1,6 @@
 class VmScan < Job
+  include Vmdb::NewLogging
+
   #
   # TODO: until we get location/offset read capability for OpenStack
   # image data, OpenStack fleecing is prone to timeout (based on image size).
@@ -60,7 +62,7 @@ class VmScan < Job
       if vm.kind_of?(VmOpenstack)
         if vm.ext_management_system
           sn_description = snapshotDescription
-          $log.info("MIQ(scan-action-call_snapshot_create) Creating snapshot, description: [#{sn_description}]")
+          _log.info("Creating snapshot, description: [#{sn_description}]")
           user_event = start_user_event_message(vm, false)
           options[:snapshot] = :server
           begin
@@ -68,12 +70,12 @@ class VmScan < Job
             sn = vm.ext_management_system.vm_create_evm_snapshot(vm, :desc => sn_description, :user_event => user_event).to_s
           rescue Exception => err
             msg = "Failed to create evm snapshot with EMS. Error: [#{err.class.name}]: [#{err}]"
-            $log.error("MIQ(scan-call_snapshot_create #{msg}")
+            _log.error("#{msg}")
             err.kind_of?(MiqException::MiqVimBrokerUnavailable) ? signal(:broker_unavailable) : signal(:abort, msg, "error")
             return
           end
           context[:snapshot_mor] = sn
-          $log.info("MIQ(scan-action-call_snapshot_create) Created snapshot, description: [#{sn_description}], reference: [#{context[:snapshot_mor]}]")
+          _log.info("Created snapshot, description: [#{sn_description}], reference: [#{context[:snapshot_mor]}]")
           set_status("Snapshot created: reference: [#{context[:snapshot_mor]}]")
           options[:snapshot] = :created
           options[:use_existing_snapshot] = true
@@ -87,14 +89,14 @@ class VmScan < Job
 
         # Check if the broker is available
         if MiqServer.use_broker_for_embedded_proxy? && !MiqVimBrokerWorker.available?
-          $log.warn("MIQ(scan-call_snapshot_create) VimBroker is not available")
+          _log.warn("VimBroker is not available")
           signal(:broker_unavailable)
           return
         end
 
         if proxy && proxy.forceVmScan
           self.options[:snapshot] = :smartProxy
-          $log.info("MIQ(scan-action-call_snapshot_create) Skipping snapshot creation, it will be performed by the SmartProxy")
+          _log.info("Skipping snapshot creation, it will be performed by the SmartProxy")
           self.context[:snapshot_mor] = self.options[:snapshot_description] = self.snapshotDescription("(embedded)")
           self.start_user_event_message(vm)
         else
@@ -102,7 +104,7 @@ class VmScan < Job
 
           if vm.ext_management_system
             sn_description = self.snapshotDescription()
-            $log.info("MIQ(scan-action-call_snapshot_create) Creating snapshot, description: [#{sn_description}]")
+            _log.info("Creating snapshot, description: [#{sn_description}]")
             user_event = self.start_user_event_message(vm, false)
             self.options[:snapshot] = :server
             begin
@@ -110,12 +112,12 @@ class VmScan < Job
               sn = vm.ext_management_system.vm_create_evm_snapshot(vm, :desc => sn_description, :user_event => user_event).to_s
             rescue Exception => err
               msg = "Failed to create evm snapshot with EMS. Error: [#{err.class.name}]: [#{err}]"
-              $log.error("MIQ(scan-call_snapshot_create #{msg}")
+              _log.error("#{msg}")
               err.kind_of?(MiqException::MiqVimBrokerUnavailable) ? signal(:broker_unavailable) : signal(:abort, msg, "error")
               return
             end
             self.context[:snapshot_mor] = sn
-            $log.info("MIQ(scan-action-call_snapshot_create) Created snapshot, description: [#{sn_description}], reference: [#{self.context[:snapshot_mor]}]")
+            _log.info("Created snapshot, description: [#{sn_description}], reference: [#{self.context[:snapshot_mor]}]")
             set_status("Snapshot created: reference: [#{self.context[:snapshot_mor]}]")
             self.options[:snapshot] = :created
             self.options[:use_existing_snapshot] = true
@@ -137,7 +139,7 @@ class VmScan < Job
             when :smartProxy, :skipped then "Request to log snapshot user event with EMS timed out."
             else "Request to create snapshot timed out"
             end
-      $log.error("MIQ(scan-action-call_snapshot_create) #{msg}")
+      _log.error("#{msg}")
       signal(:abort, msg, "error")
     end
   end
@@ -175,16 +177,16 @@ class VmScan < Job
         end
       end
 
-      $log.info "MIQ(scan-action-call_scan) [#{host.name}] communicates with [#{scan_ci_type}:#{ems_list[scan_ci_type][:hostname]}(#{ems_list[scan_ci_type][:address]})] to scan vm [#{vm.name}]" if self.agent_class == "MiqServer" && !ems_list[scan_ci_type].nil?
+      _log.info "[#{host.name}] communicates with [#{scan_ci_type}:#{ems_list[scan_ci_type][:hostname]}(#{ems_list[scan_ci_type][:address]})] to scan vm [#{vm.name}]" if self.agent_class == "MiqServer" && !ems_list[scan_ci_type].nil?
       vm.scan_metadata(self.options[:categories], "taskid" => jobid, "host" => host, "args" => [YAML.dump(scan_args)])
     rescue TimeoutError
       message = "timed out attempting to scan, aborting"
-      $log.error("MIQ(scan-action-call_scan) #{message}")
+      _log.error("#{message}")
       signal(:abort, message, "error")
       return
     rescue => message
-      $log.error("MIQ(scan-action-call_scan) #{message}")
-      $log.error("MIQ(scan-action-call_scan) #{message.backtrace.join("\n")}")
+      _log.error("#{message}")
+      _log.error("#{message.backtrace.join("\n")}")
       signal(:abort, message.message, "error")
     end
 
@@ -236,7 +238,7 @@ class VmScan < Job
       end
 
       if vm.ext_management_system
-        $log.info("MIQ(scan-action-call_snapshot_delete) Deleting snapshot: reference: [#{mor}]")
+        _log.info("Deleting snapshot: reference: [#{mor}]")
         begin
           # TODO: should this logic be moved to a VM subclass implementation?
           #       or, make type-specific Job classes.
@@ -246,19 +248,19 @@ class VmScan < Job
             delete_snapshot(mor)
           end
         rescue => err
-          $log.error("MIQ(scan-action-call_snapshot_delete) #{err}")
+          _log.error("#{err}")
           return
         rescue TimeoutError
           msg = "Request to delete snapshot timed out"
-          $log.error("MIQ(scan-action-call_snapshot_create) #{msg}")
+          _log.error("#{msg}")
         end
 
         unless self.options[:snapshot] == :smartProxy
-          $log.info("MIQ(scan-action-call_snapshot_delete) Deleted snapshot: reference: [#{mor}]")
+          _log.info("Deleted snapshot: reference: [#{mor}]")
           set_status("Snapshot deleted: reference: [#{mor}]")
         end
       else
-        $log.error("MIQ(scan-action-call_snapshot_delete) Deleting snapshot: reference: [#{mor}], No #{ui_lookup(:table => "ext_management_systems")} available to delete snapshot")
+        _log.error("Deleting snapshot: reference: [#{mor}], No #{ui_lookup(:table => "ext_management_systems")} available to delete snapshot")
         set_status("No #{ui_lookup(:table => "ext_management_systems")} available to delete snapshot, skipping", "error", 1)
       end
     else
@@ -281,11 +283,11 @@ class VmScan < Job
       )
     rescue TimeoutError
       message = "timed out attempting to synchronize, aborting"
-      $log.error("MIQ(scan-action-call_synchronize) #{message}")
+      _log.error("#{message}")
       signal(:abort, message, "error")
       return
     rescue => message
-      $log.error("MIQ(scan-action-call_synchronize) #{message}")
+      _log.error("#{message}")
       signal(:abort, message.message, "error")
       return
     end
@@ -478,7 +480,7 @@ class VmScan < Job
       vm = VmOrTemplate.find(self.target_id)
       EmsRefresh.refresh(vm)
       vm.reload
-      $log.info("MIQ(scan-action-call_scan) Retrying VM scan for [#{vm.name}] due to error [#{message}]")
+      _log.info("Retrying VM scan for [#{vm.name}] due to error [#{message}]")
       signal(:scan_retry)
     else
       signal(:abort, *args[0,2])

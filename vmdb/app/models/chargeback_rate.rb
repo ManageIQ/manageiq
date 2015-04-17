@@ -1,4 +1,5 @@
 class ChargebackRate < ActiveRecord::Base
+  include Vmdb::NewLogging
   include UuidMixin
   include ReportableMixin
 
@@ -54,13 +55,13 @@ class ChargebackRate < ActiveRecord::Base
           rec = self.find_by_guid(cbr[:guid])
           rates = cbr.delete(:rates)
           if rec.nil?
-            $log.info("MIQ(ChargebackRate.seed) Creating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
+            _log.info("Creating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
             rec = self.create(cbr)
             rec.chargeback_rate_details.create(rates)
           else
             fixture_mtime = File.mtime(fixture_file).utc
             if fixture_mtime > rec.created_on
-              $log.info("MIQ(ChargebackRate.seed) Updating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
+              _log.info("Updating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
               rec.update_attributes(cbr)
               rec.chargeback_rate_details.clear
               rec.chargeback_rate_details.create(rates)

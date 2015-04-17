@@ -1,4 +1,5 @@
 class MiqSchedule < ActiveRecord::Base
+  include Vmdb::NewLogging
   validates_uniqueness_of :name, :scope => [:userid, :towhat]
   validates_presence_of   :name, :description, :towhat, :run_at
   validate                :validate_run_at, :validate_file_depot
@@ -61,16 +62,16 @@ class MiqSchedule < ActiveRecord::Base
 
     sched = self.find_by_id(id)
     unless sched
-      $log.warn("MIQ(Schedule.queue_scheduled_work) unable to find schedule with id: [#{id}], skipping")
+      _log.warn("unable to find schedule with id: [#{id}], skipping")
       return
     end
 
     method = sched.sched_action[:method] rescue nil
-    $log.info("MIQ(Schedule.queue_scheduled_work) Queueing start of schedule id: [#{id}] [#{sched.name}] [#{sched.towhat}] [#{method}]")
+    _log.info("Queueing start of schedule id: [#{id}] [#{sched.name}] [#{sched.towhat}] [#{method}]")
 
     action = "action_" + method
     unless sched.respond_to?(action)
-      $log.warn("MIQ(Schedule.queue_scheduled_work) [#{sched.name}] no such action: [#{method}], aborting schedule")
+      _log.warn("[#{sched.name}] no such action: [#{method}], aborting schedule")
       return
     end
 
@@ -82,27 +83,25 @@ class MiqSchedule < ActiveRecord::Base
       :msg_timeout => 1200
     )
 
-    $log.info("MIQ(Schedule.queue_scheduled_work) Queueing start of schedule id: [#{id}] [#{sched.name}] [#{sched.towhat}] [#{method}]...complete")
+    _log.info("Queueing start of schedule id: [#{id}] [#{sched.name}] [#{sched.towhat}] [#{method}]...complete")
     msg
   end
 
   def invoke_actions(action, at)
-    log_prefix = "MIQ(Schedule.invoke_actions) [#{self.name}]"
-
     # TODO: Add support to invoke_actions, get_targets, and get_filter to call class methods in addition to the normal instance methods
     if self.get_filter.nil? && self.sched_action.kind_of?(Hash) && !ALLOWED_CLASS_METHOD_ACTIONS.include?(self.sched_action[:method])
-      $log.warn("#{log_prefix} Schedule has no filter, skipping invocation")
+      _log.warn("[#{name}] Schedule has no filter, skipping invocation")
       return
     end
 
     targets = self.get_targets
-    $log.warn("#{log_prefix} No targets match filter [#{self.filter.to_human}]") if (targets.length == 0) && (!self.filter.nil?)
+    _log.warn("[#{name}] No targets match filter [#{self.filter.to_human}]") if (targets.length == 0) && (!self.filter.nil?)
     targets.each do |obj|
-      $log.info("#{log_prefix} invoking action: [#{self.sched_action[:method]}] for target: [#{obj.name}]")
+      _log.info("[#{name}] invoking action: [#{self.sched_action[:method]}] for target: [#{obj.name}]")
       begin
         self.send(action, obj, at)
       rescue => err
-        $log.error("#{log_prefix} Attempting to run action [#{action}] on target [#{obj.name}], #{err}")
+        _log.error("[#{name}] Attempting to run action [#{action}] on target [#{obj.name}], #{err}")
         # $log.log_backtrace(err)
       end
     end
@@ -118,13 +117,12 @@ class MiqSchedule < ActiveRecord::Base
   end
 
   def get_targets
-    log_prefix = "MIQ(Schedule.get_targets) [#{self.name}]"
     # TODO: Add support to invoke_actions, get_targets, and get_filter to call class methods in addition to the normal instance methods
     return [Object.const_get(self.towhat)] if self.sched_action.kind_of?(Hash) && ALLOWED_CLASS_METHOD_ACTIONS.include?(self.sched_action[:method])
 
     my_filter = self.get_filter
     if my_filter.nil?
-      $log.warn("#{log_prefix} Filter is empty")
+      _log.warn("[#{name}] Filter is empty")
       return []
     end
 
@@ -176,21 +174,21 @@ class MiqSchedule < ActiveRecord::Base
   end
 
   def action_test(obj, at)
-    $log.info("MIQ(Schedule.action-test) [#{self.name}] Action has been run for target: [#{obj.name}]")
+    _log.info("[#{self.name}] Action has been run for target: [#{obj.name}]")
     puts("[#{Time.now}] MIQ(Schedule.action-test) [#{self.name}] Action has been run for target: [#{obj.name}]")
   end
 
   def action_vm_scan(obj, at)
     self.sched_action[:options] ||= {}
     obj.scan_queue(self.userid, self.sched_action[:options])
-    $log.info("MIQ(Schedule.action_vm_scan) Action [#{self.name}] has been run for target: [#{obj.name}]")
+    _log.info("Action [#{self.name}] has been run for target: [#{obj.name}]")
     # puts("[#{Time.now}] MIQ(Schedule.action_vm_scan) Action [#{self.name}] has been run for target: [#{obj.name}]")
   end
 
   def action_scan(obj, at)
     self.sched_action[:options] ||= {}
     obj.scan
-    $log.info("MIQ(Schedule.action_scan) Action [#{self.name}] has been run for target type: [#{obj.class}] with name: [#{obj.name}]")
+    _log.info("Action [#{self.name}] has been run for target type: [#{obj.class}] with name: [#{obj.name}]")
   end
 
   def action_run_report(obj, at)
@@ -198,23 +196,23 @@ class MiqSchedule < ActiveRecord::Base
     self.sched_action[:options][:userid] = self.userid
     opts = self.sched_action[:options]
     res_opts = {:at => at, :source => 'Scheduled'}
-    $log.info("MIQ(Schedule.action_run_report) Action [#{self.name}] Starting queue_report_result for report: [#{obj.name}], with options: [#{opts.inspect}], res_opts: [#{res_opts.inspect}]")
+    _log.info("Action [#{self.name}] Starting queue_report_result for report: [#{obj.name}], with options: [#{opts.inspect}], res_opts: [#{res_opts.inspect}]")
     obj.queue_report_result(opts, res_opts)
-    $log.info("MIQ(Schedule.action_run_report) Action [#{self.name}] Finished queue_report_result for report: [#{obj.name}]")
+    _log.info("Action [#{self.name}] Finished queue_report_result for report: [#{obj.name}]")
   end
 
   def action_generate_widget(obj, at)
     obj.queue_generate_content
-    $log.info("MIQ(Schedule.action_generate_widget) Action [#{self.name}] has been run for target type: [#{obj.class}] with name: [#{obj.title}]")
+    _log.info("Action [#{self.name}] has been run for target type: [#{obj.class}] with name: [#{obj.title}]")
   end
 
   def action_check_compliance(obj, at)
     unless obj.respond_to?(:check_compliance_queue)
-      $log.warn("MIQ(Schedule.action_check_compliance) Action [#{self.name}] is not supported for target type: [#{obj.class}] with name: [#{obj.name}], skipping")
+      _log.warn("Action [#{self.name}] is not supported for target type: [#{obj.class}] with name: [#{obj.name}], skipping")
       return
     end
     obj.check_compliance_queue
-    $log.info("MIQ(Schedule.action_check_compliance) Action [#{self.name}] has been run for target type: [#{obj.class}] with name: [#{obj.name}]")
+    _log.info("Action [#{self.name}] has been run for target type: [#{obj.class}] with name: [#{obj.name}]")
   end
 
   def action_db_backup(klass, at)
@@ -258,7 +256,7 @@ class MiqSchedule < ActiveRecord::Base
 
   def action_evaluate_alert(obj, at)
     MiqAlert.evaluate_queue(obj)
-    $log.info("MIQ(Schedule.action_evaluate_alert) Action [#{self.name}] has been run for target type: [#{obj.class}] with name: [#{obj.name}]")
+    _log.info("Action [#{self.name}] has been run for target type: [#{obj.class}] with name: [#{obj.name}]")
   end
 
   def rufus_schedule_opts
@@ -270,17 +268,17 @@ class MiqSchedule < ActiveRecord::Base
       # Don't run onetime schedule again unless the start_time was updated to a later time
       unless self.last_run_on && (self.last_run_on > self.run_at[:start_time])
         time = self.run_at[:start_time].getlocal
-        $log.info("MIQ(Schedule.rufus_schedule_opts) Schedule [#{self.name}] #{message} to run at #{time}")
+        _log.info("Schedule [#{self.name}] #{message} to run at #{time}")
         options = { :method => :schedule_at, :interval => time, :schedule_id => self.id, :discard_past => true, :tags => self.tag }
       end
     when "monthly"
       time = self.next_interval_time
-      $log.info("MIQ(Schedule.rufus_schedule_opts) Schedule [#{self.name}] #{message} to run at #{time} every #{self.run_at[:interval][:value]} months")
+      _log.info("Schedule [#{self.name}] #{message} to run at #{time} every #{self.run_at[:interval][:value]} months")
       options = { :method => :schedule_at, :months => self.run_at[:interval][:value].to_i, :schedule_id => self.id, :discard_past => true, :interval => time, :tags => self.tag }
     else
       time = self.next_interval_time
       int = self.interval
-      $log.info("MIQ(Schedule.rufus_schedule_opts) Schedule [#{self.name}] #{message} to run at #{time} with interval #{int}")
+      _log.info("Schedule [#{self.name}] #{message} to run at #{time} with interval #{int}")
       options = { :method => :schedule_every, :interval => int, :schedule_id => self.id, :discard_past => true, :first_at => time, :tags => self.tag }
     end
     return options
@@ -325,7 +323,7 @@ class MiqSchedule < ActiveRecord::Base
 
   def next_interval_time
     unless self.valid? || errors[:run_at].blank?
-      $log.warn("Miq(Schedule.next_interval_time) Invalid schedule [#{self.id}] [#{self.name}]: #{errors[:run_at].to_miq_a.join(", ")}")
+      _log.warn("Invalid schedule [#{self.id}] [#{self.name}]: #{errors[:run_at].to_miq_a.join(", ")}")
       return nil
     end
 
@@ -333,7 +331,7 @@ class MiqSchedule < ActiveRecord::Base
     timezone ||= 'UTC'
     sch_start_time = self.run_at[:start_time].in_time_zone(timezone)
 
-    $log.info("MIQ(Schedule.next_interval_time) sch_start_time: #{sch_start_time}")
+    _log.info("sch_start_time: #{sch_start_time}")
 
     now = Time.now.in_time_zone(timezone)
     seconds_since_start =  now - sch_start_time
@@ -370,7 +368,7 @@ class MiqSchedule < ActiveRecord::Base
       end
     end
 
-    $log.info("MIQ(Schedule.next_interval_time) next_time: #{next_time}")
+    _log.info("next_time: #{next_time}")
     next_time
   end
 
@@ -399,7 +397,7 @@ class MiqSchedule < ActiveRecord::Base
   end
 
   def self.preload_schedules
-    $log.info("MIQ(scheule-preload_schedules) Preloading sample schedules...")
+    _log.info("Preloading sample schedules...")
     fixture_file = File.join(FIXTURE_DIR, "miq_schedules.yml")
     slist = YAML.load_file(fixture_file) if File.exist?(fixture_file)
 
@@ -411,7 +409,7 @@ class MiqSchedule < ActiveRecord::Base
         rec.update_attributes(sched[:attributes])
       end
     end
-    $log.info("MIQ(scheule-preload_schedules) Preloading sample schedules... Done")
+    _log.info("Preloading sample schedules... Done")
   end
 
   def v_interval_unit

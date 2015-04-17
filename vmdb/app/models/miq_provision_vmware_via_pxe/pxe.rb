@@ -1,4 +1,5 @@
 module MiqProvisionVmwareViaPxe::Pxe
+  include Vmdb::NewLogging
   def get_mac_address_of_nic_on_requested_vlan
     network_name = get_option(:vlan)
     # Remove the "dvs_" prefix from the vlan name that gets saved as part of the DV switches
@@ -10,7 +11,7 @@ module MiqProvisionVmwareViaPxe::Pxe
       nics = vm.hardware.nics.select(&:address).sort_by(&:device_name)
       unless nics.blank?
         mac_addresses = nics.collect { |n| [n.device_name, n.address] }
-        $log.info("MIQ(#{self.class.name}#get_mac_address_of_nic_on_requested_vlan) Vlan lookup did not return a matching MAC address.  Returning first available address from: <#{mac_addresses.inspect}>")
+        _log.info("Vlan lookup did not return a matching MAC address.  Returning first available address from: <#{mac_addresses.inspect}>")
         result = mac_addresses.first.last
       end
     end

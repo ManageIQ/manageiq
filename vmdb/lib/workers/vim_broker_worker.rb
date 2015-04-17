@@ -1,6 +1,7 @@
 require 'workers/worker_base'
 
 class VimBrokerWorker < WorkerBase
+  include Vmdb::NewLogging
   self.wait_for_worker_monitor = false
 
   def after_initialize
@@ -159,7 +160,7 @@ class VimBrokerWorker < WorkerBase
   def on_notify_event(event)
     ems_id = self.ems_ids_for_notify(event[:server], event[:username])
     return if ems_id.nil?
-    $log.info("MIQ(VimBrokerWorker.on_notify_event) Queueing update for EMS id: [#{ems_id}] on event [#{event[:objType]}-#{event[:op]}]#{" for properties: #{event[:changedProps].inspect}" if event.has_key?(:changedProps)}")
+    _log.info("Queueing update for EMS id: [#{ems_id}] on event [#{event[:objType]}-#{event[:op]}]#{" for properties: #{event[:changedProps].inspect}" if event.has_key?(:changedProps)}")
     EmsRefresh.queue_vc_update(ems_id, event)
   end
   alias on_create_event on_notify_event

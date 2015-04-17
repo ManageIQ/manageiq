@@ -1,6 +1,7 @@
 require 'net_app_manageability/types'
 
 class NetappRemoteService < StorageManager
+  include Vmdb::NewLogging
 
   has_many  :top_managed_elements,
         :class_name   => "MiqCimInstance",
@@ -428,7 +429,7 @@ class NetappRemoteService < StorageManager
   def queue_volume_create_callback(*args)
     smis_agent = MiqSmisAgent.where(:zone_id => self.zone_id).first
     if smis_agent.nil?
-      $log.error("MIQ(#{self.class.name}.queue_volume_create_callback) Unable to find an SMIS agant for zone: #{self.zone}, skipping SMIS refresh")
+      _log.error("Unable to find an SMIS agant for zone: #{self.zone}, skipping SMIS refresh")
       return
     end
 
@@ -540,10 +541,10 @@ class NetappRemoteService < StorageManager
       self.volume_list_info
       self.disconnect
     rescue NetAppManageability::Error, NameError, Errno::ETIMEDOUT, Errno::ENETUNREACH
-      $log.warn("MIQ(NetappRemoteService-verify_credentials): #{$!.inspect}")
+      _log.warn("#{$!.inspect}")
       raise $!.message
     rescue Exception
-      $log.warn("MIQ(NetappRemoteService-verify_credentials): #{$!.inspect}")
+      _log.warn("#{$!.inspect}")
       raise "Unexpected response returned from #{ui_lookup(:table => "storage_managers")}, see log for details"
     else
       true

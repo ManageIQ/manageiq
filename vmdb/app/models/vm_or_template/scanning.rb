@@ -34,7 +34,7 @@ module VmOrTemplate::Scanning
 
 
       taskid = doc.root.attributes["taskid"]
-      $log.info("MIQ(Vm-save_metadata) TaskId = [#{taskid}]")
+      _log.info("TaskId = [#{taskid}]")
       unless taskid.blank?
         name = (File.basename(doc.root.elements[1].elements[1].attributes["original_filename"], ".*") rescue "vmscan")
         # Write vm xml to the vmdb directory for debugging
@@ -44,21 +44,21 @@ module VmOrTemplate::Scanning
         begin
           job.signal(:data, xmlFile)
         rescue => err
-          $log.error("MIQ(Vm-save_metadata) Processing xml for [#{name}] [#{err}]")
-          $log.error("MIQ(Vm-save_metadata) Processing xml for [#{name}] #{err.backtrace.join("\n")}")
+          _log.error("Processing xml for [#{name}] [#{err}]")
+          _log.error("Processing xml for [#{name}] #{err.backtrace.join("\n")}")
         end
       end
 
       case(doc.root.name.downcase)
       when "summary"
-        $log.info("MIQ(Vm-save_metadata) Summary XML received. [#{doc.root.to_s[0..100]}]")
+        _log.info("Summary XML received. [#{doc.root.to_s[0..100]}]")
       when "vmmetadata"
         # doc being sent up has a some extra header elements we need to remove (<vmmetadata>, and <item>)
         begin
           # Reset the root of the xml document to match the expected starting point
           doc.root = doc.root.elements[1].elements[1]
         rescue => err
-          $log.error "MIQ(Vm-save_metadata) Invalid xml error [#{err}] for xml:[#{doc}]"
+          _log.error "Invalid xml error [#{err}] for xml:[#{doc}]"
         end
         vm.add_elements(doc)
         vm.save!
@@ -138,13 +138,13 @@ module VmOrTemplate::Scanning
     # options = {:agent_id => myhost.id, :agent_class => myhost.class.to_s}.merge!(options) unless myhost.nil?
     # self.vm_state.power_state == "on" ? options[:force_snapshot] = true : options[:force_snapshot] = false
 
-    $log.info "MIQ(Vm-scan) NAME [#{options[:name]}] SCAN [#{options[:categories].inspect}] [#{options[:categories].class}]"
+    _log.info "NAME [#{options[:name]}] SCAN [#{options[:categories].inspect}] [#{options[:categories].class}]"
 
     begin
       inputs = {:vm => self, :host => self.host}
       MiqEvent.raise_evm_job_event(self, {:type => "scan", :prefix => "request"}, inputs)
     rescue => err
-      $log.warn("MIQ(Vm-scan) NAME [#{options[:name]}] #{err.message}")
+      _log.warn("NAME [#{options[:name]}] #{err.message}")
       return
     end
 
@@ -161,7 +161,7 @@ module VmOrTemplate::Scanning
 
   # Call the miqhost webservice to do the SyncMetadata operation
   def sync_metadata(category, options = {})
-    $log.debug "MIQ(#{self.class.name}#sync_metadata) category=[#{category}] [#{category.class}]"
+    _log.debug "category=[#{category}] [#{category.class}]"
     options = {
       "category" => category.join(","),
       "from_time" => self.last_drift_state_timestamp.try(:to_i),
@@ -178,7 +178,7 @@ module VmOrTemplate::Scanning
 
   # Call the miqhost webservice to do the ScanMetadata operation
   def scan_metadata(category, options = {})
-    $log.info "MIQ(#{self.class.name}#scan_metadata) category=[#{category}] [#{category.class}]"
+    _log.info "category=[#{category}] [#{category.class}]"
     options = {
       "category" => category.join(","),
       "taskid" => nil,
@@ -335,7 +335,7 @@ module VmOrTemplate::Scanning
   def sync_stashed_metadata(ost)
     log_pref = "#{self.class.name}##{__method__}"
 
-    $log.info "MIQ(#{log_pref}) from #{self.class.name}"
+    _log.info "from #{self.class.name}"
     xml_summary = nil
     begin
       raise "No synchronize category specified" if ost.category.nil?

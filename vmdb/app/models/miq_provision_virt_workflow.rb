@@ -1,6 +1,8 @@
 require 'active_support/deprecation'
 
 class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
+  include Vmdb::NewLogging
+
   def auto_placement_enabled?
     get_value(@values[:placement_auto])
   end
@@ -442,7 +444,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
         return switches
       ensure
         vim.disconnect if vim rescue nil
-        $log.info "MIQ(#{self.class.name}.allowed_dvs) Network DVS collection completed in [#{Time.now - st}] seconds"
+        _log.info "Network DVS collection completed in [#{Time.now - st}] seconds"
       end
     end
     create_unified_pg(@dvs_by_host, hosts)

@@ -1,6 +1,7 @@
 require 'miq_apache'
 module MiqWebServerWorkerMixin
   extend ActiveSupport::Concern
+  include Vmdb::NewLogging
 
   BINDING_ADDRESS = Rails.env.production? ? "127.0.0.1" : "0.0.0.0"
 
@@ -75,12 +76,12 @@ module MiqWebServerWorkerMixin
       ports_hash = {:deletes => [], :adds => []}
 
       if current != desired
-        $log.info("MIQ(#{self.name}.sync_workers) Workers are being synchronized: Current #: [#{current}], Desired #: [#{desired}]")
+        _log.info("Workers are being synchronized: Current #: [#{current}], Desired #: [#{desired}]")
 
         if desired > current && enough_resource_to_start_worker?
           (desired - current).times do
             port = self.reserve_port(ports)
-            $log.info("MIQ(#{self.name}.sync_workers) Reserved port=#{port}, Current ports in use: #{ports.inspect}")
+            _log.info("Reserved port=#{port}, Current ports in use: #{ports.inspect}")
             ports << port
             ports_hash[:adds] << port
             w = self.start_worker(:uri => build_uri(port))
@@ -93,7 +94,7 @@ module MiqWebServerWorkerMixin
             ports.delete(port)
             ports_hash[:deletes] << port
 
-            $log.info("MIQ(#{self.name}.sync_workers) Unreserved port=#{port}, Current ports in use: #{ports.inspect}")
+            _log.info("Unreserved port=#{port}, Current ports in use: #{ports.inspect}")
             result[:deletes] << w.pid
             w.stop
           end
@@ -122,7 +123,7 @@ module MiqWebServerWorkerMixin
         :cluster        => self::CLUSTER,
       }
 
-      $log.info("MIQ(#{self.name}.install_apache_proxy_config) [#{options.inspect}")
+      _log.info("[#{options.inspect}")
       MiqApache::Conf.install_default_config(options)
     end
 
@@ -139,12 +140,12 @@ module MiqWebServerWorkerMixin
       conf = MiqApache::Conf.instance(self::BALANCE_MEMBER_CONFIG_FILE)
 
       unless adds.empty?
-        $log.info("MIQ(#{self.name}.modify_apache_ports) Adding port(s) #{adds.inspect}")
+        _log.info("Adding port(s) #{adds.inspect}")
         conf.add_ports(adds)
       end
 
       unless deletes.empty?
-        $log.info("MIQ(#{self.name}.modify_apache_ports) Removing port(s) #{deletes.inspect}")
+        _log.info("Removing port(s) #{deletes.inspect}")
         conf.remove_ports(deletes)
       end
 
@@ -156,7 +157,7 @@ module MiqWebServerWorkerMixin
         # Update the apache load balancer regardless but only restart apache
         # when adding a new port to the balancer.
         MiqServer.my_server.queue_restart_apache unless adds.empty?
-        $log.info("MIQ(#{self.name}.modify_apache_ports) Added/removed port(s) #{adds.inspect}/#{deletes.inspect}, registered ports after #{self.registered_ports.inspect}")
+        _log.info("Added/removed port(s) #{adds.inspect}/#{deletes.inspect}, registered ports after #{self.registered_ports.inspect}")
       end
       return saved
     end
@@ -186,10 +187,9 @@ module MiqWebServerWorkerMixin
     def terminate
       # HACK: Cannot call exit properly from UiWorker nor can we Process.kill('INT', ...) from inside the worker
       # Hence, this is an external mechanism for terminating this worker.
-      log_prefix = "MIQ(#{self.class.name}.terminate)"
 
       begin
-        $log.info("#{log_prefix} Terminating #{self.format_full_log_msg}, status [#{self.status}]")
+        _log.info("Terminating #{self.format_full_log_msg}, status [#{self.status}]")
         Process.kill("TERM", self.pid)
         # TODO: Variablize and clean up this 10-second-max loop of waiting on Worker to gracefully shut down
         10.times do
@@ -200,9 +200,9 @@ module MiqWebServerWorkerMixin
           sleep 1
         end
       rescue Errno::ESRCH
-        $log.warn("#{log_prefix} #{self.format_full_log_msg} has been killed")
+        _log.warn("#{self.format_full_log_msg} has been killed")
       rescue => err
-        $log.warn("#{log_prefix} #{self.format_full_log_msg} has been killed, but with the following error: #{err}")
+        _log.warn("#{self.format_full_log_msg} has been killed, but with the following error: #{err}")
       end
 
       self.kill if MiqProcess.alive?(self.pid)

@@ -7,6 +7,7 @@ module MiqAeMethodService
   end
 
   class MiqAeService
+    include Vmdb::NewLogging
     include DRbUndumped
     @@id_hash = Hash.new
     @@current = Array.new
@@ -217,22 +218,20 @@ module MiqAeMethodService
     CUSTOMER_ROOT = File.expand_path(File.join(Rails.root, "..", "customer"))
     $:.push CUSTOMER_ROOT
     def new_object(what, *args)
-      log_prefix = "MIQ(MiqAeService.new_object)"
-
       begin
         require what.underscore
       rescue LoadError => err
-        $log.warn("#{log_prefix} Error requiring <#{what}> from #{CUSTOMER_ROOT} because <#{err.message}>")
+        _log.warn("Error requiring <#{what}> from #{CUSTOMER_ROOT} because <#{err.message}>")
         return nil
       end
 
       begin
         klass = what.constantize
       rescue NameError => err
-        $log.warn("#{log_prefix} Error converting <#{what}> to a constant because <#{err.message}>")
+        _log.warn("Error converting <#{what}> to a constant because <#{err.message}>")
         ruby_file = File.join(CUSTOMER_ROOT, "#{what.underscore}.rb")
         contents  = File.read(ruby_file) rescue nil
-        $log.warn("#{log_prefix} Contents of Customer Library <#{ruby_file}> are:\n#{contents}")
+        _log.warn("Contents of Customer Library <#{ruby_file}> are:\n#{contents}")
         return nil
       end
 

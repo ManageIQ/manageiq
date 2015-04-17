@@ -1,4 +1,5 @@
 class Zone < ActiveRecord::Base
+  include Vmdb::NewLogging
   DEFAULT_NTP_SERVERS = {:server => %w(0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org)}.freeze
 
   validates_presence_of   :name, :description
@@ -46,9 +47,9 @@ class Zone < ActiveRecord::Base
   def self.seed
     MiqRegion.my_region.lock do
       unless self.exists?(:name => 'default')
-        $log.info("MIQ(Zone.seed) Creating default zone...")
+        _log.info("Creating default zone...")
         self.create(:name => "default", :description => "Default Zone")
-        $log.info("MIQ(Zone.seed) Creating default zone... Complete")
+        _log.info("Creating default zone... Complete")
       end
     end
   end
@@ -247,7 +248,7 @@ class Zone < ActiveRecord::Base
 
     servers = active_miq_servers
     return if servers.blank?
-    $log.info("MIQ(Zone#queue_ntp_reload) Zone: [#{name}], Queueing ntp_reload for [#{servers.length}] active_miq_servers, ids: #{servers.collect(&:id)}")
+    _log.info("Zone: [#{name}], Queueing ntp_reload for [#{servers.length}] active_miq_servers, ids: #{servers.collect(&:id)}")
 
     servers.each do |s|
       MiqQueue.put(

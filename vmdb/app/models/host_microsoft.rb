@@ -38,10 +38,10 @@ class HostMicrosoft < Host
   def verify_credentials_windows(*authentication)
     begin
       require 'miq-wmi'
-      $log.info "MIQ(Host-Microsoft-verify_credentials): Connecting to WMI to verify credentials: [#{authentication[0]}] -[#{authentication[1]}]"
+      _log.info "Connecting to WMI to verify credentials: [#{authentication[0]}] -[#{authentication[1]}]"
       WMIHelper.verify_credentials(*authentication)
     rescue Exception
-      $log.warn("MIQ(Host-Microsoft-verify_credentials): #{$!.inspect}")
+      _log.warn("#{$!.inspect}")
       raise "Unexpected response returned from #{ui_lookup(:table => "ext_management_systems")}, see log for details"
     else
       true

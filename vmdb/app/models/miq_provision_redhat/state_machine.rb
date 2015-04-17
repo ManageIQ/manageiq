@@ -1,4 +1,5 @@
 module MiqProvisionRedhat::StateMachine
+  include Vmdb::NewLogging
   def create_destination
     signal :determine_placement
   end
@@ -33,11 +34,11 @@ module MiqProvisionRedhat::StateMachine
 
   def customize_destination
     if destination_image_locked?
-      $log.info("MIQ(#{self.class.name}#customize_destination) Destination image locked; re-queuing")
+      _log.info("Destination image locked; re-queuing")
       requeue_phase
     else
       message = "Starting New #{destination_type} Customization"
-      $log.info("MIQ(#{self.class.name}#customize_destination) #{message} #{for_destination}")
+      _log.info("#{message} #{for_destination}")
       update_and_notify_parent(:message => message)
       configure_container
       attach_floppy_payload

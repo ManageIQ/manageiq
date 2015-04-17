@@ -1,4 +1,5 @@
 class MiqWebServiceWorker < MiqWorker
+  include Vmdb::NewLogging
   REQUIRED_ROLE = 'web_services'
   self.required_roles = [REQUIRED_ROLE]
 
@@ -15,11 +16,11 @@ class MiqWebServiceWorker < MiqWorker
 
   def self.validate_config_settings(configuration = VMDB::Config.new("vmdb"))
     if configuration.config.fetch_path(:workers, :worker_base, :web_service_worker).nil?
-      $log.info("MIQ(#{self.name}) Migrating Settings")
+      _log.info("Migrating Settings")
       configuration.merge_from_template(:workers, :worker_base, :web_service_worker)
       roles = configuration.config.fetch_path(:server, :role).split(',')
       unless roles.include?(REQUIRED_ROLE)
-        $log.info("MIQ(#{self.name}) Adding Default Role #{REQUIRED_ROLE}")
+        _log.info("Adding Default Role #{REQUIRED_ROLE}")
         roles << REQUIRED_ROLE
         configuration.config.store_path(:server, :role, roles.join(','))
       end

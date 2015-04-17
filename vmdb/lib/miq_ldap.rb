@@ -1,6 +1,7 @@
 require 'net/ldap'
 
 class MiqLdap
+  include Vmdb::NewLogging
   DEFAULT_LDAP_PORT      = 389
   DEFAULT_LDAPS_PORT     = 636
   DEFAULT_BIND_TIMEOUT   = 30
@@ -31,10 +32,9 @@ class MiqLdap
   end
 
   def initialize(options = {})
-    log_prefix = "MIQ(MiqLdap.initialize)"
     @auth = options[:auth] || VMDB::Config.new("vmdb").config[:authentication]
     log_auth = VMDB::Config.clone_auth_for_log(@auth)
-    $log.info("#{log_prefix} Server Settings: #{log_auth.inspect}")
+    _log.info("Server Settings: #{log_auth.inspect}")
     mode              = options.delete(:mode)            || @auth[:mode]
     @basedn           = options.delete(:basedn)          || @auth[:basedn]
     @user_type        = options.delete(:user_type)       || @auth[:user_type]
@@ -96,21 +96,20 @@ class MiqLdap
   end
 
   def bind(username, password)
-    log_prefix = "MIQ(MiqLdap.bind)"
     @ldap.auth(username, password)
     begin
-      $log.info("#{log_prefix} Binding to LDAP: Host: [#{@ldap.host}], User: [#{username}]...")
+      _log.info("Binding to LDAP: Host: [#{@ldap.host}], User: [#{username}]...")
       Timeout::timeout(@bind_timeout) do
         if @ldap.bind
-          $log.info("#{log_prefix} Binding to LDAP: Host: [#{@ldap.host}], User: [#{username}]... successful")
+          _log.info("Binding to LDAP: Host: [#{@ldap.host}], User: [#{username}]... successful")
           return true
         else
-          $log.warn("#{log_prefix} Binding to LDAP: Host: [#{@ldap.host}], User: [#{username}]... unsuccessful")
+          _log.warn("Binding to LDAP: Host: [#{@ldap.host}], User: [#{username}]... unsuccessful")
           return false
         end
       end
     rescue Exception => err
-      $log.error("#{log_prefix} Binding to LDAP: Host: [#{@ldap.host}], User: [#{username}], '#{err.message}'")
+      _log.error("Binding to LDAP: Host: [#{@ldap.host}], User: [#{username}], '#{err.message}'")
       return false
     end
   end
@@ -128,7 +127,7 @@ class MiqLdap
     begin
       result = self.search(:base => dn, :scope => :base, :attributes => attrs)
     rescue Exception => err
-      $log.error("MIQ(MiqLdap.get) '#{err.message}'")
+      _log.error("'#{err.message}'")
     end
     return nil unless result
      # puts "result: #{result.inspect}"
@@ -151,17 +150,15 @@ class MiqLdap
   end
 
   def search(opts, &blk)
-    log_prefix = "MIQ(MiqLdap.search)"
     begin
       Timeout::timeout(@search_timeout) { _search(opts, &blk) }
     rescue TimeoutError
-      $log.error("#{log_prefix} LDAP search timed out after #{@search_timeout} seconds")
+      _log.error("LDAP search timed out after #{@search_timeout} seconds")
       raise
     end
   end
 
   def _search(opts, seen=nil, &blk)
-    log_prefix = "MIQ(MiqLdap._search)"
     raw_opts = opts.dup
     opts[:scope]            = self.scope(opts[:scope]) if opts[:scope]
     if opts[:filter]
@@ -169,7 +166,7 @@ class MiqLdap
     end
     opts[:return_referrals] = @follow_referrals
     seen                  ||= {:objects => [], :referrals => {}}
-    $log.debug("#{log_prefix} opts: #{opts.inspect}")
+    _log.debug("opts: #{opts.inspect}")
 
     if block_given?
       opts[:return_result] = false
@@ -177,7 +174,7 @@ class MiqLdap
     else
       result = @ldap.search(opts)
       unless ldap_result_ok?
-        $log.warn("#{log_prefix} LDAP Search unsuccessful, '#{@ldap.get_operation_result.message}', Code: [#{@ldap.get_operation_result.code}], Host: [#{@ldap.host}]")
+        _log.warn("LDAP Search unsuccessful, '#{@ldap.get_operation_result.message}', Code: [#{@ldap.get_operation_result.code}], Host: [#{@ldap.host}]")
         return []
       end
       return @follow_referrals ? chase_referrals(result, raw_opts, seen) : result
@@ -191,7 +188,6 @@ class MiqLdap
   end
 
   def chase_referrals(objs, opts, seen)
-    log_prefix = "MIQ(MiqLdap.chase_referrals)"
     return objs if objs.empty?
 
     res = []
@@ -204,13 +200,13 @@ class MiqLdap
           next if seen[:objects].include?(dn)
 
           begin
-            $log.debug("#{log_prefix} Chasing referral: #{ref}")
+            _log.debug("Chasing referral: #{ref}")
 
             handle = seen[:referrals][host]
             if handle.nil?
               handle = self.class.new(:auth => {:ldaphost => host, :ldapport => port, :mode => scheme, :follow_referrals => @follow_referrals})
               unless handle.bind(@auth[:bind_dn], @auth[:bind_pwd])
-                $log.warn("#{log_prefix} Unable to chase referral: #{ref}, bind with user: [#{@auth[:bind_dn]}] was unsuccessful")
+                _log.warn("Unable to chase referral: #{ref}, bind with user: [#{@auth[:bind_dn]}] was unsuccessful")
                 next
               end
               seen[:referrals][host] = handle
@@ -218,10 +214,10 @@ class MiqLdap
 
             seen[:objects] << dn
             ref_res = handle._search(opts.merge(:base => dn), seen)
-            $log.debug("#{log_prefix} Referral: #{ref}, returned [#{ref_res.length}] objects")
+            _log.debug("Referral: #{ref}, returned [#{ref_res.length}] objects")
             res += ref_res
           rescue Net::LDAP::LdapError => err
-            $log.warn("#{log_prefix} Unable to chase referral [#{ref}] because #{err.message}")
+            _log.warn("Unable to chase referral [#{ref}] because #{err.message}")
           end
         end
       else
@@ -309,8 +305,6 @@ class MiqLdap
   end
 
   def get_user_object(username, user_type = nil)
-    log_prefix = "MIQ(MiqLdap.get_user_object)"
-
     user_type ||= @user_type.split("-").first
     user_type = "dn" if self.is_dn?(username)
     begin
@@ -328,10 +322,10 @@ class MiqLdap
         search_opts[:filter] = self.class.object_sid_filter(username)
       end
 
-      $log.info("#{log_prefix} Type: [#{user_type}], Base DN: [#{@basedn}], Filter: <#{search_opts[:filter]}>")
+      _log.info("Type: [#{user_type}], Base DN: [#{@basedn}], Filter: <#{search_opts[:filter]}>")
       obj = self.search(search_opts)
     rescue Exception => err
-      $log.error("#{log_prefix} '#{err.message}'")
+      _log.error("'#{err.message}'")
       obj = nil
     end
     obj.first if obj
@@ -380,16 +374,14 @@ class MiqLdap
 
 
   def get_memberships(obj, max_depth = 0, attr=:memberof, followed = [], current_depth = 0)
-    log_prefix = "MIQ(MiqLdap.get_memberships)"
-
     current_depth += 1
 
-    $log.debug "#{log_prefix} Enter get_memberships: #{obj.inspect}"
-    $log.debug "#{log_prefix} Enter get_memberships: #{obj.dn}, max_depth: #{max_depth}, current_depth: #{current_depth}, attr: #{attr}"
+    _log.debug "Enter get_memberships: #{obj.inspect}"
+    _log.debug "Enter get_memberships: #{obj.dn}, max_depth: #{max_depth}, current_depth: #{current_depth}, attr: #{attr}"
     result = []
     # puts "obj #{obj.inspect}"
     groups = MiqLdap.get_attr(obj, attr).to_miq_a
-    $log.debug "#{log_prefix} Groups: #{groups.inspect}"
+    _log.debug "Groups: #{groups.inspect}"
     return result unless groups
 
     groups.each {|group|
@@ -398,7 +390,7 @@ class MiqLdap
       dn   = nil
       cn   = nil
       if gobj.nil?
-        $log.debug "#{log_prefix} Group: DN: #{group} returned a nil object, CN will be extracted from DN, memberships will not be followed"
+        _log.debug "Group: DN: #{group} returned a nil object, CN will be extracted from DN, memberships will not be followed"
         self.normalize(group) =~ /^cn[ ]*=[ ]*([^,]+),/
         cn = $1
       else
@@ -408,9 +400,9 @@ class MiqLdap
 
       if cn.nil?
         suffix = gobj.nil? ? "unable to extract CN from DN" : "has no CN"
-        $log.debug "#{log_prefix} Group: #{group} #{suffix}, skipping"
+        _log.debug "Group: #{group} #{suffix}, skipping"
       else
-        $log.debug "#{log_prefix} Group: DN: #{group}, extracted CN: #{cn}"
+        _log.debug "Group: DN: #{group}, extracted CN: #{cn}"
         result.push(cn.strip)
       end
 
@@ -420,7 +412,7 @@ class MiqLdap
       end
 
     }
-    $log.debug "#{log_prefix} Exit get_memberships: #{obj.dn}, result: #{result.uniq.inspect}"
+    _log.debug "Exit get_memberships: #{obj.dn}, result: #{result.uniq.inspect}"
     result.uniq
   end
 

@@ -1,4 +1,5 @@
 module MiqProvisionTaskConfiguredSystemForeman::StateMachine
+  include Vmdb::NewLogging
   def run_provision
     validate_source
     signal :prepare_provision
@@ -84,7 +85,7 @@ module MiqProvisionTaskConfiguredSystemForeman::StateMachine
 
   def finish
     if status != 'Error'
-      $log.info("MIQ(#{self.class.name}##{__method__}) Executing provision request: [#{description}]... Complete")
+      _log.info("Executing provision request: [#{description}]... Complete")
     end
   end
 end

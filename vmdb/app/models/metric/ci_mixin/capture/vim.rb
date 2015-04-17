@@ -1,4 +1,5 @@
 module Metric::CiMixin::Capture::Vim
+  include Vmdb::NewLogging
   #
   # Connect / Disconnect / Intialize methods
   #
@@ -93,7 +94,7 @@ module Metric::CiMixin::Capture::Vim
       interval_by_mor[mor] = interval
     end
 
-    $log.debug("MIQ(#{self.class.name}.perf_capture_intervals) Mapping of MOR to Intervals: #{interval_by_mor.inspect}")
+    _log.debug("Mapping of MOR to Intervals: #{interval_by_mor.inspect}")
     return interval_by_mor
   end
 

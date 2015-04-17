@@ -1,4 +1,5 @@
 module VmdbwsOps
+  include Vmdb::NewLogging
   #
   # Automate web services
   #
@@ -18,15 +19,15 @@ module VmdbwsOps
   #
 
   def EVM_ping(data)
-    $log.info "MIQ(miq_ping): enter"
+    _log.info "enter"
     t0 = Time.now
-    $log.info "MIQ(miq_ping): data: #{data}"
-    $log.info "MIQ(miq_ping): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "data: #{data}"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     true
   end
 
   def EVM_vm_list(hostId)
-    $log.info "MIQ(vm_list): enter, hostId: [#{hostId}]"
+    _log.info "enter, hostId: [#{hostId}]"
     t0 = Time.now
     if ["", "*", "all", "none"].include?(hostId.to_s.strip.downcase)
       result = VmOrTemplate.find(:all)
@@ -34,151 +35,151 @@ module VmdbwsOps
       host = Host.find_by_guid(hostId)
       raise "unable to find host with id: [#{hostId}]" if host.nil?
 
-      $log.info "MIQ(vm_list): Found host name: [#{host.name}]"
+      _log.info "Found host name: [#{host.name}]"
       result = host.vms
     end
-    $log.info "MIQ(vm_list): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     return result
   end
 
   def EVM_host_list
-    $log.info "MIQ(host_list): enter"
+    _log.info "enter"
     t0 = Time.now
       result = Host.find(:all)
-    $log.info "MIQ(host_list): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     return result
   end
 
   def EVM_cluster_list
-    $log.info "MIQ(cluster_list): enter"
+    _log.info "enter"
     t0 = Time.now
       result = EmsCluster.find(:all)
-    $log.info "MIQ(cluster_list): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     return result
   end
 
   def EVM_resource_pool_list
-    $log.info "MIQ(resource_pool_list): enter"
+    _log.info "enter"
     t0 = Time.now
       result = ResourcePool.find(:all)
-    $log.info "MIQ(resource_pool_list): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     return result
   end
 
   def EVM_datastore_list
-    $log.info "MIQ(datastore_list): enter"
+    _log.info "enter"
     t0 = Time.now
       result = Storage.find(:all)
-    $log.info "MIQ(datastore_list): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     return result
   end
 
   def EVM_vm_software(vmGuid)
-    $log.info "MIQ(vm_software): enter"
+    _log.info "enter"
     t0 = Time.now
     vm = FindVmByGuid(vmGuid)
 
     result = vm.guest_applications
-    $log.info "MIQ(vm_software): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     return result
   end
 
   def EVM_vm_accounts(vmGuid)
-    $log.info "MIQ(vm_accounts): enter"
+    _log.info "enter"
     t0 = Time.now
     vm = FindVmByGuid(vmGuid)
 
     result = vm.accounts.collect {|acct| VmAccounts.new(:name => acct.name, :type => acct.accttype)}
-    $log.info "MIQ(vm_accounts): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     return result
   end
 
   def EVM_get_host(hostguid)
-    $log.info "MIQ(EVM_get_host): enter"
+    _log.info "enter"
     t0 = Time.now
     host = Host.find_by_guid(hostguid)
     ret = host.nil? ? nil : Host.new(:name => host.name, :guid => host.guid, :vmm_vendor => host.vmm_vendor)
-    $log.info "MIQ(EVM_get_host): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     ret
   end
 
   def EVM_get_hosts(emsGuid)
-    $log.info "MIQ(EVM_get_hosts): enter"
+    _log.info "enter"
     t0 = Time.now
     ret = Host.find(:all)
-    $log.info "MIQ(EVM_get_hosts): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     ret
   end
 
   def EVM_get_cluster(clusterId)
-    $log.info "MIQ(EVM_get_cluster): enter"
+    _log.info "enter"
     t0 = Time.now
     cluster = EmsCluster.find_by_id(clusterId)
     ret = cluster.nil? ? nil : EmsCluster.new(:name => cluster.name )
-    $log.info "MIQ(EVM_get_cluster): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     ret
   end
 
   def EVM_get_clusters(emsId = nil)
-    $log.info "MIQ(EVM_get_clusters): enter"
+    _log.info "enter"
     t0 = Time.now
     ret = emsId.nil? ? EmsCluster.find(:all) : EmsCluster.find_by_ems_id(emsId)
-    $log.info "MIQ(EVM_get_clusters): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     ret
   end
 
   def EVM_get_resource_pool(resourcepoolId)
-    $log.info "MIQ(EVM_get_resource_pool): enter"
+    _log.info "enter"
     t0 = Time.now
     resourcepool = ResourcePool.find_by_id(resourcepoolId)
     ret = resourcepool.nil? ? nil : ResourcePool.new(:name => resourcepool.name )
-    $log.info "MIQ(EVM_get_resource_pool): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     ret
   end
 
   def EVM_get_resource_pools(emsGuid)
-    $log.info "MIQ(EVM_get_resource_pools): enter"
+    _log.info "enter"
     t0 = Time.now
     ret = ResourcePool.find(:all)
-    $log.info "MIQ(EVM_get_resource_pools): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     ret
   end
 
   def EVM_get_datastore(datastoreId)
-    $log.info "MIQ(EVM_get_datastore): enter"
+    _log.info "enter"
     t0 = Time.now
     datastore = Storage.find_by_id(datastoreId)
     ret = datastore.nil? ? nil : Storage.new(:name => datastore.name )
-    $log.info "MIQ(EVM_get_datastore): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     ret
   end
 
   def EVM_get_datastores(emsGuid)
-    $log.info "MIQ(EVM_get_datastores): enter"
+    _log.info "enter"
     t0 = Time.now
     ret = Storage.find(:all)
-    $log.info "MIQ(EVM_get_datastores): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     ret
   end
 
   def EVM_get_vm(vmGuid)
-    $log.info "MIQ(EVM_get_vm): enter"
+    _log.info "enter"
     t0 = Time.now
     vm = FindVmByGuid(vmGuid)
-    $log.info "MIQ(EVM_get_vm): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     vm
   end
 
   def EVM_get_vms(hostId)
-    $log.info "MIQ(EVM_get_vms): enter"
+    _log.info "enter"
     t0 = Time.now
     ret = VmOrTemplate.find(:all)
-    $log.info "MIQ(EVM_get_vms): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     ret
   end
 
   def EVM_delete_vm_by_name(name)
-    $log.info "MIQ(EVM_delete_vm_by_name): enter"
+    _log.info "enter"
     t0 = Time.now
     vm = VmOrTemplate.find_by_name(name)
 
@@ -188,7 +189,7 @@ module VmdbwsOps
     else
       ret = false
     end
-    $log.info "MIQ(EVM_delete_vm_by_name): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     ret
   end
 
@@ -198,7 +199,7 @@ module VmdbwsOps
 
   def EVM_smart_start(vmGuid)
     t0 = Time.now
-    $log.info "MIQ(EVM_smart_start): enter, vmGuid: [#{vmGuid}]"
+    _log.info "enter, vmGuid: [#{vmGuid}]"
     vm = FindVmByGuid(vmGuid)
 
     return VmdbwsSupport::VmCmdResult.new(:result => false, :reason => "VM [#{vm.name}] is already powered on") if vm.state == "on"
@@ -210,14 +211,14 @@ module VmdbwsOps
       result.result = false
       result.reason = err
     end
-    $log.info "MIQ(EVM_smart_start): result: [#{result.result}], #{result.reason}"
-    $log.info "MIQ(EVM_smart_start): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "result: [#{result.result}], #{result.reason}"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     return result
   end
 
   def EVM_smart_stop(vmGuid)
     t0 = Time.now
-    $log.info "MIQ(EVM_smart_stop): enter, vmGuid: [#{vmGuid}]"
+    _log.info "enter, vmGuid: [#{vmGuid}]"
     vm = FindVmByGuid(vmGuid)
 
     return VmdbwsSupport::VmCmdResult.new(:result => false, :reason => "VM [#{vm.name}] is already powered off") if vm.state == "off"
@@ -229,14 +230,14 @@ module VmdbwsOps
       result.result = false
       result.reason = err
     end
-    $log.info "MIQ(EVM_smart_start): result: [#{result.result}], #{result.reason}"
-    $log.info "MIQ(EVM_smart_start): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "result: [#{result.result}], #{result.reason}"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     return result
   end
 
   def EVM_smart_suspend(vmGuid)
     t0 = Time.now
-    $log.info "MIQ(EVM_smart_suspend): enter, vmGuid: [#{vmGuid}]"
+    _log.info "enter, vmGuid: [#{vmGuid}]"
     vm = FindVmByGuid(vmGuid)
 
     return VmdbwsSupport::VmCmdResult.new(:result => false, :reason => "VM [#{vm.name}] is already suspended of powered off") if vm.state == "off" || vm.state == "suspended"
@@ -248,13 +249,13 @@ module VmdbwsOps
       result.result = false
       result.reason = err
     end
-    $log.info "MIQ(EVM_smart_start): result: [#{result.result}], #{result.reason}"
-    $log.info "MIQ(EVM_smart_start): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "result: [#{result.result}], #{result.reason}"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     return result
   end
 
   def EVM_policy_list(hostId)
-    $log.info "MIQ(policy_list): enter"
+    _log.info "enter"
     t0 = Time.now
     if ["*", "all", "none"].include?(hostId.downcase)
       result = Policy.find(:all).collect {|p| PolicyList.new(:guid => p.guid, :name => p.name, :description => p.description)}
@@ -262,15 +263,15 @@ module VmdbwsOps
       host = Host.find_by_guid(hostId)
       raise "unable to find host with id: [#{hostId}]" if host.nil?
 
-      $log.info "MIQ(policy_list): Found host name: [#{host.name}]"
+      _log.info "Found host name: [#{host.name}]"
       result = host.get_policies.collect {|p| PolicyList.new(:guid => p.guid, :name => p.name, :description => p.description)}
     end
-    $log.info "MIQ(policy_list): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     return result
   end
 
   def EVM_vm_rsop(vmGuid, policy)
-    $log.info "MIQ(vm_rsop): enter"
+    _log.info "enter"
 
     t0 = Time.now
     vm = FindVmByGuid(vmGuid)
@@ -278,14 +279,14 @@ module VmdbwsOps
     pol = Policy.find_by_name(policy)
     raise "unable to find policy named: [#{policy}]" if pol.nil?
 
-    $log.info "MIQ(vm_rsop): Found vm name: [#{vm.name}]"
+    _log.info "Found vm name: [#{vm.name}]"
     result = vm.passes_policy?([policy])
-    $log.info "MIQ(vm_rsop): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     return VmRsop.new(:result => result, :reason => pol.description)
   end
 
   def EVM_add_lifecycle_event(event, status, message, guid, location, created_by)
-    $log.info "MIQ(add_lifecycle_event): enter"
+    _log.info "enter"
     t0 = Time.now
 
     identifier = ""
@@ -297,7 +298,7 @@ module VmdbwsOps
       raise "A GUID or VM location must be provided" if location.blank?
       identifier = "location"
     end
-    $log.info "MIQ(add_lifecycle_event): VM Lookup by [#{identifier}] with value [#{identifier.inspect}]"
+    _log.info "VM Lookup by [#{identifier}] with value [#{identifier.inspect}]"
 
     ## find the vm by identifier
     case identifier.downcase
@@ -311,7 +312,7 @@ module VmdbwsOps
     else
       raise "Unknown identifier #{identifier}"
     end
-    $log.warn "MIQ(add_lifecycle_event): Unable to find vm by [#{identifier}] with value [#{identifier.inspect}]" if vm.nil?
+    _log.warn "Unable to find vm by [#{identifier}] with value [#{identifier.inspect}]" if vm.nil?
 
     # create a hash of event data to give to the model for creation of the event
     event_hash = {
@@ -331,25 +332,25 @@ module VmdbwsOps
         msg = "Lifecycle event added for vm name: [#{vm.name}] with id: [#{vm.id}]"
       end
       result = true
-      $log.info "MIQ(add_lifecycle_event): #{msg}"
+      _log.info "#{msg}"
     else
       result =false
     end
-    $log.info "MIQ(add_lifecycle_event): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     return result
   end
 
   # TODO: Change name to guid
   def EVM_get_policy(name)
     t0 = Time.now
-    $log.info "MIQ(get_policy): enter"
+    _log.info "enter"
     result = Policy.find_by_name(name)
-    $log.info "MIQ(get_policy): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     return result
   end
 
   def EVM_event_list(policyId)
-    $log.info "MIQ(EVM_event_list): enter"
+    _log.info "enter"
     t0 = Time.now
     if ["*", "all", "none"].include?(policyId.downcase)
       result = MiqEvent.find(:all).collect {|ent| EventList.new(:guid => ent.guid, :name => ent.name)}
@@ -357,15 +358,15 @@ module VmdbwsOps
       policy = Policy.find_by_guid(policyId)
       raise "unable to find policy with id: [#{policyId}]" if policy.nil?
 
-      $log.info "MIQ(EVM_event_list): Found policy name: [#{policy.name}]"
+      _log.info "Found policy name: [#{policy.name}]"
       result = policy.events.collect {|ent| EventList.new(:guid => ent.guid, :name => ent.name)}
     end
-    $log.info "MIQ(EVM_event_list): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     return result
   end
 
   def EVM_condition_list(policyId)
-    $log.info "MIQ(EVM_condition_list): enter"
+    _log.info "enter"
     t0 = Time.now
     if ["*", "all", "none"].include?(policyId.downcase)
       result = Condition.find(:all).collect {|ent| ConditionList.new(:guid => ent.guid, :name => ent.name)}
@@ -373,15 +374,15 @@ module VmdbwsOps
       policy = Policy.find_by_guid(policyId)
       raise "unable to find policy with id: [#{policyId}]" if policy.nil?
 
-      $log.info "MIQ(EVM_condition_list): Found policy name: [#{policy.name}]"
+      _log.info "Found policy name: [#{policy.name}]"
       result = policy.conditions.collect {|ent| ConditionList.new(:guid => ent.guid, :name => ent.name)}
     end
-    $log.info "MIQ(EVM_condition_list): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     return result
   end
 
   def EVM_action_list(policyId)
-    $log.info "MIQ(EVM_action_list): enter"
+    _log.info "enter"
     t0 = Time.now
     if ["*", "all", "none"].include?(policyId.downcase)
       result = MiqAction.find(:all).collect {|ent| ActionList.new(:guid => ent.guid, :name => ent.name)}
@@ -389,15 +390,15 @@ module VmdbwsOps
       policy = Policy.find_by_guid(policyId)
       raise "unable to find policy with id: [#{policyId}]" if policy.nil?
 
-      $log.info "MIQ(EVM_action_list): Found policy name: [#{policy.name}]"
+      _log.info "Found policy name: [#{policy.name}]"
       result = policy.miq_actions.collect {|ent| ActionList.new(:guid => ent.guid, :name => ent.name)}
     end
-    $log.info "MIQ(EVM_action_list): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     return result
   end
 
   def EVM_assign_policy(policyId, hostId)
-    $log.info "MIQ(EVM_assign_policy): enter"
+    _log.info "enter"
     t0 = Time.now
 
     policy = Policy.find_by_guid(policyId)
@@ -409,12 +410,12 @@ module VmdbwsOps
     result = true
     host.add_policy(policy)
 
-    $log.info "MIQ(EVM_assign_policy): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     return result
   end
 
   def EVM_unassign_policy(policyId, hostId)
-    $log.info "MIQ(EVM_assign_policy): enter"
+    _log.info "enter"
     t0 = Time.now
 
     policy = Policy.find_by_guid(policyId)
@@ -426,7 +427,7 @@ module VmdbwsOps
     result = true
     host.remove_policy(policy)
 
-    $log.info "MIQ(EVM_assign_policy): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     return result
   end
 

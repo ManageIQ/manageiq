@@ -1,10 +1,12 @@
 module MiqProvisionRedhat::Configuration::Network
+  include Vmdb::NewLogging
+
   def configure_network_adapters
     configure_dialog_nic
     requested_vnics   = options[:networks]
 
     if requested_vnics.nil?
-      $log.info "MIQ(#{self.class.name}#configure_network_adapters) NIC settings will be inherited from the template."
+      _log.info "NIC settings will be inherited from the template."
       return
     end
 
@@ -42,14 +44,14 @@ module MiqProvisionRedhat::Configuration::Network
       Ovirt::Cluster.find_by_href(rhevm, dest_cluster.ems_ref).try(:find_network_by_name, network_name)
     end
 
-    $log.warn "MIQ(#{self.class.name}#find_network_in_cluster) Cannot find network name=#{network_name}" if network.nil?
+    _log.warn "Cannot find network name=#{network_name}" if network.nil?
     network
   end
 
   def find_nic_on_network(network)
     nic = get_provider_destination.nics.detect { |n| n[:network][:id] == network[:id] }
 
-    $log.warn "MIQ(#{self.class.name}#find_nic_on_network) Cannot find NIC with network id=#{network[:id].inspect}" if nic.nil?
+    _log.warn "Cannot find NIC with network id=#{network[:id].inspect}" if nic.nil?
     nic
   end
 
@@ -58,7 +60,7 @@ module MiqProvisionRedhat::Configuration::Network
     return if vlan.blank?
     options[:networks]    ||= []
     options[:networks][0] ||= begin
-      $log.info("MIQ(#{self.class.name}.configure_dialog_nic) vlan: #{vlan.inspect}")
+      _log.info("vlan: #{vlan.inspect}")
       {:network => vlan, :mac_address => get_option_last(:mac_address)}
     end
   end
@@ -75,7 +77,7 @@ module MiqProvisionRedhat::Configuration::Network
       :mac_address => mac_addr,
     }.delete_blanks
 
-    $log.info("MIQ(#{self.class.name}.configure_vnic) with options: <#{options.inspect}>")
+    _log.info("with options: <#{options.inspect}>")
 
     vnic.nil? ? get_provider_destination.create_nic(options) : vnic.apply_options!(options)
   end

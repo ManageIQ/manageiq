@@ -1,4 +1,5 @@
 module MiqProvisionMixin
+  include Vmdb::NewLogging
   RESOURCE_CLASS_KEY_MAP = {
     # Infrastructure
     "Host"                  => [:hosts,                   :placement_host_name],
@@ -152,7 +153,7 @@ module MiqProvisionMixin
       end
       self.update_attribute(:options, self.options.merge({:placement_folder_name => result})) unless result.nil?
     rescue => err
-      $log.error "MIQ(MiqProvision.set_folder) #{err}\n#{err.backtrace.join("\n")}"
+      _log.error "#{err}\n#{err.backtrace.join("\n")}"
     end
     return result
   end

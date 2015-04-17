@@ -13,6 +13,7 @@ $:.push("#{File.dirname(__FILE__)}/../../../lib/metadata/ScanProfile")
 require 'HostScanProfiles'
 
 class Host < ActiveRecord::Base
+  include Vmdb::NewLogging
   include NewWithTypeStiMixin
 
   VENDOR_TYPES = {
@@ -227,9 +228,9 @@ class Host < ActiveRecord::Base
     inputs = {:ems_cluster => ems_cluster, :host => self}
     begin
       MiqEvent.raise_evm_event(self, event, inputs)
-      $log.info("MIQ(Host.#{__method__}) Raised EVM Event: [#{event}, host: #{name}(#{id}), cluster: #{ems_cluster.name}(#{ems_cluster.id})]")
+      _log.info("Raised EVM Event: [#{event}, host: #{name}(#{id}), cluster: #{ems_cluster.name}(#{ems_cluster.id})]")
     rescue => err
-      $log.warn("MIQ(Host.#{__method__}) Error raising EVM Event: [#{event}, host: #{name}(#{id}), cluster: #{ems_cluster.name}(#{ems_cluster.id})], '#{err.message}'")
+      _log.warn("Error raising EVM Event: [#{event}, host: #{name}(#{id}), cluster: #{ems_cluster.name}(#{ems_cluster.id})], '#{err.message}'")
     end
   end
   private :raise_cluster_event
@@ -353,7 +354,7 @@ class Host < ActiveRecord::Base
   def policy_prevented?(request)
     MiqEvent.raise_evm_event(self, request, {:host => self})
   rescue MiqException::PolicyPreventAction => err
-    $log.info "MIQ(Host.policy_prevented?) #{err}"
+    _log.info "#{err}"
     true
   else
     false
@@ -507,7 +508,7 @@ class Host < ActiveRecord::Base
   def add_elements(data)
     begin
       if data.is_a?(Hash) && data[:type] == :ems_events
-        $log.info("MIQ(host-add_elements): Adding HASH elements for Host id:[#{self.id}]-[#{self.name}] from [#{data[:type]}]")
+        _log.info("Adding HASH elements for Host id:[#{self.id}]-[#{self.name}] from [#{data[:type]}]")
         add_ems_events(data) 
       end
     rescue => err
@@ -688,7 +689,7 @@ class Host < ActiveRecord::Base
 
   def connect_ems(e)
     unless self.ext_management_system == e
-      $log.debug "MIQ(Host-connect_ems) Connecting Host [#{self.name}] id [#{self.id}] to EMS [#{e.name}] id [#{e.id}]"
+      _log.debug "Connecting Host [#{self.name}] id [#{self.id}] to EMS [#{e.name}] id [#{e.id}]"
       self.ext_management_system = e
       self.save
     end
@@ -697,7 +698,7 @@ class Host < ActiveRecord::Base
   def disconnect_ems(e=nil)
     if e.nil? || self.ext_management_system == e
       log_text = " from EMS [#{self.ext_management_system.name}] id [#{self.ext_management_system.id}]" unless self.ext_management_system.nil?
-      $log.info "MIQ(Host-disconnect_ems) Disconnecting Host [#{self.name}] id [#{self.id}]#{log_text}"
+      _log.info "Disconnecting Host [#{self.name}] id [#{self.id}]#{log_text}"
 
       self.ext_management_system = nil
       self.state = "unknown"
@@ -707,14 +708,14 @@ class Host < ActiveRecord::Base
 
   def connect_storage(s)
     unless self.storages.include?(s)
-      $log.debug "MIQ(Host-connect_storage) Connecting Host [#{self.name}] id [#{self.id}] to Storage [#{s.name}] id [#{s.id}]"
+      _log.debug "Connecting Host [#{self.name}] id [#{self.id}] to Storage [#{s.name}] id [#{s.id}]"
       self.storages << s
       self.save
     end
   end
 
   def disconnect_storage(s)
-    $log.info "MIQ(Host-disconnect_storage) Disconnecting Host [#{self.name}] id [#{self.id}] from Storage [#{s.name}] id [#{s.id}]"
+    _log.info "Disconnecting Host [#{self.name}] id [#{self.id}] from Storage [#{s.name}] id [#{s.id}]"
     self.storages.delete(s)
     self.save
   end
@@ -779,7 +780,7 @@ class Host < ActiveRecord::Base
 
   def self.save_metadata(id, dataArray)
     begin
-      $log.info "MIQ(host-save_metadata): for host [#{id}]"
+      _log.info "for host [#{id}]"
       host = Host.find_by_id(id)
       data, data_type = dataArray
       if data_type.include?('yaml')
@@ -791,7 +792,7 @@ class Host < ActiveRecord::Base
       end
       host.add_elements(doc)
       host.save!
-      $log.info "MIQ(host-save_metadata): for host [#{id}] host saved"
+      _log.info "for host [#{id}] host saved"
     rescue => err
       $log.log_backtrace(err)
       return false
@@ -836,11 +837,11 @@ class Host < ActiveRecord::Base
         host.update_authentication(creds)
         host.update_attributes!(attr_hash)
       rescue ActiveRecord::RecordNotFound => err
-        $log.warn("MIQ(host-set_creds_and_save): #{err.class.name}-#{err}")
+        _log.warn("#{err.class.name}-#{err}")
         next
       rescue => err
         errors << err.to_s
-        $log.error("MIQ(host-set_creds_and_save): #{err.class.name}-#{err}")
+        _log.error("#{err.class.name}-#{err}")
         next
       end
     end
@@ -872,14 +873,14 @@ class Host < ActiveRecord::Base
 
     begin
       # connect_ssh logs address and user name(s) being used to make connection
-      $log.info "MIQ(host-verify_credentials_with_ssh): Verifying Host SSH credentials for [#{self.name}]"
+      _log.info "Verifying Host SSH credentials for [#{self.name}]"
       self.connect_ssh(options) {|ssu| ssu.exec("uname -a")}
     rescue Net::SSH::AuthenticationFailed
       raise MiqException::MiqInvalidCredentialsError, "Login failed due to a bad username or password."
     rescue Net::SSH::HostKeyMismatch
       raise # Re-raise the error so the UI can prompt the user to allow the keys to be reset.
     rescue Exception
-      $log.warn("MIQ(Host-verify_credentials_with_ssh): #{$!.inspect}")
+      _log.warn("#{$!.inspect}")
       raise MiqException::MiqHostError, "Unexpected response returned from system, see log for details"
     else
       true
@@ -920,7 +921,7 @@ class Host < ActiveRecord::Base
       ipaddr = network_id + "." + h.to_s
 
       unless Host.find_by_ipaddress(ipaddr).nil? # skip discover for existing hosts
-        $log.info "MIQ(host-discoverByIpRange): ipaddress '#{ipaddr}' exists, skipping discovery"
+        _log.info "ipaddress '#{ipaddr}' exists, skipping discovery"
         next
       end
 
@@ -1119,15 +1120,15 @@ class Host < ActiveRecord::Base
   end
 
   def self.get_hostname(ipAddress)
-    $log.info "MIQ(host-get_hostname): Resolving hostname: [#{ipAddress}]"
+    _log.info "Resolving hostname: [#{ipAddress}]"
     begin
       ret = Socket.gethostbyname(ipAddress)
       name = ret.first
     rescue => err
-      $log.error "MIQ(host-get_hostname): ERROR:  #{err}"
+      _log.error "ERROR:  #{err}"
       return nil
     end
-    $log.info "MIQ(host-get_hostname): Resolved hostname: [#{name}] to [#{ipAddress}]"
+    _log.info "Resolved hostname: [#{name}] to [#{ipAddress}]"
     name
   end
 
@@ -1439,7 +1440,7 @@ class Host < ActiveRecord::Base
       h.vms.each do |vm|
         if vm.last_scan_attempt_on.nil? || h.scan_frequency.to_i.seconds.ago.utc > vm.last_scan_attempt_on
           begin
-            $log.info("MIQ(Host.check_for_vms_to_scan) Creating scan job on [(#{vm.class.name}) #{vm.name}]")
+            _log.info("Creating scan job on [(#{vm.class.name}) #{vm.name}]")
             vm.scan
           rescue => err
             $log.log_backtrace(err)

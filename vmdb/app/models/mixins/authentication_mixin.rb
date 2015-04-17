@@ -1,4 +1,5 @@
 module AuthenticationMixin
+  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   included do
@@ -181,7 +182,7 @@ module AuthenticationMixin
       help = "Check for a running server"
       help << " in zone: [#{options[:zone]}]"   if options[:zone]
       help << " with role: [#{options[:role]}]" if options[:role]
-      $log.warn("MIQ(#{self.class.name}.authentication_check_types_queue) Previous authentication_check_types for [#{self.name}] [#{self.id}] with opts: [#{options[:args].inspect}] is still running, skipping...#{help}") unless msg.nil?
+      _log.warn("Previous authentication_check_types for [#{self.name}] [#{self.id}] with opts: [#{options[:args].inspect}] is still running, skipping...#{help}") unless msg.nil?
     end
   end
 

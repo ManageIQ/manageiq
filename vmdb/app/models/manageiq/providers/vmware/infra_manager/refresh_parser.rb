@@ -4,6 +4,7 @@ require 'miq-uuid'
 module ManageIQ::Providers
 class Vmware::InfraManager
 module RefreshParser
+  include Vmdb::NewLogging
   #
   # EMS Inventory Parsing
   #
@@ -1210,7 +1211,7 @@ module RefreshParser
     unless found.nil?
       data[:ems_root] = found
     else
-      $log.warn "MIQ(#{self.name.split('::').last}-link_root_folder) Unable to find a root folder."
+      _log.warn "Unable to find a root folder."
     end
   end
 

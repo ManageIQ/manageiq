@@ -1,4 +1,5 @@
 class VimPerformanceTag < MetricRollup
+  include Vmdb::NewLogging
   def self.instances_are_derived?
     true
   end
@@ -38,7 +39,7 @@ class VimPerformanceTag < MetricRollup
       tvrecs.each do |tv|
         if  rec.inside_time_profile == false
           tv.value = tv.assoc_ids = nil
-          $log.debug("MIQ(VimPerformanceTag.group_by_tags) Timestamp: [#{rec.timestamp}] is outside of time profile")
+          _log.debug("Timestamp: [#{rec.timestamp}] is outside of time profile")
         else
           tv.value ||= 0
         end

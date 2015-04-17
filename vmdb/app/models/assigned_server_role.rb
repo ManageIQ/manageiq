@@ -1,4 +1,5 @@
 class AssignedServerRole < ActiveRecord::Base
+  include Vmdb::NewLogging
   belongs_to :miq_server
   belongs_to :server_role
 
@@ -136,14 +137,14 @@ class AssignedServerRole < ActiveRecord::Base
 
   def activate(override = false)
     if override || self.inactive?
-      $log.info("MIQ(AssignedServerRole.activate) Activating Role <#{self.server_role.name}> on Server <#{self.miq_server.name}>")
+      _log.info("Activating Role <#{self.server_role.name}> on Server <#{self.miq_server.name}>")
       self.update_attributes(:active => true)
     end
   end
 
   def deactivate(override = false)
     if override || self.active?
-      $log.info("MIQ(AssignedServerRole.deactivate) Deactivating Role <#{self.server_role.name}> on Server <#{self.miq_server.name}>")
+      _log.info("Deactivating Role <#{self.server_role.name}> on Server <#{self.miq_server.name}>")
       self.update_attributes(:active => false)
     end
   end

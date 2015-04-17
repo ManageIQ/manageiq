@@ -1,4 +1,6 @@
 module MiqRequestTask::StateMachine
+  include Vmdb::NewLogging
+
   delegate :my_role, :to => :miq_request
   delegate :my_zone, :to => :source,      :allow_nil => true
 
@@ -17,7 +19,7 @@ module MiqRequestTask::StateMachine
       send(phase)
     rescue => err
       if [:finish, :provision_error].include?(phase.to_sym)
-        $log.error("MIQ(#{self.class.name}#signal) [#{err.message}] encountered during [#{phase}]")
+        _log.error("[#{err.message}] encountered during [#{phase}]")
         $log.log_backtrace(err)
       else
         phase_context.delete(:error_message)
@@ -57,7 +59,7 @@ module MiqRequestTask::StateMachine
 
   def prematurely_finished?
     if state == 'finished' || status == 'Error'
-      $log.warn("MIQ(#{self.class.name}#prematurely_finished) Task is prematurely finished in phase:<#{phase}> because state:<#{state}> and status:<#{status}>")
+      _log.warn("Task is prematurely finished in phase:<#{phase}> because state:<#{state}> and status:<#{status}>")
       return true
     end
     false
@@ -84,7 +86,7 @@ module MiqRequestTask::StateMachine
     error_phase         = phase_context.delete(:error_phase)
     error_message       = phase_context.delete(:error_message) || "[#{exception_class}]: #{exception_message}"
 
-    $log.error("MIQ(#{self.class.name}#provision_error) [#{error_message}] encountered during phase [#{error_phase}]")
+    _log.error("[#{error_message}] encountered during phase [#{error_phase}]")
     $log.error(exception_backtrace.join("\n")) if exception_backtrace && exception_class && !(exception_class <= MiqException::MiqProvisionError)
 
     update_and_notify_parent(:state => "finished", :status => "Error", :message => error_message)

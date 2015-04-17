@@ -1,6 +1,7 @@
 require 'net/ftp'
 
 class FileDepotFtp < FileDepot
+  include Vmdb::NewLogging
   attr_accessor :ftp
 
   def self.uri_prefix
@@ -53,7 +54,7 @@ class FileDepotFtp < FileDepot
 
   def with_connection(cred_hash = nil)
     raise "no block given" unless block_given?
-    $log.info("MIQ(#{self.class.name}##{__method__}) Connecting through #{self.class.name}: [#{name}]")
+    _log.info("Connecting through #{self.class.name}: [#{name}]")
     begin
       connection = connect(cred_hash)
       @ftp = connection

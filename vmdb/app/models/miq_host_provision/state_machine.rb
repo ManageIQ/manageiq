@@ -1,4 +1,5 @@
 module MiqHostProvision::StateMachine
+  include Vmdb::NewLogging
   def my_zone
     ems    = self.placement_ems
     zone   = ems.zone.name unless ems.nil?
@@ -57,7 +58,7 @@ module MiqHostProvision::StateMachine
 
   def post_install_callback
     message = "PXE Provisioning Complete"
-    $log.info("MIQ(#{self.class.name}#post_install_callback) #{message} #{for_destination}")
+    _log.info("#{message} #{for_destination}")
     update_and_notify_parent(:message => message)
 
     signal :delete_pxe_configuration_files
@@ -87,7 +88,7 @@ module MiqHostProvision::StateMachine
       self.source = self.destination
       signal :configure_destination
     else
-      $log.info("MIQ(#{self.class.name}#poll_destination_in_vmdb) Unable to find Host with IP Address [#{ip_address}], will retry")
+      _log.info("Unable to find Host with IP Address [#{ip_address}], will retry")
       requeue_phase
     end
   end
@@ -128,7 +129,7 @@ module MiqHostProvision::StateMachine
 
   def finish
     if self.status != 'Error'
-      $log.info("MIQ(#{self.class.name}#finish) Executing provision request ... Complete")
+      _log.info("Executing provision request ... Complete")
     end
   end
 

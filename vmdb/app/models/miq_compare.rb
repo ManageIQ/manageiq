@@ -1,4 +1,5 @@
 class MiqCompare
+  include Vmdb::NewLogging
   EMPTY = '(empty)'
   TAG_PREFIX = '_tag_'
 
@@ -337,10 +338,10 @@ class MiqCompare
           else
             key = r.send(key_name)
             if key.nil?
-              $log.warn "MIQ(MiqCompare#fetch_record_section): No value was found for the key [#{key_name}] in section [#{section}] for record [#{id}]"
+              _log.warn "No value was found for the key [#{key_name}] in section [#{section}] for record [#{id}]"
               next
             elsif result_section.has_key?(key)
-              $log.warn "MIQ(MiqCompare#fetch_record_section): A duplicate key value [#{key}] for the key [#{key_name}] was found in section [#{section}] for record [#{id}]"
+              _log.warn "A duplicate key value [#{key}] for the key [#{key_name}] was found in section [#{section}] for record [#{id}]"
               next
             end
           end
@@ -368,7 +369,7 @@ class MiqCompare
     section.to_s.split('.').each do |part|
       rec = rec.send(part)
       if rec.nil?
-        $log.warn "MIQ(MiqCompare#eval_section): Unable to evaluate section [#{section}] for record [#{id}], since [.#{part}] returns nil"
+        _log.warn "Unable to evaluate section [#{section}] for record [#{id}], since [.#{part}] returns nil"
         return nil
       end
     end
@@ -382,7 +383,7 @@ class MiqCompare
     parts.each_with_index do |part, i|
       rec = rec.send(part)
       if rec.nil? && i != (parts.length - 1)
-        $log.warn "MIQ(MiqCompare#eval_column): Unable to evaluate column [#{column}] for record [#{id}], since [.#{part}] returns nil"
+        _log.warn "Unable to evaluate column [#{column}] for record [#{id}], since [.#{part}] returns nil"
         return nil
       end
     end
@@ -531,14 +532,14 @@ class MiqCompare
       new_rec
     end
 
-    $log.error "MIQ(MiqCompare#get_compare_records) No record was found for compare object #{@model}, ids: [#{error_recs.join(", ")}]" unless error_recs.blank?
+    _log.error "No record was found for compare object #{@model}, ids: [#{error_recs.join(", ")}]" unless error_recs.blank?
   end
 
   # Retrieve the record from the source (compare mode)
   def get_compare_record(id)
     return unless @mode == :compare
     new_rec = @model.find_by_id(id)
-    $log.error "MIQ(MiqCompare#get_compare_record) No record was found for compare object #{@model}, id: [#{id}]" if new_rec.nil?
+    _log.error "No record was found for compare object #{@model}, id: [#{id}]" if new_rec.nil?
     return new_rec
   end
 
@@ -554,7 +555,7 @@ class MiqCompare
   def get_drift_record(ts)
     return unless @mode == :drift
     new_rec = drift_model_record.drift_states.find_by_timestamp(ts).data_obj
-    $log.error "MIQ(MiqCompare#get_drift_record) No data was found for drift object #{@model} [#{@model_record_id}] at [#{ts}]" if new_rec.nil?
+    _log.error "No data was found for drift object #{@model} [#{@model_record_id}] at [#{ts}]" if new_rec.nil?
     return new_rec
   end
 

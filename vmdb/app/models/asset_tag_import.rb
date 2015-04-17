@@ -1,4 +1,6 @@
 class AssetTagImport
+  include Vmdb::NewLogging
+
   attr_accessor :errors
   attr_accessor :stats
 
@@ -30,7 +32,6 @@ class AssetTagImport
   end
 
   def verify
-    log_prefix = 'MIQ(AssetTagImport.verify)'
     @errors.clear
     @verified_data = {}
     good = bad = 0
@@ -46,7 +47,7 @@ class AssetTagImport
       objs = MiqBulkImport.find_entry_by_keys(@klass, keys)
       if objs.empty?
         bad += 1
-        $log.warn "#{log_prefix} #{@keys[0].titleize} #{line[@keys[0]]}: Unable to find a #{@klass.name}"
+        _log.warn "#{@keys[0].titleize} #{line[@keys[0]]}: Unable to find a #{@klass.name}"
         err = "#{@klass.name.downcase}notfound".to_sym
         @errors.add(err, "#{@keys[0].titleize}: #{line[@keys[0]]}: Unable to find a #{@klass.name}")
         next
@@ -54,7 +55,7 @@ class AssetTagImport
       if objs.length > 1
         bad += 1
         err = "serveral#{@klass.name.downcase}sfound4keys".to_sym
-        $log.warn "#{log_prefix} #{@keys[0].titleize}: #{line[@keys[0]]}: Could not resolve a #{@klass.name}, an entry will be skipped"
+        _log.warn "#{@keys[0].titleize}: #{line[@keys[0]]}: Could not resolve a #{@klass.name}, an entry will be skipped"
         @errors.add(err, "#{@keys[0].titleize}: #{line[@keys[0]]}: Could not resolve a #{@klass.name}, an entry will be skipped")
       else
         @verified_data[objs[0].id] ||= []
@@ -72,19 +73,18 @@ class AssetTagImport
         obj = @klass.find_by_id(id)
         while data.length > 1
           data.shift
-          $log.warn "#{log_prefix} #{@klass.name} #{obj.name}, Multiple lines for the same object, the last line is applied"
+          _log.warn "#{@klass.name} #{obj.name}, Multiple lines for the same object, the last line is applied"
           @errors.add(:singlevaluedassettag, "#{@klass.name}: #{obj.name}, Multiple lines for the same object, the last line is applied")
         end
       end
     }
 
     @stats = {:good => good, :bad => bad}
-    $log.info "#{log_prefix} Number of valid entries #{@stats[:good]}, number of invalid entries #{@stats[:bad]}"
+    _log.info "Number of valid entries #{@stats[:good]}, number of invalid entries #{@stats[:bad]}"
     return @stats
   end
 
   def apply
-    log_prefix = 'MIQ(AssetTagImport.apply)'
     @verified_data.each do |id, data|
       obj = @klass.find_by_id(id)
       if obj
@@ -95,17 +95,17 @@ class AssetTagImport
           attr = attrs.detect {|ca| ca.name == key}
           if attr.nil?
             if value.blank?
-              $log.info "#{log_prefix} #{@klass.name}: #{obj.name}, Skipping tag <#{key}> due to blank value"
+              _log.info "#{@klass.name}: #{obj.name}, Skipping tag <#{key}> due to blank value"
             else
-              $log.info "#{log_prefix} #{@klass.name}: #{obj.name}, Adding tag <#{key}>, value <#{value}>"
+              _log.info "#{@klass.name}: #{obj.name}, Adding tag <#{key}>, value <#{value}>"
               new_attrs << {:name => key, :value => value, :source => 'EVM'}
             end
           else
             if value.blank?
-              $log.info "#{log_prefix} #{@klass.name}: #{obj.name}, Deleting tag <#{key}> due to blank value"
+              _log.info "#{@klass.name}: #{obj.name}, Deleting tag <#{key}> due to blank value"
               attr.delete
             else
-              $log.info "#{log_prefix} #{@klass.name}: #{obj.name}, Updating tag <#{key}>, value <#{value}>"
+              _log.info "#{@klass.name}: #{obj.name}, Updating tag <#{key}>, value <#{value}>"
               attr.update_attribute(:value, value)
             end
           end

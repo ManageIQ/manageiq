@@ -6,6 +6,7 @@ require 'http-access2' # Required in case it is not already loaded
 module ::ManageIQ::Providers
 class Vmware::InfraManager
   class Refresher < BaseManager::Refresher
+    include Vmdb::NewLogging
     include RefreshParser::Filter
 
     # Development helper method for setting up the selector specs for VC
@@ -31,17 +32,17 @@ class Vmware::InfraManager
         ems_in_list = list.any? { |t| t.kind_of?(ExtManagementSystem) }
 
         if ems_in_list
-          $log.info "MIQ(VcRefresher.initialize) Defaulting to full refresh for EMS: [#{ems.name}], id: [#{ems.id}]." if list.length > 1
+          _log.info "Defaulting to full refresh for EMS: [#{ems.name}], id: [#{ems.id}]." if list.length > 1
           list.clear << ems
         elsif !ems_in_list && list.length >= @full_refresh_threshold
-          $log.info "MIQ(VcRefresher.initialize) Escalating to full refresh for EMS: [#{ems.name}], id: [#{ems.id}]."
+          _log.info "Escalating to full refresh for EMS: [#{ems.name}], id: [#{ems.id}]."
           list.clear << ems
         end
       end
     end
 
     def refresh
-      $log.info "MIQ(VcRefresher.refresh) Refreshing all targets..."
+      _log.info "Refreshing all targets..."
       outer_time = Time.now
 
       @targets_by_ems_id.each do |ems_id, targets|
@@ -68,7 +69,7 @@ class Vmware::InfraManager
         end
       end
 
-      $log.info "MIQ(VcRefresher.refresh) Refreshing all targets...Completed in #{Time.now - outer_time}s"
+      _log.info "Refreshing all targets...Completed in #{Time.now - outer_time}s"
     end
 
     private
@@ -278,10 +279,10 @@ class Vmware::InfraManager
 
     def disconnect_from_ems
       return if @vi.nil?
-      $log.info("MIQ(VcRefresher.disconnect_from_ems) Disconnecting from EMS: [#{@ems.name}], id: [#{@ems.id}]...")
+      _log.info("Disconnecting from EMS: [#{@ems.name}], id: [#{@ems.id}]...")
       @vi.disconnect
       @vi = nil
-      $log.info("MIQ(VcRefresher.disconnect_from_ems) Disconnecting from EMS: [#{@ems.name}], id: [#{@ems.id}]...Complete")
+      _log.info("Disconnecting from EMS: [#{@ems.name}], id: [#{@ems.id}]...Complete")
     end
 
     VC_ACCESSORS_BY_MOR = {

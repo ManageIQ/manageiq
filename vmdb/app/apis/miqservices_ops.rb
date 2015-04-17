@@ -2,12 +2,13 @@ require 'xmldata_helper'
 require 'yaml'
 
 module MiqservicesOps
+  include Vmdb::NewLogging
   WS_TIMEOUT = 60
 
   def save_vmmetadata(vmId, xmlFile, type, jobid=nil)
     begin
       Timeout::timeout(WS_TIMEOUT) do
-        $log.info "MIQ(save_vmmetadata): vm [#{vmId}],  job [#{jobid}] enter"
+        _log.info "vm [#{vmId}],  job [#{jobid}] enter"
 
         # If we get a job id use that to lookup the vm
         unless jobid.blank?
@@ -18,13 +19,13 @@ module MiqservicesOps
         vm = VmOrTemplate.find_by_guid(vmId) if vm.nil?
 
         if vm
-          $log.info "MIQ(save_vmmetadata): vm [#{vmId}] found vm object id [#{vm.id}], job [#{jobid}]"
+          _log.info "vm [#{vmId}] found vm object id [#{vm.id}], job [#{jobid}]"
           MiqQueue.put(:target_id => vm.id, :class_name => "VmOrTemplate", :method_name => "save_metadata", :data => Marshal.dump([xmlFile, type]), :task_id => jobid, :zone => vm.my_zone, :role => "smartstate")
-          $log.info "MIQ(save_vmmetadata): vm [#{vmId}] data put on queue, job [#{jobid}]"
+          _log.info "vm [#{vmId}] data put on queue, job [#{jobid}]"
         else
           errMsg = "No VM found for id [#{vmId}], metadata will be discarded, job [#{jobid}]"
           errStatus = "error"
-          $log.error "MIQ(save_vmmetadata): job [#{jobid}]" + errMsg
+          _log.error "job [#{jobid}]" + errMsg
           MiqQueue.put(:class_name => "Job", :method_name => "signal_by_taskid", :args => [jobid, :error, errMsg, errStatus], :task_id => jobid, :zone => MiqServer.my_zone, :role => "smartstate")
           return false
         end
@@ -38,7 +39,7 @@ module MiqservicesOps
   end
 
   def agent_job_state(jobid, state, message=nil)
-    $log.info "MIQ(agent_job_state): jobid: [#{jobid}] starting"
+    _log.info "jobid: [#{jobid}] starting"
     begin
       Timeout::timeout(WS_TIMEOUT) do
         MiqQueue.put(:class_name => "Job", :method_name => "agent_state_update_queue", :args => [jobid, state, message], :task_id => "agent_job_state_#{Time.now.to_i}", :zone => MiqServer.my_zone, :role => "smartstate")
@@ -52,14 +53,14 @@ module MiqservicesOps
   end
 
   def task_update(task_id, state, status, message)
-    $log.info "MIQ(task_state_update): task_id: [#{task_id}] starting"
+    _log.info "task_id: [#{task_id}] starting"
     begin
       Timeout::timeout(WS_TIMEOUT) do
         task = MiqTask.find_by_id(task_id)
         unless task.nil?
           task.update_status(state, status, message)
         else
-          $log.warn "MIQ(task_update): task_id: [#{task_id}] not found"
+          _log.warn "task_id: [#{task_id}] not found"
         end
         return true
       end
@@ -106,7 +107,7 @@ module MiqservicesOps
   def save_hostmetadata(hostId, xmlFile, type)
     begin
       Timeout::timeout(WS_TIMEOUT) do
-        $log.info "MIQ(save_hostmetadata): for host [#{hostId}]"
+        _log.info "for host [#{hostId}]"
         host = Host.find_by_guid(hostId)
         MiqQueue.put(
           :target_id => host.id,
@@ -115,7 +116,7 @@ module MiqservicesOps
           :data => [xmlFile, type],
           :priority => MiqQueue::HIGH_PRIORITY
         )
-        $log.info "MIQ(save_hostmetadata): for host [#{hostId}] host queued"
+        _log.info "for host [#{hostId}] host queued"
       end
     rescue Exception => err
       $log.log_backtrace(err)
@@ -156,9 +157,9 @@ module MiqservicesOps
 
   def test_statemachine(jobId, signal, data=nil)
     begin
-      $log.info "MIQ(test_statemachine): job [#{jobId}], signal [#{signal}]"
+      _log.info "job [#{jobId}], signal [#{signal}]"
       job = Job.find_by_guid(jobId)
-      $log.info "MIQ(test_statemachine): job [#{jobId}] found job object id [#{job.id}]"
+      _log.info "job [#{jobId}] found job object id [#{job.id}]"
       unless data.nil?
         job.signal(signal.to_sym, data)
         # job.signal_process(signal.to_sym, data)
@@ -174,7 +175,7 @@ module MiqservicesOps
   end
 
   def policy_check_vm(vmId, xmlFile)
-    $log.info "MIQ(policy_check_vm): VmId:[#{vmId}]"
+    _log.info "VmId:[#{vmId}]"
     ret, reason = false, "unknown"
     begin
       Timeout::timeout(WS_TIMEOUT) do
@@ -203,7 +204,7 @@ module MiqservicesOps
   def start_service(service, userid, time)
     begin
       Timeout::timeout(WS_TIMEOUT) do
-        $log.info("MIQ(MiqservicesOps.start_service) Audit: req: <start_service>, user: <#{userid}>, service: <#{service}>, when: <#{time}>")
+        _log.info("Audit: req: <start_service>, user: <#{userid}>, service: <#{service}>, when: <#{time}>")
         svc = Service.find_by_name(service)
         return false if svc == nil
 
@@ -221,11 +222,11 @@ module MiqservicesOps
   def save_xmldata(hostId, xmlFile)
     begin
       Timeout::timeout(WS_TIMEOUT) do
-        $log.info "MIQ(save_xmldata): request received from host id: #{hostId}"
+        _log.info "request received from host id: #{hostId}"
         doc = MiqXml.decode(xmlFile)
-        $log.debug "MIQ(save_xmldata): doc:\n#{doc}"
+        _log.debug "doc:\n#{doc}"
         doctype = doc.root.name.downcase
-        $log.info "MIQ(save_xmldata): recieved document: #{doctype}"
+        _log.info "recieved document: #{doctype}"
         if XmlData.respond_to?(doctype)
           XmlData.send(doctype, hostId, doc.to_s)
         else
@@ -248,10 +249,10 @@ module MiqservicesOps
   end
 
   def miq_ping(data)
-    $log.info "MIQ(miq_ping): enter"
+    _log.info "enter"
     t0 = Time.now
-    $log.info "MIQ(miq_ping): data: #{data}"
-    $log.info "MIQ(miq_ping): exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "data: #{data}"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     true
   end
 

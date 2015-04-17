@@ -1,4 +1,5 @@
 module MiqAeDatastore
+  include Vmdb::NewLogging
   XML_VERSION = "1.0"
   XML_VERSION_MIN_SUPPORTED = "1.0"
   MANAGEIQ_DOMAIN = "ManageIQ"
@@ -58,7 +59,7 @@ module MiqAeDatastore
     FileUtils.mkdir_p(TMP_DIR) unless File.directory?(TMP_DIR)
     filename = File.join(TMP_DIR, name)
 
-    $log.info("MIQ(MiqAeDatastore) Uploading Datastore Import to file <#{filename}>") if $log
+    _log.info("Uploading Datastore Import to file <#{filename}>") if $log
 
     outfd = File.open(filename, "wb")
     data  = fd.read(block_size)
@@ -70,7 +71,7 @@ module MiqAeDatastore
     fd.close
     outfd.close
 
-    $log.info("MIQ(MiqAeDatastore) Upload complete (size=#{File.size(filename)})") if $log
+    _log.info("Upload complete (size=#{File.size(filename)})") if $log
 
     begin
       import_yaml_zip(filename, domain_name)
@@ -81,14 +82,14 @@ module MiqAeDatastore
 
   def self.import(fname, domain = temp_domain)
     _, t = Benchmark.realtime_block(:total_time) { XmlImport.load_file(fname, domain) }
-    $log.info("MIQ(MiqAeDatastore.import) Import #{fname}...Complete - Benchmark: #{t.inspect}")
+    _log.info("Import #{fname}...Complete - Benchmark: #{t.inspect}")
   end
 
   def self.restore(fname)
-    $log.info("MIQ(MiqAeDatastore.restore) Restore from #{fname}...Starting")
+    _log.info("Restore from #{fname}...Starting")
     MiqAeDatastore.reset
     MiqAeImport.new(ALL_DOMAINS, 'zip_file' => fname, 'preview' => false, 'restore' => true).import
-    $log.info("MIQ(MiqAeDatastore.restore) Restore from #{fname}...Complete")
+    _log.info("Restore from #{fname}...Complete")
   end
 
   def self.import_yaml_zip(fname, domain)
@@ -96,7 +97,7 @@ module MiqAeDatastore
       import_options = {'zip_file' => fname, 'preview' => false, 'mode' => 'add'}
       MiqAeImport.new(domain, import_options).import
     end
-    $log.info("MIQ(MiqAeDatastore.import) Import #{fname}...Complete - Benchmark: #{t.inspect}")
+    _log.info("Import #{fname}...Complete - Benchmark: #{t.inspect}")
   end
 
   def self.import_yaml_dir(dirname, domain)
@@ -104,7 +105,7 @@ module MiqAeDatastore
       import_options = {'import_dir' => dirname, 'preview' => false, 'mode' => 'add', 'restore' => true}
       MiqAeImport.new(domain, import_options).import
     end
-    $log.info("MIQ(MiqAeDatastore.import) Import from #{dirname}...Complete - Benchmark: #{t.inspect}")
+    _log.info("Import from #{dirname}...Complete - Benchmark: #{t.inspect}")
   end
 
   def self.export
@@ -126,7 +127,7 @@ module MiqAeDatastore
   end
 
   def self.reset
-    $log.info("MIQ(MiqAeDatastore) Clearing datastore") if $log
+    _log.info("Clearing datastore") if $log
     [MiqAeClass, MiqAeField, MiqAeInstance, MiqAeNamespace, MiqAeMethod, MiqAeValue].each(&:delete_all)
   end
 
@@ -137,7 +138,7 @@ module MiqAeDatastore
   end
 
   def self.reset_domain(datastore_dir, domain_name)
-    $log.info("MIQ(MiqAeDatastore) Resetting domain #{domain_name} from #{datastore_dir}") if $log
+    _log.info("Resetting domain #{domain_name} from #{datastore_dir}") if $log
     ns = MiqAeDomain.find_by_fqname(domain_name)
     ns.destroy if ns
     import_yaml_dir(datastore_dir, domain_name)
@@ -181,16 +182,15 @@ module MiqAeDatastore
 
   def self.seed
     MiqRegion.my_region.lock(:shared, 1800) do
-      log_prefix = 'MIQ(MiqAeDatastore.seed)'
       ns = MiqAeDomain.find_by_fqname(MANAGEIQ_DOMAIN)
       unless ns
-        $log.info "#{log_prefix} Seeding ManageIQ domain..." if $log
+        _log.info "Seeding ManageIQ domain..." if $log
         begin
           reset_to_defaults
         rescue => err
-          $log.error "#{log_prefix} Seeding... Reset failed, #{err.message}" if $log
+          _log.error "Seeding... Reset failed, #{err.message}" if $log
         else
-          $log.info "#{log_prefix} Seeding... Complete" if $log
+          _log.info "Seeding... Complete" if $log
         end
       end
     end

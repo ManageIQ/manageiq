@@ -1,4 +1,5 @@
 class MiqPolicySet < ActiveRecord::Base
+  include Vmdb::NewLogging
   acts_as_miq_set
 
   default_scope { where self.conditions_for_my_region_default_scope }
@@ -119,7 +120,7 @@ class MiqPolicySet < ActiveRecord::Base
     MiqRegion.my_region.lock do
       self.all.each do |ps|
         if ps.mode.nil?
-          $log.info("MIQ(MiqPolicySet.seed) Updating [#{ps.name}]")
+          _log.info("Updating [#{ps.name}]")
           ps.update_attribute(:mode, "control")
         end
       end

@@ -1,6 +1,7 @@
 # TODO: Import/Export support
 
 class MiqPolicy < ActiveRecord::Base
+  include Vmdb::NewLogging
   default_scope { where self.conditions_for_my_region_default_scope }
 
   acts_as_miq_taggable
@@ -366,7 +367,7 @@ class MiqPolicy < ActiveRecord::Base
         attrs[:active] = true      if p.active.nil?
         attrs[:mode]   = "control" if p.mode.nil?
         if attrs.empty?
-          $log.info("MIQ(MiqPolicy.seed) Updating [#{p.name}]")
+          _log.info("Updating [#{p.name}]")
           p.update_attributes(attrs)
         end
       end

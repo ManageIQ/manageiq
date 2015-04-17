@@ -4,7 +4,7 @@ describe MiqWidget::ContentGenerator do
   let(:content_generator) { described_class.new }
 
   describe "#generate" do
-    let(:widget) { active_record_instance_double("MiqWidget", :id => 123, :title => "title") }
+    let(:widget) { active_record_instance_double("MiqWidget", :id => 123, :title => "title", :log_prefix => "") }
 
     context "when the class is MiqGroup" do
       let(:klass) { "MiqGroup" }

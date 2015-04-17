@@ -1,4 +1,5 @@
 module ArLock
+  include Vmdb::NewLogging
   # Creates a critical section around the specified block, in the style of
   # Mutex#synchronize, by locking on the database record in SQL.
   #
@@ -21,17 +22,15 @@ module ArLock
     else raise "unknown lock mode <#{mode.inspect}>"
     end
 
-    log_prefix = "MIQ(#{self.class.name}#lock)"
-
     transaction do
-      $log.debug "#{log_prefix} Acquiring lock on #{self.class.name}::#{self.id}..."
+      _log.debug "Acquiring lock on #{self.class.name}::#{self.id}..."
       lock!(lock)
-      $log.debug "#{log_prefix} Acquired lock"
+      _log.debug "Acquired lock"
 
       begin
         Timeout::timeout(timeout) { yield self }
       ensure
-        $log.debug "#{log_prefix} Releasing lock"
+        _log.debug "Releasing lock"
       end
     end
   end

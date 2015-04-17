@@ -1,4 +1,5 @@
 class MiqVimBrokerWorker < MiqWorker
+  include Vmdb::NewLogging
   self.required_roles         = %w{
                                     ems_inventory
                                     ems_metrics_collector
@@ -35,33 +36,31 @@ class MiqVimBrokerWorker < MiqWorker
   end
 
   def self.drb_uri
-    log_prefix = "MIQ(MiqVimBrokerWorker.drb_uri)"
     broker = self.find_current.first
     if broker.nil?
-      $log.warn("#{log_prefix} Active VimBroker not found")
+      _log.warn("Active VimBroker not found")
       return nil
     end
 
     if broker.uri.blank?
-      $log.warn("#{log_prefix} Active VimBroker DRb URI is blank")
+      _log.warn("Active VimBroker DRb URI is blank")
       return nil
     end
 
-    $log.debug("#{log_prefix} Active VimBroker DRb URI is #{broker.uri}")
+    _log.debug("Active VimBroker DRb URI is #{broker.uri}")
     return broker.uri
   end
 
   def self.drb_port
-    log_prefix = "MIQ(MiqVimBrokerWorker.drb_uri)"
     uri = self.drb_uri
     return nil if uri.nil?
     scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(uri)
-    $log.debug("#{log_prefix} Active VimBroker DRb Port is #{port}")
+    _log.debug("Active VimBroker DRb Port is #{port}")
     return port.to_i
   end
 
   def self.broker_unavailable(err_class, message)
-    $log.warn("MIQ(MiqVimBrokerWorker) The following error was encountered, '#{message}', the broker server should be restarted on the next heartbeat")
+    _log.warn("The following error was encountered, '#{message}', the broker server should be restarted on the next heartbeat")
     broker = self.find_current.first
     broker_message = (err_class == "Errno::EMFILE") ? "broker_too_many_files" : "broker_unavailable"
     broker.send_message_to_worker_monitor(broker_message) unless broker.nil?
@@ -69,7 +68,7 @@ class MiqVimBrokerWorker < MiqWorker
 
   def self.queue_reconnect_ems(ems)
     deliver_on = Time.now.utc + (self.worker_settings[:reconnect_retry_interval] || 5.minutes)
-    $log.info "MIQ(MiqVimBrokerWorker) Queueing reconnect for EMS name: [#{ems.name}], id: [#{ems.id}] at [#{deliver_on}]"
+    _log.info "Queueing reconnect for EMS name: [#{ems.name}], id: [#{ems.id}] at [#{deliver_on}]"
     MiqQueue.put(
       :class_name  => self.name,
       :method_name => "reconnect_ems",
@@ -92,14 +91,13 @@ class MiqVimBrokerWorker < MiqWorker
   end
 
   def self.cleanup_for_pid(pid)
-    log_prefix = "MIQ(MiqVimBrokerWorker.cleanup_for_pid)"
     if self.available?
-      $log.info("#{log_prefix} Releasing any broker connections for pid: [#{pid}]")
+      _log.info("Releasing any broker connections for pid: [#{pid}]")
       broker = self.miq_vim_broker_class.new(:client, self.drb_port)
       broker.releaseSession(pid)
     end
   rescue => err
-    $log.info("#{log_prefix} Releasing any broker connections for pid: [#{pid}], ERROR: #{err.message}")
+    _log.info("Releasing any broker connections for pid: [#{pid}], ERROR: #{err.message}")
   end
 
   def friendly_name

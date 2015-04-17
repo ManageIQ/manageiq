@@ -1,4 +1,5 @@
 module EmsRefresh::VcUpdates
+  include Vmdb::NewLogging
   VIM_SELECTOR_SPEC = {
     :ems_refresh_host => [
       "MOR",
@@ -294,26 +295,26 @@ module EmsRefresh::VcUpdates
     handled, unhandled = change_set.partition { |c| EmsRefresh::VcUpdates.has_handler?(type, c["name"]) }
 
     if handled.any?
-      $log.info("MIQ(#{self.name}.vc_update_event) Handling direct updates for properties: #{handled.collect { |c| c["name"] }.inspect}")
+      _log.info("Handling direct updates for properties: #{handled.collect { |c| c["name"] }.inspect}")
       handled.each { |c| EmsRefresh::VcUpdates.handler(type, c["name"]).call(obj, c["val"]) }
       obj.save!
     end
 
     if unhandled.any?
-      $log.info("MIQ(#{self.name}.vc_update_event) Queueing refresh for #{obj.class} id: [#{obj.id}], EMS id: [#{ems_id}] on event [#{obj_type}-update] for properties #{unhandled.inspect}")
+      _log.info("Queueing refresh for #{obj.class} id: [#{obj.id}], EMS id: [#{ems_id}] on event [#{obj_type}-update] for properties #{unhandled.inspect}")
       EmsRefresh.queue_refresh(obj)
     end
   end
 
   def vc_create_event(ems_id, event)
     # TODO: Implement
-    $log.debug("MIQ(#{self.name}.vc_create_event) Ignoring refresh for EMS id: [#{ems_id}] on event [#{event[:objType]}-create]")
+    _log.debug("Ignoring refresh for EMS id: [#{ems_id}] on event [#{event[:objType]}-create]")
     return
   end
 
   def vc_delete_event(ems_id, event)
     # TODO: Implement
-    $log.debug("MIQ(#{self.name}.vc_delete_event) Ignoring refresh for EMS id: [#{ems_id}] on event [#{event[:objType]}-delete]")
+    _log.debug("Ignoring refresh for EMS id: [#{ems_id}] on event [#{event[:objType]}-delete]")
     return
   end
 

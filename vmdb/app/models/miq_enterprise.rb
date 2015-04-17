@@ -1,4 +1,6 @@
 class MiqEnterprise < ActiveRecord::Base
+  include Vmdb::NewLogging
+
   has_many :miq_regions,            -> { MiqRegion.scoped }
   has_many :ext_management_systems, -> { ExtManagementSystem.scoped }
   has_many :vms_and_templates,      -> { VmOrTemplate.where.not(:ems_id => nil) }
@@ -28,9 +30,9 @@ class MiqEnterprise < ActiveRecord::Base
   def self.seed
     MiqRegion.my_region.lock do
       if self.in_my_region.first.nil?
-        $log.info("MIQ(MiqEnterprise.seed) Creating Enterprise Root Object")
+        _log.info("Creating Enterprise Root Object")
         self.create(:name => "Enterprise", :description => "Enterprise Root Object")
-        $log.info("MIQ(MiqEnterprise.seed) Creating Enterprise Root Object... Complete")
+        _log.info("Creating Enterprise Root Object... Complete")
       end
     end
   end

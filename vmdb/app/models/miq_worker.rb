@@ -1,6 +1,7 @@
 require 'io/wait'
 
 class MiqWorker < ActiveRecord::Base
+  include Vmdb::NewLogging
   include UuidMixin
   include ReportableMixin
 
@@ -148,7 +149,7 @@ class MiqWorker < ActiveRecord::Base
     result  = { :adds => [], :deletes => [] }
 
     if current != desired
-      $log.info("MIQ(#{self.name}.sync_workers) Workers are being synchronized: Current #: [#{current}], Desired #: [#{desired}]")
+      _log.info("Workers are being synchronized: Current #: [#{current}], Desired #: [#{desired}]")
 
       if desired > current && enough_resource_to_start_worker?
         (desired - current).times { result[:adds] << self.start_worker.pid }
@@ -336,7 +337,7 @@ class MiqWorker < ActiveRecord::Base
     Process.detach(pid)
     self.save
 
-    $log.info("MIQ(#{self.class.name}.start) #{msg}")
+    _log.info("#{msg}")
   end
 
   def stop
@@ -349,12 +350,12 @@ class MiqWorker < ActiveRecord::Base
   def kill
     unless self.pid.nil?
       begin
-        $log.info("MIQ(#{self.class.name}.kill) Killing worker: ID [#{self.id}], PID [#{self.pid}], GUID [#{self.guid}], status [#{self.status}]")
+        _log.info("Killing worker: ID [#{self.id}], PID [#{self.pid}], GUID [#{self.guid}], status [#{self.status}]")
         Process.kill(9, self.pid)
       rescue Errno::ESRCH
-        $log.warn("MIQ(#{self.class.name}.kill) Worker ID [#{self.id}] PID [#{self.pid}] GUID [#{self.guid}] has been killed")
+        _log.warn("Worker ID [#{self.id}] PID [#{self.pid}] GUID [#{self.guid}] has been killed")
       rescue => err
-        $log.warn("MIQ(#{self.class.name}.kill) Worker ID [#{self.id}] PID [#{self.pid}] GUID [#{self.guid}] has been killed, but with the following error: #{err}")
+        _log.warn("Worker ID [#{self.id}] PID [#{self.pid}] GUID [#{self.guid}] has been killed, but with the following error: #{err}")
       end
     end
 
@@ -388,25 +389,24 @@ class MiqWorker < ActiveRecord::Base
   end
 
   def validate_active_messages
-    log_prefix = "MIQ(#{self.class.name}.validate_active_messages)"
-    self.active_messages.each { |msg| msg.check_for_timeout(log_prefix) }
+    self.active_messages.each { |msg| msg.check_for_timeout(_log.prefix) }
   end
 
   def clean_active_messages
     self.active_messages.each do |m|
-      $log.warn("MIQ(#{self.class.name}.clean_active_messages) Message id: [#{m.id}] Setting state to 'error'")
+      _log.warn("Message id: [#{m.id}] Setting state to 'error'")
       m.delivered_in_error('Clean Active Messages')
     end
   end
 
   def log_destroy_of_worker_messages
     self.ready_messages.each do |m|
-      $log.warn("MIQ(#{self.class.name}.log_destroy_of_worker_messages) Nullifying: #{MiqQueue.format_full_log_msg(m)}") rescue nil
+      _log.warn("Nullifying: #{MiqQueue.format_full_log_msg(m)}") rescue nil
       m.update_attributes(:handler_id => nil, :handler_type => nil) rescue nil
     end
 
     self.processed_messages.each do |m|
-      $log.warn("MIQ(#{self.class.name}.log_destroy_of_worker_messages) Destroying: #{MiqQueue.format_full_log_msg(m)}") rescue nil
+      _log.warn("Destroying: #{MiqQueue.format_full_log_msg(m)}") rescue nil
     end
   end
 
@@ -416,7 +416,7 @@ class MiqWorker < ActiveRecord::Base
     rescue => err
       # Calling ps on Linux with a pid that does not exist fails with a RuntimeError containing an empty message.
       # We will ignore this since we may be asking for the status of a worker who has exited.
-      $log.warn("MIQ(MiqWorker.status_update) #{self.class.name}: #{err.message}, while requesting process info for [#{self.friendly_name}] with PID=[#{self.pid}]") unless err.message.blank?
+      _log.warn("#{self.class.name}: #{err.message}, while requesting process info for [#{self.friendly_name}] with PID=[#{self.pid}]") unless err.message.blank?
       return
     end
 

@@ -1,4 +1,5 @@
 module MiqProvisionVmware::StateMachine
+  include Vmdb::NewLogging
   def create_destination
     signal :determine_placement
   end
@@ -28,7 +29,7 @@ module MiqProvisionVmware::StateMachine
 
     status_message = "completed; post provision work queued" if clone_status
     message = "Clone of #{clone_direction} is #{status_message}"
-    $log.info("MIQ(#{self.class.name}#poll_clone_complete) #{message}")
+    _log.info("#{message}")
     update_and_notify_parent(:message => message)
 
     if clone_status
@@ -48,13 +49,13 @@ module MiqProvisionVmware::StateMachine
       phase_context.delete(:new_vm_validation_guid)
       signal :customize_destination
     else
-      $log.info("MIQ(#{self.class.name}#poll_destination_in_vmdb) Unable to find #{destination_type} [#{dest_name}] with validation guid [#{phase_context[:new_vm_validation_guid]}], will retry")
+      _log.info("Unable to find #{destination_type} [#{dest_name}] with validation guid [#{phase_context[:new_vm_validation_guid]}], will retry")
       requeue_phase
     end
   end
 
   def customize_destination
-    $log.info("MIQ(#{self.class.name}#customize_destination) Post-processing #{destination_type} id: [#{destination.id}], name: [#{dest_name}]")
+    _log.info("Post-processing #{destination_type} id: [#{destination.id}], name: [#{dest_name}]")
     update_and_notify_parent(:message => "Starting New #{destination_type} Customization")
 
     set_cpu_and_memory_allocation(destination) if reconfigure_hardware_on_destination?
@@ -64,7 +65,7 @@ module MiqProvisionVmware::StateMachine
   def autostart_destination
     if get_option(:vm_auto_start)
       message = "Starting"
-      $log.info("MIQ(#{self.class.name}#autostart_destination) #{message} #{for_destination}")
+      _log.info("#{message} #{for_destination}")
       update_and_notify_parent(:message => message)
       start_with_cache_reset
     end
@@ -78,7 +79,7 @@ module MiqProvisionVmware::StateMachine
   def start_with_cache_reset
     destination.start
   rescue MiqException::MiqVimResourceNotFound
-    $log.info("MIQ(#{self.class.name}#start_with_cache_reset) Unable to start #{for_destination}.  Retrying after VIM cache reset.")
+    _log.info("Unable to start #{for_destination}.  Retrying after VIM cache reset.")
     destination.ext_management_system.reset_vim_cache
     destination.start
   end

@@ -3,6 +3,7 @@
 require 'simple-rss'
 
 class MiqWidget < ActiveRecord::Base
+  include Vmdb::NewLogging
   default_scope { where self.conditions_for_my_region_default_scope }
 
   default_value_for :enabled, true
@@ -120,8 +121,6 @@ class MiqWidget < ActiveRecord::Base
   end
 
   def create_task(num_targets, userid = User.current_userid)
-    log_prefix = "MIQ(MiqWidget.create_task)"
-
     userid     ||= "system"
     context_data = { :targets  => num_targets, :complete => 0 }
     miq_task     = MiqTask.create(
@@ -134,7 +133,7 @@ class MiqWidget < ActiveRecord::Base
                       :context_data => context_data
                     )
 
-    $log.info "#{log_prefix} Created MiqTask ID: [#{miq_task.id}], Name: [#{miq_task.name}] for: [#{num_targets}] groups"
+    _log.info "Created MiqTask ID: [#{miq_task.id}], Name: [#{miq_task.name}] for: [#{num_targets}] groups"
 
     self.miq_task_id = miq_task.id
     self.save!
@@ -175,8 +174,7 @@ class MiqWidget < ActiveRecord::Base
   end
 
   def generate_content_complete_callback(status, message, result)
-    log_prefix = "MIQ(MiqWidget.generate_content_complete_callback)"
-    $log.info "#{log_prefix} Widget ID: [#{self.id}], MiqTask ID: [#{self.miq_task_id}], Status: [#{status}]"
+    _log.info "Widget ID: [#{self.id}], MiqTask ID: [#{self.miq_task_id}], Status: [#{status}]"
 
     miq_task.lock(:exclusive) do |locked_miq_task|
       if MiqTask.status_error?(status)
@@ -227,18 +225,20 @@ class MiqWidget < ActiveRecord::Base
     message
   end
 
+  def log_prefix
+    "Widget: [#{title}] ID: [#{id}]"
+  end
+
   def queue_generate_content
     # Called from schedule
-    log_prefix = "MIQ(#{self.class.name}.queue_generate_content) Widget: [#{self.title}], ID: [#{self.id}]"
-
     unless self.enabled?
-      $log.info("#{log_prefix} is disabled, content will NOT be generated")
+      _log.info("#{log_prefix} is disabled, content will NOT be generated")
       return
     end
 
     group_hash_visibility_agnostic = grouped_subscribers
     if group_hash_visibility_agnostic.empty?
-      $log.info("#{log_prefix} has no subscribers, content will NOT be generated")
+      _log.info("#{log_prefix} has no subscribers, content will NOT be generated")
       return
     end
 
@@ -247,7 +247,7 @@ class MiqWidget < ActiveRecord::Base
     group_hash = group_hash_visibility_agnostic.select { |k, v| available_for_group?(k) }      # Process users grouped by LDAP group membership of whether they have RBAC
 
     if group_hash.length == 0
-      $log.info("#{log_prefix} is not subscribed, content will NOT be generated")
+      _log.info("#{log_prefix} is not subscribed, content will NOT be generated")
       return
     end
 
@@ -263,7 +263,7 @@ class MiqWidget < ActiveRecord::Base
                              :state  => %w(Queued Active))
         create_task(group_hash.length)
 
-        $log.info("#{log_prefix} Queueing Content Generation")
+        _log.info("#{log_prefix} Queueing Content Generation")
         group_hash.each do |g,u|
           options = generate_content_options(g, u)
           queue_generate_content_for_users_or_group(*options)
@@ -278,13 +278,12 @@ class MiqWidget < ActiveRecord::Base
   end
 
   def generate_one_content_for_group(group, timezone)
-    log_prefix = "MIQ(MiqWidget.generate_one_content_for_group) Widget: [#{title}] ID: [#{id}]"
-    $log.info("#{log_prefix} for [#{group.class}] [#{group.name}]...")
+    _log.info("#{log_prefix} for [#{group.class}] [#{group.name}]...")
 
     begin
       content_type_klass = "MiqWidget::#{content_type.capitalize}Content".constantize
     rescue NameError
-      $log.error("#{log_prefix} Unsupported content type '#{content_type}'")
+      _log.error("#{log_prefix} Unsupported content type '#{content_type}'")
       return
     end
 
@@ -301,36 +300,35 @@ class MiqWidget < ActiveRecord::Base
       content.miq_group_id = group.id
       content.save!
     rescue => error
-      $log.error("#{log_prefix} Failed for [#{group.class}] [#{group.name}] with error: [#{error.class.name}] [#{error}]")
+      _log.error("#{log_prefix} Failed for [#{group.class}] [#{group.name}] with error: [#{error.class.name}] [#{error}]")
       $log.log_backtrace(error)
       return
     end
 
-    $log.info("#{log_prefix} for [#{group.class}] [#{group.name}]...Complete")
+    _log.info("#{log_prefix} for [#{group.class}] [#{group.name}]...Complete")
     content
   end
 
   def generate_one_content_for_user(group, userid)
-    log_prefix = "MIQ(MiqWidget.generate_one_content_for_user) Widget: [#{title}] ID: [#{id}]"
-    $log.info("#{log_prefix} for group: [#{group.name}] users: [#{userid}]...")
+    _log.info("#{log_prefix} for group: [#{group.name}] users: [#{userid}]...")
 
     user = userid
     user = User.in_my_region.where(:userid => userid).first if userid.kind_of?(String)
     if user.nil?
-      $log.error("#{log_prefix} User #{userid} was not found")
+      _log.error("#{log_prefix} User #{userid} was not found")
       return
     end
 
     timezone = user.get_timezone
     if timezone.nil?
-      $log.warn "#{log_prefix} No timezone provided for #{userid}! UTC will be used."
+      _log.warn "#{log_prefix} No timezone provided for #{userid}! UTC will be used."
       timezone = "UTC"
     end
 
     begin
       content_type_klass = "MiqWidget::#{content_type.capitalize}Content".constantize
     rescue NameError
-      $log.error("#{log_prefix} Unsupported content type '#{content_type}'")
+      _log.error("#{log_prefix} Unsupported content type '#{content_type}'")
       return
     end
 
@@ -348,12 +346,12 @@ class MiqWidget < ActiveRecord::Base
       content.miq_group_id = group.id
       content.save!
     rescue => error
-      $log.error("#{log_prefix} Failed for [#{user.class}] [#{user.name}] with error: [#{error.class.name}] [#{error}]")
+      _log.error("#{log_prefix} Failed for [#{user.class}] [#{user.name}] with error: [#{error.class.name}] [#{error}]")
       $log.log_backtrace(error)
       return
     end
 
-    $log.info("#{log_prefix} for [#{group.name}] [#{userid}]...Complete")
+    _log.info("#{log_prefix} for [#{group.name}] [#{userid}]...Complete")
     content
   end
 
@@ -486,7 +484,7 @@ class MiqWidget < ActiveRecord::Base
     if user.kind_of?(String)
       original = user
       user = User.in_my_region.find_by_userid(user)
-      $log.warn("MIQ(MiqWidget.get_user) Unable to find user '#{original}'") if user.nil?
+      _log.warn("Unable to find user '#{original}'") if user.nil?
     end
 
     user
@@ -504,7 +502,7 @@ class MiqWidget < ActiveRecord::Base
       group = MiqGroup.in_my_region.find_by_id(group)
     end
 
-    $log.warn("MIQ(MiqWidget.get_group) Unable to find group '#{original}'") if group.nil?
+    _log.warn("Unable to find group '#{original}'") if group.nil?
     group
   end
 
@@ -581,8 +579,8 @@ class MiqWidget < ActiveRecord::Base
     self.miq_schedule = sched
     self.save!
 
-    $log.info  "MIQ(MiqWidget.sync_schedule) Created schedule for Widget: [#{self.title}]"
-    $log.debug "MIQ(MiqWidget.sync_schedule) Widget: [#{self.title}] created schedule: [#{sched.inspect}]"
+    _log.info  "Created schedule for Widget: [#{self.title}]"
+    _log.debug "Widget: [#{self.title}] created schedule: [#{sched.inspect}]"
 
     return sched
   end

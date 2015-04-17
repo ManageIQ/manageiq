@@ -1,4 +1,5 @@
 class PxeImageIpxe < PxeImage
+  include Vmdb::NewLogging
   def build_pxe_contents(ks_access_path, ks_device)
     new_kernel  = self.kernel.to_s.dup
     new_kernel << " #{super}"
@@ -31,7 +32,7 @@ PXE
     end
 
     if current_item[:kernel].blank?
-      $log.warn "MIQ(#{self.name}.parse_contents) Image #{current_item[:label]} missing kernel - Skipping"
+      _log.warn "Image #{current_item[:label]} missing kernel - Skipping"
       return []
     end
 

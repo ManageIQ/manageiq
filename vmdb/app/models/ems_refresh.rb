@@ -1,4 +1,5 @@
 module EmsRefresh
+  include Vmdb::NewLogging
   extend EmsRefresh::SaveInventory
   extend EmsRefresh::SaveInventoryCloud
   extend EmsRefresh::SaveInventoryInfra
@@ -91,7 +92,7 @@ module EmsRefresh
       # Take care of both String or Class type being passed in
       c = t[0].kind_of?(Class) ? t[0] : t[0].to_s.constantize
       if [VmOrTemplate, Host, ExtManagementSystem].none? { |k| c.is_or_subclass_of?(k) }
-        $log.warn "MIQ(#{self.name}.get_ar_objects) Unknown target type: [#{c}]."
+        _log.warn "Unknown target type: [#{c}]."
         next
       end
 
@@ -107,7 +108,7 @@ module EmsRefresh
 
       if recs.length != ids.length
         missing = ids - recs.collect(&:id)
-        $log.warn "MIQ(#{self.name}.get_ar_objects) Unable to find a record for [#{c}] ids: #{missing.inspect}."
+        _log.warn "Unable to find a record for [#{c}] ids: #{missing.inspect}."
       end
 
       a.concat(recs)

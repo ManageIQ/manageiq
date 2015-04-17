@@ -2,6 +2,8 @@ require 'enumerator'
 require 'miq-hash_struct'
 
 class MiqRequestWorkflow
+  include Vmdb::NewLogging
+
   attr_accessor :dialogs, :requester, :values, :last_vm_id
 
   def self.automate_dialog_request
@@ -620,7 +622,7 @@ class MiqRequestWorkflow
     end
 
     rails_logger('allowed_tags', 1)
-    $log.info "MIQ(#{self.class.name}.allowed_tags) allowed_tags returned [#{@tags.length}] objects in [#{Time.now - st}] seconds"
+    _log.info "allowed_tags returned [#{@tags.length}] objects in [#{Time.now - st}] seconds"
     @tags
   end
 
@@ -796,7 +798,7 @@ class MiqRequestWorkflow
       # Update the display flag for fields based on current settings
       update_field_visibility
 
-      $log.info "MIQ(#{self.class.name}.refresh_field_values) refresh completed in [#{Time.now - st}] seconds"
+      _log.info "refresh completed in [#{Time.now - st}] seconds"
     rescue => err
       $log.error "#{log_header} [#{err}]"
       $log.error err.backtrace.join("\n")
@@ -1070,7 +1072,7 @@ class MiqRequestWorkflow
     # Remove any hosts that are no longer in the list
     all_hosts = load_ar_obj(src[:ems]).hosts.find_all { |h| hosts_ids.include?(h.id) }
     allowed_hosts_obj_cache = process_filter(:host_filter, Host, all_hosts)
-    $log.info "MIQ(#{self.class.name}#allowed_hosts_obj) allowed_hosts_obj returned [#{allowed_hosts_obj_cache.length}] objects in [#{Time.now - st}] seconds"
+    _log.info "allowed_hosts_obj returned [#{allowed_hosts_obj_cache.length}] objects in [#{Time.now - st}] seconds"
     rails_logger('allowed_hosts_obj', 1)
     allowed_hosts_obj_cache
   end
@@ -1092,7 +1094,7 @@ class MiqRequestWorkflow
       ci_to_hash_struct(s)
     end
 
-    $log.info "MIQ(#{self.class.name}#allowed_storages) allowed_storages returned [#{allowed_storages_cache.length}] objects in [#{Time.now - st}] seconds"
+    _log.info "allowed_storages returned [#{allowed_storages_cache.length}] objects in [#{Time.now - st}] seconds"
     rails_logger('allowed_storages', 1)
     allowed_storages_cache
   end

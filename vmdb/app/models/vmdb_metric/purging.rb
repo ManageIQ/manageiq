@@ -1,4 +1,5 @@
 module VmdbMetric::Purging
+  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   module ClassMethods
@@ -87,7 +88,7 @@ module VmdbMetric::Purging
       until (batch = query.dup.to_a).empty?
         ids = batch.collect(&:id)
 
-        $log.info("MIQ(#{self.name}.purge) Purging #{ids.length} metrics.")
+        _log.info("Purging #{ids.length} metrics.")
         count  = self.delete_all(:id => ids)
         total += count
 

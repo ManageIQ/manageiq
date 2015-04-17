@@ -1,4 +1,5 @@
 class MiqEvent < ActiveRecord::Base
+  include Vmdb::NewLogging
   default_scope { where self.conditions_for_my_region_default_scope }
 
   include UuidMixin
@@ -63,17 +64,17 @@ class MiqEvent < ActiveRecord::Base
     results = {}
 
     if actions[:enforce_policy]
-      $log.info("MIQ(Event.raise_evm_event): Event Raised [#{event}]")
+      _log.info("Event Raised [#{event}]")
       results[:policy] = MiqPolicy.enforce_policy(target, event, inputs)
     end
 
     if actions[:raise_to_automate]
-      $log.info("MIQ(Event.raise_evm_event): Event [#{raw_event}] raised to automation")
+      _log.info("Event [#{raw_event}] raised to automation")
       results[:automate] = MiqAeEvent.raise_evm_event(raw_event, target, inputs)
     end
 
     if actions[:evaluate_alert]
-      $log.info("MIQ(Event.raise_evm_event): Alert for Event [#{raw_event}]")
+      _log.info("Alert for Event [#{raw_event}]")
       results[:alert] = MiqAlert.evaluate_alerts(target, event, inputs)
     end
 
@@ -115,7 +116,7 @@ class MiqEvent < ActiveRecord::Base
       elsif MiqAlert.event_alertable?(raw_event)
         actions[:evaluate_alert] = true
       else
-        $log.debug("MIQ(Event.raise_evm_event): Event [#{raw_event}] does not participate in policy enforcement")
+        _log.debug("Event [#{raw_event}] does not participate in policy enforcement")
       end
     else
       actions[:raise_to_automate] = true
@@ -170,7 +171,7 @@ class MiqEvent < ActiveRecord::Base
       next unless target.respond_to?(assoc)
       children = target.send(assoc)
       children.each do |child|
-        $log.info("MIQ(Event.raise_event_for_children): Raising Event [#{child_event}] for Child [(#{child.class}) #{child.name}] of Parent [(#{target.class}) #{target.name}]")
+        _log.info("Raising Event [#{child_event}] for Child [(#{child.class}) #{child.name}] of Parent [(#{target.class}) #{target.name}]")
         self.raise_evm_event_queue(child, child_event, inputs)
       end
     end
@@ -300,12 +301,12 @@ class MiqEvent < ActiveRecord::Base
 
       rec = self.find_by_name(event[:name])
       if rec.nil?
-        $log.info("MIQ(MiqEvent.seed_default_events) Creating [#{event[:name]}]")
+        _log.info("Creating [#{event[:name]}]")
         rec = self.create(event)
       else
         rec.attributes = event
         if rec.changed?
-          $log.info("MIQ(MiqEvent.seed_default_events) Updating [#{event[:name]}]")
+          _log.info("Updating [#{event[:name]}]")
           rec.save
         end
       end
@@ -325,13 +326,13 @@ class MiqEvent < ActiveRecord::Base
       events[:events].each do |e|
         event = self.find_by_name_and_event_type(e[:name], event_type.to_s)
         if event.nil?
-          $log.info("MIQ(MiqEvent.seed_default_definitions) Creating [#{e[:name]}]")
+          _log.info("Creating [#{e[:name]}]")
           event = self.create(e.merge(:event_type => event_type.to_s, :default => true, :enabled => true))
           stats[:a] += 1
         else
           event.attributes = e
           if event.changed?
-            $log.info("MIQ(MiqEvent.seed_default_definitions) Updating [#{e[:name]}]")
+            _log.info("Updating [#{e[:name]}]")
             event.save
             stats[:u] += 1
           end

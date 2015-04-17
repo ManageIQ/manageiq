@@ -1,4 +1,5 @@
 module DriftState::Purging
+  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   module ClassMethods
@@ -103,7 +104,7 @@ module DriftState::Purging
       until (batch = query.dup.to_a).empty?
         ids = batch.collect(&:id)
 
-        $log.info("MIQ(#{self.name}.purge) Purging #{ids.length} drift states.")
+        _log.info("Purging #{ids.length} drift states.")
         count  = self.delete_all(:id => ids)
         total += count
 

@@ -1,5 +1,7 @@
 module EmsOpenstackMixin
   extend ActiveSupport::Concern
+  include Vmdb::NewLogging
+
   #
   # OpenStack interactions
   #
@@ -71,7 +73,7 @@ module EmsOpenstackMixin
     require 'openstack/openstack_event_monitor'
     OpenstackEventMonitor.available?(event_monitor_options)
   rescue => e
-    $log.error("MIQ(#{self.class.name}.#{__method__}) Exeption trying to find openstack event monitor for #{self.name}(#{self.hostname}). #{e.message}")
+    _log.error("Exeption trying to find openstack event monitor for #{self.name}(#{self.hostname}). #{e.message}")
     false
   end
 
@@ -98,7 +100,7 @@ module EmsOpenstackMixin
     miq_exception = translate_exception(err)
     raise unless miq_exception
 
-    $log.error("MIQ(#{self.class.name}.verify_api_credentials) Error Class=#{err.class.name}, Message=#{err.message}")
+    _log.error("Error Class=#{err.class.name}, Message=#{err.message}")
     raise miq_exception
   end
   private :verify_api_credentials
@@ -111,7 +113,7 @@ module EmsOpenstackMixin
     miq_exception = translate_exception(err)
     raise unless miq_exception
 
-    $log.error("MIQ(#{self.class.name}.verify_aqmp_credentials) Error Class=#{err.class.name}, Message=#{err.message}")
+    _log.error("Error Class=#{err.class.name}, Message=#{err.message}")
     raise miq_exception
   end
   private :verify_amqp_credentials
@@ -137,7 +139,7 @@ module EmsOpenstackMixin
     create_options = {:stack_name => stack_name, :template => template.content}.merge(options)
     openstack_handle.orchestration_service.stacks.new.save(create_options)["id"]
   rescue => err
-    $log.error "MIQ(#{self.class.name}##{__method__}) stack=[#{stack_name}], error: #{err}"
+    _log.error "stack=[#{stack_name}], error: #{err}"
     raise MiqException::MiqOrchestrationProvisionError, err.to_s, err.backtrace
   end
 
@@ -145,7 +147,7 @@ module EmsOpenstackMixin
     stack = openstack_handle.orchestration_service.stacks.get(stack_name, stack_id)
     return stack.stack_status, stack.stack_status_reason if stack
   rescue => err
-    $log.error "MIQ(#{self.class.name}##{__method__}) stack=[#{stack_name}], error: #{err}"
+    _log.error "stack=[#{stack_name}], error: #{err}"
     raise MiqException::MiqOrchestrationStatusError, err.to_s, err.backtrace
   end
 
@@ -155,7 +157,7 @@ module EmsOpenstackMixin
   rescue Excon::Errors::BadRequest => bad
     JSON.parse(bad.response.body)['error']['message']
   rescue => err
-    $log.error "MIQ(#{self.class.name}##{__method__}) template=[#{template.name}], error: #{err}"
+    _log.error "template=[#{template.name}], error: #{err}"
     raise MiqException::MiqOrchestrationValidationError, err.to_s, err.backtrace
   end
 

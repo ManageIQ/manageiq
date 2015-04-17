@@ -1,3 +1,5 @@
+require 'vmdb/new_logging'
+
 require 'vmdb-logger'
 require 'vmdb_helper'  # TODO: eventually replace this with requiring Vmdb::Config directly
 

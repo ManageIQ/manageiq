@@ -3,6 +3,7 @@ require 'cgi'
 require 'uri'
 
 class VmOrTemplate < ActiveRecord::Base
+  include Vmdb::NewLogging
   include NewWithTypeStiMixin
 
   self.table_name = 'vms'
@@ -308,7 +309,7 @@ class VmOrTemplate < ActiveRecord::Base
     raise "VM/Template <#{name}> with Id: <#{id}>: Provider authentication failed." unless self.ext_management_system.authentication_status_ok?
 
     # TODO: Need to break this logic out into a method that can look at the verb and the vm and decide the best way to invoke it - Virtual Center WS, ESX WS, Storage Proxy.
-    $log.info("MIQ(#{self.class.name}#run_command_via_parent) Invoking [#{verb}] through provider: [#{self.ext_management_system.name}]")
+    _log.info("Invoking [#{verb}] through EMS: [#{self.ext_management_system.name}]")
     options = {:user_event => "Console Request Action [#{verb}], VM [#{self.name}]"}.merge(options)
       self.ext_management_system.send(verb, self, options)
   end
@@ -318,7 +319,7 @@ class VmOrTemplate < ActiveRecord::Base
       enforce_policy(policy_event) unless policy_event.nil?
       return false
     rescue MiqException::PolicyPreventAction => err
-      $log.info "MIQ(#{self.class.name}#policy_prevented?) #{err}"
+      _log.info "#{err}"
       return true
     end
   end
@@ -633,7 +634,7 @@ class VmOrTemplate < ActiveRecord::Base
 
   def connect_ems(e)
     unless self.ext_management_system == e
-      $log.debug "MIQ(#{self.class.name}#connect_ems) Connecting Vm [#{self.name}] id [#{self.id}] to EMS [#{e.name}] id [#{e.id}]"
+      _log.debug "Connecting Vm [#{self.name}] id [#{self.id}] to EMS [#{e.name}] id [#{e.id}]"
       self.ext_management_system = e
       self.save
     end
@@ -642,7 +643,7 @@ class VmOrTemplate < ActiveRecord::Base
   def disconnect_ems(e=nil)
     if e.nil? || self.ext_management_system == e
       log_text = " from EMS [#{self.ext_management_system.name}] id [#{self.ext_management_system.id}]" unless self.ext_management_system.nil?
-      $log.info "MIQ(#{self.class.name}#disconnect_ems) Disconnecting Vm [#{self.name}] id [#{self.id}]#{log_text}"
+      _log.info "Disconnecting Vm [#{self.name}] id [#{self.id}]#{log_text}"
 
       self.ext_management_system = nil
       self.raw_power_state = "unknown"
@@ -652,7 +653,7 @@ class VmOrTemplate < ActiveRecord::Base
 
   def connect_host(h)
     unless self.host == h
-      $log.debug "MIQ(#{self.class.name}#connect_host) Connecting Vm [#{self.name}] id [#{self.id}] to Host [#{h.name}] id [#{h.id}]"
+      _log.debug "Connecting Vm [#{self.name}] id [#{self.id}] to Host [#{h.name}] id [#{h.id}]"
       self.host = h
       self.save
 
@@ -664,7 +665,7 @@ class VmOrTemplate < ActiveRecord::Base
   def disconnect_host(h=nil)
     if h.nil? || self.host == h
       log_text = " from Host [#{self.host.name}] id [#{self.host.id}]" unless self.host.nil?
-      $log.info "MIQ(#{self.class.name}#disconnect_host) Disconnecting Vm [#{self.name}] id [#{self.id}]#{log_text}"
+      _log.info "Disconnecting Vm [#{self.name}] id [#{self.id}]#{log_text}"
 
       self.host = nil
       self.save
@@ -699,7 +700,7 @@ class VmOrTemplate < ActiveRecord::Base
 
   def connect_storage(s)
     unless self.storage == s
-      $log.debug "MIQ(Vm-connect_storage) Connecting Vm [#{self.name}] id [#{self.id}] to #{ui_lookup(:table => "storages")} [#{s.name}] id [#{s.id}]"
+      _log.debug "Connecting Vm [#{self.name}] id [#{self.id}] to #{ui_lookup(:table => "storages")} [#{s.name}] id [#{s.id}]"
       self.storage = s
       self.save
     end
@@ -709,7 +710,7 @@ class VmOrTemplate < ActiveRecord::Base
     if s.nil? || self.storage == s || self.storages.include?(s)
       stores = s.nil? ? ([self.storage] + self.storages).compact.uniq : [s]
       log_text = stores.collect {|x| "#{ui_lookup(:table => "storages")} [#{x.name}] id [#{x.id}]"}.join(", ")
-      $log.info "MIQ(Vm-disconnect_storage) Disconnecting Vm [#{self.name}] id [#{self.id}] from #{log_text}"
+      _log.info "Disconnecting Vm [#{self.name}] id [#{self.id}] from #{log_text}"
 
       if s.nil?
         self.storage = nil
@@ -1223,7 +1224,7 @@ class VmOrTemplate < ActiveRecord::Base
     when "NFS"  then "[#{storage.name}] #{location}"
     when "NAS"  then File.join(storage.name, location)
     else
-      $log.warn("MIQ(Vm-path) VM [#{self.name}] storage type [#{self.storage.store_type}] not supported")
+      _log.warn("VM [#{self.name}] storage type [#{self.storage.store_type}] not supported")
       @path = location
     end
   end
@@ -1259,7 +1260,7 @@ class VmOrTemplate < ActiveRecord::Base
     begin
       storage_id, location = parse_path(path)
     rescue
-      $log.warn "MIQ(#{self.class.name}.find_by_path) Invalid path specified [#{path}]"
+      _log.warn "Invalid path specified [#{path}]"
       return nil
     end
     VmOrTemplate.find_by_storage_id_and_location(storage_id, location)
@@ -1351,7 +1352,7 @@ class VmOrTemplate < ActiveRecord::Base
       cat = self.class.folder_category(folder_type)
       ent = self.class.folder_entry(path, cat)
 
-      $log.info("MIQ(Vm-classify_with_parent_folder_path) #{add ? "C" : "Unc"}lassifying VM: [#{self.name}] with Category: [#{cat.name} => #{cat.description}], Entry: [#{ent.name} => #{ent.description}]")
+      _log.info("#{add ? "C" : "Unc"}lassifying VM: [#{self.name}] with Category: [#{cat.name} => #{cat.description}], Entry: [#{ent.name} => #{ent.description}]")
       ent.send(add ? :assign_entry_to : :remove_entry_from, self, false)
     end
   end
@@ -1499,7 +1500,7 @@ class VmOrTemplate < ActiveRecord::Base
     data0, data1 = drift_states.order("timestamp DESC").limit(2)
 
     if data0.nil? || data1.nil?
-      $log.info("MIQ(Vm-changed_vm_value?) Unable to evaluate, not enough state data available")
+      _log.info("Unable to evaluate, not enough state data available")
       return false
     end
 
@@ -1510,7 +1511,7 @@ class VmOrTemplate < ActiveRecord::Base
     else
       raise "operator '#{operator}' is not supported"
     end
-    $log.info("MIQ(Vm-changed_vm_value?) Evaluate: !(#{v1} == #{v0}) = #{result}")
+    _log.info("Evaluate: !(#{v1} == #{v0}) = #{result}")
 
     return result
   end
@@ -1771,7 +1772,7 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def self.event_by_property(property, value, event_type, event_message, event_time=nil, options={})
-    $log.info "MIQ(#{self.name}.event_by_property) event_vm_by_property called with property:[#{property}] value:[#{value}] type:[#{event_type}] message:[#{event_message}] event_time:[#{event_time}]"
+    _log.info "event_vm_by_property called with property:[#{property}] value:[#{value}] type:[#{event_type}] message:[#{event_message}] event_time:[#{event_time}]"
     event_timestamp = event_time.blank? ? Time.now.utc : event_time.to_time(:utc)
 
     case property

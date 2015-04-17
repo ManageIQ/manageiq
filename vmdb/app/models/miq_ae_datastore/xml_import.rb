@@ -1,5 +1,6 @@
 module MiqAeDatastore
   class XmlImport
+    include Vmdb::NewLogging
     def self.process_class(input)
       fields    = input.delete("MiqAeSchema")
       instances = input.delete("MiqAeInstance")
@@ -125,7 +126,7 @@ module MiqAeDatastore
           require 'xml_hash'
           doc = XmlHash.load(f)
           version = doc.children[0].attributes[:version]
-          $log.info("MIQ(MiqAeDatastore)   with version '#{version}'") if $log
+          _log.info("  with version '#{version}'") if $log
           raise "Unsupported version '#{version}'.  Must be at least '#{MiqAeDatastore::XML_VERSION_MIN_SUPPORTED}'." unless check_version(version)
           classes = doc.to_h(:symbols => false)["MiqAeClass"]
           buttons = doc.to_h(:symbols => false)["MiqAeButton"]
@@ -162,13 +163,13 @@ module MiqAeDatastore
     end
 
     def self.load_file(f, domain)
-      $log.info("MIQ(MiqAeDatastore) Importing file '#{f}'") if $log
+      _log.info("Importing file '#{f}'") if $log
       ext = File.extname(f).downcase
       case ext
       when ".xml"          then load_xml_file(f, domain)
       else raise "Unhandled File Extension [#{ext}] when trying to load #{f}"
       end
-      $log.info("MIQ(MiqAeDatastore) Import complete") if $log
+      _log.info("Import complete") if $log
     end
   end
 end

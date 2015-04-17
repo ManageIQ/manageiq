@@ -1,4 +1,5 @@
 class ManageIQ::Providers::BaseManager::RefreshWorker < MiqQueueWorkerBase
+  include Vmdb::NewLogging
   include PerEmsWorkerMixin
 
   self.required_roles = "ems_inventory"
@@ -27,7 +28,7 @@ class ManageIQ::Providers::BaseManager::RefreshWorker < MiqQueueWorkerBase
     refresh_worker_settings = configuration.config.fetch_path(*path)
     unless refresh_worker_settings.has_key?(:defaults)
       subclasses = ExtManagementSystem.types.collect { |k| "ems_refresh_worker_#{k}".to_sym }
-      $log.info("MIQ(#{self.name}) Migrating Settings")
+      _log.info("Migrating Settings")
       defaults = refresh_worker_settings
       subclasses.each { |subclass_key| defaults.delete(subclass_key)}
       refresh_worker_settings = { :defaults => defaults }

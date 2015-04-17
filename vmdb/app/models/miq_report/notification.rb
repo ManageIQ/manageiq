@@ -1,4 +1,5 @@
 module MiqReport::Notification
+  include Vmdb::NewLogging
   def notify_user_of_report(run_on, result, options)
     userid = options[:userid]
     url = options[:email_url_prefix]
@@ -12,18 +13,18 @@ module MiqReport::Notification
     msg = "No to: email address provided." if to.blank?
 
     unless msg.nil?
-      $log.warn("MIQ(MiqReport-notify_users_of_report user: Failed to email report because: #{msg}")
+      _log.warn("Failed to email report because: #{msg}")
       return
     end
 
     send_if_empty = options.fetch_path(:email, :send_if_empty)
     send_if_empty = true if send_if_empty.nil?
     if !self.table_has_records? && !send_if_empty
-      $log.info("MIQ(MiqReport-notify_users_of_report) No records found for scheduled report and :send_if_empty option is false, no Email will be sent. ")
+      _log.info("No records found for scheduled report and :send_if_empty option is false, no Email will be sent. ")
       return
     end
 
-    $log.info("MIQ(MiqReport-notify_users_of_report) Emailing to: #{to.inspect} report results: [#{result.name}]")
+    _log.info("Emailing to: #{to.inspect} report results: [#{result.name}]")
 
     body = notify_email_body(url, result, to)
     subject = run_on.strftime("Your report '#{self.title}' generated on %m/%d/%Y is ready")
@@ -61,7 +62,7 @@ module MiqReport::Notification
 
     begin
       grouped_tos.each do |group_of_tos|
-        $log.info("MIQ(MiqReport-notify_users_of_report) Queuing email user: [#{user.name}] report results: [#{result.name}] to: #{group_of_tos.inspect}")
+        _log.info("Queuing email user: [#{user.name}] report results: [#{result.name}] to: #{group_of_tos.inspect}")
         options = {
           :to          => group_of_tos,
           :from        => from,
@@ -72,7 +73,7 @@ module MiqReport::Notification
         GenericMailer.deliver_queue(:generic_notification, options)
       end
     rescue => err
-      $log.error("MIQ(MiqReport-notify_users_of_report) Queuing email user: [#{user.name}] report results: [#{result.name}] failed with error: [#{err.class.name}] [#{err}]")
+      _log.error("Queuing email user: [#{user.name}] report results: [#{result.name}] failed with error: [#{err.class.name}] [#{err}]")
     end
     Time.zone = curr_tz # Restore original time zone setting
   end

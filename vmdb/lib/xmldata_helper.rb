@@ -3,15 +3,16 @@ $:.push("#{File.dirname(__FILE__)}/../../../lib/util/xml")
 require 'xml_utils'
 
 class XmlData < ActiveRecord::Base
+  include Vmdb::NewLogging
   def self.emsinventory(emsId, data)
     doc = REXML::Document.new(data)
-    $log.info "MIQ(XmlData.emsinventory): request received from ems id: #{emsId}"
+    _log.info "request received from ems id: #{emsId}"
     Storage.save_emsinventory(emsId, Xml2Array.getNodeDetails(doc, "Datastores"))
     Host.save_ems_inventory(emsId, Xml2Array.getNodeDetails(doc, "HostSystems"))
   end
 
   def self.emsevents(emsId, data)
-    $log.info "MIQ(XmlData.emsevents): request received from ems id: #{emsId}"
+    _log.info "request received from ems id: #{emsId}"
     handler = EventXmlHandler.new
     Document.parse_stream(data, handler)
     $log.debug "#{handler.result.inspect}"

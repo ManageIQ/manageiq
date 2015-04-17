@@ -1,4 +1,5 @@
 class ClassificationImport
+  include Vmdb::NewLogging
   attr_accessor :errors
   attr_accessor :stats
 
@@ -18,7 +19,6 @@ class ClassificationImport
   end
 
   def verify
-    log_prefix = 'MIQ(ClassificationImport.verify)'
     @errors.clear
     @verified_data = {}
     good = bad = 0
@@ -33,19 +33,19 @@ class ClassificationImport
       vms = MiqBulkImport.find_entry_by_keys(VmOrTemplate, keys)
       if vms.empty?
         bad += 1
-        $log.warn "#{log_prefix} #{@keys[0].titleize}: #{line[@keys[0]]}: Unable to find VM"
+        _log.warn "#{@keys[0].titleize}: #{line[@keys[0]]}: Unable to find VM"
         @errors.add(:vmnotfound, "#{@keys[0].titleize}: #{line[@keys[0]]}: Unable to find VM")
         next
       end
       if vms.length > 1
         bad += 1
-        $log.warn "#{log_prefix} #{@keys[0].titleize}: #{line[@keys[0]]}: Could not resolve a vm, an entry will be skipped"
+        _log.warn "#{@keys[0].titleize}: #{line[@keys[0]]}: Could not resolve a vm, an entry will be skipped"
         @errors.add(:severalvmsfound4keys, "#{@keys[0].titleize}: #{line[@keys[0]]}: Could not resolve a vm, an entry will be skipped")
       else
         cat = Classification.find_by_description(line["category"])
         if cat.nil?
           bad += 1
-          $log.warn "#{log_prefix} #{@keys[0].titleize}: #{line[@keys[0]]}: Unable to find category #{line["category"]}"
+          _log.warn "#{@keys[0].titleize}: #{line[@keys[0]]}: Unable to find category #{line["category"]}"
           @errors.add(:categorynotfound, "#{@keys[0].titleize}: #{line[@keys[0]]}: Unable to find category #{line["category"]}")
           next
         end
@@ -62,7 +62,7 @@ class ClassificationImport
         }
         if entry.nil?
           bad += 1
-          $log.warn "#{log_prefix} #{@keys[0].titleize}: #{line[@keys[0]]}, category: #{line["category"]}: Unable to find entry #{line["entry"]})"
+          _log.warn "#{@keys[0].titleize}: #{line[@keys[0]]}, category: #{line["category"]}: Unable to find entry #{line["entry"]})"
           @errors.add(:entrynotfound, "#{@keys[0].titleize}: #{line[@keys[0]]}, category: #{line["category"]}: Unable to find entry #{line["entry"]}")
           next
         end
@@ -77,14 +77,14 @@ class ClassificationImport
           vm = VmOrTemplate.find_by_id(id)
           while entries.length > 1
             e = entries.shift
-            $log.warn "#{log_prefix} Vm: #{vm.name}, Location: #{vm.location}, Category: #{category}: Multiple values given for single-valued category, value #{e} will be ignored"
+            _log.warn "Vm: #{vm.name}, Location: #{vm.location}, Category: #{category}: Multiple values given for single-valued category, value #{e} will be ignored"
             @errors.add(:singlevaluedcategory, "Vm #{vm.name}, Location: #{vm.location}, Category: #{category}: Multiple values given for single-valued category, value #{e} will be ignored")
           end
         end
       }
     }
     @stats = {:good => good, :bad => bad}
-    $log.info "#{log_prefix} Number of valid entries: #{@stats[:good]}, number of invalid entries: #{@stats[:bad]}"
+    _log.info "Number of valid entries: #{@stats[:good]}, number of invalid entries: #{@stats[:bad]}"
     return @stats
   end
 
@@ -98,7 +98,7 @@ class ClassificationImport
           entries.each{|ent|
             cat.entries.each {|e|
               if e.description == ent
-                $log.info "MIQ(ClassificationImport-apply) Vm: #{vm.name}, Location: #{vm.location}, Category: #{cat.description}: Applying entry #{ent}"
+                _log.info "Vm: #{vm.name}, Location: #{vm.location}, Category: #{cat.description}: Applying entry #{ent}"
                 e.assign_entry_to(vm)
                 break
               end

@@ -1,4 +1,5 @@
 module MiqProvisionVmware::Cloning
+  include Vmdb::NewLogging
   def do_clone_task_check(clone_task_mor)
     source.with_provider_connection do |vim|
       begin
@@ -99,7 +100,7 @@ module MiqProvisionVmware::Cloning
     end
 
     task_mor = clone_vm(vim_clone_options)
-    $log.info("MIQ(#{self.class.name}#start_clone) Provisioning completed for [#{vim_clone_options[:name]}] from source [#{source.name}]") if MiqProvision::CLONE_SYNCHRONOUS
+    _log.info("Provisioning completed for [#{vim_clone_options[:name]}] from source [#{source.name}]") if MiqProvision::CLONE_SYNCHRONOUS
     task_mor
   end
 

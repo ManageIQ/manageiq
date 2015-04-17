@@ -1,4 +1,5 @@
 class VimPerformanceTrend < ActsAsArModel
+  include Vmdb::NewLogging
   set_columns_hash(
     :resource_name         => :string,
     :resource_id           => :integer,
@@ -142,7 +143,7 @@ class VimPerformanceTrend < ActsAsArModel
       rescue RangeError
         return nil
       rescue => err
-        $log.warn("MIQ(VimPerformanceTrend-calc_value_at_target) #{err.message}, calculating trend limit for limit=#{limit}, trend_data=#{trend_data.inspect}, intermediate=#{result.inspect}")
+        _log.warn("#{err.message}, calculating trend limit for limit=#{limit}, trend_data=#{trend_data.inspect}, intermediate=#{result.inspect}")
         return nil
       end
     end
@@ -158,7 +159,7 @@ class VimPerformanceTrend < ActsAsArModel
     rescue ZeroDivisionError
       slope_arr = []
     rescue => err
-      $log.warn("MIQ(MiqReport-build_trend_data) #{err.message}, calculating slope")
+      _log.warn("#{err.message}, calculating slope")
       slope_arr = []
     end
     trend_data[:slope], trend_data[:yint], trend_data[:corr] = slope_arr

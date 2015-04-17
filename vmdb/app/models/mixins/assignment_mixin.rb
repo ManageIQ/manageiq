@@ -1,6 +1,7 @@
 # Generic mixin module that supports assignment by CI of management tags
 
 module AssignmentMixin
+  include Vmdb::NewLogging
   extend ActiveSupport::Concern
   included do  #:nodoc:
     acts_as_miq_taggable
@@ -35,7 +36,7 @@ module AssignmentMixin
         id = obj
         obj = Classification.find_by_id(id)
         if obj.nil?
-          $log.warn("MIQ(#{self.class.name}.assign_to_tags) Unable to find classification with id [#{id}], skipping assignment")
+          _log.warn("Unable to find classification with id [#{id}], skipping assignment")
           next
         end
       end

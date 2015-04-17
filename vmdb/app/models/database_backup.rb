@@ -1,4 +1,5 @@
 class DatabaseBackup < ActiveRecord::Base
+  include Vmdb::NewLogging
   SUPPORTED_DEPOTS = {
     'smb' => 'Samba',
     'nfs' => 'Network File System'
@@ -39,7 +40,7 @@ class DatabaseBackup < ActiveRecord::Base
     self._backup(:uri => depot.uri, :username => depot.authentication_userid, :password => depot.authentication_password, :remote_file_name => self.backup_file_name)
 
     if @sch && @sch.adhoc == true
-      $log.info("MIQ(DatabaseBackup.backup) Removing adhoc schedule: [#{@sch.id}] [#{@sch.name}]") if $log
+      _log.info("Removing adhoc schedule: [#{@sch.id}] [#{@sch.name}]") if $log
       @sch.destroy
     end
 

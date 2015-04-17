@@ -1,4 +1,5 @@
 class MiqRequest < ActiveRecord::Base
+  include Vmdb::NewLogging
   ACTIVE_STATES = %w(active queued)
 
   belongs_to :source,            :polymorphic => true
@@ -161,9 +162,8 @@ class MiqRequest < ActiveRecord::Base
   end
 
   def approval_approved
-    log_prefix = "MIQ(#{self.class.name}.approve)"
     unless self.approved?
-      $log.info("#{log_prefix} Request: [#{description}] has outstanding approvals")
+      _log.info("Request: [#{description}] has outstanding approvals")
       return false
     end
 
@@ -171,12 +171,12 @@ class MiqRequest < ActiveRecord::Base
     call_automate_event_queue("request_approved")
 
     # execute parent now that request is approved
-    $log.info("#{log_prefix} Request: [#{description}] has all approvals approved, proceeding with execution")
+    _log.info("Request: [#{description}] has all approvals approved, proceeding with execution")
     begin
       execute
     rescue => err
-      $log.error("#{log_prefix} #{err.message}, attempting to execute request: [#{description}]")
-      $log.error("#{log_prefix} #{err.backtrace.join("\n")}")
+      _log.error("#{err.message}, attempting to execute request: [#{description}]")
+      _log.error("#{err.backtrace.join("\n")}")
     end
 
     true

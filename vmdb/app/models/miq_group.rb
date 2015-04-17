@@ -1,4 +1,5 @@
 class MiqGroup < ActiveRecord::Base
+  include Vmdb::NewLogging
   default_scope { where(self.conditions_for_my_region_default_scope) }
 
   belongs_to :miq_user_role
@@ -76,7 +77,6 @@ class MiqGroup < ActiveRecord::Base
 
   def self.seed
     MiqRegion.my_region.lock do
-      log_prefix = "MIQ(MiqGroup.seed)"
       role_map_file = File.expand_path(File.join(FIXTURE_DIR, "role_map.yaml"))
       if self.count == 0 && File.exist?(role_map_file)
         filter_map_file = File.expand_path(File.join(FIXTURE_DIR, "filter_map.yaml"))
@@ -90,7 +90,7 @@ class MiqGroup < ActiveRecord::Base
           group = self.find_by_description(g) || self.new(:description => g)
           user_role = MiqUserRole.find_by_name("EvmRole-#{groups_to_roles[g]}")
           if user_role.nil?
-            $log.warn("#{log_prefix} Unable to find user_role 'EvmRole-#{groups_to_roles[group]}' for group '#{g}'")
+            _log.warn("Unable to find user_role 'EvmRole-#{groups_to_roles[group]}' for group '#{g}'")
             next
           end
           group.miq_user_role = user_role
@@ -100,7 +100,7 @@ class MiqGroup < ActiveRecord::Base
 
           mode = group.new_record? ? "Created" : "Added"
           group.save!
-          $log.info("#{log_prefix} #{mode} Group: #{group.description} with Role: #{user_role.name}")
+          _log.info("#{mode} Group: #{group.description} with Role: #{user_role.name}")
 
           seq += 1
         end

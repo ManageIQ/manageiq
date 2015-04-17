@@ -1,4 +1,5 @@
 module EmsRefresh::Refreshers::RefresherRelatsMixin
+  include Vmdb::NewLogging
   def find_relats_vmdb(target)
     log_header = "MIQ(RefresherRelatsMixin.find_relats_vmdb) EMS: [#{@ems.name}], id: [#{@ems.id}]"
     $log.info "#{log_header} Getting VMDB relationships for #{target.class} [#{target.name}] id: [#{target.id}]..."
@@ -250,7 +251,7 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
   end
 
   def do_relat_compare(type, prev_relats, new_relats)
-    $log.debug "MIQ(RefresherRelatsMixin.do_relat_compare) EMS: [#{@ems.name}], id: [#{@ems.id}] Updating #{type.to_s.titleize} relationships"
+    _log.debug "EMS: [#{@ems.name}], id: [#{@ems.id}] Updating #{type.to_s.titleize} relationships"
     if new_relats[type].kind_of?(Array) || prev_relats[type].kind_of?(Array)
       # Case where we have a single set of ids
       disconnect_proc, connect_proc = yield
@@ -276,7 +277,7 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
         begin
           disconnect_proc.call(p)
         rescue => err
-          $log.error "MIQ(RefresherRelatsMixin.do_relat_compare_ids) EMS: [#{@ems.name}], id: [#{@ems.id}] An error occurred while disconnecting id [#{p}]: #{err}"
+          _log.error "EMS: [#{@ems.name}], id: [#{@ems.id}] An error occurred while disconnecting id [#{p}]: #{err}"
           $log.log_backtrace(err)
         end
       end
@@ -287,7 +288,7 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
         begin
           connect_proc.call(n)
         rescue => err
-          $log.error "MIQ(RefresherRelatsMixin.do_relat_compare_ids) EMS: [#{@ems.name}], id: [#{@ems.id}] An error occurred while connecting id [#{n}]: #{err}"
+          _log.error "EMS: [#{@ems.name}], id: [#{@ems.id}] An error occurred while connecting id [#{n}]: #{err}"
           $log.log_backtrace(err)
         end
       end

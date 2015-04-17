@@ -36,12 +36,12 @@ module MiqServer::WorkerManagement::Monitor::SystemLimits
       used = sys[:SwapTotal] - sys[:SwapFree] - sys[:MemFree]
       pct_used = used / sys[:SwapTotal].to_f * 100
     rescue => err
-      $log.warn("#{self.log_prefix} #{err.message}, calculating percent of swap space used")
+      _log.warn("#{err.message}, calculating percent of swap space used")
       return false
     end
 
     if pct_used >= value
-      $log.warn("#{self.log_prefix} System memory usage has exceeded #{value}% of swap: Total: [#{sys[:SwapTotal]}], Used: [#{used}]")
+      _log.warn("System memory usage has exceeded #{value}% of swap: Total: [#{sys[:SwapTotal]}], Used: [#{used}]")
       return true
     end
     return false
@@ -56,12 +56,12 @@ module MiqServer::WorkerManagement::Monitor::SystemLimits
       used = sys[:SwapTotal] - sys[:SwapFree] - sys[:MemFree]
       pct_used = used / sys[:SwapTotal].to_f * 100
     rescue => err
-      $log.warn("#{self.log_prefix} Allowing worker: [#{options[:worker_name]}] to start due to error: #{err.message}, calculating percent of swap space used")
+      _log.warn("Allowing worker: [#{options[:worker_name]}] to start due to error: #{err.message}, calculating percent of swap space used")
       return true
     end
 
     unless pct_used <= value
-      $log.error("#{self.log_prefix} Not allowing worker [#{options[:worker_name]}] to start since system memory usage has exceeded #{value}% of swap: Total: [#{sys[:SwapTotal]}], Used: [#{used}]")
+      _log.error("Not allowing worker [#{options[:worker_name]}] to start since system memory usage has exceeded #{value}% of swap: Total: [#{sys[:SwapTotal]}], Used: [#{used}]")
       return false
     end
     return true
@@ -88,32 +88,32 @@ module MiqServer::WorkerManagement::Monitor::SystemLimits
     # Delete this?
     settings = options[:settings]
     if settings.nil?
-      $log.warn("#{self.log_prefix} Allowing worker: [#{options[:worker_name]}] to start since its theshold settings were not found!")
+      _log.warn("Allowing worker: [#{options[:worker_name]}] to start since its theshold settings were not found!")
       return false
     end
 
     value = settings[:memory_threshold]
     unless value.kind_of?(Fixnum)
-      $log.warn("#{self.log_prefix} Allowing worker: [#{options[:worker_name]}] to start since the threshold is invalid: [#{value}], type: [#{value.class.name}]")
+      _log.warn("Allowing worker: [#{options[:worker_name]}] to start since the threshold is invalid: [#{value}], type: [#{value.class.name}]")
       return false
     end
 
     value = value / 2  # The start limit is half the max
     sys = MiqSystem.memory
     result = (sys[:MemFree].nil? || sys[:MemFree] > value)
-    $log.error("#{self.log_prefix} Not allowing worker [#{options[:worker_name]}] to start since free memory [#{sys[:MemFree]}] is less than half the worker threshold [#{value}]") unless result
+    _log.error("Not allowing worker [#{options[:worker_name]}] to start since free memory [#{sys[:MemFree]}] is less than half the worker threshold [#{value}]") unless result
     return result
   end
 
   def invoke_algorithm(options)
-    $log.debug("#{self.log_prefix} Invoke algorithm started with options: [#{options.inspect}]")
+    _log.debug("Invoke algorithm started with options: [#{options.inspect}]")
     name = options[:name]
     type = options[:type]
     full_algorithm_name = self.build_algorithm_name(name, type)
 
-    $log.debug("#{self.log_prefix} Executing [#{type}] algorithm: [#{name}]")
+    _log.debug("Executing [#{type}] algorithm: [#{name}]")
     res = self.send(full_algorithm_name, options)
-    $log.debug("#{self.log_prefix} Executing [#{type}] algorithm: [#{name}] completed with result: [#{res}]")
+    _log.debug("Executing [#{type}] algorithm: [#{name}] completed with result: [#{res}]")
     res
   end
 
@@ -121,7 +121,7 @@ module MiqServer::WorkerManagement::Monitor::SystemLimits
     real_algorithm_name = "#{type}_algorithm_#{name}" if name && type
     unless real_algorithm_name && self.respond_to?(real_algorithm_name)
       default = TYPE_TO_DEFAULT_ALGORITHM[type]
-      $log.warn("#{self.log_prefix} Using default algorithm: [#{default}] since [#{name}] is not a valid algorithm")
+      _log.warn("Using default algorithm: [#{default}] since [#{name}] is not a valid algorithm")
       name = default
       real_algorithm_name = "#{type}_algorithm_#{default}"
       raise "Default algorithm [#{default}] not found!" unless self.respond_to?(real_algorithm_name)

@@ -1,10 +1,11 @@
 module VmdbTableEvm::Seeding
+  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   module ClassMethods
     def seed_for_database(db, evm_table)
       unless evm_table.kind_of?(self)
-        $log.info("MIQ(VmdbTableEvm.seed_for_database) Creating <#{evm_table}> in Database <#{db.name}>")
+        _log.info("Creating <#{evm_table}> in Database <#{db.name}>")
         evm_table = db.evm_tables.create(:name => evm_table)
       end
 
@@ -27,7 +28,7 @@ module VmdbTableEvm::Seeding
     end
 
     mine.each do |name, t|
-      $log.info("MIQ(VmdbTableEvm#seed_texts) Text Table <#{name}> for Table <#{self.name}> is no longer in Database <#{self.vmdb_database.name}> - deleting")
+      _log.info("Text Table <#{name}> for Table <#{self.name}> is no longer in Database <#{self.vmdb_database.name}> - deleting")
       t.destroy
     end
   end

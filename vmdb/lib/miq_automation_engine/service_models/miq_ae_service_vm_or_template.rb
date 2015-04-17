@@ -1,5 +1,6 @@
 module MiqAeMethodService
   class MiqAeServiceVmOrTemplate < MiqAeServiceModelBase
+    include Vmdb::NewLogging
     require_relative "mixins/miq_ae_service_ems_operations_mixin"
     include MiqAeServiceEmsOperationsMixin
     require_relative "mixins/miq_ae_service_retirement_mixin"
@@ -80,7 +81,7 @@ module MiqAeMethodService
     end
 
     def remove_from_vmdb
-      $log.info "MIQ(#{self.class.name}#remove_from_vmdb) Removing #{@object.class.name} id:<#{@object.id}>, name:<#{@object.name}>"
+      _log.info "Removing #{@object.class.name} id:<#{@object.id}>, name:<#{@object.name}>"
       object_send(:destroy)
       @object = nil
       true
@@ -93,7 +94,7 @@ module MiqAeMethodService
     end
 
     def unlink_storage
-      $log.info "MIQ(#{self.class.name}#unlink_storage) Unlinking storage on #{@object.class.name} id:<#{@object.id}>, name:<#{@object.name}>"
+      _log.info "Unlinking storage on #{@object.class.name} id:<#{@object.id}>, name:<#{@object.name}>"
       object_send(:update_attributes, :storage_id => nil)
       true
     end
@@ -112,7 +113,7 @@ module MiqAeMethodService
     end
 
     def ems_custom_set(attribute, value)
-      $log.info "MIQ(#{self.class.name}#ems_custom_set) Setting EMS Custom Key on #{@object.class.name} id:<#{@object.id}>, name:<#{@object.name}> with key=#{attribute.inspect} to #{value.inspect}"
+      _log.info "Setting EMS Custom Key on #{@object.class.name} id:<#{@object.id}>, name:<#{@object.name}> with key=#{attribute.inspect} to #{value.inspect}"
       MiqQueue.put(
         :class_name   => @object.class.name,
         :instance_id  => @object.id,
@@ -133,7 +134,7 @@ module MiqAeMethodService
     end
 
     def custom_set(key, value)
-      $log.info "MIQ(#{self.class.name}#custom_set) Setting EVM Custom Key on #{@object.class.name} id:<#{@object.id}>, name:<#{@object.name}> with key=#{key.inspect} to #{value.inspect}"
+      _log.info "Setting EVM Custom Key on #{@object.class.name} id:<#{@object.id}>, name:<#{@object.name}> with key=#{key.inspect} to #{value.inspect}"
       ar_method do
         @object.miq_custom_set(key, value)
         @object.save
@@ -146,7 +147,7 @@ module MiqAeMethodService
 
       ar_method do
         @object.evm_owner = owner && owner.instance_variable_get("@object")
-        $log.info "MIQ(#{self.class.name}#owner=) Setting EVM Owning User on #{@object.class.name} id:<#{@object.id}>, name:<#{@object.name}> to #{@object.evm_owner.inspect}"
+        _log.info "Setting EVM Owning User on #{@object.class.name} id:<#{@object.id}>, name:<#{@object.name}> to #{@object.evm_owner.inspect}"
         @object.save
       end
     end
@@ -156,7 +157,7 @@ module MiqAeMethodService
 
       ar_method do
         @object.miq_group = group && group.instance_variable_get("@object")
-        $log.info "MIQ(#{self.class.name}#group=) Setting EVM Owning Group on #{@object.class.name} id:<#{@object.id}>, name:<#{@object.name}> to #{@object.miq_group.inspect}"
+        _log.info "Setting EVM Owning Group on #{@object.class.name} id:<#{@object.id}>, name:<#{@object.name}> to #{@object.miq_group.inspect}"
         @object.save
       end
     end

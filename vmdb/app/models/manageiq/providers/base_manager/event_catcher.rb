@@ -1,4 +1,5 @@
 class ManageIQ::Providers::BaseManager::EventCatcher < MiqWorker
+  include Vmdb::NewLogging
   include PerEmsWorkerMixin
 
   self.required_roles = ["event"]
@@ -27,7 +28,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher < MiqWorker
     ec_settings = configuration.config.fetch_path(*path)
     unless ec_settings.has_key?(:defaults)
       subclasses = %w{redhat vmware openstack}.collect { |k| "event_catcher_#{k}".to_sym }
-      $log.info("MIQ(#{self.name}) Migrating Settings")
+      _log.info("Migrating Settings")
       defaults = ec_settings
       subclasses.each { |subclass_key| defaults.delete(subclass_key)}
       ec_settings = { :defaults => defaults }

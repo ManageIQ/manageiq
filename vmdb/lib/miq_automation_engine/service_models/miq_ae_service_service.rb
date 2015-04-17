@@ -1,5 +1,6 @@
 module MiqAeMethodService
   class MiqAeServiceService < MiqAeServiceModelBase
+    include Vmdb::NewLogging
     require_relative "mixins/miq_ae_service_retirement_mixin"
     include MiqAeServiceRetirementMixin
 
@@ -93,7 +94,7 @@ module MiqAeMethodService
     end
 
     def remove_from_vmdb
-      $log.info "MIQ(#{self.class.name}#remove_from_vmdb) Removing #{@object.class.name} id:<#{@object.id}>, name:<#{@object.name}>"
+      _log.info "Removing #{@object.class.name} id:<#{@object.id}>, name:<#{@object.name}>"
       object_send(:destroy)
       @object = nil
       true

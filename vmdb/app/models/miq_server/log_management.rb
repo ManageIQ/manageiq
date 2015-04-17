@@ -1,4 +1,5 @@
 module MiqServer::LogManagement
+  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   included do
@@ -19,8 +20,6 @@ module MiqServer::LogManagement
     resource = who_am_i
 
     # Post all compressed logs for a specific date + configs, creating a new row per day
-    log_prefix = "MIQ(#{self.class.name}.post_historical_logs)"
-
     VMDB::Util.compressed_log_patterns.each do |pattern|
       evm = VMDB::Util.get_evm_log_for_date(pattern)
       next if evm.nil?
@@ -38,7 +37,7 @@ module MiqServer::LogManagement
       cond[:logging_ended_on] = log_end unless log_end.nil?
       logfile = self.log_files.where(cond).first
       if logfile && logfile.log_uri.nil?
-        $log.info("#{log_prefix} Historical logfile already exists with id: [#{logfile.id}] for [#{resource}] dated: [#{date}] with contents from: [#{log_start}] to: [#{log_end}]")
+        _log.info("Historical logfile already exists with id: [#{logfile.id}] for [#{resource}] dated: [#{date}] with contents from: [#{log_start}] to: [#{log_end}]")
         next
       else
         logfile = LogFile.historical_logfile
@@ -46,14 +45,14 @@ module MiqServer::LogManagement
 
       msg = "Creating historical Logfile for [#{resource}] dated: [#{date}] from: [#{log_start}] to [#{log_end}]"
       task.update_status("Active", "Ok", msg)
-      $log.info("#{log_prefix} #{msg}")
+      _log.info(msg)
 
       begin
         self.log_files << logfile
         self.save
         msg = "Zipping and posting historical logs and configs on #{resource}"
         task.update_status("Active", "Ok", msg)
-        $log.info("#{log_prefix} #{msg}")
+        _log.info(msg)
 
         patterns = [pattern]
         cfg_pattern = get_config("vmdb").config.fetch_path(:log, :collection, :archive, :pattern)
@@ -74,13 +73,13 @@ module MiqServer::LogManagement
         logfile.upload
       rescue StandardError, TimeoutError => err
         logfile.update_attributes(:state => "error" )
-        $log.error("#{log_prefix} Posting of historical logs failed for #{resource} due to error: [#{err.class.name}] [#{err}]")
+        _log.error("Posting of historical logs failed for #{resource} due to error: [#{err.class.name}] [#{err}]")
         raise
       end
 
       msg = "Historical log files from #{resource} for #{date} are posted"
       task.update_status("Active", "Ok", msg)
-      $log.info("#{log_prefix} #{msg}")
+      _log.info(msg)
 
       #TODO: If the gz has been posted and the gz is more than X days old, delete it
     end
@@ -95,7 +94,7 @@ module MiqServer::LogManagement
       :server_guid => self.guid,
       :zone => self.my_zone,
     ) do |msg, item|
-      $log.info("MIQ(MiqServer-_post_my_logs) Previous adhoc log collection is still running, skipping...Resource: [#{self.class.name}], id: [#{self.id}]") unless msg.nil?
+      _log.info("Previous adhoc log collection is still running, skipping...Resource: [#{self.class.name}], id: [#{self.id}]") unless msg.nil?
       item.merge(
         :miq_callback => options.delete(:callback),
         :msg_timeout  => options.delete(:timeout),
@@ -144,15 +143,15 @@ module MiqServer::LogManagement
       self.log_files << logfile
       self.save
 
-      log_prefix = "MIQ(#{self.class.name}.post_current_logs) Task: [#{task.id}]"
+      log_prefix = "Task: [#{task.id}]"
       msg = "Posting logs for: #{resource}"
-      $log.info("#{log_prefix} #{msg}")
+      _log.info("#{log_prefix} #{msg}")
       task.update_status("Active", "Ok", msg)
 
       base = base_zip_log_name + ".zip"
 
       msg = "Zipping and posting current logs and configs on #{resource}"
-      $log.info("#{log_prefix} #{msg}")
+      _log.info("#{log_prefix} #{msg}")
       task.update_status("Active", "Ok", msg)
 
       patterns = []
@@ -180,12 +179,12 @@ module MiqServer::LogManagement
 
       logfile.upload
     rescue StandardError, TimeoutError => err
-      $log.error("#{log_prefix} Posting of current logs failed for #{resource} due to error: [#{err.class.name}] [#{err}]")
+      _log.error("#{log_prefix} Posting of current logs failed for #{resource} due to error: [#{err.class.name}] [#{err}]")
       logfile.update_attributes(:state => "error")
       raise
     end
     msg = "Current log files from #{resource} are posted"
-    $log.info("#{log_prefix} #{msg}")
+    _log.info("#{log_prefix} #{msg}")
     task.update_status("Active", "Ok", msg)
   end
 
@@ -200,7 +199,7 @@ module MiqServer::LogManagement
       :method_name => "delete_active_log_collections",
       :server_guid => self.guid
     ) do |msg, item|
-      $log.info("MIQ(MiqServer.delete_active_log_collections_queue) Previous cleanup is still running, skipping...") unless msg.nil?
+      _log.info("Previous cleanup is still running, skipping...") unless msg.nil?
       item.merge(:priority => MiqQueue::HIGH_PRIORITY)
     end
   end
@@ -208,7 +207,7 @@ module MiqServer::LogManagement
   def delete_active_log_collections
     self.log_files.each do |lf|
       if lf.state == 'collecting'
-        $log.info("MIQ(MiqServer.delete_active_log_collections) Deleting #{lf.description}")
+        _log.info("Deleting #{lf.description}")
         lf.miq_task.update_attributes(:state => 'Finished', :status => 'Error', :message => 'Log Collection Incomplete during Server Startup') unless lf.miq_task.nil?
         lf.destroy
       end

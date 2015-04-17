@@ -1,4 +1,5 @@
 module MiqReport::Generator::Trend
+  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   CHART_X_AXIS_COLUMN          = :timestamp # this will need to be defined in the report object when we want to calculate trend on data other than performance
@@ -109,7 +110,7 @@ module MiqReport::Generator::Trend
         arr[0] ||= []; arr[1] ||= []
         next(arr) unless  r.respond_to?(CHART_X_AXIS_COLUMN) && r.respond_to?(c[6..-1])
         if r.respond_to?(:inside_time_profile) && r.inside_time_profile == false
-          $log.debug("MIQ(MiqReport.build_trend_data) Timestamp: [#{r.timestamp}] is outside of time profile: [#{self.time_profile.description}]")
+          _log.debug("Timestamp: [#{r.timestamp}] is outside of time profile: [#{self.time_profile.description}]")
           next(arr)
         end
         arr[0] << r.send(c[6..-1]).to_f
@@ -124,7 +125,7 @@ module MiqReport::Generator::Trend
       rescue ZeroDivisionError
         slope_arr = []
       rescue => err
-        $log.warn("MIQ(MiqReport.build_trend_data) #{err.message}, calculating slope")
+        _log.warn("#{err.message}, calculating slope")
         slope_arr = []
       end
       @trend_data[c][:slope], @trend_data[c][:yint], @trend_data[c][:corr] = slope_arr
@@ -182,7 +183,7 @@ module MiqReport::Generator::Trend
       rescue RangeError
         return unknown
       rescue => err
-        $log.warn("MIQ(MiqReport-calc_value_at_target) #{err.message}, calculating trend limit for column: [#{trend_data_key}]")
+        _log.warn("#{err.message}, calculating trend limit for column: [#{trend_data_key}]")
         return unknown
       end
     end

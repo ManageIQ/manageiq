@@ -1,4 +1,5 @@
 class Provider < ActiveRecord::Base
+  include Vmdb::NewLogging
   include NewWithTypeStiMixin
   include AuthenticationMixin
   include ReportableMixin
@@ -36,7 +37,7 @@ class Provider < ActiveRecord::Base
 
   def with_provider_connection(options = {})
     raise "no block given" unless block_given?
-    $log.info("MIQ(#{self.class.name}##{__method__}) Connecting through #{self.class.name}: [#{name}]")
+    _log.info("Connecting through #{self.class.name}: [#{name}]")
     yield connect(options)
   end
 

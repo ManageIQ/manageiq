@@ -1,4 +1,5 @@
 class Account < ActiveRecord::Base
+  include Vmdb::NewLogging
   belongs_to :vm_or_template
   belongs_to :host
 
@@ -30,7 +31,7 @@ class Account < ActiveRecord::Base
 
     parent.accounts.create(new_accts)
     # Delete the IDs that correspond to the remaining names in the current list.
-    $log.info("MIQ(Account-add_missing_elements) Account deletes: #{deletes.inspect}") unless deletes.empty?
+    _log.info("Account deletes: #{deletes.inspect}") unless deletes.empty?
     deletes = deletes.transpose[0]
     Account.destroy(deletes) unless deletes.nil?
 

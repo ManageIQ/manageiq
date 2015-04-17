@@ -2,6 +2,7 @@ require 'miq_smis_client'
 require 'vmdb_storage_bridge'
 
 class MiqSmisAgent < StorageManager
+  include Vmdb::NewLogging
   AGENT_TYPES = {
     "VMDB"  => "VMDB",
     "Agent" => "Agent"
@@ -126,10 +127,10 @@ class MiqSmisAgent < StorageManager
       # this seems to be due to some strange interaction between WBEM and Rails.
       # This is only a problem in the verify failure case.
       #
-      $log.warn("MIQ(MiqSmisAgent-verify_credentials): #{$!.inspect}")
+      _log.warn("#{$!.inspect}")
       raise $!.message
     rescue Exception
-      $log.warn("MIQ(MiqSmisAgent-verify_credentials): #{$!.inspect}")
+      _log.warn("#{$!.inspect}")
       # $log.info $!.backtrace.join("\n")
       raise "Unexpected response returned from #{ui_lookup(:table => "ext_management_systems")}, see log for details"
     else

@@ -3,6 +3,7 @@ require 'uri'
 require 'mount/miq_generic_mount_session'
 
 class LogFile < ActiveRecord::Base
+  include Vmdb::NewLogging
   belongs_to :resource,    :polymorphic => true
   belongs_to :file_depot
   belongs_to :miq_task
@@ -64,7 +65,7 @@ class LogFile < ActiveRecord::Base
     klass = Object.const_get("Miq#{method.capitalize}Session")
     klass.new(legacy_depot_hash).remove(log_uri)
   rescue Exception => err
-    $log.warn("MIQ(#{self.class.name}.remove) #{err.message}, deleting #{self.log_uri} from FTP")
+    _log.warn("#{err.message}, deleting #{self.log_uri} from FTP")
   end
 
   def file_exists?

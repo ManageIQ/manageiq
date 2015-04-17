@@ -1,4 +1,5 @@
 module Metric::CiMixin::Rollup
+  include Vmdb::NewLogging
   def perf_rollup_to_parent(interval_name, start_time, end_time = nil)
     parents = case interval_name
     when 'realtime'             then [self.perf_rollup_parent(interval_name), interval_name, self, 'hourly']
@@ -59,7 +60,7 @@ module Metric::CiMixin::Rollup
       :deliver_on  => deliver_on,
       :priority    => Metric::Capture.const_get("#{interval_name.upcase}_PRIORITY")
     ) do |msg|
-      $log.debug "MIQ(#{self.class.name}.perf_rollup_queue) Skipping queueing [#{interval_name}] rollup of #{self.class.name} name: [#{self.name}], id: [#{self.id}] for time: [#{time}], since it is already queued" unless msg.nil?
+      _log.debug "Skipping queueing [#{interval_name}] rollup of #{self.class.name} name: [#{self.name}], id: [#{self.id}] for time: [#{time}], since it is already queued" unless msg.nil?
     end
   end
 

@@ -1,4 +1,5 @@
 class MiqReportResult < ActiveRecord::Base
+  include Vmdb::NewLogging
   include_concern 'Purging'
 
   belongs_to :miq_report
@@ -131,9 +132,9 @@ class MiqReportResult < ActiveRecord::Base
   end
 
   def self.atStartup
-    $log.info("MIQ(MiqReportResult.atStartup) Purging adhoc report results...")
+    _log.info("Purging adhoc report results...")
     self.purge_for_user
-    $log.info("MIQ(MiqReportResult.atStartup) Purging adhoc report results... complete")
+    _log.info("Purging adhoc report results... complete")
   end
 
   #########################################################################################################
@@ -215,12 +216,11 @@ class MiqReportResult < ActiveRecord::Base
     #   :userid => <userid>,
     #   :session_id => <session_id>
     # }
-    log_prefix = "MIQ(MiqReportResult.async_generate_result)"
 
     raise "Result type #{result_type} not supported" unless [:csv, :txt, :pdf].include?(result_type.to_sym)
     raise "A valid userid is required" if options[:userid].nil?
 
-    $log.info("#{log_prefix} Adding generate report result [#{result_type}] task to the message queue...")
+    _log.info("Adding generate report result [#{result_type}] task to the message queue...")
     task = MiqTask.new(:name => "Generate Report result [#{result_type}]: '#{self.report.name}'", :userid => options[:userid])
     task.update_status("Queued", "Ok", "Task has been queued")
 
@@ -246,7 +246,7 @@ class MiqReportResult < ActiveRecord::Base
       :message      => "#{task.name}, successfully initiated"
     )
 
-    $log.info("#{log_prefix} Finished adding generate report result [#{result_type}] task with id [#{task.id}] to the message queue")
+    _log.info("Finished adding generate report result [#{result_type}] task with id [#{task.id}] to the message queue")
 
     return task.id
   end
@@ -304,7 +304,7 @@ class MiqReportResult < ActiveRecord::Base
       :report           => self.report # Report without generated table
     }
 
-    $log.info("MIQ(MiqReportResult-build_new_result) Creating report results with hash: [#{attrs.inspect}]")
+    _log.info("Creating report results with hash: [#{attrs.inspect}]")
     res = MiqReportResult.find_by_userid(options[:userid]) if options[:userid].include?("|") # replace results if adhoc (<userid>|<session_id|<mode>) user report
     res = MiqReportResult.new if res.nil?
     res.attributes = attrs
@@ -332,7 +332,7 @@ class MiqReportResult < ActiveRecord::Base
 
   def self.delete_by_userid(userids)
     userids = userids.to_miq_a
-    $log.info("MIQ(#{self.name}.delete_by_userid) Queuing deletion of report results for the following user ids: #{userids.inspect}")
+    _log.info("Queuing deletion of report results for the following user ids: #{userids.inspect}")
     MiqQueue.put(
       :class_name  => self.name,
       :method_name => "destroy_all",

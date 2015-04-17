@@ -1,4 +1,5 @@
 module MiqFilter
+  include Vmdb::NewLogging
   def self.records2table(records, options)
     MiqReportable.records2table(records, options)
   end
@@ -120,7 +121,7 @@ module MiqFilter
     obj = klass.constantize.find_by_name(name)
 
     if obj.nil?
-      $log.warn("MIQ(MiqFilter.belongsto2object_list) lookup for klass=#{klass.inspect} with name=#{name.inspect} failed in tag=#{tag.inspect}")
+      _log.warn("lookup for klass=#{klass.inspect} with name=#{name.inspect} failed in tag=#{tag.inspect}")
       return []
     end
 

@@ -1,4 +1,5 @@
 module MiqServer::WorkerManagement::Dequeue
+  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   def peek(queue_name, priority, limit)
@@ -115,7 +116,7 @@ module MiqServer::WorkerManagement::Dequeue
           @queue_messages[queue_name][:messages]  = peek(queue_name, priority, (prefetch_max_per_worker * wcount)).collect do |q|
             { :id => q.id, :lock_version => q.lock_version, :priority => q.priority, :role => q.role }
           end
-          $log.info("MIQ(MiqServer.populate_queue_messages) Fetched #{@queue_messages[queue_name][:messages].length} miq_queue rows for queue_name=#{queue_name}, wcount=#{wcount.inspect}, priority=#{priority.inspect}") if @queue_messages[queue_name][:messages].length > 0
+          _log.info("Fetched #{@queue_messages[queue_name][:messages].length} miq_queue rows for queue_name=#{queue_name}, wcount=#{wcount.inspect}, priority=#{priority.inspect}") if @queue_messages[queue_name][:messages].length > 0
         end
       end
     end

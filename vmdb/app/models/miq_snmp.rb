@@ -1,6 +1,7 @@
 require 'snmp'
 
 class MiqSnmp
+  include Vmdb::NewLogging
 
   AVAILABLE_TYPES_HASH = {
     "Null"        => SNMP::Null,
@@ -18,7 +19,7 @@ class MiqSnmp
 
 
   def self.trap_v1(inputs)
-    $log.info "MIQ(SNMP-trap_v1) >> inputs=#{inputs.inspect}"
+    _log.info ">> inputs=#{inputs.inspect}"
 
     host = inputs[:host] || inputs['host']
     port = inputs[:port] || inputs['port'] || 162
@@ -49,7 +50,7 @@ class MiqSnmp
 
     hosts = host.kind_of?(Array) ? host : [host]
     hosts.each do |host|
-      $log.info "MIQ(SNMP-trap_v1) Sending SNMP Trap (v1) to host=[#{host}], port=[#{port}], enterprise_id=[#{enterprise}], generic_trap=[#{generic_trap}], specific_trap=[#{specific_trap}], uptime=[#{uptime}], agent=[#{agent_address}], vars=#{vars.inspect}"
+      _log.info "Sending SNMP Trap (v1) to host=[#{host}], port=[#{port}], enterprise_id=[#{enterprise}], generic_trap=[#{generic_trap}], specific_trap=[#{specific_trap}], uptime=[#{uptime}], agent=[#{agent_address}], vars=#{vars.inspect}"
       SNMP::Manager.open(:Host => host, :TrapPort => port) do |manager|
         manager.trap_v1(enterprise, agent_address, generic_trap, specific_trap, uptime, vars)
       end
@@ -57,7 +58,7 @@ class MiqSnmp
   end
 
   def self.trap_v2(inputs)
-    $log.info "MIQ(SNMP-trap_v2) >> inputs=#{inputs.inspect}"
+    _log.info ">> inputs=#{inputs.inspect}"
     host = inputs[:host] || inputs['host']
     port = inputs[:port] || inputs['port'] || 162
 
@@ -75,7 +76,7 @@ class MiqSnmp
 
     hosts = host.kind_of?(Array) ? host : [host]
     hosts.each do |host|
-      $log.info "MIQ(SNMP-trap_v2) Sending SNMP Trap (v2) to host=[#{host}], port=[#{port}], trap_oid=[#{trap_oid}], vars=#{vars.inspect}"
+      _log.info "Sending SNMP Trap (v2) to host=[#{host}], port=[#{port}], trap_oid=[#{trap_oid}], vars=#{vars.inspect}"
       SNMP::Manager.open(:Host => host, :TrapPort => port) do |manager|
         manager.trap_v2(uptime, trap_oid, vars)
       end

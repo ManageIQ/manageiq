@@ -1,4 +1,5 @@
 class MiqSearch < ActiveRecord::Base
+  include Vmdb::NewLogging
   serialize :options
   serialize :filter
 
@@ -50,7 +51,7 @@ class MiqSearch < ActiveRecord::Base
 
         rec = self.find_by_name_and_db(name, db)
         if rec.nil?
-          $log.info("MIQ(MiqSearch.seed) Creating [#{name}]")
+          _log.info("Creating [#{name}]")
           self.create(attrs)
         else
           # Avoid undoing user changes made to enable/disable default searches which is held in the search_key column

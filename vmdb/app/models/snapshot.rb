@@ -1,6 +1,7 @@
 require 'time'
 
 class Snapshot < ActiveRecord::Base
+  include Vmdb::NewLogging
   acts_as_tree
 
   belongs_to :vm_or_template
@@ -76,11 +77,11 @@ class Snapshot < ActiveRecord::Base
   end
 
   def self.remove_unused_evm_snapshots(delay)
-    $log.debug "MIQ(Snapshot.remove_unused_evm_snapshots) Called"
+    _log.debug "Called"
     self.find_all_evm_snapshots.each do |sn|
       job_guid, timestamp = self.parse_evm_snapshot_description(sn.description)
       unless Job.guid_active?(job_guid, timestamp, delay)
-        $log.info "MIQ(Snapshot.remove_unused_evm_snapshots) Removing #{sn.description.inspect} under Vm [#{sn.vm_or_template.name}]"
+        _log.info "Removing #{sn.description.inspect} under Vm [#{sn.vm_or_template.name}]"
         sn.vm_or_template.remove_evm_snapshot_queue(sn.id)
       end
     end

@@ -1,4 +1,5 @@
 class EmsOpenstack < EmsCloud
+  include Vmdb::NewLogging
   include EmsOpenstackMixin
 
   def self.ems_type
@@ -32,37 +33,37 @@ class EmsOpenstack < EmsCloud
   def vm_start(vm, options = {})
     vm.start
   rescue => err
-    $log.error "MIQ(#{self.class.name}##{__method__}) vm=[#{vm.name}], error: #{err}"
+    _log.error "vm=[#{vm.name}], error: #{err}"
   end
 
   def vm_pause(vm, options = {})
     vm.pause
   rescue => err
-    $log.error "MIQ(#{self.class.name}##{__method__}) vm=[#{vm.name}], error: #{err}"
+    _log.error "vm=[#{vm.name}], error: #{err}"
   end
 
   def vm_suspend(vm, options = {})
     vm.suspend
   rescue => err
-    $log.error "MIQ(#{self.class.name}##{__method__}) vm=[#{vm.name}], error: #{err}"
+    _log.error "vm=[#{vm.name}], error: #{err}"
   end
 
   def vm_destroy(vm, options = {})
     vm.vm_destroy
   rescue => err
-    $log.error "MIQ(#{self.class.name}##{__method__}) vm=[#{vm.name}], error: #{err}"
+    _log.error "vm=[#{vm.name}], error: #{err}"
   end
 
   def vm_reboot_guest(vm, options = {})
     vm.reboot_guest
   rescue => err
-    $log.error "MIQ(#{self.class.name}##{__method__}) vm=[#{vm.name}], error: #{err}"
+    _log.error "vm=[#{vm.name}], error: #{err}"
   end
 
   def vm_reset(vm, options = {})
     vm.reset
   rescue => err
-    $log.error "MIQ(#{self.class.name}##{__method__}) vm=[#{vm.name}], error: #{err}"
+    _log.error "vm=[#{vm.name}], error: #{err}"
   end
 
   # TODO: Should this be in a VM-specific subclass or mixin?
@@ -70,7 +71,7 @@ class EmsOpenstack < EmsCloud
   def vm_create_evm_snapshot(vm, options = {})
     require "OpenStackExtract/MiqOpenStackVm/MiqOpenStackInstance"
 
-    log_prefix = "MIQ(#{self.class.name}##{__method__}) vm=[#{vm.name}]"
+    log_prefix = "vm=[#{vm.name}]"
 
     miq_openstack_instance = MiqOpenStackInstance.new(vm.ems_ref, openstack_handle)
     miq_snapshot = miq_openstack_instance.create_evm_snapshot(options)
@@ -96,7 +97,7 @@ class EmsOpenstack < EmsCloud
     )
     return miq_snapshot.id
   rescue => err
-    $log.error "#{log_prefix}, error: #{err}"
+    _log.error "#{log_prefix}, error: #{err}"
     $log.debug err.backtrace.join("\n") if $log.debug?
     raise
   end
@@ -104,22 +105,22 @@ class EmsOpenstack < EmsCloud
   def vm_delete_evm_snapshot(vm, image_id)
     require "OpenStackExtract/MiqOpenStackVm/MiqOpenStackInstance"
 
-    log_prefix = "MIQ(#{self.class.name}##{__method__}) snapshot=[#{image_id}]"
+    log_prefix = "snapshot=[#{image_id}]"
 
     miq_openstack_instance = MiqOpenStackInstance.new(vm.ems_ref, openstack_handle)
     miq_openstack_instance.delete_evm_snapshot(image_id)
 
     # Remove from the snapshots table.
     ar_snapshot = vm.snapshots.where(:ems_ref  => image_id).first
-    $log.debug "#{log_prefix}: ar_snapshot = #{ar_snapshot.class.name}"
+    _log.debug "#{log_prefix}: ar_snapshot = #{ar_snapshot.class.name}"
     ar_snapshot.destroy if ar_snapshot
 
     # Remove from the vms table.
     ar_template = miq_templates.where(:ems_ref  => image_id).first
-    $log.debug "#{log_prefix}: ar_template = #{ar_template.class.name}"
+    _log.debug "#{log_prefix}: ar_template = #{ar_template.class.name}"
     ar_template.destroy if ar_template
   rescue => err
-    $log.error "#{log_prefix}, error: #{err}"
+    _log.error "#{log_prefix}, error: #{err}"
     $log.debug err.backtrace.join("\n") if $log.debug?
     raise
   end

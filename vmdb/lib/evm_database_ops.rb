@@ -2,6 +2,7 @@ $:.push(File.expand_path(File.join(File.dirname(__FILE__) ) ) )
 require 'db_administration/miq_postgres_admin'
 
 class EvmDatabaseOps
+  include Vmdb::NewLogging
   BACKUP_TMP_FILE = "/tmp/miq_backup"
 
   DEFAULT_OPTS = {:dbname => 'vmdb_production'}
@@ -60,10 +61,10 @@ class EvmDatabaseOps
       free_space = self.backup_destination_free_space(db_opts[:local_file])
       db_size = self.database_size(db_opts)
       if free_space > db_size
-        $log.info("MIQ(EvmDatabaseOps.backup) [#{db_opts[:dbname]}] with database size: [#{db_size} bytes], free space at [#{db_opts[:local_file]}]: [#{free_space} bytes]")
+        _log.info("[#{db_opts[:dbname]}] with database size: [#{db_size} bytes], free space at [#{db_opts[:local_file]}]: [#{free_space} bytes]")
       else
         msg = "Destination location: [#{db_opts[:local_file]}], does not have enough free disk space: [#{free_space} bytes] for database of size: [#{db_size} bytes]"
-        $log.warn("MIQ(EvmDatabaseOps.backup) #{msg}")
+        _log.warn("#{msg}")
         MiqEvent.raise_evm_event_queue(MiqServer.my_server, "evm_server_db_backup_low_space", :event_details => msg)
         raise MiqException::MiqDatabaseBackupInsufficientSpace, msg
       end
@@ -73,7 +74,7 @@ class EvmDatabaseOps
     end
 
     uri ||= backup
-    $log.info("MIQ(EvmDatabaseOps.backup) [#{db_opts[:dbname]}] database has been backed up to file: [#{uri}]")
+    _log.info("[#{db_opts[:dbname]}] database has been backed up to file: [#{uri}]")
     uri
   end
 
@@ -104,7 +105,7 @@ class EvmDatabaseOps
     end
 
     uri ||= backup
-    $log.info("MIQ(EvmDatabaseOps.restore) [#{db_opts[:dbname]}] database has been restored from file: [#{uri}]")
+    _log.info("[#{db_opts[:dbname]}] database has been restored from file: [#{uri}]")
     uri
   end
 
@@ -119,12 +120,12 @@ class EvmDatabaseOps
   end
 
   def self.stop
-    $log.info("MIQ(EvmDatabaseOps.stop) Stopping internal database")
+    _log.info("Stopping internal database")
     MiqPostgresAdmin.stop(DEFAULT_OPTS.merge(:graceful => true))
   end
 
   def self.start
-    $log.info("MIQ(EvmDatabaseOps.start) Starting internal database")
+    _log.info("Starting internal database")
     MiqPostgresAdmin.start(DEFAULT_OPTS)
   end
 

@@ -15,19 +15,17 @@ module MiqServer::RoleManagement
   end
 
   def log_role_changes
-    log_prefix = "MIQ(MiqServer.log_role_changes)"
-
-    $log.info("#{log_prefix} Server's roles have changed:")
+    _log.info("Server's roles have changed:")
     o = @active_role_names
     n = self.active_role_names
     adds      = (n - o)
     deletes   = (o - n)
     unchanged = (o & n)
-    $log.info("#{log_prefix}   Old roles:       #{o.inspect}")
-    $log.info("#{log_prefix}   New roles:       #{n.inspect}")
-    $log.info("#{log_prefix}   Roles removed:   #{deletes.inspect}")
-    $log.info("#{log_prefix}   Roles added:     #{adds.inspect}")
-    $log.info("#{log_prefix}   Roles unchanged: #{unchanged.inspect}")
+    _log.info("  Old roles:       #{o.inspect}")
+    _log.info("  New roles:       #{n.inspect}")
+    _log.info("  Roles removed:   #{deletes.inspect}")
+    _log.info("  Roles added:     #{adds.inspect}")
+    _log.info("  Roles unchanged: #{unchanged.inspect}")
   end
 
   def active_roles_changed?
@@ -252,7 +250,7 @@ module MiqServer::RoleManagement
         active.each do |s, p|
           if (inactive.length > 0) && (p > inactive.first.last)
             s2, p2 = inactive.shift
-            $log.info("#{log_prefix} Migrating Role <#{role_name}> Active on Server <#{s.name}> with Priority <#{p}> to Server <#{s2.name}> with Priority <#{p2}>")
+            _log.info("Migrating Role <#{role_name}> Active on Server <#{s.name}> with Priority <#{p}> to Server <#{s2.name}> with Priority <#{p2}>")
             s.deactivate_roles(role_name)
             s2.activate_roles(role_name)
             active << [s2, p2]

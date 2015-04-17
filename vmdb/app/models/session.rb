@@ -1,4 +1,5 @@
 class Session < ActiveRecord::Base
+  include Vmdb::NewLogging
   @@timeout = 3600 # session time to live in seconds
   @@interval = 30 # how often to purge in seconds
   @@job ||= nil
@@ -25,7 +26,7 @@ class Session < ActiveRecord::Base
 
       s.destroy
     }
-    $log.info("MIQ(session-purge) purged stale session data, #{ses.length} entries deleted") unless ses.length == 0
+    _log.info("purged stale session data, #{ses.length} entries deleted") unless ses.length == 0
   end
 
   def self.timeout(ttl=nil)

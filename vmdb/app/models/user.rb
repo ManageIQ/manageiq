@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  include Vmdb::NewLogging
   include RelationshipMixin
   acts_as_miq_taggable
   include RegionMixin
@@ -234,15 +235,15 @@ class User < ActiveRecord::Base
   end
 
   def current_group=(group)
-    log_prefix = "MIQ(User#current_group=) User: [#{userid}]"
+    log_prefix = "User: [#{userid}]"
     super
 
     if group
       self.filters = group.filters
-      $log.info("#{log_prefix} Assigning Role: [#{group.miq_user_role_name}] from Group: [#{group.description}]")
+      _log.info("#{log_prefix} Assigning Role: [#{group.miq_user_role_name}] from Group: [#{group.description}]")
     else
       self.filters = nil
-      $log.info("#{log_prefix} Removing Role: [#{miq_user_role_name}] and Group: [#{miq_group_description}]")
+      _log.info("#{log_prefix} Removing Role: [#{miq_user_role_name}] and Group: [#{miq_group_description}]")
     end
   end
 
@@ -339,9 +340,9 @@ class User < ActiveRecord::Base
     MiqRegion.my_region.lock do
       user = self.in_my_region.find_by_userid("admin")
       if user.nil?
-        $log.info("MIQ(User.seed) Creating default admin user...")
+        _log.info("Creating default admin user...")
         user = self.create(:userid => "admin", :name => "Administrator", :password => "smartvm")
-        $log.info("MIQ(User.seed) Creating default admin user... Complete")
+        _log.info("Creating default admin user... Complete")
       end
 
       admin_group     = MiqGroup.in_my_region.find_by_description("EvmGroup-super_administrator")

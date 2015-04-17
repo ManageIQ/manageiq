@@ -70,8 +70,6 @@ module MiqServer::ServerSmartProxy
   end
 
   def call_ws(ost)
-    log_prefix = "MIQ(MiqServer.call_ws)"
-
     case ost.method_name
     when "ScanMetadata", "SyncMetadata"
       worker_setting = MiqSmartProxyWorker.worker_settings
@@ -88,14 +86,12 @@ module MiqServer::ServerSmartProxy
       end
       MiqQueue.put(:class_name => self.class.name, :instance_id => id, :method_name => "scan_sync_vm", :args => ost, :server_guid => guid, :role => "smartproxy", :queue_name => "smartproxy", :msg_timeout => worker_setting[:queue_timeout] * timeout_adj)
     else
-      $log.error "#{log_prefix} Unsupported method [#{ost.method_name}]"
+      _log.error "Unsupported method [#{ost.method_name}]"
     end
   end
 
   # TODO: XXX break this into 2 methods?
   def scan_sync_vm(ost)
-    log_prefix = "MIQ(MiqServer.scan_sync_vm)"
-
     if %w{ScanMetadata SyncMetadata}.include?(ost.method_name)
       v = VmOrTemplate.find(ost.vm_id)
 
@@ -138,7 +134,7 @@ module MiqServer::ServerSmartProxy
       end
 
       startTime = Time.now
-      $log.info "#{log_prefix} Running Command: [#{args.flatten.join(" ")[0..255].tr("\n"," ")}]"
+      _log.info "Running Command: [#{args.flatten.join(" ")[0..255].tr("\n"," ")}]"
 
       $miqHostCfg ||= OpenStruct.new()
       data_dir = File.join(File.expand_path(Rails.root), "data/metadata")
@@ -161,14 +157,14 @@ module MiqServer::ServerSmartProxy
       ret = miqp.miqRet
 
       if ret.error
-        $log.error "#{log_prefix} Command [#{args[0]}] failed after [#{Time.now - startTime}] seconds.  TaskId:[#{ost.taskid}]"
+        _log.error "Command [#{args[0]}] failed after [#{Time.now - startTime}] seconds.  TaskId:[#{ost.taskid}]"
         print_backtrace(ret.error)
         if ost.taskid
           job = Job.find_by_guid(ost.taskid)
           job.signal(:abort_retry, ret.error.strip.split("\n")[0], "error", true)
         end
       else
-        $log.info "#{log_prefix} Command [#{args[0]}] completed successfully in [#{Time.now - startTime}] seconds.  TaskId:[#{ost.taskid}]"
+        _log.info "Command [#{args[0]}] completed successfully in [#{Time.now - startTime}] seconds.  TaskId:[#{ost.taskid}]"
       end
     end
   end

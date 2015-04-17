@@ -1,4 +1,5 @@
 class EvmDatabase
+  include Vmdb::NewLogging
 
   PRIMORDIAL_CLASSES = %w{
     MiqDatabase
@@ -32,8 +33,7 @@ class EvmDatabase
   end
 
   def self.seed(classes = nil, exclude_list = [])
-    log_prefix = "EvmDatabase.seed"
-    $log.info("#{log_prefix} Seeding...") if $log
+    _log.info("Seeding...") if $log
 
     classes ||= PRIMORDIAL_CLASSES + (seedable_model_class_names - PRIMORDIAL_CLASSES)
     classes  -= exclude_list
@@ -42,12 +42,12 @@ class EvmDatabase
       begin
         klass = klass.constantize if klass.kind_of?(String)
       rescue
-        $log.error("#{log_prefix} Class #{klass} does not exist") if $log
+        _log.error("Class #{klass} does not exist") if $log
         next
       end
 
       if klass.respond_to?(:seed)
-        $log.info("#{log_prefix} Seeding #{klass}") if $log
+        _log.info("Seeding #{klass}") if $log
         begin
           klass.seed
         rescue => err
@@ -56,7 +56,7 @@ class EvmDatabase
       end
     end
 
-    $log.info("#{log_prefix} Seeding... Complete") if $log
+    _log.info("Seeding... Complete") if $log
   end
 
   def self.host

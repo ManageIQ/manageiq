@@ -1,5 +1,6 @@
 module RetirementMixin
   extend ActiveSupport::Concern
+  include Vmdb::NewLogging
 
   RETIRED  = 'retired'
   RETIRING = 'retiring'
@@ -83,7 +84,7 @@ module RetirementMixin
 
   def raise_retire_audit_event(message)
     event_name = "#{retirement_event_prefix}_scheduled_to_retire"
-    $log.info("MIQ(#{retirement_object_title}#retire) #{message}")
+    _log.info("#{message}")
     raise_audit_event(event_name, message)
   end
 
@@ -104,15 +105,13 @@ module RetirementMixin
   end
 
   def retire_now(requester = nil)
-    log_prefix = "MIQ(#{retirement_object_title}#retire_now)"
-
     if retired
       return if retired_validated?
-      $log.info("#{log_prefix} #{retirement_object_title}: [#{self.name}], Retires On Date: [#{self.retires_on_date}], was previously retired, but currently #{retired_invalid_reason}")
+      _log.info("#{retirement_object_title}: [#{self.name}], Retires On Date: [#{self.retires_on_date}], was previously retired, but currently #{retired_invalid_reason}")
     else
       update_attributes(:retirement_requester => requester)
       event_name = "request_#{retirement_event_prefix}_retire"
-      $log.info("#{log_prefix} calling #{event_name}")
+      _log.info("calling #{event_name}")
       begin
         raise_retirement_event(event_name, requester)
       rescue => err

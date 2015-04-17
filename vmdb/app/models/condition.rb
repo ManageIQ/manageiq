@@ -1,4 +1,5 @@
 class Condition < ActiveRecord::Base
+  include Vmdb::NewLogging
   default_scope { where self.conditions_for_my_region_default_scope }
 
   include UuidMixin
@@ -300,9 +301,8 @@ class Condition < ActiveRecord::Base
 
   module SafeNamespace
     def self.eval_script(script, context)
-      log_prefix = "MIQ(SafeNamespace.eval_script)"
-      $log.debug("#{log_prefix} Context: [#{context}], Class: [#{context.class.name}]")
-      $log.debug("#{log_prefix} Script:\n#{script}")
+      _log.debug("Context: [#{context}], Class: [#{context.class.name}]")
+      _log.debug("Script:\n#{script}")
       begin
         t = Thread.new do
           Thread.current["result"] = _eval(context, script)
@@ -311,15 +311,15 @@ class Condition < ActiveRecord::Base
         Timeout::timeout(to) { t.join }
       rescue TimeoutError => err
         t.exit
-        $log.error  "#{log_prefix} The following error occurred during ruby evaluation"
-        $log.error  "#{log_prefix}   #{err.class}: #{err.message}"
+        _log.error  "The following error occurred during ruby evaluation"
+        _log.error  "  #{err.class}: #{err.message}"
         raise "Ruby script timed out after #{to} seconds"
       rescue Exception => err
-        $log.error  "#{log_prefix} The following error occurred during ruby evaluation"
-        $log.error  "#{log_prefix}   #{err.class}: #{err.message}"
+        _log.error  "The following error occurred during ruby evaluation"
+        _log.error  "  #{err.class}: #{err.message}"
         raise "Ruby script raised error [#{err.message}]"
       ensure
-        (t["log"] || []).each {|m| $log.info("#{log_prefix} #{m}")} unless t.nil?
+        (t["log"] || []).each {|m| _log.info("#{m}")} unless t.nil?
       end
       return t["result"]
     end

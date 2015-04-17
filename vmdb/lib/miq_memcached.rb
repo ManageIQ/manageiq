@@ -38,6 +38,7 @@ END_OF_CONFIG
   end
 
   class Control
+    include Vmdb::NewLogging
     #  > memcached -help
     #  memcached 1.4.5
     #  -p <num>      TCP port number to listen on (default: 11211)
@@ -92,13 +93,13 @@ END_OF_CONFIG
     def self.start(opts = {})
       MiqMemcached::Config.new(opts).save(CONF_FILE)
       res = MiqUtil.runcmd("service memcached start >> #{Rails.root}/log/evm.log 2>&1")
-      $log.info("MIQ(MiqMemcached:Control.start) started memcached with options: #{opts.inspect}, result: #{res.to_s.chomp}") if $log
+      _log.info("started memcached with options: #{opts.inspect}, result: #{res.to_s.chomp}") if $log
       true
     end
 
     def self.stop
       res = MiqUtil.runcmd("service memcached stop")
-      $log.info("MIQ(MiqMemcached:Control.stop) stopped memcached, result: #{res.to_s.chomp}") if $log
+      _log.info("stopped memcached, result: #{res.to_s.chomp}") if $log
     end
 
     def self.stop!

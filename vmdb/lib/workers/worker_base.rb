@@ -2,6 +2,7 @@ require 'miq-process'
 require 'thread'
 
 class WorkerBase
+  include Vmdb::NewLogging
   attr_accessor :last_hb, :worker, :worker_settings
   attr_reader   :vmdb_config, :active_roles, :server
 
@@ -279,7 +280,7 @@ class WorkerBase
     @my_zone ||= MiqServer.my_zone
     sync_log_level
     sync_worker_settings
-    $log.info("MIQ(#{self.class.name}) ID [#{@worker.id}], PID [#{Process.pid}], GUID [#{@worker.guid}], Zone [#{@my_zone}], Active Roles [#{@active_roles.join(',')}], Assigned Roles [#{MiqServer.my_role}], Configuration:")
+    _log.info("ID [#{@worker.id}], PID [#{Process.pid}], GUID [#{@worker.guid}], Zone [#{@my_zone}], Active Roles [#{@active_roles.join(',')}], Assigned Roles [#{MiqServer.my_role}], Configuration:")
     $log.log_hashes(@worker_settings)
     $log.info("---")
     $log.log_hashes(@cfg)

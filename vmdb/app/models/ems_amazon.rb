@@ -2,6 +2,7 @@ require 'Amazon/ec2/regions'
 require 'Amazon/amazon_connection'
 
 class EmsAmazon < EmsCloud
+  include Vmdb::NewLogging
   def self.ems_type
     @ems_type ||= "ec2".freeze
   end
@@ -77,7 +78,7 @@ class EmsAmazon < EmsCloud
       miq_exception = translate_exception(err)
       raise unless miq_exception
 
-      $log.error("MIQ(#{self.class.name}.verify_credentials) Error Class=#{err.class.name}, Message=#{err.message}")
+      _log.error("Error Class=#{err.class.name}, Message=#{err.message}")
       raise miq_exception
     end
 
@@ -127,31 +128,31 @@ class EmsAmazon < EmsCloud
   def vm_start(vm, options = {})
     vm.start
   rescue => err
-    $log.error "MIQ(#{self.class.name}##{__method__}) vm=[#{vm.name}], error: #{err}"
+    _log.error "vm=[#{vm.name}], error: #{err}"
   end
 
   def vm_stop(vm, options = {})
     vm.stop
   rescue => err
-    $log.error "MIQ(#{self.class.name}##{__method__}) vm=[#{vm.name}], error: #{err}"
+    _log.error "vm=[#{vm.name}], error: #{err}"
   end
 
   def vm_destroy(vm, options = {})
     vm.vm_destroy
   rescue => err
-    $log.error "MIQ(#{self.class.name}##{__method__}) vm=[#{vm.name}], error: #{err}"
+    _log.error "vm=[#{vm.name}], error: #{err}"
   end
 
   def vm_reboot_guest(vm, options = {})
     vm.reboot_guest
   rescue => err
-    $log.error "MIQ(#{self.class.name}##{__method__}) vm=[#{vm.name}], error: #{err}"
+    _log.error "vm=[#{vm.name}], error: #{err}"
   end
 
   def stack_create(stack_name, template, options = {})
     cloud_formation.stacks.create(stack_name, template.content, options).stack_id
   rescue => err
-    $log.error "MIQ(#{self.class.name}##{__method__}) stack=[#{stack_name}], error: #{err}"
+    _log.error "stack=[#{stack_name}], error: #{err}"
     raise MiqException::MiqOrchestrationProvisionError, err.to_s, err.backtrace
   end
 
@@ -159,14 +160,14 @@ class EmsAmazon < EmsCloud
     stack = cloud_formation.stacks[stack_name]
     return stack.status, stack.status_reason if stack
   rescue => err
-    $log.error "MIQ(#{self.class.name}##{__method__}) stack=[#{stack_name}], error: #{err}"
+    _log.error "stack=[#{stack_name}], error: #{err}"
     raise MiqException::MiqOrchestrationStatusError, err.to_s, err.backtrace
   end
 
   def orchestration_template_validate(template)
     cloud_formation.validate_template(template.content)[:message]
   rescue => err
-    $log.error "MIQ(#{self.class.name}##{__method__}) template=[#{template.name}], error: #{err}"
+    _log.error "template=[#{template.name}], error: #{err}"
     raise MiqException::MiqOrchestrationValidationError, err.to_s, err.backtrace
   end
 

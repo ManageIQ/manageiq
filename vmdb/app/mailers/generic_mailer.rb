@@ -1,8 +1,9 @@
 require 'haml-rails'
 class GenericMailer < ActionMailer::Base
+  include Vmdb::NewLogging
 
   def self.deliver(method, options = {})
-    $log.info("MIQ(GenericMailer-deliver) starting: method: #{method} options: #{options} ")
+    _log.info("starting: method: #{method} options: #{options} ")
     options[:attachment] &&= self.blob_to_attachment(options[:attachment])
     options[:sent_on] = Time.now
 
@@ -28,17 +29,17 @@ class GenericMailer < ActionMailer::Base
         end
       end
 
-      $log.error("MIQ(GenericMailer-deliver) method: #{method} options: #{options} delivery-error #{e} recipients #{invalid}")
+      _log.error("method: #{method} options: #{options} delivery-error #{e} recipients #{invalid}")
 
     # connection errors, and other if raised
     rescue => e
-      $log.error("MIQ(GenericMailer-deliver) method: #{method} delivery-error: #{e} attempting to resend")
+      _log.error("method: #{method} delivery-error: #{e} attempting to resend")
 
       # attempt to deliver one more time
       begin
         msg.deliver_now
       rescue => e
-        $log.error("MIQ(GenericMailer-deliver) method: #{method} options: #{options} delivery-error #{e}")
+        _log.error("method: #{method} options: #{options} delivery-error #{e}")
       end
 
     end
@@ -47,7 +48,7 @@ class GenericMailer < ActionMailer::Base
   end
 
   def self.deliver_queue(method, options = {})
-    $log.info("MIQ(GenericMailer-deliver_queue) starting: method: #{method} args: #{options} ")
+    _log.info("starting: method: #{method} args: #{options} ")
     options[:attachment] &&= self.attachment_to_blob(options[:attachment])
     MiqQueue.put(
       :class_name  => self.name,
@@ -149,7 +150,7 @@ class GenericMailer < ActionMailer::Base
   protected
 
   def prepare_generic_email(options)
-    $log.info("MIQ(GenericMailer#prepare_generic_email) options: #{options.inspect}")
+    _log.info("options: #{options.inspect}")
     options[:from] = VMDB::Config.new("vmdb").config.fetch_path(:smtp, :from) if options[:from].blank?
     @content = options[:body]
     options[:attachment] ||= []
@@ -183,7 +184,7 @@ class GenericMailer < ActionMailer::Base
     ActionMailer::Base.smtp_settings = am_settings
     log_smtp_settings = am_settings.dup
     log_smtp_settings.delete(:password)
-    $log.info("MIQ(GenericMailer#set_mailer_smtp) Mailer settings: #{log_smtp_settings.inspect}")
+    _log.info("Mailer settings: #{log_smtp_settings.inspect}")
     nil
   end
 end

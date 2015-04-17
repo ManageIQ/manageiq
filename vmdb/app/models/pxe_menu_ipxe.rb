@@ -1,4 +1,5 @@
 class PxeMenuIpxe < PxeMenu
+  include Vmdb::NewLogging
   has_many :pxe_images, :class_name => "PxeImageIpxe", :foreign_key => :pxe_menu_id, :dependent => :destroy
 
   def self.parse_contents(contents)
@@ -43,7 +44,7 @@ class PxeMenuIpxe < PxeMenu
     items << current_item
 
     bad, good = items.compact.partition { |i| i[:kernel].blank? }
-    bad.each { |i| $log.warn "MIQ(#{self.name}.parse_labels) Image #{i[:label]} missing kernel - Skipping" }
+    bad.each { |i| _log.warn "Image #{i[:label]} missing kernel - Skipping" }
     good
   end
 

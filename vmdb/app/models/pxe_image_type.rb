@@ -1,4 +1,5 @@
 class PxeImageType < ActiveRecord::Base
+  include Vmdb::NewLogging
   include ReportableMixin
   has_many :customization_templates
   has_many :pxe_images
@@ -20,7 +21,7 @@ class PxeImageType < ActiveRecord::Base
 
     MiqRegion.my_region.lock do
       seed_data.each do |s|
-        $log.info("MIQ(#{self.name}.seed) Creating #{s.inspect}")
+        _log.info("Creating #{s.inspect}")
         self.create(s)
       end
     end

@@ -1,12 +1,12 @@
 module MiqProvision::Automate
   extend ActiveSupport::Concern
+  include Vmdb::NewLogging
 
   module ClassMethods
     def get_domain_details(domain, with_password = false, user = nil)
-      log_prefix = "MIQ(#{self.class.name}.get_domain_details)"
-      $log.info "#{log_prefix} << domain=<#{domain}> with_password=#{with_password} user=<#{user}>"
+      _log.info "<< domain=<#{domain}> with_password=#{with_password} user=<#{user}>"
       if domain.nil?
-        $log.error "#{log_prefix} Domain Not specified"
+        _log.error "Domain Not specified"
         return nil
       end
 
@@ -16,7 +16,7 @@ module MiqProvision::Automate
       ws  = MiqAeEngine.resolve_automation_object(uri)
 
       if ws.root.nil?
-        $log.warn "#{log_prefix} - Automate Failed (workspace empty)"
+        _log.warn "- Automate Failed (workspace empty)"
         return nil
       end
 
@@ -29,7 +29,7 @@ module MiqProvision::Automate
         return d
       end if domains.kind_of?(Array)
 
-      $log.warn "#{log_prefix} - No Domains matched in Automate Results: #{ws.to_expanded_xml}"
+      _log.warn "- No Domains matched in Automate Results: #{ws.to_expanded_xml}"
       nil
     end
   end
@@ -107,34 +107,32 @@ module MiqProvision::Automate
   end
 
   def get_network_details
-    log_prefix = "MIQ(#{self.class.name}.get_network_details)"
-
     related_vm             = vm || source
     related_vm_description = (related_vm == vm) ? "VM" : "Template"
 
     if related_vm.nil?
-      $log.error "#{log_prefix} No VM or Template Found for Provision Object"
+      _log.error "No VM or Template Found for Provision Object"
       return nil
     end
 
     if related_vm.ext_management_system.nil?
-      $log.error "#{log_prefix} No EMS Found for #{related_vm_description} of Provision Object"
+      _log.error "No EMS Found for #{related_vm_description} of Provision Object"
       return nil
     end
 
     vc_id = related_vm.ext_management_system.id
     unless vc_id.kind_of?(Fixnum)
-      $log.error "#{log_prefix} Invalid EMS ID <#{vc_id.inspect}> for #{related_vm_description} of Provision Object"
+      _log.error "Invalid EMS ID <#{vc_id.inspect}> for #{related_vm_description} of Provision Object"
       return nil
     end
 
     vlan_id, vlan_name = options[:vlan]
     unless vlan_name.kind_of?(String)
-      $log.error "#{log_prefix} VLAN Name <#{vlan_name.inspect}> is missing or invalid"
+      _log.error "VLAN Name <#{vlan_name.inspect}> is missing or invalid"
       return nil
     end
 
-    $log.info "#{log_prefix} << vlan_name=<#{vlan_name}> vlan_id=#{vlan_id} vc_id=<#{vc_id}> user=<#{get_user}>"
+    _log.info "<< vlan_name=<#{vlan_name}> vlan_id=#{vlan_id} vc_id=<#{vc_id}> user=<#{get_user}>"
 
     attrs = {
       'request' => 'UI_PROVISION_INFO',
@@ -145,7 +143,7 @@ module MiqProvision::Automate
     ws  = MiqAeEngine.resolve_automation_object(uri)
 
     if ws.root.nil?
-      $log.warn "#{log_prefix} - Automate Failed (workspace empty)"
+      _log.warn "- Automate Failed (workspace empty)"
       return nil
     end
 
@@ -165,7 +163,7 @@ module MiqProvision::Automate
       return network
     end if networks.kind_of?(Array)
 
-    $log.warn "#{log_prefix} - No Network matched in Automate Results: #{ws.to_expanded_xml}"
+    _log.warn "- No Network matched in Automate Results: #{ws.to_expanded_xml}"
     nil
   end
 

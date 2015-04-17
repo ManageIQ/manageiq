@@ -1,4 +1,5 @@
 class VmSynchronize < Job
+  include Vmdb::NewLogging
   def load_transitions
     self.state ||= 'initialize'
     {
@@ -23,11 +24,11 @@ class VmSynchronize < Job
       vm.sync_metadata( self.options[:categories], "taskid" => jobid, "host" => host )
     rescue TimeoutError
       message = "timed out attempting to synchronize, aborting"
-      $log.error("MIQ(vmsyncdata-action-call_synchronize) #{message}")
+      _log.error("#{message}")
       signal(:abort, message, "error")
       return
     rescue => message
-      $log.error("MIQ(vmsyncdata-action-call_synchronize) #{message}")
+      _log.error("#{message}")
       signal(:abort, message.message, "error")
     end
 

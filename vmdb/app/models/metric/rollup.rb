@@ -1,4 +1,5 @@
 module Metric::Rollup
+  include Vmdb::NewLogging
   ROLLUP_COLS  = Metric.columns_hash.collect {|c, h| c.to_sym if h.type == :float || c[0,7] == "derived"}.compact
   STORAGE_COLS = Metric.columns_hash.collect {|c, h| c.to_sym if c.starts_with?("derived_storage_")}.compact
 
@@ -143,7 +144,7 @@ module Metric::Rollup
   def self.rollup_daily(obj, day, interval_name, time_profile, new_perf, orig_perf)
     tp = TimeProfile.extract_objects(time_profile)
     if tp.nil?
-      $log.info "MIQ(#{self.name}.rollup_daily) Skipping [#{interval_name}] Rollup for #{obj.class.name} name: [#{obj.name}], id: [#{obj.id}] for time: [#{day}] since the time profile no longer exists."
+      _log.info "Skipping [#{interval_name}] Rollup for #{obj.class.name} name: [#{obj.name}], id: [#{obj.id}] for time: [#{day}] since the time profile no longer exists."
       return
     end
 

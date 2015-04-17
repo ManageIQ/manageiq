@@ -11,6 +11,7 @@ class Vmware::InfraManager < InfraManager
   require_dependency 'manageiq/providers/vmware/infra_manager/template'
   require_dependency 'manageiq/providers/vmware/infra_manager/vm'
 
+  include Vmdb::NewLogging
   include VimConnectMixin
 
   before_save :stop_event_monitor_queue_on_change
@@ -78,7 +79,7 @@ class Vmware::InfraManager < InfraManager
   end
 
   def stop_control_monitor
-    $log.info "MIQ(ExtManagementSystem-stop_event_monitor) EMS [#{self.name}] id [#{self.id}]: Stopping control monitor."
+    _log.info "EMS [#{self.name}] id [#{self.id}]: Stopping control monitor."
     MiqControlMonitor.stop_worker_for_ems(self)
   end
 
@@ -88,17 +89,17 @@ class Vmware::InfraManager < InfraManager
     begin
       with_provider_connection(:use_broker => false, :auth_type => auth_type) {}
     rescue SocketError, Errno::EHOSTUNREACH, Errno::ENETUNREACH
-      $log.warn("MIQ(#{self.class.name}#verify_credentials): #{$!.inspect}")
+      _log.warn("#{$!.inspect}")
       raise MiqException::MiqUnreachableError, $!.message
     rescue Handsoap::Fault
-      $log.warn("MIQ(#{self.class.name}#verify_credentials): #{$!.inspect}")
+      _log.warn("#{$!.inspect}")
       if $!.respond_to?(:reason)
         raise MiqException::MiqInvalidCredentialsError, $!.reason if $!.reason =~ /Authorize Exception|incorrect user name or password/
         raise $!.reason
       end
       raise $!.message
     rescue Exception
-      $log.warn("MIQ(#{self.class.name}#verify_credentials): #{$!.inspect}")
+      _log.warn("#{$!.inspect}")
       raise "Unexpected response returned from #{ui_lookup(:table => "ext_management_systems")}, see log for details"
     end
 
@@ -108,7 +109,7 @@ class Vmware::InfraManager < InfraManager
   def reset_vim_cache
     return unless self.use_vim_broker?
     with_provider_connection do |vim|
-      $log.info("MIQ(#{self.class.name}#reset_vim_cache): Resetting broker cache for EMS id: [#{self.id}]")
+      _log.info("Resetting broker cache for EMS id: [#{self.id}]")
       vim.resetCache
     end
   end
@@ -288,17 +289,17 @@ class Vmware::InfraManager < InfraManager
     vm.with_provider_object do |vim_vm|
       vim_vm.logUserEvent(user_event) if user_event
 
-      $log.info("MIQ(ExtManagementSystem-vm_connect_disconnect_cdrom) EMS: [#{self.name}] VM path [#{vm.path}] Invoking [devicesByFilter]...")
+      _log.info("EMS: [#{self.name}] VM path [#{vm.path}] Invoking [devicesByFilter]...")
       devs = vim_vm.devicesByFilter("connectable.connected" => /(false|true)/)
       devs.each do |dev|
         currentLabel = dev['deviceInfo']['label']
         next if ( (deviceLabel != "*") && (currentLabel.index(deviceLabel) != 0) )
-        $log.info("MIQ(ExtManagementSystem-vm_connect_disconnect_cdrom) EMS: [#{self.name}] VM path [#{vm.path}] Invoking [connectDevice] for device [#{currentLabel}]...")
+        _log.info("EMS: [#{self.name}] VM path [#{vm.path}] Invoking [connectDevice] for device [#{currentLabel}]...")
         result = vim_vm.connectDevice(dev, connect, onStartup)
-        $log.info("MIQ(ExtManagementSystem-vm_connect_disconnect_cdrom) EMS: [#{self.name}] VM path [#{vm.path}] Returned with result [#{result}]...")
+        _log.info("EMS: [#{self.name}] VM path [#{vm.path}] Returned with result [#{result}]...")
       end
 
-      $log.info("MIQ(ExtManagementSystem-vm_connect_disconnect_cdrom) EMS: [#{self.name}] VM path [#{vm.path}] Invoking [refresh]...")
+      _log.info("EMS: [#{self.name}] VM path [#{vm.path}] Invoking [refresh]...")
       vim_vm.refresh
     end
   end

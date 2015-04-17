@@ -1,11 +1,12 @@
 module MiqProvisionRedhat::Cloning
+  include Vmdb::NewLogging
   def clone_complete?
     # TODO: shouldn't this error out the provision???
     return true if phase_context[:clone_task_ref].nil?
 
     source.with_provider_connection do |rhevm|
       status = rhevm.status(phase_context[:clone_task_ref])
-      $log.info("MIQ(#{self.class.name}#poll_clone_complete) Clone is #{status}")
+      _log.info("Clone is #{status}")
 
       status == 'complete'
     end

@@ -1,4 +1,5 @@
 module MiqHostProvision::Configuration
+  include Vmdb::NewLogging
   def set_network_information
     log_header = "MIQ(#{self.class.name}#set_network_information)"
     $log.info("#{log_header} Setting Network Information")
@@ -29,7 +30,7 @@ module MiqHostProvision::Configuration
     if self.destination.is_vmware?
       set_maintenance_mode_vmware
     else
-      $log.warn "MIQ(#{self.class.name}#set_maintenance_mode) VMM Vendor [#{self.destination.vmm_vendor}] is not supported"
+      _log.warn "VMM Vendor [#{self.destination.vmm_vendor}] is not supported"
     end
   end
 
@@ -62,7 +63,7 @@ module MiqHostProvision::Configuration
     if self.destination.is_vmware?
       add_storage_vmware
     else
-      $log.warn "MIQ(#{self.class.name}#add_storage) VMM Vendor [#{self.destination.vmm_vendor}] is not supported"
+      _log.warn "VMM Vendor [#{self.destination.vmm_vendor}] is not supported"
     end
   end
 

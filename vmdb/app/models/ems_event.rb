@@ -1,4 +1,5 @@
 class EmsEvent < ActiveRecord::Base
+  include Vmdb::NewLogging
   serialize :full_data
 
   belongs_to :ext_management_system, :foreign_key => :ems_id
@@ -144,10 +145,10 @@ class EmsEvent < ActiveRecord::Base
   def self.events_filtered?(event_hash, filter)
     return false if filter.nil?
 
-    log_prefix = "MIQ(EmsEvent.events_filtered?) Skipping caught event [#{event_hash[:event_type]}] chainId [#{event_hash[:chain_id]}]"
+    log_prefix = "Skipping caught event [#{event_hash[:event_type]}] chainId [#{event_hash[:chain_id]}]"
     FILTER_KEYS.each do |filter_key, event_key, object_description|
       if event_filtered?(event_hash, event_key, filter, filter_key)
-        $log.info "#{log_prefix} for #{object_description} [#{event_hash[event_key]}]"
+        _log.info "#{log_prefix} for #{object_description} [#{event_hash[event_key]}]"
         return true
       end
     end

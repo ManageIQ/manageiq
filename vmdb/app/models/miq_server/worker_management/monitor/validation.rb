@@ -2,8 +2,6 @@ module MiqServer::WorkerManagement::Monitor::Validation
   extend ActiveSupport::Concern
 
   def validate_worker(w)
-    log_prefix = "MIQ(MiqServer.validate_worker)"
-
     time_threshold   = get_time_threshold(w)
     restart_interval = get_restart_interval(w)
     memory_threshold = get_memory_threshold(w)
@@ -14,7 +12,7 @@ module MiqServer::WorkerManagement::Monitor::Validation
 
     if time_threshold.seconds.ago.utc > w.last_heartbeat
       msg = "#{w.format_full_log_msg} has not responded in #{Time.now.utc - w.last_heartbeat} seconds, restarting worker"
-      $log.error("#{log_prefix} #{msg}")
+      _log.error(msg)
       MiqEvent.raise_evm_event_queue(w.miq_server, "evm_worker_not_responding", :event_details => msg, :type => w.class.name)
       self.restart_worker(w, :not_responding)
       return false
@@ -24,7 +22,7 @@ module MiqServer::WorkerManagement::Monitor::Validation
 
     if MiqWorker::STATUSES_CURRENT.include?(w.status) && usage_exceeds_threshold?(w.memory_usage, memory_threshold)
       msg = "#{w.format_full_log_msg} process memory usage [#{w.memory_usage}] exceeded limit [#{memory_threshold}], requesting worker to exit"
-      $log.warn("#{log_prefix} #{msg}")
+      _log.warn(msg)
       MiqEvent.raise_evm_event_queue(w.miq_server, "evm_worker_memory_exceeded", :event_details => msg, :type => w.class.name)
       self.restart_worker(w)
       return false
@@ -32,7 +30,7 @@ module MiqServer::WorkerManagement::Monitor::Validation
 
     if time_interval_reached?(w.started_on, restart_interval)
       msg = "#{w.format_full_log_msg} uptime has reached the interval of #{restart_interval} seconds, requesting worker to exit"
-      $log.info("#{log_prefix} #{msg}")
+      _log.info(msg)
       MiqEvent.raise_evm_event_queue(w.miq_server, "evm_worker_uptime_exceeded", :event_details => msg, :type => w.class.name)
       self.restart_worker(w)
       return false
@@ -53,7 +51,7 @@ module MiqServer::WorkerManagement::Monitor::Validation
         next if [MiqServer::STATUS_STARTED, MiqServer::STATUS_STARTING].include?(handler_server.status)
       end
 
-      msg.check_for_timeout(self.log_prefix)
+      msg.check_for_timeout(_log.prefix)
     end
   end
 

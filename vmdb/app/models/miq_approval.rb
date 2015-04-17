@@ -1,4 +1,5 @@
 class MiqApproval < ActiveRecord::Base
+  include Vmdb::NewLogging
   belongs_to :approver, :polymorphic => true
   belongs_to :stamper,  :class_name => "User"
   belongs_to :miq_request
@@ -18,11 +19,11 @@ class MiqApproval < ActiveRecord::Base
     self.update_attributes(:state => "approved", :reason => reason, :stamper => user, :stamper_name => user.name, :stamped_on => Time.now.utc)
 
     # execute parent now that request is approved
-    $log.info("MIQ(MiqApproval.approve) Request: [#{self.miq_request.description}] has been approved by [#{userid}]")
+    _log.info("Request: [#{self.miq_request.description}] has been approved by [#{userid}]")
     begin
       self.miq_request.approval_approved
     rescue => err
-      $log.warn("MIQ(MiqApproval.approve) #{err.message}, attempting to approve request: [#{self.miq_request.description}]")
+      _log.warn("#{err.message}, attempting to approve request: [#{self.miq_request.description}]")
     end
   end
 

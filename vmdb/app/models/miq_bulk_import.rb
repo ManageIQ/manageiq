@@ -1,16 +1,16 @@
 require 'csv'
 
 module MiqBulkImport
+  include Vmdb::NewLogging
   def self.upload(fd, tags, keys)
-    log_prefix = 'MIQ(MiqBulkImport.upload)'
-    $log.info "#{log_prefix} Uploading CSV file"
+    _log.info "Uploading CSV file"
     data = fd.read
     raise _("File is empty") if data.empty?
     data.gsub!(/\r/, "\n")
     begin
       reader = CSV.parse(data)
     rescue CSV::IllegalFormatError
-      $log.error "#{log_prefix} CSV file is invalid"
+      _log.error "CSV file is invalid"
       raise "CSV file is invalid"
     end
     header = reader.shift
@@ -19,7 +19,7 @@ module MiqBulkImport
 
     verified_tags = tags.collect {|t| t if header.include?(t)}.compact
     unless verified_tags.empty?
-      $log.info "#{log_prefix} The following columns are verified in the csv file: #{verified_tags.join(" and ")}"
+      _log.info "The following columns are verified in the csv file: #{verified_tags.join(" and ")}"
     else
       raise "No valid columns were found in the csv file. One of the following fields is required: (#{tags.join(" ")})."
     end
@@ -33,7 +33,7 @@ module MiqBulkImport
     }
 
     if matched_keys.empty?
-      $log.error "#{log_prefix} The following required columns used for matching are missing: #{keys.join(" or ")}"
+      _log.error "The following required columns used for matching are missing: #{keys.join(" or ")}"
       raise "The following required columns used for matching are missing: #{keys.join(" or ")}"
     end
 

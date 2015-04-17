@@ -1,4 +1,5 @@
 module MiqProvisionRedhat::Configuration
+  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   include_concern 'Container'
@@ -29,7 +30,7 @@ module MiqProvisionRedhat::Configuration
 
   def configure_host_affinity(rhevm_vm)
     return if dest_host.nil?
-    $log.info("MIQ(#{self.class.name}#configure_host_affinity) Setting Host Affinity to: #{dest_host.name} with ID=#{dest_host.id}")
+    _log.info("Setting Host Affinity to: #{dest_host.name} with ID=#{dest_host.id}")
     rhevm_vm.host_affinity = dest_host.ems_ref
   end
 

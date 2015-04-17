@@ -1,4 +1,5 @@
 module MiqProvision::PostInstallCallback
+  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   # This method will be called via callback if the VM is unable to shut itself down.
@@ -6,11 +7,11 @@ module MiqProvision::PostInstallCallback
   # will be waiting for the power off.
   def post_install_callback
     if phase.to_sym == :poll_destination_powered_off_in_vmdb
-      $log.info("MIQ(#{self.class.name}#post_install_callback) Powering Off #{for_destination}")
+      _log.info("Powering Off #{for_destination}")
 
       destination.stop
     else
-      $log.info("MIQ(#{self.class.name}#post_install_callback) No action needed in post_install_callback for current phase [#{phase}] for #{for_destination}")
+      _log.info("No action needed in post_install_callback for current phase [#{phase}] for #{for_destination}")
     end
   end
 end

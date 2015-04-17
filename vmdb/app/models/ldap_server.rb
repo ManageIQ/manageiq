@@ -1,4 +1,5 @@
 class LdapServer < ActiveRecord::Base
+  include Vmdb::NewLogging
 
   belongs_to :ldap_domain
 
@@ -30,7 +31,7 @@ class LdapServer < ActiveRecord::Base
 
   def self.sync_data_from_timer(timestamp = Time.now)
     # Stub for now
-    $log.info "MIQ(LDAP sync_data_from_timer): time: #{timestamp}"
+    _log.info "time: #{timestamp}"
   end
 
 end

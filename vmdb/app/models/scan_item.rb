@@ -1,4 +1,5 @@
 class ScanItem < ActiveRecord::Base
+  include Vmdb::NewLogging
   default_scope { where self.conditions_for_my_region_default_scope }
 
   serialize :definition
@@ -108,7 +109,7 @@ class ScanItem < ActiveRecord::Base
       guid = profile.attributes['guid']
       sis = ScanItemSet.find_by_guid(guid)
       if sis.nil?
-        $log.warn "MIQ(scan_item-add_elements): Unable to find ScanItemSet [guid: #{guid}] in the database."
+        _log.warn "Unable to find ScanItemSet [guid: #{guid}] in the database."
         next
       end
 
@@ -118,7 +119,7 @@ class ScanItem < ActiveRecord::Base
 
         si = ScanItem.find_by_guid(guid)
         if si.nil?
-          $log.warn "MIQ(scan_item-add_elements): Unable to find ScanItem [guid: #{guid} type: #{item_type}] in the database."
+          _log.warn "Unable to find ScanItem [guid: #{guid} type: #{item_type}] in the database."
           next
         end
 
@@ -128,11 +129,11 @@ class ScanItem < ActiveRecord::Base
         when 'registry'
           RegistryItem.add_elements(sis, si, vm, e)
         when 'category'
-          $log.debug "MIQ(scan_item-add_elements): Skipping ScanItem [guid: #{guid} type: #{item_type}] as it is not expected in the data."
+          _log.debug "Skipping ScanItem [guid: #{guid} type: #{item_type}] as it is not expected in the data."
         when 'nteventlog'
           EventLog.add_elements(vm, e)
         else
-          $log.debug "MIQ(scan_item-add_elements): Unknown ScanItem type [#{item_type}]"
+          _log.debug "Unknown ScanItem type [#{item_type}]"
         end
       end
     end

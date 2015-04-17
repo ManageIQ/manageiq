@@ -1,4 +1,5 @@
 class MiqEventSet < ActiveRecord::Base
+  include Vmdb::NewLogging
   acts_as_miq_set
 
   default_scope { where self.conditions_for_my_region_default_scope }
@@ -21,12 +22,12 @@ class MiqEventSet < ActiveRecord::Base
 
         rec = self.find_by_name(set[:name])
         if rec.nil?
-          $log.info("MIQ(MiqEventSet.seed) Creating [#{set[:name]}]")
+          _log.info("Creating [#{set[:name]}]")
           rec = self.create(set)
         else
           rec.attributes = set
           if rec.changed?
-            $log.info("MIQ(MiqEventSet.seed) Updating [#{set[:name]}]")
+            _log.info("Updating [#{set[:name]}]")
             rec.save
           end
         end

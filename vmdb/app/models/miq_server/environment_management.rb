@@ -1,5 +1,6 @@
 require 'miq_apache'
 module MiqServer::EnvironmentManagement
+  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   module ClassMethods
@@ -64,13 +65,11 @@ module MiqServer::EnvironmentManagement
     end
 
     def validate_database
-      log_prefix = "MIQ(MiqServer.validate_database)"
-
       ActiveRecord::Base.connection.reconnect!
 
       # Log the Versions
-      $log.info "#{log_prefix} Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], version: [#{ActiveRecord::Base.connection.database_version}]"                   if ActiveRecord::Base.connection.respond_to?(:database_version)
-      $log.info "#{log_prefix} Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], detailed version: [#{ActiveRecord::Base.connection.detailed_database_version}]" if ActiveRecord::Base.connection.respond_to?(:detailed_database_version)
+      _log.info "Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], version: [#{ActiveRecord::Base.connection.database_version}]"                   if ActiveRecord::Base.connection.respond_to?(:database_version)
+      _log.info "Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], detailed version: [#{ActiveRecord::Base.connection.detailed_database_version}]" if ActiveRecord::Base.connection.respond_to?(:detailed_database_version)
     end
 
     def start_memcached(cfg = VMDB::Config.new('vmdb'))
@@ -81,7 +80,7 @@ module MiqServer::EnvironmentManagement
       svr, port = cfg.config.fetch_path(:session, :memcache_server).to_s.split(":")
       opts = cfg.config.fetch_path(:session, :memcache_server_opts).to_s
       MiqMemcached::Control.restart!(:port => port, :options => opts)
-      $log.info("MIQ(#{self.name}.start_memcached) Status: #{MiqMemcached::Control.status[1]}")
+      _log.info("Status: #{MiqMemcached::Control.status[1]}")
     end
 
     def prep_apache_proxying
@@ -106,7 +105,7 @@ module MiqServer::EnvironmentManagement
       :zone        => self.zone.name,
       :server_guid => self.guid
     ) do |msg|
-      $log.info("MIQ(#{self.class.name}.queue_restart_apache) Server: [#{self.id}] [#{self.name}], there is already a prior request to restart apache, skipping...") unless msg.nil?
+      _log.info("Server: [#{self.id}] [#{self.name}], there is already a prior request to restart apache, skipping...") unless msg.nil?
     end
   end
 

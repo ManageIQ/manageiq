@@ -1,4 +1,5 @@
 module Metric::Capture::Vim
+  include Vmdb::NewLogging
   REALTIME_METRICS_PER_MINUTE = 3
 
   VIM_INTERVAL_NAME_BY_MIQ_INTERVAL_NAME = {'hourly' => 'Past Month'}
@@ -191,7 +192,7 @@ module Metric::Capture::Vim
       elsif t.kind_of?(String) # Handsoap (VimString)
         t = t.to_s
       else
-        $log.warn("MIQ(#{self.name}.perf_vim_data_to_hashes) Discarding unexpected time value in results: ts: [#{t.class.name}] [#{t}], value: #{v}")
+        _log.warn("Discarding unexpected time value in results: ts: [#{t.class.name}] [#{t}], value: #{v}")
         next
       end
       ret << {:timestamp => t, :counter_value => v}
