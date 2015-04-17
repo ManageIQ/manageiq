@@ -2216,6 +2216,44 @@ describe ApplicationHelper do
         end
       end
     end
+
+    context "when id = ems_infra_scale" do
+      before do
+        @id = "ems_infra_scale"
+      end
+
+      context "when @record = EmsOpenstackInfra" do
+        before do
+          @record = EmsOpenstackInfra.new
+        end
+
+        it "user allowed" do
+          @user.stub(:role_allows?).and_return(true)
+          subject.should == false
+        end
+
+        it "user not allowed" do
+          @user.stub(:role_allows?).and_return(false)
+          subject.should == true
+        end
+      end
+
+      context "when @record != EmsOpenstackInfra" do
+        before do
+          @record = EmsVmware.new
+        end
+
+        it "user allowed but hide button because wrong provider" do
+          @user.stub(:role_allows?).and_return(true)
+          subject.should == true
+        end
+
+        it "user not allowed" do
+          @user.stub(:role_allows?).and_return(false)
+          subject.should == true
+        end
+      end
+    end
   end # end of build_toolbar_hide_button
 
   describe "#build_toolbar_disable_button" do
