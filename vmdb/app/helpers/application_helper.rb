@@ -835,6 +835,9 @@ module ApplicationHelper
       return true if @is_redhat
     end
 
+    # Scale is only supported by OpenStack Infrastructure Provider
+    return true if id == "ems_infra_scale" && (@record.class.name != "EmsOpenstackInfra" || !role_allows(:feature => "ems_infra_scale"))
+
     # Now check model/record specific rules
     case get_record_cls(@record)
     when "AssignedServerRole"
