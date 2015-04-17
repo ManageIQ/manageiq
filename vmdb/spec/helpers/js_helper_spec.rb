@@ -111,4 +111,20 @@ describe JsHelper do
       javascript_hide_if_exists('foo').should eq("if (miqDomElementExists('foo')) $('#foo').hide();")
     end
   end
+
+  context '#javascript_checked' do
+    it 'returns js to check the provided input element of type checkbox' do
+      javascript_checked(
+        'foo'
+      ).should eq("if ($('#foo').prop('type') == 'checkbox') {$('#foo').prop('checked', 'checked');}")
+    end
+  end
+
+  context '#javascript_unchecked' do
+    it 'returns js to uncheck the provided input element of type checkbox' do
+      javascript_unchecked(
+        'foo'
+      ).should eq("if ($('#foo').prop('type') == 'checkbox') {$('#foo').prop('checked', false);}")
+    end
+  end
 end
