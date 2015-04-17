@@ -43,7 +43,7 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       :name          => "heapster",
       :restart_count => 0,
       :image         => "kubernetes/heapster:v0.9",
-      :container_id  => "docker://87cd51044d7175c246fa1fa7699253fc2aecb769021837a966fa71e9dcb54d71"
+      :backing_ref   => "docker://87cd51044d7175c246fa1fa7699253fc2aecb769021837a966fa71e9dcb54d71"
     )
 
     @container2 = Container.find_by_name("influxdb")
@@ -52,7 +52,7 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       :name          => "influxdb",
       :restart_count => 0,
       :image         => "kubernetes/heapster_influxdb:v0.3",
-      :container_id  => "docker://af741769b650a408f4a65d2d27043912b6d57e5e2a721faeb7a93a1989eef0c6"
+      :backing_ref   => "docker://af741769b650a408f4a65d2d27043912b6d57e5e2a721faeb7a93a1989eef0c6"
     )
   end
 
