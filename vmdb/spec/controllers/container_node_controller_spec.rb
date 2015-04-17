@@ -14,7 +14,7 @@ describe ContainerNodeController do
 
   it "renders show screen" do
     ems = FactoryGirl.create(:ems_kubernetes)
-    container_node = ContainerNode.create(:ext_management_system => ems, :name => "Test Node")
+    container_node = FactoryGirl.create(:container_node, :ext_management_system => ems, :name => "Test Node")
     get :show, :id => container_node.id
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty

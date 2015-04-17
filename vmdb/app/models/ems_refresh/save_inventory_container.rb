@@ -22,8 +22,12 @@ module EmsRefresh::SaveInventoryContainer
               end
 
     save_inventory_multi(:container_nodes, ems, hashes, deletes, [:ems_ref],
-                         nil, [:namespace])
+                         [:computer_system], [:namespace])
     store_ids_for_new_records(ems.container_nodes, hashes, :ems_ref)
+  end
+
+  def save_computer_system_inventory(container_node, hash, _target = nil)
+    save_inventory_single(:computer_system, container_node, hash, [:hardware])
   end
 
   def save_container_services_inventory(ems, hashes, target = nil)

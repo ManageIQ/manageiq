@@ -4,7 +4,8 @@ module ContainerNodeHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(name creation_timestamp resource_version)
+    items = %w(name creation_timestamp resource_version num_cpu_cores memory
+               identity_system identity_machine identity_infra)
     items.collect {|m| send("textual_#{m}")}.flatten.compact
   end
 
@@ -39,5 +40,35 @@ module ContainerNodeHelper::TextualSummary
       h[:link]  = url_for(:controller => 'ems_container', :action => 'show', :id => ems)
     end
     h
+  end
+
+  def textual_num_cpu_cores
+    {:label => "Number of CPU Cores",
+     :value => @record.hardware.nil? ? "N/A" : @record.hardware.logical_cpus}
+  end
+
+  def textual_memory
+    if @record.try(:hardware).try(:memory_cpu)
+      memory = number_to_human_size(
+        @record.hardware.memory_cpu * 1.megabyte, :precision => 0)
+    else
+      memory = "N/A"
+    end
+    {:label => "Memory", :value => memory}
+  end
+
+  def textual_identity_system
+    {:label => "System BIOS UUID",
+     :value => @record.identity_system.nil? ? "N/A" : @record.identity_system}
+  end
+
+  def textual_identity_machine
+    {:label => "Machine ID",
+     :value => @record.identity_machine.nil? ? "N/A" : @record.identity_machine}
+  end
+
+  def textual_identity_infra
+    {:label => "Infrastructure Machine ID", :value =>
+      @record.identity_infra.nil?  ? "N/A" : @record.identity_infra}
   end
 end
