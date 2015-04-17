@@ -15,4 +15,14 @@ module ReportHelper
     :miq_rpt_gray_text    => "Gray Text",
     :miq_rpt_gray_bg      => "Gray Background"
   }
+
+  def visibility_options(widget)
+    typ = widget.visibility.keys.first
+    values = widget.visibility.values.flatten
+    if values.first == "_ALL_"
+      _("To All Users")
+    else
+      _("By %{typ}: %{values}") % {:typ => typ.to_s.titleize, :values => values.join(',')}
+    end
+  end
 end

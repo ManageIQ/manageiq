@@ -328,29 +328,29 @@ module ReportController::Widgets
     @edit[:new][:description] = @widget.description
     @edit[:new][:enabled]     = @widget.enabled
     @edit[:new][:roles] = []   # initializing incase of new widget since visibility is not set yet.
-    @edit[:new][:groups] = []    # initializing incase of new widget since visibility is not set yet.
+    @edit[:new][:groups] = []  # initializing incase of new widget since visibility is not set yet.
 
     @edit[:visibility_types] = [["<To All Users>","all"],["<By Role>","role"],["<By Group>","group"]]
-    #Visibility Box
-    if @widget.visibility && @widget.visibility[:roles]
-      @edit[:new][:visibility_typ] = @widget.visibility[:roles][0] == "_ALL_" ? "all" : "role"
-      if @widget.visibility[:roles][0] == "_ALL_"
-        @edit[:new][:roles] = ["_ALL_"]
-      else
-        roles = MiqUserRole.find_by_name(@widget.visibility[:roles])
-        @edit[:new][:roles] = roles.collect { |role| to_cid(role.id) }.sort
+    # Visibility Box
+    if @widget.visibility
+      if @widget.visibility[:roles]
+        @edit[:new][:visibility_typ] = @widget.visibility[:roles][0] == "_ALL_" ? "all" : "role"
+        if @widget.visibility[:roles][0] == "_ALL_"
+          @edit[:new][:roles] = ["_ALL_"]
+        else
+          roles = MiqUserRole.where(:name => @widget.visibility[:roles])
+          @edit[:new][:roles] = roles.collect { |role| to_cid(role.id) }.sort
+        end
+      elsif @widget.visibility[:groups]
+        @edit[:new][:visibility_typ] = "group"
+        groups = MiqGroup.where(:description => @widget.visibility[:groups])
+        @edit[:new][:groups] = groups.collect { |group| to_cid(group.id) }.sort
       end
-    elsif @widget.visibility && @widget.visibility[:groups]
-      @edit[:new][:visibility_typ] = "group"
-      groups = MiqGroup.find_by_description(@widget.visibility[:groups])
-      @edit[:new][:groups] = groups.collect { |group| to_cid(group.id) }.sort
     end
-    @edit[:new][:roles] ||= Array.new   # initializing incase of new widget since visibility is not set yet.
     @edit[:sorted_user_roles] =
       MiqUserRole.all.sort_by { |r| r.name.downcase }
         .collect { |r| {r.name => to_cid(r.id)} }
 
-    @edit[:new][:groups] ||= Array.new    # initializing incase of new widget since visibility is not set yet.
     @edit[:sorted_groups] =
       MiqGroup.all.sort_by { |g| g.description.downcase }
         .collect { |g| {g.description => to_cid(g.id)} }
@@ -740,8 +740,11 @@ module ReportController::Widgets
     if ["r", "c"].include?(@sb[:wtype]) && (!@edit[:new][:repfilter] || @edit[:new][:repfilter] == "")
       add_flash(_("%s must be selected") % "A Report", :error)
     end
-    if @sb[:wtype] == "rf" && @edit[:new][:visibility_typ] == "role" && @edit[:new][:roles].blank?
-      add_flash(_("%s must be selected") % "A Role", :error)
+    if %w(role group).include? @edit[:new][:visibility_typ]
+      typ = @edit[:new][:visibility_typ]
+      if @edit[:new][typ.pluralize.to_sym].blank?
+        add_flash(_("A %s must be selected") % typ.titleize, :error)
+      end
     end
     if @sb[:wtype] == "r" && @edit[:new][:pivotby1] == "<<< Nothing >>>"
       add_flash(_("%s must be selected") % "At least one Column", :error)
