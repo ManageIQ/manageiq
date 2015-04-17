@@ -15,9 +15,11 @@ module AutomateTreeHelper
 
       case params[:button]
       when 'submit'
-        selected_path = @edit[:automate_tree_selected_path]
         if @edit[:include_domain_prefix].nil?
-          @edit[:automate_tree_selected_path] = selected_path.slice(selected_path.index('/', 1), selected_path.length)
+          if MiqAeDatastore.path_includes_domain?(@edit[:automate_tree_selected_path])
+            selected_path = @edit[:automate_tree_selected_path]
+            @edit[:automate_tree_selected_path] = selected_path.slice(selected_path.index('/', 1), selected_path.length)
+          end
         end
         @edit[:new][@edit[:ae_field_typ]] = @edit[:active_id]
         page << set_element_visible("#{edit_key}_div", true)
@@ -25,7 +27,9 @@ module AutomateTreeHelper
         if @edit[:new][edit_key]
           page << "$('##{edit_key}').val('#{@edit[:new][edit_key]}');"
           page << "$('##{edit_key}').prop('title', '#{@edit[:new][edit_key]}');"
-          page << javascript_unchecked('include_domain_prefix_chk')
+          inc_domain_chk = 'include_domain_prefix_chk'
+          page << javascript_unchecked(inc_domain_chk)
+          page << javascript_disable_field(inc_domain_chk)
           @edit[:include_domain_prefix] = nil
           @edit[:domain_prefix_check] = nil
         end
@@ -107,8 +111,10 @@ module AutomateTreeHelper
       @edit[:active_id] = params[:id]
       @changed = @edit[:new][edit_key] != @edit[:automate_tree_selected_path]
     end
+    inc_domain_chk = 'include_domain_prefix_chk'
     render :update do |page|
       page << javascript_for_miq_button_visibility(@changed, 'automate')
+      @changed ? page << javascript_enable_field(inc_domain_chk) : page << javascript_disable_field(inc_domain_chk)
       page << javascript_for_ae_node_selection(@edit[:new][:selected], @edit[:current][:selected], validnode)
     end
   end
