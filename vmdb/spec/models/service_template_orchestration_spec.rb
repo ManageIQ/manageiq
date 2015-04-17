@@ -36,6 +36,15 @@ describe ServiceTemplateOrchestration do
 
       service_template.orchestration_template.should be_nil
     end
+
+    it "clears invalid orchestration template" do
+      service_template.orchestration_template = first_orch_template
+      first_orch_template.delete
+
+      service_template.save!
+      service_template.reload
+      service_template.orchestration_template.should be_nil
+    end
   end
 
   context "#orchestration_manager" do
@@ -63,6 +72,15 @@ describe ServiceTemplateOrchestration do
       service_template.orchestration_manager = ems_openstack
       service_template.orchestration_manager = nil
 
+      service_template.orchestration_manager.should be_nil
+    end
+
+    it "clears invalid orchestration manager" do
+      service_template.orchestration_manager = ems_amazon
+      ems_amazon.delete
+
+      service_template.save!
+      service_template.reload
       service_template.orchestration_manager.should be_nil
     end
   end
