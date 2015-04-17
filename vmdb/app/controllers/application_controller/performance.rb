@@ -176,7 +176,11 @@ module ApplicationController::Performance
   def perf_set_or_fix_dates(options)
     # Get start/end dates in selected timezone
     tz = options[:time_profile_tz] || options[:tz]  # Use time profile tz or chosen tz, if no profile tz
-    s, e = @perf_record.first_and_last_capture
+    s, e = @perf_record.first_and_last_capture('hourly')
+    if s.nil?
+      s, e = @perf_record.first_and_last_capture('realtime')
+      options[:typ] = "realtime"
+    end
     if s.nil?
       add_flash(_("No Utilization data available"), :warning)
       @temp[:no_util_data] = true
