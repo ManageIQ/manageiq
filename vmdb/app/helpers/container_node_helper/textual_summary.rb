@@ -10,7 +10,7 @@ module ContainerNodeHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w(ems)
+    items = %w(ems container_groups)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
@@ -70,5 +70,11 @@ module ContainerNodeHelper::TextualSummary
   def textual_identity_infra
     {:label => "Infrastructure Machine ID", :value =>
       @record.identity_infra.nil?  ? "N/A" : @record.identity_infra}
+  end
+
+  def textual_container_groups
+    num_of_container_groups = @record.number_of(:container_groups)
+    label = ui_lookup(:tables => "container_groups")
+    {:label => label, :image => "container_group", :value => num_of_container_groups}
   end
 end
