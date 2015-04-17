@@ -18,7 +18,7 @@ module ContainerServiceHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w(ems)
+    items = %w(ems container_groups)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
   #
@@ -71,5 +71,11 @@ module ContainerServiceHelper::TextualSummary
       h[:link]  = url_for(:controller => 'ems_container', :action => 'show', :id => ems)
     end
     h
+  end
+
+  def textual_container_groups
+    num_of_container_groups = @record.number_of(:container_groups)
+    label = ui_lookup(:tables => "container_groups")
+    {:label => label, :image => "container_group", :value => num_of_container_groups}
   end
 end
