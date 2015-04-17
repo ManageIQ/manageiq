@@ -186,10 +186,10 @@ EOS
       def configure_sssd_domain(config, domain)
         ldap_user_extra_attrs = LDAP_ATTRS.keys.join(", ")
         if config.include?("ldap_user_extra_attrs = ")
-          pattern = "[domain/#{domain}](\n.*)+ldap_user_extra_attrs = (.*)"
+          pattern = "[domain/#{Regexp.escape(domain)}](\n.*)+ldap_user_extra_attrs = (.*)"
           config[/#{pattern}/, 2] = ldap_user_extra_attrs
         else
-          pattern = "[domain/#{domain}].*(\n)"
+          pattern = "[domain/#{Regexp.escape(domain)}].*(\n)"
           config[/#{pattern}/, 1] = "\nldap_user_extra_attrs = #{ldap_user_extra_attrs}\n"
         end
       end
