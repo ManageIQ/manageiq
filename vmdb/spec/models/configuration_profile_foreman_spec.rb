@@ -101,33 +101,4 @@ describe ConfigurationProfileForeman do
       end
     end
   end
-
-  describe "inherited attributes" do
-    it "defaults to nil" do
-      expect(subject.operating_system_flavor).to be_nil
-      expect(subject.customization_script_medium).to be_nil
-      expect(subject.customization_script_ptable).to be_nil
-    end
-
-    it "loads attributes with nil parent" do
-      subject.raw_operating_system_flavor = OperatingSystemFlavor.new(:name => "osf")
-      subject.raw_customization_script_medium = CustomizationScriptMedium.new(:name => "csm")
-      subject.raw_customization_script_ptable = CustomizationScriptPtable.new(:name => "csp")
-      expect(subject.operating_system_flavor).not_to be_nil
-      expect(subject.customization_script_medium).not_to be_nil
-      expect(subject.customization_script_ptable).not_to be_nil
-    end
-
-    context "with a parent" do
-      let(:parent) { subject.build_parent }
-      it "loads attributes from parent" do
-        parent.raw_operating_system_flavor = OperatingSystemFlavor.new(:name => "osf")
-        parent.raw_customization_script_medium = CustomizationScriptMedium.new(:name => "csm")
-        parent.raw_customization_script_ptable = CustomizationScriptPtable.new(:name => "csp")
-        expect(subject.operating_system_flavor).not_to be_nil
-        expect(subject.customization_script_medium).not_to be_nil
-        expect(subject.customization_script_ptable).not_to be_nil
-      end
-    end
-  end
 end

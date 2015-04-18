@@ -142,6 +142,18 @@ module EmsRefresh
             :configuration_organization_ids     => ids_lookup(indexes[:organizations], profile["organizations"] || tax_refs),
           }
         end.tap do |profiles|
+          # populate profiles with rolled up values
+          profiles.each do |p|
+            # pull back a few fields that are to be merged
+            ancestor_values = family_tree(profiles, p).map do |hash|
+              {
+                :operating_system_flavor_id     => hash[:raw_operating_system_flavor_id],
+                :customization_script_medium_id => hash[:raw_customization_script_medium_id],
+                :customization_script_ptable_id => hash[:raw_customization_script_ptable_id],
+              }
+            end
+            rollup(p, ancestor_values)
+          end
           indexes[:profiles] = add_ids(profiles)
         end
       end
@@ -170,6 +182,19 @@ module EmsRefresh
             :configuration_location_id          => id_lookup(indexes[:locations], cs["location_id"] || 0),
             :configuration_organization_id      => id_lookup(indexes[:organizations], cs["organization_id"] || 0),
           }
+        end.tap do |systems|
+          # if the system doesn't have a value, use the rolled up profile value
+          systems.each do |s|
+            parent = s[:configuration_profile] || {}
+            s.merge!(
+              :operating_system_flavor_id     => s[:raw_operating_system_flavor_id].presence ||
+                                                 parent[:operating_system_flavor_id].presence,
+              :customization_script_medium_id => s[:raw_customization_script_medium_id].presence ||
+                                                 parent[:customization_script_medium_id].presence,
+              :customization_script_ptable_id => s[:raw_customization_script_ptable_id].presence ||
+                                                 parent[:customization_script_ptable_id].presence,
+            )
+          end
         end
       end
 
@@ -218,6 +243,24 @@ module EmsRefresh
       def derive_parent_ref(rec, collection)
         parent_title = (rec[:title] || "").sub(/\/?#{rec[:name]}/, "").presence
         collection.detect { |c| c[:title].to_s == parent_title }.try(:[], :manager_ref) if parent_title
+      end
+
+      # given an array of hashes, squash the values together, last value taking precidence
+      def rollup(target, records)
+        records.each do |record|
+          target.merge!(record.select { |n, v| !v.nil? && v != "" })
+        end
+      end
+
+      # walk collection returning [ancestor, grand parent, parent, child_record]
+      def family_tree(collection, record)
+        ret = []
+        loop do
+          ret << record
+          parent_ref = record[:parent_ref]
+          return ret.reverse unless parent_ref
+          record = collection.detect { |r| r[:manager_ref] == parent_ref }
+        end
       end
     end
   end

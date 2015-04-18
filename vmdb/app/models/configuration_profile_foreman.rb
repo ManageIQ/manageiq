@@ -15,6 +15,12 @@ class ConfigurationProfileForeman < ConfigurationProfile
                           :class_name  => 'ConfigurationTag',
                           :foreign_key => :configuration_profile_id
 
+  # derived values (to be used by ui)
+  belongs_to :customization_script_ptable
+  belongs_to :customization_script_medium
+  belongs_to :operating_system_flavor
+  virtual_has_many :configuration_tags,  :class_name => 'ConfigurationTag'
+
   delegate :name, :to => :configuration_architecture,    :prefix => true, :allow_nil => true
   delegate :name, :to => :configuration_compute_profile, :prefix => true, :allow_nil => true
   delegate :name, :to => :configuration_domain,          :prefix => true, :allow_nil => true
@@ -23,11 +29,6 @@ class ConfigurationProfileForeman < ConfigurationProfile
   delegate :name, :to => :operating_system_flavor,       :prefix => true, :allow_nil => true
   delegate :name, :to => :customization_script_medium,   :prefix => true, :allow_nil => true
   delegate :name, :to => :customization_script_ptable,   :prefix => true, :allow_nil => true
-
-  virtual_has_many   :configuration_tags,          :class_name => 'ConfigurationTag'
-  virtual_belongs_to :customization_script_ptable, :class_name  => 'CustomizationScriptPtable'
-  virtual_belongs_to :customization_script_medium, :class_name  => 'CustomizationScriptMedium'
-  virtual_belongs_to :operating_system_flavor,     :class_name  => 'OperatingSystemFlavor'
 
   def configuration_tags
     tag_hash.values
@@ -51,18 +52,6 @@ class ConfigurationProfileForeman < ConfigurationProfile
 
   def configuration_realm
     tag_hash[ConfigurationRealm]
-  end
-
-  def operating_system_flavor
-    raw_operating_system_flavor || parent.try(:operating_system_flavor)
-  end
-
-  def customization_script_ptable
-    raw_customization_script_ptable || parent.try(:customization_script_ptable)
-  end
-
-  def customization_script_medium
-    raw_customization_script_medium || parent.try(:customization_script_medium)
   end
 
   def tag_hash
