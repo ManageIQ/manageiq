@@ -448,7 +448,7 @@ class WorkerBase
     types = Hash.new { |h, k| h[k] = Hash.new(0) }
     ObjectSpace.each_object do |obj|
       types[obj.class][:count] += 1
-      next if obj.kind_of?(DRbObject)
+      next if obj.kind_of?(DRbObject) || obj.kind_of?(WeakRef)
       if obj.respond_to?(:length)
         len = obj.length
         if len.kind_of?(Numeric)
