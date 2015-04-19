@@ -82,14 +82,24 @@ module EmsContainerHelper::TextualSummary
 
   def textual_container_routes
     count_of_routes = @ems.number_of(:container_routes)
-    label = "Container Routes"
-    {:label => label, :image => "container_route", :value => count_of_routes}
+    label = ui_lookup(:tables => "container_routes")
+    h = {:label => label, :image => "container_route", :value => count_of_routes}
+    if count_of_routes > 0 && role_allows(:feature => "container_route_show_list")
+      h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'container_routes')
+      h[:title] = "Show all #{label}"
+    end
+    h
   end
 
   def textual_container_projects
     count_of_projects = @ems.number_of(:container_projects)
-    label = "Container Projects"
-    {:label => label, :image => "container_project", :value => count_of_projects}
+    label = ui_lookup(:tables => "container_projects")
+    h = {:label => label, :image => "container_project", :value => count_of_projects}
+    if count_of_projects > 0 && role_allows(:feature => "container_project_show_list")
+      h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'container_projects')
+      h[:title] = "Show all #{label}"
+    end
+    h
   end
 
   def textual_container_nodes
