@@ -3632,6 +3632,47 @@
       :feature_type: admin
       :identifier: container_service_new
 
+# ContainerRoute
+- :name: Routes
+  :description: Everything under Container Routes
+  :feature_type: node
+  :identifier: container_route
+  :children:
+  - :name: View
+    :description: View Container Routes
+    :feature_type: view
+    :identifier: container_route_view
+    :children:
+    - :name: List
+      :description: Display Lists of Container Routes
+      :feature_type: view
+      :identifier: container_route_show_list
+    - :name: Show
+      :description: Display Individual Container Routes
+      :feature_type: view
+      :identifier: container_route_show
+
+# ContainerProject
+- :name: Projects
+  :description: Everything under Container Projects
+  :feature_type: node
+  :identifier: container_project
+  :children:
+  - :name: View
+    :description: View Container Projects
+    :feature_type: view
+    :identifier: container_project_view
+    :children:
+    - :name: List
+      :description: Display Lists of Container Projects
+      :feature_type: view
+      :identifier: container_project_show_list
+    - :name: Show
+      :description: Display Individual Container Routes
+      :feature_type: view
+      :identifier: container_project_show
+
+
 # Container
 - :name: Containers Explorer
   :description: Everything under Containers

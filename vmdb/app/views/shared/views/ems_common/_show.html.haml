@@ -1,5 +1,5 @@
 #main_div
-  - arr = %w(container_nodes container_services container_groups availability_zones cloud_tenants ems_clusters flavors security_groups hosts instances images miq_templates orchestration_stacks vms storages miq_proxies)
+  - arr = %w(container_routes container_projects container_nodes container_services container_groups availability_zones cloud_tenants ems_clusters flavors security_groups hosts instances images miq_templates orchestration_stacks vms storages miq_proxies)
   - if arr.include?(@display) && @showtype != "compare"
     = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@ems.id}"}
   - elsif @showtype == "compare"
