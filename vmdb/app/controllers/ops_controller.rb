@@ -270,7 +270,7 @@ class OpsController < ApplicationController
   end
 
   def set_log_depot_vars
-    if (settings = @schedule.depot_hash).present?
+    if (settings = @schedule.file_depot.try(:depot_hash)).present?
       log_depot_get_form_vars_from_settings(settings)
     else
       log_depot_reset_form_vars
