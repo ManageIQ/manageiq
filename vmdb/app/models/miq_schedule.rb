@@ -12,8 +12,9 @@ class MiqSchedule < ActiveRecord::Base
   virtual_column :v_zone_name,     :type => :string, :uses => :zone
   virtual_column :next_run_on,     :type => :datetime
 
-  belongs_to  :zone
-  belongs_to  :miq_search
+  belongs_to :file_depot
+  belongs_to :miq_search
+  belongs_to :zone
 
   scope :in_zone, lambda { |zone_name|
     includes(:zone).where("zones.name" => zone_name)

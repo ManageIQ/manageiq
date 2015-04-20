@@ -2,7 +2,8 @@ class FileDepot < ActiveRecord::Base
   include NewWithTypeStiMixin
   include AuthenticationMixin
   belongs_to            :resource, :polymorphic => true
-  has_many              :miq_servers, :foreign_key => :log_file_depot_id, :dependent => :nullify
+  has_many              :miq_schedules, :dependent => :nullify
+  has_many              :miq_servers,   :dependent => :nullify, :foreign_key => :log_file_depot_id
   has_many              :log_files
   validates_presence_of :uri
 
