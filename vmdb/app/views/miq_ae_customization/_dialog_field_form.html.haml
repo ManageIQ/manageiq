@@ -42,11 +42,6 @@
           %td
             = check_box_tag('field_dynamic', '1', @edit[:field_dynamic], "data-miq_observe_checkbox" => {:url => url}.to_json)
 
-      %tr
-        %td.key=_('Read only')
-        %td
-          = check_box_tag('field_read_only', '1', @edit[:field_read_only], "data-miq_observe_checkbox" => {:url => url}.to_json)
-
   - unless @edit[:field_typ].nil?
     %fieldset
       %h3=_('Options')
@@ -109,6 +104,10 @@
               = check_box_tag('field_required', 'true',
                 @edit[:field_required],
                 "data-miq_observe_checkbox" => {:url => url}.to_json)
+          %tr
+            %td.key=_('Read only')
+            %td
+              = check_box_tag('field_read_only', '1', @edit[:field_read_only], "data-miq_observe_checkbox" => {:url => url}.to_json)
           - if @edit[:field_typ].include?('TextBox')
             %tr
               %td.key=_('Validator Type')
@@ -130,32 +129,15 @@
 
         - elsif %w(DialogFieldDateControl DialogFieldDateTimeControl).include?(@edit[:field_typ])
           %tr
+            %td.key=_('Read only')
+            %td
+              = check_box_tag('field_read_only', '1', @edit[:field_read_only], "data-miq_observe_checkbox" => {:url => url}.to_json)
+          %tr
             %td.key=_('Show Past Dates')
             %td
               = check_box_tag("field_past_dates", "1",
                 @edit[:field_past_dates],
                 "data-miq_observe_checkbox" => {:url => url}.to_json)
-
-        - elsif @edit[:field_dynamic] == true
-          %tr
-            %td.key=_('Entry Point (NS/Cls/Inst)')
-            %td.wide
-              = text_field_tag('field_entry_point',
-                @edit[:field_entry_point],
-                :onFocus => 'miqShowAE_Tree("field_entry_point");miqButtons(false, "automate");')
-          %tr
-            %td.key=_('Show Refresh Button')
-            %td
-              = check_box_tag('field_show_refresh_button', '1',
-                @edit[:field_show_refresh_button],
-                'data-miq_observe_checkbox' => {:url => url}.to_json)
-          - if @edit[:field_show_refresh_button] # show only if field_show_refresh_button is on
-            %tr
-              %td.key=_('Load Values on Init')
-              %td
-                = check_box_tag('field_load_on_init', '1',
-                  @edit[:field_load_on_init],
-                  'data-miq_observe_checkbox' => {:url => url}.to_json)
 
         - elsif %w(DialogFieldDropDownList DialogFieldRadioButton).include?(@edit[:field_typ])
           %tr
@@ -165,6 +147,10 @@
                 options_for_select([[_("True"), true], [_("False"), false]], @edit[:field_required].to_s),
                 "data-miq_sparkle_on" => true,
                 "data-miq_observe" => {:url => url}.to_json)
+          %tr
+            %td.key=_('Read only')
+            %td
+              = check_box_tag('field_read_only', '1', @edit[:field_read_only], "data-miq_observe_checkbox" => {:url => url}.to_json)
           %tr
             %td.key=_('Default Value')
             %td
@@ -235,6 +221,10 @@
               = check_box_tag('field_required', 'true',
                 @edit[:field_required],
                 "data-miq_observe_checkbox" => {:url => url}.to_json)
+          %tr
+            %td.key=_('Read only')
+            %td
+              = check_box_tag('field_read_only', '1', @edit[:field_read_only], "data-miq_observe_checkbox" => {:url => url}.to_json)
 
   - if @edit[:field_typ] =~ /Drop|Radio/ && !@edit[:field_dynamic]
     = render :partial => 'field_values', :locals=>{:entry=>nil}
