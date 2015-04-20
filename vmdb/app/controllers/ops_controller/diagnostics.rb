@@ -294,63 +294,35 @@ module OpsController::Diagnostics
   end
 
   def db_backup_form_field_changed
-    return unless load_edit("dbbackup_edit__new","replace_cell__explorer")
-    @edit[:selected_backup_schedule] = params[:backup_schedule] if params[:backup_schedule]
-    schedule = MiqSchedule.find_by_id(@edit[:selected_backup_schedule]) if @edit[:selected_backup_schedule] && @edit[:selected_backup_schedule] != ""
+    schedule = MiqSchedule.find_by_id(params[:id])
     settings = schedule ? schedule.depot_hash : nil
-    if settings && !settings.blank? && @prev_backup_schedule != @edit[:selected_backup_schedule]
-      log_depot_get_form_vars_from_settings(settings)
-      @edit[:protocol] = @edit[:new][:uri_prefix]
-    else
-      log_depot_get_form_vars
-    end
-    log_depot_set_verify_status
-    render :update do |page|                    # Use RJS to update the display
-      page.replace("flash_msg_divdatabase", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"database"})
-      page.replace("form_filter_div",:partial=>"layouts/edit_log_depot_settings", :locals=>{:action=>"db_backup_form_field_changed", :validate_url=>"log_depot_validate",:div_num=>"validate" }) if @prev_uri_prefix != @edit[:new][:uri_prefix] ||  params[:backup_schedule]
-      if (@edit[:selected_backup_schedule] == "" || @edit[:selected_backup_schedule].nil?) && (@edit[:new][:uri_prefix] == "" || @edit[:new][:uri_prefix].blank?)
-        page << javascript_hide("submit_on")
-        page << javascript_show("submit_off")
-      else
-        page << javascript_show("submit_on")
-        page << javascript_hide("submit_off")
-      end
-      if @edit[:log_verify_status] != session[:log_depot_log_verify_status]
-        session[:log_depot_log_verify_status] = @edit[:log_verify_status]
-        if @edit[:log_verify_status]
-          page << "miqValidateButtons('show', 'log_');"
-        else
-          page << "miqValidateButtons('hide', 'log_');"
-        end
-      end
-      page << "miqSparkle(false);"
-    end
-  end
-
-  def validate_uri_settings
-    if @edit[:new][:uri_prefix].blank?
-      add_flash(_("%s is required") % "Type", :error)
-    elsif @edit[:new][:uri_prefix] == "nfs" && @edit[:new][:uri].blank?
-      add_flash(_("%s is required") % "URI", :error)
-    elsif @edit[:new][:requires_credentials]
-      if @edit[:new][:uri].blank?
-        add_flash(_("%s is required") % "URI", :error)
-      elsif @edit[:new][:log_userid].blank?
-        add_flash(_("%s is required") % "Username", :error)
-      elsif @edit[:new][:log_password].blank?
-        add_flash(_("%s is required") % "Password", :error)
-      elsif @edit[:new][:log_password] != @edit[:new][:log_verify]
-        add_flash(_("Password/Verify Password do not match"), :error)
-      end
-    end
+    uri_settings = settings[:uri].split("://")
+    render :json => {:depot_name   => settings[:name],
+                     :uri          => uri_settings[1],
+                     :uri_prefix   => uri_settings[0],
+                     :log_userid   => settings[:username],
+                     :log_password => settings[:password],
+                     :log_verify   => settings[:password]
+                    }
   end
 
   def db_backup
-    return unless load_edit("dbbackup_edit__new","replace_cell__explorer")
-    @schedule = @edit && @edit[:sched_id] ? MiqSchedule.find_by_id(@edit[:sched_id]) : MiqSchedule.new(:userid=>session[:userid])
+    if params[:backup_schedule].present?
+      @schedule = MiqSchedule.find_by_id(params[:backup_schedule])
+    else
+      @schedule = MiqSchedule.new(:userid => session[:userid])
+      @schedule.adhoc = true
+      @schedule.enabled = false
+      @schedule.name = "__adhoc_dbbackup_#{Time.now}__"
+      @schedule.description = "Adhoc DB Backup at #{Time.now}"
+      @schedule.run_at ||= {}
+      run_at = create_time_in_utc("00:00:00")
+      @schedule.run_at[:start_time] = "#{run_at} Z"
+      @schedule.run_at[:tz] = nil
+      @schedule.run_at[:interval] ||= {}
+      @schedule.run_at[:interval][:unit] = "Once".downcase
+    end
     @schedule.sched_action = {:method=>"db_backup"}
-    @schedule.adhoc = true
-    validate_uri_settings
     if @flash_array
       render :update do |page|
         page.replace("flash_msg_divvalidate", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"validate"})
@@ -358,16 +330,11 @@ module OpsController::Diagnostics
       end
       return
     end
-    uri = @edit[:new][:uri_prefix] + "://" + @edit[:new][:uri]
-    settings = {:uri      => uri,
-                :username => @edit[:new][:log_userid],
-                :password => @edit[:new][:log_password],
-                :name     => @edit[:new][:depot_name]}
-    # only verify_depot_hash if anything has changed in depot settings
-    if @edit[:new][:uri_prefix] != @edit[:current][:uri_prefix] || @edit[:new][:uri] != @edit[:current][:uri] ||
-        @edit[:new][:log_userid] != @edit[:current][:log_userid] || @edit[:new][:log_password] != @edit[:current][:log_password]
+    settings = {:uri      => params[:uri_prefix] + "://" + params[:uri],
+                :username => params[:log_userid],
+                :password => params[:log_password],
+                :name     => params[:depot_name]}
       @schedule.depot_hash=(settings) if MiqSchedule.verify_depot_hash(settings)
-    end
     schedule_set_record_vars(@schedule)
     schedule_validate?(@schedule)
     if @schedule.valid? && !flash_errors? && @schedule.save
@@ -384,7 +351,6 @@ module OpsController::Diagnostics
       @schedule.errors.each do |field,msg|
         add_flash("#{field.to_s.capitalize} #{msg}", :error)
       end
-      @changed = session[:changed] = (@edit[:new] != @edit[:current])
       render :update do |page|                    # Use RJS to update the display
         page.replace("flash_msg_divdatabase", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"database"})
         page << "miqSparkle(false);"
@@ -955,41 +921,8 @@ module OpsController::Diagnostics
       elsif @sb[:active_tab] == "diagnostics_replication"     # Replication tab
         @temp[:selected_server] = MiqRegion.my_region
       elsif @sb[:active_tab] == "diagnostics_database"
-        @edit = Hash.new
-        @edit[:new] = Hash.new
-        @edit[:current] = Hash.new
-        @edit[:key] = "dbbackup_edit__new"
-        @edit[:backup_schedules] = Hash.new
-        @database = MiqDbConfig.current.options
-        db_types = MiqDbConfig.get_db_types
-        @database[:display_name] = db_types[@database[:name]]
-        MiqSchedule.all(:conditions=>"towhat = 'DatabaseBackup' And adhoc is NULL").sort_by { |s| s.name.downcase }.each do |s|
-          if s.towhat == "DatabaseBackup"
-            @edit[:backup_schedules][s.id] = s.name
-          end
-        end
-        @schedule = MiqSchedule.new(:userid=>session[:userid])
-        @edit[:sched_id] = @schedule.id
-        @edit[:new][:name] = "__adhoc_dbbackup_#{Time.now}__"
-        @edit[:new][:description] = "Adhoc DB Backup at #{Time.now}"
-        @edit[:new][:action] = "db_backup"
-        t = Time.now + 1.day  # Default date/time to tomorrow in selected time zone
-        @edit[:new][:timer_months ] = "1"
-        @edit[:new][:timer_weeks ] = "1"
-        @edit[:new][:timer_days] = "1"
-        @edit[:new][:timer_hours] = "1"
-        @edit[:new][:timer_typ] = "Once"
-        @edit[:new][:start_hour] = "00"
-        @edit[:new][:start_min] = "00"
-
-        @edit[:protocols_hash] = DatabaseBackup.supported_depots
-        #have to create array to add <choose> on the top in the form
-        @edit[:protocols_arr] = Array.new
-        @edit[:protocols_hash].each do |p|
-          @edit[:protocols_arr].push(p[1])
-        end
-        set_log_depot_vars
-        @edit[:current] = copy_hash(@edit[:new])
+        build_backup_schedule_options_for_select
+        build_db_options_for_select
       elsif @sb[:active_tab] == "diagnostics_orphaned_data"
         orphaned_records_get
       elsif @sb[:active_tab] == "diagnostics_server_list"
@@ -1060,6 +993,21 @@ module OpsController::Diagnostics
         _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Diagnostics", :name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id}]", :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)} :
         _("%{typ} %{model} \"%{name}\"") % {:typ=>"Diagnostics", :name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id}]", :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)}
     end
+  end
+
+  def build_backup_schedule_options_for_select
+    @backup_schedules = {}
+    database_details
+    miq_schedules = MiqSchedule.where(:towhat => 'DatabaseBackup', :adhoc => nil)
+    miq_schedules.sort_by { |s| s.name.downcase }.each do |s|
+      @backup_schedules[s.id] = s.name if s.towhat == "DatabaseBackup"
+    end
+  end
+
+  def database_details
+    @database = MiqDbConfig.current.options
+    db_types = MiqDbConfig.get_db_types
+    @database[:display_name] = db_types[@database[:name]]
   end
 
   def orphaned_records_get
