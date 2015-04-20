@@ -219,7 +219,7 @@ module ApplicationController::Tags
     @in_a_form = true
     session[:changed] = false
     add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
-    if @explorer && ["service","vm_cloud","vm_infra","vm_or_template"].include?(request.parameters[:controller])
+    if tagging_explorer_controller?
       @refresh_partial = "layouts/tagging"
       replace_right_cell(@sb[:action]) if params[:button]
     else
@@ -246,7 +246,7 @@ module ApplicationController::Tags
     add_flash(_("%s was cancelled by the user") % "Tag Edit")
     session[:flash_msgs] = @flash_array.dup                   # Put msg in session for next transaction to display
     session[:tag_items] = nil                                 # reset tag_items in session
-    if @explorer && ["vm_infra","vm_cloud","service","vm_or_template"].include?(request.parameters[:controller])
+    if tagging_explorer_controller?
       @edit = nil # clean out the saved info
       @sb[:action] = nil
       replace_right_cell
@@ -265,7 +265,7 @@ module ApplicationController::Tags
     tagging_save_tags
 
     session[:flash_msgs] = @flash_array.dup                   # Put msg in session for next transaction to display
-    if @explorer && ["service","vm_cloud","vm_infra","vm_or_template"].include?(request.parameters[:controller])
+    if tagging_explorer_controller?
       @edit = nil # clean out the saved info
       @sb[:action] = nil
       replace_right_cell

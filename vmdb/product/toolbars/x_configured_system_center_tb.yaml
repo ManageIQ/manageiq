@@ -19,3 +19,16 @@
       :url: provision
       :url_parms: 'main_div'
       :enabled: 'true'
+  - :buttonSelect: provider_foreman_policy_choice
+    :image: policy
+    :title: Policy
+    :text: Policy
+    :enabled: 'true'
+    :items:
+    - :button: provider_foreman_tag
+      :image: tag
+      :text: "Edit Tags"
+      :title: "Edit Tags for this Configured System"
+      :url: tagging
+      :url_parms: 'main_div'
+      :enabled: 'true'

@@ -3734,4 +3734,12 @@
         :description: Provision a Foreman Configured System
         :feature_type: admin
         :identifier: provider_foreman_provision
-
+      - :name: Operate
+        :description: Perform Operations on Foreman Configured Systems
+        :feature_type: control
+        :identifier: provider_foreman_control
+        :children:
+          - :name: Edit Tags
+            :description: Edit Foreman Configured Systems Tags
+            :feature_type: control
+            :identifier: provider_foreman_tag

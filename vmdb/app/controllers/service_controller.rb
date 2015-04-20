@@ -516,6 +516,10 @@ class ServiceController < ApplicationController
     get_tagdata(@record)
   end
 
+  def tagging_explorer_controller?
+    @explorer
+  end
+
   def get_session_data
     @title      = "My Services"
     @layout     = "services"

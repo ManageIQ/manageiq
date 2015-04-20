@@ -2,6 +2,9 @@
   - if db == "MiqCimInstance"
     %span{:title => row['evm_display_name']}
       = truncate_for_quad(row['evm_display_name'])
+  - elsif db == "ConfiguredSystem"
+    %span{:title => row['hostname']}
+      = truncate_for_quad(row['hostname'])
   - else
     %span{:title => row['name']}
       = truncate_for_quad(row['name'])
