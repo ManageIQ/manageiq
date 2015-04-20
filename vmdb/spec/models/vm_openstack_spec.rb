@@ -47,4 +47,21 @@ describe VmOpenstack do
       include_examples "Vm operation is available when powered on"
     end
   end
+
+  context "when detroyed" do
+    let(:ems) { FactoryGirl.create(:ems_openstack) }
+    let(:provider_object) do
+      double("vm_openstack_provider_object", :destroy => nil).as_null_object
+    end
+    let(:vm)  { FactoryGirl.create(:vm_openstack, :ext_management_system => ems) }
+
+    it "sets the raw_power_state and not state" do
+      # when destorying a VM, the power state will momentarily be set to
+      # suspended while the provider deals with the "destroy" operation
+      expect(vm).to receive(:with_provider_object).and_yield(provider_object)
+      vm.raw_destroy
+      vm.raw_power_state.should == "SUSPENDED"
+      vm.state.should == "suspended"
+    end
+  end
 end
