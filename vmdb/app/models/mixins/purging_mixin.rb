@@ -42,19 +42,16 @@ module PurgingMixin
     end
 
     def purge_by_date(older_than, window, &block)
-      log_header = "MIQ(#{name}.purge)"
-      $log.info("#{log_header} Purging records older than [#{older_than}]...")
+      _log.info("Purging records older than [#{older_than}]...")
       total = purge_in_batches(purge_conditions(older_than), window, &block)
-      $log.info("#{log_header} Purging records older than [#{older_than}]...Complete - Deleted #{total} records")
+      _log.info("Purging records older than [#{older_than}]...Complete - Deleted #{total} records")
     end
 
     def purge_in_batches(conditions, window, total = 0)
-      log_header = "MIQ(#{name}.purge)"
-
       query = conditions.limit(window)
 
       until (batch_ids = query.pluck(:id)).empty?
-        $log.info("#{log_header} Purging #{batch_ids.length} records.")
+        _log.info("Purging #{batch_ids.length} records.")
         count  = delete_all(:id => batch_ids)
         total += count
 

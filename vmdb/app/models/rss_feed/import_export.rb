@@ -8,7 +8,6 @@ class RssFeed
 
         rss = rss["RssFeed"] if rss.keys.first == "RssFeed"
 
-        log_header = "MIQ(#{name}.#{__method__})"
         user = User.find_by_userid(options[:userid])
 
         rf = RssFeed.find_by_name(rss["name"])
@@ -31,11 +30,11 @@ class RssFeed
           msg = "Skipping RssFeed (already in DB under a different group): [#{rss["name"]}]"
           result = {:message => msg, :level => :error, :status => :skip}
         end
-        $log.info("#{log_header} #{msg}")
+        _log.info("#{msg}")
 
         if options[:save] && result[:status].in?([:add, :update])
           rf.save!
-          $log.info("#{log_header} - Completed.")
+          _log.info("- Completed.")
         end
 
         return rf, result

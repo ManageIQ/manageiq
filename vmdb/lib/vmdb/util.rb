@@ -88,15 +88,14 @@ module VMDB
     end
 
     def self.log_duration_gz(filename)
-      log_header = "MIQ(VMDB::Util.log_duration_gz)"
       require 'zlib'
 
       begin
-        $log.info "#{log_header} Opening filename: [#{filename}], size: [#{File.size(filename)}]"
+        _log.info "Opening filename: [#{filename}], size: [#{File.size(filename)}]"
         Zlib::GzipReader.open(filename) { |gz|
           lcount = 0
           gz.each_line { |line| lcount += 1 }
-          $log.info "#{log_header} Lines in file: [#{lcount}]"
+          _log.info "Lines in file: [#{lcount}]"
 
           hlines = []
           tlines = []
@@ -120,20 +119,19 @@ module VMDB
             break unless end_time.nil?
           end
 
-          $log.info "#{log_header} Start Time: [#{start_time.inspect}]"
-          $log.info "#{log_header} End   Time: [#{end_time.inspect}]"
+          _log.info "Start Time: [#{start_time.inspect}]"
+          _log.info "End   Time: [#{end_time.inspect}]"
 
           return start_time, end_time
         }
       rescue Exception => e
-        $log.error "#{log_header} #{e}"
+        _log.error "#{e}"
         return []
       end
     end
 
     def self.zip_logs(zip_filename, dirs, userid = "system")
       require 'zip/zipfilesystem'
-      log_header = "MIQ(#{self.name}.zip_logs)"
 
       zip_dir = Rails.root.join("data", "user", userid)
       FileUtils.mkdir_p(zip_dir) unless File.exist?(zip_dir)
@@ -144,18 +142,18 @@ module VMDB
 
       zfile = zfile.to_s
 
-      $log.info "#{log_header} Creating: [#{zfile_display}]"
+      _log.info "Creating: [#{zfile_display}]"
       Zip::ZipFile.open(zfile, Zip::ZipFile::CREATE) do |zip|
         dirs.each do |dir|
           dir = Rails.root.join(dir) unless Pathname.new(dir).absolute?
           Dir.glob(dir).each do |file|
             entry, mtime = add_zip_entry(zip, file)
-            $log.info "#{log_header} Adding file: [#{entry}], size: [#{File.size(file)}], mtime: [#{mtime}]"
+            _log.info "Adding file: [#{entry}], size: [#{File.size(file)}], mtime: [#{mtime}]"
           end
         end
         zip.close
       end
-      $log.info "#{log_header} Created: [#{zfile_display}], Size: [#{File.size(zfile)}]"
+      _log.info "Created: [#{zfile_display}], Size: [#{File.size(zfile)}]"
 
       zfile
     end

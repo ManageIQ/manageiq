@@ -166,31 +166,27 @@ class MiqStorageMetric < ActiveRecord::Base
   end
 
   def self.purge_derived_metrics_by_date(older_than, window = nil)
-    log_header = "MIQ(#{self.name}.purge_derived_metrics_by_date)"
-    $log.info "#{log_header} Purging derived metrics older than [#{older_than}]..."
+    _log.info "Purging derived metrics older than [#{older_than}]..."
     gtotal = purge(older_than, nil, window, self.derived_metrics_classes)
-    $log.info "#{log_header} Purging derived metrics older than [#{older_than}]...Complete - Deleted #{gtotal} records"
+    _log.info "Purging derived metrics older than [#{older_than}]...Complete - Deleted #{gtotal} records"
     return nil
   end
 
   def self.purge_hourly_metrics_rollups_by_date(older_than, window = nil)
-    log_header = "MIQ(#{self.name}.purge_metrics_rollups_by_date)"
-    $log.info "#{log_header} Purging hourly metrics rollups older than [#{older_than}]..."
+    _log.info "Purging hourly metrics rollups older than [#{older_than}]..."
     gtotal = purge(older_than, ROLLUP_TYPE_HOURLY, window, self.metrics_rollup_classes)
-    $log.info "#{log_header} Purging hourly metrics rollups older than [#{older_than}]...Complete - Deleted #{gtotal} records"
+    _log.info "Purging hourly metrics rollups older than [#{older_than}]...Complete - Deleted #{gtotal} records"
     return nil
   end
 
   def self.purge_daily_metrics_rollups_by_date(older_than, window = nil)
-    log_header = "MIQ(#{self.name}.purge_metrics_rollups_by_date)"
-    $log.info "#{log_header} Purging daily metrics rollups older than [#{older_than}]..."
+    _log.info "Purging daily metrics rollups older than [#{older_than}]..."
     gtotal = purge(older_than, ROLLUP_TYPE_DAILY, window, self.metrics_rollup_classes)
-    $log.info "#{log_header} Purging daily metrics rollups older than [#{older_than}]...Complete - Deleted #{gtotal} records"
+    _log.info "Purging daily metrics rollups older than [#{older_than}]...Complete - Deleted #{gtotal} records"
     return nil
   end
 
   def self.purge(older_than, rollup_type, window, metrics_classes)
-    log_header = "MIQ(#{self.name}.purge)"
     window ||= purge_window_size
     gtotal = 0
     metrics_classes.each do |mc|
@@ -203,7 +199,7 @@ class MiqStorageMetric < ActiveRecord::Base
         total += mc.delete_all(:id => ids)
       end
       gtotal += total
-      $log.info "#{log_header} Purged #{total} records from #{mc.name} table."
+      _log.info "Purged #{total} records from #{mc.name} table."
     end
     return gtotal
   end

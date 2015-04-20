@@ -14,17 +14,17 @@ module Metric::CiMixin::Rollup
       when 'hourly', 'historical' then
         times = Metric::Helper.hours_from_range(start_time, end_time)
 
-        log_header = "MIQ(#{self.class.name}.perf_rollup_to_parent) Queueing [#{new_interval}] rollup to #{parent.class.name} id: [#{parent.id}] for times: #{times.inspect}"
-        $log.info "#{log_header}..."
+        log_header = "Queueing [#{new_interval}] rollup to #{parent.class.name} id: [#{parent.id}] for times: #{times.inspect}"
+        _log.info "#{log_header}..."
         times.each { |t| parent.perf_rollup_queue(t, new_interval) }
-        $log.info "#{log_header}...Complete"
+        _log.info "#{log_header}...Complete"
       when 'daily' then
         times_by_tp = Metric::Helper.days_from_range_by_time_profile(start_time, end_time)
         times_by_tp.each do |tp, times|
-          log_header = "MIQ(#{self.class.name}.perf_rollup_to_parent) Queueing [#{new_interval}] rollup to #{parent.class.name} id: [#{parent.id}] in time profile: [#{tp.description}] for times: #{times.inspect}"
-          $log.info "#{log_header}..."
+          log_header = "Queueing [#{new_interval}] rollup to #{parent.class.name} id: [#{parent.id}] in time profile: [#{tp.description}] for times: #{times.inspect}"
+          _log.info "#{log_header}..."
           times.each { |t| parent.perf_rollup_queue(t, new_interval, tp) }
-          $log.info "#{log_header}...Complete"
+          _log.info "#{log_header}...Complete"
         end
       end
     end
@@ -68,8 +68,8 @@ module Metric::CiMixin::Rollup
     time_profile_id = TimeProfile.extract_ids(time_profile)
     klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
 
-    log_header = "MIQ(#{self.class.name}.perf_rollup) [#{interval_name}] Rollup for #{self.class.name} name: [#{self.name}], id: [#{self.id}] for time: [#{time}]"
-    $log.info("#{log_header}...")
+    log_header = "[#{interval_name}] Rollup for #{self.class.name} name: [#{self.name}], id: [#{self.id}] for time: [#{time}]"
+    _log.info("#{log_header}...")
 
     dummy, t = Benchmark.realtime_block(:total_time) do
       new_perf = {
@@ -96,7 +96,7 @@ module Metric::CiMixin::Rollup
       self.perf_rollup_to_parent(interval_name, time)
     end
 
-    $log.info("#{log_header}...Complete - Timings: #{t.inspect}")
+    _log.info("#{log_header}...Complete - Timings: #{t.inspect}")
   end
 
   def perf_rollup_range(start_time, end_time, interval_name, time_profile = nil)

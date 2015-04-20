@@ -65,15 +65,14 @@ module VmdbMetric::Purging
     end
 
     def purge_by_date(older_than, interval, window = nil, &block)
-      log_header = "MIQ(#{self.name}.purge)"
-      $log.info("#{log_header} Purging #{interval} metrics older than [#{older_than}]...")
+      _log.info("Purging #{interval} metrics older than [#{older_than}]...")
 
       window ||= purge_window_size
       t = self.arel_table
       conditions = [{:capture_interval_name => interval}, self.arel_table[:timestamp].lt(older_than)]
       total = purge_in_batches(conditions, window, &block)
 
-      $log.info("#{log_header} Purging #{interval} metrics older than [#{older_than}]...Complete - Deleted #{total} records")
+      _log.info("Purging #{interval} metrics older than [#{older_than}]...Complete - Deleted #{total} records")
     end
 
     #

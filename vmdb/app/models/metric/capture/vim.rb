@@ -162,8 +162,6 @@ module Metric::Capture::Vim
   #
 
   def self.preprocess_data(data, counter_values_by_mor_and_ts = {})
-    log_header = "MIQ(#{self.name}.preprocess_data)"
-
     # First process the results into a format we can consume
     processed_res = self.perf_raw_data_to_hashes(data)
     return unless processed_res.kind_of?(Array)
@@ -171,7 +169,7 @@ module Metric::Capture::Vim
     # Next process each of the those results
     processed_res.each do |res|
       full_vim_key = "#{res[:counter_id]}_#{res[:instance]}"
-      $log.debug("#{log_header} Processing [#{res[:results].length / 2}] results for MOR: [#{res[:mor]}], instance: [#{res[:instance]}], capture interval [#{res[:interval]}], counter vim key: [#{res[:counter_id]}]")
+      _log.debug("Processing [#{res[:results].length / 2}] results for MOR: [#{res[:mor]}], instance: [#{res[:instance]}], capture interval [#{res[:interval]}], counter vim key: [#{res[:counter_id]}]")
 
       hashes = self.perf_vim_data_to_hashes(res[:results])
       next if hashes.nil?

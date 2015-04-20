@@ -390,8 +390,7 @@ class EmsEvent < ActiveRecord::Base
   end
 
   def self.purge(older_than, window = nil, limit = nil)
-    log_header = "MIQ(#{self.name}.purge)"
-    $log.info("#{log_header} Purging #{limit.nil? ? "all" : limit} events older than [#{older_than}]...")
+    _log.info("Purging #{limit.nil? ? "all" : limit} events older than [#{older_than}]...")
 
     window ||= purge_window_size
 
@@ -402,12 +401,12 @@ class EmsEvent < ActiveRecord::Base
     until (ids = where(:timestamp => oldest..older_than).limit(window).ids).empty?
       ids = ids[0, limit - total] if limit && total + ids.length > limit
 
-      $log.info("#{log_header} Purging #{ids.length} events.")
+      _log.info("Purging #{ids.length} events.")
       total += self.delete_all(:id => ids)
 
       break if limit && total >= limit
     end
 
-    $log.info("#{log_header} Purging #{limit.nil? ? "all" : limit} events older than [#{older_than}]...Complete - Deleted #{total} records")
+    _log.info("Purging #{limit.nil? ? "all" : limit} events older than [#{older_than}]...Complete - Deleted #{total} records")
   end
 end

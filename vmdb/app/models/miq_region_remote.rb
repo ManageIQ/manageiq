@@ -9,10 +9,8 @@ class MiqRegionRemote < ActiveRecord::Base
   def self.destroy_entire_region(region, host, port, username, password, database = nil, adapter = nil, tables = nil)
     database, adapter = prepare_default_fields(database, adapter)
 
-    log_header = "MIQ(MiqRegionRemote.destroy_entire_region)"
-
     self.with_remote_connection(host, port, username, password, database, adapter) do |conn|
-      $log.info "#{log_header} Clearing region [#{region}] from remote host [#{host}]..."
+      _log.info "Clearing region [#{region}] from remote host [#{host}]..."
 
       tables ||= conn.tables.reject {|t| t =~ /^schema_migrations|^rr/}.sort
       tables.each do |t|
@@ -25,37 +23,36 @@ class MiqRegionRemote < ActiveRecord::Base
         end
 
         rows = conn.delete("DELETE FROM #{t} WHERE #{conditions}")
-        $log.info "#{log_header} Cleared [#{rows}] rows from table [#{t}]"
+        _log.info "Cleared [#{rows}] rows from table [#{t}]"
       end
 
-      $log.info "#{log_header} Clearing region [#{region}] from remote host [#{host}]...Complete"
+      _log.info "Clearing region [#{region}] from remote host [#{host}]...Complete"
     end
   end
 
   def self.validate_connection_settings(host, port, username, password, database = nil, adapter = nil)
     database, adapter = prepare_default_fields(database, adapter)
 
-    log_header  = "MIQ(MiqRegionRemote.validate_connection_settings)"
     log_details = "Host: [#{host}]}, Database: [#{database}], Adapter: [#{adapter}], User: [#{username}]"
 
     begin
       self.with_remote_connection(host, port, username, password, database, adapter) do |c|
-        $log.info("#{log_header} Attempting to connection to: #{log_details}...")
+        _log.info("Attempting to connection to: #{log_details}...")
         tables = c.tables rescue nil
         if tables
-          $log.info("#{log_header} Attempting to connection to: #{log_details}...Successful")
+          _log.info("Attempting to connection to: #{log_details}...Successful")
 
           # Validate the local region against the remote
           region = MiqRegion.my_region
           return ["Validation failed due to missing region"] if region.nil?
           return self.region_valid?(region.guid, region.region, host, port, username, password, database, adapter) ? nil : ["Validation failed because region #{region.region} has already been used"]
         else
-          $log.info("#{log_header} Attempting to connection to: #{log_details}...Failed")
+          _log.info("Attempting to connection to: #{log_details}...Failed")
           return ["Validation failed"]
         end
       end
     rescue => err
-      $log.warn("#{log_header} Attempting to connection to: #{log_details}...Failed with error: '#{err.message}")
+      _log.warn("Attempting to connection to: #{log_details}...Failed with error: '#{err.message}")
       return ["Validation failed with error: '#{err.message}"]
     end
   end
@@ -63,23 +60,23 @@ class MiqRegionRemote < ActiveRecord::Base
   def self.region_valid?(guid, region, host, port, username, password, database = nil, adapter = nil)
     database, adapter = prepare_default_fields(database, adapter)
 
-    log_header = "MIQ(MiqRegionRemote.region_valid?) Region: [#{region}] with guid: [#{guid}]:"
+    log_header = "Region: [#{region}] with guid: [#{guid}]:"
 
     self.with_remote_connection(host, port, username, password, database, adapter) do |conn|
       cond = sanitize_conditions(["region = ?", region])
       reg = conn.select_one("SELECT * FROM miq_regions WHERE #{cond}")
 
       if reg.nil?
-        $log.debug("#{log_header} Valid since region #{region} does not exist in remote.")
+        _log.debug("#{log_header} Valid since region #{region} does not exist in remote.")
         return true
       end
 
       unless reg['guid'] && reg['guid'] != guid
-        $log.debug("#{log_header} Valid since region and guid match remote.")
+        _log.debug("#{log_header} Valid since region and guid match remote.")
         return true
       end
 
-      $log.warn("#{log_header} Invalid since remote guid is: [#{reg['guid']}].")
+      _log.warn("#{log_header} Invalid since remote guid is: [#{reg['guid']}].")
       return false
     end
   end

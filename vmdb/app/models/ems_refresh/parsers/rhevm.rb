@@ -73,8 +73,6 @@ module EmsRefresh::Parsers::Rhevm
     scsi_lun_uids = {}
     return result, result_uids, lan_uids, switch_uids, guest_device_uids, scsi_lun_uids if inv.nil?
 
-    log_header = "MIQ(#{self.name.split("::").last}-host_inv_to_hashes)"
-
     inv.each do |host_inv|
       mor = host_inv[:id]
 
@@ -84,7 +82,7 @@ module EmsRefresh::Parsers::Rhevm
       # Check connection state and log potential issues
       power_state = host_inv.attributes.fetch_path(:status, :state)
       if ['down', nil, ''].include?(power_state)
-        $log.warn "#{log_header} Host [#{mor}] connection state is [#{power_state.inspect}].  Inventory data may be missing."
+        _log.warn "Host [#{mor}] connection state is [#{power_state.inspect}].  Inventory data may be missing."
       end
 
       power_state, connection_state = case power_state
@@ -142,8 +140,7 @@ module EmsRefresh::Parsers::Rhevm
   end
 
   def self.host_inv_to_ip(inv, hostname = nil)
-    log_header = "MIQ(#{self.name.split("::").last}.host_inv_to_ip)"
-    $log.debug("#{log_header} IP lookup for host in VIM inventory data...") if $log
+    _log.debug("IP lookup for host in VIM inventory data...") if $log
     ipaddress = nil
 
     inv[:host_nics].to_miq_a.each do |nic|
@@ -155,22 +152,22 @@ module EmsRefresh::Parsers::Rhevm
     end
 
     if !ipaddress.nil?
-      warn_msg = "#{log_header} IP lookup for host in VIM inventory data...Failed."
+      warn_msg = "IP lookup for host in VIM inventory data...Failed."
       if [nil, "localhost", "localhost.localdomain", "127.0.0.1"].include?(hostname)
-        $log.warn warn_msg  if $log
+        _log.warn warn_msg  if $log
       else
-        $log.warn "#{warn_msg} Falling back to reverse lookup." if $log
+        _log.warn "#{warn_msg} Falling back to reverse lookup." if $log
         begin
           # IPSocket.getaddress(hostname) is not used because it was appending
           #   a ".com" to the "esxdev001.localdomain" which resolved to a real
           #   internet address. Socket.getaddrinfo does the right thing.
           # TODO: Can this moved to MiqSockUtil?
 
-          #$log.debug "#{log_header} IP lookup by hostname [#{hostname}]..."
+          #_log.debug "IP lookup by hostname [#{hostname}]..."
           ipaddress = Socket.getaddrinfo(hostname, nil)[0][3]
-          $log.debug "#{log_header} IP lookup by hostname [#{hostname}]...Complete: IP found: [#{ipaddress}]" if $log
+          _log.debug "IP lookup by hostname [#{hostname}]...Complete: IP found: [#{ipaddress}]" if $log
         rescue => err
-          $log.warn "#{log_header} IP lookup by hostname [#{hostname}]...Failed with the following error: #{err}" if $log
+          _log.warn "IP lookup by hostname [#{hostname}]...Failed with the following error: #{err}" if $log
         end
       end
     end

@@ -61,26 +61,24 @@ module MiqProvisionVmware::Cloning
   end
 
   def log_clone_options(clone_options)
-    log_header = "MIQ(#{self.class.name}#log_clone_options)"
-
-    $log.info("#{log_header} Provisioning [#{source.name}] to [#{clone_options[:name]}]")
-    $log.info("#{log_header} Source Template:            [#{source.name}]")
-    $log.info("#{log_header} Destination VM Name:        [#{clone_options[:name]}]")
-    $log.info("#{log_header} Destination Host:           [#{clone_options[:host].name} (#{clone_options[:host].ems_ref})]")
-    $log.info("#{log_header} Destination Datastore:      [#{clone_options[:datastore].name} (#{clone_options[:datastore].ems_ref})]")
-    $log.info("#{log_header} Destination Folder:         [#{clone_options[:folder].name}] (#{clone_options[:folder].ems_ref})")
-    $log.info("#{log_header} Destination Resource Pool:  [#{clone_options[:pool].name} (#{clone_options[:pool].ems_ref})]")
-    $log.info("#{log_header} Power on after cloning:     [#{clone_options[:power_on].inspect}]")
-    $log.info("#{log_header} Create Linked Clone:        [#{clone_options[:linked_clone].inspect}]")
-    $log.info("#{log_header} Selected Source Snapshot:   [#{clone_options[:snapshot].name} (#{clone_options[:snapshot].ems_ref})]") if clone_options[:linked_clone]
+    _log.info("Provisioning [#{source.name}] to [#{clone_options[:name]}]")
+    _log.info("Source Template:            [#{source.name}]")
+    _log.info("Destination VM Name:        [#{clone_options[:name]}]")
+    _log.info("Destination Host:           [#{clone_options[:host].name} (#{clone_options[:host].ems_ref})]")
+    _log.info("Destination Datastore:      [#{clone_options[:datastore].name} (#{clone_options[:datastore].ems_ref})]")
+    _log.info("Destination Folder:         [#{clone_options[:folder].name}] (#{clone_options[:folder].ems_ref})")
+    _log.info("Destination Resource Pool:  [#{clone_options[:pool].name} (#{clone_options[:pool].ems_ref})]")
+    _log.info("Power on after cloning:     [#{clone_options[:power_on].inspect}]")
+    _log.info("Create Linked Clone:        [#{clone_options[:linked_clone].inspect}]")
+    _log.info("Selected Source Snapshot:   [#{clone_options[:snapshot].name} (#{clone_options[:snapshot].ems_ref})]") if clone_options[:linked_clone]
 
     cust_dump = clone_options[:customization].try(:dup)
     cust_dump.try(:delete, 'encryptionKey')
 
-    dumpObj(clone_options[:transform], "#{log_header} Transform: ",          $log, :info)
-    dumpObj(clone_options[:config],    "#{log_header} Config spec: ",        $log, :info)
-    dumpObj(cust_dump,                 "#{log_header} Customization spec: ", $log, :info, :protected => {:path => /[Pp]assword\]\[value\]/})
-    dumpObj(options,                   "#{log_header} Prov Options: ",       $log, :info)
+    dumpObj(clone_options[:transform], "#{_log.prefix} Transform: ",          $log, :info)
+    dumpObj(clone_options[:config],    "#{_log.prefix} Config spec: ",        $log, :info)
+    dumpObj(cust_dump,                 "#{_log.prefix} Customization spec: ", $log, :info, :protected => {:path => /[Pp]assword\]\[value\]/})
+    dumpObj(options,                   "#{_log.prefix} Prov Options: ",       $log, :info)
   end
 
   def start_clone(clone_options)

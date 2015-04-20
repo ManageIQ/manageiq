@@ -68,11 +68,10 @@ class Vm < VmOrTemplate
   end
 
   def running_processes
-    log_header = "MIQ(#{self.class.name}#running_processes)"
     pl = {}
     check = validate_collect_running_processes()
     unless check[:message].nil?
-      $log.warn "#{log_header} #{check[:message]}"
+      _log.warn "#{check[:message]}"
       return pl
     end
 
@@ -81,14 +80,14 @@ class Vm < VmOrTemplate
       cred = self.my_zone_obj.auth_user_pwd(:windows_domain)
       self.ipaddresses.each do |ipaddr|
         break unless pl.blank?
-        $log.info "#{log_header} Running processes for VM:[#{self.id}:#{self.name}]  IP:[#{ipaddr}] Logon:[#{cred[0]}]"
+        _log.info "Running processes for VM:[#{self.id}:#{self.name}]  IP:[#{ipaddr}] Logon:[#{cred[0]}]"
         begin
           wmi = WMIHelper.connectServer(ipaddr, *cred)
           pl = MiqProcess.process_list_all(wmi) unless wmi.nil?
         rescue => wmi_err
-          $log.warn "#{log_header} #{wmi_err}"
+          _log.warn "#{wmi_err}"
         end
-        $log.info "#{log_header} Running processes for VM:[#{self.id}:#{self.name}]  Count:[#{pl.length}]"
+        _log.info "Running processes for VM:[#{self.id}:#{self.name}]  Count:[#{pl.length}]"
       end
     rescue => err
       $log.log_backtrace(err)

@@ -7,10 +7,6 @@ class FileDepotFtp < FileDepot
     "ftp"
   end
 
-  def log_header(method = nil)
-    "MIQ(#{self.class.name}##{method})"
-  end
-
   def self.validate_settings(settings)
     new(:uri => settings[:uri]).verify_credentials(nil, settings.slice(:username, :password))
   end
@@ -24,7 +20,7 @@ class FileDepotFtp < FileDepot
         upload(file.local_file, destination_file)
       rescue => err
         msg = "Error '#{err.message.chomp}', writing to FTP: [#{uri}], Username: [#{authentication_userid}]"
-        $log.error("#{log_header(__method__)} #{msg}")
+        _log.error("#{msg}")
         raise msg
       else
         file.update_attributes(
@@ -38,11 +34,11 @@ class FileDepotFtp < FileDepot
 
   def remove_file(file)
     @file = file
-    $log.info("#{log_header(__method__)} Removing log file [#{destination_file}]...")
+    _log.info("Removing log file [#{destination_file}]...")
     with_connection do |ftp|
       ftp.delete(destination_file.to_s)
     end
-    $log.info("#{log_header(__method__)} Removing log file [#{destination_file}]...complete")
+    _log.info("Removing log file [#{destination_file}]...complete")
   end
 
   def verify_credentials(_auth_type = nil, cred_hash = nil)
@@ -68,18 +64,18 @@ class FileDepotFtp < FileDepot
     host       = URI.split(URI.encode(uri))[2]
 
     begin
-      $log.info("#{log_header(__method__)} Connecting to #{self.class.name}: #{name} host: #{host}...")
+      _log.info("Connecting to #{self.class.name}: #{name} host: #{host}...")
       @ftp         = Net::FTP.new(host)
       @ftp.passive = true  # Use passive mode to avoid firewall issues see http://slacksite.com/other/ftp.html#passive
       # @ftp.debug_mode = true if settings[:debug]  # TODO: add debug option
       creds = cred_hash ? [cred_hash[:username], cred_hash[:password]] : login_credentials
       @ftp.login(*creds)
-      $log.info("#{log_header(__method__)} Connected to #{self.class.name}: #{name} host: #{host}")
+      _log.info("Connected to #{self.class.name}: #{name} host: #{host}")
     rescue SocketError => err
-      $log.error("#{log_header(__method__)} Failed to connect.  #{err.message}")
+      _log.error("Failed to connect.  #{err.message}")
       raise
     rescue Net::FTPPermError => err
-      $log.error("#{log_header(__method__)} Failed to login.  #{err.message}")
+      _log.error("Failed to login.  #{err.message}")
       raise
     else
       @ftp
@@ -98,16 +94,16 @@ class FileDepotFtp < FileDepot
     Pathname.new(directory_path).descend do |path|
       next if file_exists?(path)
 
-      $log.info("#{log_header(__method__)} creating #{path}")
+      _log.info("creating #{path}")
       ftp.mkdir(path.to_s)
     end
   end
 
   def upload(source, destination)
     create_directory_structure(destination_path)
-    $log.info("#{log_header(__method__)} Uploading file: #{destination} to File Depot: #{name}...")
+    _log.info("Uploading file: #{destination} to File Depot: #{name}...")
     ftp.putbinaryfile(source, destination.to_s)
-    $log.info("#{log_header(__method__)} Uploading file: #{destination_file}... Complete")
+    _log.info("Uploading file: #{destination_file}... Complete")
   end
 
   def destination_file

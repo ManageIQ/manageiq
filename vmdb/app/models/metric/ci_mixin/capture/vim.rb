@@ -11,12 +11,11 @@ module Metric::CiMixin::Capture::Vim
     @perf_intervals = {}
     @perf_ems       = "EMS: [#{ems.hostname}]"
 
-    log_header = "MIQ(#{self.class.name}.perf_init) #{@perf_resource}"
     begin
       @perf_vim = self.ext_management_system.connect
       @perf_vim_hist = @perf_vim.getVimPerfHistory
     rescue => err
-      $log.error("#{log_header} Failed to initialize performance history from #{@perf_ems}: [#{err}]" )
+      _log.error("#{@perf_resource} Failed to initialize performance history from #{@perf_ems}: [#{err}]" )
       self.perf_release_vim
       raise
     end
@@ -35,7 +34,7 @@ module Metric::CiMixin::Capture::Vim
   def perf_collect_metrics_vim(interval_name, start_time = nil, end_time = nil)
     objects = self.to_miq_a
     target = "[#{self.class.name}], [#{self.id}], [#{self.name}]"
-    log_header = "MIQ(#{self.class.name}#perf_collect_metrics) [#{interval_name}] for: #{target}"
+    log_header = "[#{interval_name}] for: #{target}"
 
     require 'httpclient'
 
@@ -54,26 +53,26 @@ module Metric::CiMixin::Capture::Vim
       msg = "#{log_header} Timeout Error during metrics data collection: [#{err}], class: [#{err.class}]"
       if attempts < 3
         attempts += 1
-        $log.warn("#{msg}...Retry attempt [#{attempts}]")
-        $log.warn("#{log_header}   Timings before retry: #{Benchmark.current_realtime.inspect}")
+        _log.warn("#{msg}...Retry attempt [#{attempts}]")
+        _log.warn("#{log_header}   Timings before retry: #{Benchmark.current_realtime.inspect}")
         self.perf_release_vim
         retry
       end
 
-      $log.error("#{msg}...Failed after [#{attempts}] retry attempts")
-      $log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
+      _log.error("#{msg}...Failed after [#{attempts}] retry attempts")
+      _log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
       raise MiqException::MiqCommunicationsTimeoutError, err.message
     rescue TimeoutError
-      $log.error("#{log_header} Timeout Error during metrics data collection")
-      $log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
+      _log.error("#{log_header} Timeout Error during metrics data collection")
+      _log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
       raise MiqException::MiqTimeoutError, err.message
     rescue Errno::ECONNREFUSED => err
-      $log.error("#{log_header} Communications Error during metrics data collection: [#{err}], class: [#{err.class}]")
-      $log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
+      _log.error("#{log_header} Communications Error during metrics data collection: [#{err}], class: [#{err.class}]")
+      _log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
       raise MiqException::MiqConnectionRefusedError, err.message
     rescue Exception => err
-      $log.error("#{log_header} Unhandled exception during metrics data collection: [#{err}], class: [#{err.class}]")
-      $log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
+      _log.error("#{log_header} Unhandled exception during metrics data collection: [#{err}], class: [#{err.class}]")
+      _log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
       $log.log_backtrace(err)
       raise
     ensure
@@ -98,8 +97,7 @@ module Metric::CiMixin::Capture::Vim
   end
 
   def perf_capture_counters(interval_by_mor)
-    log_header = "MIQ(#{self.class.name}.perf_capture_counters)"
-    $log.info("#{log_header} Capturing counters...")
+    _log.info("Capturing counters...")
 
     counters_by_mor = {}
 
@@ -108,13 +106,12 @@ module Metric::CiMixin::Capture::Vim
       counters_by_mor[mor] = Metric::Capture::Vim.avail_metrics_for_entity(self.ext_management_system, @perf_vim_hist, mor, interval, @perf_intervals[interval.to_s])
     end
 
-    $log.info("#{log_header} Capturing counters...Complete")
+    _log.info("Capturing counters...Complete")
     return counters_by_mor
   end
 
   def perf_build_query_params(interval_by_mor, counters_by_mor, start_time, end_time)
-    log_header = "MIQ(#{self.class.name}.perf_build_query_params)"
-    $log.info("#{log_header} Building query parameters...")
+    _log.info("Building query parameters...")
 
     params = []
     interval_by_mor.each do |mor, interval|
@@ -130,11 +127,11 @@ module Metric::CiMixin::Capture::Vim
         :endTime    => et,
         :metricId   => counters.values.collect { |counter| { :counterId => counter[:vim_key], :instance => counter[:instance] } }
       }
-      $log.debug("#{log_header} Adding query params: #{param.inspect}")
+      _log.debug("Adding query params: #{param.inspect}")
       params << param
     end
 
-    $log.info("#{log_header} Building query parameters...Complete")
+    _log.info("Building query parameters...Complete")
 
     return params
   end
@@ -143,19 +140,17 @@ module Metric::CiMixin::Capture::Vim
     counter_values_by_mor_and_ts = {}
     return counter_values_by_mor_and_ts if params.blank?
 
-    log_header = "MIQ(#{self.class.name}.perf_query)"
-
     Benchmark.current_realtime[:num_vim_queries] = params.length
-    $log.debug("#{log_header} Total item(s) to be requested: [#{params.length}], #{params.inspect}")
+    _log.debug("Total item(s) to be requested: [#{params.length}], #{params.inspect}")
 
     query_size = Metric::Capture.concurrent_requests(interval_name)
     vim_trips = 0
     params.each_slice(query_size) do |query|
       vim_trips += 1
 
-      $log.debug("#{log_header} Starting request for [#{query.length}] item(s), #{query.inspect}")
+      _log.debug("Starting request for [#{query.length}] item(s), #{query.inspect}")
       data, = Benchmark.realtime_block(:vim_execute_time) { @perf_vim_hist.queryPerfMulti(query) }
-      $log.debug("#{log_header} Finished request for [#{query.length}] item(s)")
+      _log.debug("Finished request for [#{query.length}] item(s)")
 
       Benchmark.realtime_block(:perf_processing) { Metric::Capture::Vim.preprocess_data(data, counter_values_by_mor_and_ts) }
     end

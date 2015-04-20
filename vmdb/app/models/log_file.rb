@@ -14,7 +14,6 @@ class LogFile < ActiveRecord::Base
   before_destroy :remove
 
   def relative_path_for_upload(loc_file)
-    log_header  = "MIQ(#{self.class.name}-relative_path_for_upload)"
     server      = self.resource
     zone        = server.zone
     path        = "#{zone.name}_#{zone.id}", "#{server.name}_#{server.id}"
@@ -22,15 +21,13 @@ class LogFile < ActiveRecord::Base
     fname       = self.historical ? "Archive_" : "Current_"
     fname      += "region_#{MiqRegion.my_region.region rescue "unknown"}_#{zone.name}_#{zone.id}_#{server.name}_#{server.id}_#{date_string}#{File.extname(loc_file)}"
     dest        = File.join("/", path, fname)
-    $log.info("#{log_header} Built relative path: [#{dest}] from source: [#{loc_file}]")
+    _log.info("Built relative path: [#{dest}] from source: [#{loc_file}]")
     dest
   end
 
   # Base is the URI defined by the user
   # loc_file is the name of the original file
   def build_log_uri(base_uri, loc_file)
-    log_header = "MIQ(#{self.class.name}-build_log_uri)"
-
     scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(URI.encode(base_uri) )
 
     # Convert encoded spaces back to spaces
@@ -39,7 +36,7 @@ class LogFile < ActiveRecord::Base
     relpath  = relative_path_for_upload(loc_file)
     new_path = File.join("/", path, relpath)
     uri      = URI::HTTP.new(scheme, userinfo, host, port, registry, new_path, opaque, query, fragment).to_s
-    $log.info("#{log_header} New URI: [#{uri}] from base: [#{base_uri}], and relative path: [#{relpath}]")
+    _log.info("New URI: [#{uri}] from base: [#{base_uri}], and relative path: [#{relpath}]")
     uri
   end
 
@@ -87,8 +84,6 @@ class LogFile < ActiveRecord::Base
     # If no server provided, use the MiqServer receiving this request
     server = args[1] || MiqServer.my_server
 
-    log_header = "MIQ(#{self.name}-logs_from_server)"
-
     # All server types who provide logs must implement the following instance methods:
     #   - my_zone:     which returns the zone in which they reside
     #   - who_am_i:    which returns a log friendly string of the server's class and id
@@ -96,7 +91,7 @@ class LogFile < ActiveRecord::Base
     zone     = server.my_zone
     resource = server.who_am_i
 
-    $log.info("#{log_header} Queueing the request by userid: [#{userid}] for logs from server: [#{resource}]")
+    _log.info("Queueing the request by userid: [#{userid}] for logs from server: [#{resource}]")
 
     begin
       # Create the task for the UI to check
@@ -124,7 +119,7 @@ class LogFile < ActiveRecord::Base
       # return task id to the UI
       msg = "Queued the request for logs from server: [#{resource}]"
       task.update_status("Queued", "Ok", msg)
-      $log.info("#{log_header} Task: [#{task.id}] #{msg}")
+      _log.info("Task: [#{task.id}] #{msg}")
       task.id
     end
   end

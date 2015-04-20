@@ -655,9 +655,7 @@ module VmdbwsOps
   end
 
   def VmAddCustomAttributes(vmGuid, customAttrs)
-    log_header = "vmdbws.VmAddCustomAttributes"
-
-    $log.info "#{log_header}: enter"
+    _log.info "enter"
     t0 = Time.now
     vm = FindVmByGuid(vmGuid)
 
@@ -696,7 +694,7 @@ module VmdbwsOps
     (new_cust_attrs + upd_cust_attrs).each {|ca| vm.set_custom_field(ca.name.to_s, ca.value.to_s) if ca.source == "VC"}
     vm.custom_attributes += new_cust_attrs
 
-    $log.info "#{log_header}: exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     vm.custom_attributes(true)
   end
 
@@ -705,9 +703,7 @@ module VmdbwsOps
   end
 
   def VmDeleteCustomAttributes(vmGuid, customAttrs)
-    log_header = "vmdbws.vmDeleteCustomAttributes"
-
-    $log.info "#{log_header}: enter"
+    _log.info "enter"
     t0 = Time.now
     vm = FindVmByGuid(vmGuid)
 
@@ -720,7 +716,7 @@ module VmdbwsOps
       end
     end
 
-    $log.info "#{log_header}: exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "exit, elapsed time [#{Time.now - t0}] seconds"
     vm.custom_attributes(true)
   end
 

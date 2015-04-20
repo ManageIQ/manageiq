@@ -126,11 +126,10 @@ class MiqRequest < ActiveRecord::Base
   end
 
   def call_automate_event(event_name)
-    log_header = "MIQ(#{self.class.name}.call_automate_event)"
     begin
-      $log.info("#{log_header} Raising event [#{event_name}] to Automate")
+      _log.info("Raising event [#{event_name}] to Automate")
       ws = MiqAeEvent.raise_evm_event(event_name, self)
-      $log.info("#{log_header} Raised  event [#{event_name}] to Automate")
+      _log.info("Raised  event [#{event_name}] to Automate")
       return ws
     rescue MiqAeException::Error => err
       message = "Error returned from #{event_name} event processing in Automate: #{err.message}"
@@ -139,17 +138,15 @@ class MiqRequest < ActiveRecord::Base
   end
 
   def automate_event_failed?(event_name)
-    log_header = "MIQ(#{self.class.name}.automate_event_failed?)"
-
     ws = call_automate_event(event_name)
 
     if ws.nil?
-      $log.warn("#{log_header} Aborting because Automate failed for event <#{event_name}>")
+      _log.warn("Aborting because Automate failed for event <#{event_name}>")
       return true
     end
 
     if ws.root['ae_result'] == 'error'
-      $log.warn("#{log_header} Aborting because Automate returned ae_result=<#{ws.root['ae_result']}> for event <#{event_name}>")
+      _log.warn("Aborting because Automate returned ae_result=<#{ws.root['ae_result']}> for event <#{event_name}>")
       return true
     end
 
@@ -358,8 +355,7 @@ class MiqRequest < ActiveRecord::Base
   end
 
   def create_request_tasks
-    log_header = "MIQ(#{self.class.name}.create_request_tasks)"
-    $log.info("#{log_header} Creating request task instances for: <#{description}>...")
+    _log.info("Creating request task instances for: <#{description}>...")
 
     return if automate_event_failed?("request_starting")
 
@@ -389,12 +385,10 @@ class MiqRequest < ActiveRecord::Base
   end
 
   def create_request_task(idx)
-    log_header = "MIQ(#{self.class.name}.create_request_tasks)"
-
     req_task_attribs = attributes.dup
     req_task_attribs['state'] = req_task_attribs.delete('request_state')
     (req_task_attribs.keys - MiqRequestTask.column_names + %w(id created_on updated_on type)).each { |key| req_task_attribs.delete(key) }
-    $log.debug("#{log_header} #{self.class.name} Attributes: [#{req_task_attribs.inspect}]...")
+    _log.debug("#{self.class.name} Attributes: [#{req_task_attribs.inspect}]...")
 
     customize_request_task_attributes(req_task_attribs, idx)
     req_task = self.class.new_request_task(req_task_attribs)

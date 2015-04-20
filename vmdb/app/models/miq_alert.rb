@@ -121,20 +121,19 @@ class MiqAlert < ActiveRecord::Base
       raise "Unable to find object with class: [#{klass}], Id: [#{id}]" unless target
     end
 
-    log_header = "MIQ(#{self.name}.evaluate_alerts) [#{event}]"
+    log_header = "[#{event}]"
     log_target = "Target: #{target.class.name} Name: [#{target.name}], Id: [#{target.id}]"
-    $log.info("#{log_header} #{log_target}")
+    _log.info("#{log_header} #{log_target}")
 
     self.assigned_to_target(target, event).each do |a|
       next if a.postpone_evaluation?(target)
-      $log.info("#{log_header} #{log_target} Queuing evaluation of Alert: [#{a.description}]")
+      _log.info("#{log_header} #{log_target} Queuing evaluation of Alert: [#{a.description}]")
       a.evaluate_queue(target, inputs)
     end
   end
 
   def self.evaluate_hourly_timer
-    log_header = "MIQ(#{self.name}.evaluate_hourly_timer)"
-    $log.info("#{log_header} Starting")
+    _log.info("Starting")
 
     # Find all active alerts that respond to _hourly_timer_ that have assignments
     # assignments = MiqAlert.assignments(:conditions => ["enabled = ? and responds_to_events like ?", true, "%#{HOURLY_TIMER_EVENT}%"])
@@ -161,7 +160,7 @@ class MiqAlert < ActiveRecord::Base
     # Call evaluate_queue for each alert/target
     targets.uniq.each {|t| self.evaluate_alerts(t, HOURLY_TIMER_EVENT)}
 
-    $log.info("#{log_header} Complete")
+    _log.info("Complete")
   end
 
   def evaluate_queue(targets, inputs={})

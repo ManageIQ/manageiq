@@ -1,6 +1,5 @@
 module MiqProvisionVmware::Configuration::Container
   def build_config_spec
-    log_header = "MIQ(#{self.class.name}.build_config_spec)"
     VimHash.new("VirtualMachineConfigSpec") do |vmcs|
       vmcs.annotation = build_vm_notes
 
@@ -21,7 +20,7 @@ module MiqProvisionVmware::Configuration::Container
         # Setting coresPerSocket is only supported on VMware hardware version 7 and above.
         vm_hardware_version = source.hardware.virtual_hw_version rescue nil
         if vm_hardware_version.to_i < 7
-          $log.warn "#{log_header} VMware hardware version <#{vm_hardware_version}> does not support setting coresPerSocket" if cores >= 1
+          _log.warn "VMware hardware version <#{vm_hardware_version}> does not support setting coresPerSocket" if cores >= 1
           cores = nil
         end
 
@@ -50,8 +49,6 @@ module MiqProvisionVmware::Configuration::Container
   end
 
   def build_vm_notes
-    log_header = "MIQ(#{self.class.name}.build_vm_notes)"
-
     new_vm_guid = phase_context[:new_vm_validation_guid]
     vm_notes = get_option(:vm_notes).to_s.strip
     vm_notes += "\n\n" unless vm_notes.blank?
@@ -60,12 +57,11 @@ module MiqProvisionVmware::Configuration::Container
     if service
       vm_notes += "\n\nParent Service: #{service.name} (#{service.guid})"
     end
-    $log.info "#{log_header} Setting VM annotations to [#{vm_notes}]"
+    _log.info "Setting VM annotations to [#{vm_notes}]"
     vm_notes
   end
 
   def set_spec_option(obj, property, key, default_value = nil, modifier = nil, override_value = nil)
-    log_header = "MiqProvision.set_spec_option"
     if key.nil?
       value = get_option(nil, override_value)
     else
@@ -76,14 +72,14 @@ module MiqProvisionVmware::Configuration::Container
       # Modifier is a method like :to_s or :to_i
       value = value.to_s if [true, false].include?(value)
       value = value.send(modifier) unless modifier.nil?
-      $log.info "#{log_header} #{property} was set to #{value} (#{value.class})"
+      _log.info "#{property} was set to #{value} (#{value.class})"
       obj.send("#{property}=", value)
     else
       value = obj.send("#{property}")
       if value.nil?
-        $log.info "#{log_header} #{property} was NOT set due to nil"
+        _log.info "#{property} was NOT set due to nil"
       else
-        $log.info "#{log_header} #{property} inheriting value from spec: #{value} (#{value.class})"
+        _log.info "#{property} inheriting value from spec: #{value} (#{value.class})"
       end
     end
   end
@@ -109,8 +105,6 @@ module MiqProvisionVmware::Configuration::Container
   end
 
   def set_cpu_and_memory_allocation(vm)
-    log_header = "MIQ (MiqProvision#set_cpu_and_memory_allocation)"
-
     config_spec = VimHash.new("VirtualMachineConfigSpec") do |vmcs|
       vmcs.cpuAllocation    = VimHash.new("ResourceAllocationInfo") do |rai|
         set_spec_option(rai, :limit,       :cpu_limit,   nil, :to_i)
@@ -123,8 +117,8 @@ module MiqProvisionVmware::Configuration::Container
       end
     end
 
-    $log.info("#{log_header} Calling VM reconfiguration")
-    dumpObj(config_spec, "#{log_header} Post-create Config spec: ", $log, :info)
+    _log.info("Calling VM reconfiguration")
+    dumpObj(config_spec, "#{_log.prefix} Post-create Config spec: ", $log, :info)
     vm.spec_reconfigure(config_spec)
   end
 end

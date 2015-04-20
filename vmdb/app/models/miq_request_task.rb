@@ -106,10 +106,9 @@ class MiqRequestTask < ActiveRecord::Base
   end
 
   def deliver_to_automate(req_type = request_type, zone = nil)
-    log_header = "MIQ(#{self.class.name}.deliver_to_automate)"
     task_check_on_execute
 
-    $log.info("#{log_header} Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
+    _log.info("Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
 
     if self.class::AUTOMATE_DRIVES
       args = {}
@@ -135,10 +134,9 @@ class MiqRequestTask < ActiveRecord::Base
   end
 
   def execute_queue(queue_options = {})
-    log_header = "MIQ(#{self.class.name}.execute_queue)"
     task_check_on_execute
 
-    $log.info("#{log_header} Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
+    _log.info("Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
 
     deliver_on = nil
     if get_option(:schedule_type) == "schedule"
@@ -163,14 +161,12 @@ class MiqRequestTask < ActiveRecord::Base
   end
 
   def execute
-    log_header = "MIQ(#{self.class.name}.execute)"
-
-    $log.info("#{log_header} Executing #{request_class::TASK_DESCRIPTION} request: [#{description}]")
+    _log.info("Executing #{request_class::TASK_DESCRIPTION} request: [#{description}]")
     update_and_notify_parent(:state => "active", :status => "Ok", :message => "In Process")
 
     begin
       message = "#{request_class::TASK_DESCRIPTION} initiated"
-      $log.info("#{log_header} #{message}")
+      _log.info("#{message}")
       update_and_notify_parent(:message => message)
 
       # Process the request
@@ -178,7 +174,7 @@ class MiqRequestTask < ActiveRecord::Base
 
     rescue => err
       message = "Error: #{err.message}"
-      $log.error("#{log_header} [#{message}] encountered during #{request_class::TASK_DESCRIPTION}")
+      _log.error("[#{message}] encountered during #{request_class::TASK_DESCRIPTION}")
       $log.log_backtrace(err)
       update_and_notify_parent(:state => "finished", :status => "Error", :message => message)
       return

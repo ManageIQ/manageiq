@@ -45,17 +45,15 @@ module MiqProvisionRedhat::Cloning
   end
 
   def log_clone_options(clone_options)
-    log_header = "MIQ(#{self.class.name}#log_clone_options)"
+    _log.info("Provisioning [#{source.name}] to [#{dest_name}]")
+    _log.info("Source Template:            [#{source.name}]")
+    _log.info("Clone Type:                 [#{clone_options[:clone_type]}]")
+    _log.info("Destination VM Name:        [#{clone_options[:name]}]")
+    _log.info("Destination Cluster:        [#{dest_cluster.name} (#{dest_cluster.ems_ref})]")
+    _log.info("Destination Datastore:      [#{dest_datastore.name} (#{dest_datastore.ems_ref})]") unless dest_datastore.nil?
 
-    $log.info("#{log_header} Provisioning [#{source.name}] to [#{dest_name}]")
-    $log.info("#{log_header} Source Template:            [#{source.name}]")
-    $log.info("#{log_header} Clone Type:                 [#{clone_options[:clone_type]}]")
-    $log.info("#{log_header} Destination VM Name:        [#{clone_options[:name]}]")
-    $log.info("#{log_header} Destination Cluster:        [#{dest_cluster.name} (#{dest_cluster.ems_ref})]")
-    $log.info("#{log_header} Destination Datastore:      [#{dest_datastore.name} (#{dest_datastore.ems_ref})]") unless dest_datastore.nil?
-
-    dumpObj(clone_options, "#{log_header} Clone Options: ", $log, :info)
-    dumpObj(options, "#{log_header} Prov Options:  ", $log, :info)
+    dumpObj(clone_options, "#{_log.prefix} Clone Options: ", $log, :info)
+    dumpObj(options, "#{_log.prefix} Prov Options:  ", $log, :info)
   end
 
   def start_clone(clone_options)

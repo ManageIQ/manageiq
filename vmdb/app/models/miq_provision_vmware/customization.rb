@@ -1,20 +1,18 @@
 module MiqProvisionVmware::Customization
   def build_customization_spec
-    log_header = "MIQ(#{self.class.name}#build_customization_spec)"
-
     sysprep_option = get_option(:sysprep_enabled)
     if sysprep_option.blank? || sysprep_option == 'disabled'
-      $log.warn "#{log_header} VM Customization will be skipped.  Sysprep customization option set to [#{sysprep_option}]"
+      _log.warn "VM Customization will be skipped.  Sysprep customization option set to [#{sysprep_option}]"
       return nil
     end
-    $log.info "#{log_header} Sysprep customization option set to [#{sysprep_option}]"
+    _log.info "Sysprep customization option set to [#{sysprep_option}]"
 
     # If an existing VC customization spec was selected connect to VC and get the spec
     custom_spec_name = get_option(:sysprep_custom_spec).to_s.strip
     sysprep_spec_override = get_option(:sysprep_spec_override)
     spec = load_customization_spec(custom_spec_name)
     spec = spec.spec unless spec.nil?
-    $log.info "#{log_header} Loaded custom spec [#{custom_spec_name}].  Override flag: [#{sysprep_spec_override}]"
+    _log.info "Loaded custom spec [#{custom_spec_name}].  Override flag: [#{sysprep_spec_override}]"
     if sysprep_spec_override == false
       adjust_nicSettingMap(spec)
       return spec
@@ -29,7 +27,7 @@ module MiqProvisionVmware::Customization
       return if identity.nil?
       spec.identity = identity
     else
-      $log.warn "#{log_header} VM Customization will be skipped.  Not supported for platform type [#{source.platform}]"
+      _log.warn "VM Customization will be skipped.  Not supported for platform type [#{source.platform}]"
       return
     end
 
@@ -53,13 +51,12 @@ module MiqProvisionVmware::Customization
   end
 
   def customization_identity_windows(spec)
-    log_header = "MIQ(#{self.class.name}.customization_identity_windows)"
     sysprep_option = get_option(:sysprep_enabled)
 
     identity = nil
     if sysprep_option == 'file'
       identity = VimHash.new("CustomizationSysprepText") do |sysprep|
-        $log.info "#{log_header} Sysprep Text being set from file"
+        _log.info "Sysprep Text being set from file"
         sysprep.value = get_option(:sysprep_upload_text)
       end
     else
@@ -101,7 +98,6 @@ module MiqProvisionVmware::Customization
   end
 
   def customization_identity_linux(spec)
-    log_header = "MIQ(#{self.class.name}.customization_identity_linux)"
     identity = find_build_spec_path(spec, 'CustomizationLinuxPrep', 'identity')
     set_spec_option(identity, :domain, :linux_domain_name)
     identity.hostName = customization_hostname
@@ -122,7 +118,6 @@ module MiqProvisionVmware::Customization
   end
 
   def customization_nicSettingMap(source_platform, spec)
-    log_header = "MIQ(#{self.class.name}.customization_nicSettingMap)"
     nic_settings = collect_nic_settings
 
     spec.nicSettingMap ||= VimArray.new("ArrayOfCustomizationAdapterMapping")
@@ -131,7 +126,7 @@ module MiqProvisionVmware::Customization
 
     nic_settings.each_with_index do |nic, idx|
       break if idx >= requested_network_adapter_count
-      $log.warn "#{log_header} Nic index:<#{idx}> -- settings:<#{nic.inspect}>"
+      _log.warn "Nic index:<#{idx}> -- settings:<#{nic.inspect}>"
       spec.nicSettingMap[idx] = VimHash.new("CustomizationAdapterMapping") if spec.nicSettingMap[idx].blank?
       adap_map = spec.nicSettingMap[idx]
       adapter = find_build_spec_path(adap_map, 'CustomizationIPSettings', 'adapter')
@@ -150,7 +145,7 @@ module MiqProvisionVmware::Customization
       set_spec_option(adapter, :secondaryWINS, nil, nil, nil, wins_server[1])
 
       if get_option(nil, nic[:addr_mode]) == "dhcp"
-        $log.info "#{log_header} Using DHCP IP settings"
+        _log.info "Using DHCP IP settings"
         adapter.ip = VimHash.new("CustomizationDhcpIpGenerator")
         adapter.delete('gateway')
         adapter.delete('subnetMask')
@@ -159,7 +154,7 @@ module MiqProvisionVmware::Customization
         set_spec_option(adapter, :subnetMask, nil, nil, nil, nic[:subnet_mask])
         adapter.ip = VimHash.new("CustomizationFixedIp") do |fixed_ip|
           ip_address = get_option(nil, nic[:ip_addr])
-          $log.info "#{log_header} Using Fixed IP address [#{ip_address}]"
+          _log.info "Using Fixed IP address [#{ip_address}]"
           fixed_ip.ipAddress = ip_address
         end
       end
@@ -202,18 +197,17 @@ module MiqProvisionVmware::Customization
   end
 
   def load_customization_spec(custom_spec_name)
-    log_header = "MIQ(#{self.class.name}.load_customization_spec)"
     custom_spec_name = nil if custom_spec_name == "__VC__NONE__"
     unless custom_spec_name.blank?
-      $log.info "#{log_header} Using customization spec [#{custom_spec_name}]"
+      _log.info "Using customization spec [#{custom_spec_name}]"
       cs = source.ext_management_system.customization_specs.find_by_id(custom_spec_name)
       cs = source.ext_management_system.customization_specs.find_by_name(custom_spec_name) if cs.nil?
       raise MiqException::MiqProvisionError, "Customization Specification [#{custom_spec_name}] does not exist." if cs.nil?
       raise MiqException::MiqProvisionError, "Customization Specification [#{custom_spec_name}] for OS type [#{cs[:typ]}] does not match the template VM OS" if cs[:typ].downcase != source.platform
-      $log.info "#{log_header} Using customization spec [#{cs.name}]"
+      _log.info "Using customization spec [#{cs.name}]"
       return cs
     else
-      $log.info "#{log_header} Customization spec name is empty, no spec will be loaded."
+      _log.info "Customization spec name is empty, no spec will be loaded."
       return nil
     end
   end
@@ -229,39 +223,35 @@ module MiqProvisionVmware::Customization
   end
 
   def customization_hostname
-    log_header = "MIQ(#{self.class.name}.customization_hostname)"
     VimHash.new("CustomizationFixedName") do |mach_name|
       computer_name = get_option(:vm_target_hostname)
       computer_name = hostname_cleanup(computer_name)
-      $log.info "#{log_header} CustomizationFixedName was set to #{computer_name}(#{computer_name.class})"
+      _log.info "CustomizationFixedName was set to #{computer_name}(#{computer_name.class})"
       mach_name.name = computer_name
     end
   end
 
   def set_spec_password_option(obj, property, key, pwd_type)
-    log_header = "MiqProvision.set_spec_password_option"
-
     value = get_option(key).to_s.strip
     value = MiqPassword.try_decrypt(value)
     unless value.blank?
       pwd_hash = VimHash.new("CustomizationPassword") do |cust_pass|
         cust_pass.plainText = "true"
         cust_pass.value     = value
-        $log.info "#{log_header} #{pwd_type} password was set [#{"*" * value.length}]"
+        _log.info "#{pwd_type} password was set [#{"*" * value.length}]"
       end
       obj.send("#{property}=", pwd_hash)
     else
       value = obj.send("#{property}")
       if value.nil?
-        $log.info "#{log_header} #{pwd_type} password was NOT set"
+        _log.info "#{pwd_type} password was NOT set"
       else
-        $log.info "#{log_header} #{pwd_type} password inheriting value from spec"
+        _log.info "#{pwd_type} password inheriting value from spec"
       end
     end
   end
 
   def set_spec_array_option(obj, property, key, override_value = nil)
-    log_header = "MiqProvision.set_spec_array_option"
     if key.nil?
       value = get_option(nil, override_value)
     else
@@ -270,10 +260,10 @@ module MiqProvisionVmware::Customization
     values = value.to_s.split(",")
     unless values.blank?
       value = VimArray.new { |l| values.each { |i| l << i.strip } }
-      $log.info "#{log_header} #{property} was set to #{value.inspect} (#{value.class})"
+      _log.info "#{property} was set to #{value.inspect} (#{value.class})"
       obj.send("#{property}=", value)
     else
-      $log.info "#{log_header} #{property} was NOT set due to blank values"
+      _log.info "#{property} was NOT set due to blank values"
     end
   end
 end

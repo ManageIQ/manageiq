@@ -332,14 +332,12 @@ class Vmware::InfraManager
     end
 
     def reconfig_refresh
-      log_header = "MIQ(VcRefresher.reconfig_refresh)"
-
       ems_id = @targets_by_ems_id.keys.first
       vm = @targets_by_ems_id[ems_id].first
       @ems = vm.ext_management_system
 
-      $log.info "#{log_header} Refreshing target VM for reconfig..."
-      $log.info "#{log_header}   #{vm.class}: [#{vm.name}], id: [#{vm.id}]"
+      _log.info "Refreshing target VM for reconfig..."
+      _log.info "#{vm.class}: [#{vm.name}], id: [#{vm.id}]"
 
       dummy, timings = Benchmark.realtime_block(:total_time) do
         Benchmark.realtime_block(:get_vc_data_total) do
@@ -352,18 +350,18 @@ class Vmware::InfraManager
           end
         end
 
-        $log.debug "#{log_header} Parsing VC inventory..."
+        _log.debug "Parsing VC inventory..."
         hashes, = Benchmark.realtime_block(:parse_vc_data) do
           RefreshParser.reconfig_inv_to_hashes(@vc_data)
         end
-        $log.debug "#{log_header} Parsing VC inventory...Complete"
+        _log.debug "Parsing VC inventory...Complete"
 
         Benchmark.realtime_block(:db_save_inventory) do
           EmsRefresh.reconfig_save_vm_inventory(vm, hashes)
         end
       end
 
-       $log.info "#{log_header} Refreshing target VM for reconfig...Complete - Timings: #{timings.inspect}"
+       _log.info "Refreshing target VM for reconfig...Complete - Timings: #{timings.inspect}"
     end
   end
 end

@@ -1,7 +1,5 @@
 module VimConnectMixin
   def connect(options = {})
-    log_header = "MIQ(#{self.class.name}.connect)"
-
     options[:auth_type] ||= :ws
     raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
 
@@ -10,8 +8,8 @@ module VimConnectMixin
     options[:use_broker] = (self.class.respond_to?(:use_vim_broker?) ? self.class.use_vim_broker? : ManageIQ::Providers::Vmware::InfraManager.use_vim_broker?) if options[:fault_tolerant] && !options.has_key?(:use_broker)
     options[:check_broker_worker] = !!options[:use_broker] unless options.has_key?(:check_broker_worker)
     if options[:check_broker_worker] && !MiqVimBrokerWorker.available?
-      msg = "#{log_header} Broker Worker is not available"
-      $log.error(msg) if $log
+      msg = "Broker Worker is not available"
+      _log.error(msg) if $log
       raise MiqException::MiqVimBrokerUnavailable, msg
     end
     options[:vim_broker_drb_port] ||= MiqVimBrokerWorker.method(:drb_port) if options[:use_broker]
@@ -32,14 +30,13 @@ module VimConnectMixin
 
   def with_provider_connection(options = {})
     raise "no block given" unless block_given?
-    log_header = "MIQ(#{self.class.name}.with_provider_connection)"
-    $log.info("#{log_header} Connecting through #{self.class.name}: [#{self.name}]")
+    _log.info("Connecting through #{self.class.name}: [#{self.name}]")
     begin
       vim = self.connect(options)
       yield vim
     rescue MiqException::MiqVimBrokerUnavailable => err
       MiqVimBrokerWorker.broker_unavailable(err.class.name, err.to_s)
-      $log.warn("#{log_header} Reported the broker unavailable")
+      _log.warn("Reported the broker unavailable")
       raise
     ensure
       vim.try(:disconnect) rescue nil

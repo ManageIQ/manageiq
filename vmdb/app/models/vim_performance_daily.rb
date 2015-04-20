@@ -111,10 +111,8 @@ class VimPerformanceDaily < MetricRollup
   def self.process_hourly_for_one_day(recs, options = {})
     return [] if recs.blank?
 
-    log_header = "MIQ(VimPerformanceDaily.process_hourly_for_one_day)"
-
     process_only_cols(options)
-    $log.debug("#{log_header} Limiting cols to: #{options[:only_cols].inspect}")
+    _log.debug("Limiting cols to: #{options[:only_cols].inspect}")
 
     result = {}
     counts = {}
@@ -141,7 +139,7 @@ class VimPerformanceDaily < MetricRollup
 
       if tp && tp.ts_in_profile?(perf.timestamp) == false
         # Save timestamp and info cols for daily row but don't aggregate any values
-        $log.debug("#{log_header} Timestamp: [#{perf.timestamp.in_time_zone(tz)}] is outside of time profile: [#{tp.description}]")
+        _log.debug("Timestamp: [#{perf.timestamp.in_time_zone(tz)}] is outside of time profile: [#{tp.description}]")
         next
       end
 
@@ -199,7 +197,7 @@ class VimPerformanceDaily < MetricRollup
           result[key][c] = result[key][c].round if self.columns_hash[c.to_s].type == :integer && !result[key][c].nil?
         }
       else
-        $log.debug("#{log_header} Daily Timestamp: [#{ts}] is outside of time profile: [#{tp.description}]")
+        _log.debug("Daily Timestamp: [#{ts}] is outside of time profile: [#{tp.description}]")
       end
 
       results.push(result[key].merge(

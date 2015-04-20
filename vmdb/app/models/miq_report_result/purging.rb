@@ -50,8 +50,7 @@ module MiqReportResult::Purging
     end
 
     def purge_by_remaining(remaining, window = nil, &block)
-      log_header = "MIQ(#{self.name}.purge)"
-      $log.info("#{log_header} Purging report results older than last #{remaining} results...")
+      _log.info("Purging report results older than last #{remaining} results...")
 
       window ||= purge_window_size
       total = 0
@@ -60,7 +59,7 @@ module MiqReportResult::Purging
         total += purge_in_batches(conditions, window, total, &block)
       end
 
-      $log.info("#{log_header} Purging report results older than last #{remaining} results...Complete - Deleted #{total} records")
+      _log.info("Purging report results older than last #{remaining} results...Complete - Deleted #{total} records")
     end
 
     def purge_counts_for_remaining(remaining)
@@ -87,14 +86,13 @@ module MiqReportResult::Purging
     end
 
     def purge_by_date(older_than, window = nil, &block)
-      log_header = "MIQ(#{self.name}.purge)"
-      $log.info("#{log_header} Purging report results older than [#{older_than}]...")
+      _log.info("Purging report results older than [#{older_than}]...")
 
       window ||= purge_window_size
       conditions = self.arel_table[:created_on].lt(older_than)
       total = purge_in_batches(conditions, window, &block)
 
-      $log.info("#{log_header} Purging report results older than [#{older_than}]...Complete - Deleted #{total} records")
+      _log.info("Purging report results older than [#{older_than}]...Complete - Deleted #{total} records")
     end
 
     #

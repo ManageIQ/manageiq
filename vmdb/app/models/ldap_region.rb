@@ -25,8 +25,6 @@ class LdapRegion < ActiveRecord::Base
   end
 
   def user_search(options)
-    log_header = "LdapRegion#user_search"
-
     results = {}
     ldap_domains.each do |domain|
       next unless domain.is_valid?
@@ -34,7 +32,7 @@ class LdapRegion < ActiveRecord::Base
         users = domain.user_search(options)
         results.merge!(users)
       rescue => err
-        $log.error "#{log_header} Error during user search on domain <#{domain.id}:#{domain.name}>.  Msg:<#{err}>"
+        _log.error "Error during user search on domain <#{domain.id}:#{domain.name}>.  Msg:<#{err}>"
       end
     end
     results

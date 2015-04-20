@@ -1,6 +1,7 @@
 require 'pid_file'
 
 class EvmApplication
+  include Vmdb::NewLogging
 
   def self.start
     if self.server_state == :no_db
@@ -14,9 +15,8 @@ class EvmApplication
       exit
     end
 
-    log_header = "MIQ(EvmApplication.start)"
     puts "Starting EVM..."
-    $log.info("#{log_header} EVM Startup initiated")
+    _log.info("EVM Startup initiated")
 
     MiqServer.kill_all_workers
     rr      = File.expand_path(Rails.root)
@@ -32,18 +32,14 @@ class EvmApplication
   end
 
   def self.stop
-    log_header = "MIQ(EvmApplication.stop)"
-
     puts "Stopping EVM gracefully..."
-    $log.info("#{log_header} EVM Shutdown initiated")
+    _log.info("EVM Shutdown initiated")
     MiqServer.stop(true)
   end
 
   def self.kill
-    log_header = "MIQ(EvmApplication.kill)"
-
     puts "Killing EVM..."
-    $log.info("#{log_header} EVM Kill initiated")
+    _log.info("EVM Kill initiated")
     MiqServer.kill
   end
 

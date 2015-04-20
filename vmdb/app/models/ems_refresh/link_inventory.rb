@@ -119,8 +119,7 @@ module EmsRefresh::LinkInventory
   #
 
   def update_relats(type, prev_relats, new_relats)
-    log_header = "MIQ(#{self.name}.update_relats)"
-    $log.info "#{log_header} Updating #{type.to_s.titleize} relationships."
+    _log.info "Updating #{type.to_s.titleize} relationships."
 
     if new_relats[type].kind_of?(Array) || prev_relats[type].kind_of?(Array)
       # Case where we have a single set of ids
@@ -136,8 +135,6 @@ module EmsRefresh::LinkInventory
   end
 
   def update_relats_by_ids(prev_ids, new_ids, disconnect_proc, connect_proc)
-    log_header = "MIQ(#{self.name}.update_relats_by_ids)"
-
     common = prev_ids & new_ids unless prev_ids.nil? || new_ids.nil?
     unless common.nil?
       prev_ids -= common
@@ -149,7 +146,7 @@ module EmsRefresh::LinkInventory
         begin
           disconnect_proc.call(p)
         rescue => err
-          $log.error "#{log_header} An error occurred while disconnecting id [#{p}]: #{err}"
+          _log.error "An error occurred while disconnecting id [#{p}]: #{err}"
           $log.log_backtrace(err)
         end
       end
@@ -160,7 +157,7 @@ module EmsRefresh::LinkInventory
         begin
           connect_proc.call(n)
         rescue => err
-          $log.error "#{log_header} An error occurred while connecting id [#{n}]: #{err}"
+          _log.error "An error occurred while connecting id [#{n}]: #{err}"
           $log.log_backtrace(err)
         end
       end

@@ -600,16 +600,15 @@ class VmOrTemplate < ActiveRecord::Base
 
   # TODO: Vmware specific
   def self.find_by_full_location(path)
-    log_header = "MIQ(#{self.name}.find_by_full_location)"
     return nil if path.blank?
     vm_hash = {}
     begin
       vm_hash[:name], vm_hash[:location], vm_hash[:store_type] = Repository.parse_path(path)
     rescue => err
-      $log.warn("#{log_header} Warning: [#{err.message}]")
+      _log.warn("Warning: [#{err.message}]")
       vm_hash[:location] = location2uri(path)
     end
-    $log.info("#{log_header} vm_hash [#{vm_hash.inspect}]")
+    _log.info("vm_hash [#{vm_hash.inspect}]")
     store = Storage.find_by_name(vm_hash[:name])
     return nil unless store
     vmobj = VmOrTemplate.find_by_location_and_storage_id(vm_hash[:location], store.id)
@@ -1468,8 +1467,6 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def reconfigured_hardware_value?(options)
-    log_header = "MIQ(#{self.class.name}##{__method__})"
-
     attr = options[:hdw_attr]
     raise ":hdw_attr required" if attr.nil?
 
@@ -1478,14 +1475,14 @@ class VmOrTemplate < ActiveRecord::Base
 
     current_state, prev_state = drift_states.order("timestamp DESC").limit(2)
     if current_state.nil? || prev_state.nil?
-      $log.info("#{log_header} Unable to evaluate, not enough state data available")
+      _log.info("Unable to evaluate, not enough state data available")
       return false
     end
 
     current_value  = current_state.data_obj.hardware.send(attr).to_i
     previous_value = prev_state.data_obj.hardware.send(attr).to_i
     result         = current_value.send(operator, previous_value)
-    $log.info("#{log_header} Evaluate: (Current: #{current_value} #{operator} Previous: #{previous_value}) = #{result}")
+    _log.info("Evaluate: (Current: #{current_value} #{operator} Previous: #{previous_value}) = #{result}")
 
     result
   end
@@ -1755,13 +1752,12 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def self.scan_by_property(property, value, options={})
-    log_header = "MIQ(#{self.name}.scan_vm_by_property)"
-    $log.info "#{log_header} scan_vm_by_property called with property:[#{property}] value:[#{value}]"
+    _log.info "scan_vm_by_property called with property:[#{property}] value:[#{value}]"
     case property
     when "ipaddress"
       vms_by_ipaddress(value) do |vm|
         if vm.state == "on"
-          $log.info "#{log_header} Initiating VM scan for [#{vm.id}:#{vm.name}]"
+          _log.info "Initiating VM scan for [#{vm.id}:#{vm.name}]"
           vm.scan
         end
       end

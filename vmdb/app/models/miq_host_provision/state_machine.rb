@@ -64,13 +64,12 @@ module MiqHostProvision::StateMachine
   end
 
   def delete_pxe_configuration_files
-    log_header = "MIQ(#{self.class.name}#delete_pxe_configuration_files)"
     if get_option(:stateless)
       message = "Stateless, NOT deleting PXE and Customization Files on PXE Server"
-      $log.info("#{log_header} #{message} #{for_destination}")
+      _log.info("#{message} #{for_destination}")
     else
       message = "Deleting PXE and Customization Files on PXE Server"
-      $log.info("#{log_header} #{message} #{for_destination}")
+      _log.info("#{message} #{for_destination}")
       update_and_notify_parent(:message => message)
       delete_pxe_files
     end

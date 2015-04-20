@@ -173,8 +173,6 @@ module MiqProvision::Automate
   end
 
   def do_pre_provision
-    log_header = "MIQ(#{self.class.name}.do_pre_provision)"
-
     event_name = 'vm_provision_preprocessing'
     ws = call_automate_event(event_name, false)
     reload
@@ -207,7 +205,7 @@ module MiqProvision::Automate
           :deliver_on  => Time.now.utc + interval
         )
         message = "Request [#{ae_message}] has been re-queued for processing in #{interval} seconds"
-        $log.info("#{log_header} #{message}")
+        _log.info("#{message}")
         update_and_notify_parent(:state => "queued", :status => "Ok", :message => message)
         return false
       end

@@ -1,6 +1,5 @@
 module MiqProvisionVmwareViaPxe::Cloning
   def build_config_disk_spec(vmcs)
-    log_header = "MIQ(#{self.class.name}.build_config_disk_spec)"
     get_disks.each do |disk|
       remove_disk(vmcs, disk)
       new_disk = copy_disk_details(disk)
@@ -20,9 +19,8 @@ module MiqProvisionVmwareViaPxe::Cloning
   end
 
   def remove_disk(vmcs, disk)
-    log_header = "MIQ(#{self.class.name}.remove_disk)"
     add_device_config_spec(vmcs, VirtualDeviceConfigSpecOperation::Remove) do |vdcs|
-      $log.info "#{log_header} Deleting disk device with Device Name:<#{disk.fetch_path('deviceInfo', 'label')}>"
+      _log.info "Deleting disk device with Device Name:<#{disk.fetch_path('deviceInfo', 'label')}>"
       vdcs.device = disk
     end
   end

@@ -58,8 +58,7 @@ class EmsRedhat < EmsInfra
 
   def with_provider_connection(options = {})
     raise "no block given" unless block_given?
-    log_header = "MIQ(#{self.class.name}.with_provider_connection)"
-    $log.info("#{log_header} Connecting through #{self.class.name}: [#{self.name}]")
+    _log.info("Connecting through #{self.class.name}: [#{self.name}]")
     begin
       connection = self.connect(options)
       yield connection
@@ -94,8 +93,6 @@ class EmsRedhat < EmsInfra
   end
 
   def verify_credentials_for_rhevm_metrics(options = {})
-    log_header = "MIQ(#{self.class.name}.verify_credentials_for_rhevm_metrics)"
-
     begin
       require 'ovirt_metrics'
       OvirtMetrics.connect(rhevm_metrics_connect_options(options))
@@ -111,7 +108,7 @@ class EmsRedhat < EmsInfra
         end
       end
 
-      $log.warn("#{log_header} PGError: #{message}")
+      _log.warn("PGError: #{message}")
       raise MiqException::MiqEVMLoginError, message
     rescue Exception => e
       raise MiqException::MiqEVMLoginError, e.to_s

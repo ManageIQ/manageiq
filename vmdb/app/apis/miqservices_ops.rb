@@ -257,13 +257,12 @@ module MiqservicesOps
   end
 
   def self.reconnect_to_db
-    log_header = "MIQ(MiqservicesOps.reconnect_to_db)"
     begin
-      $log.info("#{log_header} Reconnecting to database after error...")
+      _log.info("Reconnecting to database after error...")
       ActiveRecord::Base.connection.reconnect!
-      $log.info("#{log_header} Reconnecting to database after error...Successful")
+      _log.info("Reconnecting to database after error...Successful")
     rescue Exception => err
-      $log.error("#{log_header} Error during reconnect: #{err.message}")
+      _log.error("Error during reconnect: #{err.message}")
     end
   end
 end

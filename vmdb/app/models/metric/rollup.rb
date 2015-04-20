@@ -286,13 +286,12 @@ module Metric::Rollup
   #
 
   def self.perf_rollup_gap(start_time, end_time, interval_name, time_profile_id = nil)
-    log_header = "MIQ(#{self.name}.perf_rollup_gap)"
     targets = self.find_distinct_resources
     return if targets.empty?
 
-    $log.info "#{log_header} Queueing #{interval_name} rollups for range: [#{start_time} - #{end_time}]..."
+    _log.info "Queueing #{interval_name} rollups for range: [#{start_time} - #{end_time}]..."
     targets.each { |t| t.perf_rollup_range_queue(start_time, end_time, interval_name, time_profile_id, MiqQueue::LOW_PRIORITY) }
-    $log.info "#{log_header} Queueing #{interval_name} rollups for range: [#{start_time} - #{end_time}]...Complete"
+    _log.info "Queueing #{interval_name} rollups for range: [#{start_time} - #{end_time}]...Complete"
   end
 
   def self.perf_rollup_gap_queue(start_time, end_time, interval_name, time_profile_id = nil)

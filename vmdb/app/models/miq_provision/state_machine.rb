@@ -58,9 +58,7 @@ module MiqProvision::StateMachine
   end
 
   def post_create_destination
-    log_header = "MIQ(#{self.class.name}#post_create_destination)"
-
-    $log.info "#{log_header} Destination #{destination.class.base_model.name} ID=#{destination.id}, Name=#{destination.name}"
+    _log.info "Destination #{destination.class.base_model.name} ID=#{destination.id}, Name=#{destination.name}"
 
     set_description(destination, get_option(:vm_description))
     set_ownership(destination, get_owner)

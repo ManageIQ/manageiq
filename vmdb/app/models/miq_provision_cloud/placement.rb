@@ -8,13 +8,11 @@ module MiqProvisionCloud::Placement
   private
 
   def automatic_placement
-    log_header = "MIQ(#{self.class.name}.automatic_placement)"
-
-    $log.info("#{log_header} Getting most suitable availability_zone for new instance...")
+    _log.info("Getting most suitable availability_zone for new instance...")
     availability_zone = get_most_suitable_availability_zone
 
     options[:placement_availability_zone] = [availability_zone.try(:id), availability_zone.try(:name)]
-    $log.info("#{log_header} Getting most suitable availability_zone for new instance...Complete, Availability Zone Id: [#{availability_zone.try(:id)}], Name: [#{availability_zone.try(:name)}]")
+    _log.info("Getting most suitable availability_zone for new instance...Complete, Availability Zone Id: [#{availability_zone.try(:id)}], Name: [#{availability_zone.try(:name)}]")
     availability_zone
   end
 

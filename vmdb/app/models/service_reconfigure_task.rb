@@ -18,10 +18,9 @@ class ServiceReconfigureTask < MiqRequestTask
   end
 
   def deliver_to_automate(req_type = request_type, zone = nil)
-    log_header = "MIQ(#{self.class.name}.deliver_to_automate)"
     task_check_on_execute
 
-    $log.info("#{log_header} Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
+    _log.info("Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
     dialog_values = options[:dialog] || {}
 
     ra = source.service_template.resource_actions.find_by_action('Reconfigure')
@@ -54,9 +53,7 @@ class ServiceReconfigureTask < MiqRequestTask
   end
 
   def after_ae_delivery(ae_result)
-    log_header = "MIQ(#{self.class.name}.after_ae_delivery)"
-
-    $log.info("#{log_header} ae_result=#{ae_result.inspect}")
+    _log.info("ae_result=#{ae_result.inspect}")
 
     return if ae_result == 'retry'
     return if miq_request.state == 'finished'

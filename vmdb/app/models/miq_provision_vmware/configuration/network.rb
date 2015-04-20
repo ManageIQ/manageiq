@@ -1,13 +1,11 @@
 module MiqProvisionVmware::Configuration::Network
   def build_config_network_adapters(vmcs)
-    log_header = "MIQ(#{self.class.name}.build_config_network_adapters)"
-
     requested_networks = normalize_network_adapter_settings
     template_networks  = get_network_adapters
 
     if requested_networks.blank?
       options[:requested_network_adapter_count] = template_networks.length
-      $log.warn "#{log_header} VLan options is nil.  VLan settings will be inherited from the template."
+      _log.warn "VLan options is nil.  VLan settings will be inherited from the template."
     else
       options[:requested_network_adapter_count] = requested_networks.length
       requested_networks.each_with_index do |net, idx|
@@ -30,10 +28,9 @@ module MiqProvisionVmware::Configuration::Network
   end
 
   def normalize_network_adapter_settings
-    log_header = "MIQ(#{self.class.name}.normalize_network_adapter_settings)"
     if options[:networks].blank?
       vlan = get_option(:vlan)
-      $log.info("#{log_header} vlan: #{vlan.inspect}")
+      _log.info("vlan: #{vlan.inspect}")
       unless vlan.nil?
         options[:networks] = [] << net = {:network => vlan, :mac_address => get_option_last(:mac_address)}
         if vlan[0, 4] == 'dvs_'
@@ -51,12 +48,10 @@ module MiqProvisionVmware::Configuration::Network
   end
 
   def build_config_spec_vlan(network, vnicDev, vmcs)
-    log_header = "MIQ(#{self.class.name}.build_config_spec_vlan)"
-
     operation = vnicDev.nil? ? VirtualDeviceConfigSpecOperation::Add : VirtualDeviceConfigSpecOperation::Edit
     add_device_config_spec(vmcs, operation) do |vdcs|
       vdcs.device = vnicDev || create_vlan_device(network)
-      $log.info "#{log_header} Setting target network device to Device Name:<#{network[:network]}>  Device:<#{vdcs.device.inspect}>"
+      _log.info "Setting target network device to Device Name:<#{network[:network]}>  Device:<#{vdcs.device.inspect}>"
       vdcs.device.backing.deviceName = network[:network]
       #
       # Manually assign MAC address to target VM.
@@ -70,13 +65,11 @@ module MiqProvisionVmware::Configuration::Network
   end
 
   def build_config_spec_dvs(network, vnicDev, vmcs)
-    log_header = "MIQ(#{self.class.name}.build_config_spec_dvs)"
-
     source.with_provider_connection do |vim|
       operation = vnicDev.nil? ? VirtualDeviceConfigSpecOperation::Add : VirtualDeviceConfigSpecOperation::Edit
       add_device_config_spec(vmcs, operation) do |vdcs|
         vdcs.device = vnicDev || create_vlan_device(network)
-        $log.info "#{log_header} Setting target network device to Device Name:<#{network[:network]}>  Device:<#{vdcs.device.inspect}>"
+        _log.info "Setting target network device to Device Name:<#{network[:network]}>  Device:<#{vdcs.device.inspect}>"
 
         #
         # Change the port group of the target VM.
@@ -91,7 +84,7 @@ module MiqProvisionVmware::Configuration::Network
             dpg = vim.applyFilter(dvs.distributedVirtualPortgroup, 'uplinkPortgroup' => 'false').detect { |nupg| URI.decode(nupg.portgroupName) == network[:network] }
 
             raise MiqException::MiqProvisionError, "Port group [#{network[:network]}] is not available on target host [#{dest_host.name}]" if dpg.nil?
-            $log.info("#{log_header} portgroupName: #{dpg.portgroupName}, portgroupKey: #{dpg.portgroupKey}, switchUuid: #{dpg.switchUuid}")
+            _log.info("portgroupName: #{dpg.portgroupName}, portgroupKey: #{dpg.portgroupKey}, switchUuid: #{dpg.switchUuid}")
 
             dvspc.switchUuid   = dpg.switchUuid
             dvspc.portgroupKey = dpg.portgroupKey
@@ -135,9 +128,8 @@ module MiqProvisionVmware::Configuration::Network
   end
 
   def build_config_spec_delete_existing_vlan(vmcs, net_device)
-    log_header = "MIQ(#{self.class.name}.build_config_spec_delete_existing_vlan)"
     add_device_config_spec(vmcs, VirtualDeviceConfigSpecOperation::Remove) do |vdcs|
-      $log.info "#{log_header} Deleting network device with Device Name:<#{net_device.fetch_path('deviceInfo', 'label')}>"
+      _log.info "Deleting network device with Device Name:<#{net_device.fetch_path('deviceInfo', 'label')}>"
       vdcs.device    = net_device
     end
   end

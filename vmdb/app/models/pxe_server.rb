@@ -71,8 +71,7 @@ class PxeServer < ActiveRecord::Base
   end
 
   def sync_pxe_images
-    log_header = "MIQ(#{self.class.name}#sync_pxe_images)"
-    $log.info("#{log_header} Synchronizing PXE images on PXE Server [#{self.name}]...")
+    _log.info("Synchronizing PXE images on PXE Server [#{self.name}]...")
 
     stats = {:adds => 0, :updates => 0, :deletes => 0}
     current = self.pxe_images.where(:pxe_menu_id => nil).index_by { |i| [i.path, i.name] }
@@ -93,7 +92,7 @@ class PxeServer < ActiveRecord::Base
           incoming = image_list.group_by { |h| h[:label] }
           incoming.each_key do |name|
             array = incoming[name]
-            $log.warn("#{log_header} duplicate name <#{name}> in file <#{relative_path}> on PXE Server <#{self.name}>") if array.length > 1
+            _log.warn("duplicate name <#{name}> in file <#{relative_path}> on PXE Server <#{self.name}>") if array.length > 1
             incoming[name] = array.first
           end
 
@@ -111,7 +110,7 @@ class PxeServer < ActiveRecord::Base
           end
         end
       rescue => err
-        $log.error("#{log_header} Synchronizing PXE images on PXE Server [#{self.name}]: #{err.class.name}: #{err}")
+        _log.error("Synchronizing PXE images on PXE Server [#{self.name}]: #{err.class.name}: #{err}")
         $log.log_backtrace(err)
       end
     end
@@ -119,14 +118,13 @@ class PxeServer < ActiveRecord::Base
     stats[:deletes] = current.length
     self.pxe_images.delete(current.values) unless current.empty?
 
-    $log.info("#{log_header} Synchronizing PXE images on PXE Server [#{self.name}]... Complete - #{stats.inspect}")
+    _log.info("Synchronizing PXE images on PXE Server [#{self.name}]... Complete - #{stats.inspect}")
   end
 
   def sync_windows_images
     return if self.windows_images_directory.nil?
 
-    log_header = "MIQ(#{self.class.name}#sync_windows_images)"
-    $log.info("#{log_header} Synchronizing Windows images on PXE Server [#{self.name}]...")
+    _log.info("Synchronizing Windows images on PXE Server [#{self.name}]...")
 
     stats = {:adds => 0, :updates => 0, :deletes => 0}
     current = self.windows_images.index_by { |i| [i.path, i.index] }
@@ -154,7 +152,7 @@ class PxeServer < ActiveRecord::Base
           end
         end
       rescue => err
-        $log.error("#{log_header} Synchronizing Windows images on PXE Server [#{self.name}]: #{err.class.name}: #{err}")
+        _log.error("Synchronizing Windows images on PXE Server [#{self.name}]: #{err.class.name}: #{err}")
         $log.log_backtrace(err)
       end
     end
@@ -162,7 +160,7 @@ class PxeServer < ActiveRecord::Base
     stats[:deletes] = current.length
     self.windows_images.delete(current.values) unless current.empty?
 
-    $log.info("#{log_header} Synchronizing Windows images on PXE Server [#{self.name}]...Complete - #{stats.inspect}")
+    _log.info("Synchronizing Windows images on PXE Server [#{self.name}]...Complete - #{stats.inspect}")
   end
 
   def read_file(filename)

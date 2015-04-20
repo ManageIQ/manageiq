@@ -40,24 +40,22 @@ module Metric::Capture
   #
 
   def self.perf_capture_health_check(zone = nil)
-    log_header = "MIQ(#{self.name}.perf_capture_health_check)"
     zone ||= MiqServer.my_server.zone(true)
     q_items = MiqQueue.select("created_on, args").where(:state => "ready", :role => "ems_metrics_collector", :method_name => "perf_capture", :zone => zone.name).order("created_on ASC")
 
     items_by_interval = q_items.group_by { |i| i.args.first }
     items_by_interval.reverse_merge!("realtime" => [], "hourly" => [], "historical" => [])
     items_by_interval.each do |interval, items|
-      msg = "#{log_header} #{items.length} #{interval.inspect} captures on the queue for zone [#{zone.name}]"
+      msg = "#{items.length} #{interval.inspect} captures on the queue for zone [#{zone.name}]"
       msg << " - oldest: [#{items.first.created_on.utc.iso8601}], recent: [#{items.last.created_on.utc.iso8601}]" if items.length > 0
-      $log.info(msg)
+      _log.info(msg)
     end
   end
 
   def self.perf_capture_timer(zone = nil)
     self.perf_capture_health_check(zone)
 
-    log_header = "MIQ(#{self.name}.perf_capture_timer)"
-    $log.info "#{log_header} Queueing performance capture..."
+    _log.info "Queueing performance capture..."
 
     targets = Metric::Targets.capture_targets(zone)
 
@@ -101,7 +99,7 @@ module Metric::Capture
           :interval => "realtime"
         }
       )
-      $log.info "#{log_header} Created task id: [#{task.id}] for: [#{pkey}] with targets: #{targets_by_rollup_parent[pkey].inspect} for time range: [#{task_start_time} - #{task_end_time}]"
+      _log.info "Created task id: [#{task.id}] for: [#{pkey}] with targets: #{targets_by_rollup_parent[pkey].inspect} for time range: [#{task_start_time} - #{task_end_time}]"
       h[pkey] = task
       h
     end
@@ -130,7 +128,7 @@ module Metric::Capture
     # Purge tasks older than 4 hours
     MiqTask.delete_older(4.hours.ago.utc, "name LIKE 'Performance rollup for %'")
 
-    $log.info "#{log_header} Queueing performance capture...Complete"
+    _log.info "Queueing performance capture...Complete"
   end
 
   def self.perf_target_to_interval_name(target)
@@ -141,13 +139,12 @@ module Metric::Capture
   end
 
   def self.perf_capture_gap(start_time, end_time, zone = nil)
-    log_header = "MIQ(#{self.name}.perf_capture_gap)"
-    $log.info "#{log_header} Queueing performance capture for range: [#{start_time} - #{end_time}]..."
+    _log.info "Queueing performance capture for range: [#{start_time} - #{end_time}]..."
 
     targets = Metric::Targets.capture_targets(zone, :exclude_storages => true)
     targets.each { |target| target.perf_capture_queue('historical', :start_time => start_time, :end_time => end_time) }
 
-    $log.info "#{log_header} Queueing performance capture for range: [#{start_time} - #{end_time}]...Complete"
+    _log.info "Queueing performance capture for range: [#{start_time} - #{end_time}]...Complete"
   end
 
   def self.perf_capture_gap_queue(start_time, end_time, zone = nil)

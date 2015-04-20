@@ -10,13 +10,12 @@ module AlertMixin
 
     options.reverse_merge!({:time_threshold => 10.days, :freq_threshold => 2})
 
-    log_header = "MIQ(AlertMixin-event_log_threshold?) [#{self.class.name}]"
-    $log.info("#{log_header} options: #{options.inspect}")
+    _log.info("options: #{options.inspect}")
 
     cond, sel = build_conditions_and_selects(options)
     logs = self.operating_system.nil? ? [] : self.operating_system.event_logs.where(cond).select(sel)
 
-    $log.info("#{log_header} Found [#{logs.length}], conditions: #{cond.inspect}")
+    _log.info("Found [#{logs.length}], conditions: #{cond.inspect}")
 
     logs = case options[:message_filter_type]
     when "STARTS WITH";          logs.find_all {|l| l.message.to_s.starts_with?(options[:message_filter_value])}
@@ -27,7 +26,7 @@ module AlertMixin
       logs
     end
 
-    $log.info("#{log_header} After filtering: [#{logs.length}], filter: #{options[:message_filter_type]} #{options[:message_filter_value]}...Checking freq_threshold: #{options[:freq_threshold]}")
+    _log.info("After filtering: [#{logs.length}], filter: #{options[:message_filter_type]} #{options[:message_filter_value]}...Checking freq_threshold: #{options[:freq_threshold]}")
     logs.length >= options[:freq_threshold].to_i
   end
 

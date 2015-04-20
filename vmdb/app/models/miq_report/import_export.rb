@@ -10,7 +10,6 @@ module MiqReport::ImportExport
         raise "Incorrect format, only policy records can be imported."
       end
 
-      log_header = "MIQ(#{self.name}.#{__method__})"
       user = User.find_by_userid(options[:userid])
       report.merge!("miq_group_id" => user.current_group_id, "user_id" => user.id)
 
@@ -40,11 +39,11 @@ module MiqReport::ImportExport
         rep = MiqReport.new(report)
         result = {:message => "Imported Report: [#{report["name"]}]", :level => :info, :status => :add}
       end
-      $log.info("#{log_header} #{msg}")
+      _log.info("#{msg}")
 
       if options[:save] && result[:status].in?([:add, :update]) 
         rep.save!
-        $log.info("#{log_header} - Completed.")
+        _log.info("- Completed.")
       end
 
       return rep, result

@@ -100,16 +100,15 @@ class Service < ActiveRecord::Base
   end
 
   def process_group_action(action, group_idx, direction)
-    log_header = "MIQ(#{self.class.name}#process_group_action)"
     self.each_group_resource(group_idx) do |svc_rsc|
       begin
         rsc = svc_rsc.resource
         rsc_name =  "#{rsc.class.name}:#{rsc.id}" + (rsc.respond_to?(:name) ? ":#{rsc.name}" : "")
         if rsc.respond_to?(action)
-          $log.info "#{log_header} Processing action <#{action}> for Service:<#{self.name}:#{self.id}>, RSC:<#{rsc_name}}> in Group Idx:<#{group_idx}>"
+          _log.info "Processing action <#{action}> for Service:<#{self.name}:#{self.id}>, RSC:<#{rsc_name}}> in Group Idx:<#{group_idx}>"
           rsc.send(action)
         else
-          $log.info "#{log_header} Skipping action <#{action}> for Service:<#{self.name}:#{self.id}>, RSC:<#{rsc.class.name}:#{rsc.id}> in Group Idx:<#{group_idx}>"
+          _log.info "Skipping action <#{action}> for Service:<#{self.name}:#{self.id}>, RSC:<#{rsc.class.name}:#{rsc.id}> in Group Idx:<#{group_idx}>"
         end
       rescue => err
         $log.error "Error while processing Service:<#{self.name}> Group Idx:<#{group_idx}>  Resource<#{rsc_name}>.  Message:<#{err}>"

@@ -343,9 +343,8 @@ class Host < ActiveRecord::Base
   end
 
   def run_ipmi_command(verb)
-    log_header = "MIQ(Host.run_ipmi_command)"
     require 'miq-ipmi'
-    $log.info("#{log_header} Invoking [#{verb}] for Host: [#{self.name}], IPMI Address: [#{self.ipmi_address}], IPMI Username: [#{self.authentication_userid(:ipmi)}]")
+    _log.info("Invoking [#{verb}] for Host: [#{self.name}], IPMI Address: [#{self.ipmi_address}], IPMI Username: [#{self.authentication_userid(:ipmi)}]")
     ipmi = MiqIPMI.new(self.ipmi_address, *self.auth_user_pwd(:ipmi))
     ipmi.send(verb)
   end
@@ -372,17 +371,15 @@ class Host < ActiveRecord::Base
   end
 
   def reset
-    log_header = "MIQ(Host.reset)"
     msg = validate_reset
     if msg[:available]
       ipmi_power_reset unless policy_prevented?("request_host_reset")
     else
-      $log.warn("#{log_header} Cannot stop because <#{msg[:message]}>")
+      _log.warn("Cannot stop because <#{msg[:message]}>")
     end
   end
 
   def start
-    log_header = "MIQ(Host.start)"
     if validate_start[:available] && self.power_state == 'standby' && self.respond_to?(:vim_power_up_from_standby)
       vim_power_up_from_standby unless policy_prevented?("request_host_start")
     else
@@ -392,109 +389,100 @@ class Host < ActiveRecord::Base
         if pstate == 'off'
           ipmi_power_on unless policy_prevented?("request_host_start")
         else
-          $log.warn("#{log_header} Non-Startable IPMI power state = <#{pstate.inspect}>")
+          _log.warn("Non-Startable IPMI power state = <#{pstate.inspect}>")
         end
       else
-        $log.warn("#{log_header} Cannot start because <#{msg[:message]}>")
+        _log.warn("Cannot start because <#{msg[:message]}>")
       end
     end
   end
 
   def stop
-    log_header = "MIQ(Host.stop)"
     msg = validate_stop
     if msg[:available]
       ipmi_power_off unless policy_prevented?("request_host_stop")
     else
-      $log.warn("#{log_header} Cannot stop because <#{msg[:message]}>")
+      _log.warn("Cannot stop because <#{msg[:message]}>")
     end
   end
 
   def standby
-    log_header = "MIQ(Host.standby)"
     msg = validate_standby
     if msg[:available]
       if self.power_state == 'on' && self.respond_to?(:vim_power_down_to_standby)
         vim_power_down_to_standby unless policy_prevented?("request_host_standby")
       else
-        $log.warn("#{log_header} Cannot go into standby mode from power state = <#{self.power_state.inspect}>")
+        _log.warn("Cannot go into standby mode from power state = <#{self.power_state.inspect}>")
       end
     else
-      $log.warn("#{log_header} Cannot go into standby mode because <#{msg[:message]}>")
+      _log.warn("Cannot go into standby mode because <#{msg[:message]}>")
     end
   end
 
   def enter_maint_mode
-    log_header = "MIQ(Host.enter_maint_mode)"
     msg = validate_enter_maint_mode
     if msg[:available]
       if self.power_state == 'on' && self.respond_to?(:vim_enter_maintenance_mode)
         vim_enter_maintenance_mode unless policy_prevented?("request_host_enter_maintenance_mode")
       else
-        $log.warn("#{log_header} Cannot enter maintenance mode from power state = <#{self.power_state.inspect}>")
+        _log.warn("Cannot enter maintenance mode from power state = <#{self.power_state.inspect}>")
       end
     else
-      $log.warn("#{log_header} Cannot enter maintenance mode because <#{msg[:message]}>")
+      _log.warn("Cannot enter maintenance mode because <#{msg[:message]}>")
     end
   end
 
   def exit_maint_mode
-    log_header = "MIQ(Host.exit_maint_mode)"
     msg = validate_enter_maint_mode
     if msg[:available] && self.respond_to?(:vim_exit_maintenance_mode)
       vim_exit_maintenance_mode unless policy_prevented?("request_host_exit_maintenance_mode")
     else
-      $log.warn("#{log_header} Cannot exit maintenance mode because <#{msg[:message]}>")
+      _log.warn("Cannot exit maintenance mode because <#{msg[:message]}>")
     end
   end
 
   def shutdown
-    log_header = "MIQ(Host.shutdown)"
     msg = validate_shutdown
     if msg[:available] && self.respond_to?(:vim_shutdown)
       vim_shutdown unless policy_prevented?("request_host_shutdown")
     else
-      $log.warn("#{log_header} Cannot shutdown because <#{msg[:message]}>")
+      _log.warn("Cannot shutdown because <#{msg[:message]}>")
     end
   end
 
   def reboot
-    log_header = "MIQ(Host.reboot)"
     msg = validate_reboot
     if msg[:available] && self.respond_to?(:vim_reboot)
       vim_reboot unless policy_prevented?("request_host_reboot")
     else
-      $log.warn("#{log_header} Cannot reboot because <#{msg[:message]}>")
+      _log.warn("Cannot reboot because <#{msg[:message]}>")
     end
   end
 
   def enable_vmotion
-    log_header = "MIQ(Host.enable_vmotion)"
     msg = validate_enable_vmotion
     if msg[:available] && self.respond_to?(:vim_enable_vmotion)
       vim_enable_vmotion unless policy_prevented?("request_host_enable_vmotion")
     else
-      $log.warn("#{log_header} Cannot enable vmotion because <#{msg[:message]}>")
+      _log.warn("Cannot enable vmotion because <#{msg[:message]}>")
     end
   end
 
   def disable_vmotion
-    log_header = "MIQ(Host.disable_vmotion)"
     msg = validate_disable_vmotion
     if msg[:available] && self.respond_to?(:vim_disable_vmotion)
       vim_disable_vmotion unless policy_prevented?("request_host_disable_vmotion")
     else
-      $log.warn("#{log_header} Cannot disable vmotion because <#{msg[:message]}>")
+      _log.warn("Cannot disable vmotion because <#{msg[:message]}>")
     end
   end
 
   def vmotion_enabled?
-    log_header = "MIQ(Host.vmotion_enabled?)"
     msg = validate_vmotion_enabled?
     if msg[:available] && self.respond_to?(:vim_vmotion_enabled?)
       vim_vmotion_enabled? unless policy_prevented?("request_host_vmotion_enabled")
     else
-      $log.warn("#{log_header} Cannot check if vmotion is enabled because <#{msg[:message]}>")
+      _log.warn("Cannot check if vmotion is enabled because <#{msg[:message]}>")
     end
   end
 
@@ -982,7 +970,6 @@ class Host < ActiveRecord::Base
   end
 
   def detect_discovered_hypervisor(ost, ipaddr)
-    log_header = 'MIQ(Host.detect_discovered_hypervisor)'
     find_method = :find_by_ipaddress
     if ost.hypervisor.include?(:hyperv)
       self.name        = "Microsoft Hyper-V (#{ipaddr})"
@@ -998,14 +985,14 @@ class Host < ActiveRecord::Base
       if self.has_credentials?(:ws)
         begin
           with_provider_connection(:ip => ipaddr) do |vim|
-            $log.info "#{log_header} VIM Information for ESX Host with IP Address: [#{ipaddr}], Information: #{vim.about.inspect}"
+            _log.info "VIM Information for ESX Host with IP Address: [#{ipaddr}], Information: #{vim.about.inspect}"
             self.vmm_product     = vim.about['name'].dup.split(' ').last
             self.vmm_version     = vim.about['version']
             self.vmm_buildnumber = vim.about['build']
             self.name            = "#{vim.about['name']} (#{ipaddr})"
           end
         rescue => err
-          $log.warn "#{log_header} Cannot connect to ESX Host with IP Address: [#{ipaddr}], Username: [#{self.authentication_userid(:ws)}] because #{err.message}"
+          _log.warn "Cannot connect to ESX Host with IP Address: [#{ipaddr}], Username: [#{self.authentication_userid(:ws)}] because #{err.message}"
         end
       end
       self.type = %w(esx esxi).include?(self.vmm_product.to_s.downcase) ? "ManageIQ::Providers::Vmware::InfraManager::HostEsx" : "ManageIQ::Providers::Vmware::InfraManager::Host"
@@ -1034,12 +1021,11 @@ class Host < ActiveRecord::Base
 
   def rediscover(ipaddr, discover_types = [:esx])
     require 'discovery/MiqDiscovery'
-    log_header = 'MIQ(Host.rediscover)'
     ost = OpenStruct.new(:usePing => true, :discover_types => discover_types, :ipaddr => ipaddr)
-    $log.info "#{log_header} Rediscovering Host: #{ipaddr} with types: #{discover_types.inspect}"
+    _log.info "Rediscovering Host: #{ipaddr} with types: #{discover_types.inspect}"
     begin
       MiqDiscovery.scanHost(ost)
-      $log.info "#{log_header} Rediscovering Host: #{ipaddr} raw results: #{self.class.ost_inspect(ost)}"
+      _log.info "Rediscovering Host: #{ipaddr} raw results: #{self.class.ost_inspect(ost)}"
 
       unless ost.hypervisor.empty?
         self.detect_discovered_hypervisor(ost, ipaddr)
@@ -1055,14 +1041,13 @@ class Host < ActiveRecord::Base
 
   def self.discoverHost(options)
     require 'discovery/MiqDiscovery'
-    log_header = 'MIQ(host-discoverHost)'
     ost = OpenStruct.new(Marshal.load(options))
-    $log.info "#{log_header}: Discovering Host: #{self.ost_inspect(ost)}"
+    _log.info "Discovering Host: #{self.ost_inspect(ost)}"
     begin
       MiqDiscovery.scanHost(ost)
 
       unless ost.hypervisor.empty?
-        $log.info "#{log_header}: Discovered: #{self.ost_inspect(ost)}"
+        _log.info "Discovered: #{self.ost_inspect(ost)}"
 
         if [:virtualcenter, :scvmm, :rhevm].any? {|ems_type| ost.hypervisor.include?(ems_type)}
           ExtManagementSystem.create_discovered_ems(ost)
@@ -1097,20 +1082,20 @@ class Host < ActiveRecord::Base
             unless cred.nil? || cred[:userid].blank?
               ipmi = MiqIPMI.new(host.ipmi_address, cred[:userid], cred[:password])
               if ipmi.connected?
-                $log.warn "#{log_header}: IPMI connected to Host:<#{host.ipmi_address}> with User:<#{cred[:userid]}>"
+                _log.warn "IPMI connected to Host:<#{host.ipmi_address}> with User:<#{cred[:userid]}>"
                 host.update_authentication(:ipmi => cred)
                 host.scan
               else
-                $log.warn "#{log_header}: IPMI did not connect to Host:<#{host.ipmi_address}> with User:<#{cred[:userid]}>"
+                _log.warn "IPMI did not connect to Host:<#{host.ipmi_address}> with User:<#{cred[:userid]}>"
               end
             end
           end
 
-          $log.info "#{log_header}: #{host.name} created"
+          _log.info "#{host.name} created"
           AuditEvent.success(:event => "host_created", :target_id => host.id, :target_class => "Host", :message => "#{host.name} created")
         end
       else
-        $log.info "#{log_header}: NOT Discovered: #{self.ost_inspect(ost)}"
+        _log.info "NOT Discovered: #{self.ost_inspect(ost)}"
       end
     rescue => err
       $log.log_backtrace(err)
@@ -1293,7 +1278,6 @@ class Host < ActiveRecord::Base
   end
 
   def refresh_ipmi_power_state
-    log_header = "MIQ(Host.refresh_ipmi_power_state)"
     if self.ipmi_config_valid?
       require 'miq-ipmi'
       address = self.ipmi_address
@@ -1303,16 +1287,15 @@ class Host < ActiveRecord::Base
         if ipmi.connected?
           self.power_state = ipmi.power_state
         else
-          $log.warn("#{log_header} IPMI Login failed due to a bad username or password.")
+          _log.warn("IPMI Login failed due to a bad username or password.")
         end
       else
-        $log.info("#{log_header} IPMI is not available on this Host")
+        _log.info("IPMI is not available on this Host")
       end
     end
   end
 
   def refresh_ipmi
-    log_header = "MIQ(Host.refresh_ipmi)"
     if self.ipmi_config_valid?
       require 'miq-ipmi'
       address = self.ipmi_address
@@ -1331,10 +1314,10 @@ class Host < ActiveRecord::Base
             self.hardware.update_attributes(hw_info)
           end
         else
-          $log.warn("#{log_header} IPMI Login failed due to a bad username or password.")
+          _log.warn("IPMI Login failed due to a bad username or password.")
         end
       else
-        $log.info("#{log_header} IPMI is not available on this Host")
+        _log.info("IPMI is not available on this Host")
       end
     end
   end
@@ -1452,20 +1435,19 @@ class Host < ActiveRecord::Base
   # TODO: Rename this to scan_queue and rename scan_from_queue to scan to match
   #   standard from other places.
   def scan(userid = "system", options={})
-    log_header = "MIQ(Host.scan)"
     log_target = "#{self.class.name} name: [#{self.name}], id: [#{self.id}]"
 
     task = MiqTask.create(:name => "SmartState Analysis for '#{self.name}' ", :userid => userid)
 
-    $log.info("#{log_header} Requesting scan of #{log_target}")
+    _log.info("Requesting scan of #{log_target}")
     begin
       MiqEvent.raise_evm_job_event(self, :type => "scan", :prefix => "request")
     rescue => err
-      $log.warn("#{log_header} Error raising request scan event for #{log_target}: #{err.message}")
+      _log.warn("Error raising request scan event for #{log_target}: #{err.message}")
       return
     end
 
-    $log.info("#{log_header} Queuing scan of #{log_target}")
+    _log.info("Queuing scan of #{log_target}")
     timeout = (VMDB::Config.new("vmdb").config.fetch_path(:host_scan, :queue_timeout) || 20.minutes).to_i_with_method
     cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
     MiqQueue.put(
@@ -1486,26 +1468,25 @@ class Host < ActiveRecord::Base
       task.state_active  if task
     end
 
-    log_header = "MIQ(Host.scan_from_queue)"
     log_target = "#{self.class.name} name: [#{self.name}], id: [#{self.id}]"
 
-    $log.info("#{log_header} Scanning #{log_target}...")
+    _log.info("Scanning #{log_target}...")
 
     task.update_status("Active", "Ok", "Scanning") if task
 
     _dummy, t = Benchmark.realtime_block(:total_time) do
 
       # Firewall Rules and Advanced Settings go through EMS so we don't need Host credentials
-      $log.info("#{log_header} Refreshing Firewall Rules for #{log_target}")
+      _log.info("Refreshing Firewall Rules for #{log_target}")
       task.update_status("Active", "Ok", "Refreshing Firewall Rules") if task
       Benchmark.realtime_block(:refresh_firewall_rules) { self.refresh_firewall_rules }
 
-      $log.info("#{log_header} Refreshing Advanced Settings for #{log_target}")
+      _log.info("Refreshing Advanced Settings for #{log_target}")
       task.update_status("Active", "Ok", "Refreshing Advanced Settings") if task
       Benchmark.realtime_block(:refresh_advanced_settings) { self.refresh_advanced_settings }
 
       if self.ext_management_system.nil?
-        $log.info("#{log_header} Refreshing IPMI information for #{log_target}")
+        _log.info("Refreshing IPMI information for #{log_target}")
         task.update_status("Active", "Ok", "Refreshing IPMI Information") if task
         Benchmark.realtime_block(:refresh_ipmi) { self.refresh_ipmi }
       end
@@ -1523,34 +1504,34 @@ class Host < ActiveRecord::Base
         self.update_ssh_auth_status! if self.respond_to?(:update_ssh_auth_status!)
 
         if self.missing_credentials?
-          $log.warn "#{log_header} No credentials defined for #{log_target}"
+          _log.warn "No credentials defined for #{log_target}"
           task.update_status("Finished", "Warn", "Scanning incomplete due to Credential Issue")  if task
           return
         end
 
         begin
           self.connect_ssh do |ssu|
-            $log.info("#{log_header} Refreshing Patches for #{log_target}")
+            _log.info("Refreshing Patches for #{log_target}")
             task.update_status("Active", "Ok", "Refreshing Patches") if task
             Benchmark.realtime_block(:refresh_patches) { self.refresh_patches(ssu) }
 
-            $log.info("#{log_header} Refreshing Services for #{log_target}")
+            _log.info("Refreshing Services for #{log_target}")
             task.update_status("Active", "Ok", "Refreshing Services") if task
             Benchmark.realtime_block(:refresh_services) { self.refresh_services(ssu) }
 
-            $log.info("#{log_header} Refreshing Linux Packages for #{log_target}")
+            _log.info("Refreshing Linux Packages for #{log_target}")
             task.update_status("Active", "Ok", "Refreshing Linux Packages") if task
             Benchmark.realtime_block(:refresh_linux_packages) { self.refresh_linux_packages(ssu) }
 
-            $log.info("#{log_header} Refreshing User Groups for #{log_target}")
+            _log.info("Refreshing User Groups for #{log_target}")
             task.update_status("Active", "Ok", "Refreshing User Groups") if task
             Benchmark.realtime_block(:refresh_user_groups) { self.refresh_user_groups(ssu) }
 
-            $log.info("#{log_header} Refreshing SSH Config for #{log_target}")
+            _log.info("Refreshing SSH Config for #{log_target}")
             task.update_status("Active", "Ok", "Refreshing SSH Config") if task
             Benchmark.realtime_block(:refresh_ssh_config) { self.refresh_ssh_config(ssu) }
 
-            $log.info("#{log_header} Refreshing FS Files for #{log_target}")
+            _log.info("Refreshing FS Files for #{log_target}")
             task.update_status("Active", "Ok", "Refreshing FS Files") if task
             Benchmark.realtime_block(:refresh_fs_files) { self.refresh_fs_files(ssu) }
 
@@ -1570,24 +1551,24 @@ class Host < ActiveRecord::Base
         end
       end
 
-      $log.info("#{log_header} Refreshing Log information for #{log_target}")
+      _log.info("Refreshing Log information for #{log_target}")
       task.update_status("Active", "Ok", "Refreshing Log Information") if task
       Benchmark.realtime_block(:refresh_logs) { self.refresh_logs }
 
-      $log.info("#{log_header} Saving state for #{log_target}")
+      _log.info("Saving state for #{log_target}")
       task.update_status("Active", "Ok", "Saving Drift State") if task
       Benchmark.realtime_block(:save_driftstate) { self.save_drift_state }
 
       begin
         MiqEvent.raise_evm_job_event(self, :type => "scan", :suffix => "complete")
       rescue => err
-        $log.warn("#{log_header} Error raising complete scan event for #{log_target}: #{err.message}")
+        _log.warn("Error raising complete scan event for #{log_target}: #{err.message}")
       end
 
     end
 
     task.update_status("Finished", "Ok", "Scanning Complete") if task
-    $log.info("#{log_header} Scanning #{log_target}...Complete - Timings: #{t.inspect}")
+    _log.info("Scanning #{log_target}...Complete - Timings: #{t.inspect}")
   end
 
   def ssh_run_script(script)
