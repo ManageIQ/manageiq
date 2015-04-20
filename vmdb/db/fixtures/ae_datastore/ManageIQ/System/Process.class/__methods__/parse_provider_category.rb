@@ -11,6 +11,10 @@ def vm_detect_category(vm)
   vm.cloud ? CLOUD : INFRASTRUCTURE
 end
 
+def orchestration_stack_detect_category(_stack)
+  CLOUD
+end
+
 def miq_request_detect_category(miq_request)
   vm_detect_category(miq_request.source)
 end
@@ -37,9 +41,8 @@ def category_for_key(key)
 end
 
 provider_category = nil
-key_found = %w(vm miq_request miq_provision miq_host_provision vm_migrate_task platform_category).detect do |key|
-  provider_category = category_for_key(key)
-end
+keys = %w(vm orchestration_stack miq_request miq_provision miq_host_provision vm_migrate_task platform_category)
+key_found = keys.detect { |key| provider_category = category_for_key(key) }
 
 $evm.root['ae_provider_category'] = provider_category || UNKNOWN
 $evm.log("info", "Parse Provider Category Key: #{key_found.inspect}  Value: #{$evm.root['ae_provider_category']}")
