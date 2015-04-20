@@ -523,7 +523,7 @@ module VmdbwsOps
     log_header = "vmdbws.get#{klass.name}List"
     #puts "getKlassList klass: #{klass} parentKlass: #{parentKlass} parentGuid: #{parentGuid}"
     t0 = Time.now
-    if ["*", "all", "none"].include?(parentGuid.downcase)
+    if ["", "*", "all", "none"].include?(parentGuid.to_s.strip.downcase)
       $log.info "#{log_header}: enter, selection: <#{parentGuid}>"
       result = klass.find(:all)
     else
@@ -541,7 +541,7 @@ module VmdbwsOps
   def getKlassListbyId(klass, parentKlass=nil, parentId="*")
     log_header = "vmdbws.get#{klass.name}ListbyId"
     t0 = Time.now
-    if ["*", "all", "none"].include?(parentId.downcase)
+    if ["", "*", "all", "none"].include?(parentId.to_s.strip.downcase)
       $log.info "#{log_header}: enter, selection: <#{parentId}>"
       result = klass.find(:all)
     else
