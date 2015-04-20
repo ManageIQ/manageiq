@@ -1,5 +1,5 @@
 class DialogFieldTextBox < DialogField
-  AUTOMATE_VALUE_FIELDS = %w(protected required validator_rule validator_type)
+  AUTOMATE_VALUE_FIELDS = %w(protected required validator_rule validator_type read_only)
 
   def value
     @value = values_from_automate if dynamic && @value.blank?
