@@ -12,3 +12,5 @@ object:
       value: redhat_best_fit_cluster
   - vmware:
       value: vmware_best_fit_least_utilized
+  - microsoft:
+      value: microsoft_best_fit_least_utilized
