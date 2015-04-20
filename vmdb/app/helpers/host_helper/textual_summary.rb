@@ -66,9 +66,58 @@ module HostHelper::TextualSummary
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
+  def textual_group_openstack_status
+    return nil unless @record.kind_of?(HostOpenstackInfra)
+    ret = textual_generate_openstack_status
+
+    ret.blank? ? nil : ret
+  end
+
   #
   # Items
   #
+
+  def textual_generate_openstack_status
+    @record.host_service_group_openstacks.collect do |x|
+      running_count       = x.running_system_services.count
+      failed_count        = x.failed_system_services.count
+      all_count           = x.system_services.count
+      configuration_count = x.filesystems.count
+
+      running = {:title => _("Show list of running %s") % (x.name), :value => _("Running (%s)") % running_count,
+                 :image => failed_count == 0 && running_count > 0 ? 'status_complete' : nil,
+                 :link => running_count > 0 ? url_for(:controller => controller.controller_name,
+                                                      :action => 'host_services', :id => @record,
+                                                      :db => controller.controller_name, :host_service_group => x.id,
+                                                      :status => :running) : nil}
+
+      failed = {:title => _("Show list of failed %s") % (x.name), :value => _("Failed (%s)") % failed_count,
+                :image => failed_count > 0 ? 'status_error' : nil,
+                :link => failed_count > 0 ? url_for(:controller => controller.controller_name,
+                                                    :action => 'host_services', :id => @record,
+                                                    :db => controller.controller_name, :host_service_group => x.id,
+                                                    :status => :failed) : nil}
+
+      all = {:title => _("Show list of all %s") % (x.name), :value => _("All (%s)") % all_count,
+             :image => 'service',
+             :link => all_count > 0 ? url_for(:controller => controller.controller_name, :action => 'host_services',
+                                              :id => @record, :db => controller.controller_name,
+                                              :host_service_group => x.id, :status => :all) : nil}
+
+      configuration = {:title => _("Show list of configuration files of %s") % (x.name),
+                       :image => 'filesystems',
+                       :value => _("Configuration (%s)") % configuration_count,
+                       :link => configuration_count > 0 ? url_for(:controller => controller.controller_name,
+                                                                  :action => 'filesystems', :id => @record,
+                                                                  :db => controller.controller_name,
+                                                                  :host_service_group => x.id) : nil}
+
+      sub_items = [running, failed, all, configuration]
+
+      {:value => x.name, :sub_items => sub_items}
+    end
+  end
+
 
   def textual_hostname
     {:label => "Hostname", :value => "#{@record.hostname}"}
