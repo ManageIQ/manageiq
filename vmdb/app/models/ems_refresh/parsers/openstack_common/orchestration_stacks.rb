@@ -165,6 +165,7 @@ module EmsRefresh
           child_stacks = []
           resources = raw_resources.collect do |resource|
             physical_id = resource['physical_resource_id']
+            @resource_to_stack[physical_id] = stack.id
             # TODO(lsmola) this condition doesn't apply for OpenStack, resource is nested stack when it has child
             # resources nested resources will be solved in followup PR. There is 'rel' => 'nested' in links, when
             # resource has children.
