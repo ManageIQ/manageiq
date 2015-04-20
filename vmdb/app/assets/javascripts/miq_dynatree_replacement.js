@@ -1,5 +1,5 @@
 var miqDynatreeReplacement = {
-  replace: function(options) {
+  replace: function (options) {
     var onDblClickFunction;
     var onClickFunction;
     var onActivateFunction;
@@ -9,8 +9,9 @@ var miqDynatreeReplacement = {
     var onPostInitFunction;
     var selectMode;
 
-    if (options.group_changed)
+    if (options.group_changed) {
       cfme_delete_dynatree_cookies();
+    }
 
     if (options.no_base_exp) {
       onDblClickFunction = cfmeOnDblClick_NoBaseExpand;
@@ -18,13 +19,17 @@ var miqDynatreeReplacement = {
       onDblClickFunction = cfmeOnDblClick_Expand;
     }
 
-    if (options.three_checks)
+    if (options.three_checks) {
       selectMode = 3;
+    }
 
     if (options.cfme_no_click) {
-      onClickFunction = function(node, event) {
+      onClickFunction = function (node, event) {
         var event_type = node.getEventTargetType(event);
-        if (event_type != 'expander') return false; //skip clicking on title when no event has been passed in
+        if (event_type != 'expander') {
+          // Skip clicking on title when no event has been passed in
+          return false;
+        }
       };
     } else if (options.onclick || options.disable_checks || options.oncheck) {
       var optionsClickFunction = options.onclick;
@@ -35,7 +40,7 @@ var miqDynatreeReplacement = {
 
       if (optionsClickFunction) {
         if (click_url) {
-          onClickFunction = function(node, event) {
+          onClickFunction = function (node, event) {
             var event_type = node.getEventTargetType(event);
             if (event_type == 'icon' || event_type == 'title' || event.target.localName == 'img') {
               if (node.isActive()) {
@@ -46,7 +51,7 @@ var miqDynatreeReplacement = {
           };
         } else {
           if (miqCheckForChanges() === false) {
-            onClickFunction = function(node, event) {
+            onClickFunction = function (node, event) {
               var event_type = node.getEventTargetType(event);
               if (event_type == 'icon' || event_type == 'title' || event.target.localName == 'img') {
                 this.activeNode.focus();
@@ -54,7 +59,7 @@ var miqDynatreeReplacement = {
               }
             };
           } else {
-            onClickFunction = function(node, event) {
+            onClickFunction = function (node, event) {
               var event_type = node.getEventTargetType(event);
               if (event_type == 'icon' || event_type == 'title' || event.target.localName == 'img') {
                 if (node.isActive()) {
@@ -70,9 +75,11 @@ var miqDynatreeReplacement = {
       if (optionsDisableChecks || optionsOnCheckFunction) {
         if (optionsDisableChecks) {
           // Ignore checkbox clicks
-          onclickFunction = function(node, event) { return false; };
+          onclickFunction = function (node, event) {
+            return false;
+          };
         } else if (optionsOnCheckFunction) {
-          onclickFunction = function(node, event) {
+          onclickFunction = function (node, event) {
             var event_type = node.getEventTargetType(event);
             if (event_type == 'checkbox') {
               window[optionsOnCheckFunction](node, tree_name);
@@ -83,22 +90,22 @@ var miqDynatreeReplacement = {
       }
 
       if (optionsClickFunction) {
-        onActivateFunction = function(node) {
+        onActivateFunction = function (node) {
           window[optionsClickFunction](node.data.key);
         };
       }
 
       if (options.onmousein || options.onmouseout) {
-        onExpandFunction = function(node){
+        onExpandFunction = function (node) {
           cfme_bind_hover_event(options.tree_name);
         };
       }
     }
 
     if (options.onselect) {
-      onSelectFunction = function(flag, node) {
+      onSelectFunction = function (flag, node) {
         var selectedNodes = node.tree.getSelectedNodes();
-        var selectedKeys = $.map(selectedNodes, function(node){
+        var selectedKeys = $.map(selectedNodes, function (node) {
           return node.data.key;
         });
         window[options.onselect](options.tree_name, node.data.key, flag, selectedKeys);
@@ -107,14 +114,14 @@ var miqDynatreeReplacement = {
     }
 
     if (options.autoload) {
-      onLazyReadFunction = function(node) {
+      onLazyReadFunction = function (node) {
         cfmeOnLazyRead_GetNodeChildren(node, options.tree_name, options.controller_name);
       };
     }
 
     // Activate silently (no onActivate event) selected node AFTER the tree is initially loaded or replaced by AJAX
     if (options.explorer && options.tree_name === options.x_active_tree) {
-      onPostInitFunction = function(isReloading, isError) {
+      onPostInitFunction = function (isReloading, isError) {
         cfmeDynatree_activateNodeSilently(options.tree_name, options.select_node);
       };
     }
