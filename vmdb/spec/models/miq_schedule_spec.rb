@@ -1,14 +1,9 @@
 require "spec_helper"
 
 describe MiqSchedule do
+  before { EvmSpecHelper.create_guid_miq_server_zone }
   context 'with schedule infrastructure and valid run_ats' do
     before(:each) do
-      @zone  = FactoryGirl.create(:zone)
-      @guid = MiqUUID.new_guid
-      MiqServer.stub(:my_guid).and_return(@guid)
-      @server = FactoryGirl.create(:miq_server, :zone => @zone, :guid => @guid)
-      MiqServer.my_server_clear_cache
-
       @valid_run_ats =  [ {:start_time => "2010-07-08 04:10:00 Z", :interval => { :unit => "daily", :value => "1"  } },
         {:start_time => "2010-07-08 04:10:00 Z", :interval => { :unit => "once" } } ]
     end
