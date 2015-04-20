@@ -1,7 +1,6 @@
 class ManageIQ::Providers::BaseManager::MetricsCollectorWorker < MiqQueueWorkerBase
   require_dependency 'manageiq/providers/base_manager/metrics_collector_worker/runner'
 
-  include Vmdb::NewLogging
   include PerEmsTypeWorkerMixin
 
   self.required_roles = ["ems_metrics_collector"]

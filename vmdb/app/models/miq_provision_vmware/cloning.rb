@@ -1,5 +1,4 @@
 module MiqProvisionVmware::Cloning
-  include Vmdb::NewLogging
   def do_clone_task_check(clone_task_mor)
     source.with_provider_connection do |vim|
       begin

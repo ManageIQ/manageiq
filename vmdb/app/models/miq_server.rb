@@ -12,7 +12,6 @@ class MiqServer < ActiveRecord::Base
   include_concern 'UpdateManagement'
   include_concern 'RhnMirror'
 
-  include Vmdb::NewLogging
   include UuidMixin
   include MiqPolicyMixin
   acts_as_miq_taggable

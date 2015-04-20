@@ -1,5 +1,4 @@
 module MiqProvisionRedhatViaPxe::StateMachine
-  include Vmdb::NewLogging
   def customize_destination
     message = "Starting New #{destination_type} Customization"
     _log.info("#{message} #{for_destination}")

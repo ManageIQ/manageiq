@@ -1,5 +1,4 @@
 module MiqFilter
-  include Vmdb::NewLogging
   def self.records2table(records, options)
     MiqReportable.records2table(records, options)
   end

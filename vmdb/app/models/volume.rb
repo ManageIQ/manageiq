@@ -1,5 +1,4 @@
 class Volume < ActiveRecord::Base
-  include Vmdb::NewLogging
   belongs_to :hardware
   has_many :partitions, lambda { |_|
       p = Partition.quoted_table_name

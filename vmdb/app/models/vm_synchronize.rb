@@ -1,5 +1,4 @@
 class VmSynchronize < Job
-  include Vmdb::NewLogging
   def load_transitions
     self.state ||= 'initialize'
     {

@@ -1,5 +1,4 @@
 module MiqServer::LogManagement
-  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   included do

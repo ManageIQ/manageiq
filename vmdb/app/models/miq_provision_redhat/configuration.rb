@@ -1,5 +1,4 @@
 module MiqProvisionRedhat::Configuration
-  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   include_concern 'Container'

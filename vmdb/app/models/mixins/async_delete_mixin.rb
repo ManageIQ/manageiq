@@ -1,5 +1,4 @@
 module AsyncDeleteMixin
-  include Vmdb::NewLogging
   extend ActiveSupport::Concern
   included do
     def self._queue_task(task, ids)

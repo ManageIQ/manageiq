@@ -1,5 +1,4 @@
 module Metric::LongTermAverages
-  include Vmdb::NewLogging
   AVG_COLS_TO_OVERHEAD_TYPE = {
     :cpu_usagemhz_rate_average      => nil,
     :derived_memory_used            => nil,

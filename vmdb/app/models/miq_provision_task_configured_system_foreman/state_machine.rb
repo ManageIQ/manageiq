@@ -1,5 +1,4 @@
 module MiqProvisionTaskConfiguredSystemForeman::StateMachine
-  include Vmdb::NewLogging
   def run_provision
     validate_source
     signal :prepare_provision

@@ -1,5 +1,4 @@
 class MiqSearch < ActiveRecord::Base
-  include Vmdb::NewLogging
   serialize :options
   serialize :filter
 

@@ -1,5 +1,4 @@
 class ManageIQ::Providers::BaseManager::EventCatcher < MiqWorker
-  include Vmdb::NewLogging
   include PerEmsWorkerMixin
 
   self.required_roles = ["event"]

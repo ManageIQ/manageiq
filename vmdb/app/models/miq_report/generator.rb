@@ -1,5 +1,4 @@
 module MiqReport::Generator
-  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   include_concern 'Aggregation'

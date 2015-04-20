@@ -1,6 +1,4 @@
 class MiqEnterprise < ActiveRecord::Base
-  include Vmdb::NewLogging
-
   has_many :miq_regions,            -> { MiqRegion.scoped }
   has_many :ext_management_systems, -> { ExtManagementSystem.scoped }
   has_many :vms_and_templates,      -> { VmOrTemplate.where.not(:ems_id => nil) }

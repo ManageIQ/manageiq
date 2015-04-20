@@ -1,5 +1,4 @@
 module MiqProvisionRedhat::Cloning
-  include Vmdb::NewLogging
   def clone_complete?
     # TODO: shouldn't this error out the provision???
     return true if phase_context[:clone_task_ref].nil?

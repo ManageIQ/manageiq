@@ -1,5 +1,4 @@
 module EmsRefresh::VcUpdates
-  include Vmdb::NewLogging
   VIM_SELECTOR_SPEC = {
     :ems_refresh_host => [
       "MOR",

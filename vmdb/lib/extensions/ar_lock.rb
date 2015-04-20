@@ -1,5 +1,4 @@
 module ArLock
-  include Vmdb::NewLogging
   # Creates a critical section around the specified block, in the style of
   # Mutex#synchronize, by locking on the database record in SQL.
   #

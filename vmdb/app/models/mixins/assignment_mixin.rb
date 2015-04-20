@@ -1,7 +1,6 @@
 # Generic mixin module that supports assignment by CI of management tags
 
 module AssignmentMixin
-  include Vmdb::NewLogging
   extend ActiveSupport::Concern
   included do  #:nodoc:
     acts_as_miq_taggable

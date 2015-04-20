@@ -1,5 +1,4 @@
 module MiqHostProvision::Configuration
-  include Vmdb::NewLogging
   def set_network_information
     log_header = "MIQ(#{self.class.name}#set_network_information)"
     $log.info("#{log_header} Setting Network Information")

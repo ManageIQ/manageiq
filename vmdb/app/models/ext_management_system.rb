@@ -1,6 +1,4 @@
 class ExtManagementSystem < ActiveRecord::Base
-  include Vmdb::NewLogging
-
   def self.types
     leaf_subclasses.collect(&:ems_type)
   end

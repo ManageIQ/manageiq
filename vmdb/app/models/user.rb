@@ -1,5 +1,4 @@
 class User < ActiveRecord::Base
-  include Vmdb::NewLogging
   include RelationshipMixin
   acts_as_miq_taggable
   include RegionMixin

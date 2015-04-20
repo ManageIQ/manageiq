@@ -1,6 +1,5 @@
 module YAMLImportExportMixin
   extend ActiveSupport::Concern
-  include Vmdb::NewLogging
 
   module ClassMethods
     def export_to_array(list, klass)

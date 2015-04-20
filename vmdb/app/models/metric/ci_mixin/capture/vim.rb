@@ -1,5 +1,4 @@
 module Metric::CiMixin::Capture::Vim
-  include Vmdb::NewLogging
   #
   # Connect / Disconnect / Intialize methods
   #

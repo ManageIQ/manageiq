@@ -1,5 +1,4 @@
 class MiqGroup < ActiveRecord::Base
-  include Vmdb::NewLogging
   default_scope { where(self.conditions_for_my_region_default_scope) }
 
   belongs_to :miq_user_role

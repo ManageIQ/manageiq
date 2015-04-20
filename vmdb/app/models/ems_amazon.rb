@@ -2,7 +2,6 @@ require 'Amazon/ec2/regions'
 require 'Amazon/amazon_connection'
 
 class EmsAmazon < EmsCloud
-  include Vmdb::NewLogging
   def self.ems_type
     @ems_type ||= "ec2".freeze
   end

@@ -1,7 +1,6 @@
 require 'workers/worker_base'
 
 class VimBrokerWorker < WorkerBase
-  include Vmdb::NewLogging
   self.wait_for_worker_monitor = false
 
   def after_initialize

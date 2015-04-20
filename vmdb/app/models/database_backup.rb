@@ -1,5 +1,4 @@
 class DatabaseBackup < ActiveRecord::Base
-  include Vmdb::NewLogging
   SUPPORTED_DEPOTS = {
     'smb' => 'Samba',
     'nfs' => 'Network File System'

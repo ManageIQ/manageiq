@@ -1,5 +1,4 @@
 class EmsOpenstack < EmsCloud
-  include Vmdb::NewLogging
   include EmsOpenstackMixin
 
   def self.ems_type

@@ -1,5 +1,4 @@
 class MiqUiWorker < MiqWorker
-  include Vmdb::NewLogging
   REQUIRED_ROLE = 'user_interface'
   self.required_roles = [REQUIRED_ROLE]
   self.check_for_minimal_role = false

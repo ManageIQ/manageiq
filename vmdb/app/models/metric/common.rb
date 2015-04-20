@@ -1,5 +1,4 @@
 module Metric::Common
-  include Vmdb::NewLogging
   extend ActiveSupport::Concern
   included do
     belongs_to  :resource, :polymorphic => true

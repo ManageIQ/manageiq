@@ -1,5 +1,4 @@
 module MiqProvision::PostInstallCallback
-  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   # This method will be called via callback if the VM is unable to shut itself down.

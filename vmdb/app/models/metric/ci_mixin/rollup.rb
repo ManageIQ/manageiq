@@ -1,5 +1,4 @@
 module Metric::CiMixin::Rollup
-  include Vmdb::NewLogging
   def perf_rollup_to_parent(interval_name, start_time, end_time = nil)
     parents = case interval_name
     when 'realtime'             then [self.perf_rollup_parent(interval_name), interval_name, self, 'hourly']

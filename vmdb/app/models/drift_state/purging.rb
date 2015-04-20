@@ -1,5 +1,4 @@
 module DriftState::Purging
-  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   module ClassMethods

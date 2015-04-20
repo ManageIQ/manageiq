@@ -1,5 +1,4 @@
 module MiqReport::Notification
-  include Vmdb::NewLogging
   def notify_user_of_report(run_on, result, options)
     userid = options[:userid]
     url = options[:email_url_prefix]

@@ -13,7 +13,6 @@ $:.push("#{File.dirname(__FILE__)}/../../../lib/metadata/ScanProfile")
 require 'HostScanProfiles'
 
 class Host < ActiveRecord::Base
-  include Vmdb::NewLogging
   include NewWithTypeStiMixin
 
   VENDOR_TYPES = {

@@ -1,5 +1,4 @@
 class MiqReplicationWorker < MiqWorker
-  include Vmdb::NewLogging
   self.required_roles = ["database_synchronization"]
   self.include_stopping_workers_on_synchronize = true
 

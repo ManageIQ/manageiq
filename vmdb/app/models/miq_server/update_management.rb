@@ -2,7 +2,6 @@ require 'linux_admin'
 LinuxAdmin.logger = $log
 
 module MiqServer::UpdateManagement
-  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   module ClassMethods

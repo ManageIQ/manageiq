@@ -1,7 +1,6 @@
 require 'miq_apache'
 module MiqWebServerWorkerMixin
   extend ActiveSupport::Concern
-  include Vmdb::NewLogging
 
   BINDING_ADDRESS = Rails.env.production? ? "127.0.0.1" : "0.0.0.0"
 

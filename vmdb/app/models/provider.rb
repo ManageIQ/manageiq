@@ -1,5 +1,4 @@
 class Provider < ActiveRecord::Base
-  include Vmdb::NewLogging
   include NewWithTypeStiMixin
   include AuthenticationMixin
   include ReportableMixin

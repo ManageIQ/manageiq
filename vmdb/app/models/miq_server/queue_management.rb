@@ -1,5 +1,4 @@
 module MiqServer::QueueManagement
-  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   def clear_miq_queue_for_this_server

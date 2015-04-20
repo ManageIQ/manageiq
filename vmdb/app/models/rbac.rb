@@ -1,5 +1,4 @@
 module Rbac
-  include Vmdb::NewLogging
   # This list is used to detemine whether RBAC, based on assigned tags, should be applied for a class in a search that is based on the class.
   # Classes should be added to this list ONLY after:
   # 1. It has been added to the MiqExpression.@@base_tables list

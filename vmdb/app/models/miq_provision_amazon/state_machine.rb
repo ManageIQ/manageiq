@@ -1,5 +1,4 @@
 module MiqProvisionAmazon::StateMachine
-  include Vmdb::NewLogging
   def customize_destination
     message = "Setting New #{destination_type} Name"
     _log.info("#{message} #{for_destination}")

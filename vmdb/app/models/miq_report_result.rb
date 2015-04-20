@@ -1,5 +1,4 @@
 class MiqReportResult < ActiveRecord::Base
-  include Vmdb::NewLogging
   include_concern 'Purging'
 
   belongs_to :miq_report

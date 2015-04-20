@@ -1,5 +1,4 @@
 class MiqEventCatcherOpenstack < MiqEventCatcher
-  include Vmdb::NewLogging
   def self.ems_class
     EmsOpenstack
   end

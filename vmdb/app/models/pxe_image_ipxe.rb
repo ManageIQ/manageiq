@@ -1,5 +1,4 @@
 class PxeImageIpxe < PxeImage
-  include Vmdb::NewLogging
   def build_pxe_contents(ks_access_path, ks_device)
     new_kernel  = self.kernel.to_s.dup
     new_kernel << " #{super}"

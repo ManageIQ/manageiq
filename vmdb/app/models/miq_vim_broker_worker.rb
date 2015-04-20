@@ -1,5 +1,4 @@
 class MiqVimBrokerWorker < MiqWorker
-  include Vmdb::NewLogging
   self.required_roles         = %w{
                                     ems_inventory
                                     ems_metrics_collector

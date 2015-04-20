@@ -1,5 +1,4 @@
 module MiqProvisionTaskConfiguredSystemForeman::OptionsHelper
-  include Vmdb::NewLogging
   def log_provider_options
     _log.info("Provisioning [#{source.name}]")
   end

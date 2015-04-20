@@ -1,5 +1,4 @@
 module MiqProvision::Pxe
-  include Vmdb::NewLogging
   def pxe_and_windows_image
     return @pxe_image, @windows_image unless @pxe_image.nil?
 

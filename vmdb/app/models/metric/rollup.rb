@@ -1,5 +1,4 @@
 module Metric::Rollup
-  include Vmdb::NewLogging
   ROLLUP_COLS  = Metric.columns_hash.collect {|c, h| c.to_sym if h.type == :float || c[0,7] == "derived"}.compact
   STORAGE_COLS = Metric.columns_hash.collect {|c, h| c.to_sym if c.starts_with?("derived_storage_")}.compact
 

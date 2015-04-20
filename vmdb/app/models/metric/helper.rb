@@ -1,5 +1,4 @@
 module Metric::Helper
-  include Vmdb::NewLogging
   def self.class_and_association_for_interval_name(interval_name)
     interval_name == "realtime" ? [Metric, :metrics] : [MetricRollup, :metric_rollups]
   end

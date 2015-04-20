@@ -1,6 +1,4 @@
 class MiqRegion < ActiveRecord::Base
-  include Vmdb::NewLogging
-
   has_many :metrics,        :as => :resource # Destroy will be handled by purger
   has_many :metric_rollups, :as => :resource # Destroy will be handled by purger
   has_many :vim_performance_states, :as => :resource # Destroy will be handled by purger

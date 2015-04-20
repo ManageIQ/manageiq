@@ -1,5 +1,4 @@
 class VimPerformanceTag < MetricRollup
-  include Vmdb::NewLogging
   def self.instances_are_derived?
     true
   end

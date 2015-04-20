@@ -1,6 +1,5 @@
 require 'resource_feeder/common'
 class RssFeed < ActiveRecord::Base
-  include Vmdb::NewLogging
   include ResourceFeeder
   validates_presence_of     :name
   validates_uniqueness_of   :name

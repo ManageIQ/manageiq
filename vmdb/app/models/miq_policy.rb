@@ -1,7 +1,6 @@
 # TODO: Import/Export support
 
 class MiqPolicy < ActiveRecord::Base
-  include Vmdb::NewLogging
   default_scope { where self.conditions_for_my_region_default_scope }
 
   acts_as_miq_taggable

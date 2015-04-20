@@ -18,8 +18,6 @@ require 'digest'
 #     get: Defaults to "generic" but is typically overridden by the caller (a worker)
 #
 class MiqQueue < ActiveRecord::Base
-  include Vmdb::NewLogging
-
   belongs_to :handler, :polymorphic => true
 
   attr_accessor :last_exception

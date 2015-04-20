@@ -1,5 +1,4 @@
 module MiqProvisionVmwareViaPxe::StateMachine
-  include Vmdb::NewLogging
   def customize_destination
     _log.info("Post-processing #{destination_type} id: [#{destination.id}], name: [#{dest_name}]")
     update_and_notify_parent(:message => "Starting New #{destination_type} Customization")

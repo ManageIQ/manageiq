@@ -1,5 +1,4 @@
 class MiqTask < ActiveRecord::Base
-  include Vmdb::NewLogging
   serialize :context_data
   STATE_INITIALIZED = 'Initialized'.freeze
   STATE_QUEUED      = 'Queued'.freeze

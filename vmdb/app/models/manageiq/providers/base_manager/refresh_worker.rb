@@ -1,5 +1,4 @@
 class ManageIQ::Providers::BaseManager::RefreshWorker < MiqQueueWorkerBase
-  include Vmdb::NewLogging
   include PerEmsWorkerMixin
 
   self.required_roles = "ems_inventory"

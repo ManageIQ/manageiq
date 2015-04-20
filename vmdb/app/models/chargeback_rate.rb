@@ -1,5 +1,4 @@
 class ChargebackRate < ActiveRecord::Base
-  include Vmdb::NewLogging
   include UuidMixin
   include ReportableMixin
 

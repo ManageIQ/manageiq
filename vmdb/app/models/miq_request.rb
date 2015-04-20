@@ -1,5 +1,4 @@
 class MiqRequest < ActiveRecord::Base
-  include Vmdb::NewLogging
   ACTIVE_STATES = %w(active queued)
 
   belongs_to :source,            :polymorphic => true

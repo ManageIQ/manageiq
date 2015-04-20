@@ -1,5 +1,4 @@
 module MiqAeServiceRetirementMixin
-  include Vmdb::NewLogging
   extend ActiveSupport::Concern
   included do
     expose :retire_now

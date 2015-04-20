@@ -6,7 +6,6 @@ require 'http-access2' # Required in case it is not already loaded
 module ::ManageIQ::Providers
 class Vmware::InfraManager
   class Refresher < BaseManager::Refresher
-    include Vmdb::NewLogging
     include RefreshParser::Filter
 
     # Development helper method for setting up the selector specs for VC

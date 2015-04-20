@@ -1,5 +1,4 @@
 module MiqServer::WorkerManagement::Heartbeat
-  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   def worker_add_message(pid, item)

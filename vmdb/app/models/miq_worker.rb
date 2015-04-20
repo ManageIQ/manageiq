@@ -1,7 +1,6 @@
 require 'io/wait'
 
 class MiqWorker < ActiveRecord::Base
-  include Vmdb::NewLogging
   include UuidMixin
   include ReportableMixin
 

@@ -1,6 +1,5 @@
 module RetirementMixin
   extend ActiveSupport::Concern
-  include Vmdb::NewLogging
 
   RETIRED  = 'retired'
   RETIRING = 'retiring'

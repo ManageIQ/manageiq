@@ -1,5 +1,4 @@
 module MiqProvisionMixin
-  include Vmdb::NewLogging
   RESOURCE_CLASS_KEY_MAP = {
     # Infrastructure
     "Host"                  => [:hosts,                   :placement_host_name],

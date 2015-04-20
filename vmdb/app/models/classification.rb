@@ -1,5 +1,4 @@
 class Classification < ActiveRecord::Base
-  include Vmdb::NewLogging
   acts_as_tree
 
   belongs_to :tag

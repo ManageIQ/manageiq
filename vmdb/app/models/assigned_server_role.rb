@@ -1,5 +1,4 @@
 class AssignedServerRole < ActiveRecord::Base
-  include Vmdb::NewLogging
   belongs_to :miq_server
   belongs_to :server_role
 

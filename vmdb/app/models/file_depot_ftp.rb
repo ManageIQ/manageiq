@@ -1,7 +1,6 @@
 require 'net/ftp'
 
 class FileDepotFtp < FileDepot
-  include Vmdb::NewLogging
   attr_accessor :ftp
 
   def self.uri_prefix

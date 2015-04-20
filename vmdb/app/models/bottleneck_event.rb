@@ -1,5 +1,4 @@
 class BottleneckEvent < ActiveRecord::Base
-  include Vmdb::NewLogging
   belongs_to :resource, :polymorphic => true
 
   include ReportableMixin

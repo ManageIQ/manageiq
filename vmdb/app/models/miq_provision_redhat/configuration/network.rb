@@ -1,5 +1,4 @@
 module MiqProvisionRedhat::Configuration::Network
-  include Vmdb::NewLogging
 
   def configure_network_adapters
     configure_dialog_nic

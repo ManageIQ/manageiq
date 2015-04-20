@@ -1,5 +1,4 @@
 module MiqServer::WorkerManagement::Dequeue
-  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   def peek(queue_name, priority, limit)

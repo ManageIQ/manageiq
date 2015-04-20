@@ -8,6 +8,7 @@ MiqExpression
 MiqSearch
 
 class ApplicationController < ActionController::Base
+  include Vmdb::NewLogging
 
   if Vmdb::Application.config.action_controller.allow_forgery_protection
     protect_from_forgery :secret => MiqDatabase.first.csrf_secret_token, :except => :csp_report

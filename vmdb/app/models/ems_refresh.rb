@@ -1,5 +1,4 @@
 module EmsRefresh
-  include Vmdb::NewLogging
   extend EmsRefresh::SaveInventory
   extend EmsRefresh::SaveInventoryCloud
   extend EmsRefresh::SaveInventoryInfra

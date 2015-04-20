@@ -1,6 +1,4 @@
 class LdapServer < ActiveRecord::Base
-  include Vmdb::NewLogging
-
   belongs_to :ldap_domain
 
   default_value_for :mode, "ldaps"

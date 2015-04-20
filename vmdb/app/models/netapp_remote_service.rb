@@ -1,7 +1,6 @@
 require 'net_app_manageability/types'
 
 class NetappRemoteService < StorageManager
-  include Vmdb::NewLogging
 
   has_many  :top_managed_elements,
         :class_name   => "MiqCimInstance",

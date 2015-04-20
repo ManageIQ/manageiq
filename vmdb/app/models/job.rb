@@ -1,5 +1,4 @@
 class Job < ActiveRecord::Base
-  include Vmdb::NewLogging
   include_concern 'StateMachine'
   include UuidMixin
   include ReportableMixin

@@ -1,5 +1,4 @@
 class MiqApproval < ActiveRecord::Base
-  include Vmdb::NewLogging
   belongs_to :approver, :polymorphic => true
   belongs_to :stamper,  :class_name => "User"
   belongs_to :miq_request

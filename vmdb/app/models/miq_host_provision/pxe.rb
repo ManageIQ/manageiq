@@ -1,5 +1,4 @@
 module MiqHostProvision::Pxe
-  include Vmdb::NewLogging
   def pxe_server
     @pxe_server ||= PxeServer.find_by_id(get_option(:pxe_server_id))
   end

@@ -3,7 +3,6 @@ require 'thread'
 require_relative 'schedule_worker/jobs'
 
 class ScheduleWorker < WorkerBase
-  include Vmdb::NewLogging
   include ActiveSupport::Callbacks
   define_callbacks :dst_change
   set_callback :dst_change, :after, :load_user_schedules

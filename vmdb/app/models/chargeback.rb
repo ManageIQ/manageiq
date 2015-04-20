@@ -1,6 +1,4 @@
 class Chargeback < ActsAsArModel
-  include Vmdb::NewLogging
-
   set_columns_hash(
     :start_date               => :datetime,
     :end_date                 => :datetime,

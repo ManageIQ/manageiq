@@ -3,7 +3,6 @@ require 'uri'
 require 'mount/miq_generic_mount_session'
 
 class LogFile < ActiveRecord::Base
-  include Vmdb::NewLogging
   belongs_to :resource,    :polymorphic => true
   belongs_to :file_depot
   belongs_to :miq_task

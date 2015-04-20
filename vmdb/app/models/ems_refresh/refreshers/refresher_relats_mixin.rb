@@ -1,5 +1,4 @@
 module EmsRefresh::Refreshers::RefresherRelatsMixin
-  include Vmdb::NewLogging
   def find_relats_vmdb(target)
     log_header = "MIQ(RefresherRelatsMixin.find_relats_vmdb) EMS: [#{@ems.name}], id: [#{@ems.id}]"
     $log.info "#{log_header} Getting VMDB relationships for #{target.class} [#{target.name}] id: [#{target.id}]..."

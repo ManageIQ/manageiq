@@ -1,5 +1,4 @@
 module MiqProvisionCloud::Placement
-  include Vmdb::NewLogging
   protected
 
   def placement

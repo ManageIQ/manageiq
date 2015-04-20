@@ -1,5 +1,4 @@
 module VmdbTable::Seeding
-  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   def seed_indexes

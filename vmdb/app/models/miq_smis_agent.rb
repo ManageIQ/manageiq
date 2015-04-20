@@ -2,7 +2,6 @@ require 'miq_smis_client'
 require 'vmdb_storage_bridge'
 
 class MiqSmisAgent < StorageManager
-  include Vmdb::NewLogging
   AGENT_TYPES = {
     "VMDB"  => "VMDB",
     "Agent" => "Agent"

@@ -2,7 +2,6 @@ require 'workers/worker_base'
 require 'miq-system'
 
 class QueueWorkerBase < WorkerBase
-  include Vmdb::NewLogging
   def after_sync_config
     self.sync_cpu_usage_threshold
     self.sync_dequeue_method

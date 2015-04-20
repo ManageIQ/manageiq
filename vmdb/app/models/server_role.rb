@@ -1,5 +1,4 @@
 class ServerRole < ActiveRecord::Base
-  include Vmdb::NewLogging
   has_many :assigned_server_roles
   has_many :miq_servers, :through => :assigned_server_roles
 

@@ -1,5 +1,4 @@
 class MiqWebServiceWorker < MiqWorker
-  include Vmdb::NewLogging
   REQUIRED_ROLE = 'web_services'
   self.required_roles = [REQUIRED_ROLE]
 

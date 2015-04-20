@@ -3,7 +3,6 @@ require 'cgi'
 require 'uri'
 
 class VmOrTemplate < ActiveRecord::Base
-  include Vmdb::NewLogging
   include NewWithTypeStiMixin
 
   self.table_name = 'vms'

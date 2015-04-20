@@ -1,5 +1,4 @@
 module MiqReport::Search
-  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   module ClassMethods

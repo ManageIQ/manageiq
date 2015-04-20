@@ -1,5 +1,4 @@
 class Compliance < ActiveRecord::Base
-  include Vmdb::NewLogging
   belongs_to  :resource,  :polymorphic => true
   has_many    :compliance_details, :dependent => :destroy
 

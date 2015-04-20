@@ -1,5 +1,4 @@
 module MiqHostProvision::StateMachine
-  include Vmdb::NewLogging
   def my_zone
     ems    = self.placement_ems
     zone   = ems.zone.name unless ems.nil?

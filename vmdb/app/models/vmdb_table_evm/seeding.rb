@@ -1,5 +1,4 @@
 module VmdbTableEvm::Seeding
-  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   module ClassMethods

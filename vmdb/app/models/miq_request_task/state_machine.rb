@@ -1,6 +1,4 @@
 module MiqRequestTask::StateMachine
-  include Vmdb::NewLogging
-
   delegate :my_role, :to => :miq_request
   delegate :my_zone, :to => :source,      :allow_nil => true
 

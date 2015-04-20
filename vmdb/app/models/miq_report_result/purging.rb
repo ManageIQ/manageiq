@@ -1,5 +1,4 @@
 module MiqReportResult::Purging
-  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   module ClassMethods

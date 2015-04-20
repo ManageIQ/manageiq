@@ -1,5 +1,4 @@
 module MiqProvisionRedhat::Configuration::Container
-  include Vmdb::NewLogging
   def set_container_description(description, vm = nil)
     _log.info "Setting description to:<#{description.inspect}>"
     vm ||= get_provider_destination

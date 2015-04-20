@@ -1,5 +1,4 @@
 module AuthenticationMixin
-  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   included do

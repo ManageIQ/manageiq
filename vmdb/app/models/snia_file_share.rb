@@ -1,7 +1,6 @@
 require 'cim_profile_defs'
 
 class SniaFileShare < MiqCimInstance
-  include Vmdb::NewLogging
   include ReportableMixin
   acts_as_miq_taggable
 

@@ -1,8 +1,6 @@
 require 'active_support/deprecation'
 
 class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
-  include Vmdb::NewLogging
-
   def auto_placement_enabled?
     get_value(@values[:placement_auto])
   end

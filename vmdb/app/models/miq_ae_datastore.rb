@@ -1,5 +1,4 @@
 module MiqAeDatastore
-  include Vmdb::NewLogging
   XML_VERSION = "1.0"
   XML_VERSION_MIN_SUPPORTED = "1.0"
   MANAGEIQ_DOMAIN = "ManageIQ"

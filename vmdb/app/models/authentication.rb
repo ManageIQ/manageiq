@@ -1,5 +1,4 @@
 class Authentication < ActiveRecord::Base
-  include Vmdb::NewLogging
   include NewWithTypeStiMixin
   def self.new(*args, &block)
     if self == Authentication

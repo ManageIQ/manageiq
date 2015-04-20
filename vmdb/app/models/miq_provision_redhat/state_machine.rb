@@ -1,5 +1,4 @@
 module MiqProvisionRedhat::StateMachine
-  include Vmdb::NewLogging
   def create_destination
     signal :determine_placement
   end

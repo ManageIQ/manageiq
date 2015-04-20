@@ -1,5 +1,4 @@
 module PerEmsWorkerMixin
-  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   included do

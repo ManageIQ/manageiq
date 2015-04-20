@@ -1,5 +1,4 @@
 class PxeImageType < ActiveRecord::Base
-  include Vmdb::NewLogging
   include ReportableMixin
   has_many :customization_templates
   has_many :pxe_images

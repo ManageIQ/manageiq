@@ -1,6 +1,5 @@
 require 'miq_apache'
 module MiqServer::EnvironmentManagement
-  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   module ClassMethods

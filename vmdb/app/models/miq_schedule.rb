@@ -1,5 +1,4 @@
 class MiqSchedule < ActiveRecord::Base
-  include Vmdb::NewLogging
   validates_uniqueness_of :name, :scope => [:userid, :towhat]
   validates_presence_of   :name, :description, :towhat, :run_at
   validate                :validate_run_at, :validate_file_depot

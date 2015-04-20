@@ -1,5 +1,4 @@
 module MiqProvision::StateMachine
-  include Vmdb::NewLogging
   def run_provision
     self.source = get_source  # just in case automate changed src_vm_id in the options hash
     signal :create_destination

@@ -11,7 +11,6 @@ class Vmware::InfraManager < InfraManager
   require_dependency 'manageiq/providers/vmware/infra_manager/template'
   require_dependency 'manageiq/providers/vmware/infra_manager/vm'
 
-  include Vmdb::NewLogging
   include VimConnectMixin
 
   before_save :stop_event_monitor_queue_on_change

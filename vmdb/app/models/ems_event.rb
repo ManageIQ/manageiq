@@ -1,5 +1,4 @@
 class EmsEvent < ActiveRecord::Base
-  include Vmdb::NewLogging
   serialize :full_data
 
   belongs_to :ext_management_system, :foreign_key => :ems_id

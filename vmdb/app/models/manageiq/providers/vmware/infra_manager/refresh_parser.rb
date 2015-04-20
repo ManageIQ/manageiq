@@ -4,7 +4,6 @@ require 'miq-uuid'
 module ManageIQ::Providers
 class Vmware::InfraManager
 module RefreshParser
-  include Vmdb::NewLogging
   #
   # EMS Inventory Parsing
   #

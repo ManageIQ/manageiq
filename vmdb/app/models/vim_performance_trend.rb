@@ -1,5 +1,4 @@
 class VimPerformanceTrend < ActsAsArModel
-  include Vmdb::NewLogging
   set_columns_hash(
     :resource_name         => :string,
     :resource_id           => :integer,

@@ -1,5 +1,4 @@
 class Account < ActiveRecord::Base
-  include Vmdb::NewLogging
   belongs_to :vm_or_template
   belongs_to :host
 

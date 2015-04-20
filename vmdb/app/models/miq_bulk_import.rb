@@ -1,7 +1,6 @@
 require 'csv'
 
 module MiqBulkImport
-  include Vmdb::NewLogging
   def self.upload(fd, tags, keys)
     _log.info "Uploading CSV file"
     data = fd.read

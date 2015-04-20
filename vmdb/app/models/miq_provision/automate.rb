@@ -1,6 +1,5 @@
 module MiqProvision::Automate
   extend ActiveSupport::Concern
-  include Vmdb::NewLogging
 
   module ClassMethods
     def get_domain_details(domain, with_password = false, user = nil)

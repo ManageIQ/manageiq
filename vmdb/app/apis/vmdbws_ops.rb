@@ -1,5 +1,4 @@
 module VmdbwsOps
-  include Vmdb::NewLogging
   #
   # Automate web services
   #

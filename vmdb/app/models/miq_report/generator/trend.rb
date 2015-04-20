@@ -1,5 +1,4 @@
 module MiqReport::Generator::Trend
-  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   CHART_X_AXIS_COLUMN          = :timestamp # this will need to be defined in the report object when we want to calculate trend on data other than performance

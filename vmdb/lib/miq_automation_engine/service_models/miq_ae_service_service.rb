@@ -1,6 +1,5 @@
 module MiqAeMethodService
   class MiqAeServiceService < MiqAeServiceModelBase
-    include Vmdb::NewLogging
     require_relative "mixins/miq_ae_service_retirement_mixin"
     include MiqAeServiceRetirementMixin
 

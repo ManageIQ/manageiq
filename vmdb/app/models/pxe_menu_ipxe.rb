@@ -1,5 +1,4 @@
 class PxeMenuIpxe < PxeMenu
-  include Vmdb::NewLogging
   has_many :pxe_images, :class_name => "PxeImageIpxe", :foreign_key => :pxe_menu_id, :dependent => :destroy
 
   def self.parse_contents(contents)

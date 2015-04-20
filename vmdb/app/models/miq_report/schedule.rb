@@ -1,5 +1,4 @@
 module MiqReport::Schedule
-  include Vmdb::NewLogging
   extend ActiveSupport::Concern
   included do
     before_destroy :remove_associated_schedules

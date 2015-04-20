@@ -1,5 +1,4 @@
 module VmdbMetric::Purging
-  include Vmdb::NewLogging
   extend ActiveSupport::Concern
 
   module ClassMethods

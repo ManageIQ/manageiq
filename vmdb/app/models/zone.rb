@@ -1,5 +1,4 @@
 class Zone < ActiveRecord::Base
-  include Vmdb::NewLogging
   DEFAULT_NTP_SERVERS = {:server => %w(0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org)}.freeze
 
   validates_presence_of   :name, :description

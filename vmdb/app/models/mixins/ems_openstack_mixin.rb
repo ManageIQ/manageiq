@@ -1,6 +1,5 @@
 module EmsOpenstackMixin
   extend ActiveSupport::Concern
-  include Vmdb::NewLogging
 
   #
   # OpenStack interactions

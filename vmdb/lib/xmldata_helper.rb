@@ -3,7 +3,6 @@ $:.push("#{File.dirname(__FILE__)}/../../../lib/util/xml")
 require 'xml_utils'
 
 class XmlData < ActiveRecord::Base
-  include Vmdb::NewLogging
   def self.emsinventory(emsId, data)
     doc = REXML::Document.new(data)
     _log.info "request received from ems id: #{emsId}"

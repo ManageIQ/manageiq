@@ -1,5 +1,4 @@
 module Metric::Capture::Vim
-  include Vmdb::NewLogging
   REALTIME_METRICS_PER_MINUTE = 3
 
   VIM_INTERVAL_NAME_BY_MIQ_INTERVAL_NAME = {'hourly' => 'Past Month'}

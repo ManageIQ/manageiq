@@ -1,7 +1,6 @@
 require 'time'
 
 class Snapshot < ActiveRecord::Base
-  include Vmdb::NewLogging
   acts_as_tree
 
   belongs_to :vm_or_template
