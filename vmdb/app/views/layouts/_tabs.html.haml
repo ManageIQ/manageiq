@@ -39,6 +39,6 @@
     - if @edit && @edit[:adv_search_applied] != nil && !session[:menu_click]
       = h(@title + @edit[:adv_search_applied][:text] + " ")
       - if (@default_search && @default_search.name != @edit[:adv_search_applied][:name]) || !@default_search
-        (#{link_to("default", {:action => 'adv_search_clear'}, :method => :post, :class => 'active')})
+        (#{link_to("clear", {:action => 'adv_search_clear'}, :method => :post, :class => 'active')})
     - else
       = @title
