@@ -17,7 +17,7 @@
               - click = "DoNav('#{row[:link]}');"
             %tr{:onclick => click}
               - item[:col_order].each do |col|
-                %td
+                %td{:title => "View the table"}
                   = row[col.to_sym]
           - else
             %tr.no-hover
