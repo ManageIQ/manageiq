@@ -15,18 +15,18 @@ describe ConfigurationProfileForeman do
     it { expect(subject.configuration_realm).to eq(nil) }
 
     it "reads tags" do
-      subject.raw_configuration_tags << cd
-      subject.raw_configuration_tags << cr
+      subject.direct_configuration_tags << cd
+      subject.direct_configuration_tags << cr
       expect(subject.configuration_tags).to match_array([cr, cd])
-      expect(subject.raw_configuration_tags).to match_array([cr, cd])
+      expect(subject.direct_configuration_tags).to match_array([cr, cd])
     end
 
     it "reads tag helpers" do
-      subject.raw_configuration_tags << cd
-      subject.raw_configuration_tags << cr
-      subject.raw_configuration_tags << ConfigurationArchitecture.new(:name => "CA")
-      subject.raw_configuration_tags << ConfigurationComputeProfile.new(:name => "CC")
-      subject.raw_configuration_tags << ConfigurationEnvironment.new(:name => "CE")
+      subject.direct_configuration_tags << cd
+      subject.direct_configuration_tags << cr
+      subject.direct_configuration_tags << ConfigurationArchitecture.new(:name => "CA")
+      subject.direct_configuration_tags << ConfigurationComputeProfile.new(:name => "CC")
+      subject.direct_configuration_tags << ConfigurationEnvironment.new(:name => "CE")
 
       expect(subject.configuration_domain).to eq(cd)
       expect(subject.configuration_realm).to eq(cr)
@@ -39,30 +39,30 @@ describe ConfigurationProfileForeman do
       let(:parent) { subject.build_parent }
 
       it "supports empty parents" do
-        subject.raw_configuration_tags << cr
+        subject.direct_configuration_tags << cr
         expect(subject.configuration_tags).to eq([cr])
       end
 
       it "loads tags from parent" do
-        parent.raw_configuration_tags << cr
+        parent.direct_configuration_tags << cr
         expect(subject.configuration_tags).to eq([cr])
-        expect(subject.raw_configuration_tags).to eq([])
+        expect(subject.direct_configuration_tags).to eq([])
       end
 
       it "loads tags from parent helpers" do
-        parent.raw_configuration_tags << cr
+        parent.direct_configuration_tags << cr
         expect(subject.configuration_realm).to eq(cr)
       end
 
       it "leverages tags from child" do
-        subject.raw_configuration_tags << cr
-        parent.raw_configuration_tags << cr2
+        subject.direct_configuration_tags << cr
+        parent.direct_configuration_tags << cr2
         expect(subject.configuration_tags).to eq([cr])
       end
 
       it "leverages tags from child helpers" do
-        subject.raw_configuration_tags << cr
-        parent.raw_configuration_tags << cr2
+        subject.direct_configuration_tags << cr
+        parent.direct_configuration_tags << cr2
         expect(subject.configuration_realm).to eq(cr)
       end
 
@@ -70,31 +70,31 @@ describe ConfigurationProfileForeman do
         let(:grandparent) { parent.build_parent }
 
         it "loads tags from grandparent" do
-          parent.raw_configuration_tags << cd
-          grandparent.raw_configuration_tags << cr
+          parent.direct_configuration_tags << cd
+          grandparent.direct_configuration_tags << cr
           expect(subject.configuration_tags).to match_array([cr, cd])
-          expect(subject.raw_configuration_tags).to eq([])
+          expect(subject.direct_configuration_tags).to eq([])
         end
 
         it "loads tags from grandparent helpers" do
-          parent.raw_configuration_tags << cd
-          grandparent.raw_configuration_tags << cr
+          parent.direct_configuration_tags << cd
+          grandparent.direct_configuration_tags << cr
           expect(subject.configuration_domain).to eq(cd)
           expect(subject.configuration_realm).to eq(cr)
         end
 
         it "loads respects hierarchy" do
-          parent.raw_configuration_tags << cr
-          grandparent.raw_configuration_tags << cr2
-          grandparent.raw_configuration_tags << cd
+          parent.direct_configuration_tags << cr
+          grandparent.direct_configuration_tags << cr2
+          grandparent.direct_configuration_tags << cd
           expect(subject.configuration_tags).to eq([cr, cd])
-          expect(subject.raw_configuration_tags).to eq([])
+          expect(subject.direct_configuration_tags).to eq([])
         end
 
         it "loads respects hierarchy helpers" do
-          parent.raw_configuration_tags << cr
-          grandparent.raw_configuration_tags << cr2
-          grandparent.raw_configuration_tags << cd
+          parent.direct_configuration_tags << cr
+          grandparent.direct_configuration_tags << cr2
+          grandparent.direct_configuration_tags << cd
           expect(subject.configuration_domain).to eq(cd)
           expect(subject.configuration_realm).to eq(cr)
         end

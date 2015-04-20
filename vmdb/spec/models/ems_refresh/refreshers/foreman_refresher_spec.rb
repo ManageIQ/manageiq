@@ -137,9 +137,9 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
     expect(child.customization_script_ptable).to eq(mine(ptables)) # declared
     expect(child.configuration_locations).to     eq([default_location])
     expect(child.configuration_organizations).to eq([default_organization])
-    expect(child.raw_operating_system_flavor).to     be_nil
-    expect(child.raw_customization_script_medium).to be_nil
-    expect(child.raw_customization_script_ptable).to eq(mine(ptables))
+    expect(child.direct_operating_system_flavor).to     be_nil
+    expect(child.direct_customization_script_medium).to be_nil
+    expect(child.direct_customization_script_ptable).to eq(mine(ptables))
   end
 
   def assert_configuration_profile_parent
@@ -155,9 +155,9 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
     expect(parent.customization_script_ptable).to be_nil          # blank
     expect(parent.configuration_locations).to     eq([default_location])
     expect(parent.configuration_organizations).to eq([default_organization])
-    expect(parent.raw_operating_system_flavor).to     eq(mine(osfs))
-    expect(parent.raw_customization_script_medium).to eq(mine(media))
-    expect(parent.raw_customization_script_ptable).to be_nil
+    expect(parent.direct_operating_system_flavor).to     eq(mine(osfs))
+    expect(parent.direct_customization_script_medium).to eq(mine(media))
+    expect(parent.direct_customization_script_ptable).to be_nil
   end
 
   def assert_configured_system
@@ -177,9 +177,9 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
     expect(system.configuration_location).to      eq(default_location)
     expect(system.configuration_organization).to  eq(default_organization)
     expect(system.configuration_profile).to       eq(child)
-    expect(system.raw_operating_system_flavor).to     eq(mine(osfs))
-    expect(system.raw_customization_script_medium).to eq(mine(media))
-    expect(system.raw_customization_script_ptable).to eq(mine(ptables))
+    expect(system.direct_operating_system_flavor).to     eq(mine(osfs))
+    expect(system.direct_customization_script_medium).to eq(mine(media))
+    expect(system.direct_customization_script_ptable).to eq(mine(ptables))
   end
 
   private

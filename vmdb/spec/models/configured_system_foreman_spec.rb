@@ -13,18 +13,18 @@ describe ConfiguredSystemForeman do
     end
 
     it "reads tags" do
-      subject.raw_configuration_tags << cd
-      subject.raw_configuration_tags << cr
+      subject.direct_configuration_tags << cd
+      subject.direct_configuration_tags << cr
       expect(subject.configuration_tags).to match_array([cr, cd])
-      expect(subject.raw_configuration_tags).to match_array([cr, cd])
+      expect(subject.direct_configuration_tags).to match_array([cr, cd])
     end
 
     it "reads tag helpers" do
-      subject.raw_configuration_tags << cd
-      subject.raw_configuration_tags << cr
-      subject.raw_configuration_tags << ConfigurationArchitecture.new(:name => "CA")
-      subject.raw_configuration_tags << ConfigurationComputeProfile.new(:name => "CC")
-      subject.raw_configuration_tags << ConfigurationEnvironment.new(:name => "CE")
+      subject.direct_configuration_tags << cd
+      subject.direct_configuration_tags << cr
+      subject.direct_configuration_tags << ConfigurationArchitecture.new(:name => "CA")
+      subject.direct_configuration_tags << ConfigurationComputeProfile.new(:name => "CC")
+      subject.direct_configuration_tags << ConfigurationEnvironment.new(:name => "CE")
 
       expect(subject.configuration_domain).to eq(cd)
       expect(subject.configuration_realm).to eq(cr)
@@ -39,21 +39,21 @@ describe ConfiguredSystemForeman do
       let(:profile) { subject.build_configuration_profile }
 
       it "loads tags from profile" do
-        profile.raw_configuration_tags << cr
+        profile.direct_configuration_tags << cr
         expect(subject.configuration_tags).to eq([cr])
       end
 
       it "leverages tags from child" do
-        subject.raw_configuration_tags << cr
-        profile.raw_configuration_tags << cr2
+        subject.direct_configuration_tags << cr
+        profile.direct_configuration_tags << cr2
         expect(subject.configuration_tags).to eq([cr])
       end
 
       context "and a parent" do
         let(:parent) { profile.build_parent }
         it "loads tags from profile profile" do
-          profile.raw_configuration_tags << cd
-          parent.raw_configuration_tags << cr
+          profile.direct_configuration_tags << cd
+          parent.direct_configuration_tags << cr
           expect(subject.configuration_tags).to match_array([cr, cd])
         end
       end

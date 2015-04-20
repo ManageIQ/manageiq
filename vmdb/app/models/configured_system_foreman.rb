@@ -4,13 +4,13 @@ class ConfiguredSystemForeman < ConfiguredSystem
   belongs_to :configuration_profile, :class_name => 'ConfigurationProfileForeman'
   belongs_to :configuration_location
   belongs_to :configuration_organization
-  belongs_to :raw_operating_system_flavor,
+  belongs_to :direct_operating_system_flavor,
              :class_name  => 'OperatingSystemFlavor'
-  belongs_to :raw_customization_script_medium,
+  belongs_to :direct_customization_script_medium,
              :class_name => "CustomizationScriptMedium"
-  belongs_to :raw_customization_script_ptable,
+  belongs_to :direct_customization_script_ptable,
              :class_name => "CustomizationScriptPtable"
-  has_and_belongs_to_many :raw_configuration_tags,
+  has_and_belongs_to_many :direct_configuration_tags,
                           :join_table  => 'configuration_tags_configured_systems',
                           :class_name  => 'ConfigurationTag',
                           :foreign_key => :configured_system_id
@@ -62,7 +62,7 @@ class ConfiguredSystemForeman < ConfiguredSystem
 
   def tag_hash
     @tag_hash ||= begin
-      tag_hash = raw_configuration_tags.index_by(&:class)
+      tag_hash = direct_configuration_tags.index_by(&:class)
       configuration_profile ? tag_hash.reverse_merge(configuration_profile.tag_hash) : tag_hash
     end
   end

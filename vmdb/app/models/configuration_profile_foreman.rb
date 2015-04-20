@@ -1,16 +1,16 @@
 class ConfigurationProfileForeman < ConfigurationProfile
   belongs_to :parent, :class_name => 'ConfigurationProfileForeman'
 
-  belongs_to :raw_operating_system_flavor,
+  belongs_to :direct_operating_system_flavor,
              :class_name  => 'OperatingSystemFlavor'
 
-  belongs_to :raw_customization_script_ptable,
+  belongs_to :direct_customization_script_ptable,
              :class_name  => 'CustomizationScriptPtable'
 
-  belongs_to :raw_customization_script_medium,
+  belongs_to :direct_customization_script_medium,
              :class_name  => 'CustomizationScriptMedium'
 
-  has_and_belongs_to_many :raw_configuration_tags,
+  has_and_belongs_to_many :direct_configuration_tags,
                           :join_table  => 'configuration_profiles_configuration_tags',
                           :class_name  => 'ConfigurationTag',
                           :foreign_key => :configuration_profile_id
@@ -56,7 +56,7 @@ class ConfigurationProfileForeman < ConfigurationProfile
 
   def tag_hash
     @tag_hash ||= begin
-      tag_hash = raw_configuration_tags.index_by(&:class)
+      tag_hash = direct_configuration_tags.index_by(&:class)
       parent ? tag_hash.reverse_merge(parent.tag_hash) : tag_hash
     end
   end

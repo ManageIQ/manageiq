@@ -123,23 +123,23 @@ module EmsRefresh
       def configuration_profile_inv_to_hashes(recs, indexes)
         recs.collect do |profile|
           {
-            :type                               => "ConfigurationProfileForeman",
-            :manager_ref                        => profile["id"].to_s,
-            :parent_ref                         => (profile["ancestry"] || "").split("/").last.presence,
-            :name                               => profile["name"],
-            :description                        => profile["title"],
-            :raw_configuration_tag_ids          => [
+            :type                                  => "ConfigurationProfileForeman",
+            :manager_ref                           => profile["id"].to_s,
+            :parent_ref                            => (profile["ancestry"] || "").split("/").last.presence,
+            :name                                  => profile["name"],
+            :description                           => profile["title"],
+            :direct_configuration_tag_ids          => [
               id_lookup(indexes[:architectures], profile["architecture_id"]),
               id_lookup(indexes[:compute_profiles], profile["compute_profile_id"]),
               id_lookup(indexes[:domains], profile["domain_id"]),
               id_lookup(indexes[:environments], profile["environment_id"]),
               id_lookup(indexes[:realms], profile["realm_id"]),
             ].compact,
-            :raw_operating_system_flavor_id     => id_lookup(indexes[:flavors], profile["operatingsystem_id"]),
-            :raw_customization_script_medium_id => id_lookup(indexes[:media], profile["medium_id"]),
-            :raw_customization_script_ptable_id => id_lookup(indexes[:ptables], profile["ptable_id"]),
-            :configuration_location_ids         => ids_lookup(indexes[:locations], profile["locations"] || tax_refs),
-            :configuration_organization_ids     => ids_lookup(indexes[:organizations], profile["organizations"] || tax_refs),
+            :direct_operating_system_flavor_id     => id_lookup(indexes[:flavors], profile["operatingsystem_id"]),
+            :direct_customization_script_medium_id => id_lookup(indexes[:media], profile["medium_id"]),
+            :direct_customization_script_ptable_id => id_lookup(indexes[:ptables], profile["ptable_id"]),
+            :configuration_location_ids            => ids_lookup(indexes[:locations], profile["locations"] || tax_refs),
+            :configuration_organization_ids        => ids_lookup(indexes[:organizations], profile["organizations"] || tax_refs),
           }
         end.tap do |profiles|
           # populate profiles with rolled up values
@@ -147,9 +147,9 @@ module EmsRefresh
             # pull back a few fields that are to be merged
             ancestor_values = family_tree(profiles, p).map do |hash|
               {
-                :operating_system_flavor_id     => hash[:raw_operating_system_flavor_id],
-                :customization_script_medium_id => hash[:raw_customization_script_medium_id],
-                :customization_script_ptable_id => hash[:raw_customization_script_ptable_id],
+                :operating_system_flavor_id     => hash[:direct_operating_system_flavor_id],
+                :customization_script_medium_id => hash[:direct_customization_script_medium_id],
+                :customization_script_ptable_id => hash[:direct_customization_script_ptable_id],
               }
             end
             rollup(p, ancestor_values)
@@ -161,37 +161,37 @@ module EmsRefresh
       def configured_system_inv_to_hashes(recs, indexes)
         recs.collect do |cs|
           {
-            :type                               => "ConfiguredSystemForeman",
-            :manager_ref                        => cs["id"].to_s,
-            :hostname                           => cs["name"],
-            :configuration_profile              => id_lookup(indexes[:profiles], cs["hostgroup_id"]),
-            :raw_operating_system_flavor_id     => id_lookup(indexes[:flavors], cs["operatingsystem_id"]),
-            :raw_customization_script_medium_id => id_lookup(indexes[:media], cs["medium_id"]),
-            :raw_customization_script_ptable_id => id_lookup(indexes[:ptables], cs["ptable_id"]),
-            :raw_configuration_tag_ids          => [
+            :type                                  => "ConfiguredSystemForeman",
+            :manager_ref                           => cs["id"].to_s,
+            :hostname                              => cs["name"],
+            :configuration_profile                 => id_lookup(indexes[:profiles], cs["hostgroup_id"]),
+            :direct_operating_system_flavor_id     => id_lookup(indexes[:flavors], cs["operatingsystem_id"]),
+            :direct_customization_script_medium_id => id_lookup(indexes[:media], cs["medium_id"]),
+            :direct_customization_script_ptable_id => id_lookup(indexes[:ptables], cs["ptable_id"]),
+            :direct_configuration_tag_ids          => [
               id_lookup(indexes[:architectures], cs["architecture_id"]),
               id_lookup(indexes[:compute_profiles], cs["compute_profile_id"]),
               id_lookup(indexes[:domains], cs["domain_id"]),
               id_lookup(indexes[:environments], cs["environment_id"]),
               id_lookup(indexes[:realms], cs["realm_id"])].compact,
-            :last_checkin                       => cs["last_compile"],
-            :build_state                        => cs["build"] ? "pending" : nil,
-            :ipaddress                          => cs["ip"],
-            :mac_address                        => cs["mac"],
-            :ipmi_present                       => cs["sp_ip"].present?,
-            :configuration_location_id          => id_lookup(indexes[:locations], cs["location_id"] || 0),
-            :configuration_organization_id      => id_lookup(indexes[:organizations], cs["organization_id"] || 0),
+            :last_checkin                          => cs["last_compile"],
+            :build_state                           => cs["build"] ? "pending" : nil,
+            :ipaddress                             => cs["ip"],
+            :mac_address                           => cs["mac"],
+            :ipmi_present                          => cs["sp_ip"].present?,
+            :configuration_location_id             => id_lookup(indexes[:locations], cs["location_id"] || 0),
+            :configuration_organization_id         => id_lookup(indexes[:organizations], cs["organization_id"] || 0),
           }
         end.tap do |systems|
           # if the system doesn't have a value, use the rolled up profile value
           systems.each do |s|
             parent = s[:configuration_profile] || {}
             s.merge!(
-              :operating_system_flavor_id     => s[:raw_operating_system_flavor_id].presence ||
+              :operating_system_flavor_id     => s[:direct_operating_system_flavor_id].presence ||
                                                  parent[:operating_system_flavor_id].presence,
-              :customization_script_medium_id => s[:raw_customization_script_medium_id].presence ||
+              :customization_script_medium_id => s[:direct_customization_script_medium_id].presence ||
                                                  parent[:customization_script_medium_id].presence,
-              :customization_script_ptable_id => s[:raw_customization_script_ptable_id].presence ||
+              :customization_script_ptable_id => s[:direct_customization_script_ptable_id].presence ||
                                                  parent[:customization_script_ptable_id].presence,
             )
           end
