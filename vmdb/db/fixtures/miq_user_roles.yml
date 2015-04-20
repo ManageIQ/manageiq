@@ -755,27 +755,28 @@
       :vms: :user
   :miq_product_feature_identifiers:
   - about
+  - miq_request_admin
+  - miq_request_view
   - my_settings_default_views
   - my_settings_my_tags
   - my_settings_visuals
-  - miq_request_admin
-  - miq_request_view
   - vm_clone
+  - vm_cloud_explorer
   - vm_filter_accord
+  - vm_guest_restart
+  - vm_guest_shutdown
   - vm_infra_explorer
   - vm_miq_request_new
   - vm_publish
   - vm_reset
-  - vm_guest_restart
   - vm_retire_now
   - vm_show
   - vm_show_list
-  - vm_guest_shutdown
+  - vm_snapshot_view
   - vm_start
   - vm_stop
   - vm_suspend
   - vm_tag
-  - vm_snapshot_view
 
 - :name: EvmRole-user_self_service
   :read_only: true
@@ -784,6 +785,17 @@
       :vms: :user_or_group
   :miq_product_feature_identifiers:
   - about
+  - miq_template_clone
+  - miq_template_drift
+  - miq_template_edit
+  - miq_template_perf
+  - miq_template_refresh
+  - miq_template_show
+  - miq_template_show_list
+  - miq_template_snapshot
+  - miq_template_sync
+  - miq_template_tag
+  - miq_template_timeline
   - my_settings_default_views
   - my_settings_my_tags
   - my_settings_visuals
@@ -798,48 +810,36 @@
   - provider_foreman_tag
   - vm_console
   - vm_clone
-  - vm_filter_accord
-  - vm_infra_explorer
-  - vm_vnc_console
-  - vm_vmrc_console
+  - vm_cloud_explorer
+  - vm_console
   - vm_drift
   - vm_edit
+  - vm_filter_accord
+  - vm_guest_restart
+  - vm_guest_shutdown
+  - vm_infra_explorer
   - vm_miq_request_new
   - vm_perf
   - vm_publish
   - vm_refresh
   - vm_reset
   - vm_retire_now
-  - vm_guest_restart
   - vm_show
   - vm_show_list
-  - vm_guest_shutdown
+  - vm_snapshot
   - vm_start
   - vm_stop
   - vm_suspend
   - vm_sync
   - vm_tag
   - vm_timeline
-  - vm_snapshot
-  - miq_template_clone
-  - miq_template_drift
-  - miq_template_edit
-  - miq_template_perf
-  - miq_template_refresh
-  - miq_template_show
-  - miq_template_show_list
-  - miq_template_sync
-  - miq_template_tag
-  - miq_template_timeline
-  - miq_template_snapshot
+  - vm_vmrc_console
+  - vm_vnc_console
 
 - :name: EvmRole-vm_user
   :read_only: true
   :miq_product_feature_identifiers:
   - about
-  - my_settings_default_views
-  - my_settings_my_tags
-  - my_settings_visuals
   - miq_request_admin
   - miq_request_view
   - miq_template_analyze
@@ -850,10 +850,10 @@
   - miq_template_perf
   - miq_template_show
   - miq_template_show_list
+  - miq_template_snapshot
   - miq_template_sync
   - miq_template_tag
   - miq_template_timeline
-  - miq_template_snapshot
   - provider_foreman_authentication_validate
   - provider_foreman_edit
   - provider_foreman_delete
@@ -861,31 +861,35 @@
   - provider_foreman_provision
   - provider_foreman_refresh
   - provider_foreman_tag
+  - my_settings_default_views
+  - my_settings_my_tags
+  - my_settings_visuals
   - vm_analyze
   - vm_check_compliance
   - vm_clone
+  - vm_cloud_explorer
   - vm_collect_running_processes
   - vm_compare
   - vm_console
-  - vm_explorer
-  - vm_vnc_console
-  - vm_vmrc_console
   - vm_drift
+  - vm_explorer
+  - vm_guest_restart
+  - vm_guest_shutdown
   - vm_miq_request_new
-  - vm_publish
   - vm_perf
   - vm_policy_sim
+  - vm_publish
   - vm_refresh
   - vm_reset
-  - vm_guest_restart
   - vm_retire_now
   - vm_show
   - vm_show_list
-  - vm_guest_shutdown
+  - vm_snapshot
   - vm_start
   - vm_stop
   - vm_suspend
   - vm_sync
   - vm_tag
   - vm_timeline
-  - vm_snapshot
+  - vm_vmrc_console
+  - vm_vnc_console
