@@ -12,6 +12,9 @@ class MiqExpression
     Compliance
     ConfiguredSystemForeman
     ConfigurationManager
+    Container
+    ContainerGroup
+    ContainerNode
     EmsCloud
     EmsCluster
     EmsClusterPerformance
