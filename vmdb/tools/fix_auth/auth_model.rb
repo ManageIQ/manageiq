@@ -82,6 +82,8 @@ module FixAuth
       end
 
       def run(options = {})
+        return if available_columns.empty?
+        puts "fixing #{table_name}.#{available_columns.join(", ")}"
         contenders(options[:v2]).each do |r|
           fix_passwords(r, options)
           if options[:verbose]
