@@ -159,7 +159,7 @@
                 %tr
                   %td.key= _('Repositories')
                   %td
-                    %ul#toolbars= render_view_buttons(:repo, @edit[:new][:views][:repo])
+                    %ul#toolbars= render_view_buttons(:repository, @edit[:new][:views][:repository])
         - if get_vmdb_config[:product][:storage]
           %fieldset
             %h3= _('Storage')
