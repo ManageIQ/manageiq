@@ -518,6 +518,7 @@ module EmsRefresh::Parsers
       uid = resource[:physical_resource_id]
       new_result = {
         :ems_ref                => uid,
+        :name                   => resource[:logical_resource_id],
         :logical_resource       => resource[:logical_resource_id],
         :physical_resource      => uid,
         :resource_category      => resource[:resource_type],
