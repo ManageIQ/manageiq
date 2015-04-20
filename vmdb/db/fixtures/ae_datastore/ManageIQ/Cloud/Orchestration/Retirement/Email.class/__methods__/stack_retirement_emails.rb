@@ -59,24 +59,6 @@ if event_type == "stack_retire_warn"
   body += "<br> #{signature}"
 end
 
-if event_type == "stack_retire_extend"
-
-  from = nil
-  from ||= $evm.object['from_email_address']
-
-  signature = nil
-  signature ||= $evm.object['signature']
-
-  subject = "Stack Retirement Extended for #{stack_name}"
-
-  body = "Hello, "
-  body += "<br><br>Your stack: [#{stack_name}] will now be retired on [#{stack['retires_on']}]."
-  body += "<br><br>If you need to use this stack past this date please request an"
-  body += "<br><br>extension by contacting Support."
-  body += "<br><br> Thank you,"
-  body += "<br> #{signature}"
-end
-
 if event_type == "stack_entered_retirement"
 
   from = nil

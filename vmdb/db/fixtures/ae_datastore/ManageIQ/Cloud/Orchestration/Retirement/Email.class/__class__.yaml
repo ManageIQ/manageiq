@@ -72,31 +72,11 @@ object:
       max_retries: 
       max_time: 
   - field:
-      aetype: attribute
-      name: stack_retire_extend_days
-      display_name: 
-      datatype: string
-      priority: 4
-      owner: 
-      default_value: 
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
       aetype: method
       name: method1
       display_name: 
       datatype: string
-      priority: 5
+      priority: 4
       owner: 
       default_value: 
       substitute: true

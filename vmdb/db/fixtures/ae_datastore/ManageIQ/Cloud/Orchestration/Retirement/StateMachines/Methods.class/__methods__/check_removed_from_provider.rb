@@ -11,7 +11,7 @@ if stack
     $evm.root['ae_result'] = 'error'
     $evm.root['ae_reason'] = 'Cannot find status of stack #{stack.name}. It may not exist in the provider'
   elsif status.downcase == 'delete_complete'
-    $evm.set_state_var('stack_removed_from_provider')
+    $evm.set_state_var('stack_removed_from_provider', true)
   else
     $evm.root['ae_result']	   = 'retry'
     $evm.root['ae_retry_interval'] = '1.minute'
