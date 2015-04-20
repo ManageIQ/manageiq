@@ -1,35 +1,22 @@
 - if field.type == "DialogFieldDateControl"
   - if edit
-    = text_field_tag("miq_date__#{field.name}",
-                     field.value,
-                     :class                  => "css1 dynamic-date-#{field.id}",
-                     :readonly               => "true",
-                     "data-miq_observe_date" => {:url => url}.to_json)
+    = text_field_tag("miq_date__#{field.name}", field.value, date_tag_options(field, url))
   - else
     = field.value
 
 - if field.type == "DialogFieldDateTimeControl"
   - date_val = field.refresh_json_value
   - if edit
-    = text_field_tag("miq_date__#{field.name}",
-                     date_val[:date],
-                     :class                  => "css1 dynamic-date-#{field.id}",
-                     :readonly               => "true",
-                     "data-miq_observe_date" => {:url => url}.to_json)
+    = text_field_tag("miq_date__#{field.name}", date_val[:date], date_tag_options(field, url))
   - else
     = date_val[:date]
 
   &nbsp;at&nbsp;
   - if edit
-    = select_tag("start_hour",
-                 options_for_select(Array.new(24) {|i| i.to_s.rjust(2, '0')}, date_val[:hour]),
-                 :class => "dynamic-date-hour-#{field.id}",
-                 "data-miq_observe" => {:url => url}.to_json)
+    = select_tag("start_hour", hour_select_options(date_val[:hour]), time_tag_options(field, url, "hour"))
     = ':'
-    = select_tag("start_min",
-                 options_for_select(Array.new(59) {|i| i.to_s.rjust(2, '0')}, date_val[:min]),
-                 :class => "dynamic-date-min-#{field.id}",
-                 "data-miq_observe" => {:url => url}.to_json)
+    = select_tag("start_min", minute_select_options(date_val[:min]), time_tag_options(field, url, "min"))
+
   - else
     = "#{date_val[:hour].rjust(2, '0')}:#{date_val[:min].rjust(2, '0')}"
   &nbsp;

@@ -168,6 +168,7 @@ describe DialogFieldTextBox do
         "value"          => value,
         "protected"      => true,
         "required"       => true,
+        "read_only"      => true,
         "validator_type" => "regex",
         "validator_rule" => "rule"
       }
@@ -184,6 +185,10 @@ describe DialogFieldTextBox do
 
       it "sets the required" do
         expect(dialog_field.required).to be_true
+      end
+
+      it "sets the read_only" do
+        expect(dialog_field.read_only).to be_true
       end
 
       it "sets the validator type" do
@@ -217,10 +222,11 @@ describe DialogFieldTextBox do
   end
 
   describe "#sample_text" do
-    let(:dialog_field) { described_class.new(:dynamic => dynamic, :value => "defaultvalue") }
+    let(:dialog_field) { described_class.new(:dynamic => dynamic, :value => value, :default_value => "defaultvalue") }
 
     context "when the dialog is dynamic" do
       let(:dynamic) { true }
+      let(:value) { "somevalue" }
 
       it "returns 'Sample Text'" do
         expect(dialog_field.sample_text).to eq("Sample Text")
@@ -230,8 +236,20 @@ describe DialogFieldTextBox do
     context "when the dialog is not dynamic" do
       let(:dynamic) { false }
 
-      it "returns the value" do
-        expect(dialog_field.sample_text).to eq("defaultvalue")
+      context "when the dialog has a value" do
+        let(:value) { "somevalue" }
+
+        it "returns the value" do
+          expect(dialog_field.sample_text).to eq("somevalue")
+        end
+      end
+
+      context "when the dialog does not have a value" do
+        let(:value) { nil }
+
+        it "returns the default value" do
+          expect(dialog_field.sample_text).to eq("defaultvalue")
+        end
       end
     end
   end

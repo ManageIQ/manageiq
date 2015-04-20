@@ -10,6 +10,7 @@ describe DialogFieldTextAreaBox do
         "value"          => value,
         "protected"      => true,
         "required"       => true,
+        "read_only"      => true,
         "validator_rule" => "rule",
         "validator_type" => "regex"
       }
@@ -33,7 +34,11 @@ describe DialogFieldTextAreaBox do
       end
 
       it "sets the required" do
-        expect(dialog_field.required).to eq(true)
+        expect(dialog_field.required).to be_true
+      end
+
+      it "sets the read_only" do
+        expect(dialog_field.read_only).to be_true
       end
     end
 
