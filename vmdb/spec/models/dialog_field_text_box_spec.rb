@@ -168,6 +168,7 @@ describe DialogFieldTextBox do
         "value"          => value,
         "protected"      => true,
         "required"       => true,
+        "read_only"      => true,
         "validator_type" => "regex",
         "validator_rule" => "rule"
       }
@@ -184,6 +185,10 @@ describe DialogFieldTextBox do
 
       it "sets the required" do
         expect(dialog_field.required).to be_true
+      end
+
+      it "sets the read_only" do
+        expect(dialog_field.read_only).to be_true
       end
 
       it "sets the validator type" do

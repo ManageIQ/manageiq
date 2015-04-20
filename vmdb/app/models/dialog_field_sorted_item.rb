@@ -49,7 +49,7 @@ class DialogFieldSortedItem < DialogField
   end
 
   def normalize_automate_values(automate_hash)
-    %w(sort_by sort_order data_type default_value required).each do |key|
+    %w(sort_by sort_order data_type default_value required read_only).each do |key|
       send("#{key}=", automate_hash[key]) if automate_hash.key?(key)
     end
 

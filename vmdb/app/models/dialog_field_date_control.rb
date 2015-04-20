@@ -1,5 +1,5 @@
 class DialogFieldDateControl < DialogField
-  AUTOMATE_VALUE_FIELDS = %w(show_past_dates)
+  AUTOMATE_VALUE_FIELDS = %w(show_past_dates read_only)
 
   include TimezoneMixin
 
