@@ -473,6 +473,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
 
     # assert one of the resource models
     resources[3].should have_attributes(
+      :name                   => "WebServer",
       :logical_resource       => "WebServer",
       :physical_resource      => "i-b98fdd57",
       :resource_category      => "AWS::EC2::Instance",

@@ -102,6 +102,7 @@ module EmsRefresh
           uid = resource['physical_resource_id']
           new_result = {
             :ems_ref                => uid,
+            :name                   => resource['resource_name'],
             :logical_resource       => resource['logical_resource_id'],
             :physical_resource      => uid,
             :resource_category      => resource['resource_type'],
