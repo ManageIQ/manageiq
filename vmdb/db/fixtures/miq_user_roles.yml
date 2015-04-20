@@ -784,8 +784,6 @@
       :vms: :user_or_group
   :miq_product_feature_identifiers:
   - about
-  - miq_request_admin
-  - miq_request_view
   - miq_template_clone
   - miq_template_drift
   - miq_template_edit
