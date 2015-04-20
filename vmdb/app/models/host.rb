@@ -1392,10 +1392,25 @@ class Host < ActiveRecord::Base
   def refresh_services(ssu)
     begin
       xml = MiqXml.createDoc(:miq).root.add_element(:services)
-      services = ssu.shell_exec("chkconfig --list")
-      services = MiqLinux::Utils.parse_chkconfig_list(services)
+
+      services = ssu.shell_exec("systemctl -a --type service")
+      if services
+        # If there is a systemd use only that, chconfig is calling systemd on the background, but has misleading results
+        services = MiqLinux::Utils.parse_systemctl_list(services)
+      else
+        services = ssu.shell_exec("chkconfig --list")
+        services = MiqLinux::Utils.parse_chkconfig_list(services)
+      end
+
       services.each do |service|
-        s = xml.add_element(:service, {'name' => service[:name]})
+        s = xml.add_element(:service,
+                            'name'           => service[:name],
+                            'systemd_load'   => service[:systemd_load],
+                            'systemd_sub'    => service[:systemd_sub],
+                            'description'    => service[:description],
+                            'running'        => service[:running],
+                            'systemd_active' => service[:systemd_active],
+                            'typename'       => service[:typename])
         service[:enable_run_level].each  { |l| s.add_element(:enable_run_level,  'value' => l) } unless service[:enable_run_level].nil?
         service[:disable_run_level].each { |l| s.add_element(:disable_run_level, 'value' => l) } unless service[:disable_run_level].nil?
       end
