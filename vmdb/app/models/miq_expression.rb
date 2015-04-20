@@ -63,6 +63,7 @@ class MiqExpression
     cloud_tenants
     compliances
     compliance_details
+    computer_systems
     configuration_profiles
     configuration_managers
     configured_systems
