@@ -567,7 +567,7 @@ class Host < ActiveRecord::Base
     self.save! unless config[:repository_vm]
 
     # should we raise an event for this stuff?
-    (config[:repo] ? config[:repo] : self).enforce_policy(newVm, "vm_discover")
+    (config[:repository] ? config[:repository] : self).enforce_policy(newVm, "vm_discover")
 
     return newVm
   end
@@ -608,8 +608,8 @@ class Host < ActiveRecord::Base
 
     if vm[:registeredOnHost] == false
       vm[:location] = Repository.parse_path(vm[:location])[1]
-      config[:repo] = Repository.find(vm[:repository_id])
-      vm[:storage_id] = config[:repo].storage_id
+      config[:repository] = Repository.find(vm[:repository_id])
+      vm[:storage_id] = config[:repository].storage_id
 
       config.merge!(:repository_vm => true, :type => "repository")
     else
