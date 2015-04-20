@@ -1052,13 +1052,10 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def storage2proxies
-    return @storage_proxies unless @storage_proxies.nil?
-
-    MiqPreloader.preload(self, :storage => {:hosts => :miq_proxy})
-    proxies = self.storage2hosts.select { |h| h && h.is_a_proxy? }
-
-    # Support vixDisk scanning of VMware VMs from the vmdb server
-    return @storage_proxies = proxies + self.miq_server_proxies
+    @storage_proxies ||= begin
+      # Support vixDisk scanning of VMware VMs from the vmdb server
+      self.miq_server_proxies
+    end
   end
 
   def storage2active_proxies(all_proxy_list = nil)

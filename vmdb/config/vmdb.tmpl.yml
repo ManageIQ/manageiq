@@ -446,8 +446,6 @@ workers:
         - miq_policies
         - miq_policy_contents
         - miq_product_features
-        - miq_proxies_product_updates
-        - miq_proxies
         - miq_queue
         - miq_roles_features
         - miq_report_result_details
@@ -463,8 +461,6 @@ workers:
         - miq_widgets
         - miq_widget_contents
         - miq_workers
-        - product_updates
-        - proxy_tasks
         - rss_feeds
         - schema_migrations
         - server_roles

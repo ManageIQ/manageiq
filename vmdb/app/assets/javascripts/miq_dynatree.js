@@ -305,15 +305,6 @@ function cfmeOnClick_TagCat(id) {
   }
 }
 
-// OnCheck handler for the SmartProxy Affinity tree
-function cfmeOnClick_SmartProxyAffinityCheck(node) {
-  if (node.isSelected())
-    var checked = '0';  // If node was selected, now unchecking
-  else
-    var checked = '1';
-  miqJqueryRequest(check_url + node.data.key + '?check=' + checked);
-}
-
 // OnClick handler for Genealogy Tree
 function cfmeOnClick_GenealogyTree(id) {
   switch(hover_node_id(id)[0]) {

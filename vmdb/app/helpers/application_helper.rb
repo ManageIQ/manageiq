@@ -240,9 +240,6 @@ module ApplicationHelper
     when "MiqCimInstance"
       controller = @view ? @view.db.underscore : @record.class.to_s.underscore
       action = "show"
-    when "ProductUpdate"
-      controller = "ops"
-      action = "show_product_update"
     when "SecurityGroup"
       controller = "security_group"
       action = "show"
@@ -548,7 +545,7 @@ module ApplicationHelper
 
   def get_image(img, b_name)
     # to change summary screen button to green image
-    return "summary-green" if b_name == "show_summary" && ["scan_profile","miq_schedule","miq_proxy"].include?(@layout)
+    return "summary-green" if b_name == "show_summary" && %w(miq_schedule miq_task scan_profile).include?(@layout)
     img
   end
 
@@ -935,13 +932,6 @@ module ApplicationHelper
       when "profile_delete"
         return true unless role_allows(:feature => "profile_delete")
       end
-    when "MiqProxy"
-      case id
-      when "miq_proxy_edit"
-        return true if params[:action] == "log_viewer"
-      when "miq_proxy_deploy"
-        return true if !@record.host.smart? || params[:action] == "log_viewer"
-      end
     when "MiqProvisionRequest", "MiqHostProvisionRequest", "VmReconfigureRequest",
         "VmMigrateRequest", "AutomationRequest",
         "ServiceReconfigureRequest", "ServiceTemplateProvisionRequest", "MiqProvisionConfiguredSystemRequest"
@@ -1212,17 +1202,6 @@ module ApplicationHelper
         return @record.is_available_now_error_message(:shutdown) if @record.is_available_now_error_message(:shutdown)
       when "host_restart"
         return @record.is_available_now_error_message(:reboot) if @record.is_available_now_error_message(:reboot)
-      end
-    when "MiqProxy"
-      case id
-      when "miq_proxy_deploy"
-        if !@record.host.state.blank? && @record.host.state != "on"
-          return "The SmartProxy can not be managed because the Host is not powered on"
-        else
-          if @record.host.available_builds.length == 0
-            return "Host OS is unknown or there are no available SmartProxy versions for the Host's OS"
-          end
-        end
       end
     when "MiqAction"
       case id
@@ -1590,8 +1569,6 @@ module ApplicationHelper
       title += ": #{layout.titleize}"
 
     # Specific titles for certain layouts
-    elsif layout == "miq_proxy"
-      title += ": SmartProxies"
     elsif layout == "miq_server"
       title += ": Servers"
     elsif layout == "usage"
@@ -1814,13 +1791,12 @@ module ApplicationHelper
     if @show_taskbar.nil?
       @show_taskbar = false
       if ! (@layout == ""  &&
-      # if ! (@layout == "dashboard"  &&
-          ["show","change_tab","auth_error"].include?(controller.action_name) ||
-          ["about","rss","server_build","product_update","miq_policy","miq_ae_class",
-           "miq_capacity_utilization","miq_capacity_planning","miq_capacity_bottlenecks","miq_capacity_waste","chargeback",
-           "miq_ae_export","miq_ae_automate_button","miq_ae_tools","miq_policy_export","miq_policy_rsop","report",
-           "ops", "pxe", "exception"].include?(@layout) ||
-          (@layout == "configuration" && @tabform != "ui_4")) && !controller.action_name.end_with?("tagging_edit")
+        %w(auth_error change_tab show).include?(controller.action_name) ||
+        %w(about chargeback exception miq_ae_automate_button miq_ae_class miq_ae_export
+           miq_ae_tools miq_capacity_bottlenecks miq_capacity_planning miq_capacity_utilization
+           miq_capacity_waste miq_policy miq_policy_export miq_policy_rsop ops pxe report rss
+           server_build).include?(@layout) ||
+        (@layout == "configuration" && @tabform != "ui_4")) && !controller.action_name.end_with?("tagging_edit")
         unless @explorer
           @show_taskbar = true
         end
@@ -2134,18 +2110,12 @@ module ApplicationHelper
         return "ldap_region_center_tb"
       elsif x_node.split('-').first == "ld"
         return "ldap_domain_center_tb"
-      elsif x_node.split('-').first == "svr" &&
-          @sb[:active_tab] == "settings_maintenance"
-        return "product_updates_center_tb"
       elsif x_node.split('-').last == "sis"
         return "scan_profiles_center_tb"
       elsif x_node.split('-').first == "sis"
         return "scan_profile_center_tb"
       elsif x_node.split('-').last == "z"
         return "zones_center_tb"
-      elsif x_node.split('-').first == "z" &&
-          @sb[:active_tab] != "settings_smartproxy_affinity"
-        return "zone_center_tb"
       end
     elsif x_active_tree == :diagnostics_tree
       if x_node == "root"
@@ -2294,7 +2264,7 @@ module ApplicationHelper
       #show_list and show screens
       if !@in_a_form
         if %w(availability_zone container_group container_node container_service ems_cloud ems_cluster
-              ems_container ems_infra flavor host miq_proxy ontap_file_share ontap_logical_disk
+              ems_container ems_infra flavor host ontap_file_share ontap_logical_disk
               ontap_storage_system orchestration_stack repository resource_pool storage storage_manager
               timeline usage security_group).include?(@layout)
           if ["show_list"].include?(@lastaction)
@@ -2606,7 +2576,6 @@ module ApplicationHelper
   def render_flash_msg?
     # Don't render flash message in gtl, partial is already being rendered on screen
     return false if request.parameters[:controller] == "miq_request" && @lastaction == "show_list"
-    return false if request.parameters[:controller] == "ops" && @lastaction == "product_updates_list"
     return false if request.parameters[:controller] == "service" && @lastaction == "show" && @view
     return true
   end
@@ -2639,7 +2608,7 @@ module ApplicationHelper
 
   GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_tenant condition container_group
                         container_node container_service ems_cloud ems_cluster ems_container ems_infra event
-                        flavor host miq_proxy miq_schedule miq_template offline ontap_file_share
+                        flavor host miq_schedule miq_template offline ontap_file_share
                         ontap_logical_disk ontap_storage_system ontap_storage_volume orchestration_stack
                         policy policy_group policy_profile repository resource_pool retired scan_profile
                         service snia_local_file_system storage storage_manager templates)
@@ -2702,7 +2671,7 @@ module ApplicationHelper
       "vm"
     elsif %w(action availability_zone cim_base_storage_extent cloud_tenant condition container_group
              container_node container_service ems_cloud ems_container ems_cluster ems_infra flavor
-             host miq_proxy miq_schedule miq_template policy ontap_file_share ontap_logical_disk
+             host miq_schedule miq_template policy ontap_file_share ontap_logical_disk
              ontap_storage_system ontap_storage_volume orchestration_stack repository resource_pool
              scan_profile security_group service snia_local_file_system storage
              storage_manager timeline).include?(@layout)

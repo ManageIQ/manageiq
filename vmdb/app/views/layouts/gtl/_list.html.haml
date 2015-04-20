@@ -95,7 +95,7 @@
             - unless (@embedded || @no_checkboxes) && ! @showlinks
               - # Don't put a td URL for the server_build list view
               - case view.db
-              - when "ProductUpdate", "ServerBuild", "MiqTask", "MiqEvent", "VmdbDatabaseConnection", "VmdbDatabaseSetting"
+              - when "ServerBuild", "MiqTask", "MiqEvent", "VmdbDatabaseConnection", "VmdbDatabaseSetting"
               - when "MiqProvision"
                 - rec = @targets_hash[row['id']] if @targets_hash
                 - unless rec.destination_id.blank?

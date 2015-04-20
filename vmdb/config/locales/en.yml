@@ -979,7 +979,6 @@ en:
       miq_provision_template:      Provisioned From Template
       miq_provision_vms:           Provisioned VMs
       miq_provisions:              Provisions
-      miq_proxy:                   SmartProxy
       miq_proxy_builds:            SmartProxy Builds
       miq_region:                  Region
       miq_regions:                 Regions

@@ -257,10 +257,6 @@ class ExtManagementSystem < ActiveRecord::Base
     self.hosts.select { |h| !h.ems_cluster.nil? }
   end
 
-  def miq_proxies
-    MiqProxy.all.select { |p| p.ext_management_system == self }
-  end
-
   def clear_association_cache_with_storages
     @storages = nil
     self.clear_association_cache_without_storages

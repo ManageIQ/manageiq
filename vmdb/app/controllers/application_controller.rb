@@ -1942,7 +1942,7 @@ class ApplicationController < ActionController::Base
     @targets_hash             = attrs[:targets_hash] if attrs[:targets_hash]
 
     # Set up the grid variables for list view, with exception models below
-    if !["MiqTask", "Job", "ProductUpdate", "MiqProvision", "MiqReportResult"].include?(view.db) &&
+    if !%w(Job MiqProvision MiqReportResult MiqTask).include?(view.db) &&
       !view.db.ends_with?("Build") && !@force_no_grid_xml && (@gtl_type == "list" || @force_grid_xml)
       @grid_xml = view_to_xml(view, 0, -1, :association => association)
     end
@@ -2094,10 +2094,10 @@ class ApplicationController < ActionController::Base
       page << "miqSetButtons(0,'center_tb');"                             # Reset the center toolbar
       page << "}";
       if ! (@layout == "dashboard" && ["show","change_tab","auth_error"].include?(@controller.action_name) ||
-        ["about", "all_tasks", "all_ui_tasks", "configuration", "diagnostics", "miq_ae_automate_button",
-          "miq_ae_customization", "miq_ae_export", "miq_ae_logs", "miq_ae_tools", "miq_policy", "miq_policy_export",
-          "miq_policy_logs", "miq_request_ae", "miq_request_configured_system", "miq_request_host", "miq_request_vm",
-          "my_tasks", "my_ui_tasks", "product_update", "report", "rss", "server_build"].include?(@layout))
+        %w(about all_tasks all_ui_tasks configuration diagnostics miq_ae_automate_button
+           miq_ae_customization miq_ae_export miq_ae_logs miq_ae_tools miq_policy miq_policy_export
+           miq_policy_logs miq_request_ae miq_request_configured_system miq_request_host
+           miq_request_vm my_tasks my_ui_tasks report rss server_build).include?(@layout))
         page.replace(:listnav_div, :partial=>"layouts/listnav")               # Replace accordion, if list_nav_div is there
       end
       if @grid_xml                                  # Replacing a grid
@@ -2291,7 +2291,7 @@ class ApplicationController < ActionController::Base
         session[:tab_url][:vi] = inbound_url if ["show", "show_list", "timeline", "jobs","ui_jobs","usage","chargeback","explorer"].include?(action_name)
       when "support"
         session[:tab_url][:set] = inbound_url if ["index"].include?(action_name)
-      when "configuration","ops","product_update"
+      when "configuration", "miq_task", "ops"
         session[:tab_url][:set] = inbound_url if ["explorer","index"].include?(action_name)
       when "miq_ae_tools", "miq_ae_class", "miq_ae_customization"
         session[:tab_url][:aut] = inbound_url if ["explorer","resolve","index","explorer","log","import_export","automate_button"].include?(action_name)
@@ -2528,7 +2528,7 @@ class ApplicationController < ActionController::Base
     session[:edit] = @edit ? @edit : nil                    # Set or clear session edit hash
 
     session[:view] = @view ? @view : nil                    # Set or clear view in session hash
-    unless params[:controller] == "miq_proxy"               # Proxy needs data for delete all
+    unless params[:controller] == "miq_task"                # Proxy needs data for delete all
       session[:view].table = nil if session[:view]          # Don't need to carry table data around
     end
 

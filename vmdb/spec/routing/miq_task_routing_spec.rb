@@ -1,13 +1,13 @@
 require "spec_helper"
-require "routing/shared_examples"
 
-describe "routes for MiqTemplateController" do
-  let(:controller_name) { "miq_template" }
+describe "routes for MiqTaskController" do
+  let(:controller_name) { "miq_task" }
 
   %w(
-    edit
-    show
-    ownership
+    change_tab
+    index
+    jobs
+    tasks_show_option
   ).each do |task|
     describe "##{task}" do
       it 'routes with GET' do
@@ -17,10 +17,10 @@ describe "routes for MiqTemplateController" do
   end
 
   %w(
-    edit
-    edit_vm
-    form_field_changed
-    show
+    button
+    jobs
+    tasks_button
+    tasks_change_options
   ).each do |task|
     describe "##{task}" do
       it 'routes with POST' do

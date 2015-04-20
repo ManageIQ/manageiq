@@ -30,11 +30,6 @@ module EmsCommon
       end
       @showtype = "config"
       build_dc_tree
-    elsif @display == "miq_proxies"
-      drop_breadcrumb( {:name=>@ems.name+" (Managing SmartProxies)", :url=>"/#{@table_name}/show/#{@ems.id}?display=miq_proxies"} )
-      @view, @pages = get_view(MiqProxy, :parent=>@ems) # Get the records (into a view) and the paginator
-      @showtype = "miq_proxies"
-      @no_checkboxes = true
     elsif @display == "timeline"
       @showtype = "timeline"
       session[:tl_record_id] = params[:id] if params[:id]

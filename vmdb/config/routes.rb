@@ -123,11 +123,6 @@ Vmdb::Application.routes.draw do
   )
 
   CONTROLLER_ACTIONS = {
-    :agent => {
-      :get  => %w(get),
-      :post => %w(log)
-    },
-
     :alert                   => {
       :get  => %w(
         index
@@ -904,45 +899,6 @@ Vmdb::Application.routes.draw do
         x_post
     },
 
-    :miq_proxy              => {
-      :get => %w(
-        change_tab
-        download_data
-        edit
-        fetch_zip
-        get_log
-        index
-        install_007
-        jobs
-        log_viewer
-        new
-        protect
-        show
-        show_list
-        tagging
-        tasks_show_option
-      ) +
-        compare_get,
-      :post => %w(
-        button
-        create
-        credential_field_changed
-        form_field_changed
-        get_log
-        install_007
-        jobs
-        panel_control
-        protect
-        sections_field_changed
-        show
-        show_list
-        tasks_button
-        tasks_change_options
-        update
-      ) +
-        compare_post
-    },
-
     :miq_request            => {
       # FIXME: Change stamp to POST only; We need to remove the redirect
       :get  => %w(
@@ -987,6 +943,22 @@ Vmdb::Application.routes.draw do
       ) +
         dialog_runner_post
     },
+
+    :miq_task => {
+      :get => %w(
+        change_tab
+        index
+        jobs
+        tasks_show_option
+      ),
+      :post => %w(
+        button
+        jobs
+        tasks_button
+        tasks_change_options
+      )
+    },
+
 
     :miq_template           => {
       :get  => %w(

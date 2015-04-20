@@ -5,12 +5,8 @@
       %ul.tab
         %li
           %a{:href => "#settings_evm_servers"}=_("Zone")
-        %li
-          %a{:href => "#settings_smartproxy_affinity"}=_("SmartProxy Affinity")
       #settings_evm_servers{:name => "settings_evm_servers", :width => "80px"}
         = render :partial => "settings_evm_servers_tab"
-      #settings_smartproxy_affinity{:name => "settings_smartproxy_affinity", :width => "80px"}
-        = render :partial => "settings_smartproxy_affinity_tab"
     - elsif selected?(x_node, "svr")
       - cur_svr_id = from_cid(x_node.split("-").last).to_i
       %ul.tab
@@ -25,11 +21,7 @@
             %a{:href => "#settings_database"}=_("Database")
           %li
             %a{:href => "#settings_custom_logos"}=_("Custom Logos")
-        %li
-          %a{:href => "#settings_maintenance"}=_("Maintenance")
         - if cur_svr_id == @sb[:my_server_id]
-          %li
-            %a{:href => "#settings_smartproxy"}=_("SmartProxy")
           %li
             %a{:href => "#settings_advanced"}=_("Advanced")
       #settings_server{:name => "settings_server", :width => "80px"}
@@ -48,13 +40,7 @@
         #settings_custom_logos{:name => "settings_custom_logos", :width => "80px"}
           - if @sb[:active_tab] == "settings_custom_logos"
             = render :partial => "settings_custom_logos_tab"
-      #settings_maintenance{:name => "settings_maintenance", :width => "80px"}
-        - if @sb[:active_tab] == "settings_maintenance"
-          = render :partial => "settings_maintenance_tab"
       - if cur_svr_id == @sb[:my_server_id]
-        #settings_smartproxy{:name => "settings_smartproxy", :width => "80px"}
-          - if @sb[:active_tab] == "settings_smartproxy"
-            = render :partial => "settings_smartproxy_tab"
         #settings_advanced{:name => "settings_advanced", :width => "80px"}
           - if @sb[:active_tab] == "settings_advanced"
             = render :partial => "settings_advanced_tab"

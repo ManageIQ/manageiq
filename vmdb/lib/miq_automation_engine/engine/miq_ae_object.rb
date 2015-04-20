@@ -33,7 +33,6 @@ module MiqAeEngine
       'policy'                 => 'MiqPolicy',
       'provision'              => 'MiqProvision',
       'provision_request'      => 'MiqProvisionRequest',
-      'proxy'                  => 'MiqProxy',
       'request'                => 'MiqRequest',
       'server'                 => 'MiqServer'
     )

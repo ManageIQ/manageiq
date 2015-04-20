@@ -2485,7 +2485,7 @@
     :identifier: tasks_view
     :children:
     - :name: All VM Analysis Tasks
-      :description: Display Lists of All SmartProxy Tasks
+      :description: Display Lists of All VM Analysis Tasks
       :feature_type: view
       :identifier: job_all_smartproxy
     - :name: All Other Tasks 
@@ -2493,7 +2493,7 @@
       :feature_type: view
       :identifier: miq_task_all_ui
     - :name: VM Analysis Tasks 
-      :description: Display Lists of SmartProxy Tasks
+      :description: Display Lists of VM Analysis Tasks
       :feature_type: view
       :identifier: job_my_smartproxy
     - :name: Other UI Tasks 
@@ -2994,48 +2994,6 @@
           :feature_type: view
           :hidden: true
           :identifier: db_refresh
-
-# SmartProxies
-- :name: SmartProxies
-  :description: Everything under SmartProxies
-  :feature_type: node
-  :identifier: miq_proxy
-  :children:
-  - :name: View
-    :description: View SmartProxies
-    :feature_type: view
-    :identifier: miq_proxy_view
-    :children:
-    - :name: Show
-      :description: Display Individual SmartProxy
-      :feature_type: view
-      :identifier: miq_proxy_show
-    - :name: List
-      :description: Display Lists of SmartProxies
-      :feature_type: view
-      :identifier: miq_proxy_show_list
-  - :name: Operate
-    :description: Perform Operations on SmartProxies
-    :feature_type: control
-    :identifier: miq_proxy_control
-    :children:
-    - :name: Deploy
-      :description: Deploy to SmartProxies
-      :feature_type: control
-      :identifier: miq_proxy_deploy
-  - :name: Modify
-    :description: Modify SmartProxies
-    :feature_type: admin
-    :identifier: miq_proxy_admin
-    :children:
-    - :name: Add
-      :description: Add a SmartProxy
-      :feature_type: admin
-      :identifier: miq_proxy_new
-    - :name: Edit
-      :description: Edit a SmartProxy
-      :feature_type: admin
-      :identifier: miq_proxy_edit
 
 # About
 - :name: About
