@@ -532,47 +532,12 @@ describe MiqSchedule do
       end
     end
 
-    context "valid db_backup schedule that hasn't been saved yet" do
-      before(:each) do
-        @valid_schedules = []
-        @valid_run_ats.each do |run_at|
-          @depot_hash = {:uri => "smb://dev005.manageiq.com/share1", :username => "samba_one", :password => "Zug-drep5s" }
-          @valid_schedules << FactoryGirl.build(:miq_schedule_validation, :run_at => run_at, :sched_action=> {:method => "db_backup"})
-        end
-        @unsaved_schedule = @valid_schedules.first
-      end
-
-      it "should be valid using depot_hash=" do
-        @valid_schedules.each do |sch|
-          sch.depot_hash = @depot_hash
-          sch.valid?.should be_true
-        end
-      end
-
-      it "should be invalid using depot= with missing username" do
-        @valid_schedules.each do |sch|
-          sch.depot_hash = {:uri => "smb://dev005.manageiq.com/share1", :password => "Zug-drep5s" }
-          sch.valid?.should_not be_true
-        end
-      end
-
-      it "should be invalid using depot= with missing uri" do
-        @valid_schedules.each do |sch|
-          sch.depot_hash = {:username => "samba_one", :password => "Zug-drep5s" }
-          sch.valid?.should_not be_true
-        end
-      end
-    end
-
     context "valid schedules for db_backup" do
-      before(:each) do
+      let(:file_depot) { FactoryGirl.create(:file_depot_ftp_with_authentication) }
+      before do
         @valid_schedules = []
         @valid_run_ats.each do |run_at|
-          @depot_hash = {:uri      => "smb://dev005.manageiq.com/share1",
-                         :username => "samba_one",
-                         :password => "Zug-drep5s",
-                         :name     => "ManageIQSamba1"}
-          @valid_schedules << FactoryGirl.create(:miq_schedule_validation, :run_at => run_at, :depot_hash => @depot_hash, :sched_action=> {:method => "db_backup"}, :towhat => "DatabaseBackup")
+          @valid_schedules << FactoryGirl.create(:miq_schedule_validation, :run_at => run_at, :file_depot => file_depot, :sched_action => {:method => "db_backup"}, :towhat => "DatabaseBackup")
         end
         @schedule = @valid_schedules.first
       end
@@ -708,62 +673,35 @@ describe MiqSchedule do
         end
       end
 
-      it "should have file depots" do
-        @valid_schedules.each { |sch| sch.file_depot.is_a?(FileDepot).should be_true }
-      end
-
       it "should have valid depots" do
         @valid_schedules.each { |sch| sch.valid?.should be_true }
       end
 
       it "should return the expected depot_hash" do
-        @valid_schedules.each { |sch| sch.depot_hash.should == @depot_hash }
+        @valid_schedules.each { |sch| expect(sch.file_depot).to be_kind_of(FileDepotFtp) }
       end
+    end
+  end
 
-      it "should set and get the depot_hash" do
-        @valid_schedules.each do |sch|
-          sch.depot_hash = nil
-          sch.save
-          hsh = sch.depot_hash
-          hsh.is_a?(Hash).should be_true
-          hsh.has_key?(:uri).should be_true
-          hsh[:uri].should be_nil
-          hsh.has_key?(:username).should be_true
-          hsh.has_key?(:password).should be_true
-          sch.depot_hash = @depot_hash
-          sch.save
-          sch.depot_hash.should == @depot_hash
-        end
-      end
+  context "#verify_file_depot" do
+    let(:params) { {:uri_prefix => "ftp", :uri => "ftp://ftp.example.com", :name => "Test Backup Depot", :username => "user", :password => "password"} }
 
-      it "should do nothing if setting the depot_hash to it's existing values" do
-        @valid_schedules.each do |sch|
-          before = sch.depot_hash
-          sch.depot_hash = before
-          sch.save
-        end
-      end
+    it "builds a file_depot of the correct type and validates it, does not save" do
+      FileDepotFtp.any_instance.should_receive(:verify_credentials).and_return(true)
 
-      it "should update the file depot and it's authentication if the depot_hash is changed but not actually test the depot" do
-        @valid_schedules.each do |sch|
-          before = sch.depot_hash
-          before[:uri] = "smb://someotherhost/share1"
-          before[:username] = "test1"
-          sch.depot_hash = before
-          sch.save
-          sch.reload
-          sch.depot_hash[:uri].should == before[:uri]
-          sch.depot_hash[:username].should == before[:username]
-        end
-      end
+      MiqSchedule.new.verify_file_depot(params)
 
-      it "should support update_attributes" do
-        @valid_schedules.each do |sch|
-          @depot_hash[:uri] = "smb://blah"
-          sch.update_attribute(:depot_hash, @depot_hash)
-          sch.depot_hash.should == @depot_hash
-        end
-      end
+      expect(Authentication.count).to eq(0)
+      expect(FileDepot.count).to      eq(0)
+      expect(MiqSchedule.count).to    eq(0)
+    end
+
+    it "saves the file_depot when params[:save] is passed in, does not validate" do
+      MiqSchedule.new.verify_file_depot(params.merge(:save => true))
+
+      expect(Authentication.count).to eq(1)
+      expect(FileDepot.count).to      eq(1)
+      expect(MiqSchedule.count).to    eq(0)
     end
   end
 end
