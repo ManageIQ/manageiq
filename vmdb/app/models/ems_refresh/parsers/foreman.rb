@@ -121,6 +121,8 @@ module EmsRefresh
       end
 
       def configuration_profile_inv_to_hashes(recs, indexes)
+        def_loc = tax_refs if indexes[:locations].keys == %w(0)
+        def_org = tax_refs if indexes[:organizations].keys == %w(0)
         recs.collect do |profile|
           {
             :type                                  => "ConfigurationProfileForeman",
@@ -138,8 +140,8 @@ module EmsRefresh
             :direct_operating_system_flavor_id     => id_lookup(indexes[:flavors], profile["operatingsystem_id"]),
             :direct_customization_script_medium_id => id_lookup(indexes[:media], profile["medium_id"]),
             :direct_customization_script_ptable_id => id_lookup(indexes[:ptables], profile["ptable_id"]),
-            :configuration_location_ids            => ids_lookup(indexes[:locations], profile["locations"] || tax_refs),
-            :configuration_organization_ids        => ids_lookup(indexes[:organizations], profile["organizations"] || tax_refs),
+            :configuration_location_ids            => ids_lookup(indexes[:locations], profile["locations"] || def_loc),
+            :configuration_organization_ids        => ids_lookup(indexes[:organizations], profile["organizations"] || def_org),
           }
         end.tap do |profiles|
           # populate profiles with rolled up values
@@ -159,6 +161,8 @@ module EmsRefresh
       end
 
       def configured_system_inv_to_hashes(recs, indexes)
+        def_loc = 0 if indexes[:locations].keys == %w(0)
+        def_org = 0 if indexes[:organizations].keys == %w(0)
         recs.collect do |cs|
           {
             :type                                  => "ConfiguredSystemForeman",
@@ -179,8 +183,8 @@ module EmsRefresh
             :ipaddress                             => cs["ip"],
             :mac_address                           => cs["mac"],
             :ipmi_present                          => cs["sp_ip"].present?,
-            :configuration_location_id             => id_lookup(indexes[:locations], cs["location_id"] || 0),
-            :configuration_organization_id         => id_lookup(indexes[:organizations], cs["organization_id"] || 0),
+            :configuration_location_id             => id_lookup(indexes[:locations], cs["location_id"] || def_loc),
+            :configuration_organization_id         => id_lookup(indexes[:organizations], cs["organization_id"] || def_org),
           }
         end.tap do |systems|
           # if the system doesn't have a value, use the rolled up profile value
@@ -248,7 +252,7 @@ module EmsRefresh
       # given an array of hashes, squash the values together, last value taking precidence
       def rollup(target, records)
         records.each do |record|
-          target.merge!(record.select { |n, v| !v.nil? && v != "" })
+          target.merge!(record.select { |_n, v| !v.nil? && v != "" })
         end
       end
 
