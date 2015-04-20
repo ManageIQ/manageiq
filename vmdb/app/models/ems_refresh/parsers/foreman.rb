@@ -155,6 +155,11 @@ module EmsRefresh
               }
             end
             rollup(p, ancestor_values)
+
+            invalid = []
+            invalid << "location" if p[:configuration_location_ids].empty?
+            invalid << "organization" if p[:configuration_organization_ids].empty?
+            $log.warn "Foreman hostgroup #{p[:name]} missing: #{invalid.join(", ")}" unless invalid.empty?
           end
           indexes[:profiles] = add_ids(profiles)
         end
@@ -198,6 +203,10 @@ module EmsRefresh
               :customization_script_ptable_id => s[:direct_customization_script_ptable_id].presence ||
                                                  parent[:customization_script_ptable_id].presence,
             )
+            invalid = []
+            invalid << "location" if s[:configuration_location_id].nil?
+            invalid << "organization" if s[:configuration_organization_id].nil?
+            $log.warn "Foreman host #{s[:hostname]} missing: #{invalid.join(", ")}" unless invalid.empty?
           end
         end
       end
