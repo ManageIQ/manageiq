@@ -366,6 +366,8 @@ class CatalogController < ApplicationController
         add_flash(_("%s must be selected") % "Resource", :error)
       end
 
+      dialog_catalog_check
+
       if @flash_array
         render :update do |page|
           page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
@@ -836,10 +838,8 @@ class CatalogController < ApplicationController
       add_flash(_("%s is required") % "Name", :error)
     end
 
-    if @edit[:new][:display] && !@edit[:new][:dialog_id]
-      # check for dialog if catalog is selected
-      add_flash(_("Dialog has to be set if Display in Catalog is chosen"), :error)
-    end
+    # Check for a Dialog if Display in Catalog is selected
+    dialog_catalog_check
 
     # Check the validity of the entry points
     %w(fqname reconfigure_fqname retire_fqname).each do |fqname|
@@ -2012,5 +2012,10 @@ class CatalogController < ApplicationController
     session[:svc_lastaction] = @lastaction
     session[:prov_options]   = @options if @options
     session[:resolve]        = @resolve if @resolve
+  end
+
+  def dialog_catalog_check
+    return unless @edit[:new][:display] && (@edit[:new][:dialog_id].nil? || @edit[:new][:dialog_id].to_i == 0)
+    add_flash(_("Dialog has to be set if Display in Catalog is chosen"), :error)
   end
 end
