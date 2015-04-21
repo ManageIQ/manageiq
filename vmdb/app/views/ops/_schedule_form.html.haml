@@ -4,24 +4,24 @@
   = render :partial => "layouts/flash_msg"
   %fieldset
     %h3
-      Basic Information
+      = _("Basic Information")
       %table.style1
         %tr
-          %td.key Name
+          %td.key= _("Name")
           %td
             %input(type="text" name="name" ng-model="scheduleModel.name" maxlength="#{MAX_NAME_LEN}" miqrequired checkchange)
         %tr
-          %td.key Description
+          %td.key= _("Description")
           %td
             %input(type="text" name="description" ng-model="scheduleModel.description" maxlength="#{MAX_DESC_LEN}" miqrequired checkchange)
 
         %tr
-          %td.key Active
+          %td.key= _("Active")
           %td
             %input(type="checkbox" name="enabled" ng-model="scheduleModel.enabled" ng-true-value="1" ng-false-value="0" checkchange)
 
         %tr
-          %td.key Action
+          %td.key= _("Action")
           %td
             = select_tag('action_typ',
                          options_for_select(@action_type_options_for_select),
