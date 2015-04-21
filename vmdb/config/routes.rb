@@ -172,6 +172,7 @@ Vmdb::Application.routes.draw do
         show
       ),
       :post => %w(
+        ab_group_reorder
         accordion_select
         ae_tree_select
         ae_tree_select_discard
@@ -183,6 +184,7 @@ Vmdb::Application.routes.draw do
         get_ae_tree_edit_key
         group_create
         group_form_field_changed
+        group_reorder_field_changed
         group_update
         identify_catalog
         orchestration_template_add
