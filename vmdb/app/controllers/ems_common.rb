@@ -201,6 +201,11 @@ module EmsCommon
       if @edit[:new][:emstype].blank?
         add_flash(_("%s is required") % "Type", :error)
       end
+
+      if @edit[:new][:emstype] == "scvmm" && @edit[:new][:security_protocol] == "kerberos" && @edit[:new][:realm].blank?
+        add_flash(I18n.t("flash.edit.field_required", :field=>"Realm"), :error)
+      end
+
       if !@flash_array
         add_ems = model.model_from_emstype(@edit[:new][:emstype]).new
         set_record_vars(add_ems)
@@ -254,11 +259,13 @@ module EmsCommon
   def form_field_changed
     return unless load_edit("ems_edit__#{params[:id]}")
     get_form_vars
-    changed = edit_changed?
 
+    changed = edit_changed?
     render :update do |page|                  # Use JS to update the display
-      if params[:server_emstype]              # Server type changed
+      if params[:server_emstype] || params[:security_protocol]   # Server/protocol type changed
         page.replace_html("form_div", :partial => "shared/views/ems_common/form")
+      end
+      if params[:server_emstype]              # Server type changed
         unless @ems.kind_of?(EmsCloud)
           # Hide/show C&U credentials tab
           page << "$('#metrics_li').#{params[:server_emstype] == "rhevm" ? "show" : "hide"}();"
@@ -269,10 +276,7 @@ module EmsCommon
         # Hide/show port field
         page << "$('#port_tr').#{%w(openstack openstack_infra rhevm).include?(params[:server_emstype]) ? "show" : "hide"}();"
       end
-      if changed != session[:changed]
-        session[:changed] = changed
-        page << javascript_for_miq_button_visibility(changed)
-      end
+      page << javascript_for_miq_button_visibility(changed)
       if @edit[:default_verify_status] != @edit[:saved_default_verify_status]
         @edit[:saved_default_verify_status] = @edit[:default_verify_status]
         page << "miqValidateButtons('#{@edit[:default_verify_status] ? 'show' : 'hide'}', 'default_');"
@@ -575,6 +579,9 @@ module EmsCommon
   # Validate the ems record fields
   def valid_record?(ems)
     @edit[:errors] = Array.new
+    if ems.emstype == "scvmm" && ems.security_protocol == "kerberos" && ems.realm.blank?
+      add_flash(I18n.t("flash.edit.field_required", :field=>"Realm"), :error)
+    end
     if !ems.authentication_password.blank? && ems.authentication_userid.blank?
       @edit[:errors].push(_("User ID must be entered if Password is entered"))
     end
@@ -623,6 +630,14 @@ module EmsCommon
     @edit[:amazon_regions] = get_amazon_regions if @ems.kind_of?(EmsAmazon)
     @edit[:new][:port] = @ems.port
     @edit[:new][:provider_id] = @ems.provider_id
+    @edit[:protocols] = [['Basic (SSL)', 'ssl'], ['Kerberos', 'kerberos']]
+    if @ems.id
+      # for existing provider before this fix, set default to ssl
+      @edit[:new][:security_protocol] = @ems.security_protocol ? @ems.security_protocol : 'ssl'
+    else
+      @edit[:new][:security_protocol] = 'kerberos'
+    end
+    @edit[:new][:realm] = @ems.realm if @edit[:new][:emstype] == "scvmm"
     if @ems.zone.nil? || @ems.my_zone == ""
       @edit[:new][:zone] = "default"
     else
@@ -713,6 +728,9 @@ module EmsCommon
     @edit[:new][:host_default_vnc_port_start] = params[:host_default_vnc_port_start] if params[:host_default_vnc_port_start]
     @edit[:new][:host_default_vnc_port_end] = params[:host_default_vnc_port_end] if params[:host_default_vnc_port_end]
     @edit[:amazon_regions] = get_amazon_regions if @edit[:new][:emstype] == "ec2"
+    @edit[:new][:security_protocol] = params[:security_protocol] if params[:security_protocol]
+    @edit[:new][:realm] = nil if params[:security_protocol]
+    @edit[:new][:realm] = params[:realm] if params[:realm]
     set_verify_status
   end
 
@@ -724,6 +742,11 @@ module EmsCommon
     ems.port = @edit[:new][:port] if ems.supports_port?
     ems.provider_id = @edit[:new][:provider_id] if ems.supports_provider_id?
     ems.zone = Zone.find_by_name(@edit[:new][:zone])
+
+    if ems.is_a?(EmsMicrosoft)
+      ems.security_protocol = @edit[:new][:security_protocol]
+      ems.realm = @edit[:new][:realm]
+    end
 
     if ems.is_a?(EmsVmware)
       ems.host_default_vnc_port_start = @edit[:new][:host_default_vnc_port_start].blank? ? nil : @edit[:new][:host_default_vnc_port_start].to_i
