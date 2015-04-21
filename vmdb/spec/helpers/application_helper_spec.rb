@@ -4185,6 +4185,19 @@ describe ApplicationHelper do
       result.should be_false
     end
 
+    it "should return true for containers start pages when product flag is set" do
+      cfg = VMDB::Config.new("vmdb")
+      cfg.config.store_path(:product, :containers, true)
+      VMDB::Config.stub(:new).and_return(cfg)
+      result = start_page_allowed?("ems_container_show_list")
+      result.should be_true
+    end
+
+    it "should return false for containers start pages when product flag is not set" do
+      result = start_page_allowed?("ems_container_show_list")
+      result.should be_false
+    end
+
     it "should return true for host start page" do
       result = start_page_allowed?("host_show_list")
       result.should be_true

@@ -163,6 +163,30 @@
   :description: Storage / Storage Managers
   :url: /storage_manager/show_list
   :rbac_feature_name: storage_manager_show_list
+- :name: ems_containers
+  :description: Containers / Providers
+  :url: /ems_container/show_list
+  :rbac_feature_name: ems_container_show_list
+  :startup: true
+- :name: container_nodes
+  :description: Containers / Nodes
+  :url: /container_node/show_list
+  :rbac_feature_name: container_node_show_list
+  :startup: true
+- :name: container_groups
+  :description: Containers / Groups
+  :url: /container_group/show_list
+  :rbac_feature_name: container_group_show_list
+  :startup: true
+- :name: container_services
+  :description: Containers / Services
+  :url: /container_service/show_list
+  :rbac_feature_name: container_service_show_list
+  :startup: true
+- :name: container_containers
+  :description: Containers / Explorer
+  :url: /container/explorer
+  :rbac_feature_name: container_view
   :startup: true
 - :name: control_explorer
   :description: Control / Explorer
