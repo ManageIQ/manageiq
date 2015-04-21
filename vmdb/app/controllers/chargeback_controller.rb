@@ -383,7 +383,8 @@ class ChargebackController < ApplicationController
       @report = rr.report_results
       session[:rpt_task_id] = nil
       if @report.blank?
-        add_flash(_("Saved Report \"%s\" not found, Schedule may have failed") % format_timezone(report.last_run_on,Time.zone,"gtl"), :error)
+        add_flash(_("Saved Report \"%s\" not found, Schedule may have failed") %
+          format_timezone(rr.last_run_on, Time.zone, "gtl"), :error)
         @temp[:saved_reports] = cb_rpts_get_all_reps(rr.miq_report_id.to_s)
         rep = MiqReport.find_by_id(rr.miq_report_id)
         if x_active_tree == :cb_reports
