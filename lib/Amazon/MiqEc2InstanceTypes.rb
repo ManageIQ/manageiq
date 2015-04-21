@@ -429,6 +429,29 @@ module MiqEc2InstanceTypes
       :cluster_networking      => true,
     },
 
+    "g2.8xlarge" => {
+      :name                    => "g2.8xlarge",
+      :family                  => "GPU Instances",
+      :description             => "G2 Eight Extra Large",
+      :memory                  => 60.gigabytes,
+      :vcpu                    => 32,
+      :ebs_only                => false,
+      :instance_store_size     => 240.gigabytes,
+      :instance_store_volumes  => 2, # SSD
+      :architecture            => [:x86_64],
+      :virtualization_type     => [:hvm],
+      :network_performance     => :very_high,
+      :physical_processor      => "Intel Xeon E5-2670",
+      :processor_clock_speed   => 2.6, # GHz
+      :intel_aes_ni            => true,
+      :intel_avx               => true,
+      :intel_avx2              => nil,
+      :intel_turbo             => true,
+      :ebs_optimized_available => nil,
+      :enhanced_networking     => nil,
+      :cluster_networking      => true,
+    },
+
     "r3.large" => {
       :name                    => "r3.large",
       :family                  => "Memory Optimized",
