@@ -219,7 +219,7 @@ class MiqRegion < ActiveRecord::Base
 
   def self.atStartup
     region = self.my_region
-    prefix = "MIQ(MiqRegion.atStartup) Region: [#{region.region}], name: [#{region.name}]"
+    prefix = "#{_log.prefix} Region: [#{region.region}], name: [#{region.name}]"
     self.log_under_management(prefix)
     self.log_not_under_management(prefix)
   end

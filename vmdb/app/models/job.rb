@@ -113,7 +113,7 @@ class Job < ActiveRecord::Base
   end
 
   def dispatch_start
-    $log.info "dispatch_start: Dispatch Status is 'pending'"
+    _log.info "Dispatch Status is 'pending'"
     self.dispatch_status = "pending"
     self.save
     @storage_dispatcher_process_finish_flag = false
@@ -121,7 +121,7 @@ class Job < ActiveRecord::Base
 
   def dispatch_finish
     return if @storage_dispatcher_process_finish_flag
-    $log.info "dispatch_finish: Dispatch Status is 'finished'"
+    _log.info "Dispatch Status is 'finished'"
     self.dispatch_status = "finished"
     self.save
     @storage_dispatcher_process_finish_flag = true
@@ -131,26 +131,26 @@ class Job < ActiveRecord::Base
     options = args.first || {}
     options[:message] ||= options[:userid] ? "Job canceled by user [#{options[:useid]}] on #{Time.now}" : "Job canceled on #{Time.now}"
     options[:status] ||= "ok"
-    $log.info "action-cancel: job canceling, #{options[:message]}"
+    _log.info "job canceling, #{options[:message]}"
     signal(:finish, options[:message], options[:status])
   end
 
   def process_error(*args)
     message, status = args
-    $log.error "action-error: #{message}"
+    _log.error "#{message}"
     set_status(message, status, 1)
   end
 
   def process_abort(*args)
     message, status = args
-    $log.error "action-abort: job aborting, #{message}"
+    _log.error "job aborting, #{message}"
     set_status(message, status, 1)
     signal(:finish, message, status)
   end
 
   def process_finished(*args)
     message, status = args
-    $log.info "action-finished: job finished, #{message}"
+    _log.info "job finished, #{message}"
     set_status(message, status)
     dispatch_finish
   end

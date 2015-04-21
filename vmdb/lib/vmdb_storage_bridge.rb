@@ -3,6 +3,7 @@ require 'cim_association_defs'
 require 'lun_durable_names'
 
 class VmdbStorageBridge
+  include Vmdb::NewLogging
 
   include MiqStorageDefs
 
@@ -26,22 +27,22 @@ class VmdbStorageBridge
     vim       = nil
     last_conn_error = nil
 
-    $log.info "VmdbStorageBridge.collectData entered"
+    _log.info "entered"
 
     ManageIQ::Providers::Vmware::InfraManager.where(:zone_id => @zone).find_each do |ems|
-      $log.info "VmdbStorageBridge.collectData: found EmsVmware #{ems.hostname}"
+      _log.info "found EmsVmware #{ems.hostname}"
       begin
         begin
           vim = ems.connect
         rescue Exception => verr
-          $log.error "VmdbStorageBridge.collectData: could not connect to ems - #{ems.hostname}"
+          _log.error "could not connect to ems - #{ems.hostname}"
           $log.error verr.to_s
           last_conn_error = verr
           next
         end
 
         ems.hosts.find_each do |host|
-          $log.debug "VmdbStorageBridge.collectData: #{host.hostname}\t#{host.ipaddress}"
+          _log.debug "#{host.hostname}\t#{host.ipaddress}"
           hostNode = newNode(host, 'MIQ_CimHostSystem')
           idToHostNode[host.id] = hostNode
 
@@ -53,7 +54,7 @@ class VmdbStorageBridge
           scsiLuns.each { |sn| cnToDurableNames[sn.canonicalName] = LunDurableNames.new(sn.alternateName) }
 
           host.storages.find_each do |storage|
-            $log.debug "VmdbStorageBridge.collectData:\t#{storage.name}\t#{storage.location}"
+            _log.debug "\t#{storage.name}\t#{storage.location}"
 
             unless idToDsNode[storage.id]
               next unless (ds = vim.dataStoresByMor[storage.ems_ref_obj])
@@ -109,12 +110,12 @@ class VmdbStorageBridge
           #
           vmNode.addAssociation(hostNode, MIQ_CimVirtualMachine_TO_MIQ_CimHostSystem)
         else
-          $log.info "VmdbStorageBridge.collectData:\t*** Host node not found for VM: #{vm.name}"
+          _log.info "\t*** Host node not found for VM: #{vm.name}"
         end
 
         vm.hardware.hard_disks.find_each do |disk|
-          # $log.debug "\t\t#{disk.filename}"
-          # $log.debug "\t\t\t#{disk.storage.name}"
+          # _log.debug "\t\t#{disk.filename}"
+          # _log.debug "\t\t\t#{disk.storage.name}"
           diskNode = newNode(disk, 'MIQ_CimVirtualDisk')
 
           #
@@ -128,7 +129,7 @@ class VmdbStorageBridge
             #
             diskNode.addAssociation(dsNode, MIQ_CimVirtualDisk_TO_MIQ_CimDatastore)
           else
-            $log.debug "VmdbStorageBridge.collectData: *** Datastore node not found for disk: #{disk.filename}"
+            _log.debug "*** Datastore node not found for disk: #{disk.filename}"
           end
         end
       end
@@ -229,7 +230,7 @@ class VmdbStorageBridge
         #
         # Add the association between the datastore and the fileshare.
         #
-        $log.info "VmdbStorageBridge.bridgeAssociations: Adding CIM_FileShare association: #{key}"
+        _log.info "Adding CIM_FileShare association: #{key}"
         ds.addAssociation(backingNode, MIQ_CimDatastore_TO_CIM_FileShare)
       else
         ds.durableNames.each do |dna|
@@ -244,7 +245,7 @@ class VmdbStorageBridge
           #
           # Add the association between the datastore and the storage volume.
           #
-          $log.info "VmdbStorageBridge.bridgeAssociations: Adding CIM_StorageVolume association: #{backingKey}"
+          _log.info "Adding CIM_StorageVolume association: #{backingKey}"
           ds.addAssociation(backingNode,  MIQ_CimDatastore_TO_CIM_StorageVolume)
         end
       end

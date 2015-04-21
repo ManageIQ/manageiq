@@ -1141,15 +1141,15 @@ class Host < ActiveRecord::Base
     logged_options = options.dup
     logged_options[:key_data] = "[FILTERED]" if logged_options[:key_data]
 
-    $log.info "host.connect_ssh: Initiating SSH connection to Host:[#{self.name}] using [#{hostname}] for user:[#{users}].  Options:[#{logged_options.inspect}]"
+    _log.info "Initiating SSH connection to Host:[#{self.name}] using [#{hostname}] for user:[#{users}].  Options:[#{logged_options.inspect}]"
     begin
       MiqSshUtil.shell_with_su(hostname, rl_user, rl_password, su_user, su_password, options) do |ssu, shell|
-        $log.info "host.connect_ssh: SSH connection established to [#{hostname}]"
+        _log.info "SSH connection established to [#{hostname}]"
         yield(ssu)
       end
-      $log.info "host.connect_ssh: SSH connection completed to [#{hostname}]"
+      _log.info "SSH connection completed to [#{hostname}]"
     rescue Exception
-      $log.error "host.connect_ssh: SSH connection failed for [#{hostname}] with [#{$!.class}: #{$!}]"
+      _log.error "SSH connection failed for [#{hostname}] with [#{$!.class}: #{$!}]"
       raise $!
     end
   end
@@ -1374,7 +1374,7 @@ class Host < ActiveRecord::Base
 
       @qs = self.ext_management_system.host_quick_stats(self)
     rescue => err
-      $log.warn("(Host.quickStats) Error '#{err.message}' encountered attempting to get host quick statistics")
+      _log.warn("Error '#{err.message}' encountered attempting to get host quick statistics")
       return {}
     end
     return @qs

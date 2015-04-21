@@ -67,7 +67,7 @@ class NetappRcu < StorageManager
     unless cRcuData[:aggregates] && cRcuData[:volumes]
       # TODO: Use hostname, not ipaddress
       unless (oss = NetappRemoteService.find_controller_by_ip(ipaddress))
-        $log.info "NetappRcu.add_controller: could not find controller #{ipaddress}"
+        _log.info "could not find controller #{ipaddress}"
       else
         cRcuData[:aggregates] ||= NetappRemoteService.aggregate_names(oss)  || []
         cRcuData[:volumes]    ||= NetappRemoteService.volume_names(oss)   || []

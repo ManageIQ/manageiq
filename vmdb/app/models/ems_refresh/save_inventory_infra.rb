@@ -35,7 +35,7 @@
 module EmsRefresh::SaveInventoryInfra
   def save_ems_infra_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
-    log_header = "MIQ(#{self.name}.save_ems_infra_inventory) EMS: [#{ems.name}], id: [#{ems.id}]"
+    log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
     # Check if the data coming in reflects a complete removal from the ems
     if hashes.blank? || (hashes[:hosts].blank? && hashes[:vms].blank? && hashes[:storages].blank?)
@@ -45,10 +45,10 @@ module EmsRefresh::SaveInventoryInfra
 
     prev_relats = self.vmdb_relats(target)
 
-    $log.info("#{log_header} Saving EMS Inventory...")
+    _log.info("#{log_header} Saving EMS Inventory...")
     if debug_trace
       require 'yaml'
-      $log.debug "#{log_header} hashes:\n#{YAML.dump(hashes)}"
+      _log.debug "#{log_header} hashes:\n#{YAML.dump(hashes)}"
     end
 
     child_keys = [:storages, :clusters, :hosts, :vms, :folders, :resource_pools, :customization_specs,
@@ -60,7 +60,7 @@ module EmsRefresh::SaveInventoryInfra
     ems.save!
     hashes[:id] = ems.id
 
-    $log.info("#{log_header} Saving EMS Inventory...Complete")
+    _log.info("#{log_header} Saving EMS Inventory...Complete")
 
     new_relats = self.hashes_relats(hashes)
     self.link_ems_inventory(ems, target, prev_relats, new_relats)
@@ -70,7 +70,7 @@ module EmsRefresh::SaveInventoryInfra
 
   def save_storages_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
-    log_header = "MIQ(#{self.name}.save_storages_inventory) EMS: [#{ems.name}], id: [#{ems.id}]"
+    log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
     # Query for all of the storages ahead of time
     locs, names = hashes.partition { |h| h[:location] }
@@ -87,10 +87,10 @@ module EmsRefresh::SaveInventoryInfra
       end
 
       if found.nil?
-        $log.info("#{log_header} Creating Storage [#{h[:name]}] location: [#{h[:location]}]")
+        _log.info("#{log_header} Creating Storage [#{h[:name]}] location: [#{h[:location]}]")
         found = Storage.create(h)
       else
-        $log.info("#{log_header} Updating Storage [#{found.name}] id: [#{found.id}] location: [#{found.location}]")
+        _log.info("#{log_header} Updating Storage [#{found.name}] id: [#{found.id}] location: [#{found.location}]")
         found.update_attributes!(h)
       end
 
@@ -100,7 +100,7 @@ module EmsRefresh::SaveInventoryInfra
 
   def save_hosts_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
-    log_header = "MIQ(#{self.name}.save_hosts_inventory) EMS: [#{ems.name}], id: [#{ems.id}]"
+    log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
     disconnects = if (target == ems)
       target.hosts(true).to_a.dup
@@ -127,26 +127,26 @@ module EmsRefresh::SaveInventoryInfra
         # Find this host record
         found = nil
         if h[:ems_ref]
-          $log.debug "#{log_header} Host database lookup - ems_ref: [#{h[:ems_ref]}] ems_id: [#{ems.id}]"
+          _log.debug "#{log_header} Host database lookup - ems_ref: [#{h[:ems_ref]}] ems_id: [#{ems.id}]"
           found = Host.find_by_ems_ref_and_ems_id(h[:ems_ref], ems.id)
         end
 
         if found.nil?
           if h[:hostname].nil? && h[:ipaddress].nil?
-            $log.debug "#{log_header} Host database lookup - name [#{h[:name]}]"
+            _log.debug "#{log_header} Host database lookup - name [#{h[:name]}]"
             found = ems.hosts.detect { |e| e.name.downcase == h[:name].downcase }
           elsif ["localhost", "localhost.localdomain", "127.0.0.1"].include_none?(h[:hostname], h[:ipaddress])
             # host = Host.find_by_hostname(hostname) has a risk of creating duplicate hosts
-            $log.debug "#{log_header} Host database lookup - hostname: [#{h[:hostname]}] IP: [#{h[:ipaddress]}]"
+            _log.debug "#{log_header} Host database lookup - hostname: [#{h[:hostname]}] IP: [#{h[:ipaddress]}]"
             found = Host.lookUpHost(h[:hostname], h[:ipaddress])
           end
         end
 
         if found.nil?
-          $log.info("#{log_header} Creating Host [#{h[:name]}] hostname: [#{h[:hostname]}] IP: [#{h[:ipaddress]}] ems_ref: [#{h[:ems_ref]}]")
+          _log.info("#{log_header} Creating Host [#{h[:name]}] hostname: [#{h[:hostname]}] IP: [#{h[:ipaddress]}] ems_ref: [#{h[:ems_ref]}]")
           found = ems.hosts.build(h)
         else
-          $log.info("#{log_header} Updating Host [#{found.name}] id: [#{found.id}] hostname: [#{found.hostname}] IP: [#{found.ipaddress}] ems_ref: [#{h[:ems_ref]}]")
+          _log.info("#{log_header} Updating Host [#{found.name}] id: [#{found.id}] hostname: [#{found.hostname}] IP: [#{found.ipaddress}] ems_ref: [#{h[:ems_ref]}]")
           h[:ems_id] = ems.id  # Steal this host from the previous EMS
 
           # Adjust the names so they do not keep changing in the event of DNS problems
@@ -193,10 +193,10 @@ module EmsRefresh::SaveInventoryInfra
         h[:invalid] = invalids_found = true
         name = h[:name] || h[:uid_ems] || h[:hostname] || h[:ipaddress] || h[:ems_ref]
         if err.kind_of?(MiqException::MiqIncompleteData)
-          $log.warn("#{log_header} Processing Host: [#{name}] failed with error [#{err.class}: #{err}]. Skipping Host.")
+          _log.warn("#{log_header} Processing Host: [#{name}] failed with error [#{err.class}: #{err}]. Skipping Host.")
         else
           raise if EmsRefresh.debug_failures
-          $log.error("#{log_header} Processing Host: [#{name}] failed with error [#{err.class}: #{err}]. Skipping Host.")
+          _log.error("#{log_header} Processing Host: [#{name}] failed with error [#{err.class}: #{err}]. Skipping Host.")
           $log.log_backtrace(err)
         end
       ensure
@@ -206,9 +206,9 @@ module EmsRefresh::SaveInventoryInfra
 
     unless disconnects.empty?
       if invalids_found
-        $log.warn("#{log_header} Since failures occurred, not disconnecting for Hosts #{self.log_format_deletes(disconnects)}")
+        _log.warn("#{log_header} Since failures occurred, not disconnecting for Hosts #{self.log_format_deletes(disconnects)}")
       else
-        $log.info("#{log_header} Disconnecting Hosts #{self.log_format_deletes(disconnects)}")
+        _log.info("#{log_header} Disconnecting Hosts #{self.log_format_deletes(disconnects)}")
         disconnects.each(&:disconnect_inv)
       end
     end

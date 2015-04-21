@@ -411,19 +411,19 @@ class Vmware::InfraManager < InfraManager
   alias_method :host_quick_stats, :vm_quick_stats
 
   def invoke_vim_ws(cmd, obj, user_event=nil, *opts)
-    log_header = "MIQ(#{self.class.name}.invoke_vim_ws) EMS: [#{self.name}] #{obj.class.name}: id [#{obj.id}], name [#{obj.name}], ems_ref [#{obj.ems_ref}]"
+    log_header = "EMS: [#{self.name}] #{obj.class.name}: id [#{obj.id}], name [#{obj.name}], ems_ref [#{obj.ems_ref}]"
     result = nil
 
     if obj.kind_of?(self::Vm) || obj.kind_of?(self::Template) || obj.kind_of?(self::Host) || obj.kind_of?(EmsCluster) || obj.kind_of?(EmsFolder)
       obj.with_provider_object do |vim_obj|
         vim_obj.logUserEvent(user_event) if user_event && obj.kind_of?(Vm)
 
-        $log.info("#{log_header} Invoking [#{cmd}]...")
+        _log.info("#{log_header} Invoking [#{cmd}]...")
         result = vim_obj.send(cmd, *opts)
-        $log.info("#{log_header} Returned with result [#{result}]")
+        _log.info("#{log_header} Returned with result [#{result}]")
       end
     else
-      $log.warn("#{log_header} VIM calls not supported, invocation skipped")
+      _log.warn("#{log_header} VIM calls not supported, invocation skipped")
     end
 
     result

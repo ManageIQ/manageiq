@@ -1,4 +1,5 @@
 class MiqAeYamlImport
+  include Vmdb::NewLogging
   include MiqAeYamlImportExportMixin
 
   attr_reader :import_stats
@@ -21,8 +22,8 @@ class MiqAeYamlImport
       raise MiqAeException::InvalidDomain, "Error - New domain exists already, #{@options['import_as']}"
     end
     @preview = preview
-    $log.info("#{self.class} Import options: <#{@options}> preview: <#{@preview}>")
-    $log.info("#{self.class} Importing domain:    <#{domain_name}>")
+    _log.info("Import options: <#{@options}> preview: <#{@preview}>")
+    _log.info("Importing domain:    <#{domain_name}>")
     reset_stats
     @single_domain = true
     domain_name == ALL_DOMAINS ? import_all_domains : import_domain(domain_folder(domain_name), domain_name)
@@ -30,7 +31,7 @@ class MiqAeYamlImport
   end
 
   def log_stats
-    $log.info("#{self.class} Import statistics: <#{@import_stats.inspect}>")
+    _log.info("Import statistics: <#{@import_stats.inspect}>")
     if @preview
       $log.warn("Your database has NOT been updated. Set PREVIEW=false to apply the above changes.")
     else
@@ -115,7 +116,7 @@ class MiqAeYamlImport
 
   def process_namespace(domain_obj, namespace_folder, namespace_yaml, domain_name)
     fqname = "#{domain_name}#{namespace_folder.sub(domain_folder(@domain_name), '')}"
-    $log.info("#{self.class} Importing namespace: <#{fqname}>")
+    _log.info("Importing namespace: <#{fqname}>")
     namespace_obj = MiqAeNamespace.find_by_fqname(fqname, false)
     track_stats('namespace', namespace_obj)
     namespace_obj ||= add_namespace(fqname) unless @preview
@@ -144,7 +145,7 @@ class MiqAeYamlImport
   end
 
   def add_class_components(class_folder, class_obj)
-    $log.info("#{self.class} Importing class:     <#{class_obj.name}>") unless @preview
+    _log.info("Importing class:     <#{class_obj.name}>") unless @preview
     get_instance_files(class_folder).each do |file|
       process_instance(class_obj, load_file(file)) unless File.basename(file) == CLASS_YAML_FILENAME
     end
@@ -195,7 +196,7 @@ class MiqAeYamlImport
 
     domain_obj = MiqAeDomain.find_by_fqname(@options['import_as'], false)
     if domain_obj
-      $log.info("#{self.class} Cannot import - A domain exists with new domain name: #{@options['import_as']}.")
+      _log.info("Cannot import - A domain exists with new domain name: #{@options['import_as']}.")
       return false
     end
     true

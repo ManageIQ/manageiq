@@ -229,7 +229,7 @@ class LogFile < ActiveRecord::Base
     klass  = options.delete(:klass).to_s
     id     = options.delete(:id)
 
-    log_header = "MIQ(#{self.name}-_request_logs) Task: [#{taskid}]"
+    log_header = "Task: [#{taskid}]"
 
     server   = Object.const_get(klass).find(id)
     resource = server.who_am_i
@@ -241,7 +241,7 @@ class LogFile < ActiveRecord::Base
     task = MiqTask.find(taskid)
 
     msg = "Requesting logs from server: [#{resource}]"
-    $log.info("#{log_header} #{msg}")
+    _log.info("#{log_header} #{msg}")
     task.update_status("Active", "Ok", msg)
 
     cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
@@ -250,7 +250,7 @@ class LogFile < ActiveRecord::Base
     server._post_my_logs(options)
 
     msg = "Requested logs from: [#{resource}]"
-    $log.info("#{log_header} #{msg}")
+    _log.info("#{log_header} #{msg}")
     task.update_status("Queued", "Ok", msg)
   end
 end

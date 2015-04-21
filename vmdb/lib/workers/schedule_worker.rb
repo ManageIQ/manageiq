@@ -75,11 +75,10 @@ class ScheduleWorker < WorkerBase
   end
 
   def system_schedule_every(*args, &block)
-    log_prefix = "MIQ(ScheduleWorker.system_schedule_every)"
     begin
       @system_scheduler.schedule_every(*args, &block)
     rescue ArgumentError => err
-      $log.error("#{log_prefix} #{err.class} for schedule_every with #{args.inspect}.  Called from: #{caller[1]}.")
+      _log.error("#{err.class} for schedule_every with #{args.inspect}.  Called from: #{caller[1]}.")
     end
   end
 
@@ -479,8 +478,6 @@ class ScheduleWorker < WorkerBase
 
   BRUTE_FORCE = false
   def check_roles_changed
-    log_prefix = "MIQ(ScheduleWorker.check_roles_changed)"
-
     added   = @active_roles  - @current_roles
     removed = @current_roles - @active_roles
 
@@ -495,7 +492,7 @@ class ScheduleWorker < WorkerBase
         added.each do |r|
           m = "schedules_for_#{r}_role"
           next unless self.respond_to?(m)
-          $log.info("#{log_prefix} Adding Schedules for Role=[#{r}]")
+          _log.info("Adding Schedules for Role=[#{r}]")
           self.send(m)
         end
 
@@ -504,7 +501,7 @@ class ScheduleWorker < WorkerBase
         removed.each do |r|
           rs = r.to_sym
           next unless @schedules.has_key?(rs)
-          $log.info("#{log_prefix} Removing Schedules for Role=[#{r}]")
+          _log.info("Removing Schedules for Role=[#{r}]")
           @schedules[rs].each do |j|
             # In Rufus::Scheduler Version 1, schedule returns a JobID
             # In Rufus::Scheduler Version 2, schedule returns a Job
@@ -513,7 +510,7 @@ class ScheduleWorker < WorkerBase
             else
               if j.respond_to?(:tags)
                 if j.tags.any? {|t| t.to_s.starts_with?("miq_schedules_")}
-                  $log.info("#{log_prefix} Removing user schedule with Tags: #{j.tags.inspect}")
+                  _log.info("Removing user schedule with Tags: #{j.tags.inspect}")
                 end
                 j.unschedule
               end
@@ -523,13 +520,13 @@ class ScheduleWorker < WorkerBase
         end
       rescue Exception => err
         msg = "Error adjusting schedules: #{err.message}"
-        $log.error("#{log_prefix} #{msg}")
+        _log.error("#{msg}")
         $log.log_backtrace(err)
         do_exit("#{msg}. Restarting.", 1)
       end
     end
 
-    $log.info("#{log_prefix} Roles added: #{added.inspect}, Roles removed: #{removed.inspect}") unless added.empty? && removed.empty?
+    _log.info("Roles added: #{added.inspect}, Roles removed: #{removed.inspect}") unless added.empty? && removed.empty?
     @current_roles = @active_roles.dup
   end
 
@@ -541,8 +538,7 @@ class ScheduleWorker < WorkerBase
   end
 
   def do_work
-    log_prefix = "MIQ(ScheduleWorker.#{__method__})"
-    $log.info("#{log_prefix} Number of scheduled items to be processed: #{queue_length}.")
+    _log.info("Number of scheduled items to be processed: #{queue_length}.")
 
     schedule_worker_jobs = ScheduleWorker::Jobs.new
     while @queue.length > 0
@@ -553,7 +549,7 @@ class ScheduleWorker < WorkerBase
       rescue ActiveRecord::StatementInvalid, SystemExit
         raise
       rescue Exception => err
-        $log.error("#{self.log_prefix} #{err.message}")
+        _log.error("#{err.message}")
         $log.log_backtrace(err)
       end
       Thread.pass

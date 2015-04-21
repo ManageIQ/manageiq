@@ -29,8 +29,7 @@ module EmsRefresh
           @orchestration_service.stacks.collect(&:details)
         rescue Excon::Errors::Forbidden
           # Orchestration service is detected but not open to the user
-          log_prefix = "MIQ(OrchestrationStacks.detailed_stacks)"
-          $log.warn("#{log_prefix} Skip refreshing stacks because the user cannot access the orchestration service")
+          $log.warn("Skip refreshing stacks because the user cannot access the orchestration service")
           []
         end
 

@@ -385,7 +385,7 @@ class MiqSchedule < ActiveRecord::Base
 
   def interval
     unless self.valid? || errors[:run_at].blank?
-      $log.warn("Miq(Schedule.interval) Invalid schedule [#{self.id}] [#{self.name}]: #{errors[:run_at].to_miq_a.join(", ")}")
+      _log.warn("Invalid schedule [#{self.id}] [#{self.name}]: #{errors[:run_at].to_miq_a.join(", ")}")
       return nil
     end
 

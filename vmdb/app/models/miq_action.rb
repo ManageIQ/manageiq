@@ -107,8 +107,8 @@ class MiqAction < ActiveRecord::Base
 
   def self.invoke_actions(apply_policies_to, inputs, succeeded, failed)
     deferred = []
-    # $log.info("XXX(action-invoke_actions) succeeded policies: #{succeeded.inspect}")
-    # $log.info("XXX(action-invoke_actions) failed policies: #{failed.inspect}")
+    # _log.info("succeeded policies: #{succeeded.inspect}")
+    # _log.info("failed policies: #{failed.inspect}")
 
     results = {}
 

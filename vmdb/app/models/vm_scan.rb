@@ -35,7 +35,7 @@ class VmScan < Job
   end
 
   def call_snapshot_create
-    $log.info "action-call_snapshot: Enter"
+    _log.info "Enter"
 
     begin
       vm = VmOrTemplate.find(self.target_id)
@@ -143,7 +143,7 @@ class VmScan < Job
   end
 
   def wait_for_vim_broker
-    $log.info "action-wait_for_vim_broker: Enter"
+    _log.info "Enter"
     i = 0
     loop do
       set_status("Waiting for VimBroker to become available (#{i += 1})")
@@ -156,7 +156,7 @@ class VmScan < Job
   end
 
   def call_scan
-    $log.info "action-call_scan: Enter"
+    _log.info "Enter"
 
     begin
       host = Object.const_get(self.agent_class).find(self.agent_id)
@@ -221,7 +221,7 @@ class VmScan < Job
   end
 
   def call_snapshot_delete
-    $log.info "action-call_snapshot_delete: Enter"
+    _log.info "Enter"
 
     #TODO: remove snapshot here if Vm was running
     vm = VmOrTemplate.find(self.target_id)
@@ -270,7 +270,7 @@ class VmScan < Job
   end
 
   def call_synchronize
-    $log.info "action-call_synchronize: Enter"
+    _log.info "Enter"
 
     begin
       host = Object.const_get(self.agent_class).find(self.agent_id)
@@ -295,22 +295,22 @@ class VmScan < Job
   end
 
   def synchronizing
-    $log.info "action-synchronizing"
+    _log.info "."
   end
 
   def scanning
-    $log.info "action-scanning" if self.context[:scan_attempted]
+    _log.info "." if self.context[:scan_attempted]
     self.context[:scan_attempted] = true
   end
 
   def process_data(*args)
-    $log.info "action-process_data: starting..."
+    _log.info "starting..."
 
     data = args.first
     set_status("Processing VM data")
 
     doc = MiqXml.load(data)
-    $log.info "action-process_data: Document=#{doc.root.name.downcase}"
+    _log.info "Document=#{doc.root.name.downcase}"
 
     if doc.root.name.downcase == "summary"
       doc.root.each_element do |s|
@@ -319,16 +319,16 @@ class VmScan < Job
           request_docs = []
           all_docs = []
           s.each_element { |e|
-            $log.info("action-process_data: Summary XML [#{e}]")
+            _log.info("Summary XML [#{e}]")
             request_docs << e.attributes['original_filename'] if e.attributes['items_total'] && e.attributes['items_total'].to_i.zero?
             all_docs << e.attributes['original_filename']
           }
           unless request_docs.empty? || (request_docs.length != all_docs.length)
             message = "scan operation yielded no data. aborting"
-            $log.error("action-process_data: #{message}")
+            _log.error("#{message}")
             signal(:abort, message, "error")
           else
-            $log.info("action-process_data: sending :finish")
+            _log.info("sending :finish")
             vm = VmOrTemplate.find_by_id(self.target_id)
 
             # Collect any VIM data here
@@ -337,7 +337,7 @@ class VmScan < Job
               begin
                 vm.refresh_on_scan
               rescue => err
-                $log.error("action-process_data: refreshing data from VIM: #{err.message}")
+                _log.error("refreshing data from VIM: #{err.message}")
                 $log.log_backtrace(err)
               end
 
@@ -348,7 +348,7 @@ class VmScan < Job
             begin
               vm.save_drift_state unless vm.nil?
             rescue => err
-              $log.error("action-process_data: saving VM drift state: #{err.message}")
+              _log.error("saving VM drift state: #{err.message}")
               $log.log_backtrace(err)
             end
             signal(:finish, "Process completed successfully", "ok")
@@ -358,11 +358,11 @@ class VmScan < Job
               inputs = {:vm => vm, :host => vm.host}
               MiqEvent.raise_evm_job_event(vm, {:type => "scan", :suffix => "complete"}, inputs)
             rescue => err
-              $log.warn("action-process_data: #{err.message}, unable to raise policy event: [vm_scan_complete]")
+              _log.warn("#{err.message}, unable to raise policy event: [vm_scan_complete]")
             end
           end
         when "scanmetadata"
-          $log.info("action-process_data: sending :synchronize")
+          _log.info("sending :synchronize")
           vm = VmOrTemplate.find(self.options[:target_id])
           result = vm.save_scan_history(s.attributes.to_h(false).merge("taskid" => doc.root.attributes["taskid"])) if s.attributes
           if result.status_code == 16 #fatal error on proxy
@@ -371,7 +371,7 @@ class VmScan < Job
             signal(:snapshot_delete)
           end
         else
-          $log.info("action-process_data: no action taken")
+          _log.info("no action taken")
         end
       end
     end
@@ -394,8 +394,8 @@ class VmScan < Job
           raise "No #{ui_lookup(:table => "ext_management_systems")} available to delete snapshot"
         end
       rescue => err
-        $log.error("scan-delete_snapshot: #{err.message}")
-        $log.debug err.backtrace.join("\n")
+        _log.error("#{err.message}")
+        _log.debug err.backtrace.join("\n")
       end
     else
       self.end_user_event_message(vm)
@@ -457,7 +457,7 @@ class VmScan < Job
   def process_cancel(*args)
     options = args.first || {}
 
-    $log.info "action-cancel: job canceling, #{options[:message]}"
+    _log.info "job canceling, #{options[:message]}"
 
     begin
       delete_snapshot(self.context[:snapshot_mor])

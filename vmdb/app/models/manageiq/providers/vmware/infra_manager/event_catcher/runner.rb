@@ -17,8 +17,8 @@ class ManageIQ::Providers::Vmware::InfraManager::EventCatcher::Runner < ManageIQ
     begin
       @event_monitor_handle.stop unless @event_monitor_handle.nil?
     rescue Exception => err
-      $log.warn("#{self.log_prefix} Event Monitor Stop errored because [#{err.message}]")
-      $log.warn("#{self.log_prefix} Error details: [#{err.details}]")
+      _log.warn("#{self.log_prefix} Event Monitor Stop errored because [#{err.message}]")
+      _log.warn("#{self.log_prefix} Error details: [#{err.details}]")
       $log.log_backtrace(err)
     ensure
       reset_event_monitor_handle
@@ -33,10 +33,10 @@ class ManageIQ::Providers::Vmware::InfraManager::EventCatcher::Runner < ManageIQ
       end
     rescue Handsoap::Fault => err
       if ( @exit_requested && (err.code == "ServerFaultCode") && (err.reason == "The task was canceled by a user.") )
-        $log.info("#{self.log_prefix} Event Monitor Thread terminated normally")
+        _log.info("#{self.log_prefix} Event Monitor Thread terminated normally")
       else
-        $log.error("#{self.log_prefix} Event Monitor Thread aborted because [#{err.message}]")
-        $log.error("#{self.log_prefix} Error details: [#{err.details}]")
+        _log.error("#{self.log_prefix} Event Monitor Thread aborted because [#{err.message}]")
+        _log.error("#{self.log_prefix} Error details: [#{err.details}]")
         $log.log_backtrace(err)
       end
       raise EventCatcherHandledException
@@ -62,9 +62,9 @@ class ManageIQ::Providers::Vmware::InfraManager::EventCatcher::Runner < ManageIQ
     end
 
     if self.filtered_events.include?(event_type) || self.filtered_events.include?(sub_event_type)
-      $log.info "#{self.log_prefix} Skipping caught event [#{display_name}] chainId [#{event['chainId']}]"
+      _log.info "#{self.log_prefix} Skipping caught event [#{display_name}] chainId [#{event['chainId']}]"
     else
-      $log.info "#{self.log_prefix} Queueing event [#{display_name}] chainId [#{event['chainId']}]"
+      _log.info "#{self.log_prefix} Queueing event [#{display_name}] chainId [#{event['chainId']}]"
       EmsEvent.add_queue('add_vc', @cfg[:ems_id], event)
     end
   end

@@ -82,17 +82,6 @@ class MiqQueue < ActiveRecord::Base
 
   @@delete_command_file = File.join(File.expand_path(Rails.root), "miq_queue_delete_cmd_file")
 
-  LOG_PREFIX = {
-    :put       => "MIQ(MiqQueue.put)       ",
-    :get       => "MIQ(MiqQueue.get)       ",
-    :unget     => "MIQ(MiqQueue.unget)     ",
-    :deliver   => "MIQ(MiqQueue.deliver)   ",
-    :delivered => "MIQ(MiqQueue.delivered) ",
-    :callback  => "MIQ(MiqQueue.m_callback)",
-    :atStartup => "MIQ(MiqQueue.atStartup) ",
-    :dev_null  => "MIQ(MiqQueue.dev_null)  ",
-  }
-
   def data
     msg_data && Marshal.load(msg_data)
   end
@@ -106,7 +95,6 @@ class MiqQueue < ActiveRecord::Base
     data_size = data ? data.length : 0
 
     if (args_size + data_size) > 512
-      log_prefix = LOG_PREFIX[:put]
       culprit = caller.detect {|r| ! (r =~ /miq_queue.rb/) } || ""
       _log.warn("#{culprit.split(":in ").first} called with large payload (args: #{args_size} bytes, data: #{data_size} bytes) #{MiqQueue.format_full_log_msg(self)}")
     end
@@ -157,7 +145,6 @@ class MiqQueue < ActiveRecord::Base
   EOL
 
   def self.get(options={})
-    log_prefix = LOG_PREFIX[:get]
     cond = [
       MIQ_QUEUE_GET,
       options[:zone] || MiqServer.my_server.zone.name,
@@ -188,7 +175,7 @@ class MiqQueue < ActiveRecord::Base
       rescue ActiveRecord::StaleObjectError
         result = :stale
       rescue => err
-        raise "#{log_prefix} \"#{err}\" attempting to get next message"
+        raise "#{_log.prefix} \"#{err}\" attempting to get next message"
       end
     end
     if result == :stale
@@ -242,8 +229,6 @@ class MiqQueue < ActiveRecord::Base
   #   will allow multiple records found by the find options to further be
   #   searched against the args column, which is normally not easily searchable.
   def self.put_or_update(find_options)
-    log_prefix = LOG_PREFIX[:merge]
-
     find_options  = default_get_options(find_options)
     args_selector = find_options.delete(:args_selector)
     conds = find_options.dup
@@ -297,7 +282,7 @@ class MiqQueue < ActiveRecord::Base
       rescue ActiveRecord::StaleObjectError
         _log.debug("#{MiqQueue.format_short_log_msg(msg)} stale, retrying...")
       rescue => err
-        raise RuntimeError, "#{log_prefix} \"#{err}\" attempting merge next message", err.backtrace
+        raise RuntimeError, "#{_log.prefix} \"#{err}\" attempting merge next message", err.backtrace
       end
     end
     msg
@@ -462,8 +447,8 @@ class MiqQueue < ActiveRecord::Base
   end
 
   def self.dev_null(id, data)
-    msg = "#{LOG_PREFIX[:dev_null]} Id: #{id} delivered, data: \"#{data}\""
-    $log.info msg
+    msg = "Id: #{id} delivered, data: \"#{data}\""
+    _log.info msg
     puts      msg
   end
 

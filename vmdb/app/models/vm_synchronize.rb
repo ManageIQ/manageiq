@@ -14,7 +14,7 @@ class VmSynchronize < Job
   end
 
   def call_synchronize
-    $log.info "action-call_synchronize: Enter"
+    _log.info "Enter"
 
     self.options[:categories] ||= Vm.default_scan_categories
     begin
@@ -37,14 +37,14 @@ class VmSynchronize < Job
   end
 
   def process_data(*args)
-    $log.info "action-process_data: starting..."
+    _log.info "starting..."
 
     data = args.first
 
     set_status("Processing VM data")
 
     doc = MiqXml.load(data)
-    $log.info "action-process_data: Document=#{doc.root.name.downcase}"
+    _log.info "Document=#{doc.root.name.downcase}"
 
     if doc.root.name.downcase == "summary"
       doc.root.each_element do |s|
@@ -53,20 +53,20 @@ class VmSynchronize < Job
           request_docs = []
           all_docs = []
           s.each_element { |e|
-            $log.info("action-process_data: Summary XML [#{e}]")
+            _log.info("Summary XML [#{e}]")
             request_docs << e.attributes['original_filename'] if e.attributes['items_total'] && e.attributes['items_total'].to_i.zero?
             all_docs << e.attributes['original_filename']
           }
           unless request_docs.empty? || (request_docs.length != all_docs.length)
             message = "synchronize operation yielded no data. aborting"
-            $log.error("action-process_data: #{message}")
+            _log.error("#{message}")
             signal(:abort, message, "error")
           else
-            $log.info("action-process_data: sending :finish")
+            _log.info("sending :finish")
             signal(:finish, "Process completed successfully", "ok")
           end
         else
-          $log.info("action-process_data: no action taken")
+          _log.info("no action taken")
         end
       end
     end

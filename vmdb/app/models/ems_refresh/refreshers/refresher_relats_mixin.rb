@@ -1,7 +1,7 @@
 module EmsRefresh::Refreshers::RefresherRelatsMixin
   def find_relats_vmdb(target)
-    log_header = "MIQ(RefresherRelatsMixin.find_relats_vmdb) EMS: [#{@ems.name}], id: [#{@ems.id}]"
-    $log.info "#{log_header} Getting VMDB relationships for #{target.class} [#{target.name}] id: [#{target.id}]..."
+    log_header = "EMS: [#{@ems.name}], id: [#{@ems.id}]"
+    _log.info "#{log_header} Getting VMDB relationships for #{target.class} [#{target.name}] id: [#{target.id}]..."
 
     vr = {
       :ems_id => @ems.id,
@@ -124,7 +124,7 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
       find_relats_vmdb_host_ems_metadata(target.host, vr) unless target.host.nil?
 
     end
-    $log.info "#{log_header} Getting VMDB relationships for #{target.class} [#{target.name}] id: [#{target.id}]...Complete"
+    _log.info "#{log_header} Getting VMDB relationships for #{target.class} [#{target.name}] id: [#{target.id}]...Complete"
 
     return vr
   end
@@ -295,10 +295,10 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
   end
 
   def update_relats(target, prev_relats, new_relats)
-    log_header = "MIQ(RefresherRelatsMixin.update_relats) EMS: [#{@ems.name}], id: [#{@ems.id}]"
-    $log.debug "#{log_header} Updating relationships..."
-    $log.debug "#{log_header} prev_relats: #{prev_relats.inspect}"
-    $log.debug "#{log_header} new_relats:  #{new_relats.inspect}"
+    log_header = "EMS: [#{@ems.name}], id: [#{@ems.id}]"
+    _log.debug "#{log_header} Updating relationships..."
+    _log.debug "#{log_header} prev_relats: #{prev_relats.inspect}"
+    _log.debug "#{log_header} new_relats:  #{new_relats.inspect}"
 
     # Check if the data coming in reflects a complete removal from VC
     if new_relats[:ems_to_hosts].empty? && new_relats[:ems_to_hosts].empty? && new_relats[:ems_to_vms].empty? &&
@@ -476,9 +476,9 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
       unless root.nil?
         @ems.add_folder(root)
       else
-        $log.warn "#{log_header} Unable to find a root folder."
+        _log.warn "#{log_header} Unable to find a root folder."
       end
     end
-    $log.debug "#{log_header} Updating relationships...Complete"
+    _log.debug "#{log_header} Updating relationships...Complete"
   end
 end

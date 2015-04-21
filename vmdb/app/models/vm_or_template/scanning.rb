@@ -123,7 +123,7 @@ module VmOrTemplate::Scanning
           .where(:sync_key => guid)
           .pluck(:id)
     unless j.blank?
-      $log.info "(Vm-scan) VM scan job will not be added due to existing scan job waiting to be processed.  VM ID:[#{self.id}] Name:[#{self.name}] Guid:[#{self.guid}]  Existing Job IDs [#{j.join(", ")}]"
+      _log.info "VM scan job will not be added due to existing scan job waiting to be processed.  VM ID:[#{self.id}] Name:[#{self.name}] Guid:[#{self.guid}]  Existing Job IDs [#{j.join(", ")}]"
       return nil
     end
 
@@ -234,9 +234,7 @@ module VmOrTemplate::Scanning
   end
 
   def scan_via_miq_vm(miqVm, ost)
-    log_pref = "#{self.class.name}##{__method__}"
-
-    $log.debug "#{log_pref}: Checking for file systems..."
+    _log.debug "Checking for file systems..."
     if miqVm.vmRootTrees[0].nil?
       raise MiqException::MiqVmMountError, "No root filesystem found." if miqVm.diskInitErrors.empty?
 
@@ -279,20 +277,20 @@ module VmOrTemplate::Scanning
 
       # categories = miqVm.miq_extract.categories
       categories = ost.category.split(',') # TODO: XXX Use scan profiles
-      $log.debug "#{log_pref}: categories = [ #{categories.join(', ')} ]"
+      _log.debug "categories = [ #{categories.join(', ')} ]"
 
       categories.each do |c|
         UpdateAgentState(driver, ost, "Scanning", "Scanning #{c}")
-        $log.info "#{log_pref}: Scanning [#{c}] information.  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
+        _log.info "Scanning [#{c}] information.  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
         st = Time.now
         xml = miqVm.extract(c)
         categoriesProcessed += 1
-        $log.info "#{log_pref}: Scanning [#{c}] information ran for [#{Time.now - st}] seconds.  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
+        _log.info "Scanning [#{c}] information ran for [#{Time.now - st}] seconds.  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
         if xml
           xml.root.add_attributes({"created_on" => ost.scanTime.to_i, "display_time" => ost.scanTime.iso8601})
-          $log.debug "#{log_pref}: Writing scanned data to XML for [#{c}] to blackbox."
+          _log.debug "Writing scanned data to XML for [#{c}] to blackbox."
           bb.saveXmlData(xml, c)
-          $log.debug "#{log_pref}: writing xml complete."
+          _log.debug "writing xml complete."
 
           categoryNode = xml_summary.class.load(xml.root.shallow_copy.to_xml.to_s).root
           categoryNode.add_attributes("start_time" => st.utc.iso8601, "end_time" => Time.now.utc.iso8601)
@@ -301,14 +299,14 @@ module VmOrTemplate::Scanning
           # Handle categories that we do not expect to return data.
           # Otherwise, log an error if we do not get data back.
           unless c == "vmevents"
-            $log.error "#{log_pref} Error: No XML returned for category [#{c}]  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
+            _log.error "Error: No XML returned for category [#{c}]  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
           end
         end
       end
     rescue NoMethodError => scanErr
       lastErr = scanErr
-      $log.error "#{log_pref}: Scanmetadata Error - [#{scanErr}]"
-      $log.error "#{log_pref}: Scanmetadata Error - [#{scanErr.backtrace.join("\n")}]"
+      _log.error "Scanmetadata Error - [#{scanErr}]"
+      _log.error "Scanmetadata Error - [#{scanErr.backtrace.join("\n")}]"
     rescue Timeout::Error, StandardError => scanErr
       lastErr = scanErr
     ensure
@@ -316,25 +314,23 @@ module VmOrTemplate::Scanning
       UpdateAgentState(driver, ost, "Scanning", "Scanning completed.")
 
       # If we are sent a TaskId transfer a end of job summary xml.
-      $log.info "#{log_pref} Starting: Sending scan summary to server.  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
+      _log.info "Starting: Sending scan summary to server.  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
       if lastErr
         status = "Error"
         statusCode = 8
         statusCode = 16 if categoriesProcessed.zero?
         scanMessage = lastErr.to_s
-        $log.error "#{log_pref} ScanMetadata error status:[#{statusCode}]:  message:[#{lastErr}]"
+        _log.error "ScanMetadata error status:[#{statusCode}]:  message:[#{lastErr}]"
         lastErr.backtrace.each {|m| $log.debug m} if $log.debug?
       end
 
       xmlNodeScan.add_attributes("end_time" => Time.now.utc.iso8601, "status" => status, "status_code" => statusCode.to_s, "message" => scanMessage)
       driver.SaveVmmetadata(vmId, xml_summary.to_xml.miqEncode, "b64,zlib,xml", ost.taskid)
-      $log.info "#{log_pref} Completed: Sending scan summary to server.  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
+      _log.info "Completed: Sending scan summary to server.  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
     end
   end
 
   def sync_stashed_metadata(ost)
-    log_pref = "#{self.class.name}##{__method__}"
-
     _log.info "from #{self.class.name}"
     xml_summary = nil
     begin
@@ -350,7 +346,7 @@ module VmOrTemplate::Scanning
       vmName, bb, vmId = nil
       driver = MiqservicesClientInternal.new
       xml_summary = ost.xml_class.createDoc("<summary/>")
-      $log.debug "#{log_pref}: xml_summary1 = #{xml_summary.class.name}"
+      _log.debug "xml_summary1 = #{xml_summary.class.name}"
       xmlNode = xml_summary.root.add_element("syncmetadata")
       xml_summary.root.add_attributes("scan_time" => ost.scanTime, "taskid" => ost.taskid)
       ost.skipConfig = true
@@ -377,20 +373,20 @@ module VmOrTemplate::Scanning
 
         # Verify that we have data to send
         unless items_selected.zero?
-          $log.info "#{log_pref} Starting:  Sending vm data for [#{c}] to server.  Size:[#{data.length}]  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
+          _log.info "Starting:  Sending vm data for [#{c}] to server.  Size:[#{data.length}]  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
           driver.SaveVmmetadata(bb.vmId, data, "b64,zlib,xml", ost.taskid)
-          $log.info "Completed: Sending vm data for [#{c}] to server.  Size:[#{data.length}]  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
+          _log.info "Completed: Sending vm data for [#{c}] to server.  Size:[#{data.length}]  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
         else
           # Do not send empty XMLs.  Warn if there is not data at all, or just not items selected.
           if items_total.zero?
-            $log.warn "#{log_pref} Synchronize: No data found for [#{c}].  Items:Total[#{items_total}] Selected[#{items_selected}]  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
+            _log.warn "Synchronize: No data found for [#{c}].  Items:Total[#{items_total}] Selected[#{items_selected}]  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
           else
-            $log.warn "#{log_pref} Synchronize: No data selected for [#{c}].  Items:Total[#{items_total}] Selected[#{items_selected}]  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
+            _log.warn "Synchronize: No data selected for [#{c}].  Items:Total[#{items_total}] Selected[#{items_selected}]  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
           end
         end
       end
     rescue => syncErr
-      $log.error "#{log_pref}: #{syncErr}"
+      _log.error "#{syncErr}"
       $log.debug syncErr.backtrace.join("\n")
     ensure
       if bb
@@ -398,10 +394,10 @@ module VmOrTemplate::Scanning
         bb.close
       end
       
-      $log.info "#{log_pref} Starting:  Sending vm summary to server.  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
-      $log.debug "#{log_pref}: xml_summary2 = #{xml_summary.class.name}"
+      _log.info "Starting:  Sending vm summary to server.  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
+      _log.debug "xml_summary2 = #{xml_summary.class.name}"
       driver.SaveVmmetadata(vmId, xml_summary.miqEncode, "b64,zlib,xml", ost.taskid)
-      $log.info "#{log_pref} Completed: Sending vm summary to server.  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
+      _log.info "Completed: Sending vm summary to server.  TaskId:[#{ost.taskid}]  VM:[#{vmName}]"
       
       UpdateAgentState(driver, ost, "Synchronize", "Synchronization complete")
 

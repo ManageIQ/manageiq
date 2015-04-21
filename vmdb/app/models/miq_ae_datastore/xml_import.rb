@@ -26,7 +26,7 @@ module MiqAeDatastore
       end
 
       Benchmark.realtime_block(:process_class_save_time) do
-        $log.info("MiqAeDatastore: Importing Class: #{aec.fqname}") if $log
+        _log.info("Importing Class: #{aec.fqname}") if $log
         aec.save!
       end
     end
@@ -150,7 +150,7 @@ module MiqAeDatastore
         end
       end
 
-      $log.info("Automate Datastore Import complete: #{t.inspect}") if $log
+      _log.info("Automate Datastore Import complete: #{t.inspect}") if $log
     end
 
     def self.create_domain(domain)

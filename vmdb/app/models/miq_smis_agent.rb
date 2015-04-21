@@ -55,12 +55,12 @@ class MiqSmisAgent < StorageManager
 
     agents.each do |agent|
       # TODO: Log hostname, not ipaddress
-      $log.info "MiqSmisAgent.update_smis: Checking agent: #{agent.ipaddress}"
+      _log.info "Checking agent: #{agent.ipaddress}"
       connectFailed = false
       begin
         agent.connect
       rescue Exception => err
-        $log.warn "MiqSmisAgent.update_smis: Agent connection failed: #{agent.ipaddress}"
+        _log.warn "Agent connection failed: #{agent.ipaddress}"
         $log.warn err.to_s
         $log.warn err.backtrace.join("\n")
         connectFailed = true
@@ -69,14 +69,14 @@ class MiqSmisAgent < StorageManager
       end
 
       if connectFailed
-        $log.info "MiqSmisAgent.update_smis: agent: #{agent.ipaddress} STORAGE_UPDATE_AGENT_INACCESSIBLE"
+        _log.info "agent: #{agent.ipaddress} STORAGE_UPDATE_AGENT_INACCESSIBLE"
         agent.last_update_status = STORAGE_UPDATE_AGENT_INACCESSIBLE
         agent.managed_elements.each do |inst|
           inst.last_update_status = STORAGE_UPDATE_AGENT_INACCESSIBLE
           inst.save
         end
       else
-        $log.info "MiqSmisAgent.update_smis: agent: #{agent.ipaddress} STORAGE_UPDATE_OK"
+        _log.info "agent: #{agent.ipaddress} STORAGE_UPDATE_OK"
         # agent.last_update_status == STORAGE_UPDATE_PENDING
         pendingAgents << agent
         agent.managed_elements.each do |inst|
@@ -100,7 +100,7 @@ class MiqSmisAgent < StorageManager
         updated = true
       rescue Exception => err
         # TODO: Log hostname, not ipaddress
-        $log.error "MiqSmisAgent.update_smis: agent: #{agent.ipaddress} - #{err}"
+        _log.error "agent: #{agent.ipaddress} - #{err}"
         $log.error err.backtrace.join("\n")
         agent.last_update_status = STORAGE_UPDATE_FAILED
         agent.save
@@ -153,13 +153,13 @@ class MiqSmisAgent < StorageManager
   def self.update_stats
     self.find(:all, :conditions => {:agent_type => 'SMIS'}).each do |agent|
       # TODO: Log hostname, not ipaddress
-      $log.info "MiqSmisAgent.update_stats Agent: #{agent.ipaddress}"
+      _log.info "Agent: #{agent.ipaddress}"
 
       begin
         agent.connect
         agent.update_stats
       rescue Exception => err
-        $log.warn "MiqSmisAgent.update_stats: #{err}"
+        _log.warn "#{err}"
         $log.warn err.backtrace.join("\n")
         next
       ensure
@@ -175,8 +175,8 @@ class MiqSmisAgent < StorageManager
       begin
         spRn = @conn.GetInstance(me.obj_name, :LocalNamespacePath => me.namespace, :PropertyList => ['HealthState', 'OperationalStatus'])
       rescue Exception => err
-        $log.error "update_status: #{err}"
-        $log.error "update_status obj_name: #{me.obj_name}"
+        _log.error "#{err}"
+        _log.error "obj_name: #{me.obj_name}"
         next
       end
       if (hs = spRn['HealthState'])
@@ -200,13 +200,13 @@ class MiqSmisAgent < StorageManager
   def self.update_status
     self.find(:all, :conditions => {:agent_type => 'SMIS'}).each do |agent|
       # TODO: Log hostname, not ipaddress
-      $log.info "MiqSmisAgent.update_status Agent: #{agent.ipaddress}"
+      _log.info "Agent: #{agent.ipaddress}"
 
       begin
         agent.connect
         agent.update_status
       rescue Exception => err
-        $log.warn "MiqSmisAgent.update_status: #{err}"
+        _log.warn "#{err}"
         $log.warn err.backtrace.join("\n")
         next
       ensure
@@ -216,7 +216,7 @@ class MiqSmisAgent < StorageManager
   end
 
   def self.refresh_inventory_by_subclass(ids, args={})
-    $log.info "#{self.name}.refresh_inventory_by_subclass: queueing refresh requests for [ #{ids.join(', ')} ]"
+    _log.info "queueing refresh requests for [ #{ids.join(', ')} ]"
     request_smis_update(ids, args)
   end
 
@@ -225,10 +225,10 @@ class MiqSmisAgent < StorageManager
     self.find(ids).each { |a| zoneHash[a.zone_id] = true }
     zoneHash.each_key do |zid|
       if (rw = MiqSmisRefreshWorker.find_current_in_zone(zid).first).nil?
-        $log.warn "#{self.name}.request_smis_update: no active SmisRefreshWorker found for zone #{zid}"
+        _log.warn "no active SmisRefreshWorker found for zone #{zid}"
         next
       end
-      $log.info "#{self.name}.request_smis_update: requesting update for zone #{zid}"
+      _log.info "requesting update for zone #{zid}"
       rw.send_message_to_worker_monitor("request_smis_update")
     end
   end
@@ -260,7 +260,7 @@ class MiqSmisAgent < StorageManager
         alus = inst.agent.last_update_status
         next if alus == STORAGE_UPDATE_FAILED || alus == STORAGE_UPDATE_IN_PROGRESS
       end
-      $log.info "MiqSmisAgent.cleanup: deleting SMI-S instance #{inst.class_name} (#{inst.id}) - #{inst.evm_display_name}, last_update_status = #{inst.last_update_status}"
+      _log.info "deleting SMI-S instance #{inst.class_name} (#{inst.id}) - #{inst.evm_display_name}, last_update_status = #{inst.last_update_status}"
       inst.destroy
     end
     return nil

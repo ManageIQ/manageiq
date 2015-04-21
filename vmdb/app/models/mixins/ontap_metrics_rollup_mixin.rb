@@ -74,7 +74,7 @@ module OntapMetricsRollupMixin
       passed_cond = options.delete(:conditions)
       options[:conditions] = passed_cond.nil? ? my_cond : "( #{self.send(:sanitize_sql_for_conditions, my_cond)} ) AND ( #{self.send(:sanitize_sql, passed_cond)} )"
 
-      $log.debug("#{self.name}.find_all_by_interval_and_time_range: Find options: #{options.inspect}")
+      _log.debug("Find options: #{options.inspect}")
       self.find(count, options)
     end
   end # module ClassMethods
@@ -134,7 +134,7 @@ module OntapMetricsRollupMixin
   end
 
   def hourly_rollup(rollup_time, metric_list)
-    $log.info "#{self.class.name}.hourly_rollup: #{rollup_time}"
+    _log.info "#{rollup_time}"
     self.statistic_time = rollup_time
     self.rollup_type  = "hourly"
 
@@ -178,7 +178,7 @@ module OntapMetricsRollupMixin
         bcTotal += val * metrics.base_counters[baseCounterName]
       end
       if (bcv = bcHash[baseCounterName]) == 0
-        $log.info "#{self.class.name}.hourly_rollup: counter = #{bc}, base counter (#{baseCounterName}) is zero."
+        _log.info "counter = #{bc}, base counter (#{baseCounterName}) is zero."
         self[bc] = 0
       else
         self[bc] = bcTotal / bcv
@@ -191,7 +191,7 @@ module OntapMetricsRollupMixin
   end
 
   def daily_rollup(rollup_time, time_profile, metric_list)
-    $log.info "#{self.class.name}.daily_rollup: #{rollup_time}"
+    _log.info "#{rollup_time}"
     self.statistic_time = rollup_time
     self.time_profile = time_profile
     self.rollup_type  = "daily"
@@ -224,7 +224,7 @@ module OntapMetricsRollupMixin
       baseCounterName = counterInfo[bc].base_counter
       metric_list.each { |metrics| bcTotal += metrics[bc] * metrics.base_counters[baseCounterName] }
       if (bcv = bcHash[baseCounterName]) == 0
-        $log.info "#{self.class.name}.daily_rollup: counter = #{bc}, base counter (#{baseCounterName}) is zero."
+        _log.info "counter = #{bc}, base counter (#{baseCounterName}) is zero."
         self[bc] = 0
       else
         self[bc] = bcTotal / bcv
@@ -238,7 +238,7 @@ module OntapMetricsRollupMixin
           val = metrics[mc]
           minVal = val if val < minVal
         rescue => err
-          $log.error "daily_rollup: mc = #{mc} (#{metrics.class.name})"
+          _log.error "mc = #{mc} (#{metrics.class.name})"
           raise
         end
       end

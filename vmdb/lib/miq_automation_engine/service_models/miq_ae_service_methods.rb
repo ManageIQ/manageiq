@@ -161,7 +161,7 @@ module MiqAeMethodService
     end
 
     def self.service_now_task_service(service, server, username, password, *params)
-      log_prefix = "MIQAE(MiqAeServiceMethods.service_now_task_#{service.underscore})"
+      log_prefix = "[#{service.underscore}]"
       begin
         require 'SnSctaskClientBase'
         service_now_drb_undumped
@@ -169,18 +169,18 @@ module MiqAeMethodService
         payload = params.empty? ? {} : Hash[*params]
         password = MiqAePassword.decrypt_if_password(password)
 
-        $log.info("#{log_prefix} Connecting to host=<#{server}> with username=<#{username}>")
+        _log.info("#{log_prefix} Connecting to host=<#{server}> with username=<#{username}>")
         sn = SnSctaskClientBase.new(server, username, password)
-        $log.info("#{log_prefix} Updating with params=<#{payload.inspect}>")
+        _log.info("#{log_prefix} Updating with params=<#{payload.inspect}>")
         rv = sn.send(service, payload)
-        $log.info("#{log_prefix} Return Value=<#{sn.dumpObj(rv)}>")
+        _log.info("#{log_prefix} Return Value=<#{sn.dumpObj(rv)}>")
         return rv
       rescue Handsoap::Fault => hserr
-        $log.error "#{log_prefix} Handsoap::Fault { :code => '#{hserr.code}', :reason => '#{hserr.reason}', :details => '#{hserr.details.inspect}' }"
+        _log.error "#{log_prefix} Handsoap::Fault { :code => '#{hserr.code}', :reason => '#{hserr.reason}', :details => '#{hserr.details.inspect}' }"
         $log.error hserr.backtrace.join("\n")
         raise
       rescue => err
-        $log.error "#{log_prefix} #{err}"
+        _log.error "#{log_prefix} #{err}"
         $log.error err.backtrace.join("\n")
         raise
       end

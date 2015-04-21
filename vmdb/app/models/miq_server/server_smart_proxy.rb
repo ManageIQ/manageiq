@@ -98,19 +98,19 @@ module MiqServer::ServerSmartProxy
       if v.vendor == "OpenStack" || v.vendor == "Amazon"
         job = Job.find_by_guid(ost.taskid)
         begin
-          $log.debug "MiqServer::ServerSmartProxy.scan_sync_vm: OpenStack (#{v.class.name})"
+          _log.debug "OpenStack (#{v.class.name})"
           case ost.method_name
           when "ScanMetadata"
-            $log.debug "MiqServer::ServerSmartProxy.scan_sync_vm: OpenStack ScanMetadata"
+            _log.debug "OpenStack ScanMetadata"
             v.perform_metadata_scan(ost)
           when "SyncMetadata"
-            $log.debug "MiqServer::ServerSmartProxy.scan_sync_vm: OpenStack SyncMetadata"
+            _log.debug "OpenStack SyncMetadata"
             v.perform_metadata_sync(ost)
           end
 
           return
         rescue Exception => err
-          $log.error "MiqServer::ServerSmartProxy.scan_sync_vm: #{err}"
+          _log.error "#{err}"
           $log.debug err.backtrace.join("\n")
           job.signal(:abort_retry, err.to_s, "error", true)
           return

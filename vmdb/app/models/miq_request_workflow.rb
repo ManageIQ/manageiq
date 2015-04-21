@@ -421,23 +421,22 @@ class MiqRequestWorkflow
   end
 
   def set_value_from_list(fn, f, value, values = nil, partial_key = false)
-    header = "MIQ(#{self.class.name}.set_value_from_list)"
     @values[fn] = [nil, nil]
     values = f[:values] if values.nil?
     unless value.nil?
       @values[fn] = values.to_a.detect do |v|
         if partial_key
-          $log.warn "#{header} comparing [#{v[0]}] to [#{value}]"
+          _log.warn "comparing [#{v[0]}] to [#{value}]"
           v[0].to_s.downcase.include?(value.to_s.downcase)
         else
           v.include?(value)
         end
       end
       if @values[fn].nil?
-        $log.info "#{header} set_value_from_list did not matched an item" if partial_key
+        _log.info "set_value_from_list did not matched an item" if partial_key
         @values[fn] = [nil, nil]
       else
-        $log.info "#{header} set_value_from_list matched item value:[#{value}] to item:[#{@values[fn][0]}]" if partial_key
+        _log.info "set_value_from_list matched item value:[#{value}] to item:[#{@values[fn][0]}]" if partial_key
       end
     end
   end

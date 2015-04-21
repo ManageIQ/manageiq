@@ -30,7 +30,7 @@
 module EmsRefresh::SaveInventoryCloud
   def save_ems_cloud_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
-    log_header = "MIQ(#{self.name}.save_ems_cloud_inventory) EMS: [#{ems.name}], id: [#{ems.id}]"
+    log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
     # Check if the data coming in reflects a complete removal from the ems
     if hashes.blank?
@@ -38,10 +38,10 @@ module EmsRefresh::SaveInventoryCloud
       return
     end
 
-    $log.info("#{log_header} Saving EMS Inventory...")
+    _log.info("#{log_header} Saving EMS Inventory...")
     if debug_trace
       require 'yaml'
-      $log.debug "#{log_header} hashes:\n#{YAML.dump(hashes)}"
+      _log.debug "#{log_header} hashes:\n#{YAML.dump(hashes)}"
     end
 
     child_keys = [
@@ -70,7 +70,7 @@ module EmsRefresh::SaveInventoryCloud
     ems.save!
     hashes[:id] = ems.id
 
-    $log.info("#{log_header} Saving EMS Inventory...Complete")
+    _log.info("#{log_header} Saving EMS Inventory...Complete")
 
     return ems
   end

@@ -24,7 +24,7 @@ class EmsRefreshCoreWorker < WorkerBase
   end
 
   def log_prefix
-    @log_prefix ||= "MIQ(#{self.class.name}) EMS [#{@ems.hostname}] as [#{@ems.authentication_userid}]"
+    @log_prefix ||= "EMS [#{@ems.hostname}] as [#{@ems.authentication_userid}]"
   end
 
   def before_exit(message, exit_code)
@@ -51,14 +51,14 @@ class EmsRefreshCoreWorker < WorkerBase
     @exit_requested = false
 
     begin
-      $log.info("#{self.log_prefix} Validating Connection/Credentials")
+      _log.info("#{self.log_prefix} Validating Connection/Credentials")
       @ems.verify_credentials
     rescue => err
-      $log.warn("#{self.log_prefix} #{err.message}")
+      _log.warn("#{self.log_prefix} #{err.message}")
       return nil
     end
 
-    $log.info("#{self.log_prefix} Starting thread")
+    _log.info("#{self.log_prefix} Starting thread")
     require 'MiqVimCoreUpdater'
 
     tid = Thread.new do
@@ -67,28 +67,28 @@ class EmsRefreshCoreWorker < WorkerBase
         @vim.monitorUpdates { |*u| @queue.enq(u) }
       rescue Handsoap::Fault => err
         if ( @exit_requested && (err.code == "ServerFaultCode") && (err.reason == "The task was canceled by a user.") )
-          $log.info("#{self.log_prefix} Thread terminated normally")
+          _log.info("#{self.log_prefix} Thread terminated normally")
         else
-          $log.error("#{self.log_prefix} Thread aborted because [#{err.message}]")
-          $log.error("#{self.log_prefix} Error details: [#{err.details}]")
+          _log.error("#{self.log_prefix} Thread aborted because [#{err.message}]")
+          _log.error("#{self.log_prefix} Error details: [#{err.details}]")
           $log.log_backtrace(err)
         end
         Thread.exit
       rescue => err
-        $log.error("#{self.log_prefix} Thread aborted because [#{err.message}]")
+        _log.error("#{self.log_prefix} Thread aborted because [#{err.message}]")
         $log.log_backtrace(err) unless err.kind_of?(Errno::ECONNREFUSED)
         Thread.exit
       end
     end
 
-    $log.info("#{self.log_prefix} Started thread")
+    _log.info("#{self.log_prefix} Started thread")
 
     return tid
   end
 
   def do_work
     if @tid.nil? || !@tid.alive?
-      $log.info("#{self.log_prefix} Thread gone. Restarting...")
+      _log.info("#{self.log_prefix} Thread gone. Restarting...")
       @tid = start_updater
     end
 
@@ -138,7 +138,7 @@ class EmsRefreshCoreWorker < WorkerBase
     new_attrs.delete(:raw_power_state) if new_attrs[:template] || (new_attrs[:template].nil? && vm.template?)
 
     unless new_attrs.blank?
-      $log.info("#{self.log_prefix} Updating Vm id: [#{vm.id}], name: [#{vm.name}] with the following attributes: #{new_attrs.inspect}")
+      _log.info("#{self.log_prefix} Updating Vm id: [#{vm.id}], name: [#{vm.name}] with the following attributes: #{new_attrs.inspect}")
       vm.update_attributes(new_attrs)
     end
   end
@@ -173,7 +173,7 @@ class EmsRefreshCoreWorker < WorkerBase
     end
 
     unless new_attrs_by_nic_uid.empty?
-      $log.info("#{self.log_prefix} Updating Vm id: [#{vm.id}], name: [#{vm.name}] with the following network attributes: #{new_attrs_by_nic_uid.inspect}")
+      _log.info("#{self.log_prefix} Updating Vm id: [#{vm.id}], name: [#{vm.name}] with the following network attributes: #{new_attrs_by_nic_uid.inspect}")
       new_attrs_by_nic_uid.each { |uid, new_attrs| nics_by_uid[uid].network.update_attributes(new_attrs) }
     end
   end

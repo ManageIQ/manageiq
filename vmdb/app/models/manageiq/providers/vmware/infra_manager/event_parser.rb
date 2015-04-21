@@ -1,18 +1,17 @@
 module ManageIQ::Providers::Vmware::InfraManager::EventParser
   def self.event_to_hash(event, ems_id = nil)
-    log_header = "MIQ(#{self.name}.event_to_hash)"
-    log_header << " ems_id: [#{ems_id}]" unless ems_id.nil?
+    log_header = "ems_id: [#{ems_id}] " unless ems_id.nil?
 
-    $log.debug("#{log_header} event: [#{event.inspect}]") if $log && $log.debug?
+    _log.debug("#{log_header}event: [#{event.inspect}]") if $log && $log.debug?
     event_type = event['eventType']
     if event_type.nil?
-      $log.error("#{log_header} eventType missing in event: [#{event.inspect}]") if $log
+      _log.error("#{log_header}eventType missing in event: [#{event.inspect}]") if $log
       raise MiqException::Error, "event must have an eventType"
     end
 
     chain_id = event['chainId']
     if chain_id.nil?
-      $log.error("#{log_header} chainId missing in event: [#{event.inspect}]") if $log
+      _log.error("#{log_header}chainId missing in event: [#{event.inspect}]") if $log
       raise MiqException::Error, "event must have a chain_id"
     end
 
@@ -29,7 +28,7 @@ module ManageIQ::Providers::Vmware::InfraManager::EventParser
         sub_event_type = 'PowerOnVM_Task'    if event['fullFormattedMessage'].to_s.downcase == 'task: power on virtual machine'
         sub_event_type = 'DrsMigrateVM_Task' if sub_event_type.nil? && event.fetch_path('info', 'descriptionId') == 'Drm.ExecuteVMotionLRO'
         if sub_event_type.nil?
-          $log.warn("#{log_header} Event Type cannot be determined for TaskEvent. Using generic eventType [TaskEvent] instead. event: [#{event.inspect}]")
+          _log.warn("#{log_header}Event Type cannot be determined for TaskEvent. Using generic eventType [TaskEvent] instead. event: [#{event.inspect}]")
           sub_event_type = 'TaskEvent'
         end
       when 'Rename_Task', 'Destroy_Task'
@@ -51,7 +50,7 @@ module ManageIQ::Providers::Vmware::InfraManager::EventParser
           changed_event = true
         end
       end
-      $log.debug("#{log_header} changed event: [#{event.inspect}]") if changed_event && $log && $log.debug?
+      _log.debug("#{log_header}changed event: [#{event.inspect}]") if changed_event && $log && $log.debug?
 
       event_type = sub_event_type
     elsif event_type == "EventEx"

@@ -13,7 +13,7 @@ module EmsRefresh::SaveInventoryHelper
 
     # Delete the items no longer found
     unless deletes.blank?
-      $log.info("MIQ(#{self.name}.save_#{type}_inventory) Deleting #{self.log_format_deletes(deletes)}")
+      _log.info("[#{type}] Deleting #{self.log_format_deletes(deletes)}")
       parent.send(type).delete(deletes)
     end
 

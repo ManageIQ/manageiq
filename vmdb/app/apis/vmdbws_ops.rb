@@ -520,39 +520,39 @@ module VmdbwsOps
   end
 
   def getKlassList(klass, parentKlass=nil, parentGuid="*")
-    log_header = "vmdbws.get#{klass.name}List"
+    log_header = "#{klass.name}"
     #puts "getKlassList klass: #{klass} parentKlass: #{parentKlass} parentGuid: #{parentGuid}"
     t0 = Time.now
     if ["", "*", "all", "none"].include?(parentGuid.to_s.strip.downcase)
-      $log.info "#{log_header}: enter, selection: <#{parentGuid}>"
+      _log.info "#{log_header}: enter, selection: <#{parentGuid}>"
       result = klass.find(:all)
     else
-      $log.info "#{log_header}: enter, #{parentKlass.name} GUID: <#{parentGuid}>"
+      _log.info "#{log_header}: enter, #{parentKlass.name} GUID: <#{parentGuid}>"
       parent = parentKlass.find_by_guid(parentGuid)
       raise "unable to find #{parentKlass.name} with GUID: [#{parentGuid}]" if parent.nil?
 
-      $log.info "#{log_header}: Found #{parentKlass.name} name: [#{parent.name}]"
+      _log.info "#{log_header}: Found #{parentKlass.name} name: [#{parent.name}]"
       result = parent.send(klass.name.underscore.pluralize)
     end
-    $log.info "#{log_header}: exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "#{log_header}: exit, elapsed time [#{Time.now - t0}] seconds"
     return result
   end
 
   def getKlassListbyId(klass, parentKlass=nil, parentId="*")
-    log_header = "vmdbws.get#{klass.name}ListbyId"
+    log_header = "#{klass.name}"
     t0 = Time.now
     if ["", "*", "all", "none"].include?(parentId.to_s.strip.downcase)
-      $log.info "#{log_header}: enter, selection: <#{parentId}>"
+      _log.info "#{log_header}: enter, selection: <#{parentId}>"
       result = klass.find(:all)
     else
-      $log.info "#{log_header}: enter, #{parentKlass.name} ID: <#{parentId}>"
+      _log.info "#{log_header}: enter, #{parentKlass.name} ID: <#{parentId}>"
       parent = parentKlass.find_by_id(parentId)
       raise "unable to find #{parentKlass.name} with ID: [#{parentId}]" if parent.nil?
 
-      $log.info "#{log_header}: Found #{parentKlass.name} name: [#{parent.name}]"
+      _log.info "#{log_header}: Found #{parentKlass.name} name: [#{parent.name}]"
       result = parent.send(klass.name.underscore.pluralize)
     end
-    $log.info "#{log_header}: exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "#{log_header}: exit, elapsed time [#{Time.now - t0}] seconds"
     return result
   end
 
@@ -796,8 +796,8 @@ module VmdbwsOps
   protected
 
   def findCIsByGuid(klass, guids)
-    log_header = "vmdbws.findCIsByGuid for #{klass.name}"
-    $log.info "#{log_header}: enter, guids: #{guids}"
+    log_header = "#{klass.name}"
+    _log.info "#{log_header}: enter, guids: #{guids}"
     t0 = Time.now
     vcn = klass.virtual_column_names_symbols
     case klass
@@ -812,22 +812,22 @@ module VmdbwsOps
   end
 
   def findCIsById(klass, ids)
-    log_header = "vmdbws.findCIsById for #{klass.name}"
-    $log.info "#{log_header}: enter, ids: #{ids}"
+    log_header = "#{klass.name}"
+    _log.info "#{log_header}: enter, ids: #{ids}"
     t0 = Time.now
     vcn = klass.virtual_column_names_symbols
     Rails.logger.info("#{log_header}: loading <#{ids.to_miq_a.length}> instance(s) for IDs <#{ids.inspect}>")
     ret = klass.all(:conditions => {:id => ids}, :include => vcn)
-    $log.info "#{log_header}: exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "#{log_header}: exit, elapsed time [#{Time.now - t0}] seconds"
     raise "Unable to find #{klass} with ID <#{ids.inspect}>" if ret.blank?
     Rails.logger.info("#{log_header}: returning, elapsed time [#{Time.now - t0}] seconds")
     ret
   end
 
   def getKlassByList(klass, list)
-    log_header = "vmdbws.get#{klass.name}ByList"
+    log_header = "#{klass.name}"
 
-    $log.info "#{log_header}: enter"
+    _log.info "#{log_header}: enter"
     raise "No list provided for Find#{klass}ByList " if list.nil?
 
     guids = list.to_miq_a.collect(&:guid)
@@ -835,9 +835,9 @@ module VmdbwsOps
   end
 
   def getKlassByListId(klass, list)
-    log_header = "vmdbws.get#{klass.name}ByListId"
+    log_header = "#{klass.name}"
 
-    $log.info "#{log_header}: enter"
+    _log.info "#{log_header}: enter"
     raise "No list provided for Find#{klass}ByListId  " if list.nil?
 
     ids = list.to_miq_a.collect(&:id)
@@ -845,12 +845,12 @@ module VmdbwsOps
   end
 
   def getKlassByTag(klass, tag)
-    log_header = "getKlassbytag - vmdbws.get#{klass.name}ByTag"
+    log_header = "#{klass.name}"
 
-    $log.info "#{log_header}: enter"
+    _log.info "#{log_header}: enter"
     t0 = Time.now
     ret = klass.find_tagged_with(:all => tag, :ns => '/managed')
-    $log.info "#{log_header}: exit, elapsed time [#{Time.now - t0}] seconds"
+    _log.info "#{log_header}: exit, elapsed time [#{Time.now - t0}] seconds"
     ret
   end
 

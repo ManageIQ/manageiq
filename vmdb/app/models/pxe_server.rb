@@ -180,22 +180,22 @@ class PxeServer < ActiveRecord::Base
   end
 
   def create_provisioning_files(pxe_image, mac_address, windows_image = nil, customization_template = nil, substitution_options = nil)
-    log_message = "MIQ(#{self.class.name}#create_provisioning_files) Creating provisioning files for PXE Image [#{pxe_image.description}], Customization Template [#{customization_template.try(:description)}], with MAC Address [#{mac_address}]"
-    $log.info("#{log_message}...")
+    log_message = "Creating provisioning files for PXE Image [#{pxe_image.description}], Customization Template [#{customization_template.try(:description)}], with MAC Address [#{mac_address}]"
+    _log.info("#{log_message}...")
     with_depot do
       pxe_image.create_files_on_server(self, mac_address, customization_template)
       customization_template.create_files_on_server(self, pxe_image, mac_address, windows_image, substitution_options) unless customization_template.nil?
     end
-    $log.info("#{log_message}...Complete")
+    _log.info("#{log_message}...Complete")
   end
 
   def delete_provisioning_files(pxe_image, mac_address, windows_image = nil, customization_template = nil)
-    log_message = "MIQ(#{self.class.name}#delete_provisioning_files) Deleting provisioning files for PXE Image [#{pxe_image.description}], Customization Template [#{customization_template.try(:description)}], with MAC Address [#{mac_address}]"
-    $log.info("#{log_message}...")
+    log_message = "Deleting provisioning files for PXE Image [#{pxe_image.description}], Customization Template [#{customization_template.try(:description)}], with MAC Address [#{mac_address}]"
+    _log.info("#{log_message}...")
     with_depot do
       pxe_image.delete_files_on_server(self, mac_address)
       customization_template.delete_files_on_server(self, pxe_image, mac_address, windows_image) unless customization_template.nil?
     end
-    $log.info("#{log_message}...Complete")
+    _log.info("#{log_message}...Complete")
   end
 end

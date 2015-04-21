@@ -15,7 +15,7 @@ module EmsRefresh::SaveInventory
   def save_vms_inventory(ems, hashes, target = nil)
     return if hashes.nil?
     target = ems if target.nil?
-    log_header = "MIQ(#{self.name}.save_vms_inventory) EMS: [#{ems.name}], id: [#{ems.id}]"
+    log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
     disconnects = if target.kind_of?(ExtManagementSystem) || target.kind_of?(Host)
       target.vms_and_templates(true).to_a.dup
@@ -43,7 +43,7 @@ module EmsRefresh::SaveInventory
     vms_uids = hashes.collect { |h| h[:uid_ems] }.compact
     vms = VmOrTemplate.where(:uid_ems => vms_uids).to_a
     dup_vms_uids = (vms_uids.duplicates + vms.collect(&:uid_ems).duplicates).uniq.sort
-    $log.info "#{log_header} Duplicate unique values found: #{dup_vms_uids.inspect}" unless dup_vms_uids.empty?
+    _log.info "#{log_header} Duplicate unique values found: #{dup_vms_uids.inspect}" unless dup_vms_uids.empty?
 
     invalids_found = false
     hashes.each do |h|
@@ -79,7 +79,7 @@ module EmsRefresh::SaveInventory
         found = found.first
 
         if found.nil?
-          $log.info("#{log_header} Creating Vm [#{h[:name]}] location: [#{h[:location]}] storage id: [#{h[:storage_id]}] uid_ems: [#{h[:uid_ems]}] ems_ref: [#{h[:ems_ref]}]")
+          _log.info("#{log_header} Creating Vm [#{h[:name]}] location: [#{h[:location]}] storage id: [#{h[:storage_id]}] uid_ems: [#{h[:uid_ems]}] ems_ref: [#{h[:ems_ref]}]")
 
           # Handle the off chance that we are adding an "unknown" Vm to the db
           h[:location] = "unknown" if h[:location].blank?
@@ -91,7 +91,7 @@ module EmsRefresh::SaveInventory
 
           h.delete(:type)
 
-          $log.info("#{log_header} Updating Vm [#{found.name}] id: [#{found.id}] location: [#{found.location}] storage id: [#{found.storage_id}] uid_ems: [#{found.uid_ems}] ems_ref: [#{h[:ems_ref]}]")
+          _log.info("#{log_header} Updating Vm [#{found.name}] id: [#{found.id}] location: [#{found.location}] storage id: [#{found.storage_id}] uid_ems: [#{found.uid_ems}] ems_ref: [#{h[:ems_ref]}]")
           found.update_attributes!(h)
           disconnects.delete(found)
         end
@@ -111,10 +111,10 @@ module EmsRefresh::SaveInventory
         h[:invalid] = invalids_found = true
         name = h[:name] || h[:uid_ems] || h[:ems_ref]
         if err.kind_of?(MiqException::MiqIncompleteData)
-          $log.warn("#{log_header} Processing Vm: [#{name}] failed with error [#{err}]. Skipping Vm.")
+          _log.warn("#{log_header} Processing Vm: [#{name}] failed with error [#{err}]. Skipping Vm.")
         else
           raise if EmsRefresh.debug_failures
-          $log.error("#{log_header} Processing Vm: [#{name}] failed with error [#{err}]. Skipping Vm.")
+          _log.error("#{log_header} Processing Vm: [#{name}] failed with error [#{err}]. Skipping Vm.")
           $log.log_backtrace(err)
         end
       ensure
@@ -125,7 +125,7 @@ module EmsRefresh::SaveInventory
     # Handle genealogy link ups
     vm_ids = hashes.collect { |h| !h[:invalid] && h.has_key_path?(:parent_vm, :id) ? [h[:id], h.fetch_path(:parent_vm, :id)] : nil }.flatten.compact.uniq
     unless vm_ids.empty?
-      $log.info("#{log_header} Updating genealogy connections.")
+      _log.info("#{log_header} Updating genealogy connections.")
       vms = VmOrTemplate.where(:id => vm_ids)
       hashes.each do |h|
         child_id = h[:id]
@@ -142,9 +142,9 @@ module EmsRefresh::SaveInventory
 
     unless disconnects.empty?
       if invalids_found
-        $log.warn("#{log_header} Since failures occurred, not disconnecting for Vms #{self.log_format_deletes(disconnects)}")
+        _log.warn("#{log_header} Since failures occurred, not disconnecting for Vms #{self.log_format_deletes(disconnects)}")
       else
-        $log.info("#{log_header} Disconnecting Vms #{self.log_format_deletes(disconnects)}")
+        _log.info("#{log_header} Disconnecting Vms #{self.log_format_deletes(disconnects)}")
         disconnects.each(&:disconnect_inv)
       end
     end

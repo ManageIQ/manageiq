@@ -267,7 +267,7 @@ class MiqEvent < ActiveRecord::Base
         end
       end
 
-      #$log.warn "GMM Events.add_elements [#{xmlNode}]"
+      #_log.warn "[#{xmlNode}]"
       #add_missing_elements(vm, xmlNode, "Applications/Products/Products", "win32_product", WIN32_APPLICATION_MAPPING)
       File.open("./xfer_#{xmlNode.root.name}.xml", "w") {|f| xmlNode.write(f,0)}
     rescue

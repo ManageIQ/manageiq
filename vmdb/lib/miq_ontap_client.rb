@@ -726,7 +726,7 @@ module MiqOntapClient
       metricHash.statistic_time = perfHash.statistic_time
       perf_obj_names.each do |pon|
         if (poh = perfHash[pon]).nil?
-          $log.warn "#{self.class}.updateMetricsForNode: perf object type #{pon} not found for #{node.obj_name_str}"
+          _log.warn "perf object type #{pon} not found for #{node.obj_name_str}"
           next
         end
         ikey = OBJECT_NAME_TO_INST_KEY[pon].call(node.type_spec_obj)
@@ -734,7 +734,7 @@ module MiqOntapClient
           metricHash[pon] = poh
         else
           if (iv = poh[ikey]).nil?
-            $log.warn "#{self.class}.updateMetricsForNode: perf instance #{ikey} not found for #{node.obj_name_str}"
+            _log.warn "perf instance #{ikey} not found for #{node.obj_name_str}"
             return
           end
           ikeys << ikey

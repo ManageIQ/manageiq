@@ -219,9 +219,9 @@ class MiqDbConfig
       opt_file_for_conn_test(from_save) { MiqUtil.runcmd("ruby #{script}")}
       output, error_message = get_output_and_error
       output = File.open(IO_DOLLAR_STDOUT) {|f| f.read} if File.exist?(IO_DOLLAR_STDOUT)
-      msg = "MIQ(DbConfig-verify_config) Output:\n#{output}"
+      msg = "Output:\n#{output}"
       msg << "\nError: #{error_message}" if error_message && error_message.length > 0
-      $log.info(msg)
+      _log.info(msg)
     rescue => err
       output, error_message = get_output_and_error
       error_message ||= err.message
