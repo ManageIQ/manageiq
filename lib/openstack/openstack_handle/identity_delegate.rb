@@ -15,7 +15,7 @@ module OpenstackHandle
     def visible_tenants
       response = Handle.try_connection do |scheme, connection_options|
         url = Handle.url(@os_handle.address, @os_handle.port, scheme, "/v2.0/tenants")
-        connection = Fog::Connection.new(url, false, connection_options)
+        connection = Fog::Core::Connection.new(url, false, connection_options)
         response = connection.request(
           :expects => [200, 204],
           :headers => {'Content-Type' => 'application/json',
