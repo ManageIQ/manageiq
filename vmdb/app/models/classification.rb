@@ -343,7 +343,7 @@ class Classification < ActiveRecord::Base
         raise
       end
     rescue Exception => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       raise
     end
   end

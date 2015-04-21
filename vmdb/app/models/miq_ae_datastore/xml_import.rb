@@ -26,7 +26,7 @@ module MiqAeDatastore
       end
 
       Benchmark.realtime_block(:process_class_save_time) do
-        _log.info("Importing Class: #{aec.fqname}") if $log
+        _log.info("Importing Class: #{aec.fqname}")
         aec.save!
       end
     end
@@ -126,7 +126,7 @@ module MiqAeDatastore
           require 'xml_hash'
           doc = XmlHash.load(f)
           version = doc.children[0].attributes[:version]
-          _log.info("  with version '#{version}'") if $log
+          _log.info("  with version '#{version}'")
           raise "Unsupported version '#{version}'.  Must be at least '#{MiqAeDatastore::XML_VERSION_MIN_SUPPORTED}'." unless check_version(version)
           classes = doc.to_h(:symbols => false)["MiqAeClass"]
           buttons = doc.to_h(:symbols => false)["MiqAeButton"]
@@ -150,7 +150,7 @@ module MiqAeDatastore
         end
       end
 
-      _log.info("Automate Datastore Import complete: #{t.inspect}") if $log
+      _log.info("Automate Datastore Import complete: #{t.inspect}")
     end
 
     def self.create_domain(domain)
@@ -163,13 +163,13 @@ module MiqAeDatastore
     end
 
     def self.load_file(f, domain)
-      _log.info("Importing file '#{f}'") if $log
+      _log.info("Importing file '#{f}'")
       ext = File.extname(f).downcase
       case ext
       when ".xml"          then load_xml_file(f, domain)
       else raise "Unhandled File Extension [#{ext}] when trying to load #{f}"
       end
-      _log.info("Import complete") if $log
+      _log.info("Import complete")
     end
   end
 end

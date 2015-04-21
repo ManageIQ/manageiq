@@ -363,7 +363,7 @@ class MiqQueue < ActiveRecord::Base
       status = STATUS_EXPIRED
     rescue Exception => error
       _log.error("#{MiqQueue.format_short_log_msg(self)}, Error: [#{error}]")
-      $log.log_backtrace(error) unless error.kind_of?(MiqException::Error)
+      _log.log_backtrace(error) unless error.kind_of?(MiqException::Error)
       status = STATUS_ERROR
       self.last_exception = error
       message = error.message

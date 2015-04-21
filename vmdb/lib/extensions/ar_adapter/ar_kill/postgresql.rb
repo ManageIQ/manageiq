@@ -19,9 +19,9 @@ module ActiveRecord
 
         item = data.first
         if item.nil?
-          _log.info "SPID=[#{pid_numeric}] not found" if $log
+          _log.info "SPID=[#{pid_numeric}] not found"
         else
-          _log.info "Sending CANCEL Request for SPID=[#{pid_numeric}], age=[#{item['age']}], query=[#{item['query']}]" if $log
+          _log.info "Sending CANCEL Request for SPID=[#{pid_numeric}], age=[#{item['age']}], query=[#{item['query']}]"
           result = select(<<-SQL, "Cancel SPID")
                                 SELECT pg_cancel_backend(#{pid_numeric})
                                 FROM   pg_stat_activity

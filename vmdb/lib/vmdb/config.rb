@@ -41,34 +41,34 @@ module VMDB
       return :database if @use_db_for_config
 
       unless VMDB::model_loaded?(:Configuration)
-        _log.debug "Using filesystem configurations since Configuration model is not loaded" if $log
+        _log.debug "Using filesystem configurations since Configuration model is not loaded"
         return :filesystem
       end
 
       # Once the model is loaded, establish a connection or return an existing connection
       conn = ActiveRecord::Base.connection rescue nil
       unless conn && ActiveRecord::Base.connected?
-        _log.debug "Using filesystem configurations since DB is not connected" if $log
+        _log.debug "Using filesystem configurations since DB is not connected"
         return :filesystem
       end
 
       tables = conn.tables
       ['miq_servers', 'configurations'].each do |t|
         unless tables.include?(t)
-          _log.warn("Using filesystem configurations since [#{t}] table does not exist!") if $log
+          _log.warn("Using filesystem configurations since [#{t}] table does not exist!")
           return :filesystem
         end
       end
 
       if MiqServer.my_server.nil?
-        _log.warn("Using filesystem configurations until MiqServer is known.  This may be resolved by next server startup. ") if $log
+        _log.warn("Using filesystem configurations until MiqServer is known.  This may be resolved by next server startup. ")
         return :filesystem
       end
 
       # Now that the DB is to be used, invalidate the cached configs from the filesystem
       invalidate_all
       @use_db_for_config = true
-      _log.debug("Using database configurations") if $log
+      _log.debug("Using database configurations")
       :database
     end
 
@@ -92,7 +92,7 @@ module VMDB
       if self.cached_config_valid?
         @config = @@cached_configs[name][:data].deep_clone
       else
-        _log.debug "#{@@cached_configs.has_key?(name) && !@@cached_configs[name][:mtime].nil? ? "Rel" : "L"}oading configuration file for \"#{name}\"" if $log
+        _log.debug "#{@@cached_configs.has_key?(name) && !@@cached_configs[name][:mtime].nil? ? "Rel" : "L"}oading configuration file for \"#{name}\""
 
         @@sync_cfile.synchronize(:EX) do
           if configuration_source == :filesystem && 'database' == name && !File.exist?(@cfile) && File.exist?(@ctmpl)
@@ -105,7 +105,7 @@ module VMDB
         raise "MIQ(Config.initialize) unable to locate configuration file or template file for \"#{name}\"" if current.nil? && defaults.nil?
 
         # if the database is the source of the configuration, create or update db record and rename the config file if an override was used
-        _log.debug("Source of configuration: #{configuration_source}") if $log
+        _log.debug("Source of configuration: #{configuration_source}")
         if configuration_source == :database
           server = MiqServer.my_server
           raise "MiqServer.my_server cannot be nil" if server.nil?
@@ -115,7 +115,7 @@ module VMDB
 
           if @db_record.nil? && conf.nil?
             conf = defaults
-            _log.info("[#{@name}] - Using template to populate DB since settings were not found") if $log
+            _log.info("[#{@name}] - Using template to populate DB since settings were not found")
           end
 
           @db_record = Configuration.create_or_update(server, conf, name) unless conf.blank?
@@ -124,7 +124,7 @@ module VMDB
             # rename the config file if we already created the db_record and the file exists
             if File.exist?(@cfile) && !@db_record.nil?
               File.rename(@cfile, @cfile_db)
-              _log.info("[#{@name}] Config in DB will now be used.  Renamed file to [#{@cfile_db}]") if $log
+              _log.info("[#{@name}] Config in DB will now be used.  Renamed file to [#{@cfile_db}]")
             end
           end
           # use the record from the db
@@ -268,10 +268,10 @@ module VMDB
       when :database
         @db_record = Configuration.create_or_update(svr, @config, @name)
         self.save_file(@cfile_db)
-        _log.info("Saved Config [#{@name}] from database in file: [#{@cfile_db}]") if $log
+        _log.info("Saved Config [#{@name}] from database in file: [#{@cfile_db}]")
       when :filesystem
         self.save_file(@cfile_db)
-        _log.info("Saved Config [#{@name}] in file: [#{@cfile_db}]") if $log
+        _log.info("Saved Config [#{@name}] in file: [#{@cfile_db}]")
       end
       self.update_cache_metadata
 
@@ -309,10 +309,10 @@ module VMDB
       # if the database is the configuration_source, check if the DB record needs to be created or if the config mtime is newer than the DB mtime
       if configuration_source == :database
         if db_config_mtime.nil?
-          _log.debug("Cache Miss because DB mtime does not exist and the DB is the configuration source #{@name}") if $log
+          _log.debug("Cache Miss because DB mtime does not exist and the DB is the configuration source #{@name}")
           return false
         elsif !config_mtime.nil? && config_mtime > db_config_mtime
-          _log.debug("Cache Miss because config mtime [#{config_mtime}] is newer than DB mtime [#{db_config_mtime}] for #{@name}") if $log
+          _log.debug("Cache Miss because config mtime [#{config_mtime}] is newer than DB mtime [#{db_config_mtime}] for #{@name}")
           return false
         end
       end
@@ -324,7 +324,7 @@ module VMDB
       if (@@cached_configs[@name][:mtime] == config_mtime) && (@@cached_configs[@name][:mtime_tmpl] == template_mtime)
         return true
       else
-        _log.debug("Cache Miss: #{msg}") if $log
+        _log.debug("Cache Miss: #{msg}")
         return false
       end
       false
@@ -353,7 +353,7 @@ module VMDB
       # Refresh all cached configs
       @@cached_configs.each_key do |k|
         Config.new(k.to_s)
-        _log.debug("[#{k.inspect}] config refreshed") if $log
+        _log.debug("[#{k.inspect}] config refreshed")
       end
     end
 

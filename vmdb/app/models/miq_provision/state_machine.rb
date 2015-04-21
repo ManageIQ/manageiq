@@ -84,7 +84,7 @@ module MiqProvision::StateMachine
       inputs = {:vm => destination, :host => destination.host}
       MiqEvent.raise_evm_event(destination, 'vm_provisioned', inputs)
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
     end
 
     if MiqProvision::AUTOMATE_DRIVES

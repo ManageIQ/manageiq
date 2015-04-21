@@ -32,7 +32,7 @@ class ManageIQ::Providers::InfraManager::Vm < ::Vm
 
     tag_add(tags, :ns => "/managed")
   rescue => err
-    $log.log_backtrace(err)
+    _log.log_backtrace(err)
   end
 
   def post_create_autoscan

@@ -31,7 +31,7 @@ module MiqservicesOps
         end
       end
     rescue Exception => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       MiqservicesOps.reconnect_to_db
       return false
     end
@@ -46,7 +46,7 @@ module MiqservicesOps
         return true
       end
     rescue Exception => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       MiqservicesOps.reconnect_to_db
       return false
     end
@@ -65,7 +65,7 @@ module MiqservicesOps
         return true
       end
     rescue Exception => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       MiqservicesOps.reconnect_to_db
       return false
     end
@@ -81,7 +81,7 @@ module MiqservicesOps
         vm.save!
       end
     rescue Exception => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       MiqservicesOps.reconnect_to_db
       false
     end
@@ -97,7 +97,7 @@ module MiqservicesOps
         vm.save!
       end
     rescue Exception => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       MiqservicesOps.reconnect_to_db
       false
     end
@@ -119,7 +119,7 @@ module MiqservicesOps
         _log.info "for host [#{hostId}] host queued"
       end
     rescue Exception => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       MiqservicesOps.reconnect_to_db
       return false
     end
@@ -135,7 +135,7 @@ module MiqservicesOps
         vm.save
       end
     rescue Exception => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       MiqservicesOps.reconnect_to_db
       return false
     end
@@ -150,7 +150,7 @@ module MiqservicesOps
         return(@vm.id)
       end
     rescue Exception => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       MiqservicesOps.reconnect_to_db
     end
   end
@@ -168,7 +168,7 @@ module MiqservicesOps
         # job.signal_process(signal.to_sym)
       end
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       return false
     end
     true
@@ -190,7 +190,7 @@ module MiqservicesOps
         end
       end
     rescue Exception => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       MiqservicesOps.reconnect_to_db
       false
     ensure
@@ -213,7 +213,7 @@ module MiqservicesOps
         return true
       end
     rescue Exception => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       MiqservicesOps.reconnect_to_db
       return false
     end
@@ -234,7 +234,7 @@ module MiqservicesOps
         end
       end
     rescue Exception => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       MiqservicesOps.reconnect_to_db
       return false
     end

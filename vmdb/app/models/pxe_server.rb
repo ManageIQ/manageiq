@@ -111,7 +111,7 @@ class PxeServer < ActiveRecord::Base
         end
       rescue => err
         _log.error("Synchronizing PXE images on PXE Server [#{self.name}]: #{err.class.name}: #{err}")
-        $log.log_backtrace(err)
+        _log.log_backtrace(err)
       end
     end
 
@@ -153,7 +153,7 @@ class PxeServer < ActiveRecord::Base
         end
       rescue => err
         _log.error("Synchronizing Windows images on PXE Server [#{self.name}]: #{err.class.name}: #{err}")
-        $log.log_backtrace(err)
+        _log.log_backtrace(err)
       end
     end
 

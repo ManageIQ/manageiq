@@ -27,9 +27,9 @@ class PrincePdfGenerator < PdfGenerator
     }
 
     require 'awesome_spawn'
-    if $log.debug?
+    _log.debug do
       command = AwesomeSpawn.build_command_line(executable, options[:params])
-      _log.debug "Executing: #{command}"
+      "Executing: #{command}"
     end
     AwesomeSpawn.run!(executable, options).output
   end

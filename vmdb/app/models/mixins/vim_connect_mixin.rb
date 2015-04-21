@@ -9,7 +9,7 @@ module VimConnectMixin
     options[:check_broker_worker] = !!options[:use_broker] unless options.has_key?(:check_broker_worker)
     if options[:check_broker_worker] && !MiqVimBrokerWorker.available?
       msg = "Broker Worker is not available"
-      _log.error(msg) if $log
+      _log.error(msg)
       raise MiqException::MiqVimBrokerUnavailable, msg
     end
     options[:vim_broker_drb_port] ||= MiqVimBrokerWorker.method(:drb_port) if options[:use_broker]

@@ -6,7 +6,7 @@ module MiqServer::QueueManagement
       msg = MiqQueue.get(:queue_name => 'miq_server', :zone => self.my_zone)
       break if msg.nil?
 
-      _log.info("Removing message #{MiqQueue.format_full_log_msg(msg)}") if $log
+      _log.info("Removing message #{MiqQueue.format_full_log_msg(msg)}")
       msg.destroy
     end
   end
@@ -20,7 +20,7 @@ module MiqServer::QueueManagement
 
       if status == "timeout"
         begin
-          _log.info("Reconnecting to DB after timeout error during queue deliver") if $log
+          _log.info("Reconnecting to DB after timeout error during queue deliver")
           ActiveRecord::Base.connection.reconnect!
         rescue => err
           _log.error("Error encountered during <ActiveRecord::Base.connection.reconnect!> error:#{err.class.name}: #{err.message}")

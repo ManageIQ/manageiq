@@ -76,7 +76,7 @@ module VmOrTemplate::Scanning
   # Process XML documents from VM scans
   def add_elements(xmlNode)
     return if xmlNode.nil?
-    $log.info("Adding XML elements for [#{self.id}] from [#{xmlNode.root.name}]")
+    _log.info("Adding XML elements for [#{self.id}] from [#{xmlNode.root.name}]")
     updated = false
 
     # Find out what XML file document we are being passed.
@@ -87,7 +87,7 @@ module VmOrTemplate::Scanning
           element_class.add_elements(self, xmlNode)
           updated = true
         rescue Exception => err
-          $log.log_backtrace(err)
+          _log.log_backtrace(err)
         end
       end
     when "scan_profiles"
@@ -154,7 +154,7 @@ module VmOrTemplate::Scanning
       job = Job.create_job("VmScan", options)
       return job
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       raise
     end
   end
@@ -173,7 +173,7 @@ module VmOrTemplate::Scanning
     ost = OpenStruct.new(options)
     host.call_ws(ost)
   rescue => err
-    $log.log_backtrace(err)
+    _log.log_backtrace(err)
   end
 
   # Call the miqhost webservice to do the ScanMetadata operation
@@ -191,7 +191,7 @@ module VmOrTemplate::Scanning
     ost = OpenStruct.new(options)
     host.call_ws(ost)
   rescue => err
-    $log.log_backtrace(err)
+    _log.log_backtrace(err)
   end
 
   def scan_profile_list
@@ -321,7 +321,7 @@ module VmOrTemplate::Scanning
         statusCode = 16 if categoriesProcessed.zero?
         scanMessage = lastErr.to_s
         _log.error "ScanMetadata error status:[#{statusCode}]:  message:[#{lastErr}]"
-        lastErr.backtrace.each {|m| $log.debug m} if $log.debug?
+        _log.debug { lastErr.backtrace.join("\n") }
       end
 
       xmlNodeScan.add_attributes("end_time" => Time.now.utc.iso8601, "status" => status, "status_code" => statusCode.to_s, "message" => scanMessage)
@@ -387,7 +387,7 @@ module VmOrTemplate::Scanning
       end
     rescue => syncErr
       _log.error "#{syncErr}"
-      $log.debug syncErr.backtrace.join("\n")
+      _log.debug { syncErr.backtrace.join("\n") }
     ensure
       if bb
         bb.postSync()

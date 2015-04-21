@@ -18,7 +18,7 @@ module MiqRequestTask::StateMachine
     rescue => err
       if [:finish, :provision_error].include?(phase.to_sym)
         _log.error("[#{err.message}] encountered during [#{phase}]")
-        $log.log_backtrace(err)
+        _log.log_backtrace(err)
       else
         phase_context.delete(:error_message)
 

@@ -59,7 +59,7 @@ class Vmware::InfraManager
         rescue => e
           raise if EmsRefresh.debug_failures
 
-          $log.log_backtrace(e)
+          _log.log_backtrace(e)
           _log.error("#{log_header} Unable to perform refresh for the following targets:" )
           targets.each { |t| _log.error "#{log_header}   #{t.class}: [#{t.name}], id: [#{t.id}]" }
           @ems.update_attributes(:last_refresh_error => e.to_s, :last_refresh_date => Time.now.utc)
@@ -252,7 +252,7 @@ class Vmware::InfraManager
         yield
       rescue HTTPAccess2::Session::KeepAliveDisconnected => httperr
         # Handle this error by trying again multiple times and sleeping between attempts
-        $log.log_backtrace(httperr)
+        _log.log_backtrace(httperr)
 
         cleanup_callback.call unless cleanup_callback.nil?
 

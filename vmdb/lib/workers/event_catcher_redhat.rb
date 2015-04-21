@@ -26,7 +26,7 @@ class EventCatcherRedhat < EventCatcher
     rescue Exception => err
       _log.warn("#{self.log_prefix} Event Monitor Stop errored because [#{err.message}]")
       _log.warn("#{self.log_prefix} Error details: [#{err.details}]")
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
     ensure
       reset_event_monitor_handle
     end

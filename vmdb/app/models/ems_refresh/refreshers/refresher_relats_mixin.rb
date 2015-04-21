@@ -277,7 +277,7 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
           disconnect_proc.call(p)
         rescue => err
           _log.error "EMS: [#{@ems.name}], id: [#{@ems.id}] An error occurred while disconnecting id [#{p}]: #{err}"
-          $log.log_backtrace(err)
+          _log.log_backtrace(err)
         end
       end
     end
@@ -288,7 +288,7 @@ module EmsRefresh::Refreshers::RefresherRelatsMixin
           connect_proc.call(n)
         rescue => err
           _log.error "EMS: [#{@ems.name}], id: [#{@ems.id}] An error occurred while connecting id [#{n}]: #{err}"
-          $log.log_backtrace(err)
+          _log.log_backtrace(err)
         end
       end
     end

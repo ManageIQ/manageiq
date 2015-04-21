@@ -151,7 +151,7 @@ class RssFeed < ActiveRecord::Base
       f.destroy unless File.exist?(RssFeed.yml_file_name(f.name))
     end
   rescue => err
-    $log.log_backtrace(err)
+    _log.log_backtrace(err)
   end
 
   def self.seed

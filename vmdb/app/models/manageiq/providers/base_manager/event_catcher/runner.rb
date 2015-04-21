@@ -101,7 +101,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::WorkerBase
         Thread.exit
       rescue => err
         _log.error("#{self.log_prefix} Event Monitor Thread aborted because [#{err.message}]")
-        $log.log_backtrace(err) unless err.kind_of?(Errno::ECONNREFUSED)
+        _log.log_backtrace(err) unless err.kind_of?(Errno::ECONNREFUSED)
         Thread.exit
       end
     end

@@ -521,7 +521,7 @@ class ScheduleWorker < WorkerBase
       rescue Exception => err
         msg = "Error adjusting schedules: #{err.message}"
         _log.error("#{msg}")
-        $log.log_backtrace(err)
+        _log.log_backtrace(err)
         do_exit("#{msg}. Restarting.", 1)
       end
     end
@@ -550,7 +550,7 @@ class ScheduleWorker < WorkerBase
         raise
       rescue Exception => err
         _log.error("#{err.message}")
-        $log.log_backtrace(err)
+        _log.log_backtrace(err)
       end
       Thread.pass
     end

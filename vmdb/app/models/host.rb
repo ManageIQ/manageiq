@@ -499,7 +499,7 @@ class Host < ActiveRecord::Base
         add_ems_events(data) 
       end
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
     end
   end
 
@@ -781,7 +781,7 @@ class Host < ActiveRecord::Base
       host.save!
       _log.info "for host [#{id}] host saved"
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       return false
     end
   end
@@ -1035,7 +1035,7 @@ class Host < ActiveRecord::Base
         self.save!
       end
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
     end
   end
 
@@ -1098,7 +1098,7 @@ class Host < ActiveRecord::Base
         _log.info "NOT Discovered: #{self.ost_inspect(ost)}"
       end
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       AuditEvent.failure(:event => "host_created", :target_class => "Host", :message => "creating host, #{err}")
     end
   end
@@ -1172,14 +1172,14 @@ class Host < ActiveRecord::Base
           dhash[:description] = data[3..-1].join(" ") unless data[3..-1].nil?
           patches << dhash
         rescue ArgumentError
-          $log.log_backtrace($!)
+          _log.log_backtrace($!)
           next
         rescue
-          $log.log_backtrace($!)
+          _log.log_backtrace($!)
         end
       end
     rescue
-      #$log.log_backtrace($!)
+      #_log.log_backtrace($!)
     end
 
     Patch.refresh_patches(self, patches)
@@ -1235,7 +1235,7 @@ class Host < ActiveRecord::Base
       MiqLinux::Users.new(ssu).to_xml(node)
       Account.add_elements(self, xml.root)
     rescue
-      #$log.log_backtrace($!)
+      #_log.log_backtrace($!)
     end
   end
 
@@ -1254,7 +1254,7 @@ class Host < ActiveRecord::Base
         end
       end
     rescue
-      #$log.log_backtrace($!)
+      #_log.log_backtrace($!)
     end
   end
 
@@ -1264,7 +1264,7 @@ class Host < ActiveRecord::Base
       files = sp.parse_data_files(ssu)
       EmsRefresh.save_filesystems_inventory(self, files) if files
     rescue
-      #$log.log_backtrace($!)
+      #_log.log_backtrace($!)
     end
   end
 
@@ -1412,7 +1412,7 @@ class Host < ActiveRecord::Base
   end
 
   def self.check_for_vms_to_scan
-    $log.debug "Checking for VMs that are scheduled to be scanned"
+    _log.debug "Checking for VMs that are scheduled to be scanned"
 
     hosts = MiqServer.my_server.zone.hosts
     MiqPreloader.preload(hosts, :vms)
@@ -1425,7 +1425,7 @@ class Host < ActiveRecord::Base
             _log.info("Creating scan job on [(#{vm.class.name}) #{vm.name}]")
             vm.scan
           rescue => err
-            $log.log_backtrace(err)
+            _log.log_backtrace(err)
           end
         end
       end
@@ -1547,7 +1547,7 @@ class Host < ActiveRecord::Base
         rescue Net::SSH::HostKeyMismatch
           # Keep from dumping stack trace for this error which is sufficiently logged in the connect_ssh method
         rescue => err
-          $log.log_backtrace(err)
+          _log.log_backtrace(err)
         end
       end
 
@@ -1583,7 +1583,7 @@ class Host < ActiveRecord::Base
       begin
         EmsEvent.add(self.ems_id, event)
       rescue
-        $log.log_backtrace($!)
+        _log.log_backtrace($!)
       end
     end
   end

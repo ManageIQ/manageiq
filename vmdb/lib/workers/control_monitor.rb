@@ -59,7 +59,7 @@ class ControlMonitor < WorkerBase
             vm = Vm.find_by_storage_id_and_location(storage_id, location)
           rescue => err
             _log.error("#{self.log_prefix}#{err.message}")
-            $log.log_backtrace(err)
+            _log.log_backtrace(err)
           else
             inputs = {:vm => vm, :ext_management_system => @ems}
             event = "vm_start"
@@ -69,7 +69,7 @@ class ControlMonitor < WorkerBase
         end
       rescue => err
         _log.error("#{self.log_prefix}Thread aborted because [#{err.message}]")
-        $log.log_backtrace err
+        _log.log_backtrace err
         Thread.exit
       end
     end

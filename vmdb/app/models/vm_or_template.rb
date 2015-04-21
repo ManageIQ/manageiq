@@ -299,7 +299,7 @@ class VmOrTemplate < ActiveRecord::Base
     begin
       run_command_via_parent("SendVMState")
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
     end
   end
 

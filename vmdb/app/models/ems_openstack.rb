@@ -97,7 +97,7 @@ class EmsOpenstack < EmsCloud
     return miq_snapshot.id
   rescue => err
     _log.error "#{log_prefix}, error: #{err}"
-    $log.debug err.backtrace.join("\n") if $log.debug?
+    _log.debug { err.backtrace.join("\n") }
     raise
   end
 
@@ -120,7 +120,7 @@ class EmsOpenstack < EmsCloud
     ar_template.destroy if ar_template
   rescue => err
     _log.error "#{log_prefix}, error: #{err}"
-    $log.debug err.backtrace.join("\n") if $log.debug?
+    _log.debug { err.backtrace.join("\n") }
     raise
   end
 

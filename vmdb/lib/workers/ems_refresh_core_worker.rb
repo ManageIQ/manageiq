@@ -71,12 +71,12 @@ class EmsRefreshCoreWorker < WorkerBase
         else
           _log.error("#{self.log_prefix} Thread aborted because [#{err.message}]")
           _log.error("#{self.log_prefix} Error details: [#{err.details}]")
-          $log.log_backtrace(err)
+          _log.log_backtrace(err)
         end
         Thread.exit
       rescue => err
         _log.error("#{self.log_prefix} Thread aborted because [#{err.message}]")
-        $log.log_backtrace(err) unless err.kind_of?(Errno::ECONNREFUSED)
+        _log.log_backtrace(err) unless err.kind_of?(Errno::ECONNREFUSED)
         Thread.exit
       end
     end

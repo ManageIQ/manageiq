@@ -27,7 +27,7 @@ class EventCatcherAmazon < EventCatcher
   def monitor_events
     event_monitor_handle.start
     event_monitor_handle.each_batch do |events|
-      _log.debug("#{log_prefix} Received events #{events.collect(&:message)}") if $log.debug?
+      _log.debug { "#{log_prefix} Received events #{events.collect(&:message)}" }
       @queue.enq events
       sleep_poll_normal
     end

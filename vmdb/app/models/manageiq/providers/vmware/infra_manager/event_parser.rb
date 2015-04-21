@@ -2,16 +2,16 @@ module ManageIQ::Providers::Vmware::InfraManager::EventParser
   def self.event_to_hash(event, ems_id = nil)
     log_header = "ems_id: [#{ems_id}] " unless ems_id.nil?
 
-    _log.debug("#{log_header}event: [#{event.inspect}]") if $log && $log.debug?
+    _log.debug { "#{log_header}event: [#{event.inspect}]" }
     event_type = event['eventType']
     if event_type.nil?
-      _log.error("#{log_header}eventType missing in event: [#{event.inspect}]") if $log
+      _log.error("#{log_header}eventType missing in event: [#{event.inspect}]")
       raise MiqException::Error, "event must have an eventType"
     end
 
     chain_id = event['chainId']
     if chain_id.nil?
-      _log.error("#{log_header}chainId missing in event: [#{event.inspect}]") if $log
+      _log.error("#{log_header}chainId missing in event: [#{event.inspect}]")
       raise MiqException::Error, "event must have a chain_id"
     end
 
@@ -50,7 +50,7 @@ module ManageIQ::Providers::Vmware::InfraManager::EventParser
           changed_event = true
         end
       end
-      _log.debug("#{log_header}changed event: [#{event.inspect}]") if changed_event && $log && $log.debug?
+      _log.debug { "#{log_header}changed event: [#{event.inspect}]" } if changed_event
 
       event_type = sub_event_type
     elsif event_type == "EventEx"

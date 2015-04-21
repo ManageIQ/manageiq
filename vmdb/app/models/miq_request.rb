@@ -374,7 +374,7 @@ class MiqRequest < ActiveRecord::Base
       update_request_status
       post_create_request_tasks
     rescue
-      $log.log_backtrace($ERROR_INFO)
+      _log.log_backtrace($ERROR_INFO)
       request_state, status = request_task_created.zero? ? %w(finished Error) : %w(active Warn)
       update_attributes(:request_state => request_state, :status => status, :message => "Error: #{$ERROR_INFO}")
     end

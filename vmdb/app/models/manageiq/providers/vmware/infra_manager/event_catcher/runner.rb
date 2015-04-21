@@ -19,7 +19,7 @@ class ManageIQ::Providers::Vmware::InfraManager::EventCatcher::Runner < ManageIQ
     rescue Exception => err
       _log.warn("#{self.log_prefix} Event Monitor Stop errored because [#{err.message}]")
       _log.warn("#{self.log_prefix} Error details: [#{err.details}]")
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
     ensure
       reset_event_monitor_handle
     end
@@ -37,7 +37,7 @@ class ManageIQ::Providers::Vmware::InfraManager::EventCatcher::Runner < ManageIQ
       else
         _log.error("#{self.log_prefix} Event Monitor Thread aborted because [#{err.message}]")
         _log.error("#{self.log_prefix} Error details: [#{err.details}]")
-        $log.log_backtrace(err)
+        _log.log_backtrace(err)
       end
       raise EventCatcherHandledException
     ensure

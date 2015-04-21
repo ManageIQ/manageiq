@@ -31,11 +31,11 @@ module EmsRefresh
             raise if EmsRefresh.debug_failures
 
             _log.error("#{log_ems_target} Refresh failed")
-            $log.log_backtrace(e)
+            _log.log_backtrace(e)
             _log.error("#{log_ems_target} Unable to perform refresh for the following targets:")
             targets.each do |target|
               target = target.first if target.is_a?(Array)
-              $log.error(" --- #{target.class} [#{target.name}] id [#{target.id}]")
+              _log.error(" --- #{target.class} [#{target.name}] id [#{target.id}]")
             end
 
             # record the failed status and skip post-processing

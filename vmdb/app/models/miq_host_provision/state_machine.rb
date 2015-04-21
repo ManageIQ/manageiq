@@ -111,7 +111,7 @@ module MiqHostProvision::StateMachine
       inputs = {:host => self.destination}
       MiqEvent.raise_evm_event(self.destination, 'host_provisioned', inputs)
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
     end
 
     message = "Finished New Host Placement"

@@ -103,7 +103,7 @@ module MiqReport::Generator::Async
       task.save
       task.update_status("Finished", "Ok", "Generating report complete")
     rescue Exception => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       task.error(err.message)
       AuditEvent.failure(audit.merge(:message => err.message))
       task.state_finished

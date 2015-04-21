@@ -147,7 +147,7 @@ module EmsRefresh::LinkInventory
           disconnect_proc.call(p)
         rescue => err
           _log.error "An error occurred while disconnecting id [#{p}]: #{err}"
-          $log.log_backtrace(err)
+          _log.log_backtrace(err)
         end
       end
     end
@@ -158,7 +158,7 @@ module EmsRefresh::LinkInventory
           connect_proc.call(n)
         rescue => err
           _log.error "An error occurred while connecting id [#{n}]: #{err}"
-          $log.log_backtrace(err)
+          _log.log_backtrace(err)
         end
       end
     end

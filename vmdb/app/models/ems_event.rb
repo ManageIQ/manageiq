@@ -36,7 +36,7 @@ class EmsEvent < ActiveRecord::Base
     begin
       EmsEventHelper.new(self).handle
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
     end
   end
 

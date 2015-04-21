@@ -115,7 +115,7 @@ module EmsRefresh::SaveInventory
         else
           raise if EmsRefresh.debug_failures
           _log.error("#{log_header} Processing Vm: [#{name}] failed with error [#{err}]. Skipping Vm.")
-          $log.log_backtrace(err)
+          _log.log_backtrace(err)
         end
       ensure
         restore_keys(h, remove_keys, key_backup)

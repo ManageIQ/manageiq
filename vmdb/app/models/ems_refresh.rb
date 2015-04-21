@@ -176,7 +176,7 @@ module EmsRefresh
 
   def self.reconfig_save_vm_inventory(vm, hashes)
     return if hashes.nil?
-    log_header = "MIQ(#{self.name}.reconfig_save_vm_inventory) Vm: [#{vm.name}], id: [#{vm.id}]"
+    log_header = "Vm: [#{vm.name}], id: [#{vm.id}]"
 
     reconfig_find_lans_inventory(vm.host, hashes[:uid_lookup][:lans].values)
     reconfig_find_storages_inventory(hashes[:uid_lookup][:storages].values)
@@ -188,7 +188,7 @@ module EmsRefresh
     begin
       raise MiqException::MiqIncompleteData if hash[:invalid]
 
-      $log.info("#{log_header} Updating Vm [#{vm.name}] id: [#{vm.id}] location: [#{vm.location}] storage id: [#{vm.storage_id}] uid_ems: [#{vm.uid_ems}]")
+      _log.info("#{log_header} Updating Vm [#{vm.name}] id: [#{vm.id}] location: [#{vm.location}] storage id: [#{vm.storage_id}] uid_ems: [#{vm.uid_ems}]")
       vm.update_attributes!(hash.except(*remove_keys))
       save_child_inventory(vm, hash, child_keys)
       vm.save!
@@ -198,11 +198,11 @@ module EmsRefresh
       hash[:invalid] = true
       name = hash[:name] || hash[:uid_ems] || hash[:ems_ref]
       if err.kind_of?(MiqException::MiqIncompleteData)
-        $log.warn("#{log_header} Processing Vm: [#{name}] failed with error [#{err}]. Skipping Vm.")
+        _log.warn("#{log_header} Processing Vm: [#{name}] failed with error [#{err}]. Skipping Vm.")
       else
         raise if EmsRefresh.debug_failures
-        $log.error("#{log_header} Processing Vm: [#{name}] failed with error [#{err}]. Skipping Vm.")
-        $log.log_backtrace(err)
+        _log.error("#{log_header} Processing Vm: [#{name}] failed with error [#{err}]. Skipping Vm.")
+        _log.log_backtrace(err)
       end
     end
   end

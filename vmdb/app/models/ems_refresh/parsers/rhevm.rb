@@ -140,7 +140,7 @@ module EmsRefresh::Parsers::Rhevm
   end
 
   def self.host_inv_to_ip(inv, hostname = nil)
-    _log.debug("IP lookup for host in VIM inventory data...") if $log
+    _log.debug("IP lookup for host in VIM inventory data...")
     ipaddress = nil
 
     inv[:host_nics].to_miq_a.each do |nic|
@@ -154,9 +154,9 @@ module EmsRefresh::Parsers::Rhevm
     if !ipaddress.nil?
       warn_msg = "IP lookup for host in VIM inventory data...Failed."
       if [nil, "localhost", "localhost.localdomain", "127.0.0.1"].include?(hostname)
-        _log.warn warn_msg  if $log
+        _log.warn warn_msg
       else
-        _log.warn "#{warn_msg} Falling back to reverse lookup." if $log
+        _log.warn "#{warn_msg} Falling back to reverse lookup."
         begin
           # IPSocket.getaddress(hostname) is not used because it was appending
           #   a ".com" to the "esxdev001.localdomain" which resolved to a real
@@ -165,9 +165,9 @@ module EmsRefresh::Parsers::Rhevm
 
           #_log.debug "IP lookup by hostname [#{hostname}]..."
           ipaddress = Socket.getaddrinfo(hostname, nil)[0][3]
-          _log.debug "IP lookup by hostname [#{hostname}]...Complete: IP found: [#{ipaddress}]" if $log
+          _log.debug "IP lookup by hostname [#{hostname}]...Complete: IP found: [#{ipaddress}]"
         rescue => err
-          _log.warn "IP lookup by hostname [#{hostname}]...Failed with the following error: #{err}" if $log
+          _log.warn "IP lookup by hostname [#{hostname}]...Failed with the following error: #{err}"
         end
       end
     end

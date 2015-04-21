@@ -96,7 +96,7 @@ module RetirementMixin
         save
         raise_retirement_event(retire_warn_event_name)
       rescue => err
-        $log.log_backtrace(err)
+        _log.log_backtrace(err)
       end
     end
 
@@ -114,7 +114,7 @@ module RetirementMixin
       begin
         raise_retirement_event(event_name, requester)
       rescue => err
-        $log.log_backtrace(err)
+        _log.log_backtrace(err)
       end
     end
   end

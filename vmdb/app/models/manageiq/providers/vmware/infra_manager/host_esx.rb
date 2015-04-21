@@ -142,7 +142,7 @@ class ManageIQ::Providers::Vmware::InfraManager::HostEsx < ManageIQ::Providers::
         EventLog.add_elements(self, hashes)
       end
     rescue
-      $log.log_backtrace($!)
+      _log.log_backtrace($!)
     rescue MiqException::MiqVimBrokerUnavailable => err
       MiqVimBrokerWorker.broker_unavailable(err.class.name,  err.to_s)
       _log.warn("Reported the broker unavailable")

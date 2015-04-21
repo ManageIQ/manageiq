@@ -92,7 +92,7 @@ class ReplicationWorker < WorkerBase
       @pid, @stdout, @stderr = rubyrep_run(verb)
     rescue => err
       _log.error("#{self.log_prefix} #{verb.to_s.humanize} Process aborted because [#{err.message}]")
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
     end
   end
 

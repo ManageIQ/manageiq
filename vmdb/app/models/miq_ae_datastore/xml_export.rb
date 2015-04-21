@@ -4,7 +4,7 @@ module MiqAeDatastore
   class XmlExport
     include Vmdb::NewLogging
     def self.to_xml
-      _log.info("Exporting to XML") if $log
+      _log.info("Exporting to XML")
       xml = Builder::XmlMarkup.new(:indent => 2)
       xml.instruct!
       xml.MiqAeDatastore(:version => '1.0') do
@@ -18,7 +18,7 @@ module MiqAeDatastore
     end
 
     def self.class_to_xml(ns, class_name)
-      _log.info("Exporting class: #{class_name} to XML") if $log
+      _log.info("Exporting class: #{class_name} to XML")
       xml = Builder::XmlMarkup.new(:indent => 2)
       xml.instruct!
       xml.MiqAeDatastore(:version => '1.0') do
@@ -36,12 +36,12 @@ module MiqAeDatastore
     end
 
     def self.namespace_to_xml(namespace)
-      _log.info("Exporting namespace: #{namespace} to XML") if $log
+      _log.info("Exporting namespace: #{namespace} to XML")
       xml = Builder::XmlMarkup.new(:indent => 2)
       xml.instruct!
       rec = MiqAeNamespace.find_by_fqname(namespace)
       if rec.nil?
-        _log.info("Namespace:  <#{namespace}> not found.") if $log
+        _log.info("Namespace:  <#{namespace}> not found.")
         return nil
       end
 

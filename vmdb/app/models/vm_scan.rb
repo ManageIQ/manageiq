@@ -129,7 +129,7 @@ class VmScan < Job
       end
       signal(:snapshot_complete)
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       signal(:abort, err.message, "error")
       return
     rescue TimeoutError
@@ -148,7 +148,7 @@ class VmScan < Job
     loop do
       set_status("Waiting for VimBroker to become available (#{i += 1})")
       sleep(60)
-      $log.info "Checking VimBroker connection status.  Count=[#{i}]"
+      _log.info "Checking VimBroker connection status.  Count=[#{i}]"
       break if MiqVimBrokerWorker.available?
     end
 
@@ -338,7 +338,7 @@ class VmScan < Job
                 vm.refresh_on_scan
               rescue => err
                 _log.error("refreshing data from VIM: #{err.message}")
-                $log.log_backtrace(err)
+                _log.log_backtrace(err)
               end
 
               vm.reload
@@ -349,7 +349,7 @@ class VmScan < Job
               vm.save_drift_state unless vm.nil?
             rescue => err
               _log.error("saving VM drift state: #{err.message}")
-              $log.log_backtrace(err)
+              _log.log_backtrace(err)
             end
             signal(:finish, "Process completed successfully", "ok")
 
@@ -462,7 +462,7 @@ class VmScan < Job
     begin
       delete_snapshot(self.context[:snapshot_mor])
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
     end
 
     super
@@ -503,7 +503,7 @@ class VmScan < Job
         MiqEvent.raise_evm_job_event(vm, {:type => "scan", :suffix => "abort"}, inputs)
       end
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
     end
 
     super
@@ -557,7 +557,7 @@ class VmScan < Job
       begin
         vm.ext_management_system.vm_log_user_event(vm, user_event)
       rescue => err
-        $log.warn "Failed to log user event with EMS.  Error: [#{err.class.name}]: #{err} Event message [#{user_event}]"
+        _log.warn "Failed to log user event with EMS.  Error: [#{err.class.name}]: #{err} Event message [#{user_event}]"
       end
     end
   end

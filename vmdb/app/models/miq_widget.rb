@@ -300,7 +300,7 @@ class MiqWidget < ActiveRecord::Base
       content.save!
     rescue => error
       _log.error("#{log_prefix} Failed for [#{group.class}] [#{group.name}] with error: [#{error.class.name}] [#{error}]")
-      $log.log_backtrace(error)
+      _log.log_backtrace(error)
       return
     end
 
@@ -346,7 +346,7 @@ class MiqWidget < ActiveRecord::Base
       content.save!
     rescue => error
       _log.error("#{log_prefix} Failed for [#{user.class}] [#{user.name}] with error: [#{error.class.name}] [#{error}]")
-      $log.log_backtrace(error)
+      _log.log_backtrace(error)
       return
     end
 

@@ -14,7 +14,7 @@ module Metric::CiMixin::Capture::Amazon
     rescue Exception => err
       _log.error("#{log_header} Unhandled exception during perf data collection: [#{err}], class: [#{err.class}]")
       _log.error("#{log_header}   Timings at time of error: #{Benchmark.current_realtime.inspect}")
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       raise
     ensure
       perf_release_amazon

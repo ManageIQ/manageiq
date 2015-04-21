@@ -281,7 +281,7 @@ class MiqReportResult < ActiveRecord::Base
       task.save
       task.update_status("Finished", "Ok", "Generate Report result [#{result_type}]")
     rescue Exception => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       task.error(err.message)
       task.state_finished
       raise

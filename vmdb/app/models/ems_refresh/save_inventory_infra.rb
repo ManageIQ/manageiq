@@ -197,7 +197,7 @@ module EmsRefresh::SaveInventoryInfra
         else
           raise if EmsRefresh.debug_failures
           _log.error("#{log_header} Processing Host: [#{name}] failed with error [#{err.class}: #{err}]. Skipping Host.")
-          $log.log_backtrace(err)
+          _log.log_backtrace(err)
         end
       ensure
         restore_keys(h, remove_keys, key_backup)

@@ -327,7 +327,7 @@ class CimComputerSystem < MiqCimInstance
     begin
       aggr_info = nrs.aggr_list_info(aggrName)
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       self.errors.add("Aggregate:", err.message)
       return false
     end

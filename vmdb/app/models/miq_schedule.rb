@@ -101,7 +101,7 @@ class MiqSchedule < ActiveRecord::Base
         self.send(action, obj, at)
       rescue => err
         _log.error("[#{name}] Attempting to run action [#{action}] on target [#{obj.name}], #{err}")
-        # $log.log_backtrace(err)
+        # _log.log_backtrace(err)
       end
     end
     self.update_attribute(:last_run_on, Time.now.utc)

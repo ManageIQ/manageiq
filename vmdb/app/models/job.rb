@@ -71,7 +71,7 @@ class Job < ActiveRecord::Base
       end
     rescue => err
       _log.warn "Error '#{err.message}', updating jobid: [#{jobid}]"
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
     end
   end
 

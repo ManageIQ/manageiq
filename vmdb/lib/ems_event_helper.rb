@@ -29,7 +29,7 @@ class EmsEventHelper
     begin
       routine = VMDB::Config.new('event_handling').config[:event_handling][@event.event_type.to_sym]
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
       return
     end
 
@@ -122,7 +122,7 @@ class EmsEventHelper
       begin
         MiqEvent.raise_evm_event(target, policy_event, inputs)
       rescue => err
-        $log.log_backtrace(err)
+        _log.log_backtrace(err)
       end
     end
   end
@@ -133,7 +133,7 @@ class EmsEventHelper
     begin
       MiqAeEvent.raise_ems_event(@event)
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
     end
   end
 

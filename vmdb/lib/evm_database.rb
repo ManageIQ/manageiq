@@ -33,7 +33,7 @@ class EvmDatabase
   end
 
   def self.seed(classes = nil, exclude_list = [])
-    _log.info("Seeding...") if $log
+    _log.info("Seeding...")
 
     classes ||= PRIMORDIAL_CLASSES + (seedable_model_class_names - PRIMORDIAL_CLASSES)
     classes  -= exclude_list
@@ -42,21 +42,21 @@ class EvmDatabase
       begin
         klass = klass.constantize if klass.kind_of?(String)
       rescue
-        _log.error("Class #{klass} does not exist") if $log
+        _log.error("Class #{klass} does not exist")
         next
       end
 
       if klass.respond_to?(:seed)
-        _log.info("Seeding #{klass}") if $log
+        _log.info("Seeding #{klass}")
         begin
           klass.seed
         rescue => err
-          $log.log_backtrace(err) if $log
+          _log.log_backtrace(err)
         end
       end
     end
 
-    _log.info("Seeding... Complete") if $log
+    _log.info("Seeding... Complete")
   end
 
   def self.host

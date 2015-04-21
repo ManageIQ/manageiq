@@ -31,7 +31,7 @@ class ManageIQ::Providers::Vmware::InfraManager::Host < ::Host
         vimDs = vim.getVimDataStore(datastore.name)
         return vimDs.dsFolderFileList
       rescue Handsoap::Fault, StandardError, TimeoutError, DRb::DRbConnError => err
-        $log.log_backtrace(err)
+        _log.log_backtrace(err)
         raise MiqException::MiqStorageError, "Error communicating with Host: [#{self.name}]"
       ensure
         vimDs.release if vimDs rescue nil

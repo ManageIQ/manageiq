@@ -108,7 +108,7 @@ class QueueWorkerBase < WorkerBase
 
       if status == MiqQueue::STATUS_TIMEOUT
         begin
-          _log.info("#{self.log_prefix} Reconnecting to DB after timeout error during queue deliver") if $log
+          _log.info("#{self.log_prefix} Reconnecting to DB after timeout error during queue deliver")
           ActiveRecord::Base.connection.reconnect!
         rescue => err
           do_exit("Exiting worker due to timeout error that could not be recovered from...error: #{err.class.name}: #{err.message}", 1)
@@ -118,7 +118,7 @@ class QueueWorkerBase < WorkerBase
       msg.delivered(status, message, result) unless status == MiqQueue::STATUS_RETRY
       do_exit("Exiting worker due to timeout error", 1) if status == MiqQueue::STATUS_TIMEOUT
     rescue MiqException::MiqVimBrokerUnavailable
-      _log.error("#{self.log_prefix} VimBrokerWorker is not available.  Requeueing message...") if $log
+      _log.error("#{self.log_prefix} VimBrokerWorker is not available.  Requeueing message...")
       msg.unget
     ensure
       $_miq_worker_current_msg = nil # to avoid log messages inadvertantly prefixed by previous task_id
@@ -136,7 +136,7 @@ class QueueWorkerBase < WorkerBase
     return process_message(msg)       if msg.kind_of?(String)
 
     emsg = "#{self.log_prefix} Message <#{msg.inspect}> is of unknown type <#{msg.class}>"
-    _log.error(emsg) if $log
+    _log.error(emsg)
     raise emsg
   end
 

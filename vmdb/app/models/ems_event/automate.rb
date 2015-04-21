@@ -27,7 +27,7 @@ class EmsEvent
       begin
         MiqEvent.raise_evm_event(target, policy_event, inputs)
       rescue => err
-        $log.log_backtrace(err)
+        _log.log_backtrace(err)
       end
     end
 

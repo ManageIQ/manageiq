@@ -75,7 +75,7 @@ module MiqProvisionTaskConfiguredSystemForeman::StateMachine
     begin
       MiqEvent.raise_evm_event(source, 'configured_system_provisioned', :configured_system => source)
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
     end
 
     update_and_notify_parent(:state => 'provisioned', :message => "Finished Configured System Customization")

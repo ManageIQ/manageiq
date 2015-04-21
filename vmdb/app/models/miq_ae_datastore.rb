@@ -58,7 +58,7 @@ module MiqAeDatastore
     FileUtils.mkdir_p(TMP_DIR) unless File.directory?(TMP_DIR)
     filename = File.join(TMP_DIR, name)
 
-    _log.info("Uploading Datastore Import to file <#{filename}>") if $log
+    _log.info("Uploading Datastore Import to file <#{filename}>")
 
     outfd = File.open(filename, "wb")
     data  = fd.read(block_size)
@@ -70,7 +70,7 @@ module MiqAeDatastore
     fd.close
     outfd.close
 
-    _log.info("Upload complete (size=#{File.size(filename)})") if $log
+    _log.info("Upload complete (size=#{File.size(filename)})")
 
     begin
       import_yaml_zip(filename, domain_name)
@@ -126,7 +126,7 @@ module MiqAeDatastore
   end
 
   def self.reset
-    _log.info("Clearing datastore") if $log
+    _log.info("Clearing datastore")
     [MiqAeClass, MiqAeField, MiqAeInstance, MiqAeNamespace, MiqAeMethod, MiqAeValue].each(&:delete_all)
   end
 
@@ -137,7 +137,7 @@ module MiqAeDatastore
   end
 
   def self.reset_domain(datastore_dir, domain_name)
-    _log.info("Resetting domain #{domain_name} from #{datastore_dir}") if $log
+    _log.info("Resetting domain #{domain_name} from #{datastore_dir}")
     ns = MiqAeDomain.find_by_fqname(domain_name)
     ns.destroy if ns
     import_yaml_dir(datastore_dir, domain_name)
@@ -183,13 +183,13 @@ module MiqAeDatastore
     MiqRegion.my_region.lock(:shared, 1800) do
       ns = MiqAeDomain.find_by_fqname(MANAGEIQ_DOMAIN)
       unless ns
-        _log.info "Seeding ManageIQ domain..." if $log
+        _log.info "Seeding ManageIQ domain..."
         begin
           reset_to_defaults
         rescue => err
-          _log.error "Seeding... Reset failed, #{err.message}" if $log
+          _log.error "Seeding... Reset failed, #{err.message}"
         else
-          _log.info "Seeding... Complete" if $log
+          _log.info "Seeding... Complete"
         end
       end
     end

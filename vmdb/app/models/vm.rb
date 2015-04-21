@@ -90,7 +90,7 @@ class Vm < VmOrTemplate
         _log.info "Running processes for VM:[#{self.id}:#{self.name}]  Count:[#{pl.length}]"
       end
     rescue => err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
     end
     pl
   end
