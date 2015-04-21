@@ -126,17 +126,10 @@ describe OpsController do
                                                          :tz         => "UTC",
                                                          :interval   => {:unit => "once", :value => ""}
                                                         })
-      file_depot = FactoryGirl.create(:file_depot,
-                                      :name          => "test_depot",
-                                      :resource_id   => miq_schedule.id,
-                                      :resource_type => "MiqSchedule",
-                                      :uri           => "nfs://test_location"
-      )
-
       post :db_backup,
            :backup_schedule => miq_schedule.id,
-           :uri             => file_depot.uri,
-           :uri_prefix      => file_depot.uri.split("://")[0],
+           :uri             => "nfs://test_location",
+           :uri_prefix      => "nfs",
            :action_typ      => "db_backup",
            :format          => :js
       expect(response.status).to eq(200)
