@@ -444,8 +444,18 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
         $log.info "MIQ(#{self.class.name}.allowed_dvs) Network DVS collection completed in [#{Time.now - st}] seconds"
       end
     end
+    create_unified_pg(@dvs_by_host)
+  end
 
-    hosts.each { |h| switches.merge!(@dvs_by_host[h.id]) }
+  def create_unified_pg(dvs_by_host)
+    all_pgs = Hash.new { |h, k| h[k] = [] }
+    dvs_by_host.each do |_, pgs|
+      pgs.each { |k, v| all_pgs[k] << v }
+    end
+    switches = {}
+    all_pgs.each do |pg, switch|
+      switches["dvs_#{pg}"] = "#{pg} (#{switch.uniq.join('/')})"
+    end
     switches
   end
 
@@ -456,7 +466,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     # List the names of the non-uplink portgroups.
     unless dvs.nil? || dvs.distributedVirtualPortgroup.nil?
       nupga = vim.applyFilter(dvs.distributedVirtualPortgroup, 'uplinkPortgroup' => 'false')
-      nupga.each { |nupg| switches[URI.decode("dvs_#{nupg.portgroupName}")] = URI.decode("#{nupg.portgroupName} (#{nupg.switchName})") }
+      nupga.each { |nupg| switches[URI.decode(nupg.portgroupName)] = [URI.decode(nupg.switchName)] }
     end
 
     switches
