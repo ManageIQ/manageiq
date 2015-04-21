@@ -32,7 +32,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
 
   def assert_table_counts
     ExtManagementSystem.count.should == 1
-    Flavor.count.should              == 47
+    Flavor.count.should              == 48
     AvailabilityZone.count.should    == 3
     FloatingIp.count.should          == 1
     AuthPrivateKey.count.should      == 2
@@ -61,7 +61,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
       :uid_ems     => nil
     )
 
-    @ems.flavors.size.should            == 47
+    @ems.flavors.size.should            == 48
     @ems.availability_zones.size.should == 3
     @ems.floating_ips.size.should       == 1
     @ems.key_pairs.size.should          == 2
