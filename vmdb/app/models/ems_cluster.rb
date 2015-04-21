@@ -381,6 +381,26 @@ class EmsCluster < ActiveRecord::Base
       host.refresh_ems
     end
   end
+
+  def self.node_types
+    return :mixed_clusters if count_of_openstack_clusters > 0 && count_of_non_openstack_clusters > 0
+    return :openstack      if count_of_openstack_clusters > 0
+    :non_openstack
+  end
+
+  def self.count_of_openstack_clusters
+    ems = EmsOpenstackInfra.pluck(:id)
+    EmsCluster.where(:ems_id => ems).count
+  end
+
+  def self.count_of_non_openstack_clusters
+    ems = EmsOpenstackInfra.pluck(:id)
+    EmsCluster.where(EmsCluster.arel_table[:ems_id].not_in(ems)).count
+  end
+
+  def openstack_cluster?
+    ext_management_system.class == EmsOpenstackInfra
+  end
 end
 
 # Preload any subclasses of this class, so that they will be part of the
