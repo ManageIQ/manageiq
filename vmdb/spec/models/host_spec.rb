@@ -458,6 +458,50 @@ describe Host do
     end
   end
 
+  context "#node_types" do
+    before(:each) do
+      @ems1 = FactoryGirl.create(:ems_vmware)
+      @ems2 = FactoryGirl.create(:ems_openstack_infra)
+    end
+
+    it "returns :mixed_hosts when there are both openstack & non-openstack hosts in db" do
+      FactoryGirl.create(:host_vmware_esx, :ems_id => @ems1.id)
+      FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
+
+      result = Host.node_types
+      result.should eq(:mixed_hosts)
+    end
+
+    it "returns :openstack when there are only openstack hosts in db" do
+      FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
+      result = Host.node_types
+      result.should eq(:openstack)
+    end
+
+    it "returns :non_openstack when there are non-openstack hosts in db" do
+      FactoryGirl.create(:host_vmware_esx, :ems_id => @ems1.id)
+      result = Host.node_types
+      result.should eq(:non_openstack)
+    end
+  end
+
+  context "#openstack_host?" do
+    it "returns true for openstack host" do
+      ems = FactoryGirl.create(:ems_openstack_infra)
+      host = FactoryGirl.create(:host_redhat, :ems_id => ems.id)
+
+      result = host.openstack_host?
+      result.should be_true
+    end
+
+    it "returns false for non-openstack host" do
+      ems = FactoryGirl.create(:ems_vmware)
+      host = FactoryGirl.create(:host_vmware_esx, :ems_id => ems.id)
+      result = host.openstack_host?
+      result.should be_false
+    end
+  end
+
   def assert_default_credentials_validated
     @host.stub(:verify_credentials_with_ws)
     @host.update_authentication(@data, @options)
