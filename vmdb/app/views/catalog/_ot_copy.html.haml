@@ -3,6 +3,7 @@
     = render :partial => "layouts/flash_msg"
     - url = url_for(:action => "ot_form_field_changed", :id => @edit[:rec_id])
     %p.legend= _("New Orchestration Template Information")
+    %input{:type => "hidden", :name => "original_ot_id", :value => @edit[:rec_id]}
     %table
       %td{:valign => "top"}
         %table.style1
