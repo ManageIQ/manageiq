@@ -95,7 +95,6 @@ describe EmsRefresh::Parsers::Foreman do
   # end
 
   describe "#configuration_inv_to_hashes" do
-
     it "links parents by ancestry" do
       result = parser.configuration_inv_to_hashes(
         :operating_system_flavors => flavors,
