@@ -2,13 +2,11 @@ module MiqProvisionMicrosoft::Cloning
   DRIVE_LETTER     = /[a-z][:]/i
 
   def log_clone_options(clone_options)
-    log_header = "MIQ(#{self.class.name}#log_clone_options)"
+    _log.info("Provisioning [#{source.name}] to [#{clone_options[:name]}]")
+    _log.info("Source Image:                    [#{clone_options[:image_ref]}]")
 
-    $log.info("#{log_header} Provisioning [#{source.name}] to [#{clone_options[:name]}]")
-    $log.info("#{log_header} Source Image:                    [#{clone_options[:image_ref]}]")
-
-    dumpObj(clone_options, "#{log_header} Clone Options: ", $log, :info)
-    dumpObj(options,  "#{log_header} Prov Options:  ", $log, :info)
+    dumpObj(clone_options, "#{_log.prefix} Clone Options: ", $log, :info)
+    dumpObj(options, "#{_log.prefix} Prov Options:  ", $log, :info)
   end
 
   def clone_complete?

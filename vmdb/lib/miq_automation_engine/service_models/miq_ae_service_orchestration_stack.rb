@@ -23,8 +23,7 @@ module MiqAeMethodService
     end
 
     def remove_from_vmdb
-      log_prefix = "MIQ(#{self.class.name}#remove_from_vmdb)"
-      $log.info "#{log_prefix} Removing #{@object.class.name} id:<#{@object.id}>, name:<#{@object.name}>"
+      _log.info "Removing #{@object.class.name} id:<#{@object.id}>, name:<#{@object.name}>"
       object_send(:destroy)
       @object = nil
       true
