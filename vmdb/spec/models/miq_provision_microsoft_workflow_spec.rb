@@ -31,21 +31,5 @@ describe MiqProvisionMicrosoftWorkflow do
 
       MiqProvisionMicrosoftWorkflow.new({}, admin.userid)
     end
-
-    context "#allowed_vlans" do
-      let(:workflow) { MiqProvisionMicrosoftWorkflow.new({:src_vm_id => template.id}, admin.userid) }
-
-      before do
-        @host   = FactoryGirl.create(:host_microsoft, :ext_management_system => provider)
-        @vswitch = FactoryGirl.create(:switch, :name => 'vSwitch0', :ports => 32, :host => @host)
-
-        workflow.stub(:get_selected_hosts).and_return([@host])
-      end
-
-      it "should return a vlan name" do
-        vlans = workflow.allowed_vlans
-        vlans.keys.should match_array [@vswitch.name]
-      end
-    end
   end
 end

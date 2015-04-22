@@ -24,25 +24,6 @@ class MiqProvisionMicrosoftWorkflow < MiqProvisionInfraWorkflow
     show_fields(display_flag, [:vm_minimum_memory, :vm_maximum_memory])
   end
 
-  def allowed_vlans(options = {})
-    if @allowed_vlan_cache.nil?
-      @vlan_options ||= options
-      vlans = {}
-      src = get_source_and_targets
-      return vlans if src.blank?
-
-      unless @vlan_options[:vlans] == false
-        rails_logger('allowed_vlans', 0)
-        hosts = get_selected_hosts(src)
-        hosts.each { |h| h.switches.each { |s| vlans[s.name] = s.name } }
-        rails_logger('allowed_vlans', 1)
-      end
-
-      @allowed_vlan_cache = vlans
-    end
-    filter_by_tags(@allowed_vlan_cache, options)
-  end
-
   def allowed_datacenters(_options = {})
     allowed_ci(:datacenter, [:cluster, :host, :folder])
   end
