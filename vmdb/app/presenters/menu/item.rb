@@ -1,7 +1,11 @@
 module Menu
-  Item = Struct.new(:id, :name, :feature, :rbac_feature, :href, :type) do
-    def initialize(an_id, name, features, rbac_feature, href, type = :default)
+  Item = Struct.new(:id, :_name, :feature, :rbac_feature, :href, :type) do
+    def initialize(an_id, _name, features, rbac_feature, href, type = :default)
       super
+    end
+
+    def name
+      _name.kind_of?(Proc) ? _name.call : _name
     end
 
     def visible?
