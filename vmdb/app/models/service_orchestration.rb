@@ -31,6 +31,10 @@ class ServiceOrchestration < Service
     save_options
   end
 
+  def orchestration_stack
+    service_resources.find { |sr| sr.resource.kind_of?(OrchestrationStack) }
+  end
+
   private
 
   def build_stack_options_from_dialog

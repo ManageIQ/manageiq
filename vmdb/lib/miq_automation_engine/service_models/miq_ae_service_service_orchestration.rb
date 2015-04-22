@@ -9,6 +9,7 @@ module MiqAeMethodService
     expose :stack_options=
     expose :orchestration_stack_status
     expose :deploy_orchestration_stack
+    expose :orchestration_stack
 
     def orchestration_template=(template)
       if template && !template.kind_of?(MiqAeMethodService::MiqAeServiceOrchestrationTemplate)
