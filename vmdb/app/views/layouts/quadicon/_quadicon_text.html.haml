@@ -40,11 +40,17 @@
       - else
         - name = row['name']
       - if request.parameters[:controller] == "service" && @view.db == "Vm"
-        = link_to(truncate_for_quad(name),
-          {:controller => "vm_or_template", :action => 'show', :id => to_cid(row['id'])},
-          :title                 => name,
-          "data-miq_sparkle_on"  => true,
-          "data-miq_sparkle_off" => true)
+        - attributes = vm_quad_link_attributes(item)
+        - if attributes[:link]
+          - @record = item
+          = link_to(truncate_for_quad(name),
+            {:controller => attributes[:controller], :action => attributes[:action], :id => attributes[:id]},
+             :title                 => name,
+             "data-miq_sparkle_on"  => true,
+             "data-miq_sparkle_off" => true)
+        - else
+          %a{:title => h(name)}
+          = truncate_for_quad(name)
       - else
         = link_to(truncate_for_quad(name),
           {:action => 'x_show', :id => to_cid(row['id'])},
