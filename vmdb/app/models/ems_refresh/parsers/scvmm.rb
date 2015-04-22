@@ -309,7 +309,6 @@ module EmsRefresh::Parsers
 
     def process_snapshots(p)
       result = []
-      last_restored_snapshot = p[:LastRestoredVMCheckpoint]
       p[:VMCheckpoints].each do |snapshot_hash|
         s = snapshot_hash[:Props]
         new_result = {
@@ -320,7 +319,7 @@ module EmsRefresh::Parsers
           :name        => s[:Name],
           :description => s[:description],
           :create_time => s[:AddedTime],
-          :current     => s[:CheckpointID] == last_restored_snapshot[:Props][:CheckpointID],
+          :current     => s[:CheckpointID] == p[:LastRestoredCheckpointID]
         }
         result << new_result
       end
