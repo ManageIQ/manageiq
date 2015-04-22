@@ -4,28 +4,18 @@ module ApplianceConsole
       #
       # External Authentication Definitions
       #
-      COPY_BASE_DIR       = "/var/www/miq/system/COPY/"
       TEMPLATE_BASE_DIR   = "/var/www/miq/system/TEMPLATE/"
-
-      PAM_CONFIG_DIR      = "/etc/pam.d/"
-      HTTPD_CONFIG_DIR    = "/etc/httpd/conf.d"
 
       IPA_COMMAND         = "/usr/bin/ipa"
       IPA_INSTALL_COMMAND = "/usr/sbin/ipa-client-install"
       IPA_GETKEYTAB       = "/usr/sbin/ipa-getkeytab"
 
       SSSD_CONFIG         = "/etc/sssd/sssd.conf"
+      PAM_CONFIG          = "/etc/pam.d/httpd-auth"
       HTTP_KEYTAB         = "/etc/http.keytab"
-
-      CONFIG_FILE = {
-        :pam_module    => "httpd-auth",
-        :external_auth => "cfme-external-auth.conf",
-        :remote_user   => "cfme-remote-user.conf"
-      }
-
-      TEMPLATE_FILE = CONFIG_FILE.merge(
-        :external_auth => "cfme-external-auth.conf.erb"
-      )
+      HTTP_REMOTE_USER    = "/etc/httpd/conf.d/cfme-remote-user.conf"
+      HTTP_EXTERNAL_AUTH  = "/etc/httpd/conf.d/cfme-external-auth.conf"
+      HTTP_EXTERNAL_AUTH_TEMPLATE = "#{HTTP_EXTERNAL_AUTH}.erb"
 
       GETSEBOOL_COMMAND   = "/usr/sbin/getsebool"
       SETSEBOOL_COMMAND   = "/usr/sbin/setsebool"
@@ -73,13 +63,13 @@ module ApplianceConsole
       end
 
       def configure_httpd_application
-        cp_template(TEMPLATE_FILE[:external_auth], path_join(TEMPLATE_BASE_DIR, HTTPD_CONFIG_DIR), HTTPD_CONFIG_DIR)
-        cp_template(TEMPLATE_FILE[:remote_user],   path_join(TEMPLATE_BASE_DIR, HTTPD_CONFIG_DIR), HTTPD_CONFIG_DIR)
+        cp_template(HTTP_EXTERNAL_AUTH_TEMPLATE, TEMPLATE_BASE_DIR)
+        cp_template(HTTP_REMOTE_USER, TEMPLATE_BASE_DIR)
       end
 
       def unconfigure_httpd_application
-        rm_file(CONFIG_FILE[:external_auth], HTTPD_CONFIG_DIR)
-        rm_file(CONFIG_FILE[:remote_user],   HTTPD_CONFIG_DIR)
+        rm_file(HTTP_EXTERNAL_AUTH)
+        rm_file(HTTP_REMOTE_USER)
       end
 
       #
@@ -179,17 +169,17 @@ module ApplianceConsole
         true
       end
 
-      def cp_template(file, src_dir, dest_dir)
-        src_path = path_join(src_dir, file)
+      def cp_template(file, src_dir, dest_dir = "/")
+        src_path  = path_join(src_dir, file)
+        dest_path = path_join(dest_dir, file.gsub(".erb", ""))
         if src_path.to_s.include?(".erb")
-          dest_path = path_join(dest_dir, file.gsub(".erb", ""))
           File.write(dest_path, ERB.new(File.read(src_path), nil, '-').result(binding))
         else
-          FileUtils.cp src_path, dest_dir
+          FileUtils.cp src_path, dest_path
         end
       end
 
-      def rm_file(file, dir)
+      def rm_file(file, dir = "/")
         path = path_join(dir, file)
         File.delete(path) if File.exist?(path)
       end
