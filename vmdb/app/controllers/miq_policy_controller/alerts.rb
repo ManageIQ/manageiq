@@ -534,7 +534,7 @@ module MiqPolicyController::Alerts
     if alert.options[:notifications][:automate]
       add_flash(_("%s is required") % "Event Name", :error) if alert.options[:notifications][:automate][:event_name].blank?
     end
-    if alert.expression[:eval_method] == 'event_threshold'
+    if alert.expression.is_a?(Hash) && alert.expression[:eval_method] == 'event_threshold'
       add_flash(_("%s is required") % "Event to Check", :error) if alert.expression[:options][:event_types].blank?
     end
 
