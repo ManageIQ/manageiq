@@ -64,7 +64,6 @@ module ApplicationController::MiqRequestMethods
   # Pre provisioning, select a template
   def pre_prov
     if params[:button] == "cancel"
-      req = session[:edit][:req_id] if session[:edit] && session[:edit][:req_id]
       add_flash(_("Add of new %s was cancelled by the user") % "#{session[:edit][:prov_type]} Request")
       session[:flash_msgs] = @flash_array.dup unless session[:edit][:explorer]  # Put msg in session for next transaction to display
       @explorer = session[:edit][:explorer] ? session[:edit][:explorer] : false
@@ -263,91 +262,163 @@ module ApplicationController::MiqRequestMethods
 
   private ############################
 
+  def _build_whatever_grid(what, list, headers, sort_order, sort_by, integer_fields = [], state = @edit)
+    state["#{what}_headers".to_sym] = headers
+    state["#{what}_columns".to_sym] = headers.keys
+    state["#{what}_sortcol".to_sym] = sort_by
+    state["#{what}_sortdir".to_sym] = sort_order
+
+    post_sort_method = integer_fields.include?(sort_by) ? :to_i : :downcase
+    sorted = list.sort_by { |item| item.deep_send(sort_by).to_s.send(post_sort_method) }.uniq
+    (sort_order == "ASC") ? sorted : sorted.reverse
+  end
+
   def build_configured_system_grid(configured_systems, sort_order = nil, sort_by = nil)
-    @edit[:configured_system_headers] = {
+    sort_by    ||= "hostname"
+    sort_order ||= "ASC"
+
+    headers = {
       "hostname"                        => "Hostname",
       "configuration_location_name"     => "Configuration Location",
       "configuration_organization_name" => "Configuration Organization",
       "operating_system_flavor_name"    => "Operating System",
       "provider_name"                   => "Provider",
     }
-    @edit[:configured_system_sortcol] = sort_by    ||= "hostname"
-    @edit[:configured_system_sortdir] = sort_order ||= "ASC"
 
-    sorted = configured_systems.sort_by { |pi| pi.deep_send(sort_by).to_s.downcase }.uniq
-    @temp[:configured_systems] = (sort_order == "ASC") ? sorted : sorted.reverse
+    @temp[:configured_systems] = _build_whatever_grid('configured_system', configured_systems, headers, sort_order, sort_by)
   end
 
   def build_pxe_img_grid(pxe_imgs, sort_order = nil, sort_by = nil)
-    @edit[:pxe_img_headers] = {  # Using it to get column display name on screen to show sort by
+    sort_by    ||= "name"
+    sort_order ||= "ASC"
+
+    headers = {
       "name"        => "Name",
       "description" => "Description",
     }
-    @edit[:pxe_img_columns] = @edit[:pxe_img_headers].keys  # Using it to get column names for sort
-    @edit[:pxe_img_sortcol] = sort_by    ||= "name"  # in case sort column is not set, set the defaults
-    @edit[:pxe_img_sortdir] = sort_order ||= "ASC"
 
-    sorted = pxe_imgs.sort_by { |pi| pi.deep_send(sort_by).to_s.downcase }.uniq
-    @temp[:pxe_imgs] = (sort_order == "ASC") ? sorted : sorted.reverse
+    @temp[:pxe_imgs] = _build_whatever_grid('pxe_img', pxe_imgs, headers, sort_order, sort_by)
   end
 
-  def build_iso_img_grid(iso_imgs,sort_order="ASC",sort_by="name")
-    @edit[:iso_img_sortdir] = sort_order
-    @edit[:iso_img_headers] = {
-        "name"=>"Name"
-    }                                                         #Using it to get column display name on screen to show sort by
-    @edit[:iso_img_columns] = ["name"] #Using it to get column names for sort
-    @edit[:iso_img_sortcol] = sort_by                 # in case sort column is not set, set the defaults
+  def build_iso_img_grid(iso_imgs, sort_order = nil, sort_by = nil)
+    sort_by    ||= "name"
+    sort_order ||= "ASC"
 
-    sorted = iso_imgs.sort_by { |img| img.deep_send(sort_by).to_s.downcase }
-    sorted = sorted.reverse unless sort_order == "ASC"
-    @temp[:iso_imgs] = sorted.uniq
+    headers = {
+      "name" => "Name",
+    }
+
+    @temp[:iso_imgs] = _build_whatever_grid('iso_img', iso_imgs, headers, sort_order, sort_by)
   end
 
-  def build_windows_image_grid(windows_images,sort_order="ASC",sort_by="name")
-    @edit[:windows_image_sortdir] = sort_order
-    @edit[:windows_image_headers] = {
-      "name"=>"Name",
-      "description"=>"Description"
-    }                                                         #Using it to get column display name on screen to show sort by
-    @edit[:windows_image_columns] = ["name","description"] #Using it to get column names for sort
-    @edit[:windows_image_sortcol] = sort_by                 # in case sort column is not set, set the defaults
+  def build_windows_image_grid(windows_images, sort_order = nil, sort_by = nil)
+    sort_by    ||= "name"
+    sort_order ||= "ASC"
 
-    sorted = windows_images.sort_by { |pi| pi.deep_send(sort_by).to_s.downcase }
-    sorted = sorted.reverse unless sort_order == "ASC"
-    @temp[:windows_images] = sorted.uniq
+    headers = {
+      "name"        => "Name",
+      "description" => "Description",
+    }
+
+    @temp[:windows_images] = _build_whatever_grid('windows_image', windows_images, headers, sort_order, sort_by)
   end
 
-  def build_host_grid(hosts,sort_order="ASC",sort_by="name")
+  def build_ds_grid(datastores, sort_order = nil, sort_by = nil)
+    sort_by    ||= "free_space"
+    sort_order ||= "DESC"
+
+    headers = {
+      "name"        => "Name",
+      "free_space"  => "Free Space",
+      "total_space" => "Total Space",
+    }
+
+    integer_fields = %w(free_space total_space)
+
+    # :datastores, not :dss
+    @temp[:datastores] = _build_whatever_grid('ds', datastores, headers, sort_order, sort_by, integer_fields)
+  end
+
+  def build_vc_grid(vcs, sort_order = nil, sort_by = nil)
+    sort_by    ||= "name"
+    sort_order ||= "DESC"
+
+    headers = {
+      :name             => "Name",
+      :description      => "Description",
+      :last_update_time => "Last Updated",
+    }
+
+    integer_fields = %w(last_update_time)
+
+    @temp[:vcs] = _build_whatever_grid('vc', vcs, headers, sort_order, sort_by, integer_fields)
+  end
+
+  def build_template_grid(templates, sort_order = nil, sort_by = nil)
+    sort_by    ||= "name"
+    sort_order ||= "DESC"
+
+    headers = {
+      :name             => "Name",
+      :description      => "Description",
+      :last_update_time => "Last Updated",
+    }
+
+    integer_fields = %w(last_update_time)
+
+    @temp[:templates] = _build_whatever_grid('template', templates, headers, sort_order, sort_by, integer_fields)
+  end
+
+  def build_vm_grid(vms, sort_order = nil, sort_by = nil)
+    sort_by    ||= "name"
+    sort_order ||= "ASC"
+
+    headers = {
+      "name"                          => "Name",
+      "operating_system.product_name" => "Operating System",
+      "platform"                      => "Platform",
+      "num_cpu"                       => "CPUs",
+      "mem_cpu"                       => "Memory",
+      "allocated_disk_storage"        => "Disk Size",
+      "ext_management_system.name"    => ui_lookup(:model => 'ExtManagementSystem'),
+      "v_total_snapshots"             => "Snapshots",
+    }
+
+    # add tenant column header to cloud workflows only
+    headers["cloud_tenant"] = "Tenant" if vms.any? { |vm| vm.respond_to?(:cloud_tenant) }
+
+    integer_fields = %w(allocated_disk_storage mem_cpu num_cpu v_total_snapshots)
+
+    @temp[:vms] = _build_whatever_grid('vm', vms, headers, sort_order, sort_by, integer_fields)
+  end
+
+  def build_host_grid(hosts, sort_order = nil, sort_by = nil)
+    sort_by    ||= "name"
+    sort_order ||= "ASC"
+
     # need to set options from @edit/@option based upon calling screen: show/edit
     options = @edit || @options
-    options[:host_sortdir] = sort_order
-    #non-editable grid for host prov to display hosts being provisoned
-    if options[:wf].kind_of?(MiqHostProvisionWorkflow)
-      options[:host_headers] = {
-        "name"=>"Name",
-        "mac_address"=>"MAC Address"
-      }                                                         #Using it to get column display name on screen to show sort by
-      options[:host_columns] = ["name","mac_address"]     #Using it to get column names for sort
+
+    headers = if options[:wf].kind_of?(MiqHostProvisionWorkflow)
+      # non-editable grid for host prov to display hosts being provisioned
+      {
+        "name"        => "Name",
+        "mac_address" => "MAC Address",
+      }
     else
-      #editable grid for vm/migrate prov screens
-      options[:host_headers] = {
-        "name" => "Name",
+      # editable grid for vm/migrate prov screens
+      {
+        "name"        => "Name",
         "v_total_vms" => "Total VMs",
         "vmm_product" => "Platform",
         "vmm_version" => "Version",
-        "state" => "State"
-      }                                                         #Using it to get column display name on screen to show sort by
-      options[:host_columns] = ["name", "v_total_vms", "vmm_product", "vmm_version", "state"]     #Using it to get column names for sort
+        "state"       => "State",
+      }
     end
 
-    options[:host_sortcol] = sort_by                                          # in case sort column is not set, set the defaults
+    integer_fields = %w(v_total_vms)
 
-    integer_fields = ["v_total_vms"]
-    post_sort_method = integer_fields.include?(sort_by) ? :to_i : :downcase # no downcase needed for sorting int fields, aded to to_i to avoid situation where space was nil
-    sorted = hosts.sort_by { |h| h.deep_send(sort_by).to_s.send(post_sort_method) }
-    sorted = sorted.reverse unless sort_order == "ASC"
-    @temp[:hosts] = sorted.uniq
+    @temp[:hosts] = _build_whatever_grid('host', hosts, headers, sort_order, sort_by, integer_fields, options)
   end
 
   def build_grid
@@ -362,8 +433,6 @@ module ApplicationController::MiqRequestMethods
           @temp[:vm] = VmOrTemplate.find_by_id(@edit[:new][:src_vm_id] && @edit[:new][:src_vm_id][0])
         end
         if @edit[:wf].supports_pxe?
-          @edit[:windows_image_sortdir] ||= "ASC"
-          @edit[:windows_image_sortcol] ||= "name"
           build_pxe_img_grid(@edit[:wf].send("allowed_images"),@edit[:pxe_img_sortdir],@edit[:pxe_img_sortcol])
         end
         if @edit[:wf].supports_iso?
@@ -412,83 +481,6 @@ module ApplicationController::MiqRequestMethods
     when :service
       build_configured_system_grid(@edit[:wf].get_field(:src_configured_system_ids, :service)[:values], @edit[:configured_system_sortdir], @edit[:configured_system_sortcol])
     end
-  end
-
-  def build_vm_grid(vms, sort_order="ASC", sort_by="name")
-    @edit[:vm_sortdir] = sort_order
-    @edit[:vm_headers] = {
-      "name"=>"Name",
-      "operating_system.product_name"=>"Operating System",
-      "platform"=>"Platform",
-      "num_cpu"=>"CPUs",
-      "mem_cpu"=>"Memory",
-      "allocated_disk_storage"=>"Disk Size",
-      "ext_management_system.name"=>ui_lookup(:model=>'ExtManagementSystem'),
-      "v_total_snapshots"=>"Snapshots"
-    }                                                         #Using it to get column display name on screen to show sort by
-
-    # add tenant column header to cloud workflows only
-    @edit[:vm_headers]["cloud_tenant"] = "Tenant" if vms.any? { |vm| vm.respond_to?(:cloud_tenant) }
-    @edit[:vm_columns] = ["name","operating_system.product_name","platform","num_cpu","mem_cpu","allocated_disk_storage","ext_management_system.name","v_total_snapshots"]      #Using it to get column names for sort
-    # add tenant column to cloud workflows only
-    @edit[:vm_columns].insert(2, "cloud_tenant") if vms.any? { |vm| vm.respond_to?(:cloud_tenant) }
-    @edit[:vm_sortcol] = sort_by                  # in case sort column is not set, set the defaults
-    integer_fields = ["allocated_disk_storage","mem_cpu","num_cpu","v_total_snapshots"]
-    post_sort_method = integer_fields.include?(sort_by) ? :to_i : :downcase # no downcase needed for sorting int fields, aded to to_i to avoid situation where space was nil
-    sorted = vms.sort_by { |v| v.deep_send(sort_by).to_s.send(post_sort_method) }
-    sorted = sorted.reverse unless sort_order == "ASC"
-    @temp[:vms] = sorted.uniq
-  end
-
-  def build_ds_grid(datastores,sort_order="DESC",sort_by="free_space")
-    @edit[:ds_sortdir] = sort_order
-    @edit[:ds_headers] = {
-      "name"=>"Name",
-      "free_space"=>"Free Space",
-      "total_space"=>"Total Space"
-    }                                                             #Using it to get column display name on screen to show sort by
-    @edit[:ds_columns] = ["name","free_space","total_space"]      #Using it to get column names for sort
-    @edit[:ds_sortcol] = sort_by                                  # in case sort column is not set, set the defaults
-
-    integer_fields = ["free_space","total_space"]
-    post_sort_method = integer_fields.include?(sort_by) ? :to_i : :downcase # no downcase needed for sorting int fields, aded to to_i to avoid situation where space was nil
-    sorted = datastores.sort_by { |d| d.deep_send(sort_by).to_s.send(post_sort_method) }
-    sorted = sorted.reverse unless sort_order == "ASC"
-    @temp[:datastores] = sorted.uniq
-  end
-
-  def build_vc_grid(vcs,sort_order="DESC",sort_by="name")
-    @edit[:vc_sortdir] = sort_order
-    @edit[:vc_headers] = {
-      :name=>"Name",
-      :description=>"Description",
-      :last_update_time=>"Last Updated"
-    }                                                             #Using it to get column display name on screen to show sort by
-    @edit[:vc_columns] = [:name,:description,:last_update_time]     #Using it to get column names for sort
-    @edit[:vc_sortcol] = sort_by                                  # in case sort column is not set, set the defaults
-
-    integer_fields = ["last_update_time"]
-    post_sort_method = integer_fields.include?(sort_by) ? :to_i : :downcase # no downcase needed for sorting int fields, aded to to_i to avoid situation where space was nil
-    sorted = vcs.sort_by { |vc| vc.deep_send(sort_by).to_s.send(post_sort_method) }
-    sorted = sorted.reverse unless sort_order == "ASC"
-    @temp[:vcs] = sorted.uniq
-  end
-
-  def build_template_grid(templates,sort_order="DESC",sort_by="name")
-    @edit[:template_sortdir] = sort_order
-    @edit[:template_headers] = {
-      :name=>"Name",
-      :description=>"Description",
-      :last_update_time=>"Last Updated"
-    }                                                             #Using it to get column display name on screen to show sort by
-    @edit[:template_columns] = [:name,:description,:last_update_time]     #Using it to get column names for sort
-    @edit[:template_sortcol] = sort_by                                  # in case sort column is not set, set the defaults
-
-    integer_fields = ["last_update_time"]
-    post_sort_method = integer_fields.include?(sort_by) ? :to_i : :downcase # no downcase needed for sorting int fields, aded to to_i to avoid situation where space was nil
-    sorted = templates.sort_by { |t| t.deep_send(sort_by).to_s.send(post_sort_method) }
-    sorted = sorted.reverse unless sort_order == "ASC"
-    @temp[:templates] = sorted.uniq
   end
 
   def dialog_partial_for_workflow
@@ -846,24 +838,16 @@ module ApplicationController::MiqRequestMethods
           build_tags_tree(@edit[:wf], @edit[:new][:vm_tags], true)
           build_ous_tree(@edit[:wf], @edit[:new][:ldap_ous])
           if @edit[:wf].supports_pxe?
-            @edit[:windows_image_sortdir] ||= "ASC"
-            @edit[:windows_image_sortcol] ||= "name"
             build_pxe_img_grid(@edit[:wf].send("allowed_images"), @edit[:pxe_img_sortdir], @edit[:pxe_img_sortcol])
             build_host_grid(@edit[:wf].send("allowed_hosts"), @edit[:host_sortdir], @edit[:host_sortcol])
             build_template_grid(@edit[:wf].send("allowed_customization_templates"), @edit[:template_sortdir], @edit[:template_sortcol])
           elsif @edit[:wf].supports_iso?
-            @edit[:iso_img_sortdir] ||= "ASC"
-            @edit[:iso_img_sortcol] ||= "name"
             build_iso_img_grid(@edit[:wf].send("allowed_iso_images"), @edit[:iso_img_sortdir], @edit[:iso_img_sortcol])
           else
             build_vc_grid(@edit[:wf].send("allowed_customization_specs"), @edit[:vc_sortdir], @edit[:vc_sortcol])
           end
         elsif @edit[:wf].kind_of?(VmMigrateWorkflow)
         else
-          @edit[:iso_img_sortdir] ||= "ASC"
-          @edit[:iso_img_sortcol] ||= "name"
-          @edit[:windows_image_sortdir] ||= "ASC"
-          @edit[:windows_image_sortcol] ||= "name"
           @edit[:template_sortdir] ||= "ASC"
           @edit[:template_sortcol] ||= "name"
           build_tags_tree(@edit[:wf], @edit[:new][:tag_ids], true)
