@@ -1,11 +1,6 @@
 class MiqProvisionCloudWorkflow < MiqProvisionVirtWorkflow
   include CloudInitTemplateMixin
 
-  SUBCLASSES = %w{
-    MiqProvisionAmazon
-    MiqProvisionOpenstack
-  }
-
   def allowed_availability_zones(options={})
     source = load_ar_obj(get_source_vm)
     ems = source.try(:ext_management_system)
@@ -120,7 +115,3 @@ class MiqProvisionCloudWorkflow < MiqProvisionVirtWorkflow
     load_ar_obj(obj)
   end
 end
-
-# Preload any subclasses of this class, so that they will be part of the
-#   conditions that are generated on queries against this class.
-MiqProvisionCloudWorkflow::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}_workflow.rb").to_s }

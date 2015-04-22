@@ -27,8 +27,6 @@ class CimStorageVolume < CimStorageExtent
   virtual_has_many  :hosts,                 :class_name => 'Host'
   virtual_belongs_to  :storage_system,            :class_name => 'CimComputerSystem'
 
-  MODEL_SUBCLASSES  = [ 'OntapStorageVolume' ]
-
   StorageVolumeToBaseSe       = CimProfiles.storage_extent_to_base_storage_extent
   StorageVolumeToVirtualDisk      = CimProfiles.storage_volume_to_virtual_disk
   StorageVolumeToVm         = CimProfiles.storage_volume_to_virtual_machine
@@ -220,10 +218,4 @@ class CimStorageVolume < CimStorageExtent
   def correlatable_id
     self.name
   end
-
 end
-
-# Preload any subclasses of this class, so that they will be part of the
-# conditions that are generated on queries against this class.
-CimStorageVolume::MODEL_SUBCLASSES.each { |sc| require_dependency File.join(Rails.root, 'app', 'models', sc.underscore + '.rb')}
-
