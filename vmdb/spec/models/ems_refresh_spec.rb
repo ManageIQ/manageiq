@@ -64,4 +64,28 @@ describe EmsRefresh do
       described_class.get_ar_objects(pairs).should match_array([ems1, ems2])
     end
   end
+
+  context ".refresh" do
+    it "accepts VMs" do
+      ems = FactoryGirl.create(:ems_vmware, :name => "ems_vmware1")
+      vm1 = FactoryGirl.create(:vm_vmware, :name => "vm_vmware1", :ext_management_system => ems)
+      vm2 = FactoryGirl.create(:vm_vmware, :name => "vm_vmware2", :ext_management_system => ems)
+      EmsRefresh::Refreshers::VcRefresher.should_receive(:refresh).with([vm1, vm2])
+      EmsRefresh.refresh([
+        [vm1.class, vm1.id],
+        [vm2.class, vm2.id],
+      ])
+    end
+
+    it "ignores an EMS-less (archived) VM" do
+      ems = FactoryGirl.create(:ems_vmware, :name => "ems_vmware1")
+      vm1 = FactoryGirl.create(:vm_vmware, :name => "vm_vmware1", :ext_management_system => ems)
+      vm2 = FactoryGirl.create(:vm_vmware, :name => "vm_vmware2", :ext_management_system => nil)
+      EmsRefresh::Refreshers::VcRefresher.should_receive(:refresh).with([vm1])
+      EmsRefresh.refresh([
+        [vm1.class, vm1.id],
+        [vm2.class, vm2.id],
+      ])
+    end
+  end
 end
