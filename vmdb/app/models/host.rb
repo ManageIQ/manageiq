@@ -2156,4 +2156,23 @@ class Host < ActiveRecord::Base
     !plist.blank?
   end
 
+  def self.node_types
+    return :mixed_hosts if count_of_openstack_hosts > 0 && count_of_non_openstack_hosts > 0
+    return :openstack   if count_of_openstack_hosts > 0
+    :non_openstack
+  end
+
+  def self.count_of_openstack_hosts
+    ems = EmsOpenstackInfra.pluck(:id)
+    Host.where(:ems_id => ems).count
+  end
+
+  def self.count_of_non_openstack_hosts
+    ems = EmsOpenstackInfra.pluck(:id)
+    Host.where(Host.arel_table[:ems_id].not_in(ems)).count
+  end
+
+  def openstack_host?
+    ext_management_system.class == EmsOpenstackInfra
+  end
 end
