@@ -155,6 +155,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_storage_adapters
+    return nil if @record.openstack_host?
     num = @record.hardware.nil? ? 0 : @record.hardware.number_of(:storage_adapters)
     h = {:label => "Storage Adapters", :image => "sa", :value => num}
     if num > 0
@@ -165,6 +166,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_network
+    return nil if @record.openstack_host?
     num = @record.number_of(:switches)
     h = {:label => "Network", :image => "network", :value => (num == 0 ? "N/A" : "Available")}
     if num > 0
@@ -226,6 +228,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_storages
+    return nil if @record.openstack_host?
     label = ui_lookup(:tables=>"storages")
     num   = @record.number_of(:storages)
     h     = {:label => label, :image => "storage", :value => num}
@@ -237,6 +240,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_resource_pools
+    return nil if @record.openstack_host?
     label = "Resource Pools"
     num   = @record.number_of(:resource_pools)
     h     = {:label => label, :image => "resource_pool", :value => num}
@@ -260,8 +264,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_availability_zone
-    return nil if !@record.respond_to?(:availability_zone) || !@record.availability_zone
-
+    return nil unless @record.openstack_host?
     availability_zone = @record.availability_zone
     label = ui_lookup(:table => "availability_zone")
     h = {:label => label, :image => "availability_zone", :value => (availability_zone.nil? ? "None" : availability_zone.name)}
@@ -273,8 +276,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_used_tenants
-    return nil if !@record.respond_to?(:cloud_tenants) || !@record.cloud_tenants
-
+    return nil unless @record.openstack_host?
     label = ui_lookup(:tables => "cloud_tenants")
     num   = @record.cloud_tenants.count
     h     = {:label => label, :image => "cloud_tenants", :value => num}
@@ -297,6 +299,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_miq_templates
+    return nil if @record.openstack_host?
     label = ui_lookup(:tables=>"miq_template")
     num   = @record.number_of(:miq_templates)
     h     = {:label => label, :image => "vm", :value => num}
