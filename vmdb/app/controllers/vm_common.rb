@@ -1486,7 +1486,7 @@ module VmCommon
       if x_node == "root"
         # TODO: potential to move this into a model with a scope built into it
         options[:where_clause] =
-          ["vms.type IN (?)", VmInfra::SUBCLASSES + TemplateInfra::SUBCLASSES] if x_active_tree == :vandt_tree
+          ["vms.type IN (?)", VmInfra.subclasses.collect(&:name) + TemplateInfra.subclasses.collect(&:name)] if x_active_tree == :vandt_tree
         process_show_list(options)  # Get all VMs & Templates
         # :model=>ui_lookup(:models=>"VmOrTemplate"))
         # TODO: Change ui_lookup/dictionary to handle VmOrTemplate, returning VMs And Templates
@@ -1494,7 +1494,7 @@ module VmCommon
       else
         if TreeBuilder.get_model_for_prefix(@nodetype) == "Hash"
           options[:where_clause] =
-            ["vms.type IN (?)", VmInfra::SUBCLASSES + TemplateInfra::SUBCLASSES] if x_active_tree == :vandt_tree
+            ["vms.type IN (?)", VmInfra.subclasses.collect(&:name) + TemplateInfra.subclasses.collect(&:name)] if x_active_tree == :vandt_tree
           if id == "orph"
             options[:where_clause] = MiqExpression.merge_where_clauses(options[:where_clause], VmOrTemplate::ORPHANED_CONDITIONS)
             process_show_list(options)
