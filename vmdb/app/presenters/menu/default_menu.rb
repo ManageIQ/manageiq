@@ -34,25 +34,34 @@ module Menu
       end
 
       def infrastructure_menu_section
+        def hybrid_name(klass, name1, name2, name3)
+          lambda do
+            case klass.node_types
+            when :non_openstack then name1
+            when :openstack     then name2
+            else                     name3
+            end
+          end
+        end
+
+        hosts_name    = hybrid_name(EmsCluster, N_("Hosts"),    N_("Nodes"),            N_("Hosts / Nodes"))
+        clusters_name = hybrid_name(Host,       N_("Clusters"), N_("Deployment Roles"), N_("Clusters / Deployment Roles"))
+
         Menu::Section.new(:inf, "Infrastructure", [
           Menu::Item.new('ems_infra',        N_('Providers'),        'ems_infra',     {:feature => 'ems_infra_show_list'},     '/ems_infra'),
-          Menu::Item.new('ems_cluster',      N_('Clusters'),         'ems_cluster',   {:feature => 'ems_cluster_show_list'},   '/ems_cluster'),
-          Menu::Item.new('host',             N_('Hosts'),            'host',          {:feature => 'host_show_list'},          '/host'),
+          Menu::PolymorphItem.new('ems_cluster', clusters_name,      'ems_cluster',   {:feature => 'ems_cluster_show_list'},   '/ems_cluster'),
+          Menu::PolymorphItem.new('host',        hosts_name,         'host',          {:feature => 'host_show_list'},          '/host'),
           Menu::Item.new('vm_infra',         N_('Virtual Machines'), 'vm_infra_explorer_accords',
-                                                                                     {:feature => 'vm_infra_explorer_accords', :any => true},
+                                                                                      {:feature => 'vm_infra_explorer_accords', :any => true},
                                                                                                                               '/vm_infra/explorer'),
           Menu::Item.new('resource_pool',    N_('Resource Pools'),   'resource_pool', {:feature => 'resource_pool_show_list'}, '/resource_pool'),
           Menu::Item.new('storage',          ui_lookup(:tables => 'storages'),
-                                                                    'storage',       {:feature => 'storage_show_list'},       '/storage'),
+                                                                     'storage',       {:feature => 'storage_show_list'},       '/storage'),
           Menu::Item.new('repository',       N_('Repositories'),     'repository',    {:feature => 'repository_show_list'},    '/repository'),
           Menu::Item.new('pxe',              N_('PXE'),              'pxe',           {:feature => 'pxe', :any => true},       '/pxe/explorer'),
           Menu::Item.new('miq_request_host', N_('Requests'),         nil,             {:feature => 'miq_request_show_list'},   '/miq_request?typ=host'),
-          Menu::Item.new('provider_foreman',
-                         N_('Configuration Management'),
-                         'provider_foreman_explorer_accords',
-                         {:feature => 'provider_foreman_explorer_accords',
-                          :any     => true},
-                         '/provider_foreman/explorer')
+          Menu::Item.new('provider_foreman', N_('Configuration Management'), 'provider_foreman_explorer_accords',
+                         {:feature => 'provider_foreman_explorer_accords', :any => true}, '/provider_foreman/explorer')
         ])
       end
 
@@ -72,7 +81,7 @@ module Menu
           Menu::Item.new('ontap_logical_disk',   ui_lookup(:tables => 'ontap_logical_disk'),   'ontap_logical_disk',   {:feature => 'ontap_logical_disk_show_list'},   '/ontap_logical_disk'),
           Menu::Item.new('ontap_storage_volume', ui_lookup(:tables => 'ontap_storage_volume'), 'ontap_storage_volume', {:feature => 'ontap_storage_volume_show_list'}, '/ontap_storage_volume'),
           Menu::Item.new('ontap_file_share',     ui_lookup(:tables => 'ontap_file_share'),     'ontap_file_share',     {:feature => 'ontap_file_share_show_list'},     '/ontap_file_share'),
-          Menu::Item.new('storage_manager',      N_('Storage Managers'),                        'storage_manager',      {:feature => 'storage_manager_show_list'}, '/storage_manager')
+          Menu::Item.new('storage_manager',      N_('Storage Managers'),                       'storage_manager',      {:feature => 'storage_manager_show_list'}, '/storage_manager')
         ])
       end
 
