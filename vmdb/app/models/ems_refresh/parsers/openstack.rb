@@ -179,6 +179,7 @@ module EmsRefresh::Parsers
 
     def process_collection(collection, key, &block)
       @data[key] ||= []
+      return if @options[:inventory_ignore] && @options[:inventory_ignore].include?(key)
       collection.each { |item| process_collection_item(item, key, &block) }
     end
 

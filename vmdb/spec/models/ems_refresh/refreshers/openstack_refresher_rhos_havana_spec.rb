@@ -45,6 +45,29 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
     end
   end
 
+  context "when configured with skips" do
+    before(:each) do
+      VMDB::Config.any_instance.stub(:config).and_return(
+        :ems_refresh => {:openstack => {:inventory_ignore => [:cloud_volumes, :cloud_volume_snapshots]}}
+      )
+    end
+
+    it "will not parse the ignored items" do
+      # We need VCR to match requests differently here because fog adds a dynamic
+      #   query param to avoid HTTP caching - ignore_awful_caching##########
+      #   https://github.com/fog/fog/blob/master/lib/fog/openstack/compute.rb#L308
+      VCR.use_cassette("#{described_class.name.underscore}_rhos_havana", :match_requests_on => [:method, :host, :path]) do
+        EmsRefresh.refresh(@ems)
+      end
+
+      CloudVolume.count.should   == 0
+
+      # .. but other things are still present:
+      FloatingIp.count.should    == 4
+      Disk.count.should          == 15
+    end
+  end
+
   def assert_table_counts
     ExtManagementSystem.count.should == 1
     Flavor.count.should              == 6
@@ -55,6 +78,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
     FirewallRule.count.should        == 36
     CloudNetwork.count.should        == 6
     CloudSubnet.count.should         == 5
+    CloudVolume.count.should         == 5
     VmOrTemplate.count.should        == 15
     Vm.count.should                  == 7
     MiqTemplate.count.should         == 8
