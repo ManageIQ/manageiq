@@ -7,18 +7,23 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
     @ems.update_authentication(:default => {:userid => "admin", :password => "password"})
   end
 
+  def with_cassette
+    # Caching OpenStack info between runs causes the tests to fail with:
+    #   VCR::Errors::UnusedHTTPInteractionError
+    # Reset the cache so HTTP interactions are the same between runs.
+    @ems.reset_openstack_handle
+
+    # We need VCR to match requests differently here because fog adds a dynamic
+    #   query param to avoid HTTP caching - ignore_awful_caching##########
+    #   https://github.com/fog/fog/blob/master/lib/fog/openstack/compute.rb#L308
+    VCR.use_cassette("#{described_class.name.underscore}_rhos_havana", :match_requests_on => [:method, :host, :path]) do
+      yield
+    end
+  end
+
   it "will perform a full refresh against RHOS Havana" do
     2.times do  # Run twice to verify that a second run with existing data does not change anything
-      @ems.reload
-      # Caching OpenStack info between runs causes the tests to fail with:
-      #   VCR::Errors::UnusedHTTPInteractionError
-      # Reset the cache so HTTP interactions are the same between runs.
-      @ems.reset_openstack_handle
-
-      # We need VCR to match requests differently here because fog adds a dynamic
-      #   query param to avoid HTTP caching - ignore_awful_caching##########
-      #   https://github.com/fog/fog/blob/master/lib/fog/openstack/compute.rb#L308
-      VCR.use_cassette("#{described_class.name.underscore}_rhos_havana", :match_requests_on => [:method, :host, :path]) do
+      with_cassette do
         EmsRefresh.refresh(@ems)
       end
       @ems.reload
@@ -53,10 +58,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
     end
 
     it "will not parse the ignored items" do
-      # We need VCR to match requests differently here because fog adds a dynamic
-      #   query param to avoid HTTP caching - ignore_awful_caching##########
-      #   https://github.com/fog/fog/blob/master/lib/fog/openstack/compute.rb#L308
-      VCR.use_cassette("#{described_class.name.underscore}_rhos_havana", :match_requests_on => [:method, :host, :path]) do
+      with_cassette do
         EmsRefresh.refresh(@ems)
       end
 
