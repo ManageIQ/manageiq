@@ -29,8 +29,6 @@
 //= require jqplot-plugins/jqplot.cursor
 //= require jqplot-plugins/jqplot.enhancedLegendRenderer
 //= require miq_jqplot
-//= require spice-html5
-//= require novnc-rails
 //= require jquery/jquery-ui-1.9.2.custom.min
 //= require bootstrap.min
 //= require bootstrap-hover-dropdown/bootstrap-hover-dropdown.min

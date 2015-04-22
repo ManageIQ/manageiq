@@ -1,6 +1,7 @@
 /* DHTMLX TOOLBAR, DHX BLUE, 2009 */
 /* base */
 
+#records_div {background-color:#fff;}
 
 .dhx_toolbar_base_18_miq_blue {
     white-space: nowrap;
@@ -119,6 +120,7 @@
 /* polygon obj */
 div.dhx_toolbar_poly_18_miq_blue {
   background-image: linear-gradient(to bottom, #FAFAFA 0px, #EDEDED 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffafafa', endColorstr='#ffededed', GradientType=0);
 	border: 1px solid #b6b5b5;
     position: absolute;
     margin-top: -1px;
