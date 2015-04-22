@@ -2,13 +2,6 @@ require 'enumerator'
 require 'miq-hash_struct'
 
 class MiqRequestWorkflow
-  SUBCLASSES = %w(
-    MiqHostProvisionWorkflow
-    MiqProvisionWorkflow
-    ResourceActionWorkflow
-    VmMigrateWorkflow
-  )
-
   attr_accessor :dialogs, :requester, :values, :last_vm_id
 
   def self.automate_dialog_request
@@ -1523,7 +1516,3 @@ class MiqRequestWorkflow
     end
   end
 end
-
-# Preload any subclasses of this class, so that they will be part of the
-#   conditions that are generated on queries against this class.
-MiqRequestWorkflow::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}.rb").to_s }

@@ -32,8 +32,6 @@ class CimLogicalDisk < CimStorageExtent
   virtual_has_many  :hosts,                 :class_name => 'Host'
   virtual_belongs_to  :storage_system,            :class_name => 'CimComputerSystem'
 
-  MODEL_SUBCLASSES  = [ 'OntapLogicalDisk' ]
-
   LogicalDiskToBaseSe         = CimProfiles.storage_extent_to_base_storage_extent
   LogicalDiskToFileShare        = CimProfiles.logical_disk_to_file_share
   LogicalDiskToDatastores       = CimProfiles.logical_disk_to_datastore
@@ -263,9 +261,4 @@ class CimLogicalDisk < CimStorageExtent
   def is_based_on_underlying_redundancy?
     property('IsBasedOnUnderlyingRedundancy')
   end
-
 end
-
-# Preload any subclasses of this class, so that they will be part of the
-# conditions that are generated on queries against this class.
-CimLogicalDisk::MODEL_SUBCLASSES.each { |sc| require_dependency File.join(Rails.root, 'app', 'models', sc.underscore + '.rb')}

@@ -5,10 +5,6 @@ class Provider < ActiveRecord::Base
   include AsyncDeleteMixin
   include EmsRefresh::Manager
 
-  SUBCLASSES = %w(
-    ProviderForeman
-  )
-
   belongs_to :zone
   has_many :managers, :class_name => "ExtManagementSystem"
 
@@ -58,7 +54,3 @@ class Provider < ActiveRecord::Base
     end
   end
 end
-
-# Preload any subclasses of this class, so that they will be part of the
-#   conditions that are generated on queries against this class.
-Provider::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}.rb").to_s }

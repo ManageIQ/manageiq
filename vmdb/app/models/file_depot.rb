@@ -43,6 +43,3 @@ class FileDepot < ActiveRecord::Base
     @file = file
   end
 end
-
-# load all plugins
-# VMDB::Util.eager_load_subclasses('FileDepot')

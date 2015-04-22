@@ -1,11 +1,4 @@
 class VmInfra < Vm
-  SUBCLASSES = %w{
-    VmMicrosoft
-    VmRedhat
-    VmVmware
-    VmXen
-  }
-
   default_value_for :cloud, false
 
   # Show certain non-generic charts
@@ -55,7 +48,3 @@ class VmInfra < Vm
     MiqEvent.raise_evm_event(self, "vm_create", :vm => self, :host => host)
   end
 end
-
-# Preload any subclasses of this class, so that they will be part of the
-#   conditions that are generated on queries against this class.
-VmInfra::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}.rb").to_s }

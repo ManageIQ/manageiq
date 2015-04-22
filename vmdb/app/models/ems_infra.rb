@@ -1,11 +1,4 @@
 class EmsInfra < ExtManagementSystem
-  SUBCLASSES = %w{
-    EmsMicrosoft
-    EmsOpenstackInfra
-    EmsRedhat
-    EmsVmware
-  }
-
   #
   # ems_timeouts is a general purpose proc for obtaining
   # read and open timeouts for any ems type and optional service.
@@ -46,9 +39,4 @@ class EmsInfra < ExtManagementSystem
     path = [:ems, :ems_redhat, :service, :read_timeout]
     cfg.merge_from_template_if_missing(*path)
   end
-
 end
-
-# Preload any subclasses of this class, so that they will be part of the
-#   conditions that are generated on queries against this class.
-EmsInfra::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}.rb").to_s }

@@ -1,10 +1,5 @@
 class EmsCluster < ActiveRecord::Base
   include NewWithTypeStiMixin
-
-  SUBCLASSES = %w(
-    EmsClusterOpenstackInfra
-  )
-
   include_concern 'CapacityPlanning'
   include ReportableMixin
   include EventMixin
@@ -402,7 +397,3 @@ class EmsCluster < ActiveRecord::Base
     ext_management_system.class == EmsOpenstackInfra
   end
 end
-
-# Preload any subclasses of this class, so that they will be part of the
-#   conditions that are generated on queries against this class.
-EmsCluster::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}.rb").to_s }

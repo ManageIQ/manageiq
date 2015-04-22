@@ -1,11 +1,6 @@
 require 'active_support/deprecation'
 
 class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
-  SUBCLASSES = %w{
-    MiqProvisionCloudWorkflow
-    MiqProvisionInfraWorkflow
-  }
-
   def auto_placement_enabled?
     get_value(@values[:placement_auto])
   end
@@ -1320,7 +1315,3 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     switches
   end
 end
-
-# Preload any subclasses of this class, so that they will be part of the
-#   conditions that are generated on queries against this class.
-MiqProvisionVirtWorkflow::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}.rb").to_s }

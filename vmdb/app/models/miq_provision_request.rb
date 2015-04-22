@@ -131,7 +131,3 @@ class MiqProvisionRequest < MiqRequest
     "vm"
   end
 end
-
-# Preload any subclasses of this class, so that they will be part of the
-#   conditions that are generated on queries against this class.
-Dir.glob(Rails.root.join("app", "models", "miq_provision_request_*.rb")).each { |f| require_dependency f }
