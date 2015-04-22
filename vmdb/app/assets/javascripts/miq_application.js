@@ -512,7 +512,7 @@ function miqSetButtons(count, button_div) {
     if (typeof miq_toolbars[button_div] != "undefined") {
       tb = miq_toolbars[button_div]["obj"];
       buttons = miq_toolbars[button_div]["buttons"];
-      for (button in buttons) {
+      for (var button in buttons) {
         onwhen = eval("buttons." + button + ".onwhen");
         if (typeof onwhen != "undefined") {
           if (count == 0) {
@@ -759,7 +759,8 @@ function miqLoadCharts() {
 function miqLoadChart(chart_id) {
   var chart_object = 'undefined';
 
-  if (typeof document.getElementById(chart_id) != 'undefined' &&
+  if (document.getElementById(chart_id) != undefined &&
+      typeof document.getElementById(chart_id) != 'undefined' &&
       typeof document.getElementById(chart_id).Update_XML != 'undefined') {
     // Verify with console.log after sleep
     chart_object = document.getElementById(chart_id);
