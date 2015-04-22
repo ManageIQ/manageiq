@@ -52,13 +52,13 @@ module HostHelper::TextualSummary
   def textual_group_miq_custom_attributes
     items = %w{miq_custom_attributes}
     ret = items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-    return nil if ret.blank?
+    ret.blank? ? nil : ret
   end
 
   def textual_group_ems_custom_attributes
     items = %w{ems_custom_attributes}
     ret = items.collect { |m| self.send("textual_#{m}") }.flatten.compact
-    return nil if ret.blank?
+    ret.blank? ? nil : ret
   end
 
   def textual_group_authentications
