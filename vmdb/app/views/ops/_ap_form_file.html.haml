@@ -53,7 +53,7 @@
                     :title => _("Update this entry"),
                     :id    => "#{@scan.id || 'new'}")
                 %td
-                  = text_field("entry", "fname", :maxlength=>MAX_NAME_LEN, "value"=>session[:edit_filename])
+                  = text_field("entry", "fname", :maxlength=>MAX_NAME_LEN, "value"=>session[:edit_filename], :style => "width: 100%;")
                   = hidden_field("item", "type1", :value=>"file")
                 %td
                   - checked = entry["content"] ? true : false
