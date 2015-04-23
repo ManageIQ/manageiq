@@ -70,11 +70,13 @@ module EmsRefresh
             when t.respond_to?(:manager)               then t.manager
             else                                            t
             end
+      next if ems.nil? # archived Vm
       ems.kind_of?(EmsVmware) ? "vc" : ems.emstype.to_s
     end
 
     # Do the refreshes
     groups.each do |g, group_targets|
+      next if g.nil?
       self::Refreshers.const_get("#{g.to_s.camelize}Refresher").refresh(group_targets)
     end
   end
