@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe DialogFieldSerializer do
-  let(:resource_action_serializer) { instance_double("ResourceActionSerializer") }
+  let(:resource_action_serializer) { auto_loaded_instance_double("ResourceActionSerializer") }
   let(:dialog_field_serializer) { described_class.new(resource_action_serializer) }
 
   describe "#serialize" do

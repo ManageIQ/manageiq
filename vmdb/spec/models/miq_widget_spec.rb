@@ -464,7 +464,7 @@ describe MiqWidget do
 
   context "#generate_content_options" do
     let(:widget) { described_class.new }
-    let(:content_option_generator) { instance_double("MiqWidget::ContentOptionGenerator") }
+    let(:content_option_generator) { auto_loaded_instance_double("MiqWidget::ContentOptionGenerator") }
     let(:group) { "group" }
     let(:users) { "users" }
 
@@ -480,7 +480,7 @@ describe MiqWidget do
 
   context "#generate_content" do
     let(:widget) { described_class.new(:miq_task => miq_task) }
-    let(:content_generator) { instance_double("MiqWidget::ContentGenerator") }
+    let(:content_generator) { auto_loaded_instance_double("MiqWidget::ContentGenerator") }
     let(:klass) { "klass" }
     let(:userids) { "userids" }
     let(:timezones) { "timezones" }

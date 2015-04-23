@@ -5,7 +5,7 @@ describe "dialogs" do
   let(:task_path) { "lib/tasks/dialogs" }
 
   describe "import", :type => :rake_task do
-    let(:dialog_import_helper) { instance_double("TaskHelpers::DialogImportHelper") }
+    let(:dialog_import_helper) { auto_loaded_instance_double("TaskHelpers::DialogImportHelper") }
 
     before do
       TaskHelpers::DialogImportHelper.stub(:new).and_return(dialog_import_helper)
@@ -22,7 +22,7 @@ describe "dialogs" do
   end
 
   describe "export", :type => :rake_task do
-    let(:dialog_exporter) { instance_double("TaskHelpers::DialogExporter") }
+    let(:dialog_exporter) { auto_loaded_instance_double("TaskHelpers::DialogExporter") }
 
     before do
       TaskHelpers::DialogExporter.stub(:new).and_return(dialog_exporter)

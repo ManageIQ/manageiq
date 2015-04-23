@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe Dialog do
   describe ".seed" do
-    let(:dialog_import_service) { instance_double("DialogImportService") }
+    let(:dialog_import_service) { auto_loaded_instance_double("DialogImportService") }
     let(:test_file_path) { Rails.root.join("spec/fixtures/files/dialogs") }
     let(:all_yaml_files) { test_file_path.join("{,*/**/}*.{yaml,yml}") }
 

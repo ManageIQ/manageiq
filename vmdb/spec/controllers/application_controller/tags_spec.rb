@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe ApplicationController  do
   describe "#get_tagdata" do
-    let(:record) { Host.new; instance_double("Host") }
+    let(:record) { active_record_instance_double("Host") }
 
     before do
       session[:userid] = "testuser"

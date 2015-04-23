@@ -9,7 +9,7 @@ describe MiqPolicyController do
     include_context "valid session"
 
     let(:params) { {:import_file_upload_id => 123, :commit => commit} }
-    let(:miq_policy_import_service) { instance_double("MiqPolicyImportService") }
+    let(:miq_policy_import_service) { auto_loaded_instance_double("MiqPolicyImportService") }
 
     before do
       MiqPolicyImportService.stub(:new).and_return(miq_policy_import_service)
@@ -79,7 +79,7 @@ describe MiqPolicyController do
             fixture_file_upload(Rails.root.join("spec/fixtures/files/import_policies.yml"), "text/yml")
           end
 
-          let(:miq_policy_import_service) { instance_double("MiqPolicyImportService") }
+          let(:miq_policy_import_service) { auto_loaded_instance_double("MiqPolicyImportService") }
 
           before do
             MiqPolicyImportService.stub(:new).and_return(miq_policy_import_service)
