@@ -2,6 +2,53 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased - as of Sprint 21 end 2015-03-30
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+21+Ending+Mar+30%2C+2015%22+label%3Aenhancement)
+
+- Providers: OpenStack
+  - Inventory for Heat Stacks (Cloud and Infrastructure)
+  - Connect Cloud provider to Infrastructure provider
+- Providers: General
+  - EMS Refresh scheduling for Foreman and Kubernetes
+- Rest API
+  - Providers CRUD
+  - Refresh via /api/providers
+- Provisioning
+  - Heat Orchestration provisioning through services
+  - Foreman
+     - Provisioning of bare metal systems
+     - Organization and location inventory
+     - Uses latest Foreman Apipie gem
+- Automate: Enhanced UI import
+- Fleecing
+ - Qcow3 support
+ - VSAN support (VMware)
+ - OpenStack instances
+- UI
+ - Foreman includes provisioning
+ - Orchestration Stacks includes tagging
+ - Orchestration templates
+     - Create, edit, delete, tagging, ‘draft’ support
+     - Can create a Service Dialog from template contents
+ - HTML5 Consoles for OpenStack
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+21+Ending+Mar+30%2C+2015%22+label%3Aenhancement) 
+
+- Automate
+ - Dynamic Dialog Date/Time Control
+ - Disabled domains clearly marked in UI
+ - Automate entry point selection reduced to state machine classes
+- IPv6
+ - More code paths communicate via hostname
+ - URI building with IPv6 safety
+- UI: tagging support and toolbars on list views
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+21+Ending+Mar+30%2C+2015%22+label%3Abug)
+
+- Ruby2 trap logging and worker row status
+- Update STMP domain length to match SMTP host length
+
 ## Unreleased - as of Sprint 20 end 2015-03-09
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+20+Ending+Mar+9%2C+2015%22+label%3Aenhancement)
