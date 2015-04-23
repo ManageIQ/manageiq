@@ -273,6 +273,9 @@ sysctl -p "/etc/sysctl.conf"
 # Remove the key from the source code, we'll generate on first boot
 rm -f /var/www/miq/vmdb/certs/v2_key
 
+# Enable ssh password login via cloud-init
+[[ -s /etc/cloud/cloud.cfg ]] && sed -i "s/^ssh_pwauth:.*$/ssh_pwauth: True/g" /etc/cloud/cloud.cfg
+
 [[ -s /etc/default/evm ]] && source /etc/default/evm
 appliance_console_cli --region 0 --internal --password smartvm
 %end
