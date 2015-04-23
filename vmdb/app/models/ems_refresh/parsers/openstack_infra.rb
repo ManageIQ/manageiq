@@ -133,7 +133,7 @@ module EmsRefresh
           :vmm_vendor           => 'RedHat',
           :vmm_product          => identify_product(indexed_resources, host.instance_uuid),
           :ipaddress            => ip_address,
-          :hostname             => ip_address,
+          :hostname             => cloud_host_attributes.try(:[], :host_name) || ip_address,
           :mac_address          => identify_primary_mac_address(host, indexed_servers),
           :ipmi_address         => identify_ipmi_address(host),
           :power_state          => lookup_power_state(host.power_state),
