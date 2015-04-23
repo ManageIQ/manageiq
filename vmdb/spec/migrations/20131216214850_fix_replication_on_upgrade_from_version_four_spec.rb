@@ -1,4 +1,4 @@
-require_relative '../spec_helper'
+require "spec_helper"
 require Rails.root.join("db/migrate/20131216214850_fix_replication_on_upgrade_from_version_four.rb")
 
 describe FixReplicationOnUpgradeFromVersionFour do
