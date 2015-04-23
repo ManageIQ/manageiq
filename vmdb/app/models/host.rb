@@ -1345,7 +1345,11 @@ class Host < ActiveRecord::Base
     options[:authentication_prompt_delay] = prompt_delay unless prompt_delay.nil?
 
     users = su_user.nil? ? rl_user : "#{rl_user}/#{su_user}"
-    $log.info "host.connect_ssh: Initiating SSH connection to Host:[#{self.name}] using [#{hostname}] for user:[#{users}].  Options:[#{options.inspect}]"
+    # Obfuscate private keys in the log with ****, so it's visible that field was used, but no user secret is exposed
+    logged_options = options.dup
+    logged_options[:key_data] = "[FILTERED]" if logged_options[:key_data]
+
+    $log.info "host.connect_ssh: Initiating SSH connection to Host:[#{self.name}] using [#{hostname}] for user:[#{users}].  Options:[#{logged_options.inspect}]"
     begin
       MiqSshUtil.shell_with_su(hostname, rl_user, rl_password, su_user, su_password, options) do |ssu, shell|
         $log.info "host.connect_ssh: SSH connection established to [#{hostname}]"
@@ -1703,6 +1707,8 @@ class Host < ActiveRecord::Base
 
       # Skip SSH for ESXi hosts
       unless self.is_vmware_esxi?
+        self.update_ssh_auth_status! if self.respond_to?(:update_ssh_auth_status!)
+
         if self.missing_credentials?
           $log.warn "#{log_header} No credentials defined for #{log_target}"
           task.update_status("Finished", "Warn", "Scanning incomplete due to Credential Issue")  if task
