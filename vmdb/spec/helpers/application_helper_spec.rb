@@ -2224,7 +2224,7 @@ describe ApplicationHelper do
 
       context "when @record = EmsOpenstackInfra" do
         before do
-          @record = EmsOpenstackInfra.new
+          @record = FactoryGirl.create(:ems_openstack_infra_with_stack)
         end
 
         it "user allowed" do
@@ -2236,6 +2236,13 @@ describe ApplicationHelper do
           @user.stub(:role_allows?).and_return(false)
           subject.should == true
         end
+
+        it "button hidden if provider has no stacks" do
+          @record = FactoryGirl.create(:ems_openstack_infra)
+          @user.stub(:role_allows?).and_return(true)
+          subject.should == true
+        end
+
       end
 
       context "when @record != EmsOpenstackInfra" do

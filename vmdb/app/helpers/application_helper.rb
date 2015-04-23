@@ -836,7 +836,10 @@ module ApplicationHelper
     end
 
     # Scale is only supported by OpenStack Infrastructure Provider
-    return true if id == "ems_infra_scale" && (@record.class.name != "EmsOpenstackInfra" || !role_allows(:feature => "ems_infra_scale"))
+    return true if id == "ems_infra_scale" &&
+                   (@record.class.name != "EmsOpenstackInfra" ||
+                    !role_allows(:feature => "ems_infra_scale") ||
+                   (@record.class.name == "EmsOpenstackInfra" && @record.orchestration_stacks.count == 0))
 
     # Now check model/record specific rules
     case get_record_cls(@record)
