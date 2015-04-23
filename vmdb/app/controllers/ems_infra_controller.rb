@@ -28,6 +28,11 @@ class EmsInfraController < ApplicationController
     # TODO: Currently assumes there is a single stack per infrastructure provider. This should
     # be improved to support multiple stacks.
     @stack = @infra.orchestration_stacks.first
+    if @stack.nil?
+      log_and_flash_message(_("Orchestration stack could not be found."))
+      return
+    end
+
     @count_parameters = @stack.parameters.select { |x| x.name.include?('::count') }
 
     return unless params[:scale]
@@ -37,9 +42,7 @@ class EmsInfraController < ApplicationController
     infra = EmsOpenstackInfra.find(params[:id])
     if assigned_hosts > infra.hosts.count
       # Validate number of selected hosts is not more than available
-      message = _("Assigning #{assigned_hosts} but only have #{infra.hosts.count} hosts available.")
-      add_flash(message, :error)
-      $log.error(message)
+      log_and_flash_message(_("Assigning #{assigned_hosts} but only have #{infra.hosts.count} hosts available."))
     else
       scale_parameters_formatted = []
       return_message = _("Scaling")
@@ -51,8 +54,12 @@ class EmsInfraController < ApplicationController
       end
       if scale_parameters_formatted.length > 0
         # A value was changed
-        @stack.raw_update_stack(:parameters => scale_parameters_formatted)
-        redirect_to :action => 'show', :id => params[:id], :flash_msg => return_message
+        begin
+          @stack.raw_update_stack(:parameters => scale_parameters_formatted)
+          redirect_to :action => 'show', :id => params[:id], :flash_msg => return_message
+        rescue => ex
+          log_and_flash_message(_("Unable to initiate scaling: #{ex}"))
+        end
       else
         # No values were changed
         add_flash(_("A value must be changed or provider will not be scaled."), :error)
@@ -61,4 +68,8 @@ class EmsInfraController < ApplicationController
   end
 
   private ############################
+  def log_and_flash_message(message)
+    add_flash(message, :error)
+    $log.error(message)
+  end
 end
