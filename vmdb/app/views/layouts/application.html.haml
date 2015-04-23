@@ -8,6 +8,8 @@
       = stylesheet_link_tag 'template'
       = stylesheet_link_tag 'application'
       = javascript_include_tag 'application'
+      - if Rails.env.development?
+        = javascript_include_tag 'miq_debug'
     %body{:style => "overflow: scroll; padding: 0 20px 0 20px !important"}
       = yield
 - else

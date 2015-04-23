@@ -16,6 +16,8 @@
     = stylesheet_link_tag 'codemirror-4.2/lib/codemirror'
     = render :partial => "stylesheets/template50"
     = javascript_include_tag 'application'
+    - if Rails.env.development?
+      = javascript_include_tag 'miq_debug'
 
     -# HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries
     /[if lt IE 9]
