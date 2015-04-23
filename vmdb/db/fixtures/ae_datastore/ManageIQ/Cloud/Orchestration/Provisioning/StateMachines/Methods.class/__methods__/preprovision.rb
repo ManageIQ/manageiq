@@ -15,3 +15,12 @@ $evm.log("info", "template = #{service.orchestration_template.name}(#{service.or
 $evm.log("info", "stack name = #{service.stack_name}")
 # Caution: stack_options may contain passwords.
 # $evm.log("info", "stack options = #{service.stack_options.inspect}")
+
+# Example how to programmatically modify stack options:
+# service.stack_name = 'new_name'
+# stack_options = service.stack_options
+# stack_options[:disable_rollback] = false
+# stack_options[:timeout_mins] = 2 # this option is provider dependent
+# stack_options[:parameters]['flavor'] = 'm1.small'
+# # Important: set stack_options
+# service.stack_options = stack_options
