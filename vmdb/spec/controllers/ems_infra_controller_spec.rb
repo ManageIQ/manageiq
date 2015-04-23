@@ -106,5 +106,22 @@ describe EmsInfraController do
       response.body.should include("show")
       response.body.should include("1+to+2")
     end
+
+    it "when no orchestration stack is available" do
+      @ems = FactoryGirl.create(:ems_openstack_infra)
+      post :scaling, :id => @ems.id, :scale => "", :orchestration_stack_id => nil
+      controller.send(:flash_errors?).should be_true
+      flash_messages = assigns(:flash_array)
+      flash_messages.first[:message].should include(_("Orchestration stack could not be found."))
+    end
+
+    it "when patch operation fails, an error message should be displayed" do
+      OrchestrationStackOpenstackInfra.any_instance.stub(:raw_update_stack) { raise _("my error") }
+      post :scaling, :id => @ems.id, :scale => "", :orchestration_stack_id => @ems.orchestration_stacks.first.id,
+           @orchestration_stack_parameter_compute.name => 2
+      controller.send(:flash_errors?).should be_true
+      flash_messages = assigns(:flash_array)
+      flash_messages.first[:message].should include(_("Unable to initiate scaling: my error"))
+    end
   end
 end
