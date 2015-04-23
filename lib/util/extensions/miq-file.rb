@@ -26,17 +26,17 @@ class File
       buffer = " " * 255
       returnSize = Win32API.new("kernel32" , "GetShortPathNameA" , 'ppl'  , 'L').Call(longName ,  buffer , size )
       a = ""
-      a = a + buffer[0...returnSize]        
+      a = a + buffer[0...returnSize]
       return a
     else
       return longName
     end
   end
-  
+
   def self.normalize(path)
     File.expand_path(path.gsub(/\\/,"/"))
   end
-  
+
   def self.splitpath(path)
     ext = File.extname(path)
     return File.dirname(path), File.basename(path, ext), ext
