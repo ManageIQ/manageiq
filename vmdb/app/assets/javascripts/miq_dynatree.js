@@ -98,6 +98,7 @@ function cfmeDynatree_activateNode(tree, key) {
     node.activate();
     node.focus();
   }
+  miqSparkle(false);
 }
 
 // Activate silently (no onActivate event) and focus on a node within a tree given the node's key
