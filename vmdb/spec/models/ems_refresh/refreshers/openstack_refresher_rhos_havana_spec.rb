@@ -95,7 +95,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
     SystemService.count.should       == 0
 
     Relationship.count.should        == 10
-    MiqQueue.count.should            == 17
+    MiqQueue.count.should            == 18
   end
 
   def assert_ems

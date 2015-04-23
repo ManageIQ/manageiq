@@ -123,4 +123,8 @@ class EmsOpenstack < EmsCloud
     $log.debug err.backtrace.join("\n") if $log.debug?
     raise
   end
+
+  def self.event_monitor_class
+    MiqEventCatcherOpenstack
+  end
 end
