@@ -6,6 +6,13 @@ module RSpec::Fire
     double_name.constantize.new
     instance_double(double_name, stubs)
   end
+
+  # rspec-fire does not detect classes that are autoloaded, so we load
+  # the constant using constantize leveraging +const_missing+
+  def auto_loaded_instance_double(double_name, stubs = {})
+    double_name.constantize
+    instance_double(double_name, stubs)
+  end
 end
 
 RSpec::Fire.configure do |config|

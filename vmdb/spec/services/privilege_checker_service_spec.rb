@@ -37,7 +37,7 @@ describe PrivilegeCheckerService do
 
       context "when the session has not timed out" do
         let(:last_trans_time) { Time.current }
-        let(:server) { instance_double("MiqServer", :logon_status => logon_status) }
+        let(:server) { active_record_instance_double("MiqServer", :logon_status => logon_status) }
 
         before do
           MiqServer.stub(:my_server).with(true).and_return(server)

@@ -147,7 +147,7 @@ describe MiqProvision do
     it "workflow should be called with placement_auto = false and skip_dialog_load = true" do
       prov     = FactoryGirl.build(:miq_provision)
       host     = active_record_instance_double('Host', :id => 1, :name => 'my_host')
-      workflow = instance_double("MiqProvisionWorkflow", :allowed_hosts => [host])
+      workflow = auto_loaded_instance_double("MiqProvisionWorkflow", :allowed_hosts => [host])
 
       prov.should_receive(:eligible_resource_lookup).and_return(host)
 

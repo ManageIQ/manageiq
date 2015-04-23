@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe TaskHelpers::DialogImportHelper do
-  let(:dialog_import_service) { instance_double("DialogImportService") }
+  let(:dialog_import_service) { auto_loaded_instance_double("DialogImportService") }
   let(:dialog_import_helper) { described_class.new(dialog_import_service) }
 
   describe "#import" do

@@ -914,7 +914,7 @@ describe ReportController do
   describe "#upload_widget_import_file" do
     include_context "valid session"
 
-    let(:widget_import_service) { instance_double("WidgetImportService") }
+    let(:widget_import_service) { auto_loaded_instance_double("WidgetImportService") }
 
     before do
       bypass_rescue
@@ -1050,7 +1050,7 @@ describe ReportController do
     include_context "valid session"
 
     let(:params) { {:import_file_upload_id => "123"} }
-    let(:widget_import_service) { instance_double("WidgetImportService") }
+    let(:widget_import_service) { auto_loaded_instance_double("WidgetImportService") }
 
     before do
       bypass_rescue
@@ -1077,7 +1077,7 @@ describe ReportController do
   describe "#import_widgets" do
     include_context "valid session"
 
-    let(:widget_import_service) { instance_double("WidgetImportService") }
+    let(:widget_import_service) { auto_loaded_instance_double("WidgetImportService") }
     let(:params) { {:import_file_upload_id => "123", :widgets_to_import => ["potato"]} }
 
     before do
@@ -1094,9 +1094,7 @@ describe ReportController do
     end
 
     context "when the import file upload exists" do
-      let(:import_file_upload) do
-        instance_double("ImportFileUpload")
-      end
+      let(:import_file_upload) { active_record_instance_double("ImportFileUpload") }
 
       before do
         widget_import_service.stub(:import_widgets)
