@@ -1,13 +1,10 @@
-$:.push("#{File.dirname(__FILE__)}/../../disk/modules")
-$:.push("#{File.dirname(__FILE__)}/..")
-
 require 'rubygems'
 require 'platform'
-require "Win32API" if Platform::OS == :win32
-require 'MiqLargeFile'
-require 'runcmd'
 require 'uri'
-require 'MiqSockUtil'
+require "Win32API" if Platform::OS == :win32
+require_relative '../../disk/modules/MiqLargeFile'
+require_relative '../runcmd'
+require_relative '../MiqSockUtil'
 
 class File
   def self.paths_equal?(f1, f2)
