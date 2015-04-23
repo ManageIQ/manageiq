@@ -93,7 +93,6 @@ end
 #   models.  These tests test the basic service model methods and can be removed
 #   in favor of the same tests against any single one of those classes.
 #
-require "spec_helper"
 #  require "#{File.dirname(__FILE__)}/../lib/engine/miq_ae_service"
 #  require "#{File.dirname(__FILE__)}/../lib/engine/miq_ae_service_model_base"
 #  Dir.new("#{File.dirname(__FILE__)}/../lib/service_models").each { |fname|
