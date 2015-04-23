@@ -1253,3 +1253,13 @@
           value: "1"
     search_type: default
     db: Container
+- attributes:
+    name: default_Restart Count
+    description: Restart Count is 1
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: Container-restart_count
+          value: "1"
+    search_type: default
+    db: ContainerGroup
