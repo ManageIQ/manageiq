@@ -1,12 +1,11 @@
 class ServiceTemplateProvisionTask < MiqRequestTask
   include ReportableMixin
 
-  validates_inclusion_of :request_type, :in => self.request_class::REQUEST_TYPES,                          :message => "should be #{self.request_class::REQUEST_TYPES.join(", ")}"
-  validates_inclusion_of :state,        :in => %w{ pending provisioned finished } + self.request_class::ACTIVE_STATES, :message => "should be pending, #{self.request_class::ACTIVE_STATES.join(", ")} or finished"
+  validate :validate_request_type, :validate_state
 
   virtual_belongs_to :service_resource, :class_name => "ServiceResource"
 
-  AUTOMATE_DRIVES  = true
+  AUTOMATE_DRIVES = true
 
   def self.base_model
     ServiceTemplateProvisionTask
@@ -201,4 +200,9 @@ class ServiceTemplateProvisionTask < MiqRequestTask
     service.raise_provisioned_event unless service.nil?
   end
 
+  private
+
+  def valid_states
+    super + ["provisioned"]
+  end
 end
