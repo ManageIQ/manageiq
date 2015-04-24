@@ -531,10 +531,10 @@ class ApplicationController < ActionController::Base
     id = params[:id] ? params[:id] : "new"
     if pfx == "pxe"
       return unless load_edit("#{pfx}_edit__#{id}")
-      settings = {:username => @edit[:new][:log_userid], :password => @edit[:new][:log_password] }
+      settings = {:username => @edit[:new][:log_userid], :password => @edit[:new][:log_password]}
       settings[:uri] = @edit[:new][:uri_prefix] + "://" + @edit[:new][:uri]
     else
-      settings = {:username => params[:log_userid], :password => params[:log_password] }
+      settings = {:username => params[:log_userid], :password => params[:log_password]}
       settings[:uri] = params[:uri_prefix] + "://" + params[:uri]
     end
 
