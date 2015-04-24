@@ -1741,6 +1741,13 @@ class Host < ActiveRecord::Base
             task.update_status("Active", "Ok", "Refreshing FS Files") if task
             Benchmark.realtime_block(:refresh_fs_files) { self.refresh_fs_files(ssu) }
 
+            # refresh_openstack_services should run after refresh_services and refresh_fs_files
+            if self.respond_to?(:refresh_openstack_services)
+              $log.info("#{log_header} Refreshing OpenStack Services for #{log_target}")
+              task.update_status("Active", "Ok", "Refreshing OpenStack Services") if task
+              Benchmark.realtime_block(:refresh_openstack_services) { refresh_openstack_services(ssu) }
+            end
+
             self.save
           end
         rescue Net::SSH::HostKeyMismatch
