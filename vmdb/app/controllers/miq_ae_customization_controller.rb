@@ -197,9 +197,7 @@ class MiqAeCustomizationController < ApplicationController
     else
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-        page << "#{x_active_tree}.openItem('#{x_node}');"
-        page << "#{x_active_tree}.selectItem('#{x_node}');"
-        page << "#{x_active_tree}.focusItem('#{x_node}');"
+        page << "cfmeDynatree_activateNodeSilently('#{x_active_tree}', '#{x_node}');"
         page << "miqSparkle(false);"
       end
     end
@@ -255,7 +253,6 @@ class MiqAeCustomizationController < ApplicationController
     handle_bottom_cell(presenter)
     setup_dialog_sample_buttons(nodetype, presenter)
     set_miq_record_id(presenter)
-    save_tree_states(presenter)
 
     render :js => presenter.to_html
   end
@@ -371,10 +368,6 @@ class MiqAeCustomizationController < ApplicationController
 
   def render_proc
     proc { |opts| render_to_string(opts) }
-  end
-
-  def save_tree_states(presenter)
-    presenter[:save_open_states_trees] += [:ab_tree, :old_dialogs_tree, :dialogs_tree, :dialog_edit_tree]
   end
 
   def set_miq_record_id(presenter)

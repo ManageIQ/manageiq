@@ -490,7 +490,6 @@ class MiqCapacityController < ApplicationController
     end
 
     presenter[:expand_collapse_cells][:a] = 'expand'
-    presenter[:save_open_states_trees] << :utilization_tree
     presenter[:update_partials][:main_div] = r[:partial => 'utilization_tabs']
     presenter[:right_cell_text] = @right_cell_text
     presenter[:build_calendar]  = {
@@ -628,7 +627,6 @@ class MiqCapacityController < ApplicationController
     presenter[:update_partials][:main_div] = r[:partial => 'bottlenecks_tabs']
     presenter[:replace_partials][:tl_div]  = r[:partial => 'bottlenecks_tl_detail']
     presenter[:build_calendar] = true
-    presenter[:save_open_states_trees] << :bottlenecks_tree
     presenter[:right_cell_text] = @right_cell_text
 
     presenter[:extra_js] << "curTab = $('#bottlenecks_tabs.ui-tabs-panel:not(.ui-tabs-hide)');"

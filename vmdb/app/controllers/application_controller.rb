@@ -2524,7 +2524,7 @@ class ApplicationController < ActionController::Base
     session[:imports] = @sb[:imports] ? @sb[:imports] : nil # Imported file data from 2 stage import
 
     # Save @edit and @view in session, if present
-    if @lastaction == "show_list" || params[:action] == "tree_autoload"   # If show_list was the last screen presented or tree is being autoloaded save @edit
+    if @lastaction == "show_list"                           # If show_list was the last screen presented or tree is being autoloaded save @edit
       @edit ||= session[:edit]                              #   Remember the previous @edit
       @view ||= session[:view]                              #   Remember the previous @view
     end

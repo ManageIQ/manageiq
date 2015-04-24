@@ -568,8 +568,7 @@ class CatalogController < ApplicationController
       page << "$('##{ae_tree_key}').prop('title', '#{@edit[:new][ae_tree_key]}');"
       @edit[:ae_tree_select] = false
       page << javascript_for_miq_button_visibility(@changed)
-      page << "automate_tree.selectItem('root');"
-      page << "automate_tree.focusItem('root');"
+      page << "cfmeDynatree_activateNodeSilently('automate_tree', 'root');"
       page << "miqSparkle(false);"
     end
     session[:edit] = @edit
@@ -1949,9 +1948,6 @@ class CatalogController < ApplicationController
     presenter[:miq_record_id] = @record && !@in_a_form ? @record.id : @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
 
     presenter[:lock_unlock_trees][x_active_tree] = @edit && @edit[:current]
-
-    # Save open nodes, if any were added
-    presenter[:save_open_states_trees] = [@sb[:active_tree].to_s] if add_nodes
 
     presenter[:osf_node] = x_node
 

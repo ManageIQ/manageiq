@@ -920,9 +920,6 @@ module VmCommon
     build_policy_tree(@polArr)
     render :update do |page|
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page << "#{session[:tree_name]}.saveOpenStates('#{session[:tree_name]}','path=/');"
-      page << "#{session[:tree_name]}.loadOpenStates('#{session[:tree_name]}');"
-      #page.replace("policy_options_div", :partial=>"vm/policy_options")
       page.replace("main_div", :partial=>"vm_common/policies")
     end
   end
@@ -1342,7 +1339,8 @@ module VmCommon
       self.x_node = params[:id]
       replace_right_cell
     else
-      add_flash("User is not authorized to view #{ui_lookup(:model=>@record.class.base_model.to_s)} \"#{@record.name}\"", :error)
+      add_flash("User is not authorized to view #{ui_lookup(:model => @record.class.base_model.to_s)} \"#{@record.name}\"",
+                :error) unless flash_errors?
       render :partial => "shared/tree_select_error", :locals => {:options => {:select_node => x_node}}
     end
   end
@@ -1743,9 +1741,6 @@ module VmCommon
     presenter[:clear_search_show_or_hide] = clear_search_show_or_hide
 
     presenter[:osf_node] = x_node  # Open, select, and focus on this node
-
-    # Save open nodes, if any were added
-    presenter[:save_open_states_trees] = [x_active_tree.to_s] if add_nodes
 
     presenter[:set_visible_elements][:blocker_div] = false unless @edit && @edit[:adv_search_open]
     presenter[:hide_modal] = true

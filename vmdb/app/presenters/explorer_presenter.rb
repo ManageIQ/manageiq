@@ -27,7 +27,6 @@ class ExplorerPresenter
   #   miq_record_id          -- record being displayed or edited
   #   miq_widget_dd_url      -- set dashboard widget drag drop url
   #   osf_node               -- node to open, select and focus
-  #   save_open_states_trees -- Array of trees to save open states for
   #   open_accord            -- accordion to open
   #   extra_js               -- array of extra javascript chunks to be written out
   #
@@ -59,7 +58,6 @@ class ExplorerPresenter
       :reload_toolbars       => {},
       :trees_to_replace      => {},
       :extra_js              => [],
-      :save_open_states_trees => [],
       :object_tree_json      => '',
       :exp                   => {},
       :osf_node              => ''
@@ -81,15 +79,6 @@ class ExplorerPresenter
   end
 
   def process
-    # hiding dhtmlx only calls from dynatree
-    unless @options[:object_tree_json].empty?
-      @out << "
-        if (typeof #{@options[:active_tree]} != 'undefined') {
-          obj_tree.loadJSONObject(#{@options[:object_tree_json]});
-          obj_tree.loadOpenStates('obj_tree');
-      }\n"
-    end
-
     # see if any miq expression vars need to be set
     unless @options[:exp].empty?
       @out << "miq_val1_type  = '#{@options[:exp][:val1_type]}';"  if @options[:exp][:val1_type]
@@ -105,8 +94,6 @@ class ExplorerPresenter
 
     @out << "dhxAccord.openItem('#{@options[:open_accord]}');" unless @options[:open_accord].to_s.empty?
 
-    @options[:trees_to_replace].each { |tree, opts| @out << replace_tree(tree,opts) }
-
     if @options[:remove_nodes]
       @out << "cfmeRemoveNodeChildren('#{@options[:active_tree]}',
                                       '#{@options[:add_nodes][:key]}'
@@ -115,26 +102,19 @@ class ExplorerPresenter
 
     if @options[:add_nodes]
       @out << "
-        if (typeof #{@options[:active_tree]} == 'undefined') {
-          cfmeAddNodeChildren('#{@options[:active_tree]}',
-                              '#{@options[:add_nodes][:key]}',
-                              '#{@options[:osf_node]}',
-                              #{@options[:add_nodes][:children].to_json.html_safe}
-          );
-        } else {
-          #{@options[:active_tree]}.loadJSONObject(#{@options[:add_nodes].to_json.html_safe});
-        }\n"
+        cfmeAddNodeChildren('#{@options[:active_tree]}',
+                            '#{@options[:add_nodes][:key]}',
+                            '#{@options[:osf_node]}',
+                            #{@options[:add_nodes][:children].to_json.html_safe}
+        );
+      \n"
     end
 
     if @options[:delete_node]
-      # using dynatree if dhtmlxtree object is undefined
       @out << "
-      if (typeof #{@options[:active_tree]} == 'undefined') {
         var del_node = $('##{@options[:active_tree]}box').dynatree('getTree').getNodeByKey('#{@options[:delete_node]}');
         del_node.remove();
-      } else {
-        #{@options[:active_tree]}.deleteItem('#{@options[:delete_node]}');
-      }\n"
+        \n"
     end
 
     @out << "miq_widget_dd_url = '#{@options[:miq_widget_dd_url]}';" if @options[:miq_widget_dd_url]
@@ -188,26 +168,9 @@ class ExplorerPresenter
 
     # Open, select, and focus node in current tree
     #   using dynatree if dhtmlxtree object is undefined
-    unless @options[:osf_node].empty?
-      @out << "
-        if (typeof #{@options[:active_tree]} == 'undefined') {
-          cfmeDynatree_activateNodeSilently('#{@options[:active_tree]}', '#{@options[:osf_node]}');
-        } else {
-          #{@options[:active_tree]}.openItem(  '#{@options[:osf_node]}');
-          #{@options[:active_tree]}.selectItem('#{@options[:osf_node]}', false);
-          #{@options[:active_tree]}.focusItem( '#{@options[:osf_node]}');
-        }"
-    end
+    @out << "cfmeDynatree_activateNodeSilently('#{@options[:active_tree]}', '#{@options[:osf_node]}');" unless @options[:osf_node].empty?
 
     @options[:lock_unlock_trees].each { |tree, lock| @out << tree_lock(tree, lock) }
-
-    # Skip if dynatree (dhxmlttree object undefined) and use dt persist
-    @options[:save_open_states_trees].each do |tree|
-      tree_str = tree.to_s
-      @out << "
-        if (typeof #{tree_str} != 'undefined')
-            #{tree_str}.saveOpenStates('#{tree_str}','path=/');"
-    end
 
     @out << @options[:extra_js].join("\n")
 
@@ -249,41 +212,6 @@ class ExplorerPresenter
   # Set a JS variable to value from options or 'undefined'
   def set_or_undef(variable)
     @options[variable] ? "#{variable} = '#{@options[variable]}';" : "#{variable} = undefined;"
-  end
-
-  # Replace a tree using opts hash :new_node and :load_states keys
-  # opts
-  #     :new_node     --
-  #     :root_id      --
-  #     :load_states  --
-  #
-  def replace_tree(tree, opts)
-    tree_str = tree.to_s
-
-    out = []
-    out << 'var sel_node = ' +
-      (opts[:new_node] ? "'#{opts[:new_node]}';" : "#{tree_str}_tree.getSelectedItemId();")
-
-    out << "var root_id = '#{(opts[:root_id] || 'root')}';"
-
-    raise "replace_tree, empty tree data for tree '#{tree_str}'" unless @options[:temp].key?((tree_str+'_tree').to_sym)
-    temp_tree = @options[:temp][(tree_str+'_tree').to_sym].to_s.html_safe
-
-    out << "#{tree_str}_tree.deleteChildItems(0);" <<
-            "#{tree_str}_tree.loadJSONObject(#{temp_tree});"
-
-    out << "#{tree_str}_tree.loadOpenStates('#{tree_str}_tree');" if opts[:load_states]
-
-    out << "#{tree_str}_tree.setItemCloseable(root_id,0);" <<
-            "#{tree_str}_tree.showItemSign(root_id,false);"
-
-    if opts[:clear_selection]
-      out << "#{tree_str}_tree.clearSelection();"
-    else
-      out << "#{tree_str}_tree.selectItem(sel_node);" <<
-             "#{tree_str}_tree.openItem(sel_node);"
-    end
-    out.join("\n")
   end
 
   # Replaces an element (div) using options :partial and :locals
