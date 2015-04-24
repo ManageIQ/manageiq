@@ -85,7 +85,7 @@ describe ApplianceConsole::Cli do
     it "should handle uninstalling ipa" do
       subject.should_receive(:say)
       ApplianceConsole::ExternalHttpdAuthentication.should_receive(:new)
-        .and_return(double(:ipa_client_configured? => true, :ipa_client_unconfigure => nil))
+        .and_return(double(:ipa_client_configured? => true, :deactivate => nil))
       subject.parse(%w(--uninstall-ipa)).run
     end
 
