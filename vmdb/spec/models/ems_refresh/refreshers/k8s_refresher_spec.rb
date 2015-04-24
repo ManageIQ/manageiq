@@ -2,6 +2,7 @@ require "spec_helper"
 
 describe EmsRefresh::Refreshers::KubernetesRefresher do
   before(:each) do
+    MiqServer.stub(:my_zone).and_return("default")
     @ems = FactoryGirl.create(:ems_kubernetes, :hostname => "10.35.0.202", :ipaddress => "10.35.0.202", :port => 6443)
   end
 
