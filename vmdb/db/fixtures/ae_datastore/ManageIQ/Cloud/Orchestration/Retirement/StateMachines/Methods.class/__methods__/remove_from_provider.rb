@@ -5,10 +5,14 @@
 # Get stack from root object
 stack = $evm.root['orchestration_stack']
 
-$evm.set_state_var('stack_removed_from_provider', false)
-
 if stack
   ems = stack.ext_management_system
-  $evm.log('info', "Removing stack:<#{stack.name}> from provider:<#{ems.try(:name)}>")
-  stack.raw_delete_stack
+  if stack.raw_exists?
+    $evm.log('info', "Removing stack:<#{stack.name}> from provider:<#{ems.try(:name)}>")
+    stack.raw_delete_stack
+    $evm.set_state_var('stack_removed_from_provider', false)
+  else
+    $evm.log('info', "Stack <#{stack.name}> no longer exists in provider:<#{ems.try(:name)}>")
+    $evm.set_state_var('stack_removed_from_provider', true)
+  end
 end

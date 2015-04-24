@@ -28,5 +28,13 @@ module MiqAeMethodService
       @object = nil
       true
     end
+
+    def raw_exists?
+      status, reason = raw_status
+      status.nil? || status.downcase == 'delete_complete' ? false : true
+    rescue => err
+      return false if err.to_s =~ /[S|s]tack.+does not exist/
+      raise
+    end
   end
 end
