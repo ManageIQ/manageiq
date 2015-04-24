@@ -238,19 +238,18 @@ module Authenticator
       end
     end
 
-    def match_groups(groups)
+    def match_groups(external_group_names)
       log_prefix  = "MIQ(Authenticator#match_groups)"
 
-      return [] if groups.empty?
-      groups = groups.collect(&:downcase)
+      return [] if external_group_names.empty?
+      external_group_names = external_group_names.collect(&:downcase)
 
-      miq_groups  = MiqServer.my_server.miq_groups
-      miq_groups  = MiqServer.my_server.zone.miq_groups if miq_groups.empty?
-      miq_groups  = MiqGroup.where(:resource_id => nil, :resource_type => nil) if miq_groups.empty?
-      miq_groups  = miq_groups.order(:sequence).to_a
-      groups.each       { |g| $log.debug("#{log_prefix} External Group: #{g}") }
-      miq_groups.each   { |g| $log.debug("#{log_prefix} Internal Group: #{g.description.downcase}") }
-      miq_groups.select { |g| groups.include?(g.description.downcase) }
+      internal_groups = MiqServer.my_server.permitted_groups
+
+      external_group_names.each { |g| $log.debug("#{log_prefix} External Group: #{g}") }
+      internal_groups.each      { |g| $log.debug("#{log_prefix} Internal Group: #{g.description.downcase}") }
+
+      internal_groups.select { |g| external_group_names.include?(g.description.downcase) }
     end
 
     def autocreate_user(username)
