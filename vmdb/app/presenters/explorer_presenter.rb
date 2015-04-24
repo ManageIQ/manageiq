@@ -27,7 +27,6 @@ class ExplorerPresenter
   #   miq_record_id          -- record being displayed or edited
   #   miq_widget_dd_url      -- set dashboard widget drag drop url
   #   osf_node               -- node to open, select and focus
-  #   save_open_states_trees -- Array of trees to save open states for
   #   open_accord            -- accordion to open
   #   extra_js               -- array of extra javascript chunks to be written out
   #
@@ -59,7 +58,6 @@ class ExplorerPresenter
       :reload_toolbars       => {},
       :trees_to_replace      => {},
       :extra_js              => [],
-      :save_open_states_trees => [],
       :object_tree_json      => '',
       :exp                   => {},
       :osf_node              => ''
@@ -81,15 +79,6 @@ class ExplorerPresenter
   end
 
   def process
-    # hiding dhtmlx only calls from dynatree
-    unless @options[:object_tree_json].empty?
-      @out << "
-        if (typeof #{@options[:active_tree]} != 'undefined') {
-          obj_tree.loadJSONObject(#{@options[:object_tree_json]});
-          obj_tree.loadOpenStates('obj_tree');
-      }\n"
-    end
-
     # see if any miq expression vars need to be set
     unless @options[:exp].empty?
       @out << "miq_val1_type  = '#{@options[:exp][:val1_type]}';"  if @options[:exp][:val1_type]
@@ -113,26 +102,19 @@ class ExplorerPresenter
 
     if @options[:add_nodes]
       @out << "
-        if (typeof #{@options[:active_tree]} == 'undefined') {
-          cfmeAddNodeChildren('#{@options[:active_tree]}',
-                              '#{@options[:add_nodes][:key]}',
-                              '#{@options[:osf_node]}',
-                              #{@options[:add_nodes][:children].to_json.html_safe}
-          );
-        } else {
-          #{@options[:active_tree]}.loadJSONObject(#{@options[:add_nodes].to_json.html_safe});
-        }\n"
+        cfmeAddNodeChildren('#{@options[:active_tree]}',
+                            '#{@options[:add_nodes][:key]}',
+                            '#{@options[:osf_node]}',
+                            #{@options[:add_nodes][:children].to_json.html_safe}
+        );
+      \n"
     end
 
     if @options[:delete_node]
-      # using dynatree if dhtmlxtree object is undefined
       @out << "
-      if (typeof #{@options[:active_tree]} == 'undefined') {
         var del_node = $('##{@options[:active_tree]}box').dynatree('getTree').getNodeByKey('#{@options[:delete_node]}');
         del_node.remove();
-      } else {
-        #{@options[:active_tree]}.deleteItem('#{@options[:delete_node]}');
-      }\n"
+        \n"
     end
 
     @out << "miq_widget_dd_url = '#{@options[:miq_widget_dd_url]}';" if @options[:miq_widget_dd_url]
@@ -189,14 +171,6 @@ class ExplorerPresenter
     @out << "cfmeDynatree_activateNodeSilently('#{@options[:active_tree]}', '#{@options[:osf_node]}');" unless @options[:osf_node].empty?
 
     @options[:lock_unlock_trees].each { |tree, lock| @out << tree_lock(tree, lock) }
-
-    # Skip if dynatree (dhxmlttree object undefined) and use dt persist
-    @options[:save_open_states_trees].each do |tree|
-      tree_str = tree.to_s
-      @out << "
-        if (typeof #{tree_str} != 'undefined')
-            #{tree_str}.saveOpenStates('#{tree_str}','path=/');"
-    end
 
     @out << @options[:extra_js].join("\n")
 

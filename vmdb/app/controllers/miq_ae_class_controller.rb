@@ -293,7 +293,6 @@ class MiqAeClassController < ApplicationController
 
     r = proc { |opts| render_to_string(opts) }
 
-    presenter[:save_open_states_trees] << :ae_tree
     presenter[:right_cell_text] = @right_cell_text
 
     # Build hash of trees to replace and optional new node to be selected

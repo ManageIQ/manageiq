@@ -238,8 +238,6 @@ class MiqPolicyController < ApplicationController
     build_policy_tree(@polArr)
     render :update do |page|
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page << "#{session[:tree_name]}.saveOpenStates('#{session[:tree_name]}','path=/');"
-      page << "#{session[:tree_name]}.loadOpenStates('#{session[:tree_name]}');"
       page.replace("main_div", :partial=>"vm/policies")
     end
   end
