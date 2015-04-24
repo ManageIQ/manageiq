@@ -118,7 +118,16 @@ module OpsHelper::TextualSummary
 
   def vmdb_table_top_rows(typ,limit)
     rows = VmdbDatabase.my_database.top_tables_by(typ, limit)
-    return rows.collect { |row| {:title=>row.name, :name=>row.name, :value => typ == :rows ? number_with_delimiter(row.latest_hourly_metric.send(typ.to_s),:delimeter=>',') : number_to_human_size(row.latest_hourly_metric.send(typ.to_s),:precision=>1) , :explorer=> true, :link=>"vmdb_tree.selectItem('tb-#{to_cid(@sb[:vmdb_tables][row.name])}', true)"} }
+    return rows.collect { |row|
+      {
+        :title => row.name,
+        :name => row.name,
+        :value => typ == :rows ? number_with_delimiter(row.latest_hourly_metric.send(typ.to_s), :delimeter => ',') :
+                                 number_to_human_size(row.latest_hourly_metric.send(typ.to_s), :precision => 1),
+        :explorer => true,
+        :link => "cfmeDynatree_activateNode('vmdb_tree', 'tb-#{to_cid(@sb[:vmdb_tables][row.name])}');"
+      }
+    }
   end
 
 end
