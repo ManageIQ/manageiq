@@ -1949,9 +1949,6 @@ class CatalogController < ApplicationController
 
     presenter[:lock_unlock_trees][x_active_tree] = @edit && @edit[:current]
 
-    # Save open nodes, if any were added
-    presenter[:save_open_states_trees] = [@sb[:active_tree].to_s] if add_nodes
-
     presenter[:osf_node] = x_node
 
     # unset variable that was set in form_field_changed to prompt for changes when leaving the screen
