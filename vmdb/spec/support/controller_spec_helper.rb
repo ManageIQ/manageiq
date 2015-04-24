@@ -45,8 +45,8 @@ module ControllerSpecHelper
   end
 
   shared_context "valid session" do
-    let(:privilege_checker_service) { instance_double("PrivilegeCheckerService", :valid_session?  => true) }
-    let(:request_referer_service)   { instance_double("RequestRefererService",   :allowed_access? => true) }
+    let(:privilege_checker_service) { auto_loaded_instance_double("PrivilegeCheckerService", :valid_session?  => true) }
+    let(:request_referer_service)   { auto_loaded_instance_double("RequestRefererService",   :allowed_access? => true) }
 
     before do
       controller.stub(:set_user_time_zone)

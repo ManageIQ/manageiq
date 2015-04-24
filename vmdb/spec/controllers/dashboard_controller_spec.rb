@@ -20,7 +20,7 @@ describe DashboardController do
   end
 
   context "#validate_user" do
-    let(:server) { instance_double("MiqServer", :logon_status => :ready) }
+    let(:server) { active_record_instance_double("MiqServer", :logon_status => :ready) }
 
     before do
       MiqServer.stub(:my_server).with(true).and_return(server)

@@ -10,12 +10,12 @@ class MiqRequestTask < ActiveRecord::Base
   belongs_to :miq_request_task
 
   serialize   :phase_context, Hash
-  serialize   :options, Hash
+  serialize   :options,       Hash
 
   default_value_for :phase_context, {}
-  default_value_for :options, {}
+  default_value_for :options,       {}
 
-  validates_inclusion_of :status,         :in => %w{ Ok Warn Error Timeout }
+  validates_inclusion_of :status, :in => %w{ Ok Warn Error Timeout }
 
   include MiqRequestMixin
 
@@ -197,5 +197,19 @@ class MiqRequestTask < ActiveRecord::Base
       update_and_notify_parent(:state => "finished", :status => "Error", :message => message)
       return
     end
+  end
+
+  private
+
+  def validate_request_type
+    errors.add(:request_type, "should be #{request_class::REQUEST_TYPES.join(", ")}") unless request_class::REQUEST_TYPES.include?(request_type)
+  end
+
+  def validate_state
+    errors.add(:state, "should be #{valid_states.join(", ")}") unless valid_states.include?(state)
+  end
+
+  def valid_states
+    %w(pending finished) + request_class::ACTIVE_STATES
   end
 end

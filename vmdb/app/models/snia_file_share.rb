@@ -35,8 +35,6 @@ class SniaFileShare < MiqCimInstance
   virtual_has_many  :hosts,           :class_name => 'Host'
   virtual_belongs_to  :storage_system,      :class_name => 'CimComputerSystem'
 
-  MODEL_SUBCLASSES  = [ 'OntapFileShare' ]
-
   FileShareToBaseSe       = CimProfiles.file_share_to_base_storage_extent
   FileShareToVirtualDisk      = CimProfiles.file_share_to_virtual_disk
   FileShareToVm         = CimProfiles.file_share_to_virtual_machine
@@ -387,8 +385,3 @@ class SniaFileShare < MiqCimInstance
   end
 
 end
-
-# Preload any subclasses of this class, so that they will be part of the
-# conditions that are generated on queries against this class.
-SniaFileShare::MODEL_SUBCLASSES.each { |sc| require_dependency File.join(Rails.root, 'app', 'models', sc.underscore + '.rb')}
-

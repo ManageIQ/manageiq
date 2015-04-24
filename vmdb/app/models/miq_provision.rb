@@ -31,7 +31,6 @@ class MiqProvision < MiqProvisionTask
 
   CLONE_SYNCHRONOUS     = false
   CLONE_TIME_LIMIT      = 4.hours
-  SUBCLASSES            = %w(MiqProvisionCloud MiqProvisionRedhat MiqProvisionVmware MiqProvisionMicrosoft)
   SUPPORTED_EMS_CLASSES = %w(EmsVmware EmsRedhat EmsAmazon EmsOpenstack EmsMicrosoft)
 
   def self.base_model
@@ -92,7 +91,3 @@ class MiqProvision < MiqProvisionTask
     "#{title} from [#{prov_obj.vm_template.name}] to [#{vm_name}]"
   end
 end
-
-# Preload any subclasses of this class, so that they will be part of the
-#   conditions that are generated on queries against this class.
-MiqProvision::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}.rb").to_s }

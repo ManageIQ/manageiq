@@ -27,7 +27,7 @@ describe DynamicDialogFieldValueProcessor do
     end
 
     context "when there is no error delivering to automate from dialog field" do
-      let(:workspace) { instance_double("MiqAeEngine::MiqAeWorkspaceRuntime") }
+      let(:workspace) { auto_loaded_instance_double("MiqAeEngine::MiqAeWorkspaceRuntime") }
       let(:workspace_attributes) do
         double(
           :attributes => {

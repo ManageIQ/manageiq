@@ -1,14 +1,9 @@
 class ServiceReconfigureTask < MiqRequestTask
   include ReportableMixin
 
-  validates_inclusion_of :request_type,
-                         :in      => request_class::REQUEST_TYPES,
-                         :message => "should be #{request_class::REQUEST_TYPES.join(", ")}"
-  validates_inclusion_of :state,
-                         :in      => %w(pending finished) + request_class::ACTIVE_STATES,
-                         :message => "should be pending, #{request_class::ACTIVE_STATES.join(", ")} or finished"
+  validate :validate_request_type, :validate_state
 
-  AUTOMATE_DRIVES  = true
+  AUTOMATE_DRIVES = true
 
   def self.base_model
     ServiceReconfigureTask
