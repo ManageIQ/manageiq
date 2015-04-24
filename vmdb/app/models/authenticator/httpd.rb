@@ -20,8 +20,8 @@ module Authenticator
         request.headers['X_REMOTE_USER'].present?
     end
 
-    def failure_reason
-      request.headers['HTTP_X_EXTERNAL_AUTH_ERROR']
+    def failure_reason(_username, request)
+      request.headers['X_EXTERNAL_AUTH_ERROR']
     end
 
     def find_external_identity(_username, user_attrs, membership_list)

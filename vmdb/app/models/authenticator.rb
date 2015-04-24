@@ -63,7 +63,7 @@ module Authenticator
 
           AuditEvent.success(audit.merge(:message => "Authentication successful for user #{username}"))
         else
-          reason = failure_reason
+          reason = failure_reason(username, request)
           reason = ": #{reason}" unless reason.blank?
           AuditEvent.failure(audit.merge(:message => "Authentication failed for userid #{username}#{reason}"))
           raise MiqException::MiqEVMLoginError, fail_message
@@ -181,7 +181,7 @@ module Authenticator
       config[:"#{self.class.short_name}_role"] == true
     end
 
-    def failure_reason
+    def failure_reason(_username, _request)
       nil
     end
 
