@@ -48,24 +48,6 @@ describe ExplorerPresenter do
       end
     end
 
-    context "#replace_tree" do
-      it 'returns JS to replace tree nodes' do
-        js_str = @presenter.replace_tree(:foo, {})
-
-        expected = <<EOD
-var sel_node = foo_tree.getSelectedItemId();
-var root_id = 'root';
-foo_tree.deleteChildItems(0);
-foo_tree.loadJSONObject(bar);
-foo_tree.setItemCloseable(root_id,0);
-foo_tree.showItemSign(root_id,false);
-foo_tree.selectItem(sel_node);
-foo_tree.openItem(sel_node);
-EOD
-        (js_str + "\n").should == expected
-      end
-    end
-
     context "#build_calendar" do
       it 'returns JS to build calendar with no options' do
         @presenter[:build_calendar] = true
