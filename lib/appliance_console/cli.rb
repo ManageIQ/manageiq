@@ -221,7 +221,7 @@ module ApplianceConsole
     def uninstall_ipa
       say "Uninstalling IPA-client"
       config = ExternalHttpdAuthentication.new
-      config.ipa_client_unconfigure if config.ipa_client_configured?
+      config.deactivate if config.ipa_client_configured?
     end
 
     def config_tmp_disk
