@@ -1339,7 +1339,8 @@ module VmCommon
       self.x_node = params[:id]
       replace_right_cell
     else
-      add_flash("User is not authorized to view #{ui_lookup(:model=>@record.class.base_model.to_s)} \"#{@record.name}\"", :error)
+      add_flash("User is not authorized to view #{ui_lookup(:model => @record.class.base_model.to_s)} \"#{@record.name}\"",
+                :error) unless flash_errors?
       render :partial => "shared/tree_select_error", :locals => {:options => {:select_node => x_node}}
     end
   end

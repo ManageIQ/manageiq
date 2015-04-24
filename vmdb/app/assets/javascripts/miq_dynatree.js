@@ -95,7 +95,11 @@ function cfmeOnClick_SelectDlgEditTreeNode(id) {
 function cfmeDynatree_activateNode(tree, key) {
   var node = $("#" + tree + "box").dynatree('getTree').getNodeByKey(key);
   if (node != null) { // Only try to activate node if it is in the tree
-    node.activate();
+    if (node.isActive()) {
+      $("#" + tree + "box").dynatree('getTree').reactivate();
+    } else {
+      node.activate();
+    }
     node.focus();
   }
 }
