@@ -189,10 +189,13 @@ module Authenticator
       username
     end
 
-    def authorize_queue(username, request, *args)
+    def authorize_queue?
+      !MiqEnvironment::Process.is_ui_worker_via_command_line?
+    end
+
+    def authorize_queue(username, _request, *args)
       task = MiqTask.create(:name => "#{self.class.proper_name} User Authorization of '#{username}'", :userid => username)
-      unless MiqEnvironment::Process.is_ui_worker_via_command_line?
-        cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
+      if authorize_queue?
         MiqQueue.put(
           :queue_name   => "generic",
           :class_name   => self.class.to_s,
@@ -200,7 +203,12 @@ module Authenticator
           :args         => [config, task.id, username, *args],
           :server_guid  => MiqServer.my_guid,
           :priority     => MiqQueue::HIGH_PRIORITY,
-          :miq_callback => cb
+          :miq_callback => {
+            :class_name  => task.class.name,
+            :instance_id => task.id,
+            :method_name => :queue_callback_on_exceptions,
+            :args        => ['Finished']
+          },
         )
       else
         authorize(task.id, username, *args)

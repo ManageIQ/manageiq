@@ -15,6 +15,12 @@ module Authenticator
       super(username, request, user_attrs, membership_list)
     end
 
+    # We don't talk to an external system in #find_external_identity /
+    # #groups_for, so no need to enqueue the work
+    def authorize_queue?
+      false
+    end
+
     def _authenticate(_username, _password, request)
       request.present? &&
         request.headers['X_REMOTE_USER'].present?
