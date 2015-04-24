@@ -30,6 +30,8 @@ cols:
 - min_cpu_usage_rate_average
 - max_cpu_usage_rate_average
 - trend_max_cpu_usage_rate_average
+- derived_logicalcpus_used
+- derived_logicalcpus_available
 - v_pct_cpu_ready_delta_summation
 - v_pct_cpu_wait_delta_summation
 - v_pct_cpu_used_delta_summation
@@ -96,6 +98,8 @@ col_order:
 - min_cpu_usage_rate_average
 - max_cpu_usage_rate_average
 - trend_max_cpu_usage_rate_average
+- derived_logicalcpus_used
+- derived_logicalcpus_available
 - v_pct_cpu_ready_delta_summation
 - v_pct_cpu_wait_delta_summation
 - v_pct_cpu_used_delta_summation
@@ -158,6 +162,8 @@ headers:
 - Min % Used
 - Max % Used
 - Trend Max % Used
+- Used Cores
+- Total Cores
 - ! '% Ready'
 - ! '% Idle'
 - ! '% Used'

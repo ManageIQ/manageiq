@@ -24,6 +24,8 @@ cols:
 - derived_cpu_available
 - derived_cpu_reserved
 - cpu_usage_rate_average
+- derived_logicalcpus_used
+- derived_logicalcpus_available
 - v_pct_cpu_ready_delta_summation
 - v_pct_cpu_wait_delta_summation
 - v_pct_cpu_used_delta_summation
@@ -50,6 +52,8 @@ col_order:
 - derived_cpu_available
 - derived_cpu_reserved
 - cpu_usage_rate_average
+- derived_logicalcpus_used
+- derived_logicalcpus_available
 - v_pct_cpu_ready_delta_summation
 - v_pct_cpu_wait_delta_summation
 - v_pct_cpu_used_delta_summation
@@ -73,6 +77,8 @@ headers:
 - Available
 - Reserved
 - Avg % Used
+- Used Cores
+- Total Cores
 - ! '% Ready'
 - ! '% Idle'
 - ! '% Used'
