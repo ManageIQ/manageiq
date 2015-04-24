@@ -1,39 +1,42 @@
 module MiqProvisionMicrosoft::Placement
+  extend ActiveSupport::Concern
+
   protected
 
   def placement
-    log_header = "MIQ(#{self.class.name}.placement)"
-    desired    = manual_placement
-
-    if desired[:host].nil? || desired[:storage].nil?
-      raise MiqException::MiqProvisionError, "Unable to find a suitable environment"
-    end
-
-    [:host, :storage].each do |key|
-      object = desired[key]
-      next if object.nil?
-      $log.info("#{log_header} Using #{key.to_s.titleize} Id: [#{object.id}], Name: [#{object.name}]")
-      options["dest_#{key}".to_sym] = [object.id, object.name]
+    if get_option(:placement_auto) == true
+      automatic_placement
+    else
+      manual_placement
     end
   end
 
   private
 
   def manual_placement
-    update_placement_info
+    log_header = "MIQ(#{self.class.name}.manual_placement)"
+    $log.info("#{log_header} Manual placement...")
+    return selected_placement_obj(:placement_host_name, Host),
+           selected_placement_obj(:placement_ds_name, Storage)
   end
 
-  def update_placement_info(result = {})
-    result[:host]    = selected_placement_host if result[:host].nil?
-    result[:storage] = selected_placement_ds   if result[:storage].nil?
-    result
+  def automatic_placement
+    log_header = "MIQ(#{self.class.name}.automatic_placement)"
+    # get most suitable host and datastore for new VM
+    $log.info("#{log_header} Getting most suitable host and datastore for new VM from automate...")
+    host, datastore = get_most_suitable_host_and_storage
+    $log.info("#{log_header} Host Name: [#{host.name}] Id: [#{host.id}]") if host
+    $log.info("#{log_header} Datastore Name: [#{datastore.name}] ID : [#{datastore.id}]") if datastore
+    host      ||= selected_placement_obj(:placement_host_name, Host)
+    datastore ||= selected_placement_obj(:placement_ds_name, Storage)
+    return host, datastore
   end
 
-  def selected_placement_host
-    Host.where(:id => get_option(:placement_host_name)).first
-  end
-
-  def selected_placement_ds
-    Storage.where(:id => get_option(:placement_ds_name)).first
+  def selected_placement_obj(key, klass)
+    klass.where(:id => get_option(key)).first.tap do |obj|
+      raise MiqException::MiqProvisionError, "Destination #{key} not provided" unless obj
+      log_header = "MIQ(#{self.class.name}.selected_placement_obj)"
+      $log.info("#{log_header} Using selected #{key} : [#{obj.name}] id : [#{obj.id}]")
+    end
   end
 end
