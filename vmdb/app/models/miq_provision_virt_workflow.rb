@@ -444,9 +444,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
         $log.info "MIQ(#{self.class.name}.allowed_dvs) Network DVS collection completed in [#{Time.now - st}] seconds"
       end
     end
-
-    hosts.each { |h| switches.merge!(@dvs_by_host[h.id]) }
-    switches
+    create_unified_pg(@dvs_by_host, hosts)
   end
 
   def get_host_dvs(dest_host, vim)
@@ -456,23 +454,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     # List the names of the non-uplink portgroups.
     unless dvs.nil? || dvs.distributedVirtualPortgroup.nil?
       nupga = vim.applyFilter(dvs.distributedVirtualPortgroup, 'uplinkPortgroup' => 'false')
-      nupga.each { |nupg| switches[URI.decode("dvs_#{nupg.portgroupName}")] = URI.decode("#{nupg.portgroupName} (#{nupg.switchName})") }
+      nupga.each { |nupg| switches[URI.decode(nupg.portgroupName)] = [URI.decode(nupg.switchName)] }
     end
 
     switches
-  end
-
-  def get_selected_hosts(src)
-    # Add all the Lans for the available host(s)
-    if src[:host_id]
-      raise "Unable to find Host with Id: [#{src[:host_id]}]" if src[:host].nil?
-      hosts = [load_ar_obj(src[:host])]
-    else
-      raise "Source VM [#{src[:vm].name}] does not belong to a #{ui_lookup(:table => "ext_management_systems")}" if src[:ems].nil?
-      hosts = load_ar_obj(src[:ems]).hosts
-    end
-
-    Rbac.search(:targets => hosts, :class => Host, :results_format => :objects, :userid => @requester.userid).first
   end
 
   def filter_by_tags(target, options)
@@ -1294,6 +1279,45 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       @values[:sysprep_domain_name]        = [sdn, sdn]
       @values[:forced_sysprep_domain_name] = [sdn]
     end
+  end
+
+  def get_selected_hosts(src)
+    # Add all the Lans for the available host(s)
+    hosts = if auto_placement_enabled?
+              all_provider_hosts(src)
+            elsif src[:host_id]
+              selected_host(src)
+            else
+              load_ar_obj(allowed_hosts)
+            end
+    Rbac.search(:targets => hosts, :class => Host, :results_format => :objects,
+                :userid => @requester.userid).first
+  end
+
+  def all_provider_hosts(src)
+    ui_str = ui_lookup(:table => "ext_management_systems")
+    raise "Source VM [#{src[:vm].name}] does not belong to a #{ui_str}" if src[:ems].nil?
+    load_ar_obj(src[:ems]).hosts
+  end
+
+  def selected_host(src)
+    raise "Unable to find Host with Id: [#{src[:host_id]}]" if src[:host].nil?
+    [load_ar_obj(src[:host])]
+  end
+
+  def create_unified_pg(dvs_by_host, hosts)
+    all_pgs = Hash.new { |h, k| h[k] = [] }
+    hosts.each do |host|
+      pgs = dvs_by_host[host.id]
+      next if pgs.blank?
+      pgs.each { |k, v| all_pgs[k].concat(v) }
+    end
+
+    switches = {}
+    all_pgs.each do |pg, switch|
+      switches["dvs_#{pg}"] = "#{pg} (#{switch.uniq.sort.join('/')})"
+    end
+    switches
   end
 end
 
