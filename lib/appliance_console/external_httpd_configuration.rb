@@ -49,6 +49,11 @@ module ApplianceConsole
                           ])
       end
 
+      def deactivate
+        ipa_client_unconfigure
+        unconfigure_httpd
+      end
+
       def ipa_client_unconfigure
         say("Un-Configuring the IPA Client ...")
         AwesomeSpawn.run(IPA_INSTALL_COMMAND, :params => [:uninstall, :unattended])
@@ -135,8 +140,7 @@ module ApplianceConsole
         if ipa_client_configured?
           show_current_configuration
           return false unless agree("\nIPA Client already configured on this Appliance, Un-Configure first? (Y/N): ")
-          ipa_client_unconfigure
-          unconfigure_httpd
+          deactivate
           return false unless agree("\nProceed with External Authentication Configuration? (Y/N): ")
         end
         true
