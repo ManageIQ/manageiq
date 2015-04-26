@@ -75,6 +75,10 @@ module ContainerNodeHelper::TextualSummary
   def textual_container_groups
     num_of_container_groups = @record.number_of(:container_groups)
     label = ui_lookup(:tables => "container_groups")
-    {:label => label, :image => "container_group", :value => num_of_container_groups}
+    h = {:label => label, :image => "container_group", :value => num_of_container_groups}
+    if num_of_container_groups > 0 && role_allows(:feature => "container_group_show")
+      h[:link] = url_for(:action => 'show', :controller => 'container_node', :display => 'container_groups')
+    end
+    h
   end
 end
