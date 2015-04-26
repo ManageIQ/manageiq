@@ -241,7 +241,8 @@ module EmsRefresh::Parsers
         :name          => container.name,
         :image         => container.image,
         :restart_count => container.restartCount,
-        :backing_ref   => container.containerID
+        :backing_ref   => container.containerID,
+        :image_ref     => container.imageID
       }
       # TODO, state
     end
