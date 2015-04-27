@@ -2,7 +2,7 @@ require_relative "../util/SyncDebug"
 require "vim_base_sync_debug"
 
 module VimSyncDebug
-  def self.extended(obj) 
+  def self.extended(obj)
     obj.cacheLock.extend(SyncDebug_m)
     obj.cacheLock.lock_name = "#{obj.class.name}#cacheLock(#{obj.connId})"
     VimBaseSyncDebug.vsd_set_callbacks(obj.cacheLock)

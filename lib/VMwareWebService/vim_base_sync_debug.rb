@@ -39,12 +39,12 @@ module VimBaseSyncDebug
       return false # don't raise an exception
     }
 
-    lock.on_watchdog_start do |lock|
-      $vim_log.info "VimSyncDebug - Watchdog starting for #{lock.lock_name}"
+    lock.on_watchdog_start do |l|
+      $vim_log.info "VimSyncDebug - Watchdog starting for #{l.lock_name}"
     end
 
-    lock.on_watchdog_stop do |lock, err|
-      $vim_log.info "VimSyncDebug - Watchdog for #{lock.lock_name} stopping"
+    lock.on_watchdog_stop do |l, err|
+      $vim_log.info "VimSyncDebug - Watchdog for #{l.lock_name} stopping"
       if err
         $vim_log.error "VimSyncDebug - Watchdog ERROR: #{err}"
         $vim_log.error "VimSyncDebug - Watchdog: Start backtrace"
@@ -53,16 +53,16 @@ module VimBaseSyncDebug
       end
     end
 
-    lock.on_watchdog_heartbeat do |lock|
-      $vim_log.debug "Watchdog for #{lock.lock_name}: HEARTBEAT"
+    lock.on_watchdog_heartbeat do |l|
+      $vim_log.debug "Watchdog for #{l.lock_name}: HEARTBEAT"
     end
 
-    # lock.on_watchdog_acquire_mutex do |lock|
-    #   $vim_log.debug "Watchdog for #{lock.lock_name}: MUTEX acquired"
+    # lock.on_watchdog_acquire_mutex do |l|
+    #   $vim_log.debug "Watchdog for #{l.lock_name}: MUTEX acquired"
     # end
-    # 
-    # lock.on_watchdog_release_mutex do |lock|
-    #   $vim_log.debug "Watchdog for #{lock.lock_name}: MUTEX released"
+    #
+    # lock.on_watchdog_release_mutex do |l|
+    #   $vim_log.debug "Watchdog for #{l.lock_name}: MUTEX released"
     # end
   end
 end
