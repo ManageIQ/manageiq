@@ -55,6 +55,13 @@ FactoryGirl.define do
   factory :ems_openstack_infra, :class => "EmsOpenstackInfra", :parent => :ems_infra do
   end
 
+  factory :ems_openstack_infra_with_stack, :parent => :ems_openstack_infra do
+    after :create do |x|
+      x.orchestration_stacks << FactoryGirl.create(:orchestration_stack_openstack_infra)
+      4.times { x.hosts << FactoryGirl.create(:host_openstack_infra) }
+    end
+  end
+
   factory :ems_openstack_infra_with_authentication, :parent => :ems_openstack_infra do
     after :create do |x|
       x.authentications << FactoryGirl.create(:authentication, :userid => "admin", :password => "123456789")

@@ -1131,13 +1131,17 @@
       :feature_type: admin
       :identifier: ems_infra_delete
     - :name: Edit
-      :description: Edit a Infrastructure Provider
+      :description: Edit an Infrastructure Provider
       :feature_type: admin
       :identifier: ems_infra_edit
     - :name: Add
-      :description: Add a Infrastructure Provider
+      :description: Add an Infrastructure Provider
       :feature_type: admin
       :identifier: ems_infra_new
+    - :name: Scale
+      :description: Scale an Infrastructure Provider
+      :feature_type: admin
+      :identifier: ems_infra_scale
 
 # Datacenters
 - :name: Datacenters

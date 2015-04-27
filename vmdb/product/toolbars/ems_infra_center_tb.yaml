@@ -22,6 +22,11 @@
       :text: 'Edit this #{ui_lookup(:table=>"ems_infra")}'
       :title: 'Edit this #{ui_lookup(:table=>"ems_infra")}'
       :url: '/edit'
+    - :button: ems_infra_scale
+      :image: edit
+      :text: 'Scale this #{ui_lookup(:table=>"ems_infra")}'
+      :title: 'Scale this #{ui_lookup(:table=>"ems_infra")}'
+      :url: '/scaling'
     - :button: ems_infra_delete
       :image: delete
       :text: 'Remove this #{ui_lookup(:table=>"ems_infra")} from the VMDB'
