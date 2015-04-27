@@ -18,6 +18,14 @@ class EmsInfraController < ApplicationController
     redirect_to :action => 'show_list'
   end
 
+  def osp6?(name)
+    name.include?('::count')
+  end
+
+  def osp7?(name)
+    name.include?('Count')
+  end
+
   def scaling
     assert_privileges("ems_infra_scale")
 
@@ -33,11 +41,11 @@ class EmsInfraController < ApplicationController
       return
     end
 
-    @count_parameters = @stack.parameters.select { |x| x.name.include?('::count') }
+    @count_parameters = @stack.parameters.select { |x| osp6?(x.name) || osp7?(x.name) }
 
     return unless params[:scale]
 
-    scale_parameters = params.select { |k, _v| k.include?('::count') }
+    scale_parameters = params.select { |k, _v| osp6?(k) || osp7?(k) }
     assigned_hosts = scale_parameters.values.sum(&:to_i)
     infra = EmsOpenstackInfra.find(params[:id])
     if assigned_hosts > infra.hosts.count

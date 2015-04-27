@@ -124,4 +124,23 @@ describe EmsInfraController do
       flash_messages.first[:message].should include(_("Unable to initiate scaling: my error"))
     end
   end
+
+  describe "#scaling osp7 parameter names" do
+
+    before do
+      set_user_privileges
+      @ems = FactoryGirl.create(:ems_openstack_infra_with_stack_osp7)
+      @orchestration_stack_parameter_compute = FactoryGirl.create(:orchestration_stack_parameter_openstack_infra_compute_osp7)
+    end
+
+    it "when values are changed, and values do not exceed number of hosts available" do
+      OrchestrationStackOpenstackInfra.any_instance.stub(:raw_update_stack)
+      post :scaling, :id => @ems.id, :scale => "", :orchestration_stack_id => @ems.orchestration_stacks.first.id,
+           @orchestration_stack_parameter_compute.name => 2
+      controller.send(:flash_errors?).should be_false
+      response.body.should include("redirected")
+      response.body.should include("show")
+      response.body.should include("1+to+2")
+    end
+  end
 end
