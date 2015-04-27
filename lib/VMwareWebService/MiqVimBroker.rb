@@ -1,5 +1,6 @@
 require 'drb'
 require 'drb/acl'
+require 'broker_sync_debug'
 require 'sync'
 
 require 'MiqVimInventory'
@@ -67,9 +68,12 @@ class MiqVimBroker
 			end
             @broker = DRbObject.new(nil, "druby://127.0.0.1:#{port}")
         elsif mode == :server
+        	# Comment out before merge.
+        	extend BrokerSyncDebug
+
 			unless @@classModed
-				DRb.instance_variable_set(:@mutex, Sync.new)
-				DRb::DRbConn.instance_variable_set(:@mutex, Sync.new)
+				DRb.instance_variable_set(:@mutex, sync_for_drb)
+				DRb::DRbConn.instance_variable_set(:@mutex, sync_for_drb_drbconn)
 			end
 			@@classModed = true
 			
@@ -78,10 +82,10 @@ class MiqVimBroker
 			@shuttingDown = false
 			
 			@connectionHash = Hash.new
-			@lockHash = Hash.new		# Protects individual @connectionHash entries
-	        @connectionLock = Sync.new	# Protects @lockHash
+			@lockHash = Hash.new				# Protects individual @connectionHash entries
+	        @connectionLock = connection_lock	# Protects @lockHash
 	
-			@configLock		= Sync.new
+			@configLock		= config_lock
 			@selectorHash	= @@selectorHash
 			@cacheScope		= @@cacheScope
 			
@@ -93,6 +97,36 @@ class MiqVimBroker
             raise "MiqVimBroker: unrecognized mode #{mode}"
         end
     end
+
+    # Can be overridden by BrokerSyncDebug.
+	def connection_lock
+		Sync.new
+	end
+
+	# Can be overridden by BrokerSyncDebug.
+	def config_lock
+		Sync.new
+	end
+
+	# Can be overridden by BrokerSyncDebug.
+	def sync_for_lock_hash(_key)
+		Sync.new
+	end
+
+    # Can be overridden by BrokerSyncDebug.
+	def sync_for_lock_hash(_key)
+		Sync.new
+	end
+
+	# Can be overridden by BrokerSyncDebug.
+	def sync_for_drb_drbconn
+		Sync.new
+	end
+
+	# Can be overridden by BrokerSyncDebug.
+	def sync_for_drb
+		Sync.new
+	end
 
 	def self.cacheScope
 		@@cacheScope
@@ -322,7 +356,7 @@ class MiqVimBroker
 			#
 			# Once set, @lockHash[key] doesn't change.
 			#
-			@lockHash[key] ||= Sync.new
+			@lockHash[key] ||= sync_for_lock_hash(key)
 		end
 	end
 	
