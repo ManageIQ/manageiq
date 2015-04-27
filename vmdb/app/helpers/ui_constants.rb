@@ -167,14 +167,13 @@ module UiConstants
   # Default UI settings
   DEFAULT_SETTINGS = {
     :quadicons => { # Show quad icons, by resource type
-      :service        =>  true,
-      :ems            =>  true,
-      :ems_cloud      =>  true,
-      :host           =>  true,
-      :miq_template   =>  true,
-      :storage        =>  true,
-      :vm             =>  true,
-      :hostitem       =>  true,
+      :service      => true,
+      :ems          => true,
+      :ems_cloud    => true,
+      :host         => true,
+      :miq_template => true,
+      :storage      => true,
+      :vm           => true
     },
     :views => { # List view setting, by resource type
       :availabilityzone      => "list",
@@ -197,7 +196,6 @@ module UiConstants
       :filesystem            => "list",
       :flavor                => "list",
       :host                  => "grid",
-      :hostitem              => "list",
       :job                   => "list",
       :miqaction             => "list",
       :miqaeclass            => "list",

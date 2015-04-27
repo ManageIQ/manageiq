@@ -109,4 +109,29 @@ describe ApplicationController do
       result.should eq([1, 2, 3, 4])
     end
   end
+
+  context "#render_gtl_view_tb?" do
+    before do
+      controller.instance_variable_set(:@layout, "host")
+      controller.instance_variable_set(:@gtl_type, "list")
+    end
+
+    it "returns true for list views" do
+      controller.instance_variable_set(:@_params, :action => "show_list")
+      result = controller.send(:render_gtl_view_tb?)
+      result.should eq(true)
+    end
+
+    it "returns true for list views when navigating thru relationships" do
+      controller.instance_variable_set(:@_params, :action => "show")
+      result = controller.send(:render_gtl_view_tb?)
+      result.should eq(true)
+    end
+
+    it "returns false for sub list views" do
+      controller.instance_variable_set(:@_params, :action => "host_services")
+      result = controller.send(:render_gtl_view_tb?)
+      result.should eq(false)
+    end
+  end
 end
