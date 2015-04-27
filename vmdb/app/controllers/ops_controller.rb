@@ -480,6 +480,7 @@ class OpsController < ApplicationController
       @sb[:center_tb_filename] = center_toolbar_filename
       c_buttons, c_xml = build_toolbar_buttons_and_xml(@sb[:center_tb_filename])
     end
+    build_supported_depots_for_select
     render :update do |page|
       # forcing form buttons to turn off, to prevent Abandon changes popup when replacing right cell after form button was pressed
       page << javascript_for_miq_button_visibility(false)
@@ -680,7 +681,7 @@ class OpsController < ApplicationController
             page.replace("ops_tabs", :partial=>"all_tabs")
           elsif nodetype == "log_depot_edit"
             @right_cell_text = "Editing Log Depot settings"
-            page.replace_html("diagnostics_collect_logs", :partial=>"layouts/edit_log_depot_settings")
+            page.replace_html("diagnostics_collect_logs", :partial => "ops/log_collection")
           else
             page.replace_html(@sb[:active_tab], :partial=>"#{@sb[:active_tab]}_tab")
           end
