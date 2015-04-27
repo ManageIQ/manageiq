@@ -4,11 +4,12 @@ module MiqProvisionMicrosoft::Placement
   protected
 
   def placement
-    if get_option(:placement_auto) == true
-      automatic_placement
-    else
-      manual_placement
-    end
+    host, datastore = placement_auto ? automatic_placement : manual_placement
+
+    options[:dest_host]    = [host.id, host.name]
+    options[:dest_storage] = [datastore.id, datastore.name]
+
+    return host, datastore
   end
 
   private

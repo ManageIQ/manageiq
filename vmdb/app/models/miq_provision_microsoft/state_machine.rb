@@ -4,10 +4,7 @@ module MiqProvisionMicrosoft::StateMachine
   end
 
   def determine_placement
-    host, datastore = self.placement
-
-    self.options[:dest_host]    = [host.id, host.name]
-    self.options[:dest_storage] = [datastore.id, datastore.name]
+    placement
 
     signal :prepare_provision
   end
