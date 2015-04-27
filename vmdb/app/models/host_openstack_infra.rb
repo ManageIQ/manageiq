@@ -18,12 +18,12 @@ class HostOpenstackInfra < Host
     # HostOpenstackInfra is using auth key set on ext_management_system level, not individual hosts
     rl_user, auth_key = self.auth_user_keypair(:ssh_keypair)
     rl_password = nil
-
-    # TODO(lsmola) make sudo user work. So it with be optional sudo password for private key auth, also test
-    # password-less sudo
     su_user, su_password = nil, nil
+    # TODO(lsmola) make sudo user work with password. We will not probably support su, as root will not have password
+    # allowed. Passwordless sudo is good enough for now
+    passwordless_sudo = rl_user != 'root'
 
-    return rl_user, rl_password, su_user, su_password, {:key_data => auth_key}
+    return rl_user, rl_password, su_user, su_password, {:key_data => auth_key, :passwordless_sudo => passwordless_sudo}
   end
 
   def get_parent_keypair(type = nil)
