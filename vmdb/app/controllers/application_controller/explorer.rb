@@ -409,7 +409,7 @@ module ApplicationController::Explorer
     when :condition
       objects = Array.new
       objects.push({:id=>"host", :text=>"Host Conditions", :image=>"host", :tip=>"Host Conditions"})
-      objects.push({:id=>"vm", :text=>"VM Conditions", :image=>"vm", :tip=>"VM Conditions"})
+      objects.push({:id=>"vm", :text=>"All VM and Instance Conditions", :image=>"vm", :tip=>"All VM and Instance Conditions"})
       return count_only ? objects.length : objects
     when :db
       objects = Array.new
