@@ -92,7 +92,7 @@ module EmsClusterHelper::TextualSummary
   end
 
   def textual_aggregate_logical_cpus
-    {:label => "Total Host CPU Cores", :value => number_with_delimiter(@record.aggregate_logical_cpus)}
+    {:label => "Total #{title_for_host} CPU Cores", :value => number_with_delimiter(@record.aggregate_logical_cpus)}
   end
 
   def textual_aggregate_vm_memory
@@ -121,9 +121,9 @@ module EmsClusterHelper::TextualSummary
 
   def textual_total_hosts
     num = @record.total_hosts
-    h = {:label => "Hosts", :image => "host", :value => num}
+    h = {:label => title_for_hosts, :image => "host", :value => num}
     if num > 0 && role_allows(:feature => "host_show_list")
-      h[:title] = "Show all Hosts"
+      h[:title] = "Show all #{title_for_hosts}"
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'hosts')
     end
     h
@@ -133,7 +133,7 @@ module EmsClusterHelper::TextualSummary
     num = @record.total_direct_vms
     h = {:label => "Direct VMs", :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "vm_show_list")
-      h[:title] = "Show VMs in this Cluster, but not in Resource Pools below"
+      h[:title] = "Show VMs in this #{cluster_title}, but not in Resource Pools below"
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'vms')
     end
     h
@@ -143,7 +143,7 @@ module EmsClusterHelper::TextualSummary
     num = @record.total_vms
     h = {:label => "All VMs", :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "vm_show_list")
-      h[:title] = "Show all VMs in this Cluster"
+      h[:title] = "Show all VMs in this #{cluster_title}"
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'all_vms')
     end
     h
@@ -153,7 +153,7 @@ module EmsClusterHelper::TextualSummary
     num = @record.total_miq_templates
     h = {:label => "All Templates", :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "miq_template_show_list")
-      h[:title] = "Show all Templates in this Cluster"
+      h[:title] = "Show all Templates in this #{cluster_title}"
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'miq_templates')
     end
     h
@@ -163,7 +163,7 @@ module EmsClusterHelper::TextualSummary
     num = @record.total_vms
     h = {:label => "All VMs (Tree View)", :image => "vm", :value => num}
     if num > 0 && role_allows(:feature => "vm_show_list")
-      h[:title] = "Show tree of all VMs by Resource Pool in this Cluster"
+      h[:title] = "Show tree of all VMs by Resource Pool in this #{cluster_title}"
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'descendant_vms')
     end
     h
@@ -184,7 +184,7 @@ module EmsClusterHelper::TextualSummary
     num = @record.number_of(:drift_states)
     h = {:label => "Drift History", :image => "drift", :value => (num == 0 ? "None" : num)}
     if num > 0
-      h[:title] = "Show cluster drift history"
+      h[:title] = "Show #{cluster_title} drift history"
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'drift_history', :id => @record)
     end
     h
@@ -275,5 +275,9 @@ module EmsClusterHelper::TextualSummary
     value = @record.drs_migration_threshold
     return nil if value.nil?
     {:label => "DRS Migration Threshold", :value => value}
+  end
+
+  def cluster_title
+    title_for_cluster_record(@record)
   end
 end

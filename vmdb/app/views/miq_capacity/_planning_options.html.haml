@@ -18,7 +18,7 @@
         "data-miq_observe"     => {:url => url}.to_json)
     - if @sb[:planning][:options][:filter_typ] == "host"
       %br
-      - options = [["<#{_('Choose a Host')}>", "<Choose>"]] + Array(@sb[:planning][:hosts].invert).sort_by { |a| a.first.downcase }
+      - options = [["<#{_('Choose a %s') % title_for_host}>", "<Choose>"]] + Array(@sb[:planning][:hosts].invert).sort_by { |a| a.first.downcase }
       = select_tag("filter_value",
         options_for_select(options, @sb[:planning][:options][:filter_value]),
         :disabled              => @sb[:planning][:options][:vm_mode] != :manual ? false : true,
@@ -27,7 +27,7 @@
         "data-miq_observe"     => {:url => url}.to_json)
     - elsif @sb[:planning][:options][:filter_typ] == "cluster"
       %br
-      - options = [["<#{_('Choose a %s')}>" % ui_lookup(:table => "ems_clusters"), "<Choose>"]] + Array(@sb[:planning][:clusters].invert).sort_by { |a| a.first.downcase }
+      - options = [["<#{_('Choose a %s')}>" % title_for_clusters, "<Choose>"]] + Array(@sb[:planning][:clusters].invert).sort_by { |a| a.first.downcase }
       = select_tag("filter_value",
         options_for_select(options, @sb[:planning][:options][:filter_value]),
         :disabled              => @sb[:planning][:options][:vm_mode] != :manual ? false : true,

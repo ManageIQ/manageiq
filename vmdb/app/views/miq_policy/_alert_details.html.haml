@@ -178,7 +178,7 @@
           %h3=_('Send SNMP Trap')
           %table.style1
             %tr
-              %td.key=_("Host")
+              %td.key=title_for_host
               %td
                 - @alert.options[:notifications][:snmp][:host].each do |host|
                   = h(host)

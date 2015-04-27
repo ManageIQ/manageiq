@@ -265,7 +265,7 @@ class EmsClusterController < ApplicationController
 
   def hosts_subsets
     condition         = nil
-    label             = @ems_cluster.name + _(" (All Hosts)")
+    label             = @ems_cluster.name + _(" (All %s)" % title_for_hosts)
     breadcrumb_suffix = ""
 
     host_service_group_name = params[:host_service_group_name]
@@ -279,7 +279,7 @@ class EmsClusterController < ApplicationController
           label     = _("Hosts with failed %s") % host_service_group_name
         when 'all'
           hosts_filter = @ems_cluster.host_ids_with_service_group(host_service_group_name)
-          label     = _("All Hosts with %s") % host_service_group_name
+          label     = _("All %s with %s") % [title_for_hosts, host_service_group_name]
       end
 
       if hosts_filter
@@ -289,6 +289,10 @@ class EmsClusterController < ApplicationController
     end
 
     return label, condition, breadcrumb_suffix
+  end
+
+  def breadcrumb_name
+    title_for_clusters
   end
 
   # Build the tree object to display the ems_cluster datacenter info

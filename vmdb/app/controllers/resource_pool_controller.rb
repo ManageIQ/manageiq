@@ -53,7 +53,8 @@ class ResourcePoolController < ApplicationController
       end
 
     when "clusters"
-      drop_breadcrumb( {:name=>@record.name+" (All Clusters)", :url=>"/resource_pool/show/#{@record.id}?display=clusters"} )
+      drop_breadcrumb({:name => "#{@record.name} (All #{title_for_clusters})",
+                       :url  => "/resource_pool/show/#{@record.id}?display=clusters"})
       @view, @pages = get_view(EmsCluster, :parent=>@record)  # Get the records (into a view) and the paginator
       @showtype = "clusters"
 

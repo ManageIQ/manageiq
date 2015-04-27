@@ -1163,186 +1163,186 @@
       :feature_type: view
       :identifier: datacenter_show
 
-# EmsCluster
-- :name: Clusters
-  :description: Everything under Clusters
+# Clusters / Deployment Roles
+- :name: Clusters / Deployment Roles
+  :description: Everything under Clusters / Deployment Roles
   :feature_type: node
   :identifier: ems_cluster
   :children:
   - :name: View
-    :description: View Clusters
+    :description: View Clusters / Deployment Roles
     :feature_type: view
     :identifier: ems_cluster_view
     :children:
     - :name: Compare
-      :description: Compare List of Clusters
+      :description: Compare List of Clusters / Deployment Roles
       :feature_type: view
       :identifier: ems_cluster_compare
     - :name: Drift
-      :description: Display Clusters Drift
+      :description: Display Clusters / Deployment Roles Drift
       :feature_type: view
       :identifier: ems_cluster_drift
     - :name: List
-      :description: Display Lists of Clusters
+      :description: Display Lists of Clusters / Deployment Roles
       :feature_type: view
       :identifier: ems_cluster_show_list
     - :name: Show
-      :description: Display Individual Clusters
+      :description: Display Individual Clusters / Deployment Roles
       :feature_type: view
       :identifier: ems_cluster_show
     - :name: Utilization
-      :description: Show Capacity & Utilization data of Clusters
+      :description: Show Capacity & Utilization data of Clusters / Deployment Roles
       :feature_type: view
       :identifier: ems_cluster_perf
     - :name: Timelines
-      :description: Display Timelines for Clusters
+      :description: Display Timelines for Clusters / Deployment Roles
       :feature_type: view
       :identifier: ems_cluster_timeline
   - :name: Operate
-    :description: Perform Operations on Clusters
+    :description: Perform Operations on Clusters / Deployment Roles
     :feature_type: control
     :identifier: ems_cluster_control
     :children:
     - :name: Analysis
-      :description: Perform SmartState Analysis on Clusters
+      :description: Perform SmartState Analysis on Clusters / Deployment Roles
       :feature_type: control
       :identifier: ems_cluster_scan
     - :name: Manage Policies
-      :description: Manage Policies on Clusters
+      :description: Manage Policies on Clusters / Deployment Roles
       :feature_type: control
       :identifier: ems_cluster_protect
     - :name: Tag
-      :description: Edit Tags for Clusters
+      :description: Edit Tags for Clusters / Deployment Roles
       :feature_type: control
       :identifier: ems_cluster_tag
   - :name: Modify
-    :description: Modify Clusters
+    :description: Modify Clusters / Deployment Roles
     :feature_type: admin
     :identifier: ems_cluster_admin
     :children:
     - :name: Remove
-      :description: Remove Clusters from the VMDB
+      :description: Remove Clusters / Deployment Roles from the VMDB
       :feature_type: admin
       :identifier: ems_cluster_delete
 
-# Hosts
-- :name: Hosts
-  :description: Everything under Hosts
+# Hosts / Nodes
+- :name: Hosts / Nodes
+  :description: Everything under Hosts / Nodes
   :feature_type: node
   :identifier: host
   :children:
   - :name: View
-    :description: View Hosts
+    :description: View Hosts / Nodes
     :feature_type: view
     :identifier: host_view
     :children:
     - :name: Compare
-      :description: Compare List of Hosts
+      :description: Compare List of Hosts / Nodes
       :feature_type: view
       :identifier: host_compare
     - :name: List
-      :description: Display Lists of Hosts
+      :description: Display Lists of Hosts / Nodes
       :feature_type: view
       :identifier: host_show_list
     - :name: Show
-      :description: Display Individual Hosts
+      :description: Display Individual Hosts / Nodes
       :feature_type: view
       :identifier: host_show
     - :name: Drift
-      :description: Display Hosts Drift
+      :description: Display Hosts / Nodes Drift
       :feature_type: view
       :identifier: host_drift
     - :name: Utilization
-      :description: Show Capacity & Utilization data of Hosts
+      :description: Show Capacity & Utilization data of Hosts / Nodes
       :feature_type: view
       :identifier: host_perf
     - :name: Timelines
-      :description: Display Timelines for Hosts
+      :description: Display Timelines for Hosts / Nodes
       :feature_type: view
       :identifier: host_timeline
   - :name: Operate
-    :description: Perform Operations on Hosts
+    :description: Perform Operations on Hosts / Nodes
     :feature_type: control
     :identifier: host_control
     :children:
     - :name: Analysis
-      :description: Perform SmartState Analysis for Hosts
+      :description: Perform SmartState Analysis for Hosts / Nodes
       :feature_type: control
       :identifier: host_scan
     - :name: Analyze then Check Compliance
-      :description: Analyze then Check Compliance for Hosts
+      :description: Analyze then Check Compliance for Hosts / Nodes
       :feature_type: control
       :identifier: host_analyze_check_compliance
     - :name: Check Compliance
-      :description: Check Compliance of Last Known Configuration for Hosts
+      :description: Check Compliance of Last Known Configuration for Hosts / Nodes
       :feature_type: control
       :identifier: host_check_compliance
     - :name: Discover
       :feature_type: control
       :identifier: host_discover
     - :name: Manage Policies
-      :description: Manage Policies for Hosts
+      :description: Manage Policies for Hosts / Nodes
       :feature_type: control
       :identifier: host_protect
     - :name: Refresh
-      :description: Refresh relationships and power states for all items related to Hosts
+      :description: Refresh relationships and power states for all items related to Hosts / Nodes
       :feature_type: control
       :identifier: host_refresh
     - :name: Edit Tags
-      :description: Edit Host Tags
+      :description: Edit Host / Node Tags
       :feature_type: control
       :identifier: host_tag
     - :name: Power On
-      :description: Power On a Host
+      :description: Power On a Host / Node
       :feature_type: control
       :identifier: host_start
     - :name: Power Off
-      :description: Power Off a Host
+      :description: Power Off a Host / Node
       :feature_type: control
       :identifier: host_stop
     - :name: Reset
-      :description: Reset a Host
+      :description: Reset a Host / Node
       :feature_type: control
       :identifier: host_reset
     - :name: Enter Maintenance Mode
-      :description: Put a Host into Maintenance Mode
+      :description: Put a Host / Node into Maintenance Mode
       :feature_type: control
       :identifier: host_enter_maint_mode
     - :name: Exit Maintenance Mode
-      :description: Take a Host out of Maintenance Mode
+      :description: Take a Host / Node out of Maintenance Mode
       :feature_type: control
       :identifier: host_exit_maint_mode
     - :name: Shutdown Host to Standby
-      :description: Shutdown a Host to Standby Mode
+      :description: Shutdown a Host / Node to Standby Mode
       :feature_type: control
       :identifier: host_standby
     - :name: Shutdown Host
-      :description: Shutdown a Host
+      :description: Shutdown a Host / Node
       :feature_type: control
       :identifier: host_shutdown
     - :name: Restart Host
-      :description: Restart a Host
+      :description: Restart a Host / Node
       :feature_type: control
       :identifier: host_reboot
   - :name: Modify
-    :description: Modify Hosts
+    :description: Modify Hosts / Nodes
     :feature_type: admin
     :identifier: host_admin
     :children:
     - :name: Add
-      :description: Add a Host
+      :description: Add a Host / Node
       :feature_type: admin
       :identifier: host_new
     - :name: Remove
-      :description: Remove Hosts from the VMDB
+      :description: Remove Hosts / Nodes from the VMDB
       :feature_type: admin
       :identifier: host_delete
     - :name: Edit
-      :description: Edit a Host
+      :description: Edit a Host / Node
       :feature_type: admin
       :identifier: host_edit
-    - :name: Provision Hosts
-      :description: Request to Provision Hosts
+    - :name: Provision Hosts / Nodes
+      :description: Request to Provision Hosts / Nodes
       :feature_type: admin
       :identifier: host_miq_request_new
 

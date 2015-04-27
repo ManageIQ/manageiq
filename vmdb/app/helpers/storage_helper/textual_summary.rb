@@ -71,7 +71,7 @@ module StorageHelper::TextualSummary
   end
 
   def textual_hosts
-    label = "Hosts"
+    label = title_for_hosts
     num   = @record.number_of(:hosts)
     h     = {:label => label, :image => "host", :value => num}
     if num > 0 && role_allows(:feature => "host_show_list")

@@ -145,7 +145,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_host_platform
-    {:label => "Parent Host Platform", :value => (@record.host.nil? ? "N/A" : @record.v_host_vmm_product)}
+    {:label => "Parent #{title_for_host} Platform", :value => (@record.host.nil? ? "N/A" : @record.v_host_vmm_product)}
   end
 
   def textual_tools_status
@@ -216,9 +216,9 @@ module VmCloudHelper::TextualSummary
 
   def textual_cluster
     cluster = @record.ems_cluster
-    h = {:label => "Cluster", :image => "ems_cluster", :value => (cluster.nil? ? "None" : cluster.name)}
+    h = {:label => title_for_cluster, :image => "ems_cluster", :value => (cluster.nil? ? "None" : cluster.name)}
     if cluster && role_allows(:feature => "ems_cluster_show")
-      h[:title] = "Show this VM's Cluster"
+      h[:title] = "Show this VM's #{title_for_cluster}"
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => cluster)
     end
     h
@@ -226,9 +226,9 @@ module VmCloudHelper::TextualSummary
 
   def textual_host
     host = @record.host
-    h = {:label => "Host", :image => "host", :value => (host.nil? ? "None" : host.name)}
+    h = {:label => title_for_host, :image => "host", :value => (host.nil? ? "None" : host.name)}
     if host && role_allows(:feature => "host_show")
-      h[:title] = "Show this VM's Host"
+      h[:title] = "Show this VM's #{title_for_host}"
       h[:link]  = url_for(:controller => 'host', :action => 'show', :id => host)
     end
     h
