@@ -160,7 +160,7 @@ describe MiqExpression do
     # puts "Expression in Human: #{filter.to_human}"
     # puts "Expression in Ruby:  #{filter.to_ruby}"
     # puts
-    filter.to_ruby.should == "<find><search><value ref=host, type=text>/virtual/filesystems/name</value> == '/etc/passwd'</search><check mode=all><value ref=host, type=string>/virtual/filesystems/permissions</value> == '0644'</check></find>"
+    filter.to_ruby.should == '<find><search><value ref=host, type=text>/virtual/filesystems/name</value> == "/etc/passwd"</search><check mode=all><value ref=host, type=string>/virtual/filesystems/permissions</value> == "0644"</check></find>'
   end
 
   it "should test regexp" do
@@ -204,7 +204,7 @@ describe MiqExpression do
     # puts "Expression in Human: #{filter.to_human}"
     # puts "Expression in Ruby:  #{filter.to_ruby}"
     # puts
-    filter.to_ruby.should == '<find><search><value ref=host, type=boolean>/virtual/firewall_rules/enabled</value> == \'true\'</search><check mode=any><value ref=host, type=string>/virtual/firewall_rules/name</value> =~ /^.*SLP.*$/</check></find>'
+    filter.to_ruby.should == '<find><search><value ref=host, type=boolean>/virtual/firewall_rules/enabled</value> == "true"</search><check mode=any><value ref=host, type=string>/virtual/firewall_rules/name</value> =~ /^.*SLP.*$/</check></find>'
 
     filter = YAML.load '--- !ruby/object:MiqExpression
     exp:
@@ -222,7 +222,7 @@ describe MiqExpression do
     # puts "Expression in Human: #{filter.to_human}"
     # puts "Expression in Ruby:  #{filter.to_ruby}"
     # puts
-    filter.to_ruby.should == '<find><search><value ref=host, type=boolean>/virtual/firewall_rules/enabled</value> == \'true\'</search><check mode=any><value ref=host, type=string>/virtual/firewall_rules/name</value> !~ /^.*SLP.*$/</check></find>'
+    filter.to_ruby.should == '<find><search><value ref=host, type=boolean>/virtual/firewall_rules/enabled</value> == "true"</search><check mode=any><value ref=host, type=string>/virtual/firewall_rules/name</value> !~ /^.*SLP.*$/</check></find>'
   end
 
   it "should test ruby" do
@@ -357,7 +357,7 @@ describe MiqExpression do
   end
 
   it "should test fb7726" do
-    filter =  YAML.load '--- !ruby/object:MiqExpression
+    filter = YAML.load '--- !ruby/object:MiqExpression
     exp:
       CONTAINS:
         field: Host.filesystems-name
@@ -368,6 +368,23 @@ describe MiqExpression do
     # puts "Expression in Ruby:  #{filter.to_ruby}"
     # puts
     filter.to_ruby.should == "<exist ref=host>/virtual/filesystems/name/%2fetc%2fshadow</exist>"
+  end
+
+  it "should escape strings" do
+    filter = YAML.load '--- !ruby/object:MiqExpression
+    exp:
+      INCLUDES:
+        field: Vm.registry_items-data
+        value: $foo
+    '
+    # puts "Expression Raw:      #{filter.exp.inspect}"
+    # puts "Expression in Human: #{filter.to_human}"
+    # puts "Expression in Ruby:  #{filter.to_ruby}"
+    # puts
+    filter.to_ruby.should == "<value ref=vm, type=text>/virtual/registry_items/data</value> =~ /\\$foo/"
+
+    data = {"registry_items.data" => "C:\\Documents and Users\\O'Neill, April\\", "/virtual/registry_items/data" => "C:\\Documents and Users\\O'Neill, April\\"}
+    Condition.subst(filter.to_ruby, data, {}).should == "\"C:\\\\Documents and Users\\\\O'Neill, April\\\\\" =~ /\\$foo/"
   end
 
   it "should test context hash" do
@@ -384,8 +401,8 @@ describe MiqExpression do
     # puts "Expression in Human: #{filter.to_human}"
     # puts "Expression in Ruby:  #{filter.to_ruby}"
     # puts
-    filter.to_ruby.should == "<value type=string>guest_applications.name</value> == 'VMware Tools'"
-    Condition.subst(filter.to_ruby, data, {}).should == "'VMware Tools' == 'VMware Tools'"
+    filter.to_ruby.should == "<value type=string>guest_applications.name</value> == \"VMware Tools\""
+    Condition.subst(filter.to_ruby, data, {}).should == "\"VMware Tools\" == \"VMware Tools\""
 
     filter = YAML.load '--- !ruby/object:MiqExpression
     exp:
@@ -399,7 +416,7 @@ describe MiqExpression do
     # puts "Expression in Ruby:  #{filter.to_ruby}"
     # puts
     filter.to_ruby.should == "<value type=string>guest_applications.vendor</value> =~ /^[^.]*ware.*$/"
-    Condition.subst(filter.to_ruby, data, {}).should == "'VMware, Inc.' =~ /^[^.]*ware.*$/"
+    Condition.subst(filter.to_ruby, data, {}).should == '"VMware, Inc." =~ /^[^.]*ware.*$/'
   end
 
   it "should test atom error" do
@@ -904,10 +921,10 @@ describe MiqExpression do
 
       it "FIND/CHECK type" do
         exp = MiqExpression.new({"FIND" => {"search" => {"STARTS WITH" => {"field" => "Vm.advanced_settings-name", "value" => "X"}}, "checkall" => {"=" => {"field" => "Vm.advanced_settings-read_only", "value" => "true"}}}})
-        exp.to_human.should == "FIND VM and Instance.Advanced Settings : Name STARTS WITH \"X\" CHECK ALL Read Only = 'true'"
+        exp.to_human.should == 'FIND VM and Instance.Advanced Settings : Name STARTS WITH "X" CHECK ALL Read Only = "true"'
 
         exp = MiqExpression.new({"FIND" => {"search" => {"STARTS WITH" => {"field" => "Vm.advanced_settings-name", "value" => "X", "alias" => "Settings Name"}}, "checkall" => {"=" => {"field" => "Vm.advanced_settings-read_only", "value" => "true"}}}})
-        exp.to_human.should == "FIND Settings Name STARTS WITH \"X\" CHECK ALL Read Only = 'true'"
+        exp.to_human.should == 'FIND Settings Name STARTS WITH "X" CHECK ALL Read Only = "true"'
       end
 
       it "COUNT type" do
