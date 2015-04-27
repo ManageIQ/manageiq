@@ -141,12 +141,62 @@ class HostController < ApplicationController
     end
   end
 
+  def filesystems_subsets
+    condition = nil
+    label     = _('Files')
+
+    host_service_group = HostServiceGroup.where(:id => params['host_service_group']).first
+    if host_service_group
+      condition = host_service_group.host_service_group_filesystems_condition
+      label     = _("Configuration files of %s") % 'nova service'
+    end
+
+    # HACK: UI get_view can't do arel relations, so I need to expose conditions
+    condition = condition.to_sql if condition
+
+    return label, condition
+  end
+
   def filesystems
-    show_association('filesystems', 'Files', 'filesystems', :filesystems, Filesystem)
+    label, condition = filesystems_subsets
+    show_association('filesystems', label, 'filesystems', :filesystems, Filesystem, nil, condition)
+  end
+
+  def host_services_subsets
+    condition = nil
+    label     = _('Services')
+
+    host_service_group = HostServiceGroup.where(:id => params['host_service_group']).first
+    if host_service_group
+      case params[:status]
+      when 'running'
+        condition = host_service_group.running_system_services_condition
+        label     = _("Running system services of %s") % host_service_group.name
+      when 'failed'
+        condition =  host_service_group.failed_system_services_condition
+        label     = _("Failed system services of %s") % host_service_group.name
+      when 'all'
+        condition = nil
+        label     = _("All system services of %s") % host_service_group.name
+      end
+
+      if condition
+        # Amend the condition with the openstack host service foreign key
+        condition = condition.and(host_service_group.host_service_group_system_services_condition)
+      else
+        condition = host_service_group.host_service_group_system_services_condition
+      end
+    end
+
+    # HACK: UI get_view can't do arel relations, so I need to expose conditions
+    condition = condition.to_sql if condition
+
+    return label, condition
   end
 
   def host_services
-    show_association('host_services', 'Services', 'service', :host_services, SystemService)
+    label, condition = host_services_subsets
+    show_association('host_services', label, 'service', :host_services, SystemService, nil, condition)
   end
 
   def advanced_settings
