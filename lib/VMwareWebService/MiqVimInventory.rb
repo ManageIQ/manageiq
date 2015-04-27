@@ -8,7 +8,7 @@ require 'MiqVimDump'
 require 'VimPropMaps'
 
 class MiqVimInventory < MiqVimClientBase
-	attr_reader :cacheLock
+	attr_reader :cacheLock, :configLock
 	
 	alias :__connect :connect
     alias :__disconnect :disconnect
@@ -82,7 +82,8 @@ class MiqVimInventory < MiqVimClientBase
 		@cacheLock	= Sync.new
 		@configLock	= Sync.new
 
-		# extend VimSyncDebug
+		# Comment out before merge.
+		extend VimSyncDebug
 		
 		resetCache
 		__connect
