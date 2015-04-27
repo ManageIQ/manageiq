@@ -111,11 +111,71 @@ module EmsRefresh
         end
       end
 
+      def parse_lscpu(lscpu_data)
+        parsed_data = {}
+
+        lscpu_data.each_line do |line|
+          parts = line.split(/:/)
+          value = parts[1].try(:chomp).try(:strip)
+          key = case parts[0]
+                when 'Socket(s)'          then 'numvcpus'
+                when 'Core(s) per socket' then 'cores_per_socket'
+                when 'CPU MHz'            then 'cpu_speed'
+                when 'Model name'         then 'cpu_type'
+                end
+          parsed_data[key] = value
+        end
+        parsed_data
+      end
+
+      def parse_dmidecode(dmidecode_data)
+        parsed_data = {}
+
+        dmidecode_data.each_line do |line|
+          parts = line.split(/:/)
+          value = parts[1].try(:chomp).try(:strip)
+          key = case parts[0].strip
+                when 'Manufacturer'  then 'manufacturer'
+                when 'Product Name'  then 'model'
+                when 'Version'       then 'guest_os_full_name'
+                when 'Family'        then 'guest_os'
+                when 'Serial Number' then 'service_tag'
+                end
+          parsed_data[key] = value
+        end
+        parsed_data
+      end
+
+      def get_extra_host_attributes!(host, hostname)
+        # TODO(lsmola) in RHOS7 we can get this stuff from ironic, but now we need to hack it. This will need to
+        # obtain host from DB, so it requires already existing host. So it will be always filled second refresh.
+        # Once RHOS7 Ironic is here, we need to revisit indexes in extra data, that is changing a lot, then delete this
+        host_for_ssh = HostOpenstackInfra.new(:hostname => hostname)
+        host_for_ssh.ext_management_system = @ems
+
+        begin
+          host_for_ssh.connect_ssh do |ssu|
+            parsed_lscpu = parse_lscpu(ssu.shell_exec("lscpu"))
+            parsed_dmidecode = parse_dmidecode(ssu.shell_exec("dmidecode | grep -A8 'System Information'"))
+
+            host.properties.merge!(parsed_lscpu)
+            host.properties.merge!(parsed_dmidecode)
+          end
+        rescue Exception
+          # Log the error if SSH is not accessible, but keep going in refresh
+          $log.error "host.connect_ssh: SSH connection failed for [#{host_for_ssh.hostname}] with [#{$!.class}: #{$!}]"
+        end
+      end
+
       def parse_host(host, indexed_servers, _indexed_hosts_ports, indexed_resources, cloud_hosts_attributes)
         uid                 = host.uuid
         host_name           = identify_host_name(indexed_resources, host.instance_uuid, uid)
         hypervisor_hostname = identify_hypervisor_hostname(host, indexed_servers)
         ip_address          = identify_primary_ip_address(host, indexed_servers)
+        hostname            = ip_address
+
+        # Get the extra attributes from ssh if available
+        get_extra_host_attributes!(host, hostname) if hostname
 
         # Get the cloud_host_attributes by hypervisor hostname, only compute hosts can get this
         cloud_host_attributes = cloud_hosts_attributes.select do |x|
@@ -132,14 +192,16 @@ module EmsRefresh
           :operating_system     => {:product_name => 'linux'},
           :vmm_vendor           => 'RedHat',
           :vmm_product          => identify_product(indexed_resources, host.instance_uuid),
+          :vmm_version          => normalize_blank_property(host.properties['guest_os_full_name']),
           :ipaddress            => ip_address,
-          :hostname             => ip_address,
+          :hostname             => hostname,
           :mac_address          => identify_primary_mac_address(host, indexed_servers),
           :ipmi_address         => identify_ipmi_address(host),
           :power_state          => lookup_power_state(host.power_state),
           :connection_state     => lookup_connection_state(host.power_state),
           :hardware             => process_host_hardware(host),
           :hypervisor_hostname  => hypervisor_hostname,
+          :service_tag          => normalize_blank_property(host.properties['service_tag']),
           # Attributes taken from the Cloud provider
           :availability_zone_id => cloud_host_attributes.try(:[], :availability_zone_id)
         }
@@ -148,10 +210,22 @@ module EmsRefresh
       end
 
       def process_host_hardware(host)
+        cores_per_socket = normalize_blank_property_num(host.properties['cores_per_socket'])
+        numvcpus = normalize_blank_property_num(host.properties['numvcpus'])
+        logical_cpus = cores_per_socket && numvcpus ? cores_per_socket * numvcpus : 0
+
         {
-          :memory_cpu    => normalize_blank_property(host.properties['memory_mb']),
-          :disk_capacity => normalize_blank_property(host.properties['local_gb']),
-          :numvcpus      => normalize_blank_property_num(host.properties['cpus'])
+          :memory_cpu         => normalize_blank_property(host.properties['memory_mb']),
+          :disk_capacity      => normalize_blank_property(host.properties['local_gb']),
+          :logical_cpus       => logical_cpus,
+          :numvcpus           => numvcpus,
+          :cores_per_socket   => cores_per_socket,
+          :cpu_speed          => normalize_blank_property(host.properties['cpu_speed']),
+          :cpu_type           => normalize_blank_property(host.properties['cpu_type']),
+          :manufacturer       => normalize_blank_property(host.properties['manufacturer']),
+          :model              => normalize_blank_property(host.properties['model']),
+          :guest_os_full_name => normalize_blank_property(host.properties['guest_os_full_name']),
+          :guest_os           => normalize_blank_property(host.properties['guest_os']),
         }
       end
 
