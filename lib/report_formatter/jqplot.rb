@@ -78,6 +78,21 @@ module ReportFormatter
       mri.chart.store_path(:options, :axes, :xaxis, :renderer, 'jQuery.jqplot.CategoryAxisRenderer')
     end
 
+    def vertical?
+      @vertical ||= mri.graph[:type] =~ /(Column)/
+    end
+
+    def axis_category_labels_ticks
+      return if Array(mri.chart[:axis_category_text]).empty?
+
+      axis = vertical? ? :xaxis : :yaxis
+      mri.chart.store_path(:options, :axes, axis, :renderer, 'jQuery.jqplot.CategoryAxisRenderer')
+      mri.chart.store_path(:options, :axes, axis, :ticks, mri.chart[:axis_category_text][0].collect { |l| slice_legend(l) })
+      mri.chart.store_path(:options, :axes, axis, :tickRenderer, 'jQuery.jqplot.CanvasAxisTickRenderer')
+
+      mri.chart.store_path(:options, :axes, axis, :tickOptions, :angle, -45.0) if vertical?
+    end
+
     # Utilization timestamp charts
     def build_util_ts_chart_column
       return unless super
@@ -120,9 +135,19 @@ module ReportFormatter
       x_axis_category_labels
     end
 
-    def build_reporting_chart_other
+    def build_numeric_chart_grouped
       mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
       super
+      simple_numeric_styling
+    end
+
+    def build_numeric_chart_simple
+      mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
+      super
+      simple_numeric_styling
+    end
+
+    def simple_numeric_styling
       mri.chart[:options].update(
         :highlighter    => {
           :show                 => true,
@@ -134,7 +159,14 @@ module ReportFormatter
           }",
           :tooltipLocation      => 'n'
         }
-      ) if @is_pie_type
+      ) if pie_type?
+
+
+      if mri.graph[:type] =~ /(Bar|Column)/
+        mri.chart.store_path(:options, :seriesDefaults, :rendererOptions, :varyBarColor, true)
+        axis_category_labels_ticks
+        #default_legend 
+      end
     end
 
     def finalize_document

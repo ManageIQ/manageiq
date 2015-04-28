@@ -37,7 +37,7 @@ module ReportFormatter
     private
 
     def shorten_label(label)
-      label[0, 14]
+      label.to_s[0, 14]
     end
   end
 end

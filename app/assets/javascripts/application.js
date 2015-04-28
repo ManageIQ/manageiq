@@ -44,6 +44,8 @@
 //= require jqplot-plugins/jqplot.highlighter
 //= require jqplot-plugins/jqplot.cursor
 //= require jqplot-plugins/jqplot.enhancedLegendRenderer
+//= require jqplot-plugins/jqplot.canvasAxisTickRenderer
+//= require jqplot-plugins/jqplot.canvasTextRenderer
 //= require miq_jqplot
 //= require jquery/jquery-ui-1.9.2.custom.min
 //= require bootstrap

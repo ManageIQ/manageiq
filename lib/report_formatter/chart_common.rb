@@ -2,7 +2,7 @@ module ReportFormatter
   module ChartCommon
     def slice_legend(string, limit = LEGEND_LENGTH)
       string = string.to_s
-      string.length > limit ? string.slice(0, limit) + "..." : string
+      string = string.length > limit ? string.slice(0, limit) + "..." : string
       string.gsub(/\n/, ' ')
     end
 
@@ -58,7 +58,8 @@ module ReportFormatter
             when :performance then :build_performance_chart # performance chart (time based)
             when :util_ts     then :build_util_ts_chart     # utilization timestamp chart (grouped columns)
             when :planning    then :build_planning_chart    # trend based planning chart
-            else                   :build_reporting_chart   # standard reporting chart
+            else                                            # reporting charts
+              mri.graph[:mode] == 'values' ? :build_reporting_chart_numeric : :build_reporting_chart
             end
       method(fun).call(maxcols, divider)
     end
@@ -347,13 +348,97 @@ module ReportFormatter
           series.push(:value   => ocount,
                       :tooltip => "#{key1} / Other: #{ocount}")
         end
-        add_series("Other", series)
+        add_series(_("Other"), series)
       end
       counts # FIXME
     end
 
+    def data_column_name
+      @data_column_name ||= (
+        _model, col  = mri.graph[:column].split('-', 2)
+        col, aggreg = col.split(':', 2)
+        aggreg.blank? ? col : "#{col}__#{aggreg}"
+      )
+    end
+
+    # Options:
+    #   sort1            -- labels
+    #   data_column_name -- values
+    #
+    def build_numeric_chart_simple
+      categories = []
+      (sort1,) = mri.sortby
+      (keep, show_other) = keep_and_show_other
+      sorted_data = mri.table.data.sort_by { |row| row[data_column_name] || 0 }
+
+      series = sorted_data.reverse.take(keep)
+               .each_with_object(series_class.new(pie_type? ? :pie : :flat)) do |row, a|
+        tooltip = row[sort1]
+        tooltip = _('no value') if tooltip.blank?
+        a.push(:value   => row[data_column_name],
+               :tooltip => tooltip)
+        categories.push([tooltip, row[data_column_name]])
+      end
+
+      if show_other
+        other_sum = Array(sorted_data[0, sorted_data.length - keep])
+                 .inject(0) { |sum, row| sum + row[data_column_name] }
+        series.push(:value => other_sum, :tooltip => _('Other'))
+        categories.push([_('Other'), other_sum])
+      end
+
+      # Pie charts put categories in legend, else in axis labels
+      limit = pie_type? ? LEGEND_LENGTH : LABEL_LENGTH
+      categories.collect! { |c| slice_legend(c[0], limit) }
+      add_axis_category_text(categories)
+
+      add_series(mri.headers[0], series)
+    end
+
+    def build_numeric_chart_grouped
+      groups = mri.build_subtotals.reject { |k,_| k == :_total_ }
+
+      categories = []
+      (sort1,) = mri.sortby
+      (keep, show_other) = keep_and_show_other
+
+      match = mri.graph[:column].match(/^(\w*)-(\w*):(\w*)$/)
+      (_model, column_name, aggreg) = match[1..3]
+      aggreg = aggreg.to_sym
+
+      sorted_data = groups.sort_by { |key, data| data[aggreg][column_name] || 0 }
+
+      series = sorted_data.reverse.take(keep)
+               .each_with_object(series_class.new(pie_type? ? :pie : :flat)) do |(key, data), a|
+        tooltip = key
+        tooltip = _('no value') if key.blank?
+        a.push(:value   => data[aggreg][column_name],
+               :tooltip => key)
+        categories.push([tooltip, data[aggreg][column_name]])
+      end
+
+      # FIXME: different aggregs need different calculation
+      if show_other && aggreg == :total
+        other_sum = Array(sorted_data[0, sorted_data.length - keep])
+                 .inject(0) { |sum, (key,row)| sum + row[aggreg][column_name] }
+
+        series.push(:value => other_sum, :tooltip => _('Other'))
+        categories.push([_('Other'), other_sum])
+      end
+
+      # Pie charts put categories in legend, else in axis labels
+      limit = pie_type? ? LEGEND_LENGTH : LABEL_LENGTH
+      categories.collect! { |c| slice_legend(c[0], limit) }
+      add_axis_category_text(categories)
+
+      add_series(mri.headers[0], series)
+    end
+
+    def pie_type?
+      @pie_type ||= mri.graph[:type] =~ /^(Pie|Donut)/
+    end
+
     def build_reporting_chart_other
-      @is_pie_type = mri.graph[:type] =~ /^(Pie|Donut)/
       save_key   = nil
       counter    = 0
       categories = []                      # Store categories and series counts in an array of arrays
@@ -379,12 +464,12 @@ module ReportFormatter
       end
 
       series = categories.each_with_object(
-        series_class.new(@is_pie_type ? :pie : :flat)) do |cat, a|
+        series_class.new(pie_type? ? :pie : :flat)) do |cat, a|
         a.push(:value => cat.last, :tooltip => "#{cat.first}: #{cat.last}")
       end
 
       # Pie charts put categories in legend, else in axis labels
-      limit = @is_pie_type ? LEGEND_LENGTH : LABEL_LENGTH
+      limit = pie_type? ? LEGEND_LENGTH : LABEL_LENGTH
       categories.collect! { |c| slice_legend(c[0], limit) }
       add_axis_category_text(categories)
       add_series(mri.headers[0], series)
@@ -406,7 +491,11 @@ module ReportFormatter
       build_util_ts_chart_column if %w(Column ColumnThreed).index(mri.graph[:type])
     end
 
-    def build_reporting_chart(maxcols, divider)
+    def build_reporting_chart_numeric(_maxcols, _divider)
+      mri.group.nil? ?  build_numeric_chart_simple : build_numeric_chart_grouped
+    end
+
+    def build_reporting_chart(_maxcols, _divider)
       mri.dims == 2 ?  build_reporting_chart_dim2 : build_reporting_chart_other
     end
   end

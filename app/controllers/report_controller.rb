@@ -9,6 +9,8 @@ class ReportController < ApplicationController
   include_concern 'Usage'
   include_concern 'Widgets'
 
+  include ReportHelper
+
   before_filter :check_privileges
   before_filter :get_session_data
   after_filter  :cleanup_action
