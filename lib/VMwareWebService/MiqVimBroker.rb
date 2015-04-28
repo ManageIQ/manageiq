@@ -1,3 +1,5 @@
+require 'timeout'
+require 'broker_timeout'
 require 'drb'
 require 'drb/acl'
 require 'broker_sync_debug'
