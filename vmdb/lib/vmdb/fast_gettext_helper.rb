@@ -39,7 +39,7 @@ module Vmdb
     end
 
     def self.supported_locales_filename
-      File.join(locale_path, "supported.yml")
+      @supported_locales_filename ||= File.join(locale_path, "supported.yml")
     end
 
     def self.find_available_locales
@@ -49,7 +49,7 @@ module Vmdb
     end
 
     def self.locale_path
-      Rails.root.join("config/locales")
+      @locale_path ||= Rails.root.join("config/locales")
     end
 
     def self.register_locales
