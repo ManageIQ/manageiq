@@ -21,20 +21,10 @@ module EmsRefresh
       def provisioning_inv_to_hashes(inv)
         media            = media_inv_to_hashes(inv[:media])
         ptables          = ptables_inv_to_hashes(inv[:ptables])
-        architectures    = architectures_inv_to_hashes(inv[:architectures])
-        compute_profiles = compute_profiles_inv_to_hashes(inv[:compute_profiles])
-        domains          = domains_inv_to_hashes(inv[:domains])
-        environments     = environments_inv_to_hashes(inv[:environments])
-        realms           = realms_inv_to_hashes(inv[:realms])
 
         indexes = {
           :media            => add_ids(media),
           :ptables          => add_ids(ptables),
-          :architectures    => add_ids(architectures),
-          :compute_profiles => add_ids(compute_profiles),
-          :domains          => add_ids(domains),
-          :environments     => add_ids(environments),
-          :realms           => add_ids(realms),
         }
 
         {
@@ -42,7 +32,6 @@ module EmsRefresh
           :operating_system_flavors    => operating_system_flavors_inv_to_hashes(inv[:operating_systems], indexes),
           :configuration_locations     => location_inv_to_hashes(inv[:locations]),
           :configuration_organizations => organization_inv_to_hashes(inv[:organizations]),
-          :configuration_tags          => architectures + compute_profiles + domains + environments + realms,
         }
       end
 
@@ -52,21 +41,28 @@ module EmsRefresh
       # data coming in from database (already in the form of ids)
       #   see indexes variable
       def configuration_inv_to_hashes(inv)
+        architectures    = architectures_inv_to_hashes(inv[:architectures])
+        compute_profiles = compute_profiles_inv_to_hashes(inv[:compute_profiles])
+        domains          = domains_inv_to_hashes(inv[:domains])
+        environments     = environments_inv_to_hashes(inv[:environments])
+        realms           = realms_inv_to_hashes(inv[:realms])
+
         indexes = {
           :flavors          => inv[:operating_system_flavors],
           :media            => inv[:media],
           :ptables          => inv[:ptables],
           :locations        => inv[:locations],
           :organizations    => inv[:organizations],
-          :architectures    => inv[:architectures],
-          :compute_profiles => inv[:compute_profiles],
-          :domains          => inv[:domains],
-          :environments     => inv[:environments],
-          :realms           => inv[:realms],
+          :architectures    => add_ids(architectures),
+          :compute_profiles => add_ids(compute_profiles),
+          :domains          => add_ids(domains),
+          :environments     => add_ids(environments),
+          :realms           => add_ids(realms),
         }
 
         {
           :configuration_profiles     => configuration_profile_inv_to_hashes(inv[:hostgroups], indexes),
+          :configuration_tags         => architectures + compute_profiles + domains + environments + realms,
           :configured_systems         => configured_system_inv_to_hashes(inv[:hosts], indexes),
           :needs_provisioning_refresh => needs_provisioning_refresh,
         }

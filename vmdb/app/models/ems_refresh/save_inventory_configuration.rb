@@ -34,5 +34,10 @@ module EmsRefresh
       save_inventory_assoc(:configured_systems, manager, hashes, delete_missing_records, [:manager_ref], nil,
                            [:configuration_profile])
     end
+
+    def save_configuration_tags_inventory(manager, hashes, target)
+      delete_missing_records = target.nil? || manager == target
+      save_inventory_assoc(:configuration_tags, manager, hashes, delete_missing_records, [:type, :manager_ref])
+    end
   end
 end
