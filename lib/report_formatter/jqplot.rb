@@ -102,6 +102,11 @@ module ReportFormatter
       x_axis_category_labels
     end
 
+    def build_reporting_chart_dim2_numeric
+      # FIXME: styling
+      super
+    end
+
     def build_reporting_chart_dim2
       counts = super # FIXME: counts are passed for now, should handle this in a better way
       default_legend

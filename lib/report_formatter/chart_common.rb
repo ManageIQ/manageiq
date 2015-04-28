@@ -354,6 +354,7 @@ module ReportFormatter
     end
 
     def build_reporting_chart_dim2_numeric
+<<<<<<< HEAD
       (sort1, sort2) = mri.sortby
       (keep, show_other) = keep_and_show_other
 
@@ -413,10 +414,15 @@ module ReportFormatter
         col, aggreg = col.split(':', 2)
         "#{col}__#{aggreg}"
       )
+=======
+      # FIXME: styling
+      binding.pry
+>>>>>>> 7d2022d... Reporting charts: allow creating concrete number charts.
     end
 
     def build_reporting_chart_other_numeric
       categories = []
+<<<<<<< HEAD
       (sort1,) = mri.sortby
       (keep, show_other) = keep_and_show_other
       sorted_data = mri.table.data.sort_by { |row| row[data_column_name] }
@@ -439,16 +445,45 @@ module ReportFormatter
 
       # Pie charts put categories in legend, else in axis labels
       limit = pie_type? ? LEGEND_LENGTH : LABEL_LENGTH
+=======
+
+      model, col  = mri.graph[:column].split('-', 2)
+      col, aggreg = col.split(':', 2)
+      data_col_name = "#{col}__#{aggreg}"
+
+      sorted_data = mri.table.data.sort_by { |row| row[data_col_name] }
+
+      series = sorted_data.reverse.take(mri.graph[:count]).
+               each_with_object(series_class.new(@is_pie_type ? :pie : :flat)) do |row, a|
+
+        a.push(:value   => row[data_col_name],
+               :tooltip => row[mri.col_order[0]])
+        categories.push([row[mri.col_order[0]], row[data_col_name]])
+      end
+
+      if mri.graph[:other]
+        ocount = sorted_data[0, sorted_data.length - mri.graph[:count]].
+                  inject(0) { |sum, row| sum += row[data_col_name] }
+        series.push(:value => ocount, :tooltip => _('Other'))
+        categories.push([_('Other'), ocount])
+      end
+
+      # Pie charts put categories in legend, else in axis labels
+      limit = @is_pie_type ? LEGEND_LENGTH : LABEL_LENGTH
+>>>>>>> 7d2022d... Reporting charts: allow creating concrete number charts.
       categories.collect! { |c| slice_legend(c[0], limit) }
       add_axis_category_text(categories)
 
       add_series(mri.headers[0], series)
     end
 
+<<<<<<< HEAD
     def pie_type?
       @pie_type ||= mri.graph[:type] =~ /^(Pie|Donut)/
     end
 
+=======
+>>>>>>> 7d2022d... Reporting charts: allow creating concrete number charts.
     def build_reporting_chart_other
       save_key   = nil
       counter    = 0
@@ -502,11 +537,11 @@ module ReportFormatter
       build_util_ts_chart_column if %w(Column ColumnThreed).index(mri.graph[:type])
     end
 
-    def build_reporting_chart_numeric(_maxcols, _divider)
+    def build_reporting_chart_numeric(maxcols, divider)
       mri.dims == 2 ?  build_reporting_chart_dim2_numeric : build_reporting_chart_other_numeric
     end
 
-    def build_reporting_chart(_maxcols, _divider)
+    def build_reporting_chart(maxcols, divider)
       mri.dims == 2 ?  build_reporting_chart_dim2 : build_reporting_chart_other
     end
   end
