@@ -15,7 +15,7 @@
           %td
             %input(type="text" name="url" ng-model="providerForemanModel.url" maxlength="#{MAX_DESC_LEN}" miqrequired checkchange)
         %tr
-          %td.key= _("Verify ssl")
+          %td.key= _("Verify Peer Certificate")
           %td
             %input(type="checkbox" name="verify_ssl" ng-model="providerForemanModel.verify_ssl" ng-true-value="1" ng-false-value="0" checkchange)
 
