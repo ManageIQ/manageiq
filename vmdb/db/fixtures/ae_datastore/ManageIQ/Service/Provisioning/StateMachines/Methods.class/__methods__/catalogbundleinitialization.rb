@@ -68,14 +68,19 @@ def tag_service(dialogs_tags_hash)
   log_and_update_message(:info, "Processing tag_service...Complete", true)
 end
 
-def parsed_dialog_information
-  # get parsed dialog options and tags from the task
-  dialog_options_hash = YAML.load(@task.get_option(:parsed_dialog_options))
-  dialog_tags_hash = YAML.load(@task.get_option(:parsed_dialog_tags))
+def dialog_parser_error
+  log_and_update_message(:error, "Error loading dialog options")
+  exit MIQ_ABORT
+end
 
+def parsed_dialog_information
+  dialog_options_hash = @task.get_option(:parsed_dialog_options).nil? ? nil : YAML.load(@task.get_option(:parsed_dialog_options))
+  dialog_tags_hash = @task.get_option(:parsed_dialog_tags).nil? ? nil : YAML.load(@task.get_option(:parsed_dialog_tags))
   if dialog_options_hash.blank? && dialog_tags_hash.blank?
-    log(:error, "Error loading dialog options")
-    exit MIQ_ABORT
+    log_and_update_message(:info, "Instantiating dialog_parser to populate dialog options")
+    $evm.instantiate('/Service/Provisioning/StateMachines/Methods/DialogParser')
+    dialog_options_hash, dialog_tags_hash = parsed_dialog_information
+    dialog_parser_error if dialog_options_hash.blank? && dialog_tags_hash.blank?
   end
 
   log_and_update_message(:info, "dialog_options: #{dialog_options_hash.inspect}")
