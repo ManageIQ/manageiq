@@ -35,8 +35,8 @@ describe ApplicationController do
   end
 
   it "should set correct discovery title" do
-    res = controller.send(:set_discover_title,"host", "host")
-    res.should == "Hosts"
+    res = controller.send(:set_discover_title, "hosts", "host")
+    res.should == "Hosts / Nodes"
 
     res = controller.send(:set_discover_title,"ems", "ems_infra")
     res.should == "Infrastructure Providers"

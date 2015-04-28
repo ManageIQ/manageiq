@@ -471,8 +471,8 @@ describe MiqExpression do
       relats  = MiqExpression.get_relats(Vm)
       details = MiqExpression._model_details(relats, {})
       cluster_sorted = details.select { |d| d.first.starts_with?("Cluster") }.sort
-      cluster_sorted.map(&:first).should include("Cluster : Total Number of Physical CPUs")
-      cluster_sorted.map(&:first).should include("Cluster : Total Number of Logical CPUs")
+      cluster_sorted.map(&:first).should include("Cluster / Deployment Role : Total Number of Physical CPUs")
+      cluster_sorted.map(&:first).should include("Cluster / Deployment Role : Total Number of Logical CPUs")
       hardware_sorted = details.select { |d| d.first.starts_with?("Hardware") }.sort
       hardware_sorted.map(&:first).should_not include("Hardware : Logical Cpus")
     end
@@ -941,7 +941,7 @@ describe MiqExpression do
         FactoryGirl.create(:classification, :parent_id => category.id, :name => 'prod', :description => 'Production')
 
         exp = MiqExpression.new({"CONTAINS" => {"tag" => "Host.managed-environment", "value" => "prod"}})
-        exp.to_human.should == "Host.My Company Tags : Environment CONTAINS 'Production'"
+        exp.to_human.should == "Host / Node.My Company Tags : Environment CONTAINS 'Production'"
 
         exp = MiqExpression.new({"CONTAINS" => {"tag" => "Host.managed-environment", "value" => "prod", "alias" => "Env"}})
         exp.to_human.should == "Env CONTAINS 'Production'"

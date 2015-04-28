@@ -265,7 +265,7 @@ class EmsClusterController < ApplicationController
 
   def hosts_subsets
     condition         = nil
-    label             = @ems_cluster.name + _(" (All %s)" % title_for_hosts)
+    label             = _("%s (All %s)" % [@ems_cluster.name, title_for_hosts])
     breadcrumb_suffix = ""
 
     host_service_group_name = params[:host_service_group_name]

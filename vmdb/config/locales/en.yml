@@ -833,7 +833,7 @@ en:
       CustomButton:             Button
       CustomButtonSet:          Buttons Group
       EmsCloud:                 Cloud Provider
-      EmsCluster:               Clusters / Deployment Roles
+      EmsCluster:               Cluster / Deployment Role
       EmsClusterPerformance:    Performance - Cluster
       EmsContainer:             Container Provider
       EmsEvent:                 Management Event
@@ -846,7 +846,7 @@ en:
       FileDepotSmb:             Samba
       Filesystem:               File
       Flavor:                   Flavor
-      Host:                     Hosts / Nodes
+      Host:                     Host / Node
       HostPerformance:          Performance - Host
       IsoDatastore:             ISO Datastore
       IsoImage:                 ISO Image

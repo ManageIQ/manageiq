@@ -33,15 +33,18 @@ module ResourcePoolHelper::TextualSummary
 
   def textual_aggregate_cpu_speed
     # TODO: Why aren't we using mhz_to_human_size here?
-    {:label => "Total #{title_for_host} CPU Resources", :value => "#{number_with_delimiter(@record.aggregate_cpu_speed)} MHz"}
+    {:label => "Total #{title_for_host} CPU Resources",
+     :value => "#{number_with_delimiter(@record.aggregate_cpu_speed)} MHz"}
   end
 
   def textual_aggregate_cpu_memory
-    {:label => "Total #{title_for_host} Memory", :value => number_to_human_size(@record.aggregate_memory.megabytes, :precision => 0)}
+    {:label => "Total #{title_for_host} Memory",
+     :value => number_to_human_size(@record.aggregate_memory.megabytes, :precision => 0)}
   end
 
   def textual_aggregate_physical_cpus
-    {:label => "Total #{title_for_host} CPUs", :value => number_with_delimiter(@record.aggregate_physical_cpus)}
+    {:label => "Total #{title_for_host} CPUs",
+     :value => number_with_delimiter(@record.aggregate_physical_cpus)}
   end
 
   def textual_aggregate_logical_cpus
@@ -62,7 +65,9 @@ module ResourcePoolHelper::TextualSummary
 
   def textual_parent_cluster
     cluster = @record.parent_cluster
-    h = {:label => "Parent '#{title_for_cluster}'", :image => "ems_cluster", :value => (cluster.nil? ? "None" : cluster.name)}
+    h = {:label => "Parent '#{title_for_cluster}'",
+         :image => "ems_cluster",
+         :value => (cluster.nil? ? "None" : cluster.name)}
     if cluster && role_allows(:feature => "ems_cluster_show")
       h[:title] = "Show Parent #{title_for_cluster} #{cluster.name}"
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => cluster)

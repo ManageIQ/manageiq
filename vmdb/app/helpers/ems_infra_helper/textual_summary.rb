@@ -48,7 +48,8 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_memory_resources
-    {:label => "Aggregate #{title_for_host} Memory", :value => number_to_human_size(@ems.aggregate_memory * 1.megabyte,:precision=>0)}
+    {:label => "Aggregate #{title_for_host} Memory",
+     :value => number_to_human_size(@ems.aggregate_memory * 1.megabyte, :precision => 0)}
   end
 
   def textual_cpus
