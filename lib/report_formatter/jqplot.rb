@@ -87,6 +87,11 @@ module ReportFormatter
       x_axis_category_labels
     end
 
+    def build_reporting_chart_dim2_numeric
+      # FIXME: styling
+      super
+    end
+
     def build_reporting_chart_dim2
       counts = super # FIXME: counts are passed for now, should handle this in a better way
       default_legend
@@ -118,6 +123,24 @@ module ReportFormatter
       default_legend
       mri.chart.store_path(:options, :seriesDefaults, :renderer, 'jQuery.jqplot.BarRenderer')
       x_axis_category_labels
+    end
+
+    def build_reporting_chart_other_numeric
+      mri.chart.update(Jqplot.basic_chart_fallback(mri.graph[:type]))
+      mri.chart[:options][:seriesDefaults][:rendererOptions].update(
+        :varyBarColor => true
+      ) if mri.graph[:type] =~ /(Bar|Column)/
+      super
+
+      # x_axis_category_labels if mri.graph[:type] =~ /(Bar|Column)/
+
+      # horizontal_legend(mri.chart) if mri.graph[:type] =~ /Bar/
+      # default_legend(mri.chart)    if mri.graph[:type] =~ /Column/
+    end
+
+    def build_reporting_chart_dim2_numeric
+      # FIXME
+      super
     end
 
     def build_reporting_chart_other

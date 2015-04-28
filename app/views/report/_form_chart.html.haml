@@ -17,6 +17,28 @@
     - unless @edit[:new][:graph_type].blank?
       %tr
         %td.key
+          = _('Chart mode')
+        %td
+          = select_tag('chart_mode',
+            options_for_select([['Counts', 'counts'], ['Values', 'values']], @edit[:new][:chart_mode]),
+            :multiple              => false,
+            :class                 => "widthed",
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe"     => {:url => url}.to_json)
+      %tr
+        %td.key
+          = _('Data column')
+        %td
+          = select_tag('chart_column',
+            options_for_select(chart_fields_options, @edit[:new][:chart_column]),
+            :multiple              => false,
+            :class                 => "widthed",
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-miq_observe"     => {:url => url}.to_json)
+      %tr
+        %td.key
           = _('Top values to show')
         %td
           = select_tag('chosen_count',

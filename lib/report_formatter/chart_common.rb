@@ -58,7 +58,8 @@ module ReportFormatter
             when :performance then :build_performance_chart # performance chart (time based)
             when :util_ts     then :build_util_ts_chart     # utilization timestamp chart (grouped columns)
             when :planning    then :build_planning_chart    # trend based planning chart
-            else                   :build_reporting_chart   # standard reporting chart
+            else                                            # reporting charts
+              mri.graph[:mode] == 'values' ? :build_reporting_chart_numeric : :build_reporting_chart
             end
       method(fun).call(maxcols, divider)
     end
@@ -347,9 +348,46 @@ module ReportFormatter
           series.push(:value   => ocount,
                       :tooltip => "#{key1} / Other: #{ocount}")
         end
-        add_series("Other", series)
+        add_series(_("Other"), series)
       end
       counts # FIXME
+    end
+
+    def build_reporting_chart_dim2_numeric
+      # FIXME: styling
+      binding.pry
+    end
+
+    def build_reporting_chart_other_numeric
+      categories = []
+
+      model, col  = mri.graph[:column].split('-', 2)
+      col, aggreg = col.split(':', 2)
+      data_col_name = "#{col}__#{aggreg}"
+
+      sorted_data = mri.table.data.sort_by { |row| row[data_col_name] }
+
+      series = sorted_data.reverse.take(mri.graph[:count]).
+               each_with_object(series_class.new(@is_pie_type ? :pie : :flat)) do |row, a|
+
+        a.push(:value   => row[data_col_name],
+               :tooltip => row[mri.col_order[0]])
+        categories.push([row[mri.col_order[0]], row[data_col_name]])
+      end
+
+      if mri.graph[:other]
+        ocount = sorted_data[0, sorted_data.length - mri.graph[:count]].
+                  inject(0) { |sum, row| sum += row[data_col_name] }
+        series.push(:value => ocount, :tooltip => _('Other'))
+        categories.push([_('Other'), ocount])
+      end
+
+      # Pie charts put categories in legend, else in axis labels
+      limit = @is_pie_type ? LEGEND_LENGTH : LABEL_LENGTH
+      categories.collect! { |c| slice_legend(c[0], limit) }
+      add_axis_category_text(categories)
+
+      add_series(mri.headers[0], series)
     end
 
     def build_reporting_chart_other
@@ -404,6 +442,10 @@ module ReportFormatter
     # Utilization timestamp charts
     def build_util_ts_chart(maxcols, divider)
       build_util_ts_chart_column if %w(Column ColumnThreed).index(mri.graph[:type])
+    end
+
+    def build_reporting_chart_numeric(maxcols, divider)
+      mri.dims == 2 ?  build_reporting_chart_dim2_numeric : build_reporting_chart_other_numeric
     end
 
     def build_reporting_chart(maxcols, divider)

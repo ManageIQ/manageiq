@@ -25,4 +25,16 @@ module ReportHelper
       _("By %{typ}: %{values}") % {:typ => typ.to_s.titleize, :values => values.join(',')}
     end
   end
+
+
+  def chart_fields_options
+    # @edit[:pivot_cols] => {"Vm-mem_cpu"=>[:avg, :total]}
+    options = []
+    @edit[:pivot_cols].each do |field, agreg|
+      agreg.each do |fun|
+        options << ["#{field} (#{fun.to_s.titleize})", "#{field}:#{fun}"]
+      end
+    end
+    options
+  end
 end
