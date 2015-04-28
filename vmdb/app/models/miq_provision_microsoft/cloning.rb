@@ -89,8 +89,7 @@ module MiqProvisionMicrosoft::Cloning
   end
 
   def cpu_ps_script
-    cpu_script = ""
-    cpu_script << "-CPUCount #{cpu_count} "
+    cpu_script = "-CPUCount #{cpu_count} "
     cpu_script << "-CPUReserve #{cpu_reserve} " unless cpu_reserve.nil?
     cpu_script << "-CPUMaximumPercent #{cpu_max} " unless cpu_max.nil?
 
