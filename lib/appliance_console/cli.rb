@@ -96,6 +96,7 @@ module ApplianceConsole
         opt :ipaserver,  "IPA Server FQDN",  :type => :string
         opt :ipaprincipal,  "IPA Server principal", :type => :string,          :default => "admin"
         opt :ipapassword,   "IPA Server password",  :type => :string
+        opt :ipadomain,     "IPA Server domain (optional)", :type => :string
         opt :iparealm,      "IPA Server realm (optional)", :type => :string
         opt :ca,                   "CA name used for certmonger",       :type => :string,  :default => "ipa"
         opt :postgres_client_cert, "install certs for postgres client", :type => :boolean
@@ -210,6 +211,7 @@ module ApplianceConsole
       config = ExternalHttpdAuthentication.new(
         host,
         :ipaserver => options[:ipaserver],
+        :domain    => options[:ipadomain],
         :realm     => options[:iparealm],
         :principal => options[:ipaprincipal],
         :password  => options[:ipapassword],
