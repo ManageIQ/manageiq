@@ -112,7 +112,7 @@ module MiqAeServiceMiqRequestSpec
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request'].reason"
       @ae_method.update_attributes(:data => method)
       reason = invoke_ae.root(@ae_result_key)
-      reason.should == ""
+      reason.should be_nil
 
       wilma          = FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'wilma',  :email => 'wilma@bedrock.gov')
       betty          = FactoryGirl.create(:user, :name => 'Betty Rubble',     :userid => 'betty',  :email => 'betty@bedrock.gov')
