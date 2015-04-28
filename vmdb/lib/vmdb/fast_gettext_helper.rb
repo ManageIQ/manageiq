@@ -42,9 +42,13 @@ module Vmdb
       @supported_locales_filename ||= File.join(locale_path, "supported.yml")
     end
 
+    def self.supported_locales_specified?
+      File.exist?(supported_locales_filename)
+    end
+
     def self.find_available_locales
       available_locales = find_available_locales_via_directories
-      available_locales &= supported_locales if File.exist?(supported_locales_filename)
+      available_locales &= supported_locales if supported_locales_specified?
       available_locales
     end
 
