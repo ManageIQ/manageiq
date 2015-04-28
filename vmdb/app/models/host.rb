@@ -1707,6 +1707,12 @@ class Host < ActiveRecord::Base
 
       # Skip SSH for ESXi hosts
       unless self.is_vmware_esxi?
+        if self.hostname.blank?
+          $log.warn "#{log_header} No hostname defined for #{log_target}"
+          task.update_status("Finished", "Warn", "Scanning incomplete due to missing hostname")  if task
+          return
+        end
+
         self.update_ssh_auth_status! if self.respond_to?(:update_ssh_auth_status!)
 
         if self.missing_credentials?
