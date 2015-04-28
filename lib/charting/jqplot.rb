@@ -40,7 +40,7 @@ class Jqplot
           :options => {
             :seriesDefaults => {
               :renderer        => 'jQuery.jqplot.BarRenderer',
-              :rendererOptions => {:barDirection => 'horizontal'},
+              :rendererOptions => {:barDirection => 'horizontal', :barWidth => 5},
             },
             :series         => []
           },
@@ -52,7 +52,7 @@ class Jqplot
             :stackSeries    => true,
             :seriesDefaults => {
               :renderer        => 'jQuery.jqplot.BarRenderer',
-              :rendererOptions => {:barDirection => 'horizontal'},
+              :rendererOptions => {:barDirection => 'horizontal', :barWidth => 5},
             },
             :series         => []
           },
@@ -63,7 +63,7 @@ class Jqplot
           :options => {
             :seriesDefaults => {
               :renderer        => 'jQuery.jqplot.BarRenderer',
-              :rendererOptions => {:barDirection => 'vertical'},
+              :rendererOptions => {:barDirection => 'vertical', :barWidth => 5},
             },
             :series         => []
           },
@@ -75,7 +75,7 @@ class Jqplot
             :stackSeries    => true,
             :seriesDefaults => {
               :renderer        => 'jQuery.jqplot.BarRenderer',
-              :rendererOptions => {:barDirection => 'vertical'},
+              :rendererOptions => {:barDirection => 'vertical', :barWidth => 5},
             },
             :series         => []
           },
@@ -85,9 +85,9 @@ class Jqplot
       when 'Pie'
         Jqplot.default_legend(
           :options => {
-            :seriesDefaults => {
-              :renderer        => 'jQuery.jqplot.PieRenderer',
-              :rendererOptions => {:showDataLabels => true}
+            :seriesdefaults => {
+              :renderer        => 'jquery.jqplot.pierenderer',
+              :rendereroptions => {:showdatalabels => true}
             },
             :series         => []
           },

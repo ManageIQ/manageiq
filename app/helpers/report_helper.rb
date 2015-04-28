@@ -25,4 +25,22 @@ module ReportHelper
       _("By %{typ}: %{values}") % {:typ => typ.to_s.titleize, :values => values.join(',')}
     end
   end
+
+  def chart_fields_options
+    if @edit[:new][:group] != 'No'
+      @edit[:new][:col_options].find_all { |field, col_options| 
+        col_options[:grouping].present?
+      }.each_with_object([]) { |(field, col_options), options|
+        model = @edit[:new][:model]
+        col_options[:grouping].each { |fun|
+          options << ["#{field} (#{fun.to_s.titleize})", "#{model}-#{field}:#{fun}"]
+        }
+      }
+    else
+      @edit[:new][:field_order].find_all do |f|
+        ci = MiqReport.get_col_info(f.last.split("__").first)
+        ci[:numeric]
+      end
+    end
+  end
 end

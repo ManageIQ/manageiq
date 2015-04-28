@@ -211,6 +211,14 @@ module ReportController::Reports::Editor
         @sortby2 = @edit[:new][:sortby2]
         @sort1   = @edit[:new][:field_order].dup
         @sort2   = @sort1.dup.delete_if { |s| s[1] == @sortby1.split("__").first }
+      when "5"  # Charts
+        options = chart_fields_options
+       if options.empty?
+         @edit[:new][:chart_column] = nil
+       else
+         options[0][1] unless options.detect { |k,v| v ==  @edit[:new][:chart_column] }
+       end
+
       when "6"  # Timeline
         @tl_fields = Array.new
         @edit[:new][:fields].each do |field|
@@ -320,6 +328,8 @@ module ReportController::Reports::Editor
     @edit[:new][:filter_string]   = nil
     @edit[:new][:categories]      = []
     @edit[:new][:graph_type]      = nil             # Clear graph field
+    @edit[:new][:chart_mode]      = nil
+    @edit[:new][:chart_column]    = nil
     @edit[:new][:perf_trend_col]  = nil
     @edit[:new][:perf_trend_db]   = nil
     @edit[:new][:perf_trend_pct1] = nil
@@ -426,9 +436,7 @@ module ReportController::Reports::Editor
   # Handle params starting with "pivotcalc"
   def gfv_key_pivot_calculations(key, value)
     field = @edit[:new][:fields][key.split("_").last.to_i].last       # Get the field name
-    @edit[:pivot_cols][field] = []
-    @edit[:pivot_cols][field].push(value.to_s)                        # Add the type to the field's array
-    @edit[:pivot_cols][field].sort!                                   # Sort the array
+    @edit[:pivot_cols][field] = value.split(',').sort.map(&:to_sym)
     # Create new header from original
     @edit[:new][:headers][field + "__#{value}"] = @edit[:new][:headers][field] + " (#{value.to_s.titleize})"
     build_field_order
@@ -659,21 +667,39 @@ module ReportController::Reports::Editor
       if params[:chosen_graph] == "<No chart>"
         @edit[:new][:graph_type] = nil
         # Reset other setting to initial settings if choosing <No chart>
-        @edit[:new][:graph_count] = @edit[:current][:graph_count]
-        @edit[:new][:graph_other] = @edit[:current][:graph_other]
+        @edit[:new][:graph_count]  = @edit[:current][:graph_count]
+        @edit[:new][:graph_other]  = @edit[:current][:graph_other]
+        @edit[:new][:chart_mode]   = @edit[:current][:chart_mode]
+        @edit[:new][:chart_column] = @edit[:current][:chart_column]
       else
-        @edit[:new][:graph_other] = true if @edit[:new][:graph_type].nil? # Reset other setting if choosing first chart
-        @edit[:new][:graph_type]  = params[:chosen_graph] # Save graph type
-        @edit[:new][:graph_count] ||= GRAPH_MAX_COUNT     # Reset graph count, if not set
+        @edit[:new][:graph_other]  = true if @edit[:new][:graph_type].nil? # Reset other setting if choosing first chart
+        @edit[:new][:graph_type]   = params[:chosen_graph] # Save graph type
+        @edit[:new][:graph_count]  ||= GRAPH_MAX_COUNT     # Reset graph count, if not set
+        @edit[:new][:chart_mode]   ||= 'counts'
+        @edit[:new][:chart_column] ||= ''
       end
       @refresh_div     = "chart_div"
       @refresh_partial = "form_chart"
     end
+
+    if params[:chart_mode] && params[:chart_mode] != @edit[:new][:chart_mode]
+      @edit[:new][:chart_mode] = params[:chart_mode]
+      @refresh_div             = "chart_div"
+      @refresh_partial         = "form_chart"
+    end
+
+    if params[:chart_column] && params[:chart_column] != @edit[:new][:chart_column]
+      @edit[:new][:chart_column] = params[:chart_column]
+      @refresh_div              = "chart_sample_div"
+      @refresh_partial          = "form_chart_sample"
+    end
+
     if params[:chosen_count] && params[:chosen_count] != @edit[:new][:graph_count]
       @edit[:new][:graph_count] = params[:chosen_count]
       @refresh_div              = "chart_sample_div"
       @refresh_partial          = "form_chart_sample"
     end
+
     if params[:chosen_other] # If a chart is showing, set the other setting based on check box present
       chosen = (params[:chosen_other].to_s == "1")
       if @edit[:new][:graph_other] != chosen
@@ -1106,10 +1132,17 @@ module ReportController::Reports::Editor
       else
         rpt.dims = @edit[:new][:sortby2] == NOTHING_STRING ? 1 : 2  # Set dims to 1 or 2 based on presence of sortby2
       end
-      rpt.graph         = Hash.new
-      rpt.graph[:type]  = @edit[:new][:graph_type]
-      rpt.graph[:count] = @edit[:new][:graph_count]
-      rpt.graph[:other] = @edit[:new][:graph_other]
+      if @edit[:new][:chart_mode] == 'values' && @edit[:new][:chart_column].blank?
+        options = chart_fields_options
+        @edit[:new][:chart_column] = options[0][1] if !options.empty?
+      end
+      rpt.graph = {
+        :type   => @edit[:new][:graph_type],
+        :mode   => @edit[:new][:chart_mode],
+        :column => @edit[:new][:chart_column],
+        :count  => @edit[:new][:graph_count],
+        :other  => @edit[:new][:graph_other],
+      }
     end
 
     # Set the conditions field (expression)
@@ -1377,13 +1410,17 @@ module ReportController::Reports::Editor
 #   @edit[:new][:graph] = @rpt.graph
 # Replaced above line to handle new graph settings Hash
     if @rpt.graph.is_a?(Hash)
-      @edit[:new][:graph_type] = @rpt.graph[:type]
-      @edit[:new][:graph_count] = @rpt.graph[:count]
-      @edit[:new][:graph_other] = @rpt.graph[:other] ? @rpt.graph[:other] : false
+      @edit[:new][:graph_type]   = @rpt.graph[:type]
+      @edit[:new][:graph_count]  = @rpt.graph[:count]
+      @edit[:new][:chart_mode]   = @rpt.graph[:mode]
+      @edit[:new][:chart_column] = @rpt.graph[:column]
+      @edit[:new][:graph_other]  = @rpt.graph[:other] ? @rpt.graph[:other] : false
     else
-      @edit[:new][:graph_type] = @rpt.graph
-      @edit[:new][:graph_count] = GRAPH_MAX_COUNT
-      @edit[:new][:graph_other] = true
+      @edit[:new][:graph_type]   = @rpt.graph
+      @edit[:new][:graph_count]  = GRAPH_MAX_COUNT
+      @edit[:new][:chart_mode]   = 'counts'
+      @edit[:new][:chart_column] = ''
+      @edit[:new][:graph_other]  = true
     end
 
     @edit[:new][:dims] = @rpt.dims
