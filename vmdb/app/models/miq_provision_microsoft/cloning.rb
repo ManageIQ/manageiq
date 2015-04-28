@@ -88,6 +88,15 @@ module MiqProvisionMicrosoft::Cloning
     end
   end
 
+  def cpu_ps_script
+    cpu_script = ""
+    cpu_script << "-CPUCount #{cpu_count} "
+    cpu_script << "-CPUReserve #{cpu_reserve} " unless cpu_reserve.nil?
+    cpu_script << "-CPUMaximumPercent #{cpu_max} " unless cpu_max.nil?
+
+    cpu_script
+  end
+
   def template_ps_script
     "(Get-SCVMTemplate -Name #{source.name})"
   end
@@ -116,9 +125,7 @@ module MiqProvisionMicrosoft::Cloning
         -Path #{dest_mount_point} \
         -VMTemplate #{template_ps_script}; \
       Set-SCVirtualMachine -VM $vm \
-        -CPUCount #{cpu_count} \
-        -CPUReserve #{cpu_reserve} \
-        -CPUMaximumPercent #{cpu_max} \
+        #{cpu_ps_script} \
         #{memory_ps_script} | Out-Null;  \
       #{network_adapter_ps_script} \
       $vm | Select-Object ID | ConvertTo-Json
