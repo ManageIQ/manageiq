@@ -1,15 +1,19 @@
 module Vmdb
   module FastGettextHelper
-  	def self.register_human_localenames
+    def self.human_locale(locale)
+      # TRANSLATORS: Provide locale name in native language (e.g. English, Deutsch or Português)
+      human_locale = _("locale_name")
+      human_locale = locale if human_locale == "locale_name"
+      human_locale
+    end
+
+    def self.register_human_localenames
       original_locale = FastGettext.locale
       FastGettext.class.class_eval { attr_accessor :human_available_locales }
       FastGettext.human_available_locales = []
       FastGettext.available_locales.each do |locale|
         FastGettext.locale = locale
-        # TRANSLATORS: Provide locale name in native language (e.g. English, Deutsch or Português)
-        human_locale = _("locale_name")
-        human_locale = locale if human_locale == "locale_name"
-        FastGettext.human_available_locales << [human_locale, locale]
+        FastGettext.human_available_locales << [human_locale(locale), locale]
       end
       FastGettext.human_available_locales.sort! { |a, b| a[0] <=> b[0] }
     ensure

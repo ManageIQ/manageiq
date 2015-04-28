@@ -4,7 +4,7 @@ begin
   # enabled must want a flood of racc/yydebug output. As we're actually
   # trying to debug something other than their parser, we need to
   # temporarily force it off while we load stuff.
-  Vmdb::FastGettextHelper::register_locales
+  Vmdb::FastGettextHelper.register_locales
 ensure
   $DEBUG = old_debug
 end
