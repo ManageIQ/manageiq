@@ -53,11 +53,6 @@ module OpsController::Settings::Schedules
       # when we have a version of Rails that supports detecting changes on serialized
       # fields
       old_schedule_attributes = schedule.attributes.clone
-      old_schedule_attributes.merge("depot_hash" => {:uri      => schedule.depot_hash[:uri],
-                                                     :username => schedule.depot_hash[:username],
-                                                     :password => schedule.depot_hash[:password],
-                                                     :name     => schedule.depot_hash[:name]
-                                                    }) if schedule.depot_hash
       old_schedule_attributes.merge("filter" => old_schedule_attributes["filter"].try(:to_human))
       old_schedule_attributes.merge("run_at" => {:start_time => schedule.run_at[:start_time],
                                                  :tz         => schedule.run_at[:tz],
@@ -92,7 +87,7 @@ module OpsController::Settings::Schedules
       # This is only because ops_controller tries to set form locals, otherwise we should not use the @edit variable
       @edit = {:sched_id => @schedule.id}
 
-      settings = @schedule.depot_hash
+      settings = @schedule.file_depot.try(:depot_hash) || {}
       unless settings[:uri].nil?
         @protocol = DatabaseBackup.supported_depots[settings[:uri].split('://')[0]]
         @uri_prefix = settings[:uri].split('://')[0]
@@ -121,8 +116,7 @@ module OpsController::Settings::Schedules
       action_type = schedule.towhat.downcase + "_" + schedule.sched_action[:method]
     elsif schedule_db_backup?(schedule)
       action_type = schedule.sched_action[:method]
-
-      settings = schedule.depot_hash
+      settings    = schedule.file_depot.try(:depot_hash) || {}
 
       unless settings[:uri].nil?
         uri_prefix = settings[:uri].split('://')[0]
@@ -553,12 +547,14 @@ module OpsController::Settings::Schedules
       end
     else
       schedule.filter = nil
-      schedule.depot_hash = {
-        :uri      => "#{params[:uri_prefix]}://#{params[:uri]}",
-        :username => params[:log_userid],
-        :password => params[:log_password],
-        :name     => params[:depot_name]
-      }
+      schedule.verify_file_depot(
+        :name       => params[:depot_name],
+        :password   => params[:log_password],
+        :username   => params[:log_userid],
+        :uri        => "#{params[:uri_prefix]}://#{params[:uri]}",
+        :uri_prefix => params[:uri_prefix],
+        :save       => true,
+      )
     end
   end
 

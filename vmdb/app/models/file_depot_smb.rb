@@ -8,4 +8,8 @@ class FileDepotSmb < FileDepot
     raise "Depot Settings validation failed with error: #{res.last}" unless res.first
     res
   end
+
+  def verify_credentials(_auth_type = nil, cred_hash = nil)
+    self.class.validate_settings(cred_hash.merge(:uri => uri))
+  end
 end

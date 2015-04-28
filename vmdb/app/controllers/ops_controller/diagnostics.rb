@@ -295,8 +295,8 @@ module OpsController::Diagnostics
 
   def db_backup_form_field_changed
     schedule = MiqSchedule.find_by_id(params[:id])
-    settings = schedule ? schedule.depot_hash : nil
-    uri_settings = settings[:uri].split("://")
+    settings = schedule.file_depot.try(:depot_hash) || {}
+    uri_settings = settings[:uri].to_s.split("://")
     render :json => {:depot_name   => settings[:name],
                      :uri          => uri_settings[1],
                      :uri_prefix   => uri_settings[0],
@@ -330,11 +330,7 @@ module OpsController::Diagnostics
       end
       return
     end
-    settings = {:uri      => params[:uri_prefix] + "://" + params[:uri],
-                :username => params[:log_userid],
-                :password => params[:log_password],
-                :name     => params[:depot_name]}
-      @schedule.depot_hash=(settings) if MiqSchedule.verify_depot_hash(settings)
+
     schedule_set_record_vars(@schedule)
     schedule_validate?(@schedule)
     if @schedule.valid? && !flash_errors? && @schedule.save
