@@ -73,13 +73,18 @@ def dialog_parser_error
   exit MIQ_ABORT
 end
 
+def yaml_data(option)
+  @task.get_option(option).nil? ? nil : YAML.load(@task.get_option(option))
+end
+
 def parsed_dialog_information
-  dialog_options_hash = @task.get_option(:parsed_dialog_options).nil? ? nil : YAML.load(@task.get_option(:parsed_dialog_options))
-  dialog_tags_hash = @task.get_option(:parsed_dialog_tags).nil? ? nil : YAML.load(@task.get_option(:parsed_dialog_tags))
+  dialog_options_hash = yaml_data(:parsed_dialog_options)
+  dialog_tags_hash = yaml_data(:parsed_dialog_tags)
   if dialog_options_hash.blank? && dialog_tags_hash.blank?
     log_and_update_message(:info, "Instantiating dialog_parser to populate dialog options")
     $evm.instantiate('/Service/Provisioning/StateMachines/Methods/DialogParser')
-    dialog_options_hash, dialog_tags_hash = parsed_dialog_information
+    dialog_options_hash = yaml_data(:parsed_dialog_options)
+    dialog_tags_hash = yaml_data(:parsed_dialog_tags)
     dialog_parser_error if dialog_options_hash.blank? && dialog_tags_hash.blank?
   end
 
