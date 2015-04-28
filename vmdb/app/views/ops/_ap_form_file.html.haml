@@ -7,9 +7,9 @@
         %th =_("Name")
         %th =_("Collect Contents?")
     %tbody
-      - an_id = "#{@scan.id || 'new'}"
+      - scan_id = "#{@scan.id || 'new'}"
       - if !params[:add] && params[:add] != "new"
-        %tr#new_tr{ :title => _("Click to add a new entry"), :onclick => remote_function(:url => {:action => 'ap_ce_select', :add => 'new', :item => "file", :id => an_id}) }
+        %tr#new_tr{ :title => _("Click to add a new entry"), :onclick => remote_function(:url => {:action => 'ap_ce_select', :add => 'new', :item => "file", :id => scan_id}) }
           %td
             .rollover
               = image_tag("/images/toolbars/new.png", :class => "rollover small")
@@ -25,7 +25,7 @@
                 :alt       => _("Add this entry"),
                 :title     => _("Add this entry"),
                 :item_type => "file",
-                :id        => an_id)
+                :id        => scan_id)
           %td
             = text_field("entry", "fname", :maxlength => MAX_NAME_LEN, :style => "width: 100%;")
             = hidden_field("item", "type1", :value => "file")
@@ -34,11 +34,11 @@
       - Array(session[:file_names]).sort_by { |r| r["target"] }.each do |entry|
         - if session[:edit_filename] != entry["target"]
           %tr{ :class => cycle('row0', 'row1'), :id => "#{entry['target']}_tr" }
-            %td{ :onclick => remote_function(:url => {:action => 'ap_ce_delete', :file_name => entry["target"], :id => an_id}), :title => _("Click to delete this entry") }
+            %td{ :onclick => remote_function(:url => {:action => 'ap_ce_delete', :file_name => entry["target"], :id => scan_id}), :title => _("Click to delete this entry") }
               = image_tag("/images/toolbars/delete.png", :class => "rollover small")
-            %td{ :onclick => remote_function(:url => {:action => 'ap_ce_select', :file_name => entry["target"], :edit_entry => 'edit_file', :field => "fname", :id => an_id}), :title => _("Click to update this entry") }
+            %td{ :onclick => remote_function(:url => {:action => 'ap_ce_select', :file_name => entry["target"], :edit_entry => 'edit_file', :field => "fname", :id => scan_id}), :title => _("Click to update this entry") }
               = h(entry["target"])
-            %td{ :onclick => remote_function(:url => {:action => 'ap_ce_select', :file_name => entry["target"], :edit_entry => 'edit_file', :field => "fname", :id => an_id}), :title => _("Click to update this entry") }
+            %td{ :onclick => remote_function(:url => {:action => 'ap_ce_select', :file_name => entry["target"], :edit_entry => 'edit_file', :field => "fname", :id => scan_id}), :title => _("Click to update this entry") }
               = h(entry["content"] ? entry["content"] : false)
         - else
           - if params[:add] != "new"
@@ -50,7 +50,7 @@
                   :name  => "accept",
                   :alt   => t = _("Update this entry"),
                   :title => t,
-                  :id    => an_id)
+                  :id    => scan_id)
               %td
                 = text_field("entry", "fname", :maxlength => MAX_NAME_LEN, "value" => session[:edit_filename], :style => "width: 100%;")
                 = hidden_field("item", "type1", :value => "file")
