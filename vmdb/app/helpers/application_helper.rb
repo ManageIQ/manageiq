@@ -2667,7 +2667,7 @@ module ApplicationHelper
 
   def render_listnav_filename
     if @lastaction == "show_list" && !session[:menu_click] &&
-       %w(ems_cloud ems_cluster ems_infra host miq_template offline orchestration_stack repository
+       %w(container_node container_service ems_container container_group ems_cloud ems_cluster ems_infra host miq_template offline orchestration_stack repository
           resource_pool retired service storage templates vm).include?(@layout) && !@in_a_form
       "show_list"
     elsif @compare
