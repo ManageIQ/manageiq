@@ -1254,12 +1254,22 @@
     search_type: default
     db: Container
 - attributes:
-    name: default_Restart Count
-    description: Restart Count is 1
+    name: default_Namespace / ContainerGroup
+    description: Namespace / Container Group
     filter: !ruby/object:MiqExpression
       exp:
         "=":
-          field: Container-restart_count
-          value: "1"
+          field: ContainerGroup-namespace
+          value: default
     search_type: default
     db: ContainerGroup
+- attributes:
+    name: default_Namespace / ContainerService
+    description: Namespace / Container Services
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: ContainerService-namespace
+          value: default
+    search_type: default
+    db: ContainerService
