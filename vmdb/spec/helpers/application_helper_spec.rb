@@ -4025,4 +4025,146 @@ describe ApplicationHelper do
       end
     end
   end
+
+  context "#title_for_clusters" do
+    before(:each) do
+      @ems1 = FactoryGirl.create(:ems_vmware)
+      @ems2 = FactoryGirl.create(:ems_openstack_infra)
+    end
+
+    it "returns 'Clusters / Deployment Roles' when there are both openstack & non-openstack clusters" do
+      FactoryGirl.create(:ems_cluster, :ems_id => @ems1.id)
+      FactoryGirl.create(:ems_cluster, :ems_id => @ems2.id)
+
+      result = title_for_clusters
+      result.should eq("Clusters / Deployment Roles")
+    end
+
+    it "returns 'Clusters' when there are only non-openstack clusters" do
+      FactoryGirl.create(:ems_cluster, :ems_id => @ems1.id)
+
+      result = title_for_clusters
+      result.should eq("Clusters")
+    end
+
+    it "returns 'Deployment Roles' when there are only openstack clusters" do
+      FactoryGirl.create(:ems_cluster, :ems_id => @ems2.id)
+
+      result = title_for_clusters
+      result.should eq("Deployment Roles")
+    end
+  end
+
+  context "#title_for_cluster" do
+    before(:each) do
+      @ems1 = FactoryGirl.create(:ems_vmware)
+      @ems2 = FactoryGirl.create(:ems_openstack_infra)
+    end
+
+    it "returns 'Cluster' for non-openstack cluster" do
+      FactoryGirl.create(:ems_cluster, :ems_id => @ems1.id)
+
+      result = title_for_cluster
+      result.should eq("Cluster")
+    end
+
+    it "returns 'Deployment Role' for openstack cluster" do
+      FactoryGirl.create(:ems_cluster, :ems_id => @ems2.id)
+
+      result = title_for_cluster
+      result.should eq("Deployment Role")
+    end
+  end
+
+  context "#title_for_cluster_record" do
+    before(:each) do
+      @ems1 = FactoryGirl.create(:ems_vmware)
+      @ems2 = FactoryGirl.create(:ems_openstack_infra)
+    end
+
+    it "returns 'Cluster' for non-openstack host" do
+      cluster = FactoryGirl.create(:ems_cluster, :ems_id => @ems1.id)
+
+      result = title_for_cluster_record(cluster)
+      result.should eq("Cluster")
+    end
+
+    it "returns 'Deployment Role' for openstack host" do
+      cluster = FactoryGirl.create(:ems_cluster, :ems_id => @ems2.id)
+
+      result = title_for_cluster_record(cluster)
+      result.should eq("Deployment Role")
+    end
+  end
+
+  context "#title_for_hosts" do
+    before(:each) do
+      @ems1 = FactoryGirl.create(:ems_vmware)
+      @ems2 = FactoryGirl.create(:ems_openstack_infra)
+    end
+
+    it "returns 'Hosts / Nodes' when there are both openstack & non-openstack hosts" do
+      FactoryGirl.create(:host_vmware_esx, :ems_id => @ems1.id)
+      FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
+
+      result = title_for_hosts
+      result.should eq("Hosts / Nodes")
+    end
+
+    it "returns 'Hosts' when there are only non-openstack hosts" do
+      FactoryGirl.create(:host_vmware_esx, :ems_id => @ems1.id)
+
+      result = title_for_hosts
+      result.should eq("Hosts")
+    end
+
+    it "returns 'Nodes' when there are only openstack hosts" do
+      FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
+
+      result = title_for_hosts
+      result.should eq("Nodes")
+    end
+  end
+
+  context "#title_for_host" do
+    before(:each) do
+      @ems1 = FactoryGirl.create(:ems_vmware)
+      @ems2 = FactoryGirl.create(:ems_openstack_infra)
+    end
+
+    it "returns 'Host' for non-openstack host" do
+      FactoryGirl.create(:host_vmware, :ems_id => @ems1.id)
+
+      result = title_for_host
+      result.should eq("Host")
+    end
+
+    it "returns 'Node' for openstack host" do
+      FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
+
+      result = title_for_host
+      result.should eq("Node")
+    end
+  end
+
+  context "#title_for_host_record" do
+    before(:each) do
+      @ems1 = FactoryGirl.create(:ems_vmware)
+      @ems2 = FactoryGirl.create(:ems_openstack_infra)
+    end
+
+    it "returns 'Host' for non-openstack host" do
+      host = FactoryGirl.create(:host_vmware, :ems_id => @ems1.id)
+
+      result = title_for_host_record(host)
+      result.should eq("Host")
+    end
+
+    it "returns 'Node' for openstack host" do
+      host = FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
+
+      result = title_for_host_record(host)
+      result.should eq("Node")
+    end
+  end
 end
