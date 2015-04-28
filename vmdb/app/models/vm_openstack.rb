@@ -11,10 +11,15 @@ class VmOpenstack < VmCloud
 
   def self.calculate_power_state(raw_power_state)
     case raw_power_state
-    when "RUNNING"                                    then "on"
-    when "BLOCKED", "PAUSED", "SUSPENDED", "BUILDING" then "suspended"
-    when "SHUTDOWN", "SHUTOFF", "CRASHED", "FAILED"   then "off"
-    else                                                   super
+    when "ACTIVE"                then "on"
+    when "SHUTOFF"               then "off"
+    when "SUSPENDED"             then "suspended"
+    when "PAUSED"                then "paused"
+    when "REBOOT", "HARD_REBOOT" then "reboot_in_progress"
+    when "ERROR"                 then "non_operational"
+    when "BUILD", "REBUILD"      then "wait_for_launch"
+    when "DELETED"               then "archived"
+    else                              "unknown"
     end
   end
 

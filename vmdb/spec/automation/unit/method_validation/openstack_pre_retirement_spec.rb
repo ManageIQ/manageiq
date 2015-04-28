@@ -5,7 +5,7 @@ describe "openstack_pre_retirement Method Validation" do
     @zone = FactoryGirl.create(:zone)
     @ems  = FactoryGirl.create(:ems_vmware, :zone => @zone)
     @vm   = FactoryGirl.create(:vm_openstack,
-                               :name => "OOO",     :raw_power_state => "RUNNING",
+                               :name => "OOO",     :raw_power_state => "ACTIVE",
                                :ems_id => @ems.id, :registered => true)
     @ins  = "/Cloud/VM/Retirement/StateMachines/Methods/PreRetirement"
   end
