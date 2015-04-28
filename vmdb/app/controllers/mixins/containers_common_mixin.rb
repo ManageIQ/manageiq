@@ -38,6 +38,17 @@ module ContainersCommonMixin
         pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}")
         + " on this " + ui_lookup(:tables => @table_name)
       end
+    elsif @display == "containers"
+      title = ui_lookup(:tables => "containers")
+      drop_breadcrumb(:name => record.name + " (All #{title})",
+                      :url  => "/container_group/show/#{record.id}?display=#{@display}")
+      @view, @pages = get_view(Container, :parent => record) # Get the records (into a view) and the paginator
+      @showtype = @display
+      if @view.extras.fetch(:total_count, 0) > @view.extras.fetch(:auth_count, 0)
+        @bottom_msg = "* You are not authorized to view " +
+        pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}")
+        + " on this " + ui_lookup(:tables => @table_name)
+      end
     end
     # Came in from outside show_list partial
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]

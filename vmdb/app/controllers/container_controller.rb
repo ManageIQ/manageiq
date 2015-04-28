@@ -68,11 +68,6 @@ class ContainerController < ApplicationController
       return
     end
 
-    if params[:id]  # If a tree node id came in, show in one of the trees
-      nodetype, id = params[:id].split("-")
-      self.x_node = "#{nodetype}-#{to_cid(id)}"
-    end
-
     # Build the Explorer screen from scratch
     @built_trees   = []
     @accords = []
@@ -92,6 +87,13 @@ class ContainerController < ApplicationController
       @accords.push(:name      => "containers_filter",
                     :title     => "All Containers",
                     :container => "containers_filter_tree_div")
+    end
+
+    if params[:id]  # If a tree node id came in, show in one of the trees
+      nodetype, id = params[:id].split("-")
+      # treebuilder initializes x_node to root first time in locals_for_render,
+      # need to set this here to force & activate node when link is clicked outside of explorer.
+      @reselect_node = self.x_node = "#{nodetype}-#{to_cid(id)}"
     end
 
     params.merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides

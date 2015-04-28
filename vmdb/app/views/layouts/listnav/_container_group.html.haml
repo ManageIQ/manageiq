@@ -21,3 +21,13 @@
                 {:controller => "ems_container", :action => 'show', :id => @record.ext_management_system.id.to_s},
                 {:title => _("Show this container group's parent %s") % ui_lookup(:table => "ems_container")},
                 '/images/icons/16/link_external.gif')
+        - if role_allows(:feature => "containers")
+          - num_containers = @record.number_of(:containers)
+          - if num_containers == 0
+            %li.disabled
+              = link_to(_("%s (0)") % ui_lookup(:table => "containers"), "#")
+          - else
+            %li
+              = link_to(_("%s (%s)") % [ui_lookup(:table => "containers"), num_containers],
+                  {:action => 'show', :id => @record, :display => 'containers'},
+                  :title => _("View %s") % ui_lookup(:table => "containers"))
