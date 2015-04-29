@@ -2122,6 +2122,8 @@ module ApplicationHelper
         return "scan_profile_center_tb"
       elsif x_node.split('-').last == "z"
         return "zones_center_tb"
+      elsif x_node.split('-').first == "z"
+        return "zone_center_tb"
       end
     elsif x_active_tree == :diagnostics_tree
       if x_node == "root"
