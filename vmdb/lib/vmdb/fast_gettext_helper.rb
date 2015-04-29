@@ -43,7 +43,7 @@ module Vmdb
     end
 
     def self.supported_locales_filename
-      @supported_locales_filename ||= File.join(locale_path, "supported.yml")
+      @supported_locales_filename ||= Rails.root.join("config", "supported_locales.yml")
     end
 
     def self.supported_locales_specified?
