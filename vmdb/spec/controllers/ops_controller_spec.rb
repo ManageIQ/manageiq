@@ -136,4 +136,49 @@ describe OpsController do
       expect(response.body).to_not be_empty
     end
   end
+
+  context "#edit_changed?" do
+    it "should set session[:changed] as false" do
+      edit = {
+        :new     => {:foo => 'bar'},
+        :current => {:foo => 'bar'}
+      }
+      controller.instance_variable_set(:@edit, edit)
+      controller.send(:edit_changed?)
+      session[:changed].should eq(false)
+    end
+
+    it "should set session[:changed] as true" do
+      edit = {
+        :new     => {:foo => 'bar'},
+        :current => {:foo => 'bar1'}
+      }
+      controller.instance_variable_set(:@edit, edit)
+      controller.send(:edit_changed?)
+      session[:changed].should eq(true)
+    end
+
+    it "should set session[:changed] as false when config is same" do
+      vmdb = VMDB::Config.new("vmdb")
+      # edit_changed? expects current to be VMDB::Config
+      edit = {
+        :new     => vmdb.config,
+        :current => vmdb
+      }
+      controller.instance_variable_set(:@edit, edit)
+      controller.send(:edit_changed?)
+      session[:changed].should eq(false)
+    end
+
+    it "should set session[:changed] as true when config is sadifferentme" do
+      edit = {
+        :new     => {:workers => 2},
+        :current => VMDB::Config.new("vmdb")
+      }
+      controller.instance_variable_set(:@edit, edit)
+      controller.send(:edit_changed?)
+      session[:changed].should eq(true)
+    end
+
+  end
 end

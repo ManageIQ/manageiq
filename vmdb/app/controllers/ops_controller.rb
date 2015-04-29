@@ -169,7 +169,7 @@ class OpsController < ApplicationController
     @temp[:x_edit_buttons_locals] = set_form_locals if @in_a_form
     @collapse_c_cell = @in_a_form || @pages ? false : true
     @sb[:center_tb_filename] = center_toolbar_filename
-    session[:changed] = @edit[:new] != @edit[:current].try(:config) if @edit
+    edit_changed? if @edit
     render :layout => "explorer"
   end
 
@@ -237,6 +237,11 @@ class OpsController < ApplicationController
   end
 
   private ############################
+
+  def edit_changed?
+    current = @edit[:current].kind_of?(Hash) ? @edit[:current] : @edit[:current].try(:config)
+    session[:changed] = @edit[:new] != current
+  end
 
   def rbac_and_user_make_subarrays
     if ! @set_filter_values.blank?
