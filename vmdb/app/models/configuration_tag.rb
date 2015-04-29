@@ -4,7 +4,7 @@ class ConfigurationTag < ActiveRecord::Base
 
   acts_as_miq_taggable
 
-  belongs_to :manager
+  belongs_to :manager, :class_name => 'ConfigurationManager'
   has_and_belongs_to_many :configured_systems
   has_and_belongs_to_many :configuration_profiles
 

@@ -28,11 +28,11 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
   let(:default_location)      { provisioning_manager.configuration_locations.first }
   let(:default_organization)  { provisioning_manager.configuration_organizations.first }
 
-  let(:architectures)         { provisioning_manager.configuration_architectures }
-  let(:compute_profiles)      { provisioning_manager.configuration_compute_profiles }
-  let(:domains)               { provisioning_manager.configuration_domains }
-  let(:environments)          { provisioning_manager.configuration_environments }
-  let(:realms)                { provisioning_manager.configuration_realms }
+  let(:architectures)         { configuration_manager.configuration_architectures }
+  let(:compute_profiles)      { configuration_manager.configuration_compute_profiles }
+  let(:domains)               { configuration_manager.configuration_domains }
+  let(:environments)          { configuration_manager.configuration_environments }
+  let(:realms)                { configuration_manager.configuration_realms }
 
   it "will perform a full refresh on api v2" do
     # Stub the queueing of the refresh so that when the manager
