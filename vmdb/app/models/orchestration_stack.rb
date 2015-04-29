@@ -3,6 +3,7 @@ class OrchestrationStack < ActiveRecord::Base
   include NewWithTypeStiMixin
   include ReportableMixin
   include AsyncDeleteMixin
+  include ProcessTasksMixin
   include_concern 'RetirementManagement'
 
   acts_as_miq_taggable
