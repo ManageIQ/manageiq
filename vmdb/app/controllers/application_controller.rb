@@ -1521,21 +1521,29 @@ class ApplicationController < ActionController::Base
     @devices = Array.new    # This will be an array of hashes to allow the rhtml to pull out each device field by name
     unless db_record.hardware.nil?
       db_notes = db_record.hardware.annotation.nil? ? "<No notes have been entered for this VM>" : db_record.hardware.annotation
-      # add processor entry to the device array
-      @devices.push({ :device=>"Processors",
-                                      :description=>db_record.hardware.numvcpus,
-                                      :icon=>"processor" }) unless db_record.hardware.numvcpus.nil?
-      # add cpu entries to the device array
-      @devices.push({ :device => "CPU Type",
-                              :description => db_record.hardware.cpu_type.to_s,
-                              :icon => "processor" }) unless db_record.hardware.cpu_type.nil?
-      @devices.push({ :device => "CPU Speed",
-                              :description => db_record.hardware.cpu_speed.to_s << " MHz",
-                              :icon => "processor" }) unless db_record.hardware.cpu_speed.nil?
-      # add memory entry to the device array
-      @devices.push({ :device => "Memory",
-                                      :description => db_record.hardware.memory_cpu.to_s << " MB",
-                                      :icon => "memory" }) unless db_record.hardware.memory_cpu.nil?
+
+      if db_record.hardware.logical_cpus
+        cpu_details =
+          if db_record.num_cpu && db_record.cores_per_socket
+            " (#{pluralize(@record.num_cpu, 'socket')} x #{pluralize(@record.cores_per_socket, 'core')})"
+          else
+            ""
+          end
+
+        @devices.push(:device      => "Processors",
+                      :description => "#{db_record.hardware.logical_cpus}#{cpu_details}",
+                      :icon        => "processor")
+      end
+
+      @devices.push(:device      => "CPU Type",
+                    :description => db_record.hardware.cpu_type,
+                    :icon        => "processor") if db_record.hardware.cpu_type
+      @devices.push(:device      => "CPU Speed",
+                    :description => "#{db_record.hardware.cpu_speed} MHz",
+                    :icon        => "processor") if db_record.hardware.cpu_speed
+      @devices.push(:device      => "Memory",
+                    :description => "#{db_record.hardware.memory_cpu} MB",
+                    :icon        => "memory") if db_record.hardware.memory_cpu
 
       # Add disks to the device array
       if !db_record.hardware.disks.nil?
