@@ -75,8 +75,18 @@ module EmsRefresh
         return hosts_attributes unless clouds
 
         clouds.each do |cloud_ems|
-          connection = cloud_ems.connect
-          compute_hosts  = connection.hosts.select { |x| x.service_name == "compute" }
+          compute_hosts = nil
+          begin
+            cloud_ems.with_provider_connection do |connection|
+              compute_hosts = connection.hosts.select { |x| x.service_name == "compute" }
+            end
+          rescue StandardError => err
+            $log.error "MIQ(#{self.class.name}.#{__method__}) Error Class=#{err.class.name}, Message=#{err.message}"
+            $log.error err.backtrace.join("\n")
+            # Just log the error and continue the refresh, we don't want error in cloud side to affect infra refresh
+            next
+          end
+
           compute_hosts.each do |compute_host|
             # We need to take correct zone id from correct provider, since the zone name can be the same
             # across providers
