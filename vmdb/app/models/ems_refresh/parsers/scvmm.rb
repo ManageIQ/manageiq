@@ -158,6 +158,8 @@ module EmsRefresh::Parsers
       result = []
 
       logical_networks.each do |ln|
+        next if ln.nil?
+
         result << {
           :name    => ln[:Props][:Name],
           :uid_ems => ln[:Props][:ID],
