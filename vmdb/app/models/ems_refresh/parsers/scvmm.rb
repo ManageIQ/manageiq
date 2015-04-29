@@ -172,11 +172,9 @@ module EmsRefresh::Parsers
         :type             => 'VmMicrosoft',
         :vendor           => "microsoft",
         :raw_power_state  => p[:VirtualMachineState][:ToString],
-        :location         => p[:VMCPath].sub(DRIVE_LETTER, "").strip,
         :operating_system => process_vm_os(p[:OperatingSystem]),
         :connection_state => lookup_connected_state(connection_state),
         :tools_status     => process_tools_status(p),
-
         :host             => host,
         :ems_cluster      => host && normalize_blank_property(host[:ems_cluster]),
         :hardware         => process_vm_hardware(vm),
@@ -184,6 +182,7 @@ module EmsRefresh::Parsers
         :storage          => process_vm_storage(p[:VMCPath], host),
         :storages         => process_vm_storages(p),
       }
+      new_result[:location] = p[:VMCPath].nil? ? "unknown" : p[:VMCPath].sub(DRIVE_LETTER, "").strip
       return uid, new_result
     end
 
