@@ -1721,13 +1721,19 @@ module ApplicationHelper
 
   # Reload toolbars using new buttons object and xml
   def javascript_for_toolbar_reload(tb, buttons, xml)
-    js = ""
-    js << "#{tb}.unload();"
-    js << "#{tb} = null;"
-    js << "#{tb} = new dhtmlXToolbarObject('#{tb}', 'miq_blue');"
-    js << "miq_toolbars['#{tb}'] = {obj:#{tb}, buttons:#{buttons}, xml:\"#{xml}\"};"
-    js << "miqInitToolbar(miq_toolbars['#{tb}']);"
-    return js
+    %Q{
+      if (miq_toolbars.#{tb} && miq_toolbars.#{tb}.obj)
+        miq_toolbars.#{tb}.obj.unload();
+
+      window.#{tb} = new dhtmlXToolbarObject('#{tb}', 'miq_blue');
+      miq_toolbars['#{tb}'] = {
+        obj: window.#{tb},
+        buttons: #{buttons},
+        xml: "#{xml}"
+      };
+
+      miqInitToolbar(miq_toolbars['#{tb}']);
+    }
   end
 
   def javascript_for_ae_node_selection(id, prev_id, select)
