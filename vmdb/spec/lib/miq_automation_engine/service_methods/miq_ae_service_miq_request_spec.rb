@@ -238,5 +238,13 @@ module MiqAeServiceMiqRequestSpec
       invoke_ae
       @miq_request.reload.message.should == message
     end
+
+    it "#description=" do
+      description = 'test description'
+      method  = "$evm.root['miq_request'].description=('#{description}')"
+      @ae_method.update_attributes(:data => method)
+      invoke_ae
+      @miq_request.reload.description.should == description
+    end
   end
 end
