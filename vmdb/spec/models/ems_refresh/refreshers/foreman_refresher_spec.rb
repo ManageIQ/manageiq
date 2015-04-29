@@ -34,6 +34,9 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
   let(:environments)          { provisioning_manager.configuration_environments }
   let(:realms)                { provisioning_manager.configuration_realms }
 
+  let(:my_env)                { environments.select  { |a| a.name = 'production' }.last }
+  let(:my_arch)               { architectures.select { |a| a.name = 'x86_64' }.last }
+
   it "will perform a full refresh on api v2" do
     # Stub the queueing of the refresh so that when the manager
     #  queues up an alternate refresh we will execute it immediately.
@@ -126,38 +129,51 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
     child  = configuration_manager.configuration_profiles.where(:name => 'ProviderRefreshSpec-ChildHostGroup').first
     parent = configuration_manager.configuration_profiles.where(:name => 'ProviderRefreshSpec-HostGroup').first
     expect(child).to have_attributes(
-      :type        => "ConfigurationProfileForeman",
-      :name        => "ProviderRefreshSpec-ChildHostGroup",
-      :description => "ProviderRefreshSpec-HostGroup/ProviderRefreshSpec-ChildHostGroup",
-      :manager_ref => "14",
-      :parent_id   => parent.id,
+      :type                               => "ConfigurationProfileForeman",
+      :name                               => "ProviderRefreshSpec-ChildHostGroup",
+      :description                        => "ProviderRefreshSpec-HostGroup/ProviderRefreshSpec-ChildHostGroup",
+      :manager_ref                        => "14",
+      :parent                             => parent,
+      :configuration_architecture         => my_arch,
+      :configuration_environment          => my_env,
+      :configuration_compute_profile      => nil,
+      :configuration_domain               => nil,
+      :configuration_locations            => [default_location],
+      :configuration_organizations        => [default_organization],
+      :configuration_realm                => nil,
+      :customization_script_medium        => mine(media),   # inherited from parent
+      :customization_script_ptable        => mine(ptables), # declared
+      :direct_customization_script_medium => nil,           # inherited from parent
+      :direct_customization_script_ptable => mine(ptables), # declared
+      :direct_operating_system_flavor     => nil,           # inherited from parent
+      :operating_system_flavor            => mine(osfs),    # inherited from parent
     )
-    expect(child.operating_system_flavor).to     eq(mine(osfs))    # inherited from parent
-    expect(child.customization_script_medium).to eq(mine(media))   # inherited from parent
-    expect(child.customization_script_ptable).to eq(mine(ptables)) # declared
-    expect(child.configuration_locations).to     eq([default_location])
-    expect(child.configuration_organizations).to eq([default_organization])
-    expect(child.direct_operating_system_flavor).to     be_nil
-    expect(child.direct_customization_script_medium).to be_nil
-    expect(child.direct_customization_script_ptable).to eq(mine(ptables))
+    expect(child.configuration_tags).to match_array([my_arch, my_env])
   end
 
   def assert_configuration_profile_parent
     parent = configuration_manager.configuration_profiles.where(:name => 'ProviderRefreshSpec-HostGroup').first
     expect(parent).to have_attributes(
-      :type        => "ConfigurationProfileForeman",
-      :name        => "ProviderRefreshSpec-HostGroup",
-      :description => "ProviderRefreshSpec-HostGroup",
-      :manager_ref => "13",
+      :type                               => "ConfigurationProfileForeman",
+      :name                               => "ProviderRefreshSpec-HostGroup",
+      :description                        => "ProviderRefreshSpec-HostGroup",
+      :manager_ref                        => "13",
+      :parent                             => nil,
+      :configuration_architecture         => my_arch,
+      :configuration_environment          => my_env,
+      :configuration_compute_profile      => nil,
+      :configuration_domain               => nil,
+      :configuration_locations            => [default_location],
+      :configuration_organizations        => [default_organization],
+      :configuration_realm                => nil,
+      :customization_script_medium        => mine(media),   # declared
+      :customization_script_ptable        => nil,           # blank
+      :direct_customization_script_medium => mine(media),   # declared
+      :direct_customization_script_ptable => nil,           # blank
+      :direct_operating_system_flavor     => mine(osfs),    # declared
+      :operating_system_flavor            => mine(osfs),    # declared
     )
-    expect(parent.operating_system_flavor).to     eq(mine(osfs))  # declared
-    expect(parent.customization_script_medium).to eq(mine(media)) # declared
-    expect(parent.customization_script_ptable).to be_nil          # blank
-    expect(parent.configuration_locations).to     eq([default_location])
-    expect(parent.configuration_organizations).to eq([default_organization])
-    expect(parent.direct_operating_system_flavor).to     eq(mine(osfs))
-    expect(parent.direct_customization_script_medium).to eq(mine(media))
-    expect(parent.direct_customization_script_ptable).to be_nil
+    expect(parent.configuration_tags).to match_array([my_arch, my_env])
   end
 
   def assert_configured_system
@@ -165,21 +181,27 @@ describe EmsRefresh::Refreshers::ForemanRefresher do
     system = configuration_manager.configured_systems.where("hostname like 'providerrefreshspec%'").first
 
     expect(system).to have_attributes(
-      :ipaddress   => "192.168.169.254",
-      :mac_address => "00:00:00:00:00:00",
-      :type        => "ConfiguredSystemForeman",
-      :hostname    => "providerrefreshspec-hostbaremetal.example.com",
-      :manager_ref => "38",
+      :ipaddress                          => "192.168.169.254",
+      :mac_address                        => "00:00:00:00:00:00",
+      :type                               => "ConfiguredSystemForeman",
+      :hostname                           => "providerrefreshspec-hostbaremetal.example.com",
+      :manager_ref                        => "38",
+      :configuration_profile              => child,
+      :configuration_architecture         => my_arch,
+      :configuration_environment          => my_env,
+      :configuration_compute_profile      => nil,
+      :configuration_domain               => domains.first,
+      :configuration_location             => default_location,
+      :configuration_organization         => default_organization,
+      :configuration_realm                => nil,
+      :customization_script_medium        => mine(media),   # inherited from parent
+      :customization_script_ptable        => mine(ptables), # declared
+      :direct_customization_script_medium => mine(media),   # note: values currently copied to host
+      :direct_customization_script_ptable => mine(ptables), # note: values currently copied to host
+      :direct_operating_system_flavor     => mine(osfs),    # note: values currently copied to host
+      :operating_system_flavor            => mine(osfs),    # inherited from parent
     )
-    expect(system.operating_system_flavor).to     eq(mine(osfs))
-    expect(system.customization_script_medium).to eq(mine(media))
-    expect(system.customization_script_ptable).to eq(mine(ptables))
-    expect(system.configuration_location).to      eq(default_location)
-    expect(system.configuration_organization).to  eq(default_organization)
-    expect(system.configuration_profile).to       eq(child)
-    expect(system.direct_operating_system_flavor).to     eq(mine(osfs))
-    expect(system.direct_customization_script_medium).to eq(mine(media))
-    expect(system.direct_customization_script_ptable).to eq(mine(ptables))
+    expect(system.configuration_tags).to match_array([my_arch, my_env, domains.first])
   end
 
   private
