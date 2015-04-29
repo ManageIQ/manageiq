@@ -4,7 +4,7 @@ describe VmOpenstack do
   context "#is_available?" do
     let(:ems) { FactoryGirl.create(:ems_openstack) }
     let(:vm)  { FactoryGirl.create(:vm_openstack, :ext_management_system => ems) }
-    let(:power_state_on)        { "RUNNING" }
+    let(:power_state_on)        { "ACTIVE" }
     let(:power_state_suspended) { "SUSPENDED" }
 
     context("with :start") do
@@ -56,12 +56,10 @@ describe VmOpenstack do
     let(:vm)  { FactoryGirl.create(:vm_openstack, :ext_management_system => ems) }
 
     it "sets the raw_power_state and not state" do
-      # when destorying a VM, the power state will momentarily be set to
-      # suspended while the provider deals with the "destroy" operation
       expect(vm).to receive(:with_provider_object).and_yield(provider_object)
       vm.raw_destroy
-      vm.raw_power_state.should == "SUSPENDED"
-      vm.state.should == "suspended"
+      vm.raw_power_state.should == "DELETED"
+      vm.state.should == "archived"
     end
   end
 end

@@ -5,11 +5,6 @@ module EmsRefresh::Parsers
     include EmsRefresh::Parsers::OpenstackCommon::Images
     include EmsRefresh::Parsers::OpenstackCommon::OrchestrationStacks
 
-    # Openstack uses numbers to represent different power states. Each openstack
-    # power state value corresponds to an array index for the human readable
-    # power state.
-    RAW_POWER_STATES = %w(NO_STATE RUNNING BLOCKED PAUSED SHUTDOWN SHUTOFF CRASHED SUSPENDED FAILED BUILDING)
-
     def self.ems_inv_to_hashes(ems, options = nil)
       self.new(ems, options).ems_inv_to_hashes
     end
@@ -480,7 +475,7 @@ module EmsRefresh::Parsers
     def parse_server(server, parent_hosts = nil)
       uid = server.id
 
-      raw_power_state = RAW_POWER_STATES[server.os_ext_sts_power_state.to_i] || "UNKNOWN"
+      raw_power_state = server.state || "UNKNOWN"
 
       flavor_uid = server.flavor["id"]
       @known_flavors << flavor_uid
