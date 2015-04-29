@@ -151,10 +151,17 @@ module VmHelper::TextualSummary
       h[:value] = "None"
     else
       h[:image] = "vendor-#{vendor.downcase}"
-      h[:value] = "#{vendor} (#{pluralize(@record.num_cpu, 'CPU')}, #{@record.mem_cpu} MB)"
       h[:title] = "Show VMM container information"
       h[:explorer] = true
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'hv_info')
+
+      cpu_details =
+        if @record.num_cpu && @record.cores_per_socket
+          " (#{pluralize(@record.num_cpu, 'socket')} x #{pluralize(@record.cores_per_socket, 'core')})"
+        else
+          ""
+        end
+      h[:value] = "#{vendor}: #{pluralize(@record.logical_cpus, 'CPU')}#{cpu_details}, #{@record.mem_cpu} MB"
     end
     h
   end

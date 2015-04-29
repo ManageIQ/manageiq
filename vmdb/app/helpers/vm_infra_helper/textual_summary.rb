@@ -129,21 +129,6 @@ module VmCloudHelper::TextualSummary
     {:label => "Custom Identifier", :value => @record.custom_1}
   end
 
-  def textual_container
-    h = {:label => "Container"}
-    vendor = @record.vendor
-    if vendor.blank?
-      h[:value] = "None"
-    else
-      h[:image] = "vendor-#{vendor.downcase}"
-      h[:value] = "#{vendor} (#{pluralize(@record.num_cpu, 'CPU')}, #{@record.mem_cpu} MB)"
-      h[:title] = "Show VMM container information"
-      h[:explorer] = true
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'hv_info')
-    end
-    h
-  end
-
   def textual_host_platform
     {:label => "Parent Host Platform", :value => (@record.host.nil? ? "N/A" : @record.v_host_vmm_product)}
   end
