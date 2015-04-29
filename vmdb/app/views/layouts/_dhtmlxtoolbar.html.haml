@@ -5,7 +5,7 @@
 
 %script{:type => "text/javascript"}
 
-  - unless request.xml_http_request?
+  - if !request.xml_http_request? && !tb_yaml.nil?
     - tb_buttons, tb_xml = build_toolbar_buttons_and_xml(tb_yaml)
 
     window.#{tb} = new dhtmlXToolbarObject("#{tb}", "miq_blue");
