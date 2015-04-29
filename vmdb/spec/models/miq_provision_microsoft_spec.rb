@@ -1,6 +1,19 @@
 require "spec_helper"
 
 describe MiqProvisionMicrosoft do
+  let(:vm_prov) do
+    FactoryGirl.create(
+      :miq_provision_microsoft,
+      :userid       => @user.userid,
+      :miq_request  => @pr,
+      :source       => @vm_template,
+      :request_type => 'template',
+      :state        => 'pending',
+      :status       => 'Ok',
+      :options      => @options
+    )
+  end
+
   context "A new provision request," do
     before(:each) do
       @os = OperatingSystem.new(:product_name => 'Microsoft Windows')
@@ -32,41 +45,20 @@ describe MiqProvisionMicrosoft do
     end
 
     context "SCVMM provisioning" do
-      before(:each) do
-        @vm_prov     = FactoryGirl.create(
-          :miq_provision_microsoft,
-          :userid       => @user.userid,
-          :miq_request  => @pr,
-          :source       => @vm_template,
-          :request_type => 'template',
-          :state        => 'pending',
-          :status       => 'Ok',
-          :options      => @options)
-      end
-
       it "#workflow" do
         MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
-        @vm_prov.workflow.class.should eq MiqProvisionMicrosoftWorkflow
+        vm_prov.workflow.class.should eq MiqProvisionMicrosoftWorkflow
       end
     end
 
     context "#prepare_for_clone_task" do
       before do
         @host = FactoryGirl.create(:host_microsoft, :ems_ref => "test_ref")
-        @vm_prov = FactoryGirl.create(
-          :miq_provision_microsoft,
-          :userid       => @user.userid,
-          :miq_request  => @pr,
-          :source       => @vm_template,
-          :request_type => 'template',
-          :state        => 'pending',
-          :status       => 'Ok',
-          :options      => @options)
-        @vm_prov.stub(:dest_host).and_return(@host)
+        vm_prov.stub(:dest_host).and_return(@host)
       end
 
       it "with default options" do
-        clone_options = @vm_prov.prepare_for_clone_task
+        clone_options = vm_prov.prepare_for_clone_task
         clone_options[:name].should == @target_vm_name
         clone_options[:host].should == @host
       end
@@ -75,57 +67,63 @@ describe MiqProvisionMicrosoft do
     context "#parse mount point" do
       before do
         @datastore = FactoryGirl.create(:storage, :name => "C:\\directoryname\\test_datastore")
-        @vm_prov = FactoryGirl.create(
-          :miq_provision_microsoft,
-          :userid       => @user.userid,
-          :miq_request  => @pr,
-          :source       => @vm_template,
-          :request_type => 'template',
-          :state        => 'pending',
-          :status       => 'Ok',
-          :options      => @options)
-        @vm_prov.stub(:dest_datastore).and_return(@datastore)
+        vm_prov.stub(:dest_datastore).and_return(@datastore)
       end
 
       it "valid drive" do
-        @vm_prov.dest_mount_point.should == "C:"
+        vm_prov.dest_mount_point.should == "C:"
       end
     end
 
     context "#no network adapter available" do
-      before do
-        @vm_prov = FactoryGirl.create(
-          :miq_provision_microsoft,
-          :userid       => @user.userid,
-          :miq_request  => @pr,
-          :source       => @vm_template,
-          :request_type => 'template',
-          :state        => 'pending',
-          :status       => 'Ok',
-          :options      => @options)
-      end
-
       it "set adapter" do
-        expect(@vm_prov.network_adapter_ps_script).to be_nil
+        expect(vm_prov.network_adapter_ps_script).to be_nil
       end
     end
 
     context "#network adapter available" do
       before do
         @options[:vlan] = "virtualnetwork1"
-        @vm_prov = FactoryGirl.create(
-          :miq_provision_microsoft,
-          :userid       => @user.userid,
-          :miq_request  => @pr,
-          :source       => @vm_template,
-          :request_type => 'template',
-          :state        => 'pending',
-          :status       => 'Ok',
-          :options      => @options)
       end
 
       it "set adapter" do
-        expect(@vm_prov.network_adapter_ps_script).to_not be_nil
+        expect(vm_prov.network_adapter_ps_script).to_not be_nil
+      end
+    end
+
+    context "#no cpu limit or reservation set" do
+      before do
+        @options[:number_of_cpus] = 2
+        @options[:cpu_limit]      = nil
+        @options[:cpu_reserve]    = nil
+      end
+
+      it "set vm" do
+        vm_prov.cpu_ps_script.should == "-CPUCount 2 "
+      end
+    end
+
+    context "#cpu limit set" do
+      before do
+        @options[:cpu_limit]      = 40
+        @options[:cpu_reserve]    = nil
+        @options[:number_of_cpus] = 2
+      end
+
+      it "set vm" do
+        vm_prov.cpu_ps_script.should == "-CPUCount 2 -CPUMaximumPercent 40 "
+      end
+    end
+
+    context "#cpu reservations set" do
+      before do
+        @options[:cpu_reserve]    = 15
+        @options[:cpu_limit]      = nil
+        @options[:number_of_cpus] = 2
+      end
+
+      it "set vm" do
+        vm_prov.cpu_ps_script.should == "-CPUCount 2 -CPUReserve 15 "
       end
     end
   end
