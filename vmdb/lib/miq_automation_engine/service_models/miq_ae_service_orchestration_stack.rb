@@ -14,6 +14,7 @@ module MiqAeMethodService
     expose :raw_delete_stack
     expose :raw_update_stack
     expose :raw_status
+    expose :raw_exists?
 
     def add_to_service(service)
       error_msg = "service must be a MiqAeServiceService"

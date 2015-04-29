@@ -59,4 +59,12 @@ class OrchestrationStack < ActiveRecord::Base
   def raw_status
     ext_management_system.stack_status(name, ems_ref)
   end
+
+  def raw_exists?
+    status, _reason = raw_status
+    status.nil? || status.downcase == 'delete_complete' ? false : true
+  rescue => err
+    return false if err.to_s =~ /[S|s]tack.+does not exist/
+    raise
+  end
 end
