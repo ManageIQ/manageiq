@@ -10,7 +10,8 @@ module Metric::Processing
     :derived_vm_allocated_disk_storage,
     :derived_vm_count_off,
     :derived_vm_count_on,
-    :derived_vm_numvcpus,
+    :derived_vm_numvcpus, # This is actually logical cpus, but needs to be renamed.
+                          # See VimPerformanceState#capture_numvcpus
     :derived_vm_used_disk_storage,
   ]
 
@@ -48,7 +49,7 @@ module Metric::Processing
       when "count"
         method = [group, typ, mode].join("_")
         result[col] = state.send(method)
-      when "numvcpus"
+      when "numvcpus" # This is actually logical cpus.  See note above.
         result[col] = state.send(typ) if obj.kind_of?(VmOrTemplate)
       end
     end
