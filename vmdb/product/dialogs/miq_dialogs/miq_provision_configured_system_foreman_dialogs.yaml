@@ -134,6 +134,7 @@
           :required: false
           :display: :edit
           :data_type: :string
+          :notes: Minimum 8 characters or blank
         :hostname:
           :description: Host Name
           :required: false
