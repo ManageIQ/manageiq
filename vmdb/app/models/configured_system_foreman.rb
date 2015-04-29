@@ -2,8 +2,6 @@ class ConfiguredSystemForeman < ConfiguredSystem
   include ProviderObjectMixin
 
   belongs_to :configuration_profile, :class_name => 'ConfigurationProfileForeman'
-  belongs_to :configuration_location
-  belongs_to :configuration_organization
   belongs_to :direct_operating_system_flavor,
              :class_name  => 'OperatingSystemFlavor'
   belongs_to :direct_customization_script_medium,
@@ -15,22 +13,13 @@ class ConfiguredSystemForeman < ConfiguredSystem
                           :class_name  => 'ConfigurationTag',
                           :foreign_key => :configured_system_id
 
-  # derived values (to be used by ui)
-  belongs_to :customization_script_ptable
-  belongs_to :customization_script_medium
-  belongs_to :operating_system_flavor
   virtual_has_many :configuration_tags,  :class_name => 'ConfigurationTag'
 
-  delegate :name, :to => :configuration_location,        :prefix => true, :allow_nil => true
-  delegate :name, :to => :configuration_organization,    :prefix => true, :allow_nil => true
   delegate :name, :to => :configuration_architecture,    :prefix => true, :allow_nil => true
   delegate :name, :to => :configuration_compute_profile, :prefix => true, :allow_nil => true
   delegate :name, :to => :configuration_domain,          :prefix => true, :allow_nil => true
   delegate :name, :to => :configuration_environment,     :prefix => true, :allow_nil => true
   delegate :name, :to => :configuration_realm,           :prefix => true, :allow_nil => true
-  delegate :name, :to => :operating_system_flavor,       :prefix => true, :allow_nil => true
-  delegate :name, :to => :customization_script_medium,   :prefix => true, :allow_nil => true
-  delegate :name, :to => :customization_script_ptable,   :prefix => true, :allow_nil => true
 
   def provider_object(connection = nil)
     (connection || connection_source.connect).host(manager_ref)

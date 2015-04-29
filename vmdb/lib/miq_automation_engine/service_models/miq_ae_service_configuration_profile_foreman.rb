@@ -8,8 +8,5 @@ module MiqAeMethodService
     expose :direct_operating_system_flavors,      :association => true
 
     expose :configuration_tags,                :association => true
-    expose :customization_script_ptable,       :association => true
-    expose :customization_script_medium,       :association => true
-    expose :operating_system_flavors,          :association => true
   end
 end

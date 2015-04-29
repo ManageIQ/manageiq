@@ -16,9 +16,6 @@ class ConfigurationProfileForeman < ConfigurationProfile
                           :foreign_key => :configuration_profile_id
 
   # derived values (to be used by ui)
-  belongs_to :customization_script_ptable
-  belongs_to :customization_script_medium
-  belongs_to :operating_system_flavor
   virtual_has_many :configuration_tags,  :class_name => 'ConfigurationTag'
 
   delegate :name, :to => :configuration_architecture,    :prefix => true, :allow_nil => true
