@@ -10273,7 +10273,7 @@ msgstr ""
 msgid "Provider|Url"
 msgstr ""
 
-msgid "Provider|Verify ssl"
+msgid "Provider|Verify Peer Certificate"
 msgstr ""
 
 msgid "Provision %s"

@@ -4,25 +4,25 @@
   = render :partial => "layouts/flash_msg"
   %fieldset
     %h3
-      Basic Information
+      = _("Basic Information")
       %table.style1
         %tr
-          %td.key Name
+          %td.key= _("Name")
           %td
             %input(type="text" name="name" ng-model="providerForemanModel.name" maxlength="#{MAX_NAME_LEN}" miqrequired checkchange)
         %tr
-          %td.key URL
+          %td.key= _("Url")
           %td
             %input(type="text" name="url" ng-model="providerForemanModel.url" maxlength="#{MAX_DESC_LEN}" miqrequired checkchange)
         %tr
-          %td.key Verify SSL
+          %td.key= _("Verify Peer Certificate")
           %td
             %input(type="checkbox" name="verify_ssl" ng-model="providerForemanModel.verify_ssl" ng-true-value="1" ng-false-value="0" checkchange)
 
 
   %fieldset
     %h3
-      Credentials
+      = _("Credentials")
       %table.style1
         = render :partial => "layouts/angular/auth_credentials_angular",
                :locals  => {:ng_show           => true,
