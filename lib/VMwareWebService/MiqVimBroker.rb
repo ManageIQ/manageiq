@@ -1,8 +1,5 @@
-require 'timeout'
-require 'broker_timeout'
 require 'drb'
 require 'drb/acl'
-require 'broker_sync_debug'
 require 'sync'
 
 require 'MiqVimInventory'
@@ -70,8 +67,12 @@ class MiqVimBroker
 			end
             @broker = DRbObject.new(nil, "druby://127.0.0.1:#{port}")
         elsif mode == :server
-        	# Comment out before merge.
-        	extend BrokerSyncDebug
+        	require 'timeout'
+			require 'broker_timeout'
+
+        	# Un-comment following 2 lines to enable Sync lock debugging.
+        	# require 'broker_sync_debug'
+        	# extend BrokerSyncDebug
 
 			unless @@classModed
 				DRb.instance_variable_set(:@mutex, sync_for_drb)

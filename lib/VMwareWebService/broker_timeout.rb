@@ -5,7 +5,7 @@ module Timeout
     state_lock = Mutex.new
     state = :sleeping
     toid = Class.new.object_id
-    $vim_log.debug "************** TIMEOUT(#{toid}) Enter"
+
     begin
       begin
         x = Thread.current
@@ -16,7 +16,6 @@ module Timeout
             state_lock.synchronize do
               if state == :sleeping
                 state = :exception
-                $vim_log.debug "************** TIMEOUT(#{toid}) state -> #{state}"
                 x.raise e
               end
             end
@@ -24,7 +23,6 @@ module Timeout
             state_lock.synchronize do
               if state == :sleeping
                 state = :timeout
-                $vim_log.debug "************** TIMEOUT(#{toid}) state -> #{state}"
                 x.raise exception, "execution expired"
               end
             end
@@ -34,7 +32,6 @@ module Timeout
         state_lock.synchronize do
           if state == :sleeping
             state = :returned_from_yield
-            $vim_log.debug "************** TIMEOUT(#{toid}) state -> #{state}"
             return rv
           end
         end
@@ -42,15 +39,12 @@ module Timeout
         state_lock.synchronize do
           if state == :sleeping || state == :returned_from_yield
             state = :killing
-            $vim_log.debug "************** TIMEOUT(#{toid}) state -> #{state}"
             if y
-              $vim_log.debug "************** TIMEOUT(#{toid}) Killing"
               y.kill
               y.join # make sure y is dead.
             end
           end
         end
-        $vim_log.debug "************** TIMEOUT(#{toid}) Exit state = #{state}"
       end
     rescue exception => e
       rej = /\A#{Regexp.quote(__FILE__)}:#{__LINE__-4}\z/o

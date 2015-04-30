@@ -82,8 +82,8 @@ class MiqVimInventory < MiqVimClientBase
 		@cacheLock	= Sync.new
 		@configLock	= Sync.new
 
-		# Comment out before merge.
-		extend VimSyncDebug
+		# Un-comment to enable Sync lock debugging.
+		# extend VimSyncDebug
 		
 		resetCache
 		__connect
