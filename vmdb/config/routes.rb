@@ -324,15 +324,11 @@ Vmdb::Application.routes.draw do
         save_col_widths
         tree_autoload_dynatree
         tree_select
-        x_button
-        x_history
-        x_search_by_name
-        x_settings_changed
-        x_show
       ) +
         adv_search_post +
         exp_post +
-        save_post
+        save_post +
+        x_post
     },
 
     :container_group => {
@@ -1277,12 +1273,9 @@ Vmdb::Application.routes.draw do
         tree_select
         users
         wait_for_task
-        x_button
-        x_history
-        x_search_by_name
-        x_settings_changed
-        x_show
-      ) + adv_search_post
+      ) +
+        adv_search_post +
+        x_post
     },
 
     :pxe => {
