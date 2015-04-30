@@ -45,6 +45,12 @@ module Metric::Processing
         result[col] = state.send(method) if state.respond_to?(method)
       when "used"
         if group == "cpu"
+          # TODO: This branch is never called because there isn't a column
+          # called derived_cpu_used.  The callers, such as chargeback, generally
+          # use cpu_usagemhz_rate_average directly, and the column may not be
+          # needed, but perhaps should be added to normalize like is done for
+          # memory.  The derivation here could then use cpu_usagemhz_rate_average
+          # directly if avaiable, otherwise do the calculation below.
           result[col] = ( attrs[:cpu_usage_rate_average]     / 100 * total_cpu ) unless (total_cpu == 0 || attrs[:cpu_usage_rate_average].nil?)
         elsif group == "memory"
           result[col] = ( attrs[:mem_usage_absolute_average] / 100 * total_mem ) unless (total_mem == 0  || attrs[:mem_usage_absolute_average].nil?)
