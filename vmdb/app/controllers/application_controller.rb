@@ -1365,7 +1365,7 @@ class ApplicationController < ActionController::Base
     end
 
     pass = %w(button x_button).include?(action_name) ? handle_button_rbac : handle_generic_rbac
-    $audit_log.failure("Userid [#{session[:userid]}], Role ID [#{User.current_user.miq_user_role.try(:id)}] attempted to access area [#{controller_name}], type [Action], task [#{action_name}]") unless pass
+    $audit_log.failure("Username [#{session[:userid]}], Role ID [#{User.current_user.miq_user_role.try(:id)}] attempted to access area [#{controller_name}], type [Action], task [#{action_name}]") unless pass
   end
 
   def cleanup_action

@@ -584,7 +584,7 @@ module EmsCommon
       add_flash(I18n.t("flash.edit.field_required", :field=>"Realm"), :error)
     end
     if !ems.authentication_password.blank? && ems.authentication_userid.blank?
-      @edit[:errors].push(_("User ID must be entered if Password is entered"))
+      @edit[:errors].push(_("Username must be entered if Password is entered"))
     end
     if @edit[:new][:password] != @edit[:new][:verify]
       @edit[:errors].push(_("Password/Verify Password do not match"))

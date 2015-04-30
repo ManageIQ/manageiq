@@ -176,7 +176,7 @@ module OpsController::Settings::Ldap
       end
 
       if !@edit[:new][:bind_pwd].blank? && @edit[:new][:bind_dn].blank?
-        add_flash(_("User ID must be entered if Password is entered"), :error)
+        add_flash(_("Username must be entered if Password is entered"), :error)
       end
 
       if @flash_array

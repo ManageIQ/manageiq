@@ -347,7 +347,7 @@ class Host < ActiveRecord::Base
   def run_ipmi_command(verb)
     log_header = "MIQ(Host.run_ipmi_command)"
     require 'miq-ipmi'
-    $log.info("#{log_header} Invoking [#{verb}] for Host: [#{self.name}], IPMI Address: [#{self.ipmi_address}], IPMI Userid: [#{self.authentication_userid(:ipmi)}]")
+    $log.info("#{log_header} Invoking [#{verb}] for Host: [#{self.name}], IPMI Address: [#{self.ipmi_address}], IPMI Username: [#{self.authentication_userid(:ipmi)}]")
     ipmi = MiqIPMI.new(self.ipmi_address, *self.auth_user_pwd(:ipmi))
     ipmi.send(verb)
   end
@@ -1198,7 +1198,7 @@ class Host < ActiveRecord::Base
             self.name            = "#{vim.about['name']} (#{ipaddr})"
           end
         rescue => err
-          $log.warn "#{log_header} Cannot connect to ESX Host with IP Address: [#{ipaddr}], Userid: [#{self.authentication_userid(:ws)}] because #{err.message}"
+          $log.warn "#{log_header} Cannot connect to ESX Host with IP Address: [#{ipaddr}], Username: [#{self.authentication_userid(:ws)}] because #{err.message}"
         end
       end
       self.type = %w(esx esxi).include?(self.vmm_product.to_s.downcase) ? "HostVmwareEsx" : "HostVmware"
