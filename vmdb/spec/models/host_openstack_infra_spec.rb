@@ -66,7 +66,7 @@ openstack-keystone:                     active
     end
 
     before do
-      HostServiceGroupOpenstack.create(:host => host, :name => 'Keystone service')
+      FactoryGirl.create(:host_service_group_openstack, :host => host, :name =>  'Keystone service')
     end
 
     context "with stubbed MiqLinux::Utils" do
