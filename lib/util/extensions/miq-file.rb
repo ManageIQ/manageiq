@@ -1,42 +1,25 @@
-$:.push("#{File.dirname(__FILE__)}/../../disk/modules")
-$:.push("#{File.dirname(__FILE__)}/..")
-
 require 'rubygems'
 require 'platform'
-require "Win32API" if Platform::OS == :win32
-require 'MiqLargeFile'
-require 'runcmd'
 require 'uri'
-require 'MiqSockUtil'
+require 'win32/file' if Platform::OS == :win32
+require_relative '../../disk/modules/MiqLargeFile'
+require_relative '../runcmd'
+require_relative '../MiqSockUtil'
 
 class File
   def self.paths_equal?(f1, f2)
     if Platform::OS == :win32
-      # Note: The file needs to exist and be accessable for getShortFileName to work.
-      f1 = File.getShortFileName(f1).downcase
-      f2 = File.getShortFileName(f2).downcase
+      f1 = File.short_path(f1).downcase
+      f2 = File.short_path(f2).downcase
     end
 
-    File.expand_path(f1).gsub("\\","/") == File.expand_path(f2).gsub("\\","/")
+    File.normalize(f1) == File.normalize(f2)
   end
 
-  def self.getShortFileName(longName)
-    if Platform::OS == :win32
-      size = 255
-      buffer = " " * 255
-      returnSize = Win32API.new("kernel32" , "GetShortPathNameA" , 'ppl'  , 'L').Call(longName ,  buffer , size )
-      a = ""
-      a = a + buffer[0...returnSize]        
-      return a
-    else
-      return longName
-    end
-  end
-  
   def self.normalize(path)
-    File.expand_path(path.gsub(/\\/,"/"))
+    File.expand_path(path.tr("\\", "/"))
   end
-  
+
   def self.splitpath(path)
     ext = File.extname(path)
     return File.dirname(path), File.basename(path, ext), ext

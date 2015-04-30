@@ -1,5 +1,6 @@
 
 $:.push(File.expand_path(File.join(Rails.root, %w{.. lib Scvmm})))
+require 'gssapi'
 
 class EmsMicrosoft < EmsInfra
   include_concern "Powershell"

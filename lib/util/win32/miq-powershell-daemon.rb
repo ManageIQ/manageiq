@@ -1,8 +1,6 @@
-$:.push("#{File.dirname(__FILE__)}")
-$:.push("#{File.dirname(__FILE__)}/..")
-require 'miq-powershell'
-require 'miq-process'
-require 'miq-password'
+require_relative 'miq-powershell'
+require_relative '../miq-process'
+require_relative '../miq-password'
 
 module MiqPowerShell
   class Daemon
@@ -201,13 +199,14 @@ module MiqPowerShell
 
     def self.get_log_dir
       return nil unless Platform::OS == :win32
+      require 'win32/file'
       ps_log_dir = $miqHostCfg ? $miqHostCfg.miqLogs : nil
       unless ps_log_dir.blank?
         ps_log_dir = File.join(ps_log_dir, "ps_log")
         Dir.mkdir(ps_log_dir, 0755) if !File.directory?(ps_log_dir)
       end
       return nil if ps_log_dir.blank?
-      File.getShortFileName(ps_log_dir)
+      File.short_path(ps_log_dir)
     end
 
     def get_log_dir

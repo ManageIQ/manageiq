@@ -1,18 +1,16 @@
 require 'rubygems'
-#gem 'Platform'
 require 'platform'
-$:.push("../../util")
-require 'miq-system'
+require_relative '../../util/miq-system'
 
 if Platform::IMPL == :linux
 	if MiqSystem.arch == :x86
-		require 'MiqLargeFileLinux'
+		require_relative 'MiqLargeFileLinux'
 	elsif MiqSystem.arch == :x86_64
-		require 'MiqBlockDevOps'
-		require 'RawBlockIO'
+		require_relative 'MiqBlockDevOps'
+		require_relative 'RawBlockIO'
 	end
 elsif Platform::OS == :win32
-	require 'MiqLargeFileWin32'
+	require_relative 'MiqLargeFileWin32'
 end
 
 module MiqLargeFile
@@ -55,12 +53,12 @@ module MiqLargeFile
     		File.stat(@file_name).blockdev?
     	end
     end
-	
+
     class MiqLargeFileOther < File
         def write (buf, len)
             super(buf)
         end
-      
+
         def size
             return self.stat.size unless self.stat.blockdev?
 			return MiqBlockDevOps.blkgetsize64(self.fileno)
