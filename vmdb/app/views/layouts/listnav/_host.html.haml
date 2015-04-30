@@ -1,4 +1,5 @@
 - if @record
+  - host_title = title_for_host_record(@record)
   #accordion.panel-group
     = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
       - # Calculate the quadicon div height based on # of lines of text
@@ -34,7 +35,7 @@
           %li
             = link_to(_('Devices'),
               {:action  => 'show', :id => @record, :display => 'devices'},
-              :title => _("Show Host devices"))
+              :title => _("Show %s devices") % host_title)
 
         - if @record.number_of(:switches) == 0
           %li.disabled
@@ -43,7 +44,7 @@
           %li
             = link_to(_('Network'),
               {:action  => 'show', :id => @record, :display => 'network'},
-              :title => _("Show Host network"))
+              :title => _("Show %s network") % host_title)
 
         - if @record.hardware.blank? || @record.hardware.number_of(:storage_adapters) == 0
           %li.disabled
@@ -52,7 +53,7 @@
           %li
             = link_to(_('Storage Adapters'),
               {:action  => 'show', :id => @record, :display => 'storage_adapters'},
-              :title => _("Show Host storage adapters"))
+              :title => _("Show %s storage adapters") % host_title)
 
         - if @osinfo.nil? || @osinfo.empty?
           %li.disabled
@@ -61,7 +62,7 @@
           %li
             = link_to(_('OS Information'),
               {:action  => 'show', :id => @record, :display => 'os_info'},
-              :title => _("Show Host OS information"))
+              :title => _("Show %s OS information") % host_title)
 
         - if @vmminfo.nil? || @vmminfo.empty?
           %li.disabled
@@ -106,14 +107,15 @@
           %li
             = link_to("#{ui_lookup(:table => "ext_management_systems")}: #{@record.ext_management_system.name}",
               {:controller => "ems_infra", :action => 'show', :id => @record.ext_management_system.id.to_s},
-              {:title => _("Show this Host's parent %s") % ui_lookup(:table => "ems_infra")},
+              {:title => _("Show this %s parent %s") % ["#{host_title}'s", ui_lookup(:table => "ems_infra")]},
               '/images/icons/16/link_external.gif')
 
         - if role_allows(:feature => "ems_cluster_show") && !@record.ems_cluster.nil?
+          - cluster_title = title_for_cluster
           %li
-            = link_to("Cluster: #{@record.ems_cluster.name}",
+            = link_to("#{cluster_title}: #{@record.ems_cluster.name}",
               {:controller => "ems_cluster", :action => 'show', :id => @record.ems_cluster.id.to_s},
-              {:title => _("Show this Host's parent Cluster")},
+              {:title => _("Show %s parent %s") % ["#{host_title}'s", cluster_title]},
               '/images/icons/16/link_external.gif')
 
         - if role_allows(:feature => "storage_show_list")
@@ -165,7 +167,7 @@
             %li
               = link_to(_("Drift History (%s)") % states_size,
                 {:action => 'drift_history', :id => @record},
-                :title => _("Show host drift history"))
+                :title => _("Show %s drift history") % host_title)
 
     - if get_vmdb_config[:product][:storage]
       = patternfly_accordion_panel(_("Storage Relationships"), false, "host_inf_rel") do
@@ -205,7 +207,7 @@
           %li
             = link_to(_("Users (%s)") % users_size,
               {:action => 'users', :id => @record, :db => "host"},
-              :title => _("Show the users defined on this Host"))
+              :title => _("Show the users defined on this %s") % host_title)
         - groups_size = @record.number_of(:groups)
         - if groups_size == 0
           %li.disabled
@@ -214,7 +216,7 @@
           %li
             = link_to(_("Groups (%s)") % groups_size,
               {:action => 'groups', :id => @record, :db => "host"},
-              :title => _("Show the groups defined on this Host"))
+              :title => _("Show the groups defined on this %s") % host_title)
 
         - patches_size = @record.number_of(:patches)
         - if patches_size == 0
@@ -224,7 +226,7 @@
           %li
             = link_to(_("Patches (%s)") % patches_size,
               {:action => 'patches', :id => @record, :db => "host"},
-              :title => _("Show the patches installed on this Host"))
+              :title => _("Show the patches installed on this %s") % host_title)
 
         - fws_size = @record.number_of(:firewall_rules)
         - if fws_size == 0
@@ -234,7 +236,7 @@
           %li
             = link_to(_("Firewall Rules (%s)") % fws_size,
               {:action => 'firewall_rules', :id => @record},
-              :title => _("Show the firewall rules on this Host"))
+              :title => _("Show the firewall rules on this %s") % host_title)
 
     = patternfly_accordion_panel(_("Configuration"), false, "host_config") do
       %ul.nav.nav-pills.nav-stacked
@@ -246,7 +248,7 @@
           %li
             = link_to(_("Packages (%s)") % gas_size,
               {:action => 'guest_applications', :id => @record},
-              :title => _("Show the packages installed on this Host"))
+              :title => _("Show the packages installed on this %s") % host_title)
 
         - hs_size = @record.number_of(:host_services)
         - if hs_size == 0
@@ -256,7 +258,7 @@
           %li
             = link_to(_("Services (%s)") % hs_size,
               {:action => 'host_services', :id => @record},
-              :title => _("Show the services installed on this Host"))
+              :title => _("Show the services installed on this %s") % host_title)
 
         - fs_size = @record.number_of(:filesystems)
         - if fs_size == 0
@@ -266,7 +268,7 @@
           %li
             = link_to(_("Files (%s)") % fs_size,
               {:action => 'filesystems', :id => @record},
-              :title => _("Show the files on this Host"))
+              :title => _("Show the files on this %s") % host_title)
 
         - as_size = @record.number_of(:advanced_settings)
         - if as_size == 0
@@ -276,4 +278,4 @@
           %li
             = link_to(("Advanced Settings (%s)") % as_size,
               {:action => 'advanced_settings', :id => @record},
-              :title => _("Show the advanced settings on this Host"))
+              :title => _("Show the advanced settings on this %s") % host_title)

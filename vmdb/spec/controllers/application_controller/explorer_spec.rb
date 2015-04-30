@@ -92,7 +92,7 @@ describe VmInfraController do
         node[:key].should eq("c-#{MiqRegion.compress_id(cluster.id)}")
         node[:title].should eq(cluster.name)
         node[:icon].should eq("cluster.png")
-        node[:tooltip].should eq("Cluster: #{cluster.name}")
+        node[:tooltip].should eq("Cluster / Deployment Role: #{cluster.name}")
       end
 
       it "valid Host node" do
@@ -109,7 +109,7 @@ describe VmInfraController do
         node[:key].should eq("h-#{MiqRegion.compress_id(host.id)}")
         node[:title].should eq(host.name)
         node[:icon].should eq("host.png")
-        node[:tooltip].should eq("Host: #{host.name}")
+        node[:tooltip].should eq("Host / Node: #{host.name}")
       end
     end
 
@@ -128,9 +128,9 @@ describe VmInfraController do
         object = objects.first
 
         object[:id].should    == "folder_c_xx-#{MiqRegion.compress_id(ems.id)}"
-        object[:text].should  == "Clusters"
+        object[:text].should  == "Cluster / Deployment Role"
         object[:image].should == "folder"
-        object[:tip].should   == "Clusters (Click to open)"
+        object[:tip].should   == "Cluster / Deployment Role (Click to open)"
       end
     end
 

@@ -1,4 +1,5 @@
 - if @record.try(:name)
+  - hosts_title = title_for_hosts
   #accordion.panel-group
     = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
       = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
@@ -23,12 +24,12 @@
         - if role_allows(:feature => "host_show_list")
           - if @record.number_of(:hosts) == 0
             %li.disabled
-              = link_to(_("Hosts (%s)") % @record.number_of(:hosts), "#")
+              = link_to(_("%s (%s)") % [hosts_title, @record.number_of(:hosts)], "#")
           - else
             %li
-              = link_to(_("Hosts (%s)") % @record.number_of(:hosts),
+              = link_to(_("%s (%s)") % [hosts_title, @record.number_of(:hosts)],
                 {:action => 'show', :id => @record, :display => 'hosts'},
-                :title => _("Show all registered Hosts"))
+                :title => _("Show all registered %s") % hosts_title)
 
         - if role_allows(:feature => "vm_show_list")
           - if @record.number_of(:all_vms) == 0

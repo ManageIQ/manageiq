@@ -105,7 +105,7 @@
             - if @miq_request.resource_type == "MiqHostProvisionRequest" &&  @miq_request.resource.miq_host_provisions.length > 0
               %tr
                 %td.key
-                  = _("Provisioned Hosts")
+                  = _("Provisioned %s") % title_for_hosts
                 %td.hover-text{:class => cycle('row0', 'row1'),
                   :onclick            => "DoNav('#{'/miq_request/show/' << @miq_request.id.to_s << '?display=miq_provisions'}');",
                   :onmouseover        => "this.style.cursor='pointer'",

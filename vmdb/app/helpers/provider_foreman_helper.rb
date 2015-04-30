@@ -5,7 +5,7 @@ module ProviderForemanHelper
   end
 
   def textual_hostname
-    {:label => "Host Name", :value => @record.hostname}
+    {:label => "#{title_for_host} Name", :value => @record.hostname}
   end
 
   def textual_configuration_profile

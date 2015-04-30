@@ -828,10 +828,10 @@ module ApplicationController::CiProcessing
   end
 
   def set_discover_title(type, controller)
-    controller_table = ui_lookup(:tables=>controller)
     if type == "hosts"
-      return controller_table
+      return ui_lookup(:host_types => "hosts")
     else
+      controller_table = ui_lookup(:tables => controller)
       if controller == "ems_cloud"
         return "Amazon #{controller_table}"
       else

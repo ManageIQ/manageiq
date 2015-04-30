@@ -96,7 +96,7 @@
         = render(:partial => "#{prefix}prov_dialog_fieldset",
           :locals         => {:workflow => wf,
             :dialog                     => dialog,
-            :label                      => _("Cluster"),
+            :label                      => title_for_cluster,
             :prefix                     => prefix,
             :keys                       => keys})
       - if wf.is_a?(MiqProvisionVmwareWorkflow)
@@ -118,7 +118,7 @@
       = render(:partial => "#{prefix}prov_dialog_fieldset",
         :locals         => {:workflow => wf,
           :dialog                     => dialog,
-          :label                      => _("Host"),
+          :label                      => title_for_host,
           :prefix                     => prefix,
           :keys                       => keys,
           :extra_table_attributes     => "width=100%"})

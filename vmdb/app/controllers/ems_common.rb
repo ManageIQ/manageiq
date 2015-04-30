@@ -138,7 +138,8 @@ module EmsCommon
         @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other " + ui_lookup(:table=>"storages")) + " on this " + ui_lookup(:table=>@table_name)
       end
     elsif @display == "ems_clusters"
-      drop_breadcrumb( {:name=>@ems.name+" (All Clusters)", :url=>"/#{@table_name}/show/#{@ems.id}?display=ems_clusters"} )
+      drop_breadcrumb(:name => "#{@ems.name} (All #{title_for_clusters})",
+                      :url  => "/#{@table_name}/show/#{@ems.id}?display=ems_clusters")
       @view, @pages = get_view(EmsCluster, :parent=>@ems) # Get the records (into a view) and the paginator
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
           @view.extras[:total_count] > @view.extras[:auth_count]

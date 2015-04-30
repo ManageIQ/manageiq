@@ -207,7 +207,7 @@ module HostHelper::TextualSummary
     num = @record.hardware.nil? ? 0 : @record.hardware.number_of(:storage_adapters)
     h = {:label => "Storage Adapters", :image => "sa", :value => num}
     if num > 0
-      h[:title] = "Show Host Storage Adapters"
+      h[:title] = "Show #{host_title} Storage Adapters"
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'storage_adapters')
     end
     h
@@ -217,7 +217,7 @@ module HostHelper::TextualSummary
     num = @record.number_of(:switches)
     h = {:label => "Network", :image => "network", :value => (num == 0 ? "N/A" : "Available")}
     if num > 0
-      h[:title] = "Show Host Network"
+      h[:title] = "Show #{host_title} Network"
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'network')
     end
     h
@@ -226,7 +226,7 @@ module HostHelper::TextualSummary
   def textual_devices
     h = {:label => "Devices", :image => "devices", :value => (@devices == nil || @devices.empty? ? "None" : @devices.length)}
     if @devices.length > 0
-      h[:title] = "Show Host devices"
+      h[:title] = "Show #{host_title} devices"
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'devices')
     end
     h
@@ -266,9 +266,9 @@ module HostHelper::TextualSummary
 
   def textual_cluster
     cluster = @record.ems_cluster
-    h = {:label => "Cluster", :image => "ems_cluster", :value => (cluster.nil? ? "None" : cluster.name)}
+    h = {:label => title_for_cluster, :image => "ems_cluster", :value => (cluster.nil? ? "None" : cluster.name)}
     if cluster && role_allows(:feature => "ems_cluster_show")
-      h[:title] = "Show this Host's Cluster"
+      h[:title] = "Show this #{host_title}'s #{title_for_cluster}"
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => cluster)
     end
     h
@@ -315,7 +315,7 @@ module HostHelper::TextualSummary
     label = ui_lookup(:table => "availability_zone")
     h = {:label => label, :image => "availability_zone", :value => (availability_zone.nil? ? "None" : availability_zone.name)}
     if availability_zone && role_allows(:feature => "availability_zone_show")
-      h[:title] = _("Show this Host's %s") % label
+      h[:title] = _("Show this %s's %s") % [host_title, label]
       h[:link]  = url_for(:controller => 'availability_zone', :action => 'show', :id => availability_zone)
     end
     h
@@ -328,7 +328,7 @@ module HostHelper::TextualSummary
     num   = @record.cloud_tenants.count
     h     = {:label => label, :image => "cloud_tenants", :value => num}
     if num > 0 && role_allows(:feature => "cloud_tenant_show_list")
-      h[:title] = _("Show all used %s on this host") % label
+      h[:title] = _("Show all used %s on this %s") % [host_title, label]
       h[:link]  = url_for(:action => "show", :id => @record, :display => "cloud_tenants")
     end
     h
@@ -435,7 +435,7 @@ module HostHelper::TextualSummary
     else
       h[:image] = "compliance"
       h[:value] = "Available"
-      h[:title] = "Show Compliance History of this Host (Last 10 Checks)"
+      h[:title] = "Show Compliance History of this #{host_title} (Last 10 Checks)"
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => 'compliance_history')
     end
     h
@@ -457,7 +457,7 @@ module HostHelper::TextualSummary
     num = @record.number_of(:groups)
     h = {:label => "Groups", :image => "group", :value => num}
     if num > 0
-      h[:title] = "Show the #{pluralize(num, 'group')} defined on this Host"
+      h[:title] = "Show the #{pluralize(num, 'group')} defined on this #{host_title}"
       h[:link]  = url_for(:action => 'groups', :id => @record, :db => controller.controller_name)
     end
     h
@@ -468,7 +468,7 @@ module HostHelper::TextualSummary
     num = @record.number_of(:firewall_rules)
     h = {:label => "Firewall Rules", :image => "firewallrule", :value => num}
     if num > 0
-      h[:title] = "Show the #{pluralize(num, 'Firewall Rule')} defined on this Host"
+      h[:title] = "Show the #{pluralize(num, 'Firewall Rule')} defined on this #{host_title}"
       h[:link]  = url_for(:action => 'firewall_rules', :id => @record, :db => controller.controller_name)
     end
     h
@@ -484,7 +484,7 @@ module HostHelper::TextualSummary
     num = @record.number_of(:patches)
     h = {:label => "Patches", :image => "patch", :value => num}
     if num > 0
-      h[:title] = "Show the #{pluralize(num, 'Patch')} defined on this Host"
+      h[:title] = "Show the #{pluralize(num, 'Patch')} defined on this #{host_title}"
       h[:link]  = url_for(:action => 'patches', :id => @record, :db => controller.controller_name)
     end
     h
@@ -494,7 +494,7 @@ module HostHelper::TextualSummary
     num = @record.number_of(:guest_applications)
     h = {:label => "Packages", :image => "guest_application", :value => num}
     if num > 0
-      h[:title] = "Show the #{pluralize(num, "Package")} installed on this Host"
+      h[:title] = "Show the #{pluralize(num, "Package")} installed on this #{host_title}"
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'guest_applications', :id => @record, :db => controller.controller_name)
     end
     h
@@ -504,7 +504,7 @@ module HostHelper::TextualSummary
     num = @record.number_of(:host_services)
     h = {:label => "Services", :image => "service", :value => num}
     if num > 0
-      h[:title] = "Show the #{pluralize(num, 'Service')} installed on this Host"
+      h[:title] = "Show the #{pluralize(num, 'Service')} installed on this #{host_title}"
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'host_services', :id => @record, :db => controller.controller_name)
     end
     h
@@ -514,7 +514,7 @@ module HostHelper::TextualSummary
     num = @record.number_of(:filesystems)
     h = {:label => "Files", :image => "filesystems", :value => num}
     if num > 0
-      h[:title] = "Show the #{pluralize(num, 'File')} installed on this Host"
+      h[:title] = "Show the #{pluralize(num, 'File')} installed on this #{host_title}"
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'filesystems', :id => @record, :db => controller.controller_name)
     end
     h
@@ -524,7 +524,7 @@ module HostHelper::TextualSummary
     num = @record.number_of(:advanced_settings)
     h = {:label => "Advanced Settings", :image => "advancedsetting", :value => num}
     if num > 0
-      h[:title] = "Show the #{pluralize(num, 'Advanced Setting')} installed on this Host"
+      h[:title] = "Show the #{pluralize(num, 'Advanced Setting')} installed on this #{host_title}"
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'advanced_settings', :id => @record, :db => controller.controller_name)
     end
     h
@@ -534,7 +534,7 @@ module HostHelper::TextualSummary
     num = @record.operating_system.nil? ? 0 : @record.operating_system.number_of(:event_logs)
     h = {:label => "ESX Logs", :image => "logs", :value => (num == 0 ? "Not Available" : "Available")}
     if num > 0
-      h[:title] = "Show Host Network"
+      h[:title] = "Show #{host_title} Network"
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'event_logs')
     end
     h
@@ -569,5 +569,9 @@ module HostHelper::TextualSummary
 
       {:label => "#{label} Credentials", :value => auth.status || "None", :title => auth.status_details}
     end
+  end
+
+  def host_title
+    title_for_host_record(@record)
   end
 end

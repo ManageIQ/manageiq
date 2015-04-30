@@ -597,7 +597,10 @@ module ApplicationController::Explorer
       else
         objects = Array.new
         if ems_clusters.count > 0 || non_clustered_hosts.count > 0
-          objects.push({:id=>"folder_c_xx-#{to_cid(object.id)}", :text=>ui_lookup(:tables=>"ems_cluster"), :image=>"folder", :tip=>"#{ui_lookup(:tables=>"ems_clusters")} (Click to open)"})
+          objects.push(:id    => "folder_c_xx-#{to_cid(object.id)}",
+                       :text  => ui_lookup(:ems_cluster_types => "cluster"),
+                       :image => "folder",
+                       :tip   => "#{ui_lookup(:ems_cluster_types => "cluster")} (Click to open)")
         end
         return objects
       end

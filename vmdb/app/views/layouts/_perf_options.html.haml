@@ -96,8 +96,8 @@
 
       - if @perf_options[:model] == "VmOrTemplate" && @perf_options[:typ] != "realtime"
         - compare_choices = []
-        - compare_choices.push(["Parent Host", "Host"]) if @perf_record.host
-        - compare_choices.push(["Parent Cluster", "EmsCluster"]) if @perf_record.ems_cluster
+        - compare_choices.push(["Parent '#{title_for_host}'", "Host"]) if @perf_record.host
+        - compare_choices.push(["Parent '#{title_for_cluster}'", "EmsCluster"]) if @perf_record.ems_cluster
 
         - unless compare_choices.empty?
           %dt

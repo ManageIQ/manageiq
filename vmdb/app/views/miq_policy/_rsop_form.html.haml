@@ -26,8 +26,8 @@
             = select_tag('filter_typ',
               options_for_select([["<#{_('Choose')}>"],
                 [_("By %s") % ui_lookup(:table => "ext_management_systems"), "ems"],
-                [_("By %s") % ui_lookup(:table => "ems_clusters"), "cluster"],
-                [_("By Host"), "host"],
+                [_("By %s") % title_for_clusters, "cluster"],
+                [_("By %s") % title_for_host, "host"],
                 [_("Single VM"), "vm"]], @sb[:rsop][:filter]), "data-miq_observe" => observe)
             - if @sb[:rsop][:filter] == "host"
               %br

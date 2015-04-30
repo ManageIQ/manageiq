@@ -67,7 +67,7 @@
             :tables                => 'host',
             :display               => 'hosts',
             :action                => 'show',
-            :title                 => _("Show all %s") % ui_lookup(:tables => "host"))
+            :title                 => _("Show all %s") % title_for_hosts)
 
         - if role_allows(:feature => "storage_show_list")
           = li_link_if_nonzero(:count => @record.storages.count,

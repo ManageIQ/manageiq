@@ -1,4 +1,6 @@
 - if @record.try(:name)
+  - hosts_title    = title_for_hosts
+  - clusters_title = title_for_clusters
   #accordion.panel-group
     = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
       = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
@@ -22,12 +24,12 @@
       %ul.nav.nav-pills.nav-stacked
         - if @record.number_of(:ems_folders) == 0 || @record.ems_folder_root.nil?
           %li.disabled
-            = link_to(_('Hosts & Clusters'), "#")
+            = link_to(_("'#{hosts_title}' & '#{clusters_title}'"), "#")
         - else
           %li
-            = link_to(_('Hosts & Clusters'),
+            = link_to(_("'#{hosts_title}' & '#{clusters_title}'"),
               {:action => 'show', :id => @record, :display => 'ems_folders'},
-              :title => _("Show Hosts & Clusters"))
+              :title => _("Show %s & %s") % [hosts_title, clusters_title])
 
         - if @record.number_of(:ems_folders) == 0 || @record.ems_folder_root.nil?
           %li.disabled
@@ -41,22 +43,22 @@
         - if role_allows(:feature => "ems_cluster_show_list")
           - if @record.number_of(:ems_clusters) == 0
             %li.disabled
-              = link_to(_("Clusters (%s)") % @record.number_of(:ems_clusters), "#")
+              = link_to("#{clusters_title} (#{@record.number_of(:ems_clusters)})", "#")
           - else
             %li
-              = link_to_with_icon(_("Clusters (%s)") % @record.number_of(:ems_clusters),
+              = link_to_with_icon("#{clusters_title} (#{@record.number_of(:ems_clusters)})",
                 {:action => 'show', :id => @record, :display => 'ems_clusters'},
-                :title => _("Show all managed Clusters"))
+                :title => _("Show all managed %s") % clusters_title)
 
         - if role_allows(:feature => "host_show_list")
           - if @record.number_of(:hosts) == 0
             %li.disabled
-              = link_to(_("Hosts (%s)") % @record.number_of(:hosts), "#")
+              = link_to("#{hosts_title} (#{@record.number_of(:hosts)}", "#")
           - else
             %li
-              = link_to_with_icon(_("Hosts (%s)") % @record.number_of(:hosts),
+              = link_to_with_icon("#{hosts_title} (#{@record.number_of(:hosts)})",
                 {:action => 'show', :id => @record, :display => 'hosts'},
-                :title => _("Show all managed Hosts"))
+                :title => _("Show all managed %s") % hosts_title)
 
         - if role_allows(:feature => "storage_show_list")
           = li_link_if_nonzero(:count => @record.number_of(:storages),

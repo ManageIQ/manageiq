@@ -1573,7 +1573,10 @@ module ApplicationHelper
     if layout.blank?  # no layout, leave title alone
     elsif ["configuration", "dashboard", "chargeback", "about"].include?(layout)
       title += ": #{layout.titleize}"
-
+    elsif @layout == "ems_cluster"
+      title += ": #{title_for_clusters}"
+    elsif @layout == "host"
+      title += ": #{title_for_hosts}"
     # Specific titles for certain layouts
     elsif layout == "miq_server"
       title += ": Servers"
@@ -2776,6 +2779,48 @@ module ApplicationHelper
       attributes[:id] = "v-#{record.id}"
     end
     attributes
+  end
+
+  def title_for_hosts
+    title_for_host(true)
+  end
+
+  def title_for_host(plural = false)
+    key = case Host.node_types
+          when :non_openstack
+            "host_infra"
+          when :openstack
+            "host_openstack"
+          else
+            "host"
+          end
+    ui_lookup(:host_types => plural ? key.pluralize : key)
+  end
+
+  def title_for_clusters
+    title_for_cluster(true)
+  end
+
+  def title_for_cluster(plural = false)
+    key = case EmsCluster.node_types
+          when :non_openstack
+            "cluster_infra"
+          when :openstack
+            "cluster_openstack"
+          else
+            "cluster"
+          end
+    ui_lookup(:ems_cluster_types => plural ? key.pluralize : key)
+  end
+
+  def title_for_host_record(record)
+    record.openstack_host? ? ui_lookup(:host_types => 'host_openstack') : ui_lookup(:host_types => 'host_infra')
+  end
+
+  def title_for_cluster_record(record)
+    record.openstack_cluster? ?
+      ui_lookup(:ems_cluster_types => 'cluster_openstack') :
+      ui_lookup(:ems_cluster_types => 'cluster_infra')
   end
 
   attr_reader :big_iframe

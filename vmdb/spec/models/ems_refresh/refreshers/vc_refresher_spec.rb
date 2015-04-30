@@ -100,7 +100,7 @@ describe EmsRefresh::Refreshers::VcRefresher do
       :ems_ref               => "resgroup-872",
       :ems_ref_obj           => VimString.new("resgroup-872", :ResourcePool, :ManagedObjectReference),
       :uid_ems               => "resgroup-872",
-      :name                  => "Default for Cluster Testing-Production Cluster",
+      :name                  => "Default for Cluster / Deployment Role Testing-Production Cluster",
       :memory_reserve        => 102298,
       :memory_reserve_expand => true,
       :memory_limit          => 102298,
@@ -441,7 +441,7 @@ describe EmsRefresh::Refreshers::VcRefresher do
         [EmsFolder, "Dev", {:is_datacenter => true}] => {
           [EmsFolder, "host", {:is_datacenter => false}] => {
             [HostVmwareEsx, "vi4esxm3.manageiq.com"] => {
-              [ResourcePool, "Default for Host vi4esxm3.manageiq.com", {:is_default => true}] => {
+              [ResourcePool, "Default for Host / Node vi4esxm3.manageiq.com", {:is_default => true}] => {
                 [VmVmware, "Dev Cucumber Nightly Appl 2011-05-19"] => {},
                 [VmVmware, "DEV-GreggT"] => {},
                 [VmVmware, "DEV-GregM"] => {},
@@ -540,7 +540,8 @@ describe EmsRefresh::Refreshers::VcRefresher do
         [EmsFolder, "Prod", {:is_datacenter => true}] => {
           [EmsFolder, "host", {:is_datacenter => false}] => {
             [EmsCluster, "Testing-Production Cluster"] => {
-              [ResourcePool, "Default for Cluster Testing-Production Cluster", {:is_default => true}] => {
+              [ResourcePool, "Default for Cluster / Deployment Role Testing-Production Cluster",
+               {:is_default => true}] => {
                 [ResourcePool, "Citrix", {:is_default => false}] => {
                   [VmVmware, "Citrix 5"] => {}
                 },
@@ -630,7 +631,7 @@ describe EmsRefresh::Refreshers::VcRefresher do
             },
             [EmsFolder, "Test", {:is_datacenter => false}] => {
               [HostVmwareEsx, "localhost"] => {
-                [ResourcePool, "Default for Host localhost", {:is_default => true}] => {}
+                [ResourcePool, "Default for Host / Node localhost", {:is_default => true}] => {}
               }
             }
           },

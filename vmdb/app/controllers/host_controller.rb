@@ -620,6 +620,10 @@ class HostController < ApplicationController
 
   private ############################
 
+  def breadcrumb_name
+    title_for_hosts
+  end
+
   # Build the tree object to display the host network info
   def build_network_tree
     @tree_vms = []                   # Capture all VM ids in the tree
