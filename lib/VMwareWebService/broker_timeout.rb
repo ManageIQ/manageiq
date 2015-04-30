@@ -4,7 +4,6 @@ module Timeout
     exception = klass || Class.new(ExitException)
     state_lock = Mutex.new
     state = :sleeping
-    toid = Class.new.object_id
 
     begin
       begin
