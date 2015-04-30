@@ -52,6 +52,10 @@ class ConfiguredSystem < ActiveRecord::Base
 
   alias_method :manager, :configuration_manager
 
+  def self.common_configuration_profiles_for_selected_hosts(ids)
+    where(:id => ids).collect(&:available_configuration_profiles).inject(:&).presence
+  end
+
   def name
     hostname
   end
