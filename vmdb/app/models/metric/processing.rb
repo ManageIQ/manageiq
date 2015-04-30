@@ -26,11 +26,20 @@ module Metric::Processing
     total_mem = state.total_mem || 0
     result = {}
 
+    have_cpu_metrics = attrs[:cpu_usage_rate_average] || attrs[:cpu_usagemhz_rate_average]
+    have_mem_metrics = attrs[:mem_usage_absolute_average]
+
     DERIVED_COLS.each do |col|
       dummy, group, typ, mode = col.to_s.split("_")
       case typ
       when "available"
-        result[col] = group == "cpu" ? total_cpu : total_mem
+        # Do not derive "available" values if there haven't been any usage
+        # values collected
+        if group == "cpu"
+          result[col] = total_cpu if have_cpu_metrics && total_cpu > 0
+        else
+          result[col] = total_mem if have_mem_metrics && total_mem > 0
+        end
       when "allocated"
         method = col.to_s.split("_")[1..-1].join("_")
         result[col] = state.send(method) if state.respond_to?(method)
@@ -50,7 +59,9 @@ module Metric::Processing
         method = [group, typ, mode].join("_")
         result[col] = state.send(method)
       when "numvcpus" # This is actually logical cpus.  See note above.
-        result[col] = state.send(typ) if obj.kind_of?(VmOrTemplate)
+        # Do not derive "available" values if there haven't been any usage
+        # values collected
+        result[col] = state.numvcpus if obj.kind_of?(VmOrTemplate) && have_cpu_metrics && state.numvcpus.to_i > 0
       end
     end
 
