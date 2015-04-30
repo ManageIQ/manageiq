@@ -24,4 +24,9 @@ class OrchestrationStackOpenstackInfra < OrchestrationStack
       connection.update_stack(stack, planning_data)
     end
   end
+
+  def update_ready?
+    # Update is possible only when in complete or failed state, otherwise API returns exception
+    raw_status.first.end_with?("_COMPLETE", "_FAILED")
+  end
 end
