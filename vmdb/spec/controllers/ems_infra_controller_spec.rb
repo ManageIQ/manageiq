@@ -79,6 +79,8 @@ describe EmsInfraController do
       set_user_privileges
       @ems = FactoryGirl.create(:ems_openstack_infra_with_stack)
       @orchestration_stack_parameter_compute = FactoryGirl.create(:orchestration_stack_parameter_openstack_infra_compute)
+
+      OrchestrationStackOpenstackInfra.any_instance.stub(:raw_status).and_return(["CREATE_COMPLETE", nil])
     end
 
     it "when values are not changed" do
@@ -122,6 +124,16 @@ describe EmsInfraController do
       controller.send(:flash_errors?).should be_true
       flash_messages = assigns(:flash_array)
       flash_messages.first[:message].should include(_("Unable to initiate scaling: my error"))
+    end
+
+    it "when operation in progress, an error message should be displayed" do
+      OrchestrationStackOpenstackInfra.any_instance.stub(:raw_status).and_return(["CREATE_IN_PROGRESS", nil])
+      post :scaling, :id => @ems.id, :scale => "", :orchestration_stack_id => @ems.orchestration_stacks.first.id,
+           @orchestration_stack_parameter_compute.name => 2
+      controller.send(:flash_errors?).should be_true
+      flash_messages = assigns(:flash_array)
+      flash_messages.first[:message].should include(
+        _("Provider is not ready to be scaled, another operation is in progress."))
     end
   end
 end
