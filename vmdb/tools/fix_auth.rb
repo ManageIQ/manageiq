@@ -19,5 +19,6 @@ require 'fix_auth/auth_config_model'
 require 'fix_auth/models'
 require 'fix_auth/cli'
 require 'fix_auth/fix_auth'
+require 'fix_auth/rails_mock' if __FILE__ == $PROGRAM_NAME
 
 FixAuth::Cli.run(ARGV, ENV) if __FILE__ == $PROGRAM_NAME
