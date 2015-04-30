@@ -121,6 +121,7 @@ module EmsRefresh
       end
 
       def configuration_profile_inv_to_hashes(recs, indexes)
+        # if locations have a key with 0 (meaning we're using default), then lets assign a default location
         def_loc = tax_refs if indexes[:locations].keys == %w(0)
         def_org = tax_refs if indexes[:organizations].keys == %w(0)
         recs.collect do |profile|
@@ -130,13 +131,8 @@ module EmsRefresh
             :parent_ref                            => (profile["ancestry"] || "").split("/").last.presence,
             :name                                  => profile["name"],
             :description                           => profile["title"],
-            :direct_configuration_tag_ids          => [
-              id_lookup(indexes[:architectures], profile["architecture_id"]),
-              id_lookup(indexes[:compute_profiles], profile["compute_profile_id"]),
-              id_lookup(indexes[:domains], profile["domain_id"]),
-              id_lookup(indexes[:environments], profile["environment_id"]),
-              id_lookup(indexes[:realms], profile["realm_id"]),
-            ].compact,
+            :direct_configuration_tag_ids          => tag_id_lookup(indexes, profile),
+            :configuration_tags_hash               => tag_hash(profile),
             :direct_operating_system_flavor_id     => id_lookup(indexes[:flavors], profile["operatingsystem_id"]),
             :direct_customization_script_medium_id => id_lookup(indexes[:media], profile["medium_id"]),
             :direct_customization_script_ptable_id => id_lookup(indexes[:ptables], profile["ptable_id"]),
@@ -156,11 +152,17 @@ module EmsRefresh
             end
             rollup(p, ancestor_values)
 
+            configuration_tag_hashes = family_tree(profiles, p).map do |hash|
+              hash[:configuration_tags_hash]
+            end
+            p[:configuration_tag_ids] = tag_id_lookup(indexes, rollup({}, configuration_tag_hashes))
+
             invalid = []
             invalid << "location" if p[:configuration_location_ids].empty?
             invalid << "organization" if p[:configuration_organization_ids].empty?
             $log.warn "Foreman hostgroup #{p[:name]} missing: #{invalid.join(", ")}" unless invalid.empty?
           end
+          profiles.each { |p| p.delete(:configuration_tags_hash) }
           indexes[:profiles] = add_ids(profiles)
         end
       end
@@ -177,12 +179,8 @@ module EmsRefresh
             :direct_operating_system_flavor_id     => id_lookup(indexes[:flavors], cs["operatingsystem_id"]),
             :direct_customization_script_medium_id => id_lookup(indexes[:media], cs["medium_id"]),
             :direct_customization_script_ptable_id => id_lookup(indexes[:ptables], cs["ptable_id"]),
-            :direct_configuration_tag_ids          => [
-              id_lookup(indexes[:architectures], cs["architecture_id"]),
-              id_lookup(indexes[:compute_profiles], cs["compute_profile_id"]),
-              id_lookup(indexes[:domains], cs["domain_id"]),
-              id_lookup(indexes[:environments], cs["environment_id"]),
-              id_lookup(indexes[:realms], cs["realm_id"])].compact,
+            :direct_configuration_tag_ids          => tag_id_lookup(indexes, cs),
+            :configuration_tags_hash               => tag_hash(cs),
             :last_checkin                          => cs["last_compile"],
             :build_state                           => cs["build"] ? "pending" : nil,
             :ipaddress                             => cs["ip"],
@@ -195,6 +193,9 @@ module EmsRefresh
           # if the system doesn't have a value, use the rolled up profile value
           systems.each do |s|
             parent = s[:configuration_profile] || {}
+            configuration_tag_hashes = family_tree(systems, s).map do |hash|
+              hash[:configuration_tags_hash]
+            end
             s.merge!(
               :operating_system_flavor_id     => s[:direct_operating_system_flavor_id].presence ||
                                                  parent[:operating_system_flavor_id].presence,
@@ -202,12 +203,15 @@ module EmsRefresh
                                                  parent[:customization_script_medium_id].presence,
               :customization_script_ptable_id => s[:direct_customization_script_ptable_id].presence ||
                                                  parent[:customization_script_ptable_id].presence,
+              :configuration_tag_ids          => tag_id_lookup(indexes, rollup({}, configuration_tag_hashes)),
             )
+
             invalid = []
             invalid << "location" if s[:configuration_location_id].nil?
             invalid << "organization" if s[:configuration_organization_id].nil?
             $log.warn "Foreman host #{s[:hostname]} missing: #{invalid.join(", ")}" unless invalid.empty?
           end
+          systems.each { |s| s.delete(:configuration_tags_hash) }
         end
       end
 
@@ -263,6 +267,24 @@ module EmsRefresh
         records.each do |record|
           target.merge!(record.select { |_n, v| !v.nil? && v != "" })
         end
+        target
+      end
+
+      # lookup all the configuration_tags and return ids (from the indexes)
+      def tag_id_lookup(indexes, record)
+        [
+          id_lookup(indexes[:architectures], record["architecture_id"]),
+          id_lookup(indexes[:compute_profiles], record["compute_profile_id"]),
+          id_lookup(indexes[:domains], record["domain_id"]),
+          id_lookup(indexes[:environments], record["environment_id"]),
+          id_lookup(indexes[:realms], record["realm_id"]),
+        ].compact
+      end
+
+      # produce temporary hash of all the tags
+      def tag_hash(record)
+        record.slice(*%w(architecture_id compute_profile_id
+                          domain_id environment_id realm_id)).delete_if { |_n, v| v.nil? }
       end
 
       # walk collection returning [ancestor, grand parent, parent, child_record]
