@@ -15,6 +15,8 @@ class ConfigurationProfile < ActiveRecord::Base
   has_and_belongs_to_many :configuration_organizations, :join_table => :configuration_organizations_configuration_profiles
   has_and_belongs_to_many :configuration_tags
 
+  virtual_has_one :configuration_architecture, :class_name => 'ConfigurationArchitecture', :uses => :configuration_tags
+
   def configuration_architecture
     tag_hash[ConfigurationArchitecture]
   end
