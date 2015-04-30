@@ -2450,10 +2450,40 @@ msgstr ""
 msgid "ConfigurationProfile|Description"
 msgstr ""
 
+msgid "ConfigurationProfile|Configuration Profile Description"
+msgstr ""
+
 msgid "ConfigurationProfile|Manager ref"
 msgstr ""
 
 msgid "ConfigurationProfile|Name"
+msgstr ""
+
+msgid "ConfigurationProfile|Environment"
+msgstr ""
+
+msgid "ConfigurationProfile|Domain"
+msgstr ""
+
+msgid "ConfigurationProfile|Realm"
+msgstr ""
+
+msgid "ConfigurationProfile|Compute Profile"
+msgstr ""
+
+msgid "ConfigurationProfile|Architecture"
+msgstr ""
+
+msgid "ConfigurationProfile|Medium"
+msgstr ""
+
+msgid "ConfigurationProfile|Partition Table"
+msgstr ""
+
+msgid "ConfigurationProfile|Configuration Location"
+msgstr ""
+
+msgid "ConfigurationProfile|Configuration Organization"
 msgstr ""
 
 msgid "Configuration|Created on"
@@ -2486,7 +2516,7 @@ msgstr ""
 msgid "ConfiguredSystem|Ipaddress"
 msgstr ""
 
-msgid "ConfiguredSystem|Ipmi present"
+msgid "ConfiguredSystem|IPMI Present"
 msgstr ""
 
 msgid "ConfiguredSystem|Last checkin"

@@ -198,6 +198,7 @@ class ProviderForemanController < ApplicationController
 
   def tree_select
     @lastaction = "explorer"
+    @flash_array = nil
     self.x_active_tree = params[:tree] if params[:tree]
     self.x_node = params[:id]
     load_or_clear_adv_search
@@ -587,6 +588,7 @@ class ProviderForemanController < ApplicationController
 
   def update_partials(record_showing, presenter, r)
     if record_showing
+      get_tagdata(@record)
       presenter[:set_visible_elements][:form_buttons_div] = false
       path_dir = "provider_foreman"
       presenter[:update_partials][:main_div] =
