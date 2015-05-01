@@ -33,6 +33,7 @@ module FixAuth
     end
 
     def run
+      ENV['RAILS_ROOT'] = options[:root] if options[:root]
       ::FixAuth::FixAuth.new(options).run
     end
 
