@@ -13,7 +13,7 @@ class FileDepot < ActiveRecord::Base
   end
 
   def self.supported_protocols
-    @supported_depots ||= subclasses.each_with_object({}) { |klass, hash| hash[klass.uri_prefix] = klass.name }.freeze
+    @supported_protocols ||= subclasses.each_with_object({}) { |klass, hash| hash[klass.uri_prefix] = klass.name }.freeze
   end
 
   def self.requires_credentials?
