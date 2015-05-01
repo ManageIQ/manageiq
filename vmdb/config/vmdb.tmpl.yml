@@ -137,7 +137,7 @@ performance:
   capture_threshold:
     :ems_cluster: 50.minutes
     :host: 50.minutes
-    :storage: 120.minutes
+    :storage: 60.minutes
     :vm: 50.minutes
   capture_threshold_with_alerts:
     :host: 20.minutes

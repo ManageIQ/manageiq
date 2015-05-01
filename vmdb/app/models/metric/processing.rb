@@ -26,16 +26,31 @@ module Metric::Processing
     total_mem = state.total_mem || 0
     result = {}
 
+    have_cpu_metrics = attrs[:cpu_usage_rate_average] || attrs[:cpu_usagemhz_rate_average]
+    have_mem_metrics = attrs[:mem_usage_absolute_average]
+
     DERIVED_COLS.each do |col|
       dummy, group, typ, mode = col.to_s.split("_")
       case typ
       when "available"
-        result[col] = group == "cpu" ? total_cpu : total_mem
+        # Do not derive "available" values if there haven't been any usage
+        # values collected
+        if group == "cpu"
+          result[col] = total_cpu if have_cpu_metrics && total_cpu > 0
+        else
+          result[col] = total_mem if have_mem_metrics && total_mem > 0
+        end
       when "allocated"
         method = col.to_s.split("_")[1..-1].join("_")
         result[col] = state.send(method) if state.respond_to?(method)
       when "used"
         if group == "cpu"
+          # TODO: This branch is never called because there isn't a column
+          # called derived_cpu_used.  The callers, such as chargeback, generally
+          # use cpu_usagemhz_rate_average directly, and the column may not be
+          # needed, but perhaps should be added to normalize like is done for
+          # memory.  The derivation here could then use cpu_usagemhz_rate_average
+          # directly if avaiable, otherwise do the calculation below.
           result[col] = ( attrs[:cpu_usage_rate_average]     / 100 * total_cpu ) unless (total_cpu == 0 || attrs[:cpu_usage_rate_average].nil?)
         elsif group == "memory"
           result[col] = ( attrs[:mem_usage_absolute_average] / 100 * total_mem ) unless (total_mem == 0  || attrs[:mem_usage_absolute_average].nil?)
@@ -50,7 +65,9 @@ module Metric::Processing
         method = [group, typ, mode].join("_")
         result[col] = state.send(method)
       when "numvcpus" # This is actually logical cpus.  See note above.
-        result[col] = state.send(typ) if obj.kind_of?(VmOrTemplate)
+        # Do not derive "available" values if there haven't been any usage
+        # values collected
+        result[col] = state.numvcpus if obj.kind_of?(VmOrTemplate) && have_cpu_metrics && state.numvcpus.to_i > 0
       end
     end
 

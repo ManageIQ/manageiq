@@ -10,6 +10,8 @@ module Metric::Common
     belongs_to  :parent_storage,     :class_name => "Storage"
     belongs_to  :parent_ems,         :class_name => "ExtManagementSystem"
 
+    validates :timestamp, :presence => true
+
     scope :daily,    :conditions => {:capture_interval_name => 'daily'}
     scope :hourly,   :conditions => {:capture_interval_name => 'hourly'}
     scope :realtime, :conditions => {:capture_interval_name => 'realtime'}
