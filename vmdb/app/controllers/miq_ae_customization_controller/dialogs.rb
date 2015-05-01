@@ -425,8 +425,8 @@ module MiqAeCustomizationController::Dialogs
       render :update do |page|
         page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         page.replace("field_values_div", :partial=>"field_values", :locals=>{:entry=>"new", :edit=>true})
-        page << javascript_focus('entry_name')
-        page << "$('#entry_name').select();"
+        page << javascript_focus("entry_value")
+        page << "$('#entry_#{j_str(params[:field])}').select();"
       end
       session[:entry] = "new"
     else
@@ -460,27 +460,27 @@ module MiqAeCustomizationController::Dialogs
     key = fields[id]
 
     if session[:entry] == "new"
-      if params["entry"]["value"].strip! != "" && params["entry"]["description"].strip != ""
-
+      entry_value       = params["entry"]["value"].strip
+      entry_description = params["entry"]["description"].strip
+      if entry_value != "" && entry_description != ""
         if key[:values].include?([params["entry"]["value"],params["entry"]["description"]])
           add_flash(_("%{field} '%{value}' is already in use") % {:field=>params["entry"]["description"], :value=>params["entry"]["value"]}, :error)
           render_flash do |page|
-            page << javascript_focus('entry_name')
+            page << "$('#entry_value').focus();"
           end
           return
         else
           key[:values].push([params["entry"]["value"],params["entry"]["description"]])
           @edit[:field_values] = copy_array(key[:values])
         end
-
       else
         add_flash(_("%{field1} and %{field2} fields can't be blank") % {:field1=>"Value", :field2=>"Description"}, :error)
+        focus_field = entry_value == "" ? "entry_value" : "entry_description"
         render_flash do |page|
-          page << "$('#entry_value').focus();"
+          page << "$('##{focus_field}').focus();"
         end
         return
       end
-
     else
       key[:values].each_with_index do |entry, i|
 
