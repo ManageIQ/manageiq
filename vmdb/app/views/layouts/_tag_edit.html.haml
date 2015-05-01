@@ -8,8 +8,8 @@
         %th
           = _("Select a customer tag to assign:")
         %th
-          - @categories.each do | cat_key, cat_val |
-            - if session[:assigned_filters].include?(cat_val.downcase)
+          - @categories.each do | cat_key, _ |
+            - if session[:assigned_filters].include?(cat_key.downcase)
               - @categories.delete(cat_key)
           = select_tag("tag_cat",
             options_for_select(@categories.sort, @edit[:cat].name),
