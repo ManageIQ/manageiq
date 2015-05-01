@@ -1,5 +1,6 @@
-
 $:.push(File.expand_path(File.join(Rails.root, %w{.. lib Scvmm})))
+
+require 'gssapi'
 
 class EmsMicrosoft < EmsInfra
   include_concern "Powershell"
@@ -52,6 +53,8 @@ class EmsMicrosoft < EmsInfra
       "Remote error message: #{e.message}"
     rescue GSSAPI::GssApiError
       raise MiqException::MiqHostError, "Unable to reach any KDC in realm #{realm}"
+    rescue StandardError => e
+      raise MiqException::MiqHostError, "Unable to connect: #{e.message}"
     end
 
     true
