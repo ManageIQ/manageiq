@@ -1,7 +1,5 @@
 $:.push(File.expand_path(File.join(Rails.root, %w{.. lib Scvmm})))
 
-require 'gssapi'
-
 class EmsMicrosoft < EmsInfra
   include_concern "Powershell"
 
@@ -44,6 +42,8 @@ class EmsMicrosoft < EmsInfra
   end
 
   def verify_credentials(_auth_type = nil, options = {})
+    silence_warnings{ require 'gssapi' } # Because version 1.0.0 emits warnings
+
     raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(options[:auth_type])
 
     begin
