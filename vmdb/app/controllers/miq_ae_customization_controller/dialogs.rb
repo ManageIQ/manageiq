@@ -476,7 +476,7 @@ module MiqAeCustomizationController::Dialogs
       else
         add_flash(_("%{field1} and %{field2} fields can't be blank") % {:field1=>"Value", :field2=>"Description"}, :error)
         render_flash do |page|
-          page << javascript_focus('entry_value')
+          page << "$('#entry_value').focus();"
         end
         return
       end
@@ -489,7 +489,7 @@ module MiqAeCustomizationController::Dialogs
           add_flash(_("%{field} '%{value}' is already in use") % {:field=>params["entry"]["description"], :value=>params["entry"]["value"]}, :error)
 
           render_flash do |page|
-            page << javascript_focus('entry_name')
+            page << "$('#entry_value').focus();"
           end
           return
         else
