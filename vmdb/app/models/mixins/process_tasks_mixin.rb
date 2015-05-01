@@ -7,11 +7,10 @@ module ProcessTasksMixin
       raise "No ids given to process_tasks" if options[:ids].blank?
       if options[:task] == "refresh_ems" && respond_to?("refresh_ems")
         refresh_ems(options[:ids])
-        msg = "'#{options[:task]}' initiated for "\
-              "#{options[:ids].length} #{ui_lookup(:table => base_class.name).pluralize}"
+        msg = "'#{options[:task]}' initiated for #{options[:ids].length} #{ui_lookup(:table => base_class.name).pluralize}"
         task_audit_event(:success, options, :message => msg)
       else
-        exception_if_task_unknown(options)
+        assert_known_task(options)
         options[:userid] ||= "system"
         invoke_tasks_queue(options)
       end
@@ -28,7 +27,7 @@ module ProcessTasksMixin
 
       # TODO: invoke_tasks_remote currently is only implemented by VmOrTemplate.
       # it can be refactored to be generalized like invoke_tasks_local
-      invoke_tasks_remote(options.merge(:ids => remote)) if !remote.empty? && respond_to?("invoke_tasks_remote")
+      invoke_tasks_remote(options.merge(:ids => remote)) if remote.present? && respond_to?("invoke_tasks_remote")
     end
 
     def invoke_tasks_local(options)
@@ -37,9 +36,7 @@ module ProcessTasksMixin
 
       instances, tasks = validate_tasks(options)
 
-      instances.each_with_index do |instance, idx|
-        task = MiqTask.where(:id => tasks[idx]).first
-
+      instances.zip(tasks) do |instance, task|
         if task && task.status == "Error"
           task_audit_event(:failure, options, :target_id => instance.id, :message => task.message)
           task.state_finished
@@ -58,11 +55,13 @@ module ProcessTasksMixin
     def task_invoked_by(_options)
       :task
     end
+    private :task_invoked_by
 
     # default: only handles retirement, can be overridden
     def task_arguments(options)
       options[:task] == 'retire_now' ? [options[:userid]] : []
     end
+    private :task_arguments
 
     # default implementation, can be overridden
     def invoke_task_local(task, instance, options, args)
@@ -82,6 +81,8 @@ module ProcessTasksMixin
       )
     end
 
+    private
+
     # Helper method for invoke_tasks, to determine the instances and the tasks associated
     def validate_tasks(options)
       tasks = []
@@ -92,7 +93,7 @@ module ProcessTasksMixin
       instances.each do |instance|
         # create a task for each instance
         task = MiqTask.create(:name => "#{instance.name}: '#{options[:task]}'", :userid => options[:userid])
-        tasks.push(task.id)
+        tasks.push(task)
 
         validate_task(task, instance, options)
       end
@@ -116,7 +117,7 @@ module ProcessTasksMixin
       AuditEvent.send(event, options)
     end
 
-    def exception_if_task_unknown(options)
+    def assert_known_task(options)
       raise "Unknown task, #{options[:task]}" unless instance_methods.collect(&:to_s).include?(options[:task])
     end
   end

@@ -404,11 +404,13 @@ class VmOrTemplate < ActiveRecord::Base
     end
     true
   end
+  private_class_method :validate_task
 
   # override
   def self.task_invoked_by(options)
     %w(scan sync).include?(options[:task]) ? :job : super
   end
+  private_class_method :task_invoked_by
 
   # override
   def self.task_arguments(options)
@@ -423,6 +425,7 @@ class VmOrTemplate < ActiveRecord::Base
       super
     end
   end
+  private_class_method :task_arguments
 
   def powerops_callback(task_id, status, msg, result, queue_item)
     if queue_item.last_exception.kind_of?(MiqException::MiqVimBrokerUnavailable)
