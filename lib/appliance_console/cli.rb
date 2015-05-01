@@ -227,13 +227,18 @@ module ApplianceConsole
     end
 
     def config_tmp_disk
-      say "creating temp disk"
       if (tmp_disk = disk_from_string(options[:tmpdisk]))
+        say "creating temp disk"
         config = ApplianceConsole::TempStorageConfiguration.new(:disk => tmp_disk)
         config.activate
       else
-        say "could not find disk #{options[:tmpdisk]}"
-        say "if you pass auto, it will choose: #{disk.try(:path) || "no disks with a free partition"}"
+        choose_disk = disk.try(:path)
+        if choose_disk
+          say "could not find disk #{options[:tmpdisk]}"
+          say "if you pass auto, it will choose: #{choose_disk}"
+        else
+          say "no disks with a free partition"
+        end
       end
     end
 
