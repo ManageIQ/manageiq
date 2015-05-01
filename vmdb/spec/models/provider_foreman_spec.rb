@@ -4,7 +4,9 @@ require "manageiq_foreman"
 
 describe ProviderForeman do
   let(:provider) { FactoryGirl.build(:provider_foreman) }
-  let(:attrs)    { {:base_url => "example.com", :username => "admin", :password => "smartvm", :verify_ssl => nil} }
+  let(:attrs)    do
+    {:base_url => "example.com", :username => "admin", :password => "smartvm", :verify_ssl => OpenSSL::SSL::VERIFY_PEER}
+  end
 
   describe "#connect" do
     it "with no port" do

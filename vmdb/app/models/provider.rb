@@ -12,6 +12,9 @@ class Provider < ActiveRecord::Base
   belongs_to :zone
   has_many :managers, :class_name => "ExtManagementSystem"
 
+  default_value_for :verify_ssl, OpenSSL::SSL::VERIFY_PEER
+  validates :verify_ssl, :inclusion => {:in => [OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER]}
+
   def self.leaf_subclasses
     descendants.select { |d| d.subclasses.empty? }
   end

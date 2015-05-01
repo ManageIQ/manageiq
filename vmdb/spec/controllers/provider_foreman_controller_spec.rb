@@ -5,7 +5,7 @@ describe ProviderForemanController do
   before(:each) do
     set_user_privileges
     @zone = FactoryGirl.create(:zone, :name => 'zone1')
-    @provider = ProviderForeman.create(:name => "test", :url => "10.8.96.102", :verify_ssl => nil, :zone => @zone)
+    @provider = ProviderForeman.create(:name => "test", :url => "10.8.96.102", :zone => @zone)
     @config_mgr = ConfigurationManagerForeman.find_all_by_provider_id(@provider.id).first
     @config_profile = ConfigurationProfileForeman.create(:name                     => "testprofile",
                                                          :configuration_manager_id => @config_mgr.id)
