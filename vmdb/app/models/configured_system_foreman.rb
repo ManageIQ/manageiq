@@ -1,5 +1,6 @@
 class ConfiguredSystemForeman < ConfiguredSystem
   include ProviderObjectMixin
+  include_concern 'Placement'
 
   belongs_to :configuration_profile, :class_name => 'ConfigurationProfileForeman'
   belongs_to :direct_operating_system_flavor,

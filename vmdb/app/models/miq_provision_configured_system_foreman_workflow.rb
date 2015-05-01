@@ -31,9 +31,8 @@ class MiqProvisionConfiguredSystemForemanWorkflow < MiqProvisionConfiguredSystem
 
   def allowed_configuration_profiles(_options = {})
     @allowed_configuration_profiles ||= begin
-      configured_system_ids  = get_value(@values[:src_configured_system_ids])
-      configuration_managers = ConfiguredSystem.where(:id => configured_system_ids).collect(&:configuration_manager)
-      configuration_managers.collect(&:configuration_profiles).flatten.each_with_object({}) do |cp, hash|
+      profiles = ConfiguredSystem.common_configuration_profiles_for_selected_hosts(@values[:src_configured_system_ids])
+      profiles.each_with_object({}) do |cp, hash|
         hash[cp.id] = cp.name
       end
     end
