@@ -683,7 +683,7 @@ class DashboardController < ApplicationController
     first_allowed_url = nil
     startpage_already_set = nil
     MiqShortcut.start_pages.each do |url, _description, rbac_feature_name|
-      allowed = role_allows(:feature => rbac_feature_name, :any => true)
+      allowed = start_page_allowed?(rbac_feature_name)
       first_allowed_url ||= url if allowed
       # if default startpage is set, check if it is allowed
       startpage_already_set = true if @settings[:display][:startpage] == url && allowed

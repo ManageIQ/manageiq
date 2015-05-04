@@ -762,7 +762,7 @@ class ConfigurationController < ApplicationController
 
       # Build the start pages pulldown list
       session[:start_pages] = MiqShortcut.start_pages.each_with_object([]) do |page, pages|
-        pages.push([page[1], page[0]]) if role_allows(:feature => page[2], :any => true)
+        pages.push([page[1], page[0]]) if start_page_allowed?(page[2])
       end
     when 'ui_2'
       @edit = {
