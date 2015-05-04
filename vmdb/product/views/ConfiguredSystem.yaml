@@ -23,6 +23,8 @@ cols:
 - type
 - last_checkin
 - build_state
+- my_zone
+- configuration_environment_name
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -33,6 +35,8 @@ col_order:
 - type
 - last_checkin
 - build_state
+- my_zone
+- configuration_environment_name
 
 # Column titles, in order
 headers:
@@ -40,6 +44,8 @@ headers:
 - Type
 - Last Checkin
 - Build State
+- Zone
+- Environment
 
 col_formats:
 -
