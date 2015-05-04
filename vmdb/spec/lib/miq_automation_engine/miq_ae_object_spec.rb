@@ -18,6 +18,45 @@ module MiqAeObjectSpec
       MiqAeDatastore.reset
     end
 
+    it "#to_xml" do
+      args = {'nil_arg' => nil, 'float_arg' => 5.98,
+              'int_arg' => 10,  'string_arg' => 'Stringy',
+              'svc_vm'  => MiqAeMethodService::MiqAeServiceVmVmware.find(@vm.id)}
+
+      @miq_obj.process_args_as_attributes(args)
+      validate_xml(@miq_obj.to_xml, args)
+    end
+
+    def validate_xml(xml, args)
+      hash = Hash.from_xml(xml)
+      attrs = hash['MiqAeObject']['MiqAeAttribute']
+      args.each do |key, value|
+        find_match(attrs, key, value).should be_true
+      end
+    end
+
+    def find_match(attrs, key, value)
+      item = attrs.detect { |i| i['name'] == key }
+      return false unless item
+      item.delete('name')
+      xml_class = item.keys.first
+      type_match(value.class, xml_class) &&
+        value_match(value, item[xml_class])
+    end
+
+    def type_match(original_class, xml_class_name)
+      /MiqAeMethodService::(?<cls>.*)/ =~ original_class.name
+      cls &&= "MiqAeMethodService::#{xml_class_name}"
+      cls ||= xml_class_name
+      original_class == cls.constantize
+    end
+
+    def value_match(value, xml_value)
+      service_model = value.class.name.start_with?("MiqAeMethodService::")
+      return value.id.inspect == xml_value['id'] if service_model
+      value == xml_value || value.inspect == xml_value
+    end
+
     it "#process_args_as_attributes with a hash with no object reference" do
       result = @miq_obj.process_args_as_attributes("name"=> "fred")
       result["name"].should be_kind_of(String)
