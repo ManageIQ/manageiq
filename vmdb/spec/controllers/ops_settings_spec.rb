@@ -88,5 +88,50 @@ describe OpsController do
         @sch.should_not be_enabled
       end
     end
+
+    context "schedule additon" do
+      before(:each) do
+        EvmSpecHelper.create_guid_miq_server_zone
+        session[:userid] = User.current_user.userid
+        controller.should_receive(:render)
+        @schedule = FactoryGirl.create(:miq_schedule, :userid => "test", :towhat => "Vm")
+        @params = {
+          :button             => "add",
+          :description        => "description01",
+          :enabled            => "on",
+          :filter_typ         => "all",
+          :action_typ         => "vm",
+          :timer_typ          => "Once",
+          :time_zone          => "UTC",
+          :start_hour         => "0",
+          :start_min          => "0",
+          :miq_angular_date_1 => (Time.now + 60 * 60 * 24).strftime("%m/%d/%Y")
+        }
+        controller.stub(:assert_privileges)
+      end
+
+      after(:each) do
+        expect(response.status).to eq(200)
+      end
+
+      it "#does not allow duplicate names when adding" do
+        @params[:id] = "new"
+        @params[:name] = @schedule.name
+        controller.instance_variable_set(:@_params, @params)
+        controller.send(:schedule_edit)
+        controller.send(:flash_errors?).should be_true
+        assigns(:flash_array).first[:message].should include("Name has already been taken")
+      end
+
+      it "#does not allow duplicate names when editing" do
+        @params[:id] = @schedule.id
+        @params[:name] = "schedule01"
+        controller.instance_variable_set(:@_params, @params)
+        FactoryGirl.create(:miq_schedule, :name => @params[:name], :userid => "test", :towhat => "Vm")
+        controller.send(:schedule_edit)
+        controller.send(:flash_errors?).should be_true
+        assigns(:flash_array).first[:message].should include("Name has already been taken")
+      end
+    end
   end
 end

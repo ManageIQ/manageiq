@@ -64,21 +64,26 @@ module OpsController::Settings::Schedules
       schedule_set_record_vars(schedule)
       schedule_set_timer_record_vars(schedule)
       schedule_validate?(schedule)
-      schedule.save
-      AuditEvent.success(build_saved_audit_hash(old_schedule_attributes, schedule, params[:button] == "add"))
-      add_flash(I18n.t("flash.edit.saved", :model => ui_lookup(:model => "MiqSchedule"), :name => schedule.name))
-
-      if params[:button] == "add"
-        self.x_node  = "xx-msc"
-        schedules_list
-        settings_get_info("st")
+      begin
+        schedule.save!
+      rescue StandardError => bang
+        add_flash(_("Error when adding a new schedule: ") << bang.message, :error)
+        render :update do |page|
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        end
       else
-        @selected_schedule = schedule
-        get_node_info(x_node)
+        AuditEvent.success(build_saved_audit_hash(old_schedule_attributes, schedule, params[:button] == "add"))
+        add_flash(I18n.t("flash.edit.saved", :model => ui_lookup(:model => "MiqSchedule"), :name => schedule.name))
+        if params[:button] == "add"
+          self.x_node  = "xx-msc"
+          schedules_list
+          settings_get_info("st")
+        else
+          @selected_schedule = schedule
+          get_node_info(x_node)
+        end
+        replace_right_cell("root", [:settings])
       end
-
-      replace_right_cell("root", [:settings])
-
     when "reset", nil # Reset or first time in
       obj = find_checked_items
       obj[0] = params[:id] if obj.blank? && params[:id]
