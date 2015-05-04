@@ -1,4 +1,5 @@
 require 'linux_admin'
+LinuxAdmin.logger = $log
 
 module MiqServer::UpdateManagement
   extend ActiveSupport::Concern
@@ -124,12 +125,11 @@ module MiqServer::UpdateManagement
 
   def enable_repos
     MiqDatabase.first.update_repo_names.each do |repo|
-      update_attributes(:upgrade_message => "enabling repo #{repo}")
-      $log.info("MIQ(#{self.class.name}##{__method__}) Enabling Repository: #{repo}")
+      update_attributes(:upgrade_message => "enabling #{repo}")
       begin
         LinuxAdmin::RegistrationSystem.enable_repo(repo, assemble_registration_options)
       rescue AwesomeSpawn::CommandResultError
-        update_attributes(:upgrade_message => "failed to enable repo #{repo}")
+        update_attributes(:upgrade_message => "failed to enable #{repo}")
       end
     end
   end
@@ -204,10 +204,7 @@ module MiqServer::UpdateManagement
 
   def import_gpg_certificates
     files = File.join("/etc/pki/rpm-gpg/**","{RPM-GPG-KEY-*}")
-    Dir.glob(files).each do |key|
-      $log.info("MIQ(#{self.class.name}##{__method__}) Importing RPM-GPG-KEY: #{key}")
-      LinuxAdmin::Rpm.import_key(key)
-    end
+    Dir.glob(files).each { |key| LinuxAdmin::Rpm.import_key(key) }
   end
 
   def parse_product_version_number(version)
