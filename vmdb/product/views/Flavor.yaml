@@ -28,6 +28,7 @@ cols:
 - supports_hvm
 - supports_paravirtual
 - block_storage_based_only
+- cloud_subnet_required
 - total_vms
 
 # Included tables (joined, has_one, has_many) and columns
@@ -52,6 +53,7 @@ col_order:
 - supports_hvm
 - supports_paravirtual
 - block_storage_based_only
+- cloud_subnet_required
 - total_vms
 
 col_formats:
@@ -73,6 +75,7 @@ headers:
 - HVM (Hardware Virtual Machine)
 - Paravirtualization
 - Block Storage Based
+- Subnet Required
 - Instances
 
 # Condition(s) string for the SQL query
