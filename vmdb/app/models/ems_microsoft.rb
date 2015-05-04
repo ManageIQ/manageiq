@@ -43,6 +43,9 @@ class EmsMicrosoft < EmsInfra
   end
 
   def verify_credentials(_auth_type = nil, options = {})
+    silence_warnings { require 'winrm' }
+    silence_warnings { require 'gssapi' } # Version 1.0.0 of the gssapi gem emits warnings
+
     raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(options[:auth_type])
 
     begin
@@ -52,6 +55,8 @@ class EmsMicrosoft < EmsInfra
       "Remote error message: #{e.message}"
     rescue GSSAPI::GssApiError
       raise MiqException::MiqHostError, "Unable to reach any KDC in realm #{realm}"
+    rescue StandardError => e
+      raise MiqException::MiqHostError, "Unable to connect: #{e.message}"
     end
 
     true
