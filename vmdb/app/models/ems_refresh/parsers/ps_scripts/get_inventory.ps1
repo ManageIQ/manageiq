@@ -93,5 +93,4 @@ $r["ems"] = $e
 $r | Export-CLIXML -path $file -encoding UTF8
 get-content $file
 $file.close
-
-
+$file.delete
