@@ -57,7 +57,7 @@ module MiqServer::UpdateManagement
 
   def attempt_registration
     return unless register
-    attach_products
+    attach_products unless MiqDatabase.first.registration_type == "rhn_satellite"  # There is no concept of attaching products in Satellite 5
     # HACK: #enable_repos is not always successful immediately after #attach_products, retry to ensure they are enabled.
     5.times { repos_enabled? ? break : enable_repos }
   end
@@ -105,9 +105,6 @@ module MiqServer::UpdateManagement
 
   def attach_products
     update_attributes(:upgrade_message => "attaching products")
-    # There is no concept of attaching products in rhn_satellite
-    return if MiqDatabase.first.registration_type == "rhn_satellite"
-
     $log.info("MIQ(#{self.class.name}##{__method__}) Attaching products based on installed certificates")
     LinuxAdmin::RegistrationSystem.subscribe(assemble_registration_options)
   end
@@ -115,9 +112,8 @@ module MiqServer::UpdateManagement
   def repos_enabled?
     enabled = LinuxAdmin::RegistrationSystem.enabled_repos
     if MiqDatabase.first.update_repo_names.all? { |desired| enabled.include?(desired) }
-      update_attributes(:rh_subscribed => true)
       $log.info("MIQ(#{self.class.name}##{__method__}) Desired update repository is enabled")
-      update_attributes(:upgrade_message => "registered")
+      update_attributes(:rh_subscribed => true, :upgrade_message => "registered")
       return true
     end
     false
