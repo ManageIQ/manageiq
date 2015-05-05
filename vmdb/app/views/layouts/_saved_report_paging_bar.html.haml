@@ -4,7 +4,7 @@
 - @pb_occ += 1
 - pages ||= {:perpage => @settings[:perpage][:reports],
              :current => 1,
-             :total   => 5,
+             :total   => @sb[:pages][:total],
              :items   => @sb[:pages][:items]}
 
 %div{:id => "rpb_div_#{@pb_occ}"}
