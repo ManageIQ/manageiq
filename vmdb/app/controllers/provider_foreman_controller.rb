@@ -93,13 +93,13 @@ class ProviderForemanController < ApplicationController
       @provider_foreman = ProviderForeman.new(:name       => params[:name],
                                               :url        => params[:url],
                                               :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
-                                              :verify_ssl => params[:verify_ssl].eql?("on") ? true : nil)
+                                              :verify_ssl => params[:verify_ssl].eql?("on"))
     else
       config_mgr = ConfigurationManagerForeman.find(params[:id])
       @provider_foreman = ProviderForeman.find(config_mgr.provider_id)
       @provider_foreman.update_attributes(:name       => params[:name],
                                           :url        => params[:url],
-                                          :verify_ssl => params[:verify_ssl].eql?("on") ? true : nil)
+                                          :verify_ssl => params[:verify_ssl].eql?("on"))
 
     end
     update_authentication_provider_foreman
@@ -165,7 +165,7 @@ class ProviderForemanController < ApplicationController
     @provider_foreman = ProviderForeman.new(:name       => params[:name],
                                             :url        => params[:url],
                                             :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
-                                            :verify_ssl => params[:verify_ssl].eql?("on") ? true : nil)
+                                            :verify_ssl => params[:verify_ssl].eql?("on"))
     update_authentication_provider_foreman
 
     begin
