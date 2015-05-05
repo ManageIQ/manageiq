@@ -73,35 +73,44 @@ module EmsOpenstackMixin
     false
   end
 
-  def verify_api_credentials(options={})
-    begin
-      options[:service] = "Identity"
-      with_provider_connection(options) {}
-    rescue Excon::Errors::Unauthorized => err
-      $log.error("MIQ(#{self.class.name}.verify_api_credentials) Error Class=#{err.class.name}, Message=#{err.message}")
-      raise MiqException::MiqInvalidCredentialsError, "Login failed due to a bad username or password."
-    rescue Excon::Errors::Timeout => err
-      $log.error("MIQ(#{self.class.name}.verify_api_credentials) Error Class=#{err.class.name}, Message=#{err.message}")
-      raise MiqException::MiqUnreachableError, "Login attempt timed out"
-    rescue Excon::Errors::SocketError => err
-      $log.error("MIQ(#{self.class.name}.verify_api_credentials) Error Class=#{err.class.name}, Message=#{err.message}")
-      raise MiqException::MiqHostError, "Socket error: #{err.message}"
-    rescue MiqException::MiqInvalidCredentialsError
-      raise
-    rescue Exception => err
-      $log.error("MIQ(#{self.class.name}.verify_api_credentials) Error Class=#{err.class.name}, Message=#{err.message}")
-      raise MiqException::MiqEVMLoginError, "Unexpected response returned from system: #{err.message}"
+  def translate_exception(err)
+    case err.class
+    when Excon::Errors::Unauthorized
+      MiqException::MiqInvalidCredentialsError.new "Login failed due to a bad username or password."
+    when Excon::Errors::Timeout
+      MiqException::MiqUnreachableError.new "Login attempt timed out"
+    when Excon::Errors::SocketError
+      MiqException::MiqHostError.new "Socket error: #{err.message}"
+    when MiqException::MiqInvalidCredentialsError
+      err
+    else
+      MiqException::MiqEVMLoginError.new "Unexpected response returned from system: #{err.message}"
     end
+  end
+
+  def verify_api_credentials(options={})
+    options[:service] = "Identity"
+    with_provider_connection(options) {}
     true
+  rescue => err
+    miq_exception = translate_exception(err)
+    raise unless miq_exception
+
+    $log.error("MIQ(#{self.class.name}.verify_api_credentials) Error Class=#{err.class.name}, Message=#{err.message}")
+    raise miq_exception
   end
   private :verify_api_credentials
 
   def verify_amqp_credentials(options={})
     require 'openstack/openstack_event_monitor'
     OpenstackEventMonitor.test_amqp_connection(event_monitor_options)
-  rescue Exception => e
-    $log.error("MIQ(#{self.class.name}.verify_amqp_credentials) Error Class=#{e.class.name}, Message=#{e.message}")
-    raise MiqException::MiqEVMLoginError, e.to_s
+    true
+  rescue => err
+    miq_exception = translate_exception(err)
+    raise unless miq_exception
+
+    $log.error("MIQ(#{self.class.name}.verify_aqmp_credentials) Error Class=#{err.class.name}, Message=#{err.message}")
+    raise miq_exception
   end
   private :verify_amqp_credentials
 
