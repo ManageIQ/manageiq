@@ -139,3 +139,9 @@ end
 if File.exist?(File.expand_path("Gemfile.dev.rb", File.dirname(__FILE__)))
   MiqBundler.include_gemfile("Gemfile.dev.rb", binding)
 end
+
+# Load plugins that are packaged as Gems
+Dir["#{File.dirname(__FILE__)}/bundler.d/*.rb"].each do |bundle|
+  MiqBundler.include_gemfile(bundle, binding)
+end
+
