@@ -1370,12 +1370,12 @@ event_handling:
   - refresh:
     - ems
   AWS_EC2_Instance_CREATE:
-  - policy:
-    - src_vm
-    - vm_create
   - refresh:
     - ems
   AWS_EC2_Instance_UPDATE:
+  - refresh:
+    - ems
+  AWS_EC2_Instance_DELETE:
   - refresh:
     - ems
   AWS_EC2_Instance_running:
@@ -1387,13 +1387,13 @@ event_handling:
   AWS_EC2_Instance_stopped:
   - policy:
     - src_vm
-    - vm_power_off
+    - vm_poweroff
   - refresh:
     - ems
   AWS_EC2_Instance_shutting-down:
   - policy:
     - src_vm
-    - vm_power_off
+    - vm_poweroff
   - refresh:
     - ems
 
