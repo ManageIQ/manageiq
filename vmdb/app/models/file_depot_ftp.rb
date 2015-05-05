@@ -46,9 +46,9 @@ class FileDepotFtp < FileDepot
   end
 
   def verify_credentials(_auth_type = nil, cred_hash = nil)
-    with_connection(cred_hash, &:last_response)
-  rescue
-    false
+    res = with_connection(cred_hash, &:last_response)
+    raise "Depot Settings validation failed" unless res
+    res
   end
 
   def with_connection(cred_hash = nil)
