@@ -13186,7 +13186,7 @@ msgstr ""
 msgid "Used for access to Web Services."
 msgstr ""
 
-msgid "Used for shh connection to all Hosts in this provider."
+msgid "Used for ssh connection to all Hosts in this provider."
 msgstr ""
 
 msgid "Used to authenticate with OpenStack AMQP Messaging Bus for event handling."
