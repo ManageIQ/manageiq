@@ -85,8 +85,8 @@
           - if @item.has_contents?
             - if @item.contents_displayable?
               = text_area_tag("item_contents", @item.contents, :readonly => "readonly", :style => "overflow:auto;width:600px;height:400px;")
-          - else
-            = _("Cannot display binary content")
+            - else
+              = _("Cannot display binary content")
           - else
             = _("Not Available")
   %tr
