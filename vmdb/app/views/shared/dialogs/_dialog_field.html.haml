@@ -8,7 +8,7 @@
   %td.key{:title => field.description}
     = field.label
   %td{:title => field.description}
-    - locals = {:edit => edit, :field => field, :url => url}
+    - locals = {:edit => edit, :field => field, :url => url, :wf => wf}
     - case field.type
       - when 'DialogFieldTextBox'
         = render(:partial => "shared/dialogs/dialog_field_text_box", :locals => locals)
