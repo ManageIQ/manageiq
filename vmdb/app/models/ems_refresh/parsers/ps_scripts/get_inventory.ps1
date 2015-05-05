@@ -49,7 +49,6 @@ function get_host_inventory {
   $host_hash = @{}
   $host_hash["NetworkAdapters"] = @(Get-VMHostNetworkAdapter -VMHost $_)
   $host_hash["VirtualSwitch"] = @(Get-SCVirtualNetwork -VMHost $_)
-  # $host_hash["VLANs"] = @(Get-SCVirtualNetwork -VMHost $_ | Select-Object -ExpandProperty "VMHostNetworkAdapters" | Select-Object -ExpandProperty "SubnetVLans")
   $host_hash["Properties"] = $_
   $results[$_.ID] = $host_hash
   $_.DiskVolumes | where-object VolumeLabel -ne "System Reserved" | ForEach-Object {

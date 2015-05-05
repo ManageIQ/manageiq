@@ -146,10 +146,24 @@ module EmsRefresh::Parsers
         switch = {
           :uid_ems => v_switch[:ID],
           :name    => v_switch[:Name],
-          :lans    => []
+          :lans    => process_logical_networks(v_switch[:LogicalNetworks])
         }
         result << switch
         v_switch[:VMHostNetworkAdapters].collect { |adapter| set_switch_on_pnic(adapter[:Props], switch) }
+      end
+      result
+    end
+
+    def process_logical_networks(logical_networks)
+      result = []
+
+      logical_networks.each do |ln|
+        next if ln.nil?
+
+        result << {
+          :name    => ln[:Props][:Name],
+          :uid_ems => ln[:Props][:ID],
+        }
       end
       result
     end
