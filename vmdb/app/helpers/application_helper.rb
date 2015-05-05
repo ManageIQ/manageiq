@@ -2829,5 +2829,16 @@ module ApplicationHelper
       ui_lookup(:ems_cluster_types => 'cluster_infra')
   end
 
+  def start_page_allowed?(start_page)
+    storage_start_pages = %w(cim_storage_extent_show_list
+                             ontap_file_share_show_list
+                             ontap_logical_disk_show_list
+                             ontap_storage_system_show_list
+                             ontap_storage_volume_show_list
+                             storage_manager_show_list)
+    return false if storage_start_pages.include?(start_page) && !get_vmdb_config[:product][:storage]
+    role_allows(:feature => start_page, :any => true)
+  end
+
   attr_reader :big_iframe
 end
