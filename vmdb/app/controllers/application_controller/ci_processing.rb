@@ -994,7 +994,7 @@ module ApplicationController::CiProcessing
     if !session[:checked_items].nil? && (@lastaction == "set_checked_items" || params[:pressed] == "miq_request_edit")
       @edit[:req_id] = params[:id]
       recs = session[:checked_items]
-    elsif !params[:id]
+    elsif !params[:id] || params[:pressed] == 'vm_reconfigure'
       recs = find_checked_items
     end
     if recs.blank?
