@@ -43,27 +43,34 @@ class EmsAmazon < EmsCloud
     self.class.raw_connect(username, password, options[:service], provider_region, options[:proxy_uri])
   end
 
+  def translate_exception(err)
+    case err.class
+    when AWS::EC2::Errors::SignatureDoesNotMatch
+      MiqException::MiqHostError.new "SignatureMismatch - check your AWS Secret Access Key and signing method"
+    when AWS::EC2::Errors::AuthFailure
+      MiqException::MiqHostError.new "Login failed due to a bad username or password."
+    when AWS::Errors::MissingCredentialsError
+      MiqException::MiqHostError.new "Missing credentials"
+    else
+      MiqException::MiqHostError.new "Unexpected response returned from system: #{err.message}"
+    end
+  end
+
   def verify_credentials(auth_type=nil, options={})
     raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(auth_type)
 
     begin
       # EC2 does Lazy Connections, so call a cheap function
       with_provider_connection(options.merge(:auth_type => auth_type)) { |ec2| ec2.regions.map(&:name) }
-    rescue AWS::EC2::Errors::SignatureDoesNotMatch => err
+    rescue => err
+      miq_exception = translate_exception(err)
+      raise unless miq_exception
+
       $log.error("MIQ(#{self.class.name}.verify_credentials) Error Class=#{err.class.name}, Message=#{err.message}")
-      raise MiqException::MiqHostError, "SignatureMismatch - check your AWS Secret Access Key and signing method"
-    rescue AWS::EC2::Errors::AuthFailure => err
-      $log.error("MIQ(#{self.class.name}.verify_credentials) Error Class=#{err.class.name}, Message=#{err.message}")
-      raise MiqException::MiqHostError, "Login failed due to a bad username or password."
-    rescue AWS::Errors::MissingCredentialsError => err
-      $log.error("MIQ(#{self.class.name}.verify_credentials) Error Class=#{err.class.name}, Message=#{err.message}")
-      raise MiqException::MiqHostError, "Missing credentials"
-    rescue Exception => err
-      $log.error("MIQ(#{self.class.name}.verify_credentials) Error Class=#{err.class.name}, Message=#{err.message}")
-      raise MiqException::MiqHostError, "Unexpected response returned from system: #{err.message}"
+      raise miq_exception
     end
 
-    return true
+    true
   end
 
   def ec2
