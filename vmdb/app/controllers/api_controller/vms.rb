@@ -156,7 +156,7 @@ class ApiController
     end
 
     def add_lifecycle_event_vm(vm, lifecycle_event)
-      desc = "#{vm_ident(vm)} adding lifecycle event=#{lifecycle_event[:event]} message=#{lifecycle_event[:message]}"
+      desc = "#{vm_ident(vm)} adding lifecycle event=#{lifecycle_event['event']} message=#{lifecycle_event['message']}"
       event = LifecycleEvent.create_event(vm, lifecycle_event)
       action_result(event.present?, desc)
     rescue => err
