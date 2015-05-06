@@ -120,7 +120,7 @@ module ApplicationHelper::Dialogs
     }
 
     extra_options = {
-      :onclick  => remote_function(
+      :onclick  => "dialogFieldRefresh.triggerAutoRefresh('#{field.id}'); " + remote_function(
         :with     => "miqSerializeForm('dynamic-radio-#{field.id}')",
         :url      => url,
         :loading  => "miqSparkle(true);",

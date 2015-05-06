@@ -264,7 +264,7 @@ describe ApplicationHelper do
               :value   => "some_value",
               :name    => "field_name",
               :checked => '',
-              :onclick => "$.ajax({beforeSend:function(request){miqSparkle(true);}, complete:function(request){miqSparkle(false);}, data:miqSerializeForm('dynamic-radio-100'), dataType:'script', type:'post', url:'url'})"
+              :onclick => "dialogFieldRefresh.triggerAutoRefresh('100'); $.ajax({beforeSend:function(request){miqSparkle(true);}, complete:function(request){miqSparkle(false);}, data:miqSerializeForm('dynamic-radio-100'), dataType:'script', type:'post', url:'url'})"
             )
           end
         end
@@ -279,7 +279,7 @@ describe ApplicationHelper do
               :value   => "bogus",
               :name    => "field_name",
               :checked => nil,
-              :onclick => "$.ajax({beforeSend:function(request){miqSparkle(true);}, complete:function(request){miqSparkle(false);}, data:miqSerializeForm('dynamic-radio-100'), dataType:'script', type:'post', url:'url'})"
+              :onclick => "dialogFieldRefresh.triggerAutoRefresh('100'); $.ajax({beforeSend:function(request){miqSparkle(true);}, complete:function(request){miqSparkle(false);}, data:miqSerializeForm('dynamic-radio-100'), dataType:'script', type:'post', url:'url'})"
             )
           end
         end

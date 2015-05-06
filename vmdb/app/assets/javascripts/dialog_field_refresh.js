@@ -59,6 +59,39 @@ var dialogFieldRefresh = {
     });
   },
 
+  refreshRadioList: function(fieldName, fieldId, checkedValue, onClickString) {
+    miqSparkle(true);
+
+    $.post('dynamic_radio_button_refresh', {name: fieldName, checked_value: checkedValue}, function(data) {
+      var radioButtons = [];
+
+      $.each(data.values.refreshed_values, function(index, value) {
+        var radio = '<input type="radio" ';
+        radio += 'id="' + fieldId + '" ';
+        radio += 'value="' + value[0] + '" ';
+        radio += 'name="' + fieldName + '" ';
+        if (data.values.checked_value === value[0].toString()) {
+          radio += 'checked="" ';
+        }
+
+        if (data.values.read_only === true) {
+          radio += 'title="This element is disabled because it is read only" ';
+          radio += 'disabled=true ';
+        } else {
+          radio += onClickString;
+        }
+        radio += '/> ';
+        radio += $('<label></label>').addClass('dynamic-radio-label').text(value[1]).prop('outerHTML');
+        radio += ' ';
+        radioButtons.push(radio);
+      });
+
+      $('.dynamic-radio-' + fieldId).html(radioButtons);
+
+      miqSparkle(false);
+    });
+  },
+
   refreshTextAreaBox: function(fieldName, fieldId) {
     miqSparkle(true);
 
