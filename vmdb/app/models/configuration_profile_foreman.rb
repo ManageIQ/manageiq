@@ -12,13 +12,4 @@ class ConfigurationProfileForeman < ConfigurationProfile
                           :class_name  => 'ConfigurationTag',
                           :foreign_key => :configuration_profile_id
 
-  delegate :name, :to => :configuration_architecture,    :prefix => true, :allow_nil => true
-  delegate :name, :to => :configuration_compute_profile, :prefix => true, :allow_nil => true
-  delegate :name, :to => :configuration_domain,          :prefix => true, :allow_nil => true
-  delegate :name, :to => :configuration_environment,     :prefix => true, :allow_nil => true
-  delegate :name, :to => :configuration_realm,           :prefix => true, :allow_nil => true
-  delegate :name, :to => :operating_system_flavor,       :prefix => true, :allow_nil => true
-  delegate :name, :to => :customization_script_medium,   :prefix => true, :allow_nil => true
-  delegate :name, :to => :customization_script_ptable,   :prefix => true, :allow_nil => true
-
 end

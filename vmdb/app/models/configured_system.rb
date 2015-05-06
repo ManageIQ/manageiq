@@ -26,6 +26,16 @@ class ConfiguredSystem < ActiveRecord::Base
   delegate :name, :to => :provider,                      :prefix => true, :allow_nil => true
   delegate :my_zone, :provider, :zone, :to => :manager
 
+  virtual_column  :my_zone,                            :type => :string
+  virtual_column  :configuration_architecture_name,    :type => :string
+  virtual_column  :configuration_compute_profile_name, :type => :string
+  virtual_column  :configuration_domain_name,          :type => :string
+  virtual_column  :configuration_environment_name,     :type => :string
+  virtual_column  :configuration_realm_name,           :type => :string
+  virtual_column  :operating_system_flavor_name,       :type => :string
+  virtual_column  :customization_script_medium_name,   :type => :string
+  virtual_column  :customization_script_ptable_name,   :type => :string
+
   def configuration_architecture
     tag_hash[ConfigurationArchitecture]
   end
