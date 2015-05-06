@@ -143,7 +143,7 @@ module OpsController::Diagnostics
 
       begin
         type = Object.const_get(@edit[:protocols_hash].key(@edit[:protocol]))
-        type.validate(settings)
+        type.validate_settings(settings)
       rescue StandardError => bang
         add_flash(_("Error during '%s': ") % "Validate" << bang.message, :error)
       else

@@ -514,7 +514,7 @@ class ApplicationController < ActionController::Base
       if @sb[:active_tab] == "diagnostics_database"
         #coming from diagnostics/database tab
         pfx = "dbbackup"
-        flash_div_num = "validate"
+        flash_div_num = "database"
       end
     else
       if session[:edit] && session[:edit].key?(:pxe_id)
@@ -531,11 +531,12 @@ class ApplicationController < ActionController::Base
     id = params[:id] ? params[:id] : "new"
     if pfx == "pxe"
       return unless load_edit("#{pfx}_edit__#{id}")
+      settings = {:username => @edit[:new][:log_userid], :password => @edit[:new][:log_password]}
+      settings[:uri] = @edit[:new][:uri_prefix] + "://" + @edit[:new][:uri]
     else
-      return unless load_edit("#{pfx}_edit__#{id}","replace_cell__explorer")
+      settings = {:username => params[:log_userid], :password => params[:log_password]}
+      settings[:uri] = params[:uri_prefix] + "://" + params[:uri]
     end
-    settings = {:username => @edit[:new][:log_userid], :password => @edit[:new][:log_password] }
-    settings[:uri] = @edit[:new][:uri_prefix] + "://" + @edit[:new][:uri]
 
     begin
       if pfx == "pxe"
@@ -551,7 +552,7 @@ class ApplicationController < ActionController::Base
       add_flash(msg)
     end
 
-    @changed = (@edit[:new] != @edit[:current])
+    @changed = (@edit[:new] != @edit[:current]) if pfx == "pxe"
     render :update do |page|
       page.replace("flash_msg_div#{flash_div_num}", :partial=>"layouts/flash_msg", :locals=>{:div_num=>flash_div_num})
     end
