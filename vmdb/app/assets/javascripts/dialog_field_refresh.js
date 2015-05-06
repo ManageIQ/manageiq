@@ -7,6 +7,15 @@ var dialogFieldRefresh = {
     });
   },
 
+  refreshTextAreaBox: function(fieldName, fieldId) {
+    miqSparkle(true);
+
+    $.post('dynamic_text_box_refresh', {name: fieldName}, function(data) {
+      $('.dynamic-text-area-' + fieldId).val(data.values.text);
+      miqSparkle(false);
+    });
+  },
+
   refreshTextBox: function(fieldName, fieldId) {
     miqSparkle(true);
 

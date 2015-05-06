@@ -3,18 +3,18 @@
 - else
   = h(field.value)
 
-- if field.dynamic && field.show_refresh_button?
-  = button_tag('Refresh', :id => "refresh-dynamic-text-field-#{field.id}", :class => "btn btn-default")
-
-  :javascript
-    $('#refresh-dynamic-text-field-#{field.id}').click(function() {
-      miqSparkleOn();
-
-      var fieldId = "#{field.id}";
-      var fieldName = "#{field.name}";
-
-      $.post('dynamic_text_box_refresh', {name: fieldName}, function(data) {
-        $('.dynamic-text-area-' + fieldId).val(data.values.text);
-        miqSparkleOff();
+- if field.dynamic
+  - if field.auto_refresh
+    :javascript
+      dialogFieldRefresh.listenForAutoRefreshMessages("#{field.id}", function() {
+        dialogFieldRefresh.refreshTextAreaBox("#{field.name}", "#{field.id}");
       });
-    });
+
+  - if field.show_refresh_button?
+    = button_tag('Refresh', :id => "refresh-dynamic-text-field-#{field.id}", :class => "btn btn-default")
+
+    :javascript
+      $('#refresh-dynamic-text-field-#{field.id}').click(function() {
+        dialogFieldRefresh.refreshTextAreaBox("#{field.name}", "#{field.id}");
+        dialogFieldRefresh.triggerAutoRefresh("#{field.id}");
+      });

@@ -83,7 +83,7 @@ describe ApplicationHelper do
             :class             => "dynamic-text-area-100",
             :maxlength         => 8192,
             :size              => "50x6",
-            "data-miq_observe" => "{\"interval\":\".5\",\"url\":\"url\"}"
+            "data-miq_observe" => "{\"interval\":\".5\",\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\"}"
           )
         end
       end
