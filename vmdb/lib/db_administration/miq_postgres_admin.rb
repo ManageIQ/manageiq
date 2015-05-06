@@ -210,7 +210,7 @@ class MiqPostgresAdmin
   def self.runcmd_with_logging(cmd_str, opts, params = {})
     $log.info("MIQ(MiqPostgresAdmin.run_cmd) Running command... #{AwesomeSpawn.build_command_line(cmd_str, params)}")
     with_pgpass_file(opts) do
-      AwesomeSpawn.run!("#{cmd_str} 2>&1", :params => params).output
+      AwesomeSpawn.run!(cmd_str, :params => params).output
     end
   end
 
