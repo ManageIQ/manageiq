@@ -7,6 +7,15 @@ var dialogFieldRefresh = {
     });
   },
 
+  refreshCheckbox: function(fieldName, fieldId) {
+    miqSparkle(true);
+
+    $.post('dynamic_checkbox_refresh', {name: fieldName}, function(data) {
+      $('.dynamic-checkbox-' + fieldId).prop('checked', data.values.checked);
+      miqSparkle(false);
+    });
+  },
+
   refreshTextAreaBox: function(fieldName, fieldId) {
     miqSparkle(true);
 

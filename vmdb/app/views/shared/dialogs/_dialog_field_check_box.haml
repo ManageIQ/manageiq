@@ -1,17 +1,17 @@
 = check_box_tag(field.name, "1", field.checked?, {:disabled => !edit}.merge(checkbox_tag_options(field, url)))
 
-- if field.dynamic && field.show_refresh_button?
-  = button_tag('Refresh', :id => "refresh-dynamic-checkbox-#{field.id}", :class => "btn btn-default")
+- if field.dynamic
+  - if field.auto_refresh
+    :javascript
+      dialogFieldRefresh.listenForAutoRefreshMessages("#{field.id}", function() {
+        dialogFieldRefresh.refreshCheckbox("#{field.name}", "#{field.id}");
+      });
+
+  - if field.show_refresh_button?
+    = button_tag('Refresh', :id => "refresh-dynamic-checkbox-#{field.id}", :class => "btn btn-default")
 
   :javascript
     $('#refresh-dynamic-checkbox-#{field.id}').click(function() {
-      miqSparkleOn();
-
-      var fieldId = "#{field.id}";
-      var fieldName = "#{field.name}";
-
-      $.post('dynamic_checkbox_refresh', {name: fieldName}, function(data) {
-        $('.dynamic-checkbox-' + fieldId).prop('checked', data.values.checked);
-        miqSparkleOff();
-      });
+      dialogFieldRefresh.refreshCheckbox("#{field.name}", "#{field.id}");
+      dialogFieldRefresh.triggerAutoRefresh("#{field.id}");
     });
