@@ -535,7 +535,8 @@ class ApplicationController < ActionController::Base
       settings[:uri] = @edit[:new][:uri_prefix] + "://" + @edit[:new][:uri]
     else
       settings = {:username => params[:log_userid], :password => params[:log_password]}
-      settings[:uri] = params[:uri_prefix] + "://" + params[:uri]
+      settings[:uri] = "#{params[:uri_prefix]}://#{params[:uri]}"
+      settings[:uri_prefix] = params[:uri_prefix]
     end
 
     begin
