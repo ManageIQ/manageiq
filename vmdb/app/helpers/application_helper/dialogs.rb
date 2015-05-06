@@ -32,7 +32,12 @@ module ApplicationHelper::Dialogs
       :maxlength => 50,
       :class     => "dynamic-text-box-#{field.id}"
     }
-    extra_options = {"data-miq_observe" => {:interval => '.5', :url => url}.to_json}
+    extra_options = {"data-miq_observe" => {
+      :interval     => '.5',
+      :url          => url,
+      :auto_refresh => true,
+      :field_id     => field.id.to_s
+    }.to_json}
 
     add_options_unless_read_only(extra_options, tag_options, field)
   end

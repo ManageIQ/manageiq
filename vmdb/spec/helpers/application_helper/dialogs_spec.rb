@@ -52,7 +52,7 @@ describe ApplicationHelper do
           expect(helper.textbox_tag_options(dialog_field, "url")).to eq(
             :maxlength         => 50,
             :class             => "dynamic-text-box-100",
-            "data-miq_observe" => "{\"interval\":\".5\",\"url\":\"url\"}"
+            "data-miq_observe" => "{\"interval\":\".5\",\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\"}"
           )
         end
       end

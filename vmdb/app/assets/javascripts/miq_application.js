@@ -1139,6 +1139,10 @@ function miqSendDateRequest(el) {
   //  tack on the id and value to the URL
   var urlstring = url + '?' + el.prop('id') + '=' + el.val();
 
+  if (parms.auto_refresh === true) {
+    dialogFieldRefresh.triggerAutoRefresh(parms.field_id);
+  }
+
   if (el.attr('data-miq_sparkle_on')) {
     miqJqueryRequest(urlstring, {beforeSend: true});
   } else {
