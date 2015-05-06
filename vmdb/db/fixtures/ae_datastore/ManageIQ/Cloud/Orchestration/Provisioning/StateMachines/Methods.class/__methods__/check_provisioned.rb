@@ -24,7 +24,10 @@ def check_deployed(service)
   case status.downcase
   when 'create_complete'
     $evm.root['ae_result'] = 'ok'
-  when 'rollback_complete', /failed$/
+  when 'rollback_complete'
+    $evm.root['ae_result'] = 'error'
+    $evm.root['ae_reason'] = 'Stack was rolled back'
+  when /failed$/
     $evm.root['ae_result'] = 'error'
     $evm.root['ae_reason'] = reason
   else
@@ -69,9 +72,11 @@ def check_refreshed(service)
   end
 end
 
-service = $evm.root["service_template_provision_task"].destination
+task = $evm.root["service_template_provision_task"]
+service = task.destination
 if $evm.state_var_exist?('provider_last_refresh')
   check_refreshed(service)
 else
   check_deployed(service)
 end
+task.miq_request.user_message = $evm.root['ae_reason'] unless $evm.root['ae_reason'].blank?
