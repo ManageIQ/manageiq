@@ -114,11 +114,9 @@ module MiqAeServiceMiqRequestSpec
       reason = invoke_ae.root(@ae_result_key)
       reason.should be_nil
 
-      wilma          = FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'wilma',  :email => 'wilma@bedrock.gov')
       betty          = FactoryGirl.create(:user, :name => 'Betty Rubble',     :userid => 'betty',  :email => 'betty@bedrock.gov')
-      wilma_approval = FactoryGirl.create(:miq_approval, :approver => wilma)
       betty_approval = FactoryGirl.create(:miq_approval, :approver => betty)
-      @miq_request.miq_approvals = [wilma_approval, betty_approval]
+      @miq_request.miq_approvals = [betty_approval]
       @miq_request.save!
 
       MiqApproval.any_instance.stub(:authorized?).and_return(true)
@@ -130,6 +128,9 @@ module MiqAeServiceMiqRequestSpec
       reason = invoke_ae.root(@ae_result_key)
       reason.should == betty_reason
 
+      wilma          = FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'wilma',  :email => 'wilma@bedrock.gov')
+      wilma_approval = FactoryGirl.create(:miq_approval, :approver => wilma)
+      @miq_request.miq_approvals << wilma_approval
       wilma_reason = "Where's Fred?"
       wilma_approval.deny(wilma.userid, wilma_reason)
       #wilma_approval.update_attributes(:state => 'denied', :reason => wilma_reason)
