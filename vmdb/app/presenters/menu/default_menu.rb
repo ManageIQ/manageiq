@@ -97,12 +97,12 @@ module Menu
 
       def automate_menu_section
         Menu::Section.new(:aut, "Automate", [
-          Menu::Item.new('miq_ae_class',         N_('Explorer'),        'miq_ae_class_explorer',      {:feature => 'miq_ae_domain_view'},            '/miq_ae_class/explorer'),
-          Menu::Item.new('miq_ae_tools',         N_('Simulation'),      'miq_ae_class_simulation',    {:feature => 'miq_ae_class_simulation'},       '/miq_ae_tools/resolve'),
-          Menu::Item.new('miq_ae_customization', N_('Customization'),   'miq_ae_class_custom_button', {:feature => 'miq_ae_customization_explorer'}, '/miq_ae_customization/explorer'),
-          Menu::Item.new('miq_ae_export',        N_('Import / Export'), 'miq_ae_class_import_export', {:feature => 'miq_ae_class_import_export'},    '/miq_ae_tools/import_export'),
-          Menu::Item.new('miq_ae_logs',          N_('Log'),             'miq_ae_class_log',           {:feature => 'miq_ae_class_log'},              '/miq_ae_tools/log'),
-          Menu::Item.new('miq_request_ae',       N_('Requests'),        nil,                          {:feature => 'miq_request_show_list'},         "/miq_request?typ=ae")
+          Menu::Item.new('miq_ae_class',         N_('Explorer'),        'miq_ae_class_explorer',         {:feature => 'miq_ae_domain_view'},            '/miq_ae_class/explorer'),
+          Menu::Item.new('miq_ae_tools',         N_('Simulation'),      'miq_ae_class_simulation',       {:feature => 'miq_ae_class_simulation'},       '/miq_ae_tools/resolve'),
+          Menu::Item.new('miq_ae_customization', N_('Customization'),   'miq_ae_customization_explorer', {:feature => 'miq_ae_customization_explorer'}, '/miq_ae_customization/explorer'),
+          Menu::Item.new('miq_ae_export',        N_('Import / Export'), 'miq_ae_class_import_export',    {:feature => 'miq_ae_class_import_export'},    '/miq_ae_tools/import_export'),
+          Menu::Item.new('miq_ae_logs',          N_('Log'),             'miq_ae_class_log',              {:feature => 'miq_ae_class_log'},              '/miq_ae_tools/log'),
+          Menu::Item.new('miq_request_ae',       N_('Requests'),        nil,                             {:feature => 'miq_request_show_list'},         "/miq_request?typ=ae")
         ])
       end
 
