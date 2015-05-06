@@ -443,6 +443,9 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
   end
 
   def assert_specific_orchestration_stack
+    OrchestrationStackAmazon.where(:name => "cloudformation-spec").first.status_reason.should ==
+      "The following resource(s) failed to create: [IPAddress, WebServerWaitCondition]. "
+
     @orch_stack = OrchestrationStackAmazon.where(:name => "cloudformation-spec-WebServerInstance-QS899ZNAHZU6").first
     @orch_stack.should have_attributes(
       :status  => "CREATE_COMPLETE",

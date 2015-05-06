@@ -426,15 +426,16 @@ module EmsRefresh::Parsers
       uid = stack.stack_id.to_s
       child_stacks, resources = find_stack_resources(stack)
       new_result = {
-        :type        => "OrchestrationStackAmazon",
-        :ems_ref     => uid,
-        :name        => stack.name,
-        :description => stack.description,
-        :status      => stack.status,
-        :children    => child_stacks,
-        :resources   => resources,
-        :outputs     => find_stack_outputs(stack),
-        :parameters  => find_stack_parameters(stack),
+        :type          => "OrchestrationStackAmazon",
+        :ems_ref       => uid,
+        :name          => stack.name,
+        :description   => stack.description,
+        :status        => stack.status,
+        :status_reason => stack.status_reason,
+        :children      => child_stacks,
+        :resources     => resources,
+        :outputs       => find_stack_outputs(stack),
+        :parameters    => find_stack_parameters(stack),
 
         :orchestration_template => find_stack_template(stack)
       }

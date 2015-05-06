@@ -4,7 +4,7 @@ module OrchestrationStackHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(name description type status)
+    items = %w(name description type status status_reason)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
@@ -36,6 +36,10 @@ module OrchestrationStackHelper::TextualSummary
 
   def textual_status
     {:label => "Status", :value => @record.status}
+  end
+
+  def textual_status_reason
+    {:label => "Status Reason", :value => @record.status_reason}
   end
 
   def textual_ems_cloud

@@ -53,6 +53,7 @@ module EmsRefresh
             :name                   => stack.stack_name,
             :description            => stack.description,
             :status                 => stack.stack_status,
+            :status_reason          => stack.stack_status_reason,
             :children               => child_stacks,
             :resources              => resources,
             :outputs                => find_stack_outputs(stack),
