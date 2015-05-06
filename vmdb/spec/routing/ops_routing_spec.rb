@@ -10,6 +10,7 @@ describe "routing for OpsController" do
     fetch_build
     fetch_log
     fetch_production_log
+    log_collection_form_fields
     schedule_form_fields
     show_product_update
   ).each do |task|

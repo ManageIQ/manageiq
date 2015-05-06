@@ -14,6 +14,7 @@
 //= require controllers/repository/repository_form_controller
 //= require controllers/schedule/schedule_form_controller
 //= require controllers/ops/diagnostics_database_form_controller
+//= require controllers/ops/log_collection_form_controller
 //= require miq_application
 //= require miq_dynatree_replacement
 //= require dialog_import_export

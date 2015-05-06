@@ -1110,6 +1110,7 @@ Vmdb::Application.routes.draw do
         fetch_build
         fetch_log
         fetch_production_log
+        log_collection_form_fields
         schedule_form_fields
         show_product_update
       ),
