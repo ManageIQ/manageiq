@@ -878,6 +878,8 @@ module MiqAeCustomizationController::Dialogs
     copy_checkbox_field_param.call(:reconfigurable)
     copy_checkbox_field_param.call(:dynamic)
     copy_checkbox_field_param.call(:read_only)
+    copy_checkbox_field_param.call(:auto_refresh)
+    copy_checkbox_field_param.call(:trigger_auto_refresh)
 
     [:data_typ, :required, :sort_by, :sort_by, :sort_order].each { |key| copy_field_param.call(key) }
 
@@ -1040,7 +1042,11 @@ module MiqAeCustomizationController::Dialogs
         @edit[:field_validator_type] = field[:validator_type]
         @edit[:field_validator_rule] = field[:validator_rule]
       end
-      @edit[:field_required]  = field[:required]  if field[:typ].include?('Text')
+
+      if field[:typ].include?('Text')
+        @edit[:field_required]             = field[:required]
+        @edit[:field_trigger_auto_refresh] = field[:trigger_auto_refresh]
+      end
 
       if field[:typ].include?("TagControl")
         @edit[:field_single_value] = field[:single_value]
@@ -1052,6 +1058,7 @@ module MiqAeCustomizationController::Dialogs
           :field_load_on_init        => field[:load_on_init],
           :field_show_refresh_button => field[:show_refresh_button],
           :field_entry_point         => field[:entry_point],
+          :field_auto_refresh        => field[:auto_refresh]
         )
       end
 
@@ -1153,7 +1160,8 @@ module MiqAeCustomizationController::Dialogs
               fld.update(
                 :load_on_init        => f.load_values_on_init,
                 :show_refresh_button => f.show_refresh_button,
-                :entry_point         => f.resource_action.fqname
+                :entry_point         => f.resource_action.fqname,
+                :auto_refresh        => f.auto_refresh
               )
             end
 
@@ -1178,8 +1186,9 @@ module MiqAeCustomizationController::Dialogs
                 fld[:validator_type] = f.validator_type
                 fld[:validator_rule] = f.validator_rule
               end
-              fld[:required]      = f.required
-              fld[:default_value] = f.default_value.nil? ? "": f.default_value
+              fld[:required]             = f.required
+              fld[:default_value]        = f.default_value.nil? ? "": f.default_value
+              fld[:trigger_auto_refresh] = f.trigger_auto_refresh
 
             elsif ["DialogFieldDateControl", "DialogFieldDateTimeControl"].include?(f.type)
               fld[:past_dates] = f.show_past_dates.nil? ? false : f.show_past_dates
@@ -1267,6 +1276,7 @@ module MiqAeCustomizationController::Dialogs
                     fld[:values]              = []
                     fld[:load_values_on_init] = field[:load_on_init]
                     fld[:show_refresh_button] = field[:show_refresh_button]
+                    fld[:auto_refresh]        = field[:auto_refresh]
                   end
 
                   if field[:typ] == "DialogFieldCheckBox"
@@ -1279,8 +1289,9 @@ module MiqAeCustomizationController::Dialogs
                       fld[:validator_type] = field[:validator_type]
                       fld[:validator_rule] = field[:validator_rule]
                     end
-                    fld[:required]      = field[:required]  if field[:typ].include?('Text')
-                    fld[:default_value] = field[:default_value].to_s
+                    fld[:required]             = field[:required]  if field[:typ].include?('Text')
+                    fld[:default_value]        = field[:default_value].to_s
+                    fld[:trigger_auto_refresh] = field[:trigger_auto_refresh]
 
                   elsif ["DialogFieldDateControl", "DialogFieldDateTimeControl"].include?(field[:typ])
                     fld[:show_past_dates] = field[:past_dates]
