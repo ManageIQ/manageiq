@@ -89,6 +89,11 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       :lives_on_type => nil,
       :lives_on_id   => nil
     )
+    @containernode.container_node_conditions.count.should == 1
+    @containernode.container_node_conditions.first.should have_attributes(
+      :name   => "Ready",
+      :status => "True"
+    )
   end
 
   def assert_specific_container_service
