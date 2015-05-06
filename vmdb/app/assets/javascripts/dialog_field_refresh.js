@@ -31,6 +31,34 @@ var dialogFieldRefresh = {
     });
   },
 
+  refreshDropDownList: function(fieldName, fieldId, selectedValue) {
+    miqSparkle(true);
+
+    $.post('dynamic_radio_button_refresh', {name: fieldName, checked_value: selectedValue}, function(data) {
+      var dropdownOptions = [];
+
+      $.each(data.values.refreshed_values, function(index, value) {
+        var option = '<option ';
+        option += 'value="' + value[0] + '" ';
+        if (data.values.checked_value !== null) {
+          if (data.values.checked_value.toString() === value[0].toString()) {
+            option += 'selected="selected" ';
+          }
+        } else {
+          if (index === 0) {
+            option += 'selected="selected" ';
+          }
+        }
+        option += '> ' + value[1] + '</option>';
+        dropdownOptions.push(option);
+      });
+
+      $('.dynamic-drop-down-' + fieldId).html(dropdownOptions);
+
+      miqSparkle(false);
+    });
+  },
+
   refreshTextAreaBox: function(fieldName, fieldId) {
     miqSparkle(true);
 

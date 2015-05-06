@@ -100,7 +100,11 @@ module ApplicationHelper::Dialogs
     extra_options = {
       "data-miq_sparkle_on"  => true,
       "data-miq_sparkle_off" => true,
-      "data-miq_observe"     => {:url => url}.to_json
+      "data-miq_observe"     => {
+        :url          => url,
+        :auto_refresh => true,
+        :field_id     => field.id.to_s
+      }.to_json
     }
 
     add_options_unless_read_only(extra_options, tag_options, field)

@@ -197,7 +197,7 @@ describe ApplicationHelper do
             :class                 => "dynamic-drop-down-100",
             "data-miq_sparkle_on"  => true,
             "data-miq_sparkle_off" => true,
-            "data-miq_observe"     => "{\"url\":\"url\"}"
+            "data-miq_observe"     => "{\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\"}"
           )
         end
       end
