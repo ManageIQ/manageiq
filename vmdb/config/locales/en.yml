@@ -139,6 +139,9 @@ en:
   dictionary:
     column:
       # "." character not allowed in column key
+      User:
+        name: Full Name
+      userid: Username
       availability_zone:
         total_vms: Total Instances
 

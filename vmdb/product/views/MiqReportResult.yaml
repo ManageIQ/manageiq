@@ -47,7 +47,7 @@ headers:
 - Queued At
 - Run At
 - Source
-- User Id
+- Username
 - Group
 - Status
 

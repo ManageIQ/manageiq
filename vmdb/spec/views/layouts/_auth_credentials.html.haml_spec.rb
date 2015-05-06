@@ -15,7 +15,7 @@ describe "layouts/_auth_credentials.html.haml" do
 
     render
     #showing default labels
-    response.should have_selector('td', :text => 'User ID')
+    response.should have_selector('td', :text => 'Username')
     response.should have_selector('td', :text => 'Password')
     response.should have_selector('td', :text => 'Verify Password')
   end

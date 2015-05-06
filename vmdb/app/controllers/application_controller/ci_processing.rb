@@ -778,12 +778,12 @@ module ApplicationController::CiProcessing
         @password = params[:password] if params[:password]
         @verify = params[:verify] if params[:verify]
         if request.parameters[:controller] == "ems_cloud" && params[:userid] == ""
-          add_flash(_("%s is required") %  "User ID", :error)
+          add_flash(_("%s is required") %  "Username", :error)
           render :action => 'discover'
           return
         end
         if params[:userid] == "" && params[:password] != ""
-          add_flash(_("User ID must be entered if Password is entered"), :error)
+          add_flash(_("Username must be entered if Password is entered"), :error)
           render :action => 'discover'
           return
         end

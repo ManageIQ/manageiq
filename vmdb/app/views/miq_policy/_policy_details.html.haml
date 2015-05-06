@@ -35,12 +35,12 @@
           %tr
             %td.key=_('Created')
             %td
-              = h(_("By User ID %s %s") % [@policy.created_by || _("N/A"), format_timezone(@policy.created_on, session[:user_tz], "on_at")])
+              = h(_("By Username %s %s") % [@policy.created_by || _("N/A"), format_timezone(@policy.created_on, session[:user_tz], "on_at")])
           - if @policy.created_on != @policy.updated_on
             %tr
               %td.key=_("Last Updated")
               %td
-                = h(_("By User ID %s %s") % [@policy.updated_by || _("N/A"), format_timezone(@policy.updated_on, session[:user_tz], "on_at")])
+                = h(_("By Username %s %s") % [@policy.updated_by || _("N/A"), format_timezone(@policy.updated_on, session[:user_tz], "on_at")])
       %hr
 
       - # Scope

@@ -50,7 +50,7 @@ headers:
 - Interval
 - Last Run Time
 - Next Run Time
-- Userid
+- Username
 - EVM Zone
 
 # Condition(s) string for the SQL query

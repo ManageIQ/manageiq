@@ -8,7 +8,7 @@
   %h3=_("User Information")
   %table.style1
     %tr
-      %td.key=_("Name")
+      %td.key=_("Full Name")
       %td
         - if !@edit
           = h(@user.name)
@@ -22,7 +22,7 @@
           - unless @edit[:new][:userid] == "admin"
             = javascript_tag(javascript_focus('name'))
     %tr
-      %td.key=_("User ID")
+      %td.key=_("Username")
       %td
         - if !@edit
           = h(@user.userid)

@@ -770,7 +770,7 @@ class HostController < ApplicationController
       @tabnum = "1"
     end
     if host.authentication_userid.blank? && (!host.authentication_userid(:remote).blank? || !host.authentication_userid(:ws).blank?)
-      @edit[:errors].push("Default User ID must be entered if a Remote Login or Web Services User ID is entered")
+      @edit[:errors].push("Default Username must be entered if a Remote Login or Web Services Username is entered")
       valid = false
       @tabnum = "1"
     end
