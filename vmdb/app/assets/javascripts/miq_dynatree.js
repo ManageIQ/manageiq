@@ -1,12 +1,8 @@
 // Functions used by CFME for the dynatree control
 
-// OnCheck handler for the Role features tree
-function cfmeOnClick_RoleFeatureCheck(node) {
-  if (node.isSelected())
-    var checked = '0';  // If node was selected, now unchecking
-  else
-    var checked = '1';
-  var url = check_url + node.data.key + '?check=' + checked
+// OnCheck handler for the checkboxes in tree
+function miqOnCheck_handler(node) {
+  var url = check_url + node.data.key + '?check=' + (node.isSelected() ? '0' : '1')
   miqJqueryRequest(url);
 }
 
