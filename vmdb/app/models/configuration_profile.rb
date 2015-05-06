@@ -17,6 +17,8 @@ class ConfigurationProfile < ActiveRecord::Base
 
   virtual_has_one :configuration_architecture, :class_name => 'ConfigurationArchitecture', :uses => :configuration_tags
 
+  delegate :my_zone, :provider, :zone, :to => :manager
+
   def configuration_architecture
     tag_hash[ConfigurationArchitecture]
   end
@@ -42,4 +44,8 @@ class ConfigurationProfile < ActiveRecord::Base
   end
 
   alias_method :manager, :configuration_manager
+
+  def total_configured_systems
+    configured_systems.count
+  end
 end

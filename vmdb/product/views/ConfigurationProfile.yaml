@@ -19,31 +19,31 @@ db: ConfigurationProfile
 
 # Columns to fetch from the main table
 cols:
-- name
 - description
-- operating_system_flavor.name
+- total_configured_systems
+- configuration_environment_name
+- my_zone
+- region_description
 
 # Included tables (joined, has_one, has_many) and columns
-include:
-  operating_system_flavor:
-    columns:
-    - name
 
 # Included tables and columns for query performance
-include_for_find:
-  :operating_system_flavor: {}
 
 # Order of columns (from all tables)
 col_order:
-- name
 - description
-- operating_system_flavor.name
+- total_configured_systems
+- configuration_environment_name
+- my_zone
+- region_description
 
 # Column titles, in order
 headers:
-- Name
 - Description
-- OS Flavor
+- Total Configured Systems
+- Environment
+- Zone
+- Region
 
 col_formats:
 -

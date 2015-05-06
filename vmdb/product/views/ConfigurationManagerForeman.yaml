@@ -24,6 +24,9 @@ cols:
 - zone.name
 - last_refresh_date
 - region_description
+- authentication_status
+- total_configuration_profiles
+- total_configured_systems
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -47,6 +50,9 @@ col_order:
 - zone.name
 - last_refresh_date
 - region_description
+- authentication_status
+- total_configuration_profiles
+- total_configured_systems
 
 # Column titles, in order
 headers:
@@ -55,6 +61,9 @@ headers:
 - Zone
 - Last Refresh Date
 - Region Description
+- Status
+- Total Configuration Profiles
+- Total Configured Systems
 
 col_formats:
 -

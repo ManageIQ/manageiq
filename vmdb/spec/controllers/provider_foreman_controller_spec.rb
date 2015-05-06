@@ -8,6 +8,7 @@ describe ProviderForemanController do
     @provider = ProviderForeman.create(:name => "test", :url => "10.8.96.102", :zone => @zone)
     @config_mgr = ConfigurationManagerForeman.find_all_by_provider_id(@provider.id).first
     @config_profile = ConfigurationProfileForeman.create(:name                     => "testprofile",
+                                                         :description              => "testprofile",
                                                          :configuration_manager_id => @config_mgr.id)
     @configured_system = ConfiguredSystemForeman.create(:hostname                 => "test_configured_system",
                                                         :configuration_profile_id => @config_profile.id)
@@ -103,7 +104,7 @@ describe ProviderForemanController do
       controller.instance_variable_set(:@_params, :id => ems_id)
       controller.send(:tree_select)
       view = controller.instance_variable_get(:@view)
-      expect(view.table.data[0].data['name']).to eq("testprofile")
+      expect(view.table.data[0].data['description']).to eq("testprofile")
     end
   end
 
