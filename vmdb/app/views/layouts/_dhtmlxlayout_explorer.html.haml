@@ -33,7 +33,8 @@
     width = #{saved_width}
   - else
     width = #{layout_name}.cells("a").setWidth(#{layout_name}.cells("a").getWidth() / 2)
-    #{layout_name}.cells("a").setWidth(width)
+    
+  #{layout_name}.cells("a").setWidth(width)
 
   - if lock_slider
     #{layout_name}.cells("a").fixSize(true, false);
