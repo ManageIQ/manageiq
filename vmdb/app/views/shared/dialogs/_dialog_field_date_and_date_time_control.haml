@@ -23,23 +23,17 @@
   = session[:user_tz]
 
 - if field.dynamic && field.show_refresh_button?
-  = button_tag('Refresh', :id => "refresh-dynamic-date-#{field.id}", :class => "btn btn-default")
+  - if field.auto_refresh
+    :javascript
+      dialogFieldRefresh.listenForAutoRefreshMessages("#{field.id}", function() {
+        dialogFieldRefresh.refreshDateTime("#{field.name}", "#{field.id}");
+      });
+
+  - if field.show_refresh_button?
+    = button_tag('Refresh', :id => "refresh-dynamic-date-#{field.id}", :class => "btn btn-default")
 
   :javascript
     $('#refresh-dynamic-date-#{field.id}').click(function() {
-      miqSparkleOn();
-
-      var fieldId = "#{field.id}";
-      var fieldName = "#{field.name}";
-
-      $.post('dynamic_date_refresh', {name: fieldName}, function(data) {
-        $('.dynamic-date-' + fieldId).val(data.values.date);
-
-        if (data.values.hour !== undefined && data.values.min !== undefined) {
-          $('.dynamic-date-hour-' + fieldId).val(data.values.hour);
-          $('.dynamic-date-min-' + fieldId).val(data.values.min);
-        }
-
-        miqSparkleOff();
-      });
+      dialogFieldRefresh.refreshDateTime("#{field.name}", "#{field.id}");
+      dialogFieldRefresh.triggerAutoRefresh("#{field.id}");
     });

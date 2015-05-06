@@ -16,6 +16,21 @@ var dialogFieldRefresh = {
     });
   },
 
+  refreshDateTime: function(fieldName, fieldId) {
+    miqSparkle(true);
+
+    $.post('dynamic_date_refresh', {name: fieldName}, function(data) {
+      $('.dynamic-date-' + fieldId).val(data.values.date);
+
+      if (data.values.hour !== undefined && data.values.min !== undefined) {
+        $('.dynamic-date-hour-' + fieldId).val(data.values.hour);
+        $('.dynamic-date-min-' + fieldId).val(data.values.min);
+      }
+
+      miqSparkle(false);
+    });
+  },
+
   refreshTextAreaBox: function(fieldName, fieldId) {
     miqSparkle(true);
 

@@ -141,7 +141,7 @@ describe ApplicationHelper do
           expect(helper.date_tag_options(dialog_field, "url")).to eq(
             :class                  => "css1 dynamic-date-100",
             :readonly               => "true",
-            "data-miq_observe_date" => "{\"url\":\"url\"}"
+            "data-miq_observe_date" => "{\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\"}"
           )
         end
       end
@@ -168,7 +168,7 @@ describe ApplicationHelper do
         it "returns the tag options with a few data-miq attributes" do
           expect(helper.time_tag_options(dialog_field, "url", "hour_or_min")).to eq(
             :class             => "dynamic-date-hour_or_min-100",
-            "data-miq_observe" => "{\"url\":\"url\"}"
+            "data-miq_observe" => "{\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\"}"
           )
         end
       end
