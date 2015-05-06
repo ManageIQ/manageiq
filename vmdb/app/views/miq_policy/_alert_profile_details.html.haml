@@ -133,7 +133,7 @@
                           - objs.push(o.absolute_path(:exclude_hidden => true))
                         - else
                           - objs.push(o.name)
-                      - objs.sort(&:downcase).each do |obj|
+                      - objs.sort_by(&:downcase).each do |obj|
                         %tr
                           %td
                             = h(obj)

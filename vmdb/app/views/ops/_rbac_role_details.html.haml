@@ -58,7 +58,7 @@
                               :three_checks   => true,
                               :check_url      => "/ops/rbac_role_field_changed/",
                               :disable_checks => @edit.nil?,
-                              :oncheck        => @edit.nil? ? nil : "cfmeOnClick_RoleFeatureCheck",
+                              :oncheck        => @edit.nil? ? nil : "miqOnCheck_handler",
                               :open_close_all_on_dbl_click => true})
       &nbsp;&nbsp;*
       =_("Double click a feature to open/close all children.")
