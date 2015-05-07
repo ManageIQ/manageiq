@@ -29,11 +29,13 @@ module ProviderForemanHelper
   end
 
   def textual_configuration_profile_desc
-    {:label    => _("Configuration Profile Description"),
-     :image    => "configuration_profile",
-     :value    => @record.configuration_profile.try(:description),
-     :explorer => true
+    h = {
+      :label    => _("Configuration Profile Description"),
+      :value    => @record.configuration_profile.try(:description),
+      :explorer => true
     }
+    h[:image] = "configuration_profile" if @record.configuration_profile
+    h
   end
 
   def textual_provider_name
@@ -119,13 +121,13 @@ module ProviderForemanHelper
 
   def textual_configuration_locations_name
     {:label => _("Configuration Location"),
-     :value => @record.configuration_profile.configuration_locations.collect(&:name).join(", ")
+     :value => (@record.configuration_profile.try(:configuration_locations) || []).collect(&:name).join(", ")
     }
   end
 
   def textual_configuration_organizations_name
     {:label => _("Configuration Organization"),
-     :value => @record.configuration_profile.configuration_organizations.collect(&:name).join(", ")
+     :value => (@record.configuration_profile.try(:configuration_organizations) || []).collect(&:name).join(", ")
     }
   end
 end
