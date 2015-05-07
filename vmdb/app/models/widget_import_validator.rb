@@ -10,5 +10,7 @@ class WidgetImportValidator
     end
   rescue Psych::SyntaxError
     raise NonYamlError
+  rescue
+    raise InvalidWidgetYamlError
   end
 end
