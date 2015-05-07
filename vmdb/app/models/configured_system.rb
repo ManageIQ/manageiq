@@ -13,6 +13,7 @@ class ConfiguredSystem < ActiveRecord::Base
   belongs_to :operating_system_flavor
   has_and_belongs_to_many :configuration_tags
 
+  delegate :name, :to => :configuration_profile,         :prefix => true, :allow_nil => true
   delegate :name, :to => :configuration_architecture,    :prefix => true, :allow_nil => true
   delegate :name, :to => :configuration_compute_profile, :prefix => true, :allow_nil => true
   delegate :name, :to => :configuration_domain,          :prefix => true, :allow_nil => true
@@ -31,6 +32,7 @@ class ConfiguredSystem < ActiveRecord::Base
   virtual_column  :configuration_compute_profile_name, :type => :string
   virtual_column  :configuration_domain_name,          :type => :string
   virtual_column  :configuration_environment_name,     :type => :string
+  virtual_column  :configuration_profile_name,         :type => :string
   virtual_column  :configuration_realm_name,           :type => :string
   virtual_column  :operating_system_flavor_name,       :type => :string
   virtual_column  :customization_script_medium_name,   :type => :string
