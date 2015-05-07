@@ -32,4 +32,9 @@ FactoryGirl.define do
     name        "miq_host_provision_dialogs"
     dialog_type "MiqHostProvisionWorkflow"
   end
+
+  factory :miq_provision_configured_system_foreman_dialog, :parent => :miq_dialog do
+    name        "miq_provision_configured_system_foreman_dialogs"
+    dialog_type "MiqProvisionConfiguredSystemWorkflow"
+  end
 end
