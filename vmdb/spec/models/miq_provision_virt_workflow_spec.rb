@@ -98,8 +98,7 @@ describe MiqProvisionVirtWorkflow do
 
       context "#allowed_dvs" do
         before do
-          FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
-          @host2  = Host.all[1]
+          @host2 = FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
           @host2_dvs = {'pg1' => ['switch21'], 'pg2' => ['switch2'], 'pg3' => ['switch23']}
           workflow.stub(:get_host_dvs).with(@host2, nil).and_return(@host2_dvs)
           workflow.instance_variable_set(:@values, :vm_tags => [], :src_vm_id => @src_vm.id,
