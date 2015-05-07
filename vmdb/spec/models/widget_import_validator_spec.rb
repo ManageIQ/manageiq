@@ -44,6 +44,16 @@ describe WidgetImportValidator do
           }.to raise_error(WidgetImportValidator::InvalidWidgetYamlError)
         end
       end
+
+      context "when the yaml is a simple string" do
+        let(:uploaded_content) { "lol".to_yaml }
+
+        it "raises a WidgetImportValidator::InvalidWidgetYamlError" do
+          expect {
+            widget_import_validator.determine_validity(import_file_upload)
+          }.to raise_error(WidgetImportValidator::InvalidWidgetYamlError)
+        end
+      end
     end
 
     context "when the yaml is invalid yaml" do
