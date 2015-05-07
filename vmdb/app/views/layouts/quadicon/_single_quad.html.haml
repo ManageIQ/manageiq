@@ -5,7 +5,7 @@
     - else
       - img = item.class.to_s.underscore
   - elsif item.kind_of?(ConfigurationManagerForeman)
-    - img = "vendor-foreman_configuration"
+    - img = "vendor-#{item.image_name}"
   - else
     - img = item.class.base_class.to_s.underscore
   .flobj

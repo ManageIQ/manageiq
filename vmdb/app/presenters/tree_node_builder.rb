@@ -48,8 +48,16 @@ class TreeNodeBuilder
   def build
     case object
     when AvailabilityZone     then generic_node(object.name, "availability_zone.png", "Availability Zone: #{object.name}")
-    when ExtManagementSystem  then generic_node(object.name, "vendor-#{object.image_name}.png",
-      "#{ui_lookup(:table=>object.kind_of?(EmsInfra) ? "ems_infra" : "ems_cloud")}: #{object.name}")
+    when ExtManagementSystem  then
+      # TODO: This should really leverage .base_model on an EMS
+      prefix_model =
+        case object
+        when EmsCloud then "EmsCloud"
+        when EmsInfra then "EmsInfra"
+        else               "ExtManagementSystem"
+        end
+
+      generic_node(object.name, "vendor-#{object.image_name}.png", "#{ui_lookup(:model => prefix_model)}: #{object.name}")
     when ChargebackRate       then generic_node(object.description, "chargeback_rates.png")
     when Condition            then generic_node(object.description, "miq_condition.png")
     when ConfigurationProfile then generic_node(object.name, "configuration_profile.png", "Configuration Profile: #{object.name}")
@@ -93,7 +101,6 @@ class TreeNodeBuilder
     when MiqUserRole          then generic_node(object.name, "miq_user_role.png")
     when OrchestrationTemplateCfn then generic_node(object.name, "orchestration_template_cfn.png")
     when OrchestrationTemplateHot then generic_node(object.name, "orchestration_template_hot.png")
-    when ConfigurationManagerForeman             then generic_node(object.name, "vendor-foreman.png", "Provider: #{object.name}")
     when PxeImage             then generic_node(object.name, object.default_for_windows ? "win32service.png" : "pxeimage.png")
     when WindowsImage         then generic_node(object.name, "os-windows_generic.png")
     when PxeImageType         then generic_node(object.name, "pxeimagetype.png")
