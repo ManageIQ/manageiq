@@ -13,6 +13,7 @@ describe ContainerGroupController do
   end
 
   it "renders show screen" do
+    MiqServer.stub(:my_zone).and_return("default")
     ems = FactoryGirl.create(:ems_kubernetes)
     container_group = ContainerGroup.create(:ext_management_system => ems, :name => "Test Group")
     get :show, :id => container_group.id

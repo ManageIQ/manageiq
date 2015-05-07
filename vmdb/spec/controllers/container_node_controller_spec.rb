@@ -13,6 +13,7 @@ describe ContainerNodeController do
   end
 
   it "renders show screen" do
+    MiqServer.stub(:my_zone).and_return("default")
     ems = FactoryGirl.create(:ems_kubernetes)
     container_node = FactoryGirl.create(:container_node, :ext_management_system => ems, :name => "Test Node")
     get :show, :id => container_node.id

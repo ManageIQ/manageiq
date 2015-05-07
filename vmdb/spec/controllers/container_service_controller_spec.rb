@@ -13,6 +13,7 @@ describe ContainerServiceController do
   end
 
   it "renders show screen" do
+    MiqServer.stub(:my_zone).and_return("default")
     ems = FactoryGirl.create(:ems_kubernetes)
     container_service = ContainerService.create(:ext_management_system => ems, :name => "Test Service")
     get :show, :id => container_service.id

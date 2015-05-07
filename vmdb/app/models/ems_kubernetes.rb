@@ -4,7 +4,19 @@ class EmsKubernetes < EmsContainer
   has_many :container_services,                   :foreign_key => :ems_id, :dependent => :destroy
   has_many :container_replication_controllers,    :foreign_key => :ems_id, :dependent => :destroy
 
+  # TODO: support real authentication using certificates
+  before_validation :ensure_authentications_record
+
   default_value_for :port, 6443
+
+  # This is the API version that we use and support throughout the entire code
+  # (parsers, events, etc.). It should be explicitly selected here and not
+  # decided by the user nor out of control in the defaults of kubeclient gem
+  # because it's not guaranteed that the next default version will work with
+  # our specific code in ManageIQ.
+  def self.api_version
+    'v1beta3'
+  end
 
   def self.ems_type
     @ems_type ||= "kubernetes".freeze
@@ -14,17 +26,21 @@ class EmsKubernetes < EmsContainer
     @description ||= "Kubernetes".freeze
   end
 
+  def self.event_monitor_class
+    MiqEventCatcherKubernetes
+  end
+
   def self.raw_connect(hostname, port)
     require 'kubeclient'
     api_endpoint = raw_api_endpoint(hostname, port)
-    kube = Kubeclient::Client.new(api_endpoint)
+    kube = Kubeclient::Client.new(api_endpoint, api_version)
     # TODO: support real authentication using certificates
     kube.ssl_options(:verify_ssl => OpenSSL::SSL::VERIFY_NONE)
     kube
   end
 
   def self.raw_api_endpoint(hostname, port)
-    URI::HTTPS.build(:host => hostname, :port => port.to_i)
+    URI::HTTPS.build(:host => hostname, :port => port.presence.try(:to_i))
   end
 
   # UI methods for determining availability of fields
@@ -36,27 +52,25 @@ class EmsKubernetes < EmsContainer
     self.class.raw_api_endpoint(hostname, port)
   end
 
-  def connect(_options = {})
+  def connect(options = {})
+    hostname = options[:hostname] || self.address
+    port     = options[:port] || self.port
+
     self.class.raw_connect(hostname, port)
   end
 
-  def self.event_monitor_class
-    MiqEventCatcherKubernetes
-  end
-
-  def authentication_check
+  def verify_credentials(auth_type = nil, options = {})
     # TODO: support real authentication using certificates
-    [true, ""]
-  end
+    options = options.merge(:auth_type => auth_type)
 
-  def verify_credentials(_auth_type = nil, _options = {})
-    # TODO: support real authentication using certificates
-    true
-  end
-
-  def authentication_status_ok?(_type = nil)
-    # TODO: support real authentication using certificates
-    true
+    with_provider_connection(options, &:api_valid?)
+  rescue SocketError,
+         Errno::ECONNREFUSED,
+         RestClient::ResourceNotFound,
+         RestClient::InternalServerError => err
+    raise MiqException::MiqUnreachableError, err.message, err.backtrace
+  rescue RestClient::Unauthorized => err
+    raise MiqException::MiqInvalidCredentialsError, err.message, err.backtrace
   end
 
   # required by aggregate_hardware
@@ -71,5 +85,13 @@ class EmsKubernetes < EmsContainer
 
   def aggregate_memory(targets = nil)
     aggregate_hardware(:computer_systems, :memory_cpu, targets)
+  end
+
+  private
+
+  def ensure_authentications_record
+    # TODO: support real authentication using certificates
+    return if authentications.present?
+    update_authentication(:default => {:userid => "_", :save => false})
   end
 end
