@@ -181,6 +181,7 @@ module EmsRefresh::Parsers
         :supports_hvm             => flavor[:virtualization_type].include?(:hvm),
         :supports_paravirtual     => flavor[:virtualization_type].include?(:paravirtual),
         :block_storage_based_only => flavor[:ebs_only],
+        :cloud_subnet_required    => flavor[:vpc_only],
 
         # Extra keys
         :disk_size                => flavor[:instance_store_size],

@@ -27,6 +27,7 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
       assert_specific_vm_powered_on
       assert_specific_vm_in_other_region
       assert_relationship_tree
+      assert_subnet_required
     end
   end
 
@@ -261,5 +262,10 @@ describe EmsRefresh::Refreshers::Ec2Refresher do
 
   def assert_relationship_tree
     @ems.descendants_arranged.should match_relationship_tree({})
+  end
+
+  def assert_subnet_required
+    @flavor = FlavorAmazon.where(:name => "t2.small").first
+    @flavor.should have_attributes(:cloud_subnet_required  => true)
   end
 end

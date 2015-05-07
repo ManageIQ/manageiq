@@ -5,7 +5,16 @@ module FlavorHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(cpus cpu_cores memory supports_32_bit supports_64_bit supports_hvm supports_paravirtual block_storage_based_only)
+    items = %w(
+      cpus
+      cpu_cores
+      memory
+      supports_32_bit
+      supports_64_bit
+      supports_hvm
+      supports_paravirtual
+      block_storage_based_only
+      cloud_subnet_required)
     items.collect { |m| self.send("textual_#{m}") }.flatten.compact
   end
 
@@ -58,6 +67,11 @@ module FlavorHelper::TextualSummary
   def textual_block_storage_based_only
     return nil if @record.block_storage_based_only.nil?
     {:label => "Block Storage Based", :value => @record.block_storage_based_only?}
+  end
+
+  def textual_cloud_subnet_required
+    return nil if @record.cloud_subnet_required.nil?
+    {:label => "Cloud Subnet Required", :value => @record.cloud_subnet_required?}
   end
 
   def textual_ems_cloud

@@ -8,6 +8,8 @@ require 'active_support/core_ext/numeric/bytes'
 #   http://docs.amazonwebservices.com/AWSEC2/latest/UserGuide/instance-types.html
 #   http://aws.amazon.com/ec2/previous-generation
 #   http://www.ec2instances.info/
+#   http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/t2-instances.html
+#   http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/c4-instances.html
 #     NOTE: We may want to consider using the source data directly, however
 #           there aren't the discontinued types.
 #           https://raw.githubusercontent.com/powdahound/ec2instances.info/master/www/instances.json
@@ -36,6 +38,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => true,
     },
 
     "t2.small" => {
@@ -59,6 +62,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => true,
     },
 
     "t2.medium" => {
@@ -82,6 +86,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => true,
     },
 
     "m3.medium" => {
@@ -105,6 +110,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "m3.large" => {
@@ -128,6 +134,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "m3.xlarge" => {
@@ -151,6 +158,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "m3.2xlarge" => {
@@ -174,6 +182,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "c3.large" => {
@@ -197,6 +206,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "c3.xlarge" => {
@@ -220,6 +230,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "c3.2xlarge" => {
@@ -243,6 +254,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "c3.4xlarge" => {
@@ -266,6 +278,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "c3.8xlarge" => {
@@ -289,6 +302,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "c4.large" => {
@@ -312,6 +326,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => true,
     },
 
     "c4.xlarge" => {
@@ -335,6 +350,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => true,
     },
 
     "c4.2xlarge" => {
@@ -358,6 +374,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => true,
     },
 
     "c4.4xlarge" => {
@@ -381,6 +398,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => true,
     },
 
     "c4.8xlarge" => {
@@ -404,6 +422,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => true,
     },
 
     "g2.2xlarge" => {
@@ -427,6 +446,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => nil,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "g2.8xlarge" => {
@@ -450,6 +470,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "r3.large" => {
@@ -473,6 +494,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => true,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "r3.xlarge" => {
@@ -496,6 +518,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "r3.2xlarge" => {
@@ -519,6 +542,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "r3.4xlarge" => {
@@ -542,6 +566,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "r3.8xlarge" => {
@@ -565,6 +590,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => true,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "i2.xlarge" => {
@@ -588,6 +614,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "i2.2xlarge" => {
@@ -611,6 +638,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "i2.4xlarge" => {
@@ -634,6 +662,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "i2.8xlarge" => {
@@ -657,6 +686,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "d2.xlarge" => {
@@ -680,6 +710,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "d2.2xlarge" => {
@@ -703,6 +734,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "d2.4xlarge" => {
@@ -726,6 +758,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "d2.8xlarge" => {
@@ -749,6 +782,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => true,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
   }
 
@@ -775,6 +809,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "m1.small" => {
@@ -798,6 +833,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "m1.medium" => {
@@ -821,6 +857,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "m1.large" => {
@@ -844,6 +881,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "m1.xlarge" => {
@@ -867,6 +905,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "c1.medium" => {
@@ -890,6 +929,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "c1.xlarge" => {
@@ -913,6 +953,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "cc2.8xlarge" => {
@@ -936,6 +977,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "cg1.4xlarge" => {
@@ -959,6 +1001,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "m2.xlarge" => {
@@ -982,6 +1025,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "m2.2xlarge" => {
@@ -1005,6 +1049,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "m2.4xlarge" => {
@@ -1028,6 +1073,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => true,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "cr1.8xlarge" => {
@@ -1051,6 +1097,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
 
     "hi1.4xlarge" => {
@@ -1074,6 +1121,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     "hs1.8xlarge" => {
@@ -1097,6 +1145,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => true,
+      :vpc_only                => false,
     },
   }
 
@@ -1124,6 +1173,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
 
     # cc1.4xlarge is not available in any of the documentation, but if you
@@ -1149,6 +1199,7 @@ module MiqEc2InstanceTypes
       :ebs_optimized_available => nil,
       :enhanced_networking     => nil,
       :cluster_networking      => nil,
+      :vpc_only                => false,
     },
   }
 
