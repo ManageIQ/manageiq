@@ -435,6 +435,9 @@ class MiqRequest < ActiveRecord::Base
     customize_request_task_attributes(req_task_attribs, idx)
     req_task = self.class.new_request_task(req_task_attribs)
     req_task.miq_request = self
+
+    yield req_task if block_given?
+
     req_task.save!
     req_task.after_request_task_create
 
