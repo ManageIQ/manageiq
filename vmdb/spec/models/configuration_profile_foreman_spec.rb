@@ -3,6 +3,23 @@ require "spec_helper"
 describe ConfigurationProfileForeman do
   subject { described_class.new }
 
+  let(:cp1)   { FactoryGirl.create(:configuration_profile_foreman) }
+  let(:cp2)   { FactoryGirl.create(:configuration_profile_foreman, :parent => cp1) }
+
+  describe "#parent" do
+    it "has a parent" do
+      cp2 # make sure it is created
+      expect(cp2.parent).to eq(cp1)
+    end
+  end
+
+  describe "#children" do
+    it "has children" do
+      cp2 # make sure it is created
+      expect(cp1.children).to eq([cp2])
+    end
+  end
+
   describe "#configuration_tags" do
     let(:cd) { ConfigurationDomain.new(:name => "cd") }
     let(:cr) { ConfigurationRealm.new(:name => "cr") }
