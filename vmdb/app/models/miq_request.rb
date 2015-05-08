@@ -42,7 +42,7 @@ class MiqRequest < ActiveRecord::Base
         :clone_to_template => "VM Publish",
       },
       :MiqProvisionConfiguredSystemRequest => {
-        :provision_via_foreman => "Foreman Provision"
+        :provision_via_foreman => "#{ui_lookup(:ui_title => 'foreman')} Provision"
       },
       :VmReconfigureRequest => {
         :vm_reconfigure => "VM Reconfigure"

@@ -71,7 +71,7 @@ function miqAccordContainerSelect(itemId){
   return miqAjaxRequest(itemId,"/container/accordion_select");
 }
 
-//function to pass ajax request to server, to remember tree states for Foreman Explorer
+//function to pass ajax request to server, to remember tree states for Configuration Management Explorer
 function miqAccordProviderForemanSelect(itemId){
     return miqAjaxRequest(itemId,"/provider_foreman/accordion_select");
 }

@@ -10,7 +10,7 @@ describe MiqRequest do
         :MiqProvisionRequest                 => {:template              => "VM Provision", :clone_to_vm => "VM Clone", :clone_to_template => "VM Publish"},
         :MiqProvisionRequestTemplate         => {:template              => "VM Provision Template"},
         :MiqHostProvisionRequest             => {:host_pxe_install      => "Host Provision"},
-        :MiqProvisionConfiguredSystemRequest => {:provision_via_foreman => "Foreman Provision"},
+        :MiqProvisionConfiguredSystemRequest => {:provision_via_foreman => "#{ui_lookup(:ui_title => 'foreman')} Provision"},
         :VmReconfigureRequest                => {:vm_reconfigure        => "VM Reconfigure"},
         :VmMigrateRequest                    => {:vm_migrate            => "VM Migrate"},
         :AutomationRequest                   => {:automation            => "Automation"},

@@ -46,6 +46,6 @@ class MiqProvisionConfiguredSystemRequest < MiqRequest
   private
 
   def default_description
-    "Foreman install on [#{host_name}]"
+    "#{ui_lookup(:ui_title => 'foreman')} install on [#{host_name}]"
   end
 end

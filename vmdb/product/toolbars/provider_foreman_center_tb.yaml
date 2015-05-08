@@ -24,8 +24,8 @@
     - :separator:
     - :button: provider_foreman_new
       :image: new
-      :text: "Add a new Foreman Provider"
-      :title: "Add a new Foreman Provider"
+      :text: "Add a new Provider"
+      :title: "Add a new Provider"
       :enabled: 'true'
       :url: new
     - :button: provider_foreman_edit

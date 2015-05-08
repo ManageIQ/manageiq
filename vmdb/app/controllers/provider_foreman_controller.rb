@@ -126,7 +126,8 @@ class ProviderForemanController < ApplicationController
       AuditEvent.success(build_created_audit(@provider_foreman, @edit))
       @in_a_form = false
       @sb[:action] = nil
-      add_flash(_("%{model} \"%{name}\" was %{action}") % {:model  => ui_lookup(:model => "ProviderForeman"),
+      model = "#{ui_lookup(:ui_title => 'foreman')} #{ui_lookup(:model => 'ExtManagementSystem')}"
+      add_flash(_("%{model} \"%{name}\" was %{action}") % {:model  => model,
                                                            :name   => @provider_foreman.name,
                                                            :action => params[:id] == "new" ? "added" : "updated"})
       process_foreman([@provider_foreman.configuration_manager.id], "refresh_ems") if params[:id] == "new"
@@ -144,8 +145,9 @@ class ProviderForemanController < ApplicationController
   def cancel_provider_foreman
     @in_a_form = false
     @sb[:action] = nil
+    model = "#{ui_lookup(:ui_title => 'foreman')} #{ui_lookup(:model => 'ExtManagementSystem')}"
     add_flash(_("%{action} %{model} was cancelled by the user") %
-                  {:model  => ui_lookup(:model => "ProviderForeman"),
+                  {:model  => model,
                    :action => params[:id] == "new" ? "Add of" : "Edit of"})
     replace_right_cell
   end
@@ -487,7 +489,7 @@ class ProviderForemanController < ApplicationController
   def miq_search_node
     options = {:model => "ConfiguredSystem"}
     process_show_list(options)
-    @right_cell_text = _("All Foreman Configured Systems")
+    @right_cell_text = _("All %s Configured Systems") % ui_lookup(:ui_title => "foreman")
   end
 
   def default_node
@@ -495,11 +497,11 @@ class ProviderForemanController < ApplicationController
     if self.x_active_tree == :foreman_providers_tree
       options = {:model => "ConfigurationManagerForeman"}
       process_show_list(options)
-      @right_cell_text = _("All Foreman Providers")
+      @right_cell_text = _("All %s Providers") % ui_lookup(:ui_title => "foreman")
     elsif self.x_active_tree == :cs_filter_tree
       options = {:model => "ConfiguredSystem"}
       process_show_list(options)
-      @right_cell_text = _("All Foreman Configured Systems")
+      @right_cell_text = _("All %s Configured Systems") % ui_lookup(:ui_title => "foreman")
     end
   end
 
@@ -550,9 +552,9 @@ class ProviderForemanController < ApplicationController
 
   def update_title(presenter)
     if params[:action] == "new"
-      @right_cell_text = _("Add a new Foreman Provider")
+      @right_cell_text = _("Add a new %s Provider") % ui_lookup(:ui_title => "foreman")
     elsif params[:pressed] == "provider_foreman_edit"
-      @right_cell_text = _("Edit Foreman Provider")
+      @right_cell_text = _("Edit %s Provider") % ui_lookup(:ui_title => "foreman")
     end
     presenter[:right_cell_text] = @right_cell_text
   end
@@ -602,9 +604,9 @@ class ProviderForemanController < ApplicationController
     elsif @in_a_form
       partial_locals = {:controller => 'provider_foreman'}
       if @sb[:action] == "provider_foreman_new"
-        @right_cell_text = _("Add a new Foreman Provider")
+        @right_cell_text = _("Add a new %s Provider") % ui_lookup(:ui_title => "foreman")
       elsif @sb[:action] == "provider_foreman_edit"
-        @right_cell_text = _("Edit Foreman Provider")
+        @right_cell_text = _("Edit %s Provider") % ui_lookup(:ui_title => "foreman")
       end
       partial = 'form'
       presenter[:update_partials][:main_div] = r[:partial => partial, :locals => partial_locals]
@@ -720,7 +722,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def breadcrumb_name
-    ui_lookup_for_model(self.class.model_name).singularize
+    "#{ui_lookup(:ui_title => 'foreman')} #{ui_lookup(:model => 'ExtManagementSystem')}"
   end
 
   def tagging_explorer_controller?

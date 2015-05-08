@@ -3675,8 +3675,8 @@
         :identifier: container_new
 
 # Foreman
-- :name: Provider Foreman
-  :description: Foreman Provider Views and Access Rules
+- :name: Configuration Management
+  :description: Everything under Configuration Management
   :feature_type: node
   :identifier: provider_foreman_explorer
   :children:
@@ -3694,9 +3694,9 @@
       :feature_type: node
       :identifier: configured_systems_filter_accord
 
-# Foreman access rules
-  - :name: Provider Foreman Access Rules
-    :description: Access Rules for Provider Foreman
+# Configuration Management access rules
+  - :name: Configuration Management Access Rules
+    :description: Access Rules for Configuration Management
     :feature_type: node
     :identifier: provider_foreman
     :children:
@@ -3706,16 +3706,16 @@
       :identifier: provider_foreman_view
       :children:
       - :name: List
-        :description: Display Lists of Provider Foreman related to a CI
+        :description: Display Lists of Provider related to a CI
         :feature_type: view
         :identifier: provider_foreman_show_list
       - :name: Show
-        :description: Display Individual Provider Foreman related to a CI
+        :description: Display Individual Provider related to a CI
         :feature_type: view
         :identifier: provider_foreman_show
       :children:
       - :name: Refresh
-        :description: Refresh relationships for all items related of Provider Foreman
+        :description: Refresh relationships for all items related of Provider
         :feature_type: control
         :identifier: provider_foreman_refresh
       - :name: Remove
@@ -3727,23 +3727,23 @@
         :feature_type: admin
         :identifier: provider_foreman_edit
       - :name: Add
-        :description: Add a Foreman Provider
+        :description: Add a Provider
         :feature_type: admin
         :identifier: provider_foreman_new
       - :name: Validate
-        :description: Validate a Foreman Provider
+        :description: Validate a Provider
         :feature_type: admin
         :identifier: provider_foreman_authentication_validate
       - :name: Provision
-        :description: Provision a Foreman Configured System
+        :description: Provision a Configured System
         :feature_type: admin
         :identifier: provider_foreman_provision
       - :name: Operate
-        :description: Perform Operations on Foreman Configured Systems
+        :description: Perform Operations on Configured Systems
         :feature_type: control
         :identifier: provider_foreman_control
         :children:
           - :name: Edit Tags
-            :description: Edit Foreman Configured Systems Tags
+            :description: Edit Configured Systems Tags
             :feature_type: control
             :identifier: provider_foreman_tag

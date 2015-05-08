@@ -1,6 +1,6 @@
 ---
 :name: miq_provision_configured_system_foreman_dialogs
-:description: Sample Foreman Provisioning Dialog
+:description: Sample Configuration Management Provisioning Dialog
 :dialog_type: MiqProvisionConfiguredSystemWorkflow
 :content:
   :buttons:

@@ -770,9 +770,6 @@ msgstr ""
 msgid "Add a User"
 msgstr ""
 
-msgid "Add a new Foreman Provider"
-msgstr ""
-
 msgid "Add of new %s was cancelled by the user"
 msgstr ""
 
@@ -903,12 +900,6 @@ msgid "All Datastore customizations will be lost. Are you sure you want to reset
 msgstr ""
 
 msgid "All Files"
-msgstr ""
-
-msgid "All Foreman Configured Systems"
-msgstr ""
-
-msgid "All Foreman Providers"
 msgstr ""
 
 msgid "All Templates: %s"
@@ -3581,9 +3572,6 @@ msgid "Edit CFME Server Relationship for %{model} \"%{name}\""
 msgstr ""
 
 msgid "Edit Compute Rate Assignments"
-msgstr ""
-
-msgid "Edit Foreman Provider"
 msgstr ""
 
 msgid "Edit Log Depot settings was cancelled by the user"
