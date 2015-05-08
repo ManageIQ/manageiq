@@ -40,7 +40,7 @@ module ProviderForemanHelper
 
   def textual_provider_name
     {:label    => _("Provider"),
-     :image    => "vendor-foreman",
+     :image    => "vendor-#{@record.configuration_manager.image_name}",
      :value    => @record.configuration_manager.try(:name),
      :explorer => true
     }

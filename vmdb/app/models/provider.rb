@@ -21,6 +21,10 @@ class Provider < ActiveRecord::Base
     end
   end
 
+  def image_name
+    self.class.name[/^Provider(.+)/, 1].to_s.underscore
+  end
+
   def verify_ssl=(val)
     val = resolve_verify_ssl_value(val)
     super
