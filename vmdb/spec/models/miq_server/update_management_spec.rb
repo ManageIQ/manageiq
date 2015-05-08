@@ -94,6 +94,16 @@ describe MiqServer do
 
       @server.attempt_registration
     end
+
+    it "rhn should not call #attach_products" do
+      database.update_attributes!(:registration_type => "rhn_satellite", :registration_server => "https://server.example.com/XMLRPC")
+
+      @server.should_receive(:register).and_return(true)
+      @server.should_not_receive(:attach_products)
+      @server.should_receive(:repos_enabled?).and_return(true)
+
+      @server.attempt_registration
+    end
   end
 
   context "#register" do
@@ -152,14 +162,6 @@ describe MiqServer do
   end
 
   context "#attach_products" do
-    it "does not attach products for Rhn" do
-      database.update_attribute(:registration_type, "rhn_satellite")
-      reg_system.should_not_receive(:subscribe)
-
-      @server.attach_products
-      expect(@server.upgrade_message).to eq("attaching products")
-    end
-
     it "attaches products for SubscriptionManager" do
       reg_system.should_receive(:subscribe)
 
@@ -187,7 +189,7 @@ describe MiqServer do
     reg_system.should_receive(:enable_repo).twice
 
     @server.enable_repos
-    expect(@server.upgrade_message).to eq("enabling repo rhel-server-rhscl-6-rpms")
+    expect(@server.upgrade_message).to eq("enabling rhel-server-rhscl-6-rpms")
   end
 
   it "#check_updates" do
