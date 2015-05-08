@@ -70,15 +70,21 @@ class ProviderForemanController < ApplicationController
 
   def provision
     assert_privileges("provider_foreman_provision")
-    @prov_id = find_checked_items
-    @prov_id = params[:id] if @prov_id.empty?
+    provisioning_ids = find_checked_items
+    provisioning_ids.push(params[:id]) if provisioning_ids.empty?
 
-    render :update do |page|
-      page.redirect_to :controller     => "miq_request",
-                       :action         => "prov_edit",
-                       :prov_id        => @prov_id,
-                       :org_controller => "configured_system",
-                       :escape         => false
+    if ConfiguredSystem.common_configuration_profiles_for_selected_configured_systems(provisioning_ids)
+      render :update do |page|
+        page.redirect_to :controller     => "miq_request",
+                         :action         => "prov_edit",
+                         :prov_id        => provisioning_ids,
+                         :org_controller => "configured_system",
+                         :escape         => false
+      end
+    else
+      add_flash(_("No common configuration profiles available for the selected configured
+        #{_('system').pluralize(provisioning_ids.size)}"), :error)
+      replace_right_cell
     end
   end
 
