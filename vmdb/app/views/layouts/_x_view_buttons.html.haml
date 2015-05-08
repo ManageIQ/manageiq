@@ -7,3 +7,5 @@
     = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => "blank_view_tb"}
   - elsif %w(report).include?(@layout)
     = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => @report ? "report_view_tb" : "blank_view_tb"}
+  - elsif %w(provider_foreman).include?(@layout)
+    = render :partial => "layouts/dhtmlxtoolbar", :locals => {:tb => "view_tb", :tb_yaml => @showtype == 'main' ? "x_summary_view_tb" : "x_gtl_view_tb"}

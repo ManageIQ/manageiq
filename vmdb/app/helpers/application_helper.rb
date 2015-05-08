@@ -126,7 +126,7 @@ module ApplicationHelper
       return url_for(:controller=>@record.class.to_s.underscore, :action=>"snia_local_file_systems", :id=>@record, :show=>@id)
     elsif db == "MiqCimInstance" && @db && @db == "cim_base_storage_extent"
       return url_for(:controller=>@record.class.to_s.underscore, :action=>"cim_base_storage_extents", :id=>@record, :show=>@id)
-    elsif db == "ConfiguredSystem"
+    elsif %w(ConfiguredSystem ConfigurationProfile).include?(db)
       return url_for(:controller => "provider_foreman", :action => @lastaction, :id => @record, :show => @id)
     else
       controller, action = db_to_controller(db, action)
@@ -2325,13 +2325,21 @@ module ApplicationHelper
     case nodes.first
     when "root" then  "provider_foreman_center_tb"
     when "e"    then  "configuration_profile_foreman_center_tb"
-    when "cp"   then  "configured_systems_foreman_center_tb"
+    when "cp"   then  configuration_profile_center_tb
     end
   end
 
   def cs_filter_tree_center_tb(nodes)
     case nodes.first
     when "root", "ms" then  "configured_system_foreman_center_tb"
+    end
+  end
+
+  def configuration_profile_center_tb
+    if @sb[:active_tab] == "configured_systems"
+      "configured_systems_foreman_center_tb"
+    else
+      "blank_view_tb"
     end
   end
 
@@ -2731,9 +2739,8 @@ module ApplicationHelper
 
   def x_gtl_view_tb_render?
     no_gtl_view_buttons = %w(chargeback miq_ae_class miq_ae_customization miq_ae_tools miq_capacity_planning
-                             miq_capacity_utilization miq_policy miq_policy_rsop report ops pxe)
-    (@record.nil? && @explorer && !no_gtl_view_buttons.include?(@layout) ||
-      @record && @layout == "provider_foreman" && x_active_tree == :foreman_providers_tree)
+                             miq_capacity_utilization miq_policy miq_policy_rsop report ops provider_foreman pxe)
+    @record.nil? && @explorer && !no_gtl_view_buttons.include?(@layout)
   end
 
   def explorer_controller?

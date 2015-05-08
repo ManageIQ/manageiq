@@ -26,6 +26,7 @@ describe 'routes for ProviderForeman' do
     accordion_select
     authentication_validate
     button
+    change_tab
     delete
     edit
     explorer
