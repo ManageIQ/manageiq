@@ -60,7 +60,7 @@ describe ProviderForemanController do
       key = ems_key_for_provider(@provider)
       controller.send(:get_node_info, key)
       right_cell_text = controller.instance_variable_get(:@right_cell_text)
-      expect(right_cell_text).to eq("All Foreman Providers")
+      expect(right_cell_text).to eq("All #{ui_lookup(:ui_title => "foreman")} Providers")
     end
 
     it "renders right cell text for ConfigurationManagerForeman node" do
@@ -109,7 +109,7 @@ describe ProviderForemanController do
   end
 
   it "singularizes breadcrumb name" do
-    expect(controller.send(:breadcrumb_name)).to eq("Provider Foreman")
+    expect(controller.send(:breadcrumb_name)).to eq("#{ui_lookup(:ui_title => "foreman")} Provider")
   end
 
   it "renders tagging editor" do

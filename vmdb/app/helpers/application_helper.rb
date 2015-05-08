@@ -1594,6 +1594,8 @@ module ApplicationHelper
       title += ": Storage - Storage Managers"
     elsif layout == "ops"
       title += ": Configuration"
+    elsif layout == "provider_foreman"
+      title += ": #{ui_lookup(:ui_title => "foreman")} #{ui_lookup(:model => "ExtManagementSystem")}"
     elsif layout == "pxe"
       title += ": PXE"
     elsif layout == "explorer"

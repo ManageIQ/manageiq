@@ -1082,3 +1082,5 @@ en:
       users:               Users
       vmtree_info:         Genealogy
       win32_services:      Win32 Services
+    ui_title:
+      foreman:             Foreman

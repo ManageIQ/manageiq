@@ -160,7 +160,7 @@ module EmsRefresh
             invalid = []
             invalid << "location" if p[:configuration_location_ids].empty?
             invalid << "organization" if p[:configuration_organization_ids].empty?
-            $log.warn "Foreman hostgroup #{p[:name]} missing: #{invalid.join(", ")}" unless invalid.empty?
+            $log.warn "#{ui_lookup(:ui_title => 'foreman')} hostgroup #{p[:name]} missing: #{invalid.join(", ")}" unless invalid.empty?
           end
           profiles.each { |p| p.delete(:configuration_tags_hash) }
           indexes[:profiles] = add_ids(profiles)
@@ -209,7 +209,7 @@ module EmsRefresh
             invalid = []
             invalid << "location" if s[:configuration_location_id].nil?
             invalid << "organization" if s[:configuration_organization_id].nil?
-            $log.warn "Foreman host #{s[:hostname]} missing: #{invalid.join(", ")}" unless invalid.empty?
+            $log.warn "#{ui_lookup(:ui_title => 'foreman')} host #{s[:hostname]} missing: #{invalid.join(", ")}" unless invalid.empty?
           end
           systems.each { |s| s.delete(:configuration_tags_hash) }
         end
