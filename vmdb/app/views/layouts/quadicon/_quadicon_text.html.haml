@@ -45,7 +45,6 @@
       - if request.parameters[:controller] == "service" && @view.db == "Vm"
         - attributes = vm_quad_link_attributes(item)
         - if attributes[:link]
-          - @record = item
           = link_to(truncate_for_quad(name),
             {:controller => attributes[:controller], :action => attributes[:action], :id => attributes[:id]},
              :title                 => name,
