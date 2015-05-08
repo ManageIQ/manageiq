@@ -2839,6 +2839,12 @@ module ApplicationHelper
                              ontap_storage_volume_show_list
                              storage_manager_show_list)
     return false if storage_start_pages.include?(start_page) && !get_vmdb_config[:product][:storage]
+    containers_start_pages = %w(ems_container_show_list
+                                container_node_show_list
+                                container_group_show_list
+                                container_service_show_list
+                                container_view)
+    return false if containers_start_pages.include?(start_page) && !get_vmdb_config[:product][:containers]
     role_allows(:feature => start_page, :any => true)
   end
 
