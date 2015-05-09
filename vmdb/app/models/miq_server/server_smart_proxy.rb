@@ -75,7 +75,18 @@ module MiqServer::ServerSmartProxy
     case ost.method_name
     when "ScanMetadata", "SyncMetadata"
       worker_setting = MiqSmartProxyWorker.worker_settings
-      MiqQueue.put( :class_name => self.class.name, :instance_id => self.id, :method_name => "scan_sync_vm", :args => ost, :server_guid => self.guid, :role => "smartproxy", :queue_name => "smartproxy", :msg_timeout => worker_setting[:queue_timeout])
+      #
+      # TODO: until we get location/offset read capability for OpenStack
+      # image data, OpenStack fleecing is prone to timeout (based on image size).
+      # We try to adjust the timeout here - maybe this should be calculated based
+      # on the size of the image, but that information isn't directly available.
+      #
+      timeout_adj = 1
+      if ost.method_name == "ScanMetadata"
+        v = VmOrTemplate.find(ost.vm_id)
+        timeout_adj = 4 if v.kind_of?(VmOpenstack)
+      end
+      MiqQueue.put( :class_name => self.class.name, :instance_id => self.id, :method_name => "scan_sync_vm", :args => ost, :server_guid => self.guid, :role => "smartproxy", :queue_name => "smartproxy", :msg_timeout => worker_setting[:queue_timeout] * timeout_adj)
     else
       $log.error "#{log_prefix} Unsupported method [#{ost.method_name}]"
     end

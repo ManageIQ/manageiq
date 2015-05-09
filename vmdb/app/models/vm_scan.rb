@@ -1,4 +1,17 @@
 class VmScan < Job
+
+  #
+  # TODO: until we get location/offset read capability for OpenStack
+  # image data, OpenStack fleecing is prone to timeout (based on image size).
+  # We adjust the queue timeout in server_smart_proxy.rb, but that's not enough,
+  # we also need to adjust the job timeout here.
+  #
+  DEFAULT_TIMEOUT = 3000
+
+  def default_timeout
+    DEFAULT_TIMEOUT
+  end
+
   def load_transitions
     self.state ||= 'initialize'
     {
@@ -383,6 +396,7 @@ class VmScan < Job
         end
       rescue => err
         $log.error("scan-delete_snapshot: #{err.message}")
+        $log.debug err.backtrace.join("\n")
       end
     else
       self.end_user_event_message(vm)
@@ -474,13 +488,17 @@ class VmScan < Job
 
   def process_abort(*args)
     begin
+      vm = VmOrTemplate.find_by_id(self.target_id)
       unless self.context[:snapshot_mor].nil?
         mor = self.context[:snapshot_mor]
         self.context[:snapshot_mor] = nil
         set_status("Deleting snapshot before aborting job")
-        delete_snapshot(mor)
+        if vm.kind_of?(VmOpenstack)
+          vm.ext_management_system.vm_delete_evm_snapshot(vm, mor)
+        else
+          delete_snapshot(mor)
+        end
       end
-      vm = VmOrTemplate.find_by_id(self.target_id)
       if vm
         inputs = {:vm => vm, :host => vm.host}
         MiqEvent.raise_evm_job_event(vm, {:type => "scan", :suffix => "abort"}, inputs)
