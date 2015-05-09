@@ -6,7 +6,7 @@ class VmScan < Job
   # We adjust the queue timeout in server_smart_proxy.rb, but that's not enough,
   # we also need to adjust the job timeout here.
   #
-  DEFAULT_TIMEOUT = 3000
+  DEFAULT_TIMEOUT = defined?(RSpec) ? 300 : 3000
 
   def default_timeout
     DEFAULT_TIMEOUT
