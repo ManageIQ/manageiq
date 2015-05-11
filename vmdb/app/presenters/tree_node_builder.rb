@@ -77,7 +77,7 @@ class TreeNodeBuilder
     when IsoDatastore         then generic_node(object.name, "isodatastore.png")
     when IsoImage             then generic_node(object.name, "isoimage.png")
     when ResourcePool         then generic_node(object.name, object.vapp ? "vapp.png" : "resource_pool.png")
-    when Vm                   then generic_node(object.name, "#{object.normalized_state.downcase}.png")
+    when Vm                   then generic_node(object.name, "currentstate-#{object.normalized_state.downcase}.png")
     when LdapDomain           then generic_node("Domain: #{object.name}", "ldap_domain.png", "LDAP Domain: #{object.name}")
     when LdapRegion           then generic_node("Region: #{object.name}", "ldap_region.png", "LDAP Region: #{object.name}")
     when MiqAeClass           then node_with_display_name("ae_class.png")
@@ -90,7 +90,7 @@ class TreeNodeBuilder
                                                    get_rr_status_image(object), object.name, object.status.downcase)
     when MiqSchedule          then generic_node(object.name, "miq_schedule.png")
     when MiqServer            then miq_server_node
-    when MiqTemplate          then generic_node(object.name, "#{object.normalized_state.downcase}.png")
+    when MiqTemplate          then generic_node(object.name, "currentstate-#{object.normalized_state.downcase}.png")
     when MiqAlert             then generic_node(object.description, "miq_alert.png")
     when MiqAction            then miq_action_node
     when MiqEvent             then generic_node(object.description, "event-#{object.name}.png")
