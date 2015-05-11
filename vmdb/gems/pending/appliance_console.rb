@@ -359,13 +359,13 @@ Date and Time Configuration
 
         when I18n.t("advanced_settings.evmstop")
           say("#{selection}\n\n")
-          if agree("\nNote: It may take up to a few minutes for all EVM Server processes to exit gracefully.  Perform an EVM stop? (Y/N): ")
-            if File.exist?(EVM_PID_FILE)
+          if File.exist?(EVM_PID_FILE)
+            if agree("\nNote: It may take up to a few minutes for all EVM Server processes to exit gracefully.  Perform an EVM stop? (Y/N): ")
               say("\nStopping EVM...")
               Env['STOP'] = true
-            else
-              say("\nNo EVM PID file.  EVM Server is not running...")
             end
+          else
+            say("\nNo EVM PID file.  EVM Server is not running...")
           end
 
         when I18n.t("advanced_settings.evmstart")
