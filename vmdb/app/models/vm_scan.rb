@@ -8,7 +8,7 @@ class VmScan < Job
   #
   DEFAULT_TIMEOUT = defined?(RSpec) ? 300 : 3000
 
-  def default_timeout
+  def self.current_job_timeout
     DEFAULT_TIMEOUT
   end
 
