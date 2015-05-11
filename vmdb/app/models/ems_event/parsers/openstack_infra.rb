@@ -17,9 +17,9 @@ module EmsEvent::Parsers::OpenstackInfra
     }
 
     payload = event[:content]["payload"]
-    event_hash[:host_ems_ref] = Host.where('ems_ref_obj LIKE ?', "%#{payload['instance_id']}%").first.try(:ems_ref) if payload.has_key? "instance_id"
-    event_hash[:availability_zone_ems_ref] = payload["availability_zone"] if payload.has_key? "availability_zone"
-    event_hash[:chain_id] = payload["reservation_id"]                     if payload.has_key? "reservation_id"
+    event_hash[:host_ems_ref]              = payload["node"]              if payload.key? "node"
+    event_hash[:availability_zone_ems_ref] = payload["availability_zone"] if payload.key? "availability_zone"
+    event_hash[:chain_id]                  = payload["reservation_id"]    if payload.key? "reservation_id"
     event_hash
   end
 end
