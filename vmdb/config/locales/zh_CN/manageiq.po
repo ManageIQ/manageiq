@@ -23,6 +23,9 @@ msgstr ""
 msgid " %s Assignments"
 msgstr ""
 
+msgid " %{name} from %{value} to %{parameters} "
+msgstr ""
+
 msgid " (Names with \"%s\")"
 msgstr ""
 
@@ -39,9 +42,6 @@ msgid " Selected Alerts:"
 msgstr ""
 
 msgid " that match the entered search string"
-msgstr ""
-
-msgid " will shut down "
 msgstr ""
 
 msgid "\"#{db}Performance.#{c}\""
@@ -84,6 +84,18 @@ msgid "%s"
 msgstr ""
 
 msgid "%s  Ending with"
+msgstr ""
+
+msgid "%s & %s"
+msgstr ""
+
+msgid "%s (%s)"
+msgstr ""
+
+msgid "%s (All %s)"
+msgstr ""
+
+msgid "%s (All cloud tenants present on this host)"
 msgstr ""
 
 msgid "%s Being Tagged"
@@ -143,9 +155,6 @@ msgstr ""
 msgid "%s Policy Assignment"
 msgstr ""
 
-msgid "%s Policy Profiles"
-msgstr ""
-
 msgid "%s Policy Simulation"
 msgstr ""
 
@@ -156,6 +165,9 @@ msgid "%s Settings"
 msgstr ""
 
 msgid "%s Summary"
+msgstr ""
+
+msgid "%s Tags"
 msgstr ""
 
 msgid "%s Utilization"
@@ -214,9 +226,6 @@ msgstr ""
 msgid "%s must be numeric"
 msgstr ""
 
-msgid "%s must be numeric and greater than zero"
-msgstr ""
-
 msgid "%s must be selected"
 msgstr ""
 
@@ -257,6 +266,11 @@ msgid "%s tab is not available unless at least 1 time field has been selected"
 msgstr ""
 
 msgid "%s tab is not available until at least 1 field has been selected"
+msgstr ""
+
+msgid ""
+"%s to validate against, Username and matching password fields are needed to pe"
+"rform verification of credentials"
 msgstr ""
 
 msgid "%s was cancelled by the user"
@@ -409,9 +423,6 @@ msgstr ""
 msgid "(%s bytes)"
 msgstr ""
 
-msgid "(1-999 MB)"
-msgstr ""
-
 msgid "(All)"
 msgstr ""
 
@@ -449,9 +460,6 @@ msgid "(current)"
 msgstr ""
 
 msgid "(leave blank for default)"
-msgstr ""
-
-msgid "(max 6 digits)"
 msgstr ""
 
 msgid "(optional) the address of an alternate service"
@@ -613,7 +621,7 @@ msgstr ""
 msgid "24 Hour Time Period:"
 msgstr ""
 
-msgid "3 - Specify Target Options to qualify target Clusters or Hosts."
+msgid "3 - Specify Target Options to qualify target %s or %s."
 msgstr ""
 
 msgid "30 Days before retirement"
@@ -658,6 +666,9 @@ msgstr ""
 msgid "A %s must be entered to commit this expression element"
 msgstr ""
 
+msgid "A %s must be selected"
+msgstr ""
+
 msgid "A Red Hat subscription that covers your product"
 msgstr ""
 
@@ -671,6 +682,9 @@ msgid "A condition must contain a valid expression."
 msgstr ""
 
 msgid "A valid expression must be present"
+msgstr ""
+
+msgid "A value must be changed or provider will not be scaled."
 msgstr ""
 
 msgid "ALL"
@@ -783,7 +797,7 @@ msgstr ""
 msgid "Add a User"
 msgstr ""
 
-msgid "Add a new Foreman Provider"
+msgid "Add a new %s Provider"
 msgstr ""
 
 msgid "Add of new %s was cancelled by the user"
@@ -801,9 +815,6 @@ msgstr ""
 msgid "Add this LDAP Server"
 msgstr ""
 
-msgid "Add this SmartProxy"
-msgstr ""
-
 msgid "Add this Storage Manager"
 msgstr ""
 
@@ -817,6 +828,9 @@ msgid "Adding a new %s"
 msgstr ""
 
 msgid "Adding a new Orchestration Template"
+msgstr ""
+
+msgid "Adding a new Service Dialog from Orchestration Template \"%s\""
 msgstr ""
 
 msgid "Admin Role Filter:"
@@ -900,7 +914,16 @@ msgstr ""
 msgid "All %s"
 msgstr ""
 
+msgid "All %s Configured Systems"
+msgstr ""
+
 msgid "All %s Indexes"
+msgstr ""
+
+msgid "All %s Providers"
+msgstr ""
+
+msgid "All %s with %s"
 msgstr ""
 
 msgid "All %{model} - %{group}"
@@ -909,18 +932,15 @@ msgstr ""
 msgid "All %{typ} %{model}"
 msgstr ""
 
+msgid "All (%s)"
+msgstr ""
+
 msgid ""
 "All Datastore customizations will be lost. Are you sure you want to reset all "
 "classes and instances to default?"
 msgstr ""
 
 msgid "All Files"
-msgstr ""
-
-msgid "All Foreman Configured Systems"
-msgstr ""
-
-msgid "All Foreman Providers"
 msgstr ""
 
 msgid "All Templates: %s"
@@ -962,6 +982,9 @@ msgstr ""
 msgid "All selected %s are not in the current region"
 msgstr ""
 
+msgid "All system services of %s"
+msgstr ""
+
 msgid "Amazon"
 msgstr ""
 
@@ -981,9 +1004,6 @@ msgid "An internal system error."
 msgstr ""
 
 msgid "Analysis"
-msgstr ""
-
-msgid "Analysis Affinity was saved"
 msgstr ""
 
 msgid "Analysis History (%s)"
@@ -1058,6 +1078,9 @@ msgstr ""
 msgid "Approved/Denied on"
 msgstr ""
 
+msgid "Architecture"
+msgstr ""
+
 msgid "Are you sure you want to Run Database Garbage Collection Now?"
 msgstr ""
 
@@ -1065,9 +1088,6 @@ msgid "Are you sure you want to Run a Database Backup Now?"
 msgstr ""
 
 msgid "Are you sure you want to delete build %s?"
-msgstr ""
-
-msgid "Are you sure you want to delete build %{row_build} for %{row_platform}?"
 msgstr ""
 
 msgid "Are you sure you want to delete category '%s'?"
@@ -1145,6 +1165,9 @@ msgid "AssignedServerRole|Active"
 msgstr ""
 
 msgid "AssignedServerRole|Priority"
+msgstr ""
+
+msgid "Assigning %{hosts} but only have %{hosts_count} hosts available."
 msgstr ""
 
 msgid "Assignments"
@@ -1316,9 +1339,6 @@ msgid "Available Fields:"
 msgstr ""
 
 msgid "Available Policies:"
-msgstr ""
-
-msgid "Available Product Updates"
 msgstr ""
 
 msgid "Available Product version:"
@@ -1501,10 +1521,10 @@ msgstr ""
 msgid "By %s"
 msgstr ""
 
-msgid "By Filter"
+msgid "By %{typ}: %{values}"
 msgstr ""
 
-msgid "By Group"
+msgid "By Filter"
 msgstr ""
 
 msgid "By Host"
@@ -1513,22 +1533,22 @@ msgstr ""
 msgid "By Role"
 msgstr ""
 
-msgid "By User ID %s %s"
+msgid "By Username %s %s"
 msgstr ""
 
 msgid "C & U Collection"
+msgstr ""
+
+msgid "C & U Data Collectors"
+msgstr ""
+
+msgid "C & U Data Processors"
 msgstr ""
 
 msgid "C & U Database"
 msgstr ""
 
 msgid "C & U Gap Collection"
-msgstr ""
-
-msgid "C &amp; U Data Collectors"
-msgstr ""
-
-msgid "C &amp; U Data Processors"
 msgstr ""
 
 msgid "CFME Appliance restart initiated successfully"
@@ -1612,6 +1632,9 @@ msgid "Cancel the save"
 msgstr ""
 
 msgid "Cannot create Request Info, error: "
+msgstr ""
+
+msgid "Cannot display binary content"
 msgstr ""
 
 msgid ""
@@ -1821,9 +1844,6 @@ msgid "Choose a Category"
 msgstr ""
 
 msgid "Choose a Filter"
-msgstr ""
-
-msgid "Choose a Host"
 msgstr ""
 
 msgid "Choose a Report from the menus on the left."
@@ -2195,13 +2215,10 @@ msgstr ""
 msgid "Clouds"
 msgstr ""
 
-msgid "Cluster"
-msgstr ""
-
 msgid "Clusters"
 msgstr ""
 
-msgid "Clusters (%s)"
+msgid "Clusters / Deployment Roles"
 msgstr ""
 
 msgid "Collapse All"
@@ -2216,12 +2233,12 @@ msgstr ""
 msgid "Collect Logs"
 msgstr ""
 
-msgid "Collect for All Clusters"
+msgid "Collect for All %s"
 msgstr ""
 
 msgid ""
-"Collect for All Clusters must be checked to be able to collect C & U data from"
-" Cloud Providers such as Red Hat OpenStack or Amazon EC2"
+"Collect for All %s must be checked to be able to collect C & U data from Cloud"
+" Providers such as Red Hat OpenStack or Amazon EC2"
 msgstr ""
 
 msgid "Collect for All Datastores"
@@ -2335,6 +2352,15 @@ msgstr ""
 msgid "Compute"
 msgstr ""
 
+msgid "Compute Profile"
+msgstr ""
+
+msgid "Computer system"
+msgstr ""
+
+msgid "ComputerSystem|Managed entity type"
+msgstr ""
+
 msgid "Condition"
 msgstr ""
 
@@ -2422,6 +2448,9 @@ msgstr ""
 msgid "Configuration"
 msgstr ""
 
+msgid "Configuration (%s)"
+msgstr ""
+
 msgid ""
 "Configuration File selection can not be changed until changes are saved or res"
 "et."
@@ -2430,10 +2459,76 @@ msgstr ""
 msgid "Configuration File to Edit"
 msgstr ""
 
+msgid "Configuration Location"
+msgstr ""
+
 msgid "Configuration Management"
 msgstr ""
 
+msgid "Configuration Organization"
+msgstr ""
+
+msgid "Configuration Profile Description"
+msgstr ""
+
+msgid "Configuration files of %s"
+msgstr ""
+
+msgid "Configuration location"
+msgstr ""
+
+msgid "Configuration organization"
+msgstr ""
+
+msgid "Configuration profile"
+msgstr ""
+
 msgid "Configuration settings saved"
+msgstr ""
+
+msgid "Configuration tag"
+msgstr ""
+
+msgid "ConfigurationLocation|Manager ref"
+msgstr ""
+
+msgid "ConfigurationLocation|Name"
+msgstr ""
+
+msgid "ConfigurationLocation|Parent ref"
+msgstr ""
+
+msgid "ConfigurationLocation|Title"
+msgstr ""
+
+msgid "ConfigurationOrganization|Manager ref"
+msgstr ""
+
+msgid "ConfigurationOrganization|Name"
+msgstr ""
+
+msgid "ConfigurationOrganization|Parent ref"
+msgstr ""
+
+msgid "ConfigurationOrganization|Title"
+msgstr ""
+
+msgid "ConfigurationProfile|Description"
+msgstr ""
+
+msgid "ConfigurationProfile|Manager ref"
+msgstr ""
+
+msgid "ConfigurationProfile|Name"
+msgstr ""
+
+msgid "ConfigurationProfile|Parent ref"
+msgstr ""
+
+msgid "ConfigurationTag|Manager ref"
+msgstr ""
+
+msgid "ConfigurationTag|Name"
 msgstr ""
 
 msgid "Configuration|Created on"
@@ -2452,6 +2547,33 @@ msgid "Configure Report Columns"
 msgstr ""
 
 msgid "Configured Systems"
+msgstr ""
+
+msgid "Configured system"
+msgstr ""
+
+msgid "ConfiguredSystem|Build state"
+msgstr ""
+
+msgid "ConfiguredSystem|Hostname"
+msgstr ""
+
+msgid "ConfiguredSystem|Ipaddress"
+msgstr ""
+
+msgid "ConfiguredSystem|Ipmi present"
+msgstr ""
+
+msgid "ConfiguredSystem|Last checkin"
+msgstr ""
+
+msgid "ConfiguredSystem|Mac address"
+msgstr ""
+
+msgid "ConfiguredSystem|Manager ref"
+msgstr ""
+
+msgid "ConfiguredSystem|Puppet status"
 msgstr ""
 
 msgid "Connecting (unencrypted) to: %s"
@@ -2478,7 +2600,190 @@ msgstr ""
 msgid "Container"
 msgstr ""
 
+msgid "Container Groups (%s)"
+msgstr ""
+
+msgid "Container Groups (0)"
+msgstr ""
+
+msgid "Container Nodes (%s)"
+msgstr ""
+
+msgid "Container Nodes (0)"
+msgstr ""
+
+msgid "Container Services (%s)"
+msgstr ""
+
+msgid "Container Services (0)"
+msgstr ""
+
+msgid "Container definition"
+msgstr ""
+
+msgid "Container group"
+msgstr ""
+
+msgid "Container node"
+msgstr ""
+
+msgid "Container port config"
+msgstr ""
+
+msgid "Container replication controller"
+msgstr ""
+
+msgid "Container service"
+msgstr ""
+
+msgid "ContainerDefinition|Cpu cores"
+msgstr ""
+
+msgid "ContainerDefinition|Ems ref"
+msgstr ""
+
+msgid "ContainerDefinition|Image"
+msgstr ""
+
+msgid "ContainerDefinition|Image pull policy"
+msgstr ""
+
+msgid "ContainerDefinition|Memory"
+msgstr ""
+
+msgid "ContainerDefinition|Name"
+msgstr ""
+
+msgid "ContainerGroup|Creation timestamp"
+msgstr ""
+
+msgid "ContainerGroup|Dns policy"
+msgstr ""
+
+msgid "ContainerGroup|Ems ref"
+msgstr ""
+
+msgid "ContainerGroup|Name"
+msgstr ""
+
+msgid "ContainerGroup|Namespace"
+msgstr ""
+
+msgid "ContainerGroup|Resource version"
+msgstr ""
+
+msgid "ContainerGroup|Restart policy"
+msgstr ""
+
+msgid "ContainerNode|Creation timestamp"
+msgstr ""
+
+msgid "ContainerNode|Ems ref"
+msgstr ""
+
+msgid "ContainerNode|Identity infra"
+msgstr ""
+
+msgid "ContainerNode|Identity machine"
+msgstr ""
+
+msgid "ContainerNode|Identity system"
+msgstr ""
+
+msgid "ContainerNode|Lives on type"
+msgstr ""
+
+msgid "ContainerNode|Name"
+msgstr ""
+
+msgid "ContainerNode|Resource version"
+msgstr ""
+
+msgid "ContainerPortConfig|Ems ref"
+msgstr ""
+
+msgid "ContainerPortConfig|Host port"
+msgstr ""
+
+msgid "ContainerPortConfig|Name"
+msgstr ""
+
+msgid "ContainerPortConfig|Port"
+msgstr ""
+
+msgid "ContainerPortConfig|Protocol"
+msgstr ""
+
+msgid "ContainerReplicationController|Creation timestamp"
+msgstr ""
+
+msgid "ContainerReplicationController|Current replicas"
+msgstr ""
+
+msgid "ContainerReplicationController|Ems ref"
+msgstr ""
+
+msgid "ContainerReplicationController|Name"
+msgstr ""
+
+msgid "ContainerReplicationController|Namespace"
+msgstr ""
+
+msgid "ContainerReplicationController|Replicas"
+msgstr ""
+
+msgid "ContainerReplicationController|Resource version"
+msgstr ""
+
+msgid "ContainerService|Container port"
+msgstr ""
+
+msgid "ContainerService|Creation timestamp"
+msgstr ""
+
+msgid "ContainerService|Ems ref"
+msgstr ""
+
+msgid "ContainerService|Name"
+msgstr ""
+
+msgid "ContainerService|Namespace"
+msgstr ""
+
+msgid "ContainerService|Port"
+msgstr ""
+
+msgid "ContainerService|Portal ip"
+msgstr ""
+
+msgid "ContainerService|Protocol"
+msgstr ""
+
+msgid "ContainerService|Resource version"
+msgstr ""
+
+msgid "ContainerService|Session affinity"
+msgstr ""
+
 msgid "Containers"
+msgstr ""
+
+msgid "Container|Backing ref"
+msgstr ""
+
+msgid "Container|Ems ref"
+msgstr ""
+
+msgid "Container|Image"
+msgstr ""
+
+msgid "Container|Name"
+msgstr ""
+
+msgid "Container|Restart count"
+msgstr ""
+
+msgid "Container|State"
 msgstr ""
 
 msgid "Content"
@@ -2538,10 +2843,13 @@ msgstr ""
 msgid "Creation of a new Orchestration Template was cancelled by the user"
 msgstr ""
 
+msgid "Creation of a new Service Dialog was cancelled by the user"
+msgstr ""
+
 msgid "Credential validation returned: %s"
 msgstr ""
 
-msgid "Credential validation was not successful"
+msgid "Credential validation was not successful: %s"
 msgstr ""
 
 msgid "Credential validation was successful"
@@ -2551,12 +2859,6 @@ msgid "Credentials"
 msgstr ""
 
 msgid "Credentials - Windows Domain"
-msgstr ""
-
-msgid "Credentials are not required because this SmartProxy is currently active."
-msgstr ""
-
-msgid "Credentials for Host '%s'"
 msgstr ""
 
 msgid "Credentials/Settings saved successfully"
@@ -2578,9 +2880,6 @@ msgid "Current Status"
 msgstr ""
 
 msgid "Current User"
-msgstr ""
-
-msgid "Current Version"
 msgstr ""
 
 msgid "Custom Attribute Settings"
@@ -2742,10 +3041,19 @@ msgstr ""
 msgid "Customization Directory"
 msgstr ""
 
+msgid "Customization script"
+msgstr ""
+
 msgid "Customization spec"
 msgstr ""
 
 msgid "Customization template"
+msgstr ""
+
+msgid "CustomizationScript|Manager ref"
+msgstr ""
+
+msgid "CustomizationScript|Name"
 msgstr ""
 
 msgid "CustomizationSpec|Description"
@@ -2944,10 +3252,7 @@ msgstr ""
 msgid "Deleting the MyTag '%s' will also unassign it from all items, are you sure?"
 msgstr ""
 
-msgid "Deploy of SmartProxy to Host \"%s\" was cancelled"
-msgstr ""
-
-msgid "Deploy of SmartProxy to Host \"%s\" was initiated"
+msgid "Deployment Roles"
 msgstr ""
 
 msgid "Depot Name"
@@ -3031,6 +3336,9 @@ msgstr ""
 msgid "DialogField|Label"
 msgstr ""
 
+msgid "DialogField|Load values on init"
+msgstr ""
+
 msgid "DialogField|Name"
 msgstr ""
 
@@ -3046,6 +3354,9 @@ msgstr ""
 msgid "DialogField|Position"
 msgstr ""
 
+msgid "DialogField|Read only"
+msgstr ""
+
 msgid "DialogField|Reconfigurable"
 msgstr ""
 
@@ -3056,6 +3367,9 @@ msgid "DialogField|Required method"
 msgstr ""
 
 msgid "DialogField|Required method options"
+msgstr ""
+
+msgid "DialogField|Show refresh button"
 msgstr ""
 
 msgid "DialogField|Validator rule"
@@ -3199,9 +3513,6 @@ msgstr ""
 msgid "Disk|Updated on"
 msgstr ""
 
-msgid "Display"
-msgstr ""
-
 msgid "Display Name"
 msgstr ""
 
@@ -3250,19 +3561,7 @@ msgstr ""
 msgid "Double click a feature to open/close all children."
 msgstr ""
 
-msgid "Download"
-msgstr ""
-
 msgid "Download Report to YAML"
-msgstr ""
-
-msgid "Download SmartProxy Build"
-msgstr ""
-
-msgid "Download SmartProxy version for manual installation"
-msgstr ""
-
-msgid "Download the SmartProxy log as a Zip File"
 msgstr ""
 
 msgid "Download the full report (all rows) as a PDF file"
@@ -3340,13 +3639,13 @@ msgstr ""
 msgid "ESX Logs"
 msgstr ""
 
+msgid "Edit %s Provider"
+msgstr ""
+
 msgid "Edit CFME Server Relationship for %{model} \"%{name}\""
 msgstr ""
 
 msgid "Edit Compute Rate Assignments"
-msgstr ""
-
-msgid "Edit Foreman Provider"
 msgstr ""
 
 msgid "Edit Log Depot settings was cancelled by the user"
@@ -3356,6 +3655,9 @@ msgid "Edit Sequence of User Groups was cancelled by the user"
 msgstr ""
 
 msgid "Edit Tags for %s"
+msgstr ""
+
+msgid "Edit Tags for Configured Systems"
 msgstr ""
 
 msgid ""
@@ -3568,7 +3870,7 @@ msgstr ""
 msgid "EmsFolder|Updated on"
 msgstr ""
 
-msgid "Enable Collection by Cluster"
+msgid "Enable Collection by %s"
 msgstr ""
 
 msgid "Enable Collection by Datastore"
@@ -3608,6 +3910,9 @@ msgid "Entry Point (NS/Cls/Inst)"
 msgstr ""
 
 msgid "Entry Point must be given."
+msgstr ""
+
+msgid "Environment"
 msgstr ""
 
 msgid "Error"
@@ -3666,6 +3971,12 @@ msgid "Error retrieving LDAP info: "
 msgstr ""
 
 msgid "Error text:"
+msgstr ""
+
+msgid "Error when adding a new schedule: "
+msgstr ""
+
+msgid "Error when creating a Service Dialog from Orchestration Template: "
 msgstr ""
 
 msgid "Error: Datastore import file upload expired"
@@ -3830,6 +4141,12 @@ msgstr ""
 msgid "ExtManagementSystem|Ipaddress"
 msgstr ""
 
+msgid "ExtManagementSystem|Last refresh date"
+msgstr ""
+
+msgid "ExtManagementSystem|Last refresh error"
+msgstr ""
+
 msgid "ExtManagementSystem|Name"
 msgstr ""
 
@@ -3837,6 +4154,12 @@ msgid "ExtManagementSystem|Port"
 msgstr ""
 
 msgid "ExtManagementSystem|Provider region"
+msgstr ""
+
+msgid "ExtManagementSystem|Realm"
+msgstr ""
+
+msgid "ExtManagementSystem|Security protocol"
 msgstr ""
 
 msgid "ExtManagementSystem|Uid ems"
@@ -3858,6 +4181,12 @@ msgid "External RSS Feed/URL"
 msgstr ""
 
 msgid "Failed"
+msgstr ""
+
+msgid "Failed (%s)"
+msgstr ""
+
+msgid "Failed system services of %s"
 msgstr ""
 
 msgid "False"
@@ -3901,9 +4230,6 @@ msgstr ""
 msgid "FileDepot|Name"
 msgstr ""
 
-msgid "FileDepot|Resource type"
-msgstr ""
-
 msgid "FileDepot|Support case"
 msgstr ""
 
@@ -3911,6 +4237,9 @@ msgid "FileDepot|Uri"
 msgstr ""
 
 msgid "Filename"
+msgstr ""
+
+msgid "Files"
 msgstr ""
 
 msgid "Files (%s)"
@@ -4147,6 +4476,9 @@ msgstr ""
 msgid "Front (...1234)"
 msgstr ""
 
+msgid "Full Name"
+msgstr ""
+
 msgid "Full&#160;Screen"
 msgstr ""
 
@@ -4201,9 +4533,6 @@ msgstr ""
 msgid "Group Information"
 msgstr ""
 
-msgid "Group Order"
-msgstr ""
-
 msgid "Group Records by up to 3 Columns"
 msgstr ""
 
@@ -4232,6 +4561,9 @@ msgid "GuestApplication|Arch"
 msgstr ""
 
 msgid "GuestApplication|Description"
+msgstr ""
+
+msgid "GuestApplication|Install time"
 msgstr ""
 
 msgid "GuestApplication|Language"
@@ -4414,9 +4746,6 @@ msgstr ""
 msgid "Header"
 msgstr ""
 
-msgid "Heartbeat Frequency"
-msgstr ""
-
 msgid "Hide Detail Rows"
 msgstr ""
 
@@ -4432,24 +4761,13 @@ msgstr ""
 msgid "Host"
 msgstr ""
 
-msgid "Host Based SmartProxy Settings"
-msgstr ""
-
 msgid "Host Default VNC Port Range"
-msgstr ""
-
-msgid "Host Item"
-msgstr ""
-
-msgid "Host Items"
 msgstr ""
 
 msgid "Host Name"
 msgstr ""
 
-msgid ""
-"Host OS is unknown or there are no available SmartProxy builds for the Host's "
-"OS"
+msgid "Host Name (or IPv4 or IPv6 address)"
 msgstr ""
 
 msgid "Host Protocol"
@@ -4458,9 +4776,10 @@ msgstr ""
 msgid "Host platform"
 msgstr ""
 
-msgid ""
-"Host to validate against, User ID and matching password fields are needed to p"
-"erform verification of credentials"
+msgid "Host service group"
+msgstr ""
+
+msgid "HostServiceGroup|Name"
 msgstr ""
 
 msgid "Hostname"
@@ -4469,10 +4788,13 @@ msgstr ""
 msgid "Hosts"
 msgstr ""
 
-msgid "Hosts & Clusters"
+msgid "Hosts / Nodes"
 msgstr ""
 
-msgid "Hosts (%s)"
+msgid "Hosts with failed %s"
+msgstr ""
+
+msgid "Hosts with running %s"
 msgstr ""
 
 msgid "Host|Admin disabled"
@@ -4503,6 +4825,9 @@ msgid "Host|Hostname"
 msgstr ""
 
 msgid "Host|Hyperthreading"
+msgstr ""
+
+msgid "Host|Hypervisor hostname"
 msgstr ""
 
 msgid "Host|Ipaddress"
@@ -4589,6 +4914,9 @@ msgstr ""
 msgid "IPMI IP Address"
 msgstr ""
 
+msgid "IPMI Present"
+msgstr ""
+
 msgid "ISO"
 msgstr ""
 
@@ -4660,6 +4988,9 @@ msgstr ""
 msgid "Inactive"
 msgstr ""
 
+msgid "Include Domain prefix in the path"
+msgstr ""
+
 msgid "Index"
 msgstr ""
 
@@ -4696,15 +5027,6 @@ msgstr ""
 msgid "Insight"
 msgstr ""
 
-msgid "Install Selected SmartProxy Build"
-msgstr ""
-
-msgid "Installed on Host: %s"
-msgstr ""
-
-msgid "Installed on Host: None"
-msgstr ""
-
 msgid "Instance Type:"
 msgstr ""
 
@@ -4727,6 +5049,9 @@ msgid "Internal RSS Feed"
 msgstr ""
 
 msgid "Interval"
+msgstr ""
+
+msgid "Invalid Single Sign-On credentials"
 msgstr ""
 
 msgid "Invalid button action."
@@ -5200,15 +5525,6 @@ msgstr ""
 msgid "Log Level"
 msgstr ""
 
-msgid "Log Viewer"
-msgstr ""
-
-msgid "Log Wrap Size"
-msgstr ""
-
-msgid "Log Wrap Time"
-msgstr ""
-
 msgid "Log collection error returned: "
 msgstr ""
 
@@ -5278,10 +5594,10 @@ msgstr ""
 msgid "MHz"
 msgstr ""
 
-msgid "Main Info"
+msgid "Mac address"
 msgstr ""
 
-msgid "Maintenance"
+msgid "Main Info"
 msgstr ""
 
 msgid "Manage Accordions"
@@ -5291,12 +5607,6 @@ msgid "Manage Accordions & Folders"
 msgstr ""
 
 msgid "Manage Reports"
-msgstr ""
-
-msgid "Managed VMs (%s)"
-msgstr ""
-
-msgid "Management Engine"
 msgstr ""
 
 msgid "Management Event"
@@ -5321,6 +5631,9 @@ msgid "Max Time"
 msgstr ""
 
 msgid "Max VMs"
+msgstr ""
+
+msgid "Medium"
 msgstr ""
 
 msgid "Member VMs (%s)"
@@ -5843,9 +6156,6 @@ msgid "Miq policy set"
 msgstr ""
 
 msgid "Miq product feature"
-msgstr ""
-
-msgid "Miq proxy"
 msgstr ""
 
 msgid "Miq queue"
@@ -6418,6 +6728,9 @@ msgstr ""
 msgid "MiqDatabase|Registration organization"
 msgstr ""
 
+msgid "MiqDatabase|Registration organization display name"
+msgstr ""
+
 msgid "MiqDatabase|Registration server"
 msgstr ""
 
@@ -6659,48 +6972,6 @@ msgid "MiqProductFeature|Name"
 msgstr ""
 
 msgid "MiqProductFeature|Protected"
-msgstr ""
-
-msgid "MiqProxy|Capabilities"
-msgstr ""
-
-msgid "MiqProxy|Created on"
-msgstr ""
-
-msgid "MiqProxy|Guid"
-msgstr ""
-
-msgid "MiqProxy|Last heartbeat"
-msgstr ""
-
-msgid "MiqProxy|Name"
-msgstr ""
-
-msgid "MiqProxy|Power state"
-msgstr ""
-
-msgid "MiqProxy|Remote config"
-msgstr ""
-
-msgid "MiqProxy|Settings"
-msgstr ""
-
-msgid "MiqProxy|Updated on"
-msgstr ""
-
-msgid "MiqProxy|Upgrade message"
-msgstr ""
-
-msgid "MiqProxy|Upgrade settings"
-msgstr ""
-
-msgid "MiqProxy|Upgrade status"
-msgstr ""
-
-msgid "MiqProxy|Version"
-msgstr ""
-
-msgid "MiqProxy|Ws port"
 msgstr ""
 
 msgid "MiqQueue|Args"
@@ -7495,9 +7766,6 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-msgid "Name (from chosen Host)"
-msgstr ""
-
 msgid "Name / Description"
 msgstr ""
 
@@ -7507,7 +7775,7 @@ msgstr ""
 msgid "Name: %s | Host Name: %s"
 msgstr ""
 
-msgid "Name: %s | Host Name: %s | IP Address: %s | Refresh Status: %s"
+msgid "Name: %s | Host Name: %s | Refresh Status: %s"
 msgstr ""
 
 msgid "Name: %s | Path: %s"
@@ -7616,7 +7884,7 @@ msgid_plural "New setting will affect VMs"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "New settings have been activated"
+msgid "New template content cannot be empty"
 msgstr ""
 
 msgid "Next"
@@ -7650,6 +7918,9 @@ msgid "No %s Tags have been assigned"
 msgstr ""
 
 msgid "No %s found"
+msgstr ""
+
+msgid "No %s found in the current region."
 msgstr ""
 
 msgid "No %s found."
@@ -7740,9 +8011,6 @@ msgid "No Choices Available"
 msgstr ""
 
 msgid "No Class found for explorer tree node type '%s'"
-msgstr ""
-
-msgid "No Clusters found in the current region."
 msgstr ""
 
 msgid "No Dashboards are defined for this group. Default dashboard will be shown."
@@ -7870,6 +8138,9 @@ msgstr ""
 msgid "No child VMs to move right, no action taken"
 msgstr ""
 
+msgid "No common configuration profiles available for the selected configured %s"
+msgstr ""
+
 msgid ""
 "No conditions defined. This policy is unconditional and will ALWAYS return tru"
 "e."
@@ -7899,9 +8170,6 @@ msgid "No expression defined, a condition must contain a valid expression."
 msgstr ""
 
 msgid "No filters defined."
-msgstr ""
-
-msgid "No log available, press Retrieve to get the SmartProxy log"
 msgstr ""
 
 msgid "No more than %{max} %{model} can be selected for %{action}"
@@ -7940,6 +8208,9 @@ msgstr ""
 msgid "No timer is attached to this Widget, its contents will not be updated."
 msgstr ""
 
+msgid "No type set"
+msgstr ""
+
 msgid "No usage data found for specified options"
 msgstr ""
 
@@ -7947,6 +8218,9 @@ msgid "No valid import records were found, please upload another file"
 msgstr ""
 
 msgid "No variables configured."
+msgstr ""
+
+msgid "Nodes"
 msgstr ""
 
 msgid "Non-VM Files"
@@ -8003,6 +8277,9 @@ msgid "Notification Frequency"
 msgstr ""
 
 msgid "Number of CPU's"
+msgstr ""
+
+msgid "Number of Hosts"
 msgstr ""
 
 msgid "Number of Instances"
@@ -8069,9 +8346,6 @@ msgid "One or more selected reports are not owned by your group, they cannot be 
 msgstr ""
 
 msgid "Only 1 Date or Date/Time element can be present in a Dialog"
-msgstr ""
-
-msgid "Only 1 SmartProxy can be selected for build deployment"
 msgstr ""
 
 msgid "Ontap aggregate derived metric"
@@ -9349,10 +9623,28 @@ msgstr ""
 msgid "Open the full report in a new window"
 msgstr ""
 
+msgid "OpenStack Status"
+msgstr ""
+
+msgid "Openstack Infra provider"
+msgstr ""
+
 msgid "Operating System"
 msgstr ""
 
 msgid "Operating system"
+msgstr ""
+
+msgid "Operating system flavor"
+msgstr ""
+
+msgid "OperatingSystemFlavor|Description"
+msgstr ""
+
+msgid "OperatingSystemFlavor|Manager ref"
+msgstr ""
+
+msgid "OperatingSystemFlavor|Name"
 msgstr ""
 
 msgid "OperatingSystem|Bitness"
@@ -9433,6 +9725,9 @@ msgstr ""
 msgid "Options %s: %s"
 msgstr ""
 
+msgid "Orchestration Stack"
+msgstr ""
+
 msgid "Orchestration Template"
 msgstr ""
 
@@ -9446,6 +9741,9 @@ msgid "Orchestration Templates"
 msgstr ""
 
 msgid "Orchestration stack"
+msgstr ""
+
+msgid "Orchestration stack could not be found."
 msgstr ""
 
 msgid "Orchestration stack output"
@@ -9523,6 +9821,24 @@ msgstr ""
 msgid "OrchestrationStack|Name"
 msgstr ""
 
+msgid "OrchestrationStack|Retired"
+msgstr ""
+
+msgid "OrchestrationStack|Retirement last warn"
+msgstr ""
+
+msgid "OrchestrationStack|Retirement requester"
+msgstr ""
+
+msgid "OrchestrationStack|Retirement state"
+msgstr ""
+
+msgid "OrchestrationStack|Retirement warn"
+msgstr ""
+
+msgid "OrchestrationStack|Retires on"
+msgstr ""
+
 msgid "OrchestrationStack|Status"
 msgstr ""
 
@@ -9532,7 +9848,10 @@ msgstr ""
 msgid "OrchestrationTemplate|Description"
 msgstr ""
 
-msgid "OrchestrationTemplate|Ems ref"
+msgid "OrchestrationTemplate|Draft"
+msgstr ""
+
+msgid "OrchestrationTemplate|Md5"
 msgstr ""
 
 msgid "OrchestrationTemplate|Name"
@@ -9652,16 +9971,10 @@ msgstr ""
 msgid "Parameters (%s)"
 msgstr ""
 
-msgid "Parent Cluster: %s"
+msgid "Parent %s: %s"
 msgstr ""
 
-msgid "Parent Cluster: None"
-msgstr ""
-
-msgid "Parent Host: %s"
-msgstr ""
-
-msgid "Parent Host: None"
+msgid "Parent %s: None"
 msgstr ""
 
 msgid "Parent Type"
@@ -9683,6 +9996,9 @@ msgid "Parent VM: None"
 msgstr ""
 
 msgid "Partition"
+msgstr ""
+
+msgid "Partition Table"
 msgstr ""
 
 msgid "Partition|Controller"
@@ -9819,7 +10135,7 @@ msgstr ""
 msgid "Placement - Options"
 msgstr ""
 
-msgid "Plan for VM placement on Clusters or Hosts"
+msgid "Plan for VM placement on %s or %s"
 msgstr ""
 
 msgid "Planning"
@@ -9832,6 +10148,9 @@ msgid "Platform Updates Available"
 msgstr ""
 
 msgid "Please contact your administrator for assistance."
+msgstr ""
+
+msgid "Please correct invalid %s Entry Point prior to saving"
 msgstr ""
 
 msgid "Please select a Cloud Tenant from the Environment Tab"
@@ -9942,17 +10261,6 @@ msgstr ""
 msgid "Press your browser's Back button or click a tab to continue"
 msgstr ""
 
-msgid "Pressing 'Save' will deploy the selected SmartProxy build to the Host."
-msgstr ""
-
-msgid ""
-"Pressing 'Save' will save any Host credential changes and deploy the selected "
-"SmartProxy build to the Host."
-msgstr ""
-
-msgid "Pressing the Activate button"
-msgstr ""
-
 msgid "Pressing the back button during a session."
 msgstr ""
 
@@ -9971,6 +10279,9 @@ msgstr ""
 msgid "Priority Workers"
 msgstr ""
 
+msgid "Private Key"
+msgstr ""
+
 msgid "Process ID"
 msgstr ""
 
@@ -9981,48 +10292,6 @@ msgid "Product Assistance"
 msgstr ""
 
 msgid "Product Features (%s)"
-msgstr ""
-
-msgid "Product Update Info"
-msgstr ""
-
-msgid "Product update"
-msgstr ""
-
-msgid "ProductUpdate|Arch"
-msgstr ""
-
-msgid "ProductUpdate|Build"
-msgstr ""
-
-msgid "ProductUpdate|Component"
-msgstr ""
-
-msgid "ProductUpdate|Created on"
-msgstr ""
-
-msgid "ProductUpdate|Description"
-msgstr ""
-
-msgid "ProductUpdate|Md5"
-msgstr ""
-
-msgid "ProductUpdate|Name"
-msgstr ""
-
-msgid "ProductUpdate|Platform"
-msgstr ""
-
-msgid "ProductUpdate|Update type"
-msgstr ""
-
-msgid "ProductUpdate|Updated on"
-msgstr ""
-
-msgid "ProductUpdate|Version"
-msgstr ""
-
-msgid "ProductUpdate|Vmdb schema version"
 msgstr ""
 
 msgid "Profile Alerts:"
@@ -10043,6 +10312,18 @@ msgstr ""
 msgid "Providers"
 msgstr ""
 
+msgid "Provider|Guid"
+msgstr ""
+
+msgid "Provider|Name"
+msgstr ""
+
+msgid "Provider|Url"
+msgstr ""
+
+msgid "Provider|Verify ssl"
+msgstr ""
+
 msgid "Provision %s"
 msgstr ""
 
@@ -10058,7 +10339,7 @@ msgstr ""
 msgid "Provision Order"
 msgstr ""
 
-msgid "Provisioned Hosts"
+msgid "Provisioned %s"
 msgstr ""
 
 msgid "Provisioned VMs"
@@ -10071,24 +10352,6 @@ msgid "Provisioning Entry Point"
 msgstr ""
 
 msgid "Provisioning Entry Point (NameSpace/Class/Instance)"
-msgstr ""
-
-msgid "Proxy task"
-msgstr ""
-
-msgid "ProxyTask|Command"
-msgstr ""
-
-msgid "ProxyTask|Created on"
-msgstr ""
-
-msgid "ProxyTask|Priority"
-msgstr ""
-
-msgid "ProxyTask|State"
-msgstr ""
-
-msgid "ProxyTask|Updated on"
 msgstr ""
 
 msgid "Pxe image"
@@ -10175,6 +10438,9 @@ msgstr ""
 msgid "Quotas"
 msgstr ""
 
+msgid "RSA key pair"
+msgstr ""
+
 msgid "RSS"
 msgstr ""
 
@@ -10208,7 +10474,10 @@ msgstr ""
 msgid "Read Only %{model} \"%{name}\" cannot be edited"
 msgstr ""
 
-msgid "Read Only Mode"
+msgid "Read only"
+msgstr ""
+
+msgid "Realm"
 msgstr ""
 
 msgid "Reason"
@@ -10359,6 +10628,9 @@ msgid "Remove"
 msgstr ""
 
 msgid "Remove %s"
+msgstr ""
+
+msgid "Remove Tags"
 msgstr ""
 
 msgid "Remove Tags Settings"
@@ -10745,12 +11017,6 @@ msgstr ""
 msgid "Retirement Warning"
 msgstr ""
 
-msgid "Retrieve log returned: "
-msgstr ""
-
-msgid "Retrieve the current SmartProxy log"
-msgstr ""
-
 msgid "Right Size Recommendation for %{model} \"%{name}\""
 msgstr ""
 
@@ -10788,33 +11054,6 @@ msgid "Row Count"
 msgstr ""
 
 msgid "Rows"
-msgstr ""
-
-msgid "Rr pending change"
-msgstr ""
-
-msgid "Rr sync state"
-msgstr ""
-
-msgid "RrPendingChange|Change key"
-msgstr ""
-
-msgid "RrPendingChange|Change new key"
-msgstr ""
-
-msgid "RrPendingChange|Change table"
-msgstr ""
-
-msgid "RrPendingChange|Change time"
-msgstr ""
-
-msgid "RrPendingChange|Change type"
-msgstr ""
-
-msgid "RrSyncState|State"
-msgstr ""
-
-msgid "RrSyncState|Table name"
 msgstr ""
 
 msgid "Rss feed"
@@ -10862,6 +11101,9 @@ msgstr ""
 msgid "Running"
 msgstr ""
 
+msgid "Running (%s)"
+msgstr ""
+
 msgid "Running Processes (%s Ago)"
 msgstr ""
 
@@ -10872,6 +11114,9 @@ msgid "Running Processes (0)"
 msgstr ""
 
 msgid "Running Processes (Not Available)"
+msgstr ""
+
+msgid "Running system services of %s"
 msgstr ""
 
 msgid ""
@@ -10934,6 +11179,15 @@ msgid "Saved Reports"
 msgstr ""
 
 msgid "Savings"
+msgstr ""
+
+msgid "Scale"
+msgstr ""
+
+msgid "Scale Infrastructure Provider"
+msgstr ""
+
+msgid "Scaling"
 msgstr ""
 
 msgid "Scan history"
@@ -11095,6 +11349,9 @@ msgstr ""
 msgid "Security Groups (%s)"
 msgstr ""
 
+msgid "Security Protocol"
+msgstr ""
+
 msgid "Security group"
 msgstr ""
 
@@ -11110,22 +11367,19 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
+msgid "Select %s to validate against"
+msgstr ""
+
 msgid "Select Alerts to be Evaluated"
 msgstr ""
 
 msgid "Select Entry Point %s"
 msgstr ""
 
-msgid "Select Host to validate against"
-msgstr ""
-
 msgid "Select Policy Profiles"
 msgstr ""
 
 msgid "Select Server:"
-msgstr ""
-
-msgid "Select SmartProxy Host"
 msgstr ""
 
 msgid "Select Tags to apply"
@@ -11159,9 +11413,6 @@ msgid "Select a node on the left to view Utilization information."
 msgstr ""
 
 msgid "Select a node on the left to view Utilization report."
-msgstr ""
-
-msgid "Select a product update to view activation options"
 msgstr ""
 
 msgid "Select a reference VM or Manual Input source to Submit the Planning Options"
@@ -11236,9 +11487,6 @@ msgstr ""
 msgid "Selections"
 msgstr ""
 
-msgid "Self Update Frequency"
-msgstr ""
-
 msgid "Send E-mail"
 msgstr ""
 
@@ -11285,8 +11533,8 @@ msgid "Server Roles"
 msgstr ""
 
 msgid ""
-"Server information, User ID and matching password fields are needed to perform"
-" verification of credentials"
+"Server information, Username and matching password fields are needed to perfor"
+"m verification of credentials"
 msgstr ""
 
 msgid "Server role"
@@ -11326,6 +11574,15 @@ msgid "Service"
 msgstr ""
 
 msgid "Service Catalogs"
+msgstr ""
+
+msgid "Service Dialog \"%s\" was successfully created"
+msgstr ""
+
+msgid "Service Dialog Information"
+msgstr ""
+
+msgid "Service Dialog Name"
 msgstr ""
 
 msgid "Service Selection"
@@ -11448,6 +11705,9 @@ msgstr ""
 msgid "Service|Retirement last warn"
 msgstr ""
 
+msgid "Service|Retirement requester"
+msgstr ""
+
 msgid "Service|Retirement state"
 msgstr ""
 
@@ -11502,9 +11762,6 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-msgid "Settings activation returned: "
-msgstr ""
-
 msgid "Settings and Operations"
 msgstr ""
 
@@ -11517,10 +11774,40 @@ msgstr ""
 msgid "Show %s"
 msgstr ""
 
+msgid "Show %s & %s"
+msgstr ""
+
+msgid "Show %s OS information"
+msgstr ""
+
 msgid "Show %s Quadrants"
 msgstr ""
 
+msgid "Show %s devices"
+msgstr ""
+
+msgid "Show %s drift history"
+msgstr ""
+
+msgid "Show %s network"
+msgstr ""
+
+msgid "Show %s parent %s"
+msgstr ""
+
+msgid "Show %s storage adapters"
+msgstr ""
+
 msgid "Show Capacity & Utilization"
+msgstr ""
+
+msgid "Show Container Groups"
+msgstr ""
+
+msgid "Show Container Nodes"
+msgstr ""
+
+msgid "Show Container Services"
 msgstr ""
 
 msgid "Show Costs by"
@@ -11532,31 +11819,13 @@ msgstr ""
 msgid "Show Host Events"
 msgstr ""
 
-msgid "Show Host OS information"
-msgstr ""
-
-msgid "Show Host devices"
-msgstr ""
-
-msgid "Show Host network"
-msgstr ""
-
-msgid "Show Host storage adapters"
-msgstr ""
-
-msgid "Show Hosts"
-msgstr ""
-
-msgid "Show Hosts & Clusters"
-msgstr ""
-
 msgid "Show Input Parameters"
 msgstr ""
 
 msgid "Show Other VM files on this %s"
 msgstr ""
 
-msgid "Show Parent Host"
+msgid "Show Parent %s"
 msgstr ""
 
 msgid "Show Past Dates"
@@ -11607,9 +11876,6 @@ msgstr ""
 msgid "Show VMs & Templates"
 msgstr ""
 
-msgid "Show VMs in this Cluster, but not in Resource Pools below"
-msgstr ""
-
 msgid "Show VMs in this Resource Pool, but not in Resource Pools below"
 msgstr ""
 
@@ -11640,13 +11906,7 @@ msgstr ""
 msgid "Show all Templates"
 msgstr ""
 
-msgid "Show all Templates in this Cluster"
-msgstr ""
-
 msgid "Show all VMs"
-msgstr ""
-
-msgid "Show all VMs in this Cluster"
 msgstr ""
 
 msgid "Show all VMs in this Resource Pool"
@@ -11664,22 +11924,13 @@ msgstr ""
 msgid "Show all managed %s"
 msgstr ""
 
-msgid "Show all managed Clusters"
+msgid "Show all registered %s"
 msgstr ""
 
-msgid "Show all managed Hosts"
-msgstr ""
-
-msgid "Show all managed VMs"
-msgstr ""
-
-msgid "Show all registered Hosts"
+msgid "Show all used %s on this %s"
 msgstr ""
 
 msgid "Show at Login"
-msgstr ""
-
-msgid "Show cluster drift history"
 msgstr ""
 
 msgid "Show configuration"
@@ -11700,13 +11951,31 @@ msgstr ""
 msgid "Show events from last:"
 msgstr ""
 
-msgid "Show host drift history"
-msgstr ""
-
 msgid "Show hourly data from:"
 msgstr ""
 
 msgid "Show in Console"
+msgstr ""
+
+msgid "Show list of all %s"
+msgstr ""
+
+msgid "Show list of configuration files of %s"
+msgstr ""
+
+msgid "Show list of failed %s"
+msgstr ""
+
+msgid "Show list of hosts with %s"
+msgstr ""
+
+msgid "Show list of hosts with failed %s"
+msgstr ""
+
+msgid "Show list of hosts with running %s"
+msgstr ""
+
+msgid "Show list of running %s"
 msgstr ""
 
 msgid "Show member VMs"
@@ -11739,13 +12008,10 @@ msgstr ""
 msgid "Show snapshot info"
 msgstr ""
 
-msgid "Show the Host this SmartProxy is installed on"
-msgstr ""
-
 msgid "Show the Win32 services installed on this VM"
 msgstr ""
 
-msgid "Show the advanced settings on this Host"
+msgid "Show the advanced settings on this %s"
 msgstr ""
 
 msgid "Show the advanced settings on this VM"
@@ -11757,16 +12023,16 @@ msgstr ""
 msgid "Show the file system drivers installed on this VM"
 msgstr ""
 
-msgid "Show the files on this Host"
+msgid "Show the files on this %s"
 msgstr ""
 
 msgid "Show the files on this VM"
 msgstr ""
 
-msgid "Show the firewall rules on this Host"
+msgid "Show the firewall rules on this %s"
 msgstr ""
 
-msgid "Show the groups defined on this Host"
+msgid "Show the groups defined on this %s"
 msgstr ""
 
 msgid "Show the groups defined on this VM"
@@ -11775,10 +12041,10 @@ msgstr ""
 msgid "Show the kernel drivers installed on this VM"
 msgstr ""
 
-msgid "Show the packages installed on this Host"
+msgid "Show the packages installed on this %s"
 msgstr ""
 
-msgid "Show the patches installed on this Host"
+msgid "Show the patches installed on this %s"
 msgstr ""
 
 msgid "Show the patches installed on this VM"
@@ -11787,13 +12053,19 @@ msgstr ""
 msgid "Show the registry items on this VM"
 msgstr ""
 
-msgid "Show the services installed on this Host"
+msgid "Show the services installed on this %s"
 msgstr ""
 
-msgid "Show the users defined on this Host"
+msgid "Show the users defined on this %s"
 msgstr ""
 
 msgid "Show the users defined on this VM"
+msgstr ""
+
+msgid "Show this %s parent %s"
+msgstr ""
+
+msgid "Show this %s's %s"
 msgstr ""
 
 msgid "Show this Availability Zone's parent %s"
@@ -11805,22 +12077,13 @@ msgstr ""
 msgid "Show this Flavor's parent %s"
 msgstr ""
 
-msgid "Show this Host's parent %s"
-msgstr ""
-
-msgid "Show this Host's parent Cluster"
-msgstr ""
-
 msgid "Show this Security Group's parent %s"
-msgstr ""
-
-msgid "Show this SmartProxy's %s"
 msgstr ""
 
 msgid "Show this VM's parent"
 msgstr ""
 
-msgid "Show this VM's parent Host"
+msgid "Show this VM's parent %s"
 msgstr ""
 
 msgid "Show this VM's parent Service"
@@ -11829,7 +12092,13 @@ msgstr ""
 msgid "Show this Vm's parent %s"
 msgstr ""
 
-msgid "Show tree of all VMs by Resource Pool in this Cluster"
+msgid "Show this container group's parent %s"
+msgstr ""
+
+msgid "Show this container node's parent %s"
+msgstr ""
+
+msgid "Show this container service's parent %s"
 msgstr ""
 
 msgid "Show tree of all VMs in this Resource Pool"
@@ -11886,24 +12155,7 @@ msgstr ""
 msgid "Smart Management"
 msgstr ""
 
-msgid "SmartProxies"
-msgstr ""
-
-msgid "SmartProxy"
-msgstr ""
-
-msgid ""
-"SmartProxy \"%s\" log retrieval has been started . . . refresh page to view the "
-"log"
-msgstr ""
-
-msgid "SmartProxy Affinity"
-msgstr ""
-
 msgid "SmartProxy Server IP"
-msgstr ""
-
-msgid "SmartProxy default settings saved"
 msgstr ""
 
 msgid "Snapshot"
@@ -12023,7 +12275,7 @@ msgstr ""
 msgid "Start TLS Automatically"
 msgstr ""
 
-msgid "Start the Host Discovery"
+msgid "Start the %s Discovery"
 msgstr ""
 
 msgid "Started On"
@@ -12299,6 +12551,9 @@ msgstr ""
 msgid "SystemService|Depend on service"
 msgstr ""
 
+msgid "SystemService|Dependencies"
+msgstr ""
+
 msgid "SystemService|Description"
 msgstr ""
 
@@ -12327,6 +12582,15 @@ msgid "SystemService|Start"
 msgstr ""
 
 msgid "SystemService|Svc type"
+msgstr ""
+
+msgid "SystemService|Systemd active"
+msgstr ""
+
+msgid "SystemService|Systemd load"
+msgstr ""
+
+msgid "SystemService|Systemd sub"
 msgstr ""
 
 msgid "SystemService|Typename"
@@ -12413,6 +12677,9 @@ msgstr ""
 msgid "Templates (0)"
 msgstr ""
 
+msgid "Tenancy"
+msgstr ""
+
 msgid "Tenants"
 msgstr ""
 
@@ -12458,9 +12725,6 @@ msgstr ""
 msgid "The Remote Console is connecting"
 msgstr ""
 
-msgid "The SmartProxy log must be retrieved before it can be downloaded"
-msgstr ""
-
 msgid ""
 "The VM has been suspended, powered off or the connection to the server has bee"
 "n lost. \n"
@@ -12503,9 +12767,6 @@ msgstr ""
 msgid "The selected Schedules have been queued to run"
 msgstr ""
 
-msgid "The selected SmartProxy can not be managed because the Host is not powered on"
-msgstr ""
-
 msgid "The selected Task was cancelled"
 msgstr ""
 
@@ -12519,9 +12780,6 @@ msgid "The test email is being delivered, check \"%s\" to verify it was successf
 msgstr ""
 
 msgid "The user is not authorized for this task or item."
-msgstr ""
-
-msgid "There are no available SmartProxies to deploy on Host \"%s\""
 msgstr ""
 
 msgid ""
@@ -12708,7 +12966,7 @@ msgstr ""
 msgid "Total number of VMs that can fit on all of the above %s: %s"
 msgstr ""
 
-msgid "Totals for Hosts"
+msgid "Totals for %s"
 msgstr ""
 
 msgid "Totals for Service VMs"
@@ -12841,6 +13099,9 @@ msgid ""
 "o differ."
 msgstr ""
 
+msgid "Unable to initiate scaling: %s"
+msgstr ""
+
 msgid "Unassigned"
 msgstr ""
 
@@ -12907,6 +13168,9 @@ msgstr ""
 msgid "Uploaded File '%s'"
 msgstr ""
 
+msgid "Url"
+msgstr ""
+
 msgid "Use"
 msgstr ""
 
@@ -12940,6 +13204,9 @@ msgstr ""
 msgid "Use the Browse button to locate an Upload file"
 msgstr ""
 
+msgid "Used for SSH connection to all %s in this provider."
+msgstr ""
+
 msgid "Used for access to IPMI."
 msgstr ""
 
@@ -12962,15 +13229,6 @@ msgid "User Group Sequence was saved"
 msgstr ""
 
 msgid "User Group Sequencing for LDAP Look Up:"
-msgstr ""
-
-msgid "User ID"
-msgstr ""
-
-msgid "User ID must be entered if Password is entered"
-msgstr ""
-
-msgid "User Id"
 msgstr ""
 
 msgid "User Information"
@@ -13012,10 +13270,10 @@ msgstr ""
 msgid "User:"
 msgstr ""
 
-msgid "Userid"
+msgid "Username"
 msgstr ""
 
-msgid "Username"
+msgid "Username must be entered if Password is entered"
 msgstr ""
 
 msgid "Users"
@@ -13127,8 +13385,8 @@ msgid "VM Snapshot Files"
 msgstr ""
 
 msgid ""
-"VM data will be collected for VMs under selected Hosts only. Data is collected"
-" for a Cluster and all of its Hosts when at least one Host is selected."
+"VM data will be collected for VMs under selected %s only. Data is collected fo"
+"r a %s and all of its %s when at least one %s is selected."
 msgstr ""
 
 msgid "VM successfully removed from service \"%s\""
@@ -13185,13 +13443,13 @@ msgstr ""
 msgid "Validate the Amazon Settings"
 msgstr ""
 
-msgid "Validate the LDAP Settings by binding with the Host"
+msgid "Validate the LDAP Settings by binding with the %s"
 msgstr ""
 
 msgid "Validate the credentials by logging into the Server"
 msgstr ""
 
-msgid "Validate the credentials by logging into the selected Host"
+msgid "Validate the credentials by logging into the selected %s"
 msgstr ""
 
 msgid "Validator Rule"
@@ -13239,16 +13497,13 @@ msgstr ""
 msgid "Verify Password"
 msgstr ""
 
+msgid "Verify Peer Certificate"
+msgstr ""
+
 msgid "Version"
 msgstr ""
 
 msgid "Version / Build"
-msgstr ""
-
-msgid "Version Info"
-msgstr ""
-
-msgid "Version to Deploy"
 msgstr ""
 
 msgid "View %s Folder"
@@ -13297,9 +13552,6 @@ msgid "View Zones"
 msgstr ""
 
 msgid "View the %s Guide"
-msgstr ""
-
-msgid "View the SmartProxy log"
 msgstr ""
 
 msgid "View this %s Policy"
@@ -13425,12 +13677,6 @@ msgstr ""
 msgid "VmOrTemplate|Autostart"
 msgstr ""
 
-msgid "VmOrTemplate|Blackbox exists"
-msgstr ""
-
-msgid "VmOrTemplate|Blackbox validated"
-msgstr ""
-
 msgid "VmOrTemplate|Boot time"
 msgstr ""
 
@@ -13543,6 +13789,9 @@ msgid "VmOrTemplate|Retired"
 msgstr ""
 
 msgid "VmOrTemplate|Retirement last warn"
+msgstr ""
+
+msgid "VmOrTemplate|Retirement requester"
 msgstr ""
 
 msgid "VmOrTemplate|Retirement state"
@@ -13784,9 +14033,6 @@ msgstr ""
 msgid "Web Services"
 msgstr ""
 
-msgid "Web Services Listen Port"
-msgstr ""
-
 msgid "Wednesday"
 msgstr ""
 
@@ -13921,13 +14167,7 @@ msgstr ""
 msgid "Zoom in on this chart"
 msgstr ""
 
-msgid "[Server '%{server_name}' is currently running Version %{server_version}]"
-msgstr ""
-
 msgid "active"
-msgstr ""
-
-msgid "and restart the Server!"
 msgstr ""
 
 msgid "at"
@@ -13940,9 +14180,6 @@ msgid "back"
 msgstr ""
 
 msgid "bold"
-msgstr ""
-
-msgid "choose"
 msgstr ""
 
 msgid "cpu_affinity"
@@ -14004,6 +14241,11 @@ msgstr ""
 
 msgid "selected to copy"
 msgstr ""
+
+msgid "system"
+msgid_plural "systems"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "that match the entered search string"
 msgstr ""
