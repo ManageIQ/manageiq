@@ -42,13 +42,13 @@ class EmsInfraController < ApplicationController
     infra = EmsOpenstackInfra.find(params[:id])
     if assigned_hosts > infra.hosts.count
       # Validate number of selected hosts is not more than available
-      log_and_flash_message(_("Assigning #{assigned_hosts} but only have #{infra.hosts.count} hosts available."))
+      log_and_flash_message(_("Assigning %{hosts} but only have %{hosts_count} hosts available.") % {:hosts => assigned_hosts, :hosts_count => infra.hosts.count.to_s})
     else
       scale_parameters_formatted = []
       return_message = _("Scaling")
       @count_parameters.each do |p|
         if !scale_parameters[p.name].nil? && scale_parameters[p.name] != p.value
-          return_message += _(" #{p.name} from #{p.value} to #{scale_parameters[p.name]}")
+          return_message += _(" %{name} from %{value} to %{parameters} ") % {:name => p.name, :value => p.value, :parameters => scale_parameters[p.name]}
           scale_parameters_formatted << {"name" => p.name, "value" => scale_parameters[p.name]}
         end
       end
@@ -58,7 +58,7 @@ class EmsInfraController < ApplicationController
           @stack.raw_update_stack(:parameters => scale_parameters_formatted)
           redirect_to :action => 'show', :id => params[:id], :flash_msg => return_message
         rescue => ex
-          log_and_flash_message(_("Unable to initiate scaling: #{ex}"))
+          log_and_flash_message(_("Unable to initiate scaling: %s") % ex)
         end
       else
         # No values were changed
