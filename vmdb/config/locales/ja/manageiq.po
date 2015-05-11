@@ -15,6 +15,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Zanata 3.6.0\n"
 
+msgid " # of Days"
+msgstr ""
+
 msgid " %s Assignments"
 msgstr " %s を指定"
 
@@ -37,11 +40,14 @@ msgstr " 選択したアラート:"
 msgid " that match the entered search string"
 msgstr " 入力した検索文字列に一致する"
 
-msgid " will shut down "
+msgid "\" #{p.name} from #{p.value} to #{scale_parameters[p.name]}\""
 msgstr ""
 
 msgid "\"#{db}Performance.#{c}\""
 msgstr "\"#{db}パフォーマンス。#{c}\""
+
+msgid "\"#{session[:customer_name]} Tags\""
+msgstr ""
 
 #, fuzzy
 msgid "\"%s\" is not a valid Orchestration Template type"
@@ -68,6 +74,22 @@ msgstr "\"%{name}\": %{rep_count} が使用中のため、削除できません"
 msgid "\"%{record}\": %{task} successfully initiated"
 msgstr "\"%{record}\": %{task} が正常に開始されました"
 
+msgid ""
+"\"Assigning #{assigned_hosts} but only have #{infra.hosts.count} hosts availabl"
+"e.\""
+msgstr ""
+
+msgid "\"Credential validation was not successful: #{details}\""
+msgstr ""
+
+msgid ""
+"\"No common configuration profiles available for the selected configured\n"
+"        #{_('system').pluralize(provisioning_ids.size)}\""
+msgstr ""
+
+msgid "\"Unable to initiate scaling: #{ex}\""
+msgstr ""
+
 msgid "% Savings"
 msgstr "% 保存"
 
@@ -81,6 +103,21 @@ msgid "%s"
 msgstr "%s"
 
 msgid "%s  Ending with"
+msgstr ""
+
+msgid "%s & %s"
+msgstr ""
+
+#, fuzzy
+#, fuzzy
+msgid "%s (%s)"
+msgstr "ファイルシステム"
+
+#, fuzzy
+msgid "%s (All %s)"
+msgstr "%sのすべて"
+
+msgid "%s (All cloud tenants present on this host)"
 msgstr ""
 
 msgid "%s Being Tagged"
@@ -141,9 +178,6 @@ msgstr "%s ポリシー"
 msgid "%s Policy Assignment"
 msgstr "%s ポリシー指定"
 
-msgid "%s Policy Profiles"
-msgstr "%s ポリシープロフィール"
-
 msgid "%s Policy Simulation"
 msgstr "%s ポリシーシミュレーション"
 
@@ -199,9 +233,7 @@ msgid "%s is required"
 msgstr "%s が必要です"
 
 msgid "%s must be alphanumeric characters and underscores without spaces"
-msgstr ""
-"%s は英数文字およびアンダースコアから構成されている必要がありスペースは使用で"
-"きません"
+msgstr "%s は英数文字およびアンダースコアから構成されている必要がありスペースは使用できません"
 
 msgid "%s must be an integer"
 msgstr "%s は整数であることが必要です"
@@ -214,9 +246,6 @@ msgstr "LDAP グループ検索を実行するためには %s の入力が必要
 
 msgid "%s must be numeric"
 msgstr "%s は数字であることが必要です"
-
-msgid "%s must be numeric and greater than zero"
-msgstr "%s は 1 以上の数字であることが必要です"
 
 msgid "%s must be selected"
 msgstr "%s の選択が必要です"
@@ -260,6 +289,11 @@ msgstr "タイムフィールドが最低1つ選択されない限り %s タブ�
 
 msgid "%s tab is not available until at least 1 field has been selected"
 msgstr "フィールドが最低 1 つ選択されない限り %s タブは利用できません "
+
+msgid ""
+"%s to validate against, Username and matching password fields are needed to pe"
+"rform verification of credentials"
+msgstr ""
 
 msgid "%s was cancelled by the user"
 msgstr "%s がユーザによりキャンセルされました"
@@ -369,12 +403,10 @@ msgstr "選択した %{model} に %{task} は適用されません"
 
 #, fuzzy
 msgid "%{task} initiated for %{count_model} (Foreman) from the CFME Database"
-msgstr ""
-"CFME データベースから %{count_model} 用の %{task} が正常に開始されました"
+msgstr "CFME データベースから %{count_model} 用の %{task} が正常に開始されました"
 
 msgid "%{task} initiated for %{count_model} from the CFME Database"
-msgstr ""
-"CFME データベースから %{count_model} 用の %{task} が正常に開始されました"
+msgstr "CFME データベースから %{count_model} 用の %{task} が正常に開始されました"
 
 msgid "%{typ} %{model}"
 msgstr "%{typ} %{model}"
@@ -386,28 +418,22 @@ msgid "%{typ} %{model} \"%{name}\" (current)"
 msgstr "%{typ} %{model} \"%{name}\" (current)"
 
 msgid ""
-"%{typ} Request was Submitted, you will be notified when your %{title} are "
-"ready"
-msgstr ""
-"%{typ} リクエストが提出されました、あなたの　%{title} が読まれた時点で通知が"
-"送付されます"
+"%{typ} Request was Submitted, you will be notified when your %{title} are read"
+"y"
+msgstr "%{typ} リクエストが提出されました、あなたの　%{title} が読まれた時点で通知が送付されます"
 
 msgid ""
-"%{typ} Request was re-submitted, you will be notified when your %{title} are "
-"ready"
-msgstr ""
-"%{typ} リクエストが再提出されました、あなたの %{title} が読まれた時点で通知が"
-"送付されます"
+"%{typ} Request was re-submitted, you will be notified when your %{title} are r"
+"eady"
+msgstr "%{typ} リクエストが再提出されました、あなたの %{title} が読まれた時点で通知が送付されます"
 
 msgid "%{typ} in %{model} \"%{name}\""
 msgstr "%{model} 中の%{typ} \"%{name}\""
 
 msgid ""
-"%{typ} settings saved for CFME Server \"%{name} [%{server_id}]\" in Zone "
-"\"%{zone}\""
-msgstr ""
-"%{typ} 設定が CFME サーバー用に保存されました\"%{name} [%{server_id}]\"ゾーン"
-"中\"%{zone}\""
+"%{typ} settings saved for CFME Server \"%{name} [%{server_id}]\" in Zone \"%{zone"
+"}\""
+msgstr "%{typ} 設定が CFME サーバー用に保存されました\"%{name} [%{server_id}]\"ゾーン中\"%{zone}\""
 
 msgid "%{val} missing for %{field}"
 msgstr "%{val} が%{field}用に不足しています"
@@ -423,9 +449,6 @@ msgstr "'%s'は編集できません"
 
 msgid "(%s bytes)"
 msgstr "（%s バイト）"
-
-msgid "(1-999 MB)"
-msgstr ""
 
 msgid "(All)"
 msgstr "（すべて）"
@@ -468,17 +491,13 @@ msgstr "現"
 msgid "(leave blank for default)"
 msgstr "（デフォルトの場合は空欄にしてください）"
 
-msgid "(max 6 digits)"
-msgstr "（最大6桁）"
-
 msgid "(optional) the address of an alternate service"
 msgstr ""
 
 msgid "(optional) your HTTP proxy information"
 msgstr ""
 
-msgid ""
-"* 'Name' and 'Single Value' fields cannot be edited after adding a category."
+msgid "* 'Name' and 'Single Value' fields cannot be edited after adding a category."
 msgstr ""
 
 msgid "* Base the report on"
@@ -487,31 +506,26 @@ msgstr ""
 msgid "* Cannot be changed while this Alert belongs to an Alert Profile."
 msgstr "* このアラートがアラートプロファイル中に存在する間は変更できません。"
 
-msgid ""
-"* Caution: Changing these fields will clear all selected values below them!"
+msgid "* Caution: Changing these fields will clear all selected values below them!"
+msgstr ""
+
+msgid "* Changing the Time Zone will reset the Starting Date and Time fields below"
+msgstr ""
+
+msgid "* Changing the Zone will reset all of this Server's priorities to secondary."
 msgstr ""
 
 msgid ""
-"* Changing the Time Zone will reset the Starting Date and Time fields below"
-msgstr ""
-
-msgid ""
-"* Changing the Zone will reset all of this Server's priorities to secondary."
-msgstr ""
-
-msgid ""
-"* Checking this box will remove this setting from all other PXE Images on "
-"this PXE Server"
-msgstr ""
-"* このボックスをチェックすると、この PXE サーバーにある他のすべてのPXEイメー"
-"ジからこの設定が削除されます"
+"* Checking this box will remove this setting from all other PXE Images on this"
+" PXE Server"
+msgstr "* このボックスをチェックすると、この PXE サーバーにある他のすべてのPXEイメージからこの設定が削除されます"
 
 msgid "* Click on any MyTag to permanently delete and unassign it."
 msgstr "* MyTagを永久削除し指定解除するには、それをクリックしてください。"
 
 msgid ""
-"* Daily charts only include days for which all 24 hours of data has been "
-"collected."
+"* Daily charts only include days for which all 24 hours of data has been colle"
+"cted."
 msgstr ""
 
 #, fuzzy
@@ -525,9 +539,7 @@ msgid "* Dates/Times on this page are based on time zone: %s."
 msgstr ""
 
 msgid "* Enter Policy Simulation options on the left and press Submit"
-msgstr ""
-"* 左側のポリシーシミュレーションのオプションを入力して「提出」を押してくださ"
-"い"
+msgstr "* 左側のポリシーシミュレーションのオプションを入力して「提出」を押してください"
 
 msgid "* Enter a reason for this approval and press Submit"
 msgstr "* 承認の理由を入力して「提出」を押してください"
@@ -539,33 +551,25 @@ msgid "* Fields are read only for default Widgets"
 msgstr ""
 
 msgid ""
-"* If all Conditions are removed from a Policy, it will be unconditional and "
-"always evaluate to true."
-msgstr ""
-"* ポリシーからすべての条件が削除された場合は、無条件となり常に真の評価となり"
-"ます。"
+"* If all Conditions are removed from a Policy, it will be unconditional and al"
+"ways evaluate to true."
+msgstr "* ポリシーからすべての条件が削除された場合は、無条件となり常に真の評価となります。"
 
 msgid ""
-"* Information shown is based on available trend data from %s to %s in the %s "
-"time zone."
-msgstr ""
-"* 表示されている情報は %s タイムゾーンの %s から %s の入手可能なトレンドデー"
-"タに基づいたものです"
+"* Information shown is based on available trend data from %s to %s in the %s t"
+"ime zone."
+msgstr "* 表示されている情報は %s タイムゾーンの %s から %s の入手可能なトレンドデータに基づいたものです"
 
 msgid "* Information shown is based on available trend data going back %s."
-msgstr ""
-"* 表示されている情報は%sにさかのぼった入手可能なトレンドデータに基づいたもの"
-"です。"
+msgstr "* 表示されている情報は%sにさかのぼった入手可能なトレンドデータに基づいたものです。"
 
 msgid "* Items in"
 msgstr "* 次のアイテム"
 
 msgid ""
-"* Items in <font color=\"red\"><i>red italics</i></font> do not change the "
-"outcome of the scope or expression."
-msgstr ""
-"* <font color=\"red\"><i>赤イタリック</i><</font> のアイテムはスコープまたは"
-"数式の結果を変更しません。"
+"* Items in <font color=\"red\"><i>red italics</i></font> do not change the outco"
+"me of the scope or expression."
+msgstr "* <font color=\"red\"><i>赤イタリック</i><</font> のアイテムはスコープまたは数式の結果を変更しません。"
 
 msgid "* No Actions are configured for this Event."
 msgstr "* このイベントにはアクションが構成されていません。"
@@ -591,9 +595,7 @@ msgstr "* 推奨の内容に関しては最低でもCPU: %s およびメモリ�
 
 #, fuzzy
 msgid "* Report is not owned by your group so it cannot be removed"
-msgstr ""
-"選択したレポートのひとつまたはそれ以上があなたのグループが所有するものではな"
-"いため、移動することができません"
+msgstr "選択したレポートのひとつまたはそれ以上があなたのグループが所有するものではないため、移動することができません"
 
 #, fuzzy
 msgid "* Requirements - Type: jpg/png  Size: 100x100"
@@ -643,11 +645,9 @@ msgid "10 Minutes"
 msgstr "10分"
 
 msgid ""
-"2 - Specify the VM Options to define the source of the values used for the "
-"plan calculations."
-msgstr ""
-"2 - 計画の計算に使用する値の情報源を定義するには VM オプションを特定してくだ"
-"さい。"
+"2 - Specify the VM Options to define the source of the values used for the pla"
+"n calculations."
+msgstr "2 - 計画の計算に使用する値の情報源を定義するには VM オプションを特定してください。"
 
 msgid "2 Weeks before retirement"
 msgstr "リタイアメントの2週間前"
@@ -655,19 +655,15 @@ msgstr "リタイアメントの2週間前"
 msgid "24 Hour Time Period:"
 msgstr "24時間の時間帯 :"
 
-msgid "3 - Specify Target Options to qualify target Clusters or Hosts."
-msgstr ""
-"3 - ターゲットクラスターまたはホストを限定するにはターゲットオプションを特定"
-"してください。"
+#, fuzzy
+msgid "3 - Specify Target Options to qualify target %s or %s."
+msgstr "3 - ターゲットクラスターまたはホストを限定するにはターゲットオプションを特定してください。"
 
 msgid "30 Days before retirement"
 msgstr "リタイアメントの30日前"
 
-msgid ""
-"4 - Change the Trend Options used to calculate the daily trends, if desired."
-msgstr ""
-"4 - 毎日のトレンドを計算するためのトレンドオプションを変更することができま"
-"す。"
+msgid "4 - Change the Trend Options used to calculate the daily trends, if desired."
+msgstr "4 - 毎日のトレンドを計算するためのトレンドオプションを変更することができます。"
 
 msgid "5 - Press the Submit button."
 msgstr "5 - 「提出」ボタンを押してください"
@@ -713,6 +709,10 @@ msgstr "この数式を使用するには%s を選択することが必要です
 msgid "A %s must be entered to commit this expression element"
 msgstr "この数式を使用するには%s を入力することが必要です"
 
+#, fuzzy
+msgid "A %s must be selected"
+msgstr "%s の選択が必要です"
+
 msgid "A Red Hat subscription that covers your product"
 msgstr ""
 
@@ -727,6 +727,9 @@ msgstr "条件には有効な数式が含まれている必要があります。
 
 msgid "A valid expression must be present"
 msgstr "有効な数式があることが必要です"
+
+msgid "A value must be changed or provider will not be scaled."
+msgstr ""
 
 msgid "ALL"
 msgstr "すべて"
@@ -763,8 +766,8 @@ msgid "Access URL"
 msgstr "URLにアクセス"
 
 msgid ""
-"Accessing Management Engine from multiple tabs or windows of the same "
-"browser on a single machine."
+"Accessing Management Engine from multiple tabs or windows of the same browser "
+"on a single machine."
 msgstr ""
 
 msgid "Account"
@@ -843,7 +846,7 @@ msgstr "リソースを追加"
 msgid "Add a User"
 msgstr "リソースを追加"
 
-msgid "Add a new Foreman Provider"
+msgid "Add a new %s Provider"
 msgstr ""
 
 msgid "Add of new %s was cancelled by the user"
@@ -864,9 +867,6 @@ msgstr "このホストを追加"
 msgid "Add this LDAP Server"
 msgstr "この入力を追加"
 
-msgid "Add this SmartProxy"
-msgstr "このスマートプロクシを追加"
-
 msgid "Add this Storage Manager"
 msgstr "このストレージマネジャーを追加"
 
@@ -882,6 +882,9 @@ msgstr "新しい%sを追加"
 #, fuzzy
 msgid "Adding a new Orchestration Template"
 msgstr "オーケストレーションテンプレート"
+
+msgid "Adding a new Service Dialog from Orchestration Template \"%s\""
+msgstr ""
 
 msgid "Admin Role Filter:"
 msgstr "アドミニストレータの役割フィルター:"
@@ -968,7 +971,20 @@ msgstr "すべて"
 msgid "All %s"
 msgstr "%sのすべて"
 
+#, fuzzy
+#, fuzzy
+msgid "All %s Configured Systems"
+msgstr " %sを再構成"
+
 msgid "All %s Indexes"
+msgstr "%s インデックスのすべて"
+
+#, fuzzy
+msgid "All %s Providers"
+msgstr "アラートプロフィール"
+
+#, fuzzy
+msgid "All %s with %s"
 msgstr "%s インデックスのすべて"
 
 msgid "All %{model} - %{group}"
@@ -977,22 +993,18 @@ msgstr "%{model} - %{group}のすべて"
 msgid "All %{typ} %{model}"
 msgstr "%{typ} %{model}のすべて"
 
+#, fuzzy
+msgid "All (%s)"
+msgstr "%sのすべて"
+
 msgid ""
-"All Datastore customizations will be lost. Are you sure you want to reset "
-"all classes and instances to default?"
-msgstr ""
-"カスタム化されたデータストアのすべてが削除されます。すべてのクラスとインスタ"
-"ンスをデフォルトにリセットしてよろしいですか？"
+"All Datastore customizations will be lost. Are you sure you want to reset all "
+"classes and instances to default?"
+msgstr "カスタム化されたデータストアのすべてが削除されます。すべてのクラスとインスタンスをデフォルトにリセットしてよろしいですか？"
 
 #, fuzzy
 msgid "All Files"
 msgstr "%sのすべて"
-
-msgid "All Foreman Configured Systems"
-msgstr ""
-
-msgid "All Foreman Providers"
-msgstr ""
 
 #, fuzzy
 msgid "All Templates: %s"
@@ -1029,14 +1041,17 @@ msgid "All changes have been reset"
 msgstr "すべての変更がリセットされました"
 
 msgid "All custom classes and instances have been reset to default"
-msgstr ""
-"カスタム化したクラスとインスタンスのすべてがデフォルトにリセットされました"
+msgstr "カスタム化したクラスとインスタンスのすべてがデフォルトにリセットされました"
 
 msgid "All fields are needed to perform verification of Database Settings"
 msgstr ""
 
 msgid "All selected %s are not in the current region"
 msgstr "選択した%sがすべて現在の領域に属していません"
+
+#, fuzzy
+msgid "All system services of %s"
+msgstr "ファイルシステム|許可"
 
 msgid "Amazon"
 msgstr ""
@@ -1059,9 +1074,6 @@ msgstr ""
 #, fuzzy
 msgid "Analysis"
 msgstr "分析プロフィール"
-
-msgid "Analysis Affinity was saved"
-msgstr "分析アフィニティーが保存されました"
 
 msgid "Analysis History (%s)"
 msgstr ""
@@ -1144,6 +1156,9 @@ msgstr "承認/否認者"
 msgid "Approved/Denied on"
 msgstr "承認/否認日"
 
+msgid "Architecture"
+msgstr ""
+
 #, fuzzy
 msgid "Are you sure you want to Run Database Garbage Collection Now?"
 msgstr "カスタム化したイメージを削除してよろしいですか？"
@@ -1155,10 +1170,6 @@ msgstr "カスタム化したイメージを削除してよろしいですか？
 #, fuzzy
 msgid "Are you sure you want to delete build %s?"
 msgstr "スキーマからフィールドを削除してよろしいですか？"
-
-#, fuzzy
-msgid "Are you sure you want to delete build %{row_build} for %{row_platform}?"
-msgstr "方法から入力フィールドを削除してよろしいですか？"
 
 #, fuzzy
 msgid "Are you sure you want to delete category '%s'?"
@@ -1183,8 +1194,8 @@ msgstr "'%s'をダッシュボードから削除してよろしいですか？"
 
 #, fuzzy
 msgid ""
-"Are you sure you want to remove the '%{a_parent}[%{a}]' assignment from all "
-"of the items below?"
+"Are you sure you want to remove the '%{a_parent}[%{a}]' assignment from all of"
+" the items below?"
 msgstr "'%s'をダッシュボードから削除してよろしいですか？"
 
 msgid "Are you sure you want to remove this Custom Image?"
@@ -1264,13 +1275,10 @@ msgid "At least one Selection must be checked"
 msgstr "少なくともひとつの選択肢がチェックされている必要があります"
 
 msgid "At least one item must be entered to create Analysis Profile"
-msgstr ""
-"分析プロフィールを作成するには、少なくともひとつのアイテムが入力されている必"
-"要があります"
+msgstr "分析プロフィールを作成するには、少なくともひとつのアイテムが入力されている必要があります"
 
 msgid "At least one option must be selected to reconfigure"
-msgstr ""
-"再構成するには少なくともひとつのオプションが選択されている必要があります"
+msgstr "再構成するには少なくともひとつのオプションが選択されている必要があります"
 
 msgid "Attached to Policy"
 msgstr "ポリシーに添付"
@@ -1423,10 +1431,6 @@ msgid "Available Fields:"
 msgstr "利用可能 %s:"
 
 msgid "Available Policies:"
-msgstr "利用可能ポリシー:"
-
-#, fuzzy
-msgid "Available Product Updates"
 msgstr "利用可能ポリシー:"
 
 #, fuzzy
@@ -1623,12 +1627,12 @@ msgstr "ボタン"
 msgid "By %s"
 msgstr "経由%s"
 
+#, fuzzy
+msgid "By %{typ}: %{values}"
+msgstr "%{typ} %{model}"
+
 msgid "By Filter"
 msgstr "フィルター経由"
-
-#, fuzzy
-msgid "By Group"
-msgstr "グループ"
 
 msgid "By Host"
 msgstr "ホスト経由"
@@ -1637,7 +1641,8 @@ msgstr "ホスト経由"
 msgid "By Role"
 msgstr "ユーザ役割"
 
-msgid "By User ID %s %s"
+#, fuzzy
+msgid "By Username %s %s"
 msgstr "ユーザID %s %s経由"
 
 #, fuzzy
@@ -1645,16 +1650,20 @@ msgid "C & U Collection"
 msgstr "収集"
 
 #, fuzzy
+#, fuzzy
+msgid "C & U Data Collectors"
+msgstr "収集"
+
+#, fuzzy
+#, fuzzy
+msgid "C & U Data Processors"
+msgstr "Miq データベース"
+
+#, fuzzy
 msgid "C & U Database"
 msgstr "Miq データベース"
 
 msgid "C & U Gap Collection"
-msgstr ""
-
-msgid "C &amp; U Data Collectors"
-msgstr ""
-
-msgid "C &amp; U Data Processors"
 msgstr ""
 
 msgid "CFME Appliance restart initiated successfully"
@@ -1666,10 +1675,8 @@ msgstr "CFMEデータベース設定が正常に検証されました"
 msgid "CFME Log"
 msgstr ""
 
-msgid ""
-"CFME Server \"%{name}\" set as %{priority} for Role \"%{role_description}\""
-msgstr ""
-"CFME サーバ\"%{name}\" %{priority}を役割として設定する\"%{role_description}\""
+msgid "CFME Server \"%{name}\" set as %{priority} for Role \"%{role_description}\""
+msgstr "CFME サーバ\"%{name}\" %{priority}を役割として設定する\"%{role_description}\""
 
 #, fuzzy
 msgid "CFME Version"
@@ -1715,11 +1722,9 @@ msgid "Calculations"
 msgstr "注意:"
 
 msgid ""
-"Can not delete folder, one or more reports in the selected folder are not "
-"owned by your group"
-msgstr ""
-"フォルダーを削除できません、選択したフォルダー中のひとつまたはそれ以上のレ"
-"ポートがあなたのグループに属するものではありません"
+"Can not delete folder, one or more reports in the selected folder are not owne"
+"d by your group"
+msgstr "フォルダーを削除できません、選択したフォルダー中のひとつまたはそれ以上のレポートがあなたのグループに属するものではありません"
 
 msgid "Cancel"
 msgstr "キャンセル"
@@ -1752,9 +1757,12 @@ msgstr "変更をキャンセル"
 msgid "Cannot create Request Info, error: "
 msgstr "リクエスト情報を作成できません、エラー: "
 
+msgid "Cannot display binary content"
+msgstr ""
+
 msgid ""
-"Cannot start log collection, a log collection is already in progress within "
-"this scope"
+"Cannot start log collection, a log collection is already in progress within th"
+"is scope"
 msgstr "ログ収集を開始できません、このスコープのログ収集が既に進行中です"
 
 msgid "Cannot start log collection, requires a started server"
@@ -1819,8 +1827,7 @@ msgstr "カテゴリータグ入力"
 msgid "Caution:"
 msgstr "注意:"
 
-msgid ""
-"Caution: Changing the Database settings could make the Server unstartable!"
+msgid "Caution: Changing the Database settings could make the Server unstartable!"
 msgstr ""
 
 msgid "Caution: Manual changes to configuration files can disable the Server!"
@@ -1979,9 +1986,6 @@ msgstr "カテゴリーを選択"
 
 msgid "Choose a Filter"
 msgstr "フィルターを選択"
-
-msgid "Choose a Host"
-msgstr "ホストを選択"
 
 #, fuzzy
 msgid "Choose a Report from the menus on the left."
@@ -2383,15 +2387,11 @@ msgstr "クラウドボリューム|ボリュームタイプ"
 msgid "Clouds"
 msgstr "クラウド"
 
-msgid "Cluster"
-msgstr "クラスター"
-
 msgid "Clusters"
 msgstr "クラスター"
 
-#, fuzzy
-msgid "Clusters (%s)"
-msgstr "クラスター"
+msgid "Clusters / Deployment Roles"
+msgstr ""
 
 msgid "Collapse All"
 msgstr "すべて折り畳む"
@@ -2407,12 +2407,14 @@ msgstr "選択したテンプレートコンテンツ"
 msgid "Collect Logs"
 msgstr "収集"
 
-msgid "Collect for All Clusters"
-msgstr ""
+#, fuzzy
+#, fuzzy
+msgid "Collect for All %s"
+msgstr "収集"
 
 msgid ""
-"Collect for All Clusters must be checked to be able to collect C & U data "
-"from Cloud Providers such as Red Hat OpenStack or Amazon EC2"
+"Collect for All %s must be checked to be able to collect C & U data from Cloud"
+" Providers such as Red Hat OpenStack or Amazon EC2"
 msgstr ""
 
 msgid "Collect for All Datastores"
@@ -2535,6 +2537,18 @@ msgstr "圧縮表示"
 msgid "Compute"
 msgstr "計算"
 
+#, fuzzy
+msgid "Compute Profile"
+msgstr "タイムプロフィール"
+
+#, fuzzy
+#, fuzzy
+msgid "Computer system"
+msgstr " %sを再構成"
+
+msgid "ComputerSystem|Managed entity type"
+msgstr ""
+
 msgid "Condition"
 msgstr "条件"
 
@@ -2622,9 +2636,13 @@ msgstr "条件|更新日"
 msgid "Configuration"
 msgstr "コンフィグレーション"
 
+#, fuzzy
+msgid "Configuration (%s)"
+msgstr "コンフィグレーション"
+
 msgid ""
-"Configuration File selection can not be changed until changes are saved or "
-"reset."
+"Configuration File selection can not be changed until changes are saved or res"
+"et."
 msgstr ""
 
 #, fuzzy
@@ -2632,11 +2650,107 @@ msgid "Configuration File to Edit"
 msgstr "コンフィグレーション設定が保存されました"
 
 #, fuzzy
+msgid "Configuration Location"
+msgstr "コンフィグレーション|作成日"
+
+#, fuzzy
 msgid "Configuration Management"
 msgstr "コンフィグレーション"
 
+#, fuzzy
+msgid "Configuration Organization"
+msgstr "コンフィグレーション|作成日"
+
+#, fuzzy
+#, fuzzy
+msgid "Configuration Profile Description"
+msgstr "コンフィグレーション設定が保存されました"
+
+#, fuzzy
+#, fuzzy
+msgid "Configuration files of %s"
+msgstr "コンフィグレーション設定が保存されました"
+
+#, fuzzy
+msgid "Configuration location"
+msgstr "コンフィグレーション|作成日"
+
+#, fuzzy
+msgid "Configuration organization"
+msgstr "コンフィグレーション|作成日"
+
+#, fuzzy
+msgid "Configuration profile"
+msgstr "コンフィグレーション|設定"
+
 msgid "Configuration settings saved"
 msgstr "コンフィグレーション設定が保存されました"
+
+#, fuzzy
+msgid "Configuration tag"
+msgstr "コンフィグレーション"
+
+#, fuzzy
+#, fuzzy
+msgid "ConfigurationLocation|Manager ref"
+msgstr "コンフィグレーション"
+
+#, fuzzy
+msgid "ConfigurationLocation|Name"
+msgstr "コンフィグレーション|設定"
+
+#, fuzzy
+#, fuzzy
+msgid "ConfigurationLocation|Parent ref"
+msgstr "コンフィグレーション"
+
+#, fuzzy
+msgid "ConfigurationLocation|Title"
+msgstr "コンフィグレーション|設定"
+
+msgid "ConfigurationOrganization|Manager ref"
+msgstr ""
+
+#, fuzzy
+#, fuzzy
+msgid "ConfigurationOrganization|Name"
+msgstr "コンフィグレーション"
+
+msgid "ConfigurationOrganization|Parent ref"
+msgstr ""
+
+#, fuzzy
+#, fuzzy
+msgid "ConfigurationOrganization|Title"
+msgstr "コンフィグレーション設定が保存されました"
+
+#, fuzzy
+msgid "ConfigurationProfile|Description"
+msgstr "条件セット|記述"
+
+#, fuzzy
+#, fuzzy
+msgid "ConfigurationProfile|Manager ref"
+msgstr "コンフィグレーション"
+
+#, fuzzy
+msgid "ConfigurationProfile|Name"
+msgstr "コンフィグレーション設定が保存されました"
+
+#, fuzzy
+#, fuzzy
+msgid "ConfigurationProfile|Parent ref"
+msgstr "コンフィグレーション"
+
+#, fuzzy
+#, fuzzy
+msgid "ConfigurationTag|Manager ref"
+msgstr "コンフィグレーション"
+
+#, fuzzy
+#, fuzzy
+msgid "ConfigurationTag|Name"
+msgstr "コンフィグレーション"
 
 msgid "Configuration|Created on"
 msgstr "コンフィグレーション|作成日"
@@ -2656,6 +2770,44 @@ msgstr ""
 #, fuzzy
 msgid "Configured Systems"
 msgstr " %sを再構成"
+
+#, fuzzy
+#, fuzzy
+msgid "Configured system"
+msgstr " %sを再構成"
+
+#, fuzzy
+#, fuzzy
+msgid "ConfiguredSystem|Build state"
+msgstr " %sを再構成"
+
+#, fuzzy
+#, fuzzy
+msgid "ConfiguredSystem|Hostname"
+msgstr " %sを再構成"
+
+#, fuzzy
+msgid "ConfiguredSystem|Ipaddress"
+msgstr "拡張子マネジメントシステム|Ipアドレス"
+
+msgid "ConfiguredSystem|Ipmi present"
+msgstr ""
+
+msgid "ConfiguredSystem|Last checkin"
+msgstr ""
+
+#, fuzzy
+#, fuzzy
+msgid "ConfiguredSystem|Mac address"
+msgstr " %sを再構成"
+
+#, fuzzy
+#, fuzzy
+msgid "ConfiguredSystem|Manager ref"
+msgstr " %sを再構成"
+
+msgid "ConfiguredSystem|Puppet status"
+msgstr ""
 
 msgid "Connecting (unencrypted) to: %s"
 msgstr ""
@@ -2685,7 +2837,220 @@ msgid "Container"
 msgstr "続行"
 
 #, fuzzy
+#, fuzzy
+msgid "Container Groups (%s)"
+msgstr "セキュリティーグループ"
+
+msgid "Container Groups (0)"
+msgstr ""
+
+msgid "Container Nodes (%s)"
+msgstr ""
+
+#, fuzzy
+#, fuzzy
+msgid "Container Nodes (0)"
+msgstr "続行"
+
+#, fuzzy
+#, fuzzy
+msgid "Container Services (%s)"
+msgstr "マイサービス"
+
+#, fuzzy
+#, fuzzy
+msgid "Container Services (0)"
+msgstr "マイサービス"
+
+msgid "Container definition"
+msgstr ""
+
+#, fuzzy
+#, fuzzy
+msgid "Container group"
+msgstr "続行"
+
+#, fuzzy
+#, fuzzy
+msgid "Container node"
+msgstr "続行"
+
+msgid "Container port config"
+msgstr ""
+
+msgid "Container replication controller"
+msgstr ""
+
+#, fuzzy
+#, fuzzy
+msgid "Container service"
+msgstr "続行"
+
+msgid "ContainerDefinition|Cpu cores"
+msgstr ""
+
+msgid "ContainerDefinition|Ems ref"
+msgstr ""
+
+msgid "ContainerDefinition|Image"
+msgstr ""
+
+msgid "ContainerDefinition|Image pull policy"
+msgstr ""
+
+msgid "ContainerDefinition|Memory"
+msgstr ""
+
+#, fuzzy
+msgid "ContainerDefinition|Name"
+msgstr "条件|名称"
+
+msgid "ContainerGroup|Creation timestamp"
+msgstr ""
+
+msgid "ContainerGroup|Dns policy"
+msgstr ""
+
+#, fuzzy
+msgid "ContainerGroup|Ems ref"
+msgstr "セキュリティーグループ|Ems レファレンス"
+
+#, fuzzy
+msgid "ContainerGroup|Name"
+msgstr "セキュリティーグループ|名称"
+
+msgid "ContainerGroup|Namespace"
+msgstr ""
+
+#, fuzzy
+msgid "ContainerGroup|Resource version"
+msgstr "Miqグループ|リソースタイプ"
+
+msgid "ContainerGroup|Restart policy"
+msgstr ""
+
+msgid "ContainerNode|Creation timestamp"
+msgstr ""
+
+#, fuzzy
+msgid "ContainerNode|Ems ref"
+msgstr "クラウドネットワーク|Emsレファレンス"
+
+msgid "ContainerNode|Identity infra"
+msgstr ""
+
+msgid "ContainerNode|Identity machine"
+msgstr ""
+
+msgid "ContainerNode|Identity system"
+msgstr ""
+
+msgid "ContainerNode|Lives on type"
+msgstr ""
+
+#, fuzzy
+msgid "ContainerNode|Name"
+msgstr "条件|名称"
+
+msgid "ContainerNode|Resource version"
+msgstr ""
+
+#, fuzzy
+msgid "ContainerPortConfig|Ems ref"
+msgstr "クラウドオブジェクトストアコンテナ|Ems レファレンス"
+
+msgid "ContainerPortConfig|Host port"
+msgstr ""
+
+msgid "ContainerPortConfig|Name"
+msgstr ""
+
+msgid "ContainerPortConfig|Port"
+msgstr ""
+
+msgid "ContainerPortConfig|Protocol"
+msgstr ""
+
+msgid "ContainerReplicationController|Creation timestamp"
+msgstr ""
+
+msgid "ContainerReplicationController|Current replicas"
+msgstr ""
+
+msgid "ContainerReplicationController|Ems ref"
+msgstr ""
+
+msgid "ContainerReplicationController|Name"
+msgstr ""
+
+msgid "ContainerReplicationController|Namespace"
+msgstr ""
+
+msgid "ContainerReplicationController|Replicas"
+msgstr ""
+
+msgid "ContainerReplicationController|Resource version"
+msgstr ""
+
+msgid "ContainerService|Container port"
+msgstr ""
+
+msgid "ContainerService|Creation timestamp"
+msgstr ""
+
+msgid "ContainerService|Ems ref"
+msgstr ""
+
+#, fuzzy
+msgid "ContainerService|Name"
+msgstr "システムサービス|名称"
+
+#, fuzzy
+msgid "ContainerService|Namespace"
+msgstr "システムサービス|名称"
+
+#, fuzzy
+msgid "ContainerService|Port"
+msgstr "システムサービス|開始"
+
+msgid "ContainerService|Portal ip"
+msgstr ""
+
+msgid "ContainerService|Protocol"
+msgstr ""
+
+msgid "ContainerService|Resource version"
+msgstr ""
+
+msgid "ContainerService|Session affinity"
+msgstr ""
+
+#, fuzzy
 msgid "Containers"
+msgstr "続行"
+
+msgid "Container|Backing ref"
+msgstr ""
+
+#, fuzzy
+msgid "Container|Ems ref"
+msgstr "クラウドサブネット|Ems レファレンス"
+
+#, fuzzy
+#, fuzzy
+msgid "Container|Image"
+msgstr "続行"
+
+#, fuzzy
+msgid "Container|Name"
+msgstr "条件セット|名称"
+
+msgid "Container|Restart count"
+msgstr ""
+
+#, fuzzy
+#, fuzzy
+msgid "Container|State"
 msgstr "続行"
 
 msgid "Content"
@@ -2750,11 +3115,13 @@ msgstr "作成日"
 msgid "Creation of a new Orchestration Template was cancelled by the user"
 msgstr "新しい%sの追加がユーザによりキャンセルされました"
 
+#, fuzzy
+#, fuzzy
+msgid "Creation of a new Service Dialog was cancelled by the user"
+msgstr "新しい%sの追加がユーザによりキャンセルされました"
+
 msgid "Credential validation returned: %s"
 msgstr "資格情報検証が返還されました: %s"
-
-msgid "Credential validation was not successful"
-msgstr "資格情報検証に失敗しました"
 
 msgid "Credential validation was successful"
 msgstr "資格情報検証に成功しました"
@@ -2764,15 +3131,6 @@ msgstr "資格情報"
 
 #, fuzzy
 msgid "Credentials - Windows Domain"
-msgstr "'%s'ホスト用資格情報"
-
-msgid ""
-"Credentials are not required because this SmartProxy is currently active."
-msgstr ""
-"このスマートプロクシが現在アクティブになっているため資格情報は必要ありませ"
-"ん。"
-
-msgid "Credentials for Host '%s'"
 msgstr "'%s'ホスト用資格情報"
 
 msgid "Credentials/Settings saved successfully"
@@ -2797,9 +3155,6 @@ msgstr "現レート"
 
 msgid "Current User"
 msgstr "現ユーザ"
-
-msgid "Current Version"
-msgstr "現バージョン"
 
 msgid "Custom Attribute Settings"
 msgstr "カスタム属性設定"
@@ -2963,11 +3318,23 @@ msgstr "カスタム化仕様"
 msgid "Customization Directory"
 msgstr "カスタム化ディレクトリ"
 
+#, fuzzy
+msgid "Customization script"
+msgstr "カスタム化仕様"
+
 msgid "Customization spec"
 msgstr "カスタム化仕様"
 
 msgid "Customization template"
 msgstr "カスタム化テンプレート"
+
+#, fuzzy
+msgid "CustomizationScript|Manager ref"
+msgstr "カスタム化仕様|名称"
+
+#, fuzzy
+msgid "CustomizationScript|Name"
+msgstr "カスタム化仕様|名称"
 
 msgid "CustomizationSpec|Description"
 msgstr "カスタム化仕様|記述"
@@ -3060,11 +3427,9 @@ msgid "Database backup"
 msgstr "データベースのバックアップ"
 
 msgid ""
-"Database settings successfully saved, they will take effect upon CFME Server "
-"restart"
-msgstr ""
-"データベースの設定が正常に保存されました、この設定は CFME サーバが再起動した"
-"時点で有効になります"
+"Database settings successfully saved, they will take effect upon CFME Server r"
+"estart"
+msgstr "データベースの設定が正常に保存されました、この設定は CFME サーバが再起動した時点で有効になります"
 
 msgid "DatabaseBackup|Name"
 msgstr "データベースのバックアップ|名称"
@@ -3176,28 +3541,17 @@ msgstr "フィルター変更をリセットする"
 
 #, fuzzy
 msgid "Deleting the '%s' LDAP Server, are you sure?"
-msgstr ""
-"マイタグ '%s'を削除するとすべてのアイテムから割当が解除されますがよろしいです"
-"か？ "
+msgstr "マイタグ '%s'を削除するとすべてのアイテムから割当が解除されますがよろしいですか？ "
 
 #, fuzzy
-msgid ""
-"Deleting the '%s' entry will also unassign it from all items, are you sure?"
+msgid "Deleting the '%s' entry will also unassign it from all items, are you sure?"
+msgstr "マイタグ '%s'を削除するとすべてのアイテムから割当が解除されますがよろしいですか？ "
+
+msgid "Deleting the MyTag '%s' will also unassign it from all items, are you sure?"
+msgstr "マイタグ '%s'を削除するとすべてのアイテムから割当が解除されますがよろしいですか？ "
+
+msgid "Deployment Roles"
 msgstr ""
-"マイタグ '%s'を削除するとすべてのアイテムから割当が解除されますがよろしいです"
-"か？ "
-
-msgid ""
-"Deleting the MyTag '%s' will also unassign it from all items, are you sure?"
-msgstr ""
-"マイタグ '%s'を削除するとすべてのアイテムから割当が解除されますがよろしいです"
-"か？ "
-
-msgid "Deploy of SmartProxy to Host \"%s\" was cancelled"
-msgstr "スマートプロクシをホストに展開する\"%s\" がキャンセルされました"
-
-msgid "Deploy of SmartProxy to Host \"%s\" was initiated"
-msgstr "スマートプロクシをホストに展開する\"%s\" が開始されました"
 
 #, fuzzy
 msgid "Depot Name"
@@ -3282,6 +3636,10 @@ msgstr "ダイアログフィールド|ダイナミック"
 msgid "DialogField|Label"
 msgstr "ダイアログフィールド|ラベル"
 
+#, fuzzy
+msgid "DialogField|Load values on init"
+msgstr "ダイアログフィールド|値の方法"
+
 msgid "DialogField|Name"
 msgstr "ダイアログフィールド|名称"
 
@@ -3297,6 +3655,10 @@ msgstr "ダイアログフィールド|オプション"
 msgid "DialogField|Position"
 msgstr "ダイアログフィールド|ポジション"
 
+#, fuzzy
+msgid "DialogField|Read only"
+msgstr "ダイアログフィールド|ラベル"
+
 msgid "DialogField|Reconfigurable"
 msgstr "ダイアログフィールド|再構成可能"
 
@@ -3307,6 +3669,10 @@ msgid "DialogField|Required method"
 msgstr "ダイアログフィールド|必須の方法"
 
 msgid "DialogField|Required method options"
+msgstr "ダイアログフィールド|必須の方法オプション"
+
+#, fuzzy
+msgid "DialogField|Show refresh button"
 msgstr "ダイアログフィールド|必須の方法オプション"
 
 msgid "DialogField|Validator rule"
@@ -3452,9 +3818,6 @@ msgstr "ディスク|起動接続"
 msgid "Disk|Updated on"
 msgstr "ディスク|更新日"
 
-msgid "Display"
-msgstr "表示"
-
 msgid "Display Name"
 msgstr "表示名"
 
@@ -3505,21 +3868,8 @@ msgstr "'新規フォルダー' をダブルクリックして編集"
 msgid "Double click a feature to open/close all children."
 msgstr ""
 
-msgid "Download"
-msgstr ""
-
 msgid "Download Report to YAML"
 msgstr ""
-
-#, fuzzy
-msgid "Download SmartProxy Build"
-msgstr "選択したスマートプロクシビルドをインストール"
-
-msgid "Download SmartProxy version for manual installation"
-msgstr ""
-
-msgid "Download the SmartProxy log as a Zip File"
-msgstr "スマートプロクシをZipファイルとしてダウンロード"
 
 msgid "Download the full report (all rows) as a PDF file"
 msgstr "フルレポート（すべての行）をPDFファイルとしてダウンロード"
@@ -3602,14 +3952,14 @@ msgstr "電子メール設定"
 msgid "ESX Logs"
 msgstr ""
 
+msgid "Edit %s Provider"
+msgstr ""
+
 msgid "Edit CFME Server Relationship for %{model} \"%{name}\""
 msgstr "%{model}用のCFME サーバ関係を編集する\"%{name}\""
 
 msgid "Edit Compute Rate Assignments"
 msgstr "計算レート割当を編集する"
-
-msgid "Edit Foreman Provider"
-msgstr ""
 
 msgid "Edit Log Depot settings was cancelled by the user"
 msgstr "ログ格納設定の編集がユーザによりキャンセルされました"
@@ -3620,15 +3970,17 @@ msgstr "ユーザグループシークエンスの編集がユーザによりキ
 msgid "Edit Tags for %s"
 msgstr "%s用のタグを編集する"
 
+msgid "Edit Tags for Configured Systems"
+msgstr ""
+
 #, fuzzy
 msgid ""
-"Edit aborted!  CFME does not support the browser's back button or access "
-"from multiple tabs or windows of the same browser.  Please close any "
-"duplicate sessions before proceeding."
+"Edit aborted!  CFME does not support the browser's back button or access from "
+"multiple tabs or windows of the same browser.  Please close any duplicate sess"
+"ions before proceeding."
 msgstr ""
-"編集が中止されました！CFME はブラウザの「戻る」ボタンおよび同一ブラウザの複数"
-"のタブまたはウィンドウをサポートしていません。続行するには重複したセッション"
-"を閉じてください。"
+"編集が中止されました！CFME はブラウザの「戻る」ボタンおよび同一ブラウザの複数のタブまたはウィンドウをサポートしていません。続行するには重複したセッショ"
+"ンを閉じてください。"
 
 msgid "Edit of %s was cancelled by the user"
 msgstr "%sの編集がユーザによりキャンセルされました"
@@ -3655,8 +4007,7 @@ msgid "Edit of credentials for selected %s was cancelled by the user"
 msgstr "選択した%s用の資格情報の編集がユーザによりキャンセルされました "
 
 msgid "Edit of schema for %{model} \"%{name}\" was cancelled by the user"
-msgstr ""
-"%{model} 用のスキーマを編集する\"%{name}\" がユーザによりキャンセルされました"
+msgstr "%{model} 用のスキーマを編集する\"%{name}\" がユーザによりキャンセルされました"
 
 msgid "Edit policy assignments was cancelled by the user"
 msgstr "ポリシー割当の編集がユーザによりキャンセルされました"
@@ -3840,7 +4191,7 @@ msgstr "Emsフォルダー|Uid ems"
 msgid "EmsFolder|Updated on"
 msgstr "Emsフォルダー|更新日"
 
-msgid "Enable Collection by Cluster"
+msgid "Enable Collection by %s"
 msgstr ""
 
 msgid "Enable Collection by Datastore"
@@ -3863,8 +4214,7 @@ msgid "End Port"
 msgstr "終了ポート"
 
 msgid "Enter Automation Simulation options on the left and press Submit."
-msgstr ""
-"左側の自動化シミュレーションオプションを入力して「提出」を押してください。"
+msgstr "左側の自動化シミュレーションオプションを入力して「提出」を押してください。"
 
 msgid "Enter URL Manually"
 msgstr ""
@@ -3884,6 +4234,10 @@ msgstr "エントリーポイント（ネームスペース/クラス/インス�
 #, fuzzy
 msgid "Entry Point must be given."
 msgstr "フィールドにエントリーポイントを指定する必要があります\"%s\"."
+
+#, fuzzy
+msgid "Environment"
+msgstr "リタイアメント"
 
 msgid "Error"
 msgstr "エラー"
@@ -3907,8 +4261,8 @@ msgid "Error during '%s': "
 msgstr "'%s'中のエラー: "
 
 msgid ""
-"Error during Orchestration Template creation: new template content cannot be "
-"empty"
+"Error during Orchestration Template creation: new template content cannot be e"
+"mpty"
 msgstr ""
 
 msgid "Error during Orphaned Records delete for user %s: "
@@ -3921,16 +4275,12 @@ msgid "Error during sending test email: "
 msgstr "電子メール送信テスト中のエラー: "
 
 msgid ""
-"Error during upload: incorrect Dialog format, only service dialogs can be "
-"imported"
-msgstr ""
-"アップロード中のエラー: ダイアログフォーマットが間違っています、サービスダイ"
-"アログのみがインポート可能です"
+"Error during upload: incorrect Dialog format, only service dialogs can be impo"
+"rted"
+msgstr "アップロード中のエラー: ダイアログフォーマットが間違っています、サービスダイアログのみがインポート可能です"
 
 msgid "Error during upload: one of the DialogField types is not supported"
-msgstr ""
-"アップロード中のエラー: ダイアログフィールドタイプのひとつがサポートされてい"
-"ません"
+msgstr "アップロード中のエラー: ダイアログフィールドタイプのひとつがサポートされていません"
 
 msgid "Error executing: \"%s\" "
 msgstr "実行中のエラー: \"%s\" "
@@ -3948,9 +4298,14 @@ msgstr "LDAP 情報取得中のエラー: "
 msgid "Error text:"
 msgstr "エラー詳細: %s"
 
-msgid "Error: Datastore import file upload expired"
+msgid "Error when adding a new schedule: "
 msgstr ""
-"エラー: データストアインポートファイルアップロードが期限切れになっています"
+
+msgid "Error when creating a Service Dialog from Orchestration Template: "
+msgstr ""
+
+msgid "Error: Datastore import file upload expired"
+msgstr "エラー: データストアインポートファイルアップロードが期限切れになっています"
 
 msgid "Error: ImportFileUpload expired"
 msgstr "エラー: インポートファイルアップロード期限切れ"
@@ -4080,8 +4435,7 @@ msgid "Export all classes and instances"
 msgstr "すべてのクラスとインスタンスをエクスポート"
 
 msgid "Export generation returned: Status [%{status}] Message [%{message}]"
-msgstr ""
-"エクスポート生成が返還されました: 状況 [%{status}] メッセージ [%{message}]"
+msgstr "エクスポート生成が返還されました: 状況 [%{status}] メッセージ [%{message}]"
 
 msgid "Export:"
 msgstr "エクスポート:"
@@ -4122,6 +4476,14 @@ msgstr "拡張子マネジメントシステム|ホスト名"
 msgid "ExtManagementSystem|Ipaddress"
 msgstr "拡張子マネジメントシステム|Ipアドレス"
 
+#, fuzzy
+msgid "ExtManagementSystem|Last refresh date"
+msgstr "拡張子マネジメントシステム|Api バージョン"
+
+#, fuzzy
+msgid "ExtManagementSystem|Last refresh error"
+msgstr "拡張子マネジメントシステム|Api バージョン"
+
 msgid "ExtManagementSystem|Name"
 msgstr "拡張子マネジメントシステム|名称"
 
@@ -4130,6 +4492,14 @@ msgstr "拡張子マネジメントシステム|ポート"
 
 msgid "ExtManagementSystem|Provider region"
 msgstr "拡張子マネジメントシステム|プロバイダー領域"
+
+#, fuzzy
+msgid "ExtManagementSystem|Realm"
+msgstr "拡張子マネジメントシステム|名称"
+
+#, fuzzy
+msgid "ExtManagementSystem|Security protocol"
+msgstr "拡張子マネジメントシステム|Api バージョン"
 
 msgid "ExtManagementSystem|Uid ems"
 msgstr "拡張子マネジメントシステム|Uid ems"
@@ -4153,6 +4523,15 @@ msgstr ""
 msgid "Failed"
 msgstr "失敗"
 
+#, fuzzy
+#, fuzzy
+msgid "Failed (%s)"
+msgstr "ファイルシステム"
+
+#, fuzzy
+msgid "Failed system services of %s"
+msgstr "ファイルシステム|許可"
+
 msgid "False"
 msgstr "偽"
 
@@ -4170,11 +4549,9 @@ msgid "Fields"
 msgstr "フィールド"
 
 msgid ""
-"Fields not added: Adding the selected %{count} fields will exceed the "
-"maximum of %{max} fields"
-msgstr ""
-"フィールドが追加されませんでした: 選択した%{count}フィールドの追加は%{max}"
-"フィールド最大数の超過となります"
+"Fields not added: Adding the selected %{count} fields will exceed the maximum "
+"of %{max} fields"
+msgstr "フィールドが追加されませんでした: 選択した%{count}フィールドの追加は%{max}フィールド最大数の超過となります"
 
 #, fuzzy
 msgid "File"
@@ -4201,9 +4578,6 @@ msgstr "ファイル格納"
 msgid "FileDepot|Name"
 msgstr "ファイル格納|名称"
 
-msgid "FileDepot|Resource type"
-msgstr "ファイル格納|リソースタイプ"
-
 msgid "FileDepot|Support case"
 msgstr "ファイル格納|ケースをサポート"
 
@@ -4211,6 +4585,11 @@ msgid "FileDepot|Uri"
 msgstr "ファイル格納|Uri"
 
 msgid "Filename"
+msgstr "ファイル名"
+
+#, fuzzy
+#, fuzzy
+msgid "Files"
 msgstr "ファイル名"
 
 #, fuzzy
@@ -4456,6 +4835,10 @@ msgstr "電子メールアドレスから"
 msgid "Front (...1234)"
 msgstr "フォント (...1234)"
 
+#, fuzzy
+msgid "Full Name"
+msgstr "ファイル名"
+
 msgid "Full&#160;Screen"
 msgstr "フル&#160;スクリーン"
 
@@ -4514,9 +4897,6 @@ msgstr "グループ"
 msgid "Group Information"
 msgstr "ワークグループ情報"
 
-msgid "Group Order"
-msgstr "グループ順位"
-
 msgid "Group Records by up to 3 Columns"
 msgstr ""
 
@@ -4550,6 +4930,10 @@ msgstr "ゲストアプリケーション|Arch"
 
 msgid "GuestApplication|Description"
 msgstr "ゲストアプリケーション|記述"
+
+#, fuzzy
+msgid "GuestApplication|Install time"
+msgstr "ゲストアプリケーション|パッケージ名"
 
 msgid "GuestApplication|Language"
 msgstr "ゲストアプリケーション|言語"
@@ -4731,9 +5115,6 @@ msgstr "ハードウェア|Vモーション有効化"
 msgid "Header"
 msgstr ""
 
-msgid "Heartbeat Frequency"
-msgstr "ハートビート周波数"
-
 #, fuzzy
 msgid "Hide Detail Rows"
 msgstr "レート詳細"
@@ -4750,27 +5131,15 @@ msgstr "ヒント: ゲストからカーソルをリリースするには Ctrl-A
 msgid "Host"
 msgstr "ホスト"
 
-msgid "Host Based SmartProxy Settings"
-msgstr ""
-
 #, fuzzy
 msgid "Host Default VNC Port Range"
 msgstr "ページごとのデフォルトアイテム"
 
-msgid "Host Item"
-msgstr "ホストアイテム"
-
-msgid "Host Items"
-msgstr "ホストアイテム"
-
 msgid "Host Name"
 msgstr "ホスト名"
 
-msgid ""
-"Host OS is unknown or there are no available SmartProxy builds for the "
-"Host's OS"
+msgid "Host Name (or IPv4 or IPv6 address)"
 msgstr ""
-"ホスト OS が不明であるか、ホストOS用のスマートプロクシビルドが存在しません "
 
 msgid "Host Protocol"
 msgstr "ホストプロトコル"
@@ -4778,10 +5147,13 @@ msgstr "ホストプロトコル"
 msgid "Host platform"
 msgstr "ホストプラットフォーム"
 
-msgid ""
-"Host to validate against, User ID and matching password fields are needed to "
-"perform verification of credentials"
-msgstr ""
+#, fuzzy
+msgid "Host service group"
+msgstr "ホスト|サービスタグ"
+
+#, fuzzy
+msgid "HostServiceGroup|Name"
+msgstr "セキュリティーグループ|名称"
 
 msgid "Hostname"
 msgstr "ホスト名"
@@ -4790,12 +5162,16 @@ msgid "Hosts"
 msgstr "ホスト"
 
 #, fuzzy
-msgid "Hosts & Clusters"
+#, fuzzy
+msgid "Hosts / Nodes"
 msgstr "クラスター"
 
 #, fuzzy
-msgid "Hosts (%s)"
-msgstr "ホスト"
+msgid "Hosts with failed %s"
+msgstr "コンソールへのアクセスに失敗しました: %s"
+
+msgid "Hosts with running %s"
+msgstr ""
 
 msgid "Host|Admin disabled"
 msgstr "ホスト|アドミニストレータが無効になっています"
@@ -4826,6 +5202,9 @@ msgstr "ホスト|ホスト名"
 
 msgid "Host|Hyperthreading"
 msgstr "ホスト|ハイパースレッディング"
+
+msgid "Host|Hypervisor hostname"
+msgstr ""
 
 msgid "Host|Ipaddress"
 msgstr "ホスト|Ipアドレス"
@@ -4913,6 +5292,10 @@ msgstr ""
 msgid "IPMI IP Address"
 msgstr "IPMI IP アドレス"
 
+#, fuzzy
+msgid "IPMI Present"
+msgstr "ディスク|現在"
+
 msgid "ISO"
 msgstr "ISO"
 
@@ -4927,11 +5310,9 @@ msgid "If"
 msgstr "情報"
 
 msgid ""
-"If this widget is new or has just been added to your dashboard, the data is "
-"being generated and should be available soon."
-msgstr ""
-"このウィジェットが新規またはダッシュボードに追加されたばかりの場合は、データ"
-"は現在収集中で暫くしてから見ることができます。"
+"If this widget is new or has just been added to your dashboard, the data is be"
+"ing generated and should be available soon."
+msgstr "このウィジェットが新規またはダッシュボードに追加されたばかりの場合は、データは現在収集中で暫くしてから見ることができます。"
 
 #, fuzzy
 msgid "Image"
@@ -4992,6 +5373,9 @@ msgstr "%sレポートが使用中のため無効にできません"
 msgid "Inactive"
 msgstr "アクティブ"
 
+msgid "Include Domain prefix in the path"
+msgstr ""
+
 msgid "Index"
 msgstr "インデックス"
 
@@ -5029,16 +5413,6 @@ msgstr "入力パラメーター"
 msgid "Insight"
 msgstr "インサイト"
 
-msgid "Install Selected SmartProxy Build"
-msgstr "選択したスマートプロクシビルドをインストール"
-
-#, fuzzy
-msgid "Installed on Host: %s"
-msgstr "パッチ|インストール日"
-
-msgid "Installed on Host: None"
-msgstr ""
-
 msgid "Instance Type:"
 msgstr "インスタンスタイプ:"
 
@@ -5065,6 +5439,9 @@ msgstr ""
 #, fuzzy
 msgid "Interval"
 msgstr "間隔"
+
+msgid "Invalid Single Sign-On credentials"
+msgstr ""
 
 msgid "Invalid button action."
 msgstr "ボタンのアクションが無効です。"
@@ -5189,8 +5566,8 @@ msgid "LDAP Host Name"
 msgstr "ホスト名"
 
 msgid ""
-"LDAP Host Name and Port fields are needed to perform verification of LDAP "
-"Settings"
+"LDAP Host Name and Port fields are needed to perform verification of LDAP Sett"
+"ings"
 msgstr ""
 
 #, fuzzy
@@ -5273,9 +5650,7 @@ msgstr ""
 
 #, fuzzy
 msgid "Last 1000 lines from server %{name} [%{id}] in zone %{zone}"
-msgstr ""
-"%{typ} 設定が CFME サーバー用に保存されました\"%{name} [%{server_id}]\"ゾーン"
-"中\"%{zone}\""
+msgstr "%{typ} 設定が CFME サーバー用に保存されました\"%{name} [%{server_id}]\"ゾーン中\"%{zone}\""
 
 msgid "Last 1000 lines from the Automation log"
 msgstr "自動化ログからの最終1000 ライン"
@@ -5461,8 +5836,8 @@ msgid "LdapUser|Zip"
 msgstr "Ldapユーザ|Zip"
 
 msgid ""
-"Leave all options unchecked to show the original column value from the first "
-"record in the group."
+"Leave all options unchecked to show the original column value from the first r"
+"ecord in the group."
 msgstr ""
 
 #, fuzzy
@@ -5555,16 +5930,6 @@ msgstr ""
 msgid "Log Level"
 msgstr "ログレベル"
 
-#, fuzzy
-msgid "Log Viewer"
-msgstr "XML 表示"
-
-msgid "Log Wrap Size"
-msgstr "ログラップサイズ"
-
-msgid "Log Wrap Time"
-msgstr "ログラップタイム"
-
 msgid "Log collection error returned: "
 msgstr "ログ収集エラーが返還されました: "
 
@@ -5614,11 +5979,8 @@ msgstr "タギング"
 msgid "Login"
 msgstr "ログイン"
 
-msgid ""
-"Login not allowed, User's %s is missing. Please contact the administrator"
-msgstr ""
-"ログインが許可されませんでした、ユーザの %sが欠落しています。アドミニストレー"
-"タまでご連絡ください"
+msgid "Login not allowed, User's %s is missing. Please contact the administrator"
+msgstr "ログインが許可されませんでした、ユーザの %sが欠落しています。アドミニストレータまでご連絡ください"
 
 msgid "Logs for this CFME Server are not available for viewing"
 msgstr "このCFMEサーバ用のログは表示できません"
@@ -5638,12 +6000,12 @@ msgstr "MB"
 msgid "MHz"
 msgstr "MHz"
 
+#, fuzzy
+msgid "Mac address"
+msgstr "MAC アドレス"
+
 msgid "Main Info"
 msgstr "主情報"
-
-#, fuzzy
-msgid "Maintenance"
-msgstr "インスタンス"
 
 msgid "Manage Accordions"
 msgstr ""
@@ -5654,12 +6016,6 @@ msgstr ""
 #, fuzzy
 msgid "Manage Reports"
 msgstr "レポート"
-
-msgid "Managed VMs (%s)"
-msgstr ""
-
-msgid "Management Engine"
-msgstr "マネジメントエンジン"
 
 msgid "Management Event"
 msgstr "マネジメントイベント"
@@ -5685,6 +6041,9 @@ msgstr "最大タイム"
 
 msgid "Max VMs"
 msgstr "最大 VM"
+
+msgid "Medium"
+msgstr ""
 
 msgid "Member VMs (%s)"
 msgstr ""
@@ -6212,9 +6571,6 @@ msgstr "Miq ポリシーセット"
 
 msgid "Miq product feature"
 msgstr "Miq プロダクト機能"
-
-msgid "Miq proxy"
-msgstr "Miq プロクシ"
 
 msgid "Miq queue"
 msgstr "Miq キュー"
@@ -6786,6 +7142,10 @@ msgstr "Miqデータベース|登録 http プロクシサーバ"
 msgid "MiqDatabase|Registration organization"
 msgstr "Miqデータベース|登録組織"
 
+#, fuzzy
+msgid "MiqDatabase|Registration organization display name"
+msgstr "Miqデータベース|登録 http プロクシサーバ"
+
 msgid "MiqDatabase|Registration server"
 msgstr "Miqデータベース|登録サーバ"
 
@@ -7028,48 +7388,6 @@ msgstr "Miqプロダクト機能|名称"
 
 msgid "MiqProductFeature|Protected"
 msgstr "Miqプロダクト機能|保護"
-
-msgid "MiqProxy|Capabilities"
-msgstr "Miqプロクシ|能力"
-
-msgid "MiqProxy|Created on"
-msgstr "Miqプロクシ|作成日"
-
-msgid "MiqProxy|Guid"
-msgstr "Miqプロクシ|Guid"
-
-msgid "MiqProxy|Last heartbeat"
-msgstr "Miqプロクシ|最終ハートビート"
-
-msgid "MiqProxy|Name"
-msgstr "Miqプロクシ|名称"
-
-msgid "MiqProxy|Power state"
-msgstr "Miqプロクシ|電源状況"
-
-msgid "MiqProxy|Remote config"
-msgstr "Miqプロクシ|リモート設定"
-
-msgid "MiqProxy|Settings"
-msgstr "Miqプロクシ|設定"
-
-msgid "MiqProxy|Updated on"
-msgstr "Miqプロクシ|更新日"
-
-msgid "MiqProxy|Upgrade message"
-msgstr "Miqプロクシ|アップグレードメッセージ"
-
-msgid "MiqProxy|Upgrade settings"
-msgstr "Miqプロクシ|アップグレード設定"
-
-msgid "MiqProxy|Upgrade status"
-msgstr "Miqプロクシ|アップグレード状態"
-
-msgid "MiqProxy|Version"
-msgstr "Miqプロクシ|バージョン"
-
-msgid "MiqProxy|Ws port"
-msgstr "Miqプロクシ|Ws ポート"
 
 msgid "MiqQueue|Args"
 msgstr "Miqキュー|Args"
@@ -7881,9 +8199,6 @@ msgstr "サーバ"
 msgid "Name"
 msgstr "名称"
 
-msgid "Name (from chosen Host)"
-msgstr "名称（選んだホストから）"
-
 msgid "Name / Description"
 msgstr "名称 / 記述"
 
@@ -7893,7 +8208,7 @@ msgstr ""
 msgid "Name: %s | Host Name: %s"
 msgstr ""
 
-msgid "Name: %s | Host Name: %s | IP Address: %s | Refresh Status: %s"
+msgid "Name: %s | Host Name: %s | Refresh Status: %s"
 msgstr ""
 
 msgid "Name: %s | Path: %s"
@@ -8006,8 +8321,9 @@ msgid_plural "New setting will affect VMs"
 msgstr[0] "新規設定は%sに影響を与えます"
 msgstr[1] "新規設定は%sに影響を与えます"
 
-msgid "New settings have been activated"
-msgstr "新規設定が作動されました"
+#, fuzzy
+msgid "New template content cannot be empty"
+msgstr "インポートファイルは空であってはいけません"
 
 msgid "Next"
 msgstr "次"
@@ -8043,6 +8359,11 @@ msgstr "マイタグが作成されていません"
 
 msgid "No %s found"
 msgstr "%s が見つかりませんでした"
+
+#, fuzzy
+#, fuzzy
+msgid "No %s found in the current region."
+msgstr "選択した%sは現在の領域にありません"
 
 msgid "No %s found."
 msgstr "%s が見つかりませんでした。"
@@ -8138,12 +8459,7 @@ msgstr "利用可能な選択肢がありません"
 msgid "No Class found for explorer tree node type '%s'"
 msgstr "エクスプローラツリーノードタイプ'%s'用のクラスが見つかりませんでした"
 
-#, fuzzy
-msgid "No Clusters found in the current region."
-msgstr "選択した%sは現在の領域にありません"
-
-msgid ""
-"No Dashboards are defined for this group. Default dashboard will be shown."
+msgid "No Dashboards are defined for this group. Default dashboard will be shown."
 msgstr ""
 
 #, fuzzy
@@ -8151,11 +8467,9 @@ msgid "No Datastores found in the current region."
 msgstr "選択した%sは現在の領域にありません"
 
 msgid ""
-"No Default Repository SmartProxy is configured, contact your CFME "
-"Administrator"
-msgstr ""
-"デフォルトリポジトリスマートプロクシが構成されていません、CFME アドミニスト"
-"レータまで連絡してください"
+"No Default Repository SmartProxy is configured, contact your CFME Administrato"
+"r"
+msgstr "デフォルトリポジトリスマートプロクシが構成されていません、CFME アドミニストレータまで連絡してください"
 
 msgid "No Dialog"
 msgstr "ダイアログ無し"
@@ -8192,11 +8506,8 @@ msgstr "ポリシーが定義されていません。"
 msgid "No Policy Profiles available."
 msgstr "%sと定義された%s ポリシープロフィールはありません。"
 
-msgid ""
-"No Policy scope defined, the scope of this policy includes all elements."
-msgstr ""
-"ポリシースコープが定義されていません、このポリシーのスコープはすべての要素を"
-"含んでいます。"
+msgid "No Policy scope defined, the scope of this policy includes all elements."
+msgstr "ポリシースコープが定義されていません、このポリシーのスコープはすべての要素を含んでいます。"
 
 msgid "No RSS Feed data found"
 msgstr "RSSフィードデータが見つかりませんでした"
@@ -8289,10 +8600,9 @@ msgid "No child VMs to move right, no action taken"
 msgstr "右へ移動する子VMはありません、アクションは実行されません"
 
 msgid ""
-"No conditions defined. This policy is unconditional and will ALWAYS return "
-"true."
-msgstr ""
-"条件が定義されていません。このポリシーは無条件で常に「真」を返却します。"
+"No conditions defined. This policy is unconditional and will ALWAYS return tru"
+"e."
+msgstr "条件が定義されていません。このポリシーは無条件で常に「真」を返却します。"
 
 msgid "No custom image has been uploaded"
 msgstr "カスタムイメージがアップロードされていません"
@@ -8301,8 +8611,8 @@ msgid "No data found."
 msgstr "データが見つかりませんでした。"
 
 msgid ""
-"No drift history found, an Analysis or Virtual Black Box Synchronization for "
-"this VM may need to be run."
+"No drift history found, an Analysis or Virtual Black Box Synchronization for t"
+"his VM may need to be run."
 msgstr ""
 
 msgid "No events available for this timeline"
@@ -8315,17 +8625,11 @@ msgid "No explorer tree node type found for '%s'"
 msgstr "'%s'用のエクスプローラツリーノードタイプが見つかりませんでした"
 
 msgid "No expression defined, a condition must contain a valid expression."
-msgstr ""
-"数式が定義されていません、条件には有効な数式が含まれている必要があります。"
+msgstr "数式が定義されていません、条件には有効な数式が含まれている必要があります。"
 
 #, fuzzy
 msgid "No filters defined."
 msgstr "定義されたアラートはありません。"
-
-msgid "No log available, press Retrieve to get the SmartProxy log"
-msgstr ""
-"利用可能なログがありません、リトリーブを押してスマートプロクシログを取得して"
-"ください"
 
 msgid "No more than %{max} %{model} can be selected for %{action}"
 msgstr "%{action}用には%{max} %{model}以上を選択することはできません"
@@ -8353,13 +8657,10 @@ msgid "No saved filters or report filters are available to load"
 msgstr ""
 
 msgid "No scope defined, the scope of this condition includes all elements."
-msgstr ""
-"スコープが見つかりませんでした、この条件のスコープはすべての要素を含みます。"
+msgstr "スコープが見つかりませんでした、この条件のスコープはすべての要素を含みます。"
 
 msgid "No shortcuts are authorized for this user, contact your Administrator"
-msgstr ""
-"このユーザはショートカットが承認されていません、アドミニストレータまでご連絡"
-"ください"
+msgstr "このユーザはショートカットが承認されていません、アドミニストレータまでご連絡ください"
 
 msgid "No task target captured"
 msgstr ""
@@ -8367,26 +8668,30 @@ msgstr ""
 msgid "No timer is attached to this Widget, its contents will not be updated."
 msgstr ""
 
+#, fuzzy
+msgid "No type set"
+msgstr "Ui タスクセット"
+
 msgid "No usage data found for specified options"
 msgstr "指定オプション用の使用量データが見つかりませんでした"
 
 msgid "No valid import records were found, please upload another file"
-msgstr ""
-"有効なインポート記録が見つかりませんでした、別のファイルをアップロードしてく"
-"ださい"
+msgstr "有効なインポート記録が見つかりませんでした、別のファイルをアップロードしてください"
 
 msgid "No variables configured."
 msgstr "変数が構成されていません。"
+
+#, fuzzy
+msgid "Nodes"
+msgstr "メモ"
 
 msgid "Non-VM Files"
 msgstr ""
 
 msgid ""
-"Non-admin users can not access the system until at least 1 VM/Instance has "
-"been discovered"
-msgstr ""
-"アドミニストレータでないユーザは最低1 VM/インスタンスが発見されるまでシステム"
-"にアクセスできません"
+"Non-admin users can not access the system until at least 1 VM/Instance has bee"
+"n discovered"
+msgstr "アドミニストレータでないユーザは最低1 VM/インスタンスが発見されるまでシステムにアクセスできません"
 
 msgid "None"
 msgstr "無し"
@@ -8420,8 +8725,7 @@ msgstr "メモ"
 msgid "Note: Fields marked with * are required."
 msgstr "注：* 印のついたフィールドは必須です。"
 
-msgid ""
-"Note: Gap Collection is only available for VMware vSphere Infrastructures"
+msgid "Note: Gap Collection is only available for VMware vSphere Infrastructures"
 msgstr ""
 
 msgid "Note: Only Time Profiles with 'Roll Up Performance' set are shown."
@@ -8437,6 +8741,10 @@ msgid "Notification Frequency"
 msgstr "通知頻度"
 
 msgid "Number of CPU's"
+msgstr "CPUの数"
+
+#, fuzzy
+msgid "Number of Hosts"
 msgstr "CPUの数"
 
 msgid "Number of Instances"
@@ -8503,18 +8811,11 @@ msgstr ""
 msgid "One or more %{model} must be selected to %{task}"
 msgstr "%{task}にはひとつ以上の%{model}が選択されている必要があります"
 
-msgid ""
-"One or more selected reports are not owned by your group, they cannot be "
-"moved"
-msgstr ""
-"選択したレポートのひとつまたはそれ以上があなたのグループが所有するものではな"
-"いため、移動することができません"
+msgid "One or more selected reports are not owned by your group, they cannot be moved"
+msgstr "選択したレポートのひとつまたはそれ以上があなたのグループが所有するものではないため、移動することができません"
 
 msgid "Only 1 Date or Date/Time element can be present in a Dialog"
 msgstr "ダイアログには1つの日付または日付/時間要素しか使用できません"
-
-msgid "Only 1 SmartProxy can be selected for build deployment"
-msgstr "ビルドの展開には1つのスマートプロクシしか選択できません"
 
 msgid "Ontap aggregate derived metric"
 msgstr "Ontap集計派生メトリック"
@@ -9792,11 +10093,35 @@ msgid "Open the full report in a new window"
 msgstr "フルレポートを新規ウィンドウに開く"
 
 #, fuzzy
+#, fuzzy
+msgid "OpenStack Status"
+msgstr "パスワードを更新"
+
+msgid "Openstack Infra provider"
+msgstr ""
+
+#, fuzzy
 msgid "Operating System"
 msgstr "オペレーティングシステム"
 
 msgid "Operating system"
 msgstr "オペレーティングシステム"
+
+#, fuzzy
+msgid "Operating system flavor"
+msgstr "オペレーティングシステム"
+
+#, fuzzy
+msgid "OperatingSystemFlavor|Description"
+msgstr "オペレーティングシステム|ディストリビューション"
+
+#, fuzzy
+msgid "OperatingSystemFlavor|Manager ref"
+msgstr "オペレーティングシステム|最小 pw 長"
+
+#, fuzzy
+msgid "OperatingSystemFlavor|Name"
+msgstr "オペレーティングシステム|名称"
 
 msgid "OperatingSystem|Bitness"
 msgstr "オペレーティングシステム|ビット化"
@@ -9879,6 +10204,10 @@ msgid "Options %s: %s"
 msgstr "オプション"
 
 #, fuzzy
+msgid "Orchestration Stack"
+msgstr "オーケストレーションスタック"
+
+#, fuzzy
 msgid "Orchestration Template"
 msgstr "オーケストレーションテンプレート"
 
@@ -9896,6 +10225,10 @@ msgstr "オーケストレーションテンプレート"
 
 msgid "Orchestration stack"
 msgstr "オーケストレーションスタック"
+
+#, fuzzy
+msgid "Orchestration stack could not be found."
+msgstr "オーケストレーションスタックパラメーター"
 
 msgid "Orchestration stack output"
 msgstr "オーケストレーションスタックアウトプット"
@@ -9972,6 +10305,30 @@ msgstr "オーケストレーションスタック|Ems レファレンス"
 msgid "OrchestrationStack|Name"
 msgstr "オーケストレーションスタック|名称"
 
+#, fuzzy
+msgid "OrchestrationStack|Retired"
+msgstr "オーケストレーションスタック|Ems レファレンス"
+
+#, fuzzy
+msgid "OrchestrationStack|Retirement last warn"
+msgstr "Vmまたはテンプレート|リタイアメント最終警告"
+
+#, fuzzy
+msgid "OrchestrationStack|Retirement requester"
+msgstr "オーケストレーションスタックパラメーター|Ems レファレンス"
+
+#, fuzzy
+msgid "OrchestrationStack|Retirement state"
+msgstr "オーケストレーションスタックリソース|最終更新"
+
+#, fuzzy
+msgid "OrchestrationStack|Retirement warn"
+msgstr "オーケストレーションスタック|記述"
+
+#, fuzzy
+msgid "OrchestrationStack|Retires on"
+msgstr "オーケストレーションスタック|記述"
+
 msgid "OrchestrationStack|Status"
 msgstr "オーケストレーションスタック|状態"
 
@@ -9981,8 +10338,13 @@ msgstr "オーケストレーションテンプレート|コンテンツ"
 msgid "OrchestrationTemplate|Description"
 msgstr "オーケストレーションテンプレート|記述"
 
-msgid "OrchestrationTemplate|Ems ref"
-msgstr "オーケストレーションテンプレート|Ems レファレンス"
+#, fuzzy
+msgid "OrchestrationTemplate|Draft"
+msgstr "オーケストレーションテンプレート|名称"
+
+#, fuzzy
+msgid "OrchestrationTemplate|Md5"
+msgstr "オーケストレーションテンプレート|名称"
 
 msgid "OrchestrationTemplate|Name"
 msgstr "オーケストレーションテンプレート|名称"
@@ -10105,18 +10467,14 @@ msgid "Parameters (%s)"
 msgstr "パラメーター"
 
 #, fuzzy
-msgid "Parent Cluster: %s"
-msgstr "クラスター"
-
-msgid "Parent Cluster: None"
-msgstr ""
+#, fuzzy
+msgid "Parent %s: %s"
+msgstr "親VM"
 
 #, fuzzy
-msgid "Parent Host: %s"
-msgstr "'%s'ホスト用資格情報"
-
-msgid "Parent Host: None"
-msgstr ""
+#, fuzzy
+msgid "Parent %s: None"
+msgstr "親VM"
 
 msgid "Parent Type"
 msgstr "親タイプ"
@@ -10140,6 +10498,10 @@ msgstr "親VM"
 
 msgid "Partition"
 msgstr "パーティション"
+
+#, fuzzy
+msgid "Partition Table"
+msgstr "パーティション|名称"
 
 msgid "Partition|Controller"
 msgstr "パーティション|コントローラー"
@@ -10193,8 +10555,8 @@ msgid "Password/Verify Password do not match"
 msgstr "パスワード/検証パスワードが一致しません"
 
 msgid ""
-"Paste is not available, no object information has been copied from the "
-"Simulation screen"
+"Paste is not available, no object information has been copied from the Simulat"
+"ion screen"
 msgstr ""
 
 msgid "Paste object details for use in a Button."
@@ -10278,7 +10640,8 @@ msgstr "配置"
 msgid "Placement - Options"
 msgstr "配置 - オプション"
 
-msgid "Plan for VM placement on Clusters or Hosts"
+#, fuzzy
+msgid "Plan for VM placement on %s or %s"
 msgstr "クラスターまたはホスト上のVM 配置を計画"
 
 #, fuzzy
@@ -10293,6 +10656,9 @@ msgid "Platform Updates Available"
 msgstr "Miqサーバ|アップデート利用可能"
 
 msgid "Please contact your administrator for assistance."
+msgstr ""
+
+msgid "Please correct invalid %s Entry Point prior to saving"
 msgstr ""
 
 msgid "Please select a Cloud Tenant from the Environment Tab"
@@ -10401,29 +10767,11 @@ msgstr "インポートするには「コミット」を押してください"
 msgid "Press submit to start the Database Vacuum process"
 msgstr ""
 
-msgid ""
-"Press the Apply button to import the good records into the CFME database"
-msgstr ""
-"適した記録をCFMEデータベースにインポートするには「適用」ボタンを押してくださ"
-"い"
+msgid "Press the Apply button to import the good records into the CFME database"
+msgstr "適した記録をCFMEデータベースにインポートするには「適用」ボタンを押してください"
 
 msgid "Press your browser's Back button or click a tab to continue"
-msgstr ""
-"続行するにはブラウザの「戻る」ボタンを押すまたはタブをクリックしてください"
-
-msgid "Pressing 'Save' will deploy the selected SmartProxy build to the Host."
-msgstr "'保存'を押すと選択したスマートプロクシビルドがホストに展開されます。"
-
-msgid ""
-"Pressing 'Save' will save any Host credential changes and deploy the "
-"selected SmartProxy build to the Host."
-msgstr ""
-"'保存'を押すとホスト資格の変更が保存され、選択したスマートプロクシビルドがホ"
-"ストに展開されます。"
-
-#, fuzzy
-msgid "Pressing the Activate button"
-msgstr "5 - 「提出」ボタンを押してください"
+msgstr "続行するにはブラウザの「戻る」ボタンを押すまたはタブをクリックしてください"
 
 msgid "Pressing the back button during a session."
 msgstr ""
@@ -10445,6 +10793,9 @@ msgstr "優先順位が保存されました"
 msgid "Priority Workers"
 msgstr "優先順位が保存されました"
 
+msgid "Private Key"
+msgstr ""
+
 #, fuzzy
 msgid "Process ID"
 msgstr "プロセッサ"
@@ -10458,49 +10809,6 @@ msgstr "プロダクトアシスタンス"
 #, fuzzy
 msgid "Product Features (%s)"
 msgstr "Miqプロダクト機能|名称"
-
-#, fuzzy
-msgid "Product Update Info"
-msgstr "プロダクト更新"
-
-msgid "Product update"
-msgstr "プロダクト更新"
-
-msgid "ProductUpdate|Arch"
-msgstr "プロダクト更新|アーチ"
-
-msgid "ProductUpdate|Build"
-msgstr "プロダクト更新|ビルド"
-
-msgid "ProductUpdate|Component"
-msgstr "プロダクト更新|コンポーネント"
-
-msgid "ProductUpdate|Created on"
-msgstr "プロダクト更新|作成日"
-
-msgid "ProductUpdate|Description"
-msgstr "プロダクト更新|記述"
-
-msgid "ProductUpdate|Md5"
-msgstr "プロダクト更新|Md5"
-
-msgid "ProductUpdate|Name"
-msgstr "プロダクト更新|名称"
-
-msgid "ProductUpdate|Platform"
-msgstr "プロダクト更新|プラットフォーム"
-
-msgid "ProductUpdate|Update type"
-msgstr "プロダクト更新|更新タイプ"
-
-msgid "ProductUpdate|Updated on"
-msgstr "プロダクト更新|更新日"
-
-msgid "ProductUpdate|Version"
-msgstr "プロダクト更新|バージョン"
-
-msgid "ProductUpdate|Vmdb schema version"
-msgstr "プロダクト更新|Vmdb スキーマバージョン"
 
 msgid "Profile Alerts:"
 msgstr "プロフィールアラート:"
@@ -10522,6 +10830,24 @@ msgstr "プロビジョン順位"
 msgid "Providers"
 msgstr "プロビジョン順位"
 
+#, fuzzy
+#, fuzzy
+msgid "Provider|Guid"
+msgstr "プロビジョン順位"
+
+#, fuzzy
+#, fuzzy
+msgid "Provider|Name"
+msgstr "プロビジョン順位"
+
+#, fuzzy
+#, fuzzy
+msgid "Provider|Url"
+msgstr "プロビジョン順位"
+
+msgid "Provider|Verify ssl"
+msgstr ""
+
 msgid "Provision %s"
 msgstr "プロビジョン %s"
 
@@ -10537,8 +10863,9 @@ msgstr "プロビジョン %{model} - 選択 %{typ}"
 msgid "Provision Order"
 msgstr "プロビジョン順位"
 
-msgid "Provisioned Hosts"
-msgstr "プロビジョンされたホスト"
+#, fuzzy
+msgid "Provisioned %s"
+msgstr "プロビジョンされたVM"
 
 msgid "Provisioned VMs"
 msgstr "プロビジョンされたVM"
@@ -10550,26 +10877,7 @@ msgid "Provisioning Entry Point"
 msgstr "プロビジョニングエントリーポイント"
 
 msgid "Provisioning Entry Point (NameSpace/Class/Instance)"
-msgstr ""
-"プロビジョニングエントリーポイント（ネームスペース/クラス/インスタンス）"
-
-msgid "Proxy task"
-msgstr "プロクシタスク"
-
-msgid "ProxyTask|Command"
-msgstr "プロクシタスク|コマンド"
-
-msgid "ProxyTask|Created on"
-msgstr "プロクシタスク|作成日"
-
-msgid "ProxyTask|Priority"
-msgstr "プロクシタスク|優先順位"
-
-msgid "ProxyTask|State"
-msgstr "プロクシタスク|状態"
-
-msgid "ProxyTask|Updated on"
-msgstr "プロクシタスク|更新日"
+msgstr "プロビジョニングエントリーポイント（ネームスペース/クラス/インスタンス）"
 
 msgid "Pxe image"
 msgstr "Pxeイメージ"
@@ -10656,6 +10964,9 @@ msgstr "クイックスタート"
 msgid "Quotas"
 msgstr "割当"
 
+msgid "RSA key pair"
+msgstr ""
+
 msgid "RSS"
 msgstr ""
 
@@ -10692,8 +11003,13 @@ msgstr "読取専用 %{model} \"%{name}\" は削除することができませ�
 msgid "Read Only %{model} \"%{name}\" cannot be edited"
 msgstr "読取専用 %{model} \"%{name}\" は編集することができません"
 
-msgid "Read Only Mode"
+#, fuzzy
+#, fuzzy
+msgid "Read only"
 msgstr "読取専用モード"
+
+msgid "Realm"
+msgstr ""
 
 msgid "Reason"
 msgstr "理由"
@@ -10859,6 +11175,11 @@ msgstr "この%sを削除する"
 msgid "Remove %s"
 msgstr "この%sを削除する"
 
+#, fuzzy
+#, fuzzy
+msgid "Remove Tags"
+msgstr "この%sを削除する"
+
 msgid "Remove Tags Settings"
 msgstr "タグ設定を削除"
 
@@ -10979,16 +11300,11 @@ msgstr "Miqレポート結果|ユーザid"
 msgid "Report Selection"
 msgstr "アラート選択肢"
 
-msgid ""
-"Report can not be saved unless sort field has been configured for Charts"
-msgstr ""
-"並べ替えフィールドがチャート用に構成されていない限りレポートを保存することは"
-"できません"
+msgid "Report can not be saved unless sort field has been configured for Charts"
+msgstr "並べ替えフィールドがチャート用に構成されていない限りレポートを保存することはできません"
 
 msgid "Report cannot be deleted if it's being used by one or more Widgets"
-msgstr ""
-"ひとつまたはそれ以上のウィジェットが利用している場合、レポートを削除すること"
-"はできません"
+msgstr "ひとつまたはそれ以上のウィジェットが利用している場合、レポートを削除することはできません"
 
 msgid "Report doesn't belong to Widgets."
 msgstr ""
@@ -11014,11 +11330,8 @@ msgstr "%s はもはや存在しません"
 msgid "Report not found."
 msgstr "レポートデータが見つかりませんでした"
 
-msgid ""
-"Report preview generation returned: Status [%{status}] Message [%{message}]"
-msgstr ""
-"レポートプレビュー生成が返還されました: 状態 [%{status}] メッセージ "
-"[%{message}]"
+msgid "Report preview generation returned: Status [%{status}] Message [%{message}]"
+msgstr "レポートプレビュー生成が返還されました: 状態 [%{status}] メッセージ [%{message}]"
 
 #, fuzzy
 msgid "Reporting Workers"
@@ -11125,8 +11438,7 @@ msgid "Reset Changes"
 msgstr "フィルター変更をリセットする"
 
 msgid "Reset all Datastore custom classes and instances to default"
-msgstr ""
-"すべてのデータストアカスタムクラスとインスタンスをデフォルトにリセットする"
+msgstr "すべてのデータストアカスタムクラスとインスタンスをデフォルトにリセットする"
 
 msgid "Reset all Planning options"
 msgstr "すべての計画オプションをリセットする"
@@ -11280,12 +11592,6 @@ msgstr "リタイアメントエントリーポイント"
 msgid "Retirement Warning"
 msgstr "リタイアメント警告"
 
-msgid "Retrieve log returned: "
-msgstr "リトリーブログが返還されました: "
-
-msgid "Retrieve the current SmartProxy log"
-msgstr "現在のスマートプロクシログをリトリーブする"
-
 msgid "Right Size Recommendation for %{model} \"%{name}\""
 msgstr "%{model} 用の正しいサイズ推奨\"%{name}\""
 
@@ -11328,33 +11634,6 @@ msgstr "行カウント"
 
 msgid "Rows"
 msgstr ""
-
-msgid "Rr pending change"
-msgstr "Rr 保留中の変更"
-
-msgid "Rr sync state"
-msgstr "Rr 同期の状態"
-
-msgid "RrPendingChange|Change key"
-msgstr "Rr保留中変更|キーを変更"
-
-msgid "RrPendingChange|Change new key"
-msgstr "Rr保留中変更|新規キーを変更"
-
-msgid "RrPendingChange|Change table"
-msgstr "Rr保留中変更|表を変更"
-
-msgid "RrPendingChange|Change time"
-msgstr "Rr保留中変更|時間を変更"
-
-msgid "RrPendingChange|Change type"
-msgstr "Rr保留中変更|変更タイプ"
-
-msgid "RrSyncState|State"
-msgstr "Rr同期状態|状態"
-
-msgid "RrSyncState|Table name"
-msgstr "Rr同期状態|表名"
 
 msgid "Rss feed"
 msgstr "Rssフィード"
@@ -11405,6 +11684,10 @@ msgstr "データベースのバックアップ"
 msgid "Running"
 msgstr "実行中"
 
+#, fuzzy
+msgid "Running (%s)"
+msgstr "実行中"
+
 msgid "Running Processes (%s Ago)"
 msgstr ""
 
@@ -11417,9 +11700,12 @@ msgstr ""
 msgid "Running Processes (Not Available)"
 msgstr ""
 
+msgid "Running system services of %s"
+msgstr ""
+
 msgid ""
-"SMTP E-mail Server settings and Test E-mail Address are needed to send test "
-"email"
+"SMTP E-mail Server settings and Test E-mail Address are needed to send test em"
+"ail"
 msgstr ""
 
 msgid "SNMP Trap"
@@ -11476,9 +11762,7 @@ msgid "Save..."
 msgstr "保存"
 
 msgid "Saved Report \"%s\" not found, Schedule may have failed"
-msgstr ""
-"レポートを保存 \"%s\" が見つかりませんでした、スケジュールが失敗した可能性が"
-"あります"
+msgstr "レポートを保存 \"%s\" が見つかりませんでした、スケジュールが失敗した可能性があります"
 
 #, fuzzy
 msgid "Saved Reports"
@@ -11486,6 +11770,17 @@ msgstr "レポート"
 
 msgid "Savings"
 msgstr "貯蓄"
+
+#, fuzzy
+msgid "Scale"
+msgstr "ロケール"
+
+msgid "Scale Infrastructure Provider"
+msgstr ""
+
+#, fuzzy
+msgid "Scaling"
+msgstr "ネーミング"
 
 msgid "Scan history"
 msgstr "スキャン履歴"
@@ -11632,8 +11927,7 @@ msgstr ""
 msgid "Secondary (Display) Filter"
 msgstr "Miqレポート|表示フィルター"
 
-msgid ""
-"Secondary (Display) Filter - Filters the rows based on child table fields"
+msgid "Secondary (Display) Filter - Filters the rows based on child table fields"
 msgstr ""
 
 msgid "Secret Access Key"
@@ -11653,6 +11947,11 @@ msgstr "セキュリティーグループ"
 msgid "Security Groups (%s)"
 msgstr "セキュリティーグループ"
 
+#, fuzzy
+#, fuzzy
+msgid "Security Protocol"
+msgstr "セキュリティーグループ"
+
 msgid "Security group"
 msgstr "セキュリティーグループ"
 
@@ -11668,6 +11967,11 @@ msgstr "セキュリティーグループ|名称"
 msgid "Select"
 msgstr "選択"
 
+#, fuzzy
+#, fuzzy
+msgid "Select %s to validate against"
+msgstr "評価するアラートを選択してください"
+
 msgid "Select Alerts to be Evaluated"
 msgstr "評価するアラートを選択してください"
 
@@ -11676,18 +11980,11 @@ msgid "Select Entry Point %s"
 msgstr "リタイアメントエントリーポイント"
 
 #, fuzzy
-msgid "Select Host to validate against"
-msgstr "評価するアラートを選択してください"
-
-#, fuzzy
 msgid "Select Policy Profiles"
 msgstr "ポリシープロフィール"
 
 msgid "Select Server:"
 msgstr "サーバを選択:"
-
-msgid "Select SmartProxy Host"
-msgstr "スマートプロクシホストを選択"
 
 msgid "Select Tags to apply"
 msgstr "適用するタグを選択"
@@ -11725,14 +12022,8 @@ msgstr "左側のノードを選択して使用量情報を表示する。"
 msgid "Select a node on the left to view Utilization report."
 msgstr "左側のノードを選択して使用量レポートを表示する。"
 
-#, fuzzy
-msgid "Select a product update to view activation options"
-msgstr "左側のノードを選択して使用量情報を表示する。"
-
-msgid ""
-"Select a reference VM or Manual Input source to Submit the Planning Options"
-msgstr ""
-"レファレンスVMまたはマニュアル入力情報源を選択して計画オプションを提出する"
+msgid "Select a reference VM or Manual Input source to Submit the Planning Options"
+msgstr "レファレンスVMまたはマニュアル入力情報源を選択して計画オプションを提出する"
 
 #, fuzzy
 msgid "Select an Owner:"
@@ -11809,9 +12100,6 @@ msgstr "選択肢"
 msgid "Selections"
 msgstr "選択肢"
 
-msgid "Self Update Frequency"
-msgstr "自己更新頻度"
-
 msgid "Send E-mail"
 msgstr "電子メールを送付"
 
@@ -11864,8 +12152,8 @@ msgid "Server Roles"
 msgstr "サーバ役割"
 
 msgid ""
-"Server information, User ID and matching password fields are needed to "
-"perform verification of credentials"
+"Server information, Username and matching password fields are needed to perfor"
+"m verification of credentials"
 msgstr ""
 
 msgid "Server role"
@@ -11907,6 +12195,18 @@ msgstr "サービス"
 
 msgid "Service Catalogs"
 msgstr "サービスカタログ"
+
+#, fuzzy
+msgid "Service Dialog \"%s\" was successfully created"
+msgstr "サービスダイアログが正常にインポートされました"
+
+#, fuzzy
+msgid "Service Dialog Information"
+msgstr "ダイアログ情報"
+
+#, fuzzy
+msgid "Service Dialog Name"
+msgstr "サービステンプレート|名称"
 
 msgid "Service Selection"
 msgstr "サービス選択肢"
@@ -12032,6 +12332,10 @@ msgstr "サービス|リタイア完了"
 msgid "Service|Retirement last warn"
 msgstr "サービス|リタイアメント最終警告"
 
+#, fuzzy
+msgid "Service|Retirement requester"
+msgstr "サービス|リタイアメント状態"
+
 msgid "Service|Retirement state"
 msgstr "サービス|リタイアメント状態"
 
@@ -12048,9 +12352,7 @@ msgid "Session Timeout"
 msgstr ""
 
 msgid "Session was timed out due to inactivity. Please log in again."
-msgstr ""
-"非アクティブが原因でセッションがタイムアウトしました。もう一度ログインしてく"
-"ださい。"
+msgstr "非アクティブが原因でセッションがタイムアウトしました。もう一度ログインしてください。"
 
 msgid "Set Custom Attribute Settings"
 msgstr "カスタム属性設定を設定"
@@ -12084,14 +12386,10 @@ msgid "Setting priority is not allowed for the selected item"
 msgstr "選択したアイテムは優先順位の設定が許可されていません"
 
 msgid "Setting tracing to true may cause excessive log lines to be written"
-msgstr ""
-"「真にトレース」の設定は非常に長いラインの書き込みを生じる可能性があります"
+msgstr "「真にトレース」の設定は非常に長いラインの書き込みを生じる可能性があります"
 
 msgid "Settings"
 msgstr "設定"
-
-msgid "Settings activation returned: "
-msgstr "設定アクティベーションが返還されました: "
 
 msgid "Settings and Operations"
 msgstr "設定とオペレーション"
@@ -12107,11 +12405,56 @@ msgstr "表示"
 msgid "Show %s"
 msgstr "表示"
 
+#, fuzzy
+#, fuzzy
+msgid "Show %s & %s"
+msgstr "過去の日付を表示"
+
+#, fuzzy
+#, fuzzy
+msgid "Show %s OS information"
+msgstr "OS 情報"
+
 msgid "Show %s Quadrants"
 msgstr " %s クワドラントを表示"
 
+#, fuzzy
+#, fuzzy
+msgid "Show %s devices"
+msgstr "ホストイベントを表示"
+
+msgid "Show %s drift history"
+msgstr ""
+
+#, fuzzy
+#, fuzzy
+msgid "Show %s network"
+msgstr "ホストイベントを表示"
+
+#, fuzzy
+msgid "Show %s parent %s"
+msgstr " %s クワドラントを表示"
+
+#, fuzzy
+#, fuzzy
+msgid "Show %s storage adapters"
+msgstr "ホストイベントを表示"
+
 msgid "Show Capacity & Utilization"
 msgstr ""
+
+#, fuzzy
+#, fuzzy
+msgid "Show Container Groups"
+msgstr "セキュリティーグループ"
+
+msgid "Show Container Nodes"
+msgstr ""
+
+#, fuzzy
+#, fuzzy
+msgid "Show Container Services"
+msgstr "ホストイベントを表示"
 
 #, fuzzy
 msgid "Show Costs by"
@@ -12123,30 +12466,6 @@ msgstr ""
 msgid "Show Host Events"
 msgstr "ホストイベントを表示"
 
-#, fuzzy
-msgid "Show Host OS information"
-msgstr "OS 情報"
-
-#, fuzzy
-msgid "Show Host devices"
-msgstr "ホストイベントを表示"
-
-#, fuzzy
-msgid "Show Host network"
-msgstr "ホストイベントを表示"
-
-#, fuzzy
-msgid "Show Host storage adapters"
-msgstr "ホストイベントを表示"
-
-#, fuzzy
-msgid "Show Hosts"
-msgstr "ホストイベントを表示"
-
-#, fuzzy
-msgid "Show Hosts & Clusters"
-msgstr "ホストイベントを表示"
-
 msgid "Show Input Parameters"
 msgstr "入力パラメーターを表示"
 
@@ -12154,7 +12473,8 @@ msgid "Show Other VM files on this %s"
 msgstr ""
 
 #, fuzzy
-msgid "Show Parent Host"
+#, fuzzy
+msgid "Show Parent %s"
 msgstr "過去の日付を表示"
 
 msgid "Show Past Dates"
@@ -12213,9 +12533,6 @@ msgstr "表示"
 msgid "Show VMs & Templates"
 msgstr "過去の日付を表示"
 
-msgid "Show VMs in this Cluster, but not in Resource Pools below"
-msgstr ""
-
 msgid "Show VMs in this Resource Pool, but not in Resource Pools below"
 msgstr ""
 
@@ -12254,15 +12571,9 @@ msgstr "セキュリティーグループ"
 msgid "Show all Templates"
 msgstr "テンプレート"
 
-msgid "Show all Templates in this Cluster"
-msgstr ""
-
 #, fuzzy
 msgid "Show all VMs"
 msgstr "すべてのVM"
-
-msgid "Show all VMs in this Cluster"
-msgstr ""
 
 msgid "Show all VMs in this Resource Pool"
 msgstr ""
@@ -12279,23 +12590,16 @@ msgstr ""
 msgid "Show all managed %s"
 msgstr ""
 
-msgid "Show all managed Clusters"
-msgstr ""
+#, fuzzy
+#, fuzzy
+msgid "Show all registered %s"
+msgstr "登録済みVM用の情報"
 
-msgid "Show all managed Hosts"
-msgstr ""
-
-msgid "Show all managed VMs"
-msgstr ""
-
-msgid "Show all registered Hosts"
+msgid "Show all used %s on this %s"
 msgstr ""
 
 msgid "Show at Login"
 msgstr "ログイン時に表示"
-
-msgid "Show cluster drift history"
-msgstr ""
 
 #, fuzzy
 msgid "Show configuration"
@@ -12316,13 +12620,33 @@ msgstr ""
 msgid "Show events from last:"
 msgstr ""
 
-msgid "Show host drift history"
-msgstr ""
-
 msgid "Show hourly data from:"
 msgstr ""
 
 msgid "Show in Console"
+msgstr ""
+
+#, fuzzy
+#, fuzzy
+msgid "Show list of all %s"
+msgstr "過去の日付を表示"
+
+msgid "Show list of configuration files of %s"
+msgstr ""
+
+msgid "Show list of failed %s"
+msgstr ""
+
+msgid "Show list of hosts with %s"
+msgstr ""
+
+msgid "Show list of hosts with failed %s"
+msgstr ""
+
+msgid "Show list of hosts with running %s"
+msgstr ""
+
+msgid "Show list of running %s"
 msgstr ""
 
 msgid "Show member VMs"
@@ -12358,13 +12682,10 @@ msgstr ""
 msgid "Show snapshot info"
 msgstr "ログイン時に表示"
 
-msgid "Show the Host this SmartProxy is installed on"
-msgstr ""
-
 msgid "Show the Win32 services installed on this VM"
 msgstr ""
 
-msgid "Show the advanced settings on this Host"
+msgid "Show the advanced settings on this %s"
 msgstr ""
 
 msgid "Show the advanced settings on this VM"
@@ -12376,16 +12697,16 @@ msgstr ""
 msgid "Show the file system drivers installed on this VM"
 msgstr ""
 
-msgid "Show the files on this Host"
+msgid "Show the files on this %s"
 msgstr ""
 
 msgid "Show the files on this VM"
 msgstr ""
 
-msgid "Show the firewall rules on this Host"
+msgid "Show the firewall rules on this %s"
 msgstr ""
 
-msgid "Show the groups defined on this Host"
+msgid "Show the groups defined on this %s"
 msgstr ""
 
 msgid "Show the groups defined on this VM"
@@ -12394,10 +12715,10 @@ msgstr ""
 msgid "Show the kernel drivers installed on this VM"
 msgstr ""
 
-msgid "Show the packages installed on this Host"
+msgid "Show the packages installed on this %s"
 msgstr ""
 
-msgid "Show the patches installed on this Host"
+msgid "Show the patches installed on this %s"
 msgstr ""
 
 msgid "Show the patches installed on this VM"
@@ -12406,14 +12727,24 @@ msgstr ""
 msgid "Show the registry items on this VM"
 msgstr ""
 
-msgid "Show the services installed on this Host"
+msgid "Show the services installed on this %s"
 msgstr ""
 
-msgid "Show the users defined on this Host"
+msgid "Show the users defined on this %s"
 msgstr ""
 
 msgid "Show the users defined on this VM"
 msgstr ""
+
+#, fuzzy
+#, fuzzy
+msgid "Show this %s parent %s"
+msgstr "ホストイベントを表示"
+
+#, fuzzy
+#, fuzzy
+msgid "Show this %s's %s"
+msgstr "ホストイベントを表示"
 
 #, fuzzy
 msgid "Show this Availability Zone's parent %s"
@@ -12425,25 +12756,16 @@ msgstr ""
 msgid "Show this Flavor's parent %s"
 msgstr ""
 
-#, fuzzy
-msgid "Show this Host's parent %s"
-msgstr "ホストイベントを表示"
-
-msgid "Show this Host's parent Cluster"
-msgstr ""
-
 msgid "Show this Security Group's parent %s"
 msgstr ""
-
-#, fuzzy
-msgid "Show this SmartProxy's %s"
-msgstr "このスマートプロクシを追加"
 
 msgid "Show this VM's parent"
 msgstr ""
 
-msgid "Show this VM's parent Host"
-msgstr ""
+#, fuzzy
+#, fuzzy
+msgid "Show this VM's parent %s"
+msgstr "ホストイベントを表示"
 
 msgid "Show this VM's parent Service"
 msgstr ""
@@ -12451,8 +12773,20 @@ msgstr ""
 msgid "Show this Vm's parent %s"
 msgstr ""
 
-msgid "Show tree of all VMs by Resource Pool in this Cluster"
-msgstr ""
+#, fuzzy
+#, fuzzy
+msgid "Show this container group's parent %s"
+msgstr "利用可能ゾーン|Emsレファレンス"
+
+#, fuzzy
+#, fuzzy
+msgid "Show this container node's parent %s"
+msgstr "利用可能ゾーン|Emsレファレンス"
+
+#, fuzzy
+#, fuzzy
+msgid "Show this container service's parent %s"
+msgstr "利用可能ゾーン|Emsレファレンス"
 
 msgid "Show tree of all VMs in this Resource Pool"
 msgstr ""
@@ -12488,8 +12822,7 @@ msgid "Simulation Parameters"
 msgstr "入力パラメーター"
 
 msgid "Simulation unavailable: Required Class \"System/Process\" is missing"
-msgstr ""
-"シミュレーション利用可能: 必須クラス\"システム/プロセス\" が不足しています"
+msgstr "シミュレーション利用可能: 必須クラス\"システム/プロセス\" が不足しています"
 
 msgid "Single Select"
 msgstr "単一選択"
@@ -12513,30 +12846,9 @@ msgstr "小さなツリー"
 msgid "Smart Management"
 msgstr "スマートマネジメント"
 
-msgid "SmartProxies"
-msgstr "スマートプロクシ"
-
-#, fuzzy
-msgid "SmartProxy"
-msgstr "スマートプロクシ"
-
-msgid ""
-"SmartProxy \"%s\" log retrieval has been started . . . refresh page to view "
-"the log"
-msgstr ""
-"スマートプロクシ\"%s\" ログの検索が開始されました. . . ページをリフレッシュし"
-"てログを表示してください"
-
-#, fuzzy
-msgid "SmartProxy Affinity"
-msgstr "スマートプロクシ"
-
 #, fuzzy
 msgid "SmartProxy Server IP"
 msgstr "スマートプロクシ"
-
-msgid "SmartProxy default settings saved"
-msgstr "スマートプロクシデフォルト設定が保存されました"
 
 msgid "Snapshot"
 msgstr "スナップショット"
@@ -12603,9 +12915,9 @@ msgid "Snapshot|Updated on"
 msgstr "スナップショット|更新日"
 
 msgid ""
-"Software updates have not yet been configured. Select Edit Registration to "
-"register appliances in this region with Red Hat to receive software updates "
-"and other benefits."
+"Software updates have not yet been configured. Select Edit Registration to reg"
+"ister appliances in this region with Red Hat to receive software updates and o"
+"ther benefits."
 msgstr ""
 
 msgid "Sorry, the username or password you entered is incorrect."
@@ -12658,7 +12970,8 @@ msgstr "開始ページ"
 msgid "Start TLS Automatically"
 msgstr ""
 
-msgid "Start the Host Discovery"
+#, fuzzy
+msgid "Start the %s Discovery"
 msgstr "ホストの検出を開始"
 
 #, fuzzy
@@ -12943,6 +13256,10 @@ msgstr "システムサービス|グループによる"
 msgid "SystemService|Depend on service"
 msgstr "システムサービス|サービスによる"
 
+#, fuzzy
+msgid "SystemService|Dependencies"
+msgstr "システムサービス|グループによる"
+
 msgid "SystemService|Description"
 msgstr "システムサービス|記述"
 
@@ -12972,6 +13289,18 @@ msgstr "システムサービス|開始"
 
 msgid "SystemService|Svc type"
 msgstr "システムサービス|Svc タイプ"
+
+#, fuzzy
+msgid "SystemService|Systemd active"
+msgstr "システムサービス|開始"
+
+#, fuzzy
+msgid "SystemService|Systemd load"
+msgstr "システムサービス|記述"
+
+#, fuzzy
+msgid "SystemService|Systemd sub"
+msgstr "システムサービス|開始"
 
 msgid "SystemService|Typename"
 msgstr "システムサービス|タイプ名"
@@ -13066,6 +13395,11 @@ msgid "Templates (0)"
 msgstr "テンプレート"
 
 #, fuzzy
+#, fuzzy
+msgid "Tenancy"
+msgstr "クラウドテナント:"
+
+#, fuzzy
 msgid "Tenants"
 msgstr "クラウドテナント:"
 
@@ -13077,65 +13411,50 @@ msgid "Text"
 msgstr ""
 
 msgid ""
-"The CFME Server is still starting, you have been redirected to the "
-"diagnostics page for problem determination"
-msgstr ""
-"CFMEサーバが始動中です、問題判別のため診断ページに リダイレクトされました"
+"The CFME Server is still starting, you have been redirected to the diagnostics"
+" page for problem determination"
+msgstr "CFMEサーバが始動中です、問題判別のため診断ページに リダイレクトされました"
 
 msgid ""
-"The CFME Server is still starting. If this message persists, please contact "
-"your CFME administrator."
-msgstr ""
-"CFMEサーバがまだ始動中です。このメッセージが消えない場合、CFMEアドミニスト"
-"レータまでお問い合わせください。"
+"The CFME Server is still starting. If this message persists, please contact yo"
+"ur CFME administrator."
+msgstr "CFMEサーバがまだ始動中です。このメッセージが消えない場合、CFMEアドミニストレータまでお問い合わせください。"
 
 msgid ""
-"The Default Repository SmartProxy is not valid, contact your CFME "
-"Administrator"
-msgstr ""
-"デフォルトリポジトリスマートプロクシが無効です、CFMEアドミニストレータまでお"
-"問い合わせください"
+"The Default Repository SmartProxy is not valid, contact your CFME Administrato"
+"r"
+msgstr "デフォルトリポジトリスマートプロクシが無効です、CFMEアドミニストレータまでお問い合わせください"
 
 msgid ""
-"The Default Repository SmartProxy no longer exists, contact your CFME "
-"Administrator"
-msgstr ""
-"デフォルトリポジトリスマートプロクシがもはや存在しません、CFMEアドミニスト"
-"レータまでお問い合わせください"
+"The Default Repository SmartProxy no longer exists, contact your CFME Administ"
+"rator"
+msgstr "デフォルトリポジトリスマートプロクシがもはや存在しません、CFMEアドミニストレータまでお問い合わせください"
 
 msgid ""
-"The Default Repository SmartProxy, \"%s\", is not running, contact your CFME "
-"Administrator"
-msgstr ""
-"デフォルトリポジトリスマートプロクシが\"%s\"作動していません、CFMEアドミニス"
-"トレータまでお問い合わせください "
+"The Default Repository SmartProxy, \"%s\", is not running, contact your CFME Adm"
+"inistrator"
+msgstr "デフォルトリポジトリスマートプロクシが\"%s\"作動していません、CFMEアドミニストレータまでお問い合わせください "
 
 msgid "The Enterprise"
 msgstr "エンタープライズ"
 
 msgid ""
-"The Host Default VNC Port Range ending port must be equal to or higher than "
-"the starting point"
-msgstr ""
-"ホストデフォルトVNCポート領域の終了ポートは開始ポイントと等しいかそれより高い"
-"必要があります "
+"The Host Default VNC Port Range ending port must be equal to or higher than th"
+"e starting point"
+msgstr "ホストデフォルトVNCポート領域の終了ポートは開始ポイントと等しいかそれより高い必要があります "
 
 msgid "The Remote Console is connecting"
 msgstr "リモートコンソールに接続中"
 
-msgid "The SmartProxy log must be retrieved before it can be downloaded"
-msgstr "スマートプロクシログはダウンロード前にリトリーブが必要です"
-
 msgid ""
-"The VM has been suspended, powered off or the connection to the server has "
-"been lost. \n"
+"The VM has been suspended, powered off or the connection to the server has bee"
+"n lost. \n"
 "This console window will now close."
 msgstr ""
 "VMが中断、電源がオフまたはサーバとの接続が失われています。\n"
 "このコンソールウィンドウが閉じられます。"
 
-msgid ""
-"The check count value must be an integer to commit this expression element"
+msgid "The check count value must be an integer to commit this expression element"
 msgstr "この数式要素のチェックカウント値は整数であることが必要です"
 
 msgid "The current search details have been reset"
@@ -13159,11 +13478,8 @@ msgstr "選択された %s が有効化されました"
 msgid "The selected %{model} were marked as %{action}"
 msgstr "選択した %{model} が %{action}として印が付けられました"
 
-msgid ""
-"The selected Filter can not be set as Default because it requires user input"
-msgstr ""
-"ユーザ入力が必要であるため選択したフィルターはデフォルトに設定することができ"
-"ません"
+msgid "The selected Filter can not be set as Default because it requires user input"
+msgstr "ユーザ入力が必要であるため選択したフィルターはデフォルトに設定することができません"
 
 msgid "The selected Filter record was not found"
 msgstr "選択したフィルターの記録が見つかりませんでした"
@@ -13174,41 +13490,25 @@ msgstr "選択したスケジュールが実行の待ち行列に追加されま
 msgid "The selected Schedules have been queued to run"
 msgstr "選択したスケジュールが実行の待ち行列に追加されました"
 
-msgid ""
-"The selected SmartProxy can not be managed because the Host is not powered on"
-msgstr ""
-"ホストの電源がオンになっていないため選択したスマートプロクシを管理することが"
-"できません"
-
 msgid "The selected Task was cancelled"
 msgstr "選択したタスクがキャンセルされました"
 
-msgid ""
-"The selected job no longer exists, Delete all older Tasks was not completed"
-msgstr ""
-"選択したジョブはもはや存在しません、古いタスクすべての削除が完了しませんでし"
-"た"
+msgid "The selected job no longer exists, Delete all older Tasks was not completed"
+msgstr "選択したジョブはもはや存在しません、古いタスクすべての削除が完了しませんでした"
 
 msgid "The server is initializing; access is being retried every 10 seconds %s"
 msgstr ""
 
-msgid ""
-"The test email is being delivered, check \"%s\" to verify it was successful"
-msgstr ""
-"テスト電子メールが送付されました、 \"%s\" 正常に送付されたか確認してください"
+msgid "The test email is being delivered, check \"%s\" to verify it was successful"
+msgstr "テスト電子メールが送付されました、 \"%s\" 正常に送付されたか確認してください"
 
 msgid "The user is not authorized for this task or item."
 msgstr "ユーザはこのタスクまたはアイテムに関する権限を持っていません。"
 
-msgid "There are no available SmartProxies to deploy on Host \"%s\""
-msgstr "ホストに展開する利用可能なスマートプロクシが存在しません\"%s\""
-
 msgid ""
-"There is an error in the selected expression element, perhaps it was "
-"imported or edited manually."
-msgstr ""
-"選択した数式要素にエラーが含まれています、インポートまたはT マニュアルで編集"
-"された可能性があります。"
+"There is an error in the selected expression element, perhaps it was imported "
+"or edited manually."
+msgstr "選択した数式要素にエラーが含まれています、インポートまたはT マニュアルで編集された可能性があります。"
 
 msgid "Third band unit:"
 msgstr ""
@@ -13247,17 +13547,12 @@ msgid "This Week (partial)"
 msgstr ""
 
 msgid ""
-"This element should be removed and recreated or you can report the error to "
-"your CFME administrator."
-msgstr ""
-"この要素は削除されるか再作成されるべきです、またはCFME アドミニストレータまで"
-"お問い合わせください。"
+"This element should be removed and recreated or you can report the error to yo"
+"ur CFME administrator."
+msgstr "この要素は削除されるか再作成されるべきです、またはCFME アドミニストレータまでお問い合わせください。"
 
-msgid ""
-"This page requires the VMware MKS plugin. Install the plugin and try again."
-msgstr ""
-"このページにはVMウェアMKSプラグインが必要です。プラグインをインストールしてか"
-"らもう一度お試しください。"
+msgid "This page requires the VMware MKS plugin. Install the plugin and try again."
+msgstr "このページにはVMウェアMKSプラグインが必要です。プラグインをインストールしてからもう一度お試しください。"
 
 msgid "This policy does not currently respond to any Events."
 msgstr "このポリシーは現在どのイベントにも反応しません。"
@@ -13272,18 +13567,14 @@ msgid "This user is limited to the selected items and their children."
 msgstr ""
 
 msgid ""
-"This will show the chart and the entire report (all rows) in your browser. "
-"Do you want to proceed?"
-msgstr ""
-"ブラウザにチャートとすべてのレポート（すべての行）が表示されます。続行してよ"
-"ろしいですか？"
+"This will show the chart and the entire report (all rows) in your browser. Do "
+"you want to proceed?"
+msgstr "ブラウザにチャートとすべてのレポート（すべての行）が表示されます。続行してよろしいですか？"
 
 msgid ""
-"This will show the entire report (all rows) in your browser. Do you want to "
-"proceed?"
-msgstr ""
-"ブラウザにすべてのレポート（すべての行）が表示されます。続行してよろしいです"
-"か？"
+"This will show the entire report (all rows) in your browser. Do you want to pr"
+"oceed?"
+msgstr "ブラウザにすべてのレポート（すべての行）が表示されます。続行してよろしいですか？"
 
 msgid "Thursday"
 msgstr "木曜日"
@@ -13387,10 +13678,9 @@ msgid "To Generate a Chargeback Report"
 msgstr "チャージバックレポートを生成"
 
 msgid ""
-"To configure the Host Default VNC Port Range, both start and end ports are "
-"required"
-msgstr ""
-"ホストデフォルトVNCポート領域の設定には、開始と停止の両方のポートが必要です"
+"To configure the Host Default VNC Port Range, both start and end ports are req"
+"uired"
+msgstr "ホストデフォルトVNCポート領域の設定には、開始と停止の両方のポートが必要です"
 
 msgid "Today (partial)"
 msgstr ""
@@ -13408,8 +13698,9 @@ msgstr "VM用合計"
 msgid "Total number of VMs that can fit on all of the above %s: %s"
 msgstr "上記すべての%sに適合するVMの総数: %s"
 
-msgid "Totals for Hosts"
-msgstr "ホスト用合計"
+#, fuzzy
+msgid "Totals for %s"
+msgstr "VM用合計"
 
 msgid "Totals for Service VMs"
 msgstr "サービスVM用合計"
@@ -13463,8 +13754,7 @@ msgid "Type"
 msgstr "タイプ"
 
 msgid "Type one or more tags to create and press \"Enter\":"
-msgstr ""
-"作成するタグをひとつまたはそれ以上タイプしてから\"エンターを押してください\":"
+msgstr "作成するタグをひとつまたはそれ以上タイプしてから\"エンターを押してください\":"
 
 msgid "Type:"
 msgstr "タイプ:"
@@ -13537,13 +13827,13 @@ msgid "UiTask|Updated on"
 msgstr "Uiタスク|更新日"
 
 msgid ""
-"Unable to create a new template copy \"%s\": new template content cannot be "
-"empty."
+"Unable to create a new template copy \"%s\": new template content cannot be empt"
+"y."
 msgstr ""
 
 msgid ""
-"Unable to create a new template copy \"%s\": old and new template content "
-"have to differ."
+"Unable to create a new template copy \"%s\": old and new template content have t"
+"o differ."
 msgstr ""
 
 msgid "Unassigned"
@@ -13617,6 +13907,9 @@ msgstr "ファイルをアップロード"
 msgid "Uploaded File '%s'"
 msgstr "'%s'ファイルをアップロード"
 
+msgid "Url"
+msgstr ""
+
 #, fuzzy
 msgid "Use"
 msgstr "ユーザ"
@@ -13653,14 +13946,16 @@ msgstr "ブラウズボタンを使ってインポートファイルを見つけ
 msgid "Use the Browse button to locate an Upload file"
 msgstr "ブラウズボタンを使ってアップロードファイルをみつける"
 
+msgid "Used for SSH connection to all %s in this provider."
+msgstr ""
+
 msgid "Used for access to IPMI."
 msgstr ""
 
 msgid "Used for access to Web Services."
 msgstr ""
 
-msgid ""
-"Used to authenticate with OpenStack AMQP Messaging Bus for event handling."
+msgid "Used to authenticate with OpenStack AMQP Messaging Bus for event handling."
 msgstr ""
 
 msgid "Used to gather Capacity & Utilization metrics."
@@ -13677,16 +13972,6 @@ msgstr "ユーザグループシークエンスが保存されました"
 
 msgid "User Group Sequencing for LDAP Look Up:"
 msgstr ""
-
-msgid "User ID"
-msgstr "ユーザID"
-
-msgid "User ID must be entered if Password is entered"
-msgstr "パスワードが入力された場合はユーザIDの入力が必要です"
-
-#, fuzzy
-msgid "User Id"
-msgstr "ユーザID"
 
 #, fuzzy
 msgid "User Information"
@@ -13732,12 +14017,12 @@ msgstr ""
 msgid "User:"
 msgstr "ユーザ:"
 
-#, fuzzy
-msgid "Userid"
-msgstr "ユーザ"
-
 msgid "Username"
 msgstr "ユーザ名"
+
+#, fuzzy
+msgid "Username must be entered if Password is entered"
+msgstr "パスワードが入力された場合はユーザIDの入力が必要です"
 
 #, fuzzy
 msgid "Users"
@@ -13858,9 +14143,8 @@ msgid "VM Snapshot Files"
 msgstr "スナップショット|ファイル名"
 
 msgid ""
-"VM data will be collected for VMs under selected Hosts only. Data is "
-"collected for a Cluster and all of its Hosts when at least one Host is "
-"selected."
+"VM data will be collected for VMs under selected %s only. Data is collected fo"
+"r a %s and all of its %s when at least one %s is selected."
 msgstr ""
 
 msgid "VM successfully removed from service \"%s\""
@@ -13924,13 +14208,13 @@ msgstr ""
 msgid "Validate the Amazon Settings"
 msgstr ""
 
-msgid "Validate the LDAP Settings by binding with the Host"
+msgid "Validate the LDAP Settings by binding with the %s"
 msgstr ""
 
 msgid "Validate the credentials by logging into the Server"
 msgstr ""
 
-msgid "Validate the credentials by logging into the selected Host"
+msgid "Validate the credentials by logging into the selected %s"
 msgstr ""
 
 msgid "Validator Rule"
@@ -13984,18 +14268,15 @@ msgstr "パスワードを検証"
 msgid "Verify Password"
 msgstr "パスワードを検証"
 
+msgid "Verify Peer Certificate"
+msgstr ""
+
 msgid "Version"
 msgstr "バージョン"
 
 #, fuzzy
 msgid "Version / Build"
 msgstr "バージョン"
-
-msgid "Version Info"
-msgstr "バージョン情報"
-
-msgid "Version to Deploy"
-msgstr "展開するバージョン"
 
 msgid "View %s Folder"
 msgstr "%sフォルダーを表示"
@@ -14051,10 +14332,6 @@ msgstr "タイムゾーン"
 
 msgid "View the %s Guide"
 msgstr "%sガイドを表示"
-
-#, fuzzy
-msgid "View the SmartProxy log"
-msgstr "現在のスマートプロクシログをリトリーブする"
 
 msgid "View this %s Policy"
 msgstr "この%sポリシーを表示"
@@ -14188,12 +14465,6 @@ msgstr "Vmまたはテンプレート"
 msgid "VmOrTemplate|Autostart"
 msgstr "Vmまたはテンプレート|自動開始"
 
-msgid "VmOrTemplate|Blackbox exists"
-msgstr "Vmまたはテンプレート|ブラックボックスが存在します"
-
-msgid "VmOrTemplate|Blackbox validated"
-msgstr "Vmまたはテンプレート|ブラックボックスが検証されました"
-
 msgid "VmOrTemplate|Boot time"
 msgstr "Vmまたはテンプレート|ブートタイム"
 
@@ -14307,6 +14578,10 @@ msgstr "Vmまたはテンプレート|リタイア済"
 
 msgid "VmOrTemplate|Retirement last warn"
 msgstr "Vmまたはテンプレート|リタイアメント最終警告"
+
+#, fuzzy
+msgid "VmOrTemplate|Retirement requester"
+msgstr "Vmまたはテンプレート|リタイアメント状態"
 
 msgid "VmOrTemplate|Retirement state"
 msgstr "Vmまたはテンプレート|リタイアメント状態"
@@ -14534,11 +14809,9 @@ msgid "Warn"
 msgstr "警告"
 
 msgid ""
-"Warning: This 'Run Once' timer is in the past and will never run as "
-"currently configured"
-msgstr ""
-"警告：この'一度実行'タイマーは過去の時間設定となっておりこのままでは実行され"
-"ることはありません "
+"Warning: This 'Run Once' timer is in the past and will never run as currently "
+"configured"
+msgstr "警告：この'一度実行'タイマーは過去の時間設定となっておりこのままでは実行されることはありません "
 
 msgid "Wasted"
 msgstr ""
@@ -14550,9 +14823,6 @@ msgstr "ウェブサービスリッスンポート"
 #, fuzzy
 msgid "Web Services"
 msgstr "サービス"
-
-msgid "Web Services Listen Port"
-msgstr "ウェブサービスリッスンポート"
 
 msgid "Wednesday"
 msgstr "水曜日"
@@ -14642,11 +14912,9 @@ msgid "Yesterday"
 msgstr ""
 
 msgid ""
-"You are about to enter fullscreen mode. Press Ctl+Alt to return to windowed "
-"mode."
-msgstr ""
-"フルスクリーンモードに入ります。ウィンドウモードに戻るにはCtl+Altを押してくだ"
-"さい。"
+"You are about to enter fullscreen mode. Press Ctl+Alt to return to windowed mo"
+"de."
+msgstr "フルスクリーンモードに入ります。ウィンドウモードに戻るにはCtl+Altを押してください。"
 
 msgid "You are not authorized to view %s"
 msgstr "あなたは%sを見る権限がありません"
@@ -14696,16 +14964,9 @@ msgstr "ゾーン|更新日"
 msgid "Zoom in on this chart"
 msgstr "このチャートにズームインする"
 
-msgid ""
-"[Server '%{server_name}' is currently running Version %{server_version}]"
-msgstr ""
-
 #, fuzzy
 msgid "active"
 msgstr "アクティブ"
-
-msgid "and restart the Server!"
-msgstr ""
 
 msgid "at"
 msgstr "at"
@@ -14718,9 +14979,6 @@ msgstr ""
 
 msgid "bold"
 msgstr ""
-
-msgid "choose"
-msgstr "選ぶ"
 
 msgid "cpu_affinity"
 msgstr "cpu_affinity"
@@ -14812,112 +15070,3 @@ msgstr "コアごとのvCPU"
 
 msgid "vcpus"
 msgstr "vcpu"
-
-#~ msgid ">No notes have been entered."
-#~ msgstr ">メモが入力されていません。"
-
-#~ msgid "Cancel this provisioning request"
-#~ msgstr "このプロビジョニングリクエストをキャンセルする"
-
-#~ msgid "Click to select the %s theme"
-#~ msgstr "クリックして%sテーマを選択する"
-
-#~ msgid "Continue this provisioning request"
-#~ msgstr "このプロビジョニングリクエストを続行する"
-
-#~ msgid "Failed to add depot. See logs for detail."
-#~ msgstr "格納の追加に失敗しました。詳細はログをご覧ください。"
-
-#~ msgid "Header Accent Color"
-#~ msgstr "ヘッダーアクセントカラー"
-
-#~ msgid "Log In"
-#~ msgstr "ログイン"
-
-#~ msgid "ManageIQ"
-#~ msgstr "ManageIQ"
-
-#~ msgid "MiqGroup"
-#~ msgstr "Miqグループ"
-
-#~ msgid "New Password"
-#~ msgstr "新規パスワード"
-
-#~ msgid "No Records found"
-#~ msgstr "記録が見つかりませんでした"
-
-#~ msgid "No virtual machines were selected to delete Virtual BlackBoxes on"
-#~ msgstr ""
-#~ "仮想ブラックボックスオンを削除するための仮想マシンが選択されていません"
-
-#~ msgid "SSO Log In"
-#~ msgstr "SSO ログイン"
-
-#~ msgid "Submit this provisioning request"
-#~ msgstr "このプロビジョニングリクエストを提出"
-
-#~ msgid "The %s theme is currently selected"
-#~ msgstr "%sテーマが現在選択されています"
-
-#~ msgid "VM Item"
-#~ msgstr "VMアイテム"
-
-#~ msgid "VM and Instance Items"
-#~ msgstr "VMとインスタンスアイテム"
-
-#~ msgid "avg_read_size"
-#~ msgstr "avg_read_size"
-
-#~ msgid "avg_write_size"
-#~ msgstr "avg_write_size"
-
-#~ msgid "fqname"
-#~ msgstr "fq名"
-
-#~ msgid "k_bytes_read_per_sec"
-#~ msgstr "k_bytes_read_per_sec"
-
-#~ msgid "k_bytes_transferred_per_sec"
-#~ msgstr "k_bytes_transferred_per_sec"
-
-#~ msgid "k_bytes_written_per_sec"
-#~ msgstr "k_bytes_written_per_sec"
-
-#~ msgid "pct_hit"
-#~ msgstr "pct_hit"
-
-#~ msgid "pct_read"
-#~ msgstr "pct_read"
-
-#~ msgid "pct_write"
-#~ msgstr "pct_write"
-
-#~ msgid "queue_depth"
-#~ msgstr "queue_depth"
-
-#~ msgid "read_hit_ios_per_sec"
-#~ msgstr "read_hit_ios_per_sec"
-
-#~ msgid "read_ios_per_sec"
-#~ msgstr "read_ios_per_sec"
-
-#~ msgid "response_time_sec"
-#~ msgstr "response_time_sec"
-
-#~ msgid "service_time_sec"
-#~ msgstr "service_time_sec"
-
-#~ msgid "statistic_time"
-#~ msgstr "statistic_time"
-
-#~ msgid "total_ios_per_sec"
-#~ msgstr "total_ios_per_sec\""
-
-#~ msgid "wait_time_sec"
-#~ msgstr "wait_time_sec"
-
-#~ msgid "write_hit_ios_per_sec"
-#~ msgstr "write_hit_ios_per_sec"
-
-#~ msgid "write_ios_per_sec"
-#~ msgstr "write_ios_per_sec"
