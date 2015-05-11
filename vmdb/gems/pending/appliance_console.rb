@@ -91,14 +91,6 @@ alias agree agree_with_timeout
 $terminal.wrap_at = 80
 $terminal.page_at = 21
 
-$MIQDEBUG = false
-$MIQDEBUG_FILES = %W(#{ROOT}/lib/appliance_console.rb
-                     /bin/miqnet.sh
-                     #{ROOT}/vmdb/lib/tasks/evm_dba.rake
-                     #{ROOT}/lib/util/mount/miq_generic_mount_session.rb
-                     #{ROOT}/lib/util/mount/miq_smb_session.rb
-                     #{ROOT}/lib/util/mount/miq_nfs_session.rb
-                     #{ROOT}/vmdb/lib/evm_database_ops.rb)
 
 require 'appliance_console/errors.rb'
 
@@ -177,9 +169,6 @@ loop do
 
     say("#{I18n.t("product.name")} Virtual Appliance\n")
     say("To administer this appliance, browse to https://#{ip}\n") if configured
-    if $MIQDEBUG
-      $MIQDEBUG_FILES.each { |f| puts "Modified #{(Time.now - File.mtime(f)).to_i / 60} minutes ago - #{f}" }
-    end
 
     ask_without_timeout("Username: ") do |q|
       q.validate = /ADMIN/i
