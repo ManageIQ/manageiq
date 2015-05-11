@@ -82,8 +82,7 @@ class ProviderForemanController < ApplicationController
                          :escape         => false
       end
     else
-      add_flash(_("No common configuration profiles available for the selected configured
-        #{_('system').pluralize(provisioning_ids.size)}"), :error)
+      add_flash(_("No common configuration profiles available for the selected configured %s") % n_('system', 'systems', provisioning_ids.size), :error)
       replace_right_cell
     end
   end

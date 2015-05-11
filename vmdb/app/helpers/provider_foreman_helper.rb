@@ -55,7 +55,7 @@ module ProviderForemanHelper
   end
 
   def textual_tags
-    label = _("#{session[:customer_name]} Tags")
+    label = _("%s Tags") % session[:customer_name]
     h = {:label => label}
     tags = session[:assigned_filters]
     if tags.empty?
