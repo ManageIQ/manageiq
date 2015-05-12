@@ -3,7 +3,6 @@ require "spec_helper"
 describe ProviderForemanController do
   render_views
   before(:each) do
-    set_user_privileges
     @zone = FactoryGirl.create(:zone, :name => 'zone1')
     @provider = ProviderForeman.create(:name => "test", :url => "10.8.96.102", :zone => @zone)
     @config_mgr = ConfigurationManagerForeman.find_all_by_provider_id(@provider.id).first
@@ -11,7 +10,8 @@ describe ProviderForemanController do
                                                          :description              => "testprofile",
                                                          :configuration_manager_id => @config_mgr.id)
     @configured_system = ConfiguredSystemForeman.create(:hostname                 => "test_configured_system",
-                                                        :configuration_profile_id => @config_profile.id)
+                                                        :configuration_profile_id => @config_profile.id,
+                                                        :configuration_manager_id => @config_mgr.id)
     sb = {}
     temp = {}
     sb[:active_tree] = :foreman_providers_tree
@@ -20,24 +20,112 @@ describe ProviderForemanController do
   end
 
   it "renders index" do
+    set_user_privileges
     get :index
     expect(response.status).to eq(302)
     response.should redirect_to(:action => 'explorer')
   end
 
   it "renders explorer" do
+    set_user_privileges
+    EvmSpecHelper.seed_specific_product_features("providers_accord", "configured_systems_filter_accord")
+    feature = MiqProductFeature.find_all_by_identifier(%w(providers_accord configured_systems_filter_accord))
+    test_user_role  = FactoryGirl.create(:miq_user_role,
+                                         :name                 => "test_user_role",
+                                         :miq_product_features => feature)
+    test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
+    user = FactoryGirl.create(:user, :userid => 'test_user', :name => 'test_user', :miq_groups => [test_user_group])
+    User.stub(:current_user => user)
     session[:settings] = {:default_search => '',
                           :views          => {},
                           :perpage        => {:list => 10}}
-    session[:userid] = User.current_user.userid
+    session[:userid] = user.userid
     session[:eligible_groups] = []
     EvmSpecHelper.create_guid_miq_server_zone
     get :explorer
+    accords = controller.instance_variable_get(:@accords)
+    expect(accords.size).to eq(2)
     expect(response.status).to eq(200)
     expect(response.body).to_not be_empty
   end
 
+  context "renders explorer based on RBAC" do
+    before do
+      session[:eligible_groups] = []
+      EvmSpecHelper.create_guid_miq_server_zone
+    end
+    it "renders explorer based on RBAC access to feature 'configured_system_tag'" do
+      set_user_privileges
+      EvmSpecHelper.seed_specific_product_features("configured_system_tag")
+      feature = MiqProductFeature.find_all_by_identifier(["configured_system_tag"])
+      test_user_role  = FactoryGirl.create(:miq_user_role,
+                                           :name                 => "test_user_role",
+                                           :miq_product_features => feature)
+      test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
+      user = FactoryGirl.create(:user, :userid => 'test_user', :name => 'test_user', :miq_groups => [test_user_group])
+      User.stub(:current_user => user)
+      session[:settings] = {:default_search => '',
+                            :views          => {},
+                            :perpage        => {:list => 10}}
+      session[:userid] = user.userid
+      get :explorer
+      accords = controller.instance_variable_get(:@accords)
+      expect(accords.size).to eq(1)
+      expect(accords[0][:name]).to eq("cs_filter")
+      expect(response.status).to eq(200)
+      expect(response.body).to_not be_empty
+    end
+
+    it "renders explorer based on RBAC access to feature 'provider_foreman_add_provider'" do
+      set_user_privileges
+      EvmSpecHelper.seed_specific_product_features("provider_foreman_add_provider")
+      feature = MiqProductFeature.find_all_by_identifier(["provider_foreman_add_provider"])
+      test_user_role  = FactoryGirl.create(:miq_user_role,
+                                           :name                 => "test_user_role",
+                                           :miq_product_features => feature)
+      test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
+      user = FactoryGirl.create(:user, :userid => 'test_user', :name => 'test_user', :miq_groups => [test_user_group])
+      User.stub(:current_user => user)
+      session[:settings] = {:default_search => '',
+                            :views          => {},
+                            :perpage        => {:list => 10}}
+      session[:userid] = user.userid
+      get :explorer
+      accords = controller.instance_variable_get(:@accords)
+      expect(accords.size).to eq(1)
+      expect(accords[0][:name]).to eq("foreman_providers")
+      expect(response.status).to eq(200)
+      expect(response.body).to_not be_empty
+    end
+  end
+
+  context "asserts correct privileges" do
+    before do
+      EvmSpecHelper.seed_specific_product_features("configured_system_provision")
+      feature = MiqProductFeature.find_all_by_identifier(["configured_system_provision"])
+      test_user_role  = FactoryGirl.create(:miq_user_role,
+                                           :name                 => "test_user_role",
+                                           :miq_product_features => feature)
+      test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
+      user = FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
+      User.stub(:current_user => user)
+    end
+
+    it "should not raise an error for feature that user has access to" do
+      lambda do
+        controller.send(:assert_privileges, "configured_system_provision")
+      end.should_not raise_error
+    end
+
+    it "should raise an error for feature that user has access to" do
+      lambda do
+        controller.send(:assert_privileges, "provider_foreman_add_provider")
+      end.should raise_error
+    end
+  end
+
   it "renders show_list" do
+    set_user_privileges
     get :show_list
     expect(response.status).to eq(302)
     expect(response.body).to_not be_empty

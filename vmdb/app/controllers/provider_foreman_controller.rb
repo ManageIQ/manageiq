@@ -14,13 +14,12 @@ class ProviderForemanController < ApplicationController
   end
 
   def new
-    assert_privileges("provider_foreman_new")
+    assert_privileges("provider_foreman_add_provider")
     @provider_foreman = ProviderForeman.new
     render_form
   end
 
   def edit
-    assert_privileges("provider_foreman_edit")
     case params[:button]
     when "cancel"
       cancel_provider_foreman
@@ -28,6 +27,7 @@ class ProviderForemanController < ApplicationController
       add_provider_foreman
       save_provider_foreman
     else
+      assert_privileges("provider_foreman_edit_provider")
       @provider_foreman = find_by_id_filtered(ConfigurationManagerForeman,
                                               from_cid(params[:miq_grid_checks] || params[:id]))
       render_form
@@ -35,7 +35,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def delete
-    assert_privileges("provider_foreman_delete")
+    assert_privileges("provider_foreman_delete_provider")
     checked_items = find_checked_items
     checked_items.push(params[:id]) if params[:id]
     foremen = ConfigurationManagerForeman.where(:id => checked_items).pluck(:provider_id)
@@ -62,14 +62,15 @@ class ProviderForemanController < ApplicationController
   end
 
   def refresh
-    assert_privileges("provider_foreman_refresh")
+    assert_privileges("provider_foreman_refresh_provider")
     @explorer = true
     foreman_button_operation('refresh_ems', 'Refresh')
     replace_right_cell
   end
 
   def provision
-    assert_privileges("provider_foreman_provision")
+    assert_privileges("provider_foreman_configured_system_provision") if x_active_accord == :foreman_providers
+    assert_privileges("configured_system_provision") if x_active_accord == :cs_filter
     provisioning_ids = find_checked_items
     provisioning_ids.push(params[:id]) if provisioning_ids.empty?
 
@@ -88,8 +89,9 @@ class ProviderForemanController < ApplicationController
   end
 
   def tagging
-    assert_privileges("provider_foreman_tag")
-    tagging_edit('ConfiguredSystem')
+    assert_privileges("provider_foreman_configured_system_tag") if x_active_accord == :foreman_providers
+    assert_privileges("configured_system_tag") if x_active_accord == :cs_filter
+    tagging_edit('ConfiguredSystem', false)
     render_tagging_form
   end
 
@@ -152,7 +154,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def provider_foreman_form_fields
-    assert_privileges("provider_foreman_edit")
+    assert_privileges("provider_foreman_edit_provider")
     config_mgr_foreman = find_by_id_filtered(ConfigurationManagerForeman, params[:id])
     provider_foreman = ProviderForeman.find(config_mgr_foreman.provider_id)
     authentications_foreman = Authentication.where(:resource_id => provider_foreman[:id], :resource_type => "Provider")
@@ -168,7 +170,6 @@ class ProviderForemanController < ApplicationController
   end
 
   def authentication_validate
-    assert_privileges("provider_foreman_authentication_validate")
     @provider_foreman = ProviderForeman.new(:name       => params[:name],
                                             :url        => params[:url],
                                             :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
@@ -316,7 +317,8 @@ class ProviderForemanController < ApplicationController
     end
     return unless %w(download_pdf main).include?(@display)
     @showtype = "main"
-    @button_group = "#{rec_cls}"
+    @button_group = "#{rec_cls}" if x_active_accord == :cs_filter
+    @button_group = "provider_foreman_#{rec_cls}" if x_active_accord == :foreman_providers
   end
 
   def explorer
@@ -368,7 +370,7 @@ class ProviderForemanController < ApplicationController
     x_last_active_tree = x_active_tree if x_active_tree
     x_last_active_accord = x_active_accord if x_active_accord
 
-    if role_allows(:feature => "providers_accord")
+    if role_allows(:feature => "providers_accord", :any => true)
       self.x_active_tree   = 'foreman_providers_tree'
       self.x_active_accord = 'foreman_providers'
       default_active_tree   ||= x_active_tree
@@ -377,7 +379,7 @@ class ProviderForemanController < ApplicationController
       @trees.push("foreman_providers_tree")
       @accords.push(:name => "foreman_providers", :title => "Providers", :container => "foreman_providers_tree_div")
     end
-    if role_allows(:feature => "configured_systems_filter_accord")
+    if role_allows(:feature => "configured_systems_filter_accord", :any => true)
       self.x_active_tree   = 'cs_filter_tree'
       self.x_active_accord = 'cs_filter'
       default_active_tree   ||= x_active_tree
@@ -574,7 +576,7 @@ class ProviderForemanController < ApplicationController
   def update_title(presenter)
     if params[:action] == "new"
       @right_cell_text = _("Add a new %s Provider") % ui_lookup(:ui_title => "foreman")
-    elsif params[:pressed] == "provider_foreman_edit"
+    elsif params[:pressed] == "provider_foreman_edit_provider"
       @right_cell_text = _("Edit %s Provider") % ui_lookup(:ui_title => "foreman")
     end
     presenter[:right_cell_text] = @right_cell_text
@@ -629,9 +631,9 @@ class ProviderForemanController < ApplicationController
           r[:partial => "#{path_dir}/main", :locals => {:controller => 'provider_foreman'}]
     elsif @in_a_form
       partial_locals = {:controller => 'provider_foreman'}
-      if @sb[:action] == "provider_foreman_new"
+      if @sb[:action] == "provider_foreman_add_provider"
         @right_cell_text = _("Add a new %s Provider") % ui_lookup(:ui_title => "foreman")
-      elsif @sb[:action] == "provider_foreman_edit"
+      elsif @sb[:action] == "provider_foreman_edit_provider"
         @right_cell_text = _("Edit %s Provider") % ui_lookup(:ui_title => "foreman")
       end
       partial = 'form'
