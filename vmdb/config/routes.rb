@@ -1251,6 +1251,7 @@ Vmdb::Application.routes.draw do
         accordion_select
         authentication_validate
         button
+        change_tab
         delete
         edit
         explorer

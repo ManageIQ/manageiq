@@ -130,4 +130,85 @@ module ProviderForemanHelper
      :value => (@record.configuration_profile.try(:configuration_organizations) || []).collect(&:name).join(", ")
     }
   end
+
+  def textual_configuration_profile_group_properties
+    [textual_configuration_profile_name,
+     textual_configuration_profile_region,
+     textual_configuration_profile_zone].flatten.compact
+  end
+
+  def textual_configuration_profile_name
+    {:label => "Name", :value => @record.name}
+  end
+
+  def textual_configuration_profile_region
+    {:label => "Region", :value => @record.region_description}
+  end
+
+  def textual_configuration_profile_zone
+    {:label => "Zone", :value => @record.my_zone}
+  end
+
+  def textual_configuration_profile_group_environment
+    [textual_configuration_profile_environment,
+     textual_configuration_profile_domain,
+     textual_configuration_profile_puppet_realm].flatten.compact
+  end
+
+  def textual_configuration_profile_environment
+    {:label => "Environment", :value => @record.configuration_environment_name}
+  end
+
+  def textual_configuration_profile_domain
+    {:label => "Domain", :value => @record.configuration_domain_name}
+  end
+
+  def textual_configuration_profile_puppet_realm
+    {:label => "Puppet Realm", :value => @record.configuration_realm_name}
+  end
+
+  def textual_configuration_profile_group_os
+    [textual_configuration_profile_compute_profile,
+     textual_configuration_profile_architecture,
+     textual_configuration_profile_os,
+     textual_configuration_profile_medium,
+     textual_configuration_profile_partition_table].flatten.compact
+  end
+
+  def textual_configuration_profile_compute_profile
+    {:label => _("Compute Profile"), :value => @record.configuration_compute_profile_name}
+  end
+
+  def textual_configuration_profile_architecture
+    {:label => _("Architecture"), :value => @record.configuration_architecture_name}
+  end
+
+  def textual_configuration_profile_os
+    {:label => _("OS"), :value => @record.operating_system_flavor_name}
+  end
+
+  def textual_configuration_profile_medium
+    {:label => _("Medium"), :value => @record.customization_script_medium_name}
+  end
+
+  def textual_configuration_profile_partition_table
+    {:label => _("Partition Table"), :value => @record.customization_script_ptable_name}
+  end
+
+  def textual_configuration_profile_group_tenancy
+    [textual_configuration_profile_configuration_locations,
+     textual_configuration_profile_configuration_organizations].flatten.compact
+  end
+
+  def textual_configuration_profile_configuration_locations
+    {:label => _("Configuration Location"),
+     :value => @record.configuration_locations.collect(&:name).join(", ")
+    }
+  end
+
+  def textual_configuration_profile_configuration_organizations
+    {:label => _("Configuration Organization"),
+     :value => @record.configuration_organizations.collect(&:name).join(", ")
+    }
+  end
 end

@@ -194,7 +194,8 @@ class ProviderForemanController < ApplicationController
     @display = params[:display] || "main"
     @lastaction = "show"
     @showtype = "config"
-    @record = identify_record(id || params[:id], ConfiguredSystem)
+    @record =
+      identify_record(id || params[:id], configuration_profile_record? ? ConfigurationProfile : ConfiguredSystem)
     return if record_no_longer_exists?(@record)
 
     @explorer = true if request.xml_http_request? # Ajax request means in explorer
@@ -209,10 +210,16 @@ class ProviderForemanController < ApplicationController
     self.x_active_tree = params[:tree] if params[:tree]
     self.x_node = params[:id]
     load_or_clear_adv_search
-    if params[:action] == "reload"
-      replace_right_cell([:foreman_providers])
-    else
+
+    unless action_name == "reload"
+      if %w(x_show x_search_by_name).include?(action_name) && configuration_profile_record?
+        @sb[:active_tab] = 'configured_systems'
+      else
+        @sb[:active_tab] = 'summary'
+      end
       replace_right_cell
+    else
+      replace_right_cell([:foreman_providers])
     end
   end
 
@@ -347,6 +354,11 @@ class ProviderForemanController < ApplicationController
     render :layout => "explorer" unless redirected
   end
 
+  def change_tab
+    @sb[:active_tab] = params[:tab_id]
+    replace_right_cell
+  end
+
   private ###########
 
   def build_trees_and_accordions
@@ -453,25 +465,35 @@ class ProviderForemanController < ApplicationController
   end
 
   def configuration_profile_node(id, model)
-    cpf = identify_record(id, ConfigurationProfile)
-    if cpf.nil?
+    @record = @configuration_profile_record = identify_record(id, ConfigurationProfile)
+    if @configuration_profile_record.nil?
       self.x_node = "root"
       get_node_info("root")
       return
     else
       options = {:model => "ConfiguredSystem"}
-      options[:where_clause] = ["configuration_profile_id IN (?)", cpf.id]
+      options[:where_clause] = ["configuration_profile_id IN (?)", @configuration_profile_record.id]
       process_show_list(options)
       record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
-      @right_cell_text =
+      if @sb[:active_tab] == 'configured_systems'
+        @right_cell_text =
           _("%{model} \"%{name}\"") %
-          {:name  => cpf.name,
+          {:name  => @configuration_profile_record.name,
            :model => "#{ui_lookup(:tables => "configured_system")} under #{record_model}"}
+      else
+        @showtype = 'main'
+        @pages = nil
+        @right_cell_text =
+          _("%{model} \"%{name}\"") %
+          {:name  => @configuration_profile_record.name,
+           :model => record_model
+          }
+      end
     end
   end
 
   def configured_system_node(id, model)
-    @record = identify_record(id, ConfiguredSystem) unless @record
+    @record = @configured_system_record = identify_record(id, ConfiguredSystem)
     if @record.nil?
       self.x_node = "root"
       get_node_info("root")
@@ -593,6 +615,11 @@ class ProviderForemanController < ApplicationController
     type && ["ConfiguredSystem"].include?(TreeBuilder.get_model_for_prefix(type))
   end
 
+  def configuration_profile_record?
+    type, _id = x_node.split("_").last.split("-")
+    type && ["ConfigurationProfile"].include?(TreeBuilder.get_model_for_prefix(type))
+  end
+
   def update_partials(record_showing, presenter, r)
     if record_showing
       get_tagdata(@record)
@@ -609,6 +636,10 @@ class ProviderForemanController < ApplicationController
       end
       partial = 'form'
       presenter[:update_partials][:main_div] = r[:partial => partial, :locals => partial_locals]
+    elsif @configuration_profile_record
+      presenter[:set_visible_elements][:form_buttons_div] = false
+      presenter[:update_partials][:main_div] = r[:partial => "configuration_profile",
+                                                 :locals  => {:controller => 'provider_foreman'}]
     else
       presenter[:update_partials][:main_div] = r[:partial => 'layouts/x_gtl']
     end
@@ -658,10 +689,19 @@ class ProviderForemanController < ApplicationController
   end
 
   def rebuild_toolbars(record_showing, presenter)
+    if configuration_profile_summary_tab_selected?
+      center_tb = "blank_view_tb"
+      record_showing = true
+    end
+
     if !@in_a_form && !@sb[:action]
-      c_buttons,  c_xml  = build_toolbar_buttons_and_xml(center_toolbar_filename)
+      center_tb ||= center_toolbar_filename
+      custom_btn_tb = center_tb
+      custom_btn_tb ||= "custom_buttons_tb"
+      c_buttons,  c_xml  = build_toolbar_buttons_and_xml(center_tb)
+
       if record_showing
-        cb_buttons, cb_xml = build_toolbar_buttons_and_xml("custom_buttons_tb")
+        cb_buttons, cb_xml = build_toolbar_buttons_and_xml(custom_btn_tb)
         v_buttons,  v_xml  = build_toolbar_buttons_and_xml("x_summary_view_tb")
       else
         v_buttons,  v_xml  = build_toolbar_buttons_and_xml("x_gtl_view_tb")
@@ -685,11 +725,21 @@ class ProviderForemanController < ApplicationController
     presenter[:miq_record_id] = @record ? @record.id : nil
 
     # Hide/show searchbox depending on if a list is showing
-    presenter[:set_visible_elements][:adv_searchbox_div] = !(@record || @in_a_form)
+    presenter[:set_visible_elements][:adv_searchbox_div] = display_adv_searchbox
 
     presenter[:set_visible_elements][:blocker_div]    = false unless @edit && @edit[:adv_search_open]
     presenter[:set_visible_elements][:quicksearchbox] = false
     presenter[:lock_unlock_trees][x_active_tree] = @in_a_form
+  end
+
+  def display_adv_searchbox
+    !(@configured_system_record ||
+      @in_a_form ||
+      configuration_profile_summary_tab_selected?)
+  end
+
+  def configuration_profile_summary_tab_selected?
+    @configuration_profile_record && @sb[:active_tab] == 'summary'
   end
 
   def construct_edit
