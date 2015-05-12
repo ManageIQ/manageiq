@@ -1,0 +1,82 @@
+---
+:content:
+  event_type: compute.instance.create.end
+  timestamp: '2015-05-12 07:24:39.462895'
+  _unique_id: 9c898f4c709a41f9b65bb8946501d944
+  payload:
+    state_description: ''
+    availability_zone:
+    terminated_at: ''
+    ephemeral_gb: 0
+    instance_type_id: 6
+    message: Success
+    deleted_at: ''
+    fixed_ips:
+    - version: 4
+      vif_mac: 00:5a:08:fe:8a:50
+      floating_ips: []
+      label: ctlplane
+      meta: {}
+      address: 192.0.2.19
+      type: fixed
+    instance_id: a9811ecc-f6e9-4dfe-b78b-a7437c9d3c1b
+    display_name: ov-ifnbu77aer-1-i3nt6by46wbx-NovaCompute-pp4mpjceebtj
+    reservation_id: r-otxomvqw
+    hostname: ov-ifnbu77aer-1-i3nt6by46wbx-novacompute-pp4mpjceebtj
+    state: active
+    progress: ''
+    launched_at: '2015-05-12T07:24:39.287516'
+    metadata: {}
+    node: cdab9a8d-d653-4dee-81f9-173f9a22bd2e
+    ramdisk_id: d41afee6-20b1-4864-a95c-22b9e7b3ec9e
+    access_ip_v6:
+    disk_gb: 30
+    access_ip_v4:
+    kernel_id: 537c2c9a-5283-455a-a1a6-b9fbb08d679b
+    host: undercloud
+    user_id: c4fbb27d71844a51b5d3fa98226ec06d
+    image_ref_url: http://192.0.2.1:9292/images/2d72f1f3-72d1-428d-bf81-c94cd0e450ca
+    cell_name: ''
+    root_gb: 30
+    tenant_id: bb5c2277f9d04c16ab19cd70766aeba1
+    created_at: '2015-05-12 07:22:34+00:00'
+    memory_mb: 4096
+    instance_type: baremetal
+    vcpus: 1
+    image_meta:
+      kernel_id: 537c2c9a-5283-455a-a1a6-b9fbb08d679b
+      container_format: bare
+      min_ram: '0'
+      ramdisk_id: d41afee6-20b1-4864-a95c-22b9e7b3ec9e
+      disk_format: qcow2
+      min_disk: '30'
+      type: overcloud provisioning
+      base_image_ref: 2d72f1f3-72d1-428d-bf81-c94cd0e450ca
+    architecture:
+    os_type:
+    instance_flavor_id: e3c3bc86-ae9e-4085-bd78-b81e474f9703
+  priority: INFO
+  publisher_id: compute.undercloud
+  message_id: ebfaa4fe-f101-4f2a-a496-34a8bc3d94da
+:context:
+  _context_roles:
+  - _member_
+  - admin
+  _context_request_id: req-c2746c96-ebf7-4528-b02f-9d4367aee6f6
+  _context_quota_class:
+  _context_service_catalog: []
+  _context_user: c4fbb27d71844a51b5d3fa98226ec06d
+  _context_instance_lock_checked: false
+  _context_user_id: c4fbb27d71844a51b5d3fa98226ec06d
+  _context_project_name: admin
+  _context_read_deleted: 'no'
+  _context_auth_token: 9266472252f8462caceaf60d7204eda7
+  _context_tenant: bb5c2277f9d04c16ab19cd70766aeba1
+  _context_is_admin: true
+  _context_project_id: bb5c2277f9d04c16ab19cd70766aeba1
+  _context_timestamp: '2015-05-12T07:22:34.520476'
+  _context_user_name: admin
+  _context_remote_address: 192.0.2.1
+:user_id:
+:priority:
+:content_type:
