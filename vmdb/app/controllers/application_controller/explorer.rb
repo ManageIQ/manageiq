@@ -994,24 +994,6 @@ module ApplicationController::Explorer
         end
       end
       return options[:count_only] ? objects.count : objects
-    when :sandt   #build node showing any button groups or buttons under selected CatalogItem
-      @resolve ||= Hash.new
-      @resolve[:target_classes] = Hash.new
-      CustomButton.button_classes.each{|db| @resolve[:target_classes][db] = ui_lookup(:model=>db)}
-      @sb[:target_classes] = @resolve[:target_classes].invert
-      @resolve[:target_classes] = Array(@resolve[:target_classes].invert).sort
-      st = ServiceTemplate.find_by_id(object[:id])
-      items = st.custom_button_sets + st.custom_buttons
-      objects = Array.new
-      if st.options && st.options[:button_order]
-        st.options[:button_order].each do |item_id|
-          items.each do |g|
-            rec_id = "#{g.kind_of?(CustomButton) ? 'cb' : 'cbg'}-#{g.id}"
-            objects.push(g) if item_id == rec_id
-          end
-        end
-      end
-      return count_only ? objects.length : objects
     when :savedreports
       view, pages = get_view(MiqReportResult, :where_clause=>set_saved_reports_condition(from_cid(object[:id].split('-').last)), :all_pages=>true)
       objects = Array.new
