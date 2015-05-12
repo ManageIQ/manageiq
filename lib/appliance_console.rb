@@ -171,6 +171,10 @@ loop do
 
     clear_screen
 
+    # Condition the line so Backspace clears the character on screen. Setting provide equivelent line
+    # setting when the console is running via init(1) or invoked from the command line.
+    system("stty -echoprt ixany iexten echoe echok")
+
     say("#{I18n.t("product.name")} Virtual Appliance\n")
     say("To administer this appliance, browse to https://#{ip}\n") if configured
     if $MIQDEBUG
