@@ -17,6 +17,10 @@ class ServiceOrchestration
       end
     end
 
+    def self.get_tenant_name(dialog_options)
+      dialog_options['dialog_tenant_name']
+    end
+
     def initialize(dialog_options)
       @dialog_options = dialog_options
     end

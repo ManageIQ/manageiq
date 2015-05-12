@@ -59,7 +59,9 @@ class OrchestrationStack < ActiveRecord::Base
   end
 
   def raw_status
-    ext_management_system.stack_status(name, ems_ref)
+    options = {}
+    options.merge!(:tenant_name => cloud_tenant.name) if cloud_tenant
+    ext_management_system.stack_status(name, ems_ref, options)
   end
 
   def raw_exists?
