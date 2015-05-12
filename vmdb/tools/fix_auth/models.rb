@@ -102,6 +102,7 @@ module FixAuth
     class << self
       attr_accessor :available_columns
       attr_accessor :file_name
+      alias_method  :table_name, :file_name
     end
 
     def initialize(options = {})
