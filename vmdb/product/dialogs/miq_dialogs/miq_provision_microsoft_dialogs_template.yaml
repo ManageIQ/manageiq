@@ -221,7 +221,7 @@
             true: 1
           :description: Choose Automatically
           :required: false
-          :display: :hide
+          :display: :edit
           :default: false
           :data_type: :boolean
         :placement_dc_name:
@@ -237,7 +237,8 @@
             :method: :allowed_hosts
           :auto_select_single: false
           :description: Name
-          :required: false
+          :required_method: :validate_placement
+          :required: true
           :display: :edit
           :data_type: :integer
           :required_description: Host Name
@@ -246,7 +247,8 @@
             :method: :allowed_storages
           :auto_select_single: false
           :description: Name
-          :required: false
+          :required_method: :validate_placement
+          :required: true
           :display: :edit
           :data_type: :integer
           :required_description: Datastore Name

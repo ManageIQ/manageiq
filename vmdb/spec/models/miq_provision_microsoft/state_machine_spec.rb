@@ -6,6 +6,8 @@ describe MiqProvisionMicrosoft do
       ems      = FactoryGirl.create(:ems_microsoft_with_authentication)
       template = FactoryGirl.create(:template_microsoft, :ext_management_system => ems)
       vm       = FactoryGirl.create(:vm_microsoft)
+      @host    = FactoryGirl.create(:host_microsoft, :ext_management_system => ems)
+      @storage = FactoryGirl.create(:storage)
       options  = {:src_vm_id => template.id}
 
       @task = FactoryGirl.create(
@@ -17,20 +19,18 @@ describe MiqProvisionMicrosoft do
         :options     => options)
 
       @task.stub(:miq_request => double("MiqRequest").as_null_object)
-      @task.stub(:dest_host => FactoryGirl.create(:host_microsoft, :ext_management_system => ems))
+      @task.stub(:dest_host => @host)
+      @task.stub(:dest_storage => @storage)
     end
 
     it "#create_destination" do
       @task.should_receive(:determine_placement)
-
       @task.create_destination
     end
 
     it "#determine_placement" do
-      @task.stub(:placement)
-
+      @task.stub(:placement).and_return(@host, @storage)
       @task.should_receive(:prepare_provision)
-
       @task.determine_placement
     end
 
@@ -40,7 +40,6 @@ describe MiqProvisionMicrosoft do
       @task.stub(:start_clone)
 
       @task.should_receive(:poll_clone_complete)
-
       @task.start_clone_task
     end
 
@@ -48,7 +47,6 @@ describe MiqProvisionMicrosoft do
       it "cloning" do
         @task.should_receive(:clone_complete?).and_return(false)
         @task.should_receive(:requeue_phase)
-
         @task.poll_clone_complete
       end
 
@@ -62,11 +60,8 @@ describe MiqProvisionMicrosoft do
     end
 
     it "#customize_destination" do
-      # @task.stub(:get_provider_destination).and_return(nil)
       @task.stub(:update_and_notify_parent)
-
       @task.should_receive(:autostart_destination)
-
       @task.customize_destination
     end
   end

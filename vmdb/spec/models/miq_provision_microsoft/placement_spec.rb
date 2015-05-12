@@ -32,9 +32,24 @@ describe MiqProvisionMicrosoft do
       check
     end
 
+    it "#automatic_placement" do
+      @task.should_receive(:get_most_suitable_host_and_storage).and_return([@host, @storage])
+      @task.options[:placement_auto] = true
+      check
+    end
+
+    it "automate returns nothing" do
+      @task.options[:placement_host_name] = @host.id
+      @task.options[:placement_ds_name]   = @storage.id
+      @task.should_receive(:get_most_suitable_host_and_storage).and_return([nil, nil])
+      @task.options[:placement_auto] = true
+      check
+    end
+
     def check
-      @task.send(:placement)
-      @task.options[:dest_host].should eql([@host.id, @host.name])
+      host, storage = @task.send(:placement)
+      host.should eql(@host)
+      storage.should eql(@storage)
     end
   end
 end
