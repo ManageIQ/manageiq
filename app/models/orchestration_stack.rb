@@ -12,6 +12,7 @@ class OrchestrationStack < ActiveRecord::Base
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::CloudManager"
   belongs_to :orchestration_template
+  belongs_to :cloud_tenant
 
   has_many   :vms, :class_name => "ManageIQ::Providers::CloudManager::Vm"
   has_many   :security_groups
