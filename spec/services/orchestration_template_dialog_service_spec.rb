@@ -55,11 +55,13 @@ describe OrchestrationTemplateDialogService do
     )
 
     fields = group.dialog_fields
-    fields.size.should == 3
+    fields.size.should == 4
 
-    assert_field(fields[0], DialogFieldTextBox,      :name => "stack_name",      :validator_rule => '^[A-Za-z][A-Za-z0-9|-]*$')
-    assert_field(fields[1], DialogFieldDropDownList, :name => "stack_onfailure", :values => [%w(DO_NOTHING Do\ nothing), %w(ROLLBACK Rollback)])
-    assert_field(fields[2], DialogFieldTextBox,      :name => "stack_timeout",   :validator_rule => '^[1-9][0-9]*$')
+    fields[0].resource_action.fqname.should == "/Cloud/Orchestration/Operations/Methods/Available_Tenants"
+    assert_field(fields[0], DialogFieldDropDownList, :name => "tenant_name",     :dynamic => true)
+    assert_field(fields[1], DialogFieldTextBox,      :name => "stack_name",      :validator_rule => '^[A-Za-z][A-Za-z0-9|-]*$')
+    assert_field(fields[2], DialogFieldDropDownList, :name => "stack_onfailure", :values => [%w(DO_NOTHING Do\ nothing), %w(ROLLBACK Rollback)])
+    assert_field(fields[3], DialogFieldTextBox,      :name => "stack_timeout",   :validator_rule => '^[1-9][0-9]*$')
   end
 
   def assert_field(field, clss, attributes)
