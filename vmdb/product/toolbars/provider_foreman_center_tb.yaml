@@ -12,7 +12,7 @@
     :text: Configuration
     :enabled: 'true'
     :items:
-    - :button: provider_foreman_refresh
+    - :button: provider_foreman_refresh_provider
       :image: refresh
       :text: "Refresh Relationships and Power states"
       :title: "Refresh relationships for all items related to the selected items"
@@ -22,13 +22,13 @@
       :enabled: 'false'
       :onwhen: '1+'
     - :separator:
-    - :button: provider_foreman_new
+    - :button: provider_foreman_add_provider
       :image: new
       :text: "Add a new Provider"
       :title: "Add a new Provider"
       :enabled: 'true'
       :url: new
-    - :button: provider_foreman_edit
+    - :button: provider_foreman_edit_provider
       :image: edit
       :text: Edit Selected item
       :title: Select a single item to edit
@@ -36,7 +36,7 @@
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1'
-    - :button: provider_foreman_delete
+    - :button: provider_foreman_delete_provider
       :image: remove
       :text: Remove selected items from the VMDB
       :title: Remove selected items from the VMDB

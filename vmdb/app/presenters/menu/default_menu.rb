@@ -50,8 +50,8 @@ module Menu
           Menu::Item.new('repository',       N_('Repositories'),     'repository',    {:feature => 'repository_show_list'},    '/repository'),
           Menu::Item.new('pxe',              N_('PXE'),              'pxe',           {:feature => 'pxe', :any => true},       '/pxe/explorer'),
           Menu::Item.new('miq_request_host', N_('Requests'),         nil,             {:feature => 'miq_request_show_list'},   '/miq_request?typ=host'),
-          Menu::Item.new('provider_foreman', N_('Configuration Management'), 'provider_foreman_explorer_accords',
-                         {:feature => 'provider_foreman_explorer_accords', :any => true}, '/provider_foreman/explorer')
+          Menu::Item.new('provider_foreman', N_('Configuration Management'), 'provider_foreman_explorer',
+                         {:feature => 'provider_foreman_explorer', :any => true}, '/provider_foreman/explorer')
         ])
       end
 
