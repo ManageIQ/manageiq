@@ -715,15 +715,17 @@ class ConfigurationController < ApplicationController
   end
 
   NAV_TAB_PATH =  {
-                    :container     => %w(Containers Containers),
-                    :host          => %w(Infrastructure Hosts),
-                    :miqtemplate   => %w(Services Workloads Templates\ &\ Images),
-                    :storage       => %w(Infrastructure Datastores),
-                    :templatecloud => %w(Cloud Instances Images),
-                    :templateinfra => %w(Infrastructure Virtual\ Machines Templates),
-                    :vm            => %w(Services Workloads VMs\ &\ Instances),
-                    :vmcloud       => %w(Cloud Instances Instances),
-                    :vminfra       => %w(Infrastructure Virtual\ Machines VMs)
+                    :container        => %w(Containers Containers),
+                    :containergroup   => %w(Containers Containers\ Groups),
+                    :containerservice => %w(Containers Services),
+                    :host             => %w(Infrastructure Hosts),
+                    :miqtemplate      => %w(Services Workloads Templates\ &\ Images),
+                    :storage          => %w(Infrastructure Datastores),
+                    :templatecloud    => %w(Cloud Instances Images),
+                    :templateinfra    => %w(Infrastructure Virtual\ Machines Templates),
+                    :vm               => %w(Services Workloads VMs\ &\ Instances),
+                    :vmcloud          => %w(Cloud Instances Instances),
+                    :vminfra          => %w(Infrastructure Virtual\ Machines VMs)
                   }
 
   def merge_in_user_settings(settings)
