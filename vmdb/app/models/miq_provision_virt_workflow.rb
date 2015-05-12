@@ -863,7 +863,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     $log.info "#{log_header} Custom spec changed from [#{@current_spec}] to [#{selected_spec}].  Customize option:[#{@customize_option}]"
 
-    if selected_spec.nil?
+    if selected_spec
       src = get_source_and_targets
       ems_id = src[:ems].id
 
@@ -871,7 +871,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       if cs_data.nil?
         selected_spec_int = selected_spec.to_i
         cs_data = @customization_specs[ems_id].detect { |s| s.id == selected_spec_int }
-      else
+      end
+
+      if cs_data
         cs_data = load_ar_obj(cs_data)
 
         if @customize_option == 'file'
@@ -955,7 +957,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def collect_customization_spec_settings(spec, spec_hash, spec_path, fields)
-    return unless (section = spec.fetch_path(spec_path)).nil?
+    return unless (section = spec.fetch_path(spec_path))
     fields.each_slice(2) { |dlg_field, prop| spec_hash[dlg_field] = section[prop] }
   end
 
