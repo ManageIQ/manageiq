@@ -17,6 +17,7 @@ module EmsEvent::Parsers::OpenstackInfra
     }
 
     payload = event[:content]["payload"]
+    event_hash[:message]                   = payload["message"]           if payload.key? "message"
     event_hash[:host_ems_ref]              = payload["node"]              if payload.key? "node"
     event_hash[:availability_zone_ems_ref] = payload["availability_zone"] if payload.key? "availability_zone"
     event_hash[:chain_id]                  = payload["reservation_id"]    if payload.key? "reservation_id"
