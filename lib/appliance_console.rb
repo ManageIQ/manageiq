@@ -171,8 +171,8 @@ loop do
 
     clear_screen
 
-    # Condition the line so Backspace clears the character on screen. Setting provide equivelent line
-    # setting when the console is running via init(1) or invoked from the command line.
+    # Calling stty to provide the equivalent line settings when the console is run via an ssh session or
+    # over the virtual machine console.
     system("stty -echoprt ixany iexten echoe echok")
 
     say("#{I18n.t("product.name")} Virtual Appliance\n")
