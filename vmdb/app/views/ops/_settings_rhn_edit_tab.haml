@@ -32,7 +32,8 @@
                       :onclick => "miqAjaxButton('#{url_for( :action => 'rhn_default_server', :id => 'rhn_edit')}');")
 
       %tr
-        %td.key Repository Name:
+        - label = @edit[:new][:register_to] == "rhn_satellite" ? _("Channel Name(s):") : _("Repository Name(s):")
+        %td.key=label
         %td.wide
           = text_field_tag('repo_name', @edit[:new][:repo_name], :maxlength => 200,
             'data-miq_observe' => url_int_jsh, :id => 'repo_name')
