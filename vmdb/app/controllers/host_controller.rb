@@ -10,7 +10,7 @@ class HostController < ApplicationController
     redirect_to :action => 'show_list'
   end
 
-  def drift_history
+  def show_association(action, display_name, listicon, method, klass, association = nil, conditions = nil)
     set_config(identify_record(params[:id]))
     super
   end
@@ -156,6 +156,15 @@ class HostController < ApplicationController
 
     return label, condition
   end
+
+  def set_config_local
+    set_config(identify_record(params[:id]))
+    super
+  end
+  alias set_config_local drift_history
+  alias set_config_local groups
+  alias set_config_local patches
+  alias set_config_local users
 
   def filesystems
     label, condition = filesystems_subsets

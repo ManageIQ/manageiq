@@ -85,4 +85,23 @@ describe HostController do
       controller.send(:flash_errors?).should_not be_true
     end
   end
+
+  context "#show_association" do
+    before(:each) do
+      set_user_privileges
+      @host = FactoryGirl.create(:host)
+      @guest_application = FactoryGirl.create(:guest_application, :name => "foo", :host_id => @host.id)
+    end
+
+    it "renders show_details" do
+      controller.instance_variable_set(:@breadcrumbs, [])
+      controller.stub(:get_view)
+      get :guest_applications, :id => @host.id
+      expect(response.status).to eq(200)
+      expect(response).to render_template('host/show')
+      expect(assigns(:breadcrumbs)).to eq([{:name => "#{@host.name} (Packages)",
+                                            :url  => "/host/guest_applications/#{@host.id}"}])
+      expect(assigns(:devices)).to be_kind_of(Array)
+    end
+  end
 end
