@@ -32,5 +32,43 @@ describe MiqProvisionVmwareWorkflow do
       MiqProvisionVmwareWorkflow.new({}, admin.userid)
     end
 
+    context '#validate' do
+      before do
+        template = FactoryGirl.create(:template_vmware,
+                                      :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication)
+        )
+        @dlg = {
+          :description => 'Customize',
+          :fields      => {
+            :sysprep_organization => {
+              :description     => 'Organization',
+              :required_method => :validate_sysprep_field,
+              :required        => true,
+              :display         => :hide,
+              :data_type       => :string,
+              :read_only       => true
+            }
+          },
+          :display     => :show
+        }
+        @values = {
+          :src_vm_id            => [template.id, template.name],
+          :sysprep_organization => nil,
+          :sysprep_enabled      => %w(fields Specification)
+        }
+        @wf = MiqProvisionVmwareWorkflow.new({}, admin.userid, :src_vm_id => [template.id])
+        @wf.instance_variable_set("@dialogs", :dialogs => {:customize => @dlg})
+      end
+
+      it 'when hidden' do
+        expect(@wf.validate(@values)).to be_true
+      end
+
+      it 'when visible' do
+        @dlg[:fields][:sysprep_organization][:display] = :edit
+        expect(@wf.validate(@values)).to be_false
+        expect(@dlg.fetch_path(:fields, :sysprep_organization, :error)).to eq("'Customize/Organization' is required")
+      end
+    end
   end
 end
