@@ -27,17 +27,22 @@ class HostOpenstackInfra < Host
   end
 
   def get_parent_keypair(type = nil)
-    self.ext_management_system.try(:authentication_best_fit, type)
+    # Get private key defined on Provider level, in the case all hosts has the same user
+    self.ext_management_system.try(:authentication_type, type)
   end
 
-  def auth_user_keypair(type = nil)
-    # HostOpenstackInfra is using auth key set on ext_management_system level, not individual hosts
-    cred = self.get_parent_keypair(type)
-    return nil if cred.nil? || cred.userid.blank?
-    [cred.userid, cred.auth_key]
+  def authentication_best_fit(type = nil)
+    # First check for Host level credentials with filled private key, this way we can override auth credentials per
+    # host. Otherwise host level auth will hold only state of auth for the given host. We allow only auth with private
+    # key for OpenstackInfra hosts
+    auth = authentication_type(type)
+    return auth if auth && auth.auth_key
+    # Not defined auth on this specific host, get auth defined for all hosts from the provider.
+    get_parent_keypair(:ssh_keypair)
   end
 
   def authentication_status
+    # Auth status is always stored in Host's auth record
     self.authentication_type(:ssh_keypair).try(:status) || "None"
   end
 
