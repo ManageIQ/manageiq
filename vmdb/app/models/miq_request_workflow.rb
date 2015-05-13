@@ -167,7 +167,7 @@ class MiqRequestWorkflow
         fld[:error] = nil
 
         # Check the disabled flag here so we reset the "error" value on each field
-        next if dialog_disabled
+        next if dialog_disabled || fld[:display] == :hide
 
         value = get_value(values[f])
 
