@@ -96,6 +96,7 @@ module OpsController::Settings::RHN
     username, = db.auth_user_pwd(:registration)
     MiqHashStruct.new(
       :registered        => !username.blank?,
+      :registration_type => db.registration_type,
       :user_name         => username,
       :server            => db.registration_server,
       :company_name      => db.registration_organization_display_name,
