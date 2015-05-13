@@ -1737,7 +1737,7 @@ class CatalogController < ApplicationController
                   elsif record.kind_of?(OrchestrationTemplate)
                     "xx-#{parents.last[:id]}_ot-#{to_cid(record.id)}"
                   else
-                    existing_node ? existing_node : "#{parents.last[:id]}_#{params[:id]}"
+                    "#{parents.last[:id]}_#{params[:id]}"
                   end
     return add_nodes
   end
