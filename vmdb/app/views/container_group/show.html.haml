@@ -1,1 +1,4 @@
-= render :partial => @showtype
+- if @display == 'containers'
+    = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@record.id}"}
+- else
+    = render :partial => @showtype

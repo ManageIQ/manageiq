@@ -56,6 +56,11 @@ module ContainerGroupHelper::TextualSummary
   def textual_containers
     num_of_containers = @record.number_of(:containers)
     label = ui_lookup(:tables => "containers")
-    {:label => label, :image => "container", :value => num_of_containers}
+    h     = {:label => label, :image => "container", :value => num_of_containers}
+    if num_of_containers > 0 && role_allows(:feature => "containers")
+      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'containers')
+      h[:title] = "View #{label}"
+    end
+    h
   end
 end
