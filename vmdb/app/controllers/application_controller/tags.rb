@@ -408,7 +408,8 @@ module ApplicationController::Tags
       end
     end
 
-    @edit[:cat] ||= cats.first                                    # Set to first category, if not already set
+    # Set to first category, if not already set
+    @edit[:cat] ||= cats.sort_by(&:description).first
 
     @tagitems = @tagging.constantize.find(@object_ids).sort_by { |t| t.name.downcase } unless @object_ids.blank?
 
