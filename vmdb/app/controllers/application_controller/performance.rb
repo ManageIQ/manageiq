@@ -542,16 +542,7 @@ module ApplicationController::Performance
 
   # Load a chart layout from YML
   def perf_get_chart_layout(layout, fname = nil)
-    if fname
-      charts = YAML::load(File.open("#{CHARTS_LAYOUTS_FOLDER}/#{layout}/#{fname}.yaml"))
-    else
-      charts = YAML::load(File.open("#{CHARTS_LAYOUTS_FOLDER}/#{layout}.yaml"))
-    end
-    charts.delete_if do |c|
-      c.is_a?(Hash) && c[:applies_to_method] && @perf_record &&
-        @perf_record.respond_to?(c[:applies_to_method]) &&
-        !@perf_record.send(c[:applies_to_method].to_sym)
-    end
+    charts = ChartsLayoutService.layout(@perf_record, CHARTS_LAYOUTS_FOLDER, layout, fname)
     @perf_options[:index] = nil unless @perf_options[:index].nil? || charts[@perf_options[:index].to_i]
     return charts
   end
