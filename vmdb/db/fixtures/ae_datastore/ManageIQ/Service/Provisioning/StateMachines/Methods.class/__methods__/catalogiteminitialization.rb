@@ -193,14 +193,26 @@ def merge_dialog_information(dialog_options_hash, dialog_tags_hash)
   return merged_options_hash, merged_tags_hash
 end
 
-def parsed_dialog_information
-  dialog_options_hash = YAML.load(@task.get_option(:parsed_dialog_options))
-  dialog_tags_hash = YAML.load(@task.get_option(:parsed_dialog_tags))
+def dialog_parser_error
+  log_and_update_message(:error, "Error loading dialog options")
+  exit MIQ_ABORT
+end
 
+def yaml_data(option)
+  @task.get_option(option).nil? ? nil : YAML.load(@task.get_option(option))
+end
+
+def parsed_dialog_information
+  dialog_options_hash = yaml_data(:parsed_dialog_options)
+  dialog_tags_hash = yaml_data(:parsed_dialog_tags)
   if dialog_options_hash.blank? && dialog_tags_hash.blank?
-    log_and_update_message(:error, "Error loading dialog options")
-    exit MIQ_ABORT
+    log_and_update_message(:info, "Instantiating dialog_parser to populate dialog options")
+    $evm.instantiate('/Service/Provisioning/StateMachines/Methods/DialogParser')
+    dialog_options_hash = yaml_data(:parsed_dialog_options)
+    dialog_tags_hash = yaml_data(:parsed_dialog_tags)
+    dialog_parser_error if dialog_options_hash.blank? && dialog_tags_hash.blank?
   end
+
   merged_options_hash, merged_tags_hash = merge_dialog_information(dialog_options_hash, dialog_tags_hash)
   return merged_options_hash, merged_tags_hash
 end
