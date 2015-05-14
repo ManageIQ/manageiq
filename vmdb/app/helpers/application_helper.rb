@@ -1726,6 +1726,12 @@ module ApplicationHelper
       if (miq_toolbars.#{tb} && miq_toolbars.#{tb}.obj)
         miq_toolbars.#{tb}.obj.unload();
 
+      if (document.getElementById('#{tb}') == null) {
+        var tb_div = $('<div id="#{tb}" />');
+        parent_div_id = '#{tb}'.split('_')[0] + '_buttons_div';
+        $("#" + parent_div_id).append(tb_div);
+      }
+
       window.#{tb} = new dhtmlXToolbarObject('#{tb}', 'miq_blue');
       miq_toolbars['#{tb}'] = {
         obj: window.#{tb},
