@@ -27,9 +27,7 @@ module VmShowMixin
 
     # Build the Explorer screen from scratch
     allowed_features = features.select { |f| role_allows(:feature => f.role) }
-    #allowed_features.each { |feature| build_vm_tree(feature.name, feature.tree_name) }
     @trees = allowed_features.collect { |feature| build_vm_tree(feature.name, feature.tree_name) }
-    #@trees = allowed_features.map(&:tree_list_name)
     @accords = allowed_features.map(&:accord_hash)
 
     params.merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
@@ -93,12 +91,6 @@ module VmShowMixin
 
   # Add the children of a node that is being expanded (autoloaded), called by generic tree_autoload method
   def tree_add_child_nodes(id)
-    ##return x_get_child_nodes_dynatree(x_active_tree, id)
-    #binding.pry
-    ## :instances_tree
-    #tb = TreeBuilder.new(x_active_tree.to_s, x_active_tree, @sb)
-    #tb.x_get_child_nodes(id)
-    binding.pry
     TreeBuilder.tree_add_child_nodes(@sb, x_tree[:klass_name], id)
   end
 

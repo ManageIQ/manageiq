@@ -5,8 +5,9 @@ class TreeBuilder
 
   def self.class_for_type(type)
     case type
-    when :vandt           then TreeBuilderVandt
-    when :filter      then FOOBAR #TreeBuilderVmsFilter  # FIXME
+    when :filter           then raise('Obsolete tree type.')
+
+    when :vandt            then TreeBuilderVandt
     when :vms_filter       then TreeBuilderVmsFilter
     when :templates_filter then TreeBuilderTemplateFilter
 
@@ -21,56 +22,56 @@ class TreeBuilder
   def self.root_options(tree_name)
     #returns title, tooltip, root icon
     case tree_name
-    when :ab_tree                       then ["Object Types",                 "Object Types"]
-    when :ae_tree                       then ["Datastore",                    "Datastore"]
-    when :automate_tree                 then ["Datastore",                    "Datastore"]
-    when :bottlenecks_tree, :utilization_tree             then
+    when :ab_tree                       then [_("Object Types"),                 _("Object Types")]
+    when :ae_tree                       then [_("Datastore"),                    _("Datastore")]
+    when :automate_tree                 then [_("Datastore"),                    _("Datastore")]
+    when :bottlenecks_tree, :utilization_tree then
       if MiqEnterprise.my_enterprise.is_enterprise?
-        title = "Enterprise"
-        icon = "enterprise"
+        title = _("Enterprise")
+        icon  = "enterprise"
       else # FIXME: string CFME below
         title = "CFME Region: #{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]"
-        icon = "miq_region"
+        icon  = "miq_region"
       end
       [title, title, icon]
-    when :cb_assignments_tree           then ["Assignments",                  "Assignments"]
-    when :cb_rates_tree                 then ["Rates",                        "Rates"]
-    when :cb_reports_tree               then ["Saved Chargeback Reports",     "Saved Chargeback Reports"]
-    when :containers_tree               then ["All Containers",               "All Containers"]
-    when :containers_filter_tree               then ["All Containers",        "All Containers"]
+    when :cb_assignments_tree           then [_("Assignments"),                    _("Assignments")]
+    when :cb_rates_tree                 then [_("Rates"),                          _("Rates")]
+    when :cb_reports_tree               then [_("Saved Chargeback Reports"),       _("Saved Chargeback Reports")]
+    when :containers_tree               then [_("All Containers"),                 _("All Containers")]
+    when :containers_filter_tree        then [_("All Containers"),                 _("All Containers")]
     when :cs_filter_tree                then
       title = "All #{ui_lookup(:ui_title => "foreman")} Configured Systems"
       [title, title]
     when :customization_templates_tree  then
-      title = "All #{ui_lookup(:models => "CustomizationTemplate")} - #{ui_lookup(:models => "PxeImageType")}"
+      title = "All #{ui_lookup(:models => 'CustomizationTemplate')} - #{ui_lookup(:models => 'PxeImageType')}"
       [title, title]
     when :diagnostics_tree, :rbac_tree, :settings_tree     then
       region = MiqRegion.my_region
       ["CFME Region: #{region.description} [#{region.region}]", "CFME Region: #{region.description} [#{region.region}]", "miq_region"]
-    when :dialogs_tree                  then ["All Dialogs",                  "All Dialogs"]
-    when :dialog_import_export_tree     then ["Service Dialog Import/Export", "Service Dialog Import/Export"]
-    when :images_tree                   then ["Images by Provider",           "All Images by Provider that I can see"]
-    when :instances_tree                then ["Instances by Provider",        "All Instances by Provider that I can see"]
-    when :instances_filter_tree         then ["All Instances",                "All of the Instances that I can see"]
-    when :images_filter_tree            then ["All Images",                   "All of the Images that I can see"]
-    when :iso_datastores_tree           then ["All ISO Datastores",           "All ISO Datastores"]
-    when :old_dialogs_tree              then ["All Dialogs",                  "All Dialogs"]
-    when :ot_tree                       then ["All Orchestration Templates",  "All Orchestration Templates"]
+    when :dialogs_tree                  then [_("All Dialogs"),                  _("All Dialogs")]
+    when :dialog_import_export_tree     then [_("Service Dialog Import/Export"), _("Service Dialog Import/Export")]
+    when :images_tree                   then [_("Images by Provider"),           _("All Images by Provider that I can see")]
+    when :instances_tree                then [_("Instances by Provider"),        _("All Instances by Provider that I can see")]
+    when :instances_filter_tree         then [_("All Instances"),                _("All of the Instances that I can see")]
+    when :images_filter_tree            then [_("All Images"),                   _("All of the Images that I can see")]
+    when :iso_datastores_tree           then [_("All ISO Datastores"),           _("All ISO Datastores")]
+    when :old_dialogs_tree              then [_("All Dialogs"),                  _("All Dialogs")]
+    when :ot_tree                       then [_("All Orchestration Templates"),  _("All Orchestration Templates")]
     when :foreman_providers_tree        then
       title = "All #{ui_lookup(:ui_title => "foreman")} Providers"
       [title, title]
-    when :pxe_image_types_tree          then ["All System Image Types",       "All System Image Types"]
-    when :pxe_servers_tree              then ["All PXE Servers",              "All PXE Servers"]
-    when :sandt_tree                    then ["All Catalog Items",            "All Catalog Items"]
-    when :stcat_tree                    then ["All Catalogs",                 "All Catalogs"]
-    when :svccat_tree                   then ["All Services",                 "All Services"]
-    when :svcs_tree                     then ["All Services",                 "All Services"]
-    when :vandt_tree                    then ["All VMs & Templates",          "All VMs & Templates that I can see"]
-    when :vms_filter_tree               then ["All VMs",                      "All of the VMs that I can see"]
-    when :templates_filter_tree         then ["All Templates",                "All of the Templates that I can see"]
-    when :vms_instances_filter_tree     then ["All VMs & Instances",          "All of the VMs & Instances that I can see"]
-    when :templates_images_filter_tree  then ["All Templates & Images",       "All of the Templates & Images that I can see"]
-    when :vmdb_tree                     then ["VMDB",                         "VMDB", "miq_database"]
+    when :pxe_image_types_tree          then [_("All System Image Types"),       _("All System Image Types")]
+    when :pxe_servers_tree              then [_("All PXE Servers"),              _("All PXE Servers")]
+    when :sandt_tree                    then [_("All Catalog Items"),            _("All Catalog Items")]
+    when :stcat_tree                    then [_("All Catalogs"),                 _("All Catalogs")]
+    when :svccat_tree                   then [_("All Services"),                 _("All Services")]
+    when :svcs_tree                     then [_("All Services"),                 _("All Services")]
+    when :vandt_tree                    then [_("All VMs & Templates"),          _("All VMs & Templates that I can see")]
+    when :vms_filter_tree               then [_("All VMs"),                      _("All of the VMs that I can see")]
+    when :templates_filter_tree         then [_("All Templates"),                _("All of the Templates that I can see")]
+    when :vms_instances_filter_tree     then [_("All VMs & Instances"),          _("All of the VMs & Instances that I can see")]
+    when :templates_images_filter_tree  then [_("All Templates & Images"),       _("All of the Templates & Images that I can see")]
+    when :vmdb_tree                     then [_("VMDB"),                         _("VMDB"), "miq_database"]
     end
   end
 
@@ -86,8 +87,7 @@ class TreeBuilder
 
   # Get the children of a dynatree node that is being expanded (autoloaded)
   def x_get_child_nodes(id)
-    prefix, rec_id = extract_method_and_node_id(id)
-    model = self.class.get_model_for_prefix(prefix)
+    model, rec_id = self.class.extract_node_model_and_id(id)
     object = if model == "Hash"
                {:type => prefix, :id => rec_id, :full_id => id}
              elsif model.nil? && [:sandt_tree, :svccat_tree, :stcat_tree].include?(x_active_tree)
@@ -108,7 +108,7 @@ class TreeBuilder
     end
   end
 
-  def tree_init_options(tree_name)
+  def tree_init_options(_tree_name)
     $log.warn "MIQ(#{self.class.name}) - TreeBuilder descendants should have their own tree_init_options"
     {}
   end
@@ -126,6 +126,13 @@ class TreeBuilder
   def self.build_node_id(record)
     prefix = get_prefix_for_model(record.class.base_model)
     "#{prefix}-#{record.id}"
+  end
+
+  # return this nodes model and record id
+  def self.extract_node_model_and_id(node_id)
+    prefix, record_id = node_id.split("_").last.split('-')
+    model = get_model_for_prefix(prefix)
+    [model, record_id, prefix]
   end
 
   private
@@ -200,7 +207,7 @@ class TreeBuilder
     ))
 
     root_nodes = roots.each_with_object([]) do |root, acc|
-      # FIXME: already o node?
+      # already a node? FIXME: make a class for node
       if root.kind_of?(Hash) && root.key?(:title) && root.key?(:key) && root.key?(:icon)
         acc << root
       else
@@ -279,9 +286,9 @@ class TreeBuilder
 
     # Process the node's children
     if x_tree(@name)[:open_nodes].include?(node[:key]) ||
-      options[:open_all] ||
-      object[:load_children] ||
-      node[:expand]
+       options[:open_all] ||
+       object[:load_children] ||
+       node[:expand]
       kids = x_get_tree_objects(options.merge(:parent => object)).each_with_object([]) do |o, acc|
         acc.concat(x_build_node(o, node[:key], options))
       end
@@ -429,12 +436,4 @@ class TreeBuilder
   }
 
   X_TREE_NODE_PREFIXES_INVERTED = X_TREE_NODE_PREFIXES.invert
-
-  private
-
-  # return this nodes model and record id
-  def extract_method_and_node_id(id)
-    id.split("_").last.split('-')
-  end
-
 end

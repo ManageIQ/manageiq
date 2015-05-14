@@ -1,13 +1,10 @@
 - content_for :trees do
-  - # FIXME: ... has_quick_search? / has_advanced_search?
-  = render(:partial=>"layouts/x_adv_searchbox",
-    :locals=>{:nameonly=>[:images_tree, :instances_tree].include?(x_active_tree)})
-  = render(:partial=>'layouts/quick_search')
+  = render(:partial => "layouts/x_adv_searchbox",
+    :locals => {:nameonly => [:images_tree, :instances_tree].include?(x_active_tree)})
+  = render(:partial => 'layouts/quick_search')
 
   - @trees.each do |tree|
     %div{:style => 'display: none;'}
-      - binding.pry
-      - # = render(:partial => "vm_common/#{tree}")
       = render(:partial => "shared/tree",
                :locals  => {:tree => tree,
                             :name => tree.name.to_s})

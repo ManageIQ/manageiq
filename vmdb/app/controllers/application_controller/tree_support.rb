@@ -23,7 +23,6 @@ module ApplicationController::TreeSupport
   def tree_autoload_dynatree
     @edit ||= session[:edit]  # Remember any previous @edit
     klass_name = x_tree[:klass_name] if x_active_tree
-    binding.pry
     nodes = klass_name ? TreeBuilder.tree_add_child_nodes(@sb, klass_name, params[:id]) :
         tree_add_child_nodes(params[:id])
     render :update do |page|

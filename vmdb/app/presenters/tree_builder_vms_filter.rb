@@ -1,5 +1,5 @@
 class TreeBuilderVmsFilter < TreeBuilder
-  def tree_init_options(tree_name)
+  def tree_init_options(_tree_name)
     {
       :open_all => true,
       :leaf     => 'Vm'
@@ -18,13 +18,12 @@ class TreeBuilderVmsFilter < TreeBuilder
   def x_get_tree_roots(options)
     objects =
       [
-        {:id => "global", :text => "Global Filters", :image => "folder", :tip => "Global Shared Filters", :cfmeNoClick => true},
-        {:id => "my",     :text => "My Filters",     :image => "folder", :tip => "My Personal Filters",   :cfmeNoClick => true}
+        {:id => "global", :text => _("Global Filters"), :image => "folder", :tip => _("Global Shared Filters"), :cfmeNoClick => true},
+        {:id => "my",     :text => _("My Filters"),     :image => "folder", :tip => _("My Personal Filters"),   :cfmeNoClick => true}
       ]
     count_only_or_objects(options[:count_only], objects, nil)
   end
 
-  # Handle custom tree nodes (object is a Hash)
   def x_get_tree_custom_kids(object, options)
     objects = MiqSearch.where(:db => options[:leaf])
     objects = case object[:id]

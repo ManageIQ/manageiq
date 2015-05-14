@@ -46,33 +46,6 @@ describe VmInfraController do
       end
     end
 
-    context "#model_from_nodetype" do
-      it "valid model node" do
-        res = controller.send(:model_from_nodetype, "v")
-        res.should == Vm
-      end
-
-      it "Invalid model node" do
-        lambda { controller.send(:model_from_nodetype, "bad") }.should raise_error(RuntimeError, "No Class found for explorer tree node type 'bad'")
-      end
-    end
-
-    context "#nodetype_from_model" do
-      it "valid node as string" do
-        res = controller.send(:nodetype_from_model, "Vm")
-        res.should == "v"
-      end
-
-      it "valid node as class" do
-        res = controller.send(:nodetype_from_model, Vm)
-        res.should == "v"
-      end
-
-      it "invalid node type" do
-        lambda { controller.send(:nodetype_from_model, "bad") }.should raise_error(RuntimeError, "No explorer tree node type found for 'bad'")
-      end
-    end
-
     context "#x_build_node" do
       before :each do
         controller.instance_variable_set(:@sb, {:trees => {:utilization_tree => {:active_node => nil, :open_nodes => []}}})

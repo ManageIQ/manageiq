@@ -342,7 +342,7 @@ module ApplicationHelper
                                   "imgdis"=>"#{bsi[:image] ? bsi[:image] : bsi[:button]}.png"}
               if bsi[:button].starts_with?("history_")
                 if x_tree_history.length > 1
-                  props["text"] = (CGI.escapeHTML(x_tree_history[bsi[:button].split("_").last.to_i][:text]) rescue '') #FIXME
+                  props["text"] = CGI.escapeHTML(x_tree_history[bsi[:button].split("_").last.to_i][:text])
                 end
               else
                 eval("text = \"#{bsi[:text]}\"") unless bsi[:text].blank? # Evaluate substitutions in text
