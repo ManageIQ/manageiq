@@ -78,7 +78,7 @@ miqAngularApplication.controller('logCollectionFormController', ['$http', '$scop
     delete $scope.logCollectionModel['rh_dropbox_uri'];
     moreUrlParams = $.param(miqService.serializeModel($scope.logCollectionModel));
     if(moreUrlParams)
-      url += '&' + moreUrlParams
+      url += '&' + decodeURIComponent(moreUrlParams);
     miqService.miqAjaxButton(url, false);
     $scope.angularForm.$setPristine(true);
   };
