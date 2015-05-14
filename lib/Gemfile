@@ -83,6 +83,5 @@ unless ENV['APPLIANCE']
     gem "xml-simple", "=1.0.12",  :require => false  # Used by test/xml/tc_xmlhash_methods.rb
     gem "vcr",        "~>2.6",    :require => false  # Used by manageiq-foreman
     gem "webmock",                :require => false  # Used by vcr / manageiq-foreman
-    gem "minitest",   "< 5",      :require => false
   end
 end
