@@ -1723,18 +1723,17 @@ module ApplicationHelper
   # Reload toolbars using new buttons object and xml
   def javascript_for_toolbar_reload(tb, buttons, xml)
     %Q{
-      if (miq_toolbars.#{tb} && miq_toolbars.#{tb}.obj){
+      if (miq_toolbars.#{tb} && miq_toolbars.#{tb}.obj)
         miq_toolbars.#{tb}.obj.unload();
 
-        window.#{tb} = new dhtmlXToolbarObject('#{tb}', 'miq_blue');
-        miq_toolbars['#{tb}'] = {
-          obj: window.#{tb},
-          buttons: #{buttons},
-          xml: "#{xml}"
-        };
+      window.#{tb} = new dhtmlXToolbarObject('#{tb}', 'miq_blue');
+      miq_toolbars['#{tb}'] = {
+        obj: window.#{tb},
+        buttons: #{buttons},
+        xml: "#{xml}"
+      };
 
-        miqInitToolbar(miq_toolbars['#{tb}']);
-      }
+      miqInitToolbar(miq_toolbars['#{tb}']);
     }
   end
 
