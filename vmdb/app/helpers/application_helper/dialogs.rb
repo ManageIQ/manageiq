@@ -34,8 +34,8 @@ module ApplicationHelper::Dialogs
     }
 
     extra_options = {"data-miq_observe" => {
-      :interval     => '.5',
-      :url          => url,
+      :interval => '.5',
+      :url      => url,
     }.merge(auto_refresh_options(field)).to_json}
 
     add_options_unless_read_only(extra_options, tag_options, field)
@@ -49,8 +49,8 @@ module ApplicationHelper::Dialogs
     }
 
     extra_options = {"data-miq_observe" => {
-      :interval     => '.5',
-      :url          => url,
+      :interval => '.5',
+      :url      => url,
     }.merge(auto_refresh_options(field)).to_json}
 
     add_options_unless_read_only(extra_options, tag_options, field)

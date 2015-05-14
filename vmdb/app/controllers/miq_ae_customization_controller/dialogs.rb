@@ -1187,7 +1187,7 @@ module MiqAeCustomizationController::Dialogs
                 fld[:validator_rule] = f.validator_rule
               end
               fld[:required]             = f.required
-              fld[:default_value]        = f.default_value.nil? ? "": f.default_value
+              fld[:default_value]        = f.default_value.nil? ? "" : f.default_value
               fld[:trigger_auto_refresh] = f.trigger_auto_refresh
 
             elsif ["DialogFieldDateControl", "DialogFieldDateTimeControl"].include?(f.type)
