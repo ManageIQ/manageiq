@@ -743,7 +743,7 @@ module EmsCommon
   def set_record_vars(ems, mode = nil)
     ems.name = @edit[:new][:name]
     ems.provider_region = @edit[:new][:provider_region]
-    ems.hostname = @edit[:new][:hostname]
+    ems.hostname = @edit[:new][:hostname].strip unless @edit[:new][:hostname].nil?
     ems.port = @edit[:new][:port] if ems.supports_port?
     ems.provider_id = @edit[:new][:provider_id] if ems.supports_provider_id?
     ems.zone = Zone.find_by_name(@edit[:new][:zone])

@@ -65,6 +65,32 @@ describe EmsCloudController do
       end
     end
 
+    context "#set_record_vars" do
+      context "strip leading/trailing whitespace from hostname/ipaddress" do
+        after :each do
+          set_user_privileges
+          controller.instance_variable_set(:@edit, :new => {:name     => 'EMS 1',
+                                                            :emstype  => @type,
+                                                            :hostname => '  10.10.10.10  ',
+                                                            :port     => '5000'},
+                                                   :key => 'ems_edit__new')
+          session[:edit] = assigns(:edit)
+          controller.send(:set_record_vars, @ems)
+          expect(@ems.hostname).to eq('10.10.10.10')
+        end
+
+        it "when adding cloud EMS" do
+          @type = 'openstack'
+          @ems  = EmsOpenstack.new
+        end
+
+        it "when adding infra EMS" do
+          @type = 'rhevm'
+          @ems  = EmsRedhat.new
+        end
+      end
+    end
+
     context "#update_button_validate" do
       context "when authentication_check" do
         let(:mocked_ems_cloud) { mock_model(EmsCloud) }
