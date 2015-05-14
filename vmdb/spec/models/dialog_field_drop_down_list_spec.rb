@@ -90,22 +90,50 @@ describe DialogFieldDropDownList do
     end
   end
 
-  describe "#raw_values" do
+  describe "#refresh_json_value" do
     let(:dialog_field) { described_class.new(:dynamic => dynamic) }
 
     context "when the dialog_field is dynamic" do
       let(:dynamic) { true }
 
-      it "returns the values from automate" do
+      before do
+        DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return(
+          [["123", 456], ["789", 101]]
+        )
+        dialog_field.value = "123"
+      end
 
+      it "sets the value" do
+        dialog_field.refresh_json_value("789")
+        expect(dialog_field.value).to eq("789")
+      end
+
+      it "returns the values from automate" do
+        expect(dialog_field.refresh_json_value("789")).to eq(
+          :refreshed_values => [["789", 101], ["123", 456]],
+          :checked_value    => "789"
+        )
       end
     end
 
     context "when the dialog_field is not dynamic" do
       let(:dynamic) { false }
 
-      it "returns the values" do
+      before do
+        dialog_field.values = [["123", 456], ["789", 101]]
+        dialog_field.value = "123"
+      end
 
+      it "sets the value" do
+        dialog_field.refresh_json_value("789")
+        expect(dialog_field.value).to eq("789")
+      end
+
+      it "returns the values" do
+        expect(dialog_field.refresh_json_value("789")).to eq(
+          :refreshed_values => [["789", 101], ["123", 456]],
+          :checked_value    => "789"
+        )
       end
     end
   end
