@@ -32,12 +32,11 @@ module ApplicationHelper::Dialogs
       :maxlength => 50,
       :class     => "dynamic-text-box-#{field.id}"
     }
+
     extra_options = {"data-miq_observe" => {
       :interval     => '.5',
       :url          => url,
-      :auto_refresh => true,
-      :field_id     => field.id.to_s
-    }.to_json}
+    }.merge(auto_refresh_options(field)).to_json}
 
     add_options_unless_read_only(extra_options, tag_options, field)
   end
@@ -48,12 +47,11 @@ module ApplicationHelper::Dialogs
       :maxlength => 8192,
       :size      => "50x6"
     }
+
     extra_options = {"data-miq_observe" => {
       :interval     => '.5',
       :url          => url,
-      :auto_refresh => true,
-      :field_id     => field.id.to_s
-    }.to_json}
+    }.merge(auto_refresh_options(field)).to_json}
 
     add_options_unless_read_only(extra_options, tag_options, field)
   end
@@ -132,6 +130,10 @@ module ApplicationHelper::Dialogs
   end
 
   private
+
+  def auto_refresh_options(field)
+    field.trigger_auto_refresh ? {:auto_refresh => true, :field_id => field.id.to_s} : {}
+  end
 
   def add_options_unless_read_only(options_to_add, options_to_add_to, field)
     if field.read_only

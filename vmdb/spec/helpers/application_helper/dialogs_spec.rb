@@ -30,10 +30,18 @@ describe ApplicationHelper do
     end
 
     describe "#textbox_tag_options" do
-      let(:dialog_field) { active_record_instance_double("DialogField", :id => "100", :read_only => read_only) }
+      let(:dialog_field) do
+        active_record_instance_double(
+          "DialogField",
+          :id                   => "100",
+          :read_only            => read_only,
+          :trigger_auto_refresh => trigger_auto_refresh
+        )
+      end
 
       context "when the field is read_only" do
         let(:read_only) { true }
+        let(:trigger_auto_refresh) { nil }
 
         it "returns the tag options with a disabled true" do
           expect(helper.textbox_tag_options(dialog_field, "url")).to eq(
@@ -48,21 +56,45 @@ describe ApplicationHelper do
       context "when the dialog field is not read only" do
         let(:read_only) { false }
 
-        it "returns the tag options with a data-miq-observe" do
-          expect(helper.textbox_tag_options(dialog_field, "url")).to eq(
-            :maxlength         => 50,
-            :class             => "dynamic-text-box-100",
-            "data-miq_observe" => "{\"interval\":\".5\",\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\"}"
-          )
+        context "when the dialog field does not trigger auto refresh" do
+          let(:trigger_auto_refresh) { false }
+
+          it "returns the tag options with a data-miq-observe" do
+            expect(helper.textbox_tag_options(dialog_field, "url")).to eq(
+              :maxlength         => 50,
+              :class             => "dynamic-text-box-100",
+              "data-miq_observe" => "{\"interval\":\".5\",\"url\":\"url\"}"
+            )
+          end
+        end
+
+        context "when the dialog field triggers auto refresh" do
+          let(:trigger_auto_refresh) { true }
+
+          it "returns the tag options with a data-miq-observe" do
+            expect(helper.textbox_tag_options(dialog_field, "url")).to eq(
+              :maxlength         => 50,
+              :class             => "dynamic-text-box-100",
+              "data-miq_observe" => "{\"interval\":\".5\",\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\"}"
+            )
+          end
         end
       end
     end
 
     describe "#textarea_tag_options" do
-      let(:dialog_field) { active_record_instance_double("DialogField", :id => "100", :read_only => read_only) }
+      let(:dialog_field) do
+        active_record_instance_double(
+          "DialogField",
+          :id                   => "100",
+          :read_only            => read_only,
+          :trigger_auto_refresh => trigger_auto_refresh
+        )
+      end
 
       context "when the field is read_only" do
         let(:read_only) { true }
+        let(:trigger_auto_refresh) { nil }
 
         it "returns the tag options with a disabled true" do
           expect(helper.textarea_tag_options(dialog_field, "url")).to eq(
@@ -78,13 +110,30 @@ describe ApplicationHelper do
       context "when the dialog field is not read only" do
         let(:read_only) { false }
 
-        it "returns the tag options with a data-miq-observe" do
-          expect(helper.textarea_tag_options(dialog_field, "url")).to eq(
-            :class             => "dynamic-text-area-100",
-            :maxlength         => 8192,
-            :size              => "50x6",
-            "data-miq_observe" => "{\"interval\":\".5\",\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\"}"
-          )
+        context "when the dialog field triggers auto refresh" do
+          let(:trigger_auto_refresh) { true }
+
+          it "returns the tag options with a data-miq-observe" do
+            expect(helper.textarea_tag_options(dialog_field, "url")).to eq(
+              :class             => "dynamic-text-area-100",
+              :maxlength         => 8192,
+              :size              => "50x6",
+              "data-miq_observe" => "{\"interval\":\".5\",\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\"}"
+            )
+          end
+        end
+
+        context "when the dialog field does not trigger auto refresh" do
+          let(:trigger_auto_refresh) { false }
+
+          it "returns the tag options with a data-miq-observe" do
+            expect(helper.textarea_tag_options(dialog_field, "url")).to eq(
+              :class             => "dynamic-text-area-100",
+              :maxlength         => 8192,
+              :size              => "50x6",
+              "data-miq_observe" => "{\"interval\":\".5\",\"url\":\"url\"}"
+            )
+          end
         end
       end
     end
