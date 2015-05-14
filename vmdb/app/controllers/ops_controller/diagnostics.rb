@@ -356,8 +356,10 @@ module OpsController::Diagnostics
     else
       log_depot_json = build_empty_log_depot_json
     end
-    rh_dropbox_json = build_rh_dropbox_json
-    log_depot_json.merge!(rh_dropbox_json)
+    if defined? FileDepotFtpAnonymousRedhatDropbox
+      rh_dropbox_json = build_rh_dropbox_json
+      log_depot_json.merge!(rh_dropbox_json)
+    end
 
     render :json => log_depot_json
   end
