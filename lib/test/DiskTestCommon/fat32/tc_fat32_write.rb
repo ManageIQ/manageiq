@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'minitest/unit'
 require 'ostruct'
 
 $:.push("#{File.dirname(__FILE__)}/../..")
@@ -16,7 +16,7 @@ require 'Fat32BootSect'
 $:.push("#{File.dirname(__FILE__)}/..")
 require 'FSTestUtil'
 
-class Fat32TestWrite < Test::Unit::TestCase
+class Fat32TestWrite < MiniTest::Unit::TestCase
 	
 	TEST_SHORT_DIR = "/test"
 	TEST_LONG_DIR  = "/Test Directory"

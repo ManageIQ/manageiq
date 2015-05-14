@@ -1,11 +1,11 @@
-require 'test/unit'
+require 'minitest/unit'
 require 'enumerator'
 
 $:.push("#{File.dirname(__FILE__)}/..")
 require 'Ext3BlockPointersPath'
 include  Ext3
 
-class TestBlockPointersPath < Test::Unit::TestCase
+class TestBlockPointersPath < MiniTest::Unit::TestCase
 
   NUM_INDIRECTS = 15
   MAX_BLOCK = 3626

@@ -9,11 +9,11 @@ require 'WindowsProbe'
 
 require 'enumerator'
 require 'ostruct'
-require 'test/unit'
+require 'minitest/unit'
 
 module MiqDiscovery
 	
-	class TestDiscoveryModules < Test::Unit::TestCase
+	class TestDiscoveryModules < MiniTest::Unit::TestCase
 		def setup
 #			unless $log
 #				$:.push("#{File.dirname(__FILE__)}/../../util")

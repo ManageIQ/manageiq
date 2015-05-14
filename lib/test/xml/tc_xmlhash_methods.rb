@@ -1,11 +1,11 @@
 $:.push("#{File.dirname(__FILE__)}")
 $:.push("#{File.dirname(__FILE__)}/../../util/")
 require 'rubygems'
-require 'test/unit'
+require 'minitest/unit'
 require 'miq-xml'
 require 'xmlsimple'
 
-class TestXmlHashMethods < Test::Unit::TestCase
+class TestXmlHashMethods < MiniTest::Unit::TestCase
   require 'xml_base_parser_tests'
   include XmlBaseParserTests
 

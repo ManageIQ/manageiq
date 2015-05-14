@@ -1,11 +1,11 @@
 $:.push("#{File.dirname(__FILE__)}")
 $:.push("#{File.dirname(__FILE__)}/../../util/")
 require 'rubygems'
-require 'test/unit'
+require 'minitest/unit'
 require 'miq-xml'
 require 'nokogiri'
 
-class NokogiriXmlMethods < Test::Unit::TestCase
+class NokogiriXmlMethods < MiniTest::Unit::TestCase
 #  require 'xml_base_parser_tests'
 #  include XmlBaseParserTests
 

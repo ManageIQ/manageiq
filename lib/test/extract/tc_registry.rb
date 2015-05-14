@@ -6,12 +6,12 @@ require 'MiqVm'
 require 'MIQExtract'
 require 'miq-xml'
 require 'digest/md5'
-require 'test/unit'
+require 'minitest/unit'
 
 $qaShare = File.join((Platform::IMPL == :macosx ? "/Volumes" : "/mnt"), "manageiq", "fleecing_test", "images", "virtual_machines")
 
 module Extract
-  class TestRegistry < Test::Unit::TestCase
+  class TestRegistry < MiniTest::Unit::TestCase
     @@vmList = [
       {:vmName => File.join($qaShare, "vmware", "Windows Server 2003 Enterprise Edition/Windows Server 2003 Enterprise Edition.vmx"), :guestOS => "Windows"},
       {:vmName => File.join($qaShare, "vmware", "Debian 40 Server/debian40server.vmx"), :guestOS => "Linux"},

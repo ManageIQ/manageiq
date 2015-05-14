@@ -5,7 +5,7 @@ end
 
 $:.unshift File.expand_path('../../lib', __FILE__)
 
-require 'test/unit'
+require 'minitest/unit'
 require 'action_view'
 require 'action_controller'
 require 'active_model'
