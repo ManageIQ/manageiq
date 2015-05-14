@@ -51,7 +51,7 @@ module EmsRefresh::Parsers
     end
 
     def get_replication_controllers(inventory)
-      process_collection(inventory["replication_controller"], :container_replication_controllers)\
+      process_collection(inventory["replication_controller"], :container_replicators)\
                                                                                 { |n| parse_replication_controllers(n) }
     end
 
@@ -172,15 +172,15 @@ module EmsRefresh::Parsers
       new_result
     end
 
-    def parse_replication_controllers(container_replication_controller)
-      new_result = parse_base_item(container_replication_controller)
+    def parse_replication_controllers(container_replicator)
+      new_result = parse_base_item(container_replicator)
 
       # TODO: parse template
       new_result.merge!(
-        :replicas         => container_replication_controller.spec.replicas,
-        :current_replicas => container_replication_controller.status.replicas,
-        :labels           => parse_labels(container_replication_controller),
-        :selector_parts   => parse_selector_parts(container_replication_controller)
+        :replicas         => container_replicator.spec.replicas,
+        :current_replicas => container_replicator.status.replicas,
+        :labels           => parse_labels(container_replicator),
+        :selector_parts   => parse_selector_parts(container_replicator)
       )
 
       new_result
