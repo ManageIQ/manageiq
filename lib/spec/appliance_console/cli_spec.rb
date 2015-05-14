@@ -144,11 +144,11 @@ describe ApplianceConsole::Cli do
           :ca_name  => "ipa",
           :pgclient => true,
           :pgserver => false,
-          :api      => true,
+          :http     => true,
           :verbose  => false,
         ).and_return(double(:activate => true, :status_string => "good", :complete? => true))
 
-      subject.parse(%w(--postgres-client-cert --api-cert)).run
+      subject.parse(%w(--postgres-client-cert --http-cert)).run
     end
 
     it "should basic install waiting (manual ca_name, verbose)" do
@@ -163,7 +163,7 @@ describe ApplianceConsole::Cli do
           :ca_name  => "super",
           :pgclient => false,
           :pgserver => true,
-          :api      => false,
+          :http     => false,
           :verbose  => true,
         ).and_return(double(:activate => true, :status_string => "good", :complete? => false))
 
@@ -317,12 +317,12 @@ describe ApplianceConsole::Cli do
         expect(subject.parse(%w(--postgres-server-cert))).to be_certs
       end
 
-      it "should install certs if a api is specified" do
-        expect(subject.parse(%w(--api-cert))).to be_certs
+      it "should install certs if a http is specified" do
+        expect(subject.parse(%w(--http-cert))).to be_certs
       end
 
       it "should install certs if all params are specified" do
-        expect(subject.parse(%w(--postgres-client-cert --postgres-server-cert --api-cert))).to be_certs
+        expect(subject.parse(%w(--postgres-client-cert --postgres-server-cert --http-cert))).to be_certs
       end
     end
   end

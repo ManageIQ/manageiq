@@ -7,8 +7,6 @@ module ApplianceConsole
   # configure ssl certificates for postgres communication
   # and appliance to appliance communications
   class CertificateAuthority
-    TEMPLATES       = "/var/www/miq/system/TEMPLATE/"
-
     CFME_DIR        = "/var/www/miq/vmdb/certs"
     PSQL_CLIENT_DIR = "/root/.postgresql"
 
@@ -21,8 +19,8 @@ module ApplianceConsole
     attr_accessor :pgclient
     # true if we should configure postgres server
     attr_accessor :pgserver
-    # true if we should configure api endpoint
-    attr_accessor :api
+    # true if we should configure http endpoint
+    attr_accessor :http
     attr_accessor :verbose
 
     def initialize(options = {})
@@ -35,7 +33,7 @@ module ApplianceConsole
 
       configure_pgclient if pgclient
       configure_pgserver if pgserver
-      configure_api if api
+      configure_http if http
 
       status_string
     end
@@ -87,18 +85,10 @@ module ApplianceConsole
       self.pgserver = cert.status
     end
 
-    def configure_api
-      Certificate.new(
-        :cert_filename => "#{CFME_DIR}/apiclient.crt",
-        :root_filename => "#{CFME_DIR}/root.crt",
-        :service       => "manageiq",
-        :extensions    => %w(client),
-        :ca_name       => ca_name,
-        :hostname      => hostname,
-        :owner         => "apache.apache"
-      ).request
+    def configure_http
       cert = Certificate.new(
-        :cert_filename => "#{CFME_DIR}/apiserver.crt",
+        :key_filename  => "#{CFME_DIR}/server.cer.key",
+        :cert_filename => "#{CFME_DIR}/server.cer",
         :root_filename => "#{CFME_DIR}/root.crt",
         :service       => "HTTP",
         :extensions    => %w(server),
@@ -107,15 +97,14 @@ module ApplianceConsole
         :owner         => "apache.apache",
       ).request
       if cert.complete?
-        say "configuring apache to use certs"
-        FileUtils.cp("#{TEMPLATES}/etc/httpd/conf.d/cfme-https-cert.conf", "/etc/httpd/conf.d/cfme-https-cert.conf")
+        say "configuring apache to use new certs"
         LinuxAdmin::Service.new("httpd").restart
       end
-      self.api = cert.status
+      self.http = cert.status
     end
 
     def status
-      {"pgclient" => pgclient, "pgserver" => pgserver, "api" => api}.delete_if { |_n, v| !v }
+      {"pgclient" => pgclient, "pgserver" => pgserver, "http" => http}.delete_if { |_n, v| !v }
     end
 
     def status_string

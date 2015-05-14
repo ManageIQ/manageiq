@@ -52,7 +52,7 @@ module ApplianceConsole
     end
 
     def certs?
-      options[:postgres_client_cert] || options[:postgres_server_cert] || options[:api_cert]
+      options[:postgres_client_cert] || options[:postgres_server_cert] || options[:http_cert]
     end
 
     def initialize(options = {})
@@ -101,7 +101,7 @@ module ApplianceConsole
         opt :ca,                   "CA name used for certmonger",       :type => :string,  :default => "ipa"
         opt :postgres_client_cert, "install certs for postgres client", :type => :boolean
         opt :postgres_server_cert, "install certs for postgres server", :type => :boolean
-        opt :api_cert,             "install certs for regional api",    :type => :boolean
+        opt :http_cert,            "install certs for http server",     :type => :boolean
       end
       Trollop.die :region, "needed when setting up a local database" if options[:region].nil? && local_database?
       self
@@ -195,7 +195,7 @@ module ApplianceConsole
         :ca_name  => options[:ca],
         :pgclient => options[:postgres_client_cert],
         :pgserver => options[:postgres_server_cert],
-        :api      => options[:api_cert],
+        :http     => options[:http_cert],
         :verbose  => options[:verbose],
       )
 
