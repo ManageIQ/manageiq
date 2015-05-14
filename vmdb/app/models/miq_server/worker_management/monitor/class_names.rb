@@ -13,6 +13,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqEmsRefreshWorkerForemanConfiguration
     MiqEmsRefreshWorkerForemanProvisioning
     MiqEmsRefreshWorkerKubernetes
+    MiqEmsRefreshWorkerOpenshift
     MiqEmsRefreshWorkerMicrosoft
     MiqEmsRefreshWorkerRedhat
     MiqEmsRefreshWorkerOpenstack
@@ -60,6 +61,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqEmsRefreshWorkerForemanConfiguration
     MiqEmsRefreshWorkerForemanProvisioning
     MiqEmsRefreshWorkerKubernetes
+    MiqEmsRefreshWorkerOpenshift
     MiqEmsRefreshWorkerMicrosoft
     MiqEmsRefreshWorkerRedhat
     MiqEmsRefreshWorkerOpenstack

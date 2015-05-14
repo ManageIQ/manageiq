@@ -14,6 +14,7 @@ describe ExtManagementSystem do
       foreman_configuration
       foreman_provisioning
       kubernetes
+      openshift
       openstack
       openstack_infra
       rhevm

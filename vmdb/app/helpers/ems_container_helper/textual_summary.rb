@@ -11,6 +11,9 @@ module EmsContainerHelper::TextualSummary
 
   def textual_group_relationships
     items = %w(container_nodes container_services container_groups)
+    if @ems.kind_of?(EmsOpenshift)
+      items.concat(%w(container_routes container_projects))
+    end
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
@@ -70,6 +73,18 @@ module EmsContainerHelper::TextualSummary
                  {:value => @ems.last_refresh_error.try(:truncate, 120)}],
       :title => @ems.last_refresh_error
     }
+  end
+
+  def textual_container_routes
+    count_of_routes = @ems.number_of(:container_routes)
+    label = "Container Routes"
+    {:label => label, :image => "container_route", :value => count_of_routes}
+  end
+
+  def textual_container_projects
+    count_of_projects = @ems.number_of(:container_projects)
+    label = "Container Projects"
+    {:label => label, :image => "container_project", :value => count_of_projects}
   end
 
   def textual_container_nodes
