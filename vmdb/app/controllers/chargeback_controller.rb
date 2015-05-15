@@ -147,7 +147,9 @@ class ChargebackController < ApplicationController
       @sb[:rate] = @edit[:rate] if @edit && @edit[:rate]
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
         add_flash(_("%s is required") % "Description", :error)
-        replace_right_cell
+        render :update do |page|
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        end
         return
       end
       @sb[:rate].description = @edit[:new][:description]
