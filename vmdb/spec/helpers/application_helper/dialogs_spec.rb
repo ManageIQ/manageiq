@@ -2,8 +2,17 @@ require "spec_helper"
 
 describe ApplicationHelper do
   context "::Dialogs" do
-    describe "#dialog_dropdown_select_values" do
+    let(:dialog_field) do
+      active_record_instance_double(
+        "DialogField",
+        :id                   => "100",
+        :read_only            => read_only,
+        :trigger_auto_refresh => trigger_auto_refresh
+      )
+    end
+    let(:trigger_auto_refresh) { nil }
 
+    describe "#dialog_dropdown_select_values" do
       before do
         val_array = [["cat", "Cat"], ["dog", "Dog"]]
         @val_array_reversed = val_array.collect(&:reverse)
@@ -30,18 +39,8 @@ describe ApplicationHelper do
     end
 
     describe "#textbox_tag_options" do
-      let(:dialog_field) do
-        active_record_instance_double(
-          "DialogField",
-          :id                   => "100",
-          :read_only            => read_only,
-          :trigger_auto_refresh => trigger_auto_refresh
-        )
-      end
-
       context "when the field is read_only" do
         let(:read_only) { true }
-        let(:trigger_auto_refresh) { nil }
 
         it "returns the tag options with a disabled true" do
           expect(helper.textbox_tag_options(dialog_field, "url")).to eq(
@@ -83,18 +82,8 @@ describe ApplicationHelper do
     end
 
     describe "#textarea_tag_options" do
-      let(:dialog_field) do
-        active_record_instance_double(
-          "DialogField",
-          :id                   => "100",
-          :read_only            => read_only,
-          :trigger_auto_refresh => trigger_auto_refresh
-        )
-      end
-
       context "when the field is read_only" do
         let(:read_only) { true }
-        let(:trigger_auto_refresh) { nil }
 
         it "returns the tag options with a disabled true" do
           expect(helper.textarea_tag_options(dialog_field, "url")).to eq(
@@ -139,8 +128,6 @@ describe ApplicationHelper do
     end
 
     describe "#checkbox_tag_options" do
-      let(:dialog_field) { active_record_instance_double("DialogField", :id => "100", :read_only => read_only) }
-
       context "when the field is read_only" do
         let(:read_only) { true }
 
@@ -156,20 +143,35 @@ describe ApplicationHelper do
       context "when the dialog field is not read only" do
         let(:read_only) { false }
 
-        it "returns the tag options with a few data-miq attributes" do
-          expect(helper.checkbox_tag_options(dialog_field, "url")).to eq(
-            :class                      => "dynamic-checkbox-100",
-            "data-miq_sparkle_on"       => true,
-            "data-miq_sparkle_off"      => true,
-            "data-miq_observe_checkbox" => "{\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\"}"
-          )
+        context "when the dialog field triggers auto refresh" do
+          let(:trigger_auto_refresh) { true }
+
+          it "returns the tag options with a few data-miq attributes" do
+            expect(helper.checkbox_tag_options(dialog_field, "url")).to eq(
+              :class                      => "dynamic-checkbox-100",
+              "data-miq_sparkle_on"       => true,
+              "data-miq_sparkle_off"      => true,
+              "data-miq_observe_checkbox" => "{\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\"}"
+            )
+          end
+        end
+
+        context "when the dialog field does not trigger auto refresh" do
+          let(:trigger_auto_refresh) { false }
+
+          it "returns the tag options with a few data-miq attributes" do
+            expect(helper.checkbox_tag_options(dialog_field, "url")).to eq(
+              :class                      => "dynamic-checkbox-100",
+              "data-miq_sparkle_on"       => true,
+              "data-miq_sparkle_off"      => true,
+              "data-miq_observe_checkbox" => "{\"url\":\"url\"}"
+            )
+          end
         end
       end
     end
 
     describe "#date_tag_options" do
-      let(:dialog_field) { active_record_instance_double("DialogField", :id => "100", :read_only => read_only) }
-
       context "when the field is read_only" do
         let(:read_only) { true }
 
@@ -186,19 +188,33 @@ describe ApplicationHelper do
       context "when the dialog field is not read only" do
         let(:read_only) { false }
 
-        it "returns the tag options with a few data-miq attributes" do
-          expect(helper.date_tag_options(dialog_field, "url")).to eq(
-            :class                  => "css1 dynamic-date-100",
-            :readonly               => "true",
-            "data-miq_observe_date" => "{\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\"}"
-          )
+        context "when the dialog field triggers auto refresh" do
+          let(:trigger_auto_refresh) { true }
+
+          it "returns the tag options with a few data-miq attributes" do
+            expect(helper.date_tag_options(dialog_field, "url")).to eq(
+              :class                  => "css1 dynamic-date-100",
+              :readonly               => "true",
+              "data-miq_observe_date" => "{\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\"}"
+            )
+          end
+        end
+
+        context "when the dialog field does not trigger auto refresh" do
+          let(:trigger_auto_refresh) { false }
+
+          it "returns the tag options with a few data-miq attributes" do
+            expect(helper.date_tag_options(dialog_field, "url")).to eq(
+              :class                  => "css1 dynamic-date-100",
+              :readonly               => "true",
+              "data-miq_observe_date" => "{\"url\":\"url\"}"
+            )
+          end
         end
       end
     end
 
     describe "#time_tag_options" do
-      let(:dialog_field) { active_record_instance_double("DialogField", :id => "100", :read_only => read_only) }
-
       context "when the field is read_only" do
         let(:read_only) { true }
 
@@ -214,18 +230,31 @@ describe ApplicationHelper do
       context "when the dialog field is not read only" do
         let(:read_only) { false }
 
-        it "returns the tag options with a few data-miq attributes" do
-          expect(helper.time_tag_options(dialog_field, "url", "hour_or_min")).to eq(
-            :class             => "dynamic-date-hour_or_min-100",
-            "data-miq_observe" => "{\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\"}"
-          )
+        context "when the dialog field triggers auto refresh" do
+          let(:trigger_auto_refresh) { true }
+
+          it "returns the tag options with a few data-miq attributes" do
+            expect(helper.time_tag_options(dialog_field, "url", "hour_or_min")).to eq(
+              :class             => "dynamic-date-hour_or_min-100",
+              "data-miq_observe" => "{\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\"}"
+            )
+          end
+        end
+
+        context "when the dialog field does not trigger auto refresh" do
+          let(:trigger_auto_refresh) { false }
+
+          it "returns the tag options with a few data-miq attributes" do
+            expect(helper.time_tag_options(dialog_field, "url", "hour_or_min")).to eq(
+              :class             => "dynamic-date-hour_or_min-100",
+              "data-miq_observe" => "{\"url\":\"url\"}"
+            )
+          end
         end
       end
     end
 
     describe "#drop_down_options" do
-      let(:dialog_field) { active_record_instance_double("DialogField", :id => "100", :read_only => read_only) }
-
       context "when the field is read_only" do
         let(:read_only) { true }
 
@@ -241,13 +270,30 @@ describe ApplicationHelper do
       context "when the dialog field is not read only" do
         let(:read_only) { false }
 
-        it "returns the tag options with a few data-miq attributes" do
-          expect(helper.drop_down_options(dialog_field, "url")).to eq(
-            :class                 => "dynamic-drop-down-100",
-            "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true,
-            "data-miq_observe"     => "{\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\"}"
-          )
+        context "when the dialog field triggers auto refresh" do
+          let(:trigger_auto_refresh) { true }
+
+          it "returns the tag options with a few data-miq attributes" do
+            expect(helper.drop_down_options(dialog_field, "url")).to eq(
+              :class                 => "dynamic-drop-down-100",
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              "data-miq_observe"     => "{\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\"}"
+            )
+          end
+        end
+
+        context "when the dialog field does not trigger auto refresh" do
+          let(:trigger_auto_refresh) { false }
+
+          it "returns the tag options with a few data-miq attributes" do
+            expect(helper.drop_down_options(dialog_field, "url")).to eq(
+              :class                 => "dynamic-drop-down-100",
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              "data-miq_observe"     => "{\"url\":\"url\"}"
+            )
+          end
         end
       end
     end
@@ -256,11 +302,12 @@ describe ApplicationHelper do
       let(:dialog_field) do
         active_record_instance_double(
           "DialogField",
-          :default_value => "some_value",
-          :name          => "field_name",
-          :id            => "100",
-          :read_only     => read_only,
-          :value         => value
+          :default_value        => "some_value",
+          :name                 => "field_name",
+          :id                   => "100",
+          :read_only            => read_only,
+          :trigger_auto_refresh => trigger_auto_refresh,
+          :value                => value
         )
       end
 
@@ -306,30 +353,68 @@ describe ApplicationHelper do
         context "when the current value is equal to the default value" do
           let(:value) { "some_value" }
 
-          it "returns the tag options with a disabled true and checked" do
-            expect(helper.radio_options(dialog_field, "url", value)).to eq(
-              :type    => "radio",
-              :id      => "100",
-              :value   => "some_value",
-              :name    => "field_name",
-              :checked => '',
-              :onclick => "dialogFieldRefresh.triggerAutoRefresh('100'); $.ajax({beforeSend:function(request){miqSparkle(true);}, complete:function(request){miqSparkle(false);}, data:miqSerializeForm('dynamic-radio-100'), dataType:'script', type:'post', url:'url'})"
-            )
+          context "when the dialog field triggers auto refresh" do
+            let(:trigger_auto_refresh) { true }
+
+            it "returns the tag options with a disabled true and checked" do
+              expect(helper.radio_options(dialog_field, "url", value)).to eq(
+                :type    => "radio",
+                :id      => "100",
+                :value   => "some_value",
+                :name    => "field_name",
+                :checked => '',
+                :onclick => "dialogFieldRefresh.triggerAutoRefresh('100');$.ajax({beforeSend:function(request){miqSparkle(true);}, complete:function(request){miqSparkle(false);}, data:miqSerializeForm('dynamic-radio-100'), dataType:'script', type:'post', url:'url'})"
+              )
+            end
+          end
+
+          context "when the dialog field does not trigger auto refresh" do
+            let(:trigger_auto_refresh) { false }
+
+            it "returns the tag options with a disabled true and checked" do
+              expect(helper.radio_options(dialog_field, "url", value)).to eq(
+                :type    => "radio",
+                :id      => "100",
+                :value   => "some_value",
+                :name    => "field_name",
+                :checked => '',
+                :onclick => "$.ajax({beforeSend:function(request){miqSparkle(true);}, complete:function(request){miqSparkle(false);}, data:miqSerializeForm('dynamic-radio-100'), dataType:'script', type:'post', url:'url'})"
+              )
+            end
           end
         end
 
         context "when the current value is not equal to the default value" do
           let(:value) { "bogus" }
 
-          it "returns the tag options with a disabled true and checked" do
-            expect(helper.radio_options(dialog_field, "url", value)).to eq(
-              :type    => "radio",
-              :id      => "100",
-              :value   => "bogus",
-              :name    => "field_name",
-              :checked => nil,
-              :onclick => "dialogFieldRefresh.triggerAutoRefresh('100'); $.ajax({beforeSend:function(request){miqSparkle(true);}, complete:function(request){miqSparkle(false);}, data:miqSerializeForm('dynamic-radio-100'), dataType:'script', type:'post', url:'url'})"
-            )
+          context "when the dialog field triggers auto refresh" do
+            let(:trigger_auto_refresh) { true }
+
+            it "returns the tag options with a disabled true and checked" do
+              expect(helper.radio_options(dialog_field, "url", value)).to eq(
+                :type    => "radio",
+                :id      => "100",
+                :value   => "bogus",
+                :name    => "field_name",
+                :checked => nil,
+                :onclick => "dialogFieldRefresh.triggerAutoRefresh('100');$.ajax({beforeSend:function(request){miqSparkle(true);}, complete:function(request){miqSparkle(false);}, data:miqSerializeForm('dynamic-radio-100'), dataType:'script', type:'post', url:'url'})"
+              )
+            end
+          end
+
+          context "when the dialog field does not trigger auto refresh" do
+            let(:trigger_auto_refresh) { false }
+
+            it "returns the tag options with a disabled true and checked" do
+              expect(helper.radio_options(dialog_field, "url", value)).to eq(
+                :type    => "radio",
+                :id      => "100",
+                :value   => "bogus",
+                :name    => "field_name",
+                :checked => nil,
+                :onclick => "$.ajax({beforeSend:function(request){miqSparkle(true);}, complete:function(request){miqSparkle(false);}, data:miqSerializeForm('dynamic-radio-100'), dataType:'script', type:'post', url:'url'})"
+              )
+            end
           end
         end
       end

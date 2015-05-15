@@ -61,11 +61,7 @@ module ApplicationHelper::Dialogs
     extra_options = {
       "data-miq_sparkle_on"       => true,
       "data-miq_sparkle_off"      => true,
-      "data-miq_observe_checkbox" => {
-        :url          => url,
-        :auto_refresh => true,
-        :field_id     => field.id.to_s
-      }.to_json
+      "data-miq_observe_checkbox" => {:url => url}.merge(auto_refresh_options(field)).to_json
     }
 
     add_options_unless_read_only(extra_options, tag_options, field)
@@ -73,22 +69,14 @@ module ApplicationHelper::Dialogs
 
   def date_tag_options(field, url)
     tag_options = {:class => "css1 dynamic-date-#{field.id}", :readonly => "true"}
-    extra_options = {"data-miq_observe_date" => {
-      :url          => url,
-      :auto_refresh => true,
-      :field_id     => field.id.to_s
-    }.to_json}
+    extra_options = {"data-miq_observe_date" => {:url => url}.merge(auto_refresh_options(field)).to_json}
 
     add_options_unless_read_only(extra_options, tag_options, field)
   end
 
   def time_tag_options(field, url, hour_or_min)
     tag_options = {:class => "dynamic-date-#{hour_or_min}-#{field.id}"}
-    extra_options = {"data-miq_observe" => {
-      :url          => url,
-      :auto_refresh => true,
-      :field_id     => field.id.to_s
-    }.to_json}
+    extra_options = {"data-miq_observe" => {:url => url}.merge(auto_refresh_options(field)).to_json}
 
     add_options_unless_read_only(extra_options, tag_options, field)
   end
@@ -98,11 +86,7 @@ module ApplicationHelper::Dialogs
     extra_options = {
       "data-miq_sparkle_on"  => true,
       "data-miq_sparkle_off" => true,
-      "data-miq_observe"     => {
-        :url          => url,
-        :auto_refresh => true,
-        :field_id     => field.id.to_s
-      }.to_json
+      "data-miq_observe"     => {:url => url}.merge(auto_refresh_options(field)).to_json
     }
 
     add_options_unless_read_only(extra_options, tag_options, field)
@@ -117,8 +101,10 @@ module ApplicationHelper::Dialogs
       :checked => field.default_value.to_s == value.to_s ? '' : nil
     }
 
+    auto_refresh_string = field.trigger_auto_refresh ? "dialogFieldRefresh.triggerAutoRefresh('#{field.id}');" : ""
+
     extra_options = {
-      :onclick  => "dialogFieldRefresh.triggerAutoRefresh('#{field.id}'); " + remote_function(
+      :onclick  => auto_refresh_string + remote_function(
         :with     => "miqSerializeForm('dynamic-radio-#{field.id}')",
         :url      => url,
         :loading  => "miqSparkle(true);",
