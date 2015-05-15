@@ -1873,6 +1873,10 @@ class VmOrTemplate < ActiveRecord::Base
     false
   end
 
+  def self.batch_operation_supported?(operation, ids)
+    VmOrTemplate.where(:id => ids).all? { |v| v.public_send("validate_#{operation}")[:available] }
+  end
+
   private
 
   def power_state=(new_power_state)
@@ -1881,5 +1885,9 @@ class VmOrTemplate < ActiveRecord::Base
 
   def calculate_power_state
     self.class.calculate_power_state(raw_power_state)
+  end
+
+  def validate_supported
+    {:available => true,   :message => nil}
   end
 end

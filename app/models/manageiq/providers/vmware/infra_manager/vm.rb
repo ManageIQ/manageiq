@@ -26,4 +26,8 @@ class ManageIQ::Providers::Vmware::InfraManager::Vm < ManageIQ::Providers::Infra
   def supports_snapshots?
     true
   end
+
+  def validate_migrate
+    validate_supported
+  end
 end

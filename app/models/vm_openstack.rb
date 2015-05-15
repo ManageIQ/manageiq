@@ -70,4 +70,8 @@ class VmOpenstack < ManageIQ::Providers::CloudManager::Vm
   def has_proxy?
     true
   end
+
+  def validate_migrate
+    validate_supported
+  end
 end

@@ -442,4 +442,30 @@ describe VmOrTemplate do
       expect(tenant.vm_or_templates).to include(vm)
     end
   end
+
+  context "#is_available?" do
+    it "returns true for SCVMM VM" do
+      vm =  FactoryGirl.create(:vm_vmware)
+      expect(vm.is_available?(:migrate)).to eq(true)
+    end
+
+    it "returns true for vmware VM" do
+      vm =  FactoryGirl.create(:vm_microsoft)
+      expect(vm.is_available?(:migrate)).to_not eq(true)
+    end
+  end
+
+  context "#self.batch_operation_supported?" do
+    it "when the vm_or_template supports migrate,  returns false" do
+      vm1 =  FactoryGirl.create(:vm_microsoft)
+      vm2 =  FactoryGirl.create(:vm_vmware)
+      expect(VmOrTemplate.batch_operation_supported?(:migrate, [vm1.id, vm2.id])).to eq(false)
+    end
+
+    it "when the vm_or_template exists and can be migrated, returns true" do
+      vm1 =  FactoryGirl.create(:vm_vmware)
+      vm2 =  FactoryGirl.create(:vm_vmware)
+      expect(VmOrTemplate.batch_operation_supported?(:migrate, [vm1.id, vm2.id])).to eq(true)
+    end
+  end
 end
