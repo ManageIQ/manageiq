@@ -1,5 +1,4 @@
 class VmScan < Job
-
   #
   # TODO: until we get location/offset read capability for OpenStack
   # image data, OpenStack fleecing is prone to timeout (based on image size).
@@ -488,7 +487,7 @@ class VmScan < Job
 
   def process_abort(*args)
     begin
-      vm = VmOrTemplate.find_by_id(self.target_id)
+      vm = VmOrTemplate.find_by_id(target_id)
       unless self.context[:snapshot_mor].nil?
         mor = self.context[:snapshot_mor]
         self.context[:snapshot_mor] = nil

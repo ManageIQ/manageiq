@@ -86,7 +86,7 @@ module MiqServer::ServerSmartProxy
         v = VmOrTemplate.find(ost.vm_id)
         timeout_adj = 4 if v.kind_of?(VmOpenstack) || v.kind_of?(TemplateOpenstack)
       end
-      MiqQueue.put( :class_name => self.class.name, :instance_id => self.id, :method_name => "scan_sync_vm", :args => ost, :server_guid => self.guid, :role => "smartproxy", :queue_name => "smartproxy", :msg_timeout => worker_setting[:queue_timeout] * timeout_adj)
+      MiqQueue.put(:class_name => self.class.name, :instance_id => id, :method_name => "scan_sync_vm", :args => ost, :server_guid => guid, :role => "smartproxy", :queue_name => "smartproxy", :msg_timeout => worker_setting[:queue_timeout] * timeout_adj)
     else
       $log.error "#{log_prefix} Unsupported method [#{ost.method_name}]"
     end

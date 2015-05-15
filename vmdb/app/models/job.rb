@@ -34,7 +34,7 @@ class Job < ActiveRecord::Base
   end
 
   def self.current_job_timeout
-    return DEFAULT_TIMEOUT
+    DEFAULT_TIMEOUT
   end
 
   def current_job_timeout
