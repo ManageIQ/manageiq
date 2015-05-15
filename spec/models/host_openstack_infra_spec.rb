@@ -236,7 +236,7 @@ openstack-keystone:                     active
 
     context "#authentication_status" do
       it "returns host's auth status if auth is there" do
-        expect(host.authentication_status).to eq 'Valid'
+        expect(host.authentication_status).to eq 'SomeMockedStatus'
       end
 
       it "returns 'None' if host's auth is nil" do
@@ -289,6 +289,56 @@ openstack-keystone:                     active
         host_auth.save
 
         expect(host.authentication_best_fit(:ssh_keypair)).to eq host_auth
+      end
+    end
+
+    context "#update_ssh_auth_status!" do
+      context "when ssh connection causes exception" do
+        before :each do
+          host.stub(:verify_credentials_with_ssh) { raise "some error" }
+        end
+
+        it "sets auth to 'Error' state if credentials exists" do
+          host_auth = host.authentications.where(:authtype => :ssh_keypair).first
+          expect(host_auth.status).to eq("SomeMockedStatus")
+          # Update status and observe it changes to error
+          host.update_ssh_auth_status!
+          host_auth.reload
+          expect(host_auth.status).to eq("Error")
+        end
+
+        it "sets auth to 'None' state when hostname or credentials are missing" do
+          # Remove the auth and observe the state is not error but none
+          ext_management_system.authentications.where(:authtype => :ssh_keypair).first.destroy
+          host.reload
+          # Update status and observe it changes to none
+          host.update_ssh_auth_status!
+          expect(host.authentications.where(:authtype => :ssh_keypair).first.status).to eq("None")
+        end
+      end
+
+      context "when ssh connection succeeds an verification returns true" do
+        before :each do
+          host.stub(:verify_credentials_with_ssh).and_return(true)
+        end
+
+        it "sets auth to valid, when credentials verification succeeds" do
+
+          # Update status and observe it changes to Valid
+          host.update_ssh_auth_status!
+          expect(host.authentications.where(:authtype => :ssh_keypair).first.status).to eq("Valid")
+        end
+
+        it "creates new auth record for storing state if there is not any" do
+          host.authentications.where(:authtype => :ssh_keypair).first.destroy
+          # Check we have removed host's auth
+          expect(host.authentications.where(:authtype => :ssh_keypair)).to eq([])
+          # Update status and observe it creates new auth with Valid state
+          host.reload
+          host.update_ssh_auth_status!
+          host.reload
+          expect(host.authentications.where(:authtype => :ssh_keypair).first.status).to eq("Valid")
+        end
       end
     end
   end

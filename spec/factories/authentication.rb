@@ -26,6 +26,6 @@ FactoryGirl.define do
 
   factory :authentication_ssh_keypair_without_key, :parent => :authentication_ssh_keypair do
     auth_key    nil
-    status      "Valid"
+    status      "SomeMockedStatus"
   end
 end
