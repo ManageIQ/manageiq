@@ -74,6 +74,13 @@
                 @edit[:field_auto_refresh],
                 'data-miq_observe_checkbox' => {:url => url}.to_json)
 
+          %tr
+            %td.key=_('Auto Refresh other fields when modified')
+            %td
+              = check_box_tag('field_trigger_auto_refresh', '1',
+                @edit[:field_trigger_auto_refresh],
+                'data-miq_observe_checkbox' => {:url => url}.to_json)
+
         - elsif @edit[:field_typ] =~ /Text|Check/
           %tr
             %td.key=_('Default Value')
@@ -115,6 +122,13 @@
             %td.key=_('Read only')
             %td
               = check_box_tag('field_read_only', '1', @edit[:field_read_only], "data-miq_observe_checkbox" => {:url => url}.to_json)
+
+          %tr
+            %td.key=_('Auto Refresh other fields when modified')
+            %td
+              = check_box_tag('field_trigger_auto_refresh', '1',
+                @edit[:field_trigger_auto_refresh],
+                'data-miq_observe_checkbox' => {:url => url}.to_json)
           - if @edit[:field_typ].include?('TextBox')
             %tr
               %td.key=_('Validator Type')
@@ -139,6 +153,14 @@
             %td.key=_('Read only')
             %td
               = check_box_tag('field_read_only', '1', @edit[:field_read_only], "data-miq_observe_checkbox" => {:url => url}.to_json)
+
+          %tr
+            %td.key=_('Auto Refresh other fields when modified')
+            %td
+              = check_box_tag('field_trigger_auto_refresh', '1',
+                @edit[:field_trigger_auto_refresh],
+                'data-miq_observe_checkbox' => {:url => url}.to_json)
+
           %tr
             %td.key=_('Show Past Dates')
             %td
@@ -158,6 +180,14 @@
             %td.key=_('Read only')
             %td
               = check_box_tag('field_read_only', '1', @edit[:field_read_only], "data-miq_observe_checkbox" => {:url => url}.to_json)
+
+          %tr
+            %td.key=_('Auto Refresh other fields when modified')
+            %td
+              = check_box_tag('field_trigger_auto_refresh', '1',
+                @edit[:field_trigger_auto_refresh],
+                'data-miq_observe_checkbox' => {:url => url}.to_json)
+
           %tr
             %td.key=_('Default Value')
             %td
@@ -233,9 +263,8 @@
             %td
               = check_box_tag('field_read_only', '1', @edit[:field_read_only], "data-miq_observe_checkbox" => {:url => url}.to_json)
 
-        - if @edit[:field_typ].include?("Text")
           %tr
-            %td.key=_('Refresh other fields while typing')
+            %td.key=_('Auto Refresh other fields when modified')
             %td
               = check_box_tag('field_trigger_auto_refresh', '1',
                 @edit[:field_trigger_auto_refresh],

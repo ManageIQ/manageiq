@@ -1026,15 +1026,16 @@ module MiqAeCustomizationController::Dialogs
       get_field_types
       field = @edit[:new][:tabs][nodes[1].split('-').last.to_i][:groups][nodes[2].split('-').last.to_i][:fields][ids.last.to_i]
       @edit.update(
-        :field_label          => field[:label],
-        :field_name           => field[:name],
-        :field_description    => field[:description],
-        :field_typ            => field[:typ],
-        :field_dynamic        => field[:dynamic],
-        :field_default_value  => field[:default_value],
-        :field_read_only      => field[:read_only],
-        :field_reconfigurable => field[:reconfigurable],
-        :field_required       => field[:required]
+        :field_label                => field[:label],
+        :field_name                 => field[:name],
+        :field_description          => field[:description],
+        :field_typ                  => field[:typ],
+        :field_dynamic              => field[:dynamic],
+        :field_default_value        => field[:default_value],
+        :field_read_only            => field[:read_only],
+        :field_reconfigurable       => field[:reconfigurable],
+        :field_required             => field[:required],
+        :field_trigger_auto_refresh => field[:trigger_auto_refresh]
       )
 
       if field[:typ].include?('TextBox')
@@ -1045,7 +1046,6 @@ module MiqAeCustomizationController::Dialogs
 
       if field[:typ].include?('Text')
         @edit[:field_required]             = field[:required]
-        @edit[:field_trigger_auto_refresh] = field[:trigger_auto_refresh]
       end
 
       if field[:typ].include?("TagControl")
@@ -1143,17 +1143,18 @@ module MiqAeCustomizationController::Dialogs
           g.ordered_dialog_resources.each do |field|
             f = field.resource
             fld = {
-              :id             => f.id,
-              :label          => f.label,
-              :description    => f.description,
-              :typ            => f.type,
-              :tab_id         => t.id,
-              :group_id       => g.id,
-              :order          => field.order,
-              :name           => f.name,
-              :reconfigurable => f.reconfigurable,
-              :dynamic        => f.dynamic,
-              :read_only      => f.read_only
+              :id                   => f.id,
+              :label                => f.label,
+              :description          => f.description,
+              :typ                  => f.type,
+              :tab_id               => t.id,
+              :group_id             => g.id,
+              :order                => field.order,
+              :name                 => f.name,
+              :reconfigurable       => f.reconfigurable,
+              :dynamic              => f.dynamic,
+              :read_only            => f.read_only,
+              :trigger_auto_refresh => f.trigger_auto_refresh
             }
 
             if dynamic_field?(fld)
@@ -1188,7 +1189,6 @@ module MiqAeCustomizationController::Dialogs
               end
               fld[:required]             = f.required
               fld[:default_value]        = f.default_value.nil? ? "" : f.default_value
-              fld[:trigger_auto_refresh] = f.trigger_auto_refresh
 
             elsif ["DialogFieldDateControl", "DialogFieldDateTimeControl"].include?(f.type)
               fld[:past_dates] = f.show_past_dates.nil? ? false : f.show_past_dates
@@ -1252,13 +1252,14 @@ module MiqAeCustomizationController::Dialogs
               if group[:fields]
                 group[:fields].each_with_index do |field,k|
                   fld = {
-                    :label          => field[:label],
-                    :description    => field[:description],
-                    :name           => field[:name],
-                    :reconfigurable => field[:reconfigurable],
-                    :dynamic        => field[:dynamic],
-                    :read_only      => field[:read_only],
-                    :display        => :edit
+                    :label                => field[:label],
+                    :description          => field[:description],
+                    :name                 => field[:name],
+                    :reconfigurable       => field[:reconfigurable],
+                    :dynamic              => field[:dynamic],
+                    :read_only            => field[:read_only],
+                    :trigger_auto_refresh => field[:trigger_auto_refresh],
+                    :display              => :edit
                   }
 
                   if field[:typ] =~ /Drop|Radio/ && field[:dynamic] != true
@@ -1291,7 +1292,6 @@ module MiqAeCustomizationController::Dialogs
                     end
                     fld[:required]             = field[:required]  if field[:typ].include?('Text')
                     fld[:default_value]        = field[:default_value].to_s
-                    fld[:trigger_auto_refresh] = field[:trigger_auto_refresh]
 
                   elsif ["DialogFieldDateControl", "DialogFieldDateTimeControl"].include?(field[:typ])
                     fld[:show_past_dates] = field[:past_dates]
