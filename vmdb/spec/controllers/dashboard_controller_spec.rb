@@ -129,4 +129,18 @@ describe DashboardController do
       url.should eq("/vm_cloud/explorer?accordion=instances")
     end
   end
+
+  context "#get_layout" do
+    it "sets layout same as session[:layout] when changing window size" do
+      request.parameters["action"] = "window_sizes"
+      session[:layout] = "host"
+      layout = controller.send(:get_layout)
+      layout.should eq(session[:layout])
+    end
+
+    it "defaults layout to login on Login screen" do
+      layout = controller.send(:get_layout)
+      layout.should eq("login")
+    end
+  end
 end
