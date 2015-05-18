@@ -112,6 +112,8 @@ class Filesystem < ActiveRecord::Base
 
   def contents_displayable?
     return false if name.nil?
+    # We will display max 20k characters in the UI textarea
+    return false if size > 20_000
     mime_type = MIME::Types.of(name).first
     return has_contents? && contents.force_encoding("UTF-8").ascii_only? if mime_type.nil?
     !mime_type.binary?

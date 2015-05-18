@@ -1,6 +1,7 @@
 FactoryGirl.define do
   factory :filesystem do
     sequence(:name)     { |n| "filesystem_#{seq_padded_for_sorting(n)}" }
+    size 200
   end
 
   factory :filesystem_conf_file_ascii, :parent => :filesystem do

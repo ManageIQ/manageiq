@@ -9,6 +9,13 @@ describe Filesystem do
       expect(filesystem.contents_displayable?).to be_false
     end
 
+    it "filesystem content bigger than 20k characters is not displayable" do
+      filesystem = FactoryGirl.create(:filesystem_conf_file_ascii)
+      filesystem.stub(:size).and_return(40_000)
+
+      expect(filesystem.contents_displayable?).to be_false
+    end
+
     it "non MIME .conf ascii file is displayable" do
       filesystem = FactoryGirl.create(:filesystem_conf_file_ascii)
 
