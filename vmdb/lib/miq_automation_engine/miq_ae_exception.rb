@@ -13,7 +13,7 @@ module MiqAeException
     class ServiceNotFound      < MiqAeEngineError; end
     class StopInstantiation    < MiqAeEngineError; end
     class AbortInstantiation   < MiqAeEngineError; end
-    class UnknownMethodRc      < MiqAeEngineError; end
+    class UnknownMethodRc      < AbortInstantiation; end
     class ObjectNotFound       < MiqAeEngineError; end
     class InvalidPathFormat    < MiqAeEngineError; end
     class InvalidCollection    < MiqAeEngineError; end
