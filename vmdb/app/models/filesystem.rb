@@ -111,10 +111,9 @@ class Filesystem < ActiveRecord::Base
   alias contents_available has_contents?
 
   def contents_displayable?
-    name = base_name
     return false if name.nil?
     mime_type = MIME::Types.of(name).first
-    return false if mime_type.nil?
+    return has_contents? && contents.force_encoding("UTF-8").ascii_only? if mime_type.nil?
     !mime_type.binary?
   end
 
