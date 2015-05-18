@@ -1,3 +1,4 @@
+require_relative 'miq_ae_state_info'
 module MiqAeEngine
   class MiqAeWorkspace < ActiveRecord::Base
     serialize :workspace
@@ -35,7 +36,9 @@ module MiqAeEngine
   end
 
   class MiqAeWorkspaceRuntime
-    attr_accessor :graph, :num_drb_methods, :class_methods, :datastore_cache, :persist_state_hash
+    include MiqAeStateInfo
+    attr_accessor :graph, :num_drb_methods, :class_methods, :datastore_cache
+    attr_accessor :persist_state_hash, :current_state_info
     attr_reader :nodes
     DEFAULTS = {
       :readonly => false
@@ -51,6 +54,8 @@ module MiqAeEngine
       @class_methods     = Hash.new
       @dom_search        = MiqAeDomainSearch.new
       @persist_state_hash = HashWithIndifferentAccess.new
+      @current_state_info = {}
+      @state_machine_objects = []
     end
 
     def readonly?
@@ -106,7 +111,6 @@ module MiqAeEngine
 
     def instantiate(uri, root=nil)
       $miq_ae_logger.info("Instantiating [#{uri}]") if root.nil?
-
       scheme, userinfo, host, port, registry, path, opaque, query, fragment = MiqAeUri.split(uri, "miqaedb")
       raise "Unsupported Scheme [#{scheme}]" unless MiqAeUri.scheme_supported?(scheme)
       raise "Invalid URI <#{uri}>" if path.nil?
@@ -115,6 +119,10 @@ module MiqAeEngine
       args = MiqAeUri.query2hash(query)
       if (ae_state_data = args.delete('ae_state_data'))
         @persist_state_hash.merge!(YAML.load(ae_state_data))
+      end
+
+      if (ae_state_previous = args.delete('ae_state_previous'))
+        load_previous_state_info(ae_state_previous)
       end
 
       ns, klass, instance = MiqAePath.split(path)
@@ -134,6 +142,12 @@ module MiqAeEngine
           pushed = true
           @nodes << obj
           link_parent_child(root, obj) if root
+
+          if obj.state_machine?
+            save_current_state_info(@state_machine_objects.last) unless @state_machine_objects.empty?
+            @state_machine_objects.push(obj.object_name)
+            reset_state_info(obj.object_name)
+          end
 
           obj.process_assertions(message)
           obj.process_args_as_attributes(args)
@@ -161,9 +175,21 @@ module MiqAeEngine
         raise MiqAeException::AbortInstantiation, err.message
       ensure
         @current.pop if pushed
+        pop_state_machine_info if obj && obj.state_machine? && self.root
       end
 
       return obj
+    end
+
+    def pop_state_machine_info
+      last_state_machine = @state_machine_objects.pop
+      case root['ae_result']
+      when 'ok' then
+        @current_state_info.delete(last_state_machine)
+      when 'retry' then
+        save_current_state_info(last_state_machine)
+      end
+      reset_state_info(@state_machine_objects.last) unless @state_machine_objects.empty?
     end
 
     def to_expanded_xml(path=nil)
