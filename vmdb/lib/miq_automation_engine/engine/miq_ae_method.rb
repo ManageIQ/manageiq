@@ -103,23 +103,11 @@ module MiqAeEngine
         msg = "Method exited with rc=#{verbose_rc(rc)}"
       rescue => err
         $miq_ae_logger.error("Method exec failed because (#{err.class}:#{err.message})")
-        rc = 16
+        rc = MIQ_ABORT
         msg = "Method execution failed"
       end
 
-      case rc
-      when MIQ_OK
-        $miq_ae_logger.info(msg)
-      when MIQ_WARN
-        $miq_ae_logger.warn(msg)
-      when MIQ_STOP
-        raise MiqAeException::StopInstantiation,  msg
-      when MIQ_ABORT
-        raise MiqAeException::AbortInstantiation, msg
-      else
-        raise MiqAeException::UnknownMethodRc,    msg
-      end
-      return rc
+      process_ruby_method_results(rc, msg)
     end
 
     MIQ_OK    = 0
@@ -226,7 +214,7 @@ RUBY
         msg = "Method exited with rc=#{verbose_rc(rc)}"
       rescue => err
         $miq_ae_logger.error("Method exec failed because (#{err.class}:#{err.message})")
-        rc = 16
+        rc = MIQ_ABORT
         msg = "Method execution failed"
       end
       return rc, msg
