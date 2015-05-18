@@ -1588,6 +1588,8 @@ module ApplicationHelper
       title += ": Policy Simulation"
     elsif layout == "all_ui_tasks"
       title += ": All UI Tasks"
+    elsif layout == "my_ui_tasks"
+      title += ": My UI Tasks"
     elsif layout == "rss"
       title += ": RSS"
     elsif layout == "storage_manager"
@@ -1618,7 +1620,8 @@ module ApplicationHelper
     elsif layout.starts_with?("cim_") ||
           layout.starts_with?("snia_")
       title += ": Storage - #{ui_lookup(:tables=>layout)}"
-
+    elsif layout == "login"
+      title += ": Login"
     # Assume layout is a table name and look up the plural version
     else
       title += ": #{ui_lookup(:tables=>layout)}"
