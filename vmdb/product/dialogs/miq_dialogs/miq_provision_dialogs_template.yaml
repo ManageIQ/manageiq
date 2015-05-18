@@ -736,6 +736,7 @@
           :required: false
           :display: :edit
           :data_type: :integer
+          :validation_method: :validate_memory_reservation
         :network_adapters:
           :values:
             1: "1"

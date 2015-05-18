@@ -197,6 +197,11 @@ class MiqRequestWorkflow
           end
         end
 
+        if fld[:validation_method] && respond_to?(fld[:validation_method])
+          valid = !(fld[:error] = send(fld[:validation_method], f, values, dlg, fld, value))
+          next unless valid
+        end
+
         next if value.blank?
 
         msg = "'#{fld[:description]}' in dialog #{dlg[:description]} must be of type #{fld[:data_type]}"
