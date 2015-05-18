@@ -213,6 +213,7 @@ class HostController < ApplicationController
   end
 
   def firewall_rules
+    @display = "main"
     show_association('firewall_rules', 'Firewall Rules', 'firewallrule', :firewall_rules, FirewallRule)
   end
 
