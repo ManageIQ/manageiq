@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/test_helper'
-class RssFeedTest < Test::Unit::TestCase
+class RssFeedTest < MiniTest::Unit::TestCase
   def setup
     @records = Array.new(5).fill(Post.new)
     @records.each &:save

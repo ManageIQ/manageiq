@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'minitest/unit'
 require 'ostruct'
 
 $:.push("#{File.dirname(__FILE__)}/../..")
@@ -10,7 +10,7 @@ require 'MiqDisk'
 $:.push("#{File.dirname(__FILE__)}/../../../fs/ntfs")
 require 'NtfsBootSect'
 
-class NtfsTestDisk < Test::Unit::TestCase
+class NtfsTestDisk < MiniTest::Unit::TestCase
 	
 	CONDITIONS = ['fs_type', 'ntfs']
 	TEST_DB = "#{File.dirname(__FILE__)}/../../vms.yml"

@@ -6,7 +6,7 @@ require 'VmsFromYaml'
 $:.push("#{File.dirname(__FILE__)}/../../disk")
 require 'MiqDisk'
 
-class TestMiqDiskReadLen < Test::Unit::TestCase
+class TestMiqDiskReadLen < MiniTest::Unit::TestCase
 	
 	TEST_DB = "#{File.dirname(__FILE__)}/../vms.yml"	
 	

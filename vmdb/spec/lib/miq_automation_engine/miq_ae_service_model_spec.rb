@@ -181,7 +181,7 @@ end
 #  end
 #
 #  # Add another test to the EmsEvent test
-#  class MiqAeServiceEmsEventTest < Test::Unit::TestCase
+#  class MiqAeServiceEmsEventTest < MiniTest::Unit::TestCase
 #
 #    def test_wrap_object_call
 #      e = @klass.new(@o1)
