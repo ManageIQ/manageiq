@@ -160,34 +160,32 @@ describe EmsAmazon do
   end
 
   context "translate_exception" do
-    it "preserves and logs message for unknown exceptions" do
-      ems = FactoryGirl.build(:ems_amazon, :provider_region => "us-east-1")
+    before :each do
+      @ems = FactoryGirl.build(:ems_amazon, :provider_region => "us-east-1")
 
       creds = {:default => {:userid => "fake_user", :password => "fake_password"}}
-      ems.update_authentication(creds, :save => false)
+      @ems.update_authentication(creds, :save => false)
+    end
 
-      ems.stub(:with_provider_connection).and_raise(StandardError, "unlikely")
-
+    it "preserves and logs message for unknown exceptions" do
+      @ems.stub(:with_provider_connection).and_raise(StandardError, "unlikely")
       $log.should_receive(:error).with(/unlikely/)
-      expect { ems.verify_credentials() }.to raise_error(MiqException::MiqHostError, /Unexpected.*unlikely/)
+      expect { @ems.verify_credentials() }.to raise_error(MiqException::MiqHostError, /Unexpected.*unlikely/)
     end
 
     it "handles SignatureDoesNotMatch" do
-      ems = FactoryGirl.build(:ems_amazon, :provider_region => "us-east-1")
-      ems.stub(:with_provider_connection).and_raise(AWS::EC2::Errors::SignatureDoesNotMatch)
-      expect { ems.verify_credentials() }.to raise_error(MiqException::MiqHostError, /SignatureMismatch/)
+      @ems.stub(:with_provider_connection).and_raise(AWS::EC2::Errors::SignatureDoesNotMatch)
+      expect { @ems.verify_credentials() }.to raise_error(MiqException::MiqHostError, /Signature.*match/)
     end
 
     it "handles AuthFailure" do
-      ems = FactoryGirl.build(:ems_amazon, :provider_region => "us-east-1")
-      ems.stub(:with_provider_connection).and_raise(AWS::EC2::Errors::AuthFailure)
-      expect { ems.verify_credentials() }.to raise_error(MiqException::MiqHostError, /Login failed/)
+      @ems.stub(:with_provider_connection).and_raise(AWS::EC2::Errors::AuthFailure)
+      expect { @ems.verify_credentials() }.to raise_error(MiqException::MiqHostError, /Login failed/)
     end
 
     it "handles MissingCredentialsErrror" do
-      ems = FactoryGirl.build(:ems_amazon, :provider_region => "us-east-1")
-      ems.stub(:with_provider_connection).and_raise(AWS::Errors::MissingCredentialsError)
-      expect { ems.verify_credentials() }.to raise_error(MiqException::MiqHostError, /Missing credentials/)
+      @ems.stub(:with_provider_connection).and_raise(AWS::Errors::MissingCredentialsError)
+      expect { @ems.verify_credentials() }.to raise_error(MiqException::MiqHostError, /Missing credentials/i)
     end
   end
 end
