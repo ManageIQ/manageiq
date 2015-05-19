@@ -22,6 +22,11 @@ module EmsContainerHelper::TextualSummary
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
+  def textual_group_smart_management
+    items = %w{zone}
+    items.collect { |m| self.send("textual_#{m}") }.flatten.compact
+  end
+
   #
   # Items
   #
