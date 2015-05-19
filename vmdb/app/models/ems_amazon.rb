@@ -44,7 +44,7 @@ class EmsAmazon < EmsCloud
   end
 
   def translate_exception(err)
-    case err.class
+    case err
     when AWS::EC2::Errors::SignatureDoesNotMatch
       MiqException::MiqHostError.new "SignatureMismatch - check your AWS Secret Access Key and signing method"
     when AWS::EC2::Errors::AuthFailure
