@@ -41,7 +41,7 @@
               - else
                 = image_tag('/images/toolbars/first.png', :class => "dimmed small")
                 = image_tag('/images/toolbars/previous.png', :class => "dimmed small")
-              - if pages[:perpage] < pages[:items]
+              - if pages[:current] < pages[:total]
                 = link_to(image_tag('/images/toolbars/next.png', :class => "rollover small"),
                           {:action => action,
                            :page   => pages[:current] + 1},
