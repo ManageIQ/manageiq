@@ -4,7 +4,7 @@ module ContainerGroupHelper::TextualSummary
   #
 
   def textual_group_properties
-    items = %w(namespace name creation_timestamp resource_version restart_policy dns_policy)
+    items = %w(namespace name creation_timestamp resource_version restart_policy dns_policy ip)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
@@ -39,6 +39,10 @@ module ContainerGroupHelper::TextualSummary
 
   def textual_dns_policy
     {:label => "DNS Policy", :value => @record.dns_policy}
+  end
+
+  def textual_ip
+    {:label => "IP Address", :value => @record.ipaddress}
   end
 
   def textual_ems

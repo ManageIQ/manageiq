@@ -131,6 +131,7 @@ module EmsRefresh::Parsers
       new_result.merge!(
         :restart_policy => pod.spec.restartPolicy,
         :dns_policy     => pod.spec.dnsPolicy,
+        :ipaddress      => pod.status.podIP,
         :container_node => nil,
         :containers     => []
       )
