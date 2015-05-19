@@ -2,7 +2,7 @@ module EmsRefresh::SaveInventoryContainer
   def save_ems_container_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
     child_keys = [:container_nodes, :container_groups, :container_services,
-                  :container_replication_controllers, :container_routes, :container_projects]
+                  :container_routes, :container_projects, :container_replicators]
 
     # Save and link other subsections
     child_keys.each do |k|
@@ -64,19 +64,19 @@ module EmsRefresh::SaveInventoryContainer
     save_inventory_single(:computer_system, container_node, hash, [:hardware])
   end
 
-  def save_container_replication_controllers_inventory(ems, hashes, target = nil)
+  def save_container_replicators_inventory(ems, hashes, target = nil)
     return if hashes.nil?
     target = ems if target.nil?
 
-    ems.container_replication_controllers(true)
+    ems.container_replicators(true)
     deletes = if target.kind_of?(ExtManagementSystem)
-                ems.container_replication_controllers.dup
+                ems.container_replicators.dup
               else
                 []
               end
-    save_inventory_multi(:container_replication_controllers, ems, hashes, deletes, [:ems_ref],
+    save_inventory_multi(:container_replicators, ems, hashes, deletes, [:ems_ref],
                          [:labels, :selector_parts])
-    store_ids_for_new_records(ems.container_replication_controllers, hashes, :ems_ref)
+    store_ids_for_new_records(ems.container_replicators, hashes, :ems_ref)
   end
 
   def save_container_services_inventory(ems, hashes, target = nil)

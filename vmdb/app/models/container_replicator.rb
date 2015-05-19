@@ -1,4 +1,4 @@
-class ContainerReplicationController < ActiveRecord::Base
+class ContainerReplicator < ActiveRecord::Base
   include CustomAttributeMixin
 
   belongs_to  :ext_management_system, :foreign_key => "ems_id"
