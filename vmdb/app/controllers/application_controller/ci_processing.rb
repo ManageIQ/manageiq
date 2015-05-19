@@ -1897,14 +1897,14 @@ module ApplicationController::CiProcessing
     @edit[:new][owner] != @edit[:current][owner]
   end
 
-  def show_association(action, display_name, listicon, method, klass, association = nil, conditions =nil)
+  def show_association(action, display_name, listicon, method, klass, association = nil, conditions = nil)
     # Ajax request means in explorer, or if current explorer is one of the explorer controllers
     @explorer = true if request.xml_http_request? && explorer_controller?
     if @explorer  # Save vars for tree history array
       @x_show = params[:x_show]
       @sb[:action] = @lastaction = action
     end
-    @record = identify_record(params[:id])
+    @record = identify_record(params[:id], controller_to_model)
     @view = session[:view]                  # Restore the view from the session to get column names for the display
     return if record_no_longer_exists?(@record, klass.to_s)
     @lastaction = action
