@@ -58,7 +58,12 @@ module OrchestrationStackHelper::TextualSummary
     template = @record.orchestration_template
     return nil if template.nil?
     label = ui_lookup(:table => "orchestration_template")
-    {:label => label, :image => "orchestration_template", :value => template.name}
+    h = {:label => label, :image => "orchestration_template", :value => template.name}
+    if role_allows(:feature => "orchestration_templates_view")
+      h[:title] = "Show this Orchestration Template"
+      h[:link] = url_for(:controller => 'catalog', :action => 'ot_show', :id => template.id)
+    end
+    h
   end
 
   def textual_instances
