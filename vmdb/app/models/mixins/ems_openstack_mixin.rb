@@ -74,7 +74,7 @@ module EmsOpenstackMixin
   end
 
   def translate_exception(err)
-    case err.class
+    case err
     when Excon::Errors::Unauthorized
       MiqException::MiqInvalidCredentialsError.new "Login failed due to a bad username or password."
     when Excon::Errors::Timeout
