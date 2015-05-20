@@ -1,14 +1,18 @@
+require 'fcntl'
 require_relative 'MiqBlockDevOps'
 
 class RawBlockIO
 
   MIN_SECTORS_TO_CACHE = 64
 
-  def initialize(filename, mode = File::RDONLY | File::DIRECT)
+  def initialize(filename, mode = "r")
     # We must start with a block special file
     raise "RawBlockIO: #{filename} is not a blockSpecial file" unless File.stat(filename).ftype == 'blockSpecial'
 
     @rawDisk_file = File.open(filename, mode)
+
+    # Enable directio (raw)
+    @rawDisk_file.fcntl(Fcntl::F_SETFL, File::DIRECT)
 
     @blockSize      = 512
     @filename       = filename
