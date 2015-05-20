@@ -1,8 +1,8 @@
+require_relative 'MiqBlockDevOps'
 
-$:.push("#{File.dirname(__FILE__)}")
-
-require 'io/extra'
-require 'MiqBlockDevOps'
+if Platform::OS == :unix
+  require 'io/extra'
+end
 
 class RawBlockIO
 
@@ -24,8 +24,9 @@ class RawBlockIO
     @lbaEnd         = @sizeInBlocks - 1
     @seekPos        = 0
 
-    # Enable directio (raw)
-    @rawDisk_file.directio = IO::DIRECTIO_ON
+    if Platform::OS == :unix
+      @rawDisk_file.directio = IO::DIRECTIO_ON # Enable directio (raw)
+    end
 
     $log.debug "RawBlockIO: opened #{@filename}, size = #{@size} (#{@sizeInBlocks} blocks)"
   end
@@ -33,11 +34,11 @@ class RawBlockIO
   def read(len)
     return nil if @seekPos >= @endByteAddr
     len = @endByteAddr - @seekPos if (@seekPos + len) > @endByteAddr
-      
+
     startSector, startOffset = @seekPos.divmod(@blockSize)
     endSector = (@seekPos+len-1)/@blockSize
     numSector = endSector - startSector + 1
-            
+
     rBuf = breadCached(startSector, numSector)
     @seekPos += len
 
@@ -47,7 +48,7 @@ class RawBlockIO
   def write(buf, len)
     return nil if @seekPos >= @endByteAddr
     len = @endByteAddr - @seekPos if (@seekPos + len) > @endByteAddr
-      
+
     startSector, startOffset = @seekPos.divmod(@blockSize)
     endSector = (@seekPos+len-1)/@blockSize
     numSector = endSector - startSector + 1
@@ -86,7 +87,7 @@ class RawBlockIO
     # $log.debug "RawBlockIO.bread: startSector = #{startSector}, numSectors = #{numSectors}, @lbaEnd = #{@lbaEnd}"
     return nil if startSector > @lbaEnd
     numSectors = @sizeInBlocks - startSector if (startSector + numSectors) > @sizeInBlocks
-      
+
     @rawDisk_file.sysseek(startSector * @blockSize, IO::SEEK_SET)
     @rawDisk_file.sysread(numSectors * @blockSize, @cache)
   end
@@ -109,12 +110,12 @@ class RawBlockIO
       endSector     = startSector + sectorsRead - 1
       @cacheRange   = Range.new(startSector, endSector)
     end
-      
+
     sectorOffset = startSector  - @cacheRange.first
     bufferOffset = sectorOffset * @blockSize
     length       = numSectors   * @blockSize
     # $log.debug "RawBlockIO.breadCached: bufferOffset = #{bufferOffset}, length = #{length}"
-      
+
     return @cache[bufferOffset, length]
   end
 
