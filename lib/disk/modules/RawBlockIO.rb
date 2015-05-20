@@ -1,4 +1,3 @@
-require 'fcntl'
 require_relative 'MiqBlockDevOps'
 
 class RawBlockIO
@@ -11,8 +10,11 @@ class RawBlockIO
 
     @rawDisk_file = File.open(filename, mode)
 
-    # Enable directio (raw)
-    @rawDisk_file.fcntl(Fcntl::F_SETFL, File::DIRECT)
+    # Enable directio (raw) if supported
+    if defined? File::DIRECT
+      require 'fcntl'
+      @rawDisk_file.fcntl(Fcntl::F_SETFL, File::DIRECT)
+    end
 
     @blockSize      = 512
     @filename       = filename
