@@ -192,13 +192,14 @@ module MiqAeCustomizationController::Dialogs
     assert_privileges("dialog_edit")
     case params[:button]
     when 'cancel'
+      if params[:id]
+        dialog_label = session[:edit][:current][:label]
+        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "Dialog"), :name => dialog_label})
+      else
+        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model => "Dialog"))
+      end
       @edit = session[:edit] = nil # clean out the saved info
       self.x_active_tree = :dialogs_tree
-      if !@record || @record.id.blank?
-        add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"Dialog"))
-      else
-        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model=>ui_lookup(:model=>"Dialog"), :name=>@record.label})
-      end
       get_node_info
       replace_right_cell(x_node)
 
