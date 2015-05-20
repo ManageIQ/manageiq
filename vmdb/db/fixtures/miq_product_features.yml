@@ -3680,70 +3680,68 @@
   :feature_type: node
   :identifier: provider_foreman_explorer
   :children:
-  - :name: Accordions
-    :description: All Accordions under Foreman
+  - :name: Providers
+    :description: Everything under Providers accordion
     :feature_type: node
-    :identifier: provider_foreman_explorer_accords
-    :children:
-    - :name: Providers
-      :description: Providers Accordion
-      :feature_type: node
-      :identifier: providers_accord
-    - :name: Configured Systems
-      :description: Configured Systems Accordion
-      :feature_type: node
-      :identifier: configured_systems_filter_accord
-
-# Configuration Management access rules
-  - :name: Configuration Management Access Rules
-    :description: Access Rules for Configuration Management
-    :feature_type: node
-    :identifier: provider_foreman
+    :identifier: providers_accord
     :children:
     - :name: View
-      :description: View Provider Foreman
+      :description: View Providers, Configuration Profiles, Configured Systems
       :feature_type: view
       :identifier: provider_foreman_view
+    - :name: Operate
+      :description: Perform Operations on Providers and Configured Systems
+      :feature_type: control
+      :identifier: provider_foreman_control
       :children:
-      - :name: List
-        :description: Display Lists of Provider related to a CI
-        :feature_type: view
-        :identifier: provider_foreman_show_list
-      - :name: Show
-        :description: Display Individual Provider related to a CI
-        :feature_type: view
-        :identifier: provider_foreman_show
+        - :name: Edit Tags
+          :description: Edit Configured Systems Tags
+          :feature_type: control
+          :identifier: provider_foreman_configured_system_tag
+        - :name: Provision Configured Systems
+          :description: Provision Configured Systems
+          :feature_type: control
+          :identifier: provider_foreman_configured_system_provision
+        - :name: Refresh Providers
+          :description: Refresh relationships for all items related of Provider
+          :feature_type: control
+          :identifier: provider_foreman_refresh_provider
+    - :name: Modify
+      :description: Modify Providers
+      :feature_type: admin
+      :identifier: provider_admin
       :children:
-      - :name: Refresh
-        :description: Refresh relationships for all items related of Provider
-        :feature_type: control
-        :identifier: provider_foreman_refresh
-      - :name: Remove
-        :description: Remove Providers from the VMDB
-        :feature_type: admin
-        :identifier: provider_foreman_delete
-      - :name: Edit
-        :description: Edit a Provider
-        :feature_type: admin
-        :identifier: provider_foreman_edit
-      - :name: Add
-        :description: Add a Provider
-        :feature_type: admin
-        :identifier: provider_foreman_new
-      - :name: Validate
-        :description: Validate a Provider
-        :feature_type: admin
-        :identifier: provider_foreman_authentication_validate
-      - :name: Provision
-        :description: Provision a Configured System
-        :feature_type: admin
-        :identifier: provider_foreman_provision
+        - :name: Remove Providers
+          :description: Remove Proviers from the VMDB
+          :feature_type: admin
+          :identifier: provider_foreman_delete_provider
+        - :name: Edit Provider
+          :description: Edit a Provider
+          :feature_type: admin
+          :identifier: provider_foreman_edit_provider
+        - :name: Add Provider
+          :description: Add a Provider
+          :feature_type: admin
+          :identifier: provider_foreman_add_provider
+  - :name: Configured Systems
+    :description: Everything under Configured Systems accordion
+    :feature_type: node
+    :identifier: configured_systems_filter_accord
+    :children:
+      - :name: View
+        :description: View Configured Systems
+        :feature_type: view
+        :identifier: configured_systems_filter_accord_view
       - :name: Operate
         :description: Perform Operations on Configured Systems
         :feature_type: control
-        :identifier: provider_foreman_control
+        :identifier: configuredsystem_control
         :children:
           - :name: Edit Tags
             :description: Edit Configured Systems Tags
             :feature_type: control
-            :identifier: provider_foreman_tag
+            :identifier: configured_system_tag
+          - :name: Provision Configured Systems
+            :description: Provision Configured Systems
+            :feature_type: control
+            :identifier: configured_system_provision

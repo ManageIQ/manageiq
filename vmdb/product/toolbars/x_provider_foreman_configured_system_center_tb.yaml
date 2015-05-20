@@ -12,7 +12,7 @@
     :text: Lifecycle
     :enabled: 'true'
     :items:
-    - :button: configured_system_provision
+    - :button: provider_foreman_configured_system_provision
       :image: new
       :text: "Provision Configured System"
       :title: "Provision Configured System"
@@ -25,7 +25,7 @@
     :text: Policy
     :enabled: 'true'
     :items:
-    - :button: configured_system_tag
+    - :button: provider_foreman_configured_system_tag
       :image: tag
       :text: "Edit Tags"
       :title: "Edit Tags for this Configured System"
