@@ -31,3 +31,8 @@
               = link_to(_("%s (%s)") % [ui_lookup(:table => "containers"), num_containers],
                   {:action => 'show', :id => @record, :display => 'containers'},
                   :title => _("View %s") % ui_lookup(:table => "containers"))
+        - if role_allows(:feature => "container_node") && !@record.container_node.nil?
+          %li
+            = link_to("#{ui_lookup(:table => "container_node")}: #{@record.container_node.name}",
+                {:controller => 'container_node', :action => 'show', :id => @record.container_node},
+                :title => _("View %s %s") % [ui_lookup(:table => "container_node"), @record.container_node.name])
