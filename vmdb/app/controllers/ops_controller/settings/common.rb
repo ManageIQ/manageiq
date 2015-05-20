@@ -376,6 +376,18 @@ module OpsController::Settings::Common
         if ["settings_server","settings_authentication"].include?(@sb[:active_tab])
           server = MiqServer.find(@sb[:selected_server_id])
           @validate = server.set_config(@update)  # Save server settings against selected server
+          if @update.config[:server][:name] != server.name # appliance name was modified
+            begin
+              server.name = @update.config[:server][:name]
+              server.save!
+            rescue StandardError => bang
+              add_flash(_("Error when saving new server name: ") << bang.message, :error)
+              render :update do |page|
+                page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+              end
+              return
+            end
+          end
         else
           @update.save                                              # Save other settings for current server
         end
