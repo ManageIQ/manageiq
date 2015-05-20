@@ -4,7 +4,7 @@ class RawBlockIO
 
   MIN_SECTORS_TO_CACHE = 64
 
-  def initialize(filename, mode=File::RDONLY|File::DIRECT)
+  def initialize(filename, mode = File::RDONLY | File::DIRECT)
     # We must start with a block special file
     raise "RawBlockIO: #{filename} is not a blockSpecial file" unless File.stat(filename).ftype == 'blockSpecial'
 
