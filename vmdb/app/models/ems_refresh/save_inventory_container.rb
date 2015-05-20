@@ -133,7 +133,7 @@ module EmsRefresh::SaveInventoryContainer
               end
 
     save_inventory_multi(:container_definitions, container_group, hashes, deletes,
-                         [:ems_ref], [:container_port_configs, :container])
+                         [:ems_ref], [:container_port_configs, :container_env_vars, :container])
     store_ids_for_new_records(container_group.container_definitions, hashes, :ems_ref)
   end
 
@@ -163,6 +163,19 @@ module EmsRefresh::SaveInventoryContainer
 
     save_inventory_multi(:container_service_port_configs, container_service, hashes, deletes, [:ems_ref])
     store_ids_for_new_records(container_service.container_service_port_configs, hashes, :ems_ref)
+  end
+
+  def save_container_env_vars_inventory(container_definition, hashes, target = nil)
+    return if hashes.nil?
+    container_definition.container_env_vars(true)
+    deletes = if target.kind_of?(ExtManagementSystem)
+                container_definition.container_env_vars.dup
+              else
+                []
+              end
+
+    save_inventory_multi(:container_env_vars, container_definition, hashes, deletes, [:name, :value, :field_path])
+    store_ids_for_new_records(container_definition.container_env_vars, hashes, [:name, :value, :field_path])
   end
 
   def save_container_inventory(container_definition, hash, _target = nil)

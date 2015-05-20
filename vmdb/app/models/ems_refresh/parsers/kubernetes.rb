@@ -279,6 +279,11 @@ module EmsRefresh::Parsers
       new_result[:container_port_configs] = Array(ports).collect do |port_entry|
         parse_container_port_config(port_entry, pod_id, container_def.name)
       end
+      env = container_def.env
+      new_result[:container_env_vars] = Array(env).collect do |env_var|
+        parse_container_env_var(env_var)
+      end
+
       new_result
     end
 
@@ -312,6 +317,14 @@ module EmsRefresh::Parsers
         :port        => port_config.port,
         :target_port => port_config.targetPort,
         :protocol    => port_config.protocol
+      }
+    end
+
+    def parse_container_env_var(env_var)
+      {
+        :name  => env_var.name,
+        :value => env_var.value,
+        :field_path  => env_var.valueFrom.try(:fieldRef).try(:fieldPath)
       }
     end
 
