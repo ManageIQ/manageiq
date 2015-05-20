@@ -1,13 +1,12 @@
 require "spec_helper"
 
 describe MiqProvisionVirtWorkflow do
+  let(:workflow) { FactoryGirl.create(:miq_provision_virt_workflow) }
+
   context "#continue_request" do
     let(:sdn)      { "SysprepDomainName" }
-    let(:workflow) { FactoryGirl.create(:miq_provision_virt_workflow) }
 
     before do
-      FactoryGirl.create(:user_admin)
-      FactoryGirl.create(:miq_dialog_provision)
       workflow.stub(:validate => true)
       workflow.stub(:get_dialogs => {})
       workflow.instance_variable_set(:@values, {:vm_tags => [], :src_vm_id => 123, :sysprep_enabled => 'fields', :sysprep_domain_name => sdn})
@@ -39,13 +38,9 @@ describe MiqProvisionVirtWorkflow do
   end
 
   context 'network selection' do
-    let(:workflow) { FactoryGirl.create(:miq_provision_virt_workflow) }
-
     before do
-      FactoryGirl.create(:user_admin)
-      FactoryGirl.create(:miq_dialog_provision)
-      @ems = FactoryGirl.create(:ems_vmware)
-      @host1 =  FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
+      @ems    = FactoryGirl.create(:ems_vmware)
+      @host1  = FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
       @src_vm = FactoryGirl.create(:vm_vmware, :host => @host1, :ems_id => @ems.id)
       Rbac.stub(:search) do |hash|
         [Array.wrap(hash[:targets])]
@@ -128,6 +123,25 @@ describe MiqProvisionVirtWorkflow do
           dvs.should eql(@host1_dvs_hash)
         end
       end
+    end
+  end
+
+  context "#validate_memory_reservation" do
+    let(:values) { {:vm_memory => ["1024", "1024"]} }
+
+    it "no size" do
+      expect(workflow.validate_memory_reservation(nil, values, {}, {}, nil)).to be_nil
+    end
+
+    it "valid size" do
+      expect(workflow.validate_memory_reservation(nil, values.merge(:memory_reserve => 1024), {}, {}, nil)).to be_nil
+    end
+
+    it "invalid size" do
+      error = "Memory Reservation is larger than VM Memory"
+
+      workflow.should_receive(:required_description).and_return("Memory")
+      expect(workflow.validate_memory_reservation(nil, values.merge(:memory_reserve => 2048), {}, {}, nil)).to eq(error)
     end
   end
 end

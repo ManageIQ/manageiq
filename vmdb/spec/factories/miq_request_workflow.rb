@@ -15,4 +15,6 @@ FactoryGirl.define do
       new({:provision_dialog_name => create(:miq_provision_configured_system_foreman_dialog).name}, create(:user_admin).userid)
     end
   end
+
+  factory :miq_provision_virt_workflow, :class => MiqProvisionVirtWorkflow, :parent => :miq_provision_workflow
 end
