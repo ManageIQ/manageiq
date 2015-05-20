@@ -716,7 +716,7 @@ class MiqVimVm
 	# Add a new SCSI disk to the VM.
 	# Find an existing SCSI controller and add the disk to the next available unit number.
 	#
-	# If sizeInBM < 0, then assume the backing file already exists.
+	# If sizeInMB < 0, then assume the backing file already exists.
 	#    In this case, backingFile must be the path to the existing VMDK.
 	# If backingFile is just the datastore name, "[storage 1]" for example,
 	#    file names will be generated as appropriate.
