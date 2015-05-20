@@ -41,6 +41,7 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
     Container.count.should == 3
     ContainerService.count.should == 6
     ContainerPortConfig.count.should == 2
+    ContainerEnvVar.count.should == 5
     ContainerDefinition.count.should == 3
     ContainerReplicator.count.should == 2
     ContainerProject.count.should == 1
