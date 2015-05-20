@@ -1,12 +1,10 @@
 require_relative 'MiqBlockDevOps'
 
-require 'io/extra' if Platform::OS == :unix
-
 class RawBlockIO
 
   MIN_SECTORS_TO_CACHE = 64
 
-  def initialize(filename, mode="r")
+  def initialize(filename, mode=File::RDONLY|File::DIRECT)
     # We must start with a block special file
     raise "RawBlockIO: #{filename} is not a blockSpecial file" unless File.stat(filename).ftype == 'blockSpecial'
 
@@ -21,10 +19,6 @@ class RawBlockIO
     @endByteAddr    = @size - 1
     @lbaEnd         = @sizeInBlocks - 1
     @seekPos        = 0
-
-    if Platform::OS == :unix
-      @rawDisk_file.directio = IO::DIRECTIO_ON # Enable directio (raw)
-    end
 
     $log.debug "RawBlockIO: opened #{@filename}, size = #{@size} (#{@sizeInBlocks} blocks)"
   end
