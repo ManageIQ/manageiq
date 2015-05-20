@@ -448,4 +448,38 @@ describe CatalogController do
       end
     end
   end
+
+  context "#set_resource_action" do
+    before do
+      @st = FactoryGirl.create(:service_template)
+      dialog = FactoryGirl.create(:dialog,
+                                  :label       => "Test Label",
+                                  :description => "Test Description",
+                                  :buttons     => "submit,reset,cancel"
+      )
+      retire_fqname    = 'ns0/cls0/inst0'
+      provision_fqname = 'ns1/cls1/inst1'
+      recon_fqname     = 'ns2/cls2/inst2'
+      edit = {
+        :new          => {
+          :name               => "New Name",
+          :description        => "New Description",
+          :dialog_id          => dialog.id,
+          :reconfigure_fqname => recon_fqname,
+          :retire_fqname      => retire_fqname,
+          :fqname             => provision_fqname},
+      }
+      controller.instance_variable_set(:@edit, edit)
+    end
+    it "saves resource action" do
+      controller.send(:set_resource_action, @st)
+      expect(@st.resource_actions.pluck(:action)).to match_array(%w(Provision Retirement Reconfigure))
+    end
+
+    it "does not save blank resource action" do
+      assigns(:edit)[:new][:reconfigure_fqname] = ''
+      controller.send(:set_resource_action, @st)
+      expect(@st.resource_actions.pluck(:action)).to match_array(%w(Provision Retirement))
+    end
+  end
 end
