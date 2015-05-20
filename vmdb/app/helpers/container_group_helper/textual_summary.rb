@@ -9,7 +9,7 @@ module ContainerGroupHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w(ems containers)
+    items = %w(ems containers container_node)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
@@ -64,6 +64,18 @@ module ContainerGroupHelper::TextualSummary
     if num_of_containers > 0 && role_allows(:feature => "containers")
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'containers')
       h[:title] = "View #{label}"
+    end
+    h
+  end
+
+  def textual_container_node
+    node = @record.container_node
+    return nil if node.nil?
+    label = ui_lookup(:table => "container_node")
+    h     = {:label => label, :image => "container_node", :value => node.name}
+    if role_allows(:feature => "container_node_show")
+      h[:link]  = url_for(:action => 'show', :id => node, :controller => 'container_node')
+      h[:title] = "View #{label} #{(@record.container_node.name)}"
     end
     h
   end
