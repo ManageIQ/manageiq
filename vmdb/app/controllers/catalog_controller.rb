@@ -1214,7 +1214,7 @@ class CatalogController < ApplicationController
   end
 
   def set_resource_action(st)
-    d = @edit[:new][:dialog_id].nil? ? nil : Dialog.find_by_id(@edit[:new][:dialog_id])
+    d = @edit[:new][:dialog_id].nil? ? nil : Dialog.where(:id => @edit[:new][:dialog_id]).first
     actions = [
       {:name => 'Provision', :edit_key => :fqname},
       {:name => 'Reconfigure', :edit_key => :reconfigure_fqname},
@@ -1222,13 +1222,15 @@ class CatalogController < ApplicationController
     ]
     actions.each do |action|
       ra = st.resource_actions.find_by_action(action[:name])
-      unless ra
+      if ra.nil? && !@edit[:new][action[:edit_key]].blank?
         attrs = {:action => action[:name]}
         ra = st.resource_actions.build(attrs)
       end
-      ra.dialog = d
-      ra.fqname = @edit[:new][action[:edit_key]] unless @edit[:new][action[:edit_key]].nil?
-      ra.save!
+      if @edit[:new][action[:edit_key]].blank?
+        st.resource_actions.where(:action => action[:name]).first.try(:destroy)
+      else
+        ra.update_attributes(:dialog => d, :fqname => @edit[:new][action[:edit_key]])
+      end
     end
   end
 
@@ -1297,8 +1299,8 @@ class CatalogController < ApplicationController
     # initialize fqnames
     @edit[:new][:fqname] = @edit[:new][:reconfigure_fqname] = @edit[:new][:retire_fqname] = ""
     @record.resource_actions.each do |ra|
+      @edit[:new][:dialog_id] = ra.dialog_id.to_i
       if ra.action.downcase == "provision"
-        @edit[:new][:dialog_id] = ra.dialog_id.to_i
         @edit[:new][:fqname] = ra.fqname
       elsif ra.action.downcase == 'reconfigure'
         @edit[:new][:reconfigure_fqname] = ra.fqname
@@ -1664,12 +1666,15 @@ class CatalogController < ApplicationController
                 @miq_request = MiqRequest.find_by_id(@record.service_resources[0].resource_id)
                 prov_set_show_vars
               end
-              @sb[:dialog_label] = "No Dialog"
+              @sb[:dialog_label]       = "No Dialog"
+              @sb[:fqname]             = nil
+              @sb[:reconfigure_fqname] = nil
+              @sb[:retire_fqname]      = nil
               @record.resource_actions.each do |ra|
+                d = Dialog.where(:id => ra.dialog_id).first
+                @sb[:dialog_label] = d.label if d
                 case ra.action.downcase
                 when 'provision'
-                  d = Dialog.find_by_id(ra.dialog_id.to_i)
-                  @sb[:dialog_label] = d.label if d
                   @sb[:fqname] = ra.fqname
                 when 'reconfigure'
                   @sb[:reconfigure_fqname] = ra.fqname
