@@ -3,7 +3,7 @@
 - # prefix   view prefix
 - # keys     field keys
 
-- if @edit.fetch_path(:new, :cloud_tenant) && @edit.fetch_path(:new, :instance_type)
+- if @edit && @edit.fetch_path(:new, :cloud_tenant) && @edit.fetch_path(:new, :instance_type)
   - cloud_tenant_name = @edit[:new][:cloud_tenant][1]
   - cloud_tenant_id   = @edit[:new][:cloud_tenant][0]
   - instance_type     = @edit[:new][:instance_type][1]
