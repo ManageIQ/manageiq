@@ -1,8 +1,6 @@
 require_relative 'MiqBlockDevOps'
 
-if Platform::OS == :unix
-  require 'io/extra'
-end
+require 'io/extra' if Platform::OS == :unix
 
 class RawBlockIO
 
