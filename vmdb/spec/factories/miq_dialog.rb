@@ -46,6 +46,26 @@ FactoryGirl.define do
         }
       end
     end
+
+    factory :miq_dialog_provision_with_required_method do
+      content do
+        {
+          :dialogs => {
+            :hardware => {
+              :fields      => {
+                :memory_reserve => {
+                  :description       => "Description",
+                  :required_method   => :some_required_method,
+                  :required          => true,
+                  :display           => :edit,
+                  :data_type         => :integer,
+                }
+              }
+            }
+          }
+        }
+      end
+    end
   end
 
   factory :miq_dialog_host_provision, :parent => :miq_dialog do
