@@ -23,5 +23,44 @@ describe MiqRequestWorkflow do
         expect(wf_with_validation.validate({})).to be_false
       end
     end
+
+    context 'required_method is only run when visible' do
+      before do
+        template = FactoryGirl.create(:template_vmware,
+                                      :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication)
+        )
+        @dlg = {
+          :description => 'Customize',
+          :fields      => {
+            :sysprep_organization => {
+              :description     => 'Organization',
+              :required_method => :validate_sysprep_field,
+              :required        => true,
+              :display         => :hide,
+              :data_type       => :string,
+              :read_only       => true
+            }
+          },
+          :display     => :show
+        }
+        @values = {
+          :src_vm_id            => [template.id, template.name],
+          :sysprep_organization => nil,
+          :sysprep_enabled      => %w(fields Specification)
+        }
+        @wf = FactoryGirl.build(:miq_provision_workflow)
+        @wf.instance_variable_set("@dialogs", :dialogs => {:customize => @dlg})
+      end
+
+      it 'field hidden' do
+        expect(@wf.validate(@values)).to be_true
+      end
+
+      it 'field visible' do
+        @dlg[:fields][:sysprep_organization][:display] = :edit
+        expect(@wf).to receive(:validate_sysprep_field).and_return("A validation error")
+        expect(@wf.validate(@values)).to be_false
+      end
+    end
   end
 end
