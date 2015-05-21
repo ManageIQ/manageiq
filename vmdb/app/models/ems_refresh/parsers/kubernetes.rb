@@ -88,6 +88,11 @@ module EmsRefresh::Parsers
         }
       }
 
+      conditions = node.status.conditions
+      new_result[:container_node_conditions] = conditions.collect do |condition|
+        parse_node_condition(condition)
+      end
+
       new_result
     end
 
@@ -270,6 +275,17 @@ module EmsRefresh::Parsers
         :port        => port_config.port,
         :target_port => port_config.targetPort,
         :protocol    => port_config.protocol
+      }
+    end
+
+    def parse_node_condition(condition)
+      {
+        :name                 => condition.type,
+        :status               => condition.status,
+        :last_heartbeat_time  => condition.lastHeartbeatTime,
+        :last_transition_time => condition.lastTransitionTime,
+        :reason               => condition.reason,
+        :message              => condition.message
       }
     end
 

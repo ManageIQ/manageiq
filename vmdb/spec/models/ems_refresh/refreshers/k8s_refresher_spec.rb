@@ -7,19 +7,21 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
   end
 
   it "will perform a full refresh on k8s" do
-    VCR.use_cassette("#{described_class.name.underscore}") do # , :record => :new_episodes) do
-      EmsRefresh.refresh(@ems)
-    end
-    @ems.reload
+    2.times do  # Run twice to verify that a second run with existing data does not change anything
+      VCR.use_cassette("#{described_class.name.underscore}") do # , :record => :new_episodes) do
+        EmsRefresh.refresh(@ems)
+      end
+      @ems.reload
 
-    # All ems_ref fields and other auto generated fields aren't checked because the VCR file needs update
-    # every time the api changes. Until the api stabilizes, the tests on those fields are commented out.
-    assert_ems
-    assert_table_counts
-    assert_specific_container
-    assert_specific_container_group
-    assert_specific_container_node
-    assert_specific_container_service
+      # All ems_ref fields and other auto generated fields aren't checked because the VCR file needs update
+      # every time the api changes. Until the api stabilizes, the tests on those fields are commented out.
+      assert_ems
+      assert_table_counts
+      assert_specific_container
+      assert_specific_container_group
+      assert_specific_container_node
+      assert_specific_container_service
+    end
   end
 
   def assert_table_counts
@@ -86,6 +88,11 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       # :ems_ref       => "a3d2a008-e73f-11e4-b613-001a4a5f4a02",
       :lives_on_type => nil,
       :lives_on_id   => nil
+    )
+    @containernode.container_node_conditions.count.should == 1
+    @containernode.container_node_conditions.first.should have_attributes(
+      :name   => "Ready",
+      :status => "True"
     )
   end
 
