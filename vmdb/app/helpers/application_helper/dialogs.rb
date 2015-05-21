@@ -95,7 +95,7 @@ module ApplicationHelper::Dialogs
 
     extra_options = {
       :onclick  => remote_function(
-        :with     => "miqSerializeForm(this)",
+        :with     => "miqSerializeForm('dynamic-radio-#{field.id}')",
         :url      => url,
         :loading  => "miqSparkle(true);",
         :complete => "miqSparkle(false);"
