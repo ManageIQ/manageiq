@@ -4,9 +4,8 @@ FactoryGirl.define do
   end
 
   factory :miq_provision_workflow, :class => MiqProvisionWorkflow, :parent => :miq_request_workflow do
-    factory_dialog :miq_dialog_provision
     initialize_with do
-      new({:provision_dialog_name => create(factory_dialog).name}, create(:user_admin).userid)
+      new({:provision_dialog_name => create(:miq_dialog_provision).name}, create(:user_admin).userid)
     end
   end
 
