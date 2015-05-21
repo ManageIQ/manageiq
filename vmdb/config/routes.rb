@@ -157,11 +157,7 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         tl_chooser
         wait_for_task
-      ) +
-        adv_search_post +
-        compare_post +
-        exp_post +
-        perf_post
+      ) + adv_search_post + compare_post + exp_post + perf_post
     },
 
     :catalog                 => {
@@ -385,6 +381,31 @@ Vmdb::Application.routes.draw do
         adv_search_post +
         exp_post +
         save_post
+    },
+
+    :container_replicator => {
+       :get => %w(
+         download_data
+         edit
+         index
+         new
+         show
+         show_list
+      ),
+       :post => %w(
+         button
+         create
+         dynamic_checkbox_refresh
+         form_field_changed
+         listnav_search_selected
+         panel_control
+         quick_search
+         save_col_widths
+         sections_field_changed
+         show
+         show_list
+         update
+       ) + adv_search_post + exp_post + save_post
     },
 
     :container_service => {
