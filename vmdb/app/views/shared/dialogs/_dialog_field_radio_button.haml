@@ -1,6 +1,6 @@
 - if edit
   - if field.values.length > 1
-    %span(class="dynamic-radio-#{field.id}")
+    %span(id="dynamic-radio-#{field.id}")
       - values = field.values
       - values = [['', "<#{_('None')}>"]] + values if !field.required && !field.dynamic
       - values.each_with_index do |rb, i|
@@ -42,7 +42,7 @@
             radio += 'disabled=true ';
           } else {
             radio += 'onclick="' + "#{remote_function(
-              :with     => 'miqSerializeForm(this)',
+              :with     => "miqSerializeForm('dynamic-radio-#{field.id}')",
               :url      => {:action => 'dialog_field_changed', :id => (@edit && @edit[:rec_id]) || 'new'},
               :loading  => 'miqSparkle(true);',
               :complete => 'miqSparkle(false);'
@@ -54,7 +54,7 @@
           radioButtons.push(radio);
         });
 
-        $('.dynamic-radio-' + fieldId).html(radioButtons);
+        $('#dynamic-radio-' + fieldId).html(radioButtons);
 
         miqSparkleOff();
       });
