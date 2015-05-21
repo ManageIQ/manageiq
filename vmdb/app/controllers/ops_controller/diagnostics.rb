@@ -399,7 +399,6 @@ module OpsController::Diagnostics
   end
 
   def db_gc_collection
-    return unless load_edit("dbbackup_edit__new","replace_cell__explorer")
     begin
       MiqSchedule.run_adhoc_db_gc(:userid => session[:userid])
     rescue StandardError => bang
