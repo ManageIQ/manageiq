@@ -24,42 +24,19 @@ describe MiqRequestWorkflow do
       end
     end
 
-    context 'required_method is only run when visible' do
-      before do
-        template = FactoryGirl.create(:template_vmware,
-                                      :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication)
-        )
-        @dlg = {
-          :description => 'Customize',
-          :fields      => {
-            :sysprep_organization => {
-              :description     => 'Organization',
-              :required_method => :validate_sysprep_field,
-              :required        => true,
-              :display         => :hide,
-              :data_type       => :string,
-              :read_only       => true
-            }
-          },
-          :display     => :show
-        }
-        @values = {
-          :src_vm_id            => [template.id, template.name],
-          :sysprep_organization => nil,
-          :sysprep_enabled      => %w(fields Specification)
-        }
-        @wf = FactoryGirl.build(:miq_provision_workflow)
-        @wf.instance_variable_set("@dialogs", :dialogs => {:customize => @dlg})
+    context 'required_method is only run on visible fields' do
+      let(:wf_with_required_method) { FactoryGirl.build(:miq_provision_workflow, :factory_dialog => :miq_dialog_provision_with_required_method) }
+
+      it "field hidden" do
+        wf_with_required_method.instance_variable_get(:@dialogs).store_path(:dialogs, :hardware, :fields, :memory_reserve, :display, :hide)
+
+        expect(wf_with_required_method).to_not receive(:some_required_method)
+        expect(wf_with_required_method.validate({})).to be_true
       end
 
-      it 'field hidden' do
-        expect(@wf.validate(@values)).to be_true
-      end
-
-      it 'field visible' do
-        @dlg[:fields][:sysprep_organization][:display] = :edit
-        expect(@wf).to receive(:validate_sysprep_field).and_return("A validation error")
-        expect(@wf.validate(@values)).to be_false
+      it "field visible" do
+        expect(wf_with_required_method).to receive(:some_required_method).and_return("Some Error")
+        expect(wf_with_required_method.validate({})).to be_false
       end
     end
   end
