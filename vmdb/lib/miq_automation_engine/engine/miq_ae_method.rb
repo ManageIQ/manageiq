@@ -140,6 +140,11 @@ begin
   Socket.do_not_reverse_lookup = true  # turn off reverse DNS resolution
 
   require 'drb'
+  # HACK: inject each of the bundler git based gem lib paths from the current
+  # process into the preamble executed in the ruby method subprocess.
+  # Ideally, we should teach rubygems to be able to find the bundler git gems
+  # or have a Gemfile/bundle for automate.
+  #{$LOAD_PATH.grep(/bundler\/gems/).each_with_object("") { |path, string| string << "$LOAD_PATH << '#{path}'\n  " } }
 
   MIQ_OK    = 0
   MIQ_WARN  = 4
