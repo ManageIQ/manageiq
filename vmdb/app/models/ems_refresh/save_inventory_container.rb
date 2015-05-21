@@ -117,7 +117,7 @@ module EmsRefresh::SaveInventoryContainer
     end
 
     save_inventory_multi(:container_groups, ems, hashes, deletes, [:ems_ref],
-                         [:container_definitions, :containers, :labels],
+                         [:container_definitions, :labels],
                          [:container_node, :container_replicator])
     store_ids_for_new_records(ems.container_groups, hashes, :ems_ref)
   end
@@ -132,7 +132,8 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
-    save_inventory_multi(:container_definitions, container_group, hashes, deletes, [:ems_ref], :container_port_configs)
+    save_inventory_multi(:container_definitions, container_group, hashes, deletes,
+                         [:ems_ref], [:container_port_configs, :container])
     store_ids_for_new_records(container_group.container_definitions, hashes, :ems_ref)
   end
 
@@ -164,18 +165,9 @@ module EmsRefresh::SaveInventoryContainer
     store_ids_for_new_records(container_service.container_service_port_configs, hashes, :ems_ref)
   end
 
-  def save_containers_inventory(container_group, hashes, target = nil)
-    return if hashes.nil?
-
-    container_group.containers(true)
-    deletes = if target.kind_of?(ExtManagementSystem)
-                container_group.containers.dup
-              else
-                []
-              end
-
-    save_inventory_multi(:containers, container_group, hashes, deletes, [:ems_ref])
-    store_ids_for_new_records(container_group.containers, hashes, :ems_ref)
+  def save_container_inventory(container_definition, hash, _target = nil)
+    hash[:container_group_id] = container_definition.container_group_id
+    save_inventory_single(:container, container_definition, hash)
   end
 
   def save_container_node_conditions_inventory(container_node, hashes, target = nil)
