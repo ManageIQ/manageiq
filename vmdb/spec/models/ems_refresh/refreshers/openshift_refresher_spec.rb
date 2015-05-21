@@ -28,7 +28,7 @@ describe EmsRefresh::Refreshers::OpenshiftRefresher do
   def assert_table_counts
     ContainerGroup.count.should == 2
     ContainerNode.count.should == 1
-    Container.count.should == 3
+    Container.count.should == 2
     ContainerService.count.should == 4
     ContainerPortConfig.count.should == 1
     ContainerDefinition.count.should == 2

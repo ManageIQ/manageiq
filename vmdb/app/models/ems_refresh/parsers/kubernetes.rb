@@ -151,13 +151,13 @@ module EmsRefresh::Parsers
       new_result = parse_base_item(pod)
 
       new_result.merge!(
-        :type                 => 'ContainerGroupKubernetes',
-        :restart_policy       => pod.spec.restartPolicy,
-        :dns_policy           => pod.spec.dnsPolicy,
-        :ipaddress            => pod.status.podIP,
-        :container_node       => nil,
-        :containers           => [],
-        :container_replicator => nil
+        :type                  => 'ContainerGroupKubernetes',
+        :restart_policy        => pod.spec.restartPolicy,
+        :dns_policy            => pod.spec.dnsPolicy,
+        :ipaddress             => pod.status.podIP,
+        :container_node        => nil,
+        :container_definitions => [],
+        :container_replicator  => nil
       )
 
       unless pod.spec.host.nil?
@@ -167,16 +167,18 @@ module EmsRefresh::Parsers
 
       # TODO, map volumes
       # TODO, podIP
+      containers_index = {}
       containers = pod.spec.containers
-      new_result[:container_definitions] = containers.collect do |container_def|
-        parse_container_definition(container_def, pod.metadata.uid)
-      end
-
-      # container instances
       unless pod.status.nil? || pod.status.containerStatuses.nil?
         pod.status.containerStatuses.each do |cn|
-          new_result[:containers] << parse_container(cn, pod.metadata.uid)
+          containers_index[cn.name] = parse_container(cn, pod.metadata.uid)
         end
+      end
+
+      new_result[:container_definitions] = containers.collect do |container_def|
+        parse_container_definition(container_def, pod.metadata.uid).merge(
+          :container => containers_index[container_def.name]
+        )
       end
 
       # NOTE: what we are trying to access here is the attribute:
