@@ -20,23 +20,29 @@ db: Container
 # Columns to fetch from the main table
 cols:
 - name
-
+- image
 
 # Included tables (joined, has_one, has_many) and columns
 include:
+  container_group:
+    columns:
+    - name
 
 # Included tables and columns for query performance
 include_for_find:
+  :container_group: {}
 
 # Order of columns (from all tables)
 col_order: 
 - name
-
+- container_group.name
+- image
 
 # Column titles, in order
 headers:
 - Name
-
+- Container Group Name
+- Image
 
 # Condition(s) string for the SQL query
 conditions: 
@@ -47,6 +53,8 @@ order: Ascending
 # Columns to sort the report on, in order
 sortby:
 - name
+- container_group.name
+- image
 
 # Group rows (y=yes,n=no,c=count)
 group: n
