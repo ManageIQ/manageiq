@@ -20,6 +20,9 @@ db: ContainerGroup
 # Columns to fetch from the main table
 cols:
 - name
+- namespace
+- restart_policy
+- dns_policy
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -30,11 +33,16 @@ include_for_find:
 # Order of columns (from all tables)
 col_order: 
 - name
-
+- namespace
+- restart_policy
+- dns_policy
 
 # Column titles, in order
 headers:
 - Name
+- Namespace
+- Restart Policy
+- DNS Policy
 
 # Condition(s) string for the SQL query
 conditions: 
@@ -45,6 +53,9 @@ order: Ascending
 # Columns to sort the report on, in order
 sortby:
 - name
+- namespace
+- restart_policy
+- dns_policy
 
 # Group rows (y=yes,n=no,c=count)
 group: n
