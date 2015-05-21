@@ -109,4 +109,56 @@ describe DialogFieldDropDownList do
       end
     end
   end
+
+  describe "#values" do
+    let(:dialog_field) { described_class.new(:dynamic => dynamic) }
+
+    context "when the dialog_field is dynamic" do
+      let(:dynamic) { true }
+
+      before do
+        DynamicDialogFieldValueProcessor.stub(:values_from_automate).with(dialog_field).and_return(%w(automate values))
+      end
+
+      context "when the raw values are already set" do
+        before do
+          dialog_field.instance_variable_set(:@raw_values, %w(potato potato))
+        end
+
+        it "returns the raw values" do
+          expect(dialog_field.values).to eq(%w(potato potato))
+        end
+      end
+
+      context "when the raw values are not already set" do
+        it "returns the values from automate" do
+          expect(dialog_field.values).to eq(%w(automate values))
+        end
+      end
+    end
+
+    context "when the dialog_field is not dynamic" do
+      let(:dynamic) { false }
+
+      context "when the raw values are already set" do
+        before do
+          dialog_field.instance_variable_set(:@raw_values, %w(potato potato))
+        end
+
+        it "returns the raw values" do
+          expect(dialog_field.values).to eq(%w(potato potato))
+        end
+      end
+
+      context "when the raw values are not already set" do
+        before do
+          dialog_field.values = %w(original values)
+        end
+
+        it "returns the values" do
+          expect(dialog_field.values).to eq(%w(original values))
+        end
+      end
+    end
+  end
 end
