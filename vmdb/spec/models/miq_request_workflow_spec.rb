@@ -12,14 +12,14 @@ describe MiqRequestWorkflow do
       end
 
       it "calls the validation_method if defined" do
-        wf_with_validation.should_receive(:respond_to?).with(:some_validation_method).and_return(true)
-        wf_with_validation.should_receive(:some_validation_method).once
+        expect(wf_with_validation).to receive(:respond_to?).with(:some_validation_method).and_return(true)
+        expect(wf_with_validation).to receive(:some_validation_method).once
         expect(wf_with_validation.validate({})).to be_true
       end
 
       it "returns false when validation fails" do
-        wf_with_validation.should_receive(:respond_to?).with(:some_validation_method).and_return(true)
-        wf_with_validation.should_receive(:some_validation_method).and_return("Some Error")
+        expect(wf_with_validation).to receive(:respond_to?).with(:some_validation_method).and_return(true)
+        expect(wf_with_validation).to receive(:some_validation_method).and_return("Some Error")
         expect(wf_with_validation.validate({})).to be_false
       end
     end
