@@ -516,57 +516,9 @@ module ApplicationController::Explorer
     end
   end
 
-  # Get AvailabilityZone children count/array
-  def x_get_tree_az_kids(object, options)
-    count_only = options[:count_only]
-    case options[:type]
-      when :instances
-        objects = rbac_filtered_objects(object.vms.order("name"))
-        return count_only ? objects.length : objects
-      else
-        return count_only ? 0 : []
-    end
-  end
-
   # Get ems children count/array
   def x_get_tree_ems_kids(object, options)
-    count_only = options[:count_only]
-    case options[:type]
-    when :vandt, :handc
-      if object.is_a?(EmsOpenstack)
-        objects = rbac_filtered_objects(object.vms_and_templates.order("name"))
-      else
-        objects = object.ems_folder_root ?
-          rbac_filtered_objects(object.ems_folder_root.children, :match_via_descendants => "VmOrTemplate").sort_by { |a| a.name.downcase } :
-          []
-      end
-      return count_only ? objects.length : objects
-    when :images
-      objects = rbac_filtered_objects(object.miq_templates.order("name"))
-      return count_only ? objects.length : objects
-    when :instances
-      objects = Array.new
-      objects += rbac_filtered_objects(object.availability_zones.order("name"))
-      objects += rbac_filtered_objects(object.vms.where(:availability_zone_id => nil).order("name"))
-      return count_only ? objects.length : objects
-    when :bottlenecks, :utilization
-      ems_clusters = rbac_filtered_objects(object.ems_clusters)
-      non_clustered_hosts = rbac_filtered_objects(object.non_clustered_hosts)
-      if options[:count_only]
-        return ems_clusters.count + non_clustered_hosts.count
-      else
-        objects = Array.new
-        if ems_clusters.count > 0 || non_clustered_hosts.count > 0
-          objects.push(:id    => "folder_c_xx-#{to_cid(object.id)}",
-                       :text  => ui_lookup(:ems_cluster_types => "cluster"),
-                       :image => "folder",
-                       :tip   => "#{ui_lookup(:ems_cluster_types => "cluster")} (Click to open)")
-        end
-        return objects
-      end
-    else
-      return count_only ? 0 : []
-    end
+    raise "x_get_tree_roots called for #{options[:type]} tree"
   end
 
   def x_get_tree_datacenter_kids(object, options)
