@@ -163,6 +163,12 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     validate_length(field, values, dlg, fld, value)
   end
 
+  def validate_memory_reservation(_field, values, dlg, fld, _value)
+    allocated = get_value(values[:vm_memory]).to_i
+    reserved  = get_value(values[:memory_reserve]).to_i
+    "#{required_description(dlg, fld)} Reservation is larger than VM Memory" if reserved > allocated
+  end
+
   def validate_pxe_image_id(_field, _values, dlg, fld, _value)
     return nil unless supports_pxe?
     return nil unless get_pxe_image.nil?
