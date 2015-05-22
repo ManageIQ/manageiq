@@ -39,7 +39,7 @@ class DialogFieldDropDownList < DialogFieldSortedItem
 
   def raw_values
     @raw_values ||= dynamic ? values_from_automate : super
-    @default_value ||= @raw_values.first.first
+    @default_value ||= sort_data(@raw_values).first.first
     self.value = @default_value
 
     @raw_values
