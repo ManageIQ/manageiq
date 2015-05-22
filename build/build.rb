@@ -4,7 +4,6 @@ require 'fileutils'
 require 'logger'
 require 'pathname'
 require 'yaml'
-require 'awesome_spawn'
 
 require_relative 'productization'
 require_relative 'kickstart_generator'
@@ -90,8 +89,9 @@ Dir.chdir("/root/src/imagefactory") do
     file_name = "#{name}-#{target}-#{build_label}-#{timestamp}-#{git_checkout.commit_sha}.#{FILE_TYPE[imgfac_target]}"
     destination = DESTINATION_DIRECTORY.join(file_name)
     $log.info `mv  #{source} #{destination}`
-    $log.info `cd #{DESTINATION_DIRECTORY}/; /usr/bin/md5sum * >> md5checksums\""`
-    $log.info `cd #{DESTINATION_DIRECTORY}/; /usr/bin/sha256sum * >> 256checksums\""`
+    $log.info "Generating image checksums"
+    $log.info `cd #{DESTINATION_DIRECTORY}/; /usr/bin/md5sum * >> md5sum`
+    $log.info `cd #{DESTINATION_DIRECTORY}/; /usr/bin/sha256sum * >> sha256sum`
   end
 end
 
