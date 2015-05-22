@@ -1,5 +1,5 @@
 class EmsKubernetes < EmsContainer
-  include ContainerProviderMixin
+  include KubernetesProviderMixin
 
   default_value_for :port, 6443
 

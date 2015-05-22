@@ -1,5 +1,5 @@
 class EmsOpenshift < EmsContainer
-  include ContainerProviderMixin
+  include KubernetesProviderMixin
 
   has_many :container_routes,                      :foreign_key => :ems_id, :dependent => :destroy
   has_many :container_projects,                    :foreign_key => :ems_id, :dependent => :destroy
