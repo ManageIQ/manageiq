@@ -61,7 +61,7 @@ class Zone < ActiveRecord::Base
   end
 
   def assigned_roles
-    self.miq_servers.collect(&:assigned_roles).flatten.uniq.compact
+    miq_servers.flat_map(&:assigned_roles).uniq.compact
   end
 
   def role_active?(role_name)
@@ -73,7 +73,7 @@ class Zone < ActiveRecord::Base
   end
 
   def active_role_names
-    self.miq_servers.collect(&:active_role_names).flatten.uniq
+    miq_servers.flat_map(&:active_role_names).uniq
   end
 
   def self.default_zone
@@ -130,22 +130,30 @@ class Zone < ActiveRecord::Base
 
   def hosts
     MiqPreloader.preload(self, :ext_management_systems => :hosts)
-    self.ext_management_systems.collect(&:hosts).flatten
+    ext_management_systems.flat_map(&:hosts)
+  end
+
+  def self.hosts_without_a_zone
+    Host.where(:ems_id => nil).to_a
   end
 
   def non_clustered_hosts
     MiqPreloader.preload(self, :ext_management_systems => :hosts)
-    self.ext_management_systems.collect(&:non_clustered_hosts).flatten
+    ext_management_systems.flat_map(&:non_clustered_hosts)
   end
 
   def clustered_hosts
     MiqPreloader.preload(self, :ext_management_systems => :hosts)
-    self.ext_management_systems.collect(&:clustered_hosts).flatten
+    ext_management_systems.flat_map(&:clustered_hosts)
   end
 
   def ems_clusters
     MiqPreloader.preload(self, :ext_management_systems => :ems_clusters)
-    self.ext_management_systems.collect(&:ems_clusters).flatten
+    ext_management_systems.flat_map(&:ems_clusters)
+  end
+
+  def self.clusters_without_a_zone
+    EmsCluster.where(:ems_id => nil).to_a
   end
 
   def ems_infras
@@ -162,29 +170,33 @@ class Zone < ActiveRecord::Base
 
   def availability_zones
     MiqPreloader.preload(self.ems_clouds, :availability_zones)
-    self.ems_clouds.collect(&:availability_zones).flatten
+    ems_clouds.flat_map(&:availability_zones)
   end
 
   def vms_without_availability_zone
     MiqPreloader.preload(self, :ext_management_systems => :vms)
-    self.ext_management_systems.collect do |e|
+    ext_management_systems.flat_map do |e|
       e.kind_of?(EmsCloud) ? e.vms.select { |vm| vm.availability_zone.nil? } : []
-    end.flatten
+    end
   end
 
   def vms_and_templates
     MiqPreloader.preload(self, :ext_management_systems => :vms_and_templates)
-    self.ext_management_systems.collect(&:vms_and_templates).flatten
+    ext_management_systems.flat_map(&:vms_and_templates)
   end
 
   def vms
     MiqPreloader.preload(self, :ext_management_systems => :vms)
-    self.ext_management_systems.collect(&:vms).flatten
+    ext_management_systems.flat_map(&:vms)
+  end
+
+  def self.vms_without_a_zone
+    Vm.where(:ems_id => nil).to_a
   end
 
   def miq_templates
     MiqPreloader.preload(self, :ext_management_systems => :miq_templates)
-    self.ext_management_systems.collect(&:miq_templates).flatten
+    ext_management_systems.flat_map(&:miq_templates)
   end
 
   def vm_or_template_ids
@@ -201,7 +213,13 @@ class Zone < ActiveRecord::Base
 
   def storages
     MiqPreloader.preload(self, :ext_management_systems => {:hosts => :storages})
-    self.ext_management_systems.collect(&:storages).flatten.uniq
+    ext_management_systems.flat_map(&:storages).uniq
+  end
+
+  def self.storages_without_a_zone
+    storage_without_hosts = Storage.includes(:hosts).where(:hosts_storages => {:storage_id => nil}).to_a
+    storage_without_ems = Host.where(:ems_id => nil).includes(:storages).flat_map(&:storages).uniq
+    storage_without_hosts + storage_without_ems
   end
 
   # Used by AggregationMixin
