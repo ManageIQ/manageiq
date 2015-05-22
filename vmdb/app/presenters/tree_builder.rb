@@ -264,7 +264,8 @@ class TreeBuilder
                         when ServiceTemplate		 then x_get_tree_st_kids(parent, options)
                         when VmdbTableEvm        then x_get_tree_vmdb_table_kids(parent, options)
                         when Zone                then x_get_tree_zone_kids(parent, options)
-                        else raise "PARENT TYPE NOT FOUND"
+                        when MiqSearch           then nil
+                        else raise "PARENT TYPE NOT FOUND for #{parent.inspect}"
                         end
     children_or_count || (count_only ? 0 : [])
   end
