@@ -43,6 +43,8 @@
           - if role_allows(:feature => "ems_container_show_list")        ||
           -    role_allows(:feature => "container_group_show_list")      ||
           -    role_allows(:feature => "container_node_show_list")       ||
+          -    role_allows(:feature => "container_route_show_list")      ||
+          -    role_allows(:feature => "container_project_show_list")    ||
           -    role_allows(:feature => "container_service_accord")       ||
           -    role_allows(:feature => "containers_filter_accord")       ||
           -    role_allows(:feature => "containers_accord")
@@ -53,6 +55,8 @@
                           :containernode    => "container_node",
                           :containergroup   => "container_group",
                           :containerservice => "container_service",
+                          :containerroute   => "container_route",
+                          :containerproject => "container_project",
                           :container        => "container"}
                 - keys.each do |resource, table_view_name|
                   %tr

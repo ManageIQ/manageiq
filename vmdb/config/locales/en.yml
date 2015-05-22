@@ -955,6 +955,10 @@ en:
       container_nodes:             Nodes
       container_service:           Service
       container_services:          Services
+      container_route:             Route
+      container_routes:            Routes
+      container_project:           Project
+      container_projects:          Projects
       custom_button:               Button
       custom_button_set:           Buttons Group
       ems_cloud:                   Cloud Provider

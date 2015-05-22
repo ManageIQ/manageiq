@@ -2292,7 +2292,7 @@ module ApplicationHelper
       #show_list and show screens
       if !@in_a_form
         if %w(availability_zone cloud_tenant container_group container_node container_service ems_cloud ems_cluster
-              ems_container ems_infra flavor host ontap_file_share ontap_logical_disk
+              ems_container container_project container_route ems_infra flavor host ontap_file_share ontap_logical_disk
               ontap_storage_system orchestration_stack repository resource_pool storage storage_manager
               timeline usage security_group).include?(@layout)
           if ["show_list"].include?(@lastaction)
@@ -2367,6 +2367,7 @@ module ApplicationHelper
 
   def display_adv_search?
     %w(availability_zone container_group container_node container_service
+       container_route container_project
        ems_container vm miq_template offline retired templates
        host service repository storage ems_cloud ems_cluster flavor
        resource_pool ems_infra ontap_storage_system ontap_storage_volume
@@ -2642,6 +2643,7 @@ module ApplicationHelper
   end
 
   GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_tenant condition container_group
+                        container_route container_project
                         container_node container_service ems_cloud ems_cluster ems_container ems_infra event
                         flavor host miq_schedule miq_template offline ontap_file_share
                         ontap_logical_disk ontap_storage_system ontap_storage_volume orchestration_stack
@@ -2698,6 +2700,7 @@ module ApplicationHelper
   def render_listnav_filename
     if @lastaction == "show_list" && !session[:menu_click] &&
        %w(container_node container_service ems_container container_group ems_cloud ems_cluster
+          container_route container_project
           ems_infra host miq_template offline orchestration_stack repository
           resource_pool retired service storage templates vm).include?(@layout) && !@in_a_form
       "show_list"
@@ -2706,6 +2709,7 @@ module ApplicationHelper
     elsif %w(offline retired templates vm vm_cloud vm_or_template).include?(@layout)
       "vm"
     elsif %w(action availability_zone cim_base_storage_extent cloud_tenant condition container_group
+             container_route container_project
              container_node container_service ems_cloud ems_container ems_cluster ems_infra flavor
              host miq_schedule miq_template policy ontap_file_share ontap_logical_disk
              ontap_storage_system ontap_storage_volume orchestration_stack repository resource_pool
@@ -2719,6 +2723,7 @@ module ApplicationHelper
 
   def show_adv_search?
     show_search = %w(availability_zone cim_base_storage_extent container_group container_node container_service
+                     container_route container_project
                      ems_cloud ems_cluster ems_container ems_infra flavor host miq_template offline
                      ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume
                      orchestration_stack repository resource_pool retired security_group service
