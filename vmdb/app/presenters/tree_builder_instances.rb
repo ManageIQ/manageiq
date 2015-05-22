@@ -5,6 +5,16 @@ class TreeBuilderInstances < TreeBuilder
     }
   end
 
+  def set_locals_for_render
+    locals = super
+    locals.merge!(
+      :tree_id   => "instances_treebox",
+      :tree_name => "instances_tree",
+      :id_prefix => "instances_",
+      :autoload  => true
+    )
+  end
+
   def x_get_tree_roots(options)
     objects = rbac_filtered_objects(EmsCloud.order("lower(name)"), :match_via_descendants => "VmCloud")
     objects += [
@@ -14,6 +24,17 @@ class TreeBuilderInstances < TreeBuilder
     count_only_or_objects(options[:count_only], objects, nil)
   end
 
-  include TreeBuilderCommon
+  def x_get_tree_ems_kids(object, options)
+    objects = rbac_filtered_objects(object.availability_zones.order("name")) +
+              rbac_filtered_objects(object.vms.where(:availability_zone_id => nil).order("name"))
+    options[:count_only] ? objects.length : objects
+  end
+
+  # Get AvailabilityZone children count/array
+  def x_get_tree_az_kids(object, options)
+    objects = rbac_filtered_objects(object.vms.order("name"))
+    options[:count_only] ? objects.length : objects
+  end
+
   include TreeBuilderArchived
 end
