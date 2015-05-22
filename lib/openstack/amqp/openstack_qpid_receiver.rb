@@ -15,16 +15,16 @@ class OpenstackQpidReceiver
   # fetching more from the broker (default=50)
   # * :duration: The length of time (in seconds) the receiver should wait for a
   # message from the broker before timing out (default=10 seconds)
-  def initialize(session, exchange, subject, options={})
+  def initialize(session, exchange, subject, options = {})
     raise "qpid_messaging is not available" unless OpenstackQpidConnection.available?
 
     @options = {:capacity => 50, :duration => 10}
     @options.merge(options)
 
-    @session = session
-    @exchange = exchange
-    @subject = subject
-    @capacity = @options[:capacity]
+    @session          = session
+    @exchange         = exchange
+    @subject          = subject
+    @capacity         = @options[:capacity]
     @duration_seconds = @options[:duration]
 
     @address_options = ADDRESS_OPTIONS % subject
@@ -38,7 +38,7 @@ class OpenstackQpidReceiver
   #   receiver = OpenstackQpidReceiver.new(:hostname => "http://host.com")
   #   notifications = receiver.get_notifications
   #   notifications.each {|n| ... }
-  def get_notifications(max=100)
+  def get_notifications(max = 100)
     raise "Max messages must be greater than 0" if max < 1
     messages = []
     while receiver.available > 0 and messages.length < max
