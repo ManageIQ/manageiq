@@ -8,6 +8,14 @@ class EmsKubernetes < EmsContainer
   # decided by the user nor out of control in the defaults of kubeclient gem
   # because it's not guaranteed that the next default version will work with
   # our specific code in ManageIQ.
+  def api_version
+    self.class.api_version
+  end
+
+  def api_version=(_value)
+    raise 'Kubernetes api_version cannot be modified'
+  end
+
   def self.api_version
     kubernetes_version
   end
