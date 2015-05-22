@@ -75,14 +75,16 @@ class TreeBuilder
     end
   end
 
-  def initialize(name, type, sandbox)
+  def initialize(name, type, sandbox, build=true)
     @locals_for_render  = {}
     @name               = name.to_sym
     @options            = tree_init_options(name.to_sym)
     @sb                 = sandbox
     @tree_nodes         = {}
     @type               = type.to_sym
-    build_tree
+
+    add_to_sandbox
+    build_tree if build
   end
 
   # Get the children of a dynatree node that is being expanded (autoloaded)
@@ -103,7 +105,7 @@ class TreeBuilder
     # Save node as open
     x_tree[:open_nodes].push(id) unless x_tree[:open_nodes].include?(id)
 
-    x_get_tree_objects(x_tree.merge(:parent => object)).each_with_object([]) do |o, acc|
+    x_get_tree_objects(object, x_tree).each_with_object([]) do |o, acc|
       acc.concat(x_build_node_dynatree(o, id, x_tree))
     end
   end
@@ -138,7 +140,6 @@ class TreeBuilder
   private
 
   def build_tree
-    add_to_sandbox
     tree_nodes = x_build_dynatree(x_tree(@name))
     active_node_set(tree_nodes)
     set_nodes(tree_nodes)
@@ -201,82 +202,86 @@ class TreeBuilder
   # :add_root               # If true, put a root node at the top
   # :full_ids               # stack parent id on top of each node id
   def x_build_dynatree(options)
-    roots = x_get_tree_objects(options.merge(
-      :userid => User.current_user, # Userid for RBAC filtering
-      :parent => nil                # Asking for roots, no parent
-    ))
+    children = x_get_tree_objects(nil, options)
 
-    root_nodes = roots.each_with_object([]) do |root, acc|
+    child_nodes = children.each_with_object([]) do |child, acc|
       # already a node? FIXME: make a class for node
-      if root.kind_of?(Hash) && root.key?(:title) && root.key?(:key) && root.key?(:icon)
-        acc << root
+      if child.kind_of?(Hash) && child.key?(:title) && child.key?(:key) && child.key?(:icon)
+        acc << child
       else
-        acc.concat(x_build_node_dynatree(root, nil, options))
+        acc.concat(x_build_node_dynatree(child, nil, options))
       end
     end
 
-    return root_nodes unless options[:add_root]
-    [{:key => 'root', :children => root_nodes, :expand => true}]
+    return child_nodes unless options[:add_root]
+    [{:key => 'root', :children => child_nodes, :expand => true}]
   end
 
   # Get objects (or count) to put into a tree under a parent node, based on the tree type
-  # TODO: Make the called methods honor RBAC for passed in userid
-  # TODO: Perhaps push the object sorting down to SQL, if possible
+  # TODO: Make the called methods honor RBAC for passed in userid -- verify
+  # TODO: Perhaps push the object sorting down to SQL, if possible -- no point where there are few items
   # Options used:
   # :parent                 # Parent object for which we need child tree nodes returned
-  # :userid                 # Signed in user's id
   # :count_only             # Return only the count if true
   # :type                   # Type of tree, i.e. :handc, :vandt, :filtered, etc
   # :leaf                   # Model name of leaf nodes, i.e. "Vm"
   # :open_all               # if true open all node (no autoload)
-  def x_get_tree_objects(options)
-    object = options[:parent]
-    children_or_count = case object
+  def x_get_tree_objects(parent, options, count_only = false)
+    if options[:count_only]
+      Rails.logger.error("OBSOLETE CALL TO x_get_tree_parents")
+      count_only = options[:count_only]
+    end
+
+    options[:count_only] = count_only # FIXME -- push the count_only to functions below as an argument
+    children_or_count = case parent
                         when nil                 then x_get_tree_roots(options)
-                        when ConfigurationManagerForeman then x_get_tree_cmf_kids(object, options)
-                        when ConfigurationProfile then x_get_tree_cpf_kids(object, options)
-                        when CustomButtonSet     then x_get_tree_aset_kids(object, options)
-                        when Dialog              then x_get_tree_dialog_kids(object, options)
-                        when DialogGroup         then x_get_tree_dialog_group_kids(object, options)
-                        when DialogTab           then x_get_tree_dialog_tab_kids(object, options)
-                        when ExtManagementSystem then x_get_tree_ems_kids(object, options)
-                        when EmsFolder           then if object.is_datacenter
-                                                        x_get_tree_datacenter_kids(object, options)
+                        when AvailabilityZone    then x_get_tree_az_kids(parent, options)
+                        when ConfigurationManagerForeman then x_get_tree_cmf_kids(parent, options)
+                        when ConfigurationProfile then x_get_tree_cpf_kids(parent, options)
+                        when CustomButtonSet     then x_get_tree_aset_kids(parent, options)
+                        when Dialog              then x_get_tree_dialog_kids(parent, options)
+                        when DialogGroup         then x_get_tree_dialog_group_kids(parent, options)
+                        when DialogTab           then x_get_tree_dialog_tab_kids(parent, options)
+                        when ExtManagementSystem then x_get_tree_ems_kids(parent, options)
+                        when EmsFolder           then if parent.is_datacenter
+                                                        x_get_tree_datacenter_kids(parent, options)
                                                       else
-                                                        x_get_tree_folder_kids(object, options)
+                                                        x_get_tree_folder_kids(parent, options)
                                                       end
-                        when EmsCluster          then x_get_tree_cluster_kids(object, options)
-                        when Hash                then x_get_tree_custom_kids(object, options)
-                        when IsoDatastore        then x_get_tree_iso_datastore_kids(object, options)
-                        when LdapRegion          then x_get_tree_lr_kids(object, options)
-                        when MiqAeClass          then x_get_tree_class_kids(object, options)
-                        when MiqAeNamespace      then x_get_tree_ns_kids(object, options)
+                        when EmsCluster          then x_get_tree_cluster_kids(parent, options)
+                        when Hash                then x_get_tree_custom_kids(parent, options)
+                        when IsoDatastore        then x_get_tree_iso_datastore_kids(parent, options)
+                        when LdapRegion          then x_get_tree_lr_kids(parent, options)
+                        when MiqAeClass          then x_get_tree_class_kids(parent, options)
+                        when MiqAeNamespace      then x_get_tree_ns_kids(parent, options)
                         when MiqGroup            then options[:tree] == :db_tree ?
-                                                    x_get_tree_g_kids(object, options) : nil
-                        when MiqRegion           then x_get_tree_region_kids(object, options)
-                        when PxeServer           then x_get_tree_pxe_server_kids(object, options)
-                        when Service             then x_get_tree_service_kids(object, options)
+                                                    x_get_tree_g_kids(parent, options) : nil
+                        when MiqRegion           then x_get_tree_region_kids(parent, options)
+                        when PxeServer           then x_get_tree_pxe_server_kids(parent, options)
+                        when Service             then x_get_tree_service_kids(parent, options)
                         when ServiceTemplateCatalog
-                                                 then x_get_tree_stc_kids(object, options)
-                        when ServiceTemplate		 then x_get_tree_st_kids(object, options)
-                        when VmdbTableEvm        then x_get_tree_vmdb_table_kids(object, options)
-                        when Zone                then x_get_tree_zone_kids(object, options)
+                                                 then x_get_tree_stc_kids(parent, options)
+                        when ServiceTemplate		 then x_get_tree_st_kids(parent, options)
+                        when VmdbTableEvm        then x_get_tree_vmdb_table_kids(parent, options)
+                        when Zone                then x_get_tree_zone_kids(parent, options)
+                        else raise "PARENT TYPE NOT FOUND"
                         end
-    children_or_count || (options[:count_only] ? 0 : [])
+    children_or_count || (count_only ? 0 : [])
   end
 
   # Return a tree node for the passed in object
   def x_build_node(object, pid, options)    # Called with object, tree node parent id, tree options
-    @sb[:my_server_id] = MiqServer.my_server(true).id      if object.kind_of?(MiqServer)
-    @sb[:my_zone]      = MiqServer.my_server(true).my_zone if object.kind_of?(Zone)
+    my_server_id = MiqServer.my_server(true).id      if object.kind_of?(MiqServer)
+    my_zone      = MiqServer.my_server(true).my_zone if object.kind_of?(Zone)
 
     options[:is_current] =
-        ((object.kind_of?(MiqServer) && @sb[:my_server_id] == object.id) ||
-         (object.kind_of?(Zone)      && @sb[:my_zone]      == object.name))
+        ((object.kind_of?(MiqServer) && my_server_id == object.id) ||
+         (object.kind_of?(Zone)      && my_zone      == object.name))
     options.merge!(:active_tree => x_active_tree)
 
-    # open nodes to show selected automate entry point
-    x_tree[:open_nodes] = @open_nodes.dup if @open_nodes
+    # # open nodes to show selected automate entry point
+    # x_tree[:open_nodes] = @temp[:open_nodes].dup if @temp && @temp[:open_nodes]
+    # x_tree[:open_nodes] = @open_nodes.dup if @open_nodes
 
     node = x_build_single_node(object, pid, options)
 
@@ -289,12 +294,12 @@ class TreeBuilder
        options[:open_all] ||
        object[:load_children] ||
        node[:expand]
-      kids = x_get_tree_objects(options.merge(:parent => object)).each_with_object([]) do |o, acc|
+      kids = x_get_tree_objects(object, options).each_with_object([]) do |o, acc|
         acc.concat(x_build_node(o, node[:key], options))
       end
       node[:children] = kids unless kids.empty?
     else
-      if x_get_tree_objects(options.merge({:parent => object, :count_only => true})) > 0
+      if x_get_tree_objects(object, options.merge(:count_only => true)) > 0
         node[:isLazy] = true  # set child flag if children exist
       end
     end
@@ -335,7 +340,7 @@ class TreeBuilder
 
   # Add child nodes to the active tree below node 'id'
   def self.tree_add_child_nodes(sandbox, klass_name, id)
-    tree = klass_name.constantize.new("temp_tree", "temp", sandbox)
+    tree = klass_name.constantize.new("temp_tree", "temp", sandbox, false)
     tree.x_get_child_nodes(id)
   end
 
