@@ -6,6 +6,19 @@ class EmsOpenshift < EmsContainer
 
   default_value_for :port, 8443
 
+  # This is the API version that we use and support throughout the entire code
+  # (parsers, events, etc.). It should be explicitly selected here and not
+  # decided by the user nor out of control in the defaults of openshift gem
+  # because it's not guaranteed that the next default version will work with
+  # our specific code in ManageIQ.
+  def api_version
+    self.class.api_version
+  end
+
+  def api_version=(_value)
+    raise 'OpenShift api_version cannot be modified'
+  end
+
   def self.api_version
     'v1beta1'
   end
