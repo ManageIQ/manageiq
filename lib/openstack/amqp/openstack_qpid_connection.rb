@@ -3,6 +3,8 @@
 #
 
 class OpenstackQpidConnection
+  attr_reader :hostname, :port
+
   # Checks whether the qpid_messaging gem is available.
   def self.available?
     return @available if defined?(@available)
@@ -15,15 +17,17 @@ class OpenstackQpidConnection
     @available = false
   end
 
-  # options
-  # * :hostname     => openstack server hostname [REQUIRED]
-  # * :port         => openstack server amqp port [REQUIRED]
-  # * :username     => amqp username [REQUIRED - if authentication is enabled]
-  # * :password     => amqp password [REQUIRED - if authentication is enabled]
-  def initialize(options = {})
+  # * hostname :openstack server hostname
+  # * port     :openstack server amqp port
+  # * username :amqp username
+  # * password :amqp password
+  def initialize(hostname, port, username = nil, password = nil)
     raise "qpid_messaging is not available" unless self.class.available?
 
-    @options = options
+    @hostname = hostname
+    @port     = port
+    @username = username
+    @password = password
   end
 
   # Opens the qpid connection
@@ -60,20 +64,13 @@ class OpenstackQpidConnection
 
   private
   def connection # :nodoc:
-    unless @connection
-      if @options.has_key?(:hostname) and @options.has_key?(:port)
-        @connection = create_connection
-      else
-        raise "Host and port required for OpenStack Qpid connection"
-      end
-    end
-    @connection
+    @connection ||= create_connection
   end
 
   def create_connection
-    url = "#{@options[:hostname]}:#{@options[:port]}"
-    opts = @options.select { |k, v| [:username, :password].include? k }
-    opts[:transport] = "ssl" if @options[:port] == 5671
-    Qpid::Messaging::Connection.new(:url => url, :options => opts)
+    url     = "#{@hostname}:#{@port}"
+    options = {:username => @username, :password => @password}.delete_nils
+    options[:transport] = "ssl" if @port == 5671
+    Qpid::Messaging::Connection.new(:url => url, :options => options)
   end
 end
