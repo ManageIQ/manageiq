@@ -12,7 +12,7 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
   end
 
   def self.plugin_priority
-    1
+    PLUGIN_PRIORITY_HIGH
   end
 
   # Why not inline this?
@@ -34,9 +34,9 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
       connection.start
       return true
     rescue => e
-      log_prefix = "MIQ(#{self.name}.#{__method__}) Failed testing rabbit amqp connection for #{options[:hostname]}. "
-      $log.info("#{log_prefix} The Openstack AMQP service may be using a different provider.  Enable debug logging to see connection exception.") if $log
-      $log.debug("#{log_prefix} Exception: #{e}") if $log
+      log_prefix = "MIQ(#{self.name}.#{__method__}) Failed testing Rabbit AMQP connection for #{options[:hostname]}. "
+      $log.info("#{log_prefix} The Openstack AMQP service may be using a different provider.") if $log
+      $log.info("#{log_prefix} Exception: #{e}") if $log
       return false
     ensure
       connection.close if connection.respond_to? :close
@@ -44,8 +44,7 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
   end
 
   def initialize(options = {})
-    @options = options
-    @options[:port] ||= DEFAULT_AMQP_PORT
+    parse_options(options)
     @collecting_events = false
     @events = []
     #protect threaded access to the events array

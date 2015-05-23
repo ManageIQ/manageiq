@@ -13,6 +13,10 @@ class OpenstackQpidEventMonitor < OpenstackEventMonitor
     OpenstackQpidConnection.available? && test_connection(options)
   end
 
+  def self.plugin_priority
+    PLUGIN_PRIORITY_MED
+  end
+
   def self.test_connection(options = {})
     connection = nil
     begin
@@ -20,9 +24,9 @@ class OpenstackQpidEventMonitor < OpenstackEventMonitor
       connection.open
       connection.open?
     rescue => e
-      log_prefix = "MIQ(#{self.name}.#{__method__}) Failed testing qpid amqp connection for #{options[:hostname]}. "
-      $log.info("#{log_prefix} The Openstack AMQP service may be using a different provider.  Enable debug logging to see connection exception.") if $log
-      $log.debug("#{log_prefix} Exception: #{e}") if $log
+      log_prefix = "MIQ(#{self.name}.#{__method__}) Failed testing QPid AMQP connection for #{options[:hostname]}. "
+      $log.info("#{log_prefix} The Openstack AMQP service may be using a different provider.") if $log
+      $log.info("#{log_prefix} Exception: #{e}") if $log
       return false
     ensure
       connection.close if connection.respond_to? :close
@@ -30,8 +34,7 @@ class OpenstackQpidEventMonitor < OpenstackEventMonitor
   end
 
   def initialize(options = {})
-    @options = options
-    @options[:port] ||= DEFAULT_AMQP_PORT
+    parse_options(options)
     @receiver_options = options.slice(:duration, :capacity)
     @collecting_events = false
   end

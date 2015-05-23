@@ -16,7 +16,14 @@ describe OpenstackEventMonitor do
     @qpid_host = {:hostname => "qpid_host", :username => "qpid_user", :password => "qpid_pass"}
     @bad_host = {:hostname => "bad_host", :username => "bad_user", :password => "bad_pass"}
 
+    @orig_log = $log
+    $log = double.as_null_object
+
     OpenstackQpidConnection.stub(:available?).and_return(true)
+  end
+
+  after :each do
+    $log = @orig_log
   end
 
   it "selects rabbit when qpid is unavailable" do

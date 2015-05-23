@@ -12,10 +12,13 @@ class OpenstackEventMonitor
   end
 
   def self.available?(options)
-    !select_event_monitor_class(options).kind_of? OpenstackNullEventMonitor
+    select_event_monitor_class(options) != OpenstackNullEventMonitor
   end
 
-  DEFAULT_PLUGIN_PRIORITY = 0
+  PLUGIN_PRIORITY_HIGH    = 0
+  PLUGIN_PRIORITY_MED     = 50
+  PLUGIN_PRIORITY_LOW     = 100
+  DEFAULT_PLUGIN_PRIORITY = PLUGIN_PRIORITY_LOW
   # Subclasses can override plugin priority to receive preferential treatment.
   # The higher the plugin_priority, the ealier the plugin will be tested for
   # availability.
@@ -57,6 +60,12 @@ class OpenstackEventMonitor
     raise NotImplementedError, "must be implemented in subclass"
   end
 
+  def parse_options(options = {})
+    @options = options
+    @options[:port] = options[:port].presence.try(:to_i) || DEFAULT_AMQP_PORT
+    @options
+  end
+
   def each
     each_batch do |events|
       events.each {|e| yield e}
@@ -79,14 +88,19 @@ class OpenstackEventMonitor
 
   def self.select_event_monitor_class(options)
     cache_result(:plugin_classes, event_monitor_key(options)) do
-      self.subclasses.detect do |event_monitor|
+      event_monitor_class = self.subclasses.detect do |event_monitor|
         begin
           event_monitor.available?(options)
         rescue => e
           $log.error("MIQ(#{self}.#{__method__}) Error occured testing #{event_monitor} for #{options[:hostname]}. Trying other AMQP clients.  #{e.message}")
           false
         end
-      end || OpenstackNullEventMonitor
+      end
+      unless event_monitor_class
+        $log.warn("MIQ(#{self}.#{__method__}) Unable to connect to the AMQP service on #{options[:hostname]}.  Events will be unavailable.")
+        event_monitor_class = OpenstackNullEventMonitor
+      end
+      event_monitor_class
     end
   end
   private_class_method :select_event_monitor_class
