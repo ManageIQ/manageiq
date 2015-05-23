@@ -32,5 +32,18 @@ describe VmCloudController do
         expect(response.status).to eq(200)
       end
     end
+
+    it "renders Instance details for Instance node" do
+      instance = FactoryGirl.create(:vm_openstack)
+
+      session[:settings] = {}
+      seed_session_trees('vm_cloud', 'instances_tree')
+
+      post :tree_select, :id => "v-#{instance.compressed_id}", :format => :js
+
+      response.should render_template('vm_cloud/_main')
+      response.should render_template('shared/summary/_textual_tags')
+      expect(response.status).to eq(200)
+    end
   end
 end

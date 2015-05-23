@@ -41,5 +41,31 @@ describe VmInfraController do
         expect(response.status).to eq(200)
       end
     end
+
+    it "renders VM details for VM node" do
+      vm = FactoryGirl.create(:vm_vmware)
+
+      session[:settings] = {}
+      seed_session_trees('vm_infra', 'vandt_tree')
+
+      post :tree_select, :id => "v-#{vm.compressed_id}", :format => :js
+
+      response.should render_template('vm_common/_main')
+      response.should render_template('shared/summary/_textual_tags')
+      expect(response.status).to eq(200)
+    end
+
+    it "renders Template details for Template node" do
+      template = FactoryGirl.create(:template_vmware)
+
+      session[:settings] = {}
+      seed_session_trees('vm_infra', 'vandt_tree')
+
+      post :tree_select, :id => "t-#{template.compressed_id}", :format => :js
+
+      response.should render_template('vm_common/_main')
+      response.should render_template('shared/summary/_textual_tags')
+      expect(response.status).to eq(200)
+    end
   end
 end
