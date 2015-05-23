@@ -13,10 +13,27 @@ class OpenstackQpidEventMonitor < OpenstackEventMonitor
     OpenstackQpidConnection.available? && test_connection(options)
   end
 
+  def self.connection_parameters(options = {})
+    # TODO: get rid of these "optional" connection parameters altogether
+    raise ArgumentError, "hostname and port are required connection parameters" unless options.key?(:hostname) && options.key?(:port)
+    username = options[:username] if options.key? :username
+    password = options[:password] if options.key? :password
+    [
+      options[:hostname],
+      options[:port],
+      username,
+      password
+    ].compact
+  end
+
+  def self.create_connection(options = {})
+    OpenstackQpidConnection.new(*connection_parameters(options))
+  end
+
   def self.test_connection(options = {})
     connection = nil
     begin
-      connection = OpenstackQpidConnection.new(options)
+      connection = create_connection(options)
       connection.open
       connection.open?
     rescue => e
@@ -64,8 +81,8 @@ class OpenstackQpidEventMonitor < OpenstackEventMonitor
     @connection ||= create_connection(@options)
   end
 
-  def create_connection(options={})
-    OpenstackQpidConnection.new(options)
+  def create_connection(options = {})
+    self.class.create_connection(options)
   end
 
   def receivers
