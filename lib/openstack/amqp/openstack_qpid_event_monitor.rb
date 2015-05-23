@@ -90,14 +90,30 @@ class OpenstackQpidEventMonitor < OpenstackEventMonitor
   end
 
   def initialize_receivers
-    topics.collect {|exchange, topic| create_receiver(exchange, topic) }
+    topics.flat_map do |service, topic|
+      # The exchange name corresponds to the service name (e.g., nova)
+      # OpenStack supports two different exchange variations:
+      # v1. <service> (e.g., nova)
+      # v2. amq.topic/topic/<service> (e.g., amqp.topic/topic/nova)
+      # Create a receiver for each exchange variation per service name
+      #
+      # The topic corresponds to the message routing key (e.g., # notifications.info)
+      # The default topic for all exchanges is "notifications.*" in order to
+      # bind to all messages sent to any notification topic.
+      [create_v1_receiver(service, topic), create_v2_receiver(service, topic)]
+    end
   end
 
   def topics
     @options[:topics] || {}
   end
 
-  def create_receiver(exchange, topic)
-    OpenstackQpidReceiver.new(connection.session, exchange, topic, @receiver_options)
+  def create_v1_receiver(service, topic)
+    OpenstackQpidReceiver.new(connection, service, service, topic, @receiver_options)
+  end
+
+  def create_v2_receiver(service, topic)
+    exchange = "amq.topic/topic/#{service}"
+    OpenstackQpidReceiver.new(connection, service, exchange, topic, @receiver_options)
   end
 end
