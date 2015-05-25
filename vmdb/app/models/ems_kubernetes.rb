@@ -20,8 +20,16 @@ class EmsKubernetes < EmsContainer
     @description ||= "Kubernetes".freeze
   end
 
-  def self.raw_connect(hostname, port, _service = nil)
-    kubernetes_connect(hostname, port)
+  def supported_auth_types
+    %w(basic)
+  end
+
+  def supports_authentication?(authtype)
+    supported_auth_types.include?(authtype.to_s)
+  end
+
+  def self.raw_connect(hostname, port, username = nil, password = nil, _service = nil)
+    kubernetes_connect(hostname, port, username, password)
   end
 
   def self.event_monitor_class
