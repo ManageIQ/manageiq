@@ -16,12 +16,13 @@ module ContainerProviderMixin
       URI::HTTPS.build(:host => hostname, :port => port.presence.try(:to_i))
     end
 
-    def kubernetes_connect(hostname, port)
+    def kubernetes_connect(hostname, port, username, password)
       require 'kubeclient'
       api_endpoint = raw_api_endpoint(hostname, port)
       kubeclient = Kubeclient::Client.new(api_endpoint, kubernetes_version)
       # TODO: support real authentication using certificates
       kubeclient.ssl_options(:verify_ssl => OpenSSL::SSL::VERIFY_NONE)
+      kubeclient.basic_auth(username, password) if username && password
       kubeclient
     end
 
@@ -42,7 +43,9 @@ module ContainerProviderMixin
   def connect(options = {})
     hostname = options[:hostname] || address
     port     = options[:port] || self.port
-    self.class.raw_connect(hostname, port, options[:service])
+    username = options[:user] || authentication_userid(options[:auth_type])
+    password = options[:pass] || authentication_password(options[:auth_type])
+    self.class.raw_connect(hostname, port, username, password, options[:service])
   end
 
   def verify_credentials(auth_type = nil, options = {})

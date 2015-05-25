@@ -31,12 +31,12 @@ class EmsOpenshift < EmsContainer
     @description ||= "OpenShift".freeze
   end
 
-  def self.raw_connect(hostname, port, service = nil)
+  def self.raw_connect(hostname, port, username = nil, password = nil, service = nil)
     service   ||= "openshift"
-    send("#{service}_connect", hostname, port)
+    send("#{service}_connect", hostname, port, username, password)
   end
 
-  def self.openshift_connect(hostname, port)
+  def self.openshift_connect(hostname, port, _username = nil, _password = nil)
     require 'openshift_client'
     api_endpoint = raw_api_endpoint(hostname, port)
     osclient = OpenshiftClient::Client.new(api_endpoint, api_version)
