@@ -92,7 +92,7 @@ class TreeBuilder
     model, rec_id = self.class.extract_node_model_and_id(id)
     object = if model == "Hash"
                {:type => prefix, :id => rec_id, :full_id => id}
-             elsif model.nil? && [:sandt_tree, :svccat_tree, :stcat_tree].include?(x_active_tree)
+             elsif model.nil? && [:sandt, :svccat, :stcat].include?(options[:tree])
                # Creating empty record to show items under unassigned catalog node
                ServiceTemplateCatalog.new
              elsif model.nil? && [:foreman_providers_tree].include?(x_active_tree)
@@ -103,7 +103,6 @@ class TreeBuilder
              end
 
     # Save node as open
-    # FIXME -- we know the tree_type, should not need to quety for active_tree
     @tree_state.x_tree[:open_nodes].push(id) unless @tree_state.x_tree[:open_nodes].include?(id)
 
     x_get_tree_objects(object, @tree_state.x_tree).each_with_object([]) do |o, acc|
@@ -282,7 +281,6 @@ class TreeBuilder
     options[:is_current] =
         ((object.kind_of?(MiqServer) && my_server_id == object.id) ||
          (object.kind_of?(Zone)      && my_zone      == object.name))
-    options.merge!(:active_tree => x_active_tree)
 
     # # open nodes to show selected automate entry point
     # x_tree[:open_nodes] = @temp[:open_nodes].dup if @temp && @temp[:open_nodes]

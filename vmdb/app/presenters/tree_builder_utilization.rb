@@ -75,7 +75,8 @@ class TreeBuilderUtilization  < TreeBuilderRegion
 
   def x_get_tree_cluster_kids(object, options)
     objects =  rbac_filtered_sorted_objects(object.hosts, "name")
-    unless [:bottlenecks_tree, :utilization_tree].include?(x_active_tree)
+    # FIXME: is the condition below ever false?
+    unless [:bottlenecks, :utilization].include?(options[:tree])
       objects += rbac_filtered_sorted_objects(object.resource_pools, "name")
       objects += rbac_filtered_sorted_objects(object.vms, "name")
     end

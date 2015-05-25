@@ -25,7 +25,7 @@ class TreeBuilderAeClass  < TreeBuilder
   def x_get_tree_class_kids(object, options)
     instances = count_only_or_objects(options[:count_only], object.ae_instances, [:display_name, :name])
     # show methods in automate explorer tree
-    if x_active_tree == :ae_tree
+    if options[:type] == :ae # FIXME: is this ever false?
       methods = count_only_or_objects(options[:count_only], object.ae_methods, [:display_name, :name])
       instances + methods
     else

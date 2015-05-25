@@ -229,7 +229,7 @@ class TreeNodeBuilder
   end
 
   def custom_button_set_node
-    text  = options[:active_tree] == :sandt_tree ? "#{object.name.split("|").first} (Group)" : object.name.split("|").first
+    text  = options[:type] == :sandt ? "#{object.name.split("|").first} (Group)" : object.name.split("|").first
     image = object.set_data && object.set_data[:button_image] ? "custom-#{object.set_data[:button_image]}.png" : "folder.png"
     tip   = object.description ? "Button Group: #{object.description}" : object.name.split("|").first
     generic_node(text, image, tip)
