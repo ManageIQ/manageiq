@@ -9,7 +9,6 @@ class TreeBuilderTemplateFilter < TreeBuilderVmsFilter
       :tree_id     => "templates_filter_treebox",
       :tree_name   => "templates_filter_tree",
       :id_prefix   => "tf_",
-      :select_node => "#{x_node(:templates_filter_tree)}",
       :autoload    => false
     )
   end

@@ -1,5 +1,4 @@
 class TreeBuilder
-  include Sandbox
   include CompressedIds
   attr_reader :locals_for_render, :name, :type
 
@@ -76,10 +75,11 @@ class TreeBuilder
   end
 
   def initialize(name, type, sandbox, build=true)
+    @tree_state = Tree::State.new(sandbox)
+
     @locals_for_render  = {}
     @name               = name.to_sym
     @options            = tree_init_options(name.to_sym)
-    @sb                 = sandbox
     @tree_nodes         = {}
     @type               = type.to_sym
 
@@ -103,10 +103,11 @@ class TreeBuilder
              end
 
     # Save node as open
-    x_tree[:open_nodes].push(id) unless x_tree[:open_nodes].include?(id)
+    # FIXME -- we know the tree_type, should not need to quety for active_tree
+    @tree_state.x_tree[:open_nodes].push(id) unless @tree_state.x_tree[:open_nodes].include?(id)
 
-    x_get_tree_objects(object, x_tree).each_with_object([]) do |o, acc|
-      acc.concat(x_build_node_dynatree(o, id, x_tree))
+    x_get_tree_objects(object, @tree_state.x_tree).each_with_object([]) do |o, acc|
+      acc.concat(x_build_node_dynatree(o, id, @tree_state.x_tree))
     end
   end
 
@@ -140,14 +141,16 @@ class TreeBuilder
   private
 
   def build_tree
-    tree_nodes = x_build_dynatree(x_tree(@name))
+    # FIXME: we have the options -- no need to reload from @sb
+    tree_nodes = x_build_dynatree(@tree_state.x_tree(@name))
     active_node_set(tree_nodes)
     set_nodes(tree_nodes)
   end
 
-  #subclass this method if active node on initial load is different than root node
+  # Set active node to root if not set.
+  # Subclass this method if active node on initial load is different than root node.
   def active_node_set(tree_nodes)
-    x_node_set(tree_nodes.first[:key], @name) unless x_node(@name)  # Set active node to root if not set
+    @tree_state.x_node_set(tree_nodes.first[:key], @name) unless @tree_state.x_node(@name)
   end
 
   def set_nodes(nodes)
@@ -157,9 +160,8 @@ class TreeBuilder
   end
 
   def add_to_sandbox
-    @sb[:trees] ||= {}
-    unless @sb.has_key_path?(:trees, @name)
-      values = @options.reverse_merge(
+    @tree_state.add_tree(
+      @options.reverse_merge(
           :tree       => @name,
           :type       => type,
           :klass_name => self.class.name,
@@ -167,8 +169,7 @@ class TreeBuilder
           :add_root   => true,
           :open_nodes => []
       )
-      @sb.store_path(:trees, @name, values)
-    end
+    )
   end
 
   def add_root_node(nodes)
@@ -182,7 +183,7 @@ class TreeBuilder
       :tree_id        => "#{@name}box",
       :tree_name      => @name.to_s,
       :json_tree      => @tree_nodes,
-      :select_node    => "#{x_node(@name)}",
+      :select_node    => "#{@tree_state.x_node(@name)}",
       :onclick        => "cfmeOnClick_SelectTreeNode",
       :id_prefix      => "#{@name}_",
       :base_id        => "root",
@@ -265,7 +266,10 @@ class TreeBuilder
                         when VmdbTableEvm        then x_get_tree_vmdb_table_kids(parent, options)
                         when Zone                then x_get_tree_zone_kids(parent, options)
                         when MiqSearch           then nil
-                        else raise "PARENT TYPE NOT FOUND for #{parent.inspect}"
+                        when VmOpenstack         then nil
+                        else
+                          Rails.logger.error "PARENT TYPE NOT FOUND for #{parent.inspect}"
+                          nil
                         end
     children_or_count || (count_only ? 0 : [])
   end
@@ -287,11 +291,11 @@ class TreeBuilder
     node = x_build_single_node(object, pid, options)
 
     if [:policy_profile_tree, :policy_tree].include?(options[:tree])
-      x_tree(options[:tree])[:open_nodes].push(node[:key])
+      @tree_state.x_tree(options[:tree])[:open_nodes].push(node[:key])
     end
 
     # Process the node's children
-    if x_tree(@name)[:open_nodes].include?(node[:key]) ||
+    if @tree_state.x_tree(@name)[:open_nodes].include?(node[:key]) ||
        options[:open_all] ||
        object[:load_children] ||
        node[:expand]

@@ -21,7 +21,6 @@ class TreeBuilderVandt < TreeBuilder
     locals = super
     locals.merge!(
       :id_prefix         => "vt_",
-      :select_node       => "#{x_node(:vandt_tree)}",
       :no_getitem_alerts => true,
       :autoload          => true
     )

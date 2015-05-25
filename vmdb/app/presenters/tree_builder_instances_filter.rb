@@ -9,7 +9,6 @@ class TreeBuilderInstancesFilter < TreeBuilderVmsFilter
       :tree_id     => "instances_filter_treebox",
       :tree_name   => "instances_filter_tree",
       :id_prefix   => "inf_",
-      :select_node => "#{x_node(:instances_filter_tree)}",
       :autoload    => false
     )
   end

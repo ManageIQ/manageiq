@@ -3,13 +3,13 @@ class TreeBuilderOps < TreeBuilder
   private
 
   def active_node_set(tree_nodes)
+    # FIXME: check all below
     case @name
     when :vmdb_tree
-      x_node_set("root", @name)
+      @tree_state.x_node_set("root", @name)
     else
-      x_node_set("svr-#{to_cid(MiqServer.my_server(true).id)}", @name) unless x_node(@name)
+      @tree_state.x_node_set("svr-#{to_cid(MiqServer.my_server(true).id)}", @name) unless @tree_state.x_node(@name)
     end
-
   end
 
   def x_get_tree_zone_kids(object, options)

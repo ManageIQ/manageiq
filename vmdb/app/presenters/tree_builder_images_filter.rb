@@ -9,7 +9,6 @@ class TreeBuilderImagesFilter < TreeBuilderVmsFilter
       :tree_id     => "images_filter_treebox",
       :tree_name   => "images_filter_tree",
       :id_prefix   => "imf_",
-      :select_node => "#{x_node(:images_filter_tree)}",
       :autoload    => false
     )
   end
