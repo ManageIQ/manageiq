@@ -88,13 +88,20 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
     @containernode = ContainerNode.first
     @containernode.should have_attributes(
       # :ems_ref       => "a3d2a008-e73f-11e4-b613-001a4a5f4a02",
-      :lives_on_type => nil,
-      :lives_on_id   => nil
+      :lives_on_type              => nil,
+      :lives_on_id                => nil,
+      :container_runtime_version  => "docker://1.5.0-dev",
+      :kubernetes_kubelet_version => "v0.17.0-441-g6b6b47a777b480",
+      :kubernetes_proxy_version   => "v0.17.0-441-g6b6b47a777b480"
     )
     @containernode.container_node_conditions.count.should == 1
     @containernode.container_node_conditions.first.should have_attributes(
       :name   => "Ready",
       :status => "True"
+    )
+    @containernode.computer_system.operating_system.should have_attributes(
+      :distribution   => "CentOS Linux 7 (Core)",
+      :kernel_version => "3.10.0-229.1.2.el7.x86_64"
     )
   end
 

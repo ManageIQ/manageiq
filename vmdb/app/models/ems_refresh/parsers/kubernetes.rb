@@ -79,10 +79,13 @@ module EmsRefresh::Parsers
       new_result = parse_base_item(node)
 
       new_result.merge!(
-        :type             => 'ContainerNodeKubernetes',
-        :identity_infra   => node.spec.externalID,
-        :identity_machine => node.status.nodeInfo.machineID,
-        :identity_system  => node.status.nodeInfo.systemUUID
+        :type                       => 'ContainerNodeKubernetes',
+        :identity_infra             => node.spec.externalID,
+        :identity_machine           => node.status.nodeInfo.machineID,
+        :identity_system            => node.status.nodeInfo.systemUUID,
+        :container_runtime_version  => node.status.nodeInfo.containerRuntimeVersion,
+        :kubernetes_proxy_version   => node.status.nodeInfo.kubeProxyVersion,
+        :kubernetes_kubelet_version => node.status.nodeInfo.kubeletVersion
       )
 
       node_memory = node.status.capacity.memory
@@ -92,6 +95,10 @@ module EmsRefresh::Parsers
         :hardware => {
           :logical_cpus => node.status.capacity.cpu,
           :memory_cpu   => node_memory
+        },
+        :operating_system => {
+          :distribution   => node.status.nodeInfo.osImage,
+          :kernel_version => node.status.nodeInfo.kernelVersion
         }
       }
 
