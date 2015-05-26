@@ -1,4 +1,5 @@
 class TreeBuilderButtons  < TreeBuilderAeCustomization
+
   private
 
   def tree_init_options(tree_name)

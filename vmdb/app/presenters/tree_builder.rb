@@ -74,8 +74,9 @@ class TreeBuilder
     end
   end
 
-  def initialize(name, type, sandbox, build=true)
-    @tree_state = Tree::State.new(sandbox)
+  def initialize(name, type, sandbox, build = true)
+    @tree_state = TreeState.new(sandbox)
+    @sb = sandbox # FIXME: some subclasses still access @sb
 
     @locals_for_render  = {}
     @name               = name.to_sym
@@ -232,7 +233,9 @@ class TreeBuilder
       count_only = options[:count_only]
     end
 
+    options = options.dup
     options[:count_only] = count_only # FIXME -- push the count_only to functions below as an argument
+
     children_or_count = case parent
                         when nil                 then x_get_tree_roots(options)
                         when AvailabilityZone    then x_get_tree_az_kids(parent, options)
