@@ -434,11 +434,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     unless missing_hosts.blank?
       begin
         st = Time.now
-        return switches if @dvs_ems_connect_ok[src[:ems].id] == false
+        return switches if src[:ems] && @dvs_ems_connect_ok[src[:ems].id] == false
         vim = load_ar_obj(src[:ems]).connect
         missing_hosts.each { |dest_host| @dvs_by_host[dest_host.id] = get_host_dvs(dest_host, vim) }
       rescue
-        @dvs_ems_connect_ok[src[:ems].id] = false
+        @dvs_ems_connect_ok[src[:ems].id] = false if src[:ems]
         return switches
       ensure
         vim.disconnect if vim rescue nil
@@ -1298,9 +1298,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def all_provider_hosts(src)
-    ui_str = ui_lookup(:table => "ext_management_systems")
-    raise "Source VM [#{src[:vm].name}] does not belong to a #{ui_str}" if src[:ems].nil?
-    load_ar_obj(src[:ems]).hosts
+    load_ar_obj(src[:ems]).try(:hosts) || []
   end
 
   def selected_host(src)

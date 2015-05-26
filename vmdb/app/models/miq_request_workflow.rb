@@ -803,6 +803,8 @@ class MiqRequestWorkflow
   # Run the relationship methods and perform set intersections on the returned values.
   # Optional starting set of results maybe passed in.
   def allowed_ci(ci, relats, sources, filtered_ids = nil)
+    return [] if @ems_xml_nodes.nil?
+
     result = nil
     relats.each do |rsc_type|
       rails_logger("allowed_ci - #{rsc_type}_to_#{ci}", 0)
@@ -942,7 +944,7 @@ class MiqRequestWorkflow
     if ems_ci.nil?
       src = get_source_and_targets
       ems_xml = get_ems_metadata_tree(src)
-      ems_node = ems_xml.root
+      ems_node = ems_xml.try(:root)
     else
       ems_node = load_ems_node(ems_ci, log_header)
     end
@@ -955,6 +957,7 @@ class MiqRequestWorkflow
   def get_ems_metadata_tree(src)
     @ems_metadata_tree ||= begin
       log_header = "MIQ(#{self.class.name}.get_ems_metadata_tree)"
+      return if src[:ems].nil?
       st = Time.now
       rails_logger('get_ems_metadata_tree', 0)
       result = load_ar_obj(src[:ems]).fulltree_arranged(:except_type => "VmOrTemplate")
@@ -992,6 +995,7 @@ class MiqRequestWorkflow
 
   def ci_to_hash_struct(ci)
     return ci.collect { |c| ci_to_hash_struct(c) } if ci.kind_of?(Array)
+    return if ci.nil?
     method_name = "#{ci.class.base_class.name.underscore}_to_hash_struct".to_sym
     return send(method_name, ci) if respond_to?(method_name, true)
     default_ci_to_hash_struct(ci)
