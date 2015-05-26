@@ -905,6 +905,8 @@ module ApplicationController::MiqRequestMethods
             MiqProvisionWorkflow.class_for_source(src_vm_id[0])
           elsif @edit[:st_prov_type]
             MiqProvisionWorkflow.class_for_platform(@edit[:st_prov_type])
+          elsif @edit[:new][:st_prov_type]
+            MiqProvisionWorkflow.class_for_platform(@edit[:new][:st_prov_type])
           else # handle copy button for host provisioning
             MiqHostProvisionWorkflow
           end
