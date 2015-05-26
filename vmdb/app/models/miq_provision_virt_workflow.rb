@@ -641,15 +641,12 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     return @target_resource if @target_resource && refresh == false
 
     vm_id = get_value(@values[:src_vm_id])
-    if vm_id.to_i.zero?
+    rails_logger('get_source_and_targets', 0)
+    svm = VmOrTemplate.where(:id => vm_id).first
+
+    if svm.nil?
       @vm_snapshot_count = 0
       return @target_resource = {}
-    else
-      rails_logger('get_source_and_targets', 0)
-      svm = VmOrTemplate.find_by_id(vm_id)
-      raise "Unable to find VM with Id: [#{vm_id}]" if svm.nil?
-      raise MiqException::MiqVmError, "VM/Template <#{svm.name}> with Id: <#{vm_id}> is archived and cannot be used with provisioning." if svm.archived?
-      raise MiqException::MiqVmError, "VM/Template <#{svm.name}> with Id: <#{vm_id}> is orphaned and cannot be used with provisioning." if svm.orphaned?
     end
 
     @vm_snapshot_count = svm.v_total_snapshots
@@ -658,6 +655,13 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     result[:ems] = ci_to_hash_struct(svm.ext_management_system)
 
     result
+  end
+
+  def source_valid?
+    obj = VmOrTemplate.where(:id => get_value(@values[:src_vm_id])).first
+    return "Unable to find VM with Id: [#{obj.id}]" if obj.nil?
+    return "VM/Template <#{obj.name}> with Id: <#{obj.id}> is archived and cannot be used with provisioning." if obj.archived?
+    return "VM/Template <#{obj.name}> with Id: <#{obj.id}> is orphaned and cannot be used with provisioning." if obj.orphaned?
   end
 
   def resources_for_ui
