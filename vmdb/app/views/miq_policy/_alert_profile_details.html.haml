@@ -32,8 +32,8 @@
           %table.table.table-striped.table-bordered.table-hover
             %tbody
               - @alert_profile_alerts.each do |a|
-                %tr{:onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_al-#{to_cid(a.id)}');",
-                  :onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Alert")}
+                %tr{:title => _("View this Alert"),
+                  :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_al-#{to_cid(a.id)}');"}
                   %td.narrow
                     %img{:src => "/images/icons/new/miq_alert.png"}
                   %td

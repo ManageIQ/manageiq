@@ -133,7 +133,7 @@
                 %th=_("Scopes / Expressions")
             %tbody
               - @policy_conditions.each do |c|
-                %tr{:onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Condition"),
+                %tr{:title => _("View this Condition"),
                   :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_co-#{to_cid(c.id)}');"}
                   %td.narrow
                     %img{:src => "/images/icons/new/miq_condition.png"}
@@ -182,11 +182,11 @@
             %tbody
               - @policy_events.each do |e|
                 %tr
-                  %td.narrow{:onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}');",
-                    :onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Policy Event")}
+                  %td.narrow{:title => _("View this Policy Event"),
+                    :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}');"}
                     %img{:src => "/images/icons/new/event-#{e.name}.png"}
-                  %td{:onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}');",
-                    :onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Policy Event")}
+                  %td{:title => _("View this Policy Event"),
+                    :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}');"}
                     = h(e.description)
                   %td
                     - ta = @policy.actions_for_event(e, :success)
@@ -199,7 +199,7 @@
                         %table
                           %tbody
                             - ta.each do |a|
-                              %tr{:onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Event Action"),
+                              %tr{:title => _("View this Event Action"),
                                 :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}_a-#{to_cid(a.id)}');"}
                                 %td
                                   %img{:src => "/images/icons/new/check.png"}
@@ -209,7 +209,7 @@
                         %table
                           %tbody
                             - fa.each do |a|
-                              %tr{:onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Event Action"),
+                              %tr{title => _("View this Event Action"),
                                   :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}_a-#{to_cid(a.id)}');"}
                                 %td
                                   %img{:src => "/images/icons/new/x.png"}
@@ -250,7 +250,7 @@
               %tbody
                 - @policy_profiles.each do |pp|
                   - id = "pp-#{to_cid(pp.id)}"
-                  %tr{:onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Profile"),
+                  %tr{:title => _("View this Profile"),
                     :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=policy_profile")}
                     %td.narrow
                       %img{:src => "/images/icons/new/policy_profile#{pp.active? ? '' : '_inactive'}.png"}

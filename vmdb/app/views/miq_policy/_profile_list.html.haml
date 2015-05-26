@@ -10,8 +10,8 @@
       %table.table.table-striped.table-bordered.table-hover
         %tbody
           - @profiles.each do |pp|
-            %tr{:onclick => "cfmeDynatree_activateNode('policy_profile_tree', 'pp-#{to_cid(pp.id)}');",
-              :onmouseover => "this.style.cursor = 'pointer'", :title => _("View this Profile")}
+            %tr{:title => _("View this Profile"),
+              :onclick => "cfmeDynatree_activateNode('policy_profile_tree', 'pp-#{to_cid(pp.id)}');"}
               %td.narrow
                 %img{:src => "/images/icons/new/policy_profile#{pp.active? ? '' : '_inactive'}.png"}
               %td

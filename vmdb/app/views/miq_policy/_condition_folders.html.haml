@@ -4,8 +4,8 @@
     %table.table.table-striped.table-bordered.table-hover
       %tbody
         - @folders.each do |f|
-          %tr{:onclick => "cfmeDynatree_activateNode('condition_tree', 'xx-#{f.downcase}');",
-            :onmouseover => "this.style.cursor='pointer'", :title => _("View Condition")}
+          %tr{:title => _("View Condition"),
+            :onclick => "cfmeDynatree_activateNode('condition_tree', 'xx-#{f.downcase}');"}
             %td.narrow
               %img{:src => "/images/icons/new/#{f.downcase}.png"}
             %td

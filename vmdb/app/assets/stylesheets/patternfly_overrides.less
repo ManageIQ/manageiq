@@ -232,10 +232,14 @@ table.table.table-selectable tbody tr.selected td {
 }
 
 /* instead of using onmouseover="this.style.cursor='pointer'" */
-
 .table-hover tbody tr:hover > td {
   cursor: pointer;
   cursor: hand;
+}
+
+/* same for other tables than originally style3 */
+.pointer:hover {
+  cursor: pointer;
 }
 
 /* prevents empty dd from collapsing */
@@ -262,3 +266,4 @@ table.table.table-selectable tbody tr.selected td {
     }
   }
 }
+
