@@ -500,11 +500,11 @@ module ApplicationController::TreeSupport
     ExtManagementSystem.all.each do |ems| # Go thru all of the providers
       if !@rp_only || (@rp_only && ems.resource_pools.count > 0)
         ems_node = {
-          :key        => "#{ems.class.name}_#{ems.id}",
-          :title      => ems.name,
-          :tooltip    => "#{ui_lookup(:table=>"ems_infras")}: #{ems.name}",
-          :addClass   => "cfme-no-cursor-node",      # No cursor pointer
-          :icon       => "ems.png"
+          :key      => "#{ems.class.name}_#{ems.id}",
+          :title    => ems.name,
+          :tooltip  => "#{ui_lookup(:table => "ems_infras")}: #{ems.name}",
+          :addClass => "cfme-no-cursor-node",      # No cursor pointer
+          :icon     => "vendor-#{ems.image_name}.png"
         }
         if @vat || @rp_only
           ems_node[:hideCheckbox] = true
