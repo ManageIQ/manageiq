@@ -897,12 +897,13 @@ module ApplicationController::MiqRequestMethods
           elsif @src_vm_id || params[:src_vm_id]  # Set vm id if pre-prov chose one
             options[:src_vm_id] = [@src_vm_id || params[:src_vm_id].to_i]
           end
+        src_vm = VmOrTemplate.where(:id => src_vm_id).first
 
         wf_type =
           if req.try(:type) == "VmMigrateRequest"
             VmMigrateWorkflow
-          elsif src_vm_id.try(:first).present?
-            MiqProvisionWorkflow.class_for_source(src_vm_id[0])
+          elsif src_vm
+            MiqProvisionWorkflow.class_for_source(src_vm)
           elsif @edit[:st_prov_type]
             MiqProvisionWorkflow.class_for_platform(@edit[:st_prov_type])
           elsif @edit[:new][:st_prov_type]
