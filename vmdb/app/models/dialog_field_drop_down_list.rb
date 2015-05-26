@@ -38,7 +38,7 @@ class DialogFieldDropDownList < DialogFieldSortedItem
   end
 
   def raw_values
-    @raw_values = dynamic ? values_from_automate : super
+    @raw_values ||= dynamic ? values_from_automate : super
   end
 
   def values_from_automate
