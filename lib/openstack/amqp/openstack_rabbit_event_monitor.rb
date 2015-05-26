@@ -95,7 +95,8 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
     if @options[:topics]
       @options[:topics].each do |exchange, topic|
         amqp_exchange = channel.topic(exchange)
-        @queues[exchange] = channel.queue(topic).bind(amqp_exchange, :routing_key => topic)
+        queue_name = "miq-#{@options[:hostname]}-#{exchange}"
+        @queues[exchange] = channel.queue(queue_name).bind(amqp_exchange, :routing_key => topic)
       end
     end
   end
