@@ -62,7 +62,7 @@ describe EmsOpenstack do
       ems.stub(:with_provider_connection).and_raise(StandardError, "unlikely")
 
       $log.should_receive(:error).with(/unlikely/)
-      expect { ems.verify_credentials() }.to raise_error(MiqException::MiqEVMLoginError, /Unexpected.*unlikely/)
+      expect { ems.verify_credentials }.to raise_error(MiqException::MiqEVMLoginError, /Unexpected.*unlikely/)
     end
   end
 end
