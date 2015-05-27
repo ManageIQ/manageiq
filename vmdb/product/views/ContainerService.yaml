@@ -20,6 +20,8 @@ db: ContainerService
 # Columns to fetch from the main table
 cols:
 - name
+- portal_ip
+- session_affinity
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -30,10 +32,14 @@ include_for_find:
 # Order of columns (from all tables)
 col_order: 
 - name
+- portal_ip
+- session_affinity
 
 # Column titles, in order
 headers:
 - Name
+- Portal IP
+- Session Affinity
 
 # Condition(s) string for the SQL query
 conditions: 
@@ -44,6 +50,8 @@ order: Ascending
 # Columns to sort the report on, in order
 sortby:
 - name
+- portal_ip
+- session_affinity
 
 # Group rows (y=yes,n=no,c=count)
 group: n
