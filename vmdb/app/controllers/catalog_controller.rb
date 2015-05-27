@@ -203,7 +203,7 @@ class CatalogController < ApplicationController
     x_last_active_tree = x_active_tree if x_active_tree
     x_last_active_accord = x_active_accord if x_active_accord
 
-    if role_allows(:feature => "svc_catalog_accord")
+    if role_allows(:feature => "svc_catalog_accord", :any => true)
       self.x_active_tree   = 'svccat_tree'
       self.x_active_accord = 'svccat'
       default_active_tree   ||= self.x_active_tree
@@ -211,7 +211,7 @@ class CatalogController < ApplicationController
       @built_trees << build_svccat_tree
       @accords.push(:name => "svccat", :title => "Service Catalogs", :container => "svccat_tree_div")
     end
-    if role_allows(:feature => "catalog_items_view")
+    if role_allows(:feature => "catalog_items_accord", :any => true)
       self.x_active_tree   = 'sandt_tree'
       self.x_active_accord = 'sandt'
       default_active_tree   ||= self.x_active_tree
@@ -227,7 +227,7 @@ class CatalogController < ApplicationController
       @built_trees << build_orch_tmpl_tree
       @accords.push(:name => "ot", :title => "Orchestration Templates", :container => "ot_tree_div")
     end
-    if role_allows(:feature => "st_catalog_accord")
+    if role_allows(:feature => "st_catalog_accord", :any => true)
       self.x_active_tree   = 'stcat_tree'
       self.x_active_accord = 'stcat'
       default_active_tree   ||= self.x_active_tree
