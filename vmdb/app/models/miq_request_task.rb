@@ -15,6 +15,12 @@ class MiqRequestTask < ActiveRecord::Base
   default_value_for :phase_context, {}
   default_value_for :options,       {}
 
+  # TODO: delegate ":to => :class" and remove klass method once Rails 4 is merged
+  delegate :request_class, :task_description, :to => :klass
+  def klass
+    self.class
+  end
+
   validates_inclusion_of :status, :in => %w{ Ok Warn Error Timeout }
 
   include MiqRequestMixin
@@ -87,10 +93,6 @@ class MiqRequestTask < ActiveRecord::Base
     end
   end
 
-  def request_class
-    self.class.request_class
-  end
-
   def self.request_class
     if self.is_or_subclass_of?(MiqProvision)
       MiqProvisionRequest
@@ -103,10 +105,6 @@ class MiqRequestTask < ActiveRecord::Base
 
   def self.task_description
     request_class::TASK_DESCRIPTION
-  end
-
-  def task_description
-    self.class.task_description
   end
 
   def get_description

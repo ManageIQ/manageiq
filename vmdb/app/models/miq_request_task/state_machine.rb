@@ -1,12 +1,9 @@
 module MiqRequestTask::StateMachine
   delegate :my_role, :to => :miq_request
+  delegate :my_zone, :to => :source,      :allow_nil => true
 
   def my_task_id
     "#{self.class.base_model.name.underscore}_#{id}"
-  end
-
-  def my_zone
-    source.try(:my_zone)
   end
 
   def respond_to_signal?(phase)
