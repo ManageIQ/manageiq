@@ -6,10 +6,6 @@ module MiqRequestTask::StateMachine
     "#{self.class.base_model.name.underscore}_#{id}"
   end
 
-  def respond_to_signal?(phase)
-    respond_to?(phase)
-  end
-
   def signal(phase)
     return signal(:finish) if ![:finish, :provision_error].include?(phase.to_sym) && prematurely_finished?
 
