@@ -13,5 +13,5 @@
   :javascript
     $('#refresh-dynamic-checkbox-#{field.id}').click(function() {
       dialogFieldRefresh.refreshCheckbox("#{field.name}", "#{field.id}");
-      dialogFieldRefresh.triggerAutoRefresh("#{field.id}");
+      dialogFieldRefresh.triggerAutoRefresh("#{field.id}", "#{field.trigger_auto_refresh}");
     });

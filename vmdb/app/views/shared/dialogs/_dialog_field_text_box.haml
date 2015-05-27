@@ -17,7 +17,7 @@
       :javascript
         $('#refresh-dynamic-text-field-#{field.id}').click(function() {
           dialogFieldRefresh.refreshTextBox("#{field.name}", "#{field.id}");
-          dialogFieldRefresh.triggerAutoRefresh("#{field.id}");
+          dialogFieldRefresh.triggerAutoRefresh("#{field.id}", "#{field.trigger_auto_refresh}");
         });
 
 - else

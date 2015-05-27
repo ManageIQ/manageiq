@@ -101,7 +101,7 @@ module ApplicationHelper::Dialogs
       :checked => field.default_value.to_s == value.to_s ? '' : nil
     }
 
-    auto_refresh_string = field.trigger_auto_refresh ? "dialogFieldRefresh.triggerAutoRefresh('#{field.id}');" : ""
+    auto_refresh_string = field.trigger_auto_refresh ? "dialogFieldRefresh.triggerAutoRefresh('#{field.id}', '#{field.trigger_auto_refresh}');" : ""
 
     extra_options = {
       :onclick  => auto_refresh_string + remote_function(
@@ -118,7 +118,15 @@ module ApplicationHelper::Dialogs
   private
 
   def auto_refresh_options(field)
-    field.trigger_auto_refresh ? {:auto_refresh => true, :field_id => field.id.to_s} : {}
+    if field.trigger_auto_refresh
+      {
+        :auto_refresh => true,
+        :field_id     => field.id.to_s,
+        :trigger      => field.trigger_auto_refresh.to_s
+      }
+    else
+      {}
+    end
   end
 
   def add_options_unless_read_only(options_to_add, options_to_add_to, field)

@@ -39,7 +39,7 @@ $(document).ready(function () {
       el.unbind('change')
       el.change(function() {
         if (parms.auto_refresh === true) {
-          dialogFieldRefresh.triggerAutoRefresh(parms.field_id);
+          dialogFieldRefresh.triggerAutoRefresh(parms.field_id, parms.trigger);
         }
         var data = el.attr('id') + '=';
         if (el.prop('multiple')) {
@@ -65,7 +65,7 @@ $(document).ready(function () {
       var el = $(this);
       el.observe_field(interval, function () {
         if (parms.auto_refresh === true) {
-          dialogFieldRefresh.triggerAutoRefresh(parms.field_id);
+          dialogFieldRefresh.triggerAutoRefresh(parms.field_id, parms.trigger);
         }
 
         var oneTrans = this.getAttribute('data-miq_send_one_trans'); // Grab one trans URL, if present
@@ -92,7 +92,7 @@ $(document).ready(function () {
     };
 
     if (parms.auto_refresh === true) {
-      dialogFieldRefresh.triggerAutoRefresh(parms.field_id);
+      dialogFieldRefresh.triggerAutoRefresh(parms.field_id, parms.trigger);
     }
 
     if (el.attr('data-miq_sparkle_on')) {

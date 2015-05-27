@@ -74,7 +74,7 @@ describe ApplicationHelper do
             expect(helper.textbox_tag_options(dialog_field, "url")).to eq(
               :maxlength         => 50,
               :class             => "dynamic-text-box-100",
-              "data-miq_observe" => "{\"interval\":\".5\",\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\"}"
+              "data-miq_observe" => "{\"interval\":\".5\",\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\",\"trigger\":\"true\"}"
             )
           end
         end
@@ -107,7 +107,7 @@ describe ApplicationHelper do
               :class             => "dynamic-text-area-100",
               :maxlength         => 8192,
               :size              => "50x6",
-              "data-miq_observe" => "{\"interval\":\".5\",\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\"}"
+              "data-miq_observe" => "{\"interval\":\".5\",\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\",\"trigger\":\"true\"}"
             )
           end
         end
@@ -151,7 +151,7 @@ describe ApplicationHelper do
               :class                      => "dynamic-checkbox-100",
               "data-miq_sparkle_on"       => true,
               "data-miq_sparkle_off"      => true,
-              "data-miq_observe_checkbox" => "{\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\"}"
+              "data-miq_observe_checkbox" => "{\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\",\"trigger\":\"true\"}"
             )
           end
         end
@@ -195,7 +195,7 @@ describe ApplicationHelper do
             expect(helper.date_tag_options(dialog_field, "url")).to eq(
               :class                  => "css1 dynamic-date-100",
               :readonly               => "true",
-              "data-miq_observe_date" => "{\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\"}"
+              "data-miq_observe_date" => "{\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\",\"trigger\":\"true\"}"
             )
           end
         end
@@ -236,7 +236,7 @@ describe ApplicationHelper do
           it "returns the tag options with a few data-miq attributes" do
             expect(helper.time_tag_options(dialog_field, "url", "hour_or_min")).to eq(
               :class             => "dynamic-date-hour_or_min-100",
-              "data-miq_observe" => "{\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\"}"
+              "data-miq_observe" => "{\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\",\"trigger\":\"true\"}"
             )
           end
         end
@@ -278,7 +278,7 @@ describe ApplicationHelper do
               :class                 => "dynamic-drop-down-100",
               "data-miq_sparkle_on"  => true,
               "data-miq_sparkle_off" => true,
-              "data-miq_observe"     => "{\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\"}"
+              "data-miq_observe"     => "{\"url\":\"url\",\"auto_refresh\":true,\"field_id\":\"100\",\"trigger\":\"true\"}"
             )
           end
         end
@@ -363,7 +363,7 @@ describe ApplicationHelper do
                 :value   => "some_value",
                 :name    => "field_name",
                 :checked => '',
-                :onclick => "dialogFieldRefresh.triggerAutoRefresh('100');$.ajax({beforeSend:function(request){miqSparkle(true);}, complete:function(request){miqSparkle(false);}, data:miqSerializeForm('dynamic-radio-100'), dataType:'script', type:'post', url:'url'})"
+                :onclick => "dialogFieldRefresh.triggerAutoRefresh('100', 'true');$.ajax({beforeSend:function(request){miqSparkle(true);}, complete:function(request){miqSparkle(false);}, data:miqSerializeForm('dynamic-radio-100'), dataType:'script', type:'post', url:'url'})"
               )
             end
           end
@@ -397,7 +397,7 @@ describe ApplicationHelper do
                 :value   => "bogus",
                 :name    => "field_name",
                 :checked => nil,
-                :onclick => "dialogFieldRefresh.triggerAutoRefresh('100');$.ajax({beforeSend:function(request){miqSparkle(true);}, complete:function(request){miqSparkle(false);}, data:miqSerializeForm('dynamic-radio-100'), dataType:'script', type:'post', url:'url'})"
+                :onclick => "dialogFieldRefresh.triggerAutoRefresh('100', 'true');$.ajax({beforeSend:function(request){miqSparkle(true);}, complete:function(request){miqSparkle(false);}, data:miqSerializeForm('dynamic-radio-100'), dataType:'script', type:'post', url:'url'})"
               )
             end
           end

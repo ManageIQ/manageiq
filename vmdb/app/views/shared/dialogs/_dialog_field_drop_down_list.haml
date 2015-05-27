@@ -20,5 +20,5 @@
     $('#refresh-dynamic-field-#{field.id}').click(function() {
       var selectedValue = $('select[name="#{field.name}"]').val();
       dialogFieldRefresh.refreshDropDownList("#{field.name}", "#{field.id}", selectedValue);
-      dialogFieldRefresh.triggerAutoRefresh("#{field.id}");
+      dialogFieldRefresh.triggerAutoRefresh("#{field.id}", "#{field.trigger_auto_refresh}");
     });

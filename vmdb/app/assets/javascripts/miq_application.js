@@ -1140,7 +1140,7 @@ function miqSendDateRequest(el) {
   var urlstring = url + '?' + el.prop('id') + '=' + el.val();
 
   if (parms.auto_refresh === true) {
-    dialogFieldRefresh.triggerAutoRefresh(parms.field_id);
+    dialogFieldRefresh.triggerAutoRefresh(parms.field_id, parms.trigger);
   }
 
   if (el.attr('data-miq_sparkle_on')) {

@@ -110,7 +110,9 @@ var dialogFieldRefresh = {
     });
   },
 
-  triggerAutoRefresh: function(fieldId) {
-    parent.postMessage({fieldId: fieldId}, '*');
+  triggerAutoRefresh: function(fieldId, trigger) {
+    if (trigger === "true") {
+      parent.postMessage({fieldId: fieldId}, '*');
+    }
   }
 };

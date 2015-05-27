@@ -35,5 +35,5 @@
   :javascript
     $('#refresh-dynamic-date-#{field.id}').click(function() {
       dialogFieldRefresh.refreshDateTime("#{field.name}", "#{field.id}");
-      dialogFieldRefresh.triggerAutoRefresh("#{field.id}");
+      dialogFieldRefresh.triggerAutoRefresh("#{field.id}", "#{field.trigger_auto_refresh}");
     });
