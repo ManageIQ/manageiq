@@ -25,7 +25,7 @@ describe ContainerServiceController do
 
   it "renders show_list" do
     session[:settings] = {:default_search => 'foo',
-                          :views          => {:containernode => 'list'},
+                          :views          => {:containerservice => 'list'},
                           :perpage        => {:list => 10}}
     session[:eligible_groups] = []
     session[:userid] = User.current_user.userid
