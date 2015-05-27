@@ -160,6 +160,10 @@ describe EmsAmazon do
   end
 
   context "translate_exception" do
+    before :all do
+      require 'aws-sdk'
+    end
+
     before :each do
       @ems = FactoryGirl.build(:ems_amazon, :provider_region => "us-east-1")
 
