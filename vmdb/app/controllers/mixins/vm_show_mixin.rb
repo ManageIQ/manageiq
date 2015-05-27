@@ -26,8 +26,8 @@ module VmShowMixin
     end
 
     # Build the Explorer screen from scratch
-    allowed_features = features.select { |f| role_allows(:feature => f.role) }
-    @trees = allowed_features.collect { |feature| build_vm_tree(feature.name, feature.tree_name) }
+    allowed_features = ApplicationController::Feature.allowed_features(features)
+    @trees = allowed_features.collect { |feature| feature.build_tree(@sb) }
     @accords = allowed_features.map(&:accord_hash)
 
     params.merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
@@ -164,12 +164,5 @@ module VmShowMixin
     session[:vm_display]      = @display unless @display.nil?
     session[:polArr]          = @polArr unless @polArr.nil?
     session[:policy_options]  = @policy_options unless @policy_options.nil?
-  end
-
-  # Build a VM & Template explorer tree
-  def build_vm_tree(type, name)
-    builder = TreeBuilder.class_for_type(type)
-    Rails.logger.error("NO CLASS FOR #{type}") unless builder
-    builder.new(name, type, @sb)
   end
 end

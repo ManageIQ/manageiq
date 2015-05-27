@@ -581,6 +581,7 @@ module ApplicationController::Explorer
 
   def x_get_tree_host_kids(object, options)
     if [:bottlenecks_tree, :utilization_tree].include?(x_active_tree)
+      raise "ERROR: should not get here"
       objects = Array.new
     else
       objects = rbac_filtered_objects(object.resource_pools).sort_by { |a| a.name.downcase }.delete_if(&:is_default)
