@@ -11,7 +11,6 @@ class ServiceTemplateProvisionRequest < MiqRequest
   default_value_for(:request_type) { |r| r.request_types.first }
   default_value_for(:source_id)    { |r| r.get_option(:src_id) }
   default_value_for :source_type,  SOURCE_CLASS_NAME
-  default_value_for(:requester)    { |r| r.get_user }
 
   def my_role
     'ems_operations'

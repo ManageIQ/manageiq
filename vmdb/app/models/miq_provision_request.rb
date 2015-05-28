@@ -23,7 +23,6 @@ class MiqProvisionRequest < MiqRequest
   default_value_for :message,      "#{TASK_DESCRIPTION} - Request Created"
   default_value_for(:request_type) { |r| r.request_types.first }
   default_value_for(:src_vm_id)    { |r| r.get_option(:src_vm_id) }
-  default_value_for(:requester)    { |r| r.get_user }
 
   virtual_column :provision_type, :type => :string
 

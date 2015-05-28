@@ -12,8 +12,9 @@ class MiqRequest < ActiveRecord::Base
   serialize   :options, Hash
 
   default_value_for :options,       {}
-  default_value_for :status,        'Ok'
+  default_value_for(:requester)     { |r| r.get_user }
   default_value_for :request_state, 'pending'
+  default_value_for :status,        'Ok'
 
   validates_inclusion_of :approval_state, :in => %w(pending_approval approved denied), :message => "should be 'pending_approval', 'approved' or 'denied'"
   validates_inclusion_of :status,         :in => %w(Ok Warn Error Timeout Denied)

@@ -10,7 +10,6 @@ class MiqHostProvisionRequest < MiqRequest
   validate               :must_have_user
 
   default_value_for :message,      "#{TASK_DESCRIPTION} - Request Created"
-  default_value_for(:requester)    { |r| r.get_user }
   default_value_for(:request_type) { |r| r.request_types.first }
 
   virtual_column :provision_type, :type => :string

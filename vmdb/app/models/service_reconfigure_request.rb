@@ -7,7 +7,6 @@ class ServiceReconfigureRequest < MiqRequest
   validate :must_have_user
 
   default_value_for :message,      "#{TASK_DESCRIPTION} - Request Created"
-  default_value_for(:requester)    { |r| r.get_user }
   default_value_for(:request_type) { |r| r.request_types.first }
   default_value_for(:source_id)    { |r| r.get_option(:src_id) }
   default_value_for :source_type,  SOURCE_CLASS_NAME

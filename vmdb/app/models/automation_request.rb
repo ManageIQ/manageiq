@@ -6,8 +6,6 @@ class AutomationRequest < MiqRequest
   DEFAULT_CLASS     = "PROCESS"
   DEFAULT_INSTANCE  = "AUTOMATION_REQUEST"
 
-  default_value_for(:requester)    { |r| r.get_user }
-
   ##############################################
   # uri_parts:  instance=IIII|message=MMMM or any subset thereof
   # parameters: var1=vvvvv|var2=wwww|var3=xxxxx
