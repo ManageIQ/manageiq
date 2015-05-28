@@ -277,6 +277,8 @@
               - if %w(state status).include?(col) && row[col].nil? && view.db == "Job"
                 %center
                   = h(row[col].capitalize)
+              - elsif col == "enabled" && row[col].nil? && view.db == "MiqSchedule"
+                = (!!row[col]).to_s.capitalize
               - elsif col == "agent_class" && row[col].nil? && view.db == "Job"
                 - unless row['agent_class'].blank?
                   - if a_rec.nil?

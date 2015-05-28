@@ -7,7 +7,7 @@
       %td= h(@selected_schedule.description)
     %tr
       %td.key=_("Active")
-      %td= h(@selected_schedule.enabled)
+      %td= h((!!@selected_schedule.enabled).to_s.capitalize)
     %tr
       %td.key=_("Action")
       %td
