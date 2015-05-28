@@ -20,7 +20,6 @@ class MiqRequest < ActiveRecord::Base
   validates_inclusion_of :status,         :in => %w(Ok Warn Error Timeout Denied)
 
   validate :validate_request_type
-  #  validate :must_have_valid_requester
 
   include ReportableMixin
 
@@ -110,10 +109,6 @@ class MiqRequest < ActiveRecord::Base
   # after_update do
   #   self.call_automate_event_queue("request_updated")
   # end
-
-  def must_have_valid_requester
-    errors.add(:requester, "must have valid requester") unless self.requester.kind_of?(User)
-  end
 
   def must_have_user
     errors.add(:userid, "must have valid user") unless userid && User.exists?(:userid => userid)
