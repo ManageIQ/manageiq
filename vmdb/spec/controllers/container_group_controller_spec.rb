@@ -25,7 +25,7 @@ describe ContainerGroupController do
 
   it "renders show_list" do
     session[:settings] = {:default_search => 'foo',
-                          :views          => {:containernode => 'list'},
+                          :views          => {:containergroup => 'list'},
                           :perpage        => {:list => 10}}
     session[:userid] = User.current_user.userid
     session[:eligible_groups] = []
