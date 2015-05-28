@@ -20,8 +20,8 @@ $.getJSON("get_json?import_file_upload_id=" + import_file_upload_id, function (r
   };
 
   var PolicyNameFormatter = function (row, cell, value, columnDef, dataContext) {
-    var spacer = "<span style='display:inline-block;height:1px;width:" + (15 * dataContext["indent"]) + "px'></span>";
-    var status_img = "<img src=" + dataContext.status_icon + ">"
+    var spacer = "<span style='display:inline-block;height:1px;width:" + (15 * dataContext.indent) + "px'></span>";
+    var status_img = "<img src=" + dataContext.status_icon + ">";
 
     var idx = dataview.getIdxById(dataContext.id);
     if (rows[idx + 1] && rows[idx + 1].indent > rows[idx].indent) {

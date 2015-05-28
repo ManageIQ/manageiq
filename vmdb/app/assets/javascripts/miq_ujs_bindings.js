@@ -4,28 +4,28 @@ $(document).ready(function () {
   // Bind call to prompt if leaving an active edit
   $('a[data-miq_check_for_changes]').live('ajax:beforeSend', function () {
     return miqCheckForChanges();
-  })
+  });
 
   // Bind call to check/display text area max length on keyup
   $('textarea[data-miq_check_max_length]').live('keyup', function () {
     miqCheckMaxLength(this);
-  })
+  });
 
   // Bind the MIQ spinning Q to configured links
   $('a[data-miq_sparkle_on]').live('ajax:beforeSend', function () {
     miqSparkleOn(); // Call to miqSparkleOn since miqSparkle(true) checks XHR count, which is 0 before send
-  })
+  });
   $('a[data-miq_login_error]').live('ajax:error', function (xhr, status, error) {
-    js_mimetypes = [ "text/javascript", "application/javascript" ]
+    js_mimetypes = [ "text/javascript", "application/javascript" ];
     if (status.status == 401 &&
         js_mimetypes.indexOf(status.getResponseHeader("Content-Type")) > -1 &&
         status.responseText.length > 0) {
-      $.globalEval(status.responseText)
+      $.globalEval(status.responseText);
     }
-  })
+  });
   $('a[data-miq_sparkle_off]').live('ajax:complete', function () {
     miqSparkle(false);
-  })
+  });
 
   // Bind in the observe support. If interval is configured, use the observe_field function
   $('[data-miq_observe]').live('focus', function () {
@@ -36,7 +36,7 @@ $(document).ready(function () {
     if (typeof interval == "undefined") {
       // No interval passed, use event observer
       var el = $(this);
-      el.unbind('change')
+      el.unbind('change');
       el.change(function () {
         var data = el.attr('id') + '=';
         if (el.prop('multiple')) {
@@ -50,13 +50,13 @@ $(document).ready(function () {
           data: data
         };
         if (el.attr('data-miq_sparkle_on')) {
-          options['beforeSend'] = true
+          options.beforeSend = true;
         }
         if (el.attr('data-miq_sparkle_off')) {
-          options['complete'] = true
+          options.complete = true;
         }
         miqJqueryRequest(url, options);
-      })
+      });
     } else {
       $(this).off(); // Use jQuery to turn off observe_field, prevents multi ajax transactions
       var el = $(this);
@@ -84,10 +84,10 @@ $(document).ready(function () {
       data: el.attr('id') + '=' + encodeURIComponent(el.prop('checked') ? el.val() : 'null')
     };
     if (el.attr('data-miq_sparkle_on')) {
-      options['beforeSend'] = true
+      options.beforeSend = true;
     }
     if (el.attr('data-miq_sparkle_off')) {
-      options['complete'] = true
+      options.complete = true;
     }
     miqJqueryRequest(url, options);
   });
@@ -95,5 +95,5 @@ $(document).ready(function () {
   // Run this last to be sure all other UJS bindings have been run in case the focus field is observed
   $('[data-miq_focus]').each(function (index) {
     this.focus();
-  })
+  });
 });
