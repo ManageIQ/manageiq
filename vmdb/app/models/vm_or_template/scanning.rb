@@ -168,11 +168,12 @@ module VmOrTemplate::Scanning
       "taskid" => nil,
       "vm_id" => self.id
     }.merge(options)
-    begin
-      run_command_via_parent("SyncMetadata", options)
-    rescue => err
-      $log.log_backtrace(err)
-    end
+    host = options.delete("host")
+    options = {"args" => [self.path], "method_name" => "SyncMetadata", "vm_guid" => self.guid}.merge(options)
+    ost = OpenStruct.new(options)
+    host.call_ws(ost)
+  rescue => err
+    $log.log_backtrace(err)
   end
 
   # Call the miqhost webservice to do the ScanMetadata operation
@@ -183,11 +184,14 @@ module VmOrTemplate::Scanning
       "taskid" => nil,
       "vm_id" => self.id
     }.merge(options)
-    begin
-      run_command_via_parent("ScanMetadata", options)
-    rescue => err
-      $log.log_backtrace(err)
-    end
+    host = options.delete("host")
+    # If the options hash has an "args" element, remove it and add it to the "args" element with self.path
+    miqhost_args = Array(options.delete("args"))
+    options = {"args" => [self.path] + miqhost_args, "method_name" => "ScanMetadata", "vm_guid" => self.guid}.merge(options)
+    ost = OpenStruct.new(options)
+    host.call_ws(ost)
+  rescue => err
+    $log.log_backtrace(err)
   end
 
   def scan_profile_list
