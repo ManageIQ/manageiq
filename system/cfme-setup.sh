@@ -1,14 +1,11 @@
 #!/bin/bash
 [[ -s /etc/default/evm ]] && source /etc/default/evm
 
+pushd /var/www/miq
+  rake build:shared_objects --trace
+popd
+
 pushd /var/www/miq/vmdb
-  bundle install $BUNDLE_CLI_OPTIONS
-
-  pushd /var/www/miq
-    # rake after bundler may install rake
-    rake build:shared_objects --trace
-  popd
-
   # rails compile tasks loads environment which needs above shared objects
   # There is no database.yml. Bogus database parameters appeases rails.
   RAILS_ENV=production rake evm:compile_assets
