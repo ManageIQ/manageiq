@@ -1,0 +1,15 @@
+- if items
+  %table.table.table-bordered.table-striped
+    %thead
+      %tr
+        %th{:colspan => 6, :align => "left"}
+          = title
+    - items[:labels].each do |label|
+      %td
+        %strong
+          = label
+    - items[:values].each do |item|
+      %tr
+        - item.each do |value|
+          %td
+            = value
