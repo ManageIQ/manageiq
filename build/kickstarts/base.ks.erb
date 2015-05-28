@@ -259,6 +259,10 @@ export LC_ALL=en_US.UTF-8
 [[ -s /etc/default/evm ]] && source /etc/default/evm
 gem install bundler -v "~>1.5"
 
+pushd /var/www/miq/vmdb
+  bundle install
+popd
+
 /var/www/miq/system/cfme-setup.sh
 
 # Kickstart doesn't load sysctl's kernel runtime memory parameters found in
