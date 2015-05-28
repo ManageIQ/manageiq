@@ -29,7 +29,7 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
     ContainerNode.count.should         == 1
     Container.count.should             == 3
     ContainerService.count.should      == 6
-    ContainerPortConfig.count.should   == 3
+    ContainerPortConfig.count.should   == 2
     ContainerDefinition.count.should   == 3
   end
 
@@ -46,7 +46,7 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       # :ems_ref       => "a7566742-e73f-11e4-b613-001a4a5f4a02_heapster_kubernetes/heapster:v0.9",
       :name          => "heapster",
       :restart_count => 0,
-      :image         => "kubernetes/heapster:v0.9",
+      :image         => "kubernetes/heapster:v0.11.0",
       # :backing_ref   => "docker://87cd51044d7175c246fa1fa7699253fc2aecb769021837a966fa71e9dcb54d71"
     )
 
@@ -109,7 +109,7 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
     @confs.count.should  == 1
     @confs = @confs.first
     @confs.should have_attributes(
-      :name        => "",
+      :name        => nil,
       :port        => 443,
       :target_port => "443",
       :protocol    => "TCP"
