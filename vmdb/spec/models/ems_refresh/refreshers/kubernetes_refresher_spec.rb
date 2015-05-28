@@ -138,5 +138,10 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       :replicas         => 1,
       :current_replicas => 1
     )
+    @replicator.container_groups.count.should == 1
+
+    @group = ContainerGroup.where(:name => "monitoring-influx-grafana-controller-mdyqf").first
+    @group.container_replicator.should_not be_nil
+    @group.container_replicator.name.should == "monitoring-influx-grafana-controller"
   end
 end
