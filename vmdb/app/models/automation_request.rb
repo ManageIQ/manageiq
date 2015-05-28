@@ -2,12 +2,10 @@ class AutomationRequest < MiqRequest
   alias_attribute :automation_tasks, :miq_request_tasks
 
   TASK_DESCRIPTION  = 'Automation Request'
-  REQUEST_TYPES     = %w{ automation }
   DEFAULT_NAMESPACE = "SYSTEM"
   DEFAULT_CLASS     = "PROCESS"
   DEFAULT_INSTANCE  = "AUTOMATION_REQUEST"
 
-  validates_inclusion_of :request_type, :in => REQUEST_TYPES, :message => "should be #{REQUEST_TYPES.join(", ")}"
   default_value_for(:requester)    { |r| r.get_user }
 
   ##############################################

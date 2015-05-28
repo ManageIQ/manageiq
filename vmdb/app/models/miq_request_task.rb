@@ -192,7 +192,7 @@ class MiqRequestTask < ActiveRecord::Base
   private
 
   def validate_request_type
-    errors.add(:request_type, "should be #{request_class::REQUEST_TYPES.join(", ")}") unless request_class::REQUEST_TYPES.include?(request_type)
+    errors.add(:request_type, "should be #{request_class.request_types.join(", ")}") unless request_class.request_types.include?(request_type)
   end
 
   def validate_state

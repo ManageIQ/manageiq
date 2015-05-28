@@ -18,6 +18,7 @@ class MiqRequest < ActiveRecord::Base
   validates_inclusion_of :approval_state, :in => %w(pending_approval approved denied), :message => "should be 'pending_approval', 'approved' or 'denied'"
   validates_inclusion_of :status,         :in => %w(Ok Warn Error Timeout Denied)
 
+  validate :validate_request_type
   #  validate :must_have_valid_requester
 
   include ReportableMixin
@@ -71,6 +72,12 @@ class MiqRequest < ActiveRecord::Base
 
   REQUEST_TYPES_BACKEND_ONLY = {:MiqProvisionRequestTemplate => {:template => "VM Provision Template"}}
   REQUEST_TYPES = MODEL_REQUEST_TYPES.values.each_with_object(REQUEST_TYPES_BACKEND_ONLY) { |i, h| i.each { |k, v| h[k] = v } }
+
+  # TODO: delegate ":to => :class" and remove klass method once Rails 4 is merged
+  delegate :request_types, :task_description, :to => :klass
+  def klass
+    self.class
+  end
 
   # Supports old-style requests where specific request was a seperate table connected as a resource
   def resource
@@ -203,6 +210,10 @@ class MiqRequest < ActiveRecord::Base
 
   def request_type_display
     request_type.nil? ? "Unknown" : REQUEST_TYPES.fetch_path(type.to_sym, request_type.to_sym)
+  end
+
+  def self.request_types
+    REQUEST_TYPES[name.to_sym].keys.collect(&:to_s)
   end
 
   def request_status
@@ -484,5 +495,9 @@ class MiqRequest < ActiveRecord::Base
   private
 
   def default_description
+  end
+
+  def validate_request_type
+    errors.add(:request_type, "should be #{request_types.join(", ")}") unless request_types.include?(request_type)
   end
 end

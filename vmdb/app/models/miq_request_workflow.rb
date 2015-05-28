@@ -723,7 +723,7 @@ class MiqRequestWorkflow
   end
 
   def self.request_type(type)
-    type.presence.try(:to_sym) || request_class::REQUEST_TYPES.first
+    type.presence.try(:to_sym) || request_class.request_types.first
   end
 
   def request_type
