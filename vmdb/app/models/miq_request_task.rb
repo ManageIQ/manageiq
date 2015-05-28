@@ -64,15 +64,7 @@ class MiqRequestTask < ActiveRecord::Base
     req_state = (states.length == 1) ? states.keys.first : "active"
 
     # Determine status to report
-    req_status = if status.keys.include?('Error')
-                   'Error'
-                 elsif status.keys.include?('Timeout')
-                   'Timeout'
-                 elsif status.keys.include?('Warn')
-                   'Warn'
-                 else
-                   'Ok'
-    end
+    req_status = status.slice('Error', 'Timeout', 'Warn').keys.first || 'Ok'
 
     if req_state == "finished"
       msg = (req_status == 'Ok') ? "Task complete" : "Task completed with errors"
