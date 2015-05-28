@@ -11,7 +11,9 @@ gem "jquery-rjs", "=0.1.1", :git => 'https://github.com/amatsuda/jquery-rjs.git'
 gem 'angularjs-rails', '=1.2.4'
 gem 'jquery-rails', "=2.1.4"
 
-gem "win32-process", "~>0.8.0", :require => false, :platforms => [:mswin, :mingw]
+if Gem.win_platform?
+  gem "win32-process", "~>0.8.0", :require => false, :platforms => [:mswin, :mingw]
+end
 
 # On MS Windows run "bundle config --local build.libv8 --with-system-v8" first
 
