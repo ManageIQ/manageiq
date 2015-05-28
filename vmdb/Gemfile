@@ -9,16 +9,15 @@ MiqBundler.include_gemfile("../lib/Gemfile", binding)
 
 gem "jquery-rjs", "=0.1.1", :git => 'https://github.com/amatsuda/jquery-rjs.git'
 gem 'angularjs-rails', '=1.2.4'
-gem 'jquery-rails', "~>2.2.2"
+gem 'jquery-rails', "=2.2.2"
 gem 'jquery-hotkeys-rails'
 gem 'codemirror-rails', "=4.2"
 
 # On MS Windows run "bundle config --local build.libv8 --with-system-v8" first
 
 gem "sprockets-sass",  "~>1.2.0"
-gem "sprockets-less",  "~>0.6.1"
-gem 'therubyracer', :require => false, :platform => :ruby
-gem 'less-rails',   :require => false
+gem 'sass-rails'
+gem 'patternfly-sass', "~>1.2.1"
 
 # Vendored and required
 # TODO: Fix AWS tests now that our api specs and the soap4r 1.6.0 specs pass on 1.8.7/1.9.3
