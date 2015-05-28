@@ -10,7 +10,7 @@ module EmsContainerHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w(container_nodes container_services container_groups)
+    items = %w(container_groups container_services container_nodes)
     if @ems.kind_of?(EmsOpenshift)
       items.concat(%w(container_routes container_projects))
     end
