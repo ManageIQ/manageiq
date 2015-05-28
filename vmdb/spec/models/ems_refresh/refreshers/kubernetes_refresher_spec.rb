@@ -21,6 +21,7 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       assert_specific_container_group
       assert_specific_container_node
       assert_specific_container_service
+      assert_specific_container_replicator
     end
   end
 
@@ -31,6 +32,7 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
     ContainerService.count.should      == 6
     ContainerPortConfig.count.should   == 2
     ContainerDefinition.count.should   == 3
+    ContainerReplicator.count.should   == 2
   end
 
   def assert_ems
@@ -125,6 +127,16 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       :restart_policy => "Always",
       :dns_policy     => "ClusterFirst",
       :namespace      => "default"
+    )
+  end
+
+  def assert_specific_container_replicator
+    @replicator = ContainerReplicator.where(:name => "monitoring-influx-grafana-controller").first
+    @replicator.should have_attributes(
+      :name             => "monitoring-influx-grafana-controller",
+      :namespace        => "default",
+      :replicas         => 1,
+      :current_replicas => 1
     )
   end
 end
