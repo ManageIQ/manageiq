@@ -98,6 +98,9 @@ module EmsRefresh::Parsers
 
     def parse_service(service)
       new_result = parse_base_item(service)
+      if new_result[:ems_ref].nil? # Typically this happens for kubernetes services
+        new_result[:ems_ref] = "#{new_result[:namespace]}_#{new_result[:name]}"
+      end
       container_groups = []
 
       endpoint_container_groups = @data_index.fetch_path(
