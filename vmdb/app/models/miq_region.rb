@@ -41,8 +41,8 @@ class MiqRegion < ActiveRecord::Base
 
   PERF_ROLLUP_CHILDREN = [:ext_management_systems, :storages]
 
-  def perf_rollup_parent(interval_name=nil)
-    MiqEnterprise.my_enterprise unless interval_name == 'realtime'
+  def perf_rollup_parents(interval_name = nil)
+    [MiqEnterprise.my_enterprise] unless interval_name == 'realtime'
   end
 
   def my_zone

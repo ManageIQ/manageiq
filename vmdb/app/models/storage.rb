@@ -705,8 +705,8 @@ class Storage < ActiveRecord::Base
 
   PERF_ROLLUP_CHILDREN = :ext_management_systems
 
-  def perf_rollup_parent(interval_name=nil)
-    MiqRegion.my_region unless interval_name == 'realtime'
+  def perf_rollup_parents(interval_name = nil)
+    [MiqRegion.my_region] unless interval_name == 'realtime'
   end
 
   # TODO: See if we can reuse the main perf_capture method, and only overwrite the perf_collect_metrics method
@@ -835,7 +835,7 @@ class Storage < ActiveRecord::Base
       Benchmark.realtime_block(:process_perfs_tag) { VimPerformanceTagValue.build_from_performance_record(perf) }
 
       self.update_attribute(:last_perf_capture_on, hour)
-      self.perf_rollup_to_parent(interval_name, hour)
+      perf_rollup_to_parents(interval_name, hour)
     end
 
     $log.info "#{log_header} Capture for #{log_target}...Complete - Timings: #{t.inspect}"
