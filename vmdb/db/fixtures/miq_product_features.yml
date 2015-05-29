@@ -3595,6 +3595,43 @@
       :feature_type: admin
       :identifier: container_node_new
 
+# ContainerReplicator
+- :name: Replicators
+  :description: Everything under Container Replicators
+  :feature_type: node
+  :identifier: container_replicator
+  :children:
+  - :name: View
+    :description: View Container Replicators
+    :feature_type: node
+    :identifier: container_replicator_view
+    :children:
+    - :name: List
+      :description: Display Lists of Container Replicators
+      :feature_type: view
+      :identifier: container_replicator_show_list
+    - :name: Show
+      :description: Display Individual Container Replicators
+      :feature_type: view
+      :identifier: container_replicator_show
+  - :name: Modify
+    :description: Modify Container Nodes
+    :feature_type: admin
+    :identifier: container_replicator_admin
+    :children:
+    - :name: Remove
+      :description: Remove Container Replicators from the VMDB
+      :feature_type: admin
+      :identifier: container_replicator_delete
+    - :name: Edit
+      :description: Edit a Container Replicator
+      :feature_type: admin
+      :identifier: container_replicator_edit
+    - :name: Add
+      :description: Add a Container Replicator
+      :feature_type: admin
+      :identifier: container_replicator_new
+
 # ContainerService
 - :name: Services
   :description: Everything under Container Services

@@ -10,7 +10,7 @@ module EmsContainerHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w(container_groups container_services container_nodes)
+    items = %w(container_groups container_services container_replicators container_nodes )
     if @ems.kind_of?(EmsOpenshift)
       items.concat(%w(container_routes container_projects))
     end
@@ -130,6 +130,17 @@ module EmsContainerHelper::TextualSummary
     h     = {:label => label, :image => "container_group", :value => count_of_groups}
     if count_of_groups > 0 && role_allows(:feature => "container_group_show_list")
       h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'container_groups')
+      h[:title] = "Show all #{label}"
+    end
+    h
+  end
+
+  def textual_container_replicators
+    count_of_replicators = @ems.number_of(:container_replicators)
+    label = ui_lookup(:tables => "container_replicators")
+    h     = {:label => label, :image => "container_replicator", :value => count_of_replicators}
+    if count_of_replicators > 0 && role_allows(:feature => "container_replicator_show_list")
+      h[:link]  = url_for(:action => 'show', :id => @ems, :display => 'container_replicators')
       h[:title] = "Show all #{label}"
     end
     h

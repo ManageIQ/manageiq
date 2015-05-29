@@ -1,0 +1,31 @@
+#
+# Toolbar config file
+#
+---
+:model: ContainerReplicator
+:button_groups:
+- :name: container_replicator_vmdb
+  :items:
+  - :buttonSelect: container_replicator_vmdb_choice
+    :image: vmdb
+    :title: Configuration
+    :text: Configuration
+    :items:
+    - :button: container_replicator_new
+      :image: new
+      :url: '/new'
+      :text: 'Add a New #{ui_lookup(:table=>"container_replicator")}'
+      :title: 'Add a New #{ui_lookup(:table=>"container_replicator")}'
+    - :button: container_replicator_edit
+      :image: edit
+      :text: 'Edit Selected #{ui_lookup(:table=>"container_replicator")}'
+      :title: 'Select a single #{ui_lookup(:table=>"container_replicator")} to edit'
+      :url_parms: 'main_div'
+      :onwhen: '1'
+    - :button: container_replicator_delete
+      :image: remove
+      :text: 'Remove #{ui_lookup(:tables=>"container_replicators")} from the VMDB'
+      :title: 'Remove selected #{ui_lookup(:tables=>"container_replicators")} from the VMDB'
+      :url_parms: 'main_div'
+      :confirm: 'Warning: The selected #{ui_lookup(:tables=>"container_replicators")} and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected #{ui_lookup(:tables=>"container_replicators")}?'
+      :onwhen: '1+'

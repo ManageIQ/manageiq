@@ -951,6 +951,8 @@ en:
       containers:                  Containers
       container_group:             Container Group
       container_groups:            Container Groups
+      container_replicator:        Replicator
+      container_replicators:       Replicators
       container_node:              Node
       container_nodes:             Nodes
       container_service:           Service
