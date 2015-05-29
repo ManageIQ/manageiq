@@ -51,4 +51,18 @@ describe EmsOpenstack do
 
     @ems.event_monitor_options.should == {:hostname => "host", :port => 1234}
   end
+
+  context "translate_exception" do
+    it "preserves and logs message for unknown exceptions" do
+      ems = FactoryGirl.build(:ems_openstack, :hostname => "host", :ipaddress => "::1")
+
+      creds = {:default => {:userid => "fake_user", :password => "fake_password"}}
+      ems.update_authentication(creds, :save => false)
+
+      ems.stub(:with_provider_connection).and_raise(StandardError, "unlikely")
+
+      $log.should_receive(:error).with(/unlikely/)
+      expect { ems.verify_credentials }.to raise_error(MiqException::MiqEVMLoginError, /Unexpected.*unlikely/)
+    end
+  end
 end

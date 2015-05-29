@@ -46,8 +46,12 @@ module AuthenticationMixin
     authentication_component(type, :password_encrypted)
   end
 
+  def required_credential_fields(_type)
+    [:userid]
+  end
+
   def has_credentials?(type = nil)
-    !!authentication_component(type, :userid)
+    required_credential_fields(type).all? { |field| authentication_component(type, field) }
   end
 
   def missing_credentials?(type = nil)
