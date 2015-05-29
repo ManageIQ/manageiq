@@ -90,8 +90,9 @@ Dir.chdir("/root/src/imagefactory") do
     destination = DESTINATION_DIRECTORY.join(file_name)
     $log.info `mv  #{source} #{destination}`
     $log.info "Generating image checksums"
-    $log.info `cd #{DESTINATION_DIRECTORY}/; /usr/bin/md5sum * >> md5sum`
-    $log.info `cd #{DESTINATION_DIRECTORY}/; /usr/bin/sha256sum * >> sha256sum`
+    $log.info `cd #{DESTINATION_DIRECTORY}/; /usr/bin/sha256sum * >> SHA256SUM`
+    $log.info `cd #{DESTINATION_DIRECTORY}/; /usr/bin/gpg --batch --no-tty --passphrase-file /root/.gnupg/pass -b SHA256SUM`
+    $log.info `cd #{DESTINATION_DIRECTORY}/; cp /root/.gnupg/cfme_public.key . `
   end
 end
 
