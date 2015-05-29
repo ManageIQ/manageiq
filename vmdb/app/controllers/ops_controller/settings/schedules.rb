@@ -638,7 +638,7 @@ module OpsController::Settings::Schedules
   def schedule_set_basic_record_vars(schedule)
     schedule.name = params[:name]
     schedule.description = params[:description]
-    schedule.enabled = params[:enabled]
+    schedule.enabled = params[:enabled] || "off"
   end
 
   def schedule_set_timer_record_vars(schedule)
