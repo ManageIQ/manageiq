@@ -118,8 +118,8 @@ class MiqEnterprise < ActiveRecord::Base
 
   PERF_ROLLUP_CHILDREN = [:miq_regions]
 
-  def perf_rollup_parent(interval_name=nil)
-    nil
+  def perf_rollup_parents(_interval_name = nil)
+    # No rollup parents
   end
 
   def perf_capture_enabled
