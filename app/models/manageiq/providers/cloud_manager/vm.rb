@@ -10,8 +10,8 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
 
   default_value_for :cloud, true
 
-  def perf_rollup_parent(interval_name=nil)
-    self.availability_zone unless interval_name == 'realtime'
+  def perf_rollup_parents(interval_name = nil)
+    [availability_zone].compact unless interval_name == 'realtime'
   end
 
   #

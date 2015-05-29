@@ -1855,8 +1855,12 @@ class Host < ActiveRecord::Base
 
   PERF_ROLLUP_CHILDREN = :vms
 
-  def perf_rollup_parent(interval_name = nil)
-    ems_cluster || (ext_management_system if interval_name == 'realtime')
+  def perf_rollup_parents(interval_name = nil)
+    if interval_name == 'realtime'
+      [ems_cluster].compact if ems_cluster
+    else
+      [ems_cluster || ext_management_system].compact
+    end
   end
 
   def get_performance_metric(capture_interval, metric, range, function = nil)
