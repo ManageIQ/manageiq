@@ -3,6 +3,7 @@ class ServiceTemplate < ActiveRecord::Base
   include ServiceMixin
   include OwnershipMixin
   include NewWithTypeStiMixin
+  include ServiceTemplateFilter
 
   # # These relationships are used to specify children spawned from a parent service
   # has_many   :child_services, :class_name => "ServiceTemplate", :foreign_key => :service_template_id
@@ -119,6 +120,9 @@ class ServiceTemplate < ActiveRecord::Base
   end
 
   def create_tasks_for_service(service_task, parent_svc)
+    return [] unless self.class.include_service_template?(service_task,
+                                                          service_task.source_id,
+                                                          parent_svc) unless parent_svc
     svc = create_service(service_task, parent_svc)
 
     user = User.find_by_userid(service_task.userid)
@@ -141,6 +145,10 @@ class ServiceTemplate < ActiveRecord::Base
         nh['options'].delete(:child_tasks)
         # Initial Options[:dialog] to an empty hash so we do not pass down dialog values to child services tasks
         nh['options'][:dialog] = {}
+        next if child_svc_rsc.resource_type == "ServiceTemplate" &&
+                !self.class.include_service_template?(parent_service_task,
+                                                      child_svc_rsc.resource.id,
+                                                      parent_service)
         new_task = parent_service_task.class.new(nh)
         new_task.options.merge!(
           :src_id              => child_svc_rsc.resource.id,
