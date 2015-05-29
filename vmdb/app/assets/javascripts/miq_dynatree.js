@@ -8,11 +8,7 @@ function miqOnCheck_handler(node) {
 
 // Expand/collapse all children on double click
 function cfmeOnDblClick_Expand(node, event) {
-  if (node.isExpanded()) {
-    var exp = false;
-  } else {
-    var exp = true;
-  }
+  var exp = !node.isExpanded();
   node.expand(exp);
   node.visit(function (n) {
     n.expand(exp);
@@ -94,7 +90,7 @@ function cfmeOnClick_SelectDlgEditTreeNode(id) {
 // Activate and focus on a node within a tree given the node's key
 function cfmeDynatree_activateNode(tree, key) {
   var node = $("#" + tree + "box").dynatree('getTree').getNodeByKey(key);
-  if (node != null) {
+  if (node) {
     // Only try to activate node if it is in the tree
     if (node.isActive()) {
       $("#" + tree + "box").dynatree('getTree').reactivate();
@@ -109,7 +105,7 @@ function cfmeDynatree_activateNode(tree, key) {
 // Activate silently (no onActivate event) and focus on a node within a tree given the node's key
 function cfmeDynatree_activateNodeSilently(tree, key) {
   var node = $("#" + tree + "box").dynatree('getTree').getNodeByKey(key);
-  if (node != null) { // Only try to activate node if it is in the tree
+  if (node) { // Only try to activate node if it is in the tree
     node.activateSilently();
     node.expand();
     node.focus();
@@ -135,7 +131,7 @@ function cfme_expand_parent_nodes(treename, selected_node) {
 
 function cfme_dynatree_node_add_class(treename, key, klass) {
   var node = $("#" + treename + "box").dynatree('getTree').getNodeByKey(key);
-  if (node !== null) {
+  if (node) {
     node.data.addClass = klass;
     node.render();
   } else {
@@ -229,7 +225,7 @@ function cfme_dynatree_toggle_expand(treename, expand_mode) {
 // OnCheck handler for the Protect screen
 function miqOnCheck_Protect(node, treename) {
   var ppid = node.data.key.split('_').pop();
-  var url = check_url + ppid + '?check=' + (node.isSelected() ? '0' : '1');
+  var url = check_url + ppid + '?check=' + Number(!node.isSelected());
   miqJqueryRequest(url);
   return true;
 }
@@ -257,7 +253,7 @@ function miqOnMouseIn_HostNet(id) {
 function miqOnMouseOut_HostNet(id) {
   if (hover_node_id(id)) {
     // div id exists
-    if (last_id != null) {
+    if (last_id) {
       $("#" + last_id).hide(); // Hide the quad div
     }
   }
@@ -318,10 +314,8 @@ function cfmeOnClick_TagCat(id) {
 
 // OnClick handler for Genealogy Tree
 function cfmeOnClick_GenealogyTree(id) {
-  switch (hover_node_id(id)[0]) {
-    case 'v': // case for vm genealogy tree
-      miqJqueryRequest(click_url + id, {beforeSend: true, complete: true});
-      break;
+  if (hover_node_id(id)[0] === 'v') {
+    miqJqueryRequest(click_url + id, {beforeSend: true, complete: true});
   }
 }
 
@@ -332,7 +326,7 @@ function cfmeGetChecked(node, treename) {
   var selectedKeys = $.map(selectedNodes, function (checkedNode) {
     return checkedNode.data.key;
   });
-  if (!node.isSelected() ) {
+  if (!node.isSelected()) {
     // Indicates that the current node is checked
     selectedKeys.push(node.data.key);
   } else if (node.isSelected()) {
@@ -348,7 +342,7 @@ function cfmeGetChecked(node, treename) {
   } else {
     miqSetButtons(count, "center_buttons_div");
   }
-  if (count > 0) {
+  if (count) {
     miqJqueryRequest(check_url + '?all_checked=' + selectedKeys, {beforeSend: true, complete: true});
   }
 }
@@ -387,11 +381,7 @@ function cfmeOnDblClick_NoBaseExpand(node, event) {
   if (!node.getParent().data.title) {
     return;
   } else {
-    if (node.isExpanded()) {
-      var exp = false;
-    } else {
-      var exp = true;
-    }
+    var exp = !node.isExpanded();
     node.expand(exp);
   }
 }
@@ -411,7 +401,7 @@ function miqOnClick_ServerRoles(id) {
 // OnCheck handler for the belongsto tagging trees on the user edit screen
 function miqOnCheck_UserFilters(node, tree_name) {
   tree_typ = tree_name.split('_')[0];
-  var checked = node.isSelected() ? '0' : '1';
+  var checked = Number(!node.isSelected());
   var url = check_url + node.data.key + "?check=" + checked + "&tree_typ=" + tree_typ;
   miqJqueryRequest(url);
   return true;
@@ -492,7 +482,7 @@ function miqMenuChangeRow(grid, action, click_url) {
 }
 
 function cfmeSetAETreeNodeSelectionClass(id, prevId, bValidNode) {
-  if (prevId != "") {
+  if (prevId) {
     cfme_dynatree_node_remove_class("automate_tree", prevId);
   }
   if (bValidNode == "true") {
