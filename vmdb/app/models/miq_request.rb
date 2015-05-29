@@ -73,8 +73,10 @@ class MiqRequest < ActiveRecord::Base
   REQUEST_TYPES_BACKEND_ONLY = {:MiqProvisionRequestTemplate => {:template => "VM Provision Template"}}
   REQUEST_TYPES = MODEL_REQUEST_TYPES.values.each_with_object(REQUEST_TYPES_BACKEND_ONLY) { |i, h| i.each { |k, v| h[k] = v } }
 
+  delegate :deny, :reason, :stamped_on, :to => :first_approval
+  delegate :userid, :to => :requester, :prefix => true
   # TODO: delegate ":to => :class" and remove klass method once Rails 4 is merged
-  delegate :request_types, :task_description, :to => :klass
+  delegate :request_task_class, :request_types, :task_description, :to => :klass
   def klass
     self.class
   end
@@ -253,25 +255,14 @@ class MiqRequest < ActiveRecord::Base
     first_approval.approve(userid, reason) unless self.approved?
   end
 
-  delegate :deny, :to => :first_approval
-
   def stamped_by
     first_approval.stamper ? first_approval.stamper.userid : nil
   end
-
-  delegate :reason, :to => :first_approval
-
-  delegate :stamped_on, :to => :first_approval
 
   def approver
     first_approval.approver.try(:name)
   end
   alias_method :approver_role, :approver  # TODO: Is this needed anymore?
-
-  def requester_userid
-    self.requester.userid
-  end
-  #######
 
   def workflow_class
     klass = self.class.workflow_class
@@ -281,10 +272,6 @@ class MiqRequest < ActiveRecord::Base
 
   def self.workflow_class
     @workflow_class ||= name.underscore.chomp("_template").gsub(/_request$/, "_workflow").camelize.constantize rescue nil
-  end
-
-  def request_task_class
-    self.class.request_task_class
   end
 
   def self.request_task_class
