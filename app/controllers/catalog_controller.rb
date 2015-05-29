@@ -1666,7 +1666,7 @@ class CatalogController < ApplicationController
               add_pictures_to_sync(@record.picture.id) if @record.picture
               if @record.atomic? && need_prov_dialogs?(@record.prov_type)
                 @miq_request = MiqRequest.find_by_id(@record.service_resources[0].resource_id)
-                prov_set_show_vars
+                prov_set_show_vars if @miq_request.present?
               end
               @sb[:dialog_label]       = "No Dialog"
               @sb[:fqname]             = nil
