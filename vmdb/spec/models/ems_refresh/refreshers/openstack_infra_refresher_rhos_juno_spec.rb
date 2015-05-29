@@ -48,7 +48,7 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     VmOrTemplate.count.should                == 5
     CustomAttribute.count.should             == 0
     CustomizationSpec.count.should           == 0
-    Disk.count.should                        == 0
+    Disk.count.should                        == 5
     GuestDevice.count.should                 == 0
     Hardware.count.should                    == 5
     Lan.count.should                         == 0
@@ -122,6 +122,21 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
       :number_of_nics     => 1,
       :bios               => "seabios-1.7.5-8.el7"
     )
+
+    assert_specific_disk(@host.hardware.disks.first)
+  end
+
+  def assert_specific_disk(disk)
+    disk.should have_attributes(
+      :device_name     => 'sda',
+      :device_type     => 'disk',
+      :controller_type => 'scsi',
+      :present         => true,
+      :filename        => 'ata-QEMU_HARDDISK_QM00005',
+      :location        => nil,
+      :size            => 44,
+      :disk_type       => nil,
+      :mode            => 'persistent')
   end
 
   def assert_specific_public_template

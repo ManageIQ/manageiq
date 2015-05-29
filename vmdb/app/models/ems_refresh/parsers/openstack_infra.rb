@@ -183,7 +183,29 @@ module EmsRefresh
           # Can't get these 2 from ironic, maybe from Glance metadata, when it will be there, or image fleecing?
           :guest_os_full_name => normalize_blank_property(""),
           :guest_os           => normalize_blank_property(""),
+          :disks              => process_host_hardware_disks(extra_attributes),
         }
+      end
+
+      def process_host_hardware_disks(extra_attributes)
+        return [] if extra_attributes.nil? || (disks = extra_attributes.fetch_path('disk')).blank?
+
+        disks.keys.delete_if { |x| x.include?('{') || x == 'logical' }.map do |disk|
+          # Logical index contains number of logical disks
+          # TODO(lsmola) For now ignoring smart data, that are in format e.g. sda{cciss,1}, we need to design
+          # how to represent RAID
+          {
+            :device_name     => disk,
+            :device_type     => 'disk',
+            :controller_type => 'scsi',
+            :present         => true,
+            :filename        => disks.fetch_path(disk, 'id') || disks.fetch_path(disk, 'scsi-id'),
+            :location        => nil,
+            :size            => normalize_blank_property_num(disks.fetch_path(disk, 'size')),
+            :disk_type       => nil,
+            :mode            => 'persistent'
+          }
+        end
       end
 
       def server_address(server, key)
