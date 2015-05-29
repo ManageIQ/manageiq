@@ -143,7 +143,7 @@ function miqInitGrid(grid_name) {
   if (options['autosize']) {
     grid.enableAutoHeight(true);
     grid.enableAutoWidth(true);
-    grid.objBox.style.overflow = "hidden"; // IE fix to eliminate scroll bars on initial display
+    $(grid.objBox).css('overflow', 'hidden'); // IE fix to eliminate scroll bars on initial display
   }
 
   grid.setSizes();

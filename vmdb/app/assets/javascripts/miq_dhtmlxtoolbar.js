@@ -57,7 +57,7 @@ function miqHideToolbarButtons() {
           // Hide any items in the list that is hidden
           if (tb.getListOptionPosition(x, y) > 0 && buttons[y].hidden) {
             tb.hideListOption(x, y);
-            count += 1;
+            count++;
           }
           // Hide buttonselect button, if all items under it are hidden
           if (count == tb.getAllListOptions(x).length - 1 && tb.getPosition(x) > 0 && buttons[x].hidden) {
@@ -245,7 +245,6 @@ function miqSupportCasePrompt(tb_url) {
 
 // Handle chart context menu clicks
 function miqWidgetToolbarClick(itemId, itemValue) {
-  var i = 1;
   if (itemId == "reset") {
     if (confirm("Are you sure you want to reset this Dashboard's Widgets to the defaults?")) {
       miqAjax("/dashboard/reset_widgets");

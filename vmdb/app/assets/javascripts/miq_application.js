@@ -427,21 +427,17 @@ function miqValidateButtons(h_or_s, prefix) {
 // Convert Button image to hyperlink
 function toggleConvertButtonToLink(button, url, toggle) {
   if (toggle) {
-    if (button.hasClass('dimmed')) {
-      button.removeClass('dimmed');
-    }
-    if (button[0].parentNode.outerHTML.indexOf('<a href') == -1) {
-      button[0].outerHTML = "<a href=" + url +
-                            " title='" + button[0].getAttribute('alt') + "'>" +
-                            button[0].outerHTML +
-                            "</a>";
+    button.removeClass('dimmed');
+    if (!button.parent().is('a[href]')) {
+      button
+        .wrap($('<a/>')
+          .attr('href', url)
+          .attr('title', button.attr('alt')));
     }
   } else {
-    if (!button.hasClass('dimmed')) {
-      button.addClass('dimmed');
-    }
-    if (button[0].parentNode.outerHTML.indexOf('<a href') > -1) {
-      button[0].parentNode.outerHTML = button[0].outerHTML;
+    button.addClass('dimmed');
+    if (button.parent().is('a[href]')) {
+      button.unwrap();
     }
   }
 }
@@ -1034,18 +1030,13 @@ function miqAttachTextAreaWithLines(id) {
   el.scrollTop = ta.scrollTop;
 
   ta.focus();
-  ta.onkeydown = function () {
+  var scrollTop = function () {
     el.scrollTop = ta.scrollTop;
-  };
-  ta.onmousedown = function () {
-    el.scrollTop = ta.scrollTop;
-  };
-  ta.onmouseup = function () {
-    el.scrollTop = ta.scrollTop;
-  };
-  ta.onmousemove = function () {
-    el.scrollTop = ta.scrollTop;
-  };
+  }
+  ta.onkeydown = scrollTop;
+  ta.onmousedown = scrollTop;
+  ta.onmouseup = scrollTop;
+  ta.onmousemove = scrollTop;
 }
 
 // Initialize dashboard column jQuery sortables
@@ -1175,7 +1166,7 @@ function miqBuildExplorerView(options) {
     header: null
   }, options || {}); // If no options, pass an empty object
 
-  $(document).ready(function () {
+  $(function() {
     // On doc ready, build the layout and accordion
     // Build object for center layout unit settings
     var centerHash = {
@@ -1323,7 +1314,6 @@ function miqClickAndPop(el) {
   return false;
 }
 
-<<<<<<< HEAD
 function miq_patternfly_tabs_init(id, url) {
   $(id + ' .nav-tabs a[data-toggle="tab"]').on('click.bs.tab.data-api', function (e) {
     var currTabTarget = $(e.target).attr('href').substring(1);

@@ -423,11 +423,6 @@ function miqCheck_CU_All(cb, treename) {
     // calling _select to avoid onclick event when check all is clicked
     node._select(cb.checked);
   });
-  var tree = $("#" + treename + "box").dynatree("getTree")
-  var selectedNodes = tree.getSelectedNodes();
-  var selectedKeys = $.map(selectedNodes, function (node) {
-    return node.data.key;
-  });
   var url = check_url + '?check_all=' + cb.checked + '&tree_name=' + treename
   miqJqueryRequest(url);
   return true;
