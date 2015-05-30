@@ -21,6 +21,9 @@ db: ContainerNode
 cols:
 - name
 - ready_condition_status
+- system_distribution
+- kernel_version
+- container_runtime_version
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -32,11 +35,17 @@ include_for_find:
 col_order:
 - name
 - ready_condition_status
+- system_distribution
+- kernel_version
+- container_runtime_version
 
 # Column titles, in order
 headers:
 - Name
 - Ready
+- Operating System
+- Kernel Version
+- Runtime Version
 
 # Condition(s) string for the SQL query
 conditions:
