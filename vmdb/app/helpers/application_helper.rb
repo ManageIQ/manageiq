@@ -2874,5 +2874,10 @@ module ApplicationHelper
     role_allows(:feature => start_page, :any => true)
   end
 
+  def allowed_filter_db?(db)
+    return false if db.start_with?('Container') && !get_vmdb_config[:product][:containers]
+    true
+  end
+
   attr_reader :big_iframe
 end
