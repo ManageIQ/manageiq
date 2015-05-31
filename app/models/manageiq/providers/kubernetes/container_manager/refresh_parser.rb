@@ -128,10 +128,7 @@ module ManageIQ::Providers::Kubernetes
         }
       }
 
-      conditions = node.status.conditions
-      new_result[:container_node_conditions] = conditions.collect do |condition|
-        parse_node_condition(condition)
-      end
+      new_result[:container_conditions] = parse_conditions(node)
 
       # Establish a relationship between this node and the vm it is on (if it is in the system)
       # supported relationships: oVirt and Openstack
@@ -243,6 +240,8 @@ module ManageIQ::Providers::Kubernetes
         end
       end
 
+      new_result[:container_conditions] = parse_conditions(pod)
+
       new_result[:labels] = parse_labels(pod)
       new_result
     end
@@ -316,6 +315,20 @@ module ManageIQ::Providers::Kubernetes
         result << custom_attr
       end
       result
+    end
+
+    def parse_conditions(entity)
+      conditions = entity.status.conditions
+      conditions.to_a.collect do |condition|
+        {
+          :name                 => condition.type,
+          :status               => condition.status,
+          :last_heartbeat_time  => condition.lastHeartbeatTime,
+          :last_transition_time => condition.lastTransitionTime,
+          :reason               => condition.reason,
+          :message              => condition.message
+        }
+      end
     end
 
     def parse_container_definition(container_def, pod_id)
@@ -408,17 +421,6 @@ module ManageIQ::Providers::Kubernetes
         :name       => env_var.name,
         :value      => env_var.value,
         :field_path => env_var.valueFrom.try(:fieldRef).try(:fieldPath)
-      }
-    end
-
-    def parse_node_condition(condition)
-      {
-        :name                 => condition.type,
-        :status               => condition.status,
-        :last_heartbeat_time  => condition.lastHeartbeatTime,
-        :last_transition_time => condition.lastTransitionTime,
-        :reason               => condition.reason,
-        :message              => condition.message
       }
     end
 

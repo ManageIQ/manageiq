@@ -21,6 +21,7 @@ db: ContainerGroup
 cols:
 - name
 - ext_management_system
+- ready_condition_status
 - phase
 - restart_policy
 - dns_policy
@@ -40,6 +41,7 @@ col_order:
 - name
 - ext_management_system
 - container_project.name
+- ready_condition_status
 - phase
 - restart_policy
 - dns_policy
@@ -49,6 +51,7 @@ headers:
 - Name
 - Provider
 - Project Name
+- Ready
 - Phase
 - Restart Policy
 - DNS Policy
@@ -67,6 +70,7 @@ sortby:
 - phase
 - restart_policy
 - dns_policy
+- ready_condition_status
 
 # Group rows (y=yes,n=no,c=count)
 group: n

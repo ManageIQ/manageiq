@@ -129,6 +129,13 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     @containergroup.container_replicator.should ==
       ContainerReplicator.find_by(:name => "monitoring-heapster-controller")
     @containergroup.ext_management_system.should == @ems
+
+    # Check pod condition name is "Ready" with status "True"
+    @containergroupconditions = ContainerCondition.where(:container_entity_type => "ContainerGroup")
+    @containergroupconditions.first.should have_attributes(
+      :name   => "Ready",
+      :status => "True"
+    )
   end
 
   def assert_specific_container_node
@@ -141,11 +148,14 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       :kubernetes_kubelet_version => "v1.0.0-dirty",
       :kubernetes_proxy_version   => "v1.0.0-dirty"
     )
-    @containernode.container_node_conditions.count.should == 1
-    @containernode.container_node_conditions.first.should have_attributes(
+
+    @containernodeconditions = ContainerCondition.where(:container_entity_type => "ContainerNode")
+    @containernodeconditions.count.should be == 2
+    @containernodeconditions.first.should have_attributes(
       :name   => "Ready",
       :status => "True"
     )
+
     @containernode.computer_system.operating_system.should have_attributes(
       :distribution   => "Fedora 20 (Heisenbug)",
       :kernel_version => "3.18.9-100.fc20.x86_64"

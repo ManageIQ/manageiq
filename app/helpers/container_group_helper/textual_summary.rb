@@ -14,6 +14,18 @@ module ContainerGroupHelper::TextualSummary
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
+  def textual_group_conditions
+    labels = [_("Name"), _("Status")]
+    h = {:labels => labels}
+    h[:values] = @record.container_conditions.collect do |condition|
+      [
+        condition.name,
+        condition.status,
+      ]
+    end
+    h
+  end
+
   #
   # Items
   #
