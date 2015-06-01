@@ -476,9 +476,14 @@ class MiqRequestController < ApplicationController
     opts[:states] = PROV_STATES
     opts[:reason_text] = nil
     opts[:types] = request_types_for_dropdown
-    time_period = 30        # fetch uniq requesters from this time frame, since that's the highest time period in pull down.
-    conditions = ["created_on>=? AND created_on<=? AND type IN (?)", time_period.days.ago.utc, Time.now.utc, request_types_for_model.keys]
-    opts[:users] = MiqRequest.all_requesters(conditions)
+
+    opts[:users] = MiqRequest.where(
+      :type       => request_types_for_model.keys,
+      :created_on => (30.days.ago.utc)..(Time.now.utc)
+    ).each_with_object({}) do |r, h|
+      h[r.requester_id] = (r.requester.nil? ? "#{r.requester_name} (no longer exists)" : r.requester_name)
+    end
+
     unless is_approver
       username = session[:username]
       opts[:users] = opts[:users].value?(username) ? {opts[:users].key(username) => username} : {}

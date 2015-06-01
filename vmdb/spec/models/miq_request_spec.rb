@@ -22,36 +22,6 @@ describe MiqRequest do
     end
   end
 
-  context "Class Methods" do
-    before do
-      @requests_for_fred   = [FactoryGirl.create(:miq_request, :requester => fred), FactoryGirl.create(:miq_request, :requester => fred)]
-      @requests_for_barney = [FactoryGirl.create(:miq_request, :requester => barney)]
-    end
-
-    it "#all_requesters" do
-      expected_hash = [fred, barney].each_with_object({}) { |user, hash| hash[user.id] = user.name }
-
-      expect(MiqRequest.all_requesters).to eq(expected_hash)
-
-      expected_hash[barney.id] = "#{barney.name} (no longer exists)"
-      barney.destroy
-
-      expect(MiqRequest.all_requesters).to eq(expected_hash)
-
-      old_name = expected_hash[fred.id] = fred.name
-      fred.update_attributes(:name => "Fred Flintstone, Sr.")
-
-      expect(MiqRequest.all_requesters).to eq(expected_hash)
-
-      fred.update_attributes(:name => old_name)
-
-      expected_hash[fred.id] = "#{fred.name} (no longer exists)"
-      fred.destroy
-
-      expect(MiqRequest.all_requesters).to eq(expected_hash)
-    end
-  end
-
   context "A new request" do
     let(:event_name)   { "hello" }
     let(:host_request) { FactoryGirl.build(:miq_host_provision_request, :options => {:src_host_ids => [1]}) }

@@ -227,18 +227,6 @@ class MiqRequest < ActiveRecord::Base
     MiqApproval.new(:description => "Default Approval")
   end
 
-  def self.all_requesters(conditions = nil)
-    find(:all,
-         :conditions => conditions,
-         :select     => "requester_id, requester_name",
-         :group      => "requester_id, requester_name",
-         :include    => "requester"
-    ).inject({}) do |h, r|
-      h[r.requester_id] = (r.requester.nil? ? "#{r.requester_name} (no longer exists)" : r.requester_name)
-      h
-    end
-  end
-
   # TODO: Helper methods to support UI in legacy mode - single approval by role
   #       These should be removed once multi-approver is fully supported.
   def first_approval
