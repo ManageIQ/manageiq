@@ -89,6 +89,12 @@ Dir.chdir("/root/src/imagefactory") do
     file_name = "#{name}-#{target}-#{build_label}-#{timestamp}-#{git_checkout.commit_sha}.#{FILE_TYPE[imgfac_target]}"
     destination = DESTINATION_DIRECTORY.join(file_name)
     $log.info `mv  #{source} #{destination}`
+    $log.info "Generating image checksums"
+    Dir.chdir(DESTINATION_DIRECTORY) do
+      $log.info `/usr/bin/sha256sum * >> SHA256SUM`
+      $log.info `/usr/bin/gpg --batch --no-tty --passphrase-file /root/.gnupg/pass -b SHA256SUM`
+      FileUtils.cp("/root/.gnupg/cfme_public.key", DESTINATION_DIRECTORY)
+    end
   end
 end
 
