@@ -126,7 +126,7 @@ module ApplicationController::MiqRequestMethods
       end
       @edit[:vm_sortcol] = params[:sort_choice]
       templates = rbac_filtered_objects(@edit[:template_kls].eligible_for_provisioning).sort_by {|a| a.name.downcase}
-      self.send("build_vm_grid", templates, @edit[:vm_sortdir], @edit[:vm_sortcol])
+      build_vm_grid(templates, @edit[:vm_sortdir], @edit[:vm_sortcol])
       render :update do |page|                        # Use RJS to update the display
         page.replace("pre_prov_div", :partial=>"miq_request/pre_prov")
         page << "miqSparkle(false);"

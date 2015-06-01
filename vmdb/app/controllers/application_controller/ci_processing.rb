@@ -1113,9 +1113,9 @@ module ApplicationController::CiProcessing
         add_flash(_("No %{model} were selected for %{task}") % {:model=>ui_lookup(:tables=>request.parameters["controller"]), :task=>display_name}, :error)
       else
         if request.parameters["controller"] == "service"
-          self.send("process_services", vms, method)
+          process_services(vms, method)
         else
-          self.send("process_vms", vms, method, display_name)
+          process_vms(vms, method, display_name)
         end
       end
 
@@ -1133,9 +1133,9 @@ module ApplicationController::CiProcessing
       else
         vms.push(params[:id])
         if request.parameters["controller"] == "service"
-          self.send("process_services", vms, method) unless vms.empty?
+          process_services(vms, method) unless vms.empty?
         else
-          self.send("process_vms", vms, method, display_name) unless vms.empty?
+          process_vms(vms, method, display_name) unless vms.empty?
         end
 
         # TODO: tells callers to go back to show_list because this VM may be gone
