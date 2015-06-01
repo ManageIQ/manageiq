@@ -25,7 +25,7 @@ describe MiqApproval do
       approval.stub(:authorized?).and_return(false)
       lambda { approval.approve(approver.userid, reason) }.should raise_error("not authorized")
 
-      miq_request = FactoryGirl.create(:miq_request, :requester => user)
+      miq_request = FactoryGirl.create(:vm_migrate_request, :userid => user.userid)
       approval.miq_request = miq_request
       approval.stub(:authorized?).and_return(true)
       Timecop.freeze do
@@ -59,7 +59,7 @@ describe MiqApproval do
     approval.stub(:authorized?).and_return(false)
     lambda { approval.deny(approver.userid, reason) }.should raise_error("not authorized")
 
-    miq_request = FactoryGirl.create(:miq_request, :requester => user)
+    miq_request = FactoryGirl.create(:vm_migrate_request, :userid => user.userid)
     approval.miq_request = miq_request
     approval.stub(:authorized?).and_return(true)
     Timecop.freeze do

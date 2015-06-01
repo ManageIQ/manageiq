@@ -25,11 +25,11 @@ describe MiqRequest do
   context "A new request" do
     let(:event_name)   { "hello" }
     let(:host_request) { FactoryGirl.build(:miq_host_provision_request, :options => {:src_host_ids => [1]}) }
-    let(:request)      { FactoryGirl.create(:miq_request, :requester => fred) }
+    let(:request)      { FactoryGirl.create(:vm_migrate_request, :userid => fred.userid) }
     let(:template)     { FactoryGirl.create(:template_vmware) }
 
     it { expect(request).to be_valid }
-    describe("#request_type_display") { it { expect(request.request_type_display).to eq("Unknown") } }
+    describe("#request_type_display") { it { expect(request.request_type_display).to eq("VM Migrate") } }
     describe("#requester_userid")     { it { expect(request.requester_userid).to eq(fred.userid) } }
 
     it "should not fail when using :select" do

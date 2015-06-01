@@ -6,7 +6,7 @@ describe MiqRequestTask do
     EvmSpecHelper.create_guid_miq_server_zone
     fred          = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
     approver_role = FactoryGirl.create(:ui_task_set_approver)
-    miq_request   = FactoryGirl.create(:miq_request)
+    miq_request   = FactoryGirl.create(:miq_host_provision_request, :userid => fred.userid)
     @task         = FactoryGirl.create(:miq_request_task, :miq_request => miq_request, :type => 'MiqRequestTask')
   end
 

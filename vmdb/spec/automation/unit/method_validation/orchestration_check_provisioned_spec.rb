@@ -22,7 +22,7 @@ describe "Orchestration check_provisioned Method Validation" do
   let(:miq_request_task) do
     FactoryGirl.create(:miq_request_task,
                        :destination => service_orchestration,
-                       :miq_request => FactoryGirl.create(:miq_request),
+                       :miq_request => FactoryGirl.create(:automation_request),
                        :state       => 'active',
                        :status      => 'Ok')
   end
