@@ -3,7 +3,10 @@ require "spec_helper"
 describe EmsRefresh::Refreshers::KubernetesRefresher do
   before(:each) do
     MiqServer.stub(:my_zone).and_return("default")
-    @ems = FactoryGirl.create(:ems_kubernetes, :hostname => "10.35.0.202", :ipaddress => "10.35.0.202", :port => 6443)
+    auth = AuthToken.new(:name => "test", :auth_key => "valid-token")
+    @ems = FactoryGirl.create(:ems_kubernetes, :hostname => "10.35.0.202",
+                              :ipaddress => "10.35.0.202", :port => 6443,
+                              :authentications => [auth])
   end
 
   it "will perform a full refresh on k8s" do
@@ -16,6 +19,7 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       # All ems_ref fields and other auto generated fields aren't checked because the VCR file needs update
       # every time the api changes. Until the api stabilizes, the tests on those fields are commented out.
       assert_ems
+      assert_authentication
       assert_table_counts
       assert_specific_container
       assert_specific_container_group
@@ -39,6 +43,14 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
     @ems.should have_attributes(
       :port => "6443",
       :type => "EmsKubernetes"
+    )
+  end
+
+  def assert_authentication
+    @ems.authentication_tokens.count.should == 1
+    @token = @ems.authentication_tokens.last
+    @token.should have_attributes(
+      :auth_key => 'valid-token'
     )
   end
 
