@@ -12,6 +12,17 @@ describe ProviderForemanController do
     @configured_system = ConfiguredSystemForeman.create(:hostname                 => "test_configured_system",
                                                         :configuration_profile_id => @config_profile.id,
                                                         :configuration_manager_id => @config_mgr.id)
+    @configured_system_unprovisioned =
+      ConfiguredSystemForeman.create(:hostname                 => "configured_system_unprovisioned",
+                                     :configuration_profile_id => nil,
+                                     :configuration_manager_id => @config_mgr.id)
+
+    @provider2 = ProviderForeman.create(:name => "test2", :url => "10.8.96.103", :zone => @zone)
+    @config_mgr2 = ConfigurationManagerForeman.find_all_by_provider_id(@provider2.id).first
+    @configured_system_unprovisioned2 =
+      ConfiguredSystemForeman.create(:hostname                 => "configured_system_unprovisioned2",
+                                     :configuration_profile_id => nil,
+                                     :configuration_manager_id => @config_mgr2.id)
     sb = {}
     temp = {}
     sb[:active_tree] = :foreman_providers_tree
@@ -141,7 +152,22 @@ describe ProviderForemanController do
     before do
       right_cell_text = nil
       controller.instance_variable_set(:@right_cell_text, right_cell_text)
-      controller.stub(:process_show_list)
+      controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
+
+      controller.stub(:get_view_calculate_gtl_type)
+      controller.stub(:get_view_pages)
+      controller.stub(:build_listnav_search_list)
+      controller.stub(:load_or_clear_adv_search)
+      controller.stub(:replace_search_box)
+      controller.stub(:update_partials)
+      controller.stub(:render)
+
+      settings = {}
+      settings[:perpage] = {}
+      controller.instance_variable_set(:@settings, :per_page => {:list => 20})
+      controller.stub(:items_per_page).and_return(20)
+      controller.stub(:gtl_type).and_return("list")
+      controller.stub(:current_page).and_return(1)
       controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
     end
     it "renders right cell text for root node" do
@@ -152,9 +178,9 @@ describe ProviderForemanController do
     end
 
     it "renders right cell text for ConfigurationManagerForeman node" do
-      key = ems_key_for_provider(@provider)
-      controller.send(:x_node_set, key, :foreman_providers_tree)
-      controller.send(:get_node_info, key)
+      ems_id = ems_key_for_provider(@provider)
+      controller.instance_variable_set(:@_params, :id => ems_id)
+      controller.send(:tree_select)
       right_cell_text = controller.instance_variable_get(:@right_cell_text)
       expect(right_cell_text).to eq("Configuration Profiles under Provider \"test Configuration Manager\"")
     end
@@ -187,12 +213,37 @@ describe ProviderForemanController do
       controller.stub(:current_page).and_return(1)
       controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
     end
-    it "renders tree_select when the the node is a ConfigurationManagerForeman node" do
+    it "renders tree_select for a ConfigurationManagerForeman node that contains an unassigned profile" do
       ems_id = ems_key_for_provider(@provider)
       controller.instance_variable_set(:@_params, :id => ems_id)
       controller.send(:tree_select)
       view = controller.instance_variable_get(:@view)
-      expect(view.table.data[0].data['description']).to eq("testprofile")
+      expect(view.table.data[0].data).to include('description' => "testprofile")
+      expect(view.table.data[1]).to include('description' => _("Unassigned Profiles Group"),
+                                            'name'        => _("Unassigned Profiles Group"))
+    end
+
+    it "renders tree_select for a ConfigurationManagerForeman node that contains only an unassigned profile" do
+      ems_id = ems_key_for_provider(@provider2)
+      controller.instance_variable_set(:@_params, :id => ems_id)
+      controller.send(:tree_select)
+      view = controller.instance_variable_get(:@view)
+      expect(view.table.data[0]).to include('description' => _("Unassigned Profiles Group"),
+                                            'name'        => _("Unassigned Profiles Group"))
+    end
+
+    it "renders tree_select for an 'Unassigned Profiles Group' node for the first provider" do
+      controller.instance_variable_set(:@_params, :id => "-#{ems_id_for_provider(@provider)}-unassigned")
+      controller.send(:tree_select)
+      view = controller.instance_variable_get(:@view)
+      expect(view.table.data[0].data).to include('hostname' => "configured_system_unprovisioned")
+    end
+
+    it "renders tree_select for an 'Unassigned Profiles Group' node for the second provider" do
+      controller.instance_variable_set(:@_params, :id => "-#{ems_id_for_provider(@provider2)}-unassigned")
+      controller.send(:tree_select)
+      view = controller.instance_variable_get(:@view)
+      expect(view.table.data[0].data).to include('hostname' => "configured_system_unprovisioned2")
     end
   end
 
@@ -221,5 +272,10 @@ describe ProviderForemanController do
   def ems_key_for_provider(provider)
     ems = ExtManagementSystem.where(:provider_id => provider.id).first
     "e-" + ActiveRecord::Base.compress_id(ems.id)
+  end
+
+  def ems_id_for_provider(provider)
+    ems = ExtManagementSystem.where(:provider_id => provider.id).first
+    ems.id
   end
 end

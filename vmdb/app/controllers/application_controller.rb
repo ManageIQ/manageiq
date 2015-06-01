@@ -1116,7 +1116,7 @@ class ApplicationController < ActionController::Base
     table.data[from_idx..to_idx].each do |row|
       @id = row['id']
 
-      new_row = root.add_element('row', "id" => to_cid(row['id']))
+      new_row = root.add_element('row', "id" => list_row_id(row))
       new_row.add_element('cell').text = '0'  # Checkbox column unchecked
 
       # Generate html for the list icon
@@ -1210,7 +1210,7 @@ class ApplicationController < ActionController::Base
                 "../../../pictures/#{item.picture.basename}"
               end
             end
-    image ? image : "#{pn}#{(@listicon || view.db).underscore}.png"
+    list_row_image(pn, image, (@listicon || view.db).underscore, item.name)
   end
 
   def get_host_for_vm(vm)
@@ -2707,6 +2707,14 @@ class ApplicationController < ActionController::Base
     else
       controller_name
     end
+  end
+
+  def list_row_id(row)
+    to_cid(row['id'])
+  end
+
+  def list_row_image(image_path, image, model_image, _itemname)
+    image ? image : "#{image_path}#{model_image}.png"
   end
 
   def render_flash_not_applicable_to_model(type)

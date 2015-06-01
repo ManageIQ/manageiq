@@ -60,7 +60,7 @@ class TreeNodeBuilder
       generic_node(object.name, "vendor-#{object.image_name}.png", "#{ui_lookup(:model => prefix_model)}: #{object.name}")
     when ChargebackRate       then generic_node(object.description, "chargeback_rates.png")
     when Condition            then generic_node(object.description, "miq_condition.png")
-    when ConfigurationProfile then generic_node(object.name, "configuration_profile.png", "Configuration Profile: #{object.name}")
+    when ConfigurationProfile then configuration_profile_node(object.name, "configuration_profile.png", "Configuration Profile: #{object.name}")
     when ConfiguredSystem     then generic_node(object.hostname, "configured_system.png", "Configured System: #{object.hostname}")
     when Container            then generic_node(object.name, "container.png")
     when CustomButton         then generic_node(object.name, object.options && object.options[:button_image] ? "custom-#{object.options[:button_image]}.png" : "leaf.gif",
@@ -194,6 +194,18 @@ class TreeNodeBuilder
       :icon  => image
     }
     @node[:addClass] = "product-strikethru-node" unless enabled
+    @node[:expand] = true if options[:open_all]  # Start with all nodes open
+    tooltip(tip)
+  end
+
+  def configuration_profile_node(text, image, tip = nil)
+    text = ERB::Util.html_escape(text) unless text.html_safe?
+    title = text.split('|').first
+    @node = {
+      :key   => build_object_id,
+      :title => title,
+      :icon  => title == _("Unassigned Profiles Group") ? "folder.png" : image
+    }
     @node[:expand] = true if options[:open_all]  # Start with all nodes open
     tooltip(tip)
   end

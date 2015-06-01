@@ -2348,6 +2348,7 @@ module ApplicationHelper
     when "root" then  "provider_foreman_center_tb"
     when "e"    then  "configuration_profile_foreman_center_tb"
     when "cp"   then  configuration_profile_center_tb
+    else unassigned_configuration_profile_node(nodes)
     end
   end
 
@@ -2363,6 +2364,10 @@ module ApplicationHelper
     else
       "blank_view_tb"
     end
+  end
+
+  def unassigned_configuration_profile_node(nodes)
+    configuration_profile_center_tb if nodes[2] == "unassigned"
   end
 
   # check if back to summary button needs to be show
