@@ -1932,6 +1932,8 @@ Vmdb::Application.routes.draw do
   get '/api/*suffix'   => 'api#show',    :format => 'json'
   match '/api/*suffix' => 'api#update',  :format => 'json', :via => [:post, :put, :patch]
   match '/api/*suffix' => 'api#destroy', :format => 'json', :via => [:delete]
+  # OPTIONS requests for REST API pre-flight checks
+  match '/api/*path', :controller => 'api', :action => 'handle_options_request', :constraints => {:method => 'OPTIONS'}
 
   CONTROLLER_ACTIONS.each do |controller_name, controller_actions|
 
