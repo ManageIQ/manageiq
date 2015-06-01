@@ -152,7 +152,7 @@ class CatalogController < ApplicationController
       set_form_vars
       @edit[:new][:st_prov_type] = params[:st_prov_type] if params[:st_prov_type]
       @edit[:new][:service_type] = "atomic"
-      default_entry_point if %w(generic generic_orchestration).include?(params[:st_prov_type])
+      default_entry_point(@edit[:new][:st_prov_type]) if %w(generic generic_orchestration).include?(params[:st_prov_type])
       @edit[:rec_id] = @record ? @record.id : nil
       @tabactive = "#{@edit[:new][:current_tab_key]}_div"
     end
@@ -365,7 +365,8 @@ class CatalogController < ApplicationController
       if @edit[:new][:selected_resources].empty?
         add_flash(_("%s must be selected") % "Resource", :error)
       end
-
+      add_flash(_("%s is required") % "Provisioning Entry Point", :error) if @edit[:new][:display] &&
+                                                                             @edit[:new][:fqname].blank?
       dialog_catalog_check
 
       if @flash_array
@@ -378,6 +379,7 @@ class CatalogController < ApplicationController
       st_set_record_vars(@st)
       if @add_rsc
         if @st.save
+          set_resource_action(@st)
           flash_key = params[:button] == "save" ? _("%{model} \"%{name}\" was saved") :
                                                   _("%{model} \"%{name}\" was added")
           add_flash(flash_key % {:model => "Catalog Bundle", :name => @edit[:new][:name]})
@@ -415,6 +417,7 @@ class CatalogController < ApplicationController
   def st_form_field_changed
     return unless load_edit("st_edit__#{params[:id]}","replace_cell__explorer")
     @group_idx = false
+    default_entry_point("generic") if params[:display]
     st_get_form_vars
     changed = (@edit[:new] != @edit[:current])
     build_ae_tree(:automate, :automate_tree) # Build Catalog Items tree
@@ -834,6 +837,8 @@ class CatalogController < ApplicationController
       # check for service template required fields before creating a request
       add_flash(_("%s is required") % "Name", :error)
     end
+    add_flash(_("%s is required") % "Provisioning Entry Point", :error) if @edit[:new][:display] &&
+                                                                           @edit[:new][:fqname].blank?
 
     # Check for a Dialog if Display in Catalog is selected
     dialog_catalog_check
@@ -892,14 +897,13 @@ class CatalogController < ApplicationController
     add_orchestration_template_vars(st) if st.kind_of?(ServiceTemplateOrchestration)
     st.service_type = "atomic"
     st.prov_type = @edit[:new][:st_prov_type]
-    set_resource_action(st) if params[:button] == "save"
     if request
       st.remove_all_resources
       st.add_resource(request) if need_prov_dialogs?(@edit[:new][:st_prov_type])
     end
 
     if st.save
-      set_resource_action(st) if params[:button] == "add"
+      set_resource_action(st)
       flash_key = params[:button] == "save" ? _("%{model} \"%{name}\" was saved") : _("%{model} \"%{name}\" was added")
       add_flash(flash_key % {:model => ui_lookup(:model => "ServiceTemplate"), :name => @edit[:new][:name]})
       @changed = session[:changed] = false
@@ -1248,7 +1252,6 @@ class CatalogController < ApplicationController
     end
     st.prov_type = @edit[:new][:st_prov_type]
     st.remove_all_resources
-    set_resource_action(st)
     @add_rsc = true
     if !@edit[:new][:selected_resources].empty?
       @edit[:new][:selected_resources].each do |r|
@@ -1412,11 +1415,11 @@ class CatalogController < ApplicationController
     end
   end
 
-  def default_entry_point
+  def default_entry_point(prov_type)
     new = @edit[:new]
-    new[:fqname] = class_service_template(@edit[:new][:st_prov_type]).default_provisioning_entry_point
+    new[:fqname] = class_service_template(prov_type).default_provisioning_entry_point
     new[:retire_fqname] =
-      class_service_template(@edit[:new][:st_prov_type]).default_retirement_entry_point if params[:st_prov_type] == "generic"
+      class_service_template(prov_type).default_retirement_entry_point if prov_type == "generic"
   end
 
   def get_form_vars
