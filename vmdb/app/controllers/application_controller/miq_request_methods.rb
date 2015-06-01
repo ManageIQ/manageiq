@@ -120,7 +120,7 @@ module ApplicationController::MiqRequestMethods
     elsif params[:sort_choice]
       @edit = session[:edit]
       if @edit[:vm_sortcol] == params[:sort_choice]                       # if same column was selected
-        @edit[:vm_sortdir] = @edit[:vm_sortdir] == "ASC" ? "DESC" : "ASC"     #   switch around ascending/descending
+        @edit[:vm_sortdir] = flip_sort_direction(@edit[:vm_sortdir])
       else
         @edit[:vm_sortdir] = "ASC"
       end
@@ -506,7 +506,7 @@ module ApplicationController::MiqRequestMethods
     sortcol = "#{what}_sortcol".to_sym
     unless params[:sort_choice].nil?
       if @edit[sortcol] == params[:sort_choice]                       # if same column was selected
-        @edit[sortdir] = @edit[sortdir] == "ASC" ? "DESC" : "ASC"     #   switch around ascending/descending
+        @edit[sortdir] = flip_sort_direction(@edit[sortdir])
       else
         @edit[sortdir] = "ASC"
       end
