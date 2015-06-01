@@ -14,6 +14,20 @@ module ContainerNodeHelper::TextualSummary
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
+  def textual_group_conditions
+    labels = [_("Name"), _("Status"), _("Last Transition Time"), _("Reason")]
+    h = {:labels => labels}
+    h[:values] = @record.container_node_conditions.collect do |condition|
+      [
+        condition.name,
+        condition.status,
+        (condition.last_transition_time || ""),
+        (condition.reason || "")
+      ]
+    end
+    h
+  end
+
   #
   # Items
   #
