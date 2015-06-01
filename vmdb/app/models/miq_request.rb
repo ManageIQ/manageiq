@@ -19,7 +19,7 @@ class MiqRequest < ActiveRecord::Base
   validates_inclusion_of :approval_state, :in => %w(pending_approval approved denied), :message => "should be 'pending_approval', 'approved' or 'denied'"
   validates_inclusion_of :status,         :in => %w(Ok Warn Error Timeout Denied)
 
-  validate :validate_request_type
+  validate :validate_class, :validate_request_type
 
   include ReportableMixin
 
@@ -460,6 +460,10 @@ class MiqRequest < ActiveRecord::Base
   private
 
   def default_description
+  end
+
+  def validate_class
+    errors.add(:type, "should be a descendant of MiqRequest") if instance_of?(MiqRequest)
   end
 
   def validate_request_type
