@@ -240,7 +240,7 @@ module EmsCommon
       end
 
       if @edit[:new][:emstype] == "scvmm" && @edit[:new][:security_protocol] == "kerberos" && @edit[:new][:realm].blank?
-        add_flash(I18n.t("flash.edit.field_required", :field=>"Realm"), :error)
+        add_flash(_("%s is required") % "Realm", :error)
       end
 
       if !@flash_array
@@ -617,7 +617,7 @@ module EmsCommon
   def valid_record?(ems)
     @edit[:errors] = Array.new
     if ems.emstype == "scvmm" && ems.security_protocol == "kerberos" && ems.realm.blank?
-      add_flash(I18n.t("flash.edit.field_required", :field=>"Realm"), :error)
+      add_flash(_("%s is required") % "Realm", :error)
     end
     if !ems.authentication_password.blank? && ems.authentication_userid.blank?
       @edit[:errors].push(_("Username must be entered if Password is entered"))

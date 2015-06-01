@@ -73,7 +73,8 @@ module OpsController::Settings::Schedules
         end
       else
         AuditEvent.success(build_saved_audit_hash(old_schedule_attributes, schedule, params[:button] == "add"))
-        add_flash(I18n.t("flash.edit.saved", :model => ui_lookup(:model => "MiqSchedule"), :name => schedule.name))
+        add_flash(_("%{model} \"%{name}\" was saved") %
+                      {:model => ui_lookup(:model => "MiqSchedule"), :name => schedule.name})
         if params[:button] == "add"
           self.x_node  = "xx-msc"
           schedules_list
