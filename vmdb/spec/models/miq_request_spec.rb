@@ -30,7 +30,6 @@ describe MiqRequest do
 
     it { expect(request).to be_valid }
     describe("#request_type_display") { it { expect(request.request_type_display).to eq("VM Migrate") } }
-    describe("#requester_userid")     { it { expect(request.requester_userid).to eq(fred.userid) } }
 
     it "should not fail when using :select" do
       expect { MiqRequest.find(:all, :select => "requester_name") }.to_not raise_error
