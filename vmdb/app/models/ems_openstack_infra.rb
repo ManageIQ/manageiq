@@ -2,6 +2,7 @@ class EmsOpenstackInfra < EmsInfra
   include EmsOpenstackMixin
 
   before_save :ensure_parent_provider
+  before_destroy :destroy_parent_provider
 
   has_many :orchestration_stacks, :foreign_key => :ems_id, :dependent => :destroy
 
@@ -27,6 +28,10 @@ class EmsOpenstackInfra < EmsInfra
     else
       self.provider = ProviderOpenstack.create!(attributes)
     end
+  end
+
+  def destroy_parent_provider
+    provider.try(:destroy)
   end
 
   def self.ems_type
