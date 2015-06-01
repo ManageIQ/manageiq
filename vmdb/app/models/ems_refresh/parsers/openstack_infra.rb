@@ -153,6 +153,8 @@ module EmsRefresh
         host_for_ssh = HostOpenstackInfra.new(:hostname => hostname)
         host_for_ssh.ext_management_system = @ems
 
+        return unless host_for_ssh.refreshable_via_ssh?
+
         begin
           host_for_ssh.connect_ssh do |ssu|
             parsed_lscpu = parse_lscpu(ssu.shell_exec("lscpu"))

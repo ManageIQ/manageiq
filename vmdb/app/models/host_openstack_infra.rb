@@ -105,4 +105,8 @@ class HostOpenstackInfra < Host
     $log.log_backtrace(err)
     raise err
   end
+
+  def refreshable_via_ssh?
+    self.auth_user_keypair(:ssh_keypair).try(:last)
+  end
 end

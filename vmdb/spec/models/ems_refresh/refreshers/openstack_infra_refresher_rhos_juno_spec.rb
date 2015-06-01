@@ -13,6 +13,7 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     mock_object.stub(:shell_exec).with("lscpu").and_return("Architecture:          x86_64\nCPU op-mode(s):        32-bit, 64-bit\nByte Order:            Little Endian\nCPU(s):                1\nOn-line CPU(s) list:   0\nThread(s) per core:    1\nCore(s) per socket:    1\nSocket(s):             1\nNUMA node(s):          1\nVendor ID:             GenuineIntel\nCPU family:            6\nModel:                 13\nModel name:            QEMU Virtual CPU version 2.1.2\nStepping:              3\nCPU MHz:               2399.998\nBogoMIPS:              4799.99\nHypervisor vendor:     KVM\nVirtualization type:   full\nL1d cache:             32K\nL1i cache:             32K\nL2 cache:              4096K\nNUMA node0 CPU(s):     0\n")
     mock_object.stub(:shell_exec).with("dmidecode | grep -A8 'System Information'").and_return("System Information\n\tManufacturer: Red Hat\n\tProduct Name: KVM\n\tVersion: RHEL 7.1.0 PC (i440FX + PIIX, 1996)\n\tSerial Number: Not Specified\n\tUUID: 32B5BB93-364E-4D7D-A77C-CCBA193DB50B\n\tWake-up Type: Power Switch\n\tSKU Number: Not Specified\n\tFamily: Red Hat Enterprise Linux\n")
     HostOpenstackInfra.any_instance.stub(:connect_ssh).and_yield(mock_object)
+    HostOpenstackInfra.any_instance.stub(:refreshable_via_ssh?).and_return(true)
   end
 
   it "will perform a full refresh" do
