@@ -52,7 +52,18 @@ class EmsInfraController < ApplicationController
           scale_parameters_formatted << {"name" => p.name, "value" => scale_parameters[p.name]}
         end
       end
-      if scale_parameters_formatted.length > 0
+
+      begin
+        # Check if stack is ready to be updated
+        update_ready = @stack.update_ready?
+      rescue => ex
+        log_and_flash_message(_("Unable to initiate scaling, obtaining of status failed: #{ex}"))
+        return
+      end
+
+      if !update_ready
+        add_flash(_("Provider is not ready to be scaled, another operation is in progress."), :error)
+      elsif scale_parameters_formatted.length > 0
         # A value was changed
         begin
           @stack.raw_update_stack(:parameters => scale_parameters_formatted)
