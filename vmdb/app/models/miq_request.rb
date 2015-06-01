@@ -227,12 +227,6 @@ class MiqRequest < ActiveRecord::Base
     MiqApproval.new(:description => "Default Approval")
   end
 
-  def self.requests_for_userid(userid)
-    requester = User.find_by_userid(userid)
-    return [] unless requester
-    find_all_by_requester_id(requester.id)
-  end
-
   def self.all_requesters(conditions = nil)
     find(:all,
          :conditions => conditions,

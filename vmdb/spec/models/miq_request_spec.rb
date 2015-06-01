@@ -28,11 +28,6 @@ describe MiqRequest do
       @requests_for_barney = [FactoryGirl.create(:miq_request, :requester => barney)]
     end
 
-    it "#requests_for_userid" do
-      expect(MiqRequest.requests_for_userid(barney.userid)).to match_array(@requests_for_barney)
-      expect(MiqRequest.requests_for_userid(fred.userid)).to   match_array(@requests_for_fred)
-    end
-
     it "#all_requesters" do
       expected_hash = [fred, barney].each_with_object({}) { |user, hash| hash[user.id] = user.name }
 
