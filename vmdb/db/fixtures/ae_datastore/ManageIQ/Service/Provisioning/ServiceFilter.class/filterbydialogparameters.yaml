@@ -4,9 +4,9 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: ".missing"
+    name: FilterByDialogParameters
     inherits: 
     description: 
   fields:
-  - service_filter:
-      value: "#/Service/Provisioning/ServiceFilter/FilterByDialogParameters"
+  - filter_method:
+      value: FilterByDialogParameters

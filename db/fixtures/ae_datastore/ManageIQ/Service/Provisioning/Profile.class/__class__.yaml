@@ -31,3 +31,43 @@ object:
       on_error: 
       max_retries: 
       max_time: 
+  - field:
+      aetype: attribute
+      name: include_service
+      display_name: 
+      datatype: boolean
+      priority: 2
+      owner: 
+      default_value: 'true'
+      substitute: true
+      message: include_service
+      visibility: 
+      collect: "/include_service = include_service"
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: relationship
+      name: service_filter
+      display_name: 
+      datatype: string
+      priority: 3
+      owner: 
+      default_value: 
+      substitute: true
+      message: include_service
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
