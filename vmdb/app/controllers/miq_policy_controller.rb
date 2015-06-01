@@ -384,12 +384,12 @@ class MiqPolicyController < ApplicationController
 
   def iterate_status(items = nil, result = [], parent_id = nil, indent = nil)
     items.each do |item|
-      entry = { "id"     => result.count.to_s,
-                "title"  => "<b>#{I18n.t("model_name.#{item[:class].underscore}")}:</b>" +
-                             " #{item[:description]}",
-                "parent" => parent_id,
-                "status_icon" => get_status_icon(item[:status]),
-                "indent" => (indent.nil? ? 0 : indent + 1)}
+      entry = {"id"          => result.count.to_s,
+               "title"       => "<b>#{Dictionary.gettext(item[:class].underscore, :type => :model_name, :notfound => :titleize)}:</b>" +
+                              " #{item[:description]}",
+               "parent"      => parent_id,
+               "status_icon" => get_status_icon(item[:status]),
+               "indent"      => (indent.nil? ? 0 : indent + 1)}
 
       entry["_collapsed"] = false if item[:children]
 
