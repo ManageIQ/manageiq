@@ -7,12 +7,7 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     @ems = FactoryGirl.create(:ems_openstack_infra, :zone => zone, :hostname => "192.0.2.1",
                               :ipaddress => "192.0.2.1", :port => 5000)
     @ems.update_authentication(
-        :default => {:userid => "admin", :password => "a280e99820b2e01a42acc9535c81234842b45471"})
-
-    mock_object = double
-    mock_object.stub(:shell_exec).with("lscpu").and_return("Architecture:          x86_64\nCPU op-mode(s):        32-bit, 64-bit\nByte Order:            Little Endian\nCPU(s):                1\nOn-line CPU(s) list:   0\nThread(s) per core:    1\nCore(s) per socket:    1\nSocket(s):             1\nNUMA node(s):          1\nVendor ID:             GenuineIntel\nCPU family:            6\nModel:                 13\nModel name:            QEMU Virtual CPU version 2.1.2\nStepping:              3\nCPU MHz:               2399.998\nBogoMIPS:              4799.99\nHypervisor vendor:     KVM\nVirtualization type:   full\nL1d cache:             32K\nL1i cache:             32K\nL2 cache:              4096K\nNUMA node0 CPU(s):     0\n")
-    mock_object.stub(:shell_exec).with("dmidecode | grep -A8 'System Information'").and_return("System Information\n\tManufacturer: Red Hat\n\tProduct Name: KVM\n\tVersion: RHEL 7.1.0 PC (i440FX + PIIX, 1996)\n\tSerial Number: Not Specified\n\tUUID: 32B5BB93-364E-4D7D-A77C-CCBA193DB50B\n\tWake-up Type: Power Switch\n\tSKU Number: Not Specified\n\tFamily: Red Hat Enterprise Linux\n")
-    HostOpenstackInfra.any_instance.stub(:connect_ssh).and_yield(mock_object)
+        :default => {:userid => "admin", :password => "c9c9a1201fdf9fb217bff3a2f4e3fb89f589f355"})
   end
 
   it "will perform a full refresh" do
@@ -42,30 +37,30 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     ExtManagementSystem.count.should         == 1
     EmsFolder.count.should                   == 0 # HACK: Folder structure for UI a la VMware
     EmsCluster.count.should                  == 2
-    Host.count.should                        == 4
+    Host.count.should                        == 5
     OrchestrationStack.count.should          == 1
-    OrchestrationStackParameter.count.should == 130
-    OrchestrationStackResource.count.should  == 62
+    OrchestrationStackParameter.count.should == 168
+    OrchestrationStackResource.count.should  == 88
     OrchestrationStackOutput.count.should    == 1
     OrchestrationTemplate.count.should       == 1
     ResourcePool.count.should                == 0
     Vm.count.should                          == 0
-    VmOrTemplate.count.should                == 16
+    VmOrTemplate.count.should                == 5
     CustomAttribute.count.should             == 0
     CustomizationSpec.count.should           == 0
-    Disk.count.should                        == 0
+    Disk.count.should                        == 5
     GuestDevice.count.should                 == 0
-    Hardware.count.should                    == 4
+    Hardware.count.should                    == 5
     Lan.count.should                         == 0
     MiqScsiLun.count.should                  == 0
     MiqScsiTarget.count.should               == 0
     Network.count.should                     == 0
-    OperatingSystem.count.should             == 4
+    OperatingSystem.count.should             == 5
     Snapshot.count.should                    == 0
     Switch.count.should                      == 0
     SystemService.count.should               == 0
     Relationship.count.should                == 0
-    MiqQueue.count.should                    == 19
+    MiqQueue.count.should                    == 8
     Storage.count.should                     == 0
   end
 
@@ -79,11 +74,11 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     @ems.ems_clusters.size.should         == 2
     @ems.resource_pools.size.should       == 0
     @ems.storages.size.should             == 0
-    @ems.hosts.size.should                == 4
+    @ems.hosts.size.should                == 5
     @ems.orchestration_stacks.size.should == 1
-    @ems.vms_and_templates.size.should    == 16
+    @ems.vms_and_templates.size.should    == 5
     @ems.vms.size.should                  == 0
-    @ems.miq_templates.size.should        == 16
+    @ems.miq_templates.size.should        == 5
     @ems.customization_specs.size.should  == 0
   end
 
@@ -98,11 +93,11 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     @host.should have_attributes(
       :ipmi_address     => nil,
       :vmm_vendor       => "RedHat",
-      :vmm_version      => "RHEL 7.1.0 PC (i440FX + PIIX, 1996)",
+      :vmm_version      => nil,
       :vmm_product      => "rhel (No hypervisor, Host Type is Controller)",
       :power_state      => "on",
       :connection_state => "connected",
-      :service_tag      => "Not Specified"
+      :service_tag      => nil,
     )
 
     @host.operating_system.should have_attributes(
@@ -110,8 +105,8 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     )
 
     @host.hardware.should have_attributes(
-      :cpu_speed          => 2399,
-      :cpu_type           => "QEMU Virtual CPU version 2.1.2",
+      :cpu_speed          => 2000,
+      :cpu_type           => "RHEL 7.1.0 PC (i440FX + PIIX, 1996)",
       :manufacturer       => "Red Hat",
       :model              => "KVM",
       :memory_cpu         => 4096,  # MB
@@ -120,15 +115,32 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
       :numvcpus           => 1,
       :logical_cpus       => 1,
       :cores_per_socket   => 1,
-      :guest_os           => "Red Hat Enterprise Linux",
-      :guest_os_full_name => "RHEL 7.1.0 PC (i440FX + PIIX, 1996)",
+      :guest_os           => nil,
+      :guest_os_full_name => nil,
       :cpu_usage          => nil,
       :memory_usage       => nil,
+      :number_of_nics     => 1,
+      :bios               => "seabios-1.7.5-8.el7"
     )
+
+    assert_specific_disk(@host.hardware.disks.first)
+  end
+
+  def assert_specific_disk(disk)
+    disk.should have_attributes(
+      :device_name     => 'sda',
+      :device_type     => 'disk',
+      :controller_type => 'scsi',
+      :present         => true,
+      :filename        => 'ata-QEMU_HARDDISK_QM00005',
+      :location        => nil,
+      :size            => 44,
+      :disk_type       => nil,
+      :mode            => 'persistent')
   end
 
   def assert_specific_public_template
-    assert_specific_template("overcloud-control", true)
+    assert_specific_template("overcloud-full-vmlinuz", true)
   end
 
   def assert_specific_template(name, is_public = false)
