@@ -23,16 +23,8 @@ class DialogFieldSortedItem < DialogField
 
   # Sort values before sending back
   def values
-    sort_field = self.sort_by
     values_data = raw_values
-    return values_data if sort_field == :none
-
-    value_position = sort_field     == :value    ? :first : :last
-    value_modifier = self.data_type == "integer" ? :to_i  : :to_s
-
-    values_data = values_data.sort_by {|d| d.send(value_position).send(value_modifier)}
-    return values_data.reverse! if sort_order == :descending
-    values_data
+    sort_data(values_data)
   end
 
   def get_default_value
@@ -55,5 +47,18 @@ class DialogFieldSortedItem < DialogField
 
     result = automate_hash["values"].to_a
     result.blank? ? initial_values : result
+  end
+
+  private
+
+  def sort_data(data_to_sort)
+    return data_to_sort if sort_by == :none
+
+    value_position = sort_by   == :value    ? :first : :last
+    value_modifier = data_type == "integer" ? :to_i  : :to_s
+
+    data_to_sort = data_to_sort.sort_by { |d| d.send(value_position).send(value_modifier) }
+    return data_to_sort.reverse! if sort_order == :descending
+    data_to_sort
   end
 end
