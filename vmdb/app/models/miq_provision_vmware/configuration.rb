@@ -12,5 +12,4 @@ module MiqProvisionVmware::Configuration
       self.destination.send(k) != self.options[k]
     end
   end
-
 end

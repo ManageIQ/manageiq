@@ -10,14 +10,14 @@ describe MiqProvisionOpenstack::Configuration do
       @net2     = FactoryGirl.create(:cloud_network)
 
       @task = FactoryGirl.create(:miq_provision_openstack,
-        :source      => @template,
-        :destination => @vm,
-        :state       => 'pending',
-        :status      => 'Ok',
-        :options     => {
-          :src_vm_id     => @template.id,
-          :cloud_network => [@net1.id, @net1.name]
-        }
+                                 :source      => @template,
+                                 :destination => @vm,
+                                 :state       => 'pending',
+                                 :status      => 'Ok',
+                                 :options     => {
+                                   :src_vm_id     => @template.id,
+                                   :cloud_network => [@net1.id, @net1.name]
+                                 }
       )
       @task.stub(:miq_request => double("MiqRequest").as_null_object)
     end

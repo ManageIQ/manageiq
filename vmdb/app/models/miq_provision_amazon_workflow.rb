@@ -1,5 +1,4 @@
 class MiqProvisionAmazonWorkflow < MiqProvisionCloudWorkflow
-
   def allowed_instance_types(options={})
     source = load_ar_obj(get_source_vm)
     ems = source.try(:ext_management_system)
@@ -22,9 +21,9 @@ class MiqProvisionAmazonWorkflow < MiqProvisionCloudWorkflow
     return {} if src[:ems].nil?
 
     security_groups = if src[:cloud_network]
-      load_ar_obj(src[:cloud_network]).security_groups
-    else
-      load_ar_obj(src[:ems]).security_groups.non_cloud_network
+                        load_ar_obj(src[:cloud_network]).security_groups
+                      else
+                        load_ar_obj(src[:ems]).security_groups.non_cloud_network
     end
 
     security_groups.each_with_object({}) { |sg, hash| hash[sg.id] = display_name_for_name_description(sg) }
@@ -54,7 +53,7 @@ class MiqProvisionAmazonWorkflow < MiqProvisionCloudWorkflow
   private
 
   def dialog_name_from_automate(message = 'get_dialog_name')
-    super(message, { 'platform' => 'amazon' })
+    super(message, {'platform' => 'amazon'})
   end
 
   def self.allowed_templates_vendor

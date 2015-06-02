@@ -36,7 +36,7 @@ module MiqProvisionVmware::Configuration::Network
       $log.info("#{log_header} vlan: #{vlan.inspect}")
       unless vlan.nil?
         self.options[:networks] = [] << net = {:network => vlan, :mac_address => get_option_last(:mac_address)}
-        if vlan[0,4] == 'dvs_'
+        if vlan[0, 4] == 'dvs_'
           # Remove the "dvs_" prefix on the name
           net[:network] = vlan[4..-1]
           net[:is_dvs]  = true
@@ -84,12 +84,11 @@ module MiqProvisionVmware::Configuration::Network
 
         vdcs.device.backing = VimHash.new('VirtualEthernetCardDistributedVirtualPortBackingInfo') do |vecdvpbi|
           vecdvpbi.port = VimHash.new('DistributedVirtualSwitchPortConnection') do |dvspc|
-
             #
             # Get the DVS info for a given host.
             #
             dvs = vim.queryDvsConfigTarget(vim.sic.dvSwitchManager, dest_host.ems_ref_obj, nil)
-            dpg = vim.applyFilter(dvs.distributedVirtualPortgroup, 'uplinkPortgroup' => 'false').detect {|nupg| URI.decode(nupg.portgroupName) == network[:network]}
+            dpg = vim.applyFilter(dvs.distributedVirtualPortgroup, 'uplinkPortgroup' => 'false').detect { |nupg| URI.decode(nupg.portgroupName) == network[:network] }
 
             raise MiqException::MiqProvisionError, "Port group [#{network[:network]}] is not available on target host [#{dest_host.name}]" if dpg.nil?
             $log.info("#{log_header} portgroupName: #{dpg.portgroupName}, portgroupKey: #{dpg.portgroupKey}, switchUuid: #{dpg.switchUuid}")
@@ -138,7 +137,7 @@ module MiqProvisionVmware::Configuration::Network
   def build_config_spec_delete_existing_vlan(vmcs, net_device)
     log_header = "MIQ(#{self.class.name}.build_config_spec_delete_existing_vlan)"
     add_device_config_spec(vmcs, VirtualDeviceConfigSpecOperation::Remove) do |vdcs|
-      $log.info "#{log_header} Deleting network device with Device Name:<#{net_device.fetch_path('deviceInfo','label')}>"
+      $log.info "#{log_header} Deleting network device with Device Name:<#{net_device.fetch_path('deviceInfo', 'label')}>"
       vdcs.device    = net_device
     end
   end
@@ -149,7 +148,7 @@ module MiqProvisionVmware::Configuration::Network
     end
 
     devs = inventory_hash.fetch_path("config", "hardware", "device") || []
-    devs.select {|d| d.has_key?('macAddress')}.sort_by {|d| d['unitNumber']}
+    devs.select { |d| d.has_key?('macAddress') }.sort_by { |d| d['unitNumber'] }
   end
 
   def get_network_device(vimVm, vmcs, vim = nil, vlan = nil)
@@ -158,7 +157,7 @@ module MiqProvisionVmware::Configuration::Network
     unless nic.nil?
       # if passed a vlan, validate that the target host supports it.
       unless vlan.nil?
-        raise MiqException::MiqProvisionError, "vLan [#{vlan}] is not available on target host [#{dest_host.name}]" unless dest_host.lans.any? {|l| l.name == vlan}
+        raise MiqException::MiqProvisionError, "vLan [#{vlan}] is not available on target host [#{dest_host.name}]" unless dest_host.lans.any? { |l| l.name == vlan }
       end
 
       vnicDev = vimVm.devicesByFilter('deviceInfo.label' => nic.device_name).first
@@ -172,5 +171,4 @@ module MiqProvisionVmware::Configuration::Network
       end
     end
   end
-
 end

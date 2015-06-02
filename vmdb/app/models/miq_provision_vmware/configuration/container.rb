@@ -27,11 +27,11 @@ module MiqProvisionVmware::Configuration::Container
 
         # For VMware you need to set the total number of CPUs and the cores per socket.
         numCpus = if cores.nil?
-          sockets
-        else
-          cores = cores.to_i
-          cores = 1 if cores < 1
-          sockets * cores
+                    sockets
+                  else
+                    cores = cores.to_i
+                    cores = 1 if cores < 1
+                    sockets * cores
         end
         set_spec_option(vmcs, :numCPUs, nil, nil, :to_i, numCpus)
 
@@ -65,7 +65,7 @@ module MiqProvisionVmware::Configuration::Container
     vm_notes
   end
 
-  def set_spec_option(obj, property, key, default_value=nil, modifier=nil, override_value=nil)
+  def set_spec_option(obj, property, key, default_value = nil, modifier = nil, override_value = nil)
     log_header = "MiqProvision.set_spec_option"
     if key.nil?
       value = get_option(nil, override_value)
@@ -75,7 +75,7 @@ module MiqProvisionVmware::Configuration::Container
     value = default_value if value.nil?
     unless value.nil?
       # Modifier is a method like :to_s or :to_i
-      value = value.to_s if [true,false].include?(value)
+      value = value.to_s if [true, false].include?(value)
       value = value.send(modifier) unless modifier.nil?
       $log.info "#{log_header} #{property} was set to #{value} (#{value.class})"
       obj.send("#{property}=", value)
@@ -128,5 +128,4 @@ module MiqProvisionVmware::Configuration::Container
     self.dumpObj(config_spec, "#{log_header} Post-create Config spec: ", $log, :info)
     vm.spec_reconfigure(config_spec)
   end
-
 end

@@ -21,5 +21,4 @@ module MiqProvisionCloud::Cloning
 
     clone_options
   end
-
 end

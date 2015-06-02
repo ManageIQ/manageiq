@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe MiqProvisionRedhatWorkflow do
-
   before do
     MiqRegion.seed
   end
@@ -113,5 +112,4 @@ describe MiqProvisionRedhatWorkflow do
       end
     end
   end
-
 end

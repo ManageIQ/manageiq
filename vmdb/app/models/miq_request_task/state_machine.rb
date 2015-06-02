@@ -46,7 +46,6 @@ module MiqRequestTask::StateMachine
         self.phase_context[:exception_class]     = err.class.name
         self.phase_context[:exception_message]   = err.message
         self.phase_context[:exception_backtrace] = err.backtrace
-
         self.phase_context[:error_phase] = phase
         signal :provision_error
       end
@@ -83,7 +82,7 @@ module MiqRequestTask::StateMachine
       :zone         => my_zone,
       :role         => my_role,
       :task_id      => my_task_id,
-      :miq_callback => { :class_name => self.class.name, :instance_id => self.id, :method_name => :execute_callback }
+      :miq_callback => {:class_name => self.class.name, :instance_id => self.id, :method_name => :execute_callback}
     )
   end
 

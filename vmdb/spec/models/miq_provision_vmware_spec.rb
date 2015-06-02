@@ -5,16 +5,16 @@ describe MiqProvisionVmware do
     before(:each) do
       @os = OperatingSystem.new(:product_name => 'Microsoft Windows')
       User.any_instance.stub(:role).and_return("admin")
-      @user        = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
-      @approver    = FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'approver')
+      @user     = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
+      @approver = FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'approver')
       UiTaskSet.stub(:find_by_name).and_return(@approver)
       @target_vm_name = 'clone test'
       @options = {
-        :pass => 1,
-        :vm_name => @target_vm_name,
+        :pass          => 1,
+        :vm_name       => @target_vm_name,
         :number_of_vms => 1,
-        :cpu_limit => -1,
-        :cpu_reserve => 0
+        :cpu_limit     => -1,
+        :cpu_reserve   => 0
       }
     end
 
@@ -22,10 +22,10 @@ describe MiqProvisionVmware do
       before(:each) do
         @ems         = FactoryGirl.create(:ems_vmware_with_authentication)
         @vm_template = FactoryGirl.create(:template_vmware, :name => "template1", :ext_management_system => @ems, :operating_system => @os, :cpu_limit => -1, :cpu_reserve => 0)
-        @vm          = FactoryGirl.create(:vm_vmware, :name => "vm1",       :location => "abc/def.vmx")
-        @pr       = FactoryGirl.create(:miq_provision_request, :userid => @user.userid, :src_vm_id => @vm_template.id )
+        @vm          = FactoryGirl.create(:vm_vmware, :name => "vm1", :location => "abc/def.vmx")
+        @pr          = FactoryGirl.create(:miq_provision_request, :userid => @user.userid, :src_vm_id => @vm_template.id)
         @options[:src_vm_id] = [@vm_template.id, @vm_template.name]
-        @vm_prov = FactoryGirl.create(:miq_provision_vmware, :userid => @user.userid, :miq_request => @pr, :source => @vm_template, :request_type => 'template', :state => 'pending', :status => 'Ok', :options => @options )
+        @vm_prov = FactoryGirl.create(:miq_provision_vmware, :userid => @user.userid, :miq_request => @pr, :source => @vm_template, :request_type => 'template', :state => 'pending', :status => 'Ok', :options => @options)
       end
 
       it "#workflow" do
@@ -65,8 +65,8 @@ describe MiqProvisionVmware do
       end
 
       it "should delete unneeded network cards" do
-        requested_networks = [{:network=>"Build", :devicetype=>"VirtualE1000"}, {:network=>"Enterprise", :devicetype=>"VirtualE1000"}]
-        template_networks  = [{"connectable"=>{"startConnected"=>"true"}, "unitNumber"=>"7", "controllerKey"=>"100", "addressType"=>"assigned", "macAddress"=>"00:50:56:af:00:50", "deviceInfo"=>{"label"=>"Network adapter 1", "summary"=>"VM Network"}, "backing"=>{"deviceName"=>"VM Network", "network"=>"network-658"}, "key"=>"4000"}]
+        requested_networks = [{:network => "Build", :devicetype => "VirtualE1000"}, {:network => "Enterprise", :devicetype => "VirtualE1000"}]
+        template_networks  = [{"connectable" => {"startConnected" => "true"}, "unitNumber" => "7", "controllerKey" => "100", "addressType" => "assigned", "macAddress" => "00:50:56:af:00:50", "deviceInfo" => {"label" => "Network adapter 1", "summary" => "VM Network"}, "backing" => {"deviceName" => "VM Network", "network" => "network-658"}, "key" => "4000"}]
 
         @vm_prov.stub(:normalize_network_adapter_settings).and_return(requested_networks)
         @vm_prov.stub(:get_network_adapters).and_return(template_networks)
@@ -127,7 +127,6 @@ describe MiqProvisionVmware do
           @ems.should_receive(:reset_vim_cache).once
           @vm_prov.signal :autostart_destination
         end
-
       end
     end
   end

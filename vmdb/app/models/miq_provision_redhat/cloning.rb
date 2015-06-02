@@ -27,10 +27,10 @@ module MiqProvisionRedhat::Cloning
     raise MiqException::MiqProvisionError, "A VM with name: [#{dest_name}] already exists" if self.source.ext_management_system.vms.where(:name => dest_name).any?
 
     clone_options = {
-      :name        => dest_name,
-      :cluster     => dest_cluster.ems_ref,
-      :clone_type  => get_option(:linked_clone) ? :linked : :full,
-      :sparse      => sparse_disk_value
+      :name       => dest_name,
+      :cluster    => dest_cluster.ems_ref,
+      :clone_type => get_option(:linked_clone) ? :linked : :full,
+      :sparse     => sparse_disk_value
     }
     clone_options[:storage] = dest_datastore.ems_ref unless dest_datastore.nil?
     clone_options

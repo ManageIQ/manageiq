@@ -1,5 +1,4 @@
 module MiqProvisionRedhat::Configuration::Network
-
   def configure_network_adapters
     configure_dialog_nic
     requested_vnics   = options[:networks]
@@ -69,11 +68,12 @@ module MiqProvisionRedhat::Configuration::Network
     network   = find_network_in_cluster(network_hash[:network])
     raise MiqException::MiqProvisionError, "Unable to find specified network: <#{network_hash[:network]}>" if network.nil?
 
-    options = { :name        => name,
-                :interface   => network_hash[:interface],
-                :network_id  => network[:id],
-                :mac_address => mac_addr,
-              }.delete_blanks
+    options = {
+      :name        => name,
+      :interface   => network_hash[:interface],
+      :network_id  => network[:id],
+      :mac_address => mac_addr,
+    }.delete_blanks
 
     $log.info("MIQ(#{self.class.name}.configure_vnic) with options: <#{options.inspect}>")
 

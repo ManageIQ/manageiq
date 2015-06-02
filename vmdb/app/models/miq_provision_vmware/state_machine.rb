@@ -82,5 +82,4 @@ module MiqProvisionVmware::StateMachine
     self.destination.ext_management_system.reset_vim_cache
     self.destination.start
   end
-
 end

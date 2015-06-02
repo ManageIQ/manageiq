@@ -31,14 +31,14 @@ class MiqProvisionRedhatWorkflow < MiqProvisionInfraWorkflow
 
   def allowed_provision_types(options={})
     {
-      "pxe"            => "PXE",
-      "iso"            => "ISO",
-      "native_clone"   => "Native Clone"
+      "pxe"          => "PXE",
+      "iso"          => "ISO",
+      "native_clone" => "Native Clone"
     }
   end
 
   def dialog_name_from_automate(message = 'get_dialog_name')
-    super(message, { 'platform' => 'redhat' })
+    super(message, {'platform' => 'redhat'})
   end
 
   def update_field_visibility()
@@ -53,7 +53,7 @@ class MiqProvisionRedhatWorkflow < MiqProvisionInfraWorkflow
     f[show_flag] << :disk_format
   end
 
-  def allowed_customization_templates(options={})
+  def allowed_customization_templates(options = {})
     if supports_native_clone?
       return allowed_cloud_init_customization_templates(options)
     else
@@ -61,7 +61,7 @@ class MiqProvisionRedhatWorkflow < MiqProvisionInfraWorkflow
     end
   end
 
-  def allowed_hosts_obj(options={})
+  def allowed_hosts_obj(options = {})
     return [] if (src = resources_for_ui).blank?
 
     hosts = super
@@ -69,16 +69,15 @@ class MiqProvisionRedhatWorkflow < MiqProvisionInfraWorkflow
     hosts
   end
 
-  def allowed_storages(options={})
+  def allowed_storages(options = {})
     return [] if (src = resources_for_ui).blank?
     result = super
 
     if supports_linked_clone?
       s_id = load_ar_obj(src[:vm]).storage_id
-      result = result.select {|s| s.id == s_id}
+      result = result.select { |s| s.id == s_id }
     end
 
-    result.select {|s| s.storage_domain_type == "data"}
+    result.select { |s| s.storage_domain_type == "data" }
   end
-
 end

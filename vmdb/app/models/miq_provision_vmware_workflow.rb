@@ -16,7 +16,7 @@ class MiqProvisionVmwareWorkflow < MiqProvisionInfraWorkflow
   end
 
   def dialog_name_from_automate(message = 'get_dialog_name')
-    super(message, { 'platform' => 'vmware' })
+    super(message, {'platform' => 'vmware'})
   end
 
   def allowed_provision_types(options={})
@@ -121,7 +121,7 @@ class MiqProvisionVmwareWorkflow < MiqProvisionInfraWorkflow
 
     # Try to get coresPerSocket from advanced settings
     if result[:cores_per_socket].nil?
-      cores_per_socket = vm.advanced_settings.detect {|ad| ad.name == 'cpuid.coresPerSocket'}
+      cores_per_socket = vm.advanced_settings.detect { |ad| ad.name == 'cpuid.coresPerSocket' }
       result[:cores_per_socket] = cores_per_socket.nil? ? 1 : cores_per_socket.value.to_i
     end
 
@@ -143,5 +143,4 @@ class MiqProvisionVmwareWorkflow < MiqProvisionInfraWorkflow
 
     super(options)
   end
-
 end

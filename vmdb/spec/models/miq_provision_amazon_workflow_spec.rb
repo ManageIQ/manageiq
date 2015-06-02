@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe MiqProvisionAmazonWorkflow do
-
   before(:each) do
     MiqRegion.seed
   end
@@ -31,7 +30,7 @@ describe MiqProvisionAmazonWorkflow do
       let(:provider) { FactoryGirl.create(:ems_amazon) }
       let(:template) { FactoryGirl.create(:template_amazon, :name => "template", :ext_management_system => provider) }
       let(:workflow) do
-        MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return( {:dialogs => {}} )
+        MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
         MiqProvisionCloudWorkflow.any_instance.stub(:update_field_visibility)
         MiqProvisionAmazonWorkflow.new({:src_vm_id => template.id}, admin.userid)
       end
@@ -92,7 +91,6 @@ describe MiqProvisionAmazonWorkflow do
             template.hardware = FactoryGirl.create(:hardware, :bitness => 64)
             workflow.allowed_instance_types.length.should == 2
           end
-
         end
       end
 
@@ -138,7 +136,7 @@ describe MiqProvisionAmazonWorkflow do
           it "with a cloud_network and cloud_subnet" do
             workflow.values[:cloud_network] = [@cn1.id, @cn1.name]
             workflow.values[:cloud_subnet]  = [@cs2.id, @cs2.name]
-            workflow.allowed_availability_zones.should == { @az2.id => @az2.name }
+            workflow.allowed_availability_zones.should == {@az2.id => @az2.name}
           end
         end
 
@@ -229,7 +227,6 @@ describe MiqProvisionAmazonWorkflow do
           template.hardware = FactoryGirl.create(:hardware, :bitness => 64, :virtualization_type => 'paravirtual')
           workflow.allowed_instance_types.collect { |_, v| v }.should match_array(@instance_types_64)
         end
-
       end
 
       context "with root device type" do

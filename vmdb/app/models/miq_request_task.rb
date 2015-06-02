@@ -31,7 +31,7 @@ class MiqRequestTask < ActiveRecord::Base
   end
 
   def update_and_notify_parent(upd_attr)
-    upd_attr[:message] = upd_attr[:message][0,255] if upd_attr.has_key?(:message)
+    upd_attr[:message] = upd_attr[:message][0, 255] if upd_attr.has_key?(:message)
     self.update_attributes!(upd_attr)
 
     # If this request has a miq_request_task parent use that, otherwise the parent is the miq_request
@@ -40,8 +40,8 @@ class MiqRequestTask < ActiveRecord::Base
   end
 
   def update_request_status
-    states = Hash.new {|h,k| h[k] = 0}
-    status = Hash.new {|h,k| h[k] = 0}
+    states = Hash.new { |h, k| h[k] = 0 }
+    status = Hash.new { |h, k| h[k] = 0 }
 
     child_requests = self.miq_request_tasks
     task_count = child_requests.size
@@ -53,19 +53,19 @@ class MiqRequestTask < ActiveRecord::Base
     total = states.delete(:total).to_i
     unknown_state = task_count - total
     states["unknown"] = unknown_state unless unknown_state.zero?
-    msg = states.sort.collect {|s| "#{s[0].capitalize} = #{s[1]}"}.join("; ")
+    msg = states.sort.collect { |s| "#{s[0].capitalize} = #{s[1]}" }.join("; ")
 
     req_state = (states.length == 1) ? states.keys.first : "active"
 
     # Determine status to report
     req_status = if status.keys.include?('Error')
-      'Error'
-    elsif status.keys.include?('Timeout')
-      'Timeout'
-    elsif status.keys.include?('Warn')
-      'Warn'
-    else
-      'Ok'
+                   'Error'
+                 elsif status.keys.include?('Timeout')
+                   'Timeout'
+                 elsif status.keys.include?('Warn')
+                   'Warn'
+                 else
+                   'Ok'
     end
 
     if req_state == "finished"
@@ -148,7 +148,7 @@ class MiqRequestTask < ActiveRecord::Base
     end
   end
 
-  def execute_queue(queue_options={})
+  def execute_queue(queue_options = {})
     log_header = "MIQ(#{self.class.name}.execute_queue)"
     self.task_check_on_execute
 

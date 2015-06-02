@@ -2,7 +2,6 @@ require "spec_helper"
 require "ovirt"
 
 describe MiqProvisionRedhat::Configuration do
-
   before do
     ems       = FactoryGirl.create(:ems_redhat_with_authentication)
     template  = FactoryGirl.create(:template_redhat, :ext_management_system => ems)
@@ -24,7 +23,7 @@ describe MiqProvisionRedhat::Configuration do
     it "should attach floppy if customization template provided" do
       script = '#cloudinit'
       template = FactoryGirl.create(:customization_template_cloud_init, :script => script)
-      
+
       template_options = {'key' => 'value'}
       @task.should_receive(:prepare_customization_template_substitution_options).and_return(template_options)
 
@@ -43,5 +42,4 @@ describe MiqProvisionRedhat::Configuration do
       @task.configure_container
     end
   end
-
 end

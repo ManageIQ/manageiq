@@ -6,7 +6,7 @@ class MiqProvisionCloudWorkflow < MiqProvisionVirtWorkflow
     ems = source.try(:ext_management_system)
 
     return {} if ems.nil?
-    ems.availability_zones.available.each_with_object({}) {|az, h| h[az.id] = az.name}
+    ems.availability_zones.available.each_with_object({}) { |az, h| h[az.id] = az.name }
   end
 
   def allowed_cloud_networks(_options = {})
@@ -37,7 +37,7 @@ class MiqProvisionCloudWorkflow < MiqProvisionVirtWorkflow
     ems = source.try(:ext_management_system)
 
     return {} if ems.nil?
-    ems.key_pairs.each_with_object({}) {|kp, h| h[kp.id] = kp.name}
+    ems.key_pairs.each_with_object({}) { |kp, h| h[kp.id] = kp.name }
   end
 
   def allowed_security_groups(_options = {})
@@ -76,7 +76,7 @@ class MiqProvisionCloudWorkflow < MiqProvisionVirtWorkflow
     return show_customize_fields_pxe(fields)
   end
 
-  def allowed_customization_templates(options={})
+  def allowed_customization_templates(options = {})
     return allowed_cloud_init_customization_templates(options)
   end
 
@@ -84,12 +84,12 @@ class MiqProvisionCloudWorkflow < MiqProvisionVirtWorkflow
 
   # Run the relationship methods and perform set intersections on the returned values.
   # Optional starting set of results maybe passed in.
-  def allowed_ci(ci, relats, filtered_ids=nil)
+  def allowed_ci(ci, relats, filtered_ids = nil)
     return {} if (sources = resources_for_ui).blank?
     super(ci, relats, sources, filtered_ids)
   end
 
-  def get_source_and_targets(refresh=false)
+  def get_source_and_targets(refresh = false)
     return @target_resource if @target_resource && refresh == false
     result = super
     return result if result.blank?

@@ -6,14 +6,14 @@ module MiqProvision::Naming
   SOURCE_IDENTIFIER = "provisioning"  # a unique name for the source column in custom_attributes table
 
   module ClassMethods
-    def get_next_vm_name(prov_obj, determine_index=true)
+    def get_next_vm_name(prov_obj, determine_index = true)
       log_header = "MiqProvision.get_next_vm_name"
 
       unresolved_vm_name = nil
 
       if NAME_VIA_AUTOMATE == true
         prov_obj.save
-        attrs = { 'request' => 'UI_PROVISION_INFO', 'message' => 'get_vmname' }
+        attrs = {'request' => 'UI_PROVISION_INFO', 'message' => 'get_vmname'}
         attrs[MiqAeEngine.create_automation_attribute_key(prov_obj.get_user)] = MiqAeEngine.create_automation_attribute_value(prov_obj.get_user) unless prov_obj.get_user.nil?
         uri = MiqAeEngine.create_automation_object("REQUEST", attrs, :vmdb_object => prov_obj)
         ws  = MiqAeEngine.resolve_automation_object(uri)

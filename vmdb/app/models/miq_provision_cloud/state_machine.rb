@@ -57,5 +57,4 @@ module MiqProvisionCloud::StateMachine
   def for_destination
     "#{destination_type} id: [#{self.destination.id}], name: [#{dest_name}]"
   end
-
 end

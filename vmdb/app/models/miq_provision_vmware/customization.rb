@@ -113,10 +113,10 @@ module MiqProvisionVmware::Customization
     nic = nics[0]
     nic = {} if nic.blank?
     [:dns_domain, :dns_servers, :sysprep_netbios_mode, :wins_servers, :addr_mode,
-     :gateway, :subnet_mask, :ip_addr].each {|key| nic[key] = self.options[key]}
+     :gateway, :subnet_mask, :ip_addr].each { |key| nic[key] = self.options[key] }
     nics[0] = nic
 
-    self.options[:nic_settings]   = nics
+    self.options[:nic_settings] = nics
     self.update_attribute(:options, self.options)
     nics
   end
@@ -130,7 +130,6 @@ module MiqProvisionVmware::Customization
     requested_network_adapter_count = self.options[:requested_network_adapter_count].to_i
 
     nic_settings.each_with_index do |nic, idx|
-
       break if idx >= requested_network_adapter_count
       $log.warn "#{log_header} Nic index:<#{idx}> -- settings:<#{nic.inspect}>"
       spec.nicSettingMap[idx] = VimHash.new("CustomizationAdapterMapping") if spec.nicSettingMap[idx].blank?
@@ -178,7 +177,7 @@ module MiqProvisionVmware::Customization
 
     if requested_network_adapter_count < nic_count
       # Remove nicSettings to match network adapter count
-      nic_count.downto(requested_network_adapter_count + 1) {spec.nicSettingMap.pop}
+      nic_count.downto(requested_network_adapter_count + 1) { spec.nicSettingMap.pop }
     elsif requested_network_adapter_count > nic_count
       # Add DHCP nicSettings to match network adapter count
       spec.nicSettingMap ||= VimArray.new("ArrayOfCustomizationAdapterMapping")
@@ -261,7 +260,7 @@ module MiqProvisionVmware::Customization
     end
   end
 
-  def set_spec_array_option(obj, property, key, override_value=nil)
+  def set_spec_array_option(obj, property, key, override_value = nil)
     log_header = "MiqProvision.set_spec_array_option"
     if key.nil?
       value = get_option(nil, override_value)
@@ -270,7 +269,7 @@ module MiqProvisionVmware::Customization
     end
     values = value.to_s.split(",")
     unless values.blank?
-      value = VimArray.new {|l| values.each {|i| l << i.strip}}
+      value = VimArray.new { |l| values.each { |i| l << i.strip } }
       $log.info "#{log_header} #{property} was set to #{value.inspect} (#{value.class})"
       obj.send("#{property}=", value)
     else

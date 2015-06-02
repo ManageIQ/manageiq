@@ -151,5 +151,4 @@ module MiqProvisionVmware::Cloning
     else nil
     end
   end
-
 end
