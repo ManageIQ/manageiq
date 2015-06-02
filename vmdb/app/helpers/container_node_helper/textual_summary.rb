@@ -5,7 +5,8 @@ module ContainerNodeHelper::TextualSummary
 
   def textual_group_properties
     items = %w(name creation_timestamp resource_version num_cpu_cores memory
-               identity_system identity_machine identity_infra)
+               identity_system identity_machine identity_infra runtime_version
+               kubelet_version proxy_version os_distribution kernel_version)
     items.collect {|m| send("textual_#{m}")}.flatten.compact
   end
 
@@ -94,5 +95,38 @@ module ContainerNodeHelper::TextualSummary
       h[:link] = url_for(:action => 'show', :controller => 'container_node', :display => 'container_groups')
     end
     h
+  end
+
+  def textual_runtime_version
+    {:label => "Runtime Version", :value =>
+        @record.container_runtime_version.nil?  ? "N/A" : @record.container_runtime_version}
+  end
+
+  def textual_kubelet_version
+    {:label => "Kubelet Version", :value =>
+        @record.kubernetes_kubelet_version.nil?  ? "N/A" : @record.kubernetes_kubelet_version}
+  end
+
+  def textual_proxy_version
+    {:label => "Proxy Version", :value =>
+        @record.kubernetes_proxy_version.nil?  ? "N/A" : @record.kubernetes_proxy_version}
+  end
+
+  def textual_os_distribution
+    if @record.computer_system.nil? || @record.computer_system.operating_system.nil?
+      distribution = "N/A"
+    else
+      distribution = @record.computer_system.operating_system.distribution
+    end
+    {:label => "Operating System Distribution", :value => distribution}
+  end
+
+  def textual_kernel_version
+    if @record.computer_system.nil? || @record.computer_system.operating_system.nil?
+      version = "N/A"
+    else
+      version = @record.computer_system.operating_system.kernel_version
+    end
+    {:label => "Kernel Version", :value => version}
   end
 end

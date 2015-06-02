@@ -61,7 +61,7 @@ module EmsRefresh::SaveInventoryContainer
   end
 
   def save_computer_system_inventory(container_node, hash, _target = nil)
-    save_inventory_single(:computer_system, container_node, hash, [:hardware])
+    save_inventory_single(:computer_system, container_node, hash, [:hardware, :operating_system])
   end
 
   def save_container_replicators_inventory(ems, hashes, target = nil)
