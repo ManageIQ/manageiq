@@ -6,6 +6,7 @@ module MiqAeMethodService
     expose :retire_service_resources
     expose :automate_retirement_entrypoint
     expose :service_resources, :association => true
+    expose :service_template,  :association => true
     expose :start
     expose :stop
     expose :suspend
