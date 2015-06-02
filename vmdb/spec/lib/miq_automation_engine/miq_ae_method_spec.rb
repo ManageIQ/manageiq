@@ -47,14 +47,6 @@ module MiqAeMethodSpec
       ws.root("encrypted").should == '********'
     end
 
-    it "executes customer libraries" do
-      pending "has a dependency on the NOW extracted cfme_customer repo: https://github.com/ManageIQ/cfme_customer/blob/master/miq/test_module/test_class.rb#L3"
-      EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "miq_ae_method_spec3"), @domain)
-      ws = MiqAeEngine.instantiate("/EVM/AUTOMATE/test1")
-      ws.root("error").should be_nil
-      ws.root("param").should == 76
-    end
-
     it "properly processes instance methods via no inheritance" do
       EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "method2"), @domain)
       MiqAeDatastore.reset_default_namespace

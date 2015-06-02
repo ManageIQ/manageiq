@@ -57,53 +57,6 @@ describe MiqReport do
 
     end
 
-    it "reports on EVM table indexes and metrics with an error" do
-
-      pending "to be imlemented once has_one bug is fixed" do
-        # report_args = {
-        #   "title"       => "VmdbIndex",
-        #   "name"        => "VmdbIndex",
-        #   "db"          => "VmdbIndex",
-        #   "cols"        => ["name"],
-        #   "include"     => {"vmdb_table" => {"columns" => ["type"]}, "latest_hourly_metric" => {"columns"=>["rows", "size", "wasted_bytes", "percent_bloat"]}},
-        #   "col_order"   => ["name", "latest_hourly_metric.rows", "latest_hourly_metric.size", "latest_hourly_metric.wasted_bytes", "latest_hourly_metric.percent_bloat"],
-        #   "col_formats" => [nil, nil, :bytes_human, :bytes_human, nil],
-        #   "headers"     => ["Name", "Rows", "Size", "Wasted", "Percent Bloat"],
-        #   "order"       => "Ascending",
-        #   "sortby"      => ["name"],
-        #   "group"       => "n",
-        # }
-
-        report = MiqReport.new(@report_args)
-
-  # Rails.logger.level = 0
-
-  #       results = VmdbIndex.all(:conditions=>"((vmdb_tables.type = 'VmdbTableEvm'))",
-  #                             :include => {
-  #                               :vmdb_table=>{},
-  #                              :latest_hourly_metric=>{}
-  #                             },
-  #                             :order=>"LOWER(vmdb_indexes.name) asc",
-  #                             :limit=>8,
-  #                             :offset=>0
-  #                 )
-  #       puts "Test results: #{results.length}"
-
-  # Rails.logger.level = 1
-
-        search_expression  = MiqExpression.new({"and" => [{"=" => {"value" => "VmdbTableEvm", "field" => "VmdbIndex.vmdb_table-type"}}]})
-
-        options = { :targets_hash   => true,
-                    :filter         => search_expression,
-                    :page           => 1,
-                    :per_page       => 8
-        }
-
-        results, attrs = report.paged_view_search(options)
-        results.count.should be 4
-      end
-    end
-
     describe 'self.get_expressions_by_model' do
       it 'it returns only reports with non-nil conditions' do
 

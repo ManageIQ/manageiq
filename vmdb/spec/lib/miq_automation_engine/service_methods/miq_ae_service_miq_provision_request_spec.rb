@@ -150,27 +150,5 @@ module MiqAeServiceMiqProvisionRequestSpec
       @ae_method.update_attributes(:data => method)
       invoke_ae.root(@ae_result_key).should == 'vm'
     end
-
-    pending "Not yet implemented: 19 specs" do
-      it "#set_vm_notes"
-      it "#get_retirement_days"
-      it "#set_network_address_mode"
-      it "#check_quota"
-      it "#eligible_resources"
-      it "#eligible_hosts"
-      it "#eligible_storages"
-      it "#eligible_folders"
-      it "#eligible_clusters"
-      it "#eligible_resource_pools"
-      it "#set_resource"
-      it "#set_host"
-      it "#set_storage"
-      it "#set_cluster"
-      it "#set_resource_pool"
-      it "#set_folder"
-      it "#get_folder_paths"
-      it "#set_nic_settings"
-      it "#set_network_adapter"
-    end
   end
 end

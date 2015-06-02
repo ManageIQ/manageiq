@@ -205,17 +205,6 @@ describe MiqWidget do
     end
   end
 
-  it "should not delete schedule when zone is gone" do
-    pending "issue reported in FB#15499"
-    @zone = FactoryGirl.create(:zone, :name => "testing")
-    @schedule = FactoryGirl.create(:miq_schedule, :zone_id => @zone.id)
-    @schedule_id = @schedule.id
-    @widget = FactoryGirl.create(:miq_widget, :miq_schedule_id => @schedule_id)
-
-    @zone.destroy
-    MiqSchedule.exists?(@schedule_id).should be_true
-  end
-
   context "#queue_generate_content" do
     before(:each) do
       MiqReport.seed_report("Top CPU Consumers weekly")

@@ -3060,13 +3060,6 @@ describe ApplicationHelper do
         @tb_buttons["#{parent}__#{@item[:button]}"].should have_key(:title)
       end
 
-      it "when item[:popup] exists" do
-        pending "**** can't mock request"
-        @item[:popup] = true
-        subject.should have_key(:popup)
-        subject.should have_key(:console_url)
-      end
-
       it "when item[:url_parms] exists" do
         subject.should have_key(:url_parms)
       end

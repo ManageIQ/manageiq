@@ -314,13 +314,6 @@ describe ReservedMixin do
           @t.update_attribute(:some_field, "test2")
           @t.updated_on.should_not == @last_update
         end
-
-        it "and data not changing" do
-          pending("implementation") do
-            @t.update_attribute(:some_field, "test")
-            @t.updated_on.should == @last_update
-          end
-        end
       end
     end
   end

@@ -174,48 +174,5 @@ module MiqAeServiceVmSpec
       expect(service_vm.retirement_warn).to eq(60)
       expect(vm.retirement_last_warn).to be_nil
     end
-
-    pending "Not yet implemented: 41 specs" do
-      it "#ext_management_system"
-      it "#storage"
-      it "#host"
-      it "#hardware"
-      it "#operating_system"
-      it "#guest_applications"
-      it "#miq_provision"
-      it "#ems_cluster"
-      it "#ems_folder"
-      it "#ems_blue_folder"
-      it "#resource_pool"
-      it "#datacenter"
-      it "#remove_from_disk"
-      it "#registered?"
-      it "#to_s"
-      it "#event_threshold?"
-      it "#event_log_threshold?"
-      it "#performances_maintains_value_for_duration?"
-      it "#reconfigured_hardware_value?"
-      it "#changed_vm_value?"
-      it "#retire_now"
-      it "#files"
-      it "#directories"
-      it "#refresh"
-      it "#start"
-      it "#stop"
-      it "#suspend"
-      it "#unregister"
-      it "#collect_running_processes"
-      it "#shutdown_guest"
-      it "#standby_guest"
-      it "#reboot_guest"
-      it "#migrate"
-      it "#owner"
-      it "#scan"
-      it "#unlink_storage"
-      it "#ems_custom_set"
-      it "#custom_keys"
-      it "#custom_get"
-      it "#custom_set"
-    end
   end
 end
