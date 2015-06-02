@@ -6,17 +6,6 @@ describe "LogCollection" do
     _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
   end
 
-  it "test ftp functions for FB12142" do
-    pending("Disabled for performance/authentication reasons")
-    MiqServer.any_instance.stub(:get_log_depot_settings).and_return(:username => "manageiq.com\\jrafaniello", :uri => "ftp://miq-websvr1.manageiq.com/scratch/joer", :password => "XXXXXXXXX", :debug => true)
-    log = LogFile.current_logfile
-    @miq_server.log_files << log
-    LogFile.verify_log_depot_settings(@miq_server.get_log_depot_settings)
-    log.add('/etc/hosts')
-    log.delete
-    log.destroy
-  end
-
   context "active log_collection" do
     before do
       @log_file = FactoryGirl.create(:log_file, :state => "collecting")
