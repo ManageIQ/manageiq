@@ -102,41 +102,5 @@ module MiqAeServiceHostSpec
       ae_result = invoke_ae.root(@ae_result_key)
       ae_result.should be_nil
     end
-
-    pending "Not yet implemented: 33 specs" do
-      it "#storages"
-      it "#vms"
-      it "#ext_management_system"
-      it "#hardware"
-      it "#switches"
-      it "#lans"
-      it "#operating_system"
-      it "#guest_applications"
-      it "#ems_cluster"
-      it "#ems_events"
-      it "#ems_folder"
-      it "#datacenter"
-      it "#authentication_userid"
-      it "#authentication_password"
-      it "#event_log_threshold?"
-      it "#to_s"
-      it "#domain"
-      it "#files"
-      it "#directories"
-      it "#scan"
-      it "#shutdown"
-      it "#reboot"
-      it "#enter_maintenance_mode"
-      it "#exit_maintenance_mode"
-      it "#in_maintenance_mode?"
-      it "#power_down_to_standby"
-      it "#power_up_from_standby"
-      it "#credentials"
-      it "#ems_custom_set"
-      it "#custom_keys"
-      it "#custom_get"
-      it "#custom_set"
-      it "#ssh_exec"
-    end
   end
 end
