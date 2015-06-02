@@ -1211,11 +1211,12 @@ module ApplicationController::CiProcessing
     else
       items = find_checked_items
       if items.empty?
-        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => controller_name),
+        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:ui_title => 'foreman'),
                                                                 :task  => display_name}, :error)
+      else
+        process_foreman(items, method) unless items.empty? && !flash_errors?
       end
     end
-    process_foreman(items, method) unless items.empty? && !flash_errors?
   end
 
   def process_foreman(providers, task)
@@ -1228,8 +1229,10 @@ module ApplicationController::CiProcessing
     rescue StandardError => bang                            # Catch any errors
       add_flash(_("Error during '%s': ") % task << bang.message, :error)
   else
-    add_flash(_("%{task} initiated for %{count_model} (Foreman) from the CFME Database") %
-      {:task        => Dictionary.gettext(task, :type => :task).titleize,
+    add_flash(_("%{task} initiated for %{count_model} (%{controller}) from the CFME Database") %
+      {:task        => Dictionary.gettext(task, :type => :task).titleize.gsub("Ems",
+                                                                              "#{ui_lookup(:ui_title => 'foreman')}"),
+       :controller  => ui_lookup(:ui_title => 'foreman'),
        :count_model => pluralize(providers.length, ui_lookup(:model => kls.to_s))})
   end
 
