@@ -27,26 +27,29 @@ class HostOpenstackInfra < Host
   end
 
   def get_parent_keypair(type = nil)
-    self.ext_management_system.try(:authentication_best_fit, type)
+    # Get private key defined on Provider level, in the case all hosts has the same user
+    self.ext_management_system.try(:authentication_type, type)
   end
 
-  def auth_user_keypair(type = nil)
-    # HostOpenstackInfra is using auth key set on ext_management_system level, not individual hosts
-    cred = self.get_parent_keypair(type)
-    return nil if cred.nil? || cred.userid.blank?
-    [cred.userid, cred.auth_key]
+  def authentication_best_fit(type = nil)
+    # First check for Host level credentials with filled private key, this way we can override auth credentials per
+    # host. Otherwise host level auth will hold only state of auth for the given host. We allow only auth with private
+    # key for OpenstackInfra hosts
+    auth = authentication_type(type)
+    return auth if auth && auth.auth_key
+    # Not defined auth on this specific host, get auth defined for all hosts from the provider.
+    get_parent_keypair(:ssh_keypair)
   end
 
   def authentication_status
+    # Auth status is always stored in Host's auth record
     self.authentication_type(:ssh_keypair).try(:status) || "None"
   end
 
   def update_ssh_auth_status!
     unless cred = self.authentication_type(:ssh_keypair)
-      # Creating just Auth status placeholder, the credentials are stored in parent, that is EmsOpenstackInfra in this
-      # case. We will create Auth per Host where we will store just state
-      # TODO(lsmola) this should be done as auth inheritance, where we can override credentials on lower level, but
-      # it needs to be designed first
+      # Creating just Auth status placeholder, the credentials are stored in parent or this auth, parent is
+      # EmsOpenstackInfra in this case. We will create Auth per Host where we will store state, if it not exists
       cred = AuthKeyPairOpenstackInfra.new(:name => "#{self.class.name} #{self.name}", :authtype => :ssh_keypair,
                                            :resource_id => id, :resource_type => 'Host')
     end
@@ -62,16 +65,14 @@ class HostOpenstackInfra < Host
       cred.status = 'Valid'
       cred.save
     else
-      parent_keypair = self.get_parent_keypair(:ssh_keypair)
-      if self.hostname && parent_keypair && parent_keypair.authtype == 'ssh_keypair'
-        # The credentials on parent exists and hostname is set and we are not able to verify, go to error state
+      if self.hostname && !self.missing_credentials?(:ssh_keypair)
+        # The credentials exists and hostname is set and we are not able to verify, go to error state
         cred.status = 'Error'
-        cred.save
       else
-        # Parent credentials do not exists, set None, but do not save. It will be saved as part of host, only if cred
-        # already existed, so it will change state to none when parent keypair was deleted or host was powered down
+        # Hostname or credentials do not exists, set None.
         cred.status = 'None'
       end
+      cred.save
     end
   end
 
