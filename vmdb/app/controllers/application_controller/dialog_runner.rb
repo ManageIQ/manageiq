@@ -268,7 +268,10 @@ module ApplicationController::DialogRunner
         @edit[:wf].set_value(p[0], checkbox_value) if @record.field_name_exist?(p[0])
 
       else
-        @edit[:wf].set_value(p[0],p[1]) if @record.field_name_exist?(p[0])
+        if @record.field_name_exist?(p[0])
+          p[1] = p[1].to_i if @edit[:wf].dialog_field(p[0]).data_type == "integer"
+          @edit[:wf].set_value(p[0], p[1])
+        end
       end
     end
   end
