@@ -1,6 +1,4 @@
 class TreeBuilderUtilization  < TreeBuilderRegion
-  attr_reader :tree_nodes
-
   private
 
   def x_get_tree_ems_kids(object, options)
@@ -76,7 +74,7 @@ class TreeBuilderUtilization  < TreeBuilderRegion
   def x_get_tree_cluster_kids(object, options)
     objects =  rbac_filtered_sorted_objects(object.hosts, "name")
     # FIXME: is the condition below ever false?
-    unless [:bottlenecks, :utilization].include?(options[:tree])
+    unless [:bottlenecks, :utilization].include?(@type)
       objects += rbac_filtered_sorted_objects(object.resource_pools, "name")
       objects += rbac_filtered_sorted_objects(object.vms, "name")
     end

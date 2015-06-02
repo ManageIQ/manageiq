@@ -316,6 +316,7 @@ class TreeNodeBuilder
 
   def build_object_id
     if object.id.nil?
+      # FIXME: this makes problems in tests
       # to handle "Unassigned groups" node in automate buttons tree
       "-#{object.name.split('|').last}"
     else

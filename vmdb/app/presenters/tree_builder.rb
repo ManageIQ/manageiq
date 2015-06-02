@@ -1,6 +1,6 @@
 class TreeBuilder
   include CompressedIds
-  attr_reader :locals_for_render, :name, :type
+  attr_reader :locals_for_render, :name, :type, :tree_nodes
 
   def self.class_for_type(type)
     case type
