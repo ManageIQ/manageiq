@@ -68,6 +68,7 @@
       .col-sm-12.col-md-12.col-lg-6
         - if role_allows(:feature => "ems_cloud_show_list")           ||
         -    role_allows(:feature => "availability_zone_show_list")   ||
+        -    role_allows(:feature => "cloud_tenant_show_list")        ||
         -    role_allows(:feature => "flavor_show_list")              ||
         -    role_allows(:feature => "instances_accord")              ||
         -    role_allows(:feature => "instances_filter_accord")       ||
@@ -86,6 +87,11 @@
                   %td.key= _('Availability Zones')
                   %td
                     %ul#toolbars= render_view_buttons(:availabilityzone, @edit[:new][:views][:availabilityzone])
+              - if role_allows(:feature => "cloud_tenant_show_list")
+                %tr
+                  %td.key= _('Tenants')
+                  %td
+                    %ul#toolbars= render_view_buttons(:cloudtenant, @edit[:new][:views][:cloudtenant])
               - if role_allows(:feature => "flavor_show_list")
                 %tr
                   %td.key= _('Flavors')

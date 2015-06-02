@@ -189,6 +189,7 @@ module UiConstants
       :containerproject      => "list",
       :cimbasestorageextent  => "list",
       :cimstorageextent      => "list",
+      :cloudtenant           => "list",
       :drift                 => "expanded",
       :drift_mode            => "details",
       :emscloud              => "grid",
