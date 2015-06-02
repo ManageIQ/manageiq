@@ -356,6 +356,11 @@ class ProviderForemanController < ApplicationController
     render :layout => "explorer" unless redirected
   end
 
+  def tree_autoload_dynatree
+    @view ||= session[:view]
+    super
+  end
+
   def change_tab
     @sb[:active_tab] = params[:tab_id]
     replace_right_cell
