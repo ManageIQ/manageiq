@@ -101,15 +101,8 @@ module MiqEnvironment
       return @is_linux = (Platform::IMPL == :linux)
     end
 
-    def self.is_encrypted_appliance?
-      return @is_encrypted_appliance unless @is_encrypted_appliance.nil?
-      @is_encrypted_appliance = false
-      @is_encrypted_appliance = !!(`file -b #{fully_qualified_rails}` =~ /^ELF /) if self.is_appliance?
-      return @is_encrypted_appliance
-    end
-
     def self.rake_command
-      is_encrypted_appliance? ? "#{fully_qualified_runner} #{fully_qualified_rake}" : "rake"
+      "rake"
     end
 
     def self.runner_command
@@ -117,21 +110,10 @@ module MiqEnvironment
     end
 
     def self.rails_command
-      is_encrypted_appliance? ? fully_qualified_rails : "rails"
+      "rails"
     end
 
     private
-    def self.fully_qualified_rails
-      @fully_qualified_rails ||= File.expand_path(File.join(File.dirname(__FILE__), %w{.. script rails}))
-    end
-
-    def self.fully_qualified_runner
-      @fully_qualified_runner ||= "#{fully_qualified_rails} runner"
-    end
-
-    def self.fully_qualified_rake
-      @fully_qualified_rake ||= File.expand_path(File.join(File.dirname(__FILE__), %w{.. script rake}))
-    end
 
     def self.supports_command?(cmd)
       return false unless EVM_KNOWN_COMMANDS.include?(cmd)
