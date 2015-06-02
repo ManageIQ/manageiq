@@ -8,6 +8,8 @@
     'novnc/display', 'novnc/keyboard', 'novnc/keysym', 'novnc/keysymdef', 'novnc/logo',
     'novnc/playback', 'novnc/rfb', 'novnc/websock', 'novnc/webutil', 'novnc/web-socket-js/swfobject',
     'novnc/web-socket-js/web_socket', 'novnc-rails', 'miq_novnc'
+    - if Rails.env.development?
+      = javascript_include_tag 'miq_debug'
 
   %body{:style => 'margin: 0px; padding-top: 0px !important;'}
     = link_to('Ctrl-Alt-Del', '#', :id => 'sendCtrlAltDelButton', :class => 'btn btn-default')

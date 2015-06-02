@@ -52,3 +52,4 @@
 //= require codemirror-4.2/lib/codemirror.js
 //= require codemirror-4.2/mode/yaml/yaml.js
 //= require spin
+//= require jquery-hotkeys
