@@ -1,4 +1,5 @@
 require 'workers/worker_base'
+require 'io/wait' # To support IO#ready? calls
 
 class ReplicationWorker < WorkerBase
   def do_before_work_loop
@@ -126,11 +127,7 @@ class ReplicationWorker < WorkerBase
   end
 
   def find_rubyrep_processes
-    pids = MiqProcess.find_pids(/evm:dbsync:/)
-    if MiqEnvironment::Command.is_encrypted_appliance?
-      pids = pids.collect { |pid| MiqProcess.get_child_pids(pid) }.flatten.compact
-    end
-    pids
+    MiqProcess.find_pids(/evm:dbsync:/)
   end
 
   def stop_active_replication_processes
@@ -160,41 +157,11 @@ class ReplicationWorker < WorkerBase
   def rubyrep_run(verb)
     verb = :local_uninstall if verb == :uninstall
 
-    require 'io/wait'
+    $log.info("#{self.log_prefix} rubyrep process for verb=#{verb} starting")
+
     require 'open4'
     pid, stdin, stdout, stderr = Open4.popen4(*(MiqEnvironment::Command.rake_command).split, "evm:dbsync:#{verb}")
     stdin.close
-
-    $log.info("#{self.log_prefix} rubyrep process for verb=#{verb} starting")
-    if MiqEnvironment::Command.is_encrypted_appliance?
-      kids = MiqProcess.get_child_pids(pid)
-      begin
-        Timeout.timeout(60.seconds.to_i) do
-          while kids.empty?
-            sleep(1) # Sleep to allow OS to fire up the processes we spawned
-            $log.info("#{self.log_prefix} #{kids.length} Checking for children of rubyrep pid=#{pid}")
-            kids = MiqProcess.get_child_pids(pid)
-          end
-        end
-      rescue TimeoutError
-        do_exit("Cannot find child of rubyrep Process pid=#{pid}", 1)
-      end
-
-      if kids.length > 1
-        $log.info("#{self.log_prefix} #{kids.length} children of rubyrep pid=#{pid}: #{kids.inspect}")
-
-        kids.each do |pid|
-          $log.info("#{self.log_prefix} Killing child process with pid=#{pid}")
-          Process.kill(9, pid)
-        end
-
-        do_exit("rubyrep process has multiple children", 1)
-      end
-
-      # Overwrite pid with the child pid
-      $log.info("#{self.log_prefix} rubyrep processes: parent pid=#{pid}, child pid=#{kids.first}")
-      pid = kids.first.to_i
-    end
 
     $log.info("#{self.log_prefix} rubyrep process for verb=#{verb} started - pid=#{pid}")
     return pid, stdout, stderr
