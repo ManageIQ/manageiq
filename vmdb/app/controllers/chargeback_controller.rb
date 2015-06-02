@@ -299,7 +299,7 @@ class ChargebackController < ApplicationController
       process_cb_rates(rates, "destroy")  unless rates.empty?
       add_flash(_("The selected %s were deleted") % ui_lookup(:models=>"ChargebackRate"), :info, true) if ! flash_errors?
       cb_rates_list
-      @right_cell_text = _("%{typ} %{model}") % {:typ=>x_node, :model=>ui_lookup(:models=>"ChargebackRate")}
+      @right_cell_text = _("%{typ} %{model}") % {:typ => x_node.split('-').last, :model => ui_lookup(:models => "ChargebackRate")}
       replace_right_cell([:cb_rates])
     else # showing 1 rate, delete it
       if params[:id] == nil || ChargebackRate.find_by_id(params[:id]).nil?
