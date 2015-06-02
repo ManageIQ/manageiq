@@ -70,7 +70,12 @@ describe EmsRefresh do
       ems = FactoryGirl.create(:ems_vmware, :name => "ems_vmware1")
       vm1 = FactoryGirl.create(:vm_vmware, :name => "vm_vmware1", :ext_management_system => ems)
       vm2 = FactoryGirl.create(:vm_vmware, :name => "vm_vmware2", :ext_management_system => ems)
-      EmsRefresh::Refreshers::VcRefresher.should_receive(:refresh).with([vm1, vm2])
+      EmsRefresh::Refreshers::VcRefresher.should_receive(:refresh).with do |args|
+        # Refresh code doesn't care about args order so neither does the test
+        # TODO: use array_including in rspec 3
+        (args - [vm2, vm1]).empty?
+      end
+
       EmsRefresh.refresh([
         [vm1.class, vm1.id],
         [vm2.class, vm2.id],
