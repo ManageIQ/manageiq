@@ -1,0 +1,255 @@
+---
+:content:
+  event_type: orchestration.stack.create.end
+  timestamp: '2015-05-12 07:24:45.026776'
+  _unique_id: 23bebeaf61784fa5ba63ea57716aef15
+  payload:
+    state_reason: Stack CREATE completed successfully
+    user_id: admin
+    stack_identity: arn:openstack:heat::bb5c2277f9d04c16ab19cd70766aeba1:stacks/overcloud-compute-1-servers-clifnbu77aer-1-i3nt6by46wbx/04e9721f-b03f-4972-a9c0-a9ed747f252f
+    stack_name: overcloud-compute-1-servers-clifnbu77aer-1-i3nt6by46wbx
+    tenant_id: bb5c2277f9d04c16ab19cd70766aeba1
+    create_at: '2015-05-12T07:15:31Z'
+    state: CREATE_COMPLETE
+  priority: INFO
+  publisher_id: orchestration.localhost.localdomain
+  message_id: 364c4013-a745-4389-bc75-dedab2371b0d
+:context:
+  _context_roles:
+  - _member_
+  - admin
+  _context_request_id: req-4c946802-f102-4cac-98ed-d25adb433026
+  _context_auth_url: http://127.0.0.1:5000/v2.0
+  _context_tenant_id: bb5c2277f9d04c16ab19cd70766aeba1
+  _context_tenant: admin
+  _context_user_id: c4fbb27d71844a51b5d3fa98226ec06d
+  _context_username: admin
+  _context_auth_token: 9266472252f8462caceaf60d7204eda7
+  _context_password: 90b248db65ca0ac4e95a1aa5ca47be540f7af870
+  _context_trustor_user_id:
+  _context_aws_creds:
+  _context_show_deleted: false
+  _context_trust_id:
+  _context_is_admin: true
+  _context_auth_token_info:
+    token:
+      methods:
+      - password
+      - token
+      roles:
+      - id: 9fe2ff9ee4384b1894a90878d3e92bab
+        name: _member_
+      - id: b31275ac514240edbb5379d1a02dd183
+        name: admin
+      expires_at: '2015-05-12T11:15:22.000000Z'
+      project:
+        domain:
+          id: default
+          name: Default
+        id: bb5c2277f9d04c16ab19cd70766aeba1
+        name: admin
+      catalog:
+      - endpoints:
+        - url: http://192.0.2.1:35357/v2.0
+          interface: admin
+          region: regionOne
+          region_id: regionOne
+          id: 6c4729ff858042cfa7e1b7cba9ba6447
+        - url: http://192.0.2.1:5000/v2.0
+          interface: internal
+          region: regionOne
+          region_id: regionOne
+          id: be2f2fc797924be7ad6643940e3e8b38
+        - url: http://192.0.2.1:5000/v2.0
+          interface: public
+          region: regionOne
+          region_id: regionOne
+          id: c649504a115840b1b7f6b3f3dc048f7a
+        type: identity
+        id: 0fb84c0632e0498d934e508a6518b10c
+        name: keystone
+      - endpoints:
+        - url: http://192.0.2.1:9292/
+          interface: public
+          region: regionOne
+          region_id: regionOne
+          id: 512018975430431fba34230a9eb81965
+        - url: http://192.0.2.1:9292/
+          interface: internal
+          region: regionOne
+          region_id: regionOne
+          id: 60a1ff40a3c74db69bf57237ecdec9d7
+        - url: http://192.0.2.1:9292/
+          interface: admin
+          region: regionOne
+          region_id: regionOne
+          id: 7e93d28d61a24c10812fa627e7cf0b8b
+        type: image
+        id: 44e7f1f4ef484d9aaeff0d3871f56e02
+        name: glance
+      - endpoints:
+        - url: http://192.0.2.1:8777/
+          interface: admin
+          region: regionOne
+          region_id: regionOne
+          id: 61e452140a3a4030a672ca6d69c3eb4c
+        - url: http://192.0.2.1:8777/
+          interface: public
+          region: regionOne
+          region_id: regionOne
+          id: a56e7ab50fbc4bbf836b1787939a3d1e
+        - url: http://192.0.2.1:8777/
+          interface: internal
+          region: regionOne
+          region_id: regionOne
+          id: bde06f3b89cc4646975958cc790ffc58
+        type: metering
+        id: 50c1ce2fc21a4311ad0c97f1ee856471
+        name: ceilometer
+      - endpoints:
+        - url: http://192.0.2.1:8004/v1/bb5c2277f9d04c16ab19cd70766aeba1
+          interface: public
+          region: regionOne
+          region_id: regionOne
+          id: 939c2169a3824181b959135e2e677add
+        - url: http://192.0.2.1:8004/v1/bb5c2277f9d04c16ab19cd70766aeba1
+          interface: admin
+          region: regionOne
+          region_id: regionOne
+          id: b7fb6e07c6a34765af245b443dac7e3c
+        - url: http://192.0.2.1:8004/v1/bb5c2277f9d04c16ab19cd70766aeba1
+          interface: internal
+          region: regionOne
+          region_id: regionOne
+          id: d3fac9ba00ff4721aeed76f34f5373d2
+        type: orchestration
+        id: 5a814f587b7a4a69ac25344c9b110e49
+        name: heat
+      - endpoints:
+        - url: http://192.0.2.1:6385/
+          interface: admin
+          region: regionOne
+          region_id: regionOne
+          id: 2aa1fced95ad4fecb4bba64eb3efeee3
+        - url: http://192.0.2.1:6385/
+          interface: public
+          region: regionOne
+          region_id: regionOne
+          id: 98cf2f6d93c74341bb59b57741f792ad
+        - url: http://192.0.2.1:6385/
+          interface: internal
+          region: regionOne
+          region_id: regionOne
+          id: e453e95e84d844b88ab0e3a1ede23bfa
+        type: baremetal
+        id: 717e2f6f68e442a4bbdfac6af98ed8a8
+        name: ironic
+      - endpoints:
+        - url: http://192.0.2.1:8585/
+          interface: admin
+          region: regionOne
+          region_id: regionOne
+          id: 6f94480b8f7f4eafa26784a184395ef5
+        - url: http://192.0.2.1:8585/
+          interface: internal
+          region: regionOne
+          region_id: regionOne
+          id: b6c4858421c54fa09028a00283a65d77
+        - url: http://192.0.2.1:8585/
+          interface: public
+          region: regionOne
+          region_id: regionOne
+          id: fb42346aa9a74704aeb02654553e0ab6
+        type: management
+        id: 762e73e8a6114fe08c03a6e3ac61ca50
+        name: tuskar
+      - endpoints:
+        - url: http://192.0.2.1:8774/v3
+          interface: internal
+          region: regionOne
+          region_id: regionOne
+          id: 6ca408ec1ca648c0a2bdc28bb8bae7cb
+        - url: http://192.0.2.1:8774/v3
+          interface: public
+          region: regionOne
+          region_id: regionOne
+          id: a9a4713a85af4fa9abdead6e9b155607
+        - url: http://192.0.2.1:8774/v3
+          interface: admin
+          region: regionOne
+          region_id: regionOne
+          id: f5512bcd2c3d47febafcc59d6003d3cc
+        type: computev3
+        id: a2dff953347e48c9b9b82cef1cf2781b
+        name: nova
+      - endpoints:
+        - url: http://192.0.2.1:9696/
+          interface: public
+          region: regionOne
+          region_id: regionOne
+          id: 05da9a0fd9b2444f8faddcc31b371bb3
+        - url: http://192.0.2.1:9696/
+          interface: internal
+          region: regionOne
+          region_id: regionOne
+          id: 3be32222f07a4adeb79cde810a99e875
+        - url: http://192.0.2.1:9696/
+          interface: admin
+          region: regionOne
+          region_id: regionOne
+          id: d5ad0c9d68414996b2ba32a31deb8ad8
+        type: network
+        id: aaeb77e6fa62434fa24314143f69913e
+        name: neutron
+      - endpoints:
+        - url: http://192.0.2.1:8773/services/Cloud
+          interface: internal
+          region: regionOne
+          region_id: regionOne
+          id: 724b6d250e7f4c54a8f0e16e902540b1
+        - url: http://192.0.2.1:8773/services/Admin
+          interface: admin
+          region: regionOne
+          region_id: regionOne
+          id: b255f405e4d74ff2a4a1f37c17143608
+        - url: http://192.0.2.1:8773/services/Cloud
+          interface: public
+          region: regionOne
+          region_id: regionOne
+          id: d11da23070b74587a389aab2b191a78e
+        type: ec2
+        id: ba12cc14a3624ba681984cdedbddb4ec
+        name: ec2
+      - endpoints:
+        - url: http://192.0.2.1:8774/v2/bb5c2277f9d04c16ab19cd70766aeba1
+          interface: admin
+          region: regionOne
+          region_id: regionOne
+          id: 8c7c8340ccc04b4d88a46d0c523e4ff7
+        - url: http://192.0.2.1:8774/v2/bb5c2277f9d04c16ab19cd70766aeba1
+          interface: public
+          region: regionOne
+          region_id: regionOne
+          id: 9f56ec978bed48049e22925cbddf042a
+        - url: http://192.0.2.1:8774/v2/bb5c2277f9d04c16ab19cd70766aeba1
+          interface: internal
+          region: regionOne
+          region_id: regionOne
+          id: ce9ae52d5ffe4620ab066ca8124a3ff1
+        type: compute
+        id: ece2c6769a7e43f49400ce9260456779
+        name: nova
+      extras: {}
+      user:
+        domain:
+          id: default
+          name: Default
+        id: c4fbb27d71844a51b5d3fa98226ec06d
+        name: admin
+      audit_ids:
+      - QcWQqFwsS82Cak6U4xDKkg
+      issued_at: '2015-05-12T07:15:22.798261'
+  _context_user: admin
+:user_id:
+:priority:
+:content_type:
