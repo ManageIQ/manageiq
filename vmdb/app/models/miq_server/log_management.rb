@@ -126,7 +126,7 @@ module MiqServer::LogManagement
     task = MiqTask.find(taskid)
 
     # the current queue item and task must be errored out on exceptions so re-raise any caught errors
-    raise "Log depot settings not configured" unless self.log_depot_configured?
+    raise "Log depot settings not configured" unless log_depot
     log_depot.update_attributes(:support_case => options[:support_case].presence)
 
     self.post_historical_logs(taskid) unless options[:only_current]
@@ -233,10 +233,6 @@ module MiqServer::LogManagement
 
   def log_depot
     log_file_depot || zone.log_file_depot
-  end
-
-  def log_depot_configured?
-    get_log_depot_settings
   end
 
   def get_log_depot_settings
