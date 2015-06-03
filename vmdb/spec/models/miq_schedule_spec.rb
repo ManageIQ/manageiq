@@ -677,7 +677,7 @@ describe MiqSchedule do
         @valid_schedules.each { |sch| sch.valid?.should be_true }
       end
 
-      it "should return the expected depot_hash" do
+      it "should return the expected FileDepot subclass" do
         @valid_schedules.each { |sch| expect(sch.file_depot).to be_kind_of(FileDepotFtp) }
       end
     end
