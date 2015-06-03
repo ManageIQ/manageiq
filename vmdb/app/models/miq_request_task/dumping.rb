@@ -6,7 +6,7 @@ module MiqRequestTask::Dumping
       meth = "dump#{obj.class.name}".to_sym
       if self.respond_to?(meth)
         prnt_obj.send(prnt_meth, "#{prefix}(#{obj.class}) = EMPTY") if obj.respond_to?(:blank?) && obj.blank?
-        self.send(meth, obj, prefix, prnt_obj, prnt_meth, options)
+        send(meth, obj, prefix, prnt_obj, prnt_meth, options)
       else
         protected = false
         if options[:protected].kind_of?(Hash)
@@ -25,21 +25,21 @@ module MiqRequestTask::Dumping
     end
 
     def dumpHash(hd, prefix, prnt_obj, prnt_meth, options)
-      hd.each { |k, v| self.dumpObj(v, "#{prefix}[#{Symbol === k ? ":#{k}" : k}]", prnt_obj, prnt_meth, options) }
+      hd.each { |k, v| dumpObj(v, "#{prefix}[#{Symbol === k ? ":#{k}" : k}]", prnt_obj, prnt_meth, options) }
     end
 
     def dumpVimHash(hd, prefix, prnt_obj, prnt_meth, options)
       prnt_obj.send(prnt_meth, "#{prefix} (#{hd.class}) xsiType: <#{hd.xsiType}>  vimType: <#{hd.vimType}>")
-      self.dumpHash(hd, prefix, prnt_obj, prnt_meth, options)
+      dumpHash(hd, prefix, prnt_obj, prnt_meth, options)
     end
 
     def dumpArray(ad, prefix, prnt_obj, prnt_meth, options)
-      ad.inject(0) { |i, d| self.dumpObj(d, "#{prefix}[#{i}]", prnt_obj, prnt_meth, options);  i += 1 }
+      ad.inject(0) { |i, d| dumpObj(d, "#{prefix}[#{i}]", prnt_obj, prnt_meth, options);  i += 1 }
     end
 
     def dumpVimArray(ad, prefix, prnt_obj, prnt_meth, options)
       prnt_obj.send(prnt_meth, "#{prefix} (#{ad.class}) xsiType: <#{ad.xsiType}>  vimType: <#{ad.vimType}>")
-      self.dumpArray(ad, prefix, prnt_obj, prnt_meth, options)
+      dumpArray(ad, prefix, prnt_obj, prnt_meth, options)
     end
   end
 

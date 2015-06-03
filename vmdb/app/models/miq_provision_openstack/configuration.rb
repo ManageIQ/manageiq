@@ -1,6 +1,6 @@
 module MiqProvisionOpenstack::Configuration
   def associate_floating_ip(ip_address)
-    self.destination.with_provider_object do |instance|
+    destination.with_provider_object do |instance|
       instance.associate_address(ip_address)
     end
   end

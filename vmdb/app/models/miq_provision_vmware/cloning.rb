@@ -1,6 +1,6 @@
 module MiqProvisionVmware::Cloning
   def do_clone_task_check(clone_task_mor)
-    self.source.with_provider_connection do |vim|
+    source.with_provider_connection do |vim|
       begin
         state, val = vim.pollTask(clone_task_mor, "VMClone")
         case state
@@ -19,7 +19,7 @@ module MiqProvisionVmware::Cloning
 
   def find_destination_in_vmdb
     # The new VM will have the guid we placed in the annotations field
-    validation_guid = self.phase_context[:new_vm_validation_guid]
+    validation_guid = phase_context[:new_vm_validation_guid]
     VmOrTemplate.find_all_by_name(dest_name).detect do |v|
       v.hardware.annotation && v.hardware.annotation.include?(validation_guid)
     end
@@ -27,7 +27,7 @@ module MiqProvisionVmware::Cloning
 
   def prepare_for_clone_task
     raise MiqException::MiqProvisionError, "Provision Request's Destination VM Name=[#{dest_name}] cannot be blank" if dest_name.blank?
-    raise MiqException::MiqProvisionError, "A VM with name: [#{dest_name}] already exists" if self.source.ext_management_system.vms.where(:name => dest_name).any?
+    raise MiqException::MiqProvisionError, "A VM with name: [#{dest_name}] already exists" if source.ext_management_system.vms.where(:name => dest_name).any?
 
     clone_options = {
       :name      => dest_name,
@@ -37,7 +37,7 @@ module MiqProvisionVmware::Cloning
 
     # Destination folder
     folder_id = get_option(:placement_folder_name)
-    clone_options[:folder] = folder_id.blank? ? self.source.parent_blue_folder : EmsFolder.find_by_id(folder_id)
+    clone_options[:folder] = folder_id.blank? ? source.parent_blue_folder : EmsFolder.find_by_id(folder_id)
 
     # Find destination resource pool
     respool_id = get_option(:placement_rp_name)
@@ -47,15 +47,15 @@ module MiqProvisionVmware::Cloning
       cluster ? cluster.default_resource_pool : dest_host.default_resource_pool
     end
 
-    clone_options[:config]        = self.build_config_spec
-    clone_options[:customization] = self.build_customization_spec
-    clone_options[:transform]     = self.build_transform_spec
+    clone_options[:config]        = build_config_spec
+    clone_options[:customization] = build_customization_spec
+    clone_options[:transform]     = build_transform_spec
 
     # Determine if we are doing a linked-clone provision
     clone_options[:linked_clone] = get_option(:linked_clone).to_s == 'true'
-    clone_options[:snapshot]     = self.get_selected_snapshot if clone_options[:linked_clone]
+    clone_options[:snapshot]     = get_selected_snapshot if clone_options[:linked_clone]
 
-    self.validate_customization_spec(clone_options[:customization])
+    validate_customization_spec(clone_options[:customization])
 
     clone_options
   end
@@ -63,8 +63,8 @@ module MiqProvisionVmware::Cloning
   def log_clone_options(clone_options)
     log_header = "MIQ(#{self.class.name}#log_clone_options)"
 
-    $log.info("#{log_header} Provisioning [#{self.source.name}] to [#{clone_options[:name]}]")
-    $log.info("#{log_header} Source Template:            [#{self.source.name}]")
+    $log.info("#{log_header} Provisioning [#{source.name}] to [#{clone_options[:name]}]")
+    $log.info("#{log_header} Source Template:            [#{source.name}]")
     $log.info("#{log_header} Destination VM Name:        [#{clone_options[:name]}]")
     $log.info("#{log_header} Destination Host:           [#{clone_options[:host].name} (#{clone_options[:host].ems_ref})]")
     $log.info("#{log_header} Destination Datastore:      [#{clone_options[:datastore].name} (#{clone_options[:datastore].ems_ref})]")
@@ -77,10 +77,10 @@ module MiqProvisionVmware::Cloning
     cust_dump = clone_options[:customization].try(:dup)
     cust_dump.try(:delete, 'encryptionKey')
 
-    self.dumpObj(clone_options[:transform], "#{log_header} Transform: ",          $log, :info)
-    self.dumpObj(clone_options[:config],    "#{log_header} Config spec: ",        $log, :info)
-    self.dumpObj(cust_dump,                 "#{log_header} Customization spec: ", $log, :info, {:protected => {:path => /[Pp]assword\]\[value\]/}})
-    self.dumpObj(self.options,              "#{log_header} Prov Options: ",       $log, :info)
+    dumpObj(clone_options[:transform], "#{log_header} Transform: ",          $log, :info)
+    dumpObj(clone_options[:config],    "#{log_header} Config spec: ",        $log, :info)
+    dumpObj(cust_dump,                 "#{log_header} Customization spec: ", $log, :info, :protected => {:path => /[Pp]assword\]\[value\]/})
+    dumpObj(options,                   "#{log_header} Prov Options: ",       $log, :info)
   end
 
   def start_clone(clone_options)
@@ -98,8 +98,8 @@ module MiqProvisionVmware::Cloning
       vim_clone_options[key] = ci.ems_ref_obj
     end
 
-    task_mor = self.clone_vm(vim_clone_options)
-    $log.info("MIQ(#{self.class.name}#start_clone) Provisioning completed for [#{vim_clone_options[:name]}] from source [#{self.source.name}]") if MiqProvision::CLONE_SYNCHRONOUS
+    task_mor = clone_vm(vim_clone_options)
+    $log.info("MIQ(#{self.class.name}#start_clone) Provisioning completed for [#{vim_clone_options[:name]}] from source [#{source.name}]") if MiqProvision::CLONE_SYNCHRONOUS
     task_mor
   end
 
@@ -124,7 +124,7 @@ module MiqProvisionVmware::Cloning
 
     task_mor = nil
 
-    self.source.with_provider_object do |vim_vm|
+    source.with_provider_object do |vim_vm|
       task_mor = vim_vm.cloneVM_raw(vim_clone_options[:folder], vim_clone_options[:name], cspec, vim_clone_options[:wait])
     end
 
@@ -137,7 +137,7 @@ module MiqProvisionVmware::Cloning
       ss = Snapshot.find_by_id(selected_snapshot)
       raise MiqException::MiqProvisionError, "Unable to load requested snapshot <#{selected_snapshot}:#{get_option_last(:snapshot)}> for linked-clone processing." if ss.nil?
     else
-      first = self.source.snapshots.first
+      first = source.snapshots.first
       ss = first.get_current_snapshot unless first.blank?
     end
 

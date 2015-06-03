@@ -4,7 +4,7 @@ module MiqProvisionRedhat::StateMachine
   end
 
   def determine_placement
-    self.placement
+    placement
 
     signal :prepare_provision
   end
@@ -12,9 +12,9 @@ module MiqProvisionRedhat::StateMachine
   def start_clone_task
     update_and_notify_parent(:message => "Starting Clone of #{clone_direction}")
 
-    log_clone_options(self.phase_context[:clone_options])
-    start_clone(self.phase_context[:clone_options])
-    self.phase_context.delete(:clone_options)
+    log_clone_options(phase_context[:clone_options])
+    start_clone(phase_context[:clone_options])
+    phase_context.delete(:clone_options)
 
     signal :poll_clone_complete
   end
@@ -23,7 +23,7 @@ module MiqProvisionRedhat::StateMachine
     update_and_notify_parent(:message => "Waiting for clone of #{clone_direction}")
 
     if clone_complete?
-      self.phase_context.delete(:clone_task_ref)
+      phase_context.delete(:clone_task_ref)
       EmsRefresh.queue_refresh(dest_cluster.ext_management_system)
       signal :poll_destination_in_vmdb
     else
@@ -63,10 +63,10 @@ module MiqProvisionRedhat::StateMachine
   end
 
   def clone_direction
-    "[#{self.source.name}] to #{destination_type} [#{dest_name}]"
+    "[#{source.name}] to #{destination_type} [#{dest_name}]"
   end
 
   def for_destination
-    "#{destination_type} id: [#{self.destination.id}], name: [#{dest_name}]"
+    "#{destination_type} id: [#{destination.id}], name: [#{dest_name}]"
   end
 end

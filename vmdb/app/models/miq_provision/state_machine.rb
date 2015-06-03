@@ -20,12 +20,12 @@ module MiqProvision::StateMachine
   def poll_destination_in_vmdb
     update_and_notify_parent(:message => "Validating New #{destination_type}")
 
-    self.destination = find_destination_in_vmdb(self.phase_context[:new_vm_ems_ref])
-    if self.destination
-      self.phase_context.delete(:new_vm_ems_ref)
+    self.destination = find_destination_in_vmdb(phase_context[:new_vm_ems_ref])
+    if destination
+      phase_context.delete(:new_vm_ems_ref)
       signal :customize_destination
     else
-      $log.info("MIQ(#{self.class.name}#poll_destination_in_vmdb) Unable to find #{destination_type} [#{dest_name}] with ems_ref [#{self.phase_context[:new_vm_ems_ref]}], will retry")
+      $log.info("MIQ(#{self.class.name}#poll_destination_in_vmdb) Unable to find #{destination_type} [#{dest_name}] with ems_ref [#{phase_context[:new_vm_ems_ref]}], will retry")
       requeue_phase
     end
   end
@@ -33,11 +33,11 @@ module MiqProvision::StateMachine
   def poll_destination_powered_off_in_vmdb
     update_and_notify_parent(:message => "Waiting for VMDB PowerOff of #{for_destination}")
 
-    if self.destination.power_state == 'off'
+    if destination.power_state == 'off'
       signal :post_provision
     else
       $log.info("MIQ(#{self.class.name}#poll_destination_powered_off_in_vmdb) #{destination_type} [#{dest_name}] is not yet powered off, will retry")
-      EmsRefresh.queue_refresh(self.destination)
+      EmsRefresh.queue_refresh(destination)
       requeue_phase
     end
   end
@@ -51,7 +51,7 @@ module MiqProvision::StateMachine
       message = "Starting"
       $log.info("MIQ(#{self.class.name}#autostart_destination) #{message} #{for_destination}")
       update_and_notify_parent(:message => message)
-      self.destination.start
+      destination.start
     end
 
     signal :post_create_destination
@@ -60,31 +60,31 @@ module MiqProvision::StateMachine
   def post_create_destination
     log_header = "MIQ(#{self.class.name}#post_create_destination)"
 
-    $log.info "#{log_header} Destination #{self.destination.class.base_model.name} ID=#{self.destination.id}, Name=#{self.destination.name}"
+    $log.info "#{log_header} Destination #{destination.class.base_model.name} ID=#{destination.id}, Name=#{destination.name}"
 
-    set_description(self.destination, get_option(:vm_description))
+    set_description(destination, get_option(:vm_description))
     set_ownership(destination, get_owner)
-    set_retirement(self.destination)
-    set_genealogy(self.destination, self.source)
-    set_miq_custom_attributes(self.destination, get_option(:ws_miq_custom_attributes))
-    set_ems_custom_attributes(self.destination, get_option(:ws_ems_custom_attributes))
-    connect_to_service(self.destination, *self.get_service_and_service_resource)
+    set_retirement(destination)
+    set_genealogy(destination, source)
+    set_miq_custom_attributes(destination, get_option(:ws_miq_custom_attributes))
+    set_ems_custom_attributes(destination, get_option(:ws_ems_custom_attributes))
+    connect_to_service(destination, *get_service_and_service_resource)
 
-    self.destination.save
+    destination.save
 
     # HACK:
     # apply_tags calls Classification#assign_entry_to for each tag to apply
     # Classification#assign_entry_to reloads the object it is passed (why?)
     # So, we need to apply tags AFTER we save the destination object
-    apply_tags(self.destination)
+    apply_tags(destination)
 
     signal :mark_as_completed
   end
 
   def mark_as_completed
     begin
-      inputs = {:vm => self.destination, :host => self.destination.host}
-      MiqEvent.raise_evm_event(self.destination, 'vm_provisioned', inputs)
+      inputs = {:vm => destination, :host => destination.host}
+      MiqEvent.raise_evm_event(destination, 'vm_provisioned', inputs)
     rescue => err
       $log.log_backtrace(err)
     end
@@ -99,10 +99,10 @@ module MiqProvision::StateMachine
   end
 
   def finish
-    if self.status != 'Error'
+    if status != 'Error'
       number_of_vms = get_option(:number_of_vms).to_i
       pass = get_option(:pass)
-      $log.info("MIQ(#{self.class.name}#finish) Executing provision request: [#{self.description}], Pass: #{pass} of #{number_of_vms}... Complete")
+      $log.info("MIQ(#{self.class.name}#finish) Executing provision request: [#{description}], Pass: #{pass} of #{number_of_vms}... Complete")
     end
   end
 

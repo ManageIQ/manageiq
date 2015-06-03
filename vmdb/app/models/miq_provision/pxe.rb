@@ -46,8 +46,8 @@ module MiqProvision::Pxe
   def prepare_customization_template_substitution_options(mac_address = nil)
     substitution_options = nil
     if customization_template
-      substitution_options = self.options.dup
-      substitution_options[:miq_provision_id]             = self.id
+      substitution_options = options.dup
+      substitution_options[:miq_provision_id]             = id
       substitution_options[:post_install_callback_url] = post_install_callback_url
       substitution_options[:cidr]                         = cidr
       substitution_options[:mac_address]                  = mac_address if mac_address

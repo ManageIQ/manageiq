@@ -31,7 +31,7 @@ module MiqProvision::OptionsHelper
   end
 
   def get_hostname(dest_vm_name)
-    name_key = (self.source.platform == 'windows') ? :sysprep_computer_name : :linux_host_name
+    name_key = (source.platform == 'windows') ? :sysprep_computer_name : :linux_host_name
     computer_name = (get_option(:number_of_vms) > 1) ? nil : get_option(name_key).to_s.strip
     computer_name = dest_vm_name if computer_name.blank?
     hostname_cleanup(computer_name)
@@ -45,7 +45,7 @@ module MiqProvision::OptionsHelper
     return unless ip_address.to_s.ipv4?
     ip_seg = ip_address.split('.')
     ip_seg[-1] = ip_seg[-1].to_i + pass
-    self.options.merge!({:ip_addr => ip_seg.join('.')})
+    options.merge!(:ip_addr => ip_seg.join('.'))
   end
 
   def set_dns_domain
@@ -53,7 +53,7 @@ module MiqProvision::OptionsHelper
     value = get_option(:dns_domain)
     if value.blank?
       value = get_option(:dns_suffixes).to_s.split(',').first
-      self.options[:dns_domain] = value.nil? ? nil : value.strip
+      options[:dns_domain] = value.nil? ? nil : value.strip
     end
   end
 end

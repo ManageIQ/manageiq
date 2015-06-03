@@ -4,10 +4,10 @@ module MiqProvisionVmware::StateMachine
   end
 
   def determine_placement
-    host, datastore = self.placement
+    host, datastore = placement
 
-    self.options[:dest_host]    = [host.id, host.name]
-    self.options[:dest_storage] = [datastore.id, datastore.name]
+    options[:dest_host]    = [host.id, host.name]
+    options[:dest_storage] = [datastore.id, datastore.name]
     signal :start_clone_task
   end
 
@@ -15,16 +15,16 @@ module MiqProvisionVmware::StateMachine
     update_and_notify_parent(:message => "Starting Clone of #{clone_direction}")
 
     # Use this ID to validate the VM when we check in the post-provision method
-    self.phase_context[:new_vm_validation_guid] = MiqUUID.new_guid
+    phase_context[:new_vm_validation_guid] = MiqUUID.new_guid
 
     clone_options = prepare_for_clone_task
     log_clone_options(clone_options)
-    self.phase_context[:clone_task_mor] = start_clone(clone_options)
+    phase_context[:clone_task_mor] = start_clone(clone_options)
     signal :poll_clone_complete
   end
 
   def poll_clone_complete
-    clone_status, status_message = do_clone_task_check(self.phase_context[:clone_task_mor])
+    clone_status, status_message = do_clone_task_check(phase_context[:clone_task_mor])
 
     status_message = "completed; post provision work queued" if clone_status
     message = "Clone of #{clone_direction} is #{status_message}"
@@ -32,7 +32,7 @@ module MiqProvisionVmware::StateMachine
     update_and_notify_parent(:message => message)
 
     if clone_status
-      self.phase_context.delete(:clone_task_mor)
+      phase_context.delete(:clone_task_mor)
       EmsRefresh.queue_refresh(dest_host)
       signal :poll_destination_in_vmdb
     else
@@ -44,20 +44,20 @@ module MiqProvisionVmware::StateMachine
     update_and_notify_parent(:message => "Validating New #{destination_type}")
 
     self.destination = find_destination_in_vmdb
-    if self.destination
-      self.phase_context.delete(:new_vm_validation_guid)
+    if destination
+      phase_context.delete(:new_vm_validation_guid)
       signal :customize_destination
     else
-      $log.info("MIQ(#{self.class.name}#poll_destination_in_vmdb) Unable to find #{destination_type} [#{dest_name}] with validation guid [#{self.phase_context[:new_vm_validation_guid]}], will retry")
+      $log.info("MIQ(#{self.class.name}#poll_destination_in_vmdb) Unable to find #{destination_type} [#{dest_name}] with validation guid [#{phase_context[:new_vm_validation_guid]}], will retry")
       requeue_phase
     end
   end
 
   def customize_destination
-    $log.info("MIQ(#{self.class.name}#customize_destination) Post-processing #{destination_type} id: [#{self.destination.id}], name: [#{dest_name}]")
+    $log.info("MIQ(#{self.class.name}#customize_destination) Post-processing #{destination_type} id: [#{destination.id}], name: [#{dest_name}]")
     update_and_notify_parent(:message => "Starting New #{destination_type} Customization")
 
-    set_cpu_and_memory_allocation(self.destination) if reconfigure_hardware_on_destination?
+    set_cpu_and_memory_allocation(destination) if reconfigure_hardware_on_destination?
     signal :autostart_destination
   end
 
@@ -76,10 +76,10 @@ module MiqProvisionVmware::StateMachine
 
   # NOTE: Due to frequent problems with cache not containing the new VM we need to clear the cache and try again.
   def start_with_cache_reset
-    self.destination.start
+    destination.start
   rescue MiqException::MiqVimResourceNotFound
     $log.info("MIQ(#{self.class.name}#start_with_cache_reset) Unable to start #{for_destination}.  Retrying after VIM cache reset.")
-    self.destination.ext_management_system.reset_vim_cache
-    self.destination.start
+    destination.ext_management_system.reset_vim_cache
+    destination.start
   end
 end

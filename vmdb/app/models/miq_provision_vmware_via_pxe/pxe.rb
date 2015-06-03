@@ -3,7 +3,7 @@ module MiqProvisionVmwareViaPxe::Pxe
     network_name = get_option(:vlan)
     # Remove the "dvs_" prefix from the vlan name that gets saved as part of the DV switches
     network_name = network_name[4..-1] if network_name[0, 4] == 'dvs_'
-    vm = self.destination
+    vm = destination
     result = vm.hardware.nics.detect { |n| n.address && n.lan.try(:name) == network_name }.try(:address)
     if result.blank?
       # Sort by device name to control return order.  VMware names nics like: Network adapter 1, Network adapter 2

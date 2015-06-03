@@ -6,10 +6,10 @@ module MiqProvisionVmware::Configuration::Network
     template_networks  = get_network_adapters
 
     if requested_networks.blank?
-      self.options[:requested_network_adapter_count] = template_networks.length
+      options[:requested_network_adapter_count] = template_networks.length
       $log.warn "#{log_header} VLan options is nil.  VLan settings will be inherited from the template."
     else
-      self.options[:requested_network_adapter_count] = requested_networks.length
+      options[:requested_network_adapter_count] = requested_networks.length
       requested_networks.each_with_index do |net, idx|
         vim_net_adapter = template_networks[idx]
 
@@ -31,11 +31,11 @@ module MiqProvisionVmware::Configuration::Network
 
   def normalize_network_adapter_settings
     log_header = "MIQ(#{self.class.name}.normalize_network_adapter_settings)"
-    if self.options[:networks].blank?
+    if options[:networks].blank?
       vlan = get_option(:vlan)
       $log.info("#{log_header} vlan: #{vlan.inspect}")
       unless vlan.nil?
-        self.options[:networks] = [] << net = {:network => vlan, :mac_address => get_option_last(:mac_address)}
+        options[:networks] = [] << net = {:network => vlan, :mac_address => get_option_last(:mac_address)}
         if vlan[0, 4] == 'dvs_'
           # Remove the "dvs_" prefix on the name
           net[:network] = vlan[4..-1]
@@ -44,10 +44,10 @@ module MiqProvisionVmware::Configuration::Network
       end
     else
       # When using advanced network settings update the options hash to reflect the selected vlan
-      net = self.options[:networks].first
-      self.options[:vlan] = [net[:is_dvs] == true ? "dvs_#{net[:network]}" : net[:network], net[:network]]
+      net = options[:networks].first
+      options[:vlan] = [net[:is_dvs] == true ? "dvs_#{net[:network]}" : net[:network], net[:network]]
     end
-    self.options[:networks]
+    options[:networks]
   end
 
   def build_config_spec_vlan(network, vnicDev, vmcs)
@@ -72,7 +72,7 @@ module MiqProvisionVmware::Configuration::Network
   def build_config_spec_dvs(network, vnicDev, vmcs)
     log_header = "MIQ(#{self.class.name}.build_config_spec_dvs)"
 
-    self.source.with_provider_connection do |vim|
+    source.with_provider_connection do |vim|
       operation = vnicDev.nil? ? VirtualDeviceConfigSpecOperation::Add : VirtualDeviceConfigSpecOperation::Edit
       add_device_config_spec(vmcs, operation) do |vdcs|
         vdcs.device = vnicDev || create_vlan_device(network)
@@ -143,8 +143,8 @@ module MiqProvisionVmware::Configuration::Network
   end
 
   def get_network_adapters
-    inventory_hash = self.source.with_provider_connection do |vim|
-      vim.virtualMachineByMor(self.source.ems_ref_obj)
+    inventory_hash = source.with_provider_connection do |vim|
+      vim.virtualMachineByMor(source.ems_ref_obj)
     end
 
     devs = inventory_hash.fetch_path("config", "hardware", "device") || []
@@ -152,7 +152,7 @@ module MiqProvisionVmware::Configuration::Network
   end
 
   def get_network_device(vimVm, vmcs, vim = nil, vlan = nil)
-    svm = self.source
+    svm = source
     nic = svm.hardware.nil? ? nil : svm.hardware.nics.first
     unless nic.nil?
       # if passed a vlan, validate that the target host supports it.

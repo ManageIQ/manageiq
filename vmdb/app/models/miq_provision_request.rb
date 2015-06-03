@@ -8,7 +8,7 @@ class MiqProvisionRequest < MiqRequest
   TASK_DESCRIPTION  = 'VM Provisioning'
   SOURCE_CLASS_NAME = 'VmOrTemplate'
   REQUEST_TYPES     = %w{ template clone_to_vm clone_to_template }
-  ACTIVE_STATES     = %w{ migrated } + self.base_class::ACTIVE_STATES
+  ACTIVE_STATES     = %w{ migrated } + base_class::ACTIVE_STATES
 
   validates_inclusion_of :request_type,   :in => REQUEST_TYPES,                          :message => "should be #{REQUEST_TYPES.join(", ")}"
   validates_inclusion_of :request_state,
@@ -57,18 +57,18 @@ class MiqProvisionRequest < MiqRequest
   end
 
   def must_have_valid_vm
-    errors.add(:vm_template, "must have valid VM (must be in vmdb)") if self.vm_template.nil?
+    errors.add(:vm_template, "must have valid VM (must be in vmdb)") if vm_template.nil?
   end
 
   def set_description(force = false)
     prov_description = nil
-    if self.description.nil? || force == true
+    if description.nil? || force == true
       prov_description = MiqProvision.get_description(self, MiqProvision.get_next_vm_name(self, false))
     end
     # Capture self.options after running 'get_next_vm_name' method since automate may update the object
-    attrs = {:options => self.options.merge(:delivered_on => nil)}
+    attrs = {:options => options.merge(:delivered_on => nil)}
     attrs[:description] = prov_description unless prov_description.nil?
-    self.update_attributes(attrs)
+    update_attributes(attrs)
   end
 
   def post_create_request_tasks
@@ -85,7 +85,7 @@ class MiqProvisionRequest < MiqRequest
   end
 
   def requested_task_idx
-    (1..self.get_option(:number_of_vms).to_i).to_a
+    (1..get_option(:number_of_vms).to_i).to_a
   end
 
   def customize_request_task_attributes(req_task_attrs, idx)
@@ -124,7 +124,7 @@ class MiqProvisionRequest < MiqRequest
   end
 
   def vms
-    self.miq_provisions.collect(&:vm).compact
+    miq_provisions.collect(&:vm).compact
   end
 
   def originating_controller

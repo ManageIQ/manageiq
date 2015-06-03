@@ -4,21 +4,21 @@ module MiqProvisionCloud::StateMachine
   end
 
   def determine_placement
-    availability_zone = self.placement
-    self.options[:dest_availability_zone] = [availability_zone.try(:id), availability_zone.try(:name)]
+    availability_zone = placement
+    options[:dest_availability_zone] = [availability_zone.try(:id), availability_zone.try(:name)]
     signal :prepare_provision
   end
 
   def start_clone_task
     update_and_notify_parent(:message => "Starting Clone of #{clone_direction}")
-    log_clone_options(self.phase_context[:clone_options])
-    self.phase_context[:clone_task_ref] = start_clone(self.phase_context[:clone_options])
-    self.phase_context.delete(:clone_options)
+    log_clone_options(phase_context[:clone_options])
+    phase_context[:clone_task_ref] = start_clone(phase_context[:clone_options])
+    phase_context.delete(:clone_options)
     signal :poll_clone_complete
   end
 
   def poll_clone_complete
-    clone_status, status_message = do_clone_task_check(self.phase_context[:clone_task_ref])
+    clone_status, status_message = do_clone_task_check(phase_context[:clone_task_ref])
 
     status_message = "completed; post provision work queued" if clone_status
     message = "Clone of #{clone_direction} is #{status_message}"
@@ -26,8 +26,8 @@ module MiqProvisionCloud::StateMachine
     update_and_notify_parent(:message => message)
 
     if clone_status
-      clone_task_ref = self.phase_context.delete(:clone_task_ref)
-      self.phase_context[:new_vm_ems_ref] = clone_task_ref
+      clone_task_ref = phase_context.delete(:clone_task_ref)
+      phase_context[:new_vm_ems_ref] = clone_task_ref
       EmsRefresh.queue_refresh(source.ext_management_system)
       signal :poll_destination_in_vmdb
     else
@@ -51,10 +51,10 @@ module MiqProvisionCloud::StateMachine
   private
 
   def clone_direction
-    "[#{self.source.name}] to #{destination_type} [#{dest_name}]"
+    "[#{source.name}] to #{destination_type} [#{dest_name}]"
   end
 
   def for_destination
-    "#{destination_type} id: [#{self.destination.id}], name: [#{dest_name}]"
+    "#{destination_type} id: [#{destination.id}], name: [#{dest_name}]"
   end
 end

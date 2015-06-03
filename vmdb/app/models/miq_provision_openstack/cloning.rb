@@ -1,6 +1,6 @@
 module MiqProvisionOpenstack::Cloning
   def do_clone_task_check(clone_task_ref)
-    self.source.with_provider_connection do |openstack|
+    source.with_provider_connection do |openstack|
       instance = openstack.servers_for_accessible_tenants.detect { |s| s.id == clone_task_ref }
       status   = instance.state.downcase.to_sym
 
@@ -13,7 +13,7 @@ module MiqProvisionOpenstack::Cloning
     clone_options = super
 
     clone_options[:name]              = dest_name
-    clone_options[:image_ref]         = self.source.ems_ref
+    clone_options[:image_ref]         = source.ems_ref
     clone_options[:flavor_ref]        = instance_type.ems_ref
     clone_options[:availability_zone] = nil if dest_availability_zone.kind_of?(AvailabilityZoneOpenstackNull)
     clone_options[:security_groups]   = security_groups.collect(&:ems_ref)
@@ -25,7 +25,7 @@ module MiqProvisionOpenstack::Cloning
   def log_clone_options(clone_options)
     log_header = "MIQ(#{self.class.name}#log_clone_options)"
 
-    $log.info("#{log_header} Provisioning [#{self.source.name}] to [#{clone_options[:name]}]")
+    $log.info("#{log_header} Provisioning [#{source.name}] to [#{clone_options[:name]}]")
     $log.info("#{log_header} Source Image:                    [#{clone_options[:image_ref]}]")
     $log.info("#{log_header} Destination Availability Zone:   [#{clone_options[:availability_zone]}]")
     $log.info("#{log_header} Flavor:                          [#{clone_options[:flavor_ref]}]")
@@ -33,13 +33,13 @@ module MiqProvisionOpenstack::Cloning
     $log.info("#{log_header} Security Group:                  [#{clone_options[:security_groups]}]")
     $log.info("#{log_header} Network:                         [#{clone_options[:nics]}]")
 
-    self.dumpObj(clone_options, "#{log_header} Clone Options: ", $log, :info)
-    self.dumpObj(self.options,  "#{log_header} Prov Options:  ", $log, :info)
+    dumpObj(clone_options, "#{log_header} Clone Options: ", $log, :info)
+    dumpObj(options, "#{log_header} Prov Options:  ", $log, :info)
   end
 
   def start_clone(clone_options)
     connection_options = {:tenant_name => options[:cloud_tenant][1]} if options[:cloud_tenant].is_a? Array
-    self.source.with_provider_connection(connection_options) do |openstack|
+    source.with_provider_connection(connection_options) do |openstack|
       instance = openstack.servers.create(clone_options)
       return instance.id
     end

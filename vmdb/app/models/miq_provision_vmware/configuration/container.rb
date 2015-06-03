@@ -19,7 +19,7 @@ module MiqProvisionVmware::Configuration::Container
         set_spec_option(vmcs, :numCPUs, :number_of_cpus, nil, :to_i)
       else
         # Setting coresPerSocket is only supported on VMware hardware version 7 and above.
-        vm_hardware_version = self.source.hardware.virtual_hw_version rescue nil
+        vm_hardware_version = source.hardware.virtual_hw_version rescue nil
         if vm_hardware_version.to_i < 7
           $log.warn "#{log_header} VMware hardware version <#{vm_hardware_version}> does not support setting coresPerSocket" if cores >= 1
           cores = nil
@@ -52,12 +52,12 @@ module MiqProvisionVmware::Configuration::Container
   def build_vm_notes
     log_header = "MIQ(#{self.class.name}.build_vm_notes)"
 
-    new_vm_guid = self.phase_context[:new_vm_validation_guid]
+    new_vm_guid = phase_context[:new_vm_validation_guid]
     #vmcs.annotation = "Owner: #{get_option(:owner_first_name)} #{get_option(:owner_last_name)}, #{get_option(:owner_email)}; MIQ GUID=#{new_vm_guid}"
-    vm_notes = self.get_option(:vm_notes).to_s.strip
+    vm_notes = get_option(:vm_notes).to_s.strip
     vm_notes += "\n\n" unless vm_notes.blank?
     vm_notes += "MIQ GUID=#{new_vm_guid}"
-    service, service_resource = self.get_service_and_service_resource
+    service, service_resource = get_service_and_service_resource
     if service
       vm_notes += "\n\nParent Service: #{service.name} (#{service.guid})"
     end
@@ -125,7 +125,7 @@ module MiqProvisionVmware::Configuration::Container
     end
 
     $log.info("#{log_header} Calling VM reconfiguration")
-    self.dumpObj(config_spec, "#{log_header} Post-create Config spec: ", $log, :info)
+    dumpObj(config_spec, "#{log_header} Post-create Config spec: ", $log, :info)
     vm.spec_reconfigure(config_spec)
   end
 end

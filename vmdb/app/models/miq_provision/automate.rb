@@ -39,10 +39,10 @@ module MiqProvision::Automate
       'request' => 'UI_PROVISION_INFO',
       'message' => 'get_placement'
     }
-    attrs[MiqAeEngine.create_automation_attribute_key(self.get_user)] = MiqAeEngine.create_automation_attribute_value(self.get_user) unless self.get_user.nil?
+    attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
     uri = MiqAeEngine.create_automation_object("REQUEST", attrs, :vmdb_object => self)
     ws  = MiqAeEngine.resolve_automation_object(uri)
-    self.reload
+    reload
 
     {
       :host    => MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["host"]),
@@ -56,10 +56,10 @@ module MiqProvision::Automate
       'request' => 'UI_PROVISION_INFO',
       'message' => 'get_availability_zone'
     }
-    attrs[MiqAeEngine.create_automation_attribute_key(self.get_user)] = MiqAeEngine.create_automation_attribute_value(self.get_user) unless self.get_user.nil?
+    attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
     uri = MiqAeEngine.create_automation_object("REQUEST", attrs, :vmdb_object => self)
     ws  = MiqAeEngine.resolve_automation_object(uri)
-    self.reload
+    reload
     MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["availability_zone"])
   end
 
@@ -68,10 +68,10 @@ module MiqProvision::Automate
       'request' => 'UI_PROVISION_INFO',
       'message' => 'get_host_and_storage'
     }
-    attrs[MiqAeEngine.create_automation_attribute_key(self.get_user)] = MiqAeEngine.create_automation_attribute_value(self.get_user) unless self.get_user.nil?
+    attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
     uri = MiqAeEngine.create_automation_object("REQUEST", attrs, :vmdb_object => self)
     ws  = MiqAeEngine.resolve_automation_object(uri)
-    self.reload
+    reload
     host      = MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["host"])
     datastore = MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["storage"])
     return host, datastore
@@ -82,10 +82,10 @@ module MiqProvision::Automate
       'request' => 'UI_PROVISION_INFO',
       'message' => 'get_cluster'
     }
-    attrs[MiqAeEngine.create_automation_attribute_key(self.get_user)] = MiqAeEngine.create_automation_attribute_value(self.get_user) unless self.get_user.nil?
+    attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
     uri = MiqAeEngine.create_automation_object("REQUEST", attrs, :vmdb_object => self)
     ws  = MiqAeEngine.resolve_automation_object(uri)
-    self.reload
+    reload
     MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["cluster"])
   end
 
@@ -94,10 +94,10 @@ module MiqProvision::Automate
       'request' => 'UI_PROVISION_INFO',
       'message' => 'get_host'
     }
-    attrs[MiqAeEngine.create_automation_attribute_key(self.get_user)] = MiqAeEngine.create_automation_attribute_value(self.get_user) unless self.get_user.nil?
+    attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
     uri = MiqAeEngine.create_automation_object("REQUEST", attrs, :vmdb_object => self)
     ws  = MiqAeEngine.resolve_automation_object(uri)
-    self.reload
+    reload
     MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["host"])
   end
 
@@ -109,8 +109,8 @@ module MiqProvision::Automate
   def get_network_details
     log_prefix = "MIQ(#{self.class.name}.get_network_details)"
 
-    related_vm             = self.vm || self.source
-    related_vm_description = (related_vm == self.vm) ? "VM" : "Template"
+    related_vm             = vm || source
+    related_vm_description = (related_vm == vm) ? "VM" : "Template"
 
     if related_vm.nil?
       $log.error "#{log_prefix} No VM or Template Found for Provision Object"
@@ -128,19 +128,19 @@ module MiqProvision::Automate
       return nil
     end
 
-    vlan_id, vlan_name = self.options[:vlan]
+    vlan_id, vlan_name = options[:vlan]
     unless vlan_name.kind_of?(String)
       $log.error "#{log_prefix} VLAN Name <#{vlan_name.inspect}> is missing or invalid"
       return nil
     end
 
-    $log.info "#{log_prefix} << vlan_name=<#{vlan_name}> vlan_id=#{vlan_id} vc_id=<#{vc_id}> user=<#{self.get_user}>"
+    $log.info "#{log_prefix} << vlan_name=<#{vlan_name}> vlan_id=#{vlan_id} vc_id=<#{vc_id}> user=<#{get_user}>"
 
     attrs = {
       'request' => 'UI_PROVISION_INFO',
       'message' => 'get_networks'
     }
-    attrs[MiqAeEngine.create_automation_attribute_key(self.get_user)] = MiqAeEngine.create_automation_attribute_value(self.get_user) unless self.get_user.nil?
+    attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
     uri = MiqAeEngine.create_automation_object("REQUEST", attrs)
     ws  = MiqAeEngine.resolve_automation_object(uri)
 
@@ -170,8 +170,8 @@ module MiqProvision::Automate
   end
 
   def get_domain
-    return self.options[:linux_domain_name]         unless self.options[:linux_domain_name].nil?
-    return self.options[:sysprep_domain_name].first if     self.options[:sysprep_domain_name].kind_of?(Array)
+    return options[:linux_domain_name]         unless options[:linux_domain_name].nil?
+    return options[:sysprep_domain_name].first if     options[:sysprep_domain_name].kind_of?(Array)
     return nil
   end
 
@@ -180,7 +180,7 @@ module MiqProvision::Automate
 
     event_name = 'vm_provision_preprocessing'
     ws = call_automate_event(event_name, false)
-    self.reload
+    reload
     if ws.nil?
       update_and_notify_parent(:state => "finished", :status => "Error", :message => "Automation Error in processing Event #{event_name}")
       return false
@@ -201,7 +201,7 @@ module MiqProvision::Automate
 
         MiqQueue.put(
           :class_name  => self.class.name,
-          :instance_id => self.id,
+          :instance_id => id,
           :method_name => "execute",
           :zone        => my_zone,
           :role        => my_role,

@@ -25,7 +25,7 @@ class MiqRequestWorkflow
   end
 
   def initialize(values, requester, options = {})
-    self.instance_var_init(values, requester, options)
+    instance_var_init(values, requester, options)
 
     unless options[:skip_dialog_load] == true
       # If this is the first time we are called the values hash will be empty
@@ -63,7 +63,7 @@ class MiqRequestWorkflow
 
     yield if block_given?
 
-    request = self.request_class.create({:options => values, :userid => requester_id, :request_type => self.request_type.to_s})
+    request = request_class.create(:options => values, :userid => requester_id, :request_type => request_type.to_s)
     begin
       request.save!  # Force validation errors to raise now
     rescue => err
@@ -118,12 +118,12 @@ class MiqRequestWorkflow
     options = values
     values_new = options
 
-    self.get_all_dialogs.keys.each do |d|                         # Go thru all dialogs
-      self.get_all_fields(d).keys.each do |f|                     # Go thru all field
+    get_all_dialogs.keys.each do |d|                         # Go thru all dialogs
+      get_all_fields(d).keys.each do |f|                     # Go thru all field
         if !options[f].nil?
           values_new[f] = options[f]                              # Set the existing option value
         else
-          field = self.get_field(f, d)
+          field = get_field(f, d)
           if field[:display] != :ignore
             if !field[:default].nil?
               val = field[:default]                               # Set to default value
@@ -158,11 +158,11 @@ class MiqRequestWorkflow
     # Update @dialogs adding error keys to fields that don't validate
     valid = true
 
-    self.get_all_dialogs.each do |d, dlg|
+    get_all_dialogs.each do |d, dlg|
       # Check if the entire dialog is ignored or disabled and check while processing the fields
       dialog_disabled = !dialog_active?(d, dlg, values)
 
-      self.get_all_fields(d).each do |f,fld|
+      get_all_fields(d).each do |f, fld|
         fld[:error] = nil
 
         # Check the disabled flag here so we reset the "error" value on each field
@@ -173,7 +173,7 @@ class MiqRequestWorkflow
         if fld[:required] == true
           # If :required_method is defined let it determine if the field is value
           unless fld[:required_method].nil?
-            fld[:error] = self.send(fld[:required_method], f, values, dlg, fld, value)
+            fld[:error] = send(fld[:required_method], f, values, dlg, fld, value)
             unless fld[:error].nil?
               valid = false
               next
@@ -181,7 +181,7 @@ class MiqRequestWorkflow
           else
             default_require_method = "default_require_#{f}".to_sym
             if self.respond_to?(default_require_method)
-              fld[:error] = self.send(default_require_method, f, values, dlg, fld, value)
+              fld[:error] = send(default_require_method, f, values, dlg, fld, value)
               unless fld[:error].nil?
                 valid = false
                 next
@@ -267,7 +267,7 @@ class MiqRequestWorkflow
     if field.has_key?(:values_from)
       options = field[:values_from][:options] || {}
       options[:prov_field_name] = field_name
-      field[:values] = self.send(field[:values_from][:method], options)
+      field[:values] = send(field[:values_from][:method], options)
 
       # Reset then currently selected item if it no longer appears in the available values
       if field[:values].kind_of?(Hash)
@@ -348,10 +348,10 @@ class MiqRequestWorkflow
   def set_ws_tags(values, tag_string, parser = :parse_ws_string)
     # Tags are passed as category|value.  Example: cc|001|environment|test
     ta = []
-    ws_tags = self.send(parser, tag_string)
+    ws_tags = send(parser, tag_string)
 
     tags = {}
-    self.send(:allowed_tags).each do |v|
+    send(:allowed_tags).each do |v|
       tc = tags[v[:name]] = {}
       v[:children].each { |k, v| tc[v[:name]] = k }
     end
@@ -363,7 +363,7 @@ class MiqRequestWorkflow
   def set_ws_values(values, key_name, additional_values, parser = :parse_ws_string, parser_options = {})
     # Tags are passed as category=value.  Example: cc=001|environment=test
     ws_values = values[key_name] = {}
-    parsed_values = self.send(parser, additional_values, parser_options)
+    parsed_values = send(parser, additional_values, parser_options)
     parsed_values.each { |k, v| ws_values[k.to_sym] = v }
   end
 
@@ -390,7 +390,7 @@ class MiqRequestWorkflow
 
   def set_or_default_field_values(values)
     field_names = values.keys
-    self.fields do |fn, f, dn, d|
+    fields do |fn, f, dn, d|
       if field_names.include?(fn)
         if f.has_key?(:values)
           selected_key = nil
@@ -413,7 +413,7 @@ class MiqRequestWorkflow
   end
 
   def clear_field_values(field_names)
-    self.fields do |fn, f, dn, d|
+    fields do |fn, f, dn, d|
       if field_names.include?(fn)
         @values[fn] = f.has_key?(:values) ? [nil,nil] : nil
       end
@@ -494,7 +494,7 @@ class MiqRequestWorkflow
   end
 
   def show_fields(display_flag, field_names, display_field = :display)
-    self.fields do |fn, f, dn, d|
+    fields do |fn, f, dn, d|
       if field_names.include?(fn)
         flag = f[:display_override].blank? ? display_flag : f[:display_override]
         f[display_field] = flag
@@ -532,7 +532,7 @@ class MiqRequestWorkflow
   def default_schedule_time(options = {})
     # TODO: Added support for "default_from", like values_from, that gets called once after dialog creation
     # Update VM description
-    self.fields do |fn, f, dn, d|
+    fields do |fn, f, dn, d|
       if fn == :schedule_time
         f[:default] = Time.now + options[:offset].to_i_with_method if f[:default].nil?
         break
@@ -559,7 +559,7 @@ class MiqRequestWorkflow
 
   def get_tags
     tag_string = ''
-    self.tags do |tag, cat|
+    tags do |tag, cat|
       tag_string << ':' unless tag_string.empty?
       tag_string << "#{cat}/#{tag}"
     end
@@ -628,9 +628,9 @@ class MiqRequestWorkflow
 
   def allowed_tags_and_pre_tags
     pre_tags = @values[:pre_dialog_vm_tags].to_miq_a
-    return self.allowed_tags if pre_tags.blank?
+    return allowed_tags if pre_tags.blank?
 
-    tag_cats = self.allowed_tags.dup
+    tag_cats = allowed_tags.dup
     tag_cat_names = tag_cats.collect { |cat| cat[:name] }
 
     Classification.find_all_by_id(pre_tags).each do |tag|
@@ -701,7 +701,7 @@ class MiqRequestWorkflow
       end
     end
 
-    input_fields.each { |k| attrs["dialog_input_#{k.to_s.downcase}"] = self.send(k).to_s }
+    input_fields.each { |k| attrs["dialog_input_#{k.to_s.downcase}"] = send(k).to_s }
 
     uri  = MiqAeEngine.create_automation_object("REQUEST", attrs, :vmdb_object => @requester)
     ws   = MiqAeEngine.resolve_automation_object(uri)
@@ -725,7 +725,7 @@ class MiqRequestWorkflow
   end
 
   def self.request_type(type)
-    return self.request_class::REQUEST_TYPES.first if type.blank?
+    return request_class::REQUEST_TYPES.first if type.blank?
     return type.to_sym
   end
 
@@ -742,7 +742,7 @@ class MiqRequestWorkflow
   end
 
   def self.request_class
-    @workflow_class ||= self.name.underscore.gsub(/_workflow$/, "_request").camelize.constantize
+    @workflow_class ||= name.underscore.gsub(/_workflow$/, "_request").camelize.constantize
   end
 
   def set_default_values
@@ -796,7 +796,7 @@ class MiqRequestWorkflow
       get_source_and_targets(true)
 
       # @values gets modified during this call
-      self.get_all_dialogs
+      get_all_dialogs
 
       values.merge!(@values)
 
@@ -817,7 +817,7 @@ class MiqRequestWorkflow
     result = nil
     relats.each do |rsc_type|
       rails_logger("allowed_ci - #{rsc_type}_to_#{ci}", 0)
-      rc = self.send("#{rsc_type}_to_#{ci}", sources)
+      rc = send("#{rsc_type}_to_#{ci}", sources)
       rails_logger("allowed_ci - #{rsc_type}_to_#{ci}", 1)
       unless rc.nil?
         rc = rc.to_a
@@ -1433,7 +1433,7 @@ class MiqRequestWorkflow
   end
 
   def allowed_images(options = {})
-    result = self.allowed_pxe_images(options) + self.allowed_windows_images(options)
+    result = allowed_pxe_images(options) + allowed_windows_images(options)
     # Change the ID to contain the class name since this is a mix class type
     result.each { |ci| ci.id = "#{ci.evm_object_class}::#{ci.id}" }
     result
@@ -1510,10 +1510,10 @@ class MiqRequestWorkflow
   end
 
   def validate_values(values)
-    if self.validate(values) == false
+    if validate(values) == false
       log_header = "MIQ(#{self.class.name}#validate_values)"
       errors = []
-      self.fields { |fn, f, dn, d| errors << f[:error] unless f[:error].nil? }
+      fields { |fn, f, dn, d| errors << f[:error] unless f[:error].nil? }
       err_text = "Provision failed for the following reasons:\n#{errors.join("\n")}"
       $log.error "#{log_header}: <#{err_text}>"
       raise err_text

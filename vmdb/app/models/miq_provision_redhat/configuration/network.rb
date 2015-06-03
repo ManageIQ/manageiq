@@ -38,7 +38,7 @@ module MiqProvisionRedhat::Configuration::Network
   end
 
   def find_network_in_cluster(network_name)
-    network = self.source.with_provider_connection do |rhevm|
+    network = source.with_provider_connection do |rhevm|
       Ovirt::Cluster.find_by_href(rhevm, dest_cluster.ems_ref).try(:find_network_by_name, network_name)
     end
 

@@ -1,10 +1,10 @@
 module MiqProvisionRedhat::Cloning
   def clone_complete?
     # TODO: shouldn't this error out the provision???
-    return true if self.phase_context[:clone_task_ref].nil?
+    return true if phase_context[:clone_task_ref].nil?
 
-    self.source.with_provider_connection do |rhevm|
-      status = rhevm.status(self.phase_context[:clone_task_ref])
+    source.with_provider_connection do |rhevm|
+      status = rhevm.status(phase_context[:clone_task_ref])
       $log.info("MIQ(#{self.class.name}#poll_clone_complete) Clone is #{status}")
 
       status == 'complete'
@@ -24,7 +24,7 @@ module MiqProvisionRedhat::Cloning
 
   def prepare_for_clone_task
     raise MiqException::MiqProvisionError, "Provision Request's Destination VM Name=[#{dest_name}] cannot be blank" if dest_name.blank?
-    raise MiqException::MiqProvisionError, "A VM with name: [#{dest_name}] already exists" if self.source.ext_management_system.vms.where(:name => dest_name).any?
+    raise MiqException::MiqProvisionError, "A VM with name: [#{dest_name}] already exists" if source.ext_management_system.vms.where(:name => dest_name).any?
 
     clone_options = {
       :name       => dest_name,
@@ -47,22 +47,22 @@ module MiqProvisionRedhat::Cloning
   def log_clone_options(clone_options)
     log_header = "MIQ(#{self.class.name}#log_clone_options)"
 
-    $log.info("#{log_header} Provisioning [#{self.source.name}] to [#{dest_name}]")
-    $log.info("#{log_header} Source Template:            [#{self.source.name}]")
+    $log.info("#{log_header} Provisioning [#{source.name}] to [#{dest_name}]")
+    $log.info("#{log_header} Source Template:            [#{source.name}]")
     $log.info("#{log_header} Clone Type:                 [#{clone_options[:clone_type]}]")
     $log.info("#{log_header} Destination VM Name:        [#{clone_options[:name]}]")
     $log.info("#{log_header} Destination Cluster:        [#{dest_cluster.name} (#{dest_cluster.ems_ref})]")
     $log.info("#{log_header} Destination Datastore:      [#{dest_datastore.name} (#{dest_datastore.ems_ref})]") unless dest_datastore.nil?
 
-    self.dumpObj(clone_options, "#{log_header} Clone Options: ", $log, :info)
-    self.dumpObj(self.options,  "#{log_header} Prov Options:  ", $log, :info)
+    dumpObj(clone_options, "#{log_header} Clone Options: ", $log, :info)
+    dumpObj(options, "#{log_header} Prov Options:  ", $log, :info)
   end
 
   def start_clone(clone_options)
-    self.source.with_provider_object do |rhevm_template|
+    source.with_provider_object do |rhevm_template|
       vm = rhevm_template.create_vm(clone_options)
-      self.phase_context[:new_vm_ems_ref] = vm[:href]
-      self.phase_context[:clone_task_ref] = vm.creation_status_link
+      phase_context[:new_vm_ems_ref] = vm[:href]
+      phase_context[:clone_task_ref] = vm.creation_status_link
     end
   end
 end
