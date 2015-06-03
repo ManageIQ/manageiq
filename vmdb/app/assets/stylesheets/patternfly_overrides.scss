@@ -130,11 +130,6 @@ li.brand-white-label.whitelabeled {
   padding-bottom: 0 !important;
 }
 
-.ie8 > body > .container {
-  background-color: none !important;
-  background: url(/images/layout/overlay_dark.png) !important;
-}
-
 #notification { 
   position:absolute;
   left:0;
@@ -146,10 +141,6 @@ li.brand-white-label.whitelabeled {
   width: 100%; 
   height:100%;
   background-color: rgba(0, 0, 0, 0.5);
-}
-
-.ie8 #notification {
-  background-image: url(/images/layout/overlay_dark.png);
 }
 
 #spinner_div {

@@ -1,6 +1,5 @@
 !!! XML
 !!! Strict
-<!--[if IE 8]><html class="ie8"><![endif]-->
 <!--[if IE 9]><html class="ie9"><![endif]-->
 %html
   %head
@@ -17,11 +16,6 @@
     = javascript_include_tag 'application'
     - if Rails.env.development?
       = javascript_include_tag 'miq_debug'
-
-    -# HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries
-    /[if lt IE 9]
-      = javascript_include_tag 'html5shiv.min'
-      = javascript_include_tag 'respond.min'
     = csrf_meta_tag
     - if @timeline
       = javascript_include_tag '/javascripts/timeline/api/timeline-api.js'
