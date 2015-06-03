@@ -5,7 +5,6 @@ module ContainerServiceHelper::TextualSummary
 
   def textual_group_properties
     items = %w(
-      namespace
       name
       creation_timestamp
       resource_version
@@ -29,7 +28,7 @@ module ContainerServiceHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w(ems container_groups)
+    items = %w(ems container_project container_groups)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
   #
@@ -37,7 +36,7 @@ module ContainerServiceHelper::TextualSummary
   #
 
   def textual_namespace
-    {:label => "Namespace", :value => @record.namespace}
+    {:label => "Namespace", :value => @record.namespace.to_s}
   end
 
   def textual_name
@@ -89,6 +88,18 @@ module ContainerServiceHelper::TextualSummary
     h = {:label => label, :image => "container_group", :value => num_of_container_groups}
     if  num_of_container_groups > 0 && role_allows(:feature => "container_group_show")
       h[:link] = url_for(:action => 'show', :controller => 'container_service', :display => 'container_groups')
+    end
+    h
+  end
+
+  def textual_container_project
+    project = @record.container_project
+    return nil if project.nil?
+    label = ui_lookup(:table => "container_project")
+    h = {:label => label, :image => "container_project", :value => project.name}
+    if role_allows(:feature => "container_project_show")
+      h[:title] = "Show parent #{label} '#{project.name}'"
+      h[:link] = url_for(:controller => 'container_project', :action => 'show', :id => project)
     end
     h
   end

@@ -13,6 +13,7 @@ module EmsRefresh::Parsers
 
     def ems_inv_to_hashes(inventory)
       get_nodes(inventory)
+      get_namespaces(inventory)
       get_replication_controllers(inventory)
       get_pods(inventory)
       get_endpoints(inventory)
@@ -58,6 +59,14 @@ module EmsRefresh::Parsers
       @data[:container_endpoints].each do |ep|
         @data_index.store_path(:container_endpoints, :by_namespace_and_name,
                                ep[:namespace], ep[:name], ep)
+      end
+    end
+
+    def get_namespaces(inventory)
+      process_collection(inventory["namespace"], :container_projects) { |n| parse_namespaces(n) }
+
+      @data[:container_projects].each do |ns|
+        @data_index.store_path(:container_projects, :by_name, ns[:name], ns)
       end
     end
 
@@ -112,6 +121,7 @@ module EmsRefresh::Parsers
 
     def parse_service(service)
       new_result = parse_base_item(service)
+
       if new_result[:ems_ref].nil? # Typically this happens for kubernetes services
         new_result[:ems_ref] = "#{new_result[:namespace]}_#{new_result[:name]}"
       end
@@ -143,6 +153,8 @@ module EmsRefresh::Parsers
         parse_service_port_config(port_entry, new_result[:ems_ref])
       end
 
+      new_result[:project] = @data_index.fetch_path(:container_projects, :by_name,
+                                                    service.metadata["table"][:namespace])
       new_result
     end
 
@@ -164,6 +176,8 @@ module EmsRefresh::Parsers
         new_result[:container_node] = @data_index.fetch_path(
           :container_nodes, :by_name, pod.spec.host)
       end
+
+      new_result[:project] = @data_index.fetch_path(:container_projects, :by_name, pod.metadata["table"][:namespace])
 
       # TODO, map volumes
       # TODO, podIP
@@ -219,6 +233,10 @@ module EmsRefresh::Parsers
       new_result
     end
 
+    def parse_namespaces(container_projects)
+      parse_base_item(container_projects).except(:namespace)
+    end
+
     def parse_replication_controllers(container_replicator)
       new_result = parse_base_item(container_replicator)
 
@@ -230,6 +248,8 @@ module EmsRefresh::Parsers
         :selector_parts   => parse_selector_parts(container_replicator)
       )
 
+      new_result[:project] = @data_index.fetch_path(:container_projects, :by_name,
+                                                    container_replicator.metadata["table"][:namespace])
       new_result
     end
 

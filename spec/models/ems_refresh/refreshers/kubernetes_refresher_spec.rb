@@ -26,17 +26,19 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       assert_specific_container_node
       assert_specific_container_service
       assert_specific_container_replicator
+      assert_specific_container_project
     end
   end
 
   def assert_table_counts
-    ContainerGroup.count.should        == 2
-    ContainerNode.count.should         == 1
-    Container.count.should             == 3
-    ContainerService.count.should      == 6
-    ContainerPortConfig.count.should   == 2
-    ContainerDefinition.count.should   == 3
-    ContainerReplicator.count.should   == 2
+    ContainerGroup.count.should == 2
+    ContainerNode.count.should == 1
+    Container.count.should == 3
+    ContainerService.count.should == 6
+    ContainerPortConfig.count.should == 2
+    ContainerDefinition.count.should == 3
+    ContainerReplicator.count.should == 2
+    ContainerProject.count.should == 1
   end
 
   def assert_ems
@@ -144,8 +146,7 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
       # :ems_ref => "49b72714-e1b7-11e4-b7dc-001a4a5f4a02",
       # :name    => "monitoring-influx-grafana-controller-2toua"
       :restart_policy => "Always",
-      :dns_policy     => "ClusterFirst",
-      :namespace      => "default"
+      :dns_policy     => "ClusterFirst"
     )
   end
 
@@ -153,7 +154,6 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
     @replicator = ContainerReplicator.where(:name => "monitoring-influx-grafana-controller").first
     @replicator.should have_attributes(
       :name             => "monitoring-influx-grafana-controller",
-      :namespace        => "default",
       :replicas         => 1,
       :current_replicas => 1
     )
@@ -162,5 +162,13 @@ describe EmsRefresh::Refreshers::KubernetesRefresher do
     @group = ContainerGroup.where(:name => "monitoring-influx-grafana-controller-mdyqf").first
     @group.container_replicator.should_not be_nil
     @group.container_replicator.name.should == "monitoring-influx-grafana-controller"
+  end
+
+  def assert_specific_container_project
+    @container_pr = ContainerProject.find_by_name("default")
+    @container_pr.should have_attributes(
+      # :ems_ref => "581874d7-e385-11e4-9d96-f8b156af4ae1",
+      :name    => "default"
+    )
   end
 end

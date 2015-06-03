@@ -19,5 +19,47 @@
           %li
             = link_to("#{ui_lookup(:table => "ems_container")}: #{@record.ext_management_system.name}",
                 {:controller => "ems_container", :action => 'show', :id => @record.ext_management_system.id.to_s},
-                {:title => _("Show this container service's parent %s") % ui_lookup(:table => "ems_container")},
-                '/images/icons/16/link_external.gif')
+                {:title => _("Show this container service's parent %s") % ui_lookup(:table => "ems_container")})
+          - if role_allows(:feature => "container_group_show_list")
+            - num_groups = @record.number_of(:container_groups)
+            - if num_groups == 0
+              %li.disabled
+                = link_to(_('Container Groups (0)'), "#")
+            - else
+              %li
+                = link_to(_("Container Groups (%s)") % num_groups,
+                  {:action  => 'show', :id => @record, :display => 'container_groups'},
+                  :title => _("Show Container Groups"))
+
+        - if role_allows(:feature => "container_service_show_list")
+          - num_services = @record.number_of(:container_services)
+          - if num_services == 0
+            %li.disabled
+              = link_to(_('Container Services (0)'), "#")
+          - else
+            %li
+              = link_to(_("Container Services (%s)") % num_services,
+                  {:action  => 'show', :id => @record, :display => 'container_services'},
+                  :title => _("Show Container Services"))
+
+        - if role_allows(:feature => "container_route_show_list")
+          - num_groups = @record.number_of(:container_routes)
+          - if num_groups == 0
+            %li.disabled
+              = link_to(_('Container Routes (0)'), "#")
+          - else
+            %li
+              = link_to(_("Container Routes (%s)") % num_groups,
+                  {:action  => 'show', :id => @record, :display => 'container_routes'},
+                  :title => _("Show Container Routes"))
+
+        - if role_allows(:feature => "container_replicator_show_list")
+          - num_replicators = @record.number_of(:container_replicators)
+          - if num_replicators == 0
+            %li.disabled
+              = link_to(_('Replicators (0)'), "#")
+          - else
+            %li
+              = link_to(_("Replicators (%s)") % num_replicators,
+                  {:action  => 'show', :id => @record, :display => 'container_replicators'},
+                  :title => _("Show Replicators"))

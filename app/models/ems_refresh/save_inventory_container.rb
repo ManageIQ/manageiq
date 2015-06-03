@@ -1,8 +1,8 @@
 module EmsRefresh::SaveInventoryContainer
   def save_ems_container_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
-    child_keys = [:container_nodes, :container_replicators, :container_groups,
-                  :container_services, :container_routes, :container_projects]
+    child_keys = [:container_projects, :container_nodes, :container_replicators, :container_groups,
+                  :container_services, :container_routes]
 
     # Save and link other subsections
     child_keys.each do |k|
@@ -39,8 +39,12 @@ module EmsRefresh::SaveInventoryContainer
                 []
               end
 
+    hashes.each do |h|
+      h[:container_project_id] = h.fetch_path(:project, :id)
+    end
+
     save_inventory_multi(:container_routes, ems, hashes, deletes, [:ems_ref],
-                         :labels)
+                         :labels, [:project, :namespace])
     store_ids_for_new_records(ems.container_routes, hashes, :ems_ref)
   end
 
@@ -74,8 +78,13 @@ module EmsRefresh::SaveInventoryContainer
               else
                 []
               end
+
+    hashes.each do |h|
+      h[:container_project_id] = h.fetch_path(:project, :id)
+    end
+
     save_inventory_multi(:container_replicators, ems, hashes, deletes, [:ems_ref],
-                         [:labels, :selector_parts])
+                         [:labels, :selector_parts], [:project, :namespace])
     store_ids_for_new_records(ems.container_replicators, hashes, :ems_ref)
   end
 
@@ -92,10 +101,12 @@ module EmsRefresh::SaveInventoryContainer
 
     hashes.each do |h|
       h[:container_group_ids] = h[:container_groups].map { |x| x[:id] }
+      h[:container_project_id] = h.fetch_path(:project, :id)
     end
 
     save_inventory_multi(:container_services, ems, hashes, deletes, [:ems_ref],
-                         [:labels, :selector_parts, :container_service_port_configs], [:container_groups])
+                         [:labels, :selector_parts, :container_service_port_configs],
+                         [:container_groups, :project, :namespace])
 
     store_ids_for_new_records(ems.container_services, hashes, :ems_ref)
   end
@@ -114,11 +125,12 @@ module EmsRefresh::SaveInventoryContainer
     hashes.each do |h|
       h[:container_node_id] = h.fetch_path(:container_node, :id)
       h[:container_replicator_id] = h.fetch_path(:container_replicator, :id)
+      h[:container_project_id] = h.fetch_path(:project, :id)
     end
 
     save_inventory_multi(:container_groups, ems, hashes, deletes, [:ems_ref],
-                         [:container_definitions, :labels],
-                         [:container_node, :container_replicator])
+                         [:container_definitions, :containers, :labels],
+                         [:container_node, :container_replicator, :project, :namespace])
     store_ids_for_new_records(ems.container_groups, hashes, :ems_ref)
   end
 

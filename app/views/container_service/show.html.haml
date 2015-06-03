@@ -1,4 +1,4 @@
-- if 'container_groups'.eql?(@display) && @showtype != "compare"
+- if %w(container_groups container_services).include?(@display)
   = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@record.id}"}
 - else
   = render :partial => @showtype

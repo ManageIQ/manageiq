@@ -20,3 +20,9 @@
             = link_to("#{ui_lookup(:table => "ems_container")}: #{@record.ext_management_system.name}",
                 {:controller => "ems_container", :action => 'show', :id => @record.ext_management_system.id.to_s},
                 {:title => _("Show this container service's parent %s") % ui_lookup(:table => "ems_container")})
+
+        - if role_allows(:feature => "container_project_show") && !@record.container_project.nil?
+          %li
+            = link_to("#{ui_lookup(:table => "container_project")}: #{@record.container_project.name}",
+                {:controller => "container_project", :action => 'show', :id => @record.container_project.id.to_s},
+                :title => _("Show this container service's parent %s") % ui_lookup(:table => "container_project"))

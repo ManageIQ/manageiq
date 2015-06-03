@@ -41,6 +41,12 @@ module ContainersCommonMixin
       show_container_display("containers", Container, "container_group")
     elsif @display == "container_services" || session[:display] == "container_services" && params[:display].nil?
       show_container_display("container_services", ContainerService)
+    elsif @display == "container_routes" || session[:display] == "container_routes" && params[:display].nil?
+      show_container_display("container_routes", ContainerRoute)
+    elsif @display == "container_replicators" || session[:display] == "container_replicators" && params[:display].nil?
+      show_container_display("container_replicators", ContainerReplicator)
+    elsif @display == "container_projects" || session[:display] == "container_projects" && params[:display].nil?
+      show_container_display("container_projects", ContainerProject)
     end
     # Came in from outside show_list partial
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]

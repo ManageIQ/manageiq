@@ -7,6 +7,7 @@ module ContainerProviderMixin
     has_many :container_services, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_replicators, :foreign_key => :ems_id, :dependent => :destroy
     has_many :containers, :through => :container_groups
+    has_many :container_projects, :foreign_key => :ems_id, :dependent => :destroy
 
     # TODO: support real authentication using certificates
     before_validation :ensure_authentications_record
