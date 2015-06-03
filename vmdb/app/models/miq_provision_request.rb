@@ -42,12 +42,12 @@ class MiqProvisionRequest < MiqRequest
     case suffix
     when "Vmware"
       case MiqRequestMixin.get_option(:provision_type, nil, attribs['options'])
-      when "pxe";        suffix << "ViaPxe"
+      when "pxe" then suffix << "ViaPxe"
       end
     when "Redhat"
       case MiqRequestMixin.get_option(:provision_type, nil, attribs['options'])
-      when "iso";        suffix << "ViaIso"
-      when "pxe";        suffix << "ViaPxe"
+      when "iso" then suffix << "ViaIso"
+      when "pxe" then suffix << "ViaPxe"
       end
     end
 
