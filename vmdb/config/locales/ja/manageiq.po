@@ -7941,6 +7941,9 @@ msgstr "新しいオーケストレーションテンプレート情報"
 msgid "New Parameter"
 msgstr "新規パラメーター"
 
+msgid "New Password"
+msgstr ""
+
 msgid "New setting will affect %s"
 msgstr "新規設定は %s に影響を与えます"
 
