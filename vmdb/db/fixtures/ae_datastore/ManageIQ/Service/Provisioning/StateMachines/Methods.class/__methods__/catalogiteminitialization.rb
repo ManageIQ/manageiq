@@ -152,7 +152,7 @@ end
 def set_option_on_provision_task(dialog_options_hash, prov)
   dialog_options_hash.each do |key, value|
     log_and_update_message(:info, "Adding Option: {#{key} => #{value}} to Provisioning id: #{prov.id}")
-    prov.set_option(key.to_s.downcase.gsub(/\W/, '_'), value.to_s.downcase.gsub(/\W/, '_'))
+    prov.set_option(key, value)
   end
 end
 
@@ -161,7 +161,7 @@ def pass_dialog_values_to_provision_task(provision_task, dialog_options_hash, di
     log_and_update_message(:info, "Grandchild Task: #{prov.id} Desc: #{prov.description} type: #{prov.source_type}")
     get_vm_name(dialog_options_hash, prov)
     tag_provision_task(dialog_tags_hash, prov)
-    set_option_on_provision_task(dialog_tags_hash, prov)
+    set_option_on_provision_task(dialog_options_hash, prov)
   end
 end
 
