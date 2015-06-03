@@ -30,7 +30,6 @@ class MiqRequestWorkflow
     unless options[:skip_dialog_load] == true
       # If this is the first time we are called the values hash will be empty
       # Also skip if we are being called from a web-service
-      #@dialogs = get_pre_dialogs if initial_pass && options[:use_pre_dialog] != false
       if @dialogs.nil?
         @dialogs = get_dialogs
         normalize_numeric_fields
@@ -487,7 +486,6 @@ class MiqRequestWorkflow
 
     enabled_field = "#{name}_enabled".to_sym
     # Check if the fields hash contains a <dialog_name>_enabled field
-    #return true if config.fetch_path(:fields, "#{name}_enabled".to_sym).nil?
     enabled = get_value(values[enabled_field])
     return false if enabled == false || enabled == "disabled"
     true
@@ -775,14 +773,6 @@ class MiqRequestWorkflow
   end
 
   def update_field_visibility
-    # Determine the visibility of fields based on current values and collect the fields
-    # together so we can update the dialog in one pass
-
-    # Show/Hide Fields
-    #f = Hash.new { |h, k| h[k] = Array.new }
-
-    # Update field :display value
-    #f.each {|k,v| show_fields(k, v)}
   end
 
   def refresh_field_values(values, _requester_id)
@@ -1059,7 +1049,6 @@ class MiqRequestWorkflow
   def allowed_hosts_obj(_options = {})
     log_header = "MIQ(#{self.class.name}.allowed_hosts_obj)"
     return [] if (src = resources_for_ui).blank?
-    #return allowed_hosts_obj_cache unless allowed_hosts_obj_cache.nil?
 
     rails_logger('allowed_hosts_obj', 0)
     st = Time.now
@@ -1083,7 +1072,6 @@ class MiqRequestWorkflow
     return [] if (src = resources_for_ui).blank?
     hosts = src[:host].nil? ? allowed_hosts_obj({}) : [load_ar_obj(src[:host])]
     return [] if hosts.blank?
-    #return allowed_storages_cache unless allowed_storages_cache.nil?
 
     rails_logger('allowed_storages', 0)
     st = Time.now

@@ -53,7 +53,6 @@ module MiqProvisionVmware::Configuration::Container
     log_header = "MIQ(#{self.class.name}.build_vm_notes)"
 
     new_vm_guid = phase_context[:new_vm_validation_guid]
-    #vmcs.annotation = "Owner: #{get_option(:owner_first_name)} #{get_option(:owner_last_name)}, #{get_option(:owner_email)}; MIQ GUID=#{new_vm_guid}"
     vm_notes = get_option(:vm_notes).to_s.strip
     vm_notes += "\n\n" unless vm_notes.blank?
     vm_notes += "MIQ GUID=#{new_vm_guid}"
