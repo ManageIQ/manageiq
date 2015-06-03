@@ -73,7 +73,7 @@ module EmsRefresh::Parsers
     end
 
     def networks
-      @networks ||= @network_service.networks
+      @networks ||= @network_service.networks_for_accessible_tenants
     end
 
     def volumes
