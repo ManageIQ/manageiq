@@ -52,12 +52,12 @@ class LogFile < ActiveRecord::Base
     raise "LogFile local_file: [#{local_file}] does not exist!" unless File.exist?(local_file)
     raise "Log Depot settings not configured" unless file_depot
 
-    method = self.class.get_post_method(file_depot.depot_hash)
+    method = get_post_method(file_depot.uri)
     send("upload_log_file_#{method}")
   end
 
   def remove
-    method = self.class.get_post_method(:uri => self.log_uri)
+    method = get_post_method(log_uri)
     return if method.nil?
     return self.send("remove_log_file_#{method}") if respond_to?("remove_log_file_#{method}")
 
@@ -71,7 +71,7 @@ class LogFile < ActiveRecord::Base
   def file_exists?
     return true if self.log_uri.nil?
 
-    method = self.class.get_post_method(:uri => self.log_uri)
+    method = get_post_method(log_uri)
     return true if method.nil?
     return self.send("file_exists_#{method}?") if respond_to?("file_exists_#{method}?")
 
@@ -157,18 +157,6 @@ class LogFile < ActiveRecord::Base
       })
   end
 
-  def self.get_post_method(settings)
-    return nil if settings[:uri].nil?
-
-    # Convert all backslashes in the URI to forward slashes
-    settings[:uri].gsub!('\\','/')
-
-    # Strip any leading and trailing whitespace
-    settings[:uri].strip!
-
-    URI.split(URI.encode(settings[:uri]))[0]
-  end
-
   # Added tcp ping stuff here until ftp is refactored into a separate class
   def self.get_ping_depot_options
     @@ping_depot_options ||= VMDB::Config.new("vmdb").config[:log][:collection]
@@ -242,6 +230,18 @@ class LogFile < ActiveRecord::Base
   end
 
   private
+
+  def get_post_method(uri)
+    return nil if uri.nil?
+
+    # Convert all backslashes in the URI to forward slashes
+    uri.gsub!('\\', '/')
+
+    # Strip any leading and trailing whitespace
+    uri.strip!
+
+    URI.split(URI.encode(uri))[0]
+  end
 
   def self._request_logs(options)
     taskid = options[:taskid]
