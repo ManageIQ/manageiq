@@ -288,16 +288,17 @@ module OpsController::Diagnostics
   end
 
   def db_backup_form_field_changed
-    schedule = MiqSchedule.find_by_id(params[:id])
-    settings = schedule.file_depot.try(:depot_hash) || {}
-    uri_settings = settings[:uri].to_s.split("://")
-    render :json => {:depot_name   => settings[:name],
-                     :uri          => uri_settings[1],
-                     :uri_prefix   => uri_settings[0],
-                     :log_userid   => settings[:username],
-                     :log_password => settings[:password],
-                     :log_verify   => settings[:password]
-                    }
+    schedule     = MiqSchedule.find_by_id(params[:id])
+    depot        = schedule.file_depot
+    uri_settings = depot.try(:[], :uri).to_s.split("://")
+    render :json => {
+      :depot_name   => depot.try(:name),
+      :uri          => uri_settings[1],
+      :uri_prefix   => uri_settings[0],
+      :log_userid   => depot.try(:authentication_userid),
+      :log_password => depot.try(:authentication_password),
+      :log_verify   => depot.try(:authentication_password),
+    }
   end
 
   def db_backup
@@ -491,15 +492,14 @@ module OpsController::Diagnostics
   def file_depot_reset_form_vars
     if @edit[:protocol].present?
       klass = Object.const_get(@edit[:protocols_hash].key(@edit[:protocol]))
+      depot = @record.log_file_depot.instance_of?(klass) ? @record.log_file_depot : klass.new
       @edit[:new][:requires_credentials] = klass.try(:requires_credentials?)
       @edit[:new][:uri_prefix]           = klass.try(:uri_prefix)
-      depot = @record.log_file_depot.instance_of?(klass) ? @record.log_file_depot : klass.new
       @edit[:new][:depot_name]           = depot.name
       @edit[:new][:uri]                  = depot.uri.to_s.split('://').last
-      user, password = depot.try(:depot_hash).values_at(:username, :password)
-      @edit[:new][:log_userid]           = user
-      @edit[:new][:log_password]         = password
-      @edit[:new][:log_verify]           = password
+      @edit[:new][:log_userid]           = depot.authentication_userid
+      @edit[:new][:log_password]         = depot.authentication_password
+      @edit[:new][:log_verify]           = depot.authentication_password
     else
       log_depot_reset_form_vars
     end

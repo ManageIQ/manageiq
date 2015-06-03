@@ -1,9 +1,7 @@
 - record               = @temp[:selected_server]
 - icon                 = record.class == MiqServer ? "evmserver" : "zone"
 - icon_string          = "/images/icons/new/#{icon}.png"
-- log_depot_settings   = record.get_log_depot_settings
-- log_depot_uri        = log_depot_settings.try(:fetch_path, :uri) || "N/A"
-- log_depot_uri       << " (from Zone)" if log_depot_settings.try(:fetch_path, :from_zone)
+- log_depot_uri        = "#{record.log_depot.try(:uri) || "N/A"} #{"(from Zone)" unless record.log_file_depot}"
 - last_time            = record.last_log_sync_on
 - last_collection_time = last_time.blank? ? "Never" : format_timezone(last_time.to_time, Time.zone, "gtl")
 
