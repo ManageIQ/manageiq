@@ -235,10 +235,6 @@ module MiqServer::LogManagement
     log_file_depot || zone.log_file_depot
   end
 
-  def log_depot_uri
-    get_log_depot_settings.try(:fetch_path, :uri)
-  end
-
   def log_depot_configured?
     get_log_depot_settings
   end
