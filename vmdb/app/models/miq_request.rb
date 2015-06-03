@@ -11,6 +11,7 @@ class MiqRequest < ActiveRecord::Base
 
   serialize   :options, Hash
 
+  default_value_for(:message)       { |r| "#{r.class::TASK_DESCRIPTION} - Request Created" }
   default_value_for :options,       {}
   default_value_for(:requester)     { |r| r.get_user }
   default_value_for :request_state, 'pending'

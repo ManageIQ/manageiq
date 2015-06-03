@@ -8,7 +8,6 @@ class VmMigrateRequest < MiqRequest
   validate               :must_have_user
 
   default_value_for(:request_type) { |r| r.request_types.first }
-  default_value_for :message,      "#{TASK_DESCRIPTION} - Request Created"
 
   def my_zone
     vm = Vm.where(:id => options[:src_ids]).first

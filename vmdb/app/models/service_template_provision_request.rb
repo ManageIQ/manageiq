@@ -7,7 +7,6 @@ class ServiceTemplateProvisionRequest < MiqRequest
   validates_inclusion_of :request_state,  :in => %w{ pending finished } + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"
   validate               :must_have_user
 
-  default_value_for :message,      "#{TASK_DESCRIPTION} - Request Created"
   default_value_for(:request_type) { |r| r.request_types.first }
   default_value_for(:source_id)    { |r| r.get_option(:src_id) }
   default_value_for :source_type,  SOURCE_CLASS_NAME
