@@ -63,7 +63,7 @@ class LogFile < ActiveRecord::Base
 
     #At this point db and and ftp should have returned
     klass = Object.const_get("Miq#{method.capitalize}Session")
-    klass.new(file_depot.depot_hash).remove(log_uri)
+    klass.new(legacy_depot_hash).remove(log_uri)
   rescue Exception => err
     $log.warn("MIQ(#{self.class.name}.remove) #{err.message}, deleting #{self.log_uri} from FTP")
   end
@@ -77,7 +77,7 @@ class LogFile < ActiveRecord::Base
 
     #At this point db and and ftp should have returned
     klass = Object.const_get("Miq#{method.capitalize}Session")
-    klass.new(file_depot.depot_hash).exist?(log_uri)
+    klass.new(legacy_depot_hash).exist?(log_uri)
   end
 
   # main UI method to call to request logs from a server
@@ -189,7 +189,7 @@ class LogFile < ActiveRecord::Base
 
   def upload_log_file_nfs
     uri_to_add = build_log_uri(file_depot.uri, local_file)
-    uri        = MiqNfsSession.new(file_depot.depot_hash).add(local_file, uri_to_add)
+    uri        = MiqNfsSession.new(legacy_depot_hash).add(local_file, uri_to_add)
     update_attributes(
       :state   => "available",
       :log_uri => uri
@@ -199,7 +199,7 @@ class LogFile < ActiveRecord::Base
 
   def upload_log_file_smb
     uri_to_add = build_log_uri(file_depot.uri, local_file)
-    uri        = MiqSmbSession.new(file_depot.depot_hash).add(local_file, uri_to_add)
+    uri        = MiqSmbSession.new(legacy_depot_hash).add(local_file, uri_to_add)
     update_attributes(
       :state   => "available",
       :log_uri => uri
@@ -241,6 +241,15 @@ class LogFile < ActiveRecord::Base
     uri.strip!
 
     URI.split(URI.encode(uri))[0]
+  end
+
+  def legacy_depot_hash
+    # TODO: Delete this and make FileDepotSmb and FileDepotNfs implement all of their upload/delete/etc. logic
+    {
+      :uri      => file_depot.uri,
+      :username => file_depot.authentication_userid,
+      :password => file_depot.authentication_password,
+    }
   end
 
   def self._request_logs(options)
