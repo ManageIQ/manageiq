@@ -84,7 +84,7 @@ class MiqRequestWorkflow
 
     request.call_automate_event_queue("request_created")
     request.approve(requester_id, "Auto-Approved") if auto_approve == true
-    return request
+    request
   end
 
   def update_request(request, values, requester_id, target_class, event_name, event_message)
@@ -111,7 +111,7 @@ class MiqRequestWorkflow
 
     request.call_automate_event_queue("request_updated")
 
-    return request
+    request
   end
 
   def init_from_dialog(values, userid)
@@ -226,20 +226,20 @@ class MiqRequestWorkflow
       end
     end
 
-    return valid
+    valid
   end
 
   def get_dialog_order
-    return @dialogs[:dialog_order]
+    @dialogs[:dialog_order]
   end
 
   def get_buttons
-    return @dialogs[:buttons] || [:submit, :cancel]
+    @dialogs[:buttons] || [:submit, :cancel]
   end
 
   def get_all_dialogs
     @dialogs[:dialogs].each_key { |d| get_dialog(d) }
-    return @dialogs[:dialogs]
+    @dialogs[:dialogs]
   end
 
   def get_dialog(dialog_name)
@@ -247,7 +247,7 @@ class MiqRequestWorkflow
     return {} unless dialog
 
     get_all_fields(dialog_name)
-    return dialog
+    dialog
   end
 
   def get_all_fields(dialog_name)
@@ -255,7 +255,7 @@ class MiqRequestWorkflow
     return {} unless dialog
 
     dialog[:fields].each_key { |f| get_field(f, dialog_name) }
-    return dialog[:fields]
+    dialog[:fields]
   end
 
   def get_field(field_name, dialog_name = nil)
@@ -283,7 +283,7 @@ class MiqRequestWorkflow
         end
       end
     end
-    return field
+    field
   end
 
   # TODO: Return list in defined ordered
@@ -333,7 +333,7 @@ class MiqRequestWorkflow
       key = options[:modify_key_name] == false ? value[0, idx].strip : value[0, idx].strip.downcase.to_sym
       result[key] = value[idx + 1..-1].strip
     end
-    return result
+    result
   end
 
   def self.parse_request_parameter_hash(parameter_hash, options = {})
@@ -373,14 +373,14 @@ class MiqRequestWorkflow
       next if v.nil?
       na << [k.strip, v.strip]
     end
-    return na
+    na
   end
 
   def find_dialog_from_field_name(field_name)
     @dialogs[:dialogs].each_key do |dialog_name|
       return dialog_name if @dialogs[:dialogs][dialog_name][:fields].has_key?(field_name.to_sym)
     end
-    return nil
+    nil
   end
 
   def get_value(data)
@@ -460,7 +460,7 @@ class MiqRequestWorkflow
     missing_tags = required_tags - selected_tags_categories
     missing_categories_names = missing_tags.collect { |category| Classification.find_by_name(category.to_s).description rescue nil }.compact
     return nil if missing_categories_names.blank?
-    return "Required tag(s): #{missing_categories_names.join(', ')}"
+    "Required tag(s): #{missing_categories_names.join(', ')}"
   end
 
   def validate_length(field, values, dlg, fld, value)
@@ -490,7 +490,7 @@ class MiqRequestWorkflow
     #return true if config.fetch_path(:fields, "#{name}_enabled".to_sym).nil?
     enabled = get_value(values[enabled_field])
     return false if enabled == false || enabled == "disabled"
-    return true
+    true
   end
 
   def show_fields(display_flag, field_names, display_field = :display)
@@ -623,7 +623,7 @@ class MiqRequestWorkflow
 
     rails_logger('allowed_tags', 1)
     $log.info "MIQ(#{self.class.name}.allowed_tags) allowed_tags returned [#{@tags.length}] objects in [#{Time.now - st}] seconds"
-    return @tags
+    @tags
   end
 
   def allowed_tags_and_pre_tags
@@ -643,7 +643,7 @@ class MiqRequestWorkflow
       tag_cat_names << new_cat[:name]
     end
 
-    return tag_cats
+    tag_cats
   end
 
   def build_ci_hash_struct(ci, props)
@@ -662,7 +662,7 @@ class MiqRequestWorkflow
     raise MiqException::Error, "Dialog cannot be found.  Name:[#{@values[:miq_request_dialog_name]}]  Type:[#{self.class.base_model.name}]" if d.nil?
     prov_dialogs = d.content
 
-    return prov_dialogs
+    prov_dialogs
   end
 
   def get_pre_dialogs
@@ -678,7 +678,7 @@ class MiqRequestWorkflow
       end
     end
 
-    return pre_dialogs
+    pre_dialogs
   end
 
   def dialog_name_from_automate(message = 'get_dialog_name', input_fields = [:request_type], extra_attrs = {})
@@ -721,12 +721,12 @@ class MiqRequestWorkflow
       return name.blank? ? nil : name
     end
 
-    return nil
+    nil
   end
 
   def self.request_type(type)
     return request_class::REQUEST_TYPES.first if type.blank?
-    return type.to_sym
+    type.to_sym
   end
 
   def request_type
@@ -849,7 +849,7 @@ class MiqRequestWorkflow
   def find_all_ems_of_type(klass, src = nil)
     result = []
     each_ems_metadata(src, klass) { |ci| result << ci }
-    return result
+    result
   end
 
   def find_hosts_under_ci(item)
@@ -866,14 +866,14 @@ class MiqRequestWorkflow
     return results if item.nil?
     node = load_ems_node(item, log_header)
     each_ems_metadata(node.attributes[:object], klass) { |ci| results << ci } unless node.nil?
-    return results
+    results
   end
 
   def load_ems_node(item, log_header)
     klass_name = item.kind_of?(MiqHashStruct) ? item.evm_object_class : item.class.base_class.name
     node = @ems_xml_nodes["#{klass_name}_#{item.id}"]
     $log.error "#{log_header} Resource <#{klass_name}_#{item.id} - #{item.name}> not found in cached resource tree." if node.nil?
-    return node
+    node
   end
 
   def ems_has_clusters?
@@ -893,7 +893,7 @@ class MiqRequestWorkflow
     node = load_ems_node(folder, log_header)
     node.children.each { |child| get_ems_folders(child.attributes[:object], dh, full_path) } unless node.nil?
 
-    return dh
+    dh
   end
 
   def get_ems_respool(node, dh = {}, full_path = "")
@@ -908,7 +908,7 @@ class MiqRequestWorkflow
     # Process child folders
     node.children.each { |child| get_ems_respool(child, dh, full_path) }
 
-    return dh
+    dh
   end
 
   def find_datacenter_for_ci(item, ems_src = nil)
@@ -923,7 +923,7 @@ class MiqRequestWorkflow
     else
       hosts = [hosts]
     end
-    return hosts
+    hosts
   end
 
   def find_cluster_above_ci(item, ems_src = nil)
@@ -945,7 +945,7 @@ class MiqRequestWorkflow
       node = node.parent
     end
 
-    return result
+    result
   end
 
   def each_ems_metadata(ems_ci = nil, klass = nil, &blk)
@@ -1076,7 +1076,7 @@ class MiqRequestWorkflow
     allowed_hosts_obj_cache = process_filter(:host_filter, Host, all_hosts)
     $log.info "MIQ(#{self.class.name}#allowed_hosts_obj) allowed_hosts_obj returned [#{allowed_hosts_obj_cache.length}] objects in [#{Time.now - st}] seconds"
     rails_logger('allowed_hosts_obj', 1)
-    return allowed_hosts_obj_cache
+    allowed_hosts_obj_cache
   end
 
   def allowed_storages(options={})
@@ -1106,7 +1106,7 @@ class MiqRequestWorkflow
 
     $log.info "MIQ(#{self.class.name}#allowed_storages) allowed_storages returned [#{allowed_storages_cache.length}] objects in [#{Time.now - st}] seconds"
     rails_logger('allowed_storages', 1)
-    return allowed_storages_cache
+    allowed_storages_cache
   end
 
   def allowed_hosts(options={})
@@ -1247,7 +1247,7 @@ class MiqRequestWorkflow
       folders.merge!(get_ems_folders(dc))
       rails_logger("host_to_folder for dc #{dc.name}", 1)
     end
-    return folders
+    folders
   end
 
   def cluster_to_folder(src)
@@ -1257,7 +1257,7 @@ class MiqRequestWorkflow
     datacenters = sources.collect { |h| find_datacenter_for_ci(h) }.compact
     folders = {}
     datacenters.each { |dc| folders.merge!(get_ems_folders(dc)) }
-    return folders
+    folders
   end
 
   def respool_to_folder(src)
@@ -1266,7 +1266,7 @@ class MiqRequestWorkflow
     datacenters = sources.collect { |h| find_datacenter_for_ci(h) }.compact
     folders = {}
     datacenters.each { |dc| folders.merge!(get_ems_folders(dc)) }
-    return folders
+    folders
   end
 
   def set_ws_field_value(values, key, data, dialog_name, dlg_fields)
@@ -1361,7 +1361,7 @@ class MiqRequestWorkflow
       $log.info "#{log_header} <#{dialog_name}> dialog not found in dialogs.  Field updates be skipped."
       return
     end
-    return dlg_fields
+    dlg_fields
   end
 
   def allowed_customization_templates(options={})
@@ -1382,7 +1382,7 @@ class MiqRequestWorkflow
 
     result.compact!
     @values[:customization_template_script] = nil if result.blank?
-    return result
+    result
   end
 
   def get_iso_image
@@ -1419,7 +1419,7 @@ class MiqRequestWorkflow
       build_ci_hash_struct(p, [:name, :description]) if p.pxe_image_type.provision_type.blank? || p.pxe_image_type.provision_type == prov_typ
     end
     result.compact!
-    return result
+    result
   end
 
   def allowed_windows_images(options={})
@@ -1429,7 +1429,7 @@ class MiqRequestWorkflow
       build_ci_hash_struct(p, [:name, :description])
     end
     result.compact!
-    return result
+    result
   end
 
   def allowed_images(options = {})
@@ -1441,7 +1441,7 @@ class MiqRequestWorkflow
 
   def get_iso_images
     template = VmOrTemplate.find_by_id(get_value(@values[:src_vm_id]))
-    return template.try(:ext_management_system).try(:iso_datastore).try(:iso_images) || []
+    template.try(:ext_management_system).try(:iso_datastore).try(:iso_images) || []
   end
 
   def allowed_iso_images(options={})

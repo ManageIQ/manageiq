@@ -15,12 +15,12 @@ module MiqProvisionCloud::Placement
 
     options[:placement_availability_zone] = [availability_zone.try(:id), availability_zone.try(:name)]
     $log.info("#{log_header} Getting most suitable availability_zone for new instance...Complete, Availability Zone Id: [#{availability_zone.try(:id)}], Name: [#{availability_zone.try(:name)}]")
-    return availability_zone
+    availability_zone
   end
 
   def manual_placement
     availability_zone = AvailabilityZone.where(:id => get_option(:placement_availability_zone)).first
     $log.info("MIQ(#{self.class.name}.manual_placement) Using selected availability_zone for new VM, Id: [#{availability_zone.try(:id)}], Name: [#{availability_zone.try(:name)}]")
-    return availability_zone
+    availability_zone
   end
 end

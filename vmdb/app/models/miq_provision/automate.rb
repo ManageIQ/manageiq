@@ -30,7 +30,7 @@ module MiqProvision::Automate
       } if domains.kind_of?(Array)
 
       $log.warn "#{log_prefix} - No Domains matched in Automate Results: #{ws.to_expanded_xml}"
-      return nil
+      nil
     end
   end
 
@@ -166,13 +166,13 @@ module MiqProvision::Automate
     } if networks.kind_of?(Array)
 
     $log.warn "#{log_prefix} - No Network matched in Automate Results: #{ws.to_expanded_xml}"
-    return nil
+    nil
   end
 
   def get_domain
     return options[:linux_domain_name]         unless options[:linux_domain_name].nil?
     return options[:sysprep_domain_name].first if     options[:sysprep_domain_name].kind_of?(Array)
-    return nil
+    nil
   end
 
   def do_pre_provision
@@ -216,6 +216,6 @@ module MiqProvision::Automate
       end
     end
 
-    return true
+    true
   end
 end

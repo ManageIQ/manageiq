@@ -37,7 +37,7 @@ module MiqProvision::Naming
       end
 
       vm_name = get_vm_full_name(unresolved_vm_name, prov_obj, determine_index)
-      return vm_name
+      vm_name
     end
 
     def get_vm_full_name(unresolved_vm_name, prov_obj, determine_index)

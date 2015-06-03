@@ -131,7 +131,7 @@ module MiqProvisionVmware::Configuration::Network
     unless dvs.nil? || dvs.distributedVirtualPortgroup.nil?
       return vim.applyFilter(dvs.distributedVirtualPortgroup, 'portgroupName' => dvs_name, 'uplinkPortgroup' => 'false').first
     end
-    return nil
+    nil
   end
 
   def build_config_spec_delete_existing_vlan(vmcs, net_device)

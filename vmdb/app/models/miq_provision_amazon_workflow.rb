@@ -47,7 +47,7 @@ class MiqProvisionAmazonWorkflow < MiqProvisionCloudWorkflow
     return nil unless value.blank?
     return nil if get_value(values[:cloud_network]).to_i.zero?
     return nil unless get_value(values[field]).blank?
-    return "#{required_description(dlg, fld)} is required"
+    "#{required_description(dlg, fld)} is required"
   end
 
   private

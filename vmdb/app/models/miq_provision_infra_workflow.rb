@@ -46,7 +46,7 @@ class MiqProvisionInfraWorkflow < MiqProvisionVirtWorkflow
     end
 
     rails_logger('get_source_and_targets', 1)
-    return @target_resource = result
+    @target_resource = result
   end
 
   def dialog_name_from_automate(message, extra_attrs)

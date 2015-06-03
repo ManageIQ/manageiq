@@ -49,7 +49,7 @@ module MiqProvisionVmware::Customization
       set_spec_option(options, :deleteAccounts, :sysprep_delete_accounts)
     end
 
-    return spec
+    spec
   end
 
   def customization_identity_windows(spec)
@@ -97,7 +97,7 @@ module MiqProvisionVmware::Customization
       set_spec_option(userData, :productId, :sysprep_product_id)
       userData.computerName = customization_hostname()
     end
-    return identity
+    identity
   end
 
   def customization_identity_linux(spec)
@@ -105,7 +105,7 @@ module MiqProvisionVmware::Customization
     identity = find_build_spec_path(spec, 'CustomizationLinuxPrep', 'identity')
     set_spec_option(identity, :domain, :linux_domain_name)
     identity.hostName = customization_hostname()
-    return identity
+    identity
   end
 
   def collect_nic_settings
@@ -225,7 +225,7 @@ module MiqProvisionVmware::Customization
       parent = path.blank? ? spec : spec.fetch_path(path)
       found = parent[new_path.to_s] = VimHash.new(end_type)
     end
-    return found
+    found
   end
 
   def customization_hostname()

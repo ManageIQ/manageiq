@@ -69,7 +69,7 @@ module MiqRequestTask::StateMachine
       $log.warn("MIQ(#{self.class.name}#prematurely_finished) Task is prematurely finished in phase:<#{phase}> because state:<#{state}> and status:<#{status}>")
       return true
     end
-    return false
+    false
   end
 
   def requeue_phase

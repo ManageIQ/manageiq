@@ -73,11 +73,11 @@ class MiqProvisionCloudWorkflow < MiqProvisionVirtWorkflow
   end
 
   def show_customize_fields(fields, platform)
-    return show_customize_fields_pxe(fields)
+    show_customize_fields_pxe(fields)
   end
 
   def allowed_customization_templates(options = {})
-    return allowed_cloud_init_customization_templates(options)
+    allowed_cloud_init_customization_templates(options)
   end
 
   private
@@ -100,7 +100,7 @@ class MiqProvisionCloudWorkflow < MiqProvisionVirtWorkflow
     add_target(:cloud_tenant,                :cloud_tenant,      CloudTenant,      result)
 
     rails_logger('get_source_and_targets', 1)
-    return @target_resource = result
+    @target_resource = result
   end
 
   def dialog_name_from_automate(message, extra_attrs)

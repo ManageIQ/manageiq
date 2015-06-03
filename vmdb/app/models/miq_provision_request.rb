@@ -107,7 +107,7 @@ class MiqProvisionRequest < MiqRequest
     svc  = prov.allowed(:service_level) # Get service levels
     return false if env.include?("prod") && svc.empty?  # Make sure we have at least one
 
-    return true
+    true
   end
 
   def src_vm_id
