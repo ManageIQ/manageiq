@@ -37,7 +37,7 @@ describe MiqProvisionRedhatWorkflow do
       let(:host)     { FactoryGirl.create(:host, :ext_management_system => provider) }
 
       before do
-        %w{iso data export data}.each do |domain_type|
+        %w(iso data export data).each do |domain_type|
           host.storages << FactoryGirl.create(:storage, :storage_domain_type => domain_type)
         end
         host.reload

@@ -7,8 +7,8 @@ class MiqProvisionRequest < MiqRequest
 
   TASK_DESCRIPTION  = 'VM Provisioning'
   SOURCE_CLASS_NAME = 'VmOrTemplate'
-  REQUEST_TYPES     = %w{ template clone_to_vm clone_to_template }
-  ACTIVE_STATES     = %w{ migrated } + base_class::ACTIVE_STATES
+  REQUEST_TYPES     = %w(template clone_to_vm clone_to_template)
+  ACTIVE_STATES     = %w(migrated) + base_class::ACTIVE_STATES
 
   validates_inclusion_of :request_type,   :in => REQUEST_TYPES,                          :message => "should be #{REQUEST_TYPES.join(", ")}"
   validates_inclusion_of :request_state,

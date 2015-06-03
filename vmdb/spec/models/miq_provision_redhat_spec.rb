@@ -54,17 +54,17 @@ describe MiqProvisionRedhat do
         end
 
         it "with :default disk_format value" do
-          @vm_prov.options[:disk_format] = ["default", "Default"]
+          @vm_prov.options[:disk_format] = %w(default Default)
           @vm_prov.sparse_disk_value.should be_nil
         end
 
         it "with :thin disk_format value" do
-          @vm_prov.options[:disk_format] = ["thin", "Thin"]
+          @vm_prov.options[:disk_format] = %w(thin Thin)
           @vm_prov.sparse_disk_value.should be_true
         end
 
         it "with :preallocated disk_format value" do
-          @vm_prov.options[:disk_format] = ["preallocated", "Preallocated"]
+          @vm_prov.options[:disk_format] = %w(preallocated Preallocated)
           @vm_prov.sparse_disk_value.should be_false
         end
       end
