@@ -10,4 +10,14 @@ class ContainerNode < ActiveRecord::Base
   belongs_to :lives_on, :polymorphic => true
 
   delegate   :hardware, :to => :computer_system
+
+  virtual_column :condition_ready, :type => :string, :uses => :container_node_conditions
+
+  def ready_condition
+    container_node_conditions.find_by_name('Ready')
+  end
+
+  def ready_condition_status
+    ready_condition.try(:status) || 'None'
+  end
 end
