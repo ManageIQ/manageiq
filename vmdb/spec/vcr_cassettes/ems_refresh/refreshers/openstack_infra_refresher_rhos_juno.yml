@@ -23,15 +23,15 @@ http_interactions:
       Content-Length:
       - '3541'
       X-Openstack-Request-Id:
-      - req-10ed61ef-4af4-4c47-9a0a-7b99e7f85742
+      - req-4e38e482-9de2-427f-8c4c-605d8cabf1ac
       Date:
-      - Fri, 29 May 2015 12:41:05 GMT
+      - Wed, 03 Jun 2015 11:03:15 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-05-29T12:41:05.133242", "expires":
-        "2015-05-29T13:41:05Z", "id": "d9adeb6eec0e4793aeeb17e8297773dd", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-06-03T11:03:15.479912", "expires":
+        "2015-06-03T12:03:15Z", "id": "ce9fe69aec774a3597ae07f6313e37ea", "tenant":
         {"description": null, "enabled": true, "id": "1b824a33e7e74d85adbd020d5f864686",
-        "name": "admin"}, "audit_ids": ["fxIJ2mMzRhKG_IKo8LeplQ"]}, "serviceCatalog":
+        "name": "admin"}, "audit_ids": ["Ln-Y1fxMRFqfmd0VVNMPqw"]}, "serviceCatalog":
         [{"endpoints": [{"adminURL": "http://192.0.2.1:8585/v2", "region": "regionOne",
         "internalURL": "http://192.0.2.1:8585/v2", "id": "111235d0226d4cce8cb4b3eace441574",
         "publicURL": "http://192.0.2.1:8585/v2"}], "endpoints_links": [], "type":
@@ -70,7 +70,7 @@ http_interactions:
         "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab",
         "6c4c65479be141ddb1dea6ce58546dde"]}}}'
     http_version: 
-  recorded_at: Fri, 29 May 2015 12:41:05 GMT
+  recorded_at: Wed, 03 Jun 2015 11:03:15 GMT
 - request:
     method: get
     uri: http://192.0.2.1:5000/v2.0/tenants
@@ -85,7 +85,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - d9adeb6eec0e4793aeeb17e8297773dd
+      - ce9fe69aec774a3597ae07f6313e37ea
   response:
     status:
       code: 200
@@ -98,15 +98,15 @@ http_interactions:
       Content-Length:
       - '133'
       X-Openstack-Request-Id:
-      - req-0b0d3e2a-b3f4-4df8-b351-127fe2592b04
+      - req-5e98f330-e8e6-4da5-b9cd-cebbd292d3a2
       Date:
-      - Fri, 29 May 2015 12:41:05 GMT
+      - Wed, 03 Jun 2015 11:03:15 GMT
     body:
       encoding: UTF-8
       string: '{"tenants_links": [], "tenants": [{"description": null, "enabled":
         true, "id": "1b824a33e7e74d85adbd020d5f864686", "name": "admin"}]}'
     http_version: 
-  recorded_at: Fri, 29 May 2015 12:41:05 GMT
+  recorded_at: Wed, 03 Jun 2015 11:03:15 GMT
 - request:
     method: post
     uri: http://192.0.2.1:5000/v2.0/tokens
@@ -130,15 +130,15 @@ http_interactions:
       Content-Length:
       - '3541'
       X-Openstack-Request-Id:
-      - req-042b4a75-9bbd-459b-a3eb-81c6e6648a7a
+      - req-74f3c5c2-f90c-44e7-82cf-3fed609b8e07
       Date:
-      - Fri, 29 May 2015 12:41:05 GMT
+      - Wed, 03 Jun 2015 11:03:16 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-05-29T12:41:05.589043", "expires":
-        "2015-05-29T13:41:05Z", "id": "33507d0c57704e3d92dfa2341abf4cf5", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-06-03T11:03:16.014754", "expires":
+        "2015-06-03T12:03:15Z", "id": "52369266d9304509a8fd90d280b9b1cc", "tenant":
         {"description": null, "enabled": true, "id": "1b824a33e7e74d85adbd020d5f864686",
-        "name": "admin"}, "audit_ids": ["knDm3hq5RhWBBgzBAZOMFg"]}, "serviceCatalog":
+        "name": "admin"}, "audit_ids": ["WKLzFArPQuGbgty2Dkn2bQ"]}, "serviceCatalog":
         [{"endpoints": [{"adminURL": "http://192.0.2.1:8585/v2", "region": "regionOne",
         "internalURL": "http://192.0.2.1:8585/v2", "id": "111235d0226d4cce8cb4b3eace441574",
         "publicURL": "http://192.0.2.1:8585/v2"}], "endpoints_links": [], "type":
@@ -177,7 +177,7 @@ http_interactions:
         "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab",
         "6c4c65479be141ddb1dea6ce58546dde"]}}}'
     http_version: 
-  recorded_at: Fri, 29 May 2015 12:41:05 GMT
+  recorded_at: Wed, 03 Jun 2015 11:03:16 GMT
 - request:
     method: post
     uri: http://192.0.2.1:5000/v2.0/tokens
@@ -201,15 +201,15 @@ http_interactions:
       Content-Length:
       - '3541'
       X-Openstack-Request-Id:
-      - req-8c0506d1-94be-4e18-a991-1ac0a7a27bdd
+      - req-b1a177a9-357e-4d9d-9363-1a9c837dee3d
       Date:
-      - Fri, 29 May 2015 12:41:05 GMT
+      - Wed, 03 Jun 2015 11:03:16 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-05-29T12:41:05.688997", "expires":
-        "2015-05-29T13:41:05Z", "id": "9413baf1fc41460b915de93b5dd32680", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-06-03T11:03:16.320726", "expires":
+        "2015-06-03T12:03:16Z", "id": "2bcf90f413fa4218a03cfe1ceb3b7b83", "tenant":
         {"description": null, "enabled": true, "id": "1b824a33e7e74d85adbd020d5f864686",
-        "name": "admin"}, "audit_ids": ["2skFxDbHRLGxBi0GQGPK6Q"]}, "serviceCatalog":
+        "name": "admin"}, "audit_ids": ["oKCOatjsRtyCpBCxbRTrlA"]}, "serviceCatalog":
         [{"endpoints": [{"adminURL": "http://192.0.2.1:8585/v2", "region": "regionOne",
         "internalURL": "http://192.0.2.1:8585/v2", "id": "111235d0226d4cce8cb4b3eace441574",
         "publicURL": "http://192.0.2.1:8585/v2"}], "endpoints_links": [], "type":
@@ -248,7 +248,7 @@ http_interactions:
         "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab",
         "6c4c65479be141ddb1dea6ce58546dde"]}}}'
     http_version: 
-  recorded_at: Fri, 29 May 2015 12:41:05 GMT
+  recorded_at: Wed, 03 Jun 2015 11:03:16 GMT
 - request:
     method: post
     uri: http://192.0.2.1:5000/v2.0/tokens
@@ -272,15 +272,15 @@ http_interactions:
       Content-Length:
       - '3541'
       X-Openstack-Request-Id:
-      - req-434633f9-9e5c-4fb8-bf08-20b97b62bfc3
+      - req-67681caf-badc-426e-98fd-da59491dd732
       Date:
-      - Fri, 29 May 2015 12:41:05 GMT
+      - Wed, 03 Jun 2015 11:03:16 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-05-29T12:41:05.877357", "expires":
-        "2015-05-29T13:41:05Z", "id": "fbb81c7238734a1bb65eafcd68a5eef4", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-06-03T11:03:16.501846", "expires":
+        "2015-06-03T12:03:16Z", "id": "2f3c423440804c9c8e24232d8db58b7e", "tenant":
         {"description": null, "enabled": true, "id": "1b824a33e7e74d85adbd020d5f864686",
-        "name": "admin"}, "audit_ids": ["QIGhJmKOShmyNuRmKEgPAQ"]}, "serviceCatalog":
+        "name": "admin"}, "audit_ids": ["SIvB8rkgSwCLgFpfSZLg8w"]}, "serviceCatalog":
         [{"endpoints": [{"adminURL": "http://192.0.2.1:8585/v2", "region": "regionOne",
         "internalURL": "http://192.0.2.1:8585/v2", "id": "111235d0226d4cce8cb4b3eace441574",
         "publicURL": "http://192.0.2.1:8585/v2"}], "endpoints_links": [], "type":
@@ -319,7 +319,7 @@ http_interactions:
         "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab",
         "6c4c65479be141ddb1dea6ce58546dde"]}}}'
     http_version: 
-  recorded_at: Fri, 29 May 2015 12:41:05 GMT
+  recorded_at: Wed, 03 Jun 2015 11:03:16 GMT
 - request:
     method: post
     uri: http://192.0.2.1:5000/v2.0/tokens
@@ -343,15 +343,15 @@ http_interactions:
       Content-Length:
       - '3541'
       X-Openstack-Request-Id:
-      - req-5ebf7540-1871-4795-b62d-8f99415b277c
+      - req-d8721928-cd9b-4f7d-aba1-fdb2102ce0d0
       Date:
-      - Fri, 29 May 2015 12:41:05 GMT
+      - Wed, 03 Jun 2015 11:03:16 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-05-29T12:41:05.976570", "expires":
-        "2015-05-29T13:41:05Z", "id": "429c2be18531404dac5c4788a96298cd", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-06-03T11:03:16.794945", "expires":
+        "2015-06-03T12:03:16Z", "id": "97c8ba87082e463588dca89ed0e1d5b3", "tenant":
         {"description": null, "enabled": true, "id": "1b824a33e7e74d85adbd020d5f864686",
-        "name": "admin"}, "audit_ids": ["G1HBZhYGSnGJL9OJX5hg9g"]}, "serviceCatalog":
+        "name": "admin"}, "audit_ids": ["dJGajRRbRNWpaKQsmRWbfQ"]}, "serviceCatalog":
         [{"endpoints": [{"adminURL": "http://192.0.2.1:8585/v2", "region": "regionOne",
         "internalURL": "http://192.0.2.1:8585/v2", "id": "111235d0226d4cce8cb4b3eace441574",
         "publicURL": "http://192.0.2.1:8585/v2"}], "endpoints_links": [], "type":
@@ -390,7 +390,7 @@ http_interactions:
         "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab",
         "6c4c65479be141ddb1dea6ce58546dde"]}}}'
     http_version: 
-  recorded_at: Fri, 29 May 2015 12:41:05 GMT
+  recorded_at: Wed, 03 Jun 2015 11:03:16 GMT
 - request:
     method: get
     uri: http://192.0.2.1:9292/
@@ -405,7 +405,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 429c2be18531404dac5c4788a96298cd
+      - 97c8ba87082e463588dca89ed0e1d5b3
   response:
     status:
       code: 300
@@ -416,7 +416,7 @@ http_interactions:
       Content-Length:
       - '636'
       Date:
-      - Fri, 29 May 2015 12:41:05 GMT
+      - Wed, 03 Jun 2015 11:03:16 GMT
     body:
       encoding: UTF-8
       string: '{"versions": [{"status": "CURRENT", "id": "v2.3", "links": [{"href":
@@ -429,7 +429,7 @@ http_interactions:
         {"status": "SUPPORTED", "id": "v1.0", "links": [{"href": "http://192.0.2.1:9292/v1/",
         "rel": "self"}]}]}'
     http_version: 
-  recorded_at: Fri, 29 May 2015 12:41:05 GMT
+  recorded_at: Wed, 03 Jun 2015 11:03:16 GMT
 - request:
     method: get
     uri: http://192.0.2.1:8774/v2/1b824a33e7e74d85adbd020d5f864686/servers/detail.json
@@ -444,7 +444,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 33507d0c57704e3d92dfa2341abf4cf5
+      - 52369266d9304509a8fd90d280b9b1cc
   response:
     status:
       code: 200
@@ -455,52 +455,85 @@ http_interactions:
       Content-Length:
       - '3643'
       X-Compute-Request-Id:
-      - req-d0c360ef-851f-4beb-8456-6055123777af
+      - req-7e83feb4-80da-4258-b26a-8f586595e784
       Date:
-      - Fri, 29 May 2015 12:41:06 GMT
+      - Wed, 03 Jun 2015 11:03:17 GMT
     body:
       encoding: UTF-8
-      string: '{"servers": [{"status": "ACTIVE", "updated": "2015-05-28T12:06:21Z",
+      string: '{"servers": [{"status": "ACTIVE", "updated": "2015-06-01T11:11:41Z",
         "hostId": "2223f1f7bcaf11f113fb6c66c74bc38097e1e92d4c20faead6369f3c", "OS-EXT-SRV-ATTR:host":
         "instack.localdomain", "addresses": {"ctlplane": [{"OS-EXT-IPS-MAC:mac_addr":
-        "00:a7:23:2a:1b:61", "version": 4, "addr": "192.0.2.21", "OS-EXT-IPS:type":
-        "fixed"}]}, "links": [{"href": "http://192.0.2.1:8774/v2/1b824a33e7e74d85adbd020d5f864686/servers/78c72eb4-3fc9-4f83-9998-66a237450625",
-        "rel": "self"}, {"href": "http://192.0.2.1:8774/1b824a33e7e74d85adbd020d5f864686/servers/78c72eb4-3fc9-4f83-9998-66a237450625",
+        "00:a7:23:2a:1b:61", "version": 4, "addr": "192.0.2.11", "OS-EXT-IPS:type":
+        "fixed"}]}, "links": [{"href": "http://192.0.2.1:8774/v2/1b824a33e7e74d85adbd020d5f864686/servers/9466fe04-b05d-491c-b70d-ff8781ad74a4",
+        "rel": "self"}, {"href": "http://192.0.2.1:8774/1b824a33e7e74d85adbd020d5f864686/servers/9466fe04-b05d-491c-b70d-ff8781ad74a4",
         "rel": "bookmark"}], "key_name": "default", "image": {"id": "27ee0f87-976c-4519-a395-5805165c85e4",
         "links": [{"href": "http://192.0.2.1:8774/1b824a33e7e74d85adbd020d5f864686/images/27ee0f87-976c-4519-a395-5805165c85e4",
         "rel": "bookmark"}]}, "OS-EXT-STS:task_state": null, "OS-EXT-STS:vm_state":
-        "active", "OS-EXT-SRV-ATTR:instance_name": "instance-0000000a", "OS-SRV-USG:launched_at":
-        "2015-05-28T12:06:21.000000", "OS-EXT-SRV-ATTR:hypervisor_hostname": "df17c304-2f9f-4efa-a44c-7e12f0ad96cf",
+        "active", "OS-EXT-SRV-ATTR:instance_name": "instance-0000000f", "OS-SRV-USG:launched_at":
+        "2015-06-01T11:11:41.000000", "OS-EXT-SRV-ATTR:hypervisor_hostname": "df17c304-2f9f-4efa-a44c-7e12f0ad96cf",
         "flavor": {"id": "6a1d2fd4-658e-4388-ab88-61dcd0de840a", "links": [{"href":
         "http://192.0.2.1:8774/1b824a33e7e74d85adbd020d5f864686/flavors/6a1d2fd4-658e-4388-ab88-61dcd0de840a",
-        "rel": "bookmark"}]}, "id": "78c72eb4-3fc9-4f83-9998-66a237450625", "security_groups":
+        "rel": "bookmark"}]}, "id": "9466fe04-b05d-491c-b70d-ff8781ad74a4", "security_groups":
         [{"name": "default"}], "OS-SRV-USG:terminated_at": null, "OS-EXT-AZ:availability_zone":
-        "nova", "user_id": "d007c492ad47466bbf9298d268be7ca8", "name": "ov-lkibna5qoz-0-vlf7qtf7sode-NovaCompute-ndsbmtclv3lc",
-        "created": "2015-05-28T12:05:07Z", "tenant_id": "1b824a33e7e74d85adbd020d5f864686",
+        "nova", "user_id": "d007c492ad47466bbf9298d268be7ca8", "name": "ov-dv4wodbrr5-0-zz5ayj5ynnuk-NovaCompute-zppf7qo73o4a",
+        "created": "2015-06-01T11:10:27Z", "tenant_id": "1b824a33e7e74d85adbd020d5f864686",
         "OS-DCF:diskConfig": "MANUAL", "os-extended-volumes:volumes_attached": [],
         "accessIPv4": "", "accessIPv6": "", "progress": 0, "OS-EXT-STS:power_state":
-        1, "config_drive": "", "metadata": {}}, {"status": "ACTIVE", "updated": "2015-05-28T12:06:20Z",
+        1, "config_drive": "", "metadata": {}}, {"status": "ACTIVE", "updated": "2015-06-01T11:11:40Z",
         "hostId": "2223f1f7bcaf11f113fb6c66c74bc38097e1e92d4c20faead6369f3c", "OS-EXT-SRV-ATTR:host":
         "instack.localdomain", "addresses": {"ctlplane": [{"OS-EXT-IPS-MAC:mac_addr":
-        "00:f0:bd:63:96:ae", "version": 4, "addr": "192.0.2.20", "OS-EXT-IPS:type":
-        "fixed"}]}, "links": [{"href": "http://192.0.2.1:8774/v2/1b824a33e7e74d85adbd020d5f864686/servers/532aa57e-fe45-4944-b207-71e0d1d95425",
-        "rel": "self"}, {"href": "http://192.0.2.1:8774/1b824a33e7e74d85adbd020d5f864686/servers/532aa57e-fe45-4944-b207-71e0d1d95425",
+        "00:f0:bd:63:96:ae", "version": 4, "addr": "192.0.2.10", "OS-EXT-IPS:type":
+        "fixed"}]}, "links": [{"href": "http://192.0.2.1:8774/v2/1b824a33e7e74d85adbd020d5f864686/servers/5eca8b44-79a6-403c-91c3-413082787445",
+        "rel": "self"}, {"href": "http://192.0.2.1:8774/1b824a33e7e74d85adbd020d5f864686/servers/5eca8b44-79a6-403c-91c3-413082787445",
         "rel": "bookmark"}], "key_name": "default", "image": {"id": "27ee0f87-976c-4519-a395-5805165c85e4",
         "links": [{"href": "http://192.0.2.1:8774/1b824a33e7e74d85adbd020d5f864686/images/27ee0f87-976c-4519-a395-5805165c85e4",
         "rel": "bookmark"}]}, "OS-EXT-STS:task_state": null, "OS-EXT-STS:vm_state":
-        "active", "OS-EXT-SRV-ATTR:instance_name": "instance-00000009", "OS-SRV-USG:launched_at":
-        "2015-05-28T12:06:20.000000", "OS-EXT-SRV-ATTR:hypervisor_hostname": "b6ee3c21-5dbe-4fb4-80b9-dcc7dcf698f8",
+        "active", "OS-EXT-SRV-ATTR:instance_name": "instance-0000000e", "OS-SRV-USG:launched_at":
+        "2015-06-01T11:11:40.000000", "OS-EXT-SRV-ATTR:hypervisor_hostname": "b6ee3c21-5dbe-4fb4-80b9-dcc7dcf698f8",
         "flavor": {"id": "6a1d2fd4-658e-4388-ab88-61dcd0de840a", "links": [{"href":
         "http://192.0.2.1:8774/1b824a33e7e74d85adbd020d5f864686/flavors/6a1d2fd4-658e-4388-ab88-61dcd0de840a",
-        "rel": "bookmark"}]}, "id": "532aa57e-fe45-4944-b207-71e0d1d95425", "security_groups":
+        "rel": "bookmark"}]}, "id": "5eca8b44-79a6-403c-91c3-413082787445", "security_groups":
         [{"name": "default"}], "OS-SRV-USG:terminated_at": null, "OS-EXT-AZ:availability_zone":
-        "nova", "user_id": "d007c492ad47466bbf9298d268be7ca8", "name": "ov-2y6bhonl2mv-0-xp3xtrnavx3j-Controller-rgqpkfif52bc",
-        "created": "2015-05-28T12:05:06Z", "tenant_id": "1b824a33e7e74d85adbd020d5f864686",
+        "nova", "user_id": "d007c492ad47466bbf9298d268be7ca8", "name": "ov-lmcs5kaifrh-0-npjdhhe5opl2-Controller-weorrnynmi25",
+        "created": "2015-06-01T11:10:26Z", "tenant_id": "1b824a33e7e74d85adbd020d5f864686",
         "OS-DCF:diskConfig": "MANUAL", "os-extended-volumes:volumes_attached": [],
         "accessIPv4": "", "accessIPv6": "", "progress": 0, "OS-EXT-STS:power_state":
         1, "config_drive": "", "metadata": {}}]}'
     http_version: 
-  recorded_at: Fri, 29 May 2015 12:41:06 GMT
+  recorded_at: Wed, 03 Jun 2015 11:03:17 GMT
+- request:
+    method: get
+    uri: http://192.0.2.1:8774/v2/1b824a33e7e74d85adbd020d5f864686/servers/detail.json?marker=5eca8b44-79a6-403c-91c3-413082787445
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.29.0 fog-core/1.30.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 52369266d9304509a8fd90d280b9b1cc
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '15'
+      X-Compute-Request-Id:
+      - req-fe96c894-cdd1-4d83-b42f-58dfff9ab800
+      Date:
+      - Wed, 03 Jun 2015 11:03:17 GMT
+    body:
+      encoding: UTF-8
+      string: '{"servers": []}'
+    http_version: 
+  recorded_at: Wed, 03 Jun 2015 11:03:17 GMT
 - request:
     method: get
     uri: http://192.0.2.1:6385/ports/detail
@@ -513,14 +546,14 @@ http_interactions:
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 9413baf1fc41460b915de93b5dd32680
+      - 2bcf90f413fa4218a03cfe1ceb3b7b83
   response:
     status:
       code: 200
       message: ''
     headers:
       Date:
-      - Fri, 29 May 2015 12:41:06 GMT
+      - Wed, 03 Jun 2015 11:03:17 GMT
       Server:
       - WSGIServer/0.1 Python/2.7.5
       X-Openstack-Ironic-Api-Minimum-Version:
@@ -542,8 +575,8 @@ http_interactions:
         "updated_at": null, "address": "00:07:42:53:6c:5a"}, {"node_uuid": "b6ee3c21-5dbe-4fb4-80b9-dcc7dcf698f8",
         "uuid": "99506a06-093b-48ed-ba24-5a2ac40f703a", "links": [{"href": "http://192.0.2.1:6385/v1/ports/99506a06-093b-48ed-ba24-5a2ac40f703a",
         "rel": "self"}, {"href": "http://192.0.2.1:6385/ports/99506a06-093b-48ed-ba24-5a2ac40f703a",
-        "rel": "bookmark"}], "extra": {"vif_port_id": "e1c04fe5-4de6-4063-a47d-0660e1065abb"},
-        "created_at": "2015-05-28T11:00:37+00:00", "updated_at": "2015-05-28T12:05:09+00:00",
+        "rel": "bookmark"}], "extra": {"vif_port_id": "30dec6fa-4f24-45af-9ea5-f8f4da610b56"},
+        "created_at": "2015-05-28T11:00:37+00:00", "updated_at": "2015-06-01T11:10:29+00:00",
         "address": "00:f0:bd:63:96:ae"}, {"node_uuid": "cbb2ec8a-0db7-41ad-ae17-c9e639d41c09",
         "uuid": "d9b4dc8f-044e-4ce5-b07f-e57d70d5d41d", "links": [{"href": "http://192.0.2.1:6385/v1/ports/d9b4dc8f-044e-4ce5-b07f-e57d70d5d41d",
         "rel": "self"}, {"href": "http://192.0.2.1:6385/ports/d9b4dc8f-044e-4ce5-b07f-e57d70d5d41d",
@@ -553,15 +586,15 @@ http_interactions:
         "links": [{"href": "http://192.0.2.1:6385/v1/ports/7bfc2452-d167-4e56-ba60-6890ae257773",
         "rel": "self"}, {"href": "http://192.0.2.1:6385/ports/7bfc2452-d167-4e56-ba60-6890ae257773",
         "rel": "bookmark"}], "extra": {}, "created_at": "2015-05-28T11:00:38+00:00",
-        "updated_at": "2015-05-28T11:59:05+00:00", "address": "00:38:4b:38:9a:4e"},
+        "updated_at": "2015-06-01T09:11:42+00:00", "address": "00:38:4b:38:9a:4e"},
         {"node_uuid": "df17c304-2f9f-4efa-a44c-7e12f0ad96cf", "uuid": "1e74ebb8-3d32-4d37-a62d-438688cc7438",
         "links": [{"href": "http://192.0.2.1:6385/v1/ports/1e74ebb8-3d32-4d37-a62d-438688cc7438",
         "rel": "self"}, {"href": "http://192.0.2.1:6385/ports/1e74ebb8-3d32-4d37-a62d-438688cc7438",
-        "rel": "bookmark"}], "extra": {"vif_port_id": "2fbcbf71-7b18-48cb-9af4-6cf05d11a1e9"},
-        "created_at": "2015-05-28T11:00:38+00:00", "updated_at": "2015-05-28T12:05:10+00:00",
+        "rel": "bookmark"}], "extra": {"vif_port_id": "554ec636-0585-486d-ac12-8739f259d1c9"},
+        "created_at": "2015-05-28T11:00:38+00:00", "updated_at": "2015-06-01T11:10:30+00:00",
         "address": "00:a7:23:2a:1b:61"}]}'
     http_version: 
-  recorded_at: Fri, 29 May 2015 12:41:06 GMT
+  recorded_at: Wed, 03 Jun 2015 11:03:17 GMT
 - request:
     method: get
     uri: http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks
@@ -576,7 +609,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - fbb81c7238734a1bb65eafcd68a5eef4
+      - 2f3c423440804c9c8e24232d8db58b7e
       X-Auth-User:
       - admin
       X-Auth-Key:
@@ -591,22 +624,22 @@ http_interactions:
       Content-Length:
       - '532'
       X-Openstack-Request-Id:
-      - req-7be4aac5-632e-4900-b5da-ee985574bede
+      - req-ef635748-9288-4875-aa4d-cfc4ad373a2d
       Date:
-      - Fri, 29 May 2015 12:41:06 GMT
+      - Wed, 03 Jun 2015 11:03:17 GMT
     body:
       encoding: UTF-8
       string: '{"stacks": [{"parent": null, "description": "No description", "links":
-        [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
+        [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
         "rel": "self"}], "stack_status_reason": "Stack CREATE completed successfully",
         "stack_name": "overcloud", "stack_user_project_id": "1b824a33e7e74d85adbd020d5f864686",
-        "creation_time": "2015-05-28T12:05:00Z", "updated_time": null, "stack_owner":
-        "admin", "stack_status": "CREATE_COMPLETE", "id": "2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48"}]}'
+        "creation_time": "2015-06-01T11:10:20Z", "updated_time": null, "stack_owner":
+        "admin", "stack_status": "CREATE_COMPLETE", "id": "f88eb16a-39f6-4436-819c-2a9a8b08915b"}]}'
     http_version: 
-  recorded_at: Fri, 29 May 2015 12:41:06 GMT
+  recorded_at: Wed, 03 Jun 2015 11:03:17 GMT
 - request:
     method: get
-    uri: http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48
+    uri: http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b
     body:
       encoding: US-ASCII
       string: ''
@@ -618,7 +651,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - fbb81c7238734a1bb65eafcd68a5eef4
+      - 2f3c423440804c9c8e24232d8db58b7e
       X-Auth-User:
       - admin
       X-Auth-Key:
@@ -631,18 +664,18 @@ http_interactions:
       Content-Type:
       - application/json; charset=UTF-8
       Content-Length:
-      - '10428'
+      - '10427'
       X-Openstack-Request-Id:
-      - req-b1123c75-9b9e-439d-80a5-e5adaeebfd0d
+      - req-235a1a72-7fce-4017-b124-b5d63cd38018
       Date:
-      - Fri, 29 May 2015 12:41:06 GMT
+      - Wed, 03 Jun 2015 11:03:17 GMT
     body:
       encoding: UTF-8
       string: '{"stack": {"parent": null, "disable_rollback": true, "description":
-        "No description", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
+        "No description", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
         "rel": "self"}], "stack_status_reason": "Stack CREATE completed successfully",
         "stack_name": "overcloud", "stack_user_project_id": "1b824a33e7e74d85adbd020d5f864686",
-        "stack_owner": "admin", "creation_time": "2015-05-28T12:05:00Z", "capabilities":
+        "stack_owner": "admin", "creation_time": "2015-06-01T11:10:20Z", "capabilities":
         [], "notification_topics": [], "updated_time": null, "timeout_mins": 240,
         "stack_status": "CREATE_COMPLETE", "parameters": {"Controller-1::SSLKey":
         "******", "Compute-1::RabbitClientUseSSL": "False", "Controller-1::KeystoneSSLCertificate":
@@ -683,7 +716,7 @@ http_interactions:
         "ro_snmp_user", "Controller-1::SwiftPartPower": "10", "Swift-Storage-1::Flavor":
         "baremetal", "RabbitCookieSalt": "unset", "Compute-1::RabbitUserName": "guest",
         "CephClusterFSID": "", "Controller-1::KeystoneSigningCertificate": "-----BEGIN
-        CERTIFICATE-----\nMIIDJDCCAgygAwIBAgIBAjANBgkqhkiG9w0BAQUFADBTMQswCQYDVQQGEwJYWDEO\nMAwGA1UECBMFVW5zZXQxDjAMBgNVBAcTBVVuc2V0MQ4wDAYDVQQKEwVVbnNldDEU\nMBIGA1UEAxMLS2V5c3RvbmUgQ0EwHhcNMTUwNTI4MTIwNDU0WhcNMjUwNTI1MTIw\nNDU0WjBYMQswCQYDVQQGEwJYWDEOMAwGA1UECBMFVW5zZXQxDjAMBgNVBAcTBVVu\nc2V0MQ4wDAYDVQQKEwVVbnNldDEZMBcGA1UEAxMQS2V5c3RvbmUgU2lnbmluZzCC\nASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAJ6EkVfsSNq6e3e+tR5Edm5J\nRejjSsAcOCCMCcYOHvSaLXz8gxuN8/jrVGg2LlRJMkiAMMk3nzLHEY3N6BFD7NPj\nGVl3WIi18bwu2lWCsaEXT69trKSpOufdbzV93t4HoksxY9FrDk3qYPb/2sldxuiN\nvbsvLM1cmeZpDn41IPLJZw19TjGAHJ2dvkPPQYrGWZby1T/+DunoNfFDw+Fh3qTg\nc9IiBunIaBU/ENRfwLKBjcBF4vvXl70e9XrjwfmgH79E1P2KkiTetBIQZ7zobgzV\nfrS1PoB+KpNhCfHFpnAkXwNj+m5B5VTLqYiQUFSg27uVY2Eg72CVdP7EGE9FV1UC\nAwEAATANBgkqhkiG9w0BAQUFAAOCAQEAjCNm9MKps9stJaKVlj+9baxuhnVC+YQy\nm4zA8EGBG94wtaLzfP615C5OtdqAUt+55IWVnlYZgx7etLIhyxRqXCqglFGd5qrT\ngvNf6RY2urv4K6j38Cc8NEu/4IrFI69VBGnIJVVgSVUpAhNHA0urj71FCIFrec0Q\nUIhqls7h7K6iHDgdPn94wpu+fPEC6HFKrEd+m2IE3YLjqA63vLS1l54Ot/mhk1Q1\ngkj/Lje83QzUEZQteeDjN1HxH7zE6raCxIFIKQ9ac56tqqmCsYP1ePlKZjMJB9UZ\n5GTDFwr6wLucTPNNPQkO/pwzC3PNzIr2vHcfr2/YLm/yYzhN8SthkQ==\n-----END
+        CERTIFICATE-----\nMIIDJDCCAgygAwIBAgIBAjANBgkqhkiG9w0BAQUFADBTMQswCQYDVQQGEwJYWDEO\nMAwGA1UECBMFVW5zZXQxDjAMBgNVBAcTBVVuc2V0MQ4wDAYDVQQKEwVVbnNldDEU\nMBIGA1UEAxMLS2V5c3RvbmUgQ0EwHhcNMTUwNjAxMTExMDE0WhcNMjUwNTI5MTEx\nMDE0WjBYMQswCQYDVQQGEwJYWDEOMAwGA1UECBMFVW5zZXQxDjAMBgNVBAcTBVVu\nc2V0MQ4wDAYDVQQKEwVVbnNldDEZMBcGA1UEAxMQS2V5c3RvbmUgU2lnbmluZzCC\nASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALwxihVPzZbVev7tP4xAsOtR\n1jqpznfI/4MD9MqnLXPexC2EBpHvsTMv3ev+u14o6Saybx2M9CqsDCl76MdU8mpS\nuf+5CX/Xj3Xgl5D3T5+H+c4voLt+FdqIwvXxOoHMUbioMEtLX9Pb9yyLfhD9xYLq\naLV4e1g9UIq0Nx3CSDS61iAELFYOuOC63RZGT80810T04A+Shsw85byAqlDl17mG\nJ0f3arVCXUXCcpmdSTJi9zXby8Wfk2tqTTUHbvDrPuo6ZZ16q+FnoWyxZpqdqq0e\n0Pmti8MqrbrbyIT8I7ppNrYD9TlOGUvQ3HxPkT3059jQaKkNeSaleFmda+bCQC0C\nAwEAATANBgkqhkiG9w0BAQUFAAOCAQEAWHx1PB6vhT8L8ZmMWC7KbLQ8Sg1V/7Lv\npkXUUKDC0osUdy+xRlultVQhjwWZq/XmkcoUXAIctuthZ4qx4RdoHA/o0TLeTMaA\nz+/1DbUc3Wjtz+aZnzYg/uaEnHiHCn4iEgzjdma+o4Yj7qyfwJ0GSIbB/qTim1B+\n2C/dGMKftbxLI+nUGw3c88TqjYzSYAv7ny33AQnOpSwanTJmn1xEflWkbxfmYY5u\ne8GKCM5v1RjYnvIEY2FVkdHZ2EschGA49XAbYay9cGF2aIK2eyKcxswYgWgPw8ls\nDf5WHkEpU3OK7jwxdh2mlVQseDDazM19/4Rh/qmBYYTXx0h7k0DMmQ==\n-----END
         CERTIFICATE-----", "Compute-1::KeyName": "default", "Cinder-Storage-1::RabbitClientPort":
         "5672", "Compute-1::SnmpdReadonlyUserPassword": "******", "Compute-1::EnablePackageInstall":
         "False", "Compute-1::NeutronNetworkVLANRanges": "datacentre", "Controller-1::NeutronAgentMode":
@@ -698,7 +731,7 @@ http_interactions:
         "Compute-1::CeilometerPassword": "******", "Swift-Storage-1::PartPower": "10",
         "Controller-1::NeutronFlatNetworks": "datacentre", "Controller-1::CinderEnableIscsiBackend":
         "True", "Compute-1::CeilometerMeteringSecret": "******", "ControlFixedIPs":
-        "[]", "Controller-1::NeutronPublicInterfaceIP": "", "OS::stack_id": "2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
+        "[]", "Controller-1::NeutronPublicInterfaceIP": "", "OS::stack_id": "f88eb16a-39f6-4436-819c-2a9a8b08915b",
         "Controller-1::GlancePassword": "******", "Controller-1::KeyName": "default",
         "Controller-1::RabbitPassword": "******", "Controller-1::EnableSwiftStorage":
         "True", "CephMonKey": "", "Compute-1::NtpServer": "", "Controller-1::SSLCertificate":
@@ -715,7 +748,7 @@ http_interactions:
         "False", "Controller-1::NeutronL3HA": "False", "Controller-1::Image": "overcloud-full",
         "Swift-Storage-1::HashSuffix": "******", "Compute-1::NeutronDVR": "False",
         "Compute-1::NeutronL3HA": "False", "Cinder-Storage-1::Image": "overcloud-full",
-        "Controller-1::KeystoneCACertificate": "-----BEGIN CERTIFICATE-----\nMIIDNzCCAh+gAwIBAgIBATANBgkqhkiG9w0BAQUFADBTMQswCQYDVQQGEwJYWDEO\nMAwGA1UECBMFVW5zZXQxDjAMBgNVBAcTBVVuc2V0MQ4wDAYDVQQKEwVVbnNldDEU\nMBIGA1UEAxMLS2V5c3RvbmUgQ0EwHhcNMTUwNTI4MTIwNDU0WhcNMjUwNTI1MTIw\nNDU0WjBTMQswCQYDVQQGEwJYWDEOMAwGA1UECBMFVW5zZXQxDjAMBgNVBAcTBVVu\nc2V0MQ4wDAYDVQQKEwVVbnNldDEUMBIGA1UEAxMLS2V5c3RvbmUgQ0EwggEiMA0G\nCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDA28ip0XU0a7tCfahjJs0qkCXsf/wk\n5qHlj/wxhuKhMT4KsorjFFvxaoRhsCfz+ft3vWC+P54ZFI3LRa4zoDX6k0bgqymq\nxjvMTPKfXkqlRRmGfH51OshBzgwYZGjQBkLmZRhb5SNUr3EkVKXSCIeVjXBxWtIJ\nND//SlWONXlsu589GrWuCX0IH1091BOiVkBkU0/1Kw1k2RY6WMB55ROySHnOIWLV\nVzEDjyvdqfli6n4L3Twmnvtu7l4y7VbW7aIX6PLMHz5ZKyAW0+65OMz85waMDiZ/\ny2zJq/oSkdEf4XcxAQdZJKHQyxoG1To4VJX1E6PiIAi+HI7VmIqdR0TvAgMBAAGj\nFjAUMBIGA1UdEwEB/wQIMAYBAf8CAQAwDQYJKoZIhvcNAQEFBQADggEBACY2Z02t\nyahVk3JO9A5bJxgOR9zPi3DnNNiSb3dreggpugAjIxH7d6hfhDLcxCZKChTklDeC\niTs0XiZhkSvV0CxvxQYzdX0HFesU641uSM0PX6ix4tFDsnvLzjqIJLlKW9VWhkZI\n6OB3ZPmxdH9ao54zRa4pwBhtUbQRxlbpvLPt/bzPc6Sy70ZpsUi4cEcqVCcwvewN\nlqxMyLSKl6zdTqgeOZhOoX9+iCIjoK9TiUEtzokeLXekfQtw+Z24M5N3s5w3tFoz\nPtUY9oucCk3QpAgeiG0ciE4Lh9GcLPYPkJ5UKyhWTkScpF2yJl9vmoRwhfeTv0+G\ndQCm4ZkTsk19IJA=\n-----END
+        "Controller-1::KeystoneCACertificate": "-----BEGIN CERTIFICATE-----\nMIIDNzCCAh+gAwIBAgIBATANBgkqhkiG9w0BAQUFADBTMQswCQYDVQQGEwJYWDEO\nMAwGA1UECBMFVW5zZXQxDjAMBgNVBAcTBVVuc2V0MQ4wDAYDVQQKEwVVbnNldDEU\nMBIGA1UEAxMLS2V5c3RvbmUgQ0EwHhcNMTUwNjAxMTExMDE0WhcNMjUwNTI5MTEx\nMDE0WjBTMQswCQYDVQQGEwJYWDEOMAwGA1UECBMFVW5zZXQxDjAMBgNVBAcTBVVu\nc2V0MQ4wDAYDVQQKEwVVbnNldDEUMBIGA1UEAxMLS2V5c3RvbmUgQ0EwggEiMA0G\nCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQChqnjM3/MeBsGz+8V3s/vY6dfPsK1O\nQuxkf7s/wctZBj8mxYZ6Pq4dxRUYj+cu9AE1jWoJ4Ts4KCsWJS5pTTx+BHwDFNpL\nrfwKIDYv1CiWqfTqbVKjfFVJmDVJcjVvbCPWrYcatP/uxTW/BzYNuYdKLSz2Ys4c\nyPe0GP4dx3YVJ+TNdl8aP3A98Kh77t5IrcvjktnorwwAQIlQps5ogQAyAg7Fs2/9\nLH5cMi0fFvu4HZx4hpMKfO4gQB3ZBuT8VTTTgdMJdv8Enqwg3xBpCUDgkVocxXfp\njNLLX8EXXxkQ+bB1bNiRAE9i449Bqz0kJKdCnyPumYdb7f4UMGFvUVPNAgMBAAGj\nFjAUMBIGA1UdEwEB/wQIMAYBAf8CAQAwDQYJKoZIhvcNAQEFBQADggEBAANtZjBm\nSe0ZC/jlcwUd4rhkJF9AFuKITqIk/0yqFK2PrxIgR9V7BXhqfvXgJUTwRNrNAqIP\nddyeJEtJeS3zCDeCMPQVHgl/6lTfjKr2HEzse4jMA6bQsF2HroYnRVg4IYts+kux\n6nbOMLy1LCDinyDO7r1y5gNzgvjonzXop6RWhM1bTrNmPry6LFHjcwjv79P6OyPm\nyXbTDd0fgp63IxgWSYollin9J4wF3krEDxK6kXJUbv3ErIqZ7BOht51JHcfWI7a3\nlQp60BaIHczAJPvArCsy8Az08OlTyGm7FwOVlqoVc1l7NZJykwiDYsf5H13uCITf\nniRvvNRCFb8WEI8=\n-----END
         CERTIFICATE-----", "Compute-1::NeutronPassword": "******", "NeutronControlPlaneID":
         "c3b49ed8-74a9-4aa3-b1d0-0a00aadf4523", "Controller-1::NeutronPublicInterfaceRawDevice":
         "", "Controller-1::AdminPassword": "******", "Controller-1::CeilometerMeteringSecret":
@@ -730,14 +763,14 @@ http_interactions:
         "swift", "Compute-1::RabbitClientPort": "5672", "Controller-1::ExtraConfig":
         "{}", "Controller-1::EnableCephStorage": "False", "Compute-1::NeutronPhysicalBridge":
         "br-ex", "Compute-1::NeutronEnableTunnelling": "True", "Controller-1::EnableGalera":
-        "True"}, "id": "2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48", "outputs": [{"output_value":
-        "http://192.0.2.18:5000/v2.0/", "description": "URL for the Overcloud Keystone
+        "True"}, "id": "f88eb16a-39f6-4436-819c-2a9a8b08915b", "outputs": [{"output_value":
+        "http://192.0.2.8:5000/v2.0/", "description": "URL for the Overcloud Keystone
         service", "output_key": "KeystoneURL"}], "template_description": "No description"}}'
     http_version: 
-  recorded_at: Fri, 29 May 2015 12:41:06 GMT
+  recorded_at: Wed, 03 Jun 2015 11:03:17 GMT
 - request:
     method: get
-    uri: http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources?nested_depth=50
+    uri: http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources?nested_depth=50
     body:
       encoding: US-ASCII
       string: ''
@@ -749,7 +782,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - fbb81c7238734a1bb65eafcd68a5eef4
+      - 2f3c423440804c9c8e24232d8db58b7e
       X-Auth-User:
       - admin
       X-Auth-Key:
@@ -764,645 +797,645 @@ http_interactions:
       Content-Length:
       - '76701'
       X-Openstack-Request-Id:
-      - req-47343b1e-06c7-4a33-abbf-5876e76861b7
+      - req-1f552e30-4856-4a36-813f-1cb53a43f7f6
       Date:
-      - Fri, 29 May 2015 12:41:07 GMT
+      - Wed, 03 Jun 2015 11:03:20 GMT
     body:
       encoding: UTF-8
       string: '{"resources": [{"resource_name": "SwiftDevicesAndProxyConfig", "links":
-        [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/SwiftDevicesAndProxyConfig",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-SwiftDevicesAndProxyConfig-izzf2aq3yq7z/ebf40e21-5868-4046-9bdd-a12fc248d962",
+        [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/SwiftDevicesAndProxyConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-SwiftDevicesAndProxyConfig-q7kwexil4byu/6ea1a3f6-8963-4448-b537-09f4b17c8aa0",
         "rel": "nested"}], "logical_resource_id": "SwiftDevicesAndProxyConfig", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z", "required_by":
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
         ["ObjectStorageSwiftDeployment", "ControllerSwiftDeployment"], "resource_status_reason":
-        "state changed", "physical_resource_id": "ebf40e21-5868-4046-9bdd-a12fc248d962",
+        "state changed", "physical_resource_id": "6ea1a3f6-8963-4448-b537-09f4b17c8aa0",
         "resource_type": "OS::TripleO::SwiftDevicesAndProxy::SoftwareConfig"}, {"parent_resource":
         "SwiftDevicesAndProxyConfig", "resource_name": "SwiftDevicesAndProxyConfigImpl",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-SwiftDevicesAndProxyConfig-izzf2aq3yq7z/ebf40e21-5868-4046-9bdd-a12fc248d962/resources/SwiftDevicesAndProxyConfigImpl",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-SwiftDevicesAndProxyConfig-izzf2aq3yq7z/ebf40e21-5868-4046-9bdd-a12fc248d962",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-SwiftDevicesAndProxyConfig-q7kwexil4byu/6ea1a3f6-8963-4448-b537-09f4b17c8aa0/resources/SwiftDevicesAndProxyConfigImpl",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-SwiftDevicesAndProxyConfig-q7kwexil4byu/6ea1a3f6-8963-4448-b537-09f4b17c8aa0",
         "rel": "stack"}], "logical_resource_id": "SwiftDevicesAndProxyConfigImpl",
-        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-05-28T12:06:26Z",
+        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-06-01T11:11:45Z",
         "required_by": [], "resource_status_reason": "state changed", "physical_resource_id":
-        "46695ff4-2c0f-47a7-bc5f-ca759737f78e", "resource_type": "OS::Heat::StructuredConfig"},
-        {"resource_name": "CephStorageAllNodesDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/CephStorageAllNodesDeployment",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephStorageAllNodesDeployment-k7neqvkkr4w2/4c84ef9c-46c8-4a9e-8b75-efb4bc346668",
+        "0c754fa3-ff3b-46e3-8452-92c21b54be19", "resource_type": "OS::Heat::StructuredConfig"},
+        {"resource_name": "CephStorageAllNodesDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/CephStorageAllNodesDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephStorageAllNodesDeployment-bmsvxaizodbm/d2847d0b-4d7b-422d-a1a4-ede957215f05",
         "rel": "nested"}], "logical_resource_id": "CephStorageAllNodesDeployment",
-        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z",
+        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z",
         "required_by": ["CephStorageNodesPostDeployment"], "resource_status_reason":
-        "state changed", "physical_resource_id": "4c84ef9c-46c8-4a9e-8b75-efb4bc346668",
+        "state changed", "physical_resource_id": "d2847d0b-4d7b-422d-a1a4-ede957215f05",
         "resource_type": "OS::Heat::StructuredDeployments"}, {"resource_name": "ObjectStorageSwiftDeployment",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/ObjectStorageSwiftDeployment",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageSwiftDeployment-twee6klryo5h/d88a67fa-8503-47ae-a7a2-771d7bb90f9d",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/ObjectStorageSwiftDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageSwiftDeployment-os7wzojecder/da946fc7-7d0e-4b1d-9057-a07928018afa",
         "rel": "nested"}], "logical_resource_id": "ObjectStorageSwiftDeployment",
-        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z",
+        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:20Z",
         "required_by": ["ObjectStorageNodesPostDeployment"], "resource_status_reason":
-        "state changed", "physical_resource_id": "d88a67fa-8503-47ae-a7a2-771d7bb90f9d",
+        "state changed", "physical_resource_id": "da946fc7-7d0e-4b1d-9057-a07928018afa",
         "resource_type": "OS::Heat::StructuredDeployments"}, {"resource_name": "ControllerSwiftDeployment",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/ControllerSwiftDeployment",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerSwiftDeployment-3sal5sridugn/258ca55e-f280-41d6-a0cb-4b9ceb541330",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/ControllerSwiftDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerSwiftDeployment-oe2aehdlh3kn/37d05f0f-0495-4298-a2c1-205002a8fc49",
         "rel": "nested"}], "logical_resource_id": "ControllerSwiftDeployment", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z", "required_by":
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
         ["ControllerNodesPostDeployment"], "resource_status_reason": "state changed",
-        "physical_resource_id": "258ca55e-f280-41d6-a0cb-4b9ceb541330", "resource_type":
+        "physical_resource_id": "37d05f0f-0495-4298-a2c1-205002a8fc49", "resource_type":
         "OS::Heat::StructuredDeployments"}, {"parent_resource": "ControllerSwiftDeployment",
-        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerSwiftDeployment-3sal5sridugn/258ca55e-f280-41d6-a0cb-4b9ceb541330/resources/0",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerSwiftDeployment-3sal5sridugn/258ca55e-f280-41d6-a0cb-4b9ceb541330",
+        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerSwiftDeployment-oe2aehdlh3kn/37d05f0f-0495-4298-a2c1-205002a8fc49/resources/0",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerSwiftDeployment-oe2aehdlh3kn/37d05f0f-0495-4298-a2c1-205002a8fc49",
         "rel": "stack"}], "logical_resource_id": "0", "resource_status": "CREATE_COMPLETE",
-        "updated_time": "2015-05-28T12:06:30Z", "required_by": [], "resource_status_reason":
-        "state changed", "physical_resource_id": "b9b40e82-0c7a-4484-8dc8-f8013b652358",
+        "updated_time": "2015-06-01T11:11:49Z", "required_by": [], "resource_status_reason":
+        "state changed", "physical_resource_id": "5af38cb4-597f-4353-9d95-085223ea3094",
         "resource_type": "OS::Heat::StructuredDeployment"}, {"resource_name": "BlockStorageNodesPostDeployment",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/BlockStorageNodesPostDeployment",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-BlockStorageNodesPostDeployment-hmbkui62loeu/d5693a8e-f82e-4771-868f-a9c8086d8389",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/BlockStorageNodesPostDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-BlockStorageNodesPostDeployment-jusj57l34n4t/ebcb10e3-4f59-4b64-a92b-55e283924962",
         "rel": "nested"}], "logical_resource_id": "BlockStorageNodesPostDeployment",
-        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z",
+        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z",
         "required_by": [], "resource_status_reason": "state changed", "physical_resource_id":
-        "d5693a8e-f82e-4771-868f-a9c8086d8389", "resource_type": "OS::TripleO::BlockStoragePostDeployment"},
+        "ebcb10e3-4f59-4b64-a92b-55e283924962", "resource_type": "OS::TripleO::BlockStoragePostDeployment"},
         {"parent_resource": "BlockStorageNodesPostDeployment", "resource_name": "VolumePuppetConfig",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-BlockStorageNodesPostDeployment-hmbkui62loeu/d5693a8e-f82e-4771-868f-a9c8086d8389/resources/VolumePuppetConfig",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-BlockStorageNodesPostDeployment-hmbkui62loeu/d5693a8e-f82e-4771-868f-a9c8086d8389",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-BlockStorageNodesPostDeployment-jusj57l34n4t/ebcb10e3-4f59-4b64-a92b-55e283924962/resources/VolumePuppetConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-BlockStorageNodesPostDeployment-jusj57l34n4t/ebcb10e3-4f59-4b64-a92b-55e283924962",
         "rel": "stack"}], "logical_resource_id": "VolumePuppetConfig", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:10:03Z", "required_by":
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:16:02Z", "required_by":
         ["VolumeDeployment_Step1"], "resource_status_reason": "state changed", "physical_resource_id":
-        "47090eb0-0a5a-443f-81f0-9b7656d8282b", "resource_type": "OS::Heat::SoftwareConfig"},
+        "769e2772-51db-4954-9acd-607034dd254c", "resource_type": "OS::Heat::SoftwareConfig"},
         {"parent_resource": "BlockStorageNodesPostDeployment", "resource_name": "VolumeDeployment_Step1",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-BlockStorageNodesPostDeployment-hmbkui62loeu/d5693a8e-f82e-4771-868f-a9c8086d8389/resources/VolumeDeployment_Step1",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-BlockStorageNodesPostDeployment-hmbkui62loeu/d5693a8e-f82e-4771-868f-a9c8086d8389",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-BlockStorageNodesPostDeployment-hmbkui62loeu-VolumeDeployment_Step1-5t2t5fxgkd4p/d6603afa-cb9a-475a-91c4-7b2f17acc7bf",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-BlockStorageNodesPostDeployment-jusj57l34n4t/ebcb10e3-4f59-4b64-a92b-55e283924962/resources/VolumeDeployment_Step1",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-BlockStorageNodesPostDeployment-jusj57l34n4t/ebcb10e3-4f59-4b64-a92b-55e283924962",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-BlockStorageNodesPostDeployment-jusj57l34n4t-VolumeDeployment_Step1-e5x3io4u4lsk/89073322-19fb-4a49-8e69-aec76e7999b9",
         "rel": "nested"}], "logical_resource_id": "VolumeDeployment_Step1", "resource_status_reason":
-        "state changed", "updated_time": "2015-05-28T12:10:03Z", "required_by": [],
-        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "d6603afa-cb9a-475a-91c4-7b2f17acc7bf",
+        "state changed", "updated_time": "2015-06-01T11:16:02Z", "required_by": [],
+        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "89073322-19fb-4a49-8e69-aec76e7999b9",
         "resource_type": "OS::Heat::StructuredDeployments"}, {"resource_name": "ComputeCephDeployment",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/ComputeCephDeployment",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeCephDeployment-y43cb6g4msnz/da697d95-f333-4fbc-a8ef-391363dc91df",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/ComputeCephDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeCephDeployment-khwpd5fa3tmw/c2abd5ee-a966-4ffa-be81-2246b4ad734f",
         "rel": "nested"}], "logical_resource_id": "ComputeCephDeployment", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z", "required_by":
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:20Z", "required_by":
         ["ComputeNodesPostDeployment"], "resource_status_reason": "state changed",
-        "physical_resource_id": "da697d95-f333-4fbc-a8ef-391363dc91df", "resource_type":
+        "physical_resource_id": "c2abd5ee-a966-4ffa-be81-2246b4ad734f", "resource_type":
         "OS::Heat::StructuredDeployments"}, {"parent_resource": "ComputeCephDeployment",
-        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeCephDeployment-y43cb6g4msnz/da697d95-f333-4fbc-a8ef-391363dc91df/resources/0",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeCephDeployment-y43cb6g4msnz/da697d95-f333-4fbc-a8ef-391363dc91df",
+        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeCephDeployment-khwpd5fa3tmw/c2abd5ee-a966-4ffa-be81-2246b4ad734f/resources/0",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeCephDeployment-khwpd5fa3tmw/c2abd5ee-a966-4ffa-be81-2246b4ad734f",
         "rel": "stack"}], "logical_resource_id": "0", "resource_status": "CREATE_COMPLETE",
-        "updated_time": "2015-05-28T12:06:28Z", "required_by": [], "resource_status_reason":
-        "state changed", "physical_resource_id": "66255561-2434-46f3-b4c9-92baa4c1e0f9",
+        "updated_time": "2015-06-01T11:11:48Z", "required_by": [], "resource_status_reason":
+        "state changed", "physical_resource_id": "dab99519-1520-4fe9-8063-7dc3a560d660",
         "resource_type": "OS::Heat::StructuredDeployment"}, {"resource_name": "CephStorageCephDeployment",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/CephStorageCephDeployment",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephStorageCephDeployment-odvp3qfww2ee/2cab3e24-fb2b-4207-b862-dd7991f59915",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/CephStorageCephDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephStorageCephDeployment-mfqq2n7st7yj/7ae91877-b72c-4b36-9d4f-dfd28a95b507",
         "rel": "nested"}], "logical_resource_id": "CephStorageCephDeployment", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z", "required_by":
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:20Z", "required_by":
         ["CephStorageNodesPostDeployment"], "resource_status_reason": "state changed",
-        "physical_resource_id": "2cab3e24-fb2b-4207-b862-dd7991f59915", "resource_type":
+        "physical_resource_id": "7ae91877-b72c-4b36-9d4f-dfd28a95b507", "resource_type":
         "OS::Heat::StructuredDeployments"}, {"resource_name": "allNodesConfig", "links":
-        [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/allNodesConfig",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-allNodesConfig-nbvijovpawga/3acf92d0-30dd-4e84-b462-b3c06ca3dc78",
+        [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/allNodesConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-allNodesConfig-2bjy2hvl5ckj/24e32c9e-9f40-4cb1-9e05-ff3bde245ca8",
         "rel": "nested"}], "logical_resource_id": "allNodesConfig", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z", "required_by":
-        ["ComputeAllNodesDeployment", "ControllerAllNodesDeployment", "ObjectStorageAllNodesDeployment",
-        "CephStorageAllNodesDeployment", "BlockStorageAllNodesDeployment"], "resource_status_reason":
-        "state changed", "physical_resource_id": "3acf92d0-30dd-4e84-b462-b3c06ca3dc78",
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
+        ["ObjectStorageAllNodesDeployment", "CephStorageAllNodesDeployment", "ControllerAllNodesDeployment",
+        "BlockStorageAllNodesDeployment", "ComputeAllNodesDeployment"], "resource_status_reason":
+        "state changed", "physical_resource_id": "24e32c9e-9f40-4cb1-9e05-ff3bde245ca8",
         "resource_type": "OS::TripleO::AllNodes::SoftwareConfig"}, {"parent_resource":
         "allNodesConfig", "resource_name": "allNodesConfigImpl", "links": [{"href":
-        "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-allNodesConfig-nbvijovpawga/3acf92d0-30dd-4e84-b462-b3c06ca3dc78/resources/allNodesConfigImpl",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-allNodesConfig-nbvijovpawga/3acf92d0-30dd-4e84-b462-b3c06ca3dc78",
+        "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-allNodesConfig-2bjy2hvl5ckj/24e32c9e-9f40-4cb1-9e05-ff3bde245ca8/resources/allNodesConfigImpl",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-allNodesConfig-2bjy2hvl5ckj/24e32c9e-9f40-4cb1-9e05-ff3bde245ca8",
         "rel": "stack"}], "logical_resource_id": "allNodesConfigImpl", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:06:29Z", "required_by":
-        [], "resource_status_reason": "state changed", "physical_resource_id": "2ac5d366-53cd-40dc-8c88-1fb1a7028495",
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:11:44Z", "required_by":
+        [], "resource_status_reason": "state changed", "physical_resource_id": "35cda306-aa6f-44ab-895a-560ffbb44a55",
         "resource_type": "OS::Heat::StructuredConfig"}, {"resource_name": "CephClusterConfig",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/CephClusterConfig",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephClusterConfig-kldkyrt4kssh/8beaa084-34e6-471d-bf45-e9eb586e58fc",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/CephClusterConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephClusterConfig-qjursb6boz4g/8bf7b3c1-8d71-49e3-970a-027f57f8937a",
         "rel": "nested"}], "logical_resource_id": "CephClusterConfig", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z", "required_by":
-        ["ControllerCephDeployment", "ComputeCephDeployment", "CephStorageCephDeployment"],
-        "resource_status_reason": "state changed", "physical_resource_id": "8beaa084-34e6-471d-bf45-e9eb586e58fc",
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
+        ["CephStorageCephDeployment", "ComputeCephDeployment", "ControllerCephDeployment"],
+        "resource_status_reason": "state changed", "physical_resource_id": "8bf7b3c1-8d71-49e3-970a-027f57f8937a",
         "resource_type": "OS::TripleO::CephClusterConfig::SoftwareConfig"}, {"parent_resource":
         "CephClusterConfig", "resource_name": "CephClusterConfigImpl", "links": [{"href":
-        "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephClusterConfig-kldkyrt4kssh/8beaa084-34e6-471d-bf45-e9eb586e58fc/resources/CephClusterConfigImpl",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephClusterConfig-kldkyrt4kssh/8beaa084-34e6-471d-bf45-e9eb586e58fc",
+        "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephClusterConfig-qjursb6boz4g/8bf7b3c1-8d71-49e3-970a-027f57f8937a/resources/CephClusterConfigImpl",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephClusterConfig-qjursb6boz4g/8bf7b3c1-8d71-49e3-970a-027f57f8937a",
         "rel": "stack"}], "logical_resource_id": "CephClusterConfigImpl", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:06:26Z", "required_by":
-        [], "resource_status_reason": "state changed", "physical_resource_id": "e4d33737-d33e-4481-96c9-b1fa7ae307ed",
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:11:45Z", "required_by":
+        [], "resource_status_reason": "state changed", "physical_resource_id": "776bc904-7c00-496b-90b2-7fd873e8b666",
         "resource_type": "OS::Heat::StructuredConfig"}, {"resource_name": "ComputeAllNodesDeployment",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/ComputeAllNodesDeployment",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeAllNodesDeployment-but4fxdh4qzh/0e396327-bc0b-42e5-9b16-a59e28943a33",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/ComputeAllNodesDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeAllNodesDeployment-4mka57q3vwtq/9dd8d8aa-9836-4867-a58e-5db8a0a3e07d",
         "rel": "nested"}], "logical_resource_id": "ComputeAllNodesDeployment", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z", "required_by":
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
         ["ComputeNodesPostDeployment"], "resource_status_reason": "state changed",
-        "physical_resource_id": "0e396327-bc0b-42e5-9b16-a59e28943a33", "resource_type":
+        "physical_resource_id": "9dd8d8aa-9836-4867-a58e-5db8a0a3e07d", "resource_type":
         "OS::Heat::StructuredDeployments"}, {"parent_resource": "ComputeAllNodesDeployment",
-        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeAllNodesDeployment-but4fxdh4qzh/0e396327-bc0b-42e5-9b16-a59e28943a33/resources/0",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeAllNodesDeployment-but4fxdh4qzh/0e396327-bc0b-42e5-9b16-a59e28943a33",
+        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeAllNodesDeployment-4mka57q3vwtq/9dd8d8aa-9836-4867-a58e-5db8a0a3e07d/resources/0",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeAllNodesDeployment-4mka57q3vwtq/9dd8d8aa-9836-4867-a58e-5db8a0a3e07d",
         "rel": "stack"}], "logical_resource_id": "0", "resource_status": "CREATE_COMPLETE",
-        "updated_time": "2015-05-28T12:06:35Z", "required_by": [], "resource_status_reason":
-        "state changed", "physical_resource_id": "ef683358-ce08-43bf-b08c-8097771fc699",
+        "updated_time": "2015-06-01T11:11:52Z", "required_by": [], "resource_status_reason":
+        "state changed", "physical_resource_id": "d81dcf21-aaaf-491e-a92c-26d68ece557c",
         "resource_type": "OS::Heat::StructuredDeployment"}, {"resource_name": "CephStorageNodesPostDeployment",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/CephStorageNodesPostDeployment",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephStorageNodesPostDeployment-2ksb4voj6r7w/8a7998ee-d3c3-4dd4-a2a5-34a3497f5f4d",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/CephStorageNodesPostDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephStorageNodesPostDeployment-eihwh3zps6qm/9f053a23-f271-400f-869d-8bf35a47efd3",
         "rel": "nested"}], "logical_resource_id": "CephStorageNodesPostDeployment",
-        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z",
+        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:20Z",
         "required_by": [], "resource_status_reason": "state changed", "physical_resource_id":
-        "8a7998ee-d3c3-4dd4-a2a5-34a3497f5f4d", "resource_type": "OS::TripleO::CephStoragePostDeployment"},
+        "9f053a23-f271-400f-869d-8bf35a47efd3", "resource_type": "OS::TripleO::CephStoragePostDeployment"},
         {"parent_resource": "CephStorageNodesPostDeployment", "resource_name": "CephStoragePuppetConfig",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephStorageNodesPostDeployment-2ksb4voj6r7w/8a7998ee-d3c3-4dd4-a2a5-34a3497f5f4d/resources/CephStoragePuppetConfig",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephStorageNodesPostDeployment-2ksb4voj6r7w/8a7998ee-d3c3-4dd4-a2a5-34a3497f5f4d",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephStorageNodesPostDeployment-eihwh3zps6qm/9f053a23-f271-400f-869d-8bf35a47efd3/resources/CephStoragePuppetConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephStorageNodesPostDeployment-eihwh3zps6qm/9f053a23-f271-400f-869d-8bf35a47efd3",
         "rel": "stack"}], "logical_resource_id": "CephStoragePuppetConfig", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:10:05Z", "required_by":
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:16:02Z", "required_by":
         ["CephStorageDeployment_Step1"], "resource_status_reason": "state changed",
-        "physical_resource_id": "1230a36d-959b-4fbd-bf27-805c74348a23", "resource_type":
+        "physical_resource_id": "88343631-cafc-4a70-bb42-d86efe448921", "resource_type":
         "OS::Heat::SoftwareConfig"}, {"parent_resource": "CephStorageNodesPostDeployment",
-        "resource_name": "CephStorageDeployment_Step1", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephStorageNodesPostDeployment-2ksb4voj6r7w/8a7998ee-d3c3-4dd4-a2a5-34a3497f5f4d/resources/CephStorageDeployment_Step1",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephStorageNodesPostDeployment-2ksb4voj6r7w/8a7998ee-d3c3-4dd4-a2a5-34a3497f5f4d",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephStorageNodesPostDeployment-2ksb4voj6r7w-CephStorageDeployment_Step1-u4gq4yozi45t/0f897c5d-dc8e-496a-8971-e563b0b68853",
+        "resource_name": "CephStorageDeployment_Step1", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephStorageNodesPostDeployment-eihwh3zps6qm/9f053a23-f271-400f-869d-8bf35a47efd3/resources/CephStorageDeployment_Step1",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephStorageNodesPostDeployment-eihwh3zps6qm/9f053a23-f271-400f-869d-8bf35a47efd3",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephStorageNodesPostDeployment-eihwh3zps6qm-CephStorageDeployment_Step1-clj5zaw44hpu/ab440838-0008-4e37-bb70-98832f72ebcc",
         "rel": "nested"}], "logical_resource_id": "CephStorageDeployment_Step1", "resource_status_reason":
-        "state changed", "updated_time": "2015-05-28T12:10:05Z", "required_by": ["ExtraConfig"],
-        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "0f897c5d-dc8e-496a-8971-e563b0b68853",
+        "state changed", "updated_time": "2015-06-01T11:16:02Z", "required_by": ["ExtraConfig"],
+        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "ab440838-0008-4e37-bb70-98832f72ebcc",
         "resource_type": "OS::Heat::StructuredDeployments"}, {"parent_resource": "CephStorageNodesPostDeployment",
-        "resource_name": "ExtraConfig", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephStorageNodesPostDeployment-2ksb4voj6r7w/8a7998ee-d3c3-4dd4-a2a5-34a3497f5f4d/resources/ExtraConfig",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephStorageNodesPostDeployment-2ksb4voj6r7w/8a7998ee-d3c3-4dd4-a2a5-34a3497f5f4d",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephStorageNodesPostDeployment-2ksb4voj6r7w-ExtraConfig-mrpci6w5imck/afa5ee32-7649-4f3a-bdd5-5d091ea313c6",
+        "resource_name": "ExtraConfig", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephStorageNodesPostDeployment-eihwh3zps6qm/9f053a23-f271-400f-869d-8bf35a47efd3/resources/ExtraConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephStorageNodesPostDeployment-eihwh3zps6qm/9f053a23-f271-400f-869d-8bf35a47efd3",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephStorageNodesPostDeployment-eihwh3zps6qm-ExtraConfig-upd2pditscxf/5e3227d4-40d0-4abe-8b4c-4f337f6a53f0",
         "rel": "nested"}], "logical_resource_id": "ExtraConfig", "resource_status_reason":
-        "state changed", "updated_time": "2015-05-28T12:10:05Z", "required_by": [],
-        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "afa5ee32-7649-4f3a-bdd5-5d091ea313c6",
+        "state changed", "updated_time": "2015-06-01T11:16:02Z", "required_by": [],
+        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "5e3227d4-40d0-4abe-8b4c-4f337f6a53f0",
         "resource_type": "OS::TripleO::NodeExtraConfigPost"}, {"resource_name": "PcsdPassword",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/PcsdPassword",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/PcsdPassword",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
         "rel": "stack"}], "logical_resource_id": "PcsdPassword", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z", "required_by":
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
         ["Controller"], "resource_status_reason": "state changed", "physical_resource_id":
-        "overcloud-PcsdPassword-mwar5n7bvytj", "resource_type": "OS::Heat::RandomString"},
-        {"resource_name": "RabbitCookie", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/RabbitCookie",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
+        "overcloud-PcsdPassword-ceqb7klw7g2j", "resource_type": "OS::Heat::RandomString"},
+        {"resource_name": "RabbitCookie", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/RabbitCookie",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
         "rel": "stack"}], "logical_resource_id": "RabbitCookie", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z", "required_by":
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
         ["Controller"], "resource_status_reason": "state changed", "physical_resource_id":
-        "overcloud-RabbitCookie-bscjsajjzo57", "resource_type": "OS::Heat::RandomString"},
-        {"resource_name": "ControlVirtualIP", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/ControlVirtualIP",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
+        "overcloud-RabbitCookie-lsypur7dbup3", "resource_type": "OS::Heat::RandomString"},
+        {"resource_name": "ControlVirtualIP", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/ControlVirtualIP",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
         "rel": "stack"}], "logical_resource_id": "ControlVirtualIP", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z", "required_by":
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
         ["Cinder-Storage", "Controller", "Compute"], "resource_status_reason": "state
-        changed", "physical_resource_id": "47a80901-4666-43a6-974e-1c21fd7b0a2c",
+        changed", "physical_resource_id": "60f5b0cb-d85c-4ad3-8193-7987d42836fc",
         "resource_type": "OS::Neutron::Port"}, {"resource_name": "Swift-Storage",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/Swift-Storage",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Swift-Storage-2sjxywyrbgow/07319134-7f0c-40e4-8e4c-a6b8d76595c0",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/Swift-Storage",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Swift-Storage-jjfq5v4a246w/663dab02-4bfd-491c-a1e3-2e03df6ac237",
         "rel": "nested"}], "logical_resource_id": "Swift-Storage", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z", "required_by":
-        ["SwiftDevicesAndProxyConfig", "ObjectStorageAllNodesDeployment", "ObjectStorageNodesPostDeployment",
-        "ObjectStorageSwiftDeployment", "allNodesConfig"], "resource_status_reason":
-        "state changed", "physical_resource_id": "07319134-7f0c-40e4-8e4c-a6b8d76595c0",
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
+        ["ObjectStorageAllNodesDeployment", "ObjectStorageSwiftDeployment", "ObjectStorageNodesPostDeployment",
+        "SwiftDevicesAndProxyConfig", "allNodesConfig"], "resource_status_reason":
+        "state changed", "physical_resource_id": "663dab02-4bfd-491c-a1e3-2e03df6ac237",
         "resource_type": "OS::Heat::ResourceGroup"}, {"resource_name": "Controller",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/Controller",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-72y6bhonl2mv/f8d95d90-afe5-4bed-b7c6-54be2ae94add",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/Controller",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh/6e2eb44d-e4ac-4dab-b1a6-8293b5e4057e",
         "rel": "nested"}], "logical_resource_id": "Controller", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z", "required_by":
-        ["ControllerClusterConfig", "ControllerNodesPostDeployment", "allNodesConfig",
-        "SwiftDevicesAndProxyConfig", "ControllerClusterDeployment", "ControllerAllNodesDeployment",
-        "CephClusterConfig", "ControllerSwiftDeployment", "ControllerBootstrapNodeDeployment",
-        "ControllerBootstrapNodeConfig", "ControllerCephDeployment"], "resource_status_reason":
-        "state changed", "physical_resource_id": "f8d95d90-afe5-4bed-b7c6-54be2ae94add",
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
+        ["ControllerCephDeployment", "ControllerNodesPostDeployment", "ControllerClusterConfig",
+        "CephClusterConfig", "ControllerAllNodesDeployment", "ControllerSwiftDeployment",
+        "allNodesConfig", "ControllerBootstrapNodeConfig", "ControllerClusterDeployment",
+        "ControllerBootstrapNodeDeployment", "SwiftDevicesAndProxyConfig"], "resource_status_reason":
+        "state changed", "physical_resource_id": "6e2eb44d-e4ac-4dab-b1a6-8293b5e4057e",
         "resource_type": "OS::Heat::ResourceGroup"}, {"parent_resource": "Controller",
-        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-72y6bhonl2mv/f8d95d90-afe5-4bed-b7c6-54be2ae94add/resources/0",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-72y6bhonl2mv/f8d95d90-afe5-4bed-b7c6-54be2ae94add",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-72y6bhonl2mv-0-xp3xtrnavx3j/4468c6ad-9397-4989-ac16-ad764ac92f59",
+        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh/6e2eb44d-e4ac-4dab-b1a6-8293b5e4057e/resources/0",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh/6e2eb44d-e4ac-4dab-b1a6-8293b5e4057e",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh-0-npjdhhe5opl2/d2628340-f6c0-4094-8fd7-23a65e5e808c",
         "rel": "nested"}], "logical_resource_id": "0", "resource_status_reason": "state
-        changed", "updated_time": "2015-05-28T12:05:02Z", "required_by": [], "resource_status":
-        "CREATE_COMPLETE", "physical_resource_id": "4468c6ad-9397-4989-ac16-ad764ac92f59",
+        changed", "updated_time": "2015-06-01T11:10:22Z", "required_by": [], "resource_status":
+        "CREATE_COMPLETE", "physical_resource_id": "d2628340-f6c0-4094-8fd7-23a65e5e808c",
         "resource_type": "Tuskar::Controller-1"}, {"parent_resource": "0", "resource_name":
-        "NodeUserData", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-72y6bhonl2mv-0-xp3xtrnavx3j/4468c6ad-9397-4989-ac16-ad764ac92f59/resources/NodeUserData",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-72y6bhonl2mv-0-xp3xtrnavx3j/4468c6ad-9397-4989-ac16-ad764ac92f59",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-72y6bhonl2mv-0-xp3xtrnavx3j-NodeUserData-nokr4qx6leo4/c94873f9-9528-4d38-9f3e-c3ac68f5e6e2",
+        "NodeUserData", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh-0-npjdhhe5opl2/d2628340-f6c0-4094-8fd7-23a65e5e808c/resources/NodeUserData",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh-0-npjdhhe5opl2/d2628340-f6c0-4094-8fd7-23a65e5e808c",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh-0-npjdhhe5opl2-NodeUserData-wrjzdoztiexg/b283c036-a893-423c-bb0d-561801e69a0a",
         "rel": "nested"}], "logical_resource_id": "NodeUserData", "resource_status_reason":
-        "state changed", "updated_time": "2015-05-28T12:05:03Z", "required_by": ["Controller"],
-        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "c94873f9-9528-4d38-9f3e-c3ac68f5e6e2",
+        "state changed", "updated_time": "2015-06-01T11:10:23Z", "required_by": ["Controller"],
+        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "b283c036-a893-423c-bb0d-561801e69a0a",
         "resource_type": "OS::TripleO::NodeUserData"}, {"parent_resource": "NodeUserData",
-        "resource_name": "userdata", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-72y6bhonl2mv-0-xp3xtrnavx3j-NodeUserData-nokr4qx6leo4/c94873f9-9528-4d38-9f3e-c3ac68f5e6e2/resources/userdata",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-72y6bhonl2mv-0-xp3xtrnavx3j-NodeUserData-nokr4qx6leo4/c94873f9-9528-4d38-9f3e-c3ac68f5e6e2",
+        "resource_name": "userdata", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh-0-npjdhhe5opl2-NodeUserData-wrjzdoztiexg/b283c036-a893-423c-bb0d-561801e69a0a/resources/userdata",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh-0-npjdhhe5opl2-NodeUserData-wrjzdoztiexg/b283c036-a893-423c-bb0d-561801e69a0a",
         "rel": "stack"}], "logical_resource_id": "userdata", "resource_status": "CREATE_COMPLETE",
-        "updated_time": "2015-05-28T12:05:04Z", "required_by": [], "resource_status_reason":
-        "state changed", "physical_resource_id": "5f6b20e3-5fd3-41c2-a04d-cd43f7694efc",
+        "updated_time": "2015-06-01T11:10:24Z", "required_by": [], "resource_status_reason":
+        "state changed", "physical_resource_id": "00c04b66-5ef7-4976-8780-f70434b38ef7",
         "resource_type": "OS::Heat::MultipartMime"}, {"parent_resource": "0", "resource_name":
-        "ControllerConfig", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-72y6bhonl2mv-0-xp3xtrnavx3j/4468c6ad-9397-4989-ac16-ad764ac92f59/resources/ControllerConfig",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-72y6bhonl2mv-0-xp3xtrnavx3j/4468c6ad-9397-4989-ac16-ad764ac92f59",
+        "ControllerConfig", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh-0-npjdhhe5opl2/d2628340-f6c0-4094-8fd7-23a65e5e808c/resources/ControllerConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh-0-npjdhhe5opl2/d2628340-f6c0-4094-8fd7-23a65e5e808c",
         "rel": "stack"}], "logical_resource_id": "ControllerConfig", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:03Z", "required_by":
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:23Z", "required_by":
         ["ControllerDeployment"], "resource_status_reason": "state changed", "physical_resource_id":
-        "8ebe38e3-f2af-401e-869e-79c427d713cb", "resource_type": "OS::Heat::StructuredConfig"},
+        "8dc8c57a-bb42-4211-b7e0-138bc63f1471", "resource_type": "OS::Heat::StructuredConfig"},
         {"parent_resource": "0", "resource_name": "NetworkDeployment", "links": [{"href":
-        "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-72y6bhonl2mv-0-xp3xtrnavx3j/4468c6ad-9397-4989-ac16-ad764ac92f59/resources/NetworkDeployment",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-72y6bhonl2mv-0-xp3xtrnavx3j/4468c6ad-9397-4989-ac16-ad764ac92f59",
+        "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh-0-npjdhhe5opl2/d2628340-f6c0-4094-8fd7-23a65e5e808c/resources/NetworkDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh-0-npjdhhe5opl2/d2628340-f6c0-4094-8fd7-23a65e5e808c",
         "rel": "stack"}], "logical_resource_id": "NetworkDeployment", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:03Z", "required_by":
-        [], "resource_status_reason": "state changed", "physical_resource_id": "3b376e02-6611-4e66-b272-396e5b3d55c8",
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:23Z", "required_by":
+        [], "resource_status_reason": "state changed", "physical_resource_id": "4581b7dd-759a-4e93-93e2-95279282a1ad",
         "resource_type": "OS::TripleO::SoftwareDeployment"}, {"parent_resource": "0",
-        "resource_name": "NetworkConfig", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-72y6bhonl2mv-0-xp3xtrnavx3j/4468c6ad-9397-4989-ac16-ad764ac92f59/resources/NetworkConfig",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-72y6bhonl2mv-0-xp3xtrnavx3j/4468c6ad-9397-4989-ac16-ad764ac92f59",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-72y6bhonl2mv-0-xp3xtrnavx3j-NetworkConfig-5l42n4gsbcsh/68adf364-cad8-48cc-a8f3-f814ddbe59e8",
+        "resource_name": "NetworkConfig", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh-0-npjdhhe5opl2/d2628340-f6c0-4094-8fd7-23a65e5e808c/resources/NetworkConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh-0-npjdhhe5opl2/d2628340-f6c0-4094-8fd7-23a65e5e808c",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh-0-npjdhhe5opl2-NetworkConfig-jhuu4r4d54tg/666ea51f-fc07-44e2-90a0-0c09af031b94",
         "rel": "nested"}], "logical_resource_id": "NetworkConfig", "resource_status_reason":
-        "state changed", "updated_time": "2015-05-28T12:05:03Z", "required_by": ["NetworkDeployment"],
-        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "68adf364-cad8-48cc-a8f3-f814ddbe59e8",
+        "state changed", "updated_time": "2015-06-01T11:10:23Z", "required_by": ["NetworkDeployment"],
+        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "666ea51f-fc07-44e2-90a0-0c09af031b94",
         "resource_type": "OS::TripleO::Controller::Net::SoftwareConfig"}, {"parent_resource":
-        "NetworkConfig", "resource_name": "OsNetConfigImpl", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-72y6bhonl2mv-0-xp3xtrnavx3j-NetworkConfig-5l42n4gsbcsh/68adf364-cad8-48cc-a8f3-f814ddbe59e8/resources/OsNetConfigImpl",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-72y6bhonl2mv-0-xp3xtrnavx3j-NetworkConfig-5l42n4gsbcsh/68adf364-cad8-48cc-a8f3-f814ddbe59e8",
+        "NetworkConfig", "resource_name": "OsNetConfigImpl", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh-0-npjdhhe5opl2-NetworkConfig-jhuu4r4d54tg/666ea51f-fc07-44e2-90a0-0c09af031b94/resources/OsNetConfigImpl",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh-0-npjdhhe5opl2-NetworkConfig-jhuu4r4d54tg/666ea51f-fc07-44e2-90a0-0c09af031b94",
         "rel": "stack"}], "logical_resource_id": "OsNetConfigImpl", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:04Z", "required_by":
-        [], "resource_status_reason": "state changed", "physical_resource_id": "fcd09091-412a-429e-a003-0a756ef09004",
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:24Z", "required_by":
+        [], "resource_status_reason": "state changed", "physical_resource_id": "8ce7fe68-7bd7-4dbe-bcdc-26e96b13e280",
         "resource_type": "OS::Heat::StructuredConfig"}, {"parent_resource": "0", "resource_name":
-        "ControllerDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-72y6bhonl2mv-0-xp3xtrnavx3j/4468c6ad-9397-4989-ac16-ad764ac92f59/resources/ControllerDeployment",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-72y6bhonl2mv-0-xp3xtrnavx3j/4468c6ad-9397-4989-ac16-ad764ac92f59",
+        "ControllerDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh-0-npjdhhe5opl2/d2628340-f6c0-4094-8fd7-23a65e5e808c/resources/ControllerDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh-0-npjdhhe5opl2/d2628340-f6c0-4094-8fd7-23a65e5e808c",
         "rel": "stack"}], "logical_resource_id": "ControllerDeployment", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:03Z", "required_by":
-        [], "resource_status_reason": "state changed", "physical_resource_id": "d67c17c9-2745-4f98-84cc-01d84797d2f6",
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:23Z", "required_by":
+        [], "resource_status_reason": "state changed", "physical_resource_id": "a098b55e-df31-491e-941b-9704e4c780ed",
         "resource_type": "OS::TripleO::SoftwareDeployment"}, {"parent_resource": "0",
-        "resource_name": "Controller", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-72y6bhonl2mv-0-xp3xtrnavx3j/4468c6ad-9397-4989-ac16-ad764ac92f59/resources/Controller",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-72y6bhonl2mv-0-xp3xtrnavx3j/4468c6ad-9397-4989-ac16-ad764ac92f59",
+        "resource_name": "Controller", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh-0-npjdhhe5opl2/d2628340-f6c0-4094-8fd7-23a65e5e808c/resources/Controller",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh-0-npjdhhe5opl2/d2628340-f6c0-4094-8fd7-23a65e5e808c",
         "rel": "stack"}], "logical_resource_id": "Controller", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:03Z", "required_by":
-        ["NetworkDeployment", "ControllerDeployment"], "resource_status_reason": "state
-        changed", "physical_resource_id": "532aa57e-fe45-4944-b207-71e0d1d95425",
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:23Z", "required_by":
+        ["ControllerDeployment", "NetworkDeployment"], "resource_status_reason": "state
+        changed", "physical_resource_id": "5eca8b44-79a6-403c-91c3-413082787445",
         "resource_type": "OS::Nova::Server"}, {"resource_name": "MysqlRootPassword",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/MysqlRootPassword",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/MysqlRootPassword",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
         "rel": "stack"}], "logical_resource_id": "MysqlRootPassword", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z", "required_by":
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
         ["Controller"], "resource_status_reason": "state changed", "physical_resource_id":
-        "overcloud-MysqlRootPassword-anaxntyu52cf", "resource_type": "OS::Heat::RandomString"},
-        {"resource_name": "Cinder-Storage", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/Cinder-Storage",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Cinder-Storage-4hu4w4emt3sr/2b4daa1d-996c-4e21-840c-e9f65dd8a8a0",
+        "overcloud-MysqlRootPassword-wsynokg2yjnk", "resource_type": "OS::Heat::RandomString"},
+        {"resource_name": "Cinder-Storage", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/Cinder-Storage",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Cinder-Storage-xawsyk7ky6kh/62dce632-e150-4ed3-90f6-7522e5b1dd54",
         "rel": "nested"}], "logical_resource_id": "Cinder-Storage", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z", "required_by":
-        ["allNodesConfig", "BlockStorageNodesPostDeployment", "BlockStorageAllNodesDeployment"],
-        "resource_status_reason": "state changed", "physical_resource_id": "2b4daa1d-996c-4e21-840c-e9f65dd8a8a0",
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
+        ["BlockStorageAllNodesDeployment", "BlockStorageNodesPostDeployment", "allNodesConfig"],
+        "resource_status_reason": "state changed", "physical_resource_id": "62dce632-e150-4ed3-90f6-7522e5b1dd54",
         "resource_type": "OS::Heat::ResourceGroup"}, {"resource_name": "MysqlClusterUniquePart",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/MysqlClusterUniquePart",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/MysqlClusterUniquePart",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
         "rel": "stack"}], "logical_resource_id": "MysqlClusterUniquePart", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z", "required_by":
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
         ["Controller"], "resource_status_reason": "state changed", "physical_resource_id":
-        "overcloud-MysqlClusterUniquePart-wfjthrhsvpos", "resource_type": "OS::Heat::RandomString"},
-        {"resource_name": "BlockStorageAllNodesDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/BlockStorageAllNodesDeployment",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-BlockStorageAllNodesDeployment-ezmpb45p3c6u/fff764c3-bb45-46b9-a7ba-66564e8bd0bb",
+        "overcloud-MysqlClusterUniquePart-c4eievs36ll5", "resource_type": "OS::Heat::RandomString"},
+        {"resource_name": "BlockStorageAllNodesDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/BlockStorageAllNodesDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-BlockStorageAllNodesDeployment-2qk26755m7wb/dfd02a3c-9e17-4d27-a196-22db2752ba63",
         "rel": "nested"}], "logical_resource_id": "BlockStorageAllNodesDeployment",
-        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z",
+        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z",
         "required_by": ["BlockStorageNodesPostDeployment"], "resource_status_reason":
-        "state changed", "physical_resource_id": "fff764c3-bb45-46b9-a7ba-66564e8bd0bb",
+        "state changed", "physical_resource_id": "dfd02a3c-9e17-4d27-a196-22db2752ba63",
         "resource_type": "OS::Heat::StructuredDeployments"}, {"resource_name": "ControllerNodesPostDeployment",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/ControllerNodesPostDeployment",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx/b552d852-7fe6-4032-b799-896244723eeb",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/ControllerNodesPostDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse/6b10d7a4-2894-4a91-8131-8483e82e970c",
         "rel": "nested"}], "logical_resource_id": "ControllerNodesPostDeployment",
-        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z",
-        "required_by": ["CephStorageNodesPostDeployment", "BlockStorageNodesPostDeployment"],
-        "resource_status_reason": "state changed", "physical_resource_id": "b552d852-7fe6-4032-b799-896244723eeb",
+        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z",
+        "required_by": ["BlockStorageNodesPostDeployment", "CephStorageNodesPostDeployment"],
+        "resource_status_reason": "state changed", "physical_resource_id": "6b10d7a4-2894-4a91-8131-8483e82e970c",
         "resource_type": "OS::TripleO::ControllerPostDeployment"}, {"parent_resource":
         "ControllerNodesPostDeployment", "resource_name": "ControllerDeploymentServicesBase_Step2",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx/b552d852-7fe6-4032-b799-896244723eeb/resources/ControllerDeploymentServicesBase_Step2",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx/b552d852-7fe6-4032-b799-896244723eeb",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx-ControllerDeploymentServicesBase_Step2-vxvqhwyllsbo/28830cb8-ca00-408f-a9c1-146c4e8d4ece",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse/6b10d7a4-2894-4a91-8131-8483e82e970c/resources/ControllerDeploymentServicesBase_Step2",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse/6b10d7a4-2894-4a91-8131-8483e82e970c",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse-ControllerDeploymentServicesBase_Step2-dfrc3svosqlz/9db820a6-afa7-4f88-8d2a-ac37ef778b1a",
         "rel": "nested"}], "logical_resource_id": "ControllerDeploymentServicesBase_Step2",
-        "resource_status_reason": "state changed", "updated_time": "2015-05-28T12:07:01Z",
+        "resource_status_reason": "state changed", "updated_time": "2015-06-01T11:12:16Z",
         "required_by": ["ControllerRingbuilderDeployment_Step3"], "resource_status":
-        "CREATE_COMPLETE", "physical_resource_id": "28830cb8-ca00-408f-a9c1-146c4e8d4ece",
+        "CREATE_COMPLETE", "physical_resource_id": "9db820a6-afa7-4f88-8d2a-ac37ef778b1a",
         "resource_type": "OS::Heat::StructuredDeployments"}, {"parent_resource": "ControllerDeploymentServicesBase_Step2",
-        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx-ControllerDeploymentServicesBase_Step2-vxvqhwyllsbo/28830cb8-ca00-408f-a9c1-146c4e8d4ece/resources/0",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx-ControllerDeploymentServicesBase_Step2-vxvqhwyllsbo/28830cb8-ca00-408f-a9c1-146c4e8d4ece",
+        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse-ControllerDeploymentServicesBase_Step2-dfrc3svosqlz/9db820a6-afa7-4f88-8d2a-ac37ef778b1a/resources/0",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse-ControllerDeploymentServicesBase_Step2-dfrc3svosqlz/9db820a6-afa7-4f88-8d2a-ac37ef778b1a",
         "rel": "stack"}], "logical_resource_id": "0", "resource_status": "CREATE_COMPLETE",
-        "updated_time": "2015-05-28T12:07:43Z", "required_by": [], "resource_status_reason":
-        "state changed", "physical_resource_id": "ed928059-821b-4eb7-a560-51553343c7ef",
+        "updated_time": "2015-06-01T11:12:36Z", "required_by": [], "resource_status_reason":
+        "state changed", "physical_resource_id": "01486720-dd4e-4582-a355-fe61ee10a97c",
         "resource_type": "OS::Heat::StructuredDeployment"}, {"parent_resource": "ControllerNodesPostDeployment",
-        "resource_name": "ControllerRingbuilderPuppetConfig", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx/b552d852-7fe6-4032-b799-896244723eeb/resources/ControllerRingbuilderPuppetConfig",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx/b552d852-7fe6-4032-b799-896244723eeb",
+        "resource_name": "ControllerRingbuilderPuppetConfig", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse/6b10d7a4-2894-4a91-8131-8483e82e970c/resources/ControllerRingbuilderPuppetConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse/6b10d7a4-2894-4a91-8131-8483e82e970c",
         "rel": "stack"}], "logical_resource_id": "ControllerRingbuilderPuppetConfig",
-        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-05-28T12:07:01Z",
+        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-06-01T11:12:15Z",
         "required_by": ["ControllerRingbuilderDeployment_Step3"], "resource_status_reason":
-        "state changed", "physical_resource_id": "8c0c151e-8d03-4762-a307-ccfd74fab1c7",
+        "state changed", "physical_resource_id": "061110a7-5f85-45d0-a923-cf7eb379e232",
         "resource_type": "OS::Heat::SoftwareConfig"}, {"parent_resource": "ControllerNodesPostDeployment",
-        "resource_name": "ExtraConfig", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx/b552d852-7fe6-4032-b799-896244723eeb/resources/ExtraConfig",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx/b552d852-7fe6-4032-b799-896244723eeb",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx-ExtraConfig-mko4dfb74xmo/dc7cdea0-bbb0-4083-9589-092047654ae8",
+        "resource_name": "ExtraConfig", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse/6b10d7a4-2894-4a91-8131-8483e82e970c/resources/ExtraConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse/6b10d7a4-2894-4a91-8131-8483e82e970c",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse-ExtraConfig-pluvtbmpuwqh/cedcb28b-d757-4e5e-be09-0d3f51efcedf",
         "rel": "nested"}], "logical_resource_id": "ExtraConfig", "resource_status_reason":
-        "state changed", "updated_time": "2015-05-28T12:07:01Z", "required_by": [],
-        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "dc7cdea0-bbb0-4083-9589-092047654ae8",
+        "state changed", "updated_time": "2015-06-01T11:12:15Z", "required_by": [],
+        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "cedcb28b-d757-4e5e-be09-0d3f51efcedf",
         "resource_type": "OS::TripleO::NodeExtraConfigPost"}, {"parent_resource":
         "ControllerNodesPostDeployment", "resource_name": "ControllerPuppetConfig",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx/b552d852-7fe6-4032-b799-896244723eeb/resources/ControllerPuppetConfig",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx/b552d852-7fe6-4032-b799-896244723eeb",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse/6b10d7a4-2894-4a91-8131-8483e82e970c/resources/ControllerPuppetConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse/6b10d7a4-2894-4a91-8131-8483e82e970c",
         "rel": "stack"}], "logical_resource_id": "ControllerPuppetConfig", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:07:01Z", "required_by":
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:12:16Z", "required_by":
         ["ControllerDeploymentLoadBalancer_Step1", "ControllerDeploymentServicesBase_Step2",
         "ControllerDeploymentOvercloudServices_Step4"], "resource_status_reason":
-        "state changed", "physical_resource_id": "5c2d92ad-cef2-4ea3-be64-e8ce2dc892f7",
+        "state changed", "physical_resource_id": "749eece6-1014-4ffc-8420-4ad7a95ee887",
         "resource_type": "OS::Heat::SoftwareConfig"}, {"parent_resource": "ControllerNodesPostDeployment",
         "resource_name": "ControllerRingbuilderDeployment_Step3", "links": [{"href":
-        "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx/b552d852-7fe6-4032-b799-896244723eeb/resources/ControllerRingbuilderDeployment_Step3",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx/b552d852-7fe6-4032-b799-896244723eeb",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx-ControllerRingbuilderDeployment_Step3-a2iwwuhrrpum/d7c3594a-1046-4992-86c8-fafd8b02d043",
+        "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse/6b10d7a4-2894-4a91-8131-8483e82e970c/resources/ControllerRingbuilderDeployment_Step3",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse/6b10d7a4-2894-4a91-8131-8483e82e970c",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse-ControllerRingbuilderDeployment_Step3-7p66ij4dhop3/cf583946-b8e7-4b72-9f95-631a28bcf032",
         "rel": "nested"}], "logical_resource_id": "ControllerRingbuilderDeployment_Step3",
-        "resource_status_reason": "state changed", "updated_time": "2015-05-28T12:07:01Z",
+        "resource_status_reason": "state changed", "updated_time": "2015-06-01T11:12:15Z",
         "required_by": ["ControllerDeploymentOvercloudServices_Step4"], "resource_status":
-        "CREATE_COMPLETE", "physical_resource_id": "d7c3594a-1046-4992-86c8-fafd8b02d043",
+        "CREATE_COMPLETE", "physical_resource_id": "cf583946-b8e7-4b72-9f95-631a28bcf032",
         "resource_type": "OS::Heat::StructuredDeployments"}, {"parent_resource": "ControllerRingbuilderDeployment_Step3",
-        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx-ControllerRingbuilderDeployment_Step3-a2iwwuhrrpum/d7c3594a-1046-4992-86c8-fafd8b02d043/resources/0",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx-ControllerRingbuilderDeployment_Step3-a2iwwuhrrpum/d7c3594a-1046-4992-86c8-fafd8b02d043",
+        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse-ControllerRingbuilderDeployment_Step3-7p66ij4dhop3/cf583946-b8e7-4b72-9f95-631a28bcf032/resources/0",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse-ControllerRingbuilderDeployment_Step3-7p66ij4dhop3/cf583946-b8e7-4b72-9f95-631a28bcf032",
         "rel": "stack"}], "logical_resource_id": "0", "resource_status": "CREATE_COMPLETE",
-        "updated_time": "2015-05-28T12:08:08Z", "required_by": [], "resource_status_reason":
-        "state changed", "physical_resource_id": "e592eb4d-eca5-44bd-83a7-aff7a2daa808",
+        "updated_time": "2015-06-01T11:13:31Z", "required_by": [], "resource_status_reason":
+        "state changed", "physical_resource_id": "c9d2c4bd-2c10-4d44-9397-5b5b29201e13",
         "resource_type": "OS::Heat::StructuredDeployment"}, {"parent_resource": "ControllerNodesPostDeployment",
         "resource_name": "ControllerDeploymentOvercloudServices_Step4", "links": [{"href":
-        "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx/b552d852-7fe6-4032-b799-896244723eeb/resources/ControllerDeploymentOvercloudServices_Step4",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx/b552d852-7fe6-4032-b799-896244723eeb",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx-ControllerDeploymentOvercloudServices_Step4-k6ykbeh44z4l/7b8d082a-8d4d-4ee2-83e4-1ede0082a274",
+        "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse/6b10d7a4-2894-4a91-8131-8483e82e970c/resources/ControllerDeploymentOvercloudServices_Step4",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse/6b10d7a4-2894-4a91-8131-8483e82e970c",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse-ControllerDeploymentOvercloudServices_Step4-bw6aezoy6tbr/aa53e21b-9455-468e-b6b5-e0cad5e98ccf",
         "rel": "nested"}], "logical_resource_id": "ControllerDeploymentOvercloudServices_Step4",
-        "resource_status_reason": "state changed", "updated_time": "2015-05-28T12:07:01Z",
+        "resource_status_reason": "state changed", "updated_time": "2015-06-01T11:12:15Z",
         "required_by": ["ExtraConfig"], "resource_status": "CREATE_COMPLETE", "physical_resource_id":
-        "7b8d082a-8d4d-4ee2-83e4-1ede0082a274", "resource_type": "OS::Heat::StructuredDeployments"},
+        "aa53e21b-9455-468e-b6b5-e0cad5e98ccf", "resource_type": "OS::Heat::StructuredDeployments"},
         {"parent_resource": "ControllerDeploymentOvercloudServices_Step4", "resource_name":
-        "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx-ControllerDeploymentOvercloudServices_Step4-k6ykbeh44z4l/7b8d082a-8d4d-4ee2-83e4-1ede0082a274/resources/0",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx-ControllerDeploymentOvercloudServices_Step4-k6ykbeh44z4l/7b8d082a-8d4d-4ee2-83e4-1ede0082a274",
+        "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse-ControllerDeploymentOvercloudServices_Step4-bw6aezoy6tbr/aa53e21b-9455-468e-b6b5-e0cad5e98ccf/resources/0",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse-ControllerDeploymentOvercloudServices_Step4-bw6aezoy6tbr/aa53e21b-9455-468e-b6b5-e0cad5e98ccf",
         "rel": "stack"}], "logical_resource_id": "0", "resource_status": "CREATE_COMPLETE",
-        "updated_time": "2015-05-28T12:08:21Z", "required_by": [], "resource_status_reason":
-        "state changed", "physical_resource_id": "57f79d2f-41dc-4d37-b263-d6d405f79d22",
+        "updated_time": "2015-06-01T11:14:15Z", "required_by": [], "resource_status_reason":
+        "state changed", "physical_resource_id": "0e517c90-0721-4623-a211-f4138b496499",
         "resource_type": "OS::Heat::StructuredDeployment"}, {"parent_resource": "ControllerNodesPostDeployment",
         "resource_name": "ControllerDeploymentLoadBalancer_Step1", "links": [{"href":
-        "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx/b552d852-7fe6-4032-b799-896244723eeb/resources/ControllerDeploymentLoadBalancer_Step1",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx/b552d852-7fe6-4032-b799-896244723eeb",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx-ControllerDeploymentLoadBalancer_Step1-wl2u76wry6im/96ccbf0f-e9ee-481d-bc28-5cbd05f504b6",
+        "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse/6b10d7a4-2894-4a91-8131-8483e82e970c/resources/ControllerDeploymentLoadBalancer_Step1",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse/6b10d7a4-2894-4a91-8131-8483e82e970c",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse-ControllerDeploymentLoadBalancer_Step1-xsyowogdgh64/b9960744-a90f-4775-8899-02de0179fcc0",
         "rel": "nested"}], "logical_resource_id": "ControllerDeploymentLoadBalancer_Step1",
-        "resource_status_reason": "state changed", "updated_time": "2015-05-28T12:07:01Z",
+        "resource_status_reason": "state changed", "updated_time": "2015-06-01T11:12:16Z",
         "required_by": ["ControllerDeploymentServicesBase_Step2"], "resource_status":
-        "CREATE_COMPLETE", "physical_resource_id": "96ccbf0f-e9ee-481d-bc28-5cbd05f504b6",
+        "CREATE_COMPLETE", "physical_resource_id": "b9960744-a90f-4775-8899-02de0179fcc0",
         "resource_type": "OS::Heat::StructuredDeployments"}, {"parent_resource": "ControllerDeploymentLoadBalancer_Step1",
-        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx-ControllerDeploymentLoadBalancer_Step1-wl2u76wry6im/96ccbf0f-e9ee-481d-bc28-5cbd05f504b6/resources/0",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-ft6o7rohqebx-ControllerDeploymentLoadBalancer_Step1-wl2u76wry6im/96ccbf0f-e9ee-481d-bc28-5cbd05f504b6",
+        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse-ControllerDeploymentLoadBalancer_Step1-xsyowogdgh64/b9960744-a90f-4775-8899-02de0179fcc0/resources/0",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse-ControllerDeploymentLoadBalancer_Step1-xsyowogdgh64/b9960744-a90f-4775-8899-02de0179fcc0",
         "rel": "stack"}], "logical_resource_id": "0", "resource_status": "CREATE_COMPLETE",
-        "updated_time": "2015-05-28T12:07:01Z", "required_by": [], "resource_status_reason":
-        "state changed", "physical_resource_id": "73d4ab05-8ac3-413b-9fb9-d85b1925131e",
+        "updated_time": "2015-06-01T11:12:16Z", "required_by": [], "resource_status_reason":
+        "state changed", "physical_resource_id": "ad902546-6a43-4f5c-9526-906db6d0a3e4",
         "resource_type": "OS::Heat::StructuredDeployment"}, {"resource_name": "ControllerCephDeployment",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/ControllerCephDeployment",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerCephDeployment-qq6e7svugxii/c0009404-2b08-4643-8a46-aff067deedc8",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/ControllerCephDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerCephDeployment-hrzc367dxgv2/2ee60bba-77be-405d-892d-952316a4a2b2",
         "rel": "nested"}], "logical_resource_id": "ControllerCephDeployment", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z", "required_by":
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
         ["ControllerNodesPostDeployment"], "resource_status_reason": "state changed",
-        "physical_resource_id": "c0009404-2b08-4643-8a46-aff067deedc8", "resource_type":
+        "physical_resource_id": "2ee60bba-77be-405d-892d-952316a4a2b2", "resource_type":
         "OS::Heat::StructuredDeployments"}, {"parent_resource": "ControllerCephDeployment",
-        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerCephDeployment-qq6e7svugxii/c0009404-2b08-4643-8a46-aff067deedc8/resources/0",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerCephDeployment-qq6e7svugxii/c0009404-2b08-4643-8a46-aff067deedc8",
+        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerCephDeployment-hrzc367dxgv2/2ee60bba-77be-405d-892d-952316a4a2b2/resources/0",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerCephDeployment-hrzc367dxgv2/2ee60bba-77be-405d-892d-952316a4a2b2",
         "rel": "stack"}], "logical_resource_id": "0", "resource_status": "CREATE_COMPLETE",
-        "updated_time": "2015-05-28T12:06:32Z", "required_by": [], "resource_status_reason":
-        "state changed", "physical_resource_id": "e1fbaee3-b9d8-493f-9440-5618ace5e187",
+        "updated_time": "2015-06-01T11:11:50Z", "required_by": [], "resource_status_reason":
+        "state changed", "physical_resource_id": "fae78945-85da-46e2-ac20-2de7c1c55593",
         "resource_type": "OS::Heat::StructuredDeployment"}, {"resource_name": "Compute",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/Compute",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-kxlkibna5qoz/f20a7fd9-6529-4660-b50b-19a6b3bfc55f",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/Compute",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5/f74c3cf0-7473-44db-b2dd-a4115e667ab2",
         "rel": "nested"}], "logical_resource_id": "Compute", "resource_status": "CREATE_COMPLETE",
-        "updated_time": "2015-05-28T12:05:00Z", "required_by": ["allNodesConfig",
-        "ComputeCephDeployment", "ComputeNodesPostDeployment", "ComputeAllNodesDeployment"],
-        "resource_status_reason": "state changed", "physical_resource_id": "f20a7fd9-6529-4660-b50b-19a6b3bfc55f",
+        "updated_time": "2015-06-01T11:10:21Z", "required_by": ["ComputeNodesPostDeployment",
+        "ComputeAllNodesDeployment", "ComputeCephDeployment", "allNodesConfig"], "resource_status_reason":
+        "state changed", "physical_resource_id": "f74c3cf0-7473-44db-b2dd-a4115e667ab2",
         "resource_type": "OS::Heat::ResourceGroup"}, {"parent_resource": "Compute",
-        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-kxlkibna5qoz/f20a7fd9-6529-4660-b50b-19a6b3bfc55f/resources/0",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-kxlkibna5qoz/f20a7fd9-6529-4660-b50b-19a6b3bfc55f",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-kxlkibna5qoz-0-vlf7qtf7sode/aee6ef93-8122-4b9f-8f12-959bf8950945",
+        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5/f74c3cf0-7473-44db-b2dd-a4115e667ab2/resources/0",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5/f74c3cf0-7473-44db-b2dd-a4115e667ab2",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5-0-zz5ayj5ynnuk/5f5a4993-151c-4852-91eb-445b5c795eb6",
         "rel": "nested"}], "logical_resource_id": "0", "resource_status_reason": "state
-        changed", "updated_time": "2015-05-28T12:05:03Z", "required_by": [], "resource_status":
-        "CREATE_COMPLETE", "physical_resource_id": "aee6ef93-8122-4b9f-8f12-959bf8950945",
+        changed", "updated_time": "2015-06-01T11:10:24Z", "required_by": [], "resource_status":
+        "CREATE_COMPLETE", "physical_resource_id": "5f5a4993-151c-4852-91eb-445b5c795eb6",
         "resource_type": "Tuskar::Compute-1"}, {"parent_resource": "0", "resource_name":
-        "NodeUserData", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-kxlkibna5qoz-0-vlf7qtf7sode/aee6ef93-8122-4b9f-8f12-959bf8950945/resources/NodeUserData",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-kxlkibna5qoz-0-vlf7qtf7sode/aee6ef93-8122-4b9f-8f12-959bf8950945",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-kxlkibna5qoz-0-vlf7qtf7sode-NodeUserData-qmaqwymptyns/44d755a3-c65e-4483-95ff-8acda196eb85",
+        "NodeUserData", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5-0-zz5ayj5ynnuk/5f5a4993-151c-4852-91eb-445b5c795eb6/resources/NodeUserData",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5-0-zz5ayj5ynnuk/5f5a4993-151c-4852-91eb-445b5c795eb6",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5-0-zz5ayj5ynnuk-NodeUserData-zrm436ksvak5/f83cf806-7494-4887-859a-dc066dfe5a91",
         "rel": "nested"}], "logical_resource_id": "NodeUserData", "resource_status_reason":
-        "state changed", "updated_time": "2015-05-28T12:05:04Z", "required_by": ["NovaCompute"],
-        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "44d755a3-c65e-4483-95ff-8acda196eb85",
+        "state changed", "updated_time": "2015-06-01T11:10:25Z", "required_by": ["NovaCompute"],
+        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "f83cf806-7494-4887-859a-dc066dfe5a91",
         "resource_type": "OS::TripleO::NodeUserData"}, {"parent_resource": "NodeUserData",
-        "resource_name": "userdata", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-kxlkibna5qoz-0-vlf7qtf7sode-NodeUserData-qmaqwymptyns/44d755a3-c65e-4483-95ff-8acda196eb85/resources/userdata",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-kxlkibna5qoz-0-vlf7qtf7sode-NodeUserData-qmaqwymptyns/44d755a3-c65e-4483-95ff-8acda196eb85",
+        "resource_name": "userdata", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5-0-zz5ayj5ynnuk-NodeUserData-zrm436ksvak5/f83cf806-7494-4887-859a-dc066dfe5a91/resources/userdata",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5-0-zz5ayj5ynnuk-NodeUserData-zrm436ksvak5/f83cf806-7494-4887-859a-dc066dfe5a91",
         "rel": "stack"}], "logical_resource_id": "userdata", "resource_status": "CREATE_COMPLETE",
-        "updated_time": "2015-05-28T12:05:05Z", "required_by": [], "resource_status_reason":
-        "state changed", "physical_resource_id": "4dc29dba-e971-485b-9caf-f3bdaee6c29c",
+        "updated_time": "2015-06-01T11:10:25Z", "required_by": [], "resource_status_reason":
+        "state changed", "physical_resource_id": "d484182e-1107-4019-ad1e-cd621f6b3500",
         "resource_type": "OS::Heat::MultipartMime"}, {"parent_resource": "0", "resource_name":
-        "NovaCompute", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-kxlkibna5qoz-0-vlf7qtf7sode/aee6ef93-8122-4b9f-8f12-959bf8950945/resources/NovaCompute",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-kxlkibna5qoz-0-vlf7qtf7sode/aee6ef93-8122-4b9f-8f12-959bf8950945",
+        "NovaCompute", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5-0-zz5ayj5ynnuk/5f5a4993-151c-4852-91eb-445b5c795eb6/resources/NovaCompute",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5-0-zz5ayj5ynnuk/5f5a4993-151c-4852-91eb-445b5c795eb6",
         "rel": "stack"}], "logical_resource_id": "NovaCompute", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:04Z", "required_by":
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:25Z", "required_by":
         ["NetworkDeployment", "NovaComputeDeployment"], "resource_status_reason":
-        "state changed", "physical_resource_id": "78c72eb4-3fc9-4f83-9998-66a237450625",
+        "state changed", "physical_resource_id": "9466fe04-b05d-491c-b70d-ff8781ad74a4",
         "resource_type": "OS::Nova::Server"}, {"parent_resource": "0", "resource_name":
-        "NetworkConfig", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-kxlkibna5qoz-0-vlf7qtf7sode/aee6ef93-8122-4b9f-8f12-959bf8950945/resources/NetworkConfig",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-kxlkibna5qoz-0-vlf7qtf7sode/aee6ef93-8122-4b9f-8f12-959bf8950945",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-kxlkibna5qoz-0-vlf7qtf7sode-NetworkConfig-r5cw5gde55qy/8de7761f-8b5c-4b7b-b20b-9fd0e0fef2d3",
+        "NetworkConfig", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5-0-zz5ayj5ynnuk/5f5a4993-151c-4852-91eb-445b5c795eb6/resources/NetworkConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5-0-zz5ayj5ynnuk/5f5a4993-151c-4852-91eb-445b5c795eb6",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5-0-zz5ayj5ynnuk-NetworkConfig-vuvqafch6b74/f05ab5b2-b090-4fa0-bacd-a1ca2c1aeaec",
         "rel": "nested"}], "logical_resource_id": "NetworkConfig", "resource_status_reason":
-        "state changed", "updated_time": "2015-05-28T12:05:04Z", "required_by": ["NetworkDeployment"],
-        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "8de7761f-8b5c-4b7b-b20b-9fd0e0fef2d3",
+        "state changed", "updated_time": "2015-06-01T11:10:25Z", "required_by": ["NetworkDeployment"],
+        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "f05ab5b2-b090-4fa0-bacd-a1ca2c1aeaec",
         "resource_type": "OS::TripleO::Compute::Net::SoftwareConfig"}, {"parent_resource":
-        "NetworkConfig", "resource_name": "OsNetConfigImpl", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-kxlkibna5qoz-0-vlf7qtf7sode-NetworkConfig-r5cw5gde55qy/8de7761f-8b5c-4b7b-b20b-9fd0e0fef2d3/resources/OsNetConfigImpl",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-kxlkibna5qoz-0-vlf7qtf7sode-NetworkConfig-r5cw5gde55qy/8de7761f-8b5c-4b7b-b20b-9fd0e0fef2d3",
+        "NetworkConfig", "resource_name": "OsNetConfigImpl", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5-0-zz5ayj5ynnuk-NetworkConfig-vuvqafch6b74/f05ab5b2-b090-4fa0-bacd-a1ca2c1aeaec/resources/OsNetConfigImpl",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5-0-zz5ayj5ynnuk-NetworkConfig-vuvqafch6b74/f05ab5b2-b090-4fa0-bacd-a1ca2c1aeaec",
         "rel": "stack"}], "logical_resource_id": "OsNetConfigImpl", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:04Z", "required_by":
-        [], "resource_status_reason": "state changed", "physical_resource_id": "6c46b221-3412-4692-ad34-e5496a8f2481",
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:25Z", "required_by":
+        [], "resource_status_reason": "state changed", "physical_resource_id": "b46a1e44-0f38-4c0c-8e23-473cf34e130a",
         "resource_type": "OS::Heat::StructuredConfig"}, {"parent_resource": "0", "resource_name":
-        "NetworkDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-kxlkibna5qoz-0-vlf7qtf7sode/aee6ef93-8122-4b9f-8f12-959bf8950945/resources/NetworkDeployment",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-kxlkibna5qoz-0-vlf7qtf7sode/aee6ef93-8122-4b9f-8f12-959bf8950945",
+        "NetworkDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5-0-zz5ayj5ynnuk/5f5a4993-151c-4852-91eb-445b5c795eb6/resources/NetworkDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5-0-zz5ayj5ynnuk/5f5a4993-151c-4852-91eb-445b5c795eb6",
         "rel": "stack"}], "logical_resource_id": "NetworkDeployment", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:04Z", "required_by":
-        [], "resource_status_reason": "state changed", "physical_resource_id": "6dd6ae79-792f-4af3-8b96-a17c7fca8a7f",
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:25Z", "required_by":
+        [], "resource_status_reason": "state changed", "physical_resource_id": "536d44e3-1d90-4bb2-8abf-28d85836331c",
         "resource_type": "OS::TripleO::SoftwareDeployment"}, {"parent_resource": "0",
-        "resource_name": "NovaComputeDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-kxlkibna5qoz-0-vlf7qtf7sode/aee6ef93-8122-4b9f-8f12-959bf8950945/resources/NovaComputeDeployment",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-kxlkibna5qoz-0-vlf7qtf7sode/aee6ef93-8122-4b9f-8f12-959bf8950945",
+        "resource_name": "NovaComputeDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5-0-zz5ayj5ynnuk/5f5a4993-151c-4852-91eb-445b5c795eb6/resources/NovaComputeDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5-0-zz5ayj5ynnuk/5f5a4993-151c-4852-91eb-445b5c795eb6",
         "rel": "stack"}], "logical_resource_id": "NovaComputeDeployment", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:04Z", "required_by":
-        [], "resource_status_reason": "state changed", "physical_resource_id": "c7887cd1-aa24-42ec-a91c-8029a3a2f0ce",
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:25Z", "required_by":
+        [], "resource_status_reason": "state changed", "physical_resource_id": "e67ee4e5-6088-4510-9bc4-670832eb779b",
         "resource_type": "OS::TripleO::SoftwareDeployment"}, {"parent_resource": "0",
-        "resource_name": "NovaComputeConfig", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-kxlkibna5qoz-0-vlf7qtf7sode/aee6ef93-8122-4b9f-8f12-959bf8950945/resources/NovaComputeConfig",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-kxlkibna5qoz-0-vlf7qtf7sode/aee6ef93-8122-4b9f-8f12-959bf8950945",
+        "resource_name": "NovaComputeConfig", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5-0-zz5ayj5ynnuk/5f5a4993-151c-4852-91eb-445b5c795eb6/resources/NovaComputeConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5-0-zz5ayj5ynnuk/5f5a4993-151c-4852-91eb-445b5c795eb6",
         "rel": "stack"}], "logical_resource_id": "NovaComputeConfig", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:04Z", "required_by":
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:25Z", "required_by":
         ["NovaComputeDeployment"], "resource_status_reason": "state changed", "physical_resource_id":
-        "16a0c9f9-a754-43cd-81e2-4f70e8fd2573", "resource_type": "OS::Heat::StructuredConfig"},
-        {"resource_name": "HeatAuthEncryptionKey", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/HeatAuthEncryptionKey",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
+        "d06d7300-f602-4ee8-85fb-3162dc4e5f4b", "resource_type": "OS::Heat::StructuredConfig"},
+        {"resource_name": "HeatAuthEncryptionKey", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/HeatAuthEncryptionKey",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
         "rel": "stack"}], "logical_resource_id": "HeatAuthEncryptionKey", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z", "required_by":
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
         ["Controller"], "resource_status_reason": "state changed", "physical_resource_id":
-        "overcloud-HeatAuthEncryptionKey-ahrqro5gmclz", "resource_type": "OS::Heat::RandomString"},
-        {"resource_name": "ComputeNodesPostDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/ComputeNodesPostDeployment",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeNodesPostDeployment-ic22fxw47uzn/4b4c11eb-c81b-4e41-b78d-f78751d7da74",
+        "overcloud-HeatAuthEncryptionKey-x3ggkv2utfmk", "resource_type": "OS::Heat::RandomString"},
+        {"resource_name": "ComputeNodesPostDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/ComputeNodesPostDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeNodesPostDeployment-7hnkvgp7veft/e04989ad-a125-4419-8593-cc98c2cfb0a3",
         "rel": "nested"}], "logical_resource_id": "ComputeNodesPostDeployment", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z", "required_by":
-        [], "resource_status_reason": "state changed", "physical_resource_id": "4b4c11eb-c81b-4e41-b78d-f78751d7da74",
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:20Z", "required_by":
+        [], "resource_status_reason": "state changed", "physical_resource_id": "e04989ad-a125-4419-8593-cc98c2cfb0a3",
         "resource_type": "OS::TripleO::ComputePostDeployment"}, {"parent_resource":
         "ComputeNodesPostDeployment", "resource_name": "ComputePuppetConfig", "links":
-        [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeNodesPostDeployment-ic22fxw47uzn/4b4c11eb-c81b-4e41-b78d-f78751d7da74/resources/ComputePuppetConfig",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeNodesPostDeployment-ic22fxw47uzn/4b4c11eb-c81b-4e41-b78d-f78751d7da74",
+        [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeNodesPostDeployment-7hnkvgp7veft/e04989ad-a125-4419-8593-cc98c2cfb0a3/resources/ComputePuppetConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeNodesPostDeployment-7hnkvgp7veft/e04989ad-a125-4419-8593-cc98c2cfb0a3",
         "rel": "stack"}], "logical_resource_id": "ComputePuppetConfig", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:06:59Z", "required_by":
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:12:19Z", "required_by":
         ["ComputePuppetDeployment"], "resource_status_reason": "state changed", "physical_resource_id":
-        "fcff6bbf-a056-4e5a-a7d0-66a36d9f2ce9", "resource_type": "OS::Heat::SoftwareConfig"},
+        "bfb908e3-d1cd-4de4-88ca-25c084b09aba", "resource_type": "OS::Heat::SoftwareConfig"},
         {"parent_resource": "ComputeNodesPostDeployment", "resource_name": "ComputePuppetDeployment",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeNodesPostDeployment-ic22fxw47uzn/4b4c11eb-c81b-4e41-b78d-f78751d7da74/resources/ComputePuppetDeployment",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeNodesPostDeployment-ic22fxw47uzn/4b4c11eb-c81b-4e41-b78d-f78751d7da74",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeNodesPostDeployment-ic22fxw47uzn-ComputePuppetDeployment-l3kxxpyukmv3/50309864-917b-4c30-9fe1-d8cb53a16f16",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeNodesPostDeployment-7hnkvgp7veft/e04989ad-a125-4419-8593-cc98c2cfb0a3/resources/ComputePuppetDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeNodesPostDeployment-7hnkvgp7veft/e04989ad-a125-4419-8593-cc98c2cfb0a3",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeNodesPostDeployment-7hnkvgp7veft-ComputePuppetDeployment-5ws4f6ld57te/64ed99d9-6933-4534-93f8-a08512885e8f",
         "rel": "nested"}], "logical_resource_id": "ComputePuppetDeployment", "resource_status_reason":
-        "state changed", "updated_time": "2015-05-28T12:06:59Z", "required_by": ["ExtraConfig"],
-        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "50309864-917b-4c30-9fe1-d8cb53a16f16",
+        "state changed", "updated_time": "2015-06-01T11:12:19Z", "required_by": ["ExtraConfig"],
+        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "64ed99d9-6933-4534-93f8-a08512885e8f",
         "resource_type": "OS::Heat::StructuredDeployments"}, {"parent_resource": "ComputePuppetDeployment",
-        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeNodesPostDeployment-ic22fxw47uzn-ComputePuppetDeployment-l3kxxpyukmv3/50309864-917b-4c30-9fe1-d8cb53a16f16/resources/0",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeNodesPostDeployment-ic22fxw47uzn-ComputePuppetDeployment-l3kxxpyukmv3/50309864-917b-4c30-9fe1-d8cb53a16f16",
+        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeNodesPostDeployment-7hnkvgp7veft-ComputePuppetDeployment-5ws4f6ld57te/64ed99d9-6933-4534-93f8-a08512885e8f/resources/0",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeNodesPostDeployment-7hnkvgp7veft-ComputePuppetDeployment-5ws4f6ld57te/64ed99d9-6933-4534-93f8-a08512885e8f",
         "rel": "stack"}], "logical_resource_id": "0", "resource_status": "CREATE_COMPLETE",
-        "updated_time": "2015-05-28T12:06:59Z", "required_by": [], "resource_status_reason":
-        "state changed", "physical_resource_id": "bb4f2ee6-6212-4548-98ff-ccc4e865bf8d",
+        "updated_time": "2015-06-01T11:12:19Z", "required_by": [], "resource_status_reason":
+        "state changed", "physical_resource_id": "20a55588-3279-42b3-aa27-d1fd3ba256dc",
         "resource_type": "OS::Heat::StructuredDeployment"}, {"parent_resource": "ComputeNodesPostDeployment",
-        "resource_name": "ExtraConfig", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeNodesPostDeployment-ic22fxw47uzn/4b4c11eb-c81b-4e41-b78d-f78751d7da74/resources/ExtraConfig",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeNodesPostDeployment-ic22fxw47uzn/4b4c11eb-c81b-4e41-b78d-f78751d7da74",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeNodesPostDeployment-ic22fxw47uzn-ExtraConfig-k3taaskh5okj/2c648285-04fa-43dd-af93-9a38605a88c2",
+        "resource_name": "ExtraConfig", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeNodesPostDeployment-7hnkvgp7veft/e04989ad-a125-4419-8593-cc98c2cfb0a3/resources/ExtraConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeNodesPostDeployment-7hnkvgp7veft/e04989ad-a125-4419-8593-cc98c2cfb0a3",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ComputeNodesPostDeployment-7hnkvgp7veft-ExtraConfig-7l25mhcn4rot/0cd11593-4ad8-4583-bcca-76283f124a3f",
         "rel": "nested"}], "logical_resource_id": "ExtraConfig", "resource_status_reason":
-        "state changed", "updated_time": "2015-05-28T12:06:59Z", "required_by": [],
-        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "2c648285-04fa-43dd-af93-9a38605a88c2",
+        "state changed", "updated_time": "2015-06-01T11:12:19Z", "required_by": [],
+        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "0cd11593-4ad8-4583-bcca-76283f124a3f",
         "resource_type": "OS::TripleO::NodeExtraConfigPost"}, {"resource_name": "ControllerClusterDeployment",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/ControllerClusterDeployment",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerClusterDeployment-zrf53kbokjkv/f6786d91-0fd3-4910-a9dc-ac8c230f04ce",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/ControllerClusterDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerClusterDeployment-axwby5wkm5e6/ca2f970b-9e86-4f6c-ba2c-499023766855",
         "rel": "nested"}], "logical_resource_id": "ControllerClusterDeployment", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z", "required_by":
-        [], "resource_status_reason": "state changed", "physical_resource_id": "f6786d91-0fd3-4910-a9dc-ac8c230f04ce",
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:20Z", "required_by":
+        [], "resource_status_reason": "state changed", "physical_resource_id": "ca2f970b-9e86-4f6c-ba2c-499023766855",
         "resource_type": "OS::Heat::StructuredDeployments"}, {"parent_resource": "ControllerClusterDeployment",
-        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerClusterDeployment-zrf53kbokjkv/f6786d91-0fd3-4910-a9dc-ac8c230f04ce/resources/0",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerClusterDeployment-zrf53kbokjkv/f6786d91-0fd3-4910-a9dc-ac8c230f04ce",
+        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerClusterDeployment-axwby5wkm5e6/ca2f970b-9e86-4f6c-ba2c-499023766855/resources/0",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerClusterDeployment-axwby5wkm5e6/ca2f970b-9e86-4f6c-ba2c-499023766855",
         "rel": "stack"}], "logical_resource_id": "0", "resource_status": "CREATE_COMPLETE",
-        "updated_time": "2015-05-28T12:06:31Z", "required_by": [], "resource_status_reason":
-        "state changed", "physical_resource_id": "e4addc8e-6a42-410e-b726-41b794c92fdd",
+        "updated_time": "2015-06-01T11:11:48Z", "required_by": [], "resource_status_reason":
+        "state changed", "physical_resource_id": "b2876ed8-852e-4327-9af0-60bd957c639e",
         "resource_type": "OS::Heat::StructuredDeployment"}, {"resource_name": "ControllerBootstrapNodeConfig",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/ControllerBootstrapNodeConfig",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerBootstrapNodeConfig-s7aoodi2mh5a/30d0108a-a085-4b27-8e73-78844d6ddd2b",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/ControllerBootstrapNodeConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerBootstrapNodeConfig-scztorsy3rcy/4c4811aa-eed9-48d9-8f1d-b87293b3b63b",
         "rel": "nested"}], "logical_resource_id": "ControllerBootstrapNodeConfig",
-        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z",
+        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z",
         "required_by": ["ControllerBootstrapNodeDeployment"], "resource_status_reason":
-        "state changed", "physical_resource_id": "30d0108a-a085-4b27-8e73-78844d6ddd2b",
+        "state changed", "physical_resource_id": "4c4811aa-eed9-48d9-8f1d-b87293b3b63b",
         "resource_type": "OS::TripleO::BootstrapNode::SoftwareConfig"}, {"parent_resource":
         "ControllerBootstrapNodeConfig", "resource_name": "BootstrapNodeConfigImpl",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerBootstrapNodeConfig-s7aoodi2mh5a/30d0108a-a085-4b27-8e73-78844d6ddd2b/resources/BootstrapNodeConfigImpl",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerBootstrapNodeConfig-s7aoodi2mh5a/30d0108a-a085-4b27-8e73-78844d6ddd2b",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerBootstrapNodeConfig-scztorsy3rcy/4c4811aa-eed9-48d9-8f1d-b87293b3b63b/resources/BootstrapNodeConfigImpl",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerBootstrapNodeConfig-scztorsy3rcy/4c4811aa-eed9-48d9-8f1d-b87293b3b63b",
         "rel": "stack"}], "logical_resource_id": "BootstrapNodeConfigImpl", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:06:25Z", "required_by":
-        [], "resource_status_reason": "state changed", "physical_resource_id": "f1faf735-7ac4-48df-a053-44ce128bc952",
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:11:44Z", "required_by":
+        [], "resource_status_reason": "state changed", "physical_resource_id": "05655a06-6990-4988-a0ea-2f77b481a85a",
         "resource_type": "OS::Heat::StructuredConfig"}, {"resource_name": "ControllerAllNodesDeployment",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/ControllerAllNodesDeployment",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerAllNodesDeployment-kj7zxcmput7y/05fe0786-b31c-4f31-80d0-70931ed45cfc",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/ControllerAllNodesDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerAllNodesDeployment-656ddwybnivs/aba4a2a3-d2ba-4a57-8e28-915aaabecde8",
         "rel": "nested"}], "logical_resource_id": "ControllerAllNodesDeployment",
-        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z",
+        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z",
         "required_by": ["ControllerNodesPostDeployment"], "resource_status_reason":
-        "state changed", "physical_resource_id": "05fe0786-b31c-4f31-80d0-70931ed45cfc",
+        "state changed", "physical_resource_id": "aba4a2a3-d2ba-4a57-8e28-915aaabecde8",
         "resource_type": "OS::Heat::StructuredDeployments"}, {"parent_resource": "ControllerAllNodesDeployment",
-        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerAllNodesDeployment-kj7zxcmput7y/05fe0786-b31c-4f31-80d0-70931ed45cfc/resources/0",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerAllNodesDeployment-kj7zxcmput7y/05fe0786-b31c-4f31-80d0-70931ed45cfc",
+        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerAllNodesDeployment-656ddwybnivs/aba4a2a3-d2ba-4a57-8e28-915aaabecde8/resources/0",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerAllNodesDeployment-656ddwybnivs/aba4a2a3-d2ba-4a57-8e28-915aaabecde8",
         "rel": "stack"}], "logical_resource_id": "0", "resource_status": "CREATE_COMPLETE",
-        "updated_time": "2015-05-28T12:06:34Z", "required_by": [], "resource_status_reason":
-        "state changed", "physical_resource_id": "7f3eba7b-a748-4424-a322-987c13a1c312",
+        "updated_time": "2015-06-01T11:11:47Z", "required_by": [], "resource_status_reason":
+        "state changed", "physical_resource_id": "67d8b266-dfe5-405b-8bf8-8c111eed7207",
         "resource_type": "OS::Heat::StructuredDeployment"}, {"resource_name": "ControllerClusterConfig",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/ControllerClusterConfig",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/ControllerClusterConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
         "rel": "stack"}], "logical_resource_id": "ControllerClusterConfig", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z", "required_by":
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
         ["ControllerClusterDeployment"], "resource_status_reason": "state changed",
-        "physical_resource_id": "8afce0a2-40b8-4562-9efa-52a708aea99c", "resource_type":
+        "physical_resource_id": "85153cbf-289e-4ef6-ae62-8c4e8bc5a473", "resource_type":
         "OS::Heat::StructuredConfig"}, {"resource_name": "ControllerBootstrapNodeDeployment",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/ControllerBootstrapNodeDeployment",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerBootstrapNodeDeployment-zhl6rozxtdnm/5d0ae49e-de60-44c9-9087-bf6b646fd4ab",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/ControllerBootstrapNodeDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerBootstrapNodeDeployment-qdivbbc7oc45/50795a5f-9804-433a-bd56-68beaf2dc92c",
         "rel": "nested"}], "logical_resource_id": "ControllerBootstrapNodeDeployment",
-        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z",
+        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z",
         "required_by": ["ControllerNodesPostDeployment"], "resource_status_reason":
-        "state changed", "physical_resource_id": "5d0ae49e-de60-44c9-9087-bf6b646fd4ab",
+        "state changed", "physical_resource_id": "50795a5f-9804-433a-bd56-68beaf2dc92c",
         "resource_type": "OS::Heat::StructuredDeployments"}, {"parent_resource": "ControllerBootstrapNodeDeployment",
-        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerBootstrapNodeDeployment-zhl6rozxtdnm/5d0ae49e-de60-44c9-9087-bf6b646fd4ab/resources/0",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerBootstrapNodeDeployment-zhl6rozxtdnm/5d0ae49e-de60-44c9-9087-bf6b646fd4ab",
+        "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerBootstrapNodeDeployment-qdivbbc7oc45/50795a5f-9804-433a-bd56-68beaf2dc92c/resources/0",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerBootstrapNodeDeployment-qdivbbc7oc45/50795a5f-9804-433a-bd56-68beaf2dc92c",
         "rel": "stack"}], "logical_resource_id": "0", "resource_status": "CREATE_COMPLETE",
-        "updated_time": "2015-05-28T12:06:29Z", "required_by": [], "resource_status_reason":
-        "state changed", "physical_resource_id": "3d99fc26-d507-4534-8bf8-4cd5d84ca4a3",
+        "updated_time": "2015-06-01T11:11:51Z", "required_by": [], "resource_status_reason":
+        "state changed", "physical_resource_id": "65622d6e-8ad3-48f4-8aa3-ce9342800f0f",
         "resource_type": "OS::Heat::StructuredDeployment"}, {"resource_name": "ObjectStorageNodesPostDeployment",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/ObjectStorageNodesPostDeployment",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-qvtduopisqt5/2e516ec5-0242-4b7d-bc68-db2407378102",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/ObjectStorageNodesPostDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-feg7xyip24km/823def20-c015-44de-b6ab-16ef8eec23c5",
         "rel": "nested"}], "logical_resource_id": "ObjectStorageNodesPostDeployment",
-        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z",
+        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:20Z",
         "required_by": [], "resource_status_reason": "state changed", "physical_resource_id":
-        "2e516ec5-0242-4b7d-bc68-db2407378102", "resource_type": "OS::TripleO::ObjectStoragePostDeployment"},
+        "823def20-c015-44de-b6ab-16ef8eec23c5", "resource_type": "OS::TripleO::ObjectStoragePostDeployment"},
         {"parent_resource": "ObjectStorageNodesPostDeployment", "resource_name": "StoragePuppetConfig",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-qvtduopisqt5/2e516ec5-0242-4b7d-bc68-db2407378102/resources/StoragePuppetConfig",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-qvtduopisqt5/2e516ec5-0242-4b7d-bc68-db2407378102",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-feg7xyip24km/823def20-c015-44de-b6ab-16ef8eec23c5/resources/StoragePuppetConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-feg7xyip24km/823def20-c015-44de-b6ab-16ef8eec23c5",
         "rel": "stack"}], "logical_resource_id": "StoragePuppetConfig", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:06:38Z", "required_by":
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:11:55Z", "required_by":
         ["StorageDeployment_Step1"], "resource_status_reason": "state changed", "physical_resource_id":
-        "134593be-ef5d-41e6-a301-eba46cb9b847", "resource_type": "OS::Heat::SoftwareConfig"},
+        "dbc38cc9-6f9b-479d-a754-5bf8a6c50e7f", "resource_type": "OS::Heat::SoftwareConfig"},
         {"parent_resource": "ObjectStorageNodesPostDeployment", "resource_name": "StorageRingbuilderPuppetConfig",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-qvtduopisqt5/2e516ec5-0242-4b7d-bc68-db2407378102/resources/StorageRingbuilderPuppetConfig",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-qvtduopisqt5/2e516ec5-0242-4b7d-bc68-db2407378102",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-feg7xyip24km/823def20-c015-44de-b6ab-16ef8eec23c5/resources/StorageRingbuilderPuppetConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-feg7xyip24km/823def20-c015-44de-b6ab-16ef8eec23c5",
         "rel": "stack"}], "logical_resource_id": "StorageRingbuilderPuppetConfig",
-        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-05-28T12:06:38Z",
+        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-06-01T11:11:55Z",
         "required_by": ["StorageRingbuilderDeployment_Step2"], "resource_status_reason":
-        "state changed", "physical_resource_id": "7c010774-de68-49d4-b254-79de6d7bfe30",
+        "state changed", "physical_resource_id": "81fce957-c671-4a58-9f46-9d35f21a5b63",
         "resource_type": "OS::Heat::SoftwareConfig"}, {"parent_resource": "ObjectStorageNodesPostDeployment",
-        "resource_name": "StorageDeployment_Step1", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-qvtduopisqt5/2e516ec5-0242-4b7d-bc68-db2407378102/resources/StorageDeployment_Step1",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-qvtduopisqt5/2e516ec5-0242-4b7d-bc68-db2407378102",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-qvtduopisqt5-StorageDeployment_Step1-jd4p6rw3yi5f/d99c11ca-2019-4509-83ea-fb33833ba16f",
+        "resource_name": "StorageDeployment_Step1", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-feg7xyip24km/823def20-c015-44de-b6ab-16ef8eec23c5/resources/StorageDeployment_Step1",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-feg7xyip24km/823def20-c015-44de-b6ab-16ef8eec23c5",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-feg7xyip24km-StorageDeployment_Step1-vkqygpc7xnln/57513021-3be5-4657-b389-ad427bfc3d4a",
         "rel": "nested"}], "logical_resource_id": "StorageDeployment_Step1", "resource_status_reason":
-        "state changed", "updated_time": "2015-05-28T12:06:38Z", "required_by": ["StorageRingbuilderDeployment_Step2"],
-        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "d99c11ca-2019-4509-83ea-fb33833ba16f",
+        "state changed", "updated_time": "2015-06-01T11:11:55Z", "required_by": ["StorageRingbuilderDeployment_Step2"],
+        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "57513021-3be5-4657-b389-ad427bfc3d4a",
         "resource_type": "OS::Heat::StructuredDeployments"}, {"parent_resource": "ObjectStorageNodesPostDeployment",
         "resource_name": "StorageRingbuilderDeployment_Step2", "links": [{"href":
-        "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-qvtduopisqt5/2e516ec5-0242-4b7d-bc68-db2407378102/resources/StorageRingbuilderDeployment_Step2",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-qvtduopisqt5/2e516ec5-0242-4b7d-bc68-db2407378102",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-qvtduopisqt5-StorageRingbuilderDeployment_Step2-xgd5gu5ziru5/4d073a6e-82e0-4e14-8966-c5ae2c1083c8",
+        "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-feg7xyip24km/823def20-c015-44de-b6ab-16ef8eec23c5/resources/StorageRingbuilderDeployment_Step2",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-feg7xyip24km/823def20-c015-44de-b6ab-16ef8eec23c5",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-feg7xyip24km-StorageRingbuilderDeployment_Step2-s6qunxihy4ft/d1f9c160-cd57-4f19-96b0-c982c3b4b89b",
         "rel": "nested"}], "logical_resource_id": "StorageRingbuilderDeployment_Step2",
-        "resource_status_reason": "state changed", "updated_time": "2015-05-28T12:06:38Z",
+        "resource_status_reason": "state changed", "updated_time": "2015-06-01T11:11:55Z",
         "required_by": ["ExtraConfig"], "resource_status": "CREATE_COMPLETE", "physical_resource_id":
-        "4d073a6e-82e0-4e14-8966-c5ae2c1083c8", "resource_type": "OS::Heat::StructuredDeployments"},
+        "d1f9c160-cd57-4f19-96b0-c982c3b4b89b", "resource_type": "OS::Heat::StructuredDeployments"},
         {"parent_resource": "ObjectStorageNodesPostDeployment", "resource_name": "ExtraConfig",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-qvtduopisqt5/2e516ec5-0242-4b7d-bc68-db2407378102/resources/ExtraConfig",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-qvtduopisqt5/2e516ec5-0242-4b7d-bc68-db2407378102",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-qvtduopisqt5-ExtraConfig-jcf7l7eib5k7/0f8ab412-d101-4c56-8ecb-299fc20e6b8d",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-feg7xyip24km/823def20-c015-44de-b6ab-16ef8eec23c5/resources/ExtraConfig",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-feg7xyip24km/823def20-c015-44de-b6ab-16ef8eec23c5",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageNodesPostDeployment-feg7xyip24km-ExtraConfig-sio7nchhk5bv/4f63b8ce-d0d2-4b5b-bcb8-be634e69dca4",
         "rel": "nested"}], "logical_resource_id": "ExtraConfig", "resource_status_reason":
-        "state changed", "updated_time": "2015-05-28T12:06:38Z", "required_by": [],
-        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "0f8ab412-d101-4c56-8ecb-299fc20e6b8d",
+        "state changed", "updated_time": "2015-06-01T11:11:55Z", "required_by": [],
+        "resource_status": "CREATE_COMPLETE", "physical_resource_id": "4f63b8ce-d0d2-4b5b-bcb8-be634e69dca4",
         "resource_type": "OS::TripleO::NodeExtraConfigPost"}, {"resource_name": "PublicVirtualIP",
-        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/PublicVirtualIP",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
+        "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/PublicVirtualIP",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
         "rel": "stack"}], "logical_resource_id": "PublicVirtualIP", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z", "required_by":
-        ["Controller", "Compute"], "resource_status_reason": "state changed", "physical_resource_id":
-        "9c000fe5-5919-4f3b-ab16-e4bcde76ed9e", "resource_type": "OS::Neutron::Port"},
-        {"resource_name": "Ceph-Storage", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/Ceph-Storage",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Ceph-Storage-trkir5dnnqe4/8e83901a-79f3-41f9-af03-9554c4ab241e",
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
+        ["Compute", "Controller"], "resource_status_reason": "state changed", "physical_resource_id":
+        "cae26006-56e1-4eaf-9a00-3ac7addeeaaf", "resource_type": "OS::Neutron::Port"},
+        {"resource_name": "Ceph-Storage", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/Ceph-Storage",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Ceph-Storage-xt6c4w7vq3f5/be3ffedb-112c-48d6-86fe-d51cde4345a9",
         "rel": "nested"}], "logical_resource_id": "Ceph-Storage", "resource_status":
-        "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z", "required_by":
-        ["allNodesConfig", "CephStorageAllNodesDeployment", "CephStorageNodesPostDeployment",
+        "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
+        ["CephStorageAllNodesDeployment", "CephStorageNodesPostDeployment", "allNodesConfig",
         "CephStorageCephDeployment"], "resource_status_reason": "state changed", "physical_resource_id":
-        "8e83901a-79f3-41f9-af03-9554c4ab241e", "resource_type": "OS::Heat::ResourceGroup"},
-        {"resource_name": "ObjectStorageAllNodesDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/resources/ObjectStorageAllNodesDeployment",
-        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48",
-        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageAllNodesDeployment-b5t6e4w4xypx/a696b51b-959f-48cd-8c29-8328bbf82a44",
+        "be3ffedb-112c-48d6-86fe-d51cde4345a9", "resource_type": "OS::Heat::ResourceGroup"},
+        {"resource_name": "ObjectStorageAllNodesDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/ObjectStorageAllNodesDeployment",
+        "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
+        "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ObjectStorageAllNodesDeployment-4bxyli4vr4lu/790ff1b6-89e8-4126-ab53-c14a0f6f80fc",
         "rel": "nested"}], "logical_resource_id": "ObjectStorageAllNodesDeployment",
-        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-05-28T12:05:00Z",
+        "resource_status": "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:20Z",
         "required_by": ["ObjectStorageNodesPostDeployment"], "resource_status_reason":
-        "state changed", "physical_resource_id": "a696b51b-959f-48cd-8c29-8328bbf82a44",
+        "state changed", "physical_resource_id": "790ff1b6-89e8-4126-ab53-c14a0f6f80fc",
         "resource_type": "OS::Heat::StructuredDeployments"}]}'
     http_version: 
-  recorded_at: Fri, 29 May 2015 12:41:07 GMT
+  recorded_at: Wed, 03 Jun 2015 11:03:20 GMT
 - request:
     method: get
     uri: http://192.0.2.1:6385/nodes/detail
@@ -1415,14 +1448,14 @@ http_interactions:
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 9413baf1fc41460b915de93b5dd32680
+      - 2bcf90f413fa4218a03cfe1ceb3b7b83
   response:
     status:
       code: 200
       message: ''
     headers:
       Date:
-      - Fri, 29 May 2015 12:41:07 GMT
+      - Wed, 03 Jun 2015 11:03:20 GMT
       Server:
       - WSGIServer/0.1 Python/2.7.5
       X-Openstack-Ironic-Api-Minimum-Version:
@@ -1443,7 +1476,7 @@ http_interactions:
         "e999a20d-2e76-4c45-8b66-ce78e470a7c7", "ssh_key_contents": "-----BEGIN RSA
         PRIVATE KEY-----\nMIIEogIBAAKCAQEA7QFu9SCcobkB7+bftNnlzsUEmRLB0mU3/EsY9M6luMrAzDIT\n8N3L6e013bwzCSDoDzTTXUee2NLH6kbisv2A+R7xlv5gSkt7fbaV4fX7gDTDrOM3\neqZJShKzBX1TU9CkrKCP+R09DpUeksItxm8HU2HfA7Ugd+rb1uYD7Hm9bMnWiK8L\nEn6gbJ1AmeTQ6z9L895ezesVgtEd1ibKJDrrBF/ux7KvezjdsI0lVliRc1JKPpO2\nsuD2PYrLSRGik4KmuIgJuMfeSjTYrKkaX7NsDCmznfod7lS/eNtKbSOcVZpK/jrh\n+LVEnNTiDxZcuQlzUo54VTnIjMp1yylYtgtqDQIDAQABAoIBAHZ/U/nNX2LgfF51\nIX5rv6G9Ecpy/WNzZiWHaqfjtioJfZHaq+uvCWghSOBfW2kCAeSwdclaqMohwQCa\nhngVlWl5FjN3Za9fxBObuZ6rfR6hwv/q7u8sutIFPWrOOV5boCoLcVCNVNy4o/ue\niIKBOrlu4rEY2235iAcPJAEU8Se1YE+3qAxEktFRAj2bgPs+ldr3gqTvmUBDLpPA\nD4td4zw+zLZ5QR/BXGNmNjCkjusxMmTvekkk8Qrf7zvHiV4M4VDcQLM7St4cTRyT\nTcGhXn79GRQ0+joqcZSwUli9X8Nu4ue5+RZNi/hN9YymwNWfhUzsYPcBKrPJ1sC0\nzoSSssECgYEA/vWP6AnfQ2I8R2mYkdsNl10w6S5kHAY/Oo7asPx3g8MmaFouOfuj\nWYX7vgN1cKYhELdGHrHEv1H7l8Si0RG2NIjNtQR8KDtXjl87ImohAHdVBzsqGxfB\nZCXiIwjfzBbwUQ614hNGdeJ0Zk3+ezdrb0KlVaZWGXmAsA9/KRVKKJ0CgYEA7fkb\n/3p/Ap3keRoQlWtfSL67CoHMQadpW0he1LZfp0V1fPrloQ/nrIVc6bwydExX/KiQ\nHBTl6h9TptXn6ijRQX3dzdxGCdC2d44HpH8NPknC5hynWab3pJ1H7e+xdhhYYJ8Y\nnWwcl4o+P8dnUyfAmnwyn3sZBBQKsihr6rF09DECgYBmfn1NgLp6MkGdS7wD1pXO\nJa6F7xpbkb9VYRxVTgkVtRv5k1dGA/0U/iHHr0hE8uQT/jl4GWrIpsKHrortlTs0\nP1LC1Hy9B64ZE/uHyDZgI5jRAV3Z6mDaS8hu4SBmwUn2q/0+VxVaSqEUh4IoMo1D\n+vzQQ8AVGZ08Kd6qu15GmQKBgHFdHk1SGXcxqElYdVX41GdfFNMoihksmy/1Bdfn\nGSIiIJntG77iSMcSsPRXxuFIDRI7aos2GWCyk7MCa3xM/YJpZ2RN7r92QbYqXtGq\nBLELimD8fWxj8czlcAKVEMDlUBSXNa6odeZq4MSZRUuDwGjXiXYXug8LTR0ZzG79\nIm3BAoGAZl0JIOCIZjOB49uY8Hz/6RHiCg0dj9Bg+xhtLoJLQwtd7AWWO7cGO/sF\nWYQkCff2Mz8cT3WyTvgMxF5uA6exlAtDTgLGN05eyk066WNYsVjLz6a2m3evFKot\nb5xKH7ba2F3IXvsT1vQNnc7lX8PCVBae/Pt7Xu4wUZiyOYoMdfs=\n-----END
         RSA PRIVATE KEY-----", "ssh_virt_type": "virsh", "ssh_address": "192.168.122.1"},
-        "target_provision_state": null, "updated_at": "2015-05-29T12:40:08+00:00",
+        "target_provision_state": null, "updated_at": "2015-06-03T11:03:15+00:00",
         "last_error": null, "console_enabled": false, "extra": {"newly_discovered":
         "true", "block_devices": {"serials": ["QM00005"]}, "edeploy_facts": [["disk",
         "logical", "count", "1"], ["disk", "sda", "size", "44"], ["disk", "sda", "vendor",
@@ -1514,13 +1547,13 @@ http_interactions:
         "created_at": "2015-05-28T11:00:37+00:00", "instance_info": {}, "ports": [{"href":
         "http://192.0.2.1:6385/v1/nodes/488df585-8724-40ba-9f12-d034b6bfc7a4/ports",
         "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/488df585-8724-40ba-9f12-d034b6bfc7a4/ports",
-        "rel": "bookmark"}]}, {"instance_uuid": "532aa57e-fe45-4944-b207-71e0d1d95425",
+        "rel": "bookmark"}]}, {"instance_uuid": "5eca8b44-79a6-403c-91c3-413082787445",
         "target_power_state": null, "maintenance": false, "uuid": "b6ee3c21-5dbe-4fb4-80b9-dcc7dcf698f8",
         "driver_info": {"ssh_username": "root", "deploy_kernel": "8f3d4df2-6aed-4e18-9ad8-5a5ddd57234f",
         "deploy_ramdisk": "e999a20d-2e76-4c45-8b66-ce78e470a7c7", "ssh_key_contents":
         "-----BEGIN RSA PRIVATE KEY-----\nMIIEogIBAAKCAQEA7QFu9SCcobkB7+bftNnlzsUEmRLB0mU3/EsY9M6luMrAzDIT\n8N3L6e013bwzCSDoDzTTXUee2NLH6kbisv2A+R7xlv5gSkt7fbaV4fX7gDTDrOM3\neqZJShKzBX1TU9CkrKCP+R09DpUeksItxm8HU2HfA7Ugd+rb1uYD7Hm9bMnWiK8L\nEn6gbJ1AmeTQ6z9L895ezesVgtEd1ibKJDrrBF/ux7KvezjdsI0lVliRc1JKPpO2\nsuD2PYrLSRGik4KmuIgJuMfeSjTYrKkaX7NsDCmznfod7lS/eNtKbSOcVZpK/jrh\n+LVEnNTiDxZcuQlzUo54VTnIjMp1yylYtgtqDQIDAQABAoIBAHZ/U/nNX2LgfF51\nIX5rv6G9Ecpy/WNzZiWHaqfjtioJfZHaq+uvCWghSOBfW2kCAeSwdclaqMohwQCa\nhngVlWl5FjN3Za9fxBObuZ6rfR6hwv/q7u8sutIFPWrOOV5boCoLcVCNVNy4o/ue\niIKBOrlu4rEY2235iAcPJAEU8Se1YE+3qAxEktFRAj2bgPs+ldr3gqTvmUBDLpPA\nD4td4zw+zLZ5QR/BXGNmNjCkjusxMmTvekkk8Qrf7zvHiV4M4VDcQLM7St4cTRyT\nTcGhXn79GRQ0+joqcZSwUli9X8Nu4ue5+RZNi/hN9YymwNWfhUzsYPcBKrPJ1sC0\nzoSSssECgYEA/vWP6AnfQ2I8R2mYkdsNl10w6S5kHAY/Oo7asPx3g8MmaFouOfuj\nWYX7vgN1cKYhELdGHrHEv1H7l8Si0RG2NIjNtQR8KDtXjl87ImohAHdVBzsqGxfB\nZCXiIwjfzBbwUQ614hNGdeJ0Zk3+ezdrb0KlVaZWGXmAsA9/KRVKKJ0CgYEA7fkb\n/3p/Ap3keRoQlWtfSL67CoHMQadpW0he1LZfp0V1fPrloQ/nrIVc6bwydExX/KiQ\nHBTl6h9TptXn6ijRQX3dzdxGCdC2d44HpH8NPknC5hynWab3pJ1H7e+xdhhYYJ8Y\nnWwcl4o+P8dnUyfAmnwyn3sZBBQKsihr6rF09DECgYBmfn1NgLp6MkGdS7wD1pXO\nJa6F7xpbkb9VYRxVTgkVtRv5k1dGA/0U/iHHr0hE8uQT/jl4GWrIpsKHrortlTs0\nP1LC1Hy9B64ZE/uHyDZgI5jRAV3Z6mDaS8hu4SBmwUn2q/0+VxVaSqEUh4IoMo1D\n+vzQQ8AVGZ08Kd6qu15GmQKBgHFdHk1SGXcxqElYdVX41GdfFNMoihksmy/1Bdfn\nGSIiIJntG77iSMcSsPRXxuFIDRI7aos2GWCyk7MCa3xM/YJpZ2RN7r92QbYqXtGq\nBLELimD8fWxj8czlcAKVEMDlUBSXNa6odeZq4MSZRUuDwGjXiXYXug8LTR0ZzG79\nIm3BAoGAZl0JIOCIZjOB49uY8Hz/6RHiCg0dj9Bg+xhtLoJLQwtd7AWWO7cGO/sF\nWYQkCff2Mz8cT3WyTvgMxF5uA6exlAtDTgLGN05eyk066WNYsVjLz6a2m3evFKot\nb5xKH7ba2F3IXvsT1vQNnc7lX8PCVBae/Pt7Xu4wUZiyOYoMdfs=\n-----END
         RSA PRIVATE KEY-----", "ssh_virt_type": "virsh", "ssh_address": "192.168.122.1"},
-        "target_provision_state": null, "updated_at": "2015-05-29T12:40:09+00:00",
+        "target_provision_state": null, "updated_at": "2015-06-03T11:03:16+00:00",
         "last_error": null, "console_enabled": false, "extra": {"newly_discovered":
         "true", "block_devices": {"serials": ["QM00005"]}, "edeploy_facts": [["disk",
         "logical", "count", "1"], ["disk", "sda", "size", "44"], ["disk", "sda", "vendor",
@@ -1586,12 +1619,12 @@ http_interactions:
         "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/b6ee3c21-5dbe-4fb4-80b9-dcc7dcf698f8",
         "rel": "bookmark"}], "maintenance_reason": null, "properties": {"memory_mb":
         "4096", "cpu_arch": "x86_64", "local_gb": "40", "cpus": "1", "capabilities":
-        "boot_option:local"}, "provision_updated_at": "2015-05-28T12:06:18+00:00",
+        "boot_option:local"}, "provision_updated_at": "2015-06-01T11:11:40+00:00",
         "power_state": "power on", "provision_state": "active", "reservation": null,
         "created_at": "2015-05-28T11:00:37+00:00", "instance_info": {"ramdisk": "bfd50aea-af25-4d35-9676-e7594107122c",
         "kernel": "5a8ed463-471c-4602-814f-155c77c8ac68", "root_gb": "40", "image_source":
         "27ee0f87-976c-4519-a395-5805165c85e4", "capabilities": "{\"boot_option\":
-        \"local\"}", "deploy_key": "DFTFVDH2MJFLIRYME7G3FEEC2CE3JK35", "swap_mb":
+        \"local\"}", "deploy_key": "MRJIEH5LAYMKXW08WIHESHXG4J7X0NUI", "swap_mb":
         "0"}, "ports": [{"href": "http://192.0.2.1:6385/v1/nodes/b6ee3c21-5dbe-4fb4-80b9-dcc7dcf698f8/ports",
         "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/b6ee3c21-5dbe-4fb4-80b9-dcc7dcf698f8/ports",
         "rel": "bookmark"}]}, {"instance_uuid": null, "target_power_state": null,
@@ -1600,7 +1633,7 @@ http_interactions:
         "deploy_ramdisk": "e999a20d-2e76-4c45-8b66-ce78e470a7c7", "ssh_key_contents":
         "-----BEGIN RSA PRIVATE KEY-----\nMIIEogIBAAKCAQEA7QFu9SCcobkB7+bftNnlzsUEmRLB0mU3/EsY9M6luMrAzDIT\n8N3L6e013bwzCSDoDzTTXUee2NLH6kbisv2A+R7xlv5gSkt7fbaV4fX7gDTDrOM3\neqZJShKzBX1TU9CkrKCP+R09DpUeksItxm8HU2HfA7Ugd+rb1uYD7Hm9bMnWiK8L\nEn6gbJ1AmeTQ6z9L895ezesVgtEd1ibKJDrrBF/ux7KvezjdsI0lVliRc1JKPpO2\nsuD2PYrLSRGik4KmuIgJuMfeSjTYrKkaX7NsDCmznfod7lS/eNtKbSOcVZpK/jrh\n+LVEnNTiDxZcuQlzUo54VTnIjMp1yylYtgtqDQIDAQABAoIBAHZ/U/nNX2LgfF51\nIX5rv6G9Ecpy/WNzZiWHaqfjtioJfZHaq+uvCWghSOBfW2kCAeSwdclaqMohwQCa\nhngVlWl5FjN3Za9fxBObuZ6rfR6hwv/q7u8sutIFPWrOOV5boCoLcVCNVNy4o/ue\niIKBOrlu4rEY2235iAcPJAEU8Se1YE+3qAxEktFRAj2bgPs+ldr3gqTvmUBDLpPA\nD4td4zw+zLZ5QR/BXGNmNjCkjusxMmTvekkk8Qrf7zvHiV4M4VDcQLM7St4cTRyT\nTcGhXn79GRQ0+joqcZSwUli9X8Nu4ue5+RZNi/hN9YymwNWfhUzsYPcBKrPJ1sC0\nzoSSssECgYEA/vWP6AnfQ2I8R2mYkdsNl10w6S5kHAY/Oo7asPx3g8MmaFouOfuj\nWYX7vgN1cKYhELdGHrHEv1H7l8Si0RG2NIjNtQR8KDtXjl87ImohAHdVBzsqGxfB\nZCXiIwjfzBbwUQ614hNGdeJ0Zk3+ezdrb0KlVaZWGXmAsA9/KRVKKJ0CgYEA7fkb\n/3p/Ap3keRoQlWtfSL67CoHMQadpW0he1LZfp0V1fPrloQ/nrIVc6bwydExX/KiQ\nHBTl6h9TptXn6ijRQX3dzdxGCdC2d44HpH8NPknC5hynWab3pJ1H7e+xdhhYYJ8Y\nnWwcl4o+P8dnUyfAmnwyn3sZBBQKsihr6rF09DECgYBmfn1NgLp6MkGdS7wD1pXO\nJa6F7xpbkb9VYRxVTgkVtRv5k1dGA/0U/iHHr0hE8uQT/jl4GWrIpsKHrortlTs0\nP1LC1Hy9B64ZE/uHyDZgI5jRAV3Z6mDaS8hu4SBmwUn2q/0+VxVaSqEUh4IoMo1D\n+vzQQ8AVGZ08Kd6qu15GmQKBgHFdHk1SGXcxqElYdVX41GdfFNMoihksmy/1Bdfn\nGSIiIJntG77iSMcSsPRXxuFIDRI7aos2GWCyk7MCa3xM/YJpZ2RN7r92QbYqXtGq\nBLELimD8fWxj8czlcAKVEMDlUBSXNa6odeZq4MSZRUuDwGjXiXYXug8LTR0ZzG79\nIm3BAoGAZl0JIOCIZjOB49uY8Hz/6RHiCg0dj9Bg+xhtLoJLQwtd7AWWO7cGO/sF\nWYQkCff2Mz8cT3WyTvgMxF5uA6exlAtDTgLGN05eyk066WNYsVjLz6a2m3evFKot\nb5xKH7ba2F3IXvsT1vQNnc7lX8PCVBae/Pt7Xu4wUZiyOYoMdfs=\n-----END
         RSA PRIVATE KEY-----", "ssh_virt_type": "virsh", "ssh_address": "192.168.122.1"},
-        "target_provision_state": null, "updated_at": "2015-05-29T12:40:09+00:00",
+        "target_provision_state": null, "updated_at": "2015-06-03T11:03:17+00:00",
         "last_error": null, "console_enabled": false, "extra": {"newly_discovered":
         "true", "block_devices": {"serials": ["QM00005"]}, "edeploy_facts": [["disk",
         "logical", "count", "1"], ["disk", "sda", "size", "44"], ["disk", "sda", "vendor",
@@ -1677,7 +1710,7 @@ http_interactions:
         "deploy_ramdisk": "e999a20d-2e76-4c45-8b66-ce78e470a7c7", "ssh_key_contents":
         "-----BEGIN RSA PRIVATE KEY-----\nMIIEogIBAAKCAQEA7QFu9SCcobkB7+bftNnlzsUEmRLB0mU3/EsY9M6luMrAzDIT\n8N3L6e013bwzCSDoDzTTXUee2NLH6kbisv2A+R7xlv5gSkt7fbaV4fX7gDTDrOM3\neqZJShKzBX1TU9CkrKCP+R09DpUeksItxm8HU2HfA7Ugd+rb1uYD7Hm9bMnWiK8L\nEn6gbJ1AmeTQ6z9L895ezesVgtEd1ibKJDrrBF/ux7KvezjdsI0lVliRc1JKPpO2\nsuD2PYrLSRGik4KmuIgJuMfeSjTYrKkaX7NsDCmznfod7lS/eNtKbSOcVZpK/jrh\n+LVEnNTiDxZcuQlzUo54VTnIjMp1yylYtgtqDQIDAQABAoIBAHZ/U/nNX2LgfF51\nIX5rv6G9Ecpy/WNzZiWHaqfjtioJfZHaq+uvCWghSOBfW2kCAeSwdclaqMohwQCa\nhngVlWl5FjN3Za9fxBObuZ6rfR6hwv/q7u8sutIFPWrOOV5boCoLcVCNVNy4o/ue\niIKBOrlu4rEY2235iAcPJAEU8Se1YE+3qAxEktFRAj2bgPs+ldr3gqTvmUBDLpPA\nD4td4zw+zLZ5QR/BXGNmNjCkjusxMmTvekkk8Qrf7zvHiV4M4VDcQLM7St4cTRyT\nTcGhXn79GRQ0+joqcZSwUli9X8Nu4ue5+RZNi/hN9YymwNWfhUzsYPcBKrPJ1sC0\nzoSSssECgYEA/vWP6AnfQ2I8R2mYkdsNl10w6S5kHAY/Oo7asPx3g8MmaFouOfuj\nWYX7vgN1cKYhELdGHrHEv1H7l8Si0RG2NIjNtQR8KDtXjl87ImohAHdVBzsqGxfB\nZCXiIwjfzBbwUQ614hNGdeJ0Zk3+ezdrb0KlVaZWGXmAsA9/KRVKKJ0CgYEA7fkb\n/3p/Ap3keRoQlWtfSL67CoHMQadpW0he1LZfp0V1fPrloQ/nrIVc6bwydExX/KiQ\nHBTl6h9TptXn6ijRQX3dzdxGCdC2d44HpH8NPknC5hynWab3pJ1H7e+xdhhYYJ8Y\nnWwcl4o+P8dnUyfAmnwyn3sZBBQKsihr6rF09DECgYBmfn1NgLp6MkGdS7wD1pXO\nJa6F7xpbkb9VYRxVTgkVtRv5k1dGA/0U/iHHr0hE8uQT/jl4GWrIpsKHrortlTs0\nP1LC1Hy9B64ZE/uHyDZgI5jRAV3Z6mDaS8hu4SBmwUn2q/0+VxVaSqEUh4IoMo1D\n+vzQQ8AVGZ08Kd6qu15GmQKBgHFdHk1SGXcxqElYdVX41GdfFNMoihksmy/1Bdfn\nGSIiIJntG77iSMcSsPRXxuFIDRI7aos2GWCyk7MCa3xM/YJpZ2RN7r92QbYqXtGq\nBLELimD8fWxj8czlcAKVEMDlUBSXNa6odeZq4MSZRUuDwGjXiXYXug8LTR0ZzG79\nIm3BAoGAZl0JIOCIZjOB49uY8Hz/6RHiCg0dj9Bg+xhtLoJLQwtd7AWWO7cGO/sF\nWYQkCff2Mz8cT3WyTvgMxF5uA6exlAtDTgLGN05eyk066WNYsVjLz6a2m3evFKot\nb5xKH7ba2F3IXvsT1vQNnc7lX8PCVBae/Pt7Xu4wUZiyOYoMdfs=\n-----END
         RSA PRIVATE KEY-----", "ssh_virt_type": "virsh", "ssh_address": "192.168.122.1"},
-        "target_provision_state": null, "updated_at": "2015-05-29T12:40:10+00:00",
+        "target_provision_state": null, "updated_at": "2015-06-03T11:03:18+00:00",
         "last_error": null, "console_enabled": false, "extra": {"newly_discovered":
         "true", "block_devices": {"serials": ["QM00005"]}, "edeploy_facts": [["disk",
         "logical", "count", "1"], ["disk", "sda", "size", "44"], ["disk", "sda", "vendor",
@@ -1743,18 +1776,18 @@ http_interactions:
         "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/e71db926-3fd2-494d-8512-31a539db07b2",
         "rel": "bookmark"}], "maintenance_reason": null, "properties": {"memory_mb":
         "4096", "cpu_arch": "x86_64", "local_gb": "40", "cpus": "1", "capabilities":
-        "boot_option:local"}, "provision_updated_at": "2015-05-28T11:59:04+00:00",
+        "boot_option:local"}, "provision_updated_at": "2015-06-01T09:11:41+00:00",
         "power_state": "power off", "provision_state": null, "reservation": null,
         "created_at": "2015-05-28T11:00:38+00:00", "instance_info": {}, "ports": [{"href":
         "http://192.0.2.1:6385/v1/nodes/e71db926-3fd2-494d-8512-31a539db07b2/ports",
         "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/e71db926-3fd2-494d-8512-31a539db07b2/ports",
-        "rel": "bookmark"}]}, {"instance_uuid": "78c72eb4-3fc9-4f83-9998-66a237450625",
+        "rel": "bookmark"}]}, {"instance_uuid": "9466fe04-b05d-491c-b70d-ff8781ad74a4",
         "target_power_state": null, "maintenance": false, "uuid": "df17c304-2f9f-4efa-a44c-7e12f0ad96cf",
         "driver_info": {"ssh_username": "root", "deploy_kernel": "8f3d4df2-6aed-4e18-9ad8-5a5ddd57234f",
         "deploy_ramdisk": "e999a20d-2e76-4c45-8b66-ce78e470a7c7", "ssh_key_contents":
         "-----BEGIN RSA PRIVATE KEY-----\nMIIEogIBAAKCAQEA7QFu9SCcobkB7+bftNnlzsUEmRLB0mU3/EsY9M6luMrAzDIT\n8N3L6e013bwzCSDoDzTTXUee2NLH6kbisv2A+R7xlv5gSkt7fbaV4fX7gDTDrOM3\neqZJShKzBX1TU9CkrKCP+R09DpUeksItxm8HU2HfA7Ugd+rb1uYD7Hm9bMnWiK8L\nEn6gbJ1AmeTQ6z9L895ezesVgtEd1ibKJDrrBF/ux7KvezjdsI0lVliRc1JKPpO2\nsuD2PYrLSRGik4KmuIgJuMfeSjTYrKkaX7NsDCmznfod7lS/eNtKbSOcVZpK/jrh\n+LVEnNTiDxZcuQlzUo54VTnIjMp1yylYtgtqDQIDAQABAoIBAHZ/U/nNX2LgfF51\nIX5rv6G9Ecpy/WNzZiWHaqfjtioJfZHaq+uvCWghSOBfW2kCAeSwdclaqMohwQCa\nhngVlWl5FjN3Za9fxBObuZ6rfR6hwv/q7u8sutIFPWrOOV5boCoLcVCNVNy4o/ue\niIKBOrlu4rEY2235iAcPJAEU8Se1YE+3qAxEktFRAj2bgPs+ldr3gqTvmUBDLpPA\nD4td4zw+zLZ5QR/BXGNmNjCkjusxMmTvekkk8Qrf7zvHiV4M4VDcQLM7St4cTRyT\nTcGhXn79GRQ0+joqcZSwUli9X8Nu4ue5+RZNi/hN9YymwNWfhUzsYPcBKrPJ1sC0\nzoSSssECgYEA/vWP6AnfQ2I8R2mYkdsNl10w6S5kHAY/Oo7asPx3g8MmaFouOfuj\nWYX7vgN1cKYhELdGHrHEv1H7l8Si0RG2NIjNtQR8KDtXjl87ImohAHdVBzsqGxfB\nZCXiIwjfzBbwUQ614hNGdeJ0Zk3+ezdrb0KlVaZWGXmAsA9/KRVKKJ0CgYEA7fkb\n/3p/Ap3keRoQlWtfSL67CoHMQadpW0he1LZfp0V1fPrloQ/nrIVc6bwydExX/KiQ\nHBTl6h9TptXn6ijRQX3dzdxGCdC2d44HpH8NPknC5hynWab3pJ1H7e+xdhhYYJ8Y\nnWwcl4o+P8dnUyfAmnwyn3sZBBQKsihr6rF09DECgYBmfn1NgLp6MkGdS7wD1pXO\nJa6F7xpbkb9VYRxVTgkVtRv5k1dGA/0U/iHHr0hE8uQT/jl4GWrIpsKHrortlTs0\nP1LC1Hy9B64ZE/uHyDZgI5jRAV3Z6mDaS8hu4SBmwUn2q/0+VxVaSqEUh4IoMo1D\n+vzQQ8AVGZ08Kd6qu15GmQKBgHFdHk1SGXcxqElYdVX41GdfFNMoihksmy/1Bdfn\nGSIiIJntG77iSMcSsPRXxuFIDRI7aos2GWCyk7MCa3xM/YJpZ2RN7r92QbYqXtGq\nBLELimD8fWxj8czlcAKVEMDlUBSXNa6odeZq4MSZRUuDwGjXiXYXug8LTR0ZzG79\nIm3BAoGAZl0JIOCIZjOB49uY8Hz/6RHiCg0dj9Bg+xhtLoJLQwtd7AWWO7cGO/sF\nWYQkCff2Mz8cT3WyTvgMxF5uA6exlAtDTgLGN05eyk066WNYsVjLz6a2m3evFKot\nb5xKH7ba2F3IXvsT1vQNnc7lX8PCVBae/Pt7Xu4wUZiyOYoMdfs=\n-----END
         RSA PRIVATE KEY-----", "ssh_virt_type": "virsh", "ssh_address": "192.168.122.1"},
-        "target_provision_state": null, "updated_at": "2015-05-29T12:40:11+00:00",
+        "target_provision_state": null, "updated_at": "2015-06-03T11:03:18+00:00",
         "last_error": null, "console_enabled": false, "extra": {"newly_discovered":
         "true", "block_devices": {"serials": ["QM00005"]}, "edeploy_facts": [["disk",
         "logical", "count", "1"], ["disk", "sda", "size", "44"], ["disk", "sda", "vendor",
@@ -1820,17 +1853,17 @@ http_interactions:
         "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/df17c304-2f9f-4efa-a44c-7e12f0ad96cf",
         "rel": "bookmark"}], "maintenance_reason": null, "properties": {"memory_mb":
         "4096", "cpu_arch": "x86_64", "local_gb": "40", "cpus": "1", "capabilities":
-        "boot_option:local"}, "provision_updated_at": "2015-05-28T12:06:19+00:00",
+        "boot_option:local"}, "provision_updated_at": "2015-06-01T11:11:40+00:00",
         "power_state": "power on", "provision_state": "active", "reservation": null,
         "created_at": "2015-05-28T11:00:38+00:00", "instance_info": {"ramdisk": "bfd50aea-af25-4d35-9676-e7594107122c",
         "kernel": "5a8ed463-471c-4602-814f-155c77c8ac68", "root_gb": "40", "image_source":
         "27ee0f87-976c-4519-a395-5805165c85e4", "capabilities": "{\"boot_option\":
-        \"local\"}", "deploy_key": "TCLFSI3RY4IP3QG04B2MJCWKK43CGN87", "swap_mb":
+        \"local\"}", "deploy_key": "19B291DIO8JUSWWPD1AKZQEQ5W1X2D3Z", "swap_mb":
         "0"}, "ports": [{"href": "http://192.0.2.1:6385/v1/nodes/df17c304-2f9f-4efa-a44c-7e12f0ad96cf/ports",
         "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/df17c304-2f9f-4efa-a44c-7e12f0ad96cf/ports",
         "rel": "bookmark"}]}]}'
     http_version: 
-  recorded_at: Fri, 29 May 2015 12:41:07 GMT
+  recorded_at: Wed, 03 Jun 2015 11:03:20 GMT
 - request:
     method: get
     uri: http://192.0.2.1:9292/v1.1/images/detail
@@ -1843,7 +1876,7 @@ http_interactions:
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 429c2be18531404dac5c4788a96298cd
+      - 97c8ba87082e463588dca89ed0e1d5b3
   response:
     status:
       code: 200
@@ -1854,9 +1887,9 @@ http_interactions:
       Content-Length:
       - '2579'
       X-Openstack-Request-Id:
-      - req-req-27afa2ad-1a93-48f9-aaae-1e1ba7a0d0b9
+      - req-req-4233a466-84e7-4f52-aa25-13783d224817
       Date:
-      - Fri, 29 May 2015 12:41:07 GMT
+      - Wed, 03 Jun 2015 11:03:21 GMT
     body:
       encoding: UTF-8
       string: '{"images": [{"status": "active", "deleted_at": null, "name": "bm-deploy-ramdisk",
@@ -1891,7 +1924,7 @@ http_interactions:
         0, "checksum": "1b46154c65910ee3e70796eb93f3c490", "owner": "1b824a33e7e74d85adbd020d5f864686",
         "is_public": true, "virtual_size": null, "properties": {}, "size": 5026624}]}'
     http_version: 
-  recorded_at: Fri, 29 May 2015 12:41:07 GMT
+  recorded_at: Wed, 03 Jun 2015 11:03:21 GMT
 - request:
     method: get
     uri: http://192.0.2.1:9292/v1.1/images/detail?marker=5a8ed463-471c-4602-814f-155c77c8ac68
@@ -1904,7 +1937,7 @@ http_interactions:
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 429c2be18531404dac5c4788a96298cd
+      - 97c8ba87082e463588dca89ed0e1d5b3
   response:
     status:
       code: 200
@@ -1915,17 +1948,17 @@ http_interactions:
       Content-Length:
       - '14'
       X-Openstack-Request-Id:
-      - req-req-ee936a16-cc76-4ed5-9853-3b9ef920ae1a
+      - req-req-73ddeb31-5169-486b-a7c6-32822a2de210
       Date:
-      - Fri, 29 May 2015 12:41:07 GMT
+      - Wed, 03 Jun 2015 11:03:21 GMT
     body:
       encoding: UTF-8
       string: '{"images": []}'
     http_version: 
-  recorded_at: Fri, 29 May 2015 12:41:07 GMT
+  recorded_at: Wed, 03 Jun 2015 11:03:21 GMT
 - request:
     method: get
-    uri: http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/2df1e4d2-2c62-4378-b3d4-b6c83ebc9c48/template
+    uri: http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/template
     body:
       encoding: US-ASCII
       string: ''
@@ -1937,7 +1970,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - fbb81c7238734a1bb65eafcd68a5eef4
+      - 2f3c423440804c9c8e24232d8db58b7e
       X-Auth-User:
       - admin
       X-Auth-Key:
@@ -1952,9 +1985,9 @@ http_interactions:
       Content-Length:
       - '48965'
       X-Openstack-Request-Id:
-      - req-e845579c-3146-4745-9050-890d65651513
+      - req-f8a182a1-78d2-4422-862f-14018c2bee29
       Date:
-      - Fri, 29 May 2015 12:41:08 GMT
+      - Wed, 03 Jun 2015 11:03:21 GMT
     body:
       encoding: UTF-8
       string: '{"outputs": {"KeystoneURL": {"description": "URL for the Overcloud
@@ -2546,5 +2579,5 @@ http_interactions:
         "OS::Heat::StructuredDeployments", "properties": {"config": {"get_attr": ["allNodesConfig",
         "config_id"]}, "servers": {"get_attr": ["Swift-Storage", "attributes", "nova_server_resource"]}}}}}'
     http_version: 
-  recorded_at: Fri, 29 May 2015 12:41:08 GMT
+  recorded_at: Wed, 03 Jun 2015 11:03:21 GMT
 recorded_with: VCR 2.9.3
