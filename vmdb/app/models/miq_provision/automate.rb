@@ -22,12 +22,12 @@ module MiqProvision::Automate
 
       domains = ws.root['domains']
 
-      domains.each_with_index { |d, i|
+      domains.each_with_index do |d, _i|
         next unless domain.casecmp(d[:name]) == 0
         password = d.delete(:bind_password)
         d[:bind_password] = MiqAePassword.decrypt_if_password(password) if with_password == true
         return d
-      } if domains.kind_of?(Array)
+      end if domains.kind_of?(Array)
 
       $log.warn "#{log_prefix} - No Domains matched in Automate Results: #{ws.to_expanded_xml}"
       nil
@@ -151,19 +151,19 @@ module MiqProvision::Automate
 
     networks = ws.root("networks")
 
-    networks.each { |network|
+    networks.each do |network|
       next unless network.kind_of?(Hash)
       next unless network[:vc_id] == vc_id
       next unless vlan_name.casecmp(network[:vlan]) == 0
 
       # Remove passwords
-      network[:dhcp_servers].each { |dhcp|
+      network[:dhcp_servers].each do |dhcp|
         domain = dhcp[:domain]
         domain.delete(:bind_password) if domain.is_a?(Hash)
-      } if network[:dhcp_servers].is_a?(Array)
+      end if network[:dhcp_servers].is_a?(Array)
 
       return network
-    } if networks.kind_of?(Array)
+    end if networks.kind_of?(Array)
 
     $log.warn "#{log_prefix} - No Network matched in Automate Results: #{ws.to_expanded_xml}"
     nil
