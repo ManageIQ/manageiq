@@ -66,7 +66,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
 
       # .. but other things are still present:
       FloatingIp.count.should    == 4
-      Disk.count.should          == 15
+      Disk.count.should          == 21
     end
   end
 
@@ -76,26 +76,26 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
     AvailabilityZone.count.should    == 2
     FloatingIp.count.should          == 4
     AuthPrivateKey.count.should      == 2
-    SecurityGroup.count.should       == 7
-    FirewallRule.count.should        == 36
-    CloudNetwork.count.should        == 6
+    SecurityGroup.count.should       == 8
+    FirewallRule.count.should        == 40
+    CloudNetwork.count.should        == 5
     CloudSubnet.count.should         == 5
     CloudVolume.count.should         == 5
-    VmOrTemplate.count.should        == 15
-    Vm.count.should                  == 7
+    VmOrTemplate.count.should        == 21
+    Vm.count.should                  == 13
     MiqTemplate.count.should         == 8
 
     CustomAttribute.count.should     == 0
-    Disk.count.should                == 15
+    Disk.count.should                == 21
     GuestDevice.count.should         == 0
-    Hardware.count.should            == 7
-    Network.count.should             == 8
+    Hardware.count.should            == 13
+    Network.count.should             == 11
     OperatingSystem.count.should     == 0
     Snapshot.count.should            == 0
     SystemService.count.should       == 0
 
-    Relationship.count.should        == 10
-    MiqQueue.count.should            == 18
+    Relationship.count.should        == 17
+    MiqQueue.count.should            == 24
   end
 
   def assert_ems
@@ -108,9 +108,9 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
     @ems.availability_zones.size.should == 2
     @ems.floating_ips.size.should       == 4
     @ems.key_pairs.size.should          == 2
-    @ems.security_groups.size.should    == 7
-    @ems.vms_and_templates.size.should  == 15
-    @ems.vms.size.should                == 7
+    @ems.security_groups.size.should    == 8
+    @ems.vms_and_templates.size.should  == 21
+    @ems.vms.size.should                == 13
     @ems.miq_templates.size.should      == 8
   end
 
@@ -324,7 +324,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
       :template              => false,
       :ems_ref_obj           => nil,
       :vendor                => "OpenStack",
-      :power_state           => "on",
+      :power_state           => "off",
       :location              => "unknown",
       :tools_status          => nil,
       :boot_time             => nil,

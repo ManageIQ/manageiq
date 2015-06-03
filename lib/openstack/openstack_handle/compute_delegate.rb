@@ -7,6 +7,22 @@ module OpenstackHandle
       @os_handle = os_handle
     end
 
+    def servers_with_pagination_loop
+      all_servers = servers.all
+      last_server = all_servers.last
+
+      # There is always default pagination in Nova, so we obtain all
+      # the servers in loop, using last server of each page as marker.
+      if last_server
+        while (servers = self.servers.all('marker' => last_server.id)).count > 0
+          last_server = servers.last
+          all_servers.concat(servers)
+        end
+      end
+
+      all_servers
+    end
+
     def servers_for_accessible_tenants
       # We should be able to use the following call to retrieve the server list:
       #   servers.all(:detailed => true, :all_tenants => true)
@@ -14,7 +30,7 @@ module OpenstackHandle
       # not being set, when it should be.
       #
       # Iterating through the tenants always returns the proper value.
-      @os_handle.accessor_for_accessible_tenants(SERVICE_NAME, :servers, :id)
+      @os_handle.accessor_for_accessible_tenants(SERVICE_NAME, :servers_with_pagination_loop, :id)
     end
 
     def security_groups_for_accessible_tenants
