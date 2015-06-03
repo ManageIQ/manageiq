@@ -61,12 +61,4 @@ module MiqProvisionRedhat::StateMachine
   def powered_off_in_provider?
     destination.with_provider_object(&:status)[:state] == "down"
   end
-
-  def clone_direction
-    "[#{source.name}] to #{destination_type} [#{dest_name}]"
-  end
-
-  def for_destination
-    "#{destination_type} id: [#{destination.id}], name: [#{dest_name}]"
-  end
 end

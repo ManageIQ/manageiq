@@ -106,8 +106,6 @@ module MiqProvision::StateMachine
     end
   end
 
-  private
-
   def clone_direction
     "[#{source.name}] to #{destination_type} [#{dest_name}]"
   end
