@@ -7,8 +7,6 @@ class VmReconfigureRequest < MiqRequest
   validates_inclusion_of :request_state,  :in => %w{ pending finished } + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"
   validate               :must_have_user
 
-  default_value_for(:request_type) { |r| r.request_types.first }
-
   def self.create_request(values, requester_id, auto_approve=false)
     event_message = "#{TASK_DESCRIPTION} requested by <#{requester_id}>"
     super(values, requester_id, auto_approve, request_types.first, SOURCE_CLASS_NAME, event_message)

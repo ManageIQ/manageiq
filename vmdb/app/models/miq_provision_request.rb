@@ -20,7 +20,6 @@ class MiqProvisionRequest < MiqRequest
   validate               :must_have_user
 
   default_value_for :options,      :number_of_vms => 1
-  default_value_for(:request_type) { |r| r.request_types.first }
   default_value_for(:src_vm_id)    { |r| r.get_option(:src_vm_id) }
 
   virtual_column :provision_type, :type => :string

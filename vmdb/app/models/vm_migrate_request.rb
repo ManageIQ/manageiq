@@ -7,8 +7,6 @@ class VmMigrateRequest < MiqRequest
   validates_inclusion_of :request_state,  :in => %w{ pending finished } + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"
   validate               :must_have_user
 
-  default_value_for(:request_type) { |r| r.request_types.first }
-
   def my_zone
     vm = Vm.where(:id => options[:src_ids]).first
     vm.nil? ? super : vm.my_zone

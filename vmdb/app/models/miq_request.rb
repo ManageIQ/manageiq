@@ -15,6 +15,7 @@ class MiqRequest < ActiveRecord::Base
   default_value_for :options,       {}
   default_value_for(:requester)     { |r| r.get_user }
   default_value_for :request_state, 'pending'
+  default_value_for(:request_type)  { |r| r.request_types.first }
   default_value_for :status,        'Ok'
 
   validates_inclusion_of :approval_state, :in => %w(pending_approval approved denied), :message => "should be 'pending_approval', 'approved' or 'denied'"
