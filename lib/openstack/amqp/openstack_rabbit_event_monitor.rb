@@ -44,8 +44,10 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
   end
 
   def initialize(options = {})
-    @options = options
+    @options          = options
     @options[:port] ||= DEFAULT_AMQP_PORT
+    @client_ip        = @options[:client_ip]
+
     @collecting_events = false
     @events = []
     #protect threaded access to the events array
@@ -95,7 +97,7 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
     if @options[:topics]
       @options[:topics].each do |exchange, topic|
         amqp_exchange = channel.topic(exchange)
-        queue_name = "miq-#{@options[:hostname]}-#{exchange}"
+        queue_name = "miq-#{@client_ip}-#{exchange}"
         @queues[exchange] = channel.queue(queue_name).bind(amqp_exchange, :routing_key => topic)
       end
     end

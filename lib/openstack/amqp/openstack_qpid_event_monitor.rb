@@ -47,9 +47,11 @@ class OpenstackQpidEventMonitor < OpenstackEventMonitor
   end
 
   def initialize(options = {})
-    @options = options
+    @options          = options
     @options[:port] ||= DEFAULT_AMQP_PORT
-    @receiver_options = options.slice(:duration, :capacity)
+    @receiver_options = @options.slice(:duration, :capacity)
+    @client_ip        = @options[:client_ip]
+
     @collecting_events = false
   end
 
@@ -109,11 +111,11 @@ class OpenstackQpidEventMonitor < OpenstackEventMonitor
   end
 
   def create_v1_receiver(service, topic)
-    OpenstackQpidReceiver.new(connection, service, service, topic, @receiver_options)
+    OpenstackQpidReceiver.new(connection, service, service, topic, @client_ip, @receiver_options)
   end
 
   def create_v2_receiver(service, topic)
     exchange = "amq.topic/topic/#{service}"
-    OpenstackQpidReceiver.new(connection, service, exchange, topic, @receiver_options)
+    OpenstackQpidReceiver.new(connection, service, exchange, topic, @client_ip, @receiver_options)
   end
 end

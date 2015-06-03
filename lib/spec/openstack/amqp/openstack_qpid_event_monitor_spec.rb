@@ -33,7 +33,7 @@ describe OpenstackQpidEventMonitor do
     @receivers = {"nova" => @nova_receiver, "glance" => @glance_receiver}
     @topics = {"nova" => "nova_topic", "glance" => "glance_topic"}
     @receiver_options = {:capacity => 1, :duration => 1}
-    @options = @receiver_options.merge({:topics => @topics})
+    @options = @receiver_options.merge({:topics => @topics, :client_ip => "10.11.12.13"})
 
     @monitor = OpenstackQpidEventMonitor.new(@options)
     @monitor.stub(:create_connection).and_return(@notification_connection)

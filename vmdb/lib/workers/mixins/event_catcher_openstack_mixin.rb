@@ -10,9 +10,11 @@ module EventCatcherOpenstackMixin
         options[:username] = @ems.authentication_userid(:amqp)
         options[:password] = @ems.authentication_password(:amqp)
       end
-      options[:topics] = self.worker_settings[:topics]
+      options[:topics]   = self.worker_settings[:topics]
       options[:duration] = self.worker_settings[:duration]
       options[:capacity] = self.worker_settings[:capacity]
+
+      options[:client_ip] = MiqServer.my_server.ipaddress
       @event_monitor_handle = OpenstackEventMonitor.new(options)
     end
     @event_monitor_handle
