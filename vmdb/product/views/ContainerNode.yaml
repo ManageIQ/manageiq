@@ -20,7 +20,7 @@ db: ContainerNode
 # Columns to fetch from the main table
 cols:
 - name
-- condition_ready
+- ready_condition_status
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -31,7 +31,7 @@ include_for_find:
 # Order of columns (from all tables)
 col_order:
 - name
-- condition_ready
+- ready_condition_status
 
 # Column titles, in order
 headers:
@@ -47,7 +47,7 @@ order: Ascending
 # Columns to sort the report on, in order
 sortby:
 - name
-- condition_ready
+- ready_condition_status
 
 # Group rows (y=yes,n=no,c=count)
 group: n
