@@ -49,12 +49,18 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     CustomAttribute.count.should             == 0
     CustomizationSpec.count.should           == 0
     Disk.count.should                        == 5
-    GuestDevice.count.should                 == 0
+    GuestDevice.count.should                 == 5
+    FloatingIp.count.should                  == 0
+    AuthPrivateKey.count.should              == 0
+    SecurityGroup.count.should               == 1
+    FirewallRule.count.should                == 4
+    CloudNetwork.count.should                == 1
+    CloudSubnet.count.should                 == 1
     Hardware.count.should                    == 5
     Lan.count.should                         == 0
     MiqScsiLun.count.should                  == 0
     MiqScsiTarget.count.should               == 0
-    Network.count.should                     == 0
+    Network.count.should                     == 2
     OperatingSystem.count.should             == 5
     Snapshot.count.should                    == 0
     Switch.count.should                      == 0
@@ -80,6 +86,11 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     @ems.vms.size.should                  == 0
     @ems.miq_templates.size.should        == 5
     @ems.customization_specs.size.should  == 0
+
+    @ems.security_groups.should_not be nil
+    @ems.security_groups.first.firewall_rules.should_not be nil
+    @ems.cloud_networks.should_not be nil
+    @ems.cloud_networks.first.cloud_subnets.should_not be nil
   end
 
   def assert_specific_host
@@ -89,6 +100,10 @@ describe EmsRefresh::Refreshers::OpenstackInfraRefresher do
     @host.ems_ref_obj.should_not be nil
     @host.mac_address.should_not be nil
     @host.ipaddress.should_not be nil
+    @host.hardware.should_not be nil
+    @host.hardware.networks.should_not be nil
+    @host.hardware.guest_devices.should_not be nil
+    @host.hardware.guest_devices.first.network.should_not be nil
 
     @host.should have_attributes(
       :ipmi_address     => nil,

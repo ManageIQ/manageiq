@@ -7,6 +7,7 @@ module EmsRefresh
   extend EmsRefresh::SaveInventoryProvisioning
   extend EmsRefresh::SaveInventoryConfiguration
   extend EmsRefresh::SaveInventoryOrchestrationStacks
+  extend EmsRefresh::SaveInventoryNetworks
   extend EmsRefresh::LinkInventory
   extend EmsRefresh::MetadataRelats
   extend EmsRefresh::VcUpdates

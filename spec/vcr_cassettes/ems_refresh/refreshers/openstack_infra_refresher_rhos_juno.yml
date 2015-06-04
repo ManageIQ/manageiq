@@ -23,15 +23,15 @@ http_interactions:
       Content-Length:
       - '3541'
       X-Openstack-Request-Id:
-      - req-4e38e482-9de2-427f-8c4c-605d8cabf1ac
+      - req-b6e647ea-9c2d-42e7-a2a3-cd61147ab867
       Date:
-      - Wed, 03 Jun 2015 11:03:15 GMT
+      - Thu, 04 Jun 2015 15:15:22 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-06-03T11:03:15.479912", "expires":
-        "2015-06-03T12:03:15Z", "id": "ce9fe69aec774a3597ae07f6313e37ea", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-06-04T15:15:22.644011", "expires":
+        "2015-06-04T16:15:22Z", "id": "0505a1517ec6499ab70350c231733264", "tenant":
         {"description": null, "enabled": true, "id": "1b824a33e7e74d85adbd020d5f864686",
-        "name": "admin"}, "audit_ids": ["Ln-Y1fxMRFqfmd0VVNMPqw"]}, "serviceCatalog":
+        "name": "admin"}, "audit_ids": ["jAXQdGPqRaCyOIAhOyfYgQ"]}, "serviceCatalog":
         [{"endpoints": [{"adminURL": "http://192.0.2.1:8585/v2", "region": "regionOne",
         "internalURL": "http://192.0.2.1:8585/v2", "id": "111235d0226d4cce8cb4b3eace441574",
         "publicURL": "http://192.0.2.1:8585/v2"}], "endpoints_links": [], "type":
@@ -70,7 +70,7 @@ http_interactions:
         "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab",
         "6c4c65479be141ddb1dea6ce58546dde"]}}}'
     http_version: 
-  recorded_at: Wed, 03 Jun 2015 11:03:15 GMT
+  recorded_at: Thu, 04 Jun 2015 15:15:22 GMT
 - request:
     method: get
     uri: http://192.0.2.1:5000/v2.0/tenants
@@ -85,7 +85,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - ce9fe69aec774a3597ae07f6313e37ea
+      - 0505a1517ec6499ab70350c231733264
   response:
     status:
       code: 200
@@ -98,15 +98,15 @@ http_interactions:
       Content-Length:
       - '133'
       X-Openstack-Request-Id:
-      - req-5e98f330-e8e6-4da5-b9cd-cebbd292d3a2
+      - req-6d4670af-0d26-42d1-b538-63bc8bee7462
       Date:
-      - Wed, 03 Jun 2015 11:03:15 GMT
+      - Thu, 04 Jun 2015 15:15:22 GMT
     body:
       encoding: UTF-8
       string: '{"tenants_links": [], "tenants": [{"description": null, "enabled":
         true, "id": "1b824a33e7e74d85adbd020d5f864686", "name": "admin"}]}'
     http_version: 
-  recorded_at: Wed, 03 Jun 2015 11:03:15 GMT
+  recorded_at: Thu, 04 Jun 2015 15:15:22 GMT
 - request:
     method: post
     uri: http://192.0.2.1:5000/v2.0/tokens
@@ -130,15 +130,15 @@ http_interactions:
       Content-Length:
       - '3541'
       X-Openstack-Request-Id:
-      - req-74f3c5c2-f90c-44e7-82cf-3fed609b8e07
+      - req-4726bba2-40cc-4ecc-b8bc-381627c9ad5b
       Date:
-      - Wed, 03 Jun 2015 11:03:16 GMT
+      - Thu, 04 Jun 2015 15:15:23 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-06-03T11:03:16.014754", "expires":
-        "2015-06-03T12:03:15Z", "id": "52369266d9304509a8fd90d280b9b1cc", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-06-04T15:15:23.268013", "expires":
+        "2015-06-04T16:15:23Z", "id": "bd7f8361dfe34991b70b5f6931f62dbb", "tenant":
         {"description": null, "enabled": true, "id": "1b824a33e7e74d85adbd020d5f864686",
-        "name": "admin"}, "audit_ids": ["WKLzFArPQuGbgty2Dkn2bQ"]}, "serviceCatalog":
+        "name": "admin"}, "audit_ids": ["VXjLhnwARsyCP7R8YV8kNw"]}, "serviceCatalog":
         [{"endpoints": [{"adminURL": "http://192.0.2.1:8585/v2", "region": "regionOne",
         "internalURL": "http://192.0.2.1:8585/v2", "id": "111235d0226d4cce8cb4b3eace441574",
         "publicURL": "http://192.0.2.1:8585/v2"}], "endpoints_links": [], "type":
@@ -177,7 +177,7 @@ http_interactions:
         "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab",
         "6c4c65479be141ddb1dea6ce58546dde"]}}}'
     http_version: 
-  recorded_at: Wed, 03 Jun 2015 11:03:16 GMT
+  recorded_at: Thu, 04 Jun 2015 15:15:23 GMT
 - request:
     method: post
     uri: http://192.0.2.1:5000/v2.0/tokens
@@ -201,15 +201,15 @@ http_interactions:
       Content-Length:
       - '3541'
       X-Openstack-Request-Id:
-      - req-b1a177a9-357e-4d9d-9363-1a9c837dee3d
+      - req-ec976c96-87e8-40ac-8fee-59348f808282
       Date:
-      - Wed, 03 Jun 2015 11:03:16 GMT
+      - Thu, 04 Jun 2015 15:15:23 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-06-03T11:03:16.320726", "expires":
-        "2015-06-03T12:03:16Z", "id": "2bcf90f413fa4218a03cfe1ceb3b7b83", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-06-04T15:15:23.522657", "expires":
+        "2015-06-04T16:15:23Z", "id": "0cc43ffd595448ee97e16badc12bbcab", "tenant":
         {"description": null, "enabled": true, "id": "1b824a33e7e74d85adbd020d5f864686",
-        "name": "admin"}, "audit_ids": ["oKCOatjsRtyCpBCxbRTrlA"]}, "serviceCatalog":
+        "name": "admin"}, "audit_ids": ["7magx7hiTlm5ZJ2ksL30iw"]}, "serviceCatalog":
         [{"endpoints": [{"adminURL": "http://192.0.2.1:8585/v2", "region": "regionOne",
         "internalURL": "http://192.0.2.1:8585/v2", "id": "111235d0226d4cce8cb4b3eace441574",
         "publicURL": "http://192.0.2.1:8585/v2"}], "endpoints_links": [], "type":
@@ -248,7 +248,7 @@ http_interactions:
         "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab",
         "6c4c65479be141ddb1dea6ce58546dde"]}}}'
     http_version: 
-  recorded_at: Wed, 03 Jun 2015 11:03:16 GMT
+  recorded_at: Thu, 04 Jun 2015 15:15:23 GMT
 - request:
     method: post
     uri: http://192.0.2.1:5000/v2.0/tokens
@@ -272,15 +272,15 @@ http_interactions:
       Content-Length:
       - '3541'
       X-Openstack-Request-Id:
-      - req-67681caf-badc-426e-98fd-da59491dd732
+      - req-197c3595-8384-41b8-8f62-3df47eb2d30e
       Date:
-      - Wed, 03 Jun 2015 11:03:16 GMT
+      - Thu, 04 Jun 2015 15:15:23 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-06-03T11:03:16.501846", "expires":
-        "2015-06-03T12:03:16Z", "id": "2f3c423440804c9c8e24232d8db58b7e", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-06-04T15:15:23.798253", "expires":
+        "2015-06-04T16:15:23Z", "id": "e0e5b18f47ac45b09db3f8cef14dbe32", "tenant":
         {"description": null, "enabled": true, "id": "1b824a33e7e74d85adbd020d5f864686",
-        "name": "admin"}, "audit_ids": ["SIvB8rkgSwCLgFpfSZLg8w"]}, "serviceCatalog":
+        "name": "admin"}, "audit_ids": ["bvCeZ_RTSOq3NiveammZ-g"]}, "serviceCatalog":
         [{"endpoints": [{"adminURL": "http://192.0.2.1:8585/v2", "region": "regionOne",
         "internalURL": "http://192.0.2.1:8585/v2", "id": "111235d0226d4cce8cb4b3eace441574",
         "publicURL": "http://192.0.2.1:8585/v2"}], "endpoints_links": [], "type":
@@ -319,7 +319,7 @@ http_interactions:
         "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab",
         "6c4c65479be141ddb1dea6ce58546dde"]}}}'
     http_version: 
-  recorded_at: Wed, 03 Jun 2015 11:03:16 GMT
+  recorded_at: Thu, 04 Jun 2015 15:15:23 GMT
 - request:
     method: post
     uri: http://192.0.2.1:5000/v2.0/tokens
@@ -343,15 +343,15 @@ http_interactions:
       Content-Length:
       - '3541'
       X-Openstack-Request-Id:
-      - req-d8721928-cd9b-4f7d-aba1-fdb2102ce0d0
+      - req-8a040b5e-a0a9-4abc-93aa-5c750097f835
       Date:
-      - Wed, 03 Jun 2015 11:03:16 GMT
+      - Thu, 04 Jun 2015 15:15:24 GMT
     body:
       encoding: UTF-8
-      string: '{"access": {"token": {"issued_at": "2015-06-03T11:03:16.794945", "expires":
-        "2015-06-03T12:03:16Z", "id": "97c8ba87082e463588dca89ed0e1d5b3", "tenant":
+      string: '{"access": {"token": {"issued_at": "2015-06-04T15:15:24.034259", "expires":
+        "2015-06-04T16:15:24Z", "id": "65a5a518cb9d4ffd8a927b9988933a93", "tenant":
         {"description": null, "enabled": true, "id": "1b824a33e7e74d85adbd020d5f864686",
-        "name": "admin"}, "audit_ids": ["dJGajRRbRNWpaKQsmRWbfQ"]}, "serviceCatalog":
+        "name": "admin"}, "audit_ids": ["ZXIRqgyOS5enx3UCFAoGmw"]}, "serviceCatalog":
         [{"endpoints": [{"adminURL": "http://192.0.2.1:8585/v2", "region": "regionOne",
         "internalURL": "http://192.0.2.1:8585/v2", "id": "111235d0226d4cce8cb4b3eace441574",
         "publicURL": "http://192.0.2.1:8585/v2"}], "endpoints_links": [], "type":
@@ -390,7 +390,7 @@ http_interactions:
         "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab",
         "6c4c65479be141ddb1dea6ce58546dde"]}}}'
     http_version: 
-  recorded_at: Wed, 03 Jun 2015 11:03:16 GMT
+  recorded_at: Thu, 04 Jun 2015 15:15:24 GMT
 - request:
     method: get
     uri: http://192.0.2.1:9292/
@@ -405,7 +405,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 97c8ba87082e463588dca89ed0e1d5b3
+      - 65a5a518cb9d4ffd8a927b9988933a93
   response:
     status:
       code: 300
@@ -416,7 +416,7 @@ http_interactions:
       Content-Length:
       - '636'
       Date:
-      - Wed, 03 Jun 2015 11:03:16 GMT
+      - Thu, 04 Jun 2015 15:15:24 GMT
     body:
       encoding: UTF-8
       string: '{"versions": [{"status": "CURRENT", "id": "v2.3", "links": [{"href":
@@ -429,7 +429,110 @@ http_interactions:
         {"status": "SUPPORTED", "id": "v1.0", "links": [{"href": "http://192.0.2.1:9292/v1/",
         "rel": "self"}]}]}'
     http_version: 
-  recorded_at: Wed, 03 Jun 2015 11:03:16 GMT
+  recorded_at: Thu, 04 Jun 2015 15:15:24 GMT
+- request:
+    method: post
+    uri: http://192.0.2.1:5000/v2.0/tokens
+    body:
+      encoding: UTF-8
+      string: '{"auth":{"passwordCredentials":{"username":"admin","password":"c9c9a1201fdf9fb217bff3a2f4e3fb89f589f355"},"tenantName":"admin"}}'
+    headers:
+      User-Agent:
+      - fog/1.29.0 fog-core/1.30.0
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Vary:
+      - X-Auth-Token
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '3541'
+      X-Openstack-Request-Id:
+      - req-fe162d2d-95f7-42b3-a6ce-64d62ab4fc99
+      Date:
+      - Thu, 04 Jun 2015 15:15:24 GMT
+    body:
+      encoding: UTF-8
+      string: '{"access": {"token": {"issued_at": "2015-06-04T15:15:24.512740", "expires":
+        "2015-06-04T16:15:24Z", "id": "a787542cb4974201a425eaf7e2974dfe", "tenant":
+        {"description": null, "enabled": true, "id": "1b824a33e7e74d85adbd020d5f864686",
+        "name": "admin"}, "audit_ids": ["xNjNuA44TCa9PqFfo9JbCA"]}, "serviceCatalog":
+        [{"endpoints": [{"adminURL": "http://192.0.2.1:8585/v2", "region": "regionOne",
+        "internalURL": "http://192.0.2.1:8585/v2", "id": "111235d0226d4cce8cb4b3eace441574",
+        "publicURL": "http://192.0.2.1:8585/v2"}], "endpoints_links": [], "type":
+        "management", "name": "tuskar"}, {"endpoints": [{"adminURL": "http://192.0.2.1:8774/v2/1b824a33e7e74d85adbd020d5f864686",
+        "region": "regionOne", "internalURL": "http://192.0.2.1:8774/v2/1b824a33e7e74d85adbd020d5f864686",
+        "id": "2efafd203e204c7f940f40108f97d334", "publicURL": "http://192.0.2.1:8774/v2/1b824a33e7e74d85adbd020d5f864686"}],
+        "endpoints_links": [], "type": "compute", "name": "nova"}, {"endpoints": [{"adminURL":
+        "http://192.0.2.1:9696/", "region": "regionOne", "internalURL": "http://192.0.2.1:9696/",
+        "id": "5fc72999f8044a9885b09c9245618753", "publicURL": "http://192.0.2.1:9696/"}],
+        "endpoints_links": [], "type": "network", "name": "neutron"}, {"endpoints":
+        [{"adminURL": "http://192.0.2.1:8774/v3", "region": "regionOne", "internalURL":
+        "http://192.0.2.1:8774/v3", "id": "207b778281d44963b1d4c4f7bda13a15", "publicURL":
+        "http://192.0.2.1:8774/v3"}], "endpoints_links": [], "type": "computev3",
+        "name": "nova"}, {"endpoints": [{"adminURL": "http://192.0.2.1:9292/", "region":
+        "regionOne", "internalURL": "http://192.0.2.1:9292/", "id": "4e18bb1cfefc4e74ba8078f520f2ceed",
+        "publicURL": "http://192.0.2.1:9292/"}], "endpoints_links": [], "type": "image",
+        "name": "glance"}, {"endpoints": [{"adminURL": "http://192.0.2.1:8777/", "region":
+        "regionOne", "internalURL": "http://192.0.2.1:8777/", "id": "2edac59d4c1149cfb42a176b3e247c4e",
+        "publicURL": "http://192.0.2.1:8777/"}], "endpoints_links": [], "type": "metering",
+        "name": "ceilometer"}, {"endpoints": [{"adminURL": "http://192.0.2.1:6385/",
+        "region": "regionOne", "internalURL": "http://192.0.2.1:6385/", "id": "3e919c50540246be935787da2ac3d999",
+        "publicURL": "http://192.0.2.1:6385/"}], "endpoints_links": [], "type": "baremetal",
+        "name": "ironic"}, {"endpoints": [{"adminURL": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686",
+        "region": "regionOne", "internalURL": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686",
+        "id": "77586d8847324bcb8c3e6111c782fa5f", "publicURL": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686"}],
+        "endpoints_links": [], "type": "orchestration", "name": "heat"}, {"endpoints":
+        [{"adminURL": "http://192.0.2.1:8080/v1", "region": "regionOne", "internalURL":
+        "http://192.0.2.1:8080/v1/AUTH_1b824a33e7e74d85adbd020d5f864686", "id": "2ceb7689b32c444a90ef8b9dfed1f26f",
+        "publicURL": "http://192.0.2.1:8080/v1/AUTH_1b824a33e7e74d85adbd020d5f864686"}],
+        "endpoints_links": [], "type": "object-store", "name": "swift"}, {"endpoints":
+        [{"adminURL": "http://192.0.2.1:35357/v2.0", "region": "regionOne", "internalURL":
+        "http://192.0.2.1:5000/v2.0", "id": "8eafbd8a2e3346d29afa178da7aac482", "publicURL":
+        "http://192.0.2.1:5000/v2.0"}], "endpoints_links": [], "type": "identity",
+        "name": "keystone"}], "user": {"username": "admin", "roles_links": [], "id":
+        "d007c492ad47466bbf9298d268be7ca8", "roles": [{"name": "_member_"}, {"name":
+        "admin"}], "name": "admin"}, "metadata": {"is_admin": 0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab",
+        "6c4c65479be141ddb1dea6ce58546dde"]}}}'
+    http_version: 
+  recorded_at: Thu, 04 Jun 2015 15:15:24 GMT
+- request:
+    method: get
+    uri: http://192.0.2.1:9696/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.29.0 fog-core/1.30.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - a787542cb4974201a425eaf7e2974dfe
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Content-Length:
+      - '117'
+      Date:
+      - Thu, 04 Jun 2015 15:15:24 GMT
+    body:
+      encoding: UTF-8
+      string: '{"versions": [{"status": "CURRENT", "id": "v2.0", "links": [{"href":
+        "http://192.0.2.1:9696/v2.0", "rel": "self"}]}]}'
+    http_version: 
+  recorded_at: Thu, 04 Jun 2015 15:15:24 GMT
 - request:
     method: get
     uri: http://192.0.2.1:8774/v2/1b824a33e7e74d85adbd020d5f864686/servers/detail.json
@@ -444,7 +547,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 52369266d9304509a8fd90d280b9b1cc
+      - bd7f8361dfe34991b70b5f6931f62dbb
   response:
     status:
       code: 200
@@ -455,9 +558,9 @@ http_interactions:
       Content-Length:
       - '3643'
       X-Compute-Request-Id:
-      - req-7e83feb4-80da-4258-b26a-8f586595e784
+      - req-93e2fe63-130e-4c88-a38d-57d532ce15c4
       Date:
-      - Wed, 03 Jun 2015 11:03:17 GMT
+      - Thu, 04 Jun 2015 15:15:24 GMT
     body:
       encoding: UTF-8
       string: '{"servers": [{"status": "ACTIVE", "updated": "2015-06-01T11:11:41Z",
@@ -500,7 +603,7 @@ http_interactions:
         "accessIPv4": "", "accessIPv6": "", "progress": 0, "OS-EXT-STS:power_state":
         1, "config_drive": "", "metadata": {}}]}'
     http_version: 
-  recorded_at: Wed, 03 Jun 2015 11:03:17 GMT
+  recorded_at: Thu, 04 Jun 2015 15:15:24 GMT
 - request:
     method: get
     uri: http://192.0.2.1:8774/v2/1b824a33e7e74d85adbd020d5f864686/servers/detail.json?marker=5eca8b44-79a6-403c-91c3-413082787445
@@ -515,7 +618,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 52369266d9304509a8fd90d280b9b1cc
+      - bd7f8361dfe34991b70b5f6931f62dbb
   response:
     status:
       code: 200
@@ -526,17 +629,17 @@ http_interactions:
       Content-Length:
       - '15'
       X-Compute-Request-Id:
-      - req-fe96c894-cdd1-4d83-b42f-58dfff9ab800
+      - req-f9fa64f6-4aba-4f18-acd3-9824c194a049
       Date:
-      - Wed, 03 Jun 2015 11:03:17 GMT
+      - Thu, 04 Jun 2015 15:15:24 GMT
     body:
       encoding: UTF-8
       string: '{"servers": []}'
     http_version: 
-  recorded_at: Wed, 03 Jun 2015 11:03:17 GMT
+  recorded_at: Thu, 04 Jun 2015 15:15:24 GMT
 - request:
     method: get
-    uri: http://192.0.2.1:6385/ports/detail
+    uri: http://192.0.2.1:9696/v2.0/ports
     body:
       encoding: US-ASCII
       string: ''
@@ -545,56 +648,116 @@ http_interactions:
       - fog/1.29.0 fog-core/1.30.0
       Content-Type:
       - application/json
+      Accept:
+      - application/json
       X-Auth-Token:
-      - 2bcf90f413fa4218a03cfe1ceb3b7b83
+      - a787542cb4974201a425eaf7e2974dfe
   response:
     status:
       code: 200
       message: ''
     headers:
-      Date:
-      - Wed, 03 Jun 2015 11:03:17 GMT
-      Server:
-      - WSGIServer/0.1 Python/2.7.5
-      X-Openstack-Ironic-Api-Minimum-Version:
-      - '1.1'
-      X-Openstack-Ironic-Api-Maximum-Version:
-      - '1.6'
-      X-Openstack-Ironic-Api-Version:
-      - '1.1'
-      Content-Length:
-      - '2284'
       Content-Type:
       - application/json; charset=UTF-8
+      Content-Length:
+      - '4153'
+      X-Openstack-Request-Id:
+      - req-1c972b53-1636-4650-a6f1-5ed83e654696
+      Date:
+      - Thu, 04 Jun 2015 15:15:25 GMT
     body:
       encoding: UTF-8
-      string: '{"ports": [{"node_uuid": "488df585-8724-40ba-9f12-d034b6bfc7a4", "uuid":
-        "795fec12-5c51-4ebb-a4cf-2ffc951bcc51", "links": [{"href": "http://192.0.2.1:6385/v1/ports/795fec12-5c51-4ebb-a4cf-2ffc951bcc51",
-        "rel": "self"}, {"href": "http://192.0.2.1:6385/ports/795fec12-5c51-4ebb-a4cf-2ffc951bcc51",
-        "rel": "bookmark"}], "extra": {}, "created_at": "2015-05-28T11:00:37+00:00",
-        "updated_at": null, "address": "00:07:42:53:6c:5a"}, {"node_uuid": "b6ee3c21-5dbe-4fb4-80b9-dcc7dcf698f8",
-        "uuid": "99506a06-093b-48ed-ba24-5a2ac40f703a", "links": [{"href": "http://192.0.2.1:6385/v1/ports/99506a06-093b-48ed-ba24-5a2ac40f703a",
-        "rel": "self"}, {"href": "http://192.0.2.1:6385/ports/99506a06-093b-48ed-ba24-5a2ac40f703a",
-        "rel": "bookmark"}], "extra": {"vif_port_id": "30dec6fa-4f24-45af-9ea5-f8f4da610b56"},
-        "created_at": "2015-05-28T11:00:37+00:00", "updated_at": "2015-06-01T11:10:29+00:00",
-        "address": "00:f0:bd:63:96:ae"}, {"node_uuid": "cbb2ec8a-0db7-41ad-ae17-c9e639d41c09",
-        "uuid": "d9b4dc8f-044e-4ce5-b07f-e57d70d5d41d", "links": [{"href": "http://192.0.2.1:6385/v1/ports/d9b4dc8f-044e-4ce5-b07f-e57d70d5d41d",
-        "rel": "self"}, {"href": "http://192.0.2.1:6385/ports/d9b4dc8f-044e-4ce5-b07f-e57d70d5d41d",
-        "rel": "bookmark"}], "extra": {}, "created_at": "2015-05-28T11:00:38+00:00",
-        "updated_at": "2015-05-28T11:59:03+00:00", "address": "00:ff:f0:26:e5:d0"},
-        {"node_uuid": "e71db926-3fd2-494d-8512-31a539db07b2", "uuid": "7bfc2452-d167-4e56-ba60-6890ae257773",
-        "links": [{"href": "http://192.0.2.1:6385/v1/ports/7bfc2452-d167-4e56-ba60-6890ae257773",
-        "rel": "self"}, {"href": "http://192.0.2.1:6385/ports/7bfc2452-d167-4e56-ba60-6890ae257773",
-        "rel": "bookmark"}], "extra": {}, "created_at": "2015-05-28T11:00:38+00:00",
-        "updated_at": "2015-06-01T09:11:42+00:00", "address": "00:38:4b:38:9a:4e"},
-        {"node_uuid": "df17c304-2f9f-4efa-a44c-7e12f0ad96cf", "uuid": "1e74ebb8-3d32-4d37-a62d-438688cc7438",
-        "links": [{"href": "http://192.0.2.1:6385/v1/ports/1e74ebb8-3d32-4d37-a62d-438688cc7438",
-        "rel": "self"}, {"href": "http://192.0.2.1:6385/ports/1e74ebb8-3d32-4d37-a62d-438688cc7438",
-        "rel": "bookmark"}], "extra": {"vif_port_id": "554ec636-0585-486d-ac12-8739f259d1c9"},
-        "created_at": "2015-05-28T11:00:38+00:00", "updated_at": "2015-06-01T11:10:30+00:00",
-        "address": "00:a7:23:2a:1b:61"}]}'
+      string: '{"ports": [{"status": "DOWN", "binding:host_id": "instack.localdomain",
+        "allowed_address_pairs": [], "extra_dhcp_opts": [{"opt_value": "http://192.0.2.1:8088/boot.ipxe",
+        "ip_version": 4, "opt_name": "bootfile-name"}, {"opt_value": "192.0.2.1",
+        "ip_version": 4, "opt_name": "server-ip-address"}, {"opt_value": "undionly.kpxe",
+        "ip_version": 4, "opt_name": "tag:!ipxe,bootfile-name"}, {"opt_value": "192.0.2.1",
+        "ip_version": 4, "opt_name": "tftp-server"}], "device_owner": "compute:None",
+        "binding:profile": {}, "fixed_ips": [{"subnet_id": "215c79f2-bbe7-4741-ace3-c986a93c6ad3",
+        "ip_address": "192.0.2.10"}], "id": "30dec6fa-4f24-45af-9ea5-f8f4da610b56",
+        "security_groups": ["87c65fff-14bf-4756-8e9b-416ebee7b02e"], "device_id":
+        "5eca8b44-79a6-403c-91c3-413082787445", "name": "", "admin_state_up": true,
+        "network_id": "c3b49ed8-74a9-4aa3-b1d0-0a00aadf4523", "tenant_id": "1b824a33e7e74d85adbd020d5f864686",
+        "binding:vif_details": {"port_filter": true, "ovs_hybrid_plug": true}, "binding:vnic_type":
+        "normal", "binding:vif_type": "ovs", "mac_address": "00:f0:bd:63:96:ae"},
+        {"status": "DOWN", "binding:host_id": "instack.localdomain", "allowed_address_pairs":
+        [], "extra_dhcp_opts": [{"opt_value": "http://192.0.2.1:8088/boot.ipxe", "ip_version":
+        4, "opt_name": "bootfile-name"}, {"opt_value": "192.0.2.1", "ip_version":
+        4, "opt_name": "server-ip-address"}, {"opt_value": "undionly.kpxe", "ip_version":
+        4, "opt_name": "tag:!ipxe,bootfile-name"}, {"opt_value": "192.0.2.1", "ip_version":
+        4, "opt_name": "tftp-server"}], "device_owner": "compute:None", "binding:profile":
+        {}, "fixed_ips": [{"subnet_id": "215c79f2-bbe7-4741-ace3-c986a93c6ad3", "ip_address":
+        "192.0.2.11"}], "id": "554ec636-0585-486d-ac12-8739f259d1c9", "security_groups":
+        ["87c65fff-14bf-4756-8e9b-416ebee7b02e"], "device_id": "9466fe04-b05d-491c-b70d-ff8781ad74a4",
+        "name": "", "admin_state_up": true, "network_id": "c3b49ed8-74a9-4aa3-b1d0-0a00aadf4523",
+        "tenant_id": "1b824a33e7e74d85adbd020d5f864686", "binding:vif_details": {"port_filter":
+        true, "ovs_hybrid_plug": true}, "binding:vnic_type": "normal", "binding:vif_type":
+        "ovs", "mac_address": "00:a7:23:2a:1b:61"}, {"status": "DOWN", "binding:host_id":
+        "", "allowed_address_pairs": [], "extra_dhcp_opts": [], "device_owner": "",
+        "binding:profile": {}, "fixed_ips": [{"subnet_id": "215c79f2-bbe7-4741-ace3-c986a93c6ad3",
+        "ip_address": "192.0.2.8"}], "id": "60f5b0cb-d85c-4ad3-8193-7987d42836fc",
+        "security_groups": ["87c65fff-14bf-4756-8e9b-416ebee7b02e"], "device_id":
+        "", "name": "control_virtual_ip", "admin_state_up": true, "network_id": "c3b49ed8-74a9-4aa3-b1d0-0a00aadf4523",
+        "tenant_id": "1b824a33e7e74d85adbd020d5f864686", "binding:vif_details": {},
+        "binding:vnic_type": "normal", "binding:vif_type": "unbound", "mac_address":
+        "fa:16:3e:80:7e:00"}, {"status": "ACTIVE", "binding:host_id": "instack.localdomain",
+        "allowed_address_pairs": [], "extra_dhcp_opts": [], "device_owner": "network:dhcp",
+        "binding:profile": {}, "fixed_ips": [{"subnet_id": "215c79f2-bbe7-4741-ace3-c986a93c6ad3",
+        "ip_address": "192.0.2.5"}], "id": "8f065812-f85b-4738-9531-187dac8d4d05",
+        "security_groups": [], "device_id": "dhcpf7ba4f3a-fde5-5ecd-849a-83af0a07f6c3-c3b49ed8-74a9-4aa3-b1d0-0a00aadf4523",
+        "name": "", "admin_state_up": true, "network_id": "c3b49ed8-74a9-4aa3-b1d0-0a00aadf4523",
+        "tenant_id": "1b824a33e7e74d85adbd020d5f864686", "binding:vif_details": {"port_filter":
+        true, "ovs_hybrid_plug": true}, "binding:vnic_type": "normal", "binding:vif_type":
+        "ovs", "mac_address": "fa:16:3e:51:b8:11"}, {"status": "DOWN", "binding:host_id":
+        "", "allowed_address_pairs": [], "extra_dhcp_opts": [], "device_owner": "",
+        "binding:profile": {}, "fixed_ips": [{"subnet_id": "215c79f2-bbe7-4741-ace3-c986a93c6ad3",
+        "ip_address": "192.0.2.9"}], "id": "cae26006-56e1-4eaf-9a00-3ac7addeeaaf",
+        "security_groups": ["87c65fff-14bf-4756-8e9b-416ebee7b02e"], "device_id":
+        "", "name": "public_virtual_ip", "admin_state_up": true, "network_id": "c3b49ed8-74a9-4aa3-b1d0-0a00aadf4523",
+        "tenant_id": "1b824a33e7e74d85adbd020d5f864686", "binding:vif_details": {},
+        "binding:vnic_type": "normal", "binding:vif_type": "unbound", "mac_address":
+        "fa:16:3e:7a:a4:18"}]}'
     http_version: 
-  recorded_at: Wed, 03 Jun 2015 11:03:17 GMT
+  recorded_at: Thu, 04 Jun 2015 15:15:25 GMT
+- request:
+    method: get
+    uri: http://192.0.2.1:9696/v2.0/subnets
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.29.0 fog-core/1.30.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - a787542cb4974201a425eaf7e2974dfe
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Content-Length:
+      - '522'
+      X-Openstack-Request-Id:
+      - req-73e20054-6916-4547-97d6-969d5957c070
+      Date:
+      - Thu, 04 Jun 2015 15:15:25 GMT
+    body:
+      encoding: UTF-8
+      string: '{"subnets": [{"name": "", "enable_dhcp": true, "network_id": "c3b49ed8-74a9-4aa3-b1d0-0a00aadf4523",
+        "tenant_id": "1b824a33e7e74d85adbd020d5f864686", "dns_nameservers": ["192.168.122.1"],
+        "gateway_ip": "192.0.2.1", "ipv6_ra_mode": null, "allocation_pools": [{"start":
+        "192.0.2.5", "end": "192.0.2.24"}], "host_routes": [{"nexthop": "192.0.2.1",
+        "destination": "169.254.169.254/32"}], "ip_version": 4, "ipv6_address_mode":
+        null, "cidr": "192.0.2.0/24", "id": "215c79f2-bbe7-4741-ace3-c986a93c6ad3",
+        "subnetpool_id": null}]}'
+    http_version: 
+  recorded_at: Thu, 04 Jun 2015 15:15:25 GMT
 - request:
     method: get
     uri: http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks
@@ -609,7 +772,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 2f3c423440804c9c8e24232d8db58b7e
+      - e0e5b18f47ac45b09db3f8cef14dbe32
       X-Auth-User:
       - admin
       X-Auth-Key:
@@ -624,9 +787,9 @@ http_interactions:
       Content-Length:
       - '532'
       X-Openstack-Request-Id:
-      - req-ef635748-9288-4875-aa4d-cfc4ad373a2d
+      - req-b0e4358f-fd3f-4c1e-8aae-178dfe72973a
       Date:
-      - Wed, 03 Jun 2015 11:03:17 GMT
+      - Thu, 04 Jun 2015 15:15:25 GMT
     body:
       encoding: UTF-8
       string: '{"stacks": [{"parent": null, "description": "No description", "links":
@@ -636,7 +799,7 @@ http_interactions:
         "creation_time": "2015-06-01T11:10:20Z", "updated_time": null, "stack_owner":
         "admin", "stack_status": "CREATE_COMPLETE", "id": "f88eb16a-39f6-4436-819c-2a9a8b08915b"}]}'
     http_version: 
-  recorded_at: Wed, 03 Jun 2015 11:03:17 GMT
+  recorded_at: Thu, 04 Jun 2015 15:15:25 GMT
 - request:
     method: get
     uri: http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b
@@ -651,7 +814,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 2f3c423440804c9c8e24232d8db58b7e
+      - e0e5b18f47ac45b09db3f8cef14dbe32
       X-Auth-User:
       - admin
       X-Auth-Key:
@@ -666,9 +829,9 @@ http_interactions:
       Content-Length:
       - '10427'
       X-Openstack-Request-Id:
-      - req-235a1a72-7fce-4017-b124-b5d63cd38018
+      - req-4923bd5e-dd37-4858-99c5-7423ba50099d
       Date:
-      - Wed, 03 Jun 2015 11:03:17 GMT
+      - Thu, 04 Jun 2015 15:15:25 GMT
     body:
       encoding: UTF-8
       string: '{"stack": {"parent": null, "disable_rollback": true, "description":
@@ -767,7 +930,7 @@ http_interactions:
         "http://192.0.2.8:5000/v2.0/", "description": "URL for the Overcloud Keystone
         service", "output_key": "KeystoneURL"}], "template_description": "No description"}}'
     http_version: 
-  recorded_at: Wed, 03 Jun 2015 11:03:17 GMT
+  recorded_at: Thu, 04 Jun 2015 15:15:25 GMT
 - request:
     method: get
     uri: http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources?nested_depth=50
@@ -782,7 +945,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 2f3c423440804c9c8e24232d8db58b7e
+      - e0e5b18f47ac45b09db3f8cef14dbe32
       X-Auth-User:
       - admin
       X-Auth-Key:
@@ -797,9 +960,9 @@ http_interactions:
       Content-Length:
       - '76701'
       X-Openstack-Request-Id:
-      - req-1f552e30-4856-4a36-813f-1cb53a43f7f6
+      - req-aca4836b-785f-4242-9a40-d8c78e9ea630
       Date:
-      - Wed, 03 Jun 2015 11:03:20 GMT
+      - Thu, 04 Jun 2015 15:15:27 GMT
     body:
       encoding: UTF-8
       string: '{"resources": [{"resource_name": "SwiftDevicesAndProxyConfig", "links":
@@ -897,8 +1060,8 @@ http_interactions:
         "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-allNodesConfig-2bjy2hvl5ckj/24e32c9e-9f40-4cb1-9e05-ff3bde245ca8",
         "rel": "nested"}], "logical_resource_id": "allNodesConfig", "resource_status":
         "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
-        ["ObjectStorageAllNodesDeployment", "CephStorageAllNodesDeployment", "ControllerAllNodesDeployment",
-        "BlockStorageAllNodesDeployment", "ComputeAllNodesDeployment"], "resource_status_reason":
+        ["BlockStorageAllNodesDeployment", "ObjectStorageAllNodesDeployment", "ControllerAllNodesDeployment",
+        "CephStorageAllNodesDeployment", "ComputeAllNodesDeployment"], "resource_status_reason":
         "state changed", "physical_resource_id": "24e32c9e-9f40-4cb1-9e05-ff3bde245ca8",
         "resource_type": "OS::TripleO::AllNodes::SoftwareConfig"}, {"parent_resource":
         "allNodesConfig", "resource_name": "allNodesConfigImpl", "links": [{"href":
@@ -913,7 +1076,7 @@ http_interactions:
         "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-CephClusterConfig-qjursb6boz4g/8bf7b3c1-8d71-49e3-970a-027f57f8937a",
         "rel": "nested"}], "logical_resource_id": "CephClusterConfig", "resource_status":
         "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
-        ["CephStorageCephDeployment", "ComputeCephDeployment", "ControllerCephDeployment"],
+        ["ComputeCephDeployment", "CephStorageCephDeployment", "ControllerCephDeployment"],
         "resource_status_reason": "state changed", "physical_resource_id": "8bf7b3c1-8d71-49e3-970a-027f57f8937a",
         "resource_type": "OS::TripleO::CephClusterConfig::SoftwareConfig"}, {"parent_resource":
         "CephClusterConfig", "resource_name": "CephClusterConfigImpl", "links": [{"href":
@@ -982,7 +1145,7 @@ http_interactions:
         "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
         "rel": "stack"}], "logical_resource_id": "ControlVirtualIP", "resource_status":
         "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
-        ["Cinder-Storage", "Controller", "Compute"], "resource_status_reason": "state
+        ["Controller", "Compute", "Cinder-Storage"], "resource_status_reason": "state
         changed", "physical_resource_id": "60f5b0cb-d85c-4ad3-8193-7987d42836fc",
         "resource_type": "OS::Neutron::Port"}, {"resource_name": "Swift-Storage",
         "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/Swift-Storage",
@@ -990,8 +1153,8 @@ http_interactions:
         "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Swift-Storage-jjfq5v4a246w/663dab02-4bfd-491c-a1e3-2e03df6ac237",
         "rel": "nested"}], "logical_resource_id": "Swift-Storage", "resource_status":
         "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
-        ["ObjectStorageAllNodesDeployment", "ObjectStorageSwiftDeployment", "ObjectStorageNodesPostDeployment",
-        "SwiftDevicesAndProxyConfig", "allNodesConfig"], "resource_status_reason":
+        ["ObjectStorageNodesPostDeployment", "SwiftDevicesAndProxyConfig", "ObjectStorageAllNodesDeployment",
+        "allNodesConfig", "ObjectStorageSwiftDeployment"], "resource_status_reason":
         "state changed", "physical_resource_id": "663dab02-4bfd-491c-a1e3-2e03df6ac237",
         "resource_type": "OS::Heat::ResourceGroup"}, {"resource_name": "Controller",
         "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/Controller",
@@ -999,10 +1162,10 @@ http_interactions:
         "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh/6e2eb44d-e4ac-4dab-b1a6-8293b5e4057e",
         "rel": "nested"}], "logical_resource_id": "Controller", "resource_status":
         "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
-        ["ControllerCephDeployment", "ControllerNodesPostDeployment", "ControllerClusterConfig",
-        "CephClusterConfig", "ControllerAllNodesDeployment", "ControllerSwiftDeployment",
-        "allNodesConfig", "ControllerBootstrapNodeConfig", "ControllerClusterDeployment",
-        "ControllerBootstrapNodeDeployment", "SwiftDevicesAndProxyConfig"], "resource_status_reason":
+        ["ControllerCephDeployment", "ControllerNodesPostDeployment", "CephClusterConfig",
+        "ControllerBootstrapNodeConfig", "ControllerBootstrapNodeDeployment", "ControllerClusterDeployment",
+        "SwiftDevicesAndProxyConfig", "allNodesConfig", "ControllerClusterConfig",
+        "ControllerSwiftDeployment", "ControllerAllNodesDeployment"], "resource_status_reason":
         "state changed", "physical_resource_id": "6e2eb44d-e4ac-4dab-b1a6-8293b5e4057e",
         "resource_type": "OS::Heat::ResourceGroup"}, {"parent_resource": "Controller",
         "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh/6e2eb44d-e4ac-4dab-b1a6-8293b5e4057e/resources/0",
@@ -1061,7 +1224,7 @@ http_interactions:
         "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Controller-olmcs5kaifrh-0-npjdhhe5opl2/d2628340-f6c0-4094-8fd7-23a65e5e808c",
         "rel": "stack"}], "logical_resource_id": "Controller", "resource_status":
         "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:23Z", "required_by":
-        ["ControllerDeployment", "NetworkDeployment"], "resource_status_reason": "state
+        ["NetworkDeployment", "ControllerDeployment"], "resource_status_reason": "state
         changed", "physical_resource_id": "5eca8b44-79a6-403c-91c3-413082787445",
         "resource_type": "OS::Nova::Server"}, {"resource_name": "MysqlRootPassword",
         "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/MysqlRootPassword",
@@ -1134,9 +1297,9 @@ http_interactions:
         "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse/6b10d7a4-2894-4a91-8131-8483e82e970c",
         "rel": "stack"}], "logical_resource_id": "ControllerPuppetConfig", "resource_status":
         "CREATE_COMPLETE", "updated_time": "2015-06-01T11:12:16Z", "required_by":
-        ["ControllerDeploymentLoadBalancer_Step1", "ControllerDeploymentServicesBase_Step2",
-        "ControllerDeploymentOvercloudServices_Step4"], "resource_status_reason":
-        "state changed", "physical_resource_id": "749eece6-1014-4ffc-8420-4ad7a95ee887",
+        ["ControllerDeploymentOvercloudServices_Step4", "ControllerDeploymentServicesBase_Step2",
+        "ControllerDeploymentLoadBalancer_Step1"], "resource_status_reason": "state
+        changed", "physical_resource_id": "749eece6-1014-4ffc-8420-4ad7a95ee887",
         "resource_type": "OS::Heat::SoftwareConfig"}, {"parent_resource": "ControllerNodesPostDeployment",
         "resource_name": "ControllerRingbuilderDeployment_Step3", "links": [{"href":
         "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-ControllerNodesPostDeployment-eitqti4hzuse/6b10d7a4-2894-4a91-8131-8483e82e970c/resources/ControllerRingbuilderDeployment_Step3",
@@ -1201,9 +1364,9 @@ http_interactions:
         "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
         "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5/f74c3cf0-7473-44db-b2dd-a4115e667ab2",
         "rel": "nested"}], "logical_resource_id": "Compute", "resource_status": "CREATE_COMPLETE",
-        "updated_time": "2015-06-01T11:10:21Z", "required_by": ["ComputeNodesPostDeployment",
-        "ComputeAllNodesDeployment", "ComputeCephDeployment", "allNodesConfig"], "resource_status_reason":
-        "state changed", "physical_resource_id": "f74c3cf0-7473-44db-b2dd-a4115e667ab2",
+        "updated_time": "2015-06-01T11:10:21Z", "required_by": ["ComputeCephDeployment",
+        "allNodesConfig", "ComputeNodesPostDeployment", "ComputeAllNodesDeployment"],
+        "resource_status_reason": "state changed", "physical_resource_id": "f74c3cf0-7473-44db-b2dd-a4115e667ab2",
         "resource_type": "OS::Heat::ResourceGroup"}, {"parent_resource": "Compute",
         "resource_name": "0", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5/f74c3cf0-7473-44db-b2dd-a4115e667ab2/resources/0",
         "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Compute-mndv4wodbrr5/f74c3cf0-7473-44db-b2dd-a4115e667ab2",
@@ -1416,14 +1579,14 @@ http_interactions:
         "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
         "rel": "stack"}], "logical_resource_id": "PublicVirtualIP", "resource_status":
         "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
-        ["Compute", "Controller"], "resource_status_reason": "state changed", "physical_resource_id":
+        ["Controller", "Compute"], "resource_status_reason": "state changed", "physical_resource_id":
         "cae26006-56e1-4eaf-9a00-3ac7addeeaaf", "resource_type": "OS::Neutron::Port"},
         {"resource_name": "Ceph-Storage", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/Ceph-Storage",
         "rel": "self"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b",
         "rel": "stack"}, {"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud-Ceph-Storage-xt6c4w7vq3f5/be3ffedb-112c-48d6-86fe-d51cde4345a9",
         "rel": "nested"}], "logical_resource_id": "Ceph-Storage", "resource_status":
         "CREATE_COMPLETE", "updated_time": "2015-06-01T11:10:21Z", "required_by":
-        ["CephStorageAllNodesDeployment", "CephStorageNodesPostDeployment", "allNodesConfig",
+        ["CephStorageNodesPostDeployment", "allNodesConfig", "CephStorageAllNodesDeployment",
         "CephStorageCephDeployment"], "resource_status_reason": "state changed", "physical_resource_id":
         "be3ffedb-112c-48d6-86fe-d51cde4345a9", "resource_type": "OS::Heat::ResourceGroup"},
         {"resource_name": "ObjectStorageAllNodesDeployment", "links": [{"href": "http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/resources/ObjectStorageAllNodesDeployment",
@@ -1435,7 +1598,7 @@ http_interactions:
         "state changed", "physical_resource_id": "790ff1b6-89e8-4126-ab53-c14a0f6f80fc",
         "resource_type": "OS::Heat::StructuredDeployments"}]}'
     http_version: 
-  recorded_at: Wed, 03 Jun 2015 11:03:20 GMT
+  recorded_at: Thu, 04 Jun 2015 15:15:27 GMT
 - request:
     method: get
     uri: http://192.0.2.1:6385/nodes/detail
@@ -1448,14 +1611,14 @@ http_interactions:
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 2bcf90f413fa4218a03cfe1ceb3b7b83
+      - 0cc43ffd595448ee97e16badc12bbcab
   response:
     status:
       code: 200
       message: ''
     headers:
       Date:
-      - Wed, 03 Jun 2015 11:03:20 GMT
+      - Thu, 04 Jun 2015 15:15:27 GMT
       Server:
       - WSGIServer/0.1 Python/2.7.5
       X-Openstack-Ironic-Api-Minimum-Version:
@@ -1465,7 +1628,7 @@ http_interactions:
       X-Openstack-Ironic-Api-Version:
       - '1.1'
       Content-Length:
-      - '40102'
+      - '40121'
       Content-Type:
       - application/json; charset=UTF-8
     body:
@@ -1476,7 +1639,7 @@ http_interactions:
         "e999a20d-2e76-4c45-8b66-ce78e470a7c7", "ssh_key_contents": "-----BEGIN RSA
         PRIVATE KEY-----\nMIIEogIBAAKCAQEA7QFu9SCcobkB7+bftNnlzsUEmRLB0mU3/EsY9M6luMrAzDIT\n8N3L6e013bwzCSDoDzTTXUee2NLH6kbisv2A+R7xlv5gSkt7fbaV4fX7gDTDrOM3\neqZJShKzBX1TU9CkrKCP+R09DpUeksItxm8HU2HfA7Ugd+rb1uYD7Hm9bMnWiK8L\nEn6gbJ1AmeTQ6z9L895ezesVgtEd1ibKJDrrBF/ux7KvezjdsI0lVliRc1JKPpO2\nsuD2PYrLSRGik4KmuIgJuMfeSjTYrKkaX7NsDCmznfod7lS/eNtKbSOcVZpK/jrh\n+LVEnNTiDxZcuQlzUo54VTnIjMp1yylYtgtqDQIDAQABAoIBAHZ/U/nNX2LgfF51\nIX5rv6G9Ecpy/WNzZiWHaqfjtioJfZHaq+uvCWghSOBfW2kCAeSwdclaqMohwQCa\nhngVlWl5FjN3Za9fxBObuZ6rfR6hwv/q7u8sutIFPWrOOV5boCoLcVCNVNy4o/ue\niIKBOrlu4rEY2235iAcPJAEU8Se1YE+3qAxEktFRAj2bgPs+ldr3gqTvmUBDLpPA\nD4td4zw+zLZ5QR/BXGNmNjCkjusxMmTvekkk8Qrf7zvHiV4M4VDcQLM7St4cTRyT\nTcGhXn79GRQ0+joqcZSwUli9X8Nu4ue5+RZNi/hN9YymwNWfhUzsYPcBKrPJ1sC0\nzoSSssECgYEA/vWP6AnfQ2I8R2mYkdsNl10w6S5kHAY/Oo7asPx3g8MmaFouOfuj\nWYX7vgN1cKYhELdGHrHEv1H7l8Si0RG2NIjNtQR8KDtXjl87ImohAHdVBzsqGxfB\nZCXiIwjfzBbwUQ614hNGdeJ0Zk3+ezdrb0KlVaZWGXmAsA9/KRVKKJ0CgYEA7fkb\n/3p/Ap3keRoQlWtfSL67CoHMQadpW0he1LZfp0V1fPrloQ/nrIVc6bwydExX/KiQ\nHBTl6h9TptXn6ijRQX3dzdxGCdC2d44HpH8NPknC5hynWab3pJ1H7e+xdhhYYJ8Y\nnWwcl4o+P8dnUyfAmnwyn3sZBBQKsihr6rF09DECgYBmfn1NgLp6MkGdS7wD1pXO\nJa6F7xpbkb9VYRxVTgkVtRv5k1dGA/0U/iHHr0hE8uQT/jl4GWrIpsKHrortlTs0\nP1LC1Hy9B64ZE/uHyDZgI5jRAV3Z6mDaS8hu4SBmwUn2q/0+VxVaSqEUh4IoMo1D\n+vzQQ8AVGZ08Kd6qu15GmQKBgHFdHk1SGXcxqElYdVX41GdfFNMoihksmy/1Bdfn\nGSIiIJntG77iSMcSsPRXxuFIDRI7aos2GWCyk7MCa3xM/YJpZ2RN7r92QbYqXtGq\nBLELimD8fWxj8czlcAKVEMDlUBSXNa6odeZq4MSZRUuDwGjXiXYXug8LTR0ZzG79\nIm3BAoGAZl0JIOCIZjOB49uY8Hz/6RHiCg0dj9Bg+xhtLoJLQwtd7AWWO7cGO/sF\nWYQkCff2Mz8cT3WyTvgMxF5uA6exlAtDTgLGN05eyk066WNYsVjLz6a2m3evFKot\nb5xKH7ba2F3IXvsT1vQNnc7lX8PCVBae/Pt7Xu4wUZiyOYoMdfs=\n-----END
         RSA PRIVATE KEY-----", "ssh_virt_type": "virsh", "ssh_address": "192.168.122.1"},
-        "target_provision_state": null, "updated_at": "2015-06-03T11:03:15+00:00",
+        "target_provision_state": null, "updated_at": "2015-06-04T15:15:24+00:00",
         "last_error": null, "console_enabled": false, "extra": {"newly_discovered":
         "true", "block_devices": {"serials": ["QM00005"]}, "edeploy_facts": [["disk",
         "logical", "count", "1"], ["disk", "sda", "size", "44"], ["disk", "sda", "vendor",
@@ -1553,7 +1716,7 @@ http_interactions:
         "deploy_ramdisk": "e999a20d-2e76-4c45-8b66-ce78e470a7c7", "ssh_key_contents":
         "-----BEGIN RSA PRIVATE KEY-----\nMIIEogIBAAKCAQEA7QFu9SCcobkB7+bftNnlzsUEmRLB0mU3/EsY9M6luMrAzDIT\n8N3L6e013bwzCSDoDzTTXUee2NLH6kbisv2A+R7xlv5gSkt7fbaV4fX7gDTDrOM3\neqZJShKzBX1TU9CkrKCP+R09DpUeksItxm8HU2HfA7Ugd+rb1uYD7Hm9bMnWiK8L\nEn6gbJ1AmeTQ6z9L895ezesVgtEd1ibKJDrrBF/ux7KvezjdsI0lVliRc1JKPpO2\nsuD2PYrLSRGik4KmuIgJuMfeSjTYrKkaX7NsDCmznfod7lS/eNtKbSOcVZpK/jrh\n+LVEnNTiDxZcuQlzUo54VTnIjMp1yylYtgtqDQIDAQABAoIBAHZ/U/nNX2LgfF51\nIX5rv6G9Ecpy/WNzZiWHaqfjtioJfZHaq+uvCWghSOBfW2kCAeSwdclaqMohwQCa\nhngVlWl5FjN3Za9fxBObuZ6rfR6hwv/q7u8sutIFPWrOOV5boCoLcVCNVNy4o/ue\niIKBOrlu4rEY2235iAcPJAEU8Se1YE+3qAxEktFRAj2bgPs+ldr3gqTvmUBDLpPA\nD4td4zw+zLZ5QR/BXGNmNjCkjusxMmTvekkk8Qrf7zvHiV4M4VDcQLM7St4cTRyT\nTcGhXn79GRQ0+joqcZSwUli9X8Nu4ue5+RZNi/hN9YymwNWfhUzsYPcBKrPJ1sC0\nzoSSssECgYEA/vWP6AnfQ2I8R2mYkdsNl10w6S5kHAY/Oo7asPx3g8MmaFouOfuj\nWYX7vgN1cKYhELdGHrHEv1H7l8Si0RG2NIjNtQR8KDtXjl87ImohAHdVBzsqGxfB\nZCXiIwjfzBbwUQ614hNGdeJ0Zk3+ezdrb0KlVaZWGXmAsA9/KRVKKJ0CgYEA7fkb\n/3p/Ap3keRoQlWtfSL67CoHMQadpW0he1LZfp0V1fPrloQ/nrIVc6bwydExX/KiQ\nHBTl6h9TptXn6ijRQX3dzdxGCdC2d44HpH8NPknC5hynWab3pJ1H7e+xdhhYYJ8Y\nnWwcl4o+P8dnUyfAmnwyn3sZBBQKsihr6rF09DECgYBmfn1NgLp6MkGdS7wD1pXO\nJa6F7xpbkb9VYRxVTgkVtRv5k1dGA/0U/iHHr0hE8uQT/jl4GWrIpsKHrortlTs0\nP1LC1Hy9B64ZE/uHyDZgI5jRAV3Z6mDaS8hu4SBmwUn2q/0+VxVaSqEUh4IoMo1D\n+vzQQ8AVGZ08Kd6qu15GmQKBgHFdHk1SGXcxqElYdVX41GdfFNMoihksmy/1Bdfn\nGSIiIJntG77iSMcSsPRXxuFIDRI7aos2GWCyk7MCa3xM/YJpZ2RN7r92QbYqXtGq\nBLELimD8fWxj8czlcAKVEMDlUBSXNa6odeZq4MSZRUuDwGjXiXYXug8LTR0ZzG79\nIm3BAoGAZl0JIOCIZjOB49uY8Hz/6RHiCg0dj9Bg+xhtLoJLQwtd7AWWO7cGO/sF\nWYQkCff2Mz8cT3WyTvgMxF5uA6exlAtDTgLGN05eyk066WNYsVjLz6a2m3evFKot\nb5xKH7ba2F3IXvsT1vQNnc7lX8PCVBae/Pt7Xu4wUZiyOYoMdfs=\n-----END
         RSA PRIVATE KEY-----", "ssh_virt_type": "virsh", "ssh_address": "192.168.122.1"},
-        "target_provision_state": null, "updated_at": "2015-06-03T11:03:16+00:00",
+        "target_provision_state": null, "updated_at": "2015-06-04T15:15:25+00:00",
         "last_error": null, "console_enabled": false, "extra": {"newly_discovered":
         "true", "block_devices": {"serials": ["QM00005"]}, "edeploy_facts": [["disk",
         "logical", "count", "1"], ["disk", "sda", "size", "44"], ["disk", "sda", "vendor",
@@ -1633,7 +1796,7 @@ http_interactions:
         "deploy_ramdisk": "e999a20d-2e76-4c45-8b66-ce78e470a7c7", "ssh_key_contents":
         "-----BEGIN RSA PRIVATE KEY-----\nMIIEogIBAAKCAQEA7QFu9SCcobkB7+bftNnlzsUEmRLB0mU3/EsY9M6luMrAzDIT\n8N3L6e013bwzCSDoDzTTXUee2NLH6kbisv2A+R7xlv5gSkt7fbaV4fX7gDTDrOM3\neqZJShKzBX1TU9CkrKCP+R09DpUeksItxm8HU2HfA7Ugd+rb1uYD7Hm9bMnWiK8L\nEn6gbJ1AmeTQ6z9L895ezesVgtEd1ibKJDrrBF/ux7KvezjdsI0lVliRc1JKPpO2\nsuD2PYrLSRGik4KmuIgJuMfeSjTYrKkaX7NsDCmznfod7lS/eNtKbSOcVZpK/jrh\n+LVEnNTiDxZcuQlzUo54VTnIjMp1yylYtgtqDQIDAQABAoIBAHZ/U/nNX2LgfF51\nIX5rv6G9Ecpy/WNzZiWHaqfjtioJfZHaq+uvCWghSOBfW2kCAeSwdclaqMohwQCa\nhngVlWl5FjN3Za9fxBObuZ6rfR6hwv/q7u8sutIFPWrOOV5boCoLcVCNVNy4o/ue\niIKBOrlu4rEY2235iAcPJAEU8Se1YE+3qAxEktFRAj2bgPs+ldr3gqTvmUBDLpPA\nD4td4zw+zLZ5QR/BXGNmNjCkjusxMmTvekkk8Qrf7zvHiV4M4VDcQLM7St4cTRyT\nTcGhXn79GRQ0+joqcZSwUli9X8Nu4ue5+RZNi/hN9YymwNWfhUzsYPcBKrPJ1sC0\nzoSSssECgYEA/vWP6AnfQ2I8R2mYkdsNl10w6S5kHAY/Oo7asPx3g8MmaFouOfuj\nWYX7vgN1cKYhELdGHrHEv1H7l8Si0RG2NIjNtQR8KDtXjl87ImohAHdVBzsqGxfB\nZCXiIwjfzBbwUQ614hNGdeJ0Zk3+ezdrb0KlVaZWGXmAsA9/KRVKKJ0CgYEA7fkb\n/3p/Ap3keRoQlWtfSL67CoHMQadpW0he1LZfp0V1fPrloQ/nrIVc6bwydExX/KiQ\nHBTl6h9TptXn6ijRQX3dzdxGCdC2d44HpH8NPknC5hynWab3pJ1H7e+xdhhYYJ8Y\nnWwcl4o+P8dnUyfAmnwyn3sZBBQKsihr6rF09DECgYBmfn1NgLp6MkGdS7wD1pXO\nJa6F7xpbkb9VYRxVTgkVtRv5k1dGA/0U/iHHr0hE8uQT/jl4GWrIpsKHrortlTs0\nP1LC1Hy9B64ZE/uHyDZgI5jRAV3Z6mDaS8hu4SBmwUn2q/0+VxVaSqEUh4IoMo1D\n+vzQQ8AVGZ08Kd6qu15GmQKBgHFdHk1SGXcxqElYdVX41GdfFNMoihksmy/1Bdfn\nGSIiIJntG77iSMcSsPRXxuFIDRI7aos2GWCyk7MCa3xM/YJpZ2RN7r92QbYqXtGq\nBLELimD8fWxj8czlcAKVEMDlUBSXNa6odeZq4MSZRUuDwGjXiXYXug8LTR0ZzG79\nIm3BAoGAZl0JIOCIZjOB49uY8Hz/6RHiCg0dj9Bg+xhtLoJLQwtd7AWWO7cGO/sF\nWYQkCff2Mz8cT3WyTvgMxF5uA6exlAtDTgLGN05eyk066WNYsVjLz6a2m3evFKot\nb5xKH7ba2F3IXvsT1vQNnc7lX8PCVBae/Pt7Xu4wUZiyOYoMdfs=\n-----END
         RSA PRIVATE KEY-----", "ssh_virt_type": "virsh", "ssh_address": "192.168.122.1"},
-        "target_provision_state": null, "updated_at": "2015-06-03T11:03:17+00:00",
+        "target_provision_state": null, "updated_at": "2015-06-04T15:15:26+00:00",
         "last_error": null, "console_enabled": false, "extra": {"newly_discovered":
         "true", "block_devices": {"serials": ["QM00005"]}, "edeploy_facts": [["disk",
         "logical", "count", "1"], ["disk", "sda", "size", "44"], ["disk", "sda", "vendor",
@@ -1710,7 +1873,7 @@ http_interactions:
         "deploy_ramdisk": "e999a20d-2e76-4c45-8b66-ce78e470a7c7", "ssh_key_contents":
         "-----BEGIN RSA PRIVATE KEY-----\nMIIEogIBAAKCAQEA7QFu9SCcobkB7+bftNnlzsUEmRLB0mU3/EsY9M6luMrAzDIT\n8N3L6e013bwzCSDoDzTTXUee2NLH6kbisv2A+R7xlv5gSkt7fbaV4fX7gDTDrOM3\neqZJShKzBX1TU9CkrKCP+R09DpUeksItxm8HU2HfA7Ugd+rb1uYD7Hm9bMnWiK8L\nEn6gbJ1AmeTQ6z9L895ezesVgtEd1ibKJDrrBF/ux7KvezjdsI0lVliRc1JKPpO2\nsuD2PYrLSRGik4KmuIgJuMfeSjTYrKkaX7NsDCmznfod7lS/eNtKbSOcVZpK/jrh\n+LVEnNTiDxZcuQlzUo54VTnIjMp1yylYtgtqDQIDAQABAoIBAHZ/U/nNX2LgfF51\nIX5rv6G9Ecpy/WNzZiWHaqfjtioJfZHaq+uvCWghSOBfW2kCAeSwdclaqMohwQCa\nhngVlWl5FjN3Za9fxBObuZ6rfR6hwv/q7u8sutIFPWrOOV5boCoLcVCNVNy4o/ue\niIKBOrlu4rEY2235iAcPJAEU8Se1YE+3qAxEktFRAj2bgPs+ldr3gqTvmUBDLpPA\nD4td4zw+zLZ5QR/BXGNmNjCkjusxMmTvekkk8Qrf7zvHiV4M4VDcQLM7St4cTRyT\nTcGhXn79GRQ0+joqcZSwUli9X8Nu4ue5+RZNi/hN9YymwNWfhUzsYPcBKrPJ1sC0\nzoSSssECgYEA/vWP6AnfQ2I8R2mYkdsNl10w6S5kHAY/Oo7asPx3g8MmaFouOfuj\nWYX7vgN1cKYhELdGHrHEv1H7l8Si0RG2NIjNtQR8KDtXjl87ImohAHdVBzsqGxfB\nZCXiIwjfzBbwUQ614hNGdeJ0Zk3+ezdrb0KlVaZWGXmAsA9/KRVKKJ0CgYEA7fkb\n/3p/Ap3keRoQlWtfSL67CoHMQadpW0he1LZfp0V1fPrloQ/nrIVc6bwydExX/KiQ\nHBTl6h9TptXn6ijRQX3dzdxGCdC2d44HpH8NPknC5hynWab3pJ1H7e+xdhhYYJ8Y\nnWwcl4o+P8dnUyfAmnwyn3sZBBQKsihr6rF09DECgYBmfn1NgLp6MkGdS7wD1pXO\nJa6F7xpbkb9VYRxVTgkVtRv5k1dGA/0U/iHHr0hE8uQT/jl4GWrIpsKHrortlTs0\nP1LC1Hy9B64ZE/uHyDZgI5jRAV3Z6mDaS8hu4SBmwUn2q/0+VxVaSqEUh4IoMo1D\n+vzQQ8AVGZ08Kd6qu15GmQKBgHFdHk1SGXcxqElYdVX41GdfFNMoihksmy/1Bdfn\nGSIiIJntG77iSMcSsPRXxuFIDRI7aos2GWCyk7MCa3xM/YJpZ2RN7r92QbYqXtGq\nBLELimD8fWxj8czlcAKVEMDlUBSXNa6odeZq4MSZRUuDwGjXiXYXug8LTR0ZzG79\nIm3BAoGAZl0JIOCIZjOB49uY8Hz/6RHiCg0dj9Bg+xhtLoJLQwtd7AWWO7cGO/sF\nWYQkCff2Mz8cT3WyTvgMxF5uA6exlAtDTgLGN05eyk066WNYsVjLz6a2m3evFKot\nb5xKH7ba2F3IXvsT1vQNnc7lX8PCVBae/Pt7Xu4wUZiyOYoMdfs=\n-----END
         RSA PRIVATE KEY-----", "ssh_virt_type": "virsh", "ssh_address": "192.168.122.1"},
-        "target_provision_state": null, "updated_at": "2015-06-03T11:03:18+00:00",
+        "target_provision_state": null, "updated_at": "2015-06-04T15:15:27+00:00",
         "last_error": null, "console_enabled": false, "extra": {"newly_discovered":
         "true", "block_devices": {"serials": ["QM00005"]}, "edeploy_facts": [["disk",
         "logical", "count", "1"], ["disk", "sda", "size", "44"], ["disk", "sda", "vendor",
@@ -1787,7 +1950,7 @@ http_interactions:
         "deploy_ramdisk": "e999a20d-2e76-4c45-8b66-ce78e470a7c7", "ssh_key_contents":
         "-----BEGIN RSA PRIVATE KEY-----\nMIIEogIBAAKCAQEA7QFu9SCcobkB7+bftNnlzsUEmRLB0mU3/EsY9M6luMrAzDIT\n8N3L6e013bwzCSDoDzTTXUee2NLH6kbisv2A+R7xlv5gSkt7fbaV4fX7gDTDrOM3\neqZJShKzBX1TU9CkrKCP+R09DpUeksItxm8HU2HfA7Ugd+rb1uYD7Hm9bMnWiK8L\nEn6gbJ1AmeTQ6z9L895ezesVgtEd1ibKJDrrBF/ux7KvezjdsI0lVliRc1JKPpO2\nsuD2PYrLSRGik4KmuIgJuMfeSjTYrKkaX7NsDCmznfod7lS/eNtKbSOcVZpK/jrh\n+LVEnNTiDxZcuQlzUo54VTnIjMp1yylYtgtqDQIDAQABAoIBAHZ/U/nNX2LgfF51\nIX5rv6G9Ecpy/WNzZiWHaqfjtioJfZHaq+uvCWghSOBfW2kCAeSwdclaqMohwQCa\nhngVlWl5FjN3Za9fxBObuZ6rfR6hwv/q7u8sutIFPWrOOV5boCoLcVCNVNy4o/ue\niIKBOrlu4rEY2235iAcPJAEU8Se1YE+3qAxEktFRAj2bgPs+ldr3gqTvmUBDLpPA\nD4td4zw+zLZ5QR/BXGNmNjCkjusxMmTvekkk8Qrf7zvHiV4M4VDcQLM7St4cTRyT\nTcGhXn79GRQ0+joqcZSwUli9X8Nu4ue5+RZNi/hN9YymwNWfhUzsYPcBKrPJ1sC0\nzoSSssECgYEA/vWP6AnfQ2I8R2mYkdsNl10w6S5kHAY/Oo7asPx3g8MmaFouOfuj\nWYX7vgN1cKYhELdGHrHEv1H7l8Si0RG2NIjNtQR8KDtXjl87ImohAHdVBzsqGxfB\nZCXiIwjfzBbwUQ614hNGdeJ0Zk3+ezdrb0KlVaZWGXmAsA9/KRVKKJ0CgYEA7fkb\n/3p/Ap3keRoQlWtfSL67CoHMQadpW0he1LZfp0V1fPrloQ/nrIVc6bwydExX/KiQ\nHBTl6h9TptXn6ijRQX3dzdxGCdC2d44HpH8NPknC5hynWab3pJ1H7e+xdhhYYJ8Y\nnWwcl4o+P8dnUyfAmnwyn3sZBBQKsihr6rF09DECgYBmfn1NgLp6MkGdS7wD1pXO\nJa6F7xpbkb9VYRxVTgkVtRv5k1dGA/0U/iHHr0hE8uQT/jl4GWrIpsKHrortlTs0\nP1LC1Hy9B64ZE/uHyDZgI5jRAV3Z6mDaS8hu4SBmwUn2q/0+VxVaSqEUh4IoMo1D\n+vzQQ8AVGZ08Kd6qu15GmQKBgHFdHk1SGXcxqElYdVX41GdfFNMoihksmy/1Bdfn\nGSIiIJntG77iSMcSsPRXxuFIDRI7aos2GWCyk7MCa3xM/YJpZ2RN7r92QbYqXtGq\nBLELimD8fWxj8czlcAKVEMDlUBSXNa6odeZq4MSZRUuDwGjXiXYXug8LTR0ZzG79\nIm3BAoGAZl0JIOCIZjOB49uY8Hz/6RHiCg0dj9Bg+xhtLoJLQwtd7AWWO7cGO/sF\nWYQkCff2Mz8cT3WyTvgMxF5uA6exlAtDTgLGN05eyk066WNYsVjLz6a2m3evFKot\nb5xKH7ba2F3IXvsT1vQNnc7lX8PCVBae/Pt7Xu4wUZiyOYoMdfs=\n-----END
         RSA PRIVATE KEY-----", "ssh_virt_type": "virsh", "ssh_address": "192.168.122.1"},
-        "target_provision_state": null, "updated_at": "2015-06-03T11:03:18+00:00",
+        "target_provision_state": null, "updated_at": "2015-06-04T15:15:27+00:00",
         "last_error": null, "console_enabled": false, "extra": {"newly_discovered":
         "true", "block_devices": {"serials": ["QM00005"]}, "edeploy_facts": [["disk",
         "logical", "count", "1"], ["disk", "sda", "size", "44"], ["disk", "sda", "vendor",
@@ -1854,7 +2017,7 @@ http_interactions:
         "rel": "bookmark"}], "maintenance_reason": null, "properties": {"memory_mb":
         "4096", "cpu_arch": "x86_64", "local_gb": "40", "cpus": "1", "capabilities":
         "boot_option:local"}, "provision_updated_at": "2015-06-01T11:11:40+00:00",
-        "power_state": "power on", "provision_state": "active", "reservation": null,
+        "power_state": "power on", "provision_state": "active", "reservation": "localhost.localdomain",
         "created_at": "2015-05-28T11:00:38+00:00", "instance_info": {"ramdisk": "bfd50aea-af25-4d35-9676-e7594107122c",
         "kernel": "5a8ed463-471c-4602-814f-155c77c8ac68", "root_gb": "40", "image_source":
         "27ee0f87-976c-4519-a395-5805165c85e4", "capabilities": "{\"boot_option\":
@@ -1863,7 +2026,7 @@ http_interactions:
         "rel": "self"}, {"href": "http://192.0.2.1:6385/nodes/df17c304-2f9f-4efa-a44c-7e12f0ad96cf/ports",
         "rel": "bookmark"}]}]}'
     http_version: 
-  recorded_at: Wed, 03 Jun 2015 11:03:20 GMT
+  recorded_at: Thu, 04 Jun 2015 15:15:27 GMT
 - request:
     method: get
     uri: http://192.0.2.1:9292/v1.1/images/detail
@@ -1876,7 +2039,7 @@ http_interactions:
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 97c8ba87082e463588dca89ed0e1d5b3
+      - 65a5a518cb9d4ffd8a927b9988933a93
   response:
     status:
       code: 200
@@ -1887,9 +2050,9 @@ http_interactions:
       Content-Length:
       - '2579'
       X-Openstack-Request-Id:
-      - req-req-4233a466-84e7-4f52-aa25-13783d224817
+      - req-req-4fd141e1-f28b-44ff-8543-e44e1c7aba65
       Date:
-      - Wed, 03 Jun 2015 11:03:21 GMT
+      - Thu, 04 Jun 2015 15:15:28 GMT
     body:
       encoding: UTF-8
       string: '{"images": [{"status": "active", "deleted_at": null, "name": "bm-deploy-ramdisk",
@@ -1924,7 +2087,7 @@ http_interactions:
         0, "checksum": "1b46154c65910ee3e70796eb93f3c490", "owner": "1b824a33e7e74d85adbd020d5f864686",
         "is_public": true, "virtual_size": null, "properties": {}, "size": 5026624}]}'
     http_version: 
-  recorded_at: Wed, 03 Jun 2015 11:03:21 GMT
+  recorded_at: Thu, 04 Jun 2015 15:15:28 GMT
 - request:
     method: get
     uri: http://192.0.2.1:9292/v1.1/images/detail?marker=5a8ed463-471c-4602-814f-155c77c8ac68
@@ -1937,7 +2100,7 @@ http_interactions:
       Content-Type:
       - application/json
       X-Auth-Token:
-      - 97c8ba87082e463588dca89ed0e1d5b3
+      - 65a5a518cb9d4ffd8a927b9988933a93
   response:
     status:
       code: 200
@@ -1948,14 +2111,14 @@ http_interactions:
       Content-Length:
       - '14'
       X-Openstack-Request-Id:
-      - req-req-73ddeb31-5169-486b-a7c6-32822a2de210
+      - req-req-f1c29278-4350-4c52-8e3d-586d1356699b
       Date:
-      - Wed, 03 Jun 2015 11:03:21 GMT
+      - Thu, 04 Jun 2015 15:15:28 GMT
     body:
       encoding: UTF-8
       string: '{"images": []}'
     http_version: 
-  recorded_at: Wed, 03 Jun 2015 11:03:21 GMT
+  recorded_at: Thu, 04 Jun 2015 15:15:28 GMT
 - request:
     method: get
     uri: http://192.0.2.1:8004/v1/1b824a33e7e74d85adbd020d5f864686/stacks/overcloud/f88eb16a-39f6-4436-819c-2a9a8b08915b/template
@@ -1970,7 +2133,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - 2f3c423440804c9c8e24232d8db58b7e
+      - e0e5b18f47ac45b09db3f8cef14dbe32
       X-Auth-User:
       - admin
       X-Auth-Key:
@@ -1985,9 +2148,9 @@ http_interactions:
       Content-Length:
       - '48965'
       X-Openstack-Request-Id:
-      - req-f8a182a1-78d2-4422-862f-14018c2bee29
+      - req-35484e62-d81f-404f-87a2-534d510348a8
       Date:
-      - Wed, 03 Jun 2015 11:03:21 GMT
+      - Thu, 04 Jun 2015 15:15:28 GMT
     body:
       encoding: UTF-8
       string: '{"outputs": {"KeystoneURL": {"description": "URL for the Overcloud
@@ -2579,5 +2742,131 @@ http_interactions:
         "OS::Heat::StructuredDeployments", "properties": {"config": {"get_attr": ["allNodesConfig",
         "config_id"]}, "servers": {"get_attr": ["Swift-Storage", "attributes", "nova_server_resource"]}}}}}'
     http_version: 
-  recorded_at: Wed, 03 Jun 2015 11:03:21 GMT
+  recorded_at: Thu, 04 Jun 2015 15:15:28 GMT
+- request:
+    method: get
+    uri: http://192.0.2.1:9696/v2.0/networks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.29.0 fog-core/1.30.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - a787542cb4974201a425eaf7e2974dfe
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Content-Length:
+      - '389'
+      X-Openstack-Request-Id:
+      - req-bad592cd-ecc7-4ce7-a30a-e75d07a2d43d
+      Date:
+      - Thu, 04 Jun 2015 15:15:28 GMT
+    body:
+      encoding: UTF-8
+      string: '{"networks": [{"status": "ACTIVE", "subnets": ["215c79f2-bbe7-4741-ace3-c986a93c6ad3"],
+        "name": "ctlplane", "provider:physical_network": "ctlplane", "router:external":
+        false, "tenant_id": "1b824a33e7e74d85adbd020d5f864686", "admin_state_up":
+        true, "mtu": 0, "shared": false, "provider:network_type": "flat", "id": "c3b49ed8-74a9-4aa3-b1d0-0a00aadf4523",
+        "provider:segmentation_id": null}]}'
+    http_version: 
+  recorded_at: Thu, 04 Jun 2015 15:15:28 GMT
+- request:
+    method: get
+    uri: http://192.0.2.1:9696/v2.0/subnets
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.29.0 fog-core/1.30.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - a787542cb4974201a425eaf7e2974dfe
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Content-Length:
+      - '522'
+      X-Openstack-Request-Id:
+      - req-6ef228fa-19af-4054-a1d0-4d98462c0331
+      Date:
+      - Thu, 04 Jun 2015 15:15:28 GMT
+    body:
+      encoding: UTF-8
+      string: '{"subnets": [{"name": "", "enable_dhcp": true, "network_id": "c3b49ed8-74a9-4aa3-b1d0-0a00aadf4523",
+        "tenant_id": "1b824a33e7e74d85adbd020d5f864686", "dns_nameservers": ["192.168.122.1"],
+        "gateway_ip": "192.0.2.1", "ipv6_ra_mode": null, "allocation_pools": [{"start":
+        "192.0.2.5", "end": "192.0.2.24"}], "host_routes": [{"nexthop": "192.0.2.1",
+        "destination": "169.254.169.254/32"}], "ip_version": 4, "ipv6_address_mode":
+        null, "cidr": "192.0.2.0/24", "id": "215c79f2-bbe7-4741-ace3-c986a93c6ad3",
+        "subnetpool_id": null}]}'
+    http_version: 
+  recorded_at: Thu, 04 Jun 2015 15:15:28 GMT
+- request:
+    method: get
+    uri: http://192.0.2.1:9696/v2.0/security-groups
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.29.0 fog-core/1.30.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - a787542cb4974201a425eaf7e2974dfe
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Content-Length:
+      - '1550'
+      X-Openstack-Request-Id:
+      - req-17bf85b9-c344-4b08-aa13-7ef7dfbe45e8
+      Date:
+      - Thu, 04 Jun 2015 15:15:28 GMT
+    body:
+      encoding: UTF-8
+      string: '{"security_groups": [{"tenant_id": "1b824a33e7e74d85adbd020d5f864686",
+        "description": "Default security group", "id": "87c65fff-14bf-4756-8e9b-416ebee7b02e",
+        "security_group_rules": [{"remote_group_id": null, "direction": "egress",
+        "remote_ip_prefix": null, "protocol": null, "ethertype": "IPv6", "tenant_id":
+        "1b824a33e7e74d85adbd020d5f864686", "port_range_max": null, "port_range_min":
+        null, "id": "92d6affc-2481-4155-ba58-03814f2d9b14", "security_group_id": "87c65fff-14bf-4756-8e9b-416ebee7b02e"},
+        {"remote_group_id": "87c65fff-14bf-4756-8e9b-416ebee7b02e", "direction": "ingress",
+        "remote_ip_prefix": null, "protocol": null, "ethertype": "IPv4", "tenant_id":
+        "1b824a33e7e74d85adbd020d5f864686", "port_range_max": null, "port_range_min":
+        null, "id": "a93162db-fabd-4f18-9af5-d1fbd6e7a987", "security_group_id": "87c65fff-14bf-4756-8e9b-416ebee7b02e"},
+        {"remote_group_id": "87c65fff-14bf-4756-8e9b-416ebee7b02e", "direction": "ingress",
+        "remote_ip_prefix": null, "protocol": null, "ethertype": "IPv6", "tenant_id":
+        "1b824a33e7e74d85adbd020d5f864686", "port_range_max": null, "port_range_min":
+        null, "id": "cabe04ac-9ccb-43a0-afd3-54e0c263cdf0", "security_group_id": "87c65fff-14bf-4756-8e9b-416ebee7b02e"},
+        {"remote_group_id": null, "direction": "egress", "remote_ip_prefix": null,
+        "protocol": null, "ethertype": "IPv4", "tenant_id": "1b824a33e7e74d85adbd020d5f864686",
+        "port_range_max": null, "port_range_min": null, "id": "fcae5e0b-c4b3-44ef-b509-d36981fe0a4e",
+        "security_group_id": "87c65fff-14bf-4756-8e9b-416ebee7b02e"}], "name": "default"}]}'
+    http_version: 
+  recorded_at: Thu, 04 Jun 2015 15:15:28 GMT
 recorded_with: VCR 2.9.3

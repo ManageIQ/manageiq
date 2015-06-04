@@ -9,18 +9,16 @@ class CloudManager < BaseManager
   has_many :flavors,                       :foreign_key => :ems_id, :dependent => :destroy
   has_many :cloud_tenants,                 :foreign_key => :ems_id, :dependent => :destroy
   has_many :cloud_resource_quotas,         :foreign_key => :ems_id, :dependent => :destroy
-  has_many :floating_ips,                  :foreign_key => :ems_id, :dependent => :destroy
-  has_many :security_groups,               :foreign_key => :ems_id, :dependent => :destroy
-  has_many :cloud_networks,                :foreign_key => :ems_id, :dependent => :destroy
   has_many :cloud_volumes,                 :foreign_key => :ems_id, :dependent => :destroy
   has_many :cloud_volume_snapshots,        :foreign_key => :ems_id, :dependent => :destroy
   has_many :cloud_object_store_containers, :foreign_key => :ems_id, :dependent => :destroy
   has_many :cloud_object_store_objects,    :foreign_key => :ems_id, :dependent => :destroy
   has_many :key_pairs,                     :class_name  => "AuthPrivateKey", :as => :resource, :dependent => :destroy
 
-  alias_method :all_cloud_networks, :cloud_networks
-
   include HasManyOrchestrationStackMixin
+  include HasManyCloudNetworksMixin
+
+  alias_method :all_cloud_networks, :cloud_networks
 
   # Development helper method for Rails console for opening a browser to the EMS.
   #
