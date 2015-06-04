@@ -20,4 +20,17 @@ class ContainerNode < ActiveRecord::Base
   def ready_condition_status
     ready_condition.try(:status) || 'None'
   end
+
+  include EventMixin
+
+  def event_where_clause(assoc = :ems_events)
+    case assoc.to_sym
+    when :ems_events
+      # TODO: improve relationship using the id
+      ["container_node_name = ? AND ems_id = ?", name, ems_id]
+    when :policy_events
+      # TODO: implement policy events and its relationship
+      ["ems_id = ?", ems_id]
+    end
+  end
 end

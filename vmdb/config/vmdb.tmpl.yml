@@ -315,6 +315,13 @@ workers:
         :poll: 15.seconds
       :event_catcher_kubernetes:
         :poll: 1.seconds
+        :enabled_events:
+          Node:
+            - NodeReady
+            - NodeNotReady
+            - rebooted
+          Pod:
+            - scheduled
     :queue_worker_base:
       :defaults:
         :cpu_usage_threshold: 100.percent

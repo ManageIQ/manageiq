@@ -3494,6 +3494,10 @@
       :description: Display Individual Containers Providers
       :feature_type: view
       :identifier: ems_container_show
+    - :name: Timeline
+      :description: Display Timelines for Containers Providers
+      :feature_type: view
+      :identifier: ems_container_timeline
   - :name: Operate
     :description: Perform Operations on Containers Providers
     :feature_type: control
@@ -3540,6 +3544,10 @@
       :description: Display Individual Container Groups
       :feature_type: view
       :identifier: container_group_show
+    - :name: Timeline
+      :description: Display Timelines for Container Groups
+      :feature_type: view
+      :identifier: container_group_timeline
   - :name: Modify
     :description: Modify Container Groups
     :feature_type: admin
@@ -3577,6 +3585,10 @@
       :description: Display Individual Container Nodes
       :feature_type: view
       :identifier: container_node_show
+    - :name: Timeline
+      :description: Display Timelines for Container Nodes
+      :feature_type: view
+      :identifier: container_node_timeline
   - :name: Modify
     :description: Modify Container Nodes
     :feature_type: admin

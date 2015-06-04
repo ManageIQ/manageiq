@@ -1212,6 +1212,16 @@ module ApplicationHelper
       when "host_restart"
         return @record.is_available_now_error_message(:reboot) if @record.is_available_now_error_message(:reboot)
       end
+    when "ContainerNodeKubernetes"
+      case id
+      when "container_node_timeline"
+        return "No Timeline data has been collected for this Node" unless @record.has_events? || @record.has_events?(:policy_events)
+      end
+    when "ContainerGroupKubernetes"
+      case id
+      when "container_group_timeline"
+        return "No Timeline data has been collected for this ContainerGroup" unless @record.has_events? || @record.has_events?(:policy_events)
+      end
     when "MiqAction"
       case id
       when "action_edit"

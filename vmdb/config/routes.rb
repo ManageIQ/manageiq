@@ -348,7 +348,9 @@ Vmdb::Application.routes.draw do
         sections_field_changed
         show
         show_list
+        tl_chooser
         update
+        wait_for_task
       ) +
         adv_search_post +
         exp_post +
@@ -376,7 +378,9 @@ Vmdb::Application.routes.draw do
         sections_field_changed
         show
         show_list
+        tl_chooser
         update
+        wait_for_task
       ) +
         adv_search_post +
         exp_post +
@@ -671,7 +675,9 @@ Vmdb::Application.routes.draw do
         sections_field_changed
         show
         show_list
+        tl_chooser
         update
+        wait_for_task
       ) +
         adv_search_post +
         compare_post +

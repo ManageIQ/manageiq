@@ -522,6 +522,8 @@ event_groups:
     - compute.instance.reboot.end
     - compute.instance.suspend
     - compute.instance.resume
+    - NODE_REBOOT
+    - POD_SCHEDULED
     :detail:
     - PowerOffVM_Task
     - PowerOffVM_Task_Complete
@@ -599,6 +601,8 @@ event_groups:
     - VM_FAILURE
     - VM_NOT_RESPONDING
     - VmConfigMissingEvent
+    - NODE_NODEREADY
+    - NODE_NODENOTREADY
     :detail:
     - DatacenterRenamedEvent
     - GeneralUserEvent
@@ -1394,6 +1398,18 @@ event_handling:
   - policy:
     - src_vm
     - vm_poweroff
+  - refresh:
+    - ems
+  NODE_REBOOT:
+  - refresh:
+    - ems
+  NODE_NODEREADY:
+  - refresh:
+    - ems
+  NODE_NODENOTREADY:
+  - refresh:
+    - ems
+  POD_SCHEDULED:
   - refresh:
     - ems
 

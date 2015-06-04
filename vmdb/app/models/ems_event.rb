@@ -106,6 +106,10 @@ class EmsEvent < ActiveRecord::Base
     self.add(ems_id, EmsEvent::Parsers::Amazon.event_to_hash(event, ems_id))
   end
 
+  def self.add_kubernetes(ems_id, event)
+    add(ems_id, EmsEvent::Parsers::Kubernetes.event_to_hash(event, ems_id))
+  end
+
   def self.add(ems_id, event_hash)
     event_type = event_hash[:event_type]
     raise MiqException::Error, "event_type must be set in event" if event_type.nil?
