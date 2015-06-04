@@ -175,10 +175,6 @@ class MiqTask < ActiveRecord::Base
     self.binary_blob.binary = YAML.dump(value)
   end
 
-  def log_data
-    self.log_file.nil? ? nil : self.log_file.file_from_db
-  end
-
   def cleanup_log
     self.log_file.destroy unless self.log_file.nil?
   end
