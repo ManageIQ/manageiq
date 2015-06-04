@@ -1,15 +1,14 @@
-$:.push("#{File.dirname(__FILE__)}")
-require 'rubygems'
+require 'ffi'
 
 class WMIHelper
   WMI_ROOT_NAMESPACE = "root\\cimv2" unless defined?(WMI_ROOT_NAMESPACE)
 
-  platform = RbConfig::CONFIG['host_os'].to_sym
+  platform = FFI::Platform::OS
 
-  unless platform == :darwin
-    platform = :mswin if platform == :mingw
-    require "miq-wmi-#{platform}"
-    include Kernel.const_get("Wmi#{platform.to_s.capitalize}")
+  unless FFI::Platform.mac?
+    platform = 'mswin' if FFI::Platform.windows?
+    require_relative "miq-wmi-#{platform}"
+    include Kernel.const_get("Wmi#{platform.capitalize}")
   end
 
 	def initialize(server=nil, username=nil, password=nil, namespace=WMI_ROOT_NAMESPACE)
