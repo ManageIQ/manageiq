@@ -20,7 +20,7 @@ def process_comma_separated_object_array(sequence_id, option_key, value, hash)
   value.split(",").each do |entry|
     vmdb_obj = vmdb_object_from_array_entry(entry)
     next if vmdb_obj.nil?
-    options_value_array << vmdb_obj.respond_to?(:name) ? vmdb_obj.name : "#{vmdb_obj.class.name}::#{vmdb_obj.id}"
+    options_value_array << (vmdb_obj.respond_to?(:name) ? vmdb_obj.name : "#{vmdb_obj.class.name}::#{vmdb_obj.id}")
   end
   hash[sequence_id][option_key] = options_value_array
 end
