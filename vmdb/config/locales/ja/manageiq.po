@@ -7,7 +7,6 @@ msgid ""
 msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-11 22:51+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -73,6 +72,9 @@ msgstr "\"%{name}\": %{rep_count} が使用中のため、削除できません"
 msgid "\"%{record}\": %{task} successfully initiated"
 msgstr "\"%{record}\": %{task} が正常に開始されました"
 
+msgid "\"Unable to initiate scaling, obtaining of status failed: #{ex}\""
+msgstr ""
+
 msgid "% Savings"
 msgstr "% 節約"
 
@@ -93,6 +95,9 @@ msgstr "%s & %s"
 
 msgid "%s (%s)"
 msgstr "%s (%s)"
+
+msgid "%s (0)"
+msgstr "%s (0)"
 
 msgid "%s (All %s)"
 msgstr "%s (すべての %s)"
@@ -666,6 +671,9 @@ msgstr "<New LDAP Server>"
 
 msgid "<No Depot>"
 msgstr "<No Depot>"
+
+msgid "<Unnamed>"
+msgstr ""
 
 msgid "A %s must be chosen to commit this expression element"
 msgstr "この式要素を使用するには %s を選択することが必要です"
@@ -1717,6 +1725,9 @@ msgstr "注意: 設定ファイルへの手動による変更により、サー�
 msgid "Change %s value to submit reconfigure request"
 msgstr "%s 値を変更して再設定のリクエストを送信する"
 
+msgid "Change Group:"
+msgstr ""
+
 msgid "Change Password / Confirm Password"
 msgstr "パスワードの変更 / パスワードの確認"
 
@@ -1725,6 +1736,12 @@ msgstr "変更"
 
 msgid "Changing the UI Workers Count will immediately restart the webserver"
 msgstr "UI ワーカー数を変更するとウェブサイトが即時リスタートします"
+
+msgid "Channel Name(s)"
+msgstr ""
+
+msgid "Channel Name(s):"
+msgstr ""
 
 msgid "Chargeback"
 msgstr "チャージバック"
@@ -1938,6 +1955,9 @@ msgstr "ホストをクリックして設定を取得する"
 
 msgid "Click on this row to create a new entry"
 msgstr "この行をクリックして新しいエントリーを作成する"
+
+msgid "Click to Logout"
+msgstr ""
 
 msgid "Click to add a new entry"
 msgstr "クリックして新しいエントリーを追加する"
@@ -2623,6 +2643,18 @@ msgstr "コンテナーノード (%s)"
 msgid "Container Nodes (0)"
 msgstr "コンテナーノード (0)"
 
+msgid "Container Projects (%s)"
+msgstr ""
+
+msgid "Container Projects (0)"
+msgstr ""
+
+msgid "Container Routes (%s)"
+msgstr ""
+
+msgid "Container Routes (0)"
+msgstr ""
+
 msgid "Container Services (%s)"
 msgstr "コンテナーサービス (%s)"
 
@@ -2883,6 +2915,9 @@ msgstr "現在の %{model} \"%{name}\" を削除することができません"
 
 msgid "Current Backlog"
 msgstr "現在のバックログ"
+
+msgid "Current Group"
+msgstr ""
 
 msgid "Current Rates"
 msgstr "現在のレート"
@@ -3998,6 +4033,9 @@ msgstr "新規スケジュール追加時のエラー: "
 
 msgid "Error when creating a Service Dialog from Orchestration Template: "
 msgstr "オーケストレーションテンプレートからのサービスダイアログの作成時のエラー: "
+
+msgid "Error when saving new server name: "
+msgstr ""
 
 msgid "Error: Datastore import file upload expired"
 msgstr "エラー: データストアインポートファイルアップロードが期限切れになっています"
@@ -5288,6 +5326,9 @@ msgstr "最終メッセージ"
 msgid "Last Run Time"
 msgstr "最終実行時間"
 
+msgid "Last Transition Time"
+msgstr ""
+
 msgid "Last Update"
 msgstr "最終更新"
 
@@ -5590,12 +5631,20 @@ msgstr "ログファイル|更新日"
 msgid "Logging"
 msgstr "ログ"
 
+#, fuzzy
+#, fuzzy
+msgid "Logging into"
+msgstr "ログ"
+
 msgid "Login"
 msgstr "ログイン"
 
 msgid ""
 "Login not allowed, User's %s is missing. Please contact the administrator"
 msgstr "ログインが許可されませんでした、ユーザーの %s が見つかりません。管理者にお問い合わせください"
+
+msgid "Logout"
+msgstr ""
 
 msgid "Logs for this CFME Server are not available for viewing"
 msgstr "この CFME サーバー用のログは表示できません"
@@ -7892,6 +7941,9 @@ msgstr "新しいオーケストレーションテンプレート情報"
 msgid "New Parameter"
 msgstr "新規パラメーター"
 
+msgid "New Password"
+msgstr ""
+
 msgid "New setting will affect %s"
 msgstr "新規設定は %s に影響を与えます"
 
@@ -8318,6 +8370,9 @@ msgstr "VMの数"
 
 msgid "OR with a new expression element"
 msgstr "新規の式要素との論理和 (OR)"
+
+msgid "OS"
+msgstr ""
 
 msgid "OS %s"
 msgstr "OS %s"
@@ -10261,6 +10316,11 @@ msgstr "ポリシーイベント|ユーザー名"
 msgid "Port"
 msgstr "ポート"
 
+#, fuzzy
+#, fuzzy
+msgid "Port Configurations"
+msgstr "設定"
+
 msgid "Power Management"
 msgstr "電源管理"
 
@@ -10337,6 +10397,9 @@ msgstr "保護"
 msgid "Provider"
 msgstr "プロバイダー"
 
+msgid "Provider is not ready to be scaled, another operation is in progress."
+msgstr ""
+
 msgid "Providers"
 msgstr "プロバイダー"
 
@@ -10367,8 +10430,8 @@ msgstr "プロビジョニング %{model} - 選択 %{typ}"
 msgid "Provision Order"
 msgstr "プロビジョニング順序"
 
-msgid "Provisioned %s"
-msgstr "プロビジョニングされた %s"
+msgid "Provisioned Hosts"
+msgstr ""
 
 msgid "Provisioned VMs"
 msgstr "プロビジョニングされた VM"
@@ -10739,6 +10802,12 @@ msgstr "複製プロセス"
 msgid "Replication Worker"
 msgstr "複製ワーカー"
 
+msgid "Replicators (%s)"
+msgstr ""
+
+msgid "Replicators (0)"
+msgstr ""
+
 msgid "Report"
 msgstr "レポート"
 
@@ -10812,6 +10881,12 @@ msgstr "リポジトリー"
 
 msgid "Repository"
 msgstr "リポジトリー"
+
+msgid "Repository Name(s)"
+msgstr ""
+
+msgid "Repository Name(s):"
+msgstr ""
 
 msgid "Repository|Created on"
 msgstr "リポジトリー|作成日"
@@ -11481,6 +11556,9 @@ msgstr "先頭に移動する連続した %s を 1 つだけ選択する "
 msgid "Select only one or consecutive %s to move up"
 msgstr "上に移動する連続した %s を 1 つだけ選択する"
 
+msgid "Select to change to another Group"
+msgstr ""
+
 msgid "Selected"
 msgstr "選択"
 
@@ -11840,6 +11918,12 @@ msgstr "コンテナーグループの表示"
 msgid "Show Container Nodes"
 msgstr "コンテナーノードの表示"
 
+msgid "Show Container Projects"
+msgstr ""
+
+msgid "Show Container Routes"
+msgstr ""
+
 msgid "Show Container Services"
 msgstr "コンテナーサービスの表示"
 
@@ -11866,6 +11950,9 @@ msgstr "過去の日付を表示"
 
 msgid "Show Refresh Button"
 msgstr "リフレッシュボタンを表示"
+
+msgid "Show Replicators"
+msgstr ""
 
 msgid "Show Resource Pools"
 msgstr "リソースプールの表示"
@@ -12130,6 +12217,9 @@ msgstr "このコンテナーグループの親  %s を表示"
 
 msgid "Show this container node's parent %s"
 msgstr "このコンテナーノードの親  %s を表示"
+
+msgid "Show this container replicator's parent %s"
+msgstr ""
 
 msgid "Show this container service's parent %s"
 msgstr "このコンテナーサービスの親  %s を表示"
@@ -13172,9 +13262,6 @@ msgstr "更新"
 msgid "Update Password"
 msgstr "パスワードの更新"
 
-msgid "Update Repository"
-msgstr "リポジトリーの更新"
-
 msgid "Update Status"
 msgstr "ステータスの更新"
 
@@ -13548,6 +13635,12 @@ msgstr "バージョン"
 
 msgid "Version / Build"
 msgstr "バージョン / ビルド"
+
+msgid "View %s"
+msgstr ""
+
+msgid "View %s %s"
+msgstr ""
 
 msgid "View %s Folder"
 msgstr "%s フォルダーの表示"
