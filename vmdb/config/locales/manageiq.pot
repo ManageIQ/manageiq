@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-11 22:51+0200\n"
-"PO-Revision-Date: 2015-05-11 22:51+0200\n"
+"POT-Creation-Date: 2015-06-03 11:39+0200\n"
+"PO-Revision-Date: 2015-06-03 11:39+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -72,6 +72,9 @@ msgstr ""
 msgid "\"%{record}\": %{task} successfully initiated"
 msgstr ""
 
+msgid "\"Unable to initiate scaling, obtaining of status failed: #{ex}\""
+msgstr ""
+
 msgid "% Savings"
 msgstr ""
 
@@ -91,6 +94,9 @@ msgid "%s & %s"
 msgstr ""
 
 msgid "%s (%s)"
+msgstr ""
+
+msgid "%s (0)"
 msgstr ""
 
 msgid "%s (All %s)"
@@ -639,6 +645,9 @@ msgid "<New LDAP Server>"
 msgstr ""
 
 msgid "<No Depot>"
+msgstr ""
+
+msgid "<Unnamed>"
 msgstr ""
 
 msgid "A %s must be chosen to commit this expression element"
@@ -1679,6 +1688,9 @@ msgstr ""
 msgid "Change %s value to submit reconfigure request"
 msgstr ""
 
+msgid "Change Group:"
+msgstr ""
+
 msgid "Change Password / Confirm Password"
 msgstr ""
 
@@ -1686,6 +1698,12 @@ msgid "Changes"
 msgstr ""
 
 msgid "Changing the UI Workers Count will immediately restart the webserver"
+msgstr ""
+
+msgid "Channel Name(s)"
+msgstr ""
+
+msgid "Channel Name(s):"
 msgstr ""
 
 msgid "Chargeback"
@@ -1899,6 +1917,9 @@ msgid "Click on a Host to fetch its settings"
 msgstr ""
 
 msgid "Click on this row to create a new entry"
+msgstr ""
+
+msgid "Click to Logout"
 msgstr ""
 
 msgid "Click to add a new entry"
@@ -2579,6 +2600,18 @@ msgstr ""
 msgid "Container Nodes (0)"
 msgstr ""
 
+msgid "Container Projects (%s)"
+msgstr ""
+
+msgid "Container Projects (0)"
+msgstr ""
+
+msgid "Container Routes (%s)"
+msgstr ""
+
+msgid "Container Routes (0)"
+msgstr ""
+
 msgid "Container Services (%s)"
 msgstr ""
 
@@ -2838,6 +2871,9 @@ msgid "Current %{model} \"%{name}\" cannot be deleted"
 msgstr ""
 
 msgid "Current Backlog"
+msgstr ""
+
+msgid "Current Group"
 msgstr ""
 
 msgid "Current Rates"
@@ -3935,6 +3971,9 @@ msgid "Error when adding a new schedule: "
 msgstr ""
 
 msgid "Error when creating a Service Dialog from Orchestration Template: "
+msgstr ""
+
+msgid "Error when saving new server name: "
 msgstr ""
 
 msgid "Error: Datastore import file upload expired"
@@ -5220,6 +5259,9 @@ msgstr ""
 msgid "Last Run Time"
 msgstr ""
 
+msgid "Last Transition Time"
+msgstr ""
+
 msgid "Last Update"
 msgstr ""
 
@@ -5520,10 +5562,16 @@ msgstr ""
 msgid "Logging"
 msgstr ""
 
+msgid "Logging into"
+msgstr ""
+
 msgid "Login"
 msgstr ""
 
 msgid "Login not allowed, User's %s is missing. Please contact the administrator"
+msgstr ""
+
+msgid "Logout"
 msgstr ""
 
 msgid "Logs for this CFME Server are not available for viewing"
@@ -7821,6 +7869,9 @@ msgstr ""
 msgid "New Parameter"
 msgstr ""
 
+msgid "New Password"
+msgstr ""
+
 msgid "New setting will affect %s"
 msgstr ""
 
@@ -8234,6 +8285,9 @@ msgid "Number of VMs"
 msgstr ""
 
 msgid "OR with a new expression element"
+msgstr ""
+
+msgid "OS"
 msgstr ""
 
 msgid "OS %s"
@@ -10174,6 +10228,9 @@ msgstr ""
 msgid "Port"
 msgstr ""
 
+msgid "Port Configurations"
+msgstr ""
+
 msgid "Power Management"
 msgstr ""
 
@@ -10249,6 +10306,9 @@ msgstr ""
 msgid "Provider"
 msgstr ""
 
+msgid "Provider is not ready to be scaled, another operation is in progress."
+msgstr ""
+
 msgid "Providers"
 msgstr ""
 
@@ -10279,7 +10339,7 @@ msgstr ""
 msgid "Provision Order"
 msgstr ""
 
-msgid "Provisioned %s"
+msgid "Provisioned Hosts"
 msgstr ""
 
 msgid "Provisioned VMs"
@@ -10651,6 +10711,12 @@ msgstr ""
 msgid "Replication Worker"
 msgstr ""
 
+msgid "Replicators (%s)"
+msgstr ""
+
+msgid "Replicators (0)"
+msgstr ""
+
 msgid "Report"
 msgstr ""
 
@@ -10721,6 +10787,12 @@ msgid "Repositories"
 msgstr ""
 
 msgid "Repository"
+msgstr ""
+
+msgid "Repository Name(s)"
+msgstr ""
+
+msgid "Repository Name(s):"
 msgstr ""
 
 msgid "Repository|Created on"
@@ -11386,6 +11458,9 @@ msgstr ""
 msgid "Select only one or consecutive %s to move up"
 msgstr ""
 
+msgid "Select to change to another Group"
+msgstr ""
+
 msgid "Selected"
 msgstr ""
 
@@ -11743,6 +11818,12 @@ msgstr ""
 msgid "Show Container Nodes"
 msgstr ""
 
+msgid "Show Container Projects"
+msgstr ""
+
+msgid "Show Container Routes"
+msgstr ""
+
 msgid "Show Container Services"
 msgstr ""
 
@@ -11768,6 +11849,9 @@ msgid "Show Past Dates"
 msgstr ""
 
 msgid "Show Refresh Button"
+msgstr ""
+
+msgid "Show Replicators"
 msgstr ""
 
 msgid "Show Resource Pools"
@@ -12032,6 +12116,9 @@ msgid "Show this container group's parent %s"
 msgstr ""
 
 msgid "Show this container node's parent %s"
+msgstr ""
+
+msgid "Show this container replicator's parent %s"
 msgstr ""
 
 msgid "Show this container service's parent %s"
@@ -13036,9 +13123,6 @@ msgstr ""
 msgid "Update Password"
 msgstr ""
 
-msgid "Update Repository"
-msgstr ""
-
 msgid "Update Status"
 msgstr ""
 
@@ -13406,6 +13490,12 @@ msgid "Version"
 msgstr ""
 
 msgid "Version / Build"
+msgstr ""
+
+msgid "View %s"
+msgstr ""
+
+msgid "View %s %s"
 msgstr ""
 
 msgid "View %s Folder"
