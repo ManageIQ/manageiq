@@ -152,17 +152,6 @@ describe MiqTask do
       @miq_task.task_results.should == results
     end
 
-    it "should cleanup_log properly" do
-      l = FactoryGirl.create(:log_file, :miq_task_id => @miq_task.id)
-      @miq_task.reload
-      @miq_task.log_file.should == l
-
-      @miq_task.cleanup_log
-      @miq_task.reload
-      @miq_task.log_file.should be_nil
-      LogFile.count.should == 0
-    end
-
     it "should queue callback properly" do
       state   = MiqTask::STATE_QUEUED
       message = 'Message for testing: queue_callback'
