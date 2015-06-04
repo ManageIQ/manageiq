@@ -92,8 +92,8 @@ describe DashboardController do
     end
 
     main_tabs = {
-                  :clo => "vm_cloud_explorer_accords",
-                  :inf => "vm_infra_explorer_accords",
+                  :clo => "vm_cloud_explorer",
+                  :inf => "vm_infra_explorer",
                   :svc => "vm_explorer_accords"
                 }
     main_tabs.each do |tab, feature|
@@ -101,7 +101,7 @@ describe DashboardController do
         seed_specific_product_features(feature)
         session[:tab_url] = {}
         post :maintab, :tab => tab
-        url_controller = Menu::Manager.tab_features_by_id(tab).find { |f| f.ends_with?("_accords") }
+        url_controller = Menu::Manager.tab_features_by_id(tab).find { |f| f.ends_with?("_explorer") }
         response.body.should include("#{DashboardController::EXPLORER_FEATURE_LINKS[url_controller]}/explorer")
       end
     end
