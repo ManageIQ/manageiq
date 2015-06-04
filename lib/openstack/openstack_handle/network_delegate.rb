@@ -22,5 +22,9 @@ module OpenstackHandle
     def quotas_for_accessible_tenants
       @os_handle.accessor_for_accessible_tenants(SERVICE_NAME, :quotas_for_current_tenant, 'id', false)
     end
+
+    def networks_for_accessible_tenants
+      @os_handle.accessor_for_accessible_tenants(SERVICE_NAME, :networks, :id)
+    end
   end
 end
