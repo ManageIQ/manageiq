@@ -182,3 +182,31 @@ describe OpsController do
 
   end
 end
+
+describe OpsController do
+  let(:server) { active_record_instance_double("MiqServer", :logon_status => :ready) }
+
+  before do
+    EvmSpecHelper.seed_specific_product_features("ops_rbac")
+    feature = MiqProductFeature.find_all_by_identifier("ops_rbac")
+    @test_user_role  = FactoryGirl.create(:miq_user_role,
+                                          :name                 => "test_user_role",
+                                          :miq_product_features => feature)
+    test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => @test_user_role)
+    user = FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
+    User.stub(:current_user => user)
+    MiqServer.stub(:my_server).with(true).and_return(server)
+    controller.stub(:get_vmdb_config).and_return(:product => {})
+  end
+
+  context "#explorer" do
+    it "sets correct active accordion value" do
+      controller.instance_variable_set(:@sb, {})
+      controller.stub(:get_node_info)
+      controller.should_receive(:render)
+      controller.send(:explorer)
+      expect(response.status).to eq(200)
+      assigns(:sb)[:active_accord].should eq(:rbac)
+    end
+  end
+end
