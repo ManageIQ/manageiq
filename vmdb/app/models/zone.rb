@@ -112,18 +112,6 @@ class Zone < ActiveRecord::Base
     self.miq_servers.any? { |s| s.log_collection_active_recently?(since) }
   end
 
-  def log_depot_uri
-    get_log_depot_settings.try(:fetch_path, :uri)
-  end
-
-  def log_depot_configured?
-    get_log_depot_settings
-  end
-
-  def get_log_depot_settings
-    log_file_depot.try(:depot_hash)
-  end
-
   def host_ids
     hosts.collect(&:id)
   end

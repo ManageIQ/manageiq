@@ -145,7 +145,7 @@ describe LogFile do
 
       context "with MiqServer.post_logs raising missing log_depot settings exception" do
         before do
-          MiqServer.any_instance.stub(:log_depot_configured?).and_return(false)
+          MiqServer.any_instance.stub(:log_depot).and_return(nil)
           @message.delivered(*@message.deliver)
 
           @message = MiqQueue.where(:class_name => "MiqServer", :method_name => "post_logs").first
@@ -160,7 +160,6 @@ describe LogFile do
         before do
           @message.delivered(*@message.deliver)
           @message = MiqQueue.where(:class_name => "MiqServer", :method_name => "post_logs").first
-          MiqServer.any_instance.stub(:log_depot_configured?).and_return(true)
           VMDB::Util.stub(:zip_logs).and_return('/tmp/blah')
           VMDB::Util.stub(:get_evm_log_for_date).and_return('/tmp/blah')
           VMDB::Util.stub(:get_log_start_end_times).and_return((Time.now.utc - 600), Time.now.utc)

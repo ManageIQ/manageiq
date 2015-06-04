@@ -93,15 +93,12 @@ module OpsController::Settings::Schedules
       # This is only because ops_controller tries to set form locals, otherwise we should not use the @edit variable
       @edit = {:sched_id => @schedule.id}
 
-      settings = @schedule.file_depot.try(:depot_hash) || {}
-      unless settings[:uri].nil?
-        @protocol = DatabaseBackup.supported_depots[settings[:uri].split('://')[0]]
-        @uri_prefix = settings[:uri].split('://')[0]
-        @uri = settings[:uri].split('://')[1]
-      end
-      @log_userid = settings[:username]
-      @log_password = settings[:password]
-      @log_verify = settings[:password]
+      depot             = @schedule.file_depot
+      @uri_prefix, @uri = depot.try(:uri).to_s.split('://')
+      @protocol         = DatabaseBackup.supported_depots[@uri_prefix]
+      @log_userid       = depot.try(:authentication_userid)
+      @log_password     = depot.try(:authentication_password)
+      @log_verify       = depot.try(:authentication_password)
 
       # This is a hack to trick the controller into thinking we loaded an edit variable
       session[:edit] = {:key => "schedule_edit__#{@schedule.id || 'new'}"}
@@ -121,19 +118,14 @@ module OpsController::Settings::Schedules
     if schedule_check_compliance?(schedule)
       action_type = schedule.towhat.downcase + "_" + schedule.sched_action[:method]
     elsif schedule_db_backup?(schedule)
-      action_type = schedule.sched_action[:method]
-      settings    = schedule.file_depot.try(:depot_hash) || {}
-
-      unless settings[:uri].nil?
-        uri_prefix = settings[:uri].split('://')[0]
-        uri = settings[:uri].split('://')[1]
-        protocol = DatabaseBackup.supported_depots[uri_prefix]
-      end
-
-      depot_name = settings[:name]
-      log_userid = settings[:username]
-      log_password = settings[:password]
-      log_verify = settings[:password]
+      action_type     = schedule.sched_action[:method]
+      depot           = schedule.file_depot
+      uri_prefix, uri = depot.try(:uri).to_s.split('://')
+      protocol        = DatabaseBackup.supported_depots[uri_prefix]
+      depot_name      = depot.try(:name)
+      log_userid      = depot.try(:authentication_userid)
+      log_password    = depot.try(:authentication_password)
+      log_verify      = depot.try(:authentication_password)
     else
       if schedule.towhat.nil?
         action_type = "vm"

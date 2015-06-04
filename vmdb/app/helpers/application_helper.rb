@@ -1254,7 +1254,7 @@ module ApplicationHelper
       when "collect_logs", "collect_current_logs"
         return "Cannot collect current logs unless the #{ui_lookup(:table=>"miq_servers")} is started" if @record.status != "started"
         return "Log collection is already in progress for this #{ui_lookup(:table=>"miq_servers")}" if @record.log_collection_active_recently?
-        return "Log collection requires the Log Depot settings to be configured" if !@record.log_depot_configured? && !@record.zone.log_depot_configured?
+        return "Log collection requires the Log Depot settings to be configured" unless @record.log_depot
       when "delete_server"
         return "Server #{@record.name} [#{@record.id}] can only be deleted if it is stopped or has not responded for a while" if !@record.is_deleteable?
       when "restart_workers"
@@ -1398,7 +1398,7 @@ module ApplicationHelper
       case id
       when "collect_logs", "collect_current_logs"
         return "Cannot collect current logs unless there are started #{ui_lookup(:tables=>"miq_servers")} in the Zone" if @record.miq_servers.collect { |s| s.status == "started" ? true : nil }.compact.length == 0
-        return "This Zone and one or more active #{ui_lookup(:tables=>"miq_servers")} in this Zone do not have Log Depot settings configured, collection not allowed" if !@record.log_depot_configured? && @record.miq_servers.collect { |s| s.log_depot_configured? ? true : nil }.compact.length == 0
+        return "This Zone and one or more active #{ui_lookup(:tables=>"miq_servers")} in this Zone do not have Log Depot settings configured, collection not allowed" if @record.miq_servers.select(&:log_depot).blank?
         return "Log collection is already in progress for one or more #{ui_lookup(:tables=>"miq_servers")} in this Zone" if @record.log_collection_active_recently?
       when "zone_delete"
         if @selected_zone.name.downcase == "default"
