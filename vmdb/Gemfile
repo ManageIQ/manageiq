@@ -74,7 +74,7 @@ gem "open4",                          "~>1.3.0",      :require => false
 gem "ovirt_metrics",                  "~>1.0.1",      :require => false
 
 if RUBY_PLATFORM == 'java'
-  gem "sequel", :require => false
+  gem "activerecord-jdbcpostgresql-adapter", "~>1.3.16", :require => false
 else
   gem "pg", "~>0.12.2", :require => false
 end
