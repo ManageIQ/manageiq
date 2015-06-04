@@ -3,7 +3,6 @@ require 'uri'
 require 'mount/miq_generic_mount_session'
 
 class LogFile < ActiveRecord::Base
-  has_one    :binary_blob, :as          => :resource, :dependent => :destroy
   belongs_to :resource,    :polymorphic => true
   belongs_to :file_depot
   belongs_to :miq_task
@@ -61,7 +60,7 @@ class LogFile < ActiveRecord::Base
     return if method.nil?
     return self.send("remove_log_file_#{method}") if respond_to?("remove_log_file_#{method}")
 
-    #At this point db and and ftp should have returned
+    #At this point ftp should have returned
     klass = Object.const_get("Miq#{method.capitalize}Session")
     klass.new(legacy_depot_hash).remove(log_uri)
   rescue Exception => err
@@ -75,7 +74,7 @@ class LogFile < ActiveRecord::Base
     return true if method.nil?
     return self.send("file_exists_#{method}?") if respond_to?("file_exists_#{method}?")
 
-    #At this point db and and ftp should have returned
+    #At this point ftp should have returned
     klass = Object.const_get("Miq#{method.capitalize}Session")
     klass.new(legacy_depot_hash).exist?(log_uri)
   end
@@ -130,17 +129,6 @@ class LogFile < ActiveRecord::Base
     end
   end
 
-  def file_from_db
-    log_header = "MIQ(#{self.class.name}-file_from_db)"
-    $log.info("#{log_header} Returning Log Data from db for logfile #{self.id}")
-    bb = self.binary_blob
-    return bb.nil? ? nil : bb.binary
-  end
-
-  def blob_size
-    self.binary_blob.size rescue nil
-  end
-
   def self.historical_logfile
     empty_logfile(true)
   end
@@ -170,17 +158,6 @@ class LogFile < ActiveRecord::Base
   def self.do_ping?
     self.get_ping_depot_options
     @@do_ping ||= @@ping_depot_options[:ping_depot] == true
-  end
-
-  def upload_log_file_db
-    log_header       = "MIQ(#{self.class.name}-upload_log_file_db)"
-    self.binary_blob = BinaryBlob.new(:name => "logs", :data_type => "zip")
-    self.binary_blob.store_binary(local_file)
-    self.save
-    $log.info("#{log_header} Created blob id: [#{self.binary_blob.id}] for log_file id: [#{self.id}]")
-
-    #Return a nil URI
-    nil
   end
 
   def upload_log_file_ftp
