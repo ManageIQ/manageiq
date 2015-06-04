@@ -12,7 +12,7 @@ describe FixAuth::FixDatabaseYml do
   it "updates password" do
     with_databaseyml("oldpassword") do |databaseyml|
       FixAuth::FixDatabaseYml.file_name = databaseyml
-      FixAuth::FixDatabaseYml.run(:hardcode => 'newpassword')
+      FixAuth::FixDatabaseYml.run(:hardcode => 'newpassword', :silent => true)
 
       expect(dbpassword(databaseyml)).to be_encrypted("newpassword")
     end
@@ -21,7 +21,7 @@ describe FixAuth::FixDatabaseYml do
   it "does not add a password" do
     with_databaseyml do |databaseyml|
       FixAuth::FixDatabaseYml.file_name = databaseyml
-      FixAuth::FixDatabaseYml.run
+      FixAuth::FixDatabaseYml.run(:silent => true)
       expect(dbpassword(databaseyml)).to be_nil
     end
   end

@@ -170,7 +170,7 @@ describe FixAuth::AuthModel do
 
     it "should update with complex contenders" do
       v1 # make sure record exists
-      subject.run
+      subject.run(:silent => true)
       expect(v1.reload.value).to be_encrypted_version(2)
     end
   end
