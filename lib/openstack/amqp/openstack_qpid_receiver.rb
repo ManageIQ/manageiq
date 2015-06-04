@@ -15,7 +15,7 @@ class OpenstackQpidReceiver
   #              fetching more from the broker (default=50)
   # * :duration: The length of time (in seconds) the receiver should wait for a
   #              message from the broker before timing out (default=10 seconds)
-  def initialize(connection, service, exchange_name, subject, options = {})
+  def initialize(connection, service, exchange_name, subject, client_ip, options = {})
     raise "qpid_messaging is not available" unless OpenstackQpidConnection.available?
 
     @options = {:capacity => 50, :duration => 10}
@@ -26,6 +26,7 @@ class OpenstackQpidReceiver
     @service          = service
     @exchange_name    = exchange_name
     @subject          = subject
+    @client_ip        = client_ip
     @capacity         = @options[:capacity]
     @duration_seconds = @options[:duration]
   end
@@ -105,6 +106,6 @@ EOD
   end
 
   def queue_name
-    @queue_name ||= "miq-#{@connection.hostname}-#{@exchange_name}".gsub(/\//, "_")
+    @queue_name ||= "miq-#{@client_ip}-#{@exchange_name}".gsub(/\//, "_")
   end
 end

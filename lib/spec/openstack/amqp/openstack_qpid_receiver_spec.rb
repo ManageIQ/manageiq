@@ -33,7 +33,7 @@ describe OpenstackQpidReceiver do
     qreceiver.stub(:available).and_return(3, 2, 1, 0)
     qreceiver.stub(:get).and_return(qpid_messages[0], qpid_messages[1], qpid_messages[2])
 
-    receiver = OpenstackQpidReceiver.new(qconnection, "service", "exchange", "topic")
+    receiver = OpenstackQpidReceiver.new(qconnection, "service", "exchange", "topic", "10.11.12.13")
     receiver.stub(:address).and_return("")
     receiver.stub(:duration).and_return(0)
 
