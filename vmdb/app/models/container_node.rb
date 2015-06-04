@@ -11,7 +11,7 @@ class ContainerNode < ActiveRecord::Base
 
   delegate   :hardware, :to => :computer_system
 
-  virtual_column :condition_ready, :type => :string, :uses => :container_node_conditions
+  virtual_column :ready_condition_status, :type => :string, :uses => :container_node_conditions
 
   def ready_condition
     container_node_conditions.find_by_name('Ready')
