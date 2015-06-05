@@ -629,6 +629,19 @@ class VmOrTemplate < ActiveRecord::Base
     end
 
     self.disconnect_host
+
+    disconnect_stack if respond_to?(:orchestration_stack)
+  end
+
+  def disconnect_stack(stack = nil)
+    return unless orchestration_stack
+    return if stack && stack != orchestration_stack
+
+    log_text = " from stack [#{orchestration_stack.name}] id [#{orchestration_stack.id}]"
+    _log.info "Disconnecting Vm [#{name}] id [#{id}]#{log_text}"
+
+    self.orchestration_stack = nil
+    save
   end
 
   def connect_ems(e)
