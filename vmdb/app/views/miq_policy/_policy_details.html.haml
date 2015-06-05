@@ -209,7 +209,7 @@
                         %table
                           %tbody
                             - fa.each do |a|
-                              %tr{title => _("View this Event Action"),
+                              %tr{:title => _("View this Event Action"),
                                   :onclick => "cfmeDynatree_activateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}_a-#{to_cid(a.id)}');"}
                                 %td
                                   %img{:src => "/images/icons/new/x.png"}
