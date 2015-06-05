@@ -256,7 +256,7 @@ module ApplicationController::CiProcessing
       return
     end
     @gtl_url = "/vm/retire?"
-    session[:changed] = @changed = true
+    session[:changed] = @changed = false
     drop_breadcrumb( {:name=>"Retire #{kls.to_s.pluralize}", :url=>"/#{session[:controller]}/tagging"} )
     session[:cat] = nil                 # Clear current category
     @retireitems = kls.find(session[:retire_items]).sort_by(&:name) # Get the db records
@@ -278,6 +278,8 @@ module ApplicationController::CiProcessing
 
   # Ajax method fired when retire date is changed
   def retire_date_changed
+    changed = (params[:miq_date_1] != session[:retire_date])
+
     if params[:miq_date_1]
       session[:retire_date] = params[:miq_date_1] if params[:miq_date_1]
     end
@@ -296,6 +298,7 @@ module ApplicationController::CiProcessing
         page << javascript_show("remove_button")
         page << javascript_enable_field('retirement_warn')
       end
+      page << javascript_for_miq_button_visibility_changed(changed)
       page << "miqSparkle(false);"
     end
   end
