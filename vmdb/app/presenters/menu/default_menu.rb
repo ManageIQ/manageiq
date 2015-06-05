@@ -28,7 +28,7 @@ module Menu
           Menu::Item.new('cloud_tenant',        N_('Tenants'),             'cloud_tenant',              {:feature => 'cloud_tenant_show_list'},                  '/cloud_tenant'),
           Menu::Item.new('flavor',              N_('Flavors'),             'flavor',                    {:feature => 'flavor_show_list'},                        '/flavor'),
           Menu::Item.new('security_group',      N_('Security Groups'),     'security_group',            {:feature => 'security_group_show_list'},                '/security_group'),
-          Menu::Item.new('vm_cloud',            N_('Instances'),           'vm_cloud_explorer_accords', {:feature => 'vm_cloud_explorer_accords', :any => true}, '/vm_cloud/explorer'),
+          Menu::Item.new('vm_cloud',            N_('Instances'),           'vm_cloud_explorer', {:feature => 'vm_cloud_explorer_accords', :any => true}, '/vm_cloud/explorer'),
           Menu::Item.new('orchestration_stack', N_('Stacks'),              'orchestration_stack',       {:feature => 'orchestration_stack_show_list'},           '/orchestration_stack')
         ])
       end
@@ -41,7 +41,7 @@ module Menu
           Menu::Item.new('ems_infra',        N_('Providers'),        'ems_infra',     {:feature => 'ems_infra_show_list'},     '/ems_infra'),
           Menu::Item.new('ems_cluster',      clusters_name,          'ems_cluster',   {:feature => 'ems_cluster_show_list'},   '/ems_cluster'),
           Menu::Item.new('host',             hosts_name,             'host',          {:feature => 'host_show_list'},          '/host'),
-          Menu::Item.new('vm_infra',         N_('Virtual Machines'), 'vm_infra_explorer_accords',
+          Menu::Item.new('vm_infra',         N_('Virtual Machines'), 'vm_infra_explorer',
                                                                                       {:feature => 'vm_infra_explorer_accords', :any => true},
                                                                                                                                '/vm_infra/explorer'),
           Menu::Item.new('resource_pool',    N_('Resource Pools'),   'resource_pool', {:feature => 'resource_pool_show_list'}, '/resource_pool'),
