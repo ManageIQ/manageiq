@@ -21,6 +21,14 @@ class ContainerNode < ActiveRecord::Base
     ready_condition.try(:status) || 'None'
   end
 
+  def system_distribution
+    computer_system.try(:operating_system).try(:distribution)
+  end
+
+  def kernel_version
+    computer_system.try(:operating_system).try(:kernel_version)
+  end
+
   include EventMixin
 
   def event_where_clause(assoc = :ems_events)

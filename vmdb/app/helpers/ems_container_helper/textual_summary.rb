@@ -10,10 +10,10 @@ module EmsContainerHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w(container_groups container_services container_replicators container_nodes )
-    if @ems.kind_of?(EmsOpenshift)
-      items.concat(%w(container_routes container_projects))
-    end
+    # Order of items should be from parent to child
+    items = []
+    items.concat(%w(container_projects container_routes)) if @ems.kind_of?(EmsOpenshift)
+    items.concat(%w(container_services container_replicators container_groups container_nodes))
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 

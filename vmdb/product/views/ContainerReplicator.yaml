@@ -20,6 +20,8 @@ db: ContainerReplicator
 # Columns to fetch from the main table
 cols:
 - name
+- replicas
+- current_replicas
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -30,10 +32,14 @@ include_for_find:
 # Order of columns (from all tables)
 col_order: 
 - name
+- replicas
+- current_replicas
 
 # Column titles, in order
 headers:
 - Name
+- Replicas
+- Current Replicas
 
 # Condition(s) string for the SQL query
 conditions: 
