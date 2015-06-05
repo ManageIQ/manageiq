@@ -15,6 +15,14 @@ class EmsOpenshift < EmsContainer
     self.class.api_version
   end
 
+  def supported_auth_types
+    %w(default password bearer)
+  end
+
+  def supports_authentication?(authtype)
+    supported_auth_types.include?(authtype.to_s)
+  end
+
   def api_version=(_value)
     raise 'OpenShift api_version cannot be modified'
   end

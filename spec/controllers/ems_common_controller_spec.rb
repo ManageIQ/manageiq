@@ -134,3 +134,26 @@ describe EmsCloudController do
     end
   end
 end
+
+describe EmsContainerController do
+  context "::EmsCommon" do
+    context "#update" do
+      it "updates provider with new token" do
+        set_user_privileges
+        @ems = EmsKubernetes.create(:name => "k8s", :hostname => "10.10.10.1", :port => 5000)
+        controller.instance_variable_set(:@edit,
+                                         :new    => {:name         => @ems.name,
+                                                     :emstype      => @ems.type,
+                                                     :hostname     => @ems.hostname,
+                                                     :port         => @ems.port,
+                                                     :bearer_token => 'valid-token'},
+                                         :key    => "ems_edit__#{@ems.id}",
+                                         :ems_id => @ems.id)
+        session[:edit] = assigns(:edit)
+        post :update, :button => "save", :id => @ems.id, :type => @ems.type
+        response.status.should == 200
+        EmsKubernetes.last.authentication_token("bearer").should == "valid-token"
+      end
+    end
+  end
+end
