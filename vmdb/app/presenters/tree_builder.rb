@@ -14,6 +14,8 @@ class TreeBuilder
     when :images           then TreeBuilderImages
     when :instances_filter then TreeBuilderInstancesFilter
     when :images_filter    then TreeBuilderImagesFilter
+    when :vms_instances_filter    then TreeBuilderVmsInstancesFilter
+    when :templates_images_filter then TreeBuilderTemplatesImagesFilter
     end
   end
 
