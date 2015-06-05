@@ -12,7 +12,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2015-06-04 01:52+0000\n"
+"PO-Revision-Date: 2015-06-05 02:04+0000\n"
 "Last-Translator: asasaki <asasaki@redhat.com>\n"
 "Language-Team: English\n"
 "Language: ja\n"
@@ -102,7 +102,7 @@ msgid "%s (All cloud tenants present on this host)"
 msgstr "%s (このホストにあるすべてのクラウドテナント)"
 
 msgid "%s Being Tagged"
-msgstr "%s がタグ付けされています"
+msgstr "%s のタグ付け"
 
 msgid "%s Button not yet implemented"
 msgstr "%s ボタンが実装されていません"
@@ -404,7 +404,7 @@ msgid ""
 msgstr "%{typ} リクエストが再送信されました。あなたの %{title} の準備ができた時点で通知が送信されます"
 
 msgid "%{typ} in %{model} \"%{name}\""
-msgstr "%{model} \"%{name}\" 中の %{typ} "
+msgstr "%{model} \"%{name}\" 内の %{typ} "
 
 msgid ""
 "%{typ} settings saved for CFME Server \"%{name} [%{server_id}]\" in Zone "
@@ -463,7 +463,7 @@ msgid "(current)"
 msgstr " (現在)"
 
 msgid "(leave blank for default)"
-msgstr "(デフォルトの場合は空白にしてください)"
+msgstr "(デフォルトの場合は空白にする)"
 
 msgid "(optional) the address of an alternate service"
 msgstr "(オプション) 代替サービスのアドレス"
@@ -555,7 +555,7 @@ msgid "* No Events are defined%s."
 msgstr "* イベントが定義されていません。%s"
 
 msgid "* Only a single value can be assigned from these Tag Categories"
-msgstr "* タグのカテゴリーから割り当て可能な値は 1 つだけです"
+msgstr "* タグのカテゴリーから割り当てることのできる値は 1 つだけです"
 
 msgid "* Performance Interval"
 msgstr "* パフォーマンス間隔"
@@ -585,7 +585,7 @@ msgid "* Requirements: File-type - PNG; Dimensions - 350x70."
 msgstr "*  [要件] ファイルタイプ :  PNG、寸法 - 350x70"
 
 msgid "* Saving a blank date will remove all retirement dates"
-msgstr "* 日付を空白のまま保存すると、すべてのリタイア日が削除されます"
+msgstr "* 日付をブランクにして保存すると、リタイア日がすべて削除されます。"
 
 msgid "* Select one or more consecutive fields to move up or down."
 msgstr "* 上下に移動する 1 つ以上の連続したフィールドを選択してください。"
@@ -639,7 +639,7 @@ msgid ""
 msgstr "4 - 毎日のトレンドを計算するためのトレンドオプションを変更することができます。"
 
 msgid "5 - Press the Submit button."
-msgstr "5 - 「送信」ボタンを押してください"
+msgstr "5 - 「送信」ボタンを押してください。"
 
 msgid "<Choose a Group>"
 msgstr "<グループの選択>"
@@ -836,10 +836,10 @@ msgid "Adding a new %s"
 msgstr "新規 %s の追加"
 
 msgid "Adding a new Orchestration Template"
-msgstr "新規オーケストレーションテンプレートを追加しています"
+msgstr "新規オーケストレーションテンプレートを追加"
 
 msgid "Adding a new Service Dialog from Orchestration Template \"%s\""
-msgstr "オーケストレーションテンプレート \"%s\" から新しいサービスダイアログを追加しています"
+msgstr "オーケストレーションテンプレート \"%s\" から新しいサービスダイアログを追加"
 
 msgid "Admin Role Filter:"
 msgstr "管理者のロールフィルター:"
@@ -848,16 +848,16 @@ msgid "Advanced"
 msgstr "詳細"
 
 msgid "Advanced Search"
-msgstr "高度な検索"
+msgstr "詳細検索"
 
 msgid "Advanced Settings (%s)"
-msgstr "高度な設定 (%s)"
+msgstr "詳細設定 (%s)"
 
 msgid "Advanced Settings (0)"
-msgstr "高度な設定 (0)"
+msgstr "詳細設定 (0)"
 
 msgid "Advanced setting"
-msgstr "高度な設定"
+msgstr "詳細設定"
 
 msgid "AdvancedSetting|Created on"
 msgstr "作成日"
@@ -1389,7 +1389,7 @@ msgid "Based On"
 msgstr "ベース"
 
 msgid "Based On:"
-msgstr "基準:"
+msgstr "ベース:"
 
 msgid "Basic Info"
 msgstr "基本情報"
@@ -1404,13 +1404,13 @@ msgid "Basic Report Info"
 msgstr "基本レポート情報"
 
 msgid "Belongs to Alert Profiles"
-msgstr "アラートプロファイルに属する"
+msgstr "アラートプロファイルへの所属"
 
 msgid "Belongs to Profiles"
-msgstr "プロファイルに属する"
+msgstr "プロファイルへの所属"
 
 msgid "Best Fit %s"
-msgstr "最適 %s"
+msgstr "Best Fit %s"
 
 msgid "Binary blob"
 msgstr "バイナリーブロブ"
@@ -1893,7 +1893,7 @@ msgid "Choose an Owner"
 msgstr "所有者の選択"
 
 msgid "Choose the type of custom variables to be imported"
-msgstr "インポートするカスタム変数のタイプを選択する"
+msgstr "インポートするカスタム変数のタイプを選択"
 
 msgid "Choose>"
 msgstr "選択"
@@ -2811,7 +2811,7 @@ msgid "Continue"
 msgstr "続行"
 
 msgid "Control"
-msgstr "制御"
+msgstr "コントロール"
 
 msgid "Copy"
 msgstr "コピー"
@@ -2853,7 +2853,7 @@ msgid "Created On"
 msgstr "作成日"
 
 msgid "Creation of a new Orchestration Template was cancelled by the user"
-msgstr "新しいオーケストレーションテンプレートの作成がユーザーによりキャンセルされました"
+msgstr "新規オーケストレーションテンプレートの作成がユーザーによりキャンセルされました"
 
 msgid "Creation of a new Service Dialog was cancelled by the user"
 msgstr "新しいサービスダイアログの作成がユーザーによりキャンセルされました"
@@ -3542,7 +3542,7 @@ msgid "Display Settings"
 msgstr "表示設定"
 
 msgid "Display in Catalog"
-msgstr "カタログ中の表示"
+msgstr "カタログ内の表示"
 
 msgid "Display on Button"
 msgstr "ボタンに表示"
@@ -4444,7 +4444,7 @@ msgid "Flavor|Supports 64 bit"
 msgstr "64 ビットのサポート"
 
 msgid "Flavor|Supports hvm"
-msgstr "hvm のサポート"
+msgstr "HVM のサポート"
 
 msgid "Flavor|Supports paravirtual"
 msgstr "準仮想化のサポート"
@@ -4480,7 +4480,7 @@ msgid "Friday"
 msgstr "金曜日"
 
 msgid "From"
-msgstr "から"
+msgstr "送信元"
 
 msgid "From Address"
 msgstr "アドレス"
@@ -4953,7 +4953,7 @@ msgstr "If"
 msgid ""
 "If this widget is new or has just been added to your dashboard, the data is "
 "being generated and should be available soon."
-msgstr "データ収集中により、新規ウィジェットまたはダッシュボードに追加されたばかりのウィジェットはしばらくしてから利用可能になります。"
+msgstr "データ収集中のため、新規ウィジェットまたはダッシュボードに追加されたばかりのウィジェットはしばらくしてから利用可能になります。"
 
 msgid "Image"
 msgstr "イメージ"
@@ -5025,7 +5025,7 @@ msgid "Info"
 msgstr "情報"
 
 msgid "Information for Registered VMs"
-msgstr "登録済み VM 用の情報"
+msgstr "登録済み VM の情報"
 
 msgid "Infrastructure"
 msgstr "インフラストラクチャー"
@@ -5079,7 +5079,7 @@ msgid "Invalid button action."
 msgstr "ボタンのアクションが無効です。"
 
 msgid "Invalid chart data. Try regenerating the widgets."
-msgstr "チャートデータが無効です。ウィジェットの再生成を試みてください。"
+msgstr "チャートデータが無効です。ウィジェットの再生成を試行してください。"
 
 msgid "Iso datastore"
 msgstr "ISO データストア"
@@ -5197,7 +5197,7 @@ msgstr "LDAP ホスト名"
 msgid ""
 "LDAP Host Name and Port fields are needed to perform verification of LDAP "
 "Settings"
-msgstr "LDAP ホスト名とポートフィールドが LDAP 設定の検証を実行するために必要です"
+msgstr "LDAP ホスト名とポートフィールドが LDAP 設定の検証の実行に必要です。"
 
 msgid "LDAP Host Names"
 msgstr "LDAP ホスト名"
@@ -5496,7 +5496,7 @@ msgid "Lifespan"
 msgstr "ライフスパン"
 
 msgid "Limit Chart to"
-msgstr "チャートを次に限定する"
+msgstr "チャートの制限:"
 
 msgid "List View"
 msgstr "一覧表示"
@@ -5505,7 +5505,7 @@ msgid "Load"
 msgstr "ロード"
 
 msgid "Load Values on Init"
-msgstr "初期化への負荷値"
+msgstr "Init で値をロード"
 
 msgid "Load a filter"
 msgstr "フィルターのロード"
@@ -5523,7 +5523,7 @@ msgid "Locale"
 msgstr "ロケール"
 
 msgid "Locate and upload a file to start the import process"
-msgstr "ファイルを見つけてアップロードし、インポートプロセスを開始してください"
+msgstr "ファイルを検索してアップロードし、インポートプロセスを開始します"
 
 msgid "Location"
 msgstr "ロケーション"
@@ -5599,7 +5599,7 @@ msgid ""
 msgstr "ログインが許可されませんでした、ユーザーの %s が見つかりません。管理者にお問い合わせください"
 
 msgid "Logs for this CFME Server are not available for viewing"
-msgstr "この CFME サーバー用のログは表示できません"
+msgstr "この CFME サーバーのログは表示できません"
 
 msgid "Long Description"
 msgstr "詳細な説明"
@@ -5620,7 +5620,7 @@ msgid "Mac address"
 msgstr "MAC アドレス"
 
 msgid "Main Info"
-msgstr "主情報"
+msgstr "主な情報"
 
 msgid "Manage Accordions"
 msgstr "アコーディオンの管理"
@@ -5896,7 +5896,7 @@ msgid "MetricRollup|Resource type"
 msgstr "リソースタイプ"
 
 msgid "MetricRollup|Sys uptime absolute latest"
-msgstr "システム稼動絶対最新"
+msgstr "システム稼動絶対 (最新)"
 
 msgid "MetricRollup|Tag names"
 msgstr "タグ名"
@@ -6103,7 +6103,7 @@ msgid "Minimize"
 msgstr "最小化"
 
 msgid "Miq action"
-msgstr "Miq アクション"
+msgstr "MIQ アクション"
 
 msgid "Miq action set"
 msgstr "MIQ アクションセット"
@@ -7153,7 +7153,7 @@ msgid "MiqReport|Headers"
 msgstr "ヘッダー"
 
 msgid "MiqReport|Include"
-msgstr "含む"
+msgstr "組み込み"
 
 msgid "MiqReport|Name"
 msgstr "名前"
@@ -7813,7 +7813,7 @@ msgid "Namespaces"
 msgstr "名前空間"
 
 msgid "Naming"
-msgstr "命名"
+msgstr "名前"
 
 msgid "Network"
 msgstr "ネットワーク"
@@ -7888,23 +7888,23 @@ msgid "New Name"
 msgstr "新規名前"
 
 msgid "New Orchestration Template Information"
-msgstr "新しいオーケストレーションテンプレート情報"
+msgstr "新規オーケストレーションテンプレート情報"
 
 msgid "New Parameter"
 msgstr "新規パラメーター"
 
 msgid "New setting will affect %s"
-msgstr "新規設定は %s に影響を与えます"
+msgstr "新規設定は %s に影響を与えます。"
 
 msgid "New setting will affect Service"
 msgid_plural "New setting will affect Services"
-msgstr[0] "新規設定はサービスに影響を与えます"
-msgstr[1] "新規設定はサービスに影響を与えます"
+msgstr[0] "新規設定はサービスに影響を与えます。"
+msgstr[1] "新規設定はサービスに影響を与えます。"
 
 msgid "New setting will affect VM"
 msgid_plural "New setting will affect VMs"
-msgstr[0] "新規設定は VM に影響を与えます"
-msgstr[1] "新規設定は VM に影響を与えます"
+msgstr[0] "新規設定は VM に影響を与えます。"
+msgstr[1] "新規設定は VM に影響を与えます。"
 
 msgid "New template content cannot be empty"
 msgstr "新しいテンプレートコンテンツを空にすることはできません"
@@ -8033,7 +8033,7 @@ msgid "No Choices Available"
 msgstr "使用できる選択肢がありません"
 
 msgid "No Class found for explorer tree node type '%s'"
-msgstr "エクスプローラーツリーノードタイプ '%s' 用のクラスが見つかりませんでした"
+msgstr "エクスプローラーツリーノードタイプ '%s' のクラスが見つかりませんでした"
 
 msgid ""
 "No Dashboards are defined for this group. Default dashboard will be shown."
@@ -8066,7 +8066,7 @@ msgid "No MyTags have been created"
 msgstr "マイタグが作成されていません"
 
 msgid "No Ordering Dialog is available"
-msgstr "利用可能な順位付けダイアログがありません"
+msgstr "利用可能なオーダーダイアログがありません"
 
 msgid "No Owner"
 msgstr "所有者なし"
@@ -8154,7 +8154,7 @@ msgid "No Zones found."
 msgstr "ゾーンが見つかりませんでした。"
 
 msgid "No alarms found for the selected %s"
-msgstr "選択された %s 用のアラームが見つかりませんでした"
+msgstr "選択された %s のアラームが見つかりませんでした"
 
 msgid "No chart data found"
 msgstr "チャートデータが見つかりませんでした"
@@ -8263,7 +8263,7 @@ msgid "None Available"
 msgstr "利用不可"
 
 msgid "None Available or All Selected"
-msgstr "利用可能なものがないか、またはすべてが選択されています"
+msgstr "選択できるユーザーがゼロか、またはすべてが選択されています"
 
 msgid "Normal"
 msgstr "標準"
@@ -8354,13 +8354,13 @@ msgid "Ok"
 msgstr "Ok"
 
 msgid "On Entry"
-msgstr "入力オン"
+msgstr "開始時"
 
 msgid "On Error"
-msgstr "エラーオン"
+msgstr "エラー時"
 
 msgid "On Exit"
-msgstr "終了オン"
+msgstr "終了時"
 
 msgid "Once"
 msgstr "1 回"
@@ -8371,7 +8371,7 @@ msgstr "%{task} には 1 つ以上の %{model} が選択されている必要が
 msgid ""
 "One or more selected reports are not owned by your group, they cannot be "
 "moved"
-msgstr "選択した 1 つ以上のレポートがあなたのグループによって所有されていないため、移動することができません"
+msgstr "選択した 1 つ以上のレポートはあなたのグループによって所有されていないため、移動することができません"
 
 msgid "Only 1 Date or Date/Time element can be present in a Dialog"
 msgstr "ダイアログには 1 つの日付または日付/時間要素しか使用できません"
@@ -8644,10 +8644,10 @@ msgid "OntapDiskMetricsRollup|Disk busy"
 msgstr "ディスク使用中"
 
 msgid "OntapDiskMetricsRollup|Disk busy max"
-msgstr "ディスク使用中の最大値"
+msgstr "使用中ディスクの最大値"
 
 msgid "OntapDiskMetricsRollup|Disk busy min"
-msgstr "ディスク使用中の最小値"
+msgstr "使用中 ディスクの最小値"
 
 msgid "OntapDiskMetricsRollup|Guarenteed read blocks"
 msgstr "保証付き読み取りブロック"
@@ -8725,22 +8725,22 @@ msgid "OntapDiskMetricsRollup|Interval"
 msgstr "間隔"
 
 msgid "OntapDiskMetricsRollup|Io pending"
-msgstr "IO 保留中"
+msgstr "保留中 IO "
 
 msgid "OntapDiskMetricsRollup|Io pending max"
-msgstr "IO 保留中最大値"
+msgstr "保留中 IO の最大値"
 
 msgid "OntapDiskMetricsRollup|Io pending min"
-msgstr "IO 保留中最小値"
+msgstr "保留中 IO の最小値"
 
 msgid "OntapDiskMetricsRollup|Io queued"
-msgstr "IO 処理待ち"
+msgstr "処理待ち IO "
 
 msgid "OntapDiskMetricsRollup|Io queued max"
-msgstr "IO 処理待ちの最大値"
+msgstr "処理待ち IO の最大値"
 
 msgid "OntapDiskMetricsRollup|Io queued min"
-msgstr "IO 処理待ちの最小値"
+msgstr "処理待ち IO の最小値"
 
 msgid "OntapDiskMetricsRollup|Rollup type"
 msgstr "ロールアップタイプ"
@@ -8749,10 +8749,10 @@ msgid "OntapDiskMetricsRollup|Skip blocks"
 msgstr "スキップブロック"
 
 msgid "OntapDiskMetricsRollup|Skip blocks max"
-msgstr "スキップブロック最大値"
+msgstr "ブロックスキップ最大値"
 
 msgid "OntapDiskMetricsRollup|Skip blocks min"
-msgstr "スキップブロック最小値"
+msgstr "ブロックスキップ最小値"
 
 msgid "OntapDiskMetricsRollup|Statistic time"
 msgstr "統計時間"
@@ -8869,7 +8869,7 @@ msgid "OntapLunDerivedMetric|Other ops"
 msgstr "その他のオプション"
 
 msgid "OntapLunDerivedMetric|Queue full"
-msgstr "キューが一杯"
+msgstr "満杯のキュー"
 
 msgid "OntapLunDerivedMetric|Read data"
 msgstr "読み取りデータ"
@@ -8878,7 +8878,7 @@ msgid "OntapLunDerivedMetric|Read ops"
 msgstr "読み取りオプション"
 
 msgid "OntapLunDerivedMetric|Statistic time"
-msgstr "統計タイム"
+msgstr "統計時間"
 
 msgid "OntapLunDerivedMetric|Total ops"
 msgstr "合計オプション"
@@ -8905,13 +8905,13 @@ msgid "OntapLunMetricsRollup|Interval"
 msgstr "間隔"
 
 msgid "OntapLunMetricsRollup|Other ops"
-msgstr "その他のオプション"
+msgstr "その他 ops"
 
 msgid "OntapLunMetricsRollup|Other ops max"
-msgstr "その他のオプション最大値"
+msgstr "その他 ops 最大値"
 
 msgid "OntapLunMetricsRollup|Other ops min"
-msgstr "その他のオプション最小値"
+msgstr "その他 ops 最小値"
 
 msgid "OntapLunMetricsRollup|Queue full"
 msgstr "満杯のキュー"
@@ -8932,28 +8932,28 @@ msgid "OntapLunMetricsRollup|Read data min"
 msgstr "読み取りデータ最小値"
 
 msgid "OntapLunMetricsRollup|Read ops"
-msgstr "読み取りオプション"
+msgstr "読み取り ops"
 
 msgid "OntapLunMetricsRollup|Read ops max"
-msgstr "読み取りオプション最大値"
+msgstr "読み取り ops 最大値"
 
 msgid "OntapLunMetricsRollup|Read ops min"
-msgstr "読み取りオプション最小値"
+msgstr "読み取り ops 最小値"
 
 msgid "OntapLunMetricsRollup|Rollup type"
 msgstr "ロールアップタイプ"
 
 msgid "OntapLunMetricsRollup|Statistic time"
-msgstr "統計タイム"
+msgstr "統計時間"
 
 msgid "OntapLunMetricsRollup|Total ops"
-msgstr "合計オプション"
+msgstr "合計 ops"
 
 msgid "OntapLunMetricsRollup|Total ops max"
-msgstr "合計オプション最大値"
+msgstr "合計 ops 最大値"
 
 msgid "OntapLunMetricsRollup|Total ops min"
-msgstr "合計オプション最小値"
+msgstr "合計 ops 最小値"
 
 msgid "OntapLunMetricsRollup|Write data"
 msgstr "書き込みデータ"
@@ -8965,13 +8965,13 @@ msgid "OntapLunMetricsRollup|Write data min"
 msgstr "書き込みデータ最小値"
 
 msgid "OntapLunMetricsRollup|Write ops"
-msgstr "書き込みオプション"
+msgstr "書き込み ops "
 
 msgid "OntapLunMetricsRollup|Write ops max"
-msgstr "書き込みオプション最大値"
+msgstr "書き込み ops  最大値"
 
 msgid "OntapLunMetricsRollup|Write ops min"
-msgstr "書き込みオプション最小値"
+msgstr "書き込み ops 最小値"
 
 msgid "OntapSystemDerivedMetric|Avg processor busy"
 msgstr "使用中プロセッサー平均"
@@ -8992,16 +8992,16 @@ msgid "OntapSystemDerivedMetric|Disk data written"
 msgstr "ディスクデータ書き込み"
 
 msgid "OntapSystemDerivedMetric|Fcp ops"
-msgstr "FCP オプション"
+msgstr "FCP ops"
 
 msgid "OntapSystemDerivedMetric|Http ops"
-msgstr "HTTP オプション"
+msgstr "HTTP ops"
 
 msgid "OntapSystemDerivedMetric|Interval"
 msgstr "間隔"
 
 msgid "OntapSystemDerivedMetric|Iscsi ops"
-msgstr "ISCSI オプション"
+msgstr "ISCSI ops"
 
 msgid "OntapSystemDerivedMetric|Net data recv"
 msgstr "ネットデータ受信"
@@ -9010,13 +9010,13 @@ msgid "OntapSystemDerivedMetric|Net data sent"
 msgstr "ネットデータ送信"
 
 msgid "OntapSystemDerivedMetric|Nfs ops"
-msgstr "NFS オプション"
+msgstr "NFS ops"
 
 msgid "OntapSystemDerivedMetric|Read ops"
-msgstr "読み取りオプション"
+msgstr "読み取り ops"
 
 msgid "OntapSystemDerivedMetric|Statistic time"
-msgstr "統計タイム"
+msgstr "統計時間"
 
 msgid "OntapSystemDerivedMetric|Sys avg latency"
 msgstr "システム平均待機時間"
@@ -9049,22 +9049,22 @@ msgid "OntapSystemMetricsRollup|Base counters"
 msgstr "ベースカウンター"
 
 msgid "OntapSystemMetricsRollup|Cifs ops"
-msgstr "CIFS オプション"
+msgstr "CIFS ops"
 
 msgid "OntapSystemMetricsRollup|Cifs ops max"
-msgstr "CIFS オプション最大値"
+msgstr "CIFS ops 最大値"
 
 msgid "OntapSystemMetricsRollup|Cifs ops min"
-msgstr "CIFS オプション最小値"
+msgstr "CIFS ops 最小値"
 
 msgid "OntapSystemMetricsRollup|Cpu busy"
-msgstr "CPU 使用中"
+msgstr "使用中 CPU"
 
 msgid "OntapSystemMetricsRollup|Cpu busy max"
-msgstr "CPU 使用中の最大値"
+msgstr "使用中 CPU の最大値"
 
 msgid "OntapSystemMetricsRollup|Cpu busy min"
-msgstr "CPU 使用中の最小値"
+msgstr "使用中 CPU の最小値"
 
 msgid "OntapSystemMetricsRollup|Disk data read"
 msgstr "ディスクデータ読み取り"
@@ -9085,34 +9085,34 @@ msgid "OntapSystemMetricsRollup|Disk data written min"
 msgstr "ディスクデータ書き込み最小値"
 
 msgid "OntapSystemMetricsRollup|Fcp ops"
-msgstr "FCP オプション"
+msgstr "FCP ops"
 
 msgid "OntapSystemMetricsRollup|Fcp ops max"
-msgstr "FCP オプション最大値"
+msgstr "FCP ops 最大値"
 
 msgid "OntapSystemMetricsRollup|Fcp ops min"
-msgstr "FCP オプション最小値"
+msgstr "FCP ops 最小値"
 
 msgid "OntapSystemMetricsRollup|Http ops"
-msgstr "HTTP オプション"
+msgstr "HTTP ops"
 
 msgid "OntapSystemMetricsRollup|Http ops max"
-msgstr "HTTP オプション最大値"
+msgstr "HTTP ops 最大値"
 
 msgid "OntapSystemMetricsRollup|Http ops min"
-msgstr "HTTP オプション最小値"
+msgstr "HTTP ops 最小値"
 
 msgid "OntapSystemMetricsRollup|Interval"
 msgstr "間隔"
 
 msgid "OntapSystemMetricsRollup|Iscsi ops"
-msgstr "ISCSI オプション"
+msgstr "ISCSI ops"
 
 msgid "OntapSystemMetricsRollup|Iscsi ops max"
-msgstr "ISCSI オプション最大値"
+msgstr "ISCSI ops 最大値"
 
 msgid "OntapSystemMetricsRollup|Iscsi ops min"
-msgstr "ISCSIオプション最小値"
+msgstr "ISCSI ops 最小値"
 
 msgid "OntapSystemMetricsRollup|Net data recv"
 msgstr "ネットデータ受信"
@@ -9133,22 +9133,22 @@ msgid "OntapSystemMetricsRollup|Net data sent min"
 msgstr "ネットデータ送信最小値"
 
 msgid "OntapSystemMetricsRollup|Nfs ops"
-msgstr "NFS オプション"
+msgstr "NFS ops"
 
 msgid "OntapSystemMetricsRollup|Nfs ops max"
-msgstr "NFS オプション最大値"
+msgstr "NFS ops 最大値"
 
 msgid "OntapSystemMetricsRollup|Nfs ops min"
-msgstr "NFS オプション最小値"
+msgstr "NFS ops 最小値"
 
 msgid "OntapSystemMetricsRollup|Read ops"
-msgstr "読み取りオプション"
+msgstr "読み取り ops "
 
 msgid "OntapSystemMetricsRollup|Read ops max"
-msgstr "読み取りオプション最大値"
+msgstr "読み取り ops 最大値"
 
 msgid "OntapSystemMetricsRollup|Read ops min"
-msgstr "読み取りオプション最小値"
+msgstr "読み取り ops 最小値"
 
 msgid "OntapSystemMetricsRollup|Rollup type"
 msgstr "ロールアップタイプ"
@@ -9184,13 +9184,13 @@ msgid "OntapSystemMetricsRollup|Sys write latency min"
 msgstr "システム書き込み待機時間の最小値"
 
 msgid "OntapSystemMetricsRollup|Total ops"
-msgstr "合計オプション"
+msgstr "合計 ops "
 
 msgid "OntapSystemMetricsRollup|Total ops max"
-msgstr "合計オプション最大値"
+msgstr "合計 ops 最大値"
 
 msgid "OntapSystemMetricsRollup|Total ops min"
-msgstr "合計オプション最小値"
+msgstr "合計 ops 最小値"
 
 msgid "OntapSystemMetricsRollup|Total processor busy"
 msgstr "使用中プロセッサー合計"
@@ -9202,13 +9202,13 @@ msgid "OntapSystemMetricsRollup|Total processor busy min"
 msgstr "使用中プロセッサー合計の最小値"
 
 msgid "OntapSystemMetricsRollup|Write ops"
-msgstr "書き込みオプション"
+msgstr "書き込み ops"
 
 msgid "OntapSystemMetricsRollup|Write ops max"
-msgstr "書き込みオプション最大値"
+msgstr "書き込み ops 最大値"
 
 msgid "OntapSystemMetricsRollup|Write ops min"
-msgstr "書き込みオプション最小値"
+msgstr "書き込み ops 最小値"
 
 msgid "OntapVolumeDerivedMetric|Avg latency"
 msgstr "平均待機時間"
@@ -9220,7 +9220,7 @@ msgid "OntapVolumeDerivedMetric|Cifs other latency"
 msgstr "CIFS その他の待機時間"
 
 msgid "OntapVolumeDerivedMetric|Cifs other ops"
-msgstr "CIFS その他のオプション"
+msgstr "CIFS その他 ops"
 
 msgid "OntapVolumeDerivedMetric|Cifs read data"
 msgstr "CIFS 読み取りデータ"
@@ -9229,7 +9229,7 @@ msgid "OntapVolumeDerivedMetric|Cifs read latency"
 msgstr "CIFS 読み取り待機時間"
 
 msgid "OntapVolumeDerivedMetric|Cifs read ops"
-msgstr "CIFS 読み取りオプション"
+msgstr "CIFS 読み取り ops"
 
 msgid "OntapVolumeDerivedMetric|Cifs write data"
 msgstr "CIFS 書き込みデータ"
@@ -9238,7 +9238,7 @@ msgid "OntapVolumeDerivedMetric|Cifs write latency"
 msgstr "CIFS 書き込み待機時間"
 
 msgid "OntapVolumeDerivedMetric|Cifs write ops"
-msgstr "CIFS 書き込みオプション"
+msgstr "CIFS 書き込み ops"
 
 msgid "OntapVolumeDerivedMetric|Interval"
 msgstr "間隔"
@@ -9247,7 +9247,7 @@ msgid "OntapVolumeDerivedMetric|Nfs other latency"
 msgstr "NFS その他の待機時間"
 
 msgid "OntapVolumeDerivedMetric|Nfs other ops"
-msgstr "NFS その他のオプション"
+msgstr "NFS その他 ops"
 
 msgid "OntapVolumeDerivedMetric|Nfs read data"
 msgstr "NFS 読み取りデータ"
@@ -9256,7 +9256,7 @@ msgid "OntapVolumeDerivedMetric|Nfs read latency"
 msgstr "NFS 読み取り待機時間"
 
 msgid "OntapVolumeDerivedMetric|Nfs read ops"
-msgstr "NFS 読み取りオプション"
+msgstr "NFS 読み取り ops"
 
 msgid "OntapVolumeDerivedMetric|Nfs write data"
 msgstr "NFS 書き込みデータ"
@@ -9265,13 +9265,13 @@ msgid "OntapVolumeDerivedMetric|Nfs write latency"
 msgstr "NFS 書き込み待機時間"
 
 msgid "OntapVolumeDerivedMetric|Nfs write ops"
-msgstr "NFS 書き込みオプション"
+msgstr "NFS 書き込み ops"
 
 msgid "OntapVolumeDerivedMetric|Other latency"
 msgstr "その他の待機時間"
 
 msgid "OntapVolumeDerivedMetric|Other ops"
-msgstr "その他のオプション"
+msgstr "その他 ops "
 
 msgid "OntapVolumeDerivedMetric|Queue depth"
 msgstr "キュー深度"
@@ -9283,13 +9283,13 @@ msgid "OntapVolumeDerivedMetric|Read latency"
 msgstr "読み取り待機時間"
 
 msgid "OntapVolumeDerivedMetric|Read ops"
-msgstr "読み取りオプション"
+msgstr "読み取り ops"
 
 msgid "OntapVolumeDerivedMetric|San other latency"
 msgstr "SAN その他の待機時間"
 
 msgid "OntapVolumeDerivedMetric|San other ops"
-msgstr "SAN その他のオプション"
+msgstr "SAN その他 ops"
 
 msgid "OntapVolumeDerivedMetric|San read data"
 msgstr "SAN 読み取りデータ"
@@ -9298,7 +9298,7 @@ msgid "OntapVolumeDerivedMetric|San read latency"
 msgstr "SAN 読み取り待機時間"
 
 msgid "OntapVolumeDerivedMetric|San read ops"
-msgstr "SAN 読み取りオプション"
+msgstr "SAN 読み取り ops"
 
 msgid "OntapVolumeDerivedMetric|San write data"
 msgstr "SAN 書き込みデータ"
@@ -9307,13 +9307,13 @@ msgid "OntapVolumeDerivedMetric|San write latency"
 msgstr "SAN 書き込み待機時間"
 
 msgid "OntapVolumeDerivedMetric|San write ops"
-msgstr "SAN 書き込みオプション"
+msgstr "SAN 書き込み ops"
 
 msgid "OntapVolumeDerivedMetric|Statistic time"
-msgstr "統計タイム"
+msgstr "統計時間"
 
 msgid "OntapVolumeDerivedMetric|Total ops"
-msgstr "合計オプション"
+msgstr "合計 ops"
 
 msgid "OntapVolumeDerivedMetric|Write data"
 msgstr "書き込みデータ"
@@ -9322,7 +9322,7 @@ msgid "OntapVolumeDerivedMetric|Write latency"
 msgstr "書き込み待機時間"
 
 msgid "OntapVolumeDerivedMetric|Write ops"
-msgstr "書き込みオプション"
+msgstr "書き込み ops"
 
 msgid "OntapVolumeMetricsRollup|Avg latency"
 msgstr "平均待機時間"
@@ -9346,13 +9346,13 @@ msgid "OntapVolumeMetricsRollup|Cifs other latency min"
 msgstr "CIFS その他の待機時間の最大値"
 
 msgid "OntapVolumeMetricsRollup|Cifs other ops"
-msgstr "CIFS その他のオプション"
+msgstr "CIFS その他 ops"
 
 msgid "OntapVolumeMetricsRollup|Cifs other ops max"
-msgstr "CIFS その他のオプション最大値"
+msgstr "CIFS その他 ops 最大値"
 
 msgid "OntapVolumeMetricsRollup|Cifs other ops min"
-msgstr "CIFS その他のオプション最小値"
+msgstr "CIFS その他 ops 最小値"
 
 msgid "OntapVolumeMetricsRollup|Cifs read data"
 msgstr "CIFS 読み取りデータ"
@@ -9373,13 +9373,13 @@ msgid "OntapVolumeMetricsRollup|Cifs read latency min"
 msgstr "CIFS 読み取り待機時間の最小値"
 
 msgid "OntapVolumeMetricsRollup|Cifs read ops"
-msgstr "CIFS 読み取りオプション"
+msgstr "CIFS 読み取り ops"
 
 msgid "OntapVolumeMetricsRollup|Cifs read ops max"
-msgstr "CIFS 読み取りオプション最大値"
+msgstr "CIFS 読み取り ops 最大値"
 
 msgid "OntapVolumeMetricsRollup|Cifs read ops min"
-msgstr "CIFS 読み取りオプション最小値"
+msgstr "CIFS 読み取り ops 最小値"
 
 msgid "OntapVolumeMetricsRollup|Cifs write data"
 msgstr "CIFS 書き込みデータ"
@@ -9400,13 +9400,13 @@ msgid "OntapVolumeMetricsRollup|Cifs write latency min"
 msgstr "CIFS 書き込み待機時間の最小値"
 
 msgid "OntapVolumeMetricsRollup|Cifs write ops"
-msgstr "CIFS 書き込みオプション"
+msgstr "CIFS 書き込み ops "
 
 msgid "OntapVolumeMetricsRollup|Cifs write ops max"
-msgstr "CIFS 書き込みオプション最大値"
+msgstr "CIFS 書き込み ops 最大値"
 
 msgid "OntapVolumeMetricsRollup|Cifs write ops min"
-msgstr "CIFS 書き込みオプション最小値"
+msgstr "CIFS 書き込み ops 最小値"
 
 msgid "OntapVolumeMetricsRollup|Interval"
 msgstr "間隔"
@@ -9421,13 +9421,13 @@ msgid "OntapVolumeMetricsRollup|Nfs other latency min"
 msgstr "NFS その他の待機時間の最小値"
 
 msgid "OntapVolumeMetricsRollup|Nfs other ops"
-msgstr "NFS その他のオプション"
+msgstr "NFS その他 ops"
 
 msgid "OntapVolumeMetricsRollup|Nfs other ops max"
-msgstr "NFS その他オプション最大値"
+msgstr "NFS その他 ops 最大値"
 
 msgid "OntapVolumeMetricsRollup|Nfs other ops min"
-msgstr "NFS その他オプション最小値"
+msgstr "NFS その他 ops 最小値"
 
 msgid "OntapVolumeMetricsRollup|Nfs read data"
 msgstr "NFS 読み取りデータ"
@@ -9448,13 +9448,13 @@ msgid "OntapVolumeMetricsRollup|Nfs read latency min"
 msgstr "NFS 読み取り待機時間の最小値"
 
 msgid "OntapVolumeMetricsRollup|Nfs read ops"
-msgstr "NFS 読み取りオプション"
+msgstr "NFS 読み取り ops"
 
 msgid "OntapVolumeMetricsRollup|Nfs read ops max"
-msgstr "NFS 読み取りオプションの最大値"
+msgstr "NFS 読み取り ops の最大値"
 
 msgid "OntapVolumeMetricsRollup|Nfs read ops min"
-msgstr "NFS 読み取りオプションの最小値"
+msgstr "NFS 読み取り ops の最小値"
 
 msgid "OntapVolumeMetricsRollup|Nfs write data"
 msgstr "NFS 書き込みデータ"
@@ -9475,13 +9475,13 @@ msgid "OntapVolumeMetricsRollup|Nfs write latency min"
 msgstr "NFS 書き込み待機時間の最小値"
 
 msgid "OntapVolumeMetricsRollup|Nfs write ops"
-msgstr "NFS 書き込みオプション"
+msgstr "NFS 書き込み ops"
 
 msgid "OntapVolumeMetricsRollup|Nfs write ops max"
-msgstr "NFS 書き込みオプションの最大値"
+msgstr "NFS 書き込み ops 最大値"
 
 msgid "OntapVolumeMetricsRollup|Nfs write ops min"
-msgstr "NFS 書き込みオプションの最小値"
+msgstr "NFS 書き込み ops 最小値"
 
 msgid "OntapVolumeMetricsRollup|Other latency"
 msgstr "その他待機時間"
@@ -9493,13 +9493,13 @@ msgid "OntapVolumeMetricsRollup|Other latency min"
 msgstr "その他の待機時間の最小値"
 
 msgid "OntapVolumeMetricsRollup|Other ops"
-msgstr "その他のオプション"
+msgstr "その他 ops "
 
 msgid "OntapVolumeMetricsRollup|Other ops max"
-msgstr "その他オプションの最大値"
+msgstr "その他 ops 最大値"
 
 msgid "OntapVolumeMetricsRollup|Other ops min"
-msgstr "その他オプションの最小値"
+msgstr "その他 ops 最小値"
 
 msgid "OntapVolumeMetricsRollup|Read data"
 msgstr "読み取りデータ"
@@ -9520,13 +9520,13 @@ msgid "OntapVolumeMetricsRollup|Read latency min"
 msgstr "読み取り待機時間の最小値"
 
 msgid "OntapVolumeMetricsRollup|Read ops"
-msgstr "読み取りオプション"
+msgstr "読み取り ops "
 
 msgid "OntapVolumeMetricsRollup|Read ops max"
-msgstr "読み取りオプションの最大値"
+msgstr "読み取り ops 最大値"
 
 msgid "OntapVolumeMetricsRollup|Read ops min"
-msgstr "読み取りオプションの最小値"
+msgstr "読み取り ops 最小値"
 
 msgid "OntapVolumeMetricsRollup|Rollup type"
 msgstr "ロールアップタイプ"
@@ -9541,13 +9541,13 @@ msgid "OntapVolumeMetricsRollup|San other latency min"
 msgstr "SAN その他待機時間の最小値"
 
 msgid "OntapVolumeMetricsRollup|San other ops"
-msgstr "SAN その他のオプション"
+msgstr "SAN その他 ops"
 
 msgid "OntapVolumeMetricsRollup|San other ops max"
-msgstr "SAN その他オプションの最大値"
+msgstr "SAN その他 ops 最大値"
 
 msgid "OntapVolumeMetricsRollup|San other ops min"
-msgstr "SAN その他オプションの最小値"
+msgstr "SAN その他 ops  最小値"
 
 msgid "OntapVolumeMetricsRollup|San read data"
 msgstr "SAN 読み取りデータ"
@@ -9568,13 +9568,13 @@ msgid "OntapVolumeMetricsRollup|San read latency min"
 msgstr "SAN 読み取り待機時間の最小値"
 
 msgid "OntapVolumeMetricsRollup|San read ops"
-msgstr "SAN 読み取りオプション"
+msgstr "SAN 読み取り ops"
 
 msgid "OntapVolumeMetricsRollup|San read ops max"
-msgstr "SAN 読み取りオプションの最大値"
+msgstr "SAN 読み取り ops 最大値"
 
 msgid "OntapVolumeMetricsRollup|San read ops min"
-msgstr "SAN 読み取りオプション最小値"
+msgstr "SAN 読み取り ops 最小値"
 
 msgid "OntapVolumeMetricsRollup|San write data"
 msgstr "SAN 書き込みデータ"
@@ -9595,25 +9595,25 @@ msgid "OntapVolumeMetricsRollup|San write latency min"
 msgstr "SAN 書き込み待機時間の最小値"
 
 msgid "OntapVolumeMetricsRollup|San write ops"
-msgstr "SAN 書き込みオプション"
+msgstr "SAN 書き込み ops "
 
 msgid "OntapVolumeMetricsRollup|San write ops max"
-msgstr "SAN 書き込みオプション最大値"
+msgstr "SAN 書き込み ops 最大値"
 
 msgid "OntapVolumeMetricsRollup|San write ops min"
-msgstr "SAN 書き込みオプション最小値"
+msgstr "SAN 書き込み ops 最小値"
 
 msgid "OntapVolumeMetricsRollup|Statistic time"
-msgstr "統計タイム"
+msgstr "統計時間"
 
 msgid "OntapVolumeMetricsRollup|Total ops"
-msgstr "合計オプション"
+msgstr "合計 ops"
 
 msgid "OntapVolumeMetricsRollup|Total ops max"
-msgstr "合計オプション最大値"
+msgstr "合計 ops 最大値"
 
 msgid "OntapVolumeMetricsRollup|Total ops min"
-msgstr "合計オプション最小値"
+msgstr "合計 ops 最小値"
 
 msgid "OntapVolumeMetricsRollup|Write data"
 msgstr "書き込みデータ"
@@ -9634,13 +9634,13 @@ msgid "OntapVolumeMetricsRollup|Write latency min"
 msgstr "書き込み待機時間の最小値"
 
 msgid "OntapVolumeMetricsRollup|Write ops"
-msgstr "書き込みオプション"
+msgstr "書き込み ops "
 
 msgid "OntapVolumeMetricsRollup|Write ops max"
-msgstr "書き込みオプションの最大値"
+msgstr "書き込み ops 最大値"
 
 msgid "OntapVolumeMetricsRollup|Write ops min"
-msgstr "書き込みオプション最小値"
+msgstr "書き込み ops 最小値"
 
 msgid "Open Folder"
 msgstr "フォルダーを開く"
@@ -9787,7 +9787,7 @@ msgid "Orchestration template"
 msgstr "オーケストレーションテンプレート"
 
 msgid "Orchestration template \"%s\" is read-only and cannot be deleted."
-msgstr "オーケストレーションテンプレート \"%s\" は読み取り専用であり、削除することができません。"
+msgstr "オーケストレーションテンプレート \"%s\" は読み取り専用のため、削除することができません。"
 
 msgid "OrchestrationStackOutput|Description"
 msgstr "説明"
@@ -9886,7 +9886,7 @@ msgid "OrchestrationTemplate|Name"
 msgstr "名前"
 
 msgid "Order"
-msgstr "順序"
+msgstr "オーダー"
 
 msgid "Order of Actions if ALL Conditions are True"
 msgstr "すべての条件が「true」である場合のアクションの順序"
@@ -9895,7 +9895,7 @@ msgid "Order of Actions if ANY Conditions are False"
 msgstr "いずれかの条件が「false」である場合のアクションの順序"
 
 msgid "Order this Service"
-msgstr "このサービスの順序"
+msgstr "このサービスのオーダー"
 
 msgid "Organization"
 msgstr "組織"
@@ -9961,7 +9961,7 @@ msgid "Owner"
 msgstr "所有者"
 
 msgid "Ownership saved for selected %s"
-msgstr "選択した %s 用の所有権が保存されました"
+msgstr "選択した %s の所有権が保存されました"
 
 msgid "PDF"
 msgstr "PDF"
@@ -10221,7 +10221,7 @@ msgid "Policy assignments successfully changed"
 msgstr "ポリシー指定が正常に変更されました"
 
 msgid "Policy changes will affect %s"
-msgstr "ポリシーの変更は %s に影響を与えます"
+msgstr "ポリシーの変更は %s に影響を与えます。"
 
 msgid "Policy event"
 msgstr "ポリシーイベント"
@@ -10354,16 +10354,16 @@ msgid "Provider|Verify ssl"
 msgstr "SSL の確認"
 
 msgid "Provision %s"
-msgstr "プロビジョニング %s "
+msgstr "%s のプロビジョニング "
 
 msgid "Provision %s based on the selected %s"
-msgstr "プロビジョニング %s  (選択された %s に基づく)"
+msgstr "%s のプロビジョニング (ベース: 選択される %s)"
 
 msgid "Provision %s was cancelled by the user"
 msgstr "プロビジョニング %s がユーザーによりキャンセルされました"
 
 msgid "Provision %{model} - Select %{typ}"
-msgstr "プロビジョニング %{model} - 選択 %{typ}"
+msgstr "%{model} のプロビジョニング - %{typ} の選択"
 
 msgid "Provision Order"
 msgstr "プロビジョニング順序"
@@ -10429,7 +10429,7 @@ msgid "PxeMenu|File name"
 msgstr "ファイル名"
 
 msgid "PxeServer|Access url"
-msgstr "アクセスurl"
+msgstr "アクセスURI"
 
 msgid "PxeServer|Customization directory"
 msgstr "カスタマイズディレクトリー"
@@ -10441,10 +10441,10 @@ msgid "PxeServer|Name"
 msgstr "名前"
 
 msgid "PxeServer|Pxe directory"
-msgstr "Pxe ディレクトリー"
+msgstr "PXE ディレクトリー"
 
 msgid "PxeServer|Uri"
-msgstr "Uri"
+msgstr "URI"
 
 msgid "PxeServer|Uri prefix"
 msgstr "URI プレフィックス"
@@ -10876,7 +10876,7 @@ msgstr "SSH ログインがデフォルトアカウントに対して無効に�
 
 msgid ""
 "Required. Should have privileged access, such as root or administrator."
-msgstr "必須。root または管理者などの特権アクセスが必要です。"
+msgstr "必須情報なります。root または管理者などの特権アクセスが必要です。"
 
 msgid "Reserve"
 msgstr "予約"
@@ -11050,7 +11050,7 @@ msgid "Retirement Warning"
 msgstr "リタイア警告"
 
 msgid "Right Size Recommendation for %{model} \"%{name}\""
-msgstr "%{model} \"%{name}\" 用の適切なサイズの推奨"
+msgstr "%{model} \"%{name}\" の適切なサイズの推奨"
 
 msgid "Right-Sizing (Aggressive - derived from Average NORM)"
 msgstr "適切なサイズ設定 (アグレッシブ - 平均 NORM から派生)"
@@ -11059,7 +11059,7 @@ msgid "Right-Sizing (Conservative - derived from Absolute Maximum)"
 msgstr "適切なサイズ設定 (標準 - 絶対最大値から派生)"
 
 msgid "Right-Sizing (Moderate - derived from High NORM)"
-msgstr "適切なサイズ設定 (中程度 - 高 NORM から派生)"
+msgstr "適切なサイズ設定 (中程度 - High NORM から派生)"
 
 msgid "Role"
 msgstr "ロール"
@@ -11199,7 +11199,7 @@ msgid "Save the current search"
 msgstr "現在の検索の保存"
 
 msgid "Save this %s search as:"
-msgstr "この %s 検索を以下で保存:"
+msgstr "この %s 検索を保存:"
 
 msgid "Save..."
 msgstr "保存..."
@@ -11537,7 +11537,7 @@ msgid "Send an E-mail"
 msgstr "メールの送信"
 
 msgid "Send an SNMP Trap"
-msgstr "SNMPトラップを送信"
+msgstr "SNMPトラップの送信"
 
 msgid "Send if Report is Empty"
 msgstr "レポートが空の場合に送信"
@@ -11569,7 +11569,7 @@ msgstr "サーバーロール"
 msgid ""
 "Server information, Username and matching password fields are needed to "
 "perform verification of credentials"
-msgstr "サーバー情報、ユーザー名および一致するパスワードフィールドが、認証情報の検証を実行する際に必要です。"
+msgstr "サーバー情報、ユーザー名および一致するパスワードフィールドは認証情報の検証を実行する際に必要です。"
 
 msgid "Server role"
 msgstr "サーバーロール"
@@ -11665,16 +11665,16 @@ msgid "ServiceResource|Source type"
 msgstr "ソースタイプ"
 
 msgid "ServiceResource|Start action"
-msgstr "アクション開始"
+msgstr "開始アクション"
 
 msgid "ServiceResource|Start delay"
-msgstr "遅延開始"
+msgstr "開始の遅延"
 
 msgid "ServiceResource|Stop action"
-msgstr "アクション停止"
+msgstr "停止アクション"
 
 msgid "ServiceResource|Stop delay"
-msgstr "遅延停止"
+msgstr "停止の遅延"
 
 msgid "ServiceTemplateCatalog|Description"
 msgstr "説明"
@@ -13246,20 +13246,20 @@ msgid "Use the Browse button to locate an Upload file"
 msgstr "参照ボタンを使ってアップロードファイルを検索します。"
 
 msgid "Used for SSH connection to all %s in this provider."
-msgstr "このプロバイダーのすべての %s への SSH 接続に使用。"
+msgstr "このプロバイダーのすべての %s への SSH 接続に使用されます。"
 
 msgid "Used for access to IPMI."
-msgstr "IPMI へのアクセスに使用。"
+msgstr "IPMI へのアクセスに使用されます。"
 
 msgid "Used for access to Web Services."
-msgstr "Web サービスへのアクセスに使用。"
+msgstr "Web サービスへのアクセスに使用されます。"
 
 msgid ""
 "Used to authenticate with OpenStack AMQP Messaging Bus for event handling."
-msgstr "イベント処理のための OpenStack AMQP Messaging Bus による認証に使用。"
+msgstr "イベント処理のために OpenStack AMQP Messaging Bus による認証に使用されます。"
 
 msgid "Used to gather Capacity & Utilization metrics."
-msgstr "容量 & 使用率メトリックの収集に使用。"
+msgstr "容量 & 使用率メトリックの収集に使用されます。"
 
 msgid "User"
 msgstr "ユーザー"
@@ -13277,7 +13277,7 @@ msgid "User Information"
 msgstr "ユーザー情報"
 
 msgid "User Interface settings saved for User %s"
-msgstr "ユーザー %s 用のユーザーインターフェース設定が保存されました"
+msgstr "ユーザー %s のユーザーインターフェース設定が保存されました"
 
 msgid "User Interface settings saved for this session"
 msgstr "このセッション用のユーザーインターフェース設定が保存されました"
@@ -13458,7 +13458,7 @@ msgid "VMs (0)"
 msgstr "VM (0)"
 
 msgid "VMsafe"
-msgstr "VM セーフ"
+msgstr "VMsafe"
 
 msgid "VMware Console Support"
 msgstr "VMware コンソールサポート"
@@ -14167,7 +14167,7 @@ msgid ""
 msgstr "フルスクリーンモードに入ります。ウィンドウモードに戻るには Ctl+Alt を押してください。"
 
 msgid "You are not authorized to view %s"
-msgstr "あなたは %s を見る権限がありません"
+msgstr "%s を表示する権限がありません"
 
 msgid "You must select at least one namespace to import"
 msgstr "インポートする 1 つ以上の名前空間を選択することが必要です"
