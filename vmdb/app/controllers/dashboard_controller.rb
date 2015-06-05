@@ -50,13 +50,13 @@ class DashboardController < ApplicationController
   ]] # format is {"vi" => :vi, "svc" => :svc . . }
 
   EXPLORER_FEATURE_LINKS = {
-      "catalog"             => "catalog",
-      "containers"          => "containers",
-      "pxe"                 => "pxe",
-      "service"             => "service",
-      "vm_cloud_explorer"   => "vm_cloud",
-      "vm_explorer_accords" => "vm_or_template",
-      "vm_infra_explorer"   => "vm_infra"
+    "catalog"             => "catalog",
+    "containers"          => "containers",
+    "pxe"                 => "pxe",
+    "service"             => "service",
+    "vm_cloud_explorer"   => "vm_cloud",
+    "vm_explorer_accords" => "vm_or_template",
+    "vm_infra_explorer"   => "vm_infra"
   }
 
   # A main tab was pressed

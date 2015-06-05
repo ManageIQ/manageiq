@@ -92,10 +92,10 @@ describe DashboardController do
     end
 
     main_tabs = {
-                  :clo => "vm_cloud_explorer",
-                  :inf => "vm_infra_explorer",
-                  :svc => "vm_explorer_accords"
-                }
+      :clo => "vm_cloud_explorer",
+      :inf => "vm_infra_explorer",
+      :svc => "vm_explorer_accords"
+    }
     main_tabs.each do |tab, feature|
       it "for tab ':#{tab}'" do
         seed_specific_product_features(feature)
