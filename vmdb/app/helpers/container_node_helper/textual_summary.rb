@@ -11,7 +11,7 @@ module ContainerNodeHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w(ems container_groups)
+    items = %w(ems container_groups lives_on)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
@@ -95,6 +95,23 @@ module ContainerNodeHelper::TextualSummary
       h[:link] = url_for(:action => 'show', :controller => 'container_node', :display => 'container_groups')
     end
     h
+  end
+
+  def textual_lives_on
+    lives_on_ems = @record.lives_on.try(:ext_management_system)
+    return nil if lives_on_ems.nil?
+    # TODO: handle the case where the node is a bare-metal
+    lives_on_entity_name = lives_on_ems.kind_of?(EmsCloud) ? "Instance" : "Virtual Machine"
+    {
+      :label => "Underlying #{lives_on_entity_name}",
+      :image => "vendor-#{lives_on_ems.image_name}",
+      :value => "#{@record.lives_on.name}",
+      :link  => url_for(
+        :action     => 'show',
+        :controller => 'vm_or_template',
+        :id         => @record.lives_on.id
+      )
+    }
   end
 
   def textual_runtime_version
