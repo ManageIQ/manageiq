@@ -226,8 +226,15 @@ class ProviderForemanController < ApplicationController
 
   def accordion_select
     @lastaction = "explorer"
+
+    @sb[:foreman_search_text] ||= {}
+    @sb[:foreman_search_text]["#{x_active_accord}_search_text"] = @search_text
+
     self.x_active_accord = params[:id]
     self.x_active_tree   = "#{params[:id]}_tree"
+
+    @search_text = @sb[:foreman_search_text]["#{x_active_accord}_search_text"]
+
     load_or_clear_adv_search
     replace_right_cell
   end
