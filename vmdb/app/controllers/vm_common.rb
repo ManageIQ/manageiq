@@ -1319,7 +1319,7 @@ module VmCommon
     @vm = @record = identify_record(id, VmOrTemplate) if ["Vm", "MiqTemplate"].include?(TreeBuilder.get_model_for_prefix(@nodetype)) && !@record
 
     # Handle filtered tree nodes
-    if x_active_tree.to_s =~ /filter$/ && # FIXME: create some property on trees for this
+    if x_active_tree.to_s =~ /_filter_tree$/ && # FIXME: create some property on trees for this
         !["Vm", "MiqTemplate"].include?(TreeBuilder.get_model_for_prefix(@nodetype))
       search_id = @nodetype == "root" ? 0 : from_cid(id)
       adv_search_build(vm_model_from_active_tree(x_active_tree))
@@ -1582,7 +1582,7 @@ module VmCommon
       if params[:action] == "x_show" &&
          @record &&                            # Showing a record
          !@in_a_form &&                        # Not in a form
-         x_active_tree.to_s !~ /filter$/       # Not in a filter tree; FIXME: create some property on trees for this
+         x_active_tree.to_s !~ /_filter_tree$/ # Not in a filter tree; FIXME: create some property on trees for this
         add_nodes = open_parent_nodes(@record) # Open the parent nodes of selected record, if not open
       end
     end
