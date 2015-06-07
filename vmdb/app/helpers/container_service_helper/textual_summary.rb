@@ -15,8 +15,17 @@ module ContainerServiceHelper::TextualSummary
   end
 
   def textual_group_port_configs
-    items = ContainerServicePortConfig.where(:container_service_id => @record.id)
-    items.collect { |m| textual_port_config(m) }.flatten.compact
+    labels = [_("Name"), _("Port"), _("Target Port"), _("Protocol")]
+    h = {:labels => labels}
+    h[:values] = @record.container_service_port_configs.collect do |config|
+      [
+        config.name || _("<Unnamed>"),
+        config.port,
+        config.target_port,
+        config.protocol
+      ]
+    end
+    h
   end
 
   def textual_group_relationships
