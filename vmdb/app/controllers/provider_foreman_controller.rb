@@ -851,8 +851,8 @@ class ProviderForemanController < ApplicationController
     end
   end
 
-  def list_row_image(image_path, image, model_image, itemname)
-    if itemname == _("Unassigned Profiles Group")
+  def list_row_image(image_path, image, model_image, item)
+    if item.name == _("Unassigned Profiles Group")
       image_path ? "#{image_path}folder.png" : "folder"
     else
       super
