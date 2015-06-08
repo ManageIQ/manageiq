@@ -19,7 +19,7 @@
  * The `ajax:aborted:file` event allows you to bind your own handler to process the form submission however you wish.
  *
  * Ex:
- *     $('form').on('ajax:aborted:file', function(event, elements){
+ *     $('form').live('ajax:aborted:file', function(event, elements){
  *       // Implement own remote file-transfer handler here for non-blank file inputs passed in `elements`.
  *       // Returning false in this handler tells rails.js to disallow standard form submission
  *       return false;
@@ -42,7 +42,7 @@
  *    get fired in Opera. This event is what causes other browsers to exhibit the same submit-aborting behavior.
  *
  * Ex:
- *     $('form').on('ajax:aborted:required', function(event, elements){
+ *     $('form').live('ajax:aborted:required', function(event, elements){
  *       // Returning false in this handler tells rails.js to submit the form anyway.
  *       // The blank required inputs are passed to this function in `elements`.
  *       return ! confirm("Would you like to submit the form with missing info?");
@@ -304,11 +304,11 @@
 
   $.ajaxPrefilter(function(options, originalOptions, xhr){ if ( !options.crossDomain ) { rails.CSRFProtection(xhr); }});
 
-  $(rails.linkDisableSelector).on('ajax:complete', function() {
+  $(rails.linkDisableSelector).live('ajax:complete', function() {
       rails.enableElement($(this));
   });
 
-  $(rails.linkClickSelector).on('click.rails', function(e) {
+  $(rails.linkClickSelector).live('click.rails', function(e) {
     var link = $(this), method = link.data('method'), data = link.data('params');
     if (!rails.allowAction(link)) return rails.stopEverything(e);
 
@@ -324,7 +324,7 @@
     }
   });
 
-	$(rails.inputChangeSelector).on('change.rails', function(e) {
+	$(rails.inputChangeSelector).live('change.rails', function(e) {
     var link = $(this);
     if (!rails.allowAction(link)) return rails.stopEverything(e);
 
@@ -332,7 +332,7 @@
     return false;
   });
 
-  $(rails.formSubmitSelector).on('submit.rails', function(e) {
+  $(rails.formSubmitSelector).live('submit.rails', function(e) {
     var form = $(this),
       remote = form.data('remote') !== undefined,
       blankRequiredInputs = rails.blankInputs(form, rails.requiredInputSelector),
@@ -362,7 +362,7 @@
     }
   });
 
-  $(rails.formInputClickSelector).on('click.rails', function(event) {
+  $(rails.formInputClickSelector).live('click.rails', function(event) {
     var button = $(this);
 
     if (!rails.allowAction(button)) return rails.stopEverything(event);
@@ -374,11 +374,11 @@
     button.closest('form').data('ujs:submit-button', data);
   });
 
-  $(rails.formSubmitSelector).on('ajax:beforeSend.rails', function(event) {
+  $(rails.formSubmitSelector).live('ajax:beforeSend.rails', function(event) {
     if (this == event.target) rails.disableFormElements($(this));
   });
 
-  $(rails.formSubmitSelector).on('ajax:complete.rails', function(event) {
+  $(rails.formSubmitSelector).live('ajax:complete.rails', function(event) {
     if (this == event.target) rails.enableFormElements($(this));
   });
 
