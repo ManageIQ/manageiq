@@ -62,10 +62,10 @@ describe "FilterByDialogParameters Automate Method" do
 
     it "with missing dialog_environment" do
       post_create(:dialog => {'dialog_fred' => "vm_service"})
+      st = ServiceTemplate.find_by_name('vm_service')
+      svc = FactoryGirl.create(:service)
 
-      expect { run_automate_method(ServiceTemplate.find_by_name("vm_service"),
-                                   root_service_template_task,
-                                   FactoryGirl.create(:service)) }.to raise_exception
+      expect { run_automate_method(st, root_service_template_task, svc) }.to raise_exception
     end
 
     it "with an invalid vm_service" do
