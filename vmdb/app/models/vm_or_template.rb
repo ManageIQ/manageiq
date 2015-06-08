@@ -279,28 +279,6 @@ class VmOrTemplate < ActiveRecord::Base
     return true
   end
 
-  # Called by miqhost when adding a VM
-  def registerVm
-    $log.info("MIQ(#{self.class.name}#registerVm) Registering vm with id [#{self.id}]")
-
-    # Record record id with vm
-    begin
-      # Notify the host to do initialize the VM
-      if myhost
-        ost = OpenStruct.new("vmId" => self.guid, "args" => [self.path], "method_name" => "RegisterId", "params" => {"registeredOnHost" => !self.host.nil?})
-        myhost.call_ws(ost)
-      end
-    rescue Exception => err
-      $log.log_backtrace(err)
-    end
-
-    # Look for any past events that might contain genealogy data
-    self.reconnect_events
-    self.save
-
-    $log.info("MIQ(Vm-registerVm) Registered with vm metadata")
-  end
-
   # TODO: Vmware specific, and is this even being used anywhere?
   def connected_to_ems?
     self.connection_state == 'connected'
@@ -330,25 +308,13 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def run_command_via_parent(verb, options = {})
+    raise "VM/Template <#{name}> with Id: <#{id}> is not associated with a provider." unless self.ext_management_system
+    raise "VM/Template <#{name}> with Id: <#{id}>: Provider authentication failed." unless self.ext_management_system.authentication_status_ok?
+
     # TODO: Need to break this logic out into a method that can look at the verb and the vm and decide the best way to invoke it - Virtual Center WS, ESX WS, Storage Proxy.
-    if self.ext_management_system && self.ext_management_system.authentication_status_ok? && self.ext_management_system.respond_to?(verb)
-      $log.info("MIQ(#{self.class.name}#run_command_via_parent) Invoking [#{verb}] through EMS: [#{self.ext_management_system.name}]")
-      options = {:user_event => "EVM Console Request Action [#{verb}], VM [#{self.name}]"}.merge(options)
-      self.ext_management_system.send(verb, self, options)
-    else
-      host_id = options.delete("host_id")
-      if host_id
-        host = Host.find(host_id)
-      else
-        host = options.delete("host")
-      end
-      host ||= myhost
-      # If the options hash has an "args" element, remove it and add it to the "args" element with self.path
-      miqhost_args = Array(options.delete("args"))
-      options = {"args" => [self.path] + miqhost_args, "method_name" => verb, "vm_guid" => self.guid}.merge(options)
-      ost = OpenStruct.new(options)
-      ret = host.call_ws(ost) if host
-    end
+    $log.info("MIQ(#{self.class.name}#run_command_via_parent) Invoking [#{verb}] through provider: [#{self.ext_management_system.name}]")
+    options = {:user_event => "Console Request Action [#{verb}], VM [#{self.name}]"}.merge(options)
+    self.ext_management_system.send(verb, self, options)
   end
 
   def policy_prevented?(policy_event)
