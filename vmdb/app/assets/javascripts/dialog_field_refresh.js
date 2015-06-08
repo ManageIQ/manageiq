@@ -8,7 +8,7 @@ var dialogFieldRefresh = {
   },
 
   refreshCheckbox: function(fieldName, fieldId) {
-    miqSparkle(true);
+    miqSparkleOn();
 
     $.post('dynamic_checkbox_refresh', {name: fieldName}, function(data) {
       $('.dynamic-checkbox-' + fieldId).prop('checked', data.values.checked);
@@ -17,7 +17,7 @@ var dialogFieldRefresh = {
   },
 
   refreshDateTime: function(fieldName, fieldId) {
-    miqSparkle(true);
+    miqSparkleOn();
 
     $.post('dynamic_date_refresh', {name: fieldName}, function(data) {
       $('.dynamic-date-' + fieldId).val(data.values.date);
@@ -32,7 +32,7 @@ var dialogFieldRefresh = {
   },
 
   refreshDropDownList: function(fieldName, fieldId, selectedValue) {
-    miqSparkle(true);
+    miqSparkleOn();
 
     $.post('dynamic_radio_button_refresh', {name: fieldName, checked_value: selectedValue}, function(data) {
       var dropdownOptions = [];
@@ -60,7 +60,7 @@ var dialogFieldRefresh = {
   },
 
   refreshRadioList: function(fieldName, fieldId, checkedValue, onClickString) {
-    miqSparkle(true);
+    miqSparkleOn();
 
     $.post('dynamic_radio_button_refresh', {name: fieldName, checked_value: checkedValue}, function(data) {
       var radioButtons = [];
@@ -86,14 +86,14 @@ var dialogFieldRefresh = {
         radioButtons.push(radio);
       });
 
-      $('.dynamic-radio-' + fieldId).html(radioButtons);
+      $('#dynamic-radio-' + fieldId).html(radioButtons);
 
       miqSparkle(false);
     });
   },
 
   refreshTextAreaBox: function(fieldName, fieldId) {
-    miqSparkle(true);
+    miqSparkleOn();
 
     $.post('dynamic_text_box_refresh', {name: fieldName}, function(data) {
       $('.dynamic-text-area-' + fieldId).val(data.values.text);
@@ -102,7 +102,7 @@ var dialogFieldRefresh = {
   },
 
   refreshTextBox: function(fieldName, fieldId) {
-    miqSparkle(true);
+    miqSparkleOn();
 
     $.post('dynamic_text_box_refresh', {name: fieldName}, function(data) {
       $('.dynamic-text-box-' + fieldId).val(data.values.text);

@@ -18,7 +18,7 @@
   - if field.auto_refresh
     :javascript
       var onClickString = 'onclick="dialogFieldRefresh.triggerAutoRefresh(\'#{field.id}\', \'#{field.trigger_auto_refresh}\');' + "#{remote_function(
-        :with     => 'miqSerializeForm("dynamic-radio-#{field.id}")',
+        :with     => 'miqSerializeForm(\"dynamic-radio-#{field.id}\")',
         :url      => {:action => 'dialog_field_changed', :id => (@edit && @edit[:rec_id]) || 'new'},
         :loading  => 'miqSparkle(true);',
         :complete => 'miqSparkle(false);'
@@ -35,7 +35,7 @@
 
   :javascript
     var onClickString = 'onclick="dialogFieldRefresh.triggerAutoRefresh(\'#{field.id}\', \'#{field.trigger_auto_refresh}\');' + "#{remote_function(
-      :with     => 'miqSerializeForm("dynamic-radio-#{field.id}")',
+      :with     => 'miqSerializeForm(\"dynamic-radio-#{field.id}\")',
       :url      => {:action => 'dialog_field_changed', :id => (@edit && @edit[:rec_id]) || 'new'},
       :loading  => 'miqSparkle(true);',
       :complete => 'miqSparkle(false);'
