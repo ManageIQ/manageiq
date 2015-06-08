@@ -2,18 +2,6 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased - as of Sprint 23 end 2015-05-11
-
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+23+Ending+May+11%2C+2015%22+label%3Aenhancement)
-
-- Foreman
-  - Filtering of available Configuration Profiles based on selected Configured Systems in provisioning dialog
-  - Exposed additional properties to reporting
-
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+23+Ending+May+11%2C+2015%22+label%3Aenhancement) 
-
-- UI: Foreman Enhancements
-
 # Botvinnik Release
 
 ### Added Features
