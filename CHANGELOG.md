@@ -2,464 +2,290 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased - as of Sprint 22 end 2015-04-20
+## Unreleased - as of Sprint 23 end 2015-05-11
 
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+22+Ending+Apr+20%2C+2015%22+label%3Aenhancement)
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+23+Ending+May+11%2C+2015%22+label%3Aenhancement)
 
-- Providers
+- Foreman
+  - Filtering of available Configuration Profiles based on selected Configured Systems in provisioning dialog
+  - Exposed additional properties to reporting
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+23+Ending+May+11%2C+2015%22+label%3Aenhancement) 
+
+- UI: Foreman Enhancements
+
+# Botvinnik Release
+
+### Added Features
+
+#### Providers
+- General
+  - Added refresh status and errors, viewable on Provider Summary Page.
+  - Added collection of raw power state and exposed to reporting.
   - Orchestration: Support for Retirement
-  - SCVMM: Provisioning from template, Kerberos Authentication
-  - Amazon: Updated Instance Types (D2 and G2)
-  - Containers: UI updates, refresh button
-  - OpenStack: Autoscale compute nodes
-  - Foreman
-     - Added tag processing during provisioning
-     - Added inventory collection of direct and inherited host/host-group settings
-- UI: Tagging Support for Foreman
-- Rest API: Enhancement to /api/providers to support new provider class
-
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+22+Ending+Apr+20%2C+2015%22+label%3Aenhancement) 
-
-- Automate
- - Dynamic list refactor
- - Read only fields
- - Detection of User vs. System initiated retirement
- - Update provisioning/retirement entry point in a catalog item or bundle
-- Authentication
   - Update authentication status when clicking validate for existing Providers
-- UI
-  - IPv6: Hostname changes, IP address removal
-  - SCVMM UI updates
-- Base Appliance
-  - cloud-init rpm added (but there are root ssh login issues)
-  - iptables configured via kickstart 
-
-### [Removed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+12+Ending+Apr+20%2C+2015%22+label%3A%22technical+debt%22)
-
-- SmartProxy: removed from UI
-- IP Address Form Field: Removed from UI (use Hostname)
-
-
-## Unreleased - as of Sprint 21 end 2015-03-30
-
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+21+Ending+Mar+30%2C+2015%22+label%3Aenhancement)
-
-- Providers: OpenStack
+  - Hosts and Providers now default to use the hostname column for communication instead of IP address.    
+- SCVMM
+  - Provisioning from template, Kerberos Authentication
+  - Virtual DVD drives for templates
+- Kubernetes
+  - UI updates including Refresh button 
+  - Inventory Collection
+  - EMS Refresh scheduling
+- Foreman
+  - Provider refresh
+  - Enabled Reporting / Tagging
+  - Exposed Foreman models as Automate service models
+  - Zone enablement
+  - EMS Refresh scheduling
+  - Added tag processing during provisioning
+  - Added inventory collection of direct and inherited host/host-group settings
+  - Organization and location inventory
+- Cloud Providers
+ - Cloud images and instances: Added root device type to summary screens.
+ - Cloud flavors: Added block storage restriction to summary screens.
+ - Enabled Reporting
+- OpenStack
   - Inventory for Heat Stacks (Cloud and Infrastructure)
   - Connect Cloud provider to Infrastructure provider
-- Providers: General
-  - EMS Refresh scheduling for Foreman and Kubernetes
-- Rest API
-  - Providers CRUD
-  - Refresh via /api/providers
-- Provisioning
-  - Heat Orchestration provisioning through services
-  - Foreman
-     - Provisioning of bare metal systems
-     - Organization and location inventory
-     - Uses latest Foreman Apipie gem
-- Automate: Enhanced UI import
-- Fleecing
- - Qcow3 support
- - VSAN support (VMware)
- - OpenStack instances
-- UI
- - Foreman includes provisioning
- - Orchestration Stacks includes tagging
- - Orchestration templates
-     - Create, edit, delete, tagging, ‘draft’ support
-     - Can create a Service Dialog from template contents
- - HTML5 Consoles for OpenStack
-
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+21+Ending+Mar+30%2C+2015%22+label%3Aenhancement) 
-
-- Automate
- - Dynamic Dialog Date/Time Control
- - Disabled domains clearly marked in UI
- - Automate entry point selection reduced to state machine classes
-- IPv6
- - More code paths communicate via hostname
- - URI building with IPv6 safety
-- UI: tagging support and toolbars on list views
-
-### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+21+Ending+Mar+30%2C+2015%22+label%3Abug)
-
-- Ruby2 trap logging and worker row status
-- Update STMP domain length to match SMTP host length
-
-## Unreleased - as of Sprint 20 end 2015-03-09
-
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+20+Ending+Mar+9%2C+2015%22+label%3Aenhancement)
-
-- UI
-  - Implement HTML5 Console for RHEVM and VMware
-  - Menu plugins for external sites
-  - Orchestration templates UI updates
-  - HAML and I18n strings 100% completed in views
-- Automate
-  - New retirement workflow
-  - Added edit/copy/remove for Orchestration Templates
-  - Enabled CloudFormation Provisioning through Services
-  - New Cloud Objects exposed to Automate 
-- Rest API: Total parity with SOAP API
-- Fleecing: Systemd fleecing support
-- Providers (Backend completion)
-  - OpenStack Infrastructure: Heat stacks, images, additional metrics
-  - Kubernetes (Containers): Event catcher
-- Foreman Integration (Backed completion)
-  - Reorganized backend tables of managers by consolidating into ext_management_systems
-  - Verification of credentials
-  - Workers for EMS Refresh
-  - Provisioning
-
-
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+20+Ending+Mar+9%2C+2015%22+label%3Aenhancement)
-
-- Appliance
-  - Replaced authentication_(valid|invalid)? with (has|missing)_credentials?
-  - Stop/start apache if user_interface and web_services are inactive/active
-  - Rails server listen on loopback in production mode
-  - Make memcached listen on loopback address, not all addresses
-  - Migrate empty memcache_server_opts to bind on localhost by default  
-- IPv6:  Merged support for IPv6 addresses with RHEVM/oVirt (requires ip6tables 443 open)
-- Providers
-  - Hosts and Providers will now default to use the hostname column for communication instead of IP address.  UI changes are still to be done.
-  - Use rest-client master branch for IPv6 fixes
-- Automate Service Dialogs: Enabled dynamic date control
-
-### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+20+Ending+Mar+9%2C+2015%22+label%3Abug)
-
-Notable fixes include:
-- RHEVM/oVirt discovery fixed to eliminate false positives
-- Appliance no longer automatically creates database.yml, created after database is configured.
-- Corrected ManageIQ/Infrastructure/vm/retirement method retry criteria
-
-## Unreleased - as of Sprint 19 end 2015-02-16
-
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+19+Ending+Feb+16%2C+2015%22+label%3Aenhancement)
-
-- Providers
   - OpenStack Infrastructure Host Events
-  - Kubernetes Inventory Collection
-  - Foreman
-     - Provider refresh (inventory)
-     - Enabled Reporting / Tagging
-     - Automate service models
-     - Zone enablement
-- Rest APIs
-  - Tag Collection /api/tags 
-  - Tag Management (assign and unassign to/from resources)
-  - Foundational
-     - Virtual attribute support  
-     - Id/Href separation
-  - Policy Management
-     - Query policy and policy profiles conditions
- - VM Management
-     - Custom Attributes
-     - Add LifeCycle Events
-- I18n Status
-  - All strings in the views have been converted to use gettext (I18n) calls
-  - Can add/update I18n files with translations
-- Service Dialogs: Added Dynamic checkbox
-- Orchestration
-  - Provisioning dialog generator
-  - Enabled Reporting / Tagging
-  - Automate service models
-
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+19+Ending+Feb+16%2C+2015%22+label%3Aenhancement)
-
-- UI
-  - Login screen converted to Bootstrap / Patternfly
-  - Header, navigation, and outer layouts converted to Bootstrap / Patternfly
-  - Advanced search converted to Bootstrap / Patternfly
-  - Stacks screens have icons now
-  - Orchestration Insight
-  - Schedule editor converted to AngularJS
-  - UI Customizations with Less
-  - Dashboard tabs updated
-
-### [Removed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+19+Ending+Feb+16%2C+2015%22+label%3A%22technical+debt%22)
-
-- I18N: All views converted to HAML
-- Removed Prototype
-
-### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+19+Ending+Feb+16%2C+2015%22+label%3Abug)
-
-- Notable fixes include:
- - EventEx is now disabled by default to help prevent event storms
- - Fixed ftp log collection regression
- - Fixed “High CPU usage” due to continually restarting workers, when a provider is unreachable or password is invalid
- - Fixed bug causing fleecing timeout
- - Fixed timeout issue with remove_from_disk method on a VM in Automate
- - Fixed duplicate VM name generation issue during provisioning
-
-## Unreleased - as of Sprint 18 end 2015-01-26
-
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+18+Ending+Jan+26%2C+2015%22+label%3Aenhancement)
-
-- Providers
-  - Added refresh status and errors, viewable on Provider Summary Page.
-  - Amazon EC2: Added C4 instance types.
-- Rest API: VM start, stop, suspend, delete actions added.
-- UI
- - Multi-character set language support
- - Cloud Stacks summary and list views
-- Service Dialogs: Dynamic field support for text boxes and text area boxes
-- IPv6: Ensure an IPv6 literal address, such as "[::1]", passed to the Excon gem removes the square brackets [], when establishing a Socket connection to the address, "::1".
-
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+18+Ending+Jan+26%2C+2015%22+label%3Aenhancement)
-
-- Rails Updates
-  - Moved to Rails 4 finders.
-  - Removed patches against the logger classes.
-  - Removed assumptions that associations are eagerly loaded.
-- Fog gem updates for OpenStack
-
-### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+18+Ending+Jan+26%2C+2015%22+label%3Abug)
-
-- 48 issues fixed. 
-- Notable fixes include:
-  - A new version of the Rake gem broke the nightly CentOS community builds requiring users to run `rake db:migrate`
-  - OpenStack provisioning fix for non-admin tenants.
-
-## Unreleased - as of Sprint 17 end 2015-01-05
-
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+17+Ending+Jan+5%2C+2015%22+label%3Aenhancement)
-
-- UI  
-  - Can now set the locale for both server and user
-  - Repository Editor using AngularJS
-  - Donut chart support
-- IPv6: Underlying libraries for VMware and RHEVM/oVirt have been completed to support IPv6 literals. RHEVM/oVirt requires new releases from RESTClient and Ruby 2.0.
-- SCVMM: Virtual DVD drives for templates
+  - Autoscale compute nodes via Automate
+  - Support for non-admin users to EMS Refresh
+  - Tenant relationships added to summary screens
+  - OpenStack Infrastructure Event processing
+  - Handling of power states: paused, rebooting, waiting to launch) 
+  - UI OpenStack Terminology: Clusters vs Deployment Roles, Hosts vs Nodes
 - Amazon
   - AWS Region EU Frankfurt
   - Inventory collection for AWS CloudFormation
   - Parsing of parameters from orchestration templates
-- Provisioning: 
-  - Allow removing keys from :clone_options by setting value to nil
-  - Dynamic radio button support in dialogs
-
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+17+Ending+Jan+5%2C+2015%22+label%3Aenhancement)
-
-- Rails 4 Upgrades
-  - Updated  preloader patches against Rails
-  - Updated virtual column / reflection code to integrate with Rails
-  - Started moving ActiveRecord 2.3 hash based finders to Relation based finders
-  - Backports and refactorings on master for Rails 4 support
-- Changed classification seeding to only add classification if missing
-
-
-### [Removed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+17+Ending+Jan+5%2C+2015%22+label%3A%22technical+debt%22)
-
-- Support for repository refreshes, since they are not used.
-- Support for Host-only refreshes.  Instead, an ESX/ESXi server should be added as an EMS, if that.
-
-
-### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+17+Ending+Jan+5%2C+2015%22+label%3Abug)
-
-- 38 issues fixed. 
-- Notable fixes include:
-  - UI: Fixed code to not allow deletion of locked domains.
-  - OpenStack: Fixed image pagination issue where all of the images would not be collected.
-  - RHEVM/oVirt: Ignore user login failed events to prevent event flooding.
-  - SCVMM: Fixed refresh when Virtual DVD drives are not present.
-  - Fleecing: Fixed handling of nil directory entries and empty files
-  - Fixed virtual column inheritance creating duplicate entries.
-
-
-## Unreleased - as of Sprint 16 end 2014-12-02
-
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+16+Ending+Dec+2%2C+2014%22+label%3Aenhancement)
-
-- Rest API
-  - Added support for accounts sub-collection /api/vms/#/accounts
-  - Added support for software sub-collection /api/vms/#/software
-- Providers: Amazon Events
+  - Amazon Events via AWS Config service
   - Enables event-based policies for AWS
-- UI: Continued work on supporting I18N
-- IPv6 support
-  - VMware communication (complete)
-  - RHEVM/oVirt communication (in progress)
+  - Added a backend attribute to identify public images.
+  - Added C4, D2, and G2 instance types.
+  - Virtualization type collected during EMS refresh for better
+    filtering of available types during provisioning.
+  - Handling of power states
+- Orchestration
+ - Orchestration Stacks includes tagging
+ - Cloud Stacks: Summary and list views.
+ - Orchestration templates
+     - Create, edit, delete, tagging, ‘draft’ support
+     - Create Service Dialog from template contents
+ - Enabled Reporting / Tagging
+ - Improved rollback error message in UI
+ - Collect Stack Resource name and status reason message
+     
+#### Provisioning
+- Heat Orchestration provisioning through services
+- Foreman
+  - Provisioning of bare metal systems
+  - Uses latest Foreman Apipie gem
+- Allow removing keys from :clone_options by setting value to nil
+- OpenStack: Added tenant filtering on security groups, floating IPs, and
+    networks.
+- Amazon: Filtering of flavors based on root device type and block
+    storage restrictions.
+
+#### User Interface
+- Bootstrap/Patternfly
+  - Updates to form buttons with Patternfly
+  - Login screen converted to Bootstrap / Patternfly
+  - Header, navigation, and outer layouts converted to Bootstrap / Patternfly
+  - Advanced search converted to Bootstrap / Patternfly
+- AngularJS
+  - Repository Editor using AngularJS
+  - Schedule editor converted to AngularJS
+- I18N
+  - HAML and I18n strings 100% completed in views
+  - Multi-character set language support
+  - Can now set the locale for both server and user
+- HTML5 Console for RHEVM, VMware, and OpenStack
+- Menu plugins for external sites
+- Charting updates: jqPlot, default charts, chart styling, donut chart support
+- UI Customizations with Less
+- Dashboard tabs updated
+- Replaced many legacy Prototype calls with jQuery equivalents
+- Tagging support and toolbars on list views
+
+#### Rest API 
+- Total parity with SOAP API. SOAP API is now deprecated and will be removed in an upcoming release.
+- Foundational
+  - Virtual attribute support  
+  - Id/Href separation- Enhancement to /api/providers to support new provider class
+- Providers CRUD
+- Refresh via /api/providers
+- Tag Collection /api/tags 
+- Tag Management (assign and unassign to/from resources)
+- Policy Management: Query policy and policy profiles conditions
+- VM Management
+  - Custom Attributes
+  - Add LifeCycle Events
+  - Start, stop, suspend, delete.
+- Accounts sub-collection /api/vms/#/accounts
+- Software sub-collection /api/vms/#/software
+- Support for external authentication (httpd) against an IPA server.  
+
+#### Automate 
+- Enhanced UI import to allow granularity down to the namespace.
+- Cloud Objects exposed to Automate. 
+- Allow Automate methods to override or extend parameters passed to provider by
+  updating the clone_options during provisioning.  
+- New service model for CloudResourceQuota.
+- Exposed relationships through EmsCloud and CloudTenant models.
+- Exposed cloud relationships in automate service models.
+- Persist state data through automate state machine retries.
+- Moved auto-placement into an Automate state-machine step for Cloud and Infrastructure provisioning.
+- Added common "Finished" step to all Automate state machine classes.
+- Added eligible_* and set_* methods for cloud resources to provision task service model.
+- Ability to specify zone for web service automation request
+- Ability to override request message
+- Updated provisioning/retirement entry point in a catalog item or bundle.
+- Disabled domains clearly marked in UI.
+- Automate entry point selection reduced to state machine classes.
+- Retirement
+  - New workflow
+  - Detection of User vs. System initiated retirement
+
+#### Fleecing
+- Qcow3
+- VSAN (VMware)
+- OpenStack instances
+- Systemd fleecing support
+- XFS filesystem support
+
+#### I18n
+  - All strings in the views have been converted to use gettext (I18n) calls
+  - Can add/update I18n files with translations
+
+#### Service Dialogs
+- Dynamic field support: text boxes, text area boxes, checkboxes, radio buttons, date/time control
+- Dynamic list field refactored into standard drop-down field
+- Read only field support
+- Dialog seeding for imports
+- Service provisioning request overrides
+
+#### IPv6 
+- Allow IPv6 literals in VMware communication by upgrading httpclient
+- Allow IPv6 literals in RHEVM/ovirt communication by fixing and upgrading rest-client and ruby 2.0
+- Fixed URI building within ManageIQ to wrap/unwrap IPv6 literals as neede
   
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+16+Ending+Dec+2%2C+2014%22+label%3Aenhancement)
-
-- UI: jqPlot, default charts, chart styling
-- Cloud Orchestration: Modeling complete
-- Services
-  - Dialog seeding for imports
-  - Service provisioning request overrides
-- Automate Enhancements
-  - Specify zone for web service automation request
-  - Request message override
-- LDAP
-  - Allow undefined users to log in when “Get User Groups from LDAP” is disabled
-  - Ability to set default group for LDAP Authentication
-
-### [Removed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+16+Ending+Dec+2%2C+2014%22+label%3A%22technical+debt%22)
-
-- SmartProxy (host) directory
-- Rails Fork removal
-  - Backport disable_ddl_transaction! from Rails master to our fork
-  - Update the main app to use disable_ddl_transaction!
-  - Add bigserial support for primary keys to Rails (including table creation and FK column creation)
-  - Backport bigserial API to our fork
-  - Update application to use new API
-
-### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+16+Ending+Dec+2%2C+2014%22+label%3Abug)
-
-- 44 issues fixed. 
-- Notable fixes include:
-  - Fixed issue where deleting a cluster or host tries to delete all policy_events, thus never completing when there are millions of events.
-  - Fixed inheriting tags from resource pool.
-  - Fixed openstack provisioning to deal with multiple security groups with the same name.
-  - Fixed seeding of VmdbDatabase timing out with millions of vmdb_metrics rows
-
-## Unreleased - as of Sprint 15 end 2014-11-10
-
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+15+Ending+Nov+10%2C+2014%22+label%3Aenhancement)
-
-- Security: Lock down [POODLE](http://en.wikipedia.org/wiki/POODLE) attacks.
-- Ruby 2.0
-  - Appliance now built using Ruby 2.0
-  - New commits and pull requests - tested with Ruby 2.0
-- Service Dialogs: Exports can be copied onto an appliance and seeded during appliance startup
-- UI: Continued work on supporting I18N.
-   
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+15+Ending+Nov+10%2C+2014%22+label%3Aenhancement)
-
-- Security
-  - Command tool fix_auth now can update passwords in database.yml
-  - Better messaging around overwriting database encryption keys (aka v2_key)
-- More Rails patches removed/upstreamed/backported
-  - Bigint id columns
-  - Memoist gem replaced deprecated ActiveSupport::Memoizable
-- UI: Replaced many legacy Prototype calls with jQuery equivalents.
-- Upgraded AWS SDK gem
-- Upgraded Fog gem
-
-### [Removed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+15+Ending+Nov+10%2C+2014%22+label%3A%22technical+debt%22)
-
-- Old C-Language VixDiskLib binding code
-- Code from product that has been upstreamed into Rails.
-- Testing: Removed have_same_elements custom matcher in favor of built-in match_array
-
-### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+15+Ending+Nov+10%2C+2014%22+label%3Abug)
-
-- 45 issues closed.
-
-## Unreleased - as of Sprint 14 end 2014-10-20
-
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+14+Ending+Oct+20%2C+2014%22+is%3Aclosed+label%3Aenhancement)
-
+#### Security 
+- Lock down [POODLE](http://en.wikipedia.org/wiki/POODLE) attacks.
 - Support SSL for OpenStack
   - Deals with different ways to configure SSL for OpenStack
     - SSL termination at OpenStack services
     - SSL termination at proxy
     - Doesn’t always change the service ports
   - Attempts non-SSL first, then fails over to SSL
-- Model Template many-to-many Cloud Tenant
-- Support Version 5 XFS filesystem
-- Allow Automate methods to override or extend parameters passed to provider by
-  updating the clone_options during provisioning
+- Kerberos ticket based SSO to web UI login.
+- Fix_auth command tool can now update passwords in database.yml
+- Better messaging around overwriting database encryption keys
+- Make memcached listen on loopback address, not all addresses
+- Migrate empty memcache_server_opts to bind on localhost by default 
 
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+14+Ending+Oct+20%2C+2014%22+is%3Aclosed+label%3Aenhancement)
+#### Appliance
+- Rake task to allow a user to replicate all pending backlog before upgrading.
+- Appliance Console: Added ability to copy keys across appliances.
+- Ruby 2.0
+  - Appliance now built using Ruby 2.0
+  - New commits and pull requests - tested with Ruby 2.0
+- Ability to configure a temp disk for OpenStack fleecing added to the
+    appliance console.
+- Generation of encryption keys added to the appliance console and CLI.
+- Generation of PostgreSQL certificates, leveraging IPA, added to the
+    appliance console CLI.
+- Support for Certmonger/IPA to the appliance certificate authority.
+- Iptables configured via kickstart
+- Replaced authentication_(valid|invalid)? with (has|missing)_credentials?
+- Stop/start apache if user_interface and web_services are inactive/active
+- Rails 
+  - Moved to Rails 4 finders.
+  - Removed patches against the logger classes.
+  - Removed assumptions that associations are eagerly loaded.
+  - Updated  preloader patches against Rails
+  - Updated virtual column / reflection code to integrate with Rails
+  - Started moving ActiveRecord 2.3 hash based finders to Relation based finders
+  - Backports and refactorings on master for Rails 4 support 
+  - Rails server listen on loopback when running appliance in production mode
+  - Bigint id columns
+  - Memoist gem replaced deprecated ActiveSupport::Memoizable
+- Upgraded AWS SDK gem
+- Upgraded Fog gem
+- LDAP
+  - Allow undefined users to log in when “Get User Groups from LDAP” is disabled
+  - Ability to set default group for LDAP Authentication
+- Allow Default Zone description to be changed
+- Lazy require the less-rails gem  
 
-- Updated report listviews to use glyphicons
-- Chart Themes
-- Allow Default Zone description to be changed   
 
-### [Removed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+14+Ending+Oct+20%2C+2014%22+is%3Aclosed+label%3A%22technical+debt%22)
+### Removed
 
+- SmartProxy: 
+  - Removed from UI
+  - Directory removed
+- IP Address Form Field: Removed from UI (use Hostname)
+- Prototype from UI
+- Support for repository refreshes, since they are not used.
+- Support for Host-only refreshes.  Instead, an ESX/ESXi server should be added as a Provider.
+- Rails Fork removal
+  - Backport disable_ddl_transaction! from Rails master to our fork
+  - Update the main app to use disable_ddl_transaction!
+  - Add bigserial support for primary keys to Rails (including table creation and FK column creation)
+  - Backport bigserial API to our fork
+  - Update application to use new API
+- Old C-Language VixDiskLib binding code
+- Reduce need for Rails fork
+- Testing: Removed have_same_elements custom matcher in favor of built-in match_array
 - Graphical summary screens
 - VDI support
 - Various monkey patches to prepare for Ruby 2 and Rails 4 upgrades  
 
-### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+14+Ending+Oct+20%2C+2014%22+is%3Aclosed+label%3Abug)
+### Notable Fixes and Changes
 
-- 42 issues closed.
-
-## Unreleased - as of Sprint 13 end 2014-09-29
-
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+13+Ending+Sept+29%2C+2014%22+is%3Aclosed+label%3Aenhancement)
-
-- UI
-  - OpenStack: Tenant relationships added to summary screens.
-  - Cloud images and instances: Added root device type to summary screens.
-  - Cloud flavors: Added block storage restriction to summary screens.
-  - Cleaned up Service Requests list and detail views.
-  - Added cloud models to reporting.
+- Provisioning 
+  - Fixed duplicate VM name generation issue during provisioning.
+  - Provisioning fix for non-admin OpenStack tenants.
+  - Provisioning fix to deal with multiple security groups with the same name.
 - Automate
-  - Added new service model for CloudResourceQuota and exposed relationships
-    through EmsCloud and CloudTenant models.
-  - Enhanced import to allow granularity down to the namespace.
-- Provisioning
-  - OpenStack: Added tenant filtering on security groups, floating IPs, and
-    networks.
-  - Amazon: added filtering of flavors based on root device type and block
-    storage restrictions.
+  - Prevent deletion of locked domains.
+  - Corrected ManageIQ/Infrastructure/vm/retirement method retry criteria.
+  - Fixed timeout issue with remove_from_disk method on a VM in Automate.
 - Providers
-  - All: Added collection of raw power state and exposed to reporting.
-  - Cloud: Added a backend attribute to identify public images.
-  - OpenStack: Added support for non-admin users to EMS Refresh.
-- Fleecing
-  - Added XFS filesystem support.
-- Security
-  - Added Kerberos ticket based SSO to web UI login.
-- Appliance
-  - Added a rake task to allow a user to replicate all pending backlog before
-    upgrading.
-  - Appliance Console: Added ability to copy keys across appliances.
-
-### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+13+Ending+Sept+29%2C+2014%22+is%3Aclosed+label%3Abug)
-
-- 80 issues fixed.  Notable fixes include
-  - UI: Fixed RBAC / Feature bugs
-  - OpenStack provider will gracefully handle 404 errors.
-  - server_monitor_poll default setting changed to 5 seconds.  This should
-    result in shorter queue wait times across the board.
-  - Fixed issue where deleting an EMS and adding it back would cause failure to
-    refresh.
-  - Fixed issue where a stopped or paused OpenStack instance could not be
+ - server_monitor_poll default setting changed to 5 seconds, resulting in shorter queue times.
+ - Fixed issue where deleting an EMS and adding it back would cause refresh failure.
+ - EventEx is now disabled by default to help prevent event storms
+ - Fixed “High CPU usage” due to continually restarting workers when a provider is unreachable or password is invalid.
+ - RHEVM/oVirt: 
+    - Ignore user login failed events to prevent event flooding.
+    - Discovery fixed to eliminate false positives
+ - SCVMM: Fixed refresh when Virtual DVD drives are not present. 
+ - OpenStack
+       -  Image pagination issue where all of the images would not be collected.
+       -  OpenStack provider will gracefully handle 404 errors.
+       - Fixed issue where a stopped or paused OpenStack instance could not be
     restarted.
-  - More Ruby 2.0 backward compatible fixes.
-
-## Unreleased - as of Sprint 12 end 2014-09-09
-
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+12+Ending+Sept+9%2C+2014%22+is%3Aclosed+label%3Aenhancement)
-
-- Automate
-  - Exposed cloud relationships in automate service models.
-  - Persist state data through automate state machine retries.
-  - Moved auto-placement into an Automate state-machine step for Cloud and
-    Infrastructure provisioning.
-  - Added common "Finished" step to all Automate state machine classes.
-  - Added eligible_* and set_* methods for cloud resources to provision task
-    service model.
-- EMS Refresh / Provisioning
-  - Amazon EC2 virtualization type collected during EMS refresh for better
-    filtering of available types during provisioning.
-- UI
-  - UI updates to form buttons with Patternfly.
-- REST API
-  - Support for external authentication (httpd) against an IPA server.
-- Appliance
-  - Ability to configure a temp disk for OpenStack fleecing added to the
-    appliance console.
-  - Generation of encryption keys added to the appliance console and CLI.
-  - Generation of PostgreSQL certificates, leveraging IPA, added to the
-    appliance console CLI.
-  - Support for Certmonger/IPA to the appliance certificate authority.
+- Database
+  - Fixed seeding of VmdbDatabase timing out with millions of vmdb_metrics rows
+  - Database.yml is no longer created  after database is configured.
+  - Fixed virtual column inheritance creating duplicate entries.
+-  Appliance
+   - Fixed ftp log collection regression
+   - Ruby 2.0
+     - Ruby2 trap logging and worker row status
+   - Fixed appliance logrotate not actually rotating the logs.
+   - Gem upgrades for bugs/enhancements
+      - haml
+      - net-ldap
+      - net-ping
 - Other
-  - EVM dump tool enhanced.
-  - A change log!
-
-### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+12+Ending+Sept+9%2C+2014%22+is%3Aclosed+label%3Abug)
-
-- 63 issues fixed.  Notable fixes include
-  - Fixed appliance logrotate not actually rotating the logs.
-  - Some Ruby 2.0 backward compatible fixes.
-  - Gem upgrades for bugs/enhancements
-    - haml
-    - net-ldap
-    - net-ping
+ - Workaround for broker hang: Reported as VMware events and capacity and utilization works for a while, then stops.
+  - Chargeback
+  - Storage C&U collected every 60 minutes.
+  - Don’t collect cpus/memory available unless you have usage.- Clean up of CPU details in UI
+ - SMTP domain length updated to match SMTP host length
+ - Fleecing: Fixed handling of nil directory entries and empty files 
+ - Fixed issue where deleting a cluster or host tries to delete all policy_events, thus never completing when there are millions of events.
+ - Fixed inheriting tags from resource pool.
+ - UI: Fixed RBAC / Feature bugs
+ 
