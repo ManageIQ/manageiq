@@ -1291,6 +1291,13 @@ function miqClickAndPop(el) {
   return false;
 }
 
+function miq_patternfly_tabs_init(id, url) {
+  $(id + ' .nav-tabs a[data-toggle="tab"]').on('click.bs.tab.data-api', function (e) {
+    var currTabTarget = $(e.target).attr('href').substring(1);
+    miqJqueryRequest(url + '/?tab_id=' + currTabTarget, {beforeSend: true});
+  });
+}
+
 // method takes 4 parameters tabs div id, active tab label, url to go to when tab is changed, and whether to check for abandon changes or not
 function miq_jquery_tabs_init(options) {
   // initializing tabs

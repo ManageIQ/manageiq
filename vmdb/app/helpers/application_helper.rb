@@ -2894,5 +2894,19 @@ module ApplicationHelper
     true
   end
 
+  def patternfly_tab_header(id, active, &block)
+    content_tag(:li, :class => active == id ? 'active' : '') do
+      content_tag(:a, :href => "##{id}", 'data-toggle' => 'tab') do
+        yield
+      end
+    end
+  end
+
+  def patternfly_tab_content(id, active, &block)
+    content_tag(:div, :id => id, :class => "tab-pane#{active == id ? ' active' : ''}") do
+      yield if active == id
+    end
+  end
+
   attr_reader :big_iframe
 end

@@ -198,7 +198,7 @@ class OpsController < ApplicationController
   end
 
   def change_tab(new_tab_id = nil)
-    @exlorer = true
+    @explorer = true
     session[:changed] = false
     session[:flash_msgs] = @flash_array = nil       #clear out any messages from previous screen i.e import tab
     if params[:tab]

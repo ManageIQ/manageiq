@@ -1,269 +1,226 @@
-#ops_tabs{:style => "display:none;"}
-  -# Settings
-  - if x_active_tree == :settings_tree
-    - if selected?(x_node,"z")
-      %ul.tab
-        %li
-          %a{:href => "#settings_evm_servers"}=_("Zone")
-      #settings_evm_servers{:name => "settings_evm_servers", :width => "80px"}
-        = render :partial => "settings_evm_servers_tab"
+#ops_tabs
+  - # Settings
+  - case x_active_tree
+  - when :settings_tree
+    - if selected?(x_node, "z")
+      %ul.nav.nav-tabs
+        = patternfly_tab_header("settings_evm_servers", @sb[:active_tab]) do
+          = _("Zone")
+      .tab-content
+        = patternfly_tab_content("settings_evm_servers", @sb[:active_tab]) do
+          = render :partial => "settings_evm_servers_tab"
     - elsif selected?(x_node, "svr")
       - cur_svr_id = from_cid(x_node.split("-").last).to_i
-      %ul.tab
-        %li
-          %a{:href => "#settings_server"}=_("Server")
-        %li
-          %a{:href => "#settings_authentication"}=_("Authentication")
-        %li
-          %a{:href => "#settings_workers"}=_("Workers")
+      %ul.nav.nav-tabs
+        = patternfly_tab_header("settings_server", @sb[:active_tab]) do
+          = _("Server")
+        = patternfly_tab_header("settings_authentication", @sb[:active_tab]) do
+          = _("Authentication")
+        = patternfly_tab_header("settings_workers", @sb[:active_tab]) do
+          = _("Workers")
         - if cur_svr_id == @sb[:my_server_id]
-          %li
-            %a{:href => "#settings_database"}=_("Database")
-          %li
-            %a{:href => "#settings_custom_logos"}=_("Custom Logos")
+          = patternfly_tab_header("settings_database", @sb[:active_tab]) do
+            = _("Database")
+          = patternfly_tab_header("settings_custom_logos", @sb[:active_tab]) do
+            = _("Custom Logos")
         - if cur_svr_id == @sb[:my_server_id]
-          %li
-            %a{:href => "#settings_advanced"}=_("Advanced")
-      #settings_server{:name => "settings_server", :width => "80px"}
-        - if @sb[:active_tab] == "settings_server"
+          = patternfly_tab_header("settings_advanced", @sb[:active_tab]) do
+            = _("Advanced")
+      .tab-content
+        = patternfly_tab_content("settings_server", @sb[:active_tab]) do
           = render :partial => "settings_server_tab"
-      #settings_authentication{:name => "settings_authentication", :width => "80px"}
-        - if @sb[:active_tab] == "settings_authentication"
+        = patternfly_tab_content("settings_authentication", @sb[:active_tab]) do
           = render :partial => "settings_authentication_tab"
-      #settings_workers{:name => "settings_workers", :width => "80px"}
-        - if @sb[:active_tab] == "settings_workers"
+        = patternfly_tab_content("settings_workers", @sb[:active_tab]) do
           = render :partial => "settings_workers_tab"
-      - if cur_svr_id == @sb[:my_server_id]
-        #settings_database{:name => "settings_server", :width => "80px"}
-          - if @sb[:active_tab] == "settings_database"
+        - if cur_svr_id == @sb[:my_server_id]
+          = patternfly_tab_content("settings_database", @sb[:active_tab]) do
             = render :partial => "settings_database_tab"
-        #settings_custom_logos{:name => "settings_custom_logos", :width => "80px"}
-          - if @sb[:active_tab] == "settings_custom_logos"
+          = patternfly_tab_content("settings_custom_logos", @sb[:active_tab]) do
             = render :partial => "settings_custom_logos_tab"
-      - if cur_svr_id == @sb[:my_server_id]
-        #settings_advanced{:name => "settings_advanced", :width => "80px"}
-          - if @sb[:active_tab] == "settings_advanced"
+        - if cur_svr_id == @sb[:my_server_id]
+          = patternfly_tab_content("settings_advanced", @sb[:active_tab]) do
             = render :partial => "settings_advanced_tab"
     - else
       - if selected_settings_tree?(x_node)
-        #settings_list{:name => "settings_list", :width => "80px"}
-          - if @sb[:active_tab] == "settings_list"
-            = render :partial => "settings_list_tab"
+        = render :partial => "settings_list_tab"
       - else
-        %ul.tab
-          %li
-            %a{:href => "#settings_details"}=_("Details")
-          %li
-            %a{:href => "#settings_cu_collection"}=_("C & U Collection")
-          %li
-            %a{:href => "#settings_co_categories"}
-              = escape_javascript(session[:customer_name])
-              =_("Categories")
-          %li
-            %a{:href => "#settings_co_tags"}
-              = escape_javascript(session[:customer_name])
-              =_("Tags")
-          %li
-            %a{:href => "#settings_import_tags"}=_("Import Tags")
-          %li
-            %a{:href => "#settings_import"}=_("Import")
-          %li
-            %a{:href => "#settings_rhn"}=_("Red Hat Updates")
-        #settings_details{:name => "settings_details", :width => "80px"}
-          - if @sb[:active_tab] == "settings_details"
+        %ul.nav.nav-tabs
+          = patternfly_tab_header("settings_details", @sb[:active_tab]) do
+            = _("Details")
+          = patternfly_tab_header("settings_cu_collection", @sb[:active_tab]) do
+            = _("C & U Collection")
+          = patternfly_tab_header("settings_co_categories", @sb[:active_tab]) do
+            = escape_javascript(session[:customer_name])
+            = _("Categories")
+          = patternfly_tab_header("settings_co_tags", @sb[:active_tab]) do
+            = escape_javascript(session[:customer_name])
+            = _("Tags")
+          = patternfly_tab_header("settings_import_tags", @sb[:active_tab]) do
+            = _("Import Tags")
+          = patternfly_tab_header("settings_import", @sb[:active_tab]) do
+            = _("Import")
+          = patternfly_tab_header("settings_rhn", @sb[:active_tab]) do
+            = _("Red Hat Updates")
+        .tab-content
+          = patternfly_tab_content("settings_details", @sb[:active_tab]) do
             = render :partial => "settings_details_tab"
-        #settings_cu_collection{:name => "settings_cu_collection", :width => "80px"}
-          - if @sb[:active_tab] == "settings_cu_collection"
+          = patternfly_tab_content("settings_cu_collection", @sb[:active_tab]) do
             = render :partial => "settings_cu_collection_tab"
-        #settings_co_categories{:name => "settings_co_categories", :width => "80px"}
-          - if @sb[:active_tab] == "settings_co_categories"
+          = patternfly_tab_content("settings_co_categories", @sb[:active_tab]) do
             = render :partial => "settings_co_categories_tab"
-        #settings_co_tags{:name => "settings_co_tags", :width => "80px"}
-          - if @sb[:active_tab] == "settings_co_tags"
+          = patternfly_tab_content("settings_co_tags", @sb[:active_tab]) do
             = render :partial => "settings_co_tags_tab"
-        #settings_import_tags{:name => "settings_import_tags", :width => "80px"}
-          - if @sb[:active_tab] == "settings_import_tags"
+          = patternfly_tab_content("settings_import_tags", @sb[:active_tab]) do
             = render :partial => "settings_import_tags_tab"
-        #settings_import{:name => "settings_import", :width => "80px"}
-          - if @sb[:active_tab] == "settings_import"
+          = patternfly_tab_content("settings_import", @sb[:active_tab]) do
             = render :partial => "settings_import_tab"
-        #settings_rhn{:name => "settings_rhn", :width => "80px"}
-          - if @sb[:active_tab] == "settings_rhn"
+          = patternfly_tab_content("settings_rhn", @sb[:active_tab]) do
             = render :partial => "settings_rhn_tab"
     -# Diagnostics
-  - elsif x_active_tree == :diagnostics_tree
+  - when :diagnostics_tree
     - if x_node.split("__").last.split("-")[0] == "z"
-      %ul.tab
-        %li
-          %a{:href => "#diagnostics_roles_servers"}=_("Roles by Servers")
-        %li
-          %a{:href => "#diagnostics_servers_roles"}=_("Servers by Roles")
-        %li
-          %a{:href => "#diagnostics_server_list"}=_("Servers")
-        %li
-          %a{:href => "#diagnostics_collect_logs"}=_("Collect Logs")
-        %li
-          %a{:href => "#diagnostics_cu_repair"}=_("C & U Gap Collection")
-      #diagnostics_roles_servers{:name => "diagnostics_roles_servers", :width => "80px"}
-        - if @sb[:active_tab] == "diagnostics_roles_servers"
+      %ul.nav.nav-tabs
+        = patternfly_tab_header("diagnostics_roles_servers", @sb[:active_tab]) do
+          = _("Roles by Servers")
+        = patternfly_tab_header("diagnostics_servers_roles", @sb[:active_tab]) do
+          = _("Servers by Roles")
+        = patternfly_tab_header("diagnostics_server_list", @sb[:active_tab]) do
+          = _("Servers")
+        = patternfly_tab_header("diagnostics_collect_logs", @sb[:active_tab]) do
+          = _("Collect Logs")
+        = patternfly_tab_header("diagnostics_cu_repair", @sb[:active_tab]) do
+          = _("C & U Gap Collection")
+      .tab-content
+        = patternfly_tab_content("diagnostics_roles_servers", @sb[:active_tab]) do
           = render :partial => "diagnostics_roles_servers_tab"
-      #diagnostics_servers_roles{:name => "diagnostics_servers_roles", :width => "80px"}
-        - if @sb[:active_tab] == "diagnostics_servers_roles"
+        = patternfly_tab_content("diagnostics_servers_roles", @sb[:active_tab]) do
           = render :partial => "diagnostics_servers_roles_tab"
-      #diagnostics_server_list{:name => "diagnostics_server_list", :width => "80px"}
-        - if @sb[:active_tab] == "diagnostics_server_list"
+        = patternfly_tab_content("diagnostics_server_list", @sb[:active_tab]) do
           = render :partial => "diagnostics_server_list_tab"
-      #diagnostics_collect_logs{:name => "diagnostics_collect_logs", :width => "80px"}
-        - if @sb[:active_tab] == "diagnostics_collect_logs"
+        = patternfly_tab_content("diagnostics_collect_logs", @sb[:active_tab]) do
           = render :partial => "diagnostics_collect_logs_tab"
-      #diagnostics_cu_repair{:name => "diagnostics_cu_repair", :width => "80px"}
-        - if @sb[:active_tab] == "diagnostics_cu_repair"
+        = patternfly_tab_content("diagnostics_cu_repair", @sb[:active_tab]) do
           = render :partial => "diagnostics_cu_repair_tab"
     - elsif x_node.split("__").last.split("-")[0] == "svr"
-      %ul.tab
+      %ul.nav.nav-tabs
         - if @sb[:selected_server_id] == @sb[:my_server_id] || @temp[:selected_server].started?
-          %li
-            %a{:href => "#diagnostics_summary"}=_("Summary")
-          %li
-            %a{:href => "#diagnostics_workers"}=_("Workers")
-        %li
-          %a{:href => "#diagnostics_collect_logs"}=_("Collect Logs")
+          = patternfly_tab_header("diagnostics_summary", @sb[:active_tab]) do
+            = _("Summary")
+          = patternfly_tab_header("diagnostics_workers", @sb[:active_tab]) do
+            = _("Workers")
+        = patternfly_tab_header("diagnostics_collect_logs", @sb[:active_tab]) do
+          = _("Collect Logs")
         - if @sb[:selected_server_id] == @sb[:my_server_id]
-          %li
-            %a{:href => "#diagnostics_evm_log"}=_("CFME Log")
-          %li
-            %a{:href => "#diagnostics_audit_log"}=_("Audit Log")
-          %li
-            %a{:href => "#diagnostics_production_log"}
-              = @sb[:rails_log]
-              =_("Log")
-        %li
-          %a{:href => "#diagnostics_utilization"}=_("Utilization")
-        %li
-          %a{:href => "#diagnostics_timelines"}=_("Timelines")
-      - if @sb[:selected_server_id] == @sb[:my_server_id] || @temp[:selected_server].started?
-        #diagnostics_summary{:name => "diagnostics_summary", :width => "80px"}
-          - if @sb[:active_tab] == "diagnostics_summary"
+          = patternfly_tab_header("diagnostics_evm_log", @sb[:active_tab]) do
+            = _("CFME Log")
+          = patternfly_tab_header("diagnostics_audit_log", @sb[:active_tab]) do
+            = _("Audit Log")
+          = patternfly_tab_header("diagnostics_production_log", @sb[:active_tab]) do
+            = @sb[:rails_log]
+            = _("Log")
+        = patternfly_tab_header("diagnostics_utilization", @sb[:active_tab]) do
+          = _("Utilization")
+        = patternfly_tab_header("diagnostics_timelines", @sb[:active_tab]) do
+          = _("Timelines")
+      .tab-content
+        - if @sb[:selected_server_id] == @sb[:my_server_id] || @temp[:selected_server].started?
+          = patternfly_tab_content("diagnostics_summary", @sb[:active_tab]) do
             = render :partial => "diagnostics_summary_tab"
-        #diagnostics_workers{:name => "diagnostics_workers", :width => "80px"}
-          - if @sb[:active_tab] == "diagnostics_workers"
+          = patternfly_tab_content("diagnostics_workers", @sb[:active_tab]) do
             = render :partial => "diagnostics_workers_tab"
-      #diagnostics_collect_logs{:name => "diagnostics_collect_logs", :width => "80px"}
-        - if @sb[:active_tab] == "diagnostics_collect_logs"
+        = patternfly_tab_content("diagnostics_collect_logs", @sb[:active_tab]) do
           = render :partial => "diagnostics_collect_logs_tab"
-      - if @sb[:selected_server_id] == @sb[:my_server_id]
-        #diagnostics_evm_log{:name => "diagnostics_evm_log", :width => "80px"}
-          - if @sb[:active_tab] == "diagnostics_evm_log"
+        - if @sb[:selected_server_id] == @sb[:my_server_id]
+          = patternfly_tab_content("diagnostics_evm_log", @sb[:active_tab]) do
             = render :partial => "diagnostics_evm_log_tab"
-        #diagnostics_audit_log{:name => "diagnostics_audit_log", :width => "80px"}
-          - if @sb[:active_tab] == "diagnostics_audit_log"
+          = patternfly_tab_content("diagnostics_audit_log", @sb[:active_tab]) do
             = render :partial => "diagnostics_audit_log_tab"
-        #diagnostics_production_log{:name => "diagnostics_production_log", :width => "80px"}
-          - if @sb[:active_tab] == "diagnostics_production_log"
+          = patternfly_tab_content("diagnostics_production_log", @sb[:active_tab]) do
             = render :partial => "diagnostics_production_log_tab"
-      #diagnostics_utilization{:name => "diagnostics_utilization", :width => "80px"}
-        - if @sb[:active_tab] == "diagnostics_utilization"
+        = patternfly_tab_content("diagnostics_utilization", @sb[:active_tab]) do
           = render :partial => "diagnostics_utilization_tab"
-      #diagnostics_timelines{:name => "diagnostics_timelines", :width => "80px"}
-        - if @sb[:active_tab] == "diagnostics_timelines"
+        = patternfly_tab_content("diagnostics_timelines", @sb[:active_tab]) do
           = render :partial => "diagnostics_timelines_tab"
     - else
-      %ul.tab
-        %li
-          %a{:href => "#diagnostics_zones"}= ui_lookup(:models=>'Zone')
+      %ul.nav.nav-tabs
+        = patternfly_tab_content("diagnostics_zones", @sb[:active_tab]) do
+          = ui_lookup(:models => 'Zone')
         - if session[:userrole] == "super_administrator"
-          %li
-            %a{:href => "#diagnostics_roles_servers"}=_("Roles by Servers")
-          %li
-            %a{:href => "#diagnostics_servers_roles"}=_("Servers by Roles")
-        %li
-          %a{:href => "#diagnostics_server_list"}=_("Servers")
+          = patternfly_tab_content("diagnostics_roles_servers", @sb[:active_tab]) do
+            = _("Roles by Servers")
+          = patternfly_tab_content("diagnostics_servers_roles", @sb[:active_tab]) do
+            = _("Servers by Roles")
+        = patternfly_tab_content("diagnostics_server_list", @sb[:active_tab]) do
+          = _("Servers")
         - if !MiqEnterprise.is_enterprise? && session[:userrole] == "super_administrator"
-          %li
-            %a{:href => "#diagnostics_replication"}=_("Replication")
+          = patternfly_tab_content("diagnostics_replication", @sb[:active_tab]) do
+            = _("Replication")
         - if session[:userrole] == "super_administrator"
-          %li
-            %a{:href => "#diagnostics_database"}=_("Database")
-          %li
-            %a{:href => "#diagnostics_orphaned_data"}=_("Orphaned Data")
-      #diagnostics_zones{:name => "diagnostics_zones", :width => "80px"}
-        - if @sb[:active_tab] == "diagnostics_zones"
+          = patternfly_tab_content("diagnostics_database", @sb[:active_tab]) do
+            = _("Database")
+          = patternfly_tab_content("diagnostics_orphaned_data", @sb[:active_tab]) do
+            = _("Orphaned Data")
+      .tab-content
+        = patternfly_tab_content("diagnostics_zones", @sb[:active_tab]) do
           = render :partial => "diagnostics_zones_tab"
-      - if session[:userrole] == "super_administrator"
-        #diagnostics_roles_servers{:name => "diagnostics_roles_servers", :width => "80px"}
-          - if @sb[:active_tab] == "diagnostics_roles_servers"
+        - if session[:userrole] == "super_administrator"
+          = patternfly_tab_content("diagnostics_roles_servers", @sb[:active_tab]) do
             = render :partial => "diagnostics_roles_servers_tab"
-        #diagnostics_servers_roles{:name => "diagnostics_servers_roles", :width => "80px"}
-          - if @sb[:active_tab] == "diagnostics_servers_roles"
+          = patternfly_tab_content("diagnostics_servers_roles", @sb[:active_tab]) do
             = render :partial => "diagnostics_servers_roles_tab"
-      #diagnostics_server_list{:name => "diagnostics_server_list", :width => "80px"}
-        - if @sb[:active_tab] == "diagnostics_server_list"
+        = patternfly_tab_content("diagnostics_server_list", @sb[:active_tab]) do
           = render :partial => "diagnostics_server_list_tab"
-      - if !MiqEnterprise.is_enterprise? && session[:userrole] == "super_administrator"
-        #diagnostics_replication{:name => "diagnostics_replication", :width => "80px"}
-          - if @sb[:active_tab] == "diagnostics_replication"
+        - if !MiqEnterprise.is_enterprise? && session[:userrole] == "super_administrator"
+          = patternfly_tab_content("diagnostics_replication", @sb[:active_tab]) do
             = render :partial => "diagnostics_replication_tab"
-      - if session[:userrole] == "super_administrator"
-        #diagnostics_database{:name => "diagnostics_database", :width => "80px"}
-          - if @sb[:active_tab] == "diagnostics_database"
+        - if session[:userrole] == "super_administrator"
+          = patternfly_tab_content("diagnostics_database", @sb[:active_tab]) do
             = render :partial => "diagnostics_database_tab"
-        #diagnostics_orphaned_data{:name => "diagnostics_orphaned_data", :width => "80px"}
-          - if @sb[:active_tab] == "diagnostics_orphaned_data"
+          = patternfly_tab_content("diagnostics_orphaned_data", @sb[:active_tab]) do
             = render :partial => "diagnostics_orphaned_data_tab"
-  - elsif x_active_tree == :rbac_tree
-    %ul
-      %li
-        %a{:href => "#rbac_details"}= @sb[:tab_label]
-    #rbac_details{:name => "rbac_details", :width => "80px"}
-      - if @sb[:active_tab] == "rbac_details"
-        = render :partial => "rbac_details_tab"
-  - elsif x_active_tree == :vmdb_tree
-    %ul.tab
+  - when :rbac_tree
+    - if @sb[:active_tab] == "rbac_details"
+      = render :partial => "rbac_details_tab"
+  - when :vmdb_tree
+    %ul.nav.nav-tabs
       - tree_node = x_node
       - if tree_node == "root"
-        %li
-          %a{:href => "#db_summary"}=_("Summary")
-      %li
-        %a{:href => "#db_details"}= @tab_text
-      - if tree_node == "root"
-        %li
-          %a{:href => "#db_indexes"}=_("Indexes")
-        %li
-          %a{:href => "#db_settings"}=_("Settings")
-        %li
-          %a{:href => "#db_connections"}=_("Client Connections")
+        = patternfly_tab_header("db_summary", @sb[:active_tab]) do
+          = _("Summary")
       - if tree_node == "root" || tree_node.split("-").first == TreeBuilder.get_prefix_for_model("VmdbTable")
-        %li
-          %a{:href => "#db_utilization"}=_("Utilization")
-    - if tree_node == "root"
-      #db_summary{:name => "db_summary", :width => "80px"}
-        - if @sb[:active_tab] == "db_summary"
+        = patternfly_tab_header("db_details", @sb[:active_tab]) do
+          = @tab_text
+      - if tree_node == "root"
+        = patternfly_tab_header("db_indexes", @sb[:active_tab]) do
+          = _("Indexes")
+        = patternfly_tab_header("db_settings", @sb[:active_tab]) do
+          = _("Settings")
+        = patternfly_tab_header("db_connections", @sb[:active_tab]) do
+          = _("Client Connections")
+      - if tree_node == "root" || tree_node.split("-").first == TreeBuilder.get_prefix_for_model("VmdbTable")
+        = patternfly_tab_header("db_utilization", @sb[:active_tab]) do
+          = _("Utilization")
+    .tab-content
+      - if tree_node == "root"
+        = patternfly_tab_content("db_summary", @sb[:active_tab]) do
           = render :partial => "db_summary"
-    #db_details{:name => "db_details", :width => "80px"}
-      - if @sb[:active_tab] == "db_details" || (@sb[:active_tab] == "db_indexes" && (@temp[:vmdb_index]) || @temp[:indexes])
-        = render :partial => "db_details_tab"
-    - if tree_node == "root"
-      #db_indexes{:name => "db_indexes", :width => "80px"}
-        - if @sb[:active_tab] == "db_indexes"
+      = patternfly_tab_content("db_details", "db_details") do
+        - if @sb[:active_tab] == "db_details" || (@sb[:active_tab] == "db_indexes" && (@temp[:vmdb_index]) || @temp[:indexes])
           = render :partial => "db_details_tab"
-      #db_settings{:name => "db_settings", :width => "80px"}
-        - if @sb[:active_tab] == "db_settings"
+      - if tree_node == "root"
+        = patternfly_tab_content("db_indexes", @sb[:active_tab]) do
           = render :partial => "db_details_tab"
-      #db_connections{:name => "db_connections", :width => "80px"}
-        - if @sb[:active_tab] == "db_connections"
+        = patternfly_tab_content("db_settings", @sb[:active_tab]) do
           = render :partial => "db_details_tab"
-    - if tree_node == "root" || tree_node.split("-").first == TreeBuilder.get_prefix_for_model("VmdbTable")
-      #db_utilization{:name => "db_utilization", :width => "80px"}
-        - if @sb[:active_tab] == "db_utilization"
+        = patternfly_tab_content("db_connections", @sb[:active_tab]) do
+          = render :partial => "db_details_tab"
+      - if tree_node == "root" || tree_node.split("-").first == TreeBuilder.get_prefix_for_model("VmdbTable")
+        = patternfly_tab_content("db_utilization", @sb[:active_tab]) do
           = render(:partial => "layouts/performance")
-  - elsif x_active_tree == :analytics_tree && get_vmdb_config[:product][:analytics]
-    %ul.tab
-      %li
-        %a{:href => "#analytics_details"}=_("Analytics Report")
-    #analytics_details{:name => "analytics_details", :width => "80px"}
+  - when :analytics_tree
+    - if get_vmdb_config[:product][:analytics]
       - if @sb[:active_tab] == "analytics_details"
         = render :partial => "analytics_details_tab"
 :javascript
-  // Method takes hash that can have 4 keys: tabs div id, active_tab label,
-  //   url to go to when tab is changed, and whether to check for abandon changes or not
-  miq_jquery_tabs_init({tabs_div: "ops_tabs", active_tab: "#{@sb[:active_tab]}", url: "/ops/change_tab/", tab_changes: true});
+  miq_patternfly_tabs_init("#ops_tabs", "/ops/change_tab");
