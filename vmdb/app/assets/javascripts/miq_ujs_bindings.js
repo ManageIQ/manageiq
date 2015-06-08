@@ -2,20 +2,20 @@
 
 $(document).ready(function () {
   // Bind call to prompt if leaving an active edit
-  $('a[data-miq_check_for_changes]').live('ajax:beforeSend', function () {
+  $(document).on('ajax:beforeSend', 'a[data-miq_check_for_changes]', function () {
     return miqCheckForChanges();
   });
 
   // Bind call to check/display text area max length on keyup
-  $('textarea[data-miq_check_max_length]').live('keyup', function () {
+  $(document).on('keyup', 'textarea[data-miq_check_max_length]', function () {
     miqCheckMaxLength(this);
   });
 
   // Bind the MIQ spinning Q to configured links
-  $('a[data-miq_sparkle_on]').live('ajax:beforeSend', function () {
+  $(document).on('ajax:beforeSend', 'a[data-miq_sparkle_on]', function () {
     miqSparkleOn(); // Call to miqSparkleOn since miqSparkle(true) checks XHR count, which is 0 before send
   });
-  $('a[data-miq_login_error]').live('ajax:error', function (xhr, status, error) {
+  $(document).on('ajax:error', 'a[data-miq_login_error]', function (xhr, status, error) {
     js_mimetypes = [ "text/javascript", "application/javascript" ];
     if (status.status == 401 &&
         js_mimetypes.indexOf(status.getResponseHeader("Content-Type")) > -1 &&
@@ -23,12 +23,12 @@ $(document).ready(function () {
       $.globalEval(status.responseText);
     }
   });
-  $('a[data-miq_sparkle_off]').live('ajax:complete', function () {
+  $(document).on('ajax:complete', 'a[data-miq_sparkle_off]', function () {
     miqSparkle(false);
   });
 
   // Bind in the observe support. If interval is configured, use the observe_field function
-  $('[data-miq_observe]').live('focus', function () {
+  $(document).on('focus', '[data-miq_observe]', function () {
     var parms = $.parseJSON(this.getAttribute('data-miq_observe'));
     var interval = parms.interval;
     var url = parms.url;
@@ -76,7 +76,7 @@ $(document).ready(function () {
     }
   });
 
-  $('[data-miq_observe_checkbox]').live('click', function () {
+  $(document).on('click', '[data-miq_observe_checkbox]', function () {
     var el = $(this);
     var parms = $.parseJSON(el.attr('data-miq_observe_checkbox'));
     var url = parms.url;
