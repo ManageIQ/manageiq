@@ -49,6 +49,5 @@ describe MiqProvisionVmware do
       host.should eql(@host)
       storage.should eql(@storage)
     end
-
   end
 end

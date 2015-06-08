@@ -2,13 +2,16 @@ class MiqProvisionRequest < MiqRequest
   alias_attribute :vm_template,    :source
   alias_attribute :provision_type, :request_type
   alias_attribute :miq_provisions, :miq_request_tasks
+  alias_attribute :src_vm_id,      :source_id
+
+  delegate :my_zone, :to => :source
 
   include ReportableMixin
 
   TASK_DESCRIPTION  = 'VM Provisioning'
   SOURCE_CLASS_NAME = 'VmOrTemplate'
-  REQUEST_TYPES     = %w{ template clone_to_vm clone_to_template }
-  ACTIVE_STATES     = %w{ migrated } + self.base_class::ACTIVE_STATES
+  REQUEST_TYPES     = %w(template clone_to_vm clone_to_template)
+  ACTIVE_STATES     = %w(migrated) + base_class::ACTIVE_STATES
 
   validates_inclusion_of :request_type,   :in => REQUEST_TYPES,                          :message => "should be #{REQUEST_TYPES.join(", ")}"
   validates_inclusion_of :request_state,
@@ -18,7 +21,7 @@ class MiqProvisionRequest < MiqRequest
   validate               :must_have_valid_vm
   validate               :must_have_user
 
-  default_value_for :options,      {:number_of_vms => 1}
+  default_value_for :options,      :number_of_vms => 1
   default_value_for :request_type, REQUEST_TYPES.first
   default_value_for :message,      "#{TASK_DESCRIPTION} - Request Created"
   default_value_for(:src_vm_id)    { |r| r.get_option(:src_vm_id) }
@@ -39,12 +42,12 @@ class MiqProvisionRequest < MiqRequest
     case suffix
     when "Vmware"
       case MiqRequestMixin.get_option(:provision_type, nil, attribs['options'])
-      when "pxe";        suffix << "ViaPxe"
+      when "pxe" then suffix << "ViaPxe"
       end
     when "Redhat"
       case MiqRequestMixin.get_option(:provision_type, nil, attribs['options'])
-      when "iso";        suffix << "ViaIso"
-      when "pxe";        suffix << "ViaPxe"
+      when "iso" then suffix << "ViaIso"
+      when "pxe" then suffix << "ViaPxe"
       end
     end
 
@@ -57,18 +60,18 @@ class MiqProvisionRequest < MiqRequest
   end
 
   def must_have_valid_vm
-    errors.add(:vm_template, "must have valid VM (must be in vmdb)") if self.vm_template.nil?
+    errors.add(:vm_template, "must have valid VM (must be in vmdb)") if vm_template.nil?
   end
 
   def set_description(force = false)
     prov_description = nil
-    if self.description.nil? || force == true
+    if description.nil? || force == true
       prov_description = MiqProvision.get_description(self, MiqProvision.get_next_vm_name(self, false))
     end
     # Capture self.options after running 'get_next_vm_name' method since automate may update the object
-    attrs = {:options => self.options.merge(:delivered_on => nil)}
+    attrs = {:options => options.merge(:delivered_on => nil)}
     attrs[:description] = prov_description unless prov_description.nil?
-    self.update_attributes(attrs)
+    update_attributes(attrs)
   end
 
   def post_create_request_tasks
@@ -76,16 +79,12 @@ class MiqProvisionRequest < MiqRequest
     update_attributes(:description => miq_request_tasks.first.description)
   end
 
-  def my_zone
-    source.my_zone
-  end
-
   def my_role
     'ems_operations'
   end
 
   def requested_task_idx
-    (1..self.get_option(:number_of_vms).to_i).to_a
+    (1..get_option(:number_of_vms).to_i).to_a
   end
 
   def customize_request_task_attributes(req_task_attrs, idx)
@@ -107,11 +106,7 @@ class MiqProvisionRequest < MiqRequest
     svc  = prov.allowed(:service_level) # Get service levels
     return false if env.include?("prod") && svc.empty?  # Make sure we have at least one
 
-    return true
-  end
-
-  def src_vm_id
-    self.source_id
+    true
   end
 
   def src_vm_id=(value)
@@ -124,7 +119,7 @@ class MiqProvisionRequest < MiqRequest
   end
 
   def vms
-    self.miq_provisions.collect(&:vm).compact
+    miq_provisions.collect(&:vm).compact
   end
 
   def originating_controller

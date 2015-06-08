@@ -5,5 +5,4 @@ module MiqProvision::Description
     $log.info "#{log_header} Setting #{vm.class.base_model.name} description to #{description.inspect}"
     vm.description = description
   end
-
 end

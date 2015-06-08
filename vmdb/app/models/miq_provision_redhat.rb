@@ -9,7 +9,7 @@ class MiqProvisionRedhat < MiqProvision
   end
 
   def get_provider_destination
-    return nil if self.destination.nil?
-    self.destination.with_provider_object { |rhevm_vm| return rhevm_vm }
+    return nil if destination.nil?
+    destination.with_provider_object { |rhevm_vm| return rhevm_vm }
   end
 end

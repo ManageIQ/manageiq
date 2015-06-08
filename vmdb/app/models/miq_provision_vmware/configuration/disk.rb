@@ -5,7 +5,7 @@ module MiqProvisionVmware::Configuration::Disk
     return if new_disks.blank?
     $log.info "#{log_header} New disk info: <#{new_disks.inspect}>"
 
-    source_controllers = self.get_scsi_controller_info
+    source_controllers = get_scsi_controller_info
     $log.info "#{log_header} Source SCSI controller info: <#{source_controllers.inspect}>"
 
     new_disks.each do |disk|
@@ -14,17 +14,17 @@ module MiqProvisionVmware::Configuration::Disk
       # Add new SCSI controller if missing for the requested bus index
       if source_controllers[bus_pos].blank?
         scsi_controller_idx = get_next_device_idx
-        self.add_scsi_controller(vmcs, bus_pos, scsi_controller_idx)
+        add_scsi_controller(vmcs, bus_pos, scsi_controller_idx)
         source_controllers[bus_pos] = {"key" => scsi_controller_idx}
       end
 
-      self.add_disk(vmcs, disk, source_controllers[bus_pos], get_next_device_idx)
+      add_disk(vmcs, disk, source_controllers[bus_pos], get_next_device_idx)
     end
   end
 
   def get_scsi_controller_info
-    inventory_hash = self.source.with_provider_connection do |vim|
-      vim.virtualMachineByMor(self.source.ems_ref_obj)
+    inventory_hash = source.with_provider_connection do |vim|
+      vim.virtualMachineByMor(source.ems_ref_obj)
     end
 
     devs = inventory_hash.fetch_path("config", "hardware", "device") || []
@@ -36,7 +36,7 @@ module MiqProvisionVmware::Configuration::Disk
 
   def add_scsi_controller(vmcs, busNumber, new_dev_key)
     log_header = "MIQ(#{self.class.name}.add_scsi_controller)"
-    controller_settings = self.options[:ctrl_scsi].to_miq_a.detect {|c| c[:busnumber] == busNumber.to_i} || {}
+    controller_settings = options[:ctrl_scsi].to_miq_a.detect { |c| c[:busnumber] == busNumber.to_i } || {}
     $log.info "#{log_header} Adding SCSI controller on bus <#{busNumber}>  Settings: <#{controller_settings.inspect}>"
     device_type = get_config_spec_value(controller_settings, 'VirtualLsiLogicController', nil, [:devicetype])
     add_device_config_spec(vmcs, VirtualDeviceConfigSpecOperation::Add) do |vdcs|

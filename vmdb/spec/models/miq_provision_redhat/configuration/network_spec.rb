@@ -16,11 +16,11 @@ describe MiqProvisionRedhat::Configuration::Network do
 
   before do
     @task = FactoryGirl.create(:miq_provision_redhat,
-      :source      => template,
-      :destination => rhevm_vm,
-      :state       => 'pending',
-      :status      => 'Ok',
-      :options     => {:src_vm_id => template.id}
+                               :source      => template,
+                               :destination => rhevm_vm,
+                               :state       => 'pending',
+                               :status      => 'Ok',
+                               :options     => {:src_vm_id => template.id}
     )
     @task.stub(
       :dest_cluster             => ems_cluster,

@@ -1,5 +1,4 @@
 module MiqProvision::Service
-
   def connect_to_service(vm, service, service_resource)
     log_header = "MIQ(#{self.class.name}#connect_to_service)"
 
@@ -18,5 +17,4 @@ module MiqProvision::Service
 
     [svc, sr]
   end
-
 end

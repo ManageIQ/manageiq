@@ -44,6 +44,5 @@ describe MiqProvisionRedhat do
       @task.send(:placement)
       @task.options[:dest_cluster].should eql([@cluster.id, @cluster.name])
     end
-
   end
 end

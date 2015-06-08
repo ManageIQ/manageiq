@@ -148,13 +148,13 @@ describe MiqProvisionRequest do
           # Verify that #get_tag with classification returns the single child tag name
           @pr.get_tags[t.name.to_sym].should == @pr.get_tag(t.name)
 
-          t.children.each {|c| @pr.add_tag(t.name, c.name)}
+          t.children.each { |c| @pr.add_tag(t.name, c.name) }
           @pr.get_tags[t.name.to_sym].should be_kind_of(Array)
           @pr.get_tags[t.name.to_sym].length.should == t.children.length
 
           child_names = t.children.collect(&:name)
           # Make sure each child name is yield from the tag method
-          @pr.tags {|tag_name, classification| child_names.delete(tag_name)}
+          @pr.tags { |tag_name, _classification| child_names.delete(tag_name) }
           child_names.should be_empty
 
           tags = @pr.get_classification(t.name)

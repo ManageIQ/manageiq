@@ -9,7 +9,7 @@ describe MiqProvisionVirtWorkflow do
     before do
       workflow.stub(:validate => true)
       workflow.stub(:get_dialogs => {})
-      workflow.instance_variable_set(:@values, {:vm_tags => [], :src_vm_id => 123, :sysprep_enabled => 'fields', :sysprep_domain_name => sdn})
+      workflow.instance_variable_set(:@values, :vm_tags => [], :src_vm_id => 123, :sysprep_enabled => 'fields', :sysprep_domain_name => sdn)
     end
 
     context "exit_pre_dialog" do

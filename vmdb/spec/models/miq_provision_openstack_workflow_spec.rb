@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe MiqProvisionOpenstackWorkflow do
-
   before do
     MiqRegion.seed
   end
@@ -31,7 +30,7 @@ describe MiqProvisionOpenstackWorkflow do
       let(:provider) { FactoryGirl.create(:ems_openstack) }
       let(:template) { FactoryGirl.create(:template_openstack, :name => "template", :ext_management_system => provider) }
       let(:workflow) do
-        MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return( {:dialogs => {}} )
+        MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
         MiqProvisionCloudWorkflow.any_instance.stub(:update_field_visibility)
         MiqProvisionOpenstackWorkflow.new({:src_vm_id => template.id}, admin.userid)
       end

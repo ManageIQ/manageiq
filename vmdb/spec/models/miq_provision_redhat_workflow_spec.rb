@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe MiqProvisionRedhatWorkflow do
-
   before do
     MiqRegion.seed
   end
@@ -12,7 +11,7 @@ describe MiqProvisionRedhatWorkflow do
     let(:template) { FactoryGirl.create(:template_redhat, :name => "template", :ext_management_system => provider) }
 
     before do
-      MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return( {:dialogs => {}} )
+      MiqProvisionWorkflow.any_instance.stub(:get_dialogs).and_return(:dialogs => {})
       MiqProvisionRedhatWorkflow.any_instance.stub(:update_field_visibility)
     end
 
@@ -38,7 +37,7 @@ describe MiqProvisionRedhatWorkflow do
       let(:host)     { FactoryGirl.create(:host, :ext_management_system => provider) }
 
       before do
-        %w{iso data export data}.each do |domain_type|
+        %w(iso data export data).each do |domain_type|
           host.storages << FactoryGirl.create(:storage, :storage_domain_type => domain_type)
         end
         host.reload
@@ -113,5 +112,4 @@ describe MiqProvisionRedhatWorkflow do
       end
     end
   end
-
 end

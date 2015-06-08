@@ -20,14 +20,14 @@ class MiqProvisionInfraWorkflow < MiqProvisionVirtWorkflow
 
   # Run the relationship methods and perform set intersections on the returned values.
   # Optional starting set of results maybe passed in.
-  def allowed_ci(ci, relats, filtered_ids=nil)
+  def allowed_ci(ci, relats, filtered_ids = nil)
     return {} if get_value(@values[:placement_auto]) == true
     return {} if (sources = resources_for_ui).blank?
     get_ems_metadata_tree(sources)
     super(ci, relats, sources, filtered_ids)
   end
 
-  def get_source_and_targets(refresh=false)
+  def get_source_and_targets(refresh = false)
     return @target_resource if @target_resource && refresh == false
     result = super
     return result if result.blank?
@@ -46,7 +46,7 @@ class MiqProvisionInfraWorkflow < MiqProvisionVirtWorkflow
     end
 
     rails_logger('get_source_and_targets', 1)
-    return @target_resource = result
+    @target_resource = result
   end
 
   def dialog_name_from_automate(message, extra_attrs)
