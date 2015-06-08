@@ -106,10 +106,10 @@ class TreeBuilder
              end
 
     # Save node as open
-    @tree_state.x_tree[:open_nodes].push(id) unless @tree_state.x_tree[:open_nodes].include?(id)
+    @tree_state.x_tree(@name)[:open_nodes].push(id) unless @tree_state.x_tree(@name)[:open_nodes].include?(id)
 
-    x_get_tree_objects(object, @tree_state.x_tree).each_with_object([]) do |o, acc|
-      acc.concat(x_build_node_dynatree(o, id, @tree_state.x_tree))
+    x_get_tree_objects(object, @tree_state.x_tree(@name)).each_with_object([]) do |o, acc|
+      acc.concat(x_build_node_dynatree(o, id, @tree_state.x_tree(@name)))
     end
   end
 
@@ -294,7 +294,7 @@ class TreeBuilder
     node = x_build_single_node(object, pid, options)
 
     if [:policy_profile_tree, :policy_tree].include?(options[:tree])
-      @tree_state.x_tree(options[:tree])[:open_nodes].push(node[:key])
+      @tree_state.x_tree(@name)[:open_nodes].push(node[:key])
     end
 
     # Process the node's children
@@ -348,7 +348,9 @@ class TreeBuilder
 
   # Add child nodes to the active tree below node 'id'
   def self.tree_add_child_nodes(sandbox, klass_name, id)
-    tree = klass_name.constantize.new("temp_tree", "temp", sandbox, false)
+    tree = klass_name.constantize.new(sandbox[:active_tree].to_s,
+                                      sandbox[:active_tree].to_s.sub(/_tree$/,''),
+                                      sandbox, false)
     tree.x_get_child_nodes(id)
   end
 
