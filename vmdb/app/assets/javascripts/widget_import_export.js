@@ -104,7 +104,7 @@ var setUpImportWidgetClickHandlers = function() {
     clearMessages();
 
     $.post('import_widgets', $('#import-form').serialize(), function(data) {
-      var flashMessage = JSON.parse(data).first();
+      var flashMessage = JSON.parse(data)[0];
       if (flashMessage.level == 'error') {
         showErrorMessage(flashMessage.message);
       } else {
@@ -120,7 +120,7 @@ var setUpImportWidgetClickHandlers = function() {
     clearMessages();
 
     $.post('cancel_import', $('#import-form').serialize(), function(data) {
-      var flashMessage = JSON.parse(data).first();
+      var flashMessage = JSON.parse(data)[0];
       showSuccessMessage(flashMessage.message);
       showMainWidgetImportExport();
     });
