@@ -213,7 +213,7 @@ class ProviderForemanController < ApplicationController
     load_or_clear_adv_search
 
     unless action_name == "reload"
-      if %w(x_show x_search_by_name).include?(action_name) && configuration_profile_record?
+      if active_tab_configured_systems?
         @sb[:active_tab] = 'configured_systems'
       else
         @sb[:active_tab] = 'summary'
@@ -264,15 +264,12 @@ class ProviderForemanController < ApplicationController
 
   def x_show
     @explorer = true
-    if x_active_tree == :foreman_providers_tree
-      @record = foreman_providers_tree_rec
-    elsif x_active_tree == :cs_filter_tree
-      @record = cs_filter_tree_rec
-    end
+    tree_record unless unassigned_configuration_profile?(params[:id])
+
     respond_to do |format|
       format.js do
         unless @record
-          redirect_to :action => "explorer"
+          check_for_unassigned_configuration_profile
           return
         end
         params[:id] = x_build_node_id(@record)  # Get the tree node id
@@ -284,6 +281,33 @@ class ProviderForemanController < ApplicationController
         redirect_to :action => "explorer"
       end
       format.any { render :nothing => true, :status => 404 }  # Anything else, just send 404
+    end
+  end
+
+  def tree_record
+    if x_active_tree == :foreman_providers_tree
+      @record = foreman_providers_tree_rec
+    elsif x_active_tree == :cs_filter_tree
+      @record = cs_filter_tree_rec
+    end
+  end
+
+  def check_for_unassigned_configuration_profile
+    if action_name == "x_show"
+      unassigned_configuration_profile?(params[:id]) ? tree_select : tree_select_unprovisioned_configured_system
+    elsif action_name == "tree_select"
+      tree_select_unprovisioned_configured_system
+    else
+      redirect_to :action => "explorer"
+    end
+  end
+
+  def tree_select_unprovisioned_configured_system
+    if unassigned_configuration_profile?(x_node)
+      params[:id] = "cs-#{params[:id]}"
+      tree_select
+    else
+      redirect_to :action => "explorer"
     end
   end
 
@@ -446,7 +470,11 @@ class ProviderForemanController < ApplicationController
     when "MiqSearch"
       miq_search_node
     else
-      default_node
+      if unassigned_configuration_profile?(treenodeid)
+        configuration_profile_node(id, model)
+      else
+        default_node
+      end
     end
     @right_cell_text += @edit[:adv_search_applied][:text] if x_tree[:type] == :filter && @edit && @edit[:adv_search_applied]
 
@@ -470,6 +498,7 @@ class ProviderForemanController < ApplicationController
       options[:where_clause] = ["configuration_manager_id IN (?)", provider.id]
       @no_checkboxes = true
       process_show_list(options)
+      add_unassigned_configuration_profile_record(provider.id)
       record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
       @right_cell_text =
           _("%{model} \"%{name}\"") %
@@ -479,7 +508,11 @@ class ProviderForemanController < ApplicationController
   end
 
   def configuration_profile_node(id, model)
-    @record = @configuration_profile_record = identify_record(id, ConfigurationProfile)
+    if model
+      @record = @configuration_profile_record = identify_record(id, ConfigurationProfile)
+    else
+      @record = @configuration_profile_record = ConfigurationProfile.new
+    end
     if @configuration_profile_record.nil?
       self.x_node = "root"
       get_node_info("root")
@@ -487,13 +520,13 @@ class ProviderForemanController < ApplicationController
     else
       options = {:model => "ConfiguredSystem"}
       options[:where_clause] = ["configuration_profile_id IN (?)", @configuration_profile_record.id]
+      options[:where_clause] =
+        ["configuration_manager_id IN (?) AND \
+          configuration_profile_id IS NULL", id] if empty_configuration_profile_record?(@configuration_profile_record)
       process_show_list(options)
       record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
       if @sb[:active_tab] == 'configured_systems'
-        @right_cell_text =
-          _("%{model} \"%{name}\"") %
-          {:name  => @configuration_profile_record.name,
-           :model => "#{ui_lookup(:tables => "configured_system")} under #{record_model}"}
+        configuration_profile_right_cell_text(model)
       else
         @showtype = 'main'
         @pages = nil
@@ -650,7 +683,7 @@ class ProviderForemanController < ApplicationController
       end
       partial = 'form'
       presenter[:update_partials][:main_div] = r[:partial => partial, :locals => partial_locals]
-    elsif @configuration_profile_record
+    elsif valid_configuration_profile_record?(@configuration_profile_record)
       presenter[:set_visible_elements][:form_buttons_div] = false
       presenter[:update_partials][:main_div] = r[:partial => "configuration_profile",
                                                  :locals  => {:controller => 'provider_foreman'}]
@@ -790,6 +823,87 @@ class ProviderForemanController < ApplicationController
 
   def tagging_explorer_controller?
     @explorer
+  end
+
+  def active_tab_configured_systems?
+    (%w(x_show x_search_by_name).include?(action_name) && configuration_profile_record?) ||
+      unassigned_configuration_profile?(x_node)
+  end
+
+  def unassigned_configuration_profile?(node)
+    _type, _pid, nodeinfo = node.split("_").last.split("-")
+    nodeinfo == "unassigned"
+  end
+
+  def empty_configuration_profile_record?(configuration_profile_record)
+    configuration_profile_record.try(:id).nil?
+  end
+
+  def valid_configuration_profile_record?(configuration_profile_record)
+    configuration_profile_record.try(:id)
+  end
+
+  def list_row_id(row)
+    if row['name'] == _("Unassigned Profiles Group") && row['id'].nil?
+      "-#{row['configuration_manager_id']}-unassigned"
+    else
+      to_cid(row['id'])
+    end
+  end
+
+  def list_row_image(image_path, image, model_image, itemname)
+    if itemname == _("Unassigned Profiles Group")
+      image_path ? "#{image_path}folder.png" : "folder"
+    else
+      super
+    end
+  end
+
+  def configuration_profile_right_cell_text(model)
+    record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
+    return if @sb[:active_tab] != 'configured_systems'
+    if valid_configuration_profile_record?(@configuration_profile_record)
+      @right_cell_text =
+        _("%{model} \"%{name}\"") %
+        {:name  => @configuration_profile_record.name,
+         :model => "#{ui_lookup(:tables => "configured_system")} under #{record_model}"}
+    else
+      name  = _("Unassigned Profiles Group")
+      @right_cell_text =
+        _("%{model}") %
+        {:model => "#{ui_lookup(:tables => "configured_system")} under \"#{name}\""}
+    end
+  end
+
+  def add_unassigned_configuration_profile_record(provider_id)
+    unprovisioned_configured_systems =
+      ConfiguredSystem.where(:configuration_manager_id => provider_id, :configuration_profile_id => nil).count
+
+    return if unprovisioned_configured_systems == 0
+
+    unassigned_configuration_profile_desc = unassigned_configuration_profile_name = _("Unassigned Profiles Group")
+    unassigned_configuration_profile = ConfigurationProfile.new
+    unassigned_configuration_profile.configuration_manager_id = provider_id
+    unassigned_configuration_profile.name = unassigned_configuration_profile_name
+    unassigned_configuration_profile.description = unassigned_configuration_profile_desc
+
+    unassigned_profile_row =
+      {'description'                    => unassigned_configuration_profile_desc,
+       'total_configured_systems'       => unprovisioned_configured_systems,
+       'configuration_environment_name' => unassigned_configuration_profile.configuration_environment_name,
+       'my_zone'                        => unassigned_configuration_profile.my_zone,
+       'region_description'             => unassigned_configuration_profile.region_description,
+       'name'                           => unassigned_configuration_profile_name,
+       'configuration_manager_id'       => provider_id
+      }
+
+    add_unassigned_configuration_profile_record_to_view(unassigned_profile_row, unassigned_configuration_profile)
+  end
+
+  def add_unassigned_configuration_profile_record_to_view(unassigned_profile_row, unassigned_configuration_profile)
+    @view.table.data.push(unassigned_profile_row)
+    @targets_hash[unassigned_profile_row['id']] = unassigned_configuration_profile
+    @grid_xml = view_to_xml(@view, 0, -1, :association => nil)
   end
 
   def set_root_node

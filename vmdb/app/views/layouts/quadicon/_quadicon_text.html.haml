@@ -40,6 +40,8 @@
         - name = row['resource_name']
       - elsif db == "ConfiguredSystem"
         - name = row['hostname']
+      - elsif db == "ConfigurationProfile"
+        - name = row['description']
       - else
         - name = row['name']
       - if request.parameters[:controller] == "service" && @view.db == "Vm"
@@ -55,7 +57,7 @@
           = truncate_for_quad(name)
       - else
         = link_to(truncate_for_quad(name),
-          {:action => 'x_show', :id => to_cid(row['id'])},
+          {:action => 'x_show', :id => controller.send(:list_row_id, row)},
           "data-miq_sparkle_on"  => true,
           "data-miq_sparkle_off" => true,
           :title                 => name,

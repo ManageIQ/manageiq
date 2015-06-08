@@ -84,6 +84,9 @@ class TreeBuilder
              elsif model.nil? && [:sandt_tree, :svccat_tree, :stcat_tree].include?(x_active_tree)
                # Creating empty record to show items under unassigned catalog node
                ServiceTemplateCatalog.new
+             elsif model.nil? && [:foreman_providers_tree].include?(x_active_tree)
+               # Creating empty record to show items under unassigned catalog node
+               ConfigurationProfile.new
              else
                model.constantize.find(from_cid(rec_id))
              end

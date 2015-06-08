@@ -6,6 +6,8 @@
       - img = item.class.to_s.underscore
   - elsif item.kind_of?(ConfigurationManagerForeman)
     - img = "vendor-#{item.image_name}"
+  - elsif item.kind_of?(ConfigurationProfile)
+    - img = controller.send(:list_row_image, nil, item.class.base_class.to_s.underscore, "configuration_profile", item.name)
   - else
     - img = item.class.base_class.to_s.underscore
   .flobj
@@ -20,7 +22,7 @@
       - if !@embedded || @showlinks
         - if @explorer
           = link_to(image_tag("/images/icons/#{size}/reflection.png", :width => size, :height => size, :title => h(name)),
-            {:action => 'x_show', :id => to_cid(item.id)},
+            {:action => 'x_show', :id => controller.send(:list_row_id, item)},
             "data-miq_sparkle_on"  => true,
             "data-miq_sparkle_off" => true,
             :remote                => true)
