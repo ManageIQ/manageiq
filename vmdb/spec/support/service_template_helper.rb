@@ -35,7 +35,7 @@ module ServiceTemplateHelper
   end
 
   def link_all_children(item, properties, hash)
-    children = properties[:children] 
+    children = properties[:children]
     child_options = properties.key?(:child_options) ? properties[:child_options] : {}
     children.each do |name|
       child_item = ServiceTemplate.find_by_name(name) || build_a_composite(name, hash)
