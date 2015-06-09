@@ -38,6 +38,8 @@ describe "Login process" do
 
   context 'w/ a valid session' do
     it "allows access w/ a valid referer" do
+      sleep 60 * 15
+
       post '/dashboard/authenticate', :user_name => 'admin', :user_password => 'smartvm'
       get '/ems_cloud/show_list', nil, 'HTTP_REFERER' => "http://www.example.com/"
       expect(response.status).to eq(200)
