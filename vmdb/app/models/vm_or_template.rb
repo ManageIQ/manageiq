@@ -1740,8 +1740,8 @@ class VmOrTemplate < ActiveRecord::Base
 
   PERF_ROLLUP_CHILDREN = nil
 
-  def perf_rollup_parent(interval_name=nil)
-    self.host unless interval_name == 'realtime'
+  def perf_rollup_parents(interval_name = nil)
+    [host] unless interval_name == 'realtime'
   end
 
   # Called from integrate ws to kick off scan for vdi VMs

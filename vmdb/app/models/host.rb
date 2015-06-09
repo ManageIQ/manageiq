@@ -1882,11 +1882,11 @@ class Host < ActiveRecord::Base
 
   PERF_ROLLUP_CHILDREN = :vms
 
-  def perf_rollup_parent(interval_name=nil)
+  def perf_rollup_parents(interval_name = nil)
     if interval_name == 'realtime'
-      self.ems_cluster if self.ems_cluster
+      [ems_cluster] if ems_cluster
     else
-      self.ems_cluster || self.ext_management_system
+      [ems_cluster || ext_management_system]
     end
   end
 

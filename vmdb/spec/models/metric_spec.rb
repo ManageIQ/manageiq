@@ -454,7 +454,7 @@ describe Metric do
       context "queueing up realtime rollups to parent" do
         before(:each) do
           MiqQueue.delete_all
-          @vm.perf_rollup_to_parent("realtime", "2010-04-14T21:51:10Z", "2010-04-14T22:50:50Z")
+          @vm.perf_rollup_to_parents("realtime", "2010-04-14T21:51:10Z", "2010-04-14T22:50:50Z")
         end
 
         it "should have queued rollups for vm hourly" do
@@ -465,7 +465,7 @@ describe Metric do
 
         context "twice" do
           before(:each) do
-            @vm.perf_rollup_to_parent("realtime", "2010-04-14T21:51:10Z", "2010-04-14T22:50:50Z")
+            @vm.perf_rollup_to_parents("realtime", "2010-04-14T21:51:10Z", "2010-04-14T22:50:50Z")
           end
 
           it "should have one set of queued rollups" do
@@ -885,16 +885,16 @@ describe Metric do
         MiqQueue.delete_all
       end
 
-      context "calling perf_rollup_to_parent" do
+      context "calling perf_rollup_to_parents" do
         it "should queue up from Vm realtime to Vm hourly" do
-          @vm.perf_rollup_to_parent('realtime', ROLLUP_CHAIN_TIMESTAMP)
+          @vm.perf_rollup_to_parents('realtime', ROLLUP_CHAIN_TIMESTAMP)
           q_all = MiqQueue.order(:id).all
           q_all.length.should == 1
           assert_queue_item_rollup_chain(q_all[0], @vm, 'hourly')
         end
 
         it "should queue up from Host realtime to Host hourly" do
-          @host.perf_rollup_to_parent('realtime', ROLLUP_CHAIN_TIMESTAMP)
+          @host.perf_rollup_to_parents('realtime', ROLLUP_CHAIN_TIMESTAMP)
           q_all = MiqQueue.order(:id).all
           q_all.length.should == 1
           # assert_queue_item_rollup_chain(q_all[0], @ems_cluster, 'realtime')
@@ -903,7 +903,7 @@ describe Metric do
         end
 
         it "should queue up from Vm hourly to Host hourly and Vm daily" do
-          @vm.perf_rollup_to_parent('hourly', ROLLUP_CHAIN_TIMESTAMP)
+          @vm.perf_rollup_to_parents('hourly', ROLLUP_CHAIN_TIMESTAMP)
           q_all = MiqQueue.order(:id).all
           q_all.length.should == 2
           assert_queue_item_rollup_chain(q_all[0], @host, 'hourly')
@@ -911,7 +911,7 @@ describe Metric do
         end
 
         it "should queue up from Host hourly to EmsCluster hourly and Host daily" do
-          @host.perf_rollup_to_parent('hourly', ROLLUP_CHAIN_TIMESTAMP)
+          @host.perf_rollup_to_parents('hourly', ROLLUP_CHAIN_TIMESTAMP)
           q_all = MiqQueue.order(:id).all
           q_all.length.should == 2
           assert_queue_item_rollup_chain(q_all[0], @ems_cluster, 'hourly')
@@ -919,7 +919,7 @@ describe Metric do
         end
 
         it "should queue up from EmsCluster hourly to EMS hourly and EmsCluster daily" do
-          @ems_cluster.perf_rollup_to_parent('hourly', ROLLUP_CHAIN_TIMESTAMP)
+          @ems_cluster.perf_rollup_to_parents('hourly', ROLLUP_CHAIN_TIMESTAMP)
           q_all = MiqQueue.order(:id).all
           q_all.length.should == 2
           assert_queue_item_rollup_chain(q_all[0], @ems_vmware,         'hourly')
@@ -927,22 +927,22 @@ describe Metric do
         end
 
         it "should queue up from Vm daily to nothing" do
-          @vm.perf_rollup_to_parent('daily', ROLLUP_CHAIN_TIMESTAMP)
+          @vm.perf_rollup_to_parents('daily', ROLLUP_CHAIN_TIMESTAMP)
           MiqQueue.count.should == 0
         end
 
         it "should queue up from Host daily to nothing" do
-          @host.perf_rollup_to_parent('daily', ROLLUP_CHAIN_TIMESTAMP)
+          @host.perf_rollup_to_parents('daily', ROLLUP_CHAIN_TIMESTAMP)
           MiqQueue.count.should == 0
         end
 
         it "should queue up from EmsCluster daily to nothing" do
-          @ems_cluster.perf_rollup_to_parent('daily', ROLLUP_CHAIN_TIMESTAMP)
+          @ems_cluster.perf_rollup_to_parents('daily', ROLLUP_CHAIN_TIMESTAMP)
           MiqQueue.count.should == 0
         end
 
         it "should queue up from EMS daily to nothing" do
-          @ems_vmware.perf_rollup_to_parent('daily', ROLLUP_CHAIN_TIMESTAMP)
+          @ems_vmware.perf_rollup_to_parents('daily', ROLLUP_CHAIN_TIMESTAMP)
           MiqQueue.count.should == 0
         end
       end
@@ -1239,7 +1239,7 @@ describe Metric do
       context "queueing up realtime rollups to parent" do
         before(:each) do
           MiqQueue.delete_all
-          @vm.perf_rollup_to_parent("realtime", "2010-04-14T21:51:10Z", "2010-04-14T22:50:50Z")
+          @vm.perf_rollup_to_parents("realtime", "2010-04-14T21:51:10Z", "2010-04-14T22:50:50Z")
         end
 
         it "should have queued rollups for vm hourly" do
@@ -1250,7 +1250,7 @@ describe Metric do
 
         context "twice" do
           before(:each) do
-            @vm.perf_rollup_to_parent("realtime", "2010-04-14T21:51:10Z", "2010-04-14T22:50:50Z")
+            @vm.perf_rollup_to_parents("realtime", "2010-04-14T21:51:10Z", "2010-04-14T22:50:50Z")
           end
 
           it "should have one set of queued rollups" do
@@ -1272,23 +1272,23 @@ describe Metric do
         MiqQueue.delete_all
       end
 
-      context "calling perf_rollup_to_parent" do
+      context "calling perf_rollup_to_parents" do
         it "should queue up from Vm realtime to Vm hourly" do
-          @vm.perf_rollup_to_parent('realtime', ROLLUP_CHAIN_TIMESTAMP)
+          @vm.perf_rollup_to_parents('realtime', ROLLUP_CHAIN_TIMESTAMP)
           q_all = MiqQueue.order(:id).all
           q_all.length.should == 1
           assert_queue_item_rollup_chain(q_all[0], @vm, 'hourly')
         end
 
         it "should queue up from AvailabilityZone realtime to AvailabilityZone hourly" do
-          @availability_zone.perf_rollup_to_parent('realtime', ROLLUP_CHAIN_TIMESTAMP)
+          @availability_zone.perf_rollup_to_parents('realtime', ROLLUP_CHAIN_TIMESTAMP)
           q_all = MiqQueue.order(:id).all
           q_all.length.should == 1
           assert_queue_item_rollup_chain(q_all[0], @availability_zone, 'hourly')
         end
 
         it "should queue up from Vm hourly to AvailabilityZone hourly and Vm daily" do
-          @vm.perf_rollup_to_parent('hourly', ROLLUP_CHAIN_TIMESTAMP)
+          @vm.perf_rollup_to_parents('hourly', ROLLUP_CHAIN_TIMESTAMP)
           q_all = MiqQueue.order(:id).all
           q_all.length.should == 2
           assert_queue_item_rollup_chain(q_all[0], @availability_zone, 'hourly')
@@ -1296,7 +1296,7 @@ describe Metric do
         end
 
         it "should queue up from AvailabilityZone hourly to EMS hourly and AvailabilityZone daily" do
-          @availability_zone.perf_rollup_to_parent('hourly', ROLLUP_CHAIN_TIMESTAMP)
+          @availability_zone.perf_rollup_to_parents('hourly', ROLLUP_CHAIN_TIMESTAMP)
           q_all = MiqQueue.order(:id).all
           q_all.length.should == 2
           assert_queue_item_rollup_chain(q_all[0], @ems_openstack,  'hourly')
@@ -1304,17 +1304,17 @@ describe Metric do
         end
 
         it "should queue up from Vm daily to nothing" do
-          @vm.perf_rollup_to_parent('daily', ROLLUP_CHAIN_TIMESTAMP)
+          @vm.perf_rollup_to_parents('daily', ROLLUP_CHAIN_TIMESTAMP)
           MiqQueue.count.should == 0
         end
 
         it "should queue up from AvailabilityZone daily to nothing" do
-          @availability_zone.perf_rollup_to_parent('daily', ROLLUP_CHAIN_TIMESTAMP)
+          @availability_zone.perf_rollup_to_parents('daily', ROLLUP_CHAIN_TIMESTAMP)
           MiqQueue.count.should == 0
         end
 
         it "should queue up from EMS daily to nothing" do
-          @ems_openstack.perf_rollup_to_parent('daily', ROLLUP_CHAIN_TIMESTAMP)
+          @ems_openstack.perf_rollup_to_parents('daily', ROLLUP_CHAIN_TIMESTAMP)
           MiqQueue.count.should == 0
         end
       end

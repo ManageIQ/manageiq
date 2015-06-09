@@ -152,6 +152,8 @@ en:
       EmsClusterPerformance:
         cpu_usage_rate_average:                                                CPU - Aggregate Usage Rate for Child Hosts for Collected Intervals (%)
         derived_cpu_available:                                                 CPU - Total Installed - Sum of Child Hosts (MHz)
+        derived_logicalcpus_used:                                              CPU - Usage of Logical CPUs
+        derived_logicalcpus_available:                                         CPU - Number of Logical CPUs
         disk_usage_rate_average:                                               Disk I/O - Aggregate of Avg for Child Hosts (KBps)
         max_cpu_usage_rate_average:                                            CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals (%)
         max_cpu_usage_rate_average_avg_over_time_period:                       CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals 30 Day Avg (%)
@@ -183,6 +185,8 @@ en:
 
       HostPerformance:
         derived_cpu_available: CPU - Total Installed - from Host Analysis (MHz)
+        derived_logicalcpus_used: CPU - Usage of Logical CPUs
+        derived_logicalcpus_available: CPU - Number of Logical CPUs
 
       StoragePerformance:
         max_derived_storage_total: Disk Space Max Total
@@ -202,6 +206,8 @@ en:
         cpu_used_delta_summation:      CPU - Time Used (ms)
         cpu_wait_delta_summation:      CPU - Time Spent in Wait State (ms)
         derived_cpu_available:         CPU - Total - from VM Analysis (MHz)
+        derived_logicalcpus_used:      CPU - Usage of Logical CPUs
+        derived_logicalcpus_available: CPU - Number of Logical CPUs
         derived_cpu_reserved:          CPU - Reserved (MHz)
         derived_memory_available:      Memory - Total Allocated (MB)
         derived_memory_reserved:       Memory - Reserved (MB)
@@ -299,6 +305,8 @@ en:
       depend_on_service: Depends on Service
       derived_cpu_available: CPU Total Installed
       derived_cpu_reserved: CPU - Available (MHz)
+      derived_logicalcpus_used: CPU - Usage of Logical CPUs
+      derived_logicalcpus_available: CPU - Number of Logical CPUs
       derived_host_count_off: State - Number of Hosts Powered Off  - Hourly Count / Daily Avg
       derived_host_count_on: State - Number of Hosts Powered On  - Hourly Count / Daily Avg
       derived_memory_available: Memory - Total Allocated for Child VMs (MB)

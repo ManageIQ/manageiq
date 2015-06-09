@@ -32,7 +32,10 @@ class VimPerformanceTagValue < ActiveRecord::Base
     "EmsCluster"          => [:vms, :hosts],
     "Host"                => [:vms],
     "AvailabilityZone"    => [:vms],
-    "VmOrTemplate"        => []
+    "VmOrTemplate"        => [],
+    "ContainerNode"       => [],
+    "Container"           => [],
+    "ContainerGroup"      => [],
   }
 
   def self.build_from_performance_record(parent_perf, options={:save => true})

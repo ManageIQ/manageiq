@@ -1,11 +1,14 @@
 module Metric::CiMixin::Rollup
-  def perf_rollup_to_parent(interval_name, start_time, end_time = nil)
-    parents = case interval_name
-    when 'realtime'             then [self.perf_rollup_parent(interval_name), interval_name, self, 'hourly']
-    when 'hourly', 'historical' then [self.perf_rollup_parent('hourly'),      interval_name, self, 'daily']
-    when 'daily'                then []
+  def perf_rollup_to_parents(interval_name, start_time, end_time = nil)
+    parent_rollups, next_rollup_interval = case interval_name
+    when 'realtime'             then [perf_rollup_parents(interval_name), 'hourly']
+    when 'hourly', 'historical' then [perf_rollup_parents('hourly'), 'daily']
+    when 'daily'                then [nil, nil]
     else raise ArgumentError, "invalid interval name #{interval_name}"
     end
+
+    parents = parent_rollups.to_a.flat_map { |p| [p, interval_name] }
+    parents += [self, next_rollup_interval] unless next_rollup_interval.nil?
 
     parents.each_slice(2) do |parent, new_interval|
       next if parent.nil?
@@ -14,14 +17,14 @@ module Metric::CiMixin::Rollup
       when 'hourly', 'historical' then
         times = Metric::Helper.hours_from_range(start_time, end_time)
 
-        log_header = "MIQ(#{self.class.name}.perf_rollup_to_parent) Queueing [#{new_interval}] rollup to #{parent.class.name} id: [#{parent.id}] for times: #{times.inspect}"
+        log_header = "MIQ(#{self.class.name}.perf_rollup_to_parents) Queueing [#{new_interval}] rollup to #{parent.class.name} id: [#{parent.id}] for times: #{times.inspect}"
         $log.info "#{log_header}..."
         times.each { |t| parent.perf_rollup_queue(t, new_interval) }
         $log.info "#{log_header}...Complete"
       when 'daily' then
         times_by_tp = Metric::Helper.days_from_range_by_time_profile(start_time, end_time)
         times_by_tp.each do |tp, times|
-          log_header = "MIQ(#{self.class.name}.perf_rollup_to_parent) Queueing [#{new_interval}] rollup to #{parent.class.name} id: [#{parent.id}] in time profile: [#{tp.description}] for times: #{times.inspect}"
+          log_header = "MIQ(#{self.class.name}.perf_rollup_to_parents) Queueing [#{new_interval}] rollup to #{parent.class.name} id: [#{parent.id}] in time profile: [#{tp.description}] for times: #{times.inspect}"
           $log.info "#{log_header}..."
           times.each { |t| parent.perf_rollup_queue(t, new_interval, tp) }
           $log.info "#{log_header}...Complete"
@@ -30,8 +33,8 @@ module Metric::CiMixin::Rollup
     end
   end
 
-  def perf_rollup_parent(interval_name=nil)
-    raise NotImplementedError, "perf_rollup_parent must be overridden in the mixed-in class"
+  def perf_rollup_parents(_interval_name = nil)
+    raise NotImplementedError, "perf_rollup_parents must be overridden in the mixed-in class"
   end
 
   def perf_rollup_queue(time, interval_name, time_profile = nil)
@@ -93,7 +96,7 @@ module Metric::CiMixin::Rollup
 
       Benchmark.realtime_block(:process_bottleneck) { BottleneckEvent.generate_future_events(self) } if interval_name == 'hourly'
 
-      self.perf_rollup_to_parent(interval_name, time)
+      perf_rollup_to_parents(interval_name, time)
     end
 
     $log.info("#{log_header}...Complete - Timings: #{t.inspect}")

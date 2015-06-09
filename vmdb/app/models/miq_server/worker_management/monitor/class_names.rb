@@ -3,6 +3,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
 
   MONITOR_CLASS_NAMES = %w{
     MiqEmsMetricsCollectorWorkerAmazon
+    MiqEmsMetricsCollectorWorkerKubernetes
     MiqEmsMetricsCollectorWorkerRedhat
     MiqEmsMetricsCollectorWorkerVmware
     MiqEmsMetricsCollectorWorkerOpenstack
@@ -44,6 +45,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
   MONITOR_CLASS_NAMES_IN_KILL_ORDER = %w{
     MiqEmsMetricsProcessorWorker
     MiqEmsMetricsCollectorWorkerAmazon
+    MiqEmsMetricsCollectorWorkerKubernetes
     MiqEmsMetricsCollectorWorkerRedhat
     MiqEmsMetricsCollectorWorkerVmware
     MiqEmsMetricsCollectorWorkerOpenstack

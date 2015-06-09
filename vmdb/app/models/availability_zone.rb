@@ -27,8 +27,8 @@ class AvailabilityZone < ActiveRecord::Base
 
   PERF_ROLLUP_CHILDREN = :vms
 
-  def perf_rollup_parent(interval_name=nil)
-    self.ext_management_system unless interval_name == 'realtime'
+  def perf_rollup_parents(interval_name = nil)
+    [ext_management_system] unless interval_name == 'realtime'
   end
 
   def total_vms

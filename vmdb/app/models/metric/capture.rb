@@ -68,12 +68,12 @@ module Metric::Capture
       interval_name = self.perf_target_to_interval_name(target)
       next unless interval_name == "realtime"
 
-      parent = target.perf_rollup_parent(interval_name)
-      next(h) if parent.nil?
+      target.perf_rollup_parents(interval_name).to_a.each do |parent|
+        pkey = "#{parent.class}:#{parent.id}"
+        h[pkey] ||= []
+        h[pkey] << "#{target.class}:#{target.id}"
+      end
 
-      pkey = "#{parent.class}:#{parent.id}"
-      h[pkey] ||= []
-      h[pkey] << "#{target.class}:#{target.id}"
       h
     end
 
@@ -110,14 +110,16 @@ module Metric::Capture
     targets.each do |target|
       interval_name = self.perf_target_to_interval_name(target)
 
-      parent = target.perf_rollup_parent(interval_name)
       options = {}
-      if parent && tasks_by_rollup_parent.has_key?("#{parent.class}:#{parent.id}")
-        pkey = "#{parent.class}:#{parent.id}"
-        tkey = "#{target.class}:#{target.id}"
-        if targets_by_rollup_parent[pkey].include?(tkey)
-          options[:task_id] = tasks_by_rollup_parent[pkey].id
-          options[:force]   = true # Force collection since we've already verified that capture should be done now
+      target.perf_rollup_parents(interval_name).to_a.each do |parent|
+        if tasks_by_rollup_parent.key?("#{parent.class}:#{parent.id}")
+          pkey = "#{parent.class}:#{parent.id}"
+          tkey = "#{target.class}:#{target.id}"
+          if targets_by_rollup_parent[pkey].include?(tkey)
+            # FIXME: check that this is still correct
+            options[:task_id] = tasks_by_rollup_parent[pkey].id
+            options[:force]   = true # Force collection since we've already verified that capture should be done now
+          end
         end
       end
       target.perf_capture_queue(interval_name, options)
@@ -135,8 +137,9 @@ module Metric::Capture
 
   def self.perf_target_to_interval_name(target)
     case target
-    when Host, VmOrTemplate; "realtime"
-    when Storage;            "hourly"
+    when Host, VmOrTemplate;                       "realtime"
+    when ContainerNode, Container, ContainerGroup; "realtime"
+    when Storage;                                  "hourly"
     end
   end
 

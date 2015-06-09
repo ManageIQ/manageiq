@@ -307,6 +307,7 @@ Vmdb::Application.routes.draw do
       :get  => %w(
         download_data
         explorer
+        perf_top_chart
         show
       ),
       :post => %w(
@@ -323,6 +324,7 @@ Vmdb::Application.routes.draw do
       ) +
         adv_search_post +
         exp_post +
+        perf_post +
         save_post +
         x_post
     },
@@ -333,6 +335,7 @@ Vmdb::Application.routes.draw do
         edit
         index
         new
+        perf_top_chart
         show
         show_list
       ),
@@ -354,6 +357,7 @@ Vmdb::Application.routes.draw do
       ) +
         adv_search_post +
         exp_post +
+        perf_post +
         save_post
     },
 
@@ -363,6 +367,7 @@ Vmdb::Application.routes.draw do
         edit
         index
         new
+        perf_top_chart
         show
         show_list
       ),
@@ -384,6 +389,7 @@ Vmdb::Application.routes.draw do
       ) +
         adv_search_post +
         exp_post +
+        perf_post +
         save_post
     },
 

@@ -3,6 +3,7 @@ module Metric::CiMixin::Targets
     case self
     # For now allowing capturing for all OpenstackInfra hosts and clusters
     when HostOpenstackInfra, EmsClusterOpenstackInfra    ; true
+    when ContainerNodeKubernetes, ContainerKubernetes    ; true
     # going to treat an availability_zone like a host wrt perf_capture settings
     when Host, EmsCluster, AvailabilityZone; Metric::Targets.perf_capture_always[:host_and_cluster]
     when Storage;                            Metric::Targets.perf_capture_always[:storage]

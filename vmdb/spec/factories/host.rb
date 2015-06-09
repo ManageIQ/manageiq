@@ -72,6 +72,10 @@ FactoryGirl.define do
     vmm_product "Hyper-V"
   end
 
+  factory :node_kubernetes, :parent => :node, :class => "ContainerNodeKubernetes" do
+    vmm_vendor "kubernetes"
+  end
+
   factory :host_with_default_resource_pool, :parent => :host do
     after(:create) { |h| h.add_child(FactoryGirl.create(:default_resource_pool)) }
   end

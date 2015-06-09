@@ -29,6 +29,12 @@
     :title: Monitoring
     :text: Monitoring
     :items:
+    - :button: container_node_perf
+      :image: capacity
+      :text: "Utilization"
+      :title: "Show Capacity & Utilization data for this Node"
+      :url: '/show'
+      :url_parms: '?display=performance'
     - :button: container_node_timeline
       :image: timeline
       :text: "Timelines"

@@ -35,3 +35,9 @@
       :title: "Show Timelines for this Group"
       :url: '/show'
       :url_parms: '?display=timeline'
+    - :button: container_group_perf
+      :image: capacity
+      :text: "Utilization"
+      :title: "Show Capacity & Utilization data for this Group"
+      :url: '/show'
+      :url_parms: '?display=performance'

@@ -336,6 +336,8 @@ workers:
           :poll_method: :escalate
         :ems_metrics_collector_worker_amazon:
           :poll_method: :escalate
+        :ems_metrics_collector_worker_kubernetes:
+          :poll_method: :escalate
         :ems_metrics_collector_worker_redhat:
           :poll_method: :escalate
         :ems_metrics_collector_worker_vmware:

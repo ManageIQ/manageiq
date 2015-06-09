@@ -306,8 +306,8 @@ class EmsCluster < ActiveRecord::Base
 
   PERF_ROLLUP_CHILDREN = :hosts
 
-  def perf_rollup_parent(interval_name=nil)
-    self.ext_management_system unless interval_name == 'realtime'
+  def perf_rollup_parents(interval_name = nil)
+    [ext_management_system] unless interval_name == 'realtime'
   end
 
   def self.get_perf_collection_object_list

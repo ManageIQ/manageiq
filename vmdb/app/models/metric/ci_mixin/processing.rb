@@ -99,7 +99,7 @@ module Metric::CiMixin::Processing
       # Raise <class>_perf_complete alert event if realtime so alerts can be evaluated.
       MiqEvent.raise_evm_alert_event_queue(self, MiqEvent.event_name_for_target(self, "perf_complete"))
 
-      self.perf_rollup_to_parent(interval_orig, start_time, end_time)
+      self.perf_rollup_to_parents(interval_orig, start_time, end_time)
     end
     $log.info("#{log_header} Processing for #{log_target}, for range [#{start_time} - #{end_time}]...Complete - Timings: #{t.inspect}")
 
