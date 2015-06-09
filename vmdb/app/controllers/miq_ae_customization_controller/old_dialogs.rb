@@ -86,12 +86,14 @@ module MiqAeCustomizationController::OldDialogs
       else
         dialogs.push(params[:id])
         dialog = MiqDialog.find_by_id(from_cid(params[:id]))  if method == 'destroy'        #need to set this for destroy method so active node can be set to image_type folder node after record is deleted
-        process_old_dialogs(dialogs, method)  unless dialogs.empty?
-        # TODO: tells callers to go back to show_list because this SMIS Agent may be gone
-        # Should be refactored into calling show_list right here
-        if method == 'destroy'
-          self.x_node = "xx-MiqDialog_#{dialog.dialog_type}"
+        if dialog.default
+          add_flash(_("Default %{model} \"%{name}\" cannot be deleted") % {:model => ui_lookup(:model => "MiqDialog"),
+                                                                           :name  => dialog.name}, :error)
+        else
+          process_old_dialogs(dialogs, method)  unless dialogs.empty?
         end
+
+        self.x_node = "xx-MiqDialog_#{dialog.dialog_type}" if method == 'destroy' && !flash_errors?
         get_node_info
         replace_right_cell(x_node,[:old_dialogs])
       end
