@@ -30,7 +30,7 @@ class Post
   end
 end
 
-class Test::Unit::TestCase
+class MiniTest::Unit::TestCase
   include ResourceFeeder::Rss, ResourceFeeder::Atom
 
   def render_feed(xml)

@@ -6,11 +6,11 @@ function miqOnLoad() {
   miq_widget_dd_url = "dashboard/widget_dd_done";
 
   // Initialize the dashboard column sortables
-  if (miqDomElementExists('col1')) {
+  if ($('#col1').length) {
     miqInitDashboardCols();
   }
   // Initialize the dashboard widget pulldown
-  if (miqDomElementExists('widget_select_div')) {
+  if ($('#widget_select_div').length) {
     miqInitWidgetPulldown();
   }
   // Need this since IE will not run JS correctly until after page is loaded
@@ -19,11 +19,11 @@ function miqOnLoad() {
   }
 
   $(document).mousemove(function(e) {
-    miqGetMouseXY(e.pageX, e.pageY)
+    miqGetMouseXY(e.pageX, e.pageY);
   });
 
   // Need to do this here for IE, rather then right after the grid is initialized
-  if (miqDomElementExists('compare_grid')) {
+  if ($('#compare_grid').length) {
     compare_grid.enableAutoHeight(true);
     compare_grid.enableAutoWidth(true);
   }
@@ -50,14 +50,10 @@ function miqOnLoad() {
   if (typeof miqEditor != "undefined") {
     miqEditor.refresh();
   }
-  // Focus on certain tree node, if set
-  if (typeof miq_tree_focus == "string") {
-    eval(miq_tree_focus);
-  }
   // Position clear search link in right cell header
-  if (miqDomElementExists('clear_search')) {
+  if ($('#clear_search').length) {
     // Find the right cell header div
-    $('.dhtmlxInfoBarLabel:visible').append($('#clear_search')[0])
+    $('.dhtmlxInfoBarLabel:visible').append($('#clear_search'));
   }
   // Run MIQ after onload code if present
   if (typeof miq_after_onload == "string") {
@@ -72,7 +68,7 @@ function miqOnLoad() {
 }
 
 function miqPrepRightCellForm(tree) {
-  if (miqDomElementExists('adv_searchbox_div')) {
+  if ($('#adv_searchbox_div').length) {
     $('#adv_searchbox_div').hide();
   }
   dhxLayoutB.cells("a").collapse();
@@ -99,19 +95,20 @@ function miqInitWidgetPulldown() {
 }
 
 function miqCalendarDateConversion(server_offset) {
-  x = new Date(
-    tN().getUTCFullYear(),
-    tN().getUTCMonth(),
-    tN().getUTCDate(),
-    tN().getUTCHours(),
-    tN().getUTCMinutes(),
-    tN().getUTCSeconds()
+  var date = new Date();
+  var x = new Date(
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate(),
+    date.getUTCHours(),
+    date.getUTCMinutes(),
+    date.getUTCSeconds()
   );
   if (server_offset >= 0) {
-    x.setTime(x.getTime() + (Number(server_offset)) * 1000)
+    x.setTime(x.getTime() + (Number(server_offset)) * 1000);
   } else {
-    x.setTime(x.getTime() - (Number(server_offset.slice(1, server_offset.length))) * 1000)
-  };
+    x.setTime(x.getTime() - (Number(server_offset.slice(1, server_offset.length))) * 1000);
+  }
   return x;
 }
 
@@ -120,84 +117,77 @@ var miqMouseX;
 var miqMouseY;
 
 function miqGetMouseXY(positionX, positionY) {
-  miqMouseX = positionX,
+  miqMouseX = positionX;
   miqMouseY = positionY;
 }
 
 // Prefill text entry field when blank
 function miqLoginPrefill() {
-  if (miqDomElementExists('user_name')) {
-    miqPrefill($('#user_name')[0]);
-  }
-  if (miqDomElementExists('user_password')) {
-    miqPrefill($('#user_password')[0]);
-  }
-  if (miqDomElementExists('user_new_password')) {
-    miqPrefill($('#user_new_password')[0]);
-  }
-  if (miqDomElementExists('user_verify_password')) {
-    miqPrefill($('#user_verify_password')[0]);
-  }
-  if (miqDomElementExists('user_name')) {
+  miqPrefill($('#user_name'));
+  miqPrefill($('#user_password'));
+  miqPrefill($('#user_new_password'));
+  miqPrefill($('#user_verify_password'));
+  if ($('#user_name').length) {
     // Retry in .2 seconds, if user name field is present
-    self.setTimeout('miqLoginPrefill()', 200);
+    setTimeout(miqLoginPrefill, 200);
   }
 }
 
 // Prefill expression value text entry fields when blank
 function miqExpressionPrefill(count) {
-  if (miqDomElementExists('chosen_value') && $('#chosen_value')[0].type.indexOf('text') == 0) {
-    miqPrefill($('#chosen_value')[0], '/images/layout/expression/' + miq_val1_type + '.png');
+  var title;
+  var miq_exp_prefill_count;
+
+  if ($('#chosen_value[type=text]').length) {
+    miqPrefill($('#chosen_value'), '/images/layout/expression/' + miq_val1_type + '.png');
     $('#chosen_value').prop('title', miq_val1_title);
     $('#chosen_value').prop('alt', miq_val1_title);
   }
-  if (miqDomElementExists('chosen_cvalue') && $('#chosen_cvalue')[0].type.indexOf('text') == 0) {
-    miqPrefill($('#chosen_cvalue')[0], '/images/layout/expression/' + miq_val2_type + '.png');
+  if ($('#chosen_cvalue[type=text]').length) {
+    miqPrefill($('#chosen_cvalue'), '/images/layout/expression/' + miq_val2_type + '.png');
     $('#chosen_cvalue').prop('title', miq_val2_title);
     $('#chosen_cvalue').prop('alt', miq_val2_title);
   }
-  if (miqDomElementExists('chosen_regkey') && $('#chosen_regkey')[0].type.indexOf('text') == 0) {
-    miqPrefill($('#chosen_regkey')[0], '/images/layout/expression/string.png');
-    var title = "Registry Key";
+  if ($('#chosen_regkey[type=text]').length) {
+    miqPrefill($('#chosen_regkey'), '/images/layout/expression/string.png');
+    title = "Registry Key";
     $('#chosen_regkey').prop('title', title);
     $('#chosen_regkey').prop('alt', title);
   }
-  if (miqDomElementExists('chosen_regval') && $('#chosen_regval')[0].type.indexOf('text') == 0) {
-    miqPrefill($('#chosen_regval')[0], '/images/layout/expression/string.png');
-    var title = "Registry Key Value";
+  if ($('#chosen_regval[type=text]').length) {
+    miqPrefill($('#chosen_regval'), '/images/layout/expression/string.png');
+    title = "Registry Key Value";
     $('#chosen_regval').prop('title', title);
     $('#chosen_regval').prop('alt', title);
   }
-  if (miqDomElementExists('miq_date_1_0') && $('#miq_date_1_0')[0].type.indexOf('text') == 0) {
-    miqPrefill($('#miq_date_1_0')[0], '/images/layout/expression/' + miq_val1_type + '.png');
+  if ($('#miq_date_1_0[type=text]').length) {
+    miqPrefill($('#miq_date_1_0'), '/images/layout/expression/' + miq_val1_type + '.png');
     $('#miq_date_1_0').prop('title', miq_val1_title);
     $('#miq_date_1_0').prop('alt', miq_val1_title);
   }
-  if (miqDomElementExists('miq_date_1_1') && $('#miq_date_1_1')[0].type.indexOf('text') == 0) {
-    miqPrefill($('#miq_date_1_1')[0], '/images/layout/expression/' + miq_val1_type + '.png');
+  if ($('#miq_date_1_1[type=text]').length) {
+    miqPrefill($('#miq_date_1_1'), '/images/layout/expression/' + miq_val1_type + '.png');
     $('#miq_date_1_1').prop('title', miq_val1_title);
     $('#miq_date_1_1').prop('alt', miq_val1_title);
   }
-  if (miqDomElementExists('miq_date_2_0') && $('#miq_date_2_0')[0].type.indexOf('text') == 0) {
-    miqPrefill($('#miq_date_2_0')[0], '/images/layout/expression/' + miq_val2_type + '.png');
+  if ($('#miq_date_2_0[type=text]').length) {
+    miqPrefill($('#miq_date_2_0'), '/images/layout/expression/' + miq_val2_type + '.png');
     $('#miq_date_2_0').prop('title', miq_val2_title);
     $('#miq_date_2_0').prop('alt', miq_val2_title);
   }
-  if (miqDomElementExists('miq_date_2_1') && $('#miq_date_2_1')[0].type.indexOf('text') == 0) {
-    miqPrefill($('#miq_date_2_1')[0], '/images/layout/expression/' + miq_val2_type + '.png');
+  if ($('#miq_date_2_1[type=text]').length) {
+    miqPrefill($('#miq_date_2_1'), '/images/layout/expression/' + miq_val2_type + '.png');
     $('#miq_date_2_1').prop('title', miq_val2_title);
     $('#miq_date_2_1').prop('alt', miq_val2_title);
   }
   if (typeof count == 'undefined') {
     miq_exp_prefill_count = 0;
-    eval("self.setTimeout('miqExpressionPrefill("+ miq_exp_prefill_count + ")', 200);");
-  }
-  else if (count == miq_exp_prefill_count) {
-    miq_exp_prefill_count += 1;
-    if (miq_exp_prefill_count > 100) {
+    setTimeout(function() { miqExpressionPrefill(miq_exp_prefill_count); }, 200);
+  } else if (count == miq_exp_prefill_count) {
+    if (++miq_exp_prefill_count > 100) {
       miq_exp_prefill_count = 0;
     }
-    eval("self.setTimeout('miqExpressionPrefill("+ miq_exp_prefill_count + ")', 200);");
+    setTimeout(function() { miqExpressionPrefill(miq_exp_prefill_count); }, 200);
   }
 }
 
@@ -205,35 +195,38 @@ function miqExpressionPrefill(count) {
 // (written more generic for reuse, just have to build the miq_value_styles hash)
 function miqValueStylePrefill(count) {
   var found = false;
-  for (field in miq_value_styles) {
-    if (miqDomElementExists(field)) {
-      miqPrefill($('#' + field)[0], '/images/layout/expression/' + miq_value_styles[field] + '.png');
+  var miq_vs_prefill_count;
+
+  for (var field in miq_value_styles) {
+    if ($(field).length) {
+      miqPrefill($(field), '/images/layout/expression/' + miq_value_styles[field] + '.png');
       found = true;
     }
   }
   if (found) {
     if (typeof count == 'undefined') {
       miq_vs_prefill_count = 0;
-      eval("self.setTimeout('miqValueStylePrefill("+ miq_vs_prefill_count + ")', 200);");
+      setTimeout(function() { miqValueStylePrefill(miq_vs_prefill_count); }, 200);
     } else if (count == miq_vs_prefill_count) {
-      miq_vs_prefill_count += 1;
-      if (miq_vs_prefill_count > 100) {
+      if (++miq_vs_prefill_count > 100) {
         miq_vs_prefill_count = 0;
       }
-      eval("self.setTimeout('miqValueStylePrefill("+ miq_vs_prefill_count + ")', 200);");
+      setTimeout(function() { miqValueStylePrefill(miq_vs_prefill_count); }, 200);
     }
   }
 }
 
 // Prefill text entry field when blank
 function miqPrefill(element, image, blank_image) {
-  if (element.value == '') {
-    element.style.background = "url(" + image + ") no-repeat transparent";
-  } else {
-    if (typeof blank_image == 'undefined') {
-      element.style.background = "transparent";
+  if (element.length) {
+    if ($(element).val()) {
+      if (blank_image === '') {
+        $(element).css('background-color', 'transparent');
+      } else {
+        $(element).css('background', 'url(' + blank_image + ') no-repeat transparent');
+      }
     } else {
-      element.style.background = "url(" + blank_image + ") no-repeat transparent";
+      $(element).css('background', 'url(' + image + ') no-repeat transparent');
     }
   }
 }
@@ -241,24 +234,23 @@ function miqPrefill(element, image, blank_image) {
 // Get user's time zone offset
 function miqGetTZO() {
   var uDate = new Date();
-  if (uDate) {
-    if (miqDomElementExists('user_TZO')) {
-      $('#user_TZO').val(uDate.getTimezoneOffset()/60);
-    }
+
+  if ($('#user_TZO').length) {
+    $('#user_TZO').val(uDate.getTimezoneOffset() / 60);
   }
 }
 
 // Get user's browswer info
 function miqGetBrowserInfo() {
-  var bd;
-  bd = miqBrowserDetect();
-  if (miqDomElementExists('browser_name')) {
+  var bd = miqBrowserDetect();
+
+  if ($('#browser_name').length) {
     $('#browser_name').val(bd.browser);
   }
-  if (miqDomElementExists('browser_version')) {
+  if ($('#browser_version').length) {
     $('#browser_version').val(bd.version);
   }
-  if (miqDomElementExists('browser_os')) {
+  if ($('#browser_os').length) {
     $('#browser_os').val(bd.OS);
   }
 }
@@ -280,7 +272,7 @@ function miqHighlight(elem, status) {
 function miqSparkle(status) {
   if (status) {
     // Make sure an ajax request is active before sparkling
-    if ($.active > 0) {
+    if ($.active) {
       miqSparkleOn();
     }
   } else {
@@ -292,9 +284,9 @@ function miqSparkle(status) {
 }
 
 function miqSparkleOn() {
-  if (miqDomElementExists('advsearchModal') &&
+  if ($('#advsearchModal').length &&
       ($('#advsearchModal').hasClass('modal fade in'))) {
-    if (miqDomElementExists('searching_spinner_center')) {
+    if ($('#searching_spinner_center').length) {
       miqSearchSpinner(true);
     }
     miqSpinner(false);
@@ -311,7 +303,7 @@ function miqSparkleOn() {
 
 function miqSparkleOff() {
   miqSpinner(false);
-  if (miqDomElementExists('searching_spinner_center')) {
+  if ($('#searching_spinner_center').length) {
     miqSearchSpinner(false);
   }
   if ($('#notification').length) {
@@ -337,17 +329,17 @@ function miqDimDiv(divname, status) {
 function miqCheckForChanges() {
   if (miqAngularApplication.$scope) {
     if (miqAngularApplication.$scope.form.$dirty) {
-      answer = confirm("Abandon changes?");
-      if (answer == true) {
+      var answer = confirm("Abandon changes?");
+      if (answer) {
         miqAngularApplication.$scope.form.$setPristine(true);
       }
       return answer;
     }
   } else {
-    if (((miqDomElementExists('buttons_on') &&
+    if ((($('#buttons_on').length &&
           $('#buttons_on').is(":visible")) ||
          typeof miq_changes != "undefined") &&
-        !miqDomElementExists('ignore_form_changes')) {
+        !$('#ignore_form_changes').length) {
       return confirm("Abandon changes?");
     }
   }
@@ -356,31 +348,31 @@ function miqCheckForChanges() {
 
 // go to the specified URL when a download all log files button is pressed
 function miqDownloadLogFiles(theUrl, count) {
-  for(i = 0; i < count; i++) {
-    new_url = theUrl + "?i=" + i
-    winName = "log" + i
+  for(var i = 0; i < count; i++) {
+    var new_url = theUrl + "?i=" + i;
+    var winName = "log" + i;
     window.open(new_url, winName,
       'top=0,' +
       'left=0,' +
-      'directories=no,' +
-      'location=no,' +
-      'menubar=no,' +
-      'resizable=no,' +
-      'scrollbars=no,' +
-      'status=no,' +
-      'toolbar=no'
-    )
+      'directories=0,' +
+      'location=0,' +
+      'menubar=0,' +
+      'resizable=0,' +
+      'scrollbars=0,' +
+      'status=0,' +
+      'toolbar=0'
+    );
   }
 }
 
 // Prompt for new tags
 function miqNewTagPrompt() {
-  text = prompt('Enter new tags, separated by blanks', '');
-  if (text == null) {
-    return false;
-  } else {
+  var text = prompt('Enter new tags, separated by blanks', '');
+  if (text !== null) {
     $('#new_tag').val(text);
     return true;
+  } else {
+    return false;
   }
 }
 
@@ -391,7 +383,7 @@ function miqButtons(h_or_s, prefix) {
   var on  = h_or_s == 'show' ? 'on'  : 'off';
   var off = h_or_s == 'show' ? 'off' : 'on';
 
-  prefix = (typeof(prefix) === 'undefined' || prefix === '') ? '' : (prefix + '_');
+  prefix = (typeof prefix === 'undefined' || prefix === '') ? '' : (prefix + '_');
 
   $('#' + prefix + 'buttons_' + on).show();
   $('#' + prefix + 'buttons_' + off).hide();
@@ -399,43 +391,43 @@ function miqButtons(h_or_s, prefix) {
 
 // Hide/show form buttons
 function miqValidateButtons(h_or_s, prefix) {
-  var prefix = (prefix == null) ? "" : prefix;
-  on_id = prefix + 'validate_buttons_on';
-  off_id = prefix + 'validate_buttons_off';
+  prefix = (prefix == null) ? "" : prefix;
+  var on_id = '#' + prefix + 'validate_buttons_on';
+  var off_id = '#' + prefix + 'validate_buttons_off';
 
-  if (miqDomElementExists('flash_msg_div')) {
+  if ($('#flash_msg_div').length) {
     $('flash_msg_div').hide();
   }
 
   if (h_or_s == "show") {
-    if (miqDomElementExists(on_id)) {
-      $("#" + on_id).show();
+    if ($(on_id).length) {
+      $(on_id).show();
     }
-    if (miqDomElementExists(off_id)) {
-      $("#" + off_id).hide();
+    if ($(off_id).length) {
+      $(off_id).hide();
     }
   } else {
-    if (miqDomElementExists(off_id)) {
-      $("#" + off_id).show();
+    if ($(off_id).length) {
+      $(off_id).show();
     }
-    if (miqDomElementExists(on_id)) {
-      $("#" + on_id).hide();
+    if ($(on_id).length) {
+      $(on_id).hide();
     }
   }
 }
 
 // Convert Button image to hyperlink
 function toggleConvertButtonToLink(button, url, toggle) {
-  if (toggle == true) {
+  if (toggle) {
     if (button.hasClass('dimmed')) {
-      button.removeClass('dimmed')
+      button.removeClass('dimmed');
     }
     if (button[0].parentNode.outerHTML.indexOf('<a href') == -1) {
       button[0].outerHTML = "<a href=" + url + " title='" + button[0].getAttribute('alt') + "'>" + button[0].outerHTML + "</a>";
     }
   } else {
     if (!button.hasClass('dimmed')) {
-      button.addClass('dimmed')
+      button.addClass('dimmed');
     }
     if (button[0].parentNode.outerHTML.indexOf('<a href') > -1) {
       button[0].parentNode.outerHTML = button[0].outerHTML;
@@ -447,35 +439,30 @@ function toggleConvertButtonToLink(button, url, toggle) {
 // parms: button_div=<id of div with buttons to update>, override=<forced state>
 function miqUpdateAllCheckboxes(button_div, override) {
   miqSparkle(true);
-  if (miqDomElementExists('masterToggle')) {
+  if ($('#masterToggle').length) {
     var state = $('#masterToggle').prop('checked');
     if (override != null) {
       state = override;
     }
     if (typeof gtl_list_grid == "undefined" &&
-        ($("input[id^='listcheckbox']").length > 0)) {
+        ($("input[id^='listcheckbox']").length)) {
       // No dhtmlx grid on the screen
-      cbs = $("input[id^='listcheckbox']")
-      cbs.each(function() {
-        this.checked = state;
-      });
+      $("input[id^='listcheckbox']").prop('checked', state);
       miqUpdateButtons(cbs[0], button_div);
     } else if (typeof gtl_list_grid == "undefined" &&
-               $("input[id^='storage_cb']").length > 0) {
+               $("input[id^='storage_cb']").length) {
       // to handle check/uncheck all for C&U collection
-      $("input[id^='storage_cb']").each(function() {
-        this.checked = state;
-      });
+      $("input[id^='storage_cb']").prop('checked', state);
       miqJqueryRequest("/configuration/form_field_changed?storage_cb_all=" + state);
       return true;
     } else {
       // Set checkboxes in dhtmlx grid
       gtl_list_grid.forEachRow(function(id) {
         gtl_list_grid.cells(id, 0).setValue(state ? 1 : 0);
-      })
-      crows = gtl_list_grid.getCheckedRows(0);
+      });
+      var crows = gtl_list_grid.getCheckedRows(0);
       $('#miq_grid_checks').val(crows);
-      count = crows == "" ? 0:crows.split(",").length;
+      var count = !crows ? 0 : crows.split(",").length;
       miqSetButtons(count, button_div);
     }
   }
@@ -495,7 +482,7 @@ function miqUpdateButtons(obj, button_div) {
       if (count > 1) {
         return false;
       }
-    })
+    });
   // Check for number object, as passed from snapshot tree
   } else if (typeof obj == 'number') {
     count = 1;
@@ -510,12 +497,12 @@ function miqSetButtons(count, button_div) {
 
   if (button_div.match("_tb$")) {
     if (typeof miq_toolbars[button_div] != "undefined") {
-      tb = miq_toolbars[button_div]["obj"];
-      buttons = miq_toolbars[button_div]["buttons"];
-      for (button in buttons) {
-        onwhen = eval("buttons." + button + ".onwhen");
+      tb = miq_toolbars[button_div].obj;
+      buttons = miq_toolbars[button_div].buttons;
+      for (var button in buttons) {
+        var onwhen = buttons[button].onwhen;
         if (typeof onwhen != "undefined") {
-          if (count == 0) {
+          if (count === 0) {
             if (button.indexOf("__") >= 0) {
               tb.disableListOption(button.split("__")[0], button);
             } else {
@@ -542,7 +529,7 @@ function miqSetButtons(count, button_div) {
               } else {
                 tb.enableItem(button);
               }
-            } else if (onwhen = "1") {
+            } else if (onwhen == "1") {
               if (button.indexOf("__") >= 0) {
                 tb.disableListOption(button.split("__")[0], button);
               } else {
@@ -555,36 +542,36 @@ function miqSetButtons(count, button_div) {
     }
   } else if (button_div.match("_buttons$")) {
     // Handle newer divs with button elements
-    if (count == 0) {
-      $("#" + button_div + " button[id$=on_1]").each(function() {this.disabled = true});
+    if (count === 0) {
+      $("#" + button_div + " button[id$=on_1]").prop('disabled', true);
     } else if (count == 1) {
-      $("#" + button_div + " button[id$=on_1]").each(function() {this.disabled = false});
+      $("#" + button_div + " button[id$=on_1]").prop('disabled', false);
     } else {
-      $("#" + button_div + " button[id$=on_1]").each(function() {this.disabled = false});
+      $("#" + button_div + " button[id$=on_1]").prop('disabled', false);
     }
   } else {
     // Handle older li based buttons
-    if (count == 0) {
-      $('#' + button_div + ' li[id~=on_1]').each(function() {$(this).hide()})
-      $('#' + button_div + ' li[id~=on_2]').each(function() {$(this).hide()})
-      $('#' + button_div + ' li[id~=on_only_1]').each(function() {$(this).hide()})
-      $('#' + button_div + ' li[id~=off_0]').each(function() {$(this).show()})
-      $('#' + button_div + ' li[id~=off_1]').each(function() {$(this).show()})
-      $('#' + button_div + ' li[id~=off_not_1]').each(function() {$(this).show()})
-    } else if (count == 1) {
-      $('#' + button_div + ' li[id~=off_0]').each(function() {$(this).hide()})
-      $('#' + button_div + ' li[id~=on_2]').each(function() {$(this).hide()})
-      $('#' + button_div + ' li[id~=off_not_1]').each(function() {$(this).hide()})
-      $('#' + button_div + ' li[id~=off_1]').each(function() {$(this).show()})
-      $('#' + button_div + ' li[id~=on_1]').each(function() {$(this).show()})
-      $('#' + button_div + ' li[id~=on_only_1]').each(function() {$(this).show()})
+    if (count === 0) {
+      $('#' + button_div + ' li[id~=on_1]').hide();
+      $('#' + button_div + ' li[id~=on_2]').hide();
+      $('#' + button_div + ' li[id~=on_only_1]').hide();
+      $('#' + button_div + ' li[id~=off_0]').show();
+      $('#' + button_div + ' li[id~=off_1]').show();
+      $('#' + button_div + ' li[id~=off_not_1]').show();
+    } else if (count === 1) {
+      $('#' + button_div + ' li[id~=off_0]').hide();
+      $('#' + button_div + ' li[id~=on_2]').hide();
+      $('#' + button_div + ' li[id~=off_not_1]').hide();
+      $('#' + button_div + ' li[id~=off_1]').show();
+      $('#' + button_div + ' li[id~=on_1]').show();
+      $('#' + button_div + ' li[id~=on_only_1]').show();
     } else {
-      $('#' + button_div + ' li[id~=off_0]').each(function() {$(this).hide()})
-      $('#' + button_div + ' li[id~=off_1]').each(function() {$(this).hide()})
-      $('#' + button_div + ' li[id~=on_only_1]').each(function() {$(this).hide()})
-      $('#' + button_div + ' li[id~=on_1]').each(function() {$(this).show()})
-      $('#' + button_div + ' li[id~=on_2]').each(function() {$(this).show()})
-      $('#' + button_div + ' li[id~=off_not_1]').each(function() {$(this).show()})
+      $('#' + button_div + ' li[id~=off_0]').hide();
+      $('#' + button_div + ' li[id~=off_1]').hide();
+      $('#' + button_div + ' li[id~=on_only_1]').hide();
+      $('#' + button_div + ' li[id~=on_1]').show();
+      $('#' + button_div + ' li[id~=on_2]').show();
+      $('#' + button_div + ' li[id~=off_not_1]').show();
     }
   }
 }
@@ -619,7 +606,7 @@ function miqGetBrowserSize() {
     return;
   }
   size_timer = true;
-  self.setTimeout('miqResetSizeTimer()', 1000);
+  setTimeout(miqResetSizeTimer, 1000);
 }
 
 function miqResetSizeTimer() {
@@ -628,6 +615,7 @@ function miqResetSizeTimer() {
   var url = "/dashboard/window_sizes";
   var args = [];
   var offset = 427;
+  var h;
 
   args.push("width");
   args.push(theArray[0]);
@@ -686,7 +674,7 @@ function miqGetSize() {
 function miqPassFields(url, args) {
   url += '?';
 
-  for (var i = 0; i < args.length; i = i + 2) {
+  for (var i = 0; i < args.length; i += 2) {
     url += args[i] + '=' + args[i+1] + '&';
   }
 
@@ -697,8 +685,9 @@ function miqPassFields(url, args) {
 function wrapFish() {
   var catfish = document.getElementById('notification');
   var subelements = [];
+  var i;
 
-  for (var i = 0; i < document.body.childNodes.length; i++) {
+  for (i = 0; i < document.body.childNodes.length; i++) {
     subelements[i] = document.body.childNodes[i];
   }
 
@@ -707,7 +696,7 @@ function wrapFish() {
   // call it zip
   zip.id = 'zip';
 
-  for (var i = 0; i < subelements.length; i++) {
+  for (i = 0; i < subelements.length; i++) {
     zip.appendChild(subelements[i]);
   }
 
@@ -730,9 +719,9 @@ function Loaded_Chart(chart_id) {
 
 function doLoadChart(chart_id, chart_object) {
   var id_splitted = chart_id.split('_');
-  set = id_splitted[1];
-  idx = id_splitted[2];
-  comp = id_splitted[3];
+  var set = id_splitted[1];
+  var idx = id_splitted[2];
+  var comp = id_splitted[3];
 
   if (typeof(comp) === 'undefined') {
     chart_object.Update_XML(miq_chart_data[set][idx].xml, false);
@@ -746,7 +735,7 @@ function miqLoadCharts() {
   if (typeof miq_chart_data != 'undefined' && miq_browser == 'Explorer') {
     for (var set in miq_chart_data) {
       var mcd = miq_chart_data[set];
-      for (var i = 0; i < mcd.length; i = i + 1) {
+      for (var i = 0; i < mcd.length; i++) {
         miqLoadChart("miq_" + set + "_" + i);
         if (typeof mcd[i].xml2 != "undefined") {
           miqLoadChart("miq_" + set + "_" + i + "_2");
@@ -757,9 +746,10 @@ function miqLoadCharts() {
 }
 
 function miqLoadChart(chart_id) {
-  var chart_object = 'undefined';
+  var chart_object;
 
-  if (typeof document.getElementById(chart_id) != 'undefined' &&
+  if (document.getElementById(chart_id) != undefined &&
+      typeof document.getElementById(chart_id) != 'undefined' &&
       typeof document.getElementById(chart_id).Update_XML != 'undefined') {
     // Verify with console.log after sleep
     chart_object = document.getElementById(chart_id);
@@ -767,8 +757,8 @@ function miqLoadChart(chart_id) {
              typeof document.getElementsByName(chart_id)[0].Update_XML != 'undefined') {
     chart_object = document.getElementsByName(chart_id)[0];
   }
-  if (chart_object == 'undefined') {
-    self.setTimeout(function() { miqLoadChart(chart_id); }, 100);
+  if (chart_object === undefined) {
+    setTimeout(function() { miqLoadChart(chart_id); }, 100);
   } else {
     doLoadChart(chart_id, chart_object);
   }
@@ -779,38 +769,22 @@ function miqChartLinkData(col, row, value, category, series, id, message) {
   if (typeof miqMenu != "undefined") {
     miqMenu.hideContextMenu();
   }
-  if (category.indexOf("<Other(") == 0) {
+  if (category.indexOf("<Other(") === 0) {
     // No menus for <Other> category
     return;
   }
   // Added delay before showing menus to get it work in version 3.5
-  self.setTimeout(
-    "miqBuildChartMenu('" +
-    col +
-    "', '" +
-    row +
-    "', '" +
-    value +
-    "', '" +
-    category +
-    "', '" +
-    series +
-    "', '" +
-    id +
-    "', '" +
-    message +
-    "')", 250
-  );
+  setTimeout(function() { miqBuildChartMenu(col, row, value, category, series, id, message); }, 250);
 }
 
 function miqBuildChartMenu(col, row, value, category, series, id, message) {
-  set = id.split('_')[1]; // Get the chart set
-  idx = id.split('_')[2]; // Get the chart index
+  var set = id.split('_')[1]; // Get the chart set
+  var idx = id.split('_')[2]; // Get the chart index
   var chart_data = miq_chart_data[set];
 
-  if (chart_data[idx].menu != null && chart_data[idx].menu.length > 0) {
+  if (chart_data[idx].menu != null && chart_data[idx].menu.length) {
     var rowcolidx = "_" + row + "-" + col+ "-" + idx;
-    miqMenu = new dhtmlXMenuObject(null, "dhx_web");
+    var miqMenu = new dhtmlXMenuObject(null, "dhx_web");
     miqMenu.setImagePath("/assets/dhtmlx_gpl_36/imgs/");
     miqMenu.renderAsContextMenu();
     miqMenu.setWebModeTimeout(1000);
@@ -849,7 +823,7 @@ var miqAjaxTimers = 0;
 
 // Handle an ajax form button press (i.e. Submit) by starting the spinning Q, then waiting for .7 seconds for observers to finish
 function miqAjaxButton(url, serialize_fields) {
-  if (typeof serialize_fields == "unknown") {
+  if (typeof serialize_fields == "undefined") {
     serialize_fields = false;
   }
   if ($('#notification').length) {
@@ -857,20 +831,14 @@ function miqAjaxButton(url, serialize_fields) {
   }
 
   miqAjaxTimers++;
-  self.setTimeout(
-    "miqAjaxButtonSend('" +
-    url +
-    "', " +
-    serialize_fields +
-    ")", 700
-  );
+  setTimeout(function() { miqAjaxButtonSend(url, serialize_fields); }, 700);
 }
 
 // Send ajax url after any outstanding ajax requests, wait longer if needed
 function miqAjaxButtonSend(url, serialize_fields) {
-  if ($.active > 0) {
+  if ($.active) {
     miqAjaxTimers++;
-    self.setTimeout("miqAjaxButtonSend('" + url + "')", 700);
+    setTimeout(function() { miqAjaxButtonSend(url); }, 700);
   } else {
     miqAjax(url, serialize_fields);
   }
@@ -891,13 +859,13 @@ function miqAsyncAjax(url) {
   miqJqueryRequest(url, {beforeSend: true});
 }
 
-// Function to generate an Ajax request, but only once for a drawn screen
 var miqOneTrans = 0;
 
+// Function to generate an Ajax request, but only once for a drawn screen
 function miqSendOneTrans(url) {
   if (typeof miqIEButtonPressed != "undefined") {
     // page replace after clicking save/reset was making observe_field on text_area in IE send up a trascation to form_field_changed method
-    delete miqIEButtonPressed;
+    miqIEButtonPressed = undefined;
     return;
   }
   if (miqOneTrans == 1) {
@@ -908,82 +876,36 @@ function miqSendOneTrans(url) {
   miqJqueryRequest(url);
 }
 
-// Anytime Anywhere Web Page Clock Generator
-// Clock Script Generated at
-// http://www.rainbow.arch.scriptmania.com/tools/clock
-function tS() {
-  x = new Date(
-    tN().getUTCFullYear(),
-    tN().getUTCMonth(),
-    tN().getUTCDate(),
-    tN().getUTCHours(),
-    tN().getUTCMinutes(),
-    tN().getUTCSeconds()
-  );
-
-  if (zone_offset >= 0) {
-    x.setTime(x.getTime() + (Number(zone_offset)) * 1000);
-  } else {
-    x.setTime(x.getTime() - (Number(zone_offset.slice(1, zone_offset.length))) * 1000);
-  }
-
-  return x;
-}
-
-function tN() {
-  return new Date();
-}
-
-function lZ(x) {
+function leadingZero(x) {
   return (x > 9) ? x : '0' + x;
 }
 
-function y2(x) {
-  x = (x < 500) ? x + 1900 : x;
-  return String(x).substring(2, 4);
+function dateTime(offset, abbr) {
+  var date = miqCalendarDateConversion(offset);
+
+  document.getElementById('tP').innerHTML = (date.getMonth() + 1) +
+    '/' +
+    date.getDate() +
+    '/' +
+    date.getFullYear() +
+    ' ' +
+    leadingZero(date.getHours()) +
+    ':' +
+    leadingZero(date.getMinutes()) +
+    ' ' +
+    abbr;
+  setTimeout(function() { dateTime(offset, abbr); }, 1000);
 }
-
-var zone_offset;
-var zone_abbr;
-
-function dT(offset, abbr) {
-  if (offset != undefined) {
-    zone_offset = offset;
-  }
-  if (abbr != undefined) {
-    zone_abbr = abbr;
-  }
-  if (fr == 0) {
-    fr = 1;
-    document.write('<span id="tP">' + eval(oT) + '</span>');
-  }
-
-  document.getElementById('tP').innerHTML = eval(oT);
-  setTimeout('dT(zone_offset, zone_abbr)', 1000);
-}
-
-var dN = new Array('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
-mN = new Array('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12');
-fr = 0;
-oT = "mN[tS().getMonth()]+" +
-     "'/'+" +
-     "tS().getDate()+" +
-     "'/'+" +
-     "y2(tS().getYear())+" +
-     "' '+" +
-     "lZ(tS().getHours())+" +
-     "':'+" +
-     "lZ(tS().getMinutes())+" +
-     "' '+" +
-     "zone_abbr";
 
 // this deletes the remembered treestate when called
 function miqClearTreeState(prefix) {
+  var to_remove = [];
+  var i;
+
   if (prefix === undefined) {
     prefix = 'treeOpenStatex';
   }
-  var to_remove = [];
-  for (var i = 0; i < localStorage.length; i++) {
+  for (i = 0; i < localStorage.length; i++) {
     if (localStorage.key(i).match('^' + prefix)) {
       to_remove.push(localStorage.key(i));
     }
@@ -996,13 +918,13 @@ function miqClearTreeState(prefix) {
 
 // Check max length on a text area and set remaining chars
 function miqCheckMaxLength(obj) {
-  var ml = obj.getAttribute ? parseInt(obj.getAttribute("maxlength")) : "";
+  var ml = obj.getAttribute ? parseInt(obj.getAttribute("maxlength"), 10) : "";
   var counter = obj.getAttribute ? obj.getAttribute("counter") : "";
 
   if (obj.getAttribute && obj.value.length > ml) {
     obj.value = obj.value.substring(0, ml);
   }
-  if (counter != "") {
+  if (counter) {
     if (miq_browser != 'Explorer') {
       $('#' + counter)[0].textContent = obj.value.length;
     } else {
@@ -1013,9 +935,9 @@ function miqCheckMaxLength(obj) {
 
 function miqSetInputClass(fld, cname, typ) {
   if (typ == "remove") {
-    $(fld).removeClass(cname)
+    $(fld).removeClass(cname);
   } else {
-    $(fld).addClass(cname)
+    $(fld).addClass(cname);
   }
 }
 
@@ -1060,10 +982,10 @@ function miqAjaxAuth(button) {
 function miqEnableLoginFields(enabled) {
   $('#user_name').prop('readonly', !enabled);
   $('#user_password').prop('readonly', !enabled);
-  if (miqDomElementExists('user_new_password')) {
+  if ($('#user_new_password').length) {
     $('#user_new_password').prop('readonly', !enabled);
   }
-  if (miqDomElementExists('user_verify_password')) {
+  if ($('#user_verify_password').length) {
     $('#user_verify_password').prop('readonly', !enabled);
   }
 }
@@ -1075,7 +997,7 @@ function miqAttachTextAreaWithLines(id) {
   var string = '';
 
   for (var no = 1; no < 300; no++) {
-    if (string.length > 0) {
+    if (string.length) {
       string += '\n';
     }
     string += no;
@@ -1089,25 +1011,25 @@ function miqAttachTextAreaWithLines(id) {
   el.scrollTop = ta.scrollTop;
 
   ta.focus();
-  ta.onkeydown = function() { el.scrollTop = ta.scrollTop; }
-  ta.onmousedown = function() { el.scrollTop = ta.scrollTop; }
-  ta.onmouseup = function() { el.scrollTop = ta.scrollTop; }
-  ta.onmousemove = function() { el.scrollTop = ta.scrollTop; }
+  ta.onkeydown = function() { el.scrollTop = ta.scrollTop; };
+  ta.onmousedown = function() { el.scrollTop = ta.scrollTop; };
+  ta.onmouseup = function() { el.scrollTop = ta.scrollTop; };
+  ta.onmousemove = function() { el.scrollTop = ta.scrollTop; };
 }
 
 // Initialize dashboard column jQuery sortables
 function miqInitDashboardCols() {
-  if (miqDomElementExists('col1')) {
+  if ($('#col1').length) {
     $('#col1').sortable({connectWith:'#col2, #col3', handle:"h2"});
     $('#col1').off('sortupdate');
     $('#col1').on('sortupdate', miqDropComplete);
   }
-  if (miqDomElementExists('col2')) {
+  if ($('#col2').length) {
     $('#col2').sortable({connectWith:'#col1, #col3', handle:"h2"});
     $('#col2').off('sortupdate');
     $('#col2').on('sortupdate', miqDropComplete);
   }
-  if (miqDomElementExists('col3')) {
+  if ($('#col3').length) {
     $('#col3').sortable({connectWith:'#col1, #col2', handle:"h2"});
     $('#col3').off('sortupdate');
     $('#col3').on('sortupdate', miqDropComplete);
@@ -1129,11 +1051,13 @@ function miqDropComplete(event, ui) {
 
 // Attach a calendar control to all text boxes that start with miq_date_
 function miqBuildCalendar(bAngular) {
-  if (bAngular == undefined) {
+  var all;
+
+  if (bAngular === undefined) {
     // Get all of the input boxes with ids starting with "miq_date_"
-    var all = $('input[id^=miq_date_]');
+    all = $('input[id^=miq_date_]');
   } else {
-    var all = $('input[id^=miq_angular_date_]');
+    all = $('input[id^=miq_angular_date_]');
   }
   all.each(function() {
     // Attach dhtmlxcalendars to each one
@@ -1141,7 +1065,7 @@ function miqBuildCalendar(bAngular) {
     var cal = new dhtmlxCalendarObject(el.attr('id'));
     cal.setDateFormat("%m/%d/%Y");
 
-    if (el.val() == "" && typeof miq_cal_dateTo != "undefined") {
+    if ((!el.val()) && typeof miq_cal_dateTo != "undefined") {
       cal.setDate(miq_cal_dateTo);
     } else {
       cal.setDate(this.value);
@@ -1162,7 +1086,7 @@ function miqBuildCalendar(bAngular) {
     }
     if (typeof miq_cal_skipDays != "undefined" &&
         miq_cal_skipDays != null &&
-        miq_cal_skipDays != '') {
+        miq_cal_skipDays) {
       cal.setInsensitiveRange(miq_cal_skipDays);
     }
 
@@ -1170,7 +1094,7 @@ function miqBuildCalendar(bAngular) {
     if (el.attr('data-miq_observe_date') == "execAngular") {
       el.change(function() {
         miqSetAngularDate(el);
-      })
+      });
       cal.attachEvent("onClick", function() {
         miqSetAngularDate(el);
       });
@@ -1178,7 +1102,7 @@ function miqBuildCalendar(bAngular) {
       if (this.getAttribute('data-miq_observe_date')) {
         el.change(function() {
           miqSendDateRequest(el);
-        })
+        });
         cal.attachEvent("onClick", function() {
           miqSendDateRequest(el);
         });
@@ -1229,11 +1153,11 @@ function miqBuildExplorerView(options) {
 
     // Only add header if option specified (because passing header:null still shows a thin header)
     if (settings.header != null) {
-      centerHash["header"] = settings.header
-    };
+      centerHash.header = settings.header;
+    }
 
     // Build the layout
-    if (settings.left == 0) {
+    if (!settings.left) {
       // If no saved width, calculate
       settings.left = settings.width/settings.divider;
     }
@@ -1255,7 +1179,7 @@ function miqBuildExplorerView(options) {
     });
 
     expLayout.on('render', function() {
-      if (miqDomElementExists('main_div')) {
+      if ($('#main_div').length) {
         miqBuildMainLayout(this, settings.header);
       }
     });
@@ -1272,7 +1196,7 @@ function miqBuildExplorerView(options) {
 
     // Build the accordion
     $("#" + settings.left_div).accordion({
-      change: function(event, ui) {miqAccordionChange(event, ui, settings.accord_url)},
+      change: function(event, ui) {miqAccordionChange(event, ui, settings.accord_url);},
       fillSpace: true,
       active: "#" + settings.active_accord,
       icons: false,
@@ -1285,10 +1209,12 @@ function miqBuildExplorerView(options) {
 // Build the nested GTL layout inside the explorer layout
 function miqBuildMainLayout(parentLayout, header) {
   var el = parentLayout.getUnitByPosition('center').get('wrap');
-  if (miqDomElementExists('paging_div')) {
-    var paging_height = 35;
+  var paging_height;
+
+  if ($('#paging_div').length) {
+    paging_height = 35;
   } else {
-    var paging_height = 0;
+    paging_height = 0;
   }
 
   var mainLayout = new YAHOO.widget.Layout(el, {
@@ -1347,7 +1273,7 @@ function miqSetLayoutHeader(unitId, text) {
 
 // common function to pass ajax request to server
 function miqAjaxRequest(itemId, path) {
-  if (miqCheckForChanges() == false) {
+  if (!miqCheckForChanges()) {
     return false;
   } else {
     miqJqueryRequest(path + '?id=' + itemId, {beforeSend: true, complete: true});
@@ -1357,7 +1283,7 @@ function miqAjaxRequest(itemId, path) {
 
 // Handle an element onclick to open href in a new window with optional confirmation
 function miqClickAndPop(el) {
-  conmsg = el.getAttribute("data-miq_confirm");
+  var conmsg = el.getAttribute("data-miq_confirm");
 
   if (conmsg == null || confirm(conmsg)) {
     window.open(el.href);
@@ -1365,21 +1291,28 @@ function miqClickAndPop(el) {
   return false;
 }
 
+function miq_patternfly_tabs_init(id, url) {
+  $(id + ' .nav-tabs a[data-toggle="tab"]').on('click.bs.tab.data-api', function (e) {
+    var currTabTarget = $(e.target).attr('href').substring(1);
+    miqJqueryRequest(url + '/?tab_id=' + currTabTarget, {beforeSend: true});
+  });
+}
+
 // method takes 4 parameters tabs div id, active tab label, url to go to when tab is changed, and whether to check for abandon changes or not
 function miq_jquery_tabs_init(options) {
   // initializing tabs
-  $("#" + options['tabs_div']).tabs();
+  $("#" + options.tabs_div).tabs();
 
   // setting active tab after tabs are loaded using name of tab
-  if (options['active_tab']) {
-    var index = $('#' + options['tabs_div'] + ' a[href=\"#' + options['active_tab'] + '\" ]').parent().index();
-    $('#' + options['tabs_div']).tabs('select', index);
+  if (options.active_tab) {
+    var index = $('#' + options.tabs_div + ' a[href=\"#' + options.active_tab + '\" ]').parent().index();
+    $('#' + options.tabs_div).tabs('select', index);
   }
 
-  if (options['url']) {
+  if (options.url) {
     // passing in ui element of tabs, url to use for ajax transaction and whether to check for changes,
     // used bind to prevent from extra tab change transaction when all tabs are loaded from controller and active tab is changed
-    $( "#" + options['tabs_div'] ).bind("tabsselect", function(event, ui) {
+    $( "#" + options.tabs_div).bind("tabsselect", function(event, ui) {
       // added a workaround to make sure that bind url for main outer tabs is not being used as a url for sub tabs
       // do not bind if subtabs dont need to send up a transaction
       var bind_url = ui.panel.parentNode.getAttribute('data-miq_url');
@@ -1388,20 +1321,20 @@ function miq_jquery_tabs_init(options) {
       } else if (bind_url != null) {
         return miq_jquery_tab_select(ui, bind_url, false);
       } else {
-        return miq_jquery_tab_select(ui, options['url'], options['tab_changes'] ? options['tab_changes'] : false);
+        return miq_jquery_tab_select(ui, options.url, options.tab_changes ? options.tab_changes : false);
       }
     });
-  } else if (options['cm_tab']) {
+  } else if (options.cm_tab) {
     // forcing to refresh the codemirror text box when tab is changed, so it displays properly
-    $( "#" + options['tabs_div'] ).bind("tabsshow", function(event, ui) {
-      if (options['cm_tab'] == ui.panel.id) {
+    $( "#" + options.tabs_div).bind("tabsshow", function(event, ui) {
+      if (options.cm_tab == ui.panel.id) {
         miqEditor.refresh();
       }
     });
-  } else if (options['show_buttons_tab']) {
+  } else if (options.show_buttons_tab) {
     // show/hide toolbar div based on selected tab
-    $( "#" + options['tabs_div'] ).bind( "tabsselect", function(event, ui) {
-      if (options['show_buttons_tab'] == ui.panel.id) {
+    $( "#" + options.tabs_div).bind("tabsselect", function(event, ui) {
+      if (options.show_buttons_tab == ui.panel.id) {
         $("#center_buttons_div").show();
       } else {
         $("#center_buttons_div").hide();
@@ -1410,17 +1343,17 @@ function miq_jquery_tabs_init(options) {
   }
 
   // Hide the first tab, if only one
-  if ($("#" + options['tabs_div'] + " ul:first li").length == 1) {
-    $("#" + options['tabs_div'] + " ul:first li").hide();
+  if ($("#" + options.tabs_div + " ul:first li").length == 1) {
+    $("#" + options.tabs_div + " ul:first li").hide();
   }
 
-  $("#" + options['tabs_div']).show();
+  $("#" + options.tabs_div).show();
 }
 
 // OnSelect handler for change tab transaction for jquery ui tabs
 // getting in ui element of tabs, url to use for ajax transaction and whether to check for changes, prov screens don't need to check for changes on tab change
 function miq_jquery_tab_select(ui, url, checkChanges) {
-  if (checkChanges && miqCheckForChanges() == false) {
+  if (checkChanges && !miqCheckForChanges()) {
     return false;
   } else {
     miqJqueryRequest(url + '?tab_id=' + ui.panel.id, {beforeSend: true});
@@ -1430,9 +1363,9 @@ function miq_jquery_tab_select(ui, url, checkChanges) {
 
 function miq_jquery_disable_inactive_tabs(tabs_div) {
   // getting length of tabs on screen
-  tab_len = $('#' + tabs_div).tabs('length');
+  var tab_len = $('#' + tabs_div).tabs('length');
   // getting index of currently active tabs
-  curTab = $('#' + tabs_div).tabs().tabs('option', 'selected').valueOf();
+  var curTab = $('#' + tabs_div).tabs().tabs('option', 'selected').valueOf();
   // building array of tab indexes to be disabled, excluding active tab index
   var arr = [];
 
@@ -1447,15 +1380,15 @@ function miq_jquery_disable_inactive_tabs(tabs_div) {
 function miq_jquery_show_hide_tab(tab_li_id, s_or_h) {
   // there is no default method to show/hide jquery tabs, need to have unique li id to do a show/hide on those
   if (s_or_h == "hide") {
-    $("#" + tab_li_id).css("display", "none")
+    $("#" + tab_li_id).css("display", "none");
   } else {
-    $("#" + tab_li_id).css("display", "list-item")
+    $("#" + tab_li_id).css("display", "list-item");
   }
 }
 
 function miq_jquery_disable_all_tabs(tabs_div) {
   // getting length of tabs on screen
-  tab_len = $('#' + tabs_div).tabs('length');
+  var tab_len = $('#' + tabs_div).tabs('length');
   // building array of tab indexes to be disabled, excluding active tab index
   var arr = [];
   for (var i = 1; i <= tab_len; i++) {
@@ -1510,7 +1443,7 @@ function miqLaunchMiqVncConsole(pwd, hostAddress, hostPort, proxyAddress, proxyP
 
 // Toggle the user options div in the page header
 function miqToggleUserOptions(id) {
-  miqJqueryRequest("/dashboard/change_group?to_group=" + id)
+  miqJqueryRequest("/dashboard/change_group?to_group=" + id);
 }
 
 // Check for enter/escape on quick search box
@@ -1552,7 +1485,7 @@ function miqSpinner(status) {
         trail: 60, // Afterglow percentage
         shadow: false, // Whether to render a shadow
         hwaccel: false, // Whether to use hardware acceleration
-        className: 'spinner', // The CSS class to assign to the spinner
+        className: 'miq-spinner', // The CSS class to assign to the spinner
         zIndex: 2e9, // The z-index (defaults to 2000000000)
         top: 'auto', // Top position relative to parent in px
         left: 'auto' // Left position relative to parent in px
@@ -1571,7 +1504,7 @@ function miqSpinner(status) {
 // Start/stop the search spinner
 function miqSearchSpinner(status) {
   if (status) {
-    if (miqDomElementExists('search_notification')) {
+    if ($('#search_notification').length) {
       $('#search_notification').show();
     }
     if (typeof search_spinner == "undefined") {
@@ -1588,7 +1521,7 @@ function miqSearchSpinner(status) {
         trail: 60, // Afterglow percentage
         shadow: false, // Whether to render a shadow
         hwaccel: false, // Whether to use hardware acceleration
-        className: 'spinner', // The CSS class to assign to the spinner
+        className: 'miq-spinner', // The CSS class to assign to the spinner
         zIndex: 2e9, // The z-index (defaults to 2000000000)
         top: 'auto', // Top position relative to parent in px
         left:'auto' // Left position relative to parent in px
@@ -1598,7 +1531,7 @@ function miqSearchSpinner(status) {
       search_spinner.spin($('#searching_spinner_center')[0]);
     }
   } else {
-    if (miqDomElementExists('search_notification')) {
+    if ($('#search_notification').length) {
       $('#search_notification').hide();
     }
     if (typeof search_spinner != "undefined") {
@@ -1623,30 +1556,34 @@ $(document).ajaxSend(function(event, request, settings) {
 
 function miqJqueryRequest(url, options) {
   options = options || {};
-  ajax_options = {};
+  var ajax_options = {};
 
-  if (options['dataType'] === undefined) {
-    ajax_options['accepts'] = {script: '*/*;q=0.5, ' + $.ajaxSettings.accepts.script};
-    ajax_options['dataType'] = 'script';
+  if (options.dataType === undefined) {
+    ajax_options.accepts = {script: '*/*;q=0.5, ' + $.ajaxSettings.accepts.script};
+    ajax_options.dataType = 'script';
   }
 
-  if (options['data']) {
-    ajax_options['data'] = options['data'];
+  if (options.data) {
+    ajax_options.data = options.data;
   }
-  if (options['beforeSend']) {
-    ajax_options['beforeSend'] = function(request) {miqSparkle(true);};
+  if (options.beforeSend) {
+    ajax_options.beforeSend = function(request) {miqSparkle(true);};
   }
-  if (options['complete']) {
-    ajax_options['complete'] = function(request) { miqSparkle(false); };
+  if (options.complete) {
+    ajax_options.complete = function(request) { miqSparkle(false); };
   }
-  new $.ajax(options['no_encoding'] ? url : encodeURI(url), ajax_options);
+  new $.ajax(options.no_encoding ? url : encodeURI(url), ajax_options);
 }
 
 function miqDomElementExists(element) {
-  return $('#' + element).length
+  return $('#' + element).length;
 }
 
 function miqSerializeForm(element) {
   return $('#' + element).find('input,select,textarea').serialize();
+}
+
+function miqSerializeField(element, field_name) {
+  return $("#" + element + " :input[id=" + field_name + "]").serialize();
 }
 

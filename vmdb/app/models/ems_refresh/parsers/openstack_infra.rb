@@ -14,6 +14,7 @@ module EmsRefresh
         @data              = {}
         @data_index        = {}
         @host_hash_by_name = {}
+        @resource_to_stack = {}
 
         @known_flavors = Set.new
 
@@ -74,8 +75,18 @@ module EmsRefresh
         return hosts_attributes unless clouds
 
         clouds.each do |cloud_ems|
-          connection = cloud_ems.connect
-          compute_hosts  = connection.hosts.select { |x| x.service_name == "compute" }
+          compute_hosts = nil
+          begin
+            cloud_ems.with_provider_connection do |connection|
+              compute_hosts = connection.hosts.select { |x| x.service_name == "compute" }
+            end
+          rescue StandardError => err
+            $log.error "MIQ(#{self.class.name}.#{__method__}) Error Class=#{err.class.name}, Message=#{err.message}"
+            $log.error err.backtrace.join("\n")
+            # Just log the error and continue the refresh, we don't want error in cloud side to affect infra refresh
+            next
+          end
+
           compute_hosts.each do |compute_host|
             # We need to take correct zone id from correct provider, since the zone name can be the same
             # across providers
@@ -110,11 +121,21 @@ module EmsRefresh
         end
       end
 
+      def get_extra_host_attributes(host)
+        return {} if host.extra.blank? || (extra_attrs = host.extra.fetch_path('edeploy_facts')).blank?
+        # Convert list of tuples from Ironic extra to hash. E.g. [[a1, a2, a3, a4], [a1, a2, b3, b4], ..] converts to
+        # {a1 => {a2 => {a3 => a4, b3 => b4}}}, so we get constant access to sub indexes.
+        extra_attrs.each_with_object({}) { |attr, obj| ((obj[attr[0]] ||= {})[attr[1]] ||= {})[attr[2]] = attr[3] if attr.count >= 4 }
+      end
+
       def parse_host(host, indexed_servers, _indexed_hosts_ports, indexed_resources, cloud_hosts_attributes)
         uid                 = host.uuid
         host_name           = identify_host_name(indexed_resources, host.instance_uuid, uid)
         hypervisor_hostname = identify_hypervisor_hostname(host, indexed_servers)
         ip_address          = identify_primary_ip_address(host, indexed_servers)
+        hostname            = ip_address
+
+        extra_attributes = get_extra_host_attributes(host)
 
         # Get the cloud_host_attributes by hypervisor hostname, only compute hosts can get this
         cloud_host_attributes = cloud_hosts_attributes.select do |x|
@@ -131,14 +152,17 @@ module EmsRefresh
           :operating_system     => {:product_name => 'linux'},
           :vmm_vendor           => 'RedHat',
           :vmm_product          => identify_product(indexed_resources, host.instance_uuid),
+          # Can't get this from ironic, maybe from Glance metadata, when it will be there, or image fleecing?
+          :vmm_version          => normalize_blank_property(""),
           :ipaddress            => ip_address,
-          :hostname             => ip_address,
+          :hostname             => hostname,
           :mac_address          => identify_primary_mac_address(host, indexed_servers),
           :ipmi_address         => identify_ipmi_address(host),
           :power_state          => lookup_power_state(host.power_state),
           :connection_state     => lookup_connection_state(host.power_state),
-          :hardware             => process_host_hardware(host),
+          :hardware             => process_host_hardware(host, extra_attributes),
           :hypervisor_hostname  => hypervisor_hostname,
+          :service_tag          => normalize_blank_property(extra_attributes.fetch_path('system', 'product', 'serial')),
           # Attributes taken from the Cloud provider
           :availability_zone_id => cloud_host_attributes.try(:[], :availability_zone_id)
         }
@@ -146,12 +170,52 @@ module EmsRefresh
         return uid, new_result
       end
 
-      def process_host_hardware(host)
+      def process_host_hardware(host, extra_attributes)
+        numvcpus = normalize_blank_property_num(extra_attributes.fetch_path('cpu', 'physical', 'number'))
+        logical_cpus = normalize_blank_property_num(extra_attributes.fetch_path('cpu', 'logical', 'number'))
+        cores_per_socket = numvcpus && logical_cpus && numvcpus > 0 ? logical_cpus / numvcpus : 0
+        cpu_speed = extra_attributes.fetch_path('cpu', 'physical_0', 'frequency')
+        # Get Cpu speed in Mhz
+        cpu_speed = cpu_speed ? cpu_speed.to_i / 10**6 : 0
+
         {
-          :memory_cpu    => normalize_blank_property(host.properties['memory_mb']),
-          :disk_capacity => normalize_blank_property(host.properties['local_gb']),
-          :numvcpus      => normalize_blank_property_num(host.properties['cpus'])
+          :memory_cpu         => normalize_blank_property(host.properties['memory_mb']),
+          :disk_capacity      => normalize_blank_property(host.properties['local_gb']),
+          :logical_cpus       => logical_cpus,
+          :numvcpus           => numvcpus,
+          :cores_per_socket   => cores_per_socket,
+          :cpu_speed          => normalize_blank_property_num(cpu_speed),
+          :cpu_type           => normalize_blank_property(extra_attributes.fetch_path('cpu', 'physical_0', 'version')),
+          :manufacturer       => normalize_blank_property(extra_attributes.fetch_path('system', 'product', 'vendor')),
+          :model              => normalize_blank_property(extra_attributes.fetch_path('system', 'product', 'name')),
+          :number_of_nics     => normalize_blank_property_num(extra_attributes.fetch_path('network').try(:keys).try(:count)),
+          :bios               => normalize_blank_property(extra_attributes.fetch_path('firmware', 'bios', 'version')),
+          # Can't get these 2 from ironic, maybe from Glance metadata, when it will be there, or image fleecing?
+          :guest_os_full_name => normalize_blank_property(""),
+          :guest_os           => normalize_blank_property(""),
+          :disks              => process_host_hardware_disks(extra_attributes),
         }
+      end
+
+      def process_host_hardware_disks(extra_attributes)
+        return [] if extra_attributes.nil? || (disks = extra_attributes.fetch_path('disk')).blank?
+
+        disks.keys.delete_if { |x| x.include?('{') || x == 'logical' }.map do |disk|
+          # Logical index contains number of logical disks
+          # TODO(lsmola) For now ignoring smart data, that are in format e.g. sda{cciss,1}, we need to design
+          # how to represent RAID
+          {
+            :device_name     => disk,
+            :device_type     => 'disk',
+            :controller_type => 'scsi',
+            :present         => true,
+            :filename        => disks.fetch_path(disk, 'id') || disks.fetch_path(disk, 'scsi-id'),
+            :location        => nil,
+            :size            => normalize_blank_property_num(disks.fetch_path(disk, 'size')),
+            :disk_type       => nil,
+            :mode            => 'persistent'
+          }
+        end
       end
 
       def server_address(server, key)

@@ -1,9 +1,24 @@
 class EmsKubernetes < EmsContainer
-  has_many :container_nodes,                      :foreign_key => :ems_id, :dependent => :destroy
-  has_many :container_groups,                     :foreign_key => :ems_id, :dependent => :destroy
-  has_many :container_services,                   :foreign_key => :ems_id, :dependent => :destroy
+  include ContainerProviderMixin
 
   default_value_for :port, 6443
+
+  # This is the API version that we use and support throughout the entire code
+  # (parsers, events, etc.). It should be explicitly selected here and not
+  # decided by the user nor out of control in the defaults of kubeclient gem
+  # because it's not guaranteed that the next default version will work with
+  # our specific code in ManageIQ.
+  def api_version
+    self.class.api_version
+  end
+
+  def api_version=(_value)
+    raise 'Kubernetes api_version cannot be modified'
+  end
+
+  def self.api_version
+    kubernetes_version
+  end
 
   def self.ems_type
     @ems_type ||= "kubernetes".freeze
@@ -13,48 +28,19 @@ class EmsKubernetes < EmsContainer
     @description ||= "Kubernetes".freeze
   end
 
-  def self.raw_connect(hostname, port)
-    require 'kubeclient'
-    api_endpoint = raw_api_endpoint(hostname, port)
-    kube = Kubeclient::Client.new(api_endpoint)
-    # TODO: support real authentication using certificates
-    kube.ssl_options(:verify_ssl => OpenSSL::SSL::VERIFY_NONE)
-    kube
+  def supported_auth_types
+    %w(basic)
   end
 
-  def self.raw_api_endpoint(hostname, port)
-    URI::HTTPS.build(:host => hostname, :port => port.to_i)
+  def supports_authentication?(authtype)
+    supported_auth_types.include?(authtype.to_s)
   end
 
-  # UI methods for determining availability of fields
-  def supports_port?
-    true
-  end
-
-  def api_endpoint
-    self.class.raw_api_endpoint(hostname, port)
-  end
-
-  def connect(_options = {})
-    self.class.raw_connect(hostname, port)
+  def self.raw_connect(hostname, port, username = nil, password = nil, _service = nil)
+    kubernetes_connect(hostname, port, username, password)
   end
 
   def self.event_monitor_class
     MiqEventCatcherKubernetes
-  end
-
-  def authentication_check
-    # TODO: support real authentication using certificates
-    [true, ""]
-  end
-
-  def verify_credentials(_auth_type = nil, _options = {})
-    # TODO: support real authentication using certificates
-    true
-  end
-
-  def authentication_status_ok?(_type = nil)
-    # TODO: support real authentication using certificates
-    true
   end
 end

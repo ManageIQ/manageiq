@@ -1,0 +1,51 @@
+---
+:content:
+  event_type: port.create.end
+  timestamp: '2015-05-12 07:22:37.008738'
+  _unique_id: 9f4c2e4378074e249b167f756d43ffa5
+  payload:
+    port:
+      status: DOWN
+      binding:host_id: undercloud
+      allowed_address_pairs: []
+      extra_dhcp_opts: []
+      device_owner: compute:None
+      binding:profile: {}
+      fixed_ips:
+      - subnet_id: 772419ec-126c-4252-89be-8d995da16ecd
+        ip_address: 192.0.2.19
+      id: db544577-c240-4a7a-a772-e56f8dc43eab
+      security_groups:
+      - 7603033c-66ce-4f47-885c-489b2d4dc9e2
+      device_id: a9811ecc-f6e9-4dfe-b78b-a7437c9d3c1b
+      name: ''
+      admin_state_up: true
+      network_id: 3f6c3325-6f8f-4bdc-b093-328008a7099e
+      tenant_id: bb5c2277f9d04c16ab19cd70766aeba1
+      binding:vif_details: {}
+      binding:vnic_type: normal
+      binding:vif_type: binding_failed
+      mac_address: 00:5a:08:fe:8a:50
+  priority: INFO
+  publisher_id: network.localhost.localdomain
+  message_id: a32692f5-b6d7-483a-8405-d51d3b473dee
+:context:
+  _context_roles:
+  - _member_
+  - admin
+  _context_request_id: req-2bb5bb24-988d-4e55-b97c-64da1b9e586d
+  _context_tenant_id: 61d55da9190d415797dff343913a5c19
+  _context_user: 41f5aa8eb00d4ce2883474459a475ef5
+  _context_tenant_name: service
+  _context_user_id: 41f5aa8eb00d4ce2883474459a475ef5
+  _context_project_name: service
+  _context_read_deleted: 'no'
+  _context_auth_token: f4a8436e2a5c4023a91b8182bbd07987
+  _context_tenant: 61d55da9190d415797dff343913a5c19
+  _context_is_admin: true
+  _context_project_id: 61d55da9190d415797dff343913a5c19
+  _context_timestamp: '2015-05-12 07:22:36.382767'
+  _context_user_name: neutron
+:user_id:
+:priority:
+:content_type:

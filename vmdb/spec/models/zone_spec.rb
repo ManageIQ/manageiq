@@ -27,40 +27,12 @@ describe Zone do
       @zone2.vms.should match_array(@host2.vms)
     end
 
-    it "zone1#miq_proxies will be empty due to no proxies" do
-      @zone1.miq_proxies.should be_empty
-    end
-
-    it "zone2#miq_proxies will be empty due to no proxies" do
-      @zone2.miq_proxies.should be_empty
-    end
-
     it "hosts in virtual reflections" do
       described_class.all(:include => :aggregate_cpu_speed).should_not be_nil
     end
 
     it "vms_and_templates in virtual reflections" do
       described_class.all(:include => :aggregate_vm_cpus).should_not be_nil
-    end
-
-    context "with proxies in different zones" do
-      before(:each) do
-        @proxy1 = FactoryGirl.create(:active_cos_proxy)
-        @proxy1.host = @zone1.hosts.first
-        @proxy1.save
-
-        @proxy2 = FactoryGirl.create(:active_cos_proxy)
-        @proxy2.host = @zone2.hosts.first
-        @proxy2.save
-      end
-
-      it "zone1#miq_proxies will return proxy1" do
-        @zone1.miq_proxies.should == [@proxy1]
-      end
-
-      it "zone2#miq_proxies will return proxy2" do
-        @zone2.miq_proxies.should == [@proxy2]
-      end
     end
   end
 

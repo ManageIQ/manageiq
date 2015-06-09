@@ -1,4 +1,1 @@
-FactoryGirl.define do
-  factory :configuration_profile do
-  end
-end
+FactoryGirl.define { factory :configuration_profile }

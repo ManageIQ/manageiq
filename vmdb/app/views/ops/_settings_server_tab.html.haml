@@ -19,9 +19,10 @@
                 %tr
                   - vm = @temp[:selected_server].vm
                   - if vm
-                    %td.image{:onclick => "DoNav('#{"/vm/show/" << vm.id.to_s}');", :onmouseover => "this.style.cursor='pointer'", :title => _("Click to view this VM")}
+                    %td.image.pointer{:onclick => "DoNav('/vm/show/#{vm.id}');", :title => _("Click to view this VM")}
                       %img{:align => "left", :height => "20", :src => "/images/icons/new/vm.png", :width => "20"}/
-                    %td{:class => "#{cycle('row0','row1',:name=>'rel')} hover-text", :onclick => "DoNav('#{"/vm/show/" << vm.id.to_s}');", :onmouseover => "this.style.cursor='pointer'", :title => _("Click to view this VM")}
+                    %td.pointer.hover-text{:class => cycle('row0','row1'), :onclick => "DoNav('/vm/show/#{vm.id}');",
+                      :title => _("Click to view this VM")}
                       = h(vm.name)
                   - else
                     %td.wide=_("Not Available")
@@ -82,7 +83,7 @@
           %tr
             %td.key=_("Default Repository SmartProxy")
             %td{:style => "width: 350px"}
-              - if @smartproxy_choices.empty?
+              - if @smartproxy_choices.blank?
                 =_("None Available")
               - else
                 = select_tag('repository_scanning_defaultsmartproxy',

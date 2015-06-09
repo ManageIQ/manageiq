@@ -50,13 +50,13 @@ class DashboardController < ApplicationController
   ]] # format is {"vi" => :vi, "svc" => :svc . . }
 
   EXPLORER_FEATURE_LINKS = {
-      "catalog"                   => "catalog",
-      "containers"                => "containers",
-      "pxe"                       => "pxe",
-      "service"                   => "service",
-      "vm_cloud_explorer_accords" => "vm_cloud",
-      "vm_explorer_accords"       => "vm_or_template",
-      "vm_infra_explorer_accords" => "vm_infra"
+    "catalog"             => "catalog",
+    "containers"          => "containers",
+    "pxe"                 => "pxe",
+    "service"             => "service",
+    "vm_cloud_explorer"   => "vm_cloud",
+    "vm_explorer_accords" => "vm_or_template",
+    "vm_infra_explorer"   => "vm_infra"
   }
 
   # A main tab was pressed
@@ -132,9 +132,8 @@ class DashboardController < ApplicationController
             redirect_to :controller => "configuration", :action => "index", :config_tab => "ui"
           elsif role_allows(:feature => f)
             case f
-            when "tasks"        then redirect_to(:controller => "miq_proxy", :action => "index")
+            when "tasks"        then redirect_to(:controller => "configuration", :action => "index")
             when "ops_explorer" then redirect_to(:controller => "ops",       :action => "explorer")
-            when "miq_proxy"    then redirect_to(:controller => "miq_proxy", :action => "show_list")
             when "about"        then redirect_to(:controller => "support",   :action => "index", :support_tab => "about")
             end
           end
@@ -684,7 +683,7 @@ class DashboardController < ApplicationController
     first_allowed_url = nil
     startpage_already_set = nil
     MiqShortcut.start_pages.each do |url, _description, rbac_feature_name|
-      allowed = role_allows(:feature => rbac_feature_name, :any => true)
+      allowed = start_page_allowed?(rbac_feature_name)
       first_allowed_url ||= url if allowed
       # if default startpage is set, check if it is allowed
       startpage_already_set = true if @settings[:display][:startpage] == url && allowed
@@ -856,11 +855,8 @@ class DashboardController < ApplicationController
   end
 
   def get_layout
-    if request.parameters["action"] == "window_sizes" # Don't change layout when window size changes
-      session[:layout]
-    else
-      %w(my_tasks timeline my_ui_tasks).include?(session[:layout]) ? session[:layout] : "dashboard"
-    end
+    # Don't change layout when window size changes session[:layout]
+    request.parameters["action"] == "window_sizes" ? session[:layout] : "login"
   end
 
   def get_session_data

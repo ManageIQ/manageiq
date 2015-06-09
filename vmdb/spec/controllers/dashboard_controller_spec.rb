@@ -20,7 +20,7 @@ describe DashboardController do
   end
 
   context "#validate_user" do
-    let(:server) { instance_double("MiqServer", :logon_status => :ready) }
+    let(:server) { active_record_instance_double("MiqServer", :logon_status => :ready) }
 
     before do
       MiqServer.stub(:my_server).with(true).and_return(server)
@@ -92,16 +92,16 @@ describe DashboardController do
     end
 
     main_tabs = {
-                  :clo => "vm_cloud_explorer_accords",
-                  :inf => "vm_infra_explorer_accords",
-                  :svc => "vm_explorer_accords"
-                }
+      :clo => "vm_cloud_explorer",
+      :inf => "vm_infra_explorer",
+      :svc => "vm_explorer_accords"
+    }
     main_tabs.each do |tab, feature|
       it "for tab ':#{tab}'" do
         seed_specific_product_features(feature)
         session[:tab_url] = {}
         post :maintab, :tab => tab
-        url_controller = Menu::Manager.tab_features_by_id(tab).find { |f| f.ends_with?("_accords") }
+        url_controller = Menu::Manager.tab_features_by_id(tab).find { |f| f.ends_with?("_explorer") }
         response.body.should include("#{DashboardController::EXPLORER_FEATURE_LINKS[url_controller]}/explorer")
       end
     end
@@ -127,6 +127,20 @@ describe DashboardController do
       seed_specific_product_features_with_user_settings("vm_cloud_explorer", settings)
       url = controller.send(:start_url_for_user, nil)
       url.should eq("/vm_cloud/explorer?accordion=instances")
+    end
+  end
+
+  context "#get_layout" do
+    it "sets layout same as session[:layout] when changing window size" do
+      request.parameters["action"] = "window_sizes"
+      session[:layout] = "host"
+      layout = controller.send(:get_layout)
+      layout.should eq(session[:layout])
+    end
+
+    it "defaults layout to login on Login screen" do
+      layout = controller.send(:get_layout)
+      layout.should eq("login")
     end
   end
 end

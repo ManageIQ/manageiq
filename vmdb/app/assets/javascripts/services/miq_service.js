@@ -108,4 +108,15 @@ miqAngularApplication.service('miqService', function() {
      this.sparkleOn();
      this.miqAjaxButton(url, true);
   };
+
+  this.serializeModel = function(model) {
+    serializedObj = angular.copy( model );
+    for(var k in serializedObj){
+
+      if(serializedObj.hasOwnProperty(k) && !serializedObj[k]){
+        delete serializedObj[k];
+      }
+    }
+    return serializedObj;
+  }
 });

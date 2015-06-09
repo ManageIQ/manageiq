@@ -17,7 +17,7 @@ describe OpenstackRabbitEventMonitor do
 
     @topics = {"nova" => "nova_topic", "glance" => "glance_topic"}
     @receiver_options = {:capacity => 1, :duration => 1}
-    @options = @receiver_options.merge({:topics => @topics})
+    @options = @receiver_options.merge({:topics => @topics, :client_ip => "10.11.12.13"})
   end
 
   after do

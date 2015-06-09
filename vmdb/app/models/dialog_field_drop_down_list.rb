@@ -13,7 +13,7 @@ class DialogFieldDropDownList < DialogFieldSortedItem
   end
 
   def initial_values
-    [["", "<None>"]]
+    [[nil, "<None>"]]
   end
 
   def refresh_json_value(checked_value)
@@ -24,7 +24,7 @@ class DialogFieldDropDownList < DialogFieldSortedItem
     if refreshed_values.collect { |value_pair| value_pair[0].to_s }.include?(checked_value)
       @value = checked_value
     else
-      @value = default_value
+      @value = @default_value
     end
 
     {:refreshed_values => refreshed_values, :checked_value => @value}
@@ -38,7 +38,11 @@ class DialogFieldDropDownList < DialogFieldSortedItem
   end
 
   def raw_values
-    @raw_values = dynamic ? values_from_automate : super
+    @raw_values ||= dynamic ? values_from_automate : super
+    @default_value ||= sort_data(@raw_values).first.first
+    self.value ||= @default_value
+
+    @raw_values
   end
 
   def values_from_automate

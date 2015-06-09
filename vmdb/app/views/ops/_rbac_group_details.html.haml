@@ -34,7 +34,7 @@
               - if !@edit
                 - if @group.miq_user_role
                   %table{:cellpadding => "0", :cellspacing => "0"}
-                    %tr{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'ur-#{to_cid(@group.miq_user_role.id)}');", :onmouseover => "this.style.cursor='pointer'", :title => _("View this Role")}
+                    %tr.pointer{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'ur-#{to_cid(@group.miq_user_role.id)}');", :title => _("View this Role")}
                       %td.image
                         %ul.icons
                           %li
@@ -51,7 +51,7 @@
               %td{:style => "padding: 0px"}
                 %table{:cellpadding => "0", :cellspacing => "0"}
                   - @group.users.sort_by { |a| a.name.downcase }.each do |u|
-                    %tr{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'u-#{to_cid(u.id)}');", :onmouseover => "this.style.cursor='pointer'", :title => _("View this User")}
+                    %tr.pointer{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'u-#{to_cid(u.id)}');", :title => _("View this User")}
                       %td.image
                         %ul.icons
                           %li
@@ -75,7 +75,7 @@
                                                           :url      => url}.to_json)
                 %td
               %tr
-                %td.key=_("User Id")
+                %td.key=_("Username")
                 %td
                   = text_field_tag("user_id",
                                    @edit[:new][:user_id],
@@ -113,7 +113,7 @@
                 =_("Tags")
             %li
               %a{:href => "#hosts_clusters"}
-                =_("Hosts & Clusters")
+                =_("%s & %s") % [title_for_hosts, title_for_clusters]
             %li
               %a{:href => "#vms_templates"}
                 =_("VMs & Templates")

@@ -257,7 +257,7 @@ describe MiqAeCustomizationController do
   describe "#upload_import_file" do
     include_context "valid session"
 
-    let(:dialog_import_service) { instance_double("DialogImportService") }
+    let(:dialog_import_service) { auto_loaded_instance_double("DialogImportService") }
 
     before do
       bypass_rescue
@@ -371,7 +371,7 @@ describe MiqAeCustomizationController do
   describe "#import_service_dialogs" do
     include_context "valid session"
 
-    let(:dialog_import_service) { instance_double("DialogImportService") }
+    let(:dialog_import_service) { auto_loaded_instance_double("DialogImportService") }
     let(:params) { {:import_file_upload_id => "123", :dialogs_to_import => ["potato"]} }
 
     before do
@@ -388,9 +388,7 @@ describe MiqAeCustomizationController do
     end
 
     context "when the import file upload exists" do
-      let(:import_file_upload) do
-        instance_double("ImportFileUpload")
-      end
+      let(:import_file_upload) { active_record_instance_double("ImportFileUpload") }
 
       before do
         dialog_import_service.stub(:import_service_dialogs)
@@ -445,7 +443,7 @@ describe MiqAeCustomizationController do
     include_context "valid session"
 
     let(:params) { {:import_file_upload_id => "123"} }
-    let(:dialog_import_service) { instance_double("DialogImportService") }
+    let(:dialog_import_service) { auto_loaded_instance_double("DialogImportService") }
 
     before do
       bypass_rescue
@@ -490,7 +488,7 @@ describe MiqAeCustomizationController do
   describe "#export_service_dialogs" do
     include_context "valid session"
 
-    let(:dialog_yaml_serializer) { instance_double("DialogYamlSerializer") }
+    let(:dialog_yaml_serializer) { auto_loaded_instance_double("DialogYamlSerializer") }
     let(:dialogs) { [active_record_instance_double("Dialog")] }
     let(:params) { {:service_dialogs => service_dialogs} }
 

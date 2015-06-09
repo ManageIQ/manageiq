@@ -481,14 +481,9 @@ class MiqWorker < ActiveRecord::Base
     params = params.first || {}
     raise ArgumentError, "params must contain :guid" unless params.has_key?(:guid)
 
-    cl =
-      if MiqEnvironment::Command.is_encrypted_appliance?
-        "#{self.nice_prefix}"
-      else
-        "#{self.nice_prefix} #{Gem.ruby}"
-      end
-
     rr = File.expand_path(Rails.root)
+
+    cl = "#{self.nice_prefix} #{Gem.ruby}"
     cl << " " << File.join(rr, "bin/rails runner")
     cl << " " << File.join(rr, "lib/workers/bin/worker.rb #{self.corresponding_helper}")
     cl << " " << self.name

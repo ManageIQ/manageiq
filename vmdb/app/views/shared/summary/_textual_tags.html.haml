@@ -14,7 +14,7 @@
                   = item[:label]
               %td
                 %img{:src => "/images/icons/new/#{subitem[:image]}.png"}
-                = "#{subitem[:label]}: #{subitem[:value].collect { |t| h(t) }.join("&nbsp;<b>|</b>&nbsp;").html_safe}"
+                = "#{subitem[:label]}: #{subitem[:value].collect { |t| h(t) }.join("&nbsp;<b>|</b>&nbsp;")}".html_safe
         - else
           %tr
             %td.label

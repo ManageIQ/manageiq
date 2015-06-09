@@ -56,7 +56,7 @@ class VmInfraController < ApplicationController
     if role_allows(:feature => "vandt_accord")
       set_active_elements_authorized_user('vandt_tree', 'vandt', true, VmOrTemplate, id)
     elsif role_allows(:feature => "#{prefix}_filter_accord")
-      set_active_elements_authorized_user("#{prefix}_filter_tree", "#{prefix}_filter", false, nil)
+      set_active_elements_authorized_user("#{prefix}_filter_tree", "#{prefix}_filter", false, nil, id)
     else
       if (prefix == "vms" && role_allows(:feature => "vms_instances_filter_accord")) ||
         (prefix == "templates" && role_allows(:feature => "templates_images_filter_accord"))
@@ -69,5 +69,9 @@ class VmInfraController < ApplicationController
     nodetype, id = params[:id].split("-")
     self.x_node = "#{nodetype}-#{to_cid(id)}"
     get_node_info(x_node)
+  end
+
+  def tagging_explorer_controller?
+    @explorer
   end
 end

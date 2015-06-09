@@ -1,9 +1,4 @@
 class VmCloud < Vm
-  SUBCLASSES = %w{
-    VmAmazon
-    VmOpenstack
-  }
-
   belongs_to :availability_zone
   belongs_to :flavor
   belongs_to :cloud_network
@@ -38,7 +33,3 @@ class VmCloud < Vm
     MiqEvent.raise_evm_event(self, "vm_create", :vm => self)
   end
 end
-
-# Preload any subclasses of this class, so that they will be part of the
-#   conditions that are generated on queries against this class.
-VmCloud::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}.rb").to_s }

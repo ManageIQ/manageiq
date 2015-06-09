@@ -33,6 +33,14 @@ class Job < ActiveRecord::Base
     job
   end
 
+  def self.current_job_timeout
+    DEFAULT_TIMEOUT
+  end
+
+  def current_job_timeout
+    self.class.current_job_timeout
+  end
+
   def initialize_attributes
     self.name    ||= "#{self.type} created on #{Time.now.utc}"
     self.userid  ||= DEFAULT_USERID
@@ -157,7 +165,7 @@ class Job < ActiveRecord::Base
       :role          => "smartstate",
       :zone          => MiqServer.my_zone
     ) do |msg, find_options|
-      message = "job timed out after #{Time.now - updated_on} seconds of inactivity.  Inactivity threshold [#{DEFAULT_TIMEOUT} seconds]"
+      message = "job timed out after #{Time.now - updated_on} seconds of inactivity.  Inactivity threshold [#{current_job_timeout} seconds]"
       $log.warn("MIQ(job-check_jobs_for_timeout) Job: guid: [#{guid}], #{message}, aborting")
       find_options.merge(:args => [:abort, message, "error"])
     end
@@ -167,7 +175,7 @@ class Job < ActiveRecord::Base
     $log.debug "Checking for timed out jobs"
     begin
       self.in_my_region.find(:all, :conditions => ["((state != 'finished' and state != 'waiting_to_start') or (state = 'waiting_to_start' and dispatch_status = 'active')) and (zone is null or zone = ?)", MiqServer.my_zone]).each do |job|
-        if job.updated_on < DEFAULT_TIMEOUT.seconds.ago
+        if job.updated_on < current_job_timeout.seconds.ago
           # Allow jobs to run longer if the MiqQueue task is still active.  (Limited to MiqServer for now.)
           if job.agent_class == "MiqServer"
             # TODO: can we add method_name, queue_name, role, instance_id to the exists?

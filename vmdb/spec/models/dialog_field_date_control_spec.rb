@@ -60,7 +60,8 @@ describe DialogFieldDateControl do
     let(:automate_hash) do
       {
         "value"           => value,
-        "show_past_dates" => true
+        "show_past_dates" => true,
+        "read_only"       => true
       }
     end
 
@@ -75,6 +76,10 @@ describe DialogFieldDateControl do
 
       it "sets the show_past_dates" do
         expect(dialog_field.show_past_dates).to be_true
+      end
+
+      it "sets the read_only" do
+        expect(dialog_field.read_only).to be_true
       end
     end
 

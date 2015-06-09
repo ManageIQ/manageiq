@@ -10,7 +10,7 @@ $:.push("#{File.dirname(__FILE__)}//../../../fs/ext3")
 require 'Ext3Superblock'
 require 'Ext3Directory'
 
-class Ext3TestDirectory < Test::Unit::TestCase
+class Ext3TestDirectory < MiniTest::Unit::TestCase
 	
 	CONDITIONS = ['fs_type', 'ext3']
 	TEST_DB = "#{File.dirname(__FILE__)}/../../vms.yml"

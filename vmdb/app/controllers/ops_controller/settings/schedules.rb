@@ -53,11 +53,6 @@ module OpsController::Settings::Schedules
       # when we have a version of Rails that supports detecting changes on serialized
       # fields
       old_schedule_attributes = schedule.attributes.clone
-      old_schedule_attributes.merge("depot_hash" => {:uri      => schedule.depot_hash[:uri],
-                                                     :username => schedule.depot_hash[:username],
-                                                     :password => schedule.depot_hash[:password],
-                                                     :name     => schedule.depot_hash[:name]
-                                                    }) if schedule.depot_hash
       old_schedule_attributes.merge("filter" => old_schedule_attributes["filter"].try(:to_human))
       old_schedule_attributes.merge("run_at" => {:start_time => schedule.run_at[:start_time],
                                                  :tz         => schedule.run_at[:tz],
@@ -65,40 +60,31 @@ module OpsController::Settings::Schedules
                                                                  :value => schedule.run_at[:interval][:value]
                                                                 }
                                                 }) if schedule.run_at
-      humanized_old = old_schedule_attributes
-
+      schedule_set_basic_record_vars(schedule)
       schedule_set_record_vars(schedule)
+      schedule_set_timer_record_vars(schedule)
       schedule_validate?(schedule)
-
-      humanized_new = schedule.attributes.merge(
-        "depot_hash" => schedule.depot_hash,
-        "filter"     => schedule.filter.try(:to_human),
-        "run_at"     => schedule.run_at
-      )
-
-      attribute_difference = humanized_old.diff(humanized_new)
-
-      if attribute_difference.blank?
-        add_flash(I18n.t("flash.edit.nothing_changed", :name => schedule.name))
+      begin
+        schedule.save!
+      rescue StandardError => bang
+        add_flash(_("Error when adding a new schedule: ") << bang.message, :error)
+        render :update do |page|
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        end
       else
-        schedule.save
-
         AuditEvent.success(build_saved_audit_hash(old_schedule_attributes, schedule, params[:button] == "add"))
-
-        add_flash(I18n.t("flash.edit.saved", :model => ui_lookup(:model => "MiqSchedule"), :name => schedule.name))
+        add_flash(_("%{model} \"%{name}\" was saved") %
+                      {:model => ui_lookup(:model => "MiqSchedule"), :name => schedule.name})
+        if params[:button] == "add"
+          self.x_node  = "xx-msc"
+          schedules_list
+          settings_get_info("st")
+        else
+          @selected_schedule = schedule
+          get_node_info(x_node)
+        end
+        replace_right_cell("root", [:settings])
       end
-
-      if params[:button] == "add"
-        self.x_node  = "xx-msc"
-        schedules_list
-        settings_get_info("st")
-      else
-        @selected_schedule = schedule
-        get_node_info(x_node)
-      end
-
-      replace_right_cell("root", [:settings])
-
     when "reset", nil # Reset or first time in
       obj = find_checked_items
       obj[0] = params[:id] if obj.blank? && params[:id]
@@ -107,15 +93,12 @@ module OpsController::Settings::Schedules
       # This is only because ops_controller tries to set form locals, otherwise we should not use the @edit variable
       @edit = {:sched_id => @schedule.id}
 
-      settings = @schedule.depot_hash
-      unless settings[:uri].nil?
-        @protocol = DatabaseBackup.supported_depots[settings[:uri].split('://')[0]]
-        @uri_prefix = settings[:uri].split('://')[0]
-        @uri = settings[:uri].split('://')[1]
-      end
-      @log_userid = settings[:username]
-      @log_password = settings[:password]
-      @log_verify = settings[:password]
+      depot             = @schedule.file_depot
+      @uri_prefix, @uri = depot.try(:uri).to_s.split('://')
+      @protocol         = DatabaseBackup.supported_depots[@uri_prefix]
+      @log_userid       = depot.try(:authentication_userid)
+      @log_password     = depot.try(:authentication_password)
+      @log_verify       = depot.try(:authentication_password)
 
       # This is a hack to trick the controller into thinking we loaded an edit variable
       session[:edit] = {:key => "schedule_edit__#{@schedule.id || 'new'}"}
@@ -135,20 +118,14 @@ module OpsController::Settings::Schedules
     if schedule_check_compliance?(schedule)
       action_type = schedule.towhat.downcase + "_" + schedule.sched_action[:method]
     elsif schedule_db_backup?(schedule)
-      action_type = schedule.sched_action[:method]
-
-      settings = schedule.depot_hash
-
-      unless settings[:uri].nil?
-        uri_prefix = settings[:uri].split('://')[0]
-        uri = settings[:uri].split('://')[1]
-        protocol = DatabaseBackup.supported_depots[uri_prefix]
-      end
-
-      depot_name = settings[:name]
-      log_userid = settings[:username]
-      log_password = settings[:password]
-      log_verify = settings[:password]
+      action_type     = schedule.sched_action[:method]
+      depot           = schedule.file_depot
+      uri_prefix, uri = depot.try(:uri).to_s.split('://')
+      protocol        = DatabaseBackup.supported_depots[uri_prefix]
+      depot_name      = depot.try(:name)
+      log_userid      = depot.try(:authentication_userid)
+      log_password    = depot.try(:authentication_password)
+      log_verify      = depot.try(:authentication_password)
     else
       if schedule.towhat.nil?
         action_type = "vm"
@@ -433,10 +410,6 @@ module OpsController::Settings::Schedules
   end
 
   def schedule_set_record_vars(schedule)
-    schedule.name = params[:name]
-    schedule.description = params[:description]
-    schedule.enabled = params[:enabled]
-
     if params[:action_typ] == "db_backup"
       schedule.towhat = "DatabaseBackup"
     elsif params[:action_typ].ends_with?("check_compliance")
@@ -572,21 +545,15 @@ module OpsController::Settings::Schedules
       end
     else
       schedule.filter = nil
-      schedule.depot_hash = {
-        :uri      => "#{params[:uri_prefix]}://#{params[:uri]}",
-        :username => params[:log_userid],
-        :password => params[:log_password],
-        :name     => params[:depot_name]
-      }
+      schedule.verify_file_depot(
+        :name       => params[:depot_name],
+        :password   => params[:log_password],
+        :username   => params[:log_userid],
+        :uri        => "#{params[:uri_prefix]}://#{params[:uri]}",
+        :uri_prefix => params[:uri_prefix],
+        :save       => true,
+      )
     end
-
-    schedule.run_at ||= Hash.new
-    run_at = create_time_in_utc("#{params[:miq_angular_date_1]} #{params[:start_hour]}:#{params[:start_min]}:00", params[:time_zone])
-    schedule.run_at[:start_time] = "#{run_at} Z"
-    schedule.run_at[:tz] = params[:time_zone]
-    schedule.run_at[:interval] ||= {}
-    schedule.run_at[:interval][:unit] = params[:timer_typ].downcase
-    schedule.run_at[:interval][:value] = params[:timer_value]
   end
 
   # Common Schedule button handler routines follow
@@ -652,8 +619,37 @@ module OpsController::Settings::Schedules
       (@storage_global_filters.empty? ? [] : [["Global Filters", "global"]]) +
       (@storage_my_filters.empty? ? [] : [["My Filters", "my"]])
 
+    build_db_options_for_select
+  end
+
+  def build_db_options_for_select
     @protocols_arr = []
     DatabaseBackup.supported_depots.each { |depot| @protocols_arr.push(depot[1]) }
     @database_backup_options_for_select = @protocols_arr.sort
+  end
+
+  def schedule_set_basic_record_vars(schedule)
+    schedule.name = params[:name]
+    schedule.description = params[:description]
+    schedule.enabled = params[:enabled] || "off"
+  end
+
+  def schedule_set_timer_record_vars(schedule)
+    schedule.run_at ||= {}
+    schedule.run_at[:tz] = params[:time_zone]
+    schedule_set_start_time_record_vars(schedule)
+    schedule_set_interval_record_vars(schedule)
+  end
+
+  def schedule_set_start_time_record_vars(schedule)
+    run_at = create_time_in_utc("#{params[:miq_angular_date_1]} #{params[:start_hour]}:#{params[:start_min]}:00",
+                                params[:time_zone])
+    schedule.run_at[:start_time] = "#{run_at} Z"
+  end
+
+  def schedule_set_interval_record_vars(schedule)
+    schedule.run_at[:interval] ||= {}
+    schedule.run_at[:interval][:unit] = params[:timer_typ].downcase
+    schedule.run_at[:interval][:value] = params[:timer_value]
   end
 end

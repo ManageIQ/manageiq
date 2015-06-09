@@ -100,4 +100,14 @@ module JsHelper
   def partial_replace(from, partial, locals)
     "$(\"##{h(from)}\").replaceWith(\"#{escape_javascript(render(:partial => partial, :locals => locals))}\");".html_safe
   end
+
+  def javascript_checked(element)
+    "if ($('##{j_str(element)}').prop('type') == 'checkbox') {$('##{j_str(element)}').prop('checked', 'checked');}"
+      .html_safe
+  end
+
+  def javascript_unchecked(element)
+    "if ($('##{j_str(element)}').prop('type') == 'checkbox') {$('##{j_str(element)}').prop('checked', false);}"
+      .html_safe
+  end
 end

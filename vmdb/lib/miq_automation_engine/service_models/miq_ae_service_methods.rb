@@ -68,13 +68,6 @@ module MiqAeMethodService
       end
     end
 
-    def self.active_miq_proxies
-      ar_method do
-        proxies = MiqProxy.all.collect { |p| p.is_active? ? p : nil }.compact
-        MiqAeServiceModelBase.wrap_results(proxies)
-      end
-    end
-
     def self.category_exists?(category)
       cat = Classification.find_by_name(category)
       cat.nil? ? false : true

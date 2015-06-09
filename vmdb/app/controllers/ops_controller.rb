@@ -105,38 +105,41 @@ class OpsController < ApplicationController
     @timeline = @timeline_filter = true # Load timeline JS modules
     return unless load_edit(params[:edit_key], "explorer") if params[:edit_key]
     @breadcrumbs = []
-
-    @sb[:active_accord] ||= 'settings'
     @trees   = []
     @accords = []
     if role_allows(:feature => "ops_settings")
       @accords.push(:name => "settings", :title => "Settings", :container => "settings_tree_div")
-      self.x_active_tree ||= 'settings_tree'
-      @sb[:active_tab]   ||= "settings_server"
+      self.x_active_accord ||= 'settings'
+      self.x_active_tree  ||= 'settings_tree'
+      @sb[:active_tab]    ||= "settings_server"
       @built_trees << settings_build_tree
     end
     if role_allows(:feature => "ops_rbac")
       @accords.push(:name => "rbac", :title => "Access Control", :container => "rbac_tree_div")
-      self.x_active_tree ||= 'rbac_tree'
+      self.x_active_accord ||= 'rbac'
+      self.x_active_tree   ||= 'rbac_tree'
       @built_trees << rbac_build_tree
       x_node_set("root", :rbac_tree) unless x_node(:rbac_tree)
       @sb[:active_tab] ||= "rbac_details"
     end
     if role_allows(:feature => "ops_diagnostics")
       @accords.push(:name => "diagnostics", :title => "Diagnostics", :container => "diagnostics_tree_div")
-      self.x_active_tree ||= 'diagnostics_tree'
+      self.x_active_accord ||= 'diagnostics'
+      self.x_active_tree   ||= 'diagnostics_tree'
       @built_trees << diagnostics_build_tree
       x_node_set("svr-#{to_cid(@sb[:my_server_id])}", :diagnostics_tree) unless x_node(:diagnostics_tree)
       @sb[:active_tab] ||= "diagnostics_summary"
     end
     if get_vmdb_config[:product][:analytics]
       @accords.push(:name => "analytics", :title => "Analytics", :container => "analytics_tree_div")
+      self.x_active_accord ||= 'analytics'
       @built_trees << analytics_build_tree
       x_node_set("svr-#{to_cid(@sb[:my_server_id])}", :analytics_tree) unless x_node(:analytics_tree)
     end
     if role_allows(:feature => "ops_db")
       @accords.push(:name => "vmdb", :title => "Database", :container => "vmdb_tree_div")
-      self.x_active_tree ||= 'vmdb_tree'
+      self.x_active_accord ||= 'vmdb'
+      self.x_active_tree   ||= 'vmdb_tree'
       @built_trees << db_build_tree
       x_node_set("root", :vmdb_tree) unless x_node(:vmdb_tree)
       @sb[:active_tab] ||= "db_summary"
@@ -165,19 +168,11 @@ class OpsController < ApplicationController
         %w(settings_import settings_import_tags).include?(@sb[:active_tab]) # show apply button enabled if this is set
     end
     # setting active record object here again, since they are no longer there due to redirect
-    if params[:cls_id]
-      if params[:cls_id].split('_')[0] == "b"
-        @build = ProductUpdate.find_by_id(params[:cls_id].split('_')[1])
-        @in_a_form = true
-        session[:changed] = true
-      elsif params[:cls_id].split('_')[0] == "lg"
-        @ldap_group = @edit[:ldap_group]
-      end
-    end
+    @ldap_group = @edit[:ldap_group] if params[:cls_id] && params[:cls_id].split('_')[0] == "lg"
     @temp[:x_edit_buttons_locals] = set_form_locals if @in_a_form
     @collapse_c_cell = @in_a_form || @pages ? false : true
     @sb[:center_tb_filename] = center_toolbar_filename
-
+    edit_changed? if @edit
     render :layout => "explorer"
   end
 
@@ -203,7 +198,7 @@ class OpsController < ApplicationController
   end
 
   def change_tab(new_tab_id = nil)
-    @exlorer = true
+    @explorer = true
     session[:changed] = false
     session[:flash_msgs] = @flash_array = nil       #clear out any messages from previous screen i.e import tab
     if params[:tab]
@@ -246,6 +241,11 @@ class OpsController < ApplicationController
 
   private ############################
 
+  def edit_changed?
+    current = @edit[:current].kind_of?(Hash) ? @edit[:current] : @edit[:current].try(:config)
+    session[:changed] = @edit[:new] != current
+  end
+
   def rbac_and_user_make_subarrays
     if ! @set_filter_values.blank?
       temp_categories = []
@@ -274,14 +274,6 @@ class OpsController < ApplicationController
         temp1arr.push(temp_field)
       end
       @set_filter_values.replace(temp1arr)
-    end
-  end
-
-  def set_log_depot_vars
-    if (settings = @schedule.depot_hash).present?
-      log_depot_get_form_vars_from_settings(settings)
-    else
-      log_depot_reset_form_vars
     end
   end
 
@@ -354,12 +346,6 @@ class OpsController < ApplicationController
         action_url = "cu_collection_update"
         record_id = @sb[:active_tab].split("settings_").last
         locals[:no_cancel] = true
-      elsif @sb[:active_tab] == "settings_maintenance" && @build
-        action_url = "activate"
-        record_id = @build.id
-        locals[:no_reset] = true
-        locals[:download_button] = true
-        locals[:download_text] = "Download SmartProxy version for manual installation"
       elsif %w(settings_evm_servers settings_list).include?(@sb[:active_tab]) && @in_a_form
         if %w(ap_copy ap_edit ap_host_edit ap_vm_edit).include?(@sb[:action])
           action_url = "ap_edit"
@@ -489,6 +475,7 @@ class OpsController < ApplicationController
       @sb[:center_tb_filename] = center_toolbar_filename
       c_buttons, c_xml = build_toolbar_buttons_and_xml(@sb[:center_tb_filename])
     end
+    build_supported_depots_for_select
     render :update do |page|
       # forcing form buttons to turn off, to prevent Abandon changes popup when replacing right cell after form button was pressed
       page << javascript_for_miq_button_visibility(false)
@@ -689,7 +676,7 @@ class OpsController < ApplicationController
             page.replace("ops_tabs", :partial=>"all_tabs")
           elsif nodetype == "log_depot_edit"
             @right_cell_text = "Editing Log Depot settings"
-            page.replace_html("diagnostics_collect_logs", :partial=>"layouts/edit_log_depot_settings")
+            page.replace_html("diagnostics_collect_logs", :partial => "ops/log_collection")
           else
             page.replace_html(@sb[:active_tab], :partial=>"#{@sb[:active_tab]}_tab")
           end
@@ -768,7 +755,7 @@ class OpsController < ApplicationController
       end
 
       page << "cfmeDynatree_activateNodeSilently('#{x_active_tree}', '#{x_node}');"
-      page << "miqSparkle(false);"
+      page << "miqSparkleOff();"
       page << javascript_focus_if_exists('server_company')
       page << "if (miqDomElementExists('flash_msg_div')) {"
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")

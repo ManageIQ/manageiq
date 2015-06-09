@@ -27,7 +27,7 @@ class JobProxyDispatcher
         vms_for_jobs = jobs_to_dispatch.collect(&:target_id)
         @vms_for_dispatch_jobs, = Benchmark.realtime_block(:vm_find) do
           VmOrTemplate.where(:id => vms_for_jobs)
-            .includes(:ext_management_system => :zone, :storage => {:hosts => :miq_proxy})
+            .includes(:ext_management_system => :zone, :storage => :hosts)
             .order(:id)
         end
         zone = Zone.find_by_name(@zone)

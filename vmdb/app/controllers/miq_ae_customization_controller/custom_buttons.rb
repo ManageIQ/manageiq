@@ -110,9 +110,17 @@ module MiqAeCustomizationController::CustomButtons
         @resolve[:new][:target_class] = @sb[:target_classes].invert[@nodetype[0].split('-').last]
       else
         #selected button is under assigned folder
-        @resolve[:new][:target_class] = @sb[:target_classes].invert[@nodetype[1]]
+        kls = case @nodetype[1]
+              when "Host"
+                ui_lookup(:host_types => "host")
+              when "EmsCluster"
+                ui_lookup(:ems_cluster_types => "cluster")
+              else
+                @nodetype[1]
+              end
+        @resolve[:new][:target_class] = @sb[:target_classes].invert[kls]
       end
-      @right_cell_text = _("%{model} \"%{name}\"") % {:model=>"Button", :name=>@temp[:custom_button].name}
+      @right_cell_text = _("%{model} \"%{name}\"") % {:model => "Button", :name => @temp[:custom_button].name}
     else                # assigned buttons node/folder
       @sb[:applies_to_class] = @nodetype[1]
       @record = CustomButtonSet.find(from_cid(nodeid.last))

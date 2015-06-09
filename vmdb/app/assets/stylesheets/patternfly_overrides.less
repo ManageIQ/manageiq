@@ -8,6 +8,7 @@ body, html {
   padding-top: 2px;
   border-bottom: 1px solid #c7c7c7;
   background-image: linear-gradient(to bottom, #FAFAFA 0%, #EDEDED 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffafafa', endColorstr='#ffededed', GradientType=0);
 }
 
 /* This media query makes the entire main row scrollable once the columns have collapsed */
@@ -50,7 +51,8 @@ body, html {
   }
   #main_content {
     overflow: auto;
-    height: 100%;
+    height: calc(100% - 30px);
+    padding-bottom: 25px
   }
   #main_footer {
     position: absolute;
@@ -175,20 +177,29 @@ li.brand-white-label.whitelabeled {
   border-right: 0;
 }
 
+/* prevents Bootstrap row class horizontal scrolling within dhtmlx layout  */
+.dhtmlxLayoutSinglePoly .row {
+  margin-right: 0;
+}
+
 #custom_left_cell_div h4.panel-title {
   font-size: 12px !important
 }
 
 /* Table customizations */
 
+table.table td {
+  word-break: break-all
+ }
+
 table.table tbody td img {
   height: 20px;
-  padding-right: 5px
+  width: 20px;
 }
 
 .table > thead > tr > th {
   font-family: inherit !important;
-  white-space: nowrap
+  vertical-align: top;
 }
 
 /* override font-weight for dropdowns withing table headers */
@@ -198,7 +209,8 @@ table.table tbody td img {
 }
 
 table .narrow {
-  width: 1%
+  width: 1%;
+  white-space: nowrap;
 }
 
 /* disables hover and pointer on row */
@@ -221,10 +233,14 @@ table.table.table-selectable tbody tr.selected td {
 }
 
 /* instead of using onmouseover="this.style.cursor='pointer'" */
-
 .table-hover tbody tr:hover > td {
   cursor: pointer;
   cursor: hand;
+}
+
+/* same for other tables than originally style3 */
+.pointer:hover {
+  cursor: pointer;
 }
 
 /* prevents empty dd from collapsing */
@@ -250,4 +266,10 @@ table.table.table-selectable tbody tr.selected td {
       margin-left: 110px;
     }
   }
+}
+
+/* Adds vertical space between tabs and content */
+
+.tab-content {
+  margin-top: 10px
 }

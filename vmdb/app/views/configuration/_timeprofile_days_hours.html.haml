@@ -6,7 +6,7 @@
       %tr
         %td.key=_('Days')
         %td
-          %table
+          %table{:style => "white-space: nowrap;"}
             %tr
               - [_("(All)"), _("Sunday"), _("Monday"), _("Tuesday"), _("Wednesday"), _("Thursday"), _("Friday"), _("Saturday")].each do |day|
                 %td{:style => "width:50px", :align => "center"}
@@ -28,10 +28,10 @@
                                   :disabled => disabled,
                                   "data-miq_observe_checkbox" => url_json)
       %tr
-        %td.key Hours
+        %td.key=_('Hours')
         - hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         %td
-          %table
+          %table{:style => "white-space: nowrap;"}
             %tr
               %td{:style => "width:50px", :align => "center"}=_('(All)')
               %td{:style => "width:35px", :align => "center"}

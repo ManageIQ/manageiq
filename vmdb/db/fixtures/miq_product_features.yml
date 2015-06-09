@@ -755,8 +755,8 @@
       :feature_type: admin
       :identifier: svc_catalog_admin
       :children:
-      - :name: Provision Services
-        :description: Request to Provision Services
+      - :name: Order Services
+        :description: Request to Order Services
         :feature_type: admin
         :identifier: svc_catalog_provision
   - :name: Catalogs
@@ -1131,13 +1131,17 @@
       :feature_type: admin
       :identifier: ems_infra_delete
     - :name: Edit
-      :description: Edit a Infrastructure Provider
+      :description: Edit an Infrastructure Provider
       :feature_type: admin
       :identifier: ems_infra_edit
     - :name: Add
-      :description: Add a Infrastructure Provider
+      :description: Add an Infrastructure Provider
       :feature_type: admin
       :identifier: ems_infra_new
+    - :name: Scale
+      :description: Scale an Infrastructure Provider
+      :feature_type: admin
+      :identifier: ems_infra_scale
 
 # Datacenters
 - :name: Datacenters
@@ -1159,186 +1163,186 @@
       :feature_type: view
       :identifier: datacenter_show
 
-# EmsCluster
-- :name: Clusters
-  :description: Everything under Clusters
+# Clusters / Deployment Roles
+- :name: Clusters / Deployment Roles
+  :description: Everything under Clusters / Deployment Roles
   :feature_type: node
   :identifier: ems_cluster
   :children:
   - :name: View
-    :description: View Clusters
+    :description: View Clusters / Deployment Roles
     :feature_type: view
     :identifier: ems_cluster_view
     :children:
     - :name: Compare
-      :description: Compare List of Clusters
+      :description: Compare List of Clusters / Deployment Roles
       :feature_type: view
       :identifier: ems_cluster_compare
     - :name: Drift
-      :description: Display Clusters Drift
+      :description: Display Clusters / Deployment Roles Drift
       :feature_type: view
       :identifier: ems_cluster_drift
     - :name: List
-      :description: Display Lists of Clusters
+      :description: Display Lists of Clusters / Deployment Roles
       :feature_type: view
       :identifier: ems_cluster_show_list
     - :name: Show
-      :description: Display Individual Clusters
+      :description: Display Individual Clusters / Deployment Roles
       :feature_type: view
       :identifier: ems_cluster_show
     - :name: Utilization
-      :description: Show Capacity & Utilization data of Clusters
+      :description: Show Capacity & Utilization data of Clusters / Deployment Roles
       :feature_type: view
       :identifier: ems_cluster_perf
     - :name: Timelines
-      :description: Display Timelines for Clusters
+      :description: Display Timelines for Clusters / Deployment Roles
       :feature_type: view
       :identifier: ems_cluster_timeline
   - :name: Operate
-    :description: Perform Operations on Clusters
+    :description: Perform Operations on Clusters / Deployment Roles
     :feature_type: control
     :identifier: ems_cluster_control
     :children:
     - :name: Analysis
-      :description: Perform SmartState Analysis on Clusters
+      :description: Perform SmartState Analysis on Clusters / Deployment Roles
       :feature_type: control
       :identifier: ems_cluster_scan
     - :name: Manage Policies
-      :description: Manage Policies on Clusters
+      :description: Manage Policies on Clusters / Deployment Roles
       :feature_type: control
       :identifier: ems_cluster_protect
     - :name: Tag
-      :description: Edit Tags for Clusters
+      :description: Edit Tags for Clusters / Deployment Roles
       :feature_type: control
       :identifier: ems_cluster_tag
   - :name: Modify
-    :description: Modify Clusters
+    :description: Modify Clusters / Deployment Roles
     :feature_type: admin
     :identifier: ems_cluster_admin
     :children:
     - :name: Remove
-      :description: Remove Clusters from the VMDB
+      :description: Remove Clusters / Deployment Roles from the VMDB
       :feature_type: admin
       :identifier: ems_cluster_delete
 
-# Hosts
-- :name: Hosts
-  :description: Everything under Hosts
+# Hosts / Nodes
+- :name: Hosts / Nodes
+  :description: Everything under Hosts / Nodes
   :feature_type: node
   :identifier: host
   :children:
   - :name: View
-    :description: View Hosts
+    :description: View Hosts / Nodes
     :feature_type: view
     :identifier: host_view
     :children:
     - :name: Compare
-      :description: Compare List of Hosts
+      :description: Compare List of Hosts / Nodes
       :feature_type: view
       :identifier: host_compare
     - :name: List
-      :description: Display Lists of Hosts
+      :description: Display Lists of Hosts / Nodes
       :feature_type: view
       :identifier: host_show_list
     - :name: Show
-      :description: Display Individual Hosts
+      :description: Display Individual Hosts / Nodes
       :feature_type: view
       :identifier: host_show
     - :name: Drift
-      :description: Display Hosts Drift
+      :description: Display Hosts / Nodes Drift
       :feature_type: view
       :identifier: host_drift
     - :name: Utilization
-      :description: Show Capacity & Utilization data of Hosts
+      :description: Show Capacity & Utilization data of Hosts / Nodes
       :feature_type: view
       :identifier: host_perf
     - :name: Timelines
-      :description: Display Timelines for Hosts
+      :description: Display Timelines for Hosts / Nodes
       :feature_type: view
       :identifier: host_timeline
   - :name: Operate
-    :description: Perform Operations on Hosts
+    :description: Perform Operations on Hosts / Nodes
     :feature_type: control
     :identifier: host_control
     :children:
     - :name: Analysis
-      :description: Perform SmartState Analysis for Hosts
+      :description: Perform SmartState Analysis for Hosts / Nodes
       :feature_type: control
       :identifier: host_scan
     - :name: Analyze then Check Compliance
-      :description: Analyze then Check Compliance for Hosts
+      :description: Analyze then Check Compliance for Hosts / Nodes
       :feature_type: control
       :identifier: host_analyze_check_compliance
     - :name: Check Compliance
-      :description: Check Compliance of Last Known Configuration for Hosts
+      :description: Check Compliance of Last Known Configuration for Hosts / Nodes
       :feature_type: control
       :identifier: host_check_compliance
     - :name: Discover
       :feature_type: control
       :identifier: host_discover
     - :name: Manage Policies
-      :description: Manage Policies for Hosts
+      :description: Manage Policies for Hosts / Nodes
       :feature_type: control
       :identifier: host_protect
     - :name: Refresh
-      :description: Refresh relationships and power states for all items related to Hosts
+      :description: Refresh relationships and power states for all items related to Hosts / Nodes
       :feature_type: control
       :identifier: host_refresh
     - :name: Edit Tags
-      :description: Edit Host Tags
+      :description: Edit Host / Node Tags
       :feature_type: control
       :identifier: host_tag
     - :name: Power On
-      :description: Power On a Host
+      :description: Power On a Host / Node
       :feature_type: control
       :identifier: host_start
     - :name: Power Off
-      :description: Power Off a Host
+      :description: Power Off a Host / Node
       :feature_type: control
       :identifier: host_stop
     - :name: Reset
-      :description: Reset a Host
+      :description: Reset a Host / Node
       :feature_type: control
       :identifier: host_reset
     - :name: Enter Maintenance Mode
-      :description: Put a Host into Maintenance Mode
+      :description: Put a Host / Node into Maintenance Mode
       :feature_type: control
       :identifier: host_enter_maint_mode
     - :name: Exit Maintenance Mode
-      :description: Take a Host out of Maintenance Mode
+      :description: Take a Host / Node out of Maintenance Mode
       :feature_type: control
       :identifier: host_exit_maint_mode
     - :name: Shutdown Host to Standby
-      :description: Shutdown a Host to Standby Mode
+      :description: Shutdown a Host / Node to Standby Mode
       :feature_type: control
       :identifier: host_standby
     - :name: Shutdown Host
-      :description: Shutdown a Host
+      :description: Shutdown a Host / Node
       :feature_type: control
       :identifier: host_shutdown
     - :name: Restart Host
-      :description: Restart a Host
+      :description: Restart a Host / Node
       :feature_type: control
       :identifier: host_reboot
   - :name: Modify
-    :description: Modify Hosts
+    :description: Modify Hosts / Nodes
     :feature_type: admin
     :identifier: host_admin
     :children:
     - :name: Add
-      :description: Add a Host
+      :description: Add a Host / Node
       :feature_type: admin
       :identifier: host_new
     - :name: Remove
-      :description: Remove Hosts from the VMDB
+      :description: Remove Hosts / Nodes from the VMDB
       :feature_type: admin
       :identifier: host_delete
     - :name: Edit
-      :description: Edit a Host
+      :description: Edit a Host / Node
       :feature_type: admin
       :identifier: host_edit
-    - :name: Provision Hosts
-      :description: Request to Provision Hosts
+    - :name: Provision Hosts / Nodes
+      :description: Request to Provision Hosts / Nodes
       :feature_type: admin
       :identifier: host_miq_request_new
 
@@ -2485,7 +2489,7 @@
     :identifier: tasks_view
     :children:
     - :name: All VM Analysis Tasks
-      :description: Display Lists of All SmartProxy Tasks
+      :description: Display Lists of All VM Analysis Tasks
       :feature_type: view
       :identifier: job_all_smartproxy
     - :name: All Other Tasks 
@@ -2493,7 +2497,7 @@
       :feature_type: view
       :identifier: miq_task_all_ui
     - :name: VM Analysis Tasks 
-      :description: Display Lists of SmartProxy Tasks
+      :description: Display Lists of VM Analysis Tasks
       :feature_type: view
       :identifier: job_my_smartproxy
     - :name: Other UI Tasks 
@@ -2995,48 +2999,6 @@
           :hidden: true
           :identifier: db_refresh
 
-# SmartProxies
-- :name: SmartProxies
-  :description: Everything under SmartProxies
-  :feature_type: node
-  :identifier: miq_proxy
-  :children:
-  - :name: View
-    :description: View SmartProxies
-    :feature_type: view
-    :identifier: miq_proxy_view
-    :children:
-    - :name: Show
-      :description: Display Individual SmartProxy
-      :feature_type: view
-      :identifier: miq_proxy_show
-    - :name: List
-      :description: Display Lists of SmartProxies
-      :feature_type: view
-      :identifier: miq_proxy_show_list
-  - :name: Operate
-    :description: Perform Operations on SmartProxies
-    :feature_type: control
-    :identifier: miq_proxy_control
-    :children:
-    - :name: Deploy
-      :description: Deploy to SmartProxies
-      :feature_type: control
-      :identifier: miq_proxy_deploy
-  - :name: Modify
-    :description: Modify SmartProxies
-    :feature_type: admin
-    :identifier: miq_proxy_admin
-    :children:
-    - :name: Add
-      :description: Add a SmartProxy
-      :feature_type: admin
-      :identifier: miq_proxy_new
-    - :name: Edit
-      :description: Edit a SmartProxy
-      :feature_type: admin
-      :identifier: miq_proxy_edit
-
 # About
 - :name: About
   :description:
@@ -3532,6 +3494,10 @@
       :description: Display Individual Containers Providers
       :feature_type: view
       :identifier: ems_container_show
+    - :name: Timeline
+      :description: Display Timelines for Containers Providers
+      :feature_type: view
+      :identifier: ems_container_timeline
   - :name: Operate
     :description: Perform Operations on Containers Providers
     :feature_type: control
@@ -3578,6 +3544,10 @@
       :description: Display Individual Container Groups
       :feature_type: view
       :identifier: container_group_show
+    - :name: Timeline
+      :description: Display Timelines for Container Groups
+      :feature_type: view
+      :identifier: container_group_timeline
   - :name: Modify
     :description: Modify Container Groups
     :feature_type: admin
@@ -3615,6 +3585,10 @@
       :description: Display Individual Container Nodes
       :feature_type: view
       :identifier: container_node_show
+    - :name: Timeline
+      :description: Display Timelines for Container Nodes
+      :feature_type: view
+      :identifier: container_node_timeline
   - :name: Modify
     :description: Modify Container Nodes
     :feature_type: admin
@@ -3632,6 +3606,43 @@
       :description: Add a Container Nodes
       :feature_type: admin
       :identifier: container_node_new
+
+# ContainerReplicator
+- :name: Replicators
+  :description: Everything under Container Replicators
+  :feature_type: node
+  :identifier: container_replicator
+  :children:
+  - :name: View
+    :description: View Container Replicators
+    :feature_type: node
+    :identifier: container_replicator_view
+    :children:
+    - :name: List
+      :description: Display Lists of Container Replicators
+      :feature_type: view
+      :identifier: container_replicator_show_list
+    - :name: Show
+      :description: Display Individual Container Replicators
+      :feature_type: view
+      :identifier: container_replicator_show
+  - :name: Modify
+    :description: Modify Container Nodes
+    :feature_type: admin
+    :identifier: container_replicator_admin
+    :children:
+    - :name: Remove
+      :description: Remove Container Replicators from the VMDB
+      :feature_type: admin
+      :identifier: container_replicator_delete
+    - :name: Edit
+      :description: Edit a Container Replicator
+      :feature_type: admin
+      :identifier: container_replicator_edit
+    - :name: Add
+      :description: Add a Container Replicator
+      :feature_type: admin
+      :identifier: container_replicator_new
 
 # ContainerService
 - :name: Services
@@ -3669,6 +3680,47 @@
       :description: Add a Container Services
       :feature_type: admin
       :identifier: container_service_new
+
+# ContainerRoute
+- :name: Routes
+  :description: Everything under Container Routes
+  :feature_type: node
+  :identifier: container_route
+  :children:
+  - :name: View
+    :description: View Container Routes
+    :feature_type: view
+    :identifier: container_route_view
+    :children:
+    - :name: List
+      :description: Display Lists of Container Routes
+      :feature_type: view
+      :identifier: container_route_show_list
+    - :name: Show
+      :description: Display Individual Container Routes
+      :feature_type: view
+      :identifier: container_route_show
+
+# ContainerProject
+- :name: Projects
+  :description: Everything under Container Projects
+  :feature_type: node
+  :identifier: container_project
+  :children:
+  - :name: View
+    :description: View Container Projects
+    :feature_type: view
+    :identifier: container_project_view
+    :children:
+    - :name: List
+      :description: Display Lists of Container Projects
+      :feature_type: view
+      :identifier: container_project_show_list
+    - :name: Show
+      :description: Display Individual Container Routes
+      :feature_type: view
+      :identifier: container_project_show
+
 
 # Container
 - :name: Containers Explorer
@@ -3713,67 +3765,73 @@
         :identifier: container_new
 
 # Foreman
-- :name: Provider Foreman
-  :description: Foreman Provider Views and Access Rules
+- :name: Configuration Management
+  :description: Everything under Configuration Management
   :feature_type: node
   :identifier: provider_foreman_explorer
   :children:
-  - :name: Accordions
-    :description: All Accordions under Foreman
+  - :name: Providers
+    :description: Everything under Providers accordion
     :feature_type: node
-    :identifier: provider_foreman_explorer_accords
-    :children:
-    - :name: Providers
-      :description: Providers Accordion
-      :feature_type: node
-      :identifier: providers_accord
-    - :name: Configured Systems
-      :description: Configured Systems Accordion
-      :feature_type: node
-      :identifier: configured_systems_filter_accord
-
-# Foreman access rules
-  - :name: Provider Foreman Access Rules
-    :description: Access Rules for Provider Foreman
-    :feature_type: node
-    :identifier: provider_foreman
+    :identifier: providers_accord
     :children:
     - :name: View
-      :description: View Provider Foreman
+      :description: View Providers, Configuration Profiles, Configured Systems
       :feature_type: view
       :identifier: provider_foreman_view
+    - :name: Operate
+      :description: Perform Operations on Providers and Configured Systems
+      :feature_type: control
+      :identifier: provider_foreman_control
       :children:
-      - :name: List
-        :description: Display Lists of Provider Foreman related to a CI
-        :feature_type: view
-        :identifier: provider_foreman_show_list
-      - :name: Show
-        :description: Display Individual Provider Foreman related to a CI
-        :feature_type: view
-        :identifier: provider_foreman_show
+        - :name: Edit Tags
+          :description: Edit Configured Systems Tags
+          :feature_type: control
+          :identifier: provider_foreman_configured_system_tag
+        - :name: Provision Configured Systems
+          :description: Provision Configured Systems
+          :feature_type: control
+          :identifier: provider_foreman_configured_system_provision
+        - :name: Refresh Providers
+          :description: Refresh relationships for all items related of Provider
+          :feature_type: control
+          :identifier: provider_foreman_refresh_provider
+    - :name: Modify
+      :description: Modify Providers
+      :feature_type: admin
+      :identifier: provider_admin
       :children:
-      - :name: Refresh
-        :description: Refresh relationships for all items related of Provider Foreman
+        - :name: Remove Providers
+          :description: Remove Proviers from the VMDB
+          :feature_type: admin
+          :identifier: provider_foreman_delete_provider
+        - :name: Edit Provider
+          :description: Edit a Provider
+          :feature_type: admin
+          :identifier: provider_foreman_edit_provider
+        - :name: Add Provider
+          :description: Add a Provider
+          :feature_type: admin
+          :identifier: provider_foreman_add_provider
+  - :name: Configured Systems
+    :description: Everything under Configured Systems accordion
+    :feature_type: node
+    :identifier: configured_systems_filter_accord
+    :children:
+      - :name: View
+        :description: View Configured Systems
+        :feature_type: view
+        :identifier: configured_systems_filter_accord_view
+      - :name: Operate
+        :description: Perform Operations on Configured Systems
         :feature_type: control
-        :identifier: provider_foreman_refresh
-      - :name: Remove
-        :description: Remove Providers from the VMDB
-        :feature_type: admin
-        :identifier: provider_foreman_delete
-      - :name: Edit
-        :description: Edit a Provider
-        :feature_type: admin
-        :identifier: provider_foreman_edit
-      - :name: Add
-        :description: Add a Foreman Provider
-        :feature_type: admin
-        :identifier: provider_foreman_new
-      - :name: Validate
-        :description: Validate a Foreman Provider
-        :feature_type: admin
-        :identifier: provider_foreman_authentication_validate
-      - :name: Provision
-        :description: Provision a Foreman Configured System
-        :feature_type: admin
-        :identifier: provider_foreman_provision
-
+        :identifier: configuredsystem_control
+        :children:
+          - :name: Edit Tags
+            :description: Edit Configured Systems Tags
+            :feature_type: control
+            :identifier: configured_system_tag
+          - :name: Provision Configured Systems
+            :description: Provision Configured Systems
+            :feature_type: control
+            :identifier: configured_system_provision

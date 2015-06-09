@@ -10,6 +10,7 @@ describe "routing for OpsController" do
     fetch_build
     fetch_log
     fetch_production_log
+    log_collection_form_fields
     schedule_form_fields
     show_product_update
   ).each do |task|
@@ -91,7 +92,6 @@ describe "routing for OpsController" do
     settings_update
     show
     show_product_update
-    smartproxy_affinity_field_changed
     tag_edit_form_field_changed
     tl_chooser
     tree_autoload_dynatree
@@ -105,6 +105,7 @@ describe "routing for OpsController" do
     wait_for_task
     x_button
     x_show
+    x_settings_changed
     zone_edit
     zone_field_changed
   ).each do |task|

@@ -507,15 +507,12 @@ describe VmdbwsController, :apis => true do
       ems.vms.first.should be_kind_of(VmdbwsSupport::VmList)
       db_vm = Vm.find_by_guid(ems.vms.first.guid)
       ems.vms.first.guid.should == db_vm.guid
-      ems.hosts.count.should == db_ems.hosts.count
+      expect(ems.hosts.map(&:guid)).to match_array(db_ems.hosts.map(&:guid))
       ems.hosts.first.should be_kind_of(VmdbwsSupport::HostList)
-      ems.hosts.first.guid.should == Host.first.guid.to_s
-      ems.resource_pools.count.should == db_ems.resource_pools.count
+      expect(ems.resource_pools.map(&:id).map(&:to_i)).to match_array(db_ems.resource_pools.map(&:id))
       ems.resource_pools.first.should be_kind_of(VmdbwsSupport::ResourcePoolList)
-      ems.resource_pools.first.id.should == ResourcePool.first.id.to_s
-      ems.datastores.count.should == db_ems.storages.count
+      expect(ems.datastores.map(&:id).map(&:to_i)).to match_array(db_ems.datastores.map(&:id))
       ems.datastores.first.should be_kind_of(VmdbwsSupport::DatastoreList)
-      ems.datastores.first.id.should == Storage.first.id.to_s
     end
 
     it 'should return Host relationships' do

@@ -21,7 +21,6 @@ class MiqServer < ActiveRecord::Base
   belongs_to              :vm
   belongs_to              :zone
   has_many                :messages,  :as => :handler, :class_name => 'MiqQueue'
-  has_and_belongs_to_many :product_updates
   has_many                :miq_groups, :as => :resource
 
   cattr_accessor          :my_guid_cache
@@ -266,8 +265,6 @@ class MiqServer < ActiveRecord::Base
     $log.info "#{log_prefix} Database Latency: #{self.db_ping} ms"
 
     Vmdb::Appliance.log_config_on_startup
-
-    ProductUpdate.server_link_to_current_update(svr)
 
     svr.ntp_reload(svr.server_ntp_settings)
     # Update the config settings in the db table for MiqServer

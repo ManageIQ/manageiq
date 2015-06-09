@@ -223,13 +223,6 @@ module VmCommon
       drop_breadcrumb( {:name=>@record.name+" (Snapshots)", :url=>"/#{rec_cls}/show/#{@record.id}?display=#{@display}"} )
       build_snapshot_tree
       @button_group = "snapshot"
-    elsif @display == "miq_proxies"
-      drop_breadcrumb({:name=>"Virtual Machines", :url=>"/#{rec_cls}/show_list?page=#{@current_page}&refresh=y"}, true)
-      drop_breadcrumb( {:name=>@record.name+" (Managing SmartProxies)", :url=>"/#{rec_cls}/show/#{@record.id}?display=miq_proxies"} )
-      @view, @pages = get_view(MiqProxy, :parent=>@record)  # Get the records (into a view) and the paginator
-      @showtype = "miq_proxies"
-      @gtl_url = "/#{rec_cls}/show/" << @record.id.to_s << "?"
-
     elsif @display == "vmtree_info"
       @tree_vms = Array.new                     # Capture all VM ids in the tree
       drop_breadcrumb( {:name=>@record.name, :url=>"/#{rec_cls}/show/#{@record.id}"}, true )
@@ -927,9 +920,6 @@ module VmCommon
     build_policy_tree(@polArr)
     render :update do |page|
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page << "#{session[:tree_name]}.saveOpenStates('#{session[:tree_name]}','path=/');"
-      page << "#{session[:tree_name]}.loadOpenStates('#{session[:tree_name]}');"
-      #page.replace("policy_options_div", :partial=>"vm/policy_options")
       page.replace("main_div", :partial=>"vm_common/policies")
     end
   end
@@ -1252,8 +1242,7 @@ module VmCommon
     if params[:all_checked]
       ids = params[:all_checked].split(',')
       ids.each do |id|
-        id = id.split('-')
-        id = id[1].slice(0,id[1].length-1)
+        id = id.split('-')[1]
         session[:checked_items].push(id) unless session[:checked_items].include?(id)
       end
     end
@@ -1350,7 +1339,8 @@ module VmCommon
       self.x_node = params[:id]
       replace_right_cell
     else
-      add_flash("User is not authorized to view #{ui_lookup(:model=>@record.class.base_model.to_s)} \"#{@record.name}\"", :error)
+      add_flash("User is not authorized to view #{ui_lookup(:model => @record.class.base_model.to_s)} \"#{@record.name}\"",
+                :error) unless flash_errors?
       render :partial => "shared/tree_select_error", :locals => {:options => {:select_node => x_node}}
     end
   end
@@ -1496,7 +1486,7 @@ module VmCommon
       if x_node == "root"
         # TODO: potential to move this into a model with a scope built into it
         options[:where_clause] =
-          ["vms.type IN (?)", VmInfra::SUBCLASSES + TemplateInfra::SUBCLASSES] if x_active_tree == :vandt_tree
+          ["vms.type IN (?)", VmInfra.subclasses.collect(&:name) + TemplateInfra.subclasses.collect(&:name)] if x_active_tree == :vandt_tree
         process_show_list(options)  # Get all VMs & Templates
         # :model=>ui_lookup(:models=>"VmOrTemplate"))
         # TODO: Change ui_lookup/dictionary to handle VmOrTemplate, returning VMs And Templates
@@ -1504,7 +1494,7 @@ module VmCommon
       else
         if TreeBuilder.get_model_for_prefix(@nodetype) == "Hash"
           options[:where_clause] =
-            ["vms.type IN (?)", VmInfra::SUBCLASSES + TemplateInfra::SUBCLASSES] if x_active_tree == :vandt_tree
+            ["vms.type IN (?)", VmInfra.subclasses.collect(&:name) + TemplateInfra.subclasses.collect(&:name)] if x_active_tree == :vandt_tree
           if id == "orph"
             options[:where_clause] = MiqExpression.merge_where_clauses(options[:where_clause], VmOrTemplate::ORPHANED_CONDITIONS)
             process_show_list(options)
@@ -1751,9 +1741,6 @@ module VmCommon
     presenter[:clear_search_show_or_hide] = clear_search_show_or_hide
 
     presenter[:osf_node] = x_node  # Open, select, and focus on this node
-
-    # Save open nodes, if any were added
-    presenter[:save_open_states_trees] = [x_active_tree.to_s] if add_nodes
 
     presenter[:set_visible_elements][:blocker_div] = false unless @edit && @edit[:adv_search_open]
     presenter[:hide_modal] = true
@@ -2004,7 +1991,7 @@ module VmCommon
         @detail_sortdir = "ASC"
       else
         if @detail_sortcol == params[:sortby].to_i                        # if same column was selected
-          @detail_sortdir = @detail_sortdir == "ASC" ? "DESC" : "ASC"     #   switch around ascending/descending
+          @detail_sortdir = flip_sort_direction(@detail_sortdir)
         else
           @detail_sortdir = "ASC"
         end

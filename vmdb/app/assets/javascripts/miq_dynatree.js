@@ -1,12 +1,8 @@
 // Functions used by CFME for the dynatree control
 
-// OnCheck handler for the Role features tree
-function cfmeOnClick_RoleFeatureCheck(node) {
-  if (node.isSelected())
-    var checked = '0';  // If node was selected, now unchecking
-  else
-    var checked = '1';
-  var url = check_url + node.data.key + '?check=' + checked
+// OnCheck handler for the checkboxes in tree
+function miqOnCheck_handler(node) {
+  var url = check_url + node.data.key + '?check=' + (node.isSelected() ? '0' : '1')
   miqJqueryRequest(url);
 }
 
@@ -95,9 +91,14 @@ function cfmeOnClick_SelectDlgEditTreeNode(id) {
 function cfmeDynatree_activateNode(tree, key) {
   var node = $("#" + tree + "box").dynatree('getTree').getNodeByKey(key);
   if (node != null) { // Only try to activate node if it is in the tree
-    node.activate();
+    if (node.isActive()) {
+      $("#" + tree + "box").dynatree('getTree').reactivate();
+    } else {
+      node.activate();
+    }
     node.focus();
   }
+  miqSparkle(false);
 }
 
 // Activate silently (no onActivate event) and focus on a node within a tree given the node's key
@@ -185,6 +186,10 @@ function miqOnCheck_ProvTags(node, treename) {
 
 function cfmeOnClick_SelectAETreeNode(id) {
   miqJqueryRequest('/' + miq_controller + '/ae_tree_select/?id=' + id + '&tree=automate_tree');
+}
+
+function miqOnClick_IncludeDomainPrefix() {
+    miqJqueryRequest('/' + miq_controller + '/ae_tree_select_toggle?button=domain');
 }
 
 function cfmeOnClick_SelectOptimizeTreeNode(id) {
@@ -299,15 +304,6 @@ function cfmeOnClick_TagCat(id) {
   if (id.split('__')[0] == 't') {
     miqJqueryRequest(click_url + '?id=' + id, {beforeSend: true, complete: true});
   }
-}
-
-// OnCheck handler for the SmartProxy Affinity tree
-function cfmeOnClick_SmartProxyAffinityCheck(node) {
-  if (node.isSelected())
-    var checked = '0';  // If node was selected, now unchecking
-  else
-    var checked = '1';
-  miqJqueryRequest(check_url + node.data.key + '?check=' + checked);
 }
 
 // OnClick handler for Genealogy Tree

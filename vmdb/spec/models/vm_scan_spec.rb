@@ -10,14 +10,13 @@ describe VmScan do
       MiqServer.my_server(true)
 
       #TODO: We should be able to set values so we don't need to stub behavior
-      MiqServer.any_instance.stub(:is_vix_disk? => true)
-      MiqServer.any_instance.stub(:is_a_proxy? => true)
-      MiqServer.any_instance.stub(:has_active_role? => true)
+      MiqServer.any_instance.stub(:is_a_proxy? => true, :has_active_role? => true, :is_vix_disk? => true)
+      EmsVmware.any_instance.stub(:authentication_status_ok? => true)
+      Vm.stub(:scan_via_ems? => true)
 
       @ems       = FactoryGirl.create(:ems_vmware,       :name => "Test EMS", :zone => @zone)
-      @proxy     = FactoryGirl.create(:active_cos_proxy, :name => "test_cos_proxy")
       @storage   = FactoryGirl.create(:storage,          :name => "test_storage", :store_type => "VMFS")
-      @host      = FactoryGirl.create(:host,             :name => "test_host", :hostname => "test_host", :state => 'on', :ext_management_system => @ems, :miq_proxy => @proxy)
+      @host      = FactoryGirl.create(:host,             :name => "test_host", :hostname => "test_host", :state => 'on', :ext_management_system => @ems)
       @vm        = FactoryGirl.create(:vm_vmware,        :name => "test_vm", :location => "abc/abc.vmx", :raw_power_state => 'poweredOn', :host => @host, :ext_management_system => @ems, :storage => @storage)
       @ems_auth  = FactoryGirl.create(:authentication, :resource => @ems)
 
@@ -104,18 +103,6 @@ describe VmScan do
           @job.state.should           == "waiting_to_start"
           @job.dispatch_status.should == "active"
         end
-
-        # context "when signaled to start" do
-        #   before(:each) do
-        #     @job.signal(:start)
-        #   end
-        #
-        #   it "should go to state of 'wait_for_broker'" do
-        #     p @job
-        #     @job.state.should == "wait_for_broker"
-        #   end
-        # end
-
       end
 
     end

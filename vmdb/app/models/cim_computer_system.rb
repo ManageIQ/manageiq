@@ -36,8 +36,6 @@ class CimComputerSystem < MiqCimInstance
   virtual_has_many  :vms,         :class_name => 'Vm'
   virtual_has_many  :hosts,         :class_name => 'Host'
 
-  MODEL_SUBCLASSES  = [ 'OntapStorageSystem' ]
-
   CcsToBse            = CimProfiles.storage_system_to_base_storage_extent
   CcsToVm             = CimProfiles.storage_system_to_virtual_machine
   CcsToDatastores         = CimProfiles.storage_system_to_datastore
@@ -351,7 +349,3 @@ class CimComputerSystem < MiqCimInstance
     return true
   end
 end
-
-# Preload any subclasses of this class, so that they will be part of the
-# conditions that are generated on queries against this class.
-CimComputerSystem::MODEL_SUBCLASSES.each { |sc| require_dependency File.join(Rails.root, 'app', 'models', sc.underscore + '.rb')}

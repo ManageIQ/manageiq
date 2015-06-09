@@ -8,7 +8,7 @@
   %h3=_("User Information")
   %table.style1
     %tr
-      %td.key=_("Name")
+      %td.key=_("Full Name")
       %td
         - if !@edit
           = h(@user.name)
@@ -22,7 +22,7 @@
           - unless @edit[:new][:userid] == "admin"
             = javascript_tag(javascript_focus('name'))
     %tr
-      %td.key=_("User ID")
+      %td.key=_("Username")
       %td
         - if !@edit
           = h(@user.userid)
@@ -66,7 +66,7 @@
         - if !@edit
           - if @user.current_group
             %table{:cellpadding => "0", :cellspacing => "0"}
-              %tr{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'g-#{to_cid(@user.current_group.id)}');", :onmouseover => "this.style.cursor='pointer'", :title => _("View this Group")}
+              %tr.pointer{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'g-#{to_cid(@user.current_group.id)}');", :title => _("View this Group")}
                 %td.image
                   %ul.icons
                     %li
@@ -89,7 +89,7 @@
         %td{:style => "padding: 0px"}
           - if @user.current_group && @user.current_group.miq_user_role
             %table{:cellpadding => "0", :cellspacing => "0"}
-              %tr{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'ur-#{to_cid(@user.current_group.miq_user_role.id)}');", :onmouseover => "this.style.cursor='pointer'", :title => _("View this Role")}
+              %tr.pointer{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'ur-#{to_cid(@user.current_group.miq_user_role.id)}');", :title => _("View this Role")}
                 %td.image
                   %ul.icons
                     %li

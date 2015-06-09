@@ -8,5 +8,7 @@ object:
     inherits: 
     description: 
   fields:
+  - pre1:
+      value: "/Service/Provisioning/StateMachines/Methods/DialogParser"
   - pre2:
       value: "/Service/Provisioning/StateMachines/Methods/CatalogBundleInitialization"

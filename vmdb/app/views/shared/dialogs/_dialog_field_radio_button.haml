@@ -1,19 +1,11 @@
 - if edit
   - if field.values.length > 1
-    %span(class="dynamic-radio-#{field.id}")
+    %span(id="dynamic-radio-#{field.id}")
       - values = field.values
       - values = [['', "<#{_('None')}>"]] + values if !field.required && !field.dynamic
       - values.each_with_index do |rb, i|
-        %input{:type     => 'radio',
-               :id       => field.id,
-               :value    => rb[0],
-               :name     => field.name,
-               :checked  => field.default_value.to_s == rb[0].to_s ? '' : nil,
-               :onclick  => remote_function(:with     => 'miqSerializeForm(this)',
-                                            :url      => { :action => 'dialog_field_changed',
-                                                           :id     => "#{(@edit && @edit[:rec_id]) || "new"}"},
-                                            :loading  => "miqSparkle(true);",
-                                            :complete => "miqSparkle(false);")}
+
+        %input{radio_options(field, url, rb[0])}
         %label.dynamic-radio-label= rb[1]
 
   - else
@@ -44,19 +36,25 @@
           if (data.values.checked_value === value[0].toString()) {
             radio += 'checked="" ';
           }
-          radio += 'onclick="' + "#{remote_function(
-            :with     => 'miqSerializeForm(this)',
-            :url      => {:action => 'dialog_field_changed', :id => (@edit && @edit[:rec_id]) || 'new'},
-            :loading  => 'miqSparkle(true);',
-            :complete => 'miqSparkle(false);'
-          )}" + '"';
+
+          if (data.values.read_only === true) {
+            radio += 'title="This element is disabled because it is read only" ';
+            radio += 'disabled=true ';
+          } else {
+            radio += 'onclick="' + "#{remote_function(
+              :with     => "miqSerializeForm('dynamic-radio-#{field.id}')",
+              :url      => {:action => 'dialog_field_changed', :id => (@edit && @edit[:rec_id]) || 'new'},
+              :loading  => 'miqSparkle(true);',
+              :complete => 'miqSparkle(false);'
+            )}" + '"';
+          }
           radio += '/> ';
           radio += $('<label></label>').addClass('dynamic-radio-label').text(value[1]).prop('outerHTML');
           radio += ' ';
           radioButtons.push(radio);
         });
 
-        $('.dynamic-radio-' + fieldId).html(radioButtons);
+        $('#dynamic-radio-' + fieldId).html(radioButtons);
 
         miqSparkleOff();
       });

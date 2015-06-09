@@ -6,3 +6,19 @@
         @edit[:new][:hostname],
         :maxlength => MAX_HOSTNAME_LEN,
         "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+  - if @edit[:new][:emstype] == "scvmm"
+    %tr
+      %td.key= _('Security Protocol')
+      %td.wide
+        = select_tag("security_protocol",
+                     options_for_select(@edit[:protocols],
+                     @edit[:new][:security_protocol]),
+                     "data-miq_observe" => {:url => url}.to_json)
+    - if @edit[:new][:security_protocol] == "kerberos"
+      %tr
+        %td.key= _('Realm')
+        %td.wide
+          = text_field_tag("realm",
+                           @edit[:new][:realm],
+                           :maxlength => MAX_NAME_LEN,
+                           "data-miq_observe" => {:interval => ".5", :url => url}.to_json)

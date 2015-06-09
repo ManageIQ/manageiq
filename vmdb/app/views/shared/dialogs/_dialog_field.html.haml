@@ -8,7 +8,7 @@
   %td.key{:title => field.description}
     = field.label
   %td{:title => field.description}
-    - locals = {:edit => edit, :field => field, :url => url}
+    - locals = {:edit => edit, :field => field, :url => url, :wf => wf}
     - case field.type
       - when 'DialogFieldTextBox'
         = render(:partial => "shared/dialogs/dialog_field_text_box", :locals => locals)
@@ -36,16 +36,14 @@
         - if edit
           - if field.single_value?
             - select_values = dialog_dropdown_select_values(field, wf.value(field.name), category_tags)
-            = select_tag(field.name, options_for_select(select_values, wf.value(field.name)),
-                         "data-miq_sparkle_on"  => true,
-                         "data-miq_sparkle_off" => true,
-                         "data-miq_observe"     => {:url => url}.to_json)
+            = select_tag(field.name,
+                         options_for_select(select_values, wf.value(field.name)),
+                         drop_down_options(field, url))
           - else
-            = select_tag(field.name, options_for_select(category_tags, wf.value(field.name)),
-                         :multiple              => true,
-                         "data-miq_sparkle_on"  => true,
-                         "data-miq_sparkle_off" => true,
-                         "data-miq_observe"     => {:url => url}.to_json)
+            = select_tag(field.name,
+                         options_for_select(category_tags, wf.value(field.name)),
+                         drop_down_options(field, url).merge(:multiple => true))
+
         - else
           - value = wf.value(field.name) || ''
           - classification_ids = value.split(',')

@@ -85,7 +85,7 @@ describe ApplianceConsole::Cli do
     it "should handle uninstalling ipa" do
       subject.should_receive(:say)
       ApplianceConsole::ExternalHttpdAuthentication.should_receive(:new)
-        .and_return(double(:ipa_client_configured? => true, :ipa_client_unconfigure => nil))
+        .and_return(double(:ipa_client_configured? => true, :deactivate => nil))
       subject.parse(%w(--uninstall-ipa)).run
     end
 
@@ -103,9 +103,10 @@ describe ApplianceConsole::Cli do
           .with('client.domain.com',
                 :ipaserver => 'ipa.domain.com',
                 :principal => 'admin',
-                :realm     => 'domain.com',
+                :domain    => 'domain.com',
+                :realm     => 'DOMAIN.COM',
                 :password  => 'pass').and_return(double(:activate => true, :post_activation => nil))
-      subject.parse(%w(--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass --iparealm domain.com)).run
+      subject.parse(%w(--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass --iparealm DOMAIN.COM --ipadomain domain.com)).run
     end
 
     it "should not post_activate install ipa (aside: testing passing in host" do
@@ -116,6 +117,7 @@ describe ApplianceConsole::Cli do
           .with('client.domain.com',
                 :ipaserver => 'ipa.domain.com',
                 :principal => 'admin',
+                :domain    => nil,
                 :realm     => nil,
                 :password  => 'pass').and_return(double(:activate => false))
       subject.parse(%w(--ipaserver ipa.domain.com --ipaprincipal admin --ipapassword pass --host client.domain.com)).run

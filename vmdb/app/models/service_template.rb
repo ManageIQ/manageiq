@@ -71,7 +71,7 @@ class ServiceTemplate < ActiveRecord::Base
     self.service_resources.each do |sr|
       nh = sr.attributes.dup
       %W{id created_at updated_at service_template_id}.each {|key| nh.delete(key)}
-      svc.add_resource(sr.resource, nh)
+      svc.add_resource(sr.resource, nh) unless sr.resource.nil?
     end
 
     parent_svc.add_resource!(svc) unless parent_svc.nil?
@@ -174,10 +174,10 @@ class ServiceTemplate < ActiveRecord::Base
   end
 
   def self.default_provisioning_entry_point
-    '/ManageIQ/Service/Provisioning/StateMachines/ServiceProvision_Template/default'
+    '/Service/Provisioning/StateMachines/ServiceProvision_Template/default'
   end
 
   def self.default_retirement_entry_point
-    '/ManageIQ/Service/Retirement/StateMachines/ServiceRetirement/default'
+    '/Service/Retirement/StateMachines/ServiceRetirement/default'
   end
 end

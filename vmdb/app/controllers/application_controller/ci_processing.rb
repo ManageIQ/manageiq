@@ -256,7 +256,7 @@ module ApplicationController::CiProcessing
       return
     end
     @gtl_url = "/vm/retire?"
-    session[:changed] = @changed = true
+    session[:changed] = @changed = false
     drop_breadcrumb( {:name=>"Retire #{kls.to_s.pluralize}", :url=>"/#{session[:controller]}/tagging"} )
     session[:cat] = nil                 # Clear current category
     @retireitems = kls.find(session[:retire_items]).sort_by(&:name) # Get the db records
@@ -278,6 +278,8 @@ module ApplicationController::CiProcessing
 
   # Ajax method fired when retire date is changed
   def retire_date_changed
+    changed = (params[:miq_date_1] != session[:retire_date])
+
     if params[:miq_date_1]
       session[:retire_date] = params[:miq_date_1] if params[:miq_date_1]
     end
@@ -296,6 +298,7 @@ module ApplicationController::CiProcessing
         page << javascript_show("remove_button")
         page << javascript_enable_field('retirement_warn')
       end
+      page << javascript_for_miq_button_visibility_changed(changed)
       page << "miqSparkle(false);"
     end
   end
@@ -508,7 +511,8 @@ module ApplicationController::CiProcessing
 
     # Build the vm detail gtl view
   def show_details(db, options={})  # Pass in the db, parent vm is in @vm
-    association    = options[:association] || nil
+    association = options[:association]
+    conditions  = options[:conditions]
     # generate the grid/tile/list url to come back here when gtl buttons are pressed
     @gtl_url       = "/#{@db}/#{@listicon.pluralize}/#{@record.id.to_s}?"
     @showtype      = "details"
@@ -518,6 +522,7 @@ module ApplicationController::CiProcessing
     @view, @pages = get_view(db,
                             :parent=>@record,
                             :association=>association,
+                            :conditions => conditions,
                             :dbname=>"#{@db}item")  # Get the records into a view & paginator
 
     if @explorer # In explorer?
@@ -776,12 +781,12 @@ module ApplicationController::CiProcessing
         @password = params[:password] if params[:password]
         @verify = params[:verify] if params[:verify]
         if request.parameters[:controller] == "ems_cloud" && params[:userid] == ""
-          add_flash(_("%s is required") %  "User ID", :error)
+          add_flash(_("%s is required") %  "Username", :error)
           render :action => 'discover'
           return
         end
         if params[:userid] == "" && params[:password] != ""
-          add_flash(_("User ID must be entered if Password is entered"), :error)
+          add_flash(_("Username must be entered if Password is entered"), :error)
           render :action => 'discover'
           return
         end
@@ -826,10 +831,10 @@ module ApplicationController::CiProcessing
   end
 
   def set_discover_title(type, controller)
-    controller_table = ui_lookup(:tables=>controller)
     if type == "hosts"
-      return controller_table
+      return ui_lookup(:host_types => "hosts")
     else
+      controller_table = ui_lookup(:tables => controller)
       if controller == "ems_cloud"
         return "Amazon #{controller_table}"
       else
@@ -965,7 +970,7 @@ module ApplicationController::CiProcessing
     end
     @layout = session["#{self.class.session_key_prefix}_type".to_sym] if session["#{self.class.session_key_prefix}_type".to_sym]
     @current_page = @pages[:current] unless @pages.nil? # save the current page number
-    build_listnav_search_list(@view.db) if !["miq_proxy"].include?(@layout) && !session[:menu_click]
+    build_listnav_search_list(@view.db) if !["miq_task"].include?(@layout) && !session[:menu_click]
     # Came in from outside show_list partial
     unless params[:action] == "explorer"
       if params[:action] != "button" && (params[:ppsetting]  || params[:searchtag] || params[:entry] || params[:sort_choice])
@@ -992,7 +997,7 @@ module ApplicationController::CiProcessing
     if !session[:checked_items].nil? && (@lastaction == "set_checked_items" || params[:pressed] == "miq_request_edit")
       @edit[:req_id] = params[:id]
       recs = session[:checked_items]
-    elsif !params[:id]
+    elsif !params[:id] || params[:pressed] == 'vm_reconfigure'
       recs = find_checked_items
     end
     if recs.blank?
@@ -1111,9 +1116,9 @@ module ApplicationController::CiProcessing
         add_flash(_("No %{model} were selected for %{task}") % {:model=>ui_lookup(:tables=>request.parameters["controller"]), :task=>display_name}, :error)
       else
         if request.parameters["controller"] == "service"
-          self.send("process_services", vms, method)
+          process_services(vms, method)
         else
-          self.send("process_vms", vms, method, display_name)
+          process_vms(vms, method, display_name)
         end
       end
 
@@ -1131,9 +1136,9 @@ module ApplicationController::CiProcessing
       else
         vms.push(params[:id])
         if request.parameters["controller"] == "service"
-          self.send("process_services", vms, method) unless vms.empty?
+          process_services(vms, method) unless vms.empty?
         else
-          self.send("process_vms", vms, method, display_name) unless vms.empty?
+          process_vms(vms, method, display_name) unless vms.empty?
         end
 
         # TODO: tells callers to go back to show_list because this VM may be gone
@@ -1209,11 +1214,12 @@ module ApplicationController::CiProcessing
     else
       items = find_checked_items
       if items.empty?
-        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => controller_name),
+        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:ui_title => 'foreman'),
                                                                 :task  => display_name}, :error)
+      else
+        process_foreman(items, method) unless items.empty? && !flash_errors?
       end
     end
-    process_foreman(items, method) unless items.empty? && !flash_errors?
   end
 
   def process_foreman(providers, task)
@@ -1226,8 +1232,10 @@ module ApplicationController::CiProcessing
     rescue StandardError => bang                            # Catch any errors
       add_flash(_("Error during '%s': ") % task << bang.message, :error)
   else
-    add_flash(_("%{task} initiated for %{count_model} (Foreman) from the CFME Database") %
-      {:task        => Dictionary.gettext(task, :type => :task).titleize,
+    add_flash(_("%{task} initiated for %{count_model} (%{controller}) from the CFME Database") %
+      {:task        => Dictionary.gettext(task, :type => :task).titleize.gsub("Ems",
+                                                                              "#{ui_lookup(:ui_title => 'foreman')}"),
+       :controller  => ui_lookup(:ui_title => 'foreman'),
        :count_model => pluralize(providers.length, ui_lookup(:model => kls.to_s))})
   end
 
@@ -1895,14 +1903,14 @@ module ApplicationController::CiProcessing
     @edit[:new][owner] != @edit[:current][owner]
   end
 
-  def show_association(action, display_name, listicon, method, klass, association = nil)
+  def show_association(action, display_name, listicon, method, klass, association = nil, conditions = nil)
     # Ajax request means in explorer, or if current explorer is one of the explorer controllers
     @explorer = true if request.xml_http_request? && explorer_controller?
     if @explorer  # Save vars for tree history array
       @x_show = params[:x_show]
       @sb[:action] = @lastaction = action
     end
-    @record = identify_record(params[:id])
+    @record = identify_record(params[:id], controller_to_model)
     @view = session[:view]                  # Restore the view from the session to get column names for the display
     return if record_no_longer_exists?(@record, klass.to_s)
     @lastaction = action
@@ -1931,9 +1939,9 @@ module ApplicationController::CiProcessing
                       :url  => "/#{controller_name}/#{action}/#{@record.id}")
       @listicon = listicon
       if association.nil?
-        show_details(klass)
+        show_details(klass, :conditions => conditions)
       else
-        show_details(klass, :association => association )
+        show_details(klass, :association => association, :conditions => conditions)
       end
     end
   end

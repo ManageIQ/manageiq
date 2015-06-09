@@ -107,5 +107,4 @@ describe MiqProvisionAmazon do
 
     vm_prov.workflow.class.should eq MiqProvisionAmazonWorkflow
   end
-
 end

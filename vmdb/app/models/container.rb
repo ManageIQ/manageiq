@@ -1,5 +1,6 @@
 class Container < ActiveRecord::Base
   include ReportableMixin
-  # :container_id, :name, :image, :state, :restart_count
+  include NewWithTypeStiMixin
+
   belongs_to :container_group
 end

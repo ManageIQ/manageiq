@@ -1,9 +1,9 @@
-require 'test/unit'
+require 'minitest/unit'
 
 $:.push("#{File.dirname(__FILE__)}/../")
 require 'LinuxUtils'
 
-class TestLinuxUtils < Test::Unit::TestCase
+class TestLinuxUtils < MiniTest::Unit::TestCase
 
 #  puts "  OCTAL_TO_PERMISSIONS = {"
 #  (0..07777).each do |o|

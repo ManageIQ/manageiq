@@ -1,6 +1,6 @@
 # encoding: US-ASCII
 
-require 'test/unit'
+require 'minitest/unit'
 require 'ostruct'
 
 $:.push("#{File.dirname(__FILE__)}/../..")
@@ -61,7 +61,7 @@ class MftEntry
 	end
 end
 
-class NtfsTestMft < Test::Unit::TestCase
+class NtfsTestMft < MiniTest::Unit::TestCase
 	
 	CONDITIONS = ['fs_type', 'ntfs']
 	TEST_DB = "#{File.dirname(__FILE__)}/../../vms.yml"

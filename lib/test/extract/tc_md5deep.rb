@@ -1,10 +1,10 @@
 $:.push("#{File.dirname(__FILE__)}/../../metadata/util/")
 require 'md5deep'
-require 'test/unit'
+require 'minitest/unit'
 
 module Extract
 	
-class TestVersionInfo < Test::Unit::TestCase
+class TestVersionInfo < MiniTest::Unit::TestCase
 
   def test_md5deep
     md5 = MD5deep.new

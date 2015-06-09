@@ -28,9 +28,10 @@ class MiqSshUtil
     @options[:keys] = [] if options[:key_data]
 
     # Pull the 'remember_host' key out of the hash because the SSH initializer will complain
-    @remember_host = @options.delete(:remember_host)
-    @su_user     = @options.delete(:su_user)
-    @su_password = @options.delete(:su_password)
+    @remember_host     = @options.delete(:remember_host)
+    @su_user           = @options.delete(:su_user)
+    @su_password       = @options.delete(:su_password)
+    @passwordless_sudo = @options.delete(:passwordless_sudo)
 
     # Obsolete, delete if passed in
     @options.delete(:authentication_prompt_delay)
@@ -40,7 +41,7 @@ class MiqSshUtil
 #        @options[:logger] = $log if $log
     end
   end # def initialize
-  
+
   def cp(from, to)
     Net::SFTP.start(@host, @user, @options) do |sftp|
       $log.debug "MiqSshUtil::cp - Copying file #{from} to #{@host}:#{to}." if $log
@@ -63,7 +64,10 @@ class MiqSshUtil
     outBuf = ""
     status = nil
     signal = nil
-    
+
+    # If passwordless sudo is true, we will just prepend every command by sudo
+    cmd  = 'sudo ' + cmd if @passwordless_sudo
+
     run_session do |ssh|
       ssh.open_channel do |channel|
         channel.on_data do |channel, data|

@@ -11,8 +11,13 @@
     %meta{"http-equiv" => "cache-control", :content => "no-cache, no-store"}
     = tag :link, :rel => "shortcut icon", :href => image_path("favicon.ico")
     = stylesheet_link_tag 'application'
+    = stylesheet_link_tag 'template'
+    = stylesheet_link_tag 'jquery/miq/jquery-ui-1.9.2.custom'
+    = stylesheet_link_tag 'codemirror-4.2/lib/codemirror'
     = render :partial => "stylesheets/template50"
     = javascript_include_tag 'application'
+    - if Rails.env.development?
+      = javascript_include_tag 'miq_debug'
 
     -# HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries
     /[if lt IE 9]

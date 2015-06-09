@@ -514,7 +514,7 @@ class ApplicationController < ActionController::Base
       if @sb[:active_tab] == "diagnostics_database"
         #coming from diagnostics/database tab
         pfx = "dbbackup"
-        flash_div_num = "validate"
+        flash_div_num = "database"
       end
     else
       if session[:edit] && session[:edit].key?(:pxe_id)
@@ -531,11 +531,13 @@ class ApplicationController < ActionController::Base
     id = params[:id] ? params[:id] : "new"
     if pfx == "pxe"
       return unless load_edit("#{pfx}_edit__#{id}")
+      settings = {:username => @edit[:new][:log_userid], :password => @edit[:new][:log_password]}
+      settings[:uri] = @edit[:new][:uri_prefix] + "://" + @edit[:new][:uri]
     else
-      return unless load_edit("#{pfx}_edit__#{id}","replace_cell__explorer")
+      settings = {:username => params[:log_userid], :password => params[:log_password]}
+      settings[:uri] = "#{params[:uri_prefix]}://#{params[:uri]}"
+      settings[:uri_prefix] = params[:uri_prefix]
     end
-    settings = {:username => @edit[:new][:log_userid], :password => @edit[:new][:log_password] }
-    settings[:uri] = @edit[:new][:uri_prefix] + "://" + @edit[:new][:uri]
 
     begin
       if pfx == "pxe"
@@ -543,7 +545,7 @@ class ApplicationController < ActionController::Base
         PxeServer.verify_depot_settings(settings)
       else
         msg = 'Depot Settings successfuly validated'
-        MiqSchedule.verify_depot_hash(settings)
+        MiqSchedule.new.verify_file_depot(settings)
       end
     rescue StandardError => bang
       add_flash(_("Error during '%s': ") % "Validate" << bang.message, :error)
@@ -551,7 +553,7 @@ class ApplicationController < ActionController::Base
       add_flash(msg)
     end
 
-    @changed = (@edit[:new] != @edit[:current])
+    @changed = (@edit[:new] != @edit[:current]) if pfx == "pxe"
     render :update do |page|
       page.replace("flash_msg_div#{flash_div_num}", :partial=>"layouts/flash_msg", :locals=>{:div_num=>flash_div_num})
     end
@@ -571,6 +573,10 @@ class ApplicationController < ActionController::Base
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       yield(page) if block_given?
     end
+  end
+
+  def tagging_explorer_controller?
+    false
   end
 
   private
@@ -1110,7 +1116,7 @@ class ApplicationController < ActionController::Base
     table.data[from_idx..to_idx].each do |row|
       @id = row['id']
 
-      new_row = root.add_element('row', "id" => to_cid(row['id']))
+      new_row = root.add_element('row', "id" => list_row_id(row))
       new_row.add_element('cell').text = '0'  # Checkbox column unchecked
 
       # Generate html for the list icon
@@ -1204,7 +1210,7 @@ class ApplicationController < ActionController::Base
                 "../../../pictures/#{item.picture.basename}"
               end
             end
-    image ? image : "#{pn}#{(@listicon || view.db).underscore}.png"
+    list_row_image(pn, image, (@listicon || view.db).underscore, item.name)
   end
 
   def get_host_for_vm(vm)
@@ -1361,7 +1367,7 @@ class ApplicationController < ActionController::Base
     end
 
     pass = %w(button x_button).include?(action_name) ? handle_button_rbac : handle_generic_rbac
-    $audit_log.failure("Userid [#{session[:userid]}], Role ID [#{User.current_user.miq_user_role.try(:id)}] attempted to access area [#{controller_name}], type [Action], task [#{action_name}]") unless pass
+    $audit_log.failure("Username [#{session[:userid]}], Role ID [#{User.current_user.miq_user_role.try(:id)}] attempted to access area [#{controller_name}], type [Action], task [#{action_name}]") unless pass
   end
 
   def cleanup_action
@@ -1498,7 +1504,7 @@ class ApplicationController < ActionController::Base
   def get_sort_col
     unless params[:sortby] == nil
       if @sortcol == params[:sortby].to_i                       # if same column was selected
-        @sortdir = @sortdir == "ASC" ? "DESC" : "ASC"     #   switch around ascending/descending
+        @sortdir = flip_sort_direction(@sortdir)
       else
         @sortdir = "ASC"
       end
@@ -1517,21 +1523,29 @@ class ApplicationController < ActionController::Base
     @devices = Array.new    # This will be an array of hashes to allow the rhtml to pull out each device field by name
     unless db_record.hardware.nil?
       db_notes = db_record.hardware.annotation.nil? ? "<No notes have been entered for this VM>" : db_record.hardware.annotation
-      # add processor entry to the device array
-      @devices.push({ :device=>"Processors",
-                                      :description=>db_record.hardware.numvcpus,
-                                      :icon=>"processor" }) unless db_record.hardware.numvcpus.nil?
-      # add cpu entries to the device array
-      @devices.push({ :device => "CPU Type",
-                              :description => db_record.hardware.cpu_type.to_s,
-                              :icon => "processor" }) unless db_record.hardware.cpu_type.nil?
-      @devices.push({ :device => "CPU Speed",
-                              :description => db_record.hardware.cpu_speed.to_s << " MHz",
-                              :icon => "processor" }) unless db_record.hardware.cpu_speed.nil?
-      # add memory entry to the device array
-      @devices.push({ :device => "Memory",
-                                      :description => db_record.hardware.memory_cpu.to_s << " MB",
-                                      :icon => "memory" }) unless db_record.hardware.memory_cpu.nil?
+
+      if db_record.hardware.logical_cpus
+        cpu_details =
+          if db_record.respond_to?(:num_cpu) && db_record.num_cpu && db_record.respond_to?(:cores_per_socket) && db_record.cores_per_socket
+            " (#{pluralize(@record.num_cpu, 'socket')} x #{pluralize(@record.cores_per_socket, 'core')})"
+          else
+            ""
+          end
+
+        @devices.push(:device      => "Processors",
+                      :description => "#{db_record.hardware.logical_cpus}#{cpu_details}",
+                      :icon        => "processor")
+      end
+
+      @devices.push(:device      => "CPU Type",
+                    :description => db_record.hardware.cpu_type,
+                    :icon        => "processor") if db_record.hardware.cpu_type
+      @devices.push(:device      => "CPU Speed",
+                    :description => "#{db_record.hardware.cpu_speed} MHz",
+                    :icon        => "processor") if db_record.hardware.cpu_speed
+      @devices.push(:device      => "Memory",
+                    :description => "#{db_record.hardware.memory_cpu} MB",
+                    :icon        => "memory") if db_record.hardware.memory_cpu
 
       # Add disks to the device array
       if !db_record.hardware.disks.nil?
@@ -1780,13 +1794,8 @@ class ApplicationController < ActionController::Base
 
   def get_view_calculate_gtl_type(db_sym)
     gtl_type = @settings.fetch_path(:views, db_sym) unless %w(scanitemset miqschedule pxeserver customizationtemplate).include?(db_sym.to_s)
-
-    # Force list view for certain types and areas
-    gtl_type = 'list' if ['filesystems', 'registry_items', 'chargeback_rates', 'miq_request'].include?(@listicon)
-    gtl_type = 'list' if gtl_type.nil?
     gtl_type = 'grid' if ['vm'].include?(db_sym.to_s) && request.parameters[:controller] == 'service'
-
-    gtl_type ||= 'grid' # return a sane default
+    gtl_type ||= 'list' # return a sane default
     gtl_type
   end
   private :get_view_calculate_gtl_type
@@ -1880,7 +1889,7 @@ class ApplicationController < ActionController::Base
     # Set up the list view type (grid/tile/list)
     @settings[:views][db_sym] = params[:type] if params[:type]  # Change the list view type, if it's sent in
 
-    @gtl_type = get_view_calculate_gtl_type(db_sym)
+    @gtl_type = get_view_calculate_gtl_type(options[:gtl_dbname] || db_sym)
 
     # Get the view for this db or use the existing one in the session
     view = refresh_view ? get_db_view(db.split("::").last, :association => association, :view_suffix => view_suffix) : session[:view]
@@ -1942,7 +1951,7 @@ class ApplicationController < ActionController::Base
     @targets_hash             = attrs[:targets_hash] if attrs[:targets_hash]
 
     # Set up the grid variables for list view, with exception models below
-    if !["MiqTask", "Job", "ProductUpdate", "MiqProvision", "MiqReportResult"].include?(view.db) &&
+    if !%w(Job MiqProvision MiqReportResult MiqTask).include?(view.db) &&
       !view.db.ends_with?("Build") && !@force_no_grid_xml && (@gtl_type == "list" || @force_grid_xml)
       @grid_xml = view_to_xml(view, 0, -1, :association => association)
     end
@@ -2094,10 +2103,10 @@ class ApplicationController < ActionController::Base
       page << "miqSetButtons(0,'center_tb');"                             # Reset the center toolbar
       page << "}";
       if ! (@layout == "dashboard" && ["show","change_tab","auth_error"].include?(@controller.action_name) ||
-        ["about", "all_tasks", "all_ui_tasks", "configuration", "diagnostics", "miq_ae_automate_button",
-          "miq_ae_customization", "miq_ae_export", "miq_ae_logs", "miq_ae_tools", "miq_policy", "miq_policy_export",
-          "miq_policy_logs", "miq_request_ae", "miq_request_configured_system", "miq_request_host", "miq_request_vm",
-          "my_tasks", "my_ui_tasks", "product_update", "report", "rss", "server_build"].include?(@layout))
+        %w(about all_tasks all_ui_tasks configuration diagnostics miq_ae_automate_button
+           miq_ae_customization miq_ae_export miq_ae_logs miq_ae_tools miq_policy miq_policy_export
+           miq_policy_logs miq_request_ae miq_request_configured_system miq_request_host
+           miq_request_vm my_tasks my_ui_tasks report rss server_build).include?(@layout))
         page.replace(:listnav_div, :partial=>"layouts/listnav")               # Replace accordion, if list_nav_div is there
       end
       if @grid_xml                                  # Replacing a grid
@@ -2291,7 +2300,7 @@ class ApplicationController < ActionController::Base
         session[:tab_url][:vi] = inbound_url if ["show", "show_list", "timeline", "jobs","ui_jobs","usage","chargeback","explorer"].include?(action_name)
       when "support"
         session[:tab_url][:set] = inbound_url if ["index"].include?(action_name)
-      when "configuration","ops","product_update"
+      when "configuration", "miq_task", "ops"
         session[:tab_url][:set] = inbound_url if ["explorer","index"].include?(action_name)
       when "miq_ae_tools", "miq_ae_class", "miq_ae_customization"
         session[:tab_url][:aut] = inbound_url if ["explorer","resolve","index","explorer","log","import_export","automate_button"].include?(action_name)
@@ -2305,7 +2314,8 @@ class ApplicationController < ActionController::Base
         session[:tab_url][:clo] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
       when "ems_cluster", "ems_infra", "host", "pxe", "repository", "resource_pool", "storage", "vm_infra"
         session[:tab_url][:inf] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
-      when "container", "container_group", "container_node", "container_service", "ems_container"
+      when "container", "container_group", "container_node", "container_service", "ems_container",
+           "container_route", "container_project", "container_replicator"
         session[:tab_url][:cnt] = inbound_url if %w(explorer show show_list).include?(action_name)
       when "miq_request"
         session[:tab_url][:svc] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "vm"
@@ -2520,7 +2530,7 @@ class ApplicationController < ActionController::Base
     session[:imports] = @sb[:imports] ? @sb[:imports] : nil # Imported file data from 2 stage import
 
     # Save @edit and @view in session, if present
-    if @lastaction == "show_list" || params[:action] == "tree_autoload"   # If show_list was the last screen presented or tree is being autoloaded save @edit
+    if @lastaction == "show_list"                           # If show_list was the last screen presented or tree is being autoloaded save @edit
       @edit ||= session[:edit]                              #   Remember the previous @edit
       @view ||= session[:view]                              #   Remember the previous @view
     end
@@ -2528,7 +2538,7 @@ class ApplicationController < ActionController::Base
     session[:edit] = @edit ? @edit : nil                    # Set or clear session edit hash
 
     session[:view] = @view ? @view : nil                    # Set or clear view in session hash
-    unless params[:controller] == "miq_proxy"               # Proxy needs data for delete all
+    unless params[:controller] == "miq_task"                # Proxy needs data for delete all
       session[:view].table = nil if session[:view]          # Don't need to carry table data around
     end
 
@@ -2699,6 +2709,14 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def list_row_id(row)
+    to_cid(row['id'])
+  end
+
+  def list_row_image(image_path, image, model_image, _itemname)
+    image ? image : "#{image_path}#{model_image}.png"
+  end
+
   def render_flash_not_applicable_to_model(type)
     add_flash(_("%{task} does not apply to selected %{model}") % {:model => ui_lookup(:table => "miq_template"), :task  => type.capitalize}, :error)
     render_flash { |page| page << '$(\'#main_div\').scrollTop();' }
@@ -2725,5 +2743,9 @@ class ApplicationController < ActionController::Base
       locale = user_locale
     end
     FastGettext.set_locale(locale)
+  end
+
+  def flip_sort_direction(direction)
+    direction == "ASC" ? "DESC" : "ASC" # flip ascending/descending
   end
 end

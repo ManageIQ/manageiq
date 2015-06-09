@@ -45,13 +45,6 @@ describe MiqEnvironment do
           assert_same_result_every_time(:is_appliance?, true)
         end
       end
-
-      context ".is_encrypted_appliance?" do
-        it "should run once and cache the result" do
-          MiqEnvironment::Command.should_receive(:is_appliance?).once.and_return(false)
-          assert_same_result_every_time(:is_encrypted_appliance?, false)
-        end
-      end
     end
   end
 

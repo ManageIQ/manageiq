@@ -20,31 +20,6 @@ module ApplicationController::TreeSupport
     end
   end
 
-  def tree_autoload
-    nodes = tree_add_child_nodes(params[:id])
-    build_vm_host_array if !@sb[:tree_hosts_hash].blank? || !@sb[:tree_vms_hash].blank? # set temp list of hosts/vms to be shown on DC tree on mousein event
-    render :update do |page|
-      if !@sb[:tree_hosts_hash].blank? || !@sb[:tree_vms_hash].blank?
-        page.replace("dc_tree_quads_div", :partial=>"layouts/dc_tree_quads")
-      end
-      page << "#{j_str(params[:tree])}.loadJSONObject(#{nodes.to_json});"
-      if @sb[:node_tooltip] && @sb[:node_text]
-        page << "#{j_str(params[:tree])}.setItemText('#{j_str(params[:id])}', '#{j_str(@sb[:node_text])}', '#{j_str(@sb[:node_tooltip])}');"
-      end
-      # select an item in tree, when new report is added or a report has been queued to run so the report node is expanded
-      # to fix an issue where when newly added report was run, it doesnt go to saved report show screen because that node is not loaded yet in the tree
-      if @sb[:select_node]
-        page << "reports_tree.openItem('xx-#{@sb[:rpt_menu].length-1}_xx-#{@sb[:rpt_menu].length-1}-0');"
-        page << "reports_tree.selectItem('#{j_str(x_node)}');"
-      end
-      # expand indexes folder as well when a table name is clicked in the vmdb_tree, in Database accordion
-      if params[:tree] == "vmdb_tree" && @sb[:auto_select_node]
-        page << "#{j_str(params[:tree])}.openItem('#{j_str(@sb[:auto_select_node])}');"
-      end
-      page << "if (typeof #{j_str(params[:tree])} != 'undefined'){#{j_str(params[:tree])}.saveOpenStates('#{j_str(params[:tree])}','path=/');};"
-    end
-  end
-
   def tree_autoload_dynatree
     @edit ||= session[:edit]  # Remember any previous @edit
     klass_name = x_tree[:klass_name] if x_active_tree
@@ -525,11 +500,11 @@ module ApplicationController::TreeSupport
     ExtManagementSystem.all.each do |ems| # Go thru all of the providers
       if !@rp_only || (@rp_only && ems.resource_pools.count > 0)
         ems_node = {
-          :key        => "#{ems.class.name}_#{ems.id}",
-          :title      => ems.name,
-          :tooltip    => "#{ui_lookup(:table=>"ems_infras")}: #{ems.name}",
-          :addClass   => "cfme-no-cursor-node",      # No cursor pointer
-          :icon       => "ems.png"
+          :key      => "#{ems.class.name}_#{ems.id}",
+          :title    => ems.name,
+          :tooltip  => "#{ui_lookup(:table => "ems_infras")}: #{ems.name}",
+          :addClass => "cfme-no-cursor-node",      # No cursor pointer
+          :icon     => "vendor-#{ems.image_name}.png"
         }
         if @vat || @rp_only
           ems_node[:hideCheckbox] = true

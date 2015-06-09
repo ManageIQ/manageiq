@@ -133,6 +133,12 @@ module Vmdb
         ui_lookup_for_model(options[:model]).singularize
       elsif options[:models]
         ui_lookup_for_model(options[:models]).pluralize
+      elsif options[:host_types]
+        ui_lookup_for_host_types(options[:host_types])
+      elsif options[:ems_cluster_types]
+        ui_lookup_for_ems_cluster_types(options[:ems_cluster_types])
+      elsif options[:ui_title]
+        ui_lookup_for_title(options[:ui_title])
       else
         ''
       end
@@ -145,6 +151,18 @@ module Vmdb
 
     def ui_lookup_for_model(text)
       Dictionary.gettext(text, :type => :model, :notfound => :titleize)
+    end
+
+    def ui_lookup_for_host_types(text)
+      Dictionary.gettext(text, :type => :host_types, :notfound => :titleize)
+    end
+
+    def ui_lookup_for_ems_cluster_types(text)
+      Dictionary.gettext(text, :type => :ems_cluster_types, :notfound => :titleize)
+    end
+
+    def ui_lookup_for_title(text)
+      Dictionary.gettext(text, :type => :ui_title, :notfound => :titleize)
     end
 
     # Wrap a report html table body with html table tags and headers for the columns

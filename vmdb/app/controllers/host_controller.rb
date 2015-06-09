@@ -10,7 +10,7 @@ class HostController < ApplicationController
     redirect_to :action => 'show_list'
   end
 
-  def drift_history
+  def show_association(action, display_name, listicon, method, klass, association = nil, conditions = nil)
     set_config(identify_record(params[:id]))
     super
   end
@@ -81,11 +81,6 @@ class HostController < ApplicationController
       drop_breadcrumb( {:name=>@host.name+" (Storage Adapters)", :url=>"/host/show/#{@host.id}?display=storage_adapters"} )
       build_sa_tree
 
-    when "miq_proxies"
-      drop_breadcrumb( {:name=>@host.name+" (Managing SmartProxies)", :url=>"/host/show/#{@host.id}?display=miq_proxies"} )
-      @view, @pages = get_view(MiqProxy, :parent=>@host)  # Get the records (into a view) and the paginator
-      @showtype = "miq_proxies"
-
     when "miq_templates", "vms"
       title = @display == "vms" ? "VMs" : "Templates"
       kls = @display == "vms" ? Vm : MiqTemplate
@@ -146,12 +141,71 @@ class HostController < ApplicationController
     end
   end
 
+  def filesystems_subsets
+    condition = nil
+    label     = _('Files')
+
+    host_service_group = HostServiceGroup.where(:id => params['host_service_group']).first
+    if host_service_group
+      condition = host_service_group.host_service_group_filesystems_condition
+      label     = _("Configuration files of %s") % 'nova service'
+    end
+
+    # HACK: UI get_view can't do arel relations, so I need to expose conditions
+    condition = condition.to_sql if condition
+
+    return label, condition
+  end
+
+  def set_config_local
+    set_config(identify_record(params[:id]))
+    super
+  end
+  alias set_config_local drift_history
+  alias set_config_local groups
+  alias set_config_local patches
+  alias set_config_local users
+
   def filesystems
-    show_association('filesystems', 'Files', 'filesystems', :filesystems, Filesystem)
+    label, condition = filesystems_subsets
+    show_association('filesystems', label, 'filesystems', :filesystems, Filesystem, nil, condition)
+  end
+
+  def host_services_subsets
+    condition = nil
+    label     = _('Services')
+
+    host_service_group = HostServiceGroup.where(:id => params['host_service_group']).first
+    if host_service_group
+      case params[:status]
+      when 'running'
+        condition = host_service_group.running_system_services_condition
+        label     = _("Running system services of %s") % host_service_group.name
+      when 'failed'
+        condition =  host_service_group.failed_system_services_condition
+        label     = _("Failed system services of %s") % host_service_group.name
+      when 'all'
+        condition = nil
+        label     = _("All system services of %s") % host_service_group.name
+      end
+
+      if condition
+        # Amend the condition with the openstack host service foreign key
+        condition = condition.and(host_service_group.host_service_group_system_services_condition)
+      else
+        condition = host_service_group.host_service_group_system_services_condition
+      end
+    end
+
+    # HACK: UI get_view can't do arel relations, so I need to expose conditions
+    condition = condition.to_sql if condition
+
+    return label, condition
   end
 
   def host_services
-    show_association('host_services', 'Services', 'service', :host_services, SystemService)
+    label, condition = host_services_subsets
+    show_association('host_services', label, 'service', :host_services, SystemService, nil, condition)
   end
 
   def advanced_settings
@@ -159,6 +213,7 @@ class HostController < ApplicationController
   end
 
   def firewall_rules
+    @display = "main"
     show_association('firewall_rules', 'Firewall Rules', 'firewallrule', :firewall_rules, FirewallRule)
   end
 
@@ -575,6 +630,10 @@ class HostController < ApplicationController
 
   private ############################
 
+  def breadcrumb_name
+    title_for_hosts
+  end
+
   # Build the tree object to display the host network info
   def build_network_tree
     @tree_vms = []                   # Capture all VM ids in the tree
@@ -721,7 +780,7 @@ class HostController < ApplicationController
       @tabnum = "1"
     end
     if host.authentication_userid.blank? && (!host.authentication_userid(:remote).blank? || !host.authentication_userid(:ws).blank?)
-      @edit[:errors].push("Default User ID must be entered if a Remote Login or Web Services User ID is entered")
+      @edit[:errors].push("Default Username must be entered if a Remote Login or Web Services Username is entered")
       valid = false
       @tabnum = "1"
     end
@@ -900,7 +959,7 @@ class HostController < ApplicationController
   # Set record variables to new values
   def set_record_vars(host, mode = nil)
     host.name             = @edit[:new][:name]
-    host.hostname         = @edit[:new][:hostname]
+    host.hostname         = @edit[:new][:hostname].strip
     host.ipmi_address     = @edit[:new][:ipmi_address]
     host.mac_address      = @edit[:new][:mac_address]
     host.custom_1         = @edit[:new][:custom_1]

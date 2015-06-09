@@ -55,6 +55,7 @@ public/dhtmlx_test_cal.html
 public/test_grid.xml
 public/test_grid-0.xml
 public/upload
+public/pictures/
 
 # public/dhtmlx/
 public/dhtmlx/dhtmlxtoolbar.js.orig
@@ -113,3 +114,6 @@ vendor/plugins/princely/.gitignore
 
 # vendor/plugins/rails_sql_views/
 vendor/plugins/rails_sql_views/.gitignore
+
+# ignore included plugins in bundler.d
+bundler.d/*

@@ -293,7 +293,6 @@ class MiqAeClassController < ApplicationController
 
     r = proc { |opts| render_to_string(opts) }
 
-    presenter[:save_open_states_trees] << :ae_tree
     presenter[:right_cell_text] = @right_cell_text
 
     # Build hash of trees to replace and optional new node to be selected
@@ -1319,9 +1318,9 @@ class MiqAeClassController < ApplicationController
       replace_right_cell
     when "save"
       ae_class = find_by_id_filtered(MiqAeClass, params[:id])
-      set_field_vars(ae_class)
       begin
         MiqAeClass.transaction do
+          set_field_vars(ae_class)
           ae_class.ae_fields.destroy(MiqAeField.find_all_by_id(@edit[:fields_to_delete]))
           ae_class.ae_fields.each { |fld| fld.default_value = nil if fld.default_value == "" }
           ae_class.save!
@@ -1415,9 +1414,9 @@ class MiqAeClassController < ApplicationController
     when "save"
       ae_method = find_by_id_filtered(MiqAeMethod, params[:id])
       set_method_record_vars(ae_method)                     # Set the record variables, but don't save
-      set_input_vars(ae_method)
       begin
         MiqAeMethod.transaction do
+          set_input_vars(ae_method)
           ae_method.inputs.destroy(MiqAeField.find_all_by_id(@edit[:fields_to_delete]))
           ae_method.inputs.each { |fld| fld.default_value = nil if fld.default_value == "" }
           ae_method.save!
@@ -1530,7 +1529,8 @@ class MiqAeClassController < ApplicationController
       set_method_record_vars(add_aemethod)                        # Set the record variables, but don't save
       begin
         MiqAeMethod.transaction do
-          add_aemethod.inputs.build(@edit[:new][:fields])
+          add_aemethod.save!
+          set_field_vars(add_aemethod)
           add_aemethod.save!
         end
       rescue StandardError => bang
@@ -2520,7 +2520,9 @@ private
           new_field.send("#{attr}=", @edit[:new][:fields][i][attr]) if @edit[:new][:fields][i][attr]
         end
       end
-      fields.push(new_field) if new_field.new_record? || parent.nil?
+      if new_field.new_record? || parent.nil?
+        raise StandardError, new_field.errors.full_messages[0] unless fields.push(new_field)
+      end
     end
 
     reset_field_priority(fields)

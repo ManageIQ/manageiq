@@ -409,7 +409,7 @@ module ApplicationController::Explorer
     when :condition
       objects = Array.new
       objects.push({:id=>"host", :text=>"Host Conditions", :image=>"host", :tip=>"Host Conditions"})
-      objects.push({:id=>"vm", :text=>"VM Conditions", :image=>"vm", :tip=>"VM Conditions"})
+      objects.push({:id=>"vm", :text=>"All VM and Instance Conditions", :image=>"vm", :tip=>"All VM and Instance Conditions"})
       return count_only ? objects.length : objects
     when :db
       objects = Array.new
@@ -597,7 +597,10 @@ module ApplicationController::Explorer
       else
         objects = Array.new
         if ems_clusters.count > 0 || non_clustered_hosts.count > 0
-          objects.push({:id=>"folder_c_xx-#{to_cid(object.id)}", :text=>ui_lookup(:tables=>"ems_cluster"), :image=>"folder", :tip=>"#{ui_lookup(:tables=>"ems_clusters")} (Click to open)"})
+          objects.push(:id    => "folder_c_xx-#{to_cid(object.id)}",
+                       :text  => ui_lookup(:ems_cluster_types => "cluster"),
+                       :image => "folder",
+                       :tip   => "#{ui_lookup(:ems_cluster_types => "cluster")} (Click to open)")
         end
         return objects
       end

@@ -98,8 +98,6 @@ module OpsController::Diagnostics
     when "save"
       pfx = @sb[:active_tab] == "diagnostics_collect_logs" ? "logdepot" : "dbbackup"
       id = params[:id] ? params[:id] : "new"
-      return unless load_edit("#{pfx}_edit__#{id}","replace_cell__explorer")
-      validate_uri_settings if @edit[:protocol].present?
       if @flash_array
         render :update do |page|
           page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
@@ -109,21 +107,24 @@ module OpsController::Diagnostics
       end
 
       begin
-        if @edit[:protocol].blank?
+        if params[:log_protocol].blank?
           @record.log_file_depot.try(:destroy)
         else
-          new_uri = @edit[:new][:uri_prefix] + "://" + @edit[:new][:uri].to_s
-          type    = Object.const_get(@edit[:protocols_hash].key(@edit[:protocol]))
+          new_uri = "#{params[:uri_prefix]}://#{params[:uri]}"
+          build_supported_depots_for_select
+          type    = Object.const_get(FileDepot.supported_depots.key(params[:log_protocol]))
           depot   = @record.log_file_depot.instance_of?(type) ? @record.log_file_depot : @record.build_log_file_depot(:type => type.to_s)
-          depot.update_attributes(:uri => new_uri, :name => @edit[:new][:depot_name])
-          depot.update_authentication(:default => {:userid => @edit[:new][:log_userid], :password => @edit[:new][:log_password]}) if type.try(:requires_credentials?)
+          depot.update_attributes(:uri => new_uri, :name => params[:depot_name])
+          depot.update_authentication(:default => {:userid   => params[:log_userid],
+                                                   :password => params[:log_password]
+                                                  }) if type.try(:requires_credentials?)
           @record.save!
         end
       rescue StandardError => bang
         add_flash(_("Error during '%s': ") % "Save" << bang.message, :error)
         @changed = true
         render :update do |page|                    # Use RJS to update the display
-          page.replace_html("diagnostics_collect_logs", :partial=>"layouts/edit_log_depot_settings")
+          page.replace_html("diagnostics_collect_logs", :partial => "ops/log_collection")
         end
       else
         add_flash(_("Log Depot Settings were saved"))
@@ -134,32 +135,25 @@ module OpsController::Diagnostics
       end
     when "validate"
       id = params[:id] ? params[:id] : "new"
-      return unless load_edit("logdepot_edit__#{id}", "replace_cell__explorer")
       settings = {
-        :username => @edit[:new][:log_userid],
-        :password => @edit[:new][:log_password],
-        :uri      => "#{@edit[:new][:uri_prefix]}://#{@edit[:new][:uri]}"
+        :username => params[:log_userid],
+        :password => params[:log_password],
+        :uri      => "#{params[:uri_prefix]}://#{params[:uri]}"
       }
 
       begin
-        type = Object.const_get(@edit[:protocols_hash].key(@edit[:protocol]))
-        type.validate(settings)
+        type = Object.const_get(FileDepot.supported_depots.key(params[:log_protocol]))
+        type.validate_settings(settings)
       rescue StandardError => bang
         add_flash(_("Error during '%s': ") % "Validate" << bang.message, :error)
       else
         add_flash(_("Log Depot Settings were validated"))
       end
 
-      @changed = (@edit[:new] != @edit[:current])
       render :update do |page|
         page.replace("flash_msg_div", :partial => "layouts/flash_msg", :locals => {:div_num => ""})
       end
-    when "reset", nil # Reset or first time in
-      log_depot_build_edit_screen
-      if params[:button] == "reset"
-        #diagnostics
-        add_flash(_("All changes have been reset"), :warning)
-      end
+    when nil # Reset or first time in
       replace_right_cell("log_depot_edit")
     end
   end
@@ -294,63 +288,36 @@ module OpsController::Diagnostics
   end
 
   def db_backup_form_field_changed
-    return unless load_edit("dbbackup_edit__new","replace_cell__explorer")
-    @edit[:selected_backup_schedule] = params[:backup_schedule] if params[:backup_schedule]
-    schedule = MiqSchedule.find_by_id(@edit[:selected_backup_schedule]) if @edit[:selected_backup_schedule] && @edit[:selected_backup_schedule] != ""
-    settings = schedule ? schedule.depot_hash : nil
-    if settings && !settings.blank? && @prev_backup_schedule != @edit[:selected_backup_schedule]
-      log_depot_get_form_vars_from_settings(settings)
-      @edit[:protocol] = @edit[:new][:uri_prefix]
-    else
-      log_depot_get_form_vars
-    end
-    log_depot_set_verify_status
-    render :update do |page|                    # Use RJS to update the display
-      page.replace("flash_msg_divdatabase", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"database"})
-      page.replace("form_filter_div",:partial=>"layouts/edit_log_depot_settings", :locals=>{:action=>"db_backup_form_field_changed", :validate_url=>"log_depot_validate",:div_num=>"validate" }) if @prev_uri_prefix != @edit[:new][:uri_prefix] ||  params[:backup_schedule]
-      if (@edit[:selected_backup_schedule] == "" || @edit[:selected_backup_schedule].nil?) && (@edit[:new][:uri_prefix] == "" || @edit[:new][:uri_prefix].blank?)
-        page << javascript_hide("submit_on")
-        page << javascript_show("submit_off")
-      else
-        page << javascript_show("submit_on")
-        page << javascript_hide("submit_off")
-      end
-      if @edit[:log_verify_status] != session[:log_depot_log_verify_status]
-        session[:log_depot_log_verify_status] = @edit[:log_verify_status]
-        if @edit[:log_verify_status]
-          page << "miqValidateButtons('show', 'log_');"
-        else
-          page << "miqValidateButtons('hide', 'log_');"
-        end
-      end
-      page << "miqSparkle(false);"
-    end
-  end
-
-  def validate_uri_settings
-    if @edit[:new][:uri_prefix].blank?
-      add_flash(_("%s is required") % "Type", :error)
-    elsif @edit[:new][:uri_prefix] == "nfs" && @edit[:new][:uri].blank?
-      add_flash(_("%s is required") % "URI", :error)
-    elsif @edit[:new][:requires_credentials]
-      if @edit[:new][:uri].blank?
-        add_flash(_("%s is required") % "URI", :error)
-      elsif @edit[:new][:log_userid].blank?
-        add_flash(_("%s is required") % "Username", :error)
-      elsif @edit[:new][:log_password].blank?
-        add_flash(_("%s is required") % "Password", :error)
-      elsif @edit[:new][:log_password] != @edit[:new][:log_verify]
-        add_flash(_("Password/Verify Password do not match"), :error)
-      end
-    end
+    schedule     = MiqSchedule.find_by_id(params[:id])
+    depot        = schedule.file_depot
+    uri_settings = depot.try(:[], :uri).to_s.split("://")
+    render :json => {
+      :depot_name   => depot.try(:name),
+      :uri          => uri_settings[1],
+      :uri_prefix   => uri_settings[0],
+      :log_userid   => depot.try(:authentication_userid),
+      :log_password => depot.try(:authentication_password),
+      :log_verify   => depot.try(:authentication_password),
+    }
   end
 
   def db_backup
-    return unless load_edit("dbbackup_edit__new","replace_cell__explorer")
-    @schedule = @edit && @edit[:sched_id] ? MiqSchedule.find_by_id(@edit[:sched_id]) : MiqSchedule.new(:userid=>session[:userid])
+    if params[:backup_schedule].present?
+      @schedule = MiqSchedule.find_by_id(params[:backup_schedule])
+    else
+      @schedule = MiqSchedule.new(:userid => session[:userid])
+      @schedule.adhoc = true
+      @schedule.enabled = false
+      @schedule.name = "__adhoc_dbbackup_#{Time.now}__"
+      @schedule.description = "Adhoc DB Backup at #{Time.now}"
+      @schedule.run_at ||= {}
+      run_at = create_time_in_utc("00:00:00")
+      @schedule.run_at[:start_time] = "#{run_at} Z"
+      @schedule.run_at[:tz] = nil
+      @schedule.run_at[:interval] ||= {}
+      @schedule.run_at[:interval][:unit] = "Once".downcase
+    end
     @schedule.sched_action = {:method=>"db_backup"}
-    @schedule.adhoc = true
-    validate_uri_settings
     if @flash_array
       render :update do |page|
         page.replace("flash_msg_divvalidate", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"validate"})
@@ -358,16 +325,7 @@ module OpsController::Diagnostics
       end
       return
     end
-    uri = @edit[:new][:uri_prefix] + "://" + @edit[:new][:uri]
-    settings = {:uri      => uri,
-                :username => @edit[:new][:log_userid],
-                :password => @edit[:new][:log_password],
-                :name     => @edit[:new][:depot_name]}
-    # only verify_depot_hash if anything has changed in depot settings
-    if @edit[:new][:uri_prefix] != @edit[:current][:uri_prefix] || @edit[:new][:uri] != @edit[:current][:uri] ||
-        @edit[:new][:log_userid] != @edit[:current][:log_userid] || @edit[:new][:log_password] != @edit[:current][:log_password]
-      @schedule.depot_hash=(settings) if MiqSchedule.verify_depot_hash(settings)
-    end
+
     schedule_set_record_vars(@schedule)
     schedule_validate?(@schedule)
     if @schedule.valid? && !flash_errors? && @schedule.save
@@ -376,7 +334,6 @@ module OpsController::Diagnostics
       diagnostics_set_form_vars
       render :update do |page|                    # Use RJS to update the display
         page.replace("flash_msg_divdatabase", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"database"})
-        #page.replace("form_filter_div",:partial=>"layouts/edit_log_depot_settings", :locals=>{:action=>"db_backup_form_field_changed", :validate_url=>"db_backup"})
         page.replace_html("diagnostics_database", :partial=>"diagnostics_database_tab")
         page << "miqSparkle(false);"
       end
@@ -384,7 +341,6 @@ module OpsController::Diagnostics
       @schedule.errors.each do |field,msg|
         add_flash("#{field.to_s.capitalize} #{msg}", :error)
       end
-      @changed = session[:changed] = (@edit[:new] != @edit[:current])
       render :update do |page|                    # Use RJS to update the display
         page.replace("flash_msg_divdatabase", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"database"})
         page << "miqSparkle(false);"
@@ -392,8 +348,58 @@ module OpsController::Diagnostics
     end
   end
 
+  def log_collection_form_fields
+    assert_privileges("#{@sb[:selected_typ] == "miq_server" ? "" : "zone_"}log_depot_edit")
+    @record = @sb[:selected_typ].classify.constantize.find_by_id(@sb[:selected_server_id])
+    log_depot = @record.log_file_depot
+    if log_depot
+      log_depot_json = build_log_depot_json(log_depot)
+    else
+      log_depot_json = build_empty_log_depot_json
+    end
+    rh_dropbox_json = build_rh_dropbox_json
+    log_depot_json.merge!(rh_dropbox_json)
+
+    render :json => log_depot_json
+  end
+
+  def build_log_depot_json(log_depot)
+    prefix, uri = log_depot[:uri].to_s.split('://')
+    klass = @record.log_file_depot.try(:class)
+    protocol = Dictionary.gettext(klass.name, :type => :model, :notfound => :titleize) if klass.present?
+
+    log_depot_json = {:depot_name   => log_depot[:name],
+                      :uri          => uri,
+                      :uri_prefix   => prefix,
+                      :log_userid   => log_depot.authentication_userid,
+                      :log_password => log_depot.authentication_password,
+                      :log_verify   => log_depot.authentication_password,
+                      :log_protocol => protocol
+    }
+    log_depot_json
+  end
+
+  def build_empty_log_depot_json
+    log_depot_json = {:depot_name   => '',
+                      :uri          => '',
+                      :uri_prefix   => '',
+                      :log_userid   => '',
+                      :log_password => '',
+                      :log_verify   => '',
+                      :log_protocol => ''
+    }
+    log_depot_json
+  end
+
+  def build_rh_dropbox_json
+    rh_dropbox = FileDepotFtpAnonymousRedhatDropbox.new
+    rh_dropbox_json = {:rh_dropbox_depot_name => rh_dropbox.name,
+                       :rh_dropbox_uri        => rh_dropbox.uri.split('://')[1]
+    }
+    rh_dropbox_json
+  end
+
   def db_gc_collection
-    return unless load_edit("dbbackup_edit__new","replace_cell__explorer")
     begin
       MiqSchedule.run_adhoc_db_gc(:userid => session[:userid])
     rescue StandardError => bang
@@ -472,71 +478,6 @@ module OpsController::Diagnostics
     end
   end
 
-  def log_depot_field_changed
-    id = params[:id] ? params[:id] : "new"
-    if x_active_tree == :diagnostics_tree
-      if @sb[:active_tab] == "diagnostics_database"
-        #coming from diagnostics/database tab
-        pfx = "dbbackup"
-        flash_div_num = "validate"
-        @schedule = @edit && @edit[:sched_id] ? MiqSchedule.find_by_id(@edit[:sched_id]) : MiqSchedule.new(:userid=>session[:userid])
-      else
-        @record = MiqServer.find_by_id(@sb[:selected_server_id])
-        pfx = "logdepot"
-        flash_div_num = ""
-      end
-    else
-      #add/edit dbbackup schedule
-      pfx = "schedule"
-      flash_div_num = "validate"
-      #need to set this for edit_log_depot_settings view
-      @schedule = session[:edit] && session[:edit][:sched_id] ? MiqSchedule.find_by_id(session[:edit][:sched_id]) : MiqSchedule.new(:userid=>session[:userid])
-    end
-    return unless load_edit("#{pfx}_edit__#{id}","replace_cell__explorer")
-    log_depot_get_form_vars
-    log_depot_set_verify_status
-    changed = (@edit[:new] != @edit[:current])
-    required_fields = @edit[:new].values_at(:uri, :log_userid, :log_password, :log_verify)
-    render :update do |page|                    # Use JS to update the display
-      session[:changed] = changed
-      page.replace("form_filter_div",:partial=>"layouts/edit_log_depot_settings", :locals=>{:div_num=>flash_div_num}) if @prev_protocol != @edit[:protocol]
-      if @sb[:active_tab] == "diagnostics_database"
-        if changed && @edit[:new][:requires_credentials] &&
-            (@edit[:new][:log_password] == @edit[:new][:log_verify]) &&
-            (required_fields.all?(&:blank?) || required_fields.all?(&:present?))
-          page << javascript_show("submit_on")
-          page << javascript_hide("submit_off")
-          page << "miqButtons('show');"
-        else
-          if changed
-            page << javascript_show("submit_on")
-            page << javascript_hide("submit_off")
-          else
-            page << javascript_hide("submit_on")
-            page << javascript_show("submit_off")
-          end
-          page << javascript_for_miq_button_visibility(changed && @edit[:new][:uri_prefix] == "nfs")
-        end
-      else
-        if changed && @edit[:new][:requires_credentials] &&
-            (@edit[:new][:log_password] == @edit[:new][:log_verify]) &&
-            (required_fields.all?(&:blank?) || required_fields.all?(&:present?))
-          page << "miqButtons('show');"
-        else
-          page << javascript_for_miq_button_visibility(changed && !@edit[:new][:requires_credentials])
-        end
-      end
-      if @edit[:log_verify_status] != session[:log_depot_log_verify_status]
-        session[:log_depot_log_verify_status] = @edit[:log_verify_status]
-        if @edit[:log_verify_status]
-          page << "miqValidateButtons('show', 'log_');"
-        else
-          page << "miqValidateButtons('hide', 'log_');"
-        end
-      end
-    end
-  end
-
   private ############################
 
   def log_depot_reset_form_vars
@@ -548,32 +489,17 @@ module OpsController::Diagnostics
     @edit[:new][:log_verify]   = nil
   end
 
-  def log_depot_get_form_vars_from_settings(settings)
-    protocol, path = settings[:uri].to_s.split('://')
-    if @edit[:protocols_hash]
-      @edit[:protocol] = @edit[:protocols_hash][protocol]
-    end
-    @edit[:new][:requires_credentials] = protocol == "smb"
-    @edit[:new][:depot_name]   = settings[:name]
-    @edit[:new][:uri_prefix]   = protocol
-    @edit[:new][:uri]          = path
-    @edit[:new][:log_userid]   = settings[:username]
-    @edit[:new][:log_password] = settings[:password]
-    @edit[:new][:log_verify]   = settings[:password]
-  end
-
   def file_depot_reset_form_vars
     if @edit[:protocol].present?
       klass = Object.const_get(@edit[:protocols_hash].key(@edit[:protocol]))
+      depot = @record.log_file_depot.instance_of?(klass) ? @record.log_file_depot : klass.new
       @edit[:new][:requires_credentials] = klass.try(:requires_credentials?)
       @edit[:new][:uri_prefix]           = klass.try(:uri_prefix)
-      depot = @record.log_file_depot.instance_of?(klass) ? @record.log_file_depot : klass.new
       @edit[:new][:depot_name]           = depot.name
       @edit[:new][:uri]                  = depot.uri.to_s.split('://').last
-      user, password = depot.try(:depot_hash).values_at(:username, :password)
-      @edit[:new][:log_userid]           = user
-      @edit[:new][:log_password]         = password
-      @edit[:new][:log_verify]           = password
+      @edit[:new][:log_userid]           = depot.authentication_userid
+      @edit[:new][:log_password]         = depot.authentication_password
+      @edit[:new][:log_verify]           = depot.authentication_password
     else
       log_depot_reset_form_vars
     end
@@ -661,27 +587,6 @@ module OpsController::Diagnostics
     if @edit[:new][:start_date] != "" && (@edit[:new][:end_date] == "" || @edit[:new][:end_date].to_time < @edit[:new][:start_date].to_time)
       @edit[:new][:end_date] = @edit[:new][:start_date]
     end
-  end
-
-  def log_depot_build_edit_screen
-    @edit = Hash.new
-    @edit[:new] = Hash.new
-    @edit[:current] = Hash.new
-    @edit[:protocols_hash] = FileDepot.supported_depots
-    #have to create array to add <choose> on the top in the form
-    @edit[:protocols_arr] = @edit[:protocols_hash].values
-    @edit[:key] = "logdepot_edit__#{@record.id || "new"}"
-    log_depot = @record.log_file_depot.try(:depot_hash)
-    log_depot_get_form_vars_from_settings(log_depot) if log_depot.present?
-    klass                              = @record.log_file_depot.try(:class)
-    @edit[:protocol]                   = Dictionary.gettext(klass.name, :type => :model, :notfound => :titleize) if klass.present?
-    @edit[:new][:depot_name]           = @record.log_file_depot.try(:name)
-    @edit[:new][:requires_credentials] = klass.try(:requires_credentials?)
-
-    @edit[:current] = copy_hash(@edit[:new])
-    @in_a_form = true
-    log_depot_set_verify_status
-    session[:changed] = (@edit[:new] != @edit[:current])
   end
 
   def pm_reset_broker
@@ -955,41 +860,8 @@ module OpsController::Diagnostics
       elsif @sb[:active_tab] == "diagnostics_replication"     # Replication tab
         @temp[:selected_server] = MiqRegion.my_region
       elsif @sb[:active_tab] == "diagnostics_database"
-        @edit = Hash.new
-        @edit[:new] = Hash.new
-        @edit[:current] = Hash.new
-        @edit[:key] = "dbbackup_edit__new"
-        @edit[:backup_schedules] = Hash.new
-        @database = MiqDbConfig.current.options
-        db_types = MiqDbConfig.get_db_types
-        @database[:display_name] = db_types[@database[:name]]
-        MiqSchedule.all(:conditions=>"towhat = 'DatabaseBackup' And adhoc is NULL").sort_by { |s| s.name.downcase }.each do |s|
-          if s.towhat == "DatabaseBackup"
-            @edit[:backup_schedules][s.id] = s.name
-          end
-        end
-        @schedule = MiqSchedule.new(:userid=>session[:userid])
-        @edit[:sched_id] = @schedule.id
-        @edit[:new][:name] = "__adhoc_dbbackup_#{Time.now}__"
-        @edit[:new][:description] = "Adhoc DB Backup at #{Time.now}"
-        @edit[:new][:action] = "db_backup"
-        t = Time.now + 1.day  # Default date/time to tomorrow in selected time zone
-        @edit[:new][:timer_months ] = "1"
-        @edit[:new][:timer_weeks ] = "1"
-        @edit[:new][:timer_days] = "1"
-        @edit[:new][:timer_hours] = "1"
-        @edit[:new][:timer_typ] = "Once"
-        @edit[:new][:start_hour] = "00"
-        @edit[:new][:start_min] = "00"
-
-        @edit[:protocols_hash] = DatabaseBackup.supported_depots
-        #have to create array to add <choose> on the top in the form
-        @edit[:protocols_arr] = Array.new
-        @edit[:protocols_hash].each do |p|
-          @edit[:protocols_arr].push(p[1])
-        end
-        set_log_depot_vars
-        @edit[:current] = copy_hash(@edit[:new])
+        build_backup_schedule_options_for_select
+        build_db_options_for_select
       elsif @sb[:active_tab] == "diagnostics_orphaned_data"
         orphaned_records_get
       elsif @sb[:active_tab] == "diagnostics_server_list"
@@ -1060,6 +932,21 @@ module OpsController::Diagnostics
         _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Diagnostics", :name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id}]", :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)} :
         _("%{typ} %{model} \"%{name}\"") % {:typ=>"Diagnostics", :name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id}]", :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)}
     end
+  end
+
+  def build_backup_schedule_options_for_select
+    @backup_schedules = {}
+    database_details
+    miq_schedules = MiqSchedule.where(:towhat => 'DatabaseBackup', :adhoc => nil)
+    miq_schedules.sort_by { |s| s.name.downcase }.each do |s|
+      @backup_schedules[s.id] = s.name if s.towhat == "DatabaseBackup"
+    end
+  end
+
+  def database_details
+    @database = MiqDbConfig.current.options
+    db_types = MiqDbConfig.get_db_types
+    @database[:display_name] = db_types[@database[:name]]
   end
 
   def orphaned_records_get
@@ -1220,4 +1107,7 @@ module OpsController::Diagnostics
     TreeBuilderOpsDiagnostics.new("diagnostics_tree", "diagnostics", @sb)
   end
 
+  def build_supported_depots_for_select
+    @supported_depots_for_select = FileDepot.supported_depots.values.sort
+  end
 end

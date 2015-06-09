@@ -40,7 +40,7 @@ class Repository < ActiveRecord::Base
     @path ||= begin
       if storage_id.blank?
         self.relative_path
-      else
+      elsif storage.present?
         case storage.store_type
         when "VMFS"
           "[#{storage.name}] #{relative_path}"

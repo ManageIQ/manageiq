@@ -23,7 +23,7 @@ class MiqAeYamlExport
     else
       @domain == ALL_DOMAINS ? write_all_domains : write_domain
     end
-    write_manifest(swap_domain_name(@domain))
+    write_manifest(@options['export_as'].presence || @domain)
   end
 
   def export_level
@@ -82,7 +82,7 @@ class MiqAeYamlExport
       domain_obj.name = @options['export_as']
     end
     envelope_hash = setup_envelope(domain_obj, DOMAIN_OBJ_TYPE).to_yaml
-    write_export_file('fqname'          => swap_domain_name(domain_obj.name),
+    write_export_file('fqname'          => domain_obj.name,
                       'output_filename' => DOMAIN_YAML_FILENAME,
                       'export_data'     => envelope_hash,
                       'created_on'      => domain_obj.created_on,
@@ -250,11 +250,6 @@ class MiqAeYamlExport
       $log.error("#{self.class} Class: <#{klass}> not found in <#{ns_obj.fqname}>.")
       raise MiqAeException::ClassNotFound, "Class: [#{klass}] not found in [#{ns_obj.fqname}]"
     end
-  end
-
-  def swap_domain_name(name)
-    return name if @options['export_as'].blank?
-    name.gsub(/^#{@domain}/, @options['export_as'])
   end
 
   def swap_domain_path(fqname)

@@ -57,10 +57,15 @@
     - if !@embedded || @showlinks
       - if @explorer
         - if request.parameters[:controller] == "service" && @view.db == "Vm"
-          = link_to(image_tag("/images/icons/#{size}/reflection.png", :width => size, :height => size, :title => h(item.name)),
-            {:controller => "vm_infra", :action => 'show', :id => to_cid(item.id)},
-            "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true)
+          - attributes = vm_quad_link_attributes(item)
+          - if attributes[:link]
+            = link_to(image_tag("/images/icons/#{size}/reflection.png", :width => size, :height => size, :title => h(item.name)),
+              {:controller => attributes[:controller], :action => attributes[:action], :id => attributes[:id]},
+               "data-miq_sparkle_on"  => true,
+               "data-miq_sparkle_off" => true)
+          - else
+            %a{:title => h(item.name)}
+            %img{:src => "/images/icons/#{size}/reflection.png", :width => size, :height => size}
         - else
           = link_to(image_tag("/images/icons/#{size}/reflection.png", :width => size, :height => size, :title => h(item.name)),
             {:action => 'x_show', :id => to_cid(item.id)},

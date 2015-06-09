@@ -30,13 +30,18 @@ describe CatalogController do
   end
 
   context "#atomic_st_edit" do
-    it "Atomic Service Template and it's Resource Actions are saved" do
+    it "Atomic Service Template and it's valid Resource Actions are saved" do
       controller.instance_variable_set(:@sb, {})
       controller.instance_variable_set(:@_params, {:button => "save"})
       st = FactoryGirl.create(:service_template)
-      retire_fqname = "ns/cls/inst"
-      provision_fqname = "ns1/cls1/inst1"
-      recon_fqname = "ns2/cls2/inst2"
+      3.times.each_with_index do |i|
+        ns = FactoryGirl.create(:miq_ae_namespace, :name => "ns#{i}")
+        cls = FactoryGirl.create(:miq_ae_class, :namespace_id => ns.id, :name => "cls#{i}")
+        FactoryGirl.create(:miq_ae_instance, :class_id => cls.id, :name => "inst#{i}")
+      end
+      retire_fqname    = 'ns0/cls0/inst0'
+      provision_fqname = 'ns1/cls1/inst1'
+      recon_fqname     = 'ns2/cls2/inst2'
       edit = {
         :new          => {
           :name               => "New Name",
@@ -54,6 +59,39 @@ describe CatalogController do
       controller.send(:atomic_st_edit)
       {'Provision' => provision_fqname, 'Reconfigure' => recon_fqname, 'Retirement' => retire_fqname}.each do |k, v|
         st.resource_actions.find_by_action(k).fqname.should == "/#{v}"
+      end
+    end
+
+    it "Atomic Service Template and it's invalid Resource Actions are not saved" do
+      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
+      controller.instance_variable_set(:@sb, {})
+      controller.instance_variable_set(:@_params, :button => 'save')
+      st = FactoryGirl.create(:service_template)
+      retire_fqname    = 'ns/cls/inst'
+      provision_fqname = 'ns1/cls1/inst1'
+      recon_fqname     = 'ns2/cls2/inst2'
+      edit = {
+        :new          => {
+          :name               => 'New Name',
+          :description        => 'New Description',
+          :reconfigure_fqname => recon_fqname,
+          :retire_fqname      => retire_fqname,
+          :fqname             => provision_fqname},
+        :key          => 'prov_edit__new',
+        :rec_id       => st.id,
+        :st_prov_type => 'generic'
+      }
+      controller.instance_variable_set(:@edit, edit)
+      session[:edit] = edit
+      controller.stub(:replace_right_cell)
+      controller.send(:atomic_st_edit)
+      controller.send(:flash_errors?).should be_true
+      flash_messages = assigns(:flash_array)
+      expect(flash_messages).to have_exactly(3).items
+      entry_point_names = %w(Provisioning Reconfigure Retirement)
+      flash_messages.each_with_index do |msg, i|
+        expect(msg[:message]).to eq("Please correct invalid #{entry_point_names[i]} Entry Point prior to saving")
+        expect(msg[:level]).to eq(:error)
       end
     end
   end
@@ -162,17 +200,23 @@ describe CatalogController do
   context "#ot_copy" do
     before(:each) do
       controller.instance_variable_set(:@sb, {})
-      controller.instance_variable_set(:@_params, :button => "save")
+      controller.instance_variable_set(:@_params, :button => "add")
       controller.should_receive(:render)
+      controller.instance_variable_set(:@_response, ActionController::TestResponse.new)
       ot = FactoryGirl.create(:orchestration_template_cfn)
-      controller.x_node = "xx-ot_othot-#{ot.id}"
+      controller.x_node = "xx-otcfn_ot-#{ot.id}"
       @new_name = "New Name"
       new_description = "New Description"
       new_content = "{\"AWSTemplateFormatVersion\" : \"new-version\"}"
-      controller.params.merge!(:id               => ot.id,
-                               :name             => @new_name,
-                               :description      => new_description,
+      controller.params.merge!(:original_ot_id   => ot.id,
                                :template_content => new_content)
+      session[:edit] = {
+        :new => {
+          :name        => @new_name,
+          :description => new_description
+        },
+        :key => "ot_edit__#{ot.id}"
+      }
     end
 
     after(:each) do
@@ -188,7 +232,7 @@ describe CatalogController do
     end
 
     it "Orchestration Template is copied as a draft" do
-      controller.params.merge!(:draft => "true")
+      session[:edit][:new][:draft] = "true"
       controller.stub(:replace_right_cell)
       controller.send(:ot_copy_submit)
       OrchestrationTemplate.where(:name => @new_name).first.draft.should be_true
@@ -368,6 +412,74 @@ describe CatalogController do
       controller.send(:service_dialog_from_ot_submit)
       assigns(:flash_array).first[:message].should include("was successfully created")
       Dialog.where(:label => @dialog_label).first.should_not be_nil
+    end
+  end
+
+  context "#ot_rendering" do
+    render_views
+    before(:each) do
+      FactoryGirl.create(:vmdb_database)
+      EvmSpecHelper.create_guid_miq_server_zone
+      expect(MiqServer.my_guid).to be
+      expect(MiqServer.my_server).to be
+      session[:userid] = User.current_user.userid
+      session[:settings] = {
+        :views => {:orchestrationtemplate => "grid"}
+      }
+      session[:sandboxes] = {
+        "catalog" => {
+          :active_tree => :ot_tree
+        }
+      }
+
+      FactoryGirl.create(:orchestration_template_cfn_with_content)
+      FactoryGirl.create(:orchestration_template_hot_with_content)
+    end
+
+    after(:each) do
+      controller.send(:flash_errors?).should_not be_true
+      expect(response.status).to eq(200)
+    end
+
+    it "Renders list of orchestration templates using correct GTL type" do
+      %w(root xx-otcfn xx-othot).each do |id|
+        post :tree_select, :id => id, :format => :js
+        response.should render_template('layouts/gtl/_grid')
+      end
+    end
+  end
+
+  context "#set_resource_action" do
+    before do
+      @st = FactoryGirl.create(:service_template)
+      dialog = FactoryGirl.create(:dialog,
+                                  :label       => "Test Label",
+                                  :description => "Test Description",
+                                  :buttons     => "submit,reset,cancel"
+      )
+      retire_fqname    = 'ns0/cls0/inst0'
+      provision_fqname = 'ns1/cls1/inst1'
+      recon_fqname     = 'ns2/cls2/inst2'
+      edit = {
+        :new          => {
+          :name               => "New Name",
+          :description        => "New Description",
+          :dialog_id          => dialog.id,
+          :reconfigure_fqname => recon_fqname,
+          :retire_fqname      => retire_fqname,
+          :fqname             => provision_fqname},
+      }
+      controller.instance_variable_set(:@edit, edit)
+    end
+    it "saves resource action" do
+      controller.send(:set_resource_action, @st)
+      expect(@st.resource_actions.pluck(:action)).to match_array(%w(Provision Retirement Reconfigure))
+    end
+
+    it "does not save blank resource action" do
+      assigns(:edit)[:new][:reconfigure_fqname] = ''
+      controller.send(:set_resource_action, @st)
+      expect(@st.resource_actions.pluck(:action)).to match_array(%w(Provision Retirement))
     end
   end
 end

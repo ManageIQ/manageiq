@@ -1,14 +1,14 @@
 ---
 :base:
   :module: api
-  :name: ManageIQ API
-  :description: ManageIQ REST API
-  :version: '2.0.0-pre'
+  :name: API
+  :description: REST API
+  :version: '2.0.0'
 :version:
   :regex: !ruby/regexp /^v[0-9]+(?>\\.[0-9a-zA-Z]+)*(-[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?/
   :definitions:
-  - :name: '2.0.0-pre'
-    :ident: 'v2.0.0-pre'
+  - :name: '2.0.0'
+    :ident: 'v2.0.0'
 :method:
   :names:
   - :get
@@ -367,6 +367,8 @@
         :identifier: ems_infra_refresh
       - :name: delete
         :identifier: ems_infra_delete
+      - :name: scale
+        :identifier: ems_infra_scale
     :resource_actions:
       :post:
       - :name: edit

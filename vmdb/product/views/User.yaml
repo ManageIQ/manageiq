@@ -42,8 +42,8 @@ col_order:
 
 # Column titles, in order
 headers:
-- Name
-- Userid
+- Full Name
+- Username
 - E-mail
 - Group
 - Role

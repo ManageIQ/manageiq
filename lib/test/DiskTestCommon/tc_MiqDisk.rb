@@ -2,10 +2,10 @@ $:.push("#{File.dirname(__FILE__)}/../../disk/")
 require 'MiqDisk'
 require 'ostruct'
 require 'enumerator'
-require 'test/unit'
+require 'minitest/unit'
 
 module DiskTestCommon
-  class TestMiqDisk < Test::Unit::TestCase
+  class TestMiqDisk < MiniTest::Unit::TestCase
     FILE_PATH = (Platform::IMPL == :macosx ? "/Volumes" : "/mnt") + "/manageiq/fleecing_test/images/"
 
     FILE_DESC_4GB    = FILE_PATH + "disks/DiskTestCommon_MiqDisk_Flat4GB.vmdk"

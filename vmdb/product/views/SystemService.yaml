@@ -20,26 +20,35 @@ db: SystemService
 # Columns to fetch from the main table
 cols:
 - name
-- display_name
-- enable_run_levels
 - running
+- systemd_load
+- systemd_active
+- systemd_sub
+- description
+- enable_run_levels
 
 # Included tables (joined, has_one, has_many) and columns
 include:
 
 # Order of columns (from all tables)
-col_order: 
+col_order:
 - name
-- display_name
-- enable_run_levels
 - running
+- systemd_load
+- systemd_active
+- systemd_sub
+- description
+- enable_run_levels
 
 # Column titles, in order
 headers:
 - Name
-- Display Name
-- Enabled Run Levels
 - Running
+- Systemd Load
+- Systemd Active
+- Systemd Sub
+- Description
+- Enabled run levels
 
 # Condition(s) string for the SQL query
 conditions: 

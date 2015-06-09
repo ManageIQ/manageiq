@@ -81,14 +81,14 @@ module ApplicationController::Performance
           page << "miq_cal_dateFrom = new Date(#{@perf_options[:sdate_daily].year},#{@perf_options[:sdate_daily].month-1},#{@perf_options[:sdate_daily].day});"
           page << "miq_cal_dateTo   = new Date(#{@perf_options[:edate_daily].year},#{@perf_options[:edate_daily].month-1},#{@perf_options[:edate_daily].day});"
         end
+        if @perf_options[:skip_days]
+          page << "miq_cal_skipDays = '#{@perf_options[:skip_days]}';"
+        else
+          page << "miq_cal_skipDays = null;"
+        end
+        page << 'miqBuildCalendar();'
+        page << Charting.js_load_statement
       end
-      if @perf_options[:skip_days]
-        page << "miq_cal_skipDays = '#{@perf_options[:skip_days]}';"
-      else
-        page << "miq_cal_skipDays = null;"
-      end
-      page << 'miqBuildCalendar();'
-      page << Charting.js_load_statement
       page << 'miqSparkle(false);'
       if request.parameters["controller"] == "storage" && @perf_options[:cat]
         page << javascript_disable_field('perf_typ')
@@ -542,16 +542,7 @@ module ApplicationController::Performance
 
   # Load a chart layout from YML
   def perf_get_chart_layout(layout, fname = nil)
-    if fname
-      charts = YAML::load(File.open("#{CHARTS_LAYOUTS_FOLDER}/#{layout}/#{fname}.yaml"))
-    else
-      charts = YAML::load(File.open("#{CHARTS_LAYOUTS_FOLDER}/#{layout}.yaml"))
-    end
-    charts.delete_if do |c|
-      c.is_a?(Hash) && c[:applies_to_method] && @perf_record &&
-        @perf_record.respond_to?(c[:applies_to_method]) &&
-        !@perf_record.send(c[:applies_to_method].to_sym)
-    end
+    charts = ChartsLayoutService.layout(@perf_record, CHARTS_LAYOUTS_FOLDER, layout, fname)
     @perf_options[:index] = nil unless @perf_options[:index].nil? || charts[@perf_options[:index].to_i]
     return charts
   end

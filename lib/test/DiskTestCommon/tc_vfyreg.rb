@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'minitest/unit'
 require 'ostruct'
 
 require 'FSTestUtil'
@@ -13,7 +13,7 @@ $:.push("#{File.dirname(__FILE__)}/../../fs/MiqFS")
 require 'MiqFS'
 
 # WINDOWS SPECIFIC.
-class TestReg < Test::Unit::TestCase
+class TestReg < MiniTest::Unit::TestCase
 	
 	#define registry structures
 	REGISTRY_HEADER_REGF = BinaryStruct.new([

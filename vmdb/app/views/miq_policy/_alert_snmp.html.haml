@@ -13,7 +13,7 @@
             "data-miq_observe_checkbox" => observe)
       - if @edit[:new][:send_snmp]
         %tr
-          %td.key=_('Host')
+          %td.key=title_for_host
           %td
             = text_field_tag("host_1", @edit[:new][:snmp][:host][0],
               :maxlength         => MAX_DESC_LEN,

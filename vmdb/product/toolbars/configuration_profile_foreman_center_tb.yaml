@@ -15,18 +15,18 @@
     - :button: provider_foreman_refresh
       :image: refresh
       :text: "Refresh Relationships and Power states"
-      :title: "Refresh relationships for all items related to this Foreman Provider"
+      :title: "Refresh relationships for all items related to this Provider"
       :url: refresh
-      :confirm: "Refresh relationships for all items related to this Foreman Provider?"
+      :confirm: "Refresh relationships for all items related to this Provider?"
     - :separator:
     - :button: provider_foreman_edit
       :image: edit
-      :text: Edit this Foreman Provider
-      :title: Edit this Foreman Provider
+      :text: Edit this Provider
+      :title: Edit this Provider
       :url: edit
     - :button: provider_foreman_delete
       :image: remove
-      :text: Remove this Foreman Provider from the VMDB
-      :title: Remove this Foreman Provider from the VMDB
+      :text: Remove this Provider from the VMDB
+      :title: Remove this Provider from the VMDB
       :url: delete
-      :confirm: "Warning: The selected Foreman Provider and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Foreman Provider?"
+      :confirm: "Warning: The selected Provider and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Provider?"

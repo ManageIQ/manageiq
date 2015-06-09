@@ -5,7 +5,7 @@
 -if big_iframe
   - padding_top = session[:custom_logo] ? 83 : 70
   :css
-    @media (min-width: 992px) {
+    @media (min-width: 1042px) {
       .navbar-pf ul > li.active { margin-bottom: 0 !important; }
       .navbar-nav ul > li > ul { display:none }
       body { padding-top: #{padding_top}px !important }
@@ -13,6 +13,8 @@
 -else
   - padding_top = session[:custom_logo] ? 116 : 100
   :css
-    @media (min-width: 992px) {
+    @media (min-width: 1042px) {
       body { padding-top: #{padding_top}px !important }
     }
+    .ie8 > body { padding-top: #{padding_top}px !important }
+    

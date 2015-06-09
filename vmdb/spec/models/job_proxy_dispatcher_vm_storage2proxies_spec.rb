@@ -30,9 +30,7 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
         context "removing proxy from a host" do
           before(:each) do
             @host = @hosts.first
-            @host.miq_proxy = nil
             @host.save
-            @repo_host.miq_proxy = nil
             @repo_host.save
 
             @vm.host = @host
@@ -53,12 +51,6 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
             store.save
           end
           context "repo host's proxy inactive" do
-            before(:each) do
-              repo_proxy = @repo_host.miq_proxy
-              repo_proxy.last_heartbeat = Time.at(0)
-              repo_proxy.save
-            end
-
             it "Vm#storage2active_proxies will exclude all proxies" do
               @vm.storage2active_proxies.should be_empty
             end
@@ -112,8 +104,8 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
                 @vm.ext_management_system = @ems1
                 @vm.save
               end
-              it "Vm#storage2active_proxies will return only repo host" do
-                @vm.storage2active_proxies.should == [@repo_host]
+              it "Vm#storage2active_proxies will return an empty list" do
+                @vm.storage2active_proxies.should be_empty
               end
             end
 
@@ -122,8 +114,8 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
                 Host.any_instance.stub(:missing_credentials? => true)
                 @vm.stub(:template? => false)
               end
-              it "Vm#storage2active_proxies will return only repo host" do
-                @vm.storage2active_proxies.should == [@repo_host]
+              it "Vm#storage2active_proxies will return an empty list" do
+                @vm.storage2active_proxies.should be_empty
               end
             end
           end

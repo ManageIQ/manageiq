@@ -171,6 +171,10 @@ loop do
 
     clear_screen
 
+    # Calling stty to provide the equivalent line settings when the console is run via an ssh session or
+    # over the virtual machine console.
+    system("stty -echoprt ixany iexten echoe echok")
+
     say("#{I18n.t("product.name")} Virtual Appliance\n")
     say("To administer this appliance, browse to https://#{ip}\n") if configured
     if $MIQDEBUG

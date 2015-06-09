@@ -152,27 +152,6 @@ describe MiqTask do
       @miq_task.task_results.should == results
     end
 
-    it "should cleanup_log properly" do
-      l = FactoryGirl.create(:log_file, :miq_task_id => @miq_task.id)
-      @miq_task.reload
-      @miq_task.log_file.should == l
-
-      @miq_task.cleanup_log
-      @miq_task.reload
-      @miq_task.log_file.should be_nil
-      LogFile.count.should == 0
-    end
-
-    it "should get log_data properly" do
-      log_data = "test log data" * 100000
-      l = FactoryGirl.create(:log_file, :miq_task_id => @miq_task.id)
-      l.binary_blob = FactoryGirl.create(:binary_blob, :name => "logs", :data_type => "zip")
-      l.binary_blob.binary = log_data.dup # BinaryBlob#binary= method destroys the input data
-
-      @miq_task.reload
-      @miq_task.log_data.should == log_data
-    end
-
     it "should queue callback properly" do
       state   = MiqTask::STATE_QUEUED
       message = 'Message for testing: queue_callback'

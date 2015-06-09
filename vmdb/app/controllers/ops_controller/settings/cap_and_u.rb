@@ -390,9 +390,8 @@ module OpsController::Settings::CapAndU
     storages.each do |s|                    # Go thru all of the Storages
       ds_node = Hash.new                        # Build the storage node
       ds_node[:key] = "Datastore_" + s[:id].to_s
-      name = "<b>#{s[:name]}</b> [#{s[:location]}]"
-      ds_node[:title] = name
-      ds_node[:tooltip] = name
+      ds_node[:title] = "<b>#{s[:name]}</b> [#{s[:location]}]"
+      ds_node[:tooltip] = "#{s[:name]} [#{s[:location]}]"
       ds_node[:style] = "cursor:default"     # No cursor pointer
       ds_node[:icon] = "storage.png"
       ds_node[:select] = s[:capture] == true

@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'minitest/unit'
 require 'ostruct'
 
 $:.push("#{File.dirname(__FILE__)}/..")
@@ -10,7 +10,7 @@ require 'MiqDisk'
 $:.push("#{File.dirname(__FILE__)}/../../fs/MiqFS")
 require 'MiqFS'
 
-class TestSeek < Test::Unit::TestCase
+class TestSeek < MiniTest::Unit::TestCase
 	
 	TEST_DB = "#{File.dirname(__FILE__)}/../vms.yml"
 	TEST_FILE = '/SeekTest.dat'

@@ -1,12 +1,4 @@
 class ExtManagementSystem < ActiveRecord::Base
-  SUBCLASSES = %w(
-    ConfigurationManager
-    EmsInfra
-    EmsCloud
-    EmsContainer
-    ProvisioningManager
-  )
-
   def self.types
     leaf_subclasses.collect(&:ems_type)
   end
@@ -257,10 +249,6 @@ class ExtManagementSystem < ActiveRecord::Base
     self.hosts.select { |h| !h.ems_cluster.nil? }
   end
 
-  def miq_proxies
-    MiqProxy.all.select { |p| p.ext_management_system == self }
-  end
-
   def clear_association_cache_with_storages
     @storages = nil
     self.clear_association_cache_without_storages
@@ -447,7 +435,3 @@ class ExtManagementSystem < ActiveRecord::Base
     end
   end
 end
-
-# Preload any subclasses of this class, so that they will be part of the
-#   conditions that are generated on queries against this class.
-ExtManagementSystem::SUBCLASSES.each { |c| require_dependency Rails.root.join("app", "models", "#{c.underscore}.rb").to_s }

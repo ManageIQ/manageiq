@@ -10,7 +10,7 @@ module MiqProvision::Automate
         return nil
       end
 
-      attrs = { 'request' => 'UI_PROVISION_INFO', 'message' => 'get_domains' }
+      attrs = {'request' => 'UI_PROVISION_INFO', 'message' => 'get_domains'}
       attrs[MiqAeEngine.create_automation_attribute_key(user)] = MiqAeEngine.create_automation_attribute_value(user) unless user.nil?
       uri = MiqAeEngine.create_automation_object("REQUEST", attrs)
       ws  = MiqAeEngine.resolve_automation_object(uri)
@@ -22,27 +22,27 @@ module MiqProvision::Automate
 
       domains = ws.root['domains']
 
-      domains.each_with_index { |d, i|
+      domains.each_with_index do |d, _i|
         next unless domain.casecmp(d[:name]) == 0
         password = d.delete(:bind_password)
         d[:bind_password] = MiqAePassword.decrypt_if_password(password) if with_password == true
         return d
-      } if domains.kind_of?(Array)
+      end if domains.kind_of?(Array)
 
       $log.warn "#{log_prefix} - No Domains matched in Automate Results: #{ws.to_expanded_xml}"
-      return nil
+      nil
     end
   end
 
   def get_placement_via_automate
     attrs = {
-      'request'     => 'UI_PROVISION_INFO',
-      'message'     => 'get_placement'
+      'request' => 'UI_PROVISION_INFO',
+      'message' => 'get_placement'
     }
-    attrs[MiqAeEngine.create_automation_attribute_key(self.get_user)] = MiqAeEngine.create_automation_attribute_value(self.get_user) unless self.get_user.nil?
+    attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
     uri = MiqAeEngine.create_automation_object("REQUEST", attrs, :vmdb_object => self)
     ws  = MiqAeEngine.resolve_automation_object(uri)
-    self.reload
+    reload
 
     {
       :host    => MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["host"]),
@@ -53,25 +53,25 @@ module MiqProvision::Automate
 
   def get_most_suitable_availability_zone
     attrs = {
-      'request'     => 'UI_PROVISION_INFO',
-      'message'     => 'get_availability_zone'
+      'request' => 'UI_PROVISION_INFO',
+      'message' => 'get_availability_zone'
     }
-    attrs[MiqAeEngine.create_automation_attribute_key(self.get_user)] = MiqAeEngine.create_automation_attribute_value(self.get_user) unless self.get_user.nil?
+    attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
     uri = MiqAeEngine.create_automation_object("REQUEST", attrs, :vmdb_object => self)
     ws  = MiqAeEngine.resolve_automation_object(uri)
-    self.reload
+    reload
     MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["availability_zone"])
   end
 
   def get_most_suitable_host_and_storage
     attrs = {
-      'request'     => 'UI_PROVISION_INFO',
-      'message'     => 'get_host_and_storage'
+      'request' => 'UI_PROVISION_INFO',
+      'message' => 'get_host_and_storage'
     }
-    attrs[MiqAeEngine.create_automation_attribute_key(self.get_user)] = MiqAeEngine.create_automation_attribute_value(self.get_user) unless self.get_user.nil?
+    attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
     uri = MiqAeEngine.create_automation_object("REQUEST", attrs, :vmdb_object => self)
     ws  = MiqAeEngine.resolve_automation_object(uri)
-    self.reload
+    reload
     host      = MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["host"])
     datastore = MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["storage"])
     return host, datastore
@@ -79,25 +79,25 @@ module MiqProvision::Automate
 
   def get_most_suitable_cluster
     attrs = {
-      'request'     => 'UI_PROVISION_INFO',
-      'message'     => 'get_cluster'
+      'request' => 'UI_PROVISION_INFO',
+      'message' => 'get_cluster'
     }
-    attrs[MiqAeEngine.create_automation_attribute_key(self.get_user)] = MiqAeEngine.create_automation_attribute_value(self.get_user) unless self.get_user.nil?
+    attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
     uri = MiqAeEngine.create_automation_object("REQUEST", attrs, :vmdb_object => self)
     ws  = MiqAeEngine.resolve_automation_object(uri)
-    self.reload
+    reload
     MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["cluster"])
   end
 
   def get_most_suitable_host
     attrs = {
-      'request'     => 'UI_PROVISION_INFO',
-      'message'     => 'get_host'
+      'request' => 'UI_PROVISION_INFO',
+      'message' => 'get_host'
     }
-    attrs[MiqAeEngine.create_automation_attribute_key(self.get_user)] = MiqAeEngine.create_automation_attribute_value(self.get_user) unless self.get_user.nil?
+    attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
     uri = MiqAeEngine.create_automation_object("REQUEST", attrs, :vmdb_object => self)
     ws  = MiqAeEngine.resolve_automation_object(uri)
-    self.reload
+    reload
     MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["host"])
   end
 
@@ -109,8 +109,8 @@ module MiqProvision::Automate
   def get_network_details
     log_prefix = "MIQ(#{self.class.name}.get_network_details)"
 
-    related_vm             = self.vm || self.source
-    related_vm_description = (related_vm == self.vm) ? "VM" : "Template"
+    related_vm             = vm || source
+    related_vm_description = (related_vm == vm) ? "VM" : "Template"
 
     if related_vm.nil?
       $log.error "#{log_prefix} No VM or Template Found for Provision Object"
@@ -128,19 +128,19 @@ module MiqProvision::Automate
       return nil
     end
 
-    vlan_id, vlan_name = self.options[:vlan]
+    vlan_id, vlan_name = options[:vlan]
     unless vlan_name.kind_of?(String)
       $log.error "#{log_prefix} VLAN Name <#{vlan_name.inspect}> is missing or invalid"
       return nil
     end
 
-    $log.info "#{log_prefix} << vlan_name=<#{vlan_name}> vlan_id=#{vlan_id} vc_id=<#{vc_id}> user=<#{self.get_user}>"
+    $log.info "#{log_prefix} << vlan_name=<#{vlan_name}> vlan_id=#{vlan_id} vc_id=<#{vc_id}> user=<#{get_user}>"
 
     attrs = {
-      'request'     => 'UI_PROVISION_INFO',
-      'message'     => 'get_networks'
+      'request' => 'UI_PROVISION_INFO',
+      'message' => 'get_networks'
     }
-    attrs[MiqAeEngine.create_automation_attribute_key(self.get_user)] = MiqAeEngine.create_automation_attribute_value(self.get_user) unless self.get_user.nil?
+    attrs[MiqAeEngine.create_automation_attribute_key(get_user)] = MiqAeEngine.create_automation_attribute_value(get_user) unless get_user.nil?
     uri = MiqAeEngine.create_automation_object("REQUEST", attrs)
     ws  = MiqAeEngine.resolve_automation_object(uri)
 
@@ -151,28 +151,28 @@ module MiqProvision::Automate
 
     networks = ws.root("networks")
 
-    networks.each { |network|
+    networks.each do |network|
       next unless network.kind_of?(Hash)
       next unless network[:vc_id] == vc_id
       next unless vlan_name.casecmp(network[:vlan]) == 0
 
       # Remove passwords
-      network[:dhcp_servers].each { |dhcp|
+      network[:dhcp_servers].each do |dhcp|
         domain = dhcp[:domain]
-        domain.delete(:bind_password) if domain.is_a?(Hash)
-      } if network[:dhcp_servers].is_a?(Array)
+        domain.delete(:bind_password) if domain.kind_of?(Hash)
+      end if network[:dhcp_servers].kind_of?(Array)
 
       return network
-    } if networks.kind_of?(Array)
+    end if networks.kind_of?(Array)
 
     $log.warn "#{log_prefix} - No Network matched in Automate Results: #{ws.to_expanded_xml}"
-    return nil
+    nil
   end
 
   def get_domain
-    return self.options[:linux_domain_name]         unless self.options[:linux_domain_name].nil?
-    return self.options[:sysprep_domain_name].first if     self.options[:sysprep_domain_name].kind_of?(Array)
-    return nil
+    return options[:linux_domain_name]         unless options[:linux_domain_name].nil?
+    return options[:sysprep_domain_name].first if     options[:sysprep_domain_name].kind_of?(Array)
+    nil
   end
 
   def do_pre_provision
@@ -180,7 +180,7 @@ module MiqProvision::Automate
 
     event_name = 'vm_provision_preprocessing'
     ws = call_automate_event(event_name, false)
-    self.reload
+    reload
     if ws.nil?
       update_and_notify_parent(:state => "finished", :status => "Error", :message => "Automation Error in processing Event #{event_name}")
       return false
@@ -195,13 +195,13 @@ module MiqProvision::Automate
       if ae_result.casecmp("retry").zero?
         interval, unit = ae_message.split(".")
         interval = interval.to_i
-        interval = interval * 60           if unit == "minute" || unit == "minutes"
+        interval *= 60                     if unit == "minute" || unit == "minutes"
         interval = interval * 60 * 60      if unit == "hour"   || unit == "hours"
         interval = interval * 60 * 60 * 24 if unit == "day"    || unit == "days"
 
         MiqQueue.put(
           :class_name  => self.class.name,
-          :instance_id => self.id,
+          :instance_id => id,
           :method_name => "execute",
           :zone        => my_zone,
           :role        => my_role,
@@ -216,7 +216,6 @@ module MiqProvision::Automate
       end
     end
 
-    return true
+    true
   end
-
 end

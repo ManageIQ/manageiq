@@ -1,8 +1,7 @@
 require "spec_helper"
 
 describe TaskHelpers::DialogExporter do
-  let(:dialog_yaml_serializer) { instance_double("DialogYamlSerializer") }
-
+  let(:dialog_yaml_serializer) { auto_loaded_instance_double("DialogYamlSerializer") }
   let(:dialog_exporter) { described_class.new(dialog_yaml_serializer) }
 
   describe "#export" do

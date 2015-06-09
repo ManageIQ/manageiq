@@ -11,14 +11,12 @@ module JobProxyDispatcherSpec
         NUM_REPO_VMS = 200
         NUM_HOSTS = 10
         NUM_SERVERS = 10
-        NUM_COS_PROXIES = (NUM_HOSTS - 1)
         NUM_STORAGES = 30
       else
         NUM_VMS = 3
         NUM_REPO_VMS = 3
         NUM_HOSTS = 3
         NUM_SERVERS = 3
-        NUM_COS_PROXIES = (NUM_HOSTS - 1)
         NUM_STORAGES = 3
       end
 
@@ -41,7 +39,7 @@ module JobProxyDispatcherSpec
           EmsVmware.any_instance.stub(:missing_credentials? => false)
           Host.any_instance.stub(:missing_credentials? => false)
 
-          @hosts, @proxies, @storages, @vms, @repo_vms = self.build_hosts_proxies_storages_vms(:hosts => NUM_HOSTS, :proxies => NUM_COS_PROXIES, :storages => NUM_STORAGES, :vms => NUM_VMS, :repo_vms => NUM_REPO_VMS)
+          @hosts, @proxies, @storages, @vms, @repo_vms = self.build_hosts_proxies_storages_vms(:hosts => NUM_HOSTS, :storages => NUM_STORAGES, :vms => NUM_VMS, :repo_vms => NUM_REPO_VMS)
         end
 
         # Don't run these tests if we only want to run dispatch for load testing
@@ -57,16 +55,6 @@ module JobProxyDispatcherSpec
 
           it "should have #{NUM_HOSTS} hosts" do
             NUM_HOSTS.should == @hosts.length
-          end
-
-          it "should have #{NUM_COS_PROXIES} active cos based proxies on hosts" do
-            NUM_COS_PROXIES.should == @proxies.length
-            #miqServers = self.class.miq_servers_for_scan.find_all { |svr| !svr.has_vm_scan_affinity? }
-            host_proxies = @hosts.find_all(&:is_a_proxy?).length
-            NUM_COS_PROXIES.should == host_proxies
-
-            active_host_proxies = @hosts.find_all(&:is_proxy_active?).length
-            NUM_COS_PROXIES.should == active_host_proxies
           end
 
           it "should have #{NUM_VMS} vms and #{NUM_REPO_VMS} repo vms" do
@@ -111,10 +99,6 @@ module JobProxyDispatcherSpec
               VMDB::Config.stub(:new).and_return(cfg)
             end
             @jobs = (@vms + @repo_vms).collect(&:scan)
-
-            MiqProxy.any_instance.stub(:state).and_return("on")
-            #TODO: Create real contexts out of this
-            #MiqServer.any_instance.stub(:concurrent_job_max).and_return(20)
           end
 
           # Don't run these tests if we only want to run dispatch for load testing

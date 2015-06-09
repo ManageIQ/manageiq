@@ -105,7 +105,7 @@ module ReportFormatter
           ems_cloud = false
           if rec[:ems_id] && ExtManagementSystem.exists?(rec[:ems_id])
             ems = ExtManagementSystem.find(rec[:ems_id])
-            ems_cloud =  true if EmsCloud::SUBCLASSES.include?(ems.class.name)
+            ems_cloud =  true if ems.kind_of?(EmsCloud)
           end
           if rec[:vm_name] && !ems_cloud             # Create the title using VM name
             e_title = rec[:vm_name]

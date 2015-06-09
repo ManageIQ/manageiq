@@ -6,7 +6,7 @@ describe Provider do
   describe "#verify_ssl" do
     context "when non set" do
       it "is default to verify ssl" do
-        expect(provider.verify_ssl).to be_nil
+        expect(provider.verify_ssl).to eq(OpenSSL::SSL::VERIFY_PEER)
         expect(provider).to be_verify_ssl
       end
     end

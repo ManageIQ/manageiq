@@ -42,7 +42,7 @@ class ApiController
     #
     def add_resource(type, _id, data)
       cspec = collection_config[type]
-      klass = cspec[:klass].constantize
+      klass = collection_class(type)
       if data.key?("id") || data.key?("href")
         raise BadRequestError,
               "Resource id or href should not be specified for creating a new #{type} resource"
@@ -62,16 +62,14 @@ class ApiController
     end
 
     def edit_resource(type, id, data)
-      cspec = collection_config[type]
-      klass = cspec[:klass].constantize
+      klass = collection_class(type)
       resource = resource_search(id, type, klass)
       resource.update_attributes(data.except(*ID_ATTRS))
       resource
     end
 
     def delete_resource(type, id = nil, _data = nil)
-      cspec = collection_config[type]
-      klass = cspec[:klass].constantize
+      klass = collection_class(type)
       id  ||= @req[:c_id]
       raise BadRequestError, "Must specify and id for deleting a #{type} resource" unless id
       api_log_info("Deleting #{type} id #{id}")
@@ -80,8 +78,7 @@ class ApiController
     end
 
     def retire_resource(type, id, data = nil)
-      cspec = collection_config[type]
-      klass = cspec[:klass].constantize
+      klass = collection_class(type)
       if id
         msg = "Retiring #{type} id #{id}"
         resource = resource_search(id, type, klass)

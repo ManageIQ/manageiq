@@ -172,4 +172,48 @@ describe EmsCluster do
       @host2.perf_capture_enabled.should eq(false)
     end
   end
+
+  context "#node_types" do
+    before(:each) do
+      @ems1 = FactoryGirl.create(:ems_vmware)
+      @ems2 = FactoryGirl.create(:ems_openstack_infra)
+    end
+
+    it "returns :mixed_clusters when there are both openstack & non-openstack clusters in db" do
+      FactoryGirl.create(:ems_cluster, :ems_id => @ems1.id)
+      FactoryGirl.create(:ems_cluster, :ems_id => @ems2.id)
+
+      result = EmsCluster.node_types
+      result.should eq(:mixed_clusters)
+    end
+
+    it "returns :openstack when there are only openstack clusters in db" do
+      FactoryGirl.create(:ems_cluster, :ems_id => @ems2.id)
+      result = EmsCluster.node_types
+      result.should eq(:openstack)
+    end
+
+    it "returns :non_openstack when there are non-openstack clusters in db" do
+      FactoryGirl.create(:ems_cluster, :ems_id => @ems1.id)
+      result = EmsCluster.node_types
+      result.should eq(:non_openstack)
+    end
+  end
+
+  context "#openstack_cluster?" do
+    it "returns true for openstack cluster" do
+      ems = FactoryGirl.create(:ems_openstack_infra)
+      cluster = FactoryGirl.create(:ems_cluster, :ems_id => ems.id)
+
+      result = cluster.openstack_cluster?
+      result.should be_true
+    end
+
+    it "returns false for non-openstack cluster" do
+      ems = FactoryGirl.create(:ems_vmware)
+      cluster = FactoryGirl.create(:ems_cluster, :ems_id => ems.id)
+      result = cluster.openstack_cluster?
+      result.should be_false
+    end
+  end
 end

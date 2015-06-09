@@ -3,6 +3,8 @@ class OrchestrationStack < ActiveRecord::Base
   include NewWithTypeStiMixin
   include ReportableMixin
   include AsyncDeleteMixin
+  include ProcessTasksMixin
+  include_concern 'RetirementManagement'
 
   acts_as_miq_taggable
 
@@ -53,5 +55,17 @@ class OrchestrationStack < ActiveRecord::Base
 
   def raw_delete_stack
     raise NotImplementedError, "raw_delete_stack must be implemented in a subclass"
+  end
+
+  def raw_status
+    ext_management_system.stack_status(name, ems_ref)
+  end
+
+  def raw_exists?
+    status, _reason = raw_status
+    status.nil? || status.downcase == 'delete_complete' ? false : true
+  rescue => err
+    return false if err.to_s =~ /[S|s]tack.+does not exist/
+    raise
   end
 end

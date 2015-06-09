@@ -169,7 +169,7 @@ function miqToolbarOnClick(id){
                          'support_vmdb_choice__zone_collect_logs',
                          'support_vmdb_choice__zone_collect_current_logs'
   ]
-  if (collect_log_buttons.indexOf(button.name) >= 0 && button.prompt) {
+  if (jQuery.inArray(button.name, collect_log_buttons) >= 0 && button.prompt) {
     tb_url = miqSupportCasePrompt(tb_url);
     if (!tb_url) return false;
   }

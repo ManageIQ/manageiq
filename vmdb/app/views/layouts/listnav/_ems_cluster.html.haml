@@ -1,4 +1,5 @@
 - if @record.try(:name)
+  - cluster_title = title_for_cluster_record(@record)
   #accordion.panel-group
     = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
       = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
@@ -38,14 +39,15 @@
     = patternfly_accordion_panel(_("Relationships"), false, "ems_rel") do
       %ul.nav.nav-pills.nav-stacked
         - if role_allows(:feature => "host_show_list")
+          - hosts_title = title_for_hosts
           - if @record.total_hosts == 0
             %li.disabled
-              = link_to(_("Hosts (%s)") % @record.total_hosts, "#")
+              = link_to(_("%s (%s)") % [hosts_title, @record.total_hosts], "#")
           - else
             %li
-              = link_to(_("Hosts (%s)") % @record.total_hosts,
+              = link_to(_("%s (%s)") % [hosts_title, @record.total_hosts],
                 {:action => 'show', :id => @record, :display => 'hosts'},
-                :title => _("Show Hosts"))
+                :title => _("Show %s") % hosts_title)
 
         - if role_allows(:feature => "vm_show_list")
           - if @record.total_direct_vms == 0
@@ -55,7 +57,7 @@
             %li
               = link_to(_("Direct VMs: %s") % @record.total_direct_vms,
                 {:action => 'show', :display => "vms", :id => @record.id.to_s},
-                :title => _("Show VMs in this Cluster, but not in Resource Pools below"))
+                :title => _("Show VMs in this #{cluster_title}, but not in Resource Pools below"))
         - if role_allows(:feature => "vm_show_list")
           - if @record.total_vms == 0
             %li.disabled
@@ -64,7 +66,7 @@
             %li
               = link_to(_("All VMs: %s") % @record.total_vms,
                 {:action => 'show', :display => "all_vms", :id => @record.id.to_s},
-                :title => _("Show all VMs in this Cluster"))
+                :title => _("Show all VMs in this #{cluster_title}"))
         - if role_allows(:feature => "miq_template_show_list")
           - if @record.total_miq_templates == 0
             %li.disabled
@@ -73,7 +75,7 @@
             %li
               = link_to(_("All Templates: %s") % @record.total_miq_templates,
                 {:action => 'show', :display => "miq_templates", :id => @record.id.to_s},
-                :title => _("Show all Templates in this Cluster"))
+                :title => _("Show all Templates in this #{cluster_title}"))
         - if role_allows(:feature => "vm_show_list")
           - if @record.total_vms == 0
             %li.disabled
@@ -82,7 +84,7 @@
             %li
               = link_to(_("All VMs (Tree View): %s") % @record.total_vms,
                 {:action => 'show', :display => "descendant_vms", :id => @record.id.to_s},
-                :title => _("Show tree of all VMs by Resource Pool in this Cluster"))
+                :title => _("Show tree of all VMs by Resource Pool in this #{cluster_title}"))
         - if role_allows(:feature => "resource_pool_show_list")
           - if @record.number_of(:resource_pools) == 0
             %li.disabled
@@ -100,7 +102,7 @@
             %li
               = link_to(_("Drift History (%s)") % @record.number_of(:drift_states),
                 {:action => 'drift_history', :id => @record},
-                :title => _("Show cluster drift history"))
+                :title => _("Show #{cluster_title} drift history"))
 
     - if get_vmdb_config[:product][:storage]
       = patternfly_accordion_panel(_("Storage Relationships"), false, "host_inf_rel") do

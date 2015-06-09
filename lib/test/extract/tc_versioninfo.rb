@@ -1,10 +1,10 @@
 $:.push("#{File.dirname(__FILE__)}/../../metadata/util/win32")
 require 'versioninfo'
-require 'test/unit'
+require 'minitest/unit'
 
 module Extract
 	
-class TestVersionInfo < Test::Unit::TestCase
+class TestVersionInfo < MiniTest::Unit::TestCase
   def setup
     @dataPath = File.join(File.dirname(File.expand_path(__FILE__)), "data")
     @noFile   = File.expand_path(File.join(@dataPath, "nofile.txt"))

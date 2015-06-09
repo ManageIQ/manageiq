@@ -16,25 +16,25 @@
     - :button: ems_cluster_scan
       :image: scan
       :text: "Perform SmartState Analysis"
-      :title: "Perform SmartState Analysis on the selected Clusters"
+      :title: "Perform SmartState Analysis on the selected items"
       :url_parms: 'main_div'
-      :confirm: "Perform SmartState Analysis on the selected Clusters?"
+      :confirm: "Perform SmartState Analysis on the selected items?"
       :enabled: 'false'
       :onwhen: '1+'
     - :button: ems_cluster_compare
       :image: compare
-      :text: "Compare Selected Clusters"
-      :title: "Select two or more Clusters to compare"
+      :text: "Compare Selected items"
+      :title: "Select two or more items to compare"
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '2+'
     - :separator:
     - :button: ems_cluster_delete
       :image: remove
-      :text: Remove Clusters from the VMDB
-      :title: "Remove selected Clusters from the VMDB"
+      :text: Remove selected items from the VMDB
+      :title: "Remove selected items from the VMDB"
       :url_parms: 'main_div'
-      :confirm: "Warning: The selected Clusters and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Clusters?"
+      :confirm: "Warning: The selected items and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected items?"
       :enabled: 'false'
       :onwhen: '1+'
 - :name: ems_cluster_policy
@@ -49,14 +49,14 @@
     - :button: ems_cluster_protect
       :image: protect
       :text: "Manage Policies"
-      :title: "Manage Policies for the selected Clusters"
+      :title: "Manage Policies for the selected items"
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1+'
     - :button: ems_cluster_tag
       :image: tag
       :text: "Edit Tags"
-      :title: "Edit Tags for the selected Clusters"
+      :title: "Edit Tags for the selected items"
       :url_parms: 'main_div'
       :enabled: 'false'
       :onwhen: '1+'

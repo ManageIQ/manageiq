@@ -24,13 +24,12 @@ module MiqAeMethodService
     end
     association :approvers
 
-    def reason
-      ar_method { @object.miq_approvals.collect { |a| (a.state == 'denied') ? a.reason : nil }.compact.join("; ") }
-    end
-
     def set_message(value)
-      object_send(:update_attribute, :message, value)
+      object_send(:update_attributes, :message => value)
     end
 
+    def description=(new_description)
+      object_send(:update_attributes, :description => new_description)
+    end
   end
 end

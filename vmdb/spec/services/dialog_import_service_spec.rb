@@ -4,8 +4,8 @@ require "dialog_import_validator"
 
 describe DialogImportService do
   let(:dialog_import_service) { described_class.new(dialog_field_importer, dialog_import_validator) }
-  let(:dialog_field_importer) { instance_double("DialogFieldImporter") }
-  let(:dialog_import_validator) { instance_double("DialogImportValidator") }
+  let(:dialog_field_importer) { auto_loaded_instance_double("DialogFieldImporter") }
+  let(:dialog_import_validator) { auto_loaded_instance_double("DialogImportValidator") }
 
   shared_context "DialogImportService dialog setup" do
     let(:dialog_fields) do

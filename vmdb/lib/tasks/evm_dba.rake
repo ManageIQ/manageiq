@@ -306,5 +306,12 @@ namespace :evm do
       end
     end
 
+    # loads the v1 key into the enviroment
+    task :environmentlegacykey => :environment do
+      MiqPassword.add_legacy_key('v0_key', :v0)
+      MiqPassword.add_legacy_key('v1_key')
+    end
   end
 end
+
+Rake::Task["db:migrate"].enhance(["evm:db:environmentlegacykey"])

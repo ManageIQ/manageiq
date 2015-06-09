@@ -4,7 +4,7 @@ class ApiController
     # Service Requests Subcollection Supporting Methods
     #
     def service_requests_query_resource(object)
-      klass = collection_config[:service_requests][:klass].constantize
+      klass = collection_class(:service_requests)
       object ? klass.where(:source_id => object.id) : {}
     end
   end

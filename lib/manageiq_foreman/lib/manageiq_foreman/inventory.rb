@@ -19,7 +19,7 @@ module ManageiqForeman
       end
       {
         :hosts      => hosts,
-        :hostgroups => hostgroups.denormalize
+        :hostgroups => hostgroups
       }
     end
 

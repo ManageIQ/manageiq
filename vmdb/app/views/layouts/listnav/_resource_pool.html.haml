@@ -1,4 +1,5 @@
 - if @record.try(:name)
+  - host_title = title_for_host
   #accordion.panel-group
     = patternfly_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
       = render :partial => "layouts/quadicon", :locals => {:mode => :icon, :item => @record, :size => 72, :typ => :listnav}
@@ -16,22 +17,22 @@
         - if role_allows(:feature => "ems_cluster_show")
           - if @record.parent_cluster.nil?
             %li.disabled
-              = link_to(_("Parent Cluster: None"), "#")
+              = link_to(_("Parent %s: None") % title_for_cluster, "#")
           - else
             %li
-              = link_to(_("Parent Cluster: %s") % @record.parent_cluster.name,
+              = link_to(_("Parent %s: %s") % [title_for_cluster, @record.parent_cluster.name],
                 {:controller => 'ems_cluster', :action => 'show', :id => @record.parent_cluster.id.to_s},
                 :title => _('Show VMs'))
 
         - if role_allows(:feature => "host_show")
           - if @record.parent_host.nil?
             %li.disabled
-              = link_to(_("Parent Host: None"), "#")
+              = link_to(_("Parent %s: None") % host_title, "#")
           - else
             %li
-              = link_to(_("Parent Host: %s") % @record.parent_host.name,
+              = link_to(_("Parent %s: %s") % [host_title, @record.parent_host.name],
                 {:controller => 'host', :action => 'show', :id => @record.parent_host.id.to_s},
-                :title => _('Show Parent Host'))
+                :title => _('Show Parent %s') % host_title)
 
         - if role_allows(:feature => "vm_show_list")
           - if @record.v_direct_vms == 0

@@ -1,0 +1,2 @@
+class ContainerNodeKubernetes < ContainerNode
+end

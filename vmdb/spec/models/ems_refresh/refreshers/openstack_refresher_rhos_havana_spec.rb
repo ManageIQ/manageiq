@@ -7,18 +7,23 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
     @ems.update_authentication(:default => {:userid => "admin", :password => "password"})
   end
 
+  def with_cassette
+    # Caching OpenStack info between runs causes the tests to fail with:
+    #   VCR::Errors::UnusedHTTPInteractionError
+    # Reset the cache so HTTP interactions are the same between runs.
+    @ems.reset_openstack_handle
+
+    # We need VCR to match requests differently here because fog adds a dynamic
+    #   query param to avoid HTTP caching - ignore_awful_caching##########
+    #   https://github.com/fog/fog/blob/master/lib/fog/openstack/compute.rb#L308
+    VCR.use_cassette("#{described_class.name.underscore}_rhos_havana", :match_requests_on => [:method, :host, :path]) do
+      yield
+    end
+  end
+
   it "will perform a full refresh against RHOS Havana" do
     2.times do  # Run twice to verify that a second run with existing data does not change anything
-      @ems.reload
-      # Caching OpenStack info between runs causes the tests to fail with:
-      #   VCR::Errors::UnusedHTTPInteractionError
-      # Reset the cache so HTTP interactions are the same between runs.
-      @ems.reset_openstack_handle
-
-      # We need VCR to match requests differently here because fog adds a dynamic
-      #   query param to avoid HTTP caching - ignore_awful_caching##########
-      #   https://github.com/fog/fog/blob/master/lib/fog/openstack/compute.rb#L308
-      VCR.use_cassette("#{described_class.name.underscore}_rhos_havana", :match_requests_on => [:method, :host, :path]) do
+      with_cassette do
         EmsRefresh.refresh(@ems)
       end
       @ems.reload
@@ -45,31 +50,52 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
     end
   end
 
+  context "when configured with skips" do
+    before(:each) do
+      VMDB::Config.any_instance.stub(:config).and_return(
+        :ems_refresh => {:openstack => {:inventory_ignore => [:cloud_volumes, :cloud_volume_snapshots]}}
+      )
+    end
+
+    it "will not parse the ignored items" do
+      with_cassette do
+        EmsRefresh.refresh(@ems)
+      end
+
+      CloudVolume.count.should   == 0
+
+      # .. but other things are still present:
+      FloatingIp.count.should    == 4
+      Disk.count.should          == 21
+    end
+  end
+
   def assert_table_counts
     ExtManagementSystem.count.should == 1
     Flavor.count.should              == 6
     AvailabilityZone.count.should    == 2
     FloatingIp.count.should          == 4
     AuthPrivateKey.count.should      == 2
-    SecurityGroup.count.should       == 7
-    FirewallRule.count.should        == 36
-    CloudNetwork.count.should        == 6
+    SecurityGroup.count.should       == 8
+    FirewallRule.count.should        == 40
+    CloudNetwork.count.should        == 5
     CloudSubnet.count.should         == 5
-    VmOrTemplate.count.should        == 15
-    Vm.count.should                  == 7
+    CloudVolume.count.should         == 5
+    VmOrTemplate.count.should        == 21
+    Vm.count.should                  == 13
     MiqTemplate.count.should         == 8
 
     CustomAttribute.count.should     == 0
-    Disk.count.should                == 15
+    Disk.count.should                == 21
     GuestDevice.count.should         == 0
-    Hardware.count.should            == 7
-    Network.count.should             == 8
+    Hardware.count.should            == 13
+    Network.count.should             == 11
     OperatingSystem.count.should     == 0
     Snapshot.count.should            == 0
     SystemService.count.should       == 0
 
-    Relationship.count.should        == 10
-    MiqQueue.count.should            == 17
+    Relationship.count.should        == 17
+    MiqQueue.count.should            == 24
   end
 
   def assert_ems
@@ -82,9 +108,9 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
     @ems.availability_zones.size.should == 2
     @ems.floating_ips.size.should       == 4
     @ems.key_pairs.size.should          == 2
-    @ems.security_groups.size.should    == 7
-    @ems.vms_and_templates.size.should  == 15
-    @ems.vms.size.should                == 7
+    @ems.security_groups.size.should    == 8
+    @ems.vms_and_templates.size.should  == 21
+    @ems.vms.size.should                == 13
     @ems.miq_templates.size.should      == 8
   end
 
@@ -298,7 +324,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
       :template              => false,
       :ems_ref_obj           => nil,
       :vendor                => "OpenStack",
-      :power_state           => "on",
+      :power_state           => "off",
       :location              => "unknown",
       :tools_status          => nil,
       :boot_time             => nil,
@@ -391,7 +417,7 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
       :template              => false,
       :ems_ref_obj           => nil,
       :vendor                => "OpenStack",
-      :power_state           => "off",
+      :power_state           => "paused",
       :location              => "unknown",
       :tools_status          => nil,
       :boot_time             => nil,
@@ -467,8 +493,8 @@ describe EmsRefresh::Refreshers::OpenstackRefresher do
       :template              => false,
       :ems_ref_obj           => nil,
       :vendor                => "OpenStack",
-      :power_state           => "off",
-      :raw_power_state       => "SHUTDOWN", # openstack bug?  suspended libvirt instances show up as "shutdown"
+      :power_state           => "suspended",
+      :raw_power_state       => "SUSPENDED",
       :location              => "unknown",
       :tools_status          => nil,
       :boot_time             => nil,

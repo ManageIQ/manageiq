@@ -16,7 +16,7 @@
           = _("Average")
     %tbody
       %tr
-        %th=_('CPU')
+        %td=_('CPU')
         %td
           - if @record.cpu_usagemhz_rate_average_max_over_time_period
             = mhz_to_human_size(@record.cpu_usagemhz_rate_average_max_over_time_period, 2)
@@ -33,7 +33,7 @@
           - else
             = notavail
       %tr
-        %th=_('CPU Usage')
+        %td=_('CPU Usage')
         %td
           - if @record.max_cpu_usage_rate_average_max_over_time_period
             = number_to_percentage(@record.max_cpu_usage_rate_average_max_over_time_period, :precision => 2)
@@ -50,7 +50,7 @@
           - else
             = notavail
       %tr
-        %th=_("Memory")
+        %td=_("Memory")
         %td
           - if @record.derived_memory_used_max_over_time_period
             = number_to_human_size(@record.derived_memory_used_max_over_time_period * 1024 * 1024, :precision => 2)
@@ -67,7 +67,7 @@
           - else
             = notavail
       %tr
-        %th=_('Memory Usage')
+        %td=_('Memory Usage')
         %td
           - if @record.max_mem_usage_absolute_average_max_over_time_period
             = number_to_percentage(@record.max_mem_usage_absolute_average_max_over_time_period, :precision => 2)

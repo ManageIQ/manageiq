@@ -147,7 +147,9 @@ class ChargebackController < ApplicationController
       @sb[:rate] = @edit[:rate] if @edit && @edit[:rate]
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
         add_flash(_("%s is required") % "Description", :error)
-        replace_right_cell
+        render :update do |page|
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        end
         return
       end
       @sb[:rate].description = @edit[:new][:description]
@@ -297,7 +299,7 @@ class ChargebackController < ApplicationController
       process_cb_rates(rates, "destroy")  unless rates.empty?
       add_flash(_("The selected %s were deleted") % ui_lookup(:models=>"ChargebackRate"), :info, true) if ! flash_errors?
       cb_rates_list
-      @right_cell_text = _("%{typ} %{model}") % {:typ=>x_node, :model=>ui_lookup(:models=>"ChargebackRate")}
+      @right_cell_text = _("%{typ} %{model}") % {:typ => x_node.split('-').last, :model => ui_lookup(:models => "ChargebackRate")}
       replace_right_cell([:cb_rates])
     else # showing 1 rate, delete it
       if params[:id] == nil || ChargebackRate.find_by_id(params[:id]).nil?
@@ -383,7 +385,8 @@ class ChargebackController < ApplicationController
       @report = rr.report_results
       session[:rpt_task_id] = nil
       if @report.blank?
-        add_flash(_("Saved Report \"%s\" not found, Schedule may have failed") % format_timezone(report.last_run_on,Time.zone,"gtl"), :error)
+        add_flash(_("Saved Report \"%s\" not found, Schedule may have failed") %
+          format_timezone(rr.last_run_on, Time.zone, "gtl"), :error)
         @temp[:saved_reports] = cb_rpts_get_all_reps(rr.miq_report_id.to_s)
         rep = MiqReport.find_by_id(rr.miq_report_id)
         if x_active_tree == :cb_reports
@@ -503,7 +506,8 @@ class ChargebackController < ApplicationController
     @sb[:last_run_on] = Hash.new
     @sb[:timezone_abbr] = @timezone_abbr if @timezone_abbr  #Saving converted time to be displayed on saved reports list view
     saved_reports.each do |s|
-      @sb[:last_run_on][s.last_run_on] = "#{convert_time_from_utc(s.last_run_on).strftime('%m/%d/%Y %I:%M')} #{@sb[:timezone_abbr]}"
+      @sb[:last_run_on][s.last_run_on] =
+        "#{convert_time_from_utc(s.last_run_on).strftime('%m/%d/%Y %I:%M')} #{@sb[:timezone_abbr]}" if s.last_run_on
     end
     @sb[:tree_typ] = "reports"
     @right_cell_text = _("%{model} \"%{name}\"") % {:model=>"Reports", :name=>miq_report.name}
@@ -783,6 +787,13 @@ class ChargebackController < ApplicationController
         presenter[:expand_collapse_cells][:a] = 'collapse'
       end
       presenter[:update_partials][:main_div] = r[:partial => 'reports_list']
+      if @html
+        presenter[:update_partials][:paging_div] = r[:partial => 'layouts/saved_report_paging_bar',
+                                                     :locals  => @sb[:pages]]
+        presenter[:set_visible_elements][:paging_div] = true
+      else
+        presenter[:set_visible_elements][:paging_div] = false
+      end
     end
 
     if @record || @in_a_form ||

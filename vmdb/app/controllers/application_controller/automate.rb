@@ -9,7 +9,11 @@ module ApplicationController::Automate
       @resolve[:new][:attrs].each do |a|
         @sb[:attrs][a[0].to_sym] = a[1] unless a[0].blank?
       end
-      @sb[:obj] = @resolve[:new][:target_class].constantize.find(@resolve[:new][:target_id]) unless @resolve[:new][:target_id].blank?
+      @sb[:obj] = if @resolve[:new][:target_id] && @resolve[:new][:target_class]
+                    @resolve[:new][:target_class].constantize.find(@resolve[:new][:target_id])
+                  else
+                    nil
+                  end
       @resolve[:button_class] = @resolve[:new][:target_class]
       @resolve[:button_number] ||= 1
       @sb[:attrs][:request] = @resolve[:new][:object_request] # Add the request attribute value entered by the user
@@ -107,7 +111,7 @@ module ApplicationController::Automate
     end
     if @edit[:new][:target_class]
       @resolve[:new][:target_class] = Hash[*@resolve[:target_classes].flatten][@edit[:new][:target_class]]
-      target_class = @resolve[:target_classes].detect { |ui_name, _| @edit[:new][:target_class] == ui_name }.last
+      target_class = @resolve[:target_classes].detect { |ui_name, _| @edit[:new][:target_class] == ui_name }.first
       targets = target_class.constantize.all
       @resolve[:targets] = targets.sort_by { |t| t.name.downcase }.collect { |t| [t.name, t.id.to_s] }
       @resolve[:new][:target_id] = nil

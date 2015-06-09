@@ -382,4 +382,80 @@ describe MiqAeClassController do
       flash_messages.last[:level].should == :info
     end
   end
+
+  context "#ae_class_validation" do
+    before(:each) do
+      set_user_privileges
+      ns = FactoryGirl.create(:miq_ae_namespace)
+      @cls = FactoryGirl.create(:miq_ae_class, :namespace_id => ns.id)
+      @method = FactoryGirl.create(:miq_ae_method, :name => "method01", :scope => "class",
+        :language => "ruby", :class_id => @cls.id, :data => "exit MIQ_OK", :location => "inline")
+      controller.should_receive(:render)
+      controller.instance_variable_set(:@sb, :trees       => {:ae_tree => {:active_node => "aec-#{@cls.id}"}},
+                                             :active_tree => :ae_tree)
+    end
+
+    after(:each) do
+      controller.send(:flash_errors?).should be_true
+      assigns(:flash_array).first[:message].should include("Name has already been taken")
+      assigns(:edit).should_not be_nil
+      expect(response.status).to eq(200)
+    end
+
+    it "Should not allow to create two schema fields with identical name" do
+      field = {"aetype"   => "attribute",
+               "datatype" => "string",
+               "name"     => "name01"}
+      session[:edit] = {
+        :key         => "aefields_edit__#{@cls.id}",
+        :ae_class_id => @cls.id,
+        :new         => {
+          :datatypes => [],
+          :aetypes   => [],
+          :fields    => [field, field]
+        }
+      }
+      controller.instance_variable_set(:@_params, :button => "save", :id => @cls.id)
+      controller.send(:update_fields)
+    end
+
+    it "Should not allow to add two parameters with identical name to a method" do
+      field = {"default_value" => nil,
+               "datatype"      => nil,
+               "name"          => "name01",
+               "method_id"     => @method.id}
+      session[:edit] = {
+        :key         => "aemethod_edit__#{@method.id}",
+        :ae_class_id => @cls.id,
+        :new_field   => {},
+        :new         => {
+          :name   => @method.name,
+          :fields => [field, field]
+        }
+      }
+      controller.instance_variable_set(:@_params, :button => "save", :id => @method.id)
+      controller.send(:update_method)
+    end
+
+    it "Should not allow to add two parameters with identical name to a newly created method" do
+      field = {"default_value" => nil,
+               "datatype"      => nil,
+               "name"          => "name01",
+               "method_id"     => nil}
+      session[:edit] = {
+        :key         => "aemethod_edit__new",
+        :ae_class_id => @cls.id,
+        :new_field   => {},
+        :new         => {
+          :name         => "method01",
+          :display_name => nil,
+          :fields       => [field, field],
+          :scope        => "instance",
+          :language     => "ruby"
+        }
+      }
+      controller.instance_variable_set(:@_params, :button => "add")
+      controller.send(:create_method)
+    end
+  end
 end

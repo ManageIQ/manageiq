@@ -97,19 +97,16 @@
               %tr
                 %td.key
                   = _("Provisioned VMs")
-                %td.hover-text{:class => cycle('row0', 'row1'),
+                %td.hover-text.pointer{:class => cycle('row0', 'row1'),
                   :onclick            => "DoNav('#{'/miq_request/show/' << @miq_request.id.to_s << '?display=miq_provisions'}');",
-                  :onmouseover        => "this.style.cursor='pointer'",
                   :title              => _("Click to view details")}
                   = h(@miq_request.resource.miq_provisions.length)
             - if @miq_request.resource_type == "MiqHostProvisionRequest" &&  @miq_request.resource.miq_host_provisions.length > 0
               %tr
                 %td.key
                   = _("Provisioned Hosts")
-                %td.hover-text{:class => cycle('row0', 'row1'),
-                  :onclick            => "DoNav('#{'/miq_request/show/' << @miq_request.id.to_s << '?display=miq_provisions'}');",
-                  :onmouseover        => "this.style.cursor='pointer'",
-                  :title              => _("Click to view details")}
+                %td.hover-text.pointer{:class => cycle('row0', 'row1'), :title => _("Click to view details"),
+                  :onclick => "DoNav('#{'/miq_request/show/' << @miq_request.id.to_s << '?display=miq_provisions'}');"}
                   = h(@miq_request.resource.miq_host_provisions.length)
   - if @edit && @edit[:stamp_typ]
     %table{:width => "100%"}

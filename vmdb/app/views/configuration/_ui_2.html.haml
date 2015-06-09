@@ -17,14 +17,6 @@
                 %td.key #{view_name}
                 %td
                   %ul#toolbars= render_view_buttons(resource, @edit[:new][:views][resource])
-        - if role_allows(:feature => "miq_proxy_show_list")
-          %fieldset
-            %h3= _('Management Engine')
-            %table.style1
-              %tr
-                %td.key= _('SmartProxies')
-                %td
-                  %ul#toolbars= render_view_buttons(:miqproxy, @edit[:new][:views][:miqproxy])
 
         - if role_allows(:feature => "service")                        ||
         -    role_allows(:feature => "catalog_items_accord")           ||
@@ -51,17 +43,23 @@
           - if role_allows(:feature => "ems_container_show_list")        ||
           -    role_allows(:feature => "container_group_show_list")      ||
           -    role_allows(:feature => "container_node_show_list")       ||
+          -    role_allows(:feature => "container_route_show_list")      ||
+          -    role_allows(:feature => "container_project_show_list")    ||
+          -    role_allows(:feature => "container_replicator_show_list") ||
           -    role_allows(:feature => "container_service_accord")       ||
           -    role_allows(:feature => "containers_filter_accord")       ||
           -    role_allows(:feature => "containers_accord")
             %fieldset
               %h3= _('Containers')
               %table.style1
-                - keys = {:emscontainer     => "ems_container",
-                          :containernode    => "container_node",
-                          :containergroup   => "container_group",
-                          :containerservice => "container_service",
-                          :container        => "container"}
+                - keys = {:emscontainer        => "ems_container",
+                          :containernode       => "container_node",
+                          :containergroup      => "container_group",
+                          :containerservice    => "container_service",
+                          :containerroute      => "container_route",
+                          :containerproject    => "container_project",
+                          :containerreplicator => "container_replicator",
+                          :container           => "container"}
                 - keys.each do |resource, table_view_name|
                   %tr
                     %td.key= ui_lookup(:tables => table_view_name)
@@ -70,6 +68,7 @@
       .col-sm-12.col-md-12.col-lg-6
         - if role_allows(:feature => "ems_cloud_show_list")           ||
         -    role_allows(:feature => "availability_zone_show_list")   ||
+        -    role_allows(:feature => "cloud_tenant_show_list")        ||
         -    role_allows(:feature => "flavor_show_list")              ||
         -    role_allows(:feature => "instances_accord")              ||
         -    role_allows(:feature => "instances_filter_accord")       ||
@@ -88,6 +87,11 @@
                   %td.key= _('Availability Zones')
                   %td
                     %ul#toolbars= render_view_buttons(:availabilityzone, @edit[:new][:views][:availabilityzone])
+              - if role_allows(:feature => "cloud_tenant_show_list")
+                %tr
+                  %td.key= _('Tenants')
+                  %td
+                    %ul#toolbars= render_view_buttons(:cloudtenant, @edit[:new][:views][:cloudtenant])
               - if role_allows(:feature => "flavor_show_list")
                 %tr
                   %td.key= _('Flavors')
@@ -129,18 +133,14 @@
                     %ul#toolbars= render_view_buttons(:emsinfra, @edit[:new][:views][:emsinfra])
               - if role_allows(:feature => "ems_cluster_show_list")
                 %tr
-                  %td.key= _('Clusters')
+                  %td.key=title_for_clusters
                   %td
                     %ul#toolbars= render_view_buttons(:emscluster, @edit[:new][:views][:emscluster])
               - if role_allows(:feature => "host_show_list")
                 %tr
-                  %td.key= _('Hosts')
+                  %td.key=title_for_hosts
                   %td
                     %ul#toolbars= render_view_buttons(:host, @edit[:new][:views][:host])
-                %tr
-                  %td.key= _('Host Items')
-                  %td
-                    %ul#toolbars= render_view_buttons(:hostitem, @edit[:new][:views][:hostitem])
               - if role_allows(:feature => "vandt_accord")      ||
               -    role_allows(:feature => "vms_filter_accord")
                 %tr
@@ -167,7 +167,7 @@
                 %tr
                   %td.key= _('Repositories')
                   %td
-                    %ul#toolbars= render_view_buttons(:repo, @edit[:new][:views][:repo])
+                    %ul#toolbars= render_view_buttons(:repository, @edit[:new][:views][:repository])
         - if get_vmdb_config[:product][:storage]
           %fieldset
             %h3= _('Storage')
@@ -187,4 +187,4 @@
                 %td.key= _('Storage Managers')
                 %td
                   %ul#toolbars= render_view_buttons(:storagemanager, @edit[:new][:views][:storagemanager])
-      = render :partial => "/layouts/form_buttons"
+    = render :partial => "/layouts/form_buttons"

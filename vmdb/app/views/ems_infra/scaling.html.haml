@@ -1,0 +1,32 @@
+= render :partial => "layouts/flash_msg"
+= form_tag('/ems_infra/scaling')
+= hidden_field_tag('id', @infra.id)
+- unless @stack.nil?
+  %table.style1
+    %tbody
+      %tr
+        %td.key= _('Orchestration Stack')
+        %td= @stack.name
+      %tr
+        %td.key= _('Number of Hosts')
+        %td= @infra.hosts.count
+      - @count_parameters.each do |parameter|
+        %tr
+          %td.key=parameter.name
+          %td= text_field_tag(parameter.name, parameter.value, :maxlength => 5)
+  %table{:width => "100%"}
+    %tr
+      %td{:align => "right"}
+        #buttons_on
+          = button_tag(_("Scale"),
+                       :name  => "scale",
+                       :class => "btn btn-primary",
+                       :alt   => t = _("Scale Infrastructure Provider"),
+                       :title => t,
+                       :type  => "submit")
+          = button_tag(_("Cancel"),
+                       :name  => "cancel",
+                       :class => "btn btn-default",
+                       :alt   => t = _("Cancel"),
+                       :title => t,
+                       :type  => "submit")

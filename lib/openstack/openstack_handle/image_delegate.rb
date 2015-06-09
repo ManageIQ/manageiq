@@ -13,9 +13,11 @@ module OpenstackHandle
 
       # There is always default pagination in Glance, so we obtain all
       # the images in loop, using last image of each page as marker.
-      while (images = self.images.details('marker', last_image.id)).count > 0
-        last_image = images.last
-        all_images.concat(images)
+      if last_image
+        while (images = self.images.details('marker', last_image.id)).count > 0
+          last_image = images.last
+          all_images.concat(images)
+        end
       end
 
       all_images

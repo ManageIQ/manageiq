@@ -62,7 +62,6 @@ module FixAuth
         begin
           ActiveRecord::Base.establish_connection(db_attributes(database)) if please_establish_connection
           models.each do |model|
-            puts "fixing #{model.table_name}.#{model.password_columns.join(", ")}"
             model.run(run_options)
           end
         ensure

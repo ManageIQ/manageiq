@@ -22,6 +22,7 @@ cols:
 - name
 - type
 - status
+- status_reason
 - total_vms
 - total_security_groups
 - total_cloud_networks
@@ -42,6 +43,7 @@ col_order:
 - ext_management_system.name
 - type
 - status
+- status_reason
 - total_vms
 - total_security_groups
 - total_cloud_networks
@@ -52,6 +54,7 @@ headers:
 - Provider
 - Type
 - Status
+- Status Reason
 - Instances
 - Security Groups
 - Cloud Networks

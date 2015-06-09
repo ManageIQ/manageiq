@@ -47,7 +47,6 @@ class Host < ActiveRecord::Base
   has_many                  :vms_and_templates, :dependent => :nullify
   has_many                  :vms
   has_many                  :miq_templates
-  has_one                   :miq_proxy, :dependent => :destroy
   has_and_belongs_to_many   :storages
   has_many                  :switches, :dependent => :destroy
   has_many                  :patches, :dependent => :destroy
@@ -79,6 +78,8 @@ class Host < ActiveRecord::Base
   has_many                  :miq_alert_statuses, :dependent => :destroy, :as => :resource
 
   has_one                   :miq_cim_instance, :as => :vmdb_obj, :dependent => :destroy
+
+  has_many                  :host_service_groups, :dependent => :destroy
 
   serialize                 :settings
 
@@ -344,7 +345,7 @@ class Host < ActiveRecord::Base
   def run_ipmi_command(verb)
     log_header = "MIQ(Host.run_ipmi_command)"
     require 'miq-ipmi'
-    $log.info("#{log_header} Invoking [#{verb}] for Host: [#{self.name}], IPMI Address: [#{self.ipmi_address}], IPMI Userid: [#{self.authentication_userid(:ipmi)}]")
+    $log.info("#{log_header} Invoking [#{verb}] for Host: [#{self.name}], IPMI Address: [#{self.ipmi_address}], IPMI Username: [#{self.authentication_userid(:ipmi)}]")
     ipmi = MiqIPMI.new(self.ipmi_address, *self.auth_user_pwd(:ipmi))
     ipmi.send(verb)
   end
@@ -502,123 +503,6 @@ class Host < ActiveRecord::Base
     self.update_attributes!(:ipaddress => addr) unless addr.nil?
   end
 
-  def call_ws(ost)
-    raise "Host does not have a #{MIQHOST_PRODUCT_NAME}" unless self.miq_proxy
-    self.miq_proxy.call_ws(ost)
-  end
-
-  def self.call_ws_from_queue(id, options)
-    options = Marshal.load(options)
-    $log.info "MIQ(host-call_ws_from_queue): Calling: [#{options.inspect}]"
-    host = Host.find(id)
-    host.call_ws(OpenStruct.new(options))
-  end
-
-  # Scan for new vms and get OS/hardware details if we do not already have them.
-  def add_vms(ret)
-    disconnect_vm_list = []
-
-    begin
-      vm_list = eval(ret) rescue nil
-      disconnect_vm_list = self.vms.all if !vm_list.empty? && vm_list[0][:registeredOnHost] != false
-
-      vm_list.each do |vm|
-        config = self.configure_vm_hash(vm)
-        $log.debug "MIQ(host-scan): Before adding #{config[:type]} VM [#{vm[:location]}]  StorageId:[#{vm[:storage_id]}]  Guid:[#{vm[:guid]}]"
-
-        found = self.find_existing_vm_by_guid_or_path(vm, config)
-        if found.nil?
-          self.create_vm_on_host(vm, config)
-        else
-          disconnect_vm_list -= [found]
-
-          # Skip processing if the VM is already assigned to an EMS
-          next if found.ems_id
-
-          # Handle an existing VM that is now reported on a different host
-          if config[:repository_vm] == false && found.host_id != self.id
-            found.host_id = self.id
-            found.save!
-            found.registerVm
-          end
-        end
-      end
-
-      # Any VMs still left in this list are no longer connected
-      disconnect_vm_list.each {|v| v.host_id, v.state = nil, "unknown"; v.save}
-    rescue MiqException::PolicyPreventAction => err
-      $log.info "#{err}"
-    rescue Exception => err
-      $log.log_backtrace(err)
-    end
-  end
-
-  def create_vm_on_host(vm, config)
-    $log.info "MIQ(Host.create_vm_on_host): Adding #{config[:type]} VM [#{vm.inspect}]"
-    [:registeredOnHost, :repository_id].each {|k| vm.delete k}
-
-    # TODO: determine the type of Vm to create
-    newVm = config[:repository_vm] ? Vm.create(vm) : self.vms.build(vm)
-    newVm.surrogate_host = self if config[:repository_vm]
-    newVm.save!
-    newVm.registerVm
-    self.save! unless config[:repository_vm]
-
-    # should we raise an event for this stuff?
-    (config[:repo] ? config[:repo] : self).enforce_policy(newVm, "vm_discover")
-
-    return newVm
-  end
-
-  def find_existing_vm_by_guid_or_path(vm, config)
-    found = nil
-    found = VmOrTemplate.find_by_guid(vm[:guid]) unless vm[:guid].nil?
-    found = VmOrTemplate.find_by_uid_ems(vm[:uid_ems]) unless !found.nil? || vm[:uid_ems].nil?
-
-    if found.nil?
-      found = if config[:repository_vm]
-        VmOrTemplate.find_by_storage_id_and_location(vm[:storage_id], File.join(vm[:location]))
-      else
-        VmOrTemplate.find_by_location(vm[:location])
-      end
-    end
-
-    return found
-  end
-
-  def configure_vm_hash(vm)
-    vm[:name] = URI.decode(vm[:name])
-    config = {:repository_vm => false, :type => "registered"}
-
-    # Delete the guid from the hash if we cannot parse it or it is invalid
-    [:guid, :uid_ems].each do |uid|
-      begin
-        vm_uid = UUID.parse(vm[uid])
-        if vm_uid.valid?
-          vm[uid] = vm_uid.to_s
-        else
-          vm.delete(uid)
-        end
-      rescue
-        vm.delete(uid)
-      end
-    end
-
-    if vm[:registeredOnHost] == false
-      vm[:location] = Repository.parse_path(vm[:location])[1]
-      config[:repo] = Repository.find(vm[:repository_id])
-      vm[:storage_id] = config[:repo].storage_id
-
-      config.merge!(:repository_vm => true, :type => "repository")
-    else
-      # create storage instance if VMFS or NAS
-      store_name, vm[:location], store_type = Repository.parse_path(vm[:location]) rescue [nil, VmOrTemplate.location2uri(vm[:location]), "local"]
-      vm[:storage_id] = Storage.find_or_create_by_name_and_store_type(store_name, store_type).id if ["VMFS", "NAS"].include?(store_type)
-    end
-
-    return config
-  end
-
   # Scan for VMs in a path defined in a repository
   def add_elements(data)
     begin
@@ -629,47 +513,6 @@ class Host < ActiveRecord::Base
     rescue => err
       $log.log_backtrace(err)
     end
-  end
-
-  def get_config_data(doc=nil)
-    # if we were not passed the Host config xml, go get it
-    unless doc
-      ost = OpenStruct.new("method_name" => "GetHostConfig")
-      call_ws(ost)
-      return
-    end
-    begin
-      self.add_hypervisor(doc.root)
-      self.tag_elements(doc.root)
-      OperatingSystem.add_elements(self, doc.root)
-      el = XmlFind.findElement("host_hardware", doc.root)
-      if el
-        Hardware.add_elements(self, el)
-        Network.add_elements(self, doc.root)
-      end
-    rescue Exception => err
-      $log.log_backtrace(err)
-    end
-  end
-
-  def add_hypervisor(xmlNode)
-    el = XmlFind.findElement("hypervisor", xmlNode.root)
-    if MiqXml.isXmlElement?(el)
-      self.vmm_vendor  = el.attributes['vendor'].to_s.downcase
-      self.vmm_version = el.attributes['version']
-      self.vmm_product = el.attributes['product']
-      self.vmm_buildnumber = el.attributes['build']
-      self.save
-    end
-  end
-
-  def tag_elements(xmlNode)
-    return # auto tagging has been disabled since we can now access virtual tags to get the same info
-
-    $log.info "MIQ(host-tag_elements): Tagging: #{self.name}..."
-    tags = Xml2tags.walk(xmlNode.root)
-    self.tag_add(tags, :ns => "/system")
-    $log.info "MIQ(host-tag_elements): Tagging: #{self.name} complete, #{tags.size} tags were applied"
   end
 
   def ipaddresses
@@ -704,12 +547,6 @@ class Host < ActiveRecord::Base
     return self.operating_system.nil? ? "" : self.operating_system.service_pack
   end
 
-  def available_builds
-    data = self.platform_arch
-    return [] if data.blank?
-    ProductUpdate.where(:component => "smartproxy", :platform => data[0], :arch => data[1]).to_a
-  end
-
   def arch
     if self.vmm_product.to_s.include?('ESX')
       return 'x86_64' if self.vmm_version.to_i >= 4
@@ -729,26 +566,6 @@ class Host < ActiveRecord::Base
     return ret
   end
 
-  def mediapath
-    data = self.platform_arch
-    return nil if data.blank?
-    File.join(MiqProxyBuild.media_root, data[0], data[1])
-  end
-
-  def is_a_proxy?
-    self.miq_proxy ? true : false
-  end
-
-  def is_proxy_active?
-    return false unless self.miq_proxy
-
-    self.miq_proxy.state == "on"
-  end
-
-  def miq_proxies
-    MiqProxy.all.select { |p| p.hosts.include?(self) }
-  end
-
   def acts_as_ems?
     product = self.vmm_product.to_s.downcase
     ['hyperv', 'hyper-v'].each {|p| return true if product.include?(p)}
@@ -760,16 +577,7 @@ class Host < ActiveRecord::Base
       return {:show => true, :enabled => true, :message => ""}
     end
 
-    if self.platform == "windows"
-      s =  {:show => true, :enabled => true, :message => ""}
-      unless self.is_proxy_active?
-        s[:enabled] = false
-        s[:message] = "Proxy not active"
-      end
-      return s
-    end
-
-    return {:show => false, :enabled => false, :message => "Host not configured for refresh"}
+    {:show => false, :enabled => false, :message => "Host not configured for refresh"}
   end
 
   def scannable_status
@@ -825,11 +633,6 @@ class Host < ActiveRecord::Base
     return scannable_status[:message]
   end
 
-  def supports_miqproxy?
-    # Check for ESX Server 3i which does not support a console
-    self.is_vmware_esxi? ? false : true
-  end
-
   def is_vmware?
     self.vmm_vendor.to_s.strip.downcase == 'vmware'
   end
@@ -844,7 +647,7 @@ class Host < ActiveRecord::Base
   end
 
   def state
-    return (self.ext_management_system || self.miq_proxy.nil?) ? self.power_state : self.miq_proxy.state
+    self.power_state
   end
 
   def state=(new_state)
@@ -853,58 +656,6 @@ class Host < ActiveRecord::Base
       #self.previous_state = self.power_state
       self.power_state = new_state
     end
-  end
-
-  def self.self_register(xmlDoc)
-    version = "0.0.0.NA"
-    $log.debug "MIQ(host-self_register): [#{xmlDoc}]"
-    host_config = {:vmm_vendor => "unknown", :hostname => nil, :ipaddress => nil, :name => nil}
-    xmlDoc.find_match("//host").each { |n| version = n.attributes["version"] }
-
-    # Find the computer name from Linux and map the hostname/ip to it
-    xmlDoc.find_match("//OperatingSystem//Configuration").each do |n|
-      n.elements.each do |x|
-        host_config[:hostname] = x.text if x.attributes['name'] === "ComputerName"
-        host_config[:ipaddress] = x.text if x.attributes['name'] === "IPAddress"
-      end
-    end
-
-    # Find the DNS hostname and IP
-    xmlDoc.find_match("//device").each do |n|
-      unless n.attributes['dns_hostname'].nil?
-        $log.info "MIQ(host-self_register): [#{n}]"
-        host_config[:hostname] = n.attributes['dns_hostname']
-        unless n.attributes['dns_domain'].nil?
-          el = XmlFind.findElement('system/os/domain', xmlDoc.root)
-          domain = MiqXml.isXmlElement?(el) ? el.text : n.attributes['dns_domain']
-          host_config[:hostname] += ".#{domain}"
-        end
-        host_config[:hostname] = host_config[:hostname].chomp("@")
-        host_config[:ipaddress] = n.attributes['ipaddress'] unless n.attributes['ipaddress'].nil?
-        break
-      end
-    end
-
-    newHost = Host.lookUpHost(host_config[:hostname], host_config[:ipaddress])
-    if newHost.nil?
-      host_config[:name] = host_config[:hostname].nil? ? "miqhost - " + Time.now.strftime("%c") : host_config[:hostname]
-      host_config[:hostname]  = "xxx.xxx.xxx.xxx" if host_config[:hostname].nil?
-      host_config[:ipaddress] = "xxx.xxx.xxx.xxx" if host_config[:ipaddress].nil?
-      newHost = Host.new(host_config)
-      newHost.save!
-    end
-
-    # fill-in os/hardware inforamtion for the host
-    newHost.get_config_data(xmlDoc) if xmlDoc && newHost
-
-    # create/update MiqProxy instance
-    proxy = newHost.miq_proxy
-    proxy ||= newHost.build_miq_proxy
-    proxy.name = newHost.name
-    proxy.version = version
-    proxy.save
-
-    return {:hostId => newHost.guid, :settings => newHost.miq_proxy.settings}
   end
 
   def self.lookUpHost(hostname, ipaddr)
@@ -1105,17 +856,8 @@ class Host < ActiveRecord::Base
     when 'ws';     verify_credentials_with_ws(auth_type)
     when 'ipmi';   verify_credentials_with_ipmi(auth_type)
     else
-      if self.supports_miqproxy? && !self.has_authentication_type?(:remote)
-        begin
-          verify_credentials_with_ssh(auth_type, options)
-        rescue MiqException::MiqHostError, MiqException::MiqInvalidCredentialsError
-          verify_credentials_with_ws(auth_type)
-          raise MiqException::MiqInvalidCredentialsError, "SSH credential validation failed.  Web Service credential validation was successful."
-        end
-      else
         verify_credentials_with_ws(auth_type)
       end
-    end
 
     return true
   end
@@ -1157,10 +899,6 @@ class Host < ActiveRecord::Base
     else
       raise MiqException::MiqHostError, "IPMI is not available on this Host"
     end
-  end
-
-  def myport
-    self.miq_proxy ? self.miq_proxy.myport : nil
   end
 
   def self.discoverByIpRange(starting, ending, options={:ping => true})
@@ -1267,7 +1005,7 @@ class Host < ActiveRecord::Base
             self.name            = "#{vim.about['name']} (#{ipaddr})"
           end
         rescue => err
-          $log.warn "#{log_header} Cannot connect to ESX Host with IP Address: [#{ipaddr}], Userid: [#{self.authentication_userid(:ws)}] because #{err.message}"
+          $log.warn "#{log_header} Cannot connect to ESX Host with IP Address: [#{ipaddr}], Username: [#{self.authentication_userid(:ws)}] because #{err.message}"
         end
       end
       self.type = %w(esx esxi).include?(self.vmm_product.to_s.downcase) ? "HostVmwareEsx" : "HostVmware"
@@ -1414,7 +1152,11 @@ class Host < ActiveRecord::Base
     options[:authentication_prompt_delay] = prompt_delay unless prompt_delay.nil?
 
     users = su_user.nil? ? rl_user : "#{rl_user}/#{su_user}"
-    $log.info "host.connect_ssh: Initiating SSH connection to Host:[#{self.name}] using [#{hostname}] for user:[#{users}].  Options:[#{options.inspect}]"
+    # Obfuscate private keys in the log with ****, so it's visible that field was used, but no user secret is exposed
+    logged_options = options.dup
+    logged_options[:key_data] = "[FILTERED]" if logged_options[:key_data]
+
+    $log.info "host.connect_ssh: Initiating SSH connection to Host:[#{self.name}] using [#{hostname}] for user:[#{users}].  Options:[#{logged_options.inspect}]"
     begin
       MiqSshUtil.shell_with_su(hostname, rl_user, rl_password, su_user, su_password, options) do |ssu, shell|
         $log.info "host.connect_ssh: SSH connection established to [#{hostname}]"
@@ -1461,10 +1203,25 @@ class Host < ActiveRecord::Base
   def refresh_services(ssu)
     begin
       xml = MiqXml.createDoc(:miq).root.add_element(:services)
+
+      services = ssu.shell_exec("systemctl -a --type service")
+      if services
+        # If there is a systemd use only that, chconfig is calling systemd on the background, but has misleading results
+        services = MiqLinux::Utils.parse_systemctl_list(services)
+      else
       services = ssu.shell_exec("chkconfig --list")
       services = MiqLinux::Utils.parse_chkconfig_list(services)
+      end
+
       services.each do |service|
-        s = xml.add_element(:service, {'name' => service[:name]})
+        s = xml.add_element(:service,
+                            'name'           => service[:name],
+                            'systemd_load'   => service[:systemd_load],
+                            'systemd_sub'    => service[:systemd_sub],
+                            'description'    => service[:description],
+                            'running'        => service[:running],
+                            'systemd_active' => service[:systemd_active],
+                            'typename'       => service[:typename])
         service[:enable_run_level].each  { |l| s.add_element(:enable_run_level,  'value' => l) } unless service[:enable_run_level].nil?
         service[:disable_run_level].each { |l| s.add_element(:disable_run_level, 'value' => l) } unless service[:disable_run_level].nil?
       end
@@ -1692,26 +1449,6 @@ class Host < ActiveRecord::Base
     end
   end
 
-  def is_vix_disk?
-    self.is_a_proxy? && self.miq_proxy.capabilities && self.miq_proxy.capabilities[:vixDisk] == true
-  end
-
-  def self.available_vix_disk_hosts
-    self.vix_disk_hosts.collect {|h| h && h.state == "on" ? h : nil}.compact
-  end
-
-  def self.vix_disk_hosts()
-    vixHosts = []
-    Host.find(:all).each do |h|
-      vixHosts << h if h.is_a_proxy? && h.miq_proxy.capabilities && h.miq_proxy.capabilities[:vixDisk] == true
-    end
-    return vixHosts
-  end
-
-  def concurrent_job_max
-    self.miq_proxy.concurrent_job_max()
-  end
-
   # TODO: Rename this to scan_queue and rename scan_from_queue to scan to match
   #   standard from other places.
   def scan(userid = "system", options={})
@@ -1777,6 +1514,14 @@ class Host < ActiveRecord::Base
 
       # Skip SSH for ESXi hosts
       unless self.is_vmware_esxi?
+        if self.hostname.blank?
+          $log.warn "#{log_header} No hostname defined for #{log_target}"
+          task.update_status("Finished", "Warn", "Scanning incomplete due to missing hostname")  if task
+          return
+        end
+
+        self.update_ssh_auth_status! if self.respond_to?(:update_ssh_auth_status!)
+
         if self.missing_credentials?
           $log.warn "#{log_header} No credentials defined for #{log_target}"
           task.update_status("Finished", "Warn", "Scanning incomplete due to Credential Issue")  if task
@@ -1808,6 +1553,13 @@ class Host < ActiveRecord::Base
             $log.info("#{log_header} Refreshing FS Files for #{log_target}")
             task.update_status("Active", "Ok", "Refreshing FS Files") if task
             Benchmark.realtime_block(:refresh_fs_files) { self.refresh_fs_files(ssu) }
+
+            # refresh_openstack_services should run after refresh_services and refresh_fs_files
+            if self.respond_to?(:refresh_openstack_services)
+              $log.info("#{log_header} Refreshing OpenStack Services for #{log_target}")
+              task.update_status("Active", "Ok", "Refreshing OpenStack Services") if task
+              Benchmark.realtime_block(:refresh_openstack_services) { refresh_openstack_services(ssu) }
+            end
 
             self.save
           end
@@ -2012,11 +1764,6 @@ class Host < ActiveRecord::Base
     self.with_relationship_type("vm_scan_affinity") { self.parents }
   end
   alias get_vm_scan_affinity vm_scan_affinity
-
-  def after_update_authentication
-    # Force Miqproxy to restart on credential change
-    self.miq_proxy.change_agent_config() if self.is_a_proxy? && self.credentials_changed?
-  end
 
   def processes
     return [] if self.operating_system.nil?
@@ -2235,4 +1982,23 @@ class Host < ActiveRecord::Base
     !plist.blank?
   end
 
+  def self.node_types
+    return :mixed_hosts if count_of_openstack_hosts > 0 && count_of_non_openstack_hosts > 0
+    return :openstack   if count_of_openstack_hosts > 0
+    :non_openstack
+  end
+
+  def self.count_of_openstack_hosts
+    ems = EmsOpenstackInfra.pluck(:id)
+    Host.where(:ems_id => ems).count
+  end
+
+  def self.count_of_non_openstack_hosts
+    ems = EmsOpenstackInfra.pluck(:id)
+    Host.where(Host.arel_table[:ems_id].not_in(ems)).count
+  end
+
+  def openstack_host?
+    ext_management_system.class == EmsOpenstackInfra
+  end
 end

@@ -112,13 +112,11 @@ module MiqAeServiceMiqRequestSpec
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request'].reason"
       @ae_method.update_attributes(:data => method)
       reason = invoke_ae.root(@ae_result_key)
-      reason.should == ""
+      reason.should be_nil
 
-      wilma          = FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'wilma',  :email => 'wilma@bedrock.gov')
       betty          = FactoryGirl.create(:user, :name => 'Betty Rubble',     :userid => 'betty',  :email => 'betty@bedrock.gov')
-      wilma_approval = FactoryGirl.create(:miq_approval, :approver => wilma)
       betty_approval = FactoryGirl.create(:miq_approval, :approver => betty)
-      @miq_request.miq_approvals = [wilma_approval, betty_approval]
+      @miq_request.miq_approvals = [betty_approval]
       @miq_request.save!
 
       MiqApproval.any_instance.stub(:authorized?).and_return(true)
@@ -130,6 +128,9 @@ module MiqAeServiceMiqRequestSpec
       reason = invoke_ae.root(@ae_result_key)
       reason.should == betty_reason
 
+      wilma          = FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'wilma',  :email => 'wilma@bedrock.gov')
+      wilma_approval = FactoryGirl.create(:miq_approval, :approver => wilma)
+      @miq_request.miq_approvals << wilma_approval
       wilma_reason = "Where's Fred?"
       wilma_approval.deny(wilma.userid, wilma_reason)
       #wilma_approval.update_attributes(:state => 'denied', :reason => wilma_reason)
@@ -237,6 +238,14 @@ module MiqAeServiceMiqRequestSpec
       @ae_method.update_attributes(:data => method)
       invoke_ae
       @miq_request.reload.message.should == message
+    end
+
+    it "#description=" do
+      description = 'test description'
+      method  = "$evm.root['miq_request'].description=('#{description}')"
+      @ae_method.update_attributes(:data => method)
+      invoke_ae
+      @miq_request.reload.description.should == description
     end
   end
 end

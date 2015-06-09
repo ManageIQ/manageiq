@@ -13,9 +13,10 @@ class MiqRpmPackages
     #
     # The data types we support.
     #
+    RPM_INT32_TYPE          =  4
     RPM_STRING_TYPE         =  6
     RPM_STRING_ARRAY_TYPE   =  8
-    RPM_I18NSTRING_TYPE		=  9
+    RPM_I18NSTRING_TYPE     =  9
     
     #
     # The things we care about.
@@ -25,6 +26,7 @@ class MiqRpmPackages
     RELEASE     = 1002
     SUMMARY     = 1004
     DESCRIPTION = 1005
+    INSTALLTIME = 1008
     VENDOR      = 1011
     GROUP       = 1016
     ARCH        = 1022
@@ -36,6 +38,7 @@ class MiqRpmPackages
         1002    => "release",
         1004    => "summary",
         1005    => "description",
+        1008    => "installtime",
         1011    => "vendor",
         1016    => "category",  # group
         1022    => "arch",
@@ -88,6 +91,7 @@ class MiqRpmPackages
                 tag = TAGIDS[ei['tag']]
                 next if tag.nil?
                 pkg[tag] = getVal(data, ei)
+                pkg[tag] = convert(tag, pkg[tag])
             end
             pkg['installed'] = true unless pkg.empty?
             yield(MiqHashStruct.new(pkg))
@@ -99,9 +103,18 @@ class MiqRpmPackages
     end
     
     private
+
+    def time_tag?(tag)
+      tag == "installtime"
+    end
+
+    def convert(tag, val)
+      time_tag?(tag) ? Time.at(val).utc : val
+    end
     
     def getVal(data, ei)
         case ei['ttype']
+            when RPM_INT32_TYPE         then return(getInt32Val(data, ei['offset']))
             when RPM_STRING_TYPE        then return(getStringVal(data, ei['offset']))
             when RPM_STRING_ARRAY_TYPE  then return(getStringArray(data, ei['offset'], ei['count']).join("\n"))
             when RPM_I18NSTRING_TYPE    then return(getStringArray(data, ei['offset'], ei['count']).join("\n").AsciiToUtf8)
@@ -109,6 +122,10 @@ class MiqRpmPackages
                 $log.warn "MiqRpmPackages.getVal: unsupported data type: #{ei['ttype']}"
                 return("")
         end
+    end
+
+    def getInt32Val(data, offset)
+      return(data[offset, 4].unpack("N").first)
     end
     
     def getStringVal(data, offset)
@@ -132,9 +149,10 @@ class MiqRpmPackages
 end # class MiqRPM
 
 if __FILE__ == $0
-    rpmPkgs = MiqRpmPackages.new(nil, "test/Packages")
+    rpmPkgs = MiqRpmPackages.new(nil, "/var/lib/rpm/Packages")
     rpmPkgs.each do |pkg|
         puts "Package: #{pkg.name}"
+        puts "\tInstall Time: #{pkg.installtime}"
         puts "\tVersion: #{pkg.version}"
         puts "\tRelease: #{pkg.release}"
         puts "\tSummary: #{pkg.summary}"

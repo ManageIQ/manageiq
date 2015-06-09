@@ -30,11 +30,6 @@ module EmsCommon
       end
       @showtype = "config"
       build_dc_tree
-    elsif @display == "miq_proxies"
-      drop_breadcrumb( {:name=>@ems.name+" (Managing SmartProxies)", :url=>"/#{@table_name}/show/#{@ems.id}?display=miq_proxies"} )
-      @view, @pages = get_view(MiqProxy, :parent=>@ems) # Get the records (into a view) and the paginator
-      @showtype = "miq_proxies"
-      @no_checkboxes = true
     elsif @display == "timeline"
       @showtype = "timeline"
       session[:tl_record_id] = params[:id] if params[:id]
@@ -73,6 +68,18 @@ module EmsCommon
           @view.extras[:total_count] > @view.extras[:auth_count]
         @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") + " on this " + ui_lookup(:tables=>@table_name)
       end
+    elsif @display == "container_replicators" || session[:display] == "container_replicators" && params[:display].nil?
+      title = ui_lookup(:tables => "container_replicators")
+      drop_breadcrumb(:name => @ems.name + " (All #{title})",
+                      :url  => "/#{@table_name}/show/#{@ems.id}?display=#{@display}")
+      @view, @pages = get_view(ContainerReplicator, :parent => @ems)
+      @showtype = @display
+      if @view.extras[:total_count] > @view.extras[:auth_count] && @view.extras[:total_count] &&
+         @view.extras[:auth_count]
+        @bottom_msg = "* You are not authorized to view " +
+                      pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") +
+                      " on this " + ui_lookup(:tables => @table_name)
+      end
     elsif @display == "container_nodes" || session[:display] == "container_nodes" && params[:display].nil?
       title = "Container Nodes"
       drop_breadcrumb(:name => @ems.name + " (All #{title})",
@@ -102,6 +109,30 @@ module EmsCommon
       drop_breadcrumb(:name => @ems.name + " (All #{title})",
                       :url  => "/#{@table_name}/show/#{@ems.id}?display=#{@display}")
       @view, @pages = get_view(ContainerGroup, :parent => @ems)  # Get the records (into a view) and the paginator
+      @showtype = @display
+      if @view.extras[:total_count] > @view.extras[:auth_count] && @view.extras[:total_count] &&
+         @view.extras[:auth_count]
+        @bottom_msg = "* You are not authorized to view " +
+                      pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") +
+                      " on this " + ui_lookup(:tables => @table_name)
+      end
+    elsif @display == "container_routes" || session[:display] == "container_routes" && params[:display].nil?
+      title = ui_lookup(:tables => "container_routes")
+      drop_breadcrumb(:name => @ems.name + " (All #{title})",
+                      :url  => "/#{@table_name}/show/#{@ems.id}?display=#{@display}")
+      @view, @pages = get_view(ContainerRoute, :parent => @ems)  # Get the records (into a view) and the paginator
+      @showtype = @display
+      if @view.extras[:total_count] > @view.extras[:auth_count] && @view.extras[:total_count] &&
+         @view.extras[:auth_count]
+        @bottom_msg = "* You are not authorized to view " +
+                      pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") +
+                      " on this " + ui_lookup(:tables => @table_name)
+      end
+    elsif @display == "container_projects" || session[:display] == "container_projects" && params[:display].nil?
+      title = ui_lookup(:tables => "container_projects")
+      drop_breadcrumb(:name => @ems.name + " (All #{title})",
+                      :url  => "/#{@table_name}/show/#{@ems.id}?display=#{@display}")
+      @view, @pages = get_view(ContainerProject, :parent => @ems)  # Get the records (into a view) and the paginator
       @showtype = @display
       if @view.extras[:total_count] > @view.extras[:auth_count] && @view.extras[:total_count] &&
          @view.extras[:auth_count]
@@ -143,7 +174,8 @@ module EmsCommon
         @bottom_msg = "* You are not authorized to view " + pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other " + ui_lookup(:table=>"storages")) + " on this " + ui_lookup(:table=>@table_name)
       end
     elsif @display == "ems_clusters"
-      drop_breadcrumb( {:name=>@ems.name+" (All Clusters)", :url=>"/#{@table_name}/show/#{@ems.id}?display=ems_clusters"} )
+      drop_breadcrumb(:name => "#{@ems.name} (All #{title_for_clusters})",
+                      :url  => "/#{@table_name}/show/#{@ems.id}?display=ems_clusters")
       @view, @pages = get_view(EmsCluster, :parent=>@ems) # Get the records (into a view) and the paginator
       if @view.extras[:total_count] && @view.extras[:auth_count] &&
           @view.extras[:total_count] > @view.extras[:auth_count]
@@ -206,6 +238,11 @@ module EmsCommon
       if @edit[:new][:emstype].blank?
         add_flash(_("%s is required") % "Type", :error)
       end
+
+      if @edit[:new][:emstype] == "scvmm" && @edit[:new][:security_protocol] == "kerberos" && @edit[:new][:realm].blank?
+        add_flash(_("%s is required") % "Realm", :error)
+      end
+
       if !@flash_array
         add_ems = model.model_from_emstype(@edit[:new][:emstype]).new
         set_record_vars(add_ems)
@@ -259,11 +296,13 @@ module EmsCommon
   def form_field_changed
     return unless load_edit("ems_edit__#{params[:id]}")
     get_form_vars
-    changed = edit_changed?
 
+    changed = edit_changed?
     render :update do |page|                  # Use JS to update the display
-      if params[:server_emstype]              # Server type changed
+      if params[:server_emstype] || params[:security_protocol]   # Server/protocol type changed
         page.replace_html("form_div", :partial => "shared/views/ems_common/form")
+      end
+      if params[:server_emstype]              # Server type changed
         unless @ems.kind_of?(EmsCloud)
           # Hide/show C&U credentials tab
           page << "$('#metrics_li').#{params[:server_emstype] == "rhevm" ? "show" : "hide"}();"
@@ -274,10 +313,7 @@ module EmsCommon
         # Hide/show port field
         page << "$('#port_tr').#{%w(openstack openstack_infra rhevm).include?(params[:server_emstype]) ? "show" : "hide"}();"
       end
-      if changed != session[:changed]
-        session[:changed] = changed
-        page << javascript_for_miq_button_visibility(changed)
-      end
+      page << javascript_for_miq_button_visibility(changed)
       if @edit[:default_verify_status] != @edit[:saved_default_verify_status]
         @edit[:saved_default_verify_status] = @edit[:default_verify_status]
         page << "miqValidateButtons('#{@edit[:default_verify_status] ? 'show' : 'hide'}', 'default_');"
@@ -373,7 +409,7 @@ module EmsCommon
     if result
       add_flash(_("Credential validation was successful"))
     else
-      add_flash(_("Credential validation was not successful: #{details}"), :error)
+      add_flash(_("Credential validation was not successful: %s") % details, :error)
     end
 
     render_flash
@@ -580,8 +616,11 @@ module EmsCommon
   # Validate the ems record fields
   def valid_record?(ems)
     @edit[:errors] = Array.new
+    if ems.emstype == "scvmm" && ems.security_protocol == "kerberos" && ems.realm.blank?
+      add_flash(_("%s is required") % "Realm", :error)
+    end
     if !ems.authentication_password.blank? && ems.authentication_userid.blank?
-      @edit[:errors].push(_("User ID must be entered if Password is entered"))
+      @edit[:errors].push(_("Username must be entered if Password is entered"))
     end
     if @edit[:new][:password] != @edit[:new][:verify]
       @edit[:errors].push(_("Password/Verify Password do not match"))
@@ -628,6 +667,14 @@ module EmsCommon
     @edit[:amazon_regions] = get_amazon_regions if @ems.kind_of?(EmsAmazon)
     @edit[:new][:port] = @ems.port
     @edit[:new][:provider_id] = @ems.provider_id
+    @edit[:protocols] = [['Basic (SSL)', 'ssl'], ['Kerberos', 'kerberos']]
+    if @ems.id
+      # for existing provider before this fix, set default to ssl
+      @edit[:new][:security_protocol] = @ems.security_protocol ? @ems.security_protocol : 'ssl'
+    else
+      @edit[:new][:security_protocol] = 'kerberos'
+    end
+    @edit[:new][:realm] = @ems.realm if @edit[:new][:emstype] == "scvmm"
     if @ems.zone.nil? || @ems.my_zone == ""
       @edit[:new][:zone] = "default"
     else
@@ -692,6 +739,10 @@ module EmsCommon
       @edit[:new][:emstype] = params[:server_emstype]
       if ["openstack", "openstack_infra"].include?(params[:server_emstype])
         @edit[:new][:port] = @ems.port ? @ems.port : 5000
+      elsif params[:server_emstype] == EmsKubernetes.ems_type
+        @edit[:new][:port] = @ems.port ?  @ems.port : EmsKubernetes.new.port
+      elsif params[:server_emstype] == EmsOpenshift.ems_type
+        @edit[:new][:port] = @ems.port ?  @ems.port : EmsOpenshift.new.port
       else
         @edit[:new][:port] = nil
       end
@@ -718,6 +769,9 @@ module EmsCommon
     @edit[:new][:host_default_vnc_port_start] = params[:host_default_vnc_port_start] if params[:host_default_vnc_port_start]
     @edit[:new][:host_default_vnc_port_end] = params[:host_default_vnc_port_end] if params[:host_default_vnc_port_end]
     @edit[:amazon_regions] = get_amazon_regions if @edit[:new][:emstype] == "ec2"
+    @edit[:new][:security_protocol] = params[:security_protocol] if params[:security_protocol]
+    @edit[:new][:realm] = nil if params[:security_protocol]
+    @edit[:new][:realm] = params[:realm] if params[:realm]
     set_verify_status
   end
 
@@ -725,10 +779,15 @@ module EmsCommon
   def set_record_vars(ems, mode = nil)
     ems.name = @edit[:new][:name]
     ems.provider_region = @edit[:new][:provider_region]
-    ems.hostname = @edit[:new][:hostname]
+    ems.hostname = @edit[:new][:hostname].strip unless @edit[:new][:hostname].nil?
     ems.port = @edit[:new][:port] if ems.supports_port?
     ems.provider_id = @edit[:new][:provider_id] if ems.supports_provider_id?
     ems.zone = Zone.find_by_name(@edit[:new][:zone])
+
+    if ems.is_a?(EmsMicrosoft)
+      ems.security_protocol = @edit[:new][:security_protocol]
+      ems.realm = @edit[:new][:realm]
+    end
 
     if ems.is_a?(EmsVmware)
       ems.host_default_vnc_port_start = @edit[:new][:host_default_vnc_port_start].blank? ? nil : @edit[:new][:host_default_vnc_port_start].to_i

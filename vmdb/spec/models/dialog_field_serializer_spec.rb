@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe DialogFieldSerializer do
-  let(:resource_action_serializer) { instance_double("ResourceActionSerializer") }
+  let(:resource_action_serializer) { auto_loaded_instance_double("ResourceActionSerializer") }
   let(:dialog_field_serializer) { described_class.new(resource_action_serializer) }
 
   describe "#serialize" do
@@ -31,6 +31,9 @@ describe DialogFieldSerializer do
         "label"                   => "label",
         "load_values_on_init"     => false,
         "position"                => 1,
+        "read_only"               => false,
+        "auto_refresh"            => false,
+        "trigger_auto_refresh"    => false,
         "validator_type"          => "validator_type",
         "validator_rule"          => "validator_rule",
         "reconfigurable"          => nil

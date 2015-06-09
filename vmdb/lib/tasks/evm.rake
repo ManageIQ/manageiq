@@ -28,7 +28,7 @@ namespace :evm do
     EvmApplication.status
   end
 
-  task :update_start => :compile_assets do
+  task :update_start do
     EvmApplication.update_start
   end
 

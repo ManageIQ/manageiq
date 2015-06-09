@@ -1,11 +1,10 @@
 require "spec_helper"
-require "miq_ae_yaml_import_zipfs"
 
 describe AutomateImportJsonSerializer do
   let(:automate_import_json_serializer) { described_class.new }
 
   describe "#serialize" do
-    let(:miq_ae_yaml_import_zipfs) { instance_double("MiqAeYamlImportZipfs") }
+    let(:miq_ae_yaml_import_zipfs) { auto_loaded_instance_double("MiqAeYamlImportZipfs") }
     let(:import_file_upload) { active_record_instance_double("ImportFileUpload") }
     let(:binary_blob) { active_record_instance_double("BinaryBlob") }
 

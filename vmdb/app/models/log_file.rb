@@ -3,7 +3,6 @@ require 'uri'
 require 'mount/miq_generic_mount_session'
 
 class LogFile < ActiveRecord::Base
-  has_one    :binary_blob, :as          => :resource, :dependent => :destroy
   belongs_to :resource,    :polymorphic => true
   belongs_to :file_depot
   belongs_to :miq_task
@@ -52,18 +51,18 @@ class LogFile < ActiveRecord::Base
     raise "LogFile local_file: [#{local_file}] does not exist!" unless File.exist?(local_file)
     raise "Log Depot settings not configured" unless file_depot
 
-    method = self.class.get_post_method(file_depot.depot_hash)
+    method = get_post_method(file_depot.uri)
     send("upload_log_file_#{method}")
   end
 
   def remove
-    method = self.class.get_post_method(:uri => self.log_uri)
+    method = get_post_method(log_uri)
     return if method.nil?
     return self.send("remove_log_file_#{method}") if respond_to?("remove_log_file_#{method}")
 
-    #At this point db and and ftp should have returned
+    #At this point ftp should have returned
     klass = Object.const_get("Miq#{method.capitalize}Session")
-    klass.new(file_depot.depot_hash).remove(log_uri)
+    klass.new(legacy_depot_hash).remove(log_uri)
   rescue Exception => err
     $log.warn("MIQ(#{self.class.name}.remove) #{err.message}, deleting #{self.log_uri} from FTP")
   end
@@ -71,13 +70,13 @@ class LogFile < ActiveRecord::Base
   def file_exists?
     return true if self.log_uri.nil?
 
-    method = self.class.get_post_method(:uri => self.log_uri)
+    method = get_post_method(log_uri)
     return true if method.nil?
     return self.send("file_exists_#{method}?") if respond_to?("file_exists_#{method}?")
 
-    #At this point db and and ftp should have returned
+    #At this point ftp should have returned
     klass = Object.const_get("Miq#{method.capitalize}Session")
-    klass.new(file_depot.depot_hash).exist?(log_uri)
+    klass.new(legacy_depot_hash).exist?(log_uri)
   end
 
   # main UI method to call to request logs from a server
@@ -130,17 +129,6 @@ class LogFile < ActiveRecord::Base
     end
   end
 
-  def file_from_db
-    log_header = "MIQ(#{self.class.name}-file_from_db)"
-    $log.info("#{log_header} Returning Log Data from db for logfile #{self.id}")
-    bb = self.binary_blob
-    return bb.nil? ? nil : bb.binary
-  end
-
-  def blob_size
-    self.binary_blob.size rescue nil
-  end
-
   def self.historical_logfile
     empty_logfile(true)
   end
@@ -155,18 +143,6 @@ class LogFile < ActiveRecord::Base
         :historical  => historical,
         :description => "Default logfile"
       })
-  end
-
-  def self.get_post_method(settings)
-    return nil if settings[:uri].nil?
-
-    # Convert all backslashes in the URI to forward slashes
-    settings[:uri].gsub!('\\','/')
-
-    # Strip any leading and trailing whitespace
-    settings[:uri].strip!
-
-    URI.split(URI.encode(settings[:uri]))[0]
   end
 
   # Added tcp ping stuff here until ftp is refactored into a separate class
@@ -184,24 +160,13 @@ class LogFile < ActiveRecord::Base
     @@do_ping ||= @@ping_depot_options[:ping_depot] == true
   end
 
-  def upload_log_file_db
-    log_header       = "MIQ(#{self.class.name}-upload_log_file_db)"
-    self.binary_blob = BinaryBlob.new(:name => "logs", :data_type => "zip")
-    self.binary_blob.store_binary(local_file)
-    self.save
-    $log.info("#{log_header} Created blob id: [#{self.binary_blob.id}] for log_file id: [#{self.id}]")
-
-    #Return a nil URI
-    nil
-  end
-
   def upload_log_file_ftp
     file_depot.upload_file(self)
   end
 
   def upload_log_file_nfs
     uri_to_add = build_log_uri(file_depot.uri, local_file)
-    uri        = MiqNfsSession.new(file_depot.depot_hash).add(local_file, uri_to_add)
+    uri        = MiqNfsSession.new(legacy_depot_hash).add(local_file, uri_to_add)
     update_attributes(
       :state   => "available",
       :log_uri => uri
@@ -211,7 +176,7 @@ class LogFile < ActiveRecord::Base
 
   def upload_log_file_smb
     uri_to_add = build_log_uri(file_depot.uri, local_file)
-    uri        = MiqSmbSession.new(file_depot.depot_hash).add(local_file, uri_to_add)
+    uri        = MiqSmbSession.new(legacy_depot_hash).add(local_file, uri_to_add)
     update_attributes(
       :state   => "available",
       :log_uri => uri
@@ -243,6 +208,27 @@ class LogFile < ActiveRecord::Base
 
   private
 
+  def get_post_method(uri)
+    return nil if uri.nil?
+
+    # Convert all backslashes in the URI to forward slashes
+    uri.gsub!('\\', '/')
+
+    # Strip any leading and trailing whitespace
+    uri.strip!
+
+    URI.split(URI.encode(uri))[0]
+  end
+
+  def legacy_depot_hash
+    # TODO: Delete this and make FileDepotSmb and FileDepotNfs implement all of their upload/delete/etc. logic
+    {
+      :uri      => file_depot.uri,
+      :username => file_depot.authentication_userid,
+      :password => file_depot.authentication_password,
+    }
+  end
+
   def self._request_logs(options)
     taskid = options[:taskid]
     klass  = options.delete(:klass).to_s
@@ -254,7 +240,6 @@ class LogFile < ActiveRecord::Base
     resource = server.who_am_i
 
     # server must implement an instance method: started_on? which returns whether the server is started
-    #  Add alias in MiqProxy:  alias :started? :state
     raise MiqException::Error, "started? not implemented for #{server.class.name}" unless server.respond_to?(:started?)
     raise MiqException::Error, "Log request failed since [#{resource} #{server.name if server.respond_to?(:name)}] is not started" unless server.started?
 

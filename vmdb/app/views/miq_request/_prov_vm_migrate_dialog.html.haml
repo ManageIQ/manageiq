@@ -32,7 +32,7 @@
     = render(:partial => "/miq_request/prov_dialog_fieldset",
       :locals         => {:workflow => wf,
         :dialog                     => dialog,
-        :label                      => _("Cluster"),
+        :label                      => title_for_cluster,
         :keys                       => keys})
 
     - keys = [:rp_filter, :placement_rp_name]
@@ -46,7 +46,7 @@
     = render(:partial => "/miq_request/prov_dialog_fieldset",
       :locals         => {:workflow => wf,
         :dialog                     => dialog,
-        :label                      => _("Host"),
+        :label                      => title_for_host,
         :keys                       => keys,
         :extra_table_attributes     => "width=100%"})
 

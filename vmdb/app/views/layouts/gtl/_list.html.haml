@@ -33,7 +33,7 @@
         :sortdir                         => @sortdir ? @sortdir[0..2] : nil,
         :alt_row                         => true}})
 - else
-  %table.table.datatable.table-striped.table-bordered.table-hover
+  %table.table.datatable.table-striped.table-bordered.table-hover.table-selectable
     %thead
       %tr
         - unless @embedded || @no_checkboxes
@@ -95,7 +95,7 @@
             - unless (@embedded || @no_checkboxes) && ! @showlinks
               - # Don't put a td URL for the server_build list view
               - case view.db
-              - when "ProductUpdate", "ServerBuild", "MiqTask", "MiqEvent", "VmdbDatabaseConnection", "VmdbDatabaseSetting"
+              - when "ServerBuild", "MiqTask", "MiqEvent", "VmdbDatabaseConnection", "VmdbDatabaseSetting"
               - when "MiqProvision"
                 - rec = @targets_hash[row['id']] if @targets_hash
                 - unless rec.destination_id.blank?
@@ -277,6 +277,8 @@
               - if %w(state status).include?(col) && row[col].nil? && view.db == "Job"
                 %center
                   = h(row[col].capitalize)
+              - elsif col == "enabled" && row[col].nil? && view.db == "MiqSchedule"
+                = (!!row[col]).to_s.capitalize
               - elsif col == "agent_class" && row[col].nil? && view.db == "Job"
                 - unless row['agent_class'].blank?
                   - if a_rec.nil?

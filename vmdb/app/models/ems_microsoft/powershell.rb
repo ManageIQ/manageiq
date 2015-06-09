@@ -39,11 +39,17 @@ class EmsMicrosoft
         error = results[:data].collect { |d| d[:stderr] }.join
         $scvmm_log.error("#{log_header} #{error}") unless error.blank?
       end
+
+      def parse_json_results(results)
+        output = results[:data].collect { |d| d[:stdout] }.join
+        JSON.parse(output)
+      end
     end
 
     def run_dos_command(command)
       log_header = "MIQ(#{self.class.name}##{__method__})"
       $scvmm_log.debug("#{log_header} Execute DOS command <#{command}>...")
+      results = []
 
       _result, timings = Benchmark.realtime_block(:execution) do
         with_provider_connection do |connection|
@@ -53,6 +59,25 @@ class EmsMicrosoft
       end
 
       $scvmm_log.debug("#{log_header} Execute DOS command <#{command}>...Complete - Timings: #{timings}")
+
+      results
+    end
+
+    def run_powershell_script(script)
+      log_header = "MIQ(#{self.class.name}##{__method__})"
+      $scvmm_log.debug("#{log_header} Execute Powershell Script...")
+      results = []
+
+      _result, timings = Benchmark.realtime_block(:execution) do
+        with_provider_connection do |connection|
+          results = connection.run_powershell_script(script)
+          self.class.log_dos_error_results(results)
+        end
+      end
+
+      $scvmm_log.debug("#{log_header} Execute Powershell script... Complete - Timings: #{timings}")
+
+      results
     end
   end
 end

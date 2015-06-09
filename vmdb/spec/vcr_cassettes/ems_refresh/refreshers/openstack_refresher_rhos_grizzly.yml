@@ -1031,6 +1031,39 @@ http_interactions:
     http_version: 
   recorded_at: Tue, 16 Dec 2014 00:15:42 GMT
 - request:
+    method: get
+    uri: http://1.2.3.4:8774/v2/cd29f03e4667409fb59d2d93cc527ca2/servers/detail.json?marker=bd356ece-8cdb-4580-952a-362c5844fa07
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.26.0 fog-core/1.27.1
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 0027b3e049524b018f0944e34f22b65a
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Compute-Request-Id:
+      - req-3a157dd1-770b-49ac-8bee-06a30d8ff002
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '14043'
+      Date:
+      - Tue, 16 Dec 2014 00:05:39 GMT
+    body:
+      encoding: UTF-8
+      string: '{"servers": []}'
+    http_version:
+  recorded_at: Tue, 16 Dec 2014 00:15:42 GMT
+- request:
     method: post
     uri: http://1.2.3.4:5000/v2.0/tokens
     body:

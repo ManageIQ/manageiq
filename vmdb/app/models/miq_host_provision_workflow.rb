@@ -123,7 +123,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     raise "No host search criteria values were passed.  input data:<#{data.inspect}>" if name.nil? && mac_address.nil? && ipmi_address.nil?
 
     $log.info "#{log_header} Host Passed  : <#{name}> <#{mac_address}> <#{ipmi_address}>"
-    srcs = self.send(:allowed_ws_hosts, {:include_datacenter => true}).find_all do |v|
+    srcs = allowed_ws_hosts({:include_datacenter => true}).find_all do |v|
       $log.info "#{log_header} Host Detected: <#{v.name.downcase}> <#{v.mac_address}> <#{v.ipmi_address}>"
       (name.nil? || name == v.name.downcase) && (mac_address.nil? || mac_address == v.mac_address.to_s.downcase) && (ipmi_address.nil? || ipmi_address == v.ipmi_address.to_s)
     end

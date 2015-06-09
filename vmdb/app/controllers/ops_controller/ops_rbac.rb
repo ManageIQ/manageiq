@@ -334,7 +334,7 @@ module OpsController::OpsRbac
       add_flash(_("%s must be entered to perform LDAP Group Look Up") % "User", :error)
     end
     if @edit[:new][:user_id].nil? || @edit[:new][:user_id] == ""
-      add_flash(_("%s must be entered to perform LDAP Group Look Up") % "User Id", :error)
+      add_flash(_("%s must be entered to perform LDAP Group Look Up") % "Username", :error)
     end
     if @edit[:new][:user_pwd].nil? || @edit[:new][:user_pwd] == ""
       add_flash(_("%s must be entered to perform LDAP Group Look Up") % "User Password", :error)

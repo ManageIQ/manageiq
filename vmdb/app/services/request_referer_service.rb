@@ -11,18 +11,23 @@ class RequestRefererService
     # For all 'show' actions below the case where ID is not found is handled in
     # record_no_longer_exists? which sets a flash message and redirects either
     # to 'explorer' or 'show_list'. Therefor we need to whitelist more then just 'show'.
-    'vm_or_template' => %w(show:id explorer),  # http://localhost:3000/vm_or_template/show/400r75
+    'vm_or_template'    => %w(show:id explorer),  # http://localhost:3000/vm_or_template/show/400r75
     # Valid vm_or_template/show/:id redirects to {vm_infra,vm_cloud,vm_or_template}/explorer
     # the decision is done in 'controller_for_vm'.
-    'vm_infra'       => %w(launch_html5_console explorer),
-    'vm_cloud'       => %w(launch_html5_console explorer),
-    'vm'             => %w(launch_html5_console show:id show_list), # http://localhost:3000/vm/show/400r6
+    'vm_infra'          => %w(launch_html5_console explorer),
+    'vm_cloud'          => %w(launch_html5_console explorer),
+    'vm'                => %w(launch_html5_console show:id show_list), # http://localhost:3000/vm/show/400r6
     # 'launch_html5_console' above added due to IE even in version 11 does not set the referrer headir
     # most likely when the new window is opened by JavaScript code
-    'host'           => %w(show:id show_list), # http://localhost:3000/host/show/400r6
-    'miq_request'    => %w(show:id show_list), # http://localhost:3000/miq_request/show/400r3
-    'ems_cluster'    => %w(show:id show_list), # http://localhost:3000/ems_cluster/show/400r2
-    'storage'        => %w(show:id show_list), # http://localhost:3000//storage/show/400r1
+    'host'              => %w(show:id show_list), # http://localhost:3000/host/show/400r6
+    'miq_request'       => %w(show:id show_list), # http://localhost:3000/miq_request/show/400r3
+    'ems_cluster'       => %w(show:id show_list), # http://localhost:3000/ems_cluster/show/400r2
+    'storage'           => %w(show:id show_list), # http://localhost:3000//storage/show/400r1
+    'ems_container'     => %w(show:id show_list), # http://localhost:3000/ems_container/show/400r1
+    'container'         => %w(explorer),  # http://localhost:3000/container/explorer
+    'container_group'   => %w(show:id show_list), # http://localhost:3000/container_group/show/400r1
+    'container_node'    => %w(show:id show_list), # http://localhost:3000/container_node/show/400r1
+    'container_service' => %w(show:id show_list), # http://localhost:3000/container_service/show/400r1
   }.freeze
 
   ENTRY_POINTS =

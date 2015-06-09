@@ -14,6 +14,7 @@ describe ExtManagementSystem do
       foreman_configuration
       foreman_provisioning
       kubernetes
+      openshift
       openstack
       openstack_infra
       rhevm
@@ -112,26 +113,29 @@ describe ExtManagementSystem do
       t = ems.name.underscore
 
       context "for #{ems}" do
+        before do
+          _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
+        end
 
         it "name" do
-          expect { FactoryGirl.create(t, :name => "ems_1", :ipaddress => "1.1.1.1", :hostname => "ems_1") }.to_not raise_error
-          expect { FactoryGirl.create(t, :name => "ems_1", :ipaddress => "2.2.2.2", :hostname => "ems_2") }.to     raise_error
+          expect { FactoryGirl.create(t, :name => "ems_1", :ipaddress => "1.1.1.1", :hostname => "ems_1", :zone => @zone) }.to_not raise_error
+          expect { FactoryGirl.create(t, :name => "ems_1", :ipaddress => "2.2.2.2", :hostname => "ems_2", :zone => @zone) }.to     raise_error
         end
 
         if ems.new.hostname_required?
           context "hostname" do
             it "duplicate hostname" do
-              expect { FactoryGirl.create(t, :ipaddress => "1.1.1.1", :hostname => "ems_1") }.to_not raise_error
-              expect { FactoryGirl.create(t, :ipaddress => "2.2.2.2", :hostname => "ems_1") }.to     raise_error
-              expect { FactoryGirl.create(t, :ipaddress => "3.3.3.3", :hostname => "EMS_1") }.to     raise_error
+              expect { FactoryGirl.create(t, :ipaddress => "1.1.1.1", :hostname => "ems_1", :zone => @zone) }.to_not raise_error
+              expect { FactoryGirl.create(t, :ipaddress => "2.2.2.2", :hostname => "ems_1", :zone => @zone) }.to     raise_error
+              expect { FactoryGirl.create(t, :ipaddress => "3.3.3.3", :hostname => "EMS_1", :zone => @zone) }.to     raise_error
             end
 
             it "blank hostname" do
-              expect { FactoryGirl.create(t, :ipaddress => "1.1.1.1", :hostname => "") }.to raise_error
+              expect { FactoryGirl.create(t, :ipaddress => "1.1.1.1", :hostname => "", :zone => @zone) }.to raise_error
             end
 
             it "nil hostname" do
-              expect { FactoryGirl.create(t, :ipaddress => "1.1.1.1", :hostname => nil) }.to raise_error
+              expect { FactoryGirl.create(t, :ipaddress => "1.1.1.1", :hostname => nil, :zone => @zone) }.to raise_error
             end
           end
         end

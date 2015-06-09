@@ -15,7 +15,7 @@
   %tr
     %td{:align => align}
       #buttons_on{:style => "display:#{@changed ? "display" : "none"};"}
-        - if %w(miq_proxy miq_ae_class pxe miq_ae_tools).include?(@layout) || ajax_buttons
+        - if %w(miq_ae_class pxe miq_ae_tools).include?(@layout) || ajax_buttons
           - if serialize
             = button_tag(_("Save"),
                          :class   => 'btn btn-primary',

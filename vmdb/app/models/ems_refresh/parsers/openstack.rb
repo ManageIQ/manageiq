@@ -5,22 +5,18 @@ module EmsRefresh::Parsers
     include EmsRefresh::Parsers::OpenstackCommon::Images
     include EmsRefresh::Parsers::OpenstackCommon::OrchestrationStacks
 
-    # Openstack uses numbers to represent different power states. Each openstack
-    # power state value corresponds to an array index for the human readable
-    # power state.
-    RAW_POWER_STATES = %w(NO_STATE RUNNING BLOCKED PAUSED SHUTDOWN SHUTOFF CRASHED SUSPENDED FAILED BUILDING)
-
     def self.ems_inv_to_hashes(ems, options = nil)
       self.new(ems, options).ems_inv_to_hashes
     end
 
     def initialize(ems, options = nil)
-      @ems           = ems
-      @connection    = ems.connect
-      @options       = options || {}
-      @data          = {}
-      @data_index    = {}
-      @known_flavors = Set.new
+      @ems               = ems
+      @connection        = ems.connect
+      @options           = options || {}
+      @data              = {}
+      @data_index        = {}
+      @known_flavors     = Set.new
+      @resource_to_stack = {}
 
       @os_handle                  = ems.openstack_handle
       @compute_service            = @connection # for consistency
@@ -45,6 +41,7 @@ module EmsRefresh::Parsers
       get_tenants
       get_quotas
       get_key_pairs
+      load_orchestration_stacks
       get_security_groups
       get_networks
       # get_hosts
@@ -54,7 +51,6 @@ module EmsRefresh::Parsers
       get_snapshots
       get_object_store
       get_floating_ips
-      load_orchestration_stacks
 
       $fog_log.info("#{log_header}...Complete")
 
@@ -77,7 +73,7 @@ module EmsRefresh::Parsers
     end
 
     def networks
-      @networks ||= @network_service.networks
+      @networks ||= @network_service.networks_for_accessible_tenants
     end
 
     def volumes
@@ -178,6 +174,7 @@ module EmsRefresh::Parsers
 
     def process_collection(collection, key, &block)
       @data[key] ||= []
+      return if @options[:inventory_ignore] && @options[:inventory_ignore].include?(key)
       collection.each { |item| process_collection_item(item, key, &block) }
     end
 
@@ -325,7 +322,8 @@ module EmsRefresh::Parsers
 
     def parse_security_group(sg)
       uid, security_group = super
-      security_group[:cloud_tenant] = @data_index.fetch_path(:cloud_tenants, sg.tenant_id)
+      security_group[:cloud_tenant]        = @data_index.fetch_path(:cloud_tenants, sg.tenant_id)
+      security_group[:orchestration_stack] = @data_index.fetch_path(:orchestration_stacks, @resource_to_stack[uid])
       return uid, security_group
     end
 
@@ -367,12 +365,13 @@ module EmsRefresh::Parsers
       status  = (network.status.to_s.downcase == "active") ? "active" : "inactive"
 
       new_result = {
-        :name            => network.name,
-        :ems_ref         => uid,
-        :status          => status,
-        :enabled         => network.admin_state_up,
-        :external_facing => network.router_external,
-        :cloud_tenant    => @data_index.fetch_path(:cloud_tenants, network.tenant_id)
+        :name                => network.name,
+        :ems_ref             => uid,
+        :status              => status,
+        :enabled             => network.admin_state_up,
+        :external_facing     => network.router_external,
+        :cloud_tenant        => @data_index.fetch_path(:cloud_tenants, network.tenant_id),
+        :orchestration_stack => @data_index.fetch_path(:orchestration_stacks, @resource_to_stack[uid])
       }
       return uid, new_result
     end
@@ -476,7 +475,7 @@ module EmsRefresh::Parsers
     def parse_server(server, parent_hosts = nil)
       uid = server.id
 
-      raw_power_state = RAW_POWER_STATES[server.os_ext_sts_power_state.to_i] || "UNKNOWN"
+      raw_power_state = server.state || "UNKNOWN"
 
       flavor_uid = server.flavor["id"]
       @known_flavors << flavor_uid
@@ -521,13 +520,14 @@ module EmsRefresh::Parsers
           :disks            => [], # Filled in later conditionally on flavor
           :networks         => [], # Filled in later conditionally on what's available
         },
-        :host              => parent_host,
-        :ems_cluster       => parent_cluster,
-        :flavor            => flavor,
-        :availability_zone => @data_index.fetch_path(:availability_zones, server.availability_zone || "null_az"),
-        :key_pairs         => [@data_index.fetch_path(:key_pairs, server.key_name)].compact,
-        :security_groups   => server.security_groups.collect { |sg| @data_index.fetch_path(:security_groups, sg.id) }.compact,
-        :cloud_tenant      => @data_index.fetch_path(:cloud_tenants, server.tenant_id),
+        :host                => parent_host,
+        :ems_cluster         => parent_cluster,
+        :flavor              => flavor,
+        :availability_zone   => @data_index.fetch_path(:availability_zones, server.availability_zone || "null_az"),
+        :key_pairs           => [@data_index.fetch_path(:key_pairs, server.key_name)].compact,
+        :security_groups     => server.security_groups.collect { |sg| @data_index.fetch_path(:security_groups, sg.id) }.compact,
+        :cloud_tenant        => @data_index.fetch_path(:cloud_tenants, server.tenant_id),
+        :orchestration_stack => @data_index.fetch_path(:orchestration_stacks, @resource_to_stack[uid])
       }
       new_result[:hardware][:networks] << private_network.merge(:description => "private") unless private_network.blank?
       new_result[:hardware][:networks] << public_network.merge(:description => "public")   unless public_network.blank?

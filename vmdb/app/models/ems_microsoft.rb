@@ -12,17 +12,20 @@ class EmsMicrosoft < EmsInfra
     @description ||= "Microsoft System Center VMM".freeze
   end
 
-  def self.raw_connect(username, password, auth_url)
+  def self.raw_connect(auth_url, security_protocol, connect_params)
     # HACK: WinRM depends on the gssapi gem for encryption purposes.
     # The gssapi code outputs the following warning:
     #   WARNING: Could not load IOV methods. Check your GSSAPI C library for an update
     #   WARNING: Could not load AEAD methods. Check your GSSAPI C library for an update
-    # After much googling, this warning is considered benign and can be ignored.
+    # This warning is considered benign and can be ignored.
     # Please note - the webmock gem depends on gssapi too and prints out the
     # above warning when rspec tests are run.
+
     silence_warnings { require 'winrm' }
 
-    WinRM::WinRMWebService.new(auth_url, :ssl, :user => username, :pass => password, :disable_sspi => true)
+    winrm = WinRM::WinRMWebService.new(auth_url, security_protocol.to_sym, connect_params)
+    winrm.set_timeout(1800)
+    winrm
   end
 
   def self.auth_url(hostname, port = nil)
@@ -32,14 +35,17 @@ class EmsMicrosoft < EmsInfra
   def connect(options = {})
     raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
 
-    username = options[:user] || authentication_userid(options[:auth_type])
-    password = options[:pass] || authentication_password(options[:auth_type])
-    hostname = options[:hostname] || self.hostname
-    auth_url = self.class.auth_url(hostname, port)
-    self.class.raw_connect(username, password, auth_url)
+    hostname       = options[:hostname] || self.hostname
+    auth_url       = self.class.auth_url(hostname, port)
+    connect_params = build_connect_params(options)
+
+    self.class.raw_connect(auth_url, security_protocol, connect_params)
   end
 
   def verify_credentials(_auth_type = nil, options = {})
+    silence_warnings { require 'winrm' }
+    silence_warnings { require 'gssapi' } # Version 1.0.0 of the gssapi gem emits warnings
+
     raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(options[:auth_type])
 
     begin
@@ -47,6 +53,10 @@ class EmsMicrosoft < EmsInfra
     rescue WinRM::WinRMHTTPTransportError => e # Error 401
       raise MiqException::MiqHostError, "Check credentials and WinRM configuration settings. " \
       "Remote error message: #{e.message}"
+    rescue GSSAPI::GssApiError
+      raise MiqException::MiqHostError, "Unable to reach any KDC in realm #{realm}"
+    rescue StandardError => e
+      raise MiqException::MiqHostError, "Unable to connect: #{e.message}"
     end
 
     true
@@ -92,5 +102,23 @@ class EmsMicrosoft < EmsInfra
     params  = parameters.join(" ")
     command = "powershell #{cmdlet}-SCVirtualMachine -VM (Get-SCVirtualMachine -ID #{vm_uid_ems}) #{params}"
     run_dos_command(command)
+  end
+
+  def build_connect_params(options)
+    connect_params  = {
+      :user         => options[:user] || authentication_userid(options[:auth_type]),
+      :pass         => options[:pass] || authentication_password(options[:auth_type]),
+      :disable_sspi => true
+    }
+
+    if security_protocol == "kerberos"
+      connect_params.merge!(
+        :realm           => realm,
+        :basic_auth_only => false,
+        :disable_sspi    => false
+    )
+    end
+
+    connect_params
   end
 end

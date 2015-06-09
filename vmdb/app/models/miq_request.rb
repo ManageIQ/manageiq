@@ -35,25 +35,25 @@ class MiqRequest < ActiveRecord::Base
   include MiqRequestMixin
 
   MODEL_REQUEST_TYPES = {
-    :Service => {
-      :MiqProvisionRequest => {
+    :Service        => {
+      :MiqProvisionRequest                 => {
         :template          => "VM Provision",
         :clone_to_vm       => "VM Clone",
         :clone_to_template => "VM Publish",
       },
       :MiqProvisionConfiguredSystemRequest => {
-        :provision_via_foreman => "Foreman Provision"
+        :provision_via_foreman => "#{ui_lookup(:ui_title => 'foreman')} Provision"
       },
-      :VmReconfigureRequest => {
+      :VmReconfigureRequest                => {
         :vm_reconfigure => "VM Reconfigure"
       },
-      :VmMigrateRequest => {
+      :VmMigrateRequest                    => {
         :vm_migrate => "VM Migrate"
       },
-      :ServiceTemplateProvisionRequest => {
+      :ServiceTemplateProvisionRequest     => {
         :clone_to_service => "Service Provision"
       },
-      :ServiceReconfigureRequest => {
+      :ServiceReconfigureRequest           => {
         :service_reconfigure => "Service Reconfigure"
       }
     },
@@ -62,7 +62,7 @@ class MiqRequest < ActiveRecord::Base
         :host_pxe_install => "Host Provision"
       },
     },
-    :Automate => {
+    :Automate       => {
       :AutomationRequest => {
         :automation => "Automation"
       }
@@ -435,6 +435,9 @@ class MiqRequest < ActiveRecord::Base
     customize_request_task_attributes(req_task_attribs, idx)
     req_task = self.class.new_request_task(req_task_attribs)
     req_task.miq_request = self
+
+    yield req_task if block_given?
+
     req_task.save!
     req_task.after_request_task_create
 

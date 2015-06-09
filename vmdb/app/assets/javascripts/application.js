@@ -3,6 +3,7 @@
 //= require jquery_overrides
 //= require miq_angular_application
 //= require services/miq_service
+//= require services/miq_db_backup_service
 //= require directives/miqrequired
 //= require directives/checkchange
 //= require directives/verifypasswd
@@ -12,6 +13,8 @@
 //= require controllers/provider_foreman/provider_foreman_form_controller
 //= require controllers/repository/repository_form_controller
 //= require controllers/schedule/schedule_form_controller
+//= require controllers/ops/diagnostics_database_form_controller
+//= require controllers/ops/log_collection_form_controller
 //= require miq_application
 //= require miq_dynatree_replacement
 //= require dialog_import_export
@@ -27,8 +30,6 @@
 //= require jqplot-plugins/jqplot.cursor
 //= require jqplot-plugins/jqplot.enhancedLegendRenderer
 //= require miq_jqplot
-//= require spice-html5
-//= require novnc-rails
 //= require jquery/jquery-ui-1.9.2.custom.min
 //= require bootstrap.min
 //= require bootstrap-hover-dropdown/bootstrap-hover-dropdown.min
@@ -51,3 +52,4 @@
 //= require codemirror-4.2/lib/codemirror.js
 //= require codemirror-4.2/mode/yaml/yaml.js
 //= require spin
+//= require jquery-hotkeys

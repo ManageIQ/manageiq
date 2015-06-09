@@ -28,7 +28,7 @@ class ConfigurationController < ApplicationController
     end
     @tabform = params[:load_edit_err] ? @tabform : @config_tab + "_#{active_tab}"
     case @config_tab
-    when "operations", "ui", "filters", "smartproxies"
+    when "operations", "ui", "filters"
       if @tabform == "operations_1" || @tabform == "operations_2"
         init_server_options
         @server_options[:server_id] = MiqServer.my_server.id
@@ -715,15 +715,17 @@ class ConfigurationController < ApplicationController
   end
 
   NAV_TAB_PATH =  {
-                    :container     => %w(Containers Containers),
-                    :host          => %w(Infrastructure Hosts),
-                    :miqtemplate   => %w(Services Workloads Templates\ &\ Images),
-                    :storage       => %w(Infrastructure Datastores),
-                    :templatecloud => %w(Cloud Instances Images),
-                    :templateinfra => %w(Infrastructure Virtual\ Machines Templates),
-                    :vm            => %w(Services Workloads VMs\ &\ Instances),
-                    :vmcloud       => %w(Cloud Instances Instances),
-                    :vminfra       => %w(Infrastructure Virtual\ Machines VMs)
+                    :container        => %w(Containers Containers),
+                    :containergroup   => %w(Containers Containers\ Groups),
+                    :containerservice => %w(Containers Services),
+                    :host             => %w(Infrastructure Hosts),
+                    :miqtemplate      => %w(Services Workloads Templates\ &\ Images),
+                    :storage          => %w(Infrastructure Datastores),
+                    :templatecloud    => %w(Cloud Instances Images),
+                    :templateinfra    => %w(Infrastructure Virtual\ Machines Templates),
+                    :vm               => %w(Services Workloads VMs\ &\ Instances),
+                    :vmcloud          => %w(Cloud Instances Instances),
+                    :vminfra          => %w(Infrastructure Virtual\ Machines VMs)
                   }
 
   def merge_in_user_settings(settings)
@@ -762,7 +764,7 @@ class ConfigurationController < ApplicationController
 
       # Build the start pages pulldown list
       session[:start_pages] = MiqShortcut.start_pages.each_with_object([]) do |page, pages|
-        pages.push([page[1], page[0]]) if role_allows(:feature => page[2], :any => true)
+        pages.push([page[1], page[0]]) if start_page_allowed?(page[2])
       end
     when 'ui_2'
       @edit = {
@@ -770,7 +772,9 @@ class ConfigurationController < ApplicationController
         :key     => 'config_edit__ui2',
       }
     when 'ui_3'
-      current = MiqSearch.all(:conditions=>["search_type=?", "default"]).sort_by do |a|
+      filters = []
+      MiqSearch.all(:conditions => ["search_type=?", "default"]).collect { |search| filters.push(search) if allowed_filter_db?(search.db) }
+      current = filters.sort_by do |a|
         [NAV_TAB_PATH[a.db.downcase.to_sym], a.description.downcase]
       end
       @edit = {

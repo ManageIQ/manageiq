@@ -1,14 +1,6 @@
 - if edit
-  - if field.values.length > 1
-    - select_values = field.values.collect(&:reverse)
-    = select_tag(field.name, options_for_select(select_values, field.default_value),
-                 :class                 => "dynamic-drop-down-#{field.id}",
-                 "data-miq_sparkle_on"  => true,
-                 "data-miq_sparkle_off" => true,
-                 "data-miq_observe"     => {:url => url}.to_json)
-
-  - else
-    = h(field.values[0].last) if !field.values.empty?
+  - select_values = field.values.collect(&:reverse)
+  = select_tag(field.name, options_for_select(select_values, field.default_value), drop_down_options(field, url))
 
 - else
   = h(field.values.detect { |k, _v| k == wf.value(field.name) }.try(:last) || wf.value(field.name))
@@ -30,8 +22,14 @@
         $.each(data.values.refreshed_values, function(index, value) {
           var option = '<option ';
           option += 'value="' + value[0] + '" ';
-          if (data.values.checked_value.toString() === value[0].toString()) {
-            option += 'selected="selected" ';
+          if (data.values.checked_value !== null) {
+            if (data.values.checked_value.toString() === value[0].toString()) {
+              option += 'selected="selected" ';
+            }
+          } else {
+            if (index === 0) {
+              option += 'selected="selected" ';
+            }
           }
           option += '> ' + value[1] + '</option>';
           dropdownOptions.push(option);

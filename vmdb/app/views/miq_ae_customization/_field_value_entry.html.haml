@@ -6,9 +6,9 @@
           :class => "rollover small",
           :id => "accept", :name => "accept", :alt => (t = _("Add this entry")), :title => t)
       %td
-        = text_field("entry", "value", :maxlength => MAX_NAME_LEN)
+        = text_field("entry", "value", :size => 50, :maxlength => MAX_NAME_LEN)
       %td
-        = text_field("entry", "description", :maxlength => MAX_DESC_LEN)
+        = text_field("entry", "description", :size => 50, :maxlength => MAX_DESC_LEN)
   - else
     %tr{:id => "#{idx}_tr"}
       %td
@@ -16,9 +16,9 @@
           :class => "rollover small",
           :id => "accept", :name => "accept", :alt => (t = _("Update this entry")), :title => t)
       %td
-        = text_field("entry", "value", :maxlength => MAX_NAME_LEN, "value" => entry[0])
+        = text_field("entry", "value", :size => 50, :maxlength => MAX_NAME_LEN, "value" => entry[0])
       %td
-        = text_field("entry", "description", :maxlength => MAX_DESC_LEN, "value" => entry[1])
+        = text_field("entry", "description", :size => 50, :maxlength => MAX_DESC_LEN, "value" => entry[1])
         = hidden_field("entry", "id", "value" => h(idx))
 - else
   - if entry == "new"
@@ -56,7 +56,7 @@
         %td{:onclick => remote_function(:url => {:action => 'field_value_delete', :id => "#{@record.id || 'new'}", :entry_id => idx}),
           :title => _("Click to delete this entry")}
           = image_tag("/images/toolbars/delete.png", :class => "rollover small")
-      %td{:onclick => remote_function(:url => {:action => 'field_value_select', :id => "#{@record.id || 'new'}", :entry_id => idx, :field => "name"}),
+      %td{:onclick => remote_function(:url => {:action => 'field_value_select', :id => "#{@record.id || 'new'}", :entry_id => idx, :field => "value"}),
         :title => _("Click to update this entry")}
         = h(entry[0])
       %td{:onclick => remote_function(:url => {:action => 'field_value_select', :id => "#{@record.id || 'new'}", :entry_id => idx, :field => "description"}),

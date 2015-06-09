@@ -125,46 +125,6 @@ module MiqservicesOps
     true
   end
 
-  def host_heartbeat(hostId, xmlFile, type)
-    ret = {}
-    begin
-      Timeout::timeout(WS_TIMEOUT) do
-        $log.info "MIQ(host_heartbeat): host heartbeat starting for GUID:[#{hostId}]"
-        host = Host.find_by_guid(hostId)
-
-        if host && host.miq_proxy
-          $log.debug "MIQ(host_heartbeat): HostId id [#{hostId}]"
-          ret = host.miq_proxy.heartbeat(xmlFile, type)
-        else
-          # If the host is not found by id then we need to send back
-          # an error message and action details.
-          errMsg = "No proxy found for id [#{hostId}]"
-          $log.error "MIQ(host_heartbeat): " + errMsg
-          ret = {
-            :server_error => true,
-            :server_message => errMsg,
-            :host_action => "stop",
-          }
-        end
-      end
-    rescue Exception => err
-      # In case of an unhandled error on the server side, tell
-      # the host to retry after a heartbeat sleep cycle.
-      $log.log_backtrace(err)
-      MiqservicesOps.reconnect_to_db
-      ret = {
-        :server_error => true,
-        :server_message => err.to_s,
-        :host_action => "retry"
-      }
-    end
-
-    # Update the return hash with current time and vmdb build number
-    ret.merge!({:server_time=>Time.now.utc.iso8601, :server_build=>Vmdb::Appliance.BUILD}) if (ret.class == Hash)
-
-    return YAML.dump(ret)
-  end
-
   def vm_status_update(vmId, vmStatus)
     begin
       Timeout::timeout(WS_TIMEOUT) do
@@ -179,80 +139,6 @@ module MiqservicesOps
       return false
     end
     true
-  end
-
-  def agent_unregister(proxy_guid, message)
-    begin
-      Timeout::timeout(WS_TIMEOUT) do
-        host = Host.find_by_guid(proxy_guid)
-        return false if host.nil?
-
-        miq_proxy = host.miq_proxy
-        if miq_proxy
-          MiqProxy.destroy(miq_proxy.id)
-          $log.info("MIQ(agent_unregister): deleting miq_proxy, guid #{proxy_guid}, message [#{message}]")
-          return true
-        else
-          $log.info("MIQ(agent_unregister): could not find miq_proxy, guid #{proxy_guid}, cannot unregister the agent")
-          return false
-        end
-      end
-    rescue Exception => err
-      $log.log_backtrace(err)
-      MiqservicesOps.reconnect_to_db
-      return false
-    end
-  end
-
-  def agent_config(hostId, config)
-    ret = nil
-    $log.info "MIQ(agent_config): starting agent_config for [#{hostId}]"
-    begin
-      Timeout::timeout(WS_TIMEOUT) do
-        host = Host.find_by_guid(hostId)
-        if host && host.miq_proxy
-          $log.debug "MIQ(agent_config): Found host id [#{host.id}]"
-          agentSettings = YAML.load(MIQEncode.decode(config))
-          ret = host.miq_proxy.agent_config(agentSettings)
-        else
-          # If the host is not found by id then we need to send back
-          # an error message and action details.
-          errMsg = "No host found for id [#{hostId}]"
-          $log.error "MIQ(agent_config): " + errMsg
-          ret = {
-            :server_error => true,
-            :server_message => errMsg,
-            :host_action => "reset_hostid",
-          }
-        end
-      end
-    rescue Exception => err
-      # In case of an unhandled error on the server side, tell
-      # the host to retry after a heartbeat sleep cycle.
-      $log.log_backtrace(err)
-      MiqservicesOps.reconnect_to_db
-      ret = {
-        :server_error => true,
-        :server_message => err.to_s,
-        :host_action => "retry"
-      }
-    end
-
-    return YAML.dump(ret)
-  end
-
-  def agent_register(xmlFile)
-    ret = false
-    begin
-      Timeout::timeout(WS_TIMEOUT) do
-        $log.info "MIQ(agent_register): Starting"
-        ret = Host.self_register(MiqXml.load(xmlFile))
-      end
-    rescue Exception => err
-      $log.log_backtrace(err)
-      MiqservicesOps.reconnect_to_db
-    end
-    return YAML.dump(ret)
   end
 
   def register_vm(nm, loc, vndr)

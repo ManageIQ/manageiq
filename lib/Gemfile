@@ -26,14 +26,14 @@ gem "ffi",                  "~>1.9.3",       :require => false
 gem "ffi-vix_disk_lib",     "~>1.0.1",       :require => false  # used by lib/VixDiskLib
 gem "fog",                  "~>1.29.0",      :require => false
 gem "httpclient",           "~>2.5.3",       :require => false
-gem "io-extra",             "~>1.2.8",       :require => false
-gem "linux_admin",          ">=0.10", "<1",  :require => false
+gem "linux_admin",          ">=0.10.1", "<1", :require => false
 gem "log4r",                "=1.1.8",        :require => false
 gem "memoist",              "~>0.11.0",      :require => false
 gem "more_core_extensions", "~>1.2.0",       :require => false
 gem "nokogiri",             "~>1.6.0",       :require => false
-gem "ovirt",                "~>0.4.1",       :require => false
-gem "kubeclient",           ">=0.1.11",      :require => false
+gem "ovirt",                "~>0.4.2",        :require => false
+gem "kubeclient",           ">=0.1.16",       :require => false
+gem "openshift_client",     ">=0.0.5",        :require => false
 gem "rest-client",                           :require => false, :git => "git://github.com/rest-client/rest-client.git", :ref => "08480eb86aef1e"
 gem "parallel",             "~>0.5.21",      :require => false
 gem "Platform",             "=0.4.0",        :require => false
@@ -67,6 +67,11 @@ end
 # Locally modified but not required
 gem "handsoap",    "~>0.2.5",   :require => false, :git => "git://github.com/ManageIQ/handsoap.git", :tag => "v0.2.5-2"
 gem "rubywbem",    :require => false, :git => "git://github.com/ManageIQ/rubywbem.git", :branch => "rubywbem_0_1_0"
+
+# Windows only. Do not put in Gemfile.lock on other platforms.
+if Gem.win_platform?
+  gem "win32-process", "~>0.8.0", :require => false, :platforms => [:mswin, :mingw]
+end
 
 ### Start of gems excluded from the appliances.
 # The gems listed below do not need to be packaged until we find it necessary or useful.

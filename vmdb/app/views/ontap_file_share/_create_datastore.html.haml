@@ -13,7 +13,7 @@
           "data-miq_focus"   => true,
           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
     %tr
-      %td.key=_('Host')
+      %td.key=title_for_host
       %td
         = select_tag("host_id",
           options_for_select([["<#{_('Choose')}>",nil]] + @edit[:hosts].invert.sort,

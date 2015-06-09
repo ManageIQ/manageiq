@@ -25,6 +25,7 @@ class VmOrTemplate < ActiveRecord::Base
   include WebServiceAttributeMixin
 
   include EventMixin
+  include ProcessTasksMixin
 
   has_many :ems_custom_attributes, -> { where "source = 'VC'" }, :as => :resource, :dependent => :destroy, :class_name => "CustomAttribute"
 
@@ -154,6 +155,8 @@ class VmOrTemplate < ActiveRecord::Base
   virtual_column :num_hard_disks,                       :type => :integer,    :uses => {:hardware => :hard_disks}
   virtual_column :num_disks,                            :type => :integer,    :uses => {:hardware => :disks}
   virtual_column :num_cpu,                              :type => :integer,    :uses => :hardware
+  virtual_column :logical_cpus,                         :type => :integer,    :uses => :hardware
+  virtual_column :cores_per_socket,                     :type => :integer,    :uses => :hardware
   virtual_column :v_annotation,                         :type => :string,     :uses => :hardware
   virtual_column :has_rdm_disk,                         :type => :boolean,    :uses => {:hardware => :disks}
   virtual_column :disks_aligned,                        :type => :string,     :uses => {:hardware => {:hard_disks => :partitions_aligned}}
@@ -273,28 +276,6 @@ class VmOrTemplate < ActiveRecord::Base
     return true
   end
 
-  # Called by miqhost when adding a VM
-  def registerVm
-    $log.info("MIQ(#{self.class.name}#registerVm) Registering vm with id [#{self.id}]")
-
-    # Record record id with vm
-    begin
-      # Notify the host to do initialize the VM
-      if myhost
-        ost = OpenStruct.new("vmId" => self.guid, "args" => [self.path], "method_name" => "RegisterId", "params" => {"registeredOnHost" => !self.host.nil?})
-        myhost.call_ws(ost)
-      end
-    rescue Exception => err
-      $log.log_backtrace(err)
-    end
-
-    # Look for any past events that might contain genealogy data
-    self.reconnect_events
-    self.save
-
-    $log.info("MIQ(Vm-registerVm) Registered with vm metadata")
-  end
-
   # TODO: Vmware specific, and is this even being used anywhere?
   def connected_to_ems?
     self.connection_state == 'connected'
@@ -324,25 +305,13 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def run_command_via_parent(verb, options = {})
+    raise "VM/Template <#{name}> with Id: <#{id}> is not associated with a provider." unless self.ext_management_system
+    raise "VM/Template <#{name}> with Id: <#{id}>: Provider authentication failed." unless self.ext_management_system.authentication_status_ok?
+
     # TODO: Need to break this logic out into a method that can look at the verb and the vm and decide the best way to invoke it - Virtual Center WS, ESX WS, Storage Proxy.
-    if self.ext_management_system && self.ext_management_system.authentication_status_ok? && self.ext_management_system.respond_to?(verb)
-      $log.info("MIQ(#{self.class.name}#run_command_via_parent) Invoking [#{verb}] through EMS: [#{self.ext_management_system.name}]")
-      options = {:user_event => "EVM Console Request Action [#{verb}], VM [#{self.name}]"}.merge(options)
+    $log.info("MIQ(#{self.class.name}#run_command_via_parent) Invoking [#{verb}] through provider: [#{self.ext_management_system.name}]")
+    options = {:user_event => "Console Request Action [#{verb}], VM [#{self.name}]"}.merge(options)
       self.ext_management_system.send(verb, self, options)
-    else
-      host_id = options.delete("host_id")
-      if host_id
-        host = Host.find(host_id)
-      else
-        host = options.delete("host")
-      end
-      host ||= myhost
-      # If the options hash has an "args" element, remove it and add it to the "args" element with self.path
-      miqhost_args = Array(options.delete("args"))
-      options = {"args" => [self.path] + miqhost_args, "method_name" => verb, "vm_guid" => self.guid}.merge(options)
-      ost = OpenStruct.new(options)
-      ret = host.call_ws(ost) if host
-    end
   end
 
   def policy_prevented?(policy_event)
@@ -365,30 +334,63 @@ class VmOrTemplate < ActiveRecord::Base
     MiqEvent.raise_evm_event(self, event, inputs)
   end
 
-  # Processes tasks received from the UI and queues them
-  def self.process_tasks(options)
-    raise "No ids given to process_tasks" if options[:ids].blank?
-    if options[:task] == "refresh_ems"
-      self.refresh_ems(options[:ids])
-      AuditEvent.success(:event => options[:task], :target_class => self.base_class.name, :userid => options[:userid],
-        :message => "'#{options[:task]}' successfully initiated for #{ApplicationController.new.pluralize(options[:ids].length,"VM")}")
-    else
-      raise "Unknown task, #{options[:task]}" unless self.instance_methods.collect(&:to_s).include?(options[:task])
-      options[:userid] ||= "system"
-      self.invoke_tasks_queue(options)
+  # override
+  def self.validate_task(task, vm, options)
+    return false unless super
+    return false if options[:task] == "destroy" ||  options[:task] == "check_compliance_queue"
+    return false if vm.has_required_host?
+
+    # VM has no host or storage affiliation
+    if vm.storage.nil?
+      task.error("#{vm.name}: There is no owning Host or #{ui_lookup(:table => "storages")} for this VM, "\
+                 "'#{options[:task]}' is not allowed")
+      return false
     end
-  end
 
-  # Performs tasks received from the UI via the queue
-  def self.invoke_tasks(options)
-    local, remote = self.partition_ids_by_remote_region(options[:ids])
-    self.invoke_tasks_local(options.merge(:ids => local)) unless local.empty?
-    self.invoke_tasks_remote(options.merge(:ids => remote)) unless remote.empty?
+    # VM belongs to a storage/repository location
+    # TODO: The following never gets run since the invoke tasks invokes it as a job, and only tasks get to this point ?
+    unless %w(scan sync).include?(options[:task])
+      task.error("#{vm.name}: There is no owning Host for this VM, '#{options[:task]}' is not allowed")
+      return false
+    end
+    current = VMDB::Config.new("vmdb")      # Get the vmdb configuration settings
+    spid = current.config[:repository_scanning][:defaultsmartproxy]
+    if spid.nil?                          # No repo scanning SmartProxy configured
+      task.error("#{vm.name}: No Default Repository SmartProxy is configured, contact your EVM administrator")
+      return false
+    elsif MiqProxy.exists?(spid) == false
+      task.error("#{vm.name}: The Default Repository SmartProxy no longer exists, contact your EVM Administrator")
+      return false
+    end
+    if MiqProxy.find(spid).state != "on"                     # Repo scanning host iagent s not running
+      task.error("#{vm.name}: The Default Repository SmartProxy, '#{sp.name}', is not running. "\
+                 "'#{options[:task]}' not attempted")
+      return false
   end
+    true
+  end
+  private_class_method :validate_task
 
-  def self.invoke_tasks_queue(options)
-    MiqQueue.put(:class_name => self.name, :method_name => "invoke_tasks", :args => [options])
+  # override
+  def self.task_invoked_by(options)
+    %w(scan sync).include?(options[:task]) ? :job : super
   end
+  private_class_method :task_invoked_by
+
+  # override
+  def self.task_arguments(options)
+    case options[:task]
+    when "scan", "sync" then
+      [options[:userid]]
+    when "remove_snapshot", "revert_to_snapshot" then
+      [options[:snap_selected]]
+    when "create_snapshot" then
+      [options[:name], options[:description], options[:memory]]
+    else
+      super
+  end
+  end
+  private_class_method :task_arguments
 
   def powerops_callback(task_id, status, msg, result, queue_item)
     if queue_item.last_exception.kind_of?(MiqException::MiqVimBrokerUnavailable)
@@ -403,48 +405,32 @@ class VmOrTemplate < ActiveRecord::Base
     (VMDB::Config.new('vmdb').config.fetch_path(:management_system, :power_operation_expiration) || 10.minutes).to_i_with_method.seconds.from_now.utc
   end
 
-  def self.invoke_tasks_local(options)
-    if ["scan","sync"].include?(options[:task])
-      options[:invoke_by] = :job
-      args = [options[:userid]]
-    elsif ["remove_snapshot", "revert_to_snapshot"].include?(options[:task])
-      options[:invoke_by] = :task
-      args = [options[:snap_selected]]
-    elsif ["create_snapshot"].include?(options[:task])
-      options[:invoke_by] = :task
-      args = [options[:name], options[:description], options[:memory]]
-    else
-      options[:invoke_by] = :task
-      args = []
-    end
-
-    vms, tasks = self.validate_tasks(options)
-
-    audit = {:event => options[:task], :target_class => self.base_class.name, :userid => options[:userid]}
-
-    vms.each_with_index do |vm, idx|
-      task = MiqTask.find_by_id(tasks[idx])
-
-      if task && task.status == "Error"
-        AuditEvent.failure(audit.merge(:target_id => vm.id, :message => task.message))
-        task.state_finished
-        next
-      end
-
+  # override
+  def self.invoke_task_local(task, vm, options, args)
       cb = nil
       if task
         cb =
           if POWER_OPS.include?(options[:task])
-            {:class_name => vm.class.base_class.name, :instance_id => vm.id, :method_name => :powerops_callback, :args => [task.id]}
+          {
+            :class_name  => vm.class.base_class.name,
+            :instance_id => vm.id,
+            :method_name => :powerops_callback,
+            :args        => [task.id]
+          }
           else
-            {:class_name => task.class.to_s, :instance_id => task.id, :method_name => :queue_callback, :args => ["Finished"]}
+          {
+            :class_name  => task.class.to_s,
+            :instance_id => task.id,
+            :method_name => :queue_callback,
+            :args        => ["Finished"]
+          }
           end
       end
 
       role = options[:invoke_by] == :job ? "smartstate" : "ems_operations"
       role = nil if options[:task] == "destroy"
       MiqQueue.put(
-        :class_name   => self.base_class.name,
+      :class_name   => base_class.name,
         :instance_id  => vm.id,
         :method_name  => options[:task],
         :args         => args,
@@ -453,9 +439,6 @@ class VmOrTemplate < ActiveRecord::Base
         :role         => role,
         :expires_on   => POWER_OPS.include?(options[:task]) ? powerops_expiration : nil
       )
-      AuditEvent.success(audit.merge(:target_id => vm.id, :message => "#{vm.name}: '#{options[:task]}' successfully initiated"))
-      task.update_status("Queued", "Ok", "Task has been queued") if task
-    end
   end
 
   def self.invoke_tasks_remote(options)
@@ -490,64 +473,9 @@ class VmOrTemplate < ActiveRecord::Base
         next
       end
 
-      AuditEvent.success(
-        :event        => options[:task],
-        :target_class => self.base_class.name,
-        :userid       => options[:userid],
-        :message      => "'#{options[:task]}' successfully initiated for remote VMs: #{ids.sort.inspect}"
-      )
-    end
-  end
-
-  # Helper method for invoke_tasks, to determine the vms and the tasks associated
-  def self.validate_tasks(options)
-    tasks = []
-
-    vms = base_class.where(:id => options[:ids]).order("lower(name)").to_a
-    return vms, tasks unless options[:invoke_by] == :task # jobs will be used instead of tasks for feedback
-
-    vms.each do |vm|
-      # create a task instance for each VM
-      task = MiqTask.create(:name => "#{vm.name}: '" + options[:task] + "'", :userid => options[:userid])
-      tasks.push(task.id)
-
-      next if options[:task] == "destroy" ||  options[:task] == "check_compliance_queue"
-
-      if options[:task] == "retire_now" && vm.retired?
-        task.error("#{vm.name}: Vm is already retired")
-        next
+      msg = "'#{options[:task]}' successfully initiated for remote VMs: #{ids.sort.inspect}"
+      task_audit_event(:success, options, :message => msg)
       end
-
-      next if vm.has_required_host?
-
-      # VM has no host or storage affiliation
-      if vm.storage.nil?
-        task.error("#{vm.name}: There is no owning Host or #{ui_lookup(:table => "storages")} for this VM, '" + options[:task] + "' is not allowed")
-        next
-      end
-
-      # VM belongs to a storage/repository location
-      # TODO: The following never gets run since the invoke tasks invokes it as a job, and only tasks get to this point ?
-      unless ["scan", "sync"].include?(options[:task])
-        task.error("#{vm.name}: There is no owning Host for this VM, '#{options[:task]}' is not allowed")
-        next
-      end
-      current = VMDB::Config.new("vmdb")      # Get the vmdb configuration settings
-      spid = current.config[:repository_scanning][:defaultsmartproxy]
-      if spid == nil                          # No repo scanning SmartProxy configured
-        task.error("#{vm.name}: No Default Repository SmartProxy is configured, contact your EVM administrator")
-        next
-      elsif MiqProxy.exists?(spid) == false
-        task.error("#{vm.name}: The Default Repository SmartProxy no longer exists, contact your EVM Administrator")
-        next
-      end
-      sp = MiqProxy.find(spid)
-      if sp.state != "on"                     # Repo scanning host iagent s not running
-        task.error("#{vm.name}: The Default Repository SmartProxy, '#{sp.name}', is not running '" + options[:task] + "' not attempted")
-        next
-      end
-    end
-    return vms, tasks
   end
 
   def scan_data_current?
@@ -1045,13 +973,10 @@ class VmOrTemplate < ActiveRecord::Base
   end
 
   def storage2proxies
-    return @storage_proxies unless @storage_proxies.nil?
-
-    MiqPreloader.preload(self, :storage => {:hosts => :miq_proxy})
-    proxies = self.storage2hosts.select { |h| h && h.is_a_proxy? }
-
+    @storage_proxies ||= begin
     # Support vixDisk scanning of VMware VMs from the vmdb server
-    return @storage_proxies = proxies + self.miq_server_proxies
+      self.miq_server_proxies
+    end
   end
 
   def storage2active_proxies(all_proxy_list = nil)
@@ -1650,6 +1575,14 @@ class VmOrTemplate < ActiveRecord::Base
 
   def num_cpu
     return self.hardware.nil? ? 0 : self.hardware.numvcpus
+  end
+
+  def logical_cpus
+    return self.hardware.nil? ? 0 : self.hardware.logical_cpus
+  end
+
+  def cores_per_socket
+    return self.hardware.nil? ? 0 : self.hardware.cores_per_socket
   end
 
   def num_disks
