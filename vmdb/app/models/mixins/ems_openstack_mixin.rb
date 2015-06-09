@@ -156,4 +156,8 @@ module EmsOpenstackMixin
     $log.error "MIQ(#{self.class.name}##{__method__}) template=[#{template.name}], error: #{err}"
     raise MiqException::MiqOrchestrationValidationError, err.to_s, err.backtrace
   end
+
+  def description
+    self.class.description
+  end
 end
