@@ -1210,7 +1210,7 @@ class ApplicationController < ActionController::Base
                 "../../../pictures/#{item.picture.basename}"
               end
             end
-    list_row_image(pn, image, (@listicon || view.db).underscore, item.name)
+    list_row_image(pn, image, (@listicon || view.db).underscore, item)
   end
 
   def get_host_for_vm(vm)
@@ -2713,8 +2713,8 @@ class ApplicationController < ActionController::Base
     to_cid(row['id'])
   end
 
-  def list_row_image(image_path, image, model_image, _itemname)
-    image ? image : "#{image_path}#{model_image}.png"
+  def list_row_image(image_path, image, model_image, _item)
+    image || "#{image_path}#{model_image}.png"
   end
 
   def render_flash_not_applicable_to_model(type)
