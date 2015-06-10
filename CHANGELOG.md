@@ -168,7 +168,7 @@ All notable changes to this project will be documented in this file.
 #### IPv6 
 - Allow IPv6 literals in VMware communication by upgrading httpclient
 - Allow IPv6 literals in RHEVM/ovirt communication by fixing and upgrading rest-client and ruby 2.0
-- Fixed URI building within ManageIQ to wrap/unwrap IPv6 literals as neede
+- Fixed URI building within ManageIQ to wrap/unwrap IPv6 literals as needed
   
 #### Security 
 - Lock down [POODLE](http://en.wikipedia.org/wiki/POODLE) attacks.
