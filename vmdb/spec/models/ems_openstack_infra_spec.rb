@@ -50,15 +50,15 @@ describe EmsOpenstackInfra do
     end
 
     it "creates related ProviderOpenstack after creating EmsOpenstackInfra" do
-      @ems.provider.name.should equal @ems.name
+      @ems.provider.name.should eq @ems.name
       @ems.provider.zone.should == @ems.zone
-      ProviderOpenstack.count.should equal 1
+      ProviderOpenstack.count.should eq 1
     end
 
     it "destroys related ProviderOpenstack after destroying EmsOpenstackInfra" do
-      ProviderOpenstack.count.should equal 1
+      ProviderOpenstack.count.should eq 1
       @ems.destroy
-      ProviderOpenstack.count.should equal 0
+      ProviderOpenstack.count.should eq 0
     end
 
     it "related EmsOpenstack nullifies relation to ProviderOpenstack on EmsOpenstackInfra destroy" do
@@ -71,7 +71,7 @@ describe EmsOpenstackInfra do
 
       # destroy ems and see the relation of ems_cloud to provider nullified
       @ems.destroy
-      ProviderOpenstack.count.should equal 0
+      ProviderOpenstack.count.should eq 0
       @ems_cloud.reload.provider.should be_nil
     end
   end
