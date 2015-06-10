@@ -449,69 +449,68 @@ module OpsController::Settings::Schedules
   end
 
   def build_search_filter_from_params
-    exp = {}
     case params[:action]
     when "storage"
       case params[:filter_typ]
-      when "ems"     then exp["CONTAINS"] = {"field" => "Storage.ext_management_systems-name", "value" => params[:filter_value]}
-      when "host"    then exp["CONTAINS"] = {"field" => "Storage.hosts-name", "value" => params[:filter_value]}
-      when "storage" then exp["="] = {"field" => "Storage-name", "value" => params[:filter_value]}
-      else                exp["IS NOT NULL"] = {"field" => "Storage-name"}
+      when "ems"     then {"CONTAINS" => {"field" => "Storage.ext_management_systems-name", "value" => params[:filter_value]}}
+      when "host"    then {"CONTAINS" => {"field" => "Storage.hosts-name", "value" => params[:filter_value]}}
+      when "storage" then {"=" => {"field" => "Storage-name", "value" => params[:filter_value]}}
+      else                {"IS NOT NULL" => {"field" => "Storage-name"}}
       end
     when "host"
       case params[:filter_typ]
       when "cluster"
         unless params[:filter_value].blank?
-          exp["AND"] = [
+          {"AND" => [
             {"=" => {"field" => "Host-v_owning_cluster", "value" => params[:filter_value].split("__").first}},
             {"=" => {"field" => "Host-v_owning_datacenter", "value" => params[:filter_value].split("__").size == 1 ? "" : params[:filter_value].split("__").last}}
-          ]
+          ]}
         end
-      when "ems"  then exp["="] = {"field" => "Host.ext_management_system-name", "value" => params[:filter_value]}
-      when "host" then exp["="] = {"field" => "Host-name", "value" => params[:filter_value]}
-      else             exp["IS NOT NULL"] = {"field" => "Host-name"}
+      when "ems"  then {"=" => {"field" => "Host.ext_management_system-name", "value" => params[:filter_value]}}
+      when "host" then {"=" => {"field" => "Host-name", "value" => params[:filter_value]}}
+      else             {"IS NOT NULL" => {"field" => "Host-name"}}
       end
     when "emscluster"
       case params[:filter_typ]
       when "cluster"
         unless params[:filter_value].blank?
-          exp["AND"] = [
+          {"AND" => [
             {"=" => {"field" => "EmsCluster-name", "value" => params[:filter_value].split("__").first}},
             {"=" => {"field" => "EmsCluster-v_parent_datacenter", "value" => params[:filter_value].split("__").size == 1 ? "" : params[:filter_value].split("__").last}}
-          ]
+          ]}
         end
-      when "ems" then exp["="] = {"field" => "EmsCluster.ext_management_system-name", "value" => params[:filter_value]}
-      else            exp["IS NOT NULL"] = {"field" => "EmsCluster-name"}
+      when "ems" then {"=" => {"field" => "EmsCluster.ext_management_system-name", "value" => params[:filter_value]}}
+      else            {"IS NOT NULL" => {"field" => "EmsCluster-name"}}
       end
     when /check_compliance\z/
       case params[:filter_typ]
       when "cluster"
         unless params[:filter_value].blank?
-          exp["AND"] = [
+          {"AND" => [
             {"=" => {"field" => "#{params[:action].split("_").first.capitalize}-v_owning_cluster", "value" => params[:filter_value].split("__").first}},
             {"=" => {"field" => "#{params[:action].split("_").first.capitalize}-v_owning_datacenter", "value" => params[:filter_value].split("__").size == 1 ? "" : params[:filter_value].split("__").last}}
-          ]
+          ]}
         end
-      when "ems"  then exp["="] = {"field" => "#{params[:action].split("_").first.capitalize}.ext_management_system-name", "value" => params[:filter_value]}
-      when "host" then exp["="] = {"field" => "Host-name", "value" => params[:filter_value]}
-      when "vm"   then exp["="] = {"field" => "Vm-name", "value" => params[:filter_value]}
-      else             exp["IS NOT NULL"] = {"field" => "#{params[:action].split("_").first.capitalize}-name"}
+      when "ems"  then {"=" => {"field" => "#{params[:action].split("_").first.capitalize}.ext_management_system-name", "value" => params[:filter_value]}}
+      when "host" then {"=" => {"field" => "Host-name", "value" => params[:filter_value]}}
+      when "vm"   then {"=" => {"field" => "Vm-name", "value" => params[:filter_value]}}
+      else             {"IS NOT NULL" => {"field" => "#{params[:action].split("_").first.capitalize}-name"}}
       end
     else
       model = params[:action].starts_with?("vm") ? "Vm" : "MiqTemplate"
       case params[:filter_typ]
       when "cluster"
         unless params[:filter_value].blank?
-          exp["AND"] = [
+          {"AND" => [
             {"=" => {"field" => "#{model}-v_owning_cluster", "value" => params[:filter_value].split("__").first}},
             {"=" => {"field" => "#{model}-v_owning_datacenter", "value" => params[:filter_value].split("__").size == 1 ? "" : params[:filter_value].split("__").last}}
-          ]
+          ]}
         end
-      when "ems"          then exp["="] = {"field" => "#{model}.ext_management_system-name", "value" => params[:filter_value]}
-      when "host"         then exp["="] = {"field" => "#{model}.host-name", "value" => params[:filter_value]}
-      when "miq_template" then exp["="] = {"field" => "#{model}-name", "value" => params[:filter_value]}
-      when "vm"           then exp["="] = {"field" => "#{model}-name", "value" => params[:filter_value]}
-      else                     exp["IS NOT NULL"] = {"field" => "#{model}-name"}
+      when "ems"          then {"=" => {"field" => "#{model}.ext_management_system-name", "value" => params[:filter_value]}}
+      when "host"         then {"=" => {"field" => "#{model}.host-name", "value" => params[:filter_value]}}
+      when "miq_template" then {"=" => {"field" => "#{model}-name", "value" => params[:filter_value]}}
+      when "vm"           then {"=" => {"field" => "#{model}-name", "value" => params[:filter_value]}}
+      else                     {"IS NOT NULL" => {"field" => "#{model}-name"}}
       end
     end
   end
