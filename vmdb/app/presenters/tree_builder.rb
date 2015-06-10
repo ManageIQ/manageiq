@@ -298,7 +298,7 @@ class TreeBuilder
     end
 
     # Process the node's children
-    if @tree_state.x_tree(@name)[:open_nodes].include?(node[:key]) ||
+    if Array(@tree_state.x_tree(@name)[:open_nodes]).include?(node[:key]) ||
        options[:open_all] ||
        object[:load_children] ||
        node[:expand]
