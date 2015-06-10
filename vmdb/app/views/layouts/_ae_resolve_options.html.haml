@@ -76,21 +76,23 @@
                         "1",
                         resolve[:new][:readonly] != true,
                         "data-miq_observe_checkbox" => {:url => url}.to_json)
-  %hr
-  %h3= _("Attribute/Value Pairs")
-  %table.style1
-    - AE_MAX_RESOLUTION_FIELDS.times do |i|
-      - f = "attribute_" + (i+1).to_s
-      - v = "value_" + (i+1).to_s
-      %tr
-        %td.key= (i+1).to_s
-        %td.wide
-          = text_field_tag(f,
-                           resolve[:new][:attrs][i][0],
-                           :maxlength         => MAX_NAME_LEN,
-                           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-        %td.wide
-          = text_field_tag(v,
-                           resolve[:new][:attrs][i][1],
-                           :maxlength         => MAX_NAME_LEN,
-                           "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+%hr
+%h3= _("Attribute/Value Pairs")
+%table.style1
+  - AE_MAX_RESOLUTION_FIELDS.times do |i|
+    - f = "attribute_" + (i + 1).to_s
+    - v = "value_" + (i + 1).to_s
+    %tr
+      %td.key= (i + 1).to_s
+      %td.wide
+        = text_field_tag(f,
+                         resolve[:new][:attrs][i][0],
+                         :maxlength         => MAX_NAME_LEN,
+                         "data-miq_observe" => {:interval => '.5',
+                                                :url => url}.to_json)
+      %td.wide
+        = text_field_tag(v,
+                         resolve[:new][:attrs][i][1],
+                         :maxlength         => MAX_NAME_LEN,
+                         "data-miq_observe" => {:interval => '.5',
+                                                :url => url}.to_json)
