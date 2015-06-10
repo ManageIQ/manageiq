@@ -1808,6 +1808,7 @@ Vmdb::Application.routes.draw do
         sort_host_grid
         sort_iso_img_grid
         sort_vc_grid
+        sort_template_grid
         sort_vm_grid
         squash_toggle
         tagging_edit
