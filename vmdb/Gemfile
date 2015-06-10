@@ -43,7 +43,13 @@ gem "acts_as_tree",                   "~>2.1.0"  # acts_as_tree needs to be requ
 # https://github.com/jeremyevans/ruby-american_date
 gem "american_date"
 gem "default_value_for",              "~>2.0.3"
-gem "thin",                           "~>1.3.1"  # Used by rails server through rack
+
+if RUBY_PLATFORM == 'java'
+  gem "puma"
+else
+  gem "thin",                           "~>1.3.1"  # Used by rails server through rack
+end
+
 gem "bcrypt-ruby",                    "~> 3.0.1"
 gem 'outfielding-jqplot-rails',       "= 1.0.8"
 gem 'secure_headers'
@@ -67,7 +73,13 @@ gem "net-sftp",                       "~>2.0.5",      :require => false
 gem "net-ssh",                        "~>2.9.1",      :require => false
 gem "open4",                          "~>1.3.0",      :require => false
 gem "ovirt_metrics",                  "~>1.0.1",      :require => false
-gem "pg",                             "~>0.12.2",     :require => false
+
+if RUBY_PLATFORM == 'java'
+  gem "activerecord-jdbcpostgresql-adapter", "~>1.3.16", :require => false
+else
+  gem "pg", "~>0.12.2", :require => false
+end
+
 gem "rack",                           "~>1.4.1",      :require => false
 
 gem "ruby-progressbar",               "~>0.0.10",     :require => false
@@ -84,7 +96,11 @@ gem 'spice-html5-rails'
 #
 unless ENV['APPLIANCE']
   group :development do
-    gem "ruby-prof",                    :require => false
+    if RUBY_PLATFORM == 'java'
+      gem "jruby-prof",                   :require => false
+    else
+      gem "ruby-prof",                    :require => false
+    end
 
     gem "ruby-graphviz",                :require => false  # Used by state_machine:draw Rake Task
     # used for finding translations
