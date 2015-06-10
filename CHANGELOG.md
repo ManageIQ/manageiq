@@ -53,7 +53,7 @@ All notable changes to this project will be documented in this file.
   - Support for non-admin users to EMS Refresh
   - Tenant relationships added to summary screens
   - OpenStack Infrastructure Event processing
-  - Handling of power states: paused, rebooting, waiting to launch) 
+  - Handling of power states: paused, rebooting, waiting to launch
   - UI OpenStack Terminology: Clusters vs Deployment Roles, Hosts vs Nodes
 - Amazon
   - AWS Region EU Frankfurt
@@ -70,7 +70,7 @@ All notable changes to this project will be documented in this file.
  - Orchestration Stacks includes tagging
  - Cloud Stacks: Summary and list views.
  - Orchestration templates
-     - Create, edit, delete, tagging, ‘draft’ support
+     - Create, edit, delete, tagging, 'draft' support
      - Create Service Dialog from template contents
  - Enabled Reporting / Tagging
  - Improved rollback error message in UI
@@ -168,15 +168,15 @@ All notable changes to this project will be documented in this file.
 #### IPv6 
 - Allow IPv6 literals in VMware communication by upgrading httpclient
 - Allow IPv6 literals in RHEVM/ovirt communication by fixing and upgrading rest-client and ruby 2.0
-- Fixed URI building within ManageIQ to wrap/unwrap IPv6 literals as neede
   
+- Fixed URI building within ManageIQ to wrap/unwrap IPv6 literals as needed
 #### Security 
 - Lock down [POODLE](http://en.wikipedia.org/wiki/POODLE) attacks.
 - Support SSL for OpenStack
   - Deals with different ways to configure SSL for OpenStack
     - SSL termination at OpenStack services
     - SSL termination at proxy
-    - Doesn’t always change the service ports
+    - Doesn't always change the service ports
   - Attempts non-SSL first, then fails over to SSL
 - Kerberos ticket based SSO to web UI login.
 - Fix_auth command tool can now update passwords in database.yml
@@ -255,7 +255,7 @@ All notable changes to this project will be documented in this file.
  - server_monitor_poll default setting changed to 5 seconds, resulting in shorter queue times.
  - Fixed issue where deleting an EMS and adding it back would cause refresh failure.
  - EventEx is now disabled by default to help prevent event storms
- - Fixed “High CPU usage” due to continually restarting workers when a provider is unreachable or password is invalid.
+ - Fixed "High CPU usage" due to continually restarting workers when a provider is unreachable or password is invalid.
  - RHEVM/oVirt: 
     - Ignore user login failed events to prevent event flooding.
     - Discovery fixed to eliminate false positives
@@ -282,7 +282,8 @@ All notable changes to this project will be documented in this file.
  - Workaround for broker hang: Reported as VMware events and capacity and utilization works for a while, then stops.
   - Chargeback
   - Storage C&U collected every 60 minutes.
-  - Don’t collect cpus/memory available unless you have usage.- Clean up of CPU details in UI
+  - Don't collect cpus/memory available unless you have usage.
+  - Clean up of CPU details in UI
  - SMTP domain length updated to match SMTP host length
  - Fleecing: Fixed handling of nil directory entries and empty files 
  - Fixed issue where deleting a cluster or host tries to delete all policy_events, thus never completing when there are millions of events.
