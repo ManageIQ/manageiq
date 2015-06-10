@@ -126,6 +126,10 @@ class ReportController < ApplicationController
     @trees = []
     @accords = []
     @lists = []
+    @sb[:open_tree_nodes] ||= Array.new
+    @built_trees = []
+    @accords = Array.new
+    @lists = Array.new
 
     # if AJAX request, replace right cell, and return
     if request.xml_http_request?
@@ -135,54 +139,48 @@ class ReportController < ApplicationController
     end
 
     if role_allows(:feature => "miq_report_saved_reports")
-      build_savedreports_tree
-      @trees.push("savedreports_tree")
-      @accords.push(:name => "savedreports", :title => "Saved Reports", :container => "savedreports_accord")
+      @built_trees << build_savedreports_tree
+      @accords.push(:name => "savedreports", :title => "Saved Reports", :container => "savedreports_tree_div")
       @lists.push("savedreports_list")
       self.x_active_tree ||= 'savedreports_tree'
       self.x_active_accord ||= 'savedreports'
     end
 
     if role_allows(:feature => "miq_report_reports", :any => true)
-      build_report_listnav
-      @trees.push("reports_tree")
-      @accords.push(:name => "reports", :title => "Reports", :container => "reports_accord")
+      @built_trees << build_report_listnav
+      @accords.push(:name => "reports", :title => "Reports", :container => "reports_tree_div")
       @lists.push("report_list")
       self.x_active_tree ||= 'reports_tree'
       self.x_active_accord ||= 'reports'
     end
 
     if role_allows(:feature => "miq_report_schedules", :any => true)
-      build_schedules_tree
-      @trees.push("schedules_tree")
-      @accords.push(:name => "schedules", :title => "Schedules", :container => "schedules_accord")
+      @built_trees << build_schedules_tree
+      @accords.push(:name => "schedules", :title => "Schedules", :container => "schedules_tree_div")
       @lists.push("schedule_list")
       self.x_active_tree ||= 'schedules_tree'
       self.x_active_accord ||= 'schedules'
     end
 
     if role_allows(:feature => "miq_report_dashboard_editor")
-      build_db_tree
-      @trees.push("db_tree")
-      @accords.push(:name => "db", :title => "Dashboards", :container => "db_accord")
+      @built_trees << build_db_tree
+      @accords.push(:name => "db", :title => "Dashboards", :container => "db_tree_div")
       @lists.push("db_list")
       self.x_active_tree ||= 'db_tree'
       self.x_active_accord ||= 'db'
     end
 
     if role_allows(:feature => "miq_report_widget_editor")
-      build_widgets_tree
-      @trees.push("widgets_tree")
-      @accords.push(:name => "widgets", :title => "Dashboard Widgets", :container => "widgets_accord")
+      @built_trees << build_widgets_tree
+      @accords.push(:name => "widgets", :title => "Dashboard Widgets", :container => "widgets_tree_div")
       @lists.push("widget_list")
       self.x_active_tree ||= 'widgets_tree'
       self.x_active_accord ||= 'widgets'
     end
 
     if role_allows(:feature => "miq_report_menu_editor")
-      build_roles_tree(:roles, :roles_tree)
-      @trees.push("roles_tree")
-      @accords.push(:name => "roles", :title => "Edit Report Menus", :container => "roles_accord")
+      @built_trees << build_roles_tree
+      @accords.push(:name => "roles", :title => "Edit Report Menus", :container => "roles_tree_div")
       @lists.push("role_list")
       self.x_active_tree ||= 'roles_tree'
       self.x_active_accord ||= 'roles'
@@ -190,9 +188,8 @@ class ReportController < ApplicationController
     end
 
     if role_allows(:feature => "miq_report_export")
-      build_export_tree
-      @trees.push("export_tree")
-      @accords.push(:name => "export", :title => "Import/Export", :container => "export_accord")
+      @built_trees << build_export_tree
+      @accords.push(:name => "export", :title => "Import/Export", :container => "export_tree_div")
       @lists.push("export")
       self.x_active_tree ||= "export_tree"
       self.x_active_accord ||= "export"
@@ -395,13 +392,9 @@ class ReportController < ApplicationController
     build_trees
   end
 
-  # Build the main import/export tree
-  def build_export_tree(type = :export, name = :export_tree)
-    x_tree_init(name, type, "Import / Export", :open_all => true, :add_root => false)
-    tree_nodes = x_build_dynatree(x_tree(name))
-
-    instance_variable_set :"@#{name}", tree_nodes.to_json          # JSON object for tree loading
-    x_node_set(tree_nodes.first[:key], name) unless x_node(name)  # Set active node to root if not set
+  #Build the main import/export tree
+  def build_export_tree
+    TreeBuilderReportExport.new('export_tree', 'export', @sb)
   end
 
   def determine_root_node_info
@@ -674,12 +667,13 @@ class ReportController < ApplicationController
     @sb[:active_tab] = params[:tab_id] ? params[:tab_id] : "report_info" if x_active_tree == :reports_tree &&
                                                                             params[:action] != "reload" && !["miq_report_run", "saved_report_delete"].include?(params[:pressed]) # do not reset if reload saved reports buttons is pressed
 
-    rebuild = @in_a_form ? false : rebuild_trees
-    build_report_listnav    if replace_trees.include?(:reports) || rebuild
-    build_schedules_tree    if replace_trees.include?(:schedules)
-    build_savedreports_tree if replace_trees.include?(:savedreports) || rebuild
-    build_db_tree           if replace_trees.include?(:db) || rebuild
-    build_widgets_tree      if replace_trees.include?(:widgets) || rebuild
+    trees                = {}
+    rebuild              = @in_a_form ? false : rebuild_trees
+    trees[:reports]      = build_report_listnav    if replace_trees.include?(:reports)      || rebuild
+    trees[:schedules]    = build_schedules_tree    if replace_trees.include?(:schedules)
+    trees[:savedreports] = build_savedreports_tree if replace_trees.include?(:savedreports) || rebuild
+    trees[:db]           = build_db_tree           if replace_trees.include?(:db)           || rebuild
+    trees[:widgets]      = build_widgets_tree      if replace_trees.include?(:widgets)      || rebuild
 
     presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
@@ -700,20 +694,14 @@ class ReportController < ApplicationController
 
     # With dynatree, simply replace the tree partials to reload the trees
     replace_trees.each do |t|
-      case t
-      when :reports
-        presenter[:replace_partials][:reports_tree_div] = r[:partial => "reports_tree"]
-      when :schedules
-        presenter[:replace_partials][:schedules_tree_div] = r[:partial => "schedules_tree"]
-      when :savedreports
-        presenter[:replace_partials][:savedreports_tree_div] = r[:partial => "savedreports_tree"]
-      when :db
-        presenter[:replace_partials][:db_tree_div] = r[:partial => "db_tree"]
-      when :widgets
-        presenter[:replace_partials][:widgets_tree_div] = r[:partial => "widgets_tree"]
-      end
+      tree = trees[t]
+      presenter[:replace_partials]["#{t}_tree_div".to_sym] = r[
+        :partial => 'shared/tree',
+        :locals  => {:tree => tree,
+                     :name => tree.name.to_s
+        }
+      ]
     end
-
     presenter[:osf_node] = x_node  # Open, select, and focus on this node
 
     session[:changed] = (@edit[:new] != @edit[:current]) if @edit && @edit[:current] # to get save/reset buttons to highlight when something is changed

@@ -364,14 +364,14 @@ module ReportController::Menus
     @branch = []
     @parent_node = {}
     menus.each do |r|
-      r.each_slice(2) do |menu, section|
-        @parent_node = {
-          :key     => "p__#{menu}",
-          :title   => menu,
-          :tooltip => "Group: #{menu}",
-          :icon    => 'folder.png',
-          :style   => 'cursor:default;
-                       color:#4b4b4b;
+      r.each_slice(2) do |menu,section|
+        @parent_node = TreeNodeBuilder.generic_tree_node(
+          "p__#{menu}",
+          menu,
+          'folder.png',
+          "Group: #{menu}",
+          :style => 'cursor: default;
+                       color: #4b4b4b;
                        display: block;
                        font-size:1.1em bold;
                        font-weight:bold;
@@ -381,20 +381,20 @@ module ReportController::Menus
                        text-indent: 8px;
                        vertical-align: top;
                        width: 205px;'
-        }
+        )
         if !section.nil? && section.class != String
           section.each do |s|
             if s.class == Array
               s.each do |rec|
                 @branch_node = []
                 if rec.class == String
-                  @menu_node = {
-                    :key     => "s__#{menu}:#{rec}",
-                    :title   => rec,
-                    :tooltip => "Menu: #{rec}",
-                    :style   => 'cursor:default;', # No cursor pointer
-                    :icon    => 'folder.png'
-                  }
+                  @menu_node = TreeNodeBuilder.generic_tree_node(
+                      "s__#{menu}:#{rec}",
+                      rec,
+                      'folder.png',
+                      "Menu: #{rec}",
+                      :style   => 'cursor:default;' # No cursor pointer
+                  )
                 else
                   rec.each do |r|
                     temp = rep_kids_menutree(r)
@@ -424,11 +424,13 @@ module ReportController::Menus
     rpt = MiqReport.find_by_name(rec.strip)
     @tag_node = {}
     unless rpt.nil?
-      @tag_node[:key]     = "r__#{rpt.id}_#{rpt.name}"
-      @tag_node[:title]   = rpt.name
-      @tag_node[:tooltip] =  "Report: " + rpt.name
-      @tag_node[:icon]    = "report.png"
-      @tag_node[:style]   = "padding-bottom: 2px; padding-left: 0px;" # No cursor pointer
+      @tag_node = TreeNodeBuilder.generic_tree_node(
+        "r__#{rpt.id}_#{rpt.name}",
+        rpt.name,
+        'report.png',
+        "Report: #{rpt.name}",
+        :style => 'padding-bottom: 2px; padding-left: 0px;' # No cursor pointer
+      )
     end
     @tag_node
   end
@@ -758,23 +760,9 @@ module ReportController::Menus
     @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name => session[:role_choice], :model => ui_lookup(:model => "MiqGroup")}
   end
 
-  # Build the main roles/menu editor tree
-  def build_roles_tree(type, name)
-    x_tree_init(name, type, "MiqUserRole", :open_all => true)
-    tree_nodes = x_build_dynatree(x_tree(name))
-
-    if super_admin_user?
-      title  = "All #{ui_lookup(:models => "MiqGroup")}"
-    else
-      title  = "My #{ui_lookup(:model => "MiqGroup")}"
-    end
-    # Fill in root node details
-    root           = tree_nodes.first
-    root[:title]   = title
-    root[:tooltip] = title
-    root[:icon]    = "miq_group.png"
-    instance_variable_set :"@#{name}", tree_nodes.to_json          # JSON object for tree loading
-    x_node_set(tree_nodes.first[:key], name)         # Set active node to root if not set
+  #Build the main roles/menu editor tree
+  def build_roles_tree
+    TreeBuilderReportRoles.new('roles_tree', 'roles', @sb)
   end
 
   def get_group_roles

@@ -59,11 +59,13 @@ class TreeBuilder
     when :customization_templates_tree  then
       title = "All #{ui_lookup(:models => 'CustomizationTemplate')} - #{ui_lookup(:models => 'PxeImageType')}"
       [title, title]
+    when :db_tree                       then [_("All Dashboards"), _("All Dashboards")]
     when :diagnostics_tree, :rbac_tree, :settings_tree     then
       region = MiqRegion.my_region
       ["CFME Region: #{region.description} [#{region.region}]", "CFME Region: #{region.description} [#{region.region}]", "miq_region"]
     when :dialogs_tree                  then [_("All Dialogs"),                  _("All Dialogs")]
     when :dialog_import_export_tree     then [_("Service Dialog Import/Export"), _("Service Dialog Import/Export")]
+    when :exports_tree                  then [_("Import / Export"),              _("Import / Export"), _("report")]
     when :images_tree                   then [_("Images by Provider"),           _("All Images by Provider that I can see")]
     when :instances_tree                then [_("Instances by Provider"),        _("All Instances by Provider that I can see")]
     when :instances_filter_tree         then [_("All Instances"),                _("All of the Instances that I can see")]
@@ -76,7 +78,17 @@ class TreeBuilder
       [title, title]
     when :pxe_image_types_tree          then [_("All System Image Types"),       _("All System Image Types")]
     when :pxe_servers_tree              then [_("All PXE Servers"),              _("All PXE Servers")]
+    when :roles_tree                    then
+      user = User.current_user
+      if user.super_admin_user?
+        title = "All #{ui_lookup(:models => "MiqGroup")}"
+        else
+        title = "My #{ui_lookup(:models => "MiqGroup")}"
+      end
+      [title, title, 'miq_group']
     when :sandt_tree                    then [_("All Catalog Items"),            _("All Catalog Items")]
+    when :savedreports_tree             then [_("All Saved Reports"),            _("All Saved Reports")]
+    when :schedules_tree                then [_("All Schedules"),                _("All Schedules"), "miq_schedule"]
     when :stcat_tree                    then [_("All Catalogs"),                 _("All Catalogs")]
     when :svccat_tree                   then [_("All Services"),                 _("All Services")]
     when :svcs_tree                     then [_("All Services"),                 _("All Services")]
@@ -86,6 +98,7 @@ class TreeBuilder
     when :vms_instances_filter_tree     then [_("All VMs & Instances"),          _("All of the VMs & Instances that I can see")]
     when :templates_images_filter_tree  then [_("All Templates & Images"),       _("All of the Templates & Images that I can see")]
     when :vmdb_tree                     then [_("VMDB"),                         _("VMDB"), "miq_database"]
+    when :widgets_tree                  then [_("All Widgets"),                  _("All Widgets")]
     end
   end
 
@@ -290,6 +303,7 @@ class TreeBuilder
                         when MiqGroup            then options[:tree] == :db_tree ?
                                                     x_get_tree_g_kids(parent, options) : nil
                         when MiqRegion           then x_get_tree_region_kids(parent, options)
+                        when MiqReport		       then x_get_tree_r_kids(parent, options)
                         when PxeServer           then x_get_tree_pxe_server_kids(parent, options)
                         when Service             then x_get_tree_service_kids(parent, options)
                         when ServiceTemplateCatalog

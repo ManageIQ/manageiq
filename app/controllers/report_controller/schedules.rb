@@ -510,17 +510,8 @@ module ReportController::Schedules
     end
   end
 
-  def build_schedules_tree(type = :schedules, name = :schedules_tree)
-    x_tree_init(name, type, "MiqSchedule", :open_all => true)
-    tree_nodes = x_build_dynatree(x_tree(name))
-
-    # Fill in root node details
-    root           = tree_nodes.first
-    root[:title]   = "All Schedules"
-    root[:tooltip] = "All Schedules"
-    root[:icon]    = "miq_schedule.png"
-    instance_variable_set :"@#{name}", tree_nodes.to_json          # JSON object for tree loading
-    x_node_set(tree_nodes.first[:key], name) unless x_node(name)  # Set active node to root if not set
+  def build_schedules_tree
+    TreeBuilderReportSchedules.new('schedules_tree', 'schedules', @sb)
   end
 
   def get_schedule(nodeid)

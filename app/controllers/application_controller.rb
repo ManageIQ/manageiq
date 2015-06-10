@@ -945,7 +945,7 @@ class ApplicationController < ActionController::Base
       if tree_type == "timeline"
         build_timeline_tree(@sb[:rpt_menu], tree_type)
       else
-        build_reports_tree(:reports, :reports_tree)
+        build_reports_tree
       end
     else
       build_menu_tree(@sb[:rpt_menu], tree_type)

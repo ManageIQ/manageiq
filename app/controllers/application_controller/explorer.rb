@@ -277,7 +277,6 @@ module ApplicationController::Explorer
                         when MiqGroup            then options[:tree] == :db_tree ?
                                                       x_get_tree_g_kids(object, options) : nil
                         when MiqRegion           then x_get_tree_region_kids(object, options)
-                        when MiqReport           then x_get_tree_r_kids(object, options)
                         when ResourcePool        then x_get_tree_rp_kids(object, options)
                         when ServiceTemplate     then x_get_tree_st_kids(object, options)
                         when ServiceResource     then x_get_tree_sr_kids(object, options)
@@ -368,12 +367,6 @@ module ApplicationController::Explorer
   def x_get_tree_roots(options)
     count_only = options[:count_only]
     case options[:type]
-    when :export
-      export_children = [
-        {:id => "exportcustomreports", :tree => "export_tree", :text => "Custom Reports", :image => "report"},
-        {:id => "exportwidgets", :tree => "export_tree", :text => "Widgets", :image => "report"}
-      ]
-      return count_only ? export_children.length : export_children
     when :ab
       @resolve[:target_classes] = {}
       CustomButton.button_classes.each { |db| @resolve[:target_classes][db] = ui_lookup(:model => db) }
@@ -399,15 +392,7 @@ module ApplicationController::Explorer
       objects = rbac_filtered_objects(Dialog.all).sort_by { |a| a.label.downcase }
       return count_only ? objects.length : objects
     when :old_dialogs
-      MiqDialog::DIALOG_TYPES.sort.collect { |typ| {:id => "MiqDialog_#{typ[1]}", :text => typ[0], :image => "folder", :tip => typ[0]} }
-    when :reports
-      objects = []
-      @sb[:rpt_menu].each_with_index do |r, i|
-        objects.push(:id => "#{i}", :text => r[0], :image => "#{@sb[:grp_title] == r[0] ? "blue_folder" : "folder"}", :tip => r[0])
-        # load next level of folders when building the tree
-        x_tree(options[:tree])[:open_nodes].push("xx-#{i}")
-      end
-      return objects
+      MiqDialog::DIALOG_TYPES.sort.collect{|typ| {:id=>"MiqDialog_#{typ[1]}", :text=>typ[0], :image=>"folder", :tip=>typ[0]}}
     when :roles
       if super_admin_user?
         roles = MiqGroup.all
@@ -435,18 +420,6 @@ module ApplicationController::Explorer
             {:id => "orph", :text => "<Orphaned>", :image => "currentstate-orphaned", :tip => "Orphaned VMs and Templates"}
           ]
       end
-    when :savedreports
-      # Saving the unique folder id's that hold reports under them, to use them in view to generate link
-      @sb[:folder_ids] = {}
-      g = admin_user? ? nil : session[:group]
-      MiqReport.having_report_results(:miq_group => g, :select => [:id, :name]).each do |r|
-        @sb[:folder_ids][r.name] = to_cid(r.id.to_i)
-      end
-      objects = []
-      @sb[:folder_ids].sort.each_with_index do |p, _i|
-        objects.push(:id => p[1], :text => p[0], :image => "report", :tip => p[0])
-      end
-      return objects
     when :stcat
       objects = rbac_filtered_objects(ServiceTemplateCatalog.all).sort_by { |a| a.name.downcase }
       return count_only ? objects.length : objects
