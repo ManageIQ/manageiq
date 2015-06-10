@@ -408,23 +408,22 @@ module OpsController::Settings::Schedules
   end
 
   def schedule_set_record_vars(schedule)
-    if params[:action_typ] == "db_backup"
-      schedule.towhat = "DatabaseBackup"
-    elsif params[:action_typ].ends_with?("check_compliance")
-      schedule.towhat = params[:action_typ].split("_").first.capitalize
-    else
-      schedule.towhat = params[:action_typ] == "emscluster" ? "EmsCluster" : params[:action_typ].camelcase
-    end
+    schedule.towhat =
+      case params[:action]
+      when "db_backup"          then "DatabaseBackup"
+      when /check_compliance\z/ then params[:action].split("_").first.capitalize
+      when "emscluster"         then "EmsCluster"
+      else                           params[:action].camelcase
+      end
 
-    if %w(vm miq_template).include?(params[:action_typ])
-      schedule.sched_action = {:method=>"vm_scan"}      # Default to vm_scan method for now
-    elsif params[:action_typ].ends_with?("check_compliance")
-      schedule.sched_action = {:method=>"check_compliance"}
-    elsif params[:action_typ] == "db_backup"
-      schedule.sched_action = {:method=>"db_backup"}
-    else
-      schedule.sched_action = {:method=>"scan"}
-    end
+    schedule_method =
+      case params[:action]
+      when "vm", "miq_template" then "vm_scan"  # Default to vm_scan method for now
+      when /check_compliance\z/ then "check_compliance"
+      when "db_backup"          then "db_backup"
+      else                           "scan"
+      end
+    schedule.sched_action = {:method => schedule_method}
 
     if params[:action] != "db_backup"
       unless %w(global my).include?(params[:filter_typ]) # Unless a search filter is chosen
