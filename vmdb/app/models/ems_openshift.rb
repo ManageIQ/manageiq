@@ -44,4 +44,8 @@ class EmsOpenshift < EmsContainer
     osclient.ssl_options(:verify_ssl => OpenSSL::SSL::VERIFY_NONE)
     osclient
   end
+
+  def self.event_monitor_class
+    MiqEventCatcherOpenshift
+  end
 end
