@@ -7,7 +7,7 @@
     %ul.dropdown-menu
       %li.disabled
         %a{:href => "#"}
-          Server: #{session[:vmdb_name]}
+          = _('Server: %s') % session[:vmdb_name]
 
       - if session[:eligible_groups].length > 1
         %li.dropdown-submenu
@@ -31,5 +31,3 @@
 - else
   = _('Logging into')
   = "#{session[:vmdb_name]}"
-- if %w(login authenticate).include?(controller.action_name)
-  = javascript_tag("$$('#navcontainer a').each(function(a){a.href='#'})")
