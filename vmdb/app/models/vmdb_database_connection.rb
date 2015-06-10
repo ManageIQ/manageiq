@@ -19,7 +19,7 @@ class VmdbDatabaseConnection < ActiveRecord::Base
   virtual_column :command,           :type => :string
   virtual_column :spid,              :type => :integer
   virtual_column :task_state,        :type => :string
-  virtual_column :wait_resource,     :type => :string
+  virtual_column :wait_resource,     :type => :integer  # oid
   virtual_column :wait_time,         :type => :integer
   virtual_column :vmdb_database_id,  :type => :integer
 
