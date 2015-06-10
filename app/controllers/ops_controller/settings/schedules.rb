@@ -440,8 +440,10 @@ module OpsController::Settings::Schedules
         :save       => true,
       )
     else
-      unless %w(global my).include?(params[:filter_typ]) # Unless a search filter is chosen
-        # Build the filter expression
+      if %w(global my).include?(params[:filter_typ])  # Search filter chosen, set up relationship
+        schedule.filter = nil  # Clear out existing filter expression
+        schedule.miq_search = params[:filter_value] ? MiqSearch.find(params[:filter_value]) : nil # Set up the search relationship
+      else  # Build the filter expression
         exp = Hash.new
         if params[:action] == "storage"
           case params[:filter_typ]
@@ -550,9 +552,6 @@ module OpsController::Settings::Schedules
 
         schedule.filter = MiqExpression.new(exp)
         schedule.miq_search = nil if schedule.miq_search  # Clear out any search relationship
-      else  # Search filter chosen, set up relationship
-        schedule.filter = nil                             # Clear out existing filter expression
-        schedule.miq_search = params[:filter_value] ? MiqSearch.find(params[:filter_value]) : nil # Set up the search relationship
       end
     end
   end
