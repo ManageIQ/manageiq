@@ -104,8 +104,7 @@ describe EmsRefresh::Refreshers::OpenshiftRefresher do
                                 :ems_ref      => "ff8a8e45-e385-11e4-9d96-f8b156af4ae1",
                                 :name         => "route-edge",
                                 :namespace    => "default",
-                                :host_name    => "www.example.com",
-                                :service_name => "frontend"
+                                :host_name    => "www.example.com"
                             )
   end
 end

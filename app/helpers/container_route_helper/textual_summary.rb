@@ -9,7 +9,7 @@ module ContainerRouteHelper::TextualSummary
   end
 
   def textual_group_relationships
-    items = %w(ems)
+    items = %w(ems container_service)
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
@@ -37,6 +37,16 @@ module ContainerRouteHelper::TextualSummary
     if role_allows(:feature => "ems_container_show")
       h[:title] = "Show parent #{label} '#{ems.name}'"
       h[:link] = url_for(:controller => 'ems_container', :action => 'show', :id => ems)
+    end
+    h
+  end
+
+  def textual_container_services
+    num_of_container_services = @record.number_of(:container_services)
+    label = ui_lookup(:tables => "container_services")
+    h = {:label => label, :image => "container_service", :value => num_of_container_services}
+    if  num_of_container_services > 0 && role_allows(:feature => "container_service_show")
+      h[:link] = url_for(:action => 'show', :controller => 'container_routes', :display => 'container_services')
     end
     h
   end
