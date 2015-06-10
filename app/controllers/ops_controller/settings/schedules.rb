@@ -429,7 +429,17 @@ module OpsController::Settings::Schedules
     schedule.towhat       = schedule_towhat_from_params_action
     schedule.sched_action = {:method => schedule_method_from_params_action}
 
-    if params[:action] != "db_backup"
+    if params[:action] == "db_backup"
+      schedule.filter = nil
+      schedule.verify_file_depot(
+        :name       => params[:depot_name],
+        :password   => params[:log_password],
+        :username   => params[:log_userid],
+        :uri        => "#{params[:uri_prefix]}://#{params[:uri]}",
+        :uri_prefix => params[:uri_prefix],
+        :save       => true,
+      )
+    else
       unless %w(global my).include?(params[:filter_typ]) # Unless a search filter is chosen
         # Build the filter expression
         exp = Hash.new
@@ -544,16 +554,6 @@ module OpsController::Settings::Schedules
         schedule.filter = nil                             # Clear out existing filter expression
         schedule.miq_search = params[:filter_value] ? MiqSearch.find(params[:filter_value]) : nil # Set up the search relationship
       end
-    else
-      schedule.filter = nil
-      schedule.verify_file_depot(
-        :name       => params[:depot_name],
-        :password   => params[:log_password],
-        :username   => params[:log_userid],
-        :uri        => "#{params[:uri_prefix]}://#{params[:uri]}",
-        :uri_prefix => params[:uri_prefix],
-        :save       => true,
-      )
     end
   end
 
