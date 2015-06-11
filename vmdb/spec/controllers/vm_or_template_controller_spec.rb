@@ -80,13 +80,13 @@ describe VmOrTemplateController do
       seed_session_trees('vm_or_template', :templates_images_filter_tree, 'root')
 
       get :explorer
-      expect(response.body).to match(%r(<cell>dempsey</cell>))
+      expect(response.body).to match(%r{<cell>dempsey</cell>})
     end
 
     it 'show a vm in the vms instances list' do
       FactoryGirl.create(:vm_vmware, :name => 'makepeace')
       get :explorer
-      expect(response.body).to match(%r(<cell>makepeace</cell>))
+      expect(response.body).to match(%r{<cell>makepeace</cell>})
     end
   end
 
