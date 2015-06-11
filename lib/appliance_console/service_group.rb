@@ -59,9 +59,13 @@ module ApplianceConsole
 
     private
 
+    def run_service(service, action)
+      LinuxAdmin::Service.new(service).send(action)
+    end
+
     def service_command(action)
       services = send("to_#{action}")
-      services.each {|s| LinuxAdmin::Service.new(s).send(action)}
+      services.each {|s| run_service(s, action) }
     end
 
     #TODO: Fix LinuxAdmin::Service to detach.

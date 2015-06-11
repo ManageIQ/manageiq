@@ -53,6 +53,16 @@ describe ApplianceConsole::ServiceGroup do
     end
   end
 
+  # this is private, but since we are stubbing it, make sure it works
+  context "#run_service" do
+    it "invokes LinuxAdmin service call" do
+      stub = double
+      expect(stub).to receive('start').and_return(true)
+      expect(LinuxAdmin::Service).to receive(:new).with('service').and_return(stub)
+      group.send(:run_service, 'service', 'start')
+    end
+  end
+
   shared_examples_for "service management" do |command|
     it "##{command}" do
       LinuxAdmin.should_receive(:run).with("chkconfig", :params => {"--add" => "miqtop"}) if command == "enable"
@@ -63,7 +73,7 @@ describe ApplianceConsole::ServiceGroup do
         group.should_receive(:start_command)
       else
         expected_calls.each do |service|
-          LinuxAdmin::Service.should_receive(:new).with(service).and_return(double(command => true))
+          expect(group).to receive(:run_service).with(service, command).and_return(true)
         end
       end
 
