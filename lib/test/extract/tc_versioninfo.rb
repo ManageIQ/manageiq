@@ -33,7 +33,7 @@ class TestVersionInfo < MiniTest::Unit::TestCase
   end
   
   def test_textFile
-    assert_raise(RuntimeError) {File.getVersionInfo(__FILE__)}  # Test this ruby source file, which does not have version info
+    assert_raises(RuntimeError) {File.getVersionInfo(__FILE__)}  # Test this ruby source file, which does not have version info
   end
   
   def test_no_file
@@ -41,10 +41,10 @@ class TestVersionInfo < MiniTest::Unit::TestCase
       File.delete(@noFile)
     rescue Errno::ENOENT
     end
-    assert_raise(Errno::ENOENT) {File.getVersionInfo(@noFile)}  # This file should not exist
+    assert_raises(Errno::ENOENT) {File.getVersionInfo(@noFile)}  # This file should not exist
 
     f = File.new(@noFile,"w+")
-    assert_raise(RuntimeError) {File.getVersionInfo(@noFile)}  # This file should now exist, but be zero bytes
+    assert_raises(RuntimeError) {File.getVersionInfo(@noFile)}  # This file should now exist, but be zero bytes
     f.close
     File.delete(@noFile)
   end

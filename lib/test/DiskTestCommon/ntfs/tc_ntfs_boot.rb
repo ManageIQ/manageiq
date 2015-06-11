@@ -70,7 +70,7 @@ class NtfsTestDisk < MiniTest::Unit::TestCase
 	
 	def test_ntfs_boot_sect_empty
 		@num_tests += 1
-		assert_raise(RuntimeError) {NTFS::BootSect.new(nil)}
+		assert_raises(RuntimeError) {NTFS::BootSect.new(nil)}
 	end
 	
 	def id(line, disk)

@@ -40,7 +40,7 @@ module DiskTestCommon
         next unless File.exist?(filename)
 
         f = MiqLargeFile.open(filename, "r")
-        assert_not_nil(MiqLargeFile, f)
+        refute_nil(MiqLargeFile, f)
         f.close
       end
     end

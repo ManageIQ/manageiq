@@ -57,7 +57,7 @@ module DiskTestCommon
         diskInfo.fileName = filename
 
         d = MiqDisk.getDisk(diskInfo)
-        assert_not_nil(MiqDisk, d)
+        refute_nil(MiqDisk, d)
         d.close
       end
     end

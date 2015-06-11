@@ -55,7 +55,7 @@ class Fat32TestBoot < MiniTest::Unit::TestCase
 	
 	def test_fat32_boot_sect_empty
 		@num_tests += 1
-		assert_raise(RuntimeError) {Fat32::BootSect.new(nil)}
+		assert_raises(RuntimeError) {Fat32::BootSect.new(nil)}
 	end
 	
 	def test_fat32_boot_sect

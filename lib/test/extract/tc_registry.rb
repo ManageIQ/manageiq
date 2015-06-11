@@ -75,7 +75,7 @@ module Extract
       # "ntevents"
       %w{vmconfig accounts software services system}.each do |c|
         xml = vm.extract(c)
-        assert_not_nil(xml, "Category [#{c}] returned a nil instead of XML data.")
+        refute_nil(xml, "Category [#{c}] returned a nil instead of XML data.")
 
         xml = xml.to_xml
         validateVmXml(xml, c)
@@ -83,9 +83,9 @@ module Extract
     end
 
     def validateVmXml(xml, category)
-      assert_not_nil(xml.root.attributes['version'])
-      assert_not_nil(xml.root.attributes['created_on'])
-      assert_not_nil(xml.root.attributes['display_time'])
+      refute_nil(xml.root.attributes['version'])
+      refute_nil(xml.root.attributes['created_on'])
+      refute_nil(xml.root.attributes['display_time'])
       assert_instance_of(String, xml.root.attributes['display_time'])
       assert_instance_of(Fixnum, eval(xml.root.attributes['created_on']))
 
@@ -172,7 +172,7 @@ module Extract
         assert(filesFound.include?(hive))
 
         # Check that all the registy hives are non zero byte files
-        assert_not_equal(0, fs.fileSize(File.join(currPath, hive)))
+        refute_equal(0, fs.fileSize(File.join(currPath, hive)))
       end
     end
   end

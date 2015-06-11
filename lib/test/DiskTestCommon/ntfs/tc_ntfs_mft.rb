@@ -132,7 +132,7 @@ class NtfsTestMft < MiniTest::Unit::TestCase
 	
 	def test_emtpy
 		@num_tests += 1
-		assert_raise(RuntimeError) {NTFS::MftEntry.new(nil, nil)}
+		assert_raises(RuntimeError) {NTFS::MftEntry.new(nil, nil)}
 	end
 	
 	def id(line, disk)

@@ -20,7 +20,7 @@ class TestVersionInfo < MiniTest::Unit::TestCase
     assert_equal(:dir, xml.root.elements[1].name)
     
     # Base element should have a valid MD5 sig.
-    assert_not_nil(xml.root.elements[1].attributes['md5'])
+    refute_nil(xml.root.elements[1].attributes['md5'])
 
     # MD5 sig should be 32 bits in length
     assert_in_delta(32, xml.root.elements[1].attributes['md5'].strip.length, 0)
