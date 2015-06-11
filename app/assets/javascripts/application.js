@@ -46,8 +46,8 @@
 //= require bootstrap-datepicker
 //= require bootstrap-select
 //= require bootstrap-hover-dropdown
-//= require c3/c3
-//= require d3/d3
+//= require c3
+//= require d3
 //= require patternfly
 //= require jquery.observe_field
 //= require miq_jquery_ujs_rails3
