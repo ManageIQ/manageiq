@@ -1552,17 +1552,17 @@ describe ApplicationHelper do
 
           it "and requester.name != @record.requester_name" do
             @record.stub(:requester_name => 'admin')
-            subject.should == true
+            subject.should == false
           end
 
           it "and approval_state = approved" do
             @record.stub(:approval_state => "approved")
-            subject.should == true
+            subject.should == false
           end
 
           it "and approval_state = denied" do
             @record.stub(:approval_state => "denied")
-            subject.should == true
+            subject.should == false
           end
 
           it "and requester.name = @record.requester_name & approval_state != approved|denied" do
@@ -2908,6 +2908,69 @@ describe ApplicationHelper do
       end
     end
 
+    context "and id = miq_request_delete" do
+      let(:server) { active_record_instance_double("MiqServer", :logon_status => :ready) }
+      before(:each) do
+        # create User Role record...
+        @miq_user_role = FactoryGirl.create(
+          :miq_user_role,
+          :name      => "EvmRole-super_administrator",
+          :read_only => true
+        )
+
+        @miq_group = FactoryGirl.create(
+          :miq_group,
+          :guid          => "guid",
+          :description   => "EvmGroup-super_administrator",
+          :miq_user_role => @miq_user_role
+        )
+
+        MiqServer.stub(:my_server).with(true).and_return(server)
+
+        # create User record...
+        @user = FactoryGirl.create(
+          :user_admin,
+          :miq_groups => [@miq_group],
+        )
+
+        @test_role = FactoryGirl.create(
+          :miq_user_role,
+          :name => "test_role"
+        )
+
+        @id = "miq_request_delete"
+        User.stub(:current_user).and_return(@user)
+        session[:userid] = @user.userid
+        @record = MiqProvisionRequest.new
+        @record.stub(:resource_type => "something", :approval_state => "xx", :requester_name => @user.name)
+      end
+
+      it "and requester.name != @record.requester_name" do
+        @record.stub(:requester_name => 'admin')
+        res = build_toolbar_disable_button("miq_request_delete")
+        res.should == false
+      end
+
+      it "and approval_state = approved" do
+        @record.stub(:approval_state => "approved")
+        subject.should == false
+      end
+
+      it "and requester.name = @record.requester_name & approval_state != approved|denied" do
+        subject.should == false
+      end
+
+      it "and requester.name != @record.requester_name" do
+        @miq_group.update_attributes(:miq_user_role => @test_role)
+        user = FactoryGirl.create(
+          :user,
+          :miq_groups     => [@miq_group],
+        )
+        session[:userid] = user.userid
+        res = build_toolbar_disable_button("miq_request_delete")
+        res.should include("Users are only allowed to delete their own requests")
+      end
+    end
   end #end of disable button
 
   describe "#get_record_cls"  do
