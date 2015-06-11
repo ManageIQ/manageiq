@@ -1,5 +1,5 @@
-- url = url_for(:action=>'cu_collection_field_changed')
 - if @sb[:active_tab] == "settings_cu_collection"
+  - url = url_for(:action=>'cu_collection_field_changed')
   - clusters_title = title_for_clusters
   = form_tag( {:action => 'cu_collection_update'}, {:id => "config_form"}) do
     = render :partial => "layouts/flash_msg"

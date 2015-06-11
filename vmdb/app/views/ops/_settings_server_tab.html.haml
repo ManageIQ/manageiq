@@ -1,5 +1,5 @@
-- url = url_for(:action=>'settings_form_field_changed', :id=>"#{@sb[:active_tab].split('_').last}")
 - if @sb[:active_tab] == "settings_server"
+  - url = url_for(:action=>'settings_form_field_changed', :id=>"#{@sb[:active_tab].split('_').last}")
   = render :partial => "layouts/flash_msg"
   .row
     .col-sm-12.col-md-12.col-lg-6
