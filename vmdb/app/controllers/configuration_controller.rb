@@ -706,11 +706,11 @@ class ConfigurationController < ApplicationController
       when "ui_5"
         @tabs[0] = ["5", ""]  # Start with first tab array entry set to tab 1 as active
       end
-      @tabs.push( ["1", "Visual"] ) if role_allows(:feature=>"my_settings_visuals")
-      @tabs.push( ["2", "Default Views"] ) if role_allows(:feature=>"my_settings_default_views")
-      @tabs.push( ["3", "Default Filters"] ) if role_allows(:feature=>"my_settings_default_filters")
-      @tabs.push( ["4", "Time Profiles"] ) if role_allows(:feature=>"my_settings_time_profiles")
-      @tabs.push( ["5", "MyTags"] ) if role_allows(:feature=>"my_settings_my_tags") if false
+      @tabs.push( ["1", _("Visual")] )          if role_allows(:feature => "my_settings_visuals")
+      @tabs.push( ["2", _("Default Views")] )   if role_allows(:feature => "my_settings_default_views")
+      @tabs.push( ["3", _("Default Filters")] ) if role_allows(:feature => "my_settings_default_filters")
+      @tabs.push( ["4", _("Time Profiles")] )   if role_allows(:feature => "my_settings_time_profiles")
+      @tabs.push( ["5", _("MyTags")] )          if role_allows(:feature => "my_settings_my_tags") if false
     end
   end
 

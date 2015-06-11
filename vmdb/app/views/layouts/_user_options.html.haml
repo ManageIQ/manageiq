@@ -7,29 +7,27 @@
     %ul.dropdown-menu
       %li.disabled
         %a{:href => "#"}
-          Server: #{session[:vmdb_name]}
-          
+          = _('Server: %s') % session[:vmdb_name]
+
       - if session[:eligible_groups].length > 1
         %li.dropdown-submenu
           %a{:href => "#"}
-            Change Group:
+            = _('Change Group:')
             %ul.dropdown-menu
               - session[:eligible_groups].each do |group, id|
                 %li
-                  %a{:title => "Select to change to another Group", :href => "#",
+                  %a{:title => _("Select to change to another Group"), :href => "#",
                         :onclick => "miqSparkle(true);miqToggleUserOptions(#{id})"}
-                    = id == session[:group] ? "#{group} (Current Group)" : group
+                    = id == session[:group] ? "#{group} (#{_('Current Group')})" : group
       - else
         %li.disabled
           %a{:href => "#"}
             = session[:group_description]
       %li.divider
       %li
-        %a{:href => "/dashboard/logout", :onclick => 'return miqCheckForChanges()', :title => "Click to Logout"}
-          Logout
+        %a{:href => "/dashboard/logout", :onclick => 'return miqCheckForChanges()', :title => _("Click to Logout")}
+          = _('Logout')
 
 - else
-  Logging into
+  = _('Logging into')
   = "#{session[:vmdb_name]}"
-- if ["login", "authenticate"].include?(controller.action_name)
-  = javascript_tag("$$('#navcontainer a').each(function(a){a.href='#'})")
