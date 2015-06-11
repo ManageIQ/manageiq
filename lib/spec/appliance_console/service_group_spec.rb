@@ -71,6 +71,19 @@ describe ApplianceConsole::ServiceGroup do
     end
   end
 
+  # this is private, but since we are stubbing it, make sure it works
+  context "#detached_service" do
+    it "invokes Spawn" do
+      spwn = double
+      expect(Kernel).to receive(:spawn).with(
+        "/sbin/service service start", [:out, :err] => ["/dev/null", "w"]
+      ).and_return(spwn)
+      expect(Process).to receive(:detach).with(spwn)
+
+      group.send(:run_detached_service, "service", "start")
+    end
+  end
+
   shared_examples_for "service management" do |command|
     it "##{command}" do
       expect(group).to receive(:enable_miqtop) if command == "enable"

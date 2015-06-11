@@ -73,8 +73,12 @@ module ApplianceConsole
     end
 
     #TODO: Fix LinuxAdmin::Service to detach.
+    def run_detached_service(service, action)
+      Process.detach(Kernel.spawn("/sbin/service #{service} #{action}", [:out, :err] => ["/dev/null", "w"]))
+    end
+
     def start_command
-      to_start.each {|s| Process.detach(Kernel.spawn("/sbin/service #{s} start", [:out, :err] => ["/dev/null", "w"]))}
+      to_start.each { |s| run_detached_service(s, "start") }
     end
   end
 end
