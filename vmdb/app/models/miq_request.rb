@@ -77,11 +77,7 @@ class MiqRequest < ActiveRecord::Base
 
   delegate :deny, :reason, :stamped_on, :to => :first_approval
   delegate :userid, :to => :requester, :prefix => true
-  # TODO: delegate ":to => :class" and remove klass method once Rails 4 is merged
-  delegate :request_task_class, :request_types, :task_description, :to => :klass
-  def klass
-    self.class
-  end
+  delegate :request_task_class, :request_types, :task_description, :to => :class
 
   # Supports old-style requests where specific request was a seperate table connected as a resource
   def resource

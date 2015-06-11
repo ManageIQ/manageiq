@@ -15,11 +15,7 @@ class MiqRequestTask < ActiveRecord::Base
   default_value_for :phase_context, {}
   default_value_for :options,       {}
 
-  # TODO: delegate ":to => :class" and remove klass method once Rails 4 is merged
-  delegate :request_class, :task_description, :to => :klass
-  def klass
-    self.class
-  end
+  delegate :request_class, :task_description, :to => :class
 
   validates_inclusion_of :status, :in => %w{ Ok Warn Error Timeout }
 
