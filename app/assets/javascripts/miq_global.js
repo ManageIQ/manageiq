@@ -40,6 +40,8 @@ if (typeof(ManageIQ) === 'undefined') {
       chartData: null, // data for charts
       charts: {}, // object with registered charts used in jqplot_register_chart
       formatters: {}, // functions corresponding to MiqReport::Formatting
+      c3: {}, // C3 charts by id
+      c3config: null, // C3 chart configuration
     },
     grids: {}, // stored grids on the screen
     i18n: {

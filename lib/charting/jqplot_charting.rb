@@ -57,6 +57,10 @@ class JqplotCharting < Charting
     data.try(:to_yaml)
   end
 
+  def deserialized(data)
+    YAML.load(data)
+  end
+
   private
 
   def add_sample_chart_data(options, chart)

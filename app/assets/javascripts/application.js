@@ -19,8 +19,9 @@
 //= require_tree ./directives/
 //= require_tree ./services/
 //= require_tree ./controllers/
-//= require d3/d3
-//= require c3/c3
+//= require d3
+//= require c3
+//= require lodash
 //= require kubernetes-topology-graph/topology-graph
 //= require miq_browser_detect
 //= require miq_application
@@ -41,6 +42,7 @@
 //= require jqplot-plugins/jqplot.canvasAxisTickRenderer
 //= require jqplot-plugins/jqplot.canvasTextRenderer
 //= require miq_jqplot
+//= require miq_c3_config
 //= require jqueryui
 //= require bootstrap
 //= require bootstrap-datepicker
@@ -66,7 +68,6 @@
 //= require spin.js/spin
 //= require spin.js/jquery.spin
 //= require jquery-hotkeys
-//= require lodash
 //= require miq_formatters
 //= require miq_grid
 //= require miq_list_grid

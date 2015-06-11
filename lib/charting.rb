@@ -11,6 +11,7 @@ class Charting
       :chart_names_for_select,
       :chart_themes_for_select,
       :serialized,
+      :deserialized,
       :js_load_statement      # javascript statement to reload charts
     ] => :instance
   end
