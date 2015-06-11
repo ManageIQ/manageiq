@@ -4,6 +4,7 @@ class ContainerImage < ActiveRecord::Base
   belongs_to :container_image_registry
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   has_many :containers
+  has_many :guest_applications, :dependent => :destroy
 
   acts_as_miq_taggable
 
