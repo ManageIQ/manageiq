@@ -36,7 +36,7 @@ module OpsController::Settings::Schedules
     assert_privileges("schedule_edit")
     case params[:button]
     when "cancel"
-      @schedule = MiqSchedule.find_by_id(session[:edit][:sched_id]) if session[:edit] && session[:edit][:sched_id]
+      @schedule = MiqSchedule.find_by_id(params[:id])
       if !@schedule || @schedule.id.blank?
         add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"MiqSchedule"))
       else
@@ -44,7 +44,6 @@ module OpsController::Settings::Schedules
       end
       get_node_info(x_node)
       @schedule = nil
-      @edit = session[:edit] = nil  # clean out the saved info
       replace_right_cell(@nodetype)
     when "save", "add"
       schedule = params[:id] != "new" ? MiqSchedule.find_by_id(params[:id]) : MiqSchedule.new(:userid => session[:userid])
