@@ -24,12 +24,14 @@ describe Filesystem do
 
     it "non MIME .conf file, with non ascii characters is not displayable" do
       filesystem = FactoryGirl.create(:filesystem_conf_file_non_ascii)
+      filesystem.name = "DOES NOT EXIST"
 
       expect(filesystem.contents_displayable?).to be_false
     end
 
     it "non MIME .conf file, without content is not displayable" do
       filesystem = FactoryGirl.create(:filesystem_conf_file_ascii)
+      filesystem.name = "DOES NOT EXIST"
       filesystem.stub(:has_contents?).and_return(false)
 
       expect(filesystem.contents_displayable?).to be_false
