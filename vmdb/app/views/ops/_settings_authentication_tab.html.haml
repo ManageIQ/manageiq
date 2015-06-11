@@ -1,5 +1,5 @@
-- url = url_for(:action => 'settings_form_field_changed', :id => "#{@sb[:active_tab].split('_').last}")
 - if @sb[:active_tab] == "settings_authentication"
+  - url = url_for(:action => 'settings_form_field_changed', :id => "#{@sb[:active_tab].split('_').last}")
   = render :partial => "layouts/flash_msg"
   %h3=_("Authentication")
   %table.style1

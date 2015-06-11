@@ -2904,7 +2904,7 @@ module ApplicationHelper
 
   def patternfly_tab_content(id, active, &block)
     content_tag(:div, :id => id, :class => "tab-pane#{active == id ? ' active' : ''}") do
-      yield if active == id
+      yield
     end
   end
 
