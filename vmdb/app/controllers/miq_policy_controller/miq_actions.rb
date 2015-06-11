@@ -12,6 +12,7 @@ module MiqPolicyController::MiqActions
       else
         add_flash(_("Add of new %s was cancelled by the user") % ui_lookup(:model=>"MiqAction"))
       end
+      @sb[:action] = nil
       get_node_info(x_node)
       replace_right_cell(@nodetype)
       return
@@ -49,6 +50,7 @@ module MiqPolicyController::MiqActions
         @nodetype = "a"
         @new_action_node = "a-#{to_cid(action.id)}"
         replace_right_cell("a", params[:button] == "save" ? [:policy_profile, :policy, :action] : [:action])
+        @sb[:action] = nil
       else
         action.errors.each do |field,msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
