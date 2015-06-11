@@ -44,6 +44,11 @@ module ApplicationController::Performance
       end
     end
 
+    if @perf_options[:no_rollups]
+      add_flash(_("No Hourly or Daily data is available, real time data " \
+                  "from the Most Recent Hour is being displayed"), :warning)
+    end
+
     render :update do |page|
       if @temp[:parent_chart_data]
         page << 'miq_chart_data = ' + {"candu" => @temp[:chart_data], "parent"    => @temp[:parent_chart_data]}.to_json + ';'
@@ -176,11 +181,16 @@ module ApplicationController::Performance
   def perf_set_or_fix_dates(options)
     # Get start/end dates in selected timezone
     tz = options[:time_profile_tz] || options[:tz]  # Use time profile tz or chosen tz, if no profile tz
-    s, e = @perf_record.first_and_last_capture
+    s, e = @perf_record.first_and_last_capture('hourly')
     if s.nil?
-      add_flash(_("No Utilization data available"), :warning)
-      @temp[:no_util_data] = true
-      return
+      s, e = @perf_record.first_and_last_capture('realtime')
+      if s.nil?
+        add_flash(_("No Utilization data available"), :warning)
+        @temp[:no_util_data] = true
+        return
+      end
+      options[:typ] = "realtime"
+      options[:no_rollups] = true
     end
     sdate = s.in_time_zone(tz)
     edate = e.in_time_zone(tz)
