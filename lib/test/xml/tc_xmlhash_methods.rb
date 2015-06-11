@@ -5,7 +5,7 @@ require 'minitest/unit'
 require 'miq-xml'
 require 'xmlsimple'
 
-class TestXmlHashMethods < MiniTest::Unit::TestCase
+class TestXmlHashMethods < Minitest::Test
   require 'xml_base_parser_tests'
   include XmlBaseParserTests
 

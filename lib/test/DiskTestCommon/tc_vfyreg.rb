@@ -13,7 +13,7 @@ $:.push("#{File.dirname(__FILE__)}/../../fs/MiqFS")
 require 'MiqFS'
 
 # WINDOWS SPECIFIC.
-class TestReg < MiniTest::Unit::TestCase
+class TestReg < Minitest::Test
 	
 	#define registry structures
 	REGISTRY_HEADER_REGF = BinaryStruct.new([

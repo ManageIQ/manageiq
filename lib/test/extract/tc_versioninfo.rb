@@ -4,7 +4,7 @@ require 'minitest/unit'
 
 module Extract
 	
-class TestVersionInfo < MiniTest::Unit::TestCase
+class TestVersionInfo < Minitest::Test
   def setup
     @dataPath = File.join(File.dirname(File.expand_path(__FILE__)), "data")
     @noFile   = File.expand_path(File.join(@dataPath, "nofile.txt"))

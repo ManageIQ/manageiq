@@ -10,7 +10,7 @@ require 'MiqDisk'
 $:.push("#{File.dirname(__FILE__)}/../../../fs/ntfs")
 require 'NtfsBootSect'
 
-class NtfsTestDisk < MiniTest::Unit::TestCase
+class NtfsTestDisk < Minitest::Test
 	
 	CONDITIONS = ['fs_type', 'ntfs']
 	TEST_DB = "#{File.dirname(__FILE__)}/../../vms.yml"

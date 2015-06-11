@@ -11,7 +11,7 @@ require 'minitest/unit'
 $qaShare = File.join((Platform::IMPL == :macosx ? "/Volumes" : "/mnt"), "manageiq", "fleecing_test", "images", "virtual_machines")
 
 module Extract
-  class TestRegistry < MiniTest::Unit::TestCase
+  class TestRegistry < Minitest::Test
     @@vmList = [
       {:vmName => File.join($qaShare, "vmware", "Windows Server 2003 Enterprise Edition/Windows Server 2003 Enterprise Edition.vmx"), :guestOS => "Windows"},
       {:vmName => File.join($qaShare, "vmware", "Debian 40 Server/debian40server.vmx"), :guestOS => "Linux"},

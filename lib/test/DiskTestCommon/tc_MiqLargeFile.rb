@@ -7,7 +7,7 @@ require 'minitest/unit'
 require 'tmpdir'
 
 module DiskTestCommon
-  class TestMiqLargeFile < MiniTest::Unit::TestCase
+  class TestMiqLargeFile < Minitest::Test
     FILE_PATH = (Platform::IMPL == :macosx ? "/Volumes" : "/mnt") + "/manageiq/fleecing_test/images/"
 
     FILE_1MB = FILE_PATH + "containers/raw/DiskTestCommon_MiqLargeFile_1MB"

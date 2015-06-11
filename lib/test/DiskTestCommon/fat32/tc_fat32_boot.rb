@@ -10,7 +10,7 @@ require 'MiqDisk'
 $:.push("#{File.dirname(__FILE__)}/../../../fs/fat32")
 require 'Fat32BootSect'
 
-class Fat32TestBoot < MiniTest::Unit::TestCase
+class Fat32TestBoot < Minitest::Test
 	
 	CONDITIONS = ['fs_type', 'fat32']
 	TEST_DB = "#{File.dirname(__FILE__)}/../../vms.yml"

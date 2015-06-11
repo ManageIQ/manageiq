@@ -11,7 +11,7 @@ $:.push("#{File.dirname(__FILE__)}/../../../fs/ntfs")
 require 'NtfsBootSect'
 require 'NtfsMftEntry'
 
-class NtfsTestIndex < MiniTest::Unit::TestCase
+class NtfsTestIndex < Minitest::Test
 	
 	CONDITIONS = ['fs_type', 'ntfs']
 	TEST_DB = "#{File.dirname(__FILE__)}/../../vms.yml"

@@ -61,7 +61,7 @@ class MftEntry
 	end
 end
 
-class NtfsTestMft < MiniTest::Unit::TestCase
+class NtfsTestMft < Minitest::Test
 	
 	CONDITIONS = ['fs_type', 'ntfs']
 	TEST_DB = "#{File.dirname(__FILE__)}/../../vms.yml"

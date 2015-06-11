@@ -4,7 +4,7 @@ require 'rubygems'
 require 'minitest/unit'
 require 'miq-xml'
 
-class XmlEncoding < MiniTest::Unit::TestCase
+class XmlEncoding < Minitest::Test
 
   def test_attribute_encoding
     xml = REXML::Document.new("<test/>")

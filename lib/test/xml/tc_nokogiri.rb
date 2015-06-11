@@ -5,7 +5,7 @@ require 'minitest/unit'
 require 'miq-xml'
 require 'nokogiri'
 
-class NokogiriXmlMethods < MiniTest::Unit::TestCase
+class NokogiriXmlMethods < Minitest::Test
 #  require 'xml_base_parser_tests'
 #  include XmlBaseParserTests
 

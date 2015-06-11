@@ -4,7 +4,7 @@ require 'minitest/unit'
 
 module Extract
 	
-class TestVersionInfo < MiniTest::Unit::TestCase
+class TestVersionInfo < Minitest::Test
 
   def test_md5deep
     md5 = MD5deep.new

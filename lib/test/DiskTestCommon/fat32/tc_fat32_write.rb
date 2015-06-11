@@ -16,7 +16,7 @@ require 'Fat32BootSect'
 $:.push("#{File.dirname(__FILE__)}/..")
 require 'FSTestUtil'
 
-class Fat32TestWrite < MiniTest::Unit::TestCase
+class Fat32TestWrite < Minitest::Test
 	
 	TEST_SHORT_DIR = "/test"
 	TEST_LONG_DIR  = "/Test Directory"

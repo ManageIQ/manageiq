@@ -10,7 +10,7 @@ require 'Iso9660DirectoryEntry'
 require 'Iso9660Directory'
 include Iso9660
 
-class TestIso9660Directory < MiniTest::Unit::TestCase
+class TestIso9660Directory < Minitest::Test
 	
 	def test_root_dir
 		puts "Testing root dir."

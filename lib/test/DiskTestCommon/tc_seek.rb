@@ -10,7 +10,7 @@ require 'MiqDisk'
 $:.push("#{File.dirname(__FILE__)}/../../fs/MiqFS")
 require 'MiqFS'
 
-class TestSeek < MiniTest::Unit::TestCase
+class TestSeek < Minitest::Test
 	
 	TEST_DB = "#{File.dirname(__FILE__)}/../vms.yml"
 	TEST_FILE = '/SeekTest.dat'
