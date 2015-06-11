@@ -1,0 +1,86 @@
+%form#form_div(name="hostForm" ng-controller="hostFormController")
+  = render :partial => "layouts/flash_msg"
+  - if session[:host_items].nil?
+    %p.legend=_('Basic Information')
+    %table.style1
+      %tr
+        %td.key=_('Name')
+        %td.wide
+          %input(type="text" name="host_name" ng-model="hostModel.host_name"  ng-maxlength=10 miqrequired checkchange)
+
+      - if false
+        %tr
+          %td.key=_('Host Name')
+          %td.wide
+            #= text_field_tag("hostname",
+              @edit[:new][:hostname],
+              :maxlength => MAX_HOSTNAME_LEN,
+              "data-miq_observe" => observe)
+        %tr
+          %td.key=_('IP Address')
+          %td.wide
+            #= text_field_tag("ipaddress",
+              @edit[:new][:ipaddress],
+              :maxlength => 15,
+              "data-miq_observe" => observe)
+        %tr
+          %td.key=_('Custom Identifier')
+          %td.wide
+            #= text_field_tag("custom_1",
+              @edit[:new][:custom_1],
+              :maxlength => 50,
+              "data-miq_observe" => observe)
+        - if @host.operating_system.nil? || @host.operating_system.product_name.nil?
+          %tr
+            %td.key=_('Host platform')
+            %td.wide
+              #= select_tag("user_assigned_os",
+                options_for_select([["<#{_('not specified')}>", nil]] + Host.host_platforms.to_a,
+                @edit[:new][:user_assigned_os]),
+                "data-miq_observe" => { :url => url }.to_json)
+        %tr
+          %td.key=_('IPMI IP Address')
+          %td.wide
+            #= text_field_tag("ipmi_address",
+              @edit[:new][:ipmi_address],
+              :maxlength => 15,
+              "data-miq_observe" => observe)
+        %tr
+          %td.key=_('MAC Address')
+          %td.wide
+            #= text_field_tag("mac_address",
+              @edit[:new][:mac_address],
+              :maxlength => MAX_NAME_LEN,
+              "data-miq_observe" => observe)
+      %hr
+
+    #= render(:partial => "/layouts/multi_auth_credentials", :locals => {:record => @host})
+    %table{:width => '100%'}
+      %tr
+        %td{:align => 'right'}
+          #buttons_on
+            - if @host.id.nil?
+              = button_tag("Add", :class => "btn btn-primary", "ng-class" => "{'btn-disabled': !hostForm.$valid}", "ng-click" => "addClicked()", "ng-disabled" => "!hostForm.$valid")
+            - else
+              = button_tag("Save", :class => "btn btn-primary", "ng-click" => "saveClicked()", "ng-disabled" => "hostForm.$pristine || hostForm.$invalid", "ng-class" => "{'btn-disabled': hostForm.$pristine || hostForm.$invalid}")
+              = button_tag("Reset", :class => "btn btn-primary", "ng-click" => "resetClicked()", "ng-disabled" => "hostForm.$pristine", "ng-class" => "{'btn-disabled': hostForm.$pristine}")
+            = button_tag("Cancel", :class => "btn btn-default", "ng-click" => "cancelClicked()")
+
+    - unless session[:host_items].nil?
+      %p.legend
+        = pluralize(session[:host_items].length,Dictionary::gettext(Host.to_s, :type => :model, :notfound => :titleize))
+        |
+        =_('Selected')
+      |
+      =_('Click on a Host to fetch its settings')
+      %table.admittable{:height => '75'}
+        %tbody
+          %tr
+            %td
+              - if session[:host_items]
+                - @embedded = true
+                - @gtl_type = @settings[:views][:host]
+                = render :partial => 'layouts/gtl'
+:javascript
+  cfmeAngularApplication.value('hostFormId', '#{@host.id || "new"}');
+  angular.bootstrap(jQuery('#form_div'), ['cfmeAngularApplication']);
