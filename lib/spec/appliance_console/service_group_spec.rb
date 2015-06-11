@@ -7,7 +7,7 @@ require "linux_admin"
 describe ApplianceConsole::ServiceGroup do
   let(:group)             { described_class.new }
   let(:common_services)   { %w(evminit memcached miqtop evmserverd) }
-  let(:postgres_service)  { %w(postgresql92-postgresql) }
+  let(:postgres_service)  { "postgresql92-postgresql" }
 
   describe "#postgresql?" do
     it { expect(group).not_to be_postgresql }
@@ -26,14 +26,26 @@ describe ApplianceConsole::ServiceGroup do
   describe "#enable" do
     let(:group) { described_class.new(:internal_postgresql => false) }
 
-    it "#to_enable" do
-      expect(group.to_enable).to eq(common_services)
+    it "enables all but postgres" do
+      expect(group).to receive(:enable_miqtop)
+      common_services.each do |service|
+        expect_run_service(service, "enable")
+      end
+
+      group.enable
     end
 
     context "with postgres" do
       let(:group) { described_class.new(:internal_postgresql => true) }
-      it "#to_enable" do
-        expect(group.to_enable).to eq(common_services | postgres_service)
+
+      it "enables all including postgres" do
+        expect(group).to receive(:enable_miqtop)
+        common_services.each do |service|
+          expect_run_service(service, "enable")
+        end
+        expect_run_service(postgres_service, "enable")
+
+        group.enable
       end
     end
   end
@@ -41,15 +53,23 @@ describe ApplianceConsole::ServiceGroup do
   describe "#start" do
     let(:group) { described_class.new(:internal_postgresql => false) }
 
-    it "#to_start" do
-      expect(group.to_start).to eq(common_services)
+    it "starts all but postgres" do
+      common_services.each do |service|
+        expect_run_detached_service(service, "start")
+      end
+
+      group.start
     end
 
     context "with postgres" do
       let(:group) { described_class.new(:internal_postgresql => true) }
 
-      it "#to_start" do
-        expect(group.to_start).to eq(common_services)
+      it "starts all including postgres" do
+        common_services.each do |service|
+          expect_run_detached_service(service, "start")
+        end
+
+        group.start
       end
     end
   end
@@ -57,15 +77,19 @@ describe ApplianceConsole::ServiceGroup do
   describe "#disable" do
     let(:group) { described_class.new(:internal_postgresql => false) }
 
-    it "#to_disable" do
-      expect(group.to_disable).to eq(postgres_service)
+    it "disables postgres" do
+      expect_run_service(postgres_service, "disable")
+
+      group.disable
     end
 
     context "with postgres" do
       let(:group) { described_class.new(:internal_postgresql => true) }
 
-      it "#to_disable" do
-        expect(group.to_disable).to eq([])
+      it "does nothing" do
+        expect_no_service_calls
+
+        group.disable
       end
     end
   end
@@ -73,15 +97,19 @@ describe ApplianceConsole::ServiceGroup do
   describe "#stop" do
     let(:group) { described_class.new(:internal_postgresql => false) }
 
-    it "#to_stop" do
-      expect(group.to_stop).to eq(postgres_service)
+    it "stops postgres" do
+      expect_run_service(postgres_service, "stop")
+
+      group.stop
     end
 
     context "with postgres" do
       let(:group) { described_class.new(:internal_postgresql => true) }
 
-      it "#to_stop" do
-        expect(group.to_stop).to eq([])
+      it "stops nothing" do
+        expect_no_service_calls
+
+        group.stop
       end
     end
   end
@@ -117,27 +145,17 @@ describe ApplianceConsole::ServiceGroup do
     end
   end
 
-  shared_examples_for "service management" do |command|
-    it "##{command}" do
-      expect(group).to receive(:enable_miqtop) if command == "enable"
+  private
 
-      expected_calls = group.send("to_#{command}")
-
-      # Hack until LinuxAdmin::Service start handles detaching.
-      if command == "start"
-        group.should_receive(:start_command)
-      else
-        expected_calls.each do |service|
-          expect(group).to receive(:run_service).with(service, command).and_return(true)
-        end
-      end
-
-      group.send(command)
-    end
+  def expect_no_service_calls
+    expect(group).not_to receive(:run_service)
   end
 
-  include_examples "service management", "enable"
-  include_examples "service management", "disable"
-  include_examples "service management", "stop"
-  include_examples "service management", "start"
+  def expect_run_detached_service(service, command)
+    expect(group).to receive(:run_detached_service).with(service, command)
+  end
+
+  def expect_run_service(service, command)
+    expect(group).to receive(:run_service).with(service, command)
+  end
 end
