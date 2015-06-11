@@ -1075,7 +1075,7 @@ module ApplicationController::Compare
       end
     end
 
-    @temp[:all_sections_tree] = all_sections.to_json # Add ci node array to root of tree
+    @all_sections_tree = all_sections.to_json # Add ci node array to root of tree
     session[:tree] = "all_sections"
     session[:tree_name] = "all_sections_tree"
   end
@@ -1102,14 +1102,14 @@ module ApplicationController::Compare
       }
       row.push(rowtemp)
     end
-    @temp[:cols] = row
+    @cols = row
   end
 
   # Build the total row of the compare grid xml
   def drift_add_total(view)
     row = {
       :col0  => "<span class='cell-effort-driven cell-plain'>All Sections</span>",
-      :id    => "id_#{@temp[:rows].length}",
+      :id    => "id_#{@rows.length}",
       :total => true
     }
     view.ids.each_with_index do |id, idx|
@@ -1123,7 +1123,7 @@ module ApplicationController::Compare
         end
       end
     end
-    @temp[:rows] << row
+    @rows << row
   end
 
   # Build a section row for the compare grid xml
@@ -1136,7 +1136,7 @@ module ApplicationController::Compare
     end
     row = {
       :col0       => cell_text,
-      :id         => "id_#{@temp[:rows].length}",
+      :id         => "id_#{@rows.length}",
       :indent     => 0,
       :parent     => nil,
       :section    => true,
@@ -1144,8 +1144,8 @@ module ApplicationController::Compare
       :_collapsed => collapsed_state("#{section[:name]}")
     }
     row.merge!(drift_section_data_cols(view, section))
-    @temp[:section_parent_id] = @temp[:rows].length
-    @temp[:rows] << row
+    @section_parent_id = @rows.length
+    @rows << row
   end
 
   def drift_section_data_cols(view, section)
@@ -1169,20 +1169,20 @@ module ApplicationController::Compare
 
   # Build a record row for the compare grid xml
   def drift_add_record(view, section, record, ridx)
-    @temp[:same] = true
+    @same = true
     row = {
       :col0       => record,
-      :id         => "id_#{@temp[:rows].length}",
+      :id         => "id_#{@rows.length}",
       :indent     => 1,
-      :parent     => @temp[:section_parent_id],
+      :parent     => @section_parent_id,
       :record     => true,
       :exp_id     => "#{section[:name]}_#{ridx}",
       :_collapsed => collapsed_state("#{section[:name]}_#{ridx}")
     }
     row.merge!(drift_record_data_cols(view, section, record))
 
-    @temp[:record_parent_id] = @temp[:rows].length
-    @temp[:rows] << row
+    @record_parent_id = @rows.length
+    @rows << row
   end
 
   def drift_record_data_cols(view, section, record)
@@ -1211,7 +1211,7 @@ module ApplicationController::Compare
     if val == basval && match == 100
       row.merge!(drift_add_same_image(idx, val))
     else
-      @temp[:same] = false
+      @same = false
       row.merge!(drift_add_diff_image(idx, val))
     end
     row
@@ -1233,12 +1233,12 @@ module ApplicationController::Compare
       if basval == "Found" && match == 100
         row.merge!(drift_add_same_image(idx, val))
       else                                                        # Base doesn't have the record
-        @temp[:same] = false
+        @same = false
         row.merge!(drift_add_diff_image(idx, val))
       end
     else                                                          # Record is missing from this object
       if basval == "Found"                                        # Base has the record, no match
-        @temp[:same] = false
+        @same = false
         row.merge!(drift_add_diff_image(idx, val))
       else
         img_src = "16/plus-black.png"              # Base doesn't have the record, match
@@ -1256,14 +1256,14 @@ module ApplicationController::Compare
       if basval == "Found"                                        # Base has the record
         img_src = "16/plus-black.png"
       else                                                        # Base doesn't have the record
-        @temp[:same] = false
+        @same = false
         img_src = "16/plus-orange.png"
       end
       row.merge!(drift_add_image_col(idx, img_src, img_bkg, val))
     else                                                          # Record is missing from this object
       img_bkg = ""
       if basval == "Found"                                        # Base has the record, no match
-        @temp[:same] = false
+        @same = false
         img_src = "16/minus-orange.png"
       else                                                        # Base doesn't have the record, match
         img_src = "16/minus-black.png"
@@ -1280,11 +1280,11 @@ module ApplicationController::Compare
     else  # Expanded
       row = drift_record_field_expanded(view, section, record, field)
     end
-    row.merge!(:id           => "id_#{@temp[:rows].length}",
+    row.merge!(:id           => "id_#{@rows.length}",
                     :indent       => 2,
-                    :parent       => @temp[:record_parent_id],
+                    :parent       => @record_parent_id,
                     :record_field => true)
-    @temp[:rows] << row
+    @rows << row
   end
 
   def drift_record_field_compressed(view, section, record, field)
@@ -1398,17 +1398,17 @@ module ApplicationController::Compare
 
   # Build a field row under a section row
   def drift_add_section_field(view, section, field)
-    @temp[:same] = true
+    @same = true
     if @compressed  # Compressed
       row = drift_add_section_field_compressed(view, section, field)
     else            # Expanded
       row = drift_add_section_field_expanded(view, section, field)
     end
-    row.merge!(:id            => "id_#{@temp[:rows].length}",
+    row.merge!(:id            => "id_#{@rows.length}",
                     :indent        => 1,
-                    :parent        => @temp[:section_parent_id],
+                    :parent        => @section_parent_id,
                     :section_field => true)
-    @temp[:rows] << row
+    @rows << row
   end
 
   def drift_add_section_field_compressed(view, section, field)
@@ -1421,7 +1421,7 @@ module ApplicationController::Compare
         if view.results[id][section[:name]][field[:name]][:_match_]
           row.merge!(drift_add_same_image(idx, val))
         else
-          @temp[:same] = false
+          @same = false
           row.merge!(drift_add_diff_image(idx, val))
         end
       else
@@ -1445,7 +1445,7 @@ module ApplicationController::Compare
           img_bkg = "cell-bkg-plain-no-shade"
           row.merge!(drift_add_txt_col(idx, col, img_bkg))
         else
-          @temp[:same] = false
+          @same = false
           col = "#{view.results[id][section[:name]][field[:name]][:_value_]}"
           img_bkg = "cell-bkg-plain-mark-txt-no-shade"
           row.merge!(drift_add_txt_col(idx, col, img_bkg))
@@ -1481,8 +1481,8 @@ module ApplicationController::Compare
 
   # Render the view data to json for the grid view
   def compare_to_json(view)
-    @temp[:rows] = []
-    @temp[:cols] = []
+    @rows = []
+    @cols = []
     @compressed  = session[:miq_compressed]
 
     comp_add_header(view)
@@ -1499,8 +1499,8 @@ module ApplicationController::Compare
       end
     end
     comp_add_footer(view)
-    @temp[:grid_rows_json] = @temp[:rows].to_json.to_s.html_safe
-    @temp[:grid_cols_json] = @temp[:cols].to_json.to_s.html_safe
+    @grid_rows_json = @rows.to_json.to_s.html_safe
+    @grid_cols_json = @cols.to_json.to_s.html_safe
 
     @lastaction = "compare_miq"
   end
@@ -1509,7 +1509,7 @@ module ApplicationController::Compare
     records.each_with_index do |record, ridx|
       comp_add_record(view, section, record, ridx)
       unless compare_delete_row
-        @temp[:rows].pop
+        @rows.pop
         next
       end
       unless fields.nil?   # Build field rows under records
@@ -1524,7 +1524,7 @@ module ApplicationController::Compare
     fields.each_with_index do |field, fidx|                 # Build field rows per section
       comp_add_section_field(view, section, field)
       unless compare_delete_row
-        @temp[:rows].pop
+        @rows.pop
         next
       end
     end
@@ -1533,8 +1533,8 @@ module ApplicationController::Compare
   def compare_delete_row
     @sb[:miq_temp_params].nil? ||
     @sb[:miq_temp_params] == "all" ||
-    (@sb[:miq_temp_params] == "same" && @temp[:same]) ||
-    (@sb[:miq_temp_params] == "different" && !@temp[:same])
+    (@sb[:miq_temp_params] == "same" && @same) ||
+    (@sb[:miq_temp_params] == "different" && !@same)
   end
 
   # Build the header row of the compare grid xml
@@ -1563,7 +1563,7 @@ module ApplicationController::Compare
       }
       row.push(rowtemp)
     end
-    @temp[:cols] = row
+    @cols = row
   end
 
   def comp_add_header_compressed(view, h, i)
@@ -1621,7 +1621,7 @@ module ApplicationController::Compare
   def comp_add_footer(view)
     row = {
       :col0       => "",
-      :id         => "id_#{@temp[:rows].length}",
+      :id         => "id_#{@rows.length}",
       :remove_col => true
     }
 
@@ -1638,7 +1638,7 @@ module ApplicationController::Compare
         end
       end
     end
-    @temp[:rows] << row
+    @rows << row
   end
 
   def compare_add_txt_col(idx, txt, tooltip = "", img_bkg = "cell-stripe", style = "")
@@ -1678,7 +1678,7 @@ module ApplicationController::Compare
   def comp_add_total(view)
     row = {
       :col0  => "<span class='cell-effort-driven cell-plain'>Total Matches</span>",
-      :id    => "id_#{@temp[:rows].length}",
+      :id    => "id_#{@rows.length}",
       :total => true
     }
     view.ids.each_with_index do |id, idx|
@@ -1691,7 +1691,7 @@ module ApplicationController::Compare
         row.merge!(compare_add_piechart_image(idx, "#{pct_match}% matched", image))
       end
     end
-    @temp[:rows] << row
+    @rows << row
   end
 
   # Build a section row for the compare grid xml
@@ -1704,7 +1704,7 @@ module ApplicationController::Compare
     end
     row = {
       :col0       => cell_text,
-      :id         => "id_#{@temp[:rows].length}",
+      :id         => "id_#{@rows.length}",
       :indent     => 0,
       :parent     => nil,
       :section    => true,
@@ -1713,8 +1713,8 @@ module ApplicationController::Compare
     }
     row.merge!(compare_section_data_cols(view, section, records))
 
-    @temp[:section_parent_id] = @temp[:rows].length
-    @temp[:rows] << row
+    @section_parent_id = @rows.length
+    @rows << row
   end
 
   def compare_section_data_cols(view, section, records)
@@ -1739,20 +1739,20 @@ module ApplicationController::Compare
 
   # Build a record row for the compare grid xml
   def comp_add_record(view, section, record, ridx)
-    @temp[:same] = true
+    @same = true
     row = {
       :col0       => record,
-      :id         => "id_#{@temp[:rows].length}",
+      :id         => "id_#{@rows.length}",
       :indent     => 1,
-      :parent     => @temp[:section_parent_id],
+      :parent     => @section_parent_id,
       :record     => true,
       :exp_id     => "#{section[:name]}_#{ridx}",
       :_collapsed => collapsed_state("#{section[:name]}_#{ridx}")
     }
     row.merge!(comp_record_data_cols(view, section, record))
 
-    @temp[:record_parent_id] = @temp[:rows].length
-    @temp[:rows] << row
+    @record_parent_id = @rows.length
+    @rows << row
   end
 
   def comp_record_data_cols(view, section, record)
@@ -1905,9 +1905,9 @@ module ApplicationController::Compare
   def comp_add_record_field(view, section, record, field)
     row = {
       :col0         => field[:header],
-      :id           => "id_#{@temp[:rows].length}",
+      :id           => "id_#{@rows.length}",
       :indent       => 2,
-      :parent       => @temp[:record_parent_id],
+      :parent       => @record_parent_id,
       :record_field => true
     }
 
@@ -1916,7 +1916,7 @@ module ApplicationController::Compare
     else  # Expanded
       row.merge!(comp_add_record_field_expanded(view, section, record, field))
     end
-    @temp[:rows] << row
+    @rows << row
   end
 
   def comp_add_record_field_compressed(view, section, record, field)
@@ -2046,13 +2046,13 @@ module ApplicationController::Compare
 
   # Build a field row under a section row
   def comp_add_section_field(view, section, field)
-    @temp[:same] = true
+    @same = true
 
     row = {
       :col0          => field[:header],
-      :id            => "id_#{@temp[:rows].length}",
+      :id            => "id_#{@rows.length}",
       :indent        => 1,
-      :parent        => @temp[:section_parent_id],
+      :parent        => @section_parent_id,
       :section_field => true
     }
 
@@ -2062,7 +2062,7 @@ module ApplicationController::Compare
       row.merge!(comp_add_section_field_expanded(view, section, field))
     end
 
-    @temp[:rows] << row
+    @rows << row
   end
 
   def comp_add_section_field_compressed(view, section, field)
@@ -2117,13 +2117,13 @@ module ApplicationController::Compare
   end
 
   def unset_same_flag(match = 0)
-    @temp[:same] = false if match != 100
+    @same = false if match != 100
   end
 
   # Render the view data to xml for the grid view
   def drift_to_json(view)
-    @temp[:rows] = []
-    @temp[:cols] = []
+    @rows = []
+    @cols = []
     @layout = view.report.db == "VmOrTemplate" ? @sb[:compare_db].underscore : view.report.db.underscore
     @compressed = session[:miq_compressed]
     @exists_mode = session[:miq_exists_mode]
@@ -2141,8 +2141,8 @@ module ApplicationController::Compare
           drift_build_field_rows(view, section, fields)
         end
       end
-      @temp[:grid_rows_json] = @temp[:rows].to_json.to_s.html_safe
-      @temp[:grid_cols_json] = @temp[:cols].to_json.to_s.html_safe
+      @grid_rows_json = @rows.to_json.to_s.html_safe
+      @grid_cols_json = @cols.to_json.to_s.html_safe
     end
     @lastaction = "drift"
   end
@@ -2151,7 +2151,7 @@ module ApplicationController::Compare
     records.each_with_index do |record, ridx|
       drift_add_record(view, section, record, ridx)
       unless drift_delete_row
-        @temp[:rows].pop
+        @rows.pop
         next
       end
       if !fields.nil? && !@exists_mode  # Build field rows under records
@@ -2166,7 +2166,7 @@ module ApplicationController::Compare
     fields.each_with_index do |field, fidx|                 # Build field rows per section
       drift_add_section_field(view, section, field)
       unless drift_delete_row
-        @temp[:rows].pop
+        @rows.pop
         next
       end
     end
@@ -2175,8 +2175,8 @@ module ApplicationController::Compare
   def drift_delete_row
     @sb[:miq_drift_params].nil? ||
     @sb[:miq_drift_params] == "all" ||
-    (@sb[:miq_drift_params] == "same" && @temp[:same]) ||
-    (@sb[:miq_drift_params] == "different" && !@temp[:same])
+    (@sb[:miq_drift_params] == "same" && @same) ||
+    (@sb[:miq_drift_params] == "different" && !@same)
   end
 
   private

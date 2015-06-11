@@ -92,9 +92,9 @@ class ChargebackController < ApplicationController
 
   def set_form_locals
     if x_active_tree == :cb_rates_tree
-      @temp[:x_edit_buttons_locals] = {:action_url => 'cb_rate_edit'}
+      @x_edit_buttons_locals = {:action_url => 'cb_rate_edit'}
     elsif x_active_tree == :cb_assignments_tree
-      @temp[:x_edit_buttons_locals] = {
+      @x_edit_buttons_locals = {
         :action_url   => 'cb_assign_update',
         :no_cancel    => true,
         :multi_record => true
@@ -377,7 +377,7 @@ class ChargebackController < ApplicationController
     @right_cell_text ||= "Saved Chargeback Report [#{rr.name}]"
     if rr.userid != session[:userid]
       add_flash(_("Report is not authorized for the logged in user"), :error)
-      @temp[:saved_reports] = cb_rpts_get_all_reps(id.split('-')[1])
+      @saved_reports = cb_rpts_get_all_reps(id.split('-')[1])
       return
     else
       @report_result_id = session[:report_result_id] = rr.id
@@ -387,7 +387,7 @@ class ChargebackController < ApplicationController
       if @report.blank?
         add_flash(_("Saved Report \"%s\" not found, Schedule may have failed") %
           format_timezone(rr.last_run_on, Time.zone, "gtl"), :error)
-        @temp[:saved_reports] = cb_rpts_get_all_reps(rr.miq_report_id.to_s)
+        @saved_reports = cb_rpts_get_all_reps(rr.miq_report_id.to_s)
         rep = MiqReport.find_by_id(rr.miq_report_id)
         if x_active_tree == :cb_reports
           self.x_node = "reports-#{rep.id}"
@@ -469,8 +469,8 @@ class ChargebackController < ApplicationController
       # On a saved reports parent node
       else
         #saved reports under report node on saved report accordion
-        @temp[:saved_reports] = cb_rpts_get_all_reps(nodes[0].split('-')[1])
-        unless @temp[:saved_reports].empty?
+        @saved_reports = cb_rpts_get_all_reps(nodes[0].split('-')[1])
+        unless @saved_reports.empty?
           @sb[:sel_saved_rep_id] = nodes[1]
           @right_cell_div = "reports_list_div"
           miq_report = MiqReport.find(@sb[:miq_report_id])
@@ -479,7 +479,7 @@ class ChargebackController < ApplicationController
         else
           add_flash(_("Selected %s Report no longer exists") % "Chargeback", :warning)
           self.x_node = nodes[0]
-          @temp[:saved_reports] = nil
+          @saved_reports = nil
           cb_rpts_build_tree # Rebuild tree
         end
       end
@@ -487,7 +487,7 @@ class ChargebackController < ApplicationController
   end
 
   def cb_rpt_build_folder_nodes
-    @temp[:parent_reports] = Hash.new
+    @parent_reports = Hash.new
     srs = MiqReportResult.all(:conditions=>["db=? AND userid=? AND report_source!=?",
                                             "Chargeback",
                                             session[:userid],
@@ -495,7 +495,7 @@ class ChargebackController < ApplicationController
                               :select => "miq_report_id, name",
                               :group=>"miq_report_id, name")
     srs.sort_by { |sr| sr.name.downcase }.each_with_index do |sr, sr_idx|
-      @temp[:parent_reports][sr.name] = "#{to_cid(sr.miq_report_id)}-#{sr_idx}"
+      @parent_reports[sr.name] = "#{to_cid(sr.miq_report_id)}-#{sr_idx}"
     end
   end
 

@@ -180,7 +180,7 @@ module ReportController::Reports
       @sb[:timezone_abbr] = @timezone_abbr if @timezone_abbr
       #Saving converted time to be displayed on saved reports list view
       @view.table.data.each_with_index do |s,s_idx|
-        @temp[:report_running] = true if s.status.downcase == "running" || s.status.downcase == "queued"
+        @report_running = true if s.status.downcase == "running" || s.status.downcase == "queued"
       end
 
       @current_page = @pages[:current] unless @pages.nil? # save the current page number
@@ -194,14 +194,14 @@ module ReportController::Reports
       else
         schedules = MiqSchedule.all(:conditions=>["towhat=? AND userid=?", "MiqReport", session[:userid]])
       end
-      @temp[:schedules] = Array.new
+      @schedules = Array.new
       schedules.sort_by(&:name).each do |s|
         if s.filter.exp["="]["value"].to_i == @miq_report.id.to_i
-         @temp[:schedules].push(s)
+         @schedules.push(s)
         end
       end
 
-      @temp[:widget_nodes] = MiqWidget.all(:conditions=>["resource_id = ?", @miq_report.id.to_i])
+      @widget_nodes = MiqWidget.all(:conditions=>["resource_id = ?", @miq_report.id.to_i])
     end
 
     @sb[:tree_typ]   = "reports"
@@ -485,7 +485,7 @@ module ReportController::Reports
     root[:title]   = "All Reports"
     root[:tooltip] = "All Reports"
     root[:icon]    = "folder.png"
-    @temp[name]    = tree_nodes.to_json          # JSON object for tree loading
+    instance_variable_set :"@#{name}", tree_nodes.to_json          # JSON object for tree loading
     x_node_set(tree_nodes.first[:key], name) unless x_node(name)  # Set active node to root if not set
   end
 

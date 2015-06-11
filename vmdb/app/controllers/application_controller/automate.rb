@@ -174,8 +174,8 @@ module ApplicationController::Automate
       :fqclass     => @resolve[:new][:starting_object],
       :message     => @resolve[:new][:object_message]
     )
-    @temp[:results] = MiqAeEngine.resolve_automation_object(@resolve[:uri], :ws, @resolve[:new][:readonly]).to_expanded_xml
-    @temp[:json_tree] = ws_tree_from_xml(@temp[:results])
+    @results = MiqAeEngine.resolve_automation_object(@resolve[:uri], :ws, @resolve[:new][:readonly]).to_expanded_xml
+    @json_tree = ws_tree_from_xml(@results)
   end
 
   def ready_to_throw

@@ -2,7 +2,7 @@
   = render :partial => "layouts/flash_msg"
   - if @perf_record
     = render :partial => "layouts/perf_options"
-    = render :partial => "layouts/perf_charts", :locals => {:chart_data => @temp[:chart_data], :chart_set => "candu"}
+    = render :partial => "layouts/perf_charts", :locals => {:chart_data => @chart_data, :chart_set => "candu"}
   - else
     .alert.alert-info
       %span.pficon.pficon-info

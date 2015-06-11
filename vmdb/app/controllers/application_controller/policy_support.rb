@@ -257,16 +257,16 @@ module ApplicationController::PolicySupport
     @pol_view.table = MiqFilter.records2table(@tagitems, :only=>@pol_view.cols + ['id'])
 
     # Build the profiles selection list
-    @temp[:all_profs] = Hash.new
+    @all_profs = Hash.new
     MiqPolicySet.all.each do |ps|
       unless session[:policies].has_key?(ps.id)
-        @temp[:all_profs][ps.id] = ps.description
+        @all_profs[ps.id] = ps.description
       end
     end
-    if @temp[:all_profs].length > 0
-      @temp[:all_profs]["<select>"] = ""
+    if @all_profs.length > 0
+      @all_profs["<select>"] = ""
     else
-      @temp[:all_profs]["<select>"] = "No Policy Profiles are available"
+      @all_profs["<select>"] = "No Policy Profiles are available"
     end
     build_targets_hash(@tagitems)
   end

@@ -1,4 +1,4 @@
-- record               = @temp[:selected_server]
+- record               = @selected_server
 - icon                 = record.class == MiqServer ? "evmserver" : "zone"
 - icon_string          = "/images/icons/new/#{icon}.png"
 - log_depot_uri        = "#{record.log_depot.try(:uri) || "N/A"} #{"(from Zone)" unless record.log_file_depot}"

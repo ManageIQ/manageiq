@@ -10,14 +10,14 @@
             %strong{:style => "color: #4b4b4b"}=_("Type:")
             %br
             = select_tag('event_typ',
-              options_for_select(["<#{_('Choose')}>"] + @temp[:rsop_events], @sb[:rsop][:event]),
+              options_for_select(["<#{_('Choose')}>"] + @rsop_events, @sb[:rsop][:event]),
               "data-miq_observe" => observe)
             - unless @sb[:rsop][:event].nil?
               %br
               %strong{:style => "color: #4b4b4b"}=_("Event:")
               %br
               = select_tag('event_value',
-                options_for_select(["<#{_('Choose')}>"] + @temp[:rsop_event_sets], @sb[:rsop][:event_value]),
+                options_for_select(["<#{_('Choose')}>"] + @rsop_event_sets, @sb[:rsop][:event_value]),
                 "data-miq_observe" => observe)
       %tr
         %td

@@ -8,16 +8,16 @@
         %table.style1
           %tr
             %td.key=_("Hostname")
-            %td.wide= @temp[:selected_server].hostname
+            %td.wide= @selected_server.hostname
           %tr
             %td.key=_("IP Address")
-            %td.wide= @temp[:selected_server].ipaddress
+            %td.wide= @selected_server.ipaddress
           %tr
             %td.key=_("Resides on VM")
             %td{:style => "padding: 0px"}
               %table{:cellpadding => "0", :cellspacing => "0"}
                 %tr
-                  - vm = @temp[:selected_server].vm
+                  - vm = @selected_server.vm
                   - if vm
                     %td.image.pointer{:onclick => "DoNav('/vm/show/#{vm.id}');", :title => _("Click to view this VM")}
                       %img{:align => "left", :height => "20", :src => "/images/icons/new/vm.png", :width => "20"}/

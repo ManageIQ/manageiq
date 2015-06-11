@@ -645,7 +645,7 @@ class HostController < ApplicationController
       :expand => true
     )
     host_node[:children] = add_host_branch if @host.switches.length > 0
-    @temp[:network_tree] = [host_node].to_json
+    @network_tree = [host_node].to_json
     session[:tree_name]  = "network_tree"
   end
 
@@ -721,7 +721,7 @@ class HostController < ApplicationController
     )
     host_node[:children] = storage_adapters_node if !@host.hardware.nil? &&
         @host.hardware.storage_adapters.length > 0
-    @temp[:sa_tree] = [host_node].to_json
+    @sa_tree = [host_node].to_json
     session[:tree] = "sa"
     session[:tree_name] = "sa_tree"
   end

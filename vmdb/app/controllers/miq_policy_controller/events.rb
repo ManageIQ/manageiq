@@ -25,7 +25,7 @@ module MiqPolicyController::Events
     return unless load_edit("event_edit__#{id}","replace_cell__explorer")
     @event = @edit[:event_id] ? MiqEvent.find_by_id(@edit[:event_id]) : MiqEvent.new
     policy = MiqPolicy.find(from_cid(@sb[:node_ids][x_active_tree]["p"]))
-    @temp[:policy] = policy
+    @policy = policy
 
     case params[:button]
     when "save"
@@ -59,7 +59,7 @@ module MiqPolicyController::Events
 
     @event = MiqEvent.find(params[:id])                                         # Get event record
     policy = MiqPolicy.find(from_cid(@sb[:node_ids][x_active_tree]["p"]))   # Get the policy above this event
-    @temp[:policy] = policy                                 # Save for use in the view
+    @policy = policy                                 # Save for use in the view
     @edit[:key] = "event_edit__#{@event.id || "new"}"
     @edit[:rec_id] = @event.id || nil
 
@@ -112,7 +112,7 @@ module MiqPolicyController::Events
   # Get information for an event
   def event_get_info(event)
     @record = @event = event
-    @temp[:policy] = MiqPolicy.find(from_cid(@sb[:node_ids][x_active_tree]["p"])) unless x_active_tree == :event_tree
+    @policy = MiqPolicy.find(from_cid(@sb[:node_ids][x_active_tree]["p"])) unless x_active_tree == :event_tree
     @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:tables=>"miq_event"), :name=>event.description}
     @right_cell_div = "event_details"
 
@@ -134,7 +134,7 @@ module MiqPolicyController::Events
     root[:tooltip] = "All Events"
     root[:icon] = "folder.png"
 
-    @temp[name] = tree_nodes.to_json  # JSON object for tree loading
+    instance_variable_set :"@#{name}", tree_nodes.to_json  # JSON object for tree loading
     x_node_set(tree_nodes.first[:key], name) unless x_node(name)    # Set active node to root if not set
   end
 

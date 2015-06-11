@@ -18,7 +18,7 @@
             - if @edit[:vm_columns][i] == @edit[:vm_sortcol]
               %img{:src => "/images/icons/16/sort_#{@edit[:vm_sortdir] == 'ASC' ? 'up' : 'down'}.png"}
     %tbody
-      - @temp[:vms].each do |row|
+      - @vms.each do |row|
         - @id = row.id
         - cls =  @edit[:src_vm_id] && @edit[:src_vm_id] == @id ? "selected" : ""
         %tr{:class => cls, :onclick => "miqAjax('/miq_request/pre_prov/?sel_id=#{@id}');", :id => "row_#{@id}"}

@@ -2581,8 +2581,7 @@ describe ApplicationHelper do
         end
 
         it "when Widget content generation is already running or queued up" do
-          @temp = Hash.new
-          @temp[:widget_running] = true
+          @widget_running = true
           db = FactoryGirl.create(:miq_widget_set)
           db.replace_children([@record])
           subject.should == "This Widget content generation is already running or queued up"

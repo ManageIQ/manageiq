@@ -14,7 +14,7 @@ module ApplicationController::Timelines
     if params[:tl_show]
       @tl_options[:tl_show] = params[:tl_show]
       tl_gen_timeline_data
-      return unless @temp[:timeline]
+      return unless @timeline
     end
 
     if @tl_options[:tl_show] == "timeline"
@@ -72,7 +72,7 @@ module ApplicationController::Timelines
       add_flash(_("At least one %s must be selected") % "filter", :warning) if flg
     else
       tl_gen_timeline_data(refresh="n")
-      return unless @temp[:timeline]
+      return unless @timeline
     end
 
     if @tl_options[:tl_show] == "timeline"
@@ -103,7 +103,7 @@ module ApplicationController::Timelines
         end
       end
     end
-    @temp[:timeline] = true
+    @timeline = true
     add_flash(_("No events available for this timeline"), :warning) if @tl_options[:sdate].nil? && @tl_options[:edate].nil?
     render :update do |page|
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
@@ -263,7 +263,7 @@ module ApplicationController::Timelines
           blob.binary=(@report.to_timeline)
           session[:tl_xml_blob_id] = blob.id
         else
-          @temp[:tl_json] = @report.to_timeline
+          @tl_json = @report.to_timeline
         end
 #       START of TIMELINE TIMEZONE Code
 #       session[:tl_position] = format_timezone(@report.extras[:tl_position],Time.zone,"tl")
@@ -492,14 +492,14 @@ module ApplicationController::Timelines
   def tl_gen_timeline_data(refresh = nil)
     tl_build_timeline(refresh)
     tl_build_timeline_report_options
-    @temp[:timeline] = true if !@report         # need to set this incase @report is not there, when switching between Management/Policy events
+    @timeline = true if !@report         # need to set this incase @report is not there, when switching between Management/Policy events
     if @report
       unless params[:task_id]                                     # First time thru, kick off the report generate task
         initiate_wait_for_task(:task_id => @report.async_generate_table(:userid => session[:userid]))
         return
       end
 
-      @temp[:timeline] = true
+      @timeline = true
       miq_task = MiqTask.find(params[:task_id])     # Not first time, read the task record
       @report = miq_task.task_results
 
@@ -516,7 +516,7 @@ module ApplicationController::Timelines
             blob.binary=(@report.to_timeline)
             session[:tl_xml_blob_id] = blob.id
           else
-            @temp[:tl_json] = @report.to_timeline
+            @tl_json = @report.to_timeline
           end
   #         START of TIMELINE TIMEZONE Code
           session[:tl_position] = @report.extras[:tl_position]

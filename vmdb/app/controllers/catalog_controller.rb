@@ -271,7 +271,7 @@ class CatalogController < ApplicationController
     @edit[:explorer] = true
     @sb[:st_form_active_tab] = "request"
     @right_cell_text = _("Adding a new %s") % ui_lookup(:model => "ServiceTemplate")
-    @temp[:x_edit_buttons_locals] = {:action_url => "servicetemplate_edit"}
+    @x_edit_buttons_locals = {:action_url => "servicetemplate_edit"}
   end
 
   def identify_catalog(id = nil)
@@ -924,8 +924,8 @@ class CatalogController < ApplicationController
   def service_template_list(condition, options={})
     @no_checkboxes = x_active_tree == :svccat_tree
     if x_active_tree == :svccat_tree
-      @temp[:gtl_buttons] = ["view_list","view_tile"]
-      @temp[:gtl_small_tiles] = true
+      @gtl_buttons = ["view_list","view_tile"]
+      @gtl_small_tiles = true
       if role_allows(:feature => 'svc_catalog_provision')
         @row_button = {:image    => "Order",
                        :function => "miqOrderService",

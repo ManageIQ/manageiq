@@ -11,7 +11,7 @@
           = _("Requested by")
         %td
           - if @miq_request.requester
-            = h(@miq_request.requester + (@temp[:user].nil? ? nil : " (#{@temp[:user].name})"))
+            = h(@miq_request.requester + (@user.nil? ? nil : " (#{@user.name})"))
       %tr
         %td.key
           = _("Last Update")
@@ -27,7 +27,7 @@
           = _("Approved/Denied by")
         %td
           - if @miq_request.stamped_by
-            = h(@miq_request.stamped_by + (@temp[:user].nil? ? nil : " (#{@temp[:user].name})"))
+            = h(@miq_request.stamped_by + (@user.nil? ? nil : " (#{@user.name})"))
       %tr
         %td.key
           = _("Date Approved/Denied")

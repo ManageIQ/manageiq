@@ -204,13 +204,13 @@ module OpsController::Db
         nodes = x_node.split('-')
         if nodes.first == "xx"
           tb = VmdbTableEvm.find_by_id(from_cid(nodes.last))
-          @temp[:indexes] = get_indexes(tb)
+          @indexes = get_indexes(tb)
           @right_cell_text = _("Indexes for %{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"VmdbTable"), :name=>tb.name}
           @tab_text = "#{tb.name}: Indexes"
         else
-          @temp[:vmdb_index] = VmdbIndex.find_by_id(from_cid(nodes.last))
-          @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"VmdbIndex"), :name=>@temp[:vmdb_index].name}
-          @tab_text = @temp[:vmdb_index].name
+          @vmdb_index = VmdbIndex.find_by_id(from_cid(nodes.last))
+          @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"VmdbIndex"), :name=>@vmdb_index.name}
+          @tab_text = @vmdb_index.name
         end
       elsif @sb[:active_tab] == "db_utilization"
         @record = VmdbTable.find_by_id(from_cid(x_node.split('-').last))
@@ -221,10 +221,10 @@ module OpsController::Db
         @tab_text = @record.name
       else
         @sb[:active_tab] = "db_details"
-        @temp[:table] = VmdbTable.find_by_id(from_cid(x_node.split('-').last))
-        @temp[:indexes] = get_indexes(@temp[:table])
-        @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"VmdbTable"), :name=>@temp[:table].name}
-        @tab_text = @temp[:table].name
+        @table = VmdbTable.find_by_id(from_cid(x_node.split('-').last))
+        @indexes = get_indexes(@table)
+        @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"VmdbTable"), :name=>@table.name}
+        @tab_text = @table.name
       end
     end
   end

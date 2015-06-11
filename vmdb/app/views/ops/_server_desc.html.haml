@@ -1,7 +1,7 @@
 #desc_content.desc_content
   %fieldset
     %h3
-      = h(@temp[:selected_server]["name"])
+      = h(@selected_server["name"])
     .row
       .col-sm-12.col-md-12.col-lg-6
         %table.style1
@@ -10,44 +10,44 @@
               %img{:src => "/images/icons/new/processmanager-evmserver.png"}
             %td.key= _("Hostname")
             %td.wide
-              = h(@temp[:selected_server][:hostname])
+              = h(@selected_server[:hostname])
           %tr
             %td.key= _("IP Address")
             %td.wide
-              = h(@temp[:selected_server][:ipaddress])
+              = h(@selected_server[:ipaddress])
           %tr
             %td.key= _("Status")
             %td.wide
-              = h(@temp[:selected_server][:status])
+              = h(@selected_server[:status])
           %tr
             %td.key= _("Started On")
             %td.wide
-              - t = @temp[:selected_server].started_on
+              - t = @selected_server.started_on
               = h(t.blank? ? "" : format_timezone(t))
           %tr
             %td.key= _("Stopped On")
             %td.wide
-              - t = @temp[:selected_server].stopped_on
+              - t = @selected_server.stopped_on
               = h(t.blank? ? "" : format_timezone(t))
       .col-sm-12.col-md-12.col-lg-6
         %table.style1
           %tr
             %td.key= _("Memory Usage")
             %td
-              = h(@temp[:selected_server]["memory_usage"])
+              = h(@selected_server["memory_usage"])
           %tr
             %td.key= _("Memory Size")
             %td
-              = h(@temp[:selected_server]["memory_size"])
+              = h(@selected_server["memory_size"])
           %tr
             %td.key= _("CPU Time")
             %td
-              = h(@temp[:selected_server]["cpu_time"])
+              = h(@selected_server["cpu_time"])
           %tr
             %td.key= _("CPU Percent")
             %td
-              = h(@temp[:selected_server]["percent_cpu"])
+              = h(@selected_server["percent_cpu"])
           %tr
             %td.key= _("Version / Build")
             %td
-              = h(@temp[:selected_server]["version"])
+              = h(@selected_server["version"])

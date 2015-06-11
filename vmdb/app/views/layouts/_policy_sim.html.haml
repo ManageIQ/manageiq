@@ -9,7 +9,7 @@
           %th{:colspan => "2"}
             %strong= _("Select a Policy Profile to add:")
             = select_tag("profile_id",
-                         options_for_select(@temp[:all_profs].invert.sort_by { |desc, _id| desc.downcase }, "select"),
+                         options_for_select(@all_profs.invert.sort_by { |desc, _id| desc.downcase }, "select"),
                          "data-miq_sparkle_on"  => true,
                          "data-miq_sparkle_off" => true,
                          "data-miq_observe"     => {:url => url}.to_json)

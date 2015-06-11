@@ -1,6 +1,6 @@
 #menu_roles_div
   - if @sb[:active_accord] == :roles
-    - if @temp && @temp[:menu_roles_tree]
+    - if @menu_roles_tree
       = render :partial => "layouts/flash_msg", :locals => {:div_num => "_menu_list"}
       %table
         %tr
@@ -15,7 +15,7 @@
             = render(:partial => "layouts/dynatree",
               :locals         => {:tree_id => 'menu_roles_treebox',
                 :tree_name                 => 'menu_roles_tree',
-                :json_tree                 => @temp[:menu_roles_tree],
+                :json_tree                 => @menu_roles_tree,
                 :id_prefix                 => 'menu_roles_',
                 :click_url                 => '/report/menu_editor/',
                 :id_prefix                 => 'menu_',

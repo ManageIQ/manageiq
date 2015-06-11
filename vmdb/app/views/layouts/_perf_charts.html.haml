@@ -1,8 +1,8 @@
 %div{:id => "#{chart_set}_charts_div", :onmousedown => "if (typeof miqMenu != 'undefined') miqMenu.hideContextMenu();"}
-  - if @temp[:charts] || @perf_options[:chart_type] != :performance
+  - if @charts || @perf_options[:chart_type] != :performance
     - perf_options ||= @perf_options
     - width, height = perf_options[:index] ? [1000, 700] : [350, 250]
-    - charts ||= @temp[:charts]
+    - charts ||= @charts
     - if chart_data
       - if !perf_parent? && !perf_compare_vm?
         - if charts && chart_data.length > 0
@@ -26,8 +26,8 @@
           %hr
           = @html.html_safe
       - elsif perf_parent?
-        - pcharts = @temp[:parent_charts]
-        - pchart_data = @temp[:parent_chart_data]
+        - pcharts = @parent_charts
+        - pchart_data = @parent_chart_data
         %table
           - if charts && chart_data.length > 0
             - (0..chart_data.length - 1).each do |c|
@@ -92,8 +92,8 @@
               %h3
                 %br
                 = "#{ui_lookup(:model=>@compare_vm.class.base_model.to_s)} #{@compare_vm.name}"
-            - ccharts = @temp[:compare_vm_charts]
-            - cchart_data = @temp[:compare_vm_chart_data]
+            - ccharts = @compare_vm_charts
+            - cchart_data = @compare_vm_chart_data
             - if ccharts && cchart_data.length > 0
               - (0..cchart_data.length - 1).each do |c|
                 - unless ccharts[c][:type] == "None" || cchart_data[c].nil?

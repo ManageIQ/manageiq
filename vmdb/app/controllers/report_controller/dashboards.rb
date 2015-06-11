@@ -213,26 +213,26 @@ module ReportController::Dashboards
   def db_get_node_info
     @sb[:nodes] = x_node.split('-')
     if @sb[:nodes].length == 1
-      @temp[:default_ws] = MiqWidgetSet.where_unique_on("default", nil, nil).where(:read_only => true).first
+      @default_ws = MiqWidgetSet.where_unique_on("default", nil, nil).where(:read_only => true).first
       @right_cell_text = _("All %s") % "Dashboards"
       @right_cell_div  = "db_list"
-      @temp[:db_nodes] = Hash.new
-      @temp[:db_nodes_order] = [@temp[:default_ws].name, "All Groups"]
+      @db_nodes = Hash.new
+      @db_nodes_order = [@default_ws.name, "All Groups"]
 
-      @temp[:db_nodes][@temp[:default_ws].name] = Hash.new
-      @temp[:db_nodes][@temp[:default_ws].name][:id] = "xx-#{to_cid(@temp[:default_ws].id)}"
-      @temp[:db_nodes][@temp[:default_ws].name][:text] = "#{@temp[:default_ws].description} (#{@temp[:default_ws].name})"
-      @temp[:db_nodes][@temp[:default_ws].name][:title] = "#{@temp[:default_ws].description} (#{@temp[:default_ws].name})"
-      @temp[:db_nodes][@temp[:default_ws].name][:glyph] = "fa fa-dashboard"
+      @db_nodes[@default_ws.name] = Hash.new
+      @db_nodes[@default_ws.name][:id] = "xx-#{to_cid(@default_ws.id)}"
+      @db_nodes[@default_ws.name][:text] = "#{@default_ws.description} (#{@default_ws.name})"
+      @db_nodes[@default_ws.name][:title] = "#{@default_ws.description} (#{@default_ws.name})"
+      @db_nodes[@default_ws.name][:glyph] = "fa fa-dashboard"
 
-      @temp[:db_nodes]["All Groups"] = Hash.new
-      @temp[:db_nodes]["All Groups"][:id] = "xx-g"
-      @temp[:db_nodes]["All Groups"][:glyph] = "pficon pficon-folder-close"
-      @temp[:db_nodes]["All Groups"][:title] = "All Groups"
-      @temp[:db_nodes]["All Groups"][:text] = "All Groups"
+      @db_nodes["All Groups"] = Hash.new
+      @db_nodes["All Groups"][:id] = "xx-g"
+      @db_nodes["All Groups"][:glyph] = "pficon pficon-folder-close"
+      @db_nodes["All Groups"][:title] = "All Groups"
+      @db_nodes["All Groups"][:text] = "All Groups"
     elsif @sb[:nodes].length == 2 && @sb[:nodes].last == "g"
       #All groups node is selected
-      @temp[:miq_groups] = MiqGroup.all
+      @miq_groups = MiqGroup.all
       @right_cell_div  = "db_list"
       @right_cell_text = _("All %s") % ui_lookup(:models=>"MiqGroup")
     elsif @sb[:nodes].length == 3 && @sb[:nodes][1] == "g_g"
@@ -240,16 +240,16 @@ module ReportController::Dashboards
       @right_cell_text = _("%{model} for \"%{name}\"") % {:model=>"Dashboards", :name=>g.description}
       @right_cell_div  = "db_list"
       widgetsets = MiqWidgetSet.find_all_by_owner_type_and_owner_id("MiqGroup",g.id)
-      @temp[:widgetsets] = Array.new
+      @widgetsets = Array.new
       if g.settings && g.settings[:dashboard_order]
         g.settings[:dashboard_order].each do |ws_id|
           widgetsets.each do |ws|
-            @temp[:widgetsets].push(ws) if ws_id == ws.id && !@temp[:widgetsets].include?(ws)
+            @widgetsets.push(ws) if ws_id == ws.id && !@widgetsets.include?(ws)
           end
         end
       else
         widgetsets.sort_by(&:name).each do |ws|
-          @temp[:widgetsets].push(ws)
+          @widgetsets.push(ws)
         end
       end
     elsif (@sb[:nodes].length == 4 && @sb[:nodes][1] == "g_g") ||
@@ -519,7 +519,7 @@ module ReportController::Dashboards
     root[:title]   = "All Dashboards"
     root[:tooltip] = "All Dashboards"
     root[:icon]    = "folder.png"
-    @temp[name]    = tree_nodes.to_json          # JSON object for tree loading
+    instance_variable_set :"@#{name}", tree_nodes.to_json          # JSON object for tree loading
     x_node_set(tree_nodes.first[:key], name) unless x_node(name)  # Set active node to root if not set
   end
 

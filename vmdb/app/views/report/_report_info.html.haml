@@ -60,7 +60,7 @@
     %hr
   %h3
     = _('Schedules')
-  - if @temp[:schedules].blank?
+  - if @schedules.blank?
     = render :partial => 'layouts/info_msg', :locals => {:message => _("Report is not Scheduled.")}
   - else
     %table.table.table-striped.table-bordered.table-hover
@@ -84,7 +84,7 @@
         %th
           = _('Zone')
       %tbody
-        - @temp[:schedules].each do |s|
+        - @schedules.each do |s|
           - tz = s.run_at && s.run_at[:tz] ? s.run_at[:tz] : session[:user_tz]
           - if role_allows(:feature => "miq_report_schedules")
             - params = {:title => _("View this Schedule"), :onclick => remote_function(:url => "/report/x_show/msc-#{to_cid(s.id)}?accord=schedules")}
@@ -116,7 +116,7 @@
               = s.v_zone_name
   %h3
     = _('Widgets')
-  - if @temp[:widget_nodes].nil? || (@temp[:widget_nodes] && @temp[:widget_nodes].empty?)
+  - if @widget_nodes.blank?
     = render :partial => 'layouts/info_msg', :locals => {:message => _("Report doesn't belong to Widgets.")}
   - else
     %table.table.table-striped.table-bordered.table-hover
@@ -129,7 +129,7 @@
         %th
           = _('Enabled')
       %tbody
-        - @temp[:widget_nodes].each do |w|
+        - @widget_nodes.each do |w|
           - if role_allows(:feature => "miq_report_widget_editor")
             - params = {:title => _("Click to view selected widget"),
               :onclick => remote_function(:url => "/report/x_show/xx-#{WIDGET_CONTENT_TYPE.invert[w.content_type]}_-#{to_cid(w.id)}?accord=widgets")}

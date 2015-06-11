@@ -237,7 +237,6 @@ describe MiqAeCustomizationController do
 
       before do
         controller.stub(:get_global_session_data)
-        controller.instance_variable_set(:@temp, {})
       end
 
       it "includes the flash messages from the sandbox" do

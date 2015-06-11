@@ -1,8 +1,8 @@
 #zone_tree_div
   %fieldset
     %h3
-      - params = {:kind => ui_lookup(:model => @temp[:selected_server].class.to_s), :description => @temp[:selected_server].description}
-      - if @temp[:selected_server].kind_of?(MiqRegion)
+      - params = {:kind => ui_lookup(:model => @selected_server.class.to_s), :description => @selected_server.description}
+      - if @selected_server.kind_of?(MiqRegion)
         = _("Status of Regional Roles for Servers in %{kind} %{description}") % params
       - else
         = _("Status of Roles for Servers in %{kind} %{description}") % params
@@ -14,12 +14,12 @@
     {:tree_id     => treebox,                         |
     :tree_name    => session[:tree_name],             |
     :tree_state   => true,                            |
-    :json_tree    => @temp[:server_tree],             |
+    :json_tree    => @server_tree,                    |
     :click_url    => "/ops/diagnostics_tree_select/", |
     :onclick      => "miqOnClick_ServerRoles",        |
     :highlighting => true,                            |
     :exp_tree     => true})                           |
 
   = format(_("* Primary Server Roles shown as %{bold} text."), :bold => content_tag(:b, _("bold"))).html_safe
-  - if @temp[:selected_server].kind_of?(Zone)
+  - if @selected_server.kind_of?(Zone)
     = format(_("Region based nodes shown as %{dimmed} text."), :dimmed => content_tag(:span, _("dimmed"), :class => 'dimmed')).html_safe

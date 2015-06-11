@@ -285,7 +285,7 @@ module ApplicationController::MiqRequestMethods
       "provider_name"                   => "Provider",
     }
 
-    @temp[:configured_systems] = _build_whatever_grid('configured_system', configured_systems, headers, sort_order, sort_by)
+    @configured_systems = _build_whatever_grid('configured_system', configured_systems, headers, sort_order, sort_by)
   end
 
   def build_pxe_img_grid(pxe_imgs, sort_order = nil, sort_by = nil)
@@ -297,7 +297,7 @@ module ApplicationController::MiqRequestMethods
       "description" => "Description",
     }
 
-    @temp[:pxe_imgs] = _build_whatever_grid('pxe_img', pxe_imgs, headers, sort_order, sort_by)
+    @pxe_imgs = _build_whatever_grid('pxe_img', pxe_imgs, headers, sort_order, sort_by)
   end
 
   def build_iso_img_grid(iso_imgs, sort_order = nil, sort_by = nil)
@@ -308,7 +308,7 @@ module ApplicationController::MiqRequestMethods
       "name" => "Name",
     }
 
-    @temp[:iso_imgs] = _build_whatever_grid('iso_img', iso_imgs, headers, sort_order, sort_by)
+    @iso_imgs = _build_whatever_grid('iso_img', iso_imgs, headers, sort_order, sort_by)
   end
 
   def build_windows_image_grid(windows_images, sort_order = nil, sort_by = nil)
@@ -320,7 +320,7 @@ module ApplicationController::MiqRequestMethods
       "description" => "Description",
     }
 
-    @temp[:windows_images] = _build_whatever_grid('windows_image', windows_images, headers, sort_order, sort_by)
+    @windows_images = _build_whatever_grid('windows_image', windows_images, headers, sort_order, sort_by)
   end
 
   def build_ds_grid(datastores, sort_order = nil, sort_by = nil)
@@ -336,7 +336,7 @@ module ApplicationController::MiqRequestMethods
     integer_fields = %w(free_space total_space)
 
     # :datastores, not :dss
-    @temp[:datastores] = _build_whatever_grid('ds', datastores, headers, sort_order, sort_by, integer_fields)
+    @datastores = _build_whatever_grid('ds', datastores, headers, sort_order, sort_by, integer_fields)
   end
 
   def build_vc_grid(vcs, sort_order = nil, sort_by = nil)
@@ -351,7 +351,7 @@ module ApplicationController::MiqRequestMethods
 
     integer_fields = %w(last_update_time)
 
-    @temp[:vcs] = _build_whatever_grid('vc', vcs, headers, sort_order, sort_by, integer_fields)
+    @vcs = _build_whatever_grid('vc', vcs, headers, sort_order, sort_by, integer_fields)
   end
 
   def build_template_grid(templates, sort_order = nil, sort_by = nil)
@@ -366,7 +366,7 @@ module ApplicationController::MiqRequestMethods
 
     integer_fields = %w(last_update_time)
 
-    @temp[:templates] = _build_whatever_grid('template', templates, headers, sort_order, sort_by, integer_fields)
+    @templates = _build_whatever_grid('template', templates, headers, sort_order, sort_by, integer_fields)
   end
 
   def build_vm_grid(vms, sort_order = nil, sort_by = nil)
@@ -389,7 +389,7 @@ module ApplicationController::MiqRequestMethods
 
     integer_fields = %w(allocated_disk_storage mem_cpu num_cpu v_total_snapshots)
 
-    @temp[:vms] = _build_whatever_grid('vm', vms, headers, sort_order, sort_by, integer_fields)
+    @vms = _build_whatever_grid('vm', vms, headers, sort_order, sort_by, integer_fields)
   end
 
   def build_host_grid(hosts, sort_order = nil, sort_by = nil)
@@ -418,7 +418,7 @@ module ApplicationController::MiqRequestMethods
 
     integer_fields = %w(v_total_vms)
 
-    @temp[:hosts] = _build_whatever_grid('host', hosts, headers, sort_order, sort_by, integer_fields, options)
+    @hosts = _build_whatever_grid('host', hosts, headers, sort_order, sort_by, integer_fields, options)
   end
 
   def build_grid
@@ -430,7 +430,7 @@ module ApplicationController::MiqRequestMethods
         if @edit[:new][:st_prov_type]
           build_vm_grid(@edit[:wf].get_field(:src_vm_id,:service)[:values],@edit[:vm_sortdir],@edit[:vm_sortcol])
         else
-          @temp[:vm] = VmOrTemplate.find_by_id(@edit[:new][:src_vm_id] && @edit[:new][:src_vm_id][0])
+          @vm = VmOrTemplate.find_by_id(@edit[:new][:src_vm_id] && @edit[:new][:src_vm_id][0])
         end
         if @edit[:wf].supports_pxe?
           build_pxe_img_grid(@edit[:wf].send("allowed_images"),@edit[:pxe_img_sortdir],@edit[:pxe_img_sortcol])
@@ -772,7 +772,7 @@ module ApplicationController::MiqRequestMethods
       @force_no_grid_xml   = true
       @view, @pages = get_view(Vm, :view_suffix=>"VmReconfigureRequest", :where_clause=>["vms.id IN (?)",@miq_request.options[:src_ids]]) # Get the records (into a view) and the paginator
     end
-    @temp[:user] = User.find_by_userid(@miq_request.stamped_by)
+    @user = User.find_by_userid(@miq_request.stamped_by)
   end
 
   # Set form variables for provision request
@@ -980,9 +980,9 @@ module ApplicationController::MiqRequestMethods
       end
     end
     unless all_dcs.blank?
-      @temp[:ldap_ous_tree] = all_dcs.to_json  # Add ci node array to root of tree
+      @ldap_ous_tree = all_dcs.to_json  # Add ci node array to root of tree
     else
-      @temp[:ldap_ous_tree] = nil
+      @ldap_ous_tree = nil
     end
     session[:tree_name] = "ldap_ous_tree"
   end
@@ -1078,7 +1078,7 @@ module ApplicationController::MiqRequestMethods
         all_tags.push(@ci_node) unless @ci_kids.blank?
       end
     end
-    @temp[:all_tags_tree] = all_tags.to_json # Add ci node array to root of tree
+    @all_tags_tree = all_tags.to_json # Add ci node array to root of tree
     session[:tree] = "all_tags"
     session[:tree_name] = "all_tags_tree"
   end

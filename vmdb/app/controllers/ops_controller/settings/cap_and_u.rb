@@ -27,10 +27,10 @@ module OpsController::Settings::CapAndU
       end
 
       unless @edit[:new][:storages] == @edit[:current][:storages] # Check for storage changes
-        @temp[:st_recs] = Storage.all.inject({}) {|h,st| h[st.id] = st; h}
+        @st_recs = Storage.all.inject({}) {|h,st| h[st.id] = st; h}
         @edit[:new][:storages].each_with_index do |s, si|
           if s[:capture] != @edit[:current][:storages][si][:capture]
-            ds = @temp[:st_recs][s[:id]]
+            ds = @st_recs[s[:id]]
             ds.perf_capture_enabled = s[:capture] if ds
           end
         end
@@ -153,8 +153,8 @@ module OpsController::Settings::CapAndU
     @edit[:current][:all_clusters] = Metric::Targets.perf_capture_always[:host_and_cluster]
     @edit[:current][:all_storages] = Metric::Targets.perf_capture_always[:storage]
     @edit[:current][:clusters] = Array.new
-    @temp[:cl_hash] = EmsCluster.get_perf_collection_object_list
-    @temp[:cl_hash].each_with_index do |h,j|
+    @cl_hash = EmsCluster.get_perf_collection_object_list
+    @cl_hash.each_with_index do |h,j|
       cid, cl_hash = h
       c = cl_hash[:cl_rec]
       enabled = cl_hash[:ho_enabled]
@@ -194,9 +194,9 @@ module OpsController::Settings::CapAndU
     build_cl_hosts_tree(@edit[:current][:clusters])
 
     @edit[:current][:storages] = Array.new
-    @temp[:st_recs] = Hash.new
+    @st_recs = Hash.new
     Storage.in_my_region.all(:include => [:taggings, :tags, :hosts], :select => "id, name, store_type, location").sort_by { |s| s.name.downcase }.each do |s|
-      @temp[:st_recs][s.id] = s
+      @st_recs[s.id] = s
       @edit[:current][:storages].push({:name=>s.name,
                                 :id=>s.id,
                                 :capture=>s.perf_capture_enabled?,
@@ -293,7 +293,7 @@ module OpsController::Settings::CapAndU
       cl_node[:style] = "cursor:default"     # No cursor pointer
       cl_node[:icon] = "cluster.png"
       cl_kids = Array.new
-      cl_hash = @temp[:cl_hash][c[:id]]
+      cl_hash = @cl_hash[c[:id]]
       cluster = cl_hash[:cl_rec]
       enabled = cl_hash[:ho_enabled]
       enabled_host_ids = Array.new
@@ -367,7 +367,7 @@ module OpsController::Settings::CapAndU
     end
     ##################### Ending Non-Clustered hosts node
 
-    @temp[:clhosts_tree] = cl_hosts.to_json  # Add ems node array to root of tree
+    @clhosts_tree = cl_hosts.to_json  # Add ems node array to root of tree
     session[:tree] = "clhosts"
     session[:tree_name] = "clhosts_tree"
   end
@@ -397,7 +397,7 @@ module OpsController::Settings::CapAndU
       ds_node[:select] = s[:capture] == true
 
       children = Array.new
-      st = @temp[:st_recs][s[:id]]
+      st = @st_recs[s[:id]]
       st_hosts = Array.new      #Array to hold host/datastore relationship that will be sorted and displayed under each storage node
       st.hosts.each do |h|
         # ems_name = ems_hash[h.ems_id]
@@ -424,7 +424,7 @@ module OpsController::Settings::CapAndU
       ds.push(ds_node)
     end
 
-    @temp[:cu_datastore_tree] = ds.to_json # Add ems node array to root of tree
+    @cu_datastore_tree = ds.to_json # Add ems node array to root of tree
     session[:tree] = "cu_datastore"
     session[:ds_tree_name] = "cu_datastore_tree"
   end

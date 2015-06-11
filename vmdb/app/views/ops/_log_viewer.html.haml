@@ -1,9 +1,9 @@
 = render :partial => "layouts/flash_msg"
 
 - legend_text ||= _("Last 1000 lines from server %{name} [%{id}] in zone %{zone}") % |
-  {:name => @temp[:selected_server].name,                                            |
-  :id    => @temp[:selected_server].id,                                              |
-  :zone  => @temp[:selected_server].my_zone}                                         |
+  {:name => @selected_server.name,                                                   |
+  :id    => @selected_server.id,                                                     |
+  :zone  => @selected_server.my_zone}                                                |
 %h3= legend_text
 
 = text_area("logview", "data",                                |

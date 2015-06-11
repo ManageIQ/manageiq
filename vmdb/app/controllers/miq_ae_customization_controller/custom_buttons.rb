@@ -35,7 +35,7 @@ module MiqAeCustomizationController::CustomButtons
 
     #initializing variables to hold data for selected node
     @sb[:obj_list] = nil
-    @temp[:custom_button] = nil
+    @custom_button = nil
     @sb[:button_groups] = nil
     @sb[:buttons] = nil
 
@@ -83,26 +83,26 @@ module MiqAeCustomizationController::CustomButtons
         end
       end
     elsif (@nodetype[0] == "xx-ab"  && nodeid.length == 4) || (nodeid.length == 4 && nodeid[1] == "ub")       # button selected
-      @record = @temp[:custom_button] = CustomButton.find(from_cid(nodeid.last))
+      @record = @custom_button = CustomButton.find(from_cid(nodeid.last))
       build_resolve_screen
       @resolve[:new][:attrs] = Array.new
-      if @temp[:custom_button].uri_attributes
-        @temp[:custom_button].uri_attributes.each do |attr|
+      if @custom_button.uri_attributes
+        @custom_button.uri_attributes.each do |attr|
           if attr[0] != "object_name" && attr[0] != "request"
             @resolve[:new][:attrs].push(attr) unless @resolve[:new][:attrs].include?(attr)
           end
         end
-        @resolve[:new][:object_request] = @temp[:custom_button].uri_attributes["request"]
+        @resolve[:new][:object_request] = @custom_button.uri_attributes["request"]
       end
       @sb[:user_roles] = Array.new
-      if @temp[:custom_button].visibility && @temp[:custom_button].visibility[:roles] && @temp[:custom_button].visibility[:roles][0] != "_ALL_"
+      if @custom_button.visibility && @custom_button.visibility[:roles] && @custom_button.visibility[:roles][0] != "_ALL_"
 #         User.roles.sort_by(&:name).each do |r|
-#           @sb[:user_roles].push(r.description) if @temp[:custom_button].visibility[:roles].include?(r.name) && !@sb[:user_roles].include?(r.description)
+#           @sb[:user_roles].push(r.description) if @custom_button.visibility[:roles].include?(r.name) && !@sb[:user_roles].include?(r.description)
         MiqUserRole.all.sort_by(&:name).each do |r|
-          @sb[:user_roles].push(r.name) if @temp[:custom_button].visibility[:roles].include?(r.name)
+          @sb[:user_roles].push(r.name) if @custom_button.visibility[:roles].include?(r.name)
         end
       end
-      dialog_id = @temp[:custom_button].resource_action.dialog_id
+      dialog_id = @custom_button.resource_action.dialog_id
       @sb[:dialog_label] = dialog_id ? Dialog.find_by_id(dialog_id).label : ""
 #       @sb[:user_roles].sort!
       if @nodetype[0].starts_with?("-ub-")
@@ -120,7 +120,7 @@ module MiqAeCustomizationController::CustomButtons
               end
         @resolve[:new][:target_class] = @sb[:target_classes].invert[kls]
       end
-      @right_cell_text = _("%{model} \"%{name}\"") % {:model => "Button", :name => @temp[:custom_button].name}
+      @right_cell_text = _("%{model} \"%{name}\"") % {:model => "Button", :name => @custom_button.name}
     else                # assigned buttons node/folder
       @sb[:applies_to_class] = @nodetype[1]
       @record = CustomButtonSet.find(from_cid(nodeid.last))

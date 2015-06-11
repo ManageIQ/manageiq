@@ -20,7 +20,7 @@
           = "<#{_('None')}>"
         %td
         %td
-      - @temp[:templates].each do |row|
+      - @templates.each do |row|
         - row_id = row.id
         - cls = @edit[:new][:customization_template_id] && @edit[:new][:customization_template_id][0] == row_id ? "selected" : ""
         %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=#{row_id}&id=#{id}');"}

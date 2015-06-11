@@ -8,15 +8,15 @@
           %th
             = _('Type')
       %tbody
-        - @temp[:db_nodes_order].each do |node|
-          %tr{:title => _("Click to view '%s'") % @temp[:db_nodes][node][:title],
-            :onclick => "cfmeDynatree_activateNode('#{@sb[:active_tree]}', '#{@temp[:db_nodes][node][:id]}');"}
+        - @db_nodes_order.each do |node|
+          %tr{:title => _("Click to view '%s'") % @db_nodes[node][:title],
+            :onclick => "cfmeDynatree_activateNode('#{@sb[:active_tree]}', '#{@db_nodes[node][:id]}');"}
             %td.narrow{:nowrap => 1}
               %ul.icons
                 %li
-                  %span{:class => @temp[:db_nodes][node][:glyph]}
+                  %span{:class => @db_nodes[node][:glyph]}
             %td
-              = h(@temp[:db_nodes][node][:text])
+              = h(@db_nodes[node][:text])
   - elsif @sb[:nodes] && @sb[:nodes].last == "g" && !@in_a_form
     = render :partial => "layouts/flash_msg"
     - # All Groups node is selected
@@ -27,7 +27,7 @@
           %th
             = _('Description')
       %tbody
-        - @temp[:miq_groups].sort_by(&:description).each do |g|
+        - @miq_groups.sort_by(&:description).each do |g|
           %tr{:onclick => remote_function(:loading => "miqSparkle(true);", :complete => "miqSparkle(false);",
               :url => {:action => 'tree_select', :id => "xx-g_g-#{to_cid(g.id)}"}), :title => _("Click to view %s ") % g.description, :class => "icon"}
             %td.narrow
@@ -38,7 +38,7 @@
               = h(g.description)
   - elsif @sb[:nodes].length == 3 && @sb[:nodes][1] == "g_g" && !@in_a_form
     = render :partial => "layouts/flash_msg"
-    - if @temp[:widgetsets].empty?
+    - if @widgetsets.empty?
       = render :partial => 'layouts/info_msg', :locals => {:message => _("No Dashboards are defined for this group. Default dashboard will be shown.")}
     - else
       %table.table.table-striped.table-bordered.table-hover
@@ -48,7 +48,7 @@
             %th
               = _('Description')
         %tbody
-          - @temp[:widgetsets].each do |ws|
+          - @widgetsets.each do |ws|
             %tr{:onclick => remote_function(:loading => "miqSparkle(true);", :complete => "miqSparkle(false);", :url => {:action => 'tree_select',
                 :id => "xx-g_g-#{@sb[:nodes][2]}_-#{to_cid(ws.id)}"}), :title => _("Click to view '%s (%s)'") % [ws.description, ws.name], :class => "icon"}
               %td.narrow

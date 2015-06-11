@@ -659,9 +659,9 @@ module OpsController::OpsRbac
         rbac_role_get_details(id)
       else  # Root node
         @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>"Access Control", :name=>"#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]", :model=>ui_lookup(:model=>"MiqRegion")}
-        @temp[:users_count] = User.in_my_region.count
-        @temp[:groups_count] = MiqGroup.count
-        @temp[:roles_count] = MiqUserRole.count
+        @users_count = User.in_my_region.count
+        @groups_count = MiqGroup.count
+        @roles_count = MiqUserRole.count
     end
   end
 
@@ -676,27 +676,27 @@ module OpsController::OpsRbac
     @record = @group = MiqGroup.find_by_id(from_cid(id))
     get_tagdata(@group)
     # Build the belongsto filters hash
-    @temp[:belongsto] = Hash.new
+    @belongsto = Hash.new
     @group.get_belongsto_filters.each do |b|            # Go thru the belongsto tags
       bobj = MiqFilter.belongsto2object(b)            # Convert to an object
       next unless bobj
-      @temp[:belongsto][bobj.class.to_s + "_" + bobj.id.to_s] = b # Store in hash as <class>_<id> string
+      @belongsto[bobj.class.to_s + "_" + bobj.id.to_s] = b # Store in hash as <class>_<id> string
     end
-    @temp[:filters] = Hash.new
+    @filters = Hash.new
     # Build the managed filters hash
     [@group.get_managed_filters].flatten.each do |f|
-      @temp[:filters][f.split("/")[-2] + "-" + f.split("/")[-1]] = f
+      @filters[f.split("/")[-2] + "-" + f.split("/")[-1]] = f
     end
     rbac_build_myco_tree                              # Build the MyCompanyTags tree for this user
-    build_belongsto_tree(@temp[:belongsto].keys)  # Build the Hosts & Clusters tree for this user
-    build_belongsto_tree(@temp[:belongsto].keys, true)  # Build the VMs & Templates tree for this user
+    build_belongsto_tree(@belongsto.keys)  # Build the Hosts & Clusters tree for this user
+    build_belongsto_tree(@belongsto.keys, true)  # Build the VMs & Templates tree for this user
   end
 
   def rbac_role_get_details(id)
     @edit = nil
     @record = @role = MiqUserRole.find_by_id(from_cid(id))
     @role_features = @role.feature_identifiers.sort
-    @temp[:features_tree] = rbac_build_features_tree
+    @features_tree = rbac_build_features_tree
   end
 
   def rbac_build_features_tree
@@ -949,13 +949,13 @@ module OpsController::OpsRbac
         tag_node[:key] = [category.name, tag.name].join("-")
         tag_node[:title] = tag.description
         tag_node[:tooltip] =  "Tag: " + tag.description
-        if (@edit && @edit[:new][:filters][tag_node[:key]] == @edit[:current][:filters][tag_node[:key]]) || ![tag_node[:key]].include?(@temp[:filters]) # Check new vs current
+        if (@edit && @edit[:new][:filters][tag_node[:key]] == @edit[:current][:filters][tag_node[:key]]) || ![tag_node[:key]].include?(@filters) # Check new vs current
           tag_node[:addClass] = "cfme-no-cursor-node"       # No cursor pointer
         else
           tag_node[:addClass] = "cfme-blue-node"            # Show node as different
         end
         tag_node[:icon] = "tag.png"
-        tag_node[:select] = true if (@edit && @edit[:new][:filters].has_key?(tag_node[:key])) || (@temp[:filters] && @temp[:filters].has_key?(tag_node[:key])) # Check if tag is assigned
+        tag_node[:select] = true if (@edit && @edit[:new][:filters].has_key?(tag_node[:key])) || (@filters && @filters.has_key?(tag_node[:key])) # Check if tag is assigned
         kids_checked = true if tag_node[:select] == true
         cat_kids.push(tag_node)
       end
@@ -1011,7 +1011,7 @@ module OpsController::OpsRbac
     @edit[:current] = copy_hash(@edit[:new])
 
     @role_features = @record.feature_identifiers.sort
-    @temp[:features_tree] = rbac_build_features_tree
+    @features_tree = rbac_build_features_tree
   end
 
   # Get array of total set of features from the children of selected features

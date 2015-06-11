@@ -247,7 +247,7 @@ class TreeBuilder
     options.merge!(:active_tree => x_active_tree)
 
     # open nodes to show selected automate entry point
-    x_tree[:open_nodes] = @temp[:open_nodes].dup if @temp && @temp[:open_nodes]
+    x_tree[:open_nodes] = @open_nodes.dup if @open_nodes
 
     node = x_build_single_node(object, pid, options)
 

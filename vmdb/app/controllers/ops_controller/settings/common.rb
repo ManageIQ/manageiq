@@ -522,7 +522,7 @@ module OpsController::Settings::Common
     new = @edit[:new]
 
     # WTF? here we can have a Zone or a MiqServer, what about Region? --> rescue from exception
-    @temp[:selected_server] = (cls.find(from_cid(nodes.last)) rescue nil)
+    @selected_server = (cls.find(from_cid(nodes.last)) rescue nil)
 
     case @sb[:active_tab]                                               # No @edit[:current].config for Filters since there is no config file
     when 'settings_rhn_edit'
@@ -755,8 +755,8 @@ module OpsController::Settings::Common
         _("%{typ} %{model} \"%{name}\"") % {:typ=>"Settings", :name=>@selected_zone.description, :model=>ui_lookup(:model=>@selected_zone.class.to_s)}
     else
       @right_cell_text = @sb[:my_server_id] == @sb[:selected_server_id] ?
-        _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Settings", :name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id}]", :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)} :
-        _("%{typ} %{model} \"%{name}\"") % {:typ=>"Settings", :name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id}]", :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)}
+        _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Settings", :name=>"#{@selected_server.name} [#{@selected_server.id}]", :model=>ui_lookup(:model=>@selected_server.class.to_s)} :
+        _("%{typ} %{model} \"%{name}\"") % {:typ=>"Settings", :name=>"#{@selected_server.name} [#{@selected_server.id}]", :model=>ui_lookup(:model=>@selected_server.class.to_s)}
     end
     case @sb[:active_tab]
     when "settings_server"                                  # Server Settings tab
@@ -1014,8 +1014,8 @@ module OpsController::Settings::Common
       when "svr"
         #@sb[:tabform] = "operations_1" if @sb[:selected_server] && @sb[:selected_server].id != nodetype.downcase.split("-").last.to_i #reset tab if server node was changed, current server has 10 tabs, current active tab may not be available for other server nodes.
   #     @sb[:selected_server] = MiqServer.find(from_cid(nodetype.downcase.split("-").last))
-        @temp[:selected_server] = MiqServer.find(from_cid(nodes.last))
-        @sb[:selected_server_id] = @temp[:selected_server].id
+        @selected_server = MiqServer.find(from_cid(nodes.last))
+        @sb[:selected_server_id] = @selected_server.id
         settings_set_form_vars if params[:button] != "db_verify"
       when "msc"
         @record = @selected_schedule = MiqSchedule.find(from_cid(nodes.last))
@@ -1059,18 +1059,18 @@ module OpsController::Settings::Common
   def settings_set_view_vars
     if @sb[:active_tab] == "settings_details"
       # Enterprise Details tab
-      @temp[:scan_items] = ScanItemSet.all
-      @temp[:zones] = Zone.in_my_region.all
-      @temp[:ldap_regions] = LdapRegion.in_my_region.all
-      @temp[:miq_schedules] = Array.new
+      @scan_items = ScanItemSet.all
+      @zones = Zone.in_my_region.all
+      @ldap_regions = LdapRegion.in_my_region.all
+      @miq_schedules = Array.new
       MiqSchedule.all(:conditions=>"prod_default != 'system' or prod_default is null").sort_by { |s| s.name.downcase }.each do |s|
         if s.adhoc.nil? && (s.towhat != "DatabaseBackup" || (s.towhat == "DatabaseBackup" && DatabaseBackup.backup_supported?))
-          @temp[:miq_schedules].push(s) unless @temp[:miq_schedules].include?(s)
+          @miq_schedules.push(s) unless @miq_schedules.include?(s)
         end
       end
 #   # Enterprise Roles tab
 #   elsif @sb[:tabform] == "operations_4"
-#     @temp[:roles] = UiTaskSet.all.sort_by{ |role| role[:description] }
+#     @roles = UiTaskSet.all.sort_by{ |role| role[:description] }
     end
   end
 

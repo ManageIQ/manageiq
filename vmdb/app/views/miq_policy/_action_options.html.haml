@@ -59,7 +59,7 @@
           = render(:partial => "layouts/dynatree",
             :locals         => {:tree_id   => "action_tags_treebox",
               :tree_name                   => "action_tags_tree",
-              :json_tree                   => @temp[:cat_tree],
+              :json_tree                   => @cat_tree,
               :click_url                   => "/miq_policy/action_tag_pressed/",
               :onclick                     => "cfmeOnClick_TagCat",
               :enable_tree_images          => false,

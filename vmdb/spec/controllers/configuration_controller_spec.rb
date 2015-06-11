@@ -22,10 +22,9 @@ describe ConfigurationController do
     end
 
     it "#successfully sets all_view_tree for default filters tree" do
-      controller.instance_variable_set(:@temp, {})
       controller.instance_variable_set(:@tabform, "ui_3")
       controller.send(:set_form_vars)
-      assigns(:temp)[:all_views_tree].should_not be_nil
+      assigns(:all_views_tree).should_not be_nil
     end
   end
 end

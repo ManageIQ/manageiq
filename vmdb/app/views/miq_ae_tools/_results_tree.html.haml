@@ -1,10 +1,10 @@
 #results_tree_div
-  - if @temp[:results]
+  - if @results
     %br
     #treebox{:style => "width: auto;"}
     = render(:partial => "layouts/dynatree",
       :locals         => {:tree_id   => "treebox",
-        :json_tree                   => @temp[:json_tree],
+        :json_tree                   => @json_tree,
         :multi_lines                 => true,
         :exp_tree                    => true,
         :open_close_all_on_dbl_click => true})

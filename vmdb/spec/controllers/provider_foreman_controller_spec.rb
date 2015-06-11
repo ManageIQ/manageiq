@@ -24,10 +24,8 @@ describe ProviderForemanController do
                                      :configuration_profile_id => nil,
                                      :configuration_manager_id => @config_mgr2.id)
     sb = {}
-    temp = {}
     sb[:active_tree] = :foreman_providers_tree
     controller.instance_variable_set(:@sb, sb)
-    controller.instance_variable_set(:@temp, temp)
   end
 
   it "renders index" do
@@ -264,8 +262,7 @@ describe ProviderForemanController do
 
   def find_treenode_for_provider(provider)
     key =  ems_key_for_provider(provider)
-    temp = controller.instance_variable_get(:@temp)
-    tree =  JSON.parse(temp[:foreman_providers_tree])
+    tree =  JSON.parse(controller.instance_variable_get(:@foreman_providers_tree))
     tree[0]['children'].find { |c| c['key'] == key }
   end
 

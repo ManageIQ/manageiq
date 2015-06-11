@@ -38,9 +38,9 @@ module ApplicationController::Performance
     case @perf_options[:chart_type]
     when :performance
       perf_set_or_fix_dates(@perf_options)  unless params[:task_id] # Set dates if first time thru
-      unless @temp[:no_util_data]
+      unless @no_util_data
         perf_gen_data(refresh="n")      # Go generate the task
-        return unless @temp[:charts]    # Return if no charts got created (first time thru async rpt gen)
+        return unless @charts    # Return if no charts got created (first time thru async rpt gen)
       end
     end
 
@@ -50,12 +50,12 @@ module ApplicationController::Performance
     end
 
     render :update do |page|
-      if @temp[:parent_chart_data]
-        page << 'miq_chart_data = ' + {"candu" => @temp[:chart_data], "parent"    => @temp[:parent_chart_data]}.to_json + ';'
-      elsif @temp[:compare_vm_chart_data]
-        page << 'miq_chart_data = ' + {"candu" => @temp[:chart_data], "comparevm" => @temp[:compare_vm_chart_data]}.to_json + ';'
+      if @parent_chart_data
+        page << 'miq_chart_data = ' + {"candu" => @chart_data, "parent"    => @parent_chart_data}.to_json + ';'
+      elsif @compare_vm_chart_data
+        page << 'miq_chart_data = ' + {"candu" => @chart_data, "comparevm" => @compare_vm_chart_data}.to_json + ';'
       else
-        page << 'miq_chart_data = ' + {"candu" => @temp[:chart_data]}.to_json + ';'
+        page << 'miq_chart_data = ' + {"candu" => @chart_data}.to_json + ';'
       end
 
 # Cannot replace button divs that contain dhtmlx toolbars, use code below to turn on/off individual buttons
@@ -77,8 +77,8 @@ module ApplicationController::Performance
       page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
       page.replace("perf_options_div", :partial=>"layouts/perf_options")
       page.replace("candu_charts_div", :partial=>"layouts/perf_charts",
-                  :locals => {:chart_data => @temp[:chart_data], :chart_set => "candu"})
-      unless @temp[:no_util_data]
+                  :locals => {:chart_data => @chart_data, :chart_set => "candu"})
+      unless @no_util_data
         if @perf_options[:typ] == "Hourly"
           page << "miq_cal_dateFrom = new Date(#{@perf_options[:sdate].year},#{@perf_options[:sdate].month-1},#{@perf_options[:sdate].day});"
           page << "miq_cal_dateTo   = new Date(#{@perf_options[:edate].year},#{@perf_options[:edate].month-1},#{@perf_options[:edate].day});"
@@ -186,7 +186,7 @@ module ApplicationController::Performance
       s, e = @perf_record.first_and_last_capture('realtime')
       if s.nil?
         add_flash(_("No Utilization data available"), :warning)
-        @temp[:no_util_data] = true
+        @no_util_data = true
         return
       end
       options[:typ] = "realtime"
@@ -387,18 +387,18 @@ module ApplicationController::Performance
 
       perf_set_or_fix_dates(@perf_options)  unless params[:task_id] # Set dates if first time thru
       perf_gen_data(refresh="n")
-      return unless @temp[:charts]      # Return if no charts got created (first time thru async rpt gen)
+      return unless @charts      # Return if no charts got created (first time thru async rpt gen)
 
       render :update do |page|
-        if @temp[:parent_chart_data]
-          page << 'miq_chart_data = ' + {"candu"=>@temp[:chart_data], "parent"=>@temp[:parent_chart_data]}.to_json + ';'
-        elsif @temp[:parent_chart_data]
-          page << 'miq_chart_data = ' + {"candu"=>@temp[:chart_data], "compare_vm"=>@temp[:compare_vm_chart_data]}.to_json + ';'
+        if @parent_chart_data
+          page << 'miq_chart_data = ' + {"candu"=>@chart_data, "parent"=>@parent_chart_data}.to_json + ';'
+        elsif @parent_chart_data
+          page << 'miq_chart_data = ' + {"candu"=>@chart_data, "compare_vm"=>@compare_vm_chart_data}.to_json + ';'
         else
-          page << 'miq_chart_data = ' + {"candu"=>@temp[:chart_data]}.to_json + ';'
+          page << 'miq_chart_data = ' + {"candu"=>@chart_data}.to_json + ';'
         end
         page.replace("perf_options_div", :partial=>"layouts/perf_options")
-        page.replace("candu_charts_div", :partial=>"layouts/perf_charts", :locals=>{:chart_data=>@temp[:chart_data], :chart_set=>"candu"})
+        page.replace("candu_charts_div", :partial=>"layouts/perf_charts", :locals=>{:chart_data=>@chart_data, :chart_set=>"candu"})
         page << "miq_cal_dateFrom = new Date(#{@perf_options[:sdate].year},#{@perf_options[:sdate].month-1},#{@perf_options[:sdate].day});"
         page << "miq_cal_dateTo = new Date(#{@perf_options[:edate].year},#{@perf_options[:edate].month-1},#{@perf_options[:edate].day});"
         if @perf_options[:skip_days]
@@ -419,16 +419,16 @@ module ApplicationController::Performance
 
       perf_set_or_fix_dates(@perf_options)  unless params[:task_id] # Set dates if first time thru
       perf_gen_data(refresh="n")
-      return unless @temp[:charts]        # Return if no charts got created (first time thru async rpt gen)
+      return unless @charts        # Return if no charts got created (first time thru async rpt gen)
 
       render :update do |page|
-        if @temp[:parent_chart_data]
-          page << 'miq_chart_data = ' + {"candu"=>@temp[:chart_data], "parent"=>@temp[:parent_chart_data]}.to_json + ';'
+        if @parent_chart_data
+          page << 'miq_chart_data = ' + {"candu"=>@chart_data, "parent"=>@parent_chart_data}.to_json + ';'
         else
-          page << 'miq_chart_data = ' + {"candu"=>@temp[:chart_data]}.to_json + ';'
+          page << 'miq_chart_data = ' + {"candu"=>@chart_data}.to_json + ';'
         end
         page.replace("perf_options_div", :partial=>"layouts/perf_options")
-        page.replace("candu_charts_div", :partial=>"layouts/perf_charts", :locals=>{:chart_data=>@temp[:chart_data], :chart_set=>"candu"})
+        page.replace("candu_charts_div", :partial=>"layouts/perf_charts", :locals=>{:chart_data=>@chart_data, :chart_set=>"candu"})
         page << "miq_cal_dateFrom = new Date(#{@perf_options[:sdate_daily].year},#{@perf_options[:sdate_daily].month-1},#{@perf_options[:sdate_daily].day});"
         page << "miq_cal_dateTo = new Date(#{@perf_options[:edate_daily].year},#{@perf_options[:edate_daily].month-1},#{@perf_options[:edate_daily].day});"
         if @perf_options[:skip_days]
@@ -764,25 +764,21 @@ module ApplicationController::Performance
     c_rpt = miq_task.task_results[1] if perf_compare_vm?  # Grab the compare VM report in the array of reports returned
     miq_task.destroy                              # Get rid of the task and results
 
-    @temp[:charts], @temp[:chart_data] = perf_gen_charts(rpt, @perf_options)
+    @charts, @chart_data = perf_gen_charts(rpt, @perf_options)
     if perf_parent?
-      @temp[:parent_charts], @temp[:parent_chart_data] =
+      @parent_charts, @parent_chart_data =
         perf_gen_charts(p_rpt, @perf_options.merge({:model=>"Parent-#{@perf_options[:parent]}"}))
     elsif perf_compare_vm?
       @compare_vm = VmOrTemplate.find_by_id(@perf_options[:compare_vm]) # Get rec for view to use
-      @temp[:compare_vm_charts], @temp[:compare_vm_chart_data] =
+      @compare_vm_charts, @compare_vm_chart_data =
         perf_gen_charts(c_rpt, @perf_options.merge({:model=>"VmOrTemplate"}))
     end
 
     @sb[:chart_reports] = rpt           # Hang on to the report data for these charts
 
-    ### TODO: Get rid of all references to @charts/@chart_data, change to use @temp hash
-    # @charts = @temp[:charts]
-    # @chart_data = @temp[:chart_data]
-
     @html = perf_report_to_html
-    @p_html = perf_report_to_html(p_rpt, @temp[:parent_charts][0]) if perf_parent?
-    @c_html = perf_report_to_html(c_rpt, @temp[:compare_vm_charts][0]) if perf_compare_vm? && !@temp[:compare_vm_charts].empty?
+    @p_html = perf_report_to_html(p_rpt, @parent_charts[0]) if perf_parent?
+    @c_html = perf_report_to_html(c_rpt, @compare_vm_charts[0]) if perf_compare_vm? && !@compare_vm_charts.empty?
   end
 
   # Return the column in the chart that starts with "trend_"
@@ -941,8 +937,8 @@ module ApplicationController::Performance
       end
     end
     @sb[:chart_reports] = rpt           # Hang on to the report data for these charts
-    @temp[:charts] = @charts
-    @temp[:chart_data] = @chart_data
+    @charts = @charts
+    @chart_data = @chart_data
     @html = perf_report_to_html
   end
 
@@ -1100,8 +1096,8 @@ module ApplicationController::Performance
       end
     end
     @sb[:chart_reports] = @chart_reports                    # Hang on to the reports for these charts
-    @temp[:charts] = @charts
-    @temp[:chart_data] = @chart_data
+    @charts = @charts
+    @chart_data = @chart_data
     @top_chart = true
     @html = perf_report_to_html(rpt)
   end
@@ -1689,14 +1685,14 @@ module ApplicationController::Performance
 
   # Remove cols from report object that are not in the current chart after the report is run
   def perf_remove_report_cols(report, charts = nil)
-    charts ||= @temp[:charts].first
+    charts ||= @charts.first
     new_rpt = MiqReport.new(report.attributes)  # Make a copy of the report
     new_rpt.table = Marshal.load(Marshal.dump(report.table))
     keepcols = Array.new
     keepcols += ["timestamp", "statistic_time"] unless @top_chart
-#   keepcols += ["resource_name"] if @temp[:charts].first[:type].include?("Pie")
-#   keepcols += @temp[:charts].first[:columns]
-#   keepcols += @temp[:charts].first[:chart2][:columns] if @temp[:charts].first[:chart2]
+#   keepcols += ["resource_name"] if @charts.first[:type].include?("Pie")
+#   keepcols += @charts.first[:columns]
+#   keepcols += @charts.first[:chart2][:columns] if @charts.first[:chart2]
     keepcols += ["resource_name"] if charts[:type].include?("Pie")
     keepcols += charts[:columns]
     keepcols += charts[:chart2][:columns] if charts[:chart2]

@@ -28,7 +28,6 @@ describe MiqCapacityController do
                                   :title        => ds.name}
                       }
         tree_nodes.each do |key,node|
-          controller.instance_variable_set(:@temp, {})
           controller.instance_variable_set(:@breadcrumbs, [])
           controller.instance_variable_set(:@sb, {
                                                     :trees => {

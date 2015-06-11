@@ -37,23 +37,23 @@
             %img{:src => "/images/icons/new/scan_item_set.png"}>/
           %td{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-sis');", :title => _("View Analysis Profiles")}
             =_("Analysis Profiles")
-            (#{h(@temp[:scan_items].size)})
+            (#{h(@scan_items.size)})
         %tr
           %td.narrow{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-z');", :title => _("View Zones")}
             %img{:src => "/images/icons/new/zone.png"}>/
           %td{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-z');", :title => _("View Zones")}
             =_("Zones")
-            (#{h(@temp[:zones].size)})
+            (#{h(@zones.size)})
         %tr
           %td.narrow{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-msc');", :title => _("View Schedules")}
             %img{:src => "/images/icons/new/miq_schedule.png"}>/
           %td{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-msc');", :title => _("View Schedules")}
             =_("Schedules")
-            (#{h(@temp[:miq_schedules].size)})
+            (#{h(@miq_schedules.size)})
         - if get_vmdb_config[:product][:new_ldap]
           %tr
             %td.narrow{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-l');", :title => _("View LDAP Regions")}
               %img{:src => "/images/icons/new/ldap_region.png"}>/
             %td{:onclick => "cfmeDynatree_activateNode('settings_tree', 'xx-l');", :title => _("View LDAP Regions")}
               =_("LDAP Regions")
-              (#{h(@temp[:ldap_regions].size)})
+              (#{h(@ldap_regions.size)})

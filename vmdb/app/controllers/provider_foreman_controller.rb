@@ -439,7 +439,7 @@ class ProviderForemanController < ApplicationController
     else
       tree = TreeBuilderForemanConfiguredSystems.new(name, type, @sb)
     end
-    @temp[name] = tree.tree_nodes
+    instance_variable_set :"@#{name}", tree.tree_nodes
     tree
   end
 

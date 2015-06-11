@@ -143,7 +143,7 @@ module MiqPolicyController::AlertProfiles
     @assign[:new][:cat] = params[:chosen_cat].blank? ? nil : params[:chosen_cat].to_i if params.has_key?(:chosen_cat)
     if params.has_key?(:chosen_assign_to) || params.has_key?(:chosen_cat)
       @assign[:new][:objects] = Array.new                       # Clear selected objects
-      @temp[:objects] = alert_profile_get_assign_to_objects   # Get the assigned objects
+      @objects = alert_profile_get_assign_to_objects   # Get the assigned objects
       @assign[:obj_tree] = alert_profile_build_obj_tree         # Build the selection tree
     end
     if params.has_key?(:id)
@@ -184,7 +184,7 @@ module MiqPolicyController::AlertProfiles
   # Build the assign objects selection tree
   def alert_profile_build_obj_tree
     tree = nil
-    unless @temp[:objects].empty?               # Build object tree
+    unless @objects.empty?               # Build object tree
       if @assign[:new][:assign_to] == "ems_folder"
         tree = build_belongsto_tree(@assign[:new][:objects].collect{|f| "EmsFolder_#{f}"}, true, false)
       elsif @assign[:new][:assign_to] == "resource_pool"
@@ -200,7 +200,7 @@ module MiqPolicyController::AlertProfiles
           :hideCheckbox => true
         )
         root_node[:children] = []
-        @temp[:objects].sort_by { |o| (o[:name] || o[:description]).downcase }.each do |o|
+        @objects.sort_by { |o| (o[:name] || o[:description]).downcase }.each do |o|
           if @assign[:new][:assign_to].ends_with?("-tags")
             icon = "tag.png"
           else
@@ -293,7 +293,7 @@ module MiqPolicyController::AlertProfiles
       @assign[:new][:cat] = aa[:tags].first.first.parent_id
       @assign[:new][:objects] = aa[:tags].collect{|o| o.first.id}
     end
-    @temp[:objects] = alert_profile_get_assign_to_objects   # Get the assigned objects
+    @objects = alert_profile_get_assign_to_objects   # Get the assigned objects
     @assign[:obj_tree] = alert_profile_build_obj_tree         # Build the selection tree
 
     @assign[:current] = copy_hash(@assign[:new])
@@ -338,7 +338,7 @@ module MiqPolicyController::AlertProfiles
   def alert_profile_get_info(alert_profile)
     @record = @alert_profile = alert_profile
     aa = @alert_profile.get_assigned_tos
-    @temp[:alert_profile_tag] = Classification.find(aa[:tags].first.first.parent_id) if !aa[:tags].empty?
+    @alert_profile_tag = Classification.find(aa[:tags].first.first.parent_id) if !aa[:tags].empty?
     @alert_profile_alerts = @alert_profile.miq_alerts.sort_by { |a| a.description.downcase }
     @right_cell_text = _("%{model} \"%{name}\"") % {:model=>ui_lookup(:model=>"MiqAlertSet"), :name=>alert_profile.description}
     @right_cell_div = "alert_profile_details"
@@ -354,7 +354,7 @@ module MiqPolicyController::AlertProfiles
     root[:tooltip] = "All Alert Profiles"
     root[:icon] = "folder.png"
 
-    @temp[name] = tree_nodes.to_json  # JSON object for tree loading
+    instance_variable_set :"@#{name}", tree_nodes.to_json  # JSON object for tree loading
     x_node_set(tree_nodes.first[:key], name) unless x_node(name)    # Set active node to root if not set
   end
 
