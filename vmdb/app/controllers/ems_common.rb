@@ -736,6 +736,7 @@ module EmsCommon
     @edit[:new][:provider_region] = params[:provider_region] if params[:provider_region]
     @edit[:new][:hostname] = params[:hostname] if params[:hostname]
     if params[:server_emstype]
+      @edit[:new][:provider_region] = @ems.provider_region
       @edit[:new][:emstype] = params[:server_emstype]
       if ["openstack", "openstack_infra"].include?(params[:server_emstype])
         @edit[:new][:port] = @ems.port ? @ems.port : 5000

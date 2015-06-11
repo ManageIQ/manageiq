@@ -19,6 +19,21 @@ describe EmsCloudController do
       end
     end
 
+    context "#get_form_vars" do
+      it "check if provider_region gets reset when provider type is changed on add screen" do
+        controller.instance_variable_set(:@edit, :new => {})
+        controller.instance_variable_set(:@_params, :server_emstype => "ec2")
+        controller.instance_variable_set(:@_params, :provider_region => "some_region")
+
+        controller.send(:get_form_vars)
+        assigns(:edit)[:new][:provider_region].should == "some_region"
+
+        controller.instance_variable_set(:@_params, :server_emstype => "openstack")
+        controller.send(:get_form_vars)
+        assigns(:edit)[:new][:provider_region].should be_nil
+      end
+    end
+
     context "#form_field_changed" do
       before :each do
         set_user_privileges
