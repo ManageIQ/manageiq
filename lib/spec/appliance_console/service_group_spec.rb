@@ -23,41 +23,66 @@ describe ApplianceConsole::ServiceGroup do
     end
   end
 
-  context "postgresql" do
-    let(:group) { described_class.new(:internal_postgresql => true) }
+  describe "#enable" do
+    let(:group) { described_class.new(:internal_postgresql => false) }
 
-    it "#to_enable" do
-      expect(group.to_enable).to eq(common_services | postgres_service)
-    end
-
-    it "#to_start" do
-      expect(group.to_start).to eq(common_services)
-    end
-
-    it "#to_disable" do
-      expect(group.to_disable).to eq([])
-    end
-
-    it "#to_stop" do
-      expect(group.to_stop).to eq([])
-    end
-  end
-
-  context "without postgresql" do
     it "#to_enable" do
       expect(group.to_enable).to eq(common_services)
     end
 
+    context "with postgres" do
+      let(:group) { described_class.new(:internal_postgresql => true) }
+      it "#to_enable" do
+        expect(group.to_enable).to eq(common_services | postgres_service)
+      end
+    end
+  end
+
+  describe "#start" do
+    let(:group) { described_class.new(:internal_postgresql => false) }
+
     it "#to_start" do
       expect(group.to_start).to eq(common_services)
     end
+
+    context "with postgres" do
+      let(:group) { described_class.new(:internal_postgresql => true) }
+
+      it "#to_start" do
+        expect(group.to_start).to eq(common_services)
+      end
+    end
+  end
+
+  describe "#disable" do
+    let(:group) { described_class.new(:internal_postgresql => false) }
 
     it "#to_disable" do
       expect(group.to_disable).to eq(postgres_service)
     end
 
+    context "with postgres" do
+      let(:group) { described_class.new(:internal_postgresql => true) }
+
+      it "#to_disable" do
+        expect(group.to_disable).to eq([])
+      end
+    end
+  end
+
+  describe "#stop" do
+    let(:group) { described_class.new(:internal_postgresql => false) }
+
     it "#to_stop" do
       expect(group.to_stop).to eq(postgres_service)
+    end
+
+    context "with postgres" do
+      let(:group) { described_class.new(:internal_postgresql => true) }
+
+      it "#to_stop" do
+        expect(group.to_stop).to eq([])
+      end
     end
   end
 
