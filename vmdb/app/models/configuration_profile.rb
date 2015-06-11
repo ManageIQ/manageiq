@@ -13,7 +13,7 @@ class ConfigurationProfile < ActiveRecord::Base
 
   has_and_belongs_to_many :configuration_locations, :join_table => :configuration_locations_configuration_profiles
   has_and_belongs_to_many :configuration_organizations, :join_table => :configuration_organizations_configuration_profiles
-  has_and_belongs_to_many :configuration_tags
+  has_and_belongs_to_many :configuration_tags, :join_table => :configuration_profiles_configuration_tags
 
   delegate :name, :to => :configuration_architecture,    :prefix => true, :allow_nil => true
   delegate :name, :to => :configuration_compute_profile, :prefix => true, :allow_nil => true

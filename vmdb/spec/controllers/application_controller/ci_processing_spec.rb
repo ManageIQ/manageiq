@@ -31,7 +31,7 @@ describe ApplicationController do
     # dashboard/process_elements
     expect {
       post :process_elements
-    }.to raise_error ActionController::RoutingError
+    }.to raise_error ActionController::UrlGenerationError
   end
 
   it "should set correct discovery title" do

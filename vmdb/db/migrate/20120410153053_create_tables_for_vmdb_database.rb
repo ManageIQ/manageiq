@@ -1,6 +1,6 @@
 class CreateTablesForVmdbDatabase < ActiveRecord::Migration
   def up
-    create_table   :vmdb_databases do |t|
+    create_table   :vmdb_databases, :id => :bigserial do |t|
       t.string     :name
       t.string     :ipaddress
       t.string     :vendor

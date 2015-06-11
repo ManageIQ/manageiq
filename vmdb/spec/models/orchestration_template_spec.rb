@@ -22,7 +22,7 @@ describe OrchestrationTemplate do
         @existing_record = FactoryGirl.create(:orchestration_template)
         # prepare the query with different name and description; it is considered the same template
         # because the body (:template and :md5) does not change
-        @query_hash = @existing_record.as_json.symbolize_keys
+        @query_hash = @existing_record.as_json.symbolize_keys.except(:id)
         @query_hash[:name]        = "renamed"
         @query_hash[:description] = "modified description"
       end

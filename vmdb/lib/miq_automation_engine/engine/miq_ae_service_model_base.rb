@@ -109,6 +109,8 @@ module MiqAeMethodService
           ret = nil
         elsif results.kind_of?(Array)
           ret = results.collect { |r| self.wrap_results(r) }
+        elsif results.kind_of?(ActiveRecord::Relation)
+          ret = results.collect { |r| self.wrap_results(r) }
         elsif results.kind_of?(ActiveRecord::Base)
           klass = MiqAeMethodService.const_get("MiqAeService#{results.class.name}")
           ret = self.drb_return(klass.new(results))

@@ -74,7 +74,7 @@ module Metric::CiMixin::Processing
           perf ||= obj_perfs.store_path(interval_name, ts, self.send(meth).build(:resource_name => self.name))
           perf.new_record? ? a += 1 : u += 1
 
-          v.reverse_merge!(perf.attributes)
+          v.reverse_merge!(perf.attributes.symbolize_keys)
           v.delete("id") # Remove protected attributes
           v.merge!(Metric::Processing.process_derived_columns(self, v, interval_name == 'realtime' ? Metric::Helper.nearest_hourly_timestamp(ts) : nil))
         end

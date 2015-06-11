@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
   has_many   :miq_reports, :dependent => :nullify
   belongs_to :current_group, :class_name => "MiqGroup"
   has_and_belongs_to_many :miq_groups
-  scope      :admin, where(:userid => "admin")
+  scope      :admin, -> { where(:userid => "admin") }
 
   virtual_has_many :active_vms, :class_name => "VmOrTemplate"
 

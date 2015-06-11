@@ -172,13 +172,13 @@ describe GenericMailer do
 
   it "call automation_notification directly" do
     @args[:attachment] = [{:content_type => "text/plain", :filename => "automation_filename.txt", :body => "automation_notification" * 10}]
-    GenericMailer.automation_notification(@args).should be_kind_of(Mail::Message)
+    GenericMailer.automation_notification(@args).message.should be_kind_of(Mail::Message)
     ActionMailer::Base.deliveries.should be_empty
   end
 
   it "call generic_notification directly" do
     @args[:attachment] = [{:content_type => "text/plain", :filename => "generic_filename.txt", :body => "generic_notification" * 10}]
-    GenericMailer.generic_notification(@args).should be_kind_of(Mail::Message)
+    GenericMailer.generic_notification(@args).message.should be_kind_of(Mail::Message)
     ActionMailer::Base.deliveries.should be_empty
   end
 

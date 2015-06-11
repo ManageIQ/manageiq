@@ -55,6 +55,7 @@ module MiqReport::Seeding
 
       rpt = {}
       self.column_names.each {|c| rpt[c.to_sym] = yml[c]}
+      rpt.delete :id
       # rpt[:name] = File.basename(filename, ".*")
       rpt[:name] = yml["menu_name"].strip
       rpt[:rpt_group] = File.basename(File.dirname(filename)).split("_").last

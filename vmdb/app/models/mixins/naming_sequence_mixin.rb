@@ -11,7 +11,7 @@ module NamingSequenceMixin
       record = naming_sequences.where(:name => name, :source => source).first_or_initialize
       record.update_attributes!(:value => record.value.to_i + 1)
 
-      record.value
+      record.value.to_i
     end
   end
 end

@@ -45,7 +45,7 @@ module VmdbDatabase::Seeding
   def seed
     mine = self.evm_tables.index_by(&:name)
 
-    connection.tables.sort.each do |table_name|
+    self.class.connection.tables.sort.each do |table_name|
       table = mine.delete(table_name)
       VmdbTableEvm.seed_for_database(self, table || table_name)
     end

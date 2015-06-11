@@ -27,10 +27,6 @@ Vmdb::Application.configure do
   # http://jonathanleighton.com/articles/2011/mass-assignment-security-shouldnt-happen-in-the-model/
   # config.active_record.mass_assignment_sanitizer = :strict
 
-  # Log the query plan for queries taking more than this (works
-  # with SQLite, MySQL, and PostgreSQL)
-  config.active_record.auto_explain_threshold_in_seconds = 0.5
-
   # Do not compress assets
   config.assets.compress = false
 

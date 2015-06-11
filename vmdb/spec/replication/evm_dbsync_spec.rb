@@ -63,8 +63,9 @@ describe "evm:dbsync" do
         fields[arel_table[:timestamp]]   = Time.now.utc if @slave_connection.column_exists?(t, "timestamp")
         fields[arel_table[:created_at]]  = Time.now.utc if @slave_connection.column_exists?(t, "created_at")
         fields[arel_table[:updated_at]]  = Time.now.utc if @slave_connection.column_exists?(t, "updated_at")
+        next if fields.blank?
 
-        arel_table.insert(fields) unless fields.blank?
+        @slave_connection.execute arel_table.insert_manager.insert(fields).to_sql
       end
     end
   end

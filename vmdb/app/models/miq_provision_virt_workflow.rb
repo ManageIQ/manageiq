@@ -227,7 +227,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     auto_placement = show_flag = auto_placement_enabled? ? :hide : :edit
     f[show_flag] += [:placement_host_name, :placement_ds_name, :host_filter, :ds_filter, :cluster_filter, :placement_cluster_name, :rp_filter, :placement_rp_name]
 
-    show_flag = get_value(@values[:sysprep_enabled]).in?('fields', 'file') || self.supports_pxe? || self.supports_iso? ? :edit : :hide
+    show_flag = get_value(@values[:sysprep_enabled]).in?(%w(fields file)) || self.supports_pxe? || self.supports_iso? ? :edit : :hide
     f[show_flag] += [:addr_mode]
 
     # If we are hiding the network fields always hide.  If available then the show_flag depends on the addr_mode
@@ -341,7 +341,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     return show_customize_fields_pxe(fields) if self.supports_customization_template?
 
     exclude_list = [:sysprep_spec_override, :sysprep_custom_spec, :sysprep_enabled, :sysprep_upload_file, :sysprep_upload_text,
-                    :linux_host_name, :sysprep_computer_name, :ip_addr, :subnet_mask, :gateway, :dns_servers, :dns_suffixes]
+      :linux_host_name, :sysprep_computer_name, :ip_addr, :subnet_mask, :gateway, :dns_servers, :dns_suffixes]
     linux_fields = [:linux_domain_name]
     show_options = [:edit, :hide]
     show_options.reverse! if platform == 'linux'
@@ -405,7 +405,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
         hosts.each { |h| h.lans.each { |l| vlans[l.name] = l.name } }
 
         # Remove certain networks
-        vlans.delete_if { |_k, v| v.in?('Service Console', 'VMkernel') }
+        vlans.delete_if { |_k, v| v.in?(['Service Console', 'VMkernel']) }
         rails_logger('allowed_vlans', 1)
       end
 
@@ -526,9 +526,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     rails_logger('allowed_templates', 0)
     vms = []
     condition = if self.class.allowed_templates_vendor
-                  ["vms.template = ? AND vms.vendor = ? AND vms.ems_id IS NOT NULL", true, self.class.allowed_templates_vendor]
-                else
-                  ["vms.template = ? AND vms.ems_id IS NOT NULL", true]
+      ["vms.template = ? AND vms.vendor = ? AND vms.ems_id IS NOT NULL", true, self.class.allowed_templates_vendor]
+    else
+      ["vms.template = ? AND vms.ems_id IS NOT NULL", true]
     end
 
     run_search = true
@@ -906,20 +906,20 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     dialog    = @dialogs.fetch_path(:dialogs, :customize)
 
     collect_customization_spec_settings(spec, spec_hash, %w(identity guiUnattended),
-                                        [:sysprep_timezone, 'timeZone', :sysprep_auto_logon, 'autoLogon', :sysprep_auto_logon_count, 'autoLogonCount'])
+      [:sysprep_timezone, 'timeZone', :sysprep_auto_logon, 'autoLogon', :sysprep_auto_logon_count, 'autoLogonCount'])
 
     collect_customization_spec_settings(spec, spec_hash, %w(identity identification),
-                                        [:sysprep_domain_name, 'joinDomain', :sysprep_domain_admin, 'domainAdmin', :sysprep_workgroup_name, 'joinWorkgroup'])
+      [:sysprep_domain_name, 'joinDomain', :sysprep_domain_admin, 'domainAdmin', :sysprep_workgroup_name, 'joinWorkgroup'])
 
     # PATH:[identity][userData][computerName][name] (VimString) = "VI25Test"
     collect_customization_spec_settings(spec, spec_hash, %w(identity userData),
-                                        [:sysprep_organization, 'orgName', :sysprep_full_name, 'fullName', :sysprep_product_id, 'productId'])
+      [:sysprep_organization, 'orgName', :sysprep_full_name, 'fullName', :sysprep_product_id, 'productId'])
 
     collect_customization_spec_settings(spec, spec_hash, %w(identity licenseFilePrintData),
-                                        [:sysprep_server_license_mode, 'autoMode', :sysprep_per_server_max_connections, 'autoUsers'])
+      [:sysprep_server_license_mode, 'autoMode', :sysprep_per_server_max_connections, 'autoUsers'])
 
     collect_customization_spec_settings(spec, spec_hash, ['options'],
-                                        [:sysprep_change_sid, 'changeSID', :sysprep_delete_accounts, 'deleteAccounts'])
+      [:sysprep_change_sid, 'changeSID', :sysprep_delete_accounts, 'deleteAccounts'])
 
     spec_hash[:sysprep_identification] = spec_hash[:sysprep_domain_name].blank? ? 'workgroup' : 'domain'
 
@@ -932,7 +932,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     dialog = @dialogs.fetch_path(:dialogs, :customize)
 
     collect_customization_spec_settings(spec, spec_hash, ['identity'],
-                                        [:linux_domain_name, 'domain', :linux_host_name, 'hostName'])
+      [:linux_domain_name, 'domain', :linux_host_name, 'hostName'])
 
     spec_hash.each { |k, v| set_customization_field_from_spec(v, k, dialog) }
   end

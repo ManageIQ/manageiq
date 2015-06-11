@@ -4,12 +4,7 @@ module MiqBundler
     return if ["config"].include?(ARGV.first)
     @prepared = true
 
-    set_bundler_binstubs_path
     fix_bundler_binstub
-  end
-
-  def self.set_bundler_binstubs_path
-    ENV['BUNDLE_BIN'] = "bin"
   end
 
   def self.fix_bundler_binstub

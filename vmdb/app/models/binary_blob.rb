@@ -1,6 +1,6 @@
 class BinaryBlob < ActiveRecord::Base
   belongs_to :resource, :polymorphic => true
-  has_many :binary_blob_parts, :dependent => :delete_all, :order => :id
+  has_many :binary_blob_parts, -> { order(:id) }, :dependent => :delete_all
 
   def delete_binary
     self.md5 = self.size = self.part_size = nil

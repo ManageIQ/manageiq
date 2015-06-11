@@ -2,7 +2,6 @@ require 'timeout'
 require 'digest'
 
 class MiqQueue < ActiveRecord::Base
-  include DontAutoSaveSerialized
 
   belongs_to :handler, :polymorphic => true
 

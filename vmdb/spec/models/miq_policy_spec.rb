@@ -22,16 +22,6 @@ describe MiqPolicy do
   context "#description=" do
     subject { FactoryGirl.create(:miq_policy, :description => @description) }
 
-    it "should truncate the description > 255" do
-      @description = "a" * 300
-      subject.description.length.should == 255
-    end
-
-    it "should keep the description = 255" do
-      @description = "a" * 255
-      subject.description.length.should == 255
-    end
-
     it "should keep the description < 255" do
       @description = "a" * 30
       subject.description.length.should == 30

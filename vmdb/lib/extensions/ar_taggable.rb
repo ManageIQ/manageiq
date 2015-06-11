@@ -97,10 +97,11 @@ module ActsAsTaggable
     Tag.transaction do
       # Remove existing tags
       tag = Tag.arel_table
+      tagging = Tagging.arel_table
       Tagging.joins(:tag).
                 where(:taggable_id    => self.id).
                 where(:taggable_type  => self.class.base_class.name).
-                where(:tag_id         => tag[:id]).
+                where(tagging[:tag_id].eq(tag[:id])).
                 where(tag[:name].matches "#{ns}/%").
                 destroy_all
 
