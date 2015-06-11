@@ -12,7 +12,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2015-06-05 02:04+0000\n"
+"PO-Revision-Date: 2015-06-10 11:43+0000\n"
 "Last-Translator: asasaki <asasaki@redhat.com>\n"
 "Language-Team: English\n"
 "Language: ja\n"
@@ -842,7 +842,7 @@ msgid "Adding a new Service Dialog from Orchestration Template \"%s\""
 msgstr "オーケストレーションテンプレート \"%s\" から新しいサービスダイアログを追加"
 
 msgid "Admin Role Filter:"
-msgstr "管理者のロールフィルター:"
+msgstr "管理者ロールフィルター:"
 
 msgid "Advanced"
 msgstr "詳細"
@@ -1134,7 +1134,7 @@ msgid "Are you sure you want to remove this Retirement Entry Point?"
 msgstr "リタイアエントリーポイントを削除してもよろしいですか?"
 
 msgid "Asc. by:"
-msgstr "次の昇順:"
+msgstr "昇順:"
 
 msgid "Ascending"
 msgstr "昇順"
@@ -3281,7 +3281,7 @@ msgid "Depot Type"
 msgstr "デポタイプ"
 
 msgid "Desc. by:"
-msgstr "次の降順:"
+msgstr "降順:"
 
 msgid "Descending"
 msgstr "降順"
@@ -4214,7 +4214,7 @@ msgid "False"
 msgstr "False"
 
 msgid "Feed URL"
-msgstr "URL のフィード"
+msgstr "フィードの URL"
 
 msgid "Fetch settings from a schedule"
 msgstr "スケジュールの設定を取得"
@@ -8419,7 +8419,7 @@ msgid "OntapAggregateDerivedMetric|Interval"
 msgstr "間隔"
 
 msgid "OntapAggregateDerivedMetric|Statistic time"
-msgstr "統計タイム"
+msgstr "統計時間"
 
 msgid "OntapAggregateDerivedMetric|Total transfers"
 msgstr "合計転移"
@@ -8464,7 +8464,7 @@ msgid "OntapAggregateMetricsRollup|Rollup type"
 msgstr "ロールアップタイプ"
 
 msgid "OntapAggregateMetricsRollup|Statistic time"
-msgstr "統計タイム"
+msgstr "統計時間"
 
 msgid "OntapAggregateMetricsRollup|Total transfers"
 msgstr "合計転移"
@@ -8566,7 +8566,7 @@ msgid "OntapDiskDerivedMetric|Skip blocks"
 msgstr "ブロックのスキップ"
 
 msgid "OntapDiskDerivedMetric|Statistic time"
-msgstr "統計タイム"
+msgstr "統計時間"
 
 msgid "OntapDiskDerivedMetric|Total transfers"
 msgstr "合計転移"
@@ -8866,7 +8866,7 @@ msgid "OntapLunDerivedMetric|Interval"
 msgstr "間隔"
 
 msgid "OntapLunDerivedMetric|Other ops"
-msgstr "その他のオプション"
+msgstr "その他 ops"
 
 msgid "OntapLunDerivedMetric|Queue full"
 msgstr "満杯のキュー"
@@ -8875,19 +8875,19 @@ msgid "OntapLunDerivedMetric|Read data"
 msgstr "読み取りデータ"
 
 msgid "OntapLunDerivedMetric|Read ops"
-msgstr "読み取りオプション"
+msgstr "読み取り ops"
 
 msgid "OntapLunDerivedMetric|Statistic time"
 msgstr "統計時間"
 
 msgid "OntapLunDerivedMetric|Total ops"
-msgstr "合計オプション"
+msgstr "合計 ops"
 
 msgid "OntapLunDerivedMetric|Write data"
 msgstr "書き込みデータ"
 
 msgid "OntapLunDerivedMetric|Write ops"
-msgstr "書き込みオプション"
+msgstr "書き込み ops"
 
 msgid "OntapLunMetricsRollup|Avg latency"
 msgstr "平均待機時間"
@@ -9154,7 +9154,7 @@ msgid "OntapSystemMetricsRollup|Rollup type"
 msgstr "ロールアップタイプ"
 
 msgid "OntapSystemMetricsRollup|Statistic time"
-msgstr "統計タイム"
+msgstr "統計時間"
 
 msgid "OntapSystemMetricsRollup|Sys avg latency"
 msgstr "システム平均待機時間"
@@ -10876,7 +10876,7 @@ msgstr "SSH ログインがデフォルトアカウントに対して無効に�
 
 msgid ""
 "Required. Should have privileged access, such as root or administrator."
-msgstr "必須情報なります。root または管理者などの特権アクセスが必要です。"
+msgstr "必須情報です。root または管理者などの特権アクセスが必要です。"
 
 msgid "Reserve"
 msgstr "予約"
@@ -12519,7 +12519,7 @@ msgid "Subnet Range"
 msgstr "サブネット範囲"
 
 msgid "Subscribe to this feed"
-msgstr "このフィードをサブスクライブ"
+msgstr "このフィードを購読"
 
 msgid "Substitution:"
 msgstr "置換:"
