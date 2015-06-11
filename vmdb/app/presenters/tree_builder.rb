@@ -92,7 +92,7 @@ class TreeBuilder
 
   # Get the children of a dynatree node that is being expanded (autoloaded)
   def x_get_child_nodes(id)
-    model, rec_id = self.class.extract_node_model_and_id(id)
+    model, rec_id, prefix = self.class.extract_node_model_and_id(id)
     object = if model == "Hash"
                {:type => prefix, :id => rec_id, :full_id => id}
              elsif model.nil? && [:sandt, :svccat, :stcat].include?(options[:tree])
