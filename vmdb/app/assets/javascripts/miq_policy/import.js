@@ -1,11 +1,10 @@
 //= require_directory ../SlickGrid-2.1/
 var rows;
 
-$.getJSON("get_json?import_file_upload_id=" + import_file_upload_id, function(rows_json){
-
+$.getJSON("get_json?import_file_upload_id=" + import_file_upload_id, function (rows_json) {
   rows = rows_json;
-  function myFilter(item) {
 
+  function myFilter(item) {
     if (item.parent != null) {
       var parent = rows[item.parent];
 
@@ -40,7 +39,7 @@ $.getJSON("get_json?import_file_upload_id=" + import_file_upload_id, function(ro
   var dataview = new Slick.Data.DataView();
 
   var columns = [
-    {id: "title", name: "Details", field: "title", width: 300, formatter: PolicyNameFormatter },
+    {id: "title", name: "Details", field: "title", width: 300, formatter: PolicyNameFormatter},
     {id: "msg", name: "Message", field: "msg", width: 300}
   ];
 
@@ -73,7 +72,7 @@ $.getJSON("get_json?import_file_upload_id=" + import_file_upload_id, function(ro
     }
   });
 
-  // wire up model events to drive the grid
+  // Wire up model events to drive the grid
   dataview.onRowCountChanged.subscribe(function (e, args) {
     grid.updateRowCount();
     grid.render();

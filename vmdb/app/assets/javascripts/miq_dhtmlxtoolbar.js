@@ -2,14 +2,16 @@
 
 // This function is called in miqOnLoad
 function miqInitToolbars() {
-  if (typeof miq_toolbars == "undefined") return;
-  $.each(miq_toolbars, function( key ) {
+  if (typeof miq_toolbars == "undefined") {
+    return;
+  }
+  $.each(miq_toolbars, function (key) {
     miqInitToolbar(miq_toolbars[key]);
   });
 }
 
 // Initialize a single toolbar
-function miqInitToolbar(tb_hash){
+function miqInitToolbar(tb_hash) {
   tb = tb_hash['obj'];
   tb.setIconsPath("/images/toolbars/");
   tb.loadXMLString(tb_hash['xml']);
@@ -21,20 +23,20 @@ function miqInitToolbar(tb_hash){
 
 // Set miq_alone class for non-pulldown buttons
 function miqSetToolbarButtonIds(tb) {
-  tb.forEachItem(function(itemId){
-    if (tb.objPull[tb.idPrefix+itemId]["type"] != "buttonSelect"){
-      var item = tb.objPull[tb.idPrefix+itemId];
+  tb.forEachItem(function (itemId) {
+    if (tb.objPull[tb.idPrefix + itemId]["type"] != "buttonSelect") {
+      var item = tb.objPull[tb.idPrefix + itemId];
       item.obj.id = "miq_alone"; /*class for parent div around text div*/
     }
   });
 }
 
 // Hide buttons in the toolbars
-function miqHideToolbarButtons(){
+function miqHideToolbarButtons() {
   if (typeof miq_toolbars['view_tb'] != "undefined") {
     for (var x in miq_toolbars['view_tb']['buttons']) {
-      if (view_tb.getType(x) == "button"){
-        if (view_tb.getPosition(x)> 0 && miq_toolbars['view_tb']['buttons'][x].hidden) {
+      if (view_tb.getType(x) == "button") {
+        if (view_tb.getPosition(x) > 0 && miq_toolbars['view_tb']['buttons'][x].hidden) {
           view_tb.hideItem(x);
           view_tb.hideItem('sep_1');
         }
@@ -46,22 +48,22 @@ function miqHideToolbarButtons(){
     var buttons = miq_toolbars['center_tb']['buttons']
     for (var x in buttons) {
       var count = 0
-      if (tb.getType(x) == "button"){
-        if (tb.getPosition(x)>= 0 && buttons[x].hidden) {
+      if (tb.getType(x) == "button") {
+        if (tb.getPosition(x) >= 0 && buttons[x].hidden) {
           tb.hideItem(x);
         }
-      } else if (tb.getType(x) == "buttonSelect"){
+      } else if (tb.getType(x) == "buttonSelect") {
         for (var y in buttons) {
-          //Hide any items in the list that is hidden
-          if (tb.getListOptionPosition(x,y)> 0 && buttons[y].hidden) {
-            tb.hideListOption(x,y);
-            count+=1;
+          // Hide any items in the list that is hidden
+          if (tb.getListOptionPosition(x, y) > 0 && buttons[y].hidden) {
+            tb.hideListOption(x, y);
+            count++;
           }
-          //Hide buttonselect button, if all items under it are hidden
-          if (count == tb.getAllListOptions(x).length-1 && tb.getPosition(x)> 0 && buttons[x].hidden) {
+          // Hide buttonselect button, if all items under it are hidden
+          if (count == tb.getAllListOptions(x).length - 1 && tb.getPosition(x) > 0 && buttons[x].hidden) {
             tb.hideItem(x);
           }
-          if (tb.getListOptionPosition(x,y)> 0 && typeof buttons[y].title != "undefined") {
+          if (tb.getListOptionPosition(x, y) > 0 && typeof buttons[y].title != "undefined") {
             tb.setListOptionToolTip(x, y, buttons[y].title);
           }
         }
@@ -73,10 +75,10 @@ function miqHideToolbarButtons(){
     var buttons = miq_toolbars['custom_tb']['buttons']
     for (var x in buttons) {
       var count = 0
-      if (tb.getType(x) == "buttonSelect"){
+      if (tb.getType(x) == "buttonSelect") {
         for (var y in buttons) {
-          //show titles for buttons under a button group
-          if (tb.getListOptionPosition(x,y)> 0 && typeof buttons[y].title != "undefined") {
+          // show titles for buttons under a button group
+          if (tb.getListOptionPosition(x, y) > 0 && typeof buttons[y].title != "undefined") {
             tb.setListOptionToolTip(x, y, buttons[y].title);
           }
         }
@@ -86,11 +88,10 @@ function miqHideToolbarButtons(){
 }
 
 // Re-Initialize a single toolbar
-function miqReinitToolbar(tb_name){
+function miqReinitToolbar(tb_name) {
   var tb = miq_toolbars[tb_name]['obj'];
-//  tb.clearAll();
-// Workaround to replace clearAll method call, it's is not available in 2.0 version of dhtmlx
-  tb.forEachItem(function(id) {
+  // Workaround to replace clearAll method call, it's is not available in 2.0 version of dhtmlx
+  tb.forEachItem(function (id) {
     tb.removeItem(id);
   });
   var tb_hash = miq_toolbars[tb_name];
@@ -99,16 +100,16 @@ function miqReinitToolbar(tb_name){
 }
 
 // Function to run transactions when toolbar two state button is clicked
-function miqToolbarOnStateChange(id, state){
+function miqToolbarOnStateChange(id, state) {
   miqToolbarOnClick(id);
 }
 
 // Function to run transactions when toolbar button is clicked
-function miqToolbarOnClick(id){
+function miqToolbarOnClick(id) {
   var tb_url;
   var tb_hash;
   var button;
-  tb_hash = miq_toolbars[this.base.parentNode.id];  // Use this line for toolbar v3.0
+  tb_hash = miq_toolbars[this.base.parentNode.id]; // Use this line for toolbar v3.0
 
   if (!tb_hash['buttons'].hasOwnProperty(id)) {
     return false;
@@ -117,38 +118,56 @@ function miqToolbarOnClick(id){
   button = tb_hash['buttons'][id];
 
   if (button.hasOwnProperty("confirm") && !button.hasOwnProperty("popup")) {
-    if (!confirm(button.confirm)) return;
+    if (!confirm(button.confirm)) {
+      return;
+    }
   } else if (button.hasOwnProperty("confirm") && button.hasOwnProperty("popup")) {
     // to open console in a new window
     if (confirm(button.confirm)) {
       if (button.popup != "undefined" && button.popup) {
-        if (button.hasOwnProperty("console_url")){
+        if (button.hasOwnProperty("console_url")) {
           window.open(button.console_url);
-    } } }
+        }
+      }
+    }
     return;
   } else if (!button.hasOwnProperty("confirm") && button.hasOwnProperty("popup")) {
     // to open readonly report in a new window, doesnt have confirm message
     if (button.popup) {
-      if (button.hasOwnProperty("console_url")){
+      if (button.hasOwnProperty("console_url")) {
         window.open(button.console_url);
-    } }
+      }
+    }
     return;
   }
 
-  if (button.hasOwnProperty("url")) {   // See if a url is defined
-    if (button.url.indexOf("/") == 0) {                                     // If url starts with / it is non-ajax
+  if (button.hasOwnProperty("url")) {
+    // See if a url is defined
+    if (button.url.indexOf("/") == 0) {
+      // If url starts with / it is non-ajax
       tb_url = "/" + miq_controller + button.url;
-      if (typeof miq_record_id != "undefined" && miq_record_id != null) tb_url += "/" + miq_record_id;
-      if (button.hasOwnProperty("url_parms")) tb_url += button.url_parms;
+      if (typeof miq_record_id != "undefined" && miq_record_id != null) {
+        tb_url += "/" + miq_record_id;
+      }
+      if (button.hasOwnProperty("url_parms")) {
+        tb_url += button.url_parms;
+      }
       DoNav(encodeURI(tb_url));
       return;
-    } else {                                                                // An ajax url was defined
+    } else {
+      // An ajax url was defined
       tb_url = "/" + miq_controller + "/" + button.url;
-      if (button.url.indexOf("x_history") != 0) // If not an explorer history button
-        if (typeof miq_record_id != "undefined" && miq_record_id != null) tb_url += "/" + miq_record_id;
+      if (button.url.indexOf("x_history") != 0) {
+        // If not an explorer history button
+        if (typeof miq_record_id != "undefined" && miq_record_id != null) {
+          tb_url += "/" + miq_record_id;
+        }
+      }
     }
-  } else {                                                                  // No url specified, run standard button ajax transaction
-    if (typeof button.explorer != "undefined" && button.explorer) {         // Use x_button method for explorer ajax
+  } else {
+    // No url specified, run standard button ajax transaction
+    if (typeof button.explorer != "undefined" && button.explorer) {
+      // Use x_button method for explorer ajax
       tb_url = "/" + miq_controller + "/x_button";
     } else {
       tb_url = "/" + miq_controller + "/button";
@@ -164,14 +183,16 @@ function miqToolbarOnClick(id){
     }
   }
 
-  collect_log_buttons = ['support_vmdb_choice__collect_logs',
-                         'support_vmdb_choice__collect_current_logs',
-                         'support_vmdb_choice__zone_collect_logs',
-                         'support_vmdb_choice__zone_collect_current_logs'
+  collect_log_buttons = [ 'support_vmdb_choice__collect_logs',
+                          'support_vmdb_choice__collect_current_logs',
+                          'support_vmdb_choice__zone_collect_logs',
+                          'support_vmdb_choice__zone_collect_current_logs'
   ]
   if (jQuery.inArray(button.name, collect_log_buttons) >= 0 && button.prompt) {
     tb_url = miqSupportCasePrompt(tb_url);
-    if (!tb_url) return false;
+    if (!tb_url) {
+      return false;
+    }
   }
 
   // put url_parms into params var, if defined
@@ -179,7 +200,7 @@ function miqToolbarOnClick(id){
   if (button.hasOwnProperty("url_parms")) {
     if (button.url_parms.match("_div$")) {
       if (miqDomElementExists('miq_grid_checks')) {
-      params = "miq_grid_checks=" + $('#miq_grid_checks').val();
+        params = "miq_grid_checks=" + $('#miq_grid_checks').val();
       } else {
         params = miqSerializeForm(button.url_parms);
       }
@@ -195,36 +216,35 @@ function miqToolbarOnClick(id){
       (button.name == "vm_perf_reload") ||
       (button.name.match("_console$"))) {
     if (typeof params == "undefined") {
-      miqJqueryRequest(tb_url, {beforeSend: true,});
+      miqJqueryRequest(tb_url, {beforeSend: true});
     } else {
       miqJqueryRequest(tb_url, {beforeSend: true, data: params});
-  } }
-  else {
+    }
+  } else {
     if (typeof params == "undefined") {
       miqJqueryRequest(tb_url, {beforeSend: true, complete: true});
     } else {
       miqJqueryRequest(tb_url, {beforeSend: true, complete: true, data: params});
-  } }
+    }
+  }
   return false;
 }
 
 function miqSupportCasePrompt(tb_url) {
   var support_case = prompt('Enter Support Case:', '');
-  if (support_case == null) return false;
-  else if (support_case.trim() == '') {
+  if (support_case == null) {
+    return false;
+  } else if (support_case.trim() == '') {
     alert('Support Case must be provided to collect logs');
     return false;
-  }
-  else {
+  } else {
     tb_url = tb_url + '&support_case=' + encodeURIComponent(support_case);
     return tb_url;
   }
 }
 
-
 // Handle chart context menu clicks
 function miqWidgetToolbarClick(itemId, itemValue) {
-  var i = 1;
   if (itemId == "reset") {
     if (confirm("Are you sure you want to reset this Dashboard's Widgets to the defaults?")) {
       miqAjax("/dashboard/reset_widgets");

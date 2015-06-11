@@ -18,7 +18,7 @@ function miqOnLoad() {
     miqInitDhtmlxLayout();
   }
 
-  $(document).mousemove(function(e) {
+  $(document).mousemove(function (e) {
     miqGetMouseXY(e.pageX, e.pageY);
   });
 
@@ -34,7 +34,7 @@ function miqOnLoad() {
   if (typeof miqLoadTL == "function") {
     miqLoadTL();
     if (miq_timeline_filter) {
-      performFiltering(tl, [0, 1]);
+      performFiltering(tl, [ 0, 1 ]);
     }
   }
 
@@ -182,12 +182,16 @@ function miqExpressionPrefill(count) {
   }
   if (typeof count == 'undefined') {
     miq_exp_prefill_count = 0;
-    setTimeout(function() { miqExpressionPrefill(miq_exp_prefill_count); }, 200);
+    setTimeout(function () {
+      miqExpressionPrefill(miq_exp_prefill_count);
+    }, 200);
   } else if (count == miq_exp_prefill_count) {
     if (++miq_exp_prefill_count > 100) {
       miq_exp_prefill_count = 0;
     }
-    setTimeout(function() { miqExpressionPrefill(miq_exp_prefill_count); }, 200);
+    setTimeout(function () {
+      miqExpressionPrefill(miq_exp_prefill_count);
+    }, 200);
   }
 }
 
@@ -206,12 +210,16 @@ function miqValueStylePrefill(count) {
   if (found) {
     if (typeof count == 'undefined') {
       miq_vs_prefill_count = 0;
-      setTimeout(function() { miqValueStylePrefill(miq_vs_prefill_count); }, 200);
+      setTimeout(function () {
+        miqValueStylePrefill(miq_vs_prefill_count);
+      }, 200);
     } else if (count == miq_vs_prefill_count) {
       if (++miq_vs_prefill_count > 100) {
         miq_vs_prefill_count = 0;
       }
-      setTimeout(function() { miqValueStylePrefill(miq_vs_prefill_count); }, 200);
+      setTimeout(function () {
+        miqValueStylePrefill(miq_vs_prefill_count);
+      }, 200);
     }
   }
 }
@@ -348,7 +356,7 @@ function miqCheckForChanges() {
 
 // go to the specified URL when a download all log files button is pressed
 function miqDownloadLogFiles(theUrl, count) {
-  for(var i = 0; i < count; i++) {
+  for (var i = 0; i < count; i++) {
     var new_url = theUrl + "?i=" + i;
     var winName = "log" + i;
     window.open(new_url, winName,
@@ -380,7 +388,7 @@ function miqNewTagPrompt() {
 function miqButtons(h_or_s, prefix) {
   $('#flash_msg_div').hide();
 
-  var on  = h_or_s == 'show' ? 'on'  : 'off';
+  var on = h_or_s == 'show' ? 'on' : 'off';
   var off = h_or_s == 'show' ? 'off' : 'on';
 
   prefix = (typeof prefix === 'undefined' || prefix === '') ? '' : (prefix + '_');
@@ -419,18 +427,17 @@ function miqValidateButtons(h_or_s, prefix) {
 // Convert Button image to hyperlink
 function toggleConvertButtonToLink(button, url, toggle) {
   if (toggle) {
-    if (button.hasClass('dimmed')) {
-      button.removeClass('dimmed');
-    }
-    if (button[0].parentNode.outerHTML.indexOf('<a href') == -1) {
-      button[0].outerHTML = "<a href=" + url + " title='" + button[0].getAttribute('alt') + "'>" + button[0].outerHTML + "</a>";
+    button.removeClass('dimmed');
+    if (!button.parent().is('a[href]')) {
+      button
+        .wrap($('<a/>')
+          .attr('href', url)
+          .attr('title', button.attr('alt')));
     }
   } else {
-    if (!button.hasClass('dimmed')) {
-      button.addClass('dimmed');
-    }
-    if (button[0].parentNode.outerHTML.indexOf('<a href') > -1) {
-      button[0].parentNode.outerHTML = button[0].outerHTML;
+    button.addClass('dimmed');
+    if (button.parent().is('a[href]')) {
+      button.unwrap();
     }
   }
 }
@@ -457,7 +464,7 @@ function miqUpdateAllCheckboxes(button_div, override) {
       return true;
     } else {
       // Set checkboxes in dhtmlx grid
-      gtl_list_grid.forEachRow(function(id) {
+      gtl_list_grid.forEachRow(function (id) {
         gtl_list_grid.cells(id, 0).setValue(state ? 1 : 0);
       });
       var crows = gtl_list_grid.getCheckedRows(0);
@@ -475,8 +482,8 @@ function miqUpdateButtons(obj, button_div) {
   var count = 0;
 
   if (typeof obj.id != "undefined") {
-    $("input[id^='" + obj.id + "']").each(function() {
-      if (this.checked && ! this.disabled) {
+    $("input[id^='" + obj.id + "']").each(function () {
+      if (this.checked && !this.disabled) {
         count++;
       }
       if (count > 1) {
@@ -667,7 +674,7 @@ function miqGetSize() {
     myWidth = document.body.clientWidth;
     myHeight = document.body.clientHeight;
   }
-  return [myWidth, myHeight];
+  return [ myWidth, myHeight ];
 }
 
 // Pass fields to server given a URL and fields in name/value pairs
@@ -675,7 +682,7 @@ function miqPassFields(url, args) {
   url += '?';
 
   for (var i = 0; i < args.length; i += 2) {
-    url += args[i] + '=' + args[i+1] + '&';
+    url += args[i] + '=' + args[i + 1] + '&';
   }
 
   miqJqueryRequest(url);
@@ -712,7 +719,7 @@ var miq_chart_data;
 
 function Loaded_Chart(chart_id) {
   if ((miq_browser != 'Explorer') &&
-      (typeof(miq_chart_data) !== 'undefined')) {
+      (typeof (miq_chart_data) !== 'undefined')) {
     doLoadChart(chart_id, document.getElementsByName(chart_id)[0]);
   }
 }
@@ -723,7 +730,7 @@ function doLoadChart(chart_id, chart_object) {
   var idx = id_splitted[2];
   var comp = id_splitted[3];
 
-  if (typeof(comp) === 'undefined') {
+  if (typeof (comp) === 'undefined') {
     chart_object.Update_XML(miq_chart_data[set][idx].xml, false);
   } else {
     chart_object.Update_XML(miq_chart_data[set][idx].xml2, false);
@@ -758,14 +765,16 @@ function miqLoadChart(chart_id) {
     chart_object = document.getElementsByName(chart_id)[0];
   }
   if (chart_object === undefined) {
-    setTimeout(function() { miqLoadChart(chart_id); }, 100);
+    setTimeout(function () {
+      miqLoadChart(chart_id);
+    }, 100);
   } else {
     doLoadChart(chart_id, chart_object);
   }
 }
 
 function miqChartLinkData(col, row, value, category, series, id, message) {
-// Create the context menu
+  // Create the context menu
   if (typeof miqMenu != "undefined") {
     miqMenu.hideContextMenu();
   }
@@ -774,7 +783,9 @@ function miqChartLinkData(col, row, value, category, series, id, message) {
     return;
   }
   // Added delay before showing menus to get it work in version 3.5
-  setTimeout(function() { miqBuildChartMenu(col, row, value, category, series, id, message); }, 250);
+  setTimeout(function () {
+    miqBuildChartMenu(col, row, value, category, series, id, message);
+  }, 250);
 }
 
 function miqBuildChartMenu(col, row, value, category, series, id, message) {
@@ -783,7 +794,7 @@ function miqBuildChartMenu(col, row, value, category, series, id, message) {
   var chart_data = miq_chart_data[set];
 
   if (chart_data[idx].menu != null && chart_data[idx].menu.length) {
-    var rowcolidx = "_" + row + "-" + col+ "-" + idx;
+    var rowcolidx = "_" + row + "-" + col + "-" + idx;
     var miqMenu = new dhtmlXMenuObject(null, "dhx_web");
     miqMenu.setImagePath("/assets/dhtmlx_gpl_36/imgs/");
     miqMenu.renderAsContextMenu();
@@ -821,7 +832,8 @@ function miqChartMenuClick(itemId, itemValue) {
 
 var miqAjaxTimers = 0;
 
-// Handle an ajax form button press (i.e. Submit) by starting the spinning Q, then waiting for .7 seconds for observers to finish
+// Handle an ajax form button press (i.e. Submit) by starting the spinning Q,
+// then waiting for .7 seconds for observers to finish
 function miqAjaxButton(url, serialize_fields) {
   if (typeof serialize_fields == "undefined") {
     serialize_fields = false;
@@ -831,14 +843,18 @@ function miqAjaxButton(url, serialize_fields) {
   }
 
   miqAjaxTimers++;
-  setTimeout(function() { miqAjaxButtonSend(url, serialize_fields); }, 700);
+  setTimeout(function () {
+    miqAjaxButtonSend(url, serialize_fields);
+  }, 700);
 }
 
 // Send ajax url after any outstanding ajax requests, wait longer if needed
 function miqAjaxButtonSend(url, serialize_fields) {
   if ($.active) {
     miqAjaxTimers++;
-    setTimeout(function() { miqAjaxButtonSend(url); }, 700);
+    setTimeout(function () {
+      miqAjaxButtonSend(url);
+    }, 700);
   } else {
     miqAjax(url, serialize_fields);
   }
@@ -864,7 +880,8 @@ var miqOneTrans = 0;
 // Function to generate an Ajax request, but only once for a drawn screen
 function miqSendOneTrans(url) {
   if (typeof miqIEButtonPressed != "undefined") {
-    // page replace after clicking save/reset was making observe_field on text_area in IE send up a trascation to form_field_changed method
+    // page replace after clicking save/reset was making observe_field on
+    // text_area in IE send up a trascation to form_field_changed method
     miqIEButtonPressed = undefined;
     return;
   }
@@ -894,7 +911,9 @@ function dateTime(offset, abbr) {
     leadingZero(date.getMinutes()) +
     ' ' +
     abbr;
-  setTimeout(function() { dateTime(offset, abbr); }, 1000);
+  setTimeout(function () {
+    dateTime(offset, abbr);
+  }, 1000);
 }
 
 // this deletes the remembered treestate when called
@@ -1011,26 +1030,29 @@ function miqAttachTextAreaWithLines(id) {
   el.scrollTop = ta.scrollTop;
 
   ta.focus();
-  ta.onkeydown = function() { el.scrollTop = ta.scrollTop; };
-  ta.onmousedown = function() { el.scrollTop = ta.scrollTop; };
-  ta.onmouseup = function() { el.scrollTop = ta.scrollTop; };
-  ta.onmousemove = function() { el.scrollTop = ta.scrollTop; };
+  var scrollTop = function () {
+    el.scrollTop = ta.scrollTop;
+  }
+  ta.onkeydown = scrollTop;
+  ta.onmousedown = scrollTop;
+  ta.onmouseup = scrollTop;
+  ta.onmousemove = scrollTop;
 }
 
 // Initialize dashboard column jQuery sortables
 function miqInitDashboardCols() {
   if ($('#col1').length) {
-    $('#col1').sortable({connectWith:'#col2, #col3', handle:"h2"});
+    $('#col1').sortable({connectWith: '#col2, #col3', handle: "h2"});
     $('#col1').off('sortupdate');
     $('#col1').on('sortupdate', miqDropComplete);
   }
   if ($('#col2').length) {
-    $('#col2').sortable({connectWith:'#col1, #col3', handle:"h2"});
+    $('#col2').sortable({connectWith: '#col1, #col3', handle: "h2"});
     $('#col2').off('sortupdate');
     $('#col2').on('sortupdate', miqDropComplete);
   }
   if ($('#col3').length) {
-    $('#col3').sortable({connectWith:'#col1, #col2', handle:"h2"});
+    $('#col3').sortable({connectWith: '#col1, #col2', handle: "h2"});
     $('#col3').off('sortupdate');
     $('#col3').on('sortupdate', miqDropComplete);
   }
@@ -1040,7 +1062,7 @@ function miqInitDashboardCols() {
 function miqDropComplete(event, ui) {
   var el = $(this);
   var url = "/" + miq_widget_dd_url + "?" + el.sortable(
-              'serialize', {key:el.attr('id') + "[]"}
+              'serialize', {key: el.attr('id') + "[]"}
             ).toString();
   // Adding id of record being edited to be used by load_edit call
   if (typeof miq_record_id != "undefined") {
@@ -1059,7 +1081,7 @@ function miqBuildCalendar(bAngular) {
   } else {
     all = $('input[id^=miq_angular_date_]');
   }
-  all.each(function() {
+  all.each(function () {
     // Attach dhtmlxcalendars to each one
     var el = $(this);
     var cal = new dhtmlxCalendarObject(el.attr('id'));
@@ -1092,18 +1114,18 @@ function miqBuildCalendar(bAngular) {
 
     // Create an observer for the date field if the html5 attr is specified
     if (el.attr('data-miq_observe_date') == "execAngular") {
-      el.change(function() {
+      el.change(function () {
         miqSetAngularDate(el);
       });
-      cal.attachEvent("onClick", function() {
+      cal.attachEvent("onClick", function () {
         miqSetAngularDate(el);
       });
     } else {
       if (this.getAttribute('data-miq_observe_date')) {
-        el.change(function() {
+        el.change(function () {
           miqSendDateRequest(el);
         });
-        cal.attachEvent("onClick", function() {
+        cal.attachEvent("onClick", function () {
           miqSendDateRequest(el);
         });
       }
@@ -1144,7 +1166,7 @@ function miqBuildExplorerView(options) {
     header: null
   }, options || {}); // If no options, pass an empty object
 
-  $(document).ready(function() {
+  $(function() {
     // On doc ready, build the layout and accordion
     // Build object for center layout unit settings
     var centerHash = {
@@ -1159,7 +1181,7 @@ function miqBuildExplorerView(options) {
     // Build the layout
     if (!settings.left) {
       // If no saved width, calculate
-      settings.left = settings.width/settings.divider;
+      settings.left = settings.width / settings.divider;
     }
 
     var expLayout = new YAHOO.widget.Layout(settings.layout_div, {
@@ -1178,7 +1200,7 @@ function miqBuildExplorerView(options) {
       ]
     });
 
-    expLayout.on('render', function() {
+    expLayout.on('render', function () {
       if ($('#main_div').length) {
         miqBuildMainLayout(this, settings.header);
       }
@@ -1196,14 +1218,15 @@ function miqBuildExplorerView(options) {
 
     // Build the accordion
     $("#" + settings.left_div).accordion({
-      change: function(event, ui) {miqAccordionChange(event, ui, settings.accord_url);},
+      change: function (event, ui) {
+        miqAccordionChange(event, ui, settings.accord_url);
+      },
       fillSpace: true,
       active: "#" + settings.active_accord,
       icons: false,
       animated: false
     });
   });
-
 }
 
 // Build the nested GTL layout inside the explorer layout
@@ -1298,7 +1321,8 @@ function miq_patternfly_tabs_init(id, url) {
   });
 }
 
-// method takes 4 parameters tabs div id, active tab label, url to go to when tab is changed, and whether to check for abandon changes or not
+// method takes 4 parameters tabs div id, active tab label, url to go to when
+// tab is changed, and whether to check for abandon changes or not
 function miq_jquery_tabs_init(options) {
   // initializing tabs
   $("#" + options.tabs_div).tabs();
@@ -1311,8 +1335,9 @@ function miq_jquery_tabs_init(options) {
 
   if (options.url) {
     // passing in ui element of tabs, url to use for ajax transaction and whether to check for changes,
-    // used bind to prevent from extra tab change transaction when all tabs are loaded from controller and active tab is changed
-    $( "#" + options.tabs_div).bind("tabsselect", function(event, ui) {
+    // used bind to prevent from extra tab change transaction when all tabs are
+    // loaded from controller and active tab is changed
+    $( "#" + options.tabs_div).bind("tabsselect", function (event, ui) {
       // added a workaround to make sure that bind url for main outer tabs is not being used as a url for sub tabs
       // do not bind if subtabs dont need to send up a transaction
       var bind_url = ui.panel.parentNode.getAttribute('data-miq_url');
@@ -1326,14 +1351,14 @@ function miq_jquery_tabs_init(options) {
     });
   } else if (options.cm_tab) {
     // forcing to refresh the codemirror text box when tab is changed, so it displays properly
-    $( "#" + options.tabs_div).bind("tabsshow", function(event, ui) {
+    $( "#" + options.tabs_div).bind("tabsshow", function (event, ui) {
       if (options.cm_tab == ui.panel.id) {
         miqEditor.refresh();
       }
     });
   } else if (options.show_buttons_tab) {
     // show/hide toolbar div based on selected tab
-    $( "#" + options.tabs_div).bind("tabsselect", function(event, ui) {
+    $( "#" + options.tabs_div).bind("tabsselect", function (event, ui) {
       if (options.show_buttons_tab == ui.panel.id) {
         $("#center_buttons_div").show();
       } else {
@@ -1351,7 +1376,8 @@ function miq_jquery_tabs_init(options) {
 }
 
 // OnSelect handler for change tab transaction for jquery ui tabs
-// getting in ui element of tabs, url to use for ajax transaction and whether to check for changes, prov screens don't need to check for changes on tab change
+// getting in ui element of tabs, url to use for ajax transaction and whether
+// to check for changes, prov screens don't need to check for changes on tab change
 function miq_jquery_tab_select(ui, url, checkChanges) {
   if (checkChanges && !miqCheckForChanges()) {
     return false;
@@ -1419,9 +1445,9 @@ function miqShowAE_Tree(typ) {
 
 // Use the jQuery.form plugin for ajax file upload
 function miqInitJqueryForm() {
-  $('#uploadForm input').change(function() {
+  $('#uploadForm input').change(function () {
     $(this).parent().ajaxSubmit({
-      beforeSubmit: function(a, f, o) {
+      beforeSubmit: function (a, f, o) {
         o.dataType = 'script';
         miqSparkleOn();
       }
@@ -1524,7 +1550,7 @@ function miqSearchSpinner(status) {
         className: 'miq-spinner', // The CSS class to assign to the spinner
         zIndex: 2e9, // The z-index (defaults to 2000000000)
         top: 'auto', // Top position relative to parent in px
-        left:'auto' // Left position relative to parent in px
+        left: 'auto' // Left position relative to parent in px
       };
       search_spinner = new Spinner(opts).spin($('#searching_spinner_center')[0]);
     } else {
@@ -1546,7 +1572,7 @@ function miqSearchSpinner(status) {
  * work with rails applications which have fixed
  * CVE-2011-0447
  */
-$(document).ajaxSend(function(event, request, settings) {
+$(document).ajaxSend(function (event, request, settings) {
   var csrf_meta_tag = $('#meta[name=csrf-token]')[0];
   if (csrf_meta_tag) {
     var header = 'X-CSRF-Token';
@@ -1567,10 +1593,14 @@ function miqJqueryRequest(url, options) {
     ajax_options.data = options.data;
   }
   if (options.beforeSend) {
-    ajax_options.beforeSend = function(request) {miqSparkle(true);};
+    ajax_options.beforeSend = function (request) {
+      miqSparkle(true);
+    };
   }
   if (options.complete) {
-    ajax_options.complete = function(request) { miqSparkle(false); };
+    ajax_options.complete = function (request) {
+      miqSparkle(false);
+    };
   }
   new $.ajax(options.no_encoding ? url : encodeURI(url), ajax_options);
 }
