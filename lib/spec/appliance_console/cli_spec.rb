@@ -181,6 +181,35 @@ describe ApplianceConsole::Cli do
 
       subject.parse(%w(--tmpdisk x)).run
     end
+
+    it "configures disk with auto" do
+      subject.should_receive(:disk_from_string).with('auto').and_return('/dev/x')
+      subject.should_receive(:say)
+      ApplianceConsole::TempStorageConfiguration.should_receive(:new)
+        .with(:disk      => '/dev/x')
+      .and_return(double(:activate => true))
+
+      subject.parse(%w(--tmpdisk auto)).run
+    end
+
+    it "suggests disk with unknown disk" do
+      subject.should_receive(:disk_from_string).with('abc').and_return(nil)
+      subject.should_receive(:disk).and_return(double(:path => 'dev-good'))
+      subject.should_receive(:say).with(/abc/)
+      subject.should_receive(:say).with(/dev-good/)
+      expect(ApplianceConsole::TempStorageConfiguration).not_to receive(:new)
+
+      subject.parse(%w(--tmpdisk abc)).run
+    end
+
+    it "complains when no disks available" do
+      subject.should_receive(:disk_from_string).with('abc').and_return(nil)
+      subject.should_receive(:disk).and_return(nil)
+      subject.should_receive(:say).with(/no disk/)
+      expect(ApplianceConsole::TempStorageConfiguration).not_to receive(:new)
+
+      subject.parse(%w(--tmpdisk abc)).run
+    end
   end
 
   # private methods
