@@ -9,10 +9,18 @@ describe ApplianceConsole::ServiceGroup do
   let(:common_services)   { %w(evminit memcached miqtop evmserverd) }
   let(:postgres_service)  { %w(postgresql92-postgresql) }
 
-  it "#postgresql?" do
-    expect(described_class.new(:internal_postgresql => true).postgresql?).to be_true
-    expect(described_class.new(:internal_postgresql => false).postgresql?).to be_false
-    expect(described_class.new.postgresql?).to be_false
+  describe "#postgresql?" do
+    it { expect(group).not_to be_postgresql }
+
+    context "when internal postgres" do
+      let(:group) { described_class.new(:internal_postgresql => true) }
+      it { expect(group).to be_postgresql }
+    end
+
+    context "when not internal postgres" do
+      let(:group) { described_class.new(:internal_postgresql => false) }
+      it { expect(group).not_to be_postgresql }
+    end
   end
 
   context "postgresql" do
