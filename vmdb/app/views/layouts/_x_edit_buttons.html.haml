@@ -175,7 +175,7 @@
           - else
             - # export_button
             = button_tag(_("Export"),
-              :class  => "btn btn-primary",
+              :class  => "btn btn-primary #{@temp[:export_reports].empty? ? "btn-disabled" : ""}",
               :type   => "application/txt",
               :id     => "export_button",
               :alt    => _("Download Report to YAML"))
