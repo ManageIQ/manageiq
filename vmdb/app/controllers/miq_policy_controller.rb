@@ -763,7 +763,7 @@ class MiqPolicyController < ApplicationController
     presenter[:miq_record_id] = @record.try(:id)
 
     # Lock current tree if in edit or assign, else unlock all trees
-    if @edit || @assign
+    if (@edit || @assign) && params[:action] != "x_search_by_name"
       presenter[:lock_unlock_trees][x_active_tree] = true
     else
       [:policy_profile_tree, :policy_tree, :condition_tree,
