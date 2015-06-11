@@ -41,7 +41,7 @@ module ApplianceConsole
     end
 
     def enable
-      LinuxAdmin.run("chkconfig", :params => {"--add" => "miqtop"})  # Is this really needed?
+      enable_miqtop
       service_command("enable")
     end
 
@@ -58,6 +58,10 @@ module ApplianceConsole
     end
 
     private
+
+    def enable_miqtop
+      LinuxAdmin.run("chkconfig", :params => {"--add" => "miqtop"})  # Is this really needed?
+    end
 
     def run_service(service, action)
       LinuxAdmin::Service.new(service).send(action)

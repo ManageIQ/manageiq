@@ -54,6 +54,14 @@ describe ApplianceConsole::ServiceGroup do
   end
 
   # this is private, but since we are stubbing it, make sure it works
+  context "#enable_miqtop" do
+    it "calls chkconfig" do
+      expect(LinuxAdmin).to receive(:run).with("chkconfig", :params => {"--add" => "miqtop"})
+      group.send(:enable_miqtop)
+    end
+  end
+
+  # this is private, but since we are stubbing it, make sure it works
   context "#run_service" do
     it "invokes LinuxAdmin service call" do
       stub = double
@@ -65,7 +73,8 @@ describe ApplianceConsole::ServiceGroup do
 
   shared_examples_for "service management" do |command|
     it "##{command}" do
-      LinuxAdmin.should_receive(:run).with("chkconfig", :params => {"--add" => "miqtop"}) if command == "enable"
+      expect(group).to receive(:enable_miqtop) if command == "enable"
+
       expected_calls = group.send("to_#{command}")
 
       # Hack until LinuxAdmin::Service start handles detaching.
