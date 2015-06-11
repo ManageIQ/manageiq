@@ -1,3 +1,5 @@
+require 'openstack/openstack_configuration_parser'
+
 class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
   belongs_to :availability_zone
 
@@ -134,10 +136,24 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
 
         # save all changes
         host_service_group_openstack.save
+        # parse files into attributes
+        refresh_custom_attributes_from_conf_files(files) unless files.blank?
       end
     end
   rescue => err
     _log.log_backtrace(err)
     raise err
+  end
+
+  def refresh_custom_attributes_from_conf_files(files)
+    # Will parse all conf files and save them to CustomAttribute
+    files.select { |x| x.name.include?('.conf') }.each do |file|
+      save_custom_attributes(file) if file.contents
+    end
+  end
+
+  def save_custom_attributes(file)
+    hashes = OpenstackConfigurationParser.parse(file.contents)
+    EmsRefresh.save_custom_attributes_inventory(file, hashes, :scan) if hashes
   end
 end
