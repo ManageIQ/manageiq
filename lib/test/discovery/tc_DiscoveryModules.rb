@@ -13,7 +13,7 @@ require 'minitest/unit'
 
 module MiqDiscovery
 	
-	class TestDiscoveryModules < MiniTest::Unit::TestCase
+	class TestDiscoveryModules < Minitest::Test
 		def setup
 #			unless $log
 #				$:.push("#{File.dirname(__FILE__)}/../../util")

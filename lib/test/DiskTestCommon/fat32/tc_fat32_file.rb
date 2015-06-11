@@ -13,7 +13,7 @@ require 'MiqFS'
 $:.push("#{File.dirname(__FILE__)}/..")
 require 'FSTestUtil'
 
-class Fat32TestFile < MiniTest::Unit::TestCase
+class Fat32TestFile < Minitest::Test
 	
 	CONDITIONS = ['fs_type', 'fat32']
 	TEST_DB = "#{File.dirname(__FILE__)}/../../vms.yml"

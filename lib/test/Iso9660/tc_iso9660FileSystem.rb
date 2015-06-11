@@ -49,7 +49,7 @@ def Dir(fs)
 	end
 end
 
-class TestIso9660FileSystem < MiniTest::Unit::TestCase
+class TestIso9660FileSystem < Minitest::Test
 	
 	def test_miq_fs
 		puts "Testing file system"

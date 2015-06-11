@@ -5,7 +5,7 @@ require 'enumerator'
 require 'minitest/unit'
 
 module DiskTestCommon
-  class TestMiqDisk < MiniTest::Unit::TestCase
+  class TestMiqDisk < Minitest::Test
     FILE_PATH = (Platform::IMPL == :macosx ? "/Volumes" : "/mnt") + "/manageiq/fleecing_test/images/"
 
     FILE_DESC_4GB    = FILE_PATH + "disks/DiskTestCommon_MiqDisk_Flat4GB.vmdk"
@@ -57,7 +57,7 @@ module DiskTestCommon
         diskInfo.fileName = filename
 
         d = MiqDisk.getDisk(diskInfo)
-        assert_not_nil(MiqDisk, d)
+        refute_nil(MiqDisk, d)
         d.close
       end
     end

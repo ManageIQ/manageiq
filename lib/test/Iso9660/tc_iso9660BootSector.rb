@@ -8,7 +8,7 @@ $:.push("#{File.dirname(__FILE__)}/../../fs/iso9660")
 require 'Iso9660BootSector'
 include Iso9660
 
-class TestIso9660BootSector < MiniTest::Unit::TestCase
+class TestIso9660BootSector < Minitest::Test
 	
 	def test_boot_sector
 		puts "Testing boot sector"

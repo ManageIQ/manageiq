@@ -13,7 +13,7 @@ $:.push("#{File.dirname(__FILE__)}/../../fs/MiqFS")
 require 'MiqFS'
 
 # WINDOWS SPECIFIC.
-class TestReg < MiniTest::Unit::TestCase
+class TestReg < Minitest::Test
 	
 	#define registry structures
 	REGISTRY_HEADER_REGF = BinaryStruct.new([
@@ -82,7 +82,7 @@ class TestReg < MiniTest::Unit::TestCase
 		@disks.each do |disk|
 			next if disk.nil?
 			res, h = disk.dk.close if disk.dk
-			assert_not_equal(h, -1) if h
+			refute_equal(h, -1) if h
 		end
 	end
 	

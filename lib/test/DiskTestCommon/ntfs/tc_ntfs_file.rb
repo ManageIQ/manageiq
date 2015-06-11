@@ -13,7 +13,7 @@ require 'MiqFS'
 $:.push("#{File.dirname(__FILE__)}/..")
 require 'FSTestUtil'
 
-class NtfsTestFile < MiniTest::Unit::TestCase
+class NtfsTestFile < Minitest::Test
 	
 	CONDITIONS = ['fs_type', 'ntfs']
 	TEST_DB = "#{File.dirname(__FILE__)}/../../vms.yml"
