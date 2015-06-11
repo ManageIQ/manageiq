@@ -16,7 +16,7 @@
       -# charts on a dashboard screen
       - WidgetPresenter.chart_data.push(:xml => datum)
       - chart_index = WidgetPresenter.chart_data.length - 1
-      - chart_data = YAML.load(datum) if Charting.backend == :jqplot
+      - chart_data = Charting.deserialized(datum)
 
       = chart_local(chart_data,
                     :id     => "miq_widgetchart_#{chart_index}".html_safe,
