@@ -281,10 +281,15 @@ module EmsRefresh::SaveInventory
     self.store_ids_for_new_records(parent.firewall_rules, hashes, find_key)
   end
 
-  def save_custom_attributes_inventory(parent, hashes)
+  def save_custom_attributes_inventory(parent, hashes, mode = :refresh)
     return if hashes.nil?
-    deletes = parent.custom_attributes(true).dup
-    save_inventory_multi(:custom_attributes, parent, hashes, deletes, [:section, :name])
+
+    deletes = case mode
+              when :refresh then nil
+              when :scan    then parent.custom_attributes(true).dup
+              end
+
+    save_inventory_multi(:custom_attributes, parent, hashes, deletes, [:name, :section])
   end
 
   def save_ems_custom_attributes_inventory(parent, hashes)
