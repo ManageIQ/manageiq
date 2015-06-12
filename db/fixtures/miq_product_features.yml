@@ -3957,6 +3957,17 @@
       :feature_type: control
       :identifier: container_tag
 
+  # Container Topology
+  - :name: Containers Topology
+    :description: Containers Topology
+    :feature_type: node
+    :identifier: container_topology
+    :children:
+      - :name: View
+        :description: View Containers Topology
+        :feature_type: view
+        :identifier: container_topology_view
+
 # Foreman
 - :name: Configuration Management
   :description: Everything under Configuration Management

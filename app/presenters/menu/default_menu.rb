@@ -90,6 +90,8 @@ module Menu
                          'container_image_registry',
                          {:feature => 'container_image_registry_show_list'},
                          '/container_image_registry'),
+          Menu::Item.new('container_topology', N_('Topology'), 'container_topology',
+                         {:feature => 'container_topology', :any => true}, '/container_topology')
         ])
       end
 
