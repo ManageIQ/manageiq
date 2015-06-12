@@ -215,7 +215,6 @@ module UiConstants
       :ontapstoragevolume    => "list",
       :orchestrationstack    => "list",
       :orchestrationtemplate => "list",
-      :service               => "list",
       :servicetemplate       => "list",
       :storagemanager        => "list",
       :miqtask               => "list",
