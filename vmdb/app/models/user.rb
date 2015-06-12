@@ -910,6 +910,11 @@ class User < ActiveRecord::Base
     Thread.current[:userid] = saved_userid
   end
 
+  def self.current_user=(user)
+    Thread.current[:user]   = user
+    Thread.current[:userid] = user.try(:userid)
+  end
+
   def self.current_userid=(userid)
     Thread.current[:user]   = nil
     Thread.current[:userid] = userid

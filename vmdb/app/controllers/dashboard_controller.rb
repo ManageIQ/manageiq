@@ -708,11 +708,12 @@ class DashboardController < ApplicationController
     session[:winW]     = winw
     session['referer'] = referer
 
+    # Set the current user/userid in this thread for models to use
+    User.current_user = db_user
+
     return nil if db_user.nil? || !db_user.userid
     session[:userid] = db_user.userid
 
-    # Set the current userid in the User class for this thread for models to use
-    User.current_userid = session[:userid]
 
     session[:username] = db_user.name
 
