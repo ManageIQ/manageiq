@@ -3,7 +3,7 @@ class CreateContainerGroups < ActiveRecord::Migration
     create_table :container_groups do |t|
       t.string     :ems_ref
       t.string     :name
-      t.timestamp  :creation_timestamp
+      t.timestamp  :creation_timestamp, :null => true
       t.string     :namespace
       t.string     :resource_version
       t.string     :restart_policy

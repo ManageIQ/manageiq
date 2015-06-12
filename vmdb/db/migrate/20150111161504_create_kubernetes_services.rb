@@ -3,7 +3,7 @@ class CreateKubernetesServices < ActiveRecord::Migration
     create_table :container_services do |t|
       t.string     :ems_ref
       t.string     :name
-      t.timestamp  :creation_timestamp
+      t.timestamp  :creation_timestamp, :null => true
       t.string     :resource_version
       t.string     :namespace
       t.string     :session_affinity

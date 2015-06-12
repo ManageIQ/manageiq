@@ -4,8 +4,8 @@ class CreateChargebackRates < ActiveRecord::Migration
       t.string      :guid, :limit => 36
       t.string      :description
       t.string      :rate_type
-      t.timestamp   :created_on
-      t.timestamp   :updated_on
+      t.timestamp   :created_on, :null => true
+      t.timestamp   :updated_on, :null => true
     end
 
     create_table :chargeback_rate_details do |t|
@@ -19,8 +19,8 @@ class CreateChargebackRates < ActiveRecord::Migration
       t.string      :per_unit
       t.string      :friendly_rate
       t.integer     :chargeback_rate_id
-      t.timestamp   :created_on
-      t.timestamp   :updated_on
+      t.timestamp   :created_on, :null => true
+      t.timestamp   :updated_on, :null => true
     end
   end
 

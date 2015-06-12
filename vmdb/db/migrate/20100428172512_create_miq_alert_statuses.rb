@@ -4,7 +4,7 @@ class CreateMiqAlertStatuses < ActiveRecord::Migration
       t.integer     :miq_alert_id
       t.integer     :resource_id
       t.string      :resource_type
-      t.timestamp   :evaluated_on
+      t.timestamp   :evaluated_on, :null => true
     end
   end
 

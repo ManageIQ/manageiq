@@ -3,7 +3,7 @@ class CreateReplicationControllers < ActiveRecord::Migration
     create_table :container_replication_controllers do |t|
       t.string     :ems_ref
       t.string     :name
-      t.timestamp  :creation_timestamp
+      t.timestamp  :creation_timestamp, :null => true
       t.belongs_to :ems, :type => :bigint
       t.string     :resource_version
       t.string     :namespace
