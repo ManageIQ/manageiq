@@ -81,7 +81,7 @@ function miqOnResize() {
   if (typeof dhxLayout != "undefined") {
     dhxLayout.setSizes();
   }
-  miqGetBrowserSize();
+  miqBrowserSizeTimeout();
 }
 
 // Initialize the widget pulldown on the dashboard
@@ -605,35 +605,29 @@ function DoNav(theUrl) {
 
 // Routines to get the size of the window
 // original reference: http://www.communitymx.com/blog/index.cfm?newsid=622
-var size_timer = false;
+var miqSizeTimer = false;
 
-// Get the size and pass to the server
-function miqGetBrowserSize() {
-  if (size_timer) {
+function miqBrowserSizeTimeout() {
+  if (miqSizeTimer) {
     return;
   }
-  size_timer = true;
+  miqSizeTimer = true;
   setTimeout(miqResetSizeTimer, 1000);
 }
 
 function miqResetSizeTimer() {
-  size_timer = false;
-  var theArray = miqGetSize();
+  miqSizeTimer = false;
+  var sizes = miqGetSize();
   var url = "/dashboard/window_sizes";
-  var args = [];
   var offset = 427;
   var h;
-
-  args.push("width");
-  args.push(theArray[0]);
-  args.push("height");
-  args.push(theArray[1]);
+  var args = {'width': sizes[0], 'height': sizes[1]}
 
   if (typeof xml != "undefined") {
     // If grid xml is available for reload
     if ($('#list_grid').length) {
       // Adjust certain elements, if present
-      h = theArray[1] - offset;
+      h = sizes[1] - offset;
       if (h < 200) {
         h = 200;
       }
@@ -641,7 +635,7 @@ function miqResetSizeTimer() {
       gtl_list_grid.clearAll();
       gtl_list_grid.parse(xml);
     } else if ($('#logview').length) {
-      h = theArray[1] - offset;
+      h = sizes[1] - offset;
       if (h < 200) {
         h = 200;
       }
@@ -650,9 +644,10 @@ function miqResetSizeTimer() {
   }
 
   // Send the new values to the server
-  miqPassFields(url, args);
+  miqJqueryRequest(miqPassFields(url, args));
 }
 
+// Get the size and pass to the server
 function miqGetSize() {
   var myWidth = 0;
   var myHeight = 0;
@@ -679,13 +674,7 @@ function miqGetSize() {
 
 // Pass fields to server given a URL and fields in name/value pairs
 function miqPassFields(url, args) {
-  url += '?';
-
-  for (var i = 0; i < args.length; i += 2) {
-    url += args[i] + '=' + args[i + 1] + '&';
-  }
-
-  miqJqueryRequest(url);
+  return url + '?' + $.param(args);
 }
 
 // Create a new div to put the notification area at the bottom of the screen whenever the page loads
@@ -1265,13 +1254,9 @@ function miqBuildMainLayout(parentLayout, header) {
 
 function miqExplorerResize(e) {
   var url = "/dashboard/window_sizes";
-  var args = [];
-  args.push("exp_controller");
-  args.push(miq_controller);
-  args.push("exp_left");
-  args.push(e.newValue);
+  var args = {'exp_controller': miq_controller, 'exp_left': e.newValue}
   // Send the new values to the server
-  miqPassFields(url, args);
+  miqJqueryRequest(miqPassFields(url, args));
 }
 
 function miqAccordionChange(event, ui, url) {
