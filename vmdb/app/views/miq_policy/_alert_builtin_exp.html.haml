@@ -109,7 +109,7 @@
         = h(option[:values][@alert.expression[:options][:trend_direction] || "none"])
         - if @alert.expression[:options][:trend_direction].to_s.ends_with?("more_than")
           = h(@alert.expression[:options][:trend_steepness])
-          = h(@temp[:perf_column_unit])
+          = h(@perf_column_unit)
           = _('Per Minute')
   - when :debug_trace
     %td.key
@@ -179,13 +179,13 @@
             "data-miq_sparkle_off" => true,
             "data-miq_observe"     => observe)
       - else
-        - if @temp[:ems].blank?
+        - if @ems.blank?
           %span{:style => "color: red;"}
             = _("%s no longer exists, this alert must be reconfigured") % ui_lookup(:model => "ExtManagementSystem")
         - else
-          = h(@temp[:ems].name)
+          = h(@ems.name)
   - when :ems_alarm_mor
-    - if @edit || @temp[:ems]
+    - if @edit || @ems
       - # Show if editing or a valid EMS is configured
       %td.key
         = h(option[:description])

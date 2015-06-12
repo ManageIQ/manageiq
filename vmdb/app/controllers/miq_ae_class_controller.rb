@@ -184,16 +184,16 @@ class MiqAeClassController < ApplicationController
           if !details_cls.nil?
             records += details_cls.flatten.sort_by { |d| [d.display_name.to_s, d.name.to_s] }
           end
-          @temp[:grid_ns_xml] = build_details_grid(records,false)
-          @temp[:combo_xml] = get_combo_xml([MiqAeField.new])
-          @temp[:dtype_combo_xml] = get_dtype_combo_xml([MiqAeField.new])   # passing fields because that's how many combo boxes we need
+          @grid_ns_xml = build_details_grid(records,false)
+          @combo_xml = get_combo_xml([MiqAeField.new])
+          @dtype_combo_xml = get_dtype_combo_xml([MiqAeField.new])   # passing fields because that's how many combo boxes we need
           @sb[:active_tab] = "details"
           set_right_cell_text(x_node, @record)
         end
       else
         rec = MiqAeNamespace.all(:conditions => {:parent_id=>nil})
         @record = nil
-        @temp[:grid_xml] = build_toplevel_grid(rec)
+        @grid_xml = build_toplevel_grid(rec)
         @right_cell_text = "Datastore"
         @sb[:active_tab] = "namespaces"
         set_right_cell_text(x_node)
@@ -282,7 +282,6 @@ class MiqAeClassController < ApplicationController
 
     presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
-      :temp        => @temp,
     )
 
     if add_nodes
@@ -364,7 +363,7 @@ class MiqAeClassController < ApplicationController
 
     if !@in_a_form || (params[:pressed] && params[:pressed].ends_with?("_delete"))
       presenter[:set_visible_elements][:params_div] =
-        @sb[:active_tab] == "methods" && @temp[:grid_methods_xml]
+        @sb[:active_tab] == "methods" && @grid_methods_xml
     end
 
     # Clear the JS gtl_list_grid var if changing to a type other than list
@@ -1010,9 +1009,9 @@ class MiqAeClassController < ApplicationController
       @edit[:new][:fields].push(field)
     end
     # combo to show existing fields
-    @temp[:combo_xml]       = get_combo_xml(@edit[:new][:fields].sort_by { |a| [a['priority'].to_i] })
+    @combo_xml       = get_combo_xml(@edit[:new][:fields].sort_by { |a| [a['priority'].to_i] })
     # passing in fields because that's how many combo boxes we need
-    @temp[:dtype_combo_xml] = get_dtype_combo_xml(@edit[:new][:fields].sort_by { |a| [a['priority'].to_i] })
+    @dtype_combo_xml = get_dtype_combo_xml(@edit[:new][:fields].sort_by { |a| [a['priority'].to_i] })
     @edit[:current]         = copy_hash(@edit[:new])
     @right_cell_text = @edit[:rec_id].nil? ?
                         _("Adding a new %s") %  ui_lookup(:model => "Class Schema") :
@@ -1589,8 +1588,8 @@ class MiqAeClassController < ApplicationController
   # AJAX driven routine to select a classification entry
   def field_select
     fields_get_form_vars
-    @temp[:combo_xml] = get_combo_xml(@edit[:new][:fields])
-    @temp[:dtype_combo_xml] = get_dtype_combo_xml(@edit[:new][:fields])   # passing fields because that's how many combo boxes we need
+    @combo_xml = get_combo_xml(@edit[:new][:fields])
+    @dtype_combo_xml = get_dtype_combo_xml(@edit[:new][:fields])   # passing fields because that's how many combo boxes we need
     session[:field_data] = Hash.new
     @edit[:new_field][:substitute] = session[:field_data][:substitute] = true
     @changed = (@edit[:new] != @edit[:current])
@@ -1605,8 +1604,8 @@ class MiqAeClassController < ApplicationController
   def field_accept
     fields_get_form_vars
     @changed = (@edit[:new] != @edit[:current])
-    @temp[:combo_xml] = get_combo_xml(@edit[:new][:fields])
-    @temp[:dtype_combo_xml] = get_dtype_combo_xml(@edit[:new][:fields])   # passing fields because that's how many combo boxes we need
+    @combo_xml = get_combo_xml(@edit[:new][:fields])
+    @dtype_combo_xml = get_dtype_combo_xml(@edit[:new][:fields])   # passing fields because that's how many combo boxes we need
     render :update do |page|                    # Use JS to update the display
       page.replace_html("class_fields_div", :partial=>"class_fields")
       page << javascript_for_miq_button_visibility(@changed)
@@ -1617,8 +1616,8 @@ class MiqAeClassController < ApplicationController
   # AJAX driven routine to delete a classification entry
   def field_delete
     fields_get_form_vars
-    @temp[:combo_xml]       = get_combo_xml(@edit[:new][:fields])
-    @temp[:dtype_combo_xml] = get_dtype_combo_xml(@edit[:new][:fields])
+    @combo_xml       = get_combo_xml(@edit[:new][:fields])
+    @dtype_combo_xml = get_dtype_combo_xml(@edit[:new][:fields])
 
     if params.key?(:id) && @edit[:fields_to_delete].exclude?(params[:id])
       @edit[:fields_to_delete].push(params[:id])
@@ -2773,8 +2772,8 @@ private
       set_root_node
     else
       @ae_class             = @record.ae_class
-      @temp[:ae_class_id]   = @ae_class.id
-      @temp[:grid_inst_xml] = build_fields_grid(@ae_class.ae_fields, @record)
+      @ae_class_id   = @ae_class.id
+      @grid_inst_xml = build_fields_grid(@ae_class.ae_fields, @record)
       @sb[:active_tab]      = "instances"
       domain_overrides
       set_right_cell_text(x_node, @record)
@@ -2787,9 +2786,9 @@ private
       set_root_node
     else
       @ae_class = @record.ae_class
-      @temp[:ae_class_id] = @ae_class.id
+      @ae_class_id = @ae_class.id
       inputs = @record.inputs
-      @temp[:grid_methods_xml] = inputs.blank? ? nil : build_methods_grid(inputs)
+      @grid_methods_xml = inputs.blank? ? nil : build_methods_grid(inputs)
       @sb[:squash_state] = true
       @sb[:active_tab] = "methods"
       domain_overrides
@@ -2800,15 +2799,15 @@ private
   def get_class_node_info(id)
     @sb[:active_tab] = "instances" if !@in_a_form && !params[:button] && !params[:pressed]
     @record = @ae_class = MiqAeClass.find_by_id(from_cid(id[1]))
-    @temp[:ae_class_id] = @record.id
+    @ae_class_id = @record.id
     if @record.nil?
       set_root_node
     else
-      @temp[:grid_inst_list_xml] = build_details_grid(@record.ae_instances)
-      @temp[:combo_xml] = get_combo_xml(@record.ae_fields)
+      @grid_inst_list_xml = build_details_grid(@record.ae_instances)
+      @combo_xml = get_combo_xml(@record.ae_fields)
       # passing fields because that's how many combo boxes we need
-      @temp[:dtype_combo_xml] = get_dtype_combo_xml(@record.ae_fields)
-      @temp[:grid_methods_list_xml] = build_details_grid(@record.ae_methods)
+      @dtype_combo_xml = get_dtype_combo_xml(@record.ae_fields)
+      @grid_methods_list_xml = build_details_grid(@record.ae_methods)
       domain_overrides
       set_right_cell_text(x_node, @record)
     end

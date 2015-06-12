@@ -25,8 +25,7 @@ module ReportFormatter
       if mri.extras[:browser_name] == "explorer" || mri.extras[:tl_preview]
         tl_xml = MiqXml.load("<data/>")
       else
-        @temp ||= Hash.new
-        @temp[:events] = Array.new
+        @events = Array.new
       end
       tlfield = mri.timeline[:field].split("-") # Split the table and field
       if tlfield.first.include?(".")                    # If table has a period (from a sub table)
@@ -43,7 +42,7 @@ module ReportFormatter
       if mri.extras[:browser_name] == "explorer" || mri.extras[:tl_preview]
         output << tl_xml.to_s
       else
-        output << @temp.to_json
+        output << { :events => @events }.to_json
       end
     end
 
@@ -285,7 +284,7 @@ module ReportFormatter
         })
         event.text = e_text
       else
-        @temp[:events].push({
+        @events.push({
             "start"=>format_timezone(row[col],tz,'view').to_time,
             "title"=>CGI.escapeHTML(e_title.length < 20 ? e_title : e_title[0...17] + "..."),
             "icon"=>e_icon,

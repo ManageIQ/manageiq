@@ -438,8 +438,8 @@ class ApplicationController < ActionController::Base
   end
 
   def build_vm_host_array
-    @temp[:tree_hosts] = Host.where(:id => (@sb[:tree_hosts_hash] || {}).keys)
-    @temp[:tree_vms]   = Vm.where(  :id => (@sb[:tree_vms_hash]   || {}).keys)
+    @tree_hosts = Host.where(:id => (@sb[:tree_hosts_hash] || {}).keys)
+    @tree_vms   = Vm.where(  :id => (@sb[:tree_vms_hash]   || {}).keys)
   end
 
   # Show the current widget report in pdf format
@@ -620,27 +620,27 @@ class ApplicationController < ActionController::Base
     # build the ae tree to show the tree select box for entry point
     if x_active_tree == :automate_tree && @edit && @edit[:new][:fqname]
       nodes = @edit[:new][:fqname].split("/")
-      @temp[:open_nodes] = Array.new
+      @open_nodes = Array.new
       #if there are more than one nested namespaces
       nodes.each_with_index do |node,i|
         if i == nodes.length-1
           #check if @cls is there, to make sure the class/instance still exists in Automate db
           inst = @cls ? MiqAeInstance.find_by_class_id_and_name(@cls.id,nodes[i]) : nil
           #show this as selected/expanded node when tree loads
-          @temp[:open_nodes].push("aei-#{inst.id}") if inst
-          @temp[:active_node] = "aei-#{to_cid(inst.id)}" if inst
+          @open_nodes.push("aei-#{inst.id}") if inst
+          @active_node = "aei-#{to_cid(inst.id)}" if inst
         elsif i == nodes.length-2
           @cls = MiqAeClass.find_by_namespace_id_and_name(@ns.id,nodes[i])
-          @temp[:open_nodes].push("aec-#{to_cid(@cls.id)}") if @cls
+          @open_nodes.push("aec-#{to_cid(@cls.id)}") if @cls
         else
           @ns = MiqAeNamespace.find_by_name(nodes[i])
-          @temp[:open_nodes].push("aen-#{to_cid(@ns.id)}") if @ns
+          @open_nodes.push("aen-#{to_cid(@ns.id)}") if @ns
         end
       end
     end
 
     tree = TreeBuilderAeClass.new(name, type, @sb)
-    @temp[:automate_tree] = tree.tree_nodes if name == :automate_tree
+    @automate_tree = tree.tree_nodes if name == :automate_tree
     tree
   end
 
@@ -2368,7 +2368,6 @@ class ApplicationController < ActionController::Base
     # Commented following line in sprint 39. . . controllers should load @edit if they need it and we will
     # automatically save it in the session if it's present when the transaction ends
 #   @edit = session[:edit] ? session[:edit] : nil
-    @temp = Hash.new    # to hold tree/xml data that was stored in session previously
     return true     # If we don't return true, the entire session stops cold
   end
 

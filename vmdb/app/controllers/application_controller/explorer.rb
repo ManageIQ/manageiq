@@ -303,7 +303,7 @@ module ApplicationController::Explorer
     options.merge!({:parent_id => pid}) if object.kind_of?(MiqEvent) || object.kind_of?(MiqAction)
 
     # open nodes to show selected automate entry point
-    x_tree(options[:tree])[:open_nodes] = @temp[:open_nodes].dup if @temp && @temp[:open_nodes]
+    x_tree(options[:tree])[:open_nodes] = @open_nodes.dup if @open_nodes
 
     node = TreeNodeBuilder.build(object, pid, options)
 
@@ -413,9 +413,9 @@ module ApplicationController::Explorer
       return count_only ? objects.length : objects
     when :db
       objects = Array.new
-      @temp[:default_ws] = MiqWidgetSet.where_unique_on("default", nil, nil).where(:read_only => true).first
-      text = "#{@temp[:default_ws].description} (#{@temp[:default_ws].name})"
-      objects.push(:id=>to_cid(@temp[:default_ws].id),:text=>text, :image=>"dashboard", :tip=>text )
+      @default_ws = MiqWidgetSet.where_unique_on("default", nil, nil).where(:read_only => true).first
+      text = "#{@default_ws.description} (#{@default_ws.name})"
+      objects.push(:id=>to_cid(@default_ws.id),:text=>text, :image=>"dashboard", :tip=>text )
       objects.push({:id=>"g", :text=>"All Groups", :image=>"folder", :tip=>"All Groups"})
       return objects
     when :dialog_edit

@@ -199,7 +199,7 @@ class ReportController < ApplicationController
       self.x_active_accord ||= "export"
     end
 
-    @temp[:widget_nodes] ||= []
+    @widget_nodes ||= []
     @sb[:node_clicked] = false
     x_node_set("root", :roles_tree) if params[:load_edit_err]
     @flash_array = @sb[:flash_msg] unless @sb[:flash_msg].blank?
@@ -208,7 +208,7 @@ class ReportController < ApplicationController
     @sb[:rep_tree_build_time] = Time.now.utc
     @sb[:active_tab] = "report_info"
     @right_cell_text.gsub!(/'/, "&apos;")      # Need to escape single quote in title to load in right cell
-    @temp[:x_edit_buttons_locals] = set_form_locals if @in_a_form
+    @x_edit_buttons_locals = set_form_locals if @in_a_form
     # show form buttons after upload is pressed
     @collapse_c_cell = !@in_a_form && !@pages && !saved_report_paging?
     render :layout => "explorer"
@@ -216,7 +216,7 @@ class ReportController < ApplicationController
 
   def accordion_select
     @sb[:flash_msg]   = []
-    @temp[:schedules] = nil
+    @schedules = nil
     @edit             = nil
     if params[:id]
       self.x_active_accord = params[:id]
@@ -399,7 +399,7 @@ class ReportController < ApplicationController
     x_tree_init(name, type, "Import / Export", :open_all => true, :add_root => false)
     tree_nodes = x_build_dynatree(x_tree(name))
 
-    @temp[name]    = tree_nodes.to_json          # JSON object for tree loading
+    instance_variable_set :"@#{name}", tree_nodes.to_json          # JSON object for tree loading
     x_node_set(tree_nodes.first[:key], name) unless x_node(name)  # Set active node to root if not set
   end
 
@@ -563,11 +563,11 @@ class ReportController < ApplicationController
   def get_export_reports
     @changed = session[:changed] = true
     @in_a_form = true
-    @temp[:export_reports] = Hash.new
+    @export_reports = Hash.new
     user = User.find_by_userid(session[:userid])
     MiqReport.all.each do |rep|
       if rep.rpt_type == "Custom" && (user.admin_user? || (rep.miq_group && rep.miq_group.id == user.current_group.id))
-        @temp[:export_reports][rep.name] = rep.id
+        @export_reports[rep.name] = rep.id
       end
     end
   end
@@ -682,7 +682,6 @@ class ReportController < ApplicationController
 
     presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
-      :temp        => @temp,
     )
     # Clicked on right cell record, open the tree enough to show the node, if not already showing
     # Open the parent nodes of selected record, if not open

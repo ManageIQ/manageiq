@@ -4,7 +4,7 @@
     #miq_timeline{:style => "height: 380px; overflow:hidden; border: 1px solid #aaa"}
     = render(:partial => "layouts/timeline",
       :locals         => {:bands => @sb[:bottlenecks][:report].timeline[:bands],
-        :tl_json                 => @temp[:tl_json].html_safe,
+        :tl_json                 => @tl_json.html_safe,
         :data_action             => "getTLdata",
         :position_time           => session[:tl_position]})
     - if @sb[:bottlenecks][:report].filter_summary

@@ -176,12 +176,12 @@
           %hr
         - when "evaluate_alerts"
           %h3=_("Alerts to Evaluate")
-          - if @temp[:alert_guids].empty?
+          - if @alert_guids.empty?
             = render :partial => 'layouts/info_msg', :locals => {:message => _("No Alerts have been selected.")}
           - else
             %table.table.table-striped.table-bordered.table-hover
               %tbody
-                - @temp[:alert_guids].sort_by(&:description).each do |alert|
+                - @alert_guids.sort_by(&:description).each do |alert|
                   - id = "al-#{to_cid(alert.id)}"
                   %tr{:title => _('View This Alert'),
                     :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=alert")}
@@ -199,7 +199,7 @@
                 = h(ui_lookup(:table => @action.options[:parent_type]))
             %tr
               %td.key=_("Categories")
-              %td= h(@temp[:cats])
+              %td= h(@cats)
           %hr
         - when "remove_tags"
           %h3=_("Remove Tags")
@@ -207,7 +207,7 @@
             %tr
               %td.key=_("Categories")
               %td
-                = h(@temp[:cats])
+                = h(@cats)
           %hr
 
         - if x_active_tree == :action_tree

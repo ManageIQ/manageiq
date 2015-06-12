@@ -24,7 +24,7 @@
         = render(:partial => "layouts/dynatree",
                  :locals => {:tree_id             => "automate_treebox",
                              :tree_name           => "automate_tree",
-                             :json_tree           => @temp[:automate_tree],
+                             :json_tree           => @automate_tree,
                              :onclick             => "cfmeOnClick_SelectAETreeNode",
                              :tree_root           => "#{x_node(:automate_tree)}",
                              :base_id             => "root",

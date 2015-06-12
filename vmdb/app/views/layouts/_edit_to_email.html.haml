@@ -11,8 +11,8 @@
           - if @edit[:new][:email][:to].blank?
             = _("None")
           - else
-            - if @temp[:email_to].present?
-              - emails = @temp[:email_to].sort_by { |_email, display_email| display_email }.collect { |email, _display_email| email }
+            - if @email_to.present?
+              - emails = @email_to.sort_by { |_email, display_email| display_email }.collect { |email, _display_email| email }
             - elsif @edit[:new][:email][:to].present?
               - emails = @edit[:new][:email][:to].sort
             - else

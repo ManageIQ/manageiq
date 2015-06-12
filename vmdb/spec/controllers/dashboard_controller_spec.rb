@@ -70,7 +70,6 @@ describe DashboardController do
 
       controller.instance_variable_set(:@sb, {:active_db => ws.name})
       controller.instance_variable_set(:@tabs, [])
-      controller.instance_variable_set(:@temp, {})
       controller.stub(:role_allows)
       session[:group] = user.current_group.id
       session[:userid] = user.userid

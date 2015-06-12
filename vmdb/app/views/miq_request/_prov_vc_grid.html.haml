@@ -21,7 +21,7 @@
             = "<#{_('None')}>"
           %td
           %td
-      - @temp[:vcs].each do |row|
+      - @vcs.each do |row|
         - cls = @edit[:new][:sysprep_custom_spec] && @edit[:new][:sysprep_custom_spec][0] == row.id.to_s ? "selected" : ""
         %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=#{row.id}&id=#{id}');"}
           - @edit[:vc_columns].each do |col|

@@ -106,7 +106,7 @@
           = render :partial => "diagnostics_cu_repair_tab"
     - elsif x_node.split("__").last.split("-")[0] == "svr"
       %ul.nav.nav-tabs
-        - if @sb[:selected_server_id] == @sb[:my_server_id] || @temp[:selected_server].started?
+        - if @sb[:selected_server_id] == @sb[:my_server_id] || @selected_server.started?
           = patternfly_tab_header("diagnostics_summary", @sb[:active_tab]) do
             = _("Summary")
           = patternfly_tab_header("diagnostics_workers", @sb[:active_tab]) do
@@ -126,7 +126,7 @@
         = patternfly_tab_header("diagnostics_timelines", @sb[:active_tab]) do
           = _("Timelines")
       .tab-content
-        - if @sb[:selected_server_id] == @sb[:my_server_id] || @temp[:selected_server].started?
+        - if @sb[:selected_server_id] == @sb[:my_server_id] || @selected_server.started?
           = patternfly_tab_content("diagnostics_summary", @sb[:active_tab]) do
             = render :partial => "diagnostics_summary_tab"
           = patternfly_tab_content("diagnostics_workers", @sb[:active_tab]) do
@@ -214,7 +214,7 @@
           - if @sb[:active_tab] == "db_summary"
             = render :partial => "db_summary"
       = patternfly_tab_content("db_details", "db_details") do
-        - if @sb[:active_tab] == "db_details" || (@sb[:active_tab] == "db_indexes" && (@temp[:vmdb_index]) || @temp[:indexes])
+        - if @sb[:active_tab] == "db_details" || (@sb[:active_tab] == "db_indexes" && (@vmdb_index) || @indexes)
           = render :partial => "db_details_tab"
       - if tree_node == "root"
         = patternfly_tab_content("db_indexes", @sb[:active_tab]) do

@@ -99,7 +99,6 @@ describe ApplicationController do
       custom_button.save
       controller.instance_variable_set(:@_params, {:id => custom_button.id})
       controller.instance_variable_set(:@custom_button, custom_button)
-      controller.instance_variable_set(:@temp, {:custom_button => custom_button})
       controller.instance_variable_set(:@sb,
                                        {:trees => {
                                            :ab_tree => {:active_node => "-ub-Vm_cb-10r51"}

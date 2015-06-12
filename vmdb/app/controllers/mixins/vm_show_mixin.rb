@@ -56,7 +56,7 @@ module VmShowMixin
               :no_reset      => true,
               :action_url    => action
              }
-    @temp[:x_edit_buttons_locals] = locals
+    @x_edit_buttons_locals = locals
   end
 
   # VM or Template show selected, redirect to proper controller, to get links on tasks screen working
@@ -184,7 +184,7 @@ module VmShowMixin
     root[:icon] = "vm.png"
     root[:title], root[:tooltip] = TreeBuilder.root_options(name)
 
-    @temp[name] = tree_nodes.to_json  # JSON object for tree loading
+    instance_variable_set :"@#{name}", tree_nodes.to_json  # JSON object for tree loading
     x_node_set(tree_nodes.first[:key], name) unless x_node(name)  # Set active node to root if not set
   end
 end

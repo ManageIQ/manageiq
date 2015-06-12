@@ -13,7 +13,7 @@ describe "ops/_settings_cu_collection_tab.html.haml" do
     }})
     assign(:session, {:tree_name => "clhosts_tree"})
     #creating simple tree for the view to render
-    assign(:temp, {:clhosts_tree => {"id"=>0, "item"=>{}}.to_json})
+    assign(:clhosts_tree, {"id"=>0, "item"=>{}}.to_json)
     render
     response.should have_selector("input#cl_toggle")
   end
@@ -26,7 +26,7 @@ describe "ops/_settings_cu_collection_tab.html.haml" do
     }})
     assign(:session, {:ds_tree_name => "cu_datastore_tree"})
     #creating simple tree for the view to render
-    assign(:temp, {:cu_datastore_tree => {"id"=>0, "item"=>{}}.to_json})
+    assign(:cu_datastore_tree, {"id"=>0, "item"=>{}}.to_json)
     render
     response.should have_selector("input#ds_toggle")
   end

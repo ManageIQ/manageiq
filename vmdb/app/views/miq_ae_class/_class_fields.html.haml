@@ -62,8 +62,7 @@
                     - if %w(aetype datatype).include?(fname)
                       - combo_id   = "fields_#{fname}_id#{i}"
                       - combo_name = "fields_#{fname}#{i}"
-                      - symbol     = (fname == 'aetype') ? :combo_xml : :dtype_combo_xml
-                      - xml_combo  = @temp[symbol][i]
+                      - xml_combo  = (fname == 'aetype' ? @combo_xml : @dtype_combo_xml)[i]
                       - combo_url  = "/miq_ae_class/fields_form_field_changed/#{@ae_class.id || 'new'}"
                       %div{:id => combo_id}
                       = render(:partial => 'layouts/dhtmlxcombo',

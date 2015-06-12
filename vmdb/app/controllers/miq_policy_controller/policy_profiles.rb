@@ -162,7 +162,7 @@ module MiqPolicyController::PolicyProfiles
     root[:tooltip] = "All Policy Profiles"
     root[:icon] = "folder.png"
 
-    @temp[name] = tree_nodes.to_json  # JSON object for tree loading
+    instance_variable_set :"@#{name}", tree_nodes.to_json  # JSON object for tree loading
     x_node_set(tree_nodes.first[:key], name) unless x_node(name)    # Set active node to root if not set
   end
 

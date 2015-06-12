@@ -8,8 +8,8 @@
       %td.key
         = _('Button Text')
       %td
-        = @temp[:custom_button].name
-        - display = @temp[:custom_button].options.key?(:display) ? @temp[:custom_button].options[:display] : true
+        = @custom_button.name
+        - display = @custom_button.options.key?(:display) ? @custom_button.options[:display] : true
         = check_box_tag(display, true, display, :disabled => true)
         &nbsp;
         = _('Display on Button')
@@ -17,12 +17,12 @@
       %td.key
         = _('Button Hover Text')
       %td.notwide
-        = @temp[:custom_button].description
+        = @custom_button.description
     %tr
       %td.key
         = _('Image')
       %td.notwide
-        %img{:src => "/images/icons/new/custom-#{@temp[:custom_button].options[:button_image]}.png", :align => "left", :width => "20", :height => "20"}
+        %img{:src => "/images/icons/new/custom-#{@custom_button.options[:button_image]}.png", :align => "left", :width => "20", :height => "20"}
     %tr
       %td.key
         = _('Dialog')
@@ -87,7 +87,7 @@
 %h3
   = _('Visibility')
 %table.style1
-  - show_to = @temp[:custom_button].visibility.nil? || (@temp[:custom_button].visibility && @temp[:custom_button].visibility[:roles] && @temp[:custom_button].visibility[:roles][0] == "_ALL_") ? _("To All") : _("By Role")
+  - show_to = @custom_button.visibility.nil? || (@custom_button.visibility && @custom_button.visibility[:roles] && @custom_button.visibility[:roles][0] == "_ALL_") ? _("To All") : _("By Role")
   %tbody
     %tr
       %td.key

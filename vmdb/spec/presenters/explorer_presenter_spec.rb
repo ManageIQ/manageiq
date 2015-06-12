@@ -4,7 +4,6 @@ describe ExplorerPresenter do
   context "partial methods" do
     before :each do
       @presenter = ExplorerPresenter.new
-      @presenter[:temp] = { :foo_tree => 'bar' }
       @el        = "test_element"
       @content   = "<div>Sample div element</div>"
     end

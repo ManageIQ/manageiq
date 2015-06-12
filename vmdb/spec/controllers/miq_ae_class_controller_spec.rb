@@ -269,7 +269,6 @@ describe MiqAeClassController do
           controller.instance_variable_set(:@sb,
                                            :active_tree => :ae_tree,
                                            :trees       => {:ae_tree => {:active_node => "aei-some_id"}})
-          controller.instance_variable_set(:@temp, {})
           controller.send(:get_instance_node_info, id)
           assigns(:sb)[:trees][:ae_tree][:active_node].should eq("root")
         end
@@ -287,7 +286,6 @@ describe MiqAeClassController do
           controller.instance_variable_set(:@sb,
                                            :active_tree => :ae_tree,
                                            :trees       => {:ae_tree => {:active_node => id.join("-")}})
-          controller.instance_variable_set(:@temp, {})
           controller.send(:get_instance_node_info, id)
           assigns(:record).name.should eq(miq_ae_instance.name)
           assigns(:domain_overrides).count.should eq(2)
@@ -303,7 +301,6 @@ describe MiqAeClassController do
           controller.instance_variable_set(:@sb,
                                            :active_tree => :ae_tree,
                                            :trees       => {:ae_tree => {:active_node => "aec-some_id"}})
-          controller.instance_variable_set(:@temp, {})
           controller.send(:get_instance_node_info, id)
           assigns(:sb)[:trees][:ae_tree][:active_node].should eq("root")
         end
@@ -320,7 +317,6 @@ describe MiqAeClassController do
           controller.instance_variable_set(:@sb,
                                            :active_tree => :ae_tree,
                                            :trees       => {:ae_tree => {:active_node => id.join("-")}})
-          controller.instance_variable_set(:@temp, {})
           controller.send(:get_class_node_info, id)
           assigns(:record).name.should eq(miq_ae_class.name)
           assigns(:domain_overrides).count.should eq(2)
@@ -336,7 +332,6 @@ describe MiqAeClassController do
           controller.instance_variable_set(:@sb,
                                            :active_tree => :ae_tree,
                                            :trees       => {:ae_tree => {:active_node => "aem-some_id"}})
-          controller.instance_variable_set(:@temp, {})
           controller.send(:get_instance_node_info, id)
           assigns(:sb)[:trees][:ae_tree][:active_node].should eq("root")
         end
@@ -354,7 +349,6 @@ describe MiqAeClassController do
           controller.instance_variable_set(:@sb,
                                            :active_tree => :ae_tree,
                                            :trees       => {:ae_tree => {:active_node => id.join("-")}})
-          controller.instance_variable_set(:@temp, {})
           controller.send(:get_method_node_info, id)
           assigns(:record).name.should eq(miq_ae_method.name)
           assigns(:domain_overrides).count.should eq(2)

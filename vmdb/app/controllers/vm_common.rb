@@ -229,8 +229,8 @@ module VmCommon
       drop_breadcrumb( {:name=>@record.name+" (Genealogy)", :url=>"/#{rec_cls}/show/#{@record.id}?display=#{@display}"} )
       #session[:base_id] = @record.id
       vmtree_nodes = vmtree(@record)
-      @temp[:vm_tree] = vmtree_nodes.to_json
-      @temp[:tree_name] = "genealogy_tree"
+      @vm_tree = vmtree_nodes.to_json
+      @tree_name = "genealogy_tree"
       @button_group = "vmtree"
     elsif @display == "compliance_history"
       count = params[:count] ? params[:count].to_i : 10
@@ -429,7 +429,7 @@ module VmCommon
     end
     @root = @record.snapshots.first.id if @root.nil? && @record.snapshots.size > 0
     session[:snap_selected] = @root if params[:display] == "snapshot_info"
-    @temp[:snap_selected] = Snapshot.find(session[:snap_selected]) unless session[:snap_selected].nil?
+    @snap_selected = Snapshot.find(session[:snap_selected]) unless session[:snap_selected].nil?
     snapshots = Array.new
     vms.each do |snap|
       if snap.parent_id.nil?
@@ -473,14 +473,14 @@ module VmCommon
 
   def snap_pressed
     session[:snap_selected] = params[:id]
-    @temp[:snap_selected] = Snapshot.find_by_id(session[:snap_selected])
+    @snap_selected = Snapshot.find_by_id(session[:snap_selected])
     @vm = @record = identify_record(x_node.split('-').last, VmOrTemplate)
-    if @temp[:snap_selected].nil?
+    if @snap_selected.nil?
       @display = "snapshot_info"
       add_flash(_("Last selected %s no longer exists") %  "Snapshot", :error)
     end
     build_snapshot_tree
-    @active = @temp[:snap_selected].current.to_i == 1 if @temp[:snap_selected]
+    @active = @snap_selected.current.to_i == 1 if @snap_selected
     @button_group = "snapshot"
     @explorer = true
     c_buttons, c_xml = build_toolbar_buttons_and_xml("x_vm_center_tb")
@@ -502,7 +502,7 @@ module VmCommon
 
   def disks
     #flag to show cursor as default in grid so rows don't look clickable
-    @temp[:ro_grid] = true
+    @ro_grid = true
     @grid_xml = build_disks_tree(@record)
   end
 
@@ -1590,7 +1590,6 @@ module VmCommon
     # Build presenter to render the JS command for the tree update
     presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
-      :temp        => @temp,
       :add_nodes   => add_nodes,         # Update the tree with any new nodes
       :delete_node => @delete_node,      # Remove a new node from the tree
     )

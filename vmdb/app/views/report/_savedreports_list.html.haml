@@ -15,7 +15,7 @@
       %strong * No Reports available.
     - else
       = render :partial => 'layouts/x_gtl'
-  - elsif x_active_tree == :savedreports_tree && x_node.split('-').length == 3 && !@report && @temp[:report_result]
+  - elsif x_active_tree == :savedreports_tree && x_node.split('-').length == 3 && !@report && @report_result
     = render :partial => 'report_status'
   - else
     = render :partial => 'layouts/info_msg', :locals => {:message => _("Choose a Report from the menus on the left.")}

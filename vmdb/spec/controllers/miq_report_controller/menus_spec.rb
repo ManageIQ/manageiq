@@ -8,7 +8,7 @@ describe ReportController do
         controller.stub(:menu_get_form_vars)
         controller.stub(:get_tree_data)
         controller.stub(:replace_right_cell)
-        controller.instance_variable_set(:@temp, {:rpt_menu => []})
+        controller.instance_variable_set(:@rpt_menu, [])
         controller.instance_variable_set(:@edit, {:new => {}})
         controller.instance_variable_set(:@sb, {:new => {}})
         controller.instance_variable_set(:@_params, {:button => "default"})

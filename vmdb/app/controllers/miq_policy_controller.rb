@@ -354,14 +354,14 @@ class MiqPolicyController < ApplicationController
     @download_action = "fetch_log"
     @server_options ||= Hash.new
     @server_options[:server_id] ||= MiqServer.my_server.id
-    @temp[:server] = MiqServer.my_server
+    @server = MiqServer.my_server
     drop_breadcrumb( {:name=>"Log", :url=>"/miq_ae_policy/log"} )
     render :action=>"show"
   end
 
   def refresh_log
     @log = $policy_log.contents(nil,1000)
-    @temp[:server] = MiqServer.my_server
+    @server = MiqServer.my_server
     add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
     render :update do |page|                    # Use JS to update the display
       page.replace_html("main_div", :partial=>"layouts/log_viewer")
@@ -552,7 +552,6 @@ class MiqPolicyController < ApplicationController
     replace_trees = @replace_trees if @replace_trees  #get_node_info might set this
     @explorer = true
 
-    # Build the JSON objects in @temp for trees to be replaced
     if replace_trees
       profile_build_tree        if replace_trees.include?(:policy_profile)
       policy_build_tree         if replace_trees.include?(:policy)
@@ -569,7 +568,6 @@ class MiqPolicyController < ApplicationController
     # Build a presenter to render the JS
     presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
-      :temp        => @temp,
     )
     r = proc { |opts| render_to_string(opts) }
 

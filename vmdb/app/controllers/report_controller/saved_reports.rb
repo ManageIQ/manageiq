@@ -80,7 +80,7 @@ module ReportController::SavedReports
           end
         end
       else      #report is queued/running/error
-        @temp[:report_result] = rr
+        @report_result = rr
       end
     else
       add_flash(_("Report is not authorized for the logged in user"), :error)
@@ -148,7 +148,7 @@ module ReportController::SavedReports
     root[:title]   = "All Saved Reports"
     root[:tooltip] = "All Saved Reports"
     root[:icon]    = "folder.png"
-    @temp[name]    = tree_nodes.to_json          # JSON object for tree loading
+    instance_variable_set :"@#{name}", tree_nodes.to_json          # JSON object for tree loading
     x_node_set(tree_nodes.first[:key], name) unless x_node(name)  # Set active node to root if not set
   end
 

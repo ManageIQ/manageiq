@@ -18,7 +18,7 @@
       %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=__ISO_IMG__NONE__&id=#{id}');"}
         %td
           = "<#{_('None')}>"
-      - @temp[:iso_imgs].each do |row|
+      - @iso_imgs.each do |row|
         - @id = row.id
         - cls = @edit[:new][:iso_image_id] && @edit[:new][:iso_image_id][0] == @id ? "selected" : ""
         %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=#{@id}&id=#{id}');"}

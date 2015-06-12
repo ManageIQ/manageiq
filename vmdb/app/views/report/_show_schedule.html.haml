@@ -30,8 +30,8 @@
       %td.key
         = _('To E-mail')
       %td
-        - unless @temp[:email_to].blank?
-          = h(@temp[:email_to].join(';'))
+        - unless @email_to.blank?
+          = h(@email_to.join(';'))
   %tr
     %td.key
       = _("Report Filter")

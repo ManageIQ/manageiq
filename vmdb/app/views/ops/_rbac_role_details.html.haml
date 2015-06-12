@@ -51,7 +51,7 @@
         = render(:partial => "layouts/dynatree",
                  :locals  => {:tree_id        => "features_treebox",
                               :tree_name      => "features_tree",
-                              :json_tree      => @temp[:features_tree],
+                              :json_tree      => @features_tree,
                               :checkboxes     => true,
                               :three_checks   => true,
                               :check_url      => "/ops/rbac_role_field_changed/",

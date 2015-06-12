@@ -169,7 +169,7 @@ class OpsController < ApplicationController
     end
     # setting active record object here again, since they are no longer there due to redirect
     @ldap_group = @edit[:ldap_group] if params[:cls_id] && params[:cls_id].split('_')[0] == "lg"
-    @temp[:x_edit_buttons_locals] = set_form_locals if @in_a_form
+    @x_edit_buttons_locals = set_form_locals if @in_a_form
     @collapse_c_cell = @in_a_form || @pages ? false : true
     @sb[:center_tb_filename] = center_toolbar_filename
     edit_changed? if @edit
@@ -659,12 +659,12 @@ class OpsController < ApplicationController
               # server node
               if x_node.split("-").first == "svr" && @sb[:my_server_id] == active_id.to_i
                 #show all the tabs if on current server node
-                @temp[:selected_server] ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
+                @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
                 page << "miqOneTrans = 0;"          #resetting miqOneTrans when tab loads
                 page << "miqIEButtonPressed = true" if %w(save reset).include?(params[:button]) && is_browser_ie?
               elsif x_node.split("-").first.split("__")[1] == "svr" && @sb[:my_server_id] != active_id.to_i
                 #show only 4 tabs if not on current server node
-                @temp[:selected_server] ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
+                @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
               end
               page << "dhxLayoutB.cells('b').setText('#{escape_javascript(h(@right_cell_text))}');"
           end

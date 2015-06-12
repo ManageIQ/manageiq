@@ -358,24 +358,24 @@ class ConfigurationController < ApplicationController
   def show_timeprofiles
     build_tabs if params[:action] == "change_tab" || ["cancel","add","save"].include?(params[:button])
     if session[:userrole] == "super_administrator" || session[:userrole] == "administrator"
-      @temp[:timeprofiles] = TimeProfile.in_my_region.all(:order => "lower(description) ASC")
+      @timeprofiles = TimeProfile.in_my_region.all(:order => "lower(description) ASC")
     else
-      @temp[:timeprofiles] = TimeProfile.in_my_region.all(:conditions=> ["(profile_type = ? or (profile_type = ? and  profile_key = ?))", "global", "user", session[:userid]], :order => "lower(description) ASC")
+      @timeprofiles = TimeProfile.in_my_region.all(:conditions=> ["(profile_type = ? or (profile_type = ? and  profile_key = ?))", "global", "user", session[:userid]], :order => "lower(description) ASC")
     end
     timeprofile_set_days_hours
     drop_breadcrumb( {:name=>"Time Profiles", :url=>"/configuration/change_tab/?tab=4"})
   end
 
   def timeprofile_set_days_hours(timeprofile=@timeprofile)
-    @temp[:timeprofile_details] = Hash.new
-    @temp[:timeprofiles].each do |timeprofile|
-      @temp[:timeprofile_details][timeprofile.description] = Hash.new
-      @temp[:timeprofile_details][timeprofile.description][:days] = Array.new
+    @timeprofile_details = Hash.new
+    @timeprofiles.each do |timeprofile|
+      @timeprofile_details[timeprofile.description] = Hash.new
+      @timeprofile_details[timeprofile.description][:days] = Array.new
       timeprofile.profile[:days].each do |day|
-        @temp[:timeprofile_details][timeprofile.description][:days].push(
+        @timeprofile_details[timeprofile.description][:days].push(
           DateTime::ABBR_DAYNAMES[day.to_i])
       end
-      @temp[:timeprofile_details][timeprofile.description][:hours] = Array.new
+      @timeprofile_details[timeprofile.description][:hours] = Array.new
       temp_arr = Array.new
       timeprofile.profile[:hours].each do |h|
         temp_arr.push(h.to_i)
@@ -387,18 +387,18 @@ class ConfigurationController < ApplicationController
           st = "#{get_hr_str(hr).split('-').first}-" if st == ""
         else
           if st != ""
-            @temp[:timeprofile_details][timeprofile.description][:hours].push(st + get_hr_str(hr).split('-').last)
+            @timeprofile_details[timeprofile.description][:hours].push(st + get_hr_str(hr).split('-').last)
           else
-            @temp[:timeprofile_details][timeprofile.description][:hours].push(get_hr_str(hr))
+            @timeprofile_details[timeprofile.description][:hours].push(get_hr_str(hr))
           end
           st = ""
         end
       end
-      if @temp[:timeprofile_details][timeprofile.description][:hours].length > 1 && @temp[:timeprofile_details][timeprofile.description][:hours].first.split('-').first == "12AM" && @temp[:timeprofile_details][timeprofile.description][:hours].last.split('-').last == "12AM"      #manipulating midnight hours to be displayed on show screen
-        @temp[:timeprofile_details][timeprofile.description][:hours][0] = @temp[:timeprofile_details][timeprofile.description][:hours].last.split('-').first + '-' + @temp[:timeprofile_details][timeprofile.description][:hours].first.split('-').last
-        @temp[:timeprofile_details][timeprofile.description][:hours].delete_at(@temp[:timeprofile_details][timeprofile.description][:hours].length-1)
+      if @timeprofile_details[timeprofile.description][:hours].length > 1 && @timeprofile_details[timeprofile.description][:hours].first.split('-').first == "12AM" && @timeprofile_details[timeprofile.description][:hours].last.split('-').last == "12AM"      #manipulating midnight hours to be displayed on show screen
+        @timeprofile_details[timeprofile.description][:hours][0] = @timeprofile_details[timeprofile.description][:hours].last.split('-').first + '-' + @timeprofile_details[timeprofile.description][:hours].first.split('-').last
+        @timeprofile_details[timeprofile.description][:hours].delete_at(@timeprofile_details[timeprofile.description][:hours].length-1)
       end
-      @temp[:timeprofile_details][timeprofile.description][:tz] = timeprofile.profile[:tz]
+      @timeprofile_details[timeprofile.description][:tz] = timeprofile.profile[:tz]
     end
   end
 
@@ -870,7 +870,7 @@ class ConfigurationController < ApplicationController
       @main_tab_node[:children] = @main_tab_children   unless @main_tab_children.blank?
       all_views.push(@main_tab_node).uniq!
     end
-    @temp[:all_views_tree] = all_views.to_json
+    @all_views_tree = all_views.to_json
     session[:tree_name]    = "all_views_tree"
   end
 

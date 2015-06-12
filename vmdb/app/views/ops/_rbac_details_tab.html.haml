@@ -21,14 +21,14 @@
           %td.narrow{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'xx-u');", :title => _("View Users")}
             = image_tag("/images/icons/new/user.png")
           %td{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'xx-u');", :title => _("View Users")}
-            = _("Users (%s)") % @temp[:users_count].to_s
+            = _("Users (%s)") % @users_count.to_s
         %tr
           %td.narrow{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'xx-g');", :title => _("View Groups")}
             = image_tag("/images/icons/new/miq_group.png")
           %td{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'xx-g');", :title => _("View Groups")}
-            = _("Groups (%s)") % @temp[:groups_count].to_s
+            = _("Groups (%s)") % @groups_count.to_s
         %tr
           %td.narrow{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'xx-ur');", :title => _("View Roles")}
             = image_tag("/images/icons/new/miq_user_role.png")
           %td{:onclick => "cfmeDynatree_activateNode('rbac_tree', 'xx-ur');", :title => _("View Roles")}
-            = _("Roles (%s)") % @temp[:roles_count].to_s
+            = _("Roles (%s)") % @roles_count.to_s

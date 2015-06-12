@@ -1,6 +1,6 @@
 #dc_tree_quads_div{:style => 'position: fixed; top: 50%; left: 50%'}
   -# Create divs for each Host to display as the mouse hovers over each Host node
-  - @temp[:tree_hosts].each do |h|
+  - @tree_hosts.each do |h|
     %div{:id => "h-#{to_cid(h.id)}", :style => 'display:none; z-index:10; width: 72px; height: 72px;'}
       %div{:style => 'margin-left: -70px;'}
         = render(:partial => 'layouts/quadicon',
@@ -13,7 +13,7 @@
           %br/
           = h(h.service_pack)
   -# Create divs for each VM to display as the mouse hovers over each VM node
-  - @temp[:tree_vms].each do |v|
+  - @tree_vms.each do |v|
     %div{:id => "v-#{to_cid(v.id)}", :style => 'display:none; z-index:10; width: 72px; height: 72px;'}
       %div{:style => 'margin-left: -70px;'}
         = render(:partial => 'layouts/quadicon',

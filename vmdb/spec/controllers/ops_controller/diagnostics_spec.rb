@@ -11,7 +11,6 @@ shared_examples "logs_collect" do |type|
       :active_tab       => "diagnostics_roles_servers"
     }
     controller.instance_variable_set(:@sb, sb_hash)
-    controller.instance_variable_set(:@temp, {})
   end
 
   it "not running" do
@@ -102,7 +101,6 @@ describe OpsController do
       }
       @miq_server.update_attributes(:status => "stopped")
       controller.stub(:build_server_tree)
-      controller.instance_variable_set(:@temp, {})
       controller.instance_variable_set(:@sb, sb_hash)
 
       controller.should_receive(:render)

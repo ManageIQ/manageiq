@@ -3,7 +3,7 @@
   - if @sb[:active_accord] == :reports
     - if @in_a_form
       = render :partial => 'form'
-    - elsif @report && !@temp[:report_result]
+    - elsif @report && !@report_result
       = render :partial => "layouts/flash_msg", :locals => {:div_num => "_report_list"}
 
       - if @zgraph
@@ -128,7 +128,7 @@
       - # url to go to when tab is changed, and whether to check for abandon changes or not
       :javascript
         miq_jquery_tabs_init({tabs_div: "rep_tabs", url: "/report/rep_change_tab/", active_tab: "#{@sb[:active_tab]}", tab_changes: true})
-    - elsif !@report && @temp[:report_result]
+    - elsif !@report && @report_result
       = render :partial => "report_status"
     - else
       = render :partial => 'layouts/info_msg', :locals => {:message => _("Choose a Report to view from the menus on the left.")}

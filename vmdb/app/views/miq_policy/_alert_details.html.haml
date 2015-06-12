@@ -87,7 +87,7 @@
               %td.key
                 = _("Driving Event")
               %td
-                = h(@temp[:event])
+                = h(@event)
         - # Repeat Time
         %tr
           %td.key=_("Notification Frequency")
@@ -171,8 +171,8 @@
             %tr
               %td.key=_("To")
               %td
-                - unless @temp[:email_to].blank?
-                  = h(@temp[:email_to].join(';'))
+                - unless @email_to.blank?
+                  = h(@email_to.join(';'))
           %hr
         - if @alert.options && @alert.options[:notifications] && !@alert.options[:notifications][:snmp].blank?
           %h3=_('Send SNMP Trap')

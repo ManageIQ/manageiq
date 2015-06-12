@@ -9,10 +9,10 @@ module OpsController::Diagnostics
       @record = MiqServer.find(id)
     when "role"
       @record = ServerRole.find(id)
-      @temp[:rec_status] = @record.assigned_server_roles.find_by_active(true) ? "active" : "stopped" if @record.class == ServerRole
+      @rec_status = @record.assigned_server_roles.find_by_active(true) ? "active" : "stopped" if @record.class == ServerRole
     when "asr"
       @record = AssignedServerRole.find(id)
-      @temp[:rec_status] = @record.assigned_server_roles.find_by_active(true) ? "active" : "stopped" if @record.class == ServerRole
+      @rec_status = @record.assigned_server_roles.find_by_active(true) ? "active" : "stopped" if @record.class == ServerRole
     end
     @sb[:diag_selected_model] = @record.class.to_s
     @sb[:diag_selected_id] = @record.id
@@ -188,7 +188,7 @@ module OpsController::Diagnostics
   def refresh_log
     assert_privileges("refresh_log")
     @log = $log.contents(120,1000)
-    @temp[:selected_server] = MiqServer.find(from_cid(x_node.split("-").last).to_i)
+    @selected_server = MiqServer.find(from_cid(x_node.split("-").last).to_i)
     add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
     render :update do |page|                    # Use JS to update the display
       page.replace_html("diagnostics_evm_log", :partial=>"diagnostics_evm_log_tab")
@@ -199,7 +199,7 @@ module OpsController::Diagnostics
   def refresh_audit_log
     assert_privileges("refresh_audit_log")
     @log = $audit_log.contents(nil,1000)
-    @temp[:selected_server] = MiqServer.find(from_cid(x_node.split("-").last).to_i)
+    @selected_server = MiqServer.find(from_cid(x_node.split("-").last).to_i)
     add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
     render :update do |page|                    # Use JS to update the display
       page.replace_html("diagnostics_audit_log", :partial=>"diagnostics_audit_log_tab")
@@ -210,7 +210,7 @@ module OpsController::Diagnostics
   def refresh_production_log
     assert_privileges("refresh_production_log")
     @log = $rails_log.contents(nil,1000)
-    @temp[:selected_server] = MiqServer.find(from_cid(x_node.split("-").last).to_i)
+    @selected_server = MiqServer.find(from_cid(x_node.split("-").last).to_i)
     add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
     render :update do |page|                    # Use JS to update the display
       page.replace_html("diagnostics_production_log", :partial=>"diagnostics_production_log_tab")
@@ -220,7 +220,7 @@ module OpsController::Diagnostics
 
   def cu_repair_field_changed
     return unless load_edit("curepair_edit__new","replace_cell__explorer")
-    @temp[:selected_server] = Zone.find_by_id(@sb[:selected_server_id])
+    @selected_server = Zone.find_by_id(@sb[:selected_server_id])
     cu_repair_get_form_vars
     render :update do |page|                    # Use JS to update the display
       page.replace("flash_msg_divcu_repair", :partial=>"layouts/flash_msg", :locals=>{:div_num=>"cu_repair"})
@@ -282,7 +282,7 @@ module OpsController::Diagnostics
   end
 
   def replication_reload
-    @temp[:selected_server] = MiqRegion.my_region
+    @selected_server = MiqRegion.my_region
     @refresh_div = "diagnostics_replication"
     @refresh_partial = "diagnostics_replication_tab"
   end
@@ -612,7 +612,7 @@ module OpsController::Diagnostics
     obj, id  = x_node.split("-")
     assert_privileges("#{obj == "z" ? "zone_" : ""}collect_logs")
     klass    = obj == "svr" ? MiqServer : Zone
-    instance = @temp[:selected_server] = klass.find(from_cid(id).to_i)
+    instance = @selected_server = klass.find(from_cid(id).to_i)
     if !instance.active?
       add_flash(_("Cannot start log collection, requires a started server"), :error)
     elsif instance.log_collection_active_recently?
@@ -779,7 +779,7 @@ module OpsController::Diagnostics
     else
       parent = Zone.find_by_id(from_cid(x_node.split('-').last))
     end
-    @temp[:server_tree] = build_server_tree(parent).to_json
+    @server_tree = build_server_tree(parent).to_json
     @sb[:center_tb_filename] = center_toolbar_filename
     c_buttons, c_xml = build_toolbar_buttons_and_xml(@sb[:center_tb_filename])
     render :update do |page|
@@ -798,7 +798,7 @@ module OpsController::Diagnostics
       end
       if params[:action] == "x_button"
         kls = x_node.split("-").first == "z" ? Zone : MiqServer
-        @temp[:selected_server] = kls.find(from_cid(x_node.split("-").last))
+        @selected_server = kls.find(from_cid(x_node.split("-").last))
         page.replace("zone_tree_div", :partial=>"zone_tree")
       end
       if c_buttons && c_xml
@@ -821,7 +821,7 @@ module OpsController::Diagnostics
     else
       parent = Zone.find_by_id(from_cid(x_node.split('-').last))
     end
-    @temp[:server_tree] = build_server_tree(parent).to_json
+    @server_tree = build_server_tree(parent).to_json
     render :update do |page|
       #   Replace tree
       page.replace("selected_#{@sb[:active_tab].split('_').last}_div", :partial=>"selected")
@@ -831,34 +831,34 @@ module OpsController::Diagnostics
   def diagnostics_set_form_vars
     active_node = x_node
     if active_node && active_node.split('-').first == "z"
-      @record = @temp[:selected_server] = Zone.find_by_id(from_cid(active_node.split('-').last))
-      @sb[:selected_server_id] = @temp[:selected_server].id
+      @record = @selected_server = Zone.find_by_id(from_cid(active_node.split('-').last))
+      @sb[:selected_server_id] = @selected_server.id
       @sb[:selected_typ] = "zone"
-      if @temp[:selected_server].miq_servers.length >= 1 &&
+      if @selected_server.miq_servers.length >= 1 &&
           ["diagnostics_roles_servers","diagnostics_servers_roles"].include?(@sb[:active_tab])
-        @temp[:server_tree] = build_server_tree(@temp[:selected_server]).to_json
+        @server_tree = build_server_tree(@selected_server).to_json
       else
-        @temp[:server_tree] = nil
+        @server_tree = nil
       end
       cu_repair_set_form_vars if @sb[:active_tab] == "diagnostics_cu_repair"
       diagnostics_server_list if @sb[:active_tab] == "diagnostics_server_list"
-      @right_cell_text = @sb[:my_zone] == @temp[:selected_server].name ?
-        _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Diagnostics", :name=>@temp[:selected_server].description, :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)} :
-        _("%{typ} %{model} \"%{name}\"") % {:typ=>"Diagnostics", :name=>@temp[:selected_server].description, :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)}
+      @right_cell_text = @sb[:my_zone] == @selected_server.name ?
+        _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Diagnostics", :name=>@selected_server.description, :model=>ui_lookup(:model=>@selected_server.class.to_s)} :
+        _("%{typ} %{model} \"%{name}\"") % {:typ=>"Diagnostics", :name=>@selected_server.description, :model=>ui_lookup(:model=>@selected_server.class.to_s)}
     elsif x_node == "root"
       if @sb[:active_tab] == "diagnostics_zones"
         @zones = Zone.in_my_region.all
       elsif ["diagnostics_roles_servers","diagnostics_servers_roles"].include?(@sb[:active_tab])
-        @temp[:selected_server] = MiqRegion.my_region
-        @sb[:selected_server_id] = @temp[:selected_server].id
+        @selected_server = MiqRegion.my_region
+        @sb[:selected_server_id] = @selected_server.id
         @sb[:selected_typ] = "miq_region"
-        if @temp[:selected_server].miq_servers.length >= 1
-          @temp[:server_tree] = build_server_tree(@temp[:selected_server]).to_json
+        if @selected_server.miq_servers.length >= 1
+          @server_tree = build_server_tree(@selected_server).to_json
         else
-          @temp[:server_tree] = nil
+          @server_tree = nil
         end
       elsif @sb[:active_tab] == "diagnostics_replication"     # Replication tab
-        @temp[:selected_server] = MiqRegion.my_region
+        @selected_server = MiqRegion.my_region
       elsif @sb[:active_tab] == "diagnostics_database"
         build_backup_schedule_options_for_select
         build_db_options_for_select
@@ -869,7 +869,7 @@ module OpsController::Diagnostics
       end
       @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>"Diagnostics", :name=>"#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]", :model=>ui_lookup(:model=>"MiqRegion")}
     elsif active_node && active_node.split('-').first == "svr"
-      @temp[:selected_server] ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
+      @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
       if @sb[:selected_server_id] == @sb[:my_server_id]
         if @sb[:active_tab] == "diagnostics_evm_log"
           @log = $log.contents(120,1000)
@@ -890,30 +890,30 @@ module OpsController::Diagnostics
           @refresh_action = "refresh_production_log"
           @download_action = "fetch_production_log"
         elsif @sb[:active_tab] == "diagnostics_summary"
-          @temp[:selected_server] = MiqServer.find(@sb[:selected_server_id])
+          @selected_server = MiqServer.find(@sb[:selected_server_id])
         elsif @sb[:active_tab] == "diagnostics_workers"
           pm_get_workers
-          @record = @temp[:selected_server]
+          @record = @selected_server
         elsif @sb[:active_tab] == "diagnostics_utilization"
           diagnostics_build_perf
         elsif @sb[:active_tab] == "diagnostics_timelines"
           diagnostics_build_timeline
         else
-          @record = @temp[:selected_server] = MiqServer.find(from_cid(x_node.split("-").last).to_i)
-          @sb[:selected_server_id] = @temp[:selected_server].id
+          @record = @selected_server = MiqServer.find(from_cid(x_node.split("-").last).to_i)
+          @sb[:selected_server_id] = @selected_server.id
           @sb[:selected_typ] = "miq_server"
         end
-      elsif @sb[:selected_server_id] == @sb[:my_server_id]  || @temp[:selected_server].started?
+      elsif @sb[:selected_server_id] == @sb[:my_server_id]  || @selected_server.started?
         if @sb[:active_tab] == "diagnostics_workers"
           pm_get_workers
-          @record = @temp[:selected_server]
+          @record = @selected_server
         elsif @sb[:active_tab] == "diagnostics_utilization"
           diagnostics_build_perf
         elsif @sb[:active_tab] == "diagnostics_timelines"
           diagnostics_build_timeline
         else
-          @temp[:selected_server] = MiqServer.find(from_cid(x_node.split("-").last).to_i)
-          @sb[:selected_server_id] = @temp[:selected_server].id
+          @selected_server = MiqServer.find(from_cid(x_node.split("-").last).to_i)
+          @sb[:selected_server_id] = @selected_server.id
           @sb[:selected_typ] = "miq_server"
         end
       else
@@ -923,14 +923,14 @@ module OpsController::Diagnostics
           diagnostics_build_timeline
         else
           @sb[:active_tab] = "diagnostics_collect_logs"       # setting it to show collect logs tab as first tab for the servers that are not started
-          @record = @temp[:selected_server] = MiqServer.find(from_cid(x_node.split("-").last).to_i)
-          @sb[:selected_server_id] = @temp[:selected_server].id
+          @record = @selected_server = MiqServer.find(from_cid(x_node.split("-").last).to_i)
+          @sb[:selected_server_id] = @selected_server.id
           @sb[:selected_typ] = "miq_server"
         end
       end
       @right_cell_text = @sb[:my_server_id] == @sb[:selected_server_id] ?
-        _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Diagnostics", :name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id}]", :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)} :
-        _("%{typ} %{model} \"%{name}\"") % {:typ=>"Diagnostics", :name=>"#{@temp[:selected_server].name} [#{@temp[:selected_server].id}]", :model=>ui_lookup(:model=>@temp[:selected_server].class.to_s)}
+        _("%{typ} %{model} \"%{name}\" (current)") % {:typ=>"Diagnostics", :name=>"#{@selected_server.name} [#{@selected_server.id}]", :model=>ui_lookup(:model=>@selected_server.class.to_s)} :
+        _("%{typ} %{model} \"%{name}\"") % {:typ=>"Diagnostics", :name=>"#{@selected_server.name} [#{@selected_server.id}]", :model=>ui_lookup(:model=>@selected_server.class.to_s)}
     end
   end
 
@@ -1040,7 +1040,7 @@ module OpsController::Diagnostics
     end
     if @sb[:diag_selected_id]
       @record = @sb[:diag_selected_model].constantize.find(@sb[:diag_selected_id]) # Set the current record
-      @temp[:rec_status] = @record.assigned_server_roles.find_by_active(true) ? "active" : "stopped" if @record.class == ServerRole
+      @rec_status = @record.assigned_server_roles.find_by_active(true) ? "active" : "stopped" if @record.class == ServerRole
     end
     return tree_kids
   end
@@ -1097,8 +1097,8 @@ module OpsController::Diagnostics
       @sb[:diag_selected_id] = nil
       diagnostics_set_form_vars
     when "svr"
-      @temp[:selected_server] = MiqServer.find(from_cid(nodetype.downcase.split("-").last))
-      @sb[:selected_server_id] = @temp[:selected_server].id
+      @selected_server = MiqServer.find(from_cid(nodetype.downcase.split("-").last))
+      @sb[:selected_server_id] = @selected_server.id
       diagnostics_set_form_vars
     end
   end

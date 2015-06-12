@@ -7,7 +7,7 @@ module ReportController::Menus
     session[:node_selected] = "" if params[:action] != "menu_field_changed"
     @sb[:menu_default] = false
     if @changed || @menu_lastaction == "discard_changes"
-      @temp[:rpt_menu] = copy_array(@edit[:new])
+      @rpt_menu = copy_array(@edit[:new])
     elsif @menu_lastaction == "default"
     else
       build_report_listnav("reports","menu")
@@ -20,9 +20,9 @@ module ReportController::Menus
     menu_set_form_vars if ["explorer","tree_select","x_history"].include?(params[:action])
     @in_a_form = true
     if @menu_lastaction != "menu_editor"
-      @temp[:menu_roles_tree] = build_menu_tree(@edit[:new])
+      @menu_roles_tree = build_menu_tree(@edit[:new])
     else
-      @temp[:menu_roles_tree] = build_menu_tree(@temp[:rpt_menu]) # changing rpt_menu if changes have been commited to show updated tree with changes
+      @menu_roles_tree = build_menu_tree(@rpt_menu) # changing rpt_menu if changes have been commited to show updated tree with changes
     end
     @sb[:role_list_flag] = true if params[:id]
 
@@ -194,7 +194,7 @@ module ReportController::Menus
       session[:node_selected]   = ""
       session[:role_choice]     = nil
       @new_menu_node            = "roleroot"
-      @temp[:menu_roles_tree] = nil
+      @menu_roles_tree = nil
       @lock_tree                = false
       @edit = session[:edit]    = nil
       @changed                  = session[:changed] = false
@@ -208,8 +208,8 @@ module ReportController::Menus
       get_tree_data
       replace_right_cell(:menu_edit_action => "menu_reset")
     elsif params[:button] == "default"
-      @temp[:menu_roles_tree] = build_report_listnav("reports","menu","default")
-      @edit[:new]               = copy_array(@temp[:rpt_menu])
+      @menu_roles_tree = build_report_listnav("reports","menu","default")
+      @edit[:new]               = copy_array(@rpt_menu)
       @menu_lastaction          = "default"
       add_flash(_("%s set to default") % "Report Menu", :warning)
       get_tree_data
@@ -237,7 +237,7 @@ module ReportController::Menus
         session[:node_selected]   = ""
         session[:role_choice]     = nil
         @new_menu_node            = "roleroot"
-        @temp[:menu_roles_tree] = nil
+        @menu_roles_tree = nil
         @lock_tree                = false
         @changed                  = session[:changed] = false
         @edit = session[:edit]    = nil
@@ -339,8 +339,8 @@ module ReportController::Menus
 
   #menus tree for the group selected in the roles tree on left
   def build_menu_tree(rpt_menu,tree_type="reports")
-    @temp[:rpt_menu] = Array.new
-    @temp[:menu_roles_tree] = nil
+    @rpt_menu = Array.new
+    @menu_roles_tree = nil
     menus = Array.new
     rpt_menu.each do |r|
       # create/modify new array that doesn't have custom reports folder, dont need custom folder in menu_editor
@@ -348,7 +348,7 @@ module ReportController::Menus
       menus.push(r) if (r[1] && r[1].empty?) || (r[1] && !r[1].empty? && r[1][0].empty?) || (r[1] && !r[1].empty? && !r[1][0].empty? && r[1][0][0] != "Custom") # Check the second level menu for "Custom"
     end
     @tree_type = "menu"
-    @temp[:rpt_menu] = menus
+    @rpt_menu = menus
     base_node = {
         :key    => "b__Report Menus for #{session[:role_choice]}", # Added divider '|' in case DHTMLX adds something
         :title  => 'Top Level',
@@ -615,7 +615,7 @@ module ReportController::Menus
     @edit[:temp_arr] = Array.new
     @edit[:form_vars] = Hash.new
     @edit[:current] = Array.new
-    @edit[:new] = @temp[:rpt_menu] if !@temp[:rpt_menu].nil?
+    @edit[:new] = @rpt_menu if !@rpt_menu.nil?
     user = User.find_by_userid(session[:userid])
     @edit[:user_typ] = user.admin_user?
     @edit[:user_group] = user.current_group.id
@@ -736,7 +736,7 @@ module ReportController::Menus
       end
     end
     @edit[:folders] = @folders.dup
-    @temp[:grid_xml] = menu_to_xml(@edit[:folders],@selected[1])
+    @grid_xml = menu_to_xml(@edit[:folders],@selected[1])
   end
 
   def menu_get_all
@@ -749,7 +749,7 @@ module ReportController::Menus
       _("%s") % title :
       _("All %s") % ui_lookup(:models=>"MiqGroup")
     @right_cell_div = "role_list"
-    @temp[:menu_roles_tree] = nil
+    @menu_roles_tree = nil
   end
 
   def get_menu(nodeid)
@@ -775,7 +775,7 @@ module ReportController::Menus
     root[:title]   = title
     root[:tooltip] = title
     root[:icon]    = "miq_group.png"
-    @temp[name]    = tree_nodes.to_json          # JSON object for tree loading
+    instance_variable_set :"@#{name}", tree_nodes.to_json          # JSON object for tree loading
     x_node_set(tree_nodes.first[:key], name)         # Set active node to root if not set
   end
 

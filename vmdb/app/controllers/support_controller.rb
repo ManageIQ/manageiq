@@ -23,7 +23,7 @@ class SupportController < ApplicationController
     session[:vmdb] ||= Hash.new
     session[:vmdb][:version] ||= Vmdb::Appliance.VERSION
     session[:vmdb][:build]   ||= Vmdb::Appliance.BUILD
-    @temp[:user_role] = User.current_user.miq_user_role_name
+    @user_role = User.current_user.miq_user_role_name
     @layout = "about"
   end
 

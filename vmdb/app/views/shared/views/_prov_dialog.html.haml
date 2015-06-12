@@ -214,7 +214,7 @@
               :prefix                     => prefix,
               :keys                       => keys})
           - if (@edit && @edit[:new] && @edit[:new][:sysprep_identification][0] == "domain") || (@options && @options[:sysprep_identification][0] == "domain")
-            - keys = [:sysprep_domain_name, @temp[:ldap_ous_tree] ? :ldap_ous : nil, :sysprep_domain_admin, :sysprep_domain_password].compact
+            - keys = [:sysprep_domain_name, @ldap_ous_tree ? :ldap_ous : nil, :sysprep_domain_admin, :sysprep_domain_password].compact
             = render(:partial => "#{prefix}prov_dialog_fieldset",
               :locals         => {:workflow => wf,
                 :dialog                     => dialog,

@@ -245,9 +245,9 @@ class DashboardController < ApplicationController
     # Build the XML to load the widget dropdown list dhtmlxtoolbar
     widget_list = ""
     prev_type   = nil
-    @temp[:available_widgets] = []
+    @available_widgets = []
     MiqWidget.available_for_user(session[:userid]).sort_by { |a| a.content_type + a.title.downcase }.each do |w|
-      @temp[:available_widgets].push(w.id)  # Keep track of widgets available to this user
+      @available_widgets.push(w.id)  # Keep track of widgets available to this user
       if !col_widgets.include?(w.id) && w.enabled
         image, tip = case w.content_type
                      when "menu"   then ["menu",     "Add this Menu Widget"]
@@ -562,12 +562,12 @@ class DashboardController < ApplicationController
   # Process changes to timeline selection
   def tl_generate
     # set variables for type of timeline is selected
-    unless @temp[:timeline]
+    unless @timeline
       tl_gen_timeline_data
-      return unless @temp[:timeline]
+      return unless @timeline
     end
 
-    @temp[:timeline] = true
+    @timeline = true
     render :update do |page|
       page << javascript_highlight("report_#{session[:last_rpt_id]}_link", false)  if session[:last_rpt_id]
       center_tb_buttons = {
@@ -817,7 +817,7 @@ class DashboardController < ApplicationController
   def tl_gen_timeline_data
     @report = MiqReport.find(from_cid(params[:id]))
     @title  = @report.title
-    @temp[:timeline] = true unless @report # need to set this incase @report is not there, when switching between Management/Policy events
+    @timeline = true unless @report # need to set this incase @report is not there, when switching between Management/Policy events
     return unless @report
 
     unless params[:task_id] # First time thru, kick off the report generate task
@@ -826,7 +826,7 @@ class DashboardController < ApplicationController
       return
     end
 
-    @temp[:timeline] = true
+    @timeline = true
     miq_task = MiqTask.find(params[:task_id]) # Not first time, read the task record
     @report  = miq_task.task_results
     session[:rpt_task_id] = miq_task.id
@@ -847,7 +847,7 @@ class DashboardController < ApplicationController
       blob.binary = @report.to_timeline
       session[:tl_xml_blob_id] = blob.id
     else
-      @temp[:tl_json] = @report.to_timeline
+      @tl_json = @report.to_timeline
     end
 
     tz = @report.tz || Time.zone

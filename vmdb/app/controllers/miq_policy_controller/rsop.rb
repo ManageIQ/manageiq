@@ -62,8 +62,8 @@ module MiqPolicyController::Rsop
       rsop_put_objects_in_sb(find_filtered(Host, :all), :hosts)
       rsop_put_objects_in_sb(find_filtered(Vm, :all), :vms)
       rsop_put_objects_in_sb(find_filtered(Storage, :all), :datastores)
-      @temp[:rsop_events] = MiqEventSet.all.collect{|e|[e.description, e.id.to_s]}.sort
-      @temp[:rsop_event_sets] = MiqEventSet.find(@sb[:rsop][:event]).miq_events.collect{|e|[e.description, e.id.to_s]}.sort if @sb[:rsop][:event] != nil
+      @rsop_events = MiqEventSet.all.collect{|e|[e.description, e.id.to_s]}.sort
+      @rsop_event_sets = MiqEventSet.find(@sb[:rsop][:event]).miq_events.collect{|e|[e.description, e.id.to_s]}.sort if @sb[:rsop][:event] != nil
       render :layout => "explorer"
     end
   end
@@ -83,8 +83,8 @@ module MiqPolicyController::Rsop
     if params[:filter_value]
       @sb[:rsop][:filter_value] = params[:filter_value] == "<Choose>" ? nil : params[:filter_value]
     end
-    @temp[:rsop_events] = MiqEventSet.all.collect{|e|[e.description, e.id.to_s]}.sort
-    @temp[:rsop_event_sets] = MiqEventSet.find(@sb[:rsop][:event]).miq_events.collect{|e|[e.description, e.id.to_s]}.sort if @sb[:rsop][:event] != nil
+    @rsop_events = MiqEventSet.all.collect{|e|[e.description, e.id.to_s]}.sort
+    @rsop_event_sets = MiqEventSet.find(@sb[:rsop][:event]).miq_events.collect{|e|[e.description, e.id.to_s]}.sort if @sb[:rsop][:event] != nil
     render :update do |page|                    # Use JS to update the display
       session[:changed] = @sb[:rsop][:filter_value] && @sb[:rsop][:event_value] ? true : false
       page.replace("rsop_form_div", :partial=>"rsop_form")

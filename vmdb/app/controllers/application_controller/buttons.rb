@@ -637,7 +637,7 @@ module ApplicationController::Buttons
     drop_breadcrumb( {:name=>title, :url=>"/miq_ae_customization/button_new"} )
     @lastaction = "automate_button"
     @layout = "miq_ae_automate_button"
-    @temp[:custom_button] = nil
+    @custom_button = nil
     @sb[:buttons] = nil
     @sb[:button_groups] = nil
     replace_right_cell("button_edit")
@@ -954,7 +954,7 @@ module ApplicationController::Buttons
     nodetype = node.split("_")
     #initializing variables to hold data for selected node
     @sb[:obj_list] = nil
-    @temp[:custom_button] = nil
+    @custom_button = nil
     @sb[:button_groups] = nil
     @sb[:buttons] = nil
     @sb[:buttons_node] = true
@@ -1012,30 +1012,30 @@ module ApplicationController::Buttons
       end
     elsif nodetype.length >= 4 && (nodetype[3].split('-').first == "cb" || nodetype[4].split('-').first == "cb")        # button selected
       id = nodetype[3].split('-').first == "cb" ? nodetype[3].split('-').last : nodetype[4].split('-').last
-      @record = @temp[:custom_button] = CustomButton.find(from_cid(id))
+      @record = @custom_button = CustomButton.find(from_cid(id))
       build_resolve_screen
       @resolve[:new][:attrs] = Array.new
-      if @temp[:custom_button].uri_attributes
-        @temp[:custom_button].uri_attributes.each do |attr|
+      if @custom_button.uri_attributes
+        @custom_button.uri_attributes.each do |attr|
           if attr[0] != "object_name" && attr[0] != "request"
             @resolve[:new][:attrs].push(attr) unless @resolve[:new][:attrs].include?(attr)
           end
         end
-        @resolve[:new][:object_request] = @temp[:custom_button].uri_attributes["request"]
+        @resolve[:new][:object_request] = @custom_button.uri_attributes["request"]
       end
       @sb[:user_roles] = Array.new
-      if @temp[:custom_button].visibility && @temp[:custom_button].visibility[:roles] && @temp[:custom_button].visibility[:roles][0] != "_ALL_"
+      if @custom_button.visibility && @custom_button.visibility[:roles] && @custom_button.visibility[:roles][0] != "_ALL_"
 #         User.roles.sort_by(&:name).each do |r|
-#           @sb[:user_roles].push(r.description) if @temp[:custom_button].visibility[:roles].include?(r.name) && !@sb[:user_roles].include?(r.description)
+#           @sb[:user_roles].push(r.description) if @custom_button.visibility[:roles].include?(r.name) && !@sb[:user_roles].include?(r.description)
         MiqUserRole.all.sort_by(&:name).each do |r|
-          @sb[:user_roles].push(r.name) if @temp[:custom_button].visibility[:roles].include?(r.name)
+          @sb[:user_roles].push(r.name) if @custom_button.visibility[:roles].include?(r.name)
         end
       end
 #       @sb[:user_roles].sort!
       @resolve[:new][:target_class] = @sb[:target_classes].invert["ServiceTemplate"]
-      dialog_id = @temp[:custom_button].resource_action.dialog_id
+      dialog_id = @custom_button.resource_action.dialog_id
       @sb[:dialog_label] = dialog_id ? Dialog.find_by_id(dialog_id).label : "No Dialog"
-      @right_cell_text = _("%{model} \"%{name}\"") % {:model=>"Button", :name=>@temp[:custom_button].name}
+      @right_cell_text = _("%{model} \"%{name}\"") % {:model=>"Button", :name=>@custom_button.name}
     end
     @right_cell_div  = "ab_list"
   end
@@ -1053,9 +1053,9 @@ module ApplicationController::Buttons
     matching_instances = MiqAeClass.find_distinct_instances_across_domains(@resolve[:new][:starting_object])
     if matching_instances.any?
       @resolve[:instance_names] = matching_instances.collect(&:name)
-      instance_name = @temp[:custom_button] && @temp[:custom_button].uri_object_name
+      instance_name = @custom_button && @custom_button.uri_object_name
       @resolve[:new][:instance_name] = instance_name ? instance_name : "Automation"
-      @resolve[:new][:object_message] = @temp[:custom_button] && @temp[:custom_button].uri_message || "create"
+      @resolve[:new][:object_message] = @custom_button && @custom_button.uri_message || "create"
       @resolve[:target_class] = nil
       @resolve[:target_classes] = Hash.new
       CustomButton.button_classes.each{|db| @resolve[:target_classes][db] = ui_lookup(:model=>db)}

@@ -1,6 +1,6 @@
 - if @sb[:active_tab] == "diagnostics_roles_servers"
   = render(:partial => "layouts/flash_msg")
-  - if @temp[:server_tree]
+  - if @server_tree
     .row
       .col-sm-12.col-md-12.col-lg-6
         = render :partial => "zone_tree"

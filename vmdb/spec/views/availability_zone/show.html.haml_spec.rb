@@ -17,7 +17,6 @@ describe "availability_zone/show.html.haml" do
   before do
     assign(:record, availability_zone)
     assign(:ajax_action, action)
-    assign(:temp, {})
     assign(:showtype, showtype)
   end
 

@@ -159,8 +159,8 @@ module ApplicationController::TreeSupport
     @sb[:tree_vms_hash]   ||= {}
     @sb[:tree_hosts_hash] ||= {}
 
-    @temp[:tree_vms]   ||= []
-    @temp[:tree_hosts] ||= []
+    @tree_vms   ||= []
+    @tree_hosts ||= []
     @sb[:vat] = vat
     kids = []                            # Return node(s) as an array
     # Handle folder with the name "Datacenters"

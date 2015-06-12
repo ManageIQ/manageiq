@@ -35,13 +35,13 @@ module OpsController::Settings
 
   def forest_get_form_vars
     @edit = session[:edit]
-    @temp = Hash.new
-    @temp[:mode] = params[:user_proxies][:mode] if params[:user_proxies] && params[:user_proxies][:mode]
-    @temp[:ldaphost] = params[:user_proxies][:ldaphost] if params[:user_proxies] && params[:user_proxies][:ldaphost]
-    @temp[:ldapport] = params[:user_proxies][:ldapport] if params[:user_proxies] && params[:user_proxies][:ldapport]
-    @temp[:basedn] = params[:user_proxies][:basedn] if params[:user_proxies] && params[:user_proxies][:basedn]
-    @temp[:bind_dn] = params[:user_proxies][:bind_dn] if params[:user_proxies] && params[:user_proxies][:bind_dn]
-    @temp[:bind_pwd] = params[:user_proxies][:bind_pwd] if params[:user_proxies] && params[:user_proxies][:bind_pwd]
+    @ldap_info = Hash.new
+    @ldap_info[:mode] = params[:user_proxies][:mode] if params[:user_proxies] && params[:user_proxies][:mode]
+    @ldap_info[:ldaphost] = params[:user_proxies][:ldaphost] if params[:user_proxies] && params[:user_proxies][:ldaphost]
+    @ldap_info[:ldapport] = params[:user_proxies][:ldapport] if params[:user_proxies] && params[:user_proxies][:ldapport]
+    @ldap_info[:basedn] = params[:user_proxies][:basedn] if params[:user_proxies] && params[:user_proxies][:basedn]
+    @ldap_info[:bind_dn] = params[:user_proxies][:bind_dn] if params[:user_proxies] && params[:user_proxies][:bind_dn]
+    @ldap_info[:bind_pwd] = params[:user_proxies][:bind_pwd] if params[:user_proxies] && params[:user_proxies][:bind_pwd]
     return
   end
 
@@ -95,14 +95,14 @@ module OpsController::Settings
   def forest_accept
     forest_get_form_vars
     no_changes = true
-    if @temp[:ldaphost] == ""
+    if @ldap_info[:ldaphost] == ""
       add_flash(_("%s is required") % "LDAP Host", :error)
       no_changes = false
     elsif @edit[:new][:authentication][:user_proxies].blank? || @edit[:new][:authentication][:user_proxies][0].blank?   # if adding forest first time, delete a blank record
       @edit[:new][:authentication][:user_proxies].delete_at(0)
     else
       @edit[:new][:authentication][:user_proxies].each do |f|
-        if f[:ldaphost] == @temp[:ldaphost] && session[:entry][:ldaphost] != @temp[:ldaphost]   #check to make sure ldaphost already doesn't exist and ignore if existing record is being edited.
+        if f[:ldaphost] == @ldap_info[:ldaphost] && session[:entry][:ldaphost] != @ldap_info[:ldaphost]   #check to make sure ldaphost already doesn't exist and ignore if existing record is being edited.
           no_changes = false
           add_flash(_("%s should be unique") % "LDAP Host", :error)
           break
@@ -111,10 +111,10 @@ module OpsController::Settings
     end
     if no_changes
       if session[:entry] == "new"
-        @edit[:new][:authentication][:user_proxies].push(@temp)
+        @edit[:new][:authentication][:user_proxies].push(@ldap_info)
       else
         @edit[:new][:authentication][:user_proxies].each_with_index do |f,i|
-          @edit[:new][:authentication][:user_proxies][i] = @temp if f[:ldaphost] == session[:entry][:ldaphost]
+          @edit[:new][:authentication][:user_proxies][i] = @ldap_info if f[:ldaphost] == session[:entry][:ldaphost]
         end
       end
     end

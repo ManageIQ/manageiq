@@ -714,9 +714,9 @@ module ApplicationHelper
     return true if id == 'miq_request_edit' &&
                    %w(ServiceReconfigureRequest ServiceTemplateProvisionRequest).include?(@miq_request.try(:type))
 
-    # only hide gtl button if they are not in @temp
-    return @temp[:gtl_buttons].include?(id) ? false : true if @temp &&
-                                                @temp[:gtl_buttons] && ["view_grid","view_tile","view_list"].include?(id)
+    # only hide gtl button if they are not in @gtl_buttons
+    return @gtl_buttons.include?(id) ? false : true if @gtl_buttons &&
+                                                       ["view_grid","view_tile","view_list"].include?(id)
 
     #don't hide view buttons in toolbar
     return false if %( view_grid view_tile view_list refresh_log fetch_log common_drift
@@ -1274,7 +1274,7 @@ module ApplicationHelper
       case id
       when "widget_generate_content"
         return "Widget has to be assigned to a dashboard to generate content" if @record.memberof.count <= 0
-        return "This Widget content generation is already running or queued up" if @temp[:widget_running]
+        return "This Widget content generation is already running or queued up" if @widget_running
       end
     when "MiqWidgetSet"
       case id
@@ -1438,12 +1438,12 @@ module ApplicationHelper
       when "ae_copy_simulate"
         return "Object attribute must be specified to copy object details for use in a Button" if @resolve[:button_class].blank?
       when "customization_template_new"
-        return "No System Image Types available, Customization Template cannot be added" if @temp[:pxe_image_types_count] <= 0
+        return "No System Image Types available, Customization Template cannot be added" if @pxe_image_types_count <= 0
       #following 2 are checks for buttons in Reports/Dashboard accordion
       when "db_new"
-        return "Only #{MAX_DASHBOARD_COUNT} Dashboards are allowed for a group" if @temp[:widgetsets].length >= MAX_DASHBOARD_COUNT
+        return "Only #{MAX_DASHBOARD_COUNT} Dashboards are allowed for a group" if @widgetsets.length >= MAX_DASHBOARD_COUNT
       when "db_seq_edit"
-        return "There should be atleast 2 Dashboards to Edit Sequence" if @temp[:widgetsets].length <= 1
+        return "There should be atleast 2 Dashboards to Edit Sequence" if @widgetsets.length <= 1
       when "render_report_csv", "render_report_pdf",
           "render_report_txt", "report_only"
         if (@html || @zgraph) && (!@report.extras[:grouping] || (@report.extras[:grouping] && @report.extras[:grouping][:_total_][:count] > 0))

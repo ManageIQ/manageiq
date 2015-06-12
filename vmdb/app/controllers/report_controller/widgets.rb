@@ -239,7 +239,7 @@ module ReportController::Widgets
       else
         #get all widgets for passed in report id
         #@view, @pages = get_view(MiqWidget, :where_clause=>["content_type=? AND resource_id=?",nodeid, rep_id])
-        @temp[:widget_nodes] = MiqWidget.all(:conditions=>["content_type = ? AND resource_id = ?","report", rep_id])
+        @widget_nodes = MiqWidget.all(:conditions=>["content_type = ? AND resource_id = ?","report", rep_id])
       end
     end
 
@@ -269,7 +269,7 @@ module ReportController::Widgets
       @right_cell_text = _("%{typ} %{model}") % {:typ=>WIDGET_TYPES[@sb[:nodes][1]].singularize, :model=>ui_lookup(:models=>"MiqWidget")}
     else
       @record = @widget = MiqWidget.find_by_id(from_cid(@sb[:nodes].last))
-      @temp[:widget_running] = true if ["running","queued"].include?(@widget.status.downcase)
+      @widget_running = true if ["running","queued"].include?(@widget.status.downcase)
       typ = WIDGET_CONTENT_TYPE.invert[@widget.content_type]
       content_type = WIDGET_TYPES[typ].singularize
       @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ=>content_type, :name=>@widget.title, :model=>ui_lookup(:model=>"MiqWidget")}
@@ -517,7 +517,7 @@ module ReportController::Widgets
     root[:title]   = "All Widgets"
     root[:tooltip] = "All Widgets"
     root[:icon]    = "folder.png"
-    @temp[name]    = tree_nodes.to_json          # JSON object for tree loading
+    instance_variable_set :"@#{name}", tree_nodes.to_json          # JSON object for tree loading
     x_node_set(tree_nodes.first[:key], name) unless x_node(name)  # Set active node to root if not set
   end
 

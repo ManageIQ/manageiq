@@ -296,7 +296,7 @@ class MiqRequestController < ApplicationController
   end
 
   def prov_load_tab
-    if @options && @options[:current_tab_key] == :purpose # Need to build again for purpose tab, since it's stored in @temp
+    if @options && @options[:current_tab_key] == :purpose # Need to build again for purpose tab
       fld = @options[:wf].kind_of?(MiqHostProvisionWorkflow) ? "tag_ids" : "vm_tags"
       build_tags_tree(@options[:wf],@options["#{fld}".to_sym],false)
     end
