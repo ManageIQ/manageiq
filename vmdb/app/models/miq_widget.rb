@@ -494,6 +494,8 @@ class MiqWidget < ActiveRecord::Base
   end
 
   def self.get_group(group)
+    return nil if group.nil?
+
     original = group
 
     case group
