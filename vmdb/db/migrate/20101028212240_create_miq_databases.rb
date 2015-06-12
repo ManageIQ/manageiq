@@ -1,7 +1,7 @@
 class CreateMiqDatabases < ActiveRecord::Migration
   def self.up
     create_table :miq_databases do |t|
-      t.timestamps
+      t.timestamps :null => true
       t.bigint    :miq_region_id
     end
     add_index :miq_databases, :miq_region_id

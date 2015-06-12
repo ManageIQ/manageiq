@@ -40,7 +40,7 @@ class OntapRefactorMetricsMetadata < ActiveRecord::Migration
     create_table :storage_metrics_metadata do |t|
       t.string     :type
       t.text       :counter_info
-      t.timestamps
+      t.timestamps :null => true
     end
 
     add_column  :ontap_aggregate_derived_metrics, :storage_metrics_metadata_id, :bigint

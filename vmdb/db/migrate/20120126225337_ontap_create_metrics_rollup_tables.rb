@@ -34,7 +34,7 @@ class OntapCreateMetricsRollupTables < ActiveRecord::Migration
       t.bigint    :miq_storage_metric_id
       t.bigint    :time_profile_id
       t.integer   :position
-      t.timestamps
+      t.timestamps :null => true
     end
     add_index :ontap_aggregate_metrics_rollups, :miq_storage_metric_id
     add_index :ontap_aggregate_metrics_rollups, :time_profile_id
@@ -132,7 +132,7 @@ class OntapCreateMetricsRollupTables < ActiveRecord::Migration
       t.bigint    :miq_storage_metric_id
       t.bigint    :time_profile_id
       t.integer   :position
-      t.timestamps
+      t.timestamps :null => true
     end
     add_index :ontap_disk_metrics_rollups, :miq_storage_metric_id
     add_index :ontap_disk_metrics_rollups, :time_profile_id
@@ -173,7 +173,7 @@ class OntapCreateMetricsRollupTables < ActiveRecord::Migration
       t.bigint    :miq_storage_metric_id
       t.bigint    :time_profile_id
       t.integer   :position
-      t.timestamps
+      t.timestamps :null => true
     end
     add_index :ontap_lun_metrics_rollups, :miq_storage_metric_id
     add_index :ontap_lun_metrics_rollups, :time_profile_id
@@ -244,7 +244,7 @@ class OntapCreateMetricsRollupTables < ActiveRecord::Migration
       t.bigint    :miq_storage_metric_id
       t.bigint    :time_profile_id
       t.integer   :position
-      t.timestamps
+      t.timestamps :null => true
     end
     add_index :ontap_system_metrics_rollups, :miq_storage_metric_id
     add_index :ontap_system_metrics_rollups, :time_profile_id
@@ -363,7 +363,7 @@ class OntapCreateMetricsRollupTables < ActiveRecord::Migration
       t.bigint    :miq_storage_metric_id
       t.bigint    :time_profile_id
       t.integer   :position
-      t.timestamps
+      t.timestamps :null => true
     end
     add_index :ontap_volume_metrics_rollups, :miq_storage_metric_id
     add_index :ontap_volume_metrics_rollups, :time_profile_id

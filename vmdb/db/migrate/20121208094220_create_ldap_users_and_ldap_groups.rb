@@ -7,7 +7,7 @@ class CreateLdapUsersAndLdapGroups < ActiveRecord::Migration
       t.string     :whenchanged
       t.string     :mail
       t.belongs_to :ldap_server, :type => :bigint
-      t.timestamps
+      t.timestamps :null => true
     end
 
     create_table :ldap_users do |t|
@@ -34,7 +34,7 @@ class CreateLdapUsersAndLdapGroups < ActiveRecord::Migration
       t.string     :sid
 
       t.belongs_to :ldap_server, :type => :bigint
-      t.timestamps
+      t.timestamps :null => true
     end
 
     create_table :ldap_managements do |t|    #, :id => false

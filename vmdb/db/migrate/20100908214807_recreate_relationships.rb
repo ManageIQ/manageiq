@@ -27,7 +27,7 @@ class RecreateRelationships < ActiveRecord::Migration
       t.bigint  :resource_id
       t.string  :ancestry,    :limit => 2000
       t.string  :relationship
-      t.timestamps
+      t.timestamps :null => true
     end
 
     # Transfer existing relationships to the new table

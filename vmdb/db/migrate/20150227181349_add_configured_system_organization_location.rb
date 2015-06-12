@@ -5,7 +5,7 @@ class AddConfiguredSystemOrganizationLocation < ActiveRecord::Migration
       t.string     :name
       t.belongs_to :provisioning_manager, :type => :bigint
       t.string     :manager_ref
-      t.timestamps
+      t.timestamps :null => true
     end
     add_index :configuration_organizations, :provisioning_manager_id
     add_index :configuration_organizations, :manager_ref
@@ -15,7 +15,7 @@ class AddConfiguredSystemOrganizationLocation < ActiveRecord::Migration
       t.string     :name
       t.belongs_to :provisioning_manager, :type => :bigint
       t.string     :manager_ref
-      t.timestamps
+      t.timestamps :null => true
     end
     add_index :configuration_locations, :provisioning_manager_id
     add_index :configuration_locations, :manager_ref

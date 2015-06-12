@@ -8,7 +8,7 @@ class CreateVdiClasses < ActiveRecord::Migration
       t.string      :uid_ems
       t.string      :license_server_name
       t.string      :enable_session_reliability
-      t.timestamps
+      t.timestamps :null => true
     end
 
     create_table :vdi_controllers do |t|
@@ -16,7 +16,7 @@ class CreateVdiClasses < ActiveRecord::Migration
       t.string      :name
       t.string      :version
       t.string      :zone_preference
-      t.timestamps
+      t.timestamps :null => true
     end
 
     create_table :vdi_desktop_pools do |t|
@@ -33,7 +33,7 @@ class CreateVdiClasses < ActiveRecord::Migration
       t.string      :hosting_ipaddress
       t.string      :default_encryption_level
       t.string      :default_color_depth
-      t.timestamps
+      t.timestamps :null => true
     end
 
     create_table :vdi_desktops do |t|
@@ -47,13 +47,13 @@ class CreateVdiClasses < ActiveRecord::Migration
       t.string      :assigned_username
       t.boolean     :maintenance_mode
       t.string      :vm_uid_ems
-      t.timestamps
+      t.timestamps :null => true
     end
 
     create_table :vdi_users do |t|
       t.string      :uid_ems
       t.string      :name
-      t.timestamps
+      t.timestamps :null => true
     end
 
     create_table :vdi_sessions do |t|
@@ -70,7 +70,7 @@ class CreateVdiClasses < ActiveRecord::Migration
       t.string      :endpoint_name
       t.string      :horizontal_resolution
       t.string      :vertical_resolution
-      t.timestamps
+      t.timestamps :null => true
     end
 
   end

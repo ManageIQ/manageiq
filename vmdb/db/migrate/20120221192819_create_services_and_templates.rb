@@ -10,7 +10,7 @@ class CreateServicesAndTemplates < ActiveRecord::Migration
       t.string     :type
       t.belongs_to :service_or_template,               :type => :bigint
       t.text       :options
-      t.timestamps
+      t.timestamps :null => true
     end
 
     create_table :service_resources do |t|
@@ -23,7 +23,7 @@ class CreateServicesAndTemplates < ActiveRecord::Migration
       t.integer    :start_delay
       t.string     :stop_action
       t.integer    :stop_delay
-      t.timestamps
+      t.timestamps :null => true
     end
   end
 

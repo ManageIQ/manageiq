@@ -8,7 +8,7 @@ class CreateMiqDialogs < ActiveRecord::Migration
       t.boolean    :default,           :default => false
       t.string     :filename
       t.datetime   :file_mtime
-      t.timestamps
+      t.timestamps :null => true
     end
   end
 

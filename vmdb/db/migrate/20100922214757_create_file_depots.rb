@@ -5,7 +5,7 @@ class CreateFileDepots < ActiveRecord::Migration
       t.integer     :resource_id
       t.string      :resource_type
       t.string      :uri
-      t.timestamps
+      t.timestamps :null => true
     end
   end
 

@@ -13,7 +13,7 @@ class CreateMiqWidgets < ActiveRecord::Migration
       t.bigint    :miq_schedule_id
       t.boolean   :enabled,           :default => true
       t.boolean   :read_only,         :default => false
-      t.timestamps
+      t.timestamps :null => true
     end
     add_index :miq_widgets, :user_id
   end

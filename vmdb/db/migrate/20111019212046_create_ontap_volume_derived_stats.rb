@@ -46,7 +46,7 @@ class CreateOntapVolumeDerivedStats < ActiveRecord::Migration
 
       t.column :miq_cim_stat_id,    :bigint
       t.column :position,           :integer
-      t.timestamps
+      t.timestamps :null => true
     end
     add_index :ontap_volume_derived_stats, :miq_cim_stat_id
   end
