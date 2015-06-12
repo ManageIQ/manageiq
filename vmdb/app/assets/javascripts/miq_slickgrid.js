@@ -70,7 +70,7 @@ function TreeFormatter(row, cell, value, columnDef, dataContext) {
   }
 
   value = value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  var spacer = "<span style='display:inline-block;height:1px;width:" + (15 * dataContext["indent"]) + "px'></span>";
+  var spacer = "<span style='display:inline-block;height:1px;width:" + (15 * dataContext.indent) + "px'></span>";
   spacer += "<span class='cell-plain'></span>";
   var idx = dataView.getIdxById(dataContext.id);
   var toggle_attribute = "";
