@@ -401,16 +401,14 @@ class MiqQueue < ActiveRecord::Base
   end
 
   def delivered(state, msg, result)
-    begin
-      log_prefix = LOG_PREFIX[:delivered]
-      self.state = state
-      $log.info("#{log_prefix} #{MiqQueue.format_short_log_msg(self)}, State: [#{state}], Delivered in [#{Time.now - self.delivered_on}] seconds")
-      m_callback(msg, result) unless self.miq_callback.blank?
-    rescue => err
-      $log.error("#{log_prefix} #{MiqQueue.format_short_log_msg(self)}, #{err.message}")
-    ensure
-      self.destroy
-    end
+    log_prefix = LOG_PREFIX[:delivered]
+    self.state = state
+    $log.info("#{log_prefix} #{MiqQueue.format_short_log_msg(self)}, State: [#{state}], Delivered in [#{Time.now - delivered_on}] seconds")
+    m_callback(msg, result) unless miq_callback.blank?
+  rescue => err
+    $log.error("#{log_prefix} #{MiqQueue.format_short_log_msg(self)}, #{err.message}")
+  ensure
+    destroy
   end
 
   def delivered_on
