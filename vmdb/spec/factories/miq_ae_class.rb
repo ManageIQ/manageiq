@@ -4,7 +4,7 @@ FactoryGirl.define do
 
     trait :with_instances_and_methods do
 
-      ignore do
+      transient do
         ae_fields {}
         ae_instances {}
         ae_methods {}

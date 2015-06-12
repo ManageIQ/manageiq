@@ -3,7 +3,7 @@ FactoryGirl.define do
     sequence(:name) { |n| "miq_ae_method#{seq_padded_for_sorting(n)}" }
 
     trait :with_params do
-      ignore do
+      transient do
         params {}
       end
 
