@@ -4,7 +4,7 @@ module Authenticator
       'EVM'
     end
 
-    def password?
+    def uses_stored_password?
       true
     end
 

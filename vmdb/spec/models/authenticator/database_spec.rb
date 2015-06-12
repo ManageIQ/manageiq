@@ -4,7 +4,7 @@ describe Authenticator::Database do
   subject { Authenticator::Database.new({}) }
   let!(:alice) { FactoryGirl.create(:user, :userid => 'alice', :password => 'secret') }
 
-  its(:password?) { should be_true }
+  its(:uses_stored_password?) { should be_true }
 
   describe '#lookup_by_identity' do
     it "finds existing users" do

@@ -49,7 +49,7 @@ describe Authenticator::Ldap do
     # This specifically comes up when we auto-create a new user from an
     # external auth system: they get saved without a password, so User's
     # dummy_password_for_external_auth hook runs, and it needs to ask
-    # Authenticator#password? whether it's allowed to do anything.
+    # Authenticator#uses_stored_password? whether it's allowed to do anything.
 
     allow(User).to receive(:authenticator).and_return(subject)
   end
@@ -97,7 +97,7 @@ describe Authenticator::Ldap do
     allow(MiqLdap).to receive(:new).and_return { FakeLdap.new(user_data) }
   end
 
-  its(:password?) { should be_false }
+  its(:uses_stored_password?) { should be_false }
 
   describe '#lookup_by_identity' do
     it "finds existing users" do

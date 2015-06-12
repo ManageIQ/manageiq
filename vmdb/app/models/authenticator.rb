@@ -28,7 +28,7 @@ module Authenticator
       @config = config
     end
 
-    def password?
+    def uses_stored_password?
       false
     end
 
