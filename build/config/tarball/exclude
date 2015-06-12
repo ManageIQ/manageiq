@@ -20,6 +20,4 @@
 *lib/disk/modules/MiqBlockDevOps/Makefile
 *lib/disk/modules/MiqBlockDevOps/MiqBlockDevOps.o
 *lib/disk/modules/MiqBlockDevOps.so
-*lib/disk/modules/MiqLargeFileLinux.d/Makefile
-*lib/disk/modules/MiqLargeFileLinux.d/MiqLargeFileLinux.o
 *lib/disk/modules/ruby1.9.3
