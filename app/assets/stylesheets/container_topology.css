@@ -1,0 +1,48 @@
+kubernetes-topology-graph {
+    border-top: 1px solid #eee;
+    position: fixed;
+    height: 76%;
+    width: 98%;
+    padding: 10px;
+}
+.legend {
+    font-family: sans-serif;
+    font-size: 15px;
+    display: inline-block;
+    padding: 0 10px;
+}
+.legend label {
+    font-weight: 400;
+}
+
+.legend div kubernetes-topology-icon svg.kube-topology circle {
+    stroke: #bbb !important;
+}
+
+.refresh {
+    display: inline-block;
+    width:35px;
+    height:35px;
+    padding:0;
+}
+
+#selected {
+    float: right;
+    display: block;
+    margin-top: 15px;
+}
+
+kubernetes-topology-icon {
+    padding: 7px 6px 12px 21px !important;
+}
+
+.kube-topology line.ServicePod {
+    stroke-linecap: round;
+    stroke-dasharray: 5.5;
+}
+
+kubernetes-topology-icon svg {
+    width: 39px !important;;
+    height: 39px !important;;
+    display: block;
+}
