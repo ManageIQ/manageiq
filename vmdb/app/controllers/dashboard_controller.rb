@@ -515,6 +515,7 @@ class DashboardController < ApplicationController
       end
     when :fail
       session[:userid], session[:username], session[:user_tags] = nil
+      User.current_user = nil
       add_flash(validation.flash_msg || "Error: Authentication failed", :error)
       render :update do |page|
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
@@ -637,6 +638,7 @@ class DashboardController < ApplicationController
     user.logoff if user
 
     session.clear
+    User.current_user = nil
     session[:auto_login] = false
     redirect_to :action => 'login'
   end
@@ -713,8 +715,6 @@ class DashboardController < ApplicationController
 
     return nil if db_user.nil? || !db_user.userid
     session[:userid] = db_user.userid
-
-
     session[:username] = db_user.name
 
     # set group and role ids
