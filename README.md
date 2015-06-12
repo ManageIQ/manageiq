@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/ManageIQ/manageiq.svg)](https://travis-ci.org/ManageIQ/manageiq)
 [![Code Climate](http://img.shields.io/codeclimate/github/ManageIQ/manageiq.svg)](https://codeclimate.com/github/ManageIQ/manageiq)
+[![Issue Stats](http://issuestats.com/github/manageiq/manageiq/badge/issue?style=flat)](http://issuestats.com/github/manageiq/manageiq)
+[![Issue Stats](http://issuestats.com/github/manageiq/manageiq/badge/pr?style=flat)](http://issuestats.com/github/manageiq/manageiq)
 
 ManageIQ is a Cloud Management Platform that delivers the insight, control, and
 automation that enterprises need to address the challenges of managing hybrid
