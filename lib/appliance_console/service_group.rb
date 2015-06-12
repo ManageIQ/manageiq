@@ -12,19 +12,6 @@ module ApplianceConsole
       !!@postgresql
     end
 
-    def to_enable
-      postgresql? ? SERVICES + [POSTGRESQL_SERVICE] : SERVICES.dup
-    end
-
-    def to_disable
-      postgresql? ? [] : [POSTGRESQL_SERVICE]
-    end
-    alias :to_stop :to_disable
-
-    def to_start
-      SERVICES.dup
-    end
-
     def restart_services
       enablement
       restart
@@ -42,19 +29,20 @@ module ApplianceConsole
 
     def enable
       enable_miqtop
-      service_command("enable")
+      SERVICES.each { |s| run_service(s, "enable") }
+      run_service(POSTGRESQL_SERVICE, "enable") if postgresql?
     end
 
     def disable
-      service_command("disable")
+      run_service(POSTGRESQL_SERVICE, "disable") unless postgresql?
     end
 
     def start
-      start_command
+      SERVICES.each { |s| run_detached_service(s, "start") }
     end
 
     def stop
-      service_command("stop")
+      run_service(POSTGRESQL_SERVICE, "stop") unless postgresql?
     end
 
     private
@@ -67,18 +55,9 @@ module ApplianceConsole
       LinuxAdmin::Service.new(service).send(action)
     end
 
-    def service_command(action)
-      services = send("to_#{action}")
-      services.each {|s| run_service(s, action) }
-    end
-
     #TODO: Fix LinuxAdmin::Service to detach.
     def run_detached_service(service, action)
       Process.detach(Kernel.spawn("/sbin/service #{service} #{action}", [:out, :err] => ["/dev/null", "w"]))
-    end
-
-    def start_command
-      to_start.each { |s| run_detached_service(s, "start") }
     end
   end
 end
