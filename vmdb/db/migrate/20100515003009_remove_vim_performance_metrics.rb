@@ -56,7 +56,7 @@ class RemoveVimPerformanceMetrics < ActiveRecord::Migration
       cond[0] += " AND resource_type = ? AND resource_id = ?"
       cond << resource.class.name.split("::").last << resource.id
 
-      return VimPerformanceMetric.where(cond).all
+      VimPerformanceMetric.where(cond).to_a
     end
 
     def self.range_to_condition(start_time, end_time)

@@ -35,7 +35,7 @@ class ConvertOldStatesToNewFormat < ActiveRecord::Migration
         :finish       => lambda { |resource, _| say_batch_processed(resource[:state_count]) }
       ) do |r|
         ActiveRecord::Base.connection.reconnect! unless processors == 0
-        states = State.where(r.except(:state_count)).order("timestamp DESC, id DESC").all
+        states = State.where(r.except(:state_count)).order("timestamp DESC, id DESC").to_a
         states = cleanup_bad_states(states)
         migrate_states_to_new_format(states)
       end

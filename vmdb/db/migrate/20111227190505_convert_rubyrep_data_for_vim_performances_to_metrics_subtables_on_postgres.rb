@@ -113,7 +113,7 @@ class ConvertRubyrepDataForVimPerformancesToMetricsSubtablesOnPostgres < ActiveR
   end
 
   def discover_replication_settings
-    configs = Configuration.where(:typ => 'vmdb').select(:settings).all
+    configs = Configuration.where(:typ => 'vmdb').select(:settings).to_a
 
     settings = nil
     configs.each do |c|
