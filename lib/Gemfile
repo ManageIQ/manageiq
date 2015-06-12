@@ -26,7 +26,6 @@ gem "ffi",                  "~>1.9.3",       :require => false
 gem "ffi-vix_disk_lib",     "~>1.0.1",       :require => false  # used by lib/VixDiskLib
 gem "fog",                  "~>1.29.0",      :require => false
 gem "httpclient",           "~>2.5.3",       :require => false
-gem "large_file_linux",     ">=0.10.1", "<1", :require => false
 gem "linux_admin",          ">=0.10.1", "<1", :require => false
 gem "log4r",                "=1.1.8",        :require => false
 gem "memoist",              "~>0.11.0",      :require => false
@@ -45,6 +44,11 @@ gem "sass",                 "3.1.20",        :require => false
 gem "trollop",              "~>2.0",      :require => false
 gem "psych",                "~>2.0.12"
 gem "apipie-bindings",      "~>0.0.12",      :require => false
+
+# large_file_linux is only needed for 32 bit Linux.
+if RbConfig::CONFIG["host_cpu"] == "x86" && RbConfig::CONFIG["host_os"].include?("linux")
+  gem "large_file_linux",     "~>0.1.0",     :require => false
+end
 
 # qpid group is needed to gate the inclusion of qpid_messaging gem on platforms
 # where the qpid-cpp-client-devel package is not available.  This includes
