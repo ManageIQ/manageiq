@@ -361,8 +361,8 @@ class MiqQueue < ActiveRecord::Base
       begin
         status = STATUS_OK
         message = "Message delivered successfully"
-        Timeout::timeout(msg_timeout) do
-          if obj.is_a?(Class) && !target_id.nil?
+        Timeout.timeout(msg_timeout) do
+          if obj.kind_of?(Class) && !target_id.nil?
             result = obj.send(method_name, target_id, *args)
           else
             result = obj.send(method_name, *args)
@@ -374,7 +374,7 @@ class MiqQueue < ActiveRecord::Base
         $log.error("#{log_prefix} #{MiqQueue.format_short_log_msg(self)}, #{message}")
         status = STATUS_RETRY
       rescue TimeoutError
-        message = "timed out after #{Time.now - self.delivered_on} seconds.  Timeout threshold [#{msg_timeout}]"
+        message = "timed out after #{Time.now - delivered_on} seconds.  Timeout threshold [#{msg_timeout}]"
         $log.error("#{log_prefix} #{MiqQueue.format_short_log_msg(self)}, #{message}")
         status = STATUS_TIMEOUT
       end
@@ -450,7 +450,7 @@ class MiqQueue < ActiveRecord::Base
   end
 
   def requeue(options = {})
-    options.reverse_merge!(self.attributes.symbolize_keys)
+    options.reverse_merge!(attributes.symbolize_keys)
     options.delete(:id)
     MiqQueue.put(options)
   end
@@ -480,7 +480,7 @@ class MiqQueue < ActiveRecord::Base
   def self.atStartup
     log_prefix = LOG_PREFIX[:atStartup]
     if File.exist?(@@delete_command_file)
-      options = YAML::load(ERB.new(File.read(@@delete_command_file)).result)
+      options = YAML.load(ERB.new(File.read(@@delete_command_file)).result)
       if options[:required_role].nil? || MiqServer.my_server(true).has_active_role?(options[:required_role])
         $log.info("#{log_prefix} Executing: [#{@@delete_command_file}], Options: [#{options.inspect}]")
         deleted = delete_all(options[:conditions])
