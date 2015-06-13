@@ -14,13 +14,13 @@ describe MiqWidget do
     before(:each) do
       MiqReport.seed_report("Vendor and Guest OS")
 
-      @idents1 = ["dashboard_admin"]
-      @role1   = FactoryGirl.create(:miq_user_role, :name => "Role1", :miq_product_features => MiqProductFeature.find_all_by_identifier(@idents1))
+      feature1 = MiqProductFeature.find_all_by_identifier("dashboard_admin")
+      @role1   = FactoryGirl.create(:miq_user_role, :name => "Role1", :miq_product_features => feature1)
       @group1  = FactoryGirl.create(:miq_group, :miq_user_role => @role1)
       @user1   = FactoryGirl.create(:user, :miq_groups => [@group1], :name => "Administrator", :userid => "admin")
 
-      @idents2 = ["everything"]
-      @role2   = FactoryGirl.create(:miq_user_role, :name => "Role2", :miq_product_features => MiqProductFeature.find_all_by_identifier(@idents2))
+      feature2 = MiqProductFeature.find_all_by_identifier("everything")
+      @role2   = FactoryGirl.create(:miq_user_role, :name => "Role2", :miq_product_features => feature2)
       @group2  = FactoryGirl.create(:miq_group, :description => "Group2", :miq_user_role => @role2)
       @user2   = FactoryGirl.create(:user, :userid => "user2", :miq_groups => [@group2])
 

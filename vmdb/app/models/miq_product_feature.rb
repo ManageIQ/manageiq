@@ -25,8 +25,7 @@ class MiqProductFeature < ActiveRecord::Base
   end
 
   def self.feature_parent(identifier)
-    feat = self.features[identifier.to_s]
-    feat[:parent] if feat
+    features[identifier.to_s].try(:[], :parent)
   end
 
   def self.parent_for_feature(identifier)
@@ -130,5 +129,9 @@ class MiqProductFeature < ActiveRecord::Base
       role.miq_product_features << self
       role.save!
     end
+  end
+
+  def self.find_all_by_identifier(features)
+    where(:identifier => features)
   end
 end
