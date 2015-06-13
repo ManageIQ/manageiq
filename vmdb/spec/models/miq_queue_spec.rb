@@ -4,7 +4,7 @@ describe MiqQueue do
   specify { FactoryGirl.build(:miq_queue).should be_valid }
 
   context "#deliver" do
-    before(:each) do
+    before do
       @guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
     end
 
@@ -53,7 +53,7 @@ describe MiqQueue do
   end
 
   context "With messages left in dequeue at startup," do
-    before(:each) do
+    before do
       @guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
       @other_miq_server = FactoryGirl.create(:miq_server, :guid => MiqUUID.new_guid, :zone => @zone)
@@ -63,7 +63,7 @@ describe MiqQueue do
     end
 
     context "where worker has a message in dequeue" do
-      before(:each) do
+      before do
         @msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @worker)
       end
 
@@ -88,7 +88,7 @@ describe MiqQueue do
     end
 
     context "where worker on other server has a message in dequeue" do
-      before(:each) do
+      before do
         @msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @other_worker)
       end
 
@@ -101,7 +101,7 @@ describe MiqQueue do
     end
 
     context "message in dequeue without a worker" do
-      before(:each) do
+      before do
         @msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE)
       end
 
@@ -218,7 +218,7 @@ describe MiqQueue do
   end
 
   context "miq_queue with messages" do
-    before(:each) do
+    before do
       @guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
       @t1 = Time.parse("Wed Apr 20 00:15:00 UTC 2011")
@@ -256,7 +256,7 @@ describe MiqQueue do
   end
 
   context "deliver to queue" do
-    before(:each) do
+    before do
       @guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
       @t1 = Time.parse("Wed Apr 20 00:15:00 UTC 2011")
@@ -307,7 +307,7 @@ describe MiqQueue do
   end
 
   context "worker" do
-    before(:each) do
+    before do
       @guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
       @worker       = FactoryGirl.create(:miq_ems_refresh_worker, :miq_server_id => @miq_server.id)
@@ -324,7 +324,7 @@ describe MiqQueue do
   end
 
   context "#put" do
-    before(:each) do
+    before do
       @guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
     end
 
@@ -363,7 +363,7 @@ describe MiqQueue do
         :args        => [1,2]
       )
 
-      expect(MiqQueue.first.state).to eq("ready")
+      expect(MiqQueue.first.state).to eq(MiqQueue::STATE_READY)
     end
 
     it "should respect hash updates in put_unless_exists" do
