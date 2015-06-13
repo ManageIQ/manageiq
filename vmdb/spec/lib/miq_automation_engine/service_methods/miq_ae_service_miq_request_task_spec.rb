@@ -5,7 +5,7 @@ module MiqAeServiceMiqRequestTaskSpec
     before(:each) do
       MiqAutomateHelper.create_service_model_method('SPEC_DOMAIN', 'EVM',
                                                     'AUTOMATE', 'test1', 'test')
-      @ae_method     = ::MiqAeMethod.find(:first)
+      @ae_method     = ::MiqAeMethod.first
       @ae_result_key = 'foo'
 
       @miq_request_task = FactoryGirl.create(:miq_request_task, :status => 'Ok')

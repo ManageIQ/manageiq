@@ -276,7 +276,7 @@ describe MiqWidget do
     it "creates a new task when previous task is finished" do
       @widget.queue_generate_content
       MiqTask.first.state_finished
-      message = MiqQueue.find(:first, :conditions => @q_options)
+      message = MiqQueue.where(@q_options).first
       message.update_attribute(:state, MiqQueue::STATE_ERROR)
 
       @widget.queue_generate_content
@@ -299,7 +299,7 @@ describe MiqWidget do
       task = MiqTask.first
       task.state_active
 
-      message = MiqQueue.find(:first, :conditions => @q_options)
+      message = MiqQueue.where(@q_options).first
       message.destroy
       MiqQueue.count.should == 0
 
@@ -317,7 +317,7 @@ describe MiqWidget do
       task = MiqTask.first
       task.state_active
 
-      message = MiqQueue.find(:first, :conditions => @q_options)
+      message = MiqQueue.where(@q_options).first
       message.update_attribute(:state, MiqQueue::STATE_ERROR)
       MiqQueue.count.should == 1
 

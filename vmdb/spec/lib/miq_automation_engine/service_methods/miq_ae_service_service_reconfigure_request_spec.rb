@@ -26,7 +26,7 @@ module MiqAeServiceServiceReconfigureRequestSpec
       FactoryGirl.create(:ui_task_set_approver)
     end
 
-    let(:ae_method)     { ::MiqAeMethod.find(:first) }
+    let(:ae_method)     { ::MiqAeMethod.first }
     let(:user)          { FactoryGirl.create(:user, :name => 'Fred Flintstone', :userid => 'fred') }
     let(:request)       { FactoryGirl.create(:service_reconfigure_request, :requester => user, :userid => user.userid) }
 

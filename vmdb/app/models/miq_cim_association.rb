@@ -68,25 +68,25 @@ class MiqCimAssociation < ActiveRecord::Base
   end
 
   def self.get_association_id(assoc, from_inst, to_inst)
-    self.select(:id).find(:first, :conditions => {
+    select(:id).where(
       :obj_name     => from_inst.obj_name_str,
       :result_obj_name  => to_inst.obj_name_str,
       :assoc_class    => assoc[:AssocClass],
       # :result_class   => to_inst.class_name,  # use the specific class instead of the one in assoc
       :role       => assoc[:Role],
       # :result_role    => assoc[:ResultRole]
-    })
+    ).first
   end
 
   def self.get_rev_association_id(assoc, from_inst, to_inst)
-    self.select(:id).find(:first, :conditions => {
+    select(:id).where(
       :obj_name     => to_inst.obj_name_str,
       :result_obj_name  => from_inst.obj_name_str,
       :assoc_class    => assoc[:AssocClass],
       # :result_class   => from_inst.class_name,  # use the specific class instead of the one in assoc
       :role       => assoc[:ResultRole],
       # :result_role    => assoc[:Role]
-    })
+    ).first
   end
 
   def self.where_association(assoc)

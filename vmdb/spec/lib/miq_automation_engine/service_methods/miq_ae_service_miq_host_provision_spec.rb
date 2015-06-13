@@ -5,7 +5,7 @@ module MiqAeServiceMiqHostProvisionSpec
     before(:each) do
       MiqAutomateHelper.create_service_model_method('SPEC_DOMAIN', 'EVM',
                                                     'AUTOMATE', 'test1', 'test')
-      @ae_method     = ::MiqAeMethod.find(:first)
+      @ae_method     = ::MiqAeMethod.first
       @ae_result_key = 'foo'
 
       @miq_host_provision = FactoryGirl.create(:miq_host_provision, :provision_type => 'host_pxe_install', :state => 'pending', :status => 'Ok')

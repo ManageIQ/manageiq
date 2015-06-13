@@ -9,7 +9,7 @@ module MiqAeServiceServiceTemplateProvisionTaskSpec
     before(:each) do
       MiqAutomateHelper.create_service_model_method('SPEC_DOMAIN', 'EVM',
                                                     'AUTOMATE', 'test1', 'test')
-      @ae_method     = ::MiqAeMethod.find(:first)
+      @ae_method     = ::MiqAeMethod.first
       @ae_result_key = 'foo'
       @options       = {}
       @service_template_provision_task = FactoryGirl.create(:service_template_provision_task,  :state => 'pending', :status => 'Ok', :request_type => "clone_to_service", :options => @options)

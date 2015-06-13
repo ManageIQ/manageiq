@@ -14,7 +14,7 @@ module MiqAeServiceSpec
                                :priority => 3}
                     ]
       MiqAutomateHelper.create_dummy_method(identifiers, fields)
-      @ae_method     = ::MiqAeMethod.find(:first)
+      @ae_method     = ::MiqAeMethod.first
       @ae_result_key = 'foo'
     end
 

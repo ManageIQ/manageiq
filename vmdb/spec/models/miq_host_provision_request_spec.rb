@@ -92,7 +92,7 @@ describe MiqHostProvisionRequest do
         it "should add and delete tags from a request" do
           @pr.get_tags.length.should == 0
 
-          t = Classification.find(:first, :conditions => {:description => 'Department', :parent_id => 0}, :include => :tag)
+          t = Classification.where(:description => 'Department', :parent_id => 0).includes(:tag).first
           @pr.add_tag(t.name, t.children.first.name)
           @pr.get_tags[t.name.to_sym].should be_kind_of(String) # Single tag returns as a String
           @pr.get_tags[t.name.to_sym].should == t.children.first.name
@@ -139,7 +139,7 @@ describe MiqHostProvisionRequest do
         it "should return classifications for tags" do
           @pr.get_tags.length.should == 0
 
-          t = Classification.find(:first, :conditions => {:description => 'Department', :parent_id => 0}, :include => :tag)
+          t = Classification.where(:description => 'Department', :parent_id => 0).includes(:tag).first
           @pr.add_tag(t.name, t.children.first.name)
           @pr.get_tags[t.name.to_sym].should be_kind_of(String)
 
