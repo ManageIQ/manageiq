@@ -79,7 +79,6 @@ class VmOrTemplate < ActiveRecord::Base
   has_many                  :kernel_drivers, -> { where "typename = 'kernel' OR typename = 'misc'" }, :class_name => "SystemService"
   has_many                  :filesystem_drivers, -> { where "typename = 'filesystem'" },  :class_name => "SystemService"
   has_many                  :linux_initprocesses, -> { where "typename = 'linux_initprocess' OR typename = 'linux_systemd'" }, :class_name => "SystemService"
-  has_many                  :linux_initprocesses, :class_name => "SystemService", :conditions => "typename = 'linux_initprocess' OR typename = 'linux_systemd'"
 
   has_many                  :filesystems, :as => :resource, :dependent => :destroy
   has_many                  :directories, -> { where "rsc_type = 'dir'" }, :as => :resource, :class_name => "Filesystem"

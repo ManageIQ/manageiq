@@ -9,7 +9,7 @@ class ContainerGroup < ActiveRecord::Base
   has_many :containers, :dependent => :destroy
   has_many :container_definitions, :dependent => :destroy
   belongs_to  :ext_management_system, :foreign_key => "ems_id"
-  has_many :labels, :class_name => CustomAttribute, :as => :resource, :conditions => {:section => "labels"}
+  has_many :labels, -> { where(:section => "labels") }, :class_name => CustomAttribute, :as => :resource
   belongs_to :container_node
   has_and_belongs_to_many :container_services, :join_table => :container_groups_container_services
   belongs_to :container_replicator
