@@ -167,7 +167,7 @@ class DashboardController < ApplicationController
     @layout    = "dashboard"
     @dashboard = true
 
-    g = MiqGroup.find_by_id(session[:group])
+    g = current_group
     db_order = if g.settings && g.settings[:dashboard_order]
                  g.settings[:dashboard_order]
                else
@@ -708,37 +708,20 @@ class DashboardController < ApplicationController
     session[:winW]     = winw
     session['referer'] = referer
 
-    return nil if db_user.nil? || !db_user.userid
-    session[:userid] = db_user.userid
-
-    # Set the current userid in the User class for this thread for models to use
-    User.current_userid = session[:userid]
-
-    session[:username] = db_user.name
-
-    # set group and role ids
-    return nil unless db_user.current_group
-    session[:group] = db_user.current_group.id              # Set the user's group id
-    session[:group_description] = db_user.current_group.description # and description
-    role = db_user.current_group.miq_user_role
-    return nil unless db_user.current_group.miq_user_role
-    session[:role] = role.id                            # Set the group's role id
-
-    # Build pre-sprint 69 role name if this is an EvmRole read_only role
-    session[:userrole] = role.read_only? ? role.name.split("-").last : ""
+    self.current_user = db_user
+    self.current_group = db_user.try(:current_group)
 
     # Save an array of groups this user is eligible for, if more than 1
-    eligible_groups = db_user.miq_groups.sort_by { |g| g.description.downcase }
-    session[:eligible_groups] = db_user.nil? || eligible_groups.length < 2 ?
-        [] :
-        eligible_groups.collect{|g| [g.description, g.id]}
+    eligible_groups = db_user ? db_user.miq_groups.sort_by { |g| g.description.downcase } : []
+    session[:eligible_groups] = eligible_groups.length < 2 ? [] : eligible_groups.collect { |g| [g.description, g.id] }
 
     # Clear instance vars that end up in the session
-    @sb = @edit = @view = @settings = @lastaction = @perf_options = @assign =
-        @current_page = @search_text = @detail_sortcol = @detail_sortdir =
-            @exp_key = @server_options = @tl_options =
-                @pp_choices = @panels = @breadcrumbs = nil
-    true
+    @sb = @edit = @view = @settings = @lastaction = @perf_options = @assign = nil
+    @current_page = @search_text = @detail_sortcol = @detail_sortdir = @exp_key = nil
+    @server_options = @tl_options = @pp_choices = @panels = @breadcrumbs = nil
+
+    db_user && db_user.userid &&
+      db_user.current_group && db_user.current_group.miq_user_role && true
   end
 
   # Initialize session hash variables for the logged in user
