@@ -80,6 +80,18 @@ module EmsCommon
                       pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") +
                       " on this " + ui_lookup(:tables => @table_name)
       end
+    elsif @display == "containers" || session[:display] == "containers" && params[:display].nil?
+      title = ui_lookup(:tables => "containers")
+      drop_breadcrumb(:name => @ems.name + " (All #{title})",
+                      :url  => "/#{@table_name}/show/#{@ems.id}?display=#{@display}")
+      @view, @pages = get_view(Container, :parent => @ems)
+      @showtype = @display
+      if @view.extras[:total_count] > @view.extras[:auth_count] && @view.extras[:total_count] &&
+         @view.extras[:auth_count]
+        @bottom_msg = "* You are not authorized to view " +
+                      pluralize(@view.extras[:total_count] - @view.extras[:auth_count], "other #{title.singularize}") +
+                      " on this " + ui_lookup(:tables => @table_name)
+      end
     elsif @display == "container_nodes" || session[:display] == "container_nodes" && params[:display].nil?
       title = "Container Nodes"
       drop_breadcrumb(:name => @ems.name + " (All #{title})",

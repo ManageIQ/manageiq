@@ -85,3 +85,13 @@
               = link_to(_("Replicators (%s)") % num_replicators,
                   {:action  => 'show', :id => @record, :display => 'container_replicators'},
                   :title => _("Show Replicators"))
+        - if role_allows(:feature => "containers")
+          - num_containers = @record.number_of(:containers)
+          - if num_containers == 0
+            %li.disabled
+              = link_to(_('Containers (0)'), "#")
+          - else
+            %li
+              = link_to(_("Containers (%s)") % num_containers,
+                  {:action  => 'show', :id => @record,
+                  :display => 'containers'}, :title => _("Show Containers"))
