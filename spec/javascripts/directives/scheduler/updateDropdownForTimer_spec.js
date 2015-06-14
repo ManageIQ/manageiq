@@ -1,6 +1,6 @@
 describe('update-drop-down-for-timer initialization', function() {
   var $scope, form;
-  beforeEach(module('miqAngularApplication'));
+  beforeEach(module('ManageIQ.angularApplication'));
   beforeEach(inject(function($compile, $rootScope) {
     $scope = $rootScope;
     var element = angular.element(

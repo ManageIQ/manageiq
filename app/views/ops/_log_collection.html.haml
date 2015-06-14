@@ -48,5 +48,5 @@
   = render :partial => "layouts/angular/x_edit_buttons_angular"
 
 :javascript
-  miqAngularApplication.value('serverId', '#{@record.id || "new"}');
-  angular.bootstrap(jQuery('#form_div'), ['miqAngularApplication']);
+  ManageIQ.angularApplication.value('serverId', '#{@record.id || "new"}');
+  angular.bootstrap(jQuery('#form_div'), ['ManageIQ.angularApplication']);

@@ -1,4 +1,4 @@
-miqAngularApplication.directive('checkchange', function() {
+ManageIQ.angularApplication.directive('checkchange', function() {
   return {
     require: 'ngModel',
     link: function (scope, elem, attr, ctrl) {

@@ -11,29 +11,29 @@ class ExplorerPresenter
   # This presenter supports these options:
   #   FIXME: fill in missing doc
   #
-  #   add_nodes              -- JSON string of nodes to add to the active tree
-  #   delete_node            -- key of node to be deleted from the active tree
+  #   add_nodes                        -- JSON string of nodes to add to the active tree
+  #   delete_node                      -- key of node to be deleted from the active tree
   #   cal_date_from
   #   cal_date_to
-  #   build_calendar         -- call miqBuildCalendar, true/false or Hash with
-  #                             compulsory key :skip_days
+  #   build_calendar                   -- call miqBuildCalendar, true/false or Hash with
+  #                                       compulsory key :skip_days
   #   init_dashboard
-  #   ajax_action            -- Hash of options for AJAX action to fire
+  #   ajax_action                      -- Hash of options for AJAX action to fire
   #   cell_a_view
   #   clear_gtl_list_grid
   #   right_cell_text
-  #   miq_parent_id
-  #   miq_parent_class
-  #   miq_record_id          -- record being displayed or edited
-  #   miq_widget_dd_url      -- set dashboard widget drag drop url
-  #   osf_node               -- node to open, select and focus
-  #   open_accord            -- accordion to open
-  #   extra_js               -- array of extra javascript chunks to be written out
+  #   ManageIQ.record.parentId
+  #   ManageIQ.record.parentClass
+  #   ManageIQ.record.recordId         -- record being displayed or edited
+  #   ManageIQ.widget.dashboardUrl     -- set dashboard widget drag drop url
+  #   osf_node                         -- node to open, select and focus
+  #   open_accord                      -- accordion to open
+  #   extra_js                         -- array of extra javascript chunks to be written out
   #
-  #   object_tree_json  --
-  #   exp               --
+  #   object_tree_json            --
+  #   exp                         --
   #
-  #   active_tree       -- x_active_tree view state from controller
+  #   active_tree                 -- x_active_tree view state from controller
   #
   # Following options are hashes:
   #   lock_unlock_trees         -- trees to lock/unlock
@@ -78,10 +78,10 @@ class ExplorerPresenter
   def process
     # see if any miq expression vars need to be set
     unless @options[:exp].empty?
-      @out << "miq_val1_type  = '#{@options[:exp][:val1_type]}';"  if @options[:exp][:val1_type]
-      @out << "miq_val1_title = '#{@options[:exp][:val1_title]}';" if @options[:exp][:val1_title]
-      @out << "miq_val2_type  = '#{@options[:exp][:val2_type]};"   if @options[:exp][:val2_type]
-      @out << "miq_val2_title = '#{@options[:exp][:val2_title]}';" if @options[:exp][:val2_title]
+      @out << "ManageIQ.expEditor.first.type = '#{@options[:exp][:val1_type]}';"  if @options[:exp][:val1_type]
+      @out << "ManageIQ.expEditor.first.title = '#{@options[:exp][:val1_title]}';" if @options[:exp][:val1_title]
+      @out << "ManageIQ.expEditor.second.type  = '#{@options[:exp][:val2_type]};"   if @options[:exp][:val2_type]
+      @out << "ManageIQ.expEditor.second.title = '#{@options[:exp][:val2_title]}';" if @options[:exp][:val2_title]
     end
 
     # Turn off form buttons when replacing explorer right cell
@@ -114,7 +114,7 @@ class ExplorerPresenter
         \n"
     end
 
-    @out << "miq_widget_dd_url = '#{@options[:miq_widget_dd_url]}';" if @options[:miq_widget_dd_url]
+    @out << "ManageIQ.widget.dashboardUrl = '#{@options[:miq_widget_dd_url]}';" if @options[:miq_widget_dd_url]
 
     # Always set 'def' view in left cell as active in case it was changed to show compare/drift sections
     @out << "if (miqDomElementExists('custom_left_cell_div')) dhxLayout.cells('a').view('def').setActive();"
@@ -140,7 +140,7 @@ class ExplorerPresenter
 
     @out << "dhxLayout.cells('a').view('#{@options[:cell_a_view]}').setActive();" if @options[:cell_a_view]
 
-    @out << "if (typeof gtl_list_grid != 'undefined') gtl_list_grid = undefined;" if @options[:clear_gtl_list_grid]
+    @out << "ManageIQ.grids.grids['gtl_list_grid'] = undefined;" if @options[:clear_gtl_list_grid]
 
     @options[:set_visible_elements].each do |el, visible|
       @out << set_element_visible(el, visible)
@@ -161,7 +161,7 @@ class ExplorerPresenter
     end
 
     # reset miq_record_id, else it remembers prev id and sends it when add is pressed from list view
-    [:miq_record_id, :miq_parent_id, :miq_parent_class].each { |variable| @out << set_or_undef(variable) }
+    [:recordId, :parentId, :parentClass].each { |variable| @out << set_or_undef(variable) }
 
     # Open, select, and focus node in current tree
     #   using dynatree if dhtmlxtree object is undefined
@@ -187,8 +187,8 @@ class ExplorerPresenter
     out = []
     if Hash === @options[:build_calendar]
       calendar_options = @options[:build_calendar]
-      out << "miq_cal_dateFrom = #{format_cal_date(calendar_options[:date_from])};" if calendar_options.key?(:date_from)
-      out << "miq_cal_dateTo   = #{format_cal_date(calendar_options[:date_to])};"   if calendar_options.key?(:date_to)
+      out << "ManageIQ.calendar.calDateFrom = #{format_cal_date(calendar_options[:date_from])};" if calendar_options.key?(:date_from)
+      out << "ManageIQ.calendar.calDateTo   = #{format_cal_date(calendar_options[:date_to])};"   if calendar_options.key?(:date_to)
 
       if calendar_options.key?(:skip_days)
         skip_days = calendar_options[:skip_days].nil? ?
@@ -209,7 +209,7 @@ class ExplorerPresenter
 
   # Set a JS variable to value from options or 'undefined'
   def set_or_undef(variable)
-    @options[variable] ? "#{variable} = '#{@options[variable]}';" : "#{variable} = undefined;"
+    @options[variable] ? "ManageIQ.record.#{variable} = '#{@options[variable]}';" : "ManageIQ.record.#{variable} = null;"
   end
 
   # Replaces an element (div) using options :partial and :locals

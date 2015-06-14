@@ -108,29 +108,32 @@ module ApplicationController::Compare
     compare_to_json(@compare)
     render :update do |page|                    # Use RJS to update the display
       if @sb[:miq_temp_params] == "different"
-        page << "center_tb.enableItem('compare_all');"
-        page << "center_tb.setItemState('compare_all', false);"
-        page << "center_tb.enableItem('compare_same');"
-        page << "center_tb.setItemState('compare_same', false);"
-        page << "center_tb.disableItem('compare_diff');"
-        page << "center_tb.setItemState('compare_diff', false);"  # For some reason, need to unselect before selecting a disabled item
-        page << "center_tb.setItemState('compare_diff', true);"
+        page << "ManageIQ.toolbars.center_tb.obj.enableItem('compare_all');"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('compare_all', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.enableItem('compare_same');"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('compare_same', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.disableItem('compare_diff');"
+        # For some reason, need to unselect before selecting a disabled item
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('compare_diff', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('compare_diff', true);"
       elsif @sb[:miq_temp_params] == "same"
-        page << "center_tb.enableItem('compare_all');"
-        page << "center_tb.setItemState('compare_all', false);"
-        page << "center_tb.enableItem('compare_diff');"
-        page << "center_tb.setItemState('compare_diff', false);"
-        page << "center_tb.disableItem('compare_same');"
-        page << "center_tb.setItemState('compare_same', false);"  # For some reason, need to unselect before selecting a disabled item
-        page << "center_tb.setItemState('compare_same', true);"
+        page << "ManageIQ.toolbars.center_tb.obj.enableItem('compare_all');"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('compare_all', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.enableItem('compare_diff');"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('compare_diff', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.disableItem('compare_same');"
+        # For some reason, need to unselect before selecting a disabled item
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('compare_same', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('compare_same', true);"
       else
-        page << "center_tb.enableItem('compare_diff');"
-        page << "center_tb.setItemState('compare_diff', false);"
-        page << "center_tb.enableItem('compare_same');"
-        page << "center_tb.setItemState('compare_same', false);"
-        page << "center_tb.disableItem('compare_all');"
-        page << "center_tb.setItemState('compare_all', false);" # For some reason, need to unselect before selecting a disabled item
-        page << "center_tb.setItemState('compare_all', true);"
+        page << "ManageIQ.toolbars.center_tb.obj.enableItem('compare_diff');"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('compare_diff', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.enableItem('compare_same');"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('compare_same', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.disableItem('compare_all');"
+        # For some reason, need to unselect before selecting a disabled item
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('compare_all', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('compare_all', true);"
       end
       page.replace_html("main_div", :partial=>"layouts/compare")  # Replace the main div area contents
       page << "miqSparkle(false);"
@@ -166,17 +169,19 @@ module ApplicationController::Compare
     compare_to_json(@compare)
     render :update do |page|                    # Use RJS to update the display
       if @compressed
-        page << "view_tb.enableItem('compare_expanded');"
-        page << "view_tb.setItemState('compare_expanded', false);"
-        page << "view_tb.disableItem('compare_compressed');"
-        page << "view_tb.setItemState('compare_compressed', false);"  # For some reason, need to unselect before selecting a disabled item
-        page << "view_tb.setItemState('compare_compressed', true);"
+        page << "ManageIQ.toolbars.view_tb.obj.enableItem('compare_expanded');"
+        page << "ManageIQ.toolbars.view_tb.obj.setItemState('compare_expanded', false);"
+        page << "ManageIQ.toolbars.view_tb.obj.disableItem('compare_compressed');"
+        # For some reason, need to unselect before selecting a disabled item
+        page << "ManageIQ.toolbars.view_tb.obj.setItemState('compare_compressed', false);"
+        page << "ManageIQ.toolbars.view_tb.obj.setItemState('compare_compressed', true);"
       else
-        page << "view_tb.enableItem('compare_compressed');"
-        page << "view_tb.setItemState('compare_compressed', false);"
-        page << "view_tb.disableItem('compare_expanded');"
-        page << "view_tb.setItemState('compare_expanded', false);"  # For some reason, need to unselect before selecting a disabled item
-        page << "view_tb.setItemState('compare_expanded', true);"
+        page << "ManageIQ.toolbars.view_tb.obj.enableItem('compare_compressed');"
+        page << "ManageIQ.toolbars.view_tb.obj.setItemState('compare_compressed', false);"
+        page << "ManageIQ.toolbars.view_tb.obj.disableItem('compare_expanded');"
+        # For some reason, need to unselect before selecting a disabled item
+        page << "ManageIQ.toolbars.view_tb.obj.setItemState('compare_expanded', false);"
+        page << "ManageIQ.toolbars.view_tb.obj.setItemState('compare_expanded', true);"
       end
       page.replace_html("main_div", :partial=>"layouts/compare")  # Replace the main div area contents
       page << "miqSparkle(false);"
@@ -192,17 +197,19 @@ module ApplicationController::Compare
     compare_to_json(@compare)
     render :update do |page|                    # Use RJS to update the display
       if @exists_mode
-        page << "center_tb.enableItem('comparemode_details');"
-        page << "center_tb.setItemState('comparemode_details', false);"
-        page << "center_tb.disableItem('comparemode_exists');"
-        page << "center_tb.setItemState('comparemode_exists', false);"  # For some reason, need to unselect before selecting a disabled item
-        page << "center_tb.setItemState('comparemode_exists', true);"
+        page << "ManageIQ.toolbars.center_tb.obj.enableItem('comparemode_details');"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('comparemode_details', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.disableItem('comparemode_exists');"
+        # For some reason, need to unselect before selecting a disabled item
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('comparemode_exists', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('comparemode_exists', true);"
       else
-        page << "center_tb.enableItem('comparemode_exists');"
-        page << "center_tb.setItemState('comparemode_exists', false);"
-        page << "center_tb.disableItem('comparemode_details');"
-        page << "center_tb.setItemState('comparemode_details', false);" # For some reason, need to unselect before selecting a disabled item
-        page << "center_tb.setItemState('comparemode_details', true);"
+        page << "ManageIQ.toolbars.center_tb.obj.enableItem('comparemode_exists');"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('comparemode_exists', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.disableItem('comparemode_details');"
+        # For some reason, need to unselect before selecting a disabled item
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('comparemode_details', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('comparemode_details', true);"
       end
       page.replace_html("main_div", :partial=>"layouts/compare")  # Replace the main div area contents
       page << "miqSparkle(false);"
@@ -527,29 +534,32 @@ module ApplicationController::Compare
     @showtype = "drift"
     render :update do |page|                    # Use RJS to update the display
       if @sb[:miq_drift_params] == "different"
-        page << "center_tb.enableItem('drift_all');"
-        page << "center_tb.setItemState('drift_all', false);"
-        page << "center_tb.enableItem('drift_same');"
-        page << "center_tb.setItemState('drift_same', false);"
-        page << "center_tb.disableItem('drift_diff');"
-        page << "center_tb.setItemState('drift_diff', false);"  # For some reason, need to unselect before selecting a disabled item
-        page << "center_tb.setItemState('drift_diff', true);"
+        page << "ManageIQ.toolbars.center_tb.obj.enableItem('drift_all');"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('drift_all', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.enableItem('drift_same');"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('drift_same', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.disableItem('drift_diff');"
+        # For some reason, need to unselect before selecting a disabled item
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('drift_diff', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('drift_diff', true);"
       elsif @sb[:miq_drift_params] == "same"
-        page << "center_tb.enableItem('drift_all');"
-        page << "center_tb.setItemState('drift_all', false);"
-        page << "center_tb.enableItem('drift_diff');"
-        page << "center_tb.setItemState('drift_diff', false);"
-        page << "center_tb.disableItem('drift_same');"
-        page << "center_tb.setItemState('drift_same', false);"  # For some reason, need to unselect before selecting a disabled item
-        page << "center_tb.setItemState('drift_same', true);"
+        page << "ManageIQ.toolbars.center_tb.obj.enableItem('drift_all');"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('drift_all', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.enableItem('drift_diff');"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('drift_diff', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.disableItem('drift_same');"
+        # For some reason, need to unselect before selecting a disabled item
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('drift_same', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('drift_same', true);"
       else
-        page << "center_tb.enableItem('drift_diff');"
-        page << "center_tb.setItemState('drift_diff', false);"
-        page << "center_tb.enableItem('drift_same');"
-        page << "center_tb.setItemState('drift_same', false);"
-        page << "center_tb.disableItem('drift_all');"
-        page << "center_tb.setItemState('drift_all', false);" # For some reason, need to unselect before selecting a disabled item
-        page << "center_tb.setItemState('drift_all', true);"
+        page << "ManageIQ.toolbars.center_tb.obj.enableItem('drift_diff');"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('drift_diff', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.enableItem('drift_same');"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('drift_same', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.disableItem('drift_all');"
+        # For some reason, need to unselect before selecting a disabled item
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('drift_all', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('drift_all', true);"
       end
       page.replace_html("main_div", :partial=>"layouts/drift")  # Replace the main div area contents
       page << "miqSparkle(false);"
@@ -613,17 +623,19 @@ module ApplicationController::Compare
     drift_to_json(@compare)
     render :update do |page|                    # Use RJS to update the display
       if @exists_mode
-        page << "center_tb.enableItem('driftmode_details');"
-        page << "center_tb.setItemState('driftmode_details', false);"
-        page << "center_tb.disableItem('driftmode_exists');"
-        page << "center_tb.setItemState('driftmode_exists', false);"  # For some reason, need to unselect before selecting a disabled item
-        page << "center_tb.setItemState('driftmode_exists', true);"
+        page << "ManageIQ.toolbars.center_tb.obj.enableItem('driftmode_details');"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('driftmode_details', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.disableItem('driftmode_exists');"
+        # For some reason, need to unselect before selecting a disabled item
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('driftmode_exists', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('driftmode_exists', true);"
       else
-        page << "center_tb.enableItem('driftmode_exists');"
-        page << "center_tb.setItemState('driftmode_exists', false);"
-        page << "center_tb.disableItem('driftmode_details');"
-        page << "center_tb.setItemState('driftmode_details', false);" # For some reason, need to unselect before selecting a disabled item
-        page << "center_tb.setItemState('driftmode_details', true);"
+        page << "ManageIQ.toolbars.center_tb.obj.enableItem('driftmode_exists');"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('driftmode_exists', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.disableItem('driftmode_details');"
+        # For some reason, need to unselect before selecting a disabled item
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('driftmode_details', false);"
+        page << "ManageIQ.toolbars.center_tb.obj.setItemState('driftmode_details', true);"
       end
       page.replace_html("main_div", :partial=>"layouts/drift")  # Replace the main div area contents
       page << "miqSparkle(false);"
@@ -638,17 +650,19 @@ module ApplicationController::Compare
     drift_to_json(@compare)
     render :update do |page|                    # Use RJS to update the display
       if @compressed
-        page << "view_tb.enableItem('drift_expanded');"
-        page << "view_tb.setItemState('drift_expanded', false);"
-        page << "view_tb.disableItem('drift_compressed');"
-        page << "view_tb.setItemState('drift_compressed', false);"  # For some reason, need to unselect before selecting a disabled item
-        page << "view_tb.setItemState('drift_compressed', true);"
+        page << "ManageIQ.toolbars.view_tb.obj.enableItem('drift_expanded');"
+        page << "ManageIQ.toolbars.view_tb.obj.setItemState('drift_expanded', false);"
+        page << "ManageIQ.toolbars.view_tb.obj.disableItem('drift_compressed');"
+        # For some reason, need to unselect before selecting a disabled item
+        page << "ManageIQ.toolbars.view_tb.obj.setItemState('drift_compressed', false);"
+        page << "ManageIQ.toolbars.view_tb.obj.setItemState('drift_compressed', true);"
       else
-        page << "view_tb.enableItem('drift_compressed');"
-        page << "view_tb.setItemState('drift_compressed', false);"
-        page << "view_tb.disableItem('drift_expanded');"
-        page << "view_tb.setItemState('drift_expanded', false);"  # For some reason, need to unselect before selecting a disabled item
-        page << "view_tb.setItemState('drift_expanded', true);"
+        page << "ManageIQ.toolbars.view_tb.obj.enableItem('drift_compressed');"
+        page << "ManageIQ.toolbars.view_tb.obj.setItemState('drift_compressed', false);"
+        page << "ManageIQ.toolbars.view_tb.obj.disableItem('drift_expanded');"
+        # For some reason, need to unselect before selecting a disabled item
+        page << "ManageIQ.toolbars.view_tb.obj.setItemState('drift_expanded', false);"
+        page << "ManageIQ.toolbars.view_tb.obj.setItemState('drift_expanded', true);"
       end
       page.replace_html("main_div", :partial=>"layouts/drift")  # Replace the main div area contents
       page << "miqSparkle(false);"

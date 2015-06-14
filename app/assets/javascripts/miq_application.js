@@ -3,7 +3,7 @@
 // Things to be done on page loads
 function miqOnLoad() {
   // controller to be used in url in miqDropComplete method
-  miq_widget_dd_url = "dashboard/widget_dd_done";
+  ManageIQ.widget.dashboardUrl = "dashboard/widget_dd_done";
 
   // Initialize the dashboard column sortables
   if ($('#col1').length) {
@@ -14,7 +14,7 @@ function miqOnLoad() {
     miqInitWidgetPulldown();
   }
   // Need this since IE will not run JS correctly until after page is loaded
-  if (typeof init_dhtmlx_layout != "undefined") {
+  if (typeof ManageIQ.initDhtmlxLayout != "undefined") {
     miqInitDhtmlxLayout();
   }
 
@@ -33,7 +33,7 @@ function miqOnLoad() {
 
   if (typeof miqLoadTL == "function") {
     miqLoadTL();
-    if (miq_timeline_filter) {
+    if (ManageIQ.timelineFilter) {
       performFiltering(tl, [ 0, 1 ]);
     }
   }
@@ -47,8 +47,8 @@ function miqOnLoad() {
     miqInitToolbars();
   }
   // Refresh the myCodeMirror editor
-  if (typeof miqEditor != "undefined") {
-    miqEditor.refresh();
+  if (ManageIQ.editor !== null) {
+    ManageIQ.editor.refresh();
   }
   // Position clear search link in right cell header
   if ($('#clear_search').length) {
@@ -89,8 +89,8 @@ function miqInitWidgetPulldown() {
   var miqMenu = new dhtmlXToolbarObject("widget_select_div", "miq_blue");
   miqMenu.setIconsPath("/images/icons/24/");
   miqMenu.attachEvent("onClick", miqWidgetToolbarClick);
-  // miqMenuXML var is loaded in dashboard/_dropdownbar.rhtml
-  miqMenu.loadXMLString(miqMenuXML);
+  // ManageIQ.widget.menuXml var is loaded in dashboard/_dropdownbar.rhtml
+  miqMenu.loadXMLString(ManageIQ.widget.menuXml);
   miqSetToolbarButtonIds(miqMenu);
 }
 
@@ -113,12 +113,9 @@ function miqCalendarDateConversion(server_offset) {
 }
 
 // Track the mouse coordinates for popup menus
-var miqMouseX;
-var miqMouseY;
-
 function miqGetMouseXY(positionX, positionY) {
-  miqMouseX = positionX;
-  miqMouseY = positionY;
+  ManageIQ.mouse.x = positionX;
+  ManageIQ.mouse.y = positionY;
 }
 
 // Prefill text entry field when blank
@@ -136,17 +133,16 @@ function miqLoginPrefill() {
 // Prefill expression value text entry fields when blank
 function miqExpressionPrefill(count) {
   var title;
-  var miq_exp_prefill_count;
 
   if ($('#chosen_value[type=text]').length) {
-    miqPrefill($('#chosen_value'), '/images/layout/expression/' + miq_val1_type + '.png');
-    $('#chosen_value').prop('title', miq_val1_title);
-    $('#chosen_value').prop('alt', miq_val1_title);
+    miqPrefill($('#chosen_value'), '/images/layout/expression/' + ManageIQ.expEditor.first.type + '.png');
+    $('#chosen_value').prop('title', ManageIQ.expEditor.first.title);
+    $('#chosen_value').prop('alt', ManageIQ.expEditor.first.title);
   }
   if ($('#chosen_cvalue[type=text]').length) {
-    miqPrefill($('#chosen_cvalue'), '/images/layout/expression/' + miq_val2_type + '.png');
-    $('#chosen_cvalue').prop('title', miq_val2_title);
-    $('#chosen_cvalue').prop('alt', miq_val2_title);
+    miqPrefill($('#chosen_cvalue'), '/images/layout/expression/' + ManageIQ.expEditor.second.type + '.png');
+    $('#chosen_cvalue').prop('title', ManageIQ.expEditor.second.title);
+    $('#chosen_cvalue').prop('alt', ManageIQ.expEditor.second.title);
   }
   if ($('#chosen_regkey[type=text]').length) {
     miqPrefill($('#chosen_regkey'), '/images/layout/expression/string.png');
@@ -161,64 +157,64 @@ function miqExpressionPrefill(count) {
     $('#chosen_regval').prop('alt', title);
   }
   if ($('#miq_date_1_0[type=text]').length) {
-    miqPrefill($('#miq_date_1_0'), '/images/layout/expression/' + miq_val1_type + '.png');
-    $('#miq_date_1_0').prop('title', miq_val1_title);
-    $('#miq_date_1_0').prop('alt', miq_val1_title);
+    miqPrefill($('#miq_date_1_0'), '/images/layout/expression/' + ManageIQ.expEditor.first.type + '.png');
+    $('#miq_date_1_0').prop('title', ManageIQ.expEditor.first.title);
+    $('#miq_date_1_0').prop('alt', ManageIQ.expEditor.first.title);
   }
   if ($('#miq_date_1_1[type=text]').length) {
-    miqPrefill($('#miq_date_1_1'), '/images/layout/expression/' + miq_val1_type + '.png');
-    $('#miq_date_1_1').prop('title', miq_val1_title);
-    $('#miq_date_1_1').prop('alt', miq_val1_title);
+    miqPrefill($('#miq_date_1_1'), '/images/layout/expression/' + ManageIQ.expEditor.first.type + '.png');
+    $('#miq_date_1_1').prop('title', ManageIQ.expEditor.first.title);
+    $('#miq_date_1_1').prop('alt', ManageIQ.expEditor.first.title);
   }
   if ($('#miq_date_2_0[type=text]').length) {
-    miqPrefill($('#miq_date_2_0'), '/images/layout/expression/' + miq_val2_type + '.png');
-    $('#miq_date_2_0').prop('title', miq_val2_title);
-    $('#miq_date_2_0').prop('alt', miq_val2_title);
+    miqPrefill($('#miq_date_2_0'), '/images/layout/expression/' + ManageIQ.expEditor.second.type + '.png');
+    $('#miq_date_2_0').prop('title', ManageIQ.expEditor.second.title);
+    $('#miq_date_2_0').prop('alt', ManageIQ.expEditor.second.title);
   }
   if ($('#miq_date_2_1[type=text]').length) {
-    miqPrefill($('#miq_date_2_1'), '/images/layout/expression/' + miq_val2_type + '.png');
-    $('#miq_date_2_1').prop('title', miq_val2_title);
-    $('#miq_date_2_1').prop('alt', miq_val2_title);
+    miqPrefill($('#miq_date_2_1'), '/images/layout/expression/' + ManageIQ.expEditor.second.type + '.png');
+    $('#miq_date_2_1').prop('title', ManageIQ.expEditor.second.title);
+    $('#miq_date_2_1').prop('alt', ManageIQ.expEditor.second.title);
   }
   if (typeof count == 'undefined') {
-    miq_exp_prefill_count = 0;
+    ManageIQ.expEditor.prefillCount = 0;
     setTimeout(function () {
-      miqExpressionPrefill(miq_exp_prefill_count);
+      miqExpressionPrefill(ManageIQ.expEditor.prefillCount);
     }, 200);
-  } else if (count == miq_exp_prefill_count) {
-    if (++miq_exp_prefill_count > 100) {
-      miq_exp_prefill_count = 0;
+  } else if (count == ManageIQ.expEditor.prefillCount) {
+    if (++ManageIQ.expEditor.prefillCount > 100) {
+      ManageIQ.expEditor.prefillCount = 0;
     }
     setTimeout(function () {
-      miqExpressionPrefill(miq_exp_prefill_count);
+      miqExpressionPrefill(ManageIQ.expEditor.prefillCount);
     }, 200);
   }
 }
 
 // Prefill report editor style value text entry fields when blank
-// (written more generic for reuse, just have to build the miq_value_styles hash)
+// (written more generic for reuse, just have to build
+// the ManageIQ.reportEditor.valueStyles hash)
 function miqValueStylePrefill(count) {
   var found = false;
-  var miq_vs_prefill_count;
 
-  for (var field in miq_value_styles) {
+  for (var field in ManageIQ.reportEditor.valueStyles) {
     if ($(field).length) {
-      miqPrefill($(field), '/images/layout/expression/' + miq_value_styles[field] + '.png');
+      miqPrefill($(field), '/images/layout/expression/' + ManageIQ.reportEditor.valueStyles[field] + '.png');
       found = true;
     }
   }
   if (found) {
     if (typeof count == 'undefined') {
-      miq_vs_prefill_count = 0;
+      ManageIQ.reportEditor.prefillCount = 0;
       setTimeout(function () {
-        miqValueStylePrefill(miq_vs_prefill_count);
+        miqValueStylePrefill(ManageIQ.reportEditor.prefillCount);
       }, 200);
-    } else if (count == miq_vs_prefill_count) {
-      if (++miq_vs_prefill_count > 100) {
-        miq_vs_prefill_count = 0;
+    } else if (count == ManageIQ.reportEditor.prefillCount) {
+      if (++ManageIQ.reportEditor.prefillCount > 100) {
+        ManageIQ.reportEditor.prefillCount = 0;
       }
       setTimeout(function () {
-        miqValueStylePrefill(miq_vs_prefill_count);
+        miqValueStylePrefill(ManageIQ.reportEditor.prefillCount);
       }, 200);
     }
   }
@@ -335,18 +331,18 @@ function miqDimDiv(divname, status) {
 
 // Check for changes and prompt
 function miqCheckForChanges() {
-  if (miqAngularApplication.$scope) {
-    if (miqAngularApplication.$scope.form.$dirty) {
+  if (ManageIQ.angularApplication.$scope) {
+    if (ManageIQ.angularApplication.$scope.form.$dirty) {
       var answer = confirm("Abandon changes?");
       if (answer) {
-        miqAngularApplication.$scope.form.$setPristine(true);
+        ManageIQ.angularApplication.$scope.form.$setPristine(true);
       }
       return answer;
     }
   } else {
     if ((($('#buttons_on').length &&
           $('#buttons_on').is(":visible")) ||
-         typeof miq_changes != "undefined") &&
+         ManageIQ.changes !== null) &&
         !$('#ignore_form_changes').length) {
       return confirm("Abandon changes?");
     }
@@ -451,12 +447,12 @@ function miqUpdateAllCheckboxes(button_div, override) {
     if (override != null) {
       state = override;
     }
-    if (typeof gtl_list_grid == "undefined" &&
+    if (typeof ManageIQ.grids.grids.gtl_list_grid == 'undefined' &&
         ($("input[id^='listcheckbox']").length)) {
       // No dhtmlx grid on the screen
       $("input[id^='listcheckbox']").prop('checked', state);
       miqUpdateButtons(cbs[0], button_div);
-    } else if (typeof gtl_list_grid == "undefined" &&
+    } else if (typeof ManageIQ.grids.grids.gtl_list_grid == 'undefined' &&
                $("input[id^='storage_cb']").length) {
       // to handle check/uncheck all for C&U collection
       $("input[id^='storage_cb']").prop('checked', state);
@@ -464,10 +460,10 @@ function miqUpdateAllCheckboxes(button_div, override) {
       return true;
     } else {
       // Set checkboxes in dhtmlx grid
-      gtl_list_grid.forEachRow(function (id) {
-        gtl_list_grid.cells(id, 0).setValue(state ? 1 : 0);
+      ManageIQ.grids.grids.gtl_list_grid.obj.forEachRow(function (id) {
+        ManageIQ.grids.grids.gtl_list_grid.obj.cells(id, 0).setValue(state ? 1 : 0);
       });
-      var crows = gtl_list_grid.getCheckedRows(0);
+      var crows = ManageIQ.grids.grids.gtl_list_grid.obj.getCheckedRows(0);
       $('#miq_grid_checks').val(crows);
       var count = !crows ? 0 : crows.split(",").length;
       miqSetButtons(count, button_div);
@@ -503,9 +499,9 @@ function miqSetButtons(count, button_div) {
   var buttons;
 
   if (button_div.match("_tb$")) {
-    if (typeof miq_toolbars[button_div] != "undefined") {
-      tb = miq_toolbars[button_div].obj;
-      buttons = miq_toolbars[button_div].buttons;
+    if (typeof ManageIQ.toolbars[button_div] != "undefined") {
+      tb = ManageIQ.toolbars[button_div].obj;
+      buttons = ManageIQ.toolbars[button_div].buttons;
       for (var button in buttons) {
         var onwhen = buttons[button].onwhen;
         if (typeof onwhen != "undefined") {
@@ -605,25 +601,25 @@ function DoNav(theUrl) {
 
 // Routines to get the size of the window
 // original reference: http://www.communitymx.com/blog/index.cfm?newsid=622
-var miqSizeTimer = false;
+ManageIQ.sizeTimer = false;
 
 function miqBrowserSizeTimeout() {
-  if (miqSizeTimer) {
+  if (ManageIQ.sizeTimer) {
     return;
   }
-  miqSizeTimer = true;
+  ManageIQ.sizeTimer = true;
   setTimeout(miqResetSizeTimer, 1000);
 }
 
 function miqResetSizeTimer() {
-  miqSizeTimer = false;
+  ManageIQ.sizeTimer = false;
   var sizes = miqGetSize();
   var url = "/dashboard/window_sizes";
   var offset = 427;
   var h;
   var args = {'width': sizes[0], 'height': sizes[1]}
 
-  if (typeof xml != "undefined") {
+  if (ManageIQ.grids.xml !== null) {
     // If grid xml is available for reload
     if ($('#list_grid').length) {
       // Adjust certain elements, if present
@@ -632,8 +628,8 @@ function miqResetSizeTimer() {
         h = 200;
       }
       $('#list_grid').css({height: h + 'px'});
-      gtl_list_grid.clearAll();
-      gtl_list_grid.parse(xml);
+      ManageIQ.grids.grids.gtl_list_grid.obj.clearAll();
+      ManageIQ.grids.grids.gtl_list_grid.obj.parse(xml);
     } else if ($('#logview').length) {
       h = sizes[1] - offset;
       if (h < 200) {
@@ -704,11 +700,10 @@ function wrapFish() {
 
 // Load XML/SWF charts data (non-IE)
 // This method is called by the XML/SWF charts when a chart is loaded into the DOM
-var miq_chart_data;
 
 function Loaded_Chart(chart_id) {
-  if ((miq_browser != 'Explorer') &&
-      (typeof (miq_chart_data) !== 'undefined')) {
+  if ((ManageIQ.browser != 'Explorer') &&
+      (typeof (ManageIQ.charts.chartData) != 'undefined')) {
     doLoadChart(chart_id, document.getElementsByName(chart_id)[0]);
   }
 }
@@ -720,17 +715,17 @@ function doLoadChart(chart_id, chart_object) {
   var comp = id_splitted[3];
 
   if (typeof (comp) === 'undefined') {
-    chart_object.Update_XML(miq_chart_data[set][idx].xml, false);
+    chart_object.Update_XML(ManageIQ.charts.chartData[set][idx].xml, false);
   } else {
-    chart_object.Update_XML(miq_chart_data[set][idx].xml2, false);
+    chart_object.Update_XML(ManageIQ.charts.chartData[set][idx].xml2, false);
   }
 }
 
 // Load XML/SWF charts data (IE)
 function miqLoadCharts() {
-  if (typeof miq_chart_data != 'undefined' && miq_browser == 'Explorer') {
-    for (var set in miq_chart_data) {
-      var mcd = miq_chart_data[set];
+  if (typeof ManageIQ.charts.chartData != 'undefined' && ManageIQ.browser == 'Explorer') {
+    for (var set in ManageIQ.charts.chartData) {
+      var mcd = ManageIQ.charts.chartData[set];
       for (var i = 0; i < mcd.length; i++) {
         miqLoadChart("miq_" + set + "_" + i);
         if (typeof mcd[i].xml2 != "undefined") {
@@ -780,7 +775,7 @@ function miqChartLinkData(col, row, value, category, series, id, message) {
 function miqBuildChartMenu(col, row, value, category, series, id, message) {
   var set = id.split('_')[1]; // Get the chart set
   var idx = id.split('_')[2]; // Get the chart index
-  var chart_data = miq_chart_data[set];
+  var chart_data = ManageIQ.charts.chartData[set];
 
   if (chart_data[idx].menu != null && chart_data[idx].menu.length) {
     var rowcolidx = "_" + row + "-" + col + "-" + idx;
@@ -805,7 +800,7 @@ function miqBuildChartMenu(col, row, value, category, series, id, message) {
       miqMenu.addNewChild(pid, 99, menu_id, menu_title, false);
     }
 
-    miqMenu.showContextMenu(miqMouseX - 10, miqMouseY - 10);
+    miqMenu.showContextMenu(ManageIQ.mouse.x - 10, ManageIQ.mouse.y - 10);
   }
 }
 
@@ -819,7 +814,7 @@ function miqChartMenuClick(itemId, itemValue) {
   }
 }
 
-var miqAjaxTimers = 0;
+ManageIQ.ajaxTimers = 0;
 
 // Handle an ajax form button press (i.e. Submit) by starting the spinning Q,
 // then waiting for .7 seconds for observers to finish
@@ -831,7 +826,7 @@ function miqAjaxButton(url, serialize_fields) {
     $('#notification').show();
   }
 
-  miqAjaxTimers++;
+  ManageIQ.ajaxTimers++;
   setTimeout(function () {
     miqAjaxButtonSend(url, serialize_fields);
   }, 700);
@@ -840,14 +835,14 @@ function miqAjaxButton(url, serialize_fields) {
 // Send ajax url after any outstanding ajax requests, wait longer if needed
 function miqAjaxButtonSend(url, serialize_fields) {
   if ($.active) {
-    miqAjaxTimers++;
+    ManageIQ.ajaxTimers++;
     setTimeout(function () {
       miqAjaxButtonSend(url);
     }, 700);
   } else {
     miqAjax(url, serialize_fields);
   }
-  miqAjaxTimers--;
+  ManageIQ.ajaxTimers--;
 }
 
 // Function to generate an Ajax request
@@ -864,21 +859,21 @@ function miqAsyncAjax(url) {
   miqJqueryRequest(url, {beforeSend: true});
 }
 
-var miqOneTrans = 0;
+ManageIQ.oneTransition.oneTrans = 0;
 
 // Function to generate an Ajax request, but only once for a drawn screen
 function miqSendOneTrans(url) {
-  if (typeof miqIEButtonPressed != "undefined") {
+  if (typeof ManageIQ.oneTransition.IEButtonPressed != "undefined") {
     // page replace after clicking save/reset was making observe_field on
     // text_area in IE send up a trascation to form_field_changed method
-    miqIEButtonPressed = undefined;
+    ManageIQ.oneTransition.IEButtonPressed = undefined;
     return;
   }
-  if (miqOneTrans == 1) {
+  if (ManageIQ.oneTransition.oneTrans) {
     return;
   }
 
-  miqOneTrans = 1;
+  ManageIQ.oneTransition.oneTrans = 1;
   miqJqueryRequest(url);
 }
 
@@ -933,7 +928,7 @@ function miqCheckMaxLength(obj) {
     obj.value = obj.value.substring(0, ml);
   }
   if (counter) {
-    if (miq_browser != 'Explorer') {
+    if (ManageIQ.browser != 'Explorer') {
       $('#' + counter)[0].textContent = obj.value.length;
     } else {
       $('#' + counter).innerText = obj.value.length;
@@ -1050,12 +1045,12 @@ function miqInitDashboardCols() {
 // Send the updated sortable order after jQuery drag/drop
 function miqDropComplete(event, ui) {
   var el = $(this);
-  var url = "/" + miq_widget_dd_url + "?" + el.sortable(
+  var url = "/" + ManageIQ.widget.dashboardUrl + "?" + el.sortable(
               'serialize', {key: el.attr('id') + "[]"}
             ).toString();
   // Adding id of record being edited to be used by load_edit call
-  if (typeof miq_record_id != "undefined") {
-    url += "&id=" + miq_record_id;
+  if (ManageIQ.record.recordId !== null) {
+    url += "&id=" + ManageIQ.record.recordId;
   }
   miqJqueryRequest(url);
 }
@@ -1073,8 +1068,8 @@ function miqBuildCalendar() {
     var cal = new dhtmlxCalendarObject(el.attr('id'));
     cal.setDateFormat("%m/%d/%Y");
 
-    if ((!el.val()) && typeof miq_cal_dateTo != "undefined") {
-      cal.setDate(miq_cal_dateTo);
+    if ((!el.val()) && ManageIQ.calendar.calDateTo !== null) {
+      cal.setDate(ManageIQ.calendar.calDateTo);
     } else {
       cal.setDate(this.value);
     }
@@ -1085,12 +1080,12 @@ function miqBuildCalendar() {
     // start week from sunday, default is (1) monday
     cal.setWeekStartDay(7);
 
-    if ((typeof miq_cal_dateFrom != "undefined") &&
-        (typeof miq_cal_dateTo != "undefined")) {
-      cal.setSensitiveRange(miq_cal_dateFrom, miq_cal_dateTo);
-    } else if ((typeof miq_cal_dateFrom != "undefined") &&
-               (typeof miq_cal_dateTo == "undefined")) {
-      cal.setSensitiveRange(miq_cal_dateFrom);
+    if ((typeof ManageIQ.calendar.calDateFrom != "undefined") &&
+        (typeof ManageIQ.calendar.calDateTo != "undefined")) {
+      cal.setSensitiveRange(ManageIQ.calendar.calDateFrom, ManageIQ.calendar.calDateTo);
+    } else if ((typeof ManageIQ.calendar.calDateFrom != "undefined") &&
+               (typeof ManageIQ.calendar.calDateTo == "undefined")) {
+      cal.setSensitiveRange(ManageIQ.calendar.calDateFrom);
     }
     if (typeof miq_cal_skipDays != "undefined" &&
         miq_cal_skipDays != null &&
@@ -1254,7 +1249,7 @@ function miqBuildMainLayout(parentLayout, header) {
 
 function miqExplorerResize(e) {
   var url = "/dashboard/window_sizes";
-  var args = {'exp_controller': miq_controller, 'exp_left': e.newValue}
+  var args = {'exp_controller': ManageIQ.controller, 'exp_left': e.newValue}
   // Send the new values to the server
   miqJqueryRequest(miqPassFields(url, args));
 }
@@ -1406,7 +1401,7 @@ function miqQsEnterEscape(e) {
 // Start/stop the JS spinner
 function miqSpinner(status) {
   if (status) {
-    if (typeof spinner == "undefined") {
+    if (ManageIQ.spinner.spinner === null) {
       var opts = {
         lines: 15, // The number of lines to draw
         length: 18, // The length of each line
@@ -1424,13 +1419,13 @@ function miqSpinner(status) {
         top: 'auto', // Top position relative to parent in px
         left: 'auto' // Left position relative to parent in px
       };
-      spinner = new Spinner(opts).spin($('#spinner_div')[0]);
+      ManageIQ.spinner.spinner = new Spinner(opts).spin($('#spinner_div')[0]);
     } else {
-      spinner.spin($('#spinner_div')[0]);
+      ManageIQ.spinner.spinner.spin($('#spinner_div')[0]);
     }
   } else {
-    if (typeof spinner != "undefined") {
-      spinner.stop();
+    if (ManageIQ.spinner.spinner !== null) {
+      ManageIQ.spinner.spinner.stop();
     }
   }
 }
@@ -1441,7 +1436,7 @@ function miqSearchSpinner(status) {
     if ($('#search_notification').length) {
       $('#search_notification').show();
     }
-    if (typeof search_spinner == "undefined") {
+    if (ManageIQ.spinner.searchSpinner === null) {
       var opts = {
         lines: 13, // The number of lines to draw
         length: 20, // The length of each line
@@ -1460,16 +1455,16 @@ function miqSearchSpinner(status) {
         top: 'auto', // Top position relative to parent in px
         left: 'auto' // Left position relative to parent in px
       };
-      search_spinner = new Spinner(opts).spin($('#searching_spinner_center')[0]);
+      ManageIQ.spinner.searchSpinner = new Spinner(opts).spin($('#searching_spinner_center')[0]);
     } else {
-      search_spinner.spin($('#searching_spinner_center')[0]);
+      ManageIQ.spinner.searchSpinner.spin($('#searching_spinner_center')[0]);
     }
   } else {
     if ($('#search_notification').length) {
       $('#search_notification').hide();
     }
-    if (typeof search_spinner != "undefined") {
-      search_spinner.stop();
+    if (ManageIQ.spinner.searchSpinner !== null) {
+      ManageIQ.spinner.searchSpinner.stop();
     }
   }
 }

@@ -1,4 +1,4 @@
-miqAngularApplication.controller('diagnosticsDatabaseFormController', ['$http', '$scope', '$attrs', 'miqService', 'miqDBBackupService', function($http, $scope, $attrs, miqService, miqDBBackupService) {
+ManageIQ.angularApplication.controller('diagnosticsDatabaseFormController', ['$http', '$scope', '$attrs', 'miqService', 'miqDBBackupService', function($http, $scope, $attrs, miqService, miqDBBackupService) {
     var init = function() {
 
         $scope.diagnosticsDatabaseModel = {
@@ -17,7 +17,7 @@ miqAngularApplication.controller('diagnosticsDatabaseFormController', ['$http', 
         $scope.dbBackupFormFieldChangedUrl = $attrs.dbBackupFormFieldChangedUrl;
         $scope.submitUrl = $attrs.submitUrl;
 
-        miqAngularApplication.$scope = $scope;
+        ManageIQ.angularApplication.$scope = $scope;
 
         $scope.$watch("diagnosticsDatabaseModel.depot_name", function() {
             $scope.form = $scope.angularForm;

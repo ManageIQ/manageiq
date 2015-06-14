@@ -830,9 +830,13 @@ class ChargebackController < ApplicationController
       presenter[:expand_collapse_cells][:c] = 'expand'
     end
 
-    presenter[:miq_record_id] = @record && !@in_a_form ? @record.id : @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
+    if @record && !@in_a_form
+      presenter[:recordId] = @record.id
+    else
+      presenter[:recordId] = @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
+    end
 
-    ## Clear the JS gtl_list_grid var if changing to a type other than list
+    # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
     presenter[:right_cell_text]     = @right_cell_text
     unless x_active_tree == :cb_assignments_tree

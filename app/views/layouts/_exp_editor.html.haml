@@ -1,10 +1,10 @@
 -# Set the JS type vars if a saved expression atom already exists when first showing the editor
 - if @edit && @edit.fetch_path(@expkey, :val1, :type)
-  = javascript_tag("miq_val1_type = '#{@edit[@expkey][:val1][:type]}';")
-  = javascript_tag("miq_val1_title = '#{@edit[@expkey][:val1][:title]}';")
+  = javascript_tag("ManageIQ.expEditor.first.type = '#{@edit[@expkey][:val1][:type]}';")
+  = javascript_tag("ManageIQ.expEditor.first.title = '#{@edit[@expkey][:val1][:title]}';")
 - if @edit && @edit.fetch_path(@expkey, :val2, :type)
-  = javascript_tag("miq_val2_type = '#{@edit[@expkey][:val2][:type]}';")
-  = javascript_tag("miq_val2_title = '#{@edit[@expkey][:val2][:title]}';")
+  = javascript_tag("ManageIQ.expEditor.second.type = '#{@edit[@expkey][:val2][:type]}';")
+  = javascript_tag("ManageIQ.expEditor.second.title = '#{@edit[@expkey][:val2][:title]}';")
 
 #exp_editor_div
   %fieldset{:style => "width: auto; padding-left: 6px; padding-top: 6px"}

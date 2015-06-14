@@ -444,14 +444,19 @@ class ServiceController < ApplicationController
     presenter[:reload_toolbars][:center]  = {:buttons => c_buttons,  :xml => c_xml}  if c_buttons  && c_xml
     presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons  && v_xml
     presenter[:reload_toolbars][:custom]  = {:buttons => cb_buttons, :xml => cb_xml} if cb_buttons && cb_xml
-    
+
     presenter[:expand_collapse_cells][:a] = h_buttons || c_buttons || v_buttons ? 'expand' : 'collapse'
 
-    presenter[:miq_record_id] = @record && !@in_a_form ? @record.id : @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
+    if @record && !@in_a_form
+      presenter[:recordId] = @record.id
+    else
+      presenter[:recordId] = @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
+    end
+
     presenter[:lock_unlock_trees][x_active_tree] = @edit && @edit[:current]
     presenter[:osf_node] = x_node
     # unset variable that was set in form_field_changed to prompt for changes when leaving the screen
-    presenter[:extra_js] << "miq_changes = undefined;"
+    presenter[:extra_js] << "ManageIQ.changes = null;"
 
     # Render the JS responses to update the explorer screen
     render :js => presenter.to_html

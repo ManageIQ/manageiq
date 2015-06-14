@@ -1,6 +1,6 @@
 describe('update-drop-down-for-filter initialization', function() {
   var $scope, form;
-  beforeEach(module('miqAngularApplication'));
+  beforeEach(module('ManageIQ.angularApplication'));
   beforeEach(inject(function($compile, $rootScope, $timeout) {
     $scope = $rootScope;
     var element = angular.element(

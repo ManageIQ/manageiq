@@ -77,7 +77,7 @@ function cfme_bind_hover_event(tree_name) {
 // OnClick handler to run tree_select server method
 function cfmeOnClick_SelectTreeNode(id) {
   var rec_id = id.split('__');
-  var url = '/' + miq_controller + '/tree_select/?id=' + rec_id[0];
+  var url = '/' + ManageIQ.controller + '/tree_select/?id=' + rec_id[0];
   miqJqueryRequest(url, {beforeSend: true});
 }
 
@@ -186,11 +186,11 @@ function miqOnCheck_ProvTags(node, treename) {
 }
 
 function cfmeOnClick_SelectAETreeNode(id) {
-  miqJqueryRequest('/' + miq_controller + '/ae_tree_select/?id=' + id + '&tree=automate_tree');
+  miqJqueryRequest('/' + ManageIQ.controller + '/ae_tree_select/?id=' + id + '&tree=automate_tree');
 }
 
 function miqOnClick_IncludeDomainPrefix() {
-  miqJqueryRequest('/' + miq_controller + '/ae_tree_select_toggle?button=domain');
+  miqJqueryRequest('/' + ManageIQ.controller + '/ae_tree_select_toggle?button=domain');
 }
 
 function cfmeOnClick_SelectOptimizeTreeNode(id) {
@@ -245,7 +245,7 @@ function miqOnMouseIn_HostNet(id) {
     var top = getAbsoluteTop(node);
     $("#" + nid).css({top: (top - 220) + "px"}); // Set quad top location
     $("#" + nid).show(); // Show the quad div
-    last_id = nid; // Save current node id
+    ManageIQ.hostNetLastId = nid; // Save current node id
   }
 }
 
@@ -253,8 +253,8 @@ function miqOnMouseIn_HostNet(id) {
 function miqOnMouseOut_HostNet(id) {
   if (hover_node_id(id)) {
     // div id exists
-    if (last_id) {
-      $("#" + last_id).hide(); // Hide the quad div
+    if (ManageIQ.hostNetLastId) {
+      $("#" + ManageIQ.hostNetLastId).hide(); // Hide the quad div
     }
   }
   return true;

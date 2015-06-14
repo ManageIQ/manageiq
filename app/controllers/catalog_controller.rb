@@ -423,19 +423,12 @@ class CatalogController < ApplicationController
     render :update do |page|                    # Use JS to update the display
       page.replace_html("basic_info_div", :partial=>"form_basic_info") if params[:resource_id] || params[:display]
       page.replace_html("resources_info_div", :partial=>"form_resources_info") if params[:resource_id] || @group_idx
-      #if @changed != session[:changed]
-        #e_buttons, e_xml = build_toolbar_buttons_and_xml("x_edit_view_tb")
-        #page << javascript_for_toolbar_reload('form_button_tb', e_buttons, e_xml)
-        #page << "miq_changes = true;"
-        #session[:changed] = @changed
-      #end
-
       if params[:display]
         page << "miq_tabs_show_hide('#details_tab', '#{(params[:display] == "1")}')"
       end
       if changed != session[:changed]
         session[:changed] = changed
-        page << "miq_changes = true;"
+        page << "ManageIQ.changes = true;"
         page << javascript_for_miq_button_visibility(changed)
       end
       page << "miqSparkle(false);"
@@ -497,15 +490,9 @@ class CatalogController < ApplicationController
     render :update do |page|                    # Use JS to update the display
       page.replace_html("basic_info_div", :partial=>"form_basic_info")
       page.replace_html("resources_info_div", :partial=>"form_resources_info")
-#      if @changed != session[:changed]
-#        e_buttons, e_xml = build_toolbar_buttons_and_xml("x_edit_view_tb")
-#        page << javascript_for_toolbar_reload('form_button_tb', e_buttons, e_xml)
-#        page << "miq_changes = true;"
-#        session[:changed] = @changed
-#      end
       if changed != session[:changed]
         session[:changed] = changed
-        page << "miq_changes = true;"
+        page << "ManageIQ.changes = true;"
         page << javascript_for_miq_button_visibility(changed)
       end
       page << "miqSparkle(false);"
@@ -1870,7 +1857,7 @@ class CatalogController < ApplicationController
         r[:partial=>"layouts/x_gtl"]
       end
 
-    # Clear the JS gtl_list_grid var if changing to a type other than list
+    # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 
     presenter[:open_accord] = 'sandt' if @sb[:active_tree] == :sandt_tree
@@ -1964,15 +1951,19 @@ class CatalogController < ApplicationController
     presenter[:reload_toolbars][:view]    = {:buttons => v_buttons,  :xml => v_xml}  if v_buttons  && v_xml
     presenter[:expand_collapse_cells][:a] = h_buttons || c_buttons || v_buttons ? 'expand' : 'collapse'
 
-    presenter[:miq_record_id] = @record && !@in_a_form ? @record.id : @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
+    if @record && !@in_a_form
+      presenter[:recordId] = @record.id
+    else
+      presenter[:recordId] = @edit && @edit[:rec_id] && @in_a_form ? @edit[:rec_id] : nil
+    end
 
     presenter[:lock_unlock_trees][x_active_tree] = @edit && @edit[:current]
 
     presenter[:osf_node] = x_node
 
     # unset variable that was set in form_field_changed to prompt for changes when leaving the screen
-    presenter[:extra_js] << "miq_changes = undefined;"
-    presenter[:extra_js] << "miqOneTrans = 0;"                  #resetting miqOneTrans when tab loads
+    presenter[:extra_js] << "ManageIQ.changes = null;"
+    presenter[:extra_js] << "ManageIQ.oneTransition.oneTrans = 0;"  # resetting ManageIQ.oneTransition.oneTrans when tab loads
 
     # Render the JS responses to update the explorer screen
     render :js => presenter.to_html

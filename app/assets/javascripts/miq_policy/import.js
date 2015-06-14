@@ -1,18 +1,17 @@
 //= require_directory ../SlickGrid-2.1/
-var rows;
 
 $.getJSON("get_json?import_file_upload_id=" + import_file_upload_id, function (rows_json) {
-  rows = rows_json;
+  ManageIQ.slick.slickRows = rows_json;
 
   function myFilter(item) {
     if (item.parent != null) {
-      var parent = rows[item.parent];
+      var parent = ManageIQ.slick.slickRows[item.parent];
 
       while (parent) {
         if (parent._collapsed) {
           return false;
         }
-        parent = rows[parent.parent];
+        parent = ManageIQ.slick.slickRows[parent.parent];
       }
     }
 
@@ -24,7 +23,7 @@ $.getJSON("get_json?import_file_upload_id=" + import_file_upload_id, function (r
     var status_img = "<img src=" + dataContext.status_icon + ">";
 
     var idx = dataview.getIdxById(dataContext.id);
-    if (rows[idx + 1] && rows[idx + 1].indent > rows[idx].indent) {
+    if (ManageIQ.slick.slickRows[idx + 1] && ManageIQ.slick.slickRows[idx + 1].indent > ManageIQ.slick.slickRows[idx].indent) {
       if (dataContext._collapsed) {
         return spacer + " <span class='toggle expand'></span>&nbsp;" + status_img + value;
       } else {
@@ -50,7 +49,7 @@ $.getJSON("get_json?import_file_upload_id=" + import_file_upload_id, function (r
   };
 
   dataview.beginUpdate();
-  dataview.setItems(rows);
+  dataview.setItems(ManageIQ.slick.slickRows);
   dataview.setFilter(myFilter);
   dataview.endUpdate();
 

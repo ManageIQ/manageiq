@@ -1,4 +1,4 @@
-miqAngularApplication.service('miqService', function() {
+ManageIQ.angularApplication.service('miqService', function() {
   this.showButtons = function() {
     miqButtons('show');
   };
@@ -8,7 +8,7 @@ miqAngularApplication.service('miqService', function() {
   };
 
   this.buildCalendar = function(year, month, date) {
-    miq_cal_dateFrom = new Date(year, month, date);
+    ManageIQ.calendar.calDateFrom = new Date(year, month, date);
     miqBuildCalendar(true);
   };
 
@@ -74,7 +74,7 @@ miqAngularApplication.service('miqService', function() {
   }
 
   this.canValidateBasicInfo = function () {
-    if (miqAngularApplication.$scope.isBasicInfoValid())
+    if (ManageIQ.angularApplication.$scope.isBasicInfoValid())
       return true;
     else
       return false;

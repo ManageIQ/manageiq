@@ -758,7 +758,7 @@ class MiqPolicyController < ApplicationController
     # Hide/show searchbox depending on if a list is showing
     presenter[:set_visible_elements][:adv_searchbox_div] = @show_adv_search
 
-    presenter[:miq_record_id] = @record.try(:id)
+    presenter[:recordId] = @record.try(:id)
 
     # Lock current tree if in edit or assign, else unlock all trees
     if (@edit || @assign) && params[:action] != "x_search_by_name"

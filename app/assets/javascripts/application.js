@@ -1,3 +1,4 @@
+//= require miq_global
 //= require jquery
 //= require jquery_overrides
 //= require angular

@@ -4,8 +4,8 @@
   = render :partial => "layouts/dhtmlx_tags", :locals => {:control => "calendar"}
   -# Create from/to date JS vars to limit calendar starting from
   :javascript
-    var miq_cal_dateFrom = null;
-    var miq_cal_dateTo = new Date();
+    ManageIQ.calendar.calDateFrom = null;
+    ManageIQ.calendar.calDateTo = new Date();
   = render :partial => "layouts/flash_msg", :locals => {:div_num => "cu_repair"}
 
   %h3= _("Collection Options")

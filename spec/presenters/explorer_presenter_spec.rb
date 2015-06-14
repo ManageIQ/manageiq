@@ -25,14 +25,14 @@ describe ExplorerPresenter do
     context "#set_or_undef" do
       it 'return proper JS for nil' do
         js_str = @presenter.set_or_undef(:var1)
-        js_str.should == 'var1 = undefined;'
+        js_str.should == 'var1 = null;'
       end
 
       it 'return proper JS for a random value' do
         random_value = 'xxx' + rand(10).to_s
         @presenter['var2'] = random_value
         js_str = @presenter.set_or_undef(:var2)
-        js_str.should == "var2 = '#{random_value}';"
+        js_str.should == "ManageIQ.record.var2 = '#{random_value}';"
       end
     end
 
@@ -63,8 +63,8 @@ describe ExplorerPresenter do
         js_str = @presenter.build_calendar
 
         expected = <<EOD
-miq_cal_dateFrom = new Date(Fantomas);
-miq_cal_dateTo   = new Date(was);
+ManageIQ.calendar.calDateFrom = new Date(Fantomas);
+ManageIQ.calendar.calDateTo   = new Date(was);
 miq_cal_skipDays = 'here!';
 miqBuildCalendar();
 EOD
@@ -80,8 +80,8 @@ EOD
         js_str = @presenter.build_calendar
 
         expected = <<EOD
-miq_cal_dateFrom = new Date(Fantomas is gone!);
-miq_cal_dateTo   = undefined;
+ManageIQ.calendar.calDateFrom = new Date(Fantomas is gone!);
+ManageIQ.calendar.calDateTo   = undefined;
 miqBuildCalendar();
 EOD
         (js_str + "\n").should == expected

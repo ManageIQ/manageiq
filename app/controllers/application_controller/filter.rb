@@ -124,10 +124,10 @@ module ApplicationController::Filter
         end
 
         if @edit[@expkey][:exp_key] && @edit[@expkey][:exp_field]
-          page << "miq_val1_type = '#{@edit[@expkey][:val1][:type]}';" if @edit[@expkey][:val1][:type]
-          page << "miq_val1_title = '#{@edit[@expkey][:val1][:title]}';" if @edit[@expkey][:val1][:type]
-          page << "miq_val2_type = '#{@edit[@expkey][:val2][:type]}';" if @edit[@expkey][:val2][:type]
-          page << "miq_val2_title = '#{@edit[@expkey][:val2][:title]}';" if @edit[@expkey][:val2][:type]
+          page << "ManageIQ.expEditor.first.type = '#{@edit[@expkey][:val1][:type]}';" if @edit[@expkey][:val1][:type]
+          page << "ManageIQ.expEditor.first.title = '#{@edit[@expkey][:val1][:title]}';" if @edit[@expkey][:val1][:type]
+          page << "ManageIQ.expEditor.second.type = '#{@edit[@expkey][:val2][:type]}';" if @edit[@expkey][:val2][:type]
+          page << "ManageIQ.expEditor.second.title = '#{@edit[@expkey][:val2][:title]}';" if @edit[@expkey][:val2][:type]
         end
         page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
       end
@@ -428,10 +428,10 @@ module ApplicationController::Filter
             page << "miqBuildCalendar();"
           end
 
-          page << "miq_val1_type = '#{@edit[@expkey][:val1][:type]}';" if @edit.fetch_path(@expkey,:val1,:type)
-          page << "miq_val1_title = '#{@edit[@expkey][:val1][:title]}';" if @edit.fetch_path(@expkey,:val1,:type)
-          page << "miq_val2_type = '#{@edit[@expkey][:val2][:type]}';" if @edit.fetch_path(@expkey,:val2,:type)
-          page << "miq_val2_title = '#{@edit[@expkey][:val2][:title]}';" if @edit.fetch_path(@expkey,:val2,:type)
+          page << "ManageIQ.expEditor.first.type = '#{@edit[@expkey][:val1][:type]}';" if @edit.fetch_path(@expkey, :val1, :type)
+          page << "ManageIQ.expEditor.first.title = '#{@edit[@expkey][:val1][:title]}';" if @edit.fetch_path(@expkey, :val1, :type)
+          page << "ManageIQ.expEditor.second.type = '#{@edit[@expkey][:val2][:type]}';" if @edit.fetch_path(@expkey, :val2, :type)
+          page << "ManageIQ.expEditor.second.title = '#{@edit[@expkey][:val2][:title]}';" if @edit.fetch_path(@expkey, :val2, :type)
 
           page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
         end
@@ -463,10 +463,10 @@ module ApplicationController::Filter
           page << "miqBuildCalendar();"
         end
 
-        page << "miq_val1_type = '#{@edit[@expkey][:val1][:type]}';" if @edit.fetch_path(@expkey,:val1,:type)
-        page << "miq_val1_title = '#{@edit[@expkey][:val1][:title]}';" if @edit.fetch_path(@expkey,:val1,:type)
-        page << "miq_val2_type = '#{@edit[@expkey][:val2][:type]}';" if @edit.fetch_path(@expkey,:val2,:type)
-        page << "miq_val2_title = '#{@edit[@expkey][:val2][:title]}';" if @edit.fetch_path(@expkey,:val2,:type)
+        page << "ManageIQ.expEditor.first.type = '#{@edit[@expkey][:val1][:type]}';" if @edit.fetch_path(@expkey, :val1, :type)
+        page << "ManageIQ.expEditor.first.title = '#{@edit[@expkey][:val1][:title]}';" if @edit.fetch_path(@expkey, :val1, :type)
+        page << "ManageIQ.expEditor.second.type = '#{@edit[@expkey][:val2][:type]}';" if @edit.fetch_path(@expkey, :val2, :type)
+        page << "ManageIQ.expEditor.second.title = '#{@edit[@expkey][:val2][:title]}';" if @edit.fetch_path(@expkey, :val2, :type)
       end
       page << set_spinner_off
       # Rememeber this settting in the model settings

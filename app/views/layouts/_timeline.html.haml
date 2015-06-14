@@ -3,7 +3,7 @@
   -# commented this to, for a workaround to close any open bubble from previous timeline when switching between timelines
   -# var tl;
   - load_tl_now ||= false
-  var miq_timeline_filter = #{!! @timeline_filter};
+  ManageIQ.timelineFilter = #{!! @timeline_filter};
   function miqLoadTL() {
   var eventSource = new Timeline.DefaultEventSource();
   -# Following works around a issue that causes timeline to not show any events in IE

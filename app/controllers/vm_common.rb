@@ -1658,8 +1658,8 @@ module VmCommon
       }
       if partial == 'layouts/x_gtl'
         partial_locals[:action_url]  = @lastaction
-        presenter[:miq_parent_id]    = @record.id           # Set parent rec id for JS function miqGridSort to build URL
-        presenter[:miq_parent_class] = request[:controller] # Set parent class for URL also
+        presenter[:parentId]    = @record.id           # Set parent rec id for JS function miqGridSort to build URL
+        presenter[:parentClass] = request[:controller] # Set parent class for URL also
       end
       presenter[:update_partials][:main_div] = r[:partial=>partial, :locals=>partial_locals]
 
@@ -1681,7 +1681,7 @@ module VmCommon
       :locals  => {:nameonly => ([:images_tree, :instances_tree, :vandt_tree].include?(x_active_tree))}
     ]
 
-    # Clear the JS gtl_list_grid var if changing to a type other than list
+    # Clear the JS ManageIQ.grids.grids['gtl_list_grid'].obj var if changing to a type other than list
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
     presenter[:clear_tree_cookies] = "edit_treeOpenStatex" if @sb[:action] == "policy_sim"
 
@@ -1737,7 +1737,7 @@ module VmCommon
 
     presenter[:expand_collapse_cells][:a] = h_buttons || c_buttons || v_buttons ? 'expand' : 'collapse'
 
-    presenter[:miq_record_id] = @record ? @record.id : nil
+    presenter[:recordId] = @record ? @record.id : nil
 
     # Hide/show searchbox depending on if a list is showing
     presenter[:set_visible_elements][:adv_searchbox_div] = !(@record || @in_a_form)
