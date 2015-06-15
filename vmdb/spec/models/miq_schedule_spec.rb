@@ -488,7 +488,7 @@ describe MiqSchedule do
       end
 
       it "should create 1 miq task" do
-        tasks = MiqTask.where(:name => "Database GC", :userid => "admin").all
+        tasks = MiqTask.where(:name => "Database GC", :userid => "admin").to_a
         tasks.length.should == 1
         tasks.first.id.should == @task_id
       end

@@ -104,7 +104,7 @@ class RssFeed < ActiveRecord::Base
         items = items.limit(self.options[:limit_to_count])    if self.options[:limit_to_count]
         items = items.includes(self.options[:include])        if self.options[:include]
       end
-      items.all
+      items
     else  # Custom find method
       items = item_class.send(self.options[:search_method].to_sym, self.name, self.options)
     end

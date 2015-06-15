@@ -189,7 +189,7 @@ class MiqUserRole < ActiveRecord::Base
       end
 
       # Migrate widgets that may reference old role name
-      widgets ||= MiqWidget.in_my_region.all
+      widgets ||= MiqWidget.in_my_region
       widgets.each do |w|
         if w.visibility.kind_of?(Hash) && w.visibility.has_key?(:roles) && w.visibility[:roles].include?(old_role_name)
           idx = w.visibility[:roles].index(old_role_name)

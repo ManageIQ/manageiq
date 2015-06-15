@@ -71,14 +71,14 @@ describe "AR Regions extension" do
     end
 
     it ".in_my_region" do
-      recs = VmVmware.in_my_region.all
+      recs = VmVmware.in_my_region.to_a
       recs.count.should == 10
       recs.all? { |v| v.region_number == VmVmware.my_region_number }.should be_true
     end
 
     context ".in_region" do
       it "with region param" do
-        recs = VmVmware.in_region(@base_region).all
+        recs = VmVmware.in_region(@base_region)
         recs.count.should == 10
         recs.all? { |v| v.region_number == @base_region }.should be_true
       end

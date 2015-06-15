@@ -461,7 +461,7 @@ module Rbac
     elsif ar_scope < ActsAsArModel
       ar_scope.find(:all, options)
     else
-      apply_options(ar_scope, options).all
+      apply_options(ar_scope, options)
     end
   end
 

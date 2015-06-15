@@ -244,7 +244,7 @@ class MiqCimInstance < ActiveRecord::Base
   # Get the associations from this node that match the given association.
   #
   def getAssociations(association)
-    return miq_cim_associations.scoped.where_association(association).all
+    return miq_cim_associations.scoped.where_association(association)
   end
 
   #

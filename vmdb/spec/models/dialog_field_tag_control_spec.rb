@@ -116,7 +116,7 @@ describe DialogFieldTagControl do
     end
 
     it ".allowed_tag_categories" do
-      expected_array = Classification.where(:show => true, :parent_id => 0, :read_only => false).includes(:tag).all.collect do |cat|
+      expected_array = Classification.where(:show => true, :parent_id => 0, :read_only => false).includes(:tag).collect do |cat|
         { :id => cat.id, :description => cat.description, :single_value => cat.single_value }
       end.sort_by { |cat| cat[:description] }
 

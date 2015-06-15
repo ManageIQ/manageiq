@@ -847,7 +847,7 @@ module OpsController::Diagnostics
         _("%{typ} %{model} \"%{name}\"") % {:typ=>"Diagnostics", :name=>@selected_server.description, :model=>ui_lookup(:model=>@selected_server.class.to_s)}
     elsif x_node == "root"
       if @sb[:active_tab] == "diagnostics_zones"
-        @zones = Zone.in_my_region.all
+        @zones = Zone.in_my_region
       elsif ["diagnostics_roles_servers","diagnostics_servers_roles"].include?(@sb[:active_tab])
         @selected_server = MiqRegion.my_region
         @sb[:selected_server_id] = @selected_server.id

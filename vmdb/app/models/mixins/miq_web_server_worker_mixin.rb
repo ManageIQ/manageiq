@@ -54,7 +54,7 @@ module MiqWebServerWorkerMixin
     end
 
     def self.all_ports_in_use
-      self.server_scope.all.collect { |w| w.port unless w.is_stopped? && !MiqProcess.is_worker?(w.pid)}.compact
+      self.server_scope.collect { |w| w.port unless w.is_stopped? && !MiqProcess.is_worker?(w.pid)}.compact
     end
 
     def self.build_uri(port)

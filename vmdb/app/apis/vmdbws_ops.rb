@@ -853,7 +853,7 @@ module VmdbwsOps
 
     $log.info "#{log_header}: enter"
     t0 = Time.now
-    ret = klass.find_tagged_with(:all => tag, :ns => '/managed').all
+    ret = klass.find_tagged_with(:all => tag, :ns => '/managed')
     $log.info "#{log_header}: exit, elapsed time [#{Time.now - t0}] seconds"
     ret
   end

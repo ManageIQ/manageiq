@@ -22,7 +22,7 @@ describe LogFile do
         @task_id  = described_class.logs_from_server("admin", @miq_server)
         @tasks    = MiqTask.all
         @task     = @tasks.first
-        @messages = MiqQueue.where(:class_name => "LogFile", :method_name => "_request_logs").all
+        @messages = MiqQueue.where(:class_name => "LogFile", :method_name => "_request_logs")
         @message  = @messages.first
       end
 
@@ -39,7 +39,7 @@ describe LogFile do
       end
 
       context "with a queued item not picked up, calling delete_active_log_collections_queue twice" do
-        let(:messages) { MiqQueue.where(:class_name => "MiqServer", :method_name => "delete_active_log_collections").all }
+        let(:messages) { MiqQueue.where(:class_name => "MiqServer", :method_name => "delete_active_log_collections") }
         let(:message)  { messages.first }
         before do
           @miq_server.reload.delete_active_log_collections_queue

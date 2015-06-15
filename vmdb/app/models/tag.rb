@@ -90,7 +90,7 @@ class Tag < ActiveRecord::Base
 
   def self.filter_ns(tags, ns)
     if ns.nil?
-      tags = tags.all     if tags.kind_of?(ActiveRecord::Relation)
+      tags = tags.to_a    if tags.kind_of?(ActiveRecord::Relation)
       tags = tags.compact if tags.respond_to?(:compact)
       return tags
     end

@@ -328,7 +328,7 @@ module OpsController::Settings::CapAndU
 
     ##################### Adding Non-Clustered hosts node
     @edit[:current][:non_cl_hosts] ||= Array.new
-    ExtManagementSystem.in_my_region.all.each_with_index do |e,j|
+    ExtManagementSystem.in_my_region.each_with_index do |e,j|
       all = e.non_clustered_hosts
       all.each do |h|
         @edit[:current][:non_cl_hosts].push({:name=>h.name,
@@ -386,7 +386,7 @@ module OpsController::Settings::CapAndU
   def build_ds_tree(storages)
     # Build the Storages tree for the C&U data collection
     ds = Array.new                          # Array to hold all Storages
-    # ems_hash = ExtManagementSystem.in_my_region.all.inject({}) {|h,e| h[e.id] = e.name; h}
+    # ems_hash = ExtManagementSystem.in_my_region.inject({}) {|h,e| h[e.id] = e.name; h}
     storages.each do |s|                    # Go thru all of the Storages
       ds_node = Hash.new                        # Build the storage node
       ds_node[:key] = "Datastore_" + s[:id].to_s
