@@ -197,6 +197,10 @@ class Tenant < ActiveRecord::Base
     !!logo_file_name
   end
 
+  # for now, we are ignoring the custom_logo and custom_login_logo checkboxes
+  def custom_logo=(_ignore)
+  end
+
   def login_logo?
     !!login_logo_file_name
   end
