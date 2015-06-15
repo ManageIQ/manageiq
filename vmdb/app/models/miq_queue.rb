@@ -89,7 +89,6 @@ class MiqQueue < ActiveRecord::Base
     :unget     => "MIQ(MiqQueue.unget)     ",
     :deliver   => "MIQ(MiqQueue.deliver)   ",
     :delivered => "MIQ(MiqQueue.delivered) ",
-    :merge     => "MIQ(MiqQueue.merge)     ",
     :callback  => "MIQ(MiqQueue.m_callback)",
     :atStartup => "MIQ(MiqQueue.atStartup) ",
     :dev_null  => "MIQ(MiqQueue.dev_null)  ",
@@ -305,9 +304,6 @@ class MiqQueue < ActiveRecord::Base
       end
     end
     msg
-  end
-  class << self
-    alias_method :merge, :put_or_update
   end
 
   # Find the MiqQueue item with the specified find options, and if not found
