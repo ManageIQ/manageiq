@@ -514,7 +514,8 @@ class DashboardController < ApplicationController
         page.redirect_to(validation.url)
       end
     when :fail
-      session[:userid], session[:username], session[:user_tags] = nil
+      self.current_user = nil
+      session[:user_tags] = nil
       add_flash(validation.flash_msg || "Error: Authentication failed", :error)
       render :update do |page|
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
