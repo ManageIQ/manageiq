@@ -9,7 +9,7 @@ module MiqAeServiceServiceTemplateProvisionRequestSpec
     before(:each) do
       MiqAutomateHelper.create_service_model_method('SPEC_DOMAIN', 'EVM',
                                                     'AUTOMATE', 'test1', 'test')
-      @ae_method     = ::MiqAeMethod.find(:first)
+      @ae_method     = ::MiqAeMethod.first
       @ae_result_key = 'foo'
       @user          = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
       @approver_role = FactoryGirl.create(:ui_task_set_approver)

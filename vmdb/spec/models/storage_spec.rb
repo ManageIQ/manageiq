@@ -214,11 +214,11 @@ describe Storage do
         MiqEvent.should_receive(:raise_evm_job_event).once
         @storage1.scan
 
-        task = MiqTask.find(:first)
+        task = MiqTask.first
         task.userid.should == "system"
         task.name.should == "SmartState Analysis for [#{@storage1.name}]"
 
-        message = MiqQueue.find(:first, :conditions => { :method_name => "smartstate_analysis"})
+        message = MiqQueue.where(:method_name => "smartstate_analysis").first
         message.instance_id.should == @storage1.id
         message.args.should == [task.id]
         message.zone.should == @zone.name

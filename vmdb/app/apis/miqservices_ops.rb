@@ -11,7 +11,7 @@ module MiqservicesOps
 
         # If we get a job id use that to lookup the vm
         unless jobid.blank?
-          job = Job.find(:first, :conditions => ["guid = ?", jobid], :select => "target_id")
+          job = Job.where(:guid => jobid).select("target_id").first
           vm = VmOrTemplate.find_by_id(job.target_id) if job
         end
 

@@ -309,14 +309,12 @@ EOF
       context "first" do
         it "without conditions" do
           t = VmdbTable.vmdb_table_names.first
-          VmdbTable.find(:first).name.should == t
-          VmdbTable.first.name.should        == t
+          expect(VmdbTable.first.name).to eq(t)
         end
 
         it "with conditions" do
           t = VmdbTable.vmdb_table_names.second
-          VmdbTable.find(:first, :conditions => {:id => [2, 3]}).name.should == t
-          VmdbTable.first(:conditions => {:id => [2, 3]}).name.should        == t
+          expect(VmdbTable.where(:id => [2, 3]).first.name).to eq(t)
         end
       end
 

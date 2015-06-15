@@ -215,7 +215,7 @@ describe MiqTask do
       task.message.should == "Queued the action: [#{task.name}] being run for user: [#{task.userid}]"
 
       MiqQueue.count.should == 1
-      message = MiqQueue.find(:first)
+      message = MiqQueue.first
       message.class_name.should  == "MyClass"
       message.method_name.should == "my_method"
       message.args.should        == [1, 2, 3]
@@ -235,7 +235,7 @@ describe MiqTask do
     it "should queue up deletes when calling MiqTask.delete_by_id" do
       MiqTask.delete_by_id([@miq_task1.id, @miq_task3.id])
       MiqQueue.count.should == 1
-      message = MiqQueue.find(:first)
+      message = MiqQueue.first
 
       message.class_name.should  == "MiqTask"
       message.method_name.should == "destroy_all"
@@ -255,7 +255,7 @@ describe MiqTask do
       MiqTask.delete_older(5.minutes.ago.utc, nil)
 
       MiqQueue.count.should == 1
-      message = MiqQueue.find(:first)
+      message = MiqQueue.first
 
       message.class_name.should  == "MiqTask"
       message.method_name.should == "destroy_all"
@@ -273,7 +273,7 @@ describe MiqTask do
       MiqTask.delete_older(11.minutes.ago.utc, nil)
 
       MiqQueue.count.should == 1
-      message = MiqQueue.find(:first)
+      message = MiqQueue.first
 
       message.class_name.should  == "MiqTask"
       message.method_name.should == "destroy_all"
