@@ -352,26 +352,34 @@ module ActiveRecord
   end
 
   module FinderMethods
+    def without_virtual_includes
+      if includes_values
+        spawn.without_virtual_includes!
+      else
+        self
+      end
+    end
+
+    def without_virtual_includes!
+      self.includes_values = klass.remove_virtual_fields(includes_values) if includes_values
+      self
+    end
+
     def find_with_associations_with_virtual
-      original, self.includes_values = includes_values, klass.remove_virtual_fields(includes_values) if includes_values
+      recs = without_virtual_includes.send(:find_with_associations_without_virtual)
 
-      recs = find_with_associations_without_virtual
-
-      if original
-        self.includes_values = original
+      if includes_values
         MiqPreloader.preload(recs, preload_values + includes_values)
       end
-      return recs
+
+      recs
     end
     alias_method_chain :find_with_associations, :virtual
   end
 
   module Calculations
     def calculate_with_virtual(operation, column_name, options = {})
-      original, self.includes_values = includes_values, klass.remove_virtual_fields(includes_values) if includes_values
-      result = calculate_without_virtual(operation, column_name, options)
-      self.includes_values = original if original
-      return result
+      without_virtual_includes.send(:calculate_without_virtual, operation, column_name, options)
     end
     alias_method_chain :calculate, :virtual
   end
