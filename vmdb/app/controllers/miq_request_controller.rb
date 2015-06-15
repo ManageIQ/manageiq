@@ -141,8 +141,9 @@ class MiqRequestController < ApplicationController
       gv_options = {:filter=>prov_condition(@sb[:def_prov_options][resource_type.to_sym])}
       @view, @pages = get_view(kls, gv_options) # Get view and paginator, based on the selected options
     else
-      requester = User.find_by_userid(session[:userid])
-      gv_options = {:filter=>prov_condition({:resource_type=>resource_type, :time_period=>time_period, :requester_id=>requester ? requester.id : nil})}
+      gv_options = {:filter => prov_condition(:resource_type => resource_type,
+                                              :time_period   => time_period,
+                                              :requester_id  => current_user.try(:id))}
       @view, @pages = get_view(kls, gv_options)     # Get requests for this user
     end
     @sb[:prov_options] ||= Hash.new
@@ -418,8 +419,7 @@ class MiqRequestController < ApplicationController
     cond = [{"AFTER" => {"value" => "#{opts[:time_period].to_i} Days Ago", "field" => "MiqRequest-created_on"}}]  # Start with setting time
 
     if !is_approver
-      requester = User.find_by_userid(session[:userid])
-      cond.push("=" => {"value" => requester.try(:id), "field" => "MiqRequest-requester_id"})
+      cond.push("=" => {"value" => current_user.try(:id), "field" => "MiqRequest-requester_id"})
     end
 
     if opts[:user_choice] && opts[:user_choice] != "all"
@@ -498,6 +498,7 @@ class MiqRequestController < ApplicationController
   end
 
   def is_approver
+    # TODO: this should be current_user
     User.current_user.role_allows?(:identifier => 'miq_request_approval')
   end
 

@@ -226,8 +226,7 @@ module ApplicationController::PolicySupport
   def assigned_filters
     assigned_filters = Array.new
     #adding assigned filters for a user into hash to display categories bold and gray out subcategory if checked
-    @get_filters = [User.find_by_userid(session[:userid]).get_managed_filters]
-    @get_filters = @get_filters.flatten
+    @get_filters = [current_user.get_managed_filters].flatten
     h = Hash[*@get_filters.collect { |v| [@get_filters.index(v), v] }.flatten]
     @get_filters = h.invert
     h.invert.each do | val, key |

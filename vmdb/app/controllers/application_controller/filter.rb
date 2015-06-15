@@ -704,7 +704,7 @@ module ApplicationController::Filter
         if @settings[:default_search] && @settings[:default_search][@edit[@expkey][:exp_model].to_s.to_sym] # See if a default search exists
           def_search = @settings[:default_search][@edit[@expkey][:exp_model].to_s.to_sym]
           if id.to_i == def_search.to_i
-            db_user = User.find_by_userid(session[:userid])
+            db_user = current_user
             db_user.settings[:default_search].delete(@edit[@expkey][:exp_model].to_s.to_sym)
             db_user.save
             @edit[:adv_search_applied] = nil          # clearing up applied search results
@@ -909,7 +909,7 @@ module ApplicationController::Filter
         end
       end
       if @flash_array.blank?
-        db_user = User.find_by_userid(session[:userid])
+        db_user = current_user
         if db_user != nil
           db_user.settings[:default_search] ||= Hash.new                        # Create the col widths hash, if not there
           db_user.settings[:default_search][cols_key] ||= Hash.new        # Create hash for the view db
@@ -1734,7 +1734,7 @@ module ApplicationController::Filter
   end
 
   def build_listnav_search_list(db)
-    @settings[:default_search] = User.find_by_userid(session[:userid]).settings[:default_search]  # Get the user's default search settings again, incase default search was deleted
+    @settings[:default_search] = current_user.settings[:default_search]  # Get the user's default search settings again, incase default search was deleted
     @default_search = MiqSearch.find(@settings[:default_search][db.to_sym].to_s) if @settings[:default_search] && @settings[:default_search][db.to_sym] && @settings[:default_search][db.to_sym] != 0 && MiqSearch.exists?(@settings[:default_search][db.to_sym])
     temp = MiqSearch.new
     temp.description = "ALL"

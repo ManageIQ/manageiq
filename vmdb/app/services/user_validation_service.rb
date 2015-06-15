@@ -4,7 +4,7 @@ class UserValidationService
   end
 
   extend Forwardable
-  delegate [:session, :url_for, :initiate_wait_for_task, :session_init,
+  delegate [:session, :url_for, :initiate_wait_for_task, :session_init, :current_userid=,
             :session_reset, :get_vmdb_config, :start_url_for_user] => :@controller
 
   ValidateResult = Struct.new(:result, :flash_msg, :url)
@@ -21,8 +21,8 @@ class UserValidationService
     end
 
     unless user[:name]
-      session[:userid], session[:username], session[:user_tags] = nil
-      User.current_userid = nil
+      self.current_userid = nil
+      session[:user_tags] = nil
       return ValidateResult.new(:fail, @flash_msg ||= "Error: Authentication failed")
     end
 

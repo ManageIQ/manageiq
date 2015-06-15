@@ -564,7 +564,7 @@ class ReportController < ApplicationController
     @changed = session[:changed] = true
     @in_a_form = true
     @export_reports = Hash.new
-    user = User.find_by_userid(session[:userid])
+    user = current_user
     MiqReport.all.each do |rep|
       if rep.rpt_type == "Custom" && (user.admin_user? || (rep.miq_group && rep.miq_group.id == user.current_group.id))
         @export_reports[rep.name] = rep.id
