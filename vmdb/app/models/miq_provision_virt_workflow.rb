@@ -1007,8 +1007,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     version = args.first.to_f
     return from_ws_ver_1_0(*args) if version == 1.0
 
-    # Move optional arguments into the VmdbwsSupport::ProvisionOptions object
-    prov_options = VmdbwsSupport::ProvisionOptions.new(
+    # Move optional arguments into the MiqHashStruct object
+    prov_options = MiqHashStruct.new(
       :values                => args[6],
       :ems_custom_attributes => args[7],
       :miq_custom_attributes => args[8],
@@ -1231,7 +1231,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def self.from_ws_ver_1_x(version, userid, template_fields, vm_fields, requester, tags, options)
-    options = VmdbwsSupport::ProvisionOptions.new if options.nil?
+    options = MiqHashStruct.new if options.nil?
     log_header = "#{name}.from_ws_ver_1_x"
     $log.warn "#{log_header} Web-service provisioning starting with interface version <#{version}> by requester <#{userid}>"
 

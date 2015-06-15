@@ -216,9 +216,9 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
   def self.from_ws(*args)
     version = args.first.to_f
 
-    # Move optional arguments into the VmdbwsSupport::ProvisionOptions object
+    # Move optional arguments into the MiqHashStruct object
     prov_args = args[0,6]
-    prov_options = VmdbwsSupport::ProvisionOptions.new(:values => args[6], :ems_custom_attributes => args[7], :miq_custom_attributes => args[8])
+    prov_options = MiqHashStruct.new(:values => args[6], :ems_custom_attributes => args[7], :miq_custom_attributes => args[8])
     prov_args << prov_options
     MiqHostProvisionWorkflow.from_ws_ver_1_x(*prov_args)
   end
@@ -230,7 +230,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
   def self.from_ws_ver_1_x(version, userid, template_fields, vm_fields, requester, tags, options)
     log_header = "#{self.class.name}.from_ws"
     begin
-      options = VmdbwsSupport::ProvisionOptions.new if options.nil?
+      options = MiqHashStruct.new if options.nil?
       $log.warn "#{log_header} Web-service host provisioning starting with interface version <#{version}> by requester <#{userid}>"
 
       init_options = {:use_pre_dialog => false, :request_type => self.request_type(parse_ws_string(template_fields)[:request_type])}
