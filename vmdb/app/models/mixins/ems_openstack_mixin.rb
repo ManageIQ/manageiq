@@ -2,15 +2,16 @@ module EmsOpenstackMixin
   #
   # OpenStack interactions
   #
+  module ClassMethods
+    def raw_connect(username, password, auth_url, service = "Compute")
+      require 'openstack/openstack_handle'
+      OpenstackHandle::Handle.raw_connect(username, password, auth_url, service)
+    end
 
-  def self.raw_connect(username, password, auth_url, service = "Compute")
-    require 'openstack/openstack_handle'
-    OpenstackHandle::Handle.raw_connect(username, password, auth_url, service)
-  end
-
-  def self.auth_url(address, port = nil)
-    require 'openstack/openstack_handle'
-    OpenstackHandle::Handle.auth_url(address, port)
+    def auth_url(address, port = nil)
+      require 'openstack/openstack_handle'
+      OpenstackHandle::Handle.auth_url(address, port)
+    end
   end
 
   def auth_url
