@@ -224,22 +224,21 @@ module MigrationHelper
 
   def change_data_batches(table, column, from_value, to_value, options = {})
     batch_size = options[:batch_size] || 100_000
-    from_value = sanitize_sql_for_conditions({column => from_value}, table)
-    to_value   = "#{connection.quote_column_name(column)} = #{connection.quote(to_value)}"
-    table      = connection.quote_table_name(table)
 
-    rows = connection.select_value("SELECT COUNT(id) FROM #{table} WHERE #{from_value}").to_i
+    model = Class.new(ActiveRecord::Base) do
+      self.table_name = table
+    end
+
+    base_relation = model.where(column => from_value)
+    rows = base_relation.size
+
     say_batch_started(rows)
     return if rows == 0
 
-    select_sql = Arel::Table.new(table).project(:id).where(Arel.sql(from_value)).take(batch_size).to_sql
     loop do
-      ids = connection.select_all(select_sql).collect { |r| r["id"] }
-      break if ids.length == 0
-      ids_clause = sanitize_sql_for_conditions({:id => ids}, table)
-      count = connection.update("UPDATE #{table} SET #{to_value} WHERE #{ids_clause}")
+      count = base_relation.limit(batch_size).update_all(column => to_value)
       say_batch_processed(count)
-      break if count < batch_size
+      break if count == 0
     end
   end
 
