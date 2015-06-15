@@ -195,7 +195,7 @@
             - if @edit[:ems_alarms].length == 0
               = _("No alarms found for the selected %s") % ui_lookup(:table => "ext_management_system")
             - else
-              - opts [["<#{_('Choose')}>", nil]] + @edit[:ems_alarms].invert.sort_by { |a| a.first.downcase }
+              - opts = [["<#{_('Choose')}>", nil]] + @edit[:ems_alarms].invert.sort_by { |a| a.first.downcase }
               = select_tag('select_ems_alarm_mor',
                 options_for_select(opts, @edit[:new][:expression][:options][:ems_alarm_mor]),
                 "data-miq_sparkle_on"  => true,
