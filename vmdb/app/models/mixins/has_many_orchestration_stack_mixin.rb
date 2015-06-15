@@ -7,8 +7,8 @@ module HasManyOrchestrationStackMixin
              :dependent   => :destroy
 
     has_many :direct_orchestration_stacks,
+             -> { where(:ancestry => nil) },
              :foreign_key => :ems_id,
-             :conditions  => OrchestrationStack.arel_table[:ancestry].eq(nil).to_sql,
              :class_name  => "OrchestrationStack"
   end
 end
