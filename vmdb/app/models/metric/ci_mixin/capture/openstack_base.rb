@@ -227,7 +227,7 @@ module Metric::CiMixin::Capture::OpenstackBase
       multi_counter_aligned_start        ||= last_period
       multi_counter_aligned_end          ||= period
       multi_counter_aligned_start_guard  ||= last_period
-      multi_counter_aligned_start_guard    = period if multi_counter_aligned_start_guard == 'initialize_with_period'
+      multi_counter_aligned_start_guard    = period if 'initialize_with_period' == multi_counter_aligned_start_guard
 
       multi_counter_metrics              ||= {}
       last_multi_counter_metrics         ||= {}
