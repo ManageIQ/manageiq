@@ -1,6 +1,10 @@
 require "spec_helper"
 
 describe EmsOpenstack do
+  context "Class Methods" do
+    it("from mixin") { expect(described_class.methods).to include(:auth_url, :raw_connect) }
+  end
+
   it ".ems_type" do
     described_class.ems_type.should == 'openstack'
   end
