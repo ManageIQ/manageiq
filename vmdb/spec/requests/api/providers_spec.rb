@@ -33,7 +33,7 @@ describe ApiController do
     {
       "type"      => "EmsRedhat",
       "name"      => "sample rhevm",
-      "port"      => 5000,
+      "port"      => "5000",
       "hostname"  => "sample_rhevm.provider.com",
       "ipaddress" => "100.200.300.2"
     }
