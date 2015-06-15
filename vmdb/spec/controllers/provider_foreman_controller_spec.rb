@@ -260,6 +260,25 @@ describe ProviderForemanController do
     expect(response.status).to eq(200)
   end
 
+  it "renders tree_select as js" do
+    controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
+
+    controller.stub(:process_show_list)
+    controller.stub(:add_unassigned_configuration_profile_record)
+    controller.stub(:replace_explorer_trees)
+    controller.stub(:build_listnav_search_list)
+    controller.stub(:rebuild_toolbars)
+    controller.stub(:replace_search_box)
+    controller.stub(:update_partials)
+
+    EvmSpecHelper.create_guid_miq_server_zone
+    set_user_privileges
+
+    key = ems_key_for_provider(@provider)
+    post :tree_select, :id => key, :format => :js
+    expect(response.status).to eq(200)
+  end
+
   def find_treenode_for_provider(provider)
     key =  ems_key_for_provider(provider)
     tree =  JSON.parse(controller.instance_variable_get(:@foreman_providers_tree))
