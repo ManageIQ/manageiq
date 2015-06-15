@@ -1,4 +1,5 @@
 module EmsOpenstackMixin
+  extend ActiveSupport::Concern
   #
   # OpenStack interactions
   #
