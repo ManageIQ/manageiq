@@ -66,7 +66,7 @@ describe ProviderForemanController do
     it "renders explorer based on RBAC access to feature 'configured_system_tag'" do
       set_user_privileges
       EvmSpecHelper.seed_specific_product_features("configured_system_tag")
-      feature = MiqProductFeature.find_all_by_identifier(["configured_system_tag"])
+      feature = MiqProductFeature.find_all_by_identifier("configured_system_tag")
       test_user_role  = FactoryGirl.create(:miq_user_role,
                                            :name                 => "test_user_role",
                                            :miq_product_features => feature)
@@ -88,7 +88,7 @@ describe ProviderForemanController do
     it "renders explorer based on RBAC access to feature 'provider_foreman_add_provider'" do
       set_user_privileges
       EvmSpecHelper.seed_specific_product_features("provider_foreman_add_provider")
-      feature = MiqProductFeature.find_all_by_identifier(["provider_foreman_add_provider"])
+      feature = MiqProductFeature.find_all_by_identifier("provider_foreman_add_provider")
       test_user_role  = FactoryGirl.create(:miq_user_role,
                                            :name                 => "test_user_role",
                                            :miq_product_features => feature)
@@ -111,7 +111,7 @@ describe ProviderForemanController do
   context "asserts correct privileges" do
     before do
       EvmSpecHelper.seed_specific_product_features("configured_system_provision")
-      feature = MiqProductFeature.find_all_by_identifier(["configured_system_provision"])
+      feature = MiqProductFeature.find_all_by_identifier("configured_system_provision")
       test_user_role  = FactoryGirl.create(:miq_user_role,
                                            :name                 => "test_user_role",
                                            :miq_product_features => feature)
