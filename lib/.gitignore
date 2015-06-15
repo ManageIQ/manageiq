@@ -23,11 +23,6 @@ mdfs*.log
 !/disk/modules/MiqBlockDevOps/*.c
 /disk/modules/*.so
 
-/disk/modules/MiqLargeFileLinux.d
-!/disk/modules/MiqLargeFileLinux.d/extconf.rb
-!/disk/modules/MiqLargeFileLinux.d/*.c
-/disk/modules/**/*.so
-
 /VixDiskLib/VixDiskLib_raw
 !/VixDiskLib/VixDiskLib_raw/**/*.c
 !/VixDiskLib/VixDiskLib_raw/**/extconf.rb

@@ -45,6 +45,11 @@ gem "trollop",              "~>2.0",      :require => false
 gem "psych",                "~>2.0.12"
 gem "apipie-bindings",      "~>0.0.12",      :require => false
 
+# large_file_linux is only needed for 32 bit Linux.
+if RbConfig::CONFIG["host_cpu"] == "x86" && RbConfig::CONFIG["host_os"].include?("linux")
+  gem "large_file_linux",     "~>0.1.0",     :require => false
+end
+
 # qpid group is needed to gate the inclusion of qpid_messaging gem on platforms
 # where the qpid-cpp-client-devel package is not available.  This includes
 # OSX, Windows, and CruiseControl machines.

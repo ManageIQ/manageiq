@@ -19,7 +19,6 @@ namespace :build do
 
       artifacts_dirs = %w(
         lib/disk/modules/MiqBlockDevOps
-        lib/disk/modules/MiqLargeFileLinux.d
         lib/SlpLib/SlpLib_raw/
         lib/NetappManageabilityAPI/NmaCore/NmaCore_raw
       )
@@ -91,20 +90,6 @@ namespace :build do
       )
     else
       puts "** Skipping build of MiqBlockDevOps.so since it is only built on x86_64-linux."
-    end
-
-    #
-    # MiqLargeFileLinux
-    #
-
-    if platform == "x86_64-linux"
-      build_shared_objects(
-        "MiqLargeFileLinux.so",
-        base.join("lib/disk/modules/MiqLargeFileLinux.d/"),
-        base.join("lib/disk/modules/ruby#{RUBY_VERSION}/")
-      )
-    else
-      puts "** Skipping build of MiqLargeFileLinux.so since it is only built on x86-linux."
     end
 
     #
