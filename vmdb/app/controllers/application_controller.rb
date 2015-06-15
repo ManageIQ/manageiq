@@ -324,8 +324,7 @@ class ApplicationController < ActionController::Base
       if params[:col_widths]
         cws = params[:col_widths].split(",")[2..-1]
         if cws.length > 0
-          db_user = current_user
-          if db_user != nil
+          if (db_user = current_user)
             db_user.settings[:col_widths] ||= Hash.new                        # Create the col widths hash, if not there
             db_user.settings[:col_widths][cols_key] ||= Hash.new        # Create hash for the view db
             @settings[:col_widths] ||= Hash.new                               # Create the col widths hash, if not there
@@ -334,8 +333,8 @@ class ApplicationController < ActionController::Base
               @settings[:col_widths][cols_key][@view.col_order[i]] = cw.to_i  # Save each cols width
             end
             db_user.settings[:col_widths][cols_key] = @settings[:col_widths][cols_key]
+            db_user.save
           end
-          db_user.save
         end
       end
     end
@@ -2621,8 +2620,7 @@ class ApplicationController < ActionController::Base
   end
 
   def ruport_ize_filtered(report, options = {})
-    user = current_user
-    options[:tag_filters] = user ? user.get_filters   : []
+    options[:tag_filters] = current_user.try(:get_filters) || []
     report.ruport_ize!(options)
   end
 

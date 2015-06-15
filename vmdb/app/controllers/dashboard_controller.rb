@@ -633,8 +633,8 @@ class DashboardController < ApplicationController
   end
 
   def logout
-    user = current_user
-    user.logoff if user
+    current_user.try(:logoff)
+    self.current_user = nil
 
     session.clear
     session[:auto_login] = false
@@ -645,9 +645,7 @@ class DashboardController < ApplicationController
   def change_group
     # Get the user and new group and set current_group in the user record
     db_user = current_user
-    to_group = MiqGroup.find_by_id(params[:to_group])
-    db_user.current_group = to_group
-    db_user.save
+    db_user.update_attributes(:current_group => MiqGroup.find_by_id(params[:to_group]))
 
     # Rebuild the session
     session_reset(db_user)
@@ -804,8 +802,7 @@ class DashboardController < ApplicationController
     return unless @report
 
     unless params[:task_id] # First time thru, kick off the report generate task
-      options = {:userid => session[:userid]}
-      initiate_wait_for_task(:task_id => @report.async_generate_table(options))
+      initiate_wait_for_task(:task_id => @report.async_generate_table(:userid => session[:userid]))
       return
     end
 

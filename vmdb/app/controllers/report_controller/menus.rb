@@ -260,7 +260,7 @@ module ReportController::Menus
   def edit_reports
     @edit[:selected_reports] = Array.new
     @edit[:available_reports] = Array.new
-    user = current_user
+    current_group_id = current_user.current_group.try(:id).to_i
     id = session[:node_selected].split('__')
     @selected = id[1].split(':')
     all = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
@@ -286,7 +286,7 @@ module ReportController::Menus
                   if rep.class == Array
                     rep.each do |r|
                       report = MiqReport.find_by_name(r.strip)
-                      r_name = (@edit[:user_typ] || report.miq_group_id.to_i == user.current_group.id.to_i) ? r : "* #{r}"
+                      r_name = (@edit[:user_typ] || report.miq_group_id.to_i == current_group_id) ? r : "* #{r}"
                       @selected_reports.push(r_name)
                     end
                   end
@@ -321,7 +321,7 @@ module ReportController::Menus
     @all_reports.each do |rep|
       if !@assigned_reports.include?(rep)
         r = MiqReport.find_by_name(rep.strip)
-        @available_reports.push(rep) if @edit[:user_typ] || r.miq_group_id.to_i == user.current_group.id.to_i
+        @available_reports.push(rep) if @edit[:user_typ] || r.miq_group_id.to_i == current_group_id
       end
     end
 
@@ -764,8 +764,7 @@ module ReportController::Menus
     x_tree_init(name, type, "MiqUserRole", :open_all => true)
     tree_nodes = x_build_dynatree(x_tree(name))
 
-    user = current_user
-    if user.super_admin_user?
+    if current_user.super_admin_user?
       title  = "All #{ui_lookup(:models=>"MiqGroup")}"
     else
       title  = "My #{ui_lookup(:model=>"MiqGroup")}"
@@ -786,7 +785,7 @@ module ReportController::Menus
       title  = "All #{ui_lookup(:models=>"MiqGroup")}"
     else
       title  = "My #{ui_lookup(:model=>"MiqGroup")}"
-      roles = [MiqGroup.find_by_id(user.current_group_id)]
+      roles = [user.current_group]
     end
     return roles,title
   end

@@ -512,8 +512,7 @@ module ApplicationController::Explorer
     when :savedreports
       # Saving the unique folder id's that hold reports under them, to use them in view to generate link
       @sb[:folder_ids] = Hash.new
-      u = current_user
-      g = u.admin_user? ? nil : session[:group]
+      g = current_user.admin_user? ? nil : session[:group]
       MiqReport.having_report_results(:miq_group => g, :select => [:id, :name]).each do |r|
         @sb[:folder_ids][r.name] = to_cid(r.id.to_i)
       end
