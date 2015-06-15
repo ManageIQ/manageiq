@@ -633,7 +633,7 @@ class DashboardController < ApplicationController
   end
 
   def logout
-    user = User.find_by_userid(session[:userid])
+    user = current_user
     user.logoff if user
 
     session.clear
@@ -644,7 +644,7 @@ class DashboardController < ApplicationController
   # User request to change to a different eligible group
   def change_group
     # Get the user and new group and set current_group in the user record
-    db_user = User.find_by_userid(session[:userid])
+    db_user = current_user
     to_group = MiqGroup.find_by_id(params[:to_group])
     db_user.current_group = to_group
     db_user.save

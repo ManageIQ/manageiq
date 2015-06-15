@@ -324,7 +324,7 @@ class ApplicationController < ActionController::Base
       if params[:col_widths]
         cws = params[:col_widths].split(",")[2..-1]
         if cws.length > 0
-          db_user = User.find_by_userid(session[:userid])
+          db_user = current_user
           if db_user != nil
             db_user.settings[:col_widths] ||= Hash.new                        # Create the col widths hash, if not there
             db_user.settings[:col_widths][cols_key] ||= Hash.new        # Create hash for the view db
@@ -965,7 +965,7 @@ class ApplicationController < ActionController::Base
     reports = Array.new
     folders = Array.new
     rec = MiqGroup.find_by_id(group)
-    user = User.find_by_userid(session[:userid])
+    user = current_user
     @sb[:grp_title] = user.admin_user? ?
       "#{session[:customer_name]} (#{_("All %s") % ui_lookup(:models=>"MiqGroup")})" :
       "#{session[:customer_name]} (#{_("%s") % "#{ui_lookup(:model=>"MiqGroup")}: #{user.current_group.description}"})"
@@ -2605,7 +2605,7 @@ class ApplicationController < ActionController::Base
   end
 
   def find_filtered(db, count, options={})
-    user     = User.find_by_userid(session[:userid])
+    user     = current_user
     mfilters = user ? user.get_managed_filters   : []
     bfilters = user ? user.get_belongsto_filters : []
 
@@ -2621,8 +2621,7 @@ class ApplicationController < ActionController::Base
   end
 
   def ruport_ize_filtered(report, options = {})
-    userid = session[:userid]
-    user = User.find_by_userid(userid)
+    user = current_user
     options[:tag_filters] = user ? user.get_filters   : []
     report.ruport_ize!(options)
   end
@@ -2723,7 +2722,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_gettext_locale
-    user_settings =  User.find_by_userid(session[:userid]).try(:settings)
+    user_settings =  current_user.try(:settings)
     user_locale = user_settings[:display][:locale] if user_settings &&
                                                  user_settings.key?(:display) &&
                                                  user_settings[:display].key?(:locale)

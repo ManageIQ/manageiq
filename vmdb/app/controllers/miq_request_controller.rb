@@ -141,7 +141,7 @@ class MiqRequestController < ApplicationController
       gv_options = {:filter=>prov_condition(@sb[:def_prov_options][resource_type.to_sym])}
       @view, @pages = get_view(kls, gv_options) # Get view and paginator, based on the selected options
     else
-      requester = User.find_by_userid(session[:userid])
+      requester = current_user
       gv_options = {:filter=>prov_condition({:resource_type=>resource_type, :time_period=>time_period, :requester_id=>requester ? requester.id : nil})}
       @view, @pages = get_view(kls, gv_options)     # Get requests for this user
     end
@@ -418,7 +418,7 @@ class MiqRequestController < ApplicationController
     cond = [{"AFTER" => {"value" => "#{opts[:time_period].to_i} Days Ago", "field" => "MiqRequest-created_on"}}]  # Start with setting time
 
     if !is_approver
-      requester = User.find_by_userid(session[:userid])
+      requester = current_user
       cond.push("=" => {"value" => requester.try(:id), "field" => "MiqRequest-requester_id"})
     end
 

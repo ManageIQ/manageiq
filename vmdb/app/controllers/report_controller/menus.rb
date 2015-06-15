@@ -260,7 +260,7 @@ module ReportController::Menus
   def edit_reports
     @edit[:selected_reports] = Array.new
     @edit[:available_reports] = Array.new
-    user = User.find_by_userid(session[:userid])
+    user = current_user
     id = session[:node_selected].split('__')
     @selected = id[1].split(':')
     all = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
@@ -454,7 +454,7 @@ module ReportController::Menus
       add_flash(_("No %s were selected to move right") % "fields", :error)
       return
     else
-      user = User.find_by_userid(session[:userid])
+      user = current_user
       flg = 0
       @edit[:selected_reports].each do |nf|               # Go thru all new fields
         if params[:selected_reports].include?(nf)         # See if this col was selected to move
@@ -616,7 +616,7 @@ module ReportController::Menus
     @edit[:form_vars] = Hash.new
     @edit[:current] = Array.new
     @edit[:new] = @rpt_menu if !@rpt_menu.nil?
-    user = User.find_by_userid(session[:userid])
+    user = current_user
     @edit[:user_typ] = user.admin_user?
     @edit[:user_group] = user.current_group.id
     @edit[:group_reports] = Array.new
@@ -764,7 +764,7 @@ module ReportController::Menus
     x_tree_init(name, type, "MiqUserRole", :open_all => true)
     tree_nodes = x_build_dynatree(x_tree(name))
 
-    user = User.find_by_userid(session[:userid])
+    user = current_user
     if user.super_admin_user?
       title  = "All #{ui_lookup(:models=>"MiqGroup")}"
     else
@@ -780,7 +780,7 @@ module ReportController::Menus
   end
 
   def get_group_roles
-    user = User.find_by_userid(session[:userid])
+    user = current_user
     if user.super_admin_user?
       roles = MiqGroup.all
       title  = "All #{ui_lookup(:models=>"MiqGroup")}"

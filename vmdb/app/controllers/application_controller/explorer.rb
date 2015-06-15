@@ -37,7 +37,7 @@ module ApplicationController::Explorer
 
     if params.key?(:width)
       # Store the new settings in the user record and in @settings (session)
-      db_user = User.find_by_userid(session[:userid])
+      db_user = current_user
       unless db_user.nil?
         db_user.settings[:explorer] ||= {}
         db_user.settings[:explorer][params[:controller]] ||= {}
@@ -449,7 +449,7 @@ module ApplicationController::Explorer
       end
       return objects
     when :roles
-      user = User.find_by_userid(session[:userid])
+      user = current_user
       if user.super_admin_user?
         roles = MiqGroup.all
       else
@@ -512,7 +512,7 @@ module ApplicationController::Explorer
     when :savedreports
       # Saving the unique folder id's that hold reports under them, to use them in view to generate link
       @sb[:folder_ids] = Hash.new
-      u = User.find_by_userid(session[:userid])
+      u = current_user
       g = u.admin_user? ? nil : session[:group]
       MiqReport.having_report_results(:miq_group => g, :select => [:id, :name]).each do |r|
         @sb[:folder_ids][r.name] = to_cid(r.id.to_i)

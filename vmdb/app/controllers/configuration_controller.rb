@@ -242,7 +242,7 @@ class ConfigurationController < ApplicationController
         # Remove any old settings hashes *****************************
         @settings[:display].delete(:pres_mode)                    # :pres_mode replaced by :theme
 
-        db_user = User.find_by_userid(session[:userid])
+        db_user = current_user
         unless db_user.nil?                                       # Only if userid is in the DB
           db_user.settings = db_user.settings == nil ? @settings : db_user.settings.merge(@settings)  # Create or merge the settings into the db
           # Remove any old settings hashes *****************************
@@ -277,7 +277,7 @@ class ConfigurationController < ApplicationController
         @settings[:views].delete(:vm_summary_cool)                # :views/:vm_summary_cool changed to :dashboards
         @settings[:views].delete(:dashboards)                    # :dashboards is obsolete now
 
-        db_user = User.find_by_userid(session[:userid])
+        db_user = current_user
         unless db_user.nil?                                       # Only if userid is in the DB
           db_user.settings = db_user.settings == nil ? @settings : db_user.settings.merge(@settings)  # Create or merge the settings into the db
           # Remove any old settings hashes *****************************
@@ -729,7 +729,7 @@ class ConfigurationController < ApplicationController
                   }
 
   def merge_in_user_settings(settings)
-    db_user = User.find_by_userid(session[:userid])
+    db_user = current_user
     if db_user.try(:settings)
       settings.each do |key, value|
         value.merge!(db_user.settings[key]) unless db_user.settings[key].nil?

@@ -24,7 +24,7 @@ module ReportController::SavedReports
       return
     end
     @right_cell_text ||= _("%{model} \"%{name}\"") % {:name=>"#{rr.name} - #{format_timezone(rr.created_on,Time.zone,"gt")}", :model=>"Saved Report"}
-    user = User.find_by_userid(session[:userid])
+    user = current_user
     if user.admin_user? || rr.miq_group_id == session[:group]
       @report_result_id = session[:report_result_id] = rr.id
       session[:report_result_runtime] = rr.last_run_on
@@ -158,7 +158,7 @@ module ReportController::SavedReports
   end
 
   def set_saved_reports_condition(rep_id=nil)
-    u = User.find_by_userid(session[:userid])
+    u = current_user
     cond = Array.new
 
     # Replaced this code as all saved, requested, scheduled reports have miq_report_id set, others don't

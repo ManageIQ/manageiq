@@ -1357,7 +1357,7 @@ module ReportController::Reports::Editor
       rpt.rpt_options[:summary][:hide_detail_rows] = @edit[:new][:hide_details]
     end
 
-    user = User.find_by_userid(session[:userid])
+    user = current_user
     rpt.user = user
     rpt.miq_group = user.current_group
   end
@@ -1527,7 +1527,7 @@ module ReportController::Reports::Editor
     else
       @edit[:new][:cb_show_typ] = "owner"
       @edit[:new][:cb_owner_id] = session[:userid]
-      @edit[:cb_owner_name] = User.find_by_userid(session[:userid]).name
+      @edit[:cb_owner_name] = current_user.name
     end
 
     # Get chargeback tags
