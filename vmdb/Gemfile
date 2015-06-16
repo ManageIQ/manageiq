@@ -78,6 +78,7 @@ gem "snmp",                           "~>1.1.0",      :require => false
 gem "uglifier",                       "~>2.4.0",      :require => false
 gem "novnc-rails",                    "~>0.2"
 gem 'spice-html5-rails'
+gem 'rack-cache'
 
 ### Start of gems excluded from the appliances.
 # The gems listed below do not need to be packaged until we find it necessary or useful.
