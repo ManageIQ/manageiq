@@ -173,7 +173,7 @@ class Job < ActiveRecord::Base
   def self.check_jobs_for_timeout
     $log.debug "Checking for timed out jobs"
     begin
-      self.in_my_region.find(:all, :conditions => ["((state != 'finished' and state != 'waiting_to_start') or (state = 'waiting_to_start' and dispatch_status = 'active')) and (zone is null or zone = ?)", MiqServer.my_zone]).each do |job|
+      in_my_region.where("(state != 'finished' and state != 'waiting_to_start') or (state = 'waiting_to_start' and dispatch_status = 'active')").where("zone is null or zone = ?", MiqServer.my_zone).each do |job|
         if job.updated_on < current_job_timeout.seconds.ago
           # Allow jobs to run longer if the MiqQueue task is still active.  (Limited to MiqServer for now.)
           if job.agent_class == "MiqServer"

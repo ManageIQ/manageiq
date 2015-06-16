@@ -34,15 +34,13 @@ class ChargebackRate < ActiveRecord::Base
     return result
   end
 
-  def self.set_assignments(type,cb_rates)
-    #cb_rates = [{:cb_rate=>obj, :tag=>[Classification.entry_object, klass]} || :object=>object},...]
-    #cb_rates.each {|rate| rate[:cb_rate].remove_all_assigned_tos}
-    self.validate_rate_type(type)
-    ChargebackRate.find(:all, :conditions => {:rate_type => type.to_s.capitalize}).each(&:remove_all_assigned_tos)
+  def self.set_assignments(type, cb_rates)
+    validate_rate_type(type)
+    ChargebackRate.where(:rate_type => type.to_s.capitalize).each(&:remove_all_assigned_tos)
 
     cb_rates.each do |rate|
-      rate[:cb_rate].assign_to_objects(rate[:object]) if rate.has_key?(:object)
-      rate[:cb_rate].assign_to_tags(*rate[:tag])      if rate.has_key?(:tag)
+      rate[:cb_rate].assign_to_objects(rate[:object]) if rate.key?(:object)
+      rate[:cb_rate].assign_to_tags(*rate[:tag])      if rate.key?(:tag)
     end
   end
 

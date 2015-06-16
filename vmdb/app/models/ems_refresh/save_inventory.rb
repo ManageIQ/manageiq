@@ -41,7 +41,7 @@ module EmsRefresh::SaveInventory
 
     # Query for all of the Vms once across all EMSes, to handle any moving VMs
     vms_uids = hashes.collect { |h| h[:uid_ems] }.compact
-    vms = VmOrTemplate.find_all_by_uid_ems(vms_uids)
+    vms = VmOrTemplate.where(:uid_ems => vms_uids).to_a
     dup_vms_uids = (vms_uids.duplicates + vms.collect(&:uid_ems).duplicates).uniq.sort
     $log.info "#{log_header} Duplicate unique values found: #{dup_vms_uids.inspect}" unless dup_vms_uids.empty?
 
@@ -126,7 +126,7 @@ module EmsRefresh::SaveInventory
     vm_ids = hashes.collect { |h| !h[:invalid] && h.has_key_path?(:parent_vm, :id) ? [h[:id], h.fetch_path(:parent_vm, :id)] : nil }.flatten.compact.uniq
     unless vm_ids.empty?
       $log.info("#{log_header} Updating genealogy connections.")
-      vms = VmOrTemplate.find_all_by_id(vm_ids)
+      vms = VmOrTemplate.where(:id => vm_ids)
       hashes.each do |h|
         child_id = h[:id]
         parent_id = h.fetch_path(:parent_vm, :id)

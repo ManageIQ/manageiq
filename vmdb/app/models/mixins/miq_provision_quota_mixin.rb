@@ -228,8 +228,8 @@ module MiqProvisionQuotaMixin
 
   def quota_find_prov_requests(options)
     today_time_range = self.quota_get_time_range()
-    requests = MiqRequest.find(:all, :conditions => ["type = ? and approval_state != ? and (created_on >= ? and created_on < ?)",
-                                MiqProvisionRequest.name, 'denied', *today_time_range])
+    requests = MiqRequest.where("type = ? and approval_state != ? and (created_on >= ? and created_on < ?)",
+                                MiqProvisionRequest.name, 'denied', *today_time_range)
     # Make sure we skip the current MiqProvisionRequest in the calculation.
     skip_id = self.class.name == "MiqProvisionRequest" ? self.id : self.miq_provision_request.id
     return requests.collect {|request| request unless request.id == skip_id}.compact
@@ -255,40 +255,38 @@ module MiqProvisionQuotaMixin
 
   def quota_find_active_prov_request_by_owner(options)
     email = get_option(:owner_email).to_s.strip
-    return quota_find_active_prov_request(options).delete_if {|p| email.casecmp(p.get_option(:owner_email).to_s.strip) != 0}
+    quota_find_active_prov_request(options).select { |p| email.casecmp(p.get_option(:owner_email).to_s.strip) == 0 }
   end
 
   def quota_find_active_prov_request_by_group(options)
     prov_requests = []
-    prov_owner = self.get_owner
+    prov_owner = get_owner
     unless prov_owner.nil?
       group = prov_owner.ldap_group
-      prov_requests = quota_find_active_prov_request(options).delete_if do |p|
+      prov_requests = quota_find_active_prov_request(options).select do |p|
         prov_req_owner = p.get_owner
-        prov_req_owner.nil? ? true : group.casecmp(prov_req_owner.ldap_group) != 0
+        prov_req_owner && group.casecmp(prov_req_owner.ldap_group) == 0
       end
     end
-    return prov_requests
+    prov_requests
   end
 
   def quota_find_active_prov_request(options)
     prov_req_ids = []
-    MiqQueue.find(:all, :conditions => {:method_name => 'create_provision_instances', :state => 'dequeue', :class_name => 'MiqProvisionRequest'}).each do |q|
+    MiqQueue.where(:method_name => 'create_provision_instances', :state => 'dequeue', :class_name => 'MiqProvisionRequest').each do |q|
       prov_req_ids << q.instance_id
     end
 
     prov_ids = []
-    MiqQueue.find(:all, :conditions => ["method_name = ? AND state in (?) AND class_name = ? AND task_id like ?", 'deliver', ['ready','dequeue'], 'MiqAeEngine', '%miq_provision_%']).each do |q|
+    MiqQueue.where("method_name = ? AND state in (?) AND class_name = ? AND task_id like ?", 'deliver', ['ready','dequeue'], 'MiqAeEngine', '%miq_provision_%').each do |q|
       if !q.args.nil?
         args = q.args.first
         prov_ids << args[:object_id] if args[:object_type] == 'MiqProvision' && !args[:object_id].blank?
       end
     end
-    MiqProvision.find(:all, :conditions => ["id in (?)", prov_ids], :select => "id,miq_request_id").each do |p|
-      prov_req_ids << p.miq_request_id
-    end
+    prov_req_ids += MiqProvision.where(:id => prov_ids).pluck("miq_request_id")
 
-    return MiqProvisionRequest.find_all_by_id(prov_req_ids.compact.uniq)
+    MiqProvisionRequest.where(:id => prov_req_ids.compact.uniq)
   end
 
   def quota_provision_stats(prov_method, options)

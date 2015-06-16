@@ -199,7 +199,7 @@ class JobProxyDispatcher
   def active_scans
     @active_scans ||= begin
       actives = Hash.new(0)
-      actives[@zone] = Job.count(:conditions => ["dispatch_status = ? AND state != ? AND zone = ?", "active", "finished", @zone])
+      actives[@zone] = Job.where(:zone => @zone, :dispatch_status => "active").where.not(:state => "finished").count
       actives
     end
   end

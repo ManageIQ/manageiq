@@ -195,7 +195,7 @@ module Metric::CiMixin::Capture
 
   def perf_capture_callback(task_ids, status, message, result)
     log_header = "MIQ(#{self.class.name}.perf_capture_callback)"
-    tasks = MiqTask.find_all_by_id(task_ids)
+    tasks = MiqTask.where(:id => task_ids)
     tasks.each do |t|
       t.lock do |task|
         tkey = "#{self.class.name}:#{self.id}"

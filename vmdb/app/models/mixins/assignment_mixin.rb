@@ -83,9 +83,10 @@ module AssignmentMixin
   end
 
   module ClassMethods
-    def assignments(find_options = {})
+    def assignments
       # Get all assigned, enabled instances for type klass
-      assignment_map = self.all(find_options).inject({}) { |h, a| h[a.id] = a; h }
+      records = kind_of?(Class) ? all : self
+      assignment_map = records.each_with_object({}) { |a, h| h[a.id] = a }
       tags = Tag.where("taggings.taggable_type = ? and tags.name like ?", self.name, "#{self.namespace}/%").joins(:taggings)
       results = tags.inject([]) do |arr,tag|
         tag.taggings.each do |tagging|
@@ -99,20 +100,20 @@ module AssignmentMixin
 
     def get_assigned_for_target(target, options = {})
       # options = {
-      #   :find_options => Active Record find options for finding eligable assigments
       #   :parents      => TODO
       #   :tag_list     => TODO
       # }
-      alist = options[:find_options] ? self.assignments(options[:find_options]) : self.assignments_cached #TODO Can't pass arg to cache_with_timeout
-      unless options[:parents]
-        parents = self.const_get("ASSIGNMENT_PARENT_ASSOCIATIONS").inject([]) do |arr,rel|
+      alist = kind_of?(Class) ? assignments_cached : assignments
+      if options[:parents]
+        parents = options[:parents]
+      else
+        model = kind_of?(Class) ? self : model
+        parents = model::ASSIGNMENT_PARENT_ASSOCIATIONS.each_with_object([]) do |rel, arr|
           t = rel == :my_enterprise ? MiqEnterprise : target
-          next(arr) unless t.respond_to?(rel)
+          next unless t.respond_to?(rel)
           arr << t.send(rel)
         end.flatten.compact
         parents << target
-      else
-        parents = options[:parents]
       end
 
       tlist =  parents.collect { |p| "#{p.class.base_model.name.underscore}/id/#{p.id}" } # Assigned directly to parents

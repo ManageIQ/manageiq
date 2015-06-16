@@ -203,14 +203,18 @@ class ScheduleWorker < WorkerBase
       Zone.in_my_region.each do |z|
         zone = z.name
         threshold = threshold_seconds.seconds.ago.utc
-        msgs = MiqQueue.in_my_region.all(:include => :handler, :conditions => ["class_name = ? and method_name = ? and state = 'dequeue' and zone = ? and updated_on < ?", class_n, method_n, zone, threshold])
-        msgs.each do |msg|
-          if msg.handler.respond_to?(:is_current?) && msg.handler.is_current?
-            msg.check_for_timeout("MIQ(MiqQueue.check_for_timeout)", 10.seconds, threshold_seconds * 3 )
-          else
-            msg.check_for_timeout("MIQ(MiqQueue.check_for_timeout)", 10.seconds, threshold_seconds)
+        MiqQueue
+          .in_my_region
+          .includes(:handler)
+          .where(:class_name => class_n, :method_name => method_n, :state => 'dequeue', :zone => zone)
+          .where("updated_on < ?", threshold)
+          .each do |msg|
+            if msg.handler.respond_to?(:is_current?) && msg.handler.is_current?
+              msg.check_for_timeout("MIQ(MiqQueue.check_for_timeout)", 10.seconds, threshold_seconds * 3)
+            else
+              msg.check_for_timeout("MIQ(MiqQueue.check_for_timeout)", 10.seconds, threshold_seconds)
+            end
           end
-        end
       end
     end
 
