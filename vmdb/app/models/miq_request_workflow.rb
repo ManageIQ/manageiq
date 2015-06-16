@@ -959,15 +959,15 @@ class MiqRequestWorkflow
       log_header = "MIQ(#{self.class.name}.get_ems_metadata_tree)"
       return if src[:ems].nil?
       st = Time.now
-      rails_logger('get_ems_metadata_tree', 0)
       result = load_ar_obj(src[:ems]).fulltree_arranged(:except_type => "VmOrTemplate")
       ems_metadata_tree_add_hosts_under_clusters!(result)
-      rails_logger("get_ems_metadata_tree completed in [#{Time.now - st}] seconds.  ", 1)
       @ems_xml_nodes = {}
       xml = MiqXml.newDoc(:xmlhash)
       convert_to_xml(xml, result)
-      $log.info "#{log_header} Load EMS metadata for: <#{@ems_xml_nodes.keys.inspect}>"
-      $log.info "#{log_header} EMS metadata collection completed in [#{Time.now - st}] seconds"
+      if $log.debug?
+        $log.info "#{log_header} Load EMS metadata for: <#{@ems_xml_nodes.keys.inspect}>"
+      end
+      $log.info "#{log_header} EMS metadata collection completed in [#{Time.now-st}] seconds"
       xml
     end
   end
