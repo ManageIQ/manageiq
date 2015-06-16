@@ -60,7 +60,7 @@ class CreateOrchestrationStacks < ActiveRecord::Migration
       t.string :resource_category
       t.string :resource_status
       t.text   :resource_status_reason
-      t.timestamp :last_updated, :null => true
+      t.timestamp :last_updated
 
       t.belongs_to :stack,                  :type => :bigint
     end

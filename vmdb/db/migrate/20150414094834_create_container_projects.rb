@@ -3,7 +3,7 @@ class CreateContainerProjects < ActiveRecord::Migration
     create_table :container_projects do |t|
       t.string     :ems_ref
       t.string     :name
-      t.timestamp  :creation_timestamp, :null => true
+      t.timestamp  :creation_timestamp
       t.string     :resource_version
       t.string     :display_name
       t.belongs_to :ems, :type => :bigint

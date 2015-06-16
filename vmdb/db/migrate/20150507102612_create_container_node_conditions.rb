@@ -4,8 +4,8 @@ class CreateContainerNodeConditions < ActiveRecord::Migration
       t.belongs_to :container_node, :type => :bigint
       t.string     :name
       t.string     :status
-      t.timestamp  :last_heartbeat_time, :null => true
-      t.timestamp  :last_transition_time, :null => true
+      t.timestamp  :last_heartbeat_time
+      t.timestamp  :last_transition_time
       t.string     :reason
       t.string     :message
     end

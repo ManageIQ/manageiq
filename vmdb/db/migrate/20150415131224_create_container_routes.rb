@@ -3,7 +3,7 @@ class CreateContainerRoutes < ActiveRecord::Migration
     create_table :container_routes do |t|
       t.string     :ems_ref
       t.string     :name
-      t.timestamp  :creation_timestamp, :null => true
+      t.timestamp  :creation_timestamp
       t.string     :resource_version
       t.string     :namespace
       t.string     :host_name
