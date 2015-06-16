@@ -75,7 +75,8 @@
       %tr
         %td{:align => "right"}
           #buttons_on
-            - t = _("Add this %s") % ui_lookup(:model => model_for_ems(@ems).to_s)
+            - name = ui_lookup(:model => model_for_ems(@ems).to_s)
+            - t = _("Add this %s") % name
             = button_tag(_('Add'),
               :class   => "btn btn-primary",
               :alt     => t,
@@ -86,6 +87,7 @@
               :class   => "btn btn-default",
               :alt     => t,
               :title   => t,
-              :onclick => "miqAjaxButton('#{url_for(:action => "create", :id => "new", :button => "cancel")}');")
+              :href    => url_for(:action => "show_list", :flash_msg=>_("Add of new %s was cancelled by the user") % name),
+              :onclick => 'window.location = this.getAttribute("href");')
   - else
     = render :partial => '/layouts/edit_form_buttons', :locals  => {:record_id => @ems.id, :ajax_buttons => true}
