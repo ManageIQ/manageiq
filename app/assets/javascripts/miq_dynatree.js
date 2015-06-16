@@ -272,8 +272,8 @@ function hover_node_id(id) {
 
 // OnClick handler for Host Network Tree
 function miqOnClick_HostNet(id) {
-  ids = id.split('|')[0].split('_'); // Break apart the node ids
-  nid = ids[ids.length - 1].split('-'); // Get the last part of the node id
+  var ids = id.split('|')[0].split('_'); // Break apart the node ids
+  var nid = ids[ids.length - 1].split('-'); // Get the last part of the node id
   switch (nid[0]) {
     case 'v':
       DoNav("/vm/show/" + nid[1]);
@@ -390,7 +390,7 @@ function cfmeOnDblClick_NoBaseExpand(node, event) {
 
 // OnClick handler for Server Roles Tree
 function miqOnClick_ServerRoles(id) {
-  typ = id.split('_')[0]; // Break apart the node ids
+  var typ = id.split('_')[0]; // Break apart the node ids
   switch (typ) {
     case 'server':
     case 'role':
@@ -402,7 +402,7 @@ function miqOnClick_ServerRoles(id) {
 
 // OnCheck handler for the belongsto tagging trees on the user edit screen
 function miqOnCheck_UserFilters(node, tree_name) {
-  tree_typ = tree_name.split('_')[0];
+  var tree_typ = tree_name.split('_')[0];
   var checked = Number(!node.isSelected());
   var url = check_url + node.data.key + "?check=" + checked + "&tree_typ=" + tree_typ;
   miqJqueryRequest(url);
@@ -432,6 +432,9 @@ function miqMenuChangeRow(grid, action, click_url) {
   var ids = folder_list_grid.getAllRowIds().split(',');
   var count = ids.length;
   var ret = false;
+  var temp_id;
+  var temp_text;
+
   switch (action) {
     case "up":
       folder_list_grid.moveRowUp(id);

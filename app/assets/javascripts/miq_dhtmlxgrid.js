@@ -8,7 +8,7 @@ function miqTreeState(rowId, state) {
 
 // Handle row click (ajax or normal html trans)
 function miqRowClick(row_id, cell_idx) {
-  cell = this.cells(row_id, cell_idx);
+  var cell = this.cells(row_id, cell_idx);
   if (cell_idx && !cell.getAttribute('is_button')) {
     if (typeof row_url_ajax != "undefined" && row_url_ajax) {
       miqJqueryRequest(row_url + row_id, {beforeSend: true, complete: true});
@@ -21,7 +21,7 @@ function miqRowClick(row_id, cell_idx) {
 // Handle row click - used by AE
 function miqAeRowSelected(row_id, cell_idx) {
   if (cell_idx) {
-    selected_id = this.getSelectedRowId();
+    var selected_id = this.getSelectedRowId();
     if (selected_id != null) {
       if (selected_id.split("_")[0] == "Field") {
         this.clearSelection();
@@ -50,7 +50,7 @@ function miqRequestRowSelected(row_id) {
 function miqGridOnCheck(row_id, cell_idx, state) {
   var crows = ManageIQ.grids.grids['gtl_list_grid'].obj.getCheckedRows(0);
   $('#miq_grid_checks').val(crows);
-  count = crows ? crows.split(",").length : 0;
+  var count = crows ? crows.split(",").length : 0;
   if (miqDomElementExists('center_tb')) {
     miqSetButtons(count, "center_tb");
   } else {
@@ -89,7 +89,7 @@ function miqCheck_AE_All(button_div, gridname) {
   if (miqDomElementExists('miq_grid_checks2')) {
     $('#miq_grid_checks2').val(crows);
   }
-  count = crows ? crows.split(",").length : 0;
+  var count = crows ? crows.split(",").length : 0;
   miqSetButtons(count, button_div);
   miqSparkle(false);
 }
@@ -202,7 +202,7 @@ function miqInitGrid(grid_name) {
 
 // Handle checkbox
 function miqOnAECheck(row_id, cell_idx, state) {
-  crows = this.getCheckedRows(0);
+  var crows = this.getCheckedRows(0);
   $("#miq_grid_checks").each(function () {
     this.value = crows;
   });
@@ -210,7 +210,7 @@ function miqOnAECheck(row_id, cell_idx, state) {
     this.value = crows;
   });
 
-  count = crows ? crows.split(",").length : 0;
+  var count = crows ? crows.split(",").length : 0;
   if (miqDomElementExists('center_tb')) {
     miqSetButtons(count, "center_tb");
   } else {
@@ -264,7 +264,7 @@ function miqOrderService(id) {
 }
 
 function miqDhtmlxgridSerialize(gridObj) {
-  dhtmlxgridXml = "<?xml version='1.0'?>";
+  var dhtmlxgridXml = "<?xml version='1.0'?>";
   dhtmlxgridXml += "<rows>";
   rowIds = gridObj.getAllRowIds().split(',');
   for (i = 0; i < rowIds.length; i++) {

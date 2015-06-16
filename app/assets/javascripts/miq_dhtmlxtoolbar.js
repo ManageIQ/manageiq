@@ -16,7 +16,7 @@ function miqInitToolbars() {
 
 // Initialize a single toolbar
 function miqInitToolbar(tb_hash) {
-  tb = tb_hash.obj;
+  var tb = tb_hash.obj;
   tb.setIconsPath("/images/toolbars/");
   tb.loadXMLString(tb_hash.xml);
   tb.attachEvent("onClick", miqToolbarOnClick);
