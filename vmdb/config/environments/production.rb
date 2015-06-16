@@ -72,10 +72,4 @@ Vmdb::Application.configure do
   config.action_controller.include_all_helpers = false
 
   config.action_controller.allow_forgery_protection = true
-
-  # Disable Rack::Cache verbose miss/hit logging
-  # TODO: Use dalli to store cached pages
-  require 'rack/cache'
-  config.middleware.delete ::Rack::Cache
-  config.middleware.use ::Rack::Cache, :metastore => "rails:/", :entitystore => "rails:/", :verbose => false
 end
