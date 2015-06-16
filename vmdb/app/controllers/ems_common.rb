@@ -268,18 +268,7 @@ module EmsCommon
       end
     when "validate"
       verify_ems = model.model_from_emstype(@edit[:new][:emstype]).new
-      set_record_vars(verify_ems, :validate)
-      @in_a_form = true
-      begin
-        verify_ems.verify_credentials(params[:type])
-      rescue StandardError=>bang
-        add_flash("#{bang}", :error)
-      else
-        add_flash(_("Credential validation was successful"))
-      end
-      render :update do |page|
-        page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
-      end
+      validate_credentials verify_ems
     end
   end
 
@@ -337,7 +326,9 @@ module EmsCommon
     when "cancel"   then update_button_cancel
     when "save"     then update_button_save
     when "reset"    then update_button_reset
-    when "validate" then update_button_validate
+    when "validate" then
+      @changed = session[:changed]
+      update_button_validate
     end
   end
 
@@ -399,6 +390,11 @@ module EmsCommon
 
   def update_button_validate
     verify_ems = find_by_id_filtered(model, params[:id])
+    validate_credentials verify_ems
+  end
+  private :update_button_validate
+
+  def validate_credentials(verify_ems)
     set_record_vars(verify_ems, :validate)
     @in_a_form = true
     @changed = session[:changed]
@@ -414,7 +410,7 @@ module EmsCommon
 
     render_flash
   end
-  private :update_button_validate
+  private :validate_credentials
 
   # handle buttons pressed on the button bar
   def button
