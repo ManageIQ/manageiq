@@ -8,6 +8,7 @@
 //= require directives/checkchange
 //= require directives/verifypasswd
 //= require directives/repository/valid_unc_path
+//= require directives/miq_calendar
 //= require services/miq_service
 //= require services/timer_option_service
 //= require controllers/provider_foreman/provider_foreman_form_controller
