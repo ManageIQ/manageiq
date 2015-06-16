@@ -203,12 +203,8 @@ function miqInitGrid(grid_name) {
 // Handle checkbox
 function miqOnAECheck(row_id, cell_idx, state) {
   var crows = this.getCheckedRows(0);
-  $("#miq_grid_checks").each(function () {
-    this.value = crows;
-  });
-  $("#miq_grid_checks2").each(function () {
-    this.value = crows;
-  });
+  $("#miq_grid_checks").val(crows);
+  $("#miq_grid_checks2").val(crows);
 
   var count = crows ? crows.split(",").length : 0;
   if (miqDomElementExists('center_tb')) {
@@ -239,11 +235,7 @@ function miqGridSort(col_id, grid_obj, dir) {
 
 // Handle column resize
 function miqResizeCol(cell_idx, width, grid_obj) {
-  if (cell_idx < 2) {
-    return false;
-  } else {
-    return true;
-  }
+  return (cell_idx >= 2);
 }
 
 // Handle column resize end

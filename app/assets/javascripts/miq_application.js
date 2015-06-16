@@ -95,21 +95,7 @@ function miqInitWidgetPulldown() {
 }
 
 function miqCalendarDateConversion(server_offset) {
-  var date = new Date();
-  var x = new Date(
-    date.getUTCFullYear(),
-    date.getUTCMonth(),
-    date.getUTCDate(),
-    date.getUTCHours(),
-    date.getUTCMinutes(),
-    date.getUTCSeconds()
-  );
-  if (server_offset >= 0) {
-    x.setTime(x.getTime() + (Number(server_offset)) * 1000);
-  } else {
-    x.setTime(x.getTime() - (Number(server_offset.slice(1, server_offset.length))) * 1000);
-  }
-  return x;
+  return moment().utcOffset(Number(server_offset) / 60);
 }
 
 // Track the mouse coordinates for popup menus
@@ -131,18 +117,18 @@ function miqLoginPrefill() {
 }
 
 // Prefill expression value text entry fields when blank
-function miqExpressionPrefill(count) {
+function miqExpressionPrefill(expEditor, noPrefillCount) {
   var title;
 
   if ($('#chosen_value[type=text]').length) {
-    miqPrefill($('#chosen_value'), '/images/layout/expression/' + ManageIQ.expEditor.first.type + '.png');
-    $('#chosen_value').prop('title', ManageIQ.expEditor.first.title);
-    $('#chosen_value').prop('alt', ManageIQ.expEditor.first.title);
+    miqPrefill($('#chosen_value'), '/images/layout/expression/' + expEditor.first.type + '.png');
+    $('#chosen_value').prop('title', expEditor.first.title);
+    $('#chosen_value').prop('alt', expEditor.first.title);
   }
   if ($('#chosen_cvalue[type=text]').length) {
-    miqPrefill($('#chosen_cvalue'), '/images/layout/expression/' + ManageIQ.expEditor.second.type + '.png');
-    $('#chosen_cvalue').prop('title', ManageIQ.expEditor.second.title);
-    $('#chosen_cvalue').prop('alt', ManageIQ.expEditor.second.title);
+    miqPrefill($('#chosen_cvalue'), '/images/layout/expression/' + expEditor.second.type + '.png');
+    $('#chosen_cvalue').prop('title', expEditor.second.title);
+    $('#chosen_cvalue').prop('alt', expEditor.second.title);
   }
   if ($('#chosen_regkey[type=text]').length) {
     miqPrefill($('#chosen_regkey'), '/images/layout/expression/string.png');
@@ -157,36 +143,36 @@ function miqExpressionPrefill(count) {
     $('#chosen_regval').prop('alt', title);
   }
   if ($('#miq_date_1_0[type=text]').length) {
-    miqPrefill($('#miq_date_1_0'), '/images/layout/expression/' + ManageIQ.expEditor.first.type + '.png');
-    $('#miq_date_1_0').prop('title', ManageIQ.expEditor.first.title);
-    $('#miq_date_1_0').prop('alt', ManageIQ.expEditor.first.title);
+    miqPrefill($('#miq_date_1_0'), '/images/layout/expression/' + expEditor.first.type + '.png');
+    $('#miq_date_1_0').prop('title', expEditor.first.title);
+    $('#miq_date_1_0').prop('alt', expEditor.first.title);
   }
   if ($('#miq_date_1_1[type=text]').length) {
-    miqPrefill($('#miq_date_1_1'), '/images/layout/expression/' + ManageIQ.expEditor.first.type + '.png');
-    $('#miq_date_1_1').prop('title', ManageIQ.expEditor.first.title);
-    $('#miq_date_1_1').prop('alt', ManageIQ.expEditor.first.title);
+    miqPrefill($('#miq_date_1_1'), '/images/layout/expression/' + expEditor.first.type + '.png');
+    $('#miq_date_1_1').prop('title', expEditor.first.title);
+    $('#miq_date_1_1').prop('alt', expEditor.first.title);
   }
   if ($('#miq_date_2_0[type=text]').length) {
-    miqPrefill($('#miq_date_2_0'), '/images/layout/expression/' + ManageIQ.expEditor.second.type + '.png');
-    $('#miq_date_2_0').prop('title', ManageIQ.expEditor.second.title);
-    $('#miq_date_2_0').prop('alt', ManageIQ.expEditor.second.title);
+    miqPrefill($('#miq_date_2_0'), '/images/layout/expression/' + expEditor.second.type + '.png');
+    $('#miq_date_2_0').prop('title', expEditor.second.title);
+    $('#miq_date_2_0').prop('alt', expEditor.second.title);
   }
   if ($('#miq_date_2_1[type=text]').length) {
-    miqPrefill($('#miq_date_2_1'), '/images/layout/expression/' + ManageIQ.expEditor.second.type + '.png');
-    $('#miq_date_2_1').prop('title', ManageIQ.expEditor.second.title);
-    $('#miq_date_2_1').prop('alt', ManageIQ.expEditor.second.title);
+    miqPrefill($('#miq_date_2_1'), '/images/layout/expression/' + expEditor.second.type + '.png');
+    $('#miq_date_2_1').prop('title', expEditor.second.title);
+    $('#miq_date_2_1').prop('alt', expEditor.second.title);
   }
-  if (typeof count == 'undefined') {
-    ManageIQ.expEditor.prefillCount = 0;
+  if (noPrefillCount) {
+    expEditor.prefillCount = 0;
     setTimeout(function () {
-      miqExpressionPrefill(ManageIQ.expEditor.prefillCount);
+      miqExpressionPrefill(expEditor, false);
     }, 200);
-  } else if (count == ManageIQ.expEditor.prefillCount) {
-    if (++ManageIQ.expEditor.prefillCount > 100) {
-      ManageIQ.expEditor.prefillCount = 0;
+  } else {
+    if (++expEditor.prefillCount > 100) {
+      expEditor.prefillCount = 0;
     }
     setTimeout(function () {
-      miqExpressionPrefill(ManageIQ.expEditor.prefillCount);
+      miqExpressionPrefill(expEditor, false);
     }, 200);
   }
 }
@@ -237,10 +223,8 @@ function miqPrefill(element, image, blank_image) {
 
 // Get user's time zone offset
 function miqGetTZO() {
-  var uDate = new Date();
-
   if ($('#user_TZO').length) {
-    $('#user_TZO').val(uDate.getTimezoneOffset() / 60);
+    $('#user_TZO').val(moment().utcOffset() / 60);
   }
 }
 
@@ -347,6 +331,7 @@ function miqCheckForChanges() {
       return confirm("Abandon changes?");
     }
   }
+  // use default browser reaction for onclick
   return true;
 }
 
@@ -393,7 +378,7 @@ function miqButtons(h_or_s, prefix) {
   $('#' + prefix + 'buttons_' + off).hide();
 }
 
-// Hide/show form buttons
+// Hide/show form validate buttons
 function miqValidateButtons(h_or_s, prefix) {
   prefix = (prefix == null) ? "" : prefix;
   var on_id = '#' + prefix + 'validate_buttons_on';
@@ -456,7 +441,10 @@ function miqUpdateAllCheckboxes(button_div, override) {
                $("input[id^='storage_cb']").length) {
       // to handle check/uncheck all for C&U collection
       $("input[id^='storage_cb']").prop('checked', state);
-      miqJqueryRequest("/configuration/form_field_changed?storage_cb_all=" + state);
+      miqJqueryRequest(miqPassFields(
+        "/configuration/form_field_changed",
+        {storage_cb_all: state}
+      ));
       return true;
     } else {
       // Set checkboxes in dhtmlx grid
@@ -614,10 +602,10 @@ function miqBrowserSizeTimeout() {
 function miqResetSizeTimer() {
   ManageIQ.sizeTimer = false;
   var sizes = miqGetSize();
-  var url = "/dashboard/window_sizes";
   var offset = 427;
   var h;
-  var args = {'width': sizes[0], 'height': sizes[1]}
+  var url = "/dashboard/window_sizes";
+  var args = {width: sizes[0], height: sizes[1]};
 
   if (ManageIQ.grids.xml !== null) {
     // If grid xml is available for reload
@@ -631,7 +619,7 @@ function miqResetSizeTimer() {
       ManageIQ.grids.grids.gtl_list_grid.obj.clearAll();
       ManageIQ.grids.grids.gtl_list_grid.obj.parse(xml);
     } else if ($('#logview').length) {
-      h = sizes[1] - offset;
+        h = sizes[1] - offset;
       if (h < 200) {
         h = 200;
       }
@@ -872,24 +860,11 @@ function miqSendOneTrans(url) {
   miqJqueryRequest(url);
 }
 
-function leadingZero(x) {
-  return (x > 9) ? x : '0' + x;
-}
-
+// Function to write date and time to page footer each second
 function dateTime(offset, abbr) {
   var date = miqCalendarDateConversion(offset);
 
-  document.getElementById('tP').innerHTML = (date.getMonth() + 1) +
-    '/' +
-    date.getDate() +
-    '/' +
-    date.getFullYear() +
-    ' ' +
-    leadingZero(date.getHours()) +
-    ':' +
-    leadingZero(date.getMinutes()) +
-    ' ' +
-    abbr;
+  $('#tP').html(date.format("MM/DD/YYYY HH:mm ") + abbr);
   setTimeout(function () {
     dateTime(offset, abbr);
   }, 1000);
@@ -970,9 +945,7 @@ function miqAjaxAuth(button) {
     miqEnableLoginFields(false);
     miqAsyncAjax(
       '/dashboard/authenticate?' +
-      miqSerializeForm('login_div') +
-      '&button=' +
-      button
+      miqSerializeForm('login_div') + '&button=' + button
     );
   }
 }
@@ -1052,10 +1025,8 @@ function miqDropComplete(event, ui) {
 
 // Attach a calendar control to all text boxes that start with miq_date_
 function miqBuildCalendar() {
-  var all;
-
   // Get all of the input boxes with ids starting with "miq_date_"
-  all = $('input[id^=miq_date_]');
+  var all = $('input[id^=miq_date_]');
 
   all.each(function () {
     // Attach dhtmlxcalendars to each one
@@ -1259,11 +1230,13 @@ function miqSetLayoutHeader(unitId, text) {
 
 // common function to pass ajax request to server
 function miqAjaxRequest(itemId, path) {
-  if (!miqCheckForChanges()) {
-    return false;
-  } else {
-    miqJqueryRequest(path + '?id=' + itemId, {beforeSend: true, complete: true});
+  if (miqCheckForChanges()) {
+    miqJqueryRequest(
+      miqPassFields(path, {id: itemId}),
+      {beforeSend: true, complete: true});
     return true;
+  } else {
+    return false;
   }
 }
 
@@ -1274,6 +1247,7 @@ function miqClickAndPop(el) {
   if (conmsg == null || confirm(conmsg)) {
     window.open(el.href);
   }
+  // no default browser reaction for onclick
   return false;
 }
 
@@ -1335,9 +1309,10 @@ function miqSearchByFilter(button) {
   }
 }
 
-// Send transaction to server so automate tree selection box can be made active and rest of the screen can be blocked
+// Send transaction to server so automate tree selection box can be made active
+// and rest of the screen can be blocked
 function miqShowAE_Tree(typ) {
-  miqJqueryRequest('ae_tree_select_toggle?typ=' + typ);
+  miqJqueryRequest(miqPassFields("ae_tree_select_toggle", {typ: typ}));
   return true;
 }
 
@@ -1367,7 +1342,7 @@ function miqLaunchMiqVncConsole(pwd, hostAddress, hostPort, proxyAddress, proxyP
 
 // Toggle the user options div in the page header
 function miqToggleUserOptions(id) {
-  miqJqueryRequest("/dashboard/change_group?to_group=" + id);
+  miqJqueryRequest(miqPassFields("/dashboard/change_group", {to_group: id}));
 }
 
 // Check for enter/escape on quick search box
@@ -1500,7 +1475,7 @@ function miqJqueryRequest(url, options) {
       miqSparkle(false);
     };
   }
-  new $.ajax(options.no_encoding ? url : encodeURI(url), ajax_options);
+  $.ajax(options.no_encoding ? url : encodeURI(url), ajax_options);
 }
 
 function miqDomElementExists(element) {
@@ -1530,4 +1505,3 @@ function miqSelectPickerEvent(element, url){
     return true;
   });
 }
-
