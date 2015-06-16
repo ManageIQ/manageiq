@@ -7,21 +7,24 @@
     - tabname = @tabactive   || "#{options[:current_tab_key]}_div"
     #prov_tabs{:style => "display:none;"}
       %ul.tab
-        - wf.get_dialog_order.each do |d|
-          - unless wf.get_dialog(d).blank? || wf.get_dialog(d)[:display] == :ignore
-            - # hide the tab by setting li id to display none
-            %li{:id => "#{d}_li", :style => wf.get_dialog(d)[:display] == :hide ? "display: none;" : ""}
-              %a{:href => "##{d}_div"}
-                = wf.get_dialog(d)[:description]
-      - wf.get_dialog_order.each do |d|
-        - unless wf.get_dialog(d).blank? || wf.get_dialog(d)[:display] == :ignore
-          %div{:id => "#{d}_div", :width => "150px", :name => wf.get_dialog(d)[:description]}
-            - if wf.kind_of?(MiqProvisionWorkflow)
-              = render :partial => "/shared/views/prov_dialog", :locals => {:wf => wf, :dialog => d}
-            - elsif wf.kind_of?(VmMigrateWorkflow)
-              = render :partial => "/miq_request/prov_vm_migrate_dialog", :locals => {:wf => wf, :dialog => d}
-            - else
-              = render :partial => "/miq_request/prov_host_dialog", :locals => {:wf => wf, :dialog => d}
+        - wf.provisioning_tab_list.each do |dialog|
+          %li(id="#{dialog[:name]}_li")
+            %a(href="##{dialog[:name]}_div")
+              = dialog[:description]
+
+      - current_tab = @edit && @edit[:new] ? @edit[:new][:current_tab_key] : @options[:current_tab_key]
+      - wf.get_dialog_order.each do |dialog_name|
+        %div{:id => "#{dialog_name}_div", :width => "150px", :name => wf.instance_variable_get(:@dialogs).fetch_path(:dialogs, dialog_name, :description)}
+          - if dialog_name == current_tab
+            - dialog = wf.get_dialog(dialog_name)
+            - unless dialog.blank? || dialog[:display] == :ignore
+              - if wf.kind_of?(MiqProvisionWorkflow)
+                = render :partial => "/shared/views/prov_dialog", :locals => {:wf => wf, :dialog => dialog_name}
+              - elsif wf.kind_of?(VmMigrateWorkflow)
+                = render :partial => "/miq_request/prov_vm_migrate_dialog", :locals => {:wf => wf, :dialog => dialog_name}
+              - else
+                = render :partial => "/miq_request/prov_host_dialog", :locals => {:wf => wf, :dialog => dialog_name}
+
 :javascript
   // method takes hash that can have 4 keys: tabs div id, active_tab label,
   // url to go to when tab is changed, and whether to check for abandon changes or not
