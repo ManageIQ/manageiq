@@ -189,7 +189,7 @@ module ReportController::Reports::Editor
           @edit[@expkey][:expression] = copy_hash(@edit[:new][:record_filter]) if !@edit[:new][:record_filter].blank?
           exp_array(:init, @edit[@expkey][:expression]) if @edit[@expkey][:exp_array].nil?  # Initialize the exp array
           @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression])
-          exp_get_prefill_types                                                   # Build prefill lists
+          exp_get_prefill_types(@edit[@expkey])                                                   # Build prefill lists
           @edit[@expkey][:exp_model] = @edit[:new][:model]                        # Set the model for the expression editor
         end
 
