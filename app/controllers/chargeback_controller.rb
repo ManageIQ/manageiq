@@ -296,8 +296,18 @@ class ChargebackController < ApplicationController
           page.replace("flash_msg_div", :partial=>"layouts/flash_msg")
         end
       end
+
+      # Ensure no default rate was selected for deletion
+      rates.each do |cr_id|
+        cb_rate = ChargebackRate.find_by_id(cr_id)
+        if cb_rate.default == true
+          rate_descr = cb_rate.description
+          rates.delete(cr_id)
+          add_flash(_("Selected %{model} %{rate} is a default and cannot be deleted") % {:model => "ChargebackRate", :rate  => rate_descr}, :error)
+        end
+      end
       process_cb_rates(rates, "destroy")  unless rates.empty?
-      add_flash(_("The selected %s were deleted") % ui_lookup(:models=>"ChargebackRate"), :info, true) if ! flash_errors?
+      add_flash(_("The selected %s were deleted") % ui_lookup(:models => "ChargebackRate"), :info, true) unless flash_errors?
       cb_rates_list
       @right_cell_text = _("%{typ} %{model}") % {:typ => x_node.split('-').last, :model => ui_lookup(:models => "ChargebackRate")}
       replace_right_cell([:cb_rates])
@@ -310,13 +320,24 @@ class ChargebackController < ApplicationController
       else
         rates.push(params[:id])
       end
-      cb_rate = ChargebackRate.find_by_id(params[:id])
-      process_cb_rates(rates, "destroy")  if !rates.empty?
-      add_flash(_("The selected %s was deleted") % ui_lookup(:model=>"ChargebackRate"), :info, true) if ! flash_errors?
-      self.x_node = "xx-#{cb_rate.rate_type}"
-      cb_rates_list
-      @right_cell_text = _("%{typ} %{model}") % {:typ=>x_node.split('-').last, :model=>ui_lookup(:models=>"ChargebackRate")}
-      replace_right_cell([:cb_rates])
+      @record = ChargebackRate.find_by_id(params[:id])
+      if @record.default == true
+        add_flash(_("Selected %{model} %{rate} is a default and cannot be deleted") % {:model => "ChargebackRate", :rate  => @record.description}, :error)
+
+        @sb[:action] = nil
+        nodeid = x_build_node_id(@record)
+        params[:id] = "xx-#{@record.rate_type}_#{nodeid}"
+        params[:tree] = x_active_tree.to_s
+        tree_select
+      else
+        process_cb_rates(rates, "destroy")  unless rates.empty?
+        add_flash(_("The selected %s was deleted") % ui_lookup(:model => "ChargebackRate"), :info, true) unless flash_errors?
+
+        self.x_node = "xx-#{cb_rate.rate_type}"
+        cb_rates_list
+        @right_cell_text = _("%{typ} %{model}") % {:typ => x_node.split('-').last, :model => ui_lookup(:models => "ChargebackRate")}
+        replace_right_cell([:cb_rates])
+      end
     end
   end
 
