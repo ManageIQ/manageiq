@@ -304,11 +304,11 @@
 
   $.ajaxPrefilter(function(options, originalOptions, xhr){ if ( !options.crossDomain ) { rails.CSRFProtection(xhr); }});
 
-  $(rails.linkDisableSelector).live('ajax:complete', function() {
+  $(document).on('ajax:complete', rails.linkDisableSelector, function() {
       rails.enableElement($(this));
   });
 
-  $(rails.linkClickSelector).live('click.rails', function(e) {
+  $(document).on('click.rails', rails.linkClickSelector, function(e) {
     var link = $(this), method = link.data('method'), data = link.data('params');
     if (!rails.allowAction(link)) return rails.stopEverything(e);
 
@@ -324,7 +324,7 @@
     }
   });
 
-	$(rails.inputChangeSelector).live('change.rails', function(e) {
+	$(document).on('change.rails', rails.inputChangeSelector, function(e) {
     var link = $(this);
     if (!rails.allowAction(link)) return rails.stopEverything(e);
 
@@ -332,7 +332,7 @@
     return false;
   });
 
-  $(rails.formSubmitSelector).live('submit.rails', function(e) {
+  $(document).on('submit.rails', rails.formSubmitSelector, function(e) {
     var form = $(this),
       remote = form.data('remote') !== undefined,
       blankRequiredInputs = rails.blankInputs(form, rails.requiredInputSelector),
@@ -362,7 +362,7 @@
     }
   });
 
-  $(rails.formInputClickSelector).live('click.rails', function(event) {
+  $(document).on('click.rails', rails.formInputClickSelector, function(event) {
     var button = $(this);
 
     if (!rails.allowAction(button)) return rails.stopEverything(event);
@@ -374,11 +374,11 @@
     button.closest('form').data('ujs:submit-button', data);
   });
 
-  $(rails.formSubmitSelector).live('ajax:beforeSend.rails', function(event) {
+  $(document).on('ajax:beforeSend.rails', rails.formSubmitSelector, function(event) {
     if (this == event.target) rails.disableFormElements($(this));
   });
 
-  $(rails.formSubmitSelector).live('ajax:complete.rails', function(event) {
+  $(document).on('ajax:complete.rails', rails.formSubmitSelector, function(event) {
     if (this == event.target) rails.enableFormElements($(this));
   });
 
