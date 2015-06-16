@@ -105,7 +105,7 @@ class RemoveReserved < ActiveRecord::Migration
     RESERVED_CLASSES.each do |c|
       klass = self.class.const_get(c)
 
-      recs = klass.where("reserved IS NOT NULL").all
+      recs = klass.where("reserved IS NOT NULL").to_a
       if recs.length > 0
         say_with_time("Migrating reserved column for #{c}") do
           recs.each do |rec|

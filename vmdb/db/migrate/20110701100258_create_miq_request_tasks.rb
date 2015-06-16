@@ -75,7 +75,7 @@ class CreateMiqRequestTasks < ActiveRecord::Migration
       t.text        :options
       t.string      :message
       t.string      :status
-      t.timestamps
+      t.timestamps :null => true
     end
 
     create_table :miq_host_provisions do |t|
@@ -88,7 +88,7 @@ class CreateMiqRequestTasks < ActiveRecord::Migration
       t.string      :status
       t.bigint      :miq_host_provision_request_id
       t.bigint      :host_id
-      t.timestamps
+      t.timestamps :null => true
     end
   end
 end

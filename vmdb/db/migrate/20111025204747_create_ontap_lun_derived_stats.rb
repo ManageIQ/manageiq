@@ -15,7 +15,7 @@ class CreateOntapLunDerivedStats < ActiveRecord::Migration
 
       t.column :miq_storage_stat_id,  :bigint
       t.column :position,             :integer
-      t.timestamps
+      t.timestamps :null => true
     end
     add_index :ontap_lun_derived_stats, :miq_storage_stat_id
   end

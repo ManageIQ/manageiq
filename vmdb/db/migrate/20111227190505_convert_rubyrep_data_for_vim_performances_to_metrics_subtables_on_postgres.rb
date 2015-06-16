@@ -51,7 +51,7 @@ class ConvertRubyrepDataForVimPerformancesToMetricsSubtablesOnPostgres < ActiveR
     return unless VimPerformance.table_exists? && RrPendingChange.table_exists?
 
     say_with_time("Converting vim_performances records in #{RrPendingChange.table_name}") do
-      rows = RrPendingChange.count(:conditions => {:change_table => "vim_performances"})
+      rows = RrPendingChange.where(:change_table => "vim_performances").count
       say_batch_started(rows)
       return if rows == 0
 
@@ -113,7 +113,7 @@ class ConvertRubyrepDataForVimPerformancesToMetricsSubtablesOnPostgres < ActiveR
   end
 
   def discover_replication_settings
-    configs = Configuration.where(:typ => 'vmdb').select(:settings).all
+    configs = Configuration.where(:typ => 'vmdb').select(:settings).to_a
 
     settings = nil
     configs.each do |c|

@@ -6,7 +6,7 @@ class CreateConfigurationTags < ActiveRecord::Migration
       t.string :name
       t.belongs_to :manager, :type => :bigint
 
-      t.timestamps
+      t.timestamps :null => true
     end
 
     create_table :configuration_profiles_configuration_tags, :id => false do |t|

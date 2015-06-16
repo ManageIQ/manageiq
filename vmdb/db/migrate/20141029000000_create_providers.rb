@@ -7,7 +7,7 @@ class CreateProviders < ActiveRecord::Migration
       t.integer    :verify_ssl
       t.string     :guid, :limit => 36
       t.belongs_to :zone, :type  => :bigint
-      t.timestamps
+      t.timestamps :null => true
     end
   end
 

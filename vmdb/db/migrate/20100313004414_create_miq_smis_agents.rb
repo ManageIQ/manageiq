@@ -6,7 +6,7 @@ class CreateMiqSmisAgents < ActiveRecord::Migration
       t.column :password,       :string
       t.column :agent_type,     :string
       t.column :last_update_status, :integer
-      t.timestamps
+      t.timestamps :null => true
     end
   end
 

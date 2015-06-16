@@ -9,7 +9,7 @@ class CreateVdiDesktopPoolVdiUser < ActiveRecord::Migration
       t.string      :name
       t.string      :ipaddress
       t.string      :uid_ems
-      t.timestamps
+      t.timestamps :null => true
     end
 
     add_column :miq_proxies,  :vdi_farm_id,            :bigint

@@ -4,7 +4,7 @@ class CreatePxeMenusTable < ActiveRecord::Migration
       t.string      :file_name
       t.text        :contents
       t.belongs_to  :pxe_server, :type => :bigint
-      t.timestamps
+      t.timestamps :null => true
     end
   end
 

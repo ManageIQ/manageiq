@@ -5,7 +5,7 @@ class CreateProvisioningManagers < ActiveRecord::Migration
       t.belongs_to :provisioning_manager, :type => :bigint
       t.string     :manager_ref
       t.string     :type
-      t.timestamps
+      t.timestamps :null => true
     end
     add_index :customization_scripts, :manager_ref
     add_index :customization_scripts, [:provisioning_manager_id, :type],
@@ -16,7 +16,7 @@ class CreateProvisioningManagers < ActiveRecord::Migration
       t.string     :description
       t.belongs_to :provisioning_manager, :type => :bigint
       t.string     :manager_ref
-      t.timestamps
+      t.timestamps :null => true
     end
     add_index :operating_system_flavors, :manager_ref
     add_index :operating_system_flavors, :provisioning_manager_id
@@ -33,7 +33,7 @@ class CreateProvisioningManagers < ActiveRecord::Migration
     create_table :provisioning_managers do |t|
       t.belongs_to :provider, :type => :bigint
       t.string     :type
-      t.timestamps
+      t.timestamps :null => true
     end
     add_index :provisioning_managers, :provider_id
   end

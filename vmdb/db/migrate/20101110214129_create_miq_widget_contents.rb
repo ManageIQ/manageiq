@@ -6,7 +6,7 @@ class CreateMiqWidgetContents < ActiveRecord::Migration
       t.bigint    :user_id
       t.text      :contents
 
-      t.timestamps
+      t.timestamps :null => true
     end
   end
 
