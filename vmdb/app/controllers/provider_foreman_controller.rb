@@ -242,6 +242,7 @@ class ProviderForemanController < ApplicationController
   def load_or_clear_adv_search
     adv_search_build("ConfiguredSystem")
     session[:edit] = @edit
+    @explorer = true
 
     if x_tree[:type] != :filter || x_node == "root"
       listnav_search_selected(0)
