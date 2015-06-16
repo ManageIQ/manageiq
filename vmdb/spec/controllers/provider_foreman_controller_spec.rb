@@ -44,7 +44,7 @@ describe ProviderForemanController do
                                          :miq_product_features => feature)
     test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
     user = FactoryGirl.create(:user, :userid => 'test_user', :name => 'test_user', :miq_groups => [test_user_group])
-    User.stub(:current_user => user)
+    login_as user
     session[:settings] = {:default_search => '',
                           :views          => {},
                           :perpage        => {:list => 10}}
@@ -72,7 +72,7 @@ describe ProviderForemanController do
                                            :miq_product_features => feature)
       test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
       user = FactoryGirl.create(:user, :userid => 'test_user', :name => 'test_user', :miq_groups => [test_user_group])
-      User.stub(:current_user => user)
+      login_as user
       session[:settings] = {:default_search => '',
                             :views          => {},
                             :perpage        => {:list => 10}}
@@ -94,7 +94,7 @@ describe ProviderForemanController do
                                            :miq_product_features => feature)
       test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
       user = FactoryGirl.create(:user, :userid => 'test_user', :name => 'test_user', :miq_groups => [test_user_group])
-      User.stub(:current_user => user)
+      login_as user
       session[:settings] = {:default_search => '',
                             :views          => {},
                             :perpage        => {:list => 10}}
@@ -116,8 +116,7 @@ describe ProviderForemanController do
                                            :name                 => "test_user_role",
                                            :miq_product_features => feature)
       test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
-      user = FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
-      User.stub(:current_user => user)
+      login_as FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
     end
 
     it "should not raise an error for feature that user has access to" do

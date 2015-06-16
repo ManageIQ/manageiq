@@ -178,7 +178,7 @@ describe VmInfraController do
 
         user = FactoryGirl.create(:user_admin)
         user.current_group.set_managed_filters([["/managed/service_level/gold"]])
-        User.stub(:current_user => user)
+        login_as user
 
         Rbac.should_receive(:search).with(:targets => [ems_folder], :results_format=>:objects).and_call_original
 

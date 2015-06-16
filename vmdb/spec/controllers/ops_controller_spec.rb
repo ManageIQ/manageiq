@@ -193,8 +193,7 @@ describe OpsController do
                                           :name                 => "test_user_role",
                                           :miq_product_features => feature)
     test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => @test_user_role)
-    user = FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
-    User.stub(:current_user => user)
+    login_as FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
     MiqServer.stub(:my_server).with(true).and_return(server)
     controller.stub(:get_vmdb_config).and_return(:product => {})
   end

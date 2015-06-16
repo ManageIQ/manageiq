@@ -61,7 +61,7 @@ describe ApplicationHelper do
       @admin_role  = FactoryGirl.create(:miq_user_role, :name => "admin", :miq_product_features => features)
       @admin_group = FactoryGirl.create(:miq_group, :miq_user_role => @admin_role)
       @user        = FactoryGirl.create(:user, :name => 'wilma', :miq_groups => [@admin_group])
-      User.stub(:current_user => @user)
+      login_as  @user
     end
 
     context "when with :feature" do
@@ -785,7 +785,7 @@ describe ApplicationHelper do
     before do
       @user = FactoryGirl.create(:user, :name => 'Fred Flintstone', :userid => 'fred')
       @record = double("record")
-      User.stub(:current_user).and_return(@user)
+      login_as @user
       @settings = {
         :views => {
           :compare      => 'compressed',

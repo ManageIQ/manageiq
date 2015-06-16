@@ -10,8 +10,7 @@ module ControllerSpecHelper
   def set_user_privileges
     described_class.any_instance.stub(:set_user_time_zone)
     controller.stub(:check_privileges).and_return(true)
-    user = FactoryGirl.create(:user)
-    User.stub(:current_user => user)
+    login_as FactoryGirl.create(:user)
     User.any_instance.stub(:role_allows?).and_return(true)
   end
 
@@ -41,7 +40,7 @@ module ControllerSpecHelper
     @test_user = FactoryGirl.create(:user,
                                     :name       => 'test_user',
                                     :miq_groups => [test_group])
-    User.stub(:current_user => @test_user)
+    login_as @test_user
   end
 
   shared_context "valid session" do

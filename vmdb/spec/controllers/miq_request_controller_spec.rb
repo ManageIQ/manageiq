@@ -20,7 +20,7 @@ describe MiqRequestController do
   end
 
   context "#prov_condition builds correct MiqExpression hash" do
-    before { User.current_userid = FactoryGirl.create(:user_admin).userid }
+    before { login_as FactoryGirl.create(:user_admin) }
 
     it "MiqRequest-created_on" do
       content = {"value" => "9 Days Ago", "field" => "MiqRequest-created_on"}
