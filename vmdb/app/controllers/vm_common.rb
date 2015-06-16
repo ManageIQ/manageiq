@@ -199,7 +199,7 @@ module VmCommon
     end
 
     if @record.class.base_model.to_s == "MiqTemplate"
-      rec_cls = @record.class.base_model.to_s.underscore
+      rec_cls = "miq_template"
     else
       rec_cls = "vm"
     end
@@ -209,7 +209,7 @@ module VmCommon
       drop_breadcrumb({:name=>"Virtual Machines", :url=>"/#{rec_cls}/show_list?page=#{@current_page}&refresh=y"}, true)
       drop_breadcrumb( {:name=>@record.name + " (Summary)", :url=>"/#{rec_cls}/show/#{@record.id}"} )
       @showtype = "main"
-      @button_group = "#{rec_cls}"
+      @button_group = rec_cls
       set_summary_pdf_data if ["download_pdf","summary_only"].include?(@display)
     elsif @display == "networks"
       drop_breadcrumb( {:name=>@record.name+" (Networks)", :url=>"/#{rec_cls}/show/#{@record.id}?display=#{@display}"} )
@@ -299,14 +299,13 @@ module VmCommon
     @vm = @record = identify_record(params[:id], VmOrTemplate)
     return if record_no_longer_exists?(@vm)
 
-    rec_cls = "vm"
+    @button_group = "vm"
 
-    @gtl_url = "/#{rec_cls}/show/" << @record.id.to_s << "?"
+    @gtl_url = "/#{@button_group}/show/" << @record.id.to_s << "?"
     get_tagdata(@record)
-    drop_breadcrumb({:name=>"Virtual Machines", :url=>"/#{rec_cls}/show_list?page=#{@current_page}&refresh=y"}, true)
-    drop_breadcrumb( {:name=>@record.name + " (Summary)", :url=>"/#{rec_cls}/show/#{@record.id}"} )
+    drop_breadcrumb({:name=>"Virtual Machines", :url=>"/#{@button_group}/show_list?page=#{@current_page}&refresh=y"}, true)
+    drop_breadcrumb( {:name=>@record.name + " (Summary)", :url=>"/#{@button_group}/show/#{@record.id}"} )
     @showtype = "main"
-    @button_group = "#{rec_cls}"
     @report_only = true
     @showtype = "summary_only"
     @title = @record.name + " (Summary)"
