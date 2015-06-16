@@ -312,11 +312,6 @@ class MiqRequestWorkflow
     end
   end
 
-  # Helper method to write message to the rails log (production.log) for debugging
-  def rails_logger(_name, _start)
-    # Rails.logger.warn("#{name} #{start.zero? ? 'start' : 'end'}")
-  end
-
   def parse_ws_string(text_input, options = {})
     self.class.parse_ws_string(text_input, options)
   end
@@ -571,7 +566,6 @@ class MiqRequestWorkflow
     field_options = @dialogs.fetch_path(:dialogs, :purpose, :fields, :vm_tags, :options)
     options = field_options unless field_options.nil?
 
-    rails_logger('allowed_tags', 0)
     st = Time.now
     @tags = {}
     class_tags = Classification.where(:show => true).includes(:tag).to_a
@@ -833,7 +827,6 @@ class MiqRequestWorkflow
              else
                MiqSearch.find(filter_id).filtered(targets, :userid => @requester.userid)
              end
-    rails_logger("process_filter - [#{ci_klass}]", 1)
     result
   end
 
@@ -1052,8 +1045,8 @@ class MiqRequestWorkflow
   def allowed_hosts_obj(_options = {})
     log_header = "MIQ(#{self.class.name}.allowed_hosts_obj)"
     return [] if (src = resources_for_ui).blank?
+    return @allowed_hosts_obj_cache unless @allowed_hosts_obj_cache.nil?
 
-    rails_logger('allowed_hosts_obj', 0)
     st = Time.now
     hosts_ids = find_all_ems_of_type(Host).collect(&:id)
     hosts_ids &= load_ar_obj(src[:storage]).hosts.collect(&:id) unless src[:storage].nil?
@@ -1065,18 +1058,17 @@ class MiqRequestWorkflow
 
     # Remove any hosts that are no longer in the list
     all_hosts = load_ar_obj(src[:ems]).hosts.find_all { |h| hosts_ids.include?(h.id) }
-    allowed_hosts_obj_cache = process_filter(:host_filter, Host, all_hosts)
-    $log.info "MIQ(#{self.class.name}#allowed_hosts_obj) allowed_hosts_obj returned [#{allowed_hosts_obj_cache.length}] objects in [#{Time.now - st}] seconds"
-    rails_logger('allowed_hosts_obj', 1)
-    allowed_hosts_obj_cache
+    @allowed_hosts_obj_cache ||= process_filter(:host_filter, Host, all_hosts)
+    $log.info "MIQ(#{self.class.name}#allowed_hosts_obj) allowed_hosts_obj returned [#{@allowed_hosts_obj_cache.length}] objects in [#{Time.now-st}] seconds"
+    return @allowed_hosts_obj_cache
   end
 
   def allowed_storages(_options = {})
     return [] if (src = resources_for_ui).blank?
     hosts = src[:host].nil? ? allowed_hosts_obj({}) : [load_ar_obj(src[:host])]
     return [] if hosts.blank?
+    return @allowed_storages_cache unless @allowed_storages_cache.nil?
 
-    rails_logger('allowed_storages', 0)
     st = Time.now
     MiqPreloader.preload(hosts, :storages)
 
@@ -1084,13 +1076,12 @@ class MiqRequestWorkflow
       host.storages.each { |s| hash[s.id] = s }
     end.values
 
-    allowed_storages_cache = process_filter(:ds_filter, Storage, storages).collect do |s|
+    @allowed_storages_cache = process_filter(:ds_filter, Storage, storages).collect do |s|
       ci_to_hash_struct(s)
     end
 
-    $log.info "MIQ(#{self.class.name}#allowed_storages) allowed_storages returned [#{allowed_storages_cache.length}] objects in [#{Time.now - st}] seconds"
-    rails_logger('allowed_storages', 1)
-    allowed_storages_cache
+    $log.info "MIQ(#{self.class.name}#allowed_storages) allowed_storages returned [#{@allowed_storages_cache.length}] objects in [#{Time.now-st}] seconds"
+    return @allowed_storages_cache
   end
 
   def allowed_hosts(_options = {})
@@ -1217,16 +1208,12 @@ class MiqRequestWorkflow
   def host_to_folder(src)
     sources = src[:host].nil? ? allowed_hosts_obj : [src[:host]]
     datacenters = sources.collect do |h|
-      rails_logger("host_to_folder for host #{h.name}", 0)
       result = find_datacenter_for_ci(h)
-      rails_logger("host_to_folder for host #{h.name}", 1)
       result
     end.compact
     folders = {}
     datacenters.each do |dc|
-      rails_logger("host_to_folder for dc #{dc.name}", 0)
       folders.merge!(get_ems_folders(dc))
-      rails_logger("host_to_folder for dc #{dc.name}", 1)
     end
     folders
   end
