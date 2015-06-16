@@ -387,7 +387,7 @@ Vmdb::Application.routes.draw do
          show
          show_list
          update
-       ) + adv_search_post + exp_post + save_post
+       ) + save_post
     },
 
     :container_service => {
@@ -438,7 +438,7 @@ Vmdb::Application.routes.draw do
         show
         show_list
         update
-      ) + adv_search_post + exp_post + save_post
+      ) + save_post
     },
 
     :container_route => {
@@ -463,7 +463,7 @@ Vmdb::Application.routes.draw do
         show
         show_list
         update
-      ) + adv_search_post + exp_post + save_post
+      ) + save_post
     },
 
     :dashboard => {
@@ -1305,11 +1305,7 @@ Vmdb::Application.routes.draw do
         users
         wait_for_task
       ) +
-        x_button
-        x_history
-        x_search_by_name
-        x_show
-      )
+        x_post
     },
 
     :pxe => {
