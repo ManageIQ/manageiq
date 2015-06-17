@@ -77,11 +77,11 @@ if vol_type.nil?
   exit 1
 end
 
-vol = find_or_create(fog.volumes,
-  :name        => "EmsRefreshSpec-Volume",
-  :description => "EmsRefreshSpec-Volume description",
-  :size        => 1,
-  :volume_type => "EmsRefreshSpec-VolumeType"
+vol = find_or_create(fog_volume.volumes,
+  :display_name        => "EmsRefreshSpec-Volume",
+  :display_description => "EmsRefreshSpec-Volume description",
+  :size                => 1,
+  :volume_type         => "EmsRefreshSpec-VolumeType"
 )
 
 vol_snap = find_or_create(fog.snapshots,
@@ -90,11 +90,11 @@ vol_snap = find_or_create(fog.snapshots,
   :volume_id   => vol.id
 )
 
-find_or_create(fog.volumes,
-  :name        => "EmsRefreshSpec-Volume-FromSnapshot",
-  :description => "EmsRefreshSpec-Volume-FromSnapshot description",
-  :size        => vol_snap.size,
-  :snapshot_id => vol_snap.id
+find_or_create(fog_volume.volumes,
+  :display_name        => "EmsRefreshSpec-Volume-FromSnapshot",
+  :display_description => "EmsRefreshSpec-Volume-FromSnapshot description",
+  :size                => vol_snap.size,
+  :snapshot_id         => vol_snap.id
 )
 
 #
