@@ -8,8 +8,8 @@
       %td
         %strong
           = label
-    - items[:values].each do |item|
+    - items[:values].each do |values|
       %tr
-        - item.each do |value|
-          %td
-            = value
+        - values.each do |item|
+          %td{:title => item.has?(:title) ? item[:title] : ""}
+            = item.has?(:value) ? item[:value] : ""

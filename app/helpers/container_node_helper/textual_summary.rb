@@ -20,10 +20,10 @@ module ContainerNodeHelper::TextualSummary
     h = {:labels => labels}
     h[:values] = @record.container_node_conditions.collect do |condition|
       [
-        condition.name,
-        condition.status,
-        (condition.last_transition_time || ""),
-        (condition.reason || "")
+        {:value => condition.name},
+        {:value => condition.status},
+        {:value => (condition.last_transition_time || "")},
+        {:value => (condition.reason || "")}
       ]
     end
     h
