@@ -1,7 +1,6 @@
 ---
 :connection:
-  :ems_ip: "10.8.96.4"
-  :ems_password: "8b32f0adc73e4062"
+  :ems_id: 2
 :network:
   :network:
     :public:

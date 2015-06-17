@@ -1,6 +1,6 @@
 module ImageMethods
   def fog_image
-    @fog_image ||= connect("Image")
+    @fog_image ||= ems.connect(:tenant_name => "EmsRefreshSpec-Project", :service => "Image")
   end
 
   def find_or_create_image(collection, attributes)

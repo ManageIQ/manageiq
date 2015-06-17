@@ -1,9 +1,9 @@
 module NetworkMethods
   def fog_network
     @fog_network ||= begin
-      connect("Network")
+      ems.connect(:tenant_name => "EmsRefreshSpec-Project", :service => "Network")
     rescue MiqException::ServiceNotAvailable
-      connect
+      fog
     end
   end
 

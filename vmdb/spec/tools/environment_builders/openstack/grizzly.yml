@@ -1,7 +1,6 @@
 ---
 :connection:
-  :ems_ip: "192.168.252.71"
-  :ems_password: "admin"
+  :ems_id: 4
 :network:
   :floating_ip:
     :ip: "10.3.4.8"
