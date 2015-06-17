@@ -92,7 +92,6 @@ describe OpsController do
     context "schedule additon" do
       before(:each) do
         EvmSpecHelper.create_guid_miq_server_zone
-        session[:userid] = User.current_user.userid
         controller.should_receive(:render)
         @schedule = FactoryGirl.create(:miq_schedule, :userid => "test", :towhat => "Vm")
         @params = {

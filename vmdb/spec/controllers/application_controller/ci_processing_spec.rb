@@ -3,6 +3,8 @@ include UiConstants
 
 describe ApplicationController do
   before do
+    EvmSpecHelper.create_guid_miq_server_zone
+    EvmSpecHelper.seed_specific_product_features("everything")
     feature = MiqProductFeature.find_all_by_identifier(["everything"])
     test_user_role  = FactoryGirl.create(:miq_user_role,
                                          :name                 => "test_user_role",

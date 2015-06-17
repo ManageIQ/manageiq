@@ -7,10 +7,13 @@ module ControllerSpecHelper
     end
   end
 
-  def set_user_privileges
+  def set_user_privileges(user = FactoryGirl.create(:user))
+    allow(User).to receive(:server_timezone).and_return("UTC")
     described_class.any_instance.stub(:set_user_time_zone)
+
+    # TODO: remove these stubs
     controller.stub(:check_privileges).and_return(true)
-    login_as FactoryGirl.create(:user)
+    login_as user
     User.any_instance.stub(:role_allows?).and_return(true)
   end
 

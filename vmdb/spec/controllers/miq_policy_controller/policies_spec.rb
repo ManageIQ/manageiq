@@ -25,7 +25,6 @@ describe MiqPolicyController do
                                                   :current => new,
                                                   :typ => "basic",
                                                   :key => "policy_edit__new"})
-        session[:userid] = User.current_user.userid
         session[:edit] = assigns(:edit)
         active_node = "xx-compliance_xx-compliance-host"
         controller.instance_variable_set(:@sb, {:trees => {:policy_tree => {:active_node => active_node}},

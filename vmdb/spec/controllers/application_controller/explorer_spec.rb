@@ -173,6 +173,7 @@ describe VmInfraController do
 
     context "#rbac_filtered_objects" do
       it "properly calls RBAC" do
+        EvmSpecHelper.create_guid_miq_server_zone
         ems_folder = FactoryGirl.create(:ems_folder)
         ems = FactoryGirl.create(:ems_vmware, :ems_folders => [ems_folder])
 
