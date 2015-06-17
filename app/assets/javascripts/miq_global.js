@@ -1,7 +1,6 @@
 // global variables
 if (typeof(ManageIQ) === 'undefined') var ManageIQ = {
-  actionUrl: null, // action url
-  ajaxTimers: null, // for handle an ajax form button press
+  actionUrl: null, // action URL used in JS function miqGridSort
   angularApplication: null, // angular application
   browser: null, // browser name
   controller: null, // stored controller, used to build URL

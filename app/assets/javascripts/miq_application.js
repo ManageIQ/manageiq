@@ -14,7 +14,7 @@ function miqOnLoad() {
     miqInitWidgetPulldown();
   }
   // Need this since IE will not run JS correctly until after page is loaded
-  if (typeof ManageIQ.initDhtmlxLayout != "undefined") {
+  if (typeof miqInitDhtmlxLayout == "function") {
     miqInitDhtmlxLayout();
   }
 
@@ -24,8 +24,8 @@ function miqOnLoad() {
 
   // Need to do this here for IE, rather then right after the grid is initialized
   if ($('#compare_grid').length) {
-    compare_grid.enableAutoHeight(true);
-    compare_grid.enableAutoWidth(true);
+    $('#compare_grid')[0].enableAutoHeight(true);
+    $('#compare_grid')[0].enableAutoWidth(true);
   }
 
   miqBuildCalendar();
@@ -814,8 +814,6 @@ function miqChartMenuClick(itemId, itemValue) {
   }
 }
 
-ManageIQ.ajaxTimers = 0;
-
 // Handle an ajax form button press (i.e. Submit) by starting the spinning Q,
 // then waiting for .7 seconds for observers to finish
 function miqAjaxButton(url, serialize_fields) {
@@ -826,7 +824,6 @@ function miqAjaxButton(url, serialize_fields) {
     $('#notification').show();
   }
 
-  ManageIQ.ajaxTimers++;
   setTimeout(function () {
     miqAjaxButtonSend(url, serialize_fields);
   }, 700);
@@ -835,14 +832,12 @@ function miqAjaxButton(url, serialize_fields) {
 // Send ajax url after any outstanding ajax requests, wait longer if needed
 function miqAjaxButtonSend(url, serialize_fields) {
   if ($.active) {
-    ManageIQ.ajaxTimers++;
     setTimeout(function () {
       miqAjaxButtonSend(url);
     }, 700);
   } else {
     miqAjax(url, serialize_fields);
   }
-  ManageIQ.ajaxTimers--;
 }
 
 // Function to generate an Ajax request

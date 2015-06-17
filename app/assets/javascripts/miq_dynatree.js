@@ -65,12 +65,14 @@ function miqMenuEditor(id) {
 
 // Bind hover events to the tree's <a> tags
 function cfme_bind_hover_event(tree_name) {
+  var node_id;
+
   $("#" + tree_name + "box a").hover(function () {
     var node = $.ui.dynatree.getNode(this);
-    miqOnMouseIn_HostNet(node.data.key);
+    node_id = miqOnMouseIn_HostNet(node.data.key);
   }, function () {
     var node = $.ui.dynatree.getNode(this);
-    miqOnMouseOut_HostNet(node.data.key);
+    miqOnMouseOut_HostNet(node.data.key, node_id);
   });
 }
 
@@ -245,16 +247,16 @@ function miqOnMouseIn_HostNet(id) {
     var top = getAbsoluteTop(node);
     $("#" + nid).css({top: (top - 220) + "px"}); // Set quad top location
     $("#" + nid).show(); // Show the quad div
-    ManageIQ.hostNetLastId = nid; // Save current node id
+    return nid; // return current node id
   }
 }
 
 // For Host Network tree, clear selection and hide previously shown quad icon div
-function miqOnMouseOut_HostNet(id) {
+function miqOnMouseOut_HostNet(id, node_id) {
   if (hover_node_id(id)) {
     // div id exists
-    if (ManageIQ.hostNetLastId) {
-      $("#" + ManageIQ.hostNetLastId).hide(); // Hide the quad div
+    if (node_id) {
+      $("#" + node_id).hide(); // Hide the quad div
     }
   }
   return true;
