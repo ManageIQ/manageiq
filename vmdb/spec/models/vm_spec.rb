@@ -57,6 +57,24 @@ describe Vm do
       expect(described_class.find_all_by_mac_address_and_hostname_and_ipaddress(address, nil, nil))
         .to eql([@vm1])
     end
+
+    it "hostname" do
+      hostname = "ABCDEFG"
+      network = FactoryGirl.create(:network, :hostname => hostname)
+      @hardware1.networks << network
+
+      expect(described_class.find_all_by_mac_address_and_hostname_and_ipaddress(nil, hostname, nil))
+        .to eql([@vm1])
+    end
+
+    it "ipaddress" do
+      ipaddress = "127.0.0.1"
+      network = FactoryGirl.create(:network, :ipaddress => ipaddress)
+      @hardware1.networks << network
+
+      expect(described_class.find_all_by_mac_address_and_hostname_and_ipaddress(nil, nil, ipaddress))
+        .to eql([@vm1])
+    end
   end
 
   context "with relationships of multiple types" do

@@ -37,11 +37,13 @@ class Vm < VmOrTemplate
       conds[0] << "networks.hostname = ?"
       conds    << hostname
       include  << :networks
+      references << :networks
     end
     if ipaddress
       conds[0] << "networks.ipaddress = ?"
       conds    << ipaddress
       include  << :networks
+      references << :networks
     end
     conds[0] = "(#{conds[0].join(" AND ")})"
 
