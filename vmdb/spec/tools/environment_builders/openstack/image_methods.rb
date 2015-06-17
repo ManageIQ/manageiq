@@ -88,11 +88,11 @@ module ImageMethods
   end
 
   def image_path
-    "/tmp/cirros-image-#{SecureRandom.hex}.tar.gz"
+    @image_path ||= "/tmp/cirros-image-#{SecureRandom.hex}.tar.gz"
   end
 
   def extract_path
-    "/tmp/cirros-#{SecureRandom.hex}-dir"
+    @extract_path ||= "/tmp/cirros-#{SecureRandom.hex}-dir"
   end
 
   def image_name
