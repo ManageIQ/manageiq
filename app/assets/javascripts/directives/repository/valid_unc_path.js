@@ -1,15 +1,16 @@
-miqAngularApplication.directive('checkpath', function (){
+miqAngularApplication.directive('checkpath', function() {
   return {
     require: 'ngModel',
-       link: function (scope, elem, attrs, ctrl) {
-         scope.$watch("repoModel.repo_path", function() {
-           if(ctrl.$modelValue != undefined && scope.afterGet) {
-             setValidity(scope, ctrl, ctrl.$modelValue, false);
-           }
-         });
-         ctrl.$parsers.unshift(function() {
-           setValidity(scope, ctrl, ctrl.$viewValue, true);
-          });
+    link: function (scope, elem, attrs, ctrl) {
+      scope.$watch("repoModel.repo_path", function() {
+        if(ctrl.$modelValue != undefined && scope.afterGet) {
+          setValidity(scope, ctrl, ctrl.$modelValue, false);
+        }
+      });
+      ctrl.$parsers.unshift(function(val) {
+        setValidity(scope, ctrl, ctrl.$viewValue, true);
+        return val;
+      });
 
       validPath = function(scope, path, bClearMsg) {
         modified_path = path.replace(/\\/g, "/");
@@ -41,5 +42,5 @@ miqAngularApplication.directive('checkpath', function (){
         }
       };
     }
-  }
+  };
 });
