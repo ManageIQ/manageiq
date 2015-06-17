@@ -165,6 +165,7 @@ Vmdb::Application.routes.draw do
         download_data
         explorer
         ot_edit
+        ot_show
         show
       ),
       :post => %w(
