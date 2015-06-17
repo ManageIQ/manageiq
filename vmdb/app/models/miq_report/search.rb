@@ -103,11 +103,15 @@ module MiqReport::Search
     search_options = options.merge(:class => self.db, :conditions => self.conditions, :results_format => :objects, :include_for_find => includes)
     search_options.merge!(:limit => limit, :offset => offset, :order => order) if apply_sortby_in_search
 
-    unless options[:parent]
-      search_results, attrs = Rbac.search(search_options)
-    else
+    if options[:parent]
       targets = get_parent_targets(options)
-      search_results, attrs = targets.empty? ? [targets, {:auth_count => 0, :total_count => 0}] : Rbac.search(search_options.merge(:targets => targets))
+      if targets.empty?
+        search_results, attrs = [targets, {:auth_count => 0, :total_count => 0}]
+      else
+        search_results, attrs = Rbac.search(search_options.merge(:targets => targets))
+      end
+    else
+      search_results, attrs = Rbac.search(search_options)
     end
 
     search_results ||= []

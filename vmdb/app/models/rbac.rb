@@ -275,8 +275,7 @@ module Rbac
 
   def self.filtered(objects, options = {})
     unless objects.empty?
-      options[:targets] = objects
-      objects, _ = Rbac.search(options)
+      objects, _attrs = Rbac.search(options.merge(:targets => objects, :results_format => :objects))
     end
     objects
   end

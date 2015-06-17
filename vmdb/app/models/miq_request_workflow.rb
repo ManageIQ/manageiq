@@ -828,11 +828,11 @@ class MiqRequestWorkflow
   def process_filter_all(filter_prop, ci_klass, targets = [])
     rails_logger("process_filter - [#{ci_klass}]", 0)
     filter_id = get_value(@values[filter_prop]).to_i
-    result =  unless filter_id.zero?
-                MiqSearch.find(filter_id).search(targets, :results_format => :objects, :userid => @requester.userid).first
-              else
-                Rbac.search(:targets => targets, :class => ci_klass, :results_format => :objects, :userid => @requester.userid).first
-              end
+    result = if filter_id.zero?
+               Rbac.filtered(targets, :class => ci_klass, :userid => @requester.userid)
+             else
+               MiqSearch.find(filter_id).filtered(targets, :userid => @requester.userid)
+             end
     rails_logger("process_filter - [#{ci_klass}]", 1)
     result
   end
