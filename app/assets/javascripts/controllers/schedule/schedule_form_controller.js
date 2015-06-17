@@ -14,7 +14,7 @@ miqAngularApplication.controller('scheduleFormController', ['$http', '$scope', '
       name: '',
       timer_typ: '',
       timer_value: '',
-      miq_angular_date_1: '',
+      start_date: '',
       start_hour: '',
       start_min: '',
       time_zone: '',
@@ -26,6 +26,7 @@ miqAngularApplication.controller('scheduleFormController', ['$http', '$scope', '
     $scope.formId = scheduleFormId;
     $scope.afterGet = false;
     $scope.modelCopy = angular.copy( $scope.scheduleModel );
+    $scope.oneMonthAgo = oneMonthAgo;
 
     miqAngularApplication.$scope = $scope;
 
@@ -35,15 +36,15 @@ miqAngularApplication.controller('scheduleFormController', ['$http', '$scope', '
       $scope.scheduleModel.filter_typ          = 'all';
       $scope.scheduleModel.enabled             = '1';
       $scope.scheduleModel.filterValuesEmpty   = true;
-      var today                                 = new Date();
-      var tomorrowsDate                         = parseInt(today.getDate()) + 1;
-      $scope.scheduleModel.miq_angular_date_1  = today.getMonth() + 1 + "/" + tomorrowsDate + "/" + today.getFullYear();
+      var today                                = new Date();
+      var tomorrowsDate                        = parseInt(today.getDate()) + 1;
+      $scope.scheduleModel.start_date          = today.getMonth() + 1 + "/" + tomorrowsDate + "/" + today.getFullYear();
       $scope.scheduleModel.timer_typ           = 'Once';
       $scope.scheduleModel.time_zone           = 'UTC';
       $scope.scheduleModel.start_hour          = '0';
       $scope.scheduleModel.start_min           = '0';
-      $scope.afterGet                           = true;
-      $scope.modelCopy                          = angular.copy( $scope.scheduleModel );
+      $scope.afterGet                          = true;
+      $scope.modelCopy                         = angular.copy( $scope.scheduleModel );
     } else {
       $scope.newRecord = false;
 
@@ -62,7 +63,7 @@ miqAngularApplication.controller('scheduleFormController', ['$http', '$scope', '
         $scope.scheduleModel.name               = data.schedule_name;
         $scope.scheduleModel.timer_typ          = data.schedule_timer_type;
         $scope.scheduleModel.timer_value        = data.schedule_timer_value;
-        $scope.scheduleModel.miq_angular_date_1 = data.schedule_start_date;
+        $scope.scheduleModel.start_date         = data.schedule_start_date;
         $scope.scheduleModel.start_hour         = data.schedule_start_hour;
         $scope.scheduleModel.start_min          = data.schedule_start_min;
         $scope.scheduleModel.time_zone          = data.schedule_time_zone;
@@ -90,8 +91,6 @@ miqAngularApplication.controller('scheduleFormController', ['$http', '$scope', '
         miqService.sparkleOff();
       });
     }
-
-    miqService.buildCalendar(oneMonthAgo.year, parseInt(oneMonthAgo.month) + 1, oneMonthAgo.date);
 
     $scope.$watch("scheduleModel.name", function() {
       $scope.form = $scope.angularForm;
@@ -253,13 +252,6 @@ miqAngularApplication.controller('scheduleFormController', ['$http', '$scope', '
 
   $scope.addClicked = function() {
     $scope.saveClicked();
-  };
-
-  $scope.triggerCheckChange = function(date) {
-    $scope.miq_angular_date_1 = date;
-    $scope.$apply(function() {
-      $scope.angularForm.miq_angular_date_1.$setViewValue($scope.miq_angular_date_1);
-    });
   };
 
   $scope.filterValueRequired = function(value) {

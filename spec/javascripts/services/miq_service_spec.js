@@ -6,7 +6,6 @@ describe('miqService', function() {
   beforeEach(inject(function(miqService) {
     testService = miqService;
     spyOn(window, 'miqButtons');
-    spyOn(window, 'miqBuildCalendar');
     spyOn(window, 'miqAjaxButton');
     spyOn(window, 'miqSparkleOn');
     spyOn(window, 'miqSparkleOff');
@@ -23,18 +22,6 @@ describe('miqService', function() {
     it('calls the global buttons function with hide', function() {
       testService.hideButtons();
       expect(window.miqButtons).toHaveBeenCalledWith('hide');
-    });
-  });
-
-  describe('#buildCalendar', function() {
-    it('sets up the date from', function() {
-      testService.buildCalendar(2014, 2, 3);
-      expect(window.miq_cal_dateFrom).toEqual(new Date(2014, 2, 3));
-    });
-
-    it('calls the global build calendar function', function() {
-      testService.buildCalendar();
-      expect(window.miqBuildCalendar).toHaveBeenCalled();
     });
   });
 

@@ -8,18 +8,13 @@ describe('scheduleFormController', function() {
     timerOptionService = _timerOptionService_;
     spyOn(miqService, 'showButtons');
     spyOn(miqService, 'hideButtons');
-    spyOn(miqService, 'buildCalendar');
     spyOn(miqService, 'miqAjaxButton');
     spyOn(miqService, 'sparkleOn');
     spyOn(miqService, 'sparkleOff');
     spyOn(timerOptionService, 'getOptions').and.returnValue(['some', 'options']);
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
-    oneMonthAgo = {
-      year: 2014,
-      month: 5,
-      date: 7
-    };
+    oneMonthAgo = "2014-05-07";
 
     // For the initialization scheduleDate test. This freezes time to 1/2/2014.
     var fakeToday = new Date(2014, 0, 2);
@@ -86,7 +81,7 @@ describe('scheduleFormController', function() {
     });
 
     it('sets the scheduleDate', function() {
-      expect($scope.scheduleModel.miq_angular_date_1).toEqual('now');
+      expect($scope.scheduleModel.start_date).toEqual('now');
     });
 
     it('sets the scheduleStartHour', function() {
@@ -145,7 +140,7 @@ describe('scheduleFormController', function() {
       });
 
       it('sets the scheduleDate to today', function() {
-        expect($scope.scheduleModel.miq_angular_date_1).toEqual("1/3/2014");
+        expect($scope.scheduleModel.start_date).toEqual("2014-01-03");
       });
 
       it('sets the scheduleTimerType to once', function() {
@@ -271,10 +266,6 @@ describe('scheduleFormController', function() {
           expect($scope.scheduleModel.filterValuesEmpty).toBe(false);
         });
       });
-    });
-
-    it('builds a calendar', function() {
-      expect(miqService.buildCalendar).toHaveBeenCalledWith(2014, 6, 7);
     });
   });
 

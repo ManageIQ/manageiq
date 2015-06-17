@@ -7,11 +7,6 @@ miqAngularApplication.service('miqService', function() {
     miqButtons('hide');
   };
 
-  this.buildCalendar = function(year, month, date) {
-    miq_cal_dateFrom = new Date(year, month, date);
-    miqBuildCalendar(true);
-  };
-
   this.miqAjaxButton = function(url, serializeFields) {
     miqAjaxButton(url, serializeFields);
   };

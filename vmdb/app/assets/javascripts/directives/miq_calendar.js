@@ -12,7 +12,7 @@ miqAngularApplication.directive('miqCalendar', ['$timeout', '$parse', '$filter',
       var elem_id = elem.attr('id');
 
       // prevents clash with old calendar code
-      if (elem_id && elem_id.match(/^miq_angular_date|^miq_date/)) {
+      if (elem_id && elem_id.match(/^miq_date/)) {
         console.error("Can't use miqCalendar together with miqBuildCalendar magic, sorry", elem);
         return;
       }

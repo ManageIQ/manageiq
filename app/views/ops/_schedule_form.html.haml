@@ -35,5 +35,5 @@
 
 :javascript
   miqAngularApplication.value('scheduleFormId', '#{@schedule.id || "new"}');
-  miqAngularApplication.value('oneMonthAgo', {year: '#{@one_month_ago[:year]}', month: '#{@one_month_ago[:month]}', date: '#{@one_month_ago[:date]}'});
+  miqAngularApplication.value('oneMonthAgo', '#{@one_month_ago.strftime("%Y-%m-%d")}');
   angular.bootstrap(jQuery('#form_div'), ['miqAngularApplication']);

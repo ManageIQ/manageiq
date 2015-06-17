@@ -149,7 +149,7 @@ module OpsController::Settings::Schedules
       :schedule_description => schedule.description,
       :schedule_enabled     => schedule.enabled ? "1" : "0",
       :schedule_name        => schedule.name,
-      :schedule_start_date  => schedule.run_at[:start_time].strftime("%m/%d/%Y"),
+      :schedule_start_date  => schedule.run_at[:start_time].strftime("%Y-%m-%d"),
       :schedule_start_hour  => schedule.run_at[:start_time].strftime("%H").to_i,
       :schedule_start_min   => schedule.run_at[:start_time].strftime("%M").to_i,
       :schedule_time_zone   => schedule.run_at[:tz],
@@ -391,12 +391,7 @@ module OpsController::Settings::Schedules
 
     build_schedule_options_for_select
 
-    one_month_ago = (Time.now - 1.month).in_time_zone(session[:user_tz])
-    @one_month_ago = {
-      :year  => one_month_ago.year,
-      :month => one_month_ago.month - 1, # Javascript counts months 0-11
-      :date  => one_month_ago.day
-    }
+    @one_month_ago = (Time.now - 1.month).in_time_zone(session[:user_tz])
   end
 
   def build_global_and_my_filters(type)
@@ -640,7 +635,7 @@ module OpsController::Settings::Schedules
   end
 
   def schedule_set_start_time_record_vars(schedule)
-    run_at = create_time_in_utc("#{params[:miq_angular_date_1]} #{params[:start_hour]}:#{params[:start_min]}:00",
+    run_at = create_time_in_utc("#{params[:start_date]} #{params[:start_hour]}:#{params[:start_min]}:00",
                                 params[:time_zone])
     schedule.run_at[:start_time] = "#{run_at} Z"
   end

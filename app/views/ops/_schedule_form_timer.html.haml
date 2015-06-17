@@ -28,7 +28,7 @@
       %tr
         %td.key=_("Starting Date")
         %td#start_date
-          %input#miq_angular_date_1.css1(readonly="true" ng-model="scheduleModel.miq_angular_date_1" name="miq_angular_date_1" data-miq_observe_date="execAngular" checkchange)
+          %input.css1(readonly="true" ng-model="scheduleModel.start_date" name="start_date" miq-calendar checkchange date-from="{{oneMonthAgo}}")
 
       %tr
         %td.key
