@@ -434,11 +434,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     unless missing_hosts.blank?
       begin
         st = Time.now
-        return switches if @dvs_ems_connect_ok[src[:ems].id] == false
+        return switches if src[:ems] && @dvs_ems_connect_ok[src[:ems].id] == false
         vim = load_ar_obj(src[:ems]).connect
         missing_hosts.each { |dest_host| @dvs_by_host[dest_host.id] = get_host_dvs(dest_host, vim) }
       rescue
-        @dvs_ems_connect_ok[src[:ems].id] = false
+        @dvs_ems_connect_ok[src[:ems].id] = false if src[:ems]
         return switches
       ensure
         vim.disconnect if vim rescue nil
@@ -641,15 +641,12 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     return @target_resource if @target_resource && refresh == false
 
     vm_id = get_value(@values[:src_vm_id])
-    if vm_id.to_i.zero?
+    rails_logger('get_source_and_targets', 0)
+    svm = VmOrTemplate.where(:id => vm_id).first
+
+    if svm.nil?
       @vm_snapshot_count = 0
       return @target_resource = {}
-    else
-      rails_logger('get_source_and_targets', 0)
-      svm = VmOrTemplate.find_by_id(vm_id)
-      raise "Unable to find VM with Id: [#{vm_id}]" if svm.nil?
-      raise MiqException::MiqVmError, "VM/Template <#{svm.name}> with Id: <#{vm_id}> is archived and cannot be used with provisioning." if svm.archived?
-      raise MiqException::MiqVmError, "VM/Template <#{svm.name}> with Id: <#{vm_id}> is orphaned and cannot be used with provisioning." if svm.orphaned?
     end
 
     @vm_snapshot_count = svm.v_total_snapshots
@@ -658,6 +655,13 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     result[:ems] = ci_to_hash_struct(svm.ext_management_system)
 
     result
+  end
+
+  def source_valid?
+    obj = VmOrTemplate.where(:id => get_value(@values[:src_vm_id])).first
+    return "Unable to find VM with Id: [#{obj.id}]" if obj.nil?
+    return "VM/Template <#{obj.name}> with Id: <#{obj.id}> is archived and cannot be used with provisioning." if obj.archived?
+    return "VM/Template <#{obj.name}> with Id: <#{obj.id}> is orphaned and cannot be used with provisioning." if obj.orphaned?
   end
 
   def resources_for_ui
@@ -1298,9 +1302,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def all_provider_hosts(src)
-    ui_str = ui_lookup(:table => "ext_management_systems")
-    raise "Source VM [#{src[:vm].name}] does not belong to a #{ui_str}" if src[:ems].nil?
-    load_ar_obj(src[:ems]).hosts
+    load_ar_obj(src[:ems]).try(:hosts) || []
   end
 
   def selected_host(src)

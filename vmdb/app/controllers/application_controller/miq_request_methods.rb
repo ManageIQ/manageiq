@@ -718,7 +718,7 @@ module ApplicationController::MiqRequestMethods
         begin
           @edit[:wf].refresh_field_values(@edit[:new],session[:userid])           # Refresh the workflow with new field values based on options, need to pass userid there
         rescue StandardError => bang
-          add_flash(bang, :error)
+          add_flash(bang.message, :error)
           @edit[:new][f.to_sym] = val                                             # Save value
           return false                                                            # No need to refresh dialog divs
         else
@@ -762,13 +762,14 @@ module ApplicationController::MiqRequestMethods
         build_tags_tree(options[:wf], @options[tag_symbol_for_workflow], false) if @miq_request.resource_type != "VmMigrateRequest"
         if !["MiqHostProvisionRequest", "VmMigrateRequest"].include?(@miq_request.resource_type)
           build_ous_tree(options[:wf],@options[:ldap_ous])
-          @sb[:vm_os] = VmOrTemplate.find_by_id(@options[:src_vm_id][0]).platform if @options[:src_vm_id] && @options[:src_vm_id][0]
+          svm = VmOrTemplate.where(:id => @options[:src_vm_id][0]).first if @options[:src_vm_id] && @options[:src_vm_id][0]
+          @sb[:vm_os] = svm.platform if svm
         end
         @options[:wf] = options[:wf]
       end
     else
       @options = @miq_request.options
-      @options[:memory], @options[:mem_typ] = reconfigure_calculations(@options[:vm_memory]) if @options[:vm_memory]
+      @options[:memory], @options[:mem_typ] = reconfigure_calculations(@options[:vm_memory][0]) if @options[:vm_memory]
       @force_no_grid_xml   = true
       @view, @pages = get_view(Vm, :view_suffix=>"VmReconfigureRequest", :where_clause=>["vms.id IN (?)",@miq_request.options[:src_ids]]) # Get the records (into a view) and the paginator
     end
@@ -896,14 +897,17 @@ module ApplicationController::MiqRequestMethods
           elsif @src_vm_id || params[:src_vm_id]  # Set vm id if pre-prov chose one
             options[:src_vm_id] = [@src_vm_id || params[:src_vm_id].to_i]
           end
+        src_vm = VmOrTemplate.where(:id => src_vm_id).first
 
         wf_type =
           if req.try(:type) == "VmMigrateRequest"
             VmMigrateWorkflow
-          elsif src_vm_id.try(:first).present?
-            MiqProvisionWorkflow.class_for_source(src_vm_id[0])
+          elsif src_vm
+            MiqProvisionWorkflow.class_for_source(src_vm)
           elsif @edit[:st_prov_type]
             MiqProvisionWorkflow.class_for_platform(@edit[:st_prov_type])
+          elsif @edit[:new][:st_prov_type]
+            MiqProvisionWorkflow.class_for_platform(@edit[:new][:st_prov_type])
           else # handle copy button for host provisioning
             MiqHostProvisionWorkflow
           end
@@ -926,9 +930,11 @@ module ApplicationController::MiqRequestMethods
     end
 
     [wf_type.new(@edit[:new], session[:userid], options), pre_prov_values]  # Return the new workflow and any pre_prov_values
-  rescue MiqException::MiqVmError => bang
+  rescue => bang
     # only add this message if showing a list of Catalog items, show screen already handles this
     @no_wf_msg = _("Cannot create Request Info, error: ") << bang.message
+    $log.log_backtrace(bang)
+    nil
   end
 
   def build_ous_tree(wf,ldap_ous)
