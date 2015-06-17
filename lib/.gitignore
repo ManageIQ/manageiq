@@ -18,11 +18,6 @@ mdfs*.log
 !/SlpLib/SlpLib_raw/*.c
 /SlpLib/lib
 
-/disk/modules/MiqBlockDevOps
-!/disk/modules/MiqBlockDevOps/extconf.rb
-!/disk/modules/MiqBlockDevOps/*.c
-/disk/modules/*.so
-
 /VixDiskLib/VixDiskLib_raw
 !/VixDiskLib/VixDiskLib_raw/**/*.c
 !/VixDiskLib/VixDiskLib_raw/**/extconf.rb

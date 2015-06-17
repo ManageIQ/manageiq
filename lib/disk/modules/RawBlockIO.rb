@@ -1,4 +1,4 @@
-require_relative 'MiqBlockDevOps'
+require 'linux_block_device'
 require 'memory_buffer'
 
 class RawBlockIO
@@ -20,7 +20,7 @@ class RawBlockIO
     @blockSize      = 512
     @filename       = filename
     @mode           = mode
-    @size           = MiqBlockDevOps.blkgetsize64(@rawDisk_file.fileno)
+    @size           = LinuxBlockDevice.size(@rawDisk_file.fileno)
     @sizeInBlocks   = @size / @blockSize
     @startByteAddr  = 0
     @endByteAddr    = @size - 1

@@ -17,7 +17,4 @@
 *vmdb/certs/v2_key
 *vmdb/log/*.log
 *vmdb/tmp/miq_temp
-*lib/disk/modules/MiqBlockDevOps/Makefile
-*lib/disk/modules/MiqBlockDevOps/MiqBlockDevOps.o
-*lib/disk/modules/MiqBlockDevOps.so
 *lib/disk/modules/ruby1.9.3
