@@ -22,7 +22,6 @@ class UserValidationService
 
     unless user[:name]
       self.current_userid = nil
-      session[:user_tags] = nil
       return ValidateResult.new(:fail, @flash_msg ||= "Error: Authentication failed")
     end
 

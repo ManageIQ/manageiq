@@ -515,7 +515,6 @@ class DashboardController < ApplicationController
       end
     when :fail
       self.current_user = nil
-      session[:user_tags] = nil
       add_flash(validation.flash_msg || "Error: Authentication failed", :error)
       render :update do |page|
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
@@ -725,8 +724,6 @@ class DashboardController < ApplicationController
 
   # Initialize session hash variables for the logged in user
   def session_init(db_user)
-    session[:user_tags] = db_user.tag_list unless db_user == nil      # Get user's tags
-
     # Load settings for this user, if they exist
     @settings = copy_hash(DEFAULT_SETTINGS)             # Start with defaults
     unless db_user == nil || db_user.settings == nil    # If the user has saved settings
