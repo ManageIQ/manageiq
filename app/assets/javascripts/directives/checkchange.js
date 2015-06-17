@@ -33,6 +33,9 @@ miqAngularApplication.directive('checkchange', function() {
           if(scope.form[ctrl.$name].$pristine) {
             scope.form.$pristine = true;
             for (var name in scope.form) {
+              if (name.match(/^\$/)) {
+                continue;
+              }
               if (ctrl.$name != name && scope.modelCopy[name] != scope.form[name].$modelValue) {
                 if (scope.skipCheck[ctrl.$name] == undefined || scope.skipCheck[ctrl.$name].indexOf(name) == -1) {
                   scope.form.$pristine = false;
