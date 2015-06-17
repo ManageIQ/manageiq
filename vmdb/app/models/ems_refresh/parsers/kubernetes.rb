@@ -322,8 +322,8 @@ module EmsRefresh::Parsers
 
     def parse_container_env_var(env_var)
       {
-        :name  => env_var.name,
-        :value => env_var.value,
+        :name        => env_var.name,
+        :value       => env_var.value,
         :field_path  => env_var.valueFrom.try(:fieldRef).try(:fieldPath)
       }
     end
