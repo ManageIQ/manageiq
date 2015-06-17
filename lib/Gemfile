@@ -29,6 +29,7 @@ gem "httpclient",           "~>2.5.3",       :require => false
 gem "linux_admin",          ">=0.10.1", "<1", :require => false
 gem "log4r",                "=1.1.8",        :require => false
 gem "memoist",              "~>0.11.0",      :require => false
+gem "memory_buffer",        ">=0.1.0",       :require => false
 gem "more_core_extensions", "~>1.2.0",       :require => false
 gem "nokogiri",             "~>1.6.0",       :require => false
 gem "ovirt",                "~>0.4.2",        :require => false
