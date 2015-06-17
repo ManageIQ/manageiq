@@ -1,4 +1,5 @@
 require_relative 'MiqBlockDevOps'
+require 'memory_buffer'
 
 class RawBlockIO
 
@@ -102,7 +103,7 @@ class RawBlockIO
     # $log.debug "RawBlockIO.breadCached: startSector = #{startSector}, numSectors = #{numSectors}"
     if @cacheRange.nil? || !@cacheRange.include?(startSector) || !@cacheRange.include?(startSector + numSectors - 1)
       sectorsToRead = [MIN_SECTORS_TO_CACHE, numSectors].max
-      @cache        = MiqBlockDevOps.aligned_str_buf(@blockSize, @blockSize * sectorsToRead)
+      @cache        = MemoryBuffer.create_aligned(@blockSize, @blockSize * sectorsToRead)
       bread(startSector, sectorsToRead)
       sectorsRead   = @cache.length / @blockSize
       endSector     = startSector + sectorsRead - 1
