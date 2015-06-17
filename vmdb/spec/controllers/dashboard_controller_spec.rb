@@ -65,9 +65,9 @@ describe DashboardController do
       controller.instance_variable_set(:@tabs, [])
       login_as user
       #create a user's dashboard using group dashboard name.
-      user_ws = FactoryGirl.create(:miq_widget_set, :name => "#{user.userid}|#{group.id}|#{ws.name}",
-                                   :set_data => {:last_group_db_updated => Time.now.utc,
-                                                 :col1 => [1], :col2 => [], :col3 =>[]})
+      FactoryGirl.create(:miq_widget_set,
+                         :name     => "#{user.userid}|#{group.id}|#{ws.name}",
+                         :set_data => {:last_group_db_updated => Time.now.utc, :col1 => [1], :col2 => [], :col3 => []})
       controller.show
       controller.send(:flash_errors?).should_not be_true
     end

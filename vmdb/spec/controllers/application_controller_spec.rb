@@ -6,10 +6,7 @@ describe ApplicationController do
       EvmSpecHelper.create_guid_miq_server_zone
       controller.instance_variable_set(:@sb, {})
       ur = FactoryGirl.create(:miq_user_role)
-      rptmenu = {:report_menus => [
-                                      ["Configuration Management",["Hosts",["Hosts Summary", "Hosts Summary"]]]
-                                  ]
-                }
+      rptmenu = {:report_menus => [["Configuration Management", ["Hosts", ["Hosts Summary", "Hosts Summary"]]]]}
       group = FactoryGirl.create(:miq_group, :miq_user_role => ur, :settings => rptmenu)
       login_as FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [group])
     end
