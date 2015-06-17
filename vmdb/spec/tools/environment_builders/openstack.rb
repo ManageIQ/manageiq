@@ -19,7 +19,7 @@ puts "Building Refresh Environment for #{@environment}..."
 
 # Setup outer structure
 # TODO: Create a domain to contain refresh-related objects (Havana and above)
-# TODO: Create a project and all object should live in that project, possibly.
+@project = find_or_create_project
 
 #
 # Setup Network

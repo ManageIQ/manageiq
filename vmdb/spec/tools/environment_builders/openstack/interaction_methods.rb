@@ -50,6 +50,10 @@ module InteractionMethods
     end
   end
 
+  def find_or_create_project
+    find_or_create(ems.connect.tenants, :name => "EmsRefreshSpec-Project")
+  end
+
   def find_or_create_server(collection, attributes)
     find_or_create(collection, attributes) do |server|
       wait_for_server_to_start(server)
