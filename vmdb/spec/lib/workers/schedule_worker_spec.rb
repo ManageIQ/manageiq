@@ -44,8 +44,20 @@ describe ScheduleWorker do
         Timecop.return
       end
 
+      it "check_for_dispatch calls check_for_timeout which deletes both dispatches with fixnum" do
+        attrs = {:zone       => @zone2.name, :handler_type => @worker2.class.name,
+                 :handler_id => @worker2.id}
+        @dispatch2 = FactoryGirl.create(:miq_queue, attrs.merge(@opts))
+
+        MiqQueue.count(:conditions => @cond).should == 2
+        ScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout.to_i)
+        MiqQueue.count(:conditions => @cond).should == 0
+      end
+
       it "check_for_dispatch calls check_for_timeout which deletes both dispatches" do
-        @dispatch2 = FactoryGirl.create(:miq_queue, {:zone => @zone2.name, :handler_type => @worker2.class.name, :handler_id => @worker2.id}.merge(@opts))
+        attrs = {:zone       => @zone2.name, :handler_type => @worker2.class.name,
+                 :handler_id => @worker2.id}
+        @dispatch2 = FactoryGirl.create(:miq_queue, attrs.merge(@opts))
 
         MiqQueue.count(:conditions => @cond).should == 2
         ScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout)

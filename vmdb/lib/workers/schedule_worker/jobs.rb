@@ -202,7 +202,7 @@ class ScheduleWorker < WorkerBase
       method_n = "dispatch"
       Zone.in_my_region.all.each do |z|
         zone = z.name
-        threshold = threshold_seconds.ago.utc
+        threshold = threshold_seconds.seconds.ago.utc
         msgs = MiqQueue.in_my_region.all(:include => :handler, :conditions => ["class_name = ? and method_name = ? and state = 'dequeue' and zone = ? and updated_on < ?", class_n, method_n, zone, threshold])
         msgs.each do |msg|
           if msg.handler.respond_to?(:is_current?) && msg.handler.is_current?
