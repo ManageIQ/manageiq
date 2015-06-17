@@ -16,7 +16,7 @@ module NetworkMethods
 
     settings[:network][:network].each do |k, v|
       key       = "Network#{k.capitalize}"
-      data      = v.merge(:name => "EmsRefreshSpec-#{key}")
+      data      = v.merge(:name => "EmsRefreshSpec-#{key}", :tenant_id => @project.id)
       network   = send("find_network_#{network_service}", data)
       network ||= send("create_network_#{network_service}", data)
 
@@ -46,17 +46,15 @@ module NetworkMethods
   end
 
   def find_or_create_floating_ip
-    data = settings[:network][:floating_ip]
-    data.merge(:floating_network_id => @network_public.id) if network_service == :neutron
-
-    @floating_ip ||= send("find_floating_ip_#{network_service}", data)
-    @floating_ip ||= send("create_floating_ip_#{network_service}", data)
+    @floating_ip   = send("find_floating_ip_#{network_service}")
+    @floating_ip ||= send("create_floating_ip_#{network_service}")
   end
 
   def find_or_create_firewall_rules(sg)
     rules = settings[:network][:security_group_rules]
 
     rules.each do |attributes|
+      attributes[:tenant_id]       = @project.id unless network_service == :nova
       attributes[:remote_group_id] = sg.id if attributes[:remote_group_id]
       obj = send("find_firewall_rule_#{network_service}", sg.id, attributes)
       obj || send("create_firewall_rule_#{network_service}", sg.id, attributes)
@@ -101,32 +99,34 @@ module NetworkMethods
 
     # TODO: enhance Fog Neutron router support
     puts "Routers must be created manually.  Please run:"
-    puts "  neutron router-create #{data[:name]}"
+    puts "  neutron router-create --tenant-id #{@project.id} #{data[:name]}"
     puts "  neutron router-gateway-set #{data[:name]} #{@network_public.name}"
     puts "  neutron router-interface-add #{data[:name]} #{@subnet_private.name}"
     exit 1
   end
 
-  def find_floating_ip_neutron(data)
+  def find_floating_ip_neutron
     collection = fog_network.floating_ips
     puts "Finding address in #{collection.class.name}"
-    collection.detect { |i| i.floating_ip_address == data[:floating_ip_address] }.try(:floating_ip_address)
+    collection.detect { |i| i.tenant_id == @project.id }.try(:floating_ip_address)
   end
 
-  def create_floating_ip_neutron(data)
+  def create_floating_ip_neutron
     collection = fog_network.floating_ips
     puts "Creating address against #{collection.class.name}"
-    collection.create(data.merge(:floating_network_id => @network_public.id)).floating_ip_address
+    collection.create(:floating_network_id => @network_public.id, :tenant_id => @project.id).floating_ip_address
   end
 
-  def find_floating_ip_nova(data)
+  def find_floating_ip_nova
     collection = fog_network.addresses
+    data       = settings[:network][:floating_ip]
     puts "Finding address in #{collection.class.name}"
     collection.detect { |i| i.ip == data[:ip] }.try(&:ip)
   end
 
-  def create_floating_ip_nova(data)
+  def create_floating_ip_nova
     collection = fog_network.addresses
+    data       = settings[:network][:floating_ip]
     puts "Creating address against #{collection.class.name}"
     collection.create(data).ip
   end

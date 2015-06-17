@@ -29,14 +29,16 @@ find_or_create_subnet
 find_or_create_router
 find_or_create_floating_ip
 
-sg = find_or_create(fog.security_groups,
+sg = find_or_create(fog_network.security_groups,
   :name        => "EmsRefreshSpec-SecurityGroup",
-  :description => "EmsRefreshSpec-SecurityGroup description"
+  :description => "EmsRefreshSpec-SecurityGroup description",
+  :tenant_id   => @project.id,
 )
 
-sg2 = find_or_create(fog.security_groups,
+sg2 = find_or_create(fog_network.security_groups,
   :name        => "EmsRefreshSpec-SecurityGroup2",
-  :description => "EmsRefreshSpec-SecurityGroup2 description"
+  :description => "EmsRefreshSpec-SecurityGroup2 description",
+  :tenant_id   => @project.id,
 )
 
 find_or_create_firewall_rules(sg)

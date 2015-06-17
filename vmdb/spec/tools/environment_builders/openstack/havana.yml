@@ -20,8 +20,6 @@
       :cidr: "192.168.0.0/24"
       :gateway_ip: "192.168.0.1"
       :ip_version: "4"
-  :floating_ip:
-    :floating_ip_address: "10.8.97.2"
   :security_group_rules:
   - :direction: ingress
     :protocol: icmp
