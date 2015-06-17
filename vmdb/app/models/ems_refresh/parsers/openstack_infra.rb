@@ -204,6 +204,8 @@ module EmsRefresh
           # Logical index contains number of logical disks
           # TODO(lsmola) For now ignoring smart data, that are in format e.g. sda{cciss,1}, we need to design
           # how to represent RAID
+          # Convert the disk size from GB to B
+          disk_size = disks.fetch_path(disk, 'size').to_i * 1_024**3
           {
             :device_name     => disk,
             :device_type     => 'disk',
@@ -211,7 +213,7 @@ module EmsRefresh
             :present         => true,
             :filename        => disks.fetch_path(disk, 'id') || disks.fetch_path(disk, 'scsi-id'),
             :location        => nil,
-            :size            => normalize_blank_property_num(disks.fetch_path(disk, 'size')),
+            :size            => disk_size,
             :disk_type       => nil,
             :mode            => 'persistent'
           }
