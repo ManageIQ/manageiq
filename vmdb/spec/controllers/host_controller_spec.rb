@@ -72,8 +72,6 @@ describe HostController do
       ra = FactoryGirl.create(:resource_action, :dialog_id => d.id)
       custom_button.resource_action = ra
       custom_button.save
-      user = FactoryGirl.create(:user, :userid => 'wilma')
-      session[:userid] = "wilma"
       post :button, :pressed => "custom_button", :id => host.id, :button_id => custom_button.id
       expect(response.status).to eq(200)
       controller.send(:flash_errors?).should_not be_true

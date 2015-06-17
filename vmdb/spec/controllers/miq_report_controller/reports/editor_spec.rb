@@ -6,7 +6,7 @@ describe ReportController do
     context "#set_form_vars" do
       it "check existence of cb_owner_id key" do
         user = FactoryGirl.create(:user)
-        session[:userid] = user.userid
+        login_as user
         rep = FactoryGirl.create(
                                   :miq_report,
                                   :db => "Chargeback",

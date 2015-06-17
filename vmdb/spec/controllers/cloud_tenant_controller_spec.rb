@@ -23,13 +23,12 @@ describe CloudTenantController do
 
   context "#tags_edit" do
     before(:each) do
-      set_user_privileges
       FactoryGirl.create(:vmdb_database)
       EvmSpecHelper.create_guid_miq_server_zone
       @ct = FactoryGirl.create(:cloud_tenant, :name => "cloud-tenant-01")
       user = FactoryGirl.create(:user, :userid => 'testuser')
-      session[:userid] = user.userid
-      @ct.stub(:tagged_with).with(:cat => "testuser").and_return("my tags")
+      set_user_privileges user
+      @ct.stub(:tagged_with).with(:cat => user.userid).and_return("my tags")
       classification = FactoryGirl.create(:classification, :name => "department", :description => "D    epartment")
       @tag1 = FactoryGirl.create(:classification_tag,
                                  :name   => "tag1",

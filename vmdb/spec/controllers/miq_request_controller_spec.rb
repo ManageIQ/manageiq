@@ -38,7 +38,7 @@ describe MiqRequestController do
 
       it "user without approver priveleges" do
         user             = FactoryGirl.create(:user)
-        session[:userid] = user.userid
+        login_as user
         content          = {"value" => user.id, "field" => "MiqRequest-requester_id"}
         MiqExpression.should_receive(:new).with { |h| expect(h.fetch_path("and", 1, "=")).to eq(content) }
         controller.send(:prov_condition, {})

@@ -283,13 +283,12 @@ describe VmInfraController do
     end
 
     context "#x_settings_changed" do
+      let(:user) { FactoryGirl.create(:user, :userid => 'wilma', :settings => {}) }
       before(:each) do
-        set_user_privileges
+        set_user_privileges user
       end
 
       it "sets the width of left pane for session's user" do
-        user = FactoryGirl.create(:user, :userid => 'wilma', :settings => {})
-        session[:userid]   = user.userid
         session[:settings] = {}
         User.stub(:find_by_userid).and_return(user)
 

@@ -73,7 +73,6 @@ describe ProviderForemanController do
       session[:settings] = {:default_search => '',
                             :views          => {},
                             :perpage        => {:list => 10}}
-      session[:userid] = user.userid
       get :explorer
       accords = controller.instance_variable_get(:@accords)
       expect(accords.size).to eq(1)
@@ -94,7 +93,6 @@ describe ProviderForemanController do
       session[:settings] = {:default_search => '',
                             :views          => {},
                             :perpage        => {:list => 10}}
-      session[:userid] = user.userid
       get :explorer
       accords = controller.instance_variable_get(:@accords)
       expect(accords.size).to eq(1)
