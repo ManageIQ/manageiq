@@ -40,7 +40,7 @@ shared_examples_for "Log Collection should create 0 tasks and 0 queue items" do
   end
 
   it "should create 0 queue messages" do
-    expect(MiqQueue.where("state not in (?)", ["ok", "ready", "error"]).count).to eq(0)
+    expect(MiqQueue.where("state not in (?)", %w(ok ready error)).count).to eq(0)
   end
 end
 

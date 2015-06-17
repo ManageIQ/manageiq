@@ -87,15 +87,18 @@ module AssignmentMixin
       # Get all assigned, enabled instances for type klass
       records = kind_of?(Class) ? all : self
       assignment_map = records.each_with_object({}) { |a, h| h[a.id] = a }
-      tags = Tag.where("taggings.taggable_type = ? and tags.name like ?", self.name, "#{self.namespace}/%").joins(:taggings)
-      results = tags.inject([]) do |arr,tag|
-        tag.taggings.each do |tagging|
-          arr << {:assigned => assignment_map[tagging.taggable_id], :assigned_to => Tag.filter_ns([tag], self.namespace).first} unless assignment_map[tagging.taggable_id].nil?
+      Tag
+        .where("taggings.taggable_type = ? and tags.name like ?", name, "#{namespace}/%")
+        .joins(:taggings)
+        .each_with_object([]) do |tag, arr|
+          tag.taggings.each do |tagging|
+            next unless assignment_map[tagging.taggable_id]
+            arr << {
+              :assigned    => assignment_map[tagging.taggable_id],
+              :assigned_to => Tag.filter_ns([tag], namespace).first
+            }
+          end
         end
-        arr
-      end
-
-      return results
     end
 
     def get_assigned_for_target(target, options = {})

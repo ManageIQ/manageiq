@@ -228,7 +228,7 @@ class ScheduleWorker < WorkerBase
     end
 
     def queue_work_on_each_zone(options)
-      Zone.in_my_region.each {|z| queue_work(options.merge(:zone => z.name))}
+      Zone.in_my_region.each { |z| queue_work(options.merge(:zone => z.name)) }
     end
   end
 end

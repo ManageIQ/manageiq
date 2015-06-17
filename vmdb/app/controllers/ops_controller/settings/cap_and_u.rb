@@ -327,13 +327,15 @@ module OpsController::Settings::CapAndU
     end
 
     ##################### Adding Non-Clustered hosts node
-    @edit[:current][:non_cl_hosts] ||= Array.new
-    ExtManagementSystem.in_my_region.each_with_index do |e,j|
+    @edit[:current][:non_cl_hosts] ||= []
+    ExtManagementSystem.in_my_region.each do |e|
       all = e.non_clustered_hosts
       all.each do |h|
-        @edit[:current][:non_cl_hosts].push({:name=>h.name,
-                                :id=>h.id,
-                                :capture=>h.perf_capture_enabled?}) # grab name, id, and capture setting
+        @edit[:current][:non_cl_hosts] << {
+          :name    => h.name,
+          :id      => h.id,
+          :capture => h.perf_capture_enabled?,
+        }
       end
     end
     if !@edit[:current][:non_cl_hosts].blank?

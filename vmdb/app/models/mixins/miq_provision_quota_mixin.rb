@@ -273,17 +273,22 @@ module MiqProvisionQuotaMixin
 
   def quota_find_active_prov_request(options)
     prov_req_ids = []
-    MiqQueue.where(:method_name => 'create_provision_instances', :state => 'dequeue', :class_name => 'MiqProvisionRequest').each do |q|
-      prov_req_ids << q.instance_id
-    end
+    MiqQueue
+      .where(:method_name => 'create_provision_instances', :state => 'dequeue', :class_name => 'MiqProvisionRequest')
+      .each do |q|
+        prov_req_ids << q.instance_id
+      end
 
     prov_ids = []
-    MiqQueue.where("method_name = ? AND state in (?) AND class_name = ? AND task_id like ?", 'deliver', ['ready','dequeue'], 'MiqAeEngine', '%miq_provision_%').each do |q|
-      if !q.args.nil?
-        args = q.args.first
-        prov_ids << args[:object_id] if args[:object_type] == 'MiqProvision' && !args[:object_id].blank?
+    MiqQueue
+      .where(:method_name => 'deliver', :state => %w(ready dequeue), :class_name => 'MiqAeEngine')
+      .where("task_id like ?", '%miq_provision_%')
+      .each do |q|
+        if q.args
+          args = q.args.first
+          prov_ids << args[:object_id] if args[:object_type] == 'MiqProvision' && !args[:object_id].blank?
+        end
       end
-    end
     prov_req_ids += MiqProvision.where(:id => prov_ids).pluck("miq_request_id")
 
     MiqProvisionRequest.where(:id => prov_req_ids.compact.uniq)
