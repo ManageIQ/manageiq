@@ -93,19 +93,6 @@ describe MiqWidget do
         @widget_report_vendor_and_guest_os.grouped_subscribers.should be_empty
       end
 
-      it "returns non-empty array when widget has subscribers" do
-        ws = FactoryGirl.create(:miq_widget_set, :name => "Home", :userid => @user1.userid, :group_id => @group1.id)
-        @widget_report_vendor_and_guest_os.make_memberof(ws)
-
-        user_temp = add_user("test", @group1)
-        ws_temp   = add_dashboard_for_user("Home", user_temp.userid, @group1.id)
-        @widget_report_vendor_and_guest_os.make_memberof(ws_temp)
-        result = @widget_report_vendor_and_guest_os.grouped_subscribers
-
-        result.size.should eq(1)
-        result[@group1].should match_array([@user1, user_temp])
-      end
-
       it "ignores the legacy format admin|db_name" do
         ws = FactoryGirl.create(:miq_widget_set, :name => "#{@user1.userid}|Home")
         @widget_report_vendor_and_guest_os.make_memberof(ws)
@@ -113,23 +100,56 @@ describe MiqWidget do
         @widget_report_vendor_and_guest_os.grouped_subscribers.should be_empty
       end
 
-      it "with multiple groups and users" do
-        ws = FactoryGirl.create(:miq_widget_set, :name => "Home", :userid => @user1.userid, :group_id => @group1.id)
-        @widget_report_vendor_and_guest_os.make_memberof(ws)
-
-        users = []
-        (1..3).each do |i|
-          user_i = add_user("user_#{i}", @group2)
-          ws_i   = add_dashboard_for_user("Home", user_i.userid, @group2.id)
-          @widget_report_vendor_and_guest_os.make_memberof(ws_i)
-          users << user_i
+      context 'with subscribers' do
+        before do
+          ws = FactoryGirl.create(:miq_widget_set, :name => "Home", :userid => @user1.userid, :group_id => @group1.id)
+          @widget_report_vendor_and_guest_os.make_memberof(ws)
         end
 
-        result = @widget_report_vendor_and_guest_os.grouped_subscribers
+        it "returns non-empty array when widget has subscribers" do
+          user_temp = add_user("test", @group1)
+          ws_temp   = add_dashboard_for_user("Home", user_temp.userid, @group1.id)
+          @widget_report_vendor_and_guest_os.make_memberof(ws_temp)
+          result = @widget_report_vendor_and_guest_os.grouped_subscribers
 
-        result.size.should eq(2)
-        result[@group1].should eq([@user1])
-        result[@group2].should match_array(users)
+          result.size.should eq(1)
+          result[@group1].should match_array([@user1, user_temp])
+        end
+
+        it "with multiple groups and users" do
+          users = []
+          (1..3).each do |i|
+            user_i = add_user("user_#{i}", @group2)
+            ws_i   = add_dashboard_for_user("Home", user_i.userid, @group2.id)
+            @widget_report_vendor_and_guest_os.make_memberof(ws_i)
+            users << user_i
+          end
+
+          result = @widget_report_vendor_and_guest_os.grouped_subscribers
+
+          result.size.should eq(2)
+          result[@group1].should eq([@user1])
+          result[@group2].should match_array(users)
+        end
+
+        it 'ignores the user that does not exist any more' do
+          user_temp = add_user("test", @group1)
+          ws_temp   = add_dashboard_for_user("Home", user_temp.userid, @group1.id)
+          @widget_report_vendor_and_guest_os.make_memberof(ws_temp)
+
+          user_temp.delete
+          result = @widget_report_vendor_and_guest_os.grouped_subscribers
+
+          result.size.should eq(1)
+          result[@group1].should match_array([@user1])
+
+        end
+
+        it 'ignores the group that has no members' do
+          @user1.delete
+          result = @widget_report_vendor_and_guest_os.grouped_subscribers
+          result.size.should eq(0)
+        end
       end
 
       def add_user(userid, group)
