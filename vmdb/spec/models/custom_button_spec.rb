@@ -99,10 +99,10 @@ describe CustomButton do
                               :name        => "foo",
                               :description => "foo foo")
 
-    described_class.buttons_for(Host).to_a.should == []
-    described_class.buttons_for(Vm).to_a.should   == [button1all]
-    described_class.buttons_for(vm).to_a.should  match_array([button1vm, button2vm])
-    described_class.buttons_for(vm_other).to_a.should == []
+    described_class.buttons_for(Host).should == []
+    described_class.buttons_for(Vm).should   == [button1all]
+    described_class.buttons_for(vm).should  match_array([button1vm, button2vm])
+    described_class.buttons_for(vm_other).should == []
   end
 
   it "#save" do

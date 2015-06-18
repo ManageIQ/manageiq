@@ -170,7 +170,7 @@ class EmsAmazon < EmsCloud
   def self.discover(access_key_id, secret_access_key)
     new_emses = []
 
-    all_emses = includes(:authentications).to_a
+    all_emses = includes(:authentications)
     all_ems_names = all_emses.index_by(&:name)
 
     known_emses = all_emses.select { |e| e.authentication_userid == access_key_id }

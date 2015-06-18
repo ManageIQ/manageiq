@@ -71,7 +71,7 @@ describe "AR Regions extension" do
     end
 
     it ".in_my_region" do
-      recs = VmVmware.in_my_region.to_a
+      recs = VmVmware.in_my_region
       recs.count.should == 10
       recs.all? { |v| v.region_number == VmVmware.my_region_number }.should be_true
     end
