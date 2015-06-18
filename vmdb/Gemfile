@@ -17,6 +17,7 @@ gem 'codemirror-rails', "=4.2"
 
 gem "sprockets-sass",  "~>1.2.0"
 gem 'sass-rails'
+gem 'bootstrap-sass', "=3.3.4.1"
 gem 'patternfly-sass', "~>1.3.0"
 
 # Vendored and required
