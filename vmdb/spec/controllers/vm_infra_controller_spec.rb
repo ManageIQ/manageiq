@@ -9,8 +9,6 @@ describe VmInfraController do
 
   it 'can render the explorer' do
     session[:settings] = {:views => {}, :perpage => {:list => 10}}
-    session[:userid] = User.current_user.userid
-    session[:eligible_groups] = []
 
     FactoryGirl.create(:vmdb_database)
     EvmSpecHelper.create_guid_miq_server_zone

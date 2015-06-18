@@ -3,13 +3,14 @@ include UiConstants
 
 describe ApplicationController do
   before do
+    EvmSpecHelper.create_guid_miq_server_zone
+    EvmSpecHelper.seed_specific_product_features("everything")
     feature = MiqProductFeature.find_all_by_identifier(["everything"])
     test_user_role  = FactoryGirl.create(:miq_user_role,
                                          :name                 => "test_user_role",
                                          :miq_product_features => feature)
     test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
-    user = FactoryGirl.create(:user, :userid => 'test_user', :miq_groups => [test_user_group])
-    User.stub(:current_user => user)
+    login_as FactoryGirl.create(:user, :userid => 'test_user', :miq_groups => [test_user_group])
     controller.stub(:role_allows).and_return(true)
   end
 
@@ -60,8 +61,7 @@ describe ApplicationController do
   it "Certain actions should be allowed only for a VM record" do
     admin_role  = FactoryGirl.create(:miq_user_role, :name => "admin", :miq_product_features => MiqProductFeature.find_all_by_identifier(["everything"]))
     admin_group = FactoryGirl.create(:miq_group, :miq_user_role => admin_role)
-    user        = FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [admin_group])
-    User.stub(:current_user => user)
+    login_as FactoryGirl.create(:user, :userid => 'wilma', :miq_groups => [admin_group])
     vm = FactoryGirl.create(:vm_vmware)
     controller.instance_variable_set(:@_params, :id => vm.id)
     actions = [:vm_right_size, :vm_reconfigure]

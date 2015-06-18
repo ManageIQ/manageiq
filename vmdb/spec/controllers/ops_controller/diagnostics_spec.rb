@@ -35,7 +35,7 @@ shared_examples "logs_collect" do |type|
   context "nothing preventing collection" do
     it "succeeds" do
       klass.any_instance.should_receive(:log_collection_active_recently?).and_return(false)
-      klass.any_instance.should_receive(:synchronize_logs).with(nil, {})
+      klass.any_instance.should_receive(:synchronize_logs).with(user.userid, {})
       controller.should_receive(:replace_right_cell).with(active_node)
 
       controller.send(:logs_collect)
@@ -63,10 +63,6 @@ describe OpsController do
       FactoryGirl.create(:vmdb_database)
       EvmSpecHelper.create_guid_miq_server_zone
 
-      expect(MiqServer.my_guid).to be
-      expect(MiqServer.my_server).to be
-
-      session[:userid] = User.current_user.userid
       session[:sandboxes] = { "ops" => { :active_tree => :diagnostics_tree } }
       post :tree_select, :id => 'root', :format => :js
 
@@ -76,8 +72,9 @@ describe OpsController do
   end
 
   context "::Diagnostics" do
+    let(:user) { FactoryGirl.create(:user) }
     before do
-      set_user_privileges
+      set_user_privileges user
       _guid, @miq_server, @zone = EvmSpecHelper.remote_guid_miq_server_zone
     end
 

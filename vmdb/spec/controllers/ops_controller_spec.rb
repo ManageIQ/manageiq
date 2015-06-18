@@ -2,6 +2,7 @@ require "spec_helper"
 
 describe OpsController do
   before(:each) do
+    EvmSpecHelper.create_guid_miq_server_zone
     set_user_privileges
   end
 
@@ -22,7 +23,6 @@ describe OpsController do
   end
 
   it 'can view the db_settings tab' do
-    EvmSpecHelper.create_guid_miq_server_zone
     session[:sandboxes] = {"ops" => {:active_tree => :vmdb_tree,
                                      :active_tab  => 'db_settings',
                                      :trees       => {:vmdb_tree => {:active_node => 'root'}}}}
@@ -32,7 +32,6 @@ describe OpsController do
 
   it 'can view the db_connections tab' do
     FactoryGirl.create(:vmdb_database)
-    EvmSpecHelper.create_guid_miq_server_zone
     session[:sandboxes] = {"ops" => {:active_tree => :vmdb_tree,
                                      :active_tab  => 'db_connections',
                                      :trees       => {:vmdb_tree => {:active_node => 'root'}}}}
@@ -114,9 +113,6 @@ describe OpsController do
       session[:settings] = {:default_search => '',
                             :views          => {},
                             :perpage        => {:list => 10}}
-      session[:userid] = User.current_user.userid
-      session[:eligible_groups] = []
-      EvmSpecHelper.create_guid_miq_server_zone
 
       miq_schedule = FactoryGirl.create(:miq_schedule,
                                         :name        => "test_db_schedule",
@@ -193,8 +189,7 @@ describe OpsController do
                                           :name                 => "test_user_role",
                                           :miq_product_features => feature)
     test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => @test_user_role)
-    user = FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
-    User.stub(:current_user => user)
+    login_as FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
     MiqServer.stub(:my_server).with(true).and_return(server)
     controller.stub(:get_vmdb_config).and_return(:product => {})
   end

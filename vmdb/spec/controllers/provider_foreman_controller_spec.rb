@@ -36,7 +36,8 @@ describe ProviderForemanController do
   end
 
   it "renders explorer" do
-    set_user_privileges
+    EvmSpecHelper.create_guid_miq_server_zone
+
     EvmSpecHelper.seed_specific_product_features("providers_accord", "configured_systems_filter_accord")
     feature = MiqProductFeature.find_all_by_identifier(%w(providers_accord configured_systems_filter_accord))
     test_user_role  = FactoryGirl.create(:miq_user_role,
@@ -44,13 +45,10 @@ describe ProviderForemanController do
                                          :miq_product_features => feature)
     test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
     user = FactoryGirl.create(:user, :userid => 'test_user', :name => 'test_user', :miq_groups => [test_user_group])
-    User.stub(:current_user => user)
+    set_user_privileges user
     session[:settings] = {:default_search => '',
                           :views          => {},
                           :perpage        => {:list => 10}}
-    session[:userid] = user.userid
-    session[:eligible_groups] = []
-    EvmSpecHelper.create_guid_miq_server_zone
     get :explorer
     accords = controller.instance_variable_get(:@accords)
     expect(accords.size).to eq(2)
@@ -60,11 +58,10 @@ describe ProviderForemanController do
 
   context "renders explorer based on RBAC" do
     before do
-      session[:eligible_groups] = []
       EvmSpecHelper.create_guid_miq_server_zone
     end
+
     it "renders explorer based on RBAC access to feature 'configured_system_tag'" do
-      set_user_privileges
       EvmSpecHelper.seed_specific_product_features("configured_system_tag")
       feature = MiqProductFeature.find_all_by_identifier("configured_system_tag")
       test_user_role  = FactoryGirl.create(:miq_user_role,
@@ -72,11 +69,10 @@ describe ProviderForemanController do
                                            :miq_product_features => feature)
       test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
       user = FactoryGirl.create(:user, :userid => 'test_user', :name => 'test_user', :miq_groups => [test_user_group])
-      User.stub(:current_user => user)
+      set_user_privileges user
       session[:settings] = {:default_search => '',
                             :views          => {},
                             :perpage        => {:list => 10}}
-      session[:userid] = user.userid
       get :explorer
       accords = controller.instance_variable_get(:@accords)
       expect(accords.size).to eq(1)
@@ -86,7 +82,6 @@ describe ProviderForemanController do
     end
 
     it "renders explorer based on RBAC access to feature 'provider_foreman_add_provider'" do
-      set_user_privileges
       EvmSpecHelper.seed_specific_product_features("provider_foreman_add_provider")
       feature = MiqProductFeature.find_all_by_identifier("provider_foreman_add_provider")
       test_user_role  = FactoryGirl.create(:miq_user_role,
@@ -94,11 +89,10 @@ describe ProviderForemanController do
                                            :miq_product_features => feature)
       test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
       user = FactoryGirl.create(:user, :userid => 'test_user', :name => 'test_user', :miq_groups => [test_user_group])
-      User.stub(:current_user => user)
+      set_user_privileges user
       session[:settings] = {:default_search => '',
                             :views          => {},
                             :perpage        => {:list => 10}}
-      session[:userid] = user.userid
       get :explorer
       accords = controller.instance_variable_get(:@accords)
       expect(accords.size).to eq(1)
@@ -116,8 +110,7 @@ describe ProviderForemanController do
                                            :name                 => "test_user_role",
                                            :miq_product_features => feature)
       test_user_group = FactoryGirl.create(:miq_group, :miq_user_role => test_user_role)
-      user = FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
-      User.stub(:current_user => user)
+      login_as FactoryGirl.create(:user, :name => 'test_user', :miq_groups => [test_user_group])
     end
 
     it "should not raise an error for feature that user has access to" do
