@@ -1,5 +1,6 @@
 $LOAD_PATH.push("#{File.dirname(__FILE__)}/..")
 
+require_relative '../../bundler_setup'
 require 'rubygems'
 require 'log4r'
 require 'miq_hyperv_disk'

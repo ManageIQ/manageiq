@@ -25,10 +25,10 @@ VM   = raise "Please define VM"
 
 vm_info_handle = MiqScvmmVmSSAInfo.new(HOST, USER, PASS, PORT)
 $log.debug "Getting Hyper-V Host for VM #{VM}"
-hyperv_host    = vm_info_handle.vm_host(VM)
+hyperv_host = vm_info_handle.vm_host(VM)
 $log.debug "Hyper-V Host is #{hyperv_host}"
 $log.debug "Getting VHD Type for VM #{VM}"
-vhd_type       = vm_info_handle.vm_vhdtype(VM)
+vhd_type = vm_info_handle.vm_vhdtype(VM)
 $log.debug "VHD Type is #{vhd_type}"
-vhd            = vm_info_handle.vm_harddisks(VM)
+vhd = vm_info_handle.vm_harddisks(VM)
 $log.debug "VHD is #{vhd}"

@@ -18,7 +18,7 @@ class MiqScvmmVmSSAInfo
                     :hostname => provider
                    }
 
-    @connection  = @winrm.connect(options)
+    @connection = @winrm.connect(options)
   end
 
   def vm_host(vm_name)
@@ -60,7 +60,7 @@ VHDTYPE_EOL
   private
 
   def parse_single_powershell_value(output)
-    stdout    = ""
+    stdout = ""
     output[:data].each do |d|
       stdout << d[:stdout] unless d[:stdout].nil?
     end
