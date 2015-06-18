@@ -326,6 +326,11 @@ module OpsController::Settings::Common
       @edit[:new].set_worker_setting!(:MiqWebServiceWorker, :count, w[:count].to_i)
       @edit[:new].set_worker_setting!(:MiqWebServiceWorker, :memory_threshold, human_size_to_rails_method(w[:memory_threshold]))
 
+      w = qwb[:automate_worker]
+      @edit[:new].set_worker_setting!(:MiqAutomateWorker, :count, w[:count].to_i)
+      @edit[:new].set_worker_setting!(:MiqAutomateWorker, :memory_threshold,
+                                      human_size_to_rails_method(w[:memory_threshold]))
+
       @update = MiqServer.find(@sb[:selected_server_id]).get_config
     when "settings_database"                                      # Database tab
       db_config = MiqDbConfig.new(@edit[:new])
@@ -689,6 +694,10 @@ module OpsController::Settings::Common
       w[:count] = params[:web_service_worker_count].to_i if params[:web_service_worker_count]
       w[:memory_threshold] = params[:web_service_worker_threshold] if params[:web_service_worker_threshold]
 
+      w = qwb[:automate_worker]
+      w[:count] = params[:automate_worker_count].to_i if params[:automate_worker_count]
+      w[:memory_threshold] = params[:automate_worker_threshold] if params[:automate_worker_threshold]
+
       set_workers_verify_status
     when "settings_database"                                        # database tab
       new[:name] = params[:production_dbtype]  if params[:production_dbtype]
@@ -897,6 +906,13 @@ module OpsController::Settings::Common
       w[:memory_threshold] = rails_method_to_human_size(@edit[:current].get_raw_worker_setting(:MiqWebServiceWorker, :memory_threshold)) || rails_method_to_human_size(400.megabytes)
       @sb[:web_service_threshold] = Array.new
       @sb[:web_service_threshold] = copy_array(@sb[:threshold])
+
+      w = (qwb[:automate_worker] ||= {})
+      w[:count] = @edit[:current].get_raw_worker_setting(:MiqAutomateWorker, :count) || 2
+      mth = rails_method_to_human_size(@edit[:current].get_raw_worker_setting(:MiqAutomateWorker, :memory_threshold))
+      w[:memory_threshold] = mth || rails_method_to_human_size(400.megabytes)
+      @sb[:automate_threshold] = []
+      @sb[:automate_threshold] = copy_array(@sb[:threshold])
 
       @edit[:new].config = copy_hash(@edit[:current].config)
       session[:log_depot_default_verify_status] = true

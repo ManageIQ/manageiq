@@ -381,6 +381,8 @@ workers:
         :nice_delta: 7
       :generic_worker:
         :count: 2
+      :automate_worker:
+        :count: 2
       :netapp_refresh_worker:
         :memory_threshold: 2.gigabytes
         :nice_delta: 7
