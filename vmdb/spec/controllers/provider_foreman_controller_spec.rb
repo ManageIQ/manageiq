@@ -272,6 +272,43 @@ describe ProviderForemanController do
     expect(response.status).to eq(200)
   end
 
+  context "fetches the list setting:Grid/Tile/List from settings" do
+    before do
+      controller.stub(:items_per_page).and_return(20)
+      controller.stub(:current_page).and_return(1)
+      controller.stub(:get_view_pages)
+      controller.stub(:build_listnav_search_list)
+      controller.stub(:load_or_clear_adv_search)
+      controller.stub(:replace_search_box)
+      controller.stub(:update_partials)
+      controller.stub(:render)
+
+      settings = {}
+      settings[:perpage] = {}
+      controller.instance_variable_set(:@settings,
+                                       :per_page => {:list => 20},
+                                       :views    => {:cm_providers          => "grid",
+                                                     :cm_configured_systems => "tile"})
+      controller.send(:build_foreman_tree, :providers, :foreman_providers_tree)
+    end
+
+    it "fetches list type = 'grid' from settings for Providers accordion" do
+      key = ems_key_for_provider(@provider)
+      controller.stub(:x_active_accord).and_return(:foreman_providers)
+      controller.send(:get_node_info, key)
+      list_type = controller.instance_variable_get(:@gtl_type)
+      expect(list_type).to eq("grid")
+    end
+
+    it "fetches list type = 'tile' from settings for Configured Systems accordion" do
+      key = ems_key_for_provider(@provider)
+      controller.stub(:x_active_accord).and_return(:cs_filter)
+      controller.send(:get_node_info, key)
+      list_type = controller.instance_variable_get(:@gtl_type)
+      expect(list_type).to eq("tile")
+    end
+  end
+
   def find_treenode_for_provider(provider)
     key =  ems_key_for_provider(provider)
     tree =  JSON.parse(controller.instance_variable_get(:@foreman_providers_tree))
