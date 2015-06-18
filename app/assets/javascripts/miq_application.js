@@ -853,7 +853,7 @@ function miqAjaxButtonSend(url, serialize_fields) {
   if ($.active) {
     miqAjaxTimers++;
     setTimeout(function () {
-      miqAjaxButtonSend(url);
+      miqAjaxButtonSend(url, serialize_fields);
     }, 700);
   } else {
     miqAjax(url, serialize_fields);
