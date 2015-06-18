@@ -33,6 +33,7 @@ class UserValidationService
       end
     end
 
+    start_url = session[:start_url] # Hang on to the initial start URL
     db_user = User.find_by_userid(user[:name])
     return ValidateResult.new(
       :fail,
@@ -40,7 +41,6 @@ class UserValidationService
       (session[:group] ? "Role" : "Group")
     ) unless session_reset(db_user) # Reset/recreate the session hash
 
-    start_url = session[:start_url] # Hang on to the initial start URL
 
     # Don't allow logins until there's some content in the system
     return ValidateResult.new(
