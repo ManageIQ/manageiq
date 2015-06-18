@@ -246,7 +246,7 @@ miqAngularApplication.controller('scheduleFormController', ['$http', '$scope', '
   };
 
   $scope.saveClicked = function() {
-    scheduleEditButtonClicked('save', true);
+    scheduleEditButtonClicked('save', $scope.scheduleModel);
     $scope.angularForm.$setPristine(true);
   };
 
