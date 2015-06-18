@@ -60,7 +60,7 @@
 - elsif db == "LdapServer"
   = image_tag("#{img_path}new/ldap_server.png", img_attr_20)
 - elsif db == "MiqSchedule"
-  %ul.icons
+  %ul.icons.list-unstyled
     %li
       %span.fa.fa-clock-o
 - elsif db == "MiqGroup"
@@ -77,11 +77,11 @@
     - glyph = "fa fa-pause"
   - else
     - glyph = "product product-arrow-right"
-  %ul.icons
+  %ul.icons.list-unstyled
     %li
       %span{:class => glyph}
 - elsif db == "MiqUserRole"
-  %ul.icons
+  %ul.icons.list-unstyled
     %li
       %span{:class => "product product-role"}
 - elsif db == "MiqWidget"
@@ -94,7 +94,7 @@
     - glyph = "product product-report"
   - when "rss"
     - glyph = "fa fa-rss"
-  %ul.icons
+  %ul.icons.list-unstyled
     %li
       %span{:class => glyph}
       - status = row.status
