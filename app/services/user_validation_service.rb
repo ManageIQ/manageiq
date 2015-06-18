@@ -35,7 +35,7 @@ class UserValidationService
 
     start_url = session[:start_url] # Hang on to the initial start URL
     db_user = User.find_by_userid(user[:name])
-    session_reset(db_user)
+    session_reset
     feature = missing_user_features(db_user)
     return ValidateResult.new(
       :fail,
@@ -43,14 +43,13 @@ class UserValidationService
       feature
     ) if feature
 
+    session_init(db_user)
 
     # Don't allow logins until there's some content in the system
     return ValidateResult.new(
       :fail,
       "Logins not allowed, no providers are being managed yet. Please contact the administrator"
     ) unless user_is_super_admin? || Vm.first || Host.first
-
-    session_init(db_user) # Initialize the session hash variables
 
     return validate_user_handle_not_ready if MiqServer.my_server(true).logon_status != :ready
 
