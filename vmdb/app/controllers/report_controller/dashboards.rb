@@ -404,10 +404,10 @@ module ReportController::Dashboards
                   @edit[:new][:col3]
     if @sb[:nodes].length == 2 && @sb[:nodes][1] != "g"
       #default dashboard selected
-      @available_widgets = MiqWidget.available_for_all_roles
+      @available_widgets = MiqWidget.available_for_all_roles.to_a
     else
       g = MiqGroup.find(from_cid(@sb[:nodes][2].split('_').first))
-      @available_widgets = MiqWidget.available_for_group(g)
+      @available_widgets = MiqWidget.available_for_group(g).to_a
     end
     @available_widgets.sort_by! { |w| [w.content_type, w.title.downcase] }
 
