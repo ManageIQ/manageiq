@@ -21,6 +21,8 @@ module ApplicationController::CurrentUser
       session[:userid]    = nil
       session[:username]  = nil
     end
+    self.current_group  = db_user.try(:current_group)
+    self.current_eligible_groups = db_user.try(:miq_groups)
   end
   protected :current_user=
 
@@ -32,7 +34,14 @@ module ApplicationController::CurrentUser
     # Build pre-sprint 69 role name if this is an EvmRole read_only role
     session[:userrole] = role.try(:read_only?) ? role.name.split("-").last : ""
   end
-  protected :current_group=
+  private :current_group=
+
+  def current_eligible_groups=(eligible_groups)
+    # Save an array of groups this user is eligible for, if more than 1
+    eligible_groups = eligible_groups ? eligible_groups.sort_by { |g| g.description.downcase } : []
+    session[:eligible_groups] = eligible_groups.length < 2 ? [] : eligible_groups.collect { |g| [g.description, g.id] }
+  end
+  private :current_eligible_groups=
 
   def current_user
     User.find_by_userid(session[:userid])
