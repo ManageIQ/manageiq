@@ -712,9 +712,6 @@ class DashboardController < ApplicationController
     @sb = @edit = @view = @settings = @lastaction = @perf_options = @assign = nil
     @current_page = @search_text = @detail_sortcol = @detail_sortdir = @exp_key = nil
     @server_options = @tl_options = @pp_choices = @panels = @breadcrumbs = nil
-
-    db_user && db_user.userid &&
-      db_user.current_group && db_user.current_group.miq_user_role && true
   end
 
   # Initialize session hash variables for the logged in user

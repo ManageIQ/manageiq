@@ -35,11 +35,13 @@ class UserValidationService
 
     start_url = session[:start_url] # Hang on to the initial start URL
     db_user = User.find_by_userid(user[:name])
+    session_reset(db_user)
+    feature = missing_user_features(db_user)
     return ValidateResult.new(
       :fail,
       _("Login not allowed, User's %s is missing. Please contact the administrator") %
-      (session[:group] ? "Role" : "Group")
-    ) unless session_reset(db_user) # Reset/recreate the session hash
+      feature
+    ) if feature
 
 
     # Don't allow logins until there's some content in the system
@@ -73,6 +75,16 @@ class UserValidationService
       :flash_warning => true,
       :flash_msg     => _("Non-admin users can not access the system until at least 1 VM/Instance has been discovered"))
     )
+  end
+
+  def missing_user_features(db_user)
+    if !db_user || !db_user.userid
+      "User"
+    elsif !db_user.current_group
+      "Group"
+    elsif !db_user.current_group.miq_user_role
+      "Role"
+    end
   end
 
   def user_is_super_admin?
