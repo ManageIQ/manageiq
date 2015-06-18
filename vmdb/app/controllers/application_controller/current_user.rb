@@ -3,7 +3,7 @@ module ApplicationController::CurrentUser
 
   included do
     helper_method :current_user,  :current_userid, :current_username
-    helper_method :current_group, :current_groupid, :current_group_description
+    helper_method :current_group, :current_groupid
   end
 
   def clear_current_user
@@ -26,7 +26,6 @@ module ApplicationController::CurrentUser
 
   def current_group=(db_group)
     session[:group] = db_group.try(:id)
-    session[:group_description] = db_group.try(:description)
 
     role = db_group.try(:miq_user_role)
 
@@ -58,11 +57,6 @@ module ApplicationController::CurrentUser
     session[:group]
   end
   protected :current_groupid
-
-  def current_group_description
-    session[:group_description]
-  end
-  protected :current_group_description
 
   def current_userrole
     session[:userrole]

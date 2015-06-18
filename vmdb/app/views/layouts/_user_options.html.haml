@@ -22,7 +22,7 @@
       - else
         %li.disabled
           %a{:href => "#"}
-            = session[:group_description]
+            = current_group.try(:description)
       %li.divider
       %li
         %a{:href => "/dashboard/logout", :onclick => 'return miqCheckForChanges()', :title => _("Click to Logout")}
