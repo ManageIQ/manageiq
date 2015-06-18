@@ -52,8 +52,6 @@ miqAngularApplication.directive('miqCalendar', ['$timeout', '$parse', '$filter',
       var refreshCal = function(val) {
         // dhtmlxCalendar handles both the set input format (m/d/Y), the default one, or a Date object
         cal.setDate(val);
-        if (ctrl.$setDirty) // angular 1.2 compatibility
-          ctrl.$setDirty();
       }
 
       ctrl.$formatters.unshift(function(val) {
