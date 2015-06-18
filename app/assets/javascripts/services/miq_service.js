@@ -7,6 +7,7 @@ miqAngularApplication.service('miqService', function() {
     miqButtons('hide');
   };
 
+  // serializeFields may be either bool (true means use form_div, false no data) or an object (will be passed on as data)
   this.miqAjaxButton = function(url, serializeFields) {
     miqAjaxButton(url, serializeFields);
   };
