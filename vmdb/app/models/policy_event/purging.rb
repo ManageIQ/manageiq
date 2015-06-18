@@ -5,7 +5,7 @@ class PolicyEvent < ActiveRecord::Base
 
     module ClassMethods
       def purge_date
-        (purge_config(:keep_policy_events) || 6.months).to_i_with_method.ago.utc
+        (purge_config(:keep_policy_events) || 6.months).to_i_with_method.seconds.ago.utc
       end
 
       def purge_window_size

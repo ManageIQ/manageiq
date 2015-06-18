@@ -19,6 +19,11 @@ describe PurgingMixin do
       example_class.purge(6.months.ago)
     end
 
+    it "purge_date should not raise exception" do
+      allow(example_class).to receive(:purge_config).with(:keep_policy_events).and_return(120)
+      example_class.purge_date
+    end
+
     it "with a date out of range from configuration" do
       allow(example_class).to receive(:purge_date).and_return(6.months.ago)
 
