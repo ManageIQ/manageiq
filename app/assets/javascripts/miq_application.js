@@ -934,15 +934,15 @@ function miqBuildCalendar() {
       element.datepicker();
     }
 
-    if (typeof ManageIQ.calendar.calDateFrom != "undefined") {
+    if (ManageIQ.calendar.calDateFrom) {
       element.datepicker('setStartDate', ManageIQ.calendar.calDateFrom);
     }
 
-    if (typeof ManageIQ.calendar.calDateTo != "undefined") {
+    if (ManageIQ.calendar.calDateTo) {
       element.datepicker('setEndDate', ManageIQ.calendar.calDateTo);
     }
 
-    if (typeof miq_cal_skipDays != "undefined") {
+    if (typeof miq_cal_skipDays != "undefined" && miq_cal_skipDays) {
       element.datepicker('setDaysOfWeekDisabled', miq_cal_skipDays);
     }
 

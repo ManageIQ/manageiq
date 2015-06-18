@@ -1526,6 +1526,20 @@ describe ApplicationHelper do
     end
   end
 
+  context '#skip_days_from_time_profile' do
+    it 'should return empty array for whole week' do
+      skip_days_from_time_profile((0..6).to_a).should eq([])
+    end
+
+    it 'should return whole week for empty array' do
+      skip_days_from_time_profile([]).should eq((1..7).to_a)
+    end
+
+    it 'should handle Sundays' do
+      skip_days_from_time_profile((1..6).to_a).should eq([7])
+    end
+  end
+
   it 'output of remote_function should not be html_safe' do
     remote_function(:url => {:controller => 'vm_infra', :action => 'explorer'}).html_safe?.should be_false
   end

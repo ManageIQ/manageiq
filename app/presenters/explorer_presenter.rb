@@ -17,10 +17,7 @@ class ExplorerPresenter
   #
   #   add_nodes                        -- JSON string of nodes to add to the active tree
   #   delete_node                      -- key of node to be deleted from the active tree
-  #   cal_date_from
-  #   cal_date_to
-  #   build_calendar                   -- call miqBuildCalendar, true/false or Hash with
-  #                                       compulsory key :skip_days
+  #   build_calendar                   -- call miqBuildCalendar, true/false or Hash (:date_from, :date_to, :skip_days)
   #   init_dashboard
   #   ajax_action                      -- Hash of options for AJAX action to fire
   #   clear_gtl_list_grid
@@ -177,21 +174,13 @@ class ExplorerPresenter
   end
 
   def build_calendar
-    out = []
-    if Hash === @options[:build_calendar]
+    if @options[:build_calendar].kind_of? Hash
       calendar_options = @options[:build_calendar]
-      out << "ManageIQ.calendar.calDateFrom = #{format_cal_date(calendar_options[:date_from])};" if calendar_options.key?(:date_from)
-      out << "ManageIQ.calendar.calDateTo   = #{format_cal_date(calendar_options[:date_to])};"   if calendar_options.key?(:date_to)
-
-      if calendar_options.key?(:skip_days)
-        skip_days = calendar_options[:skip_days].nil? ?
-          'null' : ("'" + calendar_options[:skip_days] + "'")
-        out << "miq_cal_skipDays = #{skip_days};"
-      end
+    else
+      calendar_options = {}
     end
 
-    out << 'miqBuildCalendar();'
-    out.join("\n")
+    js_build_calendar(calendar_options)
   end
 
   # Fire an AJAX action
@@ -220,11 +209,5 @@ class ExplorerPresenter
   def update_partial(element, content)
     # FIXME: replace with javascript_update_element
     "$('##{element}').html('#{escape_javascript(content)}');"
-  end
-
-  private
-
-  def format_cal_date(value)
-    value.nil? ? 'undefined' : "new Date(#{value})"
   end
 end
