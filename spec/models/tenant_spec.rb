@@ -184,12 +184,6 @@ describe Tenant do
     end
   end
 
-  context "temporary names" do
-    it "supports legacy appliance_name" do
-      expect(described_class.new(:appliance_name => 'vmdb').vmdb_name).to eq('vmdb')
-    end
-  end
-
   context "#admins" do
     let(:self_service_role) { FactoryGirl.create(:miq_user_role, :settings => {:restrictions => {:vms => :user}}) }
 

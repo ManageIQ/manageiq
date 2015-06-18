@@ -4,6 +4,7 @@ describe SupportController do
   render_views
 
   before do
+    EvmSpecHelper.create_guid_miq_server_zone
     set_user_privileges
   end
 

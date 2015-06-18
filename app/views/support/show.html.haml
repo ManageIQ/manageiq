@@ -6,7 +6,7 @@
         %fieldset
           %h3= _('Session Information')
           .form-horizontal.static
-            - [[_("Server Name"),     h(session[:vmdb_name])],
+            - [[_("Server Name"),     h(current_tenant.appliance_name)],
                [_("Version"),         h(@vmdb[:version] + "." + @vmdb[:build])],
                [_("User Name"),       h(current_user.name)],
                [_("User Role"),       h(@user_role)],

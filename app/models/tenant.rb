@@ -46,9 +46,6 @@ class Tenant < ActiveRecord::Base
   validates_attachment_content_type :logo, :content_type => ['image/png']
   validates_attachment_content_type :login_logo, :content_type => ['image/png']
 
-  # FUTURE: this is currently called session[:vmdb_name]. use this temporarily then remove
-  alias_attribute :vmdb_name, :appliance_name
-
   before_save :nil_blanks
 
   def name

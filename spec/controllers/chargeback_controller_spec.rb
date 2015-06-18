@@ -88,6 +88,7 @@ describe ChargebackController do
   context "#explorer" do
     before(:each) do
       session[:settings] = {}
+      EvmSpecHelper.create_guid_miq_server_zone
     end
 
     it 'can render the explorer' do
