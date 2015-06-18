@@ -1,7 +1,5 @@
 require 'Fat32BootSect'
-
-$:.push("#{File.dirname(__FILE__)}/../../util")
-require 'MiqMemory'
+require 'memory_buffer'
 
 module Fat32
 
@@ -55,7 +53,7 @@ module Fat32
 			end
 			
 			# Span clusters.
-			out = MiqMemory.create_zero_buffer(bytes)
+			out = MemoryBuffer.create(bytes)
 			totalLen = 0
 			(startCluster..endCluster).each do |clus|
 				offset = 0; len = bpc
@@ -100,7 +98,7 @@ module Fat32
 		def getCluster(vcn)
 			lcn = getLCN(vcn)
 			#puts "vcn=#{vcn}, lcn=#{lcn}" if $track_pos
-			return MiqMemory.create_zero_buffer(@bs.bytesPerCluster) if lcn == -1
+			return MemoryBuffer.create(@bs.bytesPerCluster) if lcn == -1
 			raise "LCN is nill" if lcn.nil?
 			@bs.getCluster(lcn)
 		end

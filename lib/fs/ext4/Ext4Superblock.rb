@@ -7,7 +7,7 @@ $:.push("#{File.dirname(__FILE__)}/../../util")
 require 'binary_struct'
 require 'miq-uuid'
 require 'stringio'
-require 'MiqMemory'
+require 'memory_buffer'
 
 require 'rufus/lru'
 
@@ -286,7 +286,7 @@ module Ext4
 
       unless @block_cache.has_key?(block)
         if block == 0
-          @block_cache[block] = MiqMemory.create_zero_buffer(@blockSize) 
+          @block_cache[block] = MemoryBuffer.create(@blockSize) 
         else
           group, offset = blockNumToGroupNum(block)
           gde = gdt[group]

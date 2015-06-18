@@ -1,6 +1,6 @@
 $:.push("#{File.dirname(__FILE__)}/../../util")
 
-require 'MiqMemory'
+require 'memory_buffer'
 require 'Win32API'
 
 class MiqLargeFileWin32
@@ -49,7 +49,7 @@ class MiqLargeFileWin32
   end
   
 	def size
-		siz = MiqMemory.create_quad_buf
+		siz = MemoryBuffer.create_quad
 		err = @@getFileSize.call(@hFile, siz)
 		return siz.unpack('Q')[0]
 	end
@@ -62,7 +62,7 @@ class MiqLargeFileWin32
 			else raise "Invalid seek method: #{whence}"
 		end
 		offHi, offLo = offset.divmod(4294967296) # 2 ** 32
-		new_pos = MiqMemory.create_quad_buf
+		new_pos = MemoryBuffer.create_quad
 		res = @@setFilePointerEx.call(@hFile, offLo, offHi, new_pos, method)
 		if res == 0
       last_error = @@getLastError.call
@@ -74,8 +74,8 @@ class MiqLargeFileWin32
   
 	def read(bytes)
 		#puts "#{getFilePos}, #{bytes}" if $track_pos
-		buf = MiqMemory.create_zero_buffer(bytes)
-		bytesRead = MiqMemory.create_long_buf
+		buf = MemoryBuffer.create(bytes)
+		bytesRead = MemoryBuffer.create_long
 		res = @@readFile.call(@hFile, buf, bytes, bytesRead, 0)
 		bytesRead = bytesRead.unpack('L')[0]
 		if bytesRead == 0 and bytes != 0 or res == 0
@@ -88,7 +88,7 @@ class MiqLargeFileWin32
   
 	def write(buf, len)
 		# NOTE: len must be a double word.
-		bytesWritten = MiqMemory.create_long_buf
+		bytesWritten = MemoryBuffer.create_long
 		res = @@writeFile.call(@hFile, buf, len, bytesWritten, 0)
 		raise "WriteFile failed" if res == 0
 		bytesWritten = bytesWritten.unpack('L')[0]

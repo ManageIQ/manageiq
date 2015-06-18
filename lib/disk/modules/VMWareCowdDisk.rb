@@ -1,9 +1,6 @@
 require 'MiqLargeFile'
-
-$:.push("#{File.dirname(__FILE__)}/../util")
 require 'binary_struct'
-require 'MiqMemory'
-
+require 'memory_buffer'
 
 module VMWareCowdDisk
 
@@ -60,7 +57,7 @@ module VMWareCowdDisk
 		if gnStart == gnEnd
 			grainPos = getGTE(gnStart)
 			if grainPos == 0
-				return @dParent ? @dParent.d_read(pos, len) : MiqMemory.create_zero_buffer(len)
+				return @dParent ? @dParent.d_read(pos, len) : MemoryBuffer.create(len)
 			else
 				@vmwareCowDisk_file.seek(grainPos+goStart, IO::SEEK_SET)
 				return @vmwareCowDisk_file.read(len)
@@ -82,7 +79,7 @@ module VMWareCowdDisk
 			gp = getGTE(gn)
 			# Mods for parent link.
 			if gp == 0
-        rv << (@dParent ? @dParent.d_read(pos + bytesRead, l) : MiqMemory.create_zero_buffer(l))
+        rv << (@dParent ? @dParent.d_read(pos + bytesRead, l) : MemoryBuffer.create(l))
 			else
 				@vmwareCowDisk_file.seek(gp+so, IO::SEEK_SET)
 				rv << @vmwareCowDisk_file.read(l)
@@ -191,7 +188,7 @@ module VMWareCowdDisk
 		putGDE(gn, freeSector)
 		freeSector += GT_SECTORS
 		gtSize = ENTRIES_PER_TABLE * GTE_SIZE
-		gt = MiqMemory.create_zero_buffer(gtSize)
+		gt = MemoryBuffer.create(gtSize)
 		@vmwareCowDisk_file.seek(freeSector * self.blockSize, IO::SEEK_SET)
 		@vmwareCowDisk_file.write(gt, gtSize)
 		updateFreeSector(freeSector)

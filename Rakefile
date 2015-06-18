@@ -18,7 +18,6 @@ namespace :build do
       base = Pathname.new(File.dirname(__FILE__)).freeze
 
       artifacts_dirs = %w(
-        lib/disk/modules/MiqBlockDevOps
         lib/SlpLib/SlpLib_raw/
         lib/NetappManageabilityAPI/NmaCore/NmaCore_raw
       )
@@ -77,20 +76,6 @@ namespace :build do
     base      = Pathname.new(File.dirname(__FILE__)).freeze
     platform  = RUBY_PLATFORM.match(/(.+?)[0-9\.]*$/)[1] # => "x86_64-linux" or "x86_64-darwin"
     _arch, os = platform.split("-")                      # => ["x86_64", "linux"]
-
-    #
-    # MiqBlockDevOps
-    #
-
-    if platform == "x86_64-linux"
-      build_shared_objects(
-        "MiqBlockDevOps.so",
-        base.join("lib/disk/modules/MiqBlockDevOps/"),
-        base.join("lib/disk/modules/")
-      )
-    else
-      puts "** Skipping build of MiqBlockDevOps.so since it is only built on x86_64-linux."
-    end
 
     #
     # SlpLib

@@ -1,6 +1,6 @@
 $LOAD_PATH.push("#{File.dirname(__FILE__)}/../../util")
 require 'binary_struct'
-require 'MiqMemory'
+require 'memory_buffer'
 require 'more_core_extensions/all'
 require 'superblock'
 require 'bmap_btree_record'
@@ -392,7 +392,7 @@ module XFS
     end
 
     def read_blocks(startBlock, nblocks = 1)
-      out = MiqMemory.create_zero_buffer(nblocks * @sb.block_size)
+      out = MemoryBuffer.create(nblocks * @sb.block_size)
       dbp_len = data_block_pointers.length
       raise "XFS::Inode.read_blocks: startBlock=<#{startBlock}> is greater than #{dbp_len}" if startBlock > dbp_len - 1
       1.upto(nblocks) do |i|
