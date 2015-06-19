@@ -32,7 +32,7 @@ describe OpenstackHandle::Handle do
     it "handles non-ssl connections just fine" do
       fog      = double('fog')
       handle   = OpenstackHandle::Handle.new("dummy", "dummy", "address")
-      auth_url = OpenstackHandle::Handle.auth_url("address")
+      auth_url = OpenstackHandle::Handle.auth_url("address", 5000, "https")
 
       OpenstackHandle::Handle.should_receive(:raw_connect).once do |_, _, address|
         address.should == auth_url
@@ -47,18 +47,18 @@ describe OpenstackHandle::Handle do
       auth_url_nossl = OpenstackHandle::Handle.auth_url("address")
       auth_url_ssl   = OpenstackHandle::Handle.auth_url("address", 5000, "https")
 
-      # setup the socket error for the initial non-ssl failure
+      # setup the socket error for the initial ssl failure
       socket_error = double('socket_error')
-      allow(socket_error).to receive(:message).and_return("end of file reached (EOFError)")
+      allow(socket_error).to receive(:message).and_return("unknown protocol (OpenSSL::SSL::SSLError)")
       socket_error.should_receive(:class).and_return(Object)
       socket_error.should_receive(:backtrace)
 
       OpenstackHandle::Handle.should_receive(:raw_connect) do |_, _, address|
-        address.should == auth_url_nossl
+        address.should == auth_url_ssl
         raise Excon::Errors::SocketError.new(socket_error)
       end
       OpenstackHandle::Handle.should_receive(:raw_connect) do |_, _, address|
-        address.should == auth_url_ssl
+        address.should == auth_url_nossl
         fog
       end
 
