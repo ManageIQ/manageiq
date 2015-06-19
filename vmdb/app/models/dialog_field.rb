@@ -89,7 +89,7 @@ class DialogField < ActiveRecord::Base
   end
 
   def automate_output_value
-    @value
+    data_type == "integer" ? @value.to_i : @value
   end
 
   def automate_key_name
