@@ -1,3 +1,5 @@
+require 'net_app_manageability/types'
+
 class NetappRemoteService < StorageManager
 
   has_many  :top_managed_elements,
@@ -28,12 +30,12 @@ class NetappRemoteService < StorageManager
 
     # TODO: Use hostname, not ipaddress
     @ontapClient = OntapClient.new(ipaddress, *self.auth_user_pwd(:default))
-    @nmaClient = @ontapClient.conn
+    @namClient = @ontapClient.conn
     return @ontapClient
   end
 
   def disconnect
-    @nmaClient    = nil # Will disconnect and clean-up through GC
+    @namClient    = nil # Will disconnect and clean-up through GC
     @ontapClient  = nil
   end
 
@@ -44,9 +46,9 @@ class NetappRemoteService < StorageManager
   end
 
   def nma_client
-    return @nmaClient unless @nmaClient.nil?
+    return @namClient unless @namClient.nil?
     self.connect
-    @nmaClient || (raise "NetappRemoteService: not connected.")
+    @namClient || (raise "NetappRemoteService: not connected.")
   end
 
   def self.refresh_inventory_by_subclass(ids, args={})
@@ -472,12 +474,12 @@ class NetappRemoteService < StorageManager
     hostNames =  (hosts.kind_of?(Array) ? hosts : [ hosts ])
 
     rv = nma_client.nfs_exportfs_list_rules(:pathname, path)
-    raise "NetappRemoteService.nfs_add_root_hosts: No export rules found for path #{path}" unless rv.kind_of?(NmaHash)
+    raise "NetappRemoteService.nfs_add_root_hosts: No export rules found for path #{path}" unless rv.kind_of?(NetAppManageability::NAMHash)
 
     rules = rv.rules
-    rules.exports_rule_info.root = NmaHash.new if rules.exports_rule_info.root.nil?
+    rules.exports_rule_info.root = NetAppManageability::NAMHash.new if rules.exports_rule_info.root.nil?
     if rules.exports_rule_info.root.exports_hostname_info.nil?
-      rules.exports_rule_info.root.exports_hostname_info = NmaArray.new
+      rules.exports_rule_info.root.exports_hostname_info = NetAppManageability::NAMArray.new
     else
       rules.exports_rule_info.root.exports_hostname_info = rules.exports_rule_info.root.exports_hostname_info.to_ary
     end
@@ -495,7 +497,7 @@ class NetappRemoteService < StorageManager
       end
       next if skip
 
-      rha << NmaHash.new { name nrhn }
+      rha << NetAppManageability::NAMHash.new { name nrhn }
       changed = true
     end
 
@@ -537,7 +539,7 @@ class NetappRemoteService < StorageManager
     begin
       self.volume_list_info
       self.disconnect
-    rescue NmaCoreException, NameError, Errno::ETIMEDOUT, Errno::ENETUNREACH
+    rescue NetAppManageability::Error, NameError, Errno::ETIMEDOUT, Errno::ENETUNREACH
       $log.warn("MIQ(NetappRemoteService-verify_credentials): #{$!.inspect}")
       raise $!.message
     rescue Exception

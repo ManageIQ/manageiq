@@ -1,7 +1,7 @@
-require "NetappManageabilityAPI/NmaTypes"
+require 'net_app_manageability/types'
 
 module OntapMetricsRollupMixin
-    extend ActiveSupport::Concern
+  extend ActiveSupport::Concern
   NON_COUNTER_COLS = [
     "id",
     "statistic_time",
@@ -260,12 +260,12 @@ module OntapMetricsRollupMixin
     cnMax = cn + "_max"
     ci = counterInfo[cn]
 
-    counterInfo[cnMin] = NmaHash.new {
+    counterInfo[cnMin] = NetAppManageability::NAMHash.new {
       name  cnMin
       unit  ci.unit
       desc  "Minimum value over rollup period - " + ci.desc
     }
-    counterInfo[cnMax] = NmaHash.new {
+    counterInfo[cnMax] = NetAppManageability::NAMHash.new {
       name  cnMax
       unit  ci.unit
       desc  "Maximum value over rollup period - " + ci.desc

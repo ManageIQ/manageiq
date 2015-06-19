@@ -17,24 +17,8 @@ namespace :build do
       require 'pathname'
       base = Pathname.new(File.dirname(__FILE__)).freeze
 
-      artifacts_dirs = %w(
-        lib/NetappManageabilityAPI/NmaCore/NmaCore_raw
-      )
-
-      artifacts_dirs.each do |dir|
-        dir = base.join(dir)
-        patterns = %w(*.log *.o *.out Makefile)
-        patterns.each do |p|
-          Dir.glob(dir.join(p)) do |f|
-            puts "** Removing #{f}"
-            FileUtils.rm_f(f)
-          end
-        end
-      end
-
       so_dirs = %w(
         lib/disk/modules/
-        lib/NetappManageabilityAPI/NmaCore/
       )
 
       so_dirs.each do |dir|
@@ -66,27 +50,6 @@ namespace :build do
         FileUtils.mv(so_name, install_dir)
       end
       puts "** Building #{so_name}...complete"
-    end
-
-    require 'fileutils'
-    require 'pathname'
-
-    base      = Pathname.new(File.dirname(__FILE__)).freeze
-    platform  = RUBY_PLATFORM.match(/(.+?)[0-9\.]*$/)[1] # => "x86_64-linux" or "x86_64-darwin"
-    _arch, os = platform.split("-")                      # => ["x86_64", "linux"]
-
-    #
-    # NmaCore
-    #
-
-    if Dir.exist?("/usr/include/netapp") && Dir.exist?("/usr/lib64/netapp")
-      build_shared_objects(
-        "NmaCore_raw.so",
-        base.join("lib/NetappManageabilityAPI/NmaCore/NmaCore_raw/"),
-        base.join("lib/NetappManageabilityAPI/NmaCore/#{platform}/ruby#{RUBY_VERSION}/")
-      )
-    else
-      puts "** Skipping build of NmaCore_raw.so due to missing header or library."
     end
   end
 end
