@@ -40,6 +40,19 @@ module OpenstackHandle
       try_connection do |scheme, connection_options|
         auth_url = auth_url(address, port, scheme)
         opts[:connection_options] = (opts[:connection_options] || {}).merge(connection_options)
+
+        if scheme == 'http'
+          begin
+            # First sending fake credentials to see if we should change to SSL, we can't send real credential, cause
+            # they would not be enrypted
+            raw_connect('ssl_test', 'ssl_test', auth_url, service, opts)
+          rescue Excon::Errors::Unauthorized
+            # If we get back login error, that means we can connect with no ssl, so we will proceed with that. If we
+            # get back SocketError, the self.try_connection will switch to ssl, without sending any real credentials
+            # unencrypted over the wire.
+          end
+        end
+
         raw_connect(username, password, auth_url, service, opts)
       end
     end
