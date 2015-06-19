@@ -69,7 +69,15 @@ class MiqReportResult < ActiveRecord::Base
       serializer_name = self.binary_blob.data_type
       serializer_name = "Marshal" unless serializer_name == "YAML"  # YAML or Marshal, for now
       serializer = serializer_name.constantize
-      return serializer.load(self.binary_blob.binary)
+      raw = self.binary_blob.binary.sub(/MiqReport/, 'Hash')
+      # MiqReport.from_hash(serializer.load(raw))
+      h=serializer.load(raw)
+
+      h.merge!('attributes' => h.delete('attributes').to_hash)
+      h.delete('new_record')
+      h.delete('raw_attributes')
+
+      MiqReport.from_hash(h)
     elsif self.report.kind_of?(MiqReport)
       return self.report
     else
@@ -109,11 +117,13 @@ class MiqReportResult < ActiveRecord::Base
   # => "records are quoted as their primary key"
   def report
     val = read_attribute(:report)
-    val.nil? ? nil : val.first
+    return if val.nil?
+
+    MiqReport.from_hash(val)
   end
 
   def report=(val)
-    write_attribute(:report, val.nil? ? nil : [val])
+    write_attribute(:report, val.nil? ? nil : val.to_hash)
   end
   #
 
