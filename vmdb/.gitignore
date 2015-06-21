@@ -104,6 +104,9 @@ public/stylesheets/jmaki-standard-right-sidebar.css
 # tmp/
 tmp/*
 
+# vendor/bundle
+vendor/bundle
+
 # vendor/plugins/
 vendor/plugins/rails-dev-boost
 vendor/plugins/ruby-prof
