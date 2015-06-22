@@ -36,7 +36,11 @@ Vmdb::Application.configure do
   # config.active_record.mass_assignment_sanitizer = :strict
 
   # Print deprecation notices to the stderr
-  config.active_support.deprecation = :stderr
+  config.active_support.deprecation = lambda do |message, callstack|
+    unless message =~ /named_routes\.helpers.*rspec-rails.*controller_example_group/
+      ActiveSupport::Deprecation::DEFAULT_BEHAVIORS[:stderr].call(message, callstack)
+    end
+  end
 
 
   # Customize any additional options below...
