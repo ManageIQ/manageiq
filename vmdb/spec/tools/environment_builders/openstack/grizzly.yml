@@ -51,17 +51,17 @@
     :group:
       name: EmsRefreshSpec-SecurityGroup
   - :from_port: 0
-    :to_port: -1
+    :to_port: 0
     :ip_protocol: icmp
     :ip_range:
       cidr: 1.2.3.4/30
-  - :from_port: -1
-    :to_port: -1
+  - :from_port: 0
+    :to_port: 0
     :ip_protocol: icmp
     :ip_range:
       cidr: 0.0.0.0/0
-  - :from_port: -1
-    :to_port: -1
+  - :from_port: 0
+    :to_port: 0
     :ip_protocol: icmp
     :group:
       name: EmsRefreshSpec-SecurityGroup
