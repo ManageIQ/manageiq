@@ -49,6 +49,7 @@ namespace :evm do
       exit if $final_rake_task && $final_rake_task == :prepare_replication
     end
 
+    desc "Add Rubyrep triggers and tables but don't do an initial sync"
     task :prepare_replication_without_sync => :environment do
       require 'rubyrep'
       puts "Preparing Replication in Region (#{MiqRegion.my_region_number})..."
