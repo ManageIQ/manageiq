@@ -195,14 +195,15 @@ namespace :evm do
 
     def sync_tables
       rp_conf = VMDB::Config.new("vmdb").config.fetch_path(:workers, :worker_base, :replication_worker, :replication)
-      exclude_tables = rp_conf[:exclude_tables] + ["^rr"]
-      exclude_tables = /#{exclude_tables.collect {|t| "(#{t})"}.join("|")}/
-
-      ActiveRecord::Base.connection.tables.reject { |t| t =~ exclude_tables }
+      ActiveRecord::Base.connection.tables
+        .reject { |t| t.start_with?("rr") || rp_conf[:exclude_tables].include?(t) }
+        .sort
     end
 
     def sync_tables_from_exported_files
-      Dir[File.expand_path(File.join(Rails.root, "tmp", "sync", "*.sql"))].collect { |f| File.basename(f, ".sql") }
+      Dir.glob(Rails.root.join("tmp/sync/*.sql"))
+        .collect { |f| File.basename(f, ".sql") }
+        .sort
     end
 
     # TODO: possible overlap with MiqPostgresAdmin
