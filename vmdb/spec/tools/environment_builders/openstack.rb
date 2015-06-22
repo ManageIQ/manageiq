@@ -19,7 +19,7 @@ puts "Building Refresh Environment for #{@environment}..."
 
 # Setup outer structure
 # TODO: Create a domain to contain refresh-related objects (Havana and above)
-# TODO: Create a project and all object should live in that project, possibly.
+@project = find_or_create_project
 
 #
 # Setup Network
@@ -29,14 +29,16 @@ find_or_create_subnet
 find_or_create_router
 find_or_create_floating_ip
 
-sg = find_or_create(fog.security_groups,
+sg = find_or_create(fog_network.security_groups,
   :name        => "EmsRefreshSpec-SecurityGroup",
-  :description => "EmsRefreshSpec-SecurityGroup description"
+  :description => "EmsRefreshSpec-SecurityGroup description",
+  :tenant_id   => @project.id,
 )
 
-sg2 = find_or_create(fog.security_groups,
+sg2 = find_or_create(fog_network.security_groups,
   :name        => "EmsRefreshSpec-SecurityGroup2",
-  :description => "EmsRefreshSpec-SecurityGroup2 description"
+  :description => "EmsRefreshSpec-SecurityGroup2 description",
+  :tenant_id   => @project.id,
 )
 
 find_or_create_firewall_rules(sg)
@@ -75,11 +77,11 @@ if vol_type.nil?
   exit 1
 end
 
-vol = find_or_create(fog.volumes,
-  :name        => "EmsRefreshSpec-Volume",
-  :description => "EmsRefreshSpec-Volume description",
-  :size        => 1,
-  :volume_type => "EmsRefreshSpec-VolumeType"
+vol = find_or_create(fog_volume.volumes,
+  :display_name        => "EmsRefreshSpec-Volume",
+  :display_description => "EmsRefreshSpec-Volume description",
+  :size                => 1,
+  :volume_type         => "EmsRefreshSpec-VolumeType"
 )
 
 vol_snap = find_or_create(fog.snapshots,
@@ -88,11 +90,11 @@ vol_snap = find_or_create(fog.snapshots,
   :volume_id   => vol.id
 )
 
-find_or_create(fog.volumes,
-  :name        => "EmsRefreshSpec-Volume-FromSnapshot",
-  :description => "EmsRefreshSpec-Volume-FromSnapshot description",
-  :size        => vol_snap.size,
-  :snapshot_id => vol_snap.id
+find_or_create(fog_volume.volumes,
+  :display_name        => "EmsRefreshSpec-Volume-FromSnapshot",
+  :display_description => "EmsRefreshSpec-Volume-FromSnapshot description",
+  :size                => vol_snap.size,
+  :snapshot_id         => vol_snap.id
 )
 
 #

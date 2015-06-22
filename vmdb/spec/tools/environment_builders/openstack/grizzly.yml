@@ -1,10 +1,10 @@
 ---
 :connection:
-  :ems_ip: "192.168.252.71"
-  :ems_password: "admin"
+  :ems_id: 4
 :network:
+  :service: :nova
   :floating_ip:
-    :ip: "10.3.4.8"
+    :ip: "172.24.4.227"
   :security_group_rules:
   - :from_port: 1
     :to_port: 2
@@ -52,17 +52,17 @@
     :group:
       name: EmsRefreshSpec-SecurityGroup
   - :from_port: 0
-    :to_port: -1
+    :to_port: 0
     :ip_protocol: icmp
     :ip_range:
       cidr: 1.2.3.4/30
-  - :from_port: -1
-    :to_port: -1
+  - :from_port: 0
+    :to_port: 0
     :ip_protocol: icmp
     :ip_range:
       cidr: 0.0.0.0/0
-  - :from_port: -1
-    :to_port: -1
+  - :from_port: 0
+    :to_port: 0
     :ip_protocol: icmp
     :group:
       name: EmsRefreshSpec-SecurityGroup
