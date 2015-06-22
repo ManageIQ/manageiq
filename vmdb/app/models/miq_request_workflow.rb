@@ -496,9 +496,7 @@ class MiqRequestWorkflow
   def allowed_filters(options = {})
     model_name = options[:category]
     return @filters[model_name] unless @filters[model_name].nil?
-    rails_logger("allowed_filters - #{model_name}", 0)
     @filters[model_name] = @requester.get_expressions(model_name).invert
-    rails_logger("allowed_filters - #{model_name}", 1)
     @filters[model_name]
   end
 
@@ -639,7 +637,6 @@ class MiqRequestWorkflow
       end
     end
 
-    rails_logger('allowed_tags', 1)
     $log.info "MIQ(#{self.class.name}.allowed_tags) allowed_tags returned [#{@tags.length}] objects in [#{Time.now - st}] seconds"
     @tags
   end
@@ -827,9 +824,7 @@ class MiqRequestWorkflow
 
     result = nil
     relats.each do |rsc_type|
-      rails_logger("allowed_ci - #{rsc_type}_to_#{ci}", 0)
       rc = send("#{rsc_type}_to_#{ci}", sources)
-      rails_logger("allowed_ci - #{rsc_type}_to_#{ci}", 1)
       unless rc.nil?
         rc = rc.to_a
         result = result.nil? ? rc : result & rc
@@ -846,7 +841,6 @@ class MiqRequestWorkflow
   end
 
   def process_filter_all(filter_prop, ci_klass, targets = [])
-    rails_logger("process_filter - [#{ci_klass}]", 0)
     filter_id = get_value(@values[filter_prop]).to_i
     result = if filter_id.zero?
                Rbac.filtered(targets, :class => ci_klass, :userid => @requester.userid)

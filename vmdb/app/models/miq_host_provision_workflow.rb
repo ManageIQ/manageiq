@@ -63,8 +63,6 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     log_header = "MiqHostProvisionWorkflow.allowed_hosts"
     return @allowed_hosts_cache unless @allowed_hosts_cache.nil?
 
-    rails_logger('allowed_hosts', 0)
-
     host_ids = @values[:src_host_ids]
     hosts = Host.find_all_by_id(host_ids)
 

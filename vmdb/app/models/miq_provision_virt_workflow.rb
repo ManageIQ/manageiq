@@ -381,11 +381,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   # => New methods can be added as as needed
   #
   def allowed_cat_entries(options)
-    rails_logger('allowed_cat_entries', 0)
     @values["#{options[:prov_field_name]}_category".to_sym] = options[:category]
     cat = Classification.find_by_name(options[:category].to_s)
     result = cat ? cat.entries.each_with_object({}) { |e, h| h[e.name] = e.description } : {}
-    rails_logger('allowed_cat_entries', 1)
     result
   end
 
@@ -398,7 +396,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
       hosts = nil
       unless @vlan_options[:vlans] == false
-        rails_logger('allowed_vlans', 0)
         hosts = get_selected_hosts(src)
         # TODO: Use Active Record to preload this data?
         MiqPreloader.preload(hosts, :switches => :lans)
@@ -406,14 +403,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
         # Remove certain networks
         vlans.delete_if { |_k, v| v.in?(['Service Console', 'VMkernel']) }
-        rails_logger('allowed_vlans', 1)
       end
 
       unless @vlan_options[:dvs] == false
-        rails_logger('allowed_dvs', 0)
         vlans_dvs = allowed_dvs(@vlan_options, hosts)
         vlans.merge!(vlans_dvs)
-        rails_logger('allowed_dvs', 1)
       end
       @allowed_vlan_cache = vlans
     end
@@ -524,7 +518,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       return @allowed_templates_cache
     end
 
-    rails_logger('allowed_templates', 0)
     vms = []
     condition = if self.class.allowed_templates_vendor
       ["vms.template = ? AND vms.vendor = ? AND vms.ems_id IS NOT NULL", true, self.class.allowed_templates_vendor]
@@ -564,7 +557,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     allowed_templates_list = run_search ? source_vm_rbac_filter(vms, condition) : []
     @allowed_templates_filter = filter_id
     @allowed_templates_tag_filters = @values[:vm_tags]
-    rails_logger('allowed_templates', 1)
     if allowed_templates_list.blank?
       $log.warn "#{log_header} Allowed Templates is returning an empty list"
     else
@@ -634,7 +626,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     return @target_resource if @target_resource && refresh == false
 
     vm_id = get_value(@values[:src_vm_id])
-    rails_logger('get_source_and_targets', 0)
     svm = VmOrTemplate.where(:id => vm_id).first
 
     if svm.nil?
@@ -671,9 +662,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     @customization_specs ||= {}
     ems_id = src[:ems].id
     unless @customization_specs.key?(ems_id)
-      rails_logger('allowed_customization_specs', 0)
       @customization_specs[ems_id] = ci_to_hash_struct(load_ar_obj(src[:ems]).customization_specs)
-      rails_logger('allowed_customization_specs', 1)
     end
 
     result = @customization_specs[ems_id].dup
