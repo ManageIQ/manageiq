@@ -56,4 +56,19 @@ module AutomationSpecHelper
       :enabled       => true,
       :instance_name => 'instance1')
   end
+
+  def send_ae_request_via_queue(args)
+    MiqQueue.put(:role        => 'automate',
+                 :class_name  => 'MiqAeEngine',
+                 :method_name => 'deliver',
+                 :args        => [args])
+  end
+
+  def deliver_ae_request_from_queue
+    q = MiqQueue.all.detect { |item| item.state == 'ready' && item.class_name == "MiqAeEngine" }
+    return nil unless q
+    q.state = 'dequeue'
+    q.save
+    q.deliver
+  end
 end

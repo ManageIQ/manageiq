@@ -42,8 +42,10 @@ module MiqAeEngine
       begin
         current_state = @workspace.root['ae_state']
         yield
-        # Reset State's Metadata if ae_state was changed
-        reset_state_metadata if current_state != @workspace.root['ae_state']
+        if @workspace.root['ae_next_state'].present? && current_state != @workspace.root['ae_next_state']
+          $miq_ae_logger.warn("Skipping to state #{@workspace.root['ae_next_state']}") 
+          @workspace.root['ae_result'] = 'skip' if step == 'on_entry'
+        end
       rescue Exception => e
         error_message = "State=<#{f['name']}> running #{step} raised exception: <#{e.message}>"
         $miq_ae_logger.error error_message
@@ -58,6 +60,7 @@ module MiqAeEngine
         # Initialize the ae_state and ae_result variables, if blank
         @workspace.root['ae_state']  = f['name'] if @workspace.root['ae_state'].blank?
         @workspace.root['ae_result'] = 'ok'      if @workspace.root['ae_result'].blank?
+        @workspace.root['ae_next_state'] = ''
 
         # Do not proceed further unless this state is runnable
         return unless state_runnable?(f)
@@ -72,20 +75,31 @@ module MiqAeEngine
         process_state_step_with_error_handling(f) { process_state_relationship(f, message, args) } if state_runnable?(f)
 
         # Check the ae_result and set the next state appropriately
-        if    @workspace.root['ae_result'] == 'ok'
-          @workspace.root['ae_state'] = next_state(f['name'], message).to_s
-          reset_state_maxima_metadata
-          $miq_ae_logger.info "Next State=[#{@workspace.root['ae_state']}]"
+        if   @workspace.root['ae_result'] == 'ok'
+          $miq_ae_logger.warn "Processed State =[#{f['name']}]"
+        elsif @workspace.root['ae_result'] == 'skip'
+          $miq_ae_logger.warn "Skipping State =[#{f['name']}]"
+          return set_next_state(f, message)
         elsif @workspace.root['ae_result'] == 'retry'
           increment_state_retries
         elsif @workspace.root['ae_result'] == 'error'
           $miq_ae_logger.warn "Error in State=[#{f['name']}]"
           # Process on_error method
-          return process_state_step_with_error_handling(f, 'on_error') { process_state_method(f, 'on_error') }
+
+          return process_state_step_with_error_handling(f, 'on_error') { 
+               process_state_method(f, 'on_error')
+               if @workspace.root['ae_result'] == 'continue'
+                 $miq_ae_logger.warn "Resetting Error in State=[#{f['name']}]"
+                 @workspace.root['ae_result'] = 'ok'
+                 set_next_state(f, message)
+               end
+          }
         end
 
+        
         # Process on_exit method
         process_state_step_with_error_handling(f, 'on_exit') { process_state_method(f, 'on_exit') }
+        set_next_state(f, message)
       end
     end
 
@@ -93,6 +107,7 @@ module MiqAeEngine
       relationship = get_value(f, :aetype_relationship)
       unless relationship.blank? || relationship.lstrip[0,1] == '#'
         $miq_ae_logger.info "Processing State=[#{f['name']}]"
+        @workspace.root['ae_state_step'] = 'main'
         enforce_state_maxima(f)
         process_relationship_raw(relationship, message, args, f['name'], f['collect'])
         raise MiqAeException::MiqAeDatastoreError, "empty relationship" unless @rels[f['name']]
@@ -107,6 +122,8 @@ module MiqAeEngine
           unless method.blank? || method.lstrip[0,1] == '#'
             $miq_ae_logger.info "In State=[#{f['name']}], invoking [#{method_name}] method=[#{method}]"
             @workspace.root['ae_status_state'] = method_name
+            @workspace.root['ae_state']        = f['name']
+            @workspace.root['ae_state_step'] = method_name
             process_method_raw(method)
           end
         end unless f[method_name].blank?
@@ -116,9 +133,29 @@ module MiqAeEngine
     end
 
     def next_state(current, message)
+      state_name = @workspace.root['ae_next_state'].present? ? @workspace.root['ae_next_state'] : current
       states = fields(message).collect { |f| f['name'] if f['aetype'] == 'state' }.compact
-      index  = states.index(current)
-      return index.nil? ? nil : states[index+1]
+      validate_state(states)
+      index  = states.index(state_name)
+      return index.nil? ? nil : @workspace.root['ae_next_state'].blank? ? states[index+1] : states[index]
     end
+
+    def set_next_state(f, message)
+      if %w(skip ok).include?(@workspace.root['ae_result'])
+        @workspace.root['ae_state'] = next_state(f['name'], message).to_s
+        reset_state_maxima_metadata
+        $miq_ae_logger.info "Next State=[#{@workspace.root['ae_state']}]"
+        @workspace.root['ae_result'] = 'ok'
+      end
+    end
+
+    def validate_state(states)
+      next_state = @workspace.root['ae_next_state']
+      if next_state.present? && states.exclude?(next_state)
+        $miq_ae_logger.error "Next State=#{next_state} is invalid aborting state machine"
+        raise MiqAeException::AbortInstantiation, "Invalid state specified <#{next_state}>"
+      end 
+    end
+
   end
 end
