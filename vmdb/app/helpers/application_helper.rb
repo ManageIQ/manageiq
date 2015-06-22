@@ -941,10 +941,7 @@ module ApplicationHelper
       when "profile_delete"
         return true unless role_allows(:feature => "profile_delete")
       end
-    when "MiqProvisionRequest", "MiqHostProvisionRequest", "VmReconfigureRequest",
-        "VmMigrateRequest", "AutomationRequest",
-        "ServiceReconfigureRequest", "ServiceTemplateProvisionRequest", "MiqProvisionConfiguredSystemRequest"
-
+    when "MiqRequest"
       # Don't hide certain buttons on AutomationRequest screen
       return true if @record.resource_type == "AutomationRequest" &&
           !["miq_request_approve", "miq_request_deny", "miq_request_delete"].include?(id)
@@ -952,9 +949,6 @@ module ApplicationHelper
       case id
       when "miq_request_approve", "miq_request_deny"
         return true if ["approved", "denied"].include?(@record.approval_state) || @showtype == "miq_provisions"
-      when "miq_request_delete"
-        requester = User.find_by_userid(session[:userid])
-        return true if requester.name != @record.requester_name || ["approved", "denied"].include?(@record.approval_state)
       when "miq_request_edit"
         requester = User.find_by_userid(session[:userid])
         return true if requester.name != @record.requester_name || ["approved", "denied"].include?(@record.approval_state)
@@ -1252,6 +1246,14 @@ module ApplicationHelper
       when "policy_delete"
         return "Policies that belong to Profiles can not be deleted" if @policy.memberof.length > 0
       end
+    when "MiqRequest"
+      case id
+      when "miq_request_delete"
+        requester = User.find_by_userid(session[:userid])
+        return false if requester.admin_user?
+        return _("Users are only allowed to delete their own requests") if requester.name != @record.requester_name
+        return _("%s requests cannot be deleted" % @record.approval_state.titleize) if %w(approved denied).include?(@record.approval_state)
+      end
     when "MiqGroup"
       case id
       when "rbac_group_delete"
@@ -1475,6 +1477,8 @@ module ApplicationHelper
 
   def get_record_cls(record)
     if record.kind_of?(AvailabilityZone)
+      record.class.base_class.name
+    elsif MiqRequest.descendants.include?(record.class)
       record.class.base_class.name
     else
       klass = case record
