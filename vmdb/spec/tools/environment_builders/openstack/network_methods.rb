@@ -1,18 +1,21 @@
 module NetworkMethods
   def fog_network
     @fog_network ||= begin
-      ems.connect(:tenant_name => "EmsRefreshSpec-Project", :service => "Network")
-    rescue MiqException::ServiceNotAvailable
-      fog
+      if settings[:network][:service] == :nova
+        fog
+      else
+        ems.connect(:tenant_name => "EmsRefreshSpec-Project", :service => "Network")
+      end
     end
   end
 
   def network_service
+    @network_service ||= settings[:network][:service]
     @network_service ||= fog_network.in_namespace?(Fog::Network) ? :neutron : :nova
   end
 
   def find_or_create_networks
-    return unless network_service == :neutron
+    return unless settings[:network][:network]
 
     settings[:network][:network].each do |k, v|
       key       = "Network#{k.capitalize}"
@@ -25,7 +28,7 @@ module NetworkMethods
   end
 
   def find_or_create_subnet
-    return unless network_service == :neutron
+    return unless settings[:network][:subnet]
 
     settings[:network][:subnet].each do |k, v|
       key       = "Subnet#{k.capitalize}"
@@ -118,14 +121,14 @@ module NetworkMethods
   end
 
   def find_floating_ip_nova
-    collection = fog_network.addresses
+    collection = fog.addresses
     data       = settings[:network][:floating_ip]
     puts "Finding address in #{collection.class.name}"
     collection.detect { |i| i.ip == data[:ip] }.try(&:ip)
   end
 
   def create_floating_ip_nova
-    collection = fog_network.addresses
+    collection = fog.addresses
     data       = settings[:network][:floating_ip]
     puts "Creating address against #{collection.class.name}"
     collection.create(data).ip
