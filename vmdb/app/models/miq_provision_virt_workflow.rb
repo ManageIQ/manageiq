@@ -1289,8 +1289,13 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     hash_struct.ext_management_system = MiqHashStruct.new(
       :name => vm_or_template.ext_management_system.name
     ) if vm_or_template.ext_management_system
-    hash_struct.datacenter_name = vm_or_template.owning_blue_folder.parent_datacenter.name rescue nil if options[:include_datacenter] == true
+    if options[:include_datacenter] == true
+      hash_struct.datacenter_name = vm_or_template.owning_blue_folder.parent_datacenter.name
+    end
+
     hash_struct
+  rescue
+    nil
   end
 
   def exit_pre_dialog

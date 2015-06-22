@@ -239,18 +239,20 @@ class MiqRequestWorkflow
   end
 
   def provisioning_tab_list
-    dialog_names = @dialogs[:dialog_order].map { |dialog| dialog.to_s }
-    dialog_descriptions = dialog_names.map { |dialog_name| @dialogs.fetch_path(:dialogs, dialog_name.to_sym, :description) }
+    dialog_names = @dialogs[:dialog_order].map(&:to_s)
+    dialog_descriptions = dialog_names.map do |dialog_name|
+      @dialogs.fetch_path(:dialogs, dialog_name.to_sym, :description)
+    end
     dialog_display = dialog_names.map { |dialog_name| @dialogs.fetch_path(:dialogs, dialog_name.to_sym, :display) }
 
     tab_list = []
     dialog_names.each_with_index do |dialog_name, index|
-      unless dialog_display[index] == :hide || dialog_display[index] == :ignore
-        tab_list << {
-          :name => dialog_name,
-          :description => dialog_descriptions[index]
-        }
-      end
+      next if dialog_display[index] == :hide || dialog_display[index] == :ignore
+
+      tab_list << {
+        :name        => dialog_name,
+        :description => dialog_descriptions[index]
+      }
     end
 
     tab_list
@@ -984,7 +986,7 @@ class MiqRequestWorkflow
       if $log.debug?
         $log.info "#{log_header} Load EMS metadata for: <#{@ems_xml_nodes.keys.inspect}>"
       end
-      $log.info "#{log_header} EMS metadata collection completed in [#{Time.now-st}] seconds"
+      $log.info "#{log_header} EMS metadata collection completed in [#{Time.zone.now - st}] seconds"
       xml
     end
   end
@@ -1083,8 +1085,8 @@ class MiqRequestWorkflow
     # Remove any hosts that are no longer in the list
     all_hosts = load_ar_obj(src[:ems]).hosts.find_all { |h| hosts_ids.include?(h.id) }
     @allowed_hosts_obj_cache ||= process_filter(:host_filter, Host, all_hosts)
-    $log.info "MIQ(#{self.class.name}#allowed_hosts_obj) allowed_hosts_obj returned [#{@allowed_hosts_obj_cache.length}] objects in [#{Time.now-st}] seconds"
-    return @allowed_hosts_obj_cache
+    $log.info "MIQ(#{self.class.name}#allowed_hosts_obj) allowed_hosts_obj returned [#{@allowed_hosts_obj_cache.length}] objects in [#{Time.zone.now - st}] seconds"
+    @allowed_hosts_obj_cache
   end
 
   def allowed_storages(_options = {})
@@ -1104,8 +1106,8 @@ class MiqRequestWorkflow
       ci_to_hash_struct(s)
     end
 
-    $log.info "MIQ(#{self.class.name}#allowed_storages) allowed_storages returned [#{@allowed_storages_cache.length}] objects in [#{Time.now-st}] seconds"
-    return @allowed_storages_cache
+    $log.info "MIQ(#{self.class.name}#allowed_storages) allowed_storages returned [#{@allowed_storages_cache.length}] objects in [#{Time.zone.now - st}] seconds"
+    @allowed_storages_cache
   end
 
   def allowed_hosts(_options = {})

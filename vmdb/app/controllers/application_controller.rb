@@ -2447,7 +2447,9 @@ class ApplicationController < ActionController::Base
     line << " Elements #{value.size}"  if value.kind_of?(Hash) || value.kind_of?(Array)
     line << " ActiveRecord Object!!" if value.kind_of?(ActiveRecord::Base)
     if $log.debug?
-      line << " Value #{value.inspect[0...2000]}" unless value.kind_of?(Hash) || value.kind_of?(Array) || value.kind_of?(ActiveRecord::Base)
+      unless value.kind_of?(Hash) || value.kind_of?(Array) || value.kind_of?(ActiveRecord::Base)
+        line << " Value #{value.inspect[0...2000]}"
+      end
     end
     $log.warn("MIQ(#{controller_name}_controller-#{action_name}): " + line)
   end

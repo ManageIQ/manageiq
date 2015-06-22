@@ -8,8 +8,8 @@
     #prov_tabs{:style => "display:none;"}
       %ul.tab
         - wf.provisioning_tab_list.each do |dialog|
-          %li(id="#{dialog[:name]}_li")
-            %a(href="##{dialog[:name]}_div")
+          %li{:id => "#{dialog[:name]}_li"}
+            %a{:href => "##{dialog[:name]}_div"}
               = dialog[:description]
 
       - current_tab = @edit && @edit[:new] ? @edit[:new][:current_tab_key] : @options[:current_tab_key]
