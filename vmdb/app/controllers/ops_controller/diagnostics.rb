@@ -707,7 +707,7 @@ module OpsController::Diagnostics
 
   # Common Server button handler routines
   def process_servers(servers, task)
-    MiqServer.find_all_by_id(servers, :order => "lower(name)").each do |svr|
+    MiqServer.where(:id => servers).order("lower(name)").each do |svr|
       id = svr.id
       svr_name = svr.name
       if task == "destroy"

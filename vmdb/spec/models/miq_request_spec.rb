@@ -32,7 +32,7 @@ describe MiqRequest do
     describe("#request_type_display") { it { expect(request.request_type_display).to eq("VM Migrate") } }
 
     it "should not fail when using :select" do
-      expect { MiqRequest.find(:all, :select => "requester_name") }.to_not raise_error
+      expect { MiqRequest.select("requester_name").to_a }.to_not raise_error
     end
 
     context "#set_description" do

@@ -291,7 +291,7 @@ module EmsRefresh::SaveInventoryCloud
     end
 
     base_snapshot_to_volume.each do |bsid, volids|
-      CloudVolume.update_all({:cloud_volume_snapshot_id => bsid}, {:id => volids})
+      CloudVolume.where(:id => volids).update_all(:cloud_volume_snapshot_id => bsid)
     end
   end
 

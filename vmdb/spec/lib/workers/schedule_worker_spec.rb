@@ -49,9 +49,9 @@ describe ScheduleWorker do
                  :handler_id => @worker2.id}
         @dispatch2 = FactoryGirl.create(:miq_queue, attrs.merge(@opts))
 
-        MiqQueue.count(:conditions => @cond).should == 2
+        MiqQueue.where(@cond).count.should == 2
         ScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout.to_i)
-        MiqQueue.count(:conditions => @cond).should == 0
+        MiqQueue.where(@cond).count.should == 0
       end
 
       it "check_for_dispatch calls check_for_timeout which deletes both dispatches" do
@@ -59,9 +59,9 @@ describe ScheduleWorker do
                  :handler_id => @worker2.id}
         @dispatch2 = FactoryGirl.create(:miq_queue, attrs.merge(@opts))
 
-        MiqQueue.count(:conditions => @cond).should == 2
+        MiqQueue.where(@cond).count.should == 2
         ScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout)
-        MiqQueue.count(:conditions => @cond).should == 0
+        MiqQueue.where(@cond).count.should == 0
       end
 
       it "check_for_dispatch calls check_for_timeout with triple threshold for active worker" do
@@ -85,10 +85,10 @@ describe ScheduleWorker do
         @worker1.update_attribute(:status, MiqWorker::STATUS_STARTED)
         cond_active = @cond.dup
         cond_active[:handler_id] = @worker1.id
-        MiqQueue.count(:conditions => @cond).should == 2
+        MiqQueue.where(@cond).count.should == 2
         ScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout)
-        MiqQueue.count(:conditions => @cond).should == 1
-        MiqQueue.count(:conditions => cond_active).should == 1
+        MiqQueue.where(@cond).count.should == 1
+        MiqQueue.where(cond_active).count.should == 1
       end
     end
 

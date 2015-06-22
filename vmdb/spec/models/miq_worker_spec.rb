@@ -121,7 +121,7 @@ describe MiqWorker do
     end
 
     it ".server_scope after already scoping on a different server" do
-      described_class.send(:with_scope, :find => described_class.where(:miq_server_id => @server2.id)) do
+      described_class.where(:miq_server_id => @server2.id).scoping do
         described_class.server_scope.should == [@worker2]
         described_class.server_scope(@server.id).should == [@worker2]
       end

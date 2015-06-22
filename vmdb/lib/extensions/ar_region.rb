@@ -61,7 +61,7 @@ module ArRegion
     end
 
     def in_region(region_number)
-      region_number.nil? ? scoped : where(:id => self.region_to_range(region_number))
+      region_number.nil? ? all : where(:id => region_to_range(region_number))
     end
 
     def with_region(region_number)

@@ -773,7 +773,7 @@ class ConfigurationController < ApplicationController
       }
     when 'ui_3'
       filters = []
-      MiqSearch.all(:conditions => ["search_type=?", "default"]).collect { |search| filters.push(search) if allowed_filter_db?(search.db) }
+      MiqSearch.where(:search_type => "default").collect { |search| filters.push(search) if allowed_filter_db?(search.db) }
       current = filters.sort_by do |a|
         [NAV_TAB_PATH[a.db.downcase.to_sym], a.description.downcase]
       end

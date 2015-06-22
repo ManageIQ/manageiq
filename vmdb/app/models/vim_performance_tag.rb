@@ -5,7 +5,7 @@ class VimPerformanceTag < MetricRollup
 
   def self.find_and_group_by_tags(options)
     raise "no category provided" if options[:category].blank?
-    self.group_by_tags(self.find(:all, :conditions => options[:where_clause]), options)
+    group_by_tags(where(options[:where_clause]), options)
   end
 
   def self.group_by_tags(recs, options)

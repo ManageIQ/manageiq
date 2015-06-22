@@ -1460,9 +1460,11 @@ class VmOrTemplate < ActiveRecord::Base
     raise "option :event_types is required"    unless options[:event_types]
     raise "option :time_threshold is required" unless options[:time_threshold]
     raise "option :freq_threshold is required" unless options[:freq_threshold]
-    conditions = ["(vm_or_template_id = ? OR dest_vm_or_template_id = ?) and event_type in (?) and timestamp >= ?", self.id, self.id,  options[:event_types], options[:time_threshold].to_i.seconds.ago.utc]
-    count = EmsEvent.count(:conditions => conditions)
-    count >= options[:freq_threshold].to_i
+    EmsEvent
+      .where(:event_type => options[:event_types])
+      .where("vm_or_template_id = :id OR dest_vm_or_template_id = :id", :id => id)
+      .where("timestamp >= ?", options[:time_threshold].to_i.seconds.ago.utc)
+      .count >= options[:freq_threshold].to_i
   end
 
   def reconfigured_hardware_value?(options)

@@ -471,21 +471,21 @@ module VimPerformanceAnalysis
     start_time = (options[:start_date] || (options[:end_date].utc - options[:days].days)).utc
     end_time   = options[:end_date].utc
 
-    user_cond = nil
-    user_cond = obj.class.send(:sanitize_sql_for_conditions, options[:conditions]) if options[:conditions]
-    cond =  obj.class.send(:sanitize_sql_for_conditions, ["(timestamp > ? and timestamp <= ?)", start_time.utc, end_time.utc])
-    cond += obj.class.send(:sanitize_sql_for_conditions, [" AND resource_type = ? AND resource_id = ?", obj.class.base_class.name, obj.id])
-    cond += "AND capture_interval_name = #{interval_name}" unless interval_name == "daily"
-    cond =  "(#{user_cond}) AND (#{cond})" if user_cond
+    rel = if interval_name == "daily"
+            VimPerformanceDaily.find_entries(options[:ext_options])
+          else
+            klass, _meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
+            klass.where(:capture_interval_name => interval_name)
+          end
 
-    # puts "find_perf_for_time_period: cond: #{cond.inspect}"
+    rel = rel.where(options[:conditions]) if options[:conditions]
 
-    if interval_name == "daily"
-      VimPerformanceDaily.all(:conditions => cond, :order => "timestamp", :ext_options => options[:ext_options], :select => options[:select])
-    else
-      klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
-      klass.where(cond).order("timestamp").select(options[:select]).to_a
-    end
+    rel
+      .where("timestamp > ? and timestamp <= ?", start_time.utc, end_time.utc)
+      .where(:resource_type => obj.class.base_class.name, :resource_id => obj.id)
+      .order("timestamp")
+      .select(options[:select])
+      .to_a
   end
 
   def self.find_child_perf_for_time_period(obj, interval_name, options = {})
@@ -526,7 +526,7 @@ module VimPerformanceAnalysis
     # puts "find_child_perf_for_time_period: cond: #{cond.inspect}"
 
     if interval_name == "daily"
-      VimPerformanceDaily.all(:conditions => cond, :ext_options => options[:ext_options], :select => options[:select])
+      VimPerformanceDaily.find(:all, :conditions => cond, :ext_options => options[:ext_options], :select => options[:select])
     else
       klass.where(cond).select(options[:select]).to_a
     end
