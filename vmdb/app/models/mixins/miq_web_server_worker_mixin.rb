@@ -54,7 +54,7 @@ module MiqWebServerWorkerMixin
     end
 
     def self.all_ports_in_use
-      server_scope.select { |w| MiqProcess.is_worker?(w.pid) || !w.is_stopped? }.collect(&:port)
+      server_scope.select(&:enabled_or_running?).collect(&:port)
     end
 
     def self.build_uri(port)
