@@ -510,17 +510,13 @@ class MiqQueue < ActiveRecord::Base
   end
 
   # @return [Hash<String,Hash<Symbol,FixedNum>> wait times for the next and last items in the queue grouped by role
-  # TODO: better leverage SQL using group / partition
   def self.wait_times_by_role
     now = Time.now.utc
-    dates = where(:state => STATE_READY)
-           .select("created_on, role")
-           .order("priority, id").to_a
-           .each.with_object({}) { |c, h| (h[c.role] ||= []) << c.created_on }
-
-    dates.each.with_object({}) { |(role, created_ons), h|
-      h[role] = { :next => (now - created_ons.last), :last => (now - created_ons.first) }
-    }
+    where(:state => STATE_READY)
+      .group(:role).pluck("role", "max(created_on)", "min(created_on)")
+      .each_with_object({}) do |(role, nxt, last), h|
+        h[role] = {:next => (now - nxt.to_datetime), :last => (now - last.to_datetime)}
+      end
   end
 
   def get_worker
