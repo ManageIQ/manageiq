@@ -131,6 +131,7 @@ begin
   Socket.do_not_reverse_lookup = true  # turn off reverse DNS resolution
 
   require 'drb'
+  require 'yaml'
 
   MIQ_OK    = 0
   MIQ_WARN  = 4

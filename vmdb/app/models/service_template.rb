@@ -134,7 +134,7 @@ class ServiceTemplate < ActiveRecord::Base
       scaling_min = child_svc_rsc.scaling_min
       1.upto(scaling_min).each do |scaling_idx|
         nh = parent_service_task.attributes.dup
-        %w{created_on updated_on type state status message}.each {|key| nh.delete(key)}
+        %w{id created_on updated_on type state status message}.each {|key| nh.delete(key)}
         nh['options'] = parent_service_task.options.dup
         nh['options'].delete(:child_tasks)
         # Initial Options[:dialog] to an empty hash so we do not pass down dialog values to child services tasks
