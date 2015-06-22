@@ -27,6 +27,9 @@ app/views/vm/_main_old.rhtml
 app/views/vm/_main_new.rhtml
 app/views/vm/.fuse_hidden0000228d0000000a
 
+# bin/
+bin/*
+
 # config/
 config/apache
 config/database.yml*
