@@ -141,6 +141,7 @@ namespace :evm do
       adapter, database, username, password, host, port = db_conf.values_at(:adapter, :database, :username, :password, :host, :port)
 
       tables = sync_tables
+      puts "Exporting #{tables.join(", ")}..."
       do_pg_copy(:export, tables, database, username, password, host, port)
 
       puts "Exporting tables for manual sync...Complete (#{Time.now - t}s)"
@@ -155,6 +156,7 @@ namespace :evm do
       database, adapter = MiqRegionRemote.prepare_default_fields(database, adapter)
 
       tables = sync_tables_from_exported_files
+      puts "Importing #{tables.join(", ")}..."
       do_pg_copy(:import, tables, database, username, password, host, port)
 
       puts "Importing tables for manual sync...Complete (#{Time.now - t}s)"
