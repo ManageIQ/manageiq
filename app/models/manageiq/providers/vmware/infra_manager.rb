@@ -79,6 +79,26 @@ class Vmware::InfraManager < InfraManager
     end
   end
 
+  def self.default_blacklisted_event_names
+    %w(
+      AlarmActionTriggeredEvent
+      AlarmCreatedEvent
+      AlarmEmailCompletedEvent
+      AlarmEmailFailedEvent
+      AlarmReconfiguredEvent
+      AlarmRemovedEvent
+      AlarmScriptCompleteEvent
+      AlarmScriptFailedEvent
+      AlarmSnmpCompletedEvent
+      AlarmSnmpFailedEvent
+      AlarmStatusChangedEvent
+      AlreadyAuthenticatedSessionEvent
+      EventEx
+      UserLoginSessionEvent
+      UserLogoutSessionEvent
+    )
+  end
+
   def control_monitor
     MiqControlMonitor.find_by_ems(self)
   end

@@ -186,6 +186,10 @@ class ExtManagementSystem < ActiveRecord::Base
     end
   end
 
+  def self.default_blacklisted_event_names
+    []
+  end
+
   # UI methods for determining availability of fields
   def supports_port?
     false

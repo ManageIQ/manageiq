@@ -31,6 +31,14 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
     false
   end
 
+  def self.default_blacklisted_event_names
+    %w(
+      ConfigurationSnapshotDeliveryCompleted
+      ConfigurationSnapshotDeliveryStarted
+      ConfigurationSnapshotDeliveryFailed
+    )
+  end
+
   validates :provider_region, :inclusion => {:in => ManageIQ::Providers::Amazon::Regions.names}
 
   def description
