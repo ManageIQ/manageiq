@@ -59,8 +59,8 @@ module NetworkMethods
     rules.each do |attributes|
       attributes[:tenant_id]       = @project.id unless network_service == :nova
       attributes[:remote_group_id] = sg.id if attributes[:remote_group_id]
-      obj = send("find_firewall_rule_#{network_service}", sg.id, attributes)
-      obj || send("create_firewall_rule_#{network_service}", sg.id, attributes)
+      obj = send("find_firewall_rule_#{network_service}", sg, attributes)
+      obj || send("create_firewall_rule_#{network_service}", sg, attributes)
     end
   end
 
@@ -134,26 +134,25 @@ module NetworkMethods
     collection.create(data).ip
   end
 
-  def find_firewall_rule_nova(sg_id, attributes)
-    collection = @fog_network.security_groups.find { |i| i.id == sg_id }.security_group_rules
+  def find_firewall_rule_nova(sg, attributes)
+    collection = sg.security_group_rules
 
     rule = {:ip_range => {}}.merge(attributes)
-    rule[:parent_group_id] = sg_id
+    rule[:parent_group_id] = sg.id
 
     find(collection, rule)
   end
 
-  def create_firewall_rule_nova(sg_id, attributes)
-    sg         = @fog_network.security_groups.find { |i| i.id == sg_id }
+  def create_firewall_rule_nova(sg, attributes)
     collection = sg.security_group_rules
     puts "Creating security group rule #{attributes.inspect} in #{collection.class.name}"
-    attributes[:parent_group_id]  = sg_id
-    attributes[:group]            = sg_id if attributes[:group]
+    attributes[:parent_group_id]  = sg.id
+    attributes[:group]            = sg.id if attributes[:group]
     collection.create(attributes)
   end
 
-  def find_firewall_rule_neutron(sg_id, attributes)
-    collection = @fog_network.security_groups.find { |i| i.id == sg_id }.security_group_rules
+  def find_firewall_rule_neutron(sg, attributes)
+    collection = sg.security_group_rules
 
     rule = {
       :port_range_min   => nil,
@@ -161,16 +160,16 @@ module NetworkMethods
       :remote_ip_prefix => nil,
       :remote_group_id  => nil
     }.merge(attributes)
-    rule[:remote_group_id] = sg_id if attributes[:remote_group_id]
+    rule[:remote_group_id] = sg.id if attributes[:remote_group_id]
 
     find(collection, rule)
   end
 
-  def create_firewall_rule_neutron(sg_id, attributes)
-    collection = @fog_network.security_groups.find { |i| i.id == sg_id }.security_group_rules
+  def create_firewall_rule_neutron(sg, attributes)
+    collection = sg.security_group_rules
     puts "Creating security group rule #{attributes.inspect} in #{collection.class.name}"
-    attributes[:security_group_id]  = sg_id
-    attributes[:remote_group_id]    = sg_id if attributes[:remote_group_id]
+    attributes[:security_group_id]  = sg.id
+    attributes[:remote_group_id]    = sg.id if attributes[:remote_group_id]
     collection.create(attributes)
   end
 end
