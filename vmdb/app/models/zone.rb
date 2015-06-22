@@ -96,7 +96,7 @@ class Zone < ActiveRecord::Base
   end
 
   def synchronize_logs(*args)
-    active_miq_servers.all.each { |s| s.synchronize_logs(*args) }
+    active_miq_servers.each { |s| s.synchronize_logs(*args) }
   end
 
   def last_log_sync_on

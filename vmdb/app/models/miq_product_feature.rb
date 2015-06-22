@@ -56,12 +56,11 @@ class MiqProductFeature < ActiveRecord::Base
 
   def self.features
     @feature_cache ||= begin
-      self.all(:include => [:parent, :children]).inject({}) do |h,f|
+      includes(:parent, :children).each_with_object({}) do |f, h|
         child_idents = f.children.collect(&:identifier)
         parent_ident = f.parent.identifier if f.parent
-        details      = DETAIL_ATTRS.inject({}) {|dh,a| dh[a] = f.send(a); dh}
+        details      = DETAIL_ATTRS.each_with_object({}) { |a, dh| dh[a] = f.send(a) }
         h[f.identifier] = {:parent => parent_ident, :children => child_idents, :details => details}
-        h
       end
     end
   end

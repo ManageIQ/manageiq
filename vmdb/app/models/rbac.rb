@@ -81,21 +81,17 @@ module Rbac
     return nil
   end
 
-  def self.get_self_service_objects(user_or_group, klass, find_options = {})
+  def self.get_self_service_objects(user_or_group, klass)
     return nil unless user_or_group && user_or_group.self_service?
     return nil unless klass.ancestors.include?(OwnershipMixin)
 
-    include_for_find = find_options.delete(:include)
-    where_clause     = find_options.delete(:conditions)
-
-    # Get the list of objects that are owned by him or his LDAP group and include any filters that were passed into search
+    # Get the list of objects that are owned by the user or their LDAP group
     cond = user_or_group.limited_self_service? ? klass.conditions_for_owned(user_or_group) : klass.conditions_for_owned_or_group_owned(user_or_group)
-    cond, incl = MiqExpression.merge_where_clauses_and_includes([where_clause, cond].compact, [include_for_find].compact)
-    klass.find(:all, find_options.merge(:conditions => cond, :include => incl))
+    klass.select(minimum_columns_for(klass)).where(cond)
   end
 
   def self.get_self_service_object_ids(user_or_group, klass)
-    targets = get_self_service_objects(user_or_group, klass, :select => self.minimum_columns_for(klass))
+    targets = get_self_service_objects(user_or_group, klass)
     targets = targets.collect(&:id) if targets.respond_to?(:collect)
     targets
   end
@@ -144,7 +140,7 @@ module Rbac
       if extra_target_ids.nil?
         conditions
       else
-        ids_clause = klass.send(:sanitize_sql_for_conditions, {:id => extra_target_ids})
+        ids_clause = klass.send(:sanitize_sql_for_conditions, :id => extra_target_ids)
         if conditions.nil?
           ids_clause
         else
@@ -461,7 +457,7 @@ module Rbac
     elsif ar_scope < ActsAsArModel
       ar_scope.find(:all, options)
     else
-      apply_options(ar_scope, options).all
+      apply_options(ar_scope, options)
     end
   end
 

@@ -182,7 +182,7 @@ class MiqEvent < ActiveRecord::Base
   end
 
   def self.all_events
-    self.find_all_by_event_type("Default")
+    where(:event_type => "Default")
   end
 
   def self.event_name_for_target(target, event_suffix)

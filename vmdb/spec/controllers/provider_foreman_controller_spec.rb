@@ -5,7 +5,7 @@ describe ProviderForemanController do
   before(:each) do
     @zone = FactoryGirl.create(:zone, :name => 'zone1')
     @provider = ProviderForeman.create(:name => "test", :url => "10.8.96.102", :zone => @zone)
-    @config_mgr = ConfigurationManagerForeman.find_all_by_provider_id(@provider.id).first
+    @config_mgr = ConfigurationManagerForeman.find_by_provider_id(@provider.id)
     @config_profile = ConfigurationProfileForeman.create(:name                     => "testprofile",
                                                          :description              => "testprofile",
                                                          :configuration_manager_id => @config_mgr.id)
@@ -18,7 +18,7 @@ describe ProviderForemanController do
                                      :configuration_manager_id => @config_mgr.id)
 
     @provider2 = ProviderForeman.create(:name => "test2", :url => "10.8.96.103", :zone => @zone)
-    @config_mgr2 = ConfigurationManagerForeman.find_all_by_provider_id(@provider2.id).first
+    @config_mgr2 = ConfigurationManagerForeman.find_by_provider_id(@provider2.id)
     @configured_system_unprovisioned2 =
       ConfiguredSystemForeman.create(:hostname                 => "configured_system_unprovisioned2",
                                      :configuration_profile_id => nil,

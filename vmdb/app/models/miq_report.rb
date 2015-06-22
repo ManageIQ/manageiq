@@ -80,9 +80,15 @@ class MiqReport < ActiveRecord::Base
   end
 
   def self.get_expressions_by_model(db)
-    reports = self.find_all_by_db_and_template_type(db.to_s, "report", :conditions => "conditions is not NULL", :select => "id, name, conditions")
-    # We have to do the filtering on ruby side because nil conditions can be serialized as non-NULL value in the database.
-    reports.reject! { |report| report.conditions.nil? }
+    reports = where(:db => db.to_s, :template_type => "report")
+              .where.not(:conditions => nil)
+              .select(:id, :name, :conditions)
+              .to_a
+
+    # We have to redo the filtering on ruby side because nil conditions
+    # can be serialized as non-NULL value in the database.
+    reports = reports.select(&:conditions)
+
     reports.each_with_object({}) { |report, hash| hash[report.name] = report.id }
   end
 

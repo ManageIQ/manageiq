@@ -115,12 +115,17 @@ class Chargeback < ActsAsArModel
       end
       $log.debug("#{log_prefix} Conditions: #{cond.inspect}")
 
-      recs = MetricRollup.all(
-        :conditions => cond,
-        :include => {:resource => :hardware, :parent_host => :tags, :parent_ems_cluster => :tags, :parent_storage => :tags, :parent_ems => :tags},
-        :select => options[:ext_options][:only_cols].join(","),
-        :order => "resource_id, timestamp"
-      )
+      recs = MetricRollup
+             .where(cond)
+             .includes(
+               :resource           => :hardware,
+               :parent_host        => :tags,
+               :parent_ems_cluster => :tags,
+               :parent_storage     => :tags,
+               :parent_ems         => :tags,
+             )
+             .select(*options[:ext_options][:only_cols])
+             .order("resource_id, timestamp")
       recs = Metric::Helper.remove_duplicate_timestamps(recs)
       $log.info("#{log_prefix} Found #{recs.length} records for time range #{[query_start_time, query_end_time].inspect}")
 

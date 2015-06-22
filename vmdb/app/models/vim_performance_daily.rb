@@ -54,7 +54,7 @@ class VimPerformanceDaily < MetricRollup
     # all the regions in the database. We only want one match from each region
     # otherwise we'll end up with duplicate daily rows.
     tp     = ext_options[:time_profile]
-    tps    = TimeProfile.rollup_daily_metrics.all.select { |p| p.profile == tp.profile }.group_by(&:region_id).values.flatten if tp
+    tps    = TimeProfile.rollup_daily_metrics.select { |p| p.profile == tp.profile }.group_by(&:region_id).values.flatten if tp
     tp_ids = tps.nil? ? [] : tps.collect(&:id)
     #
 

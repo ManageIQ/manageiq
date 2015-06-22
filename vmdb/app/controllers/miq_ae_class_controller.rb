@@ -191,7 +191,7 @@ class MiqAeClassController < ApplicationController
           set_right_cell_text(x_node, @record)
         end
       else
-        rec = MiqAeNamespace.all(:conditions => {:parent_id=>nil})
+        rec = MiqAeNamespace.where(:parent_id => nil)
         @record = nil
         @grid_xml = build_toplevel_grid(rec)
         @right_cell_text = "Datastore"

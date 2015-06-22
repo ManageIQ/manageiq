@@ -410,7 +410,7 @@ module VmCommon
   end
 
   def build_snapshot_tree
-    vms = @record.snapshots.all
+    vms = @record.snapshots
     parent = TreeNodeBuilder.generic_tree_node(
       "snaproot",
       @record.name,

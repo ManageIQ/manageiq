@@ -184,7 +184,7 @@ module ApiHelper
         elsif by_tag_param
           klass.find_tagged_with(:all => by_tag_param, :ns  => ApiController::TAG_NAMESPACE)
         else
-          klass.scoped
+          klass.all
         end
       filter_options = filter_param(klass)
       res = res.where(filter_options)             if filter_options.present? && res.respond_to?(:where)

@@ -401,8 +401,7 @@ class EmsEvent < ActiveRecord::Base
     oldest = oldest.nil? ? older_than : oldest.timestamp
 
     total = 0
-    until (batch = self.all(:select => :id, :conditions => {:timestamp => oldest..older_than}, :limit => window)).empty?
-      ids = batch.collect(&:id)
+    until (ids = where(:timestamp => oldest..older_than).limit(window).ids).empty?
       ids = ids[0, limit - total] if limit && total + ids.length > limit
 
       $log.info("#{log_header} Purging #{ids.length} events.")

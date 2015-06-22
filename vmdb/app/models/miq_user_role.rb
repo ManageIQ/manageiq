@@ -133,10 +133,14 @@ class MiqUserRole < ActiveRecord::Base
   end
 
   def self.get_role(role)
-    return role if role.kind_of?(self) || role.nil?
-
-    find_method = role.kind_of?(Integer) ? :find_by_id : :find_by_name
-    self.send(find_method, role, :include => :miq_product_features)
+    case role
+    when self, nil
+      role
+    when Integer
+      includes(:miq_product_features).find_by_id(role)
+    else
+      includes(:miq_product_features).find_by_name(role)
+    end
   end
 
   def self_service_role?
@@ -189,7 +193,7 @@ class MiqUserRole < ActiveRecord::Base
       end
 
       # Migrate widgets that may reference old role name
-      widgets ||= MiqWidget.in_my_region.all
+      widgets ||= MiqWidget.in_my_region
       widgets.each do |w|
         if w.visibility.kind_of?(Hash) && w.visibility.has_key?(:roles) && w.visibility[:roles].include?(old_role_name)
           idx = w.visibility[:roles].index(old_role_name)

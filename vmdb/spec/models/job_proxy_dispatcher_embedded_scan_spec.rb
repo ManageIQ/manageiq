@@ -28,7 +28,7 @@ module JobProxyDispatcherEmbeddedScanSpec
           hsh
         end
       else
-        vms = VmOrTemplate.find_all_by_id(vms_in_embedded_scanning)
+        vms = VmOrTemplate.where(:id => vms_in_embedded_scanning)
         resource_hsh = vms.inject({}) do |hsh, v|
           hsh[v.send(method)] ||= 0
           hsh[v.send(method)] += 1

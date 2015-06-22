@@ -348,15 +348,23 @@ class MiqWorker < ActiveRecord::Base
   end
 
   def is_current?
-    STATUSES_CURRENT.include?(self.status)
+    STATUSES_CURRENT.include?(status)
   end
 
   def is_alive?
-    STATUSES_ALIVE.include?(self.status) && MiqProcess.is_worker?(self.pid)
+    STATUSES_ALIVE.include?(status) && actually_running?
   end
 
   def is_stopped?
-    STATUSES_STOPPED.include?(self.status)
+    STATUSES_STOPPED.include?(status)
+  end
+
+  def actually_running?
+    MiqProcess.is_worker?(pid)
+  end
+
+  def enabled_or_running?
+    !is_stopped? || actually_running?
   end
 
   def validate_active_messages

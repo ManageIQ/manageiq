@@ -28,7 +28,7 @@ class TreeBuilderOpsRbac < TreeBuilder
   def x_get_tree_custom_kids(object_hash, options)
     objects =
         case object_hash[:id]
-        when "u"  then User.in_my_region.all
+        when "u"  then User.in_my_region
         when "g"  then MiqGroup.all
         when "ur" then MiqUserRole.all
         end

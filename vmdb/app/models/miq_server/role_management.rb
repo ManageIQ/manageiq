@@ -160,12 +160,12 @@ module MiqServer::RoleManagement
 
   def assign_role(server_role, priority = nil)
     server_role          = ServerRole.to_role(server_role)
-    assigned_server_role = self.assigned_server_roles.find_or_create_by_server_role_id(server_role.id)
+    assigned_server_role = assigned_server_roles.find_or_create_by(:server_role_id => server_role.id)
     if assigned_server_role.priority.nil? || (priority.kind_of?(Numeric) && assigned_server_role.priority != priority)
       priority ||= AssignedServerRole::DEFAULT_PRIORITY
       assigned_server_role.update_attributes(:priority => priority)
     end
-    self.reload
+    reload
     assigned_server_role
   end
 

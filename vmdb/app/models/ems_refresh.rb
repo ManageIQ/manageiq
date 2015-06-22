@@ -104,9 +104,8 @@ module EmsRefresh
     return targets_by_type.each_with_object([]) do |(c, ids), a|
       ids.uniq!
 
-      opts = {:conditions => {:id => ids}}
-      opts[:include] = :ext_management_system unless c.ancestors.include?(ExtManagementSystem)
-      recs = c.find(:all, opts)
+      recs = c.where(:id => ids)
+      recs = recs.includes(:ext_management_system) unless c.ancestors.include?(ExtManagementSystem)
 
       if recs.length != ids.length
         missing = ids - recs.collect(&:id)

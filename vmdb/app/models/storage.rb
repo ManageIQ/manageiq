@@ -301,7 +301,7 @@ class Storage < ActiveRecord::Base
     zone_caption = zone_name ? " for zone [#{zone_name}]" : ""
     $log.info "#{log_header} Computing#{zone_caption} Started"
     storages = []
-    self.find(:all, :conditions => { :store_type => SUPPORTED_STORAGE_TYPES }).each do |storage|
+    where(:store_type => SUPPORTED_STORAGE_TYPES).each do |storage|
       unless storage.perf_capture_enabled?
         $log.info "#{log_header} Skipping scan of Storage: [#{storage.name}], performance capture is not enabled"
         next

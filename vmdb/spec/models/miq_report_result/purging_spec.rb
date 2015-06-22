@@ -132,16 +132,16 @@ describe MiqReportResult do
     context "#purge" do
       it "by remaining" do
         described_class.purge(:remaining, 1)
-        described_class.where(:miq_report_id => 1).all.should   == [@rr1.last]
-        described_class.where(:miq_report_id => 2).all.should   == [@rr2.last]
-        described_class.where(:miq_report_id => nil).all.should == @rr_orphaned
+        described_class.where(:miq_report_id => 1).should   == [@rr1.last]
+        described_class.where(:miq_report_id => 2).should   == [@rr2.last]
+        described_class.where(:miq_report_id => nil).should == @rr_orphaned
       end
 
       it "by date" do
         described_class.purge(:date, 6.months.to_i.seconds.ago.utc)
-        described_class.where(:miq_report_id => 1).all.should   == [@rr1.last]
-        described_class.where(:miq_report_id => 2).all.should   == [@rr2.last]
-        described_class.where(:miq_report_id => nil).all.should == @rr_orphaned
+        described_class.where(:miq_report_id => 1).should   == [@rr1.last]
+        described_class.where(:miq_report_id => 2).should   == [@rr2.last]
+        described_class.where(:miq_report_id => nil).should == @rr_orphaned
       end
     end
   end

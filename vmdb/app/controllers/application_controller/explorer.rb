@@ -927,8 +927,7 @@ module ApplicationController::Explorer
       return count_only ? objects.length : objects
     when :alert_profile
       # Add all alert profiles so links back from Alerts etc will work - TODO: figure out how to load on demand
-      objects = MiqAlertSet.all(:conditions=> ["(mode = ?)", object[:id].split('-')],
-                          :order => "lower(description) ASC")
+      objects = MiqAlertSet.where(:mode => object[:id].split('-')).order("lower(description) ASC")
       if options[:count_only]
         return objects.count
       else
@@ -944,7 +943,7 @@ module ApplicationController::Explorer
     when :condition
       nodes = object[:id].split('-')
       if ["host","vm"].include?(nodes.first) && nodes.length == 1
-        objects = Condition.find_all_by_towhat(nodes.first.titleize).sort_by { |a| a.description.downcase }
+        objects = Condition.where(:towhat => nodes.first.titleize).sort_by { |a| a.description.downcase }
       end
       if options[:count_only]
         return objects.count
@@ -961,10 +960,12 @@ module ApplicationController::Explorer
         objects = Array.new
         objects.push({:id=>"#{nodes[0]}-host", :text=>"Host #{nodes[0].capitalize} Policies", :image=>"host", :tip=>"Host Policies"})
         objects.push({:id=>"#{nodes[0]}-vm", :text=>"Vm #{nodes[0].capitalize} Policies", :image=>"vm", :tip=>"Vm Policies"})
-      elsif ["host","vm"].include?(nodes[0].split("-").last)
+      elsif %w(host vm).include?(nodes[0].split("-").last)
         # Add all policies so links back from Conditions etc will work - TODO: figure out how to load on demand
-        objects = MiqPolicy.all(:conditions=> ["(mode = ? and towhat = ?)", nodes[0].split("-").first.downcase, nodes[0].split("-").last.titleize],
-                               :order => "lower(description) ASC")
+        objects = MiqPolicy.where(
+                    :mode   => nodes[0].split("-").first.downcase,
+                    :towhat => nodes[0].split("-").last.titleize,
+                  ).order("lower(description) ASC")
       end
       if options[:count_only]
         return objects.count
@@ -1045,13 +1046,14 @@ module ApplicationController::Explorer
       end
       return options[:count_only] ? objects.length : objects
     when :filter  # Filter trees have global and my filter nodes
+      objects = MiqSearch.where(:db => options[:leaf])
       case object[:id]
       when "global" # Global filters
-        objects = MiqSearch.all(:conditions=>["(search_type=? or (search_type=? and (search_key is null or search_key<>?))) and db=?", "global", "default", "_hidden_", options[:leaf]]).sort_by { |a| a.description.downcase }
+        objects = objects.where("search_type=? or (search_type=? and (search_key is null or search_key<>?))", "global", "default", "_hidden_")
       when "my"     # My filters
-        objects = MiqSearch.all(:conditions=>["search_type=? and search_key=? and db=?", "user", session[:userid], options[:leaf]]).sort_by { |a| a.description.downcase }
+        objects = objects.where(:search_type => "user", :search_key => session[:userid])
       end
-      return options[:count_only] ? objects.length : objects
+      return options[:count_only] ? objects.count : objects.sort_by { |a| a.description.downcase }
     when :bottlenecks, :utilization
       nodes = object[:id].split('_')
       emses = Array.new

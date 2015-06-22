@@ -200,17 +200,21 @@ class ScheduleWorker < WorkerBase
     def check_for_stuck_dispatch(threshold_seconds)
       class_n = "JobProxyDispatcher"
       method_n = "dispatch"
-      Zone.in_my_region.all.each do |z|
+      Zone.in_my_region.each do |z|
         zone = z.name
         threshold = threshold_seconds.seconds.ago.utc
-        msgs = MiqQueue.in_my_region.all(:include => :handler, :conditions => ["class_name = ? and method_name = ? and state = 'dequeue' and zone = ? and updated_on < ?", class_n, method_n, zone, threshold])
-        msgs.each do |msg|
-          if msg.handler.respond_to?(:is_current?) && msg.handler.is_current?
-            msg.check_for_timeout("MIQ(MiqQueue.check_for_timeout)", 10.seconds, threshold_seconds * 3 )
-          else
-            msg.check_for_timeout("MIQ(MiqQueue.check_for_timeout)", 10.seconds, threshold_seconds)
+        MiqQueue
+          .in_my_region
+          .includes(:handler)
+          .where(:class_name => class_n, :method_name => method_n, :state => 'dequeue', :zone => zone)
+          .where("updated_on < ?", threshold)
+          .each do |msg|
+            if msg.handler.respond_to?(:is_current?) && msg.handler.is_current?
+              msg.check_for_timeout("MIQ(MiqQueue.check_for_timeout)", 10.seconds, threshold_seconds * 3)
+            else
+              msg.check_for_timeout("MIQ(MiqQueue.check_for_timeout)", 10.seconds, threshold_seconds)
+            end
           end
-        end
       end
     end
 
@@ -224,7 +228,7 @@ class ScheduleWorker < WorkerBase
     end
 
     def queue_work_on_each_zone(options)
-      Zone.in_my_region.all.each {|z| queue_work(options.merge(:zone => z.name))}
+      Zone.in_my_region.each { |z| queue_work(options.merge(:zone => z.name)) }
     end
   end
 end
