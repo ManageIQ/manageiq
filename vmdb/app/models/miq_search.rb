@@ -18,7 +18,12 @@ class MiqSearch < ActiveRecord::Base
 
   def search(targets = [], opts = {})
     self.options ||= {}
-    Rbac.search(self.options.merge(:targets => targets, :class => self.db, :filter => self.filter).merge(opts))
+    Rbac.search(options.merge(:targets => targets, :class => db, :filter => filter).merge(opts))
+  end
+
+  def filtered(targets, opts = {})
+    self.options ||= {}
+    Rbac.filtered(targets, options.merge(:class => db, :filter => filter).merge(opts))
   end
 
   def self.get_expressions_by_model(db)

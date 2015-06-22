@@ -41,7 +41,10 @@ module MiqReport::Generator::Trend
         :include     => includes,
         :ext_options => {:class => trend_klass, :only_cols => only_cols, :reflections => associations, :tz => self.tz, :time_profile => self.time_profile}
       )
-      results, attrs = Rbac.search(:targets => recs, :class => self.db_options[:trend_db], :filter => self.db_options[:trend_filter], :results_format => :objects, :userid => options[:userid], :miq_group_id => options[:miq_group_id]) unless recs.empty?
+      results = Rbac.filtered(recs, :class        => db_options[:trend_db],
+                                    :filter       => db_options[:trend_filter],
+                                    :userid       => options[:userid],
+                                    :miq_group_id => options[:miq_group_id])
     else
       start_time = Time.now.utc -  self.db_options[:start_offset].seconds
       end_time   =  self.db_options[:end_offset].nil? ? Time.now.utc : Time.now.utc -  self.db_options[:end_offset].seconds
@@ -55,7 +58,10 @@ module MiqReport::Generator::Trend
         :all,
         :conditions => where_clause
       )
-      results, attrs = Rbac.search(:targets => recs, :class => self.db_options[:trend_db], :filter => self.db_options[:trend_filter], :results_format => :objects, :userid => options[:userid], :miq_group_id => options[:miq_group_id]) unless results.empty?
+      results = Rbac.filtered(recs, :class        => db_options[:trend_db],
+                                    :filter       => db_options[:trend_filter],
+                                    :userid       => options[:userid],
+                                    :miq_group_id => options[:miq_group_id])
     end
 
     klass = db.is_a?(Class) ? db : Object.const_get(db)
@@ -64,11 +70,15 @@ module MiqReport::Generator::Trend
     options[:only] ||= (self.cols + self.build_cols_from_include(self.include) + ['id']).uniq
 
     # Build and filter trend data from performance data
-    self.build_apply_time_profile(results)
-    results = klass.build(results, self.db_options)
-    results, attrs = Rbac.search(:targets => results, :class => self.db, :filter => self.conditions, :results_format => :objects, :limit => options[:limit], :userid => options[:userid], :miq_group_id => options[:miq_group_id]) unless results.empty?
+    build_apply_time_profile(results)
+    results = klass.build(results, db_options)
+    results = Rbac.filtered(results, :class        => db,
+                                     :filter       => conditions,
+                                     :limit        => options[:limit],
+                                     :userid       => options[:userid],
+                                     :miq_group_id => options[:miq_group_id])
 
-    return [results]
+    [results]
   end
 
   def build_calculate_trend_point(rec, col)

@@ -597,7 +597,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     log_header = "MIQ(#{self.class.name}#source_vm_rbac)"
 
     filter_id = get_value(@values[:vm_filter]).to_i
-    search_options = {:results_format => :objects, :userid => @requester.userid}
+    search_options = {:userid => @requester.userid}
     search_options[:conditions] = condition unless condition.blank?
     template_msg =  "User: <#{@requester.userid}>"
     template_msg += " Role: <#{@requester.current_group.nil? ? "none" : @requester.current_group.miq_user_role.name}>  Group: <#{@requester.current_group.nil? ? "none" : @requester.current_group.description}>"
@@ -605,9 +605,17 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     template_msg += "  Passing inital template IDs: <#{vms.collect(&:id).inspect}>" unless vms.blank?
     $log.info "#{log_header} Checking for allowed templates for #{template_msg}"
     if filter_id.zero?
-      Rbac.search(search_options.merge(:targets => vms, :class => VmOrTemplate)).first
+      if vms.empty?
+        Rbac.search(search_options.merge(:class => VmOrTemplate, :results_format => :objects)).first
+      else
+        Rbac.filtered(vms, search_options.merge(:class => VmOrTemplate))
+      end
     else
-      MiqSearch.find(filter_id).search(vms, search_options).first
+      if vms.empty?
+        MiqSearch.find(filter_id).search([], search_options.merge(:results_format => :objects)).first
+      else
+        MiqSearch.find(filter_id).filtered(vms, search_options)
+      end
     end
   end
 
@@ -1297,8 +1305,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
             else
               load_ar_obj(allowed_hosts)
             end
-    Rbac.search(:targets => hosts, :class => Host, :results_format => :objects,
-                :userid => @requester.userid).first
+    Rbac.filtered(hosts, :class => Host, :userid => @requester.userid)
   end
 
   def all_provider_hosts(src)

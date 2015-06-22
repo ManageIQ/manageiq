@@ -239,7 +239,10 @@ module MiqReport::Generator
         :limit       => options[:limit],
         :ext_options => ext_options.merge(:reflections => associations, :class => klass)
       )
-      results, attrs = !results.empty? ? Rbac.search(:targets => results, :class => self.db, :filter => self.conditions, :results_format => :objects, :userid => options[:userid], :miq_group_id => options[:miq_group_id]) : [results, {}]
+      results = Rbac.filtered(results, :class        => db,
+                                       :filter       => conditions,
+                                       :userid       => options[:userid],
+                                       :miq_group_id => options[:miq_group_id])
       results = Metric::Helper.remove_duplicate_timestamps(results)
     elsif !self.db_options.blank? && self.db_options.has_key?(:interval)
       # Ad-hoc performance reports
@@ -260,7 +263,10 @@ module MiqReport::Generator
         :limit => options[:limit]
       )
 
-      results, attrs = !results.empty? ? Rbac.search(:targets => results, :class => self.db, :filter => self.conditions, :results_format => :objects, :userid => options[:userid], :miq_group_id => options[:miq_group_id]) : [results, {}]
+      results = Rbac.filtered(results, :class        => db,
+                                       :filter       => conditions,
+                                       :userid       => options[:userid],
+                                       :miq_group_id => options[:miq_group_id])
       results = Metric::Helper.remove_duplicate_timestamps(results)
     else
       # Basic report
