@@ -30,7 +30,7 @@ module MiqEc2InstanceTypes
       :virtualization_type     => [:hvm],
       :network_performance     => :low_to_moderate,
       :physical_processor      => "Intel Xeon Family",
-      :processor_clock_speed   => 2.5, # GHz
+      :processor_clock_speed   => 3.3, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
       :intel_avx2              => nil,
@@ -54,7 +54,7 @@ module MiqEc2InstanceTypes
       :virtualization_type     => [:hvm],
       :network_performance     => :low_to_moderate,
       :physical_processor      => "Intel Xeon Family",
-      :processor_clock_speed   => 2.5, # GHz
+      :processor_clock_speed   => 3.3, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
       :intel_avx2              => nil,
@@ -78,7 +78,31 @@ module MiqEc2InstanceTypes
       :virtualization_type     => [:hvm],
       :network_performance     => :low_to_moderate,
       :physical_processor      => "Intel Xeon Family",
-      :processor_clock_speed   => 2.5, # GHz
+      :processor_clock_speed   => 3.3, # GHz
+      :intel_aes_ni            => true,
+      :intel_avx               => true,
+      :intel_avx2              => nil,
+      :intel_turbo             => true,
+      :ebs_optimized_available => nil,
+      :enhanced_networking     => nil,
+      :cluster_networking      => nil,
+      :vpc_only                => true,
+    },
+
+    "t2.large" => {
+      :name                    => "t2.large",
+      :family                  => "General Purpose",
+      :description             => "T2 Large",
+      :memory                  => 8.gigabyte,
+      :vcpu                    => 2,
+      :ebs_only                => true,
+      :instance_store_size     => 0,
+      :instance_store_volumes  => 0,
+      :architecture            => [:x86_64],
+      :virtualization_type     => [:hvm],
+      :network_performance     => :low_to_moderate,
+      :physical_processor      => "Intel Xeon Family",
+      :processor_clock_speed   => 3.0, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
       :intel_avx2              => nil,
