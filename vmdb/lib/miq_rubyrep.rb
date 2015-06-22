@@ -63,8 +63,11 @@ class MiqRubyrep
       config.add_table_option table, :event_filter => klass.new
     end
 
-    # config.left[:logger]  = Logger.new('rubyrep_left.log')
-    # config.right[:logger] = Logger.new('rubyrep_right.log')
+    if rp_conf.fetch_path(:options, :debug_sql)
+      require 'logger'
+      config.left[:logger]  = Logger.new(Rails.root.join('log/rubyrep_local.log'))
+      config.right[:logger] = Logger.new(Rails.root.join('log/rubyrep_remote.log'))
+    end
 
     $log.info("Replication Settings:")
     $log.log_hashes({
