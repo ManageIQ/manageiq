@@ -2,23 +2,48 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased - as of Sprint 23 end 2015-05-11
+## Unreleased
 
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+23+Ending+May+11%2C+2015%22+label%3Aenhancement)
+### Sprint 24 end 2015-06-01
+
+
+#### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+24+Ending+June+1%2C+2015%22+label%3Aenhancement)
+
+- Kubernetes inventory: 
+  - Replicators
+  - Routes
+  - Projects
+- OpenShift Provider
+- OpenStack: Better name for AMQP binding queues
+- Provisioning
+  - Enabled SCVMM Auto placement
+  - Provision dialog field validation for non-required fields
+
+#### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+24+Ending+June+1%2C+2015%22+label%3Abug)
+
+Notable fixes include:
+- Provisioning: Fixed unique names for provisioned VMs when ordered through a service
+- UI
+  - Fixes for Japanese I18n support
+  - Fixed alignment of Foreman explorer RBAC features with the UI
+
+### Sprint 23 end 2015-05-11
+
+#### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+23+Ending+May+11%2C+2015%22+label%3Aenhancement)
 
 - Foreman
   - Filtering of available Configuration Profiles based on selected Configured Systems in provisioning dialog
   - Exposed additional properties to reporting
 
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+23+Ending+May+11%2C+2015%22+label%3Aenhancement) 
+#### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+23+Ending+May+11%2C+2015%22+label%3Aenhancement) 
 
 - UI: Foreman Enhancements
 
 # Botvinnik Release
 
-### Added Features
+## Added Features
 
-#### Providers
+### Providers
 - General
   - Added refresh status and errors, viewable on Provider Summary Page.
   - Added collection of raw power state and exposed to reporting.
@@ -76,7 +101,7 @@ All notable changes to this project will be documented in this file.
  - Improved rollback error message in UI
  - Collect Stack Resource name and status reason message
      
-#### Provisioning
+### Provisioning
 - Heat Orchestration provisioning through services
 - Foreman
   - Provisioning of bare metal systems
@@ -87,7 +112,7 @@ All notable changes to this project will be documented in this file.
 - Amazon: Filtering of flavors based on root device type and block
     storage restrictions.
 
-#### User Interface
+### User Interface
 - Bootstrap/Patternfly
   - Updates to form buttons with Patternfly
   - Login screen converted to Bootstrap / Patternfly
@@ -108,7 +133,7 @@ All notable changes to this project will be documented in this file.
 - Replaced many legacy Prototype calls with jQuery equivalents
 - Tagging support and toolbars on list views
 
-#### Rest API 
+### Rest API 
 - Total parity with SOAP API. SOAP API is now deprecated and will be removed in an upcoming release.
 - Foundational
   - Virtual attribute support  
@@ -126,7 +151,7 @@ All notable changes to this project will be documented in this file.
 - Software sub-collection /api/vms/#/software
 - Support for external authentication (httpd) against an IPA server.  
 
-#### Automate 
+### Automate 
 - Enhanced UI import to allow granularity down to the namespace.
 - Cloud Objects exposed to Automate. 
 - Allow Automate methods to override or extend parameters passed to provider by
@@ -147,30 +172,30 @@ All notable changes to this project will be documented in this file.
   - New workflow
   - Detection of User vs. System initiated retirement
 
-#### Fleecing
+### Fleecing
 - Qcow3
 - VSAN (VMware)
 - OpenStack instances
 - Systemd fleecing support
 - XFS filesystem support
 
-#### I18n
+### I18n
   - All strings in the views have been converted to use gettext (I18n) calls
   - Can add/update I18n files with translations
 
-#### Service Dialogs
+### Service Dialogs
 - Dynamic field support: text boxes, text area boxes, checkboxes, radio buttons, date/time control
 - Dynamic list field refactored into standard drop-down field
 - Read only field support
 - Dialog seeding for imports
 - Service provisioning request overrides
 
-#### IPv6 
+### IPv6 
 - Allow IPv6 literals in VMware communication by upgrading httpclient
-- Allow IPv6 literals in RHEVM/ovirt communication by fixing and upgrading rest-client and ruby 2.0
-  
+- Allow IPv6 literals in RHEVM/ovirt communication by fixing and upgrading rest-client and ruby 2.0  
 - Fixed URI building within ManageIQ to wrap/unwrap IPv6 literals as needed
-#### Security 
+
+### Security 
 - Lock down [POODLE](http://en.wikipedia.org/wiki/POODLE) attacks.
 - Support SSL for OpenStack
   - Deals with different ways to configure SSL for OpenStack
@@ -184,7 +209,7 @@ All notable changes to this project will be documented in this file.
 - Make memcached listen on loopback address, not all addresses
 - Migrate empty memcache_server_opts to bind on localhost by default 
 
-#### Appliance
+### Appliance
 - Rake task to allow a user to replicate all pending backlog before upgrading.
 - Appliance Console: Added ability to copy keys across appliances.
 - Ruby 2.0
@@ -219,7 +244,7 @@ All notable changes to this project will be documented in this file.
 - Lazy require the less-rails gem  
 
 
-### Removed
+## Removed
 
 - SmartProxy: 
   - Removed from UI
@@ -241,7 +266,7 @@ All notable changes to this project will be documented in this file.
 - VDI support
 - Various monkey patches to prepare for Ruby 2 and Rails 4 upgrades  
 
-### Notable Fixes and Changes
+## Notable Fixes and Changes
 
 - Provisioning 
   - Fixed duplicate VM name generation issue during provisioning.
