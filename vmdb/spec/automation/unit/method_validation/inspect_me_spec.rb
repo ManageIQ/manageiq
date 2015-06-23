@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe "InspectMe Automate Method" do
-  before(:each) do
+  before do
     @guid = MiqUUID.new_guid
     MiqServer.stub(:my_guid).and_return(@guid)
     @zone       = FactoryGirl.create(:zone)
